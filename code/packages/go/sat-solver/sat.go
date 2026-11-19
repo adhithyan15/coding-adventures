@@ -1,0 +1,1022 @@
+// Package satsolver provides an incremental CDCL SAT solver and CNF builder.
+package satsolver
+
+import (
+	"errors"
+	"fmt"
+	"math"
+	"sort"
+)
+
+type Var uint32
+type Lit uint32
+type LBool int8
+
+const (
+	Undef     LBool  = 0
+	False     LBool  = -1
+	True      LBool  = 1
+	maxPacked uint32 = 1 << 31
+	maxVar    uint32 = (1 << 30) - 1
+)
+
+type SolveResult string
+
+const (
+	SolveSat     SolveResult = "sat"
+	SolveUnsat   SolveResult = "unsat"
+	SolveUnknown SolveResult = "unknown"
+)
+
+type SolverConfig struct {
+	MaxVars                                          uint32
+	MaxClauses, MaxClauseLiterals, MaxStoredLiterals uint64
+}
+type SolverOptions struct{ MaxConflicts, MaxSteps *uint64 }
+type satClause struct {
+	lits     []Lit
+	w0, w1   int
+	learnt   bool
+	deleted  bool
+	activity float64
+}
+type Solver struct {
+	cfg                                          SolverConfig
+	vars                                         uint32
+	cs                                           []*satClause
+	rootUnits                                    []Lit
+	inputClauseCount                             uint64
+	permanentEmpty                               bool
+	watches                                      [][]int
+	val                                          []int8
+	level                                        []int
+	reason                                       []int
+	trail                                        []Lit
+	limits                                       []int
+	qhead                                        int
+	rootUnsat                                    bool
+	model                                        []bool
+	modelOK                                      bool
+	core                                         []Lit
+	Conflicts, Decisions, Propagations, Restarts uint64
+	activity                                     []float64
+	inc                                          float64
+	phase                                        []int8
+	restartBase, restartIndex, sinceRestart      uint64
+	learnedLimit                                 int
+}
+
+func NewSolver(config ...SolverConfig) (*Solver, error) {
+	c := SolverConfig{MaxVars: 1 << 20, MaxClauses: 1 << 20, MaxClauseLiterals: 1 << 24, MaxStoredLiterals: 1 << 24}
+	if len(config) > 1 {
+		return nil, errors.New("at most one solver config")
+	}
+	if len(config) == 1 {
+		x := config[0]
+		if x.MaxVars > 0 {
+			c.MaxVars = x.MaxVars
+		}
+		if x.MaxClauses > 0 {
+			c.MaxClauses = x.MaxClauses
+		}
+		if x.MaxClauseLiterals > 0 {
+			c.MaxClauseLiterals = x.MaxClauseLiterals
+		}
+		if x.MaxStoredLiterals > 0 {
+			c.MaxStoredLiterals = x.MaxStoredLiterals
+		}
+	}
+	if c.MaxVars > maxVar+1 {
+		return nil, errors.New("MaxVars exceeds literal representation")
+	}
+	if c.MaxClauses == 0 || c.MaxClauseLiterals == 0 || c.MaxStoredLiterals == 0 {
+		return nil, errors.New("resource ceilings must be positive")
+	}
+	return &Solver{cfg: c, inc: 1, restartBase: 32, restartIndex: 1, learnedLimit: 2000}, nil
+}
+func MakeLit(v Var, neg bool) (Lit, error) {
+	if uint32(v) > maxVar {
+		return 0, errors.New("variable is not representable")
+	}
+	x := uint32(v) << 1
+	if neg {
+		x |= 1
+	}
+	return Lit(x), nil
+}
+func validLit(l Lit) bool { return uint32(l) < maxPacked }
+func NegateLit(l Lit) (Lit, error) {
+	if !validLit(l) {
+		return 0, errors.New("invalid literal")
+	}
+	return l ^ 1, nil
+}
+func VarOf(l Lit) (Var, error) {
+	if !validLit(l) {
+		return 0, errors.New("invalid literal")
+	}
+	return Var(uint32(l) >> 1), nil
+}
+func SignOf(l Lit) (bool, error) {
+	if !validLit(l) {
+		return false, errors.New("invalid literal")
+	}
+	return uint32(l)&1 != 0, nil
+}
+func LitToString(l Lit) (string, error) {
+	if !validLit(l) {
+		return "", errors.New("invalid literal")
+	}
+	n := uint64(uint32(l)>>1) + 1
+	if uint32(l)&1 != 0 {
+		return fmt.Sprintf("-%d", n), nil
+	}
+	return fmt.Sprint(n), nil
+}
+func (s *Solver) NewVar() (Var, error) {
+	if s.vars >= s.cfg.MaxVars || s.vars > maxVar {
+		return 0, errors.New("variable ceiling exceeded")
+	}
+	v := s.vars
+	s.vars++
+	s.val = append(s.val, 0)
+	s.level = append(s.level, 0)
+	s.reason = append(s.reason, -1)
+	s.activity = append(s.activity, 0)
+	s.phase = append(s.phase, -1)
+	s.watches = append(s.watches, nil, nil)
+	s.clearResult()
+	return Var(v), nil
+}
+func (s *Solver) NVars() uint32 { return s.vars }
+func (s *Solver) NClauses() uint64 {
+	var n uint64
+	for _, c := range s.cs {
+		if !c.deleted && len(c.lits) > 1 {
+			n++
+		}
+	}
+	return n
+}
+func (s *Solver) Okay() bool       { return !s.rootUnsat }
+func (s *Solver) clearResult()     { s.model = nil; s.modelOK = false; s.core = nil }
+func (s *Solver) litOK(l Lit) bool { return validLit(l) && uint32(l)>>1 < s.vars }
+func (s *Solver) litVal(l Lit) int8 {
+	x := s.val[uint32(l)>>1]
+	if x == 0 {
+		return -1
+	}
+	if uint32(l)&1 != 0 {
+		x = -x
+	}
+	if x > 0 {
+		return 1
+	}
+	return 0
+}
+func (s *Solver) enqueue(l Lit, r int) bool {
+	v := uint32(l) >> 1
+	x := int8(1)
+	if uint32(l)&1 != 0 {
+		x = -1
+	}
+	if s.val[v] != 0 {
+		return s.val[v] == x
+	}
+	s.val[v] = x
+	s.level[v] = len(s.limits)
+	s.reason[v] = r
+	s.trail = append(s.trail, l)
+	return true
+}
+func (s *Solver) newLevel() { s.limits = append(s.limits, len(s.trail)) }
+func (s *Solver) cancel(level int) {
+	if len(s.limits) <= level {
+		return
+	}
+	to := s.limits[level]
+	for i := len(s.trail) - 1; i >= to; i-- {
+		v := uint32(s.trail[i]) >> 1
+		s.phase[v] = s.val[v]
+		s.val[v] = 0
+		s.reason[v] = -1
+		s.level[v] = 0
+	}
+	s.trail = s.trail[:to]
+	s.limits = s.limits[:level]
+	if s.qhead > len(s.trail) {
+		s.qhead = len(s.trail)
+	}
+}
+func (s *Solver) AddClause(in []Lit) (bool, error) {
+	maxRequired := s.vars
+	for _, l := range in {
+		if !validLit(l) {
+			return false, fmt.Errorf("invalid literal %d", l)
+		}
+		if v := uint32(l) >> 1; v >= maxRequired {
+			maxRequired = v + 1
+		}
+	}
+	if maxRequired > s.cfg.MaxVars {
+		return false, errors.New("variable resource ceiling exceeded")
+	}
+	if uint64(len(in)) > s.cfg.MaxClauseLiterals || s.inputClauseCount >= s.cfg.MaxClauses {
+		return false, errors.New("clause resource ceiling exceeded")
+	}
+	var used uint64
+	for _, c := range s.cs {
+		if !c.deleted {
+			used += uint64(len(c.lits))
+		}
+	}
+	if used+uint64(len(in)) > s.cfg.MaxStoredLiterals {
+		return false, errors.New("stored literal ceiling exceeded")
+	}
+	// Match the TypeScript API: a well-formed literal grows the variable
+	// universe, but preflight the entire request first to keep refusal atomic.
+	for s.vars < maxRequired {
+		if _, err := s.NewVar(); err != nil {
+			return false, err
+		}
+	}
+	s.clearResult()
+	s.cancel(0)
+	if s.rootUnsat {
+		return false, nil
+	}
+	// Simplify against the established permanent root assignment. Watches on
+	// a newly added clause cannot observe root literals whose qhead was already
+	// consumed, so detect satisfied/unit/conflicting additions here.
+	reduced := make([]Lit, 0, len(in))
+	for _, l := range in {
+		switch s.litVal(l) {
+		case 1:
+			return true, nil
+		case 0:
+			// Permanently false at root; omit it from the stored clause.
+		default:
+			reduced = append(reduced, l)
+		}
+	}
+	ls := append([]Lit(nil), reduced...)
+	sort.Slice(ls, func(i, j int) bool { return ls[i] < ls[j] })
+	out := ls[:0]
+	for _, l := range ls {
+		if len(out) > 0 && l == out[len(out)-1] {
+			continue
+		}
+		if len(out) > 0 && uint32(l) == uint32(out[len(out)-1])^1 {
+			return true, nil
+		}
+		out = append(out, l)
+	}
+	ls = out
+	s.inputClauseCount++
+	if len(ls) == 0 {
+		s.rootUnsat = true
+		s.permanentEmpty = true
+		return false, nil
+	}
+	if len(ls) == 1 {
+		s.rootUnits = append(s.rootUnits, ls[0])
+		if !s.enqueue(ls[0], -1) {
+			s.rootUnsat = true
+			return false, nil
+		}
+		if conflict := s.propagate(math.MaxUint64); conflict >= 0 {
+			s.rootUnsat = true
+			return false, nil
+		}
+		return true, nil
+	}
+	c := &satClause{lits: append([]Lit(nil), ls...)}
+	id := len(s.cs)
+	s.cs = append(s.cs, c)
+	c.w0 = 0
+	c.w1 = 1
+	s.watches[uint32(ls[c.w0])^1] = append(s.watches[uint32(ls[c.w0])^1], id)
+	s.watches[uint32(ls[c.w1])^1] = append(s.watches[uint32(ls[c.w1])^1], id)
+	if conflict := s.propagate(math.MaxUint64); conflict >= 0 {
+		s.rootUnsat = true
+		return false, nil
+	}
+	return true, nil
+}
+
+// propagate checks the budget before consuming a trail item. UNKNOWN therefore
+// leaves qhead at the earliest unprocessed propagation, including at level zero.
+func (s *Solver) propagate(budget uint64) int {
+	var used uint64
+	for s.qhead < len(s.trail) {
+		if used >= budget {
+			return -2
+		}
+		p := s.trail[s.qhead]
+		s.qhead++
+		used++
+		s.Propagations++
+		// Watch lists are keyed by the complement of the watched literal,
+		// which is the literal just made true.
+		wi := uint32(p)
+		list := s.watches[wi]
+		write := 0
+		for pos, id := range list {
+			c := s.cs[id]
+			if c.deleted {
+				continue
+			}
+			fw := c.w0
+			if uint32(c.lits[fw])^1 != wi {
+				fw = c.w1
+			}
+			ow := c.w0
+			if fw == c.w0 {
+				ow = c.w1
+			}
+			other := c.lits[ow]
+			if s.litVal(other) > 0 {
+				s.watches[wi][write] = id
+				write++
+				continue
+			}
+			rep := -1
+			for k, l := range c.lits {
+				if k != fw && k != ow && s.litVal(l) != 0 {
+					rep = k
+					break
+				}
+			}
+			if rep >= 0 {
+				if fw == c.w0 {
+					c.w0 = rep
+				} else {
+					c.w1 = rep
+				}
+				s.watches[uint32(c.lits[rep])^1] = append(s.watches[uint32(c.lits[rep])^1], id)
+				continue
+			}
+			s.watches[wi][write] = id
+			write++
+			if s.litVal(other) == 0 {
+				s.watches[wi] = append(s.watches[wi][:write], list[pos+1:]...)
+				s.Conflicts++
+				return id
+			}
+			if !s.enqueue(other, id) {
+				s.watches[wi] = append(s.watches[wi][:write], list[pos+1:]...)
+				s.Conflicts++
+				return id
+			}
+		}
+		s.watches[wi] = s.watches[wi][:write]
+	}
+	return -1
+}
+func (s *Solver) analyze(conf int) ([]Lit, int, bool) {
+	seen := make([]bool, s.vars)
+	learn := []Lit{0}
+	path := 0
+	idx := len(s.trail) - 1
+	p := Lit(0)
+	havePivot := false
+	ci := conf
+	for {
+		c := s.cs[ci]
+		c.activity += 1
+		for _, q := range c.lits {
+			v := uint32(q) >> 1
+			if (havePivot && v == uint32(p)>>1) || seen[v] || s.level[v] == 0 {
+				continue
+			}
+			seen[v] = true
+			s.activity[v] += s.inc
+			if s.level[v] == len(s.limits) {
+				path++
+			} else {
+				learn = append(learn, q)
+			}
+		}
+		for idx >= 0 && !seen[uint32(s.trail[idx])>>1] {
+			idx--
+		}
+		if idx < 0 {
+			return nil, 0, false
+		}
+		p = s.trail[idx]
+		havePivot = true
+		idx--
+		v := uint32(p) >> 1
+		seen[v] = false
+		path--
+		if path == 0 {
+			learn[0] = p ^ 1
+			break
+		}
+		ci = s.reason[v]
+		if ci < 0 {
+			return nil, 0, false
+		}
+	}
+	back := 0
+	if len(learn) > 1 {
+		best := 1
+		for i := 2; i < len(learn); i++ {
+			if s.level[uint32(learn[i])>>1] > s.level[uint32(learn[best])>>1] {
+				best = i
+			}
+		}
+		learn[1], learn[best] = learn[best], learn[1]
+		back = s.level[uint32(learn[1])>>1]
+	}
+	s.inc *= 1.05
+	if len(learn) == 0 || !havePivot || s.level[uint32(learn[0])>>1] != len(s.limits) {
+		return nil, 0, false
+	}
+	return learn, back, true
+}
+func (s *Solver) addLearned(ls []Lit) (int, bool) {
+	var used uint64
+	for _, c := range s.cs {
+		if !c.deleted {
+			used += uint64(len(c.lits))
+		}
+	}
+	if used+uint64(len(ls)) > s.cfg.MaxStoredLiterals {
+		return -1, false
+	}
+	c := &satClause{lits: append([]Lit(nil), ls...), learnt: true}
+	id := len(s.cs)
+	s.cs = append(s.cs, c)
+	c.w0 = 0
+	c.w1 = 0
+	if len(ls) > 1 {
+		c.w1 = 1
+		s.watches[uint32(ls[1])^1] = append(s.watches[uint32(ls[1])^1], id)
+	}
+	s.watches[uint32(ls[0])^1] = append(s.watches[uint32(ls[0])^1], id)
+	return id, true
+}
+func luby(i uint64) uint64 {
+	k := uint64(1)
+	for (uint64(1)<<k)-1 < i {
+		k++
+	}
+	if i == (uint64(1)<<k)-1 {
+		return uint64(1) << (k - 1)
+	}
+	return luby(i - (uint64(1) << (k - 1)) + 1)
+}
+func (s *Solver) reduceLearned() {
+	locked := make(map[int]bool)
+	for _, r := range s.reason {
+		if r >= 0 {
+			locked[r] = true
+		}
+	}
+	var candidates []int
+	for i, c := range s.cs {
+		if c.learnt && !c.deleted && len(c.lits) > 2 && !locked[i] {
+			candidates = append(candidates, i)
+		}
+	}
+	sort.Slice(candidates, func(i, j int) bool { return s.cs[candidates[i]].activity < s.cs[candidates[j]].activity })
+	for i := 0; i < len(candidates)/2; i++ {
+		c := s.cs[candidates[i]]
+		c.deleted = true
+		c.lits = nil
+	}
+}
+
+// Assumption decisions make conflict clauses conditional. Drop all learned
+// clauses after such a call, then reconstruct the permanent root closure.
+func (s *Solver) discardAssumptionLearning() {
+	model, modelOK, core := append([]bool(nil), s.model...), s.modelOK, append([]Lit(nil), s.core...)
+	kept := s.cs[:0]
+	for _, c := range s.cs {
+		if !c.learnt {
+			kept = append(kept, c)
+		}
+	}
+	s.cs = kept
+	s.watches = make([][]int, s.vars*2)
+	s.val = make([]int8, s.vars)
+	s.level = make([]int, s.vars)
+	s.reason = make([]int, s.vars)
+	for i := range s.reason {
+		s.reason[i] = -1
+	}
+	s.trail = nil
+	s.limits = nil
+	s.qhead = 0
+	s.rootUnsat = s.permanentEmpty
+	for _, l := range s.rootUnits {
+		if !s.enqueue(l, -1) {
+			s.rootUnsat = true
+		}
+	}
+	for id, c := range s.cs {
+		if len(c.lits) == 0 {
+			s.rootUnsat = true
+			continue
+		}
+		c.w0 = 0
+		c.w1 = 0
+		if len(c.lits) > 1 {
+			c.w1 = 1
+			s.watches[uint32(c.lits[1])^1] = append(s.watches[uint32(c.lits[1])^1], id)
+		}
+		s.watches[uint32(c.lits[0])^1] = append(s.watches[uint32(c.lits[0])^1], id)
+	}
+	if !s.rootUnsat && s.propagate(math.MaxUint64) >= 0 {
+		s.rootUnsat = true
+	}
+	s.model, s.modelOK, s.core = model, modelOK, core
+}
+func (s *Solver) Solve(opts ...SolverOptions) (SolveResult, error) {
+	return s.SolveWithAssumptions(nil, opts...)
+}
+func (s *Solver) SolveWithAssumptions(as []Lit, opts ...SolverOptions) (SolveResult, error) {
+	if len(opts) > 1 {
+		return SolveUnknown, errors.New("at most one options value")
+	}
+	for _, l := range as {
+		if !validLit(l) {
+			return SolveUnknown, fmt.Errorf("invalid assumption %d", l)
+		}
+	}
+	maxRequired := s.vars
+	for _, l := range as {
+		if v := uint32(l) >> 1; v >= maxRequired {
+			maxRequired = v + 1
+		}
+	}
+	if maxRequired > s.cfg.MaxVars {
+		return SolveUnknown, errors.New("variable resource ceiling exceeded")
+	}
+	for s.vars < maxRequired {
+		if _, e := s.NewVar(); e != nil {
+			return SolveUnknown, e
+		}
+	}
+	if len(as) > 0 {
+		defer s.discardAssumptionLearning()
+	}
+	o := SolverOptions{}
+	if len(opts) == 1 {
+		o = opts[0]
+	}
+	mc, ms := uint64(math.MaxUint64), uint64(math.MaxUint64)
+	if o.MaxConflicts != nil {
+		mc = *o.MaxConflicts
+	}
+	if o.MaxSteps != nil {
+		ms = *o.MaxSteps
+	}
+	s.clearResult()
+	s.cancel(0)
+	if s.rootUnsat {
+		return SolveUnsat, nil
+	}
+	pc, pp := s.Conflicts, s.Propagations
+	rem := func(max, used uint64) uint64 {
+		if max == math.MaxUint64 {
+			return max
+		}
+		if used >= max {
+			return 0
+		}
+		return max - used
+	}
+	if c := s.propagate(rem(ms, s.Propagations-pp)); c >= 0 {
+		s.rootUnsat = true
+		return SolveUnsat, nil
+	} else if c == -2 {
+		return SolveUnknown, nil
+	}
+	unique := make([]Lit, 0, len(as))
+	seen := map[Lit]bool{}
+	for _, a := range as {
+		if seen[a] {
+			continue
+		}
+		seen[a] = true
+		unique = append(unique, a)
+		switch s.litVal(a) {
+		case 1:
+			s.newLevel()
+		case 0:
+			s.core = append([]Lit(nil), unique...)
+			s.cancel(0)
+			return SolveUnsat, nil
+		default:
+			s.newLevel()
+			s.Decisions++
+			s.enqueue(a, -1)
+			c := s.propagate(rem(ms, s.Propagations-pp))
+			if c == -2 {
+				s.cancel(0)
+				return SolveUnknown, nil
+			}
+			if c >= 0 {
+				if mc != math.MaxUint64 && s.Conflicts-pc > mc {
+					s.cancel(0)
+					return SolveUnknown, nil
+				}
+				s.core = append([]Lit(nil), unique...)
+				s.cancel(0)
+				return SolveUnsat, nil
+			}
+		}
+	}
+	assLevels := len(s.limits)
+	for {
+		conf := s.propagate(rem(ms, s.Propagations-pp))
+		if conf == -2 {
+			s.cancel(0)
+			return SolveUnknown, nil
+		}
+		if conf >= 0 {
+			if s.Conflicts-pc > mc && mc != math.MaxUint64 {
+				s.cancel(0)
+				return SolveUnknown, nil
+			}
+			if len(s.limits) <= assLevels {
+				if len(s.limits) == 0 {
+					s.rootUnsat = true
+				} else {
+					s.core = append([]Lit(nil), unique...)
+				}
+				s.cancel(0)
+				return SolveUnsat, nil
+			}
+			s.sinceRestart++
+			ls, back, valid := s.analyze(conf)
+			if !valid {
+				s.cancel(0)
+				return SolveUnknown, errors.New("CDCL conflict-analysis invariant failed")
+			}
+			if back < assLevels {
+				back = assLevels
+			}
+			s.cancel(back)
+			id, stored := s.addLearned(ls)
+			if !stored {
+				s.cancel(0)
+				return SolveUnknown, nil
+			}
+			if !s.enqueue(ls[0], id) {
+				s.core = append([]Lit(nil), unique...)
+				s.cancel(0)
+				return SolveUnsat, nil
+			}
+			learnedCount := 0
+			for _, cl := range s.cs {
+				if cl.learnt && !cl.deleted {
+					learnedCount++
+				}
+			}
+			if learnedCount > s.learnedLimit {
+				s.reduceLearned()
+			}
+			if s.sinceRestart >= s.restartBase*luby(s.restartIndex) {
+				s.cancel(assLevels)
+				s.qhead = 0
+				s.Restarts++
+				s.restartIndex++
+				s.sinceRestart = 0
+			}
+			continue
+		}
+		v := -1
+		score := -1.0
+		for i, x := range s.val {
+			if x == 0 && s.activity[i] > score {
+				score = s.activity[i]
+				v = i
+			}
+		}
+		if v < 0 {
+			s.model = make([]bool, s.vars)
+			for i, x := range s.val {
+				s.model[i] = x > 0
+			}
+			s.modelOK = true
+			s.cancel(0)
+			return SolveSat, nil
+		}
+		s.newLevel()
+		s.Decisions++
+		l := Lit(v << 1)
+		if s.phase[v] <= 0 {
+			l |= 1
+		}
+		s.enqueue(l, -1)
+	}
+}
+func (s *Solver) Model() ([]bool, bool) {
+	if !s.modelOK {
+		return nil, false
+	}
+	return append([]bool(nil), s.model...), true
+}
+func (s *Solver) FailedCore() []Lit { return append([]Lit(nil), s.core...) }
+func (s *Solver) Value(l Lit) (LBool, error) {
+	if !validLit(l) {
+		return Undef, errors.New("invalid literal")
+	}
+	if uint32(l)>>1 >= s.vars {
+		return Undef, nil
+	}
+	x := s.litVal(l)
+	if x < 0 {
+		return Undef, nil
+	}
+	if x == 0 {
+		return False, nil
+	}
+	return True, nil
+}
+func (s *Solver) VarValue(v Var) LBool {
+	if uint32(v) >= s.vars || s.val[v] == 0 {
+		return Undef
+	}
+	if s.val[v] < 0 {
+		return False
+	}
+	return True
+}
+func (s *Solver) Propagate(maxSteps uint64) int { return s.propagate(maxSteps) }
+func (s *Solver) Reset()                        { s.clearResult(); s.cancel(0) }
+
+// The builder emits Tseitin equivalences; vectors are little-endian and BvAdd
+// returns the low input-width bits (the final carry is intentionally dropped).
+type CnfBuilder struct{ solver *Solver }
+type FullAdderResult struct{ Sum, Carry Lit }
+
+func NewCnfBuilder(s *Solver) (*CnfBuilder, error) {
+	if s == nil {
+		var e error
+		s, e = NewSolver()
+		if e != nil {
+			return nil, e
+		}
+	}
+	return &CnfBuilder{s}, nil
+}
+func (b *CnfBuilder) GetSolver() *Solver { return b.solver }
+func (b *CnfBuilder) NewLit() (Lit, error) {
+	v, e := b.solver.NewVar()
+	if e != nil {
+		return 0, e
+	}
+	return MakeLit(v, false)
+}
+func (b *CnfBuilder) check(ls ...Lit) error {
+	for _, l := range ls {
+		if !b.solver.litOK(l) {
+			return fmt.Errorf("invalid builder literal %d", l)
+		}
+	}
+	return nil
+}
+func (b *CnfBuilder) preflight(vars uint64, clauses, literals uint64) error {
+	s := b.solver
+	if uint64(s.vars)+vars > uint64(s.cfg.MaxVars) {
+		return errors.New("builder variable resource ceiling exceeded")
+	}
+	if s.inputClauseCount+clauses > s.cfg.MaxClauses {
+		return errors.New("builder clause resource ceiling exceeded")
+	}
+	var stored uint64
+	for _, c := range s.cs {
+		stored += uint64(len(c.lits))
+	}
+	if stored+literals > s.cfg.MaxStoredLiterals {
+		return errors.New("builder stored-literal resource ceiling exceeded")
+	}
+	return nil
+}
+func (b *CnfBuilder) And(a, c Lit) (Lit, error) {
+	if e := b.check(a, c); e != nil {
+		return 0, e
+	}
+	if e := b.preflight(1, 3, 7); e != nil {
+		return 0, e
+	}
+	o, e := b.NewLit()
+	if e != nil {
+		return 0, e
+	}
+	for _, cl := range [][]Lit{{o ^ 1, a}, {o ^ 1, c}, {o, a ^ 1, c ^ 1}} {
+		if _, e = b.solver.AddClause(cl); e != nil {
+			return 0, e
+		}
+	}
+	return o, nil
+}
+func (b *CnfBuilder) Or(a, c Lit) (Lit, error) {
+	if e := b.check(a, c); e != nil {
+		return 0, e
+	}
+	if e := b.preflight(1, 3, 7); e != nil {
+		return 0, e
+	}
+	o, e := b.NewLit()
+	if e != nil {
+		return 0, e
+	}
+	for _, cl := range [][]Lit{{o, a ^ 1}, {o, c ^ 1}, {o ^ 1, a, c}} {
+		if _, e = b.solver.AddClause(cl); e != nil {
+			return 0, e
+		}
+	}
+	return o, nil
+}
+func (b *CnfBuilder) Xor(a, c Lit) (Lit, error) {
+	if e := b.check(a, c); e != nil {
+		return 0, e
+	}
+	if e := b.preflight(1, 4, 12); e != nil {
+		return 0, e
+	}
+	o, e := b.NewLit()
+	if e != nil {
+		return 0, e
+	}
+	for _, cl := range [][]Lit{{a, c, o ^ 1}, {a ^ 1, c ^ 1, o ^ 1}, {a, c ^ 1, o}, {a ^ 1, c, o}} {
+		if _, e = b.solver.AddClause(cl); e != nil {
+			return 0, e
+		}
+	}
+	return o, nil
+}
+func (b *CnfBuilder) Equiv(a, c Lit) (Lit, error) {
+	if e := b.check(a, c); e != nil {
+		return 0, e
+	}
+	if e := b.preflight(1, 4, 12); e != nil {
+		return 0, e
+	}
+	o, e := b.NewLit()
+	if e != nil {
+		return 0, e
+	}
+	for _, cl := range [][]Lit{{a, c ^ 1, o ^ 1}, {a ^ 1, c, o ^ 1}, {a, c, o}, {a ^ 1, c ^ 1, o}} {
+		if _, e = b.solver.AddClause(cl); e != nil {
+			return 0, e
+		}
+	}
+	return o, nil
+}
+func (b *CnfBuilder) Not(a Lit) (Lit, error) {
+	if e := b.check(a); e != nil {
+		return 0, e
+	}
+	return a ^ 1, nil
+}
+func (b *CnfBuilder) Ite(sel, a, c Lit) (Lit, error) {
+	if e := b.check(sel, a, c); e != nil {
+		return 0, e
+	}
+	if e := b.preflight(1, 4, 12); e != nil {
+		return 0, e
+	}
+	o, e := b.NewLit()
+	if e != nil {
+		return 0, e
+	}
+	for _, cl := range [][]Lit{{sel ^ 1, a ^ 1, o}, {sel ^ 1, a, o ^ 1}, {sel, c ^ 1, o}, {sel, c, o ^ 1}} {
+		if _, e = b.solver.AddClause(cl); e != nil {
+			return 0, e
+		}
+	}
+	return o, nil
+}
+func (b *CnfBuilder) FullAdder(a, c, carry Lit) (FullAdderResult, error) {
+	if e := b.check(a, c, carry); e != nil {
+		return FullAdderResult{}, e
+	}
+	if e := b.preflight(5, 17, 45); e != nil {
+		return FullAdderResult{}, e
+	}
+	x, e := b.Xor(a, c)
+	if e != nil {
+		return FullAdderResult{}, e
+	}
+	sum, e := b.Xor(x, carry)
+	if e != nil {
+		return FullAdderResult{}, e
+	}
+	ab, e := b.And(a, c)
+	if e != nil {
+		return FullAdderResult{}, e
+	}
+	xc, e := b.And(x, carry)
+	if e != nil {
+		return FullAdderResult{}, e
+	}
+	co, e := b.Or(ab, xc)
+	return FullAdderResult{sum, co}, e
+}
+func (b *CnfBuilder) BvAdd(a, c []Lit) ([]Lit, error) {
+	if len(a) != len(c) {
+		return nil, errors.New("bit-vector width mismatch")
+	}
+	if e := b.check(append(append([]Lit{}, a...), c...)...); e != nil {
+		return nil, e
+	}
+	if len(a) > 0 {
+		vars := uint64(2)
+		clauses, lits := uint64(7), uint64(19)
+		if len(a) > 1 {
+			vars += 5 * uint64(len(a)-1)
+			clauses += 17 * uint64(len(a)-1)
+			lits += 45 * uint64(len(a)-1)
+		}
+		if e := b.preflight(vars, clauses, lits); e != nil {
+			return nil, e
+		}
+	}
+	out := make([]Lit, len(a))
+	if len(a) == 0 {
+		return out, nil
+	}
+	var carry Lit
+	for i := range a {
+		if i == 0 {
+			var e error
+			out[i], e = b.Xor(a[i], c[i])
+			if e != nil {
+				return nil, e
+			}
+			carry, e = b.And(a[i], c[i])
+			if e != nil {
+				return nil, e
+			}
+		} else {
+			fa, e := b.FullAdder(a[i], c[i], carry)
+			if e != nil {
+				return nil, e
+			}
+			out[i], carry = fa.Sum, fa.Carry
+		}
+	}
+	return out, nil
+}
+func (b *CnfBuilder) BvEq(a, c []Lit) (Lit, error) {
+	if len(a) != len(c) {
+		return 0, errors.New("bit-vector width mismatch")
+	}
+	if e := b.check(append(append([]Lit{}, a...), c...)...); e != nil {
+		return 0, e
+	}
+	if len(a) > 0 {
+		n := uint64(len(a))
+		if e := b.preflight(2*n-1, 7*n-3, 19*n-7); e != nil {
+			return 0, e
+		}
+	}
+	if len(a) == 0 {
+		return b.TrueLit()
+	}
+	var acc Lit
+	for i := range a {
+		x, e := b.Equiv(a[i], c[i])
+		if e != nil {
+			return 0, e
+		}
+		if i == 0 {
+			acc = x
+		} else {
+			acc, e = b.And(acc, x)
+			if e != nil {
+				return 0, e
+			}
+		}
+	}
+	return acc, nil
+}
+func (b *CnfBuilder) TrueLit() (Lit, error) {
+	if e := b.preflight(1, 1, 1); e != nil {
+		return 0, e
+	}
+	l, e := b.NewLit()
+	if e != nil {
+		return 0, e
+	}
+	_, e = b.solver.AddClause([]Lit{l})
+	return l, e
+}
+func (b *CnfBuilder) FalseLit() (Lit, error) {
+	if e := b.preflight(1, 1, 1); e != nil {
+		return 0, e
+	}
+	l, e := b.NewLit()
+	if e != nil {
+		return 0, e
+	}
+	_, e = b.solver.AddClause([]Lit{l ^ 1})
+	return l, e
+}
+func (b *CnfBuilder) AddClause(c []Lit) (bool, error) { return b.solver.AddClause(c) }

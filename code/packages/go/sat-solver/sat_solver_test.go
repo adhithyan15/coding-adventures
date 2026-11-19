@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -55,6 +57,7 @@ func loadSharedCorpus(t *testing.T) corpus {
 	if got.Version != 1 || len(got.Cases) != 11 {
 		t.Fatalf("shared corpus shape: version=%d cases=%d", got.Version, len(got.Cases))
 	}
+	wantIDs := []string{"empty_formula_sat", "assumption_satisfies_clause", "assumption_conflict_with_irrelevant_and_duplicate", "nonminimal_but_sound_failed_core", "empty_clause_unsat", "transport_crlf_comments_spanning_and_multiple_clauses", "satlib_terminator_ignores_following_text", "negative_zero_terminates_empty_clause", "contradictory_assumptions_and_recovery", "zero_budget_unknown_then_unbounded_sat", "clause_addition_invalidates_model_and_preserves_constraint"}
 	seen := make(map[string]bool, len(got.Cases))
 	for _, c := range got.Cases {
 		if c.ID == "" || seen[c.ID] {
@@ -62,7 +65,75 @@ func loadSharedCorpus(t *testing.T) corpus {
 		}
 		seen[c.ID] = true
 	}
+	for i, id := range wantIDs {
+		if got.Cases[i].ID != id {
+			t.Fatalf("shared corpus ID[%d]=%q, want %q", i, got.Cases[i].ID, id)
+		}
+	}
 	return got
+}
+
+// parseDIMACSOracle decodes the signed DIMACS source directly, independently
+// of ParseDimacs and the production literal helpers used by the solver.
+func parseDIMACSOracle(t *testing.T, text string) (uint32, [][]Lit) {
+	t.Helper()
+	var n uint32
+	var declared int
+	header := false
+	var clauses [][]Lit
+	var current []Lit
+	for _, line := range strings.Split(strings.ReplaceAll(strings.ReplaceAll(text, "\r\n", "\n"), "\r", "\n"), "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "c") {
+			continue
+		}
+		if line == "%" {
+			break
+		}
+		if !header {
+			fields := strings.Fields(line)
+			if len(fields) != 4 || fields[0] != "p" || fields[1] != "cnf" {
+				t.Fatalf("oracle rejected fixture header %q", line)
+			}
+			v, e1 := strconv.ParseUint(fields[2], 10, 32)
+			c, e2 := strconv.Atoi(fields[3])
+			if e1 != nil || e2 != nil || c < 0 {
+				t.Fatalf("bad oracle header %q", line)
+			}
+			n, declared, header = uint32(v), c, true
+			continue
+		}
+		for _, field := range strings.Fields(line) {
+			v, err := strconv.ParseInt(field, 10, 64)
+			if err != nil {
+				t.Fatalf("bad fixture token %q", field)
+			}
+			if v == 0 {
+				clauses = append(clauses, append([]Lit(nil), current...))
+				current = nil
+				continue
+			}
+			if v < -int64(n) || v > int64(n) {
+				t.Fatalf("fixture literal %d outside declared variables", v)
+			}
+			neg := v < 0
+			idx := uint64(v)
+			if neg {
+				idx = -idx
+			}
+			idx--
+			// Encode here arithmetically; don't call MakeLit/VarOf/SignOf.
+			packed := uint32(idx << 1)
+			if neg {
+				packed++
+			}
+			current = append(current, Lit(packed))
+		}
+	}
+	if !header || len(current) != 0 || len(clauses) != declared {
+		t.Fatalf("oracle DIMACS framing mismatch: header=%t clauses=%d want=%d pending=%v", header, len(clauses), declared, current)
+	}
+	return n, clauses
 }
 
 func literalFromDIMACS(t *testing.T, n int) Lit {
@@ -161,21 +232,25 @@ func TestSharedStatefulCorpus(t *testing.T) {
 	data := loadSharedCorpus(t)
 	for _, tc := range data.Cases {
 		t.Run(tc.ID, func(t *testing.T) {
+			oracleVars, oracleClauses := parseDIMACSOracle(t, tc.DIMACS)
 			formula, err := ParseDimacs(tc.DIMACS)
 			if err != nil {
 				t.Fatalf("ParseDimacs: %v", err)
+			}
+			if formula.NumVars != oracleVars || !sameClauses(formula.Clauses, oracleClauses) {
+				t.Fatalf("production parser disagrees with independent signed-DIMACS decoder")
 			}
 			solver, err := NewSolver()
 			if err != nil {
 				t.Fatalf("NewSolver: %v", err)
 			}
-			for want := Var(0); want < formula.NumVars; want++ {
+			for want := Var(0); uint32(want) < formula.NumVars; want++ {
 				got, err := solver.NewVar()
 				if err != nil || got != want {
 					t.Fatalf("NewVar: got (%d,%v), want %d", got, err, want)
 				}
 			}
-			clauses := cloneClauses(formula.Clauses)
+			clauses := cloneClauses(oracleClauses)
 			for _, clause := range formula.Clauses {
 				if _, err := solver.AddClause(clause); err != nil {
 					t.Fatalf("AddClause: %v", err)
@@ -249,6 +324,23 @@ func TestSharedStatefulCorpus(t *testing.T) {
 			}
 		})
 	}
+}
+
+func sameClauses(a, b [][]Lit) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if len(a[i]) != len(b[i]) {
+			return false
+		}
+		for j := range a[i] {
+			if a[i][j] != b[i][j] {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 func cloneClauses(clauses [][]Lit) [][]Lit {
@@ -337,6 +429,219 @@ func TestLiteralEncodingAndCheckedBoundaries(t *testing.T) {
 	}
 	if got, err := LitToString(Lit(3)); err != nil || got != "-2" {
 		t.Fatalf("LitToString(3)=(%q,%v)", got, err)
+	}
+}
+
+func TestUndeclaredLiteralGrowthAndPublicValueStates(t *testing.T) {
+	solver, _ := NewSolver()
+	lit, _ := MakeLit(2, false)
+	if got, err := solver.Value(lit); err != nil || got != Undef {
+		t.Fatalf("unallocated Value = %v, %v", got, err)
+	}
+	if ok, err := solver.AddClause([]Lit{lit}); err != nil || !ok {
+		t.Fatalf("AddClause growth: %t, %v", ok, err)
+	}
+	if solver.NVars() != 3 {
+		t.Fatalf("AddClause allocated %d variables, want 3", solver.NVars())
+	}
+	if got, err := solver.Solve(); err != nil || got != SolveSat {
+		t.Fatalf("solve = %v, %v", got, err)
+	}
+	model, valid := solver.Model()
+	if !valid || len(model) != 3 || !model[2] {
+		t.Fatalf("grown-variable model = %v, valid=%t", model, valid)
+	}
+	limited, _ := NewSolver(SolverConfig{MaxVars: 2, MaxClauses: 8, MaxClauseLiterals: 8, MaxStoredLiterals: 8})
+	before := limited.NVars()
+	if _, err := limited.AddClause([]Lit{lit}); err == nil || limited.NVars() != before {
+		t.Fatal("resource refusal was not atomic")
+	}
+	if _, err := limited.SolveWithAssumptions([]Lit{lit}); err == nil || limited.NVars() != before {
+		t.Fatal("assumption resource refusal was not atomic")
+	}
+	if Undef != 0 || True != 1 || False != -1 {
+		t.Fatalf("public LBool codes: undef=%d true=%d false=%d", Undef, True, False)
+	}
+}
+
+func TestInspectionAPIsAndNotGate(t *testing.T) {
+	s, _ := NewSolver()
+	v, _ := s.NewVar()
+	a, _ := MakeLit(v, false)
+	na := a ^ 1
+	if got, err := s.Value(a); err != nil || got != Undef {
+		t.Fatalf("unassigned Value: %v, %v", got, err)
+	}
+	if got := s.VarValue(v); got != Undef {
+		t.Fatalf("unassigned VarValue: %v", got)
+	}
+	if got := s.VarValue(Var(9)); got != Undef {
+		t.Fatalf("unallocated VarValue: %v", got)
+	}
+	if _, err := s.AddClause([]Lit{a}); err != nil {
+		t.Fatal(err)
+	}
+	if got := s.VarValue(v); got != True {
+		t.Fatalf("root VarValue: %v", got)
+	}
+	if got, err := s.Value(na); err != nil || got != False {
+		t.Fatalf("negated Value: %v, %v", got, err)
+	}
+	if got, err := s.Value(Lit(1 << 31)); err == nil || got != Undef {
+		t.Fatal("Value accepted malformed packed literal")
+	}
+	b, _ := NewCnfBuilder(nil)
+	x, _ := b.NewLit()
+	nx, err := b.Not(x)
+	if err != nil || nx != x^1 {
+		t.Fatalf("Not: %v, %v", nx, err)
+	}
+}
+
+func TestParserReaderAndResourceCeilings(t *testing.T) {
+	f, err := ParseDimacsReader(strings.NewReader("p cnf 1 1\n1 0\n"))
+	if err != nil || f.NumVars != 1 {
+		t.Fatalf("reader parse: %+v %v", f, err)
+	}
+	s, _ := NewSolver(SolverConfig{MaxVars: 2, MaxClauses: 2, MaxClauseLiterals: 2, MaxStoredLiterals: 2})
+	a, _ := MakeLit(0, false)
+	b, _ := MakeLit(1, false)
+	if _, err := s.AddClause([]Lit{a, b}); err != nil {
+		t.Fatal(err)
+	}
+	beforeVars, beforeClauses := s.NVars(), s.NClauses()
+	tooWide := Lit(4)
+	if _, err := s.AddClause([]Lit{a, tooWide}); err == nil {
+		t.Fatal("AddClause exceeded variable cap")
+	}
+	if s.NVars() != beforeVars || s.NClauses() != beforeClauses {
+		t.Fatal("variable-cap refusal mutated solver")
+	}
+	if _, err := NewSolver(SolverConfig{MaxVars: (1 << 30) + 1}); err == nil {
+		t.Fatal("NewSolver allowed ceiling beyond encoding")
+	}
+}
+
+func TestPublicRefusalPathsAndBuilderPreflight(t *testing.T) {
+	bad := Lit(1 << 31)
+	if _, err := NegateLit(bad); err == nil {
+		t.Fatal("NegateLit accepted malformed value")
+	}
+	if _, err := SignOf(bad); err == nil {
+		t.Fatal("SignOf accepted malformed value")
+	}
+	if _, err := NewSolver(SolverConfig{MaxVars: (1 << 30) + 1}); err == nil {
+		t.Fatal("invalid representation config accepted")
+	}
+	if _, err := NewSolver(SolverConfig{}, SolverConfig{}); err == nil {
+		t.Fatal("multiple configs accepted")
+	}
+	limited, _ := NewSolver(SolverConfig{MaxVars: 2, MaxClauses: 2, MaxClauseLiterals: 4, MaxStoredLiterals: 4})
+	builder, _ := NewCnfBuilder(limited)
+	a, _ := builder.NewLit()
+	b, _ := builder.NewLit()
+	if _, err := builder.Or(a, b); err == nil {
+		t.Fatal("Or ignored clause ceiling")
+	}
+	if _, err := builder.Xor(a, b); err == nil {
+		t.Fatal("Xor ignored clause ceiling")
+	}
+	if _, err := builder.Equiv(a, b); err == nil {
+		t.Fatal("Equiv ignored clause ceiling")
+	}
+	if _, err := builder.Ite(a, b, a); err == nil {
+		t.Fatal("Ite ignored clause ceiling")
+	}
+	if _, err := builder.FullAdder(a, b, a); err == nil {
+		t.Fatal("FullAdder ignored clause ceiling")
+	}
+	if _, err := builder.BvAdd([]Lit{a}, []Lit{b}); err == nil {
+		t.Fatal("BvAdd ignored clause ceiling")
+	}
+	if _, err := builder.BvEq([]Lit{a}, []Lit{b}); err == nil {
+		t.Fatal("BvEq ignored clause ceiling")
+	}
+	if _, err := builder.Not(bad); err == nil {
+		t.Fatal("Not accepted malformed literal")
+	}
+	if solverVars := limited.NVars(); solverVars != 2 {
+		t.Fatalf("failed builder operations changed variable count: %d", solverVars)
+	}
+	maxed, _ := NewSolver(SolverConfig{MaxVars: 1, MaxClauses: 8, MaxClauseLiterals: 8, MaxStoredLiterals: 8})
+	bb, _ := NewCnfBuilder(maxed)
+	if _, err := bb.NewLit(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := bb.NewLit(); err == nil {
+		t.Fatal("NewLit ignored variable ceiling")
+	}
+	if _, err := maxed.Solve(SolverOptions{}, SolverOptions{}); err == nil {
+		t.Fatal("Solve accepted multiple options")
+	}
+	if _, err := maxed.SolveWithAssumptions([]Lit{bad}); err == nil {
+		t.Fatal("Solve accepted malformed assumption")
+	}
+}
+
+func TestUnknownPreservesPendingRootPropagation(t *testing.T) {
+	solver, _ := NewSolver()
+	x, _ := solver.NewVar()
+	y, _ := solver.NewVar()
+	z, _ := solver.NewVar()
+	xl, _ := MakeLit(x, false)
+	yl, _ := MakeLit(y, false)
+	zl, _ := MakeLit(z, false)
+	for _, cl := range [][]Lit{{xl, yl}, {xl, yl ^ 1}, {xl ^ 1, zl}} {
+		if _, err := solver.AddClause(cl); err != nil {
+			t.Fatal(err)
+		}
+	}
+	one := uint64(1)
+	if got, err := solver.Solve(SolverOptions{MaxSteps: &one}); err != nil || got != SolveUnknown {
+		t.Fatalf("bounded solve = %v, %v", got, err)
+	}
+	if got := solver.Propagate(^uint64(0)); got != -1 {
+		t.Fatalf("retry Propagate conflict = %d", got)
+	}
+	if got := solver.VarValue(z); got != True {
+		t.Fatalf("pending root propagation lost z=true: %v", got)
+	}
+}
+
+func TestAssumptionBackjumpDoesNotMakeBaseFormulaUnsat(t *testing.T) {
+	for _, thirdNegated := range []bool{false, true} {
+		t.Run(fmt.Sprint("thirdNegated_", thirdNegated), func(t *testing.T) {
+			solver, _ := NewSolver()
+			for i := 0; i < 3; i++ {
+				_, _ = solver.NewVar()
+			}
+			a, _ := MakeLit(0, false)
+			b, _ := MakeLit(1, false)
+			z, _ := MakeLit(2, thirdNegated)
+			if _, err := solver.AddClause([]Lit{z ^ 1, b}); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := solver.AddClause([]Lit{z ^ 1, b ^ 1}); err != nil {
+				t.Fatal(err)
+			}
+			// Force the heuristic onto the wrong phase first so this exercises a
+			// learned consequence whose natural backjump crosses the assumption.
+			solver.activity[2] = 100
+			if thirdNegated {
+				solver.phase[2] = -1
+			} else {
+				solver.phase[2] = 1
+			}
+			if got, err := solver.SolveWithAssumptions([]Lit{a}); err != nil || got != SolveSat {
+				t.Fatalf("assumption solve = %v, %v", got, err)
+			}
+			if !solver.Okay() {
+				t.Fatal("assumption conflict poisoned permanent formula")
+			}
+			if got, err := solver.Solve(); err != nil || got != SolveSat {
+				t.Fatalf("unrestricted solve = %v, %v", got, err)
+			}
+		})
 	}
 }
 
@@ -444,7 +749,7 @@ func TestFailedCoreIsSoundButNeedNotBeMinimal(t *testing.T) {
 		t.Fatal(err)
 	}
 	solver, _ := NewSolver()
-	for i := Var(0); i < formula.NumVars; i++ {
+	for i := Var(0); uint32(i) < formula.NumVars; i++ {
 		if _, err := solver.NewVar(); err != nil {
 			t.Fatal(err)
 		}
@@ -759,8 +1064,23 @@ func TestPigeonholeAndQueensAgainstIndependentChecks(t *testing.T) {
 			}
 		}
 	}
+	solver.restartBase = 1
+	solver.learnedLimit = 1
 	if got, err := solver.Solve(); err != nil || got != SolveUnsat {
 		t.Fatalf("PHP(4,3): %v (%v)", got, err)
+	}
+	if solver.Restarts == 0 {
+		t.Fatal("forced low Luby threshold did not exercise restart path")
+	}
+	deletedLearned := false
+	for _, cl := range solver.cs {
+		if cl.learnt && cl.deleted {
+			deletedLearned = true
+			break
+		}
+	}
+	if !deletedLearned {
+		t.Fatal("forced low learned limit did not exercise safe reduction")
 	}
 	phpClauses := make([][]Lit, 0, 4+3*6)
 	for i := range p {
@@ -977,31 +1297,59 @@ func TestDeterministicDifferentialSATProperties(t *testing.T) {
 		}
 		assumptionExpected := oracleSAT(n, clauses, assumptions)
 		assumptionResult, err := solver.SolveWithAssumptions(assumptions)
-		if err != nil { t.Fatalf("round %d assumption solve: %v", round, err) }
+		if err != nil {
+			t.Fatalf("round %d assumption solve: %v", round, err)
+		}
 		if assumptionExpected && assumptionResult != SolveSat || !assumptionExpected && assumptionResult != SolveUnsat {
 			t.Fatalf("round %d assumption oracle mismatch: result=%s expectedSat=%t assumptions=%v", round, assumptionResult, assumptionExpected, assumptions)
 		}
 		if assumptionResult == SolveSat {
 			model, valid := solver.Model()
-			if !valid || !allClausesSatisfied(clauses, model) || !assumptionsSatisfied(assumptions, model) { t.Fatalf("round %d invalid assumption model", round) }
+			if !valid || !allClausesSatisfied(clauses, model) || !assumptionsSatisfied(assumptions, model) {
+				t.Fatalf("round %d invalid assumption model", round)
+			}
 		} else {
 			core := solver.FailedCore()
-			if hasDuplicateLits(core) || !isSubset(core, assumptions) || oracleSAT(n, clauses, core) { t.Fatalf("round %d unsound assumption core %v", round, core) }
+			if hasDuplicateLits(core) || !isSubset(core, assumptions) || oracleSAT(n, clauses, core) {
+				t.Fatalf("round %d unsound assumption core %v", round, core)
+			}
 		}
 		newClause := make([]Lit, 0, 2)
 		for count := 1 + int(rng.bounded(2)); count > 0; count-- {
 			lit, _ := MakeLit(Var(rng.bounded(uint64(n))), rng.bounded(2) == 1)
 			newClause = append(newClause, lit)
 		}
-		if _, err := solver.AddClause(newClause); err != nil { t.Fatalf("round %d add clause: %v", round, err) }
+		if _, err := solver.AddClause(newClause); err != nil {
+			t.Fatalf("round %d add clause: %v", round, err)
+		}
 		clauses = append(clauses, newClause)
-		if model, valid := solver.Model(); valid || model != nil || len(solver.FailedCore()) != 0 { t.Fatalf("round %d AddClause did not clear previous result", round) }
+		if model, valid := solver.Model(); valid || model != nil || len(solver.FailedCore()) != 0 {
+			t.Fatalf("round %d AddClause did not clear previous result", round)
+		}
 		postAddExpected := oracleSAT(n, clauses, nil)
 		postAddResult, err := solver.Solve()
-		if err != nil || (postAddExpected && postAddResult != SolveSat) || (!postAddExpected && postAddResult != SolveUnsat) { t.Fatalf("round %d post-add mismatch: %s (%v), expectedSat=%t", round, postAddResult, err, postAddExpected) }
+		if err != nil || (postAddExpected && postAddResult != SolveSat) || (!postAddExpected && postAddResult != SolveUnsat) {
+			fresh, _ := NewSolver()
+			for i := 0; i < n; i++ {
+				_, _ = fresh.NewVar()
+			}
+			for _, cl := range clauses {
+				_, _ = fresh.AddClause(cl)
+			}
+			freshResult, _ := fresh.Solve()
+			var learned [][]Lit
+			for _, c := range solver.cs {
+				if c.learnt {
+					learned = append(learned, c.lits)
+				}
+			}
+			t.Fatalf("round %d post-add mismatch: %s (%v), expectedSat=%t fresh=%s model=%v learned=%v clauses=%v", round, postAddResult, err, postAddExpected, freshResult, solver.model, learned, clauses)
+		}
 		solver.Reset()
 		resetResult, err := solver.Solve()
-		if err != nil || resetResult != postAddResult { t.Fatalf("round %d reset changed formula result: %s vs %s (%v)", round, resetResult, postAddResult, err) }
+		if err != nil || resetResult != postAddResult {
+			t.Fatalf("round %d reset changed formula result: %s vs %s (%v)", round, resetResult, postAddResult, err)
+		}
 	}
 	if satCount == 0 || unsatCount == 0 {
 		t.Fatalf("differential rounds lacked SAT/UNSAT: %d/%d", satCount, unsatCount)

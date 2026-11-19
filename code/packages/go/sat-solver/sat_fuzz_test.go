@@ -26,7 +26,7 @@ func FuzzParseDimacsBounded(f *testing.F) {
 		for _, clause := range formula.Clauses {
 			for _, lit := range clause {
 				v, err := VarOf(lit)
-				if err != nil || v >= formula.NumVars {
+				if err != nil || uint32(v) >= formula.NumVars {
 					t.Fatalf("parsed literal %d out of range for %d variables: %v", lit, formula.NumVars, err)
 				}
 			}
@@ -46,6 +46,7 @@ func FuzzBoundedSolverAgainstOracle(f *testing.F) {
 	f.Add([]byte{3, 1, 0, 1, 2, 3, 4})
 	f.Add([]byte{4, 5, 2, 9, 17, 31, 0, 3, 7})
 	f.Add([]byte{1, 0, 0})
+	f.Add([]byte{})
 	f.Fuzz(func(t *testing.T, data []byte) {
 		if len(data) > 64 {
 			t.Skip()
@@ -97,11 +98,14 @@ func FuzzBoundedSolverAgainstOracle(f *testing.F) {
 					assumptions = append(assumptions, opposite)
 				}
 			}
-			if operation == 0 && data[0]&0x08 != 0 {
+			if operation == 0 && len(data) > 0 && data[0]&0x08 != 0 {
 				zero := uint64(0)
 				got, err := solver.SolveWithAssumptions(assumptions, SolverOptions{MaxSteps: &zero})
-				if err != nil || got != SolveUnknown {
+				if err != nil {
 					t.Fatalf("zero-budget stateful fuzz operation: %v (%v)", got, err)
+				}
+				if got != SolveUnknown && (got == SolveSat) != oracleSAT(n, clauses, assumptions) {
+					t.Fatalf("zero-budget operation disagreed with oracle: %v", got)
 				}
 			}
 			want := oracleSAT(n, clauses, assumptions)
@@ -110,7 +114,7 @@ func FuzzBoundedSolverAgainstOracle(f *testing.F) {
 				t.Fatalf("SolveWithAssumptions: %v", err)
 			}
 			if want && got != SolveSat || !want && got != SolveUnsat {
-				t.Fatalf("solver/oracle mismatch: got=%s wantSat=%t", got, want)
+				t.Fatalf("solver/oracle mismatch: got=%s wantSat=%t data=%v clauses=%v assumptions=%v operation=%d", got, want, data, clauses, assumptions, operation)
 			}
 			if got == SolveSat {
 				model, valid := solver.Model()
