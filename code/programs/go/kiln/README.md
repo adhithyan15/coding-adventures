@@ -786,6 +786,24 @@ place, a step run twice, a tracked file changed after the build);
 `TestSandboxRecordSurvivor` starts a sandbox of its own, outside `record step`,
 and requires `collect` to void the run.
 
+### `kiln record census` (census PR C, KILN04 section 4.8)
+
+```
+kiln record census --dir <abs> --out <abs> [--md <abs>] [--records <abs>]
+```
+
+A diagnostic, never run during a recording: after a sampled real build it reads
+the record directory back (step traces and sidecars, `census.json`,
+`record.json`/`record.failed`, and with `--records` collect's header) and writes
+a bounded, sanitised summary (`kiln-census-summary/1`, JSON at most 512 KiB, an
+optional Markdown rendering at most 256 KiB): the host-path reason histogram,
+trace-size and G2 timing distributions, per-action trace bytes against the cap,
+the cross-check counts and the recordable share per language. Every input is
+read as hostile and every path is quoted for Markdown. Exit 0 clean, 4 on a
+cross-check mismatch or allowed divergence, 1 on an infrastructure failure or a
+refusal (it never writes inside `--dir`), 2 on usage. Code:
+`internal/record/census_report.go`, `census_render.go`, `census_stats.go`.
+
 ## Lookup in the plan (`kiln legacy-plan --ledger`, KILN04 stage 5a)
 
 ```
