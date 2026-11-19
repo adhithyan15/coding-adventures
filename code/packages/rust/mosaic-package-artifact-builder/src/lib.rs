@@ -17024,7 +17024,10 @@ layout NativeEvents {
         assert!(main.contains("import 'package:path_provider/path_provider.dart';\n"));
         assert!(main.contains("import 'package:flutter/services.dart' show MissingPluginException, PlatformException;\n"));
         assert!(main.contains("String _mosaicSupportLookupFailure(Object error) {\n"));
-        for label in [
+        // Keep the producer's returned categories as data and require the
+        // paired host collector to admit each one. A classifier result that
+        // the host silently drops is not a useful diagnostic.
+        let support_failure_labels = [
             "missing_directory",
             "missing_plugin",
             "platform_exception",
@@ -17033,7 +17036,8 @@ layout NativeEvents {
             "jni_null_type_name",
             "jni_throwable_type_name",
             "other",
-        ] {
+        ];
+        for label in support_failure_labels {
             assert!(
                 main.contains(&format!("return '{label}';")),
                 "{label}: {main}"
@@ -17092,6 +17096,12 @@ layout NativeEvents {
         assert!(host.contains("'capture_clipped:record_limit'"));
         assert!(host.contains("'main:entered'"));
         assert!(host.contains("'app_support_lookup:attempted'"));
+        for label in support_failure_labels {
+            assert!(
+                host.contains(&format!("'app_support_lookup:{label}'")),
+                "host diagnostic vocabulary must admit classifier output {label}"
+            );
+        }
         assert!(host.contains("void _writeMosaicNativeDiagnostic(String record)"));
         assert!(host.contains("print(record);"));
         assert!(host.contains("mosaicNativeDiagnostic('runtime_route', 'phone_bundled')"));
