@@ -500,10 +500,7 @@ func TestCensusStrictCrossCheck(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			f := censusDirFix(t)
-			old := censusCrossCheck
-			censusCrossCheck = stub
-			defer func() { censusCrossCheck = old }()
-			res, s, _, mdPath := runCensus(t, f)
+			res, s, _, mdPath := runCensus(t, f, func(o *CensusRunOptions) { o.CrossCheck = stub })
 			if res.Exit != CensusExitMismatch {
 				t.Fatalf("exit %d, want %d", res.Exit, CensusExitMismatch)
 			}

@@ -310,6 +310,10 @@ type CensusOptions struct {
 	// Records, when set, is collect's records.jsonl: its header and its line
 	// count join the report.
 	Records string
+	// CrossCheck is the cross-checked parse; nil means trace.ParseCrossChecked.
+	// This file is the ONE production file that names it
+	// (TestParseCrossCheckedOnlyInCensus).
+	CrossCheck CrossCheckFunc
 	// Redact are the directory prefixes to label in any text (the caller passes
 	// $HOME, the temporary directories and the workspace; the record directory is
 	// added here).
@@ -336,7 +340,10 @@ func collectCensus(o CensusOptions) (*censusAcc, error) {
 	}
 	red := newRedactor(append(append([]Redaction(nil), o.Redact...), Redaction{From: o.Dir, To: "$RECORD_DIR"}))
 	acc := newCensusAcc(red)
-	run := &censusRun{o: o, acc: acc}
+	run := &censusRun{o: o, acc: acc, crossCheck: o.CrossCheck}
+	if run.crossCheck == nil {
+		run.crossCheck = trace.ParseCrossChecked
+	}
 	pre, err := VerifyPre(o.Dir)
 	if err != nil {
 		text, _ := safeText(err.Error(), 300, red)
@@ -374,9 +381,10 @@ func collectCensus(o CensusOptions) (*censusAcc, error) {
 
 // censusRun is the walk's state.
 type censusRun struct {
-	o   CensusOptions
-	acc *censusAcc
-	pre *Pre
+	o          CensusOptions
+	acc        *censusAcc
+	pre        *Pre
+	crossCheck CrossCheckFunc
 }
 
 // stepIndex parses "<n>.<ext>" with n canonical (no sign, no leading zero).
@@ -730,10 +738,11 @@ func countLines(f io.Reader, limit int64) (int64, error) {
 	}
 }
 
-// censusCrossCheck is the cross-checked parse; a variable so a test can stand in
-// a mismatch or an allowed divergence, which no real trace is known to produce.
-// This file is the ONE production caller (TestParseCrossCheckedOnlyInCensus).
-var censusCrossCheck = trace.ParseCrossChecked
+// CrossCheckFunc is the cross-checked parse (trace.ParseCrossChecked's shape).
+// CensusOptions.CrossCheck injects it, so a test can stand in a mismatch or an
+// allowed divergence, which no real trace is known to produce, without a
+// package-level variable.
+type CrossCheckFunc = func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, int)
 
 // helperParseOptions are the options the classify child parses a step trace
 // with (parseHelperTrace builds them from the same function): helper-root mode,
@@ -847,7 +856,7 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 		a.problem("trace_unreadable")
 		return size
 	}
-	_, perr, m, allowed := censusCrossCheck(cf, pkgDir, helperParseOptions(r.pre.Config.KilnExe, limits))
+	_, perr, m, allowed := r.crossCheck(cf, pkgDir, helperParseOptions(r.pre.Config.KilnExe, limits))
 	cf.Close()
 	cc := &a.cross
 	cc.Traces++

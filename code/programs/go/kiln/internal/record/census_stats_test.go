@@ -195,3 +195,47 @@ func TestFinishMarkdown(t *testing.T) {
 		t.Errorf("the workflow command line was not defused: %q", got)
 	}
 }
+
+// A directory prefix is replaced only as a whole path prefix: a short one such as
+// /tmp must not corrupt /usr/lib/tmpfiles.d, /var/tmp or /tmpx.
+func TestRedactorWorksOnPathBoundaries(t *testing.T) {
+	red := newRedactor([]Redaction{{From: "/tmp", To: "$TMPDIR"}, {From: "/home/u", To: "$HOME"}})
+	for _, c := range []struct{ in, want string }{
+		{"/tmp", "$TMPDIR"},
+		{"/tmp/y", "$TMPDIR/y"},
+		{"a=/tmp/z b=/tmp", "a=$TMPDIR/z b=$TMPDIR"},
+		{"/usr/lib/tmpfiles.d/x", "/usr/lib/tmpfiles.d/x"},
+		{"/var/tmp/y", "/var/tmp/y"},
+		{"/tmpx", "/tmpx"},
+		{"/tmp.d/x", "/tmp.d/x"},
+		{"/tmp/a /var/tmp/b /tmp/c", "$TMPDIR/a /var/tmp/b $TMPDIR/c"},
+		{"/home/user/x", "/home/user/x"},
+		{"/home/u/x", "$HOME/x"},
+		{"/tmp/tmp", "$TMPDIR/tmp"},
+	} {
+		if got := red.apply(c.in); got != c.want {
+			t.Errorf("apply(%q) = %q, want %q", c.in, got, c.want)
+		}
+	}
+}
+
+// A language or kind that could autolink or render as an emoji is in a code span
+// in a list item, never bare and never in a table cell.
+func TestMarkdownLanguageAndKindAreCodeSpans(t *testing.T) {
+	s := &CensusSummary{
+		Languages: []LangSummary{{Language: "www.evil.example", Actions: 1}, {Language: "a:smile:b", Actions: 1}},
+		Reasons:   []KindSummary{{Kind: ":smile:"}, {Kind: "www.evil.example"}},
+	}
+	md, _, _ := RenderCensusMarkdown(s)
+	outside := stripSpans(md)
+	for _, bad := range []string{"www.evil", ":smile:", "a:smile"} {
+		if strings.Contains(outside, bad) {
+			t.Errorf("%q occurs outside a code span", bad)
+		}
+	}
+	for _, l := range strings.Split(md, "\n") {
+		if strings.HasPrefix(l, "|") && (strings.Contains(l, "evil") || strings.Contains(l, "smile")) {
+			t.Errorf("a table row holds a name: %q", l)
+		}
+	}
+}

@@ -171,9 +171,12 @@ func renderMarkdown(s *CensusSummary) string {
 	}
 	w("\n")
 
-	w("## Recordable share by language\n\n| language | actions | recordable | clean | share |\n|---|---|---|---|---|\n")
+	// Language names are validated, but a bare name can still autolink
+	// (www.evil.example) or render as an emoji (:smile:), so each is in a code
+	// span, in a list item and not in a table cell.
+	w("## Recordable share by language\n\n")
 	for _, l := range s.Languages {
-		w("| %s | %d | %d | %d | %s |\n", mdEscape(l.Language), l.Actions, l.Recordable, l.Clean, pct(l.Share))
+		w("- %s: %d actions, %d recordable, %d clean, %s\n", codeSpan(l.Language), l.Actions, l.Recordable, l.Clean, pct(l.Share))
 	}
 	w("\n")
 
@@ -193,7 +196,7 @@ func renderMarkdown(s *CensusSummary) string {
 		w("None.\n\n")
 	}
 	for _, k := range s.Reasons {
-		w("### %s\n\n", mdEscape(k.Kind))
+		w("### Kind %s\n\n", codeSpan(k.Kind))
 		w("- occurrences %d, raised in %d actions, %d distinct paths kept, overflow shed by the classifier %d, dropped here %d\n", k.Occurrences, k.Actions, k.DistinctPaths, k.Overflow, k.DroppedPaths)
 		if len(k.Prefixes) > 0 {
 			w("\nBy path prefix (depth at most %d):\n\n", censusPrefixDepth)

@@ -164,17 +164,60 @@ func newRedactor(in []Redaction) *redactor {
 	return &redactor{rs: rs}
 }
 
-// apply redacts s.  A nil redactor changes nothing.
+// apply redacts s.  A nil redactor changes nothing.  A prefix is replaced only
+// at a path-component boundary (replaceAtBoundary), so "/tmp" never touches
+// "/usr/lib/tmpfiles.d" or "/var/tmp".
 func (r *redactor) apply(s string) string {
 	if r == nil {
 		return s
 	}
 	for _, x := range r.rs {
 		if strings.Contains(s, x.From) {
-			s = strings.ReplaceAll(s, x.From, x.To)
+			s = replaceAtBoundary(s, x.From, x.To)
 		}
 	}
 	return s
+}
+
+// isPathByte says b can be part of a path component: a letter, a digit, one of
+// "_.-", a slash, or any byte of a multi-byte character.
+func isPathByte(b byte) bool {
+	return b >= 0x80 || b == '/' || b == '_' || b == '.' || b == '-' || b >= '0' && b <= '9' || b >= 'a' && b <= 'z' || b >= 'A' && b <= 'Z'
+}
+
+// replaceAtBoundary replaces the occurrences of from (a directory path) in s
+// that are whole path prefixes: the match must begin s or follow a character
+// that cannot be part of a path (a space, '=', a quote), and must be followed by
+// '/', the end of s, or such a character.  So with from "/tmp":
+//
+//	/tmp/x            replaced          ($TMPDIR/x)
+//	a=/tmp            replaced          (a=$TMPDIR)
+//	/var/tmp/y        kept  (the match follows "r", a path character)
+//	/usr/lib/tmpfiles.d/x   kept  (the match follows "b" and precedes "f")
+//	/tmpx             kept  (the match precedes "x")
+func replaceAtBoundary(s, from, to string) string {
+	var b strings.Builder
+	i := 0
+	for {
+		k := strings.Index(s[i:], from)
+		if k < 0 {
+			break
+		}
+		k += i
+		end := k + len(from)
+		before := k == 0 || !isPathByte(s[k-1])
+		after := end == len(s) || s[end] == '/' || !isPathByte(s[end])
+		if before && after {
+			b.WriteString(s[i:k])
+			b.WriteString(to)
+			i = end
+		} else {
+			b.WriteString(s[i : k+1])
+			i = k + 1
+		}
+	}
+	b.WriteString(s[i:])
+	return b.String()
 }
 
 // safeText makes untrusted text printable, redacted and short.  Invalid UTF-8
