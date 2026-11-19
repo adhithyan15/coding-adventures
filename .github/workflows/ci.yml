@@ -3918,8 +3918,6 @@ jobs:
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         shell: bash
         timeout-minutes: 50
-        env:
-          MOSAIC_NATIVE_DIAGNOSTICS: 'true'
         run: |
           set -euo pipefail
           # program | jniLibs built by its Compose step above | project name.
@@ -3932,7 +3930,11 @@ jobs:
             mkdir -p "$phone_runtime"
             cp -R "$jni_libs" "$phone_runtime/android"
             echo "::group::$name (Flutter, Android)"
-            bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" "$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"
+            if [[ "$name" == trestle ]]; then
+              MOSAIC_NATIVE_DIAGNOSTICS=true bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" "$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"
+            else
+              bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" "$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"
+            fi
             echo "::endgroup::"
           done 3<<EOF
           code/programs/mosaic/task-app $RUNNER_TEMP/mosaic-trestle-jnilibs trestle

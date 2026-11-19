@@ -30,8 +30,8 @@ to emit a record is ignored and must not change the operation's result.
 Required stages distinguish:
 
 1. application-support-directory lookup: nonempty, empty, or thrown;
-2. selected runtime route (including whether the phone runtime was bundled,
-   without claiming that a later fallback lookup failed), Dart create-call
+2. whether the phone runtime was bundled (this does not claim the selected
+   fallback route), Dart create-call
    attempt, raw ABI-call return/throw, and startup response
    accepted/rejected;
 3. environment-report decisions (fixed not-ready/suppressed reason or send),
@@ -56,7 +56,7 @@ zero-status buffer that cannot be decoded is a decode rejection.
 ## Gate failure evidence
 
 On the existing Flutter Trestle missing-state failure only, the gate may print
-a bounded diagnostic summary containing:
+a new bounded diagnostic summary containing:
 
 - SHA-256 of the exact APK, its parsed application identifier, and SHA-256 of
   the generated project's resolved `pubspec.lock` when available;
@@ -65,11 +65,16 @@ a bounded diagnostic summary containing:
 - the state-path probe result as `absent`, `present_empty`,
   `present_nonempty`, or `probe_failed`.
 
+The newly added summary is capped below 64 KiB in total; its raw log is capped
+at 49,152 bytes before exact PID, envelope, and vocabulary filtering. The
+existing 200-line failure log printed by `fail()` remains separate and is not
+included in this summary cap.
+
 The probe must use the app's existing `run-as` identity. A failed command,
 timeout, or unreadable response is `probe_failed`; it must never be reported as
 absence. It reports only a size class, not state contents. The failure-only
-capture runs in one child process under an enclosing six-second timeout and
-is limited to 64 KiB total, filters host markers to the current Trestle
+capture runs in one child process under a five-second timeout plus a
+one-second kill-after bound, filters host markers to the current Trestle
 PID/launch window, and reports whether log capture itself
 was complete, clipped, timed out, or failed. APK and lock identifiers are
 fixed-size hashes and parsed package metadata. Failure to gather diagnostics

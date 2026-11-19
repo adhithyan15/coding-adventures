@@ -2410,7 +2410,7 @@ fn flutter_main_with_phone_state_root(main_dart: &str) -> Result<String, BuildEr
             "  // cannot be, the host says state is not saved.\n",
             "  WidgetsFlutterBinding.ensureInitialized();\n",
             "  if (Platform.isAndroid || Platform.isIOS) {\n",
-            "    final supportLookup = Stopwatch()..start();\n",
+            "    final supportLookup = _mosaicNativeDiagnostics ? (Stopwatch()..start()) : null;\n",
             "    try {\n",
             "      final supportDirectory = await getApplicationSupportDirectory();\n",
             "      mosaicStateRoot = supportDirectory.path;\n",
@@ -17002,7 +17002,12 @@ layout NativeEvents {
         assert!(main.contains("      mosaicStateRoot = supportDirectory.path;\n"));
         assert!(main.contains("        'app_support_lookup',\n"));
         assert!(main.contains("        supportDirectory.path.isEmpty ? 'empty' : 'nonempty',\n"));
-        assert!(main.contains("      mosaicNativeDiagnostic('app_support_lookup', 'threw', supportLookup);\n"));
+        assert!(main.contains(
+            "    final supportLookup = _mosaicNativeDiagnostics ? (Stopwatch()..start()) : null;\n"
+        ));
+        assert!(main.contains(
+            "      mosaicNativeDiagnostic('app_support_lookup', 'threw', supportLookup);\n"
+        ));
         let host = fs::read_to_string(flutter.join("lib/mosaic_host.dart")).unwrap();
         assert!(host.contains(
             "const bool _mosaicNativeDiagnostics = bool.fromEnvironment(\n  'MOSAIC_NATIVE_DIAGNOSTICS',\n);"
@@ -17013,11 +17018,14 @@ layout NativeEvents {
         assert!(host.contains("_mosaicNativeDiagnosticRecords.length >= 23"));
         assert!(host.contains("'capture_clipped:record_limit'"));
         assert!(host.contains("mosaicNativeDiagnostic('runtime_route', 'phone_bundled')"));
-        assert!(
-            host.contains("mosaicNativeDiagnostic('runtime_route', 'phone_not_bundled')")
-        );
+        assert!(host.contains("mosaicNativeDiagnostic('runtime_route', 'phone_not_bundled')"));
         assert!(!host.contains("phone_unavailable"));
         assert!(host.contains("mosaicNativeDiagnostic('create_call', 'abi_returned', timer)"));
+        assert!(host
+            .contains("final timer = _mosaicNativeDiagnostics ? (Stopwatch()..start()) : null;"));
+        assert!(host.contains(
+            "final timer = _mosaicNativeDiagnostics && isEnvironmentEvent\n        ? (Stopwatch()..start())\n        : null;"
+        ));
         assert!(host.contains(
             "'environment_answer',\n        update['error'] == null ? 'decoded_success' : 'decoded_error',"
         ));
@@ -17036,19 +17044,32 @@ layout NativeEvents {
             .find("final status = _dispatch(_app, input, output);")
             .unwrap();
         let returned = dispatch.find("'abi_returned',").unwrap();
-        let decoded = dispatch.find("update = _requireMap(raw, 'event update');").unwrap();
+        let decoded = dispatch
+            .find("update = _requireMap(raw, 'event update');")
+            .unwrap();
         assert!(attempted < call && call < returned && returned < decoded);
         let persist_start = host.find("void _persistSnapshot() {").unwrap();
         let persist = &host[persist_start..];
-        let disabled = persist.find("mosaicNativeDiagnostic('persistence_decision', 'disabled');").unwrap();
+        let disabled = persist
+            .find("mosaicNativeDiagnostic('persistence_decision', 'disabled');")
+            .unwrap();
         let snapshot = persist.find("_snapshot(_app, output)").unwrap();
-        let directory = persist.find("file.parent.createSync(recursive: true);").unwrap();
-        let write = persist.find("temporary.writeAsStringSync(jsonEncode(value), flush: true);").unwrap();
-        let replace = persist.find("_replaceAtomically(temporary, file);").unwrap();
+        let directory = persist
+            .find("file.parent.createSync(recursive: true);")
+            .unwrap();
+        let write = persist
+            .find("temporary.writeAsStringSync(jsonEncode(value), flush: true);")
+            .unwrap();
+        let replace = persist
+            .find("_replaceAtomically(temporary, file);")
+            .unwrap();
         assert!(
             disabled < snapshot && snapshot < directory && directory < write && write < replace
         );
-        assert!(main.find("getApplicationSupportDirectory").unwrap() < main.find("  runApp(MosaicApp());").unwrap());
+        assert!(
+            main.find("getApplicationSupportDirectory").unwrap()
+                < main.find("  runApp(MosaicApp());").unwrap()
+        );
         assert!(!main.contains("void main() {\n"));
 
         let readme = fs::read_to_string(flutter.join("README.md")).unwrap();

@@ -93,27 +93,35 @@ diagnostic_state_failure() {
     echo "diagnostic_capture=timeout_or_bash_unavailable"
     return 0
   fi
+  local capture_log=""
+  capture_log="$(mktemp)" || capture_log=""
+  if [[ -z "$capture_log" ]]; then
+    echo "diagnostic_capture=temporary_file_failed"
+    return 0
+  fi
   export -f diagnostic_state_failure_inner
   local capture_status=0
+  MOSAIC_DIAG_LOG_PATH="$capture_log" \
   MOSAIC_DIAG_APK="$apk" \
     MOSAIC_DIAG_PACKAGE="$package" \
     MOSAIC_DIAG_APPLICATION_ID="$application_id" \
-    timeout 6 bash -c '
+    timeout --kill-after=1 5 bash -c '
       apk="$MOSAIC_DIAG_APK"
       package="$MOSAIC_DIAG_PACKAGE"
       application_id="$MOSAIC_DIAG_APPLICATION_ID"
       state="files/$application_id/mosaic-state.v1.json"
       diagnostic_state_failure_inner
     ' || capture_status=$?
-  if [[ $capture_status -eq 124 ]]; then
+  if [[ $capture_status -eq 124 || $capture_status -eq 137 ]]; then
     echo "diagnostic_capture=timed_out"
   elif [[ $capture_status -ne 0 ]]; then
     echo "diagnostic_capture=failed"
   fi
+  rm -f -- "$capture_log" || true
 }
 
 diagnostic_state_failure_inner() {
-  local raw_log=""
+  local raw_log="${MOSAIC_DIAG_LOG_PATH:-}"
   diagnostic_cleanup_temp() {
     [[ -z "$raw_log" ]] || rm -f -- "$raw_log" || true
   }
@@ -145,7 +153,7 @@ diagnostic_state_failure_inner() {
   local apk_metadata="unavailable"
   if [[ -n "$aapt2" && $SECONDS -lt $deadline ]] && command -v timeout >/dev/null 2>&1; then
     local raw_metadata=""
-    raw_metadata="$(timeout 1 "$aapt2" dump badging "$apk" 2>/dev/null | sed -n "s/^package: name='\\([A-Za-z0-9._-]*\\)' versionCode='\\([0-9]*\\)'.*/\\1 \\2/p" | head -n 1)" || raw_metadata=""
+    raw_metadata="$(timeout 1 "$aapt2" dump badging "$apk" 2>/dev/null | sed -n "s/^package: name='\\([A-Za-z0-9._-]*\\)' versionCode='\\([0-9]*\\)'.*/\\1 \\2/p" | head -n 1 | cut -c1-128)" || raw_metadata=""
     if [[ "$raw_metadata" =~ ^[A-Za-z0-9._-]+\ [0-9]+$ ]]; then
       apk_metadata="$raw_metadata"
     fi
@@ -156,7 +164,7 @@ diagnostic_state_failure_inner() {
   if [[ $SECONDS -lt $deadline ]] && command -v timeout >/dev/null 2>&1; then
     local probe_output=""
     local probe_status=0
-    probe_output="$(timeout 1 adb shell "run-as $package sh -c 'if test -e $state; then if test -s $state; then printf present_nonempty; else printf present_empty; fi; else printf absent; fi'" 2>/dev/null)" || probe_status=$?
+    probe_output="$(timeout 1 adb shell "run-as $package sh -c 'if ! test -d files || ! test -x files; then printf probe_failed; elif test -e $state || test -L $state; then if test -f $state && test -r $state; then if test -s $state; then printf present_nonempty; else printf present_empty; fi; else printf probe_failed; fi; else parent=\$(dirname $state); if test -e \$parent; then if test -d \$parent && test -x \$parent; then printf absent; else printf probe_failed; fi; else printf absent; fi; fi'" 2>/dev/null)" || probe_status=$?
     probe_output="${probe_output//$'\r'/}"
     if [[ $probe_status -eq 0 && "$probe_output" =~ ^(absent|present_empty|present_nonempty)$ ]]; then
       probe_result="$probe_output"
@@ -175,11 +183,10 @@ diagnostic_state_failure_inner() {
 
   local log_status="failed"
   local max_log_bytes=49152
-  if [[ $SECONDS -lt $deadline ]] && command -v timeout >/dev/null 2>&1; then
-    raw_log="$(mktemp)" || raw_log=""
+  if [[ -n "$pid" && $SECONDS -lt $deadline ]] && command -v timeout >/dev/null 2>&1; then
     if [[ -n "$raw_log" ]]; then
       set +e
-      timeout 1 adb logcat -d -v brief -t 4000 2>/dev/null | head -c "$max_log_bytes" > "$raw_log"
+      timeout 1 adb logcat -d -v brief --pid="$pid" -t 4000 2>/dev/null | head -c "$max_log_bytes" > "$raw_log"
       local pipeline_status=("${PIPESTATUS[@]}")
       set -e
       local log_bytes
@@ -196,8 +203,9 @@ diagnostic_state_failure_inner() {
       printf 'diagnostic_log_capture=%s\n' "$log_status"
       if [[ -n "$pid" && "$log_status" != failed && "$log_status" != timed_out ]]; then
         local marker_lines
-        marker_lines="$(awk -v pid="$pid" 'match($0, "\\([[:space:]]*" pid "\\)") && index($0, "MOSAIC_NATIVE_DIAG v=1 ") { print }' "$raw_log" \
-          | grep -Eo 'MOSAIC_NATIVE_DIAG v=1 stage=[a-z_]+ result=[a-z_]+ elapsed_us=[0-9]+' \
+        local marker_pattern
+        marker_pattern='^([VDIWEF])/[[:alnum:]_.-]+[[:space:]]+\([[:space:]]*'"$pid"'[[:space:]]*\): MOSAIC_NATIVE_DIAG v=1 stage=(app_support_lookup result=(nonempty|empty|threw)|runtime_route result=(phone_bundled|phone_not_bundled)|create_call result=(dart_attempted|abi_returned|abi_threw|abi_not_reached)|startup_response result=(accepted|rejected)|environment_report result=(unmounted|host_not_ready|host_absent|environment_absent|settling_suppressed|already_reported|already_refused|dart_attempted|returned_no_visible_change|returned_visible_answer|threw)|environment_dispatch result=(dart_attempted|abi_returned|abi_threw|abi_not_reached)|environment_answer result=(decoded_success|decoded_error|decode_rejected|native_status_rejected)|persistence_decision result=(skipped_already_saved|disabled|path_unavailable|path_available)|snapshot_call result=(null|present|threw)|state_directory result=(returned|threw)|state_temp_write result=(returned|threw)|state_replace result=(returned|threw)|state_delete_null_snapshot result=(returned|threw)|capture_clipped result=record_limit) elapsed_us=[0-9]+$'
+        marker_lines="$(grep -E "$marker_pattern" "$raw_log" \
           | head -n 24 | cut -c1-240 || true)"
         if [[ -n "$marker_lines" ]]; then
           printf '%s\n' "$marker_lines"
@@ -212,6 +220,9 @@ diagnostic_state_failure_inner() {
     else
       printf 'diagnostic_log_capture=temporary_file_failed\n'
     fi
+  elif [[ -z "$pid" ]]; then
+    printf 'diagnostic_log_capture=unavailable_pid\n'
+    printf 'diagnostic_host_markers=unavailable_pid_or_log\n'
   else
     printf 'diagnostic_log_capture=deadline_or_timeout_tool_unavailable\n'
   fi

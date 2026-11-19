@@ -442,7 +442,7 @@ final class _MosaicRuntime {
       final persisted = _loadPersistedSnapshot();
       _persistenceWarning = persisted.warning;
       Map<String, Object?> create(Map<String, Object?>? restoredSnapshot) {
-        final timer = Stopwatch()..start();
+        final timer = _mosaicNativeDiagnostics ? (Stopwatch()..start()) : null;
         var abiCallReached = false;
         var abiReturned = false;
         mosaicNativeDiagnostic('create_call', 'dart_attempted', timer);
@@ -665,7 +665,9 @@ final class _MosaicRuntime {
                 entry.key: entry.value,
           };
     final isEnvironmentEvent = name == _environmentChanged;
-    final timer = isEnvironmentEvent ? (Stopwatch()..start()) : null;
+    final timer = _mosaicNativeDiagnostics && isEnvironmentEvent
+        ? (Stopwatch()..start())
+        : null;
     var abiCallReached = false;
     var abiReturned = false;
     var abiStatusNonzero = false;

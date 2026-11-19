@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import importlib.util
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -711,6 +713,17 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
 
     def test_flutter_state_diagnostic_is_bounded_and_cannot_mask_gate_failure(self) -> None:
         gate = SCRIPT.parent / "mosaic-android-emulator-gate.sh"
+        gate_text = gate.read_text(encoding="utf-8")
+        self.assertIn("timeout --kill-after=1 5 bash -c", gate_text)
+        self.assertIn('adb logcat -d -v brief --pid="$pid" -t 4000', gate_text)
+        self.assertIn("test -d files || ! test -x files", gate_text)
+        self.assertIn("test -f $state && test -r $state", gate_text)
+        self.assertIn("test -e $state || test -L $state", gate_text)
+        self.assertIn("elapsed_us=[0-9]+$", gate_text)
+        self.assertIn(
+            "environment_answer result=(decoded_success|decoded_error|decode_rejected|native_status_rejected)",
+            gate_text,
+        )
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             project = root / "mosaic-flutter-trestle-android" / "flutter"
@@ -740,12 +753,17 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "  install) exit 0 ;;\n"
                 "  logcat)\n"
                 "    if [[ \"$2\" == -c ]]; then exit 0; fi\n"
-                "    if [[ \"$5\" == -t && \"${DIAG_MODE:-ok}\" == log_fail ]]; then exit 7; fi\n"
-                "    if [[ \"$5\" == -t && \"${DIAG_MODE:-ok}\" == log_large ]]; then\n"
+                "    if [[ \"$6\" == -t && \"${DIAG_MODE:-ok}\" == log_fail ]]; then exit 7; fi\n"
+                "    if [[ \"$6\" == -t && \"${DIAG_MODE:-ok}\" == log_large ]]; then\n"
                 "      for i in $(seq 1 1200); do printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=%s\\n' \"$i\"; done\n"
                 "      exit 0\n"
                 "    fi\n"
-                "    if [[ \"$5\" != -t ]]; then printf 'ordinary gate failure log\\n'; exit 0; fi\n"
+                "    if [[ \"$6\" != -t ]]; then printf 'ordinary gate failure log\\n'; exit 0; fi\n"
+                "    if [[ \"${DIAG_MODE:-ok}\" == log_wrong_pid ]]; then printf 'I/flutter ( 9999): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'; exit 0; fi\n"
+                "    if [[ \"${DIAG_MODE:-ok}\" == log_wrong_body ]]; then printf 'I/Other ( 9999): note mentions ( 4321) MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'; exit 0; fi\n"
+                "    if [[ \"${DIAG_MODE:-ok}\" == log_unknown ]]; then printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=unexpected elapsed_us=17\\n'; exit 0; fi\n"
+                "    if [[ \"${DIAG_MODE:-ok}\" == log_suffix ]]; then printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17 trailing\\n'; exit 0; fi\n"
+                "    if [[ \"${DIAG_MODE:-ok}\" == log_timeout ]]; then trap '' TERM; while true; do /bin/sleep 0.1; done; fi\n"
                 "    if [[ \"${DIAG_MODE:-ok}\" != outer_timeout ]]; then\n"
                 "      printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'\n"
                 "      exit 0\n"
@@ -760,9 +778,14 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "        if [[ \"${DIAG_MODE:-ok}\" == pid_fail ]]; then exit 8; fi\n"
                 "        echo 4321; exit 0\n"
                 "        ;;\n"
-                "      *'if test -e files/task-app/mosaic-state.v1.json'* )\n"
-                "        if [[ \"${DIAG_MODE:-ok}\" != probe_fail ]]; then echo present_empty; exit 0; fi\n"
-                "        exit 9\n"
+                "      *'test -d files'* )\n"
+                "        case \"${DIAG_MODE:-ok}\" in\n"
+                "          probe_fail) exit 9 ;;\n"
+                "          probe_absent) echo absent ;;\n"
+                "          probe_nonempty) echo present_nonempty ;;\n"
+                "          *) echo present_empty ;;\n"
+                "        esac\n"
+                "        exit 0\n"
                 "        ;;\n"
                 "      *'test -s files/task-app/mosaic-state.v1.json'*) exit 1 ;;\n"
                 "      *) exit 0 ;;\n"
@@ -779,9 +802,24 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             sleep.chmod(0o755)
             timeout = bin_dir / "timeout"
             timeout.write_text(
-                "#!/usr/bin/env bash\n"
-                "if [[ \"$1\" == 6 && \"${DIAG_MODE:-ok}\" == outer_timeout ]]; then exit 124; fi\n"
-                "shift\nexec \"$@\"\n",
+                f"#!{sys.executable}\n"
+                "import os, signal, subprocess, sys, time\n"
+                "args = sys.argv[1:]\n"
+                "if args[:2] == ['--kill-after=1', '5']:\n"
+                "    if os.environ.get('DIAG_MODE') in ('outer_timeout', 'log_timeout'):\n"
+                "        child = subprocess.Popen(args[2:], start_new_session=True)\n"
+                "        time.sleep(0.15)\n"
+                "        try: os.killpg(child.pid, signal.SIGTERM)\n"
+                "        except ProcessLookupError: pass\n"
+                "        try: child.wait(timeout=0.15)\n"
+                "        except subprocess.TimeoutExpired:\n"
+                "            try: os.killpg(child.pid, signal.SIGKILL)\n"
+                "            except ProcessLookupError: pass\n"
+                "            child.wait()\n"
+                "        sys.exit(124)\n"
+                "    os.execvpe(args[2], args[2:], os.environ)\n"
+                "if len(args) > 1 and args[0] == '1': os.execvpe(args[1], args[1:], os.environ)\n"
+                "sys.exit(125)\n",
                 encoding="utf-8",
             )
             timeout.chmod(0o755)
@@ -793,6 +831,18 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 encoding="utf-8",
             )
             sha256sum.chmod(0o755)
+            temp_tracker = root / "temp-files.txt"
+            mktemp = bin_dir / "mktemp"
+            mktemp.write_text(
+                "#!/usr/bin/env bash\n"
+                f"path='{root}/diagnostic.XXXXXX'\n"
+                "path=\"${path/XXXXXX/$$}\"\n"
+                ": > \"$path\"\n"
+                f"printf '%s\\n' \"$path\" >> '{temp_tracker}'\n"
+                "printf '%s\\n' \"$path\"\n",
+                encoding="utf-8",
+            )
+            mktemp.chmod(0o755)
 
             def run(mode: str) -> subprocess.CompletedProcess[str]:
                 return subprocess.run(
@@ -829,10 +879,38 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             self.assertIn("diagnostic_state_probe=probe_failed", probe_failure.stdout)
             self.assertIn("diagnostic_log_capture=complete", probe_failure.stdout)
 
+            absent_state = run("probe_absent")
+            self.assertEqual(absent_state.returncode, 1)
+            self.assertIn("diagnostic_state_probe=absent", absent_state.stdout)
+
+            nonempty_state = run("probe_nonempty")
+            self.assertEqual(nonempty_state.returncode, 1)
+            self.assertIn("diagnostic_state_probe=present_nonempty", nonempty_state.stdout)
+
             log_failure = run("log_fail")
             self.assertEqual(log_failure.returncode, 1)
             self.assertIn("diagnostic_state_probe=present_empty", log_failure.stdout)
             self.assertIn("diagnostic_log_capture=failed", log_failure.stdout)
+
+            wrong_pid = run("log_wrong_pid")
+            self.assertEqual(wrong_pid.returncode, 1)
+            self.assertIn("diagnostic_host_markers=none_observed_for_current_pid", wrong_pid.stdout)
+            self.assertNotIn("elapsed_us=17", wrong_pid.stdout)
+
+            unknown_marker = run("log_unknown")
+            self.assertEqual(unknown_marker.returncode, 1)
+            self.assertIn("diagnostic_host_markers=none_observed_for_current_pid", unknown_marker.stdout)
+            self.assertNotIn("unexpected elapsed_us", unknown_marker.stdout)
+
+            wrong_body = run("log_wrong_body")
+            self.assertEqual(wrong_body.returncode, 1)
+            self.assertIn("diagnostic_host_markers=none_observed_for_current_pid", wrong_body.stdout)
+            self.assertNotIn("elapsed_us=17", wrong_body.stdout)
+
+            trailing_marker = run("log_suffix")
+            self.assertEqual(trailing_marker.returncode, 1)
+            self.assertIn("diagnostic_host_markers=none_observed_for_current_pid", trailing_marker.stdout)
+            self.assertNotIn("trailing", trailing_marker.stdout)
 
             pid_failure = run("pid_fail")
             self.assertEqual(pid_failure.returncode, 1)
@@ -855,13 +933,43 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 sum("MOSAIC_NATIVE_DIAG v=1" in line for line in clipped_log.stdout.splitlines()),
                 24,
             )
-            self.assertLess(len(clipped_log.stdout.encode("utf-8")), 64 * 1024)
+            summary_start = clipped_log.stdout.index("---- bounded Flutter Trestle diagnostics")
+            summary_end = clipped_log.stdout.index("::error::", summary_start)
+            summary = clipped_log.stdout[summary_start:summary_end]
+            self.assertLess(len(summary.encode("utf-8")), 64 * 1024)
             self.assertNotIn("lock data", clipped_log.stdout)
             self.assertNotIn(str(apk), clipped_log.stdout)
 
             timed_out_capture = run("outer_timeout")
             self.assertEqual(timed_out_capture.returncode, 1)
             self.assertIn("diagnostic_capture=timed_out", timed_out_capture.stdout)
+            timeout_start = time.monotonic()
+            hanging_log = run("log_timeout")
+            timeout_elapsed = time.monotonic() - timeout_start
+            self.assertEqual(hanging_log.returncode, 1)
+            self.assertIn("diagnostic_capture=timed_out", hanging_log.stdout)
+            self.assertLess(timeout_elapsed, 2.0)
+            recorded_temps = temp_tracker.read_text(encoding="utf-8").splitlines()
+            self.assertTrue(recorded_temps)
+            self.assertTrue(all(not Path(path).exists() for path in recorded_temps))
+
+    @unittest.skipUnless(shutil.which("timeout"), "GNU timeout is unavailable on this host")
+    def test_gnu_timeout_kills_term_resistant_process_group(self) -> None:
+        start = time.monotonic()
+        result = subprocess.run(
+            [
+                shutil.which("timeout") or "timeout",
+                "--kill-after=0.2",
+                "0.2",
+                "bash",
+                "-c",
+                "trap '' TERM; while :; do /bin/sleep 0.05; done",
+            ],
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 124)
+        self.assertLess(time.monotonic() - start, 2.0)
 
     def test_a_lane_script_change_alone_requires_acceptance(self) -> None:
         """The Android scripts belong to no package; changing one must still

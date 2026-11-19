@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import re
 import subprocess
 import sys
 import tempfile
@@ -33,7 +34,24 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
             "- name: Build Trestle, Journal and Engram for Android with Flutter (UI89 §7)"
         )
         build_step = workflow[build_start : workflow.index("\n      - name:", build_start)]
-        self.assertIn("MOSAIC_NATIVE_DIAGNOSTICS: 'true'", build_step)
+        self.assertNotIn("MOSAIC_NATIVE_DIAGNOSTICS: 'true'", build_step)
+        self.assertIn('if [[ "$name" == trestle ]]; then', build_step)
+        self.assertIn(
+            'MOSAIC_NATIVE_DIAGNOSTICS=true bash code/scripts/build-mosaic-flutter-phone-app.sh android',
+            build_step,
+        )
+        normalized_build_step = re.sub(r"\s+", " ", build_step)
+        self.assertIn(
+            "else bash code/scripts/build-mosaic-flutter-phone-app.sh android",
+            normalized_build_step,
+        )
+        self.assertLess(
+            build_step.index('if [[ "$name" == trestle ]]; then'),
+            build_step.index("MOSAIC_NATIVE_DIAGNOSTICS=true bash"),
+        )
+        trestle_call = build_step.index("MOSAIC_NATIVE_DIAGNOSTICS=true bash")
+        journal_call = build_step.index("else\n              bash code/scripts/build-mosaic-flutter-phone-app.sh", trestle_call)
+        self.assertLess(trestle_call, journal_call)
         helper = (Path(__file__).resolve().parents[1] / "build-mosaic-flutter-phone-app.sh").read_text(encoding="utf-8")
         self.assertIn('MOSAIC_NATIVE_DIAGNOSTICS:-false', helper)
         self.assertIn("--dart-define=MOSAIC_NATIVE_DIAGNOSTICS=true", helper)
