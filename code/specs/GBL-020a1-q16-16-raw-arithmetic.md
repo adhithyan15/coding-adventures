@@ -65,7 +65,13 @@ compile and call these actual exports, preserve record/result/enum types and exa
 errors, and demonstrate a successful value plus each typed error. If the generator
 cannot represent the actual API without panic normalization, missing error variants,
 or a wrapper treated as the subject, stop implementation and record the smallest
-required generator prerequisite. Do not claim evidence for a surrogate.
+required generator prerequisite. Do not claim evidence for a surrogate. The first
+actual `gen_evidence` probe exposed that every op requires an applicable fault, while
+the current numeric record faults do not reach a Boolean field inside the genuine
+nested `SaturatingResult` output. `WX-FAULT2` in `VER-BACKLOG.md` is now an explicit
+prerequisite: an opt-in direct Boolean-field mutation with non-vacuity and unchanged
+legacy-adopter controls. Full admission remains blocked until that prerequisite and
+the real nested-result probe pass.
 
 ## Arithmetic semantics
 
