@@ -781,7 +781,16 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "    if [[ \"${DIAG_MODE:-ok}\" == log_wrong_body ]]; then printf 'I/Other ( 9999): note mentions ( 4321) MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'; exit 0; fi\n"
                 "    if [[ \"${DIAG_MODE:-ok}\" == log_unknown ]]; then printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=unexpected elapsed_us=17\\n'; exit 0; fi\n"
                 "    if [[ \"${DIAG_MODE:-ok}\" == log_suffix ]]; then printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17 trailing\\n'; exit 0; fi\n"
-                "    if [[ \"${DIAG_MODE:-ok}\" == log_timeout || \"${DIAG_MODE:-ok}\" == real_timeout ]]; then printf '%s\\n' \"$$\" > \"$DIAG_HANG_PID_PATH\"; trap '' TERM; while true; do /bin/sleep 0.1; done; fi\n"
+                "    if [[ \"${DIAG_MODE:-ok}\" == log_timeout || \"${DIAG_MODE:-ok}\" == real_timeout ]]; then\n"
+                "      printf '%s\\n' \"$$\" > \"$DIAG_HANG_PID_PATH\"\n"
+                "      cat /proc/$$/stat > \"$DIAG_HANG_WORKER_STAT_PATH\"\n"
+                "      trap '' TERM\n"
+                "      /bin/sleep 30 &\n"
+                "      child=$!\n"
+                "      printf '%s\\n' \"$child\" > \"$DIAG_HANG_CHILD_PID_PATH\"\n"
+                "      cat /proc/$child/stat > \"$DIAG_HANG_CHILD_STAT_PATH\"\n"
+                "      wait \"$child\"\n"
+                "    fi\n"
                 "    if [[ \"${DIAG_MODE:-ok}\" != outer_timeout ]]; then\n"
                 "      printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'\n"
                 "      exit 0\n"
@@ -821,6 +830,11 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "args = sys.argv[1:]\n"
                 "if os.environ.get('DIAG_MODE') == 'real_timeout':\n"
                 "    real = os.environ['REAL_TIMEOUT']\n"
+                "    if args[:2] == ['--kill-after=1', '5']:\n"
+                "        result = subprocess.run([real, *args], check=False)\n"
+                "        with open(os.environ['DIAG_REAL_TIMEOUT_STATUS_PATH'], 'w', encoding='ascii') as status_file:\n"
+                "            status_file.write(str(result.returncode) + '\\n')\n"
+                "        raise SystemExit(result.returncode)\n"
                 "    os.execv(real, [real, *args])\n"
                 "if args[:2] == ['--kill-after=1', '5']:\n"
                 "    if os.environ.get('DIAG_MODE') in ('outer_timeout', 'log_timeout', 'probe_timeout'):\n"
@@ -878,6 +892,10 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                     "DIAG_APP_DATA_ROOT": str(app_data_root),
                     "DIAG_MODE": mode,
                     "DIAG_HANG_PID_PATH": str(root / "hung-adb.pid"),
+                    "DIAG_HANG_CHILD_PID_PATH": str(root / "hung-sleep.pid"),
+                    "DIAG_HANG_WORKER_STAT_PATH": str(root / "hung-adb.initial-stat"),
+                    "DIAG_HANG_CHILD_STAT_PATH": str(root / "hung-sleep.initial-stat"),
+                    "DIAG_REAL_TIMEOUT_STATUS_PATH": str(root / "real-timeout.status"),
                 }
                 if shutil.which("timeout"):
                     env["REAL_TIMEOUT"] = shutil.which("timeout") or "timeout"
@@ -1005,9 +1023,86 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 self.assertEqual(real_timeout_gate.returncode, 1)
                 self.assertIn("diagnostic_capture=timed_out", real_timeout_gate.stdout)
                 self.assertLess(real_elapsed, 7.5)
+                real_timeout_status = (root / "real-timeout.status").read_text(
+                    encoding="ascii"
+                ).strip()
                 hung_pid = int((root / "hung-adb.pid").read_text(encoding="utf-8").strip())
-                with self.assertRaises(ProcessLookupError):
+                hung_child_pid = int((root / "hung-sleep.pid").read_text(encoding="utf-8").strip())
+
+                def proc_identity(raw_stat: str) -> dict[str, str | int]:
+                    close_paren = raw_stat.rfind(")")
+                    self.assertGreaterEqual(close_paren, 0, raw_stat)
+                    fields = raw_stat[close_paren + 2 :].split()
+                    self.assertGreaterEqual(len(fields), 20, raw_stat)
+                    return {
+                        "state": fields[0],
+                        "ppid": int(fields[1]),
+                        "pgrp": int(fields[2]),
+                        "session": int(fields[3]),
+                        "starttime": int(fields[19]),
+                    }
+
+                initial_worker = proc_identity(
+                    (root / "hung-adb.initial-stat").read_text(encoding="ascii")
+                )
+                initial_child = proc_identity(
+                    (root / "hung-sleep.initial-stat").read_text(encoding="ascii")
+                )
+
+                def snapshot_process(pid: int) -> dict[str, str | int] | None:
+                    try:
+                        raw_stat = Path(f"/proc/{pid}/stat").read_text(encoding="ascii")
+                    except FileNotFoundError:
+                        return None
+                    current = proc_identity(raw_stat)
+                    expected = initial_worker if pid == hung_pid else initial_child
+                    if current["starttime"] != expected["starttime"]:
+                        return {"state": "pid_reused", **current}
+                    return current
+
+                def group_snapshot(expected_pgrp: int) -> list[dict[str, str | int]]:
+                    members: list[dict[str, str | int]] = []
+                    for proc_entry in Path("/proc").iterdir():
+                        if not proc_entry.name.isdigit():
+                            continue
+                        try:
+                            raw_stat = (proc_entry / "stat").read_text(encoding="ascii")
+                            current = proc_identity(raw_stat)
+                        except (FileNotFoundError, PermissionError, ValueError):
+                            continue
+                        if current["pgrp"] == expected_pgrp:
+                            members.append({"pid": int(proc_entry.name), **current})
+                    return members[:32]
+
+                process_history: list[dict[str, object]] = []
+                observation_start = time.monotonic()
+                for checkpoint in (0.0, 0.05, 0.20, 0.50):
+                    remaining = checkpoint - (time.monotonic() - observation_start)
+                    if remaining > 0:
+                        time.sleep(remaining)
+                    process_history.append(
+                        {
+                            "elapsed_s": round(time.monotonic() - observation_start, 3),
+                            "worker": snapshot_process(hung_pid),
+                            "sleep_child": snapshot_process(hung_child_pid),
+                            "group": group_snapshot(int(initial_worker["pgrp"])),
+                        }
+                    )
+                self.assertEqual(
+                    real_timeout_status,
+                    "124",
+                    f"real outer timeout status={real_timeout_status!r}; process_history={process_history!r}",
+                )
+                try:
                     os.kill(hung_pid, 0)
+                except ProcessLookupError:
+                    pass
+                else:
+                    self.fail(
+                        "term-resistant adb worker PID remained addressable after timeout; "
+                        f"initial_worker={initial_worker!r}, initial_sleep_child={initial_child!r}, "
+                        f"process_history={process_history!r}"
+                    )
                 recorded_temps = temp_tracker.read_text(encoding="utf-8").splitlines()
                 self.assertTrue(all(not Path(path).exists() for path in recorded_temps))
 
