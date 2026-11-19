@@ -1065,6 +1065,16 @@ length are all findings. Negative controls, each asserted by code AND text: `Pok
 with a `usize` field are rejected; `[u8; 4]` and a nested passing enum pass; the same enum in a
 `kind = "production"` crate raises no SH19; the real `vos-sched-contract` passes.
 
+**The vocabulary of a contract crate is closed (security review of 039b-2a).** The four spellings are
+only safe if the four names mean what they look like, and a lexical check cannot resolve names. So
+SH19 refuses, as whole constructs, everything that can change a name's meaning: any `use` or
+`extern crate` (a contract crate imports nothing), any `mod` (one flat namespace), any macro
+definition or invocation, and any item named like a Rust primitive or a Warrant built-in type
+(`type u8 = u32;`, `struct u8`, `struct U8(u8)`). Attributes and doc comments stay; tests live in
+`tests/`. An `enum $n` that a macro body would write is a VT03 gap in every crate. Each bypass the
+review reproduced is a negative control in class K, P and H. The real `vos-sched-contract` uses none
+of these. CK10 compares only the NAME of a nested same-crate type; SH19 judges its contents (VOS-D111).
+
 **Planned, not built: 039b-2b.** (1) *`bound` rows against ceilings* (VOS-D055 remainder): derive
 the operation-to-ceiling mapping (an operation `X` maps to the ceiling `X`, else to the ceiling of `X`
 with one `_out` or `_img` suffix stripped, VOS02 section 4.4, else it is ghost-only and unmapped), with

@@ -67,6 +67,32 @@
 //! Every type enters the queue at most once, so the work is linear in the number
 //! of fields; a cycle (`A` holds `B`, `B` holds `A`) simply terminates.
 //!
+//! ## The closed vocabulary of a contract crate
+//!
+//! "Accepted types are exactly four spellings" is only true if the four names
+//! mean what they look like.  A lexical check cannot resolve names, so instead of
+//! chasing every trick that changes what a name means (a `type u8 = u32;`, a
+//! `use core::primitive::u32 as Addr;`, a `macro_rules!` that writes the enum, a
+//! nested `mod` that defines a name twice) the check **refuses the whole
+//! construct** in a contract crate.  A contract crate holds declarations and
+//! nothing else, so this costs it nothing.  It is a SH19 finding to write:
+//!
+//! * any `use` (including `pub use` and `use .. as ..`) or `extern crate`: the
+//!   crate imports nothing, every name is defined in it or is a primitive;
+//! * any `mod`: one flat namespace, so a name cannot mean two things;
+//! * any macro definition (`macro_rules!`, `macro`) or invocation (`name!(..)`):
+//!   a macro can write an enum the check never reads;
+//! * an item (`struct`, `enum`, `union`, `type`, `trait`, `fn`, `const`, `static`)
+//!   named like a Rust primitive or like a Warrant built-in type
+//!   ([`RESERVED_TYPE_NAMES`]): `struct u8(..)` would change what `u8` means, and
+//!   `struct U8(u8)` would render, in CK10, exactly like the primitive.
+//!
+//! Attributes (`#[derive(..)]`, `#[repr(u8)]`, `#![no_std]`) and doc comments
+//! are not touched.  Tests live in the crate's `tests/` directory, not in a
+//! `#[cfg(test)] mod`.  [`spell`] also asks the crate's item table before it
+//! trusts `u8` or `bool`, so a shadowing item that somehow escaped the rules
+//! above still fails closed.
+//!
 //! ## What this check does not see
 //!
 //! It is lexical.  It reads what is written (VOS03 section 6, item 18).  The HAL
@@ -74,7 +100,10 @@
 
 use std::collections::BTreeMap;
 
+use std::collections::BTreeSet;
+
 use crate::items::TypeDef;
+use crate::lexer::Kind;
 use crate::report::{Finding, Rule};
 use crate::rules::Ctx;
 
@@ -82,6 +111,38 @@ use crate::rules::Ctx;
 /// spec and asserts that it states each of these, so the list and the text cannot
 /// drift apart.
 pub const ACCEPTED_TYPES: [&str; 4] = ["u8", "bool", "[u8; N]", "same-crate struct or enum"];
+
+/// Names a contract crate may not give to an item: the Rust primitive types, and
+/// the built-in type names of a Warrant document (`checker.rs` of
+/// `warrant-grammar`: `V0_BUILTINS` and `V1_TYPES`; a test reads that file and
+/// asserts every type name there is listed here, so the two cannot drift).
+pub const RESERVED_TYPE_NAMES: [&str; 33] = [
+    "u8", "u16", "u32", "u64", "u128", "usize", "i8", "i16", "i32", "i64", "i128", "isize", "bool",
+    "char", "str", "f32", "f64", "Bool", "Int", "Nat", "U8", "U16", "U32", "U64", "I8", "I16",
+    "I32", "I64", "Bytes", "List", "Option", "Result", "Self",
+];
+
+/// Longest piece of source text a message quotes.
+const SHOW_CAP: usize = 48;
+
+/// `s` for a message: every character that is not printable ASCII is escaped
+/// (a field type may contain a string literal with a newline, and a finding is
+/// one line), and a long text is cut.
+fn show(s: &str) -> String {
+    let mut out = String::new();
+    for (n, c) in s.chars().enumerate() {
+        if n >= SHOW_CAP {
+            out.push_str("...");
+            break;
+        }
+        if c == '\\' || !(c.is_ascii_graphic() || c == ' ') {
+            out.extend(c.escape_default());
+        } else {
+            out.push(c);
+        }
+    }
+    out
+}
 
 /// How a field type reads.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -138,7 +199,7 @@ fn slots(t: &TypeDef) -> Vec<Slot> {
             for f in &v.fields {
                 crate::steps::tick();
                 out.push(Slot {
-                    place: format!("variant `{}` field `{}`", v.name, f.name),
+                    place: format!("variant `{}` field `{}`", show(&v.name), show(&f.name)),
                     line: f.line,
                     ty: f.ty.clone(),
                 });
@@ -148,7 +209,7 @@ fn slots(t: &TypeDef) -> Vec<Slot> {
         for f in &t.fields {
             crate::steps::tick();
             out.push(Slot {
-                place: format!("field `{}`", f.name),
+                place: format!("field `{}`", show(&f.name)),
                 line: f.line,
                 ty: f.ty.clone(),
             });
@@ -164,9 +225,10 @@ fn is_data(t: &TypeDef) -> bool {
 
 /// What the whole crate says about the names its types use.
 struct Names<'a> {
-    types: &'a [TypeDef],
-    /// Name to the indexes of every item of that name (a struct, an alias, ...).
-    by_name: BTreeMap<&'a str, Vec<usize>>,
+    /// Per name: does a struct or enum carry it, and which other item (a `type`
+    /// alias, a `union`) does.  Built once, so a lookup costs one map probe
+    /// however many items share the name.
+    kinds: BTreeMap<&'a str, (bool, Option<&'static str>)>,
 }
 
 /// Why a field type is not a command payload, when that is decided by the type
@@ -178,6 +240,8 @@ enum Local {
     Unknown,
     /// A name that a `type` alias or a `union` carries.
     Alias(&'static str),
+    /// `u8` or `bool` while the crate defines an item of that name.
+    Shadowed,
 }
 
 impl Local {
@@ -187,64 +251,63 @@ impl Local {
             Local::Unknown => "it is not `u8` or `bool`, and no struct or enum of this crate has that name (a wider integer, a path or a foreign type is not accepted)",
             Local::Alias("type") => "a `type` alias is not resolved, so it is rejected (write the underlying `u8`, `bool` or `[u8; N]`)",
             Local::Alias(_) => "a `union` is not a command payload",
+            Local::Shadowed => "this crate defines an item named like that primitive, so the name is not known to mean the primitive",
         }
     }
 }
 
 impl<'a> Names<'a> {
     fn new(types: &'a [TypeDef]) -> Names<'a> {
-        let mut by_name: BTreeMap<&'a str, Vec<usize>> = BTreeMap::new();
-        for (i, t) in types.iter().enumerate() {
+        let mut kinds: BTreeMap<&'a str, (bool, Option<&'static str>)> = BTreeMap::new();
+        for t in types {
             crate::steps::tick();
-            by_name.entry(t.name.as_str()).or_default().push(i);
-        }
-        Names { types, by_name }
-    }
-
-    /// The struct and enum items named `name`, and whether some other item
-    /// (a `type` alias, a `union`) also carries that name.
-    fn data_named(&self, name: &str) -> (Vec<usize>, Option<&'static str>) {
-        let mut data = Vec::new();
-        let mut other = None;
-        for &j in self.by_name.get(name).map_or(&[][..], Vec::as_slice) {
-            crate::steps::tick();
-            if is_data(&self.types[j]) {
-                data.push(j);
+            let e = kinds.entry(t.name.as_str()).or_default();
+            if is_data(t) {
+                e.0 = true;
             } else {
-                other = Some(self.types[j].keyword);
+                e.1 = Some(t.keyword);
             }
         }
-        (data, other)
+        Names { kinds }
     }
 
     /// The verdict on one field type that does not depend on other items:
-    /// `Err(reason)` when it fails here, `Ok(indexes)` with the same-crate
-    /// struct and enum items it names (empty when it is accepted outright).
-    fn judge(&self, ty: &str) -> Result<Vec<usize>, Local> {
+    /// `Err(reason)` when it fails here, `Ok(Some(name))` with the same-crate
+    /// type name it refers to, `Ok(None)` when it is accepted outright.
+    fn judge(&self, ty: &str) -> Result<Option<&'a str>, Local> {
+        crate::steps::tick();
         match spell(ty) {
-            Spelling::Accepted => Ok(Vec::new()),
-            Spelling::Rejected => Err(Local::Spelling),
-            Spelling::Name(n) => {
-                let (data, other) = self.data_named(n);
-                match (data.is_empty(), other) {
-                    (_, Some(kw)) => Err(Local::Alias(kw)),
-                    (true, None) => Err(Local::Unknown),
-                    (false, None) => Ok(data),
+            Spelling::Accepted => {
+                let prim = if ty == "bool" { "bool" } else { "u8" };
+                if self.kinds.contains_key(prim) {
+                    Err(Local::Shadowed)
+                } else {
+                    Ok(None)
                 }
             }
+            Spelling::Rejected => Err(Local::Spelling),
+            Spelling::Name(n) => match self.kinds.get_key_value(n) {
+                Some((_, (_, Some(kw)))) => Err(Local::Alias(kw)),
+                Some((&key, (true, None))) => Ok(Some(key)),
+                _ => Err(Local::Unknown),
+            },
         }
     }
 }
 
 /// The message of a field that fails on its own.
 fn local_message(ty: &str, why: &Local) -> String {
-    format!("type `{ty}` is not a command payload: {}", why.why())
+    format!(
+        "type `{}` is not a command payload: {}",
+        show(ty),
+        why.why()
+    )
 }
 
 /// The first defect an item has before any field is read: the flags, in the
 /// order they are explained above.
 fn flag_defect(t: &TypeDef) -> Option<String> {
-    let what = format!("{} `{}`", t.keyword, t.name);
+    let what = format!("{} `{}`", t.keyword, show(&t.name));
     if t.non_exhaustive {
         Some(format!(
             "{what} is `#[non_exhaustive]`: a command set must be closed"
@@ -266,17 +329,104 @@ fn flag_defect(t: &TypeDef) -> Option<String> {
     }
 }
 
+/// Is `name` one a contract crate may not define?  It is read through a
+/// raw-identifier prefix (`r#u8` is `u8`).
+fn reserved(name: &str) -> bool {
+    let bare = name.strip_prefix("r#").unwrap_or(name);
+    RESERVED_TYPE_NAMES.contains(&bare)
+}
+
+/// The closed vocabulary (see the module notes): `use`, `extern crate`, `mod`,
+/// macros, and items named like a primitive or a Warrant built-in.
+fn vocabulary(cx: &mut Ctx<'_>) {
+    let mut found: Vec<Finding> = Vec::new();
+    for f in cx.files {
+        let t = &f.toks;
+        let mut add = |line: u32, message: String| {
+            found.push(Finding {
+                rule: Rule::Sh19,
+                file: f.path.clone(),
+                line,
+                message,
+            });
+        };
+        for i in 0..t.len() {
+            crate::steps::tick();
+            if f.in_attr[i] || t[i].kind != Kind::Ident {
+                continue;
+            }
+            if i > 0 && t[i - 1].is_punct(".") {
+                continue;
+            }
+            let word = t[i].text.as_str();
+            let next = t.get(i + 1);
+            let line = t[i].line;
+            match word {
+                "use" => add(
+                    line,
+                    "`use`: a contract crate imports nothing (every name it uses is defined in it or is a primitive), so a name cannot be renamed or re-exported".to_string(),
+                ),
+                "extern" if next.is_some_and(|x| x.is_ident("crate")) => add(
+                    line,
+                    "`extern crate`: a contract crate imports nothing".to_string(),
+                ),
+                "mod" => add(
+                    line,
+                    "`mod`: a contract crate is one flat namespace, so a name cannot mean two things".to_string(),
+                ),
+                "macro_rules" | "macro" => add(
+                    line,
+                    format!("`{word}`: a contract crate defines no macro (a macro can write an enum this check never reads)"),
+                ),
+                _ => {}
+            }
+            if next.is_some_and(|x| x.is_punct("!"))
+                && t.get(i + 2).is_some_and(|x| {
+                    x.kind == Kind::Punct && matches!(x.text.as_str(), "(" | "[" | "{")
+                })
+                && word != "macro_rules"
+            {
+                add(
+                    line,
+                    format!(
+                        "macro invocation `{}!`: a contract crate uses no macro (a macro can write an enum this check never reads)",
+                        show(word)
+                    ),
+                );
+            }
+            if matches!(
+                word,
+                "struct" | "enum" | "union" | "type" | "trait" | "fn" | "const" | "static"
+            ) {
+                if let Some(n) = next.filter(|x| x.kind == Kind::Ident && reserved(&x.text)) {
+                    add(
+                        n.line,
+                        format!(
+                            "{word} `{}`: a contract crate may not define an item named like a Rust primitive or a Warrant built-in type ({})",
+                            show(&n.text),
+                            "it would change what that name means to this check, or render like the built-in in CK10"
+                        ),
+                    );
+                }
+            }
+        }
+    }
+    cx.out.extend(found);
+}
+
 /// SH19 over a crate that declares `kind = "contract"`.
 pub fn command_rules(cx: &mut Ctx<'_>) {
+    vocabulary(cx);
     let names = Names::new(&cx.types);
-    let n = cx.types.len();
 
-    // 1. Local judgement, and the reverse-reference graph.
-    let mut failing = vec![false; n];
-    let mut cause: Vec<String> = vec![String::new(); n];
-    let mut refs_by: Vec<Vec<usize>> = vec![Vec::new(); n];
-    let mut queue: Vec<usize> = Vec::new();
-    for (i, t) in cx.types.iter().enumerate() {
+    // 1. Local judgement, and the reverse-reference graph, over DISTINCT NAMES:
+    //    one node per name, one edge per (referencing name, referenced name) pair,
+    //    so n items called `X` and n fields naming `X` cost n, not n times n.
+    //    A name fails if any item of that name fails.
+    let mut cause: BTreeMap<&str, String> = BTreeMap::new();
+    let mut refs_by: BTreeMap<&str, BTreeSet<&str>> = BTreeMap::new();
+    let mut queue: Vec<&str> = Vec::new();
+    for t in cx.types.iter() {
         crate::steps::tick();
         if !is_data(t) {
             continue;
@@ -284,17 +434,16 @@ pub fn command_rules(cx: &mut Ctx<'_>) {
         let mut defect = flag_defect(t);
         for s in slots(t) {
             match names.judge(&s.ty) {
-                Ok(named) => {
-                    for j in named {
-                        refs_by[j].push(i);
-                    }
+                Ok(Some(named)) => {
+                    refs_by.entry(named).or_default().insert(t.name.as_str());
                 }
+                Ok(None) => {}
                 Err(why) => {
                     defect.get_or_insert_with(|| {
                         format!(
                             "{} `{}`, {}: {}",
                             t.keyword,
-                            t.name,
+                            show(&t.name),
                             s.place,
                             local_message(&s.ty, &why)
                         )
@@ -303,22 +452,24 @@ pub fn command_rules(cx: &mut Ctx<'_>) {
             }
         }
         if let Some(d) = defect {
-            failing[i] = true;
-            cause[i] = d;
-            queue.push(i);
+            if !cause.contains_key(t.name.as_str()) {
+                cause.insert(t.name.as_str(), d);
+                queue.push(t.name.as_str());
+            }
         }
     }
 
-    // 2. A type that mentions a failing type fails, with the same root cause.
+    // 2. A name that is mentioned by a failing name fails, with the same root cause.
     let mut head = 0;
     while head < queue.len() {
         crate::steps::tick();
         let j = queue[head];
         head += 1;
-        for &p in &refs_by[j] {
-            if !failing[p] {
-                failing[p] = true;
-                cause[p] = cause[j].clone();
+        let root = cause[j].clone();
+        for &p in refs_by.get(j).into_iter().flatten() {
+            crate::steps::tick();
+            if !cause.contains_key(p) {
+                cause.insert(p, root.clone());
                 queue.push(p);
             }
         }
@@ -337,7 +488,7 @@ pub fn command_rules(cx: &mut Ctx<'_>) {
                 message,
             });
         };
-        let what = format!("enum `{}`", t.name);
+        let what = format!("enum `{}`", show(&t.name));
         if t.non_exhaustive {
             add(
                 t.line,
@@ -349,7 +500,7 @@ pub fn command_rules(cx: &mut Ctx<'_>) {
                 v.line,
                 format!(
                     "{what} variant `{}` is `#[non_exhaustive]`: a command set must be closed",
-                    v.name
+                    show(&v.name)
                 ),
             );
         }
@@ -371,17 +522,20 @@ pub fn command_rules(cx: &mut Ctx<'_>) {
                     s.line,
                     format!("{what} {}: {}", s.place, local_message(&s.ty, &why)),
                 ),
-                Ok(named) => {
-                    if let Some(&j) = named.iter().find(|&&j| failing[j]) {
+                Ok(Some(named)) => {
+                    if let Some(c) = cause.get(named) {
                         add(
                             s.line,
                             format!(
                                 "{what} {}: type `{}` is not a command payload ({})",
-                                s.place, s.ty, cause[j]
+                                s.place,
+                                show(&s.ty),
+                                c
                             ),
                         );
                     }
                 }
+                Ok(None) => {}
             }
         }
     }

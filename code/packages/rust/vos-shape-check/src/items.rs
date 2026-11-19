@@ -361,6 +361,23 @@ pub fn collect_types(files: &[FileCtx]) -> (Vec<TypeDef>, Vec<Gap>) {
                 continue;
             }
             let Some(name_tok) = t.get(i + 1).filter(|x| x.kind == Kind::Ident) else {
+                // `enum` and `struct` are strict keywords, so one that is not
+                // followed by a name is a definition this scan cannot read
+                // (`enum $n { .. }` inside a macro body is the case that
+                // matters: it would define an enum the check never sees).  It is
+                // a gap (VT03), never a silent skip.  `union` and `type` are
+                // not strict, so they are a gap only before a `$`.
+                let strict = keyword == "enum" || keyword == "struct";
+                let after = t.get(i + 1);
+                if strict || after.is_some_and(|x| x.is_punct("$")) {
+                    gaps.push(Gap {
+                        file: fi,
+                        line: t[i].line,
+                        message: format!(
+                            "the name of this `{keyword}` could not be read (fail closed)"
+                        ),
+                    });
+                }
                 continue;
             };
             let mut gap = |line: u32, what: &str| {

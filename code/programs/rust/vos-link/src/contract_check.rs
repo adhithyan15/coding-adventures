@@ -890,7 +890,18 @@ fn check_enums(inp: &ContractInputs, base: &str) -> Result<(Vec<Finding>, Vec<St
         }
     };
     // `base` type-checked a moment ago, so it parses.
-    let is_named = |e: &str, c: &str| rust.iter().any(|r| r.name == e && r.named.contains(c));
+    // One map built once (enum name to its brace-written constructors), so a constructor
+    // lookup is a map probe and not a scan of every enum (an enum with many constructors
+    // would otherwise cost enums x constructors).
+    let mut named_ctors: std::collections::BTreeMap<&str, std::collections::BTreeSet<&str>> =
+        std::collections::BTreeMap::new();
+    for r in &rust {
+        named_ctors
+            .entry(r.name.as_str())
+            .or_default()
+            .extend(r.named.iter().map(String::as_str));
+    }
+    let is_named = |e: &str, c: &str| named_ctors.get(e).is_some_and(|s| s.contains(c));
     let warrant = on_big_stack(|| enums::warrant_variants(base, &is_named))?
         .map_err(|e| NoVerdict::new(format!("the checked document no longer parses: {e}")))?;
     Ok(enums::correspond(&rust, &warrant))

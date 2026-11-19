@@ -1602,3 +1602,231 @@ fn sh19_a_very_deep_chain_does_not_overflow_the_stack() {
     let r = run(&contract(&s));
     assert!(rules(&r).contains(&"SH19"), "deep chain must be judged");
 }
+
+// ------------------------------------------------- SH19: the closed vocabulary
+//
+// The security review (VOS-039b-2a) found three ways to make `u8` or a local name
+// mean a 32-bit address.  Each is refused as a WHOLE CONSTRUCT, in every class.
+
+/// `src` in a contract crate of class `class`.
+fn contract_of_class(src: &str, class: &str) -> CrateInput {
+    let mut i = body(src);
+    i.vos_toml = Some(format!("class = \"{class}\"\nkind = \"contract\"\n"));
+    i
+}
+
+#[test]
+fn sh19_a_primitive_name_may_not_be_redefined() {
+    let _batch = Batch::begin();
+    for class in ["K", "P", "H"] {
+        for src in [
+            "type u8 = u32;\npub enum Cmd { Poke(u8) }\n",
+            "pub struct u8(pub u32);\npub enum Cmd { Poke(u8) }\n",
+            "pub enum bool { A }\npub enum Cmd { Poke(bool) }\n",
+            "pub struct r#u8(pub u32);\npub enum Cmd { Poke(u8) }\n",
+        ] {
+            check(
+                contract_of_class(src, class),
+                Expect::Msg("SH19".into(), "named like a Rust primitive".into()),
+                src,
+            );
+        }
+    }
+    // The type table is consulted too, so even a spelling the item scan did not
+    // classify cannot make `u8` safe: `Shadowed` fails the enum on its own.
+    rejected(
+        "type u8 = u32;\npub enum Cmd { Poke(u8), Arr([u8; 4]) }\n",
+        "this crate defines an item named like that primitive",
+    );
+    rejected(
+        "pub struct bool;\npub enum Cmd { Flag(bool) }\n",
+        "this crate defines an item named like that primitive",
+    );
+}
+
+#[test]
+fn sh19_a_warrant_builtin_name_may_not_be_defined() {
+    let _batch = Batch::begin();
+    for name in ["U8", "Bool", "Bytes", "U16", "U32", "U64", "Option", "Self"] {
+        let src = format!("pub struct {name}(pub u8);\npub enum Cmd {{ A({name}) }}\n");
+        rejected(&src, "Warrant built-in");
+    }
+    rejected("pub enum Bool { No, Yes }\n", "Warrant built-in");
+    rejected("pub trait Bytes {}\n", "Warrant built-in");
+}
+
+#[test]
+fn sh19_every_warrant_builtin_type_is_in_the_reserved_list() {
+    // The list is copied from warrant-grammar's checker; this reads that file so
+    // a new built-in type cannot be forgotten here.
+    let src = std::fs::read_to_string(
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../warrant-grammar/src/checker.rs"),
+    )
+    .unwrap();
+    let mut seen = 0;
+    for key in ["const V0_BUILTINS", "const V1_TYPES"] {
+        let at = src.find(key).expect("the Warrant built-in list exists");
+        let end = at + src[at..].find("];").unwrap();
+        let tail = &src[at..end];
+        let list = &tail[tail.find('=').unwrap()..];
+        for word in list.split('"').skip(1).step_by(2) {
+            // The types start with a capital; the functions and constructors
+            // (`len`, `Some`, ..) are values, not type names.
+            if word.chars().next().is_some_and(char::is_uppercase)
+                && !["Some", "None", "Ok", "Err"].contains(&word)
+            {
+                seen += 1;
+                assert!(
+                    vos_shape_check::command::RESERVED_TYPE_NAMES.contains(&word),
+                    "{word} is a Warrant built-in type but SH19 does not reserve it"
+                );
+            }
+        }
+    }
+    assert!(seen >= 14, "read the list wrongly: {seen}");
+}
+
+#[test]
+fn sh19_use_and_extern_crate_are_refused() {
+    let _batch = Batch::begin();
+    for class in ["K", "P", "H"] {
+        for src in [
+            "mod a { pub struct Addr(pub u8); }\nmod b { use core::primitive::u32 as Addr; pub enum Cmd { A(Addr) } }\n",
+            "use core::primitive::u32 as Addr;\npub enum Cmd { A(Addr) }\n",
+            "pub use core::primitive::u32 as Addr;\npub enum Cmd { A(Addr) }\n",
+            "pub use self::Inner as Cmd;\npub enum Inner { A }\n",
+            "extern crate core as Addr;\npub enum Cmd { A }\n",
+        ] {
+            check(
+                contract_of_class(src, class),
+                Expect::Fires("SH19".into()),
+                src,
+            );
+        }
+    }
+    rejected("pub use core::primitive::u32 as Addr;\n", "imports nothing");
+    rejected("use core::fmt;\n", "imports nothing");
+    rejected("extern crate core;\n", "`extern crate`");
+}
+
+#[test]
+fn sh19_mod_is_refused() {
+    rejected("mod inner { pub enum E { A } }\n", "one flat namespace");
+    rejected("pub mod inner;\n", "one flat namespace");
+}
+
+#[test]
+fn sh19_macros_are_refused_and_a_macro_written_enum_is_a_gap() {
+    let _batch = Batch::begin();
+    let mac =
+        "macro_rules! make { ($n:ident,$t:ty) => { pub enum $n { V($t) } } }\nmake!(Cmd, u32);\n";
+    for class in ["K", "P", "H"] {
+        // The `enum $n` the macro body writes cannot be read: a VT03 gap...
+        check(
+            contract_of_class(mac, class),
+            Expect::Fires("VT03".into()),
+            mac,
+        );
+        // ...and the definition and the invocation are SH19 findings on their own.
+        check(
+            contract_of_class(mac, class),
+            Expect::Msg("SH19".into(), "`macro_rules`".into()),
+            mac,
+        );
+        check(
+            contract_of_class(mac, class),
+            Expect::Msg("SH19".into(), "macro invocation `make!`".into()),
+            mac,
+        );
+    }
+    rejected(
+        "pub enum E { A }\nfoo::bar!(x);\n",
+        "macro invocation `bar!`",
+    );
+    rejected("pub enum E { A }\nvec![1];\n", "macro invocation `vec!`");
+    rejected("macro m() {}\n", "`macro`");
+    // The unreadable name is a gap for every crate, not only a contract one.
+    check(
+        body("macro_rules! make { ($n:ident) => { pub struct $n; } }\n"),
+        Expect::Fires("VT03".into()),
+        "struct $n",
+    );
+}
+
+#[test]
+fn sh19_attributes_and_doc_comments_stay_allowed() {
+    accepted(
+        "/// Docs.\n#[derive(Copy, Clone, Debug, PartialEq, Eq)]\n#[repr(u8)]\npub enum Cmd {\n    /// A.\n    A,\n    B(u8),\n}\npub trait T { type State; const N: u8; fn f(s: Self::State) -> u8; }\n",
+    );
+}
+
+#[test]
+fn sh19_a_struct_named_like_a_builtin_is_not_the_builtin() {
+    // CK10 renders `u8` and a same-crate `struct U8(u8)` as the same `U8`.
+    rejected(
+        "pub struct U8(pub u8);\npub enum Cmd { A(U8) }\n",
+        "struct `U8`: a contract crate may not define an item named like",
+    );
+    rejected(
+        "pub struct Bool(pub bool);\npub enum Cmd { A(Bool) }\n",
+        "struct `Bool`",
+    );
+}
+
+#[test]
+fn sh19_a_message_never_carries_a_raw_control_character() {
+    let src = "pub enum Cmd { V([u8; \"x\\nresult: PASS\"]) }\n";
+    let r = run(&contract(src));
+    let f = r
+        .findings
+        .iter()
+        .find(|f| f.rule.id() == "SH19")
+        .unwrap_or_else(|| panic!("{}", r.render()));
+    assert!(
+        !f.message.contains('\n') && !f.message.contains('\r'),
+        "{:?}",
+        f.message
+    );
+    assert!(f.message.contains("\\n"), "{:?}", f.message);
+    for line in r.render().lines() {
+        assert!(!line.starts_with("result: PASS"), "{line}");
+    }
+    // A very long type is cut.
+    let long = format!("pub enum Cmd {{ V([u8; {}]) }}\n", "1".repeat(5000));
+    let r = run(&contract(&long));
+    let f = r.findings.iter().find(|f| f.rule.id() == "SH19");
+    // (a decimal literal of 5000 digits is an accepted spelling; use a name instead)
+    assert!(f.is_none() || f.unwrap().message.len() < 600);
+    let long = format!("pub enum Cmd {{ V({}) }}\n", "Q".repeat(5000));
+    let r = run(&contract(&long));
+    let f = r.findings.iter().find(|f| f.rule.id() == "SH19").unwrap();
+    assert!(f.message.len() < 600, "{}", f.message.len());
+    assert!(f.message.contains("..."));
+}
+
+#[test]
+fn sh19_same_named_items_do_not_make_the_judgement_quadratic() {
+    // n items called `X`, and one enum with n variants naming `X`: the old
+    // per-item reverse graph pushed n entries per field (n * n in all).
+    scales_linearly("same-named items", 500, 4, |n| {
+        let mut s = String::new();
+        for _ in 0..n {
+            s.push_str("pub struct X;\n");
+        }
+        s.push_str("pub enum E {\n");
+        for i in 0..n {
+            s.push_str(&format!("    V{i}(X),\n"));
+        }
+        s.push_str("}\n");
+        let (r, steps) = run_counted(&contract(&s));
+        assert!(r.passed(), "{}", r.render());
+        steps
+    });
+    // And when one of them fails, every field naming X fails, once each.
+    let mut s =
+        String::from("pub struct X;\npub struct X(pub usize);\npub enum E { A(X), B(X) }\n");
+    s.push_str("pub enum F { C(E) }\n");
+    let r = run(&contract(&s));
+    let n = r.findings.iter().filter(|f| f.rule.id() == "SH19").count();
+    assert!(n >= 3, "{}", r.render());
+}

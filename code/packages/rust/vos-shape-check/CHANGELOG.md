@@ -4,6 +4,26 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Fixed (security review of VOS-039b-2a)
+
+- **SH19 gate bypass closed by a closed vocabulary** (`command::vocabulary`).  A contract crate may not contain a
+  `use` or `extern crate`, a `mod`, a macro definition or invocation, or an item (`struct`, `enum`, `union`,
+  `type`, `trait`, `fn`, `const`, `static`) named like a Rust primitive or a Warrant built-in type
+  (`RESERVED_TYPE_NAMES`, checked by a test against `warrant-grammar`'s list).  This refuses, as whole
+  constructs, `type u8 = u32;`, `struct u8`, a `use .. as` rename hiding a foreign type, a macro-written enum, and
+  the `struct U8(u8)` collision with CK10.  `Names::judge` also consults the item table before accepting `u8` or
+  `bool` (`Local::Shadowed`).  Attributes and doc comments are unaffected; the real `vos-sched-contract` and the
+  `pass-ready-contract` fixture still pass.
+- `items::collect_types`: an `enum` or `struct` keyword not followed by a name (and `union`/`type` before `$`) is a
+  gap (VT03, fail closed) for every crate, instead of a silent skip (`enum $n` in a macro body).
+- **Quadratic work removed** (`Names`, `command_rules`): the reverse-reference graph is over DISTINCT NAMES (one
+  node per name, deduplicated edges, a name fails if any item of that name fails), so n items named `X` and n
+  fields naming `X` cost linear work, not n times n.  Test: `sh19_same_named_items_do_not_make_the_judgement_quadratic`.
+- **Output injection**: type, variant, field and item names in SH19 messages are escaped (any non-printable-ASCII
+  character) and cut at 48 characters, so a string literal with a newline in a field type cannot forge a line.
+- Tests: a negative control for every reproduced bypass in class K, P and H, the `$` gap, `pub use`, a macro
+  invocation, the reserved-name list against the Warrant checker, and the control-character message.
+
 ### Added (VOS-039b-2a, VOS-D077)
 
 - **SH19, the command-type check** (`src/command.rs`, VOS03 section 4), bound by **kind** (`kind = "contract"`),

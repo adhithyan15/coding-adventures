@@ -4,6 +4,11 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed (security review of VOS-039b-2a)
+
+- `check_enums`: the constructor-written-with-braces lookup is a precomputed map (enum name to constructor set), not
+  a scan of every enum per constructor.
+
 ### Added (VOS-039b-2a, VOS-D077)
 
 - **CK10**, the Rust-enum/Warrant-variant correspondence of `check-contract` (`src/enums.rs`).  Every `enum` of the
