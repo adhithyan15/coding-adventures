@@ -639,6 +639,7 @@ to an earlier constructor with minimal fields, then field-wise; `Option` toward
 | `swap-components` | homogeneous tuples | components exchanged |
 | `field-zero` | record results | first numeric field replaced by `0` |
 | `field-flip` | record results (applicable exactly where `field-zero` is) | lowest bit of the first numeric field flipped |
+| `bool-field-flip` | declared record result (direct, `Result<Record, E>`, or `Option<Record>`) with a direct Boolean field | first direct Boolean field toggled |
 | `wrong-ctor` | variant results | constructor replaced by its predecessor |
 | `ok-as-err` | `Result` of a composite | success reported as the first error case |
 | `off-by-one-consumed` | `(value, consumed)` pairs | `consumed + 1` / `- 1` |
@@ -666,6 +667,36 @@ numeric: a record with none is W0701.
 and the `Fault::FieldFlip` variant are emitted only when some `evidence.bindings`
 line lists `field-flip` in `faults=`. A harness that never names it is byte for
 byte what it was before the fault existed.
+
+**`bool-field-flip` (WX-FAULT2).** Some result records expose a directly observable
+Boolean status alongside a nested numeric record. The numeric faults above do not
+reach that status: field traversal is deliberately direct and declaration ordered.
+`bool-field-flip` toggles (`false` to `true`, `true` to `false`) the first direct
+Boolean field of a declared Warrant record payload. Accepted output shapes are a
+direct record, `Result<Record, E>`, and `Option<Record>`. At most one wrapper is
+supported; `Result<Option<Record>, E>`, `Option<Result<Record, E>>`, and other
+nested/multi-wrapper shapes are rejected at generation with W0701 rather than
+silently admitting an inert fault. The record must resolve through aliases to a
+declared Warrant `record`, not a `variant` (including a one-constructor variant).
+The fault preserves the record constructor, every other direct field, and every
+nested value byte-for-byte. `Err` and `None` are passed through unchanged. A
+record without a direct Boolean field, a scalar/tuple/bytes result, a variant, or
+a record with only a nested Boolean is rejected at generation with W0701. The
+existing `field-zero` and `field-flip` meanings are unchanged.
+
+The fault is opt-in and operation-specific. The generated variant/helper and the
+attack selector are emitted only for a binding that names `bool-field-flip`. Aimed
+execution must also verify that the selected operation lists this fault; an unrelated
+existing operation is not a valid target. An
+aimed negative-control run must fail closed when its named operation is absent, the
+fault is unset, the target operation does not itself list `bool-field-flip`, or the
+target is otherwise invalid; it must fault only the named operation so multiple
+operations cannot cancel each other's mutations. Tests must
+demonstrate both input Boolean values toggle, preserve the constructor/nested and
+unselected fields, preserve `Err`/`None`, and reject nested-only/non-Boolean/variant
+shapes. Existing adopters without the opt-in must regenerate byte-identically.
+The fixed-point saturation probe is the motivating consumer: its public overflow
+flag supplies the direct Boolean target while the nested Q16 value stays unchanged.
 
 *Aiming a sabotage run (`WARRANT_EVIDENCE_ATTACK`).* A sabotage run
 (`WARRANT_EVIDENCE_FAULT=<fault>`) faults every operation that lists the fault. Two
@@ -1624,6 +1655,22 @@ The numbering continues from 14.1.
     range and keeps the width); `drop-last-result-byte` still applies to byte
     strings only.  The `V::Fixed` arm is emitted only when a bound operation
     needs it, so no other harness changes by a byte.
+56. **Boolean record-result fault (WX-FAULT2).** `bool-field-flip` toggles only the
+    first direct Bool field of a declared single-constructor record result, whether
+    direct or inside exactly one `Result`/`Option` wrapper. Accept only a declared
+    Warrant `record` after alias resolution; reject variants, nested-only Bool fields,
+    and multi-wrapper combinations (including `Result<Option<Record>, E>` and
+    `Option<Result<Record, E>>`) with W0701. Preserve all other fields, nested
+    values, the record constructor, `Err`, and `None`. Add opt-in emission,
+    operation-aimed fail-closed sabotage, both-value non-vacuity controls,
+    wrapper/shape tests, and byte-identical regeneration of existing non-opt-in
+    adopters. Do not change numeric `field-zero`/`field-flip` behavior.
+57. **Legacy nested-wrapper fault audit (WX-FAULT3).** Some existing composite
+    faults may admit `Result<Option<Record>, E>` or `Option<Result<Record, E>>`
+    while the legacy `map_payload` helper traverses one layer. Add a bounded
+    synthetic observable repro and compare admission with replay; identify public
+    adopters before changing legacy behavior. No public adopter bug is confirmed,
+    and WX-FAULT2 rejects nested wrappers independently.
 47. **Rows are cases, a table is one test.**  The suite registers one test per table,
     `warrant/<module>/table/<name>`; each row is a case named `vectors/<name>/<row id>`
     in the failure message and in `failed_ids`.  A row whose `holds` panics, or
