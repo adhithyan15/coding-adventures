@@ -314,11 +314,15 @@ worktree; report and preserve it if those checks do not pass.
   established by this port.
 - [ ] `GBL-011` Add fixture external-input/build-selection edges and negative v10 selection tests in each
   affected build lane. Preserve canonical decimal `u64`, bounded numeric `u32`, strict booleans, and
-  exact error behavior across runtimes. GBL-050a now verifies its six exact TypeScript consumer
-  inputs, filtered emit/load selection, and persisted-cache mutation, restore, and hit behavior,
-  including transitive Rust proof dependencies. This closes only that consumer's scope: audit other
-  consumers, including existing Rust game-clock corpus/Warrant inputs, against their actual
-  selector and persisted cache before making a repository-wide external-input invalidation claim.
+  exact error behavior across runtimes. GBL-050a verifies its six exact TypeScript consumer inputs,
+  filtered emit/load selection, and persisted-cache mutation, restore, and hit behavior, including
+  transitive Rust proof dependencies. GBL-003b adds the corresponding exact Rust game-clock input
+  closure and cache probes; audit of other consumers remains open before any repository-wide
+  external-input invalidation claim. A bounded cross-lane admission question also remains: determine
+  whether a repository-root lookalike such as `.cargo/config.toml.bak` is rejected consistently by
+  Go/Python versus C#/Swift candidate selection and source filtering. This is an unresolved contract
+  question, not a confirmed production mismatch; keep the valid six-input case and nearby-path
+  negatives intact while probing it.
 - [ ] `GBL-013` Implement GAME10 public APIs and exact v1 corpus consumption in Go.
 - [ ] `GBL-014` Implement GAME10 public APIs and exact v1 corpus consumption in Python.
 - [ ] `GBL-012` Add the remaining established GAME10 package ports with exact shared corpus consumers,

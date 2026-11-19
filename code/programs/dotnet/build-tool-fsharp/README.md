@@ -46,7 +46,7 @@ that `_Build`, `Blib`, `blib-example`, and `_build-example` remain source. This
 facade intentionally performs the same filesystem discovery as the CLI and adds
 no second implementation or authority.
 
-The source-hashing facades independently consume all 21 neutral source-
+The source-hashing facades independently consume all 22 neutral source-
 collection cases and all eight hashing/cache package-digest cases through F#,
 including both before/after consumers of one exact shared Rust manifest. They prove the
 complete typed language and repository-boundary projections, both canonical

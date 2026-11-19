@@ -1202,6 +1202,21 @@ func cacheHashPackages(execution, universe []discovery.Package, graph *directedg
 // several places that compute shards all read the same choice.
 var shardWeights *plan.ShardWeights
 
+func hashPackageWithRepositoryInputs(
+	pkg discovery.Package,
+	repoRoot string,
+	fallback func(discovery.Package) (string, error),
+) (string, error) {
+	switch pkg.Name {
+	case "rust/game-clock":
+		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, gameClockInputPaths)
+	case "typescript/game-input-frame":
+		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, typescriptGameInputFrameInputs)
+	default:
+		return fallback(pkg)
+	}
+}
+
 func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) int {
 	// CLI flags — using Go's standard flag package.
 	root := flag.String("root", "", "Repo root directory (auto-detect from .git)")
@@ -1331,10 +1346,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	}
 	basePackageHasher := hashPackage
 	hashPackage = func(pkg discovery.Package) (string, error) {
-		if pkg.Name == "typescript/game-input-frame" {
-			return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, typescriptGameInputFrameInputs)
-		}
-		return basePackageHasher(pkg)
+		return hashPackageWithRepositoryInputs(pkg, repoRoot, basePackageHasher)
 	}
 
 	// The build starts from the code/ directory inside the repo root.
