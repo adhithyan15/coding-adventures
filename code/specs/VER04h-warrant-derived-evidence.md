@@ -384,14 +384,25 @@ one `source-equivalence` entry only as an explicit **refusal-only fallback**:
   certificates or obligation digest. `evidence.bindings` must declare
   `proofs_not_live=<reason>` for that operation.
 * The supported crate target is Cargo's default library target discovered as
-  `src/lib.rs`. A custom `[lib]` target, `package.autolib = false`, or any
-  manifest form the bounded target check cannot resolve is unsupported. The
+  `src/lib.rs`. The bounded manifest bytes are parsed as TOML; the manifest
+  must identify a package, omit a `[lib]` override, and omit or enable
+  `package.autolib`. A custom target, disabled auto-discovery, malformed TOML,
+  or any other target form is unsupported. The
   export must be an unconditional root item: candidate-like tokens inside
   parentheses, brackets, macro input, or nested braces do not count. An
   attached `cfg`/`cfg_attr` or crate-level conditional attribute makes the
   candidate ineligible; other unrelated item attributes, including `derive`,
   remain allowed. This restriction establishes the active public export
   without pretending the subset lexer is a complete Rust item resolver.
+* The pilot export signature profile is intentionally closed: `pub fn <name>`
+  with named parameters whose types are simple paths, optionally followed by
+  a return type that is a simple path or one generic path level with simple,
+  comma-separated type arguments, and then the function body. Generic
+  functions, nested generic types, const-generic syntax, references, `where`
+  clauses, type macros, or any unrecognized signature token are identity
+  failures. They are not frontend refusals and cannot produce this fallback.
+  Only after target, root-item and signature identity are resolved does a
+  parser or lowering refusal count as the reproduced frontend result.
 * The report checker reruns the Rust-subset/WIR frontend on that actual public
   export. Producer and checker each capture the bounded `src/**/*.rs` tree
   once, reject a symlinked `src` root or any symlink in the tree, and derive
