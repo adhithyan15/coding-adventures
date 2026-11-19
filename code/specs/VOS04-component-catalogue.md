@@ -1130,7 +1130,8 @@ is absent or `false`. `[dev-dependencies]` are allowed (they run in tests only, 
 real contract crate has none). (2) SH19 (h): in a contract crate every attribute, outer or inner, is one of a
 closed list: `derive` whose arguments are only the BARE names `Copy`, `Clone`, `Debug`, `PartialEq`, `Eq`,
 `PartialOrd`, `Ord`, `Hash`, `Default`; `repr` with arguments from `u8`, `C`, `transparent`; `no_std`,
-`forbid`, `deny`, `warn`, `allow`, `doc`, `must_use`, `inline`; and `cfg` whose argument is exactly `test`.
+`forbid`, `deny`, `warn`, `allow` (lists of lint names), `doc` (`= "text"` or `(hidden)`), `must_use`, `inline`, `default`
+(the helper of `derive(Default)` on an enum, added to the memo's list for that reason); and `cfg` whose argument is exactly `test`.
 Any other attribute is a finding: every path attribute (`a::b`), `cfg_attr`, `path`, `macro_use`, `proc_macro*`,
 `test` and anything else. (`non_exhaustive` is its own finding, SH19 (a).) Doc comments stay.
 
