@@ -64,8 +64,10 @@ well-formed variable query returns `Undef`, as in TypeScript. `NewVar` and
 `AddClause` check an independent configurable resource ceiling before growing
 state: defaults are at most `1<<20` variables, `1<<20` original clauses,
 `1<<24` total original clause literals, and `1<<24` total stored literals
-including learned clauses. Configured ceilings may lower these values but
-cannot raise representability limits. `Solve()` with omitted options is
+including learned clauses. A zero config field keeps its default; a positive
+field may lower but cannot raise its hard default. The physical clause arena is
+also capped at `MaxClauses + MaxStoredLiterals`, so reduction cannot leave an
+unbounded trail of tombstones and watcher IDs. `Solve()` with omitted options is
 unlimited except for state ceilings. `SolverOptions` uses optional `*uint64`
 budget fields: nil is unlimited and a pointer to zero means zero work; setting
 one limit leaves the other unlimited. At most one options value is accepted.
@@ -84,7 +86,8 @@ and rejects encodings outside the representable TypeScript-compatible range
 (variable indices `0..2^30-1`, packed literals `0..2^31-1`). It must not rely on
 integer wraparound. A separate conservative allocation ceiling bounds actual
 variable and clause storage; representability is not permission to allocate
-billions of entries. TypeScript does not enforce the encoding upper bound at
+billions of entries. DIMACS `MaxVars` overrides and declared headers also stay
+within the packed-literal representability limit. TypeScript does not enforce the encoding upper bound at
 every public entry point; this Go-side validation is an explicit hardening
 difference.
 
