@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Same-suite, server-role `VerifiedFinished` completion of the retained ordered
+  no-PSK server flight, preserving both cryptographic verdicts, the optional
+  client-authentication requirement, and stable pre-mutation failures.
 - Ordered no-PSK server-flight transition from `ExpectCertificateVerify` to
   `ExpectFinished` that admits only the five sealed destination-bound complete-
   revocation signature verdicts and retains the exact flight and proof.

@@ -1097,6 +1097,27 @@ external effect. Ordered transcript composition, Finished authentication,
 record protection, and transport therefore remain separate blockers; concrete
 HTTPS and live-provider readiness remain unavailable.
 
+A bounded follow-up consumes that exact ordered `CertificateVerify` result
+together with one repository-owned `VerifiedFinished`. It requires the
+Finished sender role to be server and its selected cipher suite to equal the
+suite retained through the exact sealed `CertificateVerify` verdict before it
+mutates the flight. Success accepts `Finished`, completes that exact flight,
+preserves any accepted client-authentication requirement, and returns non-
+copyable evidence retaining the complete-revocation signature verdict and
+exact Finished verdict. Role or suite substitution fails before flight
+mutation with a stable payload-free category.
+
+This transition consumes an already-produced Finished verification result. It
+does not prove that the verdict's retained transcript hash was advanced from
+the exact retained `CertificateVerify` message or the earlier accepted message
+types in one encoded handshake stream. It does not enforce a later client-
+authentication response, bind record epochs, protect records, perform I/O,
+authorize OAuth transport, or grant network authority. It accesses no
+credential and causes no editing, signing, provider or trace event, storage,
+clock, network, or other external effect. Exact ordered transcript ownership,
+record protection, and transport remain separate blockers; concrete HTTPS and
+live-provider readiness remain unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks

@@ -14917,6 +14917,7 @@ dependencies = [
 name = "tls13-reviewed-server-path-certificate-verify"
 version = "0.1.0"
 dependencies = [
+ "coding_adventures_hkdf",
  "der-asn1",
  "http1-request-host-authority",
  "https-destination-name-binding",
@@ -14928,6 +14929,7 @@ dependencies = [
  "tls13-certificate-verify-message",
  "tls13-certificate-verify-transcript-binding",
  "tls13-cipher-suite-policy",
+ "tls13-finished",
  "tls13-handshake",
  "tls13-no-psk-server-flight",
  "tls13-rsa-pss-certificate-verify",

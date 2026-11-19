@@ -70,6 +70,22 @@ perform I/O, or make TLS, HTTPS, HTTP, OAuth transport, or live-provider access
 available. It accesses no credential and causes no signing, provider, trace,
 storage, clock, network, or other external effect.
 
+A second bounded transition consumes that ordered result together with one
+repository-owned `VerifiedFinished`. It rejects client-role evidence and a
+cipher-suite substitution before flight mutation, then accepts `Finished` in
+the retained ordering policy and returns non-copyable evidence retaining the
+exact complete-revocation `CertificateVerify` verdict, exact `Finished`
+verdict, and completed flight. The optional client-authentication requirement
+remains attached to the flight.
+
+This completion does not prove that the `Finished` verdict's retained
+transcript hash follows the exact retained `CertificateVerify` message or any
+earlier accepted type in one encoded handshake stream. It does not enforce a
+later client-authentication response, bind record epochs, protect records,
+perform I/O, or make TLS, HTTPS, HTTP, OAuth transport, or live-provider access
+available. It accesses no credential and causes no signing, provider, trace,
+storage, clock, network, or other external effect.
+
 ## Development
 
 ```bash
