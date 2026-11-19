@@ -41,7 +41,7 @@ mod harness {
     }
 
     pub fn exec(job: impl FnOnce() -> V + Send + 'static) -> Seen {
-        match obs_exec(job) {
+        match obs_exec(move || obs_scope(job)) {
             Exec::Finished(Ok(_), p) => Seen::Finished(p),
             Exec::Finished(Err(_), p) => Seen::Panicked(p),
             Exec::Tripped(p) => Seen::Tripped(p),
@@ -60,7 +60,7 @@ mod harness {
         heap: Option<i128>,
         job: impl FnOnce() -> V + Send + 'static,
     ) -> Result<V, String> {
-        match catch_unwind(AssertUnwindSafe(|| obs_observe(op, heap, job))) {
+        match catch_unwind(AssertUnwindSafe(|| obs_observe(op, heap, move || obs_scope(job)))) {
             Ok(v) => Ok(v),
             Err(p) => match p.downcast::<ObsFailure>() {
                 Ok(f) => Err(f.0),
@@ -217,7 +217,12 @@ fn the_manifest_records_the_output_bound_and_the_observer() {
         let instances = number(&e, "instances_observed");
         let peak = number(&e, "max_observed_heap");
         assert!(instances > 0, "{id}: {e}");
-        assert!(peak > 0, "{id}: {e}");
+        // Only the export is observed (VOS-D063): a suite whose inputs are almost all
+        // rejected allocates nothing in the export and peaks at 0.  The one example that
+        // decodes a stream must show the export's own allocation.
+        if id.starts_with("example/") {
+            assert!(peak > 0, "{id}: {e}");
+        }
         // The measured peak is below the bound at that instance.
         if e.contains("\"bound_at_max\":") {
             assert!(peak <= number(&e, "bound_at_max"), "{id}: {e}");

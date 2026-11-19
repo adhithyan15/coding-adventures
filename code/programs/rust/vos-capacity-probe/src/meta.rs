@@ -86,5 +86,28 @@ pub fn gather(exe: &Path) -> Meta {
         os: run("uname", &["-sr"], None).unwrap_or_default(),
         revisions,
         regeneration: None,
+        merges: Vec::new(),
     }
+}
+
+/// Is `rev` (a 40-hex commit id) HEAD or an ancestor of it?  `Err` if `git` cannot say.
+pub fn is_ancestor_of_head(rev: &str) -> Result<bool, String> {
+    if rev.len() != 40 || !rev.bytes().all(|b| b.is_ascii_hexdigit()) {
+        return Err(format!("{rev:?} is not a 40-hex revision"));
+    }
+    let st = Command::new("git")
+        .args(["merge-base", "--is-ancestor", rev, "HEAD"])
+        .current_dir(repo_root())
+        .status()
+        .map_err(|e| format!("cannot run git: {e}"))?;
+    match st.code() {
+        Some(0) => Ok(true),
+        Some(1) => Ok(false),
+        _ => Err(format!("git cannot place revision {rev}")),
+    }
+}
+
+/// The current UTC time, `YYYY-MM-DDTHH:MM:SSZ`.
+pub fn utc_now() -> String {
+    run("date", &["-u", "+%Y-%m-%dT%H:%M:%SZ"], None).unwrap_or_else(|| "unknown".into())
 }

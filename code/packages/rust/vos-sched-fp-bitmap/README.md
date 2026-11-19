@@ -84,10 +84,11 @@ run exits 0: `init` is bound with `field-flip` (VER04j 4.8, WX-SV2), which is ne
 initial state, so there is no tolerance script (VOS-D065). `evidence/test-manifest.json` records no
 failing control.
 
-**The ceiling `heap 0` is not evidenced package-wide.** The harness's heap observer counts its own
-value marshalling, so only `insert_out` and `remove_out` carry a `heap <= 0` row (VOS-D063); the other
-six bound operations have no heap row and the contract's `heap 0` ceiling is untested for them
-(the source has no allocator, SH1, but that is a shape fact, not evidence).
+**The ceiling `heap 0` is evidenced on every bound operation.** The harness's heap observer counts the
+export call only, not the `vec!` the adapter allocates to marshal a record or a payload-carrying
+variant (VOS-D063), so all eight bound operations carry `heap <= 0` and `evidence/test-manifest.json`
+records `max_observed_heap 0` for each. (The source has no allocator, SH1; the rows are what turns that
+shape fact into evidence.)
 
 The nine model-level lemmas of the contract are not here: they live in the contract package's
 `lemmas.part`, evaluated by `vos-sched-contract-check` (VOS02 R1.4, VOS-D064).

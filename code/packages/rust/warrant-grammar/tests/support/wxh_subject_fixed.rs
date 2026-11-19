@@ -8,7 +8,7 @@
 //   --------+--------------------------
 //   03 00 00 00  03 61         -> "aaa"
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LzErr {
     OutputLimit,
     Corrupt,

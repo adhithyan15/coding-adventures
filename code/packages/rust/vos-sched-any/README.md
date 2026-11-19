@@ -92,5 +92,5 @@ skips validation fails `dispatch_safe` and `dispatch_sound`; one that moves the 
 oracle passes the generated evidence, because the safety claims quantify over `build(M)` and
 `alpha` forgets the oracle; only the hand-written behaviour test catches it.
 
-**The ceiling `heap 0` is not evidenced package-wide**, as in `vos-sched-fp-bitmap` (VOS-D063):
-only `insert_out` and `remove_out` carry a `heap <= 0` row.
+**The ceiling `heap 0` is evidenced on every bound operation** (VOS-D063): the harness's heap observer
+counts the export call only, so all eight bound operations carry a `heap <= 0` row.
