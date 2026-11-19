@@ -1175,6 +1175,8 @@ const WXA_FAULTS: &[(&str, &str)] = &[
     ("off-by-one-consumed", "OffByOneConsumed"),
     // WX-SV2: `field-zero` that is never inert (the lowest bit flips).
     ("field-flip", "FieldFlip"),
+    // WX-FAULT2: mutate one directly observable status flag in a record.
+    ("bool-field-flip", "BoolFieldFlip"),
 ];
 
 /// Faults for an operation whose result is a byte string (a digest, a codec
@@ -1203,6 +1205,21 @@ const WXG_FAULTS: &[(&str, &str)] = &[
     ("clobber-prefix", "ClobberPrefix"),
     ("cursor-off-by-one", "CursorOffByOne"),
 ];
+
+/// WX-FAULT2 applies only to a declared record (never a variant) with a
+/// directly observable Bool field, optionally behind exactly one Result or
+/// Option. Resolve aliases before this predicate is called.
+fn bool_field_flip_applies(full: &Ty) -> bool {
+    let record_has_bool = |ty: &Ty| {
+        matches!(ty, Ty::Data { ctors, record: true, .. }
+            if ctors.len() == 1 && ctors[0].1.iter().any(|field| *field == Ty::Bool))
+    };
+    match full {
+        Ty::Data { .. } => record_has_bool(full),
+        Ty::Res(payload, _, _) | Ty::Opt(payload) => record_has_bool(payload),
+        _ => false,
+    }
+}
 
 fn fault_variant(name: &str) -> Option<&'static str> {
     FAULTS
@@ -2386,6 +2403,7 @@ fn composite_adapter<'a>(
             }
             "field-zero" | "field-flip" => matches!(&core, Ty::Data { ctors, .. }
                 if ctors.len() == 1 && ctors[0].1.iter().any(is_numeric)),
+            "bool-field-flip" => bool_field_flip_applies(&full),
             "wrong-ctor" => matches!(&core, Ty::Data { ctors, .. } if ctors.len() >= 2),
             "ok-as-err" => {
                 is_result && matches!(&core, Ty::Tuple(_) | Ty::Data { .. }) && !cases.is_empty()
@@ -2555,6 +2573,7 @@ fn composite_adapter<'a>(
             "swap-components" => "fault_swap_components(v)".to_string(),
             "field-zero" => "fault_field_zero(v)".to_string(),
             "field-flip" => "fault_field_flip(v)".to_string(),
+            "bool-field-flip" => "fault_bool_field_flip(v)".to_string(),
             "off-by-one-consumed" => "fault_off_by_one_consumed(v)".to_string(),
             "wrong-ctor" => format!("fault_wrong_ctor(v, {})", core.rust()),
             "ok-as-err" => format!("fault_ok_as_err(v, \"{}\")", cases[0]),
@@ -4020,9 +4039,25 @@ pub fn generate_evidence_harness_with_tables(
     // so no harness written before the fault existed changes by a byte.
     if used_faults.contains("field-flip") {
         features.insert("fieldflip");
+        features.insert("fieldfliphelper");
+    }
+    if used_faults.contains("field-flip") || used_faults.contains("bool-field-flip") {
+        // `fieldflip` is the shared, existing targeted-sabotage infrastructure.
+        // Keep its rendered source unchanged for legacy adopters; the numeric
+        // helper itself is separately gated above.
+        features.insert("fieldflip");
         // The operations `WARRANT_EVIDENCE_ATTACK` may name (validated by `check_attack`).
         let names: Vec<String> = shapes.keys().map(|k| format!("{k:?}")).collect();
         let _ = write!(adapters, "const HARNESS_OPS: &[&str] = &[{}];\n\n", names.join(", "));
+    }
+    if used_faults.contains("bool-field-flip") {
+        features.insert("boolfieldflip");
+        let names: Vec<String> = op_faults
+            .iter()
+            .filter(|(_, faults)| faults.iter().any(|(name, _)| name == "bool-field-flip"))
+            .map(|(name, _)| format!("{name:?}"))
+            .collect();
+        let _ = write!(adapters, "const HARNESS_BOOL_FIELD_FLIP_OPS: &[&str] = &[{}];\n\n", names.join(", "));
     }
     // WX-N: a v1 document with a fixed-width `Bytes<N>` anywhere labels that
     // domain `full` or `sample` instead of `set`.  Gated like the helpers above,
@@ -4087,7 +4122,55 @@ pub fn generate_evidence_harness_with_tables(
 
 #[cfg(test)]
 mod scope_tests {
-    use super::scope_export_calls;
+    use super::{bool_field_flip_applies, scope_export_calls, Ty};
+
+    fn record(fields: Vec<Ty>) -> Ty {
+        Ty::Data {
+            name: "Record".into(),
+            ctors: vec![("Record".into(), fields)],
+            record: true,
+        }
+    }
+
+    #[test]
+    fn bool_field_fault_shape_is_direct_record_with_at_most_one_wrapper() {
+        let direct = record(vec![Ty::U8, Ty::Bool, Ty::Data {
+            name: "Nested".into(),
+            ctors: vec![("Nested".into(), vec![Ty::Bool])],
+            record: true,
+        }]);
+        assert!(bool_field_flip_applies(&direct));
+        assert!(bool_field_flip_applies(&Ty::Res(
+            Box::new(direct.clone()),
+            vec!["ERR".into()],
+            super::ErrName("E".into()),
+        )));
+        assert!(bool_field_flip_applies(&Ty::Opt(Box::new(direct))));
+
+        let nested_only = record(vec![Ty::Data {
+            name: "Nested".into(),
+            ctors: vec![("Nested".into(), vec![Ty::Bool])],
+            record: true,
+        }]);
+        assert!(!bool_field_flip_applies(&nested_only));
+        assert!(!bool_field_flip_applies(&record(vec![Ty::U8])));
+        assert!(!bool_field_flip_applies(&Ty::Data {
+            name: "SingleVariant".into(),
+            ctors: vec![("Only".into(), vec![Ty::Bool])],
+            record: false,
+        }));
+        assert!(!bool_field_flip_applies(&Ty::Res(
+            Box::new(Ty::Opt(Box::new(record(vec![Ty::Bool])))),
+            vec!["ERR".into()],
+            super::ErrName("E".into()),
+        )));
+        assert!(!bool_field_flip_applies(&Ty::Opt(Box::new(Ty::Res(
+            Box::new(record(vec![Ty::Bool])),
+            vec!["ERR".into()],
+            super::ErrName("E".into()),
+        )))));
+        assert!(!bool_field_flip_applies(&Ty::Tuple(vec![Ty::Bool, Ty::U8])));
+    }
 
     #[test]
     fn wraps_the_call_and_nothing_around_it() {

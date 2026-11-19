@@ -727,7 +727,7 @@ fn fault_field_zero(v: V) -> V {
     })
 }
 
-//@if fieldflip
+//@if fieldfliphelper
 /// Fault `field-flip` (WX-SV2): the lowest bit of the first numeric field of a
 /// record result is flipped.  Where `field-zero` is inert on a field that is
 /// already `0`, `x ^ 1` differs from `x` for every `x`: it exchanges the pair
@@ -749,6 +749,24 @@ fn fault_field_flip(v: V) -> V {
     })
 }
 
+//@endif
+//@if boolfieldflip
+/// WX-FAULT2: toggle the first direct Boolean field of a declared record result.
+/// This is emitted only for documents that explicitly bind this fault.
+fn fault_bool_field_flip(v: V) -> V {
+    map_payload(v, |x| match x {
+        V::Con(t, i, c, mut vs) => {
+            if let Some(slot) = vs.iter_mut().find(|field| matches!(field, V::Bool(_))) {
+                *slot = match &*slot {
+                    V::Bool(value) => V::Bool(!*value),
+                    other => other.clone(),
+                };
+            }
+            V::Con(t, i, c, vs)
+        }
+        other => other,
+    })
+}
 //@endif
 /// Fault `off-by-one-consumed`: the second component of a `(value, consumed)`
 /// pair is off by one, `+ 1` when even and `- 1` when odd, so both directions
@@ -3285,6 +3303,23 @@ pub fn check_attack(attack: Option<&str>, fault: Option<&str>, ops: &[&str]) -> 
     Ok(())
 }
 
+//@if boolfieldflip
+/// WX-FAULT2: an aimed bool-field attack must select an operation that opted
+/// into this fault, not merely any operation that exists in the harness.
+pub fn check_bool_field_attack(attack: Option<&str>, fault: Option<&str>, ops: &[&str]) -> Result<(), String> {
+    if matches!(fault, Some("bool-field-flip")) {
+        if let Some(op) = attack {
+            if !ops.contains(&op) {
+                return Err(format!(
+                    "WARRANT_EVIDENCE_ATTACK={op:?} does not bind fault `bool-field-flip`"
+                ));
+            }
+        }
+    }
+    Ok(())
+}
+
+//@endif
 //@endif
 /// A filtered suite that selects nothing proves nothing and must not pass.
 pub fn require_tests(count: usize, filter: Option<&str>) -> Result<(), String> {
@@ -3329,6 +3364,16 @@ pub fn run_main(src_dir: &std::path::Path) -> i32 {
         std::env::var("WARRANT_EVIDENCE_ATTACK").ok().as_deref(),
         fault_var.as_deref(),
         HARNESS_OPS,
+    ) {
+        eprintln!("{msg}");
+        return 2;
+    }
+//@endif
+//@if boolfieldflip
+    if let Err(msg) = check_bool_field_attack(
+        std::env::var("WARRANT_EVIDENCE_ATTACK").ok().as_deref(),
+        fault_var.as_deref(),
+        HARNESS_BOOL_FIELD_FLIP_OPS,
     ) {
         eprintln!("{msg}");
         return 2;

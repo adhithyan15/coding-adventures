@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — opt-in Boolean record-result fault (WX-FAULT2)
+
+- Add the `bool-field-flip` evidence fault for a declared record result with a
+  direct `Bool` field, optionally behind one `Result` or `Option`. It flips only
+  the first direct Boolean field and preserves the rest of the record; unsupported
+  shapes fail closed. The opt-in helper and targeted-attack checks are emitted
+  only for adopters that bind the fault. The WX-FAULT2 fixture compiles and runs
+  direct, `Result`, `Option`, combined-fault and non-opted-operation controls.
+
 ## Unreleased — observer counts the export only; `fixed<N>` in models (VOS-038c)
 
 - VOS-D063 (VER04j 6.3, 14.3 item 54): the allocation observer's window is closed when a job starts and is
