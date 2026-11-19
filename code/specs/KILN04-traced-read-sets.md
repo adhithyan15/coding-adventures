@@ -2535,6 +2535,30 @@ code 0, an absolute path, the owner resuming `= 0`, and (pass 2) the same thread
 group; every miss is the old `unresumed-call`. The captured trace is a test,
 and both fuzzers seed it.
 
+**Cross-checking the traces the children wrote (D34).** The soak's coverage of
+real recordings was thin: `KILN_TRACE_DIFF=1` is set for the `go test` process,
+but the real parses happen in CHILD processes (`kiln record prepare`'s probes,
+`step`, the classify child, `collect`) whose environments are hand-built. The
+variable is deliberately NOT passed to them: `recordcmd.go` seals the environment
+into facts and keys, so a debugging switch could leak into sealed data. Instead
+the kiln-sandbox tests that run record children (step, collect, gates, survivor
+and the probe tests) register a `t.Cleanup` that reads back EVERY `*.trace` under
+the record directory (`probe/*.trace` and `record.StepFile(dir, action, i,
+"trace")`) and parses it in the test process with `trace.ParseCrossChecked`
+(`internal/trace`, a test instrument kept out of production code by
+`TestMeasureIsNotUsedByProductionCode`), using the Limits, helper-root setting,
+helper executable and working directory the child used (recovered from the sealed
+`pre/`). It returns a disagreement as a value instead of a panic. The test FAILS
+on any mismatch (a fail-open or a divergence outside the list) and on any ALLOWED
+stricter-only divergence: on a real trace the rule is that there are none. The
+cleanup runs after the children finish and before the temp dir is deleted, once
+per record directory, and only when the test process has `KILN_TRACE_DIFF=1`. It
+logs `PROBE: crosscheck traces=N bytes=B mismatches=M allowed=A` (with the D32
+`Diagnose` report, bounded and sanitised, for any failing trace), and
+`ci/assert_sandbox_tests.py` requires at least one such line with `traces >= 1`
+from a passing test, and `mismatches=0 allowed=0` on every one, so the check
+cannot go vacuous.
+
 **The default-flip gates (restated by PR 6).** The first draft gated the flip on
 "at least 8 MB/s and within 3x of the old parser". That gate is replaced: a ratio
 to the old scanner measures how fast the old scanner is, not whether the grammar
@@ -2740,7 +2764,11 @@ holding. Until then it is kept as the oracle.
 cross-check, not the throughput gate. A kiln-sandbox run counts toward the 200
 if its cross-checked tests ran under `KILN_TRACE_DIFF=1` with no mismatch and no
 divergence, **whatever G1 did** (a slow host failing the capability or absolute
-gate says nothing about whether the two readers agree). A job that died before
+gate says nothing about whether the two readers agree). The coverage
+of REAL recordings is the D34 line: each kiln-sandbox run's `PROBE: crosscheck`
+line (traces of the children's recordings, both readers, no mismatch, no allowed
+divergence) counts toward it, and a run whose line has `traces=0` or is missing
+does not count. A job that died before
 its tests ran (a runner fault, a setup failure) counts **neither way**: it is
 not a pass and it does not reset the count. Only a mismatch or a divergence
 resets the count. The resource limits (1 GiB and 8M events, and the caps above) may be
