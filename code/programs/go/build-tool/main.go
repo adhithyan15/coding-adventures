@@ -1331,8 +1331,8 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	}
 	basePackageHasher := hashPackage
 	hashPackage = func(pkg discovery.Package) (string, error) {
-		if pkg.Name == "typescript/game-input-frame" {
-			return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, typescriptGameInputFrameInputs)
+		if inputs := repositoryInputsForPackage(pkg.Name); len(inputs) > 0 {
+			return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, inputs)
 		}
 		return basePackageHasher(pkg)
 	}

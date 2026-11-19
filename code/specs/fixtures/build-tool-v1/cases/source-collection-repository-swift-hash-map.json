@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/repository-swift-hash-map-v1-corpus",
+  "domain": "source_collection",
+  "summary": "The Swift hash-map package receives only its exact tracked DT18 v1 corpus as a repository boundary input.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "source_collection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "mode": "repository_boundary",
+      "language": "swift",
+      "package_root": "code/packages/swift/hash-map",
+      "boundary_sha256": "8642fcecac97fe634026938e6ec3d3078390ad0f8e8ff77c810dd3dbf85c82b5",
+      "candidates": [
+        {
+          "path": "code/packages/swift/hash-map/Package.swift",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "7061636b6167650a"
+        },
+        {
+          "path": "code/specs/DT18-hash-map.md",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "737065630a"
+        },
+        {
+          "path": "code/specs/fixtures/hash-map-v10/cases.json",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "6c6f6f6b616c696b650a"
+        },
+        {
+          "path": "code/specs/fixtures/hash-map-v1/cases.json",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "64743138206e65757472616c20666978747572650a"
+        },
+        {
+          "path": "code/specs/fixtures/hash-map-v1/schema.json",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "736368656d610a"
+        }
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/repository-swift-hash-map-v1-corpus",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {
+      "files": [
+        {
+          "path": "code/specs/fixtures/hash-map-v1/cases.json",
+          "digest": "c389948ca502967f0cc377a3133f473c72b2c22346701ee955367e1e61f4bdcc"
+        }
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

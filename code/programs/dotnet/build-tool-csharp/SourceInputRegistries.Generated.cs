@@ -1571,6 +1571,25 @@ internal static class SourceInputRegistryProjection
       "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
     },
     {
+      "id": "swift-hash-map-v1-corpus-input",
+      "input_origin": "repository",
+      "applies_to": {
+        "exact_roots": [
+          "code/packages/swift/hash-map"
+        ],
+        "descendant_roots": [],
+        "excluded_roots": []
+      },
+      "inputs": [
+        {
+          "path": "code/specs/fixtures/hash-map-v1/cases.json",
+          "role": "cross_package_exact"
+        }
+      ],
+      "reason": "The Swift hash-map package conformance test reads the neutral DT18 v1 cases file outside its package root.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    },
+    {
       "id": "typescript-program-workspace-configuration",
       "input_origin": "typescript",
       "applies_to": {

@@ -12,7 +12,7 @@
       "mode": "repository_boundary",
       "language": "java",
       "package_root": "code/packages/java/conduit",
-      "boundary_sha256": "02975c651ded7e4191ca4f1a142148ecd17176ae585c349c62a86163b13c0d16",
+      "boundary_sha256": "8642fcecac97fe634026938e6ec3d3078390ad0f8e8ff77c810dd3dbf85c82b5",
       "candidates": [
         {"path": "code/packages/rust/.cargo/config.toml", "kind": "file", "tracked": true, "content_hex": "6f746865720a"},
         {"path": "code/packages/rust/Cargo.toml", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
