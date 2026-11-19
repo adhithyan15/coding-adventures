@@ -13,17 +13,17 @@ proof beside the sender role and a borrowed key-material view into caller-owned
 fixed wipe-on-drop storage. Callers cannot supply a detached secret, suite,
 hash, output length, label, or context.
 
-The complete traffic-secret wrapper can instead be immutably retained by a
-single-use record-state issuer. The shared exact proof object may therefore
-also authorize Finished-key and transcript-continuation boundaries without
-duplicating secret custody. The issuer permits one successful client issuance
-and one successful server issuance. Repeating a sender is rejected before
-output storage is touched. Each success derives the retained sender's key
-material, moves it into fresh sequence-zero nonce state, marks that sender
-issued, and returns a non-cloneable wrapper that borrows the issuer. Callers
-can borrow or mutably borrow the state through that wrapper, but cannot detach
-it from the complete retry proof or create a second sequence-zero state for
-the same sender through this boundary.
+The complete traffic-secret wrapper can instead be consumed into a single-use
+record-state issuer. That issuer permits one successful client issuance and
+one successful server issuance. Repeating a sender is rejected before output
+storage is touched. Each success derives the retained sender's key material,
+moves it into fresh sequence-zero nonce state, marks that sender issued, and
+returns a non-cloneable wrapper that borrows the issuer. Callers can borrow or
+mutably borrow the state through that wrapper, but cannot detach it from the
+complete retry proof or create a second sequence-zero state for the same
+sender through this boundary. Finished-key and transcript-continuation proofs
+for the same secrets must be derived through the issuer's immutable proof
+accessor, preserving that single owner and its issuance state.
 
 The exact state wrapper can also seal or open one retry-handshake record through
 the repository-owned record dispatcher. Sealing fixes the authenticated inner

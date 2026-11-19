@@ -360,9 +360,7 @@ impl HandshakeTrafficSender {
 
 /// Single-use per-sender issuer for exact retry handshake record state.
 ///
-/// Construction immutably retains the complete non-cloneable traffic-secret
-/// proof, so the same exact proof object can also authorize Finished-key and
-/// transcript continuation boundaries without duplicating secret custody.
+/// Construction consumes the complete non-cloneable traffic-secret proof.
 /// Each sender can obtain state exactly once from this issuer. The interior
 /// issuance bits make this type non-`Sync`, so duplicate checks and successful
 /// issuance cannot race across threads.
@@ -371,8 +369,7 @@ pub struct RetryHandshakeRecordProtectionStateIssuer<
     'secret_storage,
     Evidence: ExactRetryBaseSecrets + ?Sized,
 > {
-    traffic_secrets:
-        &'evidence BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence>,
+    traffic_secrets: BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence>,
     issued: Cell<u8>,
 }
 
@@ -381,14 +378,10 @@ impl<'evidence, 'secret_storage, Evidence>
 where
     Evidence: ExactRetryBaseSecrets + ?Sized,
 {
-    /// Retain exact retry traffic-secret evidence in a fresh issuer.
+    /// Consume exact retry traffic-secret evidence into a fresh issuer.
     #[must_use]
     pub const fn new(
-        traffic_secrets: &'evidence BoundRetryHandshakeTrafficSecrets<
-            'evidence,
-            'secret_storage,
-            Evidence,
-        >,
+        traffic_secrets: BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence>,
     ) -> Self {
         Self {
             traffic_secrets,
@@ -401,7 +394,7 @@ where
     pub const fn traffic_secrets(
         &self,
     ) -> &BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence> {
-        self.traffic_secrets
+        &self.traffic_secrets
     }
 
     /// Report whether this issuer already created state for `sender`.
@@ -435,7 +428,7 @@ where
         }
 
         let bound =
-            bind_retry_handshake_traffic_key_material(self.traffic_secrets, sender, storage)
+            bind_retry_handshake_traffic_key_material(&self.traffic_secrets, sender, storage)
                 .map_err(RetryHandshakeRecordProtectionStateBindingError::KeyMaterial)?;
         let BoundRetryHandshakeTrafficKeyMaterial { key_material, .. } = bound;
         let state = RecordProtectionState::new(key_material)
@@ -503,7 +496,7 @@ where
     pub const fn traffic_secrets(
         &self,
     ) -> &'issuer BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence> {
-        self.issuer.traffic_secrets
+        &self.issuer.traffic_secrets
     }
 
     /// Return the sender whose retained secret supplied this record state.

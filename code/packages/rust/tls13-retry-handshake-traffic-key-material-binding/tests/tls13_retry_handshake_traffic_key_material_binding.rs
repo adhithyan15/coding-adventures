@@ -280,7 +280,7 @@ fn derives_both_senders_from_and_retains_exact_retry_evidence() {
             }
         }
 
-        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(&traffic);
+        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(traffic);
         assert!(!issuer.has_issued(HandshakeTrafficSender::Client));
         assert!(!issuer.has_issued(HandshakeTrafficSender::Server));
         let mut client_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
@@ -731,7 +731,7 @@ fn handler_unwind_clears_and_permanently_closes_reassembly() {
         let base = bind_retry_key_schedule(&secret, &transcript, &mut base_storage).unwrap();
         let mut traffic_storage = HandshakeTrafficSecretStorage::new(suite).unwrap();
         let traffic = bind_retry_handshake_traffic_secrets(&base, &mut traffic_storage).unwrap();
-        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(&traffic);
+        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(traffic);
         let mut server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
         let server_state = issuer
             .issue(HandshakeTrafficSender::Server, &mut server_storage)
@@ -829,11 +829,12 @@ fn joins_fresh_ordered_flight_to_exact_retry_transcript_and_finished_key() {
         let base = bind_retry_key_schedule(&secret, &transcript, &mut base_storage).unwrap();
         let mut traffic_storage = HandshakeTrafficSecretStorage::new(suite).unwrap();
         let traffic = bind_retry_handshake_traffic_secrets(&base, &mut traffic_storage).unwrap();
+        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(traffic);
         let mut finished_storage = FinishedKeyStorage::new(suite, FinishedRole::Server);
         let server_finished =
-            bind_retry_server_finished_key(&traffic, &mut finished_storage).unwrap();
+            bind_retry_server_finished_key(issuer.traffic_secrets(), &mut finished_storage)
+                .unwrap();
         let continuation = bind_retry_server_transcript_continuation(&server_finished).unwrap();
-        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(&traffic);
         let mut server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
         let server_state = issuer
             .issue(HandshakeTrafficSender::Server, &mut server_storage)
@@ -902,7 +903,7 @@ fn rejects_an_ordered_owner_from_another_traffic_secret_proof() {
         let base = bind_retry_key_schedule(&secret, &transcript, &mut base_storage).unwrap();
         let mut first_storage = HandshakeTrafficSecretStorage::new(suite).unwrap();
         let first = bind_retry_handshake_traffic_secrets(&base, &mut first_storage).unwrap();
-        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(&first);
+        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(first);
         let mut server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
         let server_state = issuer
             .issue(HandshakeTrafficSender::Server, &mut server_storage)
@@ -952,7 +953,7 @@ fn authenticates_and_enforces_the_complete_server_flight_before_callbacks() {
         let base = bind_retry_key_schedule(&secret, &transcript, &mut base_storage).unwrap();
         let mut traffic_storage = HandshakeTrafficSecretStorage::new(suite).unwrap();
         let traffic = bind_retry_handshake_traffic_secrets(&base, &mut traffic_storage).unwrap();
-        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(&traffic);
+        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(traffic);
 
         let mut client_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
         let client_state = issuer
@@ -1134,7 +1135,7 @@ fn ordering_failure_poison_closes_before_the_offending_callback() {
         let base = bind_retry_key_schedule(&secret, &transcript, &mut base_storage).unwrap();
         let mut traffic_storage = HandshakeTrafficSecretStorage::new(suite).unwrap();
         let traffic = bind_retry_handshake_traffic_secrets(&base, &mut traffic_storage).unwrap();
-        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(&traffic);
+        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(traffic);
         let mut server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
         let server_state = issuer
             .issue(HandshakeTrafficSender::Server, &mut server_storage)
@@ -1297,7 +1298,7 @@ fn rejects_wrong_suite_without_consuming_sender_issuance() {
             RetryHandshakeTrafficKeyMaterialBindingError::CipherSuiteMismatch
         );
 
-        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(&traffic);
+        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(traffic);
         let issuance_error = match issuer.issue(HandshakeTrafficSender::Client, &mut output_storage)
         {
             Err(error) => error,

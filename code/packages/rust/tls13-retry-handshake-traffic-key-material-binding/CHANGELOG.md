@@ -5,10 +5,11 @@
 - Bind one sender's handshake traffic key and static IV to the exact retained
   TLS 1.3 retry handshake traffic-secret proof.
 - Reject output-storage suite substitution before mutation.
-- Immutably retain the complete retry traffic-secret proof in a single-use
-  issuer so the same exact proof object can authorize Finished-key and
-  transcript-continuation boundaries, while permitting one fresh monotonic
-  record state per sender and rejecting duplicate issuance before mutation.
+- Consume the complete retry traffic-secret proof into a single-use issuer
+  that permits one fresh monotonic record state per sender and rejects
+  duplicate sender issuance before output mutation. Finished-key and
+  transcript-continuation proofs for those secrets derive through the issuer's
+  immutable proof accessor so a second sequence-zero issuer remains impossible.
 - Seal and open exact retry-handshake records through the repository-owned
   record dispatcher while retaining the state, exact input or request, and
   output owner in non-cloneable proof wrappers.
