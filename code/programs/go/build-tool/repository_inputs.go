@@ -212,6 +212,7 @@ var (
 
 	rngCorpusPaths                 = []string{"code/specs/fixtures/rng-v1"}
 	fenwickTreeContractPaths       = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
 	gameClockInputPaths            = []string{"code/specs/fixtures/game-clock-v1", "code/specs/game-clock.warrant"}
 	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
 	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
@@ -401,6 +402,20 @@ var (
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name:     "rust/hash-functions",
+		language: "rust",
+		inputs:   "the shared DT17 byte-hash and Dart profile contract plus v1 fixture",
+		matches:  isDt17HashFunctionsInput,
+		paths:    dt17HashFunctionsPaths,
+	},
+	{
+		name:     "dart/hash-functions",
+		language: "dart",
+		inputs:   "the shared DT17 byte-hash and Dart profile contract plus v1 fixture",
+		matches:  isDt17HashFunctionsInput,
+		paths:    dt17HashFunctionsPaths,
+	},
+	{
 		name:     "dart/fenwick-tree",
 		language: "dart",
 		inputs:   "the shared DT06 Fenwick contract and v1 conformance fixture",
@@ -453,6 +468,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	vosImplementationRow("vos-sched-any"),
 	vosImplementationRow("vos-sched-rr"),
 	vosImplementationRow("vos-probe-ready"),
+	vosContractRow("vos-sched-contract"),
 	{
 		name:     "rust/programs/vos-capacity-probe",
 		language: "rust",
@@ -1428,6 +1444,22 @@ func vosImplementationRow(crate string) repositoryInputConsumer {
 	}
 }
 
+// vosContractRow is the row of one VOS contract crate (`code/packages/rust/<crate>`, kind
+// contract, VOS-039b-1).  Its BUILD runs `vos-link check-contract` and `check-component` outside
+// Cargo (the generated Rust of the contract crate does not depend on them), so a change to a VOS
+// tool or grammar must select it.  A contract has no generated document of its own (the
+// implementations embed its parts), so unlike vosImplementationRow nothing under code/specs
+// selects it; its own files select it through the package path.
+func vosContractRow(crate string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name:     "rust/" + crate,
+		language: "rust",
+		inputs:   "the VOS tools its BUILD runs outside Cargo (vos-link check-contract, vos-link check-component, vos-shape-check, the capability analyzer)",
+		matches:  isVosToolInput,
+		paths:    append([]string{}, vosToolPaths...),
+	}
+}
+
 // isVosCapacityProbeInput reports whether a changed path is one of the exact files the
 // capacity probe checks outside its Cargo edges (VOS-028b): no prefix, no lookalike.
 //
@@ -1533,6 +1565,17 @@ func isFenwickTreeContractInput(changed string) bool {
 	}
 	return changed == "code/specs/DT06-fenwick-tree.md" ||
 		strings.HasPrefix(changed, "code/specs/fixtures/fenwick-tree-v1/")
+}
+
+// isDt17HashFunctionsInput selects the two exact shared contracts and the
+// versioned v1 fixture tree, excluding neighboring spec and fixture names.
+func isDt17HashFunctionsInput(changed string) bool {
+	if path.Clean(changed) != changed {
+		return false
+	}
+	return changed == "code/specs/DT17-hash-functions.md" ||
+		changed == "code/specs/DT17b-hash-functions-dart-profile.md" ||
+		strings.HasPrefix(changed, "code/specs/fixtures/hash-functions-v1/")
 }
 
 // isTrigReferenceCorpus reports whether a changed path is a file of the shared

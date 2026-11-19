@@ -1,0 +1,2 @@
+  claim empty_has_nobody:
+    forall t: U8. mem(empty(), t) == false

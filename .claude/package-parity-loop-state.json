@@ -312,7 +312,7 @@
       ],
       "branch": null,
       "pr_number": null,
-      "selection_blocked": true,
+      "selection_blocked": false,
       "notes": "Completion umbrella for the eleven independently reviewable existing-engine children. The post-#13388 dependency pass decomposed C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript before selecting implementation work; F# follows the C# shared engine while every child consumes the same merged inert corpus. Route later Dart, JVM, and promoted OCaml engines through the same contract rather than copying Go-only BUILD parsing."
     },
     {
@@ -18989,11 +18989,30 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Three missing 11/15 slots, separate from existing Swift owner. DT17 correction must fix FNV-1a and Murmur3 vectors first. Preserve explicit 32/64-bit masks, little-endian behavior, and caller-supplied SipHash keys. Split by lane before implementation.",
+      "notes": "Historical inventory pin: three missing 11/15 slots. At exact main 4ca0030e43d41d0919a309e4607b2d4851129b0d, the fresh audit reports twelve of fifteen established hash-functions lanes, with Dart, Java, and Kotlin absent. The Dart work is now split into child hash-functions-dart-lane-parity. Java and Kotlin remain pending under this umbrella. The DT17 vector correction is merged. Preserve explicit 32/64-bit masks, little-endian behavior, and caller-supplied SipHash keys. No lane conformance is inferred from structural presence.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/hash-functions-dart-java-kotlin-lane-parity"
       ],
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+    },
+    {
+      "id": "hash-functions-dart-lane-parity",
+      "title": "Implement and validate the Dart DT17 hash-functions profile",
+      "status": "pr-open",
+      "depends_on": [
+        "hash-functions-dt17-vector-and-documentation-correction"
+      ],
+      "branch": "codex/parity-dart-hash-functions-20261119",
+      "pr_number": 19687,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19687",
+      "selection_blocked": true,
+      "selection_revision": "4ca0030e43d41d0919a309e4607b2d4851129b0d",
+      "selection_notes": "Fresh 2026-11-19 review selects the Dart child from the existing combined Dart/JVM owner. The exact-main structural audit reports twelve of fifteen established lanes for hash-functions, with Dart, Java, and Kotlin absent. This child isolates Dart and does not select the JVM lanes.",
+      "notes": "Draft PR #19687 carries the Dart child profile. Astra approved Phase 2 fixture and tooling head 2f455879f7000a000f252a5042c514b2d8bcad10. The candidate corpus is code/specs/fixtures/hash-functions-v1/cases.json at SHA-256 B0960F1B4BF87A187CA3369BC07F9AFB705E0F098C9211387F95FE8455492DEE. Its independent validator passes. Dart production APIs are now implemented locally on branch codex/parity-dart-hash-functions-20261119; public API tests exercise the shared corpus on VM and Node, with 100% line and branch coverage and ten source mutants killed. The fixture/tooling gate is passed, while final exact-head independent review, pinned hosted Node execution, required CI, and merge remain pending. No SAT proof, Warrant proof, or all-language claim is made.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/hash-functions-dart-lane-parity",
+        "code/specs/DT17b-hash-functions-dart-profile.md"
+      ]
     },
     {
       "id": "tree-dt02-language-neutral-conformance-and-existing-lane-reconciliation",

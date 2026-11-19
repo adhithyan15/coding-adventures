@@ -4754,6 +4754,7 @@ name = "coding_adventures_hash_functions"
 version = "0.2.0"
 dependencies = [
  "capability-runtime-conformance",
+ "coding-adventures-json-value",
  "coding_adventures_sha256",
  "coding_adventures_test_bootstrap",
 ]
@@ -15981,15 +15982,6 @@ dependencies = [
 [[package]]
 name = "vos-sched-contract"
 version = "0.1.0"
-
-[[package]]
-name = "vos-sched-contract-check"
-version = "0.1.0"
-dependencies = [
- "coding_adventures_warrant_grammar",
- "vos-manifest",
- "vos-sched-contract",
-]
 
 [[package]]
 name = "vos-sched-fp-bitmap"

@@ -297,11 +297,11 @@ fn gen_build_refuses_bad_inputs_and_writes_nothing() {
     let o = gen_build(&r.pkg(PROD), None).unwrap();
     assert!(!o.findings.is_empty());
     assert_eq!(r.read(&p(PROD, "BUILD")), before);
-    r.write(&p(PROD, "vos.toml"), "kind = \"contract\"\n");
+    r.write(&p(PROD, "vos.toml"), "kind = \"spine\"\n");
     only(
         &gen_build(&r.pkg(PROD), None).unwrap(),
         "CC01",
-        "kind `contract`",
+        "kind `spine`",
     );
 }
 
@@ -317,13 +317,14 @@ fn gen_build_writes_the_tolerance_script_from_excused_controls() {
 // --- CC01: scope --------------------------------------------------------------------------
 
 #[test]
-fn a_contract_crate_is_out_of_scope_and_says_so() {
-    let r = good("cc01-contract", PROD, "production", false);
-    r.write(&p(PROD, "vos.toml"), "kind = \"contract\"\n");
+fn a_crate_that_is_not_a_component_kind_is_out_of_scope_and_says_so() {
+    // Contract crates are components since VOS-039b-1 (tests/contract.rs); a spine is not.
+    let r = good("cc01-spine", PROD, "production", false);
+    r.write(&p(PROD, "vos.toml"), "kind = \"spine\"\n");
     only(
         &run(&r, PROD),
         "CC01",
-        "kind `contract` is not an implementation kind",
+        "kind `spine` is not a component kind",
     );
 }
 

@@ -60,3 +60,7 @@ path = "tests/representation.rs"
 [[test]]
 name = "component"
 path = "tests/component.rs"
+
+[[test]]
+name = "contract"
+path = "tests/contract.rs"

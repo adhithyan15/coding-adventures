@@ -1,0 +1,6 @@
+  -- Mutant of the lemma `insert_outside_pre_changes_nothing` (VOS04 5.6, `vos-link check-contract`): the model `abs_insert` of
+  -- contract.part with one deliberate fault, which the lemma must catch: an insert outside the precondition answers Unchanged, not OutOfRange.
+  -- It replaces the model of the same name by span; the tool refuses the mutant if the lemma still holds.
+  model abs_insert(m: Ready, t: U8) -> (Upd, Ready) = (
+    if t >= 8u8 then (Unchanged, m)
+    else (if mem(m, t) then (Unchanged, m) else (Changed, put(m, t, true))))

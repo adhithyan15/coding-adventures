@@ -1,0 +1,4 @@
+  -- Mutant of the lemma `policy_admits_only_top` (VOS04 5.6, `vos-link check-contract`): the model `policy_dispatch` of
+  -- contract.part with one deliberate fault, which the lemma must catch: the policy also admits Idle when a thread is ready.
+  -- It replaces the model of the same name by span; the tool refuses the mutant if the lemma still holds.
+  model policy_dispatch(m: Ready, o: Pick, m2: Ready) -> Bool = (o == top(m) or o == Idle) and m2 == after(m, o)

@@ -1,0 +1,5 @@
+  -- Mutant of the lemma `config_n_is_the_id_range` (VOS04 5.6, `vos-link check-contract`): the model
+  -- `pre_insert` of contract.part with one deliberate fault, which the lemma must catch: the caller
+  -- precondition admits thread id 8, one more than `config N 8` allows.
+  -- It replaces the model of the same name by span; the tool refuses the mutant if the lemma still holds.
+  model pre_insert(m: Ready, t: U8) -> Bool = t < 9u8

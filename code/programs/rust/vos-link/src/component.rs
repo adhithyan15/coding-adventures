@@ -21,6 +21,14 @@
 //!   CC04 inputs of generation: bindings, document, sabotage plan, tolerance script
 //! ```
 //!
+//! ## Contract crates (VOS-039b-1)
+//!
+//! A crate of kind `contract` is judged by a shorter branch ([`contract_component`]): CC02 (its
+//! own file set), CC03 (BUILD and BUILD_windows against `canonical_contract_build`) and CC05
+//! (`vosContractRow`).  CC04, CC06, CC07 and CC08 are about evidence, a document, `-any` crates
+//! and coverable code, none of which a contract has.  The lemmas themselves are `check-contract`'s,
+//! which the generated BUILD runs.
+//!
 //! ## The Go file is read narrowly
 //!
 //! The build-tool row is one call in a Go slice literal.  `vos-link` does not depend on a Go
@@ -41,7 +49,8 @@ use vos_shape_check::manifest::{
 use vos_shape_check::toml::{self as toml_reader, Value};
 
 use crate::build_gen::{
-    canonical_build, load_inputs, tolerance_script, GenInputs, PLAN_FILE, TOLERANCE_SCRIPT,
+    canonical_build, canonical_contract_build, load_inputs, tolerance_script, GenInputs, PLAN_FILE,
+    TOLERANCE_SCRIPT,
 };
 use crate::check::first_difference_line;
 use crate::error::{Finding, NoVerdict};
@@ -111,13 +120,13 @@ pub(crate) fn read_component_vos_toml(
         }
     };
     match vt.kind {
-        Some(Kind::Production | Kind::Reference | Kind::Any) => Ok(Ok(vt)),
+        Some(Kind::Production | Kind::Reference | Kind::Any | Kind::Contract) => Ok(Ok(vt)),
         other => {
             let name = other.map_or("(none)", Kind::name);
             Ok(Err(Finding::new(
                 "CC01",
                 format!(
-                    "vos.toml: kind `{name}` is not an implementation kind; check-component judges production, reference and any crates (VOS04 5.6)"
+                    "vos.toml: kind `{name}` is not a component kind; check-component judges production, reference, any and contract crates (VOS04 5.6)"
                 ),
             )))
         }
@@ -194,8 +203,14 @@ pub fn strip_go(src: &str) -> String {
 /// the Go file `src`?  The slice runs from the line holding [`CONSUMERS_OPEN`] to the next line
 /// that is exactly `}`.
 pub fn row_in_consumers(src: &str, krate: &str) -> bool {
+    row_in_consumers_with(src, "vosImplementationRow", krate)
+}
+
+/// [`row_in_consumers`] for the row function `func`: `vosImplementationRow` for an
+/// implementation, `vosContractRow` for a contract crate (VOS-039b-1).
+pub fn row_in_consumers_with(src: &str, func: &str, krate: &str) -> bool {
     let stripped = strip_go(src);
-    let row = format!("vosImplementationRow(\"{krate}\"),");
+    let row = format!("{func}(\"{krate}\"),");
     let mut inside = false;
     for line in stripped.lines() {
         if !inside {
@@ -251,6 +266,14 @@ pub fn check_component(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outc
         f: Vec::new(),
     };
 
+    if kind == Kind::Contract {
+        contract_component(&mut cx)?;
+        out.findings = cx.f;
+        out.notes.push(
+            "check-component (contract crate): the file set, BUILD and BUILD_windows byte-equal to `gen-build`'s contract region (VOS04 5.6, which runs `check-contract`: lemmas, mutants, config mutants and the generated table) and the build-tool row `vosContractRow` are present and consistent. Not checked: that the lines PASS (the build does that), the command-type rule (VOS-D077, VOS-039b-2). A contract has no evidence manifest, coverage floor or `-any` rule (VOS10 section 15).".to_string(),
+        );
+        return Ok(out);
+    }
     file_set(&mut cx)?;
     match load_inputs(&cx.layout, &cx.vt)? {
         Ok(g) => {
@@ -304,6 +327,96 @@ fn file_set(cx: &mut Ctx) -> Result<(), NoVerdict> {
                 cx.layout.doc_display()
             ),
         );
+    }
+    Ok(())
+}
+
+/// The checks of a **contract crate** (VOS-039b-1): CC02 (file set), CC03 (BUILD files byte for
+/// byte) and CC05 (the `vosContractRow` row).  CC04 and CC06 to CC08 do not apply: a contract has
+/// no bindings, no document of its own, no evidence manifest and no coverable code.
+fn contract_component(cx: &mut Ctx) -> Result<(), NoVerdict> {
+    let dir = cx.layout.impl_dir.clone();
+    let mut required: Vec<String> = [
+        "BUILD",
+        "BUILD_windows",
+        "README.md",
+        "Cargo.toml",
+        "vos.toml",
+        "required_capabilities.json",
+        "src/lib.rs",
+        "contract.vos",
+        "warrant/contract.part",
+        "warrant/lemmas.part",
+        "warrant/lemmas.table",
+    ]
+    .iter()
+    .map(|s| s.to_string())
+    .collect();
+    // One obligations part per `tier` row: the tier list is read by the tool's own parser.
+    match read_regular_opt(
+        &dir.join("contract.vos"),
+        vos_manifest::caps::CONTRACT_MAX_BYTES,
+    )? {
+        None => {}
+        Some(bytes) => match vos_manifest::contract::parse_contract(&bytes) {
+            Ok(c) => {
+                for t in &c.tiers {
+                    required.push(format!("warrant/{}", crate::inputs::obligations_file(*t)));
+                }
+            }
+            Err(e) if e.is_cap() => return Err(NoVerdict::new(e.to_string())),
+            Err(e) => cx.find("CC02", format!("contract.vos: {}", esc(&e.to_string()))),
+        },
+    }
+    for rel in &required {
+        if !present(&dir.join(rel))? {
+            cx.find("CC02", format!("file set: {rel} is missing"));
+        }
+    }
+    if !present(&dir.join("CHANGELOG.md"))? && !present(&dir.join("CHANGELOG.d/_meta.md"))? {
+        cx.find(
+            "CC02",
+            "file set: neither CHANGELOG.md nor CHANGELOG.d/_meta.md exists",
+        );
+    }
+
+    // CC03: BUILD and BUILD_windows begin with the generated region, byte for byte.
+    let want = canonical_contract_build(&cx.krate);
+    for name in ["BUILD", "BUILD_windows"] {
+        let Some(found) = read_text(&dir.join(name), BUILD_MAX_BYTES)? else {
+            continue; // CC02 reported it
+        };
+        if !found.starts_with(&want) {
+            let n = first_difference_line(&found, &want);
+            cx.find(
+                "CC03",
+                format!(
+                    "{name}:{n}: the file does not begin with the region `vos-link gen-build` writes for a contract crate; expected {}, found {}",
+                    show_line(&want, n),
+                    show_line(&found, n)
+                ),
+            );
+        }
+    }
+
+    // CC05: the build-tool row.
+    let path = cx.layout.root.join(BUILD_TOOL_ROWS);
+    match read_text(&path, BUILD_ROWS_MAX_BYTES)? {
+        None => cx.find(
+            "CC05",
+            format!("build-tool row: {BUILD_TOOL_ROWS} not found"),
+        ),
+        Some(src) => {
+            if !row_in_consumers_with(&src, "vosContractRow", &cx.krate) {
+                cx.find(
+                    "CC05",
+                    format!(
+                        "build-tool row: {BUILD_TOOL_ROWS} has no line `vosContractRow(\"{}\"),` inside the repositoryInputConsumers slice (comments and raw strings do not count), so an edit to a VOS tool selects nothing (VOS04 5.2 line 11, VOS-039b-1)",
+                        cx.krate
+                    ),
+                );
+            }
+        }
     }
     Ok(())
 }
