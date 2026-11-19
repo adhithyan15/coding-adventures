@@ -76,10 +76,20 @@ included in this summary cap.
 The probe must use the app's existing `run-as` identity. A failed command,
 timeout, or unreadable response is `probe_failed`; it must never be reported as
 absence. It reports only a size class, not state contents. The failure-only
-capture runs in one child process under a five-second timeout plus a
-one-second kill-after bound, filters host markers to the current Trestle
-PID/launch window, and reports whether log capture itself
-was complete, clipped, timed out, or failed. APK and lock identifiers are
+capture runs in a private worker session supervised by a Linux child subreaper.
+One absolute boot-clock deadline is recorded before the supervisor starts: up
+to five seconds for collection and at most one second for TERM/KILL escalation
+and reaping. The worker's PID remains unreaped until its last process-group
+signal; adopted descendants are reaped before success is reported. If ownership
+or cleanup cannot be confirmed within the deadline, the summary reports
+`cleanup_incomplete`. This bounds the collector's ordinary process-tree cleanup
+path, not kernel stalls or detached processes outside the trusted collector
+tree. The supervisor signals only its fresh private session and verified
+adopted descendants; the ordinary gate path does not use it.
+
+The collector filters host markers to the current Trestle PID/launch window,
+and reports whether log capture itself was complete, clipped, timed out, or
+failed. APK and lock identifiers are
 fixed-size hashes and parsed package metadata. Failure to gather diagnostics
 cannot mask the original gate failure, change its status, or skip emulator
 cleanup. Other apps' successful runs do not cause Trestle records to be
@@ -98,8 +108,10 @@ and instrumentation around the Dart-call/ABI-return/answer boundaries. The
 Android build command must pass the explicit Dart define. Script tests must
 verify PID-scoped bounded failure-only capture and preservation of the
 original failing status when the state, PID, log, hash, and APK-metadata
-probes fail individually, including an outer-timeout control. One reviewed native
-CI run may then capture the checkpoints for the already reproduced failure.
+probes fail individually. Linux supervisor tests must cover normal completion,
+a TERM-resistant worker tree whose leader exits first, an unrelated live
+sentinel, and confirmed reaping under the absolute deadline. One reviewed
+native CI run may then capture the checkpoints for the already reproduced failure.
 A passing run or missing marker is not by itself a causal explanation.
 
 This investigation does not prove general FFI correctness, package

@@ -89,8 +89,10 @@ diagnostic_state_failure() {
   [[ "${MOSAIC_NATIVE_DIAGNOSTICS_CAPTURE:-}" == 1 ]] || return 0
   [[ "$package" == "dev.codingadventures.trestle" && "$application_id" == "task-app" ]] || return 0
   [[ "$apk" == *"/mosaic-flutter-trestle-android/flutter/build/app/outputs/flutter-apk/app-debug.apk" ]] || return 0
-  if ! command -v timeout >/dev/null 2>&1 || ! command -v bash >/dev/null 2>&1; then
-    echo "diagnostic_capture=timeout_or_bash_unavailable"
+  local script_dir
+  script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+  if ! command -v timeout >/dev/null 2>&1 || ! command -v bash >/dev/null 2>&1 || ! command -v python3 >/dev/null 2>&1; then
+    echo "diagnostic_capture=supervisor_or_timeout_unavailable"
     return 0
   fi
   local capture_log=""
@@ -99,24 +101,42 @@ diagnostic_state_failure() {
     echo "diagnostic_capture=temporary_file_failed"
     return 0
   fi
-  export -f diagnostic_state_failure_inner
   local capture_status=0
+  local uptime_raw=""
+  local uptime_seconds=""
+  local uptime_fraction=""
+  local deadline_cs=0
+  if IFS=' ' read -r uptime_raw _ < /proc/uptime && [[ "$uptime_raw" =~ ^([0-9]+)\.([0-9]{2})$ ]]; then
+    uptime_seconds="${BASH_REMATCH[1]}"
+    uptime_fraction="${BASH_REMATCH[2]}"
+    deadline_cs=$((10#$uptime_seconds * 100 + 10#$uptime_fraction + 600))
+  else
+    echo "diagnostic_capture=supervisor_clock_unavailable"
+    rm -f -- "$capture_log" || true
+    return 0
+  fi
+  export -f diagnostic_state_failure_inner
   MOSAIC_DIAG_LOG_PATH="$capture_log" \
   MOSAIC_DIAG_APK="$apk" \
     MOSAIC_DIAG_PACKAGE="$package" \
     MOSAIC_DIAG_APPLICATION_ID="$application_id" \
-    timeout --kill-after=1 5 bash -c '
+    python3 "$script_dir/mosaic_diagnostic_supervisor.py" \
+      --deadline-boottime-cs "$deadline_cs" -- bash -c '
       apk="$MOSAIC_DIAG_APK"
       package="$MOSAIC_DIAG_PACKAGE"
       application_id="$MOSAIC_DIAG_APPLICATION_ID"
       state="files/$application_id/mosaic-state.v1.json"
       diagnostic_state_failure_inner
     ' || capture_status=$?
-  if [[ $capture_status -eq 124 || $capture_status -eq 137 ]]; then
-    echo "diagnostic_capture=timed_out"
-  elif [[ $capture_status -ne 0 ]]; then
-    echo "diagnostic_capture=failed"
-  fi
+  case "$capture_status" in
+    0) ;;
+    124) echo "diagnostic_capture=timed_out_cleaned" ;;
+    125) echo "diagnostic_capture=descendants_cleaned" ;;
+    126) echo "diagnostic_capture=cleanup_incomplete" ;;
+    127) echo "diagnostic_capture=supervisor_unavailable" ;;
+    128) echo "diagnostic_capture=worker_failed_cleaned" ;;
+    *) echo "diagnostic_capture=failed" ;;
+  esac
   rm -f -- "$capture_log" || true
 }
 

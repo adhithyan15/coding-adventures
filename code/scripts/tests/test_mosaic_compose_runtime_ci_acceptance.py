@@ -38,65 +38,7 @@ MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 
 
-def _process_identity_is_gone(snapshot: dict[str, object]) -> bool:
-    """Only absence or a different start time proves the recorded process is gone."""
-    return snapshot.get("identity") in {"absent", "pid_reused"}
-
-
-def _process_group_is_clean(snapshot: dict[str, object]) -> bool:
-    """Host-wide unreadable /proc entries are reported, not attributed to this group."""
-    return (
-        snapshot.get("observed_count") == 0
-        and not snapshot.get("truncated")
-        and not snapshot.get("enumeration_error")
-    )
-
-
 class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
-    def test_timeout_process_observer_verdicts_are_identity_scoped(self) -> None:
-        for identity in ("absent", "pid_reused"):
-            with self.subTest(identity=identity):
-                self.assertTrue(_process_identity_is_gone({"identity": identity}))
-        for identity, state in (("same", "S"), ("same", "Z"), ("unclassifiable", "?")):
-            with self.subTest(identity=identity, state=state):
-                self.assertFalse(
-                    _process_identity_is_gone(
-                        {"identity": identity, "current": {"state": state}}
-                    )
-                )
-
-        self.assertTrue(
-            _process_group_is_clean(
-                {
-                    "observed_count": 0,
-                    "truncated": False,
-                    "enumeration_error": None,
-                    "host_unreadable": 4,
-                }
-            )
-        )
-        self.assertFalse(
-            _process_group_is_clean(
-                {
-                    "observed_count": 1,
-                    "truncated": False,
-                    "enumeration_error": None,
-                    "host_unreadable": 0,
-                    "members": [{"pid": 123, "state": "S"}],
-                }
-            )
-        )
-        self.assertFalse(
-            _process_group_is_clean(
-                {
-                    "observed_count": 0,
-                    "truncated": True,
-                    "enumeration_error": None,
-                    "host_unreadable": 0,
-                }
-            )
-        )
-
     def test_force_plan_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_compose_runtime({"affected_packages": None})
@@ -771,6 +713,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 2, result.stderr)
                 self.assertEqual(calls, [], "refused before adb is reached")
 
+    @unittest.skipUnless(sys.platform.startswith("linux"), "diagnostic supervisor integration is Linux-only")
     def test_flutter_state_diagnostic_is_bounded_and_cannot_mask_gate_failure(self) -> None:
         gate = SCRIPT.parent / "mosaic-android-emulator-gate.sh"
         gate_text = gate.read_text(encoding="utf-8")
@@ -839,22 +782,16 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "    if [[ \"${DIAG_MODE:-ok}\" == log_wrong_body ]]; then printf 'I/Other ( 9999): note mentions ( 4321) MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'; exit 0; fi\n"
                 "    if [[ \"${DIAG_MODE:-ok}\" == log_unknown ]]; then printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=unexpected elapsed_us=17\\n'; exit 0; fi\n"
                 "    if [[ \"${DIAG_MODE:-ok}\" == log_suffix ]]; then printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17 trailing\\n'; exit 0; fi\n"
-                "    if [[ \"${DIAG_MODE:-ok}\" == log_timeout || \"${DIAG_MODE:-ok}\" == real_timeout ]]; then\n"
-                "      printf '%s\\n' \"$$\" > \"$DIAG_HANG_PID_PATH\"\n"
-                "      cat /proc/$$/stat > \"$DIAG_HANG_WORKER_STAT_PATH\"\n"
+                "    if [[ \"${DIAG_MODE:-ok}\" == real_timeout ]]; then\n"
                 "      trap '' TERM\n"
                 "      /bin/sleep 30 &\n"
                 "      child=$!\n"
-                "      printf '%s\\n' \"$child\" > \"$DIAG_HANG_CHILD_PID_PATH\"\n"
-                "      cat /proc/$child/stat > \"$DIAG_HANG_CHILD_STAT_PATH\"\n"
                 "      wait \"$child\"\n"
                 "    fi\n"
-                "    if [[ \"${DIAG_MODE:-ok}\" != outer_timeout ]]; then\n"
-                "      printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=main result=entered elapsed_us=2\\n'\n"
-                "      printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=app_support_lookup result=attempted elapsed_us=3\\n'\n"
-                "      printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'\n"
-                "      exit 0\n"
-                "    fi\n"
+                "    printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=main result=entered elapsed_us=2\\n'\n"
+                "    printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=app_support_lookup result=attempted elapsed_us=3\\n'\n"
+                "    printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'\n"
+                "    exit 0\n"
                 "    exit 7\n"
                 "    ;;\n"
                 "  shell)\n"
@@ -884,38 +821,14 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             sleep.write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
             sleep.chmod(0o755)
             timeout = bin_dir / "timeout"
-            timeout_helper = root / "timeout-helper.py"
-            timeout_helper.write_text(
-                "import os, signal, subprocess, sys, time\n"
-                "mode, *args = sys.argv[1:]\n"
-                "if mode == 'real':\n"
-                "    real, *command = args\n"
-                "    result = subprocess.run([real, *command], check=False)\n"
-                "    shell_status = 128 + (-result.returncode) if result.returncode < 0 else result.returncode\n"
-                "    with open(os.environ['DIAG_REAL_TIMEOUT_STATUS_PATH'], 'w', encoding='ascii') as status_file:\n"
-                "        status_file.write(f'{result.returncode} {shell_status}\\n')\n"
-                "    raise SystemExit(shell_status)\n"
-                "raise SystemExit(125)\n",
-                encoding="utf-8",
-            )
             timeout.write_text(
                 "#!/usr/bin/env bash\n"
                 "if [[ \"${DIAG_MODE:-ok}\" == real_timeout ]]; then\n"
-                "  if [[ \"${1:-}\" == --kill-after=1 && \"${2:-}\" == 5 ]]; then\n"
-                "    printf 'gnu-outer\\n' >> \"$DIAG_TIMEOUT_DISPATCH_PATH\"\n"
-                "    exec \"$DIAG_PYTHON\" \"$DIAG_TIMEOUT_HELPER\" real \"$REAL_TIMEOUT\" \"$@\"\n"
-                "  fi\n"
-                "  printf 'gnu-command\\n' >> \"$DIAG_TIMEOUT_DISPATCH_PATH\"\n"
+                "  printf 'real-timeout-command\\n' >> \"$DIAG_TIMEOUT_DISPATCH_PATH\"\n"
                 "  exec \"$REAL_TIMEOUT\" \"$@\"\n"
                 "fi\n"
-                "if [[ \"${1:-}\" == --kill-after=1 && \"${2:-}\" == 5 ]]; then\n"
-                "  if [[ \"${DIAG_MODE:-ok}\" == outer_timeout || \"${DIAG_MODE:-ok}\" == log_timeout || \"${DIAG_MODE:-ok}\" == probe_timeout ]]; then\n"
-                "    printf 'mock-outer-timeout\\n' >> \"$DIAG_TIMEOUT_DISPATCH_PATH\"\n"
-                "    exit 124\n"
-                "  fi\n"
-                "  shift 2\n"
-                "  exec \"$@\"\n"
-                "fi\n"
+                "if [[ \"${DIAG_MODE:-ok}\" == probe_timeout && \"${3:-}\" == adb && \"${4:-}\" == shell && \"${5:-}\" == run-as* ]]; then exit 124; fi\n"
+                "if [[ \"${DIAG_MODE:-ok}\" == log_timeout && \"${3:-}\" == adb && \"${4:-}\" == logcat && \"${5:-}\" == -d ]]; then exit 124; fi\n"
                 "[[ \"${1:-}\" == --foreground ]] && shift\n"
                 "[[ \"${1:-}\" == 1 ]] && shift\n"
                 "exec \"$@\"\n",
@@ -1029,14 +942,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                     "DIAG_RUN_AS_HELPER": str(run_as_helper),
                     "DIAG_APP_DATA_ROOT": str(app_data_root),
                     "DIAG_MODE": mode,
-                    "DIAG_HANG_PID_PATH": str(root / f"hung-adb-{mode}.pid"),
-                    "DIAG_HANG_CHILD_PID_PATH": str(root / f"hung-sleep-{mode}.pid"),
-                    "DIAG_HANG_WORKER_STAT_PATH": str(root / f"hung-adb-{mode}.initial-stat"),
-                    "DIAG_HANG_CHILD_STAT_PATH": str(root / f"hung-sleep-{mode}.initial-stat"),
-                    "DIAG_REAL_TIMEOUT_STATUS_PATH": str(root / f"real-timeout-{mode}.status"),
                     "DIAG_TIMEOUT_DISPATCH_PATH": str(root / f"timeout-dispatch-{mode}.log"),
-                    "DIAG_PYTHON": sys.executable,
-                    "DIAG_TIMEOUT_HELPER": str(timeout_helper),
                 }
                 if shutil.which("timeout"):
                     env["REAL_TIMEOUT"] = shutil.which("timeout") or "timeout"
@@ -1079,7 +985,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
 
             probe_timeout = run("probe_timeout")
             self.assertEqual(probe_timeout.returncode, 1)
-            self.assertIn("diagnostic_capture=timed_out", probe_timeout.stdout)
+            self.assertIn("diagnostic_state_probe=probe_failed", probe_timeout.stdout)
 
             absent_state = run("probe_absent")
             self.assertEqual(absent_state.returncode, 1)
@@ -1151,14 +1057,11 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             self.assertNotIn("lock data", clipped_log.stdout)
             self.assertNotIn(str(apk), clipped_log.stdout)
 
-            timed_out_capture = run("outer_timeout")
-            self.assertEqual(timed_out_capture.returncode, 1)
-            self.assertIn("diagnostic_capture=timed_out", timed_out_capture.stdout)
             timeout_start = time.monotonic()
             hanging_log = run("log_timeout")
             timeout_elapsed = time.monotonic() - timeout_start
             self.assertEqual(hanging_log.returncode, 1)
-            self.assertIn("diagnostic_capture=timed_out", hanging_log.stdout)
+            self.assertIn("diagnostic_log_capture=timed_out", hanging_log.stdout)
             self.assertLess(timeout_elapsed, 2.0)
             recorded_temps = temp_tracker.read_text(encoding="utf-8").splitlines()
             self.assertTrue(recorded_temps)
@@ -1166,202 +1069,186 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
 
             real_timeout = shutil.which("timeout")
             if real_timeout:
+                version = subprocess.run(
+                    [real_timeout, "--version"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                timeout_identity = f"{real_timeout}: {version.stdout.splitlines()[0] if version.stdout else version.stderr.splitlines()[0]}"
                 real_start = time.monotonic()
                 real_timeout_gate = run("real_timeout")
                 real_elapsed = time.monotonic() - real_start
-                status_path = root / "real-timeout-real_timeout.status"
-                timeout_status = status_path.read_text(
-                    encoding="ascii"
-                ).strip()
                 timeout_dispatches = (
                     root / "timeout-dispatch-real_timeout.log"
                 ).read_text(encoding="ascii").splitlines()
-                hung_pid_path = root / "hung-adb-real_timeout.pid"
-                child_pid_path = root / "hung-sleep-real_timeout.pid"
-                worker_stat_path = root / "hung-adb-real_timeout.initial-stat"
-                child_stat_path = root / "hung-sleep-real_timeout.initial-stat"
-                hung_pid = int(hung_pid_path.read_text(encoding="ascii").strip())
-                hung_child_pid = int(child_pid_path.read_text(encoding="ascii").strip())
-
-                def proc_identity(raw_stat: str) -> dict[str, str | int]:
-                    close_paren = raw_stat.rfind(")")
-                    self.assertGreaterEqual(close_paren, 0, raw_stat)
-                    fields = raw_stat[close_paren + 2 :].split()
-                    self.assertGreaterEqual(len(fields), 20, raw_stat)
-                    return {
-                        "pid": int(raw_stat[:close_paren].split()[0]),
-                        "state": fields[0],
-                        "ppid": int(fields[1]),
-                        "pgrp": int(fields[2]),
-                        "session": int(fields[3]),
-                        "starttime": int(fields[19]),
-                    }
-
-                initial_worker = proc_identity(
-                    worker_stat_path.read_text(encoding="ascii")
-                )
-                initial_child = proc_identity(
-                    child_stat_path.read_text(encoding="ascii")
-                )
-                self.assertEqual(initial_worker["pid"], hung_pid)
-                self.assertEqual(initial_child["pid"], hung_child_pid)
-                self.assertEqual(initial_child["ppid"], hung_pid)
-                self.assertEqual(initial_child["pgrp"], initial_worker["pgrp"])
-                self.assertEqual(initial_child["session"], initial_worker["session"])
-
-                def snapshot_process(
-                    pid: int, expected: dict[str, str | int]
-                ) -> dict[str, object]:
-                    try:
-                        raw_stat = Path(f"/proc/{pid}/stat").read_text(encoding="ascii")
-                    except FileNotFoundError:
-                        return {"identity": "absent"}
-                    except OSError as error:
-                        return {"identity": "unclassifiable", "error": type(error).__name__}
-                    current = proc_identity(raw_stat)
-                    if current["starttime"] != expected["starttime"]:
-                        return {"identity": "pid_reused", "current": current}
-                    return {"identity": "same", "current": current}
-
-                def group_snapshot(expected_pgrp: int) -> dict[str, object]:
-                    members: list[dict[str, str | int]] = []
-                    observed_count = 0
-                    vanished = 0
-                    host_unreadable = 0
-                    enumeration_error = None
-                    try:
-                        proc_entries = list(Path("/proc").iterdir())
-                    except OSError as error:
-                        proc_entries = []
-                        enumeration_error = type(error).__name__
-                    for proc_entry in proc_entries:
-                        if not proc_entry.name.isdigit():
-                            continue
-                        try:
-                            raw_stat = (proc_entry / "stat").read_text(encoding="ascii")
-                            current = proc_identity(raw_stat)
-                        except FileNotFoundError:
-                            vanished += 1
-                            continue
-                        except (OSError, ValueError):
-                            host_unreadable += 1
-                            continue
-                        if current["pgrp"] == expected_pgrp:
-                            observed_count += 1
-                            if len(members) < 33:
-                                members.append({"pid": int(proc_entry.name), **current})
-                    return {
-                        "members": members[:32],
-                        "observed_count": observed_count,
-                        "vanished_during_scan": vanished,
-                        "host_unreadable": host_unreadable,
-                        "enumeration_error": enumeration_error,
-                        "truncated": observed_count > 32,
-                    }
-
-                def pid_addressability(pid: int) -> str:
-                    try:
-                        os.kill(pid, 0)
-                    except ProcessLookupError:
-                        return "absent"
-                    except PermissionError:
-                        return "unclassifiable_permission_denied"
-                    return "addressable"
-
-                def probe_disagreement(identity: dict[str, object], probe: str) -> str | None:
-                    observed = identity["identity"]
-                    if observed == "same" and probe == "absent":
-                        return "same_identity_stat_but_kill_probe_absent"
-                    if observed == "absent" and probe != "absent":
-                        return "stat_absent_but_pid_probe_addressable_or_unclassifiable"
-                    if observed == "pid_reused" and probe == "absent":
-                        return "pid_reused_stat_but_pid_probe_absent"
-                    if observed == "unclassifiable":
-                        return "identity_stat_unclassifiable"
-                    return None
-
-                process_history: list[dict[str, object]] = []
-                observation_start = time.monotonic()
-                for checkpoint in (0.0, 0.05, 0.20, 0.50):
-                    remaining = checkpoint - (time.monotonic() - observation_start)
-                    if remaining > 0:
-                        time.sleep(remaining)
-                    worker_snapshot = snapshot_process(hung_pid, initial_worker)
-                    child_snapshot = snapshot_process(hung_child_pid, initial_child)
-                    worker_probe = pid_addressability(hung_pid)
-                    child_probe = pid_addressability(hung_child_pid)
-                    process_history.append(
-                        {
-                            "elapsed_s": round(time.monotonic() - observation_start, 3),
-                            "worker": worker_snapshot,
-                            "sleep_child": child_snapshot,
-                            "worker_pid_probe": worker_probe,
-                            "sleep_child_pid_probe": child_probe,
-                            "worker_probe_disagreement": probe_disagreement(worker_snapshot, worker_probe),
-                            "sleep_child_probe_disagreement": probe_disagreement(child_snapshot, child_probe),
-                            "group": group_snapshot(int(initial_worker["pgrp"])),
-                        }
-                    )
                 recorded_temps = temp_tracker.read_text(encoding="utf-8").splitlines()
                 remaining_temps = [path for path in recorded_temps if Path(path).exists()]
-
-                failures: list[str] = []
-                allowed_timeout_statuses = {"124 124", "137 137", "-9 137"}
-                if timeout_status not in allowed_timeout_statuses:
-                    failures.append(f"unexpected real timeout raw/shell status {timeout_status!r}")
-                if "gnu-outer" not in timeout_dispatches or "gnu-command" not in timeout_dispatches:
-                    failures.append(f"real timeout did not dispatch through GNU binary: {timeout_dispatches!r}")
-                if real_timeout_gate.returncode != 1:
-                    failures.append(f"gate exit changed to {real_timeout_gate.returncode}")
-                if "diagnostic_capture=timed_out" not in real_timeout_gate.stdout:
-                    failures.append("timeout diagnostic marker missing")
-                if real_elapsed >= 7.5:
-                    failures.append(f"gate elapsed {real_elapsed:.3f}s exceeded 7.5s")
-                if not _process_identity_is_gone(process_history[0]["worker"]):
-                    failures.append("original worker identity remained at gate return")
-                if not _process_identity_is_gone(process_history[0]["sleep_child"]):
-                    failures.append("original sleep-child identity remained at gate return")
-                immediate_group = process_history[0]["group"]
-                final_group = process_history[-1]["group"]
-                assert isinstance(immediate_group, dict)
-                assert isinstance(final_group, dict)
-                for label, snapshot in (("immediate", immediate_group), ("final", final_group)):
-                    if snapshot["truncated"] or snapshot["enumeration_error"]:
-                        failures.append(f"{label} process-group census incomplete: {snapshot!r}")
-                if not _process_group_is_clean(immediate_group):
-                    failures.append(f"process group still had members at gate return: {immediate_group!r}")
-                if not _process_group_is_clean(final_group):
-                    failures.append(f"process group members persisted after bounded observation: {final_group!r}")
-                for label in ("worker", "sleep_child"):
-                    if not _process_identity_is_gone(process_history[-1][label]):
-                        failures.append(f"{label} identity persisted: {process_history[-1][label]!r}")
                 if not recorded_temps:
-                    failures.append("diagnostic temporary-file tracker was empty")
+                    self.fail("diagnostic temporary-file tracker was empty")
                 if remaining_temps:
-                    failures.append(f"diagnostic temporary files remain: {remaining_temps!r}")
-                receipt = (
-                    "timeout_process_cleanup="
-                    f"worker:{process_history[0]['worker']['identity']}->"
-                    f"{process_history[-1]['worker']['identity']},"
-                    f"child:{process_history[0]['sleep_child']['identity']}->"
-                    f"{process_history[-1]['sleep_child']['identity']},"
-                    f"group:{immediate_group['observed_count']}->{final_group['observed_count']},"
-                    f"host_unreadable:{immediate_group['host_unreadable']}+{final_group['host_unreadable']},"
-                    f"raw_shell_timeout={timeout_status},gate_elapsed={real_elapsed:.3f}s"
-                )
-                if not failures:
-                    print(receipt)
-                self.assertFalse(
-                    failures,
-                    "timeout cleanup regression: "
-                    f"failures={failures!r}, raw_timeout_status={timeout_status!r}, "
-                    f"gate_exit={real_timeout_gate.returncode}, gate_elapsed={real_elapsed:.3f}s, "
-                    f"receipt={receipt!r}, initial_worker={initial_worker!r}, initial_sleep_child={initial_child!r}, "
-                    f"process_history={process_history!r}",
+                    self.fail(f"diagnostic temporary files remain: {remaining_temps!r}")
+                self.assertEqual(real_timeout_gate.returncode, 1)
+                self.assertIn("diagnostic_supervisor=timed_out_cleaned", real_timeout_gate.stdout)
+                self.assertIn("diagnostic_capture=timed_out_cleaned", real_timeout_gate.stdout)
+                self.assertIn("real-timeout-command", timeout_dispatches)
+                self.assertLess(real_elapsed, 6.5, f"timeout executable={timeout_identity}")
+                print(
+                    f"diagnostic_supervisor_timeout={timeout_identity},"
+                    f"gate_exit={real_timeout_gate.returncode},elapsed={real_elapsed:.3f}s"
                 )
 
-    @unittest.skipUnless(shutil.which("timeout"), "GNU timeout is unavailable on this host")
-    def test_gnu_timeout_kills_term_resistant_process_group(self) -> None:
+    @unittest.skipUnless(sys.platform.startswith("linux"), "diagnostic supervisor requires Linux")
+    def test_diagnostic_supervisor_owns_and_reaps_only_its_worker_tree(self) -> None:
+        helper = SCRIPT.parent / "mosaic_diagnostic_supervisor.py"
+        self.assertTrue(helper.is_file())
+
+        def deadline_cs(seconds: float) -> int:
+            now = time.clock_gettime(time.CLOCK_BOOTTIME)
+            return int((now + seconds) * 100)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            sentinel = subprocess.Popen(
+                [sys.executable, "-c", "import time; time.sleep(30)"],
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            try:
+                normal = subprocess.run(
+                    [
+                        sys.executable,
+                        str(helper),
+                        "--deadline-boottime-cs",
+                        str(deadline_cs(3.0)),
+                        "--",
+                        sys.executable,
+                        "-c",
+                        "print('normal-worker-output')",
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=4,
+                    check=False,
+                )
+                self.assertEqual(normal.returncode, 0, normal.stderr)
+                self.assertIn("normal-worker-output", normal.stdout)
+                self.assertIn("diagnostic_supervisor=completed", normal.stdout)
+
+                child_pid_path = root / "child.pid"
+                grandchild_pid_path = root / "grandchild.pid"
+                worker_identity_path = root / "worker.identity"
+                child_identity_path = root / "child.identity"
+                grandchild_identity_path = root / "grandchild.identity"
+                worker_code = "\n".join(
+                    (
+                        "import os, signal, time",
+                        "def identity():",
+                        "    raw = open(f'/proc/{os.getpid()}/stat').read()",
+                        "    fields = raw[raw.rfind(')') + 2:].split()",
+                        "    return f'{os.getpid()} {fields[2]} {fields[3]} {fields[19]}\\n'",
+                        f"open({str(worker_identity_path)!r}, 'w').write(identity())",
+                        "child = os.fork()",
+                        "if child == 0:",
+                        "    signal.signal(signal.SIGTERM, signal.SIG_IGN)",
+                        f"    open({str(child_pid_path)!r}, 'w').write(str(os.getpid()))",
+                        f"    open({str(child_identity_path)!r}, 'w').write(identity())",
+                        "    grandchild = os.fork()",
+                        "    if grandchild == 0:",
+                        "        signal.signal(signal.SIGTERM, signal.SIG_IGN)",
+                        f"        open({str(grandchild_pid_path)!r}, 'w').write(str(os.getpid()))",
+                        f"        open({str(grandchild_identity_path)!r}, 'w').write(identity())",
+                        "        while True: time.sleep(30)",
+                        "    while True: time.sleep(30)",
+                        "deadline = time.monotonic() + 1.5",
+                        f"grandchild_path = {str(grandchild_pid_path)!r}",
+                        "while time.monotonic() < deadline and not os.path.exists(grandchild_path): time.sleep(0.005)",
+                        "if not os.path.exists(grandchild_path): raise SystemExit(90)",
+                        "os._exit(0)",
+                    )
+                )
+                cleanup_started = time.monotonic()
+                contained = subprocess.run(
+                    [
+                        sys.executable,
+                        str(helper),
+                        "--deadline-boottime-cs",
+                        str(deadline_cs(3.0)),
+                        "--",
+                        sys.executable,
+                        "-c",
+                        worker_code,
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=4,
+                    check=False,
+                )
+                cleanup_elapsed = time.monotonic() - cleanup_started
+                self.assertEqual(contained.returncode, 125, contained.stdout + contained.stderr)
+                self.assertIn("diagnostic_supervisor=descendants_cleaned", contained.stdout)
+                self.assertLess(cleanup_elapsed, 3.0)
+                child_pid = int(child_pid_path.read_text(encoding="ascii"))
+                grandchild_pid = int(grandchild_pid_path.read_text(encoding="ascii"))
+                def process_identity(path: Path) -> tuple[int, int, int, int]:
+                    parts = tuple(int(part) for part in path.read_text(encoding="ascii").split())
+                    self.assertEqual(len(parts), 4)
+                    return parts  # pid, pgrp, session, starttime
+
+                identities = tuple(
+                    process_identity(path)
+                    for path in (
+                        worker_identity_path,
+                        child_identity_path,
+                        grandchild_identity_path,
+                    )
+                )
+                self.assertEqual(identities[1][0], child_pid)
+                self.assertEqual(identities[2][0], grandchild_pid)
+                worker_group = identities[0][1]
+                self.assertEqual(worker_group, identities[0][0])
+                self.assertTrue(all(identity[1] == worker_group for identity in identities))
+                self.assertTrue(all(identity[2] == worker_group for identity in identities))
+
+                def current_stat(pid: int) -> tuple[str, int, int, int] | None:
+                    try:
+                        raw = Path(f"/proc/{pid}/stat").read_text(encoding="ascii")
+                    except FileNotFoundError:
+                        return None
+                    close_paren = raw.rfind(")")
+                    self.assertGreaterEqual(close_paren, 0, raw)
+                    fields = raw[close_paren + 2 :].split()
+                    return fields[0], int(fields[2]), int(fields[3]), int(fields[19])
+
+                for pid, pgrp, session, starttime in identities:
+                    with self.subTest(pid=pid):
+                        current = current_stat(pid)
+                        self.assertTrue(
+                            current is None or current[3] != starttime,
+                            f"same process identity remains after helper return: {pid} {current}",
+                        )
+
+                remaining_group_members = []
+                for entry in Path("/proc").iterdir():
+                    if not entry.name.isdigit():
+                        continue
+                    current = current_stat(int(entry.name))
+                    if current is not None and current[1] == worker_group:
+                        remaining_group_members.append((entry.name, current))
+                self.assertEqual(remaining_group_members, [])
+                self.assertIsNone(sentinel.poll(), "unrelated process was touched")
+                print(
+                    "diagnostic_supervisor_tree=leader_exit_first,"
+                    f"resistant_child_reaped=true,grandchild_reaped=true,elapsed={cleanup_elapsed:.3f}s"
+                )
+            finally:
+                if sentinel.poll() is None:
+                    sentinel.terminate()
+                    sentinel.wait(timeout=2)
+
+    @unittest.skipUnless(shutil.which("timeout"), "timeout utility is unavailable on this host")
+    def test_timeout_utility_process_group_behavior_is_recorded(self) -> None:
         start = time.monotonic()
         with tempfile.TemporaryDirectory() as directory:
             pid_file = Path(directory) / "child.pid"
