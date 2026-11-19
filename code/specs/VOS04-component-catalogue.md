@@ -1134,18 +1134,33 @@ claim of `vos-sched-any` (the hand-written behaviour test caught it). The contra
 `warrant/obligations-any.part` (VOS10 9.3): `insert_oracle_lo`, `_hi` and `_ids`, the three of `remove`, and
 `alpha_build_with_oracle`, so CD07 requires them of every `any` crate by `claim_sha256` and no implementation
 authors them. A claim only proves what its fault can fail, and no record fault reached the last field of `Impl`, so
-VER04j 4.8 gained `field-flip-last`. CC11 is the generic half, DERIVED from the parsed document and the bindings and
-never declared by the author, and it never reads claim text:
+VER04j 4.8 gained `field-flip-last`. CC11 is the generic half, DERIVED from the parsed document, the contract's `any`
+claims and the bindings, never declared by the author, and it never reads claim text:
 
 ```text
   (a) the Impl field outside the cone of `build` (the oracle; `BuildShape::Constructor { in_cone }`, the walk
-      CD07 uses) is exactly ONE field and it is the LAST field of `Impl`; anything else, and any shape the walk
-      cannot decide, fails closed
-  (b) every SUCCESSOR operation lists the fault `field-flip-last` in `faults=`; the successors are the bound
-      operations with `ret=Impl` and an `Impl` among `args=` (`insert_img`, `remove_img`, `dispatch_img`)
+      CD07 uses) is exactly ONE field, it is the LAST field of `Impl`, and its type is NUMERIC (a fixed-width
+      integer or `Nat`: the generator's own predicate for `field-flip-last`, the `FixedTy` table); anything
+      else, and any shape the walk cannot decide, fails closed
+  (b) every SUCCESSOR operation lists the fault `field-flip-last` in `faults=`; the successors are the `op`s of
+      the GENERATED DOCUMENT whose return type mentions `Impl` and that have a parameter that mentions `Impl`,
+      or an `inout` parameter that does (`insert_img`, `remove_img`, `dispatch_img`); the bindings are read
+      only afterwards, for each successor's faults
   (c) for every successor operation `sabotage.plan` has an entry `exhaustive/<claim> field-flip-last` whose claim
-      calls that operation and no other successor (the existing `claim_calls`)
+      is CONTRACT-OWNED (the document's claim has the name and `claim_sha256` of an obligation of the contract's
+      `any` tier, the identity CD05 and CD06 use; never the `tier=` attribute) and calls that operation and no
+      other successor (the existing `claim_calls`)
 ```
+
+The successors come from the document because `ret=` and `args=` of an `op` line are optional: omitted, the
+generator falls back to the host type of the document's signature, so `op insert_img export=.. faults=field-zero`
+is still a state-to-state operation for the generator, and a rule that read the bindings' spelling would not see
+it (VOS-039c security review F1). "Mentions" includes `Option<Impl>`, `Result<Impl, E>`, tuples and lists, so a
+type the rule cannot classify counts as a state (the generator then refuses `field-flip-last` on a non-record
+result, which is a finding); a binding that names no `op` of the document is a finding (it cannot be
+classified); a document with no successor is a finding. A claim that the implementation adds itself and that
+calls one successor does not satisfy (c) (F3): the contract's preservation claims are the ones that must be
+attacked. The numeric-oracle clause is F2: a `Bool` or `Bytes` oracle leaves `field-flip-last` nothing to flip.
 
 The constant is `ORACLE_FAULT` in `vos-link` (`src/oracle.rs`); a test reads this section and asserts it. Whether
 the claim really FAILS under the fault is not decided by `check-component`: the generated BUILD runs the plan through
@@ -1157,8 +1172,11 @@ extension, adjacent to VOS-D101); and there is no lexical rule over the implemen
 never read the oracle", VOS10 11.2), because it is neither sufficient (a mutant that writes `choice: 0` never reads
 it) nor cheap (`..s` and `return s` read the field lexically in the honest code). Negative controls, each a fixture
 `-any` crate: a successor without the fault; an entry on a claim that calls no successor, and on an `example`; a claim
-that calls two successors; the oracle first, absent, or doubled; a `build` that is not a constructor or is missing; no
-state-producing operation bound; a document the analysis refuses; and the production crate that is not subject.
+that calls two successors; the oracle first, absent, doubled, or not numeric; a `build` that is not a constructor or is
+missing; the successor bound with `args=` and `ret=` omitted (each alone, and both), without the fault; a binding that
+names no `op` of the document; an `inout` state operation; a decoy claim of the implementation's own carrying the
+entry while the contract's claim has none; a document with no state-producing operation; a document the analysis
+refuses; and the production crate that is not subject.
 
 **The dependencies and attributes of a contract crate, CC10 and SH19 (h) (VOS-D112).** SH19 is a lexical check
 of the crate's own text: a path dependency could supply an attribute macro (`#[evil::rewrite]`) or a foreign

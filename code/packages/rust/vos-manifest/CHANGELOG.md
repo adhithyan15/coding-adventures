@@ -4,6 +4,10 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-039c security review)
+
+- `Analysis::ops` (`OpFact`: name, whether the return type mentions `Impl`, how many parameters do, whether an `inout` one does) and `Analysis::impl_last_field_type`, from the parsed tree.  `vos-link` CC11 derives the state-to-state operations and checks the oracle's type from them, not from the optional `ret=`/`args=` of the bindings.
+
 ### Changed (VOS-039c)
 
 - `tests/warrant.rs`: the `any` block of the real scheduler contract has ten claims (was three) and the seven new obligations are pinned with their `claim_sha256` (computed by `tests/claim_sha256_reference.py`, the independent implementation, not by this crate).  No source change.

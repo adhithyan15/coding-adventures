@@ -1522,8 +1522,10 @@ argument to a `model` whose body does not depend on that parameter (a field set 
 constant is an oracle or a register, not a function of M). `kind = any`: the document
 carries every `any` obligation, **no** `canonical` and **no** `representation` claim (by `claim_sha256`), the crate name
 ends in `-any`, and **at least one** `Impl` field is outside the cone of `build` (the oracle
-the `any` block names; `check-component` CC11 tightens this to exactly one, the last field, because
-the fault that attacks the oracle-preservation claims flips the last numeric field, VOS04 5.6). `kind = reference`: the document has no `bound` row. A `build` that is
+the `any` block names; `check-component` CC11 tightens this to exactly one, the last field, of a numeric type, because
+the fault that attacks the oracle-preservation claims flips the last numeric field, VOS04 5.6; CC11 also derives the
+state-to-state operations from the document's signatures, not from the bindings, and requires the fault's plan entry on
+a claim the contract owns) `kind = reference`: the document has no `bound` row. A `build` that is
 not an `Impl(..)` application cannot be decided structurally and fails closed for
 `production` and `any`.
 

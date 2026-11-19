@@ -802,3 +802,50 @@ fn bound_facts_lists_ops_and_literal_bounds_and_refuses_to_guess_anything_else()
     assert_eq!(f.rows.len(), 7);
     assert!(vos_manifest::warrant::bound_facts("not a document").is_err());
 }
+
+#[test]
+fn ops_and_the_last_impl_field_are_reported_for_cc11() {
+    // VOS-039c F1/F2: the signatures of the `op`s of a document (what they return and take of
+    // `Impl`, composites included, and whether an `inout` Impl is mutated) and the type of the last
+    // field of `Impl`, read from the parsed tree.
+    let doc = "warrant t v1
+  record M(a: Bool)
+  record Impl(x: U8, c: Bool)
+  op init() -> Impl
+  op ins(s: Impl, t: U8) -> Impl
+  op opt(s: Impl) -> Option<Impl>
+  op out(s: Impl) -> U8
+  op bump(s: inout Impl) -> (U8, Impl)
+  op many(l: List<Impl>) -> Option<Impl>
+  op raw(b: Bytes) -> Bytes
+  labels ins:
+    s public
+    t public
+  labels opt:
+    s public
+  labels out:
+    s public
+  labels bump:
+    s public
+  labels many:
+    l public
+  labels raw:
+    b public
+  model build(m: M) -> Impl = (Impl(0u8, false))
+";
+    let ops = match analyze_document(doc) {
+        Ok(a) => {
+            assert_eq!(a.impl_last_field_type.as_deref(), Some("Bool"));
+            a.ops
+        }
+        Err(e) => panic!("the fixture document must type-check: {e:?}"),
+    };
+    let get = |n: &str| ops.iter().find(|o| o.name == n).unwrap().clone();
+    assert!(get("init").returns_state && get("init").state_params == 0);
+    assert!(get("ins").returns_state && get("ins").state_params == 1 && !get("ins").inout_state);
+    assert!(get("opt").returns_state);
+    assert!(!get("out").returns_state && get("out").state_params == 1);
+    assert!(get("bump").inout_state);
+    assert!(get("many").returns_state && get("many").state_params == 1);
+    assert!(!get("raw").returns_state && get("raw").state_params == 0);
+}

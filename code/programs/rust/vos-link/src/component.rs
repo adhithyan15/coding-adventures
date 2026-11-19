@@ -574,12 +574,37 @@ fn oracle_rule(cx: &mut Ctx, g: &GenInputs) -> Result<(), NoVerdict> {
     else {
         return Ok(()); // CC02 reported it
     };
+    // The contract's `any` claims, by name and digest: the claims the contract owns.  A contract
+    // that cannot be read, or that has no `any` claim, leaves nothing to attack (fails closed;
+    // the other rules report why the contract cannot be read).
+    let mut unread = Vec::new();
+    let contract_any: Vec<vos_manifest::warrant::ClaimFact> = match cx.vt.contract.as_deref() {
+        Some(pkg) => crate::inputs::load_contract_package(&cx.layout, pkg, &mut unread)?
+            .map(|p| {
+                p.tier_claims
+                    .into_iter()
+                    .filter(|(t, _)| *t == vos_manifest::Tier::Any)
+                    .flat_map(|(_, c)| c)
+                    .collect()
+            })
+            .unwrap_or_default(),
+        None => Vec::new(),
+    };
     match oracle::load(&bindings, document)? {
         Err(message) => cx.find("CC11", format!("oracle: {message}")),
-        Ok((build, successors)) => {
+        Ok(d) => {
+            let owned: BTreeSet<String> = d
+                .claims
+                .iter()
+                .filter(|c| contract_any.contains(c))
+                .map(|c| c.name.clone())
+                .collect();
             let facts = oracle::Facts {
-                build: &build,
-                successors: &successors,
+                build: &d.build,
+                successors: &d.successors,
+                last_field: d.last_field.as_deref(),
+                unclassified: &d.unclassified,
+                owned: &owned,
                 faults: &g.faults,
                 plan: &g.plan,
                 calls: &g.calls,
