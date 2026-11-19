@@ -183,15 +183,22 @@ func (r *redactor) apply(s string) string {
 // Only the characters a path is actually written after count: the start of the
 // text, whitespace, a quote, '=', ':', ',', '(', '[' and '<'; or a "-X" flag
 // prefix (a single ASCII letter right after a '-' that itself starts the text or
-// follows whitespace, as in -L/tmp/x or -I/home/runner/inc).  '+', '@' and '~'
-// are not boundaries: they occur INSIDE real paths ("c++", "user@host").
+// follows whitespace, as in -L/tmp/x or -I/home/runner/inc).  The shell
+// metacharacters ';', '|', '&', '>', '{' and '}' also start a word (a;/tmp/x,
+// >/tmp/out, {/tmp/a,b}), and so does an '@' that is itself at the start of the
+// text or right after whitespace: a response file, @/home/runner/x.rsp.  '+',
+// '~' and a mid-word '@' are not boundaries: they occur INSIDE real paths and
+// names ("c++", "user@host", "pkg@1.2/home").
 func precedesBoundary(s string, k int) bool {
 	if k == 0 {
 		return true
 	}
 	switch c := s[k-1]; c {
-	case ' ', '\t', '\n', '\r', '\v', '\f', '"', '\'', '`', '=', ':', ',', '(', '[', '<':
+	case ' ', '\t', '\n', '\r', '\v', '\f', '"', '\'', '`', '=', ':', ',', '(', '[', '<',
+		';', '|', '&', '>', '{', '}':
 		return true
+	case '@':
+		return k == 1 || strings.IndexByte(" \t\n\r\v\f", s[k-2]) >= 0
 	default:
 		if k >= 2 && s[k-2] == '-' && (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') {
 			return k == 2 || strings.IndexByte(" \t\n\r\v\f", s[k-3]) >= 0
@@ -209,7 +216,8 @@ func isPathByte(b byte) bool {
 // replaceAtBoundary replaces the occurrences of from (a directory path) in s
 // that are whole path prefixes.  The match must be PRECEDED by a boundary
 // (precedesBoundary: the start of s, whitespace, a quote, '=', ':', ',', '(',
-// '[', '<', or a one-letter flag such as the -L of -L/tmp/x) and FOLLOWED by '/',
+// '[', '<', ';', '|', '&', '>', '{', '}', a leading '@', or a one-letter flag
+// such as the -L of -L/tmp/x) and FOLLOWED by '/',
 // the end of s, or a character that cannot be part of a path.  So with from
 // "/tmp":
 //
@@ -219,6 +227,9 @@ func isPathByte(b byte) bool {
 //	/var/tmp/y        kept  (the match follows "r", a path character)
 //	/usr/lib/tmpfiles.d/x   kept  (the match follows "b" and precedes "f")
 //	/tmpx             kept  (the match precedes "x")
+//	@/tmp/r.rsp       replaced          (@$TMPDIR/r.rsp)
+//	a;/tmp/x          replaced          (a;$TMPDIR/x)
+//	user@/tmp/x       kept  (a mid-word '@' is not a boundary)
 //	/usr/include/c++/tmp    kept  ('+' is not a boundary)
 func replaceAtBoundary(s, from, to string) string {
 	var b strings.Builder

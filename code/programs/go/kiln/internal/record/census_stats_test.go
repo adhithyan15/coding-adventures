@@ -220,6 +220,28 @@ func TestRedactorWorksOnPathBoundaries(t *testing.T) {
 		{"user@/tmp/x", "user@/tmp/x"},
 		{"~/tmp/x", "~/tmp/x"},
 		{"+/tmp/x", "+/tmp/x"},
+		// '@' starts a path only at the start of the text or after whitespace.
+		{"@/tmp/x.rsp", "@$TMPDIR/x.rsp"},
+		{"cc @/home/u/work/x.rsp", "cc @$HOME/work/x.rsp"},
+		{"cc\t@/tmp/a\n@/tmp/b", "cc\t@$TMPDIR/a\n@$TMPDIR/b"},
+		{"@@/tmp/x", "@@/tmp/x"},
+		{"user@host/tmp/x", "user@host/tmp/x"},
+		{"pkg@1.2/home/u/x", "pkg@1.2/home/u/x"},
+		{"a@/tmp/x", "a@/tmp/x"},
+		// Shell metacharacters start a word.
+		{"a;/home/u/x", "a;$HOME/x"},
+		{"a|/tmp/x", "a|$TMPDIR/x"},
+		{"a&/tmp/x", "a&$TMPDIR/x"},
+		{"a&&/tmp/x", "a&&$TMPDIR/x"},
+		{"echo >/tmp/out", "echo >$TMPDIR/out"},
+		{"echo 2>/tmp/err", "echo 2>$TMPDIR/err"},
+		{"{/home/u/a,b}", "{$HOME/a,b}"},
+		{"{a,/home/u/b}", "{a,$HOME/b}"},
+		{"{a,b}/tmp/x", "{a,b}$TMPDIR/x"},
+		// ...but a following path character still blocks the match.
+		{";/tmpx", ";/tmpx"},
+		{"a;/var/tmp/x", "a;/var/tmp/x"},
+		{">/usr/lib/tmpfiles.d/x", ">/usr/lib/tmpfiles.d/x"},
 		{"(/tmp/x) [/tmp/y] <$/tmp/z>", "($TMPDIR/x) [$TMPDIR/y] <$/tmp/z>"},
 		{"a,/tmp/b:/tmp/c\"/tmp/d'/tmp/e", "a,$TMPDIR/b:$TMPDIR/c\"$TMPDIR/d'$TMPDIR/e"},
 	} {
