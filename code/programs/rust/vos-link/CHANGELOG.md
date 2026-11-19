@@ -4,6 +4,11 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-039c, VOS-D080)
+
+- **CC11**, oracle preservation of every `-any` (`src/oracle.rs`, run by `check-component` on kind `any` only).  DERIVED from the parsed document and the bindings, never declared, and it reads no claim text: (a) the `Impl` field outside the cone of `build` (the walk CD07 uses) is exactly one and is the LAST field, and a `build` the walk cannot decide fails closed; (b) every state-producing operation (bound with `ret=Impl` and an `Impl` among `args=`) lists the fault `field-flip-last`; (c) the sabotage plan has an `exhaustive/<claim> field-flip-last` entry on a claim that calls that operation and no other state-producing operation.  The constant is `ORACLE_FAULT`, asserted against VOS04 5.6 by a test.  A contract whose `any` block lacks preservation claims cannot have a compliant `-any`; no `contract.vos` format change.  `pub fn judge` is pure.
+- Tests: `tests/oracle.rs` (the pure judge: every undecided shape, an empty constructor, a flip fault that is not the oracle fault, the successor set of a bindings file, refused bindings and documents) and the CC11 controls of `tests/component.rs` (the `-any` fixture is now a valid Warrant document with the oracle last and a state-producing operation `f`; controls: a successor without the fault, an entry on a claim that calls no successor or on an example, a claim that calls two successors, the oracle first, absent or doubled, a `build` that is not a constructor or is missing, no state-producing operation, a refused document, and the production crate that is not subject).
+
 ### Added (VOS-039b-2b, VOS-D104, VOS-D055 bound half, VOS-D112)
 
 - **CC09**, `bound` rows against the ceilings of `contract.vos` (`src/bounds.rs`), run by `check-component` on

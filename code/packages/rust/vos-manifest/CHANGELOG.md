@@ -4,6 +4,10 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-039c)
+
+- `tests/warrant.rs`: the `any` block of the real scheduler contract has ten claims (was three) and the seven new obligations are pinned with their `claim_sha256` (computed by `tests/claim_sha256_reference.py`, the independent implementation, not by this crate).  No source change.
+
 ### Added (VOS-039b-2b)
 
 - `warrant::bound_facts(text)`: the `op` names and every `bound` row (`op`, metric, bound) of a document, read

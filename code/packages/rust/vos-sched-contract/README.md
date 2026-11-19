@@ -47,6 +47,8 @@ most-general scheduler) is the safety tier's witness.
 | `contract.vos` | ceilings (steps, heap, depth per operation) and the instance, `N 8` |
 | `vos.toml` | class K, kind `contract` (read by `vos-shape-check`) |
 
+The `any` part holds ten claims: soundness and coverage of `dispatch` (`dispatch_sound`, `dispatch_covers_run`, `dispatch_covers_idle`) and, since VOS-039c, the oracle-preservation claims of `insert` and `remove` (`insert_oracle_lo`, `_hi`, `_ids`, `remove_oracle_lo`, `_hi`, `_ids`, split to stay inside the 400,000-case budget) and `alpha_build_with_oracle`.  Residual: the ids 8 to 255 on the masks other than 0x00, 0xA5, 0x5A and 0xFF (VOS10 section 9.3).
+
 The `.part` files are copied verbatim into each implementation's generated
 document by `vos-link gen-doc` (VOS-033, not built yet; VOS02 R2). Edit them only
 as a contract change: every implementation regenerates and re-proves.
