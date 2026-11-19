@@ -1981,3 +1981,58 @@ func TestBuilderPublicValidationAndAtomicPreflight(t *testing.T) {
 		}
 	}
 }
+
+func TestLowThresholdReductionOnOracleBoundedPigeonhole(t *testing.T) {
+	const pigeons, holes = 5, 4
+	s, _ := NewSolver()
+	vars := make([][]Lit, pigeons)
+	clauses := make([][]Lit, 0, pigeons+holes*pigeons*(pigeons-1)/2)
+	for p := 0; p < pigeons; p++ {
+		vars[p] = make([]Lit, holes)
+		for h := 0; h < holes; h++ {
+			v, err := s.NewVar()
+			if err != nil {
+				t.Fatal(err)
+			}
+			vars[p][h], _ = MakeLit(v, false)
+		}
+		clauses = append(clauses, append([]Lit(nil), vars[p]...))
+	}
+	for h := 0; h < holes; h++ {
+		for p := 0; p < pigeons; p++ {
+			for q := p + 1; q < pigeons; q++ {
+				clause := []Lit{vars[p][h] ^ 1, vars[q][h] ^ 1}
+				clauses = append(clauses, clause)
+			}
+		}
+	}
+	for _, clause := range clauses {
+		if _, err := s.AddClause(clause); err != nil {
+			t.Fatal(err)
+		}
+	}
+	s.restartBase, s.learnedLimit = 1, 1
+	if got, err := s.Solve(); err != nil || got != SolveUnsat {
+		t.Fatalf("PHP(5,4) with maintenance thresholds: %v %v", got, err)
+	}
+	if oracleSAT(pigeons*holes, clauses, nil) {
+		t.Fatal("independent assignment enumeration found PHP(5,4) model")
+	}
+	deleted := false
+	for _, clause := range s.cs {
+		if clause.learnt && clause.deleted {
+			deleted = true
+			break
+		}
+	}
+	if !deleted {
+		t.Fatal("low threshold did not exercise learned reduction")
+	}
+	var watchCapacity int
+	for _, bucket := range s.watches {
+		watchCapacity += cap(bucket)
+	}
+	if bound := 4 * s.storedLiteralCount(); uint64(watchCapacity) > bound {
+		t.Fatalf("repeated watcher movement exceeded literal-derived bound: capacity=%d bound=%d", watchCapacity, bound)
+	}
+}
