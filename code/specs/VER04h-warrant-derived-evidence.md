@@ -383,12 +383,25 @@ one `source-equivalence` entry only as an explicit **refusal-only fallback**:
   `verdict` are exactly `not-live`, `max_len` is zero, and it has no
   certificates or obligation digest. `evidence.bindings` must declare
   `proofs_not_live=<reason>` for that operation.
+* The supported crate target is Cargo's default library target discovered as
+  `src/lib.rs`. A custom `[lib]` target, `package.autolib = false`, or any
+  manifest form the bounded target check cannot resolve is unsupported. The
+  export must be an unconditional root item: candidate-like tokens inside
+  parentheses, brackets, macro input, or nested braces do not count. An
+  attached `cfg`/`cfg_attr` or crate-level conditional attribute makes the
+  candidate ineligible; other unrelated item attributes, including `derive`,
+  remain allowed. This restriction establishes the active public export
+  without pretending the subset lexer is a complete Rust item resolver.
 * The report checker reruns the Rust-subset/WIR frontend on that actual public
-  export. The check is bound to the current Warrant document and the exact
-  `src/**/*.rs` tree through their existing manifest hashes. The recorded
-  refusal must be reproducible. A newly accepted export, mismatched function,
-  missing opt-in, stale source/spec pin, any other status or label, or any
-  certificate makes checking fail.
+  export. Producer and checker each capture the bounded `src/**/*.rs` tree
+  once, reject a symlinked `src` root or any symlink in the tree, and derive
+  both the source digest and the isolated frontend input from that same
+  in-memory snapshot. They do not reread `lib.rs` after hashing it or use a
+  compile-time source copy as the subject. The check is also bound to the
+  current Warrant document through its manifest hash. The recorded refusal
+  must be reproducible. A newly accepted export, mismatched function, missing
+  opt-in, stale source/spec pin, any other status or label, or any certificate
+  makes checking fail.
 * This entry records only that the source frontend refused the export. It never
   asserts semantic equivalence, receives a passing rank, discharges CWE-400,
   CWE-208 or another weakness, or makes E5 pass. E5 remains `not-live` when an
