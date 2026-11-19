@@ -302,6 +302,99 @@ fn declaration_span(d: &Declaration<'_>) -> (usize, usize) {
     }
 }
 
+/// The names a Warrant document declares: its `claim`s and its `example`s, in document
+/// order.  The document is **parsed only** (type-checking is `check-doc`'s); this is what
+/// `vos-link check-component` binds the evidence manifest and the sabotage plan to
+/// (VOS-039a), so the claim set comes from the generated document, never from a BUILD file.
+pub fn declared_names(text: &str) -> Result<(Vec<String>, Vec<String>), WarrantFailure> {
+    with_parsed(text, |file, _tokens, _norm| {
+        let mut claims = Vec::new();
+        let mut examples = Vec::new();
+        for d in &file.declarations {
+            match d {
+                Declaration::Claim(c) => claims.push(c.name.to_string()),
+                Declaration::Example(e) => examples.push(e.name.to_string()),
+                _ => {}
+            }
+        }
+        Ok((claims, examples))
+    })
+}
+
+/// For each claim of a parsed document, which of `ops` its body calls, in the order first met.
+///
+/// The claim's **parsed expression** is walked (a text scan was bypassable: `--` inside a
+/// string literal cut the line and hid a call).  A call is a single-segment reference with an
+/// argument list whose name is in `ops`, anywhere in the body, comments and strings being
+/// invisible to a tree.  `vos-link` uses it to require that every claim that calls a bound
+/// operation is attacked by a sabotage control (VOS-039a review M3).  It does NOT follow a
+/// call into a `model` body, so M3 relies on models being operation-free (the document's
+/// type check refuses an operation call in a model today; the transitive closure is VOS-D108).
+pub fn claim_calls(
+    text: &str,
+    ops: &[String],
+) -> Result<Vec<(String, Vec<String>)>, WarrantFailure> {
+    with_parsed(text, |file, _tokens, _norm| {
+        let mut out = Vec::new();
+        for d in &file.declarations {
+            if let Declaration::Claim(c) = d {
+                let mut found = Vec::new();
+                calls_in(&c.body, ops, &mut found);
+                out.push((c.name.to_string(), found));
+            }
+        }
+        Ok(out)
+    })
+}
+
+/// Collect the members of `ops` called inside `e`.
+fn calls_in(e: &Expression<'_>, ops: &[String], out: &mut Vec<String>) {
+    match e {
+        Expression::Quantified { body, .. } => calls_in(body, ops, out),
+        Expression::Conditional {
+            condition,
+            then_branch,
+            else_branch,
+            ..
+        } => {
+            for x in [condition, then_branch, else_branch] {
+                calls_in(x, ops, out);
+            }
+        }
+        Expression::Match { target, arms, .. } => {
+            calls_in(target, ops, out);
+            for a in arms {
+                calls_in(&a.body, ops, out);
+            }
+        }
+        Expression::Binary { left, right, .. } => {
+            calls_in(left, ops, out);
+            calls_in(right, ops, out);
+        }
+        Expression::Unary { operand, .. } => calls_in(operand, ops, out),
+        Expression::Literal { .. } => {}
+        Expression::List { elements, .. } | Expression::Tuple { elements, .. } => {
+            for x in elements {
+                calls_in(x, ops, out);
+            }
+        }
+        Expression::Reference { name, args, .. } => {
+            if let Some(args) = args {
+                if let [one] = name.segments.as_slice() {
+                    if ops.iter().any(|o| o == one) && !out.iter().any(|o| o == one) {
+                        out.push((*one).to_string());
+                    }
+                }
+                for x in args {
+                    calls_in(x, ops, out);
+                }
+            }
+        }
+        Expression::Grouped { inner, .. } => calls_in(inner, ops, out),
+        Expression::Project { base, .. } => calls_in(base, ops, out),
+    }
+}
+
 /// Parse and type-check a whole document with `warrant-grammar` and report what the
 /// R6 checks need.
 pub fn analyze_document(text: &str) -> Result<Analysis, WarrantFailure> {

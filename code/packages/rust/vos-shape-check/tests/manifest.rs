@@ -294,8 +294,80 @@ fn vos_toml_contract_and_obligations_keys() {
             "more than 5",
         ),
         ("obligation = [\"a\"]", "unknown key"),
+        ("coverage-floor = 101", "integer from 0 to 100"),
+        ("coverage-floor = -1", "integer from 0 to 100"),
+        ("coverage-floor = 9_5", "integer from 0 to 100"),
+        ("coverage-floor = 95.0", "integer from 0 to 100"),
+        ("coverage-floor = 0x5f", "integer from 0 to 100"),
+        ("coverage-floor = 0095", "integer from 0 to 100"),
+        ("coverage-floor = \"95\"", "wrong type"),
+        ("coverage-floor = 95\ncoverage-floor = 96", "duplicate key"),
+        ("excused-controls = []", "never empty"),
+        ("excused-controls = [\"a\"]", "inline tables"),
+        ("excused-controls = \"a\"", "wrong type"),
+        ("excused-controls = [{ id = \"a\" }]", "exactly one `id` and one `reason`"),
+        ("excused-controls = [{ reason = \"VOS-D098\" }]", "exactly one `id` and one `reason`"),
+        ("excused-controls = [{ id = \"\", reason = \"VOS-D098\" }]", "1 to 128 bytes"),
+        ("excused-controls = [{ id = \"a b\", reason = \"VOS-D098\" }]", "1 to 128 bytes"),
+        ("excused-controls = [{ id = \"a\", reason = \"because\" }]", "backlog row"),
+        ("excused-controls = [{ id = \"a\", reason = \"VOS-D98\" }]", "backlog row"),
+        ("excused-controls = [{ id = \"a\", reason = \"VOS-D0981\" }]", "backlog row"),
+        ("excused-controls = [{ id = \"a\", reason = \"\" }]", "backlog row"),
+        ("excused-controls = [{ id = \"a\", why = \"x\" }]", "`id` and `reason` only"),
+        ("excused-controls = [{ id = 1, reason = \"VOS-D098\" }]", "are strings"),
+        ("excused-controls = [{ id = \"a\", reason = \"VOS-D098\" }, { id = \"a\", reason = \"VOS-D098\" }]", "listed twice"),
     ] {
         let e = parse_vos_toml(text).unwrap_err();
         assert!(e.1.contains(why), "{text:?}: {e:?}");
     }
+}
+
+#[test]
+fn coverage_floor_is_an_integer_percent_and_optional() {
+    // VOS-039a: the declared floor of the coverage gate (VOS04 section 5.6).
+    assert_eq!(
+        parse_vos_toml("kind = \"any\"").unwrap().coverage_floor,
+        None
+    );
+    for (text, want) in [
+        ("coverage-floor = 95", 95),
+        ("coverage-floor = 0", 0),
+        ("coverage-floor = 100", 100),
+        ("coverage-floor = 7", 7),
+    ] {
+        assert_eq!(
+            parse_vos_toml(text).unwrap().coverage_floor,
+            Some(want),
+            "{text}"
+        );
+    }
+}
+
+#[test]
+fn excused_controls_are_whole_plain_ids_with_a_backlog_reason() {
+    let v = parse_vos_toml(
+        "excused-controls = [{ id = \"m/negctl/exhaustive/init/field-flip\", reason = \"VOS-D098\" }, { reason = \"VOS-D065\", id = \"x\" }]",
+    )
+    .unwrap();
+    let got: Vec<(&str, &str)> = v
+        .excused_controls
+        .iter()
+        .map(|e| (e.id.as_str(), e.reason.as_str()))
+        .collect();
+    assert_eq!(
+        got,
+        [
+            ("m/negctl/exhaustive/init/field-flip", "VOS-D098"),
+            ("x", "VOS-D065")
+        ]
+    );
+    assert!(parse_vos_toml("kind = \"any\"")
+        .unwrap()
+        .excused_controls
+        .is_empty());
+    let many: Vec<String> = (0..17)
+        .map(|i| format!("{{ id = \"i{i}\", reason = \"VOS-D098\" }}"))
+        .collect();
+    let e = parse_vos_toml(&format!("excused-controls = [{}]", many.join(","))).unwrap_err();
+    assert!(e.1.contains("more than 16"), "{e:?}");
 }

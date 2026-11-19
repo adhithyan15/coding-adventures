@@ -1,6 +1,6 @@
 # VOS02 -- Interface Contracts and Profile Linking
 
-**Status:** Draft. The rules below are specified. `vos-manifest` (the `contract.vos`, part and document parsers) and `vos-link gen-doc` / `check-doc` exist (VOS-033, section 10.1); `check-profile`, `check-owners` and the profile parsers do not (VOS-034).
+**Status:** Draft. The rules below are specified. `vos-manifest` (the `contract.vos`, part and document parsers) and `vos-link gen-doc` / `check-doc` exist (VOS-033, section 10.1); `vos-link check-component` exists (VOS-039a, VOS04 section 5.6); `check-profile`, `check-owners` and the profile parsers do not (VOS-034).
 The acceptance spike of section 13 ran the toy of
 [VOS01](VOS01-component-contract-model.md) section 5 through today's Warrant
 evidence generator (VER04h) with the ghost face of section 4: the document was
@@ -623,6 +623,7 @@ kind = "production"             # or "reference", "any"
 evidence-features = ["ghost"]   # features that exist for evidence only; must be in the central list of section 7.3
 contract = "vos-ready-contract" # the contract package this implementation realises (an implementation only)
 obligations = ["canonical", "policy", "safety"]   # the tiers gen-doc embeds; sorted, unique, each a `tier` of contract.vos
+coverage-floor = 95             # percent of line coverage of src/ the BUILD gate keeps true; at least 95 (VOS04 section 5.6, VOS-D070)
 ```
 
 The kind is **checked by `vos-link`**, not merely trusted, with the rules listed under
@@ -1365,7 +1366,7 @@ and capability strengths are not withheld for class K (VER29 section 7.2.1).
 | Tool | Class | Home | What it does |
 |---|---|---|---|
 | `vos-manifest` | P (parser) | `code/packages/rust/vos-manifest` | parsers and canonical emitters for `contract.vos`, `profile.vos`, `profile.lock`; total, bounded, fail closed, a fuzz target per parser (VER06, as VOS-D001 requires of EMU00); `alloc` allowed (VOS01 section 1.6) |
-| `vos-link` | H (host) | `code/programs/rust/vos-link` | `gen-doc`, `check-doc`, `check-profile` (`--write-lock`), `check-owners`; reads files; the image build command and its gate are VOS22 |
+| `vos-link` | H (host) | `code/programs/rust/vos-link` | `gen-doc`, `check-doc`, `gen-build` and `check-component` (VOS-039a, VOS04 section 5.6), `check-profile` (`--write-lock`), `check-owners`; reads files; the image build command and its gate are VOS22 |
 | `vos-shape-check` | tool (class H) | `code/packages/rust/vos-shape-check` | SH1-SH15, SH17, SH18, class tags; uses the VER08a lexer as a **library**; reads each crate's class from its README (VOS01 section 1.6) |
 
 **Do not add modes to `ca-capability-analyzer`.** A change to that crate selects
@@ -1387,6 +1388,8 @@ Commands, as the CI invocation will read them:
 ```text
 vos-link gen-doc     code/packages/rust/vos-ready-bitmap            # writes code/specs/vos-ready-bitmap.warrant
 vos-link check-doc   code/packages/rust/vos-ready-bitmap            # exit 1 on any drift
+vos-link gen-build   code/packages/rust/vos-ready-bitmap            # writes the canonical region of BUILD and BUILD_windows (VOS04 section 5.6)
+vos-link check-component code/packages/rust/vos-ready-bitmap        # file set, BUILD byte-equal to gen-build's, selection row, coverage floor, manifest
 vos-link check-profile profiles/rtos-min/profile.vos [--write-lock]
 vos-link check-owners                                                # CODEOWNERS covers the authority files (section 7.4)
 ```
