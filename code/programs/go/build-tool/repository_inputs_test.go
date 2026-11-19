@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cigates"
@@ -661,6 +662,71 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 				t.Fatalf("got %v, want %v", got, tc.want)
 			}
 		})
+	}
+}
+
+func TestFenwickContractSelectsDartAndPythonConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "dart/fenwick-tree", Language: "dart"},
+		{Name: "python/fenwick-tree", Language: "python"},
+	}
+	cases := map[string]bool{
+		"code/specs/DT06-fenwick-tree.md":                           true,
+		"code/specs/fixtures/fenwick-tree-v1/cases.json":            true,
+		"code/specs/fixtures/fenwick-tree-v1/schema.json":           true,
+		"code/specs/fixtures/fenwick-tree-v1/README.md":             true,
+		"code/specs/fixtures/fenwick-tree-v1/validate.py":           true,
+		"code/specs/DT06-fenwick-tree.md.bak":                       false,
+		"code/specs/fixtures/fenwick-tree-v10/cases.json":           false,
+		"code/specs/fixtures/fenwick-tree-v1x/cases.json":           false,
+		"code/specs/fixtures/fenwick-tree-v1":                       false,
+		"code/specs/fixtures/fenwick-tree-v1/cases.json.backup":     true,
+		"code/specs/DT06-fenwick-tree-extra.md":                     false,
+		"code/specs/fixtures/fenwick-tree-v1/../fenwick-tree-v10/x": false,
+	}
+	for path, want := range cases {
+		if got := isFenwickTreeContractInput(path); got != want {
+			t.Errorf("isFenwickTreeContractInput(%q) = %v, want %v", path, got, want)
+		}
+		selected, err := repositoryInputConsumersForChange([]string{path}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		wantSelected := map[string]bool{}
+		if want {
+			wantSelected["dart/fenwick-tree"] = true
+			wantSelected["python/fenwick-tree"] = true
+		}
+		if !reflect.DeepEqual(selected, wantSelected) {
+			t.Errorf("change %q selects %v, want %v", path, selected, wantSelected)
+		}
+	}
+
+	for language, want := range map[string]map[string]bool{
+		"dart":   {"dart/fenwick-tree": true},
+		"python": {"python/fenwick-tree": true},
+	} {
+		selected, err := repositoryInputConsumersForChange(
+			[]string{"code/specs/fixtures/fenwick-tree-v1/cases.json"}, packages, language,
+		)
+		if err != nil {
+			t.Fatalf("language %s: %v", language, err)
+		}
+		if !reflect.DeepEqual(selected, want) {
+			t.Errorf("language %s selects %v, want %v", language, selected, want)
+		}
+	}
+
+	missingPython := packages[:1]
+	if _, err := repositoryInputConsumersForChange(
+		[]string{"code/specs/fixtures/fenwick-tree-v1/cases.json"}, missingPython, "all",
+	); err == nil || !strings.Contains(err.Error(), `repository input consumer "python/fenwick-tree"`) {
+		t.Errorf("missing Python consumer error = %v", err)
+	}
+	if selected, err := repositoryInputConsumersForChange(
+		[]string{"code/specs/fixtures/fenwick-tree-v1/cases.json"}, missingPython, "dart",
+	); err != nil || !reflect.DeepEqual(selected, map[string]bool{"dart/fenwick-tree": true}) {
+		t.Errorf("Dart-only selection with Python absent = %v, %v", selected, err)
 	}
 }
 
