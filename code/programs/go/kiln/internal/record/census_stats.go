@@ -185,8 +185,8 @@ func (r *redactor) apply(s string) string {
 // prefix (a single ASCII letter right after a '-' that itself starts the text or
 // follows whitespace, as in -L/tmp/x or -I/home/runner/inc).  The shell
 // metacharacters ';', '|', '&', '>', '{' and '}' also start a word (a;/tmp/x,
-// >/tmp/out, {/tmp/a,b}), and so does an '@' that is itself at the start of the
-// text or right after whitespace: a response file, @/home/runner/x.rsp.  '+',
+// >/tmp/out, {/tmp/a,b}), and so does an '@' that itself follows a boundary: a
+// response file, @/home/runner/x.rsp or --opt=@/tmp/x.  '+',
 // '~' and a mid-word '@' are not boundaries: they occur INSIDE real paths and
 // names ("c++", "user@host", "pkg@1.2/home").
 func precedesBoundary(s string, k int) bool {
@@ -198,7 +198,11 @@ func precedesBoundary(s string, k int) bool {
 		';', '|', '&', '>', '{', '}':
 		return true
 	case '@':
-		return k == 1 || strings.IndexByte(" \t\n\r\v\f", s[k-2]) >= 0
+		// A response-file '@' counts when it itself stands where a path could
+		// start: --opt=@/tmp/x, "@/tmp/x", (@/tmp/x), cc @/tmp/x.  The recursion
+		// asks the same question one byte to the left, so a mid-word '@'
+		// (user@/tmp/x) is still not a boundary; it is bounded by k.
+		return precedesBoundary(s, k-1)
 	default:
 		if k >= 2 && s[k-2] == '-' && (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') {
 			return k == 2 || strings.IndexByte(" \t\n\r\v\f", s[k-3]) >= 0
@@ -216,7 +220,7 @@ func isPathByte(b byte) bool {
 // replaceAtBoundary replaces the occurrences of from (a directory path) in s
 // that are whole path prefixes.  The match must be PRECEDED by a boundary
 // (precedesBoundary: the start of s, whitespace, a quote, '=', ':', ',', '(',
-// '[', '<', ';', '|', '&', '>', '{', '}', a leading '@', or a one-letter flag
+// '[', '<', ';', '|', '&', '>', '{', '}', an '@' that follows a boundary, or a one-letter flag
 // such as the -L of -L/tmp/x) and FOLLOWED by '/',
 // the end of s, or a character that cannot be part of a path.  So with from
 // "/tmp":

@@ -220,11 +220,15 @@ func TestRedactorWorksOnPathBoundaries(t *testing.T) {
 		{"user@/tmp/x", "user@/tmp/x"},
 		{"~/tmp/x", "~/tmp/x"},
 		{"+/tmp/x", "+/tmp/x"},
-		// '@' starts a path only at the start of the text or after whitespace.
+		// '@' starts a path when it itself follows a boundary (a response file).
 		{"@/tmp/x.rsp", "@$TMPDIR/x.rsp"},
 		{"cc @/home/u/work/x.rsp", "cc @$HOME/work/x.rsp"},
 		{"cc\t@/tmp/a\n@/tmp/b", "cc\t@$TMPDIR/a\n@$TMPDIR/b"},
-		{"@@/tmp/x", "@@/tmp/x"},
+		{"@@/tmp/x", "@@$TMPDIR/x"},
+		{"--opt=@/tmp/x.rsp", "--opt=@$TMPDIR/x.rsp"},
+		{"\"@/home/u/x.rsp\"", "\"@$HOME/x.rsp\""},
+		{"(@/tmp/x)", "(@$TMPDIR/x)"},
+		{"a,@/tmp/x", "a,@$TMPDIR/x"},
 		{"user@host/tmp/x", "user@host/tmp/x"},
 		{"pkg@1.2/home/u/x", "pkg@1.2/home/u/x"},
 		{"a@/tmp/x", "a@/tmp/x"},

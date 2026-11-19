@@ -29,7 +29,7 @@
   path-component boundary: it must be preceded by the start of the text,
   whitespace, a quote, `=`, `:`, `,`, `(`, `[`, `<` or a one-letter `-X` flag
   (`-L/tmp/x`), one of the shell metacharacters `;` `|` `&` `>` `{` `}`, or an
-  `@` at the start of the text or after whitespace (a response file,
+  `@` that itself follows a boundary (a response file, `--opt=@/tmp/x`,
   `@/home/runner/x.rsp`); a mid-word `@`, `+` and `~` never start a path, and `/tmp` leaves
   `/usr/lib/tmpfiles.d`, `/var/tmp` and `/usr/include/c++/tmp` alone. In the Markdown every path is in a
   code span longer than any backtick run in it, other text is escaped, no table

@@ -1152,7 +1152,7 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   `$TMPDIR`, `$RECORD_DIR`, `$WORKSPACE`; a prefix is replaced only at a
   path-component boundary, preceded by the start, whitespace, a quote, `=`, `:`,
   `,`, `(`, `[`, `<`, one of the shell metacharacters `;` `|` `&` `>` `{` `}`,
-  an `@` that starts the text or follows whitespace (a response file), or a
+  an `@` that itself follows a boundary (a response file, `--opt=@/tmp/x`), or a
   one-letter `-X` flag, and followed by `/` or the end,
   so `/tmp` leaves `/usr/lib/tmpfiles.d`, `/var/tmp` and `/usr/include/c++/tmp`
   alone) and cut to 512 runes (`paths_truncated`). At most 100,000 distinct
