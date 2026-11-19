@@ -139,7 +139,7 @@ S10) is checked by a fourth `--check --release` line in `BUILD` and `BUILD_windo
 with tuple values, `match` on a `Result` and the composite faults (`drop-consumed`, `ok-as-err`,
 `off-by-one-consumed`, the tuple-payload `missing-error`): 44 suites, 46,566,930 cases, 740 chunks, 20 faults, no
 profile knob beyond the fault lines. Its spec was changed first (VER04r D28: the two `W0701` claims split, 42 to
-44 claims) and `tests/census.rs` pins the result (357 claims, 242 emittable); its README has the command and
+44 claims) and `tests/census.rs` pins the result (364 claims, 242 emittable since VOS-039c added seven `vos-sched-any` claims); its README has the command and
 what it holds.
 
 ### As a library
@@ -281,10 +281,10 @@ no adopter is blocked by a cost it would simply declare), as of S10c-2:
 | lzw | 21 | **21** | none |
 | arithmetic | 63 | 8 | `ir.data` 55 |
 | wasm-leb128 | 44 | **44** | none (was 42 claims, 40 emittable, `W0701` 2, before the VER04r D28 split) |
-| vos-sched-any | 8 | 0 | `ir.data` 8 |
+| vos-sched-any | 15 | 0 | `ir.data` 15 (the three `any` and five safety claims, and the seven oracle-preservation claims of VOS-039c) |
 | vos-sched-fp-bitmap | 13 | 0 | `ir.data` 13 |
 | zeroize | 9 | 0 | `inout` 9 |
-| **total** | **357** | **242** | `ir.data` 100, `inout` 9, `W0701` 6 |
+| **total** | **364** | **242** | `ir.data` 107, `inout` 9, `W0701` 6 |
 
 The table is pinned per adopter in `tests/census.rs`. History of the totals: before S10b `ir.data` 154,
 `ir.fixed` 101, `inout` 9, `W0701` 2; S10b `ir.data` 79, `ir.fixed` 99, `ir.tuple` 71, `W0701` 8 (89

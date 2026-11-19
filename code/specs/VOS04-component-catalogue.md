@@ -752,8 +752,8 @@ the retirement of `vos-sched-contract-check`, the `config` half of VOS-D055; sec
 and **039b-2**, itself split: **039b-2a** (the command-type check SH19, VOS-D077, and the
 Rust-enum/Warrant-variant correspondence CK10; section 5.6, as built) and **039b-2b** (`bound` rows
 against ceilings, CC09, with the dependency and attribute closure of a contract crate, CC10 and SH19 (h), VOS-D112, and
-the VOS-D104 sweep, `check-publish`; section 5.6, as built); **039c** the oracle-preservation claim
-of every `-any` (VOS-D080); **039d** the step-counter tick audit (VOS-D089); the migration of the VOS
+the VOS-D104 sweep, `check-publish`; section 5.6, as built); **039c** (done) the oracle-preservation claims
+of every `-any` (VOS-D080) and the kit rule CC11 that requires the fault that attacks them (section 5.6, as built); **039d** the step-counter tick audit (VOS-D089); the migration of the VOS
 sabotage lines to `code/scripts/warrant_negctl.py` (VOS-D099, closing VOS-D088)
 moved into 039a, because the generated BUILD uses it.
 
@@ -857,7 +857,7 @@ and it can satisfy no requirement, because the requirement is the canonical regi
 name must be a claim of the document) or `example` (an example of the document);
 `<fault>` must be bound to some operation in `evidence.bindings`; `field-flip` takes
 `attack=<op>` (the record fault that cancels itself if two operations list it,
-VER04j 4.8) and nothing else does; no entry repeats. **Completeness:** every fault of
+VER04j 4.8) and nothing else does (`field-flip-last`, VOS-039c, takes none: nothing reads the register it corrupts, and CC11 below requires it of every state-producing operation of an `-any`); no entry repeats. **Completeness:** every fault of
 every bound operation has an entry, and every operation that lists `field-flip` has
 an `attack=` entry; and **every claim whose text calls a bound operation appears in at
 least one entry** (found by walking the claim's parsed expression, `vos_manifest::warrant::claim_calls`; calls through a `model` body are not followed, VOS-D108; the
@@ -896,6 +896,7 @@ over its cap) is *no verdict*, exit 2.
 | `CC08` | The evidence manifest | see below |
 | `CC09` | `bound` rows against the ceilings (VOS-039b-2b, VOS-D055) | see below |
 | `CC10` | The dependencies and build of a contract crate (VOS-D112), kind `contract` only | `Cargo.toml` has an entry in `[dependencies]`, `[build-dependencies]` or any `[target.*.dependencies]` table, a `build` key or a `build.rs`, a `[lib]` `proc-macro` that is not the literal `false`, a `[lib]` `crate-type` naming `proc-macro`, or a top-level `[patch]`, `[replace]` or `[workspace]` table |
+| `CC11` | Oracle preservation (VOS-039c, VOS-D080), kind `any` only | see below |
 
 **CC08, the manifest, bound to the document and the source.** `evidence/test-manifest.json`
 is read by the repository's `bounded-json`. It must have schema `warrant-test-evidence-v1`;
@@ -1127,6 +1128,68 @@ identical line of `vos-link`'s BUILD and BUILD_windows, and a build-tool row sel
 `code/{packages,programs}/rust/vos-*/Cargo.toml` or `vos.toml` changes. It forced `publish = false` onto
 `vos-manifest`, `vos-probe-ready`, `vos-link` and `vos-capacity-probe`.
 
+**Oracle preservation of every `-any`, CC11 (VOS-039c, VOS-D080).** The safety claims quantify over `build(M)`, whose
+oracle is a constant, and `alpha` drops the oracle, so an `insert` that overwrote the oracle passed every generated
+claim of `vos-sched-any` (the hand-written behaviour test caught it). The contract now carries the claims, in
+`warrant/obligations-any.part` (VOS10 9.3): `insert_oracle_lo`, `_hi` and `_ids`, the three of `remove`, and
+`alpha_build_with_oracle`, so CD07 requires them of every `any` crate by `claim_sha256` and no implementation
+authors them. A claim only proves what its fault can fail, and no record fault reached the last field of `Impl`, so
+VER04j 4.8 gained `field-flip-last`. CC11 is the generic half, DERIVED from the parsed document, the contract's `any`
+claims and the bindings, never declared by the author, and it never reads claim text:
+
+```text
+  (a) the Impl field outside the cone of `build` (the oracle; `BuildShape::Constructor { in_cone }`, the walk
+      CD07 uses) is exactly ONE field, it is the LAST field of `Impl`, and its type is NUMERIC (a fixed-width
+      integer or `Nat`: the generator's own predicate for `field-flip-last`, the `FixedTy` table); anything
+      else, and any shape the walk cannot decide, fails closed
+  (b) every SUCCESSOR operation lists the fault `field-flip-last` in `faults=`; the successors are the `op`s of
+      the GENERATED DOCUMENT whose return type mentions `Impl` and that have a parameter that mentions `Impl`,
+      or an `inout` parameter that does (`insert_img`, `remove_img`, `dispatch_img`); "mentions" is judged on
+      the RESOLVED type, the generator's own resolution (`warrant-grammar` `evidence::type_mentions`, over the
+      `TyEnv` that `ty_of_type` uses), so `model State = Impl` (or a chain of aliases, an alias of
+      `Option<Impl>`, a record with such a field) is a state; the bindings are read only afterwards, for each
+      successor's faults
+  (c) for every successor operation `sabotage.plan` has an entry `exhaustive/<claim> field-flip-last` whose claim
+      is CONTRACT-OWNED (the document's claim has the name and `claim_sha256` of an obligation of the contract's
+      `any` tier, the identity CD05 and CD06 use; never the `tier=` attribute) and calls that operation and no
+      other successor (the existing `claim_calls`)
+```
+
+The successors come from the document because `ret=` and `args=` of an `op` line are optional: omitted, the
+generator falls back to the host type of the document's signature, so `op insert_img export=.. faults=field-zero`
+is still a state-to-state operation for the generator, and a rule that read the bindings' spelling would not see
+it (VOS-039c security review F1). "Mentions" includes `Option<Impl>`, `Result<Impl, E>`, tuples and lists, and is
+read through the document's type aliases by the generator's own resolution, not by CC11's own reading of the
+text (round-2 finding: `model State = Impl` with `op insert_img(s: State, ..) -> State` was invisible to a rule
+that matched the literal name `Impl`, so dropping `field-flip-last` passed; a gate that re-interprets author text
+with its own logic does not converge, so CC11 calls the function the generator's types come from). A type the
+resolution cannot resolve (an unknown name, an alias cycle, a chain deeper than 64) counts as a state, so a type
+the rule cannot classify counts as a state (the generator then refuses `field-flip-last` on a non-record
+result, which is a finding); a binding that names no `op` of the document is a finding (it cannot be
+classified); a document with no successor is a finding. A claim that the implementation adds itself and that
+calls one successor does not satisfy (c) (F3): the contract's preservation claims are the ones that must be
+attacked. The contract-owned test trusts the `contract =` package of `vos.toml`, which is author-declared: CD05,
+CD06 and CD07 (`check.rs`) judge the document against whichever package `vos.toml` names and the marker
+`contract-package=` is compared with the same key (CD01), so none of them catches a swapped contract; a well-formed
+fake contract package whose `any` tier lists the author's own claims would make `owned` include them (VOS-D114, tied
+to the registry with VOS-D030). The numeric-oracle clause is F2: a `Bool` or `Bytes` oracle leaves `field-flip-last` nothing to flip.
+
+The constant is `ORACLE_FAULT` in `vos-link` (`src/oracle.rs`); a test reads this section and asserts it. Whether
+the claim really FAILS under the fault is not decided by `check-component`: the generated BUILD runs the plan through
+`warrant_negctl.py`, and CC08 already requires every in-harness control to pass (the successors now have controls of
+their own, which closes the part of VOS-D080 that said `insert_img` and `remove_img` had none). A future contract
+whose `any` block lacks preservation claims cannot have a compliant `-any`, with no `contract.vos` format change.
+Deliberate limits: an oracle that is not the last field, or two oracle fields, is refused (a named-field fault is the
+extension, adjacent to VOS-D101); and there is no lexical rule over the implementation's source ("insert and remove
+never read the oracle", VOS10 11.2), because it is neither sufficient (a mutant that writes `choice: 0` never reads
+it) nor cheap (`..s` and `return s` read the field lexically in the honest code). Negative controls, each a fixture
+`-any` crate: a successor without the fault; an entry on a claim that calls no successor, and on an `example`; a claim
+that calls two successors; the oracle first, absent, doubled, or not numeric; a `build` that is not a constructor or is
+missing; the successor bound with `args=` and `ret=` omitted (each alone, and both), without the fault; a binding that
+names no `op` of the document; an `inout` state operation; a decoy claim of the implementation's own carrying the
+entry while the contract's claim has none; a document with no state-producing operation; a document the analysis
+refuses; and the production crate that is not subject.
+
 **The dependencies and attributes of a contract crate, CC10 and SH19 (h) (VOS-D112).** SH19 is a lexical check
 of the crate's own text: a path dependency could supply an attribute macro (`#[evil::rewrite]`) or a foreign
 derive (`#[derive(evil::Gen)]`) that rewrites a command enum after SH19 judged it. Two closures, each fail
@@ -1212,7 +1275,7 @@ them.
 | 3 | VOS-D081 | Safety-tier `init` claim | The VOS-012a run showed nothing constrains `init` outside `canonical`; it changes every implementation's safety digests, so it lands before the second implementation of the contract (`rr`) |
 | 4 | VOS-012b | `vos-sched-rr` (representation mode) | The first representation-mode implementation (VOS-D061) and the first swap |
 | 5 | VOS-038 | Generator debts: D065 non-inert record fault, D063 heap observer, D025 array builder | Before mass production |
-| 6 | VOS-039 | Component kit: 039a `vos-link check-component` and coverage gate (done), 039b-1 generic contract check (D049, done), 039b-2a command-type check (D077) and enum/variant correspondence (done), 039b-2b bounds (CC09), D104 sweep and D112 (done), 039c oracle preservation of every `-any` (D080), 039d sabotage lines to `warrant_negctl.py` (D099) | After three real implementations exist |
+| 6 | VOS-039 | Component kit: 039a `vos-link check-component` and coverage gate (done), 039b-1 generic contract check (D049, done), 039b-2a command-type check (D077) and enum/variant correspondence (done), 039b-2b bounds (CC09), D104 sweep and D112 (done), 039c oracle preservation of every `-any` (D080, done), 039d sabotage lines to `warrant_negctl.py` (D099) | After three real implementations exist |
 | 7 | VOS-028b | Capacity probe (fixture: `vos-sched-fp-bitmap`) | Fixes the X1 sizes (VOS00 D4) and decides 029's funding |
 | 8 | VOS-040 | Host model-SAT lane on the `sched` contract, plus the Rust-lowering spike | Reuses the probe harness |
 | 9 | VOS-005 | `emu-core` | The emulator has been idle and everything bootable waits on it |

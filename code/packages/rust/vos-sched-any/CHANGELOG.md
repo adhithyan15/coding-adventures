@@ -2,6 +2,12 @@
 
 All notable changes to this package are documented here.
 
+## Unreleased — oracle preservation (VOS-039c, VOS-D080)
+
+- The contract's `any` block gained seven claims, so this crate's generated document `code/specs/vos-sched-any.warrant` now carries ten `any` obligations (`insert_oracle_lo`, `_hi`, `_ids`, `remove_oracle_lo`, `_hi`, `_ids`, `alpha_build_with_oracle`): `insert` and `remove` keep the oracle and answer and abstract as the model for EVERY oracle value (the safety claims only covered oracle 0, and `alpha` drops it).  Measured by the regenerated suite: 15 exhaustive claims, **1,901,314 cases** (the largest 262,144, 65.5% of the 400,000 budget; it was 262,914), 85 tests (15 exhaustive, 15 property, 15 fuzz, 3 examples, 37 negative controls), all pass.  A full run of the generated suite takes about 160 s in a debug build on a 10-core laptop.
+- `evidence.bindings`: `insert_img`, `remove_img` and `dispatch_img` also list the new fault `field-flip-last` (VER04j 4.8), which flips the oracle register `choice`; they now have negative controls of their own (VOS-D080, VOS-D105 note) and the `dispatch_img` moves-the-oracle control of `dispatch_sound` that the retirement of the old check lost (VOS-D109) is back.  `warrant/sabotage.plan` gains eight entries; `BUILD` and `BUILD_windows` regenerated (eight more `warrant_negctl.py` lines).  `vos-link check-component` (CC11) requires all of it.
+- `src/lib.rs`: a doc-comment sentence only ("never reads the oracle" became "independent of the oracle", with a pointer to the claims).  No code change.
+
 ## Unreleased — the component check and the coverage gate (VOS-039a)
 
 - `BUILD` and `BUILD_windows` are now **generated** by `vos-link gen-build` (VOS04 5.6) from `vos.toml`, `evidence.bindings`, the document and the new `warrant/sabotage.plan`, and `vos-link check-component` requires them byte for byte (a text lint over BUILD was bypassable by single-line tricks). `vos.toml` declares `coverage-floor = 95`, enforced by a Linux `cargo tarpaulin ... --fail-under 95` line (VOS-D070). Every sabotage line now runs through the shared checker `code/scripts/warrant_negctl.py` (VOS-D099, closing VOS-D088); no claim or fault lost its line (`sabotage.plan` is the old lines, one entry each). Measured line coverage of `src/lib.rs`: 100%.

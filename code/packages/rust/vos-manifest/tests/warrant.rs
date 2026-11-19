@@ -204,7 +204,7 @@ fn a_block_of_claims_is_read_and_anything_else_is_refused() {
 /// produced by `tests/claim_sha256_reference.py` (an independent Python implementation of
 /// D-GD7), not by this crate: if one changes, the definition or the obligation changed, and
 /// every generated document and lock must be regenerated.
-const PINS: [(&str, &str); 24] = [
+const PINS: [(&str, &str); 31] = [
     (
         "insert_safe",
         "ef3d7c1760812044ae6d87dfa9c58d03c123d61cdae97efe9e613ad1c3a39608",
@@ -270,6 +270,34 @@ const PINS: [(&str, &str); 24] = [
         "8ddfda72b86548a2c72eab4e22ab1d7b7021c5c2b32717ccbb0b1c2ce610ba5c",
     ),
     (
+        "insert_oracle_lo",
+        "a88575df61d85c61e6a444c237970350597ed129b1e68844e4140818b79674ce",
+    ),
+    (
+        "insert_oracle_hi",
+        "8d81b06db42b195873586c19bf6aa11d2ff84aaf86f6e3dc3095f7439dc3f89c",
+    ),
+    (
+        "insert_oracle_ids",
+        "222e9351828c2bf195927cba7ca3a46a4c39b78d2dbe4be4ed9cb63f12f34043",
+    ),
+    (
+        "remove_oracle_lo",
+        "8eb56c7af70155686c286d70a5871fef217e750f574864f75394a28ba0aefdfa",
+    ),
+    (
+        "remove_oracle_hi",
+        "837c07e9ccb6a1924ad441622746f6b5cfcefb37ad35ecaa16be8e77b006e74e",
+    ),
+    (
+        "remove_oracle_ids",
+        "7f0962551decfed1289c2b4f79872566c3900d0dda89e950c139676e7b2d947c",
+    ),
+    (
+        "alpha_build_with_oracle",
+        "62f19befe9b2c8b24a18b44c4bdf1b7888339cf4169237070c718f83880bc13a",
+    ),
+    (
         "rep_init",
         "5a34bfc3544c12d40b65ffc6e8895bf99656166dd4ad69fa80e8eaf8ae42e672",
     ),
@@ -324,7 +352,7 @@ fn the_real_obligation_blocks_have_the_expected_claims_and_pinned_digests() {
         (
             "any",
             include_str!("../../vos-sched-contract/warrant/obligations-any.part"),
-            3,
+            10,
         ),
         (
             "representation",
@@ -773,4 +801,128 @@ fn bound_facts_lists_ops_and_literal_bounds_and_refuses_to_guess_anything_else()
     assert_eq!(row("step_out", "named"), None);
     assert_eq!(f.rows.len(), 7);
     assert!(vos_manifest::warrant::bound_facts("not a document").is_err());
+}
+
+#[test]
+fn ops_and_the_last_impl_field_are_reported_for_cc11() {
+    // VOS-039c F1/F2: the signatures of the `op`s of a document (what they return and take of
+    // `Impl`, composites included, and whether an `inout` Impl is mutated) and the type of the last
+    // field of `Impl`, read from the parsed tree.
+    let doc = "warrant t v1
+  record M(a: Bool)
+  record Impl(x: U8, c: Bool)
+  op init() -> Impl
+  op ins(s: Impl, t: U8) -> Impl
+  op opt(s: Impl) -> Option<Impl>
+  op out(s: Impl) -> U8
+  op bump(s: inout Impl) -> (U8, Impl)
+  op many(l: List<Impl>) -> Option<Impl>
+  op raw(b: Bytes) -> Bytes
+  labels ins:
+    s public
+    t public
+  labels opt:
+    s public
+  labels out:
+    s public
+  labels bump:
+    s public
+  labels many:
+    l public
+  labels raw:
+    b public
+  model build(m: M) -> Impl = (Impl(0u8, false))
+";
+    let ops = match analyze_document(doc) {
+        Ok(a) => {
+            assert_eq!(a.impl_last_field_type.as_deref(), Some("Bool"));
+            a.ops
+        }
+        Err(e) => panic!("the fixture document must type-check: {e:?}"),
+    };
+    let get = |n: &str| ops.iter().find(|o| o.name == n).unwrap().clone();
+    assert!(get("init").returns_state && get("init").state_params == 0);
+    assert!(get("ins").returns_state && get("ins").state_params == 1 && !get("ins").inout_state);
+    assert!(get("opt").returns_state);
+    assert!(!get("out").returns_state && get("out").state_params == 1);
+    assert!(get("bump").inout_state);
+    assert!(get("many").returns_state && get("many").state_params == 1);
+    assert!(!get("raw").returns_state && get("raw").state_params == 0);
+}
+
+/// A document with type aliases and one `op` per signature under test, so the facts of each `op`
+/// can be read back.  `record Impl` is the state; every alias that resolves to it, through
+/// `Option`, `Result`, a tuple or a record field, must be seen as a state (VOS-039c round 2).
+fn ops_doc(aliases_and_ops: &str) -> String {
+    // The checker wants a secrecy label for every parameter of every operation.
+    let mut labels = String::new();
+    for line in aliases_and_ops.lines() {
+        let Some(rest) = line.trim().strip_prefix("op ") else {
+            continue;
+        };
+        let (name, tail) = rest.split_once('(').expect("an op signature");
+        let params = tail.split_once(')').expect("an op signature").0;
+        if params.trim().is_empty() {
+            continue;
+        }
+        labels.push_str(&format!("  labels {name}:\n"));
+        for param in params.split(", ") {
+            let pname = param.split(':').next().unwrap().trim();
+            labels.push_str(&format!("    {pname} public\n"));
+        }
+    }
+    let aliases_and_ops = format!("{aliases_and_ops}{labels}");
+    format!(
+        "warrant t v1\n  record M(a: Bool)\n  record Impl(x: U8, c: U8)\n  error E = BAD\n  model build(m: M) -> Impl = (Impl(if m.a then 1u8 else 0u8, 0u8))\n{aliases_and_ops}  assume platform:\n    none\n  assume environment:\n    none\n"
+    )
+}
+
+fn op_fact(text: &str, name: &str) -> vos_manifest::warrant::OpFact {
+    analyze_document(text)
+        .expect("type checks")
+        .ops
+        .into_iter()
+        .find(|o| o.name == name)
+        .expect("the op")
+}
+
+#[test]
+fn an_alias_of_the_state_is_a_state_on_either_side_and_through_a_chain() {
+    let doc = ops_doc(
+        "  model State = Impl\n  model Deep = State\n  op both(s: State, t: U8) -> State\n  op param_only(s: State, t: U8) -> Impl\n  op ret_only(s: Impl, t: U8) -> State\n  op chain(s: Deep) -> Deep\n  op plain(s: U8) -> U8\n",
+    );
+    for n in ["both", "param_only", "ret_only", "chain"] {
+        let f = op_fact(&doc, n);
+        assert!(f.state_params > 0 || f.returns_state, "{n}: {f:?}");
+    }
+    let both = op_fact(&doc, "both");
+    assert!(both.returns_state && both.state_params == 1);
+    let p = op_fact(&doc, "param_only");
+    assert!(p.returns_state && p.state_params == 1);
+    let r = op_fact(&doc, "ret_only");
+    assert!(r.returns_state && r.state_params == 1);
+    let c = op_fact(&doc, "chain");
+    assert!(c.returns_state && c.state_params == 1);
+    let plain = op_fact(&doc, "plain");
+    assert!(!plain.returns_state && plain.state_params == 0 && !plain.inout_state);
+}
+
+#[test]
+fn an_alias_of_a_composite_of_the_state_is_a_state() {
+    let doc = ops_doc(
+        "  model MaybeS = Option<Impl>\n  model Pair = (Impl, U8)\n  model Wrapped = Result<MaybeS, E>\n  record Holder(s: MaybeS, n: U8)\n  op opt(s: Impl) -> MaybeS\n  op pair(s: Pair) -> U8\n  op res(s: U8) -> Wrapped\n  op held(h: Holder) -> U8\n  op plain(s: U8) -> Option<U8>\n",
+    );
+    assert!(op_fact(&doc, "opt").returns_state);
+    assert_eq!(op_fact(&doc, "pair").state_params, 1);
+    assert!(op_fact(&doc, "res").returns_state);
+    assert_eq!(op_fact(&doc, "held").state_params, 1);
+    let plain = op_fact(&doc, "plain");
+    assert!(!plain.returns_state);
+}
+
+#[test]
+fn an_alias_of_something_that_is_not_the_state_is_not_one() {
+    let doc = ops_doc("  model Count = U8\n  model Bag = (Count, Bool)\n  op f(s: Bag) -> Count\n");
+    let f = op_fact(&doc, "f");
+    assert!(!f.returns_state && f.state_params == 0);
 }
