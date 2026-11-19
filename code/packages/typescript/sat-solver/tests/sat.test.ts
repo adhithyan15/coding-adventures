@@ -591,6 +591,22 @@ describe("CDCL SAT: Resource Bounding and Hostile Input Protection (VER09 §2.9)
     expect(res).toBe("unknown");
   });
 
+  it("charges fractional propagation budgets only for completed work", () => {
+    const s = new Solver();
+    const a = makeLit(s.newVar(), false);
+    const b = makeLit(s.newVar(), false);
+    const clauses = [[a, b], [negateLit(a), b]];
+    for (const clause of clauses) s.addClause(clause);
+
+    expect(s.solve({ maxSteps: 0.5 })).toBe("unknown");
+    expect(s.propagations).toBe(0);
+    expect(s.solve({ maxSteps: 1.5 })).toBe("unknown");
+    expect(s.propagations).toBe(1);
+    expect(s.solve()).toBe("sat");
+    const model = s.getModel();
+    assert.ok(clauses.every((clause) => clause.some((lit) => (lit & 1) === 1 ? !model[varOf(lit)] : model[varOf(lit)])));
+  });
+
   it("inspects solver variables, clauses, values, and resets cleanly", () => {
     const s = new Solver();
     const v1 = s.newVar();
@@ -641,6 +657,7 @@ describe("CDCL SAT: Resource Bounding and Hostile Input Protection (VER09 §2.9)
 
   it("keeps the historical pending-root false-SAT witness permanently UNSAT", () => {
     const clauses = [[1, 2], [1, -2], [-1, 3], [-1, 4], [-4, 5], [-4, -5]];
+    assert.equal(independentlyBruteForceSat(5, clauses, []), false, "historical source CNF is independently UNSAT");
     const s = new Solver();
     for (let i = 0; i < 5; i++) s.newVar();
     for (const clause of clauses) {
@@ -764,7 +781,7 @@ describe("Shared SAT CNF v1 stateful corpus", () => {
     const bytes = readFileSync(path);
     assert.equal(
       createHash("sha256").update(bytes).digest("hex"),
-      "46ad74ca077992da7390d6ecccd0b6691c2f4ee909035a7da31d6b47a90fb785",
+      "0bea6fc66d5d407bebba080663a3d128eabf9804cb8d57c06b4955d9e29944a1",
     );
     const corpus = JSON.parse(bytes.toString("utf8")) as {
       version: number;

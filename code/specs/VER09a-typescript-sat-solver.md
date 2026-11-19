@@ -62,6 +62,7 @@ The solver implements a modern CDCL architecture based on MiniSat and [VER09](VE
 ### 2.6 Hostile Input & Resource Bounding
 - Guarded by explicit conflict budget (`maxConflicts`) and propagation step budget (`maxSteps`).
 - Returns `SolveResult.Unknown` when budgets are exhausted, preventing denial-of-service on adversarial formulas.
+- A step budget charges only complete trail-item propagation work. A fractional numeric `maxSteps` therefore permits its whole-number portion; when the next item would exceed the limit, it remains pending for a later call.
 
 ---
 

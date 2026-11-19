@@ -354,7 +354,7 @@ export class Solver {
     while (this.qhead < this.trail.length) {
       // Check before dequeue so UNKNOWN leaves the exact pending root work
       // available to a later solve or public propagate call.
-      if (this.propagations >= this.stepBudget) {
+      if (this.propagations + 1 > this.stepBudget) {
         return -2; // Step budget exceeded
       }
       const p = this.trail[this.qhead++];

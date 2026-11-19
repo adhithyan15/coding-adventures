@@ -13,7 +13,7 @@ import (
 )
 
 const sharedCorpusPath = "../../../specs/fixtures/sat-cnf-v1/cases.json"
-const sharedCorpusSHA256 = "46ad74ca077992da7390d6ecccd0b6691c2f4ee909035a7da31d6b47a90fb785"
+const sharedCorpusSHA256 = "0bea6fc66d5d407bebba080663a3d128eabf9804cb8d57c06b4955d9e29944a1"
 
 type corpus struct {
 	Version int          `json:"version"`

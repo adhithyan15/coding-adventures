@@ -5,6 +5,7 @@
       "id": "empty_formula_sat",
       "dimacs": "p cnf 2 0\n",
       "steps": [
+        {"op": "propagate", "expect_conflict": false},
         {"op": "solve", "assumptions": [], "expect": "sat"}
       ]
     },

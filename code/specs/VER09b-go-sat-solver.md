@@ -153,16 +153,17 @@ with the dedicated TypeScript writer; output has no trailing newline).
 
 The shared valid corpus is
 [`fixtures/sat-cnf-v1/cases.json`](fixtures/sat-cnf-v1/cases.json), SHA-256
-`46ad74ca077992da7390d6ecccd0b6691c2f4ee909035a7da31d6b47a90fb785`. Every
+`0bea6fc66d5d407bebba080663a3d128eabf9804cb8d57c06b4955d9e29944a1`. Every
 case has a unique fixed ID, valid DIMACS bytes, and ordered public operations
-(`solve`, `propagate`, `add_clause`, or `reset`). Every solve step declares its expected
-result; SAT always triggers independent model replay, and assumption-UNSAT
+(`solve`, `propagate`, `add_clause`, or `reset`). Every solve step declares its
+expected result; SAT always triggers independent model replay, and assumption-UNSAT
 always triggers core subset and brute-force soundness checks. No fixture flag
 can disable these checks. The corpus includes CRLF/comments, clauses spanning
 lines and multiple clauses per line, empty clauses, standalone `%`, `-0`,
 duplicate/contradictory/irrelevant assumptions, clause addition, reset,
-zero-budget UNKNOWN, public propagation conflict outcomes, and recovery. Each consumer allocates all declared
-variables before adding any clauses and checks a model's width against the
+zero-budget UNKNOWN, public propagation conflict outcomes, and recovery. Each
+consumer allocates all declared variables before adding any clauses and checks
+a model's width against the
 declared count, including unconstrained variables. After every `add_clause`
 and `reset` step, the Go consumer asserts model/core invalidation immediately.
 TypeScript exposes no model-validity flag, so its shared-corpus adapter checks
