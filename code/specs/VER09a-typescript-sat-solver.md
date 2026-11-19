@@ -135,9 +135,12 @@ UNSAT, and model checks for queens and bit-blasted arithmetic. P043 adds 64
 seeded stateful differential traces (seed `0x51a7e5eed`, 528 public API
 calls) against an independently decoded signed-CNF and brute-force oracle. A
 separate bounded mutation campaign uses the existing TypeScript fuzz engine
-for 2,500 iterations (seed `0x504043`, 2,504 target invocations, 16 admitted
-seeds, 29 explicitly recorded harness semantic edges, zero crashes). Its
-mutation feedback classifies parser, formula-shape, budget/result,
+for 2,500 mutation iterations (seed `0x504043`): 2,504 total target
+invocations comprise two explicit positive/negative controls, two initial
+fuzz-corpus evaluations, and 2,500 mutations. The engine admitted 16 seeds
+and recorded 29 explicitly instrumented harness semantic edges, with zero
+explicit fuzz crash records and no oracle assertion failures or thrown errors.
+Its mutation feedback classifies parser, formula-shape, budget/result,
 propagation, assumption, and recovery outcomes; it is not instrumented
 SAT-solver source coverage. Positive SAT and negative UNSAT seeds pass through
 the same target, which checks every solve result, model, and failed core

@@ -1198,7 +1198,7 @@ describe("Bounded SAT lifecycle mutation campaign", () => {
     assert.equal(report.iterations, 2500, "bounded campaign executes its full iteration budget");
     assert.equal(report.crashes.length, 0, "no mutation violates parser, model, core, or lifecycle oracle");
     assert.ok(report.totalEdges >= 10, "mutations explore distinct semantic harness outcomes");
-    assert.ok(invocations >= 2502, "target sees each initial seed, positive control, negative control, and mutation");
+    assert.equal(invocations, 2504, "2 harness controls + 2 engine seed evaluations + 2500 mutations");
   });
 });
 
