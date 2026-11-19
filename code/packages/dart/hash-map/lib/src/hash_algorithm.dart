@@ -1,5 +1,10 @@
 part of coding_adventures_hash_map;
 
+/// The closed set of DT17 algorithms used by the DT18 map.
+///
+/// Parameter checks are deferred until hashing or map construction so the map
+/// can report capacity errors first. BigInt keeps unsigned hashes exact on both
+/// the Dart VM and JavaScript runtimes.
 sealed class HashAlgorithm {
   const HashAlgorithm._();
 
@@ -14,6 +19,8 @@ sealed class HashAlgorithm {
     return _hashValidated(bytes);
   }
 
+  // HashMap validates this immutable configuration once. It still checks
+  // serialized key bytes before delegating to the shared DT17 implementations.
   BigInt _hashValidated(List<int> bytes) {
     _validateByteValues(bytes);
     if (this is _Fnv1a32Algorithm) return BigInt.from(fnv1a32(bytes));

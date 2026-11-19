@@ -58,6 +58,7 @@ final class HashMap<V> {
   }) {
     final algorithm = hashAlgorithm ??
         HashAlgorithm.sipHash24(key: HashMapLimits.deterministicSipHashKey);
+    // Capacity is checked before deferred algorithm parameters by contract.
     _validateMapConfiguration(capacity, algorithm);
     return HashMap._(_Table<V>.empty(
       capacity: capacity,
@@ -75,6 +76,8 @@ final class HashMap<V> {
     final algorithm = hashAlgorithm ??
         HashAlgorithm.sipHash24(key: HashMapLimits.deterministicSipHashKey);
     _validateMapConfiguration(capacity, algorithm);
+    // The private builder consumes entries sequentially and publishes only after
+    // every entry succeeds. This keeps million-entry setup linear and atomic.
     final builder = _TableBuilder<V>.empty(
       capacity: capacity,
       strategy: strategy,
@@ -104,6 +107,10 @@ final class HashMap<V> {
   List<HashMapKey> get keys => [for (final entry in entries) entry.key];
   List<V> get values => [for (final entry in entries) entry.value];
 
+  /// Copies table structure and returns a new version with [forKey] set.
+  ///
+  /// Entry values are shallow references. A replacement keeps its physical
+  /// position and never triggers growth.
   HashMap<V> setting(V value, {required HashMapKey forKey}) {
     final length = forKey._payloadByteCount;
     if (length > HashMapLimits.maximumKeyByteCount) {
@@ -132,6 +139,9 @@ final class HashMap<V> {
     return HashMap._(builder.freeze());
   }
 
+  /// Applies right-side entries in physical order using this map's settings.
+  ///
+  /// The builder remains private, so failure cannot publish a partial result.
   HashMap<V> merging(HashMap<V> other) {
     final builder = _TableBuilder<V>.fromTable(_table);
     for (final entry in other.entries) {
@@ -218,6 +228,8 @@ final class _Table<V> {
   final List<List<_Entry<V>>>? buckets;
   final List<_Slot<V>>? slots;
 
+  // Observable order follows physical storage: ascending bucket/slot, with
+  // chaining collisions in their insertion order.
   List<MapEntry<HashMapKey, V>> entries() {
     if (strategy == CollisionStrategy.separateChaining) {
       return [
@@ -232,6 +244,8 @@ final class _Table<V> {
     ];
   }
 
+  // Probing stops at an empty slot or after one bounded full-table traversal.
+  // Tombstones preserve the search chain and are skipped.
   _Entry<V>? find(HashMapKey key) {
     if (strategy == CollisionStrategy.separateChaining) {
       final bucket = buckets![_bucketIndex(key, capacity, hashAlgorithm)];
@@ -253,6 +267,10 @@ final class _Table<V> {
   }
 }
 
+/// Mutable state used only while a result is being built.
+///
+/// Existing maps share immutable bucket/slot objects, while each update copies
+/// the outer list and replaces changed storage. The builder never escapes.
 final class _TableBuilder<V> {
   _TableBuilder({
     required this.count,
@@ -375,6 +393,8 @@ final class _TableBuilder<V> {
     return null;
   }
 
+  // Replacement is detected before this method. The threshold therefore only
+  // applies to a distinct key and, for probing, runs before tombstone reuse.
   void _ensureCapacityForNewEntry() {
     final shouldGrow = strategy == CollisionStrategy.separateChaining
         ? count == capacity
@@ -389,6 +409,8 @@ final class _TableBuilder<V> {
     _rehash(newCapacity);
   }
 
+  // Reinsert the old physical sequence so the documented iteration order is
+  // stable across a resize. Deleted probe slots are discarded here.
   void _rehash(int newCapacity) {
     final oldEntries = entriesInPhysicalOrder();
     capacity = newCapacity;
@@ -424,6 +446,9 @@ final class _TableBuilder<V> {
     ];
   }
 
+  // Remember the earliest tombstone but keep searching for a duplicate.
+  // After one complete cycle, reuse that tombstone if the table has no empty
+  // slot; a low live count alone does not guarantee an empty slot.
   void _insertLinear(_Entry<V> entry) {
     final slots = this.slots!;
     final start = _bucketIndex(entry.key, capacity, hashAlgorithm);
@@ -449,6 +474,8 @@ final class _TableBuilder<V> {
   }
 }
 
+// Reduce the unsigned result while it is still a BigInt. Converting the full
+// 64-bit value to a JS number before modulo would lose bucket-index bits.
 int _bucketIndex(HashMapKey key, int capacity, HashAlgorithm algorithm) =>
     (algorithm._hashValidated(key.encodedBytes) % BigInt.from(capacity))
         .toInt();

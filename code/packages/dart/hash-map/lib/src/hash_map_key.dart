@@ -1,5 +1,9 @@
 part of coding_adventures_hash_map;
 
+/// A key's identity includes its type tag as well as its payload bytes.
+///
+/// The serialized form is `[tag][u64 little-endian payload length][payload]`.
+/// This makes string and raw-byte keys distinct even when their payloads match.
 sealed class HashMapKey {
   HashMapKey._();
 
@@ -40,7 +44,7 @@ sealed class HashMapKey {
 
 final class _ByteHashMapKey extends HashMapKey {
   _ByteHashMapKey(List<int> bytes)
-      : _bytes = List<int>.unmodifiable(_copy(bytes)),
+      : _bytes = List<int>.unmodifiable(_snapshotAndValidate(bytes)),
         super._();
 
   final List<int> _bytes;
@@ -51,12 +55,16 @@ final class _ByteHashMapKey extends HashMapKey {
   @override
   List<int> get _payload => _bytes;
 
-  static List<int> _copy(List<int> bytes) {
-    for (var index = 0; index < bytes.length; index++) {
-      final value = bytes[index];
+  static List<int> _snapshotAndValidate(List<int> bytes) {
+    // Validate the exact owned snapshot. A caller-supplied List implementation
+    // may compute values when read, so validating it and copying it separately
+    // could admit different bytes on the second pass.
+    final snapshot = List<int>.of(bytes);
+    for (var index = 0; index < snapshot.length; index++) {
+      final value = snapshot[index];
       if (value < 0 || value > 255) throw InvalidByte(index, value);
     }
-    return List<int>.of(bytes);
+    return snapshot;
   }
 }
 
@@ -73,6 +81,8 @@ final class _StringHashMapKey extends HashMapKey {
   @override
   List<int> get _payload => _bytes;
 
+  // Validate UTF-16 before asking the UTF-8 encoder to avoid replacement of
+  // malformed surrogate code units with the same bytes as a different string.
   static List<int> _encode(String value) {
     final units = value.codeUnits;
     for (var index = 0; index < units.length; index++) {
