@@ -81,11 +81,15 @@ number of compared output bits. It rejects callback results that are negative
 or do not fit the declared width. It uses exact counters before converting the
 final score to `double`.
 
-Distribution analysis requires at least one input and a positive bucket count.
-Empty byte input remains valid. Callback values must be `BigInt` values in
-`0..0xffffffffffffffff`. The helper maps each result with exact integer modulo
-before converting the bounded bucket index. Its chi-squared result is a
-`double` computed from the complete supplied corpus.
+Distribution analysis requires at least one input and a Dart `int` bucket
+count in `1..9007199254740991` (`2^53 - 1`). Empty byte input remains valid.
+Callback values must be `BigInt` values in `0..0xffffffffffffffff`. The helper
+maps each result with exact `BigInt` modulo and stores only occupied buckets,
+so memory use does not grow with the bucket count. For `N` inputs, `k` buckets,
+and occupied counts `c`, it computes the exact rational chi-squared value
+`(k * sum(c * c) - N * N) / N`, including implicit empty buckets, and converts
+to `double` only for the returned statistic. Counts, bucket indices, and the
+rational numerator remain exact on Dart VM and JavaScript targets.
 
 Invalid byte values, seeds, polynomial parameters, SipHash key lengths,
 analysis widths, empty analysis corpora, bucket counts, and callback outputs
