@@ -850,6 +850,8 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "      wait \"$child\"\n"
                 "    fi\n"
                 "    if [[ \"${DIAG_MODE:-ok}\" != outer_timeout ]]; then\n"
+                "      printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=main result=entered elapsed_us=2\\n'\n"
+                "      printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=app_support_lookup result=attempted elapsed_us=3\\n'\n"
                 "      printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'\n"
                 "      exit 0\n"
                 "    fi\n"
@@ -1058,6 +1060,14 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             self.assertIn("diagnostic_state_probe=present_empty", successful_capture.stdout)
             self.assertIn(
                 "MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17",
+                successful_capture.stdout,
+            )
+            self.assertIn(
+                "MOSAIC_NATIVE_DIAG v=1 stage=main result=entered elapsed_us=2",
+                successful_capture.stdout,
+            )
+            self.assertIn(
+                "MOSAIC_NATIVE_DIAG v=1 stage=app_support_lookup result=attempted elapsed_us=3",
                 successful_capture.stdout,
             )
             self.assertIn("diagnostic_apk_package_version=dev.codingadventures.trestle 1", successful_capture.stdout)

@@ -2408,12 +2408,17 @@ fn flutter_main_with_phone_state_root(main_dart: &str) -> Result<String, BuildEr
             "  'MOSAIC_NATIVE_DIAGNOSTICS',\n",
             ");\n",
             "Future<void> main() async {\n",
+            "  if (_mosaicNativeDiagnostics) {\n",
+            "    final mainEntry = Stopwatch()..start();\n",
+            "    mosaicNativeDiagnostic('main', 'entered', mainEntry);\n",
+            "  }\n",
             "  // UI89 §7.4: on a phone, state lives in the app-support directory,\n",
             "  // which only the platform knows. Found before the host loads; if it\n",
             "  // cannot be, the host says state is not saved.\n",
             "  WidgetsFlutterBinding.ensureInitialized();\n",
             "  if (Platform.isAndroid || Platform.isIOS) {\n",
             "    final supportLookup = _mosaicNativeDiagnostics ? (Stopwatch()..start()) : null;\n",
+            "    mosaicNativeDiagnostic('app_support_lookup', 'attempted', supportLookup);\n",
             "    try {\n",
             "      final supportDirectory = await getApplicationSupportDirectory();\n",
             "      mosaicStateRoot = supportDirectory.path;\n",
@@ -17007,6 +17012,10 @@ layout NativeEvents {
             "const bool _mosaicNativeDiagnostics = bool.fromEnvironment(\n  'MOSAIC_NATIVE_DIAGNOSTICS',\n);"
         ));
         assert!(main.contains("Future<void> main() async {\n"));
+        assert!(main.contains("mosaicNativeDiagnostic('main', 'entered', mainEntry);\n"));
+        assert!(main.contains(
+            "mosaicNativeDiagnostic('app_support_lookup', 'attempted', supportLookup);\n"
+        ));
         assert!(main.contains("      final supportDirectory = await getApplicationSupportDirectory();\n"));
         assert!(main.contains("      mosaicStateRoot = supportDirectory.path;\n"));
         assert!(main.contains("        'app_support_lookup',\n"));
@@ -17017,6 +17026,18 @@ layout NativeEvents {
         assert!(main.contains(
             "      mosaicNativeDiagnostic('app_support_lookup', 'threw', supportLookup);\n"
         ));
+        assert!(
+            main.find("mosaicNativeDiagnostic('main', 'entered'")
+                .unwrap()
+                < main
+                    .find("WidgetsFlutterBinding.ensureInitialized();")
+                    .unwrap()
+        );
+        assert!(
+            main.find("mosaicNativeDiagnostic('app_support_lookup', 'attempted'")
+                .unwrap()
+                < main.find("await getApplicationSupportDirectory()").unwrap()
+        );
         let host = fs::read_to_string(flutter.join("lib/mosaic_host.dart")).unwrap();
         assert!(host.contains(
             "const bool _mosaicNativeDiagnostics = bool.fromEnvironment(\n  'MOSAIC_NATIVE_DIAGNOSTICS',\n);"
@@ -17026,6 +17047,10 @@ layout NativeEvents {
             .contains("if (!_mosaicNativeDiagnostics || _mosaicNativeDiagnosticClipped) return;"));
         assert!(host.contains("_mosaicNativeDiagnosticRecords.length >= 23"));
         assert!(host.contains("'capture_clipped:record_limit'"));
+        assert!(host.contains("'main:entered'"));
+        assert!(host.contains("'app_support_lookup:attempted'"));
+        assert!(host.contains("void _writeMosaicNativeDiagnostic(String record)"));
+        assert!(host.contains("print(record);"));
         assert!(host.contains("mosaicNativeDiagnostic('runtime_route', 'phone_bundled')"));
         assert!(host.contains("mosaicNativeDiagnostic('runtime_route', 'phone_not_bundled')"));
         assert!(!host.contains("phone_unavailable"));

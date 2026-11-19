@@ -37,8 +37,10 @@ final Set<String> _mosaicNativeDiagnosticRecords = <String>{};
 bool _mosaicNativeDiagnosticClipped = false;
 
 const Set<String> _mosaicNativeDiagnosticVocabulary = <String>{
+  'main:entered',
   'app_support_lookup:nonempty',
   'app_support_lookup:empty',
+  'app_support_lookup:attempted',
   'app_support_lookup:threw',
   'runtime_route:phone_bundled',
   'runtime_route:phone_not_bundled',
@@ -85,6 +87,13 @@ const Set<String> _mosaicNativeDiagnosticVocabulary = <String>{
   'capture_clipped:record_limit',
 };
 
+void _writeMosaicNativeDiagnostic(String record) {
+  // Flutter routes print records to Android logcat; Dart stderr is not a
+  // reliable source for the emulator gate's PID-filtered log capture.
+  // ignore: avoid_print
+  print(record);
+}
+
 /// Emit a bounded record only when the diagnostic Dart define is enabled.
 /// Stage/result pairs are deduplicated so a first skipped attempt cannot hide
 /// a later successful one. The last record is reserved for the clip marker.
@@ -98,7 +107,7 @@ void mosaicNativeDiagnostic(String stage, String result, [Stopwatch? timer]) {
   if (_mosaicNativeDiagnosticRecords.length >= 23) {
     _mosaicNativeDiagnosticClipped = true;
     try {
-      stderr.writeln(
+      _writeMosaicNativeDiagnostic(
         'MOSAIC_NATIVE_DIAG v=1 stage=capture_clipped '
         'result=record_limit elapsed_us=0',
       );
@@ -110,7 +119,7 @@ void mosaicNativeDiagnostic(String stage, String result, [Stopwatch? timer]) {
   _mosaicNativeDiagnosticRecords.add(key);
   final elapsed = timer?.elapsedMicroseconds ?? 0;
   try {
-    stderr.writeln(
+    _writeMosaicNativeDiagnostic(
       'MOSAIC_NATIVE_DIAG v=1 stage=$stage result=$result elapsed_us=$elapsed',
     );
   } on Object {
