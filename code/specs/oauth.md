@@ -6581,6 +6581,26 @@ open a network connection. Authenticated handshake progression, certificate
 and revocation policy, record protection, and HTTP composition remain
 prerequisites; concrete HTTPS and live-provider readiness remain unavailable.
 
+The exact retry server Finished-key proof can now also reconstruct a fresh
+selected transcript state only from its retained CH1, HelloRetryRequest, CH2,
+and final ServerHello message graph and the original transcript policy retained
+by that graph. No caller-supplied transcript, policy, message, suite, hash, or
+snapshot is accepted. The reconstruction must reproduce both the retained
+selected suite and the exact ServerHello transcript snapshot before success.
+Non-copyable success evidence keeps the complete retry-derived server
+Finished-key provenance beside the reconstructed state, providing a bounded
+starting point for later authenticated server-flight transcript composition
+without detaching the key schedule from the retry messages that selected it.
+
+This reconstruction does not advance beyond ServerHello, authenticate or
+sequence EncryptedExtensions, Certificate, CertificateVerify, or Finished,
+consume authenticated records, validate certificates, establish trust,
+enforce revocation, protect records, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Authenticated ordered transcript
+advancement and all remaining TLS, certificate, revocation, HTTP, and audited
+transport composition remain prerequisites; concrete HTTPS and live-provider
+readiness remain unavailable.
+
 An allocation-free `tls13-retry-handshake-traffic-key-material-binding`
 prerequisite now accepts only the exact-message retry handshake-traffic-secret
 proof above, one explicit client-or-server sender role, and caller-owned
