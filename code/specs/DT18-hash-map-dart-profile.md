@@ -18,6 +18,7 @@ The package barrel is
 The public surface is closed to these types and operations:
 
 ```dart
+// Public API signatures; private implementation classes are omitted.
 enum CollisionStrategy { separateChaining, linearProbing }
 
 sealed class HashMapKey {
@@ -27,9 +28,9 @@ sealed class HashMapKey {
 }
 
 sealed class HashAlgorithm {
-  const HashAlgorithm.fnv1a32();
-  HashAlgorithm.murmur3({required int seed});
-  HashAlgorithm.sipHash24({required List<int> key});
+  const factory HashAlgorithm.fnv1a32() = _Fnv1a32;
+  factory HashAlgorithm.murmur3({required int seed}) = _Murmur3;
+  factory HashAlgorithm.sipHash24({required List<int> key}) = _SipHash24;
   BigInt validatedHash(List<int> bytes);
 }
 
@@ -99,7 +100,7 @@ final class HashMap<V> {
   });
 
   factory HashMap.fromEntries(
-    List<MapEntry<HashMapKey, V>> entries, {
+    Iterable<MapEntry<HashMapKey, V>> entries, {
     int capacity = 16,
     CollisionStrategy strategy = CollisionStrategy.separateChaining,
     HashAlgorithm? hashAlgorithm,
@@ -195,27 +196,39 @@ Separate chaining stores entries in bucket arrays. It grows before inserting a
 new key when `count == capacity`. Thus a table may reach load factor exactly
 1.0. Replacing an existing key never grows the table.
 
-Linear probing stores empty, occupied, and tombstone slots. Before inserting a
-new key it grows when
-`(count + 1) * 4 > capacity * 3`. Replacing an existing key never grows the
-table. The threshold uses the live count. A tombstone is reusable only after
-this growth decision. Lookup passes through tombstones and stops at an empty
-slot. Deletion marks a tombstone and never shrinks the table.
+Linear probing starts at `hash(key) % capacity` and visits
+`(start + offset) % capacity` for offsets from zero up to, but not including,
+capacity. Lookup and insertion inspect at most capacity slots. Lookup passes
+through tombstones and stops at the first empty slot or after a full cycle.
+Insertion remembers the earliest tombstone encountered, but continues until
+it finds an equal key, an empty slot, or completes a full cycle. Before
+inserting a new key it grows when `(count + 1) * 4 > capacity * 3`; replacement
+never grows. The threshold uses the live count and is checked before reusing a
+tombstone. At the first empty slot, insertion uses the remembered tombstone if
+present, otherwise that empty slot. After a full cycle, it uses the earliest
+tombstone if one was found. Deletion marks a tombstone and never shrinks the
+table.
 
 Growth chooses `min(capacity * 2, maximumCapacity)`. If that value cannot
-increase the capacity, insertion raises `HashMapError` with code
-`CapacityLimitExceeded`. Rehashing inserts the existing entries in their
-previous physical iteration order. Chaining iterates buckets by ascending
-index and each bucket in insertion order. Linear probing iterates slots by
-ascending index and omits empty and tombstone slots. Replacing a key changes
-its value without changing its physical position.
+increase the capacity, insertion raises the `CapacityLimitExceeded` error
+type. Rehashing inserts the existing entries in their previous physical
+iteration order. Chaining iterates buckets by ascending index and each bucket
+in insertion order. Linear probing iterates slots by ascending index and
+omits empty and tombstone slots. This physical iteration order is normative.
+Replacing a key changes its value without changing its physical position.
 
 ## Persistent operations and values
 
 `setting`, `removingValueForKey`, and `merging` return maps with independent
 logical state. Their input maps remain unchanged. Missing-key deletion is a
-no-op. `fromEntries` processes pairs in source order. A duplicate replaces the
-earlier value without increasing count or moving its physical position.
+no-op. `fromEntries` accepts an `Iterable<MapEntry<HashMapKey, V>>` and
+consumes it once in source order. It validates map configuration before
+requesting the iterable's iterator. It stops at the first insertion failure
+and propagates an exception raised by the iterable. No partially built map is
+published. A duplicate replaces the earlier value without increasing count
+or moving its physical position. Swift's corresponding API accepts finite
+arrays; lazy iteration and iterator-error behavior are Dart-only contract
+cases.
 
 `merging` starts with the left map's capacity, strategy, and hash algorithm,
 then processes the right map's entries in right physical order. Right-side
@@ -270,6 +283,19 @@ new key. A capacity-growth failure leaves all published maps unchanged.
 The table above is the complete public error family. No API accepts a custom
 strategy, hash callback, value copier, or key serializer.
 
+## Cross-language case boundary
+
+Shared Swift/Dart conformance cases are limited to inputs representable by
+both APIs: byte payload elements in `0..255`, valid Unicode strings, and
+Murmur seeds in the unsigned 32-bit range. A Swift `[UInt8]` cannot express a
+negative or greater-than-255 byte. Swift string values cannot represent an
+unpaired UTF-16 surrogate as a Unicode scalar, and the Swift seed type cannot
+represent an out-of-range unsigned 32-bit seed. These cases therefore do not
+count as Swift API conformance. Dart must test malformed UTF-16, out-of-range
+byte integers, and invalid seeds through its own public API; fixture adapters
+must reject or classify them as Dart-only without prevalidating shared valid
+cases.
+
 ## Capability and conformance boundary
 
 The package is pure in-memory computation and declares an empty capability
@@ -290,13 +316,32 @@ Public Dart acceptance must execute the package APIs on both VM and Node. It
 must cover both collision strategies, exact resize boundaries, collisions,
 tombstones, physical order, snapshots, duplicate entries, merge, nullable
 values, failure atomicity, Unicode and byte validation, and error precedence.
-The production maximum capacity and key size require public-boundary tests.
-Any smaller injected limits are internal test cases and must be labeled
-separately. A private transient builder may construct production-boundary
-cases without exposing mutation. Production line and branch coverage must be
-reported separately and exceed 95% on the actual source. Function coverage
-may be reported only when the coverage engine emits those counters. Meaningful
-source-fault controls must fail on actual public behavior.
+For each strategy, exhaust every history of length zero through five over
+three keys, two values, and the operations set(key, value) and remove(key).
+That is 66,430 histories per strategy. Compare every prefix with an
+independent association-list model, and recheck every earlier immutable
+version after each prefix. Longer generated histories and byte-mutation fuzz
+must record deterministic seeds, iteration counts, and replayable failures.
+Report whether the selected engine actually supports shrinking; preserve and
+replay the failing input when it does not. Do not call deterministic mutation
+testing coverage-guided fuzzing unless it uses coverage feedback.
+
+The production maximum requires public-boundary tests at capacity
+`1_048_576`: for chaining, fill all `1_048_576` entries; for probing, fill
+`786_432` entries (the largest count before the next distinct insertion
+crosses its 75% threshold). At each boundary, a distinct insertion must fail
+with `CapacityLimitExceeded`, replacement must succeed without growth,
+remove-and-reinsert must follow the threshold, and prior map versions must
+remain unchanged. Use the private transient builder to construct these cases
+without exposing mutation. Smaller injected limits are internal test cases
+and must be labeled separately. Key-size maximum and over-limit behavior also
+require public-boundary tests.
+
+Production line and branch coverage must be measured separately and each must
+exceed 95% on the actual source. Function coverage may be reported only when
+the coverage engine emits those counters. Meaningful source-fault controls
+must fail on actual public behavior. Do not claim a SAT proof, coverage-guided
+fuzzing, or shrink support unless the selected tool actually provides it.
 
 These are acceptance obligations, not completed validation. The profile and
 reference package do not claim a Dart Warrant proof, a native proof binding,
