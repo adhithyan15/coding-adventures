@@ -161,9 +161,11 @@ duplicate/contradictory/irrelevant assumptions, clause addition, reset,
 zero-budget UNKNOWN, and recovery. Each consumer allocates all declared
 variables before adding any clauses and checks a model's width against the
 declared count, including unconstrained variables. After every `add_clause`
-and `reset` step it asserts model invalidation immediately. A false return
-from adding a permanent contradiction does not erase that new clause from the
-independent oracle formula. The known TypeScript stale-core scenario is
+and `reset` step, the Go consumer asserts model/core invalidation immediately.
+TypeScript exposes no model-validity flag, so its shared-corpus adapter checks
+the next public solve and does not read `getModel` until SAT is returned
+again. A false return from adding a permanent contradiction does not erase
+that new clause from the independent oracle formula. The known TypeScript stale-core scenario is
 excluded from the shared corpus and has a Go-only regression; the TypeScript
 bug is represented by the separate backlog reproduction. Both Go and
 TypeScript BUILD tests consume
