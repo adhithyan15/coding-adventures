@@ -136,7 +136,14 @@ func TestCensusEndToEnd(t *testing.T) {
 	}
 	a := s.Actions
 	if a.Total != 2 || a.WithRecord != 2 || a.RecordParseOK != 2 || a.CensusClean != 2 || a.NoVerdict != 0 || a.CensusMissing != 0 {
-		t.Errorf("actions: %+v", a)
+		// The whole summary, so a host-dependent census (one OS classifies the
+		// canned exec differently) says WHAT it found, not only that it is
+		// non-empty.  Bounded: the summary is at most 512 KiB, cut to 8 KiB.
+		summary, _ := os.ReadFile(jsonPath)
+		if len(summary) > 8<<10 {
+			summary = summary[:8<<10]
+		}
+		t.Errorf("actions: %+v\nsummary: %s", a, summary)
 	}
 	cc := s.CrossCheck
 	if cc.Traces != 2 || cc.Accepted != 2 || cc.Mismatches != 0 || cc.Allowed != 0 || cc.Refused != 0 || cc.Bytes <= 0 {
