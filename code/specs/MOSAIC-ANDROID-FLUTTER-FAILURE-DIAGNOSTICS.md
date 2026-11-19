@@ -19,8 +19,8 @@ Diagnostics are disabled unless the generated app is built with the explicit
 `MOSAIC_NATIVE_DIAGNOSTICS=true` Dart define. The relevant CI build enables it
 only for the Flutter phone artifacts used by the emulator gate. The host emits
 fixed-format `MOSAIC_NATIVE_DIAG v=1 stage=… result=<enum> elapsed_us=<int>`
-records to stderr, with fixed stage names and enumerated results. It does not
-print environment values, event or snapshot data, exception messages,
+records through Dart `print`, which Flutter routes to Android logcat. It does
+not print environment values, event or snapshot data, exception messages,
 filesystem paths, or arbitrary platform output. Each fixed stage/result pair
 is emitted once, so an initial skipped environment report does not hide a
 later successful attempt. Each app process emits at most 24 records; the final
@@ -29,7 +29,10 @@ to emit a record is ignored and must not change the operation's result.
 
 Required stages distinguish:
 
-1. application-support-directory lookup: nonempty, empty, or thrown;
+1. Dart `main()` entry before Flutter binding initialization, then the
+   application-support-directory lookup attempt immediately before its
+   existing await; the lookup result is nonempty, empty, or thrown. The
+   attempt marker does not establish that the platform plugin replied;
 2. whether the phone runtime was bundled (this does not claim the selected
    fallback route), Dart create-call
    attempt, raw ABI-call return/throw, and startup response
