@@ -111,25 +111,32 @@ filtering against assumptions, without a minimization pass. Failed assumption
 cores are sound, duplicate-free subsets of assumptions; order and minimality
 are unspecified.
 
-The remaining correctness and contract repairs are tracked as VER-P043. A
-known permanent contradiction can return early before clearing a prior failed
-core, and the DIMACS reader accepts malformed `p cnf` prefixes or extra header
-fields. Its propagation budget currently advances the queue head before
-checking whether a step is available; after an interrupted root propagation,
-a public propagation call can consume a conflict without making the
-contradiction sticky, allowing a later solve to report a model that falsifies
-an input clause. The repair must check the step budget before consuming trail
-work, preserve pending root work across UNKNOWN, make actual level-zero
-conflicts sticky even when found through public `propagate()`, and keep
-nonroot assumption conflicts local to that solve. A valid solve call that
-reaches the known-root-UNSAT fast return must clear an older failed core without
-changing malformed-assumption validation precedence. DIMACS headers must
-contain exactly four whitespace-separated tokens: `p cnf <vars> <clauses>`.
+The following differences describe the pinned pre-repair baseline for VER-P043:
+known root contradictions could return before clearing a failed core; the
+DIMACS reader accepted malformed `p cnf` prefixes or extra header fields; and
+the propagation budget advanced the queue head before checking whether a step
+was available. After interrupted root propagation, public `propagate()` could
+consume a conflict without making the contradiction sticky, allowing a later
+solve to return a model that falsified an input clause. The P043 repair checks
+the step budget before consuming trail work, preserves pending root work across
+UNKNOWN, makes actual level-zero conflicts sticky through public propagation,
+and keeps nonroot assumption conflicts local to that solve. A valid solve call
+that reaches the known-root-UNSAT fast return clears an older failed core while
+preserving malformed-assumption validation precedence. DIMACS headers contain
+exactly four whitespace-separated tokens: `p cnf <vars> <clauses>`.
 
 The shared SAT CNF corpus adds a portable `propagate` step with a boolean
 expected-conflict outcome so Go and TypeScript exercise the same recovery
 lifecycle without pinning a private clause index. Each consumer validates SAT
 models and failed cores against the original signed DIMACS formula,
-independently of its production parser. VER-P043 is the selected next serial
-repair after the Go port merge; source-bound proof tooling and line/branch
-evidence remain separate work.
+independently of its production parser. The TypeScript package suite retains
+100 deterministic random 3-SAT comparisons against brute force, pigeonhole
+UNSAT, and model checks for queens and bit-blasted arithmetic.
+
+At the P043 verification snapshot, Node's native test coverage over freshly
+emitted `dist/sat.js` measured 95.49% lines, 95.08% branches, and 98.28%
+functions. This is coverage of the TypeScript compiler's emitted JavaScript;
+it is not source-mapped coverage of authored TypeScript. It meets this spec's
+90% line and 85% branch criteria and the repository's 95% library line target.
+No Warrant-bound source proof or solver certificate is claimed; VER-P042 is a
+separate Go source-assurance lane.

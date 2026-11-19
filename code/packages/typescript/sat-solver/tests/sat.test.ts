@@ -726,6 +726,22 @@ describe("CDCL SAT: Resource Bounding and Hostile Input Protection (VER09 §2.9)
     expect(s.getFailedCore()).toEqual(priorCore);
   });
 
+  it("clears stale core on known-root UNSAT without changing fast-return precedence", () => {
+    const s = new Solver();
+    const a = makeLit(s.newVar(), false);
+    expect(s.solveWithAssumptions([a, negateLit(a)])).toBe("unsat");
+    assert.ok(s.getFailedCore().length > 0);
+    expect(s.addClause([])).toBe(false);
+
+    // A permanently contradictory solver has historically returned UNSAT
+    // before validating assumptions. Preserve that precedence and clear the
+    // stale assumption core on this known-root fast path.
+    expect(s.solveWithAssumptions([-1])).toBe("unsat");
+    expect(s.getFailedCore()).toEqual([]);
+    expect(s.solve()).toBe("unsat");
+    expect(s.getFailedCore()).toEqual([]);
+  });
+
   it("tests Tseitin ITE, EQUIV, bvEq, and width mismatches", () => {
     const builder = new CnfBuilder();
     const cond = builder.newLit();
@@ -907,8 +923,10 @@ describe("Shared SAT CNF v1 stateful corpus", () => {
           // Preserve the attempted permanent clause in the independent oracle
           // even if addClause reports an immediate contradiction.
           clauses = [...clauses, [...(step.clause ?? [])]];
-        } else {
+        } else if (step.op === "reset") {
           solver.reset();
+        } else {
+          assert.fail(`${testCase.id}: unknown corpus operation ${String(step.op)}`);
         }
       }
     }
