@@ -605,8 +605,9 @@ source-equivalence test constructs a sandbox by copying
 `effect_certificate.json`, `evidence.bindings`, and `assurance-profile.json`,
 then reads `code/specs/fixed-point.warrant`. `rust/warrant-ir`'s fixed-point
 proof integration test embeds that Warrant file, `rust/fixed-point/src/lib.rs`
-and `evidence.bindings`, and frames the complete `rust/fixed-point/src/`
-source tree. Both run through Cargo, so their exact external inputs also
+and `evidence.bindings`, frames the complete `rust/fixed-point/src/` source
+tree, and reads `rust/fixed-point/Cargo.toml` to validate the default library
+target and `package.autolib`. Both run through Cargo, so their exact external inputs also
 include the root and Rust-workspace Cargo target configs and the workspace
 manifest and lockfile. These are test-only input registrations; they do not
 create dependency edges from fixed-point to either verifier.
