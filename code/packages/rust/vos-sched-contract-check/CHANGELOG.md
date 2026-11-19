@@ -6,7 +6,7 @@ All notable changes to this package are documented here.
 
 ### Changed (VOS-039a, VOS-D082)
 
-- `publish = false` in `Cargo.toml`: an evidence-only check crate is never published or shipped.  Applied by hand; no tool enforces it for check crates yet (VOS-D103).
+- `publish = false` in `Cargo.toml`: an evidence-only check crate is never published or shipped.  Applied by hand; no tool enforces it for check crates yet (VOS-D104).
 
 ### Added (VOS-012b0, VOS-D061)
 

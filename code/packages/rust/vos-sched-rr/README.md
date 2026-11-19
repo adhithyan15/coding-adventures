@@ -94,5 +94,5 @@ a reset pointer is still inside the image of `rep`, which is what the ungated ow
 Line coverage of `src/*` is a **gate** (VOS-D070, VOS04 5.6): `coverage-floor = 95` in `vos.toml`, enforced on Linux by the
 `cargo tarpaulin ... --include-files 'vos-sched-rr/src/*' --fail-under 95` line of BUILD, and `vos-link check-component` fails if the floor,
 the line or its `--include-files` is missing or they disagree. Measured (tarpaulin, LLVM engine, `--lib --test behaviour --features ghost`,
-2026-11-17): **100%, 84 of 84 lines of `src/lib.rs`**. The generated evidence suite is not part of the measurement (VOS-D106).
+2026-11-17): **100%, 84 of 84 lines of `src/lib.rs`**. The generated evidence suite is not part of the measurement (VOS-D107).
 

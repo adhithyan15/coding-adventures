@@ -802,7 +802,7 @@ reproduced.
 or `any`. Any other kind is a finding (`CC01`): `contract` crates are VOS-039b's;
 check crates (`vos-sched-contract-check`, retired by 039b) and fixtures are not
 components. For them VOS-D082 (`publish = false`) is a manual rule, applied to
-`vos-sched-contract-check` in this change and swept by VOS-D103.
+`vos-sched-contract-check` in this change and swept by VOS-D104.
 
 **What `gen-build` reads.**
 
@@ -854,13 +854,13 @@ name must be a claim of the document) or `example` (an example of the document);
 VER04j 4.8) and nothing else does; no entry repeats. **Completeness:** every fault of
 every bound operation has an entry, and every operation that lists `field-flip` has
 an `attack=` entry; and **every claim whose text calls a bound operation appears in at
-least one entry** (found by walking the claim's parsed expression, `vos_manifest::warrant::claim_calls`; calls through a `model` body are not followed, VOS-D107; the
+least one entry** (found by walking the claim's parsed expression, `vos_manifest::warrant::claim_calls`; calls through a `model` body are not followed, VOS-D108; the
 one exemption is a claim whose operations' faults are all excused, below). An author
 cannot attack one easy claim per fault and leave the rest untried. Counting controls per
-operation and tier is VOS-D104. Whether the named claim really catches the fault is the run's
+operation and tier is VOS-D105. Whether the named claim really catches the fault is the run's
 (the shared checker fails a control that does not). The plan cannot be derived from
 the document and bindings alone, because the claim-to-operation map is inside the
-Warrant expressions; deriving it is VOS-D107. The plan holds names, never command
+Warrant expressions; deriving it is VOS-D108. The plan holds names, never command
 text, so it cannot carry a shell fragment.
 
 **The tolerance script.** A crate whose only claim over an operation cannot see a fault
@@ -911,8 +911,8 @@ fails as surely as an unexcused failure). The numbers 4096 and 5000 are constant
 `vos-link` whose test reads this file and asserts that this section states them.
 
 **Not checked yet, each with a row.** The exact "controls equal operations times tiers"
-count of line 9 (VOS-D104); a parser's fuzz corpus and bounds (VOS-D105); the
-command-type check of line 2 (VOS-D077); deriving the sabotage plan (VOS-D107); line 10
+count of line 9 (VOS-D105); a parser's fuzz corpus and bounds (VOS-D106); the
+command-type check of line 2 (VOS-D077); deriving the sabotage plan (VOS-D108); line 10
 (SAT, n/a until VOS-029).
 
 **Item G, the coverage gate (VOS-D070).** `cargo tarpaulin`, which CI installs on

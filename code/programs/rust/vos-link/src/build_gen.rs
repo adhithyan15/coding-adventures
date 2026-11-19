@@ -96,7 +96,7 @@ pub struct GenInputs {
     pub examples: Vec<String>,
     /// The faults of each bound operation, from `evidence.bindings`.
     pub faults: BTreeMap<String, Vec<String>>,
-    /// For each claim, the bound operations its text calls (lexical, VOS-D107).
+    /// For each claim, the bound operations its text calls (lexical, VOS-D108).
     pub calls: Vec<(String, Vec<String>)>,
     /// `evidence.bindings` `property_cases`.
     pub property_cases: u64,
@@ -256,7 +256,7 @@ pub fn validate_plan(
     // Every claim that calls a bound operation is attacked at least once (review M3): an
     // author cannot attack one easy claim per fault and leave the others untried.  A claim is
     // exempt only when every fault of every operation it calls is excused by a declared
-    // control (rr's `init`/`field-flip`).  Counting controls per operation and tier is VOS-D104.
+    // control (rr's `init`/`field-flip`).  Counting controls per operation and tier is VOS-D105.
     for (claim, called) in calls {
         let all_excused = called.iter().all(|op| {
             faults.get(op).is_some_and(|fs| {

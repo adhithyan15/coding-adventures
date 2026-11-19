@@ -264,7 +264,7 @@ pub fn check_component(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outc
 
     out.findings = cx.f;
     out.notes.push(
-        "check-component: the file set, BUILD and BUILD_windows byte-equal to `gen-build` (VOS04 5.2 lines 1 to 9, the coverage gate and this command), the sabotage plan, the tolerance script, the build-tool row, publish = false for `-any` and the evidence manifest bound to the document are present and consistent. Not checked: that the lines PASS (the build does that), the exact operations-times-tiers control count (VOS-D104), a parser's fuzz corpus (VOS-D105), the command-type check (VOS-D077), deriving the plan (VOS-D107), and line 10 (SAT, n/a until VOS-029).".to_string(),
+        "check-component: the file set, BUILD and BUILD_windows byte-equal to `gen-build` (VOS04 5.2 lines 1 to 9, the coverage gate and this command), the sabotage plan, the tolerance script, the build-tool row, publish = false for `-any` and the evidence manifest bound to the document are present and consistent. Not checked: that the lines PASS (the build does that), the exact operations-times-tiers control count (VOS-D105), a parser's fuzz corpus (VOS-D106), the command-type check (VOS-D077), deriving the plan (VOS-D108), and line 10 (SAT, n/a until VOS-029).".to_string(),
     );
     Ok(out)
 }

@@ -329,7 +329,7 @@ pub fn declared_names(text: &str) -> Result<(Vec<String>, Vec<String>), WarrantF
 /// invisible to a tree.  `vos-link` uses it to require that every claim that calls a bound
 /// operation is attacked by a sabotage control (VOS-039a review M3).  It does NOT follow a
 /// call into a `model` body, so M3 relies on models being operation-free (the document's
-/// type check refuses an operation call in a model today; the transitive closure is VOS-D107).
+/// type check refuses an operation call in a model today; the transitive closure is VOS-D108).
 pub fn claim_calls(
     text: &str,
     ops: &[String],
