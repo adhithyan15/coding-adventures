@@ -4,6 +4,26 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-039b-2a, VOS-D077)
+
+- **CK10**, the Rust-enum/Warrant-variant correspondence of `check-contract` (`src/enums.rs`).  Every `enum` of the
+  contract crate's `src/**/*.rs` (read with `vos-shape-check`'s hardened `loader::load_sources` and its token-tree
+  scan, never a new lexer) and the Warrant `variant` of the same name are each rendered to one
+  `variant <Name> = <C1> | <C2>(<T>, ..)` line by one function and the bytes are compared; both lines are printed on
+  a mismatch.  Type map `u8` to `U8`, `bool` to `Bool`, `[u8; N]` to `Bytes<N>`, a same-crate name to itself,
+  anything else `?`-prefixed (never equal).  A tuple variant renders types only (Warrant names its fields freely);
+  a named-field variant renders its field names too.  Direction Rust to Warrant: a model-only Warrant variant is
+  allowed; a rename on either side leaves a Rust enum without a twin.
+- `warrant/lemmas.table` is `vos-lemmas 2`: the Rust lines are published as `variant ...` rows after the `config`
+  rows, so CK09 byte-pins them.  The tables of `vos-sched-contract` and the fixture were regenerated with
+  `gen-contract`.
+- Tests: reordered variants, a renamed constructor, a changed payload arity, type and array width, an unmapped and an
+  alias type, a renamed enum on either side, a renamed named field, a free tuple-field name (not a finding), a stale
+  variant row (CK09), an unlexable source and an unreadable enum (fail closed), no `src/`, a symlink under `src/`
+  (no verdict), every Warrant type form, and the real contract's two rows.
+- The `check-component` note for a contract crate no longer lists the command-type rule as unchecked (SH19 runs in the
+  contract crate's BUILD).
+
 ### Fixed (VOS-039b security hardening)
 
 - `check-contract` / `gen-contract`: a symlinked crate directory, `warrant/` or `warrant/mutants/` is a `CK01`

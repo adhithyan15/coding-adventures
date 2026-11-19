@@ -4,6 +4,27 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Added (VOS-039b-2a, VOS-D077)
+
+- **SH19, the command-type check** (`src/command.rs`, VOS03 section 4), bound by **kind** (`kind = "contract"`),
+  not by class.  The command set is derived: every `enum` of the crate, `pub` or not.  An enum fails on
+  `#[non_exhaustive]` (enum or variant), a generic list, or a variant field whose type is not exactly `u8`,
+  `bool`, `[u8; <decimal literal>]` or the bare name of a same-crate struct or enum that itself passes.
+  `usize`, wider integers, references, pointers, tuples, `Option<..>`, paths, a `type` alias (rejected, never
+  resolved) and a const-named length are findings.  Nested types are judged by a work list over a reverse
+  reference graph (no recursion, linear, a cycle terminates).  `Rule::Sh19`, `command::ACCEPTED_TYPES`
+  (a test reads VOS03 and asserts it states them).
+- `items`: `TypeDef` gains `variants`, `generic`, `non_exhaustive`, `malformed`; new `Variant`; the enum body is read
+  by the existing token-tree scan (tuple, named-field, unit and discriminant variants).  An unreadable variant
+  is a `Gap` (VT03, fail closed).  `parse_fields` now reports a skipped entry instead of dropping it silently.
+- `loader` is a library module (it was private to the binary) with `load_sources`, so `vos-link` reuses the
+  hardened source walk for `check-contract`'s CK10 instead of writing a weaker one.
+- `publish = false` (an evidence-only tool, VOS-D104).
+- Tests: the `Poke(usize)` and `Write { addr: u32 }` controls (inline and as fixtures `fail-contract-poke`,
+  `fail-contract-addr`), every rejected spelling, alias, nested and cyclic cases, `Pick::Run(u8)` and `Upd`
+  passing, the same enum in a production crate silent, the real `vos-sched-contract` passing, linearity over
+  variants and structs, and a 20,000-deep chain.
+
 ### Added (VOS-039a)
 
 - `vos.toml` key `excused-controls`: an array of inline tables `{ id = "<manifest id>", reason = "VOS-Dnnn" }` naming the negative controls a crate may fail (VOS-D065, VOS-D098).  Never empty, each id 1 to 128 plain bytes and distinct, at most 16; the reason is a backlog row, which `vos-link` requires to exist and be open, so an excuse expires with its row.  New `Excuse` and `is_backlog_ref`.
