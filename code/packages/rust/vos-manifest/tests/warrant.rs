@@ -849,3 +849,80 @@ fn ops_and_the_last_impl_field_are_reported_for_cc11() {
     assert!(get("many").returns_state && get("many").state_params == 1);
     assert!(!get("raw").returns_state && get("raw").state_params == 0);
 }
+
+/// A document with type aliases and one `op` per signature under test, so the facts of each `op`
+/// can be read back.  `record Impl` is the state; every alias that resolves to it, through
+/// `Option`, `Result`, a tuple or a record field, must be seen as a state (VOS-039c round 2).
+fn ops_doc(aliases_and_ops: &str) -> String {
+    // The checker wants a secrecy label for every parameter of every operation.
+    let mut labels = String::new();
+    for line in aliases_and_ops.lines() {
+        let Some(rest) = line.trim().strip_prefix("op ") else {
+            continue;
+        };
+        let (name, tail) = rest.split_once('(').expect("an op signature");
+        let params = tail.split_once(')').expect("an op signature").0;
+        if params.trim().is_empty() {
+            continue;
+        }
+        labels.push_str(&format!("  labels {name}:\n"));
+        for param in params.split(", ") {
+            let pname = param.split(':').next().unwrap().trim();
+            labels.push_str(&format!("    {pname} public\n"));
+        }
+    }
+    let aliases_and_ops = format!("{aliases_and_ops}{labels}");
+    format!(
+        "warrant t v1\n  record M(a: Bool)\n  record Impl(x: U8, c: U8)\n  error E = BAD\n  model build(m: M) -> Impl = (Impl(if m.a then 1u8 else 0u8, 0u8))\n{aliases_and_ops}  assume platform:\n    none\n  assume environment:\n    none\n"
+    )
+}
+
+fn op_fact(text: &str, name: &str) -> vos_manifest::warrant::OpFact {
+    analyze_document(text)
+        .expect("type checks")
+        .ops
+        .into_iter()
+        .find(|o| o.name == name)
+        .expect("the op")
+}
+
+#[test]
+fn an_alias_of_the_state_is_a_state_on_either_side_and_through_a_chain() {
+    let doc = ops_doc(
+        "  model State = Impl\n  model Deep = State\n  op both(s: State, t: U8) -> State\n  op param_only(s: State, t: U8) -> Impl\n  op ret_only(s: Impl, t: U8) -> State\n  op chain(s: Deep) -> Deep\n  op plain(s: U8) -> U8\n",
+    );
+    for n in ["both", "param_only", "ret_only", "chain"] {
+        let f = op_fact(&doc, n);
+        assert!(f.state_params > 0 || f.returns_state, "{n}: {f:?}");
+    }
+    let both = op_fact(&doc, "both");
+    assert!(both.returns_state && both.state_params == 1);
+    let p = op_fact(&doc, "param_only");
+    assert!(p.returns_state && p.state_params == 1);
+    let r = op_fact(&doc, "ret_only");
+    assert!(r.returns_state && r.state_params == 1);
+    let c = op_fact(&doc, "chain");
+    assert!(c.returns_state && c.state_params == 1);
+    let plain = op_fact(&doc, "plain");
+    assert!(!plain.returns_state && plain.state_params == 0 && !plain.inout_state);
+}
+
+#[test]
+fn an_alias_of_a_composite_of_the_state_is_a_state() {
+    let doc = ops_doc(
+        "  model MaybeS = Option<Impl>\n  model Pair = (Impl, U8)\n  model Wrapped = Result<MaybeS, E>\n  record Holder(s: MaybeS, n: U8)\n  op opt(s: Impl) -> MaybeS\n  op pair(s: Pair) -> U8\n  op res(s: U8) -> Wrapped\n  op held(h: Holder) -> U8\n  op plain(s: U8) -> Option<U8>\n",
+    );
+    assert!(op_fact(&doc, "opt").returns_state);
+    assert_eq!(op_fact(&doc, "pair").state_params, 1);
+    assert!(op_fact(&doc, "res").returns_state);
+    assert_eq!(op_fact(&doc, "held").state_params, 1);
+    let plain = op_fact(&doc, "plain");
+    assert!(!plain.returns_state);
+}
+
+#[test]
+fn an_alias_of_something_that_is_not_the_state_is_not_one() {
+    let doc = ops_doc("  model Count = U8\n  model Bag = (Count, Bool)\n  op f(s: Bag) -> Count\n");
+    let f = op_fact(&doc, "f");
+    assert!(!f.returns_state && f.state_params == 0);
+}

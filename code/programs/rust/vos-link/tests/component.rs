@@ -2086,6 +2086,62 @@ fn cc11_a_state_producing_operation_without_the_fault_fails() {
     );
 }
 
+/// A type alias is the same state to the generator (it resolves `model State = Impl`), so it is one
+/// to CC11: dropping `field-flip-last` from `f` fails whichever way `f`'s signature spells `Impl`.
+/// (The round-2 finding: a gate that matched the literal name `Impl` saw `State -> State` as no
+/// successor and passed.)
+#[test]
+fn cc11_an_aliased_state_is_still_a_successor() {
+    let drop = |b: &str| {
+        b.replace("wrong-ctor,field-flip-last", "wrong-ctor")
+            .replace(
+                "op g export=vos_ghost_g ret=u8 faults=field-flip",
+                "op g export=vos_ghost_g ret=u8 faults=field-flip,field-flip-last",
+            )
+    };
+    for (label, aliases, sig) in [
+        (
+            "cc11-alias-both",
+            "  model State = Impl\n",
+            "op f(s: State, t: U8) -> State",
+        ),
+        (
+            "cc11-alias-param",
+            "  model State = Impl\n",
+            "op f(s: State, t: U8) -> Impl",
+        ),
+        (
+            "cc11-alias-return",
+            "  model State = Impl\n",
+            "op f(s: Impl, t: U8) -> State",
+        ),
+        (
+            "cc11-alias-chain",
+            "  model State = Impl\n  model St2 = State\n",
+            "op f(s: St2, t: U8) -> St2",
+        ),
+    ] {
+        let o = any_with(
+            label,
+            |d| {
+                d.replacen(
+                    "  record Impl(x: U8, c: U8)\n",
+                    &format!("  record Impl(x: U8, c: U8)\n{aliases}"),
+                    1,
+                )
+                .replacen("op f(s: Impl, t: U8) -> Impl", sig, 1)
+            },
+            drop,
+            same,
+        );
+        only(
+            &o,
+            "CC11",
+            "operation \"f\" produces a state from a state but does not list `field-flip-last`",
+        );
+    }
+}
+
 #[test]
 fn cc11_an_operation_no_claim_attacks_with_the_oracle_fault_fails() {
     // The entry names `c2`, which calls `h` and no state-producing operation; and an `example` entry

@@ -39,6 +39,7 @@ use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 
 use coding_adventures_warrant_grammar::checker::check_warrant;
+use coding_adventures_warrant_grammar::evidence::type_mentions;
 use coding_adventures_warrant_grammar::layout::{
     capture_layout, LayoutLimits, LayoutToken, LayoutTokenKind, TokenSpan,
 };
@@ -101,9 +102,12 @@ pub enum BuildShape {
 }
 
 /// The signature of one `op` of a document, reduced to what "does it produce a state from a
-/// state?" needs (VOS-039c, CC11).  "Mentions" means the type is `Impl` or has `Impl` anywhere
-/// inside it (`Option<Impl>`, `Result<Impl, E>`, `(Impl, U8)`, `List<Impl>`): a composite is
-/// never read as "not a state", because the safe direction for a gate is to treat what it cannot
+/// state?" needs (VOS-039c, CC11).  "Mentions" means the type, RESOLVED THROUGH THE DOCUMENT'S
+/// ALIASES by the evidence generator's own resolution
+/// ([`coding_adventures_warrant_grammar::evidence::type_mentions`]), is `Impl` or has `Impl`
+/// anywhere inside it (`model State = Impl`, `Option<Impl>`, `Result<Impl, E>`, `(Impl, U8)`,
+/// `List<Impl>`): a composite is never read as "not a state", and a type the resolution cannot
+/// resolve counts as one, because the safe direction for a gate is to treat what it cannot
 /// classify as a state.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OpFact {
@@ -115,19 +119,6 @@ pub struct OpFact {
     pub state_params: usize,
     /// A parameter that mentions `Impl` is `inout`: the operation mutates a state in place.
     pub inout_state: bool,
-}
-
-/// Does `t` mention the record `Impl`?
-fn mentions_impl(t: &TypeExpr<'_>) -> bool {
-    match t {
-        TypeExpr::Named { name, .. } => *name == "Impl",
-        TypeExpr::List { inner, .. } | TypeExpr::Option { inner, .. } => mentions_impl(inner),
-        TypeExpr::Result {
-            ok_type, err_name, ..
-        } => *err_name == "Impl" || mentions_impl(ok_type),
-        TypeExpr::Tuple { elems, .. } => elems.iter().any(mentions_impl),
-        TypeExpr::Bytes { .. } => false,
-    }
 }
 
 /// What the Warrant tools found in a document that type-checked.
@@ -632,16 +623,16 @@ pub fn analyze_document_with_budget(text: &str, budget: u64) -> Result<Analysis,
                 }
                 Declaration::Op(o) => a.ops.push(OpFact {
                     name: o.name.to_string(),
-                    returns_state: mentions_impl(&o.return_type),
+                    returns_state: type_mentions(file, &o.return_type, "Impl"),
                     state_params: o
                         .params
                         .iter()
-                        .filter(|p| mentions_impl(&p.param_type))
+                        .filter(|p| type_mentions(file, &p.param_type, "Impl"))
                         .count(),
                     inout_state: o
                         .params
                         .iter()
-                        .any(|p| p.inout && mentions_impl(&p.param_type)),
+                        .any(|p| p.inout && type_mentions(file, &p.param_type, "Impl")),
                 }),
                 Declaration::Model(m) if m.name == "build" => {
                     a.build =

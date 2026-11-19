@@ -4,6 +4,10 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed (VOS-039c security review, round 2)
+
+- **CC11 gate bypass through a type alias (high).**  The successors were judged by a `mentions_impl` in `vos-manifest` that matched only the literal name `Impl`, but Warrant has aliases (`model State = Impl`) that the checker and the evidence generator resolve, so `op insert_img(s: State, t: U8) -> State` was `Impl -> Impl` to the generator and invisible to CC11, and dropping `field-flip-last` passed.  `vos-manifest` now judges the resolved type with the generator's own resolution (`warrant-grammar` `evidence::type_mentions`), so CC11 agrees with the generator by construction; an unresolvable type or an alias cycle counts as a state (fail closed).  Test: `cc11_an_aliased_state_is_still_a_successor` (both sides, one side, an alias of an alias).  VOS04 5.6 records the INFO note that the `contract =` pin is author-declared and no CD rule ties it to a registry (VOS-D114).
+
 ### Fixed (VOS-039c security review)
 
 - **CC11 gate bypass (F1, high).**  The successor operations were read from the bindings' host spelling (`ret=Impl`, an `Impl` in `args=`), but both are optional and the generator falls back to the document's signature, so `op insert_img export=.. faults=field-zero` was a real state-to-state operation that CC11 did not see (b and c were skipped).  The successors are now the `op`s of the generated document whose return type mentions `Impl` and that have an `Impl`-mentioning parameter (or an `inout` one); the bindings are read only for each successor's faults.  A binding that names no `op` of the document fails closed, as does an `Option<Impl>`/`Result`/tuple signature (treated as a state, which the generator then refuses `field-flip-last` on).  `successor_ops` now takes the document's `OpFact`s (new in `vos-manifest`).

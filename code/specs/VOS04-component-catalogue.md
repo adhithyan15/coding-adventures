@@ -1144,8 +1144,11 @@ claims and the bindings, never declared by the author, and it never reads claim 
       else, and any shape the walk cannot decide, fails closed
   (b) every SUCCESSOR operation lists the fault `field-flip-last` in `faults=`; the successors are the `op`s of
       the GENERATED DOCUMENT whose return type mentions `Impl` and that have a parameter that mentions `Impl`,
-      or an `inout` parameter that does (`insert_img`, `remove_img`, `dispatch_img`); the bindings are read
-      only afterwards, for each successor's faults
+      or an `inout` parameter that does (`insert_img`, `remove_img`, `dispatch_img`); "mentions" is judged on
+      the RESOLVED type, the generator's own resolution (`warrant-grammar` `evidence::type_mentions`, over the
+      `TyEnv` that `ty_of_type` uses), so `model State = Impl` (or a chain of aliases, an alias of
+      `Option<Impl>`, a record with such a field) is a state; the bindings are read only afterwards, for each
+      successor's faults
   (c) for every successor operation `sabotage.plan` has an entry `exhaustive/<claim> field-flip-last` whose claim
       is CONTRACT-OWNED (the document's claim has the name and `claim_sha256` of an obligation of the contract's
       `any` tier, the identity CD05 and CD06 use; never the `tier=` attribute) and calls that operation and no
@@ -1155,12 +1158,21 @@ claims and the bindings, never declared by the author, and it never reads claim 
 The successors come from the document because `ret=` and `args=` of an `op` line are optional: omitted, the
 generator falls back to the host type of the document's signature, so `op insert_img export=.. faults=field-zero`
 is still a state-to-state operation for the generator, and a rule that read the bindings' spelling would not see
-it (VOS-039c security review F1). "Mentions" includes `Option<Impl>`, `Result<Impl, E>`, tuples and lists, so a
-type the rule cannot classify counts as a state (the generator then refuses `field-flip-last` on a non-record
+it (VOS-039c security review F1). "Mentions" includes `Option<Impl>`, `Result<Impl, E>`, tuples and lists, and is
+read through the document's type aliases by the generator's own resolution, not by CC11's own reading of the
+text (round-2 finding: `model State = Impl` with `op insert_img(s: State, ..) -> State` was invisible to a rule
+that matched the literal name `Impl`, so dropping `field-flip-last` passed; a gate that re-interprets author text
+with its own logic does not converge, so CC11 calls the function the generator's types come from). A type the
+resolution cannot resolve (an unknown name, an alias cycle, a chain deeper than 64) counts as a state, so a type
+the rule cannot classify counts as a state (the generator then refuses `field-flip-last` on a non-record
 result, which is a finding); a binding that names no `op` of the document is a finding (it cannot be
 classified); a document with no successor is a finding. A claim that the implementation adds itself and that
 calls one successor does not satisfy (c) (F3): the contract's preservation claims are the ones that must be
-attacked. The numeric-oracle clause is F2: a `Bool` or `Bytes` oracle leaves `field-flip-last` nothing to flip.
+attacked. The contract-owned test trusts the `contract =` package of `vos.toml`, which is author-declared: CD05,
+CD06 and CD07 (`check.rs`) judge the document against whichever package `vos.toml` names and the marker
+`contract-package=` is compared with the same key (CD01), so none of them catches a swapped contract; a well-formed
+fake contract package whose `any` tier lists the author's own claims would make `owned` include them (VOS-D114, tied
+to the registry with VOS-D030). The numeric-oracle clause is F2: a `Bool` or `Bytes` oracle leaves `field-flip-last` nothing to flip.
 
 The constant is `ORACLE_FAULT` in `vos-link` (`src/oracle.rs`); a test reads this section and asserts it. Whether
 the claim really FAILS under the fault is not decided by `check-component`: the generated BUILD runs the plan through

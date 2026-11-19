@@ -4,6 +4,10 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed (VOS-039c security review, round 2)
+
+- `Analysis::ops` judges "mentions `Impl`" on the RESOLVED type: `mentions_impl` (the literal name `Impl`) is gone, replaced by `coding_adventures_warrant_grammar::evidence::type_mentions`, the generator's own alias resolution, so `model State = Impl`, a chain of aliases, an alias of `Option<Impl>` or `Result<.., E>` and a record with such a field all count.  An unresolvable type counts as a state.  Tests in `tests/warrant.rs`: alias on both sides, one side, a chain, composites, a record field, and an alias of a non-state.
+
 ### Added (VOS-039c security review)
 
 - `Analysis::ops` (`OpFact`: name, whether the return type mentions `Impl`, how many parameters do, whether an `inout` one does) and `Analysis::impl_last_field_type`, from the parsed tree.  `vos-link` CC11 derives the state-to-state operations and checks the oracle's type from them, not from the optional `ret=`/`args=` of the bindings.
