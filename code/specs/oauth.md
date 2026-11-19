@@ -6754,6 +6754,28 @@ transcript and signature authentication, certificate and revocation policy,
 and HTTP/TLS transport composition remain prerequisites; concrete HTTPS and
 live-provider readiness remain unavailable.
 
+The fresh retry server transcript-continuation proof can now be consumed
+together with one fresh authenticated ordered server-flight owner only when
+both retain the same exact handshake-traffic-secret object. Construction also
+requires the ordered owner to remain at `ExpectEncryptedExtensions` with zero
+records consumed, no partial message, and no failure, and requires the
+continuation transcript, ordered record state, and retained server Finished
+key to select the same suite. The continuation snapshot must still equal the
+exact ServerHello snapshot retained by that shared retry proof. Success moves
+the complete ordered record owner and reconstructed transcript into one
+non-copyable wrapper while retaining the exact retry-derived server Finished-
+key proof; callers cannot substitute a detached transcript, Finished key,
+traffic-secret proof, record state, or resumed flight position.
+
+This provenance join does not open a record, advance the transcript, expose a
+mutable transcript, validate or authenticate a server-flight message, verify
+CertificateVerify or Finished, validate certificates, establish trust,
+enforce revocation, protect application data, perform I/O, authorize HTTP or
+OAuth transport, or open a network connection. Authenticated message capture,
+ordered transcript advancement, certificate and revocation policy, and all
+remaining TLS/HTTP/audited transport composition remain prerequisites;
+concrete HTTPS and live-provider readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
