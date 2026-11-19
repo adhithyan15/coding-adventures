@@ -32,10 +32,28 @@ type tracedEntry = traced.CensusEntry
 // censusDirFix is a prepared shard in which actions A and Z each ran one step
 // (a canned helper trace the classifier parses) and the real classify child left
 // record.json and census.json beside each.
+//
+// The canned trace execs /bin/sh, and the classifier then reads the program the
+// way the kernel does: it follows symlinks and, for an ELF image, reads its
+// loader (PT_INTERP).  What that touches depends on the host.  macOS has a real
+// /bin/sh, inside the fixture's "/bin" image root.  A merged-/usr Linux has
+// /bin -> usr/bin, so the path resolves to /usr/bin/dash and its loader lives
+// under /lib64 and /usr/lib: none inside "/bin", so each was a host-read and the
+// census was never clean.  The fixture therefore declares the system directories
+// as roots too (a root need not exist: macOS has no /lib64).  They are
+// "ephemeral", not "image": an image root also compares each file's ctime with
+// the job start, and a runner image rebuilt after that stamp would fail the
+// same tests for a different reason.  Ephemeral is covered by nothing, which is
+// exactly what this fixture's trace of a canned shell wants.
 func censusDirFix(t *testing.T) *stepFix {
 	t.Helper()
 	lineA, lineZ := playLine("", "a", 0), playLine("", "z", 0)
-	f := newStepFixCustom(t, planOf([]string{lineA}, nil, []string{lineZ}), nil, true)
+	roots := []string{
+		`{"path": "/usr", "kind": "ephemeral"}`,
+		`{"path": "/lib", "kind": "ephemeral"}`,
+		`{"path": "/lib64", "kind": "ephemeral"}`,
+	}
+	f := newStepFixRoots(t, roots, planOf([]string{lineA}, nil, []string{lineZ}), nil, nil, true)
 	f.give("a", actA, lineA, 0, cannedOpts{})
 	f.give("z", actZ, lineZ, 0, cannedOpts{})
 	f.must(actA, 0, 1, lineA)
