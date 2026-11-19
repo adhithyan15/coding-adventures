@@ -57,7 +57,7 @@ public sealed class HasherConformanceTests
             .GetFiles(Path.Combine(FixtureDirectory, "cases"), "source-collection-*.json")
             .OrderBy(path => path, StringComparer.Ordinal)
             .ToArray();
-        Assert.Equal(22, fixturePaths.Length);
+        Assert.Equal(23, fixturePaths.Length);
 
         foreach (var fixturePath in fixturePaths)
         {
