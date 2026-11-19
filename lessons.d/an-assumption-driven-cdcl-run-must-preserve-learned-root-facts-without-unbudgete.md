@@ -15,4 +15,4 @@ negations in globally entailed learned clauses. Backjumps are clamped at the
 active assumption prefix; root conflicts are sticky, and public propagation
 records a root contradiction before returning. Keep an independent
 assumptions-to-unrestricted recovery regression and assert that UNKNOWN
-preserves the pending root queue without doing hidden cleanup work.
+preserves the pending root queue without doing hidden cleanup work. Delay learned-clause deletion while a conflict ID is pending analysis, even when it is not a reason clause.

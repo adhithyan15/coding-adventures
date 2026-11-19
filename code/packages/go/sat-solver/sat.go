@@ -755,7 +755,9 @@ func (s *Solver) SolveWithAssumptions(as []Lit, opts ...SolverOptions) (SolveRes
 					learnedCount++
 				}
 			}
-			if learnedCount > s.learnedLimit {
+			// The conflict clause is a live analysis input even when it is not a
+			// reason clause. Defer database deletion until it has been analyzed.
+			if pendingConflict < 0 && learnedCount > s.learnedLimit {
 				s.reduceLearned()
 			}
 			if pendingConflict < 0 && s.sinceRestart >= s.restartBase*luby(s.restartIndex) {

@@ -1911,3 +1911,73 @@ func TestWatchBucketCapacityIsBoundedByLiteralOccurrences(t *testing.T) {
 		}
 	}
 }
+
+func TestBuilderPublicValidationAndAtomicPreflight(t *testing.T) {
+	bad := Lit(1 << 31)
+	valid := []Lit{mustLit(t, 0, false), mustLit(t, 1, false), mustLit(t, 2, false)}
+	invalidOps := []struct {
+		name string
+		call func(*CnfBuilder) error
+	}{
+		{"And", func(b *CnfBuilder) error { _, e := b.And(bad, valid[0]); return e }},
+		{"Or", func(b *CnfBuilder) error { _, e := b.Or(valid[0], bad); return e }},
+		{"Xor", func(b *CnfBuilder) error { _, e := b.Xor(bad, valid[1]); return e }},
+		{"Equiv", func(b *CnfBuilder) error { _, e := b.Equiv(valid[0], bad); return e }},
+		{"Not", func(b *CnfBuilder) error { _, e := b.Not(bad); return e }},
+		{"Ite", func(b *CnfBuilder) error { _, e := b.Ite(valid[0], bad, valid[2]); return e }},
+		{"FullAdder", func(b *CnfBuilder) error { _, e := b.FullAdder(valid[0], bad, valid[2]); return e }},
+		{"BvAdd", func(b *CnfBuilder) error { _, e := b.BvAdd([]Lit{valid[0], bad}, []Lit{valid[1], valid[2]}); return e }},
+		{"BvEq", func(b *CnfBuilder) error { _, e := b.BvEq([]Lit{bad}, []Lit{valid[0]}); return e }},
+	}
+	for _, tc := range invalidOps {
+		t.Run("invalid_"+tc.name, func(t *testing.T) {
+			s, _ := NewSolver()
+			for i := 0; i < 3; i++ {
+				_, _ = s.NewVar()
+			}
+			b, _ := NewCnfBuilder(s)
+			if err := tc.call(b); err == nil {
+				t.Fatal("invalid literal accepted")
+			}
+			if s.NVars() != 3 || s.inputClauseCount != 0 {
+				t.Fatal("invalid operation mutated solver")
+			}
+		})
+	}
+	preflightConfigs := []struct {
+		name string
+		cfg  SolverConfig
+	}{
+		{"variables", SolverConfig{MaxVars: 2, MaxClauses: 8, MaxClauseLiterals: 16, MaxStoredLiterals: 16}},
+		{"clauses", SolverConfig{MaxVars: 8, MaxClauses: 2, MaxClauseLiterals: 16, MaxStoredLiterals: 16}},
+		{"original_literals", SolverConfig{MaxVars: 8, MaxClauses: 8, MaxClauseLiterals: 6, MaxStoredLiterals: 16}},
+		{"stored_literals", SolverConfig{MaxVars: 8, MaxClauses: 8, MaxClauseLiterals: 16, MaxStoredLiterals: 6}},
+	}
+	for _, tc := range preflightConfigs {
+		t.Run("preflight_"+tc.name, func(t *testing.T) {
+			s, err := NewSolver(tc.cfg)
+			if err != nil {
+				t.Fatal(err)
+			}
+			for i := 0; i < 2; i++ {
+				_, _ = s.NewVar()
+			}
+			b, _ := NewCnfBuilder(s)
+			beforeVars, beforeClauses, beforeLiterals := s.NVars(), s.inputClauseCount, s.inputLiteralCount
+			if _, err := b.And(valid[0], valid[1]); err == nil {
+				t.Fatal("preflight limit not enforced")
+			}
+			if s.NVars() != beforeVars || s.inputClauseCount != beforeClauses || s.inputLiteralCount != beforeLiterals {
+				t.Fatal("failed preflight mutated solver")
+			}
+		})
+	}
+	for _, makeLiteral := range []func(*CnfBuilder) (Lit, error){(*CnfBuilder).TrueLit, (*CnfBuilder).FalseLit} {
+		s, _ := NewSolver(SolverConfig{MaxVars: 1, MaxClauses: 1, MaxClauseLiterals: 1, MaxStoredLiterals: 1})
+		_, _ = s.NewVar()
+		b, _ := NewCnfBuilder(s)
+		if _, err := makeLiteral(b); err == nil {
+			t.Fatal("constant literal ignored variable ceiling")
+		}
+	}
+}
