@@ -2553,11 +2553,25 @@ on any mismatch (a fail-open or a divergence outside the list) and on any ALLOWE
 stricter-only divergence: on a real trace the rule is that there are none. The
 cleanup runs after the children finish and before the temp dir is deleted, once
 per record directory, and only when the test process has `KILN_TRACE_DIFF=1`. It
-logs `PROBE: crosscheck traces=N bytes=B mismatches=M allowed=A` (with the D32
-`Diagnose` report, bounded and sanitised, for any failing trace), and
-`ci/assert_sandbox_tests.py` requires at least one such line with `traces >= 1`
-from a passing test, and `mismatches=0 allowed=0` on every one, so the check
-cannot go vacuous.
+logs `PROBE: crosscheck traces=N accepted=K bytes=B mismatches=M allowed=A` (all
+counts, no text; with the D32 `Diagnose` report, bounded and sanitised, for any
+failing trace). `accepted` counts the traces the parse accepted: two readers
+that refuse every trace alike "agree", so a check whose parameters drifted (a
+wrong helper executable or working directory) would otherwise read
+`mismatches=0` while checking nothing. For traces under a VERIFIED `pre/` the
+test also compares its verdict with the child's: a probe run listed in the
+sealed `probes.json`, and every step trace of an action whose `record.json` says
+`parse_ok`, must be accepted here too, and a trace the verified `pre/` does not
+account for fails. The steps come from the directory listing, with no fixed
+range; a directory-walk error is a failure. The check is registered BEFORE
+`prepare` runs, so a probe trace that prepare refuses (the D32 incident) is
+still read back; without a verified `pre/` the helper is the test's own kiln
+binary. `ci/assert_sandbox_tests.py` requires, over the passing tests' lines,
+`traces >= 1` and `accepted >= 1` in total, and `mismatches=0 allowed=0` on
+every line, so the check cannot go vacuous. The parse reads a process-global
+allowed-divergence counter, so these tests must not use `t.Parallel`. The
+script's own tests (`code/scripts/tests/test_assert_kiln_sandbox_tests.py`) run
+in the kiln-sandbox job.
 
 **The default-flip gates (restated by PR 6).** The first draft gated the flip on
 "at least 8 MB/s and within 3x of the old parser". That gate is replaced: a ratio
@@ -2766,9 +2780,11 @@ if its cross-checked tests ran under `KILN_TRACE_DIFF=1` with no mismatch and no
 divergence, **whatever G1 did** (a slow host failing the capability or absolute
 gate says nothing about whether the two readers agree). The coverage
 of REAL recordings is the D34 line: each kiln-sandbox run's `PROBE: crosscheck`
-line (traces of the children's recordings, both readers, no mismatch, no allowed
-divergence) counts toward it, and a run whose line has `traces=0` or is missing
-does not count. A job that died before
+line (the children's recordings, both readers, no mismatch, no allowed
+divergence) counts toward it only with traces >= 1 AND accepted >= 1 in total; a
+run with `traces=0`, `accepted=0` or no line does not count. D34 coverage starts
+at the merge of the PR that added it: earlier kiln-sandbox runs do not count
+retroactively. A job that died before
 its tests ran (a runner fault, a setup failure) counts **neither way**: it is
 not a pass and it does not reset the count. Only a mismatch or a divergence
 resets the count. The resource limits (1 GiB and 8M events, and the caps above) may be
