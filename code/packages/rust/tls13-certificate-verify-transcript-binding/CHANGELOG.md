@@ -13,4 +13,6 @@ All notable changes to this package will be documented in this file.
 - Outer-proof-preserving RSA-PSS verification that accepts only the retained
   transcript-bound hash evidence and keeps it beside the complete signature
   verdict.
+- Consuming exact-body verification and single-update transcript advancement
+  with owned before/after evidence and no returned state on failure.
 - Atomic short-output rejection and redacted diagnostics.
