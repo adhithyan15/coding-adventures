@@ -1125,6 +1125,23 @@ func TestFixedPointInputConsumersSelectExactRustReaders(t *testing.T) {
 			t.Fatalf("Rust input %s selected %v, err %v; want %v", input, selected, err, want)
 		}
 	}
+	for _, consumerName := range []string{"rust/ca-assurance-report", "rust/warrant-ir"} {
+		var found bool
+		for _, consumer := range repositoryInputConsumers {
+			if consumer.name != consumerName {
+				continue
+			}
+			found = true
+			for _, treePath := range consumer.treePaths {
+				if !containsString(consumer.paths, treePath) || !consumer.matches(treePath+"/new-file.rs") {
+					t.Errorf("%s tree registration %q is not covered by its exact selector/export paths", consumerName, treePath)
+				}
+			}
+		}
+		if !found {
+			t.Errorf("missing fixed-point tree consumer %s", consumerName)
+		}
+	}
 	for _, tc := range []struct {
 		input string
 		want  map[string]bool

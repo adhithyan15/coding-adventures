@@ -86,6 +86,9 @@ type repositoryInputConsumer struct {
 	// leaves this nil; the export then lists no paths for it. A test pins
 	// every declared path to its predicate so the two cannot drift.
 	paths []string
+	// treePaths marks the subset of paths whose cache input kind is explicitly
+	// recursive tree. A file/directory substitution is rejected by the hasher.
+	treePaths []string
 	// globs declares inputs that are a pattern rather than a finite list
 	// (`**` any depth including none, `*` within one segment), for
 	// predicates such as the Mosaic walk. A test pins them to the predicate
@@ -221,12 +224,13 @@ var (
 		"code/specs/fixed-point.warrant",
 		"code/specs/fixtures/fixed-point-q16-v1/cases.json",
 	}
-	// fixedPointSourceInputs are read as a complete source tree by both the
-	// assurance sandbox and the WIR integration test. Directory inputs are
-	// recursively framed by the package hasher, so newly added and removed
-	// source files change both selection and cache identity.
-	fixedPointSourceInputs = []string{
+	// The verifier BUILD recipes explicitly register these tree roots; all
+	// other repository inputs remain file-only.
+	fixedPointSourceTreePaths = []string{
 		"code/packages/rust/fixed-point/src",
+	}
+	fixedPointEvidenceTreePaths = []string{
+		"code/packages/rust/fixed-point/evidence",
 	}
 	rustWorkspaceCargoInputs = []string{
 		".cargo/config.toml",
@@ -234,20 +238,23 @@ var (
 		"code/packages/rust/Cargo.lock",
 		"code/packages/rust/Cargo.toml",
 	}
-	fixedPointBindingsInput  = "code/packages/rust/fixed-point/evidence.bindings"
-	fixedPointReporterInputs = append(append(append([]string{}, fixedPointSourceInputs...), []string{
-		"code/packages/rust/fixed-point/evidence",
+	fixedPointBindingsInput      = "code/packages/rust/fixed-point/evidence.bindings"
+	fixedPointReporterFileInputs = append(append([]string{}, []string{
 		"code/packages/rust/fixed-point/Cargo.toml",
 		"code/packages/rust/fixed-point/effect_certificate.json",
 		fixedPointBindingsInput,
 		"code/packages/rust/fixed-point/assurance-profile.json",
 		"code/specs/fixed-point.warrant",
 	}...), rustWorkspaceCargoInputs...)
-	fixedPointWarrantIRInputs = append(append(append([]string{}, fixedPointSourceInputs...), []string{
+	fixedPointWarrantIRFileInputs = append(append([]string{}, []string{
 		fixedPointBindingsInput,
 		"code/specs/fixed-point.warrant",
 	}...), rustWorkspaceCargoInputs...)
-	gameClockInputPaths = []string{
+	fixedPointReporterTreePaths  = append(append([]string{}, fixedPointSourceTreePaths...), fixedPointEvidenceTreePaths...)
+	fixedPointWarrantIRTreePaths = append([]string{}, fixedPointSourceTreePaths...)
+	fixedPointReporterInputs     = append(append([]string{}, fixedPointReporterFileInputs...), fixedPointReporterTreePaths...)
+	fixedPointWarrantIRInputs    = append(append([]string{}, fixedPointWarrantIRFileInputs...), fixedPointWarrantIRTreePaths...)
+	gameClockInputPaths          = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
 		"code/packages/rust/Cargo.lock",
@@ -1105,18 +1112,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		globs:    []string{warrantDocumentGlob},
 	},
 	{
-		name:     "rust/ca-assurance-report",
-		language: "rust",
-		inputs:   "the Warrant lane inputs plus fixed-point package evidence consumed by its assurance sandbox",
-		matches:  isFixedPointReporterInput,
-		paths:    append(append([]string{}, warrantAssurancePaths...), fixedPointReporterInputs...),
+		name:      "rust/ca-assurance-report",
+		language:  "rust",
+		inputs:    "the Warrant lane inputs plus fixed-point package evidence consumed by its assurance sandbox",
+		matches:   isFixedPointReporterInput,
+		paths:     append(append([]string{}, warrantAssurancePaths...), fixedPointReporterInputs...),
+		treePaths: fixedPointReporterTreePaths,
 	},
 	{
-		name:     "rust/warrant-ir",
-		language: "rust",
-		inputs:   "the fixed-point Warrant model, source tree and evidence bindings read by its proof integration test",
-		matches:  isFixedPointWarrantIRInput,
-		paths:    fixedPointWarrantIRInputs,
+		name:      "rust/warrant-ir",
+		language:  "rust",
+		inputs:    "the fixed-point Warrant model, source tree and evidence bindings read by its proof integration test",
+		matches:   isFixedPointWarrantIRInput,
+		paths:     fixedPointWarrantIRInputs,
+		treePaths: fixedPointWarrantIRTreePaths,
 	},
 	{
 		name:     "rust/arithmetic",

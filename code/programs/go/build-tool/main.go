@@ -1211,9 +1211,10 @@ func hashPackageWithRepositoryInputs(
 	case "rust/fixed-point":
 		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, fixedPointInputPaths)
 	case "rust/ca-assurance-report":
-		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, append(append([]string{}, warrantAssurancePaths...), fixedPointReporterInputs...))
+		return hasher.HashPackageWithRepositoryInputsAndTrees(pkg, repoRoot,
+			append(append([]string{}, warrantAssurancePaths...), fixedPointReporterFileInputs...), fixedPointReporterTreePaths)
 	case "rust/warrant-ir":
-		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, fixedPointWarrantIRInputs)
+		return hasher.HashPackageWithRepositoryInputsAndTrees(pkg, repoRoot, fixedPointWarrantIRFileInputs, fixedPointWarrantIRTreePaths)
 	case "rust/game-clock":
 		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, gameClockInputPaths)
 	case "typescript/game-input-frame":
