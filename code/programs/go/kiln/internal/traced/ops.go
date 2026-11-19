@@ -228,7 +228,7 @@ func (c *classifier) openVirtual(ev *trace.Event, tg target, f openFlags) {
 		if strings.HasPrefix(ev.ReturnFDPath, "/") {
 			c.openResolved(ev.ReturnFDPath, f, false, false)
 		} else if !anonymousFD(ev.ReturnFDPath) {
-			c.reason(rProc) // D28: no -y path says what the descriptor is
+			c.reasonAt(rProc, tg.abs) // D28: no -y path says what the descriptor is
 		}
 		return
 	}
@@ -236,14 +236,14 @@ func (c *classifier) openVirtual(ev *trace.Event, tg target, f openFlags) {
 	// D28: opening a magic link itself (cwd, root, exe, fd/N, ...) with no
 	// usable -y path leaves the object unknown, whatever the ephemeral list says.
 	if ret := ev.ReturnFDPath; !strings.HasPrefix(ret, "/") && !anonymousFD(ret) && procMagicFinal(tg.abs) {
-		c.reason(rProc)
+		c.reasonAt(rProc, tg.abs)
 	}
 	// D28: strace -y printed what the descriptor really is.  When that is not
 	// the /proc name the action wrote, the name led somewhere else (a magic
 	// link): classify the real file, and refuse a /proc answer that differs.
 	if ret := ev.ReturnFDPath; strings.HasPrefix(ret, "/") && !procSameFile(tg.abs, ret) {
 		if isVirtual(ret) {
-			c.reason(rProc)
+			c.reasonAt(rProc, ret)
 		} else {
 			c.openResolved(ret, f, false, false)
 		}
@@ -361,7 +361,7 @@ func (c *classifier) write(ev *trace.Event) {
 		return
 	}
 	if tg.virtual {
-		c.reason(rProc)
+		c.reasonAt(rProc, tg.abs)
 		c.incomplete = true // W5
 		return
 	}
@@ -420,7 +420,11 @@ func (c *classifier) rename(ev *trace.Event) {
 		return
 	}
 	if src.virtual || dst.virtual {
-		c.reason(rProc)
+		virt := dst.abs
+		if src.virtual {
+			virt = src.abs
+		}
+		c.reasonAt(rProc, virt)
 		c.incomplete = true // W5
 		return
 	}
@@ -496,7 +500,11 @@ func (c *classifier) link(ev *trace.Event) {
 		return
 	}
 	if src.virtual || dst.virtual {
-		c.reason(rProc)
+		virt := dst.abs
+		if src.virtual {
+			virt = src.abs
+		}
+		c.reasonAt(rProc, virt)
 		c.incomplete = true // W5
 		return
 	}

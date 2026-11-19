@@ -183,6 +183,11 @@ func scanAction(dir string) dirScan {
 		case name == "record.failed":
 			s.hasFailed = true
 			continue
+		case name == CensusFileName || strings.HasPrefix(name, censusTmpPrefix):
+			// The diagnostic side file (census.go), or the temporary name of one
+			// whose write was cut short: opaque, never read, never evidence of
+			// anything about the action (unlike a stray record.json.tmp-).
+			continue
 		case strings.HasPrefix(name, "record.json.tmp-") || strings.HasPrefix(name, "record.failed.tmp-"):
 			// A kill between the write and the link(2): a record that may have been
 			// half made. It is never "no record".

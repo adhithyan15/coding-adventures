@@ -229,6 +229,9 @@ type classifier struct {
 
 	// netns is Input.StepNetNS.
 	netns bool
+	// census, when set, observes path-carrying reasons before the cap.  It is
+	// write-only: nothing in the classifier reads it.
+	census *Census
 	// incomplete is the negation of RawRecord.WritesComplete: set the moment
 	// something happens that could hide a write from Writes/TrackedWrites.
 	// Every setter says which trigger of KILN04 section 5.5 it is.
@@ -274,11 +277,23 @@ func newClassifier(p *prepared) *classifier {
 
 func (c *classifier) reason(r string) {
 	c.reasons[r] = true
+	if c.census != nil {
+		c.census.noteReason(r)
+	}
 	// W8: a read-side problem is only a reason, but the same problem while a
 	// write is being placed means the write may be somewhere else.
 	if c.inWrite && strings.HasPrefix(r, "trace-incomplete:") {
 		c.incomplete = true
 	}
+}
+
+// reasonAt is reason for one whose text carries no path (proc-path): the path
+// goes only to the census observer, never into the record.
+func (c *classifier) reasonAt(r, path string) {
+	if c.census != nil {
+		c.census.Note(r, c.redact(path))
+	}
+	c.reason(r)
 }
 
 // writing runs f with inWrite set (restoring it after), for a call that can
