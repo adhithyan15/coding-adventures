@@ -21079,10 +21079,10 @@ DT17 package. The umbrella remains pending for its other storage identities.
 The Dart map slot remains missing until its implementation, validation, and
 merge gates complete. The local phase1 commit is profile and ownership only.
 
-The reviewed profile must resolve the resize-at-1.0 example, specify the full
-public Dart surface, exact tagged UTF-8 and byte keys, DT17 algorithms and
-defaults, production bounds and typed errors, persistence and shallow-value
-ownership, iteration order, and merge precedence. Its next gate is a neutral
-fixture with an independent association-list model and direct public Swift
-calls. Production work stays gated until that review. No native Warrant, SAT
-proof, or Dart conformance result is claimed.
+The profile and ownership split passed independent review and are recorded
+in draft PR #19693. Phase 2 now prepares a neutral fixture with an independent
+association-list semantics model, a separate physical-layout model, literal
+hash vectors, exhaustive short histories, and directed public-operation cases.
+The candidate corpus remains pending independent review and direct public Swift
+consumption. Dart production work stays gated until those checks pass. No native
+Warrant, SAT proof, Swift/Dart conformance, or Dart slot credit is claimed.
