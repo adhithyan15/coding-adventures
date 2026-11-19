@@ -700,7 +700,7 @@ PR that rebuilds `warrant-grammar`. `*.warrant.draft` files are not documents
 and do not select it. Only that one package is selected, with its
 prerequisites, not the Warrant adopters.
 
-### Package-local metadata does not rebuild dependents
+### Package-local files do not rebuild dependents
 
 Adding or editing a package's root `CHANGELOG.md`, a direct
 `CHANGELOG.d/*.md` shard, `required_capabilities.json`,
@@ -727,16 +727,60 @@ The rule is deliberately narrow:
   `path`/`build`, Rust `#[path]` or `include!` that executes a metadata-class
   location (`internal/validator/metadata_exec.go`).
 - Local and ordinary roots come from the same platform-filtered path list, so
-  a metadata change beside a `BUILD_windows` edit is local on Linux and macOS
-  and ordinary on Windows; the package is selected everywhere.
+  the package is selected everywhere. A metadata change beside a
+  `BUILD_windows` edit is local on every platform when that edit is an
+  in-place edit of a Rust package's front (below); otherwise the front is an
+  ordinary change on Windows only.
 - Strict-glob Starlark packages keep their declared-source semantics; any
   other change in the same package, fixture seeds, forced roots and
   repository-boundary consumers propagate; `-force` and the hash fallback are
   unchanged.
 
+**A package's own BUILD front.** An in-place edit (Git status `M`) of the
+`BUILD`, `BUILD_linux`, `BUILD_mac`, `BUILD_mac_and_linux` or `BUILD_windows`
+at the root of a Rust package is package-local too: the package and its
+prerequisites are rebuilt, its dependents are not. A dependent compiles a
+Rust prerequisite from source with its own `cargo` invocation and never runs
+or reads the prerequisite's BUILD, so nothing it builds can change. Moving
+the negative-control lines of eight Rust hub crates to a shared checker used
+to select 803 packages and time out the Windows job at 300 minutes; it now
+selects 35.
+
+The rule is narrow on purpose:
+
+- **Rust only.** In other ecosystems dependents consume what a
+  prerequisite's BUILD run leaves behind (`lua/lexer` needs the rocks its
+  prerequisites' BUILDs install; `typescript/bitset` reads
+  `../test-bootstrap/dist`, which that package's BUILD compiles). The gate is
+  a closed list in `internal/pkgmeta` with the evidence for each entry.
+- **Only `M`.** An added or deleted front changes which file a platform
+  selects, or whether the directory is a package there, and propagates.
+- **Only the front the platform selects**, at the package root, by exact
+  name. A nested `BUILD` or `BUILD.bak` is source.
+- **Shell BUILDs only.** A Starlark BUILD declares sources and dependencies
+  and always propagates.
+- **Not a BUILD another package runs.** If any BUILD names a BUILD front and
+  this package's directory on one line (`(cd ../x && sh BUILD)`), edits to
+  this package's fronts propagate. `-validate-build-files` refuses a BUILD
+  invocation that names no package directory, and any script that runs a
+  BUILD front.
+- **Not across the platform-unsupported protocol.** A package with
+  `BUILD_TOOL_UNSUPPORTED:` in any front, or a diff that adds or removes such
+  a line (one extra `git diff -G` call), propagates: marking and un-marking
+  change whether dependents run.
+- Any other change in the package, fixture seeds, forced roots and
+  repository input consumers propagate; `-force` and the hash fallback are
+  unchanged. The edited BUILD is still checked by `-validate-build-files`,
+  which runs over every package on every pull request.
+
+What this does not cover: a dependent that relies on a toolchain only its
+prerequisite's BUILD declares with `# needs-toolchain:` is not re-run when
+that declaration is removed. The scheduled full builds (every six hours on
+Linux, daily on macOS and Windows) are the backstop.
+
 The neutral `metadata_policy: "package_local"` diff-selection variant
-(`package-metadata-selection-*.json`) pins the path rules, and
-`internal/graphdiff` replays it.
+(`package-metadata-selection-*.json`) pins the path rules, including the root
+BUILD fronts, and `internal/graphdiff` replays it.
 
 ## Architecture
 
@@ -751,7 +795,7 @@ The tool is organized into seven internal packages, each responsible for one pha
 4. **cache** -- JSON-based build cache (read/write with atomic saves)
 5. **executor** -- Parallel execution with goroutines + semaphore
 6. **gitdiff** -- Git-based change detection for incremental builds
-   (with **pkgmeta**, which names the package-local metadata files whose
+   (with **pkgmeta**, which names the package-local files (metadata, BUILD fronts) whose
    changes do not reach dependents)
 7. **reporter** -- Terminal-friendly build report formatting
 

@@ -666,9 +666,11 @@ func selectPackageRoots(
 	}
 
 	// Only changes that can reach dependents are roots here. A package whose
-	// only changes are package-local metadata (README, changelog, capability
-	// manifest, assurance evidence) is selected separately and without its
-	// dependents; see package_metadata.go.
+	// only changes are package-local files (changelog, capability manifest,
+	// assurance evidence, an in-place edit of its own Rust BUILD front) is
+	// selected separately and without its dependents; see package_metadata.go
+	// and build_front_local.go. README.md is not package-local.
+	statuses = statuses.WithClearedFronts(clearedBuildFronts(filtered, statuses, packages, repoRoot))
 	changed, local = gitdiff.ClassifyChangedFiles(filtered, packages, repoRoot, statuses)
 	// External native-acceptance specifications need a producer root as well
 	// as a step gate. Otherwise CI enables the step without selecting its
@@ -1598,7 +1600,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 								strings.Join(sortedConsumerNames(inputConsumers), ", "))
 						}
 						if len(localPkgs) > 0 {
-							fmt.Printf("Git diff: %d packages changed only package-local metadata — selected without their dependents\n",
+							fmt.Printf("Git diff: %d packages changed only package-local files (metadata, BUILD fronts) — selected without their dependents\n",
 								len(localPkgs))
 						}
 						fmt.Printf("Git diff: %d packages changed, %d affected (including dependents and prerequisites)\n",
@@ -1634,6 +1636,9 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		// Package-local metadata is selected without its dependents, so it
 		// must never be executed (internal/validator/metadata_exec.go).
 		metadataErr := validator.ValidateNoExecutedMetadata(repoRoot)
+		// A BUILD front edited in place is package-local only if selection
+		// can see who runs it (internal/validator/build_front_invocations.go).
+		frontErr := validator.ValidateBuildFrontInvocations(repoRoot, knownPackages)
 
 		if buildErr != nil {
 			fmt.Fprintln(os.Stderr, buildErr)
@@ -1650,7 +1655,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		if metadataErr != nil {
 			fmt.Fprintln(os.Stderr, metadataErr)
 		}
-		if buildErr != nil || orphanErr != nil || packageRootErr != nil || artifactErr != nil || metadataErr != nil {
+		if frontErr != nil {
+			fmt.Fprintln(os.Stderr, frontErr)
+		}
+		if buildErr != nil || orphanErr != nil || packageRootErr != nil || artifactErr != nil || metadataErr != nil || frontErr != nil {
 			return 1
 		}
 
