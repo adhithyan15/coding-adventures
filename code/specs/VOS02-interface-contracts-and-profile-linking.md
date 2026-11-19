@@ -677,11 +677,18 @@ different block from the tier obligations (which quantify over `build(M)`):
       mem(alpha(Impl(mask, p)), p) => pick(Impl(mask, p)).0 == Member(p))
   claim pick_covers_none:
     forall mask: U8. pick(Impl(mask, 255u8)).0 == NoneReady
+  -- VOS-039c: the operations that produce a state keep the oracle and do not depend on it.
+  -- As built these are the `insert_oracle_*`, `remove_oracle_*` and `alpha_build_with_oracle`
+  -- claims of the scheduler contract (VOS10 section 9.3): per operation, `op_img(Impl(mask, c), t).choice == c`
+  -- FIRST (so the image operation is the claim's subject and has a negative control), then the
+  -- abstraction of the image and the answer equal the abstract step taken from alpha(Impl(mask, c)).
 ```
 
 The text names fields of `Impl` (`choice`), so these obligations can only be
 carried by an implementation whose state has them: carrying them is the `any`
-kind. Coverage is itself falsifiable (a sabotaged `-any` must be rejected); that
+kind. The oracle is, by rule, the LAST field of `Impl` (CD07 and the kit rule CC11,
+section 10.1 and VOS04 5.6): the evidence fault that corrupts it, `field-flip-last`
+(VER04j 4.8), reaches only that field. Coverage is itself falsifiable (a sabotaged `-any` must be rejected); that
 needs variant faults inside tuple components, which is WX-SV item 2 (section 9.3).
 Until it lands, the coverage claims have no negative control and the report prints
 `controls: none (WX-SV item 2)`, not a label the controls would earn (VOS01 section
@@ -765,6 +772,11 @@ abstraction and configuration are returned as one-field records of integers:
 | `op insert(s: Impl, p: U8) -> (Upd, Impl)` | `insert_out(s, p) -> Upd` and `insert_img(s, p) -> Impl` | no fault applies to a tuple whose second component is not an integer |
 | `op alpha(s: Impl) -> M` | `alpha_w(s: Impl) -> AbsW`, `model dec(x: AbsW) -> M` | no fault applies to a record of `Bool`s; `field-zero` needs an integer field |
 | `op cfg_n() -> Nat` | `op cfg_n() -> CfgN`, `record CfgN(v: U8)` | no fault applies to a nullary scalar |
+
+The fault vocabulary of the generator is closed and each fault reaches one place (VER04j 4.8):
+`field-zero` and `field-flip` the FIRST numeric field of a record result and `field-flip-last` (VOS-039c) the LAST,
+which for an `-any` image `Impl(mask, choice)` is the oracle register; an operation that returns an `Impl` from an
+`Impl` lists `field-flip-last` so the claims that it keeps the oracle (VOS10 9.3) have a fault that can fail them.
 
 The interim names are part of the vocabulary of R3 for as long as they are needed.
 When WX-SV lands the obligation text changes (one claim per operation instead of
@@ -1510,7 +1522,8 @@ argument to a `model` whose body does not depend on that parameter (a field set 
 constant is an oracle or a register, not a function of M). `kind = any`: the document
 carries every `any` obligation, **no** `canonical` and **no** `representation` claim (by `claim_sha256`), the crate name
 ends in `-any`, and **at least one** `Impl` field is outside the cone of `build` (the oracle
-the `any` block names). `kind = reference`: the document has no `bound` row. A `build` that is
+the `any` block names; `check-component` CC11 tightens this to exactly one, the last field, because
+the fault that attacks the oracle-preservation claims flips the last numeric field, VOS04 5.6). `kind = reference`: the document has no `bound` row. A `build` that is
 not an `Impl(..)` application cannot be decided structurally and fails closed for
 `production` and `any`.
 
