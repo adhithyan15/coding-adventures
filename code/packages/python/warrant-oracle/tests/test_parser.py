@@ -49,11 +49,11 @@ GOLDEN = {
     "wasm-leb128": (
         "wasm_leb128",
         "v1",
-        163,
+        165,
         {
             "AssumeDecl": 2,
             "BoundDecl": 6,
-            "ClaimDecl": 42,
+            "ClaimDecl": 44,
             "ErrorDecl": 1,
             "ExampleDecl": 39,
             "InputDecl": 12,

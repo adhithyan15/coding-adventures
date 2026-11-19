@@ -101,6 +101,9 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 		{Name: "typescript/game-clock", Language: "typescript"},
 		{Name: "rust/warrant-grammar", Language: "rust"},
 		{Name: "rust/wasm-leb128", Language: "rust"},
+		// wasm-leb128 is a warrantAdopters row since its adopter PR (CV2 S10), so a change to its spec
+		// selects the generator too, and a consumer missing from discovery is a hard error
+		{Name: "rust/warrant-corpus-gen", Language: "rust"},
 		{Name: "python/warrant-oracle", Language: "python"},
 		{Name: "go/warrant-corpus", Language: "go"},
 		{Name: "go/build-tool", Language: "go"},
@@ -132,7 +135,7 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true, "rust/warrant-grammar": true}) {
 		t.Fatalf("rust-only GAME10 Warrant selection got %v, err %v", got, err)
 	}
-	if got, err := repositoryInputConsumersForChange([]string{"code/specs/wasm-leb128.warrant"}, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-grammar": true, "python/warrant-oracle": true}) {
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/wasm-leb128.warrant"}, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-grammar": true, "python/warrant-oracle": true, "rust/warrant-corpus-gen": true}) {
 		t.Fatalf("other Warrant consumers selection got %v, err %v", got, err)
 	}
 	for path, want := range map[string]bool{

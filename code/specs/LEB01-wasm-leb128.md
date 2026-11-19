@@ -211,25 +211,36 @@ What the document cannot say, stated rather than approximated:
 ### Measured evidence
 
 Read from `code/packages/rust/wasm-leb128/evidence/test-manifest.json` (written
-by the generated test target; 245 entries (219 before the SEC-006 fix), all `pass`), debug profile:
+by the generated test target; 251 entries (219 before the SEC-006 fix, 245 before the VER04r D28 split below), all `pass`), debug profile:
 
 * 39 examples;
-* 42 claims, each with an exhaustive, a property (4,096 cases) and a fuzz
-  (5,000 iterations) suite: **46,565,930 exhaustive cases** in total, 0
+* 44 claims, each with an exhaustive, a property (4,096 cases) and a fuzz
+  (5,000 iterations) suite: **46,566,930 exhaustive cases** in total (equal to the case
+  count of the warrant-corpus-v2 fixture, `code/specs/fixtures/wasm-leb128-warrant-v2/`), 0
   unreachable by type; the only discards are the 540 tuples per plain decoder that the
   refinement `o >= len(d)` of the offset-past-end claims excludes and, per
   bounded decoder, the tuples outside the width refinement (56,214 and 41,472);
-* per operation (the report's `exhaustive.cases`): `encode_unsigned` 1,131,
-  `encode_signed` 1,869, `decode_unsigned` 17,246,170, `decode_signed`
+* per operation (the report's `exhaustive.cases`): `encode_unsigned` 1,508,
+  `encode_signed` 2,492, `decode_unsigned` 17,246,170, `decode_signed`
   17,417,140, `decode_unsigned_bounded` 5,941,815, `decode_signed_bounded`
   5,957,805;
+* the 44 claims are the 42 of the earlier text plus two: VER04r [D28] split
+  `encode_unsigned_at_most_ten_bytes` and `encode_signed_at_most_ten_bytes`
+  (`len(f(v)) >= 1 and len(f(v)) <= 10`, a subject call under an impure guard, which the
+  corpus-v2 generator refuses as `W0701` under its section 4.4) into
+  `encode_*_at_least_one_byte` (`len(f(v)) >= 1`, new, inserted immediately before) and
+  `encode_*_at_most_ten_bytes` (same name and evidence ids, now `len(f(v)) <= 10`); the
+  two halves prove exactly what the conjunction did, and the extra claims add 377 (`U64`)
+  and 623 (`I64`) exhaustive cases;
 * 80 negative controls (6 operations x their faults x example/exhaustive/
   property/fuzz), each catching its fault by a named claim (`caught_by`), plus
   20 BUILD-level sabotage runs (each fault against each operation it is bound
   to), each printing exactly one `not ok`;
-* the encoders' heap rows: 1,714,606 observed instances, peak 26 bytes against
+* the encoders' heap rows: 1,714,606 observed instances (the same total as before the split: each
+  bound's instances are now shared between two claims), peak 26 bytes against
   the bound of 64;
-* wall clock of the whole target on the authoring machine: about 140 s, of
+* wall clock of the whole target on the authoring machine: about 140 s (the
+  2026-11-18 regeneration for 44 claims measured 172 s including the build), of
   which the two 2^24-input claims take 26 s (`decode_unsigned_three_bytes`) and
   29 s (`decode_signed_three_bytes`), each two-byte-at-every-width claim about
   8 s, the fuzz suites together about 13 s and the property suites about 3 s.
