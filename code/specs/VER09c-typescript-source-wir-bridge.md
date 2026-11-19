@@ -40,7 +40,14 @@ the existing `parser` crate as a direct dependency and imports
 `parser::grammar_parser::{GrammarASTNode, ASTNodeOrToken}`. It inspects that
 returned tree and its raw `Token` leaves. It must not parse a normalized string,
 search source text for the expected expression, or reconstruct the operator
-from the expected theorem.
+from the expected theorem. The current shared TypeScript grammar does not model
+the ECMAScript restricted production after `return`: a probe showed it accepts
+`return\n(expression)` as a return-with-expression even though JavaScript
+returns `undefined`. This bridge scans the original trivia between the `return`
+token and the first expression token, and refuses `LF`, `CR`, `U+2028`, or
+`U+2029`, including line terminators inside comments. The broader parser repair
+is tracked separately as VER-P045; this PR must not silently claim parser-wide
+ECMAScript conformance.
 
 The proof test uses `include_bytes!` on the exact checked-in TypeScript helper
 fixture path, recomputes SHA-256 from those bytes, and records the
@@ -174,6 +181,11 @@ The package acceptance suite includes:
   mutants reach SAT, the reference can differ, and broken source binding or
   incorrect type/operator lowering fails a test.
 
+The source-binding harness must be exercised with the healthy fixture before
+lowering/proving and with independent wrong-path, wrong-digest, and mismatched
+embedded-byte inputs. Each broken binding must refuse at the harness gate before
+the parser, WIR checker, or SAT prover runs.
+
 Coverage must exceed 95% for meaningful library lines where the repository's
 Rust tooling can measure it. A raw line percentage does not replace explicit
 admission/refusal coverage, proof controls, or evidence that mutant operators
@@ -197,9 +209,12 @@ presence does not mean it is a TypeScript runtime parity implementation.
 The repository build graph must see changes to the proof input TypeScript
 fixture as inputs to this package's source-bound proof consumer. Update the
 validated dependency/source-input boundary and its generated or pinned digests
-where required. `BUILD` and `BUILD_windows` must install the full transitive
-dependency closure leaf-to-root before invoking Cargo, and both paths must run
-the same proof and refusal evidence. No proof input may live outside the
+where required. `BUILD` and `BUILD_windows` must run the same proof and refusal evidence. The
+Cargo workspace manifest declares the path-dependency graph; Cargo resolves and
+compiles that closure in dependency order, so no parallel hand-maintained
+leaf-to-root command list is needed. The TypeScript fixture is included in the
+Rust test resource source-input suffix registry and its pinned boundary digest
+is refreshed with this change. No proof input may live outside the
 declared source-input boundary.
 
 ## 8. Claim limits and follow-up

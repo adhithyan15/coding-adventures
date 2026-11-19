@@ -1046,6 +1046,62 @@ func TestHashPackageDeterministic(t *testing.T) {
 	}
 }
 
+func TestHashPackageTracksRustTypeScriptFixtureInputs(t *testing.T) {
+	start, err := filepath.Abs(".")
+	if err != nil {
+		t.Fatal(err)
+	}
+	repositoryRoot, found, err := findRepositoryRoot(start)
+	if err != nil || !found {
+		t.Fatalf("find repository root: found=%v err=%v", found, err)
+	}
+	tempPackage, err := os.MkdirTemp(filepath.Join(repositoryRoot, "code", "packages", "rust"), ".cache-hasher-typescript-")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(tempPackage) })
+	for relPath, content := range map[string]string{
+		"BUILD":                     "rust_library(name = \"fixture\")\n",
+		"src/lib.rs":                "pub fn stable() -> u8 { 1 }\n",
+		"tests/fixtures/digital.ts": "export const proof = \"A\";\n",
+	} {
+		absPath := filepath.Join(tempPackage, filepath.FromSlash(relPath))
+		if err := os.MkdirAll(filepath.Dir(absPath), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(absPath, []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{
+		Name:     "rust/typescript-warrant-fixture",
+		Path:     tempPackage,
+		Language: "rust",
+	}
+	initial := mustHashPackage(t, pkg)
+	tsPath := filepath.Join(tempPackage, "tests", "fixtures", "digital.ts")
+	if err := os.WriteFile(tsPath, []byte("export const proof = \"B\";\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	changed := mustHashPackage(t, pkg)
+	if changed == initial {
+		t.Fatal("same-length TypeScript fixture mutation must invalidate the Rust package hash")
+	}
+	if err := os.WriteFile(tsPath, []byte("export const proof = \"A\";\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if restored := mustHashPackage(t, pkg); restored != initial {
+		t.Fatalf("restoring TypeScript fixture must restore package hash: got %s, want %s", restored, initial)
+	}
+	rsPath := filepath.Join(tempPackage, "src", "lib.rs")
+	if err := os.WriteFile(rsPath, []byte("pub fn stable() -> u8 { 2 }\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if control := mustHashPackage(t, pkg); control == initial {
+		t.Fatal("Rust source mutation control must change the package hash")
+	}
+}
+
 func TestHashPackageMatchesHashingV1Oracle(t *testing.T) {
 	fixture := readJSONFixture[hashingCacheFixture](t, "hashing-cache-missing.json")
 	root := makeFixture(t, map[string]string{"pkg/src/data.bin": "abc"})
