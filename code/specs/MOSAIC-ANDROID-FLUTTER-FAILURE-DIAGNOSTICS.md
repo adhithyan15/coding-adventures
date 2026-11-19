@@ -3,9 +3,9 @@
 ## Purpose and scope
 
 The Android emulator gate requires a freshly launched Flutter app to persist a
-state file after its first environment event. When that file is missing, the
-current gate proves only that the app failed to create a nonempty file at the
-expected app-private path before the existing deadline. This diagnostic mode
+state file after its first environment event. When its `run-as ... test -s`
+does not succeed by the existing deadline, the gate does not establish whether
+the file was absent, empty, unreadable, or inaccessible. This diagnostic mode
 adds evidence for the stages that can lead to that write; it does not change
 the gate, repair behavior, or establish a cause by itself.
 
@@ -18,31 +18,36 @@ behavior, state contents, test expectations, or timeouts.
 Diagnostics are disabled unless the generated app is built with the explicit
 `MOSAIC_NATIVE_DIAGNOSTICS=true` Dart define. The relevant CI build enables it
 only for the Flutter phone artifacts used by the emulator gate. The host emits
-fixed-format records to stderr, with a fixed stage name, a small enumerated
-result, and elapsed microseconds where a stage has a measured duration. It
-does not print environment values, event or snapshot data, exception messages,
-filesystem paths, or arbitrary platform output. Each app process emits at most
-24 records. Any inability to emit a record is ignored and must not change the
-operation's result.
+fixed-format `MOSAIC_NATIVE_DIAG v=1 stage=… result=<enum> elapsed_us=<int>`
+records to stderr, with fixed stage names and enumerated results. It does not
+print environment values, event or snapshot data, exception messages,
+filesystem paths, or arbitrary platform output. Each fixed stage/result pair
+is emitted once, so an initial skipped environment report does not hide a
+later successful attempt. Each app process emits at most 24 records; the final
+slot is reserved for `capture_clipped` if the limit is reached. Any inability
+to emit a record is ignored and must not change the operation's result.
 
 Required stages distinguish:
 
 1. application-support-directory lookup: nonempty, empty, or thrown;
-2. selected runtime route (including the statically bundled `@Native` route),
-   first create-call entered, and startup response accepted or failed;
-3. first environment-report decision (sent or a fixed not-ready/suppressed
-   reason), actual native dispatch entered, and decoded answer returned,
-   rejected, or thrown;
-4. first snapshot result (null, present, or failed), then state-path
-   availability, parent creation, temporary-file write, and replacement
-   result. These markers describe calls/results only; they do not claim durable
+2. selected runtime route (including statically bundled `@Native`), Dart
+   create-call attempt, raw ABI-call return/throw, and startup response
+   accepted/rejected;
+3. environment-report decisions (fixed not-ready/suppressed reason or send),
+   Dart dispatch attempt, raw ABI-call return/throw, and answer decoded as
+   success/error; these stages allow an initial skip and a later send;
+4. persistence decisions in actual order: skipped-already-saved, disabled,
+   or unavailable path; then the snapshot call's null/present/error result,
+   parent-directory creation, temporary-file write, and replacement return.
+   These markers describe calls/results only; they do not claim durable
    storage.
 
-Instrumentation is observational. It must surround the actual FFI dispatch
-and decoded answer, not infer a successful answer from a shell callback or a
-non-null Flutter response. An environment report may be successfully
-dispatched while the public method returns `null` because the app did not
-change its visible revision or warning.
+Instrumentation is observational. A Dart marker before an FFI call means
+only that the Dart call site was reached; it cannot prove Rust entered the
+ABI. The raw call return and decoded response are separate markers. A non-null
+Flutter response is not a substitute for decoded native answer. An
+environment report may be successfully dispatched while the public method
+returns `null` because the app did not change its visible revision or warning.
 
 ## Gate failure evidence
 
@@ -58,8 +63,11 @@ a bounded diagnostic summary containing:
 
 The probe must use the app's existing `run-as` identity. A failed command,
 timeout, or unreadable response is `probe_failed`; it must never be reported as
-absence. It reports only a size class, not state contents. Diagnostic capture
-has a dedicated wall-clock and byte budget. Failure to gather diagnostics
+absence. It reports only a size class, not state contents. The failure-only
+capture is limited to six seconds and 64 KiB total, filters host markers to
+the current Trestle PID/launch window, and reports whether log capture itself
+was complete, clipped, timed out, or failed. APK and lock identifiers are
+fixed-size hashes and parsed package metadata. Failure to gather diagnostics
 cannot mask the original gate failure, change its status, or skip emulator
 cleanup. Other apps' successful runs do not cause Trestle records to be
 published.
@@ -72,12 +80,13 @@ symbol or received an environment answer.
 ## Validation and evidence limits
 
 Source/generator tests must verify disabled-by-default output, fixed
-diagnostic vocabulary, absence of values, and instrumentation around real
-call/answer boundaries. Script tests must verify the bounded failure-only
-capture and preservation of the original failing status when each diagnostic
-probe fails. One reviewed native CI run may then capture the checkpoints for
-the already reproduced failure. A passing run or missing marker is not by
-itself a causal explanation.
+diagnostic vocabulary, absence of values, ordered persistence skip behavior,
+and instrumentation around the Dart-call/ABI-return/answer boundaries. The
+Android build command must pass the explicit Dart define. Script tests must
+verify PID-scoped bounded failure-only capture and preservation of the
+original failing status when each diagnostic probe fails. One reviewed native
+CI run may then capture the checkpoints for the already reproduced failure.
+A passing run or missing marker is not by itself a causal explanation.
 
 This investigation does not prove general FFI correctness, package
 installability, storage durability, or native/source/Warrant behavior. Any
