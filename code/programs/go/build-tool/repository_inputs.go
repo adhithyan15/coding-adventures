@@ -163,6 +163,10 @@ var (
 		"code/packages/rust/state-machine",
 		"code/packages/rust/toml-lexer",
 		"code/packages/rust/toml-parser",
+		// VOS-039a: vos-link reads the evidence manifest with bounded-json, and every
+		// generated BUILD runs its sabotage lines through the shared negative-control checker.
+		"code/packages/rust/bounded-json",
+		"code/scripts/warrant_negctl.py",
 		"code/grammars/vos_contract",
 		"code/grammars/vos_document",
 	}
@@ -207,13 +211,23 @@ var (
 	}
 
 	rngCorpusPaths                 = []string{"code/specs/fixtures/rng-v1"}
+	fenwickTreeContractPaths       = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
 	gameClockInputPaths            = []string{"code/specs/fixtures/game-clock-v1", "code/specs/game-clock.warrant"}
 	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
 	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
-	biquadSosFixturePaths          = []string{"code/specs/fixtures/biquad-sos-v1"}
-	hamurabiCorpusPaths            = []string{"code/specs/fixtures/hamurabi-v1"}
-	lunarLanderCorpusPaths         = []string{"code/specs/fixtures/lunar-lander-v1"}
-	warrantGrammarPaths            = []string{
+	typescriptGameInputFrameInputs = []string{
+		".cargo/config.toml",
+		"code/packages/rust/.cargo/config.toml",
+		"code/packages/rust/Cargo.lock",
+		"code/packages/rust/Cargo.toml",
+		"code/packages/typescript/tsconfig.base.json",
+		"code/specs/fixtures/game-input-frame-v1/cases.json",
+	}
+	biquadSosFixturePaths  = []string{"code/specs/fixtures/biquad-sos-v1"}
+	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
+	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
+	warrantGrammarPaths    = []string{
 		"code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v1",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
@@ -396,6 +410,34 @@ var (
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name:     "rust/hash-functions",
+		language: "rust",
+		inputs:   "the shared DT17 byte-hash and Dart profile contract plus v1 fixture",
+		matches:  isDt17HashFunctionsInput,
+		paths:    dt17HashFunctionsPaths,
+	},
+	{
+		name:     "dart/hash-functions",
+		language: "dart",
+		inputs:   "the shared DT17 byte-hash and Dart profile contract plus v1 fixture",
+		matches:  isDt17HashFunctionsInput,
+		paths:    dt17HashFunctionsPaths,
+	},
+	{
+		name:     "dart/fenwick-tree",
+		language: "dart",
+		inputs:   "the shared DT06 Fenwick contract and v1 conformance fixture",
+		matches:  isFenwickTreeContractInput,
+		paths:    fenwickTreeContractPaths,
+	},
+	{
+		name:     "python/fenwick-tree",
+		language: "python",
+		inputs:   "the shared DT06 Fenwick contract and v1 conformance fixture",
+		matches:  isFenwickTreeContractInput,
+		paths:    fenwickTreeContractPaths,
+	},
+	{
 		name:     "python/dsp-filters",
 		language: "python",
 		inputs:   "the shared Biquad/SOS conformance fixture read by package tests",
@@ -434,6 +476,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	vosImplementationRow("vos-sched-any"),
 	vosImplementationRow("vos-sched-rr"),
 	vosImplementationRow("vos-probe-ready"),
+	vosContractRow("vos-sched-contract"),
 	{
 		name:     "rust/programs/vos-capacity-probe",
 		language: "rust",
@@ -567,6 +610,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the GAME input action frame v1 corpus",
 		matches:  isGameInputFrameV1,
 		paths:    gameInputFrameV1Paths,
+	},
+	{
+		name:     "typescript/game-input-frame",
+		language: "typescript",
+		inputs:   "the shared GAME input action frame v1 cases and exact TypeScript/Rust proof-tool configuration inputs",
+		matches:  isTypeScriptGameInputFrameInput,
+		paths:    typescriptGameInputFrameInputs,
 	},
 	{
 		name:     "python/trig",
@@ -1409,6 +1459,22 @@ func vosImplementationRow(crate string) repositoryInputConsumer {
 	}
 }
 
+// vosContractRow is the row of one VOS contract crate (`code/packages/rust/<crate>`, kind
+// contract, VOS-039b-1).  Its BUILD runs `vos-link check-contract` and `check-component` outside
+// Cargo (the generated Rust of the contract crate does not depend on them), so a change to a VOS
+// tool or grammar must select it.  A contract has no generated document of its own (the
+// implementations embed its parts), so unlike vosImplementationRow nothing under code/specs
+// selects it; its own files select it through the package path.
+func vosContractRow(crate string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name:     "rust/" + crate,
+		language: "rust",
+		inputs:   "the VOS tools its BUILD runs outside Cargo (vos-link check-contract, vos-link check-component, vos-shape-check, the capability analyzer)",
+		matches:  isVosToolInput,
+		paths:    append([]string{}, vosToolPaths...),
+	}
+}
+
 // isVosCapacityProbeInput reports whether a changed path is one of the exact files the
 // capacity probe checks outside its Cargo edges (VOS-028b): no prefix, no lookalike.
 //
@@ -1500,10 +1566,40 @@ func isGameInputFrameV1(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/game-input-frame-v1/")
 }
 
+func isTypeScriptGameInputFrameInput(changed string) bool {
+	for _, input := range typescriptGameInputFrameInputs {
+		if changed == input {
+			return true
+		}
+	}
+	return false
+}
+
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while
 // excluding adjacent lookalike versions.
 func isBiquadSosFixture(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/biquad-sos-v1/")
+}
+
+// isFenwickTreeContractInput selects only the shared DT06 contract and v1
+// fixture, excluding neighboring versions and lookalike paths.
+func isFenwickTreeContractInput(changed string) bool {
+	if path.Clean(changed) != changed {
+		return false
+	}
+	return changed == "code/specs/DT06-fenwick-tree.md" ||
+		strings.HasPrefix(changed, "code/specs/fixtures/fenwick-tree-v1/")
+}
+
+// isDt17HashFunctionsInput selects the two exact shared contracts and the
+// versioned v1 fixture tree, excluding neighboring spec and fixture names.
+func isDt17HashFunctionsInput(changed string) bool {
+	if path.Clean(changed) != changed {
+		return false
+	}
+	return changed == "code/specs/DT17-hash-functions.md" ||
+		changed == "code/specs/DT17b-hash-functions-dart-profile.md" ||
+		strings.HasPrefix(changed, "code/specs/fixtures/hash-functions-v1/")
 }
 
 // isTrigReferenceCorpus reports whether a changed path is a file of the shared

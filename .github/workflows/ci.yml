@@ -957,6 +957,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_elixir_windows_build_fronts.py'
           python3 code/scripts/validate_elixir_windows_build_fronts.py --format json > /tmp/elixir-windows-build-fronts.json
           python3 -m unittest discover -s code/scripts/tests -p 'test_classical_cipher_fixtures.py'
+          python3 code/specs/fixtures/fenwick-tree-v1/validate.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_barcode_symbologies_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_barcode_layout_1d_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_scytale_fixture_consumers.py'
@@ -991,6 +992,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_swift_runtime_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_qt_runtime_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_flutter_runtime_ci_acceptance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_flutter_android_build_receipt.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_compose_runtime_ci_acceptance.py'
           # Pins ensure-flutter-android-ndk.sh: Flutter's pinned NDK is installed
           # verified and retried, never downloaded by Gradle mid-build.
@@ -3938,7 +3940,11 @@ jobs:
             mkdir -p "$phone_runtime"
             cp -R "$jni_libs" "$phone_runtime/android"
             echo "::group::$name (Flutter, Android)"
-            bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" "$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"
+            if [[ "$name" == trestle ]]; then
+              MOSAIC_NATIVE_DIAGNOSTICS=true bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" "$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"
+            else
+              bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" "$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"
+            fi
             echo "::endgroup::"
           done 3<<EOF
           code/programs/mosaic/task-app $RUNNER_TEMP/mosaic-trestle-jnilibs trestle
@@ -3954,6 +3960,7 @@ jobs:
         timeout-minutes: 65
         env:
           MOSAIC_FLUTTER_LANE: ${{ needs.detect.outputs.needs_mosaic_flutter_runtime }}
+          MOSAIC_NATIVE_DIAGNOSTICS_CAPTURE: '1'
         run: |
           set -euo pipefail
           # Let the runner's user open /dev/kvm (GitHub's documented recipe).
@@ -4337,7 +4344,7 @@ jobs:
           bundle config get mirror.https://rubygems.org
 
       - name: Set up Node.js
-        if: needs.detect.outputs.needs_typescript == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
+        if: needs.detect.outputs.needs_typescript == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_dart == 'true'
         uses: actions/setup-node@v7
         with:
           node-version: '22.23.5'

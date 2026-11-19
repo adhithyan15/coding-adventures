@@ -1,0 +1,9 @@
+vos-contract 1
+name vos-fixture-contract
+iface toy
+tier safety
+config N 2
+ceiling put depth 1
+ceiling put heap 0
+ceiling put steps 10
+end

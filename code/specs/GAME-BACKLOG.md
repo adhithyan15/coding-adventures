@@ -95,6 +95,43 @@ GAME01 Rust corpus consumer, and the separate Kiln allocation-reuse repair have 
 deterministic contracts precede new device, graphics, and host stacks.
 This order avoids duplicating repository-wide `VER-*` and `MUS00`–`MUS08` work.
 
+**Reprioritization decision (2026-11-19):** GBL-050a is selected next. VER-P044
+is merged, closing the reusable TypeScript source-to-WIR proof prerequisite;
+Rust v1 and the dedicated TypeScript SAT repair are also on main. Finishing
+this bounded cross-language contract now closes a specific foundational
+vertical slice with its prerequisites present, before broad remaining ports or
+unrelated audits. The historical P0–P5 headings are groupings, not the source
+of this selection. Production-source binding and proof-tool transitive cache
+ selection/invalidation are acceptance requirements in
+[GBL-050a TypeScript binding and proof/cache acceptance](GBL-050a-typescript-input-frame.md).
+The candidate `package_parity_report.py` snapshot recognizes the normalized
+`gameinputframe` identity in Rust and TypeScript (2/15 established lanes).
+This is package presence only, not behavioral parity or blanket parity across
+the game primitive queue.
+
+**Implementation receipt (2026-11-19, PR #19689; draft/pending CI):** the
+consumer cache tests now cover the six exact inputs listed in the GBL-050a
+companion: the shared 21-vector corpus, inherited TypeScript base config, root
+`.cargo/config.toml`, Rust workspace manifest/lockfile, and Rust `.cargo`
+configuration. The existing generic TypeScript shared-input negative remains
+unchanged; a separate game-input-frame source-collection fixture positively
+selects all six inputs. Temporary-repository probes exercise same-length valid
+mutations through selection, filtered plan replay, and persisted-cache
+miss/restore/hit paths. The canonical boundary contains 21 rows, 32
+registrations, and 28 unique paths. Local native receipts are Swift 97/97,
+C# 163/163, F# focused hasher 4/4, and Go's 16 packages plus `go vet`;
+Python conformance is 96/96 and corpus metadata validation covers 205 case
+documents and 328 staged fixture files. These are local receipts; the PR's
+exact-head CI and protected merge are still pending.
+
+The production-source test harness also now compares Windows-capable physical
+file identity with `realpathSync.native` and checks display-path normalization
+separately. A same-bytes copy is refused when pinned to the production path;
+the copy-bound proof succeeds, then the consumer identity gate rejects it.
+Relative-path and wrong-digest controls remain. This test-only Windows review
+delta passed 22/22 local package tests; exact-head Windows execution was still
+pending when this note was written.
+
 As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, `GBL-061`, and the selected `GBL-063` parser
 repair are merged. PR #19649 merged squash `399ab9af38c45817c6638defe368bf4596d4cad4`; exact-head
 CI run `44345630607` passed the required Ubuntu 24.04 and 26.04 G1 lanes under the then-current
@@ -212,7 +249,7 @@ worktree; report and preserve it if those checks do not pass.
   Windows affected-package test step was SKIPPED; no native Windows Hamurabi execution is claimed.
 - [x] `GBL-003a` (merged in [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618), squash `a2163fc64c74c10f3bb0e62cd268363cbb560d21`) Separately execute and assess the GAME10 constructor Warrant model. Local finite execution covered the 648-case boundary (105 `Ok`, 72 `ZeroFixedTimestep`, 162 `InvalidMaxFrameSteps`, 309 `InvalidMaxFrameDelta`) and 1,024 stratified full-width inputs; aggregate CI `BUILT` receipts are not Warrant execution evidence. Constructor-only execution does not prove `validate`, `advance`, or the shared `WX-SP1` proof; those source and universal proof claims remain open under `GBL-003`. The portable corpus/WX-SP1 route also depends on Warrant `ir.data` records and variants (CV2-S11; tracked gap CV2-F10); current fixed built-ins and tuple `Result` support do not encode `GameClockConfig`/`GameClockState` records. Do not call this model execution a Rust-to-Warrant source proof or a full-domain universal proof.
 - [x] `GBL-061` (merged in [PR #19630](https://github.com/adhithyan15/coding-adventures/pull/19630), squash `1de3c7f6e9b74765f48cce277187f1920a487a81`) Add caller-owned token-vector reuse to the Go lexer and strace parser after measuring the per-line allocation hotspot. The 14 MB/s Kiln Ubuntu 26.04 floor was unchanged. On exact-head CI run `44247169191`, the 66,600-byte / 936-line synthetic reported 19.9 MB/s on Ubuntu 24.04 and 22.1 MB/s on Ubuntu 26.04 (`gated=1`, seven repeats); the separate 4,195,800-byte census reported 18.8 and 20.3 MB/s (`gated=0`). These are candidate gate receipts, not a native same-host Linux A/B or proof of a Linux speedup. Full affected-package CI built Go lexer, strace lexer/parser, and Kiln; no native Windows execution was selected. Local macOS allocation and timing evidence, sparse full-suite limits, and review scope are recorded in the PR.
-- [ ] `GBL-059` Preserve useful per-package CI receipts: commands/recipe selection, stdout summary, seed, source revision, platform, and runtime verdict. Audit existing `VER`/build-tool receipt and KILN facilities before extending them; do not create a competing evidence framework. `GBL-061` exact-head artifacts exposed only build-plan in the downloaded artifact set and aggregate logs suppressed command/test details, so package-level CI claims remain limited to explicit `BUILT` and gate receipts.
+- [ ] `GBL-059` Preserve useful per-package CI receipts: commands/recipe selection, stdout summary, seed, source revision, platform, and runtime verdict. Audit existing `VER`/build-tool receipt and KILN facilities before extending them; do not create a competing evidence framework. Include implicit preflights that run before declared `BUILD` commands: PR #19685's first macOS CI run failed strict Rust 1.100 `cargo clippy --all-targets -- -D warnings` on a `collapsible_if` in the bridge library before tests ran; a later local strict all-target Clippy run found `needless_range_loop` in the independent test oracle. `BUILD` text did not expose this gate. Receipt acceptance must show the effective preflight and flags plus per-package outcomes, not only declared commands. The exact-head plan artifact showed package selection, while full job logs supplied the explicit `BUILT` rows. A focused Ruff check of `code/scripts/tests/test_build_tool_conformance_runner.py` reports E402 on its unchanged `sys.path` bootstrap import; no broad ignore was accepted. Triage a narrow documented exception or import-bootstrap cleanup and record the actual strict lint result.
 - [ ] `GBL-060` Execute portable game-core functional tests natively on Windows. Current affected-package Windows steps can skip Rust packages; compile-only cross checks and Windows job presence are not native game-core execution evidence. Keep `NOT-LIVE` platform containment separate from test coverage.
 - [ ] `GBL-003` Repair GAME10's three Warrant claims and assurance report. Add meaningful positive and negative
   evidence for `validate` and `advance`, shared proof through `WXSP1`, generated/property and fuzz
@@ -293,8 +330,9 @@ worktree; report and preserve it if those checks do not pass.
 
 ### P3 — Complete Lunar Lander language coverage
 
-- [ ] `GBL-020` Verify current Rust, Python, TypeScript, Go, Ruby, Perl, Lua, and Elixir packages against the
-  normative fixed-point contract and shared vectors.
+- [ ] `GBL-020` Before adding more Lunar Lander ports, audit current Rust, Python, TypeScript, Go, Ruby, Perl, Lua, and Elixir packages against the normative fixed-point contract and shared vectors.
+- [ ] `GBL-020a` (GAME01a) Specify and implement a reusable portable fixed-point arithmetic substrate, including rounding, overflow, saturation, and refusal semantics; Lunar Lander title-specific math is not a shared substrate.
+- [ ] `GBL-020b` (GAME01b) Specify a deterministic `sim-turn-core` contract over caller-supplied fixed-point state and time; define shared vectors and lane gates after GAME01a. Keep host scheduling and runtime authority outside this core.
 - [ ] `GBL-021` Add the missing established C# Lunar Lander port, consuming the shared fixed-point
   corpus and satisfying package/build metadata requirements.
 - [ ] `GBL-023` Add the missing established F# Lunar Lander port with shared corpus and package/build evidence.
@@ -344,20 +382,27 @@ worktree; report and preserve it if those checks do not pass.
   build on verified simulation foundations. Replay and checkpoints are tracked in `GBL-051`.
 - [ ] `GBL-042` Reconcile GAME00's GAME30–GAME35 and GAME40–GAME45 rows with actual packages, language lanes, device backends,
   and host integration. Roadmap presence alone is not completion evidence.
-- [ ] `GBL-050` (active; spec/corpus committed first, Rust implementation in progress) Define a portable
-  pure action-frame reducer. The v1 boundary accepts one full-width `u32` player ID, caller-owned
+- [x] `GBL-050` Rust v1 action-frame boundary delivered by PR #19668, squash
+  `ccd86180bb0b274d5e0a30c37a55c512c42aeba3`, merged 2026-11-18. This closes
+  the Rust v1 slice only, not the language queue, host integration, replay, or
+  checkpoint family. The boundary accepts one full-width `u32` player ID, caller-owned
   `u64` simulation tick, 64 button levels, 16 signed absolute axes, and at most 256 ordered changes;
   it refuses invalid frames atomically with stable validation order. Edge masks summarize whether
   transitions occurred and do not retain within-tick ordering or tap counts. Current evidence is
   bounded to the stated reducer, finite vectors/domain enumeration, seeded properties, harness/parser
   fuzzing, a 64-slot/3-transition SAT model, and extracted scalar-helper proofs; no whole-reducer
   source proof or universal claim is established. Runtime containment is reported per host.
-- [ ] `GBL-050a` Port the input action-frame contract and vectors to TypeScript after the Rust boundary is stable.
+- [ ] `GBL-050a` **Selected for the next implementation**: finish the bounded foundational Rust-to-TypeScript input-frame vertical slice now that Rust v1, the TypeScript SAT parity repair, and the reusable TypeScript-to-WIR bridge are merged. This specific contract and proof prerequisite make the slice more valuable now than broad remaining ports or unrelated audits; the historical P1-P5 headings did not themselves select it. Follow [GBL-050a TypeScript binding and proof/cache acceptance](GBL-050a-typescript-input-frame.md) before runtime work. Bind the consumer's production `digital.ts`, execute the full Rust vector/domain/property/fuzz/SAT assurance plan, and replay source mutants through the public reducer. Guard SAT queries by the actual call-site conditions (press only when clear, release only when held); use exactly 16 axes, initialized to zero for digital-helper witness cases; include an admitted clear-bit mutant with `~` removed; decode each witness and replay unchanged inputs through the public reducer, compare the full result, and do not count refusal as a mutant kill. The canonical vector fixture lives outside the package root, so add its exact file as a TypeScript source-boundary input and verify diff selection plus persisted-cache mutation/restore. The filtered `--emit-plan`/load path must also retain Rust proof providers for execution and hashing. The helper fixture's current set-bit witness does not satisfy the reducer's press guard and cannot stand in for this consumer proof. Bind and report only the demonstrated source scope. The Rust proof bridge remains a development-time evidence dependency. The actual proof tool and its transitive parser/WIR/solver inputs must be selected and included in the consumer's build/cache invalidation path; dependency metadata declarations alone do not establish resolver selection or effective cache invalidation. Verify selection and effective cache invalidation on both diff-selection and persisted-cache paths, including transitive changes, `--language typescript`, unchanged hits, and restored-input controls.
+  This item also requires the consumer's cached input closure to cover exactly these six repository-owned paths, not only the fixture: `code/specs/fixtures/game-input-frame-v1/cases.json`, `code/packages/typescript/tsconfig.base.json`, `code/packages/rust/Cargo.toml`, `code/packages/rust/Cargo.lock`, `code/packages/rust/.cargo/config.toml`, and `.cargo/config.toml`. For each, verify changed-path selection and effective persisted-cache invalidation under TypeScript-only emitted-plan replay, with same-length valid semantic mutation and exact restoration controls. This is a consumer-specific cache acceptance; other external-input consumers remain unaudited.
+  CI closeout: the first exact-head metadata contract run caught stale TypeScript portability pins
+  after this package added one shared-config project and one compiler lock. Update and retain the
+  strict aggregate values `total_projects=517`, `shared_projects=310`, and `locked_compilers=530`;
+  the full 16-test portability module and canonical validator pass without relaxing checks.
 - [ ] `GBL-050-language-queue` Port the stable contract to Go, Python, C#, Dart, Elixir, F#, Haskell,
   Java, Kotlin, Lua, Perl, Ruby, and Swift, each with independent public-API conformance evidence.
   The emerging C, C++, and OCaml lanes remain a separate 0/3 queue. Package presence alone is not
-  behavioral parity. Go SAT-solver parity remains the first package-parity selection after this
-  primitive; the Rust `cdcl-sat` dependency is already available here.
+  behavioral parity. Rust `cdcl-sat` is already available; Go SAT-solver parity is merged,
+  while Go source assurance remains a separate VER-P042 item.
 - [ ] `GBL-050-input-followups` Define host input binding and multi-device aggregation; caller-owned
   host tick assignment and event ordering; focus-loss/disconnect release policy; richer text and
   relative pointer input; quantization and action layouts/banks; and ordered/versioned replay.

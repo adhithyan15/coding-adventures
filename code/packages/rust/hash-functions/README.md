@@ -56,6 +56,12 @@ authentication and this crate makes no such claim.
 cargo test -p coding_adventures_hash_functions -- --nocapture
 ```
 
+`tests/hash_functions_v1_fixture.rs` also consumes the shared DT17 v1 corpus and
+checks the eight public byte-hash operations, including parameterized
+polynomial rolling with a nondefault base, plus the public UTF-8 helpers and
+FNV callback analysis cases. This is fixture conformance coverage; it does not
+extend the Warrant contract or change the crate's runtime API.
+
 ## Warrant status
 
 [`code/specs/hash-functions.warrant`](../../../specs/hash-functions.warrant) covers

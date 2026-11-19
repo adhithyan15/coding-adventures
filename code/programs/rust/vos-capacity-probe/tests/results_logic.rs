@@ -47,6 +47,7 @@ fn meta() -> Meta {
         os: "os".into(),
         revisions: vec![("repo".into(), "abc".into())],
         regeneration: None,
+        merges: Vec::new(),
     }
 }
 
@@ -482,4 +483,223 @@ fn groups_keep_file_order_and_share_a_key() {
     assert_eq!(gs[0].first().experiment, "A1");
     assert!(gs[0].max(|r| r.conflicts as f64) >= 1000.0);
     assert_eq!(gs[0].counted().len(), 5);
+}
+
+// ---- `merge`: refreshing a subset of the committed rows through the tool (VOS30 section 9.2) ----
+
+use vos_capacity_probe::cli::merge_results;
+
+const REV_OLD: &str = "1111111111111111111111111111111111111111";
+const REV_NEW: &str = "2222222222222222222222222222222222222222";
+
+/// Five valid A1 rows of fixture `fixture`, with instance digest `digest`.
+fn grp(fixture: &str, digest: &str) -> Vec<Row> {
+    five(|s| {
+        let mut r = good(
+            "A1",
+            Knob::of(&[("n", Kv::I(8)), ("fixture", Kv::S(fixture.into()))]),
+            "monolithic",
+            s,
+        );
+        r.instance_sha256 = digest.repeat(32);
+        r
+    })
+}
+
+fn file_of(groups: Vec<Vec<Row>>, rev: &str) -> Results {
+    let mut m = meta();
+    m.binary_sha256 = format!("{rev:0<64}").chars().take(64).collect();
+    m.revisions = vec![("repo".into(), rev.into())];
+    Results {
+        meta: m,
+        rows: groups.into_iter().flatten().collect(),
+    }
+}
+
+const SEL: Option<(&str, &str)> = Some(("fixture", "fp"));
+const AT: &str = "2026-11-18T00:00:00Z";
+fn yes(_: &str) -> Result<bool, String> {
+    Ok(true)
+}
+fn go(
+    b: &Results,
+    f: &Results,
+    sel: Option<(&str, &str)>,
+    outside: bool,
+) -> Result<Results, String> {
+    merge_results(b, f, "A1", sel, outside, AT, &yes)
+}
+
+fn base3() -> Results {
+    file_of(
+        vec![grp("fp", "aa"), grp("other", "bb"), grp("fp2", "cc")],
+        REV_OLD,
+    )
+}
+
+#[test]
+fn merge_replaces_only_the_subset_keeps_the_original_provenance_and_records_the_merge() {
+    let base = base3();
+    let fresh = file_of(vec![grp("fp", "11")], REV_NEW);
+    let m = go(&base, &fresh, SEL, false).unwrap();
+    assert_eq!(m.rows.len(), 15);
+    assert_eq!(m.rows[..5], fresh.rows[..], "the subset is the fresh rows");
+    assert_eq!(m.rows[5..], base.rows[5..], "every other row is identical");
+    // The file's own provenance is the base's, not the fresh run's.
+    let mut want = base.meta.clone();
+    want.merges = m.meta.merges.clone();
+    assert_eq!(m.meta, want);
+    assert_eq!(m.meta.merges.len(), 1);
+    let g = &m.meta.merges[0];
+    assert_eq!(
+        (g.rev.as_str(), g.where_.as_str(), g.at.as_str()),
+        (REV_NEW, "fixture=fp", AT)
+    );
+    assert_eq!(g.binary_sha256, fresh.meta.binary_sha256);
+    assert_eq!(g.rows.len(), 5);
+    // The output passes validate, and survives the text round trip with its merges.
+    assert_eq!(validate(&m), Vec::<String>::new());
+    assert_eq!(Results::from_text(&m.to_text()).unwrap(), m);
+    // A second merge appends; the first entry stays.
+    let again = go(&m, &file_of(vec![grp("fp", "33")], REV_NEW), SEL, false).unwrap();
+    assert_eq!(again.meta.merges.len(), 2);
+    assert_eq!(validate(&again), Vec::<String>::new());
+}
+
+#[test]
+fn merge_without_a_where_refreshes_the_whole_experiment() {
+    let base = base3();
+    let fresh = file_of(
+        vec![grp("fp", "11"), grp("other", "22"), grp("fp2", "33")],
+        REV_NEW,
+    );
+    assert!(go(&base, &fresh, None, false).is_ok());
+}
+
+#[test]
+fn an_invalid_or_dirty_fresh_run_is_refused() {
+    let base = base3();
+    let mut bad = file_of(vec![grp("fp", "11")], REV_NEW);
+    bad.rows[0].result = "sat".into(); // an UNSAT shape that is not, but still marked green
+    assert!(go(&base, &bad, SEL, false).unwrap_err().contains("invalid"));
+    let mut dirty = file_of(vec![grp("fp", "11")], REV_NEW);
+    dirty.meta.dirty_tree = true;
+    assert!(go(&base, &dirty, SEL, false)
+        .unwrap_err()
+        .contains("dirty_tree"));
+}
+
+#[test]
+fn a_dirty_tree_that_is_not_a_json_boolean_does_not_parse() {
+    let text = base3().to_text();
+    assert!(Results::from_text(&text).is_ok());
+    for bad in ["\"false\"", "null", "0", "\"true\""] {
+        let t = text.replacen("\"dirty_tree\":false", &format!("\"dirty_tree\":{bad}"), 1);
+        assert_ne!(t, text, "the field was not found");
+        assert!(
+            Results::from_text(&t).unwrap_err().contains("dirty_tree"),
+            "{bad}"
+        );
+    }
+}
+
+#[test]
+fn a_revision_that_is_not_head_or_an_ancestor_is_refused() {
+    let base = base3();
+    let fresh = file_of(vec![grp("fp", "11")], REV_NEW);
+    let no = |_: &str| Ok(false);
+    let e = merge_results(&base, &fresh, "A1", SEL, false, AT, &no).unwrap_err();
+    assert!(e.contains("ancestor"), "{e}");
+    let broken = |_: &str| Err("git cannot say".to_string());
+    assert!(merge_results(&base, &fresh, "A1", SEL, false, AT, &broken).is_err());
+}
+
+#[test]
+fn duplicate_ids_in_either_file_are_refused() {
+    let base = base3();
+    let mut fresh = file_of(vec![grp("fp", "11")], REV_NEW);
+    fresh.rows[1] = fresh.rows[0].clone();
+    assert!(go(&base, &fresh, SEL, false).is_err());
+    let mut dup_base = base3();
+    dup_base.rows[6] = dup_base.rows[5].clone();
+    let fresh = file_of(vec![grp("fp", "11")], REV_NEW);
+    assert!(go(&dup_base, &fresh, SEL, false)
+        .unwrap_err()
+        .contains("duplicate"));
+}
+
+#[test]
+fn fresh_rows_outside_the_subset_are_refused_unless_ignored() {
+    let base = base3();
+    let fresh = file_of(vec![grp("fp", "11"), grp("other", "22")], REV_NEW);
+    assert!(go(&base, &fresh, SEL, false)
+        .unwrap_err()
+        .contains("outside"));
+    let m = go(&base, &fresh, SEL, true).unwrap();
+    assert_eq!(
+        m.rows[5..],
+        base.rows[5..],
+        "the ignored rows do not leak in"
+    );
+}
+
+#[test]
+fn a_where_field_no_row_has_is_refused() {
+    let base = base3();
+    let fresh = file_of(vec![grp("fp", "11")], REV_NEW);
+    let e = go(&base, &fresh, Some(("fixtur", "fp")), false).unwrap_err();
+    assert!(e.contains("fixtur"), "{e}");
+    // A value that matches nothing selects no row.
+    assert!(go(&base, &fresh, Some(("fixture", "zz")), false).is_err());
+}
+
+#[test]
+fn a_changed_row_identity_is_refused() {
+    let base = base3();
+    let renamed = file_of(vec![grp("fp", "11").into_iter().take(4).collect()], REV_NEW);
+    assert!(go(&base, &renamed, SEL, false).is_err());
+}
+
+#[test]
+fn validate_checks_the_merges_list() {
+    let m = go(
+        &base3(),
+        &file_of(vec![grp("fp", "11")], REV_NEW),
+        SEL,
+        false,
+    )
+    .unwrap();
+    let mutate = |f: &dyn Fn(&mut Results)| {
+        let mut r = m.clone();
+        f(&mut r);
+        validate(&r)
+    };
+    assert!(!mutate(&|r| r.meta.merges[0].rev = "abc".into()).is_empty());
+    assert!(!mutate(&|r| r.meta.merges[0].binary_sha256 = "zz".into()).is_empty());
+    assert!(!mutate(&|r| r.meta.merges[0].dirty_tree = true).is_empty());
+    assert!(!mutate(&|r| r.meta.merges[0].experiment = "ZZ".into()).is_empty());
+    assert!(!mutate(&|r| r.meta.merges[0].rows.push("A1 nope".into())).is_empty());
+    assert!(!mutate(&|r| {
+        let x = r.meta.merges[0].rows[0].clone();
+        r.meta.merges[0].rows.push(x)
+    })
+    .is_empty());
+}
+
+#[test]
+fn the_table_banner_names_the_refreshed_rows_and_their_revision() {
+    let plain = vos_capacity_probe::table::render_block(&base3());
+    assert!(!plain.contains("refreshed at rev"));
+    let m = go(
+        &base3(),
+        &file_of(vec![grp("fp", "11")], REV_NEW),
+        SEL,
+        false,
+    )
+    .unwrap();
+    let t = vos_capacity_probe::table::render_block(&m);
+    assert!(
+        t.contains(&format!("5 rows refreshed at rev {REV_NEW}")),
+        "{t}"
+    );
 }

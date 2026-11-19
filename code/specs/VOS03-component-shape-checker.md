@@ -95,9 +95,9 @@ class K contract or component crate cannot depend on the Warrant tooling
 that wants its Warrant text parsed, type-checked and evaluated before `vos-link gen-doc`
 exists (VOS-033) puts those tests in a test-only sibling crate with `class = "H"` in its
 `vos.toml`, which depends normally on the contract crate (so the build graph reruns it
-when the contract changes) and on `warrant-grammar`. `vos-sched-contract-check` is the
-first (VOS10 section 12); it is folded into `vos-link`'s tests when VOS-033 lands
-(VOS-D049).
+when the contract changes) and on `warrant-grammar`. `vos-sched-contract-check` was the
+first (VOS10 section 12); `vos-link check-contract` (VOS-039b-1, VOS02 D-GD11) replaced it, and no
+new contract needs a sibling crate.
 
 **`#[cfg(test)]` items are masked.** An item whose attribute list contains
 exactly `cfg(test)` is removed from the token stream before any rule runs. It
@@ -113,12 +113,16 @@ every rule below.
 class = "K"                      # K, C, S, M, P or H; default K
 kind  = "production"             # contract, production, reference, any, spine, hal or profile
 evidence-features = ["ghost"]    # names that must be in the central list
+coverage-floor = 95              # integer percent of line coverage the BUILD gate enforces (VOS04 5.6)
+excused-controls = [{ id = "warrant/m/negctl/exhaustive/init/field-flip", reason = "VOS-D098" }]   # optional (VOS04 5.6)
 ```
 
 Grammar: the file is TOML (read by the TOML crates, section 0) restricted to
-three top-level keys, `class` and `kind` (double-quoted strings from the closed
-sets above) and `evidence-features` (an array of 1 to 32 byte strings, at most
-64). A table, a dotted or unknown key, a duplicate key, a value of the wrong
+top-level keys, `class` and `kind` (double-quoted strings from the closed
+sets above), `evidence-features` (an array of 1 to 32 byte strings, at most
+64) and, since VOS-039a, `coverage-floor` (an integer 0 to 100; the shape checker
+only reads it, `vos-link check-component` and the BUILD coverage line enforce it,
+VOS04 section 5.6) and `excused-controls` (optional; an array of 1 to 16 inline tables `{ id, reason }`: `id` 1 to 128 bytes of `[A-Za-z0-9_/.-]`, distinct; `reason` a backlog row, `VOS-D` and three digits, which `vos-link` requires to exist and be open; never an empty array). A table, a dotted or unknown key, a duplicate key, a value of the wrong
 type or outside its closed set, a backslash anywhere, non-ASCII, more than 16
 key lines, a file over 4 KiB or a line over 1,024 bytes, and anything the TOML
 grammar refuses, is rule **VT01**. The

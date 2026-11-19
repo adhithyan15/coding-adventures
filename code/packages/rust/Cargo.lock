@@ -4754,6 +4754,7 @@ name = "coding_adventures_hash_functions"
 version = "0.2.0"
 dependencies = [
  "capability-runtime-conformance",
+ "coding-adventures-json-value",
  "coding_adventures_sha256",
  "coding_adventures_test_bootstrap",
 ]
@@ -14700,6 +14701,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "tls13-finished-transcript-binding"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_hkdf",
+ "tls13-cipher-suite-policy",
+ "tls13-finished",
+ "tls13-transcript",
+]
+
+[[package]]
 name = "tls13-handshake"
 version = "0.1.0"
 
@@ -14917,6 +14928,7 @@ dependencies = [
 name = "tls13-reviewed-server-path-certificate-verify"
 version = "0.1.0"
 dependencies = [
+ "coding_adventures_hkdf",
  "der-asn1",
  "http1-request-host-authority",
  "https-destination-name-binding",
@@ -14928,6 +14940,9 @@ dependencies = [
  "tls13-certificate-verify-message",
  "tls13-certificate-verify-transcript-binding",
  "tls13-cipher-suite-policy",
+ "tls13-finished",
+ "tls13-handshake",
+ "tls13-no-psk-server-flight",
  "tls13-rsa-pss-certificate-verify",
  "tls13-rsa-pss-signature-routing",
  "tls13-server-name",
@@ -15558,6 +15573,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20"
 
 [[package]]
+name = "typescript-warrant-ir"
+version = "0.1.0"
+dependencies = [
+ "bit-blaster",
+ "coding-adventures-typescript-lexer",
+ "coding-adventures-typescript-parser",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "coding_adventures_warrant_ir",
+ "lexer",
+ "parser",
+ "serde_json",
+]
+
+[[package]]
 name = "typing-spectrum"
 version = "0.1.0"
 dependencies = [
@@ -15952,15 +15982,6 @@ dependencies = [
 [[package]]
 name = "vos-sched-contract"
 version = "0.1.0"
-
-[[package]]
-name = "vos-sched-contract-check"
-version = "0.1.0"
-dependencies = [
- "coding_adventures_warrant_grammar",
- "vos-manifest",
- "vos-sched-contract",
-]
 
 [[package]]
 name = "vos-sched-fp-bitmap"

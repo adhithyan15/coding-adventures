@@ -1,0 +1,24 @@
+[package]
+name = "typescript-warrant-ir"
+version = "0.1.0"
+edition = "2021"
+description = "A bounded TypeScript AST-to-WIR bridge for source-bound bit proofs"
+license = "MIT"
+readme = "README.md"
+
+[lib]
+name = "typescript_warrant_ir"
+path = "src/lib.rs"
+
+[dependencies]
+coding-adventures-typescript-lexer = { path = "../typescript-lexer" }
+coding-adventures-typescript-parser = { path = "../typescript-parser" }
+coding_adventures_warrant_ir = { path = "../warrant-ir" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+
+[dev-dependencies]
+bit-blaster = { path = "../bit-blaster" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+serde_json = "1"

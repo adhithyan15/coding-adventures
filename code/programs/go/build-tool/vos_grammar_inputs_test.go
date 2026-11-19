@@ -195,3 +195,31 @@ func TestVosToolPathsExist(t *testing.T) {
 		}
 	}
 }
+
+// The registered row of a contract crate (VOS-039b-1): present, selects the VOS tools and
+// grammars its BUILD runs outside Cargo, and nothing else (no document of its own, no lookalike).
+func TestVosContractRowSelectsTheVosTools(t *testing.T) {
+	var row *repositoryInputConsumer
+	for i := range repositoryInputConsumers {
+		if repositoryInputConsumers[i].name == "rust/vos-sched-contract" {
+			row = &repositoryInputConsumers[i]
+		}
+	}
+	if row == nil || row.language != "rust" || len(row.paths) == 0 {
+		t.Fatalf("no usable repository input row for rust/vos-sched-contract: %+v", row)
+	}
+	for path, want := range map[string]bool{
+		"code/programs/rust/vos-link/src/contract_check.rs": true,
+		"code/packages/rust/vos-manifest/src/warrant.rs":    true,
+		"code/packages/rust/vos-shape-check/src/a.rs":       true,
+		"code/packages/rust/warrant-grammar/src/a.rs":       true,
+		"code/specs/vos-sched-any.warrant":                  false,
+		"code/specs/vos-sched-contract.warrant":             false,
+		"code/packages/rust/vos-manifest-x/src/a.rs":        false,
+		"code/programs/rust/vos-linker/src/a.rs":            false,
+	} {
+		if got := row.matches(path); got != want {
+			t.Errorf("rust/vos-sched-contract matches(%q) = %v, want %v", path, got, want)
+		}
+	}
+}

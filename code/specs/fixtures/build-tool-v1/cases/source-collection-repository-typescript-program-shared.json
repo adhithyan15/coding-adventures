@@ -12,7 +12,7 @@
       "mode": "repository_boundary",
       "language": "typescript",
       "package_root": "code/programs/typescript/ircd",
-      "boundary_sha256": "7014b769f48c4f55e056c7bbbcf4e14bc0e84c1e7ef6030472e0e7949d93f0c8",
+      "boundary_sha256": "02975c651ded7e4191ca4f1a142148ecd17176ae585c349c62a86163b13c0d16",
       "candidates": [
         {"path": "code/packages/typescript/tsconfig.base.json", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
         {"path": "code/programs/typescript/ircd/tsconfig.json", "kind": "file", "tracked": true, "content_hex": "7061636b6167650a"}

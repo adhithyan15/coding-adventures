@@ -6,6 +6,8 @@ description = "FNV-1a, DJB2, polynomial rolling, MurmurHash3, and SipHash hash f
 
 [dev-dependencies]
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+# Parse the shared DT17 fixture without adding a third-party dependency.
+coding_adventures_json_value = { package = "coding-adventures-json-value", path = "../json-value" }
 # The generated evidence harness hashes the spec and the source tree.
 coding_adventures_sha256 = { path = "../sha256" }
 # VER08b: runtime capability conformance (a sandboxed run of the public API).

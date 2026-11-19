@@ -2,8 +2,8 @@
 
 **Status:** Draft. The contract package `code/packages/rust/vos-sched-contract`
 (the Rust trait, the Warrant contract block, five obligation blocks and
-`contract.vos`) and its test companion `vos-sched-contract-check` are committed
-with this document, in the commit that follows it. No
+`contract.vos`) are committed with this document, in the commit that follows it; its test
+companion `vos-sched-contract-check` was replaced by `vos-link check-contract` (VOS-039b-1). No
 scheduler implements it yet: `vos-sched-fp-bitmap` is VOS-011 and
 `vos-sched-any` with `vos-sched-rr` are VOS-012. The Warrant text below is the
 text of the package, copied by a script, and was type-checked and evaluated
@@ -444,19 +444,22 @@ The document header and the implementation block are not part of it. This is
 
 ### 9.2a The lemmas part
 
-`warrant/lemmas.part` holds the nine model-level lemmas. It is a contract-package part
+`warrant/lemmas.part` holds the nine model-level lemmas and the config lemma. It is a contract-package part
 (VOS02 R1.4) that is **not embedded** in any implementation's document: a lemma calls no
 bound operation, so it is never subject evidence (VER04m V9), and the generator has no
 lemma kind (VOS-D005, found at VOS-011: it refuses such a claim with W0701). The lemmas
-are evaluated by `vos-sched-contract-check` over the contract block, with a mutant per
-lemma, and by nothing else. Re-embedding them is for the day a Warrant lemma kind exists.
+are evaluated by `vos-link check-contract` (VOS04 section 5.6) over the contract block, with a
+mutant per lemma in `warrant/mutants/<lemma>.part`, and by nothing else; the run writes
+`warrant/lemmas.table`, which is byte-compared. The tenth claim, `config_n_is_the_id_range`
+(`pre_insert(empty(), t) == (t < cfg_N())`), ties `contract.vos`'s `N 8` to the Warrant text: the
+tool generates `cfg_N` from the `config` row, and its V-1 and V+1 mutants must falsify it. Re-embedding them is for the day a Warrant lemma kind exists.
 Byte for byte:
 
 ```text
   -- The contract's model-level lemmas (VOS10 section 9.2).  NOT embedded in any implementation's
   -- document: a lemma calls no bound operation, so it is a fact about the abstract model and never
   -- subject evidence (VER04m V9), and the generator has no lemma kind yet (VOS-D005, WX-SV item 3).
-  -- vos-sched-contract-check evaluates it over the contract block, with a mutant per lemma.
+  -- vos-link check-contract evaluates it over the contract block, with a mutant per lemma.
   -- Lemmas (VER04m V9): no bound operation is called, so no subject evidence and no strength.
   -- closure_at_m is a TRIVIAL lemma (inv is `true`): it documents the shape, and is not counted as
   -- evidence of anything (VOS10 section 4).
@@ -698,7 +701,7 @@ counts the evaluation of section 12 measured, not typed by hand.
 
 | Claim | Binders | Product | Admitted | % budget |
 |---|---|---|---|---|
-| **Lemmas (`lemmas.part`; counted by `vos-sched-contract-check` only, never by an implementation's evidence)** | | | | |
+| **Lemmas (`lemmas.part`; counted by `vos-link check-contract` only, never by an implementation's evidence)** | | | | |
 | `closure_at_m` | 8 Bool, `t: U8` | 65,536 | 65,536 | 16.38 |
 | `insert_outside_pre_changes_nothing` | 8 Bool, `t: U8` | 65,536 | 65,536 | 16.38 |
 | `remove_outside_pre_changes_nothing` | 8 Bool, `t: U8` | 65,536 | 65,536 | 16.38 |
@@ -820,7 +823,9 @@ is out of this contract's reach: plan on `T <= 8..16` per obligation there.
 No scheduler exists, so no evidence about Rust is claimed. What was checked, with
 the repository's Warrant tooling (`coding_adventures_warrant_grammar`: parser,
 `check_warrant`, and the ground `Evaluator`), in
-`code/packages/rust/vos-sched-contract-check/tests/warrant_contract.rs`:
+`code/packages/rust/vos-sched-contract-check/tests/warrant_contract.rs` **(history: that crate was
+deleted by VOS-039b-1, and the lemma half of this section is now `vos-link check-contract`; the
+fate of each part is the table after item 4 below)**:
 
 0. **Where the checks live.** The shape check (VOS03 SH12) allows a class K crate no
    Warrant-tooling dependency, so the Warrant checks are in the sibling crate
@@ -867,6 +872,17 @@ the repository's Warrant tooling (`coding_adventures_warrant_grammar`: parser,
    | `dispatch_covers_run` | `any` never proposes thread 3 | `dispatch_covers_run` only |
    | `dispatch_covers_idle` | `any` answers `Run(7)` for oracle 255 on a non-empty set | `dispatch_sound`, `dispatch_covers_idle` |
    | each of the nine lemmas | one mutation of the contract block per lemma | that lemma |
+
+   **Fate of each part of the retired suite (VOS-039b-1, VOS02 D-GD11).**
+
+   | Part of `tests/warrant_contract.rs` | Fate |
+   |---|---|
+   | the nine lemmas over their whole domain, one mutant each | `check-contract`, generic; the mutants are `warrant/mutants/*.part`, the counts are `warrant/lemmas.table` |
+   | marker discipline; generated-shape type check; `any` block refused on a one-field `Impl` | already `vos-link`'s (GD01, CD04, `tests/gen_and_check.rs`) |
+   | three implementations as Warrant models and the 21 obligation mutants | dropped: all 24 obligations appear in the `warrant/sabotage.plan` of the three real crates, and the 247 of the lowest-first scan stays in `vos-sched-contract/tests/trait_usable.rs` |
+   | the Rust enums and the Warrant variants have the same constructors | dropped until 039b-2 makes it generic; a mismatched constructor fails the generated harness, which is compiled against the contract's own enums, and `wrong-ctor` sabotage attacks the marshalling |
+   | `pre_insert_is_exactly_the_ids_below_eight` | replaced by the config lemma `config_n_is_the_id_range` |
+   | exact-set and per-conjunct controls; the oracle-at-zero-is-canonical evaluation | **lost** (sabotage is per claim): VOS-D109 |
 
    Three honest limits. (a) The `_post` claims are *implied* by their `_img` twins plus
    `safety_alpha_build`: no mutant can break a `_post` claim alone (an `img` equal to a
@@ -966,10 +982,10 @@ Found while writing a real contract. F1 to F4 and the SH12 wording were **amende
 | F4 | `dispatch` is **destructive**, so its safety tier has no abstract successor function of M alone; the toy's `pick` was a read. VOS01 section 2.3's shape B needs `m2` to be related to the *output* (`after(m, o)`), and canonical claims need the successor taken from the implementation's own output (`canon_dispatch_img`). VOS01 section 5 does not show a shape-B operation with an output-dependent successor | Written here (section 9); VOS01 section 2.3 could cite it | VOS-D053 |
 | F5 | A claim with no use of its binders (`canon_init: forall b: Bool. init() == build(empty())`) is a convention not exercised by the generator; if VER04h rejects an unused binder, `canon_init` becomes an `example` in the implementation block and the obligation list loses an entry (a contract-text change) | settled at VOS-011: the generator accepts the unused binder (`canon_init` ran, 2 cases); the claim stays | VOS-D054 |
 | F6 | VER04h finds a claim's negative-control subject by a shallow left-to-right search (VOS02 section 13.3). The `any` claims (`dispatch_sound`) lead with `safe_dispatch(...)`, a non-operation call; the subject found may be `dispatch_out` or `alpha_w` depending on how arguments are searched. Whether each obligation has a control that can catch a fault in the operation it is *about* is not checked until a generator runs | settled in part at VOS-011: the carried claims' subjects are the operations they are about; settled at VOS-012a by running it: `dispatch_sound` has subject `dispatch_img`, `dispatch_covers_run` and `dispatch_covers_idle` have `dispatch_out`; none has `alpha_w`, and no claim was rewritten for it | VOS-D054 |
-| F7 | VOS02 section 2.5 gives `contract.vos` a `tier` line for each of `any`, `canonical`, `policy`, `safety`; nothing says that a tier line and the files `warrant/obligations-<tier>.part` must correspond. A tier with no file, or a file with no tier, is a silent mismatch until `vos-manifest` exists. `contract.vos` has its own grammar and its parser is `vos-manifest`, so this PR does not read it (no ad-hoc parser) | `vos-manifest` / `gen-doc` (VOS-033) must cross-check tiers, files and `config` against `Sched::N` and the `8`s in the text | VOS-D049 |
-| F8 | The nine lemmas call no operation and the generator refuses them (`W0701 claim ... calls no operation`) until the `lemma` entry kind exists (VER04m V9, WX-SV item 3, VOS-D005). They were only ever evaluated by `vos-sched-contract-check`, yet sat in the embedded contract block | **Resolved in the VOS-011 PR:** the lemmas moved to `warrant/lemmas.part`, not embedded (VOS02 R1.4). The contract-block digest changed; every obligation's `claim_sha256` and every obligations-block digest is unchanged. The 394,498 total (394,500 since VOS-D081 added `safety_init`) is what the carried claims of a production scheduler enumerate | VOS-D064 |
-| F9 | The evidence harness's `heap` observer wraps the whole adapter call, including the allocation that builds a record or a payload-carrying variant as a Warrant value (64 bytes). `heap <= 0` can only hold for scalar or payload-free results | The ceiling `heap 0` is declared (and evidenced) only on `insert_out` and `remove_out`; the other six bound operations omit the `heap` row, with a comment in `impl.part` | VOS-D063 |
-| F11 | The safety tier did not constrain `init` (VOS-D081): `canon_init` is canonical-only, so `-any` and a representation-mode scheduler could start from a non-empty ready set and every generated test passed (a mask-8 `-any` mutant). The generator has no non-inert fault for the new claim: its subject is `alpha_w`, whose only fault is `field-zero`, and the state it is applied to is the empty one (`AbsW(0)`), so the claim has no negative control of its own (VOS-D065, WX-SV2); `field-flip` (VOS-038a) gives it BUILD sabotage lines in all three schedulers | `safety_init` (section 9.3); the claim is evidenced by the contract-check mutants (section 12, table) and the mutation sanity of the two implementations, not by a generated control | VOS-D081 |
+| F7 | VOS02 section 2.5 gives `contract.vos` a `tier` line for each of `any`, `canonical`, `policy`, `safety`; nothing says that a tier line and the files `warrant/obligations-<tier>.part` must correspond. A tier with no file, or a file with no tier, is a silent mismatch until `vos-manifest` exists. `contract.vos` has its own grammar and its parser is `vos-manifest`, so this PR does not read it (no ad-hoc parser) | **Tier half closed** (VOS-033: GD03, both ways). **Config half closed in VOS-039b-1**: `check-contract` generates `cfg_N` from `config N 8` and a lemma ties it to `pre_insert`. `Sched::N` in the Rust trait and the literal `8` of an implementation's `n_is_eight` example stay open (VOS-D055, 039b-2) | VOS-D049 |
+| F8 | The nine lemmas call no operation and the generator refuses them (`W0701 claim ... calls no operation`) until the `lemma` entry kind exists (VER04m V9, WX-SV item 3, VOS-D005). They were only ever evaluated by the (since retired) `vos-sched-contract-check`, yet sat in the embedded contract block | **Resolved in the VOS-011 PR:** the lemmas moved to `warrant/lemmas.part`, not embedded (VOS02 R1.4). The contract-block digest changed; every obligation's `claim_sha256` and every obligations-block digest is unchanged. The 394,498 total (394,500 since VOS-D081 added `safety_init`) is what the carried claims of a production scheduler enumerate | VOS-D064 |
+| F9 | The evidence harness's `heap` observer wrapped the whole adapter call, including the allocation that builds a record or a payload-carrying variant as a Warrant value (64 bytes), so `heap <= 0` could only hold for scalar or payload-free results | Fixed in VOS-038c: the observer counts the export call only (VER04j 14.3 item 54), and `heap <= 0` is declared and evidenced on all eight bound operations | VOS-D063 (done) |
+| F11 | The safety tier did not constrain `init` (VOS-D081): `canon_init` is canonical-only, so `-any` and a representation-mode scheduler could start from a non-empty ready set and every generated test passed (a mask-8 `-any` mutant). The generator has no non-inert fault for the new claim: its subject is `alpha_w`, whose only fault is `field-zero`, and the state it is applied to is the empty one (`AbsW(0)`), so the claim has no negative control of its own (VOS-D065, WX-SV2); `field-flip` (VOS-038a) gives it BUILD sabotage lines in all three schedulers | `safety_init` (section 9.3); the claim is evidenced by the mutants of the retired contract check (section 12, table; the three schedulers' sabotage plans carry it now) and the mutation sanity of the two implementations, not by a generated control | VOS-D081 |
 | F10 | VOS02 13.4 F4 on the real crate: the three `init` / `field-zero` controls cannot pass (zero initial field; with `field-zero`), so a bare run of the generated suite exits non-zero. An example over the zero state also fails the example control of its subject | `impl.part` uses a non-zero worked example; fixed by `field-flip` (VOS-038a): fp-bitmap's `init` controls pass, round-robin keeps three `init`/`field-flip` controls as a named failure (VOS-D098) | VOS-D065 |
 
 ---
@@ -982,15 +998,13 @@ code/packages/rust/vos-sched-contract/
     src/lib.rs                        trait Sched, Upd, Pick
     warrant/contract.part             section 9.2 (models only)
     warrant/lemmas.part               section 9.2a (not embedded)
+    warrant/mutants/<lemma>.part      one model per lemma: the mutant that must break it
+    warrant/lemmas.table              generated by `vos-link gen-contract`, byte-compared
     warrant/obligations-{safety,policy,canonical,any}.part      section 9.3
     contract.vos                      section 7 (ceilings, N = 8)
     tests/trait_usable.rs             the Rust-level checks of section 12 (item 6)
     required_capabilities.json        empty
     BUILD  BUILD_windows  README.md  CHANGELOG.md
-
-code/packages/rust/vos-sched-contract-check/                   class H, test-only
-    tests/warrant_contract.rs         section 12 (items 0 to 5), and the control table
-    tests/fixtures/impl-*.part        three implementations as Warrant models, and the bound-operation block
 ```
 
 The contract crate has no Rust code beyond declarations: two enums and a trait, which

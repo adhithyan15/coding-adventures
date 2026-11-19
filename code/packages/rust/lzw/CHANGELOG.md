@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — regenerated evidence harness (VOS-038c)
+
+- `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence`: the allocation observer counts the
+  export call only (VOS-D063, VER04j 14.3 item 54). No `heap` or `output` row changes; a recorded
+  `max_observed_heap` can only be lower, because the adapter's own copies are no longer charged.
+
 ## Unreleased — regenerated evidence harness (VOS-038b)
 
 - `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the refinement sampler (a low-acceptance refinement over an enumerable domain is drawn from its admissible set; VER04h 4.1) and the observer timeout clamp (`WARRANT_OBS_TIMEOUT_SECS` at most 24 h, `checked_add` deadline; VER04j). No test, case count or recorded evidence manifest changes.

@@ -4,6 +4,20 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-039b-1)
+
+- `warrant::declarations_of_block(block)`: the top-level declarations of a block (kind, name, byte span IN
+  THE BLOCK, whether a model has a body), by the Warrant parser.  `vos-link check-contract` replaces a model
+  of the contract block by a mutant's declaration by span; a block whose normalised text differs from its
+  bytes is refused, since a span would not index it.  `DeclKind`, `DeclFact`.
+- A test that `claim_calls` finds `cfg_N()` (a call with no arguments), which `check-contract`'s "each config
+  key is called by a lemma" rule rests on.
+
+### Added (VOS-039a)
+
+- `warrant::declared_names(text)`: the claim and example names of a document, parsed only.  `vos-link check-component` binds the evidence manifest and the sabotage plan to them.
+- `warrant::claim_calls(text, ops)`: which bound operations each claim's parsed body calls (an AST walk; a model body is not followed, VOS-D108).  `vos-link` requires every such claim to be attacked by a sabotage entry.
+
 ### Added (VOS-012b0, VOS-D061)
 
 - `Tier` gains a fifth member, `Representation`, sorted between `policy` and `safety` (VOS02 2.7):

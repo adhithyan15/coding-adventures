@@ -62,7 +62,7 @@ describe("portable Lua source hashing", function()
         local fixture = decode(fixture_dir .. "language-source-input-registry.json")
         assert.same(fixture, SourceHashing.registry())
         assert.equals(
-            "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1",
+            "4b695e89c165297a539091b9e74b60a3be0fd6b056c13fb36d66cdc696e7a1d2",
             SourceHashing.registry_digest()
         )
         local canonical = canonical_json(fixture)

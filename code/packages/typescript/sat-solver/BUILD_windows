@@ -1,3 +1,4 @@
 call npm ci --quiet
-call npx tsc
+call npm ci --prefix ..\fuzz --quiet
+call npm run build
 node --experimental-strip-types --test tests/sat.test.ts

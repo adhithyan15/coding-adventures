@@ -116,6 +116,7 @@ func externalInputRelations() []externalInputRelation {
 		{what: "BF03 compiler IR corpus", consumers: compilerIRCorpusConsumers, paths: []string{compilerIRCorpusPath}},
 		{what: "TE04 GFM corpora", consumers: gfmCorpusConsumers, paths: []string{gfmFencedBlockCorpusPath, gfmExtensionCorpusPath}},
 		{what: "G2D02 bezier flattening corpus", consumers: bezier2dFlatteningConsumers, paths: []string{bezier2dFlatteningCorpusPath}},
+		{what: "VER09b shared SAT corpus", consumers: satSolverSharedCorpusConsumers, paths: []string{satSolverSharedCorpusPath}},
 	}
 	relations = append(relations, codedRelations("resolution fixtures", resolutionFixtureCasePrefix, resolutionNativeFixtureReaders, resolutionNativeFixtureCases)...)
 	relations = append(relations, codedRelations("hashing-cache fixtures", hashingCacheFixtureCasePrefix, hashingCacheNativeFixtureReaders, hashingCacheNativeFixtureCases)...)

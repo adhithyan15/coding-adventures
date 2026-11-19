@@ -1,6 +1,8 @@
 # VER09a — TypeScript Level 3 CDCL SAT Solver & Tseitin Bit-Blaster (P034)
 
-**Status:** Draft. Target package: `@coding-adventures/test-bootstrap/sat`.
+**Status:** Implemented in `@coding-adventures/sat-solver` at
+`code/packages/typescript/sat-solver`; this specification retains the original
+bootstrap-era history and records known contract discrepancies below.
 **Layer:** Verification ladder, Level 3 (Formal Boolean Verification & SMT engine).
 **Builds on:** [VER00](VER00-verification-manifesto.md), [VER09](VER09-cdcl-sat.md), [TF01a](TF01a-typescript-test-bootstrap.md).
 **Consumed by:** Level 3 invariant checking, Level 4 bounded model checking, Warrant solver bindings, and symbolic execution.
@@ -54,12 +56,13 @@ The solver implements a modern CDCL architecture based on MiniSat and [VER09](VE
 
 ### 2.5 Incremental Solving & Assumptions
 - Supports `solveWithAssumptions(assumptions: Lit[])`.
-- Decisions at negative levels enforce assumptions; if unsatisfiable under assumptions, the solver extracts the **failed assumption core** (the minimal subset of assumptions that caused the conflict).
+- Decisions at negative levels enforce assumptions; if unsatisfiable under assumptions, the solver extracts a sound, duplicate-free subset of assumptions sufficient for the conflict. The implementation does not minimize this core.
 - Allows adding clauses between successive `solve()` invocations.
 
 ### 2.6 Hostile Input & Resource Bounding
 - Guarded by explicit conflict budget (`maxConflicts`) and propagation step budget (`maxSteps`).
 - Returns `SolveResult.Unknown` when budgets are exhausted, preventing denial-of-service on adversarial formulas.
+- A step budget charges only complete trail-item propagation work. A fractional numeric `maxSteps` therefore permits its whole-number portion; when the next item would exceed the limit, it remains pending for a later call.
 
 ---
 
@@ -98,3 +101,55 @@ Directly converting boolean expressions to CNF via distributive laws causes expo
    - Failed-assumption core soundness.
 3. **Resource Safety**: Strict termination within `maxConflicts` / `maxSteps`.
 4. **Coverage**: $\ge 90\%$ line coverage and $\ge 85\%$ branch coverage.
+
+## 6. Implementation reconciliation
+
+The dedicated package under `code/packages/typescript/sat-solver` is the
+implemented identity; the target path above is historical bootstrap wording.
+Its `extractCore` performs implication-graph traversal, deduplication, and
+filtering against assumptions, without a minimization pass. Failed assumption
+cores are sound, duplicate-free subsets of assumptions; order and minimality
+are unspecified.
+
+The following differences describe the pinned pre-repair baseline for VER-P043:
+known root contradictions could return before clearing a failed core; the
+DIMACS reader accepted malformed `p cnf` prefixes or extra header fields; and
+the propagation budget advanced the queue head before checking whether a step
+was available. After interrupted root propagation, public `propagate()` could
+consume a conflict without making the contradiction sticky, allowing a later
+solve to return a model that falsified an input clause. The P043 repair checks
+the step budget before consuming trail work, preserves pending root work across
+UNKNOWN, makes actual level-zero conflicts sticky through public propagation,
+and keeps nonroot assumption conflicts local to that solve. A valid solve call
+that reaches the known-root-UNSAT fast return clears an older failed core while
+preserving malformed-assumption validation precedence. DIMACS headers contain
+exactly four whitespace-separated tokens: `p cnf <vars> <clauses>`.
+
+The shared SAT CNF corpus adds a portable `propagate` step with a boolean
+expected-conflict outcome so Go and TypeScript exercise the same recovery
+lifecycle without pinning a private clause index. Each consumer validates SAT
+models and failed cores against the original signed DIMACS formula,
+independently of its production parser. The TypeScript package suite retains
+100 deterministic random 3-SAT comparisons against brute force, pigeonhole
+UNSAT, and model checks for queens and bit-blasted arithmetic. P043 adds 64
+seeded stateful differential traces (seed `0x51a7e5eed`, 528 public API
+calls) against an independently decoded signed-CNF and brute-force oracle. A
+separate bounded mutation campaign uses the existing TypeScript fuzz engine
+for 2,500 mutation iterations (seed `0x504043`): 2,504 total target
+invocations comprise two explicit positive/negative controls, two initial
+fuzz-corpus evaluations, and 2,500 mutations. The engine admitted 16 seeds
+and recorded 29 explicitly instrumented harness semantic edges, with zero
+explicit fuzz crash records and no oracle assertion failures or thrown errors.
+Its mutation feedback classifies parser, formula-shape, budget/result,
+propagation, assumption, and recovery outcomes; it is not instrumented
+SAT-solver source coverage. Positive SAT and negative UNSAT seeds pass through
+the same target, which checks every solve result, model, and failed core
+against the original signed formula.
+
+At the P043 verification snapshot, Node's native test coverage over freshly
+emitted `dist/sat.js` measured 95.49% lines, 95.47% branches, and 98.28%
+functions. This is coverage of the TypeScript compiler's emitted JavaScript;
+it is not source-mapped coverage of authored TypeScript. It meets this spec's
+90% line and 85% branch criteria and the repository's 95% library line target.
+No Warrant-bound source proof or solver certificate is claimed; VER-P042 is a
+separate Go source-assurance lane.

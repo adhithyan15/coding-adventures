@@ -6,6 +6,7 @@
 //!   vos-capacity-probe check results.json [--jobs N]
 //!   vos-capacity-probe table [--check | --write] [--results FILE] [--spec FILE]
 //!   vos-capacity-probe decide [--results FILE]
+//!   vos-capacity-probe merge --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
 //!   vos-capacity-probe row --spec JSON --wall SECONDS      (the child process of `run`)
 //! ```
 
