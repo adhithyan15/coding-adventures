@@ -1175,6 +1175,9 @@ const WXA_FAULTS: &[(&str, &str)] = &[
     ("off-by-one-consumed", "OffByOneConsumed"),
     // WX-SV2: `field-zero` that is never inert (the lowest bit flips).
     ("field-flip", "FieldFlip"),
+    // VOS-039c: `field-flip` aimed at the LAST numeric field, so the oracle
+    // register of an `-any` (the last field of `Impl`) can be corrupted.
+    ("field-flip-last", "FieldFlipLast"),
 ];
 
 /// Faults for an operation whose result is a byte string (a digest, a codec
@@ -2386,6 +2389,11 @@ fn composite_adapter<'a>(
             }
             "field-zero" | "field-flip" => matches!(&core, Ty::Data { ctors, .. }
                 if ctors.len() == 1 && ctors[0].1.iter().any(is_numeric)),
+            // VOS-039c: the last numeric field is a different field from the
+            // first only when there are two, so a record with one numeric
+            // field is refused (it would duplicate `field-flip`).
+            "field-flip-last" => matches!(&core, Ty::Data { ctors, .. }
+                if ctors.len() == 1 && ctors[0].1.iter().filter(|t| is_numeric(t)).count() >= 2),
             "wrong-ctor" => matches!(&core, Ty::Data { ctors, .. } if ctors.len() >= 2),
             "ok-as-err" => {
                 is_result && matches!(&core, Ty::Tuple(_) | Ty::Data { .. }) && !cases.is_empty()
@@ -2555,6 +2563,7 @@ fn composite_adapter<'a>(
             "swap-components" => "fault_swap_components(v)".to_string(),
             "field-zero" => "fault_field_zero(v)".to_string(),
             "field-flip" => "fault_field_flip(v)".to_string(),
+            "field-flip-last" => "fault_field_flip_last(v)".to_string(),
             "off-by-one-consumed" => "fault_off_by_one_consumed(v)".to_string(),
             "wrong-ctor" => format!("fault_wrong_ctor(v, {})", core.rust()),
             "ok-as-err" => format!("fault_ok_as_err(v, \"{}\")", cases[0]),
@@ -4023,6 +4032,14 @@ pub fn generate_evidence_harness_with_tables(
         // The operations `WARRANT_EVIDENCE_ATTACK` may name (validated by `check_attack`).
         let names: Vec<String> = shapes.keys().map(|k| format!("{k:?}")).collect();
         let _ = write!(adapters, "const HARNESS_OPS: &[&str] = &[{}];\n\n", names.join(", "));
+    }
+    // VOS-039c: `fault_field_flip_last` is likewise emitted only for a binding
+    // that names `field-flip-last`.  It has no `WARRANT_EVIDENCE_ATTACK`
+    // semantics of its own: a flip of the last field cannot cancel against an
+    // `init`/`alpha` pair the way a first-field flip can, because the oracle is
+    // read by no abstraction.
+    if used_faults.contains("field-flip-last") {
+        features.insert("lastflip");
     }
     // WX-N: a v1 document with a fixed-width `Bytes<N>` anywhere labels that
     // domain `full` or `sample` instead of `set`.  Gated like the helpers above,

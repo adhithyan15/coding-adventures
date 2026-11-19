@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — the `field-flip-last` fault (VOS-039c)
+
+- New record fault `field-flip-last` (VER04j 4.8): the lowest bit of the LAST numeric field of a record result is flipped (`fault_field_flip_last`, the mirror of `fault_field_flip` searching from the back; never inert).  Applicable only to a single-constructor record with at least two numeric fields, else W0701 (with one numeric field it would only duplicate `field-flip`; a variant, or a record with none, is refused as for the other record faults).  No `WARRANT_EVIDENCE_ATTACK` semantics.  Gated by its own prelude feature (`lastflip`): `fault_field_flip_last` and `Fault::FieldFlipLast` are emitted only for a binding that lists it, so every harness that does not is byte for byte what it was (the other twelve `gen_evidence` adopters and the fp-bitmap and round-robin crates did not regenerate).  Why: the record faults touch the first numeric field, which for an `-any` image `Impl(mask, choice)` is the bitmap, so nothing could corrupt the oracle register and a claim that an operation keeps it had no control that could fail it (VOS-D080).
+- Tests: `tests/wxa_generator.rs` (accepted on a record with two numeric fields, alone and inside a `Result`; W0701 on one numeric field, none and a variant; emitted only for a binding that names it, with no attack switch, and independently of `field-flip`), `tests/wxa_evidence.rs` (the function flips the last field and leaves the first, twice restores, a single numeric field is flipped where it is, a non-record is unchanged; the full generated suite catches the new fault on `normalize`), the WX-A fixture binds it and `tests/generated/wxa_evidence.rs` is regenerated.
+
 ## Unreleased — observer counts the export only; `fixed<N>` in models (VOS-038c)
 
 - VOS-D063 (VER04j 6.3, 14.3 item 54): the allocation observer's window is closed when a job starts and is
