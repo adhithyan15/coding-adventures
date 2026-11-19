@@ -4770,6 +4770,24 @@ storage, clock, network, or other external effect. Ordered transcript
 continuity, record protection, and transport remain separate blockers;
 concrete HTTPS and live-provider readiness remain unavailable.
 
+The same binding also provides a consuming Finished-verification form for a
+later handshake state machine. It takes ownership of the exact selected
+transcript before checking the suite and verify-data and returns non-copyable
+owned evidence retaining that transcript, its internally captured snapshot,
+and the repository-owned Finished verdict together. Failure returns only the
+same stable redacted error and does not return the transcript, so a failed
+Finished check cannot leave caller-accessible authenticated-handshake state
+available for retry or reuse. The borrowed form remains available when a
+caller needs an immutable proof without transferring transcript ownership.
+
+Ownership alone does not establish ordered transcript continuity. This form
+still does not authenticate or append `CertificateVerify`, prove which exact
+handshake encodings entered the transcript, sequence the server flight, bind a
+certificate path, establish trust, enforce revocation, protect records,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those compositions remain blockers; concrete HTTPS and live-provider
+readiness remain unavailable.
+
 The repository-owned `tls13-key-schedule` boundary now composes the no-PSK
 RFC 8446 section 7.1 base-secret transitions for a full ephemeral key exchange.
 One caller-policy-selected cipher suite remains the sole source of SHA-256 or
