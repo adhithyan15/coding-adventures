@@ -385,6 +385,27 @@ impl<
     pub const fn transcript(&self) -> &SelectedTls13Transcript {
         &self.transcript
     }
+
+    /// Consume this proof into its exact retained components.
+    ///
+    /// The returned transcript carries no stronger authority by itself. A
+    /// downstream composition must retain the returned server Finished-key
+    /// proof whenever it claims this exact provenance.
+    #[must_use]
+    pub fn into_parts(
+        self,
+    ) -> (
+        &'continuation BoundRetryServerFinishedKey<
+            'finished_bound,
+            'key_storage,
+            'traffic_bound,
+            'traffic_storage,
+            Evidence,
+        >,
+        SelectedTls13Transcript,
+    ) {
+        (self.server_finished_key, self.transcript)
+    }
 }
 
 impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
