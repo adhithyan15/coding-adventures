@@ -63,7 +63,7 @@ vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] --out results
 vos-capacity-probe check code/specs/data/vos30-capacity-results.json
 vos-capacity-probe table [--check | --write]
 vos-capacity-probe decide
-vos-capacity-probe merge --base A.json --fresh B.json --experiment E1 [--where field=value] --out C.json
+vos-capacity-probe merge --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
 ```
 
 * `run --tier quick` is what BUILD runs: the smallest knob of every experiment, five seeds each,
@@ -77,7 +77,7 @@ vos-capacity-probe merge --base A.json --fresh B.json --experiment E1 [--where f
   other rows stay byte-identical, a dirty fresh run or a changed row identity is refused. Use it
   when `check` reports `instance_sha256 differs` on the E1 `vos-sched-fp-bitmap` rows after that
   crate's generated document changed (VOS-D103): commit, `run --tier full --only E1 --out F`,
-  `merge --base R --fresh F --experiment E1 --where fixture=vos-sched-fp-bitmap --out R`, then
+  `merge --base R --fresh F --experiment E1 --where fixture=vos-sched-fp-bitmap --ignore-outside --out R`, then
   `table --write`.
 * `table` renders the generated block of VOS30 section 9.8 (maximum over seeds, banner and the six
   validity limits first); `table --check` fails on drift, on a missing block, or on a section 8.5

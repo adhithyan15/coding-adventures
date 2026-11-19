@@ -1279,7 +1279,7 @@ rejected, with the reason, so they are not reopened:
 vos-capacity-probe list
 vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] [--seeds N] --out results.json
 vos-capacity-probe check results.json [--jobs N]
-vos-capacity-probe merge --base A.json --fresh B.json --experiment E1 [--where field=value] --out C.json
+vos-capacity-probe merge --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
 vos-capacity-probe table [--check | --write] [--results FILE] [--spec FILE]
 vos-capacity-probe decide [--results FILE]
 vos-capacity-probe row --spec JSON --wall SECONDS          (the child process of run)
@@ -1302,15 +1302,27 @@ malformed command line or an unreadable input (a gate never confuses the two).
 * `merge` is the only sanctioned way to refresh a SUBSET of the committed rows (the file is never
   edited by hand): it replaces the base rows of one experiment (optionally those whose knob string
   field equals a value, `--where fixture=vos-sched-fp-bitmap`) by the same-identity rows of a fresh
-  `run`, leaves every other row byte-identical and in place, refuses a fresh run with
-  `dirty_tree = true`, and refuses a subset whose row identities `(experiment, knob, mode, seed)`
-  differ between the two files (it never adds, drops or renames a row). The metadata becomes the
-  fresh run's, so `dirty_tree` and the revisions describe the newest measurement; the unrefreshed rows
-  keep their earlier measurements, which the PR states. Refresh procedure, for example after a
-  change to `vos-sched-fp-bitmap`'s generated document (VOS-D103): commit; `run --tier full --only
-  E1 --out F`; `merge --base R --fresh F --experiment E1 --where fixture=vos-sched-fp-bitmap
-  --out R`; `table --write`; commit the results file (a second commit, so the tree that ran was
-  clean).
+  `run`, leaves every other row byte-identical and in place, and records the refresh.
+  **Provenance is per row, so the base `tool`, `host` and `revisions` are kept** as the file's
+  original provenance and the merge appends one entry to a top-level `merges` list (omitted while
+  empty): `{ "rev", "binary_sha256", "dirty_tree", "experiment", "where", "rows": [row ids], "at" }`,
+  with `rev` the fresh run's `repo` revision. `validate` checks every entry (a 40-hex `rev`, a
+  64-hex binary digest, `dirty_tree` false, a known experiment, every listed row id present in the
+  file, no id listed twice), and the table banner says "N rows refreshed at rev X".
+  `merge` refuses, writing nothing: a fresh run for which `validate` reports anything (`validate`
+  applies unchanged to a partial run: it needs only non-empty rows, five seeds per knob and
+  the row rules); a merged result for which `validate` reports anything; a `dirty_tree` that is not
+  the JSON boolean `false` (in `merge` and in `validate`: a string or `null` never reads as clean);
+  a fresh `repo` revision that is not HEAD or an ancestor of it (`git merge-base --is-ancestor`);
+  duplicate row ids in either file; fresh rows outside the selected subset (unless `--ignore-outside`
+  says to drop them, as when `run --only E1` re-ran fixtures that are not being refreshed);
+  a `--where` field that no base row of the experiment has; a subset whose identities
+  `(experiment, knob, mode, seed)` differ between the two files (it never adds, drops or renames a
+  row). Reads are capped at 64 MiB and the output is written to a temporary file next to the target
+  and renamed over it. Refresh procedure, for example after a change to `vos-sched-fp-bitmap`'s
+  generated document (VOS-D103): commit; `run --tier full --only E1 --out F`; `merge --base R
+  --fresh F --experiment E1 --where fixture=vos-sched-fp-bitmap --ignore-outside --out R`;
+  `table --write`; commit the results file (a second commit, so the tree that ran was clean).
 * `table` renders the markdown block of section 9.8 from the committed results
   file; `--check` fails if the VOS30 spec's generated block differs, and
   `--write` splices the block between the markers.
@@ -1492,6 +1504,8 @@ both are run and recorded:
               "rss_cap_kb": 2097152, "seeds": 5,
               "drat_check": { "max_vars": 1048576, "max_work": 4294967296 } },
   "regeneration": null | { "reviewer": "<name>", "host": "<host>" },
+  "merges": [ { "rev", "binary_sha256", "dirty_tree", "experiment", "where", "rows", "at" } ],
+                                              (optional; one entry per `merge`, section 9.2)
   "rows": [ Row, ... ]
 }
 ```
