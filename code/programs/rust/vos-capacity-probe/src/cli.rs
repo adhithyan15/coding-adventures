@@ -59,12 +59,13 @@ pub fn dispatch(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
         Some("check") => cmd_check(&args[1..], out, err),
         Some("table") => cmd_table(&args[1..], out, err),
         Some("decide") => cmd_decide(&args[1..], out),
+        Some("merge") => cmd_merge(&args[1..], out),
         Some("row") => cmd_row(&args[1..], out),
         Some(other) => Err(Failure::Usage(format!(
-            "unknown command {other}; try list, run, check, table, decide"
+            "unknown command {other}; try list, run, check, table, decide, merge"
         ))),
         None => Err(Failure::Usage(
-            "no command; try list, run, check, table, decide".into(),
+            "no command; try list, run, check, table, decide, merge".into(),
         )),
     }
 }
@@ -209,6 +210,110 @@ pub fn cmd_run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Res
         }
     }
     Ok(())
+}
+
+/// Does this row belong to the refreshed subset: its experiment is `experiment` and, when a
+/// `field=value` selector is given, its knob's string field `field` equals `value`?
+fn in_subset(r: &Row, experiment: &str, sel: Option<(&str, &str)>) -> bool {
+    r.experiment == experiment && sel.is_none_or(|(f, v)| r.knob.s(f) == v)
+}
+
+/// The identity of a row across runs: everything but its measurements.
+fn row_id(r: &Row) -> (String, String, String, u64) {
+    (r.experiment.clone(), r.knob.key(), r.mode.clone(), r.seed)
+}
+
+/// The pure part of `merge`: replace, in `base`, exactly the rows of the subset by the matching
+/// rows of `fresh`.  Every other row is left untouched (so it stays byte-identical), the order is
+/// preserved, and the two row sets of the subset must have the same identities: a merge never
+/// adds, drops or renames a row.  The metadata becomes the fresh run's (the newest measurement
+/// started on that tree), and a dirty fresh run is refused.
+pub fn merge_results(
+    base: &Results,
+    fresh: &Results,
+    experiment: &str,
+    sel: Option<(&str, &str)>,
+) -> Result<Results, String> {
+    if fresh.meta.dirty_tree {
+        return Err("the fresh run has dirty_tree = true; commit, then run again".into());
+    }
+    let fresh_rows: Vec<&Row> = fresh
+        .rows
+        .iter()
+        .filter(|r| in_subset(r, experiment, sel))
+        .collect();
+    let base_ids: Vec<_> = base
+        .rows
+        .iter()
+        .filter(|r| in_subset(r, experiment, sel))
+        .map(row_id)
+        .collect();
+    let mut fresh_ids: Vec<_> = fresh_rows.iter().map(|r| row_id(r)).collect();
+    let mut sorted_base = base_ids.clone();
+    sorted_base.sort();
+    fresh_ids.sort();
+    if sorted_base.is_empty() {
+        return Err("the subset selects no row of the base file".into());
+    }
+    if sorted_base != fresh_ids {
+        return Err(format!(
+            "the subset has {} rows in the base and {} in the fresh run, or their identities \
+             differ: a merge never adds, drops or renames a row",
+            sorted_base.len(),
+            fresh_ids.len()
+        ));
+    }
+    let mut rows = Vec::with_capacity(base.rows.len());
+    for r in &base.rows {
+        if in_subset(r, experiment, sel) {
+            let id = row_id(r);
+            let f = fresh_rows
+                .iter()
+                .find(|f| row_id(f) == id)
+                .ok_or("internal: a matched identity vanished")?;
+            rows.push((*f).clone());
+        } else {
+            rows.push(r.clone());
+        }
+    }
+    Ok(Results {
+        meta: fresh.meta.clone(),
+        rows,
+    })
+}
+
+/// `merge`: refresh a subset of the committed results through the tool, never by hand.
+///
+/// ```text
+/// merge --base results.json --fresh fresh.json --experiment E1 [--where fixture=NAME] --out out.json
+/// ```
+pub fn cmd_merge(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
+    let need = |n: &str| flag(args, n).ok_or_else(|| Failure::Usage(format!("merge needs {n}")));
+    let base = Results::from_text(&read(Path::new(&need("--base")?))?).map_err(Failure::Usage)?;
+    let fresh = Results::from_text(&read(Path::new(&need("--fresh")?))?).map_err(Failure::Usage)?;
+    let experiment = need("--experiment")?;
+    if !EXPERIMENTS.contains(&experiment.as_str()) {
+        return Err(Failure::Usage(format!("unknown experiment {experiment}")));
+    }
+    let wh = flag(args, "--where");
+    let sel = match &wh {
+        Some(w) => Some(
+            w.split_once('=')
+                .ok_or_else(|| Failure::Usage("--where wants field=value".into()))?,
+        ),
+        None => None,
+    };
+    let merged = merge_results(&base, &fresh, &experiment, sel).map_err(Failure::Usage)?;
+    let path = need("--out")?;
+    std::fs::write(&path, merged.to_text())
+        .map_err(|e| Failure::Usage(format!("cannot write {path}: {e}")))?;
+    let n = merged
+        .rows
+        .iter()
+        .filter(|r| in_subset(r, &experiment, sel))
+        .count();
+    writeln!(out, "merged {n} rows of {experiment} into {path}")
+        .map_err(|e| Failure::Usage(e.to_string()))
 }
 
 /// `check`.

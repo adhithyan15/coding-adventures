@@ -483,3 +483,83 @@ fn groups_keep_file_order_and_share_a_key() {
     assert!(gs[0].max(|r| r.conflicts as f64) >= 1000.0);
     assert_eq!(gs[0].counted().len(), 5);
 }
+
+// ---- `merge`: refreshing a subset of the committed rows through the tool (VOS30 section 9.2) ----
+
+fn e1(fixture: &str, claim: &str, digest: &str) -> Vec<Row> {
+    five(|s| {
+        let mut r = good(
+            "E1",
+            Knob::of(&[
+                ("claim", Kv::S(claim.into())),
+                ("fixture", Kv::S(fixture.into())),
+            ]),
+            "enum",
+            s,
+        );
+        r.instance_sha256 = digest.repeat(32);
+        r
+    })
+}
+
+fn file_of(rows: Vec<Vec<Row>>, dirty: bool) -> Results {
+    let mut m = meta();
+    m.dirty_tree = dirty;
+    Results {
+        meta: m,
+        rows: rows.into_iter().flatten().collect(),
+    }
+}
+
+#[test]
+fn merge_replaces_exactly_the_selected_rows_and_nothing_else() {
+    use vos_capacity_probe::cli::merge_results;
+    let base = file_of(
+        vec![
+            e1("fp", "a", "aa"),
+            e1("other", "b", "bb"),
+            e1("fp", "c", "cc"),
+        ],
+        false,
+    );
+    let mut fresh = file_of(vec![e1("fp", "a", "11"), e1("fp", "c", "22")], false);
+    fresh.meta.binary_sha256 = "ff".into();
+    let m = merge_results(&base, &fresh, "E1", Some(("fixture", "fp"))).unwrap();
+    assert_eq!(m.rows.len(), 15);
+    assert_eq!(m.meta.binary_sha256, "ff", "the fresh run's metadata");
+    for (i, r) in m.rows.iter().enumerate() {
+        let want = match i / 5 {
+            0 => "11",
+            1 => "bb",
+            _ => "22",
+        };
+        assert_eq!(r.instance_sha256, want.repeat(32), "row {i}");
+    }
+    // The untouched rows are identical, not merely equal in one field.
+    assert_eq!(m.rows[5..10], base.rows[5..10]);
+}
+
+#[test]
+fn merge_refuses_every_unsound_input() {
+    use vos_capacity_probe::cli::merge_results;
+    let base = file_of(vec![e1("fp", "a", "aa"), e1("other", "b", "bb")], false);
+    let sel = Some(("fixture", "fp"));
+    // A dirty fresh run.
+    let dirty = file_of(vec![e1("fp", "a", "11")], true);
+    assert!(merge_results(&base, &dirty, "E1", sel)
+        .unwrap_err()
+        .contains("dirty_tree"));
+    // A fresh run that renames, drops or adds a row.
+    let renamed = file_of(vec![e1("fp", "z", "11")], false);
+    assert!(merge_results(&base, &renamed, "E1", sel).is_err());
+    let extra = file_of(vec![e1("fp", "a", "11"), e1("fp", "z", "11")], false);
+    assert!(merge_results(&base, &extra, "E1", sel).is_err());
+    let none = file_of(vec![], false);
+    assert!(merge_results(&base, &none, "E1", sel).is_err());
+    // A subset that selects nothing in the base.
+    let f = file_of(vec![e1("zzz", "a", "11")], false);
+    assert!(merge_results(&base, &f, "E1", Some(("fixture", "zzz"))).is_err());
+    // Without a selector the whole experiment is the subset.
+    let whole = file_of(vec![e1("fp", "a", "11"), e1("other", "b", "22")], false);
+    assert!(merge_results(&base, &whole, "E1", None).is_ok());
+}
