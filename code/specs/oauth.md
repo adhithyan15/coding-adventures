@@ -6776,6 +6776,34 @@ ordered transcript advancement, certificate and revocation policy, and all
 remaining TLS/HTTP/audited transport composition remain prerequisites;
 concrete HTTPS and live-provider readiness remain unavailable.
 
+The joined retry owner can now authenticate one ciphertext record, enforce the
+no-PSK server-flight transition for every completed message, and lend each
+exact header-plus-body encoding with the transcript snapshot from immediately
+before that message to one synchronous non-retaining handler. The handler must
+explicitly accept the message before the joined owner appends that exact
+encoding to its private transcript. This ordering lets later repository-owned
+CertificateVerify and Finished processing use the required pre-message
+snapshot without exposing mutable transcript state. Success returns
+non-copyable record evidence retaining the joined owner and exact ciphertext
+beside the post-record flight state, authenticated content length, completed
+message count, partial-message status, client-authentication requirement, and
+post-record transcript snapshot.
+
+Record, content-type, reassembly, ordering, handler-rejection, transcript, or
+handler-unwind failure clears buffered fragments and permanently closes the
+joined record owner before a later record can be processed. A handler may have
+accepted earlier messages in the same record before a later message fails, and
+transcript-capacity failure occurs only after the handler accepts the affected
+message, so caller-owned effects remain caller-audited and non-transactional.
+The handler acceptance bit is not body validation, signature verification, or
+Finished authentication. This boundary does not parse EncryptedExtensions,
+CertificateRequest, Certificate, CertificateVerify, or Finished bodies; build
+or validate a certificate path or hostname; enforce revocation; select later
+epochs; protect application data; perform I/O; authorize HTTP or OAuth
+transport; or open a network connection. Those repository-owned validation
+and transport compositions remain prerequisites, and concrete HTTPS and
+live-provider readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

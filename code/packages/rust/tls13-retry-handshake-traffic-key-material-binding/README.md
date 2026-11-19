@@ -68,14 +68,27 @@ the retained ServerHello snapshot. Success moves the ordered owner and
 reconstructed transcript into one non-cloneable wrapper while retaining the
 complete server Finished-key proof. Only immutable access is exposed.
 
+The joined owner can authenticate a ciphertext record, enforce each completed
+message's no-PSK ordering transition, and lend the exact message with its
+pre-message transcript snapshot to a synchronous non-retaining handler. A
+`true` result authorizes hashing that message's exact header-plus-body bytes;
+`false` rejects it without hashing it and permanently closes record
+processing. Success retains the exact ciphertext, authenticated record result,
+server Finished-key proof, post-record flight state, and post-record transcript
+snapshot in one non-cloneable result. Record, reassembly, ordering, rejection,
+transcript, and handler-unwind failures are terminal. Earlier callback effects
+are not transactional, and a transcript-capacity failure can occur after the
+handler authorizes the affected message.
+
 This package derives one direction's handshake key and IV, creates matching
 record state, protects exact retry-handshake records in caller-owned buffers,
-enforces the public no-PSK server-flight type order, and joins fresh ordered
-state to exact retry transcript and Finished-key provenance. It does not open
-a record through that joined wrapper, interpret message bodies, advance its
-transcript, authenticate CertificateVerify or Finished, validate certificates,
-establish trust, verify hostnames, enforce revocation, perform I/O, authorize
-HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
+enforces the public no-PSK server-flight type order, joins fresh ordered state
+to exact retry transcript and Finished-key provenance, and advances that
+transcript only after explicit caller authorization of authenticated ordered
+messages. The authorization bit is not body validation. This package does not
+interpret message bodies, authenticate CertificateVerify or Finished, validate
+certificates, establish trust, verify hostnames, enforce revocation, perform
+I/O, authorize HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
 
 ## Verification
 
