@@ -164,6 +164,9 @@ jobs:
           export GOCACHE="$RUNNER_TEMP/gocache" GOMODCACHE="$RUNNER_TEMP/gomod" GOTOOLCHAIN=local
           (cd code/programs/go/kiln && go build -o "$RUNNER_TEMP/bin/kiln" .)
           (cd code/programs/go/build-tool && go build -o "$RUNNER_TEMP/bin/build-tool" .)
+          # The not-clean checker runs after each shard's build, and a build can
+          # write the checkout: copy it out with the binaries, before any shard.
+          install -m 0555 code/programs/go/kiln/ci/census_not_clean.py "$RUNNER_TEMP/bin/census_not_clean.py"
           ls -l "$RUNNER_TEMP/bin"
 
       # The job's start stamp: prepare binds it (KILN04 5.3, --job-start), and
@@ -207,7 +210,7 @@ jobs:
 
           kiln="$RUNNER_TEMP/bin/kiln"
           bt="$RUNNER_TEMP/bin/build-tool"
-          not_clean="$GITHUB_WORKSPACE/code/programs/go/kiln/ci/census_not_clean.py"
+          not_clean="$RUNNER_TEMP/bin/census_not_clean.py"  # copied before any build ran
           real_home="$HOME"
           # A fixed name, so redacted text aggregates across shards.
           shard_home="$real_home/.kiln-census-home"
