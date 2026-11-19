@@ -544,7 +544,7 @@ func parseHelperTrace(path, kilnExe, cwd, wantSHA string, rootStatus int, exit12
 	if st, err := f.Stat(); err != nil || !st.Mode().IsRegular() {
 		return nil, "the trace is not a regular file", 0
 	}
-	tr, err := trace.ParseOptions(f, cwd, trace.Options{Limits: limits, HelperRoot: true, HelperExe: kilnExe})
+	tr, err := trace.ParseOptions(f, cwd, helperParseOptions(kilnExe, limits))
 	if err != nil {
 		var te *trace.Error
 		// Exit status 125 with no step exec in the trace is the sandbox refusing

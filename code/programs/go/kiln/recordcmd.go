@@ -9,6 +9,8 @@ package main
 //	kiln record step    --dir <abs> -- sh -c <line>                  (PR 2b-2a)
 //	kiln record collect --root <abs> --dir <abs> --results <abs> --out <abs>
 //	                                                                 (PR 2b-2b-ii)
+//	kiln record census  --dir <abs> --out <abs> [--md <abs>] [--records <abs>]
+//	                                                                 (census PR C)
 //
 // `prepare` is the part of a recording shard that runs before any BUILD (see
 // internal/record/prepare.go). `step` is the build tool's -exec-wrapper: it
@@ -81,7 +83,7 @@ var recordCollect = record.Collect
 // runRecord dispatches `kiln record <subcommand>`.
 func runRecord(args []string, stdout, stderr io.Writer) int {
 	if len(args) == 0 {
-		fmt.Fprintln(stderr, "usage: kiln record <prepare|step|collect> ...")
+		fmt.Fprintln(stderr, "usage: kiln record <prepare|step|collect|census> ...")
 		return 2
 	}
 	switch args[0] {
@@ -93,6 +95,8 @@ func runRecord(args []string, stdout, stderr io.Writer) int {
 		return runRecordClassifyAction(args[1:], stderr)
 	case "collect":
 		return runRecordCollect(args[1:], stdout, stderr)
+	case "census":
+		return runRecordCensus(args[1:], stdout, stderr)
 	}
 	fmt.Fprintf(stderr, "kiln: unknown record subcommand %q\n", args[0])
 	return 2
@@ -296,4 +300,61 @@ func runRecordStep(args []string, stdout, stderr io.Writer) int {
 		fmt.Fprintf(stderr, "kiln: record step: no record.json for the action: %s\n", res.RecordWhy)
 	}
 	return res.ExitCode
+}
+
+// runRecordCensus is `kiln record census --dir <abs> --out <abs> [--md <abs>]
+// [--records <abs>]`: the diagnostic that reads a finished record directory back
+// and writes a bounded, sanitised summary (internal/record/census_*.go, KILN04
+// "`kiln record census`").  It is NOT gated on linux/amd64 or a trusted run: it
+// records nothing, and it is useful on a developer's machine.  It is never run
+// during a recording.
+//
+//	exit 0  ran, and the cross-check found nothing
+//	exit 4  a cross-check mismatch or an allowed divergence (strict)
+//	exit 1  infrastructure failure, or a refusal (not a record directory, an
+//	        output that exists or is inside --dir); a refusal writes nothing
+//	exit 2  a usage error
+func runRecordCensus(args []string, stdout, stderr io.Writer) int {
+	fs := flag.NewFlagSet("record census", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	dir := fs.String("dir", "", "the record directory a recording left (absolute)")
+	out := fs.String("out", "", "where the JSON summary is written; it must not exist (absolute)")
+	md := fs.String("md", "", "where the Markdown rendering is written; it must not exist (absolute, optional)")
+	records := fs.String("records", "", "collect's records.jsonl, for its header and count (absolute, optional)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	if fs.NArg() != 0 || *dir == "" || *out == "" {
+		fmt.Fprintln(stderr, "usage: kiln record census --dir <abs> --out <abs> [--md <abs>] [--records <abs>]")
+		return record.CensusExitUsage
+	}
+	// The directories whose prefix the report labels instead of printing.
+	var redact []record.Redaction
+	if home, err := os.UserHomeDir(); err == nil {
+		redact = append(redact, record.Redaction{From: home, To: "$HOME"})
+	}
+	for _, e := range []struct{ env, label string }{{"TMPDIR", "$TMPDIR"}, {"RUNNER_TEMP", "$RUNNER_TEMP"}, {"GITHUB_WORKSPACE", "$WORKSPACE"}} {
+		redact = append(redact, record.Redaction{From: os.Getenv(e.env), To: e.label})
+	}
+	redact = append(redact, record.Redaction{From: os.TempDir(), To: "$TMPDIR"})
+	res, err := record.RunCensus(record.CensusRunOptions{
+		CensusOptions: record.CensusOptions{Dir: *dir, Records: *records, Redact: redact},
+		Out:           *out, MD: *md,
+	}, stdout)
+	if err != nil {
+		// The text is ours or an operating-system error about a path the caller
+		// gave; none of it came from a trace.
+		fmt.Fprintf(stderr, "kiln: record census: %v\n", err)
+		if res != nil && res.Exit != 0 {
+			return res.Exit
+		}
+		return record.CensusExitInfra
+	}
+	switch res.Exit {
+	case record.CensusExitMismatch:
+		fmt.Fprintln(stderr, "kiln: record census: the cross-check found a mismatch or an allowed divergence")
+	case record.CensusExitInfra:
+		fmt.Fprintln(stderr, "kiln: record census: infrastructure failure (see infrastructure_failure in the summary)")
+	}
+	return res.Exit
 }
