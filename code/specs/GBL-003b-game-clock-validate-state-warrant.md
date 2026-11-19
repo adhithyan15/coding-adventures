@@ -98,7 +98,11 @@ counters, or clamp count.
   `Ok(())`) from the real Rust `validate_state` API. The oracle must not mutate its input.
 - Cover the product boundary at `u64::MAX`, first overflowing products, exact product matches,
   and mismatches on both sides of the boundary. Include zero and hard-limit configurations and
-  `max_frame_steps` endpoints.
+  `max_frame_steps` endpoints. Exercise quotient thresholds `floor(u64::MAX / dt)` at minus one,
+  exact, and plus one for `dt` 1, 2, 3, and the configured cap where representable; exact elapsed
+  product and one-below/one-above where representable; `dt` 0, cap plus one, and `u64::MAX`; step
+  limits 0, 1, 1024, 1025, and `u32::MAX`; and isolated accumulator/max-delta endpoints. Use
+  finite table/stratified cases, not a claim of a Cartesian exhaustive test.
 - Add four ignored-field metamorphic controls, one for each ignored counter
   (`frame_count`, `elapsed_wall_ns`, `total_dropped_ns`, `spiral_clamped_frames`), using zero,
   ordinary, and `u64::MAX` representatives while holding the result fixed. Also mutate each of
@@ -106,7 +110,12 @@ counters, or clamp count.
   `fixed_dt_ns`, `max_frame_steps`, `max_frame_delta_ns`) in valid or deliberately isolated
   boundary cases to demonstrate its result/precedence effect. The adapter must round-trip all ten
   fields in their declared order and reject missing, extra, reordered, or wrongly typed fields;
-  if serialized as bytes, one all-`u64`/`u32` state occupies exactly 76 payload bytes. State
+  if serialized as bytes, one all-`u64`/`u32` state occupies exactly 76 payload bytes. The adapter
+  must round-trip all ten fields in their declared order using distinct sentinel values, and reject
+  detectable missing, extra, wrong-identity/index, or wrongly typed fields. Since same-typed
+  positional values still form a valid record with different semantics, do not claim every
+  same-width permutation can be rejected; prove order through distinct-value round trips and
+  semantic-difference controls. State
   clearly that generated totals are finite evidence, not exhaustive runtime coverage.
 - Ensure failed validation leaves all ten original public state field values unchanged; do not
   claim a meaningful raw-struct padding-byte guarantee.
@@ -118,9 +127,12 @@ counters, or clamp count.
   overflow, and near-boundary products. Compare public API and native Warrant results against the
   independent `u128` oracle for each generated input.
 - Use the repository's existing Rust property and fuzz tooling; record the exact engine,
-  generator, seed, case/callback counts, shrink behavior, and resource limits. Keep valid-state
-  typed Rust generation separate from malformed/hostile serialized-adapter input campaigns; only
-  the adapter boundary has malformed record shapes or types. Unexpected panics, oracle
+  generator, seed, case/callback counts, shrink behavior, and resource limits. A typed-state fuzz
+  target must map every mutated input to full-width typed states stratified toward valid states,
+  each observable result, each isolated guard, overflow, mismatch, and conflicting conditions; run
+  public Rust, native Warrant, and independent oracle on every callback and demonstrate all four
+  result classes reached. Keep malformed/hostile serialized-adapter input as a separate campaign;
+  only that adapter boundary has malformed record shapes or types. Unexpected panics, oracle
   disagreement, or a valid typed state refused by the adapter is a failure, not a swallowed fuzz
   result.
 - Report per-stratum executions so all four outcomes (`Ok`, `ZeroFixedTimestep`,
@@ -163,6 +175,16 @@ counters, or clamp count.
 - Track every exact source, Warrant document, test, and fixture file read by the evidence command
   through the repository's existing source-selection and cache mechanisms. Build-tool dependency
   metadata alone is not proof that the provider or transitive inputs are selected or hashed.
+- For `rust/game-clock`, the effective input set includes the six external files actually read or
+  used by the package's evidence/build path: `code/specs/game-clock.warrant`,
+  `code/specs/fixtures/game-clock-v1/cases.json`, root `.cargo/config.toml`,
+  `code/packages/rust/.cargo/config.toml`, `code/packages/rust/Cargo.toml`, and
+  `code/packages/rust/Cargo.lock`. The package-local `game-clock/Cargo.toml` remains covered by
+  ordinary package hashing. Prove selection and persisted-cache behavior for every external input:
+  unchanged warm hit, same-length semantically valid mutation miss, restoration to the original
+  input followed by a build and subsequent unchanged hit. Exercise the real filtered Rust plan
+  emit/load path as well as the normal selector; do not treat canonical authorization as evidence
+  that the cache hashes these inputs.
 - The native Rust API and Warrant tooling must be run by the normal package `BUILD` recipes on
   supported platforms, with effective strict preflights recorded. Ensure test-only Warrant
   evaluator/proof targets are actually executed by both normal platform recipes; compile-only
@@ -179,5 +201,6 @@ counters, or clamp count.
 - `GBL-020a` fixed-point game primitives need a separate contract and remains deferred.
 - Remaining cache-wide external-input audits, implicit CI preflight receipts, stale superseded
   workflow-run cleanup safety, TypeScript parser ASI behavior, and macOS temporary-path
-  canonicalization are separately tracked follow-ups. They must not be folded into this validator
-  proof without a demonstrated dependency.
+  canonicalization are separately tracked follow-ups. This six-input acceptance is scoped to
+  `rust/game-clock`; it does not establish a global external-input cache fix. They must not be
+  folded into this validator proof without a demonstrated dependency.
