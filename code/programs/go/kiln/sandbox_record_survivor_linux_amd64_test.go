@@ -153,6 +153,10 @@ exit 0
 		"GITHUB_EVENT_PATH=" + filepath.Join(aux, "event.json"), "ImageOS=ubuntu24", "ImageVersion=20260101.1",
 		"GITHUB_SHA=" + sha, "GITHUB_REPOSITORY=owner/repo", "GITHUB_RUN_ID=1", "GITHUB_RUN_ATTEMPT=1",
 	}
+	// D34: when the test ends, cross-check every trace the children wrote. It is
+	// registered BEFORE prepare runs (the temp dir already exists, so the check still
+	// runs before it is deleted), so a probe trace that prepare refuses is checked too.
+	crossCheckChildTraces(t, recDir, kiln)
 	prep := exec.Command(kiln, "record", "prepare", "--root", repo, "--dir", recDir, "--build-tool", filepath.Join(bin, "build-tool"),
 		"--shard-index", "0", "--shard-count", "1", "--job-start", fmt.Sprint(time.Now().Unix()),
 		"--strace", straceBin, "--git", gitBin)
@@ -172,9 +176,6 @@ exit 0
 			return nil
 		})
 	})
-	// D34: when the test ends, cross-check every trace the children wrote (registered
-	// after the temp dir, so it runs before the directory is deleted).
-	crossCheckChildTraces(t, recDir)
 
 	// The action's one step, as the build tool runs it.
 	env := append(append([]string{}, pre.Tools.BuildToolEnv...), "KILN_ACTION="+rel, "KILN_STEP=0", "KILN_STEP_COUNT=1")

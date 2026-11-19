@@ -1,11 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"sort"
 	"strconv"
@@ -56,19 +58,32 @@ func crossCheckEnabled() bool { return os.Getenv("KILN_TRACE_DIFF") == "1" }
 // stand in a mismatch, which no real trace is known to produce.
 var crossCheckParse = trace.ParseCrossChecked
 
-// crossCheckReport is what one directory's check found.
+// crossCheckReport is what one directory's check found.  Accepted counts the
+// traces the parse ACCEPTED (no refusal): a check whose parameters drifted (a
+// wrong helper executable or working directory) has both readers refuse every
+// trace identically, which is "agreement" and would read as mismatches=0, so
+// the census line carries accepted=K and CI requires it to be at least 1.
 type crossCheckReport struct {
-	Traces, Bytes, Mismatches, Allowed int
+	Traces, Accepted, Bytes, Mismatches, Allowed int
 	// Problems are the failure lines (no path text; a trace is named by its
 	// quoted base name), and Failed the paths to Diagnose.
 	Problems []string
 	Failed   []string
 }
 
-// traceParams are how a child parsed one trace.
+// traceParams are how a child parsed one trace.  MustAccept, when set, says why
+// the child's own verdict was "parsed": the test's parse must then accept it too.
 type traceParams struct {
-	cwd    string
-	limits trace.Limits
+	cwd        string
+	limits     trace.Limits
+	mustAccept string
+}
+
+// childInfo is what the sealed `pre/` says about the children's parses.
+type childInfo struct {
+	kilnExe  string
+	known    map[string]traceParams
+	verified bool // pre/ verified: every trace must be one of known
 }
 
 // crossCheckedDirs remembers the directories already checked in this process, so
@@ -78,10 +93,19 @@ var (
 	crossCheckedDirs = map[string]bool{}
 )
 
-// crossCheckChildTraces registers the D34 check for recDir.  Call it once the
-// record directory is known and the temp dir exists, so that this cleanup is
-// registered after the temp dir's and therefore runs before it.
-func crossCheckChildTraces(t *testing.T, recDir string) {
+// crossCheckChildTraces registers the D34 check for recDir.  kilnExe is the kiln
+// binary the children run (the helper executable of their traces); it is used
+// when `pre/` cannot be verified, e.g. because prepare refused a probe trace,
+// which is exactly the case the check must still see.
+//
+// Call it BEFORE `prepare` runs, once the temp dir exists: cleanups run
+// last-in first-out, so the check then runs after the children are finished and
+// before the temp dir (registered earlier) is deleted.
+//
+// The parse behind it keeps one process-global counter of allowed divergences
+// (trace.AllowedDivergences), so the check, and the tests that call it, must not
+// run in parallel: no t.Parallel.
+func crossCheckChildTraces(t *testing.T, recDir, kilnExe string) {
 	t.Helper()
 	if !crossCheckEnabled() {
 		return
@@ -94,10 +118,11 @@ func crossCheckChildTraces(t *testing.T, recDir string) {
 		if done {
 			return
 		}
-		rep := crossCheckDir(recDir, crossCheckParse)
-		// The census line.  assert_sandbox_tests.py reads it: it must say traces >= 1
-		// in at least one passing test, so the check cannot go vacuous.
-		t.Logf("PROBE: crosscheck traces=%d bytes=%d mismatches=%d allowed=%d", rep.Traces, rep.Bytes, rep.Mismatches, rep.Allowed)
+		rep := crossCheckDir(recDir, kilnExe, crossCheckParse)
+		// The census line.  assert_sandbox_tests.py reads it: traces >= 1 and
+		// accepted >= 1 in total over the passing tests, so the check cannot go
+		// vacuous.  Every field is a count: no text can ride on the line.
+		t.Logf("PROBE: crosscheck traces=%d accepted=%d bytes=%d mismatches=%d allowed=%d", rep.Traces, rep.Accepted, rep.Bytes, rep.Mismatches, rep.Allowed)
 		for _, p := range rep.Problems {
 			t.Errorf("cross-check of a child's trace: %s", p)
 		}
@@ -108,21 +133,35 @@ func crossCheckChildTraces(t *testing.T, recDir string) {
 }
 
 // crossCheckDir checks every *.trace under recDir.  It never fails a test itself.
-func crossCheckDir(recDir string, parse func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, int)) crossCheckReport {
+func crossCheckDir(recDir, kilnExe string, parse func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, int)) crossCheckReport {
 	var rep crossCheckReport
-	kilnExe, known := childParams(recDir)
+	info := childParams(recDir, kilnExe)
 	var paths []string
-	filepath.WalkDir(recDir, func(p string, d fs.DirEntry, err error) error {
-		if err == nil && d.Type().IsRegular() && strings.HasSuffix(p, ".trace") {
+	err := filepath.WalkDir(recDir, func(p string, d fs.DirEntry, err error) error {
+		if err != nil {
+			if p == recDir && errors.Is(err, fs.ErrNotExist) {
+				return filepath.SkipAll // the test stopped before the directory existed
+			}
+			rep.Problems = append(rep.Problems, fmt.Sprintf("cannot walk the record directory at %q", filepath.Base(p)))
+			return nil
+		}
+		if d.Type().IsRegular() && strings.HasSuffix(p, ".trace") {
 			paths = append(paths, p)
 		}
 		return nil
 	})
+	if err != nil {
+		rep.Problems = append(rep.Problems, "cannot walk the record directory")
+	}
 	sort.Strings(paths)
 	for _, p := range paths {
 		name := strconv.Quote(filepath.Base(p))
-		params, ok := known[p]
-		if !ok { // a trace no child parse is known for: generic limits
+		params, ok := info.known[p]
+		if !ok {
+			if info.verified {
+				rep.Problems = append(rep.Problems, "trace "+name+" is not one the verified pre/ accounts for (an unknown action or step)")
+			}
+			// Generic parameters, so it is still read by both readers.
 			params = traceParams{cwd: "/", limits: record.ClassifyLimits()}
 		}
 		f, err := openTraceNoFollow(p)
@@ -133,18 +172,30 @@ func crossCheckDir(recDir string, parse func(io.Reader, string, trace.Options) (
 		if st, err := f.Stat(); err == nil {
 			rep.Bytes += int(st.Size())
 		}
-		_, _, m, allowed := parse(f, params.cwd, trace.Options{Limits: params.limits, HelperRoot: true, HelperExe: kilnExe})
+		// ParseCrossChecked reads the process-global allowed-divergence counter
+		// (trace.AllowedDivergences) before and after: never call it from parallel
+		// tests (no t.Parallel here), or one trace would be charged another's hits.
+		_, perr, m, allowed := parse(f, params.cwd, trace.Options{Limits: params.limits, HelperRoot: true, HelperExe: info.kilnExe})
 		f.Close()
 		rep.Traces++
+		if m == nil && perr == nil {
+			rep.Accepted++
+		}
 		if m != nil {
 			rep.Mismatches++
 			rep.Problems = append(rep.Problems, fmt.Sprintf("trace %s: %s", name, m.Error()))
+			rep.Failed = append(rep.Failed, p)
+		} else if perr != nil && params.mustAccept != "" {
+			// Both readers refuse alike, but the child ACCEPTED this trace: the
+			// check's parameters differ from the child's, or the parse is not
+			// deterministic.  Either way the census would be meaningless.
+			rep.Problems = append(rep.Problems, fmt.Sprintf("trace %s was refused here (%s) although %s", name, errorReason(perr), params.mustAccept))
 			rep.Failed = append(rep.Failed, p)
 		}
 		if allowed > 0 {
 			rep.Allowed += allowed
 			rep.Problems = append(rep.Problems, fmt.Sprintf("trace %s took %d allowed stricter-only divergence(s); on a real trace there must be none", name, allowed))
-			if m == nil {
+			if m == nil && !(perr != nil && params.mustAccept != "") {
 				rep.Failed = append(rep.Failed, p)
 			}
 		}
@@ -152,28 +203,68 @@ func crossCheckDir(recDir string, parse func(io.Reader, string, trace.Options) (
 	return rep
 }
 
+// errorReason is a refusal's reason (no path text: a trace.Error carries a
+// reason and a line), or a fixed word for any other error.
+func errorReason(err error) string {
+	var te *trace.Error
+	if errors.As(err, &te) {
+		return fmt.Sprintf("%s, line %d", te.Reason, te.Line)
+	}
+	return "an error"
+}
+
+var stepTraceName = regexp.MustCompile(`^[0-9]+\.trace$`)
+
 // childParams recovers, from the sealed `pre/` directory, how the children parsed
-// each trace: the helper binary, and per trace the working directory and Limits
+// each trace: the helper binary, and per trace the working directory, the Limits
 // (parseHelperTrace, parseStep, probeLimits and ClassifyLimits in
-// internal/record).  When the directory cannot be verified (prepare did not
-// finish) it returns a placeholder helper and no known traces, which makes the
-// check only weaker, never wrong.
-func childParams(recDir string) (kilnExe string, known map[string]traceParams) {
-	known = map[string]traceParams{}
+// internal/record) and, where a child's own verdict is on disk, that the trace
+// was accepted:
+//
+//   - a probe run listed in the sealed probes.json parsed (prepare refuses
+//     otherwise);
+//   - a step trace of an action whose record.json says parse_ok parsed.
+//
+// The steps are found from the directory listing, not a fixed range.  When `pre/`
+// cannot be verified (prepare did not finish) the helper is the test's own kiln
+// binary and nothing is known: the check is then only weaker, never wrong.
+func childParams(recDir, fallbackExe string) childInfo {
+	exe := fallbackExe
+	if r, err := filepath.EvalSymlinks(exe); err == nil {
+		exe = r
+	}
+	info := childInfo{kilnExe: exe, known: map[string]traceParams{}}
 	pre, err := record.VerifyPre(recDir)
 	if err != nil {
-		return "/kiln", known
+		return info
 	}
+	info.kilnExe, info.verified = pre.Config.KilnExe, true
 	for _, action := range pre.Config.Actions() {
-		for i := 0; i < 64; i++ {
-			known[record.StepFile(recDir, action, i, "trace")] = traceParams{pre.Config.PackageDir(action), record.ClassifyLimits()}
+		why := ""
+		if data, err := os.ReadFile(record.RecordFile(recDir, action)); err == nil {
+			if rec, err := record.DecodeClassified(data); err == nil && rec.ParseOK {
+				why = "record.json says every step trace of the action parsed"
+			}
+		}
+		entries, _ := os.ReadDir(record.StepDir(recDir, action))
+		for _, e := range entries {
+			if stepTraceName.MatchString(e.Name()) {
+				info.known[filepath.Join(record.StepDir(recDir, action), e.Name())] = traceParams{pre.Config.PackageDir(action), record.ClassifyLimits(), why}
+			}
 		}
 	}
 	probes, _ := filepath.Glob(filepath.Join(recDir, record.ProbeDir, "*.trace"))
 	for _, p := range probes {
-		known[p] = traceParams{pre.Config.PackageDir(pre.Probes.Action), record.ProbeParseLimits()}
+		info.known[p] = traceParams{cwd: pre.Config.PackageDir(pre.Probes.Action), limits: record.ProbeParseLimits()}
 	}
-	return pre.Config.KilnExe, known
+	for _, r := range pre.Probes.Runs {
+		p := filepath.Join(recDir, record.ProbeDir, r.Name+".trace")
+		if tp, ok := info.known[p]; ok {
+			tp.mustAccept = "prepare succeeded, so its probe run parsed"
+			info.known[p] = tp
+		}
+	}
+	return info
 }
 
 // ---------------------------------------------------------------------------
@@ -206,8 +297,55 @@ func TestCrossCheckDirCountsAgreement(t *testing.T) {
 	writeFakeTrace(t, filepath.Join(dir, record.ProbeDir, "a.trace"), "not a trace\n")
 	writeFakeTrace(t, filepath.Join(dir, "traces", "b.trace"), "also not\n")
 	writeFakeTrace(t, filepath.Join(dir, "traces", "b.json"), "{}")
-	rep := crossCheckDir(dir, trace.ParseCrossChecked)
-	if rep.Traces != 2 || rep.Bytes != len("not a trace\n")+len("also not\n") || rep.Mismatches != 0 || rep.Allowed != 0 || len(rep.Problems) != 0 {
+	rep := crossCheckDir(dir, "/kiln", trace.ParseCrossChecked)
+	if rep.Traces != 2 || rep.Accepted != 0 || rep.Bytes != len("not a trace\n")+len("also not\n") || rep.Mismatches != 0 || rep.Allowed != 0 || len(rep.Problems) != 0 {
+		t.Errorf("report = %+v", rep)
+	}
+}
+
+// Accepted counts the traces the parse accepted, and a refusal is not one; this
+// is what keeps a drifted check from reading as a clean one.
+func TestCrossCheckDirCountsAcceptance(t *testing.T) {
+	skipCrossCheckOnWindows(t)
+	dir := t.TempDir()
+	writeFakeTrace(t, filepath.Join(dir, "x.trace"), "x\n")
+	writeFakeTrace(t, filepath.Join(dir, "y.trace"), "y\n")
+	fake := func(r io.Reader, cwd string, o trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, int) {
+		b, _ := io.ReadAll(r)
+		if string(b) == "x\n" {
+			return &trace.Trace{}, nil, nil, 0
+		}
+		return nil, &trace.Error{Reason: "unparsable-line", Line: 1}, nil, 0
+	}
+	rep := crossCheckDir(dir, "/kiln", fake)
+	if rep.Traces != 2 || rep.Accepted != 1 || len(rep.Problems) != 0 {
+		t.Errorf("report = %+v", rep)
+	}
+}
+
+// A walk error is a problem, not silence.
+func TestCrossCheckDirReportsAWalkError(t *testing.T) {
+	skipCrossCheckOnWindows(t)
+	if os.Geteuid() == 0 {
+		t.Skip("root reads any directory")
+	}
+	dir := t.TempDir()
+	locked := filepath.Join(dir, "locked")
+	writeFakeTrace(t, filepath.Join(locked, "x.trace"), "x\n")
+	if err := os.Chmod(locked, 0); err != nil {
+		t.Fatal(err)
+	}
+	defer os.Chmod(locked, 0o700)
+	rep := crossCheckDir(dir, "/kiln", trace.ParseCrossChecked)
+	if len(rep.Problems) == 0 {
+		t.Errorf("a directory that cannot be read was not reported: %+v", rep)
+	}
+}
+
+// A missing record directory (the test stopped first) is not a walk error.
+func TestCrossCheckDirOfAMissingDirectoryIsEmpty(t *testing.T) {
+	rep := crossCheckDir(filepath.Join(t.TempDir(), "absent"), "/kiln", trace.ParseCrossChecked)
+	if rep.Traces != 0 || len(rep.Problems) != 0 {
 		t.Errorf("report = %+v", rep)
 	}
 }
@@ -225,8 +363,8 @@ func TestCrossCheckDirReportsMismatchAndAllowed(t *testing.T) {
 		}
 		return nil, nil, nil, 2
 	}
-	rep := crossCheckDir(dir, fake)
-	if rep.Traces != 2 || rep.Mismatches != 1 || rep.Allowed != 2 || len(rep.Problems) != 2 || len(rep.Failed) != 2 {
+	rep := crossCheckDir(dir, "/kiln", fake)
+	if rep.Traces != 2 || rep.Accepted != 1 || rep.Mismatches != 1 || rep.Allowed != 2 || len(rep.Problems) != 2 || len(rep.Failed) != 2 {
 		t.Fatalf("report = %+v", rep)
 	}
 	for _, p := range rep.Problems {
@@ -248,7 +386,7 @@ func TestCrossCheckChildTracesIsOffWithoutTheSwitch(t *testing.T) {
 	defer func() { crossCheckParse = old }()
 	dir := t.TempDir()
 	writeFakeTrace(t, filepath.Join(dir, "x.trace"), "x\n")
-	t.Run("register", func(t *testing.T) { crossCheckChildTraces(t, dir) })
+	t.Run("register", func(t *testing.T) { crossCheckChildTraces(t, dir, "/kiln") })
 	if called {
 		t.Error("the cross-check ran without KILN_TRACE_DIFF=1")
 	}
@@ -268,8 +406,8 @@ func TestCrossCheckChildTracesCountsADirectoryOnce(t *testing.T) {
 	dir := t.TempDir()
 	writeFakeTrace(t, filepath.Join(dir, "x.trace"), "x\n")
 	t.Run("twice", func(t *testing.T) {
-		crossCheckChildTraces(t, dir)
-		crossCheckChildTraces(t, dir)
+		crossCheckChildTraces(t, dir, "/kiln")
+		crossCheckChildTraces(t, dir, "/kiln")
 	})
 	if calls != 1 {
 		t.Errorf("parse calls = %d, want 1", calls)

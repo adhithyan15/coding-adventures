@@ -261,7 +261,7 @@ exit 0
 	})
 	// D34: when the test ends, cross-check every trace the children wrote (registered
 	// after the temp dir, so it runs before the directory is deleted).
-	crossCheckChildTraces(t, w.recDir)
+	crossCheckChildTraces(t, w.recDir, w.kiln)
 	return w
 }
 
