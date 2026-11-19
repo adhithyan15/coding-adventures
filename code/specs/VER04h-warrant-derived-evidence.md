@@ -376,7 +376,10 @@ one `source-equivalence` entry only as an explicit **refusal-only fallback**:
   cannot replace, weaken, or hide a declared cost obligation.
 * Its id is exactly `warrant/<module>/source-equivalence/<op>`, its `kind` is
   exactly `source-equivalence`, and its `function` is the exact public export
-  named by the operation's validated `evidence.bindings` row. Its `label` and
+  named by the operation's validated `evidence.bindings` row. The initial
+  supported export surface is a direct module-level `pub fn` in `src/lib.rs`;
+  a same-named function in a private child module, a re-export, a duplicate
+  root definition, or any other unresolved route is refused. Its `label` and
   `verdict` are exactly `not-live`, `max_len` is zero, and it has no
   certificates or obligation digest. `evidence.bindings` must declare
   `proofs_not_live=<reason>` for that operation.
