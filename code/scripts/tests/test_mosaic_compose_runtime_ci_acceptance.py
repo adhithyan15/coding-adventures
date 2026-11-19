@@ -941,6 +941,77 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             )
             mktemp.chmod(0o755)
 
+            # Prime these generated mocks outside the collector's unchanged
+            # five-second window. In particular, the hash and package-metadata
+            # commands are first used inside that window. Assert the warmups'
+            # outputs so cold script-launch overhead cannot masquerade as
+            # collector work.
+            preflight_env = {
+                "PATH": f"{bin_dir}:/usr/bin:/bin",
+                "DIAG_MODE": "ok",
+            }
+            preflight_hash = subprocess.run(
+                [str(sha256sum), str(apk)],
+                env=preflight_env,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            self.assertTrue(preflight_hash.stdout.startswith("0" * 64 + "  "))
+            preflight_badging = subprocess.run(
+                [str(aapt2), "dump", "badging", str(apk)],
+                env=preflight_env,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            self.assertIn(
+                "package: name='dev.codingadventures.trestle'",
+                preflight_badging.stdout,
+            )
+            preflight_adb = subprocess.run(
+                [str(adb), "logcat", "-c"],
+                env=preflight_env,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            self.assertEqual(preflight_adb.stdout, "")
+            preflight_sleep = subprocess.run(
+                [str(sleep), "0"],
+                env=preflight_env,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            self.assertEqual(preflight_sleep.stdout, "")
+            preflight_timeout = subprocess.run(
+                [str(timeout), "--foreground", "1", "/usr/bin/true"],
+                env=preflight_env,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            self.assertEqual(preflight_timeout.stdout, "")
+            preflight_temp = subprocess.run(
+                [str(mktemp)],
+                env=preflight_env,
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
+            self.assertTrue(Path(preflight_temp).is_file())
+            Path(preflight_temp).unlink()
+            temp_tracker.write_text("", encoding="utf-8")
+            self.assertFalse(Path(preflight_temp).exists())
+            for identity_path in (
+                root / "hung-adb-ok.pid",
+                root / "hung-sleep-ok.pid",
+                root / "hung-adb-ok.initial-stat",
+                root / "hung-sleep-ok.initial-stat",
+            ):
+                self.assertFalse(identity_path.exists(), str(identity_path))
+
             def run(mode: str) -> subprocess.CompletedProcess[str]:
                 if state_parent.is_dir():
                     if mode == "probe_absent":
@@ -1144,6 +1215,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
 
                 def group_snapshot(expected_pgrp: int) -> dict[str, object]:
                     members: list[dict[str, str | int]] = []
+                    observed_count = 0
                     vanished = 0
                     host_unreadable = 0
                     enumeration_error = None
@@ -1165,14 +1237,16 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                             host_unreadable += 1
                             continue
                         if current["pgrp"] == expected_pgrp:
-                            members.append({"pid": int(proc_entry.name), **current})
+                            observed_count += 1
+                            if len(members) < 33:
+                                members.append({"pid": int(proc_entry.name), **current})
                     return {
                         "members": members[:32],
-                        "observed_count": len(members),
+                        "observed_count": observed_count,
                         "vanished_during_scan": vanished,
                         "host_unreadable": host_unreadable,
                         "enumeration_error": enumeration_error,
-                        "truncated": len(members) > 32,
+                        "truncated": observed_count > 32,
                     }
 
                 def pid_addressability(pid: int) -> str:
