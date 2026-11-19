@@ -61,6 +61,17 @@ polynomial rolling results. SipHash keys contain exactly 16 bytes and are
 caller-supplied. The wrapper snapshots the key so later caller mutation does
 not change its behavior.
 
+## Existing evidence boundary
+
+| Surface | Existing Rust evidence | Evidence required for Dart |
+| --- | --- | --- |
+| Eight byte functions | `code/packages/rust/hash-functions/src/lib.rs` exports the eight DT17 byte operations. `code/specs/hash-functions.warrant` covers only those operations with 277 Rust tests, including 73 literal examples. | Execute the same neutral byte vectors through Dart public functions. Compare exhaustive expectations against the independent exact model, then cross-check selected known answers against Rust public functions. Rust results are a second implementation comparison, not the expected-answer oracle. |
+| UTF-8 conveniences and six strategy wrappers | The Warrant excludes both string conveniences and the trait/strategy types. The string functions are simple Rust forwards, but that does not establish Dart string or wrapper behavior. | Exercise Dart UTF-8 encoding and malformed-string rejection, wrapper output widths, SipHash key ownership, and forwarding behavior through Dart public APIs. |
+| Avalanche and distribution analysis | Rust analysis lives in the separate `hash-analysis` crate described by DT17a. Its avalanche helper draws OS randomness and its analysis API is not covered by the eight-operation Warrant. | Use explicit samples only. Hand-computable synthetic callbacks pin flip counts, denominators, bucket counts, and rational chi-squared results. Real hash callbacks use outputs from the independent exact model. Do not use Rust random avalanche values as expected answers. |
+
+The 277 Warrant test count and its claims belong to the existing Rust crate.
+They do not establish Dart behavior or a Dart Warrant proof.
+
 ## Analysis helpers and failures
 
 Avalanche analysis accepts `outputBits` from 1 through 64, at least one sample,
@@ -94,8 +105,11 @@ encoding to preserve exactness through JSON parsing. The Dart consumer parses
 them directly to `BigInt`.
 
 The corpus includes exhaustive inputs consisting of every byte string of
-length zero, one, and two (65,793 inputs per applicable operation) under a
-fixed documented seed, fixed SipHash key, and default polynomial parameters.
+length zero, one, and two (65,793 inputs per applicable operation) under
+Murmur3 seed `0x9747b28c`, SipHash key `000102030405060708090a0b0c0d0e0f`,
+and default polynomial parameters. Each operation's output is stored as a
+fixed-width lowercase hexadecimal stream with exactly one output per ordered
+input. Dart validates the full stream and consumes every output.
 It also includes directed four- and eight-byte block and tail boundaries,
 wrap carries, maximum seed and key bytes, and polynomial cases whose exact
 intermediate exceeds 64 bits. Longer deterministic property histories and
@@ -106,9 +120,11 @@ syntax or setup failures are not controls.
 
 VM and Node runs must execute the same fixture cases through public Dart APIs.
 Node evidence must execute those public calls under Node. Compilation alone
-does not establish runtime conformance. Fixture loading may use a test-only
-bridge or generated constant snapshot verified against the neutral JSON
-corpus, while production remains free of I/O dependencies. Report the actual
+does not establish runtime conformance. A test-only generator binds the raw
+neutral JSON bytes as chunked base64 constants in ignored `.dart_tool` output.
+The VM integrity test compares decoded snapshot bytes exactly with the neutral
+JSON file. VM and Node decode the same generated snapshot through
+`dart:convert`; production remains free of I/O dependencies. Report the actual
 coverage engine and its line/branch capabilities, with at least 95% measured
 coverage under the configured native Dart test workflow. No SAT or native
 Warrant proof is claimed without executing the actual supporting engine.

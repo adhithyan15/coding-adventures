@@ -1,0 +1,11 @@
+name: coding_adventures_hash_functions
+version: 0.1.0
+description: Test-only DT17 fixture binding for Dart VM and Node validation.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.25.0
