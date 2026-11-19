@@ -605,6 +605,51 @@ func TestParserResourceCeilings(t *testing.T) {
 	}
 }
 
+func TestDIMACSOptionAndWriterRefusals(t *testing.T) {
+	if _, err := ParseDimacs("p cnf 0 0", ParseDimacsOptions{}, ParseDimacsOptions{}); err == nil {
+		t.Fatal("parser accepted multiple options")
+	}
+	if _, err := ParseDimacs("p cnf 1 0\n", ParseDimacsOptions{MaxVars: 0}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := WriteDimacs(CnfFormula{NumVars: 1, Clauses: [][]Lit{{2}}}); err == nil {
+		t.Fatal("writer accepted undeclared literal")
+	}
+	if _, err := WriteDimacs(CnfFormula{NumVars: maxVar + 2}); err == nil {
+		t.Fatal("writer accepted unrepresentable variable count")
+	}
+}
+
+func TestConflictBudgetAndRootConflictPrecedence(t *testing.T) {
+	build := func() *Solver {
+		s, _ := NewSolver()
+		x, _ := s.NewVar()
+		y, _ := s.NewVar()
+		a, _ := MakeLit(x, false)
+		b, _ := MakeLit(y, false)
+		for _, cl := range [][]Lit{{a, b}, {a, b ^ 1}, {a ^ 1, b}, {a ^ 1, b ^ 1}} {
+			_, _ = s.AddClause(cl)
+		}
+		return s
+	}
+	s := build()
+	zero := uint64(0)
+	if got, err := s.Solve(SolverOptions{MaxConflicts: &zero}); err != nil || got != SolveUnknown {
+		t.Fatalf("zero conflict budget=%v %v", got, err)
+	}
+	if got, err := s.Solve(); err != nil || got != SolveUnsat {
+		t.Fatalf("unbounded recovery=%v %v", got, err)
+	}
+	root := build()
+	one := uint64(1)
+	if got, err := root.Solve(SolverOptions{MaxConflicts: &one}); err != nil || got != SolveUnsat {
+		t.Fatalf("observed root conflict did not outrank limit=%v %v", got, err)
+	}
+	if root.Okay() {
+		t.Fatal("root conflict was not sticky")
+	}
+}
+
 func TestPublicRefusalPathsAndBuilderPreflight(t *testing.T) {
 	bad := Lit(1 << 31)
 	if _, err := NegateLit(bad); err == nil {
@@ -694,6 +739,41 @@ func TestLearnedArenaHasHardPhysicalEntryLimit(t *testing.T) {
 	}
 }
 
+func TestLearnedReductionKeepsReasonLockedAndBinaryClauses(t *testing.T) {
+	s, _ := NewSolver()
+	for i := 0; i < 4; i++ {
+		_, _ = s.NewVar()
+	}
+	l0, _ := MakeLit(0, false)
+	l1, _ := MakeLit(1, false)
+	l2, _ := MakeLit(2, false)
+	l3, _ := MakeLit(3, false)
+	locked, _ := s.addLearned([]Lit{l0, l1, l2})
+	binary, _ := s.addLearned([]Lit{l0, l1})
+	candidate, _ := s.addLearned([]Lit{l1, l2, l3})
+	candidate2, _ := s.addLearned([]Lit{l0, l2, l3})
+	s.reason[0] = locked
+	s.learnedLimit = 1
+	s.reduceLearned()
+	if s.cs[locked].deleted {
+		t.Fatal("reduction deleted a clause locked as a live reason")
+	}
+	if s.cs[binary].deleted {
+		t.Fatal("reduction deleted a binary learned clause")
+	}
+	if s.cs[candidate].deleted == s.cs[candidate2].deleted || (s.cs[candidate].deleted && len(s.cs[candidate].lits) != 0) || (s.cs[candidate2].deleted && len(s.cs[candidate2].lits) != 0) {
+		t.Fatal("reduction did not reclaim an unlocked long learned clause")
+	}
+	if s.NClauses() != 3 {
+		t.Fatalf("NClauses after reduction=%d want3", s.NClauses())
+	}
+	for _, bucket := range s.watches {
+		if cap(bucket) != len(bucket) {
+			t.Fatalf("reduction retained historical watch capacity: len=%d cap=%d", len(bucket), cap(bucket))
+		}
+	}
+}
+
 func TestUnknownPreservesPendingRootPropagation(t *testing.T) {
 	solver, _ := NewSolver()
 	x, _ := solver.NewVar()
@@ -717,6 +797,82 @@ func TestUnknownPreservesPendingRootPropagation(t *testing.T) {
 	if got := solver.VarValue(z); got != True {
 		t.Fatalf("pending root propagation lost z=true: %v", got)
 	}
+}
+
+func TestAssumptionBackjumpLeavesPendingLearnedRootFacts(t *testing.T) {
+	for _, mirrored := range []bool{false, true} {
+		t.Run(fmt.Sprint("mirrored_", mirrored), func(t *testing.T) {
+			build := func() *Solver {
+				solver, err := NewSolver()
+				if err != nil {
+					t.Fatal(err)
+				}
+				for i := 0; i < 4; i++ {
+					if _, err := solver.NewVar(); err != nil {
+						t.Fatal(err)
+					}
+				}
+				x, _ := MakeLit(0, mirrored)
+				y, _ := MakeLit(1, mirrored)
+				z, _ := MakeLit(2, mirrored)
+				for _, clause := range [][]Lit{{x, y}, {x, y ^ 1}, {x ^ 1, z}} {
+					if _, err := solver.AddClause(clause); err != nil {
+						t.Fatal(err)
+					}
+				}
+				if mirrored {
+					solver.phase[0] = 1
+				} else {
+					solver.phase[0] = -1
+				}
+				return solver
+			}
+			xExpected := True
+			if mirrored {
+				xExpected = False
+			}
+			a, _ := MakeLit(3, false)
+			budget := uint64(2)
+			solver := build()
+			if got, err := solver.SolveWithAssumptions([]Lit{a}, SolverOptions{MaxSteps: &budget}); err != nil || got != SolveUnknown {
+				t.Fatalf("bounded solve=%v %v", got, err)
+			}
+			if got := solver.Propagate(^uint64(0)); got != -1 {
+				t.Fatalf("pending root propagation conflict=%d", got)
+			}
+			if solver.VarValue(0) != xExpected || solver.VarValue(2) != xExpected {
+				t.Fatalf("lost root implications: x=%v z=%v want=%v", solver.VarValue(0), solver.VarValue(2), xExpected)
+			}
+			if solver.VarValue(3) != Undef {
+				t.Fatal("assumption leaked into root state")
+			}
+			if got, err := solver.Solve(); err != nil || got != SolveSat {
+				t.Fatalf("unrestricted recovery=%v %v", got, err)
+			}
+			model, valid := solver.Model()
+			clauses := [][]Lit{{mustLit(t, 0, mirrored), mustLit(t, 1, mirrored)}, {mustLit(t, 0, mirrored), mustLit(t, 1, mirrored) ^ 1}, {mustLit(t, 0, mirrored) ^ 1, mustLit(t, 2, mirrored)}}
+			if !valid || !allClausesSatisfied(clauses, model) {
+				t.Fatalf("recovered model invalid: valid=%v model=%v", valid, model)
+			}
+			resetCase := build()
+			if got, err := resetCase.SolveWithAssumptions([]Lit{a}); err != nil || got != SolveSat {
+				t.Fatalf("SAT assumption control=%v %v", got, err)
+			}
+			resetCase.Reset()
+			if resetCase.VarValue(0) != xExpected || resetCase.VarValue(2) != xExpected || resetCase.VarValue(3) != Undef {
+				t.Fatalf("Reset lost learned root facts or retained assumption: x=%v z=%v a=%v", resetCase.VarValue(0), resetCase.VarValue(2), resetCase.VarValue(3))
+			}
+		})
+	}
+}
+
+func mustLit(t *testing.T, v Var, neg bool) Lit {
+	t.Helper()
+	l, err := MakeLit(v, neg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return l
 }
 
 func TestKnownRootUnsatSurvivesAssumptionsAndBudget(t *testing.T) {
@@ -1240,16 +1396,6 @@ func TestPigeonholeAndQueensAgainstIndependentChecks(t *testing.T) {
 	if solver.Restarts == 0 {
 		t.Fatal("forced low Luby threshold did not exercise restart path")
 	}
-	deletedLearned := false
-	for _, cl := range solver.cs {
-		if cl.learnt && cl.deleted {
-			deletedLearned = true
-			break
-		}
-	}
-	if !deletedLearned {
-		t.Fatal("forced low learned limit did not exercise safe reduction")
-	}
 	phpClauses := make([][]Lit, 0, 4+3*6)
 	for i := range p {
 		phpClauses = append(phpClauses, append([]Lit(nil), p[i]...))
@@ -1655,5 +1801,113 @@ func TestRepeatedFormulaAndSolveStatsRemainDefined(t *testing.T) {
 	}
 	if solver.Conflicts > ^uint64(0)-solver.Decisions {
 		t.Fatal(fmt.Sprintf("unexpectedly overflowing statistics: %+v", solver))
+	}
+}
+
+func TestRefusalsPreserveSavedModelAndCore(t *testing.T) {
+	s, _ := NewSolver()
+	x, _ := s.NewVar()
+	lit, _ := MakeLit(x, false)
+	if _, err := s.AddClause([]Lit{lit}); err != nil {
+		t.Fatal(err)
+	}
+	if got, err := s.Solve(); err != nil || got != SolveSat {
+		t.Fatalf("SAT setup=%v %v", got, err)
+	}
+	beforeModel, beforeValid := s.Model()
+	if _, err := s.AddClause([]Lit{Lit(1 << 31)}); err == nil {
+		t.Fatal("malformed clause accepted")
+	}
+	afterModel, afterValid := s.Model()
+	if !beforeValid || !afterValid || !reflect.DeepEqual(beforeModel, afterModel) {
+		t.Fatalf("invalid-input refusal changed saved model: before=%v/%v after=%v/%v", beforeModel, beforeValid, afterModel, afterValid)
+	}
+
+	coreSolver, _ := NewSolver()
+	aVar, _ := coreSolver.NewVar()
+	bVar, _ := coreSolver.NewVar()
+	a, _ := MakeLit(aVar, false)
+	b, _ := MakeLit(bVar, false)
+	if _, err := coreSolver.AddClause([]Lit{a ^ 1, b ^ 1}); err != nil {
+		t.Fatal(err)
+	}
+	if got, err := coreSolver.SolveWithAssumptions([]Lit{a, b}); err != nil || got != SolveUnsat {
+		t.Fatalf("UNSAT setup=%v %v", got, err)
+	}
+	beforeCore := coreSolver.FailedCore()
+	if _, err := coreSolver.AddClause([]Lit{Lit(1 << 31)}); err == nil {
+		t.Fatal("malformed clause accepted")
+	}
+	if afterCore := coreSolver.FailedCore(); !reflect.DeepEqual(beforeCore, afterCore) {
+		t.Fatalf("invalid-input refusal changed saved core: before=%v after=%v", beforeCore, afterCore)
+	}
+
+	quotaModel, _ := NewSolver(SolverConfig{MaxVars: 2, MaxClauses: 2, MaxClauseLiterals: 2, MaxStoredLiterals: 1})
+	q0, _ := quotaModel.NewVar()
+	q1, _ := quotaModel.NewVar()
+	l0, _ := MakeLit(q0, false)
+	l1, _ := MakeLit(q1, false)
+	if _, err := quotaModel.AddClause([]Lit{l0}); err != nil {
+		t.Fatal(err)
+	}
+	if got, err := quotaModel.Solve(); err != nil || got != SolveSat {
+		t.Fatalf("quota model setup=%v %v", got, err)
+	}
+	quotaBefore, _ := quotaModel.Model()
+	if _, err := quotaModel.AddClause([]Lit{l1}); err == nil {
+		t.Fatal("stored-literal quota refusal did not occur")
+	}
+	quotaAfter, quotaValid := quotaModel.Model()
+	if !quotaValid || !reflect.DeepEqual(quotaBefore, quotaAfter) {
+		t.Fatalf("quota refusal changed saved model: %v -> %v valid=%t", quotaBefore, quotaAfter, quotaValid)
+	}
+
+	quotaCore, _ := NewSolver(SolverConfig{MaxVars: 2, MaxClauses: 1, MaxClauseLiterals: 2, MaxStoredLiterals: 2})
+	qaVar, _ := quotaCore.NewVar()
+	qbVar, _ := quotaCore.NewVar()
+	qa, _ := MakeLit(qaVar, false)
+	qb, _ := MakeLit(qbVar, false)
+	if _, err := quotaCore.AddClause([]Lit{qa ^ 1, qb ^ 1}); err != nil {
+		t.Fatal(err)
+	}
+	if got, err := quotaCore.SolveWithAssumptions([]Lit{qa, qb}); err != nil || got != SolveUnsat {
+		t.Fatalf("quota core setup=%v %v", got, err)
+	}
+	coreBeforeQuota := quotaCore.FailedCore()
+	if _, err := quotaCore.AddClause([]Lit{qa, qb}); err == nil {
+		t.Fatal("clause-count quota refusal did not occur")
+	}
+	if coreAfterQuota := quotaCore.FailedCore(); !reflect.DeepEqual(coreBeforeQuota, coreAfterQuota) {
+		t.Fatalf("quota refusal changed saved core: %v -> %v", coreBeforeQuota, coreAfterQuota)
+	}
+}
+
+func TestWatchBucketCapacityIsBoundedByLiteralOccurrences(t *testing.T) {
+	s, _ := NewSolver(SolverConfig{MaxVars: 16, MaxClauses: 32, MaxClauseLiterals: 64, MaxStoredLiterals: 64})
+	for i := 0; i < 16; i++ {
+		if _, err := s.NewVar(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for i := 0; i < 12; i++ {
+		a, _ := MakeLit(Var(i), false)
+		b, _ := MakeLit(Var((i+1)%16), false)
+		c, _ := MakeLit(Var((i+2)%16), false)
+		if _, err := s.AddClause([]Lit{a, b, c}); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for i := 0; i < 100; i++ {
+		a, _ := MakeLit(Var(i%12), i%2 == 0)
+		if got, err := s.SolveWithAssumptions([]Lit{a}); err != nil || (got != SolveSat && got != SolveUnknown) {
+			t.Fatalf("assumption solve=%v %v", got, err)
+		}
+		var capacity int
+		for _, bucket := range s.watches {
+			capacity += cap(bucket)
+		}
+		if bound := 4 * s.storedLiteralCount(); uint64(capacity) > bound {
+			t.Fatalf("watch capacity=%d exceeds literal-derived bound=%d", capacity, bound)
+		}
 	}
 }

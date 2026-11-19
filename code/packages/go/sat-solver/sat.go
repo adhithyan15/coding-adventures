@@ -331,6 +331,7 @@ func (s *Solver) AddClause(in []Lit) (bool, error) {
 // propagate checks the budget before consuming a trail item. UNKNOWN therefore
 // leaves qhead at the earliest unprocessed propagation, including at level zero.
 func (s *Solver) propagate(budget uint64) int {
+
 	var used uint64
 	for s.qhead < len(s.trail) {
 		if used >= budget {
@@ -398,6 +399,32 @@ func (s *Solver) propagate(budget uint64) int {
 	}
 	return -1
 }
+
+// compactWatches discards every historical bucket backing array and watcher
+// entry after a learned-clause deletion pass. The remaining IDs are rebuilt
+// from the two live watched positions of each non-unit clause.
+func (s *Solver) compactWatches() {
+	fresh := make([][]int, len(s.watches))
+	for id, c := range s.cs {
+		if c.deleted || len(c.lits) < 2 {
+			continue
+		}
+		w0 := uint32(c.lits[c.w0]) ^ 1
+		w1 := uint32(c.lits[c.w1]) ^ 1
+		fresh[w0] = append(fresh[w0], id)
+		fresh[w1] = append(fresh[w1], id)
+	}
+	for i, bucket := range fresh {
+		if len(bucket) == 0 {
+			continue
+		}
+		exact := make([]int, len(bucket))
+		copy(exact, bucket)
+		fresh[i] = exact
+	}
+	s.watches = fresh
+}
+
 func (s *Solver) analyze(conf int) ([]Lit, int, bool) {
 	// First-UIP walks backward over the implication graph. The pivot variable
 	// is skipped in its own reason (which contains its opposite literal), so
@@ -508,6 +535,11 @@ func (s *Solver) reduceLearned() {
 		c.deleted = true
 		c.lits = nil
 	}
+	// Deleted watch IDs otherwise leave oversized historical buckets behind.
+	// Between reductions, each clause's two watch IDs can occupy only buckets
+	// for literals present in that clause; total retained capacity is bounded
+	// by the slice growth factor times stored literal occurrences.
+	s.compactWatches()
 }
 
 func (s *Solver) Solve(opts ...SolverOptions) (SolveResult, error) {
@@ -517,13 +549,11 @@ func (s *Solver) SolveWithAssumptions(as []Lit, opts ...SolverOptions) (SolveRes
 	if len(opts) > 1 {
 		return SolveUnknown, errors.New("at most one options value")
 	}
+	maxRequired := s.vars
 	for _, l := range as {
 		if !validLit(l) {
 			return SolveUnknown, fmt.Errorf("invalid assumption %d", l)
 		}
-	}
-	maxRequired := s.vars
-	for _, l := range as {
 		if v := uint32(l) >> 1; v >= maxRequired {
 			maxRequired = v + 1
 		}
@@ -532,44 +562,48 @@ func (s *Solver) SolveWithAssumptions(as []Lit, opts ...SolverOptions) (SolveRes
 		return SolveUnknown, errors.New("variable resource ceiling exceeded")
 	}
 	for s.vars < maxRequired {
-		if _, e := s.NewVar(); e != nil {
-			return SolveUnknown, e
+		if _, err := s.NewVar(); err != nil {
+			return SolveUnknown, err
 		}
 	}
 	o := SolverOptions{}
 	if len(opts) == 1 {
 		o = opts[0]
 	}
-	mc, ms := uint64(math.MaxUint64), uint64(math.MaxUint64)
+	maxConflicts, maxSteps := uint64(math.MaxUint64), uint64(math.MaxUint64)
 	if o.MaxConflicts != nil {
-		mc = *o.MaxConflicts
+		maxConflicts = *o.MaxConflicts
 	}
 	if o.MaxSteps != nil {
-		ms = *o.MaxSteps
+		maxSteps = *o.MaxSteps
+	}
+	remaining := func(limit, used uint64) uint64 {
+		if limit == math.MaxUint64 {
+			return limit
+		}
+		if used >= limit {
+			return 0
+		}
+		return limit - used
 	}
 	s.clearResult()
 	s.cancel(0)
 	if s.rootUnsat {
 		return SolveUnsat, nil
 	}
-	pc, pp := s.Conflicts, s.Propagations
-	rem := func(max, used uint64) uint64 {
-		if max == math.MaxUint64 {
-			return max
-		}
-		if used >= max {
-			return 0
-		}
-		return max - used
-	}
-	if c := s.propagate(rem(ms, s.Propagations-pp)); c >= 0 {
-		s.rootUnsat = true
-		return SolveUnsat, nil
-	} else if c == -2 {
+	startConflicts, startPropagations := s.Conflicts, s.Propagations
+	// Root work is checked before assumptions. A contradiction already
+	// observed at level zero is permanent and takes precedence over budgets.
+	rootConflict := s.propagate(remaining(maxSteps, s.Propagations-startPropagations))
+	if rootConflict == -2 {
 		return SolveUnknown, nil
 	}
+	if rootConflict >= 0 {
+		s.rootUnsat = true
+		return SolveUnsat, nil
+	}
 	unique := make([]Lit, 0, len(as))
-	seen := map[Lit]bool{}
+	seen := make(map[Lit]bool, len(as))
 	for _, a := range as {
 		if seen[a] {
 			continue
@@ -587,13 +621,13 @@ func (s *Solver) SolveWithAssumptions(as []Lit, opts ...SolverOptions) (SolveRes
 			s.newLevel()
 			s.Decisions++
 			s.enqueue(a, -1)
-			c := s.propagate(rem(ms, s.Propagations-pp))
+			c := s.propagate(remaining(maxSteps, s.Propagations-startPropagations))
 			if c == -2 {
 				s.cancel(0)
 				return SolveUnknown, nil
 			}
 			if c >= 0 {
-				if mc != math.MaxUint64 && s.Conflicts-pc > mc {
+				if maxConflicts != math.MaxUint64 && s.Conflicts-startConflicts > maxConflicts {
 					s.cancel(0)
 					return SolveUnknown, nil
 				}
@@ -603,70 +637,129 @@ func (s *Solver) SolveWithAssumptions(as []Lit, opts ...SolverOptions) (SolveRes
 			}
 		}
 	}
-	assLevels := len(s.limits)
+	assumptionLevels := len(s.limits)
+	pendingConflict := -1
 	for {
-		conf := s.propagate(rem(ms, s.Propagations-pp))
-		if conf == -2 {
+		conflict := pendingConflict
+		pendingConflict = -1
+		if conflict < 0 {
+			conflict = s.propagate(remaining(maxSteps, s.Propagations-startPropagations))
+		}
+		if conflict == -2 {
 			s.cancel(0)
 			return SolveUnknown, nil
 		}
-		if conf >= 0 {
-			if len(s.limits) <= assLevels {
-				if len(s.limits) == 0 {
-					// A level-zero conflict is a permanent fact, independent of
-					// later calls' budgets or assumptions.
-					s.rootUnsat = true
-					s.cancel(0)
-					return SolveUnsat, nil
-				} else {
-					if mc != math.MaxUint64 && s.Conflicts-pc > mc {
-						s.cancel(0)
-						return SolveUnknown, nil
-					}
-					s.core = append([]Lit(nil), unique...)
-				}
+		if conflict >= 0 {
+			// A true root conflict is sticky and outranks the conflict budget.
+			if len(s.limits) == 0 {
+				s.rootUnsat = true
 				s.cancel(0)
 				return SolveUnsat, nil
 			}
-			if s.Conflicts-pc > mc && mc != math.MaxUint64 {
-				s.cancel(0)
-				return SolveUnknown, nil
-			}
-			s.sinceRestart++
-			ls, back, valid := s.analyze(conf)
-			if !valid {
-				s.cancel(0)
-				return SolveUnknown, errors.New("CDCL conflict-analysis invariant failed")
-			}
-			// Assumptions are decision levels, not reason clauses. Resolution
-			// therefore keeps every learned clause entailed by the permanent
-			// formula. Clamp backjumping at the active assumption prefix; dropping
-			// that prefix would turn a learned consequence into a false UNSAT.
-			if back < assLevels {
-				back = assLevels
-			}
-			s.cancel(back)
-			id, stored := s.addLearned(ls)
-			if !stored {
-				s.cancel(0)
-				return SolveUnknown, nil
-			}
-			if !s.enqueue(ls[0], id) {
+			if len(s.limits) <= assumptionLevels {
+				if maxConflicts != math.MaxUint64 && s.Conflicts-startConflicts > maxConflicts {
+					s.cancel(0)
+					return SolveUnknown, nil
+				}
 				s.core = append([]Lit(nil), unique...)
 				s.cancel(0)
 				return SolveUnsat, nil
 			}
+			if maxConflicts != math.MaxUint64 && s.Conflicts-startConflicts > maxConflicts {
+				s.cancel(0)
+				return SolveUnknown, nil
+			}
+			s.sinceRestart++
+			learned, back, valid := s.analyze(conflict)
+			if !valid {
+				s.cancel(0)
+				return SolveUnknown, errors.New("CDCL conflict-analysis invariant failed")
+			}
+			// Assumptions are decisions, not resolution reasons. Learned clauses
+			// therefore remain permanent consequences; jump to the natural level,
+			// assert the clause there, then replay only assumptions that were cut.
+			s.cancel(back)
+			id, stored := s.addLearned(learned)
+			if !stored {
+				s.cancel(0)
+				return SolveUnknown, nil
+			}
+			if !s.enqueue(learned[0], id) {
+				if back == 0 {
+					s.rootUnsat = true
+				} else if back <= len(unique) {
+					s.core = append([]Lit(nil), unique[:back]...)
+				} else {
+					return SolveUnknown, errors.New("learned clause was not asserting after backjump")
+				}
+				s.cancel(0)
+				return SolveUnsat, nil
+			}
+			postLearn := s.propagate(remaining(maxSteps, s.Propagations-startPropagations))
+			if postLearn == -2 {
+				s.cancel(0)
+				return SolveUnknown, nil
+			}
+			if postLearn >= 0 {
+				if back == 0 {
+					s.rootUnsat = true
+					s.cancel(0)
+					return SolveUnsat, nil
+				}
+				if back <= assumptionLevels {
+					if maxConflicts != math.MaxUint64 && s.Conflicts-startConflicts > maxConflicts {
+						s.cancel(0)
+						return SolveUnknown, nil
+					}
+					s.core = append([]Lit(nil), unique[:back]...)
+					s.cancel(0)
+					return SolveUnsat, nil
+				}
+				pendingConflict = postLearn
+			}
+			if back < assumptionLevels {
+				for i := back; i < len(unique); i++ {
+					a := unique[i]
+					switch s.litVal(a) {
+					case 1:
+						s.newLevel()
+					case 0:
+						s.core = append([]Lit(nil), unique[:i+1]...)
+						s.cancel(0)
+						return SolveUnsat, nil
+					default:
+						s.newLevel()
+						s.Decisions++
+						s.enqueue(a, -1)
+						c := s.propagate(remaining(maxSteps, s.Propagations-startPropagations))
+						if c == -2 {
+							s.cancel(0)
+							return SolveUnknown, nil
+						}
+						if c >= 0 {
+							if maxConflicts != math.MaxUint64 && s.Conflicts-startConflicts > maxConflicts {
+								s.cancel(0)
+								return SolveUnknown, nil
+							}
+							s.core = append([]Lit(nil), unique[:i+1]...)
+							s.cancel(0)
+							return SolveUnsat, nil
+						}
+					}
+				}
+				assumptionLevels = len(s.limits)
+			}
 			learnedCount := 0
-			for _, cl := range s.cs {
-				if cl.learnt && !cl.deleted {
+			for _, c := range s.cs {
+				if c.learnt && !c.deleted {
 					learnedCount++
 				}
 			}
 			if learnedCount > s.learnedLimit {
 				s.reduceLearned()
 			}
-			if s.sinceRestart >= s.restartBase*luby(s.restartIndex) {
-				s.cancel(assLevels)
+			if pendingConflict < 0 && s.sinceRestart >= s.restartBase*luby(s.restartIndex) {
+				s.cancel(assumptionLevels)
 				s.qhead = 0
 				s.Restarts++
 				s.restartIndex++
@@ -692,11 +785,11 @@ func (s *Solver) SolveWithAssumptions(as []Lit, opts ...SolverOptions) (SolveRes
 		}
 		s.newLevel()
 		s.Decisions++
-		l := Lit(v << 1)
+		lit := Lit(v << 1)
 		if s.phase[v] <= 0 {
-			l |= 1
+			lit |= 1
 		}
-		s.enqueue(l, -1)
+		s.enqueue(lit, -1)
 	}
 }
 func (s *Solver) Model() ([]bool, bool) {
