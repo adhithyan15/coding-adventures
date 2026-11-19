@@ -188,11 +188,16 @@ def avalanche_counts(
     changed = 0
     compared = 0
     for sample in samples:
-        original = hash_fn(sample) & mask
+        original = hash_fn(sample)
+        if original < 0 or original > mask:
+            raise ValueError("avalanche callback result does not fit output width")
         for bit in range(len(sample) * 8):
             mutated = bytearray(sample)
             mutated[bit // 8] ^= 1 << (bit % 8)
-            changed += (original ^ (hash_fn(bytes(mutated)) & mask)).bit_count()
+            result = hash_fn(bytes(mutated))
+            if result < 0 or result > mask:
+                raise ValueError("avalanche callback result does not fit output width")
+            changed += (original ^ result).bit_count()
             compared += output_bits
     return changed, compared
 
@@ -202,7 +207,10 @@ def distribution_counts(hash_fn, inputs: list[bytes], bucket_count: int) -> tupl
         raise ValueError("invalid distribution corpus")
     buckets = [0] * bucket_count
     for data in inputs:
-        buckets[hash_fn(data) % bucket_count] += 1
+        result = hash_fn(data)
+        if result < 0 or result > U64_MAX:
+            raise ValueError("distribution callback result is outside u64 range")
+        buckets[result % bucket_count] += 1
     total = len(inputs)
     numerator = sum((bucket_count * count - total) ** 2 for count in buckets)
     denominator = bucket_count * total

@@ -17,10 +17,12 @@ length equals `count * width`, check lowercase hex, and consume all 65,793
 entries. Important order boundaries are index 0 (empty), 1 (`00`), 256 (`ff`),
 257 (`0000`), and 65,792 (`ffff`).
 
-The eight streams cover FNV-1a 32/64, DJB2 64, polynomial rolling with both
-default and default-valued parameter entry points, Murmur3-32 with seed zero
-and fixed seed `0x9747b28c`, and SipHash-2-4 with key `00 01 … 0f`. The exact
-fixed parameters are in `cases.json`.
+The eight streams cover FNV-1a 32/64, DJB2 64, default polynomial rolling
+(base 31), parameterized polynomial rolling (base 257, modulus
+`2305843009213693951`), Murmur3-32 with seed zero and fixed seed
+`0x9747b28c`, and SipHash-2-4 with key `00 01 … 0f`. The nondefault base on
+the parameterized stream ensures that its consumer must call the public
+parameterized operation. All fixed parameters are in `cases.json`.
 
 ## Other case groups
 
@@ -44,8 +46,10 @@ fixed parameters are in `cases.json`.
   deterministic sample API as the Dart profile.
 - `dart_only_invalid` records invalid inputs that cannot be passed to the
   Rust API's typed `&[u8]`, `u32`, `u64`, or `[u8; 16]` parameters. The separate
-  `rust_panics` case records that zero polynomial modulus panics in Rust; it
-  does not claim Rust returns the Dart `ArgumentError`.
+  rows also cover invalid analysis widths, empty corpora, negative and
+  out-of-range callback outputs, and an unpaired surrogate. The `rust_panics`
+  case records that zero polynomial modulus panics in Rust; these vectors do
+  not claim Rust returns the Dart `ArgumentError`.
 
 ## Independent exact oracle
 
@@ -65,8 +69,10 @@ py -3.13 validate.py
 ```
 
 The Dart VM-only integrity test compares the generated test snapshot to the
-canonical `cases.json` bytes. The Dart VM and Node tests consume that snapshot
-and execute every fixture case through public Dart APIs.
+canonical `cases.json` bytes. Current Dart VM and Node tests consume and
+validate all stream entries from that snapshot. Public Dart API execution,
+including Dart-only invalid inputs and profile analysis callbacks, remains
+pending the production implementation phase.
 
 Warrant's generated Rust test evidence remains a separate suite: 277 TAP tests
 passed on the baseline source, but the existing Warrant document covers only
@@ -78,14 +84,16 @@ does not claim proof or security properties.
 
 | Evidence surface | Executed evidence | Scope |
 | --- | --- | --- |
-| Rust byte API | `hash_functions_v1_fixture` calls all eight Rust functions for all 65,793 inputs each, then checks 48 literal answers, 28 directed cases, 128 deterministic generated cases, 32 byte-flip pairs, four UTF-8 wrappers, and exact analysis answers for the public FNV callback. | Rust API behavior represented by its typed byte, seed, parameter, and key inputs. |
-| Dart public API | The package test consumer uses the shared snapshot and calls Dart public methods on VM and Node. | Includes Dart-only invalid-value validation and profile analysis callbacks; these are not Rust API conformance claims. |
-| Independent model | Python arbitrary-precision oracle validates every fixture value and canonical regeneration. | Cross-checks arithmetic and fixture integrity; it does not derive expected results from either production implementation. |
+| Rust byte API | `hash_functions_v1_fixture` calls all eight Rust functions for all 65,793 inputs each, then checks 48 literal answers, 28 directed cases, 128 deterministic generated cases, 32 byte-flip pairs, four UTF-8 wrappers, and exact analysis answers for the public FNV callback. | Rust API behavior represented by its typed byte, seed, parameter, and key inputs. The parameterized polynomial stream uses base 257 and the test calls `polynomial_rolling_with_params`. |
+| Dart test scaffold | VM and Node tests consume the byte-exact snapshot and validate every stream entry. | No production Dart hash or analysis API has executed yet; those checks are pending implementation. |
+| Independent model | Python arbitrary-precision oracle validates every fixture value, rejects invalid analysis callback ranges, and checks canonical regeneration. | Cross-checks arithmetic and fixture integrity; it does not derive expected results from either production implementation. Profile analysis callback outputs are checked before use: avalanche values must fit `outputBits`; distribution values must fit u64. |
 | Rust Warrant | Baseline `warrant_evidence` emitted 277 passing TAP rows. | Existing Warrant source covers the eight Rust byte operations; it does not cover Dart text wrappers or caller-sample analysis. Its proof rows remain `not-live`/`unchecked` as recorded above. |
 
 The Rust consumer was run from an isolated 20-crate Cargo workspace because
 the sparse implementation worktree does not contain the repository's full
 1,530-member workspace. Package source files were copied byte-for-byte into
-that scratch workspace; its only workspace-boundary adjustment was listing
-the 20 recursively required Cargo roots. The test's fixture include path was
-adjusted in the scratch copy to point to the identical canonical fixture.
+that scratch workspace; the library `src/**/*.rs` bytes are unchanged. The
+test harness had one path-only change: `include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../../code/specs/fixtures/hash-functions-v1/cases.json"))`
+became the same expression with `/../specs/fixtures/hash-functions-v1/cases.json`
+to match the isolated package layout. The canonical fixture bytes are
+identical in both runs.

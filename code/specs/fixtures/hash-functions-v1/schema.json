@@ -32,7 +32,23 @@
             "count": { "const": 65793 }
           }
         },
-        "fixed_parameters": { "type": "object" },
+        "fixed_parameters": {
+          "type": "object",
+          "required": [
+            "murmur3_32_with_seed",
+            "siphash_2_4_key_hex",
+            "polynomial_rolling_default_base",
+            "polynomial_base",
+            "polynomial_modulus"
+          ],
+          "properties": {
+            "murmur3_32_with_seed": { "type": "string", "pattern": "^0x[0-9a-f]{8}$" },
+            "siphash_2_4_key_hex": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+            "polynomial_rolling_default_base": { "const": "31" },
+            "polynomial_base": { "const": "257" },
+            "polynomial_modulus": { "const": "2305843009213693951" }
+          }
+        },
         "expected_hex_streams": {
           "type": "object",
           "required": [
@@ -64,8 +80,39 @@
     "directed": { "type": "array", "items": { "$ref": "#/$defs/hashRecord" } },
     "generated": { "type": "object", "required": ["algorithm", "seed_hex", "count", "cases"] },
     "mutations": { "type": "object", "required": ["algorithm", "seed_hex", "bit_flips", "cases"] },
-    "analysis": { "type": "array" },
-    "dart_only_invalid": { "type": "array" },
+    "analysis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "reference_scope", "callback", "expected"],
+        "properties": {
+          "id": { "type": "string" },
+          "kind": { "enum": ["avalanche", "distribution"] },
+          "reference_scope": { "enum": ["profile-only-synthetic", "public-hash-callback-only"] },
+          "callback": { "type": "object" },
+          "expected": { "type": "object" }
+        }
+      }
+    },
+    "dart_only_invalid": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "op", "expected_error", "rust_reference"],
+        "properties": {
+          "id": { "type": "string" },
+          "op": { "type": "string" },
+          "code_points": { "type": "array", "items": { "type": "integer", "minimum": 0, "maximum": 1114111 } },
+          "samples_hex": { "type": "array", "items": { "type": "string", "pattern": "^([0-9a-f]{2})*$" } },
+          "inputs_hex": { "type": "array", "items": { "type": "string", "pattern": "^([0-9a-f]{2})*$" } },
+          "output_bits": { "type": "integer" },
+          "bucket_count": { "type": "integer" },
+          "callback_result": { "type": "string", "pattern": "^-?[0-9]+$" },
+          "expected_error": { "const": "ArgumentError" },
+          "rust_reference": { "type": "string" }
+        }
+      }
+    },
     "rust_panics": { "type": "array" }
   },
   "$defs": {

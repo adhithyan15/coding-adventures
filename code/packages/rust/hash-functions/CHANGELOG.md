@@ -2,6 +2,10 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased — DT17 v1 shared fixture
+
+- Add a test-only shared fixture consumer for the existing public hash APIs, with exhaustive parameterized polynomial coverage using a nondefault base. No runtime API or Warrant claim changes.
+
 ## Unreleased — regenerated evidence harness (VOS-038c)
 
 - `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence`: the allocation observer counts the

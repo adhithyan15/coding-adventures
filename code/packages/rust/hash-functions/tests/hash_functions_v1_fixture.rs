@@ -171,6 +171,23 @@ fn validate_stream(
     Ok(())
 }
 
+fn check_stream_output(
+    stream: &str,
+    index: usize,
+    width: usize,
+    actual: u64,
+) -> Result<(), &'static str> {
+    let start = index.checked_mul(width).ok_or("length")?;
+    let end = start.checked_add(width).ok_or("length")?;
+    let expected = stream.get(start..end).ok_or("length")?;
+    let encoded = format!("{actual:0width$x}");
+    if expected == encoded {
+        Ok(())
+    } else {
+        Err("answer")
+    }
+}
+
 #[test]
 fn public_rust_hashes_match_every_shared_v1_case() {
     let fixture = parse(FIXTURE).expect("fixture JSON must parse");
@@ -335,6 +352,8 @@ fn check_exhaustive(fixture: &JsonValue) {
     let key: [u8; 16] = bytes_hex(string(field(fixed, "siphash_2_4_key_hex")))
         .try_into()
         .unwrap();
+    let polynomial_base = integer(field(fixed, "polynomial_base"));
+    let polynomial_modulus = integer(field(fixed, "polynomial_modulus"));
     let operations: [(&str, usize); 8] = [
         ("fnv1a_32", 8),
         ("fnv1a_64", 16),
@@ -378,19 +397,20 @@ fn check_exhaustive(fixture: &JsonValue) {
                     "fnv1a_32" => hashes::fnv1a_32(&data) as u64,
                     "fnv1a_64" => hashes::fnv1a_64(&data),
                     "djb2" => hashes::djb2(&data),
-                    "polynomial_rolling" | "polynomial_rolling_with_params" => {
-                        hashes::polynomial_rolling(&data)
-                    }
+                    "polynomial_rolling" => hashes::polynomial_rolling(&data),
+                    "polynomial_rolling_with_params" => hashes::polynomial_rolling_with_params(
+                        &data,
+                        polynomial_base,
+                        polynomial_modulus,
+                    ),
                     "murmur3_32" => hashes::murmur3_32(&data) as u64,
                     "murmur3_32_with_seed" => hashes::murmur3_32_with_seed(&data, seed) as u64,
                     "siphash_2_4" => hashes::siphash_2_4(&data, &key),
                     _ => unreachable!(),
                 };
-                let encoded = format!("{actual:0width$x}");
-                let start = index * width;
                 assert_eq!(
-                    &stream[start..start + width],
-                    encoded,
+                    check_stream_output(stream, index, width, actual),
+                    Ok(()),
                     "{op} exhaustive index {index}"
                 );
                 index += 1;
@@ -405,9 +425,12 @@ fn check_exhaustive(fixture: &JsonValue) {
                     "fnv1a_32" => hashes::fnv1a_32(&[]) as u64,
                     "fnv1a_64" => hashes::fnv1a_64(&[]),
                     "djb2" => hashes::djb2(&[]),
-                    "polynomial_rolling" | "polynomial_rolling_with_params" => {
-                        hashes::polynomial_rolling(&[])
-                    }
+                    "polynomial_rolling" => hashes::polynomial_rolling(&[]),
+                    "polynomial_rolling_with_params" => hashes::polynomial_rolling_with_params(
+                        &[],
+                        polynomial_base,
+                        polynomial_modulus,
+                    ),
                     "murmur3_32" => hashes::murmur3_32(&[]) as u64,
                     "murmur3_32_with_seed" => {
                         hashes::murmur3_32_with_seed(&[], seed) as u64
@@ -435,8 +458,19 @@ fn check_exhaustive(fixture: &JsonValue) {
             let replacement = if &mutated[..1] == "0" { "1" } else { "0" };
             mutated.replace_range(..1, replacement);
             assert_eq!(
-                validate_stream(&mutated, stream, count, width),
+                check_stream_output(&mutated, 0, width, hashes::fnv1a_32(&[]) as u64,),
                 Err("answer")
+            );
+        }
+        if op == "polynomial_rolling_with_params" {
+            // A default-dispatch regression must disagree on this two-byte
+            // input because the fixture base is deliberately nondefault 257.
+            let data = [0x01, 0x00];
+            let index = 513; // empty + 256 single bytes + 256 preceding pairs
+            assert_eq!(
+                check_stream_output(stream, index, width, hashes::polynomial_rolling(&data),),
+                Err("answer"),
+                "dispatching this lane to the default API must be detected"
             );
         }
     }

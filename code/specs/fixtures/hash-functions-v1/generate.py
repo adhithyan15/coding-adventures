@@ -14,8 +14,8 @@ from oracle import (
     U32_MAX,
     U64_MAX,
     avalanche_counts,
-    djb2,
     distribution_counts,
+    djb2,
     expected_hashes,
     fixed_hex,
     fnv1a32,
@@ -29,6 +29,7 @@ from oracle import (
 
 ROOT = Path(__file__).resolve().parent
 SEED = 0x445431375F7631  # "DT17_v1", SplitMix64 stream seed.
+PARAM_POLY_BASE = 257
 
 
 class SplitMix64:
@@ -317,7 +318,8 @@ def build_fixture() -> dict:
             "fixed_parameters": {
                 "murmur3_32_with_seed": f"0x{MURMUR_SEED:08x}",
                 "siphash_2_4_key_hex": SIPHASH_KEY.hex(),
-                "polynomial_base": str(POLY_BASE),
+                "polynomial_rolling_default_base": str(POLY_BASE),
+                "polynomial_base": str(PARAM_POLY_BASE),
                 "polynomial_modulus": str(POLY_MODULUS),
             },
             "expected_hex_streams": {
@@ -330,7 +332,11 @@ def build_fixture() -> dict:
                     ("fnv1a_64", fnv1a64, 64),
                     ("djb2", djb2, 64),
                     ("polynomial_rolling", polynomial_rolling, 64),
-                    ("polynomial_rolling_with_params", polynomial_rolling, 64),
+                    (
+                        "polynomial_rolling_with_params",
+                        lambda data: polynomial_rolling(data, PARAM_POLY_BASE, POLY_MODULUS),
+                        64,
+                    ),
                     ("murmur3_32", murmur3_32, 32),
                     ("murmur3_32_with_seed", lambda data: murmur3_32(data, MURMUR_SEED), 32),
                     ("siphash_2_4", lambda data: siphash24(data, SIPHASH_KEY), 64),
@@ -360,9 +366,16 @@ def build_fixture() -> dict:
             {"id": "negative-poly-base", "op": "polynomial_rolling_with_params", "base": "-1", "modulus": "17", "expected_error": "ArgumentError", "rust_reference": "not-representable-in-u64"},
             {"id": "poly-modulus-zero", "op": "polynomial_rolling_with_params", "base": "31", "modulus": "0", "expected_error": "ArgumentError", "rust_reference": "panics-assertion-no-native-error-value"},
             {"id": "siphash-short-key", "op": "siphash_2_4", "key_hex": "00" * 15, "expected_error": "ArgumentError", "rust_reference": "not-representable-in-array-u8-16"},
+            {"id": "string-unpaired-surrogate", "op": "hash_str_fnv1a_32", "code_points": [0xD800], "expected_error": "ArgumentError", "rust_reference": "not-representable-in-valid-utf8-str"},
             {"id": "avalanche-empty-sample-list", "op": "avalanche", "samples_hex": [], "expected_error": "ArgumentError", "rust_reference": "analysis-api-has-rng-sample-count-not-explicit-samples"},
             {"id": "distribution-empty-input-list", "op": "distribution", "inputs_hex": [], "bucket_count": 4, "expected_error": "ArgumentError", "rust_reference": "Rust-analysis-panics-but-accepts-iterator"},
             {"id": "distribution-zero-buckets", "op": "distribution", "inputs_hex": ["61"], "bucket_count": 0, "expected_error": "ArgumentError", "rust_reference": "Rust-analysis-panics-but-has-no-Dart-error-contract"},
+            {"id": "avalanche-zero-output-bits", "op": "avalanche", "samples_hex": ["01"], "output_bits": 0, "expected_error": "ArgumentError", "rust_reference": "profile-only-analysis-contract"},
+            {"id": "avalanche-output-bits-over-u64", "op": "avalanche", "samples_hex": ["01"], "output_bits": 65, "expected_error": "ArgumentError", "rust_reference": "profile-only-analysis-contract"},
+            {"id": "avalanche-negative-callback", "op": "avalanche", "samples_hex": ["01"], "output_bits": 8, "callback_result": "-1", "expected_error": "ArgumentError", "rust_reference": "profile-only-analysis-contract"},
+            {"id": "avalanche-callback-too-wide", "op": "avalanche", "samples_hex": ["01"], "output_bits": 8, "callback_result": "256", "expected_error": "ArgumentError", "rust_reference": "profile-only-analysis-contract"},
+            {"id": "distribution-negative-callback", "op": "distribution", "inputs_hex": [""], "bucket_count": 4, "callback_result": "-1", "expected_error": "ArgumentError", "rust_reference": "profile-only-analysis-contract"},
+            {"id": "distribution-callback-over-u64", "op": "distribution", "inputs_hex": [""], "bucket_count": 4, "callback_result": str(U64_MAX + 1), "expected_error": "ArgumentError", "rust_reference": "profile-only-analysis-contract"},
         ],
         "rust_panics": [
             {"id": "poly-modulus-zero-rust-reference", "op": "polynomial_rolling_with_params", "data_hex": "616263", "base": "31", "modulus": "0", "behavior": "panics"}

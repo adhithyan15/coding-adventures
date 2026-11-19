@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import sys
-from pathlib import Path
 
 from generate import ROOT, build_fixture
 from oracle import (
@@ -13,8 +12,8 @@ from oracle import (
     POLY_MODULUS,
     SIPHASH_KEY,
     avalanche_counts,
-    djb2,
     distribution_counts,
+    djb2,
     fixed_hex,
     fnv1a32,
     fnv1a64,
@@ -120,6 +119,11 @@ def validate() -> tuple[int, int]:
     ).encode("utf-8")
     if actual_bytes != expected_bytes:
         raise AssertionError("cases.json is stale; run `python generate.py` and review the change")
+    if fixture.get("schema") != "dt17-hash-functions-v1" or fixture.get("oracle") != "dt17-exact-arithmetic-v1":
+        raise AssertionError("schema/oracle identifier differs from DT17 v1 contract")
+    domain = fixture["exhaustive"]["domain"]
+    if domain != {"lengths": [0, 1, 2], "order": "length-then-lexicographic-bytes", "count": 65793}:
+        raise AssertionError("exhaustive domain or input ordering differs from DT17 v1 contract")
 
     for record in fixture["known_answers"]:
         _check_single_known_answer(record)
@@ -141,7 +145,14 @@ def validate() -> tuple[int, int]:
         "fnv1a_64": (fnv1a64, 16),
         "djb2": (djb2, 16),
         "polynomial_rolling": (polynomial_rolling, 16),
-        "polynomial_rolling_with_params": (polynomial_rolling, 16),
+        "polynomial_rolling_with_params": (
+            lambda data: polynomial_rolling(
+                data,
+                _number(fixture["exhaustive"]["fixed_parameters"]["polynomial_base"]),
+                _number(fixture["exhaustive"]["fixed_parameters"]["polynomial_modulus"]),
+            ),
+            16,
+        ),
         "murmur3_32": (murmur3_32, 8),
         "murmur3_32_with_seed": (lambda data: murmur3_32(data, MURMUR_SEED), 8),
         "siphash_2_4": (lambda data: siphash24(data, SIPHASH_KEY), 16),
@@ -168,6 +179,13 @@ def validate() -> tuple[int, int]:
                 index += 1
         if index != count:
             raise AssertionError(f"{op}: consumed {index} expected outputs, declared {count}")
+    dispatch_probe = bytes.fromhex("0100")
+    dispatch_base = _number(fixture["exhaustive"]["fixed_parameters"]["polynomial_base"])
+    dispatch_modulus = _number(fixture["exhaustive"]["fixed_parameters"]["polynomial_modulus"])
+    if polynomial_rolling(dispatch_probe) == polynomial_rolling(
+        dispatch_probe, dispatch_base, dispatch_modulus
+    ):
+        raise AssertionError("parameterized polynomial dispatch negative control is not discriminating")
 
     # Keep the stream contract itself under negative control: consumers must
     # reject malformed encoding, truncation, and any changed result entry.
@@ -204,7 +222,27 @@ def validate() -> tuple[int, int]:
         if item["expected"] != actual:
             raise AssertionError(f"{item['id']}: analysis expectation differs from exact oracle")
 
+    _check_invalid_analysis_inputs(fixture["dart_only_invalid"])
+
     return count, len(fixture["known_answers"])
+
+
+def _check_invalid_analysis_inputs(cases: list[dict]) -> None:
+    for item in cases:
+        if item["op"] not in {"avalanche", "distribution"}:
+            continue
+        callback_result = _number(item.get("callback_result", "0"))
+        callback = lambda _data, value=callback_result: value
+        try:
+            if item["op"] == "avalanche":
+                samples = [bytes.fromhex(value) for value in item.get("samples_hex", [])]
+                avalanche_counts(callback, samples, item.get("output_bits", 32))
+            else:
+                inputs = [bytes.fromhex(value) for value in item.get("inputs_hex", [])]
+                distribution_counts(callback, inputs, item.get("bucket_count", 1))
+        except ValueError:
+            continue
+        raise AssertionError(f"{item['id']}: invalid analysis input was accepted by exact oracle")
 
 
 def _expect_stream_rejected(
@@ -227,7 +265,7 @@ def _expect_stream_rejected(
 if __name__ == "__main__":
     try:
         exhaustive_count, known_count = validate()
-    except Exception as error:
+    except (AssertionError, KeyError, TypeError, ValueError) as error:
         print(f"invalid DT17 fixture: {error}", file=sys.stderr)
         raise SystemExit(1)
     print(
