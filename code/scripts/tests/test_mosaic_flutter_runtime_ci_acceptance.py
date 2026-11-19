@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import re
 import subprocess
 import sys
 import tempfile
@@ -27,6 +28,55 @@ SPEC.loader.exec_module(MODULE)
 
 
 class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
+    def test_android_diagnostic_define_is_opt_in_at_build_and_failure_capture(self) -> None:
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        build_start = workflow.index(
+            "- name: Build Trestle, Journal and Engram for Android with Flutter (UI89 §7)"
+        )
+        build_step = workflow[build_start : workflow.index("\n      - name:", build_start)]
+        self.assertNotIn("MOSAIC_NATIVE_DIAGNOSTICS: 'true'", build_step)
+        self.assertIn('if [[ "$name" == trestle ]]; then', build_step)
+        self.assertIn(
+            'MOSAIC_NATIVE_DIAGNOSTICS=true bash code/scripts/build-mosaic-flutter-phone-app.sh android',
+            build_step,
+        )
+        normalized_build_step = re.sub(r"\s+", " ", build_step)
+        self.assertIn(
+            "else bash code/scripts/build-mosaic-flutter-phone-app.sh android",
+            normalized_build_step,
+        )
+        self.assertLess(
+            build_step.index('if [[ "$name" == trestle ]]; then'),
+            build_step.index("MOSAIC_NATIVE_DIAGNOSTICS=true bash"),
+        )
+        trestle_call = build_step.index("MOSAIC_NATIVE_DIAGNOSTICS=true bash")
+        journal_call = build_step.index("else\n              bash code/scripts/build-mosaic-flutter-phone-app.sh", trestle_call)
+        self.assertLess(trestle_call, journal_call)
+        helper = (Path(__file__).resolve().parents[1] / "build-mosaic-flutter-phone-app.sh").read_text(encoding="utf-8")
+        self.assertIn('MOSAIC_NATIVE_DIAGNOSTICS:-false', helper)
+        self.assertIn("--dart-define=MOSAIC_NATIVE_DIAGNOSTICS=true", helper)
+        self.assertIn("run_flutter_build build apk --debug", helper)
+        self.assertIn('if [[ -n "$flutter_diagnostic_arg" ]]', helper)
+        self.assertNotIn("flutter_diagnostic_args[@]", helper)
+        receipt = (Path(__file__).resolve().parents[1] / "mosaic_flutter_android_build_receipt.py").read_text(encoding="utf-8")
+        self.assertIn('"MOSAIC_BUILD_DIAG v=1 "', receipt)
+        self.assertIn('"lib/x86_64/libdartjni.so"', receipt)
+        self.assertIn(r"path_provider_android\.PathProviderAndroid\.registerWith", receipt)
+        self.assertIn('"io.flutter.plugins.GeneratedPluginRegistrant"', receipt)
+        self.assertIn("dex_jni_plugin=", receipt)
+        self.assertIn("dex_jni_flutter_plugin=", receipt)
+        self.assertIn("TOOL_TIMEOUT_SECONDS = 15", receipt)
+        self.assertIn("MAX_DEX_OUTPUT = 1_000_000", receipt)
+        self.assertIn("stderr=", receipt)
+        self.assertLess(helper.index('test -f "$apk"'), helper.index("mosaic_flutter_android_build_receipt.py"))
+        self.assertIn("|| true", helper[helper.index("mosaic_flutter_android_build_receipt.py") :])
+
+        gate_start = workflow.index(
+            "- name: Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)"
+        )
+        gate_step = workflow[gate_start : workflow.index("\n      - name:", gate_start)]
+        self.assertIn("MOSAIC_NATIVE_DIAGNOSTICS_CAPTURE: '1'", gate_step)
+
     def test_force_plan_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_flutter_runtime({"affected_packages": None})
@@ -126,6 +176,10 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn(
             "python3 code/scripts/mosaic_flutter_runtime_ci_acceptance.py",
+            workflow,
+        )
+        self.assertIn(
+            "python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_flutter_android_build_receipt.py'",
             workflow,
         )
         self.assertIn("Round-trip Rust engine through standard Flutter binding", workflow)
