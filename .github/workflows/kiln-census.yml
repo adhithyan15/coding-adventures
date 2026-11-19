@@ -67,9 +67,10 @@ jobs:
     timeout-minutes: 360
     permissions:
       contents: read
-    env:
-      # Where the sanitised summaries are collected; the only thing uploaded.
-      CENSUS_OUT: ${{ runner.temp }}/census-out
+    # CENSUS_OUT (where the sanitised summaries are collected; the only thing
+    # uploaded) is set by the first step: the runner context does not exist in
+    # a job-level env, and GitHub refuses to parse the workflow if it is used
+    # there.
     steps:
       # The inputs are attacker-influenced only by repository writers, but they
       # are never interpolated into a script: they arrive through env and are
@@ -83,6 +84,7 @@ jobs:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
+          echo "CENSUS_OUT=$RUNNER_TEMP/census-out" >> "$GITHUB_ENV"
           if [[ "$GITHUB_REF" != "refs/heads/$DEFAULT_BRANCH" ]]; then
             echo "::error::kiln record prepare only runs on a trusted run (the default branch); dispatch this workflow on $DEFAULT_BRANCH"
             exit 1
