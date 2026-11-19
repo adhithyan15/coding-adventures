@@ -183,6 +183,13 @@ def _child_exec(command: Sequence[str], ready_fd: int, release_fd: int) -> None:
         os._exit(127)
 
 
+def _release_worker(fd: int) -> None:
+    """Send the single-byte release after the parent has pinned the session."""
+
+    os.write(fd, b"1")
+    os.close(fd)
+
+
 def _reap_unisolated_child(pid: int, deadline: float) -> bool:
     """Fail safely if setsid/exec setup failed before group ownership."""
 
@@ -261,12 +268,16 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
         _child_exec(command, ready_write, release_read)
         os._exit(127)
 
-    os.close(ready_write)
-    os.close(release_read)
+    phase = "pre_release"
+    ready_write_parent = ready_write
+    release_read_parent = release_read
     released = False
     descendants_reaped = False
-    phase = "pre_release"
     try:
+        os.close(ready_write_parent)
+        ready_write_parent = -1
+        os.close(release_read_parent)
+        release_read_parent = -1
         ready = _wait_ready(ready_read, work_deadline)
         os.close(ready_read)
         ready_read = -1
@@ -298,9 +309,9 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
         # path then uses the already verified group identity, never a raw PID.
         released = True
         phase = "work"
-        os.write(release_write, b"1")
-        os.close(release_write)
+        release_fd = release_write
         release_write = -1
+        _release_worker(release_fd)
 
         worker_exit: int | None = None
         worker_timed_out = False
@@ -386,10 +397,12 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
             cleanup_ok = False
         phase = "reaped"
     except BaseException:  # noqa: BLE001 - pre-release worker is held at the gate
-        if ready_read >= 0:
-            os.close(ready_read)
-        if release_write >= 0:
-            os.close(release_write)
+        for fd in (ready_read, ready_write_parent, release_read_parent, release_write):
+            if fd >= 0:
+                try:
+                    os.close(fd)
+                except OSError:
+                    pass
         if phase == "pre_release":
             # Before release the command has not executed and cannot have
             # children; one direct-child signal is safe. Never retry it after
@@ -404,7 +417,7 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
             restore_handlers()
             print(f"diagnostic_supervisor={label}")
             return RESULT_UNAVAILABLE if cleaned else RESULT_CLEANUP_INCOMPLETE
-        if phase == "signal" and released:
+        if phase in ("work", "signal") and released:
             # This phase has not called waitpid yet; only its verified private
             # group is still safe to signal.
             try:

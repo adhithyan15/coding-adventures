@@ -1470,6 +1470,20 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                                     "module.print = fail_first_report",
                                 )
                             )
+                    elif fault_kind == "release_after_write":
+                        lines.extend(
+                            (
+                                f"ready = pathlib.Path({str(ready_path)!r})",
+                                "original_release = module._release_worker",
+                                "def release_then_fail(fd):",
+                                "    original_release(fd)",
+                                "    deadline = time.monotonic() + 1.0",
+                                "    while time.monotonic() < deadline and not ready.exists(): time.sleep(0.005)",
+                                "    if not ready.exists(): raise RuntimeError('worker did not start after release')",
+                                "    raise OSError('injected error after release byte delivery')",
+                                "module._release_worker = release_then_fail",
+                            )
+                        )
                     elif fault_kind == "startup_report":
                         lines.extend(
                             (
@@ -1531,6 +1545,18 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 )
                 lost_current = current_stat(lost_pid)
                 self.assertTrue(lost_current is None or lost_current[3] != lost_start)
+
+                release_failure, release_identity = run_phase_fault(
+                    "release-failure", "release_after_write"
+                )
+                self.assertEqual(release_failure.returncode, 127, release_failure.stderr)
+                self.assertIn("diagnostic_supervisor=signal_exception_cleanup_complete", release_failure.stdout)
+                self.assertIn("test_signal_calls=1", release_failure.stdout)
+                release_pid, _release_group, _release_session, release_start = tuple(
+                    int(field) for field in release_identity.read_text(encoding="ascii").split()
+                )
+                release_current = current_stat(release_pid)
+                self.assertTrue(release_current is None or release_current[3] != release_start)
 
                 ownership_report, _ = run_phase_fault(
                     "ownership-report", "lost_ownership_report"
