@@ -2381,3 +2381,28 @@ func TestKnownRootConflictPrecedesZeroBudgetAfterPendingWork(t *testing.T) {
 		t.Fatal("independent oracle found a model for root-conflict formula")
 	}
 }
+
+func TestEnqueueAlreadyAssignedIsIdempotentAndRejectsOpposite(t *testing.T) {
+	s, _ := NewSolver()
+	v, err := s.NewVar()
+	if err != nil {
+		t.Fatal(err)
+	}
+	positive, _ := MakeLit(v, false)
+	if !s.enqueue(positive, -1) {
+		t.Fatal("first root assignment failed")
+	}
+	trailLength := len(s.trail)
+	if !s.enqueue(positive, -1) {
+		t.Fatal("same root assignment was not idempotent")
+	}
+	if len(s.trail) != trailLength {
+		t.Fatal("idempotent assignment duplicated trail entry")
+	}
+	if s.enqueue(positive^1, -1) {
+		t.Fatal("conflicting assignment was accepted")
+	}
+	if got := s.VarValue(v); got != True {
+		t.Fatalf("conflict changed existing assignment: %v", got)
+	}
+}

@@ -147,6 +147,12 @@ func (s *Solver) NewVar() (Var, error) {
 	if s.vars >= s.cfg.MaxVars || s.vars > maxVar {
 		return 0, errors.New("variable ceiling exceeded")
 	}
+	return s.appendVar(), nil
+}
+
+// appendVar performs allocation after its caller has checked the configured
+// ceiling. Builder composites use it only after their aggregate preflight.
+func (s *Solver) appendVar() Var {
 	v := s.vars
 	s.vars++
 	s.val = append(s.val, 0)
@@ -156,7 +162,7 @@ func (s *Solver) NewVar() (Var, error) {
 	s.phase = append(s.phase, -1)
 	s.watches = append(s.watches, nil, nil)
 	s.clearResult()
-	return Var(v), nil
+	return Var(v)
 }
 func (s *Solver) NVars() uint32 { return s.vars }
 func (s *Solver) NClauses() uint64 {
@@ -255,14 +261,20 @@ func (s *Solver) AddClause(in []Lit) (bool, error) {
 	// Match the TypeScript API: a well-formed literal grows the variable
 	// universe, but preflight the entire request first to keep refusal atomic.
 	for s.vars < maxRequired {
-		if _, err := s.NewVar(); err != nil {
-			return false, err
-		}
+		s.appendVar()
 	}
+	return s.addClauseValidated(in), nil
+}
+
+// addClauseValidated applies a clause whose packed literals, allocated
+// variables, and aggregate resource reservation were checked by AddClause or
+// by a CnfBuilder operation. It retains the normal root simplification and
+// propagation order, but cannot refuse on malformed input or quotas.
+func (s *Solver) addClauseValidated(in []Lit) bool {
 	s.clearResult()
 	s.cancel(0)
 	if s.rootUnsat {
-		return false, nil
+		return false
 	}
 	// Simplify against the established permanent root assignment. Watches on
 	// a newly added clause cannot observe root literals whose qhead was already
@@ -271,7 +283,7 @@ func (s *Solver) AddClause(in []Lit) (bool, error) {
 	for _, l := range in {
 		switch s.litVal(l) {
 		case 1:
-			return true, nil
+			return true
 		case 0:
 			// Permanently false at root; omit it from the stored clause.
 		default:
@@ -282,7 +294,7 @@ func (s *Solver) AddClause(in []Lit) (bool, error) {
 		s.inputLiteralCount += uint64(len(in))
 		s.inputClauseCount++
 		s.rootUnsat = true
-		return false, nil
+		return false
 	}
 	ls := append([]Lit(nil), reduced...)
 	sort.Slice(ls, func(i, j int) bool { return ls[i] < ls[j] })
@@ -292,7 +304,7 @@ func (s *Solver) AddClause(in []Lit) (bool, error) {
 			continue
 		}
 		if len(out) > 0 && uint32(l) == uint32(out[len(out)-1])^1 {
-			return true, nil
+			return true
 		}
 		out = append(out, l)
 	}
@@ -301,18 +313,18 @@ func (s *Solver) AddClause(in []Lit) (bool, error) {
 	s.inputLiteralCount += uint64(len(in))
 	if len(ls) == 0 {
 		s.rootUnsat = true
-		return false, nil
+		return false
 	}
 	if len(ls) == 1 {
 		if !s.enqueue(ls[0], -1) {
 			s.rootUnsat = true
-			return false, nil
+			return false
 		}
 		if conflict := s.propagate(math.MaxUint64); conflict >= 0 {
 			s.rootUnsat = true
-			return false, nil
+			return false
 		}
-		return true, nil
+		return true
 	}
 	c := &satClause{lits: append([]Lit(nil), ls...)}
 	id := len(s.cs)
@@ -323,9 +335,9 @@ func (s *Solver) AddClause(in []Lit) (bool, error) {
 	s.watches[uint32(ls[c.w1])^1] = append(s.watches[uint32(ls[c.w1])^1], id)
 	if conflict := s.propagate(math.MaxUint64); conflict >= 0 {
 		s.rootUnsat = true
-		return false, nil
+		return false
 	}
-	return true, nil
+	return true
 }
 
 // propagate checks the budget before consuming a trail item. UNKNOWN therefore
@@ -562,9 +574,7 @@ func (s *Solver) SolveWithAssumptions(as []Lit, opts ...SolverOptions) (SolveRes
 		return SolveUnknown, errors.New("variable resource ceiling exceeded")
 	}
 	for s.vars < maxRequired {
-		if _, err := s.NewVar(); err != nil {
-			return SolveUnknown, err
-		}
+		s.appendVar()
 	}
 	o := SolverOptions{}
 	if len(opts) == 1 {
@@ -888,6 +898,56 @@ func (b *CnfBuilder) preflight(vars uint64, clauses, literals uint64) error {
 	}
 	return nil
 }
+
+// outputAfterPreflight allocates an output ID under an already successful
+// aggregate reservation. appendVar cannot refuse once that reservation has
+// established the required capacity.
+func (b *CnfBuilder) outputAfterPreflight() Lit {
+	return Lit(uint32(b.solver.appendVar()) << 1)
+}
+
+// clausesAfterPreflight applies generated clauses through the same semantic
+// path as public AddClause (root simplification, units, and propagation) while
+// relying on the enclosing operation's complete validation and quota check.
+func (b *CnfBuilder) clausesAfterPreflight(clauses ...[]Lit) {
+	for _, clause := range clauses {
+		b.solver.addClauseValidated(clause)
+	}
+}
+
+func (b *CnfBuilder) andAfterPreflight(a, c Lit) Lit {
+	o := b.outputAfterPreflight()
+	b.clausesAfterPreflight([]Lit{o ^ 1, a}, []Lit{o ^ 1, c}, []Lit{o, a ^ 1, c ^ 1})
+	return o
+}
+func (b *CnfBuilder) orAfterPreflight(a, c Lit) Lit {
+	o := b.outputAfterPreflight()
+	b.clausesAfterPreflight([]Lit{o, a ^ 1}, []Lit{o, c ^ 1}, []Lit{o ^ 1, a, c})
+	return o
+}
+func (b *CnfBuilder) xorAfterPreflight(a, c Lit) Lit {
+	o := b.outputAfterPreflight()
+	b.clausesAfterPreflight([]Lit{a, c, o ^ 1}, []Lit{a ^ 1, c ^ 1, o ^ 1}, []Lit{a, c ^ 1, o}, []Lit{a ^ 1, c, o})
+	return o
+}
+func (b *CnfBuilder) equivAfterPreflight(a, c Lit) Lit {
+	o := b.outputAfterPreflight()
+	b.clausesAfterPreflight([]Lit{a, c ^ 1, o ^ 1}, []Lit{a ^ 1, c, o ^ 1}, []Lit{a, c, o}, []Lit{a ^ 1, c ^ 1, o})
+	return o
+}
+func (b *CnfBuilder) iteAfterPreflight(sel, a, c Lit) Lit {
+	o := b.outputAfterPreflight()
+	b.clausesAfterPreflight([]Lit{sel ^ 1, a ^ 1, o}, []Lit{sel ^ 1, a, o ^ 1}, []Lit{sel, c ^ 1, o}, []Lit{sel, c, o ^ 1})
+	return o
+}
+func (b *CnfBuilder) fullAdderAfterPreflight(a, c, carry Lit) FullAdderResult {
+	x := b.xorAfterPreflight(a, c)
+	sum := b.xorAfterPreflight(x, carry)
+	ab := b.andAfterPreflight(a, c)
+	xc := b.andAfterPreflight(x, carry)
+	co := b.orAfterPreflight(ab, xc)
+	return FullAdderResult{sum, co}
+}
 func (b *CnfBuilder) And(a, c Lit) (Lit, error) {
 	if e := b.check(a, c); e != nil {
 		return 0, e
@@ -895,16 +955,7 @@ func (b *CnfBuilder) And(a, c Lit) (Lit, error) {
 	if e := b.preflight(1, 3, 7); e != nil {
 		return 0, e
 	}
-	o, e := b.NewLit()
-	if e != nil {
-		return 0, e
-	}
-	for _, cl := range [][]Lit{{o ^ 1, a}, {o ^ 1, c}, {o, a ^ 1, c ^ 1}} {
-		if _, e = b.solver.AddClause(cl); e != nil {
-			return 0, e
-		}
-	}
-	return o, nil
+	return b.andAfterPreflight(a, c), nil
 }
 func (b *CnfBuilder) Or(a, c Lit) (Lit, error) {
 	if e := b.check(a, c); e != nil {
@@ -913,16 +964,7 @@ func (b *CnfBuilder) Or(a, c Lit) (Lit, error) {
 	if e := b.preflight(1, 3, 7); e != nil {
 		return 0, e
 	}
-	o, e := b.NewLit()
-	if e != nil {
-		return 0, e
-	}
-	for _, cl := range [][]Lit{{o, a ^ 1}, {o, c ^ 1}, {o ^ 1, a, c}} {
-		if _, e = b.solver.AddClause(cl); e != nil {
-			return 0, e
-		}
-	}
-	return o, nil
+	return b.orAfterPreflight(a, c), nil
 }
 func (b *CnfBuilder) Xor(a, c Lit) (Lit, error) {
 	if e := b.check(a, c); e != nil {
@@ -931,16 +973,7 @@ func (b *CnfBuilder) Xor(a, c Lit) (Lit, error) {
 	if e := b.preflight(1, 4, 12); e != nil {
 		return 0, e
 	}
-	o, e := b.NewLit()
-	if e != nil {
-		return 0, e
-	}
-	for _, cl := range [][]Lit{{a, c, o ^ 1}, {a ^ 1, c ^ 1, o ^ 1}, {a, c ^ 1, o}, {a ^ 1, c, o}} {
-		if _, e = b.solver.AddClause(cl); e != nil {
-			return 0, e
-		}
-	}
-	return o, nil
+	return b.xorAfterPreflight(a, c), nil
 }
 func (b *CnfBuilder) Equiv(a, c Lit) (Lit, error) {
 	if e := b.check(a, c); e != nil {
@@ -949,16 +982,7 @@ func (b *CnfBuilder) Equiv(a, c Lit) (Lit, error) {
 	if e := b.preflight(1, 4, 12); e != nil {
 		return 0, e
 	}
-	o, e := b.NewLit()
-	if e != nil {
-		return 0, e
-	}
-	for _, cl := range [][]Lit{{a, c ^ 1, o ^ 1}, {a ^ 1, c, o ^ 1}, {a, c, o}, {a ^ 1, c ^ 1, o}} {
-		if _, e = b.solver.AddClause(cl); e != nil {
-			return 0, e
-		}
-	}
-	return o, nil
+	return b.equivAfterPreflight(a, c), nil
 }
 func (b *CnfBuilder) Not(a Lit) (Lit, error) {
 	if e := b.check(a); e != nil {
@@ -973,16 +997,7 @@ func (b *CnfBuilder) Ite(sel, a, c Lit) (Lit, error) {
 	if e := b.preflight(1, 4, 12); e != nil {
 		return 0, e
 	}
-	o, e := b.NewLit()
-	if e != nil {
-		return 0, e
-	}
-	for _, cl := range [][]Lit{{sel ^ 1, a ^ 1, o}, {sel ^ 1, a, o ^ 1}, {sel, c ^ 1, o}, {sel, c, o ^ 1}} {
-		if _, e = b.solver.AddClause(cl); e != nil {
-			return 0, e
-		}
-	}
-	return o, nil
+	return b.iteAfterPreflight(sel, a, c), nil
 }
 func (b *CnfBuilder) FullAdder(a, c, carry Lit) (FullAdderResult, error) {
 	if e := b.check(a, c, carry); e != nil {
@@ -991,24 +1006,7 @@ func (b *CnfBuilder) FullAdder(a, c, carry Lit) (FullAdderResult, error) {
 	if e := b.preflight(5, 17, 45); e != nil {
 		return FullAdderResult{}, e
 	}
-	x, e := b.Xor(a, c)
-	if e != nil {
-		return FullAdderResult{}, e
-	}
-	sum, e := b.Xor(x, carry)
-	if e != nil {
-		return FullAdderResult{}, e
-	}
-	ab, e := b.And(a, c)
-	if e != nil {
-		return FullAdderResult{}, e
-	}
-	xc, e := b.And(x, carry)
-	if e != nil {
-		return FullAdderResult{}, e
-	}
-	co, e := b.Or(ab, xc)
-	return FullAdderResult{sum, co}, e
+	return b.fullAdderAfterPreflight(a, c, carry), nil
 }
 func (b *CnfBuilder) BvAdd(a, c []Lit) ([]Lit, error) {
 	if len(a) != len(c) {
@@ -1036,20 +1034,10 @@ func (b *CnfBuilder) BvAdd(a, c []Lit) ([]Lit, error) {
 	var carry Lit
 	for i := range a {
 		if i == 0 {
-			var e error
-			out[i], e = b.Xor(a[i], c[i])
-			if e != nil {
-				return nil, e
-			}
-			carry, e = b.And(a[i], c[i])
-			if e != nil {
-				return nil, e
-			}
+			out[i] = b.xorAfterPreflight(a[i], c[i])
+			carry = b.andAfterPreflight(a[i], c[i])
 		} else {
-			fa, e := b.FullAdder(a[i], c[i], carry)
-			if e != nil {
-				return nil, e
-			}
+			fa := b.fullAdderAfterPreflight(a[i], c[i], carry)
 			out[i], carry = fa.Sum, fa.Carry
 		}
 	}
@@ -1073,17 +1061,11 @@ func (b *CnfBuilder) BvEq(a, c []Lit) (Lit, error) {
 	}
 	var acc Lit
 	for i := range a {
-		x, e := b.Equiv(a[i], c[i])
-		if e != nil {
-			return 0, e
-		}
+		x := b.equivAfterPreflight(a[i], c[i])
 		if i == 0 {
 			acc = x
 		} else {
-			acc, e = b.And(acc, x)
-			if e != nil {
-				return 0, e
-			}
+			acc = b.andAfterPreflight(acc, x)
 		}
 	}
 	return acc, nil
@@ -1092,22 +1074,16 @@ func (b *CnfBuilder) TrueLit() (Lit, error) {
 	if e := b.preflight(1, 1, 1); e != nil {
 		return 0, e
 	}
-	l, e := b.NewLit()
-	if e != nil {
-		return 0, e
-	}
-	_, e = b.solver.AddClause([]Lit{l})
-	return l, e
+	l := b.outputAfterPreflight()
+	b.clausesAfterPreflight([]Lit{l})
+	return l, nil
 }
 func (b *CnfBuilder) FalseLit() (Lit, error) {
 	if e := b.preflight(1, 1, 1); e != nil {
 		return 0, e
 	}
-	l, e := b.NewLit()
-	if e != nil {
-		return 0, e
-	}
-	_, e = b.solver.AddClause([]Lit{l ^ 1})
-	return l, e
+	l := b.outputAfterPreflight()
+	b.clausesAfterPreflight([]Lit{l ^ 1})
+	return l, nil
 }
 func (b *CnfBuilder) AddClause(c []Lit) (bool, error) { return b.solver.AddClause(c) }
