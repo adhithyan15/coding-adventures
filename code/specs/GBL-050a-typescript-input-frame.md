@@ -141,10 +141,17 @@ Test this through the actual `--emit-plan` and plan-load path as well as direct
 execution. A TypeScript-filtered emitted plan must preserve enough of the full
 provider universe that replay still selects and hashes the Rust proof closure;
 resolver state existing only in the original in-memory graph is insufficient.
-The consumer's cache hash must also include the exact external corpus file,
-because ordinary `HashPackage` only walks files under the package root. An
-external-input registry row that changes diff selection without changing the
-persisted package hash is not sufficient.
+The consumer's effective build-input closure contains these six repository-
+owned files: `code/specs/fixtures/game-input-frame-v1/cases.json`,
+`code/packages/typescript/tsconfig.base.json`,
+`code/packages/rust/Cargo.toml`, `code/packages/rust/Cargo.lock`,
+`code/packages/rust/.cargo/config.toml`, and `.cargo/config.toml`. They supply
+the corpus, inherited TypeScript compiler configuration, and Rust proof-tool
+workspace/build configuration. Ordinary `HashPackage` only walks files under
+the package root, and the transitive Rust proof closure does not imply these
+external paths are hashed. A source-boundary row or metadata annotation that
+changes diff selection without changing the persisted consumer cache hash is
+not sufficient.
 
 Acceptance uses the real build-tool resolver, selector, executor, and hasher
 paths, with a temporary or isolated consumer package and full restoration:
@@ -160,9 +167,13 @@ paths, with a temporary or isolated consumer package and full restoration:
   and prove a cache miss, then restore it and prove the original hit;
 - repeat the persisted-cache assertion with TypeScript-only language filtering
   so filtered proof packages cannot erase the consumer's closure hash;
-- perform a same-relative-path, same-length mutation of the canonical corpus
-  while the consumer cache is warm; require a miss, restore the original bytes,
-  rebuild once to restore the original key, then verify an unchanged hit;
+- for each of the six repository-owned inputs, perform a same-path, same-length
+  valid semantic mutation and prove the TypeScript consumer is selected by the
+  real diff selector and misses in the persisted cache, including under
+  TypeScript-only filtering and emitted-plan replay. Restore the exact original
+  bytes, rebuild once to restore the original key, then verify an unchanged
+  hit. Mutations must remain valid JSON, tsconfig JSON, Cargo TOML, or Cargo
+  configuration syntax as applicable;
 - preserve an existing package-local `.ts` or declared BUILD input control to
   show unrelated source selection and hashing remain intact.
 
