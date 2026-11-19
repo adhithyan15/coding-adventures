@@ -140,10 +140,16 @@ func TestCensusWriteIsAtomic(t *testing.T) {
 // The encoded file is bounded; what is shed is counted in overflow.
 func TestEncodeCensusIsBounded(t *testing.T) {
 	c := traced.NewCensus()
-	for i := 0; i < traced.MaxCensusEntries; i++ {
-		c.Note("host-read", fmt.Sprintf("/%s/%d", strings.Repeat("d", 150), i))
+	// Four full kinds of long paths overflow 512 KiB; a small kind has three.
+	for _, k := range []string{"host-read", "writes-tracked", "daemon", "network"} {
+		for i := 0; i < traced.MaxCensusPerKind; i++ {
+			c.Note(k, fmt.Sprintf("/%s/%d", strings.Repeat("d", 150), i))
+		}
 	}
-	c.Note("host-read", "/a")
+	c.Note("host-read", "/over-the-kind-cap")
+	for i := 0; i < 3; i++ {
+		c.Note("trace-incomplete:proc-path", fmt.Sprintf("/proc/%d/x", i))
+	}
 	data, err := EncodeCensus(actZ, c)
 	if err != nil {
 		t.Fatal(err)
@@ -156,11 +162,35 @@ func TestEncodeCensusIsBounded(t *testing.T) {
 		t.Fatal(err)
 	}
 	var held int64
+	perKind := map[string]int{}
 	for _, e := range doc.Entries {
 		held += e.Count
+		perKind[e.Kind]++
 	}
-	if doc.Overflow == 0 || held+doc.Overflow != doc.Total {
-		t.Fatalf("held %d overflow %d total %d", held, doc.Overflow, doc.Total)
+	if doc.OverflowTotal == 0 || held+doc.OverflowTotal != doc.Total {
+		t.Fatalf("held %d overflow %d total %d", held, doc.OverflowTotal, doc.Total)
+	}
+	// Fair: every kind keeps entries, and the small kind is untouched; the
+	// per-kind overflow names the kinds that were cut.
+	for _, k := range []string{"host-read", "writes-tracked", "daemon", "network", "trace-incomplete:proc-path"} {
+		if perKind[k] == 0 {
+			t.Fatalf("kind %s lost every entry: %v", k, perKind)
+		}
+	}
+	// (Shedding is round-robin, so the small kind is trimmed too, but its cut
+	// is counted and it keeps what is left.)
+	if int64(perKind["trace-incomplete:proc-path"])+doc.Overflow["trace-incomplete:proc-path"] != 3 {
+		t.Fatalf("the small kind's entries are not accounted for: %v %v", perKind, doc.Overflow)
+	}
+	if doc.Overflow["host-read"] == 0 || doc.Overflow["network"] == 0 {
+		t.Fatalf("overflow %v", doc.Overflow)
+	}
+	var sum int64
+	for _, n := range doc.Overflow {
+		sum += n
+	}
+	if sum != doc.OverflowTotal {
+		t.Fatalf("overflow_total %d != sum %d", doc.OverflowTotal, sum)
 	}
 	empty, _ := EncodeCensus(actZ, traced.NewCensus())
 	if !strings.Contains(string(empty), `"entries":[]`) {
@@ -174,10 +204,30 @@ func TestCollectIgnoresTheCensus(t *testing.T) {
 	f := newCfix(t)
 	f.good()
 	os.WriteFile(filepath.Join(f.dirOf(ca), "census.json"), []byte(`{"schema":"kiln-record-census/1"}`), 0o600)
-	os.WriteFile(filepath.Join(f.dirOf(ca), "census.json.tmp-abcd"), []byte("{"), 0o600)
+	os.WriteFile(filepath.Join(f.dirOf(ca), "census.json.tmp-0123456789abcdef"), []byte("{"), 0o600)
 	_, sh := f.collect()
 	if r := recOf(t, sh, ca); r.Unknown != "" {
 		t.Fatalf("a census made the action unknown: %q", r.Unknown)
+	}
+}
+
+// The allowlist is exact: a temporary of another shape, or a census that is not
+// a regular file, is still an unexpected entry.
+func TestCollectCensusAllowlistIsExact(t *testing.T) {
+	for name, do := range map[string]func(dir string){
+		"a short tmp suffix":     func(d string) { os.WriteFile(filepath.Join(d, "census.json.tmp-abcd"), nil, 0o600) },
+		"a non-hex tmp suffix":   func(d string) { os.WriteFile(filepath.Join(d, "census.json.tmp-0123456789abcdeg"), nil, 0o600) },
+		"a census that is a dir": func(d string) { os.Mkdir(filepath.Join(d, "census.json"), 0o700) },
+	} {
+		t.Run(name, func(t *testing.T) {
+			f := newCfix(t)
+			f.good()
+			do(f.dirOf(ca))
+			_, sh := f.collect()
+			if r := recOf(t, sh, ca); !strings.Contains(r.Unknown, "unexpected entry") {
+				t.Fatalf("unknown %q", r.Unknown)
+			}
+		})
 	}
 }
 
@@ -188,7 +238,7 @@ func TestCheckOrderIgnoresTheCensus(t *testing.T) {
 	act := "pkg/a"
 	writeBytes(t, StepFile(d, act, 0, "json"), []byte("{}"), 0o600)
 	writeBytes(t, CensusFile(d, act), []byte("{}"), 0o600)
-	writeBytes(t, CensusFile(d, act)+".tmp-1", []byte("{"), 0o600)
+	writeBytes(t, CensusFile(d, act)+".tmp-0123456789abcdef", []byte("{"), 0o600)
 	writeBytes(t, StepFile(d, act, 1, "overlap"), nil, 0o600)
 	if err := checkOrder(d, act, 1); err != nil {
 		t.Fatalf("step 1 after step 0 with a census present: %v", err)

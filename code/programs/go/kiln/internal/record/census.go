@@ -18,15 +18,21 @@ package record
 //	atomic          written to a temporary name in the same directory, then
 //	                rename(2)d over census.json, so a reader sees it whole or
 //	                not at all
-//	bounded         at most traced.MaxCensusEntries pairs, and the encoded
-//	                file at most MaxCensusBytes (entries are shed from the tail
-//	                into "overflow" until it fits)
+//	bounded         at most traced.MaxCensusPerKind paths per kind, and the
+//	                encoded file at most MaxCensusBytes (entries are shed
+//	                round-robin from every kind's tail into that kind's
+//	                "overflow" until it fits)
+//	no fsync        the rename alone gives whole-or-nothing; a slow sync could
+//	                push the child past the parent's deadline and cost the
+//	                record.json already linked
 
 import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
 	"os"
+	"sort"
+	"strings"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/traced"
 )
@@ -40,52 +46,104 @@ const MaxCensusBytes = 512 << 10
 // CensusFileName is the file's name in an action's trace directory.
 const CensusFileName = "census.json"
 
-// censusTmpPrefix starts the temporary name a census is written under.
+// censusTmpPrefix starts the temporary name a census is written under; it is
+// followed by 16 lowercase hex characters (8 random bytes).
 const censusTmpPrefix = CensusFileName + ".tmp-"
+
+// isCensusTmp says name is exactly such a temporary name.
+func isCensusTmp(name string) bool {
+	rest, ok := strings.CutPrefix(name, censusTmpPrefix)
+	if !ok || len(rest) != 16 {
+		return false
+	}
+	for _, r := range rest {
+		if !(r >= '0' && r <= '9' || r >= 'a' && r <= 'f') {
+			return false
+		}
+	}
+	return true
+}
 
 // CensusFile is the path of an action's census.
 func CensusFile(dir, action string) string { return StepDir(dir, action) + "/" + CensusFileName }
 
-// CensusDoc is the file's content.
+// CensusDoc is the file's content.  Overflow is per kind (what a bound
+// dropped, in occurrences), OverflowTotal its sum.
 type CensusDoc struct {
-	Schema   string               `json:"schema"`
-	Action   string               `json:"action"`
-	Total    int64                `json:"total"`
-	Overflow int64                `json:"overflow"`
-	Entries  []traced.CensusEntry `json:"entries"`
+	Schema        string               `json:"schema"`
+	Action        string               `json:"action"`
+	Total         int64                `json:"total"`
+	OverflowTotal int64                `json:"overflow_total"`
+	Overflow      map[string]int64     `json:"overflow"`
+	Entries       []traced.CensusEntry `json:"entries"`
 }
 
-// EncodeCensus renders c, shedding entries from the tail (their counts go to
-// overflow) until the result is at most MaxCensusBytes.
+// EncodeCensus renders c, shedding entries until the result is at most
+// MaxCensusBytes.  Shedding is FAIR: each round takes a slice off the tail of
+// every kind that still has more than one entry, so a kind with a thousand
+// paths cannot make a kind with three disappear.  What is shed is counted in
+// that kind's overflow.
 func EncodeCensus(action string, c *traced.Census) ([]byte, error) {
-	doc := CensusDoc{Schema: CensusSchema, Action: action, Total: c.Total, Overflow: c.Overflow, Entries: c.Entries()}
-	if doc.Entries == nil {
-		doc.Entries = []traced.CensusEntry{}
+	doc := CensusDoc{Schema: CensusSchema, Action: action, Total: c.Total, Overflow: map[string]int64{}}
+	for k, n := range c.Overflow {
+		if n > 0 {
+			doc.Overflow[k] = n
+		}
 	}
+	byKind := map[string][]traced.CensusEntry{}
+	for _, e := range c.Entries() { // sorted by kind, then path
+		byKind[e.Kind] = append(byKind[e.Kind], e)
+	}
+	kinds := make([]string, 0, len(byKind))
+	for k := range byKind {
+		kinds = append(kinds, k)
+	}
+	sort.Strings(kinds)
 	for {
+		doc.Entries = []traced.CensusEntry{}
+		for _, k := range kinds {
+			doc.Entries = append(doc.Entries, byKind[k]...)
+		}
+		doc.OverflowTotal = 0
+		for _, n := range doc.Overflow {
+			doc.OverflowTotal += n
+		}
 		data, err := json.Marshal(doc)
 		if err != nil {
 			return nil, err
 		}
-		if len(data) <= MaxCensusBytes || len(doc.Entries) == 0 {
+		if len(data) <= MaxCensusBytes {
 			return data, nil
 		}
-		// Shed in chunks, so a huge file costs few re-encodes.
-		cut := len(doc.Entries) / 8
-		if cut < 1 {
-			cut = 1
+		shed := false
+		for _, k := range kinds {
+			es := byKind[k]
+			if len(es) <= 1 {
+				continue
+			}
+			cut := len(es) / 8
+			if cut < 1 {
+				cut = 1
+			}
+			if cut > len(es)-1 {
+				cut = len(es) - 1
+			}
+			for _, e := range es[len(es)-cut:] {
+				doc.Overflow[k] += e.Count
+			}
+			byKind[k] = es[:len(es)-cut]
+			shed = true
 		}
-		for _, e := range doc.Entries[len(doc.Entries)-cut:] {
-			doc.Overflow += e.Count
+		if !shed {
+			return data, nil // one entry per kind: nothing fairer to drop
 		}
-		doc.Entries = doc.Entries[:len(doc.Entries)-cut]
 	}
 }
 
 // censusWrite writes the file; a variable so a test can make it fail.
 var censusWrite = writeCensusFile
 
-// writeCensusFile writes data to final atomically: temp file, fsync, rename.
+// writeCensusFile writes data to final atomically: temp file, rename.
 func writeCensusFile(final string, data []byte) error {
 	var rnd [8]byte
 	if _, err := rand.Read(rnd[:]); err != nil {
@@ -97,9 +155,11 @@ func writeCensusFile(final string, data []byte) error {
 		return err
 	}
 	_, err = f.Write(data)
-	if err == nil {
-		err = f.Sync()
-	}
+	// No fsync, on purpose: the census is written while the parent's classify
+	// deadline runs, and a slow sync could cost the valid record.json that was
+	// linked just before.  rename(2) alone gives whole-or-nothing to a reader
+	// of the live directory; after a crash the file may be empty or absent,
+	// which a diagnostic on an ephemeral runner can bear.
 	if cerr := f.Close(); err == nil {
 		err = cerr
 	}

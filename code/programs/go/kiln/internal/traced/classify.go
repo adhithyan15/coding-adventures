@@ -291,7 +291,7 @@ func (c *classifier) reason(r string) {
 // goes only to the census observer, never into the record.
 func (c *classifier) reasonAt(r, path string) {
 	if c.census != nil {
-		c.census.Note(r, c.redact(path))
+		c.census.noteClean(r, c.redact(path))
 	}
 	c.reason(r)
 }

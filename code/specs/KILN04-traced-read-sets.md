@@ -1047,16 +1047,28 @@ optional observer that sees every path-carrying reason (`host-read`,
 `writes-tracked`, `trace-visible`, `state-write`, `network`, `daemon`, and each
 `proc-path`) as the classifier raises it. It only counts: the record is
 byte-identical with and without it. The file holds `{schema, action, total,
-overflow, entries: [{kind, path, count}]}` with entries sorted by kind then
-path, each path made printable and redacted exactly as in a reason. The
-observer keeps at most 4096 distinct (kind, path) pairs per action; a new pair
-beyond that adds to `overflow` (and `total`) instead, and the file is bounded to
-512 KiB (entries are dropped from the tail into `overflow` if needed). It is
-always on, **best-effort** (a failed write changes neither the verdict nor the
-child's exit status), written atomically (temp file, then `rename`), and never
-read for any verdict: it is not in a shard, not sealed, not hashed. `collect`
-and `step` accept the name `census.json` (and a stray `census.json.tmp-*`) in
-an action's directory and do not count it as an orphan or an unexpected entry.
+overflow_total, overflow: {kind: n}, entries: [{kind, path, count}]}` with
+entries sorted by kind then path. Paths are printable and redacted
+(`$HOME`, `$TMPDIR`) as in a reason, and sanitised once: a path the classifier
+already made printable is not sanitised again. The bounds are PER KIND: at most
+1024 distinct paths of each kind (and 16384 overall as a safety net), so a flood
+of `host-read` cannot hide a late `proc-path`; a new pair beyond its kind's
+bound adds to that kind's `overflow` (and to `total`) instead. The encoded file
+is at most 512 KiB; to fit, entries are shed round-robin from the tail of every
+kind that holds more than one, so every kind keeps entries, and what is shed is
+counted in that kind's `overflow`. The file is **best-effort**: a failed write,
+or a panic in it, changes neither the verdict nor the child's exit status. It is
+written atomically (temp file, then `rename`, with NO fsync: a crash may leave it
+empty or absent, which a diagnostic can bear). It is never read for any verdict:
+it is not in a shard, not sealed, not hashed. One window remains: the file is
+written after `record.json` is linked and before the child exits, so if the
+parent's classify deadline (`ClassifyTimeout`) fires in that interval the
+parent writes `record.failed` over a valid record. That fails closed and costs
+only yield, and the missing fsync is what keeps the interval short. `collect`
+and `step` accept a regular file named `census.json`, and a stray
+`census.json.tmp-` plus 16 lowercase hex digits, in an action's directory; they
+do not count either as an orphan or an unexpected entry (any other name, or a
+non-regular `census.json`, is still one).
 
 **P3. Binary placement (D15).** The Kiln binary (the running executable,
 resolved through symlinks) and the build-tool binary must be regular files

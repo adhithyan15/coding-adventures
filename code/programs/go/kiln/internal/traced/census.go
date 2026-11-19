@@ -17,12 +17,19 @@ import "sort"
 //
 // It never feeds back: nothing in the classifier reads it, so a record made
 // with a Census is byte-identical to one made without.  It is bounded (a
-// hostile trace can name millions of paths): at most MaxCensusEntries distinct
-// (kind, path) pairs, after which a NEW pair only bumps Overflow.  Pairs
-// already held keep counting.
+// hostile trace can name millions of paths): at most MaxCensusPerKind distinct
+// paths per kind and MaxCensusEntries overall, after which a NEW pair only
+// bumps that kind's Overflow.  Pairs already held keep counting.
 
-// MaxCensusEntries bounds the distinct (kind, path) pairs one Census holds.
-const MaxCensusEntries = 4096
+// The bounds.  Per kind, so a flood of one kind (a thousand host reads) cannot
+// starve a rarer, more interesting one (a late proc-path); and overall, so many
+// kinds together are still bounded.  There are about ten kinds, so the overall
+// bound is a safety net well above kinds x per-kind: were it near the sum of
+// the per-kind caps, early kinds could fill it and starve a late one again.
+const (
+	MaxCensusPerKind = 1024
+	MaxCensusEntries = 16384
+)
 
 // CensusEntry is one distinct (kind, path) pair and how often it was raised.
 type CensusEntry struct {
@@ -36,27 +43,41 @@ type censusKey struct{ kind, path string }
 // Census collects path-carrying reasons.  Use NewCensus.  It is not safe for
 // concurrent use (a classifier is serial).
 type Census struct {
-	m map[censusKey]int64
-	// Total is every Note, held or not; Overflow is the Notes of pairs dropped
-	// because the bound was reached.
-	Total, Overflow int64
+	m     map[censusKey]int64
+	nKind map[string]int
+	// Total is every Note, held or not; Overflow counts, per kind, the Notes of
+	// pairs dropped because a bound was reached.
+	Total    int64
+	Overflow map[string]int64
 }
 
 // NewCensus returns an empty observer.
-func NewCensus() *Census { return &Census{m: map[censusKey]int64{}} }
+func NewCensus() *Census {
+	return &Census{m: map[censusKey]int64{}, nKind: map[string]int{}, Overflow: map[string]int64{}}
+}
 
-// Note records one occurrence.  The path is made printable (sanitize) so a
-// newline, a bidi override or an escape in a file name cannot reach a log or
-// forge a line; the kind is a fixed program string.
+// Note records one occurrence of a path of unknown provenance: it is made
+// printable (sanitize) so a newline, a bidi override or an escape in a file
+// name cannot reach a log or forge a line.  The kind is a fixed program string.
 func (c *Census) Note(kind, path string) {
 	if c == nil {
 		return
 	}
-	k := censusKey{kind, sanitize(path)}
+	c.noteClean(kind, sanitize(path))
+}
+
+// noteClean records a path the classifier already made printable (redact and
+// the reason text both end in sanitize).  Sanitising twice is not idempotent:
+// a cut multi-byte rune turns the first pass's "..." into a longer tail.
+func (c *Census) noteClean(kind, path string) {
+	k := censusKey{kind, path}
 	c.Total++
-	if _, ok := c.m[k]; !ok && len(c.m) >= MaxCensusEntries {
-		c.Overflow++
+	if _, ok := c.m[k]; !ok && (c.nKind[kind] >= MaxCensusPerKind || len(c.m) >= MaxCensusEntries) {
+		c.Overflow[kind]++
 		return
+	}
+	if _, ok := c.m[k]; !ok {
+		c.nKind[kind]++
 	}
 	c.m[k]++
 }
@@ -92,7 +113,7 @@ var censusPrefixes = []string{
 func (c *Census) noteReason(r string) {
 	for _, p := range censusPrefixes {
 		if len(r) > len(p) && r[:len(p)] == p {
-			c.Note(p[:len(p)-1], r[len(p):])
+			c.noteClean(p[:len(p)-1], r[len(p):])
 			return
 		}
 	}
