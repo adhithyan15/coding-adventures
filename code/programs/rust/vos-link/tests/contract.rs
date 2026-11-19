@@ -17,6 +17,7 @@ use vos_link::contract_check::{
     config_preamble, evaluation_document, run_lemma, splice, LemmaRun, Run, LEMMA_BUDGET,
     MAX_LEMMAS, MUTANTS_DIR, TABLE_FILE,
 };
+use vos_link::enums::{correspond, rust_enums, warrant_variants};
 use vos_link::{check_component, check_contract, gen_build, gen_contract, NoVerdict, Outcome};
 
 const C: &str = "vos-fixture-contract";
@@ -96,7 +97,7 @@ fn a_generated_toy_contract_passes_and_its_table_is_the_committed_one() {
     .unwrap();
     assert_eq!(r.read(TABLE), expected);
     // What it says: the products, the kills of each mutant and of each config mutant.
-    assert!(expected.starts_with("vos-lemmas 1\ncontract-part "));
+    assert!(expected.starts_with("vos-lemmas 2\ncontract-part "));
     assert!(expected.contains("config N 2\n"));
     assert!(
         expected.contains("lemma put_then_mem product 1024 admitted 1024 mutant put mutant-part ")
@@ -723,7 +724,7 @@ fn ck09_an_absent_a_stale_and_a_hand_edited_table() {
     only(
         &o,
         "CK09",
-        "warrant/lemmas.table:5: differs from the table this run writes",
+        "warrant/lemmas.table:7: differs from the table this run writes",
     );
     assert!(o.findings[0].message.contains("failed 5"), "{}", show(&o));
 
@@ -753,6 +754,250 @@ fn ck09_an_absent_a_stale_and_a_hand_edited_table() {
         &t[..t.len() - "end\n".len()],
     );
     only(&chk(&r), "CK09", "found \"(end of file)\"");
+}
+
+// --- CK10: the Rust enums and the Warrant variants ----------------------------------------------------
+
+const RS: &str = "code/packages/rust/vos-fixture-contract/src/lib.rs";
+const CP: &str = "code/packages/rust/vos-fixture-contract/warrant/contract.part";
+
+/// A generated toy contract with the Rust source and the contract part each edited once, then
+/// checked: exactly one CK10 finding whose text has `needle` in it.
+fn ck10(label: &str, file: &str, from: &str, to: &str, needle: &str) {
+    let r = generated(label);
+    r.edit(file, from, to);
+    let o = chk(&r);
+    only(&o, "CK10", needle);
+    // The generator refuses to write what the check would reject.
+    let g = gen(&r);
+    assert_eq!(codes(&g), ["CK10"], "{}", show(&g));
+    assert!(g.action.is_none());
+}
+
+#[test]
+fn the_toy_contract_passes_ck10_and_its_table_carries_the_variant_rows() {
+    let r = generated("ck10-pass");
+    let t = r.read(TABLE);
+    // In Rust source order, after the config rows; a model-only Warrant variant has no row.
+    assert!(
+        t.contains(
+            "config N 2\nvariant Cmd = Nop | Put(slot: U8, on: Bool) | Fill(Bytes<4>)\nvariant Reply = Done | Got(Pair)\nlemma "
+        ),
+        "{t}"
+    );
+    assert!(!t.contains("variant Model"), "{t}");
+}
+
+#[test]
+fn ck10_variants_reordered_in_rust() {
+    ck10(
+        "ck10-order",
+        RS,
+        "    Nop,\n    Put { slot: u8, on: bool },",
+        "    Put { slot: u8, on: bool },\n    Nop,",
+        "Rust renders `variant Cmd = Put(slot: U8, on: Bool) | Nop | Fill(Bytes<4>)`, warrant/contract.part renders `variant Cmd = Nop | Put(slot: U8, on: Bool) | Fill(Bytes<4>)`",
+    );
+}
+
+#[test]
+fn ck10_a_constructor_renamed_in_the_warrant() {
+    ck10(
+        "ck10-ctor",
+        CP,
+        "variant Cmd = Nop |",
+        "variant Cmd = Noop |",
+        "enum `Cmd` and its Warrant variant differ",
+    );
+}
+
+#[test]
+fn ck10_payload_arity_and_payload_type_changed() {
+    ck10(
+        "ck10-arity",
+        RS,
+        "Put { slot: u8, on: bool }",
+        "Put { slot: u8, on: bool, extra: bool }",
+        "Rust renders `variant Cmd = Nop | Put(slot: U8, on: Bool, extra: Bool) | Fill(Bytes<4>)`",
+    );
+    ck10(
+        "ck10-type",
+        RS,
+        "Put { slot: u8, on: bool }",
+        "Put { slot: bool, on: bool }",
+        "Put(slot: Bool, on: Bool)",
+    );
+    ck10(
+        "ck10-width",
+        RS,
+        "Fill([u8; 4])",
+        "Fill([u8; 5])",
+        "Fill(Bytes<5>)",
+    );
+}
+
+#[test]
+fn ck10_a_rust_type_the_map_does_not_know_never_matches() {
+    ck10(
+        "ck10-unmapped",
+        RS,
+        "Fill([u8; 4])",
+        "Fill(usize)",
+        "Fill(?usize)",
+    );
+    // An alias is not resolved, so it cannot launder a type into the map.
+    let r = generated("ck10-alias");
+    r.edit(
+        RS,
+        "pub struct Pair {",
+        "pub type Addr = u8;\npub struct Pair {",
+    );
+    r.edit(RS, "Fill([u8; 4])", "Fill(Addr)");
+    let o = chk(&r);
+    only(&o, "CK10", "Fill(?Addr)");
+}
+
+#[test]
+fn ck10_an_enum_renamed_has_no_twin() {
+    ck10(
+        "ck10-enum-rust",
+        RS,
+        "pub enum Cmd {",
+        "pub enum Command {",
+        "enum `Command` has no Warrant `variant Command`",
+    );
+    ck10(
+        "ck10-enum-warrant",
+        CP,
+        "variant Reply = Done",
+        "variant Answer = Done",
+        "enum `Reply` has no Warrant `variant Reply`",
+    );
+}
+
+#[test]
+fn ck10_a_named_field_renamed_and_a_tuple_field_renamed() {
+    // A named-field Rust variant: its field names are part of the type, so they must agree.
+    ck10(
+        "ck10-field-rust",
+        RS,
+        "Put { slot: u8, on: bool }",
+        "Put { pos: u8, on: bool }",
+        "Put(pos: U8, on: Bool)",
+    );
+    ck10(
+        "ck10-field-warrant",
+        CP,
+        "Put(slot: U8, on: Bool)",
+        "Put(pos: U8, on: Bool)",
+        "warrant/contract.part renders `variant Cmd = Nop | Put(pos: U8, on: Bool)",
+    );
+    // A tuple variant's field names are free in Warrant: renaming one is NOT a finding.
+    let r = generated("ck10-tuple-free");
+    r.edit(RS, "Got(Pair)", "Got(Pair)");
+    r.edit(CP, "Got(p: Pair)", "Got(whole: Pair)");
+    let o = chk(&r);
+    // Only the digest of contract.part moved: the table is stale (CK09), the enums agree.
+    only(&o, "CK09", "warrant/lemmas.table:2");
+    assert!(gen(&r).findings.is_empty());
+    assert!(chk(&r).findings.is_empty());
+}
+
+#[test]
+fn ck10_a_stale_variant_row_is_ck09() {
+    let r = generated("ck10-stale");
+    r.edit(
+        &pkg_path("warrant/lemmas.table"),
+        "variant Reply = Done | Got(Pair)",
+        "variant Reply = Got(Pair) | Done",
+    );
+    only(&chk(&r), "CK09", "warrant/lemmas.table:6");
+}
+
+#[test]
+fn ck10_unreadable_rust_fails_closed() {
+    // A file that does not lex.
+    let r = generated("ck10-lex");
+    r.write(&pkg_path("src/extra.rs"), "pub fn f( {\n");
+    only(&chk(&r), "CK10", "src/extra.rs");
+    // An enum the token scan cannot read to its end.
+    let r = generated("ck10-gap");
+    r.edit(RS, "    Done,", "    Done Got2,");
+    let o = chk(&r);
+    assert!(!o.findings.is_empty(), "{}", show(&o));
+    assert!(o.findings.iter().all(|f| f.code == "CK10"), "{}", show(&o));
+    assert!(show(&o).contains("src/lib.rs:"), "{}", show(&o));
+}
+
+#[test]
+fn a_contract_with_no_src_has_no_variant_rows_and_a_symlinked_src_is_no_verdict() {
+    let r = generated("ck10-nosrc");
+    std::fs::remove_dir_all(r.path(&pkg_path("src"))).unwrap();
+    // The table still says what the source said, so CK09 reports the missing rows...
+    let o = chk(&r);
+    only(&o, "CK09", "warrant/lemmas.table:5");
+    // ...and regenerating drops them.
+    assert!(gen(&r).findings.is_empty());
+    assert!(!r.read(TABLE).contains("\nvariant "));
+    assert!(chk(&r).findings.is_empty());
+    #[cfg(unix)]
+    {
+        // `load_sources` refuses a symlink anywhere under `src/`: no verdict, not a pass.
+        let r = generated("ck10-symlink");
+        let src = r.path(&pkg_path("src"));
+        std::os::unix::fs::symlink(r.path(&pkg_path("README.md")), src.join("link.rs")).unwrap();
+        let e = nv(check_contract(&r.pkg(C), None));
+        assert!(e.contains("cannot read the sources"), "{e}");
+    }
+}
+
+/// The rendering of every Warrant type constructor, in one document (a variant over each).
+#[test]
+fn the_warrant_side_renders_every_type_form() {
+    let doc = "warrant w v1\n  variant V = A(a: Bytes) | B(b: Bytes<4>) | C(c: List<U8>) | D(d: Option<U8>)\n  variant W = E(e: (U8, Bool)) | F(f: Bytes<N>) | G(g: U64) | H(h: Result<U8, Oops>)\n";
+    let m = warrant_variants(doc, &|_, _| false).expect("parses");
+    assert_eq!(
+        m["V"],
+        "variant V = A(Bytes) | B(Bytes<4>) | C(List<U8>) | D(Option<U8>)"
+    );
+    assert_eq!(
+        m["W"],
+        "variant W = E((U8, Bool)) | F(Bytes<N>) | G(U64) | H(Result<U8, Oops>)"
+    );
+    // `named` turns the field names on for exactly the constructors it names.
+    let m = warrant_variants(doc, &|e, c| e == "V" && c == "B").unwrap();
+    assert!(m["V"].contains("| B(b: Bytes<4>) |"), "{}", m["V"]);
+    assert!(m["V"].starts_with("variant V = A(Bytes) |"), "{}", m["V"]);
+    assert!(warrant_variants("not a document", &|_, _| false).is_err());
+}
+
+#[test]
+fn the_real_contract_renders_its_two_rows_and_they_agree() {
+    let real = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../packages/rust/vos-sched-contract");
+    let sources = vos_shape_check::loader::load_sources(&real).unwrap();
+    let rust = rust_enums(&sources).expect("the real contract reads");
+    let lines: Vec<&str> = rust.iter().map(|e| e.line_text.as_str()).collect();
+    assert_eq!(
+        lines,
+        [
+            "variant Upd = Changed | Unchanged | OutOfRange",
+            "variant Pick = Idle | Run(U8)"
+        ]
+    );
+    let part = std::fs::read_to_string(real.join("warrant/contract.part")).unwrap();
+    let warrant = warrant_variants(
+        &format!("warrant vos_sched_contract v1\n{part}"),
+        &|_, _| false,
+    )
+    .expect("the real contract part parses");
+    assert_eq!(warrant["Pick"], "variant Pick = Idle | Run(U8)");
+    let (findings, rows) = correspond(&rust, &warrant);
+    assert!(findings.is_empty());
+    assert_eq!(rows.len(), 2);
+    // ... and the committed table carries exactly these two rows after the config row.
+    let table = std::fs::read_to_string(real.join("warrant/lemmas.table")).unwrap();
+    assert!(table.starts_with("vos-lemmas 2\n"));
+    assert!(table.contains("config N 8\nvariant Upd = Changed | Unchanged | OutOfRange\nvariant Pick = Idle | Run(U8)\nlemma "));
 }
 
 // --- check-component on a contract crate ------------------------------------------------------------------------------
@@ -986,7 +1231,7 @@ fn the_spec_states_the_budget_and_every_code() {
     );
     assert_eq!(MAX_LEMMAS, 64);
     for code in [
-        "CK01", "CK02", "CK03", "CK04", "CK05", "CK06", "CK07", "CK08", "CK09",
+        "CK01", "CK02", "CK03", "CK04", "CK05", "CK06", "CK07", "CK08", "CK09", "CK10",
     ] {
         assert!(
             spec.contains(&format!("| `{code}` |")),
@@ -994,6 +1239,8 @@ fn the_spec_states_the_budget_and_every_code() {
         );
     }
     assert!(spec.contains("vosContractRow"));
+    // The table version the code writes (CK10 added the `variant` rows) is the one stated.
+    assert!(spec.contains("vos-lemmas 2\ncontract-part"));
     assert!(spec.contains(&format!("`{TABLE_FILE}`")) || spec.contains("warrant/lemmas.table"));
 }
 

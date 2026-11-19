@@ -36,7 +36,9 @@ fn the_toy_crates_report_their_class_and_kind() {
 
 #[test]
 fn the_broken_fixture_crates_fail_with_the_expected_rules() {
-    let cases: [(&str, &[&str]); 3] = [
+    let cases: [(&str, &[&str]); 5] = [
+        ("fail-contract-poke", &["SH19"]),
+        ("fail-contract-addr", &["SH19"]),
         ("fail-bitmap-ghost-leak", &["SH13", "SH18"]),
         ("fail-bitmap-build-rs", &["SH15"]),
         ("fail-bitmap-image-drift", &["SH17"]),
@@ -212,4 +214,66 @@ fn a_third_party_dependency_or_proc_macro_fails_the_toy() {
             .replace("[features]", "[lib]\nproc-macro = true\n\n[features]"),
     );
     check(i.clone(), Expect::Fires("SH15".into()), "");
+}
+
+#[test]
+fn the_command_type_fixtures_fire_sh19_and_nothing_else_for_a_wide_payload() {
+    // `Write { addr: u32 }` is fixed-width, so only the command-type rule objects.
+    let r = run(&load("fail-contract-addr"));
+    assert_eq!(rules(&r), ["SH19"], "{}", r.render());
+    assert!(
+        r.render()
+            .contains("enum `Pick` variant `Write` field `addr`: type `u32`"),
+        "{}",
+        r.render()
+    );
+    // `Poke(usize)` is also an SH10 matter (`usize` is not fixed-width); both fire.
+    let r = run(&load("fail-contract-poke"));
+    assert!(rules(&r).contains(&"SH19"), "{}", r.render());
+    assert!(
+        r.render()
+            .contains("variant `Poke` field `0`: type `usize`"),
+        "{}",
+        r.render()
+    );
+    // The passing contract is the same crate with `Member(u8)`.
+    assert!(run(&load("pass-ready-contract")).passed());
+}
+
+/// The real scheduler contract is judged by the real rule (its own BUILD runs the
+/// binary too; this puts the same crate in the library's test).
+#[test]
+fn the_real_scheduler_contract_passes_sh19() {
+    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../vos-sched-contract");
+    let input = vos_shape_check::loader::load_crate(&dir).expect("the contract crate loads");
+    let r = run(&input);
+    assert!(r.passed(), "{}", r.render());
+    assert_eq!(r.kind, Some(vos_shape_check::manifest::Kind::Contract));
+}
+
+#[test]
+fn load_sources_reads_src_only_and_refuses_what_load_crate_refuses() {
+    use vos_shape_check::loader::load_sources;
+    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../vos-sched-contract");
+    let files = load_sources(&dir).expect("sources");
+    assert!(files.iter().any(|f| f.path == "src/lib.rs"), "{files:?}");
+    // A directory with no `src` has no sources (and no Cargo.toml is needed).
+    let bare = fixtures_dir().join("pass-ready-contract").join("src");
+    assert!(load_sources(&bare).expect("no src below it").is_empty());
+    // A file is not a crate directory.
+    let file = fixtures_dir().join("pass-ready-contract").join("vos.toml");
+    assert!(load_sources(&file).is_err());
+    assert!(load_sources(&fixtures_dir().join("no-such-crate")).is_err());
+    // A symlinked crate directory is refused (Unix: creating one needs no privilege).
+    #[cfg(unix)]
+    {
+        let t = materialize("pass-ready-contract", "ls-symlink");
+        let link = std::path::Path::new(env!("CARGO_TARGET_TMPDIR"))
+            .join(format!("vos-shape-check-link-{}", std::process::id()));
+        let _ = std::fs::remove_file(&link);
+        std::os::unix::fs::symlink(&*t, &link).unwrap();
+        let e = load_sources(&link).unwrap_err();
+        let _ = std::fs::remove_file(&link);
+        assert!(e.contains("not a plain directory"), "{e}");
+    }
 }

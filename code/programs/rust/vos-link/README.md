@@ -57,7 +57,8 @@ Warrant parser reports, with the single `model` of `warrant/mutants/<lemma>.part
 `cfg_<KEY>()` and that the tool's own mutants V-1 and V+1 each break one.  What it saw is written by
 `gen-contract` into `warrant/lemmas.table` and compared byte for byte (`CK09`); the table is never parsed.
 Codes: `CK01` inputs, `CK02` type check, `CK03` budget and domain, `CK04` a lemma fails, `CK05` mutant set,
-`CK06` mutant form, `CK07` a lemma survives, `CK08` config, `CK09` the table.  On the real scheduler contract
+`CK06` mutant form, `CK07` a lemma survives, `CK08` config, `CK09` the table, `CK10` a Rust enum and its Warrant
+`variant` render to different lines (generated from both sides and compared; the lines are rows of the table).  On the real scheduler contract
 (N = 8, ten lemmas) it takes about 10 s wall (57 s CPU, 8 workers) in a debug build; this crate's tests use a toy contract with two
 threads (`tests/fixtures/contracts/vos-fixture-contract`) so they stay fast.
 

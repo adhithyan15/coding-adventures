@@ -926,6 +926,26 @@ HTTP, OAuth transport, or live-provider access. Those state, role, certificate,
 trust, revocation, handshake, and transport boundaries remain separate;
 concrete HTTPS remains unavailable.
 
+A consuming form of the same composition now advances an owned selected
+transcript only after authenticating one exact decoded `CertificateVerify`
+body. It accepts the exact body bytes, decodes them internally, verifies their
+signature against the transcript snapshot captured before the message, frames
+those same body bytes as one complete `CertificateVerify` handshake message in
+caller-owned storage, and updates the owned transcript once with that complete
+encoding. Success returns non-copyable evidence retaining the owned advanced
+transcript, before and after snapshots, exact body, authorized scheme, role,
+validated RSA key, and encoded length. Every failure consumes the transcript
+and returns only a stable redacted category, so partially authenticated state
+cannot be retried or reused by the caller.
+
+This transition still accepts an algorithm- and strength-validated detached
+RSA key and a caller-selected role. It does not bind the key to a reviewed
+certificate path, prove the preceding server-flight order, authenticate or
+append Finished, establish trust, enforce revocation, protect records, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. Exact
+reviewed-path and Finished continuity remain later compositions; concrete
+HTTPS and live-provider readiness remain unavailable.
+
 A bounded `tls13-reviewed-server-path-certificate-verify` composition closes
 the detached-key and caller-selected-role gaps for one reviewed RSA server
 path. It accepts only the strongest accumulated reviewed server-path proof,
@@ -4769,6 +4789,24 @@ no credential and causes no edit, signing operation, provider or trace event,
 storage, clock, network, or other external effect. Ordered transcript
 continuity, record protection, and transport remain separate blockers;
 concrete HTTPS and live-provider readiness remain unavailable.
+
+The same binding also provides a consuming Finished-verification form for a
+later handshake state machine. It takes ownership of the exact selected
+transcript before checking the suite and verify-data and returns non-copyable
+owned evidence retaining that transcript, its internally captured snapshot,
+and the repository-owned Finished verdict together. Failure returns only the
+same stable redacted error and does not return the transcript, so a failed
+Finished check cannot leave caller-accessible authenticated-handshake state
+available for retry or reuse. The borrowed form remains available when a
+caller needs an immutable proof without transferring transcript ownership.
+
+Ownership alone does not establish ordered transcript continuity. This form
+still does not authenticate or append `CertificateVerify`, prove which exact
+handshake encodings entered the transcript, sequence the server flight, bind a
+certificate path, establish trust, enforce revocation, protect records,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those compositions remain blockers; concrete HTTPS and live-provider
+readiness remain unavailable.
 
 The repository-owned `tls13-key-schedule` boundary now composes the no-PSK
 RFC 8446 section 7.1 base-secret transitions for a full ephemeral key exchange.

@@ -8,6 +8,7 @@ description = "Suite-bound TLS 1.3 CertificateVerify transcript input compositio
 tls13-certificate-verify-input = { path = "../tls13-certificate-verify-input" }
 tls13-certificate-verify-message = { path = "../tls13-certificate-verify-message" }
 tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-handshake = { path = "../tls13-handshake" }
 tls13-rsa-pss-certificate-verify = { path = "../tls13-rsa-pss-certificate-verify" }
 tls13-rsa-pss-signature-routing = { path = "../tls13-rsa-pss-signature-routing" }
 tls13-signature-scheme-policy = { path = "../tls13-signature-scheme-policy" }

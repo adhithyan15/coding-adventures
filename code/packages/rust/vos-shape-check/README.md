@@ -11,7 +11,7 @@ source stays inside a narrow shape: `#![no_std]`, no `unsafe`, no `static`, no
 `dyn` or closures, no recursion, one loop form (`for i in 0..K`), no division, no
 panic path, fixed-width types, no floats, only `core` and a contract crate as
 dependencies, no macros or build scripts the analyzer cannot see. VOS01 section
-1.4 names these rules SH1-SH15; VOS02 adds SH17 and SH18 for the *ghost face*
+1.4 names these rules SH1-SH15; VOS02 adds SH17 and SH18 for the *ghost face*, and VOS03 SH19 (the command-type check of a contract crate)
 (the evidence-only `mod ghost`). Existing analyzers (VER08a) check little of this.
 
 `vos-shape-check` tokenises a crate's `src/**/*.rs` and `Cargo.toml` and reports
@@ -31,7 +31,7 @@ per run design.
 
 ```text
  contract crate  ->  component crate  ->  vos-shape-check  (this)  ->  vos-link
- (VOS01/VOS02)       (class K, vos.toml)   SH1-SH15, SH17, SH18        profile/lock
+ (VOS01/VOS02)       (class K, vos.toml)   SH1-SH15, SH17-SH19        profile/lock
 ```
 
 The crate class (K, C, S, M, P, H; VOS01 section 1.6) and kind come from the

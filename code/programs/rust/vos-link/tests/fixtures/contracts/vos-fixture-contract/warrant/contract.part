@@ -1,6 +1,11 @@
   -- A toy contract: a two-thread ready set (N = 2).  Small on purpose: vos-link's own tests must
   -- stay fast, and the real N = 8 evaluation runs once, in the scheduler contract's BUILD.
   record Pair(a: Bool, b: Bool)
+  -- The command and answer types, twice: here, and as the Rust enums of src/lib.rs (CK10).
+  -- `Model` has no Rust enum: a model-only variant is allowed.
+  variant Cmd = Nop | Put(slot: U8, on: Bool) | Fill(data: Bytes<4>)
+  variant Reply = Done | Got(p: Pair)
+  variant Model = Lo | Hi
   model empty() -> Pair = Pair(false, false)
   model mem(m: Pair, i: U8) -> Bool = ((i == 0u8 and m.a) or (i == 1u8 and m.b))
   model put(m: Pair, i: U8, v: Bool) -> Pair = (

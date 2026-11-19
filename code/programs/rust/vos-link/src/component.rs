@@ -270,7 +270,7 @@ pub fn check_component(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outc
         contract_component(&mut cx)?;
         out.findings = cx.f;
         out.notes.push(
-            "check-component (contract crate): the file set, BUILD and BUILD_windows byte-equal to `gen-build`'s contract region (VOS04 5.6, which runs `check-contract`: lemmas, mutants, config mutants and the generated table) and the build-tool row `vosContractRow` are present and consistent. Not checked: that the lines PASS (the build does that), the command-type rule (VOS-D077, VOS-039b-2). A contract has no evidence manifest, coverage floor or `-any` rule (VOS10 section 15).".to_string(),
+            "check-component (contract crate): the file set, BUILD and BUILD_windows byte-equal to `gen-build`'s contract region (VOS04 5.6, which runs `check-contract`: lemmas, mutants, config mutants, the Rust-enum/Warrant-variant correspondence and the generated table, and `vos-shape-check` with its command-type rule SH19) and the build-tool row `vosContractRow` are present and consistent. Not checked: that the lines PASS (the build does that). A contract has no evidence manifest, coverage floor or `-any` rule (VOS10 section 15).".to_string(),
         );
         return Ok(out);
     }

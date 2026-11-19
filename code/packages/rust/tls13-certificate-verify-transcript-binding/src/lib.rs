@@ -7,12 +7,14 @@
 //! existing authorized RSA-PSS scheme composition. A third stage accepts only
 //! that complete outer evidence and delegates the exact decoded message,
 //! validated RSA key, scratch, and fixed limits to repository-owned RSA-PSS
-//! verification.
+//! verification. A consuming form performs those stages internally and admits
+//! the exact authenticated CertificateVerify body to an owned transcript as
+//! one complete handshake encoding.
 //!
 //! The API accepts neither detached transcript bytes nor caller-selected
-//! transcript-hash metadata. It does not prove ordered handshake state,
-//! authorize the selected role, bind a certificate key, or make TLS or HTTPS
-//! available.
+//! transcript-hash metadata. It does not prove the preceding ordered handshake
+//! state, authorize the selected role, bind a certificate key to a reviewed
+//! path, authenticate Finished, or make TLS or HTTPS available.
 
 #![forbid(unsafe_code)]
 
@@ -21,16 +23,19 @@ use tls13_certificate_verify_input::{
     build_certificate_verify_input, CertificateVerifyInput, CertificateVerifyRole, InputError,
     TranscriptHashAlgorithm,
 };
-use tls13_certificate_verify_message::CertificateVerifyMessage;
+use tls13_certificate_verify_message::{CertificateVerifyMessage, MessageError};
 use tls13_cipher_suite_policy::HkdfHash;
+use tls13_handshake::{
+    encode_tls13_handshake, HandshakeErrorKind, Tls13HandshakePolicy, Tls13HandshakeType,
+};
 use tls13_rsa_pss_certificate_verify::{
     hash_tls13_certificate_verify_input, verify_tls13_rsa_pss_certificate_verify,
     HashedTls13CertificateVerifyInput, Tls13RsaPssCertificateVerifyError,
-    VerifiedTls13RsaPssCertificateVerify,
+    Tls13RsaPssCertificateVerifyErrorKind, VerifiedTls13RsaPssCertificateVerify,
 };
 use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
 use tls13_signature_scheme_policy::AuthorizedSignatureScheme;
-use tls13_transcript::{SelectedTls13Transcript, TranscriptHash};
+use tls13_transcript::{SelectedTls13Transcript, TranscriptErrorKind, TranscriptHash};
 use x509_rsa_public_key::ValidatedRsaPublicKey;
 
 /// One exact framed input bound to the selected transcript state that produced
@@ -236,5 +241,199 @@ pub fn verify_transcript_bound_certificate_verify<
     Ok(VerifiedTranscriptBoundCertificateVerify {
         hashed_input,
         verification,
+    })
+}
+
+/// Stable, payload-free failures from consuming CertificateVerify transcript
+/// advancement.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum CertificateVerifyTranscriptAdvanceErrorKind {
+    /// The exact borrowed CertificateVerify body was not structurally valid.
+    MessageFraming(MessageError),
+    /// The selected transcript could not be framed into the signed input.
+    SignedInput(InputError),
+    /// Repository-owned RSA-PSS verification rejected the exact message.
+    SignatureVerification(Tls13RsaPssCertificateVerifyErrorKind),
+    /// The authenticated body could not be framed as one handshake message.
+    HandshakeFraming(HandshakeErrorKind),
+    /// The complete authenticated encoding could not advance the transcript.
+    Transcript(TranscriptErrorKind),
+}
+
+/// One redacted consuming CertificateVerify transcript-advance failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct CertificateVerifyTranscriptAdvanceError {
+    kind: CertificateVerifyTranscriptAdvanceErrorKind,
+}
+
+impl CertificateVerifyTranscriptAdvanceError {
+    /// Return the stable redacted failure category.
+    #[must_use]
+    pub const fn kind(self) -> CertificateVerifyTranscriptAdvanceErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for CertificateVerifyTranscriptAdvanceError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "TLS 1.3 CertificateVerify transcript-advance error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for CertificateVerifyTranscriptAdvanceError {}
+
+/// Non-copyable evidence owning one transcript advanced by an authenticated
+/// exact CertificateVerify handshake encoding.
+pub struct OwnedVerifiedCertificateVerifyTranscript<'body, 'key> {
+    transcript: SelectedTls13Transcript,
+    before_snapshot: TranscriptHash,
+    after_snapshot: TranscriptHash,
+    role: CertificateVerifyRole,
+    authorized_scheme: AuthorizedSignatureScheme,
+    certificate_verify_body: &'body [u8],
+    public_key: ValidatedRsaPublicKey<'key>,
+    encoded_handshake_length: usize,
+}
+
+impl<'body, 'key> OwnedVerifiedCertificateVerifyTranscript<'body, 'key> {
+    /// Borrow the exact selected transcript after authenticated advancement.
+    #[must_use]
+    pub const fn transcript(&self) -> &SelectedTls13Transcript {
+        &self.transcript
+    }
+
+    /// Return the transcript snapshot authenticated by CertificateVerify.
+    #[must_use]
+    pub const fn before_snapshot(&self) -> TranscriptHash {
+        self.before_snapshot
+    }
+
+    /// Return the transcript snapshot after hashing the complete message.
+    #[must_use]
+    pub const fn after_snapshot(&self) -> TranscriptHash {
+        self.after_snapshot
+    }
+
+    /// Return the endpoint role framed into the authenticated signed input.
+    #[must_use]
+    pub const fn role(&self) -> CertificateVerifyRole {
+        self.role
+    }
+
+    /// Return the exact policy-authorized signature scheme.
+    #[must_use]
+    pub const fn authorized_scheme(&self) -> AuthorizedSignatureScheme {
+        self.authorized_scheme
+    }
+
+    /// Borrow the exact structurally decoded body hashed into the transcript.
+    #[must_use]
+    pub const fn certificate_verify_body(&self) -> &'body [u8] {
+        self.certificate_verify_body
+    }
+
+    /// Return the exact validated RSA key used for signature verification.
+    #[must_use]
+    pub const fn public_key(&self) -> ValidatedRsaPublicKey<'key> {
+        self.public_key
+    }
+
+    /// Return the complete handshake encoding length added to the transcript.
+    #[must_use]
+    pub const fn encoded_handshake_length(&self) -> usize {
+        self.encoded_handshake_length
+    }
+}
+
+impl fmt::Debug for OwnedVerifiedCertificateVerifyTranscript<'_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("OwnedVerifiedCertificateVerifyTranscript")
+    }
+}
+
+/// Authenticate one exact CertificateVerify body and advance an owned selected
+/// transcript with that complete handshake encoding.
+///
+/// The exact body is decoded internally before any signed-input output changes.
+/// Signature verification is completed against the transcript's captured
+/// pre-message snapshot before the body is framed and admitted to the owned
+/// transcript. Every failure consumes the transcript and returns only a stable
+/// redacted category, preventing caller retry or reuse of partial state.
+#[allow(clippy::too_many_arguments)]
+pub fn verify_and_advance_owned_certificate_verify_transcript<'body, 'key>(
+    mut transcript: SelectedTls13Transcript,
+    role: CertificateVerifyRole,
+    authorized_scheme: AuthorizedSignatureScheme,
+    certificate_verify_body: &'body [u8],
+    public_key: ValidatedRsaPublicKey<'key>,
+    signed_input_output: &mut [u8],
+    handshake_output: &mut [u8],
+    data_block_scratch: &mut [u8],
+    limits: Tls13RsaPssSignatureLimits,
+) -> Result<
+    OwnedVerifiedCertificateVerifyTranscript<'body, 'key>,
+    CertificateVerifyTranscriptAdvanceError,
+> {
+    let message = CertificateVerifyMessage::decode(certificate_verify_body).map_err(|error| {
+        CertificateVerifyTranscriptAdvanceError {
+            kind: CertificateVerifyTranscriptAdvanceErrorKind::MessageFraming(error),
+        }
+    })?;
+    let before_snapshot = transcript.snapshot();
+
+    {
+        let bound = bind_certificate_verify_transcript(&transcript, role, signed_input_output)
+            .map_err(|error| CertificateVerifyTranscriptAdvanceError {
+                kind: CertificateVerifyTranscriptAdvanceErrorKind::SignedInput(error),
+            })?;
+        let hashed = hash_transcript_bound_certificate_verify_input(authorized_scheme, &bound);
+        verify_transcript_bound_certificate_verify(
+            &hashed,
+            &message,
+            public_key,
+            data_block_scratch,
+            limits,
+        )
+        .map_err(|error| CertificateVerifyTranscriptAdvanceError {
+            kind: CertificateVerifyTranscriptAdvanceErrorKind::SignatureVerification(error.kind()),
+        })?;
+    }
+
+    let handshake_policy = Tls13HandshakePolicy::new(
+        &[Tls13HandshakeType::CertificateVerify],
+        certificate_verify_body.len(),
+    )
+    .map_err(|error| CertificateVerifyTranscriptAdvanceError {
+        kind: CertificateVerifyTranscriptAdvanceErrorKind::HandshakeFraming(error.kind()),
+    })?;
+    let encoded_handshake_length = encode_tls13_handshake(
+        &handshake_policy,
+        Tls13HandshakeType::CertificateVerify,
+        certificate_verify_body,
+        handshake_output,
+    )
+    .map_err(|error| CertificateVerifyTranscriptAdvanceError {
+        kind: CertificateVerifyTranscriptAdvanceErrorKind::HandshakeFraming(error.kind()),
+    })?;
+    transcript
+        .update(&handshake_output[..encoded_handshake_length])
+        .map_err(|error| CertificateVerifyTranscriptAdvanceError {
+            kind: CertificateVerifyTranscriptAdvanceErrorKind::Transcript(error.kind()),
+        })?;
+    let after_snapshot = transcript.snapshot();
+
+    Ok(OwnedVerifiedCertificateVerifyTranscript {
+        transcript,
+        before_snapshot,
+        after_snapshot,
+        role,
+        authorized_scheme,
+        certificate_verify_body,
+        public_key,
+        encoded_handshake_length,
     })
 }

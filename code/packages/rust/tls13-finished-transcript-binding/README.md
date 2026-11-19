@@ -9,10 +9,12 @@ retaining that exact transcript, exact snapshot, and `VerifiedFinished`
 together.
 
 The retained immutable transcript borrow prevents later mutation while the
-proof is live. Stable failures retain no transcript bytes, digest, verify-data,
-suite, role, length, or offset. Both SHA-256 and SHA-384 policy routes are
-covered, and a same-hash different-suite substitution fails before peer-length
-processing.
+proof is live. A consuming form instead takes ownership of the transcript and
+returns it only inside successful non-copyable Finished evidence. On failure,
+the transcript is not returned for caller retry or reuse. Stable failures
+retain no transcript bytes, digest, verify-data, suite, role, length, or offset.
+Both SHA-256 and SHA-384 policy routes are covered, and a same-hash
+different-suite substitution fails before peer-length processing.
 
 This package does not prove which ordered handshake encodings entered the
 transcript, choose the correct client/server BaseKey or sender role, connect a

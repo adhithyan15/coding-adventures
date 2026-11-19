@@ -626,7 +626,8 @@
         "code/packages/go/grammar-tools/**",
         "code/packages/go/state-machine/**",
         "code/packages/go/directed-graph/**",
-        "code/grammars/strace/**"
+        "code/grammars/strace/**",
+        "code/scripts/tests/test_assert_kiln_sandbox_tests.py"
       ]
     }
   }

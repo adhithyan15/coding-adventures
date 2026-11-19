@@ -21073,16 +21073,19 @@ Dart DT17 hash-functions PR #19687 merged at exact main
 14/15 established lanes, with Dart the sole missing lane. The six open PRs at
 selection time do not overlap this package.
 
-Split `hash-map-dart-lane-parity` from the pending Dart storage umbrella. Its
-direct dependencies are the corrected DT17 vector contract and the merged Dart
-DT17 package. The umbrella remains pending for its other storage identities.
-The Dart map slot remains missing until its implementation, validation, and
-merge gates complete. The local phase1 commit is profile and ownership only.
+Split `hash-map-dart-lane-parity` from the pending Dart storage umbrella. The
+DT18 profile and ownership split merged in PR #19693 as
+`eaa6fb8d547d63eff010739ad36aa25508046c34`. The Dart map slot remains missing
+until its implementation, validation, and merge gates complete.
 
-The profile and ownership split passed independent review and are recorded
-in draft PR #19693. Phase 2 now prepares a neutral fixture with an independent
-association-list semantics model, a separate physical-layout model, literal
-hash vectors, exhaustive short histories, and directed public-operation cases.
-The candidate corpus remains pending independent review and direct public Swift
-consumption. Dart production work stays gated until those checks pass. No native
-Warrant, SAT proof, Swift/Dart conformance, or Dart slot credit is claimed.
+The Phase 2 shared conformance foundation is tracked as
+`hash-map-dt18-shared-conformance-foundation`. Its neutral corpus, independent
+association-list and physical-layout models, exhaustive short-history streams,
+directed public-operation cases, real Swift public API consumer, and
+build-tool fixture routing passed the Phase 2 gate. The foundation is ready for
+its own reviewed PR. It contains no Dart production implementation and earns no
+Dart slot credit. Hold Dart implementation until this foundation PR merges and
+a fresh inventory confirms the dependency state.
+
+No native Dart Warrant, SAT proof, Dart runtime conformance, or Dart slot credit
+is claimed. The umbrella remains pending for its other storage identities.

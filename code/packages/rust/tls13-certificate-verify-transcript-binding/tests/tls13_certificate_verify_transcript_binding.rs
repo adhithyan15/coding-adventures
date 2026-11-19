@@ -13,11 +13,13 @@ use tls13_certificate_verify_input::{
 use tls13_certificate_verify_message::CertificateVerifyMessage;
 use tls13_certificate_verify_transcript_binding::{
     bind_certificate_verify_transcript, hash_transcript_bound_certificate_verify_input,
-    verify_transcript_bound_certificate_verify,
+    verify_and_advance_owned_certificate_verify_transcript,
+    verify_transcript_bound_certificate_verify, CertificateVerifyTranscriptAdvanceErrorKind,
 };
 use tls13_cipher_suite_policy::{
     CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry, SelectedCipherSuite,
 };
+use tls13_handshake::HandshakeErrorKind;
 use tls13_rsa_pss_certificate_verify::Tls13RsaPssCertificateVerifyErrorKind;
 use tls13_rsa_pss_signature_routing::{
     Tls13RsaPssSignatureLimits, Tls13RsaPssSignatureRoutingErrorKind,
@@ -25,7 +27,9 @@ use tls13_rsa_pss_signature_routing::{
 use tls13_signature_scheme_policy::{
     AuthorizedSignatureScheme, SignatureScheme, SignatureSchemePolicy,
 };
-use tls13_transcript::{PendingTls13Transcript, SelectedTls13Transcript, TranscriptPolicy};
+use tls13_transcript::{
+    PendingTls13Transcript, SelectedTls13Transcript, TranscriptErrorKind, TranscriptPolicy,
+};
 use x509_rsa_public_key::{validate_rsa_public_key, RsaPublicKeyPolicy, ValidatedRsaPublicKey};
 use x509_subject_public_key_info::decode_x509_subject_public_key_info;
 
@@ -105,8 +109,17 @@ fn selected_suite(suite: CipherSuite) -> SelectedCipherSuite {
 }
 
 fn selected_transcript(suite: CipherSuite, bytes: &[u8]) -> SelectedTls13Transcript {
-    let mut pending =
-        PendingTls13Transcript::new(TranscriptPolicy::new(4096).expect("valid transcript policy"));
+    selected_transcript_with_limit(suite, bytes, 4096)
+}
+
+fn selected_transcript_with_limit(
+    suite: CipherSuite,
+    bytes: &[u8],
+    maximum_observed_bytes: u64,
+) -> SelectedTls13Transcript {
+    let mut pending = PendingTls13Transcript::new(
+        TranscriptPolicy::new(maximum_observed_bytes).expect("valid transcript policy"),
+    );
     pending.update(bytes).expect("test transcript fits");
     pending.select(selected_suite(suite))
 }
@@ -116,6 +129,14 @@ fn authorized(scheme: SignatureScheme) -> AuthorizedSignatureScheme {
         .expect("valid signature policy")
         .select(scheme.wire_id())
         .expect("scheme is allowed")
+}
+
+fn certificate_verify_body(scheme: SignatureScheme, signature: &[u8]) -> Vec<u8> {
+    let mut body = Vec::with_capacity(4 + signature.len());
+    body.extend_from_slice(&scheme.wire_id().to_be_bytes());
+    body.extend_from_slice(&(signature.len() as u16).to_be_bytes());
+    body.extend_from_slice(signature);
+    body
 }
 
 #[test]
@@ -416,4 +437,228 @@ fn changed_selected_transcript_invalidates_signature() {
         )
     ));
     assert!(!format!("{error:?}").contains(&SHA256_SIGNATURE_HEX[..32]));
+}
+
+#[test]
+fn authenticated_exact_body_advances_the_owned_transcript_once() {
+    let encoded_key = decode_hex(PUBLIC_KEY_SPKI_HEX);
+    let key = validated_key(&encoded_key);
+    let scheme = SignatureScheme::RsaPssRsaeSha256;
+    let signature = decode_hex(SHA256_SIGNATURE_HEX);
+    let body = certificate_verify_body(scheme, &signature);
+    let transcript = selected_transcript(
+        CipherSuite::TlsChacha20Poly1305Sha256,
+        VERIFY_TRANSCRIPT_BYTES,
+    );
+    let before_snapshot = transcript.snapshot();
+    let mut expected_transcript = selected_transcript(
+        CipherSuite::TlsChacha20Poly1305Sha256,
+        VERIFY_TRANSCRIPT_BYTES,
+    );
+    let mut signed_input_output = [0_u8; MAXIMUM_INPUT_LENGTH];
+    let mut handshake_output = vec![0xa5; 4 + body.len() + 7];
+    let mut scratch = [0xa5; 223];
+
+    let verified = verify_and_advance_owned_certificate_verify_transcript(
+        transcript,
+        CertificateVerifyRole::Server,
+        authorized(scheme),
+        &body,
+        key,
+        &mut signed_input_output,
+        &mut handshake_output,
+        &mut scratch,
+        Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+    )
+    .unwrap();
+
+    let encoded_length = 4 + body.len();
+    assert_eq!(&handshake_output[..4], &[15, 0, 1, 4]);
+    assert_eq!(&handshake_output[4..encoded_length], body);
+    assert!(handshake_output[encoded_length..]
+        .iter()
+        .all(|byte| *byte == 0xa5));
+    expected_transcript
+        .update(&handshake_output[..encoded_length])
+        .unwrap();
+
+    assert_eq!(verified.before_snapshot(), before_snapshot);
+    assert_eq!(verified.after_snapshot(), expected_transcript.snapshot());
+    assert_eq!(
+        verified.transcript().snapshot(),
+        expected_transcript.snapshot()
+    );
+    assert_eq!(
+        verified.transcript().observed_bytes(),
+        (VERIFY_TRANSCRIPT_BYTES.len() + encoded_length) as u64
+    );
+    assert_eq!(verified.role(), CertificateVerifyRole::Server);
+    assert_eq!(verified.authorized_scheme().scheme(), scheme);
+    assert!(ptr::eq(verified.certificate_verify_body(), body.as_slice()));
+    assert_eq!(verified.public_key(), key);
+    assert_eq!(verified.encoded_handshake_length(), encoded_length);
+    assert_eq!(
+        format!("{verified:?}"),
+        "OwnedVerifiedCertificateVerifyTranscript"
+    );
+}
+
+#[test]
+fn malformed_body_fails_before_output_mutation_and_redacts() {
+    let encoded_key = decode_hex(PUBLIC_KEY_SPKI_HEX);
+    let key = validated_key(&encoded_key);
+    let transcript = selected_transcript(
+        CipherSuite::TlsChacha20Poly1305Sha256,
+        VERIFY_TRANSCRIPT_BYTES,
+    );
+    let malformed_body = [0x08, 0x04, 0x00, 0x02, 0xaa];
+    let mut signed_input_output = [0xa5; MAXIMUM_INPUT_LENGTH];
+    let mut handshake_output = [0xa5; 32];
+    let mut scratch = [0xa5; 223];
+
+    let error = verify_and_advance_owned_certificate_verify_transcript(
+        transcript,
+        CertificateVerifyRole::Server,
+        authorized(SignatureScheme::RsaPssRsaeSha256),
+        &malformed_body,
+        key,
+        &mut signed_input_output,
+        &mut handshake_output,
+        &mut scratch,
+        Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        CertificateVerifyTranscriptAdvanceErrorKind::MessageFraming(
+            tls13_certificate_verify_message::MessageError::SignatureLengthMismatch
+        )
+    );
+    assert_eq!(signed_input_output, [0xa5; MAXIMUM_INPUT_LENGTH]);
+    assert_eq!(handshake_output, [0xa5; 32]);
+    assert_eq!(scratch, [0xa5; 223]);
+    assert!(!format!("{error:?}").contains("aa"));
+}
+
+#[test]
+fn invalid_signature_fails_before_handshake_framing_or_transcript_admission() {
+    let encoded_key = decode_hex(PUBLIC_KEY_SPKI_HEX);
+    let key = validated_key(&encoded_key);
+    let scheme = SignatureScheme::RsaPssRsaeSha256;
+    let signature = decode_hex(SHA256_SIGNATURE_HEX);
+    let mut body = certificate_verify_body(scheme, &signature);
+    body[4] ^= 1;
+    let transcript = selected_transcript(
+        CipherSuite::TlsChacha20Poly1305Sha256,
+        VERIFY_TRANSCRIPT_BYTES,
+    );
+    let mut signed_input_output = [0_u8; MAXIMUM_INPUT_LENGTH];
+    let mut handshake_output = vec![0xa5; 4 + body.len()];
+    let before_handshake_output = handshake_output.clone();
+    let mut scratch = [0xa5; 223];
+
+    let error = verify_and_advance_owned_certificate_verify_transcript(
+        transcript,
+        CertificateVerifyRole::Server,
+        authorized(scheme),
+        &body,
+        key,
+        &mut signed_input_output,
+        &mut handshake_output,
+        &mut scratch,
+        Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+    )
+    .unwrap_err();
+
+    assert!(matches!(
+        error.kind(),
+        CertificateVerifyTranscriptAdvanceErrorKind::SignatureVerification(
+            Tls13RsaPssCertificateVerifyErrorKind::SignatureRouting(
+                Tls13RsaPssSignatureRoutingErrorKind::Sha256(_)
+            )
+        )
+    ));
+    assert_eq!(handshake_output, before_handshake_output);
+    for diagnostic in [format!("{error:?}"), error.to_string()] {
+        assert!(!diagnostic.contains(std::str::from_utf8(VERIFY_TRANSCRIPT_BYTES).unwrap()));
+        assert!(!diagnostic.contains(&SHA256_SIGNATURE_HEX[..32]));
+    }
+}
+
+#[test]
+fn short_handshake_storage_withholds_authenticated_transcript_state() {
+    let encoded_key = decode_hex(PUBLIC_KEY_SPKI_HEX);
+    let key = validated_key(&encoded_key);
+    let scheme = SignatureScheme::RsaPssRsaeSha256;
+    let signature = decode_hex(SHA256_SIGNATURE_HEX);
+    let body = certificate_verify_body(scheme, &signature);
+    let transcript = selected_transcript(
+        CipherSuite::TlsChacha20Poly1305Sha256,
+        VERIFY_TRANSCRIPT_BYTES,
+    );
+    let mut signed_input_output = [0_u8; MAXIMUM_INPUT_LENGTH];
+    let mut handshake_output = vec![0xa5; 3 + body.len()];
+    let before_handshake_output = handshake_output.clone();
+    let mut scratch = [0xa5; 223];
+
+    let error = verify_and_advance_owned_certificate_verify_transcript(
+        transcript,
+        CertificateVerifyRole::Server,
+        authorized(scheme),
+        &body,
+        key,
+        &mut signed_input_output,
+        &mut handshake_output,
+        &mut scratch,
+        Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        CertificateVerifyTranscriptAdvanceErrorKind::HandshakeFraming(
+            HandshakeErrorKind::OutputTooSmall
+        )
+    );
+    assert_eq!(handshake_output, before_handshake_output);
+}
+
+#[test]
+fn transcript_limit_failure_withholds_partially_advanced_state() {
+    let encoded_key = decode_hex(PUBLIC_KEY_SPKI_HEX);
+    let key = validated_key(&encoded_key);
+    let scheme = SignatureScheme::RsaPssRsaeSha256;
+    let signature = decode_hex(SHA256_SIGNATURE_HEX);
+    let body = certificate_verify_body(scheme, &signature);
+    let transcript = selected_transcript_with_limit(
+        CipherSuite::TlsChacha20Poly1305Sha256,
+        VERIFY_TRANSCRIPT_BYTES,
+        VERIFY_TRANSCRIPT_BYTES.len() as u64,
+    );
+    let mut signed_input_output = [0_u8; MAXIMUM_INPUT_LENGTH];
+    let mut handshake_output = vec![0xa5; 4 + body.len()];
+    let mut scratch = [0xa5; 223];
+
+    let error = verify_and_advance_owned_certificate_verify_transcript(
+        transcript,
+        CertificateVerifyRole::Server,
+        authorized(scheme),
+        &body,
+        key,
+        &mut signed_input_output,
+        &mut handshake_output,
+        &mut scratch,
+        Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        CertificateVerifyTranscriptAdvanceErrorKind::Transcript(
+            TranscriptErrorKind::TranscriptLimitExceeded
+        )
+    );
+    assert_eq!(&handshake_output[..4], &[15, 0, 1, 4]);
+    assert_eq!(&handshake_output[4..], body);
 }

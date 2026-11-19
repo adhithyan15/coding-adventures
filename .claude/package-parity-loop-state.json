@@ -17226,13 +17226,17 @@
       "merged_head_revision": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
       "merged_at": "2026-10-26T15:37:25Z",
       "merge_revision": "1bb58a0d7ed8d818d622e69890234d96b6e26b3a",
-      "merge_notes": "Every final-head check reached an acceptable terminal conclusion. GitHub reported the reviewed head conflict-free, guarded squash merge completed without bypassing review or checks, and the exact receipt is current origin/main.",
+      "merge_notes": "GitHub reports PR #18324 merged from exact reviewed head d34af356d621175dd8cc307d953ecb7a99d1b79a as 1bb58a0d7ed8d818d622e69890234d96b6e26b3a at 2026-10-26T15:37:25Z. The receipt is exact current origin/main, and the clean completed worktree and local branch were removed after verification.",
       "selection_revision": "27dc687739ac74e8f5bbab70916a03d62a609743",
       "selection_notes": "Selected after the local Swift hash-functions tranche reached an exact-head independent PASS while the hosted parity queue remained full. Among dependency-ready portable owners, this bounded Python front ranks ahead of the Swift paint-vm-ascii capability-only repair because it removes one exact orphan exemption and unblocks two recorded descendants without changing SGD behavior. Scope is limited to truthful Unix and Windows BUILD fronts, production-only coverage, Ruff, existing ML02 behavior tests, publishable metadata, package documentation, and removal of the exact gradient-descent exemption. No training loop, randomness, convergence guarantee, model API, native runtime, or new host authority is introduced.",
       "reconciled_main_revision": "0be03745d775ffa9ee8c66ffda1700baa76ba58f",
       "queue_notes": "Rebased onto current origin/main after guarded auto-merge of Haskell Starlark provider PR #18183 freed one hosted slot. Fresh prioritization keeps this reviewed Python front ahead of the prepared Swift PaintVmAscii and Kotlin micro-qr metadata repairs because it retires an exact orphan exemption and unblocks two recorded descendants. The Bezier successors remain publication-blocked on PR #18293.",
       "validation_notes": "Fresh post-rebase native validation uses Python 3.12.13 and passes Ruff lint, Ruff format checking, all 11 focused optimizer tests, and the production-only 95% coverage gate at 100% lines. Two consecutive clean source and wheel builds succeed while an intentionally hostile in-package validation environment points through an absolute Python symlink; the resulting source archive excludes every .venv variant, cache, coverage file, bytecode directory, and dist recursion. The empty required-capabilities declaration validates against the repository schema, and the exact gradient-descent exemption is absent. The root changelog filename digest matches its full heading. A real Go diff plan evaluates 12 Starlark BUILD files, discovers five Python packages, and selects only python/gradient-descent. All 1,576 lesson shards validate. The 1,547-owner state is JSON-valid, unique, dependency-complete, acyclic, and free of merged-to-unfinished edges; only this local owner is in progress and exactly the three published owners are pr-open.",
       "prepublication_revalidation_notes": "After rebasing onto 263e05f201003afd0395e82e6b810fe25a1260b4, Python 3.12.13 again passes Ruff, formatting, all 11 tests, and 100% production-line coverage. Two clean builds with an absolute-symlink .venv-review-absolute again exclude all validation environments, caches, coverage, bytecode, and dist recursion from the sdist. The capability schema, exact exemption removal, and root changelog digest pass. The real Go planner again selects only python/gradient-descent from five discovered Python packages. All 1,583 lesson shards validate. The 1,547-owner graph remains unique, dependency-complete, acyclic, and free of merged-to-unfinished edges with exactly this owner in_progress and the two remaining hosted owners pr-open.",
+      "merged_head_revision": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
+      "merged_at": "2026-10-26T15:37:25Z",
+      "merge_revision": "1bb58a0d7ed8d818d622e69890234d96b6e26b3a",
+      "merge_notes": "Every final-head check reached an acceptable terminal conclusion. GitHub reported the reviewed head conflict-free, guarded squash merge completed without bypassing review or checks, and the exact receipt is current origin/main.",
       "notes": "Add an independent cross-platform front, run the existing optimizer suite and coverage/lint checks, and reconcile package documentation and metadata without changing the SGD API.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/python-gradient-descent-build-front-coverage"
@@ -19089,34 +19093,69 @@
       "notes": "The Dart DT17 hash-functions prerequisite is merged. The Dart DT18 hash-map gap is split into hash-map-dart-lane-parity and remains missing while its profile, shared-fixture, implementation, VM/Node, coverage, and merge gates are pending. This umbrella retains the other missing Dart identities: bloom-filter, hash-set, HyperLogLog, in-memory store/protocol/engine, radix-tree, RESP, skip-list, and tree-set. Hash-set depends on the map child, tree-set needs its tree substrate, and the store engine needs several data structures. Keep the full server/AOF outside scope without applicability review."
     },
     {
-      "id": "hash-map-dart-lane-parity",
-      "title": "Implement and validate the Dart DT18 hash-map profile",
-      "status": "in_progress",
+      "id": "hash-map-dt18-shared-conformance-foundation",
+      "title": "Add DT18 shared conformance and cache-input bindings",
+      "status": "pending",
       "depends_on": [
         "hash-functions-dt17-vector-and-documentation-correction",
-        "hash-functions-dart-lane-parity"
+        "hash-functions-dart-lane-parity",
+        "swift-hash-map-lane-parity"
       ],
-      "branch": "codex/parity-dart-hash-map-20261119",
-      "pr_number": 19693,
+      "branch": "codex/dt18-map-conformance-foundation-20261119",
+      "pr_number": null,
       "selection_blocked": false,
       "selection_revision": "b779d10a1601c203bc377ef74e448ac947906c66",
+      "publication_readiness": "ready_for_pr",
+      "notes": "Phase 2 freezes a shared DT18 corpus with independent association-list and physical-layout models, compact lossless exhaustive-history streams, directed cases, and hash vectors. The real Swift public HashMap consumer and build-tool fixture routing pass on the Phase 2 source. This foundation contains no Dart production implementation and earns no Dart slot credit. Independent review and the publication PR must complete before selecting the Dart implementation owner.",
+      "profile_evidence": {
+        "pull_request": 19693,
+        "merge_revision": "eaa6fb8d547d63eff010739ad36aa25508046c34",
+        "profile_revision": "6c6224602972d91ee5f3683a13d4f4f106c9e585"
+      },
+      "fixture_gate": {
+        "status": "passed",
+        "fixture_path": "code/specs/fixtures/hash-map-v1/cases.json",
+        "fixture_bytes": 469237,
+        "fixture_sha256": "4b8e2ebaa80e50c0d680d1f1c7ef7f8eb96944a46356dc30db31be4e2daee86a",
+        "history_count_per_strategy": 66430,
+        "consumer": "actual Swift public API",
+        "production_dart_claim": false
+      }
+    },
+    {
+      "id": "hash-map-dart-lane-parity",
+      "title": "Implement and validate the Dart DT18 hash-map profile",
+      "status": "pending",
+      "depends_on": [
+        "hash-functions-dt17-vector-and-documentation-correction",
+        "hash-functions-dart-lane-parity",
+        "hash-map-dt18-shared-conformance-foundation"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "selection_revision": "b779d10a1601c203bc377ef74e448ac947906c66",
       "selection_notes": "Fresh exact-main inventory at b779d10a1601c203bc377ef74e448ac947906c66 reports 5,164 structural package slots and DT18 hash-map coverage of 14/15 established lanes, with Dart the sole missing lane. The six open PRs had no map overlap. Select this dedicated leaf after Dart DT17 PR #19687 merged.",
-      "notes": "PR #19693 carries the independently accepted DT18 profile and ownership split. Phase 2 is preparing a neutral corpus with an independent association-list semantics model, a separate physical-layout model, literal hash vectors, exhaustive short histories, and directed operation cases. The current fixture candidate is pending independent fixture review and direct public Swift consumption; this is not a conformance or slot-credit claim. Dart implementation and tests remain gated until the complete corpus is reviewed and consumed by the real Swift public API.",
+      "notes": "The DT18 profile and ownership split merged in PR #19693 as eaa6fb8d547d63eff010739ad36aa25508046c34. Its Phase 2 shared conformance foundation is tracked separately and must merge before Dart production work begins. The Dart package implementation, public API tests, VM/Node validation, and production-boundary checks remain outstanding. This owner still carries no Dart slot credit.",
       "postmerge_preparation_evidence": [
         "code/specs/DT18-hash-map-dart-profile.md"
       ],
       "profile_gate": {
-        "status": "passed",
-        "reviewed_profile_revision": "6c622a6f0a6e4ea9df63ef644a4df2382c58cb6d",
+        "status": "merged",
+        "reviewed_profile_revision": "6c6224602972d91ee5f3683a13d4f4f106c9e585",
         "publication_revision": "7d3e87ae46d2e4009c8c1d27c5d7b290ee6900ec",
-        "pull_request": "https://github.com/adhithyan15/coding-adventures/pull/19693"
+        "pull_request": "https://github.com/adhithyan15/coding-adventures/pull/19693",
+        "merge_revision": "eaa6fb8d547d63eff010739ad36aa25508046c34"
       },
       "fixture_gate": {
-        "status": "pending_independent_review",
+        "status": "passed",
+        "foundation_owner": "hash-map-dt18-shared-conformance-foundation",
         "fixture_path": "code/specs/fixtures/hash-map-v1/cases.json",
         "fixture_bytes": 469237,
         "fixture_sha256": "4b8e2ebaa80e50c0d680d1f1c7ef7f8eb96944a46356dc30db31be4e2daee86a",
         "histories_per_strategy": 66430,
+        "consumer": "actual Swift public HashMap API",
+        "dart_conformance_claimed": false,
         "production_implementation_authorized": false
       }
     },
