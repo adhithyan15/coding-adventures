@@ -880,7 +880,7 @@ fate of each part is the table after item 4 below)**:
    | the nine lemmas over their whole domain, one mutant each | `check-contract`, generic; the mutants are `warrant/mutants/*.part`, the counts are `warrant/lemmas.table` |
    | marker discipline; generated-shape type check; `any` block refused on a one-field `Impl` | already `vos-link`'s (GD01, CD04, `tests/gen_and_check.rs`) |
    | three implementations as Warrant models and the 21 obligation mutants | dropped: all 24 obligations appear in the `warrant/sabotage.plan` of the three real crates, and the 247 of the lowest-first scan stays in `vos-sched-contract/tests/trait_usable.rs` |
-   | the Rust enums and the Warrant variants have the same constructors | dropped until 039b-2 makes it generic; a mismatched constructor fails the generated harness, which is compiled against the contract's own enums, and `wrong-ctor` sabotage attacks the marshalling |
+   | the Rust enums and the Warrant variants have the same constructors | restored, generic, as CK10 of `check-contract` (VOS-039b-2a): the Rust enum and the Warrant variant render to one line each and the bytes are compared, and the lines are rows of `warrant/lemmas.table`; a mismatched constructor also fails the generated harness, and `wrong-ctor` sabotage attacks the marshalling |
    | `pre_insert_is_exactly_the_ids_below_eight` | replaced by the config lemma `config_n_is_the_id_range` |
    | exact-set and per-conjunct controls; the oracle-at-zero-is-canonical evaluation | **lost** (sabotage is per claim): VOS-D109 |
 

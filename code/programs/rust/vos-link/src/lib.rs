@@ -49,6 +49,7 @@ pub mod build_gen;
 pub mod check;
 pub mod component;
 pub mod contract_check;
+pub mod enums;
 pub mod error;
 pub mod fsio;
 pub mod inputs;

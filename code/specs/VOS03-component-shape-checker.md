@@ -6,7 +6,7 @@ are **not** in this document's scope; they arrive with VOS-026 and VOS-028.
 
 **Layer:** Tooling, below VOS01 and VOS02. VOS01 section 1.4 defines the shape
 rules SH1-SH15 and names "one new, VOS-owned lexical check"; VOS02 section 4.6
-adds SH17 and SH18, section 7.2-7.3 the static file and manifest bans and the
+adds SH17 and SH18 (VOS-039b-2a adds SH19, the command-type rule), section 7.2-7.3 the static file and manifest bans and the
 central evidence-feature list, section 6.8 the parser caps, and section 10
 places the tool at `code/packages/rust/vos-shape-check`. This document is the
 exact contract of that tool: inputs, which rule binds which crate, the precise
@@ -145,13 +145,19 @@ not checked here. P and H crates have no shape rule (only VT01 to VT03).
 
 | Class | Rules checked |
 |---|---|
-| **K** (default) | SH1-SH15, SH17, SH18 |
+| **K** (default) | SH1-SH15, SH17, SH18 (and SH19 when `kind = "contract"`, below) |
 | **C**, **S** | SH2-SH11, SH13-SH15, SH17, SH18 |
 | **M** | SH2-SH9, SH11, SH13-SH15, SH17, SH18 (exempt SH1, SH10, SH12) |
 | **P**, **H** | none |
 
-SH17 and SH18 follow SH13 (the ghost face), which binds K, C, S and M. The
-table is one function in the code; a change of VOS01 section 1.6 is a one-line
+SH17 and SH18 follow SH13 (the ghost face), which binds K, C, S and M.
+
+**SH19 is bound by kind, not by class** (VOS-039b-2a): it is checked exactly when `vos.toml`
+declares `kind = "contract"`, whatever the class, and never otherwise. `binds()` is not
+consulted for it. The question it asks is not "which shape does this class need" but "this
+crate is the one place the command vocabulary lives" (VOS04 section 3, requirement 1).
+
+The table is one function in the code; a change of VOS01 section 1.6 is a one-line
 edit. Two disagreements between documents are recorded, not resolved here:
 EMU00 section 7.5 calls class M "exempt from the no-panic shape rules" where
 VOS01 section 1.6 exempts only SH1, SH10 and SH12 (so SH8 binds M here), and
@@ -253,6 +259,7 @@ VOS02; the second column is the exact lexical check.*
 | **SH15** | (a) `macro_rules` followed by `!`; (b) `include`, `include_str`, `include_bytes` followed by `!`; (c) any other macro invocation other than the pure `core` list `matches`, `compile_error`, `concat`, `stringify`, `line`, `column`, `file`, `module_path` (**`cfg!` is not on it**: SH18); (d) an attribute naming `path`, `link_section`, `no_mangle` or `export_name` (inside `cfg_attr` too; `link`, `link_name` are SH2); (e) a crate-root entry named `build.rs` **in any case**, `.cargo`, or `rust-toolchain*`; (f) in `Cargo.toml` (`[package]` or its alias `[project]`) a `build` key of **any** value in any TOML spelling, a `links` key, `proc-macro` not the literal `false`, a `crate-type` containing `proc-macro`; (g) `[lib] path` other than exactly `src/lib.rs`, any `[[bin]]` target or `src/main.rs` or `src/bin/**` file (a component is a library; a binary is a second crate root the checks would not cover), and a `[[test]]`, `[[example]]` or `[[bench]]` path not under `tests/`, `examples/`, `benches/` | a macro or build script of another crate is invisible; all of the above are bans, not analyses |
 | **SH17** | in the ghost scope (an inline `mod ghost { }` or the files `src/ghost.rs`, `src/ghost/**`): (a) every `fn` is named with the prefix `vos_ghost_`, and every leaf of a crate-root `pub use ghost::...` is too (an alias counts; a glob is a finding); (b) **only a CLOSED list of EXACT names may have a free body: `vos_ghost_alpha`, `vos_ghost_alpha_w` and `vos_ghost_cfg_n`** (VOS02 section 4.4; not prefixes, so `vos_ghost_alpha_evil` is a wrapper; VOS-D037). Every other ghost function is a **wrapper** and must contain exactly one UFCS call `<T as Trait>::f(` and nothing else computing: no other call (`ident(`, `.m(`, `Type::f(`), no `if`, `else`, `match`, `while`, `loop`, `for`, `return`, `break`, `continue`, no `as` outside the call, none of `+ - * / % ^ \| & ! ?` and no `<`, `>` outside the call; a ghost function with no UFCS call that is not on the list is a finding, so a wrapper cannot be replaced by an inline reimplementation; (c) every `let` pattern in a wrapper is an exhaustive destructure with no `..` whose field names are exactly the fields of the crate's non-ghost `struct` of that name; (d) every ghost `struct` built with `Name { .. }` in a wrapper that destructures a production struct `S` has the same field names, types (as token text) and order as `S`; (e) a ghost `struct` named `Image` that no wrapper pairs is a finding; (f) a ghost function header that could not be read is VT03 | the bodies of `alpha` and the `cfg_*` exports are not checked for faithfulness (the evidence's job). The prefix rule is applied to `fn`s and root re-exports only: the types `Image` and `AbsW` of VOS02 section 4.2 are not prefixed (VOS-D033) |
 | **SH18** | (a) **every** `cfg`, `cfg_attr` and `cfg!` is a finding, in every class that binds SH18, **except** exactly `#[cfg(feature = "F")]` (`F` an evidence feature: the central list plus `vos.toml`'s) on a `mod ghost` item or a `pub use ghost::..` item, and the masked `cfg(test)` items. A `cfg(target_arch = ..)` gives the evidence host and the image two different crates, so it is not allowed whatever its predicate. Features named in a `cfg` must also be declared in `[features]`, and in class K a non-evidence feature must not gate code; (b) outside the ghost scope, `ghost` (not after `mod`), or an identifier starting `vos_ghost_`, is a finding unless inside such a gated `pub use ghost::..`; (c) every name in `vos.toml` `evidence-features` is in the central list (**VT01** otherwise) | Cargo's resolved feature set (unification through other dependents) is not computed: that is the resolved-graph check of VOS22 |
+| **SH19** | **only when `kind = "contract"`** (section 2). The *command set* is DERIVED, never listed by the author: **every `enum` item of the crate**, `pub` or not (a superset of "every `pub enum`" that needs no visibility parsing and so fails closed). Findings: (a) `#[non_exhaustive]` on the enum or on a variant; (b) a generic list on the enum; (c) a variant field whose type is not accepted. The accepted set is EXACTLY: `u8`; `bool`; `[u8; N]` with `N` a **decimal** integer literal (digits only: a suffix such as `4usize`, a base prefix, an underscore or a name is a different spelling and is rejected); or the bare name of a `struct` or `enum` of the same crate that itself passes (judged the same way, memoised, with a visited set so a cycle is judged once; a generic, `#[non_exhaustive]` or unreadable struct fails; two items of one name must both pass; the judgement is a work list, not a recursion, so a chain of ten thousand nested structs is judged in linear time). **The vocabulary of a contract crate is closed** (SH19 also refuses, as whole constructs, the things that can change what a name means): (d) any `use` (including `pub use` and `use .. as ..`) or `extern crate`, because a contract crate imports nothing; (e) any `mod`, so the crate is one flat namespace; (f) any macro definition (`macro_rules!`, `macro`) or invocation (`name!(..)`, `a::b![..]`); (g) any `struct`, `enum`, `union`, `type`, `trait`, `fn`, `const` or `static` named like a Rust primitive (`u8`, `bool`, `usize`, ..) or a Warrant built-in type (`U8`, `Bool`, `Bytes`, ..; the list `RESERVED_TYPE_NAMES` is checked by a test against `warrant-grammar`), so neither `type u8 = u32;` nor `struct U8(u8)` can change what `u8` means to this check or to CK10; attributes (`#[derive]`, `#[repr(u8)]`, `#![no_std]`) and doc comments are untouched, and a contract crate's tests live in `tests/`, not in a `#[cfg(test)] mod`. The judgement of `u8` and `bool` also consults the crate's item table, so a shadowing item that escaped (g) still fails. In EVERY crate, an `enum` or `struct` keyword not followed by a name (`enum $n { .. }` in a macro body) is a gap, VT03. Everything else is a finding that names the type (control characters escaped, long text cut): `usize`, `u16` and wider, `i*`, `&` and `*`, tuples, `Option<..>`, any `::` path, a `type` alias (NOT resolved: rejected, so an alias cannot launder `usize`), a const-named array length. A variant, a field list or a discriminant (`= ..`) the scan cannot read is a gap, reported as VT03 (fail closed) | lexical (item 18 of section 6): names are not resolved, so a same-crate type is found by its bare name; a `struct` in the ghost module is judged like any other; the judgement runs over distinct names (one node per name), so many items sharing a name cost linear work |
 
 ---
 
@@ -344,6 +351,19 @@ for every rule, checked by hand for the review items, not by mutation testing.
     its `{`. Rewrite with a named field, a `type` alias or a `let` with a type
     annotation; the declaration positions (parameters, return types, fields,
     `let x: T`, bounds, `impl` headers, turbofish) stay clean.
+18. **SH19 is lexical** (VOS-039b-2a). It reads enum variants from the token stream, so it
+    sees what is WRITTEN: a type is accepted only as the five spellings of the SH19 row.
+    A `type Addr = usize;` alias is rejected rather than resolved (the check never follows a
+    name to its definition across a path or an alias), so the safe direction is a finding,
+    never a pass. The command set is every enum of a contract crate; a contract crate that
+    wants a non-command enum with a wider payload has none to write (the crate is
+    declarations only, VOS10 section 15). The HAL side (the allowlist) is VOS-025a.
+    A lexical check never converges against an adversary that can rename things, so it does
+    not try: a contract crate's vocabulary is CLOSED (SH19 (d)-(g): no `use`, `mod`, macro or
+    item named like a primitive or a Warrant built-in), and the check refuses the construct
+    instead of resolving it. What remains is what a flat, import-free, macro-free crate can
+    still say, which the spellings of the SH19 row cover. CK10 compares only the NAME of a
+    nested same-crate type, not its contents; SH19 judges the contents (VOS-D111).
 17. **SH14 spine half, SH16, and the audits of VOS02 section 5** (the
    `impl Profile` block, `site_` claims): VOS-D024, VOS-034 and VOS22.
 
@@ -357,6 +377,16 @@ for every rule, checked by hand for the review items, not by mutation testing.
       broken variants of each fail with the expected rule ids;
 - [ ] the report is deterministic and the exit codes are 0, 1, 2 as in section 3;
 - [ ] over-cap, unlexable, symlinked and non-UTF-8 inputs fail closed;
+- [ ] SH19 (VOS-039b-2a): the negative controls `Poke(usize)`, `Write { addr: u32 }`,
+      `#[non_exhaustive]`, a generic enum, `&'static u8`, a foreign path, a `type` alias of
+      `usize`, a nested struct with a `usize` field and a const-named array length are
+      each rejected; `Pick::Run(u8)`, `Upd`, `[u8; 4]` and a nested passing enum pass; the
+      same enum in a `kind = "production"` crate raises no SH19; and the work counts
+      linearly in the number of variants and in the number of items sharing a name; the
+      closed vocabulary is enforced (`type u8 = u32;`, `struct u8`, `struct U8(u8)`, a `use`
+      rename or re-export, a `mod`, a macro definition or invocation, each rejected in class
+      K, P and H, the `enum $n` of a macro body a VT03 gap), and a control character in a
+      field type never reaches a message raw;
 - [ ] line coverage of the crate is above 95%;
 - [ ] the crate reads Rust and TOML only through the grammar-driven crates
       (`lexer`, `grammar-tools`, `parser`, the TOML lexer and parser), has no

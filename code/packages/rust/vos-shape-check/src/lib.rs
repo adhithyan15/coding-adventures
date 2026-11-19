@@ -33,13 +33,15 @@
 //!   rules        SH1-SH4, SH6-SH11, SH15 over tokens (and which class binds what)
 //!   graph        SH5 recursion over a by-name call graph
 //!   ghost        SH13, SH14, SH17, SH18 (the ghost face)
+//!   command      SH19, the command-type check of a `kind = "contract"` crate
 //!   cargo_rules  SH12, SH15 (Cargo.toml), crate-root SH1/SH2, VT02
 //!   steps        a deterministic work counter (linearity tests count, not time)
 //!   report       findings, deterministic rendering, exit codes
 //! ```
 //!
-//! The library is **pure**: text in, [`Report`] out.  Only the binary
-//! (`src/main.rs`, `src/loader.rs`) touches the filesystem.
+//! The checking core is **pure**: text in, [`Report`] out.  Only the binary
+//! (`src/main.rs`) and [`loader`] (the one hardened filesystem edge, shared with
+//! `vos-link`) touch the filesystem.
 //!
 //! ## Example
 //!
@@ -61,10 +63,12 @@
 #![forbid(unsafe_code)]
 
 pub mod cargo_rules;
+pub mod command;
 pub mod ghost;
 pub mod graph;
 pub mod items;
 pub mod lexer;
+pub mod loader;
 pub mod manifest;
 pub mod report;
 pub mod rules;
@@ -435,6 +439,11 @@ fn analyse(input: &CrateInput, policy: &Policy, p: Prepared, results: Vec<Lexed>
     }
     graph::recursion(&mut cx);
     ghost::ghost_rules(&mut cx);
+    // SH19 binds by KIND, not by class (VOS03 section 2): the contract crate is
+    // where the command vocabulary lives, whatever class it declares.
+    if kind == Some(manifest::Kind::Contract) {
+        command::command_rules(&mut cx);
+    }
     if let Some(c) = cargo.as_ref() {
         cargo_rules::manifest_rules(&mut cx, c, &input.root_entries);
     }

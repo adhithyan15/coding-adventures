@@ -1,7 +1,9 @@
-vos-lemmas 1
+vos-lemmas 2
 contract-part fd4b88aaa4cab44c03947906aab0d8b97b996351111608de19446ef40b8f673b
 lemmas-part 5a87b7951c16058f840eb5c188d963a2952f9cb49f55323b95167c51d659f010
 config N 8
+variant Upd = Changed | Unchanged | OutOfRange
+variant Pick = Idle | Run(U8)
 lemma closure_at_m product 65536 admitted 65536 mutant inv mutant-part a7730efff61d4823c8f740bfa90fe50863d803f2d0d07dcfa80305c4b0fa12cb failed 65536
 lemma insert_outside_pre_changes_nothing product 65536 admitted 65536 mutant abs_insert mutant-part 06f63cbea9aec68c779911a7c6bc0408d0f9b063b5c7f6638d905bf89d70df4c failed 63488
 lemma remove_outside_pre_changes_nothing product 65536 admitted 65536 mutant abs_remove mutant-part 93de48f9f135a188f827c1402f2384a4fdf4d1153d10f8fba846b068e0b05bd5 failed 63488
