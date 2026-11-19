@@ -946,6 +946,26 @@ I/O, authorize HTTP or OAuth transport, or open a network connection. Exact
 reviewed-path and Finished continuity remain later compositions; concrete
 HTTPS and live-provider readiness remain unavailable.
 
+A follow-up consuming transition now authenticates Finished directly from that
+owned post-`CertificateVerify` transcript. The Finished key's sender role must
+match the client/server role already retained by the authenticated
+`CertificateVerify` evidence, and the existing Finished transcript binding
+requires exact selected-suite equality before HMAC work. Success returns one
+non-copyable graph retaining the original exact body, role, authorized scheme,
+validated RSA key, pre- and post-`CertificateVerify` snapshots, owned selected
+transcript, internally captured Finished snapshot, and repository-owned
+Finished verdict. The Finished snapshot is required to equal the retained
+post-`CertificateVerify` snapshot. Every failure consumes the earlier evidence
+and returns no transcript state for retry or reuse.
+
+This proves continuity only between the detached-key `CertificateVerify`
+transition and the immediately following role- and suite-bound Finished check.
+It does not bind the RSA key to a reviewed certificate path, prove preceding
+server-flight order, append the Finished handshake encoding, establish trust,
+enforce revocation, protect records, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Those compositions remain blockers;
+concrete HTTPS and live-provider readiness remain unavailable.
+
 A bounded `tls13-reviewed-server-path-certificate-verify` composition closes
 the detached-key and caller-selected-role gaps for one reviewed RSA server
 path. It accepts only the strongest accumulated reviewed server-path proof,
