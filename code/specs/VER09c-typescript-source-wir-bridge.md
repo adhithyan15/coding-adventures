@@ -231,3 +231,25 @@ Whole-package TypeScript semantics, general control flow or memory, arbitrary
 BigInt, all dynamic Number behavior, the record-based reducer, fixture decoder,
 device polling, cross-language parity, and unbounded program behavior remain
 outside this contract unless separately specified and proved.
+
+## 9. Delivery record
+
+VER-P044 is complete on main through PR #19685, protected squash
+`9511584649b1c3294d38a9742f97eac7ddd9ae5b`, from reviewed head
+`02cbd0e67e79dbe12acc5a4f1cefb86bc34b3080`. Exact-head CI run `44486323864`,
+Human Languages Books run `44486323844`, and Swift Apps run `44486323707` all
+passed. The CI build plan selected this crate and `go/programs/build-tool` on
+Linux, macOS, and Windows; all six package outcomes were `BUILT`. The Go package
+rows include the same-relative-path, same-length TypeScript fixture A→B→A cache
+invalidation test. On Rust 1.100.0, strict all-target Clippy, debug and release
+test suites passed; library coverage was 394/408 lines (96.57%).
+
+The CI build tool also runs strict Clippy before the crate's declared `BUILD`
+commands. The first PR run exposed a collapsible-if lint in the library and a
+needless-range-loop lint in the independent test oracle; both were repaired
+without changing lowering behavior or the oracle's bit order. This gate must be
+included when describing the effective build recipe and local reproduction.
+These completion receipts do not extend the claim boundary above: the checked
+source remains the helper fixture, and production reducer binding, guarded
+mutant replay, and proof-tool transitive cache invalidation remain consumer
+acceptance work.
