@@ -3,12 +3,13 @@
 //! The path-only composition accepts selected-transcript hash evidence and the
 //! strongest accumulated reviewed RSA server-path proof. Stronger HTTPS entry
 //! points accept that path only through the existing exact DNS destination
-//! binding, with or without retained anchor self-signature evidence. Direct
-//! and nested revocation entry points accept the leaf only through their exact
-//! destination-bound complete fixed-path proofs. All entry points authorize
-//! the server role, derive and validate the exact retained target certificate's
-//! RSA key, and delegate signature verification to repository-owned code. They
-//! do not establish ordered handshake state, Finished, records, TLS, HTTP,
+//! binding, with or without retained anchor self-signature evidence. Direct,
+//! nested, and double-nested revocation entry points accept the leaf only
+//! through their exact destination-bound complete fixed-path proofs. All entry
+//! points authorize the server role, derive and validate the exact retained
+//! target certificate's RSA key, and delegate signature verification to
+//! repository-owned code. They do not establish ordered handshake state,
+//! Finished, records, TLS, HTTP,
 //! OAuth, or network readiness.
 
 #![forbid(unsafe_code)]
@@ -18,6 +19,7 @@ use core::fmt;
 use der_asn1::Asn1Limits;
 use https_reviewed_server_path_binding::{
     BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation,
+    BoundHttpsDnsDestinationToReviewedDoubleNestedNoCheckCompleteFixedPathRevocation,
     BoundHttpsDnsDestinationToReviewedNestedNoCheckCompleteFixedPathRevocation,
     BoundHttpsDnsDestinationToReviewedServerPath,
     BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature, ReviewedHttpsServerPath,
@@ -44,6 +46,14 @@ mod direct_revocation_evidence_sealed {
 }
 
 mod nested_revocation_evidence_sealed {
+    use x509_certificate::X509Certificate;
+
+    pub trait Sealed<'encoded> {
+        fn server_certificate(&self) -> &X509Certificate<'encoded>;
+    }
+}
+
+mod double_nested_revocation_evidence_sealed {
     use x509_certificate::X509Certificate;
 
     pub trait Sealed<'encoded> {
@@ -84,6 +94,32 @@ impl<
         Proof,
         ResponderRevocation,
         IntermediateRevocation,
+    >
+{
+    fn server_certificate(&self) -> &X509Certificate<'target_encoded> {
+        self.destination().certificate()
+    }
+}
+
+impl<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        OriginalResponderRevocation,
+        IntermediateRevocation,
+        AddedResponderRevocation,
+    > double_nested_revocation_evidence_sealed::Sealed<'target_encoded>
+    for BoundHttpsDnsDestinationToReviewedDoubleNestedNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        OriginalResponderRevocation,
+        IntermediateRevocation,
+        AddedResponderRevocation,
     >
 {
     fn server_certificate(&self) -> &X509Certificate<'target_encoded> {
@@ -474,6 +510,98 @@ impl<Evidence: ?Sized> fmt::Debug
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str(
             "VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify",
+        )
+    }
+}
+
+/// Non-copyable evidence retaining the exact HTTPS DNS destination, complete
+/// double-nested no-check fixed-path revocation proof, and selected-transcript
+/// server signature verdict.
+pub struct VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+    'destination,
+    'target_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+    Evidence: ?Sized,
+> {
+    https_destination_complete_revocation: &'destination Evidence,
+    verification: VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        'target_encoded,
+    >,
+}
+
+impl<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence: ?Sized,
+    >
+    VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence,
+    >
+{
+    /// Return the exact destination and double-nested complete revocation proof.
+    #[must_use]
+    pub const fn https_destination_complete_revocation(&self) -> &'destination Evidence {
+        self.https_destination_complete_revocation
+    }
+
+    /// Return the exact selected-transcript server signature verdict.
+    #[must_use]
+    pub const fn verification(
+        &self,
+    ) -> &VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        'target_encoded,
+    > {
+        &self.verification
+    }
+}
+
+impl<Evidence: ?Sized> fmt::Debug
+    for VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        Evidence,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify",
         )
     }
 }
@@ -1344,6 +1472,70 @@ where
     )
 }
 
+/// Verify one server `CertificateVerify` through the exact HTTPS DNS
+/// destination and complete double-nested no-check fixed-path revocation proof.
+#[allow(private_bounds)]
+#[allow(clippy::too_many_arguments)]
+pub fn verify_https_dns_destination_reviewed_double_nested_no_check_complete_fixed_path_revocation_certificate_verify<
+    'destination,
+    'target_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+    'key_policy,
+    Evidence,
+>(
+    https_destination_complete_revocation: &'destination Evidence,
+    hashed_input: &'hashed HashedTranscriptBoundCertificateVerifyInput<
+        'bound,
+        'transcript,
+        'output,
+    >,
+    message: &'message CertificateVerifyMessage<'body>,
+    rsa_key_policy: RsaPublicKeyPolicy<'key_policy>,
+    rsa_key_limits: Asn1Limits,
+    data_block_scratch: &mut [u8],
+    signature_limits: Tls13RsaPssSignatureLimits,
+) -> Result<
+    VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence,
+    >,
+    ReviewedServerPathCertificateVerifyError,
+>
+where
+    Evidence: ?Sized + double_nested_revocation_evidence_sealed::Sealed<'target_encoded>,
+{
+    require_server_role(hashed_input.bound_input().input().role())?;
+
+    let verification = verify_server_certificate_verify_after_role(
+        https_destination_complete_revocation.server_certificate(),
+        hashed_input,
+        message,
+        rsa_key_policy,
+        rsa_key_limits,
+        data_block_scratch,
+        signature_limits,
+    )?;
+
+    Ok(
+        VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify {
+            https_destination_complete_revocation,
+            verification,
+        },
+    )
+}
+
 #[allow(clippy::too_many_arguments)]
 fn verify_server_certificate_verify_after_role<
     'certificate,
@@ -1423,12 +1615,14 @@ fn require_server_role(
 #[cfg(test)]
 mod tests {
     use super::{
-        direct_revocation_evidence_sealed, nested_revocation_evidence_sealed, require_server_role,
-        validate_leaf_public_key,
+        direct_revocation_evidence_sealed, double_nested_revocation_evidence_sealed,
+        nested_revocation_evidence_sealed, require_server_role, validate_leaf_public_key,
         verify_https_dns_destination_reviewed_direct_no_check_complete_fixed_path_revocation_certificate_verify,
+        verify_https_dns_destination_reviewed_double_nested_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_nested_no_check_complete_fixed_path_revocation_certificate_verify,
         ReviewedServerPathCertificateVerifyError, ReviewedServerPathCertificateVerifyErrorKind,
         VerifiedHttpsDnsDestinationReviewedDirectNoCheckCompleteFixedPathRevocationCertificateVerify,
+        VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify,
         VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify,
         VerifiedReviewedServerPathCertificateVerify,
     };
@@ -1475,6 +1669,18 @@ mod tests {
 
     impl<'certificate, 'encoded> nested_revocation_evidence_sealed::Sealed<'encoded>
         for TestNestedRevocationEvidence<'certificate, 'encoded>
+    {
+        fn server_certificate(&self) -> &X509Certificate<'encoded> {
+            self.certificate
+        }
+    }
+
+    struct TestDoubleNestedRevocationEvidence<'certificate, 'encoded> {
+        certificate: &'certificate X509Certificate<'encoded>,
+    }
+
+    impl<'certificate, 'encoded> double_nested_revocation_evidence_sealed::Sealed<'encoded>
+        for TestDoubleNestedRevocationEvidence<'certificate, 'encoded>
     {
         fn server_certificate(&self) -> &X509Certificate<'encoded> {
             self.certificate
@@ -1659,6 +1865,22 @@ mod tests {
             "VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify"
         ));
 
+        type DoubleNestedRevocationProof =
+            VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                u8,
+            >;
+        assert!(core::any::type_name::<DoubleNestedRevocationProof>().contains(
+            "VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify"
+        ));
+
         fn assert_direct_evidence<'encoded, Evidence>()
         where
             Evidence: direct_revocation_evidence_sealed::Sealed<'encoded>,
@@ -1691,6 +1913,24 @@ mod tests {
                 u8,
             >;
         assert_nested_evidence::<'static, OfficialNestedEvidence>();
+
+        fn assert_double_nested_evidence<'encoded, Evidence>()
+        where
+            Evidence: double_nested_revocation_evidence_sealed::Sealed<'encoded>,
+        {
+        }
+        type OfficialDoubleNestedEvidence =
+            super::BoundHttpsDnsDestinationToReviewedDoubleNestedNoCheckCompleteFixedPathRevocation<
+                'static,
+                'static,
+                'static,
+                'static,
+                u8,
+                u8,
+                u8,
+                u8,
+            >;
+        assert_double_nested_evidence::<'static, OfficialDoubleNestedEvidence>();
     }
 
     fn exercise_direct_revocation_entry_point(role: CertificateVerifyRole, expect_success: bool) {
@@ -1879,6 +2119,102 @@ mod tests {
         }
     }
 
+    fn exercise_double_nested_revocation_entry_point(
+        role: CertificateVerifyRole,
+        expect_success: bool,
+    ) {
+        let leaf_encoded = fixture(PUBLIC_LEAF_HEX);
+        let leaf = decode_x509_certificate(&leaf_encoded, Asn1Limits::default()).unwrap();
+        let evidence = TestDoubleNestedRevocationEvidence { certificate: &leaf };
+        let transcript_encoded = fixture(PUBLIC_TRANSCRIPT_HEX);
+        let suite_entry =
+            CipherSuitePolicyEntry::new(CipherSuite::TlsAes256GcmSha384, 8_192).unwrap();
+        let selected_suite = CipherSuitePolicy::new(&[suite_entry])
+            .unwrap()
+            .select(CipherSuite::TlsAes256GcmSha384.wire_id())
+            .unwrap();
+        let mut pending = PendingTls13Transcript::new(TranscriptPolicy::new(8_192).unwrap());
+        pending.update(&transcript_encoded).unwrap();
+        let transcript = pending.select(selected_suite);
+        let scheme = SignatureSchemePolicy::new(&[SignatureScheme::RsaPssRsaeSha256])
+            .unwrap()
+            .select(SignatureScheme::RsaPssRsaeSha256.wire_id())
+            .unwrap();
+        let signature = fixture(PUBLIC_SIGNATURE_HEX);
+        let mut output = [0xa5; MAXIMUM_INPUT_LENGTH + 7];
+        let mut scratch = [0xa5; 223];
+        let before_scratch = scratch;
+        let expected_input;
+        {
+            let bound = bind_certificate_verify_transcript(&transcript, role, &mut output).unwrap();
+            let hashed = hash_transcript_bound_certificate_verify_input(scheme, &bound);
+            let message = CertificateVerifyMessage::new(
+                SignatureScheme::RsaPssRsaeSha256.wire_id(),
+                &signature,
+            )
+            .unwrap();
+            expected_input = bound.input().as_bytes().to_vec();
+            let result = verify_https_dns_destination_reviewed_double_nested_no_check_complete_fixed_path_revocation_certificate_verify(
+                &evidence,
+                &hashed,
+                &message,
+                RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+                Asn1Limits::default(),
+                &mut scratch,
+                Tls13RsaPssSignatureLimits::Sha256(
+                    RsaPssSha256SignatureLimits::new(300, 300).unwrap(),
+                ),
+            );
+
+            if expect_success {
+                let verified = result.expect("captured server signature must verify");
+                let expected_key = validate_rsa_public_key(
+                    leaf.tbs_certificate().subject_public_key_info(),
+                    RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+                    Asn1Limits::default(),
+                )
+                .unwrap();
+                assert!(core::ptr::eq(
+                    verified.https_destination_complete_revocation(),
+                    &evidence,
+                ));
+                assert!(core::ptr::eq(
+                    verified.verification().hashed_input(),
+                    &hashed,
+                ));
+                assert!(core::ptr::eq(
+                    verified.verification().verification().signature().message(),
+                    &message,
+                ));
+                assert_eq!(
+                    verified
+                        .verification()
+                        .verification()
+                        .signature()
+                        .public_key()
+                        .modulus(),
+                    expected_key.modulus(),
+                );
+                assert_eq!(
+                    format!("{verified:?}"),
+                    "VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify",
+                );
+            } else {
+                assert_eq!(
+                    result.unwrap_err().kind(),
+                    ReviewedServerPathCertificateVerifyErrorKind::WrongEndpointRole,
+                );
+            }
+        }
+        assert_eq!(&output[..expected_input.len()], expected_input);
+        assert!(output[expected_input.len()..]
+            .iter()
+            .all(|byte| *byte == 0xa5));
+        if !expect_success {
+            assert_eq!(scratch, before_scratch);
+        }
+    }
+
     #[test]
     fn direct_revocation_entry_point_retains_exact_evidence_and_signature() {
         exercise_direct_revocation_entry_point(CertificateVerifyRole::Server, true);
@@ -1897,6 +2233,16 @@ mod tests {
     #[test]
     fn nested_revocation_entry_point_rejects_client_before_scratch_mutation() {
         exercise_nested_revocation_entry_point(CertificateVerifyRole::Client, false);
+    }
+
+    #[test]
+    fn double_nested_revocation_entry_point_retains_exact_evidence_and_signature() {
+        exercise_double_nested_revocation_entry_point(CertificateVerifyRole::Server, true);
+    }
+
+    #[test]
+    fn double_nested_revocation_entry_point_rejects_client_before_scratch_mutation() {
+        exercise_double_nested_revocation_entry_point(CertificateVerifyRole::Client, false);
     }
 
     #[test]
