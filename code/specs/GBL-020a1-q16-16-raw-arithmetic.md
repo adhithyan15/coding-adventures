@@ -125,6 +125,20 @@ scale boundaries, sign combinations, exact and inexact quotients, half ties on b
 signs, and post-round boundaries; supplemental vectors do not change the 559-value
 edge-set definition.
 
+The checked-in named controls use
+`code/specs/fixtures/fixed-point-q16-v1/cases.json`. Its top-level fields are
+`schema`, `scale`, `raw_min`, `raw_max`, `rounding_modes`, `vector_count`, and
+`vectors`. Each vector has a unique stable `id`, an `operation`, integer `input`,
+and expected output. `from_integer` and `add`/`sub` store `expected`; `mul`/`div`
+and `to_integer` store an `expected_by_mode` object with exactly the four named
+modes. Checked outcomes use `{ "ok_raw": i32 }` or `{ "error": "Overflow" }`;
+saturating outcomes use `{ "raw": i32, "overflowed": bool }`, except a
+zero-denominator division whose checked and saturating outcomes both carry the
+exact `DivisionByZero` error. The initial v1 fixture has 39 named controls. A
+fixture validator pins its schema, count, per-operation counts, integer-only
+input widths, and exact mode set, then recomputes every expected value with an
+independent arbitrary-precision oracle.
+
 The test oracle uses arbitrary-precision signed integer numerator/denominator
 arithmetic independent of the production implementation. It independently applies
 the four rounding rules, then checked/clamped range semantics, and compares complete
