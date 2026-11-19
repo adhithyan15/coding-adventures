@@ -19,11 +19,19 @@ mutation. Success retains the complete retry traffic-secret proof beside a
 borrowed view into caller-owned wipe-on-drop Finished-key storage, preventing a
 detached traffic secret, suite, role, label, or key from being substituted.
 
+That server Finished-key proof can also reconstruct a fresh selected
+transcript state only from the exact retry messages and original transcript
+policy retained by its sealed base-schedule evidence. The reconstruction must
+reproduce the retained suite and ServerHello snapshot before success. The
+non-cloneable result retains the complete Finished-key proof beside the fresh
+state, without accepting a detached transcript, policy, message, suite, hash,
+or snapshot.
+
 This package does not advance the transcript beyond ServerHello, derive
-traffic keys or IVs, verify peer Finished data, authenticate CertificateVerify,
-protect records, validate certificates, establish trust, enforce revocation,
-perform I/O, authorize HTTP or OAuth, or provide TLS, HTTPS, or live-provider
-readiness.
+traffic keys or IVs, consume authenticated records, verify peer Finished data,
+authenticate or sequence later server-flight messages, validate certificates,
+establish trust, enforce revocation, protect records, perform I/O, authorize
+HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
 
 ## Verification
 

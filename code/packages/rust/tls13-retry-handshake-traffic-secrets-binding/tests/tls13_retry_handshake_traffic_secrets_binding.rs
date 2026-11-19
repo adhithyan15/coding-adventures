@@ -14,7 +14,8 @@ use tls13_key_share::KeyShareLimits;
 use tls13_named_group_policy::{NamedGroup, NamedGroupPolicy};
 use tls13_retry_handshake_traffic_secrets_binding::{
     bind_retry_handshake_traffic_secrets, bind_retry_server_finished_key,
-    RetryHandshakeTrafficSecretBindingError, RetryServerFinishedKeyBindingError,
+    bind_retry_server_transcript_continuation, RetryHandshakeTrafficSecretBindingError,
+    RetryServerFinishedKeyBindingError, RetryServerTranscriptContinuationError,
 };
 use tls13_retry_key_schedule_binding::bind_retry_key_schedule;
 use tls13_retry_transcript_binding::bind_retry_transcript;
@@ -244,6 +245,33 @@ fn derives_from_and_retains_the_exact_retry_base_schedule() {
             bound.traffic_secrets().selected_suite(),
         );
         assert_eq!(actual_verify_data, expected_verify_data);
+        let continuation = bind_retry_server_transcript_continuation(&server_finished).unwrap();
+        assert!(core::ptr::eq(
+            continuation.server_finished_key(),
+            &server_finished,
+        ));
+        assert_eq!(
+            continuation.transcript().selected_suite(),
+            transcript.transcript().selected_suite(),
+        );
+        assert_eq!(
+            continuation.transcript().snapshot(),
+            transcript.transcript().snapshot(),
+        );
+        assert_eq!(
+            continuation.transcript().policy(),
+            transcript.transcript().policy(),
+        );
+        assert_eq!(
+            continuation.transcript().observed_bytes(),
+            transcript.transcript().observed_bytes(),
+        );
+        assert!(continuation.transcript().hello_retry_request_applied());
+        let continuation_debug = format!("{continuation:?}");
+        assert!(continuation_debug.contains("[RETAINED]"));
+        for disclosed in ["retry-traffic", "8520f009", "de9edb7d"] {
+            assert!(!continuation_debug.contains(disclosed));
+        }
         let finished_debug = format!("{server_finished:?}");
         assert!(finished_debug.contains("[RETAINED]"));
         assert!(finished_debug.contains("[SECRET]"));
@@ -347,6 +375,20 @@ fn errors_are_stable_and_payload_free() {
         RetryServerFinishedKeyBindingError::WrongEndpointRole,
         RetryServerFinishedKeyBindingError::CipherSuiteMismatch,
         RetryServerFinishedKeyBindingError::SecretImport,
+    ] {
+        let display = error.to_string();
+        let debug = format!("{error:?}");
+        assert!(!display.contains("retry-traffic"));
+        assert!(!debug.contains("retry-traffic"));
+        assert!(error.source().is_none());
+    }
+
+    for error in [
+        RetryServerTranscriptContinuationError::Transcript(
+            tls13_transcript::TranscriptErrorKind::HashMessageTooLong,
+        ),
+        RetryServerTranscriptContinuationError::CipherSuiteMismatch,
+        RetryServerTranscriptContinuationError::SnapshotMismatch,
     ] {
         let display = error.to_string();
         let debug = format!("{error:?}");

@@ -208,6 +208,12 @@ pub struct SelectedTls13Transcript {
 }
 
 impl SelectedTls13Transcript {
+    /// Return the validated cumulative-work policy retained by this state.
+    #[must_use]
+    pub const fn policy(&self) -> TranscriptPolicy {
+        self.policy
+    }
+
     /// Hash another segment of an exact caller-accepted handshake encoding.
     pub fn update(&mut self, bytes: &[u8]) -> Result<(), TranscriptError> {
         let next_observed = checked_observed_bytes(self.policy, self.observed_bytes, bytes.len())?;

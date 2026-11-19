@@ -4,7 +4,9 @@
 //! snapshots its retained transcript, and derives the client and server
 //! handshake traffic secrets into caller-owned wipe-on-drop storage. A second
 //! composition derives the server Finished key only from that exact retained
-//! server secret.
+//! server secret. A third reconstructs a fresh selected transcript only from
+//! the same exact retry messages and original retained policy, then keeps that
+//! state attached to the complete server Finished-key proof.
 
 #![forbid(unsafe_code)]
 
@@ -20,7 +22,9 @@ use tls13_handshake_traffic_secrets::{
 };
 use tls13_key_schedule::BaseSecrets;
 use tls13_retry_key_schedule_binding::BoundRetryBaseSecrets;
-use tls13_transcript::TranscriptHash;
+use tls13_transcript::{
+    SelectedTls13Transcript, TranscriptError, TranscriptErrorKind, TranscriptHash,
+};
 
 mod private {
     /// Prevent external implementations of the exact retry evidence trait.
@@ -41,6 +45,9 @@ pub trait ExactRetryBaseSecrets: private::Sealed {
 
     /// Borrow the base schedule already attached to that transcript.
     fn base_secrets(&self) -> &BaseSecrets<'_>;
+
+    /// Reconstruct a fresh state only from the retained exact retry messages.
+    fn reconstruct_transcript(&self) -> Result<SelectedTls13Transcript, TranscriptError>;
 }
 
 impl<
@@ -133,6 +140,10 @@ impl<
 
     fn base_secrets(&self) -> &BaseSecrets<'_> {
         BoundRetryBaseSecrets::base_secrets(self)
+    }
+
+    fn reconstruct_transcript(&self) -> Result<SelectedTls13Transcript, TranscriptError> {
+        self.transcript().reconstruct_transcript()
     }
 }
 
@@ -286,6 +297,157 @@ pub struct BoundRetryServerFinishedKey<
     handshake_traffic_secrets:
         &'bound BoundRetryHandshakeTrafficSecrets<'traffic_bound, 'traffic_storage, Evidence>,
     finished_key: FinishedKey<'key_storage>,
+}
+
+/// Stable, payload-free failures while reconstructing exact retry transcript state.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RetryServerTranscriptContinuationError {
+    /// Repository-owned exact-message transcript reconstruction failed.
+    Transcript(TranscriptErrorKind),
+    /// The reconstructed transcript retained a different selected suite.
+    CipherSuiteMismatch,
+    /// Reconstruction did not reproduce the retained ServerHello snapshot.
+    SnapshotMismatch,
+}
+
+impl fmt::Display for RetryServerTranscriptContinuationError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::Transcript(_) => "TLS 1.3 retry transcript reconstruction failed",
+            Self::CipherSuiteMismatch => {
+                "TLS 1.3 reconstructed retry transcript selected a different cipher suite"
+            }
+            Self::SnapshotMismatch => {
+                "TLS 1.3 reconstructed retry transcript did not reproduce the retained snapshot"
+            }
+        })
+    }
+}
+
+impl std::error::Error for RetryServerTranscriptContinuationError {}
+
+/// Fresh retry transcript state retained beside its exact server Finished-key proof.
+///
+/// This value intentionally derives neither `Copy` nor `Clone`. It exposes the
+/// reconstructed state only through an immutable borrow so provenance remains
+/// attached until a later consuming composition owns this complete wrapper.
+pub struct BoundRetryServerTranscriptContinuation<
+    'continuation,
+    'finished_bound,
+    'key_storage,
+    'traffic_bound,
+    'traffic_storage,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    server_finished_key: &'continuation BoundRetryServerFinishedKey<
+        'finished_bound,
+        'key_storage,
+        'traffic_bound,
+        'traffic_storage,
+        Evidence,
+    >,
+    transcript: SelectedTls13Transcript,
+}
+
+impl<
+        'continuation,
+        'finished_bound,
+        'key_storage,
+        'traffic_bound,
+        'traffic_storage,
+        Evidence: ExactRetryBaseSecrets + ?Sized,
+    >
+    BoundRetryServerTranscriptContinuation<
+        'continuation,
+        'finished_bound,
+        'key_storage,
+        'traffic_bound,
+        'traffic_storage,
+        Evidence,
+    >
+{
+    /// Borrow the complete exact retry-derived server Finished-key proof.
+    #[must_use]
+    pub const fn server_finished_key(
+        &self,
+    ) -> &BoundRetryServerFinishedKey<
+        'finished_bound,
+        'key_storage,
+        'traffic_bound,
+        'traffic_storage,
+        Evidence,
+    > {
+        self.server_finished_key
+    }
+
+    /// Borrow the freshly reconstructed selected transcript through ServerHello.
+    #[must_use]
+    pub const fn transcript(&self) -> &SelectedTls13Transcript {
+        &self.transcript
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for BoundRetryServerTranscriptContinuation<'_, '_, '_, '_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryServerTranscriptContinuation")
+            .field("server_finished_key", &"[RETAINED]")
+            .field("transcript", &"[RETAINED]")
+            .finish()
+    }
+}
+
+/// Reconstruct the exact retry transcript beside its server Finished-key proof.
+///
+/// The sealed exact-retry evidence rebuilds the state from its retained
+/// messages and original policy. Suite and snapshot equality are then checked
+/// against the same retained proof before the continuation is exposed.
+pub fn bind_retry_server_transcript_continuation<
+    'continuation,
+    'finished_bound,
+    'key_storage,
+    'traffic_bound,
+    'traffic_storage,
+    Evidence,
+>(
+    server_finished_key: &'continuation BoundRetryServerFinishedKey<
+        'finished_bound,
+        'key_storage,
+        'traffic_bound,
+        'traffic_storage,
+        Evidence,
+    >,
+) -> Result<
+    BoundRetryServerTranscriptContinuation<
+        'continuation,
+        'finished_bound,
+        'key_storage,
+        'traffic_bound,
+        'traffic_storage,
+        Evidence,
+    >,
+    RetryServerTranscriptContinuationError,
+>
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    let evidence = server_finished_key.handshake_traffic_secrets().evidence();
+    let transcript = evidence
+        .reconstruct_transcript()
+        .map_err(|error| RetryServerTranscriptContinuationError::Transcript(error.kind()))?;
+    if transcript.selected_suite() != evidence.selected_suite() {
+        return Err(RetryServerTranscriptContinuationError::CipherSuiteMismatch);
+    }
+    if transcript.snapshot() != evidence.transcript_hash() {
+        return Err(RetryServerTranscriptContinuationError::SnapshotMismatch);
+    }
+
+    Ok(BoundRetryServerTranscriptContinuation {
+        server_finished_key,
+        transcript,
+    })
 }
 
 impl<
