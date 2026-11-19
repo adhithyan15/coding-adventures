@@ -1,0 +1,1143 @@
+package satsolver
+
+import (
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"os"
+	"reflect"
+	"testing"
+)
+
+const sharedCorpusPath = "../../../specs/fixtures/sat-cnf-v1/cases.json"
+const sharedCorpusSHA256 = "ba66f3a23690ced4d01621e2e26341c1c2e5bee7bce5a455e7a82a8435b32c63"
+
+type corpus struct {
+	Version int          `json:"version"`
+	Cases   []corpusCase `json:"cases"`
+}
+
+type corpusCase struct {
+	ID     string       `json:"id"`
+	DIMACS string       `json:"dimacs"`
+	Steps  []corpusStep `json:"steps"`
+}
+
+type corpusStep struct {
+	Op          string        `json:"op"`
+	Assumptions []int         `json:"assumptions"`
+	Clause      []int         `json:"clause"`
+	Budget      *corpusBudget `json:"budget"`
+	Expect      string        `json:"expect"`
+	ExpectCore  []int         `json:"expect_core"`
+}
+
+type corpusBudget struct {
+	MaxConflicts *uint64 `json:"max_conflicts"`
+	MaxSteps     *uint64 `json:"max_steps"`
+}
+
+func loadSharedCorpus(t *testing.T) corpus {
+	t.Helper()
+	data, err := os.ReadFile(sharedCorpusPath)
+	if err != nil {
+		t.Fatalf("read shared SAT corpus: %v", err)
+	}
+	digest := sha256.Sum256(data)
+	if got := hex.EncodeToString(digest[:]); got != sharedCorpusSHA256 {
+		t.Fatalf("shared corpus digest changed: got %s, want %s", got, sharedCorpusSHA256)
+	}
+	var got corpus
+	if err := json.Unmarshal(data, &got); err != nil {
+		t.Fatalf("decode shared SAT corpus: %v", err)
+	}
+	if got.Version != 1 || len(got.Cases) != 11 {
+		t.Fatalf("shared corpus shape: version=%d cases=%d", got.Version, len(got.Cases))
+	}
+	seen := make(map[string]bool, len(got.Cases))
+	for _, c := range got.Cases {
+		if c.ID == "" || seen[c.ID] {
+			t.Fatalf("empty or duplicate shared corpus ID %q", c.ID)
+		}
+		seen[c.ID] = true
+	}
+	return got
+}
+
+func literalFromDIMACS(t *testing.T, n int) Lit {
+	t.Helper()
+	if n == 0 {
+		t.Fatal("zero is a clause terminator, not an assumption or clause literal")
+	}
+	lit, err := MakeLit(Var(absInt(n)-1), n < 0)
+	if err != nil {
+		t.Fatalf("MakeLit(%d): %v", n, err)
+	}
+	return lit
+}
+
+func literalsFromDIMACS(t *testing.T, values []int) []Lit {
+	t.Helper()
+	out := make([]Lit, len(values))
+	for i, value := range values {
+		out[i] = literalFromDIMACS(t, value)
+	}
+	return out
+}
+
+func absInt(n int) int {
+	if n < 0 {
+		return -n
+	}
+	return n
+}
+
+func budgetOptions(b *corpusBudget) []SolverOptions {
+	if b == nil {
+		return nil
+	}
+	return []SolverOptions{{MaxConflicts: b.MaxConflicts, MaxSteps: b.MaxSteps}}
+}
+
+func allClausesSatisfied(clauses [][]Lit, model []bool) bool {
+	for _, clause := range clauses {
+		clauseSatisfied := false
+		for _, lit := range clause {
+			v := uint32(lit) >> 1
+			if int(v) >= len(model) || uint32(lit) >= 1<<31 {
+				return false
+			}
+			negated := uint32(lit)&1 != 0
+			value := model[v]
+			if negated {
+				value = !value
+			}
+			if value {
+				clauseSatisfied = true
+				break
+			}
+		}
+		if !clauseSatisfied {
+			return false
+		}
+	}
+	return true
+}
+
+func oracleSAT(n int, clauses [][]Lit, assumptions []Lit) bool {
+	if n < 0 || n > 20 {
+		panic("test oracle domain must be bounded")
+	}
+	for mask := uint64(0); mask < uint64(1)<<n; mask++ {
+		model := make([]bool, n)
+		for v := range model {
+			model[v] = mask&(uint64(1)<<v) != 0
+		}
+		if !allClausesSatisfied(clauses, model) {
+			continue
+		}
+		ok := true
+		for _, lit := range assumptions {
+			v := uint32(lit) >> 1
+			negated := uint32(lit)&1 != 0
+			value := model[v]
+			if negated {
+				value = !value
+			}
+			if !value {
+				ok = false
+				break
+			}
+		}
+		if ok {
+			return true
+		}
+	}
+	return false
+}
+
+func TestSharedStatefulCorpus(t *testing.T) {
+	data := loadSharedCorpus(t)
+	for _, tc := range data.Cases {
+		t.Run(tc.ID, func(t *testing.T) {
+			formula, err := ParseDimacs(tc.DIMACS)
+			if err != nil {
+				t.Fatalf("ParseDimacs: %v", err)
+			}
+			solver, err := NewSolver()
+			if err != nil {
+				t.Fatalf("NewSolver: %v", err)
+			}
+			for want := Var(0); want < formula.NumVars; want++ {
+				got, err := solver.NewVar()
+				if err != nil || got != want {
+					t.Fatalf("NewVar: got (%d,%v), want %d", got, err, want)
+				}
+			}
+			clauses := cloneClauses(formula.Clauses)
+			for _, clause := range formula.Clauses {
+				if _, err := solver.AddClause(clause); err != nil {
+					t.Fatalf("AddClause: %v", err)
+				}
+			}
+			var lastAssumptions []Lit
+			for stepIndex, step := range tc.Steps {
+				switch step.Op {
+				case "solve":
+					lastAssumptions = literalsFromDIMACS(t, step.Assumptions)
+					result, err := solver.SolveWithAssumptions(lastAssumptions, budgetOptions(step.Budget)...)
+					if err != nil {
+						t.Fatalf("step %d solve: %v", stepIndex, err)
+					}
+					if string(result) != step.Expect {
+						t.Fatalf("step %d result: got %s, want %s", stepIndex, result, step.Expect)
+					}
+					switch result {
+					case SolveSat:
+						model, valid := solver.Model()
+						if !valid || len(model) != int(formula.NumVars) {
+							t.Fatalf("SAT model validity/width: valid=%t len=%d vars=%d", valid, len(model), formula.NumVars)
+						}
+						if !allClausesSatisfied(clauses, model) || !assumptionsSatisfied(lastAssumptions, model) {
+							t.Fatalf("SAT model does not satisfy the original formula and assumptions: %v", model)
+						}
+						if len(solver.FailedCore()) != 0 {
+							t.Fatalf("SAT left a failed core: %v", solver.FailedCore())
+						}
+					case SolveUnsat:
+						model, valid := solver.Model()
+						if valid || model != nil {
+							t.Fatalf("UNSAT exposed a valid model: %v", model)
+						}
+						core := solver.FailedCore()
+						if hasDuplicateLits(core) || !isSubset(core, lastAssumptions) {
+							t.Fatalf("failed core is not a duplicate-free assumption subset: core=%v assumptions=%v", core, lastAssumptions)
+						}
+						if oracleSAT(int(formula.NumVars), clauses, core) {
+							t.Fatalf("failed core does not make original formula UNSAT: %v", core)
+						}
+						if step.ExpectCore != nil && !sameLitSet(core, literalsFromDIMACS(t, step.ExpectCore)) {
+							t.Fatalf("failed core %v, want exact sound core %v", core, step.ExpectCore)
+						}
+					case SolveUnknown:
+						model, valid := solver.Model()
+						if valid || model != nil || len(solver.FailedCore()) != 0 {
+							t.Fatalf("UNKNOWN leaked model/core: model=%v valid=%t core=%v", model, valid, solver.FailedCore())
+						}
+					}
+				case "add_clause":
+					clause := literalsFromDIMACS(t, step.Clause)
+					_, err := solver.AddClause(clause)
+					if err != nil {
+						t.Fatalf("step %d AddClause: %v", stepIndex, err)
+					}
+					clauses = append(clauses, append([]Lit(nil), clause...))
+					model, valid := solver.Model()
+					if valid || model != nil || len(solver.FailedCore()) != 0 {
+						t.Fatalf("AddClause did not invalidate saved result: model=%v valid=%t core=%v", model, valid, solver.FailedCore())
+					}
+				case "reset":
+					solver.Reset()
+					model, valid := solver.Model()
+					if valid || model != nil || len(solver.FailedCore()) != 0 {
+						t.Fatalf("Reset did not invalidate saved result: model=%v valid=%t core=%v", model, valid, solver.FailedCore())
+					}
+				default:
+					t.Fatalf("unknown corpus operation %q", step.Op)
+				}
+			}
+		})
+	}
+}
+
+func cloneClauses(clauses [][]Lit) [][]Lit {
+	out := make([][]Lit, len(clauses))
+	for i, clause := range clauses {
+		out[i] = append([]Lit(nil), clause...)
+	}
+	return out
+}
+
+func assumptionsSatisfied(assumptions []Lit, model []bool) bool {
+	for _, lit := range assumptions {
+		v := uint32(lit) >> 1
+		if uint32(lit) >= 1<<31 || int(v) >= len(model) {
+			return false
+		}
+		value := model[v]
+		negated := uint32(lit)&1 != 0
+		if negated {
+			value = !value
+		}
+		if !value {
+			return false
+		}
+	}
+	return true
+}
+
+func hasDuplicateLits(lits []Lit) bool {
+	seen := make(map[Lit]struct{}, len(lits))
+	for _, lit := range lits {
+		if _, ok := seen[lit]; ok {
+			return true
+		}
+		seen[lit] = struct{}{}
+	}
+	return false
+}
+
+func isSubset(a, b []Lit) bool {
+	set := make(map[Lit]struct{}, len(b))
+	for _, lit := range b {
+		set[lit] = struct{}{}
+	}
+	for _, lit := range a {
+		if _, ok := set[lit]; !ok {
+			return false
+		}
+	}
+	return true
+}
+
+func sameLitSet(a, b []Lit) bool {
+	return len(a) == len(b) && isSubset(a, b) && isSubset(b, a)
+}
+
+func TestLiteralEncodingAndCheckedBoundaries(t *testing.T) {
+	for v := Var(0); v < 32; v++ {
+		for _, negated := range []bool{false, true} {
+			lit, err := MakeLit(v, negated)
+			if err != nil {
+				t.Fatal(err)
+			}
+			gotVar, err := VarOf(lit)
+			if err != nil || gotVar != v {
+				t.Fatalf("VarOf(%d)=(%d,%v), want %d", lit, gotVar, err, v)
+			}
+			gotSign, err := SignOf(lit)
+			if err != nil || gotSign != negated {
+				t.Fatalf("SignOf(%d)=(%t,%v), want %t", lit, gotSign, err, negated)
+			}
+			inverse, err := NegateLit(lit)
+			if err != nil || inverse != lit^1 {
+				t.Fatalf("NegateLit(%d)=(%d,%v)", lit, inverse, err)
+			}
+		}
+	}
+	if _, err := MakeLit(Var(1<<30), false); err == nil {
+		t.Fatal("MakeLit accepted an unrepresentable variable")
+	}
+	if _, err := VarOf(Lit(1 << 31)); err == nil {
+		t.Fatal("VarOf accepted a literal outside the compatible range")
+	}
+	if got, err := LitToString(Lit(0)); err != nil || got != "1" {
+		t.Fatalf("LitToString(0)=(%q,%v)", got, err)
+	}
+	if got, err := LitToString(Lit(3)); err != nil || got != "-2" {
+		t.Fatalf("LitToString(3)=(%q,%v)", got, err)
+	}
+}
+
+func TestSolverIncrementalBudgetsAndSnapshotOwnership(t *testing.T) {
+	solver, err := NewSolver()
+	if err != nil {
+		t.Fatal(err)
+	}
+	a, _ := MakeLit(0, false)
+	b, _ := MakeLit(1, false)
+	if _, err := solver.NewVar(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := solver.NewVar(); err != nil {
+		t.Fatal(err)
+	}
+	if ok, err := solver.AddClause([]Lit{a, b}); err != nil || !ok {
+		t.Fatalf("AddClause: ok=%t err=%v", ok, err)
+	}
+	zero := uint64(0)
+	if got, err := solver.Solve(SolverOptions{MaxSteps: &zero}); err != nil || got != SolveUnknown {
+		t.Fatalf("zero-step solve: %v, %v", got, err)
+	}
+	if got, err := solver.Solve(); err != nil || got != SolveSat {
+		t.Fatalf("unbounded recovery: %v, %v", got, err)
+	}
+	model, valid := solver.Model()
+	if !valid || len(model) != 2 || !allClausesSatisfied([][]Lit{{a, b}}, model) {
+		t.Fatalf("bad model snapshot: %v valid=%t", model, valid)
+	}
+	model[0] = !model[0]
+	second, secondValid := solver.Model()
+	if !secondValid || !allClausesSatisfied([][]Lit{{a, b}}, second) {
+		t.Fatalf("mutating returned model changed solver state: %v", second)
+	}
+	if ok, err := solver.AddClause([]Lit{a}); err != nil || !ok {
+		t.Fatalf("AddClause unit: ok=%t err=%v", ok, err)
+	}
+	if model, valid := solver.Model(); valid || model != nil {
+		t.Fatalf("AddClause retained a stale model: %v valid=%t", model, valid)
+	}
+	if got, err := solver.SolveWithAssumptions([]Lit{negateForTest(t, a)}); err != nil || got != SolveUnsat {
+		t.Fatalf("assumption conflict: %v, %v", got, err)
+	}
+	core := solver.FailedCore()
+	if !reflect.DeepEqual(core, []Lit{negateForTest(t, a)}) {
+		t.Fatalf("failed core %v", core)
+	}
+	core[0] = a
+	if !reflect.DeepEqual(solver.FailedCore(), []Lit{negateForTest(t, a)}) {
+		t.Fatal("mutating returned core changed solver state")
+	}
+	if got, err := solver.SolveWithAssumptions(nil); err != nil || got != SolveSat {
+		t.Fatalf("assumption cleanup: %v, %v", got, err)
+	}
+	if len(solver.FailedCore()) != 0 {
+		t.Fatalf("SAT retained a stale failed core: %v", solver.FailedCore())
+	}
+}
+
+func negateForTest(t *testing.T, lit Lit) Lit {
+	t.Helper()
+	got, err := NegateLit(lit)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return got
+}
+
+func TestKnownRootContradictionClearsPriorFailedCore(t *testing.T) {
+	solver, err := NewSolver()
+	if err != nil {
+		t.Fatal(err)
+	}
+	a, _ := MakeLit(0, false)
+	b, _ := MakeLit(1, false)
+	_, _ = solver.NewVar()
+	_, _ = solver.NewVar()
+	if ok, err := solver.AddClause([]Lit{negateForTest(t, a), b}); err != nil || !ok {
+		t.Fatalf("initial clause: ok=%t err=%v", ok, err)
+	}
+	if got, err := solver.SolveWithAssumptions([]Lit{a, negateForTest(t, b)}); err != nil || got != SolveUnsat {
+		t.Fatalf("assumption UNSAT: %v, %v", got, err)
+	}
+	if len(solver.FailedCore()) == 0 {
+		t.Fatal("expected a nonempty first failed core")
+	}
+	if ok, err := solver.AddClause([]Lit{a}); err != nil || !ok {
+		t.Fatalf("root unit add: ok=%t err=%v", ok, err)
+	}
+	if ok, err := solver.AddClause([]Lit{negateForTest(t, a)}); err != nil || ok {
+		t.Fatalf("contradictory root unit add: ok=%t err=%v", ok, err)
+	}
+	if got, err := solver.SolveWithAssumptions([]Lit{b}); err != nil || got != SolveUnsat {
+		t.Fatalf("known permanent contradiction: %v, %v", got, err)
+	}
+	if core := solver.FailedCore(); len(core) != 0 {
+		t.Fatalf("known root contradiction returned stale core %v", core)
+	}
+}
+
+func TestFailedCoreIsSoundButNeedNotBeMinimal(t *testing.T) {
+	formula, err := ParseDimacs("p cnf 4 5\n-1 -2 0\n-1 3 4 0\n-1 3 -4 0\n-1 -3 4 0\n-1 -3 -4 0\n")
+	if err != nil {
+		t.Fatal(err)
+	}
+	solver, _ := NewSolver()
+	for i := Var(0); i < formula.NumVars; i++ {
+		if _, err := solver.NewVar(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, clause := range formula.Clauses {
+		if _, err := solver.AddClause(clause); err != nil {
+			t.Fatal(err)
+		}
+	}
+	a, _ := MakeLit(0, false)
+	b, _ := MakeLit(1, false)
+	assumptions := []Lit{a, b}
+	if result, err := solver.SolveWithAssumptions(assumptions); err != nil || result != SolveUnsat {
+		t.Fatalf("SolveWithAssumptions: %v, %v", result, err)
+	}
+	core := solver.FailedCore()
+	if len(core) == 0 || hasDuplicateLits(core) || !isSubset(core, assumptions) {
+		t.Fatalf("invalid core %v", core)
+	}
+	if oracleSAT(int(formula.NumVars), formula.Clauses, core) {
+		t.Fatalf("core is not sound: %v", core)
+	}
+}
+
+func TestDIMACSStrictnessRoundTripAndLimits(t *testing.T) {
+	input := "c test\r\np cnf 3 3\r\n1\r\n-2 0 3 0\r\n0\r\n"
+	formula, err := ParseDimacs(input)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if formula.NumVars != 3 || len(formula.Clauses) != 3 || len(formula.Clauses[2]) != 0 {
+		t.Fatalf("unexpected parsed formula: %+v", formula)
+	}
+	serialized, err := WriteDimacs(formula)
+	if err != nil {
+		t.Fatal(err)
+	}
+	roundTrip, err := ParseDimacs(serialized)
+	if err != nil || !reflect.DeepEqual(formula, roundTrip) {
+		t.Fatalf("round trip mismatch: %+v -> %q -> %+v (%v)", formula, serialized, roundTrip, err)
+	}
+	if serialized[len(serialized)-2:] != " 0" {
+		t.Fatalf("empty clause writer spelling = %q", serialized[len(serialized)-2:])
+	}
+	malformed := []string{
+		"p cnfX 1 0\n", "p cnf 1 0 extra\n", "p cnf 1 1\n1\n",
+		"p cnf 1 1\n2 0\n", "p cnf 1 0\n1 0\n", "p cnf -1 0\n",
+		"p cnf 1 1\n1 bad 0\n", "p cnf 1 1\n0 0\n",
+	}
+	for _, text := range malformed {
+		if _, err := ParseDimacs(text); err == nil {
+			t.Errorf("ParseDimacs accepted malformed input %q", text)
+		}
+	}
+	if _, err := ParseDimacs("p cnf 100 0\n", ParseDimacsOptions{MaxVars: 99}); err == nil {
+		t.Fatal("ParseDimacs ignored MaxVars")
+	}
+	if got, err := ParseDimacs("p cnf 1 1\n1 0\n%\nmalformed trailing\n"); err != nil || len(got.Clauses) != 1 {
+		t.Fatalf("SATLIB terminator: %+v, %v", got, err)
+	}
+}
+
+func TestAllTseitinGateTruthTablesAndBitVectors(t *testing.T) {
+	for _, gate := range []string{"and", "or", "xor", "equiv", "ite"} {
+		t.Run(gate, func(t *testing.T) {
+			solver, _ := NewSolver()
+			builder, err := NewCnfBuilder(solver)
+			if err != nil {
+				t.Fatal(err)
+			}
+			a, _ := builder.NewLit()
+			b, _ := builder.NewLit()
+			c, _ := builder.NewLit()
+			var out Lit
+			switch gate {
+			case "and":
+				out, err = builder.And(a, b)
+			case "or":
+				out, err = builder.Or(a, b)
+			case "xor":
+				out, err = builder.Xor(a, b)
+			case "equiv":
+				out, err = builder.Equiv(a, b)
+			case "ite":
+				out, err = builder.Ite(a, b, c)
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			for av := 0; av < 2; av++ {
+				for bv := 0; bv < 2; bv++ {
+					for cv := 0; cv < 2; cv++ {
+						inputs := []int{av, bv, cv}
+						assumptions := make([]Lit, 0, 4)
+						for i, lit := range []Lit{a, b, c} {
+							assumptions = append(assumptions, truthLit(t, lit, inputs[i] == 1))
+						}
+						want := gateValue(gate, av == 1, bv == 1, cv == 1)
+						assumptions = append(assumptions, truthLit(t, out, want))
+						if got, err := solver.SolveWithAssumptions(assumptions); err != nil || got != SolveSat {
+							t.Fatalf("inputs %v expected %t: %v (%v)", inputs, want, got, err)
+						}
+						assumptions[len(assumptions)-1] = truthLit(t, out, !want)
+						if got, err := solver.SolveWithAssumptions(assumptions); err != nil || got != SolveUnsat {
+							t.Fatalf("wrong output for inputs %v: %v (%v)", inputs, got, err)
+						}
+					}
+				}
+			}
+		})
+	}
+
+	builder, _ := NewCnfBuilder(nil)
+	a, _ := builder.NewLit()
+	b, _ := builder.NewLit()
+	cin, _ := builder.NewLit()
+	fa, err := builder.FullAdder(a, b, cin)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for av := 0; av < 2; av++ {
+		for bv := 0; bv < 2; bv++ {
+			for cv := 0; cv < 2; cv++ {
+				total := av + bv + cv
+				assumptions := []Lit{truthLit(t, a, av == 1), truthLit(t, b, bv == 1), truthLit(t, cin, cv == 1), truthLit(t, fa.Sum, total%2 == 1), truthLit(t, fa.Carry, total >= 2)}
+				if got, err := builder.GetSolver().SolveWithAssumptions(assumptions); err != nil || got != SolveSat {
+					t.Fatalf("full adder %d%d%d: %v (%v)", av, bv, cv, got, err)
+				}
+				bad := append([]Lit(nil), assumptions...)
+				bad[len(bad)-2] = truthLit(t, fa.Sum, total%2 == 0)
+				if got, err := builder.GetSolver().SolveWithAssumptions(bad); err != nil || got != SolveUnsat {
+					t.Fatalf("full adder accepted wrong sum %d%d%d: %v (%v)", av, bv, cv, got, err)
+				}
+			}
+		}
+	}
+
+	if _, err := builder.BvEq([]Lit{a}, []Lit{a, b}); err == nil {
+		t.Fatal("BvEq accepted width mismatch")
+	}
+	if _, err := builder.BvAdd([]Lit{a}, []Lit{a, b}); err == nil {
+		t.Fatal("BvAdd accepted width mismatch")
+	}
+	emptyEq, err := builder.BvEq(nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, err := builder.GetSolver().SolveWithAssumptions([]Lit{emptyEq}); err != nil || got != SolveSat {
+		t.Fatalf("empty bvEq: %v (%v)", got, err)
+	}
+}
+
+func truthLit(t *testing.T, lit Lit, truth bool) Lit {
+	t.Helper()
+	if truth {
+		return lit
+	}
+	return negateForTest(t, lit)
+}
+
+func gateValue(gate string, a, b, c bool) bool {
+	switch gate {
+	case "and":
+		return a && b
+	case "or":
+		return a || b
+	case "xor":
+		return a != b
+	case "equiv":
+		return a == b
+	case "ite":
+		if a {
+			return b
+		}
+		return c
+	default:
+		panic("unknown test gate")
+	}
+}
+
+func TestFullAdderRippleCarryAndMutantCounterexample(t *testing.T) {
+	builder, _ := NewCnfBuilder(nil)
+	a, _ := builder.NewLit()
+	b, _ := builder.NewLit()
+	cin, _ := builder.NewLit()
+	fa, err := builder.FullAdder(a, b, cin)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for av := 0; av < 2; av++ {
+		for bv := 0; bv < 2; bv++ {
+			for cv := 0; cv < 2; cv++ {
+				sum := av + bv + cv
+				assumptions := []Lit{truthLit(t, a, av == 1), truthLit(t, b, bv == 1), truthLit(t, cin, cv == 1), truthLit(t, fa.Sum, sum%2 == 1), truthLit(t, fa.Carry, sum >= 2)}
+				if got, err := builder.GetSolver().SolveWithAssumptions(assumptions); err != nil || got != SolveSat {
+					t.Fatalf("full adder %d%d%d: %v (%v)", av, bv, cv, got, err)
+				}
+			}
+		}
+	}
+
+	ripple, _ := NewCnfBuilder(nil)
+	x := make([]Lit, 4)
+	y := make([]Lit, 4)
+	for i := range x {
+		x[i], _ = ripple.NewLit()
+		y[i], _ = ripple.NewLit()
+	}
+	sum, err := ripple.BvAdd(x, y)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for xv := 0; xv < 16; xv++ {
+		for yv := 0; yv < 16; yv++ {
+			assumptions := make([]Lit, 0, 12)
+			for bit := 0; bit < 4; bit++ {
+				assumptions = append(assumptions, truthLit(t, x[bit], xv&(1<<bit) != 0), truthLit(t, y[bit], yv&(1<<bit) != 0), truthLit(t, sum[bit], (xv+yv)&(1<<bit) != 0))
+			}
+			if got, err := ripple.GetSolver().SolveWithAssumptions(assumptions); err != nil || got != SolveSat {
+				t.Fatalf("bvAdd %d + %d: %v (%v)", xv, yv, got, err)
+			}
+			bad := append([]Lit(nil), assumptions...)
+			bad[2] = truthLit(t, sum[0], (xv+yv)&1 == 0)
+			if got, err := ripple.GetSolver().SolveWithAssumptions(bad); err != nil || got != SolveUnsat {
+				t.Fatalf("bvAdd accepted wrong low bit for %d + %d: %v (%v)", xv, yv, got, err)
+			}
+		}
+	}
+	eqBuilder, _ := NewCnfBuilder(nil)
+	ea, _ := eqBuilder.NewLit()
+	eb, _ := eqBuilder.NewLit()
+	eq, err := eqBuilder.BvEq([]Lit{ea}, []Lit{eb})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for av := 0; av < 2; av++ {
+		for bv := 0; bv < 2; bv++ {
+			want := av == bv
+			assumptions := []Lit{truthLit(t, ea, av == 1), truthLit(t, eb, bv == 1), truthLit(t, eq, want)}
+			if got, err := eqBuilder.GetSolver().SolveWithAssumptions(assumptions); err != nil || got != SolveSat {
+				t.Fatalf("bvEq %d=%d: %v (%v)", av, bv, got, err)
+			}
+			assumptions[2] = truthLit(t, eq, !want)
+			if got, err := eqBuilder.GetSolver().SolveWithAssumptions(assumptions); err != nil || got != SolveUnsat {
+				t.Fatalf("bvEq accepted wrong result %d=%d: %v (%v)", av, bv, got, err)
+			}
+		}
+	}
+
+	// Mutant control: omit AND's reverse implication clauses. The broken gate
+	// admits a=1,b=1,out=0, which the independent truth table rejects; replay
+	// the same assignment through the real builder and require UNSAT.
+	mutant, _ := NewCnfBuilder(nil)
+	ma, _ := mutant.NewLit()
+	mb, _ := mutant.NewLit()
+	mout, _ := mutant.NewLit()
+	for _, clause := range [][]Lit{{negateForTest(t, mout), ma}, {negateForTest(t, mout), mb}} {
+		if _, err := mutant.AddClause(clause); err != nil {
+			t.Fatal(err)
+		}
+	}
+	wrong := []Lit{ma, mb, negateForTest(t, mout)}
+	if got, err := mutant.GetSolver().SolveWithAssumptions(wrong); err != nil || got != SolveSat {
+		t.Fatalf("mutant did not expose counterexample: %v (%v)", got, err)
+	}
+	witness, valid := mutant.GetSolver().Model()
+	if !valid {
+		t.Fatal("mutant did not return its SAT witness")
+	}
+	witnessOut := witness[uint32(mout)>>1]
+	witnessExpected := witness[uint32(ma)>>1] && witness[uint32(mb)>>1]
+	if witnessOut == witnessExpected {
+		t.Fatalf("mutant witness does not violate the independent AND truth table: %v", witness)
+	}
+	healthy, _ := NewCnfBuilder(nil)
+	ha, _ := healthy.NewLit()
+	hb, _ := healthy.NewLit()
+	hout, err := healthy.And(ha, hb)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, err := healthy.GetSolver().SolveWithAssumptions([]Lit{ha, hb, negateForTest(t, hout)}); err != nil || got != SolveUnsat {
+		t.Fatalf("healthy gate accepted mutant witness: %v (%v)", got, err)
+	}
+}
+
+func TestPigeonholeAndQueensAgainstIndependentChecks(t *testing.T) {
+	// PHP(4,3): every pigeon chooses a hole and no hole has two pigeons.
+	solver, _ := NewSolver()
+	p := make([][]Lit, 4)
+	for i := range p {
+		p[i] = make([]Lit, 3)
+		for j := range p[i] {
+			v, err := solver.NewVar()
+			if err != nil {
+				t.Fatal(err)
+			}
+			p[i][j], _ = MakeLit(v, false)
+		}
+	}
+	for i := range p {
+		if _, err := solver.AddClause(p[i]); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for h := 0; h < 3; h++ {
+		for i := 0; i < 4; i++ {
+			for j := i + 1; j < 4; j++ {
+				if _, err := solver.AddClause([]Lit{negateForTest(t, p[i][h]), negateForTest(t, p[j][h])}); err != nil {
+					t.Fatal(err)
+				}
+			}
+		}
+	}
+	if got, err := solver.Solve(); err != nil || got != SolveUnsat {
+		t.Fatalf("PHP(4,3): %v (%v)", got, err)
+	}
+	phpClauses := make([][]Lit, 0, 4+3*6)
+	for i := range p {
+		phpClauses = append(phpClauses, append([]Lit(nil), p[i]...))
+	}
+	for h := 0; h < 3; h++ {
+		for i := 0; i < 4; i++ {
+			for j := i + 1; j < 4; j++ {
+				phpClauses = append(phpClauses, []Lit{negateForTest(t, p[i][h]), negateForTest(t, p[j][h])})
+			}
+		}
+	}
+	if oracleSAT(12, phpClauses, nil) {
+		t.Fatal("independent enumeration found a model for PHP(4,3)")
+	}
+	phpSat, _ := NewSolver()
+	phpSatVars := make([][]Lit, 3)
+	for i := range phpSatVars {
+		phpSatVars[i] = make([]Lit, 3)
+		for j := range phpSatVars[i] {
+			v, err := phpSat.NewVar()
+			if err != nil {
+				t.Fatal(err)
+			}
+			phpSatVars[i][j], _ = MakeLit(v, false)
+		}
+	}
+	phpSatClauses := make([][]Lit, 0, 3+3*3)
+	for i := range phpSatVars {
+		phpSatClauses = append(phpSatClauses, append([]Lit(nil), phpSatVars[i]...))
+		if _, err := phpSat.AddClause(phpSatVars[i]); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for h := 0; h < 3; h++ {
+		for i := 0; i < 3; i++ {
+			for j := i + 1; j < 3; j++ {
+				clause := []Lit{negateForTest(t, phpSatVars[i][h]), negateForTest(t, phpSatVars[j][h])}
+				phpSatClauses = append(phpSatClauses, clause)
+				if _, err := phpSat.AddClause(clause); err != nil {
+					t.Fatal(err)
+				}
+			}
+		}
+	}
+	if got, err := phpSat.Solve(); err != nil || got != SolveSat {
+		t.Fatalf("PHP(3,3) SAT control: %v (%v)", got, err)
+	}
+	phpModel, phpValid := phpSat.Model()
+	if !phpValid || !allClausesSatisfied(phpSatClauses, phpModel) || !oracleSAT(9, phpSatClauses, nil) {
+		t.Fatal("PHP(3,3) failed independent SAT control")
+	}
+
+	// N-Queens(4): validate the returned board independently.
+	qsolver, _ := NewSolver()
+	q := make([][]Lit, 4)
+	for r := range q {
+		q[r] = make([]Lit, 4)
+		for c := range q[r] {
+			v, err := qsolver.NewVar()
+			if err != nil {
+				t.Fatal(err)
+			}
+			q[r][c], _ = MakeLit(v, false)
+		}
+	}
+	for r := 0; r < 4; r++ {
+		if _, err := qsolver.AddClause(q[r]); err != nil {
+			t.Fatal(err)
+		}
+		for c1 := 0; c1 < 4; c1++ {
+			for c2 := c1 + 1; c2 < 4; c2++ {
+				_, err := qsolver.AddClause([]Lit{negateForTest(t, q[r][c1]), negateForTest(t, q[r][c2])})
+				if err != nil {
+					t.Fatal(err)
+				}
+			}
+		}
+	}
+	for c := 0; c < 4; c++ {
+		for r1 := 0; r1 < 4; r1++ {
+			for r2 := r1 + 1; r2 < 4; r2++ {
+				if _, err := qsolver.AddClause([]Lit{negateForTest(t, q[r1][c]), negateForTest(t, q[r2][c])}); err != nil {
+					t.Fatal(err)
+				}
+			}
+		}
+	}
+	for r1 := 0; r1 < 4; r1++ {
+		for c1 := 0; c1 < 4; c1++ {
+			for r2 := r1 + 1; r2 < 4; r2++ {
+				for c2 := 0; c2 < 4; c2++ {
+					if absInt(r1-r2) == absInt(c1-c2) {
+						if _, err := qsolver.AddClause([]Lit{negateForTest(t, q[r1][c1]), negateForTest(t, q[r2][c2])}); err != nil {
+							t.Fatal(err)
+						}
+					}
+				}
+			}
+		}
+	}
+	if got, err := qsolver.Solve(); err != nil || got != SolveSat {
+		t.Fatalf("4-queens: %v (%v)", got, err)
+	}
+	model, valid := qsolver.Model()
+	if !valid {
+		t.Fatal("4-queens returned invalid model")
+	}
+	count := 0
+	for r := range q {
+		row := 0
+		for c := range q[r] {
+			if model[q[r][c]>>1] {
+				count++
+				row++
+			}
+		}
+		if row != 1 {
+			t.Fatalf("row %d has %d queens", r, row)
+		}
+	}
+	if count != 4 {
+		t.Fatalf("board has %d queens", count)
+	}
+	for c := 0; c < 4; c++ {
+		col := 0
+		for r := 0; r < 4; r++ {
+			if model[uint32(q[r][c])>>1] {
+				col++
+			}
+		}
+		if col != 1 {
+			t.Fatalf("column %d has %d queens", c, col)
+		}
+	}
+	for r1 := 0; r1 < 4; r1++ {
+		for c1 := 0; c1 < 4; c1++ {
+			if !model[uint32(q[r1][c1])>>1] {
+				continue
+			}
+			for r2 := r1 + 1; r2 < 4; r2++ {
+				for c2 := 0; c2 < 4; c2++ {
+					if model[uint32(q[r2][c2])>>1] && absInt(r1-r2) == absInt(c1-c2) {
+						t.Fatalf("attacking queens at (%d,%d) and (%d,%d)", r1, c1, r2, c2)
+					}
+				}
+			}
+		}
+	}
+}
+
+func TestDeterministicDifferentialSATProperties(t *testing.T) {
+	rng := newSplitMix64(0x9e3779b97f4a7c15)
+	satCount, unsatCount := 0, 0
+	for round := 0; round < 120; round++ {
+		n := 4 + int(rng.bounded(5))
+		m := int(float64(n) * 4.26)
+		clauses := make([][]Lit, 0, m)
+		solver, _ := NewSolver()
+		for i := 0; i < n; i++ {
+			if _, err := solver.NewVar(); err != nil {
+				t.Fatal(err)
+			}
+		}
+		for c := 0; c < m; c++ {
+			clause := make([]Lit, 0, 3)
+			for len(clause) < 3 {
+				v := Var(rng.bounded(uint64(n)))
+				negated := rng.bounded(2) == 1
+				lit, _ := MakeLit(v, negated)
+				if !containsLit(clause, lit) && !containsLit(clause, negateForTest(t, lit)) {
+					clause = append(clause, lit)
+				}
+			}
+			clauses = append(clauses, clause)
+			if _, err := solver.AddClause(clause); err != nil {
+				t.Fatal(err)
+			}
+		}
+		expected := oracleSAT(n, clauses, nil)
+		got, err := solver.Solve()
+		if err != nil {
+			t.Fatalf("round %d: %v", round, err)
+		}
+		if expected {
+			satCount++
+			if got != SolveSat {
+				t.Fatalf("round %d expected SAT, got %s", round, got)
+			}
+			model, valid := solver.Model()
+			if !valid || !allClausesSatisfied(clauses, model) {
+				t.Fatalf("round %d invalid SAT model %v", round, model)
+			}
+		} else {
+			unsatCount++
+			if got != SolveUnsat {
+				t.Fatalf("round %d expected UNSAT, got %s", round, got)
+			}
+			if oracleSAT(n, clauses, solver.FailedCore()) {
+				t.Fatalf("round %d returned unsound core", round)
+			}
+		}
+		assumptions := make([]Lit, 0, 4)
+		for count := int(rng.bounded(5)); count > 0; count-- {
+			lit, _ := MakeLit(Var(rng.bounded(uint64(n))), rng.bounded(2) == 1)
+			assumptions = append(assumptions, lit)
+			if rng.bounded(3) == 0 { // Exercise repeated assumptions.
+				assumptions = append(assumptions, lit)
+			}
+			if rng.bounded(7) == 0 { // Exercise contradictory assumption pairs.
+				opposite, _ := NegateLit(lit)
+				assumptions = append(assumptions, opposite)
+			}
+		}
+		assumptionExpected := oracleSAT(n, clauses, assumptions)
+		assumptionResult, err := solver.SolveWithAssumptions(assumptions)
+		if err != nil { t.Fatalf("round %d assumption solve: %v", round, err) }
+		if assumptionExpected && assumptionResult != SolveSat || !assumptionExpected && assumptionResult != SolveUnsat {
+			t.Fatalf("round %d assumption oracle mismatch: result=%s expectedSat=%t assumptions=%v", round, assumptionResult, assumptionExpected, assumptions)
+		}
+		if assumptionResult == SolveSat {
+			model, valid := solver.Model()
+			if !valid || !allClausesSatisfied(clauses, model) || !assumptionsSatisfied(assumptions, model) { t.Fatalf("round %d invalid assumption model", round) }
+		} else {
+			core := solver.FailedCore()
+			if hasDuplicateLits(core) || !isSubset(core, assumptions) || oracleSAT(n, clauses, core) { t.Fatalf("round %d unsound assumption core %v", round, core) }
+		}
+		newClause := make([]Lit, 0, 2)
+		for count := 1 + int(rng.bounded(2)); count > 0; count-- {
+			lit, _ := MakeLit(Var(rng.bounded(uint64(n))), rng.bounded(2) == 1)
+			newClause = append(newClause, lit)
+		}
+		if _, err := solver.AddClause(newClause); err != nil { t.Fatalf("round %d add clause: %v", round, err) }
+		clauses = append(clauses, newClause)
+		if model, valid := solver.Model(); valid || model != nil || len(solver.FailedCore()) != 0 { t.Fatalf("round %d AddClause did not clear previous result", round) }
+		postAddExpected := oracleSAT(n, clauses, nil)
+		postAddResult, err := solver.Solve()
+		if err != nil || (postAddExpected && postAddResult != SolveSat) || (!postAddExpected && postAddResult != SolveUnsat) { t.Fatalf("round %d post-add mismatch: %s (%v), expectedSat=%t", round, postAddResult, err, postAddExpected) }
+		solver.Reset()
+		resetResult, err := solver.Solve()
+		if err != nil || resetResult != postAddResult { t.Fatalf("round %d reset changed formula result: %s vs %s (%v)", round, resetResult, postAddResult, err) }
+	}
+	if satCount == 0 || unsatCount == 0 {
+		t.Fatalf("differential rounds lacked SAT/UNSAT: %d/%d", satCount, unsatCount)
+	}
+}
+
+func containsLit(lits []Lit, want Lit) bool {
+	for _, lit := range lits {
+		if lit == want {
+			return true
+		}
+	}
+	return false
+}
+
+type splitMix64 struct{ state uint64 }
+
+func newSplitMix64(seed uint64) *splitMix64 { return &splitMix64{state: seed} }
+func (r *splitMix64) next() uint64 {
+	r.state += 0x9e3779b97f4a7c15
+	z := r.state
+	z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9
+	z = (z ^ (z >> 27)) * 0x94d049bb133111eb
+	return z ^ (z >> 31)
+}
+func (r *splitMix64) bounded(n uint64) uint64 {
+	if n == 0 {
+		panic("zero bound")
+	}
+	threshold := -n % n
+	for {
+		x := r.next()
+		if x >= threshold {
+			return x % n
+		}
+	}
+}
+
+func TestBudgetsPerCallAndInvalidInputIsAtomic(t *testing.T) {
+	solver, _ := NewSolver()
+	a, _ := MakeLit(0, false)
+	if _, err := solver.NewVar(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := solver.AddClause([]Lit{a}); err != nil {
+		t.Fatal(err)
+	}
+	bad := Lit(1 << 31)
+	if _, err := solver.AddClause([]Lit{a, bad}); err == nil {
+		t.Fatal("AddClause accepted malformed input")
+	}
+	if solver.NClauses() != 0 {
+		t.Fatalf("invalid clause partially mutated solver, clauses=%d", solver.NClauses())
+	}
+	if _, err := solver.SolveWithAssumptions([]Lit{a, bad}); err == nil {
+		t.Fatal("Solve accepted malformed assumptions")
+	}
+	if got, err := solver.Solve(); err != nil || got != SolveSat {
+		t.Fatalf("formula after rejected input: %v (%v)", got, err)
+	}
+	zero := uint64(0)
+	if got, err := solver.Solve(SolverOptions{MaxConflicts: &zero}); err != nil || got != SolveSat {
+		t.Fatalf("conflict-only budget unexpectedly limited steps: %v (%v)", got, err)
+	}
+	if !solver.Okay() {
+		t.Fatal("solver marked not okay after recoverable budget path")
+	}
+}
+
+func TestBuilderFailureAtomicityAndConstLiterals(t *testing.T) {
+	solver, _ := NewSolver(SolverConfig{MaxVars: 2, MaxClauses: 4, MaxClauseLiterals: 8, MaxStoredLiterals: 8})
+	builder, err := NewCnfBuilder(solver)
+	if err != nil {
+		t.Fatal(err)
+	}
+	a, err := builder.NewLit()
+	if err != nil {
+		t.Fatal(err)
+	}
+	b, err := builder.NewLit()
+	if err != nil {
+		t.Fatal(err)
+	}
+	beforeVars, beforeClauses := solver.NVars(), solver.NClauses()
+	if _, err := builder.And(a, b); err == nil {
+		t.Fatal("builder exceeded variable ceiling")
+	}
+	if solver.NVars() != beforeVars || solver.NClauses() != beforeClauses {
+		t.Fatal("failed gate operation was not atomic")
+	}
+	if _, err := builder.And(a, Lit(1<<31)); err == nil {
+		t.Fatal("builder accepted malformed literal")
+	}
+	if solver.NVars() != beforeVars || solver.NClauses() != beforeClauses {
+		t.Fatal("invalid gate input mutated solver")
+	}
+}
+
+func TestCnfFormulaWriteReadAndEmptyConstants(t *testing.T) {
+	builder, _ := NewCnfBuilder(nil)
+	trueLit, err := builder.TrueLit()
+	if err != nil {
+		t.Fatal(err)
+	}
+	falseLit, err := builder.FalseLit()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, err := builder.GetSolver().SolveWithAssumptions([]Lit{trueLit, negateForTest(t, falseLit)}); err != nil || got != SolveSat {
+		t.Fatalf("constant literals: %v (%v)", got, err)
+	}
+	formula := CnfFormula{NumVars: 2, Clauses: [][]Lit{{0, 2}, {}, {3}}}
+	text, err := WriteDimacs(formula)
+	if err != nil {
+		t.Fatal(err)
+	}
+	parsed, err := ParseDimacs(text)
+	if err != nil || !reflect.DeepEqual(parsed, formula) {
+		t.Fatalf("write/read: %+v (%v), text=%q", parsed, err, text)
+	}
+}
+
+func TestRepeatedFormulaAndSolveStatsRemainDefined(t *testing.T) {
+	solver, _ := NewSolver()
+	a, _ := MakeLit(0, false)
+	_, _ = solver.NewVar()
+	if _, err := solver.AddClause([]Lit{a}); err != nil {
+		t.Fatal(err)
+	}
+	if solver.NVars() != 1 || solver.NClauses() != 0 {
+		t.Fatalf("stats vars=%d clauses=%d", solver.NVars(), solver.NClauses())
+	}
+	if got, err := solver.Solve(); err != nil || got != SolveSat {
+		t.Fatalf("solve=%v %v", got, err)
+	}
+	if solver.Conflicts > ^uint64(0)-solver.Decisions {
+		t.Fatal(fmt.Sprintf("unexpectedly overflowing statistics: %+v", solver))
+	}
+}

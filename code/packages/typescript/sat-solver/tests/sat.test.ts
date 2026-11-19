@@ -1,5 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import {
   Solver,
   CnfBuilder,
@@ -698,3 +700,177 @@ describe("CDCL SAT: Resource Bounding and Hostile Input Protection (VER09 §2.9)
     expect(parsedSatlib.clauses.length).toBe(1);
   });
 });
+
+describe("Shared SAT CNF v1 stateful corpus", () => {
+  it("consumes the same fixed valid cases as the native Go port", () => {
+    const path = new URL("../../../../specs/fixtures/sat-cnf-v1/cases.json", import.meta.url);
+    const bytes = readFileSync(path);
+    assert.equal(
+      createHash("sha256").update(bytes).digest("hex"),
+      "ba66f3a23690ced4d01621e2e26341c1c2e5bee7bce5a455e7a82a8435b32c63",
+    );
+    const corpus = JSON.parse(bytes.toString("utf8")) as {
+      version: number;
+      cases: Array<{
+        id: string;
+        dimacs: string;
+        steps: Array<{
+          op: "solve" | "add_clause" | "reset";
+          assumptions?: number[];
+          clause?: number[];
+          budget?: { max_conflicts?: number; max_steps?: number };
+          expect?: "sat" | "unsat" | "unknown";
+          expect_core?: number[];
+        }>;
+      }>;
+    };
+    const expectedIds = [
+      "empty_formula_sat",
+      "assumption_satisfies_clause",
+      "assumption_conflict_with_irrelevant_and_duplicate",
+      "nonminimal_but_sound_failed_core",
+      "empty_clause_unsat",
+      "transport_crlf_comments_spanning_and_multiple_clauses",
+      "satlib_terminator_ignores_following_text",
+      "negative_zero_terminates_empty_clause",
+      "contradictory_assumptions_and_recovery",
+      "zero_budget_unknown_then_unbounded_sat",
+      "clause_addition_invalidates_model_and_preserves_constraint",
+    ];
+    assert.equal(corpus.version, 1);
+    assert.deepEqual(corpus.cases.map((testCase) => testCase.id), expectedIds);
+
+    for (const testCase of corpus.cases) {
+      const independent = parseSharedDimacsIndependently(testCase.dimacs);
+      const formula = parseDimacs(testCase.dimacs);
+      assert.equal(formula.numVars, independent.numVars, `${testCase.id}: parser variable count`);
+      assert.deepEqual(
+        formula.clauses,
+        independent.clauses.map((clause) => clause.map(packedFromSignedDimacs)),
+        `${testCase.id}: parser literal encoding`,
+      );
+      const solver = new Solver();
+      // DIMACS declares variables that may not occur in any clause. Create
+      // all of them first so the model width is part of the public contract.
+      for (let i = 0; i < formula.numVars; i++) solver.newVar();
+      let clauses = independent.clauses.map((clause) => [...clause]);
+      for (const clause of formula.clauses) solver.addClause(clause);
+
+      for (const step of testCase.steps) {
+        if (step.op === "solve") {
+          const assumptions = (step.assumptions ?? []).map(dimacsLit);
+          const options = {
+            ...(step.budget?.max_conflicts === undefined ? {} : { maxConflicts: step.budget.max_conflicts }),
+            ...(step.budget?.max_steps === undefined ? {} : { maxSteps: step.budget.max_steps }),
+          };
+          const result = solver.solveWithAssumptions(assumptions, options);
+          assert.equal(result, step.expect, `${testCase.id}: solve result`);
+          if (result === "sat") {
+            const model = solver.getModel();
+            assert.equal(model.length, formula.numVars, `${testCase.id}: model width`);
+            assert.equal(independentlySatisfies(clauses, model), true, `${testCase.id}: model satisfies original CNF`);
+            assert.equal(independentlySatisfiesPackedLiterals(assumptions, model), true, `${testCase.id}: model satisfies assumptions`);
+            assert.deepEqual(solver.getFailedCore(), [], `${testCase.id}: SAT clears core`);
+          } else if (result === "unsat") {
+            const core = solver.getFailedCore();
+            assert.equal(new Set(core).size, core.length, `${testCase.id}: core has no duplicates`);
+            assert.equal(core.every((lit) => assumptions.includes(lit)), true, `${testCase.id}: core is an assumption subset`);
+            assert.equal(independentlyBruteForceSat(formula.numVars, clauses, core.map(signedDimacsFromPacked)), false, `${testCase.id}: core is sound against original CNF`);
+            if (step.expect_core !== undefined) {
+              assert.deepEqual([...core].sort((a, b) => a - b), step.expect_core.map(dimacsLit).sort((a, b) => a - b));
+            }
+          } else {
+            assert.deepEqual(solver.getFailedCore(), [], `${testCase.id}: UNKNOWN clears core`);
+          }
+        } else if (step.op === "add_clause") {
+          const clause = (step.clause ?? []).map(dimacsLit);
+          solver.addClause(clause);
+          // Preserve the attempted permanent clause in the independent oracle
+          // even if addClause reports an immediate contradiction.
+          clauses = [...clauses, [...(step.clause ?? [])]];
+        } else {
+          solver.reset();
+        }
+      }
+    }
+  });
+});
+
+function dimacsLit(value: number): Lit {
+  assert.notEqual(value, 0, "0 terminates a DIMACS clause; it is not an assumption");
+  return makeLit(Math.abs(value) - 1, value < 0);
+}
+
+// This parser/oracle intentionally avoids the production literal helpers. It
+// consumes signed DIMACS integers and decodes packed literals arithmetically,
+// so a shared VarOf/SignOf bug cannot validate the same bad result it created.
+function parseSharedDimacsIndependently(text: string): { numVars: number; clauses: number[][] } {
+  const lines = text.replace(/\r\n?/g, "\n").split("\n");
+  let numVars: number | undefined;
+  let declaredClauses: number | undefined;
+  let tokens: string[] = [];
+  let terminated = false;
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed === "" || trimmed.startsWith("c")) continue;
+    if (trimmed === "%") { terminated = true; break; }
+    if (numVars === undefined) {
+      const header = trimmed.match(/^p cnf (\d+) (\d+)$/);
+      assert.ok(header, `invalid shared fixture header: ${trimmed}`);
+      numVars = Number(header[1]);
+      declaredClauses = Number(header[2]);
+      continue;
+    }
+    tokens.push(...trimmed.split(/\s+/));
+  }
+  assert.equal(terminated || numVars !== undefined, true);
+  assert.notEqual(numVars, undefined);
+  const clauses: number[][] = [];
+  let clause: number[] = [];
+  for (const token of tokens) {
+    const value = Number(token);
+    assert.ok(Number.isSafeInteger(value), `invalid fixture literal: ${token}`);
+    if (value === 0) {
+      clauses.push(clause);
+      clause = [];
+    } else {
+      assert.ok(Math.abs(value) <= numVars!, `fixture literal exceeds declared variables: ${value}`);
+      clause.push(value);
+    }
+  }
+  assert.deepEqual(clause, [], "shared fixture must terminate every clause");
+  assert.equal(clauses.length, declaredClauses);
+  return { numVars: numVars!, clauses };
+}
+
+function packedFromSignedDimacs(value: number): Lit {
+  return (2 * (Math.abs(value) - 1) + (value < 0 ? 1 : 0)) as Lit;
+}
+
+function signedDimacsFromPacked(literal: number): number {
+  const variable = Math.floor(literal / 2) + 1;
+  return literal % 2 === 1 ? -variable : variable;
+}
+
+function independentlySatisfiesPackedLiterals(literals: number[], model: boolean[]): boolean {
+  return literals.every((literal) => {
+    const variable = Math.floor(literal / 2);
+    const negative = literal % 2 === 1;
+    return negative ? !model[variable] : model[variable];
+  });
+}
+
+function independentlySatisfies(clauses: number[][], model: boolean[]): boolean {
+  return clauses.every((clause) => clause.some((literal) => {
+    const value = model[Math.abs(literal) - 1];
+    return literal < 0 ? !value : value;
+  }));
+}
+
+function independentlyBruteForceSat(numVars: number, clauses: number[][], assumptions: number[]): boolean {
+  for (let mask = 0; mask < 2 ** numVars; mask++) {
+    const model = Array.from({ length: numVars }, (_, variable) => Math.floor(mask / 2 ** variable) % 2 === 1);
+    if (assumptions.every((literal) => literal < 0 ? !model[Math.abs(literal) - 1] : model[literal - 1]) && independentlySatisfies(clauses, model)) return true;
+  }
+  return false;
+}

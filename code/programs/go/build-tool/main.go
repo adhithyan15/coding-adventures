@@ -222,6 +222,7 @@ const (
 	gfmFencedBlockCorpusPath         = "code/specs/gfm-fenced-block-v1/cases.json"
 	gfmExtensionCorpusPath           = "code/specs/fixtures/gfm-extension-v1/cases.json"
 	bezier2dFlatteningCorpusPath     = "code/specs/fixtures/bezier2d-flattening-v1/cases.json"
+	satSolverSharedCorpusPath        = "code/specs/fixtures/sat-cnf-v1/cases.json"
 )
 
 var starlarkOpcodeProviderConsumers = []struct{ name, language string }{
@@ -240,6 +241,11 @@ var gfmCorpusConsumers = []struct{ name, language string }{
 var bezier2dFlatteningConsumers = []struct{ name, language string }{
 	{name: "csharp/bezier2d", language: "csharp"},
 	{name: "fsharp/bezier2d", language: "fsharp"},
+}
+
+var satSolverSharedCorpusConsumers = []struct{ name, language string }{
+	{name: "go/sat-solver", language: "go"},
+	{name: "typescript/sat-solver", language: "typescript"},
 }
 
 // These are the program fronts whose native tests read sharedDiscoveryFixturePath.
@@ -761,6 +767,27 @@ func selectPackageRoots(
 			}
 			if !found {
 				return nil, nil, fmt.Errorf("G2D02 fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	// VER09b's shared stateful SAT corpus is consumed directly by both
+	// standalone packages. Seed the exact readers even for deletion/rename-old
+	// paths, before ordinary package-root matching returns.
+	if containsPath(changedFiles, satSolverSharedCorpusPath) {
+		for _, consumer := range satSolverSharedCorpusConsumers {
+			if language != "all" && language != consumer.language {
+				continue
+			}
+			found := false
+			for _, pkg := range packages {
+				if pkg.Name == consumer.name && pkg.Language == consumer.language {
+					found = true
+					break
+				}
+			}
+			if !found {
+				return nil, nil, fmt.Errorf("VER09b shared SAT corpus consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
