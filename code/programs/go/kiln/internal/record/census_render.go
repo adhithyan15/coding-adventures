@@ -126,6 +126,30 @@ func renderMarkdown(s *CensusSummary) string {
 	w("- census.json EMPTY beside a failed parse half (the classifier never ran; not \"no host reads\"): %d\n", a.CensusEmptyParseFailed)
 	w("- census.json empty and no record: %d\n- census.json MISSING (a classify error; not \"no host reads\"): %d\n- census.json unreadable or invalid: %d\n\n", a.CensusEmptyNoRecord, a.CensusMissing, a.CensusInvalid)
 
+	w("## Why actions are not recordable (fixed codes, no paths)\n\n")
+	ex := s.Explain
+	for _, g := range []struct {
+		title string
+		m     map[string]int
+	}{
+		{"classifier reason kinds in record.json (actions)", ex.RecordReasonKinds},
+		{"parse reasons in record.json (actions)", ex.RecordParseReasons},
+		{"parse refusals seen by this census (traces)", ex.ParseRefusals},
+		{"record.failed (actions)", ex.RecordFailed},
+		{"truncated steps by reason", ex.Sidecar.Truncated},
+		{"tracer unclean reasons (steps)", ex.Sidecar.Unclean},
+	} {
+		w("- %s:", g.title)
+		if len(g.m) == 0 {
+			w(" none")
+		}
+		for _, k := range sortedStrings(g.m) {
+			w(" %s %d;", codeSpan(k), g.m[k])
+		}
+		w("\n")
+	}
+	w("- sidecars: %d steps, %d not clean, %d exit 125, %d with a non-zero root status\n\n", ex.Sidecar.Steps, ex.Sidecar.NotClean, ex.Sidecar.Exit125, ex.Sidecar.RootNonZero)
+
 	if len(s.Problems) > 0 {
 		w("## Problems\n\n")
 		for _, k := range sortedStrings(s.Problems) {

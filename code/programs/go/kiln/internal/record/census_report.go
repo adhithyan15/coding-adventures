@@ -62,6 +62,7 @@ const (
 	// CensusTopN is how many full paths (and prefixes) per kind the summary keeps.
 	CensusTopN = 200
 
+	maxCensusFailedBytes   = 64 << 10 // a record.failed is read at most this big
 	maxCensusRecordBytes   = 32 << 20 // a record.json is read at most this big
 	maxCensusEntries       = 65536    // entries in one census.json (the writer's own bound is 16384)
 	maxCensusKinds         = 128      // distinct kinds kept; the rest are "(other)"
@@ -101,6 +102,7 @@ type CensusSummary struct {
 	InfrastructureFailure string            `json:"infrastructure_failure"`
 	Problems              map[string]int    `json:"problems"`
 	Actions               ActionCounts      `json:"actions"`
+	Explain               ExplainSummary    `json:"explain"`
 	Reasons               []KindSummary     `json:"reasons"`
 	TraceSizes            TraceSizes        `json:"trace_sizes"`
 	Timing                TimingSummary     `json:"timing"`
@@ -270,6 +272,7 @@ type censusAcc struct {
 	red      *redactor
 	problems map[string]int
 	actions  ActionCounts
+	explain  ExplainSummary
 	kinds    map[string]*kindAcc
 	distinct int
 
@@ -293,7 +296,7 @@ type censusAcc struct {
 }
 
 func newCensusAcc(red *redactor) *censusAcc {
-	return &censusAcc{red: red, problems: map[string]int{}, kinds: map[string]*kindAcc{}, langs: map[string]*langAcc{}}
+	return &censusAcc{red: red, explain: newExplain(), problems: map[string]int{}, kinds: map[string]*kindAcc{}, langs: map[string]*langAcc{}}
 }
 
 // problem counts one problem under a fixed code.
@@ -463,9 +466,11 @@ func (r *censusRun) action(hexName string) {
 		}
 		scs[j] = sc
 		name = sc.Action
+		a.sidecarFacts(sc)
 	}
 
-	// The verdict.
+	// The verdict.  record.failed WINS over a record.json, as in collect: the
+	// parent writes it over a valid record when its deadline fires.
 	var rec *ClassifiedRecord
 	if data, err := readBoundedFile(filepath.Join(adir, "record.json"), maxCensusRecordBytes); err == nil {
 		if c, err := DecodeClassified(data); err != nil {
@@ -473,9 +478,14 @@ func (r *censusRun) action(hexName string) {
 		} else if sha256Hex(c.Action) != hexName {
 			a.problem("record_action_mismatch")
 		} else {
-			rec = &c
 			if name == "" {
 				name = c.Action
+			}
+			if r.pre != nil && (c.BindingID != r.pre.BindingID || c.SealedSHA256 != r.pre.SealedSHA256) {
+				// Another binding or another sealed directory: not this recording's.
+				a.problem("record_binding_mismatch")
+			} else {
+				rec = &c
 			}
 		}
 	} else if !errors.Is(err, fs.ErrNotExist) {
@@ -484,6 +494,15 @@ func (r *censusRun) action(hexName string) {
 	failed := false
 	if st, err := os.Lstat(filepath.Join(adir, "record.failed")); err == nil && st.Mode().IsRegular() {
 		failed = true
+		code := "other"
+		if text, err := readBoundedFile(filepath.Join(adir, "record.failed"), maxCensusFailedBytes); err == nil {
+			code = failedCode(string(text))
+		}
+		a.explain.RecordFailed[code]++
+		if rec != nil {
+			a.problem("record_and_failed_both")
+			rec = nil
+		}
 	}
 	switch {
 	case rec != nil:
@@ -494,10 +513,9 @@ func (r *censusRun) action(hexName string) {
 		if rec.WritesComplete {
 			a.actions.RecordWritesComplete++
 		}
+		a.explainRecord(rec)
 	case failed:
-		// A failure marker, counted on its own (and, when a valid record.json
-		// also exists, the record wins: the parent writes record.failed over a
-		// valid record when its deadline fires, see the Census side file).
+		// A failure marker, counted on its own.
 	default:
 		a.actions.NoVerdict++
 	}
@@ -829,6 +847,7 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 	elapsed := time.Since(start)
 	if why != "" {
 		a.parseRefused++
+		a.explain.ParseRefusals[parseReasonCode(why)]++
 	} else {
 		ms := elapsed.Seconds() * 1000
 		a.parses = append(a.parses, ms)
@@ -963,7 +982,7 @@ func readCollectSummary(path string, a *censusAcc) *CollectSummary {
 func (a *censusAcc) summary(top int) *CensusSummary {
 	s := &CensusSummary{
 		Schema: CensusSummarySchema, InfrastructureFailure: a.infra,
-		Problems: map[string]int{}, Actions: a.actions, Collect: a.collect,
+		Problems: map[string]int{}, Actions: a.actions, Explain: a.explain, Collect: a.collect,
 		Reasons: []KindSummary{}, Languages: []LangSummary{},
 	}
 	for k, v := range a.problems {
@@ -1064,4 +1083,50 @@ func (a *censusAcc) summary(top int) *CensusSummary {
 		KindsCollapsed: a.kindsCollapsed, LanguagesCollapsed: a.languagesCollapsed, ActionsSkipped: a.skipped,
 	}
 	return s
+}
+
+// sidecarFacts counts one decoded sidecar's facts.
+func (a *censusAcc) sidecarFacts(sc StepSidecar) {
+	f := &a.explain.Sidecar
+	f.Steps++
+	if sc.Truncated {
+		f.Truncated[sc.TruncatedReason]++ // Validate allows only the three fixed reasons
+	}
+	if !sc.Clean {
+		f.NotClean++
+	}
+	for _, u := range sc.Unclean {
+		if c, ok := matchCode(u, uncleanCodes); ok && c == u {
+			f.Unclean[u]++
+		} else {
+			f.Unclean["other"]++
+		}
+	}
+	if sc.Exit125 {
+		f.Exit125++
+	}
+	if sc.Started && sc.RootStatus != 0 {
+		f.RootNonZero++
+	}
+}
+
+// explainRecord counts the path-free reasons of a believed record.json: the
+// kind of each classifier reason, and each parse reason's code, once per action.
+func (a *censusAcc) explainRecord(rec *ClassifiedRecord) {
+	seen := map[string]bool{}
+	if rec.Record != nil {
+		for _, r := range rec.Record.Reasons {
+			if c := reasonKindCode(r); !seen[c] {
+				seen[c] = true
+				a.explain.RecordReasonKinds[c]++
+			}
+		}
+	}
+	seen = map[string]bool{}
+	for _, r := range rec.ParseReasons {
+		if c := parseReasonCode(r); !seen[c] {
+			seen[c] = true
+			a.explain.RecordParseReasons[c]++
+		}
+	}
 }
