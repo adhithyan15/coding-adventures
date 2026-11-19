@@ -35,3 +35,10 @@ no shell dialect to get wrong.
 **Rule:** a `BUILD_windows` line must stand alone. If two lines need to share
 state, they are one program: put it in a script, or join them with `&&` on
 one line.
+
+`cmd /C` also does not use single quotes for argument grouping. GBL-050's
+`python -m unittest discover -p 'test_*.py'` therefore passed a pattern with
+literal quote characters and discovered zero tests on Windows, despite the
+canonical validator succeeding. Use double quotes for the pattern and require
+the normal test-count output; a zero-test unittest exit status is not proof of
+discovery.

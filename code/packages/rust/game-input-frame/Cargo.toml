@@ -1,0 +1,48 @@
+[package]
+name = "game-input-frame"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic, bounded per-player game input action frames"
+license = "MIT"
+readme = "README.md"
+
+[lib]
+name = "game_input_frame"
+path = "src/lib.rs"
+
+[dependencies]
+
+[dev-dependencies]
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+cdcl-sat = { path = "../cdcl-sat" }
+drat-check = { path = "../drat-check" }
+bit-blaster = { path = "../bit-blaster" }
+coding_adventures_bounded_json = { path = "../bounded-json" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_warrant_ir = { path = "../warrant-ir" }
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "property_fuzz"
+path = "tests/property_fuzz.rs"
+
+[[test]]
+name = "sat_miter"
+path = "tests/sat_miter.rs"
+
+[[test]]
+name = "source_proof"
+path = "tests/source_proof.rs"
+
+[[test]]
+name = "domain_exhaustive"
+path = "tests/domain_exhaustive.rs"
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

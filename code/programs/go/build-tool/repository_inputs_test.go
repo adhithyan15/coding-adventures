@@ -159,6 +159,36 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 	}
 }
 
+func TestGameInputFrameV1SelectsOnlyRustConsumer(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/game-input-frame", Language: "rust"},
+		{Name: "rust/game-clock", Language: "rust"},
+		{Name: "typescript/game-input-frame", Language: "typescript"},
+	}
+	for _, changed := range []string{
+		"code/specs/fixtures/game-input-frame-v1/cases.json",
+		"code/specs/fixtures/game-input-frame-v1/schema.json",
+		"code/specs/fixtures/game-input-frame-v1/validate.py",
+	} {
+		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || !reflect.DeepEqual(selected, map[string]bool{"rust/game-input-frame": true}) {
+			t.Fatalf("%s selected %v, err %v; want only Rust GAME frame", changed, selected, err)
+		}
+	}
+	for path, want := range map[string]bool{
+		"code/specs/fixtures/game-input-frame-v1/cases.json":       true,
+		"code/specs/fixtures/game-input-frame-v10/cases.json":      false,
+		"code/specs/fixtures/game-input-frame-v1-old/cases.json":   false,
+		"code/specs/fixtures/game-input-frame-v1":                  false,
+		"code/specs/fixtures/other-game-input-frame-v1/cases.json": false,
+		"code/specs/fixtures/game-input-frame-v1ish/cases.json":    false,
+	} {
+		if got := isGameInputFrameV1(path); got != want {
+			t.Errorf("isGameInputFrameV1(%q) = %v, want %v", path, got, want)
+		}
+	}
+}
+
 func TestBiquadSosFixtureSelectsAllLanguageConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "python/dsp-filters", Language: "python"},
