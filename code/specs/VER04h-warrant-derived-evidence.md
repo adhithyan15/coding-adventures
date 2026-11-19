@@ -602,9 +602,12 @@ Further checks added by the security review (each has a falsification test in
     input) or `decompressor`.  `rows` must declare CWE-326, CWE-327 and CWE-407
     (an absent row refuses the file: nothing defaults to a sentence) and may
     declare CWE-409 for a `transform` only; no other CWE may be declared.
-    `applicability` has exactly one value, `excluded`; a profile cannot declare a
-    row discharged, an exemption or approved.  `reason` is one line of printable
-    ASCII, 1 to 2048 bytes, without the reserved suffix the matrix appends itself.
+    `applicability` is `excluded`, except CWE-407 may also be `applicable` under
+    [VER15 §5](VER15-weakness-registry.md#5-missing-cost-bound-coverage-ver-p048).
+    A profile cannot declare a row discharged, an exemption or
+    approved. `reason` is one line of printable ASCII, 1 to 2048 bytes, without
+    the reserved suffix the matrix appends itself; for `applicable`, it is
+    descriptive input only and is not copied into the computed disposition.
 
     *What stays in code, and cannot be weakened by data.*  The profile supplies the
     wording of a row and the declaration that it is excluded; the matrix still
@@ -615,6 +618,14 @@ Further checks added by the security review (each has a falsification test in
     | CWE-326, 327 | the effect certificate declares a `rand:` capability (key material needs entropy) |
     | CWE-407 | the document has no operation, or an operation with no `steps` bound row |
     | CWE-409 | the kind is `decompressor` (refused when the file is loaded), or the document declares an `output` row |
+
+    A CWE-407 `applicable` row is valid only for a nonempty Warrant module with
+    at least one operation lacking a declared `steps` bound. The reporter
+    computes unapproved, evidence-empty CWE-400 and CWE-407 exemptions from the
+    exact missing-operation set as specified by VER-P048. The profile cannot
+    declare or approve those exemptions. A `407: excluded` row remains invalid
+    when any operation lacks a step bound, and `407: applicable` fails closed
+    when all operations are bounded or the module has no operations.
 
     Every other row (memory safety, CWE-208, CWE-400, the capability rows) is not
     declarable and is computed exactly as before.  CWE-409 is still derived from the
