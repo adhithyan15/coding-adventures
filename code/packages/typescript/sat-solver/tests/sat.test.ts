@@ -178,11 +178,31 @@ describe("CDCL SAT: Solving, 1-UIP Learning, and Model Extraction (VER09 §3.3)"
     expect(model[varOf(c)]).toBe(true);
   });
 
+  it("grows variables from public clauses and returns a complete model", () => {
+    const s = new Solver();
+    const third = makeLit(2, false);
+    expect(s.addClause([third])).toBe(true);
+    expect(s.nVars()).toBe(3);
+    expect(s.solve()).toBe("sat");
+    expect(s.getModel()).toEqual([false, false, true]);
+  });
+
   it("proves direct contradiction UNSAT at level 0", () => {
     const s = new Solver();
     const x = makeLit(s.newVar(), false);
     expect(s.addClause([x])).toBe(true);
     expect(s.addClause([negateLit(x)])).toBe(false); // Immediate contradiction
+  });
+
+  it("makes a root contradiction found while adding a unit clause sticky", () => {
+    const s = new Solver();
+    const a = makeLit(s.newVar(), false);
+    const b = makeLit(s.newVar(), false);
+    s.addClause([negateLit(a), b]);
+    s.addClause([negateLit(a), negateLit(b)]);
+    expect(s.addClause([a])).toBe(false);
+    expect(s.okay()).toBe(false);
+    expect(s.solve()).toBe("unsat");
   });
 
   it("proves Pigeonhole Principle (PHP 4 pigeons into 3 holes) is UNSAT", () => {
@@ -619,11 +639,36 @@ describe("CDCL SAT: Resource Bounding and Hostile Input Protection (VER09 §2.9)
     expect(s.okay()).toBe(true);
   });
 
+  it("keeps the historical pending-root false-SAT witness permanently UNSAT", () => {
+    const clauses = [[1, 2], [1, -2], [-1, 3], [-1, 4], [-4, 5], [-4, -5]];
+    const s = new Solver();
+    for (let i = 0; i < 5; i++) s.newVar();
+    for (const clause of clauses) {
+      s.addClause(clause.map((value) => makeLit(Math.abs(value) - 1, value < 0)));
+    }
+
+    expect(s.solve({ maxSteps: 2 })).toBe("unknown");
+    assert.ok(s.propagate() >= 0, "public propagation must report the pending root conflict");
+    expect(s.okay()).toBe(false);
+    expect(s.solve()).toBe("unsat");
+    expect(s.getFailedCore()).toEqual([]);
+  });
+
   it("rejects negative or malformed literals defensively", () => {
     const s = new Solver();
     expect(() => s.addClause([-1])).toThrow();
     expect(() => s.addClause([1.5])).toThrow();
     expect(() => s.solveWithAssumptions([-1])).toThrow();
+  });
+
+  it("preserves a failed core when live-solver assumption validation rejects a call", () => {
+    const s = new Solver();
+    const a = makeLit(s.newVar(), false);
+    expect(s.solveWithAssumptions([a, negateLit(a)])).toBe("unsat");
+    const priorCore = s.getFailedCore();
+    assert.ok(priorCore.length > 0);
+    expect(() => s.solveWithAssumptions([-1])).toThrow();
+    expect(s.getFailedCore()).toEqual(priorCore);
   });
 
   it("tests Tseitin ITE, EQUIV, bvEq, and width mismatches", () => {
@@ -669,6 +714,7 @@ describe("CDCL SAT: Resource Bounding and Hostile Input Protection (VER09 §2.9)
   });
 
   it("rejects malformed DIMACS inputs strictly", () => {
+    expect(() => parseDimacs("c comment only\n\n")).toThrow();
     // Unterminated clause
     const unclosed = `p cnf 2 1\n1 2\n`;
     expect(() => parseDimacs(unclosed)).toThrow();
@@ -693,6 +739,17 @@ describe("CDCL SAT: Resource Bounding and Hostile Input Protection (VER09 §2.9)
     const tooManyVars = `p cnf 100 1\n1 0\n`;
     expect(() => parseDimacs(tooManyVars, { maxVars: 50 })).toThrow();
 
+    // Header tokens are exact, while any whitespace separator is accepted.
+    for (const malformed of [
+      "p cnfx 1 0\n",
+      "p cnf-extra 1 0\n",
+      "p cnf 1 0 extra\n",
+      "p cnf 1 0 extra fields\n",
+    ]) {
+      expect(() => parseDimacs(malformed)).toThrow();
+    }
+    expect(parseDimacs("p\tcnf\t1\t0\n").numVars).toBe(1);
+
     // SATLIB % terminator halts parsing cleanly before trailing garbage
     const satlibText = `p cnf 2 1\n1 2 0\n%\nmalformed non-dimacs garbage trailing lines`;
     const parsedSatlib = parseDimacs(satlibText);
@@ -707,7 +764,7 @@ describe("Shared SAT CNF v1 stateful corpus", () => {
     const bytes = readFileSync(path);
     assert.equal(
       createHash("sha256").update(bytes).digest("hex"),
-      "ba66f3a23690ced4d01621e2e26341c1c2e5bee7bce5a455e7a82a8435b32c63",
+      "46ad74ca077992da7390d6ecccd0b6691c2f4ee909035a7da31d6b47a90fb785",
     );
     const corpus = JSON.parse(bytes.toString("utf8")) as {
       version: number;
@@ -715,12 +772,13 @@ describe("Shared SAT CNF v1 stateful corpus", () => {
         id: string;
         dimacs: string;
         steps: Array<{
-          op: "solve" | "add_clause" | "reset";
+          op: "solve" | "propagate" | "add_clause" | "reset";
           assumptions?: number[];
           clause?: number[];
           budget?: { max_conflicts?: number; max_steps?: number };
           expect?: "sat" | "unsat" | "unknown";
           expect_core?: number[];
+          expect_conflict?: boolean;
         }>;
       }>;
     };
@@ -736,6 +794,9 @@ describe("Shared SAT CNF v1 stateful corpus", () => {
       "contradictory_assumptions_and_recovery",
       "zero_budget_unknown_then_unbounded_sat",
       "clause_addition_invalidates_model_and_preserves_constraint",
+      "unknown_preserves_pending_root_conflict",
+      "unknown_public_propagate_root_conflict_is_sticky",
+      "known_root_contradiction_clears_core",
     ];
     assert.equal(corpus.version, 1);
     assert.deepEqual(corpus.cases.map((testCase) => testCase.id), expectedIds);
@@ -782,6 +843,9 @@ describe("Shared SAT CNF v1 stateful corpus", () => {
           } else {
             assert.deepEqual(solver.getFailedCore(), [], `${testCase.id}: UNKNOWN clears core`);
           }
+        } else if (step.op === "propagate") {
+          const conflict = solver.propagate() >= 0;
+          assert.equal(conflict, step.expect_conflict, `${testCase.id}: public propagation conflict`);
         } else if (step.op === "add_clause") {
           const clause = (step.clause ?? []).map(dimacsLit);
           solver.addClause(clause);

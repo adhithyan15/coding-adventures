@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Preserve pending trail work when a propagation step budget is exhausted, and
+  retain permanent root conflicts discovered through public propagation.
+- Clear stale failed-assumption cores after known-root contradictions and reject
+  malformed DIMACS headers with prefixes or extra fields.
+- Document failed cores as sound, duplicate-free subsets without minimality or
+  ordering guarantees.
+
 ## 0.1.0 (2026-11-08)
 
 ### Added
