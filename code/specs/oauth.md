@@ -963,8 +963,10 @@ transition and the immediately following role- and suite-bound Finished check.
 It does not bind the RSA key to a reviewed certificate path, prove preceding
 server-flight order, append the Finished handshake encoding, establish trust,
 enforce revocation, protect records, perform I/O, authorize HTTP or OAuth
-transport, or open a network connection. Those compositions remain blockers;
-concrete HTTPS and live-provider readiness remain unavailable.
+transport, or open a network connection. It accesses no credential and causes
+no edit, signing operation, provider or trace event, storage, clock, network,
+or other external effect. Those compositions remain blockers; concrete HTTPS
+and live-provider readiness remain unavailable.
 
 A bounded `tls13-reviewed-server-path-certificate-verify` composition closes
 the detached-key and caller-selected-role gaps for one reviewed RSA server

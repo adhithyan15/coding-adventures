@@ -15,4 +15,6 @@ All notable changes to this package will be documented in this file.
   verdict.
 - Consuming exact-body verification and single-update transcript advancement
   with owned before/after evidence and no returned state on failure.
+- Role- and suite-bound Finished verification directly from the owned
+  post-CertificateVerify transcript, retaining both verdicts' continuity.
 - Atomic short-output rejection and redacted diagnostics.
