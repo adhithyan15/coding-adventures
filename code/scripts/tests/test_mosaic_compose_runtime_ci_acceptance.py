@@ -38,7 +38,65 @@ MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 
 
+def _process_identity_is_gone(snapshot: dict[str, object]) -> bool:
+    """Only absence or a different start time proves the recorded process is gone."""
+    return snapshot.get("identity") in {"absent", "pid_reused"}
+
+
+def _process_group_is_clean(snapshot: dict[str, object]) -> bool:
+    """Host-wide unreadable /proc entries are reported, not attributed to this group."""
+    return (
+        snapshot.get("observed_count") == 0
+        and not snapshot.get("truncated")
+        and not snapshot.get("enumeration_error")
+    )
+
+
 class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
+    def test_timeout_process_observer_verdicts_are_identity_scoped(self) -> None:
+        for identity in ("absent", "pid_reused"):
+            with self.subTest(identity=identity):
+                self.assertTrue(_process_identity_is_gone({"identity": identity}))
+        for identity, state in (("same", "S"), ("same", "Z"), ("unclassifiable", "?")):
+            with self.subTest(identity=identity, state=state):
+                self.assertFalse(
+                    _process_identity_is_gone(
+                        {"identity": identity, "current": {"state": state}}
+                    )
+                )
+
+        self.assertTrue(
+            _process_group_is_clean(
+                {
+                    "observed_count": 0,
+                    "truncated": False,
+                    "enumeration_error": None,
+                    "host_unreadable": 4,
+                }
+            )
+        )
+        self.assertFalse(
+            _process_group_is_clean(
+                {
+                    "observed_count": 1,
+                    "truncated": False,
+                    "enumeration_error": None,
+                    "host_unreadable": 0,
+                    "members": [{"pid": 123, "state": "S"}],
+                }
+            )
+        )
+        self.assertFalse(
+            _process_group_is_clean(
+                {
+                    "observed_count": 0,
+                    "truncated": True,
+                    "enumeration_error": None,
+                    "host_unreadable": 0,
+                }
+            )
+        )
+
     def test_force_plan_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_compose_runtime({"affected_packages": None})
@@ -824,35 +882,41 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             sleep.write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
             sleep.chmod(0o755)
             timeout = bin_dir / "timeout"
-            timeout.write_text(
-                f"#!{sys.executable}\n"
+            timeout_helper = root / "timeout-helper.py"
+            timeout_helper.write_text(
                 "import os, signal, subprocess, sys, time\n"
-                "args = sys.argv[1:]\n"
-                "if os.environ.get('DIAG_MODE') == 'real_timeout':\n"
-                "    real = os.environ['REAL_TIMEOUT']\n"
-                "    if args[:2] == ['--kill-after=1', '5']:\n"
-                "        result = subprocess.run([real, *args], check=False)\n"
-                "        shell_status = 128 + (-result.returncode) if result.returncode < 0 else result.returncode\n"
-                "        with open(os.environ['DIAG_REAL_TIMEOUT_STATUS_PATH'], 'w', encoding='ascii') as status_file:\n"
-                "            status_file.write(f'{result.returncode} {shell_status}\\n')\n"
-                "        raise SystemExit(shell_status)\n"
-                "    os.execv(real, [real, *args])\n"
-                "if args[:2] == ['--kill-after=1', '5']:\n"
-                "    if os.environ.get('DIAG_MODE') in ('outer_timeout', 'log_timeout', 'probe_timeout'):\n"
-                "        child = subprocess.Popen(args[2:], start_new_session=True)\n"
-                "        time.sleep(0.15)\n"
-                "        try: os.killpg(child.pid, signal.SIGTERM)\n"
-                "        except ProcessLookupError: pass\n"
-                "        try: child.wait(timeout=0.15)\n"
-                "        except subprocess.TimeoutExpired:\n"
-                "            try: os.killpg(child.pid, signal.SIGKILL)\n"
-                "            except ProcessLookupError: pass\n"
-                "            child.wait()\n"
-                "        sys.exit(124)\n"
-                "    os.execvpe(args[2], args[2:], os.environ)\n"
-                "if args and args[0] == '--foreground': args = args[1:]\n"
-                "if len(args) > 1 and args[0] == '1': os.execvpe(args[1], args[1:], os.environ)\n"
-                "sys.exit(125)\n",
+                "mode, *args = sys.argv[1:]\n"
+                "if mode == 'real':\n"
+                "    real, *command = args\n"
+                "    result = subprocess.run([real, *command], check=False)\n"
+                "    shell_status = 128 + (-result.returncode) if result.returncode < 0 else result.returncode\n"
+                "    with open(os.environ['DIAG_REAL_TIMEOUT_STATUS_PATH'], 'w', encoding='ascii') as status_file:\n"
+                "        status_file.write(f'{result.returncode} {shell_status}\\n')\n"
+                "    raise SystemExit(shell_status)\n"
+                "raise SystemExit(125)\n",
+                encoding="utf-8",
+            )
+            timeout.write_text(
+                "#!/usr/bin/env bash\n"
+                "if [[ \"${DIAG_MODE:-ok}\" == real_timeout ]]; then\n"
+                "  if [[ \"${1:-}\" == --kill-after=1 && \"${2:-}\" == 5 ]]; then\n"
+                "    printf 'gnu-outer\\n' >> \"$DIAG_TIMEOUT_DISPATCH_PATH\"\n"
+                "    exec \"$DIAG_PYTHON\" \"$DIAG_TIMEOUT_HELPER\" real \"$REAL_TIMEOUT\" \"$@\"\n"
+                "  fi\n"
+                "  printf 'gnu-command\\n' >> \"$DIAG_TIMEOUT_DISPATCH_PATH\"\n"
+                "  exec \"$REAL_TIMEOUT\" \"$@\"\n"
+                "fi\n"
+                "if [[ \"${1:-}\" == --kill-after=1 && \"${2:-}\" == 5 ]]; then\n"
+                "  if [[ \"${DIAG_MODE:-ok}\" == outer_timeout || \"${DIAG_MODE:-ok}\" == log_timeout || \"${DIAG_MODE:-ok}\" == probe_timeout ]]; then\n"
+                "    printf 'mock-outer-timeout\\n' >> \"$DIAG_TIMEOUT_DISPATCH_PATH\"\n"
+                "    exit 124\n"
+                "  fi\n"
+                "  shift 2\n"
+                "  exec \"$@\"\n"
+                "fi\n"
+                "[[ \"${1:-}\" == --foreground ]] && shift\n"
+                "[[ \"${1:-}\" == 1 ]] && shift\n"
+                "exec \"$@\"\n",
                 encoding="utf-8",
             )
             timeout.chmod(0o755)
@@ -897,6 +961,9 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                     "DIAG_HANG_WORKER_STAT_PATH": str(root / f"hung-adb-{mode}.initial-stat"),
                     "DIAG_HANG_CHILD_STAT_PATH": str(root / f"hung-sleep-{mode}.initial-stat"),
                     "DIAG_REAL_TIMEOUT_STATUS_PATH": str(root / f"real-timeout-{mode}.status"),
+                    "DIAG_TIMEOUT_DISPATCH_PATH": str(root / f"timeout-dispatch-{mode}.log"),
+                    "DIAG_PYTHON": sys.executable,
+                    "DIAG_TIMEOUT_HELPER": str(timeout_helper),
                 }
                 if shutil.which("timeout"):
                     env["REAL_TIMEOUT"] = shutil.which("timeout") or "timeout"
@@ -1025,6 +1092,9 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 timeout_status = status_path.read_text(
                     encoding="ascii"
                 ).strip()
+                timeout_dispatches = (
+                    root / "timeout-dispatch-real_timeout.log"
+                ).read_text(encoding="ascii").splitlines()
                 hung_pid_path = root / "hung-adb-real_timeout.pid"
                 child_pid_path = root / "hung-sleep-real_timeout.pid"
                 worker_stat_path = root / "hung-adb-real_timeout.initial-stat"
@@ -1075,8 +1145,14 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 def group_snapshot(expected_pgrp: int) -> dict[str, object]:
                     members: list[dict[str, str | int]] = []
                     vanished = 0
-                    unreadable = 0
-                    for proc_entry in Path("/proc").iterdir():
+                    host_unreadable = 0
+                    enumeration_error = None
+                    try:
+                        proc_entries = list(Path("/proc").iterdir())
+                    except OSError as error:
+                        proc_entries = []
+                        enumeration_error = type(error).__name__
+                    for proc_entry in proc_entries:
                         if not proc_entry.name.isdigit():
                             continue
                         try:
@@ -1086,7 +1162,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                             vanished += 1
                             continue
                         except (OSError, ValueError):
-                            unreadable += 1
+                            host_unreadable += 1
                             continue
                         if current["pgrp"] == expected_pgrp:
                             members.append({"pid": int(proc_entry.name), **current})
@@ -1094,7 +1170,8 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                         "members": members[:32],
                         "observed_count": len(members),
                         "vanished_during_scan": vanished,
-                        "unreadable": unreadable,
+                        "host_unreadable": host_unreadable,
+                        "enumeration_error": enumeration_error,
                         "truncated": len(members) > 32,
                     }
 
@@ -1107,19 +1184,37 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                         return "unclassifiable_permission_denied"
                     return "addressable"
 
+                def probe_disagreement(identity: dict[str, object], probe: str) -> str | None:
+                    observed = identity["identity"]
+                    if observed == "same" and probe == "absent":
+                        return "same_identity_stat_but_kill_probe_absent"
+                    if observed == "absent" and probe != "absent":
+                        return "stat_absent_but_pid_probe_addressable_or_unclassifiable"
+                    if observed == "pid_reused" and probe == "absent":
+                        return "pid_reused_stat_but_pid_probe_absent"
+                    if observed == "unclassifiable":
+                        return "identity_stat_unclassifiable"
+                    return None
+
                 process_history: list[dict[str, object]] = []
                 observation_start = time.monotonic()
                 for checkpoint in (0.0, 0.05, 0.20, 0.50):
                     remaining = checkpoint - (time.monotonic() - observation_start)
                     if remaining > 0:
                         time.sleep(remaining)
+                    worker_snapshot = snapshot_process(hung_pid, initial_worker)
+                    child_snapshot = snapshot_process(hung_child_pid, initial_child)
+                    worker_probe = pid_addressability(hung_pid)
+                    child_probe = pid_addressability(hung_child_pid)
                     process_history.append(
                         {
                             "elapsed_s": round(time.monotonic() - observation_start, 3),
-                            "worker": snapshot_process(hung_pid, initial_worker),
-                            "sleep_child": snapshot_process(hung_child_pid, initial_child),
-                            "worker_pid_probe": pid_addressability(hung_pid),
-                            "sleep_child_pid_probe": pid_addressability(hung_child_pid),
+                            "worker": worker_snapshot,
+                            "sleep_child": child_snapshot,
+                            "worker_pid_probe": worker_probe,
+                            "sleep_child_pid_probe": child_probe,
+                            "worker_probe_disagreement": probe_disagreement(worker_snapshot, worker_probe),
+                            "sleep_child_probe_disagreement": probe_disagreement(child_snapshot, child_probe),
                             "group": group_snapshot(int(initial_worker["pgrp"])),
                         }
                     )
@@ -1130,40 +1225,54 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 allowed_timeout_statuses = {"124 124", "137 137", "-9 137"}
                 if timeout_status not in allowed_timeout_statuses:
                     failures.append(f"unexpected real timeout raw/shell status {timeout_status!r}")
+                if "gnu-outer" not in timeout_dispatches or "gnu-command" not in timeout_dispatches:
+                    failures.append(f"real timeout did not dispatch through GNU binary: {timeout_dispatches!r}")
                 if real_timeout_gate.returncode != 1:
                     failures.append(f"gate exit changed to {real_timeout_gate.returncode}")
                 if "diagnostic_capture=timed_out" not in real_timeout_gate.stdout:
                     failures.append("timeout diagnostic marker missing")
                 if real_elapsed >= 7.5:
                     failures.append(f"gate elapsed {real_elapsed:.3f}s exceeded 7.5s")
-                if process_history[0]["worker_pid_probe"] != "absent":
-                    failures.append("worker PID remained addressable immediately after gate return")
-                if process_history[0]["sleep_child_pid_probe"] != "absent":
-                    failures.append("sleep child PID remained addressable immediately after gate return")
+                if not _process_identity_is_gone(process_history[0]["worker"]):
+                    failures.append("original worker identity remained at gate return")
+                if not _process_identity_is_gone(process_history[0]["sleep_child"]):
+                    failures.append("original sleep-child identity remained at gate return")
                 immediate_group = process_history[0]["group"]
                 final_group = process_history[-1]["group"]
                 assert isinstance(immediate_group, dict)
                 assert isinstance(final_group, dict)
                 for label, snapshot in (("immediate", immediate_group), ("final", final_group)):
-                    if snapshot["unreadable"] or snapshot["truncated"]:
+                    if snapshot["truncated"] or snapshot["enumeration_error"]:
                         failures.append(f"{label} process-group census incomplete: {snapshot!r}")
-                if immediate_group["members"]:
+                if not _process_group_is_clean(immediate_group):
                     failures.append(f"process group still had members at gate return: {immediate_group!r}")
-                if final_group["members"]:
+                if not _process_group_is_clean(final_group):
                     failures.append(f"process group members persisted after bounded observation: {final_group!r}")
                 for label in ("worker", "sleep_child"):
-                    if process_history[-1][label]["identity"] not in ("absent", "pid_reused"):
+                    if not _process_identity_is_gone(process_history[-1][label]):
                         failures.append(f"{label} identity persisted: {process_history[-1][label]!r}")
                 if not recorded_temps:
                     failures.append("diagnostic temporary-file tracker was empty")
                 if remaining_temps:
                     failures.append(f"diagnostic temporary files remain: {remaining_temps!r}")
+                receipt = (
+                    "timeout_process_cleanup="
+                    f"worker:{process_history[0]['worker']['identity']}->"
+                    f"{process_history[-1]['worker']['identity']},"
+                    f"child:{process_history[0]['sleep_child']['identity']}->"
+                    f"{process_history[-1]['sleep_child']['identity']},"
+                    f"group:{immediate_group['observed_count']}->{final_group['observed_count']},"
+                    f"host_unreadable:{immediate_group['host_unreadable']}+{final_group['host_unreadable']},"
+                    f"raw_shell_timeout={timeout_status},gate_elapsed={real_elapsed:.3f}s"
+                )
+                if not failures:
+                    print(receipt)
                 self.assertFalse(
                     failures,
                     "timeout cleanup regression: "
                     f"failures={failures!r}, raw_timeout_status={timeout_status!r}, "
                     f"gate_exit={real_timeout_gate.returncode}, gate_elapsed={real_elapsed:.3f}s, "
-                    f"initial_worker={initial_worker!r}, initial_sleep_child={initial_child!r}, "
+                    f"receipt={receipt!r}, initial_worker={initial_worker!r}, initial_sleep_child={initial_child!r}, "
                     f"process_history={process_history!r}",
                 )
 
