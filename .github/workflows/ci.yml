@@ -1284,6 +1284,14 @@ jobs:
           nproc
           go test -count=1 -run Sandbox -v -json . > "$RUNNER_TEMP/kiln-sandbox.json"
 
+      # The assertion script's own tests (the G1 gate, the D34 cross-check census
+      # and this job's wiring). No workflow discovered this file before D34.
+      - name: Test the sandbox assertion script
+        if: always()
+        shell: bash
+        run: |
+          python3 -m unittest discover -s code/scripts/tests -p 'test_assert_kiln_sandbox_tests.py'
+
       # Runs even when the tests failed: the JSON stream is the only record of
       # which test failed and why, and this step prints it. It also fails the
       # job when a test was skipped or did not run.

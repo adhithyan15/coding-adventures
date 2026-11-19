@@ -4,7 +4,8 @@
 //! passes only that snapshot to one already-derived Finished key. Exact
 //! selected-suite equality is checked before HMAC work, and successful evidence
 //! retains the transcript, its snapshot, and the repository-owned Finished
-//! verdict together.
+//! verdict together. A consuming form owns the selected transcript in its
+//! success evidence and withholds that state entirely on failure.
 //!
 //! It does not decide which handshake encodings entered the transcript, choose
 //! the correct BaseKey or sender role, sequence a handshake, authenticate a
@@ -91,6 +92,44 @@ impl fmt::Debug for VerifiedTranscriptBoundFinished<'_> {
     }
 }
 
+/// Non-copyable evidence owning one exact transcript and Finished verdict.
+///
+/// Ownership makes this form suitable for a later consuming handshake state
+/// machine: the selected transcript is available only after Finished has
+/// authenticated its internally captured snapshot. A failure returns no
+/// transcript state for caller retry or reuse.
+pub struct OwnedVerifiedTranscriptBoundFinished {
+    transcript: SelectedTls13Transcript,
+    snapshot: TranscriptHash,
+    verification: VerifiedFinished,
+}
+
+impl OwnedVerifiedTranscriptBoundFinished {
+    /// Borrow the exact selected transcript consumed by verification.
+    #[must_use]
+    pub const fn transcript(&self) -> &SelectedTls13Transcript {
+        &self.transcript
+    }
+
+    /// Return the exact suite-bound snapshot supplied to Finished verification.
+    #[must_use]
+    pub const fn snapshot(&self) -> TranscriptHash {
+        self.snapshot
+    }
+
+    /// Return the repository-owned Finished verification evidence.
+    #[must_use]
+    pub const fn verification(&self) -> &VerifiedFinished {
+        &self.verification
+    }
+}
+
+impl fmt::Debug for OwnedVerifiedTranscriptBoundFinished {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("OwnedVerifiedTranscriptBoundFinished")
+    }
+}
+
 /// Verify peer Finished data only against an internally captured snapshot of
 /// the exact selected transcript.
 ///
@@ -120,6 +159,36 @@ pub fn verify_transcript_bound_finished<'transcript>(
     })
 }
 
+/// Consume one selected transcript and verify peer Finished data against only
+/// its internally captured snapshot.
+///
+/// A selected-suite mismatch fails before snapshotting or HMAC work. Any
+/// failure consumes and drops the transcript instead of returning state that a
+/// caller could retry or reuse. Success owns the exact transcript together
+/// with the snapshot and repository-owned verdict.
+pub fn verify_owned_transcript_bound_finished(
+    transcript: SelectedTls13Transcript,
+    finished_key: &FinishedKey<'_>,
+    peer_verify_data: &[u8],
+) -> Result<OwnedVerifiedTranscriptBoundFinished, TranscriptBoundFinishedError> {
+    if transcript.selected_suite() != finished_key.selected_suite() {
+        return Err(TranscriptBoundFinishedError {
+            kind: TranscriptBoundFinishedErrorKind::CipherSuiteMismatch,
+        });
+    }
+
+    let snapshot = transcript.snapshot();
+    let verification = finished_key
+        .verify_peer(snapshot.as_bytes(), peer_verify_data)
+        .map_err(map_finished_error)?;
+
+    Ok(OwnedVerifiedTranscriptBoundFinished {
+        transcript,
+        snapshot,
+        verification,
+    })
+}
+
 fn map_finished_error(error: FinishedError) -> TranscriptBoundFinishedError {
     let kind = match error {
         FinishedError::HashMismatch | FinishedError::TranscriptHashLengthMismatch => {
@@ -139,7 +208,8 @@ fn map_finished_error(error: FinishedError) -> TranscriptBoundFinishedError {
 #[cfg(test)]
 mod tests {
     use super::{
-        verify_transcript_bound_finished, TranscriptBoundFinishedErrorKind,
+        verify_owned_transcript_bound_finished, verify_transcript_bound_finished,
+        OwnedVerifiedTranscriptBoundFinished, TranscriptBoundFinishedErrorKind,
         VerifiedTranscriptBoundFinished,
     };
     use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk};
@@ -272,5 +342,57 @@ mod tests {
             core::any::type_name::<VerifiedTranscriptBoundFinished<'static>>()
                 .contains("VerifiedTranscriptBoundFinished")
         );
+        assert!(
+            core::any::type_name::<OwnedVerifiedTranscriptBoundFinished>()
+                .contains("OwnedVerifiedTranscriptBoundFinished")
+        );
+    }
+
+    #[test]
+    fn consuming_verification_owns_the_exact_transcript_and_verdict() {
+        let suite = selected_suite(CipherSuite::TlsAes128GcmSha256);
+        let transcript = selected_transcript(suite, b"owned ordered handshake bytes");
+        let expected_snapshot = transcript.snapshot();
+        let expected_observed_bytes = transcript.observed_bytes();
+
+        with_finished_key(suite, FinishedRole::Server, |key| {
+            let verify_data = valid_verify_data(&key, &transcript);
+            let verified =
+                verify_owned_transcript_bound_finished(transcript, &key, &verify_data).unwrap();
+
+            assert_eq!(verified.transcript().selected_suite(), suite);
+            assert_eq!(
+                verified.transcript().observed_bytes(),
+                expected_observed_bytes
+            );
+            assert_eq!(verified.transcript().snapshot(), expected_snapshot);
+            assert_eq!(verified.snapshot(), expected_snapshot);
+            assert_eq!(verified.verification().selected_suite(), suite);
+            assert_eq!(verified.verification().role(), FinishedRole::Server);
+            assert_eq!(
+                verified.verification().transcript_hash(),
+                expected_snapshot.as_bytes(),
+            );
+            assert_eq!(
+                format!("{verified:?}"),
+                "OwnedVerifiedTranscriptBoundFinished"
+            );
+        });
+    }
+
+    #[test]
+    fn consuming_verification_preserves_redacted_failure_categories() {
+        let transcript_suite = selected_suite(CipherSuite::TlsAes128GcmSha256);
+        let key_suite = selected_suite(CipherSuite::TlsChacha20Poly1305Sha256);
+        let transcript = selected_transcript(transcript_suite, b"consumed mismatch transcript");
+
+        with_finished_key(key_suite, FinishedRole::Server, |key| {
+            let error = verify_owned_transcript_bound_finished(transcript, &key, &[]).unwrap_err();
+            assert_eq!(
+                error.kind(),
+                TranscriptBoundFinishedErrorKind::CipherSuiteMismatch,
+            );
+            assert!(!format!("{error:?}").contains("consumed"));
+        });
     }
 }

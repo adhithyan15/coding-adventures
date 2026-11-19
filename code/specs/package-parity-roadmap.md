@@ -21064,3 +21064,25 @@ current main normally and conflict-free as
 `e665a342bd7979331e78f1c3bd5fa8bd741c3aa4`; complete Rust and repo-wide
 catalogue validation remains green. Require fresh exact-head review and hosted
 CI before guarded auto-merge.
+
+## November 19, 2026: Dart DT18 hash-map leaf selection
+
+Dart DT17 hash-functions PR #19687 merged at exact main
+`b779d10a1601c203bc377ef74e448ac947906c66`. The fresh inventory reports
+5,164 structural package slots. DT18 hash-map and DT19 hash-set each cover
+14/15 established lanes, with Dart the sole missing lane. The six open PRs at
+selection time do not overlap this package.
+
+Split `hash-map-dart-lane-parity` from the pending Dart storage umbrella. Its
+direct dependencies are the corrected DT17 vector contract and the merged Dart
+DT17 package. The umbrella remains pending for its other storage identities.
+The Dart map slot remains missing until its implementation, validation, and
+merge gates complete. The local phase1 commit is profile and ownership only.
+
+The reviewed profile must resolve the resize-at-1.0 example, specify the full
+public Dart surface, exact tagged UTF-8 and byte keys, DT17 algorithms and
+defaults, production bounds and typed errors, persistence and shallow-value
+ownership, iteration order, and merge precedence. Its next gate is a neutral
+fixture with an independent association-list model and direct public Swift
+calls. Production work stays gated until that review. No native Warrant, SAT
+proof, or Dart conformance result is claimed.
