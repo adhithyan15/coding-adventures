@@ -415,6 +415,7 @@ class CorpusTests(unittest.TestCase):
         self.assertIn(".json", scoped("ruby", "ruby-test-resource-inputs")["suffixes"])
         self.assertIn(".py", scoped("ruby", "ruby-test-resource-inputs")["suffixes"])
         self.assertIn(".toml", scoped("ruby", "ruby-test-resource-inputs")["suffixes"])
+        self.assertIn(".ts", scoped("rust", "rust-tests-resource-inputs")["suffixes"])
         self.assertIn(".wast", scoped("rust", "rust-tests-resource-inputs")["suffixes"])
         self.assertIn(
             ".lattice",
@@ -452,7 +453,7 @@ class CorpusTests(unittest.TestCase):
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "7014b769f48c4f55e056c7bbbcf4e14bc0e84c1e7ef6030472e0e7949d93f0c8",
+            "537c9d4d7af75aeae1b03b327ff7198cee811ecaf4734a4cfc213fcabe37c479",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -4086,6 +4087,17 @@ class PureDomainValidationTests(unittest.TestCase):
             ("evidence/test-manifest.json", True),
             ("evidence/proofs/a.cnf", True),
             ("evidence/proofs/a.drat", True),
+            ("BUILD", True),
+            ("BUILD_linux", True),
+            ("BUILD_mac", True),
+            ("BUILD_mac_and_linux", True),
+            ("BUILD_windows", True),
+            ("nested/BUILD", False),
+            ("BUILD.bak", False),
+            ("BUILD_debug", False),
+            ("BUILD_Windows", False),
+            ("build", False),
+            ("BUILD\\x", False),
             ("README.md", False),
             ("CHANGELOG.d/nested/a.md", False),
             ("CHANGELOG.d/run.sh", False),

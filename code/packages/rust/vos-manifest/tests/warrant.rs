@@ -645,3 +645,42 @@ fn a_model_with_more_than_63_parameters_is_refused_not_approximated() {
         BuildShape::Constructor { .. }
     ));
 }
+
+#[test]
+fn declared_names_lists_claims_and_examples_in_document_order() {
+    // VOS-039a: parsed only (no type check), claims and examples kept apart.
+    let doc = "warrant t v1
+  record Impl(x: U8)
+  claim c2:
+    forall v: Bool. v == v
+  example e1:
+    1u8 == 1u8
+  claim c1:
+    forall v: Bool. v == v
+";
+    let (claims, examples) = vos_manifest::warrant::declared_names(doc).unwrap();
+    assert_eq!(claims, ["c2", "c1"]);
+    assert_eq!(examples, ["e1"]);
+    assert!(vos_manifest::warrant::declared_names("not a document").is_err());
+}
+
+#[test]
+fn claim_calls_walks_the_parsed_body_so_strings_and_comments_hide_nothing() {
+    // VOS-039a review M3: the call is found in the tree.  Warrant's only string-like literal is
+    // the hex `b".."` (it cannot hold `--`), but the earlier text scan cut every line at the first
+    // `--`; a tree has no comments and no literals to mislead it.
+    let doc = "warrant t v1
+  record Impl(x: U8)
+  claim c1:
+    forall v: Bool. v == v -- insert(1) in a comment
+  claim c2:
+    forall v: Bool. b\"00\" == b\"00\" and insert (v) == dispatch(v) and insertx(v) == v
+  claim c3:
+    forall v: Bool. if v then (b\"00\", unused(v)) == (b\"00\", v) else dispatch(insert(v)) == v
+";
+    let ops = ["insert".to_string(), "dispatch".to_string(), "unused".to_string()];
+    let got = vos_manifest::warrant::claim_calls(doc, &ops).unwrap();
+    assert_eq!(got[0], ("c1".to_string(), vec![]));
+    assert_eq!(got[1], ("c2".to_string(), vec!["insert".to_string(), "dispatch".to_string()]));
+    assert_eq!(got[2].1, ["unused", "dispatch", "insert"]);
+}

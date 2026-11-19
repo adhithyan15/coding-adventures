@@ -2,6 +2,21 @@
 
 Binary Indexed Tree (Fenwick Tree) for prefix sums with point updates.
 
+`FenwickTree` preserves its existing float and unbounded integer behavior by
+default. Pass `portable_integer_domain=True` to the constructor or `from_list`
+to enforce the DT06 v1 signed integer and absolute-sum limits. In this mode,
+invalid values and updates raise `ValueOutOfDomainError`, a `FenwickError`.
+
+## DT06 v1 Validation
+
+The Python package consumes the shared fixture through its public API and
+compares operations with a flat-list oracle. Its current suite runs 66 tests
+with 99% package coverage, including 500 deterministic history properties
+(seed `0xD706`), 5,000 deterministic byte-operation mutations (seed
+`0xD706B17`), and four source mutation controls. The mutation fuzz target
+generates bounded small updates and audits each resulting state. These are
+runtime conformance checks, not a formal Warrant proof.
+
 ## What It Is
 
 A Fenwick tree (invented by Peter Fenwick, 1994) answers two queries in O(log n) time

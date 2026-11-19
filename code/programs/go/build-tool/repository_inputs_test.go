@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cigates"
@@ -101,6 +102,9 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 		{Name: "typescript/game-clock", Language: "typescript"},
 		{Name: "rust/warrant-grammar", Language: "rust"},
 		{Name: "rust/wasm-leb128", Language: "rust"},
+		// wasm-leb128 is a warrantAdopters row since its adopter PR (CV2 S10), so a change to its spec
+		// selects the generator too, and a consumer missing from discovery is a hard error
+		{Name: "rust/warrant-corpus-gen", Language: "rust"},
 		{Name: "python/warrant-oracle", Language: "python"},
 		{Name: "go/warrant-corpus", Language: "go"},
 		{Name: "go/build-tool", Language: "go"},
@@ -132,7 +136,7 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true, "rust/warrant-grammar": true}) {
 		t.Fatalf("rust-only GAME10 Warrant selection got %v, err %v", got, err)
 	}
-	if got, err := repositoryInputConsumersForChange([]string{"code/specs/wasm-leb128.warrant"}, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-grammar": true, "python/warrant-oracle": true}) {
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/wasm-leb128.warrant"}, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-grammar": true, "python/warrant-oracle": true, "rust/warrant-corpus-gen": true}) {
 		t.Fatalf("other Warrant consumers selection got %v, err %v", got, err)
 	}
 	for path, want := range map[string]bool{
@@ -153,6 +157,36 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 	}
 	if !isGameClockInput("code/specs/game-clock.warrant") || isGameClockCorpusInput("code/specs/game-clock.warrant") {
 		t.Fatal("the Warrant spec selects Rust only, not the TypeScript corpus consumer")
+	}
+}
+
+func TestGameInputFrameV1SelectsOnlyRustConsumer(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/game-input-frame", Language: "rust"},
+		{Name: "rust/game-clock", Language: "rust"},
+		{Name: "typescript/game-input-frame", Language: "typescript"},
+	}
+	for _, changed := range []string{
+		"code/specs/fixtures/game-input-frame-v1/cases.json",
+		"code/specs/fixtures/game-input-frame-v1/schema.json",
+		"code/specs/fixtures/game-input-frame-v1/validate.py",
+	} {
+		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || !reflect.DeepEqual(selected, map[string]bool{"rust/game-input-frame": true}) {
+			t.Fatalf("%s selected %v, err %v; want only Rust GAME frame", changed, selected, err)
+		}
+	}
+	for path, want := range map[string]bool{
+		"code/specs/fixtures/game-input-frame-v1/cases.json":       true,
+		"code/specs/fixtures/game-input-frame-v10/cases.json":      false,
+		"code/specs/fixtures/game-input-frame-v1-old/cases.json":   false,
+		"code/specs/fixtures/game-input-frame-v1":                  false,
+		"code/specs/fixtures/other-game-input-frame-v1/cases.json": false,
+		"code/specs/fixtures/game-input-frame-v1ish/cases.json":    false,
+	} {
+		if got := isGameInputFrameV1(path); got != want {
+			t.Errorf("isGameInputFrameV1(%q) = %v, want %v", path, got, want)
+		}
 	}
 }
 
@@ -628,6 +662,71 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 				t.Fatalf("got %v, want %v", got, tc.want)
 			}
 		})
+	}
+}
+
+func TestFenwickContractSelectsDartAndPythonConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "dart/fenwick-tree", Language: "dart"},
+		{Name: "python/fenwick-tree", Language: "python"},
+	}
+	cases := map[string]bool{
+		"code/specs/DT06-fenwick-tree.md":                           true,
+		"code/specs/fixtures/fenwick-tree-v1/cases.json":            true,
+		"code/specs/fixtures/fenwick-tree-v1/schema.json":           true,
+		"code/specs/fixtures/fenwick-tree-v1/README.md":             true,
+		"code/specs/fixtures/fenwick-tree-v1/validate.py":           true,
+		"code/specs/DT06-fenwick-tree.md.bak":                       false,
+		"code/specs/fixtures/fenwick-tree-v10/cases.json":           false,
+		"code/specs/fixtures/fenwick-tree-v1x/cases.json":           false,
+		"code/specs/fixtures/fenwick-tree-v1":                       false,
+		"code/specs/fixtures/fenwick-tree-v1/cases.json.backup":     true,
+		"code/specs/DT06-fenwick-tree-extra.md":                     false,
+		"code/specs/fixtures/fenwick-tree-v1/../fenwick-tree-v10/x": false,
+	}
+	for path, want := range cases {
+		if got := isFenwickTreeContractInput(path); got != want {
+			t.Errorf("isFenwickTreeContractInput(%q) = %v, want %v", path, got, want)
+		}
+		selected, err := repositoryInputConsumersForChange([]string{path}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		wantSelected := map[string]bool{}
+		if want {
+			wantSelected["dart/fenwick-tree"] = true
+			wantSelected["python/fenwick-tree"] = true
+		}
+		if !reflect.DeepEqual(selected, wantSelected) {
+			t.Errorf("change %q selects %v, want %v", path, selected, wantSelected)
+		}
+	}
+
+	for language, want := range map[string]map[string]bool{
+		"dart":   {"dart/fenwick-tree": true},
+		"python": {"python/fenwick-tree": true},
+	} {
+		selected, err := repositoryInputConsumersForChange(
+			[]string{"code/specs/fixtures/fenwick-tree-v1/cases.json"}, packages, language,
+		)
+		if err != nil {
+			t.Fatalf("language %s: %v", language, err)
+		}
+		if !reflect.DeepEqual(selected, want) {
+			t.Errorf("language %s selects %v, want %v", language, selected, want)
+		}
+	}
+
+	missingPython := packages[:1]
+	if _, err := repositoryInputConsumersForChange(
+		[]string{"code/specs/fixtures/fenwick-tree-v1/cases.json"}, missingPython, "all",
+	); err == nil || !strings.Contains(err.Error(), `repository input consumer "python/fenwick-tree"`) {
+		t.Errorf("missing Python consumer error = %v", err)
+	}
+	if selected, err := repositoryInputConsumersForChange(
+		[]string{"code/specs/fixtures/fenwick-tree-v1/cases.json"}, missingPython, "dart",
+	); err != nil || !reflect.DeepEqual(selected, map[string]bool{"dart/fenwick-tree": true}) {
+		t.Errorf("Dart-only selection with Python absent = %v, %v", selected, err)
 	}
 }
 

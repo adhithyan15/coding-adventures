@@ -94,6 +94,20 @@ repo="$(cd "$here/../.." && pwd)"
 program="$(cd "$program" && pwd)"
 runtime="$(cd "$runtime" && pwd)"
 
+# Diagnostics are absent by default, including release builds. The emulator
+# investigation opts in only for its temporary Flutter phone artifacts.
+flutter_diagnostic_arg=""
+if [[ "${MOSAIC_NATIVE_DIAGNOSTICS:-false}" == true ]]; then
+  flutter_diagnostic_arg="--dart-define=MOSAIC_NATIVE_DIAGNOSTICS=true"
+fi
+run_flutter_build() {
+  if [[ -n "$flutter_diagnostic_arg" ]]; then
+    flutter "$@" "$flutter_diagnostic_arg"
+  else
+    flutter "$@"
+  fi
+}
+
 rm -rf -- "${output:?}"
 mkdir -p -- "$output"
 output="$(cd "$output" && pwd)"
@@ -153,11 +167,17 @@ checks="$(mktemp -d)"
 trap 'rm -rf -- "$checks"' EXIT
 
 if [[ "$platform" == android ]]; then
-  flutter build apk --debug
+  run_flutter_build build apk --debug
   apk=build/app/outputs/flutter-apk/app-debug.apk
   test -f "$apk"
   aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
   test -n "$aapt2"
+  if [[ "${MOSAIC_NATIVE_DIAGNOSTICS:-false}" == true ]]; then
+    # Fixed build identity outside the emulator failure collector. This is
+    # evidence about built inputs only, never proof of plugin invocation.
+    python3 "$here/mosaic_flutter_android_build_receipt.py" \
+      "$apk" pubspec.lock .dart_tool/flutter_build/dart_plugin_registrant.dart "$aapt2" "${ANDROID_HOME:-}" || true
+  fi
   "$aapt2" dump xmltree --file AndroidManifest.xml "$apk" > "$checks/manifest.txt"
   grep -Eq 'allowBackup\(0x01010280\)=false' "$checks/manifest.txt"
   ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
@@ -190,7 +210,7 @@ if [[ "$platform" == android ]]; then
   done
   echo "built $output/flutter/$apk"
 else
-  flutter build ios --simulator --debug
+  run_flutter_build build ios --simulator --debug
   app=build/ios/iphonesimulator/Runner.app
   test -d "$app"
   test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist")" = "$org.$name"

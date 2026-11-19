@@ -386,7 +386,7 @@
         "warrant/lzw/property/decompress/output-bound"
       ],
       "name": "Decompression Bomb",
-      "reason": "discharged for bounded inputs: the Warrant document bounds the size of what compress, decompress returns (`output` row) and the live heap of the call (`heap` row); 18886 generated cases and iterations of the exhaustive, property and fuzz `output-bound` suites passed, and every observed instance ran under the allocation observer with a peak of at most 33554496 bytes (the bound at that instance: 70348824). The bound is checked on the enumerated and sampled inputs and the document's bomb examples, not proved for every input",
+      "reason": "discharged for bounded inputs: the Warrant document bounds the size of what compress, decompress returns (`output` row) and the live heap of the call (`heap` row); 18886 generated cases and iterations of the exhaustive, property and fuzz `output-bound` suites passed, and every observed instance ran under the allocation observer with a peak of at most 16810080 bytes (the bound at that instance: 70348824). The bound is checked on the enumerated and sampled inputs and the document's bomb examples, not proved for every input",
       "status": "discharged"
     },
     {

@@ -77,7 +77,6 @@ This works because each cell passes its accumulated sum up exactly once.
 
 from __future__ import annotations
 
-
 # ─── Exceptions ──────────────────────────────────────────────────────────────
 
 
@@ -91,6 +90,13 @@ class IndexOutOfRangeError(FenwickError):
 
 class EmptyTreeError(FenwickError):
     """Raised when an operation requires a non-empty tree."""
+
+
+class ValueOutOfDomainError(FenwickError):
+    """Raised when a portable integer profile value is outside its domain."""
+
+
+_PORTABLE_INTEGER_LIMIT = (1 << 53) - 1
 
 
 # ─── Main class ───────────────────────────────────────────────────────────────
@@ -128,7 +134,7 @@ class FenwickTree:
 
     # ── Construction ─────────────────────────────────────────────────────────
 
-    def __init__(self, n: int) -> None:
+    def __init__(self, n: int, *, portable_integer_domain: bool = False) -> None:
         """
         Create an empty Fenwick tree of size n (all values initialised to 0).
 
@@ -138,14 +144,23 @@ class FenwickTree:
         Raises:
             FenwickError: If n < 0.
         """
+        if not isinstance(portable_integer_domain, bool):
+            raise TypeError("portable_integer_domain must be bool")
         if n < 0:
             raise FenwickError(f"Size must be non-negative, got {n}")
         self._n: int = n
+        self._portable_integer_domain = portable_integer_domain
+        self._absolute_total = 0
         # _bit is 1-indexed; index 0 is an unused sentinel.
         self._bit: list[int | float] = [0] * (n + 1)
 
     @classmethod
-    def from_list(cls, values: list[int | float]) -> "FenwickTree":
+    def from_list(
+        cls,
+        values: list[int | float],
+        *,
+        portable_integer_domain: bool = False,
+    ) -> FenwickTree:
         """
         Build a Fenwick tree from a 0-indexed list in O(n).
 
@@ -163,8 +178,28 @@ class FenwickTree:
             >>> ft.prefix_sum(5)  # 3+2+1+7+4 = 17
             17
         """
+        if not isinstance(portable_integer_domain, bool):
+            raise TypeError("portable_integer_domain must be bool")
         n = len(values)
-        tree = cls(n)
+        absolute_total = 0
+        if portable_integer_domain:
+            for value in values:
+                if isinstance(value, bool) or not isinstance(value, int):
+                    raise ValueOutOfDomainError(
+                        "value is not an integer in the portable domain"
+                    )
+                magnitude = abs(value)
+                if magnitude > _PORTABLE_INTEGER_LIMIT - absolute_total:
+                    raise ValueOutOfDomainError(
+                        "values exceed the portable integer domain"
+                    )
+                absolute_total += magnitude
+        tree = (
+            cls(n, portable_integer_domain=True)
+            if portable_integer_domain
+            else cls(n)
+        )
+        tree._absolute_total = absolute_total
         # Copy values into the BIT array (1-indexed).
         for i in range(1, n + 1):
             tree._bit[i] += values[i - 1]
@@ -198,6 +233,22 @@ class FenwickTree:
                 i=8 → bit[8] += delta, i becomes 16 > 8, stop.
         """
         self._check_index(i)
+        if self._portable_integer_domain:
+            if isinstance(delta, bool) or not isinstance(delta, int):
+                raise ValueOutOfDomainError(
+                    "delta is not an integer in the portable domain"
+                )
+            if abs(delta) > _PORTABLE_INTEGER_LIMIT:
+                raise ValueOutOfDomainError("delta exceeds the portable integer domain")
+            old_value = self.point_query(i)
+            other_absolute_total = self._absolute_total - abs(old_value)
+            new_value = old_value + delta
+            new_magnitude = abs(new_value)
+            if new_magnitude > _PORTABLE_INTEGER_LIMIT - other_absolute_total:
+                raise ValueOutOfDomainError(
+                    "updated values exceed the portable integer domain"
+                )
+            self._absolute_total = other_absolute_total + new_magnitude
         while i <= self._n:
             self._bit[i] += delta
             i += i & (-i)  # climb: add lowest set bit
@@ -234,7 +285,8 @@ class FenwickTree:
             i -= i & (-i)  # descend: strip lowest set bit
         return total
 
-    def range_sum(self, l: int, r: int) -> int | float:
+    # `l` is a public keyword parameter, so keep its spelling for compatibility.
+    def range_sum(self, l: int, r: int) -> int | float:  # noqa: E741
         """
         Sum of positions l through r (1-indexed, inclusive).
 
@@ -342,7 +394,7 @@ class FenwickTree:
                 k -= self._bit[idx]
         result = idx + 1
         if result > self._n:
-            raise FenwickError(f"k exceeds total sum of the tree")
+            raise FenwickError("k exceeds total sum of the tree")
         return result
 
     # ── Dunder methods ────────────────────────────────────────────────────────

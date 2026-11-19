@@ -175,5 +175,5 @@
   "source": "code/packages/rust/wasm-leb128/src/lib.rs",
   "source_sha256": "638248669c21a2e0898b411b06c8610e9554127adce2c25ebb4d1dc1934d381c",
   "spec": "code/specs/wasm-leb128.warrant",
-  "spec_sha256": "44a4947940443abc2de802a6d26aca719e3d8fdcac276961a1e01cc86c14f59d"
+  "spec_sha256": "8cd7b64e104420d2aa7f66cca1b1cb638cf3c63d3112ec318f62c342beacc4e5"
 }

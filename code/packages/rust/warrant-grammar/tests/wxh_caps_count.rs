@@ -12,10 +12,10 @@ mod harness {
     pub fn trips() -> (usize, bool) {
         let mut tripped = 0;
         loop {
-            match obs_exec(|| {
+            match obs_exec(|| obs_scope(|| {
                 let v: Vec<u8> = Vec::with_capacity(OBSERVER_CAP_BYTES as usize + 1);
                 V::Bool(v.is_empty())
-            }) {
+            })) {
                 Exec::Tripped(_) => tripped += 1,
                 Exec::Refused => return (tripped, true),
                 _ => return (tripped, false),

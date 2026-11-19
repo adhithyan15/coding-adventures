@@ -24,6 +24,117 @@ import 'package:ffi/ffi.dart';
 /// Ignored on desktop, whose roots stay exactly as they were.
 String? mosaicStateRoot;
 
+/// Opt-in, fixed-vocabulary diagnostics for the Android persistence gate.
+///
+/// Release and ordinary test builds leave this off. Records contain only
+/// stage/result enums and elapsed time; never add user data, paths, or error
+/// messages here. The app gate reads this prefix only after its state check
+/// fails.
+const bool _mosaicNativeDiagnostics = bool.fromEnvironment(
+  'MOSAIC_NATIVE_DIAGNOSTICS',
+);
+final Set<String> _mosaicNativeDiagnosticRecords = <String>{};
+bool _mosaicNativeDiagnosticClipped = false;
+
+const Set<String> _mosaicNativeDiagnosticVocabulary = <String>{
+  'main:entered',
+  'app_support_lookup:nonempty',
+  'app_support_lookup:empty',
+  'app_support_lookup:attempted',
+  'app_support_lookup:threw',
+  'app_support_lookup:missing_directory',
+  'app_support_lookup:missing_plugin',
+  'app_support_lookup:platform_exception',
+  'app_support_lookup:jni_helper_load_type_name',
+  'app_support_lookup:jni_no_vm_type_name',
+  'app_support_lookup:jni_null_type_name',
+  'app_support_lookup:jni_throwable_type_name',
+  'app_support_lookup:other',
+  'runtime_route:phone_bundled',
+  'runtime_route:phone_not_bundled',
+  'create_call:dart_attempted',
+  'create_call:abi_returned',
+  'create_call:abi_threw',
+  'create_call:abi_not_reached',
+  'startup_response:accepted',
+  'startup_response:rejected',
+  'environment_report:unmounted',
+  'environment_report:host_not_ready',
+  'environment_report:host_absent',
+  'environment_report:environment_absent',
+  'environment_report:settling_suppressed',
+  'environment_report:already_reported',
+  'environment_report:already_refused',
+  'environment_report:dart_attempted',
+  'environment_report:returned_no_visible_change',
+  'environment_report:returned_visible_answer',
+  'environment_report:threw',
+  'environment_dispatch:dart_attempted',
+  'environment_dispatch:abi_returned',
+  'environment_dispatch:abi_threw',
+  'environment_dispatch:abi_not_reached',
+  'environment_answer:decoded_success',
+  'environment_answer:decoded_error',
+  'environment_answer:decode_rejected',
+  'environment_answer:native_status_rejected',
+  'persistence_decision:skipped_already_saved',
+  'persistence_decision:disabled',
+  'persistence_decision:path_unavailable',
+  'persistence_decision:path_available',
+  'snapshot_call:null',
+  'snapshot_call:present',
+  'snapshot_call:threw',
+  'state_directory:returned',
+  'state_directory:threw',
+  'state_temp_write:returned',
+  'state_temp_write:threw',
+  'state_replace:returned',
+  'state_replace:threw',
+  'state_delete_null_snapshot:returned',
+  'state_delete_null_snapshot:threw',
+  'capture_clipped:record_limit',
+};
+
+void _writeMosaicNativeDiagnostic(String record) {
+  // Flutter routes print records to Android logcat; Dart stderr is not a
+  // reliable source for the emulator gate's PID-filtered log capture.
+  // ignore: avoid_print
+  print(record);
+}
+
+/// Emit a bounded record only when the diagnostic Dart define is enabled.
+/// Stage/result pairs are deduplicated so a first skipped attempt cannot hide
+/// a later successful one. The last record is reserved for the clip marker.
+void mosaicNativeDiagnostic(String stage, String result, [Stopwatch? timer]) {
+  if (!_mosaicNativeDiagnostics || _mosaicNativeDiagnosticClipped) return;
+  final key = '$stage:$result';
+  if (!_mosaicNativeDiagnosticVocabulary.contains(key) ||
+      _mosaicNativeDiagnosticRecords.contains(key)) {
+    return;
+  }
+  if (_mosaicNativeDiagnosticRecords.length >= 23) {
+    _mosaicNativeDiagnosticClipped = true;
+    try {
+      _writeMosaicNativeDiagnostic(
+        'MOSAIC_NATIVE_DIAG v=1 stage=capture_clipped '
+        'result=record_limit elapsed_us=0',
+      );
+    } on Object {
+      // Diagnostics never change the host operation's result.
+    }
+    return;
+  }
+  _mosaicNativeDiagnosticRecords.add(key);
+  final elapsed = timer?.elapsedMicroseconds ?? 0;
+  try {
+    _writeMosaicNativeDiagnostic(
+      'MOSAIC_NATIVE_DIAG v=1 stage=$stage result=$result elapsed_us=$elapsed',
+    );
+  } on Object {
+    // Diagnostics never change the host operation's result.
+  }
+}
+
 /// Android and iOS: phones, whose rules for the runtime and the state file
 /// differ from desktop's (UI89 §7.4).
 bool get _isPhone => Platform.isAndroid || Platform.isIOS;
@@ -347,21 +458,54 @@ final class _MosaicRuntime {
     try {
       final persisted = _loadPersistedSnapshot();
       _persistenceWarning = persisted.warning;
-      Map<String, Object?> create(Map<String, Object?>? restoredSnapshot) =>
-          _requireMap(
-            _invokeInput(<String, Object?>{
-          'protocolVersion': _protocolVersion,
-          'locale': Platform.localeName,
-          'colorScheme': 'system',
-          'textScale': 1.0,
-          ..._utcOffsetEntry(),
-          'platform': _platformName(),
-          // What the platform knows before the first frame (UI48 ENV4). The
-          // window's size class and orientation arrive with the shell's first
-          // environment report.
-          ...MosaicHost.initialEnvironment(),
-          'restoredSnapshot': restoredSnapshot,
-        }, (input, output) => _create(input, appOut, output)), 'startup update');
+      Map<String, Object?> create(Map<String, Object?>? restoredSnapshot) {
+        final timer = _mosaicNativeDiagnostics ? (Stopwatch()..start()) : null;
+        var abiCallReached = false;
+        var abiReturned = false;
+        mosaicNativeDiagnostic('create_call', 'dart_attempted', timer);
+        Object? raw;
+        try {
+          raw = _invokeInput(
+            <String, Object?>{
+              'protocolVersion': _protocolVersion,
+              'locale': Platform.localeName,
+              'colorScheme': 'system',
+              'textScale': 1.0,
+              ..._utcOffsetEntry(),
+              'platform': _platformName(),
+              // What the platform knows before the first frame (UI48 ENV4). The
+              // window's size class and orientation arrive with the shell's first
+              // environment report.
+              ...MosaicHost.initialEnvironment(),
+              'restoredSnapshot': restoredSnapshot,
+            },
+            (input, output) {
+              abiCallReached = true;
+              final status = _create(input, appOut, output);
+              abiReturned = true;
+              mosaicNativeDiagnostic('create_call', 'abi_returned', timer);
+              return status;
+            },
+          );
+        } on Object {
+          if (!abiCallReached) {
+            mosaicNativeDiagnostic('create_call', 'abi_not_reached', timer);
+          } else if (!abiReturned) {
+            mosaicNativeDiagnostic('create_call', 'abi_threw', timer);
+          }
+          mosaicNativeDiagnostic('startup_response', 'rejected', timer);
+          rethrow;
+        }
+        try {
+          final response = _requireMap(raw, 'startup update');
+          mosaicNativeDiagnostic('startup_response', 'accepted', timer);
+          return response;
+        } on Object {
+          mosaicNativeDiagnostic('startup_response', 'rejected', timer);
+          rethrow;
+        }
+      }
+
       try {
         latestUpdate = create(persisted.snapshot);
       } on Object catch (error) {
@@ -489,7 +633,16 @@ final class _MosaicRuntime {
       return _MosaicRuntime(DynamicLibrary.open(requested));
     }
 
-    if (_hasBundledRuntime) return _MosaicRuntime.bundled();
+    if (_hasBundledRuntime) {
+      if (_isPhone) {
+        mosaicNativeDiagnostic('runtime_route', 'phone_bundled');
+      }
+      return _MosaicRuntime.bundled();
+    }
+
+    if (_isPhone) {
+      mosaicNativeDiagnostic('runtime_route', 'phone_not_bundled');
+    }
 
     final candidates = <DynamicLibrary Function()>[
       DynamicLibrary.process,
@@ -528,15 +681,84 @@ final class _MosaicRuntime {
                   entry.key != 'payload')
                 entry.key: entry.value,
           };
-    final update = _requireMap(
-      _invokeInput(<String, Object?>{
-        'protocolVersion': _protocolVersion,
-        'sequence': nextSequence,
-        'name': name,
-        'payload': payload,
-      }, (input, output) => _dispatch(_app, input, output)),
-      'event update',
-    );
+    final isEnvironmentEvent = name == _environmentChanged;
+    final timer = _mosaicNativeDiagnostics && isEnvironmentEvent
+        ? (Stopwatch()..start())
+        : null;
+    var abiCallReached = false;
+    var abiReturned = false;
+    var abiStatusNonzero = false;
+    if (isEnvironmentEvent) {
+      mosaicNativeDiagnostic('environment_dispatch', 'dart_attempted', timer);
+    }
+    Object? raw;
+    try {
+      raw = _invokeInput(
+        <String, Object?>{
+          'protocolVersion': _protocolVersion,
+          'sequence': nextSequence,
+          'name': name,
+          'payload': payload,
+        },
+        (input, output) {
+          abiCallReached = true;
+          final status = _dispatch(_app, input, output);
+          abiReturned = true;
+          abiStatusNonzero = status != 0;
+          if (isEnvironmentEvent) {
+            mosaicNativeDiagnostic(
+              'environment_dispatch',
+              'abi_returned',
+              timer,
+            );
+            if (abiStatusNonzero) {
+              mosaicNativeDiagnostic(
+                'environment_answer',
+                'native_status_rejected',
+                timer,
+              );
+            }
+          }
+          return status;
+        },
+      );
+    } on Object {
+      if (isEnvironmentEvent) {
+        if (!abiCallReached) {
+          mosaicNativeDiagnostic(
+            'environment_dispatch',
+            'abi_not_reached',
+            timer,
+          );
+        } else if (!abiReturned) {
+          mosaicNativeDiagnostic('environment_dispatch', 'abi_threw', timer);
+        }
+        if (abiReturned && !abiStatusNonzero) {
+          mosaicNativeDiagnostic(
+            'environment_answer',
+            'decode_rejected',
+            timer,
+          );
+        }
+      }
+      rethrow;
+    }
+    Map<String, Object?> update;
+    try {
+      update = _requireMap(raw, 'event update');
+    } on Object {
+      if (isEnvironmentEvent) {
+        mosaicNativeDiagnostic('environment_answer', 'decode_rejected', timer);
+      }
+      rethrow;
+    }
+    if (isEnvironmentEvent) {
+      mosaicNativeDiagnostic(
+        'environment_answer',
+        update['error'] == null ? 'decoded_success' : 'decoded_error',
+        timer,
+      );
+    }
     _sequence = nextSequence;
     // Settle BEFORE persisting: the runtime refuses to snapshot while an effect
     // is outstanding, so persisting first warns on every effect.
@@ -557,6 +779,8 @@ final class _MosaicRuntime {
         _persistenceWarning != null) {
       _persistSnapshot();
       _savedRevision = _persistenceWarning == null ? revision : null;
+    } else {
+      mosaicNativeDiagnostic('persistence_decision', 'skipped_already_saved');
     }
     latestUpdate = _withPersistenceWarning(settled);
     return latestUpdate;
@@ -582,26 +806,51 @@ final class _MosaicRuntime {
   /// - A report the runtime took is remembered at once.
   Map<String, Object?>? reportEnvironment(Map<String, String> environment) {
     _ensureOpen();
-    if (_settling > 0) return null;
+    if (_settling > 0) {
+      mosaicNativeDiagnostic('environment_report', 'settling_suppressed');
+      return null;
+    }
     final report = Map<String, String>.of(environment);
-    if (_sameEnvironment(_lastReportedEnvironment, report)) return null;
-    if (_sameEnvironment(_lastRefusedEnvironment, report)) return null;
+    if (_sameEnvironment(_lastReportedEnvironment, report)) {
+      mosaicNativeDiagnostic('environment_report', 'already_reported');
+      return null;
+    }
+    if (_sameEnvironment(_lastRefusedEnvironment, report)) {
+      mosaicNativeDiagnostic('environment_report', 'already_refused');
+      return null;
+    }
     final shownRevision = _revision(_runtimeUpdate);
     final shownWarning = latestUpdate['persistenceWarning'];
-    final answer = _dispatchEnvironment(report);
+    mosaicNativeDiagnostic('environment_report', 'dart_attempted');
+    Map<String, Object?> answer;
+    try {
+      answer = _dispatchEnvironment(report);
+    } on Object {
+      mosaicNativeDiagnostic('environment_report', 'threw');
+      rethrow;
+    }
     _lastReportedEnvironment = report;
     _lastRefusedEnvironment = null;
     // A tripped settle guard reaches the shell only through the answer.
-    if (answer['error'] != null) return answer;
+    if (answer['error'] != null) {
+      mosaicNativeDiagnostic('environment_report', 'returned_visible_answer');
+      return answer;
+    }
     // An app that does not react answers at the revision already showing,
     // its props kept by [_keepShowingProps]: nothing new to show, so the
     // shell rebuilds nothing on a resize -- unless it retried a failed save
     // and so set or cleared the storage warning, which is shown as an
     // event's would be.
-    return _revision(answer) == shownRevision &&
-            answer['persistenceWarning'] == shownWarning
-        ? null
-        : answer;
+    final noVisibleChange =
+        _revision(answer) == shownRevision &&
+        answer['persistenceWarning'] == shownWarning;
+    mosaicNativeDiagnostic(
+      'environment_report',
+      noVisibleChange
+          ? 'returned_no_visible_change'
+          : 'returned_visible_answer',
+    );
+    return noVisibleChange ? null : answer;
   }
 
   /// Send [report], recording it as refused when the runtime says it is
@@ -1103,9 +1352,13 @@ final class _MosaicRuntime {
   void _persistSnapshot() {
     // The rejected file is still at the live path: writing, or deleting it for
     // a null snapshot, would destroy it.
-    if (_persistenceDisabled) return;
+    if (!_persistenceEnabled || _persistenceDisabled) {
+      mosaicNativeDiagnostic('persistence_decision', 'disabled');
+      return;
+    }
     final path = _statePath();
     if (path == null) {
+      mosaicNativeDiagnostic('persistence_decision', 'path_unavailable');
       // A phone build whose app-support directory could not be found
       // (UI89 §7.4): say so, rather than quietly keeping nothing.
       if (_persistenceEnabled && _isPhone) {
@@ -1114,18 +1367,55 @@ final class _MosaicRuntime {
       }
       return;
     }
+    mosaicNativeDiagnostic('persistence_decision', 'path_available');
     try {
-      final value = _invokeOutput((output) => _snapshot(_app, output));
+      Object? value;
+      try {
+        value = _invokeOutput((output) => _snapshot(_app, output));
+      } on Object {
+        mosaicNativeDiagnostic('snapshot_call', 'threw');
+        rethrow;
+      }
+      mosaicNativeDiagnostic(
+        'snapshot_call',
+        value == null ? 'null' : 'present',
+      );
       final file = File(path);
       if (value == null) {
-        if (file.existsSync()) file.deleteSync();
+        if (file.existsSync()) {
+          try {
+            file.deleteSync();
+            mosaicNativeDiagnostic('state_delete_null_snapshot', 'returned');
+          } on Object {
+            mosaicNativeDiagnostic('state_delete_null_snapshot', 'threw');
+            rethrow;
+          }
+        }
         _persistenceWarning = null;
         return;
       }
-      file.parent.createSync(recursive: true);
+      try {
+        file.parent.createSync(recursive: true);
+        mosaicNativeDiagnostic('state_directory', 'returned');
+      } on Object {
+        mosaicNativeDiagnostic('state_directory', 'threw');
+        rethrow;
+      }
       final temporary = File('$path.tmp');
-      temporary.writeAsStringSync(jsonEncode(value), flush: true);
-      _replaceAtomically(temporary, file);
+      try {
+        temporary.writeAsStringSync(jsonEncode(value), flush: true);
+        mosaicNativeDiagnostic('state_temp_write', 'returned');
+      } on Object {
+        mosaicNativeDiagnostic('state_temp_write', 'threw');
+        rethrow;
+      }
+      try {
+        _replaceAtomically(temporary, file);
+        mosaicNativeDiagnostic('state_replace', 'returned');
+      } on Object {
+        mosaicNativeDiagnostic('state_replace', 'threw');
+        rethrow;
+      }
       _persistenceWarning = null;
     } on Object catch (error) {
       _persistenceWarning = 'Could not persist Mosaic state: $error';

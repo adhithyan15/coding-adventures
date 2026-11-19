@@ -4,6 +4,12 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-038c CI fix)
+
+- `merge`: refresh a subset of the committed rows from a fresh `run` without hand-editing
+  (VOS30 section 9.2), with unit tests. It keeps the file's original provenance and records each refresh in a `merges` list (checked by `validate`, named in the table banner); it refuses an invalid or dirty fresh run, a non-ancestor revision, duplicate ids, fresh rows outside the subset (unless `--ignore-outside`), an unknown `--where` field, and a `dirty_tree` that is not a JSON boolean; reads are capped and the write is atomic; used to refresh the E1 `vos-sched-fp-bitmap` rows after
+  VOS-038c changed that crate's generated document (VOS-D103).
+
 ### Added (VOS-028b, VOS30 section 9)
 
 - The solver and enumeration capacity probe: `list`, `run --tier quick|full`, `check`, `table

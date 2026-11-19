@@ -64,6 +64,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/traced"
 )
 
 // The child's memory bound (see above).
@@ -219,6 +221,9 @@ func ClassifyChild(dir, action string, step int, dataLimit int64, h ChildHooks) 
 			return fmt.Errorf("classified-twice: %q already has a verdict", printable(action))
 		}
 	}
+	// The census observer is always on (census.go); it only counts.
+	census := traced.NewCensus()
+	h.Census = census
 	rec, err := classifyAction(h, pre, action, step, last)
 	if err != nil {
 		return err
@@ -235,5 +240,8 @@ func ClassifyChild(dir, action string, step int, dataLimit int64, h ChildHooks) 
 		}
 		return fmt.Errorf("record.json: %w", err)
 	}
+	// The verdict is on disk.  The census is a diagnostic: written last, and
+	// whatever happens to it changes neither the verdict nor the exit status.
+	writeCensusBestEffort(dir, action, census)
 	return nil
 }

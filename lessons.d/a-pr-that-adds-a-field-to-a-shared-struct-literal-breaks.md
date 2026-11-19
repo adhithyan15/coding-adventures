@@ -25,3 +25,9 @@ merge main, just before every push. Do this again whenever a CI build fails
 with E0063 on a file you didn't change since. When designing such a change,
 a field that can default (`..Prog::DEFAULT` struct-update syntax, or a
 builder) avoids the race altogether.
+
+For conflict diagnosis, first find the merge base and compare each side's
+changes from that point (`merge-base..feature` and `merge-base..main`), then
+inspect `git merge-tree`. A direct `HEAD..main` path diff also lists feature-
+only files as deletions because they are absent from main; that is not an
+overlap or a conflict.

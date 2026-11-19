@@ -149,23 +149,29 @@
     hostile
     ensures no_panic, terminates
 
-  -- Bounds: the contract ceilings.  `heap <= 0` only where the answer is a payload-free variant
-  -- (the harness's own marshalling allocates otherwise, VOS-D063).
+  -- Bounds: the contract ceilings; `heap <= 0` on every operation (the harness's heap observer
+  -- counts the export call only, not its own result marshalling, VOS-D063).
   bound init:
     steps <= 80
+    heap <= 0
   bound insert_out:
     steps <= 160
     heap <= 0
   bound insert_img:
     steps <= 160
+    heap <= 0
   bound remove_out:
     steps <= 160
     heap <= 0
   bound remove_img:
     steps <= 160
+    heap <= 0
   bound dispatch_out:
     steps <= 160
+    heap <= 0
   bound dispatch_img:
     steps <= 160
+    heap <= 0
   bound alpha_w:
     steps <= 160
+    heap <= 0

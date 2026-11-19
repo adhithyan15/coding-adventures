@@ -352,11 +352,13 @@ export class Solver {
     let conflictClause = -1;
 
     while (this.qhead < this.trail.length) {
-      const p = this.trail[this.qhead++];
-      this.propagations++;
-      if (this.propagations > this.stepBudget) {
+      // Check before dequeue so UNKNOWN leaves the exact pending root work
+      // available to a later solve or public propagate call.
+      if (this.propagations + 1 > this.stepBudget) {
         return -2; // Step budget exceeded
       }
+      const p = this.trail[this.qhead++];
+      this.propagations++;
 
       const falseLit = negateLit(p);
       const ws = this.watches[falseLit];
@@ -412,6 +414,11 @@ export class Solver {
         if (this.value(first) === LBool.False) {
           // Conflict
           conflictClause = cr;
+          if (this.decisionLevel() === 0) {
+            // Public root propagation may discover a permanent contradiction
+            // before solve() observes it. Assumption conflicts stay local.
+            this.ok = false;
+          }
           this.qhead = this.trail.length;
           // Copy remaining watchers
           while (i < ws.length) {
@@ -630,6 +637,7 @@ export class Solver {
 
   public solveWithAssumptions(assumptions: Lit[], options: SolverOptions = {}): SolveResult {
     if (!this.ok) {
+      this.failedCore = [];
       return "unsat";
     }
 
@@ -966,12 +974,9 @@ export function parseDimacs(dimacs: string, options: ParseDimacsOptions = {}): C
     }
 
     if (!headerSeen) {
-      if (!trimmed.startsWith("p cnf")) {
-        throw new Error(`line ${lineNum}: Expected DIMACS header 'p cnf <vars> <clauses>', got: ${trimmed}`);
-      }
       const parts = trimmed.split(/\s+/);
-      if (parts.length < 4) {
-        throw new Error(`line ${lineNum}: Malformed DIMACS header: ${trimmed}`);
+      if (parts.length !== 4 || parts[0] !== "p" || parts[1] !== "cnf") {
+        throw new Error(`line ${lineNum}: Expected DIMACS header 'p cnf <vars> <clauses>', got: ${trimmed}`);
       }
       if (!/^\d+$/.test(parts[2]) || !/^\d+$/.test(parts[3])) {
         throw new Error(`line ${lineNum}: Malformed DIMACS header counts: vars=${parts[2]}, clauses=${parts[3]}`);

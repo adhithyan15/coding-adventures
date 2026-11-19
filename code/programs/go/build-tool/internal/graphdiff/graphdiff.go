@@ -116,7 +116,8 @@ type DiffSelectionInput struct {
 	Boundary          *RepositoryBoundary
 	// MetadataPolicy is "" or MetadataPolicyPackageLocal. Under the latter, a
 	// package_prefix package whose only selected paths are package-local
-	// metadata (internal/pkgmeta) is changed but not propagated: it joins
+	// metadata or a root BUILD front name (pkgmeta.IsPackageLocal; the host adds
+	// the status/language/veto conditions) is changed but not propagated: it joins
 	// affected_packages without its dependents.
 	MetadataPolicy string
 }

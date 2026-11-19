@@ -68,7 +68,11 @@ MAX_DIFF_SELECTION_MATCH_WORK = 50_000_000
 # but propagates to no dependent.  Matching is exact, case-sensitive and
 # root-only, and closed by use: CHANGELOG.d/ holds only direct `*.md` shards
 # and evidence/ only the data extensions tracked today.  README.md is not
-# listed: dependents' packaging (hatchling `readme`) reads it.
+# listed: dependents' packaging (hatchling `readme`) reads it.  The five exact
+# root BUILD-front names (ORPHAN_BUILD_NAMES) are local too: an in-place edit
+# of a package's own front rebuilds that package, not its dependents.  The
+# contract models paths only; a host adds the Git status, platform, language,
+# Starlark, executed-by-another-package and unsupported-protocol conditions.
 PACKAGE_LOCAL_METADATA_FILES = frozenset(
     {
         "CHANGELOG.md",
@@ -3690,11 +3694,14 @@ def _is_package_local_metadata(relative: str) -> bool:
     >>> [_is_package_local_metadata(p) for p in (
     ...     "CHANGELOG.md", "CHANGELOG.d/_meta.md", "evidence/p/x.drat",
     ...     "README.md", "docs/CHANGELOG.md", "CHANGELOG.d/x.sh",
-    ...     "CHANGELOG.d/a/b.md", "evidence/run.sh", "evidence.bindings")]
-    [True, True, True, False, False, False, False, False, False]
+    ...     "CHANGELOG.d/a/b.md", "evidence/run.sh", "evidence.bindings",
+    ...     "BUILD", "BUILD_windows", "nested/BUILD", "BUILD.bak")]
+    [True, True, True, False, False, False, False, False, False, True, True, False, False]
     """
     if "\\" in relative:
         return False
+    if relative in ORPHAN_BUILD_NAMES:
+        return True
     if relative in PACKAGE_LOCAL_METADATA_FILES:
         return True
     if relative.startswith("CHANGELOG.d/"):

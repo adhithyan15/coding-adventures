@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "diff-selection/package-metadata-lookalikes",
   "domain": "diff_selection",
-  "summary": "README.md and nested, misspelled, case-varied or file-shaped metadata names are ordinary package-prefix changes and still select every dependent.",
+  "summary": "README.md and nested, misspelled, case-varied or file-shaped metadata names are ordinary package-prefix changes and still select every dependent, as do nested, backup, unknown-suffix or case-varied BUILD-front names.",
   "platforms": [
     "darwin",
     "linux",
@@ -127,6 +127,56 @@
           "name": "rust/bindings-user",
           "rel_path": "code/packages/rust/bindings-user",
           "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-nested",
+          "rel_path": "code/packages/rust/front-nested",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-nested-user",
+          "rel_path": "code/packages/rust/front-nested-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-backup",
+          "rel_path": "code/packages/rust/front-backup",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-backup-user",
+          "rel_path": "code/packages/rust/front-backup-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-suffix",
+          "rel_path": "code/packages/rust/front-suffix",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-suffix-user",
+          "rel_path": "code/packages/rust/front-suffix-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-case",
+          "rel_path": "code/packages/rust/front-case",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-case-user",
+          "rel_path": "code/packages/rust/front-case-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-lower",
+          "rel_path": "code/packages/rust/front-lower",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-lower-user",
+          "rel_path": "code/packages/rust/front-lower-user",
+          "source_mode": "package_prefix"
         }
       ],
       "edges": [
@@ -173,6 +223,26 @@
         [
           "rust/bindings",
           "rust/bindings-user"
+        ],
+        [
+          "rust/front-nested",
+          "rust/front-nested-user"
+        ],
+        [
+          "rust/front-backup",
+          "rust/front-backup-user"
+        ],
+        [
+          "rust/front-suffix",
+          "rust/front-suffix-user"
+        ],
+        [
+          "rust/front-case",
+          "rust/front-case-user"
+        ],
+        [
+          "rust/front-lower",
+          "rust/front-lower-user"
         ]
       ],
       "forced_packages": [],
@@ -190,7 +260,12 @@
       "code/packages/rust/lower-case/changelog.md",
       "code/packages/rust/mixed-case/Required_capabilities.json",
       "code/packages/rust/upper-dir/Evidence/test-manifest.json",
-      "code/packages/rust/bindings/evidence.bindings"
+      "code/packages/rust/bindings/evidence.bindings",
+      "code/packages/rust/front-nested/nested/BUILD_linux",
+      "code/packages/rust/front-backup/BUILD.bak",
+      "code/packages/rust/front-suffix/BUILD_debug",
+      "code/packages/rust/front-case/BUILD_Windows",
+      "code/packages/rust/front-lower/build"
     ]
   },
   "expected": {
@@ -203,6 +278,11 @@
         "rust/backup",
         "rust/bindings",
         "rust/evidence-file",
+        "rust/front-backup",
+        "rust/front-case",
+        "rust/front-lower",
+        "rust/front-nested",
+        "rust/front-suffix",
         "rust/lower-case",
         "rust/mixed-case",
         "rust/nested-evidence",
@@ -219,6 +299,16 @@
         "rust/bindings-user",
         "rust/evidence-file",
         "rust/evidence-file-user",
+        "rust/front-backup",
+        "rust/front-backup-user",
+        "rust/front-case",
+        "rust/front-case-user",
+        "rust/front-lower",
+        "rust/front-lower-user",
+        "rust/front-nested",
+        "rust/front-nested-user",
+        "rust/front-suffix",
+        "rust/front-suffix-user",
         "rust/lower-case",
         "rust/lower-case-user",
         "rust/mixed-case",

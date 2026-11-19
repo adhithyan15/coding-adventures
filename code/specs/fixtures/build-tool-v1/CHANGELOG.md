@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-18
+
+- Extended the `metadata_policy: "package_local"` predicate to the five exact
+  root BUILD-front names (`BUILD`, `BUILD_linux`, `BUILD_mac`,
+  `BUILD_mac_and_linux`, `BUILD_windows`) of package-prefix packages. Edited
+  `package-metadata-selection-build-front.json` (every front alone and beside
+  metadata, strict-glob front still ordinary) and
+  `package-metadata-selection-lookalikes.json` (nested, backup, unknown-suffix,
+  case-varied and lower-case front names stay ordinary). No file added; the
+  corpus still has 204 cases. Hosts that do not offer the policy are
+  unaffected.
+
 ## 2026-11-11
 
 - Review fixes for the `package_local` metadata policy. `README.md` is no

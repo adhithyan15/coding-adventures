@@ -4,7 +4,7 @@
 // before anything is checked, so a ten-byte stream can request four gigabytes.
 // Its answers are all correct; only its allocation is wrong.
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LzErr {
     OutputLimit,
     Corrupt,

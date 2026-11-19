@@ -8,7 +8,7 @@
 
 use crate::exp::{knobs, plan, run_row, Tier, EXPERIMENTS};
 use crate::meta;
-use crate::results::{self, decide, Results, MIN_SEEDS, TIMEOUT_S};
+use crate::results::{self, decide, Merge, Results, MIN_SEEDS, TIMEOUT_S};
 use crate::row::Row;
 use crate::runner;
 use crate::table;
@@ -59,12 +59,13 @@ pub fn dispatch(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
         Some("check") => cmd_check(&args[1..], out, err),
         Some("table") => cmd_table(&args[1..], out, err),
         Some("decide") => cmd_decide(&args[1..], out),
+        Some("merge") => cmd_merge(&args[1..], out),
         Some("row") => cmd_row(&args[1..], out),
         Some(other) => Err(Failure::Usage(format!(
-            "unknown command {other}; try list, run, check, table, decide"
+            "unknown command {other}; try list, run, check, table, decide, merge"
         ))),
         None => Err(Failure::Usage(
-            "no command; try list, run, check, table, decide".into(),
+            "no command; try list, run, check, table, decide, merge".into(),
         )),
     }
 }
@@ -209,6 +210,216 @@ pub fn cmd_run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Res
         }
     }
     Ok(())
+}
+
+/// Does this row belong to the refreshed subset: its experiment is `experiment` and, when a
+/// `field=value` selector is given, its knob's string field `field` equals `value`?
+fn in_subset(r: &Row, experiment: &str, sel: Option<(&str, &str)>) -> bool {
+    r.experiment == experiment && sel.is_none_or(|(f, v)| r.knob.s(f) == v)
+}
+
+/// The identity of a row across runs: everything but its measurements.
+fn row_id(r: &Row) -> (String, String, String, u64) {
+    (r.experiment.clone(), r.knob.key(), r.mode.clone(), r.seed)
+}
+
+/// The pure part of `merge`: replace, in `base`, exactly the rows of the subset by the matching
+/// rows of `fresh`, and record the refresh in `meta.merges`.  Every other row is left untouched
+/// (so it stays byte-identical), the order is preserved, and the base `tool`, `host` and
+/// `revisions` stay the file's original provenance.  Refused (nothing is produced): a fresh run or
+/// a merged result that `validate` rejects; duplicate row ids in either file; fresh rows outside
+/// the subset unless `ignore_outside`; a `where` field no base row of the experiment has; subset
+/// identities that differ between the files; a fresh `repo` revision that `is_ancestor` does not
+/// accept (HEAD or an ancestor of it).
+pub fn merge_results(
+    base: &Results,
+    fresh: &Results,
+    experiment: &str,
+    sel: Option<(&str, &str)>,
+    ignore_outside: bool,
+    at: &str,
+    is_ancestor: &dyn Fn(&str) -> Result<bool, String>,
+) -> Result<Results, String> {
+    if fresh.meta.dirty_tree {
+        return Err("the fresh run has dirty_tree = true; commit, then run again".into());
+    }
+    let bad = results::validate(fresh);
+    if !bad.is_empty() {
+        return Err(format!(
+            "the fresh run is invalid ({} violations), first: {}",
+            bad.len(),
+            bad[0]
+        ));
+    }
+    for (name, f) in [("base", base), ("fresh", fresh)] {
+        let mut seen = std::collections::BTreeSet::new();
+        for r in &f.rows {
+            if !seen.insert(row_id(r)) {
+                return Err(format!(
+                    "duplicate row id in the {name} file: {}",
+                    results::row_text_id(r)
+                ));
+            }
+        }
+    }
+    if let Some((f, _)) = sel {
+        let exists = base
+            .rows
+            .iter()
+            .filter(|r| r.experiment == experiment)
+            .any(|r| r.knob.0.iter().any(|(k, _)| k == f));
+        if !exists {
+            return Err(format!(
+                "no base row of {experiment} has a knob field {f} (a typo would select nothing)"
+            ));
+        }
+    }
+    let fresh_rows: Vec<&Row> = fresh
+        .rows
+        .iter()
+        .filter(|r| in_subset(r, experiment, sel))
+        .collect();
+    if !ignore_outside && fresh_rows.len() != fresh.rows.len() {
+        return Err(format!(
+            "the fresh run has {} rows outside the subset (pass --ignore-outside to drop them)",
+            fresh.rows.len() - fresh_rows.len()
+        ));
+    }
+    let mut sorted_base: Vec<_> = base
+        .rows
+        .iter()
+        .filter(|r| in_subset(r, experiment, sel))
+        .map(row_id)
+        .collect();
+    let mut fresh_ids: Vec<_> = fresh_rows.iter().map(|r| row_id(r)).collect();
+    sorted_base.sort();
+    fresh_ids.sort();
+    if sorted_base.is_empty() {
+        return Err("the subset selects no row of the base file".into());
+    }
+    if sorted_base != fresh_ids {
+        return Err(format!(
+            "the subset has {} rows in the base and {} in the fresh run, or their identities \
+             differ: a merge never adds, drops or renames a row",
+            sorted_base.len(),
+            fresh_ids.len()
+        ));
+    }
+    let rev = fresh
+        .meta
+        .revisions
+        .iter()
+        .find(|(k, _)| k == "repo")
+        .map(|(_, v)| v.clone())
+        .ok_or("the fresh run records no repo revision")?;
+    if !is_ancestor(&rev)? {
+        return Err(format!(
+            "the fresh run's revision {rev} is neither HEAD nor an ancestor of it"
+        ));
+    }
+    let mut rows = Vec::with_capacity(base.rows.len());
+    let mut replaced = Vec::new();
+    for r in &base.rows {
+        if in_subset(r, experiment, sel) {
+            let id = row_id(r);
+            let f = fresh_rows
+                .iter()
+                .find(|f| row_id(f) == id)
+                .ok_or("internal: a matched identity vanished")?;
+            replaced.push(results::row_text_id(r));
+            rows.push((*f).clone());
+        } else {
+            rows.push(r.clone());
+        }
+    }
+    let mut meta = base.meta.clone();
+    meta.merges.push(Merge {
+        rev,
+        binary_sha256: fresh.meta.binary_sha256.clone(),
+        dirty_tree: fresh.meta.dirty_tree,
+        experiment: experiment.to_string(),
+        where_: sel.map(|(f, v)| format!("{f}={v}")).unwrap_or_default(),
+        rows: replaced,
+        at: at.to_string(),
+    });
+    let merged = Results { meta, rows };
+    let bad = results::validate(&merged);
+    if !bad.is_empty() {
+        return Err(format!(
+            "the merged result is invalid ({} violations), first: {}",
+            bad.len(),
+            bad[0]
+        ));
+    }
+    Ok(merged)
+}
+
+/// Read a results file for `merge`, refusing one over [`results::MAX_FILE_BYTES`].
+fn read_capped(path: &Path) -> Result<String, Failure> {
+    let len = std::fs::metadata(path)
+        .map_err(|e| Failure::Usage(format!("cannot read {}: {e}", path.display())))?
+        .len();
+    if len > results::MAX_FILE_BYTES {
+        return Err(Failure::Usage(format!(
+            "{} is {len} bytes, over the {} byte cap",
+            path.display(),
+            results::MAX_FILE_BYTES
+        )));
+    }
+    read(path)
+}
+
+/// Write `text` to a temporary file next to `path`, then rename it over `path`.
+fn write_atomic(path: &str, text: &str) -> Result<(), Failure> {
+    let target = Path::new(path);
+    let tmp = target.with_extension(format!("tmp{}", std::process::id()));
+    std::fs::write(&tmp, text)
+        .and_then(|_| std::fs::rename(&tmp, target))
+        .map_err(|e| {
+            let _ = std::fs::remove_file(&tmp);
+            Failure::Usage(format!("cannot write {path}: {e}"))
+        })
+}
+
+/// `merge`: refresh a subset of the committed results through the tool, never by hand.
+///
+/// ```text
+/// merge --base results.json --fresh fresh.json --experiment E1 [--where fixture=NAME]
+///       [--ignore-outside] --out out.json
+/// ```
+pub fn cmd_merge(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
+    let need = |n: &str| flag(args, n).ok_or_else(|| Failure::Usage(format!("merge needs {n}")));
+    let base =
+        Results::from_text(&read_capped(Path::new(&need("--base")?))?).map_err(Failure::Usage)?;
+    let fresh =
+        Results::from_text(&read_capped(Path::new(&need("--fresh")?))?).map_err(Failure::Usage)?;
+    let experiment = need("--experiment")?;
+    if !EXPERIMENTS.contains(&experiment.as_str()) {
+        return Err(Failure::Usage(format!("unknown experiment {experiment}")));
+    }
+    let wh = flag(args, "--where");
+    let sel = match &wh {
+        Some(w) => Some(
+            w.split_once('=')
+                .ok_or_else(|| Failure::Usage("--where wants field=value".into()))?,
+        ),
+        None => None,
+    };
+    let merged = merge_results(
+        &base,
+        &fresh,
+        &experiment,
+        sel,
+        has(args, "--ignore-outside"),
+        &meta::utc_now(),
+        &meta::is_ancestor_of_head,
+    )
+    .map_err(Failure::Usage)?;
+    let path = need("--out")?;
+    write_atomic(&path, &merged.to_text())?;
+    let n = merged.meta.merges.last().map_or(0, |g| g.rows.len());
+    writeln!(out, "merged {n} rows of {experiment} into {path}")
+        .map_err(|e| Failure::Usage(e.to_string()))
 }
 
 /// `check`.

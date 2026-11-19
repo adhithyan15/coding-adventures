@@ -70,6 +70,8 @@ fn an_output_or_heap_row_in_a_v1_document_enables_the_observer() {
         assert!(text.contains(&format!("pub const OBSERVER_CAP_BYTES: u64 = {OBSERVER_CAP_BYTES};")));
         assert!(text.contains("fn op_decompress_raw("));
         assert!(text.contains("obs_observe(\"decompress\""));
+        // VOS-D063: the window opens around the export call and nowhere else.
+        assert!(text.contains("obs_scope(|| ") && text.contains("fn obs_scope<R>("));
     }
 }
 
@@ -106,7 +108,7 @@ fn the_heap_row_is_a_function_of_the_arguments_and_the_output_row_a_claim() {
 fn a_document_without_bounds_is_not_touched() {
     let src = "warrant t v1\n  error Err = LIMIT | BAD\n  op decompress(d: Bytes, m: U32) -> Result<Bytes, Err>\n  labels decompress:\n    d public\n    m public\n  claim c:\n    forall m: U32. decompress(b\"\", m) == Err(Err.BAD)\n";
     let text = generate(src, &[&format!("{DECOMPRESS}missing-error")]).unwrap();
-    assert!(!text.contains("global_allocator") && !text.contains("obs_observe"));
+    assert!(!text.contains("global_allocator") && !text.contains("obs_observe") && !text.contains("obs_scope"));
     assert!(!text.contains("//@"), "no marker line may reach the output");
 }
 
@@ -134,7 +136,7 @@ fn the_four_limit_faults_are_accepted_on_a_composite_operation_with_a_limit() {
     for (variant, needle) in [
         ("IgnoreLimit", "Fault::IgnoreLimit => u32::MAX"),
         ("OffByOneLimit", "Fault::OffByOneLimit => p1.saturating_add(1)"),
-        ("LimitAfterAlloc", "Fault::LimitAfterAlloc).then(|| vec![0u8; p1 as usize])"),
+        ("LimitAfterAlloc", "Fault::LimitAfterAlloc).then(|| obs_scope(|| vec![0u8; p1 as usize]))"),
         ("TruncateSilently", "fault_truncate_silently(v, args[0].bytes(), args[1].int())"),
     ] {
         assert!(text.contains(variant), "{variant}");

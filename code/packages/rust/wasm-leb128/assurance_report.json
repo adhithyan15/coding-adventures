@@ -33,9 +33,11 @@
         "warrant/wasm_leb128/example/encode_unsigned_u32_max",
         "warrant/wasm_leb128/example/encode_unsigned_u64_max",
         "warrant/wasm_leb128/example/encode_unsigned_zero",
+        "warrant/wasm_leb128/exhaustive/encode_unsigned_at_least_one_byte",
         "warrant/wasm_leb128/exhaustive/encode_unsigned_at_most_ten_bytes",
         "warrant/wasm_leb128/exhaustive/encode_unsigned_length_formula",
         "warrant/wasm_leb128/exhaustive/encode_unsigned_matches_canonical_model",
+        "warrant/wasm_leb128/fuzz/encode_unsigned_at_least_one_byte",
         "warrant/wasm_leb128/fuzz/encode_unsigned_at_most_ten_bytes",
         "warrant/wasm_leb128/fuzz/encode_unsigned_length_formula",
         "warrant/wasm_leb128/fuzz/encode_unsigned_matches_canonical_model",
@@ -47,23 +49,24 @@
         "warrant/wasm_leb128/negctl/fuzz/encode_unsigned/flip-result-bit",
         "warrant/wasm_leb128/negctl/property/encode_unsigned/drop-last-result-byte",
         "warrant/wasm_leb128/negctl/property/encode_unsigned/flip-result-bit",
+        "warrant/wasm_leb128/property/encode_unsigned_at_least_one_byte",
         "warrant/wasm_leb128/property/encode_unsigned_at_most_ten_bytes",
         "warrant/wasm_leb128/property/encode_unsigned_length_formula",
         "warrant/wasm_leb128/property/encode_unsigned_matches_canonical_model"
       ],
       "example": "pass",
       "exhaustive": {
-        "cases": 1131,
+        "cases": 1508,
         "status": "pass"
       },
       "fuzz": {
-        "iterations": 15000,
+        "iterations": 20000,
         "status": "pass"
       },
       "id": "encode_unsigned_soundness",
       "proof": null,
       "property": {
-        "cases": 12288,
+        "cases": 16384,
         "status": "pass"
       },
       "symbol": "encode_unsigned"
@@ -75,9 +78,11 @@
         "warrant/wasm_leb128/example/encode_signed_i64_min",
         "warrant/wasm_leb128/example/encode_signed_minus_two",
         "warrant/wasm_leb128/example/encode_signed_sixty_four_needs_a_sign_byte",
+        "warrant/wasm_leb128/exhaustive/encode_signed_at_least_one_byte",
         "warrant/wasm_leb128/exhaustive/encode_signed_at_most_ten_bytes",
         "warrant/wasm_leb128/exhaustive/encode_signed_length_formula",
         "warrant/wasm_leb128/exhaustive/encode_signed_matches_canonical_model",
+        "warrant/wasm_leb128/fuzz/encode_signed_at_least_one_byte",
         "warrant/wasm_leb128/fuzz/encode_signed_at_most_ten_bytes",
         "warrant/wasm_leb128/fuzz/encode_signed_length_formula",
         "warrant/wasm_leb128/fuzz/encode_signed_matches_canonical_model",
@@ -89,23 +94,24 @@
         "warrant/wasm_leb128/negctl/fuzz/encode_signed/flip-result-bit",
         "warrant/wasm_leb128/negctl/property/encode_signed/drop-last-result-byte",
         "warrant/wasm_leb128/negctl/property/encode_signed/flip-result-bit",
+        "warrant/wasm_leb128/property/encode_signed_at_least_one_byte",
         "warrant/wasm_leb128/property/encode_signed_at_most_ten_bytes",
         "warrant/wasm_leb128/property/encode_signed_length_formula",
         "warrant/wasm_leb128/property/encode_signed_matches_canonical_model"
       ],
       "example": "pass",
       "exhaustive": {
-        "cases": 1869,
+        "cases": 2492,
         "status": "pass"
       },
       "fuzz": {
-        "iterations": 15000,
+        "iterations": 20000,
         "status": "pass"
       },
       "id": "encode_signed_soundness",
       "proof": null,
       "property": {
-        "cases": 12288,
+        "cases": 16384,
         "status": "pass"
       },
       "symbol": "encode_signed"
