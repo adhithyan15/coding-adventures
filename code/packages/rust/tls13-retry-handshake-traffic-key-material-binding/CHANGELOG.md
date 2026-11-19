@@ -7,7 +7,9 @@
 - Reject output-storage suite substitution before mutation.
 - Consume the complete retry traffic-secret proof into a single-use issuer
   that permits one fresh monotonic record state per sender and rejects
-  duplicate sender issuance before output mutation.
+  duplicate sender issuance before output mutation. Finished-key and
+  transcript-continuation proofs for those secrets derive through the issuer's
+  immutable proof accessor so a second sequence-zero issuer remains impossible.
 - Seal and open exact retry-handshake records through the repository-owned
   record dispatcher while retaining the state, exact input or request, and
   output owner in non-cloneable proof wrappers.
@@ -28,3 +30,7 @@
   record, retain post-accept ordering and client-auth state in callback and
   record evidence, and permanently close the owner on ordering failure before
   any later record can be processed.
+- Consume one fresh ordered server-flight owner with the exact retry server
+  transcript continuation only when both retain the same traffic-secret
+  object, suite, and ServerHello snapshot, then retain the ordered owner,
+  transcript, and server Finished-key provenance in one non-cloneable wrapper.
