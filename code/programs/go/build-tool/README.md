@@ -96,7 +96,11 @@ The [CI-gate registry](../../../specs/ci-gate-registry.md) pins this relation.
 
 ## Rust fixed-point cache inputs
 
-The `rust/fixed-point` package adds an exact repository-input relation for its Q16.16 Warrant model and named cases. The same six paths are used for change selection and package hashing: the root and Rust-workspace Cargo target configs, the workspace `Cargo.toml` and `Cargo.lock`, `code/specs/fixed-point.warrant`, and `code/specs/fixtures/fixed-point-q16-v1/cases.json`. The build tool tests the changed package against a persisted cache in an isolated repository copy; nearby names and untracked credentials remain outside the cache identity. Shared Cargo metadata also selects the existing Rust game-clock consumer.
+The `rust/fixed-point` package adds an exact repository-input relation for its Q16.16 Warrant model and named cases. The same six paths are used for change selection and package hashing: the root and Rust-workspace Cargo target configs, the workspace `Cargo.toml` and `Cargo.lock`, `code/specs/fixed-point.warrant`, and `code/specs/fixtures/fixed-point-q16-v1/cases.json`. Shared Cargo metadata also selects the existing Rust game-clock consumer and the two test-only fixed-point verifier consumers, `rust/ca-assurance-report` and `rust/warrant-ir`.
+
+The report verifier reads the fixed-point `src/` and `evidence/` trees, package `Cargo.toml`, `effect_certificate.json`, `evidence.bindings`, `assurance-profile.json`, the Warrant spec, and the existing Warrant lane inputs. The WIR proof test reads the `src/` tree, `evidence.bindings`, and Warrant spec. Both hash the exact Rust workspace target configs, manifest and lockfile because their BUILD recipes invoke Cargo. These readers are registered as raw data inputs; they do not create Cargo graph edges back to fixed-point.
+
+An exact registered directory is recursively hashed with a tree-specific domain, sorted repository paths, file-kind markers, lengths and raw bytes. Additions, removals and same-length edits change persisted cache identity, including new untracked files inside a consumed tree; untracked files outside registered roots remain excluded. The traversal rejects links and special files and is bounded by depth, entry count and bytes. The build-tool tests these consumers with isolated repository copies, cache hit/miss/restore probes, and Rust-filtered plan emit/replay.
 
 ## Portable source hashing
 

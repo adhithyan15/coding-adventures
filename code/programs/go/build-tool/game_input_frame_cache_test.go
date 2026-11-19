@@ -35,6 +35,7 @@ func writeGameInputCacheFixture(t *testing.T) (string, []discovery.Package, *dir
 	t.Helper()
 	root := t.TempDir()
 	copyTypeScriptGameInputFrameInputs(t, root)
+	copyFixedPointReaderInputs(t, toolchainFixtureRepoRoot(t), root)
 	fixtures := []gameInputCachePackage{
 		{
 			name: gameInputFrameCacheConsumer, language: "typescript",
@@ -110,6 +111,7 @@ func writeGameInputCacheFixture(t *testing.T) (string, []discovery.Package, *dir
 			BuildContent: fixture.build, BuildCommands: []string{fixture.build[strings.LastIndex(fixture.build, "\n")+1:]},
 		})
 	}
+	ensureFixedPointReaderPackages(t, root)
 	graph, _, err := resolver.ResolveWithTestTriggers(packages)
 	if err != nil {
 		t.Fatalf("resolve complete cache fixture: %v", err)

@@ -618,7 +618,8 @@ repository-relative path and framed with a distinct tree domain, root path,
 file count, file path, file kind, byte length, and exact bytes. The `src/`
 scope is a conservative all-file superset of the Rust producer's `.rs` source
 tree; the evidence scope mirrors the sandbox's copied files. Each tree is
-bounded to depth 32, 100,000 files, 8 MiB per file, and 128 MiB total.
+bounded to depth 32, 100,000 total entries and files, 8 MiB per file, and
+128 MiB total.
 Adding, removing, or changing a file
 changes the digest. The filesystem tree is the source of the digest, so an
 untracked file inside a consumed tree participates whenever the consumer is

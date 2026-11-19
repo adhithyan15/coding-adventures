@@ -408,7 +408,14 @@ func writeFileFrame(hash io.Writer, packageRoot, root, path string) error {
 	if _, err := hash.Write(pathBytes); err != nil {
 		return err
 	}
+	return writeStableContentFrame(hash, root, path)
+}
 
+func writeStableContentFrame(hash io.Writer, root, path string) error {
+	return writeStableContentFrameBounded(hash, root, path, 0)
+}
+
+func writeStableContentFrameBounded(hash io.Writer, root, path string, maxBytes int64) error {
 	if err := ensureUnlinkedComponents(root, path); err != nil {
 		return err
 	}
@@ -426,13 +433,17 @@ func writeFileFrame(hash io.Writer, packageRoot, root, path string) error {
 		return fmt.Errorf("source changed before hashing")
 	}
 	contentLength := opened.Size()
-	if contentLength < 0 {
+	if contentLength < 0 || (maxBytes > 0 && contentLength > maxBytes) {
 		return fmt.Errorf("source length is invalid")
 	}
 	if err := binary.Write(hash, binary.BigEndian, uint64(contentLength)); err != nil {
 		return err
 	}
-	written, err := io.CopyBuffer(hash, source, make([]byte, 8192))
+	var reader io.Reader = source
+	if maxBytes > 0 {
+		reader = io.LimitReader(source, maxBytes+1)
+	}
+	written, err := io.CopyBuffer(hash, reader, make([]byte, 8192))
 	if err != nil {
 		return fmt.Errorf("source read failed")
 	}
@@ -460,8 +471,8 @@ func HashPackage(pkg discovery.Package) (string, error) {
 	return HashPackageWithRepositoryInputs(pkg, "", nil)
 }
 
-// HashPackageWithRepositoryInputs adds exact repository-relative files read by
-// the package's tests to its ordinary source hash.
+// HashPackageWithRepositoryInputs adds exact repository-relative files and
+// explicitly registered directory trees read by the package to its source hash.
 func HashPackageWithRepositoryInputs(pkg discovery.Package, repoRoot string, repositoryInputs []string) (string, error) {
 	var (
 		files []string
@@ -495,12 +506,129 @@ func HashPackageWithRepositoryInputs(pkg discovery.Package, repoRoot string, rep
 			if filepath.ToSlash(filepath.Clean(filepath.FromSlash(input))) != input || filepath.IsAbs(input) {
 				return "", fmt.Errorf("repository input path is invalid")
 			}
-			if err := writeFileFrame(hash, packageRoot, repoRoot, filepath.Join(repoRoot, filepath.FromSlash(input))); err != nil {
+			repositoryPath := filepath.Join(repoRoot, filepath.FromSlash(input))
+			info, statErr := os.Lstat(repositoryPath)
+			if statErr != nil {
+				return "", fmt.Errorf("repository input is not stable")
+			}
+			if info.IsDir() {
+				files, collectErr := collectRepositoryTreeFiles(repositoryPath)
+				if collectErr != nil {
+					return "", fmt.Errorf("repository input is not stable")
+				}
+				if err := writeRepositoryTreeFrame(hash, packageRoot, repoRoot, input, files); err != nil {
+					return "", fmt.Errorf("repository input is not stable")
+				}
+				after, err := collectRepositoryTreeFiles(repositoryPath)
+				if err != nil || !reflect.DeepEqual(files, after) {
+					return "", fmt.Errorf("repository input changed while hashing")
+				}
+				continue
+			}
+			if err := writeFileFrame(hash, packageRoot, repoRoot, repositoryPath); err != nil {
 				return "", fmt.Errorf("repository input is not stable")
 			}
 		}
 	}
 	return hex.EncodeToString(hash.Sum(nil)), nil
+}
+
+const (
+	maxRepositoryTreeDepth   = 32
+	maxRepositoryTreeEntries = 100_000
+	maxRepositoryTreeFiles   = 100_000
+	maxRepositoryTreeBytes   = 8 * 1024 * 1024
+	maxRepositoryTreeTotal   = 128 * 1024 * 1024
+)
+
+// collectRepositoryTreeFiles frames every regular file below an explicitly
+// registered repository directory. It rejects links and special files rather
+// than allowing a cache key to escape or omit an input, and sorts paths so
+// filesystem enumeration order cannot affect the identity.
+func collectRepositoryTreeFiles(root string) ([]string, error) {
+	var files []string
+	var totalBytes int64
+	var entryCount int
+	err := filepath.WalkDir(root, func(path string, entry os.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		entryCount++
+		if entryCount > maxRepositoryTreeEntries {
+			return fmt.Errorf("repository tree has too many entries")
+		}
+		info, err := entry.Info()
+		if err != nil {
+			return err
+		}
+		if info.Mode()&os.ModeSymlink != 0 || hasWindowsReparsePoint(info) {
+			return fmt.Errorf("repository tree contains a link")
+		}
+		if entry.IsDir() {
+			rel, err := filepath.Rel(root, path)
+			if err != nil || strings.Count(filepath.ToSlash(rel), "/") >= maxRepositoryTreeDepth {
+				return fmt.Errorf("repository tree is nested too deeply")
+			}
+			return nil
+		}
+		if !info.Mode().IsRegular() {
+			return fmt.Errorf("repository tree contains a special file")
+		}
+		files = append(files, path)
+		totalBytes += info.Size()
+		if len(files) > maxRepositoryTreeFiles || info.Size() < 0 || info.Size() > maxRepositoryTreeBytes || totalBytes > maxRepositoryTreeTotal {
+			return fmt.Errorf("repository tree exceeds its bounds")
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	sort.Strings(files)
+	return files, nil
+}
+
+// writeRepositoryTreeFrame uses a separate domain and an explicit file count,
+// so a tree cannot collide with a sequence of ordinary repository file inputs.
+func writeRepositoryTreeFrame(hash io.Writer, packageRoot, repoRoot, input string, files []string) error {
+	if _, err := io.WriteString(hash, "coding-adventures/build-tool-repository-tree/v1\x00"); err != nil {
+		return err
+	}
+	treePath := packageRoot + "/" + input
+	if err := writeLengthPrefixed(hash, []byte(treePath)); err != nil {
+		return err
+	}
+	if err := binary.Write(hash, binary.BigEndian, uint64(len(files))); err != nil {
+		return err
+	}
+	for _, file := range files {
+		relative, err := portableRelativePath(repoRoot, file)
+		if err != nil {
+			return err
+		}
+		repositoryPath := packageRoot + "/" + relative
+		if err := validateRepositoryPath(repositoryPath); err != nil {
+			return err
+		}
+		if err := writeLengthPrefixed(hash, []byte(repositoryPath)); err != nil {
+			return err
+		}
+		if _, err := hash.Write([]byte{1}); err != nil {
+			return err
+		}
+		if err := writeStableContentFrameBounded(hash, repoRoot, file, maxRepositoryTreeBytes); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func writeLengthPrefixed(w io.Writer, data []byte) error {
+	if err := binary.Write(w, binary.BigEndian, uint64(len(data))); err != nil {
+		return err
+	}
+	_, err := w.Write(data)
+	return err
 }
 
 // HashDeps computes a SHA256 hash of all transitive dependency hashes.

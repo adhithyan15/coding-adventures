@@ -221,6 +221,32 @@ var (
 		"code/specs/fixed-point.warrant",
 		"code/specs/fixtures/fixed-point-q16-v1/cases.json",
 	}
+	// fixedPointSourceInputs are read as a complete source tree by both the
+	// assurance sandbox and the WIR integration test. Directory inputs are
+	// recursively framed by the package hasher, so newly added and removed
+	// source files change both selection and cache identity.
+	fixedPointSourceInputs = []string{
+		"code/packages/rust/fixed-point/src",
+	}
+	rustWorkspaceCargoInputs = []string{
+		".cargo/config.toml",
+		"code/packages/rust/.cargo/config.toml",
+		"code/packages/rust/Cargo.lock",
+		"code/packages/rust/Cargo.toml",
+	}
+	fixedPointBindingsInput  = "code/packages/rust/fixed-point/evidence.bindings"
+	fixedPointReporterInputs = append(append(append([]string{}, fixedPointSourceInputs...), []string{
+		"code/packages/rust/fixed-point/evidence",
+		"code/packages/rust/fixed-point/Cargo.toml",
+		"code/packages/rust/fixed-point/effect_certificate.json",
+		fixedPointBindingsInput,
+		"code/packages/rust/fixed-point/assurance-profile.json",
+		"code/specs/fixed-point.warrant",
+	}...), rustWorkspaceCargoInputs...)
+	fixedPointWarrantIRInputs = append(append(append([]string{}, fixedPointSourceInputs...), []string{
+		fixedPointBindingsInput,
+		"code/specs/fixed-point.warrant",
+	}...), rustWorkspaceCargoInputs...)
 	gameClockInputPaths = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -1081,9 +1107,16 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "rust/ca-assurance-report",
 		language: "rust",
-		inputs:   "the Warrant lane spec, corpus, consumer registry, schema and TFV transport",
-		matches:  isWarrantAssuranceInput,
-		paths:    warrantAssurancePaths,
+		inputs:   "the Warrant lane inputs plus fixed-point package evidence consumed by its assurance sandbox",
+		matches:  isFixedPointReporterInput,
+		paths:    append(append([]string{}, warrantAssurancePaths...), fixedPointReporterInputs...),
+	},
+	{
+		name:     "rust/warrant-ir",
+		language: "rust",
+		inputs:   "the fixed-point Warrant model, source tree and evidence bindings read by its proof integration test",
+		matches:  isFixedPointWarrantIRInput,
+		paths:    fixedPointWarrantIRInputs,
 	},
 	{
 		name:     "rust/arithmetic",
@@ -1209,6 +1242,40 @@ func isWarrantAssuranceInput(changed string) bool {
 		return true
 	}
 	return false
+}
+
+func isRustWorkspaceCargoInput(changed string) bool {
+	for _, input := range rustWorkspaceCargoInputs {
+		if changed == input {
+			return true
+		}
+	}
+	return false
+}
+
+func isFixedPointPackageFile(changed string) bool {
+	return changed == "code/packages/rust/fixed-point/Cargo.toml" ||
+		changed == "code/packages/rust/fixed-point/effect_certificate.json" ||
+		changed == fixedPointBindingsInput ||
+		changed == "code/packages/rust/fixed-point/assurance-profile.json" ||
+		isUnderExactInputTree(changed, "code/packages/rust/fixed-point/src") ||
+		isUnderExactInputTree(changed, "code/packages/rust/fixed-point/evidence")
+}
+
+func isUnderExactInputTree(changed, root string) bool {
+	return changed == root || strings.HasPrefix(changed, root+"/")
+}
+
+func isFixedPointReporterInput(changed string) bool {
+	return isWarrantAssuranceInput(changed) || isFixedPointPackageFile(changed) ||
+		changed == "code/specs/fixed-point.warrant" || isRustWorkspaceCargoInput(changed)
+}
+
+func isFixedPointWarrantIRInput(changed string) bool {
+	return changed == "code/specs/fixed-point.warrant" ||
+		changed == fixedPointBindingsInput ||
+		isUnderExactInputTree(changed, "code/packages/rust/fixed-point/src") ||
+		isRustWorkspaceCargoInput(changed)
 }
 
 // warrantAdopter is one row of warrantAdopters: the module, its Warrant spec, its committed

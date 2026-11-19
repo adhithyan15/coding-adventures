@@ -100,6 +100,9 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/game-clock", Language: "rust"},
+		{Name: "rust/fixed-point", Language: "rust"},
+		{Name: "rust/ca-assurance-report", Language: "rust"},
+		{Name: "rust/warrant-ir", Language: "rust"},
 		{Name: "typescript/game-clock", Language: "typescript"},
 		{Name: "rust/warrant-grammar", Language: "rust"},
 		{Name: "rust/wasm-leb128", Language: "rust"},
@@ -187,6 +190,9 @@ func TestGameInputFrameV1SelectsRustAndTypeScriptConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/game-input-frame", Language: "rust"},
 		{Name: "rust/game-clock", Language: "rust"},
+		{Name: "rust/fixed-point", Language: "rust"},
+		{Name: "rust/ca-assurance-report", Language: "rust"},
+		{Name: "rust/warrant-ir", Language: "rust"},
 		{Name: "typescript/game-input-frame", Language: "typescript"},
 	}
 	for _, changed := range typescriptGameInputFrameInputs {
@@ -530,6 +536,17 @@ func TestCtCompareInputsSelectTheirConsumers(t *testing.T) {
 		}
 		if got, err := repositoryInputConsumersForChange([]string{tc.input}, packages, "go"); err != nil || len(got) != 0 {
 			t.Fatalf("single-language filtering: %v, %v", got, err)
+		}
+	}
+	for _, path := range []string{
+		"code/packages/rust/fixed-point/src.bak/lib.rs",
+		"code/packages/rust/fixed-point/src-v2/lib.rs",
+		"code/packages/rust/fixed-point/evidence.backup/proof.json",
+		"code/packages/rust/fixed-point/evidence.bindings.bak",
+		"code/packages/rust/fixed-point/../fixed-point/src/lib.rs",
+	} {
+		if isFixedPointReporterInput(path) || isFixedPointWarrantIRInput(path) {
+			t.Errorf("fixed-point verifier selector accepted lookalike %q", path)
 		}
 	}
 	// A single corpus lane is selectable on its own.
@@ -1083,12 +1100,42 @@ func TestRepositoryInputConsumersPlan(t *testing.T) {
 	}
 }
 
-func TestFixedPointInputsSelectOnlyRustConsumer(t *testing.T) {
-	packages := []discovery.Package{{Name: "rust/fixed-point", Language: "rust"}, {Name: "rust/game-clock", Language: "rust"}}
+func TestFixedPointInputConsumersSelectExactRustReaders(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/fixed-point", Language: "rust"},
+		{Name: "rust/game-clock", Language: "rust"},
+		{Name: "rust/ca-assurance-report", Language: "rust"},
+		{Name: "rust/warrant-ir", Language: "rust"},
+		{Name: "rust/warrant-grammar", Language: "rust"},
+	}
 	for _, input := range fixedPointInputPaths {
 		selected, err := repositoryInputConsumersForChange([]string{input}, packages, "rust")
-		if err != nil || !selected["rust/fixed-point"] || len(selected) != 1 {
-			t.Fatalf("Rust input %s selected %v, err %v", input, selected, err)
+		want := map[string]bool{"rust/fixed-point": true}
+		switch input {
+		case ".cargo/config.toml", "code/packages/rust/.cargo/config.toml", "code/packages/rust/Cargo.toml", "code/packages/rust/Cargo.lock":
+			want["rust/game-clock"] = true
+			want["rust/ca-assurance-report"] = true
+			want["rust/warrant-ir"] = true
+		case "code/specs/fixed-point.warrant":
+			want["rust/ca-assurance-report"] = true
+			want["rust/warrant-ir"] = true
+			want["rust/warrant-grammar"] = true
+		}
+		if err != nil || !reflect.DeepEqual(selected, want) {
+			t.Fatalf("Rust input %s selected %v, err %v; want %v", input, selected, err, want)
+		}
+	}
+	for _, tc := range []struct {
+		input string
+		want  map[string]bool
+	}{
+		{"code/packages/rust/fixed-point/src/lib.rs", map[string]bool{"rust/ca-assurance-report": true, "rust/warrant-ir": true}},
+		{"code/packages/rust/fixed-point/evidence/proof-manifest.json", map[string]bool{"rust/ca-assurance-report": true}},
+		{"code/packages/rust/fixed-point/evidence.bindings", map[string]bool{"rust/ca-assurance-report": true, "rust/warrant-ir": true}},
+	} {
+		selected, err := repositoryInputConsumersForChange([]string{tc.input}, packages, "rust")
+		if err != nil || !reflect.DeepEqual(selected, tc.want) {
+			t.Fatalf("fixed-point verifier input %s selected %v, err %v; want %v", tc.input, selected, err, tc.want)
 		}
 	}
 	if !sort.StringsAreSorted(fixedPointInputPaths) {

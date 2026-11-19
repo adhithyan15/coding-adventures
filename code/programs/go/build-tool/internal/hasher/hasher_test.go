@@ -1134,6 +1134,58 @@ func TestHashPackageFramesRepositoryPathAndRawContent(t *testing.T) {
 	}
 }
 
+func TestHashPackageWithRepositoryTreeInputsTracksFilesystemTreeAndRejectsLinks(t *testing.T) {
+	root := t.TempDir()
+	pkgPath := filepath.Join(root, "code/packages/rust/warrant-ir")
+	for path, contents := range map[string]string{
+		filepath.Join(pkgPath, "Cargo.toml"):                             "[package]\nname = \"warrant-ir\"\nversion = \"0.1.0\"\n",
+		filepath.Join(pkgPath, "BUILD"):                                  "echo tree-input-test\n",
+		filepath.Join(pkgPath, "src/lib.rs"):                             "pub fn local() -> u8 { 1 }\n",
+		filepath.Join(root, "code/packages/rust/fixed-point/src/lib.rs"): "pub fn external() -> u8 { 1 }\n",
+	} {
+		absolute := path
+		if err := os.MkdirAll(filepath.Dir(absolute), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(absolute, []byte(contents), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "rust/warrant-ir", Language: "rust", Path: pkgPath}
+	inputs := []string{"code/packages/rust/fixed-point/src"}
+	hash := func() string {
+		t.Helper()
+		value, err := HashPackageWithRepositoryInputs(pkg, root, inputs)
+		if err != nil {
+			t.Fatalf("hash repository tree: %v", err)
+		}
+		return value
+	}
+	baseline := hash()
+	newFile := filepath.Join(root, "code/packages/rust/fixed-point/src/untracked.rs")
+	if err := os.WriteFile(newFile, []byte("pub fn untracked() -> u8 { 1 }\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	added := hash()
+	if added == baseline {
+		t.Fatal("new untracked file under a consumed tree did not change its cache identity")
+	}
+	if err := os.Remove(newFile); err != nil {
+		t.Fatal(err)
+	}
+	if restored := hash(); restored != baseline {
+		t.Fatalf("removing the new file did not restore tree identity: got %s want %s", restored, baseline)
+	}
+	if runtime.GOOS != "windows" {
+		if err := os.Symlink(filepath.Join(root, "code/packages/rust/fixed-point/src/lib.rs"), newFile); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := HashPackageWithRepositoryInputs(pkg, root, inputs); err == nil {
+			t.Fatal("a symlink under a consumed tree was hashed")
+		}
+	}
+}
+
 func TestHashPackageFramesAndSortsMultipleFilesByUTF8Bytes(t *testing.T) {
 	root := t.TempDir()
 	pkgPath := filepath.Join(root, "demo")

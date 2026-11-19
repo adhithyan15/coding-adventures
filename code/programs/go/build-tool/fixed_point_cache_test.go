@@ -25,19 +25,7 @@ func writeFixedPointCacheFixture(t *testing.T) (string, discovery.Package, *dire
 	t.Helper()
 	root := t.TempDir()
 	repositoryRoot := toolchainFixtureRepoRoot(t)
-	for _, input := range fixedPointInputPaths {
-		original, err := os.ReadFile(filepath.Join(repositoryRoot, filepath.FromSlash(input)))
-		if err != nil {
-			t.Fatalf("read fixed-point external input %s: %v", input, err)
-		}
-		destination := filepath.Join(root, filepath.FromSlash(input))
-		if err := os.MkdirAll(filepath.Dir(destination), 0o755); err != nil {
-			t.Fatal(err)
-		}
-		if err := os.WriteFile(destination, original, 0o644); err != nil {
-			t.Fatal(err)
-		}
-	}
+	copyFixedPointReaderInputs(t, repositoryRoot, root)
 	for _, input := range []string{"code/specs/fixtures/game-clock-v1/cases.json", "code/specs/game-clock.warrant"} {
 		original, err := os.ReadFile(filepath.Join(repositoryRoot, filepath.FromSlash(input)))
 		if err != nil {
@@ -65,7 +53,6 @@ func writeFixedPointCacheFixture(t *testing.T) (string, discovery.Package, *dire
 			t.Fatal(err)
 		}
 	}
-	packageRoot := filepath.Join(root, "code/packages/rust/fixed-point")
 	exemptions := "EXCLUDED code/packages/rust  # synthetic Rust Cargo workspace root has no package target\n"
 	if err := os.MkdirAll(filepath.Join(root, "code"), 0o755); err != nil {
 		t.Fatal(err)
@@ -73,19 +60,8 @@ func writeFixedPointCacheFixture(t *testing.T) (string, discovery.Package, *dire
 	if err := os.WriteFile(filepath.Join(root, "code/BUILD-EXEMPTIONS"), []byte(exemptions), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	for _, entry := range []struct{ path, contents string }{
-		{"Cargo.toml", "[package]\nname = \"fixed-point\"\nversion = \"0.1.0\"\nedition = \"2021\"\n"},
-		{"BUILD", "echo fixed-point-cache-probe\n"},
-		{"src/lib.rs", "pub fn cache_probe() -> u8 { 1 }\n"},
-	} {
-		path := filepath.Join(packageRoot, filepath.FromSlash(entry.path))
-		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-			t.Fatal(err)
-		}
-		if err := os.WriteFile(path, []byte(entry.contents), 0o644); err != nil {
-			t.Fatal(err)
-		}
-	}
+	ensureFixedPointReaderPackages(t, root)
+	packageRoot := filepath.Join(root, "code/packages/rust/fixed-point")
 	warrantRoot := filepath.Join(root, "code/packages/rust/warrant-grammar")
 	for _, entry := range []struct{ path, contents string }{
 		{"Cargo.toml", "[package]\nname = \"warrant-grammar\"\nversion = \"0.1.0\"\nedition = \"2021\"\n"},
@@ -110,6 +86,86 @@ func writeFixedPointCacheFixture(t *testing.T) (string, discovery.Package, *dire
 		t.Fatalf("create fixed-point cache graph: %v", err)
 	}
 	return root, pkg, graph
+}
+
+func copyFixedPointReaderInputs(t *testing.T, repositoryRoot, root string) {
+	t.Helper()
+	inputs := append(append(append(append([]string{}, fixedPointInputPaths...), fixedPointReporterInputs...), fixedPointWarrantIRInputs...), warrantAssurancePaths...)
+	seen := map[string]bool{}
+	for _, input := range inputs {
+		if seen[input] {
+			continue
+		}
+		seen[input] = true
+		copyFixedPointFixturePath(t, repositoryRoot, root, input)
+	}
+}
+
+func ensureFixedPointReaderPackages(t *testing.T, root string) {
+	t.Helper()
+	for _, packageName := range []string{"fixed-point", "ca-assurance-report", "warrant-ir"} {
+		packageRoot := filepath.Join(root, "code/packages/rust", packageName)
+		if err := os.MkdirAll(packageRoot, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if packageName == "fixed-point" || !fixedPointFixtureFileExists(filepath.Join(packageRoot, "Cargo.toml")) {
+			contents := "[package]\nname = \"" + packageName + "\"\nversion = \"0.1.0\"\nedition = \"2021\"\n"
+			if err := os.WriteFile(filepath.Join(packageRoot, "Cargo.toml"), []byte(contents), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		if !fixedPointFixtureFileExists(filepath.Join(packageRoot, "BUILD")) {
+			if err := os.WriteFile(filepath.Join(packageRoot, "BUILD"), []byte("echo "+packageName+"-cache-probe\n"), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		if !fixedPointFixtureFileExists(filepath.Join(packageRoot, "src/lib.rs")) {
+			if err := os.MkdirAll(filepath.Join(packageRoot, "src"), 0o755); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(filepath.Join(packageRoot, "src/lib.rs"), []byte("pub fn cache_probe() -> u8 { 1 }\n"), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+	}
+}
+
+func fixedPointFixtureFileExists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
+}
+
+func copyFixedPointFixturePath(t *testing.T, fromRoot, toRoot, relative string) {
+	t.Helper()
+	from := filepath.Join(fromRoot, filepath.FromSlash(relative))
+	to := filepath.Join(toRoot, filepath.FromSlash(relative))
+	info, err := os.Stat(from)
+	if err != nil {
+		t.Fatalf("stat real fixed-point reader input %s: %v", relative, err)
+	}
+	if info.IsDir() {
+		entries, err := os.ReadDir(from)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := os.MkdirAll(to, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		for _, entry := range entries {
+			copyFixedPointFixturePath(t, fromRoot, toRoot, filepath.ToSlash(filepath.Join(filepath.FromSlash(relative), entry.Name())))
+		}
+		return
+	}
+	contents, err := os.ReadFile(from)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(filepath.Dir(to), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(to, contents, 0o644); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func runFixedPointCacheProbe(t *testing.T, root string, pkg discovery.Package, graph *directedgraph.Graph) (string, string) {
@@ -264,9 +320,9 @@ func TestFixedPointRustFilteredPlanEmitAndReplaySelectsAllInputs(t *testing.T) {
 		wantAffected := []string{"rust/fixed-point"}
 		switch input {
 		case ".cargo/config.toml", "code/packages/rust/.cargo/config.toml", "code/packages/rust/Cargo.lock", "code/packages/rust/Cargo.toml":
-			wantAffected = []string{"rust/fixed-point", "rust/game-clock"}
+			wantAffected = []string{"rust/ca-assurance-report", "rust/fixed-point", "rust/game-clock", "rust/warrant-ir"}
 		case "code/specs/fixed-point.warrant":
-			wantAffected = []string{"rust/fixed-point", "rust/warrant-grammar"}
+			wantAffected = []string{"rust/ca-assurance-report", "rust/fixed-point", "rust/warrant-grammar", "rust/warrant-ir"}
 		}
 		if !reflect.DeepEqual(buildPlan.AffectedPackages, wantAffected) || !buildPlan.LanguagesNeeded["rust"] {
 			t.Fatalf("input %s affected=%v, want exact consumers %v; languages=%v output=%q",
@@ -276,10 +332,71 @@ func TestFixedPointRustFilteredPlanEmitAndReplaySelectsAllInputs(t *testing.T) {
 			"-root", root, "-language", "rust", "-plan-file", planPath,
 			"-cache-file", filepath.Join(root, "fixed-point-plan-cache.json"), "-dry-run",
 		)
-		if !strings.Contains(replayOutput, "Loaded plan:") || !strings.Contains(replayOutput, "rust/fixed-point") {
-			t.Fatalf("Rust-filtered plan replay omitted rust/fixed-point for %s: %s", input, replayOutput)
+		if !strings.Contains(replayOutput, "Loaded plan:") {
+			t.Fatalf("Rust-filtered plan replay failed for %s: %s", input, replayOutput)
+		}
+		for _, selected := range wantAffected {
+			if !strings.Contains(replayOutput, selected) {
+				t.Fatalf("Rust-filtered plan replay omitted %s for %s: %s", selected, input, replayOutput)
+			}
 		}
 		t.Logf("Rust-filtered plan input=%s affected=%v replay=%q", input, buildPlan.AffectedPackages, replayOutput)
+	}
+}
+
+func TestFixedPointVerifierInputsSelectExactConsumersInRustPlans(t *testing.T) {
+	root, _, _ := writeFixedPointCacheFixture(t)
+	for _, args := range [][]string{
+		{"init", "-q"},
+		{"config", "user.email", "build-tool-test@example.invalid"},
+		{"config", "user.name", "Build Tool Test"},
+		{"add", "."},
+		{"commit", "-qm", "fixed-point verifier fixture baseline"},
+	} {
+		fixedPointGit(t, root, args...)
+	}
+	base := strings.TrimSpace(fixedPointGitOutput(t, root, "rev-parse", "HEAD"))
+	probes := []struct {
+		path, old, changed string
+		want               []string
+	}{
+		{"code/packages/rust/fixed-point/src/lib.rs", "const SCALE: i128 = 65_536;", "const SCALE: i128 = 65_535;", []string{"rust/ca-assurance-report", "rust/fixed-point", "rust/warrant-ir"}},
+		{"code/packages/rust/fixed-point/evidence/proof-manifest.json", "\"max_len\": 0", "\"max_len\": 1", []string{"rust/ca-assurance-report", "rust/fixed-point"}},
+		{"code/packages/rust/fixed-point/evidence.bindings", "fuzz_iterations 4096", "fuzz_iterations 4097", []string{"rust/ca-assurance-report", "rust/fixed-point", "rust/warrant-ir"}},
+	}
+	for _, probe := range probes {
+		fixedPointGit(t, root, "reset", "--hard", base)
+		path := filepath.Join(root, filepath.FromSlash(probe.path))
+		original := mustReadFile(t, path)
+		changed := bytes.Replace(original, []byte(probe.old), []byte(probe.changed), 1)
+		if bytes.Equal(changed, original) || len(changed) != len(original) {
+			t.Fatalf("selection probe %s was not a same-length mutation", probe.path)
+		}
+		if err := os.WriteFile(path, changed, 0o644); err != nil {
+			t.Fatal(err)
+		}
+		fixedPointGit(t, root, "add", probe.path)
+		fixedPointGit(t, root, "commit", "-qm", "change "+probe.path)
+		planPath := filepath.Join(root, "reader-plan-"+strings.ReplaceAll(strings.ReplaceAll(probe.path, "/", "-"), ".", "_")+".json")
+		output := runBuildToolPlanProcess(t, "-root", root, "-language", "rust", "-diff-base", base, "-ci-gates=", "-emit-plan", planPath)
+		buildPlan, err := plan.Read(planPath)
+		if err != nil {
+			t.Fatalf("read reader plan for %s: %v", probe.path, err)
+		}
+		if !reflect.DeepEqual(buildPlan.AffectedPackages, probe.want) {
+			t.Fatalf("path %s selected %v, want %v; output=%s", probe.path, buildPlan.AffectedPackages, probe.want, output)
+		}
+		replay := runBuildToolPlanProcess(t, "-root", root, "-language", "rust", "-plan-file", planPath,
+			"-cache-file", filepath.Join(root, "reader-cache.json"), "-dry-run")
+		if !strings.Contains(replay, "Loaded plan:") {
+			t.Fatalf("reader plan did not replay for %s: %s", probe.path, replay)
+		}
+		for _, selected := range probe.want {
+			if !strings.Contains(replay, selected) {
+				t.Fatalf("replayed plan omitted %s for %s: %s", selected, probe.path, replay)
+			}
+		}
+		t.Logf("fixed-point reader selection path=%s affected=%v", probe.path, buildPlan.AffectedPackages)
 	}
 }
 

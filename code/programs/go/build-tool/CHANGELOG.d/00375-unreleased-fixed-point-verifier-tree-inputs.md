@@ -1,0 +1,5 @@
+# Fixed-point verifier tree cache inputs
+
+- Registered the exact fixed-point source and evidence trees plus their Warrant and package metadata as external inputs of `rust/ca-assurance-report`; registered the source tree, bindings and Warrant model for `rust/warrant-ir`. Both verifier consumers also key on the exact Cargo workspace configs, manifest and lockfile used by their BUILD recipes. The fixed-point package itself retains its original six external inputs, and no Cargo dependency edge was added from fixed-point to either verifier.
+- Added bounded, domain-separated repository-tree framing to the Go package hasher. New and removed files, including untracked files within a registered tree, affect identity; links, special files, unstable trees, and over-limit inputs fail closed.
+- Added persisted cache miss/hit/restore checks, tree add/remove and content mutations, unrelated untracked controls, and exact Rust filtered-plan emit/replay coverage for the two verifier consumers.
