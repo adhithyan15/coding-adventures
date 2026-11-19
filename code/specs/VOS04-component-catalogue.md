@@ -16,7 +16,7 @@ per-interface contract specs (VOS10 and the `VOS1x` family that follows it).
 **Builds on:** [VOS01](VOS01-component-contract-model.md) (the component shape,
 tiers, `-any`, the budget), [VOS02](VOS02-interface-contracts-and-profile-linking.md)
 (generated per-implementation documents, kinds, profile manifests, SH16),
-[VOS03](VOS03-component-shape-checker.md) (SH1-SH18),
+[VOS03](VOS03-component-shape-checker.md) (SH1-SH19),
 [VOS10](VOS10-scheduler-contract.md) (the first contract),
 [VOS30](VOS30-proof-route-and-capacity.md) (the X3 route and the capacity
 numbers) and [EMU00](EMU00-emulator-framework.md) (the machine side).
@@ -413,9 +413,9 @@ crate that executes commands. Three requirements make "commands" safe:
    as a closed enum in its contract package. No variant carries a raw address,
    a CSR number or an MMIO offset; payloads are opaque ids, bounded indices and
    data bytes. A leaf therefore cannot even **construct** a request for an
-   arbitrary location. This is checked per implementation (PR-I line 2 in
-   section 5.2: the command-type check) and has a negative control: a mutant
-   leaf that emits a raw address must be rejected (VOS-D077).
+   arbitrary location. This is checked on the contract package, where the enums live (SH19, section 5.6; PR-I line 2
+   in section 5.2), and has negative controls: a contract enum that carries a raw address must be
+   rejected (VOS-D077, done in VOS-039b-2a).
 2. **Allowlist in the HAL.** The HAL (VOS21, VOS-025a) validates every command
    against a **static allowlist** built from the board map and the owning
    domain, before executing it. A command outside the allowlist is rejected,
@@ -633,7 +633,7 @@ explanation:
 | # | Evidence | BUILD line | Gate |
 |---|---|---|---|
 | 1 | Unit | `cargo test --lib --test behaviour` with and without `ghost`, plus `--doc` | Against a plain reference model written in the test, not copied from the implementation |
-| 2 | Shape | `vos-shape-check .` | SH1-SH18; `clippy::arithmetic_side_effects` denied; **command-type check** (rule 6: every command enum is closed and no variant payload can carry a raw address or CSR number), with a negative control that a mutant leaf emitting one is rejected (VOS-D077) |
+| 2 | Shape | `vos-shape-check .` | SH1-SH19; `clippy::arithmetic_side_effects` denied; **command-type check** (rule 6: every command enum is closed and no variant payload can carry a raw address or CSR number), built as **SH19** on the `contract` kind in VOS-039b-2a, with negative controls that a contract enum emitting one is rejected (VOS-D077, done; section 5.6) |
 | 3 | Capability | `ca-capability-analyzer --dir .` | An empty `required_capabilities.json` |
 | 4 | Document | `vos-link check-doc .` | The committed `.warrant` equals the regenerated one |
 | 5 | Harness drift | `gen_evidence --check <crate>` | The generated test harness equals the regenerated one |
@@ -749,8 +749,9 @@ delivered in four slices: **039a** `gen-build`, `check-component` and the covera
 (section 5.6, as built); **039b** the contract kit, split into **039b-1** (the generic
 contract check `check-contract`, the `contract` kind in `gen-build` and `check-component`,
 the retirement of `vos-sched-contract-check`, the `config` half of VOS-D055; section 5.6)
-and **039b-2** (the command-type check VOS-D077, the Rust-enum/Warrant-variant
-correspondence, `bound` rows against ceilings, the VOS-D104 sweep); **039c** the oracle-preservation claim
+and **039b-2**, itself split: **039b-2a** (the command-type check SH19, VOS-D077, and the
+Rust-enum/Warrant-variant correspondence CK10; section 5.6, as built) and **039b-2b** (`bound` rows
+against ceilings, CC09, and the VOS-D104 sweep, `check-publish`; planned, section 5.6); **039c** the oracle-preservation claim
 of every `-any` (VOS-D080); **039d** the step-counter tick audit (VOS-D089); the migration of the VOS
 sabotage lines to `code/scripts/warrant_negctl.py` (VOS-D099, closing VOS-D088)
 moved into 039a, because the generated BUILD uses it.
@@ -916,7 +917,7 @@ fails as surely as an unexcused failure). The numbers 4096 and 5000 are constant
 
 **Not checked yet, each with a row.** The exact "controls equal operations times tiers"
 count of line 9 (VOS-D105); a parser's fuzz corpus and bounds (VOS-D106); the
-command-type check of line 2 (VOS-D077, 039b-2); deriving the sabotage plan (VOS-D108); line 10
+command-type check of line 2 on IMPLEMENTATION crates (a leaf has no command enum of its own; SH19 binds the contract crate, 039b-2a); deriving the sabotage plan (VOS-D108); line 10
 (SAT, n/a until VOS-029).
 
 **Item G, the coverage gate (VOS-D070).** `cargo tarpaulin`, which CI installs on
@@ -984,15 +985,16 @@ least one lemma that calls the key; the author cannot write them. The scheduler 
 `contract.vos`'s `N 8` is tied to the Warrant `pre_insert` model: changing either alone fails.
 `lemmas.part` is not embedded in any implementation's document, so no document digest moves.
 What stays open: the literal `8` in an implementation's `n_is_eight` example against
-`contract.vos`, and `bound` rows against ceilings (039b-2).
+`contract.vos`, and `bound` rows against ceilings (039b-2b).
 
 **`warrant/lemmas.table`** (generated):
 
 ```text
-vos-lemmas 1
+vos-lemmas 2
 contract-part <sha256 of contract.part>
 lemmas-part <sha256 of lemmas.part>
 config N 8
+variant <Name> = <C1> | <C2>(<T>, ..)
 lemma <name> product <n> admitted <n> mutant <model> mutant-part <sha256> failed <n>
 config-mutant N 7 kills <lemma>[,<lemma>]
 config-mutant N 9 kills <lemma>[,<lemma>]
@@ -1010,12 +1012,68 @@ end
 | `CK07` | Mutant kills | a lemma survives its mutant (zero failing cases) |
 | `CK08` | Config | a config key is called by no lemma, or a generated V-1 or V+1 mutant falsifies no lemma that calls it |
 | `CK09` | The table | `warrant/lemmas.table` is absent or differs from the regenerated bytes (the first differing line is printed) |
+| `CK10` | Enum/variant correspondence | a Rust `enum` of the crate has no Warrant `variant` of the same name, or the two generated lines differ (both lines are printed) |
 
 The budget is VER04h's X1 per-claim case budget of **400,000** (the `exhaustive_budget` of every
 `evidence.bindings`); it is a constant of `vos-link`, and a test of `vos-link` reads this section
 and asserts that it states the number.  A `lemmas.part` is limited to **64** lemmas (the limit of the
 mutants directory), so the work of a run is bounded; and when CK02, CK05 or CK06 findings exist, the
 check returns them without evaluating anything.
+
+**Enum/variant correspondence, CK10 (VOS-039b-2a).** The Rust `enum`s of the contract crate and the
+Warrant `variant`s of `contract.part` must say the same thing, so a renamed constructor, a changed
+payload or a reordered variant is caught at the contract and not only by a failing generated harness.
+The check follows the one principle of this section, **generate and compare**: it renders a line from
+each side with ONE function and compares the bytes.
+
+```text
+variant Pick = Idle | Run(U8)          <- rendered from the Rust enum  (src/**/*.rs)
+variant Pick = Idle | Run(U8)          <- rendered from the Warrant variant (warrant/contract.part)
+```
+
+The Rust side is `vos_shape_check::items::collect_types` over the crate's `src/**/*.rs` (the RS01
+lexer; no new lexer), the Warrant side the AST of `warrant-grammar`'s parser (`VariantDecl`).
+`variant <Name> = <C1> | <C2>(<T>, ..)`: constructors in source order separated by ` | `, a
+payload as the comma-and-space joined TYPES. The type map is `u8` to `U8`, `bool` to `Bool`,
+`[u8; N]` to `Bytes<N>`, a same-crate name to itself. A named-field variant (`Write { addr: .. }`)
+renders its types only, as a tuple variant does, and Warrant names its fields freely, so `Run(t: U8)`
+renders `Run(U8)`: **field names are not compared** (the harness marshals by position). CK10 fires when
+a Rust enum has no Warrant variant of its name (a rename on either side leaves a Rust enum without a
+twin) or the lines differ. The direction is Rust to Warrant: a Warrant variant with no Rust enum is a
+model-only type and is allowed. A Rust type SH19 would reject cannot render (the Rust side prints it
+as written, which never equals a Warrant type), so SH19 and CK10 agree.
+
+The rendered lines are also published, in the same order as the Rust enums appear in the source,
+as `variant ...` rows after the `config` rows of `warrant/lemmas.table` (`vos-lemmas 2`), so a reviewer
+sees the correspondence in the generated artifact and CK09 byte-pins it. What this does NOT check:
+the evidence bindings' `enum ... ctors=` lines against the contract. The generated harness compiles
+against the contract's own enums (VOS10 section 12, fate table), so a mismatch fails the harness.
+
+**The command-type check, SH19 (VOS-D077, built in VOS-039b-2a).** `vos-shape-check`'s rule SH19
+(VOS03 section 4) is checked when `vos.toml` says `kind = "contract"`. The command set is derived,
+never listed by the author: **every `enum` in the crate**, `pub` or not. An enum fails when it
+carries `#[non_exhaustive]` (on the enum or a variant) or a generic list, or when a variant field is
+not one of exactly `u8`, `bool`, `[u8; <integer literal>]` or the bare name of a same-crate `struct`
+or `enum` that itself passes. So `usize`, `u16` and wider, `i*`, references, pointers, tuples,
+`Option<..>`, any `::` path, a `type` alias (not resolved, therefore rejected) and a const-named
+length are all findings. Negative controls, each asserted by code AND text: `Poke(usize)` and
+`Write { addr: u32 }` are rejected, `Pick::Run(u8)` and `Upd` pass; `#[non_exhaustive]`, `Cmd<T>`,
+`X(&'static u8)`, `X(core::num::NonZeroU8)`, `X(Addr)` with `type Addr = usize`, and a nested struct
+with a `usize` field are rejected; `[u8; 4]` and a nested passing enum pass; the same enum in a
+`kind = "production"` crate raises no SH19; the real `vos-sched-contract` passes.
+
+**Planned, not built: 039b-2b.** (1) *`bound` rows against ceilings* (VOS-D055 remainder): derive
+the operation-to-ceiling mapping (an operation `X` maps to the ceiling `X`, else to the ceiling of `X`
+with one `_out` or `_img` suffix stripped, VOS02 section 4.4, else it is ghost-only and unmapped), with
+no change to the bindings (a `realises=` field would be author-declared and gameable, and would touch
+`warrant-grammar`); a new check-component code **CC09**: a production or `any` crate needs a `steps`
+and a `heap` bound row per mapped operation, a ceiling operation with no mapped operation fails, depth
+is compared when present and noted when absent, `reference` is optional. This updates VOS02 section
+6.6 item 3 and NC9. (2) *The VOS-D104 sweep*: `vos-link check-publish [--root]`, codes **PB01** and
+**PB02**, over the direct `vos-*` children of `code/packages/rust` and `code/programs/rust` that have
+a `Cargo.toml`: `production`, `reference` and `contract` are exempt (the production publish policy is
+undecided), every other needs `publish = false`; it adds that flag to `vos-manifest`, `vos-probe-ready`,
+`vos-link` and `vos-capacity-probe`, runs in the `vos-link` BUILD, and needs a build-tool glob row.
 
 **Cost, measured.** `check-contract` on the real scheduler contract (10 lemmas, 10 mutants, 2
 config mutants; N = 8, 65,536 cases per lemma) takes about **10 s wall** (about 57 s of CPU, on 8 worker threads on a 14-core Apple-silicon host; measured twice: 9.84 s and 9.89 s) in a debug build, once, in
@@ -1086,7 +1144,7 @@ them.
 | 3 | VOS-D081 | Safety-tier `init` claim | The VOS-012a run showed nothing constrains `init` outside `canonical`; it changes every implementation's safety digests, so it lands before the second implementation of the contract (`rr`) |
 | 4 | VOS-012b | `vos-sched-rr` (representation mode) | The first representation-mode implementation (VOS-D061) and the first swap |
 | 5 | VOS-038 | Generator debts: D065 non-inert record fault, D063 heap observer, D025 array builder | Before mass production |
-| 6 | VOS-039 | Component kit: 039a `vos-link check-component` and coverage gate (done), 039b-1 generic contract check (D049, done), 039b-2 command-type check (D077), correspondence, bounds, D104 sweep, 039c oracle preservation of every `-any` (D080), 039d sabotage lines to `warrant_negctl.py` (D099) | After three real implementations exist |
+| 6 | VOS-039 | Component kit: 039a `vos-link check-component` and coverage gate (done), 039b-1 generic contract check (D049, done), 039b-2a command-type check (D077) and enum/variant correspondence (done), 039b-2b bounds and D104 sweep, 039c oracle preservation of every `-any` (D080), 039d sabotage lines to `warrant_negctl.py` (D099) | After three real implementations exist |
 | 7 | VOS-028b | Capacity probe (fixture: `vos-sched-fp-bitmap`) | Fixes the X1 sizes (VOS00 D4) and decides 029's funding |
 | 8 | VOS-040 | Host model-SAT lane on the `sched` contract, plus the Rust-lowering spike | Reuses the probe harness |
 | 9 | VOS-005 | `emu-core` | The emulator has been idle and everything bootable waits on it |

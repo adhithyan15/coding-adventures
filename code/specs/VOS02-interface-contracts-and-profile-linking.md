@@ -1577,8 +1577,9 @@ happened (VOS-011, VOS-012). Of its parts, the nine lemmas with a mutant each ar
 `any` block on a one-field `Impl` were already `vos-link`'s (GD01, CD04); the Warrant-model
 implementations and the 21 obligation mutants are dropped, because all 24 obligations are
 attacked by the sabotage plans of the three real crates; the Rust-enum/Warrant-variant
-correspondence waits for 039b-2 (a mismatched constructor fails the generated harness, which is
-compiled against the contract's own enums); and the exact-set and per-conjunct controls are
+correspondence is restored, generic, as `check-contract` code CK10 (VOS-039b-2a, VOS04 5.6: a Rust
+enum and its Warrant variant must render to the same line; a mismatched constructor also fails the
+generated harness, which is compiled against the contract's own enums); and the exact-set and per-conjunct controls are
 lost (sabotage is per claim), which is VOS-D109.
 
 ---
