@@ -204,7 +204,12 @@ jobs:
           START_DEADLINE_SECS: '12000'
           MATRIX_OS: ${{ matrix.os }}
         run: |
-          set -uo pipefail
+          # `shell: bash` runs this script as `bash -e -o pipefail`, so errexit is
+          # ON unless turned off here.  This step handles every exit status
+          # itself (a failed BUILD step is census data, not a job failure), and
+          # with errexit the build tool's non-zero status killed the step before
+          # collect and the census ran (first dispatch, run 44625742979).
+          set +e -uo pipefail
           # The working directory is kept out of the checkout by choice (the
           # tests run the recorder from / too); the checkout is passed
           # explicitly wherever it is needed.
@@ -373,7 +378,7 @@ jobs:
         if: always()
         shell: bash
         run: |
-          set -uo pipefail
+          set +e -uo pipefail  # errexit off: every status is checked explicitly
           worst=$(cat "$CENSUS_OUT/.worst" 2>/dev/null) || {
             echo "::error::the recording step did not finish (no status file)"
             exit 1
