@@ -85,12 +85,14 @@ for candidate:
 | `sat-solver` slots out of 15 | 1 | 2 |
 | Implementation identity union | 1,775 | 1,775 |
 
-Presence remains structural evidence only. The Go and TypeScript tests consume
-the same `sat-cnf-v1` corpus at SHA-256
-`ba66f3a23690ced4d01621e2e26341c1c2e5bee7bce5a455e7a82a8435b32c63`. The
-candidate reports 703/740 Go statements covered (95.0%), but this does not
+Presence remains structural evidence only. At the 2026-11-18 Go candidate
+receipt, the Go and TypeScript tests consumed the same `sat-cnf-v1` corpus at
+SHA-256 `ba66f3a23690ced4d01621e2e26341c1c2e5bee7bce5a455e7a82a8435b32c63`.
+The candidate reports 703/740 Go statements covered (95.0%), but this does not
 close the separate Go source-bound proof and line/branch assurance prerequisites
-in VER-P042.
+in VER-P042. VER-P043 extends the current shared corpus with public propagation
+recovery cases; its current digest is
+`0bea6fc66d5d407bebba080663a3d128eabf9804cb8d57c06b4955d9e29944a1`.
 The validation-enabled whole-feature changed-input dry-run against `origin/main`
 reports three changed packages and 15 affected packages, including both SAT
 solvers.

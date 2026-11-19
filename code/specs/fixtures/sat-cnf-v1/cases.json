@@ -5,6 +5,7 @@
       "id": "empty_formula_sat",
       "dimacs": "p cnf 2 0\n",
       "steps": [
+        {"op": "propagate", "expect_conflict": false},
         {"op": "solve", "assumptions": [], "expect": "sat"}
       ]
     },
@@ -84,6 +85,32 @@
         {"op": "add_clause", "clause": [1]},
         {"op": "solve", "assumptions": [-1], "expect": "unsat"},
         {"op": "solve", "assumptions": [], "expect": "sat"}
+      ]
+    },
+    {
+      "id": "unknown_preserves_pending_root_conflict",
+      "dimacs": "p cnf 2 4\n1 2 0\n1 -2 0\n-1 2 0\n-1 -2 0\n",
+      "steps": [
+        {"op": "solve", "assumptions": [], "budget": {"max_steps": 1}, "expect": "unknown"},
+        {"op": "solve", "assumptions": [], "expect": "unsat", "expect_core": []}
+      ]
+    },
+    {
+      "id": "unknown_public_propagate_root_conflict_is_sticky",
+      "dimacs": "p cnf 2 4\n1 2 0\n1 -2 0\n-1 2 0\n-1 -2 0\n",
+      "steps": [
+        {"op": "solve", "assumptions": [], "budget": {"max_steps": 1}, "expect": "unknown"},
+        {"op": "propagate", "expect_conflict": true},
+        {"op": "solve", "assumptions": [], "expect": "unsat", "expect_core": []}
+      ]
+    },
+    {
+      "id": "known_root_contradiction_clears_core",
+      "dimacs": "p cnf 1 0\n",
+      "steps": [
+        {"op": "solve", "assumptions": [1, -1], "expect": "unsat"},
+        {"op": "add_clause", "clause": []},
+        {"op": "solve", "assumptions": [], "expect": "unsat", "expect_core": []}
       ]
     }
   ]

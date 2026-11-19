@@ -13,7 +13,7 @@ import (
 )
 
 const sharedCorpusPath = "../../../specs/fixtures/sat-cnf-v1/cases.json"
-const sharedCorpusSHA256 = "ba66f3a23690ced4d01621e2e26341c1c2e5bee7bce5a455e7a82a8435b32c63"
+const sharedCorpusSHA256 = "0bea6fc66d5d407bebba080663a3d128eabf9804cb8d57c06b4955d9e29944a1"
 
 type corpus struct {
 	Version int          `json:"version"`
@@ -27,12 +27,13 @@ type corpusCase struct {
 }
 
 type corpusStep struct {
-	Op          string        `json:"op"`
-	Assumptions []int         `json:"assumptions"`
-	Clause      []int         `json:"clause"`
-	Budget      *corpusBudget `json:"budget"`
-	Expect      string        `json:"expect"`
-	ExpectCore  []int         `json:"expect_core"`
+	Op             string        `json:"op"`
+	Assumptions    []int         `json:"assumptions"`
+	Clause         []int         `json:"clause"`
+	Budget         *corpusBudget `json:"budget"`
+	Expect         string        `json:"expect"`
+	ExpectCore     []int         `json:"expect_core"`
+	ExpectConflict *bool         `json:"expect_conflict"`
 }
 
 type corpusBudget struct {
@@ -54,10 +55,10 @@ func loadSharedCorpus(t *testing.T) corpus {
 	if err := json.Unmarshal(data, &got); err != nil {
 		t.Fatalf("decode shared SAT corpus: %v", err)
 	}
-	if got.Version != 1 || len(got.Cases) != 11 {
+	if got.Version != 1 || len(got.Cases) != 14 {
 		t.Fatalf("shared corpus shape: version=%d cases=%d", got.Version, len(got.Cases))
 	}
-	wantIDs := []string{"empty_formula_sat", "assumption_satisfies_clause", "assumption_conflict_with_irrelevant_and_duplicate", "nonminimal_but_sound_failed_core", "empty_clause_unsat", "transport_crlf_comments_spanning_and_multiple_clauses", "satlib_terminator_ignores_following_text", "negative_zero_terminates_empty_clause", "contradictory_assumptions_and_recovery", "zero_budget_unknown_then_unbounded_sat", "clause_addition_invalidates_model_and_preserves_constraint"}
+	wantIDs := []string{"empty_formula_sat", "assumption_satisfies_clause", "assumption_conflict_with_irrelevant_and_duplicate", "nonminimal_but_sound_failed_core", "empty_clause_unsat", "transport_crlf_comments_spanning_and_multiple_clauses", "satlib_terminator_ignores_following_text", "negative_zero_terminates_empty_clause", "contradictory_assumptions_and_recovery", "zero_budget_unknown_then_unbounded_sat", "clause_addition_invalidates_model_and_preserves_constraint", "unknown_preserves_pending_root_conflict", "unknown_public_propagate_root_conflict_is_sticky", "known_root_contradiction_clears_core"}
 	seen := make(map[string]bool, len(got.Cases))
 	for _, c := range got.Cases {
 		if c.ID == "" || seen[c.ID] {
@@ -311,6 +312,14 @@ func TestSharedStatefulCorpus(t *testing.T) {
 					model, valid := solver.Model()
 					if valid || model != nil || len(solver.FailedCore()) != 0 {
 						t.Fatalf("AddClause did not invalidate saved result: model=%v valid=%t core=%v", model, valid, solver.FailedCore())
+					}
+				case "propagate":
+					if step.ExpectConflict == nil {
+						t.Fatalf("step %d propagate missing expect_conflict", stepIndex)
+					}
+					gotConflict := solver.Propagate(^uint64(0)) >= 0
+					if gotConflict != *step.ExpectConflict {
+						t.Fatalf("step %d public propagation conflict=%t, want %t", stepIndex, gotConflict, *step.ExpectConflict)
 					}
 				case "reset":
 					solver.Reset()
