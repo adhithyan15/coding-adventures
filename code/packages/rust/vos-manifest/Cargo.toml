@@ -3,6 +3,8 @@ name = "vos-manifest"
 version = "0.1.0"
 edition = "2021"
 description = "Pure parsers and document assembly for the verified-OS program (VOS-033, VOS02): contract.vos, .part admission, the generated-document marker skeleton and claim digests"
+# An evidence-only tooling library of the verified-OS program, not a published package (VOS-D104, checked by `vos-link check-publish`).
+publish = false
 
 [lib]
 name = "vos_manifest"

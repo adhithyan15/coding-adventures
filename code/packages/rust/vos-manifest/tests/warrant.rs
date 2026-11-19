@@ -678,10 +678,20 @@ fn claim_calls_walks_the_parsed_body_so_strings_and_comments_hide_nothing() {
   claim c3:
     forall v: Bool. if v then (b\"00\", unused(v)) == (b\"00\", v) else dispatch(insert(v)) == v
 ";
-    let ops = ["insert".to_string(), "dispatch".to_string(), "unused".to_string()];
+    let ops = [
+        "insert".to_string(),
+        "dispatch".to_string(),
+        "unused".to_string(),
+    ];
     let got = vos_manifest::warrant::claim_calls(doc, &ops).unwrap();
     assert_eq!(got[0], ("c1".to_string(), vec![]));
-    assert_eq!(got[1], ("c2".to_string(), vec!["insert".to_string(), "dispatch".to_string()]));
+    assert_eq!(
+        got[1],
+        (
+            "c2".to_string(),
+            vec!["insert".to_string(), "dispatch".to_string()]
+        )
+    );
     assert_eq!(got[2].1, ["unused", "dispatch", "insert"]);
 }
 
@@ -725,4 +735,42 @@ fn claim_calls_finds_a_config_model_called_with_an_empty_argument_list() {
     let got = vos_manifest::warrant::claim_calls(doc, &["cfg_N".to_string()]).unwrap();
     assert_eq!(got[0], ("uses".to_string(), vec!["cfg_N".to_string()]));
     assert_eq!(got[1], ("ignores".to_string(), vec![]));
+}
+
+#[test]
+fn bound_facts_lists_ops_and_literal_bounds_and_refuses_to_guess_anything_else() {
+    // VOS-039b-2b: the rows come from the parsed tree.  A bound is `Some` only for a plain
+    // integer literal; a sum, a parenthesised number, a name and a typed literal are `None`.
+    let doc = "warrant t v1
+  record Impl(x: U8)
+  op init() -> Impl
+  op step_out(s: Impl) -> Impl
+  bound init:
+    steps <= 80
+    heap <= 0
+  bound step_out:
+    steps <= 40 + 40
+    heap <= (0)
+    depth <= 2u8
+    other <= 7u64
+    named <= heap
+";
+    let f = vos_manifest::warrant::bound_facts(doc).unwrap();
+    assert_eq!(f.ops, ["init", "step_out"]);
+    let row = |op: &str, metric: &str| {
+        f.rows
+            .iter()
+            .find(|r| r.op == op && r.metric == metric)
+            .unwrap_or_else(|| panic!("no row {op} {metric}"))
+            .value
+    };
+    assert_eq!(row("init", "steps"), Some(80));
+    assert_eq!(row("init", "heap"), Some(0));
+    assert_eq!(row("step_out", "steps"), None);
+    assert_eq!(row("step_out", "heap"), None);
+    assert_eq!(row("step_out", "depth"), Some(2));
+    assert_eq!(row("step_out", "other"), Some(7));
+    assert_eq!(row("step_out", "named"), None);
+    assert_eq!(f.rows.len(), 7);
+    assert!(vos_manifest::warrant::bound_facts("not a document").is_err());
 }

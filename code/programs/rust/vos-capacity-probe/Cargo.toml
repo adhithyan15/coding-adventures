@@ -3,6 +3,8 @@ name = "vos-capacity-probe"
 version = "0.1.0"
 edition = "2021"
 description = "Solver and enumeration capacity probe of the verified-OS program (VOS-028b, VOS30 section 9): synthetic RV32I miters, certified chains, memory, self-composition and enumeration experiments, with resource limits, validity guards and a reproducible results file"
+# An evidence-only probe program, not a published package (VOS-D104, checked by `vos-link check-publish`).
+publish = false
 
 [lib]
 name = "vos_capacity_probe"

@@ -189,7 +189,7 @@ recorded. Block 3 (`contract.vos`) is **not** copied: it is not Warrant, it has 
 in a `.warrant` document, and its digest **will be** pinned by the lock (`ceilings-sha256`,
 section 6.3; `check-profile`, VOS-034), so a change to a ceiling regenerates no document
 (section 10.1, D-GD1).  Until then `check-doc` binds only the tier list of `contract.vos`;
-the ceilings and `config N` are not yet compared with the bound rows (VOS-D055). A regeneration check (`vos-link check-doc`, section 10) fails on drift,
+the ceilings are compared with the bound rows, per component, by `vos-link check-component` (CC09, VOS-039b-2b; VOS04 section 5.6), and `config N` by `check-contract`. A regeneration check (`vos-link check-doc`, section 10) fails on drift,
 in the style of `--check-module` (VER23a section 2.1) and `gen_evidence --check`
 (VER04h section 1).
 
@@ -433,7 +433,7 @@ warrant vos_ready_bitmap v1
   example alpha_reads_bit_i_as_priority_i:
     dec(alpha_w(Impl(5u8))) == Ready(true, false, true, false, false, false, false, false)
   labels insert_out: ... labels alpha_w:    (7 labels rows, all `public`)
-  ...                                   (bound rows against the ceilings of contract.vos go here)
+  ...                                   (bound rows; `check-component` CC09 compares them with the ceilings of contract.vos)
   -- vos02:impl-end
   -- vos02:obligations-begin tier=safety sha256=9ce29b29ff60f33c81bf1b5e4e1d398029f6a31a788b6ad401e0926df6663073
   claim insert_safe:
@@ -1090,7 +1090,9 @@ Further checks, each a named negative control (section 12):
 2. A theorem with `property=hyper` needs every cited interface realised by a
    `production` implementation that carries `policy` (VOS-D007).
 3. An implementation's `bound` rows are at or under the contract's ceilings
-   (section 8, resource).
+   (section 8, resource). Per component, `vos-link check-component` already compares them (CC09,
+   VOS-039b-2b: the operation-to-ceiling mapping is derived, never declared; VOS04 section 5.6);
+   `check-profile` keeps the lock side (the digest of the ceilings the lock pinned).
 4. The board's `isa` equals the target ISA, and the `class` rows required by
    section 6.2 are present.
 5. Every obligation the profile needs for an implementation satisfies R4.
@@ -1414,7 +1416,7 @@ admitted when present (a forged marker in it is a `GD01`) and never copied. `con
 the tiers and the instance), never copied.  Its digest will be pinned by the lock (VOS-034);
 until then `check-doc` binds only its tier list (each `tier` row against the
 `obligations-*.part` files, both ways), and the ceilings and `config N` are compared with
-nothing (VOS-D055).
+nothing by `check-doc`; `check-component` compares the ceilings with the bound rows (CC09, VOS-039b-2b) and `check-contract` generates `config N`.
 
 **D-GD2. Which crate names which contract, and which tiers are embedded.** The crate's
 `vos.toml` has two more keys, both required for kind `production`, `reference` and `any`:
@@ -1681,7 +1683,7 @@ the gate (VER04h section 6).
 | NC6 | a stale lock after a contract change | `check-profile` (digest mismatch) |
 | NC7 | an `any` implementation in an `image` profile | eligibility, section 7.2 rule 3 |
 | NC8 | a `hyper` theorem over an `any` or non-policy interface | `check-profile` (VOS-D007) |
-| NC9 | an implementation whose `bound` row exceeds the ceiling | `check-profile` (resource) |
+| NC9 | an implementation whose `bound` row exceeds the ceiling | `check-component` CC09 (per component, VOS-039b-2b); `check-profile` (resource, against the locked ceilings) |
 | NC10 | a board whose `isa` differs from the target | `check-profile` |
 | NC11 | every control S1-S9 of section 7.5 (unification, renamed or relabelled `-any`, `ghost` in `default`, `build.rs` file and proc macros, a regenerated lock, `class image` before VOS22; a dev-dependency-only ghost must pass) | SH16 static rules |
 | NC12 | two `impl Profile` blocks; a missing `realises=`; a wrapper that does not forward | AM5 controls 1-3 |

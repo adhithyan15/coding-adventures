@@ -180,6 +180,14 @@ var (
 		"code/specs/vos-probe-ready.warrant",
 		"code/specs/vos-sched-fp-bitmap.warrant",
 	}
+	// vosPublishGlobs are exactly isVosPublishInput as globs: the two files `vos-link check-publish`
+	// reads in every direct `vos-*` child of the two Rust roots (VOS-D104).
+	vosPublishGlobs = []string{
+		"code/packages/rust/vos-*/Cargo.toml",
+		"code/packages/rust/vos-*/vos.toml",
+		"code/programs/rust/vos-*/Cargo.toml",
+		"code/programs/rust/vos-*/vos.toml",
+	}
 	vosShapeGrammarPaths = []string{
 		"code/grammars/rust/rust1.97.0-e2021.tokens",
 		"code/grammars/rust/rust1.97.0-e2024.tokens",
@@ -475,9 +483,10 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "rust/programs/vos-link",
 		language: "rust",
-		inputs:   "the vos_contract and vos_document grammar pairs vos-manifest embeds",
-		matches:  isVosGrammarInput,
+		inputs:   "the vos_contract and vos_document grammar pairs vos-manifest embeds, and the Cargo.toml and vos.toml of every vos-* crate, which its BUILD sweeps outside Cargo (check-publish, VOS-D104)",
+		matches:  func(changed string) bool { return isVosGrammarInput(changed) || isVosPublishInput(changed) },
 		paths:    vosGrammarPaths,
+		globs:    vosPublishGlobs,
 	},
 	vosImplementationRow("vos-sched-fp-bitmap"),
 	vosImplementationRow("vos-sched-any"),
@@ -1431,6 +1440,25 @@ func isCtCompareInput(changed string) bool {
 func isVosGrammarInput(changed string) bool {
 	return strings.HasPrefix(changed, "code/grammars/vos_contract/") ||
 		strings.HasPrefix(changed, "code/grammars/vos_document/")
+}
+
+// isVosPublishInput reports whether a changed path is a file `vos-link check-publish` reads: the
+// `Cargo.toml` or `vos.toml` of a DIRECT child named `vos-*` of `code/packages/rust` or
+// `code/programs/rust` (VOS-D104).  The sweep does not recurse, so neither does this.
+//
+//	code/packages/rust/vos-manifest/Cargo.toml        → true
+//	code/programs/rust/vos-capacity-probe/vos.toml    → true
+//	code/packages/rust/vos-manifest/src/Cargo.toml    → false (nested)
+//	code/packages/rust/vosx/Cargo.toml                → false
+//	code/packages/python/vos-a/Cargo.toml             → false
+func isVosPublishInput(changed string) bool {
+	parts := strings.Split(changed, "/")
+	return len(parts) == 5 &&
+		parts[0] == "code" &&
+		(parts[1] == "packages" || parts[1] == "programs") &&
+		parts[2] == "rust" &&
+		strings.HasPrefix(parts[3], "vos-") &&
+		(parts[4] == "Cargo.toml" || parts[4] == "vos.toml")
 }
 
 // isVosToolInput reports whether a changed path is a source of a tool that a VOS

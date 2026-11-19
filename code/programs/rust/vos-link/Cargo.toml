@@ -3,6 +3,8 @@ name = "vos-link"
 version = "0.1.0"
 edition = "2021"
 description = "Host tool of the verified-OS program (VOS-033, VOS-039a, VOS02): gen-doc assembles and check-doc verifies code/specs/<impl>.warrant; check-component judges a component crate (VOS04 5.6)"
+# An evidence-only host tool, not a published package (VOS-D104, checked by `vos-link check-publish`).
+publish = false
 
 [lib]
 name = "vos_link"
@@ -64,3 +66,11 @@ path = "tests/component.rs"
 [[test]]
 name = "contract"
 path = "tests/contract.rs"
+
+[[test]]
+name = "bounds"
+path = "tests/bounds.rs"
+
+[[test]]
+name = "publish"
+path = "tests/publish.rs"
