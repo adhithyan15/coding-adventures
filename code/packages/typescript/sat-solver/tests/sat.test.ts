@@ -671,6 +671,44 @@ describe("CDCL SAT: Resource Bounding and Hostile Input Protection (VER09 §2.9)
     expect(s.getFailedCore()).toEqual([]);
   });
 
+  it("reduces genuine long learned clauses without deleting originals or live reasons", () => {
+    const pigeons = 17;
+    const holes = 16;
+    const s = new Solver();
+    const choices = Array.from({ length: pigeons }, () =>
+      Array.from({ length: holes }, () => makeLit(s.newVar(), false)),
+    );
+    for (const row of choices) s.addClause(row);
+    for (let hole = 0; hole < holes; hole++) {
+      for (let first = 0; first < pigeons; first++) {
+        for (let second = first + 1; second < pigeons; second++) {
+          s.addClause([negateLit(choices[first][hole]), negateLit(choices[second][hole])]);
+        }
+      }
+    }
+    const originalClauseCount = s.nClauses();
+    assert.equal(originalClauseCount, 2193);
+    expect(s.solve({ maxConflicts: 7 })).toBe("unknown");
+
+    // Inspect only naturally generated learned records: no solver state is
+    // forged, and every tombstone below came from the real bounded search.
+    const internal = s as unknown as {
+      clauses: Lit[][];
+      isLearned: boolean[];
+      reason: Int32Array;
+      maxLearned: number;
+    };
+    const deletedLearned = internal.clauses
+      .map((clause, index) => ({ clause, index }))
+      .filter(({ clause, index }) => index >= originalClauseCount && clause.length === 0);
+    assert.ok(deletedLearned.length > 0, "bounded PHP trace should cross learned-database reduction");
+    assert.ok(deletedLearned.every(({ index }) => !internal.isLearned[index]));
+    assert.ok(internal.clauses.slice(0, originalClauseCount).every((clause) => clause.length > 0));
+    const liveReasons = [...internal.reason].filter((reason) => reason >= 0);
+    assert.ok(liveReasons.every((reason) => internal.clauses[reason]?.length > 0));
+    assert.ok(internal.maxLearned > 2000, "reduction must advance its real learned-clause threshold");
+  });
+
   it("rejects negative or malformed literals defensively", () => {
     const s = new Solver();
     expect(() => s.addClause([-1])).toThrow();
