@@ -396,7 +396,11 @@ class CiWiring(unittest.TestCase):
         self.assertNotIn("ubuntu-latest", body)
         self.assertIn("sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0", body)
         self.assertNotRegex(body, r"if:.*apparmor")
+        # strace is preinstalled on both images: apt only as a fallback, never
+        # an unconditional `apt-get update` (mirror stalls fail the job).
+        self.assertIn("if command -v strace >/dev/null 2>&1; then", body)
         self.assertIn("bash code/scripts/ci/apt-install.sh strace", body)
+        self.assertIn("strace -V | head -1", body)
         self.assertIn("KILN_REQUIRE_SANDBOX: '1'", body)
         # D24: real traces are cross-checked between the old scanner and the grammar path.
         self.assertIn("KILN_TRACE_DIFF: '1'", body)
