@@ -13,9 +13,13 @@
 //! variants to the no-PSK server-flight position that expects
 //! `CertificateVerify`, then advances that state to expect `Finished`. A final
 //! bounded transition admits one server-role `Finished` verdict for the same
-//! selected suite and completes that exact flight. It does not prove that the
-//! verdict's transcript follows the retained `CertificateVerify`, authenticate
-//! records, or provide TLS, HTTP, OAuth, or network readiness.
+//! selected suite and completes that exact flight. A separate consuming entry
+//! point derives the RSA key only through the complete reviewed path and proves
+//! exact transcript continuity from authenticated server `CertificateVerify`
+//! through a caller-supplied Finished key. It checks that key's role and suite
+//! but does not establish its key-schedule or traffic-secret provenance. It
+//! does not prove the preceding flight order, append the Finished encoding,
+//! authenticate records, or provide TLS, HTTP, OAuth, or network readiness.
 
 #![forbid(unsafe_code)]
 
@@ -34,15 +38,20 @@ use https_reviewed_server_path_binding::{
 use tls13_certificate_verify_input::CertificateVerifyRole;
 use tls13_certificate_verify_message::CertificateVerifyMessage;
 use tls13_certificate_verify_transcript_binding::{
-    verify_transcript_bound_certificate_verify, HashedTranscriptBoundCertificateVerifyInput,
+    verify_and_advance_owned_certificate_verify_transcript,
+    verify_finished_after_owned_certificate_verify, verify_transcript_bound_certificate_verify,
+    CertificateVerifyFinishedContinuityErrorKind, CertificateVerifyTranscriptAdvanceErrorKind,
+    HashedTranscriptBoundCertificateVerifyInput, OwnedVerifiedCertificateVerifyFinishedContinuity,
     VerifiedTranscriptBoundCertificateVerify,
 };
 use tls13_cipher_suite_policy::SelectedCipherSuite;
-use tls13_finished::{FinishedRole, VerifiedFinished};
+use tls13_finished::{FinishedKey, FinishedRole, VerifiedFinished};
 use tls13_handshake::Tls13HandshakeType;
 use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightError};
 use tls13_rsa_pss_certificate_verify::Tls13RsaPssCertificateVerifyErrorKind;
 use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
+use tls13_signature_scheme_policy::AuthorizedSignatureScheme;
+use tls13_transcript::SelectedTls13Transcript;
 use x509_certificate::X509Certificate;
 use x509_rsa_public_key::{
     validate_rsa_public_key, RsaPublicKeyErrorKind, RsaPublicKeyPolicy, ValidatedRsaPublicKey,
@@ -258,6 +267,53 @@ impl fmt::Display for ReviewedServerPathCertificateVerifyError {
 
 impl std::error::Error for ReviewedServerPathCertificateVerifyError {}
 
+/// Stable, payload-free failures from reviewed-path CertificateVerify-to-
+/// Finished continuity.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind {
+    /// The reviewed target's exact SubjectPublicKeyInfo failed RSA policy.
+    PublicKey(RsaPublicKeyErrorKind),
+    /// Exact CertificateVerify authentication or transcript advancement failed.
+    CertificateVerify(CertificateVerifyTranscriptAdvanceErrorKind),
+    /// Exact post-CertificateVerify Finished authentication failed.
+    Finished(CertificateVerifyFinishedContinuityErrorKind),
+}
+
+/// One redacted consuming reviewed-path continuity failure.
+#[derive(Clone, Copy, Eq, PartialEq)]
+pub struct ReviewedServerPathFinishedKeyTranscriptContinuityError {
+    kind: ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind,
+}
+
+impl ReviewedServerPathFinishedKeyTranscriptContinuityError {
+    /// Return the stable redacted failure category.
+    #[must_use]
+    pub const fn kind(self) -> ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Debug for ReviewedServerPathFinishedKeyTranscriptContinuityError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ReviewedServerPathFinishedKeyTranscriptContinuityError")
+            .field("kind", &self.kind)
+            .finish()
+    }
+}
+
+impl fmt::Display for ReviewedServerPathFinishedKeyTranscriptContinuityError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "reviewed server-path CertificateVerify-to-Finished-key transcript continuity error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for ReviewedServerPathFinishedKeyTranscriptContinuityError {}
+
 /// Non-copyable evidence retaining the complete reviewed path and exact
 /// selected-transcript server signature verdict.
 pub struct VerifiedReviewedServerPathCertificateVerify<
@@ -412,6 +468,128 @@ impl fmt::Debug
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("VerifiedReviewedServerPathCertificateVerify")
+    }
+}
+
+/// Non-copyable evidence retaining the complete reviewed path and exact
+/// consuming CertificateVerify-to-Finished-key transcript continuity graph.
+pub struct VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity<
+    'reviewed,
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'body,
+> {
+    reviewed_server_path: &'reviewed ReviewedHttpsServerPath<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    continuity: OwnedVerifiedCertificateVerifyFinishedContinuity<'body, 'target_encoded>,
+}
+
+impl<
+        'reviewed,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'body,
+    >
+    VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity<
+        'reviewed,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'body,
+    >
+{
+    /// Return the exact complete reviewed server-path proof.
+    #[must_use]
+    pub const fn reviewed_server_path(
+        &self,
+    ) -> &'reviewed ReviewedHttpsServerPath<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        self.reviewed_server_path
+    }
+
+    /// Return the exact consuming CertificateVerify-to-Finished proof.
+    #[must_use]
+    pub const fn continuity(
+        &self,
+    ) -> &OwnedVerifiedCertificateVerifyFinishedContinuity<'body, 'target_encoded> {
+        &self.continuity
+    }
+}
+
+impl fmt::Debug
+    for VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity")
     }
 }
 
@@ -1300,6 +1478,134 @@ impl fmt::Debug
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("VerifiedHttpsDnsDestinationReviewedServerPathCertificateVerify")
     }
+}
+
+/// Verify exact server CertificateVerify-to-Finished-key transcript continuity
+/// with the target key derived only through the complete reviewed path.
+///
+/// The selected transcript is consumed. Every failure returns only a stable
+/// redacted category and no transcript or partial verification evidence.
+/// The caller-supplied Finished key is checked for server role and exact suite,
+/// but this boundary does not establish its key-schedule or traffic-secret
+/// provenance and does not retain that provenance in its result.
+#[allow(clippy::too_many_arguments)]
+pub fn verify_reviewed_server_path_certificate_verify_finished_key_transcript_continuity<
+    'reviewed,
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'body,
+    'key_policy,
+>(
+    reviewed_server_path: &'reviewed ReviewedHttpsServerPath<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    transcript: SelectedTls13Transcript,
+    authorized_scheme: AuthorizedSignatureScheme,
+    certificate_verify_body: &'body [u8],
+    rsa_key_policy: RsaPublicKeyPolicy<'key_policy>,
+    rsa_key_limits: Asn1Limits,
+    signed_input_output: &mut [u8],
+    handshake_output: &mut [u8],
+    data_block_scratch: &mut [u8],
+    signature_limits: Tls13RsaPssSignatureLimits,
+    finished_key: &FinishedKey<'_>,
+    peer_verify_data: &[u8],
+) -> Result<
+    VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity<
+        'reviewed,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'body,
+    >,
+    ReviewedServerPathFinishedKeyTranscriptContinuityError,
+> {
+    let certificate = reviewed_server_path
+        .subordinate_policy()
+        .target_policy()
+        .anchor_policy()
+        .target_signature_closure()
+        .server_policy()
+        .certificate();
+    let public_key = validate_rsa_public_key(
+        certificate.tbs_certificate().subject_public_key_info(),
+        rsa_key_policy,
+        rsa_key_limits,
+    )
+    .map_err(
+        |error| ReviewedServerPathFinishedKeyTranscriptContinuityError {
+            kind: ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind::PublicKey(
+                error.kind(),
+            ),
+        },
+    )?;
+    let certificate_verify = verify_and_advance_owned_certificate_verify_transcript(
+        transcript,
+        CertificateVerifyRole::Server,
+        authorized_scheme,
+        certificate_verify_body,
+        public_key,
+        signed_input_output,
+        handshake_output,
+        data_block_scratch,
+        signature_limits,
+    )
+    .map_err(
+        |error| ReviewedServerPathFinishedKeyTranscriptContinuityError {
+            kind: ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind::CertificateVerify(
+                error.kind(),
+            ),
+        },
+    )?;
+    let continuity = verify_finished_after_owned_certificate_verify(
+        certificate_verify,
+        finished_key,
+        peer_verify_data,
+    )
+    .map_err(
+        |error| ReviewedServerPathFinishedKeyTranscriptContinuityError {
+            kind: ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind::Finished(
+                error.kind(),
+            ),
+        },
+    )?;
+
+    Ok(
+        VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity {
+            reviewed_server_path,
+            continuity,
+        },
+    )
 }
 
 /// Verify one server `CertificateVerify` with the exact reviewed path target.
