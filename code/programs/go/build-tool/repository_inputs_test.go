@@ -903,6 +903,118 @@ func TestHashFunctionsV1GraphExportsExactRepositoryInputs(t *testing.T) {
 	}
 }
 
+func TestHashMapV1SelectsOnlySwiftPublicConsumer(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "swift/hash-map", Language: "swift"},
+		{Name: "dart/hash-map", Language: "dart"},
+		{Name: "swift/hash-functions", Language: "swift"},
+	}
+	accepted := []string{
+		"code/specs/DT18-hash-map.md",
+		"code/specs/DT18-hash-map-dart-profile.md",
+		"code/specs/fixtures/hash-map-v1/cases.json",
+		"code/specs/fixtures/hash-map-v1/schema.json",
+		"code/specs/fixtures/hash-map-v1/oracle.py",
+	}
+	for _, changed := range accepted {
+		if !isDt18HashMapInput(changed) {
+			t.Errorf("isDt18HashMapInput(%q) = false, want true", changed)
+		}
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := map[string]bool{"swift/hash-map": true}; !reflect.DeepEqual(got, want) {
+			t.Errorf("consumers for %q = %v, want %v", changed, got, want)
+		}
+	}
+	for _, changed := range []string{
+		"code/specs/DT18-hash-map.md.bak",
+		"code/specs/DT18-hash-map-dart-profile.md.extra",
+		"code/specs/DT18x-hash-map.md",
+		"code/specs/fixtures/hash-map-v10/cases.json",
+		"code/specs/fixtures/hash-map-v1x/cases.json",
+		"code/specs/fixtures/hash-map-v1",
+		"code/specs/fixtures/hash-map-v1/cases.json.backup",
+		"code/specs/fixtures/hash-map-v1/../hash-map-v10/cases.json",
+	} {
+		if changed == "code/specs/fixtures/hash-map-v1/cases.json.backup" {
+			if !isDt18HashMapInput(changed) {
+				t.Errorf("fixture-tree input %q was not selected", changed)
+			}
+			continue
+		}
+		if isDt18HashMapInput(changed) {
+			t.Errorf("isDt18HashMapInput(%q) = true, want false", changed)
+		}
+	}
+	for language, want := range map[string]map[string]bool{
+		"swift": {"swift/hash-map": true},
+		"dart":  {},
+	} {
+		got, err := repositoryInputConsumersForChange([]string{accepted[0]}, packages, language)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("%s selector returned %v, want %v", language, got, want)
+		}
+	}
+	if _, err := repositoryInputConsumersForChange([]string{accepted[2]}, packages[1:], "all"); err == nil || !strings.Contains(err.Error(), `repository input consumer "swift/hash-map"`) {
+		t.Errorf("missing Swift consumer error = %v", err)
+	}
+}
+
+func TestHashMapV1GraphExportsExactRepositoryInput(t *testing.T) {
+	root := t.TempDir()
+	pkg := discovery.Package{Name: "swift/hash-map", Language: "swift", Path: filepath.Join(root, "code", "packages", "swift", "hash-map")}
+	if err := os.MkdirAll(pkg.Path, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	graph, err := buildKilnLegacyGraph([]discovery.Package{pkg}, root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, node := range graph.Packages {
+		if node.Name != pkg.Name {
+			continue
+		}
+		want := []string{"code/specs/DT18-hash-map-dart-profile.md", "code/specs/DT18-hash-map.md", "code/specs/fixtures/hash-map-v1"}
+		if !reflect.DeepEqual(node.RepoInputs, want) {
+			t.Fatalf("repo_inputs = %v, want %v", node.RepoInputs, want)
+		}
+		return
+	}
+	t.Fatal("graph omitted swift/hash-map")
+}
+
+func TestDiscoveredSwiftHashMapExportsDT18RepositoryInputs(t *testing.T) {
+	root := findRepoRoot("")
+	packageRoot := filepath.Join(root, "code", "packages", "swift", "hash-map")
+	packages, err := discovery.DiscoverPackages(packageRoot)
+	if err != nil {
+		t.Fatalf("discover actual Swift hash-map package: %v", err)
+	}
+	if len(packages) != 1 || packages[0].Name != "swift/hash-map" {
+		t.Fatalf("discovered packages = %#v, want actual swift/hash-map package", packages)
+	}
+	graph, err := buildKilnLegacyGraph(packages, root)
+	if err != nil {
+		t.Fatalf("export actual Swift hash-map graph node: %v", err)
+	}
+	for _, node := range graph.Packages {
+		if node.Name != "swift/hash-map" {
+			continue
+		}
+		want := []string{"code/specs/DT18-hash-map-dart-profile.md", "code/specs/DT18-hash-map.md", "code/specs/fixtures/hash-map-v1"}
+		if !reflect.DeepEqual(node.RepoInputs, want) {
+			t.Fatalf("actual swift/hash-map repo_inputs = %v, want %v", node.RepoInputs, want)
+		}
+		return
+	}
+	t.Fatal("graph omitted discovered swift/hash-map package")
+}
+
 func TestVer04pDomainDiagnosticSelectsWarrantGrammar(t *testing.T) {
 	packages := []discovery.Package{{Name: "rust/warrant-grammar", Language: "rust"}}
 	cases := map[string]bool{

@@ -21,7 +21,9 @@ moves it into fresh sequence-zero nonce state, marks that sender issued, and
 returns a non-cloneable wrapper that borrows the issuer. Callers can borrow or
 mutably borrow the state through that wrapper, but cannot detach it from the
 complete retry proof or create a second sequence-zero state for the same
-sender through this boundary.
+sender through this boundary. Finished-key and transcript-continuation proofs
+for the same secrets must be derived through the issuer's immutable proof
+accessor, preserving that single owner and its issuance state.
 
 The exact state wrapper can also seal or open one retry-handshake record through
 the repository-owned record dispatcher. Sealing fixes the authenticated inner
@@ -57,13 +59,23 @@ an earlier valid message followed by an invalid one, the earlier callback may
 already have run; caller-owned effects remain caller-audited and are not
 transactional.
 
+A fresh ordered owner can also be consumed together with the exact retry
+server transcript-continuation proof. The join requires pointer identity of
+the retained handshake-traffic-secret object, zero consumed records, no
+fragment or failure, the initial `ExpectEncryptedExtensions` position, exact
+suite equality across ordered state, transcript, and server Finished key, and
+the retained ServerHello snapshot. Success moves the ordered owner and
+reconstructed transcript into one non-cloneable wrapper while retaining the
+complete server Finished-key proof. Only immutable access is exposed.
+
 This package derives one direction's handshake key and IV, creates matching
 record state, protects exact retry-handshake records in caller-owned buffers,
-and enforces the public no-PSK server-flight type order. It does not interpret
-message bodies, advance the transcript, authenticate CertificateVerify or
-Finished, validate certificates, establish trust, verify hostnames, enforce
-revocation, perform I/O, authorize HTTP or OAuth, or provide TLS, HTTPS, or
-live-provider readiness.
+enforces the public no-PSK server-flight type order, and joins fresh ordered
+state to exact retry transcript and Finished-key provenance. It does not open
+a record through that joined wrapper, interpret message bodies, advance its
+transcript, authenticate CertificateVerify or Finished, validate certificates,
+establish trust, verify hostnames, enforce revocation, perform I/O, authorize
+HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
 
 ## Verification
 

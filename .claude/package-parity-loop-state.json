@@ -19093,22 +19093,71 @@
       "notes": "The Dart DT17 hash-functions prerequisite is merged. The Dart DT18 hash-map gap is split into hash-map-dart-lane-parity and remains missing while its profile, shared-fixture, implementation, VM/Node, coverage, and merge gates are pending. This umbrella retains the other missing Dart identities: bloom-filter, hash-set, HyperLogLog, in-memory store/protocol/engine, radix-tree, RESP, skip-list, and tree-set. Hash-set depends on the map child, tree-set needs its tree substrate, and the store engine needs several data structures. Keep the full server/AOF outside scope without applicability review."
     },
     {
+      "id": "hash-map-dt18-shared-conformance-foundation",
+      "title": "Add DT18 shared conformance and cache-input bindings",
+      "status": "pending",
+      "depends_on": [
+        "hash-functions-dt17-vector-and-documentation-correction",
+        "hash-functions-dart-lane-parity",
+        "swift-hash-map-lane-parity"
+      ],
+      "branch": "codex/dt18-map-conformance-foundation-20261119",
+      "pr_number": null,
+      "selection_blocked": false,
+      "selection_revision": "b779d10a1601c203bc377ef74e448ac947906c66",
+      "publication_readiness": "ready_for_pr",
+      "notes": "Phase 2 freezes a shared DT18 corpus with independent association-list and physical-layout models, compact lossless exhaustive-history streams, directed cases, and hash vectors. The real Swift public HashMap consumer and build-tool fixture routing pass on the Phase 2 source. This foundation contains no Dart production implementation and earns no Dart slot credit. Independent review and the publication PR must complete before selecting the Dart implementation owner.",
+      "profile_evidence": {
+        "pull_request": 19693,
+        "merge_revision": "eaa6fb8d547d63eff010739ad36aa25508046c34",
+        "profile_revision": "6c6224602972d91ee5f3683a13d4f4f106c9e585"
+      },
+      "fixture_gate": {
+        "status": "passed",
+        "fixture_path": "code/specs/fixtures/hash-map-v1/cases.json",
+        "fixture_bytes": 469237,
+        "fixture_sha256": "4b8e2ebaa80e50c0d680d1f1c7ef7f8eb96944a46356dc30db31be4e2daee86a",
+        "history_count_per_strategy": 66430,
+        "consumer": "actual Swift public API",
+        "production_dart_claim": false
+      }
+    },
+    {
       "id": "hash-map-dart-lane-parity",
       "title": "Implement and validate the Dart DT18 hash-map profile",
       "status": "pending",
       "depends_on": [
         "hash-functions-dt17-vector-and-documentation-correction",
-        "hash-functions-dart-lane-parity"
+        "hash-functions-dart-lane-parity",
+        "hash-map-dt18-shared-conformance-foundation"
       ],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
       "selection_revision": "b779d10a1601c203bc377ef74e448ac947906c66",
       "selection_notes": "Fresh exact-main inventory at b779d10a1601c203bc377ef74e448ac947906c66 reports 5,164 structural package slots and DT18 hash-map coverage of 14/15 established lanes, with Dart the sole missing lane. The six open PRs had no map overlap. Select this dedicated leaf after Dart DT17 PR #19687 merged.",
-      "notes": "Split from pending dart-hash-foundation-and-eleven-storage-families. The local phase1 branch codex/parity-dart-hash-map-20261119 contains only the DT18 Dart profile, the worked-example boundary correction, and canonical ownership reconciliation. The initial phase1 commit c365016a683991765157e0153b1cd4849a3dff34 established the profile and ownership split. The current profile specifies bounded probing and tombstone rules, common Swift/Dart input scope, Dart-only invalid-domain and iterable cases, and explicit exhaustive, production-limit, generated-history, mutation, and coverage gates. The updated profile awaits independent review; gate2 fixtures and production work remain blocked. No shared fixtures, production package, tests, or Dart slot credit exist yet. After profile approval, freeze neutral fixtures with an independent association-list oracle and direct public Swift consumer. Only after that review may production work start. Phase3 must execute real public APIs on Dart VM and Node, exercise production limits, report measured line and branch coverage, and use meaningful source-fault controls. Reduced internal limits remain labeled separately. No Dart Warrant or SAT proof is claimed.",
+      "notes": "The DT18 profile and ownership split merged in PR #19693 as eaa6fb8d547d63eff010739ad36aa25508046c34. Its Phase 2 shared conformance foundation is tracked separately and must merge before Dart production work begins. The Dart package implementation, public API tests, VM/Node validation, and production-boundary checks remain outstanding. This owner still carries no Dart slot credit.",
       "postmerge_preparation_evidence": [
         "code/specs/DT18-hash-map-dart-profile.md"
-      ]
+      ],
+      "profile_gate": {
+        "status": "merged",
+        "reviewed_profile_revision": "6c6224602972d91ee5f3683a13d4f4f106c9e585",
+        "publication_revision": "7d3e87ae46d2e4009c8c1d27c5d7b290ee6900ec",
+        "pull_request": "https://github.com/adhithyan15/coding-adventures/pull/19693",
+        "merge_revision": "eaa6fb8d547d63eff010739ad36aa25508046c34"
+      },
+      "fixture_gate": {
+        "status": "passed",
+        "foundation_owner": "hash-map-dt18-shared-conformance-foundation",
+        "fixture_path": "code/specs/fixtures/hash-map-v1/cases.json",
+        "fixture_bytes": 469237,
+        "fixture_sha256": "4b8e2ebaa80e50c0d680d1f1c7ef7f8eb96944a46356dc30db31be4e2daee86a",
+        "histories_per_strategy": 66430,
+        "consumer": "actual Swift public HashMap API",
+        "dart_conformance_claimed": false,
+        "production_implementation_authorized": false
+      }
     },
     {
       "id": "sql-csv-source-neutral-and-dart-swift-parity",

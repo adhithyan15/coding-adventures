@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 206)
+        self.assertEqual(summary["case_count"], 207)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -160,8 +160,8 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["conformance_status"], "not-run")
         self.assertEqual(summary["source_input_language_count"], 23)
         self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
-        self.assertEqual(summary["repository_source_boundary_count"], 23)
-        self.assertEqual(summary["repository_source_input_count"], 36)
+        self.assertEqual(summary["repository_source_boundary_count"], 24)
+        self.assertEqual(summary["repository_source_input_count"], 37)
         self.assertEqual(len(summary["repository_source_boundary_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
@@ -445,15 +445,15 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(
             summary,
             {
-                "boundary_count": 23,
-                "input_count": 36,
-                "scope_count": 512,
-                "authorization_count": 531,
+                "boundary_count": 24,
+                "input_count": 37,
+                "scope_count": 513,
+                "authorization_count": 532,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "8f9d93a5a7ee618baf31de0cc225b3f834121a7f673e0d8de920b70520a9745a",
+            "b8afd2020cf3cf50eb133eb95cac12bb4f568f5451fb624aa68544e6ff6add71",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         game_input_frame_inputs = by_id[
@@ -3460,6 +3460,7 @@ class PureDomainValidationTests(unittest.TestCase):
             "source-collection-repository-python-workspace.json",
             "source-collection-repository-rust-boundary.json",
             "source-collection-repository-rust-game-clock-exact-inputs.json",
+            "source-collection-repository-swift-hash-map.json",
             "source-collection-repository-starlark-load.json",
             "source-collection-repository-typescript-program-shared.json",
             "source-collection-repository-typescript-shared.json",
@@ -5101,7 +5102,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 206)
+        self.assertEqual(summary["case_count"], 207)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

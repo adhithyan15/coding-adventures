@@ -317,12 +317,12 @@ struct HasherTests {
         )
 
         #expect(checkedObject.isEqual(productionObject))
-        #expect(checked.boundaries.count == 23)
-        #expect(checked.boundaries.flatMap(\.inputs).count == 36)
-        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 30)
+        #expect(checked.boundaries.count == 24)
+        #expect(checked.boundaries.flatMap(\.inputs).count == 37)
+        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 31)
         #expect(
             Hasher.repositorySourceInputBoundaryDigest
-                == "8f9d93a5a7ee618baf31de0cc225b3f834121a7f673e0d8de920b70520a9745a"
+                == "b8afd2020cf3cf50eb133eb95cac12bb4f568f5451fb624aa68544e6ff6add71"
         )
         #expect(
             try Hasher.canonicalRepositorySourceInputBoundaryDigest(from: checkedData)
@@ -341,6 +341,7 @@ struct HasherTests {
         "source-collection-repository-python-workspace.json",
         "source-collection-repository-rust-boundary.json",
         "source-collection-repository-rust-game-clock-exact-inputs.json",
+        "source-collection-repository-swift-hash-map.json",
         "source-collection-repository-starlark-load.json",
         "source-collection-repository-typescript-program-shared.json",
         "source-collection-repository-typescript-shared.json",

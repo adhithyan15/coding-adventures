@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Reconstruct a fresh selected transcript only from the retained exact retry
+  messages and original policy, require exact suite and snapshot equality, and
+  retain it beside the complete server Finished-key provenance.
 - Derive and retain the server Finished key only through the exact-message
   retry handshake traffic-secret proof, with pre-mutation role and suite
   substitution checks.

@@ -203,7 +203,7 @@ and an unmatched `[` is literal. Descending ranges and ambiguous `--`, `&&`,
 
 Package-tree traversal deliberately remains below the package root. A second
 generated, source-embedded projection consumes the complete checked repository-
-relative boundary registry: 23 reviewed boundaries, 36 exact inputs, and 30
+relative boundary registry: 24 reviewed boundaries, 37 exact inputs, and 31
 exact tracked paths. The engine verifies both pinned registry digests, maps only
 exact or strict-descendant consumers with exact exclusions, and reaches a
 generated-pruning exception by its registered path without unpruning or walking
@@ -244,7 +244,7 @@ escaped:
 HASH_PACKAGE_FAILED: package="swift/example"
 ```
 
-The test suite consumes all 17 neutral source-collection cases listed in its
+The test suite consumes all 19 neutral source-collection cases listed in its
 native fixture matrix and the shared
 hashing-v1 missing-cache oracle, then independently covers binary bytes, CRLF,
 Unicode path ordering, same-content renames, empty packages, every established
