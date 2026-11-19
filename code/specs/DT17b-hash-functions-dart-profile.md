@@ -107,7 +107,9 @@ them directly to `BigInt`.
 The corpus includes exhaustive inputs consisting of every byte string of
 length zero, one, and two (65,793 inputs per applicable operation) under
 Murmur3 seed `0x9747b28c`, SipHash key `000102030405060708090a0b0c0d0e0f`,
-and default polynomial parameters. Each operation's output is stored as a
+and both polynomial entry points: the default operation uses base 31, while
+the parameterized operation uses base 257 with modulus
+`2305843009213693951`. Each operation's output is stored as a
 fixed-width lowercase hexadecimal stream with exactly one output per ordered
 input. Dart validates the full stream and consumes every output.
 It also includes directed four- and eight-byte block and tail boundaries,
