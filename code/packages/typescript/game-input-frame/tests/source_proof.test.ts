@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { copyFileSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { basename, join, resolve, sep } from "node:path";
+import { basename, isAbsolute, join, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
@@ -80,6 +80,14 @@ function runCli(cliArgs: string[]) {
     ["run", "--locked", "-q", "-p", "typescript-warrant-ir", "--example", "source-proof", "--", ...cliArgs],
     { cwd: rustWorkspace, encoding: "utf8" },
   );
+}
+
+function assertPhysicalPathBoundTo(reportedPath: string, expectedPath: string): void {
+  assert.ok(isAbsolute(reportedPath), "reported physical path must be absolute");
+  assert.ok(isAbsolute(expectedPath), "expected physical path must be absolute");
+  const reportedIdentity = realpathSync.native(reportedPath);
+  const expectedIdentity = realpathSync.native(expectedPath);
+  assert.equal(reportedIdentity, expectedIdentity);
 }
 
 function assertRefused(cliArgs: string[], expectedMessage: RegExp): void {
@@ -190,7 +198,7 @@ test("the healthy WIR query binds exact production digital.ts bytes", () => {
   assert.equal(report.schema, "typescript-warrant-ir/source-proof/v1");
   assert.equal(report.status, "proved");
   assert.equal(report.source.path, relativeSourcePath);
-  assert.equal(report.source.physical_path, sourcePath);
+  assertPhysicalPathBoundTo(report.source.physical_path, sourcePath);
   assert.equal(report.source.sha256, sourceDigest);
   assert.equal(report.profile.parser, "ts5.8");
   assert.equal(report.profile.lowerer, "typescript-warrant-ir");
@@ -256,6 +264,47 @@ test("source-proof admission refuses digest/path/verdict and healthy-provenance 
   );
 });
 
+test("production binding rejects an identical source file at another physical path", () => {
+  const temporaryDirectory = mkdtempSync(join(tmpdir(), "gbl050a-same-bytes-"));
+  const copiedSourcePath = join(temporaryDirectory, basename(sourcePath));
+  try {
+    copyFileSync(sourcePath, copiedSourcePath);
+    assertRefused(
+      [
+        "--source", copiedSourcePath,
+        "--expected-path", sourcePath,
+        "--sha256", sourceDigest,
+        "--query", "healthy:Proved",
+      ],
+      /source path mismatch/,
+    );
+    const child = runCli([
+      "--source", copiedSourcePath,
+      "--expected-path", realpathSync.native(copiedSourcePath),
+      "--sha256", sourceDigest,
+      "--query", "healthy:Proved",
+    ]);
+    assert.equal(child.error, undefined, child.error?.message);
+    assert.equal(child.status, 0, child.stderr);
+    const report = JSON.parse(child.stdout) as {
+      status: string;
+      source: { physical_path: string; sha256: string };
+    };
+    assert.equal(report.status, "proved");
+    assert.equal(report.source.sha256, sourceDigest);
+    assert.throws(
+      () => assertPhysicalPathBoundTo(report.source.physical_path, sourcePath),
+      assert.AssertionError,
+    );
+    assert.throws(
+      () => assertPhysicalPathBoundTo(relativeSourcePath, sourcePath),
+      assert.AssertionError,
+    );
+  } finally {
+    rmSync(temporaryDirectory, { recursive: true });
+  }
+});
+
 test("guarded source-mutant SAT witnesses replay through the public reducer", async (t) => {
   for (const mutant of mutants) {
     const mutantText = sourceText.replace(mutant.before, mutant.after);
@@ -280,11 +329,14 @@ test("guarded source-mutant SAT witnesses replay through the public reducer", as
       assert.equal(report.schema, "typescript-warrant-ir/source-proof/v1");
       assert.equal(report.status, "proved");
       assert.equal(report.source.path, null, "temporary mutant is outside the repository tree");
-      assert.equal(report.source.identity, realpathSync(mutantPath));
-      assert.equal(report.source.physical_path, realpathSync(mutantPath));
+      assertPhysicalPathBoundTo(report.source.physical_path, mutantPath);
+      assert.equal(
+        report.source.identity,
+        report.source.physical_path.replaceAll("\\", "/"),
+      );
       assert.equal(report.source.sha256, mutantDigest);
       assert.equal(report.provenance.origin.path, relativeSourcePath);
-      assert.equal(report.provenance.origin.physical_path, realpathSync(sourcePath));
+      assertPhysicalPathBoundTo(report.provenance.origin.physical_path, sourcePath);
       assert.equal(report.provenance.origin.sha256, sourceDigest);
       assert.equal(report.provenance.mutation, mutant.query);
       assert.match(report.solver, /coding_adventures_warrant_ir::Prover using cdcl-sat/);

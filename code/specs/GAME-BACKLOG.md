@@ -124,6 +124,14 @@ Python conformance is 96/96 and corpus metadata validation covers 205 case
 documents and 328 staged fixture files. These are local receipts; the PR's
 exact-head CI and protected merge are still pending.
 
+The production-source test harness also now compares Windows-capable physical
+file identity with `realpathSync.native` and checks display-path normalization
+separately. A same-bytes copy is refused when pinned to the production path;
+the copy-bound proof succeeds, then the consumer identity gate rejects it.
+Relative-path and wrong-digest controls remain. This test-only Windows review
+delta passed 22/22 local package tests; exact-head Windows execution was still
+pending when this note was written.
+
 As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, `GBL-061`, and the selected `GBL-063` parser
 repair are merged. PR #19649 merged squash `399ab9af38c45817c6638defe368bf4596d4cad4`; exact-head
 CI run `44345630607` passed the required Ubuntu 24.04 and 26.04 G1 lanes under the then-current
