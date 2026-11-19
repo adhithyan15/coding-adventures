@@ -2281,3 +2281,103 @@ func TestPendingConflictSurvivesLearnedReduction(t *testing.T) {
 		t.Fatal("low learned limit did not reduce learned clauses")
 	}
 }
+
+func TestAddClauseFinishesPendingRootContradiction(t *testing.T) {
+	s, _ := NewSolver()
+	x, _ := s.NewVar()
+	y, _ := s.NewVar()
+	a, _ := MakeLit(x, false)
+	b, _ := MakeLit(y, false)
+	for _, clause := range [][]Lit{{a, b}, {a, b ^ 1}, {a ^ 1, b}, {a ^ 1, b ^ 1}} {
+		if _, err := s.AddClause(clause); err != nil {
+			t.Fatal(err)
+		}
+	}
+	one := uint64(1)
+	if got, err := s.Solve(SolverOptions{MaxSteps: &one}); err != nil || got != SolveUnknown {
+		t.Fatalf("budgeted root proof=%v %v", got, err)
+	}
+	u, _ := MakeLit(Var(3), false)
+	v, _ := MakeLit(Var(4), false)
+	if added, err := s.AddClause([]Lit{u, v}); err != nil || added {
+		t.Fatalf("AddClause did not report propagated root conflict: added=%t err=%v", added, err)
+	}
+	if s.Okay() {
+		t.Fatal("AddClause failed to persist root contradiction")
+	}
+	if got, err := s.Solve(); err != nil || got != SolveUnsat {
+		t.Fatalf("follow-up known root result=%v %v", got, err)
+	}
+}
+
+func TestDIMACSNumericSpellingAndLiteralStringBoundaries(t *testing.T) {
+	for _, input := range []string{"", "p cnf +1 0\n", "p cnf 1 18446744073709551616\n", "p cnf 1 1\n18446744073709551616 0\n", "p cnf 1 1\n- 0\n"} {
+		if _, err := ParseDimacs(input); err == nil {
+			t.Fatalf("accepted malformed DIMACS %q", input)
+		}
+	}
+	if _, err := LitToString(Lit(1 << 31)); err == nil {
+		t.Fatal("LitToString accepted malformed packed literal")
+	}
+	if got, err := LitToString(Lit((1 << 31) - 1)); err != nil || got != "-1073741824" {
+		t.Fatalf("maximum representable literal=%q %v", got, err)
+	}
+}
+
+func TestEmptyBvAddAndMultiBitBvEq(t *testing.T) {
+	builder, _ := NewCnfBuilder(nil)
+	empty, err := builder.BvAdd(nil, nil)
+	if err != nil || len(empty) != 0 {
+		t.Fatalf("empty BvAdd=%v %v", empty, err)
+	}
+	a0, _ := builder.NewLit()
+	a1, _ := builder.NewLit()
+	b0, _ := builder.NewLit()
+	b1, _ := builder.NewLit()
+	eq, err := builder.BvEq([]Lit{a0, a1}, []Lit{b0, b1})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, values := range [][4]bool{{false, false, false, false}, {false, true, false, true}, {true, false, true, false}, {true, true, true, true}, {false, false, true, false}, {true, false, true, true}} {
+		assumptions := []Lit{truthLit(t, a0, values[0]), truthLit(t, a1, values[1]), truthLit(t, b0, values[2]), truthLit(t, b1, values[3])}
+		want := values[0] == values[2] && values[1] == values[3]
+		assumptions = append(assumptions, truthLit(t, eq, want))
+		if got, err := builder.GetSolver().SolveWithAssumptions(assumptions); err != nil || got != SolveSat {
+			t.Fatalf("BvEq expected %t on %v: %v %v", want, values, got, err)
+		}
+		assumptions[4] = truthLit(t, eq, !want)
+		if got, err := builder.GetSolver().SolveWithAssumptions(assumptions); err != nil || got != SolveUnsat {
+			t.Fatalf("BvEq wrong result accepted on %v: %v %v", values, got, err)
+		}
+	}
+	if _, err := builder.BvAdd([]Lit{a0}, nil); err == nil {
+		t.Fatal("BvAdd accepted mismatched widths")
+	}
+}
+
+func TestKnownRootConflictPrecedesZeroBudgetAfterPendingWork(t *testing.T) {
+	s, _ := NewSolver()
+	x, _ := s.NewVar()
+	y, _ := s.NewVar()
+	a, _ := MakeLit(x, false)
+	b, _ := MakeLit(y, false)
+	clauses := [][]Lit{{a, b}, {a, b ^ 1}, {a ^ 1, b}, {a ^ 1, b ^ 1}}
+	for _, clause := range clauses {
+		if _, err := s.AddClause(clause); err != nil {
+			t.Fatal(err)
+		}
+	}
+	one, zero := uint64(1), uint64(0)
+	if got, err := s.Solve(SolverOptions{MaxSteps: &one}); err != nil || got != SolveUnknown {
+		t.Fatalf("first bounded result=%v %v", got, err)
+	}
+	if got, err := s.Solve(SolverOptions{MaxSteps: &zero}); err != nil || got != SolveUnknown {
+		t.Fatalf("zero-budget retry=%v %v", got, err)
+	}
+	if got, err := s.Solve(); err != nil || got != SolveUnsat {
+		t.Fatalf("unbounded root-conflict retry=%v %v", got, err)
+	}
+	if oracleSAT(2, clauses, nil) {
+		t.Fatal("independent oracle found a model for root-conflict formula")
+	}
+}
