@@ -7,6 +7,14 @@ name: Kiln census
 # publishes ONLY the sanitised summary.  The scheduled weekly run is census PR
 # E and is deliberately not here.
 #
+# COVERAGE.  This run uses a fresh $HOME and installs Go only.  Steps that need
+# Rust, .NET, Haskell, Python, Ruby or node fail at "not found" and are recorded
+# as failed steps.  Go is a small share of the build (about 298 of 5115 packages,
+# 0.8% of build time; Rust alone is about 29%), so a clean census here is NOT the
+# PR8 gate.  Every shard's summary says so in its first line.  The follow-up
+# (KILN04, census workflow section) is a `home: fresh|runner` input plus the
+# toolchains pinned as in ci.yml.
+#
 # Trust.  `kiln record prepare` refuses (exit 3) unless the run is a trusted
 # GitHub run: the repository's default branch, event push, schedule or
 # workflow_dispatch.  So dispatch this workflow ON THE DEFAULT BRANCH; the
@@ -24,10 +32,10 @@ on:
       shard_count:
         description: 'Number of shards the build is split into (integer, 1-256)'
         required: true
-        default: '16'
+        default: '15'
         type: string
       shard_indices:
-        description: 'Shard indices to record, comma separated, each below shard_count (at most 8, no repeats)'
+        description: 'Shard indices to record, comma separated, each below shard_count (at most 3, no repeats)'
         required: true
         default: '0'
         type: string
@@ -35,8 +43,8 @@ on:
 permissions:
   contents: read
 
-# Two dispatches would fight over /tmp/kiln-tmp (the recorder's fixed TMPDIR) on
-# a reused runner and double the cost; queue the second, never cancel a recording.
+# Two dispatches would double the cost and fight over the recorder's fixed
+# TMPDIR; queue the second and never cancel a recording.
 concurrency:
   group: kiln-census
   cancel-in-progress: false
@@ -49,8 +57,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, ubuntu-26.04]
-    # Up to 8 shards, each a strace-traced build with -jobs 1; each shard's own
-    # build is capped below (SHARD_BUILD_TIMEOUT), so this is the sum plus setup.
+    # At most 3 shards, each a strace-traced build with -jobs 1 capped at 90
+    # minutes (SHARD_BUILD_TIMEOUT).  No new shard starts after 200 minutes
+    # (START_DEADLINE_SECS), so the last one that starts still finishes, with its
+    # collect, census and the upload, inside this limit.
     timeout-minutes: 300
     permissions:
       contents: read
@@ -83,8 +93,8 @@ jobs:
             echo "::error::shard_count must be between 1 and 256"
             exit 1
           fi
-          if ! [[ "$IN_SHARD_INDICES" =~ ^[0-9]{1,3}(,[0-9]{1,3}){0,7}$ ]]; then
-            echo "::error::shard_indices must be 1 to 8 comma-separated integers, no spaces"
+          if ! [[ "$IN_SHARD_INDICES" =~ ^[0-9]{1,3}(,[0-9]{1,3}){0,2}$ ]]; then
+            echo "::error::shard_indices must be 1 to 3 comma-separated integers, no spaces"
             exit 1
           fi
           IFS=, read -r -a raw <<< "$IN_SHARD_INDICES"
@@ -107,8 +117,6 @@ jobs:
           {
             echo "SHARD_COUNT=$count"
             echo "SHARD_INDICES=$joined"
-            # The job's first stamp: prepare binds it (KILN04 5.3, --job-start).
-            echo "JOB_START=$(date +%s)"
           } >> "$GITHUB_ENV"
           echo "sampling shards $joined of $count"
 
@@ -129,6 +137,9 @@ jobs:
       - name: Allow unprivileged user namespaces
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
+      # BEFORE the job start is stamped (below): were the apt branch ever to run
+      # it would modify /usr and /etc/ld.so.cache after the stamp, and every
+      # action would then read as host-read:setup-modified.
       - name: Install strace
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         # Both runner images ship strace, so only touch apt when it is missing
@@ -137,13 +148,14 @@ jobs:
           if command -v strace >/dev/null 2>&1; then
             echo "strace preinstalled: $(strace -V | head -1)"
           else
+            echo "::warning::strace was not preinstalled; installing it, before the job start is stamped"
             bash code/scripts/ci/apt-install.sh strace
           fi
           strace -V | head -1
 
       # The recorder places both binaries outside the checkout, the step TMPDIR
       # and every state root (KILN04 P3), so they go under RUNNER_TEMP.  The Go
-      # caches go there too: a cache under $HOME would be a non-empty state root.
+      # caches go there too, so no build output lands in $HOME.
       - name: Build kiln and the build tool
         shell: bash
         run: |
@@ -154,13 +166,19 @@ jobs:
           (cd code/programs/go/build-tool && go build -o "$RUNNER_TEMP/bin/build-tool" .)
           ls -l "$RUNNER_TEMP/bin"
 
+      # The job's start stamp: prepare binds it (KILN04 5.3, --job-start), and
+      # nothing that modifies the host runs after it.
+      - name: Stamp the job start
+        shell: bash
+        run: echo "JOB_START=$(date +%s)" >> "$GITHUB_ENV"
+
       # One recording per sampled shard, each from a clean checkout, a fresh
-      # $HOME (state roots must start empty) and a fresh record directory, then
-      # the census over that directory.  A census failure does not stop the
-      # loop and does not stop the summary: its status is written to a file and
-      # the job fails in the last step.  The build's output is wrapped in
-      # ::stop-commands:: because a step prints through to the log and GitHub
-      # would otherwise act on "::" lines a BUILD printed (KILN04 4.8).
+      # $HOME and a fresh record directory, then the census over that directory.
+      # A failure does not stop the loop and does not stop the summary: its
+      # status goes to a file and the job fails in the last step.  The build's
+      # output is wrapped in ::stop-commands:: because a step prints through to
+      # the log and GitHub would otherwise act on "::" lines a BUILD printed
+      # (KILN04 4.8).
       - name: Record the sampled shards and run the census
         shell: bash
         env:
@@ -172,20 +190,54 @@ jobs:
           # One shard's traced build is cut off after this long; what the build
           # left is still collected and censused.
           SHARD_BUILD_TIMEOUT: 90m
+          # No new shard starts after this many seconds from JOB_START (the job
+          # timeout of 300 minutes minus one shard's build cap and a margin for
+          # collect, the census and the upload).  A shard not started is a
+          # failure, so a partial run is never green.
+          START_DEADLINE_SECS: '12000'
           MATRIX_OS: ${{ matrix.os }}
         run: |
           set -uo pipefail
+          # Never the checkout as cwd (the recorder refuses it, KILN04 P3); the
+          # checkout is passed explicitly wherever it is needed.
+          cd "$RUNNER_TEMP"
           token=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
           echo "::stop-commands::$token"
           trap 'echo "::$token::"' EXIT
 
           kiln="$RUNNER_TEMP/bin/kiln"
           bt="$RUNNER_TEMP/bin/build-tool"
+          not_clean="$GITHUB_WORKSPACE/code/programs/go/kiln/ci/census_not_clean.py"
           real_home="$HOME"
+          # A fixed name, so redacted text aggregates across shards.
+          shard_home="$real_home/.kiln-census-home"
           mkdir -p "$CENSUS_OUT"
           status_file="$CENSUS_OUT/.status"
           : > "$status_file"
+          # .worst starts as a failure and only the end of the loop makes it the
+          # real figure: a missing, unreadable or never-updated file fails the job.
+          echo 1 > "$CENSUS_OUT/.worst"
           worst=0
+          summary_cap=921600   # GitHub allows 1 MiB per step summary; stay under it
+
+          # A sealed pre/ is 0444 files in 0555 directories (prepare); a plain
+          # rm -rf cannot remove it.
+          rmrec() { chmod -R u+w "$1" 2>/dev/null || true; rm -rf "$1"; }
+          # Git as the recorder runs it (source.ConfigEnv, P10).
+          safe_git() {
+            GIT_CONFIG_COUNT=3 \
+            GIT_CONFIG_KEY_0=core.fsmonitor GIT_CONFIG_VALUE_0=false \
+            GIT_CONFIG_KEY_1=core.hooksPath GIT_CONFIG_VALUE_1=/dev/null \
+            GIT_CONFIG_KEY_2=protocol.file.allow GIT_CONFIG_VALUE_2=never \
+              git -C "$GITHUB_WORKSPACE" "$@"
+          }
+          # fail IDX MESSAGE: a status line, a summary line, a failing status.
+          fail() {
+            echo "shard $1: $2" >> "$status_file" || true
+            printf -- '- shard %s: **%s**\n\n' "$1" "$2" >> "$GITHUB_STEP_SUMMARY"
+            if (( worst < 1 )); then worst=1; fi
+            return 0
+          }
 
           grep -m1 'model name' /proc/cpuinfo || true
           uname -r
@@ -196,20 +248,31 @@ jobs:
             echo "=== shard $idx of $SHARD_COUNT ==="
             rec="$RUNNER_TEMP/kiln-record-$idx"
             tag="$MATRIX_OS-shard$idx"
+            # The coverage banner is the first line of every shard's summary.
+            printf '**coverage: fresh HOME, Go toolchain only; not the PR8 gate** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+
+            if (( $(date +%s) - JOB_START > START_DEADLINE_SECS )); then
+              fail "$idx" "not started: past the start deadline, the job would run out of time"
+              continue
+            fi
 
             # A clean tree for every shard: the previous build wrote into it.
-            git -C "$GITHUB_WORKSPACE" reset --hard -q HEAD
-            git -C "$GITHUB_WORKSPACE" clean -ffdxq
-            rm -rf /tmp/kiln-tmp "$rec"
-            shard_home=$(mktemp -d "$real_home/.kiln-census-home.XXXXXX")
+            if ! safe_git reset --hard -q HEAD; then
+              fail "$idx" "could not restore a clean checkout (git reset failed)"
+              continue
+            fi
+            if ! safe_git clean -ffdxq; then
+              fail "$idx" "could not restore a clean checkout (git clean failed)"
+              continue
+            fi
+            rmrec "$rec"; rmrec "$shard_home"; rm -rf /tmp/kiln-tmp
+            mkdir -m 0700 "$shard_home"
 
             if ! HOME="$shard_home" "$kiln" record prepare \
                 --root "$GITHUB_WORKSPACE" --dir "$rec" --build-tool "$bt" \
                 --shard-index "$idx" --shard-count "$SHARD_COUNT" --job-start "$JOB_START"; then
-              echo "prepare failed for shard $idx"
-              echo "shard $idx: prepare failed" >> "$status_file"
-              worst=1
-              rm -rf "$shard_home"
+              fail "$idx" "prepare failed"
+              rmrec "$shard_home"
               continue
             fi
 
@@ -224,37 +287,54 @@ jobs:
                 -exec-wrapper "$wrapper" -emit-results "$rec/results.json"
             build_rc=$?
             echo "build tool exit status for shard $idx: $build_rc (failed BUILD steps are census data, not job failures)"
-            if (( build_rc == 124 || build_rc == 137 )); then
-              echo "shard $idx: build timed out" >> "$status_file"
-              worst=1
+            if (( build_rc == 124 )); then
+              fail "$idx" "build timed out"
+            elif (( build_rc == 137 )); then
+              fail "$idx" "build killed (timeout or OOM)"
             fi
 
+            # The census needs only pre/ and traces/; --records is optional, so
+            # a failed collect still gets its census, just without the records.
             if ! HOME="$shard_home" "$kiln" record collect \
                 --root "$GITHUB_WORKSPACE" --dir "$rec" \
                 --results "$rec/results.json" --out "$rec/records.jsonl"; then
-              echo "collect failed for shard $idx"
-              echo "shard $idx: collect failed" >> "$status_file"
-              worst=1
-              rm -rf "$shard_home"
-              continue
+              fail "$idx" "collect failed (the census runs without --records)"
+            fi
+            records_args=()
+            if [[ -f "$rec/records.jsonl" ]]; then
+              records_args=(--records "$rec/records.jsonl")
             fi
 
             GOMEMLIMIT="$CENSUS_GOMEMLIMIT" "$kiln" record census \
-              --dir "$rec" --records "$rec/records.jsonl" \
+              --dir "$rec" "${records_args[@]}" \
               --out "$CENSUS_OUT/census-$tag.json" --md "$CENSUS_OUT/census-$tag.md"
             census_rc=$?
             echo "census exit status for shard $idx: $census_rc"
-            if [[ -f "$CENSUS_OUT/census-$tag.md" ]]; then
-              cat "$CENSUS_OUT/census-$tag.md" >> "$GITHUB_STEP_SUMMARY"
-              echo >> "$GITHUB_STEP_SUMMARY"
-            fi
             if (( census_rc != 0 )); then
-              echo "shard $idx: census exit $census_rc" >> "$status_file"
-              (( census_rc > worst )) && worst=$census_rc
+              echo "shard $idx: census exit $census_rc" >> "$status_file" || true
+              if (( census_rc > worst )); then worst=$census_rc; fi
+            fi
+
+            # Never past GitHub's 1 MiB step-summary limit: past about 900 KiB
+            # the Markdown stays in the artifact.
+            if [[ -f "$CENSUS_OUT/census-$tag.md" ]]; then
+              md_size=$(wc -c < "$CENSUS_OUT/census-$tag.md")
+              cur_size=$(wc -c < "$GITHUB_STEP_SUMMARY")
+              if (( cur_size + md_size > summary_cap )); then
+                printf -- '- shard %s: summary omitted (step summary size limit); see artifact `kiln-census-%s`\n\n' "$idx" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+              else
+                cat "$CENSUS_OUT/census-$tag.md" >> "$GITHUB_STEP_SUMMARY"
+                echo >> "$GITHUB_STEP_SUMMARY"
+              fi
+            fi
+            # Soft passes (an exit 0 that left part of the sample unchecked) are
+            # read from the JSON, never from the Markdown.
+            if [[ -f "$CENSUS_OUT/census-$tag.json" ]]; then
+              python3 "$not_clean" "$CENSUS_OUT/census-$tag.json" "$idx" >> "$GITHUB_STEP_SUMMARY" || true
             fi
 
             # The record directory is never uploaded; drop it before the next.
-            rm -rf "$rec" "$shard_home" /tmp/kiln-tmp
+            rmrec "$rec"; rmrec "$shard_home"; rm -rf /tmp/kiln-tmp
           done
           echo "$worst" > "$CENSUS_OUT/.worst"
           exit 0
@@ -274,15 +354,21 @@ jobs:
 
       # The summary is already appended and uploaded, so a census that exited 4
       # (a cross-check mismatch, an allowed divergence or a parse_panic), 1
-      # (infrastructure) or 2 (usage), or a prepare, collect or timeout failure,
-      # fails the job only now.
+      # (infrastructure) or 2 (usage), or a prepare, collect, timeout or
+      # not-started failure, fails the job only now.  A missing or unreadable
+      # status file fails it too.
       - name: Fail when any shard failed
         if: always()
         shell: bash
         run: |
-          set -euo pipefail
-          if [[ ! -f "$CENSUS_OUT/.worst" ]]; then
-            echo "::error::the recording step did not finish"
+          set -uo pipefail
+          worst=$(cat "$CENSUS_OUT/.worst" 2>/dev/null) || {
+            echo "::error::the recording step did not finish (no status file)"
+            exit 1
+          }
+          if [[ "$worst" != 0 ]]; then
+            echo "::error::worst status $worst"
+            [[ -s "$CENSUS_OUT/.status" ]] && while IFS= read -r line; do echo "::error::$line"; done < "$CENSUS_OUT/.status"
             exit 1
           fi
           if [[ -s "$CENSUS_OUT/.status" ]]; then

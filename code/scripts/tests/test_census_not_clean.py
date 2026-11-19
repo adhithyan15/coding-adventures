@@ -1,0 +1,46 @@
+"""Tests for code/programs/go/kiln/ci/census_not_clean.py (the census soft-pass flags)."""
+
+import importlib.util
+import json
+import pathlib
+import tempfile
+import unittest
+
+SCRIPT = pathlib.Path(__file__).resolve().parents[2] / "programs/go/kiln/ci/census_not_clean.py"
+spec = importlib.util.spec_from_file_location("census_not_clean", SCRIPT)
+mod = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(mod)
+
+
+def summary(traces=5, accepted=5, skipped=0, actions_skipped=0):
+    return {
+        "cross_check": {"traces": traces, "accepted": accepted, "skipped_too_large": skipped},
+        "bounds": {"actions_skipped": actions_skipped},
+    }
+
+
+class NotCleanTests(unittest.TestCase):
+    def test_clean_has_no_reasons(self):
+        self.assertEqual(mod.reasons(summary()), [])
+
+    def test_each_soft_pass_is_flagged(self):
+        self.assertEqual(len(mod.reasons(summary(skipped=2))), 1)
+        self.assertEqual(len(mod.reasons(summary(actions_skipped=1))), 1)
+        self.assertEqual(len(mod.reasons(summary(traces=3, accepted=0))), 1)
+        self.assertEqual(len(mod.reasons(summary(skipped=1, actions_skipped=1, accepted=0))), 3)
+
+    def test_no_traces_is_not_all_refused(self):
+        self.assertEqual(mod.reasons(summary(traces=0, accepted=0)), [])
+
+    def test_main_prints_and_exits_zero(self):
+        with tempfile.TemporaryDirectory() as d:
+            good, bad = pathlib.Path(d, "a.json"), pathlib.Path(d, "b.json")
+            good.write_text(json.dumps(summary(skipped=1)))
+            bad.write_text("{not json")
+            self.assertEqual(mod.main(["x", str(good), "0"]), 0)
+            self.assertEqual(mod.main(["x", str(bad), "1"]), 0)
+            self.assertEqual(mod.main(["x", str(pathlib.Path(d, "missing.json")), "2"]), 0)
+
+
+if __name__ == "__main__":
+    unittest.main()
