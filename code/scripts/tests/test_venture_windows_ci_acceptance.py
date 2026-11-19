@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 import re
 import subprocess
 import sys
@@ -166,7 +167,6 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIsNotNone(job)
         assert job is not None
         steps = re.split(r"(?m)^      - ", job.group(1))[1:]
-        flags = ("needs_typescript", "needs_venture_windows")
         for name in ("Set up Node.js", "Set up npm"):
             with self.subTest(step=name):
                 matching = [s for s in steps if s.splitlines()[0] == f"name: {name}"]
@@ -185,13 +185,24 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
                     self.assertIsNotNone(comparison)
                     assert comparison is not None
                     admitted_flags.append(comparison.group(1))
-                for typescript, venture, expected in (
-                    (False, False, False),
-                    (True, False, True),
-                    (False, True, True),
-                    (True, True, True),
+                expected_flags = (
+                    {"needs_typescript", "needs_venture_windows", "needs_dart"}
+                    if name == "Set up Node.js"
+                    else {"needs_typescript", "needs_venture_windows"}
+                )
+                self.assertEqual(set(admitted_flags), expected_flags)
+                for typescript, venture, dart, expected in (
+                    (False, False, False, False),
+                    (True, False, False, True),
+                    (False, True, False, True),
+                    (False, False, True, name == "Set up Node.js"),
+                    (True, True, True, True),
                 ):
-                    values = dict(zip(flags, (typescript, venture)))
+                    values = {
+                        "needs_typescript": typescript,
+                        "needs_venture_windows": venture,
+                        "needs_dart": dart,
+                    }
                     self.assertEqual(
                         any(values.get(flag, False) for flag in admitted_flags),
                         expected,
@@ -202,6 +213,39 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
                         matching[0],
                         r"(?m)^        run: npm install --global npm@11\.13\.0$",
                     )
+
+    def test_dart_only_plan_normalizes_needs_dart_for_node_setup(self) -> None:
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        lines = workflow.splitlines()
+        step = lines.index("      - name: Normalize toolchain requirements")
+        run = lines.index("        run: |", step) + 1
+        body = []
+        for line in lines[run:]:
+            if line.startswith("      - "):
+                break
+            body.append(line[10:] if line.startswith("          ") else line)
+        script = "\n".join(body)
+        script = script.replace(
+            "${{ steps.detect-main.outputs.full_build }}", "false"
+        )
+        script = re.sub(
+            r"\$\{\{ steps\.detect\.outputs\.(needs_[a-z_]+) \}\}",
+            lambda match: "true" if match.group(1) == "needs_dart" else "false",
+            script,
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "github-output"
+            environment = dict(os.environ, GITHUB_OUTPUT=str(output))
+            subprocess.run(
+                ["bash", "-e", "-c", script],
+                check=True,
+                capture_output=True,
+                text=True,
+                env=environment,
+            )
+            normalized = output.read_text(encoding="utf-8").splitlines()
+        self.assertIn("needs_dart=true", normalized)
+        self.assertNotIn("needs_typescript=true", normalized)
 
 
 if __name__ == "__main__":

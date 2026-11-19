@@ -730,6 +730,101 @@ func TestFenwickContractSelectsDartAndPythonConsumers(t *testing.T) {
 	}
 }
 
+func TestHashFunctionsV1SelectsOnlyRustAndDartPublicConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/hash-functions", Language: "rust"},
+		{Name: "dart/hash-functions", Language: "dart"},
+		{Name: "rust/hash-analysis", Language: "rust"},
+		{Name: "dart/hash-analysis", Language: "dart"},
+		{Name: "python/hash-functions", Language: "python"},
+	}
+	accepted := []string{
+		"code/specs/DT17-hash-functions.md",
+		"code/specs/DT17b-hash-functions-dart-profile.md",
+		"code/specs/fixtures/hash-functions-v1/cases.json",
+		"code/specs/fixtures/hash-functions-v1/schema.json",
+		"code/specs/fixtures/hash-functions-v1/oracle.py",
+		"code/specs/fixtures/hash-functions-v1/generate.py",
+	}
+	for _, changed := range accepted {
+		if !isDt17HashFunctionsInput(changed) {
+			t.Errorf("isDt17HashFunctionsInput(%q) = false, want true", changed)
+		}
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := map[string]bool{"rust/hash-functions": true, "dart/hash-functions": true}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("consumers for %q = %v, want %v", changed, got, want)
+		}
+	}
+	for _, changed := range []string{
+		"code/specs/DT17-hash-functions.md.bak",
+		"code/specs/DT17b-hash-functions-dart-profile.md.extra",
+		"code/specs/DT17c-hash-functions.md",
+		"code/specs/fixtures/hash-functions-v10/cases.json",
+		"code/specs/fixtures/hash-functions-v1x/cases.json",
+		"code/specs/fixtures/hash-functions-v1",
+		"docs/code/specs/fixtures/hash-functions-v1/cases.json",
+		`code\specs\fixtures\hash-functions-v1\cases.json`,
+		"code/specs/fixtures/hash-functions-v1/../hash-functions-v10/cases.json",
+	} {
+		if isDt17HashFunctionsInput(changed) {
+			t.Errorf("isDt17HashFunctionsInput(%q) = true, want false", changed)
+		}
+	}
+	for language, want := range map[string]map[string]bool{
+		"rust": {"rust/hash-functions": true},
+		"dart": {"dart/hash-functions": true},
+	} {
+		got, err := repositoryInputConsumersForChange([]string{accepted[0]}, packages, language)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("%s selector returned %v, want %v", language, got, want)
+		}
+	}
+}
+
+func TestHashFunctionsV1GraphExportsExactRepositoryInputs(t *testing.T) {
+	root := t.TempDir()
+	packages := []discovery.Package{
+		{Name: "rust/hash-functions", Language: "rust", Path: filepath.Join(root, "code", "packages", "rust", "hash-functions")},
+		{Name: "dart/hash-functions", Language: "dart", Path: filepath.Join(root, "code", "packages", "dart", "hash-functions")},
+	}
+	for _, pkg := range packages {
+		if err := os.MkdirAll(pkg.Path, 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	graph, err := buildKilnLegacyGraph(packages, root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{
+		"code/specs/DT17-hash-functions.md",
+		"code/specs/DT17b-hash-functions-dart-profile.md",
+		"code/specs/fixtures/hash-functions-v1",
+	}
+	for _, name := range []string{"rust/hash-functions", "dart/hash-functions"} {
+		var found *kilnLegacyPackage
+		for i := range graph.Packages {
+			if graph.Packages[i].Name == name {
+				found = &graph.Packages[i]
+				break
+			}
+		}
+		if found == nil {
+			t.Fatalf("graph omitted %s", name)
+		}
+		if !reflect.DeepEqual(found.RepoInputs, want) {
+			t.Errorf("%s repo_inputs = %v, want %v", name, found.RepoInputs, want)
+		}
+	}
+}
+
 func TestVer04pDomainDiagnosticSelectsWarrantGrammar(t *testing.T) {
 	packages := []discovery.Package{{Name: "rust/warrant-grammar", Language: "rust"}}
 	cases := map[string]bool{
