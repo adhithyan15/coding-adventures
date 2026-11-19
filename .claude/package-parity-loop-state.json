@@ -18998,16 +18998,17 @@
     {
       "id": "hash-functions-dart-lane-parity",
       "title": "Implement and validate the Dart DT17 hash-functions profile",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "hash-functions-dt17-vector-and-documentation-correction"
       ],
       "branch": "codex/parity-dart-hash-functions-20261119",
-      "pr_number": null,
+      "pr_number": 19687,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19687",
       "selection_blocked": true,
       "selection_revision": "4ca0030e43d41d0919a309e4607b2d4851129b0d",
       "selection_notes": "Fresh 2026-11-19 review selects the Dart child from the existing combined Dart/JVM owner. The exact-main structural audit reports twelve of fifteen established lanes for hash-functions, with Dart, Java, and Kotlin absent. This child isolates Dart and does not select the JVM lanes.",
-      "notes": "Phase 1 profile commit 1cad278ae21ad820a8f4f6c0838b43cb2da932e0 defines the Dart and JavaScript numeric, byte, string, wrapper, and analysis contracts in code/specs/DT17b-hash-functions-dart-profile.md. Implementation remains blocked until independent review approves both the profile and the Phase 2 neutral fixture/oracle contract. Before implementation, prepare a versioned neutral DT17 corpus, an independent exact-arithmetic model, and cross-check admitted published answers against the existing public Rust package. Later validation must execute the same public fixture cases on Dart VM and Node. No SAT proof, Warrant proof, or all-language claim is made.",
+      "notes": "Draft PR #19687 carries the Dart child profile. Astra approved exact profile head 072aef67aee16d4e0a69e751f070f3e4a3eca9f6. Production implementation remains blocked pending independent review of the Phase 2 neutral fixture/oracle contract. The Dart test binding must consume the versioned DT17 corpus through both Dart VM and Node public-API runs. No SAT proof, Warrant proof, or all-language claim is made.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/hash-functions-dart-lane-parity",
         "code/specs/DT17b-hash-functions-dart-profile.md"
