@@ -6561,6 +6561,26 @@ Authenticated handshake progression, record protection, certificate and
 revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
 and live-provider readiness remain unavailable.
 
+The same exact-message binding now also derives the server Finished key only
+from its retained server handshake traffic secret. Caller-owned Finished-key
+storage must select the exact same data-driven cipher suite and the `Server`
+sender role before any output mutation. The composer then imports only the
+retained server secret under the suite-selected SHA-256 or SHA-384 policy and
+delegates the fixed `"finished"` label derivation to the repository-owned
+Finished boundary. Non-copyable success evidence retains the complete CH1,
+HelloRetryRequest, CH2, final ServerHello, base-schedule, and handshake-
+traffic-secret proof beside the borrowed key view into caller-owned wipe-on-
+drop storage. No detached traffic secret, suite, role, label, or key is
+accepted; stable failures retain no secret bytes.
+
+This provenance binding does not verify peer Finished data, advance the
+transcript beyond ServerHello, authenticate CertificateVerify, prove later
+handshake-message order, protect records, validate certificates, establish
+trust, enforce revocation, perform I/O, authorize HTTP or OAuth transport, or
+open a network connection. Authenticated handshake progression, certificate
+and revocation policy, record protection, and HTTP composition remain
+prerequisites; concrete HTTPS and live-provider readiness remain unavailable.
+
 An allocation-free `tls13-retry-handshake-traffic-key-material-binding`
 prerequisite now accepts only the exact-message retry handshake-traffic-secret
 proof above, one explicit client-or-server sender role, and caller-owned
