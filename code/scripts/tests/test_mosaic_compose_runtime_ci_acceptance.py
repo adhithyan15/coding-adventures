@@ -717,7 +717,8 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
     def test_flutter_state_diagnostic_is_bounded_and_cannot_mask_gate_failure(self) -> None:
         gate = SCRIPT.parent / "mosaic-android-emulator-gate.sh"
         gate_text = gate.read_text(encoding="utf-8")
-        self.assertIn("timeout --kill-after=1 5 bash -c", gate_text)
+        self.assertIn('python3 "$script_dir/mosaic_diagnostic_supervisor.py"', gate_text)
+        self.assertIn('--deadline-boottime-cs "$deadline_cs" -- bash -c', gate_text)
         self.assertIn("timeout --foreground 1 adb shell", gate_text)
         self.assertIn('adb logcat -d -v brief --pid="$pid" -t 4000', gate_text)
         self.assertIn("test -d files || ! test -x files", gate_text)
