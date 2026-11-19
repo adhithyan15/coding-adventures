@@ -991,13 +991,13 @@ substitution between the leaf covered by complete direct revocation evidence
 and the leaf key used for handshake authentication. The entry point does not
 repeat revocation evaluation or acquire, refresh, or load revocation data.
 
-The composition does not yet admit the existing nested, double-nested,
+The direct entry point does not admit the existing nested, double-nested,
 recursive, or alternative intermediate-status-responder completion topologies.
-It also does not prove ordered transcript state, authenticate Finished, protect
-records, perform TLS or HTTP I/O, authorize OAuth transport, or grant network
-authority. Those remaining revocation-topology, state, record, and transport
-boundaries remain separate; concrete HTTPS and live-provider readiness remain
-unavailable.
+It also does not prove ordered transcript state, authenticate Finished,
+protect records, perform TLS or HTTP I/O, authorize OAuth transport, or grant
+network authority. Those remaining revocation-topology, state, record, and
+transport boundaries remain separate; concrete HTTPS and live-provider
+readiness remain unavailable.
 
 A second revocation entry point now accepts only the exact HTTPS DNS
 destination already bound to the complete one-level nested no-check fixed-path
@@ -1010,9 +1010,28 @@ nested proof with the exact signature verdict. This closes substitution
 between the server leaf covered by the nested completion and the key used for
 handshake authentication without repeating revocation evaluation.
 
-This bounded extension does not admit the existing double-nested, recursive,
+The nested entry point does not admit the existing double-nested, recursive,
 or alternative intermediate-status-responder completion topologies. It does
 not acquire or refresh status, prove ordered transcript state, authenticate
+Finished, protect records, perform TLS or HTTP I/O, authorize OAuth transport,
+or grant network authority. Those remaining revocation-topology, state,
+record, and transport boundaries remain separate; concrete HTTPS and live-
+provider readiness remain unavailable.
+
+A third revocation entry point now accepts only the exact HTTPS DNS destination
+already bound to the complete double-nested no-check fixed-path revocation
+proof. Its private sealed admission has exactly one production implementation:
+the repository-owned double-nested destination/revocation boundary. After the
+same server-role gate it derives the leaf through that retained destination,
+validates the exact SubjectPublicKeyInfo under caller policy, verifies the
+selected-transcript `CertificateVerify`, and retains the complete double-
+nested proof with the exact signature verdict. This closes substitution
+between the server leaf covered by the double-nested completion and the key
+used for handshake authentication without repeating revocation evaluation.
+
+The double-nested entry point does not admit the existing recursive or
+alternative intermediate-status-responder completion topologies. It does not
+acquire or refresh status, prove ordered transcript state, authenticate
 Finished, protect records, perform TLS or HTTP I/O, authorize OAuth transport,
 or grant network authority. Those remaining revocation-topology, state,
 record, and transport boundaries remain separate; concrete HTTPS and live-
