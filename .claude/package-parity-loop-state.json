@@ -312,7 +312,7 @@
       ],
       "branch": null,
       "pr_number": null,
-      "selection_blocked": true,
+      "selection_blocked": false,
       "notes": "Completion umbrella for the eleven independently reviewable existing-engine children. The post-#13388 dependency pass decomposed C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript before selecting implementation work; F# follows the C# shared engine while every child consumes the same merged inert corpus. Route later Dart, JVM, and promoted OCaml engines through the same contract rather than copying Go-only BUILD parsing."
     },
     {
@@ -19008,7 +19008,7 @@
       "selection_blocked": true,
       "selection_revision": "4ca0030e43d41d0919a309e4607b2d4851129b0d",
       "selection_notes": "Fresh 2026-11-19 review selects the Dart child from the existing combined Dart/JVM owner. The exact-main structural audit reports twelve of fifteen established lanes for hash-functions, with Dart, Java, and Kotlin absent. This child isolates Dart and does not select the JVM lanes.",
-      "notes": "Draft PR #19687 carries the Dart child profile. Astra approved profile head 072aef67aee16d4e0a69e751f070f3e4a3eca9f6; a follow-up provenance table and the Phase 2 test-only binding are on the current local head for fresh review. The candidate corpus is code/specs/fixtures/hash-functions-v1/cases.json at SHA-256 B0960F1B4BF87A187CA3369BC07F9AFB705E0F098C9211387F95FE8455492DEE. Its independent validator passes, and the Dart tooling currently proves VM byte-for-byte snapshot integrity and complete Node JSON/hex-stream parsing on local Node 24.16.0. Production implementation remains blocked pending independent fixture/binding review. These tooling checks do not call Dart hash APIs and earn no behavioral-conformance credit. No SAT proof, Warrant proof, or all-language claim is made.",
+      "notes": "Draft PR #19687 carries the Dart child profile. Astra approved Phase 2 fixture and tooling head 2f455879f7000a000f252a5042c514b2d8bcad10. The candidate corpus is code/specs/fixtures/hash-functions-v1/cases.json at SHA-256 B0960F1B4BF87A187CA3369BC07F9AFB705E0F098C9211387F95FE8455492DEE. Its independent validator passes. Dart production APIs are now implemented locally on branch codex/parity-dart-hash-functions-20261119; public API tests exercise the shared corpus on VM and Node, with 100% line and branch coverage and ten source mutants killed. The fixture/tooling gate is passed, while final exact-head independent review, pinned hosted Node execution, required CI, and merge remain pending. No SAT proof, Warrant proof, or all-language claim is made.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/hash-functions-dart-lane-parity",
         "code/specs/DT17b-hash-functions-dart-profile.md"

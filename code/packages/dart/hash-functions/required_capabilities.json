@@ -3,5 +3,5 @@
   "version": 1,
   "package": "dart/hash-functions",
   "capabilities": [],
-  "justification": "The current package slice contains test-only fixture tooling. No production hash implementation or runtime I/O is added."
+  "justification": "Hash operations are deterministic in-memory computations. Filesystem access is confined to development-only fixture and coverage tooling."
 }
