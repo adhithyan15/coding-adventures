@@ -11,6 +11,20 @@ final _mutations = <_Mutation>[
     testName: 'public hash APIs match all 526344 exhaustive outputs',
   ),
   _Mutation(
+    name: 'djb2-64-bit-wrap',
+    source: 'lib/src/algorithms.dart',
+    before: 'hash = ((hash << 5) + hash + BigInt.from(byte)) & _mask64;',
+    after: 'hash = (hash << 5) + hash + BigInt.from(byte);',
+    testName: 'DJB2 64-bit wrapping matches the shared long input vector',
+  ),
+  _Mutation(
+    name: 'murmur3-one-byte-tail',
+    source: 'lib/src/algorithms.dart',
+    before: 'if (tailLength > 0) {',
+    after: 'if (tailLength > 1) {',
+    testName: 'Murmur3 block and tail match the shared five-byte vector',
+  ),
+  _Mutation(
     name: 'parameterized-polynomial-dispatch',
     source: 'lib/src/algorithms.dart',
     before: 'hash = (hash * base + BigInt.from(byte)) % modulus;',
@@ -40,6 +54,14 @@ final _mutations = <_Mutation>[
     testName: 'ArgumentError: avalanche-negative-callback',
   ),
   _Mutation(
+    name: 'distribution-chi-square-correction',
+    source: 'lib/src/analysis.dart',
+    before: 'final numerator = bucketCount * sumSquares - total * total;',
+    after: 'final numerator = bucketCount * sumSquares;',
+    testName:
+        'distributionTest uses sparse exact buckets through the portable int limit',
+  ),
+  _Mutation(
     name: 'siphash-wrapper-key-snapshot',
     source: 'lib/src/hash_function.dart',
     before:
@@ -58,10 +80,26 @@ final _mutations = <_Mutation>[
   ),
 ];
 
-Future<void> main() async {
+Future<void> main(List<String> arguments) async {
+  final selectedMutations = arguments.isEmpty
+      ? _mutations
+      : _mutations
+          .where((mutation) => arguments.contains(mutation.name))
+          .toList();
+  final unknown = arguments
+      .where((name) => !_mutations.any((mutation) => mutation.name == name))
+      .toList();
+  if (unknown.isNotEmpty || selectedMutations.isEmpty) {
+    stderr.writeln(
+      'Unknown or empty mutation selection: ${unknown.join(', ')}',
+    );
+    exitCode = 64;
+    return;
+  }
+
   final packageRoot = Directory.current.absolute;
   final sourcePaths = <String>{
-    for (final mutation in _mutations) mutation.source,
+    for (final mutation in selectedMutations) mutation.source,
   };
   final sourceBytes = <String, List<int>>{
     for (final path in sourcePaths)
@@ -78,7 +116,7 @@ Future<void> main() async {
     _requireSuccess('scratch package setup', setup);
 
     var killed = 0;
-    for (final mutation in _mutations) {
+    for (final mutation in selectedMutations) {
       for (final entry in sourceBytes.entries) {
         File('${scratch.path}/${entry.key}').writeAsBytesSync(entry.value);
       }
@@ -111,10 +149,14 @@ Future<void> main() async {
       killed++;
     }
 
-    if (killed != _mutations.length) {
-      throw StateError('Killed $killed/${_mutations.length} source mutants');
+    if (killed != selectedMutations.length) {
+      throw StateError(
+        'Killed $killed/${selectedMutations.length} selected source mutants',
+      );
     }
-    stdout.writeln('Mutation controls: $killed/${_mutations.length} killed.');
+    stdout.writeln(
+      'Mutation controls: $killed/${selectedMutations.length} killed.',
+    );
   } finally {
     await scratch.delete(recursive: true);
   }

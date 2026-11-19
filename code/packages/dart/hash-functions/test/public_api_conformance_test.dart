@@ -216,6 +216,22 @@ void main() {
     }
   });
 
+  test('DJB2 64-bit wrapping matches the shared long input vector', () {
+    final directed =
+        (fixture['directed'] as List<dynamic>).cast<Map<String, dynamic>>();
+    _checkHashRecord(
+      directed.singleWhere((record) => record['id'] == 'boundary-length-17'),
+    );
+  });
+
+  test('Murmur3 block and tail match the shared five-byte vector', () {
+    final directed =
+        (fixture['directed'] as List<dynamic>).cast<Map<String, dynamic>>();
+    _checkHashRecord(
+      directed.singleWhere((record) => record['id'] == 'boundary-length-5'),
+    );
+  });
+
   test('UTF-8 convenience functions match the neutral UTF-8 cases', () {
     final cases = fixture['utf8_cases'] as List<dynamic>;
     for (final raw in cases.cast<Map<String, dynamic>>()) {
