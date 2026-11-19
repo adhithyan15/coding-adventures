@@ -353,6 +353,9 @@ type ClassifyDeps struct {
 	DiskFS   traced.FS
 	// Limits are the parser's caps; zero fields take ClassifyLimits.
 	Limits trace.Limits
+	// Census, when set, observes the classifier's path-carrying reasons (the
+	// child always sets it; see census.go).
+	Census *traced.Census
 }
 
 func (d ClassifyDeps) withDefaults() ClassifyDeps {
@@ -457,7 +460,7 @@ func classifyAction(d ClassifyDeps, pre *Pre, action string, step int, last Step
 	if err != nil {
 		return ClassifiedRecord{}, err
 	}
-	raw, err := d.Classify(cfg, traced.Input{Package: action, Traces: traces, Recipe: planned.Steps, StepNetNS: netns})
+	raw, err := d.Classify(cfg, traced.Input{Package: action, Traces: traces, Recipe: planned.Steps, StepNetNS: netns, Census: d.Census})
 	if err != nil {
 		return ClassifiedRecord{}, fmt.Errorf("classify: %w", err)
 	}
