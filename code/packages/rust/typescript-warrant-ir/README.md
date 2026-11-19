@@ -34,13 +34,33 @@ let typed_wir = lower_typescript_bytes(source).expect("admitted source");
 assert_eq!(typed_wir.functions.len(), 3);
 ```
 
-The source-bound integration proof reads the checked-in fixture with
-`include_bytes!`, pins its path and SHA-256, proves each helper against an
-independent per-bit reference, and admits supported wrong-operator mutants to
-SAT. It decodes each witness and runs the original and mutated TypeScript bytes
-under Node. This proves only those fixture helpers over their bounded domains;
-it does not prove a future production reducer. GBL-050a must bind the consumer's
-own `digital.ts` and replay witnesses through its public reducer.
+The fixture integration tests remain fixture-only. The development example
+`source-proof` accepts an actual source path, an expected repository-relative or
+absolute path, and its expected SHA-256; it reads and validates those exact
+bytes before parsing. For example, from the Rust workspace:
+
+```sh
+cargo run -p typescript-warrant-ir --example source-proof -- \
+  --source ../typescript/game-input-frame/src/digital.ts \
+  --expected-path code/packages/typescript/game-input-frame/src/digital.ts \
+  --sha256 <expected-sha256> --query healthy:Proved
+```
+
+The JSON response uses schema `typescript-warrant-ir/source-proof/v1` and
+records the input path, resolved physical path, byte count, SHA-256, parser
+profile, solver identity, WIR widths, expected and actual solver verdicts, and
+(for a mutant) the complete decimal mask and slot witness. The mutant model's
+`expected` value is the independent reference and `predicted` is the changed
+helper's hand-evaluated result; neither is a public reducer execution. The
+consumer separately reports that execution and compares the complete frame.
+A mutant query must receive a caller-created mutated source path and digest plus
+`--origin-path`, `--origin-sha256`, and `--mutation` equal to the selected query
+name. Healthy queries refuse all origin and mutation flags. Supported query names are
+`healthy:Proved`, `bit_is_set_not_equal:Counterexample`, `set_bit_or:Counterexample`,
+and `clear_bit_complement:Counterexample`. The CLI never edits or substitutes
+source bytes. Guarded mutant queries assert the public reducer call precondition
+inside WIR before SAT. The CLI does not itself prove or replay the record-based
+reducer; the consumer owns that separate public replay evidence.
 
 See [VER09c](../../../specs/VER09c-typescript-source-wir-bridge.md) for the
 complete subset, bounds, evidence obligations, and claim limits.

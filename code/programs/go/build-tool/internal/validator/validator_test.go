@@ -196,6 +196,87 @@ func TestValidateBuildFilesFailsMissingStandalonePrereq(t *testing.T) {
 	}
 }
 
+func TestValidateBuildFilesDeclaredDependencySuppliesResolvedClosure(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "rust/parser", relPath: "code/packages/rust/parser", lang: "rust"},
+		{name: "rust/bridge", relPath: "code/packages/rust/bridge", lang: "rust"},
+		{name: "typescript/consumer", relPath: "code/packages/typescript/consumer", lang: "typescript", commands: []string{"node scripts/run-proof.mjs"}},
+	})
+	for i := range pkgs {
+		if pkgs[i].Name == "typescript/consumer" {
+			pkgs[i].BuildContent = "# build-tool: deps=rust/bridge\n"
+		}
+	}
+	graph := graphWithEdges([2]string{"rust/parser", "rust/bridge"}, [2]string{"rust/bridge", "typescript/consumer"})
+	if err := ValidateBuildFiles(pkgs, graph); err != nil {
+		t.Fatalf("declared bridge should supply its resolved transitive closure: %v", err)
+	}
+}
+
+func TestValidateBuildFilesUnrelatedDeclaredDependencyDoesNotSupplyPrerequisites(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "rust/parser", relPath: "code/packages/rust/parser", lang: "rust"},
+		{name: "rust/bridge", relPath: "code/packages/rust/bridge", lang: "rust"},
+		{name: "rust/unrelated", relPath: "code/packages/rust/unrelated", lang: "rust"},
+		{name: "typescript/consumer", relPath: "code/packages/typescript/consumer", lang: "typescript", commands: []string{"node scripts/run-proof.mjs"}},
+	})
+	for i := range pkgs {
+		if pkgs[i].Name == "typescript/consumer" {
+			pkgs[i].BuildContent = "# build-tool: deps=rust/unrelated\n"
+		}
+	}
+	graph := graphWithEdges(
+		[2]string{"rust/parser", "rust/bridge"},
+		[2]string{"rust/bridge", "typescript/consumer"},
+	)
+	graph.AddNode("rust/unrelated")
+	err := ValidateBuildFiles(pkgs, graph)
+	if err == nil || !strings.Contains(err.Error(), "missing prerequisite refs for standalone builds: rust/bridge, rust/parser") {
+		t.Fatalf("unrelated declared dependency incorrectly supplied actual prerequisites: %v", err)
+	}
+}
+
+func TestValidateBuildFilesFailsUnresolvedDeclaredDependency(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "typescript/consumer", relPath: "code/packages/typescript/consumer", lang: "typescript", commands: []string{"node scripts/run-proof.mjs"}},
+	})
+	pkgs[0].BuildContent = "# build-tool: deps=rust/missing-proof\n"
+	graph := directedgraph.New()
+	graph.AddNode("typescript/consumer")
+	err := ValidateBuildFiles(pkgs, graph)
+	if err == nil || !strings.Contains(err.Error(), `declared build-tool dependency "rust/missing-proof" is not in the resolved graph`) {
+		t.Fatalf("unresolved declared dependency was not rejected: %v", err)
+	}
+}
+
+func TestParseDeclaredBuildDepsMatchesResolverSeparators(t *testing.T) {
+	for _, content := range []string{
+		"# build-tool: deps=rust/bridge,rust/sha256\n",
+		"# build-tool: deps=rust/bridge rust/sha256\n",
+		"# build-tool: deps = rust/bridge,\trust/sha256\n",
+	} {
+		got := parseDeclaredBuildDeps(discovery.Package{BuildContent: content})
+		if !got["rust/bridge"] || !got["rust/sha256"] || len(got) != 2 {
+			t.Errorf("parseDeclaredBuildDeps(%q) = %v, want both names", content, got)
+		}
+	}
+}
+
 func TestValidateBuildFilesAllowsIntentionalPlatformSkip(t *testing.T) {
 	pkgs := makePackages(t, []struct {
 		name     string

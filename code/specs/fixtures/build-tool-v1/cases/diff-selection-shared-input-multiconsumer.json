@@ -55,7 +55,7 @@
       ],
       "forced_packages": [],
       "unknown_path_policy": "error",
-      "boundary_sha256": "537c9d4d7af75aeae1b03b327ff7198cee811ecaf4734a4cfc213fcabe37c479"
+      "boundary_sha256": "02975c651ded7e4191ca4f1a142148ecd17176ae585c349c62a86163b13c0d16"
     },
     "changed_paths": [
       "code/packages/rust/Cargo.toml"
