@@ -20,6 +20,11 @@ const (
 	maxVar    uint32 = (1 << 30) - 1
 )
 
+// Literals are packed as (variable<<1)|sign: even values are positive and
+// odd values are negative. Thus l^1 is the complement. Watch buckets below
+// are keyed by a watched literal's complement, so the newly true literal
+// selects clauses whose watched literal just became false.
+
 type SolveResult string
 
 const (
@@ -44,9 +49,8 @@ type Solver struct {
 	cfg                                          SolverConfig
 	vars                                         uint32
 	cs                                           []*satClause
-	rootUnits                                    []Lit
 	inputClauseCount                             uint64
-	permanentEmpty                               bool
+	inputLiteralCount                            uint64
 	watches                                      [][]int
 	val                                          []int8
 	level                                        []int
@@ -67,6 +71,9 @@ type Solver struct {
 }
 
 func NewSolver(config ...SolverConfig) (*Solver, error) {
+	// Zero fields retain these conservative defaults; callers may lower, never
+	// raise, them. The literal encoding's larger numeric range is not an
+	// allocation budget.
 	c := SolverConfig{MaxVars: 1 << 20, MaxClauses: 1 << 20, MaxClauseLiterals: 1 << 24, MaxStoredLiterals: 1 << 24}
 	if len(config) > 1 {
 		return nil, errors.New("at most one solver config")
@@ -88,6 +95,9 @@ func NewSolver(config ...SolverConfig) (*Solver, error) {
 	}
 	if c.MaxVars > maxVar+1 {
 		return nil, errors.New("MaxVars exceeds literal representation")
+	}
+	if c.MaxVars > 1<<20 || c.MaxClauses > 1<<20 || c.MaxClauseLiterals > 1<<24 || c.MaxStoredLiterals > 1<<24 {
+		return nil, errors.New("configured resource ceilings may lower, not raise, the hard defaults")
 	}
 	if c.MaxClauses == 0 || c.MaxClauseLiterals == 0 || c.MaxStoredLiterals == 0 {
 		return nil, errors.New("resource ceilings must be positive")
@@ -158,6 +168,18 @@ func (s *Solver) NClauses() uint64 {
 	}
 	return n
 }
+func (s *Solver) storedLiteralCount() uint64 {
+	// Original literals include root units (which have no clause object).
+	// Learned literals count while live; the physical arena has a separate cap
+	// because tombstones and watcher IDs still consume memory after reduction.
+	n := s.inputLiteralCount
+	for _, c := range s.cs {
+		if c.learnt && !c.deleted {
+			n += uint64(len(c.lits))
+		}
+	}
+	return n
+}
 func (s *Solver) Okay() bool       { return !s.rootUnsat }
 func (s *Solver) clearResult()     { s.model = nil; s.modelOK = false; s.core = nil }
 func (s *Solver) litOK(l Lit) bool { return validLit(l) && uint32(l)>>1 < s.vars }
@@ -197,6 +219,7 @@ func (s *Solver) cancel(level int) {
 	to := s.limits[level]
 	for i := len(s.trail) - 1; i >= to; i-- {
 		v := uint32(s.trail[i]) >> 1
+		// Save the last decision phase before making the variable undefined.
 		s.phase[v] = s.val[v]
 		s.val[v] = 0
 		s.reason[v] = -1
@@ -209,6 +232,8 @@ func (s *Solver) cancel(level int) {
 	}
 }
 func (s *Solver) AddClause(in []Lit) (bool, error) {
+	// Validate the entire request and its growth quotas before allocation; a
+	// malformed tail must not leave a partially grown solver.
 	maxRequired := s.vars
 	for _, l := range in {
 		if !validLit(l) {
@@ -221,16 +246,10 @@ func (s *Solver) AddClause(in []Lit) (bool, error) {
 	if maxRequired > s.cfg.MaxVars {
 		return false, errors.New("variable resource ceiling exceeded")
 	}
-	if uint64(len(in)) > s.cfg.MaxClauseLiterals || s.inputClauseCount >= s.cfg.MaxClauses {
+	if s.inputLiteralCount+uint64(len(in)) > s.cfg.MaxClauseLiterals || s.inputClauseCount >= s.cfg.MaxClauses {
 		return false, errors.New("clause resource ceiling exceeded")
 	}
-	var used uint64
-	for _, c := range s.cs {
-		if !c.deleted {
-			used += uint64(len(c.lits))
-		}
-	}
-	if used+uint64(len(in)) > s.cfg.MaxStoredLiterals {
+	if s.storedLiteralCount()+uint64(len(in)) > s.cfg.MaxStoredLiterals {
 		return false, errors.New("stored literal ceiling exceeded")
 	}
 	// Match the TypeScript API: a well-formed literal grows the variable
@@ -259,6 +278,12 @@ func (s *Solver) AddClause(in []Lit) (bool, error) {
 			reduced = append(reduced, l)
 		}
 	}
+	if len(reduced) == 0 && len(in) > 0 { // all-false clauses are retained as the permanent empty clause below
+		s.inputLiteralCount += uint64(len(in))
+		s.inputClauseCount++
+		s.rootUnsat = true
+		return false, nil
+	}
 	ls := append([]Lit(nil), reduced...)
 	sort.Slice(ls, func(i, j int) bool { return ls[i] < ls[j] })
 	out := ls[:0]
@@ -273,13 +298,12 @@ func (s *Solver) AddClause(in []Lit) (bool, error) {
 	}
 	ls = out
 	s.inputClauseCount++
+	s.inputLiteralCount += uint64(len(in))
 	if len(ls) == 0 {
 		s.rootUnsat = true
-		s.permanentEmpty = true
 		return false, nil
 	}
 	if len(ls) == 1 {
-		s.rootUnits = append(s.rootUnits, ls[0])
 		if !s.enqueue(ls[0], -1) {
 			s.rootUnsat = true
 			return false, nil
@@ -317,7 +341,8 @@ func (s *Solver) propagate(budget uint64) int {
 		used++
 		s.Propagations++
 		// Watch lists are keyed by the complement of the watched literal,
-		// which is the literal just made true.
+		// which is the literal just made true. Check the limit before consuming
+		// qhead so UNKNOWN preserves an exact retry point.
 		wi := uint32(p)
 		list := s.watches[wi]
 		write := 0
@@ -374,6 +399,9 @@ func (s *Solver) propagate(budget uint64) int {
 	return -1
 }
 func (s *Solver) analyze(conf int) ([]Lit, int, bool) {
+	// First-UIP walks backward over the implication graph. The pivot variable
+	// is skipped in its own reason (which contains its opposite literal), so
+	// each resolution step strictly reduces the current-level path count.
 	seen := make([]bool, s.vars)
 	learn := []Lit{0}
 	path := 0
@@ -436,13 +464,7 @@ func (s *Solver) analyze(conf int) ([]Lit, int, bool) {
 	return learn, back, true
 }
 func (s *Solver) addLearned(ls []Lit) (int, bool) {
-	var used uint64
-	for _, c := range s.cs {
-		if !c.deleted {
-			used += uint64(len(c.lits))
-		}
-	}
-	if used+uint64(len(ls)) > s.cfg.MaxStoredLiterals {
+	if s.storedLiteralCount()+uint64(len(ls)) > s.cfg.MaxStoredLiterals || uint64(len(s.cs)) >= s.cfg.MaxClauses+s.cfg.MaxStoredLiterals {
 		return -1, false
 	}
 	c := &satClause{lits: append([]Lit(nil), ls...), learnt: true}
@@ -488,51 +510,6 @@ func (s *Solver) reduceLearned() {
 	}
 }
 
-// Assumption decisions make conflict clauses conditional. Drop all learned
-// clauses after such a call, then reconstruct the permanent root closure.
-func (s *Solver) discardAssumptionLearning() {
-	model, modelOK, core := append([]bool(nil), s.model...), s.modelOK, append([]Lit(nil), s.core...)
-	kept := s.cs[:0]
-	for _, c := range s.cs {
-		if !c.learnt {
-			kept = append(kept, c)
-		}
-	}
-	s.cs = kept
-	s.watches = make([][]int, s.vars*2)
-	s.val = make([]int8, s.vars)
-	s.level = make([]int, s.vars)
-	s.reason = make([]int, s.vars)
-	for i := range s.reason {
-		s.reason[i] = -1
-	}
-	s.trail = nil
-	s.limits = nil
-	s.qhead = 0
-	s.rootUnsat = s.permanentEmpty
-	for _, l := range s.rootUnits {
-		if !s.enqueue(l, -1) {
-			s.rootUnsat = true
-		}
-	}
-	for id, c := range s.cs {
-		if len(c.lits) == 0 {
-			s.rootUnsat = true
-			continue
-		}
-		c.w0 = 0
-		c.w1 = 0
-		if len(c.lits) > 1 {
-			c.w1 = 1
-			s.watches[uint32(c.lits[1])^1] = append(s.watches[uint32(c.lits[1])^1], id)
-		}
-		s.watches[uint32(c.lits[0])^1] = append(s.watches[uint32(c.lits[0])^1], id)
-	}
-	if !s.rootUnsat && s.propagate(math.MaxUint64) >= 0 {
-		s.rootUnsat = true
-	}
-	s.model, s.modelOK, s.core = model, modelOK, core
-}
 func (s *Solver) Solve(opts ...SolverOptions) (SolveResult, error) {
 	return s.SolveWithAssumptions(nil, opts...)
 }
@@ -558,9 +535,6 @@ func (s *Solver) SolveWithAssumptions(as []Lit, opts ...SolverOptions) (SolveRes
 		if _, e := s.NewVar(); e != nil {
 			return SolveUnknown, e
 		}
-	}
-	if len(as) > 0 {
-		defer s.discardAssumptionLearning()
 	}
 	o := SolverOptions{}
 	if len(opts) == 1 {
@@ -637,18 +611,26 @@ func (s *Solver) SolveWithAssumptions(as []Lit, opts ...SolverOptions) (SolveRes
 			return SolveUnknown, nil
 		}
 		if conf >= 0 {
-			if s.Conflicts-pc > mc && mc != math.MaxUint64 {
-				s.cancel(0)
-				return SolveUnknown, nil
-			}
 			if len(s.limits) <= assLevels {
 				if len(s.limits) == 0 {
+					// A level-zero conflict is a permanent fact, independent of
+					// later calls' budgets or assumptions.
 					s.rootUnsat = true
+					s.cancel(0)
+					return SolveUnsat, nil
 				} else {
+					if mc != math.MaxUint64 && s.Conflicts-pc > mc {
+						s.cancel(0)
+						return SolveUnknown, nil
+					}
 					s.core = append([]Lit(nil), unique...)
 				}
 				s.cancel(0)
 				return SolveUnsat, nil
+			}
+			if s.Conflicts-pc > mc && mc != math.MaxUint64 {
+				s.cancel(0)
+				return SolveUnknown, nil
 			}
 			s.sinceRestart++
 			ls, back, valid := s.analyze(conf)
@@ -656,6 +638,10 @@ func (s *Solver) SolveWithAssumptions(as []Lit, opts ...SolverOptions) (SolveRes
 				s.cancel(0)
 				return SolveUnknown, errors.New("CDCL conflict-analysis invariant failed")
 			}
+			// Assumptions are decision levels, not reason clauses. Resolution
+			// therefore keeps every learned clause entailed by the permanent
+			// formula. Clamp backjumping at the active assumption prefix; dropping
+			// that prefix would turn a learned consequence into a false UNSAT.
 			if back < assLevels {
 				back = assLevels
 			}
@@ -702,7 +688,6 @@ func (s *Solver) SolveWithAssumptions(as []Lit, opts ...SolverOptions) (SolveRes
 				s.model[i] = x > 0
 			}
 			s.modelOK = true
-			s.cancel(0)
 			return SolveSat, nil
 		}
 		s.newLevel()
@@ -746,8 +731,16 @@ func (s *Solver) VarValue(v Var) LBool {
 	}
 	return True
 }
-func (s *Solver) Propagate(maxSteps uint64) int { return s.propagate(maxSteps) }
-func (s *Solver) Reset()                        { s.clearResult(); s.cancel(0) }
+func (s *Solver) Propagate(maxSteps uint64) int {
+	c := s.propagate(maxSteps)
+	if c >= 0 && len(s.limits) == 0 {
+		// Public root propagation can discover the permanent contradiction
+		// before Solve sees it; preserve that knowledge across later calls.
+		s.rootUnsat = true
+	}
+	return c
+}
+func (s *Solver) Reset() { s.clearResult(); s.cancel(0) }
 
 // The builder emits Tseitin equivalences; vectors are little-endian and BvAdd
 // returns the low input-width bits (the final carry is intentionally dropped).
@@ -764,7 +757,8 @@ func NewCnfBuilder(s *Solver) (*CnfBuilder, error) {
 	}
 	return &CnfBuilder{s}, nil
 }
-func (b *CnfBuilder) GetSolver() *Solver { return b.solver }
+func (b *CnfBuilder) GetSolver() *Solver   { return b.solver }
+func (b *CnfBuilder) NewVar() (Var, error) { return b.solver.NewVar() }
 func (b *CnfBuilder) NewLit() (Lit, error) {
 	v, e := b.solver.NewVar()
 	if e != nil {
@@ -781,6 +775,9 @@ func (b *CnfBuilder) check(ls ...Lit) error {
 	return nil
 }
 func (b *CnfBuilder) preflight(vars uint64, clauses, literals uint64) error {
+	// All gate operands are checked before this reservation. Checking cumulative
+	// original and stored literals here prevents an error on the last emitted
+	// clause from leaving a partial Tseitin definition.
 	s := b.solver
 	if uint64(s.vars)+vars > uint64(s.cfg.MaxVars) {
 		return errors.New("builder variable resource ceiling exceeded")
@@ -788,11 +785,10 @@ func (b *CnfBuilder) preflight(vars uint64, clauses, literals uint64) error {
 	if s.inputClauseCount+clauses > s.cfg.MaxClauses {
 		return errors.New("builder clause resource ceiling exceeded")
 	}
-	var stored uint64
-	for _, c := range s.cs {
-		stored += uint64(len(c.lits))
+	if s.inputLiteralCount+literals > s.cfg.MaxClauseLiterals {
+		return errors.New("builder original-literal resource ceiling exceeded")
 	}
-	if stored+literals > s.cfg.MaxStoredLiterals {
+	if s.storedLiteralCount()+literals > s.cfg.MaxStoredLiterals {
 		return errors.New("builder stored-literal resource ceiling exceeded")
 	}
 	return nil

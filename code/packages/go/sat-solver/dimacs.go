@@ -1,10 +1,8 @@
 package satsolver
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
-	"io"
 	"strconv"
 	"strings"
 )
@@ -23,10 +21,13 @@ func ParseDimacs(text string, options ...ParseDimacsOptions) (CnfFormula, error)
 	if len(options) == 1 && options[0].MaxVars > 0 {
 		max = options[0].MaxVars
 	}
+	if max > maxVar+1 {
+		return CnfFormula{}, errors.New("MaxVars exceeds literal representation")
+	}
 	text = strings.ReplaceAll(strings.ReplaceAll(text, "\r\n", "\n"), "\r", "\n")
 	lines := strings.Split(text, "\n")
 	var n uint32
-	expected := -1
+	var expected uint64
 	header := false
 	var clauses [][]Lit
 	var cur []Lit
@@ -43,23 +44,26 @@ func ParseDimacs(text string, options ...ParseDimacsOptions) (CnfFormula, error)
 			if len(f) != 4 || f[0] != "p" || f[1] != "cnf" {
 				return CnfFormula{}, fmt.Errorf("line %d: malformed DIMACS header", i+1)
 			}
+			if !unsignedDecimal(f[2]) || !unsignedDecimal(f[3]) {
+				return CnfFormula{}, fmt.Errorf("line %d: invalid header count spelling", i+1)
+			}
 			nv, e1 := strconv.ParseUint(f[2], 10, 32)
 			nc, e2 := strconv.ParseUint(f[3], 10, 64)
 			if e1 != nil || e2 != nil {
 				return CnfFormula{}, fmt.Errorf("line %d: invalid header counts", i+1)
 			}
-			if nv > uint64(max) {
+			if nv > uint64(max) || nv > uint64(maxVar)+1 {
 				return CnfFormula{}, errors.New("declared variables exceed configured limit")
 			}
 			n = uint32(nv)
-			if nc > uint64(max)*1024 {
-				return CnfFormula{}, errors.New("declared clause count exceeds parser safety ceiling")
-			}
-			expected = int(nc)
+			expected = nc
 			header = true
 			continue
 		}
 		for _, tok := range strings.Fields(line) {
+			if !signedDecimal(tok) {
+				return CnfFormula{}, fmt.Errorf("line %d: invalid literal spelling %q", i+1, tok)
+			}
 			v, e := strconv.ParseInt(tok, 10, 64)
 			if e != nil {
 				return CnfFormula{}, fmt.Errorf("line %d: malformed literal %q", i+1, tok)
@@ -89,25 +93,27 @@ func ParseDimacs(text string, options ...ParseDimacsOptions) (CnfFormula, error)
 	if len(cur) != 0 {
 		return CnfFormula{}, errors.New("unterminated DIMACS clause")
 	}
-	if len(clauses) != expected {
+	if uint64(len(clauses)) != expected {
 		return CnfFormula{}, fmt.Errorf("DIMACS clause count mismatch: declared %d, parsed %d", expected, len(clauses))
 	}
 	return CnfFormula{n, clauses}, nil
 }
-func ParseDimacsReader(r io.Reader, options ...ParseDimacsOptions) (CnfFormula, error) {
-	b := bufio.NewReader(r)
-	var s strings.Builder
-	for {
-		line, e := b.ReadString('\n')
-		s.WriteString(line)
-		if e != nil {
-			if e == io.EOF {
-				break
-			}
-			return CnfFormula{}, e
+func unsignedDecimal(s string) bool {
+	if s == "" {
+		return false
+	}
+	for _, c := range s {
+		if c < '0' || c > '9' {
+			return false
 		}
 	}
-	return ParseDimacs(s.String(), options...)
+	return true
+}
+func signedDecimal(s string) bool {
+	if strings.HasPrefix(s, "-") {
+		s = s[1:]
+	}
+	return unsignedDecimal(s)
 }
 func WriteDimacs(f CnfFormula) (string, error) {
 	if f.NumVars > maxVar+1 {

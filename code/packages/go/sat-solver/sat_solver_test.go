@@ -491,6 +491,9 @@ func TestInspectionAPIsAndNotGate(t *testing.T) {
 		t.Fatal("Value accepted malformed packed literal")
 	}
 	b, _ := NewCnfBuilder(nil)
+	if v, err := b.NewVar(); err != nil || v != 0 {
+		t.Fatalf("builder NewVar: %d %v", v, err)
+	}
 	x, _ := b.NewLit()
 	nx, err := b.Not(x)
 	if err != nil || nx != x^1 {
@@ -498,11 +501,55 @@ func TestInspectionAPIsAndNotGate(t *testing.T) {
 	}
 }
 
-func TestParserReaderAndResourceCeilings(t *testing.T) {
-	f, err := ParseDimacsReader(strings.NewReader("p cnf 1 1\n1 0\n"))
-	if err != nil || f.NumVars != 1 {
-		t.Fatalf("reader parse: %+v %v", f, err)
+func TestValueQueriesRemainAlignedWithSATModel(t *testing.T) {
+	s, _ := NewSolver()
+	aVar, _ := s.NewVar()
+	bVar, _ := s.NewVar()
+	a, _ := MakeLit(aVar, false)
+	if _, err := s.AddClause([]Lit{a}); err != nil {
+		t.Fatal(err)
 	}
+	if got, err := s.Solve(); err != nil || got != SolveSat {
+		t.Fatalf("solve=%v %v", got, err)
+	}
+	model, valid := s.Model()
+	if !valid || len(model) != 2 {
+		t.Fatalf("model=%v valid=%t", model, valid)
+	}
+	for v, want := range model {
+		if got := s.VarValue(Var(v)); (got == True) != want || got == Undef {
+			t.Fatalf("VarValue(%d)=%v for model=%v", v, got, model)
+		}
+		pos, _ := MakeLit(Var(v), false)
+		neg := pos ^ 1
+		positive, err := s.Value(pos)
+		if err != nil || (positive == True) != want {
+			t.Fatalf("Value(positive %d)=%v want=%t err=%v", v, positive, want, err)
+		}
+		negative, err := s.Value(neg)
+		if err != nil || (negative == True) == want {
+			t.Fatalf("Value(negative %d)=%v want negation of %t err=%v", v, negative, want, err)
+		}
+	}
+	if _, err := s.NewVar(); err != nil {
+		t.Fatal(err)
+	}
+	if _, valid := s.Model(); valid {
+		t.Fatal("NewVar retained old model")
+	}
+	if got := s.VarValue(aVar); got != True {
+		t.Fatalf("NewVar discarded permanent root assignment: %v", got)
+	}
+	s.Reset()
+	if _, valid := s.Model(); valid {
+		t.Fatal("Reset retained old model")
+	}
+	if got := s.VarValue(bVar); got != Undef {
+		t.Fatalf("Reset retained a decision assignment: %v", got)
+	}
+}
+
+func TestParserResourceCeilings(t *testing.T) {
 	s, _ := NewSolver(SolverConfig{MaxVars: 2, MaxClauses: 2, MaxClauseLiterals: 2, MaxStoredLiterals: 2})
 	a, _ := MakeLit(0, false)
 	b, _ := MakeLit(1, false)
@@ -520,6 +567,42 @@ func TestParserReaderAndResourceCeilings(t *testing.T) {
 	if _, err := NewSolver(SolverConfig{MaxVars: (1 << 30) + 1}); err == nil {
 		t.Fatal("NewSolver allowed ceiling beyond encoding")
 	}
+	if _, err := ParseDimacs("p cnf 1073741825 0\n", ParseDimacsOptions{MaxVars: 1073741825}); err == nil {
+		t.Fatal("DIMACS accepted variables outside literal representation")
+	}
+	limitedLits, _ := NewSolver(SolverConfig{MaxVars: 2, MaxClauses: 8, MaxClauseLiterals: 2, MaxStoredLiterals: 1})
+	u0, _ := MakeLit(0, false)
+	u1, _ := MakeLit(1, false)
+	_, _ = limitedLits.NewVar()
+	_, _ = limitedLits.NewVar()
+	if ok, err := limitedLits.AddClause([]Lit{u0}); err != nil || !ok {
+		t.Fatalf("first root literal: %t %v", ok, err)
+	}
+	if _, err := limitedLits.AddClause([]Lit{u1}); err == nil {
+		t.Fatal("root unit bypassed stored literal ceiling")
+	}
+	if limitedLits.NVars() != 2 || limitedLits.NClauses() != 0 || limitedLits.VarValue(0) != True || limitedLits.VarValue(1) != Undef {
+		t.Fatal("root-literal quota refusal was not atomic")
+	}
+	totalLimit, _ := NewSolver(SolverConfig{MaxVars: 3, MaxClauses: 8, MaxClauseLiterals: 2, MaxStoredLiterals: 4})
+	t0, _ := MakeLit(0, false)
+	t1, _ := MakeLit(1, false)
+	t2, _ := MakeLit(2, false)
+	for i := 0; i < 3; i++ {
+		_, _ = totalLimit.NewVar()
+	}
+	for _, l := range []Lit{t0, t1} {
+		if _, err := totalLimit.AddClause([]Lit{l}); err != nil {
+			t.Fatal(err)
+		}
+	}
+	beforeVars, beforeCount := totalLimit.NVars(), totalLimit.inputClauseCount
+	if _, err := totalLimit.AddClause([]Lit{t2}); err == nil {
+		t.Fatal("total original literal ceiling not enforced")
+	}
+	if totalLimit.NVars() != beforeVars || totalLimit.inputClauseCount != beforeCount || totalLimit.VarValue(2) != Undef {
+		t.Fatal("total-original-literal refusal mutated solver")
+	}
 }
 
 func TestPublicRefusalPathsAndBuilderPreflight(t *testing.T) {
@@ -532,6 +615,11 @@ func TestPublicRefusalPathsAndBuilderPreflight(t *testing.T) {
 	}
 	if _, err := NewSolver(SolverConfig{MaxVars: (1 << 30) + 1}); err == nil {
 		t.Fatal("invalid representation config accepted")
+	}
+	for _, cfg := range []SolverConfig{{MaxVars: 1 << 21}, {MaxClauses: 1 << 21}, {MaxClauseLiterals: 1 << 25}, {MaxStoredLiterals: 1 << 25}} {
+		if _, err := NewSolver(cfg); err == nil {
+			t.Fatalf("raised hard resource ceiling accepted: %+v", cfg)
+		}
 	}
 	if _, err := NewSolver(SolverConfig{}, SolverConfig{}); err == nil {
 		t.Fatal("multiple configs accepted")
@@ -567,6 +655,9 @@ func TestPublicRefusalPathsAndBuilderPreflight(t *testing.T) {
 	if solverVars := limited.NVars(); solverVars != 2 {
 		t.Fatalf("failed builder operations changed variable count: %d", solverVars)
 	}
+	if limited.inputLiteralCount != 0 || limited.inputClauseCount != 0 || limited.NClauses() != 0 {
+		t.Fatal("gate preflight left partial formula state")
+	}
 	maxed, _ := NewSolver(SolverConfig{MaxVars: 1, MaxClauses: 8, MaxClauseLiterals: 8, MaxStoredLiterals: 8})
 	bb, _ := NewCnfBuilder(maxed)
 	if _, err := bb.NewLit(); err != nil {
@@ -580,6 +671,26 @@ func TestPublicRefusalPathsAndBuilderPreflight(t *testing.T) {
 	}
 	if _, err := maxed.SolveWithAssumptions([]Lit{bad}); err == nil {
 		t.Fatal("Solve accepted malformed assumption")
+	}
+}
+
+func TestLearnedArenaHasHardPhysicalEntryLimit(t *testing.T) {
+	s, _ := NewSolver(SolverConfig{MaxVars: 1, MaxClauses: 1, MaxClauseLiterals: 8, MaxStoredLiterals: 2})
+	_, _ = s.NewVar()
+	literal, _ := MakeLit(0, false)
+	for range 3 {
+		id, ok := s.addLearned([]Lit{literal})
+		if !ok {
+			t.Fatal("learned entry refused before physical arena limit")
+		}
+		s.cs[id].deleted = true
+		s.cs[id].lits = nil
+	}
+	if _, ok := s.addLearned([]Lit{literal}); ok {
+		t.Fatal("learned tombstones bypassed physical clause arena ceiling")
+	}
+	if len(s.cs) != 3 {
+		t.Fatalf("physical arena length=%d want=3", len(s.cs))
 	}
 }
 
@@ -605,6 +716,63 @@ func TestUnknownPreservesPendingRootPropagation(t *testing.T) {
 	}
 	if got := solver.VarValue(z); got != True {
 		t.Fatalf("pending root propagation lost z=true: %v", got)
+	}
+}
+
+func TestKnownRootUnsatSurvivesAssumptionsAndBudget(t *testing.T) {
+	s, _ := NewSolver()
+	x, _ := s.NewVar()
+	y, _ := s.NewVar()
+	a, _ := MakeLit(x, false)
+	b, _ := MakeLit(y, false)
+	for _, cl := range [][]Lit{{a, b}, {a, b ^ 1}, {a ^ 1, b}, {a ^ 1, b ^ 1}} {
+		if _, err := s.AddClause(cl); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if got, err := s.Solve(); err != nil || got != SolveUnsat {
+		t.Fatalf("base solve=%v %v", got, err)
+	}
+	if s.Okay() {
+		t.Fatal("root UNSAT was not recorded")
+	}
+	if got, err := s.SolveWithAssumptions([]Lit{a}); err != nil || got != SolveUnsat {
+		t.Fatalf("assumption after root UNSAT=%v %v", got, err)
+	}
+	if s.Okay() {
+		t.Fatal("assumption solve cleared known root UNSAT")
+	}
+	zero := uint64(0)
+	if got, err := s.Solve(SolverOptions{MaxSteps: &zero}); err != nil || got != SolveUnsat {
+		t.Fatalf("zero-budget known root UNSAT=%v %v", got, err)
+	}
+}
+
+func TestPublicPropagatePersistsRootConflictBeforeBudgetedRetry(t *testing.T) {
+	s, _ := NewSolver()
+	x, _ := s.NewVar()
+	y, _ := s.NewVar()
+	a, _ := MakeLit(x, false)
+	b, _ := MakeLit(y, false)
+	for _, cl := range [][]Lit{{a, b}, {a, b ^ 1}, {a ^ 1, b}, {a ^ 1, b ^ 1}} {
+		if _, err := s.AddClause(cl); err != nil {
+			t.Fatal(err)
+		}
+	}
+	one := uint64(1)
+	if got, err := s.Solve(SolverOptions{MaxSteps: &one}); err != nil || got != SolveUnknown {
+		t.Fatalf("bounded base=%v %v", got, err)
+	}
+	conflict := s.Propagate(^uint64(0))
+	if conflict < 0 {
+		t.Fatalf("public Propagate missed permanent root conflict: %d", conflict)
+	}
+	if s.Okay() {
+		t.Fatal("public Propagate did not persist root contradiction")
+	}
+	budget := uint64(1)
+	if got, err := s.Solve(SolverOptions{MaxConflicts: &budget}); err != nil || got != SolveUnsat {
+		t.Fatalf("known root conflict did not outrank budget: %v %v", got, err)
 	}
 }
 
@@ -795,7 +963,7 @@ func TestDIMACSStrictnessRoundTripAndLimits(t *testing.T) {
 		t.Fatalf("empty clause writer spelling = %q", serialized[len(serialized)-2:])
 	}
 	malformed := []string{
-		"p cnfX 1 0\n", "p cnf 1 0 extra\n", "p cnf 1 1\n1\n",
+		"p cnfX 1 0\n", "p cnf 1 0 extra\n", "p cnf +1 0\n", "p cnf 1 1\n+1 0\n", "p cnf 1 1\n1\n",
 		"p cnf 1 1\n2 0\n", "p cnf 1 0\n1 0\n", "p cnf -1 0\n",
 		"p cnf 1 1\n1 bad 0\n", "p cnf 1 1\n0 0\n",
 	}
