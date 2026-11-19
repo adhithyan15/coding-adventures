@@ -2398,7 +2398,7 @@ fn flutter_main_with_phone_state_root(main_dart: &str) -> Result<String, BuildEr
     }
     let main_dart = main_dart.replacen(
         MATERIAL,
-        "import 'dart:io' show Platform;\nimport 'package:flutter/material.dart';\nimport 'package:path_provider/path_provider.dart';\n",
+        "import 'dart:io' show Platform;\nimport 'package:flutter/material.dart';\nimport 'package:flutter/services.dart' show MissingPluginException, PlatformException;\nimport 'package:path_provider/path_provider.dart';\n",
         1,
     );
     Ok(main_dart.replacen(
@@ -2407,6 +2407,22 @@ fn flutter_main_with_phone_state_root(main_dart: &str) -> Result<String, BuildEr
             "const bool _mosaicNativeDiagnostics = bool.fromEnvironment(\n",
             "  'MOSAIC_NATIVE_DIAGNOSTICS',\n",
             ");\n",
+            "String _mosaicSupportLookupFailure(Object error) {\n",
+            "  if (error is MissingPlatformDirectoryException) return 'missing_directory';\n",
+            "  if (error is MissingPluginException) return 'missing_plugin';\n",
+            "  if (error is PlatformException) return 'platform_exception';\n",
+            "  try {\n",
+            "    switch (error.runtimeType.toString()) {\n",
+            "      case 'DynamicLibraryLoadError': return 'jni_helper_load_type_name';\n",
+            "      case 'NoJvmInstanceError': return 'jni_no_vm_type_name';\n",
+            "      case 'JNullError': return 'jni_null_type_name';\n",
+            "      case 'JThrowable': return 'jni_throwable_type_name';\n",
+            "    }\n",
+            "  } catch (_) {\n",
+            "    return 'other';\n",
+            "  }\n",
+            "  return 'other';\n",
+            "}\n",
             "Future<void> main() async {\n",
             "  if (_mosaicNativeDiagnostics) {\n",
             "    final mainEntry = Stopwatch()..start();\n",
@@ -2427,9 +2443,10 @@ fn flutter_main_with_phone_state_root(main_dart: &str) -> Result<String, BuildEr
             "        supportDirectory.path.isEmpty ? 'empty' : 'nonempty',\n",
             "        supportLookup,\n",
             "      );\n",
-            "    } on Object {\n",
+            "    } on Object catch (error) {\n",
             "      mosaicStateRoot = null;\n",
-            "      mosaicNativeDiagnostic('app_support_lookup', 'threw', supportLookup);\n",
+            "      final failure = _mosaicNativeDiagnostics ? _mosaicSupportLookupFailure(error) : 'threw';\n",
+            "      mosaicNativeDiagnostic('app_support_lookup', failure, supportLookup);\n",
             "    }\n",
             "  }\n",
             "  runApp(MosaicApp());\n",
@@ -17005,6 +17022,30 @@ layout NativeEvents {
         assert!(pubspec.contains("  path_provider: 2.1.6\n"), "{pubspec}");
         let main = fs::read_to_string(flutter.join("lib/main.dart")).unwrap();
         assert!(main.contains("import 'package:path_provider/path_provider.dart';\n"));
+        assert!(main.contains("import 'package:flutter/services.dart' show MissingPluginException, PlatformException;\n"));
+        assert!(main.contains("String _mosaicSupportLookupFailure(Object error) {\n"));
+        for label in [
+            "missing_directory",
+            "missing_plugin",
+            "platform_exception",
+            "jni_helper_load_type_name",
+            "jni_no_vm_type_name",
+            "jni_null_type_name",
+            "jni_throwable_type_name",
+            "other",
+        ] {
+            assert!(
+                main.contains(&format!("return '{label}';")),
+                "{label}: {main}"
+            );
+        }
+        let classifier_start = main
+            .find("String _mosaicSupportLookupFailure(Object error)")
+            .unwrap();
+        let classifier_end = main.find("Future<void> main() async {").unwrap();
+        let classifier = &main[classifier_start..classifier_end];
+        assert!(!classifier.contains("error.toString()"));
+        assert!(!classifier.contains("PlatformException.code"));
         // `main.dart` and the imported host are separate Dart libraries, so
         // each file must read its own compile-time flag instead of reaching
         // into the host's private namespace.
@@ -17016,7 +17057,8 @@ layout NativeEvents {
         assert!(main.contains(
             "mosaicNativeDiagnostic('app_support_lookup', 'attempted', supportLookup);\n"
         ));
-        assert!(main.contains("      final supportDirectory = await getApplicationSupportDirectory();\n"));
+        assert!(main
+            .contains("      final supportDirectory = await getApplicationSupportDirectory();\n"));
         assert!(main.contains("      mosaicStateRoot = supportDirectory.path;\n"));
         assert!(main.contains("        'app_support_lookup',\n"));
         assert!(main.contains("        supportDirectory.path.isEmpty ? 'empty' : 'nonempty',\n"));
@@ -17024,8 +17066,9 @@ layout NativeEvents {
             "    final supportLookup = _mosaicNativeDiagnostics ? (Stopwatch()..start()) : null;\n"
         ));
         assert!(main.contains(
-            "      mosaicNativeDiagnostic('app_support_lookup', 'threw', supportLookup);\n"
+            "      final failure = _mosaicNativeDiagnostics ? _mosaicSupportLookupFailure(error) : 'threw';\n"
         ));
+        assert!(main.contains("} on Object catch (error) {\n"));
         assert!(
             main.find("mosaicNativeDiagnostic('main', 'entered'")
                 .unwrap()

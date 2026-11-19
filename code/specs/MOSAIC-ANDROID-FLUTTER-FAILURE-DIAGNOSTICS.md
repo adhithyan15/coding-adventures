@@ -31,8 +31,12 @@ Required stages distinguish:
 
 1. Dart `main()` entry before Flutter binding initialization, then the
    application-support-directory lookup attempt immediately before its
-   existing await; the lookup result is nonempty, empty, or thrown. The
-   attempt marker does not establish that the platform plugin replied;
+   existing await. A failed lookup reports only one closed classification:
+   missing directory, missing plugin, platform exception, one of four exact
+   JNI error type-name matches, or `other`. The classifier does not emit an
+   exception message, platform code, or arbitrary type name. A JNI label is a
+   type-name match, not proof of a particular runtime class or native cause.
+   The attempt marker does not establish that the platform plugin replied;
 2. whether the phone runtime was bundled (this does not claim the selected
    fallback route), Dart create-call
    attempt, raw ABI-call return/throw, and startup response
@@ -72,6 +76,19 @@ The newly added summary is capped below 64 KiB in total; its raw log is capped
 at 49,152 bytes before exact PID, envelope, and vocabulary filtering. The
 existing 200-line failure log printed by `fail()` remains separate and is not
 included in this summary cap.
+
+The opted-in Trestle Android build also emits one fixed-field
+`MOSAIC_BUILD_DIAG` receipt after the APK is produced and outside the gate's
+six-second collection deadline. It binds the APK and resolved lockfile by
+SHA-256, reports the package identifier parsed from APK badging, and reports
+`present`, `absent`, or `unavailable` for the x86_64 JNI library, generated
+Dart registrant source, and (when `apkanalyzer` can inspect the exact APK)
+executable construction of the two JNI plugins in
+`GeneratedPluginRegistrant`. A missing/failed inspection tool is unavailable,
+not evidence of absence. Generated Dart registrant presence is only source
+input evidence. The DEX receipt is build artifact evidence; neither proves
+that the installed app invoked registration or loaded a library. No DEX,
+registrant, APK contents, or filesystem paths are printed.
 
 The probe must use the app's existing `run-as` identity. A failed command,
 timeout, or unreadable response is `probe_failed`; it must never be reported as

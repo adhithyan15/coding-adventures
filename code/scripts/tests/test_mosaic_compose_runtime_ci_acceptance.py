@@ -792,6 +792,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "    fi\n"
                 "    printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=main result=entered elapsed_us=2\\n'\n"
                 "    printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=app_support_lookup result=attempted elapsed_us=3\\n'\n"
+                "    for result in missing_directory missing_plugin platform_exception jni_helper_load_type_name jni_no_vm_type_name jni_null_type_name jni_throwable_type_name other; do printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=app_support_lookup result=%s elapsed_us=4\\n' \"$result\"; done\n"
                 "    printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'\n"
                 "    exit 0\n"
                 "    exit 7\n"
@@ -979,6 +980,20 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "MOSAIC_NATIVE_DIAG v=1 stage=app_support_lookup result=attempted elapsed_us=3",
                 successful_capture.stdout,
             )
+            for result in (
+                "missing_directory",
+                "missing_plugin",
+                "platform_exception",
+                "jni_helper_load_type_name",
+                "jni_no_vm_type_name",
+                "jni_null_type_name",
+                "jni_throwable_type_name",
+                "other",
+            ):
+                self.assertIn(
+                    f"MOSAIC_NATIVE_DIAG v=1 stage=app_support_lookup result={result} elapsed_us=4",
+                    successful_capture.stdout,
+                )
             self.assertIn("diagnostic_apk_package_version=dev.codingadventures.trestle 1", successful_capture.stdout)
 
             probe_failure = run("probe_fail")

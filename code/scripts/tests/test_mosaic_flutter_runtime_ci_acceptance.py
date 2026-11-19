@@ -58,6 +58,16 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("run_flutter_build build apk --debug", helper)
         self.assertIn('if [[ -n "$flutter_diagnostic_arg" ]]', helper)
         self.assertNotIn("flutter_diagnostic_args[@]", helper)
+        receipt = (Path(__file__).resolve().parents[1] / "mosaic_flutter_android_build_receipt.py").read_text(encoding="utf-8")
+        self.assertIn('"MOSAIC_BUILD_DIAG v=1 "', receipt)
+        self.assertIn('"lib/x86_64/libdartjni.so"', receipt)
+        self.assertIn('"PathProviderAndroid.registerWith()"', receipt)
+        self.assertIn('"io.flutter.plugins.GeneratedPluginRegistrant"', receipt)
+        self.assertIn("dex_jni_plugin=", receipt)
+        self.assertIn("dex_jni_flutter_plugin=", receipt)
+        self.assertIn("DEX_TIMEOUT_SECONDS = 15", receipt)
+        self.assertLess(helper.index('test -f "$apk"'), helper.index("mosaic_flutter_android_build_receipt.py"))
+        self.assertIn("|| true", helper[helper.index("mosaic_flutter_android_build_receipt.py") :])
 
         gate_start = workflow.index(
             "- name: Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)"

@@ -172,6 +172,12 @@ if [[ "$platform" == android ]]; then
   test -f "$apk"
   aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
   test -n "$aapt2"
+  if [[ "${MOSAIC_NATIVE_DIAGNOSTICS:-false}" == true ]]; then
+    # Fixed build identity outside the emulator failure collector. This is
+    # evidence about built inputs only, never proof of plugin invocation.
+    python3 "$here/mosaic_flutter_android_build_receipt.py" \
+      "$apk" pubspec.lock .dart_tool/flutter_build/dart_plugin_registrant.dart "$aapt2" "${ANDROID_HOME:-}" || true
+  fi
   "$aapt2" dump xmltree --file AndroidManifest.xml "$apk" > "$checks/manifest.txt"
   grep -Eq 'allowBackup\(0x01010280\)=false' "$checks/manifest.txt"
   ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
