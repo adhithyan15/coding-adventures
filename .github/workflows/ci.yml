@@ -804,6 +804,11 @@ jobs:
 
       - name: Verify repo-wide metadata contracts
         run: |
+          # The inventory is pinned to cb60dc and the checker also verifies
+          # that committed audited inputs at HEAD still match that subject.
+          # Run this on the unconditional metadata path so inventory/checker
+          # edits cannot bypass the semantic controls.
+          python3 code/scripts/validate_dsp_filter_assurance_inventory.py --repo-root . --self-test
           # `lessons.d/` is one file per lesson so concurrent PRs cannot
           # conflict on it. `validate` is what keeps that true: it rejects a
           # duplicate title, a category absent from `_meta.md`, and a filename
