@@ -1525,6 +1525,7 @@ members = [
   "x509-rsassa-pss-parameters",
   "rsa-pss-message-prime",
   "tls13-finished",
+  "tls13-finished-transcript-binding",
   "tls13-key-schedule",
   "https-reviewed-server-path-binding",
   "x509-rsa-reviewed-anchor-self-signature-binding",
