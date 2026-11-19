@@ -178,6 +178,10 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
             "python3 code/scripts/mosaic_flutter_runtime_ci_acceptance.py",
             workflow,
         )
+        self.assertIn(
+            "python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_flutter_android_build_receipt.py'",
+            workflow,
+        )
         self.assertIn("Round-trip Rust engine through standard Flutter binding", workflow)
         self.assertIn("needs_mosaic_flutter_runtime == 'true'", workflow)
         self.assertIn("timeout-minutes: 25", workflow)
