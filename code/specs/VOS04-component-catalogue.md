@@ -1016,7 +1016,7 @@ The budget is VER04h's X1 per-claim case budget of **400,000** (the `exhaustive_
 and asserts that it states the number.
 
 **Cost, measured.** `check-contract` on the real scheduler contract (10 lemmas, 10 mutants, 2
-config mutants; N = 8, 65,536 cases per lemma) takes WALLTIME_PLACEHOLDER in a debug build, once, in
+config mutants; N = 8, 65,536 cases per lemma) takes about **10 s wall** (about 57 s of CPU, on 8 worker threads on a 14-core Apple-silicon host; measured twice: 9.84 s and 9.89 s) in a debug build, once, in
 the contract crate's generated BUILD. `vos-link`'s own tests use a toy contract fixture with
 two threads, so they stay fast (VOS02 D-GD11).
 
