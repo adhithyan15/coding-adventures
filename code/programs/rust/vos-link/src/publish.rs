@@ -98,7 +98,7 @@ pub fn check_publish(root_arg: Option<&Path>) -> Result<Outcome, NoVerdict> {
     let (mut swept, mut exempt) = (0usize, Vec::new());
     for scope in SCOPES {
         let dir = scope.iter().fold(root.clone(), |p, s| p.join(s));
-        for name in prefixed_children(&dir)? {
+        for name in prefixed_children(&dir, MAX_ENTRIES)? {
             let crate_dir = dir.join(&name);
             let shown = format!("{}/{name}", scope.join("/"));
             // A symlink is looked at BEFORE anything is read through it.
@@ -133,36 +133,46 @@ pub fn check_publish(root_arg: Option<&Path>) -> Result<Outcome, NoVerdict> {
 }
 
 /// The most directory entries the sweep reads in one directory (the repository has a few hundred).
-const MAX_ENTRIES: usize = 20_000;
+pub const MAX_ENTRIES: usize = 20_000;
 
-/// The names of the entries of `dir` that start with [`PREFIX`], sorted.  Unlike
-/// [`crate::fsio::list_names`] (which caps a crate's own directory at 64 entries) this reads a
-/// directory of hundreds of packages, with its own cap; a name that starts with the prefix but is
-/// not UTF-8 is no verdict, as everywhere in this tool.
-fn prefixed_children(dir: &Path) -> Result<Vec<String>, NoVerdict> {
+/// Is the directory entry `raw` a name the sweep looks at?  `Ok(Some(name))` when it starts with
+/// [`PREFIX`], `Ok(None)` when it does not, and `Err(())` when it starts with the prefix but is not
+/// UTF-8 (no verdict, as everywhere in this tool: a name the report could not print faithfully).
+#[allow(clippy::result_unit_err)]
+pub fn swept_name(raw: &std::ffi::OsStr) -> Result<Option<&str>, ()> {
+    if !raw.as_encoded_bytes().starts_with(PREFIX.as_bytes()) {
+        return Ok(None);
+    }
+    raw.to_str().map(Some).ok_or(())
+}
+
+/// The names of the entries of `dir` that start with [`PREFIX`], sorted, reading at most `max`
+/// entries.  Unlike [`crate::fsio::list_names`] (which caps a crate's own directory at 64 entries)
+/// this reads a directory of hundreds of packages, with its own cap.
+pub fn prefixed_children(dir: &Path, max: usize) -> Result<Vec<String>, NoVerdict> {
     let io = |e: std::io::Error| NoVerdict::new(format!("{}: {e}", q(dir)));
     let mut names = Vec::new();
     let mut seen = 0usize;
     for entry in std::fs::read_dir(dir).map_err(io)? {
         let entry = entry.map_err(io)?;
         seen += 1;
-        if seen > MAX_ENTRIES {
+        if seen > max {
             return Err(NoVerdict::new(format!(
-                "{}: more than {MAX_ENTRIES} entries",
+                "{}: more than {max} entries",
                 q(dir)
             )));
         }
         let raw = entry.file_name();
-        if !raw.as_encoded_bytes().starts_with(PREFIX.as_bytes()) {
-            continue;
+        match swept_name(&raw) {
+            Ok(Some(name)) => names.push(name.to_string()),
+            Ok(None) => {}
+            Err(()) => {
+                return Err(NoVerdict::new(format!(
+                    "{}: a `vos-` name is not UTF-8",
+                    q(dir)
+                )))
+            }
         }
-        let Some(name) = raw.to_str() else {
-            return Err(NoVerdict::new(format!(
-                "{}: a `vos-` name is not UTF-8",
-                q(dir)
-            )));
-        };
-        names.push(name.to_string());
     }
     names.sort();
     Ok(names)

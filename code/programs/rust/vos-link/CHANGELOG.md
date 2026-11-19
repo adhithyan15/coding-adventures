@@ -24,7 +24,7 @@ All notable changes to this package are documented here.
   not `false`, `PB02` unreadable TOML, a symlinked crate directory or `Cargo.toml` is no verdict.  Runs in this
   crate's BUILD and BUILD_windows.
 - `publish = false` in this crate's `Cargo.toml`.
-- Tests: `bounds` (7), `publish` (15), CC09 controls (9) in `component`, CC10 controls (5) in `contract`; the
+- Tests: `bounds` (7), `publish` (18), CC09 controls (9) in `component`, CC10 controls (5) in `contract`; the
   component fixtures name their contract and carry `op` and `bound` rows.
 
 ### Fixed (security review of VOS-039b-2a)

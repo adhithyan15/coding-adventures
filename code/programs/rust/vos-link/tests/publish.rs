@@ -8,7 +8,7 @@ use common::*;
 use std::path::Path;
 use std::process::Command;
 
-use vos_link::publish::{root_above, says_publish_false};
+use vos_link::publish::{prefixed_children, root_above, says_publish_false, swept_name};
 use vos_link::{check_publish, NoVerdict, Outcome};
 
 const PKG: &str = "code/packages/rust";
@@ -337,4 +337,51 @@ fn the_command_line_sweeps_and_exits_0_1_2() {
     let o = run(&["check-component"]);
     assert_eq!(o.status.code(), Some(2));
     assert!(String::from_utf8_lossy(&o.stderr).contains("no crate directory"));
+}
+
+#[test]
+fn the_entry_cap_is_no_verdict_and_only_vos_names_are_listed() {
+    let r = tree("pub-cap");
+    for n in ["vos-b", "vos-a", "other", "xvos-c"] {
+        std::fs::create_dir_all(r.path(&format!("{PKG}/{n}"))).unwrap();
+    }
+    let dir = r.path(PKG);
+    // `vos-sched-contract` is there too (copied by `Repo::new`): 5 entries, 3 of them `vos-*`.
+    assert_eq!(
+        prefixed_children(&dir, 100).unwrap(),
+        ["vos-a", "vos-b", "vos-sched-contract"]
+    );
+    let e = prefixed_children(&dir, 4).unwrap_err();
+    assert!(e.to_string().contains("more than 4 entries"), "{e}");
+    assert!(prefixed_children(&r.path("nope"), 4).is_err());
+}
+
+#[test]
+fn a_vos_name_that_is_not_utf8_is_refused_and_other_names_are_not_looked_at() {
+    use std::ffi::OsStr;
+    assert_eq!(swept_name(OsStr::new("vos-a")), Ok(Some("vos-a")));
+    assert_eq!(swept_name(OsStr::new("other")), Ok(None));
+    #[cfg(unix)] // a non-UTF-8 OsStr can be built from bytes on Unix only
+    {
+        use std::os::unix::ffi::OsStrExt;
+        assert_eq!(swept_name(OsStr::from_bytes(b"vos-\xff")), Err(()));
+        assert_eq!(swept_name(OsStr::from_bytes(b"\xffvos-")), Ok(None));
+    }
+}
+
+#[test]
+fn the_command_line_outside_any_repository_is_no_verdict() {
+    // No --root, and a working directory that is not under code/(packages|programs)/rust.
+    let r = tree("pub-cwd");
+    let o = Command::new(env!("CARGO_BIN_EXE_vos-link"))
+        .arg("check-publish")
+        .current_dir(&r.root)
+        .output()
+        .unwrap();
+    assert_eq!(o.status.code(), Some(2));
+    let err = String::from_utf8_lossy(&o.stderr);
+    assert!(
+        err.contains("not inside code/packages/rust or code/programs/rust"),
+        "{err}"
+    );
 }
