@@ -1077,6 +1077,26 @@ OAuth transport, or grant network authority. Those remaining path, state,
 record, and transport boundaries remain separate; concrete HTTPS and live-
 provider readiness remain unavailable.
 
+A bounded ordered-transition follow-up accepts only one of those five sealed
+destination-bound complete-revocation `CertificateVerify` verdict types and a
+no-PSK server flight already positioned at `ExpectCertificateVerify`. Success
+advances that exact flight to `ExpectFinished` and returns non-copyable evidence
+retaining a mutable borrow of the flight plus the exact signature verdict. A
+wrong position fails through the existing ordering policy without mutation,
+and an accepted `CertificateRequest` requirement remains attached to the
+flight.
+
+This transition does not remove the lower-level public message-type ordering
+API, link the flight's earlier accepted types to one encoded handshake stream,
+or prove that the retained verification transcript was advanced by those exact
+accepted messages. It does not authenticate Finished, enforce a later client-
+authentication response, protect records, perform I/O, authorize OAuth
+transport, or grant network authority. It accesses no credential and causes no
+editing, signing, provider or trace event, storage, clock, network, or other
+external effect. Ordered transcript composition, Finished authentication,
+record protection, and transport therefore remain separate blockers; concrete
+HTTPS and live-provider readiness remain unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks
