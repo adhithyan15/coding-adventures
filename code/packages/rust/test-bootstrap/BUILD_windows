@@ -1,2 +1,3 @@
+# needs-toolchain: python
 cargo test -p coding_adventures_test_bootstrap
-cargo test -q -p coding_adventures_test_bootstrap --test self_corpus -- --sabotage always-pass 2>NUL | findstr /B /C:"not ok "
+python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_test_bootstrap --test self_corpus -- --sabotage always-pass

@@ -1,3 +1,4 @@
+# needs-toolchain: python
 @echo off
 setlocal enabledelayedexpansion
 
@@ -19,5 +20,5 @@ if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 node bin/cli.mjs --self-corpus
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-call node bin/cli.mjs --sabotage always-pass 2>nul | findstr /B /C:"not ok " >nul
+python ../../../scripts/warrant_negctl.py -- node bin/cli.mjs --sabotage always-pass
 if %ERRORLEVEL% neq 0 exit /b 1

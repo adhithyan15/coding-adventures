@@ -6,6 +6,16 @@
 
 ## Unreleased
 
+### Changed
+
+- **WD-HARN1c: negative controls run through the shared checker.** All 6 sabotage lines in
+  each of `BUILD`, `BUILD_linux` and `BUILD_windows` (five `warrant_evidence` controls and the `warrant_proofs` `secret-branch` control) now call `code/scripts/warrant_negctl.py -- cargo test ...` instead of a
+  `grep`/`findstr` pipe. Every fault, filter and cargo argument is unchanged and in the same
+  order. The checker also requires a non-zero exit, exactly one TAP plan, test points numbered
+  `1..N` and no `Bail out!`, and prints the captured output when a control fails (the Windows
+  lines printed nothing). Each BUILD file declares `# needs-toolchain: python`. No source,
+  test or evidence change.
+
 - Make the VER08b runtime-capability jail check strict on Linux (CAP-RT): new
   `BUILD_linux` is `BUILD` plus a `RCG_STRICT=1 cargo test -p coding_adventures_ct_compare
   --test runtime_capability` line, so a NOT-LIVE jail (no Landlock/seccomp/strace) fails
