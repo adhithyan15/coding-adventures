@@ -93,6 +93,26 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P038 | Standalone TypeScript Coverage-Guided Fuzzing package (`@coding-adventures/fuzz`) | #19044 merged as d89423032e1; Package extraction under `code/packages/typescript/fuzz`; standalone zero-runtime-dep fuzz engine, mutator algebra, 65536-bit bitmap coverage, 40 tests, 97%+ cov |
 | done / VER-P039 | Standalone TypeScript Test Matchers package (`@coding-adventures/test-matchers`) | Package extraction under `code/packages/typescript/test-matchers`; standalone zero-runtime-dep assertions and matchers, 27 tests, 99%+ cov |
 | in-progress / VER-P040 | TypeScript Level 4 Bounded Model Checker & Invariant Verifier | BMC engine using Tseitin bit-blaster and sat-solver for transition system unrolling |
+| in-progress / VER-P041 | Native Go `sat-solver` port | [VER09b](VER09b-go-sat-solver.md); at the 2026-11-18 receipt for `66a8001dbe30d2d4d6f6ccd5a29404fcdc16ec63`, PR #19675 was draft and hosted required CI was pending. Dedicated API port, shared stateful corpus, independent SAT/model/core oracles, CDCL and builder gates, bounded DIMACS, and package metadata were implemented. Local Go tests/build recipes/vet passed; statement coverage was 703/740 (95.0%) and four bounded native fuzz campaigns passed. Final delivery checks were still open at that receipt; Go source-bound proof and line/branch tooling remain separately open under VER-P042. |
+| P1 / VER-P042 | Go Level 3 source-assurance lane | Define and deliver Go Warrant source binding, a reproducible proof/certificate consumer, and an actual line/branch measurement path; acceptance requires compiling and running claims against selected Go package source, mutation controls, independently checked proof artifacts, and measurable line/branch criteria. Go statement coverage does not close this item |
+| P2 / VER-P043 | Repair dedicated TypeScript `sat-solver` contract drift | Clear stale failed-core state on known root contradiction; enforce exact DIMACS header grammar; repair confirmed pending-root propagation false-SAT; reconcile README/spec core-minimality wording. Track outside Go port; bounded reproduction is recorded below |
+
+**Confirmed pending-root propagation reproduction (2026-11-18):** on GoSAT
+checkpoint `3ff46d5`, the unchanged dedicated TypeScript source at
+`code/packages/typescript/sat-solver/src/sat.ts` had SHA-256
+`0e2fdc1c000c8fc0183be2aaa7b0ca32eeb6d32f0cb615cab31f77e4f81e5c22`
+(Git blob `d23aa34ad11fe6cf27c68398b24ddb6b502ce970`), under Node v25.9.0.
+The six-clause case below returned UNKNOWN at `maxSteps:2`, public propagation
+reported conflict index 5, then an unbounded solve returned SAT with a model
+that falsified the final original clause. This is a reference-solver false
+SAT, not a Go port failure; Go tests separately assert that pending root work
+survives the same budget/Propagate lifecycle.
+
+```sh
+node --experimental-strip-types --input-type=module -e 'import {Solver, makeLit} from "./code/packages/typescript/sat-solver/src/sat.ts"; const s=new Solver(); for(let i=0;i<5;i++) s.newVar(); const clauses=[[1,2],[1,-2],[-1,3],[-1,4],[-4,5],[-4,-5]]; const l=n=>makeLit(Math.abs(n)-1,n<0); for(const c of clauses) s.addClause(c.map(l)); const first=s.solve({maxSteps:2}); const mid=s.propagate(); const second=s.solve(); const model=s.getModel(); const checks=clauses.map(c=>c.some(n=>n>0?model[Math.abs(n)-1]:!model[Math.abs(n)-1])); console.log(JSON.stringify({first,mid,second,model,checks,allClausesSatisfied:checks.every(Boolean),conflicts:s.conflicts,decisions:s.decisions,propagations:s.propagations}));'
+```
+
+Observed output: `{"first":"unknown","mid":5,"second":"sat","model":[true,true,true,true,true],"checks":[true,true,true,true,true,false],"allClausesSatisfied":false,"conflicts":1,"decisions":2,"propagations":5}`.
 
 Critical path: P003 -> P004 -> P005-011 -> P021-025. Fuzzing and measurements
 can progress independently once their prerequisites are available.

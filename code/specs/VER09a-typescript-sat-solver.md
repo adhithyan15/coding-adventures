@@ -1,6 +1,8 @@
 # VER09a — TypeScript Level 3 CDCL SAT Solver & Tseitin Bit-Blaster (P034)
 
-**Status:** Draft. Target package: `@coding-adventures/test-bootstrap/sat`.
+**Status:** Implemented in `@coding-adventures/sat-solver` at
+`code/packages/typescript/sat-solver`; this specification retains the original
+bootstrap-era history and records known contract discrepancies below.
 **Layer:** Verification ladder, Level 3 (Formal Boolean Verification & SMT engine).
 **Builds on:** [VER00](VER00-verification-manifesto.md), [VER09](VER09-cdcl-sat.md), [TF01a](TF01a-typescript-test-bootstrap.md).
 **Consumed by:** Level 3 invariant checking, Level 4 bounded model checking, Warrant solver bindings, and symbolic execution.
@@ -54,7 +56,7 @@ The solver implements a modern CDCL architecture based on MiniSat and [VER09](VE
 
 ### 2.5 Incremental Solving & Assumptions
 - Supports `solveWithAssumptions(assumptions: Lit[])`.
-- Decisions at negative levels enforce assumptions; if unsatisfiable under assumptions, the solver extracts the **failed assumption core** (the minimal subset of assumptions that caused the conflict).
+- Decisions at negative levels enforce assumptions; if unsatisfiable under assumptions, the solver extracts a sound, duplicate-free subset of assumptions sufficient for the conflict. The implementation does not minimize this core.
 - Allows adding clauses between successive `solve()` invocations.
 
 ### 2.6 Hostile Input & Resource Bounding
@@ -98,3 +100,16 @@ Directly converting boolean expressions to CNF via distributive laws causes expo
    - Failed-assumption core soundness.
 3. **Resource Safety**: Strict termination within `maxConflicts` / `maxSteps`.
 4. **Coverage**: $\ge 90\%$ line coverage and $\ge 85\%$ branch coverage.
+
+## 6. Implementation reconciliation
+
+The dedicated package under `code/packages/typescript/sat-solver` is the
+implemented identity; the target path above is historical bootstrap wording.
+Its `extractCore` performs implication-graph traversal, deduplication, and
+filtering against assumptions, without a minimization pass. The earlier phrase
+“minimal subset” is therefore not an implementation guarantee. The package
+also has two known follow-ups: a known permanent contradiction can return
+early before clearing a prior failed core, and its DIMACS header test accepts
+some malformed `p cnf` prefixes or extra fields. The Go port clears core state
+and applies a strict documented header grammar; these upstream TypeScript
+repairs are separate backlog items.
