@@ -457,6 +457,12 @@ func writeFileFrame(hash io.Writer, packageRoot, root, path string) error {
 // If the package has no source files, we hash the empty string for
 // consistency — every package gets a hash, even empty ones.
 func HashPackage(pkg discovery.Package) (string, error) {
+	return HashPackageWithRepositoryInputs(pkg, "", nil)
+}
+
+// HashPackageWithRepositoryInputs adds exact repository-relative files read by
+// the package's tests to its ordinary source hash.
+func HashPackageWithRepositoryInputs(pkg discovery.Package, repoRoot string, repositoryInputs []string) (string, error) {
 	var (
 		files []string
 		err   error
@@ -479,6 +485,19 @@ func HashPackage(pkg discovery.Package) (string, error) {
 	for _, file := range files {
 		if err := writeFileFrame(hash, packageRoot, pkg.Path, file); err != nil {
 			return "", fmt.Errorf("source input is not stable")
+		}
+	}
+	if len(repositoryInputs) > 0 {
+		if repoRoot == "" {
+			return "", fmt.Errorf("repository input root is required")
+		}
+		for _, input := range repositoryInputs {
+			if filepath.ToSlash(filepath.Clean(filepath.FromSlash(input))) != input || filepath.IsAbs(input) {
+				return "", fmt.Errorf("repository input path is invalid")
+			}
+			if err := writeFileFrame(hash, packageRoot, repoRoot, filepath.Join(repoRoot, filepath.FromSlash(input))); err != nil {
+				return "", fmt.Errorf("repository input is not stable")
+			}
 		}
 	}
 	return hex.EncodeToString(hash.Sum(nil)), nil
@@ -507,10 +526,10 @@ func HashDeps(
 	packageName string,
 	graph *directedgraph.Graph,
 	packageHashes map[string]string,
-) string {
+) (string, error) {
 	if !graph.HasNode(packageName) {
 		h := sha256.Sum256([]byte(""))
-		return hex.EncodeToString(h[:])
+		return hex.EncodeToString(h[:]), nil
 	}
 
 	// Collect all transitive dependencies (packages this one depends on).
@@ -520,12 +539,15 @@ func HashDeps(
 
 	if len(transitiveDeps) == 0 {
 		h := sha256.Sum256([]byte(""))
-		return hex.EncodeToString(h[:])
+		return hex.EncodeToString(h[:]), nil
 	}
 
 	// Sort for determinism, concatenate hashes, hash again.
 	sorted := make([]string, 0, len(transitiveDeps))
 	for dep := range transitiveDeps {
+		if hash, ok := packageHashes[dep]; !ok || hash == "" {
+			return "", fmt.Errorf("dependency package hash is unavailable")
+		}
 		sorted = append(sorted, dep)
 	}
 	sort.Strings(sorted)
@@ -536,7 +558,7 @@ func HashDeps(
 	}
 
 	h := sha256.Sum256([]byte(combined.String()))
-	return hex.EncodeToString(h[:])
+	return hex.EncodeToString(h[:]), nil
 }
 
 // collectTransitivePredecessors walks backwards through the graph from

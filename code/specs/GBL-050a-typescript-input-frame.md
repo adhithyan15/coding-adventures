@@ -32,8 +32,11 @@ Binding and semantic validation preserve observable order without eagerly
 walking input records:
 
 1. Require the changes container to be an array (`TypeError` otherwise), then
-   check its length. More than 256 yields `TooManyChanges` before reading any
-   previous-state, tick, or element property.
+   read its length exactly once. The observed length must be a finite integer
+   Number in the JavaScript array-length range (`TypeError` for a wrong type,
+   `RangeError` otherwise). More than 256 yields `TooManyChanges` before
+   reading any previous-state, tick, or element property. Iterate only the
+   observed count so proxies and event accessors cannot extend the batch.
 2. Bind the tick as u64 `bigint`; bind the previous-state record, player ID,
    and held mask in that order; then require an axes array of length exactly
    16. Wrong array type is `TypeError`, wrong length is `RangeError`. Read
@@ -96,9 +99,13 @@ both full results; the mutated witness must reach the guarded call site. A
 validation refusal, rejected mutant syntax, UNKNOWN, or unexpected UNSAT is a
 failed control, never a mutation kill.
 
-Separately retain the bounded reducer miter with its actual encoded state and
-transition bound, independent Boolean oracle, endpoint-only edge and
-high-bit-loss mutants, and public witness replay. Report helper equivalence,
+Separately retain the bounded reducer miter with all 64 held-mask bits,
+every one of the 64 fixed slots, and exactly three ordered transitions that
+all target the same slot. This is a same-slot bound; it does not encode
+mixed-slot sequences. Use an independent Boolean-array oracle, endpoint-only
+edge and high-bit-loss mutants, and public witness replay. Replay fixes the
+player to `u32::MAX`, tick to `u64::MAX`, and all 16 axes to zero; these are
+harness constants, not SAT variables. Report helper equivalence,
 guarded scalar-source mutation queries, bounded reducer miter, and public
 replay as distinct evidence layers. None is a whole-reducer source proof.
 
@@ -112,6 +119,14 @@ transitive parser/WIR/solver source changes. The persisted cache must also
 include those same transitive inputs when deciding whether the consumer is a
 cache hit.
 
+The BUILD validator must recognize that a declared direct prerequisite supplies
+its resolved transitive package closure. It must continue rejecting an
+undeclared direct prerequisite and must not treat unrelated declarations as a
+blanket exemption. This matters here because the TypeScript consumer invokes
+the proof bridge directly, while Cargo resolves the bridge's parser, WIR, SAT,
+and digest dependencies. Test the actual validator and plan path; do not add
+fake direct TypeScript-to-every-Rust-crate declarations to silence validation.
+
 The Go executor's persisted-cache path hashes package inputs and dependency
 hashes in the package loop; `HashDeps` can observe an empty hash for a
 dependency discovered later. The proof closure therefore must be hashed from
@@ -122,10 +137,20 @@ hash for the proof closure even when proof packages are filtered out of the
 execution list. Do not mistake diff mode for cache evidence: when an affected
 set is supplied the executor bypasses persisted caching.
 
+Test this through the actual `--emit-plan` and plan-load path as well as direct
+execution. A TypeScript-filtered emitted plan must preserve enough of the full
+provider universe that replay still selects and hashes the Rust proof closure;
+resolver state existing only in the original in-memory graph is insufficient.
+The consumer's cache hash must also include the exact external corpus file,
+because ordinary `HashPackage` only walks files under the package root. An
+external-input registry row that changes diff selection without changing the
+persisted package hash is not sufficient.
+
 Acceptance uses the real build-tool resolver, selector, executor, and hasher
 paths, with a temporary or isolated consumer package and full restoration:
 
 - prove changed proof-tool inputs select the consumer in the diff plan;
+- prove the filtered emitted-plan/replay path retains the Rust proof providers;
 - with a warm persisted cache, verify unchanged inputs hit and a same-path,
   same-length direct tool change misses. Because the cache records the last
   successful digest, restoration must recover the original hash and then
@@ -135,6 +160,9 @@ paths, with a temporary or isolated consumer package and full restoration:
   and prove a cache miss, then restore it and prove the original hit;
 - repeat the persisted-cache assertion with TypeScript-only language filtering
   so filtered proof packages cannot erase the consumer's closure hash;
+- perform a same-relative-path, same-length mutation of the canonical corpus
+  while the consumer cache is warm; require a miss, restore the original bytes,
+  rebuild once to restore the original key, then verify an unchanged hit;
 - preserve an existing package-local `.ts` or declared BUILD input control to
   show unrelated source selection and hashing remain intact.
 
@@ -148,7 +176,12 @@ of a selector alone.
 The consumer uses all 21 canonical vector IDs and the fixture SHA-256
 `8db2c0fdc9bb6ab93785f3bd6d5dc52183b67682ca0e8d693fcdbfaa30aff785`, compares
 complete outputs and exact portable error payloads, and
-keeps JSON decoding errors separate from reducer errors. Retain the Rust
+keeps JSON decoding errors separate from reducer errors. Since the public
+conformance test reads this fixture from `code/specs/fixtures` outside the
+package root, declare that exact file as a source-boundary input for the
+TypeScript consumer. Prove a fixture edit selects the TypeScript package and
+participates in its effective cache key, then restore the original bytes and
+verify the original key/hit. Retain the Rust
 contract's exhaustive 256 raw slot IDs and all 65,536 raw i16 values at each
 of 16 axis positions through prior-state and update paths (2,097,152 core
 calls, plus explicit count/index/precedence controls). Use an independent
@@ -165,3 +198,7 @@ inventory updates. Run the repository's effective strict preflights, not only
 declared BUILD commands. No browser, OS polling, key binding, device merging,
 focus handling, text input, relative pointer, quantization, or tick assignment
 is added here.
+
+The generic bridge's `BUILD` and `BUILD_windows` must run the proof example's
+CLI refusal-control tests as a test target; compiling the example or recording
+a local-only control run is insufficient.

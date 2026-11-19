@@ -113,8 +113,20 @@ func ValidateBuildFilesAgainst(packages, known []discovery.Package, graph *direc
 		}
 
 		prereqs := transitivePredecessors(graph, pkg.Name)
+		declaredDeps := parseDeclaredBuildDeps(pkg)
+		declaredClosure := make(map[string]bool)
+		for dep := range declaredDeps {
+			if !graph.HasNode(dep) {
+				problems = append(problems, fmt.Sprintf("%s (%s): declared build-tool dependency %q is not in the resolved graph", pkg.Name, buildFileLabel(pkg.Path), dep))
+				continue
+			}
+			declaredClosure[dep] = true
+			for prerequisite := range transitivePredecessors(graph, dep) {
+				declaredClosure[prerequisite] = true
+			}
+		}
 		allowedDirectRefs := allowedDirectRefsFromMetadata(pkg, pythonKnownNames, perlKnownNames, graph)
-		for dep := range parseDeclaredBuildDeps(pkg) {
+		for dep := range declaredDeps {
 			if allowedDirectRefs == nil {
 				allowedDirectRefs = make(map[string]bool)
 			}
@@ -137,7 +149,7 @@ func ValidateBuildFilesAgainst(packages, known []discovery.Package, graph *direc
 		var missing []string
 		if requiresExplicitPrereqs[pkg.Language] && !isIntentionalSkipBuild(pkg) {
 			for dep := range prereqs {
-				if !referencedFuzzy[dep] {
+				if !referencedFuzzy[dep] && !declaredClosure[dep] {
 					missing = append(missing, dep)
 				}
 			}
@@ -192,7 +204,7 @@ func buildFileLabel(pkgPath string) string {
 
 var relPathRe = regexp.MustCompile(`(?:\.\.?[/\\][^ \t\r\n"'&|;()]+)+`)
 
-var buildToolDepsRe = regexp.MustCompile(`(?m)^\s*#\s*build-tool:\s*deps=(.+)$`)
+var buildToolDepsRe = regexp.MustCompile(`(?m)#\s*build-tool:\s*deps\s*=\s*(.+)$`)
 
 // parseDeclaredBuildDeps extracts package names declared via a
 // "# build-tool: deps=pkg1 pkg2" comment at the top of a BUILD/BUILD_windows
@@ -216,8 +228,12 @@ func parseDeclaredBuildDeps(pkg discovery.Package) map[string]bool {
 		return nil
 	}
 	declared := make(map[string]bool)
-	for _, name := range strings.Fields(match[1]) {
-		declared[name] = true
+	for _, raw := range strings.FieldsFunc(match[1], func(r rune) bool {
+		return r == ',' || r == ' ' || r == '\t'
+	}) {
+		if raw != "" {
+			declared[raw] = true
+		}
 	}
 	return declared
 }

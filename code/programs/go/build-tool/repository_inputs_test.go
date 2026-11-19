@@ -160,21 +160,26 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 	}
 }
 
-func TestGameInputFrameV1SelectsOnlyRustConsumer(t *testing.T) {
+func TestGameInputFrameV1SelectsRustAndTypeScriptConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/game-input-frame", Language: "rust"},
 		{Name: "rust/game-clock", Language: "rust"},
 		{Name: "typescript/game-input-frame", Language: "typescript"},
 	}
-	for _, changed := range []string{
-		"code/specs/fixtures/game-input-frame-v1/cases.json",
-		"code/specs/fixtures/game-input-frame-v1/schema.json",
-		"code/specs/fixtures/game-input-frame-v1/validate.py",
-	} {
+	for _, changed := range []string{"code/specs/fixtures/game-input-frame-v1/cases.json"} {
+		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || !reflect.DeepEqual(selected, map[string]bool{"rust/game-input-frame": true, "typescript/game-input-frame": true}) {
+			t.Fatalf("%s selected %v, err %v; want Rust and TypeScript GAME frame", changed, selected, err)
+		}
+	}
+	for _, changed := range []string{"code/specs/fixtures/game-input-frame-v1/schema.json", "code/specs/fixtures/game-input-frame-v1/validate.py"} {
 		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
 		if err != nil || !reflect.DeepEqual(selected, map[string]bool{"rust/game-input-frame": true}) {
-			t.Fatalf("%s selected %v, err %v; want only Rust GAME frame", changed, selected, err)
+			t.Fatalf("%s selected %v, err %v; want Rust-only GAME frame", changed, selected, err)
 		}
+	}
+	if selected, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/game-input-frame-v1/cases.json"}, packages, "typescript"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"typescript/game-input-frame": true}) {
+		t.Fatalf("typescript-only corpus selection = %v, err %v", selected, err)
 	}
 	for path, want := range map[string]bool{
 		"code/specs/fixtures/game-input-frame-v1/cases.json":       true,
@@ -187,6 +192,11 @@ func TestGameInputFrameV1SelectsOnlyRustConsumer(t *testing.T) {
 		if got := isGameInputFrameV1(path); got != want {
 			t.Errorf("isGameInputFrameV1(%q) = %v, want %v", path, got, want)
 		}
+	}
+	if !isTypeScriptGameInputFrameCorpus("code/specs/fixtures/game-input-frame-v1/cases.json") ||
+		isTypeScriptGameInputFrameCorpus("code/specs/fixtures/game-input-frame-v1/schema.json") ||
+		isTypeScriptGameInputFrameCorpus("code/specs/fixtures/game-input-frame-v10/cases.json") {
+		t.Fatal("TypeScript GAME input predicate is not exact")
 	}
 }
 

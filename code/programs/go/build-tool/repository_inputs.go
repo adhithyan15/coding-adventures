@@ -215,6 +215,7 @@ var (
 	gameClockInputPaths            = []string{"code/specs/fixtures/game-clock-v1", "code/specs/game-clock.warrant"}
 	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
 	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
+	typescriptGameInputFrameCorpus = []string{"code/specs/fixtures/game-input-frame-v1/cases.json"}
 	biquadSosFixturePaths          = []string{"code/specs/fixtures/biquad-sos-v1"}
 	hamurabiCorpusPaths            = []string{"code/specs/fixtures/hamurabi-v1"}
 	lunarLanderCorpusPaths         = []string{"code/specs/fixtures/lunar-lander-v1"}
@@ -586,6 +587,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the GAME input action frame v1 corpus",
 		matches:  isGameInputFrameV1,
 		paths:    gameInputFrameV1Paths,
+	},
+	{
+		name:     "typescript/game-input-frame",
+		language: "typescript",
+		inputs:   "the shared GAME input action frame v1 cases",
+		matches:  isTypeScriptGameInputFrameCorpus,
+		paths:    typescriptGameInputFrameCorpus,
 	},
 	{
 		name:     "python/trig",
@@ -1517,6 +1525,10 @@ func isGameClockCorpusInput(changed string) bool {
 // Neighboring versions, directory-only paths, and similarly named fixtures do not select it.
 func isGameInputFrameV1(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/game-input-frame-v1/")
+}
+
+func isTypeScriptGameInputFrameCorpus(changed string) bool {
+	return changed == "code/specs/fixtures/game-input-frame-v1/cases.json"
 }
 
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while

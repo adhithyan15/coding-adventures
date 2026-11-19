@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Add a reusable source-bound proof example that validates caller-supplied
+  source path and digest, proves healthy helper equivalence, and runs guarded
+  source-mutant queries with explicit provenance and machine-readable results.
+- Add symbolic precondition support to the WIR prover and expose proof-only
+  dependencies to the repository build graph.
+
 ## 0.1.0
 
 - Add the bounded `ts5.8` AST-to-WIR bridge for three typed scalar bit helpers.

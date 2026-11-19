@@ -453,7 +453,7 @@ class CorpusTests(unittest.TestCase):
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "537c9d4d7af75aeae1b03b327ff7198cee811ecaf4734a4cfc213fcabe37c479",
+            "974f31ba55e8c738954c6fa0138d4005ad3c27a667ed79634667213b5ccf4a6d",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(

@@ -260,6 +260,20 @@ enum RepositorySourceInputBoundaryProjection {
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
+              "id": "repository-typescript-game-input-frame-corpus",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": ["code/packages/typescript/game-input-frame"],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {"path": "code/specs/fixtures/game-input-frame-v1/cases.json", "role": "cross_package_exact"}
+              ],
+              "reason": "The TypeScript game-input-frame conformance tests read this exact shared v1 cases file outside the package root.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
               "id": "rust-cargo-target-configuration",
               "input_origin": "rust",
               "applies_to": {
