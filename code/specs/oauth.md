@@ -926,6 +926,26 @@ HTTP, OAuth transport, or live-provider access. Those state, role, certificate,
 trust, revocation, handshake, and transport boundaries remain separate;
 concrete HTTPS remains unavailable.
 
+A consuming form of the same composition now advances an owned selected
+transcript only after authenticating one exact decoded `CertificateVerify`
+body. It accepts the exact body bytes, decodes them internally, verifies their
+signature against the transcript snapshot captured before the message, frames
+those same body bytes as one complete `CertificateVerify` handshake message in
+caller-owned storage, and updates the owned transcript once with that complete
+encoding. Success returns non-copyable evidence retaining the owned advanced
+transcript, before and after snapshots, exact body, authorized scheme, role,
+validated RSA key, and encoded length. Every failure consumes the transcript
+and returns only a stable redacted category, so partially authenticated state
+cannot be retried or reused by the caller.
+
+This transition still accepts an algorithm- and strength-validated detached
+RSA key and a caller-selected role. It does not bind the key to a reviewed
+certificate path, prove the preceding server-flight order, authenticate or
+append Finished, establish trust, enforce revocation, protect records, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. Exact
+reviewed-path and Finished continuity remain later compositions; concrete
+HTTPS and live-provider readiness remain unavailable.
+
 A bounded `tls13-reviewed-server-path-certificate-verify` composition closes
 the detached-key and caller-selected-role gaps for one reviewed RSA server
 path. It accepts only the strongest accumulated reviewed server-path proof,
