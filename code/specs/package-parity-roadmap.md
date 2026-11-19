@@ -60,10 +60,12 @@ Go had no `sat-solver` identity. The bounded Go parser SAT check described by
 [VER backlog](VER-BACKLOG.md) is an opt-in test bridge to the existing
 TypeScript solver, not an implementation port and not package parity. Native
 Go `sat-solver` is now in progress under [VER09b](VER09b-go-sat-solver.md) and
-[PR #19675](https://github.com/adhithyan15/coding-adventures/pull/19675),
-currently a draft. After the Go PR merges, the next queue selection must reprioritize confirmed
-TypeScript P043 against GBL-050a input-frame. The prior order is not a guarantee
-while the reference solver false-SAT repair is outstanding.
+[PR #19675](https://github.com/adhithyan15/coding-adventures/pull/19675). At
+the `66a8001` receipt on 2026-11-18, PR #19675 was open and draft, with hosted
+required checks pending. After the Go PR merges, the next queue selection must
+reprioritize confirmed TypeScript P043 against GBL-050a input-frame. The prior
+order is not a guarantee while the reference solver false-SAT repair is
+outstanding.
 
 **Canonical presence receipt (2026-11-18):** the existing reporter logic was
 run over exact committed `git ls-tree` paths for `origin/main` and candidate
@@ -85,12 +87,17 @@ for candidate:
 
 Presence remains structural evidence only. The Go and TypeScript tests consume
 the same `sat-cnf-v1` corpus at SHA-256
-`ba66f3a23690ced4d01621e2e26341c1c2e5bee7bce5a455e7a82a8435b32c63`; the
-actual changed-input dry-run selected both `go/sat-solver` and
-`typescript/sat-solver` from the shared corpus relation. The candidate reports
-703/740 Go statements covered (95.0%), but this does not close the separate
-Go source-bound proof and line/branch assurance prerequisites in VER-P042.
-Hosted required CI remains pending on the draft PR. Rust
+`ba66f3a23690ced4d01621e2e26341c1c2e5bee7bce5a455e7a82a8435b32c63`. The
+candidate reports 703/740 Go statements covered (95.0%), but this does not
+close the separate Go source-bound proof and line/branch assurance prerequisites
+in VER-P042.
+The validation-enabled whole-feature changed-input dry-run against `origin/main`
+reports three changed packages and 15 affected packages, including both SAT
+solvers.
+Separately, the exact shared-corpus selector test proves that changing
+`cases.json` selects both consumers, and the emitted Kiln graph registers that
+file as a `repo_input` for each. These checks verify selection and graph
+registration; they do not measure a digest-mutation/rebuild experiment. Rust
 `code/packages/rust/cdcl-sat` remains a separate package identity and does not
 fill the Go `sat-solver` cell.
 
