@@ -37,7 +37,9 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         helper = (Path(__file__).resolve().parents[1] / "build-mosaic-flutter-phone-app.sh").read_text(encoding="utf-8")
         self.assertIn('MOSAIC_NATIVE_DIAGNOSTICS:-false', helper)
         self.assertIn("--dart-define=MOSAIC_NATIVE_DIAGNOSTICS=true", helper)
-        self.assertIn('flutter build apk --debug "${flutter_diagnostic_args[@]}"', helper)
+        self.assertIn("run_flutter_build build apk --debug", helper)
+        self.assertIn('if [[ -n "$flutter_diagnostic_arg" ]]', helper)
+        self.assertNotIn("flutter_diagnostic_args[@]", helper)
 
         gate_start = workflow.index(
             "- name: Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)"

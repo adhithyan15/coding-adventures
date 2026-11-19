@@ -725,6 +725,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             aapt2 = build_tools / "aapt2"
             aapt2.write_text(
                 "#!/usr/bin/env bash\n"
+                "if [[ \"${DIAG_MODE:-ok}\" == aapt_fail ]]; then exit 12; fi\n"
                 "printf \"package: name='dev.codingadventures.trestle' versionCode='1' versionName='1.0'\\n\"\n",
                 encoding="utf-8",
             )
@@ -739,7 +740,13 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "  install) exit 0 ;;\n"
                 "  logcat)\n"
                 "    if [[ \"$2\" == -c ]]; then exit 0; fi\n"
-                "    if [[ \"${DIAG_MODE:-ok}\" == ok ]]; then\n"
+                "    if [[ \"$5\" == -t && \"${DIAG_MODE:-ok}\" == log_fail ]]; then exit 7; fi\n"
+                "    if [[ \"$5\" == -t && \"${DIAG_MODE:-ok}\" == log_large ]]; then\n"
+                "      for i in $(seq 1 1200); do printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=%s\\n' \"$i\"; done\n"
+                "      exit 0\n"
+                "    fi\n"
+                "    if [[ \"$5\" != -t ]]; then printf 'ordinary gate failure log\\n'; exit 0; fi\n"
+                "    if [[ \"${DIAG_MODE:-ok}\" != outer_timeout ]]; then\n"
                 "      printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'\n"
                 "      exit 0\n"
                 "    fi\n"
@@ -749,9 +756,12 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "    command=\"$2\"\n"
                 "    case \"$command\" in\n"
                 "      *'am start -W'*) exit 0 ;;\n"
-                "      pidof) echo 4321; exit 0 ;;\n"
+                "      pidof)\n"
+                "        if [[ \"${DIAG_MODE:-ok}\" == pid_fail ]]; then exit 8; fi\n"
+                "        echo 4321; exit 0\n"
+                "        ;;\n"
                 "      *'if test -e files/task-app/mosaic-state.v1.json'* )\n"
-                "        if [[ \"${DIAG_MODE:-ok}\" == ok ]]; then echo present_empty; exit 0; fi\n"
+                "        if [[ \"${DIAG_MODE:-ok}\" != probe_fail ]]; then echo present_empty; exit 0; fi\n"
                 "        exit 9\n"
                 "        ;;\n"
                 "      *'test -s files/task-app/mosaic-state.v1.json'*) exit 1 ;;\n"
@@ -769,12 +779,17 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             sleep.chmod(0o755)
             timeout = bin_dir / "timeout"
             timeout.write_text(
-                "#!/usr/bin/env bash\nshift\nexec \"$@\"\n", encoding="utf-8"
+                "#!/usr/bin/env bash\n"
+                "if [[ \"$1\" == 6 && \"${DIAG_MODE:-ok}\" == outer_timeout ]]; then exit 124; fi\n"
+                "shift\nexec \"$@\"\n",
+                encoding="utf-8",
             )
             timeout.chmod(0o755)
             sha256sum = bin_dir / "sha256sum"
             sha256sum.write_text(
-                "#!/usr/bin/env bash\nprintf '%064d  %s\\n' 0 \"$1\"\n",
+                "#!/usr/bin/env bash\n"
+                "if [[ \"${DIAG_MODE:-ok}\" == hash_fail ]]; then exit 11; fi\n"
+                "printf '%064d  %s\\n' 0 \"$1\"\n",
                 encoding="utf-8",
             )
             sha256sum.chmod(0o755)
@@ -809,10 +824,44 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             )
             self.assertIn("diagnostic_apk_package_version=dev.codingadventures.trestle 1", successful_capture.stdout)
 
-            failed_capture = run("fail")
-            self.assertEqual(failed_capture.returncode, 1)
-            self.assertIn("diagnostic_state_probe=probe_failed", failed_capture.stdout)
-            self.assertIn("diagnostic_log_capture=failed", failed_capture.stdout)
+            probe_failure = run("probe_fail")
+            self.assertEqual(probe_failure.returncode, 1)
+            self.assertIn("diagnostic_state_probe=probe_failed", probe_failure.stdout)
+            self.assertIn("diagnostic_log_capture=complete", probe_failure.stdout)
+
+            log_failure = run("log_fail")
+            self.assertEqual(log_failure.returncode, 1)
+            self.assertIn("diagnostic_state_probe=present_empty", log_failure.stdout)
+            self.assertIn("diagnostic_log_capture=failed", log_failure.stdout)
+
+            pid_failure = run("pid_fail")
+            self.assertEqual(pid_failure.returncode, 1)
+            self.assertIn("diagnostic_pid_probe=unavailable", pid_failure.stdout)
+            self.assertIn("diagnostic_host_markers=unavailable_pid_or_log", pid_failure.stdout)
+
+            aapt_failure = run("aapt_fail")
+            self.assertEqual(aapt_failure.returncode, 1)
+            self.assertIn("diagnostic_apk_package_version=unavailable", aapt_failure.stdout)
+
+            hash_failure = run("hash_fail")
+            self.assertEqual(hash_failure.returncode, 1)
+            self.assertIn("diagnostic_apk_sha256=unavailable", hash_failure.stdout)
+            self.assertIn("diagnostic_pubspec_lock_sha256=unavailable", hash_failure.stdout)
+
+            clipped_log = run("log_large")
+            self.assertEqual(clipped_log.returncode, 1)
+            self.assertIn("diagnostic_log_capture=clipped", clipped_log.stdout)
+            self.assertLessEqual(
+                sum("MOSAIC_NATIVE_DIAG v=1" in line for line in clipped_log.stdout.splitlines()),
+                24,
+            )
+            self.assertLess(len(clipped_log.stdout.encode("utf-8")), 64 * 1024)
+            self.assertNotIn("lock data", clipped_log.stdout)
+            self.assertNotIn(str(apk), clipped_log.stdout)
+
+            timed_out_capture = run("outer_timeout")
+            self.assertEqual(timed_out_capture.returncode, 1)
+            self.assertIn("diagnostic_capture=timed_out", timed_out_capture.stdout)
 
     def test_a_lane_script_change_alone_requires_acceptance(self) -> None:
         """The Android scripts belong to no package; changing one must still

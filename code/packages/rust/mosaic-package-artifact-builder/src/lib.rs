@@ -17007,17 +17007,47 @@ layout NativeEvents {
         assert!(host.contains(
             "const bool _mosaicNativeDiagnostics = bool.fromEnvironment(\n  'MOSAIC_NATIVE_DIAGNOSTICS',\n);"
         ));
-        assert!(host.contains("if (!_mosaicNativeDiagnostics || _mosaicNativeDiagnosticClipped) return;"));
+        assert!(!host.contains("MOSAIC_NATIVE_DIAGNOSTICS=true"));
+        assert!(host
+            .contains("if (!_mosaicNativeDiagnostics || _mosaicNativeDiagnosticClipped) return;"));
         assert!(host.contains("_mosaicNativeDiagnosticRecords.length >= 23"));
         assert!(host.contains("'capture_clipped:record_limit'"));
         assert!(host.contains("mosaicNativeDiagnostic('runtime_route', 'phone_bundled')"));
+        assert!(
+            host.contains("mosaicNativeDiagnostic('runtime_route', 'phone_not_bundled')")
+        );
+        assert!(!host.contains("phone_unavailable"));
         assert!(host.contains("mosaicNativeDiagnostic('create_call', 'abi_returned', timer)"));
         assert!(host.contains(
             "'environment_answer',\n        update['error'] == null ? 'decoded_success' : 'decoded_error',"
         ));
+        assert!(host.contains("'environment_answer:native_status_rejected'"));
         assert!(host.contains("'persistence_decision:skipped_already_saved'"));
         assert!(host.contains("'snapshot_call:present'"));
         assert!(host.contains("'state_replace:returned'"));
+        let dispatch_start = host
+            .find("final isEnvironmentEvent = name == _environmentChanged;")
+            .unwrap();
+        let dispatch = &host[dispatch_start..];
+        let attempted = dispatch
+            .find("mosaicNativeDiagnostic('environment_dispatch', 'dart_attempted', timer);")
+            .unwrap();
+        let call = dispatch
+            .find("final status = _dispatch(_app, input, output);")
+            .unwrap();
+        let returned = dispatch.find("'abi_returned',").unwrap();
+        let decoded = dispatch.find("update = _requireMap(raw, 'event update');").unwrap();
+        assert!(attempted < call && call < returned && returned < decoded);
+        let persist_start = host.find("void _persistSnapshot() {").unwrap();
+        let persist = &host[persist_start..];
+        let disabled = persist.find("mosaicNativeDiagnostic('persistence_decision', 'disabled');").unwrap();
+        let snapshot = persist.find("_snapshot(_app, output)").unwrap();
+        let directory = persist.find("file.parent.createSync(recursive: true);").unwrap();
+        let write = persist.find("temporary.writeAsStringSync(jsonEncode(value), flush: true);").unwrap();
+        let replace = persist.find("_replaceAtomically(temporary, file);").unwrap();
+        assert!(
+            disabled < snapshot && snapshot < directory && directory < write && write < replace
+        );
         assert!(main.find("getApplicationSupportDirectory").unwrap() < main.find("  runApp(MosaicApp());").unwrap());
         assert!(!main.contains("void main() {\n"));
 

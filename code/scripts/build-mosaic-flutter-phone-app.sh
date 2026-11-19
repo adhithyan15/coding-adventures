@@ -96,10 +96,17 @@ runtime="$(cd "$runtime" && pwd)"
 
 # Diagnostics are absent by default, including release builds. The emulator
 # investigation opts in only for its temporary Flutter phone artifacts.
-flutter_diagnostic_args=()
+flutter_diagnostic_arg=""
 if [[ "${MOSAIC_NATIVE_DIAGNOSTICS:-false}" == true ]]; then
-  flutter_diagnostic_args+=(--dart-define=MOSAIC_NATIVE_DIAGNOSTICS=true)
+  flutter_diagnostic_arg="--dart-define=MOSAIC_NATIVE_DIAGNOSTICS=true"
 fi
+run_flutter_build() {
+  if [[ -n "$flutter_diagnostic_arg" ]]; then
+    flutter "$@" "$flutter_diagnostic_arg"
+  else
+    flutter "$@"
+  fi
+}
 
 rm -rf -- "${output:?}"
 mkdir -p -- "$output"
@@ -160,7 +167,7 @@ checks="$(mktemp -d)"
 trap 'rm -rf -- "$checks"' EXIT
 
 if [[ "$platform" == android ]]; then
-  flutter build apk --debug "${flutter_diagnostic_args[@]}"
+  run_flutter_build build apk --debug
   apk=build/app/outputs/flutter-apk/app-debug.apk
   test -f "$apk"
   aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
@@ -197,7 +204,7 @@ if [[ "$platform" == android ]]; then
   done
   echo "built $output/flutter/$apk"
 else
-  flutter build ios --simulator --debug "${flutter_diagnostic_args[@]}"
+  run_flutter_build build ios --simulator --debug
   app=build/ios/iphonesimulator/Runner.app
   test -d "$app"
   test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist")" = "$org.$name"

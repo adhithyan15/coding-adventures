@@ -41,7 +41,7 @@ const Set<String> _mosaicNativeDiagnosticVocabulary = <String>{
   'app_support_lookup:empty',
   'app_support_lookup:threw',
   'runtime_route:phone_bundled',
-  'runtime_route:phone_unavailable',
+  'runtime_route:phone_not_bundled',
   'create_call:dart_attempted',
   'create_call:abi_returned',
   'create_call:abi_threw',
@@ -66,6 +66,7 @@ const Set<String> _mosaicNativeDiagnosticVocabulary = <String>{
   'environment_answer:decoded_success',
   'environment_answer:decoded_error',
   'environment_answer:decode_rejected',
+  'environment_answer:native_status_rejected',
   'persistence_decision:skipped_already_saved',
   'persistence_decision:disabled',
   'persistence_decision:path_unavailable',
@@ -623,7 +624,7 @@ final class _MosaicRuntime {
     }
 
     if (_isPhone) {
-      mosaicNativeDiagnostic('runtime_route', 'phone_unavailable');
+      mosaicNativeDiagnostic('runtime_route', 'phone_not_bundled');
     }
 
     final candidates = <DynamicLibrary Function()>[
@@ -667,6 +668,7 @@ final class _MosaicRuntime {
     final timer = isEnvironmentEvent ? (Stopwatch()..start()) : null;
     var abiCallReached = false;
     var abiReturned = false;
+    var abiStatusNonzero = false;
     if (isEnvironmentEvent) {
       mosaicNativeDiagnostic('environment_dispatch', 'dart_attempted', timer);
     }
@@ -683,12 +685,20 @@ final class _MosaicRuntime {
           abiCallReached = true;
           final status = _dispatch(_app, input, output);
           abiReturned = true;
+          abiStatusNonzero = status != 0;
           if (isEnvironmentEvent) {
             mosaicNativeDiagnostic(
               'environment_dispatch',
               'abi_returned',
               timer,
             );
+            if (abiStatusNonzero) {
+              mosaicNativeDiagnostic(
+                'environment_answer',
+                'native_status_rejected',
+                timer,
+              );
+            }
           }
           return status;
         },
@@ -704,7 +714,7 @@ final class _MosaicRuntime {
         } else if (!abiReturned) {
           mosaicNativeDiagnostic('environment_dispatch', 'abi_threw', timer);
         }
-        if (abiReturned) {
+        if (abiReturned && !abiStatusNonzero) {
           mosaicNativeDiagnostic(
             'environment_answer',
             'decode_rejected',

@@ -30,12 +30,14 @@ to emit a record is ignored and must not change the operation's result.
 Required stages distinguish:
 
 1. application-support-directory lookup: nonempty, empty, or thrown;
-2. selected runtime route (including statically bundled `@Native`), Dart
-   create-call attempt, raw ABI-call return/throw, and startup response
+2. selected runtime route (including whether the phone runtime was bundled,
+   without claiming that a later fallback lookup failed), Dart create-call
+   attempt, raw ABI-call return/throw, and startup response
    accepted/rejected;
 3. environment-report decisions (fixed not-ready/suppressed reason or send),
    Dart dispatch attempt, raw ABI-call return/throw, and answer decoded as
-   success/error; these stages allow an initial skip and a later send;
+   success/error or rejected by a nonzero native status; these stages allow an
+   initial skip and a later send;
 4. persistence decisions in actual order: skipped-already-saved, disabled,
    or unavailable path; then the snapshot call's null/present/error result,
    parent-directory creation, temporary-file write, and replacement return.
@@ -48,6 +50,8 @@ ABI. The raw call return and decoded response are separate markers. A non-null
 Flutter response is not a substitute for decoded native answer. An
 environment report may be successfully dispatched while the public method
 returns `null` because the app did not change its visible revision or warning.
+A nonzero native status is recorded separately from a decode rejection; only a
+zero-status buffer that cannot be decoded is a decode rejection.
 
 ## Gate failure evidence
 
@@ -64,8 +68,9 @@ a bounded diagnostic summary containing:
 The probe must use the app's existing `run-as` identity. A failed command,
 timeout, or unreadable response is `probe_failed`; it must never be reported as
 absence. It reports only a size class, not state contents. The failure-only
-capture is limited to six seconds and 64 KiB total, filters host markers to
-the current Trestle PID/launch window, and reports whether log capture itself
+capture runs in one child process under an enclosing six-second timeout and
+is limited to 64 KiB total, filters host markers to the current Trestle
+PID/launch window, and reports whether log capture itself
 was complete, clipped, timed out, or failed. APK and lock identifiers are
 fixed-size hashes and parsed package metadata. Failure to gather diagnostics
 cannot mask the original gate failure, change its status, or skip emulator
@@ -84,7 +89,8 @@ diagnostic vocabulary, absence of values, ordered persistence skip behavior,
 and instrumentation around the Dart-call/ABI-return/answer boundaries. The
 Android build command must pass the explicit Dart define. Script tests must
 verify PID-scoped bounded failure-only capture and preservation of the
-original failing status when each diagnostic probe fails. One reviewed native
+original failing status when the state, PID, log, hash, and APK-metadata
+probes fail individually, including an outer-timeout control. One reviewed native
 CI run may then capture the checkpoints for the already reproduced failure.
 A passing run or missing marker is not by itself a causal explanation.
 

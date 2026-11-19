@@ -89,9 +89,38 @@ diagnostic_state_failure() {
   [[ "${MOSAIC_NATIVE_DIAGNOSTICS_CAPTURE:-}" == 1 ]] || return 0
   [[ "$package" == "dev.codingadventures.trestle" && "$application_id" == "task-app" ]] || return 0
   [[ "$apk" == *"/mosaic-flutter-trestle-android/flutter/build/app/outputs/flutter-apk/app-debug.apk" ]] || return 0
+  if ! command -v timeout >/dev/null 2>&1 || ! command -v bash >/dev/null 2>&1; then
+    echo "diagnostic_capture=timeout_or_bash_unavailable"
+    return 0
+  fi
+  export -f diagnostic_state_failure_inner
+  local capture_status=0
+  MOSAIC_DIAG_APK="$apk" \
+    MOSAIC_DIAG_PACKAGE="$package" \
+    MOSAIC_DIAG_APPLICATION_ID="$application_id" \
+    timeout 6 bash -c '
+      apk="$MOSAIC_DIAG_APK"
+      package="$MOSAIC_DIAG_PACKAGE"
+      application_id="$MOSAIC_DIAG_APPLICATION_ID"
+      state="files/$application_id/mosaic-state.v1.json"
+      diagnostic_state_failure_inner
+    ' || capture_status=$?
+  if [[ $capture_status -eq 124 ]]; then
+    echo "diagnostic_capture=timed_out"
+  elif [[ $capture_status -ne 0 ]]; then
+    echo "diagnostic_capture=failed"
+  fi
+}
 
+diagnostic_state_failure_inner() {
+  local raw_log=""
+  diagnostic_cleanup_temp() {
+    [[ -z "$raw_log" ]] || rm -f -- "$raw_log" || true
+  }
+  trap diagnostic_cleanup_temp EXIT
+  trap 'exit 124' TERM HUP
   echo "---- bounded Flutter Trestle diagnostics (failure only) ----"
-  local deadline=$((SECONDS + 6))
+  local deadline=$((SECONDS + 5))
   local apk_hash="unavailable"
   if [[ -f "$apk" && $SECONDS -lt $deadline ]] && command -v sha256sum >/dev/null 2>&1 && command -v timeout >/dev/null 2>&1; then
     apk_hash="$(timeout 1 sha256sum "$apk" | cut -c1-64)" || apk_hash="unavailable"
@@ -145,7 +174,6 @@ diagnostic_state_failure() {
   fi
 
   local log_status="failed"
-  local raw_log=""
   local max_log_bytes=49152
   if [[ $SECONDS -lt $deadline ]] && command -v timeout >/dev/null 2>&1; then
     raw_log="$(mktemp)" || raw_log=""
@@ -180,6 +208,7 @@ diagnostic_state_failure() {
         printf 'diagnostic_host_markers=unavailable_pid_or_log\n'
       fi
       rm -f -- "$raw_log"
+      raw_log=""
     else
       printf 'diagnostic_log_capture=temporary_file_failed\n'
     fi
