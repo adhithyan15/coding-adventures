@@ -150,7 +150,7 @@ with the dedicated TypeScript writer; output has no trailing newline).
 
 The shared valid corpus is
 [`fixtures/sat-cnf-v1/cases.json`](fixtures/sat-cnf-v1/cases.json), SHA-256
-`71ac009c5c65e712dfacce519d009809431663b603fbdcd52d6e51f2ff3e032d`. Every
+`ba66f3a23690ced4d01621e2e26341c1c2e5bee7bce5a455e7a82a8435b32c63`. Every
 case has a unique fixed ID, valid DIMACS bytes, and ordered public operations
 (`solve`, `add_clause`, or `reset`). Every solve step declares its expected
 result; SAT always triggers independent model replay, and assumption-UNSAT
@@ -158,7 +158,15 @@ always triggers core subset and brute-force soundness checks. No fixture flag
 can disable these checks. The corpus includes CRLF/comments, clauses spanning
 lines and multiple clauses per line, empty clauses, standalone `%`, `-0`,
 duplicate/contradictory/irrelevant assumptions, clause addition, reset,
-zero-budget UNKNOWN, and recovery. Both Go and TypeScript BUILD tests consume
+zero-budget UNKNOWN, and recovery. Each consumer allocates all declared
+variables before adding any clauses and checks a model's width against the
+declared count, including unconstrained variables. After every `add_clause`
+and `reset` step it asserts model invalidation immediately. A false return
+from adding a permanent contradiction does not erase that new clause from the
+independent oracle formula. The known TypeScript stale-core scenario is
+excluded from the shared corpus and has a Go-only regression; the TypeScript
+bug is represented by the separate backlog reproduction. Both Go and
+TypeScript BUILD tests consume
 the same bytes and pin the digest and exact ID set. Register the fixture as a
 source input for both package consumers so changes select both BUILD targets.
 Malformed transport differences are tested separately and recorded as
