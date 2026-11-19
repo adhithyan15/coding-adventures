@@ -355,12 +355,12 @@ worktree; report and preserve it if those checks do not pass.
   bounded to the stated reducer, finite vectors/domain enumeration, seeded properties, harness/parser
   fuzzing, a 64-slot/3-transition SAT model, and extracted scalar-helper proofs; no whole-reducer
   source proof or universal claim is established. Runtime containment is reported per host.
-- [ ] `GBL-050a` (next after Go sat-solver parity) Port the input action-frame contract and vectors to TypeScript; the Rust boundary is merged and stable.
+- [ ] `GBL-050a` Port the input action-frame contract and vectors to TypeScript after VER-P044's reusable source-to-WIR bridge is merged. The Rust boundary is merged and stable; the dedicated TypeScript sat-solver parity repair is merged in PR #19679. The consumer must bind its own production `digital.ts`, execute the full Rust vector/domain/property/fuzz/SAT assurance plan, and replay source-mutant witnesses through its public reducer. The Rust proof bridge is a development-time evidence dependency only.
 - [ ] `GBL-050-language-queue` Port the stable contract to Go, Python, C#, Dart, Elixir, F#, Haskell,
   Java, Kotlin, Lua, Perl, Ruby, and Swift, each with independent public-API conformance evidence.
   The emerging C, C++, and OCaml lanes remain a separate 0/3 queue. Package presence alone is not
-  behavioral parity. Go SAT-solver parity is the selected package-parity delivery before the
-  TypeScript input-frame port; the Rust `cdcl-sat` dependency is already available.
+  behavioral parity. Rust `cdcl-sat` is already available; Go SAT-solver parity is merged,
+  while Go source assurance remains a separate VER-P042 item.
 - [ ] `GBL-050-input-followups` Define host input binding and multi-device aggregation; caller-owned
   host tick assignment and event ordering; focus-loss/disconnect release policy; richer text and
   relative pointer input; quantization and action layouts/banks; and ordered/versioned replay.

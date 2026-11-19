@@ -809,9 +809,9 @@
           "decision": "include",
           "scope": "subtree",
           "path_prefix": "tests",
-          "suffixes": [".apkg", ".csv", ".dat", ".js", ".json", ".mil", ".mll", ".msl", ".stdout", ".test", ".toml", ".txt", ".wast", ".xls", ".xlsx"],
+          "suffixes": [".apkg", ".csv", ".dat", ".js", ".json", ".mil", ".mll", ".msl", ".stdout", ".test", ".toml", ".ts", ".txt", ".wast", ".xls", ".xlsx"],
           "exact_basenames": ["echo_agent.py"],
-          "reason": "Tracked Rust tests consume reviewed archive, parser, compiler-diff, Mosaic, spreadsheet, subprocess, and WebAssembly fixtures below tests.",
+          "reason": "Tracked Rust tests consume reviewed archive, TypeScript proof source, parser, compiler-diff, Mosaic, spreadsheet, subprocess, and WebAssembly fixtures below tests.",
           "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
         }
       ]
