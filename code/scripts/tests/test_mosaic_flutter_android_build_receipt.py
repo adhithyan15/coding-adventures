@@ -307,6 +307,51 @@ const-string v2, "Lcom/github/dart_lang/jni_flutter/JniFlutterPlugin;"
                 RECEIPT_MODULE.MAX_DEX_OUTPUT = old_stdout_limit
                 RECEIPT_MODULE.TOOL_TIMEOUT_SECONDS = old_timeout
 
+    def test_dex_unbalanced_or_unrecognized_method_body_is_unavailable(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            apk, _, _, _, tools = self._fixture(root, member=True, dex="")
+            analyzer = tools / "apkanalyzer"
+            selected_header = ".method public static registerWith(Lio/flutter/embedding/engine/FlutterEngine;)V"
+            cases = (
+                # The selected method cannot borrow another method's terminator.
+                selected_header
+                + "\n.method public static other()V\n"
+                + "new-instance v0, Lcom/github/dart_lang/jni/JniPlugin;\n"
+                + "invoke-direct {v0}, Lcom/github/dart_lang/jni/JniPlugin;-><init>()V\n"
+                + ".end method\n",
+                # Opcode-shaped text inside a string is not an instruction.
+                selected_header
+                + '\nconst-string v0, "new-instance v1, Lcom/github/dart_lang/jni/JniPlugin;"\n'
+                + ".end method\n",
+                # Duplicate selected bodies make the tool output ambiguous.
+                selected_header
+                + "\nnew-instance v0, Lother/Plugin;\n.end method\n"
+                + selected_header
+                + "\nnew-instance v1, Lother/Plugin;\n.end method\n",
+            )
+            for dex in cases:
+                with self.subTest(dex=dex):
+                    analyzer.write_text(
+                        "#!/bin/sh\n"
+                        "cat <<'DEX'\n"
+                        + dex
+                        + "DEX\n",
+                        encoding="utf-8",
+                    )
+                    analyzer.chmod(0o755)
+                    result = self._run(
+                        root,
+                        apk,
+                        root / "missing.lock",
+                        root / "missing.dart",
+                        root / "missing-aapt",
+                        tools,
+                    )
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertIn("dex_jni_plugin=unavailable", result.stdout)
+                    self.assertIn("dex_jni_flutter_plugin=unavailable", result.stdout)
+
     def test_bounded_tool_reader_rejects_output_caps_timeout_and_bad_text(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

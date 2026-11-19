@@ -196,14 +196,31 @@ def _selected_register_method(dex_text: str) -> str | None:
         r"registerWith\(Lio/flutter/embedding/engine/FlutterEngine;\)V\s*$"
     )
     lines = dex_text.splitlines()
-    for start, line in enumerate(lines):
-        if not expected.fullmatch(line):
-            continue
-        for end in range(start + 1, len(lines)):
-            if lines[end].strip() == ".end method":
-                return "\n".join(lines[start : end + 1])
+    selected: list[str] = []
+    start: int | None = None
+    for index, line in enumerate(lines):
+        if line.strip().startswith(".method "):
+            if start is not None:
+                return None
+            if expected.fullmatch(line):
+                start = index
+        elif line.strip() == ".end method" and start is not None:
+            selected.append("\n".join(lines[start : index + 1]))
+            start = None
+    if start is not None or len(selected) != 1:
         return None
-    return None
+    return selected[0]
+
+
+def _has_supported_smali_instruction(method: str) -> bool:
+    return any(
+        re.fullmatch(r"\s*new-instance\s+v[0-9]+,\s+L[^\s;]+;\s*", line)
+        or re.fullmatch(
+            r"\s*invoke-direct\s+\{v[0-9]+\},\s+L[^\s;]+;-><init>\([^\n]*\)V\s*",
+            line,
+        )
+        for line in method.splitlines()
+    )
 
 
 def dex_registrant_statuses(apk: Path, android_home: str) -> tuple[str, str]:
@@ -239,7 +256,7 @@ def dex_registrant_statuses(apk: Path, android_home: str) -> tuple[str, str]:
     # Refuse to label an unfamiliar/empty analyzer format as absence. Parse
     # only the exact selected method, even if a tool version emits the class.
     method = _selected_register_method(text)
-    if method is None or not re.search(r"\b(new-instance|invoke-direct)\b", method):
+    if method is None or not _has_supported_smali_instruction(method):
         return "unavailable", "unavailable"
     statuses: list[str] = []
     for class_name in (
