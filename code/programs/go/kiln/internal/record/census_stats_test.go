@@ -212,6 +212,16 @@ func TestRedactorWorksOnPathBoundaries(t *testing.T) {
 		{"/home/user/x", "/home/user/x"},
 		{"/home/u/x", "$HOME/x"},
 		{"/tmp/tmp", "$TMPDIR/tmp"},
+		{"-L/tmp/x -I/home/u/inc", "-L$TMPDIR/x -I$HOME/inc"},
+		{"cc -L/tmp/x", "cc -L$TMPDIR/x"},
+		{"foo-L/tmp/x", "foo-L/tmp/x"},
+		{"-LL/tmp/x", "-LL/tmp/x"},
+		{"/usr/include/c++/tmp", "/usr/include/c++/tmp"},
+		{"user@/tmp/x", "user@/tmp/x"},
+		{"~/tmp/x", "~/tmp/x"},
+		{"+/tmp/x", "+/tmp/x"},
+		{"(/tmp/x) [/tmp/y] <$/tmp/z>", "($TMPDIR/x) [$TMPDIR/y] <$/tmp/z>"},
+		{"a,/tmp/b:/tmp/c\"/tmp/d'/tmp/e", "a,$TMPDIR/b:$TMPDIR/c\"$TMPDIR/d'$TMPDIR/e"},
 	} {
 		if got := red.apply(c.in); got != c.want {
 			t.Errorf("apply(%q) = %q, want %q", c.in, got, c.want)

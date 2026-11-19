@@ -75,7 +75,7 @@ func TestCensusHostAndColdStart(t *testing.T) {
 	if h.CPUModel != "Evil CPU" {
 		t.Errorf("cpu model %q", h.CPUModel)
 	}
-	if s.Timing.FirstParse.MS <= 0 || s.Timing.FirstParse.Bytes <= 0 || len(s.Timing.BySize) == 0 || s.Timing.ParseMBPerS.N != 2 {
+	if !s.Timing.FirstParse.Accepted || s.Timing.FirstParse.MS <= 0 || s.Timing.FirstParse.Bytes <= 0 || len(s.Timing.BySize) == 0 || s.Timing.ParseMBPerS.N != 2 {
 		t.Errorf("timing: %+v", s.Timing)
 	}
 	md, _ := os.ReadFile(mdPath)
@@ -139,7 +139,9 @@ func TestCensusSurvivesAParsePanic(t *testing.T) {
 			panic("boom")
 		}
 	})
-	if s.Problems["parse_panic"] != 2 || res.Exit != CensusExitInfra || s.TraceSizes.All.N != 2 {
+	// A panic is soak-relevant: exit 4, like a mismatch (not the infrastructure 1
+	// that "nothing was cross-checked" would give).
+	if s.Problems["parse_panic"] != 2 || res.Exit != CensusExitMismatch || s.TraceSizes.All.N != 2 {
 		t.Errorf("exit %d problems %v", res.Exit, s.Problems)
 	}
 }

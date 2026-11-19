@@ -180,7 +180,7 @@ func renderMarkdown(s *CensusSummary) string {
 	b.WriteString(distRow("grammar parse (ms)", t.ParseMS, num))
 	b.WriteString(distRow("parse share of wall", t.ParseShare, pct))
 	w("\n- parse throughput (MB/s): p50 %s, p90 %s, p99 %s, max %s\n", num(t.ParseMBPerS.P50), num(t.ParseMBPerS.P90), num(t.ParseMBPerS.P99), num(t.ParseMBPerS.Max))
-	w("- first (cold) parse: %s ms on %d bytes; each classify child pays this initialisation again\n", num(t.FirstParse.MS), t.FirstParse.Bytes)
+	w("- first (cold) parse: %s ms on %d bytes (accepted: %v); each classify child pays this initialisation again\n", num(t.FirstParse.MS), t.FirstParse.Bytes, t.FirstParse.Accepted)
 	w("- G2 at or above the p99 size (%s bytes): %d traces, share over 10%% %d, parse over 5 s %d, failing %d\n", num(t.G2AtP99.ThresholdBytes), t.G2AtP99.Traces, t.G2AtP99.Over10Pct, t.G2AtP99.Over5s, t.G2AtP99.Failing)
 	for _, r := range t.BySize {
 		w("- size from %d bytes: %d parses, parse ms p50 %s max %s, share p50 %s max %s\n", r.Min, r.N, num(r.ParseMS.P50), num(r.ParseMS.Max), pct(r.ParseShare.P50), pct(r.ParseShare.Max))
@@ -271,7 +271,7 @@ const (
 	CensusExitOK       = 0
 	CensusExitInfra    = 1 // an infrastructure failure: no traces, a pre/ that does not verify, an output that could not be written
 	CensusExitUsage    = 2
-	CensusExitMismatch = 4 // a cross-check mismatch or an allowed divergence (strict)
+	CensusExitMismatch = 4 // a cross-check mismatch, an allowed divergence or a parse panic (strict)
 )
 
 // CensusRunOptions are CensusOptions and where the outputs go.
@@ -387,7 +387,9 @@ func RunCensus(o CensusRunOptions, stdout io.Writer) (*CensusResult, error) {
 		return res, fmt.Errorf("writing the summary: %v", err)
 	}
 	switch {
-	case s.CrossCheck.Mismatches > 0 || s.CrossCheck.Allowed > 0:
+	case s.CrossCheck.Mismatches > 0 || s.CrossCheck.Allowed > 0 || s.Problems["parse_panic"] > 0:
+		// A parse panic is soak-relevant: a trace that crashes a reader is worse
+		// than one the readers disagree on.  Strict, like a mismatch.
 		res.Exit = CensusExitMismatch
 	case s.InfrastructureFailure != "":
 		res.Exit = CensusExitInfra

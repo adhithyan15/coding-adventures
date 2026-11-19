@@ -1150,7 +1150,9 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   paths). Paths are sanitised (non-printable runes become `?`), redacted
   (`$HOME`, `$TMPDIR`, the record directory and the workspace become `$HOME`,
   `$TMPDIR`, `$RECORD_DIR`, `$WORKSPACE`; a prefix is replaced only at a
-  path-component boundary, so `/tmp` leaves `/usr/lib/tmpfiles.d` and `/var/tmp`
+  path-component boundary, preceded by the start, whitespace, a quote, `=`, `:`,
+  `,`, `(`, `[`, `<` or a one-letter `-X` flag, and followed by `/` or the end,
+  so `/tmp` leaves `/usr/lib/tmpfiles.d`, `/var/tmp` and `/usr/include/c++/tmp`
   alone) and cut to 512 runes (`paths_truncated`). At most 100,000 distinct
   (kind, path) pairs and 32 MiB of their text are kept; the rest are counted in
   `bounds.paths_dropped`.
@@ -1178,7 +1180,8 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   `by_size` (per log2 size bucket: n and the `parse_ms` and `parse_share`
   distributions); `g2_at_p99` (the same two limbs over the traces at or above
   the census p99 size, where G2 is defined); and `first_parse` (the first timed
-  parse alone, its lazy initialisation included, which each classify child pays
+  parse alone, whatever its outcome (`accepted` says which), its lazy
+  initialisation included, which each classify child pays
   again, so the per-action child cost can be added back). Report-only.
 - `per_action`: the total trace bytes of each action against the 2 GiB cap
   (`DefaultMaxTraceTotal`): a distribution, how many reach 50%, 90% and 100% of
@@ -1207,8 +1210,9 @@ items); no raw control character occurs; and no line starts with `::`
 (every line starts with a fixed marker of ours).
 
 *Exit codes.* 0: the census ran and the cross-check found nothing. 4: a
-cross-check mismatch or any allowed divergence (strict: on a real trace there
-must be none). 1: infrastructure failure (no traces, an unverifiable `pre/`, an
+cross-check mismatch, any allowed divergence (strict: on a real trace there
+must be none) or any `parse_panic` (a trace that crashes a reader is
+soak-relevant; it wins over exit 1). 1: infrastructure failure (no traces, an unverifiable `pre/`, an
 output that could not be written). 2: usage. The summary is written in every
 case that got as far as reading the directory. Histograms and G2 are report-only
 and never change the status. The command refuses, writing nothing, when `--dir`

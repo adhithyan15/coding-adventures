@@ -233,6 +233,9 @@ type G2P99 struct {
 type FirstParse struct {
 	MS    float64 `json:"ms"`
 	Bytes int64   `json:"bytes"`
+	// Accepted says whether that parse was accepted; the first timed parse is
+	// taken whatever its outcome, because the cold start is paid either way.
+	Accepted bool `json:"accepted"`
 }
 
 // PerActionSummary is the total trace bytes of each action against the cap
@@ -932,6 +935,9 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 	}) {
 		return size
 	}
+	if !a.firstSet {
+		a.firstSet, a.first = true, FirstParse{MS: round3(elapsed.Seconds() * 1000), Bytes: size, Accepted: why == ""}
+	}
 	if why != "" {
 		a.parseRefused++
 		a.explain.ParseRefusals[parseReasonCode(why)]++
@@ -939,9 +945,6 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 		ms := elapsed.Seconds() * 1000
 		a.parses = append(a.parses, ms)
 		sample := parseSample{size: size, ms: ms, share: -1}
-		if !a.firstSet {
-			a.firstSet, a.first = true, FirstParse{MS: round3(ms), Bytes: size}
-		}
 		over5 := ms > 5000
 		if over5 {
 			a.over5s++

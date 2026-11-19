@@ -310,7 +310,7 @@ func runRecordStep(args []string, stdout, stderr io.Writer) int {
 // during a recording.
 //
 //	exit 0  ran, and the cross-check found nothing
-//	exit 4  a cross-check mismatch or an allowed divergence (strict)
+//	exit 4  a cross-check mismatch, an allowed divergence or a parse panic (strict)
 //	exit 1  infrastructure failure, or a refusal (not a record directory, an
 //	        output that exists or is inside --dir); a refusal writes nothing
 //	exit 2  a usage error
@@ -352,7 +352,7 @@ func runRecordCensus(args []string, stdout, stderr io.Writer) int {
 	}
 	switch res.Exit {
 	case record.CensusExitMismatch:
-		fmt.Fprintln(stderr, "kiln: record census: the cross-check found a mismatch or an allowed divergence")
+		fmt.Fprintln(stderr, "kiln: record census: the cross-check found a mismatch, an allowed divergence or a parse panic")
 	case record.CensusExitInfra:
 		fmt.Fprintln(stderr, "kiln: record census: infrastructure failure (see infrastructure_failure in the summary)")
 	}
