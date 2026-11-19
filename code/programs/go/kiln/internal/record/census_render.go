@@ -112,6 +112,10 @@ func renderMarkdown(s *CensusSummary) string {
 		status = "FAILED"
 	}
 	w("- cross-check: %s (traces %d, accepted %d, refused %d, mismatches %d, allowed divergences %d)\n", status, cc.Traces, cc.Accepted, cc.Refused, cc.Mismatches, cc.Allowed)
+	// A trace over the cross-check size cap was timed but NOT cross-checked, so
+	// "ok" above says nothing about it: put the count beside the verdict, where
+	// a reader of only this section cannot miss it.
+	w("- cross-check SKIPPED (trace too large to cross-check, timed only): %d traces, %d bytes\n", cc.Skipped, cc.SkippedBytes)
 	if s.InfrastructureFailure != "" {
 		w("- infrastructure failure: %s\n", codeSpan(s.InfrastructureFailure))
 	} else {
