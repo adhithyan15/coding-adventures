@@ -1035,9 +1035,12 @@ The Rust side is `vos_shape_check::items::collect_types` over the crate's `src/*
 lexer; no new lexer), the Warrant side the AST of `warrant-grammar`'s parser (`VariantDecl`).
 `variant <Name> = <C1> | <C2>(<T>, ..)`: constructors in source order separated by ` | `, a
 payload as the comma-and-space joined TYPES. The type map is `u8` to `U8`, `bool` to `Bool`,
-`[u8; N]` to `Bytes<N>`, a same-crate name to itself. A named-field variant (`Write { addr: .. }`)
-renders its types only, as a tuple variant does, and Warrant names its fields freely, so `Run(t: U8)`
-renders `Run(U8)`: **field names are not compared** (the harness marshals by position). CK10 fires when
+`[u8; N]` to `Bytes<N>`, a same-crate name to itself, and anything else to `?` and the type as written
+(a character no Warrant type has, so it never matches). Warrant names a constructor's fields freely, so a
+Rust TUPLE variant's field names are not compared: `Run(t: U8)` renders `Run(U8)` (the harness marshals
+by position). A Rust NAMED-field variant (`Put { slot: u8 }`) is different, its field names are part of
+the Rust type, so it renders `Put(slot: U8)` and the Warrant constructor of that name must spell the same
+names: the one rendering function is told by the Rust side which constructors are named. CK10 fires when
 a Rust enum has no Warrant variant of its name (a rename on either side leaves a Rust enum without a
 twin) or the lines differ. The direction is Rust to Warrant: a Warrant variant with no Rust enum is a
 model-only type and is allowed. A Rust type SH19 would reject cannot render (the Rust side prints it

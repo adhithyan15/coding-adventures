@@ -61,6 +61,8 @@ impl Repo {
         }
         // The whole `warrant/` tree, recursively: it holds `mutants/` since VOS-039b-1.
         copy_dir(&real.join("warrant"), &dest.join("warrant"));
+        // And `src/`, the Rust half of CK10 (the enums are compared with the Warrant variants).
+        copy_dir(&real.join("src"), &dest.join("src"));
         Repo { root }
     }
 

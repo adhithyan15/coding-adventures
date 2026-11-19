@@ -20,6 +20,10 @@
 //!                                                ▼
 //!                            warrant/lemmas.table  (generated, never parsed)
 //!                            gen-contract writes it, check-contract compares (CK09)
+//!
+//!   src/**/*.rs enums ──┐   one `variant ...` line per Rust enum, one per Warrant variant,
+//!   contract.part ──────┴─► rendered by one function each and compared byte for byte (CK10);
+//!                           the lines are rows of the table (see `enums`)
 //! ```
 //!
 //! ## A mutant is an ordinary part, not a new file format
@@ -70,9 +74,11 @@ use vos_manifest::digest::sha256_hex;
 use vos_manifest::document::document_name;
 use vos_manifest::warrant::{claim_calls, claims_of_block, declarations_of_block, DeclKind};
 use vos_manifest::{Contract, Part};
+use vos_shape_check::SourceFile;
 
 use crate::check::{first_difference_line, WARRANT_STACK_BYTES};
 use crate::component::read_text;
+use crate::enums;
 use crate::error::{Finding, NoVerdict};
 use crate::fsio::{ensure_plain_dirs, esc, list_names, read_regular_opt, write_replacing};
 use crate::inputs::{admit, load_contract_package, resolve_layout, Layout};
@@ -114,6 +120,8 @@ pub struct ContractInputs {
     pub mutants: Vec<(String, Part)>,
     /// `warrant/lemmas.table` as on disk, if present.
     pub table: Option<String>,
+    /// Every `*.rs` file under `src/` (the Rust side of CK10), empty when there is no `src/`.
+    pub sources: Vec<SourceFile>,
 }
 
 /// GD01, GD02 and GD05 are the inputs of a document; for `check-contract` they are `CK01`
@@ -193,6 +201,13 @@ pub fn load_inputs(
     mutants.sort_by(|a, b| a.0.cmp(&b.0));
 
     let table = read_text(&layout.impl_dir.join(TABLE_FILE), TABLE_MAX_BYTES)?;
+    // The Rust enums (CK10): the shape checker's own hardened reader, so a symlink, a FIFO, a
+    // case-trap file name or an oversized source is refused here exactly as it is there.
+    let sources = vos_shape_check::loader::load_sources(&layout.impl_dir).map_err(|e| {
+        NoVerdict::new(format!(
+            "cannot read the sources of the contract crate: {e}"
+        ))
+    })?;
 
     let findings: Vec<Finding> = f.into_iter().map(as_ck01).collect();
     match (findings.is_empty(), pkg.contract_part, pkg.lemmas_part) {
@@ -203,6 +218,7 @@ pub fn load_inputs(
             lemmas_part,
             mutants,
             table,
+            sources,
         })),
         _ => Ok(Err(findings)),
     }
@@ -307,7 +323,7 @@ fn domain(ty: &TypeExpr) -> Option<Vec<EvalValue>> {
 }
 
 /// Parse `src`, then run `f` over the file (the AST borrows the source).
-fn with_file<R>(src: &str, f: impl FnOnce(&WarrantFile) -> R) -> Result<R, String> {
+pub(crate) fn with_file<R>(src: &str, f: impl FnOnce(&WarrantFile) -> R) -> Result<R, String> {
     let doc = SourceDocument::admit(src.as_bytes(), SourceLimits::default())
         .map_err(|e| format!("{e}"))?;
     let layout = capture_layout(&doc, LayoutLimits::default()).map_err(|e| format!("{e}"))?;
@@ -495,7 +511,7 @@ fn on_big_stack<R: Send>(f: impl FnOnce() -> R + Send) -> Result<R, NoVerdict> {
 /// What the check found, and the table it would write if it found nothing.
 #[derive(Debug, Default)]
 pub struct Checked {
-    /// `CK02` to `CK08`, in order (`CK09` is the caller's: it compares the table).
+    /// `CK02` to `CK08` and `CK10`, in order (`CK09` is the caller's: it compares the table).
     pub findings: Vec<Finding>,
     /// The generated `warrant/lemmas.table`, present only when `findings` is empty.
     pub table: Option<String>,
@@ -571,6 +587,10 @@ pub fn check_inputs(inp: &ContractInputs) -> Result<Checked, NoVerdict> {
         );
         return Ok(out);
     }
+
+    // --- CK10: the Rust enums and the Warrant variants, generated and compared ---------------
+    let (enum_findings, variant_lines) = check_enums(inp, &base)?;
+    out.findings.extend(enum_findings);
 
     // --- CK05: the mutant set equals the lemma set, both ways ------------------------------
     let have: BTreeSet<&str> = inp.mutants.iter().map(|(s, _)| s.as_str()).collect();
@@ -788,7 +808,7 @@ pub fn check_inputs(inp: &ContractInputs) -> Result<Checked, NoVerdict> {
     }
 
     if out.findings.is_empty() {
-        out.table = Some(table_text(inp, &rows, &config_rows));
+        out.table = Some(table_text(inp, &rows, &config_rows, &variant_lines));
     }
     Ok(out)
 }
@@ -851,9 +871,39 @@ fn build_mutant(
     }))
 }
 
-/// The generated table (`vos-lemmas 1`), the bytes `gen-contract` writes.  Never parsed.
-fn table_text(inp: &ContractInputs, rows: &[Row], config_rows: &[ConfigRow]) -> String {
-    let mut t = String::from("vos-lemmas 1\n");
+/// CK10 (VOS-039b-2a): render each Rust enum of the crate and the Warrant variant of the same
+/// name with one function each (`enums`) and compare the bytes.  Returns the findings and, in
+/// source order, the Rust lines (which equal the Warrant lines when there is no finding): the
+/// `variant` rows of the table.  A crate with no `src/` has no enum to compare.
+fn check_enums(inp: &ContractInputs, base: &str) -> Result<(Vec<Finding>, Vec<String>), NoVerdict> {
+    if inp.sources.is_empty() {
+        return Ok((Vec::new(), Vec::new()));
+    }
+    let rust = match enums::rust_enums(&inp.sources) {
+        Ok(r) => r,
+        Err(problems) => {
+            let findings = problems
+                .into_iter()
+                .map(|p| Finding::new("CK10", p))
+                .collect();
+            return Ok((findings, Vec::new()));
+        }
+    };
+    // `base` type-checked a moment ago, so it parses.
+    let is_named = |e: &str, c: &str| rust.iter().any(|r| r.name == e && r.named.contains(c));
+    let warrant = on_big_stack(|| enums::warrant_variants(base, &is_named))?
+        .map_err(|e| NoVerdict::new(format!("the checked document no longer parses: {e}")))?;
+    Ok(enums::correspond(&rust, &warrant))
+}
+
+/// The generated table (`vos-lemmas 2`), the bytes `gen-contract` writes.  Never parsed.
+fn table_text(
+    inp: &ContractInputs,
+    rows: &[Row],
+    config_rows: &[ConfigRow],
+    variant_lines: &[String],
+) -> String {
+    let mut t = String::from("vos-lemmas 2\n");
     t.push_str(&format!(
         "contract-part {}\n",
         sha256_hex(inp.contract_part.text().as_bytes())
@@ -864,6 +914,10 @@ fn table_text(inp: &ContractInputs, rows: &[Row], config_rows: &[ConfigRow]) -> 
     ));
     for c in &inp.contract.config {
         t.push_str(&format!("config {} {}\n", c.key, c.value));
+    }
+    for v in variant_lines {
+        t.push_str(v);
+        t.push('\n');
     }
     for r in rows {
         t.push_str(&format!(
@@ -888,7 +942,7 @@ fn table_text(inp: &ContractInputs, rows: &[Row], config_rows: &[ConfigRow]) -> 
 // ---------------------------------------------------------------------------------------
 
 fn notes() -> Vec<String> {
-    vec!["check-contract: every lemma holds over the whole domain of its binders, every lemma fails on its own mutant (a parsed, span-replaced model), every `config` key is called by a lemma and breaks one when moved by one, and `warrant/lemmas.table` equals what this run writes, byte for byte. Not checked: that a mutant is the BEST control (the exact set of claims it breaks, VOS-D109), the Rust enums against the Warrant variants, `Sched::N` in the trait and an implementation's `n_is_eight` literal against `contract.vos`, bound rows against ceilings (VOS-D055, VOS-039b-2), and the command-type rule (VOS-D077).".to_string()]
+    vec!["check-contract: every lemma holds over the whole domain of its binders, every lemma fails on its own mutant (a parsed, span-replaced model), every `config` key is called by a lemma and breaks one when moved by one, and `warrant/lemmas.table` equals what this run writes, byte for byte. Every Rust `enum` of the crate renders to the same `variant ...` line as its Warrant variant (CK10; a tuple variant's field names are not compared). Not checked: that a mutant is the BEST control (the exact set of claims it breaks, VOS-D109), the evidence bindings' `enum ... ctors=` lines against the contract, `Sched::N` in the trait and an implementation's `n_is_eight` literal against `contract.vos`, and bound rows against ceilings (VOS-D055, VOS-039b-2b). The command-type rule is `vos-shape-check` SH19, run by the contract crate's BUILD.".to_string()]
 }
 
 /// A line of `text`, escaped and cut, for a finding.

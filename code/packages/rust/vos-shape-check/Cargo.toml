@@ -2,7 +2,9 @@
 name = "vos-shape-check"
 version = "0.1.0"
 edition = "2021"
-description = "Lexical component shape checker for the verified-OS program (VOS-D002, VOS03): SH1-SH15, SH17, SH18 and the class tag"
+description = "Lexical component shape checker for the verified-OS program (VOS-D002, VOS03): SH1-SH15, SH17-SH19 and the class tag"
+# An evidence-only tool of the verified-OS program, not a published package (VOS-D104).
+publish = false
 
 [lib]
 name = "vos_shape_check"

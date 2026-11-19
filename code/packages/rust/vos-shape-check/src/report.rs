@@ -47,6 +47,8 @@ pub enum Rule {
     Sh17,
     /// Nothing ghost leaks into the shipped build.
     Sh18,
+    /// A contract crate's command enums are closed and carry no raw address.
+    Sh19,
     /// `vos.toml` is invalid.
     Vt01,
     /// The package name and the declared kind disagree.
@@ -76,6 +78,7 @@ impl Rule {
             Rule::Sh15 => "SH15",
             Rule::Sh17 => "SH17",
             Rule::Sh18 => "SH18",
+            Rule::Sh19 => "SH19",
             Rule::Vt01 => "VT01",
             Rule::Vt02 => "VT02",
             Rule::Vt03 => "VT03",
