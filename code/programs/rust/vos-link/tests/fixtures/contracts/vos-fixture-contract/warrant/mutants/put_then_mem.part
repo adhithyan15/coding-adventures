@@ -1,0 +1,1 @@
+  model put(m: Pair, i: U8, v: Bool) -> Pair = Pair(m.a, m.b)

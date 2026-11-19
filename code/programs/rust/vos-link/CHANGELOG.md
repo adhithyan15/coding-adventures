@@ -4,6 +4,29 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-039b-1, VOS02 D-GD11)
+
+- `vos-link gen-contract` and `check-contract <contract-crate-dir>` (VOS04 5.6, `src/contract_check.rs`): the
+  generic contract check that retires `vos-sched-contract-check`.  Every lemma of `warrant/lemmas.part` is
+  evaluated over the whole domain of its binders (Bool, U8; budget 400,000), each against the one-`model`
+  mutant `warrant/mutants/<lemma>.part` replaced by parsed span, each `config` key through a generated
+  `cfg_<KEY>()` model with tool-made V-1 and V+1 mutants, and `warrant/lemmas.table` is generated and
+  byte-compared.  Codes `CK01` to `CK09`.  Workers on `WARRANT_STACK_BYTES` threads, at most 8, results
+  collected by index (deterministic).
+- `gen-build` and `check-component` accept kind `contract`: `canonical_contract_build` (identical BUILD and
+  BUILD_windows), CC02 file set, CC03 byte equality, CC05 `vosContractRow`.  `row_in_consumers_with` takes the
+  row function name.
+- `inputs::load_contract_package`: the contract half of `load` (kind, `contract.vos`, tier files, part
+  admission), shared with `check-contract`; `check-contract` maps GD01, GD02, GD05 to CK01.
+- `tests/contract.rs` (37 tests) on a toy N = 2 contract; two CLI tests; `Repo::new` copies `warrant/`
+  recursively (the real contract now has `warrant/mutants/`).  Line coverage of `src/contract_check.rs`
+  96.5% (tarpaulin, LLVM engine), 97.4% of `src/`.
+
+### Changed (VOS-039b-1)
+
+- `check-component` no longer refuses kind `contract` (it is judged by the contract branch); the message of
+  `CC01` now reads "is not a component kind".  A crate of another kind (`spine`, ...) is still refused.
+
 ### Added (VOS-039a, VOS-D070, VOS-D082, VOS-D099)
 
 - `vos-link gen-build <crate-dir>`: writes the canonical region of `BUILD` and `BUILD_windows` (VOS04 5.2
