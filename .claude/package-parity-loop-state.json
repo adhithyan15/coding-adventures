@@ -19098,6 +19098,7 @@
       "status": "merged",
       "depends_on": [
         "hash-functions-dt17-vector-and-documentation-correction",
+        "hash-functions-dart-lane-parity",
         "swift-hash-map-lane-parity"
       ],
       "branch": "codex/dt18-map-conformance-foundation-20261119",
