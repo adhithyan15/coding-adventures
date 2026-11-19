@@ -542,6 +542,51 @@ fn malformed_body_fails_before_output_mutation_and_redacts() {
 }
 
 #[test]
+fn invalid_signature_fails_before_handshake_framing_or_transcript_admission() {
+    let encoded_key = decode_hex(PUBLIC_KEY_SPKI_HEX);
+    let key = validated_key(&encoded_key);
+    let scheme = SignatureScheme::RsaPssRsaeSha256;
+    let signature = decode_hex(SHA256_SIGNATURE_HEX);
+    let mut body = certificate_verify_body(scheme, &signature);
+    body[4] ^= 1;
+    let transcript = selected_transcript(
+        CipherSuite::TlsChacha20Poly1305Sha256,
+        VERIFY_TRANSCRIPT_BYTES,
+    );
+    let mut signed_input_output = [0_u8; MAXIMUM_INPUT_LENGTH];
+    let mut handshake_output = vec![0xa5; 4 + body.len()];
+    let before_handshake_output = handshake_output.clone();
+    let mut scratch = [0xa5; 223];
+
+    let error = verify_and_advance_owned_certificate_verify_transcript(
+        transcript,
+        CertificateVerifyRole::Server,
+        authorized(scheme),
+        &body,
+        key,
+        &mut signed_input_output,
+        &mut handshake_output,
+        &mut scratch,
+        Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+    )
+    .unwrap_err();
+
+    assert!(matches!(
+        error.kind(),
+        CertificateVerifyTranscriptAdvanceErrorKind::SignatureVerification(
+            Tls13RsaPssCertificateVerifyErrorKind::SignatureRouting(
+                Tls13RsaPssSignatureRoutingErrorKind::Sha256(_)
+            )
+        )
+    ));
+    assert_eq!(handshake_output, before_handshake_output);
+    for diagnostic in [format!("{error:?}"), error.to_string()] {
+        assert!(!diagnostic.contains(std::str::from_utf8(VERIFY_TRANSCRIPT_BYTES).unwrap()));
+        assert!(!diagnostic.contains(&SHA256_SIGNATURE_HEX[..32]));
+    }
+}
+
+#[test]
 fn short_handshake_storage_withholds_authenticated_transcript_state() {
     let encoded_key = decode_hex(PUBLIC_KEY_SPKI_HEX);
     let key = validated_key(&encoded_key);
