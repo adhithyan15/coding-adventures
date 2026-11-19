@@ -198,7 +198,7 @@ new key when `count == capacity`. Thus a table may reach load factor exactly
 
 Linear probing starts at `hash(key) % capacity` and visits
 `(start + offset) % capacity` for offsets from zero up to, but not including,
-capacity. Lookup and insertion inspect at most capacity slots. Lookup passes
+capacity. Each probe traversal inspects at most capacity slots. Lookup passes
 through tombstones and stops at the first empty slot or after a full cycle.
 Insertion remembers the earliest tombstone encountered, but continues until
 it finds an equal key, an empty slot, or completes a full cycle. Before
@@ -280,8 +280,8 @@ reading entries, then follows source order. Each insertion validates key
 length, replaces an existing key if present, and considers growth only for a
 new key. A capacity-growth failure leaves all published maps unchanged.
 
-The table above is the complete public error family. No API accepts a custom
-strategy, hash callback, value copier, or key serializer.
+The table above is the complete package-defined error family. No API accepts
+a custom strategy, hash callback, value copier, or key serializer.
 
 ## Cross-language case boundary
 
@@ -291,10 +291,13 @@ Murmur seeds in the unsigned 32-bit range. A Swift `[UInt8]` cannot express a
 negative or greater-than-255 byte. Swift string values cannot represent an
 unpaired UTF-16 surrogate as a Unicode scalar, and the Swift seed type cannot
 represent an out-of-range unsigned 32-bit seed. These cases therefore do not
-count as Swift API conformance. Dart must test malformed UTF-16, out-of-range
-byte integers, and invalid seeds through its own public API; fixture adapters
-must reject or classify them as Dart-only without prevalidating shared valid
-cases.
+count as Swift API conformance. The corpus classifies inputs as shared or
+Dart-only. The Swift consumer marks a Dart-only case unrepresentable or
+skipped without claiming that a Swift API rejected it. The Dart consumer
+constructs the raw malformed UTF-16, out-of-range byte integers, and invalid
+seeds and passes them to the actual public API. Its adapter must not discard
+or reject those cases before the Dart call. Shared valid cases still pass
+through both public APIs without adapter prevalidation.
 
 ## Capability and conformance boundary
 
