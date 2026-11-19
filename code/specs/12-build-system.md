@@ -614,8 +614,12 @@ create dependency edges from fixed-point to either verifier.
 For these rows, a registered repository directory is a recursive tree input,
 not a snapshot of the filenames currently present. The cache key MUST include
 all regular files below the exact registered root, sorted by canonical
-repository-relative path and framed with a distinct tree domain, path, file
-kind, byte length, and exact bytes. Adding, removing, or changing a file
+repository-relative path and framed with a distinct tree domain, root path,
+file count, file path, file kind, byte length, and exact bytes. The `src/`
+scope is a conservative all-file superset of the Rust producer's `.rs` source
+tree; the evidence scope mirrors the sandbox's copied files. Each tree is
+bounded to depth 32, 100,000 files, 8 MiB per file, and 128 MiB total.
+Adding, removing, or changing a file
 changes the digest. The filesystem tree is the source of the digest, so an
 untracked file inside a consumed tree participates whenever the consumer is
 hashed; unrelated untracked files outside the exact roots do not. A symlink,
