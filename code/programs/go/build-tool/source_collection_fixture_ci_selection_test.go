@@ -283,7 +283,7 @@ func TestSourceCollectionFixtureCheckedCorpusAndNativeReaders(t *testing.T) {
 			counts["local"]++
 		}
 	}
-	if counts["local"] != 7 || counts["repository"] != 11 || counts["shared"] != 4 {
+	if counts["local"] != 7 || counts["repository"] != 12 || counts["shared"] != 4 {
 		t.Fatalf("checked source fixture subfamilies = %v", counts)
 	}
 
