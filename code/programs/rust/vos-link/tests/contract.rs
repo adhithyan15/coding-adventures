@@ -999,6 +999,9 @@ fn the_spec_states_the_budget_and_every_code() {
 
 // --- security hardening -------------------------------------------------------------------------------------------
 
+// Windows forbids control characters in file names, so an author cannot create such a stem there;
+// the escape is still exercised on Unix.
+#[cfg(unix)]
 #[test]
 fn a_mutant_stem_is_escaped_in_the_ck05_message() {
     let r = generated("ck05-escape");
