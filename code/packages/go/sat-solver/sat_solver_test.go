@@ -2036,3 +2036,248 @@ func TestLowThresholdReductionOnOracleBoundedPigeonhole(t *testing.T) {
 		t.Fatalf("repeated watcher movement exceeded literal-derived bound: capacity=%d bound=%d", watchCapacity, bound)
 	}
 }
+
+func TestEveryBuilderPreflightRejectsBeforeMutation(t *testing.T) {
+	calls := []struct {
+		name string
+		call func(*CnfBuilder, []Lit) error
+	}{
+		{"And", func(b *CnfBuilder, x []Lit) error { _, e := b.And(x[0], x[1]); return e }},
+		{"Or", func(b *CnfBuilder, x []Lit) error { _, e := b.Or(x[0], x[1]); return e }},
+		{"Xor", func(b *CnfBuilder, x []Lit) error { _, e := b.Xor(x[0], x[1]); return e }},
+		{"Equiv", func(b *CnfBuilder, x []Lit) error { _, e := b.Equiv(x[0], x[1]); return e }},
+		{"Ite", func(b *CnfBuilder, x []Lit) error { _, e := b.Ite(x[0], x[1], x[2]); return e }},
+		{"FullAdder", func(b *CnfBuilder, x []Lit) error { _, e := b.FullAdder(x[0], x[1], x[2]); return e }},
+		{"BvAdd", func(b *CnfBuilder, x []Lit) error { _, e := b.BvAdd([]Lit{x[0]}, []Lit{x[1]}); return e }},
+		{"BvEq", func(b *CnfBuilder, x []Lit) error { _, e := b.BvEq([]Lit{x[0]}, []Lit{x[1]}); return e }},
+	}
+	for _, tc := range calls {
+		t.Run(tc.name, func(t *testing.T) {
+			s, _ := NewSolver(SolverConfig{MaxVars: 8, MaxClauses: 2, MaxClauseLiterals: 64, MaxStoredLiterals: 64})
+			inputs := []Lit{mustLit(t, 0, false), mustLit(t, 1, false), mustLit(t, 2, false)}
+			for range inputs {
+				if _, err := s.NewVar(); err != nil {
+					t.Fatal(err)
+				}
+			}
+			b, _ := NewCnfBuilder(s)
+			if err := tc.call(b, inputs); err == nil {
+				t.Fatal("gate exceeded clause ceiling")
+			}
+			if s.NVars() != 3 || s.inputClauseCount != 0 || s.inputLiteralCount != 0 {
+				t.Fatal("gate preflight refusal changed formula")
+			}
+		})
+	}
+}
+
+func TestAssumptionGrowthAndZeroBudgetRecovery(t *testing.T) {
+	s, _ := NewSolver()
+	a, _ := MakeLit(Var(3), false)
+	zero := uint64(0)
+	if got, err := s.SolveWithAssumptions([]Lit{a}, SolverOptions{MaxSteps: &zero}); err != nil || got != SolveUnknown {
+		t.Fatalf("zero-budget fresh assumption=%v %v", got, err)
+	}
+	if s.NVars() != 4 {
+		t.Fatalf("assumption did not auto-grow variables: %d", s.NVars())
+	}
+	if s.VarValue(3) != Undef {
+		t.Fatal("zero-budget assumption leaked after UNKNOWN")
+	}
+	if got, err := s.SolveWithAssumptions([]Lit{a}); err != nil || got != SolveSat {
+		t.Fatalf("unbounded assumption recovery=%v %v", got, err)
+	}
+	model, valid := s.Model()
+	if !valid || len(model) != 4 || !model[3] {
+		t.Fatalf("fresh-assumption model=%v valid=%t", model, valid)
+	}
+}
+
+func TestConflictBudgetAssumptionRecoveryAndSoundCore(t *testing.T) {
+	s, _ := NewSolver()
+	a, _ := s.NewVar()
+	p, _ := s.NewVar()
+	la, _ := MakeLit(a, false)
+	lp, _ := MakeLit(p, false)
+	for _, clause := range [][]Lit{{la ^ 1, lp}, {la ^ 1, lp ^ 1}} {
+		if _, err := s.AddClause(clause); err != nil {
+			t.Fatal(err)
+		}
+	}
+	zero := uint64(0)
+	if got, err := s.SolveWithAssumptions([]Lit{la}, SolverOptions{MaxConflicts: &zero}); err != nil || got != SolveUnknown {
+		t.Fatalf("zero-conflict assumption=%v %v", got, err)
+	}
+	if got, err := s.SolveWithAssumptions([]Lit{la}); err != nil || got != SolveUnsat {
+		t.Fatalf("assumption retry=%v %v", got, err)
+	}
+	core := s.FailedCore()
+	if len(core) == 0 || oracleSAT(2, [][]Lit{{la ^ 1, lp}, {la ^ 1, lp ^ 1}}, core) {
+		t.Fatalf("returned core is not independently UNSAT: %v", core)
+	}
+	if got, err := s.Solve(); err != nil || got != SolveSat {
+		t.Fatalf("unrestricted base recovery=%v %v", got, err)
+	}
+}
+
+func TestLearnedClauseStorageBudgetReturnsUnknownAtomically(t *testing.T) {
+	s, _ := NewSolver(SolverConfig{MaxVars: 2, MaxClauses: 2, MaxClauseLiterals: 4, MaxStoredLiterals: 4})
+	for i := 0; i < 2; i++ {
+		_, _ = s.NewVar()
+	}
+	x, _ := MakeLit(0, false)
+	y, _ := MakeLit(1, false)
+	clauses := [][]Lit{{x, y}, {x, y ^ 1}}
+	for _, clause := range clauses {
+		if _, err := s.AddClause(clause); err != nil {
+			t.Fatal(err)
+		}
+	}
+	s.phase[0] = -1
+	if got, err := s.Solve(); err != nil || got != SolveUnknown {
+		t.Fatalf("learned storage refusal=%v %v", got, err)
+	}
+	if s.inputClauseCount != 2 || s.inputLiteralCount != 4 || s.NClauses() != 2 {
+		t.Fatal("learned storage refusal changed original formula")
+	}
+	if got, err := s.SolveWithAssumptions([]Lit{x}); err != nil || got != SolveSat {
+		t.Fatalf("satisfying-assumption recovery=%v %v", got, err)
+	}
+	model, valid := s.Model()
+	if !valid || !allClausesSatisfied(clauses, model) {
+		t.Fatalf("recovered model invalid: %v/%t", model, valid)
+	}
+}
+
+func TestAssumptionReplayConflictBudgetPreservesBaseFormula(t *testing.T) {
+	s, _ := NewSolver()
+	for i := 0; i < 4; i++ {
+		_, _ = s.NewVar()
+	}
+	x, _ := MakeLit(0, false)
+	y, _ := MakeLit(1, false)
+	a, _ := MakeLit(2, false)
+	b, _ := MakeLit(3, false)
+	clauses := [][]Lit{{x, y}, {x, y ^ 1}, {x ^ 1, a ^ 1, b}, {x ^ 1, a ^ 1, b ^ 1}}
+	for _, clause := range clauses {
+		if _, err := s.AddClause(clause); err != nil {
+			t.Fatal(err)
+		}
+	}
+	s.phase[0] = -1
+	one := uint64(1)
+	if got, err := s.SolveWithAssumptions([]Lit{a}, SolverOptions{MaxConflicts: &one}); err != nil || got != SolveUnknown {
+		t.Fatalf("replay conflict budget=%v %v", got, err)
+	}
+	if got, err := s.SolveWithAssumptions([]Lit{a}); err != nil || got != SolveUnsat {
+		t.Fatalf("replay recovery=%v %v", got, err)
+	}
+	core := s.FailedCore()
+	if len(core) == 0 || oracleSAT(4, clauses, core) {
+		t.Fatalf("replayed assumption core is not independently UNSAT: %v", core)
+	}
+	if got, err := s.Solve(); err != nil || got != SolveSat {
+		t.Fatalf("unrestricted follow-up=%v %v", got, err)
+	}
+	model, valid := s.Model()
+	if !valid || !allClausesSatisfied(clauses, model) {
+		t.Fatalf("unrestricted base model invalid: %v/%t", model, valid)
+	}
+}
+
+func TestAssumptionReplayAlreadyTrueAndContradictory(t *testing.T) {
+	for _, forceAssumption := range []bool{true, false} {
+		t.Run(fmt.Sprintf("force_%t", forceAssumption), func(t *testing.T) {
+			s, _ := NewSolver()
+			for i := 0; i < 5; i++ {
+				_, _ = s.NewVar()
+			}
+			x, _ := MakeLit(0, false)
+			y, _ := MakeLit(1, false)
+			p, _ := MakeLit(2, false)
+			q, _ := MakeLit(3, false)
+			a, _ := MakeLit(4, false)
+			last := a
+			if !forceAssumption {
+				last ^= 1
+			}
+			clauses := [][]Lit{{x, y}, {x, y ^ 1}, {x ^ 1, p}, {x ^ 1, q}, {p ^ 1, q ^ 1, last}}
+			for _, clause := range clauses {
+				if _, err := s.AddClause(clause); err != nil {
+					t.Fatal(err)
+				}
+			}
+			s.phase[0] = -1
+			got, err := s.SolveWithAssumptions([]Lit{a})
+			if forceAssumption {
+				if err != nil || got != SolveSat {
+					t.Fatalf("already-true assumption replay=%v %v", got, err)
+				}
+				model, valid := s.Model()
+				if !valid || !model[4] || !allClausesSatisfied(clauses, model) {
+					t.Fatalf("replayed SAT model invalid: %v/%t", model, valid)
+				}
+			} else {
+				if err != nil || got != SolveUnsat {
+					t.Fatalf("contradictory assumption replay=%v %v", got, err)
+				}
+				core := s.FailedCore()
+				if len(core) == 0 || oracleSAT(5, clauses, core) {
+					t.Fatalf("replayed core not independently UNSAT: %v", core)
+				}
+				if got, err := s.Solve(); err != nil || got != SolveSat {
+					t.Fatalf("base formula after core=%v %v", got, err)
+				}
+				model, valid := s.Model()
+				if !valid || !allClausesSatisfied(clauses, model) {
+					t.Fatalf("base model invalid: %v/%t", model, valid)
+				}
+			}
+		})
+	}
+}
+
+func TestPendingConflictSurvivesLearnedReduction(t *testing.T) {
+	s, _ := NewSolver()
+	const variables = 7
+	for i := 0; i < variables; i++ {
+		if _, err := s.NewVar(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	clauses := [][]int{{-2, -7, 6}, {7, 3, 4}, {1, -6, -2}, {3, 5, -4}, {-3, 1, 4}, {5, 2, 1}, {-2, -3, -4}, {7, 2, 5}, {-5, 7, 1}, {-7, 5, 4}, {-4, -7, -1}, {4, -1, -2}, {2, 1, -5}}
+	original := make([][]Lit, len(clauses))
+	for i, clause := range clauses {
+		original[i] = literalsFromDIMACS(t, clause)
+		if _, err := s.AddClause(original[i]); err != nil {
+			t.Fatal(err)
+		}
+	}
+	// These test-only thresholds force a pending long conflict to overlap
+	// learned database reduction; production defaults remain unchanged.
+	s.restartBase, s.learnedLimit = 1, 0
+	if !oracleSAT(variables, original, nil) {
+		t.Fatal("independent enumeration says fixed formula is UNSAT")
+	}
+	got, err := s.Solve()
+	if err != nil || got != SolveSat {
+		t.Fatalf("pending-conflict reduction solve=%v %v", got, err)
+	}
+	model, valid := s.Model()
+	if !valid || !allClausesSatisfied(original, model) {
+		t.Fatalf("pending-conflict model violates original CNF: %v/%t", model, valid)
+	}
+	if s.Restarts == 0 {
+		t.Fatal("low restart threshold did not run")
+	}
+	deleted := false
+	for _, clause := range s.cs {
+		if clause.learnt && clause.deleted {
+			deleted = true
+			break
+		}
+	}
+	if !deleted {
+		t.Fatal("low learned limit did not reduce learned clauses")
+	}
+}
