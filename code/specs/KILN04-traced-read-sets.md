@@ -1222,6 +1222,105 @@ is not a record directory (a real `pre/` and `traces/`), when a path is not
 absolute, when an output exists (outputs are created `O_EXCL`, mode 0600), or
 when an output would lie inside `--dir`: it never writes there.
 
+*The Markdown verdict.* The `Verdict` section states the cross-check status, and on
+the next line the count of traces SKIPPED as too large to cross-check
+(`skipped_too_large`, with their bytes), so an "ok" cannot be read as covering a
+trace that was only timed. The cross-check status is `FAILED` also when a
+`parse_panic` was counted (exit 4 says the same). The `Host` section carries the
+CPU model.
+
+**The census workflow (census PR D): `.github/workflows/kiln-census.yml`.**
+`workflow_dispatch` only; the scheduled weekly run is census PR E. One job,
+`census`, runs on `ubuntu-24.04` and `ubuntu-26.04` (the `kiln-sandbox` job's
+labels; `fail-fast: false`), `permissions: contents: read`, a `kiln-census`
+concurrency group that queues and never cancels, and a job timeout.
+
+- *Inputs.* `shard_count` (integer, 1 to 256, default 15, as `ci.yml`) and `shard_indices`
+  (1 to 3 comma-separated integers, each below the count, no repeats, default
+  `0`). They reach the shell only through `env:` and are validated there
+  (regular expressions, then arithmetic bounds) before anything runs; only the
+  normalised values are exported to later steps. The first step also refuses a
+  ref that is not the repository's default branch, because `prepare` would exit 3
+  on it (P2: trusted runs only).
+- *Recording.* Full checkout (no token kept), Go, the AppArmor userns sysctl
+  and strace (guarded: `command -v strace`, else `code/scripts/ci/apt-install.sh`;
+  the text `apt-get update` is forbidden in any workflow). `kiln` and the build
+  tool are built into `$RUNNER_TEMP/bin` with the Go caches in `$RUNNER_TEMP`
+  too (P3 wants the binaries outside the checkout; the only state roots are
+  `~/.cargo/registry` and `~/.cargo/git`, and only when `~/.cargo/bin` exists,
+  so the fresh `$HOME` makes them trivially empty). For each sampled shard, in order:
+  reset and clean the checkout, a fresh `$HOME` (state roots start empty), a fresh
+  record directory and `/tmp/kiln-tmp`; `kiln record prepare`; the traced build,
+  exactly the command of P1, launched under `env -i` with `pre/tools.json`'s
+  `build_tool_env` and wrapped in `::stop-commands::<random token>`;
+  `kiln record collect`; `kiln record census --dir <rec> --records
+  <rec>/records.jsonl --out census-<os>-shard<i>.json --md census-<os>-shard<i>.md`
+  with `GOMEMLIMIT=8GiB` (the cross-check buffers a trace of up to 256 MiB and
+  parses it twice; the hosted runner has 16 GiB). A failing BUILD step is census
+  data, not a job failure; a build cut off by the per-shard timeout (90 minutes),
+  a failed `prepare` or `collect` and any non-zero census exit are.
+- *Output.* Each Markdown summary is appended to `$GITHUB_STEP_SUMMARY`, and
+  `census-*.json` and `census-*.md` are uploaded as the artifact
+  `kiln-census-<os>` (30 days). The upload runs `if: always()`, and the job's
+  verdict is decided by the last step, so a census that exited 4 still publishes.
+- *Exit semantics.* The job fails when any census exits non-zero: 4 (a
+  cross-check mismatch, any allowed divergence or a `parse_panic`), 1
+  (infrastructure) or 2 (usage), or when `prepare` or `collect` fail or a build
+  times out.
+- *Never uploaded.* The record directory, the traces, the sidecars,
+  `records.jsonl` and the strace stderr files: they hold host paths and command
+  lines (4.3). Only the sanitised summary leaves the runner.
+- *Limits: coverage.* This workflow records with a fresh `$HOME` and installs Go
+  only. Steps that need Rust, .NET, Haskell, Python, Ruby or node fail at "not
+  found" and are recorded as failed steps (`record_failed`,
+  `sidecar.root_status_nonzero`). Go is about 298 of 5115 packages and 0.8% of
+  build time; Rust alone is about 29%. So a clean census from this workflow is
+  NOT evidence for the PR8 gate, and every shard's step summary says so in its
+  first line (`coverage: fresh HOME, Go toolchain only; not the PR8 gate`).
+- *Follow-up (not this PR): the PR8 census.* PR8's clean census needs a run with
+  the toolchains installed (setup-python, Ruby and node pinned as in `ci.yml`,
+  and the rest) and the real-home layout: a `home: fresh|runner` input, `runner`
+  using the runner's own `$HOME`. Expect new `prepare` refusals in runner mode (a
+  state root that is not empty, an `ro_roots` entry overlapping the runner's
+  directories); they are the point of that run.
+- *"Clean" (for PR8).* A shard is clean only when its census exits 0 AND
+  `skipped_too_large` is 0 AND `bounds.actions_skipped` is 0 AND the traces were
+  not all refused by both readers (`cross_check.accepted` is above 0 when
+  `traces` is). The workflow flags a shard that exits 0 but misses any of these
+  as "not clean" in its summary (`ci/census_not_clean.py`, which reads the JSON,
+  never the Markdown), and does not fail the job for it; it prints a positive
+  "clean" line otherwise, so a missing line is never read as clean. A workflow
+  that gates PR8 must FAIL on "not clean", not only annotate it.
+- *Never partly green.* The job's status is the worst of every shard. A shard
+  that was not started (the start deadline: no new shard starts more than 200
+  minutes after the job start stamp), a failed
+  `reset`/`clean` of the checkout, a failed `prepare` or `collect`, and a build
+  that timed out or was killed (timeout or OOM) each fail the job, and each
+  leaves a line in the summary. A failed `collect` still gets its census (it
+  needs only `pre/` and `traces/`), run without `--records`. The status file is
+  created as a failure before the loop, so a missing or unreadable one fails
+  the job. The job limit is 360 minutes (the hosted maximum), because the stamp
+  is taken after setup and the limit counts from the job's start: setup (at most
+  15) + the start deadline (200) + reset and prepare (at most 20; `VerifyTree` has
+  a 20 minute budget) + one shard's build (91) + collect, census and upload (at
+  most 25) is about 351 minutes. Three slow shards cannot all complete: the third
+  is skipped and the job fails, which is intended.
+- *Job start stamp.* The workflow stamps `JOB_START` after setup, which is more
+  permissive than section 5.3 ("the job's first step"). That is acceptable for
+  this census, which warns when apt installed strace. Stage-4 PR 3
+  (`kiln-record.yml`) must NOT copy it: it stamps first and fails if strace is
+  missing.
+- *Housekeeping.* `strace` is verified (or installed, with a `::warning::`)
+  BEFORE the job start is stamped, so an apt install cannot turn every action
+  into `host-read:setup-modified`. Every recorder command runs with `$RUNNER_TEMP`
+  as the working directory, never the checkout. Between shards the checkout is
+  restored with git run under the recorder's pinned configuration
+  (`core.fsmonitor=false`, `core.hooksPath=/dev/null`, `protocol.file.allow=never`,
+  as `source.ConfigEnv`). The sealed `pre/` (0444 files in 0555 directories) is
+  made writable before a record directory is removed. Each shard's summary is
+  appended only while the step summary stays under about 900 KiB (GitHub's limit
+  is 1 MiB); past that, the shard gets a pointer to the artifact.
+
 **P3. Binary placement (D15).** The Kiln binary (the running executable,
 resolved through symlinks) and the build-tool binary must be regular files
 whose path equals its own resolved path, and must lie outside every place a

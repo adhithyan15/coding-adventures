@@ -389,6 +389,77 @@ pub fn declared_names(text: &str) -> Result<(Vec<String>, Vec<String>), WarrantF
     })
 }
 
+/// One `metric <= bound` row of a `bound OP:` declaration.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BoundFact {
+    /// The operation the `bound` declaration names.
+    pub op: String,
+    /// The metric (`steps`, `heap`, `depth`, ...), as written.
+    pub metric: String,
+    /// The bound, **only when the expression is a plain integer literal**.  Anything else
+    /// (a name, a sum, a parenthesised number, a typed literal) is `None`: the tool cannot
+    /// know its value, and a caller that compares it with a ceiling must treat `None` as a
+    /// failure, never as zero (fail closed).
+    pub value: Option<u64>,
+}
+
+/// The operations and `bound` rows of a document (VOS-039b-2b, `check-component` CC09).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BoundFacts {
+    /// Every `op` declaration's name, in document order.
+    pub ops: Vec<String>,
+    /// Every row of every `bound` declaration, in document order.
+    pub rows: Vec<BoundFact>,
+}
+
+/// The `op` names and `bound` rows of a document, read from the **parsed** tree.
+///
+/// ```text
+///   op insert_img(s: Impl, t: U8) -> Impl       ops:  ["insert_img", ...]
+///   bound insert_img:                           rows: [("insert_img", "steps", Some(160)),
+///     steps <= 160                                     ("insert_img", "heap",  Some(0))]
+///     heap <= 0
+/// ```
+///
+/// The document is parsed only (type-checking is `check-doc`'s), as in [`declared_names`].
+/// A bound is `Some` only for an unsuffixed integer literal ([`Literal::Int`]) or a `u64`
+/// or `u8` literal; everything else is `None` (see [`BoundFact::value`]).
+pub fn bound_facts(text: &str) -> Result<BoundFacts, WarrantFailure> {
+    with_parsed(text, |file, _tokens, _norm| {
+        let mut out = BoundFacts {
+            ops: Vec::new(),
+            rows: Vec::new(),
+        };
+        for d in &file.declarations {
+            match d {
+                Declaration::Op(o) => out.ops.push(o.name.to_string()),
+                Declaration::Bound(b) => {
+                    for r in &b.rows {
+                        let value = match &r.bound {
+                            Expression::Literal {
+                                lit: Literal::Int(n) | Literal::U64(n),
+                                ..
+                            } => Some(*n),
+                            Expression::Literal {
+                                lit: Literal::U8(n),
+                                ..
+                            } => Some(u64::from(*n)),
+                            _ => None,
+                        };
+                        out.rows.push(BoundFact {
+                            op: b.name.to_string(),
+                            metric: r.name.to_string(),
+                            value,
+                        });
+                    }
+                }
+                _ => {}
+            }
+        }
+        Ok(out)
+    })
+}
+
 /// For each claim of a parsed document, which of `ops` its body calls, in the order first met.
 ///
 /// The claim's **parsed expression** is walked (a text scan was bypassable: `--` inside a

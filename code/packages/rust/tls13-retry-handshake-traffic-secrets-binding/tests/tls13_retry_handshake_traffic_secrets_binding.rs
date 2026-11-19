@@ -1,9 +1,11 @@
+use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk};
 use std::error::Error;
 use tls13_cipher_suite_offer::ClientCipherSuiteOffer;
 use tls13_cipher_suite_policy::{CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry};
 use tls13_client_hello_message::{decode_client_hello, ClientHelloLimits};
 use tls13_extension_block::ExtensionBlockLimits;
 use tls13_extension_context_policy::{ExtensionContextPolicy, STANDARD_TLS13_EXTENSION_RULES};
+use tls13_finished::{derive_finished_key, FinishedKeyStorage, FinishedRole};
 use tls13_handshake_traffic_secrets::{
     derive_handshake_traffic_secrets, HandshakeTrafficSecretStorage,
 };
@@ -11,7 +13,9 @@ use tls13_key_schedule::BaseSecretStorage;
 use tls13_key_share::KeyShareLimits;
 use tls13_named_group_policy::{NamedGroup, NamedGroupPolicy};
 use tls13_retry_handshake_traffic_secrets_binding::{
-    bind_retry_handshake_traffic_secrets, RetryHandshakeTrafficSecretBindingError,
+    bind_retry_handshake_traffic_secrets, bind_retry_server_finished_key,
+    bind_retry_server_transcript_continuation, RetryHandshakeTrafficSecretBindingError,
+    RetryServerFinishedKeyBindingError, RetryServerTranscriptContinuationError,
 };
 use tls13_retry_key_schedule_binding::bind_retry_key_schedule;
 use tls13_retry_transcript_binding::bind_retry_transcript;
@@ -212,6 +216,68 @@ fn derives_from_and_retains_the_exact_retry_base_schedule() {
         assert!(core::ptr::eq(bound.evidence(), &base));
         assert_eq!(bound.traffic_secrets().client_secret(), expected_client);
         assert_eq!(bound.traffic_secrets().server_secret(), expected_server);
+
+        let expected_prk = HkdfPrk::import_exact(FixedHkdfHash::Sha256, &expected_server).unwrap();
+        let mut expected_finished_storage = FinishedKeyStorage::new(suite, FinishedRole::Server);
+        let expected_finished_key =
+            derive_finished_key(&expected_prk, &mut expected_finished_storage).unwrap();
+        let mut finished_storage = FinishedKeyStorage::new(suite, FinishedRole::Server);
+        let server_finished =
+            bind_retry_server_finished_key(&bound, &mut finished_storage).unwrap();
+        let transcript_hash = [0x42; 32];
+        let mut expected_verify_data = [0; 32];
+        let mut actual_verify_data = [0; 32];
+        expected_finished_key
+            .write_verify_data(&transcript_hash, &mut expected_verify_data)
+            .unwrap();
+        server_finished
+            .finished_key()
+            .write_verify_data(&transcript_hash, &mut actual_verify_data)
+            .unwrap();
+
+        assert!(core::ptr::eq(
+            server_finished.handshake_traffic_secrets(),
+            &bound,
+        ));
+        assert_eq!(server_finished.finished_key().role(), FinishedRole::Server);
+        assert_eq!(
+            server_finished.finished_key().selected_suite(),
+            bound.traffic_secrets().selected_suite(),
+        );
+        assert_eq!(actual_verify_data, expected_verify_data);
+        let continuation = bind_retry_server_transcript_continuation(&server_finished).unwrap();
+        assert!(core::ptr::eq(
+            continuation.server_finished_key(),
+            &server_finished,
+        ));
+        assert_eq!(
+            continuation.transcript().selected_suite(),
+            transcript.transcript().selected_suite(),
+        );
+        assert_eq!(
+            continuation.transcript().snapshot(),
+            transcript.transcript().snapshot(),
+        );
+        assert_eq!(
+            continuation.transcript().policy(),
+            transcript.transcript().policy(),
+        );
+        assert_eq!(
+            continuation.transcript().observed_bytes(),
+            transcript.transcript().observed_bytes(),
+        );
+        assert!(continuation.transcript().hello_retry_request_applied());
+        let continuation_debug = format!("{continuation:?}");
+        assert!(continuation_debug.contains("[RETAINED]"));
+        for disclosed in ["retry-traffic", "8520f009", "de9edb7d"] {
+            assert!(!continuation_debug.contains(disclosed));
+        }
+        let finished_debug = format!("{server_finished:?}");
+        assert!(finished_debug.contains("[RETAINED]"));
+        assert!(finished_debug.contains("[SECRET]"));
+        for disclosed in ["retry-traffic", "8520f009", "de9edb7d"] {
+            assert!(!finished_debug.contains(disclosed));
+        }
         let debug = format!("{bound:?}");
         assert!(debug.contains("[RETAINED]"));
         assert!(debug.contains("[SECRET]"));
@@ -251,6 +317,42 @@ fn rejects_output_storage_for_another_suite_before_derivation() {
 }
 
 #[test]
+fn finished_key_binding_rejects_role_and_suite_substitution() {
+    let mut x25519_output = [0xa5; 32];
+    with_retry_x25519_messages(|messages| {
+        let secret = derive_message_bound_retry_x25519_shared_secret(
+            messages,
+            &ALICE_PRIVATE,
+            &mut x25519_output,
+        )
+        .unwrap();
+        let transcript = bind_retry_transcript(
+            messages.messages().selection(),
+            TranscriptPolicy::new(4_096).unwrap(),
+        )
+        .unwrap();
+        let suite = transcript.transcript().selected_suite();
+        let mut base_storage = BaseSecretStorage::new(suite).unwrap();
+        let base = bind_retry_key_schedule(&secret, &transcript, &mut base_storage).unwrap();
+        let mut traffic_storage = HandshakeTrafficSecretStorage::new(suite).unwrap();
+        let traffic = bind_retry_handshake_traffic_secrets(&base, &mut traffic_storage).unwrap();
+
+        let mut client_storage = FinishedKeyStorage::new(suite, FinishedRole::Client);
+        assert_eq!(
+            bind_retry_server_finished_key(&traffic, &mut client_storage).unwrap_err(),
+            RetryServerFinishedKeyBindingError::WrongEndpointRole,
+        );
+
+        let other_suite = selected_suite(CipherSuite::TlsAes256GcmSha384);
+        let mut other_suite_storage = FinishedKeyStorage::new(other_suite, FinishedRole::Server);
+        assert_eq!(
+            bind_retry_server_finished_key(&traffic, &mut other_suite_storage).unwrap_err(),
+            RetryServerFinishedKeyBindingError::CipherSuiteMismatch,
+        );
+    });
+}
+
+#[test]
 fn errors_are_stable_and_payload_free() {
     let mismatch = RetryHandshakeTrafficSecretBindingError::CipherSuiteMismatch;
     assert_eq!(
@@ -268,4 +370,30 @@ fn errors_are_stable_and_payload_free() {
     );
     assert!(derivation.source().is_some());
     assert!(!format!("{derivation:?}").contains("retry-traffic"));
+
+    for error in [
+        RetryServerFinishedKeyBindingError::WrongEndpointRole,
+        RetryServerFinishedKeyBindingError::CipherSuiteMismatch,
+        RetryServerFinishedKeyBindingError::SecretImport,
+    ] {
+        let display = error.to_string();
+        let debug = format!("{error:?}");
+        assert!(!display.contains("retry-traffic"));
+        assert!(!debug.contains("retry-traffic"));
+        assert!(error.source().is_none());
+    }
+
+    for error in [
+        RetryServerTranscriptContinuationError::Transcript(
+            tls13_transcript::TranscriptErrorKind::HashMessageTooLong,
+        ),
+        RetryServerTranscriptContinuationError::CipherSuiteMismatch,
+        RetryServerTranscriptContinuationError::SnapshotMismatch,
+    ] {
+        let display = error.to_string();
+        let debug = format!("{error:?}");
+        assert!(!display.contains("retry-traffic"));
+        assert!(!debug.contains("retry-traffic"));
+        assert!(error.source().is_none());
+    }
 }

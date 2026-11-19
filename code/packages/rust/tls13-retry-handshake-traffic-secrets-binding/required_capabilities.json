@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/tls13-retry-handshake-traffic-secrets-binding",
   "capabilities": [],
-  "justification": "Pure composition of exact caller-owned TLS retry evidence, repository-owned base secrets and transcript state, and caller-owned wipe-on-drop handshake traffic-secret storage. It performs no filesystem, network, DNS, process, environment, clock, entropy, credential access, signing, certificate, trust-root, path-validation, hostname, revocation, audit, HTTP, OAuth, or external effect."
+  "justification": "Pure composition and exact-message transcript reconstruction from retained caller-owned TLS retry evidence, repository-owned base secrets and transcript state, and caller-owned wipe-on-drop handshake traffic-secret and Finished-key storage. It performs no filesystem, network, DNS, process, environment, clock, entropy, credential access, signing, certificate, trust-root, path-validation, hostname, revocation, audit, HTTP, OAuth, or external effect."
 }

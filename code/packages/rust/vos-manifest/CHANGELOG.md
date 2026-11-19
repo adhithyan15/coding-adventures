@@ -4,6 +4,13 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-039b-2b)
+
+- `warrant::bound_facts(text)`: the `op` names and every `bound` row (`op`, metric, bound) of a document, read
+  from the parsed tree.  A bound is `Some` only for an integer literal; anything else is `None`, so a caller
+  that compares it with a ceiling fails closed.  `BoundFact`, `BoundFacts`.  `vos-link check-component` CC09.
+- `publish = false` in `Cargo.toml` (VOS-D104).
+
 ### Added (VOS-039b-1)
 
 - `warrant::declarations_of_block(block)`: the top-level declarations of a block (kind, name, byte span IN

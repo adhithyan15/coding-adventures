@@ -1830,3 +1830,202 @@ fn sh19_same_named_items_do_not_make_the_judgement_quadratic() {
     let n = r.findings.iter().filter(|f| f.rule.id() == "SH19").count();
     assert!(n >= 3, "{}", r.render());
 }
+
+// ------------------------------------------------- SH19 (h): the closed attribute list (VOS-D112)
+//
+// A path dependency could supply an attribute macro or a foreign derive that rewrites an enum
+// after SH19 judged it.  The dependency side is `vos-link check-component` CC10; this is the
+// attribute side.  Each class of rejection is a control that asserts the message too.
+
+#[test]
+fn sh19h_the_allowed_attributes_pass() {
+    let _batch = Batch::begin();
+    for attr in [
+        "#[derive(Copy, Clone, Debug, PartialEq, Eq)]",
+        "#[derive(PartialOrd, Ord, Hash, Default,)]",
+        "#[repr(u8)]",
+        "#[repr(C)]",
+        "#[repr(transparent, C)]",
+        "#[must_use]",
+        "#[must_use = \"why\"]",
+        "#[inline]",
+        "#[inline(always)]",
+        "#[doc = \"text\"]",
+        "#[doc(hidden)]",
+        "#[allow(clippy::arithmetic_side_effects)]",
+        "#[warn(dead_code)]",
+        "#[deny(missing_docs, unused)]",
+        "#[forbid(unsafe_code)]",
+    ] {
+        accepted(&format!("{attr}\npub enum E {{ A, B }}\n"));
+    }
+    accepted("#[cfg(test)]\npub struct OnlyInTests;\npub enum E { A }\n");
+    // An attribute on a variant, and an inner attribute after the header, are read too.
+    accepted("pub enum E { #[default] A, B }\n");
+    // The real contract crate's own attributes.
+    accepted("#[derive(Copy, Clone, Debug, PartialEq, Eq)]\npub enum Upd { Changed, Unchanged }\n");
+}
+
+#[test]
+fn sh19h_a_path_attribute_or_a_foreign_derive_is_rejected() {
+    let _batch = Batch::begin();
+    rejected(
+        "#[evil::rewrite]\npub enum E { A }\n",
+        "`evil::..` is a path attribute",
+    );
+    rejected(
+        "#[vos_evil_contract::rewrite(x)]\npub enum E { A }\n",
+        "path attribute",
+    );
+    rejected(
+        "#[derive(evil::Gen)]\npub enum E { A }\n",
+        "`derive`: `::` is not allowed in the list",
+    );
+    rejected(
+        "#[derive(Copy, core::clone::Clone)]\npub enum E { A }\n",
+        "`derive`: `::` is not allowed in the list",
+    );
+    rejected(
+        "#[derive(Serialize)]\npub enum E { A }\n",
+        "`derive` argument `Serialize` is not on the closed list",
+    );
+    rejected(
+        "#[::evil::x]\npub enum E { A }\n",
+        "does not start with a plain name",
+    );
+    // An inner attribute and an attribute on a variant and a field are all read.
+    rejected("#![evil::x]\npub enum E { A }\n", "path attribute");
+    rejected("pub enum E { #[evil::x] A }\n", "path attribute");
+    rejected(
+        "pub struct S { #[evil::x] pub a: u8 }\npub enum E { A(S) }\n",
+        "path attribute",
+    );
+}
+
+#[test]
+fn sh19h_every_other_attribute_is_rejected() {
+    let _batch = Batch::begin();
+    for (attr, needle) in [
+        (
+            "#[cfg_attr(test, derive(Copy))]",
+            "`cfg_attr` is not on the closed list",
+        ),
+        ("#[path = \"x.rs\"]", "`path` is not on the closed list"),
+        ("#[macro_use]", "`macro_use` is not on the closed list"),
+        (
+            "#[proc_macro_derive(X)]",
+            "`proc_macro_derive` is not on the closed list",
+        ),
+        ("#[proc_macro]", "`proc_macro` is not on the closed list"),
+        (
+            "#[proc_macro_attribute]",
+            "`proc_macro_attribute` is not on the closed list",
+        ),
+        ("#[test]", "`test` is not on the closed list"),
+        ("#[cfg(not(test))]", "`cfg` is exactly `cfg(test)`"),
+        ("#[cfg(feature = \"x\")]", "`cfg` is exactly `cfg(test)`"),
+        ("#[cfg(test, x)]", "`cfg` is exactly `cfg(test)`"),
+        ("#[repr(align(4))]", "`repr`"),
+        (
+            "#[repr(u32)]",
+            "`repr` argument `u32` is not on the closed list",
+        ),
+        ("#[repr(packed)]", "`repr` argument `packed`"),
+        ("#[derive]", "`derive`: it takes a parenthesised list"),
+        ("#[derive()]", "`derive`: the list is empty"),
+        (
+            "#[derive(Copy Clone)]",
+            "`derive`: `Clone` is not allowed in the list",
+        ),
+        (
+            "#[derive(Copy, 1)]",
+            "`derive`: `1` is not allowed in the list",
+        ),
+        ("#[derive(Debug) extra]", "`derive`"),
+        ("#[inline(sometimes)]", "`inline` takes no arguments here"),
+        ("#[must_use(x)]", "`must_use` takes no arguments here"),
+        ("#[no_std(x)]", "`no_std` takes no arguments here"),
+        ("#[doc = include_str!(\"x\")]", "`doc` is"),
+        ("#[doc(alias = \"x\")]", "`doc` is"),
+        (
+            "#[allow(clippy::x, \"s\")]",
+            "`allow`: `s` is not allowed in the list",
+        ),
+        ("#[allow]", "`allow`: it takes a parenthesised list"),
+        ("#[allow()]", "`allow`: the list is empty"),
+        ("#[warn(a b)]", "`warn`: `b` is not allowed in the list"),
+        ("#[unsafe(no_mangle)]", "`unsafe` is not on the closed list"),
+        ("#[link(name = \"c\")]", "`link` is not on the closed list"),
+        (
+            "#[automatically_derived]",
+            "`automatically_derived` is not on the closed list",
+        ),
+    ] {
+        rejected(&format!("{attr}\npub enum E {{ A }}\n"), needle);
+    }
+    // `non_exhaustive` is reported by the closed-set rule, not twice.
+    rejected(
+        "#[non_exhaustive]\npub enum E { A }\n",
+        "is `#[non_exhaustive]`: a command set must be closed",
+    );
+}
+
+#[test]
+fn sh19h_attributes_are_a_contract_crate_rule_only() {
+    let _batch = Batch::begin();
+    let src = "#[evil::rewrite]\n#[derive(evil::Gen)]\npub enum E { A }\n";
+    for kind in ["production", "reference", "any"] {
+        let mut i = body(src);
+        i.vos_toml = Some(format!("class = \"K\"\nkind = \"{kind}\"\n"));
+        check(i, Expect::Silent("SH19".into()), kind);
+    }
+    check(body(src), Expect::Silent("SH19".into()), "no vos.toml");
+    for class in ["K", "C", "S", "M", "P", "H"] {
+        let mut i = contract_of_class(src, class);
+        i.vos_toml = Some(format!("class = \"{class}\"\nkind = \"contract\"\n"));
+        check(i, Expect::Fires("SH19".into()), class);
+    }
+}
+
+#[test]
+fn sh19h_the_message_is_one_line_with_control_characters_escaped() {
+    let r = run(&contract("#[derive(Copy, \"a\\nb\")]\npub enum E { A }\n"));
+    let text = r.render();
+    assert!(
+        text.contains("SH19 src/lib.rs:3 attribute: `derive`:"),
+        "{text}"
+    );
+    assert!(!text.lines().any(|l| l.trim() == "b\")]"), "{text}");
+}
+
+#[test]
+fn sh19h_the_spec_states_the_closed_lists() {
+    let spec = std::fs::read_to_string(
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../specs/VOS03-component-shape-checker.md"),
+    )
+    .unwrap();
+    let row = spec
+        .lines()
+        .find(|l| l.starts_with("| **SH19**"))
+        .expect("VOS03 has an SH19 row");
+    for t in vos_shape_check::command::DERIVE_ALLOWED
+        .iter()
+        .chain(vos_shape_check::command::REPR_ALLOWED.iter())
+    {
+        assert!(
+            row.contains(&format!("`{t}`")),
+            "the SH19 row does not state {t}"
+        );
+    }
+}
+
+#[test]
+fn sh19h_the_real_contract_crate_and_the_fixtures_pass() {
+    let real =
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../vos-sched-contract/src/lib.rs");
+    let text = std::fs::read_to_string(real).unwrap();
+    let mut i = lib(&text);
+    i.vos_toml = Some(CONTRACT_TOML.to_string());
+    check(i, Expect::Silent("SH19".into()), "vos-sched-contract");
+}

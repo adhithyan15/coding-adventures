@@ -968,6 +968,36 @@ no edit, signing operation, provider or trace event, storage, clock, network,
 or other external effect. Those compositions remain blockers; concrete HTTPS
 and live-provider readiness remain unavailable.
 
+A reviewed-path consuming entry point now closes the detached-certificate-key
+and caller-selected-`CertificateVerify`-role gaps for exact
+`CertificateVerify`-to-Finished-key transcript continuity. It accepts the
+strongest accumulated reviewed RSA server-path proof, takes ownership of one
+selected transcript, derives and validates the target certificate's
+SubjectPublicKeyInfo only through that retained path, and fixes the
+authenticated signature role to `Server`. It then uses the existing consuming
+transitions to authenticate the exact decoded body against the pre-message
+transcript, append that same body as one complete handshake encoding, and
+verify peer verify-data with one caller-supplied Finished key over the
+resulting post-message transcript. Non-copyable success evidence retains the
+complete reviewed path together with the exact body, authorized scheme,
+path-derived certificate key, before and after snapshots, owned transcript,
+Finished snapshot, and repository-owned Finished verdict. Every failure
+consumes the transcript and returns only a stable redacted category, so no
+partial state is returned for substitution or retry.
+
+The Finished key remains detached: role and selected-suite checks do not bind
+it to this handshake's ECDHE result, handshake traffic secret, or key-schedule
+evidence, and the result retains no such provenance. This bounded composition
+also does not prove the preceding server-flight order, append the Finished
+handshake encoding, verify the reviewed anchor's self-signature, select or
+enforce revocation, bind an HTTPS destination, protect records, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. It accesses
+no credential and causes no edit, signing operation, provider or trace event,
+storage, clock, network, or other external effect. Those key-schedule,
+ordered-state, anchor, revocation, destination, record, and transport
+compositions remain blockers; concrete HTTPS and live-provider readiness
+remain unavailable.
+
 A bounded `tls13-reviewed-server-path-certificate-verify` composition closes
 the detached-key and caller-selected-role gaps for one reviewed RSA server
 path. It accepts only the strongest accumulated reviewed server-path proof,
@@ -6531,6 +6561,46 @@ Authenticated handshake progression, record protection, certificate and
 revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
 and live-provider readiness remain unavailable.
 
+The same exact-message binding now also derives the server Finished key only
+from its retained server handshake traffic secret. Caller-owned Finished-key
+storage must select the exact same data-driven cipher suite and the `Server`
+sender role before any output mutation. The composer then imports only the
+retained server secret under the suite-selected SHA-256 or SHA-384 policy and
+delegates the fixed `"finished"` label derivation to the repository-owned
+Finished boundary. Non-copyable success evidence retains the complete CH1,
+HelloRetryRequest, CH2, final ServerHello, base-schedule, and handshake-
+traffic-secret proof beside the borrowed key view into caller-owned wipe-on-
+drop storage. No detached traffic secret, suite, role, label, or key is
+accepted; stable failures retain no secret bytes.
+
+This provenance binding does not verify peer Finished data, advance the
+transcript beyond ServerHello, authenticate CertificateVerify, prove later
+handshake-message order, protect records, validate certificates, establish
+trust, enforce revocation, perform I/O, authorize HTTP or OAuth transport, or
+open a network connection. Authenticated handshake progression, certificate
+and revocation policy, record protection, and HTTP composition remain
+prerequisites; concrete HTTPS and live-provider readiness remain unavailable.
+
+The exact retry server Finished-key proof can now also reconstruct a fresh
+selected transcript state only from its retained CH1, HelloRetryRequest, CH2,
+and final ServerHello message graph and the original transcript policy retained
+by that graph. No caller-supplied transcript, policy, message, suite, hash, or
+snapshot is accepted. The reconstruction must reproduce both the retained
+selected suite and the exact ServerHello transcript snapshot before success.
+Non-copyable success evidence keeps the complete retry-derived server
+Finished-key provenance beside the reconstructed state, providing a bounded
+starting point for later authenticated server-flight transcript composition
+without detaching the key schedule from the retry messages that selected it.
+
+This reconstruction does not advance beyond ServerHello, authenticate or
+sequence EncryptedExtensions, Certificate, CertificateVerify, or Finished,
+consume authenticated records, validate certificates, establish trust,
+enforce revocation, protect records, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Authenticated ordered transcript
+advancement and all remaining TLS, certificate, revocation, HTTP, and audited
+transport composition remain prerequisites; concrete HTTPS and live-provider
+readiness remain unavailable.
+
 An allocation-free `tls13-retry-handshake-traffic-key-material-binding`
 prerequisite now accepts only the exact-message retry handshake-traffic-secret
 proof above, one explicit client-or-server sender role, and caller-owned
@@ -6683,6 +6753,28 @@ OAuth transport, or open a network connection. Body-specific processing,
 transcript and signature authentication, certificate and revocation policy,
 and HTTP/TLS transport composition remain prerequisites; concrete HTTPS and
 live-provider readiness remain unavailable.
+
+The fresh retry server transcript-continuation proof can now be consumed
+together with one fresh authenticated ordered server-flight owner only when
+both retain the same exact handshake-traffic-secret object. Construction also
+requires the ordered owner to remain at `ExpectEncryptedExtensions` with zero
+records consumed, no partial message, and no failure, and requires the
+continuation transcript, ordered record state, and retained server Finished
+key to select the same suite. The continuation snapshot must still equal the
+exact ServerHello snapshot retained by that shared retry proof. Success moves
+the complete ordered record owner and reconstructed transcript into one
+non-copyable wrapper while retaining the exact retry-derived server Finished-
+key proof; callers cannot substitute a detached transcript, Finished key,
+traffic-secret proof, record state, or resumed flight position.
+
+This provenance join does not open a record, advance the transcript, expose a
+mutable transcript, validate or authenticate a server-flight message, verify
+CertificateVerify or Finished, validate certificates, establish trust,
+enforce revocation, protect application data, perform I/O, authorize HTTP or
+OAuth transport, or open a network connection. Authenticated message capture,
+ordered transcript advancement, certificate and revocation policy, and all
+remaining TLS/HTTP/audited transport composition remain prerequisites;
+concrete HTTPS and live-provider readiness remain unavailable.
 
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length

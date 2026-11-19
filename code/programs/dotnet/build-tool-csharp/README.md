@@ -74,7 +74,7 @@ The shared source hasher recognizes an exact `rust/fixed-point` repository bound
   a changed shared input to every exact consumer.
 - Package hashes sort canonical repository-relative UTF-8 paths and frame each
   path and exact raw file body with unsigned 64-bit big-endian lengths before
-  SHA-256. Native tests now replay all 22 neutral source-collection cases and
+  SHA-256. Native tests now replay all 24 neutral source-collection cases and
   eight hashing/cache package-digest cases, including both before/after
   consumers of one exact shared Rust manifest. Dependency and combined-digest
   framing remain a separate contract.

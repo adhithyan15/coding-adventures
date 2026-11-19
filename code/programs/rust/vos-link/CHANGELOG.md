@@ -4,6 +4,41 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-039b-2b, VOS-D104, VOS-D055 bound half, VOS-D112)
+
+- **CC09**, `bound` rows against the ceilings of `contract.vos` (`src/bounds.rs`), run by `check-component` on
+  every implementation.  The operation-to-ceiling mapping is DERIVED from the parsed document (X itself when the
+  contract has a ceiling for X, else X with ONE `_out` or `_img` suffix stripped, else ghost-only and listed in a
+  note), never declared: the `realises=` field of VOS02 4.7 is not built (the bindings reader rejects it and an
+  author-declared map could point `insert_img` at the loosest ceiling).  Fails on a non-literal bound, a bound above
+  its ceiling, a missing `steps` or `heap` row of a mapped operation (production and `any`), and a ceiling
+  operation that no document operation maps to.  `depth` is compared when present, a note when absent;
+  `reference` rows are optional.  `MAP_SUFFIXES` is asserted against VOS04 by a test.
+- **CC10**, the dependencies and build of a contract crate (`check-component`, kind `contract`): no entry in
+  `[dependencies]`, `[build-dependencies]` or `[target.*.dependencies]` (the underscore alias too), no `build` key or
+  `build.rs`, no `[lib] proc-macro`; `[dev-dependencies]` allowed.  Closes the dependency half of VOS-D112 (a path
+  dependency supplying an attribute macro or derive).  An unreadable `Cargo.toml` is no verdict.
+- **`check-publish [--root R]`** (`src/publish.rs`), the VOS-D104 sweep: the direct `vos-*` children with a
+  `Cargo.toml` of `code/packages/rust` and `code/programs/rust` must say `publish = false`, except kinds
+  `production`, `reference` and `contract` (exempt with a note: the publish policy is undecided).  `PB01` missing or
+  not `false`, `PB02` unreadable TOML, a symlinked crate directory or `Cargo.toml` is no verdict.  Runs in this
+  crate's BUILD and BUILD_windows.
+- `publish = false` in this crate's `Cargo.toml`.
+- Tests: `bounds` (7), `publish` (18), CC09 controls (9) in `component`, CC10 controls (5) in `contract`; the
+  component fixtures name their contract and carry `op` and `bound` rows.
+
+### Fixed (security review of VOS-039b-2b)
+
+- `check-publish` printed author-controlled `vos-*` directory names raw, so a directory named with a newline or an
+  ANSI escape could forge report lines; every name in PB01, PB02 and the `exempt` note now goes through `esc()`.
+  Test (unix only: Windows forbids such names).
+- The kind exemption was the author's word alone (a tooling crate escaped PB01 by adding a one-line `vos.toml`).  A
+  kind-exempt crate is now exempt only when `repository_inputs.go` registers it (`vosImplementationRow` or
+  `vosContractRow`, read by CC05's own scanner); otherwise the new code **PB03**.  A missing or unreadable row file
+  is no verdict (read only when a crate claims an exempt kind).
+- CC10 stands alone: it also refuses a top-level `[patch]`, `[replace]` or `[workspace]` and a `[lib] crate-type`
+  naming `proc-macro` (SH15 caught these too).
+
 ### Fixed (security review of VOS-039b-2a)
 
 - `check_enums`: the constructor-written-with-braces lookup is a precomputed map (enum name to constructor set), not

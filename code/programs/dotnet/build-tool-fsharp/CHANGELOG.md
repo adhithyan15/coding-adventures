@@ -6,6 +6,9 @@
 
 ## Unreleased
 
+- Expand the F# source-collection facade replay to include the Swift hash-map
+  consumer's DT18 repository-boundary fixture and the 24-case corpus count.
+
 - Fix two F# conformance tests to pass string element types to xUnit array
   equality assertions, preserving ordered sequence comparison.
 

@@ -1304,6 +1304,7 @@ jobs:
         shell: bash
         run: |
           python3 -m unittest discover -s code/scripts/tests -p 'test_assert_kiln_sandbox_tests.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_census_not_clean.py'
 
       # Runs even when the tests failed: the JSON stream is the only record of
       # which test failed and why, and this step prints it. It also fails the

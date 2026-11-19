@@ -24,6 +24,29 @@ const ANY: &str = "vos-fix-comp-any";
 
 const DOC: &str = "warrant vos_fix_comp v1
   record Impl(x: U8)
+  op init() -> Impl
+  op insert_out(s: Impl, t: U8) -> Impl
+  op insert_img(s: Impl, t: U8) -> Impl
+  op remove(s: Impl, t: U8) -> Impl
+  op dispatch_out(s: Impl) -> Impl
+  op alpha_w(s: Impl) -> U8
+  bound init:
+    steps <= 80
+    heap <= 0
+  bound insert_out:
+    steps <= 160
+    heap <= 0
+  bound insert_img:
+    steps <= 160
+    heap <= 0
+  bound remove:
+    steps <= 160
+    heap <= 0
+  bound dispatch_out:
+    steps <= 160
+    heap <= 0
+  bound alpha_w:
+    steps <= 999
   claim c1:
     forall v: Bool. f(v) == f(v)
   claim c2:
@@ -73,7 +96,7 @@ fn manifest(claims: &[&str], property: i64, fuzz: i64, cases: i64, failing: &[&s
 }
 
 fn vos_toml(kind: &str, extra: &str) -> String {
-    format!("class = \"K\"\nkind = \"{kind}\"\nevidence-features = [\"ghost\"]\ncoverage-floor = 95\n{extra}")
+    format!("class = \"K\"\nkind = \"{kind}\"\ncontract = \"vos-sched-contract\"\nevidence-features = [\"ghost\"]\ncoverage-floor = 95\n{extra}")
 }
 
 const EXCUSED: &str = "excused-controls = [{ id = \"m/negctl/exhaustive/g/field-flip\", reason = \"VOS-D098\" }, { id = \"m/negctl/property/g/field-flip\", reason = \"VOS-D098\" }, { id = \"m/negctl/fuzz/g/field-flip\", reason = \"VOS-D098\" }]\n";
@@ -249,7 +272,7 @@ fn a_crate_without_an_evidence_feature_gets_no_features_flag() {
     let r = good("gb-nofeat", PROD, "production", false);
     r.write(
         &p(PROD, "vos.toml"),
-        "kind = \"production\"\ncoverage-floor = 96\n",
+        "kind = \"production\"\ncontract = \"vos-sched-contract\"\ncoverage-floor = 96\n",
     );
     assert!(gen_build(&r.pkg(PROD), None).unwrap().findings.is_empty());
     let b = r.read(&p(PROD, "BUILD"));
@@ -900,7 +923,7 @@ fn a_missing_floor_fails_and_gen_build_refuses_it() {
     let r = good("cc07-none", PROD, "production", false);
     r.write(
         &p(PROD, "vos.toml"),
-        "kind = \"production\"\nevidence-features = [\"ghost\"]\n",
+        "kind = \"production\"\ncontract = \"vos-sched-contract\"\nevidence-features = [\"ghost\"]\n",
     );
     only(&run(&r, PROD), "CC07", "declares no `coverage-floor`");
     only(
@@ -1655,4 +1678,254 @@ fn m4_resolved_withdrawn_done_in_this_pr_and_duplicate_rows_do_not_excuse() {
         "| VOS-D098 | x | y | P2 | open |\n",
     );
     assert!(gen_build(&r.pkg(PROD), None).unwrap().findings.is_empty());
+}
+
+// --- CC09: the `bound` rows against the ceilings (VOS-039b-2b) -------------------------------------
+
+/// Rewrite the fixture document with `f`, and re-bind the evidence manifest to it (CC08 would
+/// otherwise report the stale digest, and each control must fail for exactly one reason).
+fn with_doc(r: &Repo, name: &str, f: impl Fn(&str) -> String) {
+    let doc = f(DOC);
+    assert_ne!(doc, DOC, "the edit changed nothing");
+    r.write(&format!("code/specs/{name}.warrant"), doc);
+    put_manifest(r, name, manifest(&["c1", "c2"], 4096, 5000, 10, &[]));
+}
+
+#[test]
+fn cc09_the_passing_fixture_carries_its_notes() {
+    let r = good("cc09-pass", PROD, "production", false);
+    let o = run(&r, PROD);
+    assert!(o.findings.is_empty(), "{}", show(&o));
+    // `alpha_w` (ghost-only, a row above every ceiling) is listed, not compared; `depth` absent.
+    assert!(o
+        .notes
+        .iter()
+        .any(|n| n.contains("\"alpha_w\" map to no contract ceiling")));
+    assert!(o
+        .notes
+        .iter()
+        .any(|n| n.contains("`depth` is not evidenced for")));
+}
+
+#[test]
+fn cc09_control_one_step_over_the_ceiling_on_one_image_operation() {
+    let r = good("cc09-steps", PROD, "production", false);
+    with_doc(&r, PROD, |d| {
+        d.replacen(
+            "bound insert_img:\n    steps <= 160",
+            "bound insert_img:\n    steps <= 161",
+            1,
+        )
+    });
+    only(
+        &run(&r, PROD),
+        "CC09",
+        "bound \"insert_img\" row \"steps\" <= 161 is above the ceiling 160 of the contract operation \"insert\"",
+    );
+}
+
+#[test]
+fn cc09_control_a_heap_bound_above_zero() {
+    let r = good("cc09-heap", PROD, "production", false);
+    with_doc(&r, PROD, |d| {
+        d.replacen(
+            "bound init:\n    steps <= 80\n    heap <= 0",
+            "bound init:\n    steps <= 80\n    heap <= 1",
+            1,
+        )
+    });
+    only(
+        &run(&r, PROD),
+        "CC09",
+        "row \"heap\" <= 1 is above the ceiling 0 of the contract operation \"init\"",
+    );
+}
+
+#[test]
+fn cc09_control_a_deleted_heap_or_steps_row() {
+    let r = good("cc09-noheap", PROD, "production", false);
+    with_doc(&r, PROD, |d| {
+        d.replacen(
+            "bound remove:\n    steps <= 160\n    heap <= 0\n",
+            "bound remove:\n    steps <= 160\n",
+            1,
+        )
+    });
+    only(
+        &run(&r, PROD),
+        "CC09",
+        "operation \"remove\" (ceiling operation \"remove\") has no heap row",
+    );
+    let r = good("cc09-nosteps", PROD, "any", false);
+    with_doc(&r, PROD, |d| {
+        d.replacen(
+            "bound dispatch_out:\n    steps <= 160\n    heap <= 0\n",
+            "bound dispatch_out:\n    heap <= 0\n",
+            1,
+        )
+    });
+    only(
+        &run(&r, PROD),
+        "CC09",
+        "operation \"dispatch_out\" (ceiling operation \"dispatch\") has no steps row",
+    );
+}
+
+#[test]
+fn cc09_control_a_deleted_bound_block_and_a_deleted_operation() {
+    // The `bound` block is gone but the operation is still declared: both rows are missing.
+    let r = good("cc09-noblock", PROD, "production", false);
+    with_doc(&r, PROD, |d| {
+        d.replacen("  bound remove:\n    steps <= 160\n    heap <= 0\n", "", 1)
+    });
+    let o = run(&r, PROD);
+    assert_eq!(o.findings.len(), 2, "{}", show(&o));
+    has(
+        &o,
+        "CC09",
+        "operation \"remove\" (ceiling operation \"remove\") has no steps row",
+    );
+    has(&o, "CC09", "has no heap row");
+    // The operation itself is gone: the ceiling operation has no mapped operation at all.
+    let r = good("cc09-noop", PROD, "production", false);
+    with_doc(&r, PROD, |d| {
+        d.replacen("  op remove(s: Impl, t: U8) -> Impl\n", "", 1)
+            .replacen("  bound remove:\n    steps <= 160\n    heap <= 0\n", "", 1)
+    });
+    only(
+        &run(&r, PROD),
+        "CC09",
+        "ceilings for operation \"remove\" but no operation of the document maps to it",
+    );
+}
+
+#[test]
+fn cc09_control_a_bound_that_is_not_a_literal_is_not_a_bound() {
+    let r = good("cc09-expr", PROD, "production", false);
+    with_doc(&r, PROD, |d| {
+        d.replacen(
+            "bound init:\n    steps <= 80",
+            "bound init:\n    steps <= 40 + 40",
+            1,
+        )
+    });
+    only(
+        &run(&r, PROD),
+        "CC09",
+        "bound \"init\" row \"steps\" <= is not an integer literal",
+    );
+}
+
+#[test]
+fn cc09_depth_is_compared_when_present_and_a_note_when_absent() {
+    let r = good("cc09-depth", PROD, "production", false);
+    with_doc(&r, PROD, |d| {
+        d.replacen(
+            "bound init:\n    steps <= 80",
+            "bound init:\n    depth <= 3\n    steps <= 80",
+            1,
+        )
+    });
+    only(
+        &run(&r, PROD),
+        "CC09",
+        "row \"depth\" <= 3 is above the ceiling 2",
+    );
+    let r = good("cc09-depth-ok", PROD, "production", false);
+    with_doc(&r, PROD, |d| {
+        d.replacen(
+            "bound init:\n    steps <= 80",
+            "bound init:\n    depth <= 2\n    steps <= 80",
+            1,
+        )
+    });
+    let o = run(&r, PROD);
+    assert!(o.findings.is_empty(), "{}", show(&o));
+    // `init` now has its depth row, so it is not in the absent list.
+    let n = o
+        .notes
+        .iter()
+        .find(|n| n.contains("`depth` is not evidenced"))
+        .unwrap();
+    assert!(!n.contains("\"init\""), "{n}");
+}
+
+#[test]
+fn cc09_a_reference_crate_needs_no_rows_but_still_realises_every_ceiling_operation() {
+    // No `bound` block at all: a reference implementation has none (VOS02 section 4.7).
+    let r = good("cc09-ref", PROD, "reference", false);
+    with_doc(&r, PROD, |d| {
+        let cut = d.find("  bound init:").unwrap();
+        d[..cut].to_string() + &d[d.find("  claim c1:").unwrap()..]
+    });
+    let o = run(&r, PROD);
+    assert!(o.findings.is_empty(), "{}", show(&o));
+    // Rows that ARE present are compared.
+    let r = good("cc09-ref-over", PROD, "reference", false);
+    with_doc(&r, PROD, |d| d.replacen("steps <= 80", "steps <= 81", 1));
+    only(
+        &run(&r, PROD),
+        "CC09",
+        "row \"steps\" <= 81 is above the ceiling 80",
+    );
+    // And an operation of the contract that nobody realises fails for every kind.
+    let r = good("cc09-ref-noop", PROD, "reference", false);
+    with_doc(&r, PROD, |d| {
+        d.replacen("  op init() -> Impl\n", "", 1).replacen(
+            "  bound init:\n    steps <= 80\n    heap <= 0\n",
+            "",
+            1,
+        )
+    });
+    only(
+        &run(&r, PROD),
+        "CC09",
+        "ceilings for operation \"init\" but no operation",
+    );
+}
+
+#[test]
+fn cc09_cannot_be_applied_without_a_contract_or_a_document() {
+    let r = good("cc09-nocontract", PROD, "production", false);
+    r.edit(
+        &p(PROD, "vos.toml"),
+        "contract = \"vos-sched-contract\"\n",
+        "",
+    );
+    only(
+        &run(&r, PROD),
+        "CC09",
+        "vos.toml names no valid `contract` package",
+    );
+    let r = good("cc09-nocontract2", PROD, "production", false);
+    r.edit(
+        &p(PROD, "vos.toml"),
+        "\"vos-sched-contract\"",
+        "\"vos-nothere\"",
+    );
+    only(
+        &run(&r, PROD),
+        "CC09",
+        "contract package \"vos-nothere\" has no contract.vos",
+    );
+    let r = good("cc09-badcontract", PROD, "production", false);
+    r.write(
+        "code/packages/rust/vos-sched-contract/contract.vos",
+        "garbage\n",
+    );
+    only(
+        &run(&r, PROD),
+        "CC09",
+        "contract.vos of \"vos-sched-contract\"",
+    );
+    let r = good("cc09-nodoc", PROD, "production", false);
+    std::fs::remove_file(r.path(&format!("code/specs/{PROD}.warrant"))).unwrap();
+    has(
+        &run(&r, PROD),
+        "CC09",
+        "is missing, so there are no bound rows to compare",
+    );
+    let r = good("cc09-baddoc", PROD, "production", false);
+    r.write(&format!("code/specs/{PROD}.warrant"), "not a document\n");
+    has(&run(&r, PROD), "CC09", "code/specs/vos-fix-comp.warrant:");
 }

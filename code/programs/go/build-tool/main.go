@@ -1215,13 +1215,11 @@ func hashPackageWithRepositoryInputs(
 			append(append([]string{}, warrantAssurancePaths...), fixedPointReporterFileInputs...), fixedPointReporterTreePaths)
 	case "rust/warrant-ir":
 		return hasher.HashPackageWithRepositoryInputsAndTrees(pkg, repoRoot, fixedPointWarrantIRFileInputs, fixedPointWarrantIRTreePaths)
-	case "rust/game-clock":
-		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, gameClockInputPaths)
-	case "typescript/game-input-frame":
-		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, typescriptGameInputFrameInputs)
-	default:
-		return fallback(pkg)
 	}
+	if inputs := repositoryInputsForPackage(pkg.Name); len(inputs) > 0 {
+		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, inputs)
+	}
+	return fallback(pkg)
 }
 
 func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) int {

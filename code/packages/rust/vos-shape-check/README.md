@@ -63,6 +63,13 @@ let report = check_crate(&input, &Policy::default());
 println!("{}", report.render());
 ```
 
+## SH19 and the contract crate's attributes (VOS-D112)
+
+For `kind = "contract"` crates SH19 also holds every attribute to a closed list (derive of the bare core traits,
+`repr(u8|C|transparent)`, `no_std`, the lint attributes, `doc`, `must_use`, `inline`, `default`, exactly
+`cfg(test)`), so a path attribute or a foreign derive cannot rewrite a command enum after it was judged.  The
+dependency half is `vos-link check-component` CC10.
+
 ## Tests
 
 `cargo test -p vos-shape-check` (run from `code/packages/rust`): a clean and a

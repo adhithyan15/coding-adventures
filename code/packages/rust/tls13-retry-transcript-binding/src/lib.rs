@@ -98,6 +98,15 @@ impl<
     pub const fn transcript(&self) -> &SelectedTls13Transcript {
         &self.transcript
     }
+
+    /// Reconstruct a fresh selected state from the retained exact messages.
+    ///
+    /// The original validated transcript policy is selected internally. No
+    /// detached message, policy, suite, hash, or snapshot enters this path.
+    pub fn reconstruct_transcript(&self) -> Result<SelectedTls13Transcript, TranscriptError> {
+        let rebound = bind_retry_transcript(self.messages, self.transcript.policy())?;
+        Ok(rebound.transcript)
+    }
 }
 
 impl fmt::Debug for BoundRetryTranscript<'_, '_, '_, '_, '_, '_, '_, '_, '_, '_, '_> {

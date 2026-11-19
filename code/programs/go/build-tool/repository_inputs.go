@@ -183,6 +183,14 @@ var (
 		"code/specs/vos-probe-ready.warrant",
 		"code/specs/vos-sched-fp-bitmap.warrant",
 	}
+	// vosPublishGlobs are exactly isVosPublishInput as globs: the two files `vos-link check-publish`
+	// reads in every direct `vos-*` child of the two Rust roots (VOS-D104).
+	vosPublishGlobs = []string{
+		"code/packages/rust/vos-*/Cargo.toml",
+		"code/packages/rust/vos-*/vos.toml",
+		"code/programs/rust/vos-*/Cargo.toml",
+		"code/programs/rust/vos-*/vos.toml",
+	}
 	vosShapeGrammarPaths = []string{
 		"code/grammars/rust/rust1.97.0-e2021.tokens",
 		"code/grammars/rust/rust1.97.0-e2024.tokens",
@@ -255,6 +263,8 @@ var (
 	fixedPointWarrantIRTreePaths = append([]string{}, fixedPointSourceTreePaths...)
 	fixedPointReporterInputs     = append(append([]string{}, fixedPointReporterFileInputs...), fixedPointReporterTreePaths...)
 	fixedPointWarrantIRInputs    = append(append([]string{}, fixedPointWarrantIRFileInputs...), fixedPointWarrantIRTreePaths...)
+	dt18HashMapPaths          = []string{"code/specs/DT18-hash-map.md", "code/specs/DT18-hash-map-dart-profile.md", "code/specs/fixtures/hash-map-v1"}
+	swiftHashMapFixtureInputs = []string{"code/specs/fixtures/hash-map-v1/cases.json"}
 	gameClockInputPaths          = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
@@ -459,6 +469,13 @@ var (
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name:     "swift/hash-map",
+		language: "swift",
+		inputs:   "the shared DT18 hash-map contract and v1 fixture",
+		matches:  isDt18HashMapInput,
+		paths:    dt18HashMapPaths,
+	},
+	{
 		name:     "rust/hash-functions",
 		language: "rust",
 		inputs:   "the shared DT17 byte-hash and Dart profile contract plus v1 fixture",
@@ -517,9 +534,10 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "rust/programs/vos-link",
 		language: "rust",
-		inputs:   "the vos_contract and vos_document grammar pairs vos-manifest embeds",
-		matches:  isVosGrammarInput,
+		inputs:   "the vos_contract and vos_document grammar pairs vos-manifest embeds, and the Cargo.toml and vos.toml of every vos-* crate, which its BUILD sweeps outside Cargo (check-publish, VOS-D104)",
+		matches:  func(changed string) bool { return isVosGrammarInput(changed) || isVosPublishInput(changed) },
 		paths:    vosGrammarPaths,
+		globs:    vosPublishGlobs,
 	},
 	vosImplementationRow("vos-sched-fp-bitmap"),
 	vosImplementationRow("vos-sched-any"),
@@ -1228,6 +1246,32 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	},
 }
 
+// repositoryInputsForPackage returns exact repository-relative files that
+// package tests read and that must participate in the fallback cache key.
+func repositoryInputsForPackage(packageName string) []string {
+	switch packageName {
+	case "rust/game-clock":
+		return gameClockInputPaths
+	case "typescript/game-input-frame":
+		return typescriptGameInputFrameInputs
+	case "swift/hash-map":
+		return swiftHashMapFixtureInputs
+	default:
+		return nil
+	}
+}
+
+// isDt18HashMapInput selects the two exact shared contracts and the
+// versioned v1 fixture tree, excluding neighboring spec and fixture names.
+func isDt18HashMapInput(changed string) bool {
+	if path.Clean(changed) != changed {
+		return false
+	}
+	return changed == "code/specs/DT18-hash-map.md" ||
+		changed == "code/specs/DT18-hash-map-dart-profile.md" ||
+		strings.HasPrefix(changed, "code/specs/fixtures/hash-map-v1/")
+}
+
 // warrantLaneRegistryPaths is the consumer registry. Every Rust package that
 // uses ca-assurance-report records one rung per registry lane in its
 // assurance_report.json (WD-004b2), so adding, flipping or removing a row
@@ -1524,6 +1568,25 @@ func isCtCompareInput(changed string) bool {
 func isVosGrammarInput(changed string) bool {
 	return strings.HasPrefix(changed, "code/grammars/vos_contract/") ||
 		strings.HasPrefix(changed, "code/grammars/vos_document/")
+}
+
+// isVosPublishInput reports whether a changed path is a file `vos-link check-publish` reads: the
+// `Cargo.toml` or `vos.toml` of a DIRECT child named `vos-*` of `code/packages/rust` or
+// `code/programs/rust` (VOS-D104).  The sweep does not recurse, so neither does this.
+//
+//	code/packages/rust/vos-manifest/Cargo.toml        → true
+//	code/programs/rust/vos-capacity-probe/vos.toml    → true
+//	code/packages/rust/vos-manifest/src/Cargo.toml    → false (nested)
+//	code/packages/rust/vosx/Cargo.toml                → false
+//	code/packages/python/vos-a/Cargo.toml             → false
+func isVosPublishInput(changed string) bool {
+	parts := strings.Split(changed, "/")
+	return len(parts) == 5 &&
+		parts[0] == "code" &&
+		(parts[1] == "packages" || parts[1] == "programs") &&
+		parts[2] == "rust" &&
+		strings.HasPrefix(parts[3], "vos-") &&
+		(parts[4] == "Cargo.toml" || parts[4] == "vos.toml")
 }
 
 // isVosToolInput reports whether a changed path is a source of a tool that a VOS
