@@ -11,8 +11,11 @@
 //! certificate's RSA key, and delegate signature verification to repository-
 //! owned code. A stronger transition binds only the five complete revocation
 //! variants to the no-PSK server-flight position that expects
-//! `CertificateVerify`, then advances that state to expect `Finished`. It does
-//! not authenticate Finished, records, TLS, HTTP, OAuth, or network readiness.
+//! `CertificateVerify`, then advances that state to expect `Finished`. A final
+//! bounded transition admits one server-role `Finished` verdict for the same
+//! selected suite and completes that exact flight. It does not prove that the
+//! verdict's transcript follows the retained `CertificateVerify`, authenticate
+//! records, or provide TLS, HTTP, OAuth, or network readiness.
 
 #![forbid(unsafe_code)]
 
@@ -34,6 +37,8 @@ use tls13_certificate_verify_transcript_binding::{
     verify_transcript_bound_certificate_verify, HashedTranscriptBoundCertificateVerifyInput,
     VerifiedTranscriptBoundCertificateVerify,
 };
+use tls13_cipher_suite_policy::SelectedCipherSuite;
+use tls13_finished::{FinishedRole, VerifiedFinished};
 use tls13_handshake::Tls13HandshakeType;
 use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightError};
 use tls13_rsa_pss_certificate_verify::Tls13RsaPssCertificateVerifyErrorKind;
@@ -84,7 +89,11 @@ mod alternative_revocation_evidence_sealed {
 }
 
 mod complete_revocation_certificate_verify_sealed {
-    pub trait Sealed {}
+    use tls13_cipher_suite_policy::SelectedCipherSuite;
+
+    pub trait Sealed {
+        fn selected_suite(&self) -> SelectedCipherSuite;
+    }
 }
 
 impl<'server_name, 'host, 'target, 'target_encoded, Proof, IntermediateRevocation>
@@ -1951,6 +1960,13 @@ macro_rules! impl_complete_revocation_certificate_verify_sealed {
                 Evidence,
             >
         {
+            fn selected_suite(&self) -> SelectedCipherSuite {
+                self.verification()
+                    .hashed_input()
+                    .bound_input()
+                    .transcript()
+                    .selected_suite()
+            }
         }
     };
 }
@@ -2044,6 +2060,151 @@ pub fn advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify
     )
 }
 
+/// Stable, payload-free failures while completing the reviewed server flight.
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub enum ReviewedServerFinishedTransitionErrorKind {
+    /// The Finished verdict authenticated the client sender rather than server.
+    WrongEndpointRole,
+    /// The Finished verdict selected a different suite than CertificateVerify.
+    CipherSuiteMismatch,
+    /// The retained server flight did not accept Finished at its current state.
+    UnexpectedFlightState,
+}
+
+/// One reviewed server-Finished transition failure with no retained peer data.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ReviewedServerFinishedTransitionError {
+    kind: ReviewedServerFinishedTransitionErrorKind,
+}
+
+impl ReviewedServerFinishedTransitionError {
+    /// Return the stable failure category.
+    #[must_use]
+    pub const fn kind(self) -> ReviewedServerFinishedTransitionErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for ReviewedServerFinishedTransitionError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "reviewed TLS 1.3 server Finished transition error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for ReviewedServerFinishedTransitionError {}
+
+/// Non-copyable evidence that exact reviewed CertificateVerify and server
+/// Finished verdicts completed one no-PSK server flight under the same suite.
+pub struct CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished<
+    'flight,
+    'verification,
+    'finished,
+    Verification: ?Sized,
+> {
+    server_flight: &'flight mut NoPskServerFlight,
+    verification: &'verification Verification,
+    finished: &'finished VerifiedFinished,
+}
+
+impl<'verification, 'finished, Verification: ?Sized>
+    CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished<
+        '_,
+        'verification,
+        'finished,
+        Verification,
+    >
+{
+    /// Return the completed exact server flight.
+    #[must_use]
+    pub const fn server_flight(&self) -> &NoPskServerFlight {
+        self.server_flight
+    }
+
+    /// Return the exact complete-revocation CertificateVerify verdict.
+    #[must_use]
+    pub const fn verification(&self) -> &'verification Verification {
+        self.verification
+    }
+
+    /// Return the exact server Finished verdict.
+    #[must_use]
+    pub const fn finished(&self) -> &'finished VerifiedFinished {
+        self.finished
+    }
+}
+
+impl<Verification: ?Sized> fmt::Debug
+    for CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished<
+        '_,
+        '_,
+        '_,
+        Verification,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished")
+    }
+}
+
+/// Complete the exact retained no-PSK server flight only with a server-role
+/// Finished verdict for the same cipher suite as retained CertificateVerify.
+///
+/// Role and suite checks happen before the ordering policy is invoked. The
+/// result retains both cryptographic verdicts and the completed flight. This
+/// bounded transition does not establish that Finished's retained transcript
+/// hash follows the exact CertificateVerify message in one encoded stream.
+#[allow(private_bounds)]
+pub fn complete_no_psk_server_flight_after_reviewed_revocation_finished<
+    'flight,
+    'verification,
+    'finished,
+    Verification: ?Sized + complete_revocation_certificate_verify_sealed::Sealed,
+>(
+    ordered: OrderedNoPskServerFlightReviewedRevocationCertificateVerify<
+        'flight,
+        'verification,
+        Verification,
+    >,
+    finished: &'finished VerifiedFinished,
+) -> Result<
+    CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished<
+        'flight,
+        'verification,
+        'finished,
+        Verification,
+    >,
+    ReviewedServerFinishedTransitionError,
+> {
+    if finished.role() != FinishedRole::Server {
+        return Err(ReviewedServerFinishedTransitionError {
+            kind: ReviewedServerFinishedTransitionErrorKind::WrongEndpointRole,
+        });
+    }
+    if finished.selected_suite() != ordered.verification.selected_suite() {
+        return Err(ReviewedServerFinishedTransitionError {
+            kind: ReviewedServerFinishedTransitionErrorKind::CipherSuiteMismatch,
+        });
+    }
+    ordered
+        .server_flight
+        .accept(Tls13HandshakeType::Finished)
+        .map_err(|_| ReviewedServerFinishedTransitionError {
+            kind: ReviewedServerFinishedTransitionErrorKind::UnexpectedFlightState,
+        })?;
+
+    Ok(
+        CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished {
+            server_flight: ordered.server_flight,
+            verification: ordered.verification,
+            finished,
+        },
+    )
+}
+
 #[allow(clippy::too_many_arguments)]
 fn verify_server_certificate_verify_after_role<
     'certificate,
@@ -2124,16 +2285,19 @@ fn require_server_role(
 mod tests {
     use super::{
         advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify,
-        alternative_revocation_evidence_sealed, complete_revocation_certificate_verify_sealed,
-        direct_revocation_evidence_sealed, double_nested_revocation_evidence_sealed,
-        nested_revocation_evidence_sealed, recursive_revocation_evidence_sealed,
-        require_server_role, validate_leaf_public_key,
+        alternative_revocation_evidence_sealed,
+        complete_no_psk_server_flight_after_reviewed_revocation_finished,
+        complete_revocation_certificate_verify_sealed, direct_revocation_evidence_sealed,
+        double_nested_revocation_evidence_sealed, nested_revocation_evidence_sealed,
+        recursive_revocation_evidence_sealed, require_server_role, validate_leaf_public_key,
         verify_https_dns_destination_reviewed_direct_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_double_nested_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_intermediate_status_responder_revocation_responder_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_nested_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_recursive_responder_no_check_complete_fixed_path_revocation_certificate_verify,
+        CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished,
         OrderedNoPskServerFlightReviewedRevocationCertificateVerify,
+        ReviewedServerFinishedTransitionError, ReviewedServerFinishedTransitionErrorKind,
         ReviewedServerPathCertificateVerifyError, ReviewedServerPathCertificateVerifyErrorKind,
         VerifiedHttpsDnsDestinationReviewedDirectNoCheckCompleteFixedPathRevocationCertificateVerify,
         VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify,
@@ -2142,6 +2306,7 @@ mod tests {
         VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify,
         VerifiedReviewedServerPathCertificateVerify,
     };
+    use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk};
     use der_asn1::Asn1Limits;
     use rsa_pss_sha256_signature::RsaPssSha256SignatureLimits;
     use tls13_certificate_verify_input::{CertificateVerifyRole, MAXIMUM_INPUT_LENGTH};
@@ -2149,7 +2314,10 @@ mod tests {
     use tls13_certificate_verify_transcript_binding::{
         bind_certificate_verify_transcript, hash_transcript_bound_certificate_verify_input,
     };
-    use tls13_cipher_suite_policy::{CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry};
+    use tls13_cipher_suite_policy::{
+        CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry, SelectedCipherSuite,
+    };
+    use tls13_finished::{derive_finished_key, FinishedKeyStorage, FinishedRole, VerifiedFinished};
     use tls13_handshake::Tls13HandshakeType;
     use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightErrorKind, ServerFlightState};
     use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
@@ -2221,11 +2389,16 @@ mod tests {
         certificate: &'certificate X509Certificate<'encoded>,
     }
 
-    struct TestCompleteRevocationCertificateVerify;
+    struct TestCompleteRevocationCertificateVerify {
+        selected_suite: SelectedCipherSuite,
+    }
 
     impl complete_revocation_certificate_verify_sealed::Sealed
         for TestCompleteRevocationCertificateVerify
     {
+        fn selected_suite(&self) -> SelectedCipherSuite {
+            self.selected_suite
+        }
     }
 
     impl<'certificate, 'encoded> alternative_revocation_evidence_sealed::Sealed<'encoded>
@@ -2248,6 +2421,28 @@ mod tests {
             .iter()
             .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).unwrap(), 16).unwrap())
             .collect()
+    }
+
+    fn selected_suite(suite: CipherSuite) -> SelectedCipherSuite {
+        let entry = CipherSuitePolicyEntry::new(suite, 8_192).unwrap();
+        CipherSuitePolicy::new(&[entry])
+            .unwrap()
+            .select(suite.wire_id())
+            .unwrap()
+    }
+
+    fn verified_finished(
+        selected_suite: SelectedCipherSuite,
+        role: FinishedRole,
+    ) -> VerifiedFinished {
+        let prk = HkdfPrk::import_exact(FixedHkdfHash::Sha256, &[0x11; 32]).unwrap();
+        let mut storage = FinishedKeyStorage::new(selected_suite, role);
+        let key = derive_finished_key(&prk, &mut storage).unwrap();
+        let transcript_hash = [0x24; 32];
+        let mut verify_data = [0; 32];
+        key.write_verify_data(&transcript_hash, &mut verify_data)
+            .unwrap();
+        key.verify_peer(&transcript_hash, &verify_data).unwrap()
     }
 
     fn length(length: usize) -> Vec<u8> {
@@ -2563,6 +2758,14 @@ mod tests {
             OrderedNoPskServerFlightReviewedRevocationCertificateVerify<'static, 'static, u8>;
         assert!(core::any::type_name::<OrderedProof>()
             .contains("OrderedNoPskServerFlightReviewedRevocationCertificateVerify"));
+        type CompletedProof = CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished<
+            'static,
+            'static,
+            'static,
+            u8,
+        >;
+        assert!(core::any::type_name::<CompletedProof>()
+            .contains("CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished",));
     }
 
     fn exercise_direct_revocation_entry_point(role: CertificateVerifyRole, expect_success: bool) {
@@ -3101,7 +3304,9 @@ mod tests {
         server_flight
             .accept(Tls13HandshakeType::Certificate)
             .unwrap();
-        let verification = TestCompleteRevocationCertificateVerify;
+        let verification = TestCompleteRevocationCertificateVerify {
+            selected_suite: selected_suite(CipherSuite::TlsAes128GcmSha256),
+        };
 
         {
             let ordered =
@@ -3130,7 +3335,9 @@ mod tests {
     #[test]
     fn ordered_transition_rejects_wrong_state_without_mutation() {
         let mut server_flight = NoPskServerFlight::new();
-        let verification = TestCompleteRevocationCertificateVerify;
+        let verification = TestCompleteRevocationCertificateVerify {
+            selected_suite: selected_suite(CipherSuite::TlsAes128GcmSha256),
+        };
 
         let error = advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify(
             &mut server_flight,
@@ -3143,6 +3350,117 @@ mod tests {
             server_flight.state(),
             ServerFlightState::ExpectEncryptedExtensions,
         );
+        assert!(!server_flight.client_authentication_requested());
+    }
+
+    #[test]
+    fn finished_transition_completes_exact_flight_and_retains_both_verdicts() {
+        let suite = selected_suite(CipherSuite::TlsAes128GcmSha256);
+        let verification = TestCompleteRevocationCertificateVerify {
+            selected_suite: suite,
+        };
+        let finished = verified_finished(suite, FinishedRole::Server);
+        let mut server_flight = NoPskServerFlight::new();
+        server_flight
+            .accept(Tls13HandshakeType::EncryptedExtensions)
+            .unwrap();
+        server_flight
+            .accept(Tls13HandshakeType::CertificateRequest)
+            .unwrap();
+        server_flight
+            .accept(Tls13HandshakeType::Certificate)
+            .unwrap();
+        let ordered = advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify(
+            &mut server_flight,
+            &verification,
+        )
+        .unwrap();
+
+        {
+            let completed = complete_no_psk_server_flight_after_reviewed_revocation_finished(
+                ordered, &finished,
+            )
+            .unwrap();
+
+            assert_eq!(
+                completed.server_flight().state(),
+                ServerFlightState::Complete
+            );
+            assert!(completed.server_flight().client_authentication_requested());
+            assert!(core::ptr::eq(completed.verification(), &verification));
+            assert!(core::ptr::eq(completed.finished(), &finished));
+            assert_eq!(
+                format!("{completed:?}"),
+                "CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished",
+            );
+        }
+
+        assert!(server_flight.is_complete());
+        assert!(server_flight.client_authentication_requested());
+    }
+
+    #[test]
+    fn finished_transition_rejects_client_role_without_flight_mutation() {
+        let suite = selected_suite(CipherSuite::TlsAes128GcmSha256);
+        let verification = TestCompleteRevocationCertificateVerify {
+            selected_suite: suite,
+        };
+        let finished = verified_finished(suite, FinishedRole::Client);
+        let mut server_flight = NoPskServerFlight::new();
+        server_flight
+            .accept(Tls13HandshakeType::EncryptedExtensions)
+            .unwrap();
+        server_flight
+            .accept(Tls13HandshakeType::Certificate)
+            .unwrap();
+        let ordered = advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify(
+            &mut server_flight,
+            &verification,
+        )
+        .unwrap();
+
+        let error =
+            complete_no_psk_server_flight_after_reviewed_revocation_finished(ordered, &finished)
+                .unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            ReviewedServerFinishedTransitionErrorKind::WrongEndpointRole,
+        );
+        assert_eq!(server_flight.state(), ServerFlightState::ExpectFinished);
+        assert!(!server_flight.client_authentication_requested());
+    }
+
+    #[test]
+    fn finished_transition_rejects_suite_substitution_without_flight_mutation() {
+        let certificate_verify_suite = selected_suite(CipherSuite::TlsAes128GcmSha256);
+        let finished_suite = selected_suite(CipherSuite::TlsChacha20Poly1305Sha256);
+        let verification = TestCompleteRevocationCertificateVerify {
+            selected_suite: certificate_verify_suite,
+        };
+        let finished = verified_finished(finished_suite, FinishedRole::Server);
+        let mut server_flight = NoPskServerFlight::new();
+        server_flight
+            .accept(Tls13HandshakeType::EncryptedExtensions)
+            .unwrap();
+        server_flight
+            .accept(Tls13HandshakeType::Certificate)
+            .unwrap();
+        let ordered = advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify(
+            &mut server_flight,
+            &verification,
+        )
+        .unwrap();
+
+        let error =
+            complete_no_psk_server_flight_after_reviewed_revocation_finished(ordered, &finished)
+                .unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            ReviewedServerFinishedTransitionErrorKind::CipherSuiteMismatch,
+        );
+        assert_eq!(server_flight.state(), ServerFlightState::ExpectFinished);
         assert!(!server_flight.client_authentication_requested());
     }
 
@@ -3165,6 +3483,24 @@ mod tests {
         for secret in ["api.example.test", "transcript", "signature", "modulus"] {
             assert!(!display.contains(secret));
             assert!(!debug.contains(secret));
+        }
+
+        let finished_error = ReviewedServerFinishedTransitionError {
+            kind: ReviewedServerFinishedTransitionErrorKind::CipherSuiteMismatch,
+        };
+        let finished_display = finished_error.to_string();
+        let finished_debug = format!("{finished_error:?}");
+        assert_eq!(
+            finished_display,
+            "reviewed TLS 1.3 server Finished transition error CipherSuiteMismatch",
+        );
+        assert_eq!(
+            finished_debug,
+            "ReviewedServerFinishedTransitionError { kind: CipherSuiteMismatch }",
+        );
+        for secret in ["verify-data", "transcript", "signature", "suite 0x1301"] {
+            assert!(!finished_display.contains(secret));
+            assert!(!finished_debug.contains(secret));
         }
     }
 }
