@@ -9,6 +9,8 @@
   malformed DIMACS headers with prefixes or extra fields.
 - Document failed cores as sound, duplicate-free subsets without minimality or
   ordering guarantees.
+- Add 64 seeded stateful differential traces and a bounded 2,500-iteration
+  mutation campaign with independent signed-CNF model and core checks.
 
 ## 0.1.0 (2026-11-08)
 

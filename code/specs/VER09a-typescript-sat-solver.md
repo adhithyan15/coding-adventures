@@ -131,10 +131,20 @@ lifecycle without pinning a private clause index. Each consumer validates SAT
 models and failed cores against the original signed DIMACS formula,
 independently of its production parser. The TypeScript package suite retains
 100 deterministic random 3-SAT comparisons against brute force, pigeonhole
-UNSAT, and model checks for queens and bit-blasted arithmetic.
+UNSAT, and model checks for queens and bit-blasted arithmetic. P043 adds 64
+seeded stateful differential traces (seed `0x51a7e5eed`, 528 public API
+calls) against an independently decoded signed-CNF and brute-force oracle. A
+separate bounded mutation campaign uses the existing TypeScript fuzz engine
+for 2,500 iterations (seed `0x504043`, 2,504 target invocations, 16 admitted
+seeds, 29 explicitly recorded harness semantic edges, zero crashes). Its
+mutation feedback classifies parser, formula-shape, budget/result,
+propagation, assumption, and recovery outcomes; it is not instrumented
+SAT-solver source coverage. Positive SAT and negative UNSAT seeds pass through
+the same target, which checks every solve result, model, and failed core
+against the original signed formula.
 
 At the P043 verification snapshot, Node's native test coverage over freshly
-emitted `dist/sat.js` measured 95.49% lines, 95.08% branches, and 98.28%
+emitted `dist/sat.js` measured 95.49% lines, 95.47% branches, and 98.28%
 functions. This is coverage of the TypeScript compiler's emitted JavaScript;
 it is not source-mapped coverage of authored TypeScript. It meets this spec's
 90% line and 85% branch criteria and the repository's 95% library line target.

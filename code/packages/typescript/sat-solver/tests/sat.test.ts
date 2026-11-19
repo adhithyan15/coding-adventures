@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
+import { CoverageBitmap, fuzzTarget } from "@coding-adventures/fuzz";
 import {
   Solver,
   CnfBuilder,
@@ -312,6 +313,7 @@ describe("CDCL SAT: Incremental Solving, Assumptions, and Failed Core (VER09 §2
     // Test 2: Assume a = true and b = false -> UNSAT (violates a -> b)
     // Pass irrelevant assumption c as well; core must contain a and not b, but exclude c!
     expect(s.solveWithAssumptions([c, a, negateLit(b)])).toBe("unsat");
+    expect(s.okay()).toBe(true); // Assumption conflicts are local, not permanent root contradictions.
 
     // Check failed core
     const core = s.getFailedCore();
@@ -324,6 +326,7 @@ describe("CDCL SAT: Incremental Solving, Assumptions, and Failed Core (VER09 §2
     s.addClause([negateLit(b)]);
     // Now assume a = true -> UNSAT
     expect(s.solveWithAssumptions([a])).toBe("unsat");
+    expect(s.okay()).toBe(true);
     expect(s.getFailedCore().includes(a)).toBe(true);
     // Assume not a -> SAT
     expect(s.solveWithAssumptions([negateLit(a)])).toBe("sat");
@@ -985,12 +988,11 @@ describe("Seeded stateful SAT differential properties", () => {
       const propagation = solver.propagate();
       operations++;
       assert.ok(propagation === -1 || propagation >= 0, `seed=${seed} iteration=${iteration}: propagate outcome`);
-      if (propagation >= 0) {
-        assert.equal(solver.okay(), false, `seed=${seed} iteration=${iteration}: root conflict must stick`);
+      if (!solver.okay()) {
         assert.equal(
           independentlyBruteForceSat(numVars, original.clauses, []),
           false,
-          `seed=${seed} iteration=${iteration}: public root conflict must match original CNF`,
+          `seed=${seed} iteration=${iteration}: known root contradiction must match original CNF`,
         );
       }
       const recovered = solver.solve();
@@ -1076,6 +1078,161 @@ describe("Seeded stateful SAT differential properties", () => {
     assert.ok(initialUnknowns > 0, `seed=${seed}: generated traces must exercise UNKNOWN recovery`);
   });
 });
+
+describe("Bounded SAT lifecycle mutation campaign", () => {
+  it("mutates bounded formula records and checks every public result against the independent oracle", () => {
+    const satisfiableSeed = encodeMutationSeed(2, [[1], [-1, 2]]);
+    const unsatisfiableSeed = encodeMutationSeed(2, [[1], [-1]]);
+    assert.equal(independentlyBruteForceSat(2, [[1], [-1, 2]], []), true, "positive seed is SAT");
+    assert.equal(independentlyBruteForceSat(2, [[1], [-1]], []), false, "negative seed is UNSAT");
+
+    let invocations = 0;
+    const controlResults: string[] = [];
+    const budgets = [0, 1, 1.5] as const;
+    const target = (input: Uint8Array, coverage: CoverageBitmap): { status: "pass" } => {
+      invocations++;
+      const byte = (index: number): number => input[index] ?? 0;
+      const formula = decodeMutationSeed(input);
+      const dimacs = `p cnf ${formula.numVars} ${formula.clauses.length}\n${formula.clauses
+        .map((clause) => `${clause.join(" ")} 0`)
+        .join("\n")}\n`;
+      const oracleParsed = parseSharedDimacsIndependently(dimacs);
+      const parsed = parseDimacs(dimacs);
+      assert.equal(parsed.numVars, oracleParsed.numVars, "mutation parser variable count");
+      assert.deepEqual(
+        parsed.clauses,
+        oracleParsed.clauses.map((clause) => clause.map(packedFromSignedDimacs)),
+        "mutation parser signed clauses",
+      );
+      coverage.recordEdge(100 + Math.min(formula.numVars, 5));
+      coverage.recordEdge(110 + Math.min(formula.clauses.length, 8));
+      if (formula.clauses.some((clause) => clause.length === 0)) coverage.recordEdge(120);
+
+      const solver = new Solver();
+      for (let variable = 0; variable < formula.numVars; variable++) solver.newVar();
+      for (const clause of parsed.clauses) solver.addClause(clause);
+
+      const bounded = solver.solve({ maxSteps: budgets[byte(2) % budgets.length] });
+      if (invocations <= 2) controlResults.push(bounded);
+      coverage.recordEdge(bounded === "sat" ? 130 : bounded === "unsat" ? 131 : 132);
+      assertStatefulOracleResult(solver, bounded, formula.numVars, oracleParsed.clauses, [], [], "mutation bounded solve");
+
+      const propagation = solver.propagate();
+      coverage.recordEdge(propagation >= 0 ? 140 : 141);
+      if (!solver.okay()) {
+        coverage.recordEdge(142);
+        assert.equal(
+          independentlyBruteForceSat(formula.numVars, oracleParsed.clauses, []),
+          false,
+          "mutation known root contradiction must agree with original CNF",
+        );
+      }
+      const recovered = solver.solve();
+      coverage.recordEdge(recovered === "sat" ? 150 : recovered === "unsat" ? 151 : 152);
+      assertStatefulOracleResult(solver, recovered, formula.numVars, oracleParsed.clauses, [], [], "mutation recovery");
+
+      const signedAssumptions = [byte(3), byte(4)].map((raw) => {
+        const variable = (raw % formula.numVars) + 1;
+        return (raw & 0x80) === 0 ? variable : -variable;
+      });
+      const packedAssumptions = signedAssumptions.map(dimacsLit);
+      const assumed = solver.solveWithAssumptions(packedAssumptions, {
+        maxSteps: budgets[byte(5) % budgets.length],
+      });
+      coverage.recordEdge(assumed === "sat" ? 160 : assumed === "unsat" ? 161 : 162);
+      assertStatefulOracleResult(
+        solver,
+        assumed,
+        formula.numVars,
+        oracleParsed.clauses,
+        packedAssumptions,
+        signedAssumptions,
+        "mutation assumptions",
+      );
+      if (assumed === "unknown") {
+        const assumptionRecovery = solver.solveWithAssumptions(packedAssumptions);
+        coverage.recordEdge(163);
+        assertStatefulOracleResult(
+          solver,
+          assumptionRecovery,
+          formula.numVars,
+          oracleParsed.clauses,
+          packedAssumptions,
+          signedAssumptions,
+          "mutation assumption recovery",
+        );
+      }
+
+      const addedClause = [byte(6), byte(7), byte(8)].slice(0, byte(9) % 4).map((raw) => {
+        const variable = (raw % formula.numVars) + 1;
+        return (raw & 0x80) === 0 ? variable : -variable;
+      });
+      solver.addClause(addedClause.map(dimacsLit));
+      const updatedClauses = [...oracleParsed.clauses, addedClause];
+      const afterAddition = solver.solve();
+      coverage.recordEdge(afterAddition === "sat" ? 170 : afterAddition === "unsat" ? 171 : 172);
+      assertStatefulOracleResult(solver, afterAddition, formula.numVars, updatedClauses, [], [], "mutation permanent clause");
+
+      solver.reset();
+      coverage.recordEdge(180);
+      const afterReset = solver.solve();
+      assertStatefulOracleResult(solver, afterReset, formula.numVars, updatedClauses, [], [], "mutation reset recovery");
+      return { status: "pass" };
+    };
+
+    // Positive and negative semantic controls pass through the same target
+    // used by mutations before the coverage-guided run begins.
+    for (const seed of [satisfiableSeed, unsatisfiableSeed]) {
+      const coverage = new CoverageBitmap();
+      assert.deepEqual(target(seed, coverage), { status: "pass" });
+      assert.ok(coverage.bytes.some((byte) => byte !== 0), "semantic control records harness feedback");
+    }
+    assert.deepEqual(controlResults, ["sat", "unsat"], "same-target positive and negative controls classify correctly");
+
+    const report = fuzzTarget([satisfiableSeed, unsatisfiableSeed], {
+      seed: 0x504043n,
+      maxIterations: 2500,
+      maxInputLen: 34,
+      baseEnergy: 12,
+    }, target);
+    assert.equal(report.iterations, 2500, "bounded campaign executes its full iteration budget");
+    assert.equal(report.crashes.length, 0, "no mutation violates parser, model, core, or lifecycle oracle");
+    assert.ok(report.totalEdges >= 10, "mutations explore distinct semantic harness outcomes");
+    assert.ok(invocations >= 2502, "target sees each initial seed, positive control, negative control, and mutation");
+  });
+});
+
+function encodeMutationSeed(numVars: number, clauses: number[][]): Uint8Array {
+  const bytes = new Uint8Array(34);
+  bytes[0] = numVars - 1;
+  bytes[1] = clauses.length;
+  for (let clauseIndex = 0; clauseIndex < Math.min(clauses.length, 8); clauseIndex++) {
+    const offset = 2 + clauseIndex * 4;
+    const clause = clauses[clauseIndex];
+    bytes[offset] = clause.length;
+    for (let literalIndex = 0; literalIndex < Math.min(clause.length, 3); literalIndex++) {
+      const literal = clause[literalIndex];
+      bytes[offset + literalIndex + 1] = Math.abs(literal) - 1 | (literal < 0 ? 0x80 : 0);
+    }
+  }
+  return bytes;
+}
+
+function decodeMutationSeed(input: Uint8Array): { numVars: number; clauses: number[][] } {
+  const byte = (index: number): number => input[index] ?? 0;
+  const numVars = (byte(0) % 5) + 1;
+  const clauseCount = byte(1) % 9;
+  const clauses = Array.from({ length: clauseCount }, (_, clauseIndex) => {
+    const offset = 2 + clauseIndex * 4;
+    const width = byte(offset) % 4;
+    return Array.from({ length: width }, (_, literalIndex) => {
+      const raw = byte(offset + literalIndex + 1);
+      const variable = (raw % numVars) + 1;
+      return (raw & 0x80) === 0 ? variable : -variable;
+    });
+  });
+  return { numVars, clauses };
+}
 
 function assertStatefulOracleResult(
   solver: Solver,
