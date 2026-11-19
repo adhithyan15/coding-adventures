@@ -630,7 +630,8 @@ file count, file path, file kind, byte length, and exact bytes. The `src/`
 scope is a conservative all-file superset of the Rust producer's `.rs` source
 tree; the evidence scope mirrors the sandbox's copied files.
 
-Each tree is bounded to depth 32, 100,000 total entries, 8 MiB per file, and
+Each tree is bounded to depth 32, 100,000 total entries, 4,096 bytes per
+canonical path, 32 MiB of retained canonical paths, 8 MiB per file, and
 128 MiB of bytes actually read. A content reader MUST enforce the file and
 aggregate limits while streaming, as well as checking initial sizes. It MUST
 verify that each opened descriptor is the same file at the registered path
