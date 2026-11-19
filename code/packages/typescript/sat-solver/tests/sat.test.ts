@@ -933,6 +933,183 @@ describe("Shared SAT CNF v1 stateful corpus", () => {
   });
 });
 
+describe("Seeded stateful SAT differential properties", () => {
+  it("checks 64 bounded formula and lifecycle traces against the original signed CNF", () => {
+    const seed = 0x51a7e5eedn;
+    const rng = new SplitMix64(seed);
+    const iterations = 64;
+    const budgets = [0, 1, 1.5];
+    let operations = 0;
+    let assumptionRecoveries = 0;
+    let initialUnknowns = 0;
+
+    for (let iteration = 0; iteration < iterations; iteration++) {
+      const numVars = 1 + rng.bounded(5);
+      const signedClauses = Array.from({ length: rng.bounded(9) }, () => {
+        const width = rng.bounded(4);
+        return Array.from({ length: width }, () => {
+          const variable = 1 + rng.bounded(numVars);
+          return rng.bounded(2) === 0 ? variable : -variable;
+        });
+      });
+      const dimacs = `p cnf ${numVars} ${signedClauses.length}\n${signedClauses
+        .map((clause) => `${clause.join(" ")} 0`)
+        .join("\n")}\n`;
+      const original = parseSharedDimacsIndependently(dimacs);
+      const parsed = parseDimacs(dimacs);
+      assert.equal(parsed.numVars, original.numVars, `seed=${seed} iteration=${iteration}: parser vars`);
+      assert.deepEqual(
+        parsed.clauses,
+        original.clauses.map((clause) => clause.map(packedFromSignedDimacs)),
+        `seed=${seed} iteration=${iteration}: parser signed literals`,
+      );
+
+      const solver = new Solver();
+      for (let variable = 0; variable < numVars; variable++) solver.newVar();
+      for (const clause of parsed.clauses) solver.addClause(clause);
+
+      const firstBudget = budgets[iteration % budgets.length];
+      const first = solver.solve({ maxSteps: firstBudget });
+      operations++;
+      if (first === "unknown") initialUnknowns++;
+      assertStatefulOracleResult(
+        solver,
+        first,
+        numVars,
+        original.clauses,
+        [],
+        [],
+        `seed=${seed} iteration=${iteration} initial budget=${firstBudget}`,
+      );
+
+      const propagation = solver.propagate();
+      operations++;
+      assert.ok(propagation === -1 || propagation >= 0, `seed=${seed} iteration=${iteration}: propagate outcome`);
+      if (propagation >= 0) {
+        assert.equal(solver.okay(), false, `seed=${seed} iteration=${iteration}: root conflict must stick`);
+        assert.equal(
+          independentlyBruteForceSat(numVars, original.clauses, []),
+          false,
+          `seed=${seed} iteration=${iteration}: public root conflict must match original CNF`,
+        );
+      }
+      const recovered = solver.solve();
+      operations++;
+      assertStatefulOracleResult(
+        solver,
+        recovered,
+        numVars,
+        original.clauses,
+        [],
+        [],
+        `seed=${seed} iteration=${iteration} unbounded recovery`,
+      );
+
+      const signedAssumptions = Array.from({ length: rng.bounded(3) }, () => {
+        const variable = 1 + rng.bounded(numVars);
+        return rng.bounded(2) === 0 ? variable : -variable;
+      });
+      const packedAssumptions = signedAssumptions.map(dimacsLit);
+      const assumptionBudget = budgets[(iteration + 1) % budgets.length];
+      let underAssumptions = solver.solveWithAssumptions(packedAssumptions, { maxSteps: assumptionBudget });
+      operations++;
+      assertStatefulOracleResult(
+        solver,
+        underAssumptions,
+        numVars,
+        original.clauses,
+        packedAssumptions,
+        signedAssumptions,
+        `seed=${seed} iteration=${iteration} assumptions budget=${assumptionBudget}`,
+      );
+      if (underAssumptions === "unknown") {
+        assumptionRecoveries++;
+        underAssumptions = solver.solveWithAssumptions(packedAssumptions);
+        operations++;
+        assertStatefulOracleResult(
+          solver,
+          underAssumptions,
+          numVars,
+          original.clauses,
+          packedAssumptions,
+          signedAssumptions,
+          `seed=${seed} iteration=${iteration} assumptions recovery`,
+        );
+      }
+
+      const addedClause = Array.from({ length: rng.bounded(4) }, () => {
+        const variable = 1 + rng.bounded(numVars);
+        return rng.bounded(2) === 0 ? variable : -variable;
+      });
+      solver.addClause(addedClause.map(dimacsLit));
+      operations++;
+      const updatedClauses = [...original.clauses, addedClause];
+      const afterAddition = solver.solve();
+      operations++;
+      assertStatefulOracleResult(
+        solver,
+        afterAddition,
+        numVars,
+        updatedClauses,
+        [],
+        [],
+        `seed=${seed} iteration=${iteration} permanent clause`,
+      );
+
+      solver.reset();
+      operations++;
+      const afterReset = solver.solve();
+      operations++;
+      assertStatefulOracleResult(
+        solver,
+        afterReset,
+        numVars,
+        updatedClauses,
+        [],
+        [],
+        `seed=${seed} iteration=${iteration} reset recovery`,
+      );
+    }
+
+    assert.equal(iterations, 64);
+    assert.equal(operations, 512 + assumptionRecoveries);
+    assert.ok(initialUnknowns > 0, `seed=${seed}: generated traces must exercise UNKNOWN recovery`);
+  });
+});
+
+function assertStatefulOracleResult(
+  solver: Solver,
+  result: ReturnType<Solver["solve"]>,
+  numVars: number,
+  originalClauses: number[][],
+  packedAssumptions: Lit[],
+  signedAssumptions: number[],
+  context: string,
+): void {
+  const expectedSat = independentlyBruteForceSat(numVars, originalClauses, signedAssumptions);
+  if (result === "unknown") {
+    assert.deepEqual(solver.getFailedCore(), [], `${context}: UNKNOWN clears core`);
+    return;
+  }
+  assert.equal(result, expectedSat ? "sat" : "unsat", `${context}: result versus independent oracle`);
+  if (result === "sat") {
+    const model = solver.getModel();
+    assert.equal(model.length, numVars, `${context}: model width`);
+    assert.equal(independentlySatisfies(originalClauses, model), true, `${context}: model satisfies original CNF`);
+    assert.equal(independentlySatisfiesPackedLiterals(packedAssumptions, model), true, `${context}: model satisfies assumptions`);
+    assert.deepEqual(solver.getFailedCore(), [], `${context}: SAT clears core`);
+    return;
+  }
+  const core = solver.getFailedCore();
+  assert.equal(new Set(core).size, core.length, `${context}: core has no duplicates`);
+  assert.equal(core.every((literal) => packedAssumptions.includes(literal)), true, `${context}: core is an assumption subset`);
+  assert.equal(
+    independentlyBruteForceSat(numVars, originalClauses, core.map(signedDimacsFromPacked)),
+    false,
+    `${context}: core is sound against original CNF`,
+  );
+}
+
 function dimacsLit(value: number): Lit {
   assert.notEqual(value, 0, "0 terminates a DIMACS clause; it is not an assumption");
   return makeLit(Math.abs(value) - 1, value < 0);
