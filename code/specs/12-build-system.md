@@ -581,8 +581,10 @@ restriction above is what removes the accidental case. What remains is a
 deliberate two-step: a reviewed pull request (which propagates normally,
 because the wiring itself is a source change) makes behaviour depend on an
 allowed-type data file, and a later `A`/`M` edit of only that file is then
-local. Review of the first step is the control; no instance exists in the
-repository today.
+local. Review of the first step is the control. The fixed-point test-only
+reader described below is a separately registered exception: it reads
+metadata from a different package without making that package's ordinary
+dependents inherit the files.
 
 Other packages do read some of these files, but none of them is a dependent
 of the file's owner, so dependency propagation never selected them:
@@ -595,6 +597,34 @@ the `CHANGELOG.d/` shards of `typescript/script-ductus` and
 `typescript/programs/language-ladder`, both of which depend on it. Before
 adding a cross-package read of one of these files from a dependent, take the
 file off the list.
+
+Two fixed-point verification consumers read data from another Rust package
+without a Cargo dependency edge. `rust/ca-assurance-report`'s fixed-point
+source-equivalence test constructs a sandbox by copying
+`rust/fixed-point/src/`, `rust/fixed-point/evidence/`, `Cargo.toml`,
+`effect_certificate.json`, `evidence.bindings`, and `assurance-profile.json`,
+then reads `code/specs/fixed-point.warrant`. `rust/warrant-ir`'s fixed-point
+proof integration test embeds that Warrant file, `rust/fixed-point/src/lib.rs`
+and `evidence.bindings`, and frames the complete `rust/fixed-point/src/`
+source tree. Both run through Cargo, so their exact external inputs also
+include the root and Rust-workspace Cargo target configs and the workspace
+manifest and lockfile. These are test-only input registrations; they do not
+create dependency edges from fixed-point to either verifier.
+
+For these rows, a registered repository directory is a recursive tree input,
+not a snapshot of the filenames currently present. The cache key MUST include
+all regular files below the exact registered root, sorted by canonical
+repository-relative path and framed with a distinct tree domain, path, file
+kind, byte length, and exact bytes. Adding, removing, or changing a file
+changes the digest. The filesystem tree is the source of the digest, so an
+untracked file inside a consumed tree participates whenever the consumer is
+hashed; unrelated untracked files outside the exact roots do not. A symlink,
+reparse point, special file, traversal error, or file changing during the read
+MUST fail hashing closed. No ancestor, sibling, suffix, or package-wide
+directory is implied by a tree registration. In particular, the fixed-point
+package's own external input set remains its six exact Warrant, corpus and
+Cargo files; these additional tree inputs belong only to the two verifier
+consumers.
 
 A package whose **only** changes are package-local metadata is selected
 like a repository input consumer: it and its prerequisites, not its
