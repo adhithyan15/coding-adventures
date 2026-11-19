@@ -1027,6 +1027,25 @@ internal static class SourceInputRegistryProjection
   "language_source_input_registry_sha256": "4b695e89c165297a539091b9e74b60a3be0fd6b056c13fb36d66cdc696e7a1d2",
   "boundaries": [
     {
+      "id": "dart-hash-map-v1-corpus-input",
+      "input_origin": "repository",
+      "applies_to": {
+        "exact_roots": [
+          "code/packages/dart/hash-map"
+        ],
+        "descendant_roots": [],
+        "excluded_roots": []
+      },
+      "inputs": [
+        {
+          "path": "code/specs/fixtures/hash-map-v1/cases.json",
+          "role": "cross_package_exact"
+        }
+      ],
+      "reason": "The Dart hash-map BUILD snapshot generator reads the neutral DT18 v1 cases file outside its package root for VM and Node conformance tests.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    },
+    {
       "id": "haskell-workspace-project",
       "input_origin": "haskell",
       "applies_to": {

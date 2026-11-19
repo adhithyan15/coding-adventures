@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - Dart DT18 hash-map input binding
+
+- Replay the real Dart hash-map repository-corpus case through the shared production selector, increasing the complete source-collection matrix to 24 cases.
+
 ## Unreleased
 
 - Expand the F# source-collection facade replay to include the Swift hash-map
