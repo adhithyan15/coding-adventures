@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- **WD-HARN1c: negative controls run through the shared checker.** All 3 sabotage lines in
+  `BUILD` and `BUILD_windows` now call `code/scripts/warrant_negctl.py -- cargo test ...` instead of a
+  `grep`/`findstr` pipe. Every fault, filter and cargo argument is unchanged and in the same
+  order. The checker also requires a non-zero exit, exactly one TAP plan, test points numbered
+  `1..N` and no `Bail out!`, and prints the captured output when a control fails (the Windows
+  lines printed nothing). Each BUILD file declares `# needs-toolchain: python`. No source,
+  test or evidence change.
+
 ## 0.1.1 — Warrant WX-G pilot evidence (VER04k section 4)
 
 - Added `code/specs/zeroize.warrant` and `evidence.bindings`: a generator-path pilot of

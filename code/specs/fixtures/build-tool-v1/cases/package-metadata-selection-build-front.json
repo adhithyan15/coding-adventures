@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "diff-selection/package-metadata-build-front",
   "domain": "diff_selection",
-  "summary": "A platform BUILD front changed beside metadata is an ordinary path, so the owner is always selected and propagates; the contract does not model platform filtering.",
+  "summary": "An in-place root BUILD front of a package-prefix package is package-local, alone or beside metadata; a strict-glob package's front still propagates. Status, platform, language and Starlark conditions are host concerns.",
   "platforms": [
     "darwin",
     "linux",
@@ -34,6 +34,36 @@
           "source_mode": "package_prefix"
         },
         {
+          "name": "rust/front-build",
+          "rel_path": "code/packages/rust/front-build",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-linux",
+          "rel_path": "code/packages/rust/front-linux",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-mac",
+          "rel_path": "code/packages/rust/front-mac",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-mac-and-linux",
+          "rel_path": "code/packages/rust/front-mac-and-linux",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-windows",
+          "rel_path": "code/packages/rust/front-windows",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/front-user",
+          "rel_path": "code/packages/rust/front-user",
+          "source_mode": "package_prefix"
+        },
+        {
           "name": "rust/strict",
           "rel_path": "code/packages/rust/strict",
           "source_mode": "strict_globs",
@@ -57,6 +87,26 @@
           "rust/dep"
         ],
         [
+          "rust/front-build",
+          "rust/front-user"
+        ],
+        [
+          "rust/front-linux",
+          "rust/front-user"
+        ],
+        [
+          "rust/front-mac",
+          "rust/front-user"
+        ],
+        [
+          "rust/front-mac-and-linux",
+          "rust/front-user"
+        ],
+        [
+          "rust/front-windows",
+          "rust/front-user"
+        ],
+        [
           "rust/strict",
           "rust/strict-user"
         ]
@@ -68,6 +118,11 @@
     "changed_paths": [
       "code/packages/rust/meta/effect_certificate.json",
       "code/packages/rust/meta/BUILD_windows",
+      "code/packages/rust/front-build/BUILD",
+      "code/packages/rust/front-linux/BUILD_linux",
+      "code/packages/rust/front-mac/BUILD_mac",
+      "code/packages/rust/front-mac-and-linux/BUILD_mac_and_linux",
+      "code/packages/rust/front-windows/BUILD_windows",
       "code/packages/rust/strict/required_capabilities.json",
       "code/packages/rust/strict/BUILD_mac"
     ]
@@ -79,11 +134,20 @@
     "outcome": "ok",
     "result": {
       "changed_packages": [
+        "rust/front-build",
+        "rust/front-linux",
+        "rust/front-mac",
+        "rust/front-mac-and-linux",
+        "rust/front-windows",
         "rust/meta",
         "rust/strict"
       ],
       "affected_packages": [
-        "rust/dep",
+        "rust/front-build",
+        "rust/front-linux",
+        "rust/front-mac",
+        "rust/front-mac-and-linux",
+        "rust/front-windows",
         "rust/meta",
         "rust/strict",
         "rust/strict-user"

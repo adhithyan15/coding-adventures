@@ -42,3 +42,8 @@ cd ../../../.. && cargo run -q --manifest-path code/packages/rust/Cargo.toml -p 
 # max_ir_cost 16384). `--release`: about 25 s (in debug about 3 min, because the corpus has 17.5 M cases); the build tool selects this package for an edit to
 # lzw.warrant, the fixture or the lzw bindings (repository_inputs.go, warrantAdopters).
 cd ../../../.. && cargo run -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/lzw.warrant --profile code/specs/fixtures/lzw-warrant-v2/corpus.profile --bindings code/packages/rust/lzw/evidence.bindings --out code/specs/fixtures/lzw-warrant-v2
+# CV2 S10 adopter (wasm-leb128): the committed wasm-leb128 v2 fixture (44 suites, 46,566,930 cases, 740 chunks,
+# 20 faults). `--release` is required: 2 min 11 s measured on a 4-core VM (a debug build takes about 20 min,
+# VER04r D38); one line, not sharded. The build tool selects this package for an edit to wasm-leb128.warrant,
+# the fixture or the wasm-leb128 bindings (repository_inputs.go, warrantAdopters).
+cd ../../../.. && cargo run -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/wasm-leb128.warrant --profile code/specs/fixtures/wasm-leb128-warrant-v2/corpus.profile --bindings code/packages/rust/wasm-leb128/evidence.bindings --out code/specs/fixtures/wasm-leb128-warrant-v2

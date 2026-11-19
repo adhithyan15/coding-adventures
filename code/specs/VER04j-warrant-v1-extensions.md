@@ -1687,7 +1687,8 @@ The numbering continues from 14.1.
     the test points are numbered exactly 1..N in order, `not ok # TODO` is not a catch, and `Bail out!` is searched in stderr too (a filtered run prints the filtered plan, so the
     count rule holds); on failure it prints the captured output.  It closes the case of a plan with too few points (a crash
     after an earlier `not ok`), the silent Windows failure, and the stale
-    `%TEMP%` capture.  Existing lines migrate in staged PRs, and the VOS packages
+    `%TEMP%` capture.  All VER-owned Rust adopters and `typescript/test-bootstrap` are migrated (the legacy batch);
+    `go/ct-compare` stays on the old form because its runner emits no TAP plan, and the VOS packages
     migrate their own `vos-sched-*` lines with the script's recipe.  The bail-out also
     ends the run before an abandoned, possibly spinning, worker can burn a
     core.  The stderr line is written with `writeln!` and its result ignored

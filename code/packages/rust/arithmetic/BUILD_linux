@@ -1,3 +1,4 @@
+# needs-toolchain: python
 # BUILD_linux is BUILD plus ONE change: the VER08b runtime-capability line runs with
 # RCG_STRICT=1.  The build tool picks BUILD_linux first on Linux, BUILD on macOS
 # (BUILD_mac / BUILD_mac_and_linux do not exist here) and BUILD_windows on Windows.
@@ -29,19 +30,19 @@ RCG_STRICT=1 cargo test -q -p arithmetic --test runtime_capability
 # result and the ALU's record has neither (AR01 "Verification status").
 cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check arithmetic
 WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p arithmetic --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_rejects_non_bit cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=drop-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_truth_table cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=off-by-one-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_truth_table cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=swap-components WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_truth_table cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_rejects_non_bit_a cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=drop-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_truth_table cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=off-by-one-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_truth_table cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=swap-components WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_truth_table cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_rejects_an_empty_a cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_1_bit_exhaustive cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_with_carry_rejects_an_empty_a cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_with_carry_1_bit_exhaustive cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/alu_rejects_empty_a cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_rejects_non_bit python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=drop-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=off-by-one-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=swap-components WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_rejects_non_bit_a python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=drop-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=off-by-one-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=swap-components WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_truth_table python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_rejects_an_empty_a python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_1_bit_exhaustive python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_with_carry_rejects_an_empty_a python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_with_carry_1_bit_exhaustive python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/alu_rejects_empty_a python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p arithmetic --test warrant_evidence
 # No operand is secret, so there is no constant-time obligation; the steps rows are
 # attempted on the real source, the front end refuses it, and the proof manifest
 # records every steps-bound obligation `not-live` with the blocker.

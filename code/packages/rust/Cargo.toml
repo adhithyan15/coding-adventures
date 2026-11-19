@@ -792,6 +792,7 @@ members = [
     "sim-discrete-arcade-logic",
     "sim-crt-vector-beam",
     "game-clock",
+    "game-input-frame",
     "game-pong",
     "game-breakout",
     "game-monster-rpg",

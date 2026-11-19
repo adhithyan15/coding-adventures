@@ -104,17 +104,37 @@ every historical CPU class or runner is fixed; the CPU model from prior misses r
 current main gate has an 8 MB/s raw absolute floor and a calibrated 14 MB/s host-normalised floor on
 the fixed synthetic slice. Preserve both historical receipts and the current gate requirements.
 
-`GBL-010` remains under review in open PR #19644. On prior public head `45ee52078ed`, exact-head CI
-run `44374216434` included Windows `rust/game-clock` and `typescript/game-clock` BUILT receipts, but
-the Windows Go executor failed after Kotlin Gradle reported `BUILD SUCCESSFUL`, when a process kept
-the captured output pipe open beyond the existing five-second wait. The package-local Kotlin
-Gradle-property repair is locally verified; exact rebased-head protected checks remain pending.
-These BUILT receipts do not prove Windows runtime containment, and the pipe owner remains unknown.
-The dependent TypeScript integration remains pending until #19644 passes its protected checks and
-merges. Then resume `GBL-050` Rust input action frames and `GBL-050a` TypeScript input action frames.
-A fresh full-checkout canonical package-presence report must be recorded before the next new
-language-port selection; a sparse-worktree report is not valid inventory evidence. This sequence is
-coordination state, not implementation authorization for unrelated primitives.
+`GBL-010` was delivered by PR #19644, squash `4ec975d` (merged 2026-11-18). Its exact reviewed
+head `0d110` passed protected CI run `44395603937` (including the one authorized Ubuntu debug
+job retry), Kotlin Apps `44395604183`, Swift Apps `44395603790`, and Books `44395603804`; aggregate
+CI gate `135165050874` passed. Ubuntu job `135125201658` first failed during Gradle daemon startup
+before package tasks; the single debug rerun `135150245836` passed. The initial exception was not
+captured, so startup cause remains unresolved. Windows TypeScript emitted-CLI tests preserve their
+5-second real-process limits; Kotlin uses the package-local compiler settings. Windows Rust and
+TypeScript clocks produced BUILT receipts on the merged head. These receipts do not establish
+Windows runtime containment. The merged package has Rust and TypeScript presence (2/15), not
+universal parity or whole-reducer/source proof; GAME10 validate/advance and source-proof debt stays
+open under `GBL-003`.
+
+`GBL-063`'s measured parser component is merged as PR #19649 squash
+`399ab9af38c45817c6638defe368bf4596d4cad4`; its required run `44345630607` passed the then-current
+U24/U26 lanes. The dependent TypeScript clock integration is complete through #19644. Paired native
+measurements showed gains on two Azure CPUs only; broader host robustness and the historical CPU
+class remain unresolved. The current main G1 gate is 8 MB/s raw plus 14 MB/s host-normalised; the
+older 14 MB/s-only result is historical. Do not infer all-host repair.
+
+The full committed-path inventory at base `origin/main` `1ef4c38084f5d3704d99d423a164156a7840d330`
+has 1,816 all-bucket identities, 1,774 established implementation identities, and 5,159 established
+slots. Its CSV/JSON SHA-256 values are `850054a82a256387219629db5051ffb1f3b3572cc7ba29a27340d989215f769d` /
+`174b2bba690f62c2d03c1fc03fc5578a6312a5954054c64cc4629fe6107d987f`. The candidate report from
+the same classifier includes the new Rust input-frame package: 1,817 all-bucket identities, 1,775
+established identities, 5,160 established slots, 5,575 package directories, zero collisions and zero
+unknown buckets; CSV/JSON SHA-256 values are
+`248f5c575e6833d894862ac639b65dc4292f36bf85e7e026ca15324381d0138a` /
+`2cdaecd0a6072793092dd34510f3917e226d536119c7295fcb0c4b692af79ab9`. `game-clock` is present in
+Rust and TypeScript (2/15), `game-input-frame` in Rust (1/15), and emerging input lanes remain 0/3.
+Package presence does not establish behavior parity. This candidate count predates its implementation
+commit; refresh from merged main before selecting the next port.
 
 Candidate committed-tree inventory was recomputed from full committed Git paths with the existing
 `package_parity_report.py` classifier for base `origin/main` `6b7889dc95672e58879785ba3372f30a195a5fa1`
@@ -222,7 +242,7 @@ worktree; report and preserve it if those checks do not pass.
 
 ### P2 — Port the clock contract
 
-- [ ] `GBL-010` (current selection; implementation complete locally, PR/CI pending) Implement the five GAME10 public APIs and consume all 23 v1
+- [x] `GBL-010` (delivered by PR #19644, squash `4ec975d`) Implement the five GAME10 public APIs and consume all 23 v1
   vectors through TypeScript public exports. Keep canonical `u64` values as `bigint`, validate
   `u32` widths without coercion, return exact semantic `ClockError` variants, and reject host
   wrong-kind/width inputs with the TypeScript binding's `TypeError`/`RangeError` boundary. Check
@@ -324,8 +344,26 @@ worktree; report and preserve it if those checks do not pass.
   build on verified simulation foundations. Replay and checkpoints are tracked in `GBL-051`.
 - [ ] `GBL-042` Reconcile GAME00's GAME30–GAME35 and GAME40–GAME45 rows with actual packages, language lanes, device backends,
   and host integration. Roadmap presence alone is not completion evidence.
-- [ ] `GBL-050` Define portable input action frames, beginning with the Rust contract and canonical vectors.
+- [ ] `GBL-050` (active; spec/corpus committed first, Rust implementation in progress) Define a portable
+  pure action-frame reducer. The v1 boundary accepts one full-width `u32` player ID, caller-owned
+  `u64` simulation tick, 64 button levels, 16 signed absolute axes, and at most 256 ordered changes;
+  it refuses invalid frames atomically with stable validation order. Edge masks summarize whether
+  transitions occurred and do not retain within-tick ordering or tap counts. Current evidence is
+  bounded to the stated reducer, finite vectors/domain enumeration, seeded properties, harness/parser
+  fuzzing, a 64-slot/3-transition SAT model, and extracted scalar-helper proofs; no whole-reducer
+  source proof or universal claim is established. Runtime containment is reported per host.
 - [ ] `GBL-050a` Port the input action-frame contract and vectors to TypeScript after the Rust boundary is stable.
+- [ ] `GBL-050-language-queue` Port the stable contract to Go, Python, C#, Dart, Elixir, F#, Haskell,
+  Java, Kotlin, Lua, Perl, Ruby, and Swift, each with independent public-API conformance evidence.
+  The emerging C, C++, and OCaml lanes remain a separate 0/3 queue. Package presence alone is not
+  behavioral parity. Go SAT-solver parity remains the first package-parity selection after this
+  primitive; the Rust `cdcl-sat` dependency is already available here.
+- [ ] `GBL-050-input-followups` Define host input binding and multi-device aggregation; caller-owned
+  host tick assignment and event ordering; focus-loss/disconnect release policy; richer text and
+  relative pointer input; quantization and action layouts/banks; and ordered/versioned replay.
+  Edge masks in GBL-050 summarize transitions and do not preserve within-tick event order or tap
+  counts. Reuse UI11b and existing host primitives rather than duplicating them; `GBL-051` owns the
+  deterministic replay/checkpoint contract.
 - [ ] `GBL-051` Define deterministic replay and checkpoint contracts over verified action frames.
 - [ ] `GBL-052` Define bounded rollback behavior and resource limits over replay/checkpoint state.
 - [ ] `GBL-053` Define generational handles and deterministic scheduling for reusable game entities.

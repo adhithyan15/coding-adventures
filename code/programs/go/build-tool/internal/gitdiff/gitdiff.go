@@ -20,13 +20,21 @@ import (
 )
 
 func isBuildFront(base string) bool {
-	switch base {
-	case "BUILD", "BUILD_windows", "BUILD_mac", "BUILD_linux", "BUILD_mac_and_linux":
-		return true
-	default:
-		return false
-	}
+	return pkgmeta.IsBuildFront(base)
 }
+
+// StatusOrdinary is a pseudo-status the host records for a path that must be
+// treated as an ordinary change whatever Git says (for example a BUILD front
+// whose diff adds or removes a platform-unsupported marker line).
+const StatusOrdinary byte = '!'
+
+// StatusLocalFront is a pseudo-status the host records for a root BUILD front
+// that Git reports as modified in place AND that the host's veto pass
+// positively examined and cleared (see WithClearedFronts). ClassifyChangedFiles
+// treats a BUILD front as package-local only with this status, so a front the
+// host never examined (it could not map the path to a package, or the veto
+// pass was skipped) is ordinary: the rule fails closed.
+const StatusLocalFront byte = 'L'
 
 // ChangeStatuses maps a raw changed Git path to the first letter of its
 // `git diff --name-status` status: A (added), M (modified), D (deleted),
@@ -44,6 +52,51 @@ type ChangeStatuses map[string]byte
 func (statuses ChangeStatuses) Additive(path string) bool {
 	status, ok := statuses[path]
 	return ok && (status == 'A' || status == 'M')
+}
+
+// Modified reports whether path was modified in place (status exactly M).
+func (statuses ChangeStatuses) Modified(path string) bool {
+	status, ok := statuses[path]
+	return ok && status == 'M'
+}
+
+// WithOrdinary returns a copy of statuses in which every path in paths is
+// StatusOrdinary. A nil map stays nil (unknown stays unknown) and an empty
+// paths set returns statuses itself.
+func (statuses ChangeStatuses) WithOrdinary(paths map[string]bool) ChangeStatuses {
+	if statuses == nil || len(paths) == 0 {
+		return statuses
+	}
+	copied := make(ChangeStatuses, len(statuses))
+	for path, status := range statuses {
+		copied[path] = status
+	}
+	for path := range paths {
+		if _, ok := copied[path]; ok {
+			copied[path] = StatusOrdinary
+		}
+	}
+	return copied
+}
+
+// WithClearedFronts returns a copy of statuses in which every path in paths
+// whose status is exactly M becomes StatusLocalFront. Any other path, and any
+// path in paths that has no status, is left alone. A nil map stays nil and an
+// empty paths set returns statuses itself.
+func (statuses ChangeStatuses) WithClearedFronts(paths map[string]bool) ChangeStatuses {
+	if statuses == nil || len(paths) == 0 {
+		return statuses
+	}
+	copied := make(ChangeStatuses, len(statuses))
+	for path, status := range statuses {
+		copied[path] = status
+	}
+	for path := range paths {
+		if copied[path] == 'M' {
+			copied[path] = StatusLocalFront
+		}
+	}
+	return copied
 }
 
 // GetChangedFiles runs `git diff --no-renames --name-status -z <base>...HEAD` and returns
@@ -69,8 +122,10 @@ func GetChangedFilesWithStatus(repoRoot, diffBase string) ([]string, ChangeStatu
 	cmd := exec.Command("git", "diff", "--no-renames", "--name-status", "-z", diffBase+"...HEAD")
 	cmd.Dir = repoRoot
 	out, err := cmd.Output()
+	threeDot := true
 	if err != nil {
 		// Fallback: two-dot diff
+		threeDot = false
 		cmd = exec.Command("git", "diff", "--no-renames", "--name-status", "-z", diffBase, "HEAD")
 		cmd.Dir = repoRoot
 		out, err = cmd.Output()
@@ -78,7 +133,59 @@ func GetChangedFilesWithStatus(repoRoot, diffBase string) ([]string, ChangeStatu
 			return nil, nil
 		}
 	}
-	return parseNameStatus(out)
+	files, statuses := parseNameStatus(out)
+	return files, withMarkerTouchedFronts(repoRoot, diffBase, threeDot, files, statuses)
+}
+
+// buildFrontPathspecs select every BUILD front at any depth.
+var buildFrontPathspecs = []string{
+	":(glob)**/BUILD", ":(glob)**/BUILD_linux", ":(glob)**/BUILD_mac",
+	":(glob)**/BUILD_mac_and_linux", ":(glob)**/BUILD_windows",
+}
+
+// withMarkerTouchedFronts marks StatusOrdinary every changed BUILD front
+// whose diff adds or removes a line containing the platform-unsupported
+// marker (pkgmeta.UnsupportedMarker). Marking or un-marking a package changes
+// whether its dependents run at all, so such an edit is never package-local.
+// It costs one extra `git diff -G` call, and only when a BUILD front changed.
+// If that call fails, every changed BUILD front is marked ordinary.
+func withMarkerTouchedFronts(repoRoot, diffBase string, threeDot bool, files []string, statuses ChangeStatuses) ChangeStatuses {
+	if statuses == nil {
+		return nil
+	}
+	var fronts []string
+	for _, file := range files {
+		if isBuildFront(file[strings.LastIndex(file, "/")+1:]) {
+			fronts = append(fronts, file)
+		}
+	}
+	if len(fronts) == 0 {
+		return statuses
+	}
+	args := []string{"diff", "--no-renames", "--name-only", "-z", "-G", pkgmeta.UnsupportedMarker}
+	if threeDot {
+		args = append(args, diffBase+"...HEAD")
+	} else {
+		args = append(args, diffBase, "HEAD")
+	}
+	args = append(args, "--")
+	args = append(args, buildFrontPathspecs...)
+	cmd := exec.Command("git", args...)
+	cmd.Dir = repoRoot
+	out, err := cmd.Output()
+	marked := map[string]bool{}
+	if err != nil {
+		for _, front := range fronts {
+			marked[front] = true
+		}
+	} else {
+		for _, path := range bytes.Split(out, []byte{0}) {
+			if len(path) > 0 {
+				marked[string(path)] = true
+			}
+		}
+	}
+	return statuses.WithOrdinary(marked)
 }
 
 // parseNameStatus decodes `--name-status -z` output: a status token, then one
@@ -168,6 +275,12 @@ func MapFilesToPackages(changedFiles []string, packages []discovery.Package, rep
 //	Starlark, srcs    | CHANGELOG.md (in srcs)         | YES     | YES
 //	Starlark, srcs    | src/main.py                    | YES     | YES
 //	Starlark, srcs    | BUILD                          | YES     | YES
+//	Rust shell        | BUILD, BUILD_<os> (M)          | YES     | NO  (local)
+//	Rust shell        | BUILD (A, D, T, or !)          | YES     | YES (selection may change)
+//	Rust shell        | BUILD (M) + src/lib.rs         | YES     | YES
+//	non-Rust shell    | BUILD (M)                      | YES     | YES (dependents use its output)
+//	Starlark, no srcs | BUILD (M)                      | YES     | YES
+//	Shell BUILD       | nested/BUILD, BUILD.bak        | YES     | YES (not a front)
 //
 // The "local" rows are package-local metadata (internal/pkgmeta): files no
 // dependent's build or tests can read, added or modified in place according
@@ -189,6 +302,7 @@ func ClassifyChangedFiles(changedFiles []string, packages []discovery.Package, r
 	type pkgInfo struct {
 		name         string
 		relPath      string // repo-root-relative, platform separators
+		language     string
 		isStarlark   bool
 		declaredSrcs []string
 	}
@@ -202,6 +316,7 @@ func ClassifyChangedFiles(changedFiles []string, packages []discovery.Package, r
 		pkgPaths = append(pkgPaths, pkgInfo{
 			name:         pkg.Name,
 			relPath:      filepath.ToSlash(rel),
+			language:     pkg.Language,
 			isStarlark:   pkg.IsStarlark,
 			declaredSrcs: pkg.DeclaredSrcs,
 		})
@@ -226,13 +341,27 @@ func ClassifyChangedFiles(changedFiles []string, packages []discovery.Package, r
 
 			if !pkg.isStarlark || len(pkg.declaredSrcs) == 0 {
 				// Shell BUILD or no declared srcs: any file triggers a
-				// rebuild; only package-local metadata stops there.
-				// Only an addition or in-place edit can be local. A deleted,
-				// renamed-away or retyped metadata file can break a
-				// dependent that needs it to exist (packaging file lists).
-				if pkgmeta.IsPackageLocal(relToPackage) && statuses.Additive(raw) {
+				// rebuild; only package-local files stop there.
+				// Only an addition or in-place edit of metadata can be
+				// local. A deleted, renamed-away or retyped metadata file
+				// can break a dependent that needs it to exist (packaging
+				// file lists).
+				//
+				// A root BUILD front is local only when it was modified in place
+				// (an added or deleted front changes which file a platform
+				// selects), the package is a shell package of a language in
+				// the closed gate, AND the host's veto pass cleared it
+				// (StatusLocalFront). A plain M is not enough: fail closed.
+				switch {
+				case pkgmeta.IsBuildFront(relToPackage):
+					if statuses[raw] == StatusLocalFront && !pkg.isStarlark && pkgmeta.BuildFrontLocalFor(pkg.language) {
+						local[pkg.name] = true
+					} else {
+						propagating[pkg.name] = true
+					}
+				case pkgmeta.IsMetadata(relToPackage) && statuses.Additive(raw):
 					local[pkg.name] = true
-				} else {
+				default:
 					propagating[pkg.name] = true
 				}
 				break
