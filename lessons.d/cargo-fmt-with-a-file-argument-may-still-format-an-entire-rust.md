@@ -13,5 +13,3 @@ the exact repository instructions first and review the complete diff immediately
 For recovery, snapshot the full diff outside the worktree, restore only paths proven clean before
 the formatter ran, and preserve all deliberate concurrent edits. Never use a broad reset or clean
 to undo a formatting accident.
-
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
