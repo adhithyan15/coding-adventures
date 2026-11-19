@@ -210,10 +210,17 @@ var (
 		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
 	}
 
-	rngCorpusPaths                 = []string{"code/specs/fixtures/rng-v1"}
-	fenwickTreeContractPaths       = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
-	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
-	gameClockInputPaths            = []string{"code/specs/fixtures/game-clock-v1", "code/specs/game-clock.warrant"}
+	rngCorpusPaths           = []string{"code/specs/fixtures/rng-v1"}
+	fenwickTreeContractPaths = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths   = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
+	gameClockInputPaths      = []string{
+		".cargo/config.toml",
+		"code/packages/rust/.cargo/config.toml",
+		"code/packages/rust/Cargo.lock",
+		"code/packages/rust/Cargo.toml",
+		"code/specs/fixtures/game-clock-v1/cases.json",
+		"code/specs/game-clock.warrant",
+	}
 	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
 	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
 	typescriptGameInputFrameInputs = []string{
@@ -593,7 +600,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "rust/game-clock",
 		language: "rust",
-		inputs:   "the GAME10 constructor Warrant model and fixed-step clock v1 corpus",
+		inputs:   "the GAME10 Warrant model, v1 corpus, and exact Cargo workspace/build configuration",
 		matches:  isGameClockInput,
 		paths:    gameClockInputPaths,
 	},
@@ -1548,10 +1555,16 @@ func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
 }
 
-// isGameClockInput reports whether GAME10's constructor model or shared v1 vectors changed.
-// The exact spec path and versioned directory boundary deliberately exclude lookalikes.
+// isGameClockInput selects the exact repository-owned files hashed for the
+// Rust GAME10 consumer. The corpus consumer below retains its narrower reader
+// relation; nearby versions and lookalikes do not select this package.
 func isGameClockInput(changed string) bool {
-	return changed == "code/specs/game-clock.warrant" || isGameClockCorpusInput(changed)
+	for _, input := range gameClockInputPaths {
+		if changed == input {
+			return true
+		}
+	}
+	return false
 }
 
 // isGameClockCorpusInput selects only the shared GAME10 v1 vectors. The

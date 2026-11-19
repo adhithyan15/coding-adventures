@@ -6918,10 +6918,12 @@ name = "game-clock"
 version = "0.1.0"
 dependencies = [
  "capability-runtime-conformance",
+ "cdcl-sat",
  "coding_adventures_bounded_json",
  "coding_adventures_sha256",
  "coding_adventures_test_bootstrap",
  "coding_adventures_warrant_grammar",
+ "drat-check",
 ]
 
 [[package]]

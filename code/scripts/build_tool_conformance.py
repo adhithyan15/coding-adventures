@@ -1582,7 +1582,11 @@ def _validate_repository_source_input_boundary(
             root_cargo_config_exception = (
                 input_origin == "repository"
                 and item["role"] == "cross_package_exact"
-                and exact_roots == ["code/packages/typescript/game-input-frame"]
+                and exact_roots
+                in (
+                    ["code/packages/typescript/game-input-frame"],
+                    ["code/packages/rust/game-clock"],
+                )
                 and not descendant_roots
                 and path == ".cargo/config.toml"
             )

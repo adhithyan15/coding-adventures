@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 205)
+        self.assertEqual(summary["case_count"], 206)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -160,8 +160,8 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["conformance_status"], "not-run")
         self.assertEqual(summary["source_input_language_count"], 23)
         self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
-        self.assertEqual(summary["repository_source_boundary_count"], 21)
-        self.assertEqual(summary["repository_source_input_count"], 32)
+        self.assertEqual(summary["repository_source_boundary_count"], 23)
+        self.assertEqual(summary["repository_source_input_count"], 36)
         self.assertEqual(len(summary["repository_source_boundary_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
@@ -445,15 +445,15 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(
             summary,
             {
-                "boundary_count": 21,
-                "input_count": 32,
-                "scope_count": 510,
-                "authorization_count": 527,
+                "boundary_count": 23,
+                "input_count": 36,
+                "scope_count": 512,
+                "authorization_count": 531,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "02975c651ded7e4191ca4f1a142148ecd17176ae585c349c62a86163b13c0d16",
+            "8f9d93a5a7ee618baf31de0cc225b3f834121a7f673e0d8de920b70520a9745a",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         game_input_frame_inputs = by_id[
@@ -488,6 +488,23 @@ class CorpusTests(unittest.TestCase):
                 "code/packages/rust/Cargo.lock",
                 "code/packages/rust/Cargo.toml",
             ],
+        )
+        game_clock_inputs = by_id["repository-rust-game-clock-inputs"]
+        self.assertEqual(
+            game_clock_inputs["applies_to"]["exact_roots"],
+            ["code/packages/rust/game-clock"],
+        )
+        self.assertEqual(
+            [item["path"] for item in game_clock_inputs["inputs"]],
+            [
+                ".cargo/config.toml",
+                "code/specs/fixtures/game-clock-v1/cases.json",
+                "code/specs/game-clock.warrant",
+            ],
+        )
+        self.assertEqual(
+            [item["path"] for item in by_id["rust-game-clock-cargo-lock"]["inputs"]],
+            ["code/packages/rust/Cargo.lock"],
         )
         self.assertEqual(
             by_id["rust-root-workspace-manifest"]["applies_to"]["excluded_roots"],
@@ -815,6 +832,17 @@ class CorpusTests(unittest.TestCase):
                 "REPOSITORY_SOURCE_ROLE_INVALID",
             )
         )
+        nearby_game_clock_cargo_input = copy.deepcopy(canonical)
+        boundary_by_id(
+            nearby_game_clock_cargo_input, "repository-rust-game-clock-inputs"
+        )["inputs"][0]["path"] = ".cargo/config.toml.bak"
+        mutations.append(
+            (
+                "nearby-game-clock-root-cargo-input",
+                nearby_game_clock_cargo_input,
+                "REPOSITORY_SOURCE_ROLE_INVALID",
+            )
+        )
         cross_inside_consumer = copy.deepcopy(canonical)
         boundary_by_id(
             cross_inside_consumer, "typescript-program-workspace-configuration"
@@ -1012,7 +1040,7 @@ class CorpusTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, expected_code)
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 483),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 485),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
@@ -1023,7 +1051,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "REPOSITORY_SOURCE_SCOPE_LIMIT")
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 485),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 487),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
@@ -3431,6 +3459,7 @@ class PureDomainValidationTests(unittest.TestCase):
             "source-collection-repository-link-boundaries.json",
             "source-collection-repository-python-workspace.json",
             "source-collection-repository-rust-boundary.json",
+            "source-collection-repository-rust-game-clock-exact-inputs.json",
             "source-collection-repository-starlark-load.json",
             "source-collection-repository-typescript-program-shared.json",
             "source-collection-repository-typescript-shared.json",
@@ -5072,7 +5101,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 205)
+        self.assertEqual(summary["case_count"], 206)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"
