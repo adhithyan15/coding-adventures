@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — warrant_negctl.py bounds a hung command (VOS-038b Windows `rust/lzw` hang)
+
+- `code/scripts/warrant_negctl.py` kills the sabotaged command's whole process tree after
+  `WARRANT_NEGCTL_TIMEOUT_SECS` (default 1200 s, clamped to 86400 s; nan, inf, zero, negative and
+  non-numeric fall back to the default) and fails the control with the output captured so far,
+  which appears once. The same kill runs on SIGTERM or any abnormal exit of the checker, and the
+  Windows `taskkill` call has its own 30 s bound. Before this a hang printed nothing and cost the
+  build tool's 90-minute limit. TF01 section 6 updated; tests added to `test_warrant_negctl.py`.
+
 ## Unreleased — CV2-S10c-2: a parenthesised shift count selects `NatCount`
 
 - `count_binders` (the `NatCount` refinement of VER04j 3.6) looks through `Expression::Grouped`:
@@ -16,6 +25,25 @@
   and subnormal one-tap ratio. It uses no host float and is not a Warrant native-float
   or source/compiler proof. The build tool selects `rust/warrant-grammar` when the
   VER04p document or diagnostic changes.
+
+## Unreleased — refinement sampler and observer timeout clamp (VOS-038b)
+
+- VOS-D079 (VER04h 4.1): a refined binder of low acceptance no longer reports `property-exhausted`.
+  The rejection draw is unchanged; when a case's 100 retries are all rejected and every binder is
+  exactly enumerable, the case is drawn uniformly from the admissible set (built once). Otherwise an
+  acceptance floor (1/8 over 2,048 probe draws, derived from C(1-a)^100 < 0.01 at C = 4,096 from a derived stream) refuses the claim on its first
+  draw with a clear message. Emitted from a new `refine` prelude region (a harness without a refined
+  binder is byte for byte unchanged); passing runs draw identical cases, so no manifest changes.
+  The floor runs in the harness, not the generator (VOS-D100).
+- VOS-D085 (VER04j): in the `obs` region, `WARRANT_OBS_TIMEOUT_SECS` is clamped to `OBS_MAX_RAISE_SECS`
+  (24 h) by `obs_raise_ms`, and the deadline is `obs_deadline` (`checked_add`, fail closed to an
+  already-past deadline), so a huge value neither panics nor disables the bound.
+- Tests: rescue, empty set, high acceptance, floor refusal, floor boundary and `exact_support` (`wx`),
+  the composite branch (`wxa`, whose fixture gains a vacuous refinement so the branch is compiled), the
+  clamp table, `Duration::MAX` and a child process with the maximal variable (`wxh_supervisor`).
+- Regenerated: adopters arithmetic, ct-compare, gf256, logic-gates, lzw, wasm-leb128 (refine);
+  hash-functions, lzw, wasm-leb128, vos-sched-any, -fp-bitmap, -rr (obs); fixtures `wx`, `wxa`, `wxh`.
+  vos-probe-ready, x25519 and zeroize are unchanged.
 
 ## Unreleased — WX-SV2: the `field-flip` fault (VOS-038a)
 

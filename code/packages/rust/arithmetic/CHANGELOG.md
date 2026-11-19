@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased — regenerated evidence harness (VOS-038b)
+
+- `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the refinement sampler (a low-acceptance refinement over an enumerable domain is drawn from its admissible set; VER04h 4.1). No test, case count or recorded evidence manifest changes.
+
 ## [Unreleased] — Warrant-derived evidence (AR01, VER04h)
 
 ### Changed

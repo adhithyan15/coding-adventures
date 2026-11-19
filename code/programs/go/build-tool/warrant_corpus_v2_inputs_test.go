@@ -32,6 +32,7 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		{Name: "rust/lzw", Language: "rust"},
 		{Name: "rust/wasm-leb128", Language: "rust"},
 		{Name: "rust/test-bootstrap", Language: "rust"},
+		{Name: "rust/x25519", Language: "rust"},
 	}
 	both := map[string]bool{"rust/warrant-corpus-gen": true, "python/warrant-oracle": true}
 	// Every file of the fixture directory, and the bindings, select exactly the two.
@@ -56,8 +57,81 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 			t.Fatalf("%s: python-only run selected %v", changed, got)
 		}
 	}
+	// CV2 S10 adopter (x25519), VER04r 16.10 [D32]: the table-driven rows give the second
+	// adopter the same selection as ct-compare. Every file of its fixture directory and its
+	// bindings select exactly the generator and the oracle, per language filter too.
+	for _, changed := range []string{
+		"code/specs/fixtures/x25519-warrant-v2/corpus.json",
+		"code/specs/fixtures/x25519-warrant-v2/cases.tfv",
+		"code/specs/fixtures/x25519-warrant-v2/corpus.profile",
+		"code/specs/fixtures/x25519-warrant-v2/README.md",
+		"code/specs/fixtures/x25519-warrant-v2/chunks/clamp_is_idempotent.txt",
+		"code/packages/rust/x25519/evidence.bindings",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, both) {
+			t.Fatalf("%s selected %v (err %v), want exactly the generator and the oracle", changed, got, err)
+		}
+		if got, _ := repositoryInputConsumersForChange([]string{changed}, packages, "rust"); !reflect.DeepEqual(got, map[string]bool{"rust/warrant-corpus-gen": true}) {
+			t.Fatalf("%s: rust-only run selected %v", changed, got)
+		}
+		if got, _ := repositoryInputConsumersForChange([]string{changed}, packages, "python"); !reflect.DeepEqual(got, map[string]bool{"python/warrant-oracle": true}) {
+			t.Fatalf("%s: python-only run selected %v", changed, got)
+		}
+	}
+	// CV2 S10 adopter (lzw), VER04r 16.10 [D32]: the third row. Every kind of path of its fixture
+	// directory (the largest one: 21 chunk files) and its bindings select exactly the generator and
+	// the oracle, per language filter too.
+	for _, changed := range []string{
+		"code/specs/fixtures/lzw-warrant-v2/corpus.json",
+		"code/specs/fixtures/lzw-warrant-v2/cases.tfv",
+		"code/specs/fixtures/lzw-warrant-v2/corpus.profile",
+		"code/specs/fixtures/lzw-warrant-v2/README.md",
+		"code/specs/fixtures/lzw-warrant-v2/chunks/round_trip.txt",
+		"code/specs/fixtures/lzw-warrant-v2/chunks/decompress_three_bytes_rejected.txt",
+		"code/packages/rust/lzw/evidence.bindings",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, both) {
+			t.Fatalf("%s selected %v (err %v), want exactly the generator and the oracle", changed, got, err)
+		}
+		if got, _ := repositoryInputConsumersForChange([]string{changed}, packages, "rust"); !reflect.DeepEqual(got, map[string]bool{"rust/warrant-corpus-gen": true}) {
+			t.Fatalf("%s: rust-only run selected %v", changed, got)
+		}
+		if got, _ := repositoryInputConsumersForChange([]string{changed}, packages, "python"); !reflect.DeepEqual(got, map[string]bool{"python/warrant-oracle": true}) {
+			t.Fatalf("%s: python-only run selected %v", changed, got)
+		}
+	}
+	// The lzw spec selects both too (it was already an oracle input; the table adds the generator).
+	// rust/lzw's own row (the lane registry) is a separate consumer and is not asserted here.
+	got, err := repositoryInputConsumersForChange([]string{"code/specs/lzw.warrant"}, packages, "all")
+	if err != nil || !got["rust/warrant-corpus-gen"] || !got["python/warrant-oracle"] {
+		t.Fatalf("lzw.warrant selected %v (err %v)", got, err)
+	}
+	// The x25519 spec selects both too (it was already an oracle input; the table adds the generator).
+	got, err = repositoryInputConsumersForChange([]string{"code/specs/x25519.warrant"}, packages, "all")
+	if err != nil || !got["rust/warrant-corpus-gen"] || !got["python/warrant-oracle"] {
+		t.Fatalf("x25519.warrant selected %v (err %v)", got, err)
+	}
+	// Every adopter row selects both packages through each of its three path kinds, and the
+	// rows are distinct (a copy-pasted row would silently drop an adopter).
+	seen := map[string]bool{}
+	for _, adopter := range warrantAdopters {
+		if seen[adopter.module] {
+			t.Errorf("duplicate adopter row %s", adopter.module)
+		}
+		seen[adopter.module] = true
+		for _, changed := range []string{adopter.spec, adopter.fixture + "/corpus.json", adopter.bindings} {
+			if !isWarrantCorpusGenInput(changed) || !isWarrantOracleInput(changed) {
+				t.Errorf("%s (adopter %s) is not selected by both predicates", changed, adopter.module)
+			}
+		}
+	}
+	if len(warrantAdopters) != 3 || !seen["ct-compare"] || !seen["x25519"] || !seen["lzw"] {
+		t.Errorf("warrantAdopters = %v, want exactly ct-compare, x25519 and lzw", warrantAdopters)
+	}
 	// The spec selects both too (among the other Warrant consumers of the document).
-	got, err := repositoryInputConsumersForChange([]string{"code/specs/ct-compare.warrant"}, packages, "all")
+	got, err = repositoryInputConsumersForChange([]string{"code/specs/ct-compare.warrant"}, packages, "all")
 	if err != nil || !got["rust/warrant-corpus-gen"] || !got["python/warrant-oracle"] {
 		t.Fatalf("ct-compare.warrant selected %v (err %v)", got, err)
 	}
@@ -153,6 +227,25 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 			t.Fatalf("%s selected %v, want %v (err %v)", changed, got, want, err)
 		}
 	}
+	// CV2-S10o-1: the oracle's off-by-one-consumed document, its profile and its committed faults and
+	// refusals dumps are reproduced by the generator's slice S10o-2, read from the oracle's directory.
+	// off_by_one_consumed_v1.warrant is a Warrant document, so rust/warrant-grammar is selected as well.
+	for _, changed := range []string{
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1/off_by_one_consumed_v1.warrant",
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1/off_by_one_consumed_v1.profile",
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1/off_by_one_consumed_v1.oracle-faults.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1/off_by_one_consumed_v1.oracle-refusals.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1/make_off_by_one_consumed.py",
+	} {
+		want := map[string]bool{"rust/warrant-corpus-gen": true}
+		if isWarrantDocument(changed) {
+			want["rust/warrant-grammar"] = true
+		}
+		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s selected %v, want %v (err %v)", changed, got, want, err)
+		}
+	}
 	// Lookalikes select neither: another version directory, the directory itself (a
 	// changed *file* is what is mapped), a backslash spelling, another crate's bindings.
 	for _, changed := range []string{
@@ -163,6 +256,18 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		"docs/code/specs/fixtures/ct-compare-warrant-v2/corpus.json",
 		"code/packages/rust/ct-compare/evidence.bindings.bak",
 		"code/packages/rust/gf256/evidence.bindings",
+		"code/specs/fixtures/x25519-warrant-v20/corpus.json",
+		"code/specs/fixtures/x25519-warrant-v2",
+		"code/specs/fixtures/x25519-warrant-v2x/chunks/clamp_is_idempotent.txt",
+		`code\specs\fixtures\x25519-warrant-v2\corpus.json`,
+		"code/packages/rust/x25519/evidence.bindings.bak",
+		"code/packages/rust/x25519/tests/warrant_evidence.rs",
+		"code/specs/fixtures/lzw-warrant-v20/corpus.json",
+		"code/specs/fixtures/lzw-warrant-v2",
+		"code/specs/fixtures/lzw-warrant-v2x/chunks/round_trip.txt",
+		`code\specs\fixtures\lzw-warrant-v2\corpus.json`,
+		"code/packages/rust/lzw/evidence.bindings.bak",
+		"code/packages/rust/lzw/tests/generated/warrant_evidence.rs",
 		"code/packages/python/warrant-oracle/tests/fixtures/accept-blind-v20/corpus/corpus.json",
 		"code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v10/fixed_forms_v1.warrant",
 		"code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1",
@@ -172,6 +277,8 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		"code/packages/python/warrant-oracle/tests/fixtures/tuple-forms-v1",
 		"code/packages/python/warrant-oracle/tests/fixtures/fixed-eval-v10/fixed_eval_v1.warrant",
 		"code/packages/python/warrant-oracle/tests/fixtures/fixed-eval-v1",
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v10/off_by_one_consumed_v1.warrant",
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1",
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.backup.json",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")

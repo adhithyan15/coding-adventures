@@ -46,6 +46,14 @@ exactly as ``ir.fixed``'s was: :data:`IMPLEMENTED` held ``ir.core`` only, so a c
 needed ``ir.tuple`` (or ``ir.fixed``) recorded ``{"claim": C, "deferred": "ir.tuple"}`` witnesses and no
 witness search runs.  The gate is reachable only through the ``implemented`` parameter of
 :func:`derive_controls`, which the tests use; no command line or environment switch exists.
+
+``off-by-one-consumed`` (slice S10o-1; VER04r 8.2 and 16.10 [D36])
+-----------------------------------------------------------------
+The second component ``n`` of a tuple result, or of the tuple inside an ``Ok``, becomes ``n + 1``
+when ``n`` is even and ``n - 1`` when it is odd.  Unlike the faults above, **VER04r 8.2 fixes its JSON**
+(the dump follows the spec, R11), and it requires ``ir.fixed`` plus ``ir.tuple``.  Its committed faults
+dump lives in a fixture directory of its own (``tests/fixtures/off-by-one-consumed-v1``), which the
+generator's slice S10o-2 must reproduce byte for byte.
 """
 
 from __future__ import annotations
@@ -300,6 +308,47 @@ def _drop_consumed(op: OpSig, errors) -> tuple:
     return "post", [TUPLE_LEVEL], expr
 
 
+def _off_by_one_consumed(op: OpSig, errors) -> tuple:
+    """``off-by-one-consumed`` [D36]: the second component ``n`` becomes ``n + 1`` (even) or ``n - 1`` (odd).
+
+    The fault of VER04j 4.8 ("right value, wrong bytes consumed") as the Rust harness applies it:
+    the pair ``2k, 2k+1`` is exchanged, so both directions occur and the value never leaves its
+    type.  Applies exactly where ``drop-consumed`` does (a tuple, or a ``Result`` of one, whose second
+    component is ``Nat`` or fixed-width) and its JSON is the normative block of VER04r 8.2:
+
+    * ``Nat`` component ``C``:
+      ``if unwrap_or(rem(C, 2), 0) == 0 then C + 1 else C - 1`` (``Int`` literals in the parity
+      test, ``Nat`` literals in the arms; ``add``/``sub`` on a ``Nat`` are exact, so the value is
+      always a ``Nat`` value: an odd ``n`` has ``n >= 1`` and the largest ``Nat`` is odd);
+    * fixed-width component: ``bit_xor(C, 1)``, the harness's wrapping ``+ 1`` / ``- 1`` on the bit
+      pattern (an even pattern has bit 0 clear, an odd one has it set, so no carry or borrow occurs).
+
+    ``requires`` is ``ir.fixed`` and ``ir.tuple`` in all four combinations.  An ``Err`` is unchanged
+    (the ``err_any`` arm of the ``Ok`` form returns ``result``).
+    """
+    tup, inside = _tuple_target(op, "off-by-one-consumed")
+    second = tup.args[1]
+    if second.head not in FIXED and second.head != "Nat":
+        raise _fail("off-by-one-consumed needs a numeric second component")
+
+    def rewrite(src: list) -> list:
+        c = _project(src, 1)
+        if second.head == "Nat":
+            x = [
+                "if",
+                ["eq", ["unwrap_or", ["rem", c, _lit("Int", 2)], _lit("Int", 0)], _lit("Int", 0)],
+                ["add", c, _lit("Nat", 1)],
+                ["sub", c, _lit("Nat", 1)],
+            ]
+        else:
+            x = ["bit_xor", c, _lit(second.head, 1)]
+        n = len(tup.args)
+        return ["tuple", [_project(src, 0), x, *(_project(src, i) for i in range(2, n))]]
+
+    expr = _ok_form(op, rewrite) if inside else rewrite(_var("result"))
+    return "post", [FIXED_LEVEL, TUPLE_LEVEL], expr
+
+
 def _swap_components(op: OpSig, errors) -> tuple:
     """The components of a homogeneous tuple exchanged (reversed, so a pair is swapped)."""
     tup, inside = _tuple_target(op, "swap-components")
@@ -342,6 +391,7 @@ REGISTRY = {
     "ok-as-err": _ok_as_err,
     "drop-consumed": _drop_consumed,
     "swap-components": _swap_components,
+    "off-by-one-consumed": _off_by_one_consumed,
 }
 
 

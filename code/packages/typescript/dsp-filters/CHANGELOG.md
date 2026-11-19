@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- Added opt-in strict `CheckedBiquad` and `checkedSosfilt` APIs with finite direct normalization, failure-atomic blocks, and separate legacy-compatible entry points.
+- Added the local test-bootstrap development dependency for checked numerical properties and semantic mutation testing.
 - Added public Biquad/SOS characterization tests for reciprocal normalization overflow, output and hidden-delay overflow, partial state commit after invalid input, and SOS section-order behavior.
 - Aligned the AF-02 fixture test loader with decoded finite binary64 equality for version and chunk-length fields, including decimal/exponent spellings and malformed controls.
 - Added public FIR designer contract regressions for cutoff endpoints, tap-cap boundaries, lane-specific windows, and validation error precedence.

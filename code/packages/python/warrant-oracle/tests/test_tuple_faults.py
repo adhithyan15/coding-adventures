@@ -471,7 +471,7 @@ def test_derive_controls_takes_the_gate_as_a_parameter_and_defaults_to_the_shipp
     assert shipped[1] != closed[1]  # the shipped gate is no longer the closed one
 
 
-def test_the_registry_has_the_thirteen_names():
+def test_the_registry_has_the_fourteen_names():
     assert sorted(REGISTRY) == sorted(
         [
             "invert",
@@ -487,6 +487,8 @@ def test_the_registry_has_the_thirteen_names():
             "ok-as-err",
             "drop-consumed",
             "swap-components",
+            # S10o-1 (VER04r 8.2, D36)
+            "off-by-one-consumed",
         ]
     )
 

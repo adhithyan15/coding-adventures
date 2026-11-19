@@ -2538,15 +2538,106 @@ and both fuzzers seed it.
 **The default-flip gates (restated by PR 6).** The first draft gated the flip on
 "at least 8 MB/s and within 3x of the old parser". That gate is replaced: a ratio
 to the old scanner measures how fast the old scanner is, not whether the grammar
-path is fast enough. The new gates are absolute and tied to the deadline the
-recorder already enforces.
+path is fast enough, and the old scanner is deleted in PR 8. The new gates are
+tied to the deadline the recorder already enforces: an absolute floor, and a
+capability floor that is a ratio to a FROZEN reference kernel. A frozen kernel
+is a different kind of denominator from the old scanner: it never changes (so
+the ratio moves only when the reader or the host does), and it is not a
+competing implementation, so it survives PR 8.
 
-- **G1 (blocking).** The grammar path's **pass 1** (the line reader,
-  `readRecordsAt`) must run at a rate that would get a cap-sized action
-  (`DefaultMaxTraceTotal`, 2 GiB) through in at most a quarter of the classify
-  deadline (`DefaultClassifyTimeout`, 10 minutes). A quarter is 150 s, so the
-  floor is 2048 MiB / 150 s = 2,147 MB / 150 s, about **14 MB/s** (13.7 exactly;
-  the job uses 14). The gate is on the **best** (minimum) pass-1 time over at
+- **G1 (blocking), in two parts.** The grammar path's **pass 1** (the line
+  reader, `readRecordsAt`) must be fast enough to get a cap-sized action
+  (`DefaultMaxTraceTotal`, 2 GiB) through well inside the classify deadline
+  (`DefaultClassifyTimeout`, 10 minutes).
+  (a) **A host-normalised capability gate** on the deterministic synthetic
+  slice: the reader's rate, rescaled to a nominal host, must be at least
+  **14 MB/s** (2048 MiB / 150 s, a quarter of the deadline, is 13.7 MB/s,
+  rounded up to 14). It answers "did the reader get slower?" without being
+  fooled by a slower runner.
+  (b) **An absolute safety floor** of **8 MB/s raw**, on every gated line (the
+  slice and each real trace of 32 to 128 KB). It answers "could a cap-sized
+  action still finish?" whatever the host: the hard limit is the 600 s
+  deadline, which is 2147 MB / 600 s = 3.6 MB/s, and 8 is more than twice that.
+
+  *Why two parts.* GitHub's runner fleet varies about **1.75x** in CPU speed. The
+  slice (best-of-7, 64 KB) read, over ten kiln-sandbox legs, 21.6, 18.7, 15.9,
+  14.3, 19.2, 19.6, 19.4, 15.6, 20.2 and 12.3 MB/s: a raw 14 fails the slow
+  hosts for reasons that are not the reader's. On the slowest host seen (the
+  census read 10.8 MB/s there) a 2 GiB action takes about **199 s**, 33% of the
+  deadline. That is a fact about the host that no code gate can change; the
+  gate's job is to catch the reader getting slower, and to refuse a host on
+  which a cap-sized action could not finish.
+
+  *The normalisation.* Each synthetic measurement also times a **reference
+  kernel** (`refKernel`, `internal/trace/measure.go`) in the same loop, and
+
+      norm_mb_s = best_mb_s * refNominalMBs / ref_mb_s
+
+  is the rate the reader would have on the nominal host (`refNominalMBs` = 72.0,
+  the kernel's rate there). The kernel is **parser-shaped, allocating and
+  FROZEN**: it splits the input on newlines; per line it makes a token slice of
+  capacity 4 and appends heap token nodes (so the slice grows and the allocator
+  runs); it finds token boundaries with a byte-class table and dispatches with a
+  `switch` on the class (different work per arm); it copies each token to a
+  string and looks it up in a small prefilled `map[string]int`; it keeps the last
+  64 lines live in a ring; and it hashes once per token, never per byte (no
+  serial multiply chain). It is NOT allocation-free: it allocates about 28 bytes
+  per input byte (the grammar path about 46) and runs at about 72 MB/s, 3 to 4
+  times the reader. One reference sample is 2 passes over the slice. A first
+  candidate, a byte-at-a-time state machine with a serial FNV multiply chain
+  ("kernel A"), was rejected: it is a clock-frequency meter, blind to branch
+  prediction, out-of-order width, caches and the allocator, and its cross-leg
+  spread was 1.39. `BestPass1Calibrated` times one reference sample and then one
+  grammar pass in each iteration of the usual loop (the refusal-check pass
+  doubles as the grammar warm-up, one warm-up sample of the kernel, collector
+  off and restored for a small trace, at least 7 iterations spanning at least
+  250 ms, at most 200) and keeps the minimum of each. `ref_mb_s = 2 * len /
+  refBest`. The kernel, its tables and dictionary, its pass count and
+  `refNominalMBs` are frozen together.
+
+  *Calibration (done, 8 CI legs).* On each leg
+  `k = ref_mb_s * 19.5 / best_mb_s` (the reference rate the leg's host would
+  show if the slice read the nominal 19.5 MB/s there), and
+  `norm_mb_s = best_mb_s * 72.0 / ref_mb_s`:
+
+  | CPU | best | ref | k | norm |
+  |---|---|---|---|---|
+  | Xeon 6975P-C | 19.3 | 71.4 | 72.0 | 19.5 |
+  | EPYC 7763 | 12.5 | 45.9 | 71.7 | 19.6 |
+  | Xeon 6975P-C | 19.4 | 69.7 | 70.1 | 20.0 |
+  | EPYC 9V74 | 16.8 | 65.4 | 75.9 | 18.5 |
+  | EPYC 9V45 | 20.8 | 85.0 | 79.8 | 17.6 |
+  | EPYC 9V74 | 16.7 | 66.2 | 77.5 | 18.2 |
+  | Xeon Platinum 8370C | 13.6 | 47.9 | 68.9 | 20.4 |
+  | Xeon Platinum 8573C | 17.4 | 59.4 | 66.5 | 21.1 |
+
+  The median k is 71.85, rounded to **`refNominalMBs = 72.0`**.
+  *Validity rule:* the within-leg k spread (rounds on one host) is at most 1.05,
+  and the worst-leg norm is at least 1.2 x the 14 floor (16.8) with a slow host
+  (raw slice at most 16) included. Observed: the worst norm is **17.6** (the
+  Zen 5 EPYC 9V45, a 1.26 margin over 14), and the slow legs (EPYC 7763 at 12.5,
+  Xeon 8370C at 13.6) normalise to 19.6 and 20.4. The cross-leg spread of k is
+  **1.20** (66.5 to 79.8), and it is systematic by CPU model: the kernel
+  over-rates Zen 4 and Zen 5 by 6 to 11% against the median (so the reader looks
+  6 to 10% slower there than it is) and under-rates the Intel 8573C. That
+  residual is inside the 1.39 margin and is not corrected per CPU.
+  **Recalibrate** when the Go toolchain changes, or when a new CPU model shows
+  norm below 16.8 on a PR that does not touch the parser; recalibration is a new
+  median over at least 6 legs. **Never add a per-CPU table.**
+  `refNominalCalibrated = true`: the synthetic test fails when norm is below 14,
+  the slice line says `calibrated=1`, and `ci/assert_sandbox_tests.py` sets
+  `REQUIRE_CALIBRATED = True`, so a line that says anything but `calibrated=1`
+  fails the job and Go alone cannot switch the independent check off.
+
+  *Margins.* Normalised, the reader clears the floor by 19.5 / 14 = **1.39x**
+  (the worst leg, 17.6 / 14 = 1.26x). For the absolute floor: 2147 MB at 8 MB/s
+  is **268 s** by the slice proxy, about half the 600 s deadline (3.6 MB/s is the
+  hard limit).
+
+  The CI job prints the CPU model (`/proc/cpuinfo`) and `nproc` next to
+  `uname -r`, so each leg's rate can be read against its host.
+
+  *The measurement.* The gate is on the **best** (minimum) pass-1 time over at
   least 7 passes and at least **250 ms** of wall time after one warm-up pass,
   never on a single shot: a 50 KB trace is read in about 2 ms, so one sample is
   mostly noise, and noise only ever adds time, so the minimum is the right
@@ -2555,9 +2646,8 @@ recorder already enforces.
   trace of 128 KB or less the figure is taken **with the garbage collector off**
   (after one collection), because a stop-the-world wait on a busy machine is
   neighbour noise; production runs with the collector on, so the figure flatters
-  the reader a little. The measured idle rate of a whole 4 MiB pass (about 18.5
-  MB/s, collector on) is 10 to 15% below the slice figure, so the honest margin
-  over the floor is about **1.3x**, not the 1.4x or more the slice suggests.
+  the reader a little. The whole 4 MiB pass (collector on) reads 10 to 15%
+  below the slice figure; that is why the slice, not the 4 MiB pass, is gated.
   **G1 is enforced in the dedicated kiln-sandbox job only**, selected by the
   test-only environment variable `KILN_G1_GATE=1`, set in that job in `ci.yml`
   and read nowhere in production code. Elsewhere (the general `build` job, local
@@ -2565,12 +2655,12 @@ recorder already enforces.
   applied (a zero best time or a non-finite rate still fails). The reason: the
   general build job runs kiln's tests in parallel with many other packages, and
   there the synthetic slice read 11.2 MB/s (66,600 bytes in 5.96 ms) and the
-  4 MiB census 8.9: a contended runner, not a slow reader. The first figures from
-  the dedicated job: `synthetic-slice` 21.6 MB/s on the 26.04 image and 18.7 on
-  24.04, real traces 28 to 37 MB/s gated. A kiln-sandbox job run without
+  4 MiB census 8.9: a contended runner, not a slow reader. (The dedicated job's
+  slice rates are in the fleet table above; real traces read 28 to 37 MB/s
+  there.) A kiln-sandbox job run without
   `KILN_G1_GATE=1` has no `gated=1` synthetic line, so
   `assert_sandbox_tests.py` fails it.
-  In the job, a real trace of **32 KB to 128 KB** that falls below the floor fails
+  In the job, a real trace of **32 KB to 128 KB** that falls below the 8 MB/s absolute floor fails
   it. Traces under 32 KB, and traces over 128 KB, are logged with
   `gated=0` (census only): a long pass sees every change in how the CPU is
   shared, and only about 7 passes fit, so best-of cannot see through a sustained
@@ -2578,15 +2668,15 @@ recorder already enforces.
   floor on larger inputs is carried by one deterministic input that always runs
   (`TestSandboxTraceGateSynthetic`): a 64 KB slice of whole repetitions of
   `testdata/build.strace`, logged as `PROBE: trace synthetic-slice ... gated=1`,
-  with the same statistic and floor. The same test reads the fixture repeated to
+  with the same statistic, carrying both parts of G1 (its line also carries `ref_mb_s`, `norm_mb_s` and `calibrated=1`, all before `gated=` and before any refusal field). The same test reads the fixture repeated to
   at least 4 MiB (pass 1 must read all of it) and logs its best-of-7 rate on its
   own line, `synthetic-4mib-census`, `gated=0`. Each gated line carries
-  `best_mb_s` (gated) and real traces also carry `grammar_mb_s` (single shot,
+  `best_mb_s` (gated, raw) and real traces also carry `grammar_mb_s` (single shot,
   census only). A zero best time or a non-finite or non-positive rate FAILS.
   `ci/assert_sandbox_tests.py` independently fails the job unless a passing test
   logged a `gated=1` line, the `synthetic-slice` line is among them and comes
   from `TestSandboxTraceGateSynthetic`, and every gated `best_mb_s` is finite,
-  positive and at least 14; a PROBE line counts only when its payload starts
+  positive and at least 8 (the slice line also needs a finite, positive `ref_mb_s`, `calibrated=1`, and a `norm_mb_s` of at least 14); a PROBE line counts only when its payload starts
   with `PROBE: trace ` after the go test `file:line` prefix, which must be
   indented exactly four spaces (in `go test -v -json`, the mode CI runs, every
   `t.Logf` line has that indent at any subtest depth; a continuation line of a
@@ -2644,7 +2734,16 @@ lenient reader). Rollback is a revert.
 **Deleting the old scanner (PR 8).** Only after Phase B (PR 7) and a soak of at
 least 14 days and at least 200 kiln-sandbox runs with zero mismatches, zero
 allowed divergences on real traces, and clean nightly fuzzing, and with G2
-holding. Until then it is kept as the oracle. The resource limits (1 GiB and 8M events, and the caps above) may be
+holding. Until then it is kept as the oracle.
+
+**What counts toward the 200 runs (soak rule).** The soak measures the
+cross-check, not the throughput gate. A kiln-sandbox run counts toward the 200
+if its cross-checked tests ran under `KILN_TRACE_DIFF=1` with no mismatch and no
+divergence, **whatever G1 did** (a slow host failing the capability or absolute
+gate says nothing about whether the two readers agree). A job that died before
+its tests ran (a runner fault, a setup failure) counts **neither way**: it is
+not a pass and it does not reset the count. Only a mismatch or a divergence
+resets the count. The resource limits (1 GiB and 8M events, and the caps above) may be
 lowered freely, but raised only by a spec revision that includes a DoS review
 and a benchmark of the worst-case input, with the new values committed in the
 spec.

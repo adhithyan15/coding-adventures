@@ -144,11 +144,58 @@ the second by relation:
 | 1/8 | one byte appended or removed (`Bytes`) |
 
 `Bytes<N>` binders draw exactly `N` bytes. A refinement is applied as a filter
-with `max_retries = 100`; exhaustion fails with `property-exhausted`. Lengths
+with `max_retries = 100` (section 4.1 for what happens on exhaustion). Lengths
 for `Bytes` are `0..=64`. Execution uses `pbt::check_property` with a per-claim
 seed `SplitMix64(evidence_seed ^ fnv1a64("claim/" ‖ module ‖ "/" ‖ claim))`.
 `PROPERTY_CASES = 4096` per claim. The manifest records the seed and the case
 count actually run.
+
+### 4.1 Refinement starvation (VOS-D079)
+
+A refinement of low acceptance used to fail the suite: `t < 8` over `U8` admits 8 of 256
+values (3 percent), a case draws 100 times and fails with probability 0.97^100 = 4.7
+percent, so 4,096 cases never all succeed and the suite reported `property-exhausted`
+while the exhaustive suite (which enumerates the 256 values) passed. Two rules, both in
+the generated prelude (`property`), both present only in a harness with at least one
+refined binder (the `refine` feature region; a harness without a refinement is byte for
+byte unchanged):
+
+1. **Rescue by enumeration.** The relation-biased rejection draw is unchanged (so every
+   case that used to be drawn is drawn identically, and no recorded property manifest
+   changes). Only when the 100 retries of one case are all rejected does the suite fall
+   back, and only if the claim is *exactly enumerable*: every binder's draw support equals
+   its exhaustive domain (`Bool`, `Nat`, a narrow fixed-width type of at most 16 bits,
+   `U8` in a v0 document, and tuples, records, variants, `Option` and `Result` of those)
+   and the exhaustive budget of section 3 holds. The admissible set (the exhaustive
+   enumeration filtered by the refinement) is built once, and the case is drawn uniformly
+   from it. An empty admissible set is still `property-exhausted` ("refinement admitted
+   no case", as in the exhaustive suite). `Bytes`, `U64`, wide fixed-width types, edge
+   sets and lists have a draw support larger than their exhaustive domain, so sampling
+   the enumeration would silently narrow what the suite covers; they are not rescued.
+2. **Acceptance floor.** A claim that is not exactly enumerable cannot be rescued, so a
+   refinement the rejection loop cannot be relied on to satisfy must be refused up front
+   with a clear diagnostic, not found 100 retries into iteration 3. The first draw of
+   such a claim's property suite measures the acceptance of `ACCEPT_PROBE = 2048` draws
+   (from a stream derived from the suite seed, so the case stream is untouched). If fewer
+   than `1/ACCEPT_FLOOR_DEN` (`ACCEPT_FLOOR_DEN = 8`, 12.5 percent) are admitted, the suite
+   fails with `property-exhausted` and the message `refinement acceptance <k>/2048 is below the
+   floor 1/8 on a domain that cannot be enumerated (widen the refinement or narrow the
+   binder types)`.
+
+The floor is derived, not chosen. A case is lost with probability (1 - a)^R (R = 100
+retries) and the suite fails if any of its C cases is lost, so P(fail) is about
+C (1 - a)^R. With C = `PROPERTY_CASES` = 4096 and P(fail) < 0.01, (1 - a)^100 < 2.4e-6, so
+a > 12.0 percent, hence 1/8. (The first draft, 1/32, let a 4 percent claim through:
+0.96^100 = 1.7 percent per case.) A harness asserts `PROPERTY_CASES <= 4096` at compile
+time; a larger count must re-derive the floor.
+
+A rescued claim draws its cases from a small set, so its case count overstates coverage:
+the harness prints `# property <tag>: rescued by enumeration, <n> distinct admissible
+case(s)` to stderr when it builds the set.
+
+The floor is evaluated when the suite starts, in the harness, not when the generator
+runs: a refinement is emitted as Rust, and the generator has no evaluator for it (the
+generation-time form is VOS-D100). The case counts of a passing run are unchanged.
 
 ## 5. Fuzz suites
 

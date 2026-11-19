@@ -446,13 +446,13 @@ class CorpusTests(unittest.TestCase):
             {
                 "boundary_count": 19,
                 "input_count": 27,
-                "scope_count": 506,
-                "authorization_count": 520,
+                "scope_count": 507,
+                "authorization_count": 521,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "7e148f79474bc6f167676f967806791b404192288dd7abc14a7ebbfa6cd90e44",
+            "7014b769f48c4f55e056c7bbbcf4e14bc0e84c1e7ef6030472e0e7949d93f0c8",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -4086,6 +4086,17 @@ class PureDomainValidationTests(unittest.TestCase):
             ("evidence/test-manifest.json", True),
             ("evidence/proofs/a.cnf", True),
             ("evidence/proofs/a.drat", True),
+            ("BUILD", True),
+            ("BUILD_linux", True),
+            ("BUILD_mac", True),
+            ("BUILD_mac_and_linux", True),
+            ("BUILD_windows", True),
+            ("nested/BUILD", False),
+            ("BUILD.bak", False),
+            ("BUILD_debug", False),
+            ("BUILD_Windows", False),
+            ("build", False),
+            ("BUILD\\x", False),
             ("README.md", False),
             ("CHANGELOG.d/nested/a.md", False),
             ("CHANGELOG.d/run.sh", False),

@@ -907,6 +907,98 @@ network connection. Those ordered-state, role, certificate, trust, revocation,
 handshake, and transport boundaries remain separate; concrete HTTPS and
 live-provider readiness remain unavailable.
 
+A follow-up verification stage in that composition now accepts only the outer
+transcript-bound hash evidence, the exact decoded `CertificateVerify` message,
+one already validated RSA public key, matching typed verifier limits, and
+caller-owned scratch. It delegates to the existing repository-owned RSA-PSS
+certificate verifier and returns non-copyable success evidence retaining both
+the outer selected-transcript proof and the complete lower signature-verdict
+proof. Callers therefore cannot obtain this stronger verdict from detached
+framing or hash evidence, and the returned proof keeps the selected transcript,
+role-specific input, authorized scheme, message, key, and signature verdict in
+one lifetime-bound graph.
+
+The public key is still only algorithm- and strength-validated: this stage does
+not bind it to an authenticated certificate or reviewed server path. It also
+does not prove ordered handshake state, authorize the selected role, check
+Finished, sequence a handshake, process records, perform I/O, or authorize TLS,
+HTTP, OAuth transport, or live-provider access. Those state, role, certificate,
+trust, revocation, handshake, and transport boundaries remain separate;
+concrete HTTPS remains unavailable.
+
+A bounded `tls13-reviewed-server-path-certificate-verify` composition closes
+the detached-key and caller-selected-role gaps for one reviewed RSA server
+path. It accepts only the strongest accumulated reviewed server-path proof,
+outer transcript-bound hash evidence, the exact decoded `CertificateVerify`
+message, data-driven RSA key policy, matching typed verifier limits, and
+caller-owned scratch. Before RSA work or scratch mutation it requires the
+retained RFC 8446 input role to be `Server`. It then derives the target
+certificate exclusively through the retained reviewed path, validates that
+certificate's exact SubjectPublicKeyInfo under the supplied RSA key policy,
+and delegates verification with that derived key. Non-copyable success
+evidence retains both the complete reviewed path and the outer
+selected-transcript signature verdict, so a detached certificate, key, role,
+path, transcript, message, or signature cannot be substituted after success.
+
+This composition does not prove that the selected transcript contains the
+right ordered handshake messages or stopped at the required state, verify the
+reviewed anchor's self-signature, select a revocation outcome, authenticate
+Finished, sequence a handshake, process or protect records, perform I/O, or
+authorize TLS, HTTP, OAuth transport, or live-provider access. Those remaining
+anchor, revocation, state, Finished, record, and transport boundaries remain
+separate; concrete HTTPS remains unavailable.
+
+The same package now exposes a stronger exact-destination entry point. It
+accepts the reviewed server path only through the existing non-copyable HTTPS
+DNS destination binding, then delegates the same role-first exact-leaf
+`CertificateVerify` verification. Success retains the complete certificate
+SAN, TLS SNI, HTTP Host authority, reviewed path, selected transcript, decoded
+message, derived key, and signature verdict in one lifetime-bound graph. This
+closes substitution between a destination-proven leaf and the leaf used for
+handshake authentication.
+
+The stronger entry point still does not add anchor self-signature evidence,
+select or enforce revocation, prove ordered transcript state, authenticate
+Finished, protect records, perform TLS or HTTP I/O, authorize OAuth transport,
+or grant network authority. Those trust, revocation, state, record, and
+transport boundaries remain separate; concrete HTTPS and live-provider
+readiness remain unavailable.
+
+A still stronger entry point now accepts only the exact HTTPS DNS destination
+and reviewed server path already bound to the reviewed anchor's
+repository-owned self-signature proof. It performs the same role-first exact
+leaf `CertificateVerify` verification and retains the destination, complete
+reviewed path, reviewed root selection, anchor self-signature verdict,
+selected transcript, decoded message, derived key, and server signature
+verdict together. This closes substitution between the root whose
+self-signature was verified and the destination-bound path used for handshake
+authentication; the entry point itself neither loads trust roots nor repeats
+anchor verification.
+
+This composition still does not select or enforce revocation, prove ordered
+transcript state, authenticate Finished, protect records, perform TLS or HTTP
+I/O, authorize OAuth transport, or grant network authority. Those revocation,
+state, record, and transport boundaries remain separate; concrete HTTPS and
+live-provider readiness remain unavailable.
+
+An orthogonal direct-revocation entry point now accepts only the exact HTTPS
+DNS destination already bound to the complete direct no-check fixed-path
+revocation proof. After the same server-role gate, it derives the leaf through
+that destination, validates the exact SubjectPublicKeyInfo under caller policy,
+verifies the selected-transcript `CertificateVerify`, and retains the complete
+destination and revocation proof with the exact signature verdict. This closes
+substitution between the leaf covered by complete direct revocation evidence
+and the leaf key used for handshake authentication. The entry point does not
+repeat revocation evaluation or acquire, refresh, or load revocation data.
+
+The composition does not yet admit the existing nested, double-nested,
+recursive, or alternative intermediate-status-responder completion topologies.
+It also does not prove ordered transcript state, authenticate Finished, protect
+records, perform TLS or HTTP I/O, authorize OAuth transport, or grant network
+authority. Those remaining revocation-topology, state, record, and transport
+boundaries remain separate; concrete HTTPS and live-provider readiness remain
+unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks

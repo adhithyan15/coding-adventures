@@ -95,18 +95,42 @@ GAME01 Rust corpus consumer, and the separate Kiln allocation-reuse repair have 
 deterministic contracts precede new device, graphics, and host stacks.
 This order avoids duplicating repository-wide `VER-*` and `MUS00`–`MUS08` work.
 
-As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, and `GBL-061` are merged. `GBL-010` is under
-review in open PR #19644; keep it open until its exact-head checks and merge are verified. Before
-that PR can clear, `GBL-063` is the blocking Kiln Ubuntu 24.04 G1 performance follow-up: diagnose
-the unchanged 14 MB/s gate miss on the exact 66,600-byte / 936-line workload, then make the smallest
-reusable hot-path repair supported by native Linux measurements. The current evidence correlates
-two misses with an Azure runner image/kernel and one pass with AWS, but the CPU model is absent, so
-it does not establish a runner cause. Keep the workload, floor, and failure receipts intact; do not
-retry unchanged code or infer a same-host speedup from separate CI jobs. After `GBL-010` lands,
-resume `GBL-050` Rust input action frames and `GBL-050a` TypeScript input action frames. A fresh
-full-checkout canonical package-presence report must be recorded before the next new language-port
-selection; a sparse-worktree report is not valid inventory evidence. This sequence is coordination
-state, not implementation authorization for unrelated primitives.
+As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, `GBL-061`, and the selected `GBL-063` parser
+repair are merged. PR #19649 merged squash `399ab9af38c45817c6638defe368bf4596d4cad4`; exact-head
+CI run `44345630607` passed the required Ubuntu 24.04 and 26.04 G1 lanes under the then-current
+14 MB/s absolute floor. Its paired native measurements showed 4.36% and 3.54% lower elapsed time on
+two Azure CPUs. That historical run predates the later G1 calibration and does not establish that
+every historical CPU class or runner is fixed; the CPU model from prior misses remains unknown. The
+current main gate has an 8 MB/s raw absolute floor and a calibrated 14 MB/s host-normalised floor on
+the fixed synthetic slice. Preserve both historical receipts and the current gate requirements.
+
+`GBL-010` remains under review in open PR #19644. On prior public head `45ee52078ed`, exact-head CI
+run `44374216434` included Windows `rust/game-clock` and `typescript/game-clock` BUILT receipts, but
+the Windows Go executor failed after Kotlin Gradle reported `BUILD SUCCESSFUL`, when a process kept
+the captured output pipe open beyond the existing five-second wait. The package-local Kotlin
+Gradle-property repair is locally verified; exact rebased-head protected checks remain pending.
+These BUILT receipts do not prove Windows runtime containment, and the pipe owner remains unknown.
+The dependent TypeScript integration remains pending until #19644 passes its protected checks and
+merges. Then resume `GBL-050` Rust input action frames and `GBL-050a` TypeScript input action frames.
+A fresh full-checkout canonical package-presence report must be recorded before the next new
+language-port selection; a sparse-worktree report is not valid inventory evidence. This sequence is
+coordination state, not implementation authorization for unrelated primitives.
+
+Candidate committed-tree inventory was recomputed from full committed Git paths with the existing
+`package_parity_report.py` classifier for base `origin/main` `6b7889dc95672e58879785ba3372f30a195a5fa1`
+and integrated candidate `ead34d4c72874cf293d4b05e1f62c47eccf85aa8`. The base has 1,816 identities
+across all classified buckets, 1,774 implementation identities in the established 15 lanes, 5,158
+occupied established language-by-identity slots, and 5,574 package directories across all buckets;
+CSV and JSON SHA-256 are `3c6bc1672bf843a004f7a1120477a178b2e7ed40be4e3dc8c7b6bb79a94f1838` and
+`762e69148f7628f958e8ce4c95d96f3e1202d4f37633a8cf0aa6895933856950`. The candidate retains both
+identity counts and adds one occupied slot and one package directory: 5,159 established slots and
+5,575 directories; CSV and JSON SHA-256 are
+`850054a82a256387219629db5051ffb1f3b3572cc7ba29a27340d989215f769d` and
+`174b2bba690f62c2d03c1fc03fc5578a6312a5954054c64cc4629fe6107d987f`. Both reports have zero
+collisions and zero unknown buckets. The candidate changes `game-clock` from Rust-only (1/15) to
+Rust and TypeScript (2/15); this is package presence only, not verified behavioral parity. The
+committed TypeScript package is the only package-path addition since the base. Refresh again from
+merged `origin/main` before selecting the next port.
 
 For each serial delivery, use a fresh worktree from the latest fetched `origin/main`. After a PR
 merges, verify the published head and merged tree, confirm the worktree is clean, published, and
@@ -198,8 +222,30 @@ worktree; report and preserve it if those checks do not pass.
 
 ### P2 — Port the clock contract
 
-- [ ] `GBL-010` Implement GAME10 public APIs and exact v1 corpus consumption in TypeScript, preserving
-  canonical `u64` values as `BigInt` across fixture parsing and public APIs.
+- [ ] `GBL-010` (current selection; implementation complete locally, PR/CI pending) Implement the five GAME10 public APIs and consume all 23 v1
+  vectors through TypeScript public exports. Keep canonical `u64` values as `bigint`, validate
+  `u32` widths without coercion, return exact semantic `ClockError` variants, and reject host
+  wrong-kind/width inputs with the TypeScript binding's `TypeError`/`RangeError` boundary. Check
+  every config, all ten state fields, all six step-result fields, and input immutability on success
+  and refusal. Use the existing Python validator against original fixture bytes before parsing in
+  JavaScript, plus same-path negative controls. Add bounded seeded property and mutation-fuzz
+  evidence with recorded seeds/counts/strata; finite tests do not discharge the open Warrant/source
+  proof targets. Wire the exact fixture path to the TypeScript package and reject v10/lookalike
+  paths while preserving the separate Rust/global-Warrant selection. Add normal `BUILD`,
+  `BUILD_windows`, package metadata, README and changelog entries. After the package is committed,
+  refresh this canonical inventory and record the TypeScript slot separately from emerging lanes.
+  Local package `BUILD` and `BUILD_windows` command sets passed on macOS. The focused suite passed
+  15/15 with 98.35% source line coverage and 92.52% branch coverage. The seeded property run used
+  seed `0x47434c4b5f545350` for 1,024 cases across eight strata (128 each); the mutation campaign
+  used seed `0x47434c4b5f46555a` for 256 cases and eight mutations per case. The bounded SAT miter
+  covers 16 inputs, with mismatch UNSAT and a same-path spiral mutant SAT witness. These are finite
+  local package results; native Windows execution, universal/source proof, and full-domain claims
+  remain open. The repository TypeScript portability contract's explicit inventory must be updated
+  for every new package; this port moves its total/shared counts from 515/308 to 516/309 without
+  changing inherited-path or standalone-emitter counts. Run that full portability test on the new
+  package closure in addition to package-local checks. JavaScript `bigint` and returned-record
+  allocation means native GAME10 zero-allocation, per-step, and constant-time proof targets are not
+  established by this port.
 - [ ] `GBL-011` Add fixture external-input/build-selection edges and negative v10 selection tests in each
   affected build lane. Preserve canonical decimal `u64`, bounded numeric `u32`, strict booleans, and
   exact error behavior across runtimes.
@@ -407,11 +453,77 @@ worktree; report and preserve it if those checks do not pass.
   margin. They do not prove the historically slower CPU class is fixed: its CPU model was not
   recorded, and no host-cause inference is claimed. Preserve all cells and artifacts under
   `/tmp/kiln-g1-parser-abba-44343414219/`. The SAT/VER bridge covers a bounded 32-row observation
-  domain; it does not prove Go source behavior or lifetime semantics. GBL-063 remains pending until
-  ordinary protected PR checks pass and the repair is merged. Keep the cursor experiment separate
-  as a rejected floor repair, preserve the 14 MB/s gate and prior failure receipts. No open PR
-  in the current list owns parser fast-path work; draft PR #19633 concerns gate calibration and
-  cannot change or weaken this unchanged acceptance criterion.
+  domain; it does not prove Go source behavior or lifetime semantics. The selected repeated-U24
+  parser repair merged in PR #19649 as squash `399ab9af38c45817c6638defe368bf4596d4cad4`; exact-head
+  CI run `44345630607` passed both required Ubuntu G1 lanes. Paired native measurements recorded
+  4.36% and 3.54% lower elapsed time on two Azure CPUs with the unchanged 14 MB/s gate. The historical
+  failing CPU model is unknown, so this does not establish universal or historical runner coverage.
+  The parser component is merged; broader GBL-063 host robustness remains open. Keep the cursor
+  experiment separate as a rejected floor repair, preserve the 14 MB/s gate and prior failure receipts.
+  A later focused lexer candidate `eedb854e2a5e6436be8ce6dc55295c902710d9e5`
+  avoids copying each immutable `ModeTransition` value in the per-token loop
+  and checks nonempty mode guards before scanning token triggers. The bounded
+  frozen-oracle controls and 2,048 seeded cases passed locally; the Go fuzz
+  campaign ran 5,998,782 executions, and the negative guard mutation was
+  detected. These are finite tests, not source/Warrant/SAT proof. In paired
+  workflow run [44370322596](https://github.com/adhithyan15/coding-adventures/actions/runs/44370322596),
+  pinned baseline `adadc8fc0b9783b3a829fbb4309182f558d4561b` and candidate
+  `eedb854e2a5e6436be8ce6dc55295c902710d9e5` used Go 1.26.1, the same unchanged
+  G1 gate (`f834ff07849b8c1dd8b412d99e4e95e119176614`), BestPass1 measurement
+  source (`c04b3a093c81262201ecb2f43d48f9a162312eff`), fixture SHA-256
+  `dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae`, and
+  66,600-byte / 936-line slice SHA-256
+  `6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af`. All
+  eight official cells and eight separate precision cells completed in
+  A1/B1/B2/A2 order, and every official cell passed with the original floor
+  and separate census intact. Ubuntu 24.04 Azure image `20261111.370.1`, Intel
+  Xeon Platinum 8573C: official slice rates 18.4/19.3/19.5/18.6 MB/s; helper
+  times 3,871,256/3,484,245/3,569,618/3,627,890 ns, paired mean 5.94% lower
+  elapsed time for B. Ubuntu 26.04 image `20261116.202.1`, AMD EPYC 9V45:
+  official rates 22.1/22.9/22.7/22.2 MB/s; helper times
+  3,043,198/3,163,751/2,998,331/3,142,800 ns, paired mean 0.39% lower for B,
+  within the observed spread. Both A hosts passed, so the experiment does not
+  show rescue of the historical Ubuntu 26.04 EPYC 7763 miss at 13.2 MB/s
+  (run `44362035252`, job `135005747661`); that host has no paired B result.
+  It does not establish pooled or stable 6% gain. Exact per-cell source trees,
+  official and helper binary SHA-256 values, host details, and artifacts
+  `14458713072` / `14457444089` are recorded in
+  `code/programs/go/kiln/ci/G1_PROFILE_RECEIPT.md`. A narrowly titled lexer
+  optimization PR is open with unchanged protected CI and gate
+  semantics. Keep this broader G1 host-robustness item open until the PR passes
+  ordinary protected checks and any slow-host rescue claim has a predeclared
+  matched-host cohort independent of candidate results; retain every run and
+  make no result-selected retries. The narrowly scoped optimization is PR
+  [#19657](https://github.com/adhithyan15/coding-adventures/pull/19657);
+  its protected U26 G1 gate failed at 13.7 MB/s on synthetic merge
+  `cc832fafea9c`; auto-merge is disabled, and the remaining successful checks do
+  not override that failure.
+  Follow-up evidence: fixed diagnostic cohort run `44377433767` compared A
+  `efe517a24fef9ddad591e468f72f8e1251e177ac` with frozen B
+  `1a3f378412a5eeb899bcc8e10c8c0c3b9a066bb1` on four predeclared Ubuntu jobs.
+  Only the U26 AMD EPYC 9V74 slot reproduced an A miss/B pass (A 13.6/13.7,
+  B 14.1/14.3 MB/s); all other slots passed on both revisions. B profiles
+  repeatedly show `matcher.match` as a residual hotspot. Candidate C adds a
+  narrow ASCII-only `stepRun` specialization in the Go lexer. Its code and
+  bounded frozen-matcher/regexp semantic checks were reviewed; local macOS
+  component and fixture-pipeline benchmarks are plausibility data, not Linux
+  admission evidence. The fixed B/C four-host diagnostic workflow was reviewed
+  as commit `362e7a3d371dc68efc9fc4b29fee94a27a4784cc`; run `44385830717`
+  completed with four jobs and all 16 official cells passing. Each slot's C1/C2
+  rounded slice rates exceeded both B1/B2 rates. The separate helper means
+  favored C by 10.50%, 10.67%, 8.15%, and 1.30% on U24 slot1, U24 slot2, U26
+  slot1, and U26 slot2, respectively; U26 slot2 C2 was slower than both B
+  helper cells, so the mean does not describe every measurement. All eight B
+  cells passed too: the held-out run has zero matched B-miss/C-pass rescues and
+  does not establish population-wide robustness. Full rates, per-cell
+  exit/classification, artifacts, source/binary identities, and host details
+  are in `code/programs/go/kiln/ci/G1_PROFILE_RECEIPT.md`. PR #19657 remains at
+  head `1a3f378412a5eeb899bcc8e10c8c0c3b9a066bb1`, with its separate protected
+  U26 G1 gate failing at 13.7 MB/s and auto-merge disabled; this diagnostic run
+  does not repair that failure. Keep GBL-063 and broader host robustness open,
+  preserve the 14 MB/s gate, and keep GoLexer VER/Warrant/native-source and
+  SAT/source-equivalence obligations open.
+  GBL-010's dependent TypeScript integration remains pending its exact-head protected checks and merge.
 - [ ] `GBL-058` Repair the conflict between the actual `P2D09`/`P2D10` specification filenames/scopes
   and GAME00 labels. Keep this as a separate documentation repair; do not mint or reuse colliding game
   identifiers to paper over it.

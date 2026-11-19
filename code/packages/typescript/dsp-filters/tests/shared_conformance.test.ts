@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
-import { Biquad, EmptySignalError, sosfilt } from "../src/index.js";
+import { Biquad, CheckedBiquad, checkedSosfilt, EmptySignalError, sosfilt } from "../src/index.js";
 
 type FixtureRecord = {
   id: string;
@@ -123,6 +123,16 @@ function processChunks(filter: Biquad, chunks: number[][]): number[] {
   return output;
 }
 
+function makeCheckedBiquad(record: FixtureRecord): CheckedBiquad {
+  return new CheckedBiquad(...record.sections[0] as [number, number, number, number, number, number]);
+}
+
+function processCheckedChunks(filter: CheckedBiquad, chunks: number[][]): number[] {
+  const output: number[] = [];
+  for (const chunk of chunks) output.push(...filter.process(chunk));
+  return output;
+}
+
 function nextU32(state: { value: number }): number {
   let value = state.value;
   value ^= value << 13;
@@ -239,6 +249,42 @@ describe("shared AF-02 Biquad/SOS fixture", () => {
     replay.process(fixture.input.slice(0, 7));
     replay.reset();
     assertExactFinite(replay.process(fixture.input), expected);
+  });
+
+  it("runs checked public APIs over the complete shared fixture domain", () => {
+    const fixture = decodeFixture(fixtureText);
+    const record = fixture.cases[0];
+    const expected = record.expected;
+    assertExactFinite(makeCheckedBiquad(record).process(fixture.input), expected);
+
+    const [first, second, third] = record.chunk_lengths!;
+    assertExactFinite(
+      processCheckedChunks(makeCheckedBiquad(record), [
+        fixture.input.slice(0, first),
+        fixture.input.slice(first, first + second),
+        fixture.input.slice(first + second, first + second + third),
+      ]),
+      expected,
+    );
+    const samplewise = makeCheckedBiquad(record);
+    assertExactFinite(fixture.input.map((sample) => samplewise.processSample(sample)), expected);
+
+    for (let mask = 0; mask < 2 ** 15; mask++) {
+      assertExactFinite(
+        processCheckedChunks(makeCheckedBiquad(record), partitionChunks(fixture.input, mask)),
+        expected,
+      );
+    }
+
+    const replay = makeCheckedBiquad(record);
+    replay.process(fixture.input.slice(0, 7));
+    replay.reset();
+    assertExactFinite(replay.process(fixture.input), expected);
+
+    const sosRecord = fixture.cases[1];
+    assertExactFinite(checkedSosfilt(sosRecord.sections, fixture.input), sosRecord.expected);
+    assertExactFinite(checkedSosfilt([], fixture.input), fixture.input);
+    assert.throws(() => checkedSosfilt([], []), EmptySignalError);
   });
 
   it("checks one-shot SOS, empty-section identity, and empty-input rejection", () => {

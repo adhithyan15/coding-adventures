@@ -3357,6 +3357,7 @@ pub fn generate_evidence_harness_with_tables(
         cx.allow_ops = false;
         for p in binders.iter() {
             if let Some(r) = &p.refinement {
+                features.insert("refine");
                 let _ = write!(admit, " && {}.truthy()", emit(r, &mut cx)?);
             }
         }

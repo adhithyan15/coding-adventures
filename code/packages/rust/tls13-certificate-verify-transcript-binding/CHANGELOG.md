@@ -10,4 +10,7 @@ All notable changes to this package will be documented in this file.
   SHA-384 TLS 1.3 cipher suites.
 - Non-copyable evidence retaining the exact transcript state, snapshot, role,
   framed bytes, authorized RSA-PSS scheme, and scheme-bound digest.
+- Outer-proof-preserving RSA-PSS verification that accepts only the retained
+  transcript-bound hash evidence and keeps it beside the complete signature
+  verdict.
 - Atomic short-output rejection and redacted diagnostics.

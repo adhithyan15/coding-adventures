@@ -123,6 +123,16 @@ crate's version fails that line until the fixture is regenerated and the diff re
 `profile_sha256` in `corpus.json` is the digest of the `--profile` file, so the build passes the
 fixture's own `corpus.profile` and an edit to it fails the line ([D14]).
 
+**The committed x25519 fixture.** `code/specs/fixtures/x25519-warrant-v2/` (the second adopter, CV2
+S10) is checked the same way by a second `--check` line in `BUILD` and `BUILD_windows`; its README
+has the command and what it holds (eight suites, five faults).
+
+**The committed lzw fixture.** `code/specs/fixtures/lzw-warrant-v2/` (the third adopter, CV2 S10) is
+checked by a third `--check` line in `BUILD` and `BUILD_windows` (the line runs with `--release`: about 25 s, against about 3 min in a debug build). It is
+the first fixture whose profile carries `omit_example` lines (the six `bomb_*` examples, two
+`not-op-eq-pure` and four `value-over-limit`) and a raised `max_ir_cost` (16384); its README has the
+command and what it holds (21 suites, 17,563,819 cases, five faults).
+
 ### As a library
 
 ```rust
@@ -318,7 +328,7 @@ are refused with the generator code `ir` (unreachable first, R12). The S2 checke
 rules (`W0301`, `W0203`); `lower` maps exactly those kinds to `ir`. `concat`, bytes literals and `if`
 over sized operands flow to `Bytes<N>` everywhere (A.1).
 
-Faults: `ok-as-err`, `drop-consumed`, `swap-components`, the tuple-payload `missing-error`, and the bare
+Faults: `ok-as-err`, `drop-consumed`, `swap-components`, `off-by-one-consumed` [D36] (`requires` `ir.fixed` and `ir.tuple`), the tuple-payload `missing-error`, and the bare
 and `Ok` forms of `flip-result-bit` / `drop-last-result-byte`, in the exact 8.2 JSON; a fault's
 `requires` is the sorted union of its template's levels and its op's types (R9). Fault evaluation is
 gated by `SHIPPED_GATE`, open to `ir.core`, `ir.fixed` and `ir.tuple` since the flip (S10c, 0.6.0); under a

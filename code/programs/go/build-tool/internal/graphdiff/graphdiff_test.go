@@ -270,6 +270,13 @@ func TestPackageMetadataPolicyIsExplicitAndClosed(t *testing.T) {
 	if _, err := EvaluateDiffSelection(input); err == nil || err.Error() != "DIFF_METADATA_POLICY_INVALID" {
 		t.Fatalf("unknown policy error = %v, want DIFF_METADATA_POLICY_INVALID", err)
 	}
+	// Under the empty policy a root BUILD front is an ordinary path.
+	input.MetadataPolicy = ""
+	input.ChangedPaths = []string{"code/packages/rust/meta/BUILD"}
+	frontLegacy, err := EvaluateDiffSelection(input)
+	if err != nil || !reflect.DeepEqual(frontLegacy.AffectedPackages, []string{"rust/dep", "rust/meta"}) {
+		t.Fatalf("legacy policy BUILD front = %#v, err = %v", frontLegacy, err)
+	}
 }
 
 // An unknown path under the "all" policy selects every package as an
@@ -383,7 +390,7 @@ func TestBoundaryDigestAndCallerInputsAreStable(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if digest != "7e148f79474bc6f167676f967806791b404192288dd7abc14a7ebbfa6cd90e44" {
+	if digest != "7014b769f48c4f55e056c7bbbcf4e14bc0e84c1e7ef6030472e0e7949d93f0c8" {
 		t.Fatalf("boundary digest = %s", digest)
 	}
 

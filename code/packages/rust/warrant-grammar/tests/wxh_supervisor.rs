@@ -81,6 +81,20 @@ mod harness {
         matches!(*g, Some(ObsReply::Tripped(1, 2)))
     }
 
+    pub fn raise_ms(var: Option<&str>) -> u64 {
+        obs_raise_ms(var)
+    }
+    pub fn max_raise_secs() -> u64 {
+        OBS_MAX_RAISE_SECS
+    }
+    pub fn deadline(now: std::time::Instant, timeout: std::time::Duration) -> std::time::Instant {
+        obs_deadline(now, timeout)
+    }
+    /// The bound in force (reads `WARRANT_OBS_TIMEOUT_SECS` once).
+    pub fn bound() -> std::time::Duration {
+        obs_timeout()
+    }
+
     /// Poison `META` by panicking while holding it, then use it again.
     pub fn poison_then_recover() -> bool {
         let t = std::thread::spawn(|| {
@@ -122,6 +136,15 @@ fn child_scenario() {
             let run = run_once();
             // Not reached: the run bails out at the first stalled instance.
             panic!("the suite finished with {} failures", run.failed);
+        }
+        // VOS-D085: a huge `WARRANT_OBS_TIMEOUT_SECS` is clamped, and an observed
+        // call still runs and returns inside it (no `Instant + Duration` panic).
+        Ok("huge") => {
+            println!("bound_secs={}", harness::bound().as_secs());
+            match harness::exec(|| harness::V::Bool(true)) {
+                Seen::Finished => println!("finished"),
+                _ => println!("not-finished"),
+            }
         }
         _ => {}
     }
@@ -177,4 +200,44 @@ fn a_stalled_call_times_out_and_the_rest_of_the_harness_stays_usable() {
     assert!(harness::poison_then_recover(), "the lock must have been poisoned");
     assert!(harness::poisoned_slot_still_works(), "the reply slot must survive poisoning");
     harness::take_every_shared_lock();
+}
+
+// ---------------------------------------------------------------------------
+// VOS-D085: the observer timeout clamp
+// ---------------------------------------------------------------------------
+
+#[test]
+fn the_timeout_raise_is_clamped_to_the_stated_maximum() {
+    assert_eq!(harness::max_raise_secs(), 86_400, "24 h");
+    assert_eq!(harness::raise_ms(None), 0);
+    assert_eq!(harness::raise_ms(Some("junk")), 0);
+    assert_eq!(harness::raise_ms(Some("-5")), 0);
+    assert_eq!(harness::raise_ms(Some(" 300 ")), 300_000);
+    assert_eq!(harness::raise_ms(Some("86400")), 86_400_000);
+    // Above the maximum, and absurdly above it: the maximum, never an overflow.
+    assert_eq!(harness::raise_ms(Some("86401")), 86_400_000);
+    assert_eq!(harness::raise_ms(Some("18446744073709551615")), 86_400_000);
+}
+
+#[test]
+fn an_unrepresentable_deadline_fails_closed_instead_of_panicking() {
+    let now = Instant::now();
+    // The old `Instant::now() + timeout` panicked here.
+    assert_eq!(harness::deadline(now, Duration::MAX), now, "already past: the wait times out");
+    assert!(harness::deadline(now, Duration::from_secs(86_400)) > now);
+    assert_eq!(harness::deadline(now, Duration::ZERO), now);
+}
+
+#[test]
+fn a_huge_timeout_variable_is_clamped_and_calls_still_run() {
+    let out = std::process::Command::new(std::env::current_exe().unwrap())
+        .args(["child_scenario", "--exact", "--nocapture", "--test-threads=1"])
+        .env("WXH_CHILD", "huge")
+        .env("WARRANT_OBS_TIMEOUT_SECS", "18446744073709551615")
+        .output()
+        .expect("the child runs");
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(out.status.success(), "{stdout}\n{}", String::from_utf8_lossy(&out.stderr));
+    assert!(stdout.contains("bound_secs=86400"), "{stdout}");
+    assert!(stdout.contains("finished"), "{stdout}");
 }

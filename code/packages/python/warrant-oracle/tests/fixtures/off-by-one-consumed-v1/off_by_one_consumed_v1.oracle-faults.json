@@ -1,0 +1,930 @@
+{
+  "accepted_blind_faults": [],
+  "controls_gate_on": [
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/bare_i8/off-by-one-consumed",
+      "op": "bare_i8",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_bare_i8"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_bare_i8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/bare_nat/off-by-one-consumed",
+      "op": "bare_nat",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_bare_nat"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_bare_nat"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/bare_u8/off-by-one-consumed",
+      "op": "bare_u8",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_bare_u8"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_bare_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/dec_i64/off-by-one-consumed",
+      "op": "dec_i64",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_dec_i64"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_dec_i64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_dec_u64_err"
+      ],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/dec_u64/off-by-one-consumed",
+      "op": "dec_u64",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_dec_u64"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_dec_u64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/dec_u8/off-by-one-consumed",
+      "op": "dec_u8",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_dec_u8"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_dec_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/tri/off-by-one-consumed",
+      "op": "tri",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_tri"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_tri"
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "controls_shipped": [
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/bare_i8/off-by-one-consumed",
+      "op": "bare_i8",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_bare_i8"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_bare_i8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/bare_nat/off-by-one-consumed",
+      "op": "bare_nat",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_bare_nat"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_bare_nat",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/bare_u8/off-by-one-consumed",
+      "op": "bare_u8",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_bare_u8"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_bare_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/dec_i64/off-by-one-consumed",
+      "op": "dec_i64",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_dec_i64"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_dec_i64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/dec_u64/off-by-one-consumed",
+      "op": "dec_u64",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_dec_u64",
+        "warrant/off_by_one_consumed/exhaustive/c_dec_u64_err"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_dec_u64",
+          "deferred": "ir.fixed"
+        },
+        {
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_dec_u64_err",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/dec_u8/off-by-one-consumed",
+      "op": "dec_u8",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_dec_u8"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_dec_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one-consumed",
+      "id": "warrant/off_by_one_consumed/negctl/exhaustive/tri/off-by-one-consumed",
+      "op": "tri",
+      "required_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_tri"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_tri",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "faults": [
+    {
+      "expr": [
+        "tuple",
+        [
+          [
+            "project",
+            [
+              "var",
+              "result"
+            ],
+            0
+          ],
+          [
+            "bit_xor",
+            [
+              "project",
+              [
+                "var",
+                "result"
+              ],
+              1
+            ],
+            [
+              "lit",
+              {
+                "type": "I8",
+                "value": "1"
+              }
+            ]
+          ]
+        ]
+      ],
+      "fault": "off-by-one-consumed",
+      "kind": "post",
+      "op": "bare_i8",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "tuple",
+        [
+          [
+            "project",
+            [
+              "var",
+              "result"
+            ],
+            0
+          ],
+          [
+            "if",
+            [
+              "eq",
+              [
+                "unwrap_or",
+                [
+                  "rem",
+                  [
+                    "project",
+                    [
+                      "var",
+                      "result"
+                    ],
+                    1
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Int",
+                      "value": "2"
+                    }
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Int",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Int",
+                  "value": "0"
+                }
+              ]
+            ],
+            [
+              "add",
+              [
+                "project",
+                [
+                  "var",
+                  "result"
+                ],
+                1
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ],
+            [
+              "sub",
+              [
+                "project",
+                [
+                  "var",
+                  "result"
+                ],
+                1
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ]
+          ]
+        ]
+      ],
+      "fault": "off-by-one-consumed",
+      "kind": "post",
+      "op": "bare_nat",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "tuple",
+        [
+          [
+            "project",
+            [
+              "var",
+              "result"
+            ],
+            0
+          ],
+          [
+            "bit_xor",
+            [
+              "project",
+              [
+                "var",
+                "result"
+              ],
+              1
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ]
+        ]
+      ],
+      "fault": "off-by-one-consumed",
+      "kind": "post",
+      "op": "bare_u8",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "project",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    0
+                  ],
+                  [
+                    "if",
+                    [
+                      "eq",
+                      [
+                        "unwrap_or",
+                        [
+                          "rem",
+                          [
+                            "project",
+                            [
+                              "var",
+                              "ok_payload"
+                            ],
+                            1
+                          ],
+                          [
+                            "lit",
+                            {
+                              "type": "Int",
+                              "value": "2"
+                            }
+                          ]
+                        ],
+                        [
+                          "lit",
+                          {
+                            "type": "Int",
+                            "value": "0"
+                          }
+                        ]
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "Int",
+                          "value": "0"
+                        }
+                      ]
+                    ],
+                    [
+                      "add",
+                      [
+                        "project",
+                        [
+                          "var",
+                          "ok_payload"
+                        ],
+                        1
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "Nat",
+                          "value": "1"
+                        }
+                      ]
+                    ],
+                    [
+                      "sub",
+                      [
+                        "project",
+                        [
+                          "var",
+                          "ok_payload"
+                        ],
+                        1
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "Nat",
+                          "value": "1"
+                        }
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "off-by-one-consumed",
+      "kind": "post",
+      "op": "dec_i64",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "project",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    0
+                  ],
+                  [
+                    "if",
+                    [
+                      "eq",
+                      [
+                        "unwrap_or",
+                        [
+                          "rem",
+                          [
+                            "project",
+                            [
+                              "var",
+                              "ok_payload"
+                            ],
+                            1
+                          ],
+                          [
+                            "lit",
+                            {
+                              "type": "Int",
+                              "value": "2"
+                            }
+                          ]
+                        ],
+                        [
+                          "lit",
+                          {
+                            "type": "Int",
+                            "value": "0"
+                          }
+                        ]
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "Int",
+                          "value": "0"
+                        }
+                      ]
+                    ],
+                    [
+                      "add",
+                      [
+                        "project",
+                        [
+                          "var",
+                          "ok_payload"
+                        ],
+                        1
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "Nat",
+                          "value": "1"
+                        }
+                      ]
+                    ],
+                    [
+                      "sub",
+                      [
+                        "project",
+                        [
+                          "var",
+                          "ok_payload"
+                        ],
+                        1
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "Nat",
+                          "value": "1"
+                        }
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "off-by-one-consumed",
+      "kind": "post",
+      "op": "dec_u64",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "project",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    0
+                  ],
+                  [
+                    "bit_xor",
+                    [
+                      "project",
+                      [
+                        "var",
+                        "ok_payload"
+                      ],
+                      1
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "U8",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "off-by-one-consumed",
+      "kind": "post",
+      "op": "dec_u8",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "tuple",
+        [
+          [
+            "project",
+            [
+              "var",
+              "result"
+            ],
+            0
+          ],
+          [
+            "if",
+            [
+              "eq",
+              [
+                "unwrap_or",
+                [
+                  "rem",
+                  [
+                    "project",
+                    [
+                      "var",
+                      "result"
+                    ],
+                    1
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Int",
+                      "value": "2"
+                    }
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Int",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Int",
+                  "value": "0"
+                }
+              ]
+            ],
+            [
+              "add",
+              [
+                "project",
+                [
+                  "var",
+                  "result"
+                ],
+                1
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ],
+            [
+              "sub",
+              [
+                "project",
+                [
+                  "var",
+                  "result"
+                ],
+                1
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "project",
+            [
+              "var",
+              "result"
+            ],
+            2
+          ]
+        ]
+      ],
+      "fault": "off-by-one-consumed",
+      "kind": "post",
+      "op": "tri",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    }
+  ],
+  "gate_on": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "gate_shipped": [
+    "ir.core"
+  ],
+  "levels_gate_on": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "levels_shipped": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "module": "off_by_one_consumed",
+  "schema": "warrant-fault-parity-v1"
+}

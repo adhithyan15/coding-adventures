@@ -954,15 +954,18 @@ constant `metadata_policy: "package_local"`; the original path-selection
 options never carry the field. Under the policy, a changed path inside a
 `package_prefix` package whose package-relative path is exactly
 `CHANGELOG.md`, `required_capabilities.json`, `effect_certificate.json` or
-`assurance_report.json`, a direct child of `CHANGELOG.d/` ending in `.md`, or a
-descendant of `evidence/` ending in `.json`, `.cnf` or `.drat` (every segment
-non-empty and neither `.` nor `..`), marks that package *local*. Matching is
+`assurance_report.json`, exactly one of the root BUILD-front names `BUILD`,
+`BUILD_linux`, `BUILD_mac`, `BUILD_mac_and_linux` or `BUILD_windows`, a direct
+child of `CHANGELOG.d/` ending in `.md`, or a descendant of `evidence/` ending
+in `.json`, `.cnf` or `.drat` (every segment non-empty and neither `.` nor
+`..`), marks that package *local*. Matching is
 case-sensitive, root-only and closed by type, so `README.md`,
 `docs/CHANGELOG.md`, `x/evidence/y.json`, `changelog.md`, `evidence.bindings`,
-`evidence/run.sh`, `CHANGELOG.d/nested/x.md` and a file named `CHANGELOG.d`
-are ordinary paths. Every other selection rule is unchanged: strict-glob
-packages, BUILD fronts (including platform variants such as `BUILD_windows`),
-forced seeds, repository-boundary consumers and the unknown-path policy all
+`evidence/run.sh`, `CHANGELOG.d/nested/x.md`, a file named `CHANGELOG.d`,
+`nested/BUILD`, `BUILD.bak`, `BUILD_debug`, `BUILD_Windows` and `build` are
+ordinary paths. Every other selection rule is unchanged: strict-glob
+packages (including their BUILD fronts at any depth), nested or misspelled
+front names, forced seeds, repository-boundary consumers and the unknown-path policy all
 seed ordinary changed packages. A local package that is also an ordinary seed
 is ordinary. Then:
 
@@ -979,7 +982,13 @@ that lists a file needs it to exist in a dependent's build; a host that
 cannot tell MUST also treat it as ordinary. Platform BUILD-front selection is
 likewise a host concern outside this pure operation: a host MUST classify
 local packages from the same platform-filtered path list as ordinary ones, so
-that a package is never dropped from both. Backslash spellings are not
+that a package is never dropped from both. A host MUST treat a root BUILD front
+as an ordinary path unless it knows the front was modified in place, is the
+front its platform selects, is a shell (non-declarative) BUILD, is not executed
+or read by another package's BUILD, neither carries nor gains/loses the
+platform-unsupported protocol, and belongs to an ecosystem in which dependents
+build prerequisites from source. A host that cannot establish all of these
+MUST treat it as ordinary. Backslash spellings are not
 portable fixture paths and are rejected by the schema; hosts treat them as
 ordinary paths.
 
@@ -990,8 +999,9 @@ fixtures use the distinct `package-metadata-selection-*.json` filename prefix
 and `diff-selection/package-metadata-` id prefix and pin a metadata-only
 change of every listed class, a source change beside metadata, README and
 nested, misspelled, case-varied and file-shaped lookalikes, disallowed
-extensions and nesting under `evidence/` and `CHANGELOG.d/`, a platform BUILD
-front beside metadata, strict-glob and forced packages, and a
+extensions and nesting under `evidence/` and `CHANGELOG.d/`, root BUILD
+fronts alone and beside metadata, nested, backup, unknown-suffix and
+case-varied BUILD-front lookalikes, strict-glob and forced packages, and a
 repository-boundary consumer of a capability manifest. Implementations that
 dispatch every flat case by domain and do not implement the policy must skip
 cases whose options carry `metadata_policy`, as they skip

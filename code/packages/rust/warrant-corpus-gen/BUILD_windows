@@ -19,3 +19,8 @@ cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
 # oracle's accept-blind-v2 fixture and --expect-generator pin change with it); the
 # profile named is the fixture's own, so an edit to it fails through profile_sha256 ([D14]).
 cd ..\..\..\.. && cargo run -q --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/ct-compare.warrant --profile code/specs/fixtures/ct-compare-warrant-v2/corpus.profile --bindings code/packages/rust/ct-compare/evidence.bindings --out code/specs/fixtures/ct-compare-warrant-v2
+# CV2 S10 adopter (x25519): the same line for the committed x25519 v2 fixture.
+cd ..\..\..\.. && cargo run -q --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/x25519.warrant --profile code/specs/fixtures/x25519-warrant-v2/corpus.profile --bindings code/packages/rust/x25519/evidence.bindings --out code/specs/fixtures/x25519-warrant-v2
+# CV2 S10 adopter (lzw): the same line for the committed lzw v2 fixture, with `--release` (about 25 s; in debug
+# about 3 min, because the corpus has 17.5 M cases).
+cd ..\..\..\.. && cargo run -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/lzw.warrant --profile code/specs/fixtures/lzw-warrant-v2/corpus.profile --bindings code/packages/rust/lzw/evidence.bindings --out code/specs/fixtures/lzw-warrant-v2
