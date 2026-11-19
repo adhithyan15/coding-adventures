@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
 	"strings"
@@ -48,6 +49,20 @@ func runFixedPointReaderCacheProbe(t *testing.T, root, name string) (string, str
 
 func TestFixedPointVerifierTreesChangePersistedCacheIdentityAndRestore(t *testing.T) {
 	root, _, _ := writeFixedPointCacheFixture(t)
+	// Make the implicit Cargo default explicit in the isolated copy so the
+	// WIR reader's package.autolib target decision has a same-length mutation.
+	fixedPointManifest := filepath.Join(root, "code/packages/rust/fixed-point/Cargo.toml")
+	manifestBytes, err := os.ReadFile(fixedPointManifest)
+	if err != nil {
+		t.Fatal(err)
+	}
+	manifestWithAutolib := []byte(strings.Replace(string(manifestBytes), "edition = \"2021\"\n", "edition = \"2021\"\nautolib = true\n", 1))
+	if bytes.Equal(manifestBytes, manifestWithAutolib) {
+		t.Fatal("could not add explicit Cargo autolib fixture value")
+	}
+	if err := os.WriteFile(fixedPointManifest, manifestWithAutolib, 0o644); err != nil {
+		t.Fatal(err)
+	}
 	for _, name := range []string{"ca-assurance-report", "warrant-ir"} {
 		if status, _ := runFixedPointReaderCacheProbe(t, root, name); status != "built" {
 			t.Fatalf("initial %s cache status = %q, want built", name, status)
@@ -97,6 +112,7 @@ func TestFixedPointVerifierTreesChangePersistedCacheIdentityAndRestore(t *testin
 		name, path, old, changed string
 	}{
 		{"warrant-ir", "code/packages/rust/fixed-point/src/lib.rs", "const SCALE: i128 = 65_536;", "const SCALE: i128 = 65_535;"},
+		{"warrant-ir", "code/packages/rust/fixed-point/Cargo.toml", "autolib = true", "autolib =false"},
 		{"warrant-ir", "code/specs/fixed-point.warrant", "b.raw == 0i32", "b.raw != 0i32"},
 		{"ca-assurance-report", "code/packages/rust/fixed-point/evidence/proof-manifest.json", "\"max_len\": 0", "\"max_len\": 1"},
 	}

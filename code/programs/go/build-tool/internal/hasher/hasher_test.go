@@ -1258,6 +1258,46 @@ func TestRepositoryTreeInventoryChargesPagedEntriesBeforeRetaining(t *testing.T)
 	}
 }
 
+func TestRepositoryTreeCanonicalPathBudgetUsesOneRepositoryRelativePath(t *testing.T) {
+	root := t.TempDir()
+	tree := filepath.Join(root, "code/packages/rust/demo/src")
+	if err := os.MkdirAll(tree, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(tree, "x.rs"), []byte("x"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	limits := defaultRepositoryTreeLimits
+	limits.maxPathBytes = len("code/packages/rust/demo/src/x.rs")
+	if _, err := collectRepositoryTreeSnapshot(root, "code/packages/rust/demo/src", limits); err != nil {
+		t.Fatalf("canonical near-limit path was rejected: %v", err)
+	}
+	limits.maxPathBytes--
+	if _, err := collectRepositoryTreeSnapshot(root, "code/packages/rust/demo/src", limits); err == nil {
+		t.Fatal("path over the canonical byte limit was accepted")
+	}
+}
+
+func TestRepositoryTreeAggregateByteLimitIsPerTree(t *testing.T) {
+	root := t.TempDir()
+	trees := []string{"code/packages/rust/one/src", "code/packages/rust/two/src"}
+	for _, tree := range trees {
+		directory := filepath.Join(root, filepath.FromSlash(tree))
+		if err := os.MkdirAll(directory, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(directory, "input.bin"), []byte("12345678"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	limits := defaultRepositoryTreeLimits
+	limits.maxFileBytes = 8
+	limits.maxTotalBytes = 8
+	if err := hashRepositoryTreeInputs(sha256.New(), "rust/consumer", root, trees, limits); err != nil {
+		t.Fatalf("two separately legal trees exceeded a shared byte budget: %v", err)
+	}
+}
+
 func TestStableContentFrameRejectsAtomicReplacementAndGrowth(t *testing.T) {
 	t.Run("replacement", func(t *testing.T) {
 		if runtime.GOOS == "windows" {
@@ -1269,7 +1309,7 @@ func TestStableContentFrameRejectsAtomicReplacementAndGrowth(t *testing.T) {
 			t.Fatal(err)
 		}
 		hash := sha256.New()
-		err := writeStableContentFrameBoundedWithHook(hash, root, path, nil, 64, nil, func() error {
+		err := writeStableContentFrameBoundedWithHook(hash, root, path, nil, 64, nil, 0, func() error {
 			replacement := filepath.Join(root, "replacement.bin")
 			if err := os.WriteFile(replacement, []byte("same size"), 0o644); err != nil {
 				return err
@@ -1294,7 +1334,7 @@ func TestStableContentFrameRejectsAtomicReplacementAndGrowth(t *testing.T) {
 			t.Fatal(err)
 		}
 		hash := sha256.New()
-		err := writeStableContentFrameBoundedWithHook(hash, root, path, nil, 64, nil, func() error {
+		err := writeStableContentFrameBoundedWithHook(hash, root, path, nil, 64, nil, 0, func() error {
 			file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0)
 			if err != nil {
 				return err

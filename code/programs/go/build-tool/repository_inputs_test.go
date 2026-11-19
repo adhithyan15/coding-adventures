@@ -1149,6 +1149,7 @@ func TestFixedPointInputConsumersSelectExactRustReaders(t *testing.T) {
 		{"code/packages/rust/fixed-point/src/lib.rs", map[string]bool{"rust/ca-assurance-report": true, "rust/warrant-ir": true}},
 		{"code/packages/rust/fixed-point/evidence/proof-manifest.json", map[string]bool{"rust/ca-assurance-report": true}},
 		{"code/packages/rust/fixed-point/evidence.bindings", map[string]bool{"rust/ca-assurance-report": true, "rust/warrant-ir": true}},
+		{"code/packages/rust/fixed-point/Cargo.toml", map[string]bool{"rust/ca-assurance-report": true, "rust/warrant-ir": true}},
 	} {
 		selected, err := repositoryInputConsumersForChange([]string{tc.input}, packages, "rust")
 		if err != nil || !reflect.DeepEqual(selected, tc.want) {

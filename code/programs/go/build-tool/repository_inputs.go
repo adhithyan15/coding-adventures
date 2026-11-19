@@ -247,6 +247,7 @@ var (
 		"code/specs/fixed-point.warrant",
 	}...), rustWorkspaceCargoInputs...)
 	fixedPointWarrantIRFileInputs = append(append([]string{}, []string{
+		"code/packages/rust/fixed-point/Cargo.toml",
 		fixedPointBindingsInput,
 		"code/specs/fixed-point.warrant",
 	}...), rustWorkspaceCargoInputs...)
@@ -1281,7 +1282,8 @@ func isFixedPointReporterInput(changed string) bool {
 }
 
 func isFixedPointWarrantIRInput(changed string) bool {
-	return changed == "code/specs/fixed-point.warrant" ||
+	return changed == "code/packages/rust/fixed-point/Cargo.toml" ||
+		changed == "code/specs/fixed-point.warrant" ||
 		changed == fixedPointBindingsInput ||
 		isUnderExactInputTree(changed, "code/packages/rust/fixed-point/src") ||
 		isRustWorkspaceCargoInput(changed)
