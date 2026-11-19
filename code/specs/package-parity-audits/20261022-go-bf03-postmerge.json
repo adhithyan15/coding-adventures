@@ -34561,6 +34561,13 @@
       ],
       "authority": "documentary preparation only; resolve governing profile before implementation"
     },
+    "hash-functions-dart-lane-parity": {
+      "relation_indices": [
+        322,
+        346
+      ],
+      "authority": "Dart child profile prepared under hash-functions-dart-java-kotlin-lane-parity; implementation and native validation remain pending"
+    },
     "hash-functions-dt17-vector-and-documentation-correction": {
       "relation_indices": [
         322,

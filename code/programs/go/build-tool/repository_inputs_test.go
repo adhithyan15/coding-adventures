@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"sort"
 	"strings"
 	"testing"
 
@@ -160,21 +161,24 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 	}
 }
 
-func TestGameInputFrameV1SelectsOnlyRustConsumer(t *testing.T) {
+func TestGameInputFrameV1SelectsRustAndTypeScriptConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/game-input-frame", Language: "rust"},
 		{Name: "rust/game-clock", Language: "rust"},
 		{Name: "typescript/game-input-frame", Language: "typescript"},
 	}
-	for _, changed := range []string{
-		"code/specs/fixtures/game-input-frame-v1/cases.json",
-		"code/specs/fixtures/game-input-frame-v1/schema.json",
-		"code/specs/fixtures/game-input-frame-v1/validate.py",
-	} {
+	for _, changed := range typescriptGameInputFrameInputs {
 		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
-		if err != nil || !reflect.DeepEqual(selected, map[string]bool{"rust/game-input-frame": true}) {
-			t.Fatalf("%s selected %v, err %v; want only Rust GAME frame", changed, selected, err)
+		if err != nil || !selected["typescript/game-input-frame"] {
+			t.Fatalf("%s selected %v, err %v; want TypeScript GAME frame", changed, selected, err)
 		}
+		tsSelected, err := repositoryInputConsumersForChange([]string{changed}, packages, "typescript")
+		if err != nil || !reflect.DeepEqual(tsSelected, map[string]bool{"typescript/game-input-frame": true}) {
+			t.Fatalf("typescript-only %s selected %v, err %v", changed, tsSelected, err)
+		}
+	}
+	if selected, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/game-input-frame-v1/schema.json"}, packages, "all"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"rust/game-input-frame": true}) {
+		t.Fatalf("schema-only selector = %v, err %v; want Rust-only frame consumer", selected, err)
 	}
 	for path, want := range map[string]bool{
 		"code/specs/fixtures/game-input-frame-v1/cases.json":       true,
@@ -187,6 +191,58 @@ func TestGameInputFrameV1SelectsOnlyRustConsumer(t *testing.T) {
 		if got := isGameInputFrameV1(path); got != want {
 			t.Errorf("isGameInputFrameV1(%q) = %v, want %v", path, got, want)
 		}
+	}
+	if !isTypeScriptGameInputFrameInput(".cargo/config.toml") ||
+		isTypeScriptGameInputFrameInput(".cargo/config.toml.bak") ||
+		isTypeScriptGameInputFrameInput("code/packages/rust/Cargo.toml.bak") ||
+		isTypeScriptGameInputFrameInput("code/specs/fixtures/game-input-frame-v10/cases.json") {
+		t.Fatal("TypeScript GAME proof-input predicate is not exact")
+	}
+}
+
+func TestTypeScriptGameInputFrameHashSelectorAndBoundaryShareExactInputs(t *testing.T) {
+	if !sort.StringsAreSorted(typescriptGameInputFrameInputs) {
+		t.Fatalf("TypeScript game-input-frame hash inputs are not byte-sorted: %v", typescriptGameInputFrameInputs)
+	}
+	selectorInputs := repositoryInputsByPackage()["typescript/game-input-frame"]
+	if selectorInputs == nil || !reflect.DeepEqual(selectorInputs.paths, typescriptGameInputFrameInputs) {
+		t.Fatalf("selector inputs = %#v, want shared sorted list %v", selectorInputs, typescriptGameInputFrameInputs)
+	}
+	boundaryPath := filepath.Join(toolchainFixtureRepoRoot(t), "code/specs/fixtures/build-tool-v1/repository-source-input-boundary.json")
+	data, err := os.ReadFile(boundaryPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var boundary struct {
+		Boundaries []struct {
+			AppliesTo struct {
+				ExactRoots []string `json:"exact_roots"`
+			} `json:"applies_to"`
+			Inputs []struct {
+				Path string `json:"path"`
+			} `json:"inputs"`
+		} `json:"boundaries"`
+	}
+	if err := json.Unmarshal(data, &boundary); err != nil {
+		t.Fatal(err)
+	}
+	boundaryInputs := make(map[string]bool)
+	const packageRoot = "code/packages/typescript/game-input-frame"
+	for _, row := range boundary.Boundaries {
+		if !containsString(row.AppliesTo.ExactRoots, packageRoot) {
+			continue
+		}
+		for _, input := range row.Inputs {
+			boundaryInputs[input.Path] = true
+		}
+	}
+	var sortedBoundaryInputs []string
+	for input := range boundaryInputs {
+		sortedBoundaryInputs = append(sortedBoundaryInputs, input)
+	}
+	sort.Strings(sortedBoundaryInputs)
+	if !reflect.DeepEqual(sortedBoundaryInputs, typescriptGameInputFrameInputs) {
+		t.Fatalf("exact-root boundary inputs = %v, want selector/hash inputs %v", sortedBoundaryInputs, typescriptGameInputFrameInputs)
 	}
 }
 
@@ -727,6 +783,101 @@ func TestFenwickContractSelectsDartAndPythonConsumers(t *testing.T) {
 		[]string{"code/specs/fixtures/fenwick-tree-v1/cases.json"}, missingPython, "dart",
 	); err != nil || !reflect.DeepEqual(selected, map[string]bool{"dart/fenwick-tree": true}) {
 		t.Errorf("Dart-only selection with Python absent = %v, %v", selected, err)
+	}
+}
+
+func TestHashFunctionsV1SelectsOnlyRustAndDartPublicConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/hash-functions", Language: "rust"},
+		{Name: "dart/hash-functions", Language: "dart"},
+		{Name: "rust/hash-analysis", Language: "rust"},
+		{Name: "dart/hash-analysis", Language: "dart"},
+		{Name: "python/hash-functions", Language: "python"},
+	}
+	accepted := []string{
+		"code/specs/DT17-hash-functions.md",
+		"code/specs/DT17b-hash-functions-dart-profile.md",
+		"code/specs/fixtures/hash-functions-v1/cases.json",
+		"code/specs/fixtures/hash-functions-v1/schema.json",
+		"code/specs/fixtures/hash-functions-v1/oracle.py",
+		"code/specs/fixtures/hash-functions-v1/generate.py",
+	}
+	for _, changed := range accepted {
+		if !isDt17HashFunctionsInput(changed) {
+			t.Errorf("isDt17HashFunctionsInput(%q) = false, want true", changed)
+		}
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := map[string]bool{"rust/hash-functions": true, "dart/hash-functions": true}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("consumers for %q = %v, want %v", changed, got, want)
+		}
+	}
+	for _, changed := range []string{
+		"code/specs/DT17-hash-functions.md.bak",
+		"code/specs/DT17b-hash-functions-dart-profile.md.extra",
+		"code/specs/DT17c-hash-functions.md",
+		"code/specs/fixtures/hash-functions-v10/cases.json",
+		"code/specs/fixtures/hash-functions-v1x/cases.json",
+		"code/specs/fixtures/hash-functions-v1",
+		"docs/code/specs/fixtures/hash-functions-v1/cases.json",
+		`code\specs\fixtures\hash-functions-v1\cases.json`,
+		"code/specs/fixtures/hash-functions-v1/../hash-functions-v10/cases.json",
+	} {
+		if isDt17HashFunctionsInput(changed) {
+			t.Errorf("isDt17HashFunctionsInput(%q) = true, want false", changed)
+		}
+	}
+	for language, want := range map[string]map[string]bool{
+		"rust": {"rust/hash-functions": true},
+		"dart": {"dart/hash-functions": true},
+	} {
+		got, err := repositoryInputConsumersForChange([]string{accepted[0]}, packages, language)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("%s selector returned %v, want %v", language, got, want)
+		}
+	}
+}
+
+func TestHashFunctionsV1GraphExportsExactRepositoryInputs(t *testing.T) {
+	root := t.TempDir()
+	packages := []discovery.Package{
+		{Name: "rust/hash-functions", Language: "rust", Path: filepath.Join(root, "code", "packages", "rust", "hash-functions")},
+		{Name: "dart/hash-functions", Language: "dart", Path: filepath.Join(root, "code", "packages", "dart", "hash-functions")},
+	}
+	for _, pkg := range packages {
+		if err := os.MkdirAll(pkg.Path, 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	graph, err := buildKilnLegacyGraph(packages, root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{
+		"code/specs/DT17-hash-functions.md",
+		"code/specs/DT17b-hash-functions-dart-profile.md",
+		"code/specs/fixtures/hash-functions-v1",
+	}
+	for _, name := range []string{"rust/hash-functions", "dart/hash-functions"} {
+		var found *kilnLegacyPackage
+		for i := range graph.Packages {
+			if graph.Packages[i].Name == name {
+				found = &graph.Packages[i]
+				break
+			}
+		}
+		if found == nil {
+			t.Fatalf("graph omitted %s", name)
+		}
+		if !reflect.DeepEqual(found.RepoInputs, want) {
+			t.Errorf("%s repo_inputs = %v, want %v", name, found.RepoInputs, want)
+		}
 	}
 }
 

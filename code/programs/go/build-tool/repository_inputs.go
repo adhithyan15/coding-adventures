@@ -212,13 +212,22 @@ var (
 
 	rngCorpusPaths                 = []string{"code/specs/fixtures/rng-v1"}
 	fenwickTreeContractPaths       = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
 	gameClockInputPaths            = []string{"code/specs/fixtures/game-clock-v1", "code/specs/game-clock.warrant"}
 	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
 	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
-	biquadSosFixturePaths          = []string{"code/specs/fixtures/biquad-sos-v1"}
-	hamurabiCorpusPaths            = []string{"code/specs/fixtures/hamurabi-v1"}
-	lunarLanderCorpusPaths         = []string{"code/specs/fixtures/lunar-lander-v1"}
-	warrantGrammarPaths            = []string{
+	typescriptGameInputFrameInputs = []string{
+		".cargo/config.toml",
+		"code/packages/rust/.cargo/config.toml",
+		"code/packages/rust/Cargo.lock",
+		"code/packages/rust/Cargo.toml",
+		"code/packages/typescript/tsconfig.base.json",
+		"code/specs/fixtures/game-input-frame-v1/cases.json",
+	}
+	biquadSosFixturePaths  = []string{"code/specs/fixtures/biquad-sos-v1"}
+	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
+	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
+	warrantGrammarPaths    = []string{
 		"code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v1",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
@@ -400,6 +409,20 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	{
+		name:     "rust/hash-functions",
+		language: "rust",
+		inputs:   "the shared DT17 byte-hash and Dart profile contract plus v1 fixture",
+		matches:  isDt17HashFunctionsInput,
+		paths:    dt17HashFunctionsPaths,
+	},
+	{
+		name:     "dart/hash-functions",
+		language: "dart",
+		inputs:   "the shared DT17 byte-hash and Dart profile contract plus v1 fixture",
+		matches:  isDt17HashFunctionsInput,
+		paths:    dt17HashFunctionsPaths,
+	},
 	{
 		name:     "dart/fenwick-tree",
 		language: "dart",
@@ -587,6 +610,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the GAME input action frame v1 corpus",
 		matches:  isGameInputFrameV1,
 		paths:    gameInputFrameV1Paths,
+	},
+	{
+		name:     "typescript/game-input-frame",
+		language: "typescript",
+		inputs:   "the shared GAME input action frame v1 cases and exact TypeScript/Rust proof-tool configuration inputs",
+		matches:  isTypeScriptGameInputFrameInput,
+		paths:    typescriptGameInputFrameInputs,
 	},
 	{
 		name:     "python/trig",
@@ -1536,6 +1566,15 @@ func isGameInputFrameV1(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/game-input-frame-v1/")
 }
 
+func isTypeScriptGameInputFrameInput(changed string) bool {
+	for _, input := range typescriptGameInputFrameInputs {
+		if changed == input {
+			return true
+		}
+	}
+	return false
+}
+
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while
 // excluding adjacent lookalike versions.
 func isBiquadSosFixture(changed string) bool {
@@ -1550,6 +1589,17 @@ func isFenwickTreeContractInput(changed string) bool {
 	}
 	return changed == "code/specs/DT06-fenwick-tree.md" ||
 		strings.HasPrefix(changed, "code/specs/fixtures/fenwick-tree-v1/")
+}
+
+// isDt17HashFunctionsInput selects the two exact shared contracts and the
+// versioned v1 fixture tree, excluding neighboring spec and fixture names.
+func isDt17HashFunctionsInput(changed string) bool {
+	if path.Clean(changed) != changed {
+		return false
+	}
+	return changed == "code/specs/DT17-hash-functions.md" ||
+		changed == "code/specs/DT17b-hash-functions-dart-profile.md" ||
+		strings.HasPrefix(changed, "code/specs/fixtures/hash-functions-v1/")
 }
 
 // isTrigReferenceCorpus reports whether a changed path is a file of the shared

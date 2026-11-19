@@ -4754,6 +4754,7 @@ name = "coding_adventures_hash_functions"
 version = "0.2.0"
 dependencies = [
  "capability-runtime-conformance",
+ "coding-adventures-json-value",
  "coding_adventures_sha256",
  "coding_adventures_test_bootstrap",
 ]

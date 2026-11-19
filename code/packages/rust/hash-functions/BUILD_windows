@@ -4,6 +4,8 @@
 # (strict gate), macOS uses BUILD (plain gate, NOT-LIVE without failing).
 cargo test -q -p coding_adventures_hash_functions --lib -- --nocapture
 cargo test -q -p coding_adventures_hash_functions --doc
+# DT17 v1 shared fixture: compare every case through the Rust public API.
+cargo test -q -p coding_adventures_hash_functions --test hash_functions_v1_fixture
 # The library is pure: no capability (the analyzer scans the crate source, src/).  The OS
 # randomness of the old analysis helpers lives in hash-analysis (WX-P1a2).
 cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .

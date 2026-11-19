@@ -1224,7 +1224,10 @@ func TestHashDepsNoDeps(t *testing.T) {
 		"python/pkg-a": "abc123",
 	}
 
-	hash := HashDeps("python/pkg-a", graph, hashes)
+	hash, err := HashDeps("python/pkg-a", graph, hashes)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if hash != emptyHash() {
 		t.Fatalf("expected empty hash for no deps, got %s", hash)
 	}
@@ -1241,13 +1244,19 @@ func TestHashDepsWithDeps(t *testing.T) {
 		"python/pkg-b": "hash-b",
 	}
 
-	hash := HashDeps("python/pkg-a", graph, hashes)
+	hash, err := HashDeps("python/pkg-a", graph, hashes)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if hash == emptyHash() {
 		t.Fatal("expected non-empty hash when deps exist")
 	}
 
 	// The hash should be deterministic.
-	hash2 := HashDeps("python/pkg-a", graph, hashes)
+	hash2, err := HashDeps("python/pkg-a", graph, hashes)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if hash != hash2 {
 		t.Fatal("hash should be deterministic")
 	}
@@ -1269,8 +1278,14 @@ func TestHashDepsChangesWhenDepChanges(t *testing.T) {
 		"python/pkg-b": "hash-b-v2",
 	}
 
-	h1 := HashDeps("python/pkg-a", graph, hashes1)
-	h2 := HashDeps("python/pkg-a", graph, hashes2)
+	h1, err := HashDeps("python/pkg-a", graph, hashes1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	h2, err := HashDeps("python/pkg-a", graph, hashes2)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	if h1 == h2 {
 		t.Fatal("deps hash should change when a dependency's hash changes")
@@ -1279,9 +1294,22 @@ func TestHashDepsChangesWhenDepChanges(t *testing.T) {
 
 func TestHashDepsNodeNotInGraph(t *testing.T) {
 	graph := directedgraph.New()
-	hash := HashDeps("nonexistent", graph, map[string]string{})
+	hash, err := HashDeps("nonexistent", graph, map[string]string{})
+	if err != nil {
+		t.Fatal(err)
+	}
 	if hash != emptyHash() {
 		t.Fatalf("expected empty hash for missing node, got %s", hash)
+	}
+}
+
+func TestHashDepsFailsWhenAProviderHashIsMissing(t *testing.T) {
+	graph := directedgraph.New()
+	graph.AddNode("rust/provider")
+	graph.AddNode("typescript/consumer")
+	graph.AddEdge("rust/provider", "typescript/consumer")
+	if _, err := HashDeps("typescript/consumer", graph, map[string]string{}); err == nil {
+		t.Fatal("missing provider hash must fail instead of becoming an empty dependency contribution")
 	}
 }
 
@@ -1301,7 +1329,10 @@ func TestHashDepsTransitive(t *testing.T) {
 		"python/pkg-c": "hash-c",
 	}
 
-	hashC := HashDeps("python/pkg-c", graph, hashes)
+	hashC, err := HashDeps("python/pkg-c", graph, hashes)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if hashC == emptyHash() {
 		t.Fatal("pkg-c should have deps hash (depends on both A and B)")
 	}
@@ -1312,7 +1343,10 @@ func TestHashDepsTransitive(t *testing.T) {
 		"python/pkg-b": "hash-b",
 		"python/pkg-c": "hash-c",
 	}
-	hashC2 := HashDeps("python/pkg-c", graph, hashes2)
+	hashC2, err := HashDeps("python/pkg-c", graph, hashes2)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if hashC == hashC2 {
 		t.Fatal("changing transitive dep A should change C's deps hash")
 	}
