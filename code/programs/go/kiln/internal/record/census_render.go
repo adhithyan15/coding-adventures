@@ -119,6 +119,9 @@ func renderMarkdown(s *CensusSummary) string {
 	}
 	w("\n")
 
+	h := s.Host
+	w("## Host\n\n- image %s; kernel %s; strace %s\n- shard %d of %d; CPU %s\n\n", codeSpan(h.ImageID), codeSpan(h.Kernel), codeSpan(h.StraceVersion), h.ShardIndex, h.ShardCount, codeSpan(h.CPUModel))
+
 	a := s.Actions
 	w("## Actions\n\n")
 	w("- total: %d\n- with a record.json: %d (parse ok %d, writes complete %d)\n- record.failed: %d\n- no verdict at all: %d\n", a.Total, a.WithRecord, a.RecordParseOK, a.RecordWritesComplete, a.RecordFailed, a.NoVerdict)
@@ -176,6 +179,12 @@ func renderMarkdown(s *CensusSummary) string {
 	b.WriteString(distRow("step wall (ms)", t.StepWallMS, num))
 	b.WriteString(distRow("grammar parse (ms)", t.ParseMS, num))
 	b.WriteString(distRow("parse share of wall", t.ParseShare, pct))
+	w("\n- parse throughput (MB/s): p50 %s, p90 %s, p99 %s, max %s\n", num(t.ParseMBPerS.P50), num(t.ParseMBPerS.P90), num(t.ParseMBPerS.P99), num(t.ParseMBPerS.Max))
+	w("- first (cold) parse: %s ms on %d bytes; each classify child pays this initialisation again\n", num(t.FirstParse.MS), t.FirstParse.Bytes)
+	w("- G2 at or above the p99 size (%s bytes): %d traces, share over 10%% %d, parse over 5 s %d, failing %d\n", num(t.G2AtP99.ThresholdBytes), t.G2AtP99.Traces, t.G2AtP99.Over10Pct, t.G2AtP99.Over5s, t.G2AtP99.Failing)
+	for _, r := range t.BySize {
+		w("- size from %d bytes: %d parses, parse ms p50 %s max %s, share p50 %s max %s\n", r.Min, r.N, num(r.ParseMS.P50), num(r.ParseMS.Max), pct(r.ParseShare.P50), pct(r.ParseShare.Max))
+	}
 	w("\n- parse share over 10%%: %d\n- parse over 5 s: %d\n- either limit (G2 failing): %d\n- walls dropped (not positive): %d\n- parses refused (not timed): %d\n\n", t.ShareOver10Pct, t.ParseOver5s, t.G2Failing, t.WallsDropped, t.ParseRefused)
 
 	pa := s.PerAction
@@ -189,7 +198,7 @@ func renderMarkdown(s *CensusSummary) string {
 		w("\n")
 	}
 
-	w("## Cross-check\n\n- traces %d, bytes %d\n- accepted %d, refused %d\n- mismatches %d\n- allowed stricter-only divergences %d\n", cc.Traces, cc.Bytes, cc.Accepted, cc.Refused, cc.Mismatches, cc.Allowed)
+	w("## Cross-check\n\n- traces %d, bytes %d\n- accepted %d, refused %d\n- skipped as too large to cross-check: %d (%d bytes)\n- mismatches %d\n- allowed stricter-only divergences %d\n", cc.Traces, cc.Bytes, cc.Accepted, cc.Refused, cc.Skipped, cc.SkippedBytes, cc.Mismatches, cc.Allowed)
 	for _, d := range cc.Details {
 		w("- detail: %s\n", codeSpan(d))
 	}
@@ -335,6 +344,15 @@ func RunCensus(o CensusRunOptions, stdout io.Writer) (*CensusResult, error) {
 	if err := looksLikeRecordDir(o.Dir); err != nil {
 		return nil, err
 	}
+	// A recording in progress (a step holds the lock shared, collect exclusive)
+	// makes the numbers meaningless and its memory use unwelcome: refuse.  The
+	// census takes the lock exclusively, without waiting, and holds it while it
+	// reads.
+	unlock, err := LockDir(o.Dir, true)
+	if err != nil {
+		return nil, fmt.Errorf("a recording is in progress or the directory cannot be locked: %v", err)
+	}
+	defer unlock()
 	for _, p := range []string{o.Out, o.MD} {
 		if p == "" {
 			continue

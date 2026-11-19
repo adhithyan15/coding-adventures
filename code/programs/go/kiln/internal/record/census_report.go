@@ -38,6 +38,7 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"math/bits"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -51,6 +52,13 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
+
+// DefaultCrossCheckMaxBytes is the largest trace the census cross-checks: the
+// cross-check buffers the whole trace (and parses it twice), so a trace near the
+// 1 GiB cap would take several GiB.  A larger one is still timed (the child's own
+// parse) but its cross-check is skipped and counted.  The workflow should also set
+// GOMEMLIMIT for the census process.
+const DefaultCrossCheckMaxBytes int64 = 256 << 20
 
 // CensusSummarySchema is the schema of the summary.
 const CensusSummarySchema = "kiln-census-summary/1"
@@ -66,7 +74,8 @@ const (
 	maxCensusRecordBytes   = 32 << 20 // a record.json is read at most this big
 	maxCensusEntries       = 65536    // entries in one census.json (the writer's own bound is 16384)
 	maxCensusKinds         = 128      // distinct kinds kept; the rest are "(other)"
-	maxCensusDistinct      = 500_000  // distinct (kind, path) pairs kept, over everything
+	maxCensusDistinct      = 100_000  // distinct (kind, path) pairs kept, over everything
+	maxCensusPathBytes     = 32 << 20 // total bytes of the distinct paths kept
 	maxCensusPrefixes      = 50_000   // distinct prefixes kept per kind
 	maxCensusLanguages     = 64       // distinct languages kept; the rest are "other"
 	maxCensusSteps         = 4096     // step files looked at per action
@@ -77,6 +86,7 @@ const (
 	maxCensusHeaderBytes   = 1 << 20 // collect's header line
 	maxCensusRecordsBytes  = 4 << 30 // how far the records file is read to count lines
 	censusPrefixDepth      = 4
+	maxCensusCPUInfo       = 256 << 10
 	censusLargestActions   = 10
 	censusActionNameRunes  = 200
 	censusRecordsReadChunk = 1 << 20
@@ -100,6 +110,7 @@ type CensusSummary struct {
 	// InfrastructureFailure is "" or why the census could not do its job (no
 	// traces; a pre/ that does not verify, so nothing could be parsed).
 	InfrastructureFailure string            `json:"infrastructure_failure"`
+	Host                  HostSummary       `json:"host"`
 	Problems              map[string]int    `json:"problems"`
 	Actions               ActionCounts      `json:"actions"`
 	Explain               ExplainSummary    `json:"explain"`
@@ -111,6 +122,17 @@ type CensusSummary struct {
 	Languages             []LangSummary     `json:"languages"`
 	Collect               *CollectSummary   `json:"collect"`
 	Bounds                BoundsSummary     `json:"bounds"`
+}
+
+// HostSummary says where the recording was made: from the verified binding and
+// host facts of pre/, and the CPU model of THIS machine.
+type HostSummary struct {
+	ImageID       string `json:"image_id"`
+	Kernel        string `json:"kernel"`
+	StraceVersion string `json:"strace_version"`
+	ShardIndex    int    `json:"shard_index"`
+	ShardCount    int    `json:"shard_count"`
+	CPUModel      string `json:"cpu_model"`
 }
 
 // ActionCounts counts actions by what was found for them.  The census states
@@ -176,6 +198,41 @@ type TimingSummary struct {
 	G2Failing      int  `json:"g2_failing"`
 	WallsDropped   int  `json:"walls_dropped"`
 	ParseRefused   int  `json:"parse_refused"`
+	// ParseMBPerS is the parse throughput (trace megabytes per second of parse).
+	ParseMBPerS Dist `json:"parse_mb_per_s"`
+	// BySize is the timing per log2 trace-size bucket: G2 is a statement about a
+	// trace SIZE, so a blended percentile hides it.
+	BySize []SizeTiming `json:"by_size"`
+	// G2AtP99 is the G2 verdict over the traces at or above the census p99 size,
+	// where G2 is defined.
+	G2AtP99 G2P99 `json:"g2_at_p99"`
+	// FirstParse is the first timed parse alone: it includes the process's lazy
+	// initialisation (grammar tables), which each classify child pays again, so
+	// it is the cost to add back per action.
+	FirstParse FirstParse `json:"first_parse"`
+}
+
+// SizeTiming is one size bucket's timing.
+type SizeTiming struct {
+	Min        int64 `json:"min"`
+	N          int   `json:"n"`
+	ParseMS    Dist  `json:"parse_ms"`
+	ParseShare Dist  `json:"parse_share"`
+}
+
+// G2P99 is G2 over the traces at or above the census p99 size.
+type G2P99 struct {
+	ThresholdBytes float64 `json:"threshold_bytes"`
+	Traces         int     `json:"traces"`
+	Over10Pct      int     `json:"share_over_10pct"`
+	Over5s         int     `json:"parse_over_5s"`
+	Failing        int     `json:"failing"`
+}
+
+// FirstParse is the cold-start parse.
+type FirstParse struct {
+	MS    float64 `json:"ms"`
+	Bytes int64   `json:"bytes"`
 }
 
 // PerActionSummary is the total trace bytes of each action against the cap
@@ -198,13 +255,15 @@ type ActionBytes struct {
 
 // CrossCheckSummary is the D34 line, from the census's own parses.
 type CrossCheckSummary struct {
-	Traces     int      `json:"traces"`
-	Bytes      int64    `json:"bytes"`
-	Accepted   int      `json:"accepted"`
-	Refused    int      `json:"refused"`
-	Mismatches int      `json:"mismatches"`
-	Allowed    int      `json:"allowed"`
-	Details    []string `json:"details"`
+	Traces       int      `json:"traces"`
+	Bytes        int64    `json:"bytes"`
+	Accepted     int      `json:"accepted"`
+	Refused      int      `json:"refused"`
+	Skipped      int      `json:"skipped_too_large"`
+	SkippedBytes int64    `json:"skipped_bytes"`
+	Mismatches   int      `json:"mismatches"`
+	Allowed      int      `json:"allowed"`
+	Details      []string `json:"details"`
 }
 
 // LangSummary is one language's recordable share.
@@ -260,6 +319,13 @@ type kindAcc struct {
 
 type langAcc struct{ actions, recordable, clean int }
 
+// parseSample is one accepted timed parse: the trace's size, the parse time and
+// its share of the step's wall (-1 when the wall was not positive).
+type parseSample struct {
+	size      int64
+	ms, share float64
+}
+
 type namedBytes struct {
 	name  string
 	bytes int64
@@ -269,12 +335,17 @@ type namedBytes struct {
 // above (distinct paths, prefixes, kinds, languages) plus a few numbers per
 // step trace.
 type censusAcc struct {
-	red      *redactor
-	problems map[string]int
-	actions  ActionCounts
-	explain  ExplainSummary
-	kinds    map[string]*kindAcc
-	distinct int
+	red       *redactor
+	problems  map[string]int
+	actions   ActionCounts
+	explain   ExplainSummary
+	host      HostSummary
+	samples   []parseSample
+	firstSet  bool
+	first     FirstParse
+	pathBytes int64
+	kinds     map[string]*kindAcc
+	distinct  int
 
 	pathsTruncated, pathsDropped, prefixesDropped int64
 	kindsCollapsed, languagesCollapsed, skipped   int
@@ -317,6 +388,10 @@ type CensusOptions struct {
 	// This file is the ONE production file that names it
 	// (TestParseCrossCheckedOnlyInCensus).
 	CrossCheck CrossCheckFunc
+	// CrossCheckMaxBytes overrides DefaultCrossCheckMaxBytes (0: the default).
+	CrossCheckMaxBytes int64
+	// CPUInfo is the file the CPU model is read from (empty: /proc/cpuinfo).
+	CPUInfo string
 	// Redact are the directory prefixes to label in any text (the caller passes
 	// $HOME, the temporary directories and the workspace; the record directory is
 	// added here).
@@ -354,6 +429,7 @@ func collectCensus(o CensusOptions) (*censusAcc, error) {
 		acc.infra = "pre/ does not verify, so no trace was parsed: " + text
 	} else {
 		run.pre = pre
+		acc.hostFrom(pre, o.CPUInfo)
 	}
 	ents, err := os.ReadDir(filepath.Join(o.Dir, "traces"))
 	if err != nil {
@@ -376,8 +452,10 @@ func collectCensus(o CensusOptions) (*censusAcc, error) {
 	if o.Records != "" {
 		acc.collect = readCollectSummary(o.Records, acc)
 	}
-	if acc.infra == "" && acc.cross.Traces == 0 {
+	if acc.infra == "" && len(acc.sizesAll) == 0 {
 		acc.infra = "no step trace was found to parse"
+	} else if acc.infra == "" && acc.cross.Traces == 0 {
+		acc.infra = "no trace was cross-checked (every one was too large, unreadable or refused a panic)"
 	}
 	return acc, nil
 }
@@ -441,7 +519,9 @@ func (r *censusRun) action(hexName string) {
 			}
 			sidecars = append(sidecars, n)
 		} else if n, ok := stepIndex(e.Name(), "trace"); ok {
-			traces[n] = true
+			if len(traces) < maxCensusSteps {
+				traces[n] = true
+			}
 		}
 	}
 	sort.Ints(sidecars)
@@ -704,12 +784,13 @@ func (a *censusAcc) addCensus(doc *CensusDoc) {
 			a.pathsTruncated++
 		}
 		if _, known := k.paths[p]; !known {
-			if a.distinct >= maxCensusDistinct {
+			if a.distinct >= maxCensusDistinct || a.pathBytes+int64(len(p)) > maxCensusPathBytes {
 				a.pathsDropped++
 				k.dropped += e.Count
 				continue
 			}
 			a.distinct++
+			a.pathBytes += int64(len(p))
 		}
 		first := false
 		if _, known := k.paths[p]; !known {
@@ -842,15 +923,25 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 	// starts is outside the timing: it keeps the previous trace's garbage (this
 	// process is long-lived, the child is not) off this parse's account.
 	runtime.GC()
-	start := time.Now()
-	_, why := parseStep(r.pre, name, j, sc, pkgDir, limits)
-	elapsed := time.Since(start)
+	var why string
+	var elapsed time.Duration
+	if !a.guard(func() {
+		start := time.Now()
+		_, why = parseStep(r.pre, name, j, sc, pkgDir, limits)
+		elapsed = time.Since(start)
+	}) {
+		return size
+	}
 	if why != "" {
 		a.parseRefused++
 		a.explain.ParseRefusals[parseReasonCode(why)]++
 	} else {
 		ms := elapsed.Seconds() * 1000
 		a.parses = append(a.parses, ms)
+		sample := parseSample{size: size, ms: ms, share: -1}
+		if !a.firstSet {
+			a.firstSet, a.first = true, FirstParse{MS: round3(ms), Bytes: size}
+		}
 		over5 := ms > 5000
 		if over5 {
 			a.over5s++
@@ -858,15 +949,29 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 		over10 := false
 		if wallMS > 0 {
 			share := ms / wallMS
+			sample.share = share
 			a.shares = append(a.shares, share)
 			if share > 0.10 {
 				a.over10++
 				over10 = true
 			}
 		}
+		a.samples = append(a.samples, sample)
 		if over5 || over10 {
 			a.g2++
 		}
+	}
+
+	// A trace over the threshold is timed but not cross-checked: the cross-check
+	// buffers it whole and parses it twice.
+	limit := r.o.CrossCheckMaxBytes
+	if limit <= 0 {
+		limit = DefaultCrossCheckMaxBytes
+	}
+	if size > limit {
+		a.cross.Skipped++
+		a.cross.SkippedBytes += size
+		return size
 	}
 
 	// The cross-checked parse (a second file read; one trace in memory).
@@ -875,8 +980,16 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 		a.problem("trace_unreadable")
 		return size
 	}
-	_, perr, m, allowed := r.crossCheck(cf, pkgDir, helperParseOptions(r.pre.Config.KilnExe, limits))
+	var perr error
+	var m *trace.CrossCheckMismatch
+	var allowed int
+	ok := a.guard(func() {
+		_, perr, m, allowed = r.crossCheck(cf, pkgDir, helperParseOptions(r.pre.Config.KilnExe, limits))
+	})
 	cf.Close()
+	if !ok {
+		return size
+	}
 	cc := &a.cross
 	cc.Traces++
 	cc.Bytes += size
@@ -981,7 +1094,7 @@ func readCollectSummary(path string, a *censusAcc) *CollectSummary {
 // CensusTopN).
 func (a *censusAcc) summary(top int) *CensusSummary {
 	s := &CensusSummary{
-		Schema: CensusSummarySchema, InfrastructureFailure: a.infra,
+		Schema: CensusSummarySchema, InfrastructureFailure: a.infra, Host: a.host,
 		Problems: map[string]int{}, Actions: a.actions, Explain: a.explain, Collect: a.collect,
 		Reasons: []KindSummary{}, Languages: []LangSummary{},
 	}
@@ -1031,8 +1144,9 @@ func (a *censusAcc) summary(top int) *CensusSummary {
 	s.Timing = TimingSummary{
 		StepWallMS: distOf(a.walls), ParseMS: distOf(a.parses), ParseShare: distOf(shares),
 		ShareOver10Pct: a.over10, ParseOver5s: a.over5s, G2Failing: a.g2,
-		WallsDropped: a.wallsDropped, ParseRefused: a.parseRefused,
+		WallsDropped: a.wallsDropped, ParseRefused: a.parseRefused, FirstParse: a.first,
 	}
+	a.timingBySize(&s.Timing, s.TraceSizes.All.P99)
 	pa := PerActionSummary{CapBytes: DefaultMaxTraceTotal, Largest: []ActionBytes{}}
 	bytesF := make([]float64, 0, len(a.actionBytes))
 	for _, ab := range a.actionBytes {
@@ -1129,4 +1243,105 @@ func (a *censusAcc) explainRecord(rec *ClassifiedRecord) {
 			a.explain.RecordParseReasons[c]++
 		}
 	}
+}
+
+// guard runs f and turns a panic in it into a counted problem: one bad trace
+// must not take the whole census down.  It reports whether f finished.
+func (a *censusAcc) guard(f func()) (ok bool) {
+	defer func() {
+		if recover() != nil {
+			a.problem("parse_panic")
+			ok = false
+		}
+	}()
+	f()
+	return true
+}
+
+// timingBySize fills the per-size-bucket rows, the throughput distribution and
+// the G2 verdict at the census p99 size.
+func (a *censusAcc) timingBySize(t *TimingSummary, p99 float64) {
+	type group struct{ ms, share []float64 }
+	groups := map[int64]*group{}
+	var mbps []float64
+	t.G2AtP99.ThresholdBytes = p99
+	for _, sm := range a.samples {
+		var min int64
+		if k := bits.Len64(uint64(sm.size)); k > 0 {
+			min = 1 << (k - 1)
+		}
+		g := groups[min]
+		if g == nil {
+			g = &group{}
+			groups[min] = g
+		}
+		g.ms = append(g.ms, sm.ms)
+		if sm.share >= 0 {
+			g.share = append(g.share, sm.share)
+		}
+		if sm.ms > 0 {
+			mbps = append(mbps, float64(sm.size)/1e6/(sm.ms/1000))
+		}
+		if p99 > 0 && float64(sm.size) >= p99 {
+			g2 := &t.G2AtP99
+			g2.Traces++
+			o5, o10 := sm.ms > 5000, sm.share > 0.10
+			if o5 {
+				g2.Over5s++
+			}
+			if o10 {
+				g2.Over10Pct++
+			}
+			if o5 || o10 {
+				g2.Failing++
+			}
+		}
+	}
+	t.ParseMBPerS = distOf(mbps)
+	mins := make([]int64, 0, len(groups))
+	for m := range groups {
+		mins = append(mins, m)
+	}
+	sort.Slice(mins, func(i, j int) bool { return mins[i] < mins[j] })
+	t.BySize = []SizeTiming{}
+	for _, m := range mins {
+		g := groups[m]
+		t.BySize = append(t.BySize, SizeTiming{Min: m, N: len(g.ms), ParseMS: distOf(g.ms), ParseShare: distOf(g.share)})
+	}
+}
+
+// hostFrom fills the host block from the verified pre/ (binding and host facts)
+// and the CPU model of this machine.  Every string is sanitised and cut.
+func (a *censusAcc) hostFrom(pre *Pre, cpuinfo string) {
+	cut := func(s string) string { t, _ := safeText(s, 200, a.red); return t }
+	b := pre.Binding
+	a.host = HostSummary{Kernel: cut(b.Kernel), StraceVersion: cut(b.StraceVersion), ShardIndex: b.ShardIndex, ShardCount: b.ShardCount}
+	if data, err := pre.ReadSealed("host-facts.json"); err == nil {
+		if hf, err := recfmt.DecodeHostFacts(data); err == nil {
+			a.host.ImageID = cut(hf.Image)
+		}
+	}
+	if cpuinfo == "" {
+		cpuinfo = "/proc/cpuinfo"
+	}
+	a.host.CPUModel = cut(cpuModel(cpuinfo))
+}
+
+// cpuModel is the first "model name" of a cpuinfo file ("" if there is none).
+func cpuModel(path string) string {
+	f, err := os.Open(path)
+	if err != nil {
+		return ""
+	}
+	defer f.Close()
+	data, err := io.ReadAll(io.LimitReader(f, maxCensusCPUInfo))
+	if err != nil {
+		return ""
+	}
+	for _, line := range strings.Split(string(data), "\n") {
+		if k, v, ok := strings.Cut(line, ":"); ok && strings.TrimSpace(k) == "model name" {
+			return strings.TrimSpace(v)
+		}
+	}
+	return ""
 }
