@@ -13,6 +13,8 @@
 use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk};
 use core::fmt;
 use tls13_cipher_suite_policy::{HkdfHash, SelectedCipherSuite};
+use tls13_extension_block::ExtensionBlock;
+use tls13_extension_context_policy::ExtensionContextPolicy;
 use tls13_finished::{
     derive_finished_key, FinishedError, FinishedKey, FinishedKeyStorage, FinishedRole,
 };
@@ -37,6 +39,9 @@ mod private {
 /// supertrait prevents callers from substituting detached base secrets or a
 /// detached transcript behind another implementation.
 pub trait ExactRetryBaseSecrets: private::Sealed {
+    /// Erase the concrete repository-owned proof type without losing identity.
+    fn as_exact_retry_base_secrets(&self) -> &dyn ExactRetryBaseSecrets;
+
     /// Return the suite retained by the exact retry transcript.
     fn selected_suite(&self) -> SelectedCipherSuite;
 
@@ -48,6 +53,12 @@ pub trait ExactRetryBaseSecrets: private::Sealed {
 
     /// Reconstruct a fresh state only from the retained exact retry messages.
     fn reconstruct_transcript(&self) -> Result<SelectedTls13Transcript, TranscriptError>;
+
+    /// Borrow the final ClientHello extension offer retained by this proof.
+    fn final_client_hello_extensions(&self) -> &ExtensionBlock<'_>;
+
+    /// Return the exact extension-context policy retained by the final selection.
+    fn extension_context_policy(&self) -> ExtensionContextPolicy<'_>;
 }
 
 impl<
@@ -130,6 +141,10 @@ impl<
         'final_rules,
     >
 {
+    fn as_exact_retry_base_secrets(&self) -> &dyn ExactRetryBaseSecrets {
+        self
+    }
+
     fn selected_suite(&self) -> SelectedCipherSuite {
         self.transcript().transcript().selected_suite()
     }
@@ -144,6 +159,22 @@ impl<
 
     fn reconstruct_transcript(&self) -> Result<SelectedTls13Transcript, TranscriptError> {
         self.transcript().reconstruct_transcript()
+    }
+
+    fn final_client_hello_extensions(&self) -> &ExtensionBlock<'_> {
+        self.transcript()
+            .messages()
+            .server_hello()
+            .selection()
+            .client_hello()
+            .extensions()
+    }
+
+    fn extension_context_policy(&self) -> ExtensionContextPolicy<'_> {
+        self.transcript()
+            .messages()
+            .server_hello()
+            .extension_policy()
     }
 }
 

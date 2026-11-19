@@ -80,15 +80,27 @@ transcript, and handler-unwind failures are terminal. Earlier callback effects
 are not transactional, and a transcript-capacity failure can occur after the
 handler authorizes the affected message.
 
+When that pending ordered message is `EncryptedExtensions`, the handler can
+decode its exact authenticated body under explicit structural limits and bind
+every extension to the retained retry policy and final ClientHello offer. The
+result is a non-cloneable proof retaining the pending pre-message transcript
+snapshot beside the exact decoded body. The underlying base-schedule evidence
+remains private to the pending value, so this body check cannot be redirected
+to a detached offer or policy. This helper validates only extension-block
+structure, message placement, allowed context, uniqueness, and offer matching;
+it does not interpret extension payload semantics.
+
 This package derives one direction's handshake key and IV, creates matching
 record state, protects exact retry-handshake records in caller-owned buffers,
 enforces the public no-PSK server-flight type order, joins fresh ordered state
 to exact retry transcript and Finished-key provenance, and advances that
 transcript only after explicit caller authorization of authenticated ordered
-messages. The authorization bit is not body validation. This package does not
-interpret message bodies, authenticate CertificateVerify or Finished, validate
-certificates, establish trust, verify hostnames, enforce revocation, perform
-I/O, authorize HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
+messages. It provides the bounded `EncryptedExtensions` structure and retained
+offer/context check above; the authorization bit is otherwise not body
+validation. This package does not interpret extension payloads or other message
+bodies, authenticate CertificateVerify or Finished, validate certificates,
+establish trust, verify hostnames, enforce revocation, perform I/O, authorize
+HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
 
 ## Verification
 
