@@ -7,6 +7,7 @@
 //! vos-link check-component <crate-dir> [--root <repo-root>]
 //! vos-link gen-contract <crate-dir> [--root <repo-root>]
 //! vos-link check-contract <crate-dir> [--root <repo-root>]
+//! vos-link check-publish [--root <repo-root>]
 //! ```
 //!
 //! Exit codes: 0 no findings, 1 findings, 2 no verdict (see the library docs).
@@ -15,15 +16,17 @@ use std::path::PathBuf;
 use std::process::ExitCode;
 
 use vos_link::{
-    check_component, check_contract, check_doc, gen_build, gen_contract, gen_doc, NoVerdict,
-    Outcome,
+    check_component, check_contract, check_doc, check_publish, gen_build, gen_contract, gen_doc,
+    NoVerdict, Outcome,
 };
 
-const USAGE: &str = "usage: vos-link (gen-doc | check-doc | gen-build | check-component | gen-contract | check-contract) <crate-dir> [--root <repo-root>]";
+const USAGE: &str = "usage: vos-link (gen-doc | check-doc | gen-build | check-component | gen-contract | check-contract) <crate-dir> [--root <repo-root>]
+       vos-link check-publish [--root <repo-root>]";
 
 struct Args {
     command: String,
-    crate_dir: PathBuf,
+    /// `check-publish` sweeps the repository and takes no crate directory.
+    crate_dir: Option<PathBuf>,
     root: Option<PathBuf>,
 }
 
@@ -38,6 +41,7 @@ fn parse_args(args: &[String]) -> Result<Args, NoVerdict> {
             | "check-component"
             | "gen-contract"
             | "check-contract"
+            | "check-publish"
     ) {
         return Err(NoVerdict::new(format!(
             "unknown command {}\n{USAGE}",
@@ -65,8 +69,15 @@ fn parse_args(args: &[String]) -> Result<Args, NoVerdict> {
             )));
         }
     }
-    let crate_dir =
-        crate_dir.ok_or_else(|| NoVerdict::new(format!("no crate directory\n{USAGE}")))?;
+    let sweep = command == "check-publish";
+    if sweep && crate_dir.is_some() {
+        return Err(NoVerdict::new(format!(
+            "check-publish takes no crate directory (it sweeps the repository)\n{USAGE}"
+        )));
+    }
+    if !sweep && crate_dir.is_none() {
+        return Err(NoVerdict::new(format!("no crate directory\n{USAGE}")));
+    }
     Ok(Args {
         command,
         crate_dir,
@@ -106,15 +117,25 @@ fn print(command: &str, o: &Outcome) {
 
 fn run(args: &[String]) -> Result<ExitCode, NoVerdict> {
     let a = parse_args(args)?;
+    if a.command == "check-publish" {
+        return finish("check-publish", &check_publish(a.root.as_deref())?);
+    }
+    // `parse_args` guarantees a crate directory for every other command.
+    let dir = a.crate_dir.unwrap_or_default();
     let outcome = match a.command.as_str() {
-        "gen-doc" => gen_doc(&a.crate_dir, a.root.as_deref())?,
-        "gen-build" => gen_build(&a.crate_dir, a.root.as_deref())?,
-        "check-component" => check_component(&a.crate_dir, a.root.as_deref())?,
-        "gen-contract" => gen_contract(&a.crate_dir, a.root.as_deref())?,
-        "check-contract" => check_contract(&a.crate_dir, a.root.as_deref())?,
-        _ => check_doc(&a.crate_dir, a.root.as_deref())?,
+        "gen-doc" => gen_doc(&dir, a.root.as_deref())?,
+        "gen-build" => gen_build(&dir, a.root.as_deref())?,
+        "check-component" => check_component(&dir, a.root.as_deref())?,
+        "gen-contract" => gen_contract(&dir, a.root.as_deref())?,
+        "check-contract" => check_contract(&dir, a.root.as_deref())?,
+        _ => check_doc(&dir, a.root.as_deref())?,
     };
-    print(&a.command, &outcome);
+    finish(&a.command, &outcome)
+}
+
+/// Print the outcome and pick the exit code.
+fn finish(command: &str, outcome: &Outcome) -> Result<ExitCode, NoVerdict> {
+    print(command, outcome);
     Ok(if outcome.findings.is_empty() {
         ExitCode::SUCCESS
     } else {

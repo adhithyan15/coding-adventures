@@ -55,6 +55,9 @@ let layout = parse_layout(doc.as_bytes())?;
 assert_eq!(layout.contract.marker_sha256.as_deref(), Some(c.digest().as_str()));
 ```
 
+`vos_manifest::warrant::bound_facts(text)` lists a document's `op` names and `bound` rows from the parsed tree (a bound
+is `Some` only for an integer literal); `vos-link check-component` CC09 compares them with the contract's ceilings.
+
 ## `claim_sha256`
 
 The identity of a claim (VER29 section 5.3): the SHA-256 of the claim's real tokens joined

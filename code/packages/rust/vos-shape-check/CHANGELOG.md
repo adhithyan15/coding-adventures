@@ -4,6 +4,17 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Added (VOS-D112)
+
+- **SH19 (h), a closed attribute list for `kind = "contract"` crates** (`command::attributes`).  Every attribute is
+  `derive` of the bare core traits `Copy Clone Debug PartialEq Eq PartialOrd Ord Hash Default`, `repr` of `u8`, `C`
+  or `transparent`, `no_std`, `forbid`, `deny`, `warn`, `allow`, `doc`, `must_use`, `inline`, `default` (the
+  helper of `derive(Default)`) or exactly `cfg(test)`; `non_exhaustive` passes this pass and is reported by the
+  closed-set rule.  Any path attribute (`#[evil::rewrite]`), a derive of a path (`derive(evil::Gen)`), `cfg_attr`,
+  `path`, `macro_use`, `proc_macro*`, `test` or an unknown name is an SH19 finding.  A whitelist over the spelling,
+  so a foreign macro cannot rewrite a command enum after SH19 judged it.  The dependency half is
+  `vos-link check-component` CC10.
+
 ### Fixed (security review of VOS-039b-2a)
 
 - **SH19 gate bypass closed by a closed vocabulary** (`command::vocabulary`).  A contract crate may not contain a
