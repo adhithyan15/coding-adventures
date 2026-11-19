@@ -34,12 +34,13 @@ first matching result:
 
 The overflow case must not use wrapping multiplication or compare against a wrapped product.
 Prefer Warrant's checked multiplication result (`checked_mul(tick_count, fixed_dt_ns)`) and map
-`None` to `TimestampOverflow`; confirm that this exact expression is accepted by the native
-parser/typechecker/evaluator and symbolic path. The proof model must preserve the distinction
-between overflow at guard 6 and an ordinary elapsed mismatch at guard 7. If checked multiplication
-is not symbolic in the selected proof path, provide an independently reviewed sound overflow
-predicate or exact wider arithmetic encoding over the full `u64 × u64` domain. Fixed test constants
-alone do not prove the universal multiplication property.
+`None` to `TimestampOverflow`; confirm this exact expression is accepted by the native
+parser/typechecker/evaluator and has the same concrete semantics as Rust. Preserve the distinction
+between overflow at guard 6 and an ordinary elapsed mismatch at guard 7. For SAT, construct and
+validate an independent overflow-safe circuit for each declared fixed `fixed_dt_ns`, with full
+64-bit `tick_count` and `elapsed_sim_ns` inputs. A universal symbolic proof of multiplication over
+arbitrary pairs of 64-bit operands is a separate open assurance task; it is not required or implied
+by this bounded fixed-parameter slice.
 
 Exactly four state fields (`frame_count`, `elapsed_wall_ns`, `total_dropped_ns`,
 `spiral_clamped_frames`) are ignored and do not affect acceptance, while
@@ -152,8 +153,9 @@ counters, or clamp count.
   deliberately broken predicate admits a satisfiable counterexample; evaluate that broken
   predicate on the unchanged decoded witness and require the expected changed result. Also require
   that the unmutated comparison has its claimed verdict.
-- Keep these fixed-parameter or otherwise bounded checks distinct from full-domain Warrant
-  evaluation and from source-to-Warrant equivalence. No whole-`validate_state` source proof is
+- Keep these fixed-parameter or otherwise bounded checks distinct from finite native Warrant
+  evaluation of generated full-width inputs and from source-to-Warrant equivalence. No
+  whole-`validate_state` source proof is
   claimed unless a later item binds the actual Rust source and proves its lowering.
 
 ## Inputs, build, and evidence boundaries
