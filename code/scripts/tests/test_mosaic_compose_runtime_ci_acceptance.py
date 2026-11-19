@@ -785,7 +785,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "    if [[ \"${DIAG_MODE:-ok}\" == real_timeout ]]; then\n"
                 "      raw=\"$(cat /proc/$$/stat)\"; fields=\"${raw##*) }\"; set -- $fields; printf '%s %s %s %s\\n' \"$$\" \"$3\" \"$4\" \"${20}\" > \"$DIAG_HANG_IDENTITIES_PATH\"\n"
                 "      trap '' TERM\n"
-                "      /bin/sleep 30 &\n"
+                "      /bin/sleep 7 &\n"
                 "      child=$!\n"
                 "      raw=\"$(cat /proc/$child/stat)\"; fields=\"${raw##*) }\"; set -- $fields; printf '%s %s %s %s\\n' \"$child\" \"$3\" \"$4\" \"${20}\" >> \"$DIAG_HANG_IDENTITIES_PATH\"\n"
                 "      wait \"$child\"\n"
@@ -1235,17 +1235,20 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                         "child = os.fork()",
                         "if child == 0:",
                         "    signal.signal(signal.SIGTERM, signal.SIG_IGN)",
-                        f"    open({str(child_pid_path)!r}, 'w').write(str(os.getpid()))",
                         f"    open({str(child_identity_path)!r}, 'w').write(identity())",
+                        f"    open({str(child_pid_path)!r}, 'w').write(str(os.getpid()))",
                         "    grandchild = os.fork()",
                         "    if grandchild == 0:",
                         "        signal.signal(signal.SIGTERM, signal.SIG_IGN)",
-                        f"        open({str(grandchild_pid_path)!r}, 'w').write(str(os.getpid()))",
                         f"        open({str(grandchild_identity_path)!r}, 'w').write(identity())",
-                        "        while True: time.sleep(30)",
-                        "    while True: time.sleep(30)",
+                        f"        open({str(grandchild_pid_path)!r}, 'w').write(str(os.getpid()))",
+                        f"        open({str(grandchild_pid_path)!r} + '.ready', 'w').write('ready')",
+                        "        until = time.monotonic() + 10.0",
+                        "        while time.monotonic() < until: time.sleep(0.05)",
+                        "    until = time.monotonic() + 10.0",
+                        "    while time.monotonic() < until: time.sleep(0.05)",
                         "deadline = time.monotonic() + 1.5",
-                        f"grandchild_path = {str(grandchild_pid_path)!r}",
+                        f"grandchild_path = {str(grandchild_pid_path)!r} + '.ready'",
                         "while time.monotonic() < deadline and not os.path.exists(grandchild_path): time.sleep(0.005)",
                         "if not os.path.exists(grandchild_path): raise SystemExit(90)",
                         "os._exit(0)",
@@ -1352,17 +1355,20 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                         "        signal.signal(signal.SIGTERM, signal.SIG_IGN)",
                         "        with open(identity_path, 'a') as stream: stream.write(identity(os.getpid()) + '\\n')",
                         "        open(ready_path + '.grandchild', 'w').write('ready')",
-                        "        while True: time.sleep(30)",
+                        "        until = time.monotonic() + 10.0",
+                        "        while time.monotonic() < until: time.sleep(0.05)",
                         "    with open(identity_path, 'a') as stream: stream.write(identity(os.getpid()) + '\\n')",
                         "    deadline = time.monotonic() + 1.0",
                         "    while time.monotonic() < deadline and not os.path.exists(ready_path + '.grandchild'): time.sleep(0.005)",
                         "    if not os.path.exists(ready_path + '.grandchild'): raise SystemExit(92)",
                         "    open(ready_path, 'w').write('ready')",
-                        "    while True: time.sleep(30)",
+                        "    until = time.monotonic() + 10.0",
+                        "    while time.monotonic() < until: time.sleep(0.05)",
                         "deadline = time.monotonic() + 1.0",
                         "while time.monotonic() < deadline and not os.path.exists(ready_path): time.sleep(0.005)",
                         "if not os.path.exists(ready_path): raise SystemExit(91)",
-                        "while True: time.sleep(30)",
+                        "until = time.monotonic() + 10.0",
+                        "while time.monotonic() < until: time.sleep(0.05)",
                     )
                 )
                 # A Python wrapper injects a parent-side observer error only
@@ -1409,6 +1415,98 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                         f"post-release exception left same process identity: {pid} {current}",
                     )
                 self.assertIsNone(sentinel.poll(), "post-release cleanup touched unrelated sentinel")
+
+                def run_phase_fault(tag: str, fault_kind: str) -> tuple[subprocess.CompletedProcess[str], Path]:
+                    ready_path = root / f"{tag}-ready"
+                    identity_path = root / f"{tag}-identity"
+                    worker_source = "\n".join(
+                        (
+                            "import os, time",
+                            "raw = open(f'/proc/{os.getpid()}/stat').read()",
+                            "fields = raw[raw.rfind(')') + 2:].split()",
+                            f"open({str(identity_path)!r}, 'w').write(f'{os.getpid()} {{fields[2]}} {{fields[3]}} {{fields[19]}}')",
+                            f"open({str(ready_path)!r}, 'w').write('ready')",
+                            "time.sleep(0.05)",
+                        )
+                    )
+                    driver_path = root / f"{tag}-driver.py"
+                    lines = [
+                        "import importlib.util, pathlib, sys, time, os",
+                        f"helper = pathlib.Path({str(helper)!r})",
+                        "spec = importlib.util.spec_from_file_location('diag_supervisor', helper)",
+                        "module = importlib.util.module_from_spec(spec)",
+                        "sys.modules[spec.name] = module",
+                        "spec.loader.exec_module(module)",
+                        "calls = []",
+                        "original_signal = module._signal_owned",
+                        "def tracked_signal(*args):",
+                        "    calls.append(args[-1])",
+                        "    return original_signal(*args)",
+                        "module._signal_owned = tracked_signal",
+                    ]
+                    if fault_kind == "lost_ownership":
+                        lines.extend(
+                            (
+                                f"ready = pathlib.Path({str(ready_path)!r})",
+                                "def lose_ownership(pid):",
+                                "    deadline = time.monotonic() + 1.0",
+                                "    while time.monotonic() < deadline and not ready.exists(): time.sleep(0.005)",
+                                "    if not ready.exists(): raise RuntimeError('worker did not become ready')",
+                                "    os.waitpid(pid, 0)",
+                                "    raise ChildProcessError('injected ECHILD after leader reaped')",
+                                "module._peek_exit = lose_ownership",
+                            )
+                        )
+                    else:
+                        lines.extend(
+                            (
+                                "original_reap = module._reap_to_deadline",
+                                "def reap_then_error(pid, deadline):",
+                                "    original_reap(pid, deadline)",
+                                "    raise RuntimeError('injected failure after waitpid phase')",
+                                "module._reap_to_deadline = reap_then_error",
+                            )
+                        )
+                    lines.extend(
+                        (
+                            "try:",
+                            f"    result = module.supervise([{sys.executable!r}, '-c', {worker_source!r}], int((time.clock_gettime(time.CLOCK_BOOTTIME) + 2.0) * 100))",
+                            "finally:",
+                            "    print(f'test_signal_calls={len(calls)}')",
+                            "raise SystemExit(result)",
+                        )
+                    )
+                    driver_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+                    result = subprocess.run(
+                        [sys.executable, str(driver_path)],
+                        capture_output=True,
+                        text=True,
+                        timeout=3,
+                        check=False,
+                    )
+                    return result, identity_path
+
+                ownership_loss, ownership_identity = run_phase_fault(
+                    "ownership-loss", "lost_ownership"
+                )
+                self.assertEqual(ownership_loss.returncode, 126, ownership_loss.stderr)
+                self.assertIn("diagnostic_supervisor=worker_ownership_lost", ownership_loss.stdout)
+                self.assertIn("test_signal_calls=0", ownership_loss.stdout)
+                lost_pid, _lost_group, _lost_session, lost_start = tuple(
+                    int(field) for field in ownership_identity.read_text(encoding="ascii").split()
+                )
+                lost_current = current_stat(lost_pid)
+                self.assertTrue(lost_current is None or lost_current[3] != lost_start)
+
+                reap_error, reap_identity = run_phase_fault("reap-error", "after_reap")
+                self.assertEqual(reap_error.returncode, 126, reap_error.stderr)
+                self.assertIn("diagnostic_supervisor=cleanup_incomplete", reap_error.stdout)
+                self.assertIn("test_signal_calls=1", reap_error.stdout)
+                reaped_pid, _reaped_group, _reaped_session, reaped_start = tuple(
+                    int(field) for field in reap_identity.read_text(encoding="ascii").split()
+                )
+                reaped_current = current_stat(reaped_pid)
+                self.assertTrue(reaped_current is None or reaped_current[3] != reaped_start)
             finally:
                 if sentinel.poll() is None:
                     sentinel.terminate()

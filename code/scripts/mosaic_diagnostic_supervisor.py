@@ -135,6 +135,8 @@ def _reap_to_deadline(leader_pid: int, deadline: float) -> tuple[bool, bool]:
         # The worker leader has already been pinned through its final group
         # signal. Reaping any child is now safe: no future signal uses its PGID.
         while True:
+            if _clock() >= deadline:
+                return False, descendants_reaped
             try:
                 pid, _status = os.waitpid(-1, os.WNOHANG)
             except ChildProcessError:
@@ -204,6 +206,8 @@ def _reap_unisolated_child(pid: int, deadline: float) -> bool:
 
 
 def supervise(command: Sequence[str], deadline_cs: int) -> int:
+    global _cancel_signal
+    _cancel_signal = None
     if (
         not sys.platform.startswith("linux")
         or not hasattr(os, "fork")
@@ -225,6 +229,11 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
     old_handlers: dict[int, object] = {}
     for signum in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
         old_handlers[signum] = signal.signal(signum, _on_cancel)
+    old_handlers[signal.SIGCHLD] = signal.signal(signal.SIGCHLD, signal.SIG_DFL)
+
+    def restore_handlers() -> None:
+        for signum, handler in old_handlers.items():
+            signal.signal(signum, handler)
 
     created_pipes: list[int] = []
     try:
@@ -235,6 +244,7 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
     except OSError:
         for fd in created_pipes:
             os.close(fd)
+        restore_handlers()
         print("diagnostic_supervisor=worker_pipe_failed")
         return RESULT_UNAVAILABLE
     try:
@@ -242,6 +252,7 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
     except OSError:
         for fd in (ready_read, ready_write, release_read, release_write):
             os.close(fd)
+        restore_handlers()
         print("diagnostic_supervisor=worker_fork_failed")
         return RESULT_UNAVAILABLE
     if leader_pid == 0:
@@ -275,6 +286,7 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
             release_write = -1
             cleaned = _reap_unisolated_child(leader_pid, deadline)
             label = "startup_failed_cleaned" if cleaned else "startup_cleanup_incomplete"
+            restore_handlers()
             print(f"diagnostic_supervisor={label}")
             return RESULT_UNAVAILABLE if cleaned else RESULT_CLEANUP_INCOMPLETE
 
@@ -286,9 +298,11 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
         os.close(release_write)
         release_write = -1
 
+        worker_exit: int | None = None
+        worker_timed_out = False
+        ownership_lost = False
+        observer_failed = False
         try:
-            worker_exit: int | None = None
-            worker_timed_out = False
             while _clock() < work_deadline:
                 if _cancel_signal is not None:
                     worker_timed_out = True
@@ -301,56 +315,94 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
                 worker_exit = _peek_exit(leader_pid)
             if worker_exit is None:
                 worker_timed_out = True
+        except ChildProcessError:
+            # ECHILD means the leader is no longer ours to pin. Never signal
+            # its numeric process-group ID after this ownership loss.
+            ownership_lost = True
+        except BaseException:  # noqa: BLE001 - cleanup must precede process exit
+            observer_failed = True
 
+        if ownership_lost:
+            restore_handlers()
+            print("diagnostic_supervisor=worker_ownership_lost")
+            return RESULT_CLEANUP_INCOMPLETE
+
+        if observer_failed:
+            # No waitpid has run; the verified leader is still our unreaped
+            # child, so its private group remains pinned for this one cleanup.
+            try:
+                cleanup_ok = _signal_owned(
+                    leader_pid, leader_starttime, signal.SIGKILL
+                )
+            except BaseException:  # noqa: BLE001 - pinned but cleanup is uncertain
+                cleanup_ok = False
+            try:
+                reaped, _ = _reap_to_deadline(leader_pid, deadline)
+                cleanup_ok = cleanup_ok and reaped
+            except BaseException:  # noqa: BLE001 - never signal after reaping starts
+                cleanup_ok = False
+            restore_handlers()
+            print("diagnostic_supervisor=post_release_exception")
+            return RESULT_CLEANUP_INCOMPLETE
+
+        # The signal phase ends before the first waitpid. Once reaping begins,
+        # no code path may signal this process-group number again.
+        try:
             if worker_timed_out:
                 cleanup_ok = _signal_owned(leader_pid, leader_starttime, signal.SIGTERM)
                 kill_at = min(deadline - REAP_RESERVE_SECONDS, _clock() + TERM_GRACE_SECONDS)
                 while _clock() < kill_at and _cancel_signal is None:
                     time.sleep(min(POLL_SECONDS, max(0.0, kill_at - _clock())))
-                cleanup_ok = _signal_owned(
-                    leader_pid, leader_starttime, signal.SIGKILL
-                ) and cleanup_ok
             else:
-                # Keep the exited leader unreaped until the final private-group
-                # signal, so its PID cannot be recycled as an unrelated PGID.
-                cleanup_ok = _signal_owned(
-                    leader_pid, leader_starttime, signal.SIGKILL
-                )
-            cleaned, descendants_reaped = _reap_to_deadline(leader_pid, deadline)
-            cleanup_ok = cleanup_ok and cleaned
-        except BaseException:  # noqa: BLE001 - cleanup must precede process exit
-            # The release pipe proved the session's identity. Keep that leader
-            # unreaped and clean only its private group before returning an
-            # explicit failure status. No numeric descendant PID is signalled.
-            cleanup_ok = _signal_owned(
+                cleanup_ok = True
+            final_signal_ok = _signal_owned(
                 leader_pid, leader_starttime, signal.SIGKILL
             )
-            reaped, _ = _reap_to_deadline(leader_pid, deadline)
-            cleanup_ok = reaped and cleanup_ok
-            print("diagnostic_supervisor=post_release_exception")
-            return RESULT_CLEANUP_INCOMPLETE
+            cleanup_ok = cleanup_ok and final_signal_ok
+        except BaseException:  # noqa: BLE001 - still pre-reap; try one pinned final signal
+            cleanup_ok = False
+            try:
+                final_signal_ok = _signal_owned(
+                    leader_pid, leader_starttime, signal.SIGKILL
+                )
+                cleanup_ok = cleanup_ok and final_signal_ok
+            except BaseException:  # noqa: BLE001 - report incomplete without PID fallback
+                pass
+
+        try:
+            cleaned, descendants_reaped = _reap_to_deadline(leader_pid, deadline)
+            cleanup_ok = cleanup_ok and cleaned
+        except BaseException:  # noqa: BLE001 - after reaping starts, never signal again
+            cleanup_ok = False
     except BaseException:  # noqa: BLE001 - pre-release worker is held at the gate
         if ready_read >= 0:
             os.close(ready_read)
         if release_write >= 0:
             os.close(release_write)
         if released:
-            cleanup_ok = _signal_owned(
-                leader_pid, leader_starttime, signal.SIGKILL
-            )
-            reaped, _ = _reap_to_deadline(leader_pid, deadline)
-            cleanup_ok = reaped and cleanup_ok
+            try:
+                cleanup_ok = _signal_owned(
+                    leader_pid, leader_starttime, signal.SIGKILL
+                )
+            except BaseException:  # noqa: BLE001 - ownership remains pinned
+                cleanup_ok = False
+            try:
+                reaped, _ = _reap_to_deadline(leader_pid, deadline)
+                cleanup_ok = reaped and cleanup_ok
+            except BaseException:  # noqa: BLE001 - never signal after reap begins
+                cleanup_ok = False
+            restore_handlers()
             print("diagnostic_supervisor=startup_exception_cleanup_" + ("complete" if cleanup_ok else "incomplete"))
             return RESULT_UNAVAILABLE if cleanup_ok else RESULT_CLEANUP_INCOMPLETE
         # Before release the command has not executed and cannot have children;
         # this direct-child cleanup therefore cannot target an unrelated PID.
         cleaned = _reap_unisolated_child(leader_pid, deadline)
         label = "startup_failed_cleaned" if cleaned else "startup_cleanup_incomplete"
+        restore_handlers()
         print(f"diagnostic_supervisor={label}")
         return RESULT_UNAVAILABLE if cleaned else RESULT_CLEANUP_INCOMPLETE
 
-    for signum, handler in old_handlers.items():
-        signal.signal(signum, handler)
+    restore_handlers()
 
     if not cleanup_ok:
         print("diagnostic_supervisor=cleanup_incomplete")
