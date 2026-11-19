@@ -1211,6 +1211,150 @@ fn gen_build_of_a_contract_crate_needs_no_evidence_inputs() {
     assert!(!r.path(&pkg_path("evidence.bindings")).exists());
 }
 
+// --- CC10: the dependencies and build of a contract crate (VOS-D112) -------------------------------------------------
+
+/// The fixture's manifest with `extra` appended (every control adds ONE thing to a clean one).
+fn with_manifest(label: &str, extra: &str) -> Repo {
+    let r = component(label);
+    let base = r.read(&pkg_path("Cargo.toml"));
+    r.write(&pkg_path("Cargo.toml"), format!("{base}{extra}"));
+    r
+}
+
+#[test]
+fn cc10_the_clean_manifest_and_the_allowed_spellings_pass() {
+    // Empty tables, with a comment (the real crate's shape), and dev-dependencies: tests only.
+    for (label, extra) in [
+        ("cc10-empty", "\n[dependencies]\n# nothing, SH12\n\n[build-dependencies]\n\n[target.'cfg(unix)'.dependencies]\n"),
+        ("cc10-dev", "\n[dev-dependencies]\nvos-fixture-contract = { path = \".\" }\n"),
+        ("cc10-procfalse", "\n[package.metadata]\nx = 1\n"),
+    ] {
+        let r = with_manifest(label, extra);
+        let o = cc(&r);
+        assert!(o.findings.is_empty(), "{label}: {}", show(&o));
+    }
+    let r = component("cc10-procfalse2");
+    r.edit(
+        &pkg_path("Cargo.toml"),
+        "[lib]\n",
+        "[lib]\nproc-macro = false\n",
+    );
+    assert!(cc(&r).findings.is_empty());
+}
+
+#[test]
+fn cc10_control_every_spelling_of_a_dependency_is_refused() {
+    for (label, extra, shown) in [
+        (
+            "cc10-dep",
+            "\n[dependencies]\nvos-evil-contract = { path = \"../evil\" }\n",
+            "dependencies.vos-evil-contract",
+        ),
+        (
+            "cc10-dep-table",
+            "\n[dependencies.vos-evil-contract]\npath = \"../evil\"\n",
+            "dependencies.vos-evil-contract",
+        ),
+        (
+            "cc10-dep-core",
+            "\n[dependencies]\ncore = \"1\"\n",
+            "dependencies.core",
+        ),
+        (
+            "cc10-build-dep",
+            "\n[build-dependencies]\nevil = \"1\"\n",
+            "build-dependencies.evil",
+        ),
+        (
+            "cc10-build-dep-underscore",
+            "\n[build_dependencies]\nevil = \"1\"\n",
+            "build_dependencies.evil",
+        ),
+        (
+            "cc10-target-dep",
+            "\n[target.'cfg(unix)'.dependencies]\nevil = \"1\"\n",
+            "target.cfg(unix).dependencies.evil",
+        ),
+        (
+            "cc10-target-build-dep",
+            "\n[target.x86_64-unknown-linux-gnu.build-dependencies]\nevil = \"1\"\n",
+            "build-dependencies.evil",
+        ),
+    ] {
+        let r = with_manifest(label, extra);
+        let o = cc(&r);
+        only(&o, "CC10", shown);
+        assert!(
+            o.findings[0].message.contains("a contract has none"),
+            "{label}"
+        );
+    }
+}
+
+#[test]
+fn cc10_control_a_dependency_table_written_as_a_scalar_is_refused() {
+    // At the document root, before the first table header.
+    let r = component("cc10-dep-scalar");
+    let base = r.read(&pkg_path("Cargo.toml"));
+    r.write(
+        &pkg_path("Cargo.toml"),
+        format!("dependencies = \"x\"\n{base}"),
+    );
+    only(&cc(&r), "CC10", "\"dependencies\"");
+}
+
+#[test]
+fn cc10_control_a_build_script_a_build_key_and_a_proc_macro_are_refused() {
+    let r = component("cc10-build-key");
+    r.edit(
+        &pkg_path("Cargo.toml"),
+        "edition = \"2021\"\n",
+        "edition = \"2021\"\nbuild = \"b.rs\"\n",
+    );
+    only(&cc(&r), "CC10", "package.build");
+    // `false` is a spelling too: the rule is "no `build` key at all" (as SH15).
+    let r = component("cc10-build-false");
+    r.edit(
+        &pkg_path("Cargo.toml"),
+        "edition = \"2021\"\n",
+        "edition = \"2021\"\nbuild = false\n",
+    );
+    only(&cc(&r), "CC10", "package.build");
+    let r = component("cc10-proc-macro");
+    r.edit(
+        &pkg_path("Cargo.toml"),
+        "[lib]\n",
+        "[lib]\nproc-macro = true\n",
+    );
+    only(&cc(&r), "CC10", "lib.proc-macro");
+    let r = component("cc10-proc-macro-alias");
+    r.edit(
+        &pkg_path("Cargo.toml"),
+        "[lib]\n",
+        "[lib]\nproc_macro = true\n",
+    );
+    only(&cc(&r), "CC10", "lib.proc_macro");
+    for name in ["build.rs", "Build.rs"] {
+        let r = component("cc10-build-rs");
+        r.write(&pkg_path(name), "fn main() {}\n");
+        only(&cc(&r), "CC10", "a build script exists");
+    }
+}
+
+#[test]
+fn cc10_an_unreadable_manifest_is_no_verdict_not_a_pass() {
+    let r = component("cc10-unreadable");
+    r.write(&pkg_path("Cargo.toml"), "[package\nname = \n");
+    let e = check_component(&r.pkg(C), None).expect_err("no verdict");
+    assert!(e.to_string().contains("Cargo.toml:"), "{e}");
+    assert!(e.to_string().contains("CC10 needs the manifest"), "{e}");
+    // A missing manifest is CC02's finding, and CC10 then has nothing to read.
+    let r = component("cc10-missing");
+    std::fs::remove_file(r.path(&pkg_path("Cargo.toml"))).unwrap();
+    let o = cc(&r);
+    only(&o, "CC02", "Cargo.toml is missing");
+}
+
 // --- the spec states the numbers the code holds -----------------------------------------------------------------------
 
 #[test]

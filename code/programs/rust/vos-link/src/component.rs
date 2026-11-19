@@ -19,13 +19,15 @@
 //!   CC02 file set           CC06 publish = false (any)     bound to the document's claims
 //!   CC03 BUILD, BUILD_windows == gen-build            CC07 coverage-floor declared, >= 95
 //!   CC04 inputs of generation: bindings, document, sabotage plan, tolerance script
+//!   CC09 `bound` rows against the ceilings of contract.vos (VOS-039b-2b, [`crate::bounds`])
+//!   CC10 a contract crate has no dependency, build script or proc-macro (VOS-D112)
 //! ```
 //!
 //! ## Contract crates (VOS-039b-1)
 //!
 //! A crate of kind `contract` is judged by a shorter branch ([`contract_component`]): CC02 (its
-//! own file set), CC03 (BUILD and BUILD_windows against `canonical_contract_build`) and CC05
-//! (`vosContractRow`).  CC04, CC06, CC07 and CC08 are about evidence, a document, `-any` crates
+//! own file set), CC03 (BUILD and BUILD_windows against `canonical_contract_build`), CC05
+//! (`vosContractRow`) and CC10 (no dependency at all, VOS-D112).  CC04, CC06, CC07 and CC08 are about evidence, a document, `-any` crates
 //! and coverable code, none of which a contract has.  The lemmas themselves are `check-contract`'s,
 //! which the generated BUILD runs.
 //!
@@ -48,13 +50,14 @@ use vos_shape_check::manifest::{
 };
 use vos_shape_check::toml::{self as toml_reader, Value};
 
+use crate::bounds;
 use crate::build_gen::{
     canonical_build, canonical_contract_build, load_inputs, tolerance_script, GenInputs, PLAN_FILE,
     TOLERANCE_SCRIPT,
 };
 use crate::check::first_difference_line;
 use crate::error::{Finding, NoVerdict};
-use crate::fsio::{ensure_plain_dirs, esc, q, read_regular_opt};
+use crate::fsio::{ensure_plain_dirs, esc, list_names, q, read_regular_opt};
 use crate::inputs::{resolve_layout, Layout};
 use crate::ops::Outcome;
 
@@ -234,6 +237,8 @@ struct Ctx {
     vt: VosToml,
     kind: Kind,
     f: Vec<Finding>,
+    /// What a pass does not establish, and what was left out (printed with the result).
+    notes: Vec<String>,
 }
 
 impl Ctx {
@@ -264,11 +269,13 @@ pub fn check_component(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outc
         vt,
         kind,
         f: Vec::new(),
+        notes: Vec::new(),
     };
 
     if kind == Kind::Contract {
         contract_component(&mut cx)?;
         out.findings = cx.f;
+        out.notes = cx.notes;
         out.notes.push(
             "check-component (contract crate): the file set, BUILD and BUILD_windows byte-equal to `gen-build`'s contract region (VOS04 5.6, which runs `check-contract`: lemmas, mutants, config mutants, the Rust-enum/Warrant-variant correspondence and the generated table, and `vos-shape-check` with its command-type rule SH19) and the build-tool row `vosContractRow` are present and consistent. Not checked: that the lines PASS (the build does that). A contract has no evidence manifest, coverage floor or `-any` rule (VOS10 section 15).".to_string(),
         );
@@ -284,10 +291,12 @@ pub fn check_component(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outc
     }
     build_tool_row(&mut cx)?;
     publish_rule(&mut cx)?;
+    bounds_rule(&mut cx)?;
 
     out.findings = cx.f;
+    out.notes = cx.notes;
     out.notes.push(
-        "check-component: the file set, BUILD and BUILD_windows byte-equal to `gen-build` (VOS04 5.2 lines 1 to 9, the coverage gate and this command), the sabotage plan, the tolerance script, the build-tool row, publish = false for `-any` and the evidence manifest bound to the document are present and consistent. Not checked: that the lines PASS (the build does that), the exact operations-times-tiers control count (VOS-D105), a parser's fuzz corpus (VOS-D106), the command-type check (VOS-D077), deriving the plan (VOS-D108), and line 10 (SAT, n/a until VOS-029).".to_string(),
+        "check-component: the file set, BUILD and BUILD_windows byte-equal to `gen-build` (VOS04 5.2 lines 1 to 9, the coverage gate and this command), the sabotage plan, the tolerance script, the build-tool row, publish = false for `-any`, the `bound` rows at or under the contract's ceilings (CC09) and the evidence manifest bound to the document are present and consistent. Not checked: that the lines PASS (the build does that), that a bound is the TRUE worst case (the step counter, VOS-D089), the exact operations-times-tiers control count (VOS-D105), a parser's fuzz corpus (VOS-D106), the command-type check (VOS-D077), deriving the plan (VOS-D108), and line 10 (SAT, n/a until VOS-029).".to_string(),
     );
     Ok(out)
 }
@@ -399,6 +408,9 @@ fn contract_component(cx: &mut Ctx) -> Result<(), NoVerdict> {
         }
     }
 
+    // CC10: no dependency, no build script, no proc-macro (VOS-D112).
+    contract_dependencies(cx)?;
+
     // CC05: the build-tool row.
     let path = cx.layout.root.join(BUILD_TOOL_ROWS);
     match read_text(&path, BUILD_ROWS_MAX_BYTES)? {
@@ -416,6 +428,114 @@ fn contract_component(cx: &mut Ctx) -> Result<(), NoVerdict> {
                     ),
                 );
             }
+        }
+    }
+    Ok(())
+}
+
+/// The dependency tables Cargo reads for code that is part of a build (the underscore spellings
+/// are accepted by Cargo as aliases, so they count).  `dev-dependencies` are NOT here: they run
+/// in tests only.
+const BUILD_DEP_TABLES: [&str; 3] = ["dependencies", "build-dependencies", "build_dependencies"];
+
+/// CC10 (VOS-D112): a contract crate is declarations only, so nothing in its manifest may bring
+/// foreign code into its build.
+///
+/// SH19 judges the crate's own text; a path dependency could supply an attribute macro or a
+/// foreign derive that rewrites a command enum after SH19 judged it (`#[evil::rewrite]`).  So the
+/// manifest of a contract crate has:
+///
+/// ```text
+///   [dependencies]  [build-dependencies]  [target.*.dependencies]    no entry (an empty table is fine)
+///   package.build  /  a build.rs file                                 none
+///   [lib] proc-macro                                                  absent, or the literal false
+/// ```
+///
+/// `[dev-dependencies]` are allowed: they build only under `cargo test`, and SH12 judges their
+/// allowlist.  The tables are found by FLATTENED KEY PATH (`toml_reader`), so `[dependencies.x]`,
+/// an inline table, a dotted key and a quoted key all land in the same place.  A `Cargo.toml` that
+/// cannot be read is no verdict (exit 2): the rule could not be applied.
+fn contract_dependencies(cx: &mut Ctx) -> Result<(), NoVerdict> {
+    let dir = cx.layout.impl_dir.clone();
+    let Some(text) = read_text(&dir.join("Cargo.toml"), CARGO_TOML_MAX_BYTES)? else {
+        return Ok(()); // CC02 reported it
+    };
+    let entries = toml_reader::parse(&text).map_err(|e| {
+        NoVerdict::new(format!(
+            "Cargo.toml:{}: {} (CC10 needs the manifest)",
+            e.line,
+            esc(&e.message)
+        ))
+    })?;
+    let mut seen: BTreeSet<String> = BTreeSet::new();
+    for e in &entries {
+        let p: Vec<&str> = e.path.iter().map(String::as_str).collect();
+        // The position of a dependency-table name: the root, or under `target.<cfg>`.
+        let at = match p.as_slice() {
+            [t, ..] if BUILD_DEP_TABLES.contains(t) => Some(0),
+            ["target", _, t, ..] if BUILD_DEP_TABLES.contains(t) => Some(2),
+            _ => None,
+        };
+        if let Some(at) = at {
+            // A member (`p.len() > at + 1`), or a table written as a non-table value, is a
+            // dependency.  The bare header `[dependencies]` is `Value::Table` with no member.
+            // `a = { path = ".." }` flattens to TWO entries (`a` and `a.path`); one finding
+            // per dependency name, at its first line.
+            if (p.len() > at + 1 || e.value != Value::Table)
+                && seen.insert(p[..(at + 2).min(p.len())].join("."))
+            {
+                cx.find(
+                    "CC10",
+                    format!(
+                        "Cargo.toml:{}: `{}` is a dependency of a contract crate; a contract has none (an attribute macro or derive it supplied could rewrite a command enum after SH19 judged it, VOS-D112)",
+                        e.line,
+                        esc(&p[..(at + 2).min(p.len())].join("."))
+                    ),
+                );
+            }
+        }
+        let is_build_key = matches!(p.as_slice(), ["package" | "project", "build"]);
+        let is_proc_macro = matches!(p.as_slice(), ["lib", "proc-macro" | "proc_macro"])
+            && e.value != Value::Bool(false);
+        if is_build_key || is_proc_macro {
+            cx.find(
+                "CC10",
+                format!(
+                    "Cargo.toml:{}: `{}` runs code at build time; a contract crate has no build script or procedural macro (VOS-D112)",
+                    e.line,
+                    esc(&p.join("."))
+                ),
+            );
+        }
+    }
+    for name in list_names(&dir)? {
+        if name.eq_ignore_ascii_case("build.rs") {
+            cx.find(
+                "CC10",
+                format!(
+                    "{}: a build script exists; Cargo runs it before the crate (VOS-D112)",
+                    esc(&name)
+                ),
+            );
+        }
+    }
+    Ok(())
+}
+
+/// CC09 (VOS-039b-2b): the document's `bound` rows against the ceilings of `contract.vos`.
+fn bounds_rule(cx: &mut Ctx) -> Result<(), NoVerdict> {
+    match bounds::load(&cx.layout, cx.vt.contract.as_deref())? {
+        bounds::Inputs::Stop(messages) => {
+            for m in messages {
+                cx.find("CC09", m);
+            }
+        }
+        bounds::Inputs::Ready(contract, facts) => {
+            let verdict = bounds::judge(cx.kind != Kind::Reference, &contract, &facts);
+            for m in verdict.findings {
+                cx.find("CC09", m);
+            }
+            cx.notes.extend(verdict.notes);
         }
     }
     Ok(())

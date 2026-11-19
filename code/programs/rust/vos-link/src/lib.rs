@@ -45,6 +45,7 @@
 //! unreadable or oversized file, a path outside the repository or through a symlink, a
 //! usage error).  A rule that fails on bytes that *were* admitted is a finding.
 
+pub mod bounds;
 pub mod build_gen;
 pub mod check;
 pub mod component;
