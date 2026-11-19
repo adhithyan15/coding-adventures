@@ -1431,7 +1431,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                     )
                     driver_path = root / f"{tag}-driver.py"
                     lines = [
-                        "import importlib.util, pathlib, sys, time, os",
+                        "import builtins, importlib.util, pathlib, sys, time, os",
                         f"helper = pathlib.Path({str(helper)!r})",
                         "spec = importlib.util.spec_from_file_location('diag_supervisor', helper)",
                         "module = importlib.util.module_from_spec(spec)",
@@ -1444,7 +1444,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                         "    return original_signal(*args)",
                         "module._signal_owned = tracked_signal",
                     ]
-                    if fault_kind == "lost_ownership":
+                    if fault_kind in ("lost_ownership", "lost_ownership_report"):
                         lines.extend(
                             (
                                 f"ready = pathlib.Path({str(ready_path)!r})",
@@ -1455,6 +1455,39 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                                 "    os.waitpid(pid, 0)",
                                 "    raise ChildProcessError('injected ECHILD after leader reaped')",
                                 "module._peek_exit = lose_ownership",
+                            )
+                        )
+                        if fault_kind == "lost_ownership_report":
+                            lines.extend(
+                                (
+                                    "original_print = builtins.print",
+                                    "reported = []",
+                                    "def fail_first_report(*args, **kwargs):",
+                                    "    if not reported:",
+                                    "        reported.append(True)",
+                                    "        raise OSError('injected closed diagnostic stdout')",
+                                    "    return original_print(*args, **kwargs)",
+                                    "module.print = fail_first_report",
+                                )
+                            )
+                    elif fault_kind == "startup_report":
+                        lines.extend(
+                            (
+                                "module._wait_ready = lambda _fd, _deadline: False",
+                                "cleanup_calls = []",
+                                "original_startup_cleanup = module._reap_unisolated_child",
+                                "def tracked_startup_cleanup(*args):",
+                                "    cleanup_calls.append(True)",
+                                "    return original_startup_cleanup(*args)",
+                                "module._reap_unisolated_child = tracked_startup_cleanup",
+                                "original_print = builtins.print",
+                                "reported = []",
+                                "def fail_first_report(*args, **kwargs):",
+                                "    if not reported:",
+                                "        reported.append(True)",
+                                "        raise OSError('injected closed diagnostic stdout')",
+                                "    return original_print(*args, **kwargs)",
+                                "module.print = fail_first_report",
                             )
                         )
                     else:
@@ -1473,6 +1506,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                             f"    result = module.supervise([{sys.executable!r}, '-c', {worker_source!r}], int((time.clock_gettime(time.CLOCK_BOOTTIME) + 2.0) * 100))",
                             "finally:",
                             "    print(f'test_signal_calls={len(calls)}')",
+                            "    if 'cleanup_calls' in globals(): print(f'test_startup_cleanup_calls={len(cleanup_calls)}')",
                             "raise SystemExit(result)",
                         )
                     )
@@ -1497,6 +1531,19 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 )
                 lost_current = current_stat(lost_pid)
                 self.assertTrue(lost_current is None or lost_current[3] != lost_start)
+
+                ownership_report, _ = run_phase_fault(
+                    "ownership-report", "lost_ownership_report"
+                )
+                self.assertEqual(ownership_report.returncode, 126, ownership_report.stderr)
+                self.assertIn("test_signal_calls=0", ownership_report.stdout)
+                self.assertIn("diagnostic_supervisor=cleanup_incomplete", ownership_report.stdout)
+
+                startup_report, _ = run_phase_fault("startup-report", "startup_report")
+                self.assertEqual(startup_report.returncode, 126, startup_report.stderr)
+                self.assertIn("test_signal_calls=0", startup_report.stdout)
+                self.assertIn("test_startup_cleanup_calls=1", startup_report.stdout)
+                self.assertIn("diagnostic_supervisor=cleanup_incomplete", startup_report.stdout)
 
                 reap_error, reap_identity = run_phase_fault("reap-error", "after_reap")
                 self.assertEqual(reap_error.returncode, 126, reap_error.stderr)
