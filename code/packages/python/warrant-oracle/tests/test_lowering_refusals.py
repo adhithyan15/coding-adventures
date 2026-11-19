@@ -191,14 +191,39 @@ def test_a_claim_that_calls_an_op_only_inside_a_branch_still_calls_one():
 
 
 def test_the_adopters_are_unchanged_by_the_two_rules():
-    # the committed adopter documents lower as before; their impure-guard claims (wasm-leb128 has
-    # `len(op(v)) >= 1 and len(op(v)) <= 10`) are recorded, not fatal, as the generator's
-    # per-item census records them
+    # the committed adopter documents lower without a refusal.  wasm-leb128 used to carry two
+    # impure-guard claims (`len(op(v)) >= 1 and len(op(v)) <= 10`, 42 claims, 2 refused); VER04r
+    # [D28] split each into `len(op(v)) >= 1` and `len(op(v)) <= 10` (44 claims): wasm-leb128 has
+    # none now; hash-functions still has six (VER04r R13(d), CV2-F5).  The claims it lost are asserted accepted, by name, and the rule itself
+    # is still tested below with the old shape written as a synthetic claim.
     spec = lower_document(parse_source(adopter_bytes("wasm-leb128")))
-    refused = [s.claim for s in spec.suites if s.refusal is not None]
-    assert "encode_unsigned_at_most_ten_bytes" in refused
+    assert len(spec.suites) == 44
+    assert [s.claim for s in spec.suites if s.refusal is not None] == []
+    by_name = {s.claim: s for s in spec.suites}
+    for op in ("unsigned", "signed"):
+        names = [f"encode_{op}_at_least_one_byte", f"encode_{op}_at_most_ten_bytes"]
+        assert all(by_name[n].refusal is None and by_name[n].unsupported is None for n in names)
+        # the split claims sit side by side, `at_least_one_byte` first (the new one is inserted before)
+        order = [s.claim for s in spec.suites]
+        assert order.index(names[0]) + 1 == order.index(names[1])
     for name in ("ct-compare", "gf256"):
         assert all(s.refusal is None for s in lower_document(parse_source(adopter_bytes(name))).suites)
+    hf = lower_document(parse_source(adopter_bytes("hash-functions")))
+    refused = [s for s in hf.suites if s.refusal is not None]
+    assert len(refused) == 6 and all(
+        s.refusal.code == "generation" and s.refusal.message.startswith("W0701") for s in refused
+    )
+
+
+def test_the_old_wasm_leb128_shape_is_recorded_not_fatal():
+    # the shape [D28] removed from wasm-leb128, as a synthetic claim: a refusal recorded on the
+    # suite (the generator's per-item census records it the same way), never an error for the document
+    suite = lowered("f(a) >= 1u8 and f(a) <= 10u8")
+    assert suite.refusal is not None and suite.refusal.code == "generation"
+    assert suite.refusal.message.startswith("W0701") and "impure guard" in suite.refusal.message
+    # its two halves, as claims of their own, are accepted
+    assert lowered("f(a) >= 1u8").refusal is None
+    assert lowered("f(a) <= 10u8").refusal is None
 
 
 # -- VER04r 4.2 rule 3: a model body calls no subject --------------------------------------------

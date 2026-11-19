@@ -12,12 +12,14 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build --prefix ../fuzz && tsc",
     "test": "node --experimental-strip-types --test tests/sat.test.ts"
   },
   "license": "MIT",
   "author": "Adhithya Rajasekaran",
+  "dependencies": {},
   "devDependencies": {
+    "@coding-adventures/fuzz": "file:../fuzz",
     "typescript": "^5.0.0"
   }
 }

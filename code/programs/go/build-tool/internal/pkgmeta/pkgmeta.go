@@ -83,6 +83,30 @@
 //   - Raw slash-separated Git paths. A backslash never matches, so an
 //     unusual spelling falls back to the conservative behaviour.
 //
+// # BUILD fronts
+//
+// A package's own BUILD front (BUILD, BUILD_linux, BUILD_mac,
+// BUILD_mac_and_linux, BUILD_windows at the package root) is package-local
+// only under conditions this package cannot check alone. The name test
+// (IsBuildFront) is the first of six; the host (gitdiff.ClassifyChangedFiles
+// and the main package's ordinaryBuildFronts) adds the other five: Git status
+// M, the front the platform selects, a shell (non-Starlark) BUILD, a language
+// in the closed gate (BuildFrontLocalFor) and no veto. The evidence:
+//
+//	P1  other BUILDs run this BUILD (`(cd ../x && sh BUILD)`, `call
+//	    BUILD_windows`; 11 packages today)        → veto, ScanBuildFrontReferences
+//	P2  dependents consume state a prerequisite's BUILD run leaves behind
+//	    (lua/lexer needs rocks its prerequisites' BUILDs install;
+//	    typescript/bitset reads ../test-bootstrap/dist) → language gate
+//	P3  a BUILD of `echo BUILD_TOOL_UNSUPPORTED:<CODE>` makes dependents
+//	    "unsupported"                                   → marker veto
+//	P4  an added/deleted front changes which file a platform selects → M only
+//	P5  Starlark BUILDs declare srcs and deps           → shell BUILDs only
+//
+// Rust has neither P1 nor P2 today: every dependent (Rust, wasm and the
+// Dart/Swift/Go/C++/C#/F#/Haskell/Mosaic wrappers) compiles a Rust
+// prerequisite from source in its own cargo invocation.
+//
 // When in doubt a file is NOT metadata: a wrongly-propagating file costs CI
 // time, a wrongly-local one lets a broken dependent merge.
 package pkgmeta
@@ -105,6 +129,16 @@ var rootFiles = map[string]struct{}{
 var EvidenceExtensions = []string{".json", ".cnf", ".drat"}
 
 // IsPackageLocal reports whether relative — a slash-separated path relative
+// to the package root, exactly as Git spells it — can be package-local: it is
+// package-local metadata (IsMetadata) or a BUILD front name (IsBuildFront).
+// This is the predicate of the neutral `package_local` policy; whether a BUILD
+// front is *actually* local also needs the host conditions described under
+// "BUILD fronts" in the package documentation.
+func IsPackageLocal(relative string) bool {
+	return IsMetadata(relative) || IsBuildFront(relative)
+}
+
+// IsMetadata reports whether relative — a slash-separated path relative
 // to the package root, exactly as Git spells it — is package-local metadata.
 //
 //	CHANGELOG.md                       → true
@@ -120,7 +154,7 @@ var EvidenceExtensions = []string{".json", ".cnf", ".drat"}
 //	CHANGELOG.d, evidence              → false (a file, not the directory)
 //	evidence.bindings                  → false (read by other packages)
 //	""                                 → false (the package root itself)
-func IsPackageLocal(relative string) bool {
+func IsMetadata(relative string) bool {
 	if strings.Contains(relative, "\\") {
 		return false
 	}

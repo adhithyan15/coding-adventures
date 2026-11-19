@@ -2,6 +2,7 @@
 name = "vos-sched-contract-check"
 version = "0.1.0"
 edition = "2021"
+publish = false  # evidence-only check crate: never published or shipped (VOS-D082)
 description = "Parses, type-checks and evaluates the Warrant text of vos-sched-contract (VOS-010) with the repository's Warrant tooling; the document checks themselves are vos-link's (VOS-033)"
 
 [lib]

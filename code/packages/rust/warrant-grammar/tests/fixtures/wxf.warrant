@@ -1,0 +1,64 @@
+-- VOS-D025 test fixture (VER04j section 14.3 item 55): a document whose state is a fixed-size
+-- byte array BUILT BY A MODEL with `fixed<8>(..)`.  Until D025 the generator stopped at W0701
+-- "call to `fixed`" although the document type-checks; this is the shape of the linear scan of
+-- VOS01 section 5.4.  It is NOT a package specification.
+--
+-- `Cells` is eight bytes, each 0 (clear) or 1 (set).  `cells_of` builds the state from eight
+-- Bool binders (256 states, enumerated exhaustively) by concatenating eight single bytes and
+-- asking `fixed<8>` for the Bytes<8> view; `fixed<8>` of eight bytes is always `Some`, and the
+-- `None` arm is the document's own answer for the impossible case.
+warrant wxf v1
+  variant Pick = Idle | Run(t: U8)
+  record Cells(cells: Bytes<8>)
+  record Total(n: U8)
+
+  op tally(s: Cells) -> Total
+  op lowest(s: Cells) -> Pick
+  op highest(s: Cells) -> Pick
+
+  labels highest:
+    s public
+  labels tally:
+    s public
+  labels lowest:
+    s public
+
+  model b2u(b: Bool) -> U8 = if b then 1u8 else 0u8
+  model cells_of(b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool) -> Bytes<8> = (
+    match fixed<8>(concat(concat(concat(concat(concat(concat(concat(
+        be_bytes(b2u(b0)), be_bytes(b2u(b1))), be_bytes(b2u(b2))), be_bytes(b2u(b3))),
+        be_bytes(b2u(b4))), be_bytes(b2u(b5))), be_bytes(b2u(b6))), be_bytes(b2u(b7))))
+    with Some(b) -> b | None -> b"0000000000000000")
+  model build(b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool) -> Cells = Cells(cells_of(b0, b1, b2, b3, b4, b5, b6, b7))
+  model ones(b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool) -> Int = (
+    to_int(b2u(b0)) + to_int(b2u(b1)) + to_int(b2u(b2)) + to_int(b2u(b3)) +
+    to_int(b2u(b4)) + to_int(b2u(b5)) + to_int(b2u(b6)) + to_int(b2u(b7)))
+  -- The lowest set position, or Idle.
+  model low(b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool) -> Pick = (
+    if b0 then Run(0u8) else (if b1 then Run(1u8) else (if b2 then Run(2u8) else (if b3 then Run(3u8) else
+    (if b4 then Run(4u8) else (if b5 then Run(5u8) else (if b6 then Run(6u8) else (if b7 then Run(7u8) else Idle))))))))
+
+  -- The highest set position, or Idle.
+  model high(b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool) -> Pick = (
+    if b7 then Run(7u8) else (if b6 then Run(6u8) else (if b5 then Run(5u8) else (if b4 then Run(4u8) else
+    (if b3 then Run(3u8) else (if b2 then Run(2u8) else (if b1 then Run(1u8) else (if b0 then Run(0u8) else Idle))))))))
+
+  example nothing_set:
+    tally(Cells(b"0000000000000000")) == Total(0u8)
+  example two_set:
+    tally(Cells(b"0100000001000000")) == Total(2u8)
+  example lowest_of_cells_two_and_five:
+    lowest(Cells(b"0000010000000100")) == Run(2u8)
+  example highest_of_none_is_idle:
+    highest(Cells(b"0000000000000000")) == Idle
+
+  -- The builder is exercised by every claim: 256 states, exhaustively.
+  claim tally_matches_the_model:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. (
+      to_int(tally(build(b0, b1, b2, b3, b4, b5, b6, b7)).n) == ones(b0, b1, b2, b3, b4, b5, b6, b7))
+  claim lowest_matches_the_model:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. (
+      lowest(build(b0, b1, b2, b3, b4, b5, b6, b7)) == low(b0, b1, b2, b3, b4, b5, b6, b7))
+  claim highest_matches_the_model:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. (
+      highest(build(b0, b1, b2, b3, b4, b5, b6, b7)) == high(b0, b1, b2, b3, b4, b5, b6, b7))

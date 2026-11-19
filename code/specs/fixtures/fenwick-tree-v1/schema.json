@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DT06 Fenwick tree conformance fixture v1",
+  "type": "object",
+  "required": [
+    "version",
+    "cases"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/case"
+      }
+    }
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "required": [
+        "name",
+        "values",
+        "ops"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "ops": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "op"
+            ]
+          }
+        },
+        "constructor_error": {
+          "enum": [
+            "negative_size",
+            "out_of_domain"
+          ]
+        },
+        "size": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

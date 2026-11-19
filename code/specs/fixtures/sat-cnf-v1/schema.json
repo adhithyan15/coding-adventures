@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SAT CNF v1 shared stateful conformance corpus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "cases"],
+  "properties": {
+    "version": {"const": 1},
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/case"}
+    }
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "dimacs", "steps"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "dimacs": {"type": "string"},
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {"$ref": "#/$defs/solve"},
+              {"$ref": "#/$defs/propagate"},
+              {"$ref": "#/$defs/addClause"},
+              {"$ref": "#/$defs/reset"}
+            ]
+          }
+        }
+      }
+    },
+    "solve": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op", "assumptions", "expect"],
+      "properties": {
+        "op": {"const": "solve"},
+        "assumptions": {"type": "array", "items": {"type": "integer", "not": {"const": 0}}},
+        "budget": {"$ref": "#/$defs/budget"},
+        "expect": {"enum": ["sat", "unsat", "unknown"]},
+        "expect_core": {"type": "array", "items": {"type": "integer", "not": {"const": 0}}}
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_conflicts": {"type": "integer", "minimum": 0},
+        "max_steps": {"type": "integer", "minimum": 0}
+      }
+    },
+    "propagate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op", "expect_conflict"],
+      "properties": {
+        "op": {"const": "propagate"},
+        "expect_conflict": {"type": "boolean"}
+      }
+    },
+    "addClause": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op", "clause"],
+      "properties": {
+        "op": {"const": "add_clause"},
+        "clause": {"type": "array", "items": {"type": "integer", "not": {"const": 0}}}
+      }
+    },
+    "reset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op"],
+      "properties": {"op": {"const": "reset"}}
+    }
+  }
+}

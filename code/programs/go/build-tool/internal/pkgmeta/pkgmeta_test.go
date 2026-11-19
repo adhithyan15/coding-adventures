@@ -5,7 +5,7 @@ import "testing"
 // Every row is a package-relative Git path and whether it is package-local
 // metadata. The false rows are the lookalikes: each one is read, could be
 // read, or could be executed by something other than its own package's BUILD.
-func TestIsPackageLocal(t *testing.T) {
+func TestIsMetadata(t *testing.T) {
 	for _, tc := range []struct {
 		path string
 		want bool
@@ -67,8 +67,8 @@ func TestIsPackageLocal(t *testing.T) {
 		{"CHANGELOG.d\\a.md", false},
 		{"evidence\\test-manifest.json", false},
 	} {
-		if got := IsPackageLocal(tc.path); got != tc.want {
-			t.Errorf("IsPackageLocal(%q) = %t, want %t", tc.path, got, tc.want)
+		if got := IsMetadata(tc.path); got != tc.want {
+			t.Errorf("IsMetadata(%q) = %t, want %t", tc.path, got, tc.want)
 		}
 	}
 }

@@ -130,8 +130,10 @@ fn the_adopters_beyond_what_is_evaluated_are_refused_whole() {
     for (name, doc) in adopters() {
         let d = doc.unwrap();
         // S10c-2 evaluates `ir.fixed`, so x25519 is emittable whole too (the census does not run
-        // the evaluator: a document is "emittable" when every item lowers and fits its bounds)
-        if ["ct-compare", "gf256", "x25519"].contains(&name.as_str()) {
+        // the evaluator: a document is "emittable" when every item lowers and fits its bounds).
+        // wasm-leb128 joined with its adopter PR: VER04r [D28] split its two `W0701` claims, so
+        // all 44 claims lower (the plan for that PR missed this pin; the test found it)
+        if ["ct-compare", "gf256", "x25519", "wasm-leb128"].contains(&name.as_str()) {
             assert!(d.emittable(), "{name}");
             continue;
         }
@@ -153,7 +155,9 @@ fn the_adopters_beyond_what_is_evaluated_are_refused_whole() {
 /// `ir.data` 100, `ir.fixed` 130, `W0701` 8, `inout` 9, `16.2` 3 and 105 emittable.  **S10c-2
 /// evaluates `ir.fixed` and describes the signed and 16-bit `fx_edge` and `nat_shift`**, so no claim
 /// is blocked on `ir.fixed` or `16.2` any more.  Now: `ir.data` 100, `inout` 9, `W0701` 8 and 238
-/// emittable (of 355).
+/// emittable (of 355).  **The wasm-leb128 adopter (VER04r [D28]) splits the two `W0701` claims of
+/// wasm-leb128 into four `ok` ones**: 357 claims, `ir.data` 100, `inout` 9, `W0701` 6 and 242
+/// emittable.
 const PINS: [(&str, &[(&str, usize)]); 11] = [
     ("arithmetic", &[("ir.data", 55), ("ok", 8)]),
     ("ct-compare", &[("ok", 9)]),
@@ -166,7 +170,7 @@ const PINS: [(&str, &[(&str, usize)]); 11] = [
     ("lzw", &[("ok", 21)]),
     ("vos-sched-any", &[("ir.data", 8)]),
     ("vos-sched-fp-bitmap", &[("ir.data", 13)]),
-    ("wasm-leb128", &[("W0701", 2), ("ok", 40)]),
+    ("wasm-leb128", &[("ok", 44)]),
     ("x25519", &[("ok", 8)]),
     ("zeroize", &[("inout", 9)]),
 ];
@@ -176,12 +180,12 @@ const PINS: [(&str, &[(&str, usize)]); 11] = [
 /// claim-calls-no-op rule, VER04r 4.3, 4.4) by `W0701`; `ok` for none.  `ir.fixed` is evaluated, so
 /// no suite names it any more, and the six hash-functions claims that have an impure guard *and* a
 /// built-in now name the guard in both tools.  The numbers come from running the oracle's lowering
-/// (`warrant-oracle/tests/test_lower.py` `CENSUS` keys by level only, so it reads `ir.core 42` for
-/// wasm-leb128: those hold the 2 refused claims, and `ir.core 35` for hash-functions: 29 + 6).
+/// (`warrant-oracle/tests/test_lower.py` `CENSUS` keys by level only, so it reads `ir.core 44` for
+/// wasm-leb128 (42 and 2 refused before [D28]: none now), and `ir.core 35` for hash-functions: 29 + 6).
 const ORACLE_PINS: [(&str, &[(&str, usize)]); 9] = [
     ("ct-compare", &[("ok", 9)]),
     ("gf256", &[("ok", 38)]),
-    ("wasm-leb128", &[("ok", 40), ("W0701", 2)]),
+    ("wasm-leb128", &[("ok", 44)]),
     ("hash-functions", &[("ok", 29), ("W0701", 6), ("ir.data", 21)]),
     ("logic-gates", &[("ok", 85), ("ir.data", 3)]),
     ("lzw", &[("ok", 21)]),
@@ -214,7 +218,7 @@ fn the_first_blocker_histogram_of_every_adopter_is_pinned() {
         .flat_map(|(_, r)| r.iter())
         .map(|(_, n)| n)
         .sum();
-    assert_eq!(total, 355);
+    assert_eq!(total, 357);
 }
 
 #[test]

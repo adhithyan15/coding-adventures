@@ -1,0 +1,6299 @@
+{
+  "version": 1,
+  "suite": "game-input-frame-v1",
+  "cases": [
+    {
+      "id": "empty_frame_preserves_levels_and_clears_edges",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "9",
+          "axes": [
+            0,
+            0,
+            -32767,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            32767
+          ]
+        },
+        "changes": []
+      },
+      "expected": {
+        "frame": {
+          "player_id": 7,
+          "tick": "1",
+          "held_buttons": "9",
+          "pressed_buttons": "0",
+          "released_buttons": "0",
+          "axes": [
+            0,
+            0,
+            -32767,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            32767
+          ]
+        }
+      }
+    },
+    {
+      "id": "press_from_up",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 3,
+            "down": true
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 7,
+          "tick": "1",
+          "held_buttons": "8",
+          "pressed_buttons": "8",
+          "released_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": "release_from_down",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "8",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 3,
+            "down": false
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 7,
+          "tick": "1",
+          "held_buttons": "0",
+          "pressed_buttons": "0",
+          "released_buttons": "8",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": "duplicate_down_is_noop",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "8",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 3,
+            "down": true
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 7,
+          "tick": "1",
+          "held_buttons": "8",
+          "pressed_buttons": "0",
+          "released_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": "duplicate_up_is_noop",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 3,
+            "down": false
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 7,
+          "tick": "1",
+          "held_buttons": "0",
+          "pressed_buttons": "0",
+          "released_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": "same_tick_tap_sets_both_edges",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": true
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 7,
+          "tick": "1",
+          "held_buttons": "0",
+          "pressed_buttons": "1",
+          "released_buttons": "1",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": "repeated_taps_are_presence_masks",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 2,
+            "down": true
+          },
+          {
+            "kind": "button",
+            "slot": 2,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 2,
+            "down": true
+          },
+          {
+            "kind": "button",
+            "slot": 2,
+            "down": false
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 7,
+          "tick": "1",
+          "held_buttons": "0",
+          "pressed_buttons": "4",
+          "released_buttons": "4",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": "down_up_down_finishes_held",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 1,
+            "down": true
+          },
+          {
+            "kind": "button",
+            "slot": 1,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 1,
+            "down": true
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 7,
+          "tick": "1",
+          "held_buttons": "2",
+          "pressed_buttons": "2",
+          "released_buttons": "2",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": "axis_update_and_persistence",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "axis",
+            "slot": 5,
+            "value": -12345
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 7,
+          "tick": "1",
+          "held_buttons": "0",
+          "pressed_buttons": "0",
+          "released_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            -12345,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": "axis_last_change_wins",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "axis",
+            "slot": 0,
+            "value": 11
+          },
+          {
+            "kind": "axis",
+            "slot": 0,
+            "value": -22
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 7,
+          "tick": "1",
+          "held_buttons": "0",
+          "pressed_buttons": "0",
+          "released_buttons": "0",
+          "axes": [
+            -22,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": "button_slot_63_and_full_width_tick",
+      "input": {
+        "player_id": 1,
+        "tick": "18446744073709551615",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 63,
+            "down": true
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 1,
+          "tick": "18446744073709551615",
+          "held_buttons": "9223372036854775808",
+          "pressed_buttons": "9223372036854775808",
+          "released_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": "u32_player_max_and_axis_lower_bound",
+      "input": {
+        "player_id": 4294967295,
+        "tick": "0",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "axis",
+            "slot": 15,
+            "value": -32767
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 4294967295,
+          "tick": "0",
+          "held_buttons": "0",
+          "pressed_buttons": "0",
+          "released_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -32767
+          ]
+        }
+      }
+    },
+    {
+      "id": "too_many_precedes_invalid_state_and_event",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            -32768,
+            0,
+            0,
+            0,
+            -32768,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "axis",
+            "slot": 16,
+            "value": -32768
+          }
+        ]
+      },
+      "expected": {
+        "error": {
+          "code": "TooManyChanges"
+        }
+      }
+    },
+    {
+      "id": "lowest_invalid_prior_axis_wins",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            -32768,
+            0,
+            0,
+            0,
+            -32768,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": []
+      },
+      "expected": {
+        "error": {
+          "code": "InvalidPreviousAxisValue",
+          "axis_slot": 3,
+          "value": -32768
+        }
+      }
+    },
+    {
+      "id": "invalid_button_slot",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 64,
+            "down": true
+          }
+        ]
+      },
+      "expected": {
+        "error": {
+          "code": "InvalidButtonActionId",
+          "change_index": 0,
+          "action_id": 64
+        }
+      }
+    },
+    {
+      "id": "invalid_axis_slot_precedes_axis_value",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "axis",
+            "slot": 16,
+            "value": -32768
+          }
+        ]
+      },
+      "expected": {
+        "error": {
+          "code": "InvalidAxisActionId",
+          "change_index": 0,
+          "action_id": 16
+        }
+      }
+    },
+    {
+      "id": "invalid_axis_value",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "axis",
+            "slot": 15,
+            "value": -32768
+          }
+        ]
+      },
+      "expected": {
+        "error": {
+          "code": "InvalidAxisValue",
+          "change_index": 0,
+          "axis_slot": 15,
+          "value": -32768
+        }
+      }
+    },
+    {
+      "id": "first_invalid_change_wins",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "axis",
+            "slot": 0,
+            "value": -32768
+          },
+          {
+            "kind": "button",
+            "slot": 64,
+            "down": true
+          }
+        ]
+      },
+      "expected": {
+        "error": {
+          "code": "InvalidAxisValue",
+          "change_index": 0,
+          "axis_slot": 0,
+          "value": -32768
+        }
+      }
+    },
+    {
+      "id": "accept_255_changes",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 7,
+          "tick": "1",
+          "held_buttons": "0",
+          "pressed_buttons": "0",
+          "released_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": "accept_256_changes",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          }
+        ]
+      },
+      "expected": {
+        "frame": {
+          "player_id": 7,
+          "tick": "1",
+          "held_buttons": "0",
+          "pressed_buttons": "0",
+          "released_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": "reject_257_changes",
+      "input": {
+        "player_id": 7,
+        "tick": "1",
+        "state": {
+          "held_buttons": "0",
+          "axes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "changes": [
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          },
+          {
+            "kind": "button",
+            "slot": 0,
+            "down": false
+          }
+        ]
+      },
+      "expected": {
+        "error": {
+          "code": "TooManyChanges"
+        }
+      }
+    }
+  ]
+}

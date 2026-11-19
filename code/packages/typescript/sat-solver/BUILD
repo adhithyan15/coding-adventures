@@ -2,6 +2,7 @@
 set -euo pipefail
 
 npm ci --quiet
-npx tsc
+npm ci --prefix ../fuzz --quiet
+npm run build
 
 node --experimental-strip-types --test tests/sat.test.ts

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added `tests/error_paths.test.ts` and `tests/types_standalone.test.ts` covering previously unexercised error and edge paths (resource-budget guards in the text, portable-text and JSON parsers; builder section/motif/meter helpers; `TextScore`/`PortableScore` constructor budgets; render duration and sample-budget guards; `mixPcmSamples` overflow checks; validation scanners). Line coverage rises from about 95.0-95.2% to about 99.6%, giving the 95% gate real headroom instead of leaving it within a fraction of a percent of failing. No source behaviour changed.
 - The shared Tier-0 golden (`specs/fixtures/music-machine/expected_render.json`) was regenerated once, for all three lanes together, after the Python, Rust and TypeScript `trig` ports converged on TRIG-REF-1 (PHY00a, TC-2): new `pcm16_le_sha256` `25bc4eb1...4acee1` (was `15c793ee...364766`); a few dozen of 96,138 samples moved by 1 LSB; the first and last 32 samples are unchanged. New `tests/golden_parity.test.ts` asserts the digest and the first/last 32 samples (the lane had no golden test). Depends on `trig` through `oscillator`, `musical-instruments` and `percussion-kit`; BUILD files build it first.
 
 ## 0.1.0

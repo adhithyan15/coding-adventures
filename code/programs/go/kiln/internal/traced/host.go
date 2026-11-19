@@ -120,10 +120,10 @@ func (c *classifier) observeVirtual(p string) {
 	case procMagicBeyond(p):
 		// A magic link with more path after it: the name says nothing of the
 		// object (D28), whatever the ephemeral list matches.
-		c.reason(rProc)
+		c.reasonAt(rProc, p)
 	case c.ephemeralMatch(p):
 	default:
-		c.reason(rProc)
+		c.reasonAt(rProc, p)
 	}
 }
 

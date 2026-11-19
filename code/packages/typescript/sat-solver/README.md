@@ -44,7 +44,8 @@ solver.addClause([negateLit(a), b]);
 const result = solver.solveWithAssumptions([a, negateLit(b)]);
 console.log(result); // "unsat"
 
-// Extract minimal unsatisfiable assumption core
+// Extract a sound, duplicate-free subset of assumptions sufficient for UNSAT.
+// The solver does not promise that this core is minimal or ordered.
 console.log(solver.getFailedCore()); // [a, not b]
 \`\`\`
 

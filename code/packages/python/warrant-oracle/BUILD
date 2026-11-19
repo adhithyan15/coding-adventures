@@ -19,6 +19,10 @@ uv pip install -e ".[dev]" --quiet
 # CV2 S10 adopter (lzw): the committed lzw v2 fixture (six omitted examples, max_ir_cost 16384); the full derive
 # of its 17,563,819 cases takes about 20 s, so one line suffices (VER04r 16.10 [D33]).
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/lzw-warrant-v2 --warrant ../../../specs/lzw.warrant --profile ../../../specs/fixtures/lzw-warrant-v2/corpus.profile --bindings ../../rust/lzw/evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
+# CV2 S10 adopter (wasm-leb128): the committed wasm-leb128 v2 fixture (44 suites, 20 faults); the full derive of
+# its 46,566,930 cases takes 4 min 53 s on one core (15 times lzw's), the most expensive line of this package.
+# One line, not sharded (VER04r 16.11 [D38]); sharding by chunk (D33) is the documented remedy if it stops fitting.
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/wasm-leb128-warrant-v2 --warrant ../../../specs/wasm-leb128.warrant --profile ../../../specs/fixtures/wasm-leb128-warrant-v2/corpus.profile --bindings ../../rust/wasm-leb128/evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/ct-compare.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/gf256.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/wasm-leb128.warrant

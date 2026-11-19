@@ -152,6 +152,9 @@ type Input struct {
 	// daemon, and keeps just the plain daemon: reason (the cross-action rule
 	// M13 covers it).
 	StepNetNS bool
+	// Census, when not nil, observes every path-carrying reason before the
+	// per-kind cap (census.go).  It never changes the result.
+	Census *Census
 }
 
 // RawRecord is the output (KILN04 section 7, item 1).  Every slice is sorted
@@ -233,6 +236,7 @@ func Classify(cfg Config, in Input) (*RawRecord, error) {
 	}
 	c := newClassifier(p)
 	c.netns = in.StepNetNS
+	c.census = in.Census
 	for _, t := range in.Traces {
 		c.runTrace(t)
 	}

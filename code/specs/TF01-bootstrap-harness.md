@@ -306,9 +306,13 @@ set WARRANT_EVIDENCE_FAULT=F&& set WARRANT_EVIDENCE_FILTER=T&& python ../../../s
 ```
 
 (Unix `BUILD`/`BUILD_linux`, then `BUILD_windows`), and declare
-`# needs-toolchain: python`. Lines of the older shapes (`| grep -q '^not ok '`,
-`| findstr /B /C:"not ok "`, the `awk` and `%TEMP%` forms) still exist; they
-migrate to the checker in staged PRs. The `vos-sched-*` packages are owned by
+`# needs-toolchain: python`. Every VER-owned Rust adopter and `typescript/test-bootstrap`
+are on the checker. Lines of the older shapes (`| grep -q '^not ok '`,
+`| findstr /B /C:"not ok "`, the `awk` and `%TEMP%` forms) remain in exactly two
+places: `go/ct-compare` (its Go runner prints an unnumbered, plan-less TAP-like
+stream that the checker's plan and numbering rules would reject, so that lane
+stays on the old form until its runner is fixed) and the `vos-sched-*` packages,
+which are owned by
 the VOS workstream, which migrates its own lines with the recipe at the end of
 the script's docstring. The checker's own tests run from
 `rust/warrant-grammar`'s BUILD on every OS.

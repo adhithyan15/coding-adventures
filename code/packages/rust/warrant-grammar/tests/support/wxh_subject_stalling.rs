@@ -3,7 +3,7 @@
 // allocation observer never trips), and it panics for others.  Everything else
 // is the honest subject, so the rest of the suite still runs and passes.
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LzErr {
     OutputLimit,
     Corrupt,

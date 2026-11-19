@@ -914,7 +914,11 @@ per-test cap (default 64 MiB, a tool-profile value) that makes an over-cap
 allocation *fail*, so a bomb is recorded as a failed instance
 (`bound-heap-exceeded`, with the measured peak), not a process abort or CI OOM.
 The observer is subject to VER04 §7's controls: a subject whose result is
-unchanged but whose allocation grows must be distinguished. Measured peak is
+unchanged but whose allocation grows must be distinguished. **The observed region is the export call, and only it** (VOS-D063; section 14.3 item 54):
+the allocations the adapter makes to marshal arguments into host values and the result
+into a Warrant value belong to the harness, not to the subject, and are not counted. A
+fault that is *modelled as an allocation by the subject* (`limit-after-alloc`) is
+allocated inside the region, so it is still counted. Measured peak is
 compared with the bound evaluated at the instance's arguments; the manifest
 records `max_observed_heap`, `bound_at_max` and `instances_observed`. A lane
 without an allocation observer records `heap` and `output` as `not-live`: a bomb
@@ -1489,10 +1493,10 @@ The numbering continues from 14.1.
     workers holding at most 1 GiB between them are ever abandoned in one process
     (`OBS_MAX_ABANDONED`, `OBS_MAX_HELD`); after that an observed call is refused with
     the same failure instead of being started.  **The supervisor is bounded (WD-HARN1,
-    item 53).**  The window is the whole adapter call (argument conversion, the export, result
-    conversion), so the adapter's copy of the result counts: a `heap` bound must
-    leave room for one extra copy of the output, as the spec's own example
-    (`2 * to_int(max_output)`) does.  The measured peak is compared with the `heap`
+    item 53).**  The window covers the export call only (item 54; it used to be the whole adapter
+    call, argument conversion and result conversion included, so the adapter's own copy of a
+    result counted and a `heap <= 0` row on any record or payload-carrying result was
+    falsified by the harness).  The measured peak is compared with the `heap`
     row evaluated at the call's arguments; a call over the row fails.
 34. **Failure vocabulary.** `bound-heap-exceeded` is not in the closed TF01 section 5.3
     failure-id vocabulary and `test-bootstrap`'s vocabulary is not changed here.  The
@@ -1687,7 +1691,8 @@ The numbering continues from 14.1.
     the test points are numbered exactly 1..N in order, `not ok # TODO` is not a catch, and `Bail out!` is searched in stderr too (a filtered run prints the filtered plan, so the
     count rule holds); on failure it prints the captured output.  It closes the case of a plan with too few points (a crash
     after an earlier `not ok`), the silent Windows failure, and the stale
-    `%TEMP%` capture.  Existing lines migrate in staged PRs, and the VOS packages
+    `%TEMP%` capture.  All VER-owned Rust adopters and `typescript/test-bootstrap` are migrated (the legacy batch);
+    `go/ct-compare` stays on the old form because its runner emits no TAP plan, and the VOS packages
     migrate their own `vos-sched-*` lines with the script's recipe.  The bail-out also
     ends the run before an abandoned, possibly spinning, worker can burn a
     core.  The stderr line is written with `writeln!` and its result ignored
@@ -1707,8 +1712,71 @@ The numbering continues from 14.1.
     allocator writes when it trips, so a panic in an instance is a failed verdict and
     never a cascade.  The first rule is the only one that changes a verdict text (it
     adds one); every adopter's generated harness changes, and is regenerated.
+54. **The observer counts the export, not the harness (VOS-D063).**  The window of item 33
+    used to be the whole adapter call.  The adapter builds the Warrant value of a record or
+    of a payload-carrying variant with a `vec!` (64 bytes for `Run(u8)`), so `heap <= 0` was
+    falsified by the harness for every operation whose result is not a scalar or a
+    payload-free variant, and `vos-sched-fp-bitmap` could declare the row on two of its
+    eight operations only.  Now the worker's window is *closed* when a job starts and is
+    opened by `obs_scope(f)` (through `obs_call!`) around exactly one expression: the call of the export (the
+    generator wraps each call of the binding's `export=` in the adapter text it has just
+    emitted as `obs_call!(export(..))`; EVERY occurrence of the export name outside a string
+    literal must be such a call, and a method call, a turbofish, a bare reference or no call
+    at all is a generation error, never an unobserved export call).  The window is restored
+    on unwinding, so a subject panic cannot leave it open.  **The drop of the result is
+    observed too.**  The result's `Drop` is the subject's code, so `obs_call!` splits a
+    marshalling copy off the result (`T: Clone`, chosen by autoref resolution on the concrete
+    type), marshals the copy outside the window and drops the original inside one.  A result
+    with drop glue that is not `Clone` cannot be split: the instance fails with
+    `bound-heap-exceeded: ... is not Clone`, never a silent pass (a type without drop glue has
+    nothing to observe).  Marshalling is still never inside a window.  One other
+    allocation is observed on purpose: the `limit-after-alloc` fault's hog (section 6.4),
+    which stands in for an allocating subject and is allocated through `obs_scope` so the
+    observer still flags it.  What is therefore *not* counted: argument conversion, result
+    conversion, the `Fault` rewrites of the result, and the harness's own bookkeeping.  A
+    `heap` bound no longer needs room for the adapter's copy of the output (items 33 and 53
+    said it did); a bound that did leave it is merely looser.  The cap (item 33) is enforced
+    on the same region, so a bomb in the export is still contained and a bomb in a
+    marshalling copy (a harness bug, not a subject property) is not.  Controls: a fixture
+    subject whose export allocates against `heap <= 0` must fail (`tests/wxo_observer.rs`),
+    beside the honest record, variant and scalar operations that must pass.  Only
+    documents with an `output` or `heap` row carry the observer, so only their harnesses
+    change.  `check-profile`'s NC9 (VOS-D055) is unaffected: a missing `heap` row is still
+    not evidenced.  **Limits of the observer (stated, not fixed).**  (a) *Threads.* The window
+    is a thread-local of the worker, so memory allocated on another thread during the call (a
+    pool thread that already exists, a thread the subject's runtime owns) is not charged;
+    `thread::spawn` itself allocates on the calling thread and is.  The observer is therefore
+    not a sandbox (item 50).  For VOS components the primary barrier is the shape checker, not
+    this observer: they are `no_std`, single-threaded and have no allocator (SH1), so there is
+    no thread and no allocation to miss.  (b) *One-time initialisation.* A lazy static, a
+    `OnceLock` or a cache filled by an earlier call outside any window is not charged to a
+    later call, so a `heap <= 0` row can hold on the second call of an export whose first call
+    allocated.  A warm-up call inside a scope would call the export twice (arguments may not be
+    `Copy`; an operation may carry state), so it is not done; logged as VOS-D102.  (c) The
+    liveness of the observer on a real subject is shown by the `wxo` control (an allocating
+    export, an allocating `Drop`, an uncloneable result), which runs in `warrant-grammar`'s
+    BUILD (`cargo test`), not by the manifests: since only the export is observed, an
+    exhaustive suite whose inputs are rejected records a peak of 0.
+55. **`fixed<N>(bytes)` in a generated model (VOS-D025).**  The type checker and the ground
+    evaluator have always accepted `fixed<N>(b)` (VER04 section 4: `Some(b)` when `b` is
+    exactly `N` bytes, else `None`), but the evidence generator's expression translation
+    had no case for it and stopped at W0701 "call to `fixed`".  That blocked every model
+    that builds a fixed-size byte array (the linear scan of VOS01 section 5.4 builds its
+    state with `match fixed<8>(concat(..)) with Some(b) -> b | None -> ..`).  The
+    generator now translates it: `fixed<N>(e)` becomes `V::fixed_n(N, &e)`, an `Opt` of the
+    same byte string (or `None` on a length mismatch), evaluated by the same rule as the
+    ground evaluator, so the differential test of section 10.3 covers it.  `N` must be a
+    literal width within `MAX_FIXED_WIDTH` (4096); a named width is W0701 (it has no value
+    in a generated model) and a larger one is W0706, exactly as for a call's widths.  The
+    helper is a prelude part (`//@if fixedn`) emitted only when a body uses it, so no other
+    harness changes by a byte.  The fixture `tests/fixtures/wxf.warrant` (eight `Bool`
+    binders build a `Bytes<8>` state; `tally`, `lowest` and `highest` over it) generates and
+    passes its exhaustive (256 states), property and fuzz suites and its negative controls
+    (`tests/wxf_array.rs`).  **Not part of this item:** the second half of VOS-D025, that a
+    claim which calls no operation (the contract's lemmas) is W0701 (VOS-D005), is unchanged:
+    those lemmas stay unevidenced.
 
-### 14.4 WX-N (fixed-length byte arrays across the host boundary)
+### 14.3 WX-E (fixed-length byte arrays across the host boundary)
 
 **What was missing, exactly.**  The *language* already has a length-indexed bytes
 type: `Bytes<N>` with a literal `N` is parsed, checked (`Bytes<N> <: Bytes`,

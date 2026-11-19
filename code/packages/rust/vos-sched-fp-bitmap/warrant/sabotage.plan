@@ -1,0 +1,21 @@
+# The sabotage plan of vos-sched-fp-bitmap (VOS04 5.6): `vos-link gen-build` turns each entry into one line 9 of BUILD and BUILD_windows.
+# `<tier>/<name> <fault> [attack=<op>]`: <name> is a claim (exhaustive) or an example of code/specs/vos-sched-fp-bitmap.warrant, <fault> a fault
+# bound in evidence.bindings; `field-flip` needs attack=<op> (VER04j 4.8).  `vos-link check-component` requires that every bound
+# fault and every field-flip operation is attacked; whether the claim CATCHES it is the shared checker's, at build time.
+exhaustive/insert_safe wrong-ctor
+exhaustive/canon_insert_img field-zero
+exhaustive/remove_safe wrong-ctor
+exhaustive/canon_remove_img field-zero
+exhaustive/dispatch_policy wrong-ctor
+exhaustive/canon_dispatch_img field-zero
+exhaustive/safety_alpha_build field-zero
+example/n_is_eight field-zero
+example/insert_three_sets_bit_three field-zero
+exhaustive/canon_init field-flip attack=init
+exhaustive/safety_init field-flip attack=init
+exhaustive/safety_init field-flip attack=alpha_w
+exhaustive/canon_insert_post field-flip attack=alpha_w
+exhaustive/canon_remove_post field-flip attack=alpha_w
+exhaustive/canon_dispatch_post field-flip attack=alpha_w
+exhaustive/dispatch_safe wrong-ctor
+exhaustive/dispatch_safe field-zero

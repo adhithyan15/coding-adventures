@@ -238,9 +238,9 @@ func TestPackageLocalMetadataPlan(t *testing.T) {
 }
 
 // A metadata change beside an edit to a BUILD front that the platform does
-// not select must keep the owner on every platform. On Linux and macOS the
-// BUILD_windows edit is filtered out, so the package is local there; on
-// Windows the edit is the selected front and the package propagates.
+// not select must keep the owner on every platform. An in-place edit of a Rust
+// package's own front is package-local, so the package stays local everywhere;
+// an ADDED front is ordinary on the platform that selects it.
 // (Before the fix, local roots were classified from the unfiltered list and
 // the owner fell out of both sets on Linux and macOS.)
 func TestPackageLocalMetadataBesideNonSelectedBuildFront(t *testing.T) {
@@ -272,7 +272,8 @@ func TestPackageLocalMetadataBesideNonSelectedBuildFront(t *testing.T) {
 			_, platforms := planFor(t, root, packages, tc.changed, tc.statuses)
 			for platform, got := range platforms {
 				front := strings.TrimPrefix(filepath.Base(tc.changed[1]), "BUILD_")
-				selected := map[string]string{"windows": "windows", "mac": "darwin"}[front] == platform
+				selected := map[string]string{"windows": "windows", "mac": "darwin"}[front] == platform &&
+					tc.statuses[tc.changed[1]] != 'M'
 				want := []string{"rust/meta", "rust/pre"}
 				if selected {
 					want = sourceClosure
@@ -328,5 +329,228 @@ func TestWithPackageLocalChangesSelectsNoDependents(t *testing.T) {
 	}
 	if withPackageLocalChanges(graph, nil, map[string]bool{"emit": true}) != nil {
 		t.Fatal("a forced or fallback (nil) set must stay nil")
+	}
+}
+
+// Rust BUILD fronts edited in place are package-local: the package and its
+// prerequisites rebuild, its dependents (and Cargo dev-dependency triggers)
+// do not. Every clause of the rule has a row.
+func TestPackageLocalBuildFrontPlan(t *testing.T) {
+	const meta = "code/packages/rust/meta/"
+	local := []string{"rust/meta", "rust/pre"}
+	closure := []string{"rust/dep", "rust/meta", "rust/pre", "rust/smoke"}
+	write := func(t *testing.T, root, rel, content string) {
+		t.Helper()
+		if err := os.WriteFile(filepath.Join(root, filepath.FromSlash(rel)), []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, tc := range []struct {
+		name     string
+		setup    func(t *testing.T, root string, packages []discovery.Package) []discovery.Package
+		changed  []string
+		statuses gitdiff.ChangeStatuses
+		want     map[string][]string // by platform; "" = every platform
+	}{
+		{
+			name:     "BUILD M: local on linux and darwin, windows selects BUILD_windows",
+			changed:  []string{meta + "BUILD"},
+			statuses: additive(meta + "BUILD"),
+			want:     map[string][]string{"linux": local, "darwin": local, "windows": nil},
+		},
+		{
+			name:     "BUILD_windows M alone: local on windows only",
+			changed:  []string{meta + "BUILD_windows"},
+			statuses: additive(meta + "BUILD_windows"),
+			want:     map[string][]string{"linux": nil, "darwin": nil, "windows": local},
+		},
+		{
+			name:     "BUILD and BUILD_windows M: local everywhere",
+			changed:  []string{meta + "BUILD", meta + "BUILD_windows"},
+			statuses: additive(meta+"BUILD", meta+"BUILD_windows"),
+			want:     map[string][]string{"": local},
+		},
+		{
+			name:     "BUILD A: source closure",
+			changed:  []string{meta + "BUILD"},
+			statuses: gitdiff.ChangeStatuses{meta + "BUILD": 'A'},
+			want:     map[string][]string{"linux": closure, "darwin": closure},
+		},
+		{
+			name:     "BUILD D: source closure",
+			changed:  []string{meta + "BUILD"},
+			statuses: gitdiff.ChangeStatuses{meta + "BUILD": 'D'},
+			want:     map[string][]string{"linux": closure, "darwin": closure},
+		},
+		{
+			name:     "BUILD M beside a source edit: source closure",
+			changed:  []string{meta + "BUILD", meta + "src/lib.rs"},
+			statuses: additive(meta+"BUILD", meta+"src/lib.rs"),
+			want:     map[string][]string{"": closure},
+		},
+		{
+			name:     "BUILD M beside a changelog entry: local",
+			changed:  []string{meta + "BUILD", meta + "CHANGELOG.md"},
+			statuses: additive(meta+"BUILD", meta+"CHANGELOG.md"),
+			want:     map[string][]string{"": local},
+		},
+		{
+			name:     "V1 marker in another front of the package",
+			changed:  []string{meta + "BUILD"},
+			statuses: additive(meta + "BUILD"),
+			setup: func(t *testing.T, root string, packages []discovery.Package) []discovery.Package {
+				write(t, root, meta+"BUILD_windows", "echo BUILD_TOOL_UNSUPPORTED:NO_X -- skipped\n")
+				return packages
+			},
+			want: map[string][]string{"linux": closure, "darwin": closure},
+		},
+		{
+			name:     "V1 marker in the edited front itself",
+			changed:  []string{meta + "BUILD"},
+			statuses: additive(meta + "BUILD"),
+			setup: func(t *testing.T, root string, packages []discovery.Package) []discovery.Package {
+				write(t, root, meta+"BUILD", "echo BUILD_TOOL_UNSUPPORTED:NO_X -- skipped\n")
+				return packages
+			},
+			want: map[string][]string{"linux": closure, "darwin": closure},
+		},
+		{
+			name:     "V2 Starlark content",
+			changed:  []string{meta + "BUILD"},
+			statuses: additive(meta + "BUILD"),
+			setup: func(t *testing.T, root string, packages []discovery.Package) []discovery.Package {
+				write(t, root, meta+"BUILD", "load(\"x.star\", \"y\")\n")
+				return packages
+			},
+			want: map[string][]string{"linux": closure, "darwin": closure},
+		},
+		{
+			name:     "V3 BUILD run by another package",
+			changed:  []string{meta + "BUILD"},
+			statuses: additive(meta + "BUILD"),
+			setup: func(t *testing.T, root string, packages []discovery.Package) []discovery.Package {
+				write(t, root, "code/packages/rust/other/BUILD", "(cd ../meta && sh BUILD)\n")
+				return packages
+			},
+			want: map[string][]string{"linux": closure, "darwin": closure},
+		},
+		{
+			name:     "V3 only in a comment: local again",
+			changed:  []string{meta + "BUILD"},
+			statuses: additive(meta + "BUILD"),
+			setup: func(t *testing.T, root string, packages []discovery.Package) []discovery.Package {
+				write(t, root, "code/packages/rust/other/BUILD", "# (cd ../meta && sh BUILD)\ncargo test\n")
+				return packages
+			},
+			want: map[string][]string{"linux": local, "darwin": local},
+		},
+		{
+			name:     "Starlark package propagates",
+			changed:  []string{meta + "BUILD"},
+			statuses: additive(meta + "BUILD"),
+			setup: func(t *testing.T, root string, packages []discovery.Package) []discovery.Package {
+				for i := range packages {
+					if packages[i].Name == "rust/meta" {
+						packages[i].IsStarlark = true
+					}
+				}
+				return packages
+			},
+			want: map[string][]string{"linux": closure, "darwin": closure},
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			root, packages := metadataWorld(t)
+			if tc.setup != nil {
+				packages = tc.setup(t, root, packages)
+			}
+			_, platforms := planFor(t, root, packages, tc.changed, tc.statuses)
+			for platform, got := range platforms {
+				want, ok := tc.want[platform]
+				if !ok {
+					want, ok = tc.want[""]
+				}
+				if !ok {
+					continue
+				}
+				if !reflect.DeepEqual(got, want) && !(len(got) == 0 && len(want) == 0) {
+					t.Fatalf("%s affected = %v, want %v", platform, got, want)
+				}
+			}
+		})
+	}
+}
+
+// With no candidate (an M front of a Rust package) nothing is read: a package
+// whose directory does not exist produces no error and a nil result.
+func TestClearedBuildFrontsReadsNothingWithoutCandidates(t *testing.T) {
+	root := t.TempDir()
+	packages := []discovery.Package{{Name: "rust/ghost", Path: filepath.Join(root, "code/packages/rust/ghost"), Language: "rust"}}
+	ghost := "code/packages/rust/ghost/"
+	for _, tc := range []struct {
+		name     string
+		changed  []string
+		statuses gitdiff.ChangeStatuses
+	}{
+		{"source edit", []string{ghost + "src/lib.rs"}, additive(ghost + "src/lib.rs")},
+		{"added front", []string{ghost + "BUILD"}, gitdiff.ChangeStatuses{ghost + "BUILD": 'A'}},
+		{"nested front", []string{ghost + "x/BUILD"}, additive(ghost + "x/BUILD")},
+		{"unknown statuses", []string{ghost + "BUILD"}, nil},
+	} {
+		if got := clearedBuildFronts(tc.changed, tc.statuses, packages, root); got != nil {
+			t.Errorf("%s: clearedBuildFronts = %v, want nil", tc.name, got)
+		}
+	}
+	// A candidate whose front cannot be read is not cleared (V2).
+	if got := clearedBuildFronts([]string{ghost + "BUILD"}, additive(ghost+"BUILD"), packages, root); got[ghost+"BUILD"] {
+		t.Errorf("unreadable front must not be cleared, got %v", got)
+	}
+}
+
+// Fail closed: a front the veto pass never examined (here, a changed path that
+// maps to no discovered package) is never cleared, so selectPackageRoots keeps
+// it ordinary. A front in a discovered package that passes the veto pass is
+// cleared and local.
+func TestUnexaminedBuildFrontStaysOrdinary(t *testing.T) {
+	root, packages := metadataWorld(t)
+	unmapped := "code/packages/rust/not-discovered/BUILD"
+	if got := clearedBuildFronts([]string{unmapped}, additive(unmapped), packages, root); len(got) != 0 {
+		t.Errorf("unmapped front cleared: %v", got)
+	}
+	// The classifier alone: a plain M front (never cleared) propagates.
+	changed := []string{"code/packages/rust/meta/BUILD"}
+	propagating, local := gitdiff.ClassifyChangedFiles(changed, packages, root, additive(changed...))
+	if !propagating["rust/meta"] || len(local) != 0 {
+		t.Errorf("uncleared M front: propagating=%v local=%v; want propagating", propagating, local)
+	}
+	// Through the host, the same edit is cleared and local.
+	roots, localSet, err := selectPackageRoots(changed, additive(changed...), packages, root, "linux", "all")
+	if err != nil || len(roots) != 0 || !localSet["rust/meta"] {
+		t.Errorf("cleared front: roots=%v local=%v err=%v", roots, localSet, err)
+	}
+}
+
+// The language gate: the same in-place BUILD edit in a package of a language
+// outside the gate is an ordinary root (the dependency graph of a Cargo-less
+// world is empty, so the roots themselves are what is asserted).
+func TestBuildFrontLanguageGate(t *testing.T) {
+	root, packages := metadataWorld(t)
+	changed := []string{"code/packages/rust/meta/BUILD"}
+	for _, language := range []string{"typescript", "lua", "wasm", "go", ""} {
+		gated := append([]discovery.Package(nil), packages...)
+		for i := range gated {
+			gated[i].Language = language
+		}
+		roots, local, err := selectPackageRoots(changed, additive(changed...), gated, root, "linux", "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !roots["rust/meta"] || len(local) != 0 {
+			t.Errorf("language %q: roots = %v, local = %v; want an ordinary root", language, roots, local)
+		}
+	}
+	roots, local, err := selectPackageRoots(changed, additive(changed...), packages, root, "linux", "all")
+	if err != nil || len(roots) != 0 || !local["rust/meta"] {
+		t.Errorf("rust: roots = %v, local = %v, err = %v; want local only", roots, local, err)
 	}
 }

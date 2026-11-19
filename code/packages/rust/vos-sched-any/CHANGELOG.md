@@ -2,6 +2,17 @@
 
 All notable changes to this package are documented here.
 
+## Unreleased — the component check and the coverage gate (VOS-039a)
+
+- `BUILD` and `BUILD_windows` are now **generated** by `vos-link gen-build` (VOS04 5.6) from `vos.toml`, `evidence.bindings`, the document and the new `warrant/sabotage.plan`, and `vos-link check-component` requires them byte for byte (a text lint over BUILD was bypassable by single-line tricks). `vos.toml` declares `coverage-floor = 95`, enforced by a Linux `cargo tarpaulin ... --fail-under 95` line (VOS-D070). Every sabotage line now runs through the shared checker `code/scripts/warrant_negctl.py` (VOS-D099, closing VOS-D088); no claim or fault lost its line (`sabotage.plan` is the old lines, one entry each). Measured line coverage of `src/lib.rs`: 100%.
+
+## Heap rows restored (VOS-038c)
+
+- `heap <= 0` is declared on every bound operation again (VOS-D063): the harness's heap observer now
+  counts the export call only, not its own result marshalling. `warrant/impl.part`, the generated
+  `code/specs/vos-sched-any.warrant`, `tests/generated/warrant_evidence.rs` and `evidence/test-manifest.json`
+  regenerated; every operation records `max_observed_heap 0`.
+
 ## Unreleased — regenerated evidence harness (VOS-038b)
 
 - `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the observer timeout clamp (`WARRANT_OBS_TIMEOUT_SECS` at most 24 h, `checked_add` deadline; VER04j). No test, case count or recorded evidence manifest changes.

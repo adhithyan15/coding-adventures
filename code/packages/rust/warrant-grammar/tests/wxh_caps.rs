@@ -24,7 +24,7 @@ mod harness {
     }
 
     pub fn exec(job: impl FnOnce() -> V + Send + 'static) -> Seen {
-        match obs_exec(job) {
+        match obs_exec(move || obs_scope(job)) {
             Exec::Finished(Ok(_), p) => Seen::Finished(p),
             Exec::Finished(Err(_), p) => Seen::Panicked(p),
             Exec::Tripped(p) => Seen::Tripped(p),

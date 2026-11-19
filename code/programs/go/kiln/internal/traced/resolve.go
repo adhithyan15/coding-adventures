@@ -397,7 +397,11 @@ func join(cwd, dirfd, p string) string {
 func (c *classifier) resolve(full string, follow bool) (target, bool) {
 	w, bad := c.walk(full, follow)
 	if bad != "" {
-		c.reason(bad)
+		if bad == rProc {
+			c.reasonAt(bad, full)
+		} else {
+			c.reason(bad)
+		}
 		return target{}, false
 	}
 	for _, l := range w.links {

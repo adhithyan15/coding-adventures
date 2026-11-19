@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"debug/elf"
 	"encoding/binary"
+	"encoding/json"
 	"errors"
 	"io/fs"
 	"path"
@@ -352,6 +353,18 @@ func (h *harness) runSteps(steps ...*trace.Trace) *RawRecord {
 	rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe, StepNetNS: h.netns})
 	if err != nil {
 		h.t.Fatalf("Classify: %v", err)
+	}
+	// The census observer must not change the answer: every fixture in the
+	// package is also classified WITH one, and the two records must be the
+	// same bytes (and agree on WritesComplete, which is not in the JSON).
+	withCensus, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe, StepNetNS: h.netns, Census: NewCensus()})
+	if err != nil {
+		h.t.Fatalf("Classify with a census: %v", err)
+	}
+	j1, _ := json.Marshal(rec)
+	j2, _ := json.Marshal(withCensus)
+	if !bytes.Equal(j1, j2) || rec.WritesComplete != withCensus.WritesComplete {
+		h.t.Fatalf("a census changed the record:\n without %s\n with    %s", j1, j2)
 	}
 	return rec
 }

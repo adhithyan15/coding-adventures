@@ -8,6 +8,8 @@
 //! ```text
 //!   vos-link gen-doc   code/packages/rust/<impl>     writes code/specs/<impl>.warrant
 //!   vos-link check-doc code/packages/rust/<impl>     exit 1 on any drift or rule failure
+//!   vos-link gen-build code/packages/rust/<impl>     writes the canonical region of BUILD and BUILD_windows (VOS04 5.6)
+//!   vos-link check-component code/packages/rust/<impl>   file set, BUILD byte-equal to gen-build's, row, floor, manifest
 //! ```
 //!
 //! ## The pipeline
@@ -41,11 +43,15 @@
 //! unreadable or oversized file, a path outside the repository or through a symlink, a
 //! usage error).  A rule that fails on bytes that *were* admitted is a finding.
 
+pub mod build_gen;
 pub mod check;
+pub mod component;
 pub mod error;
 pub mod fsio;
 pub mod inputs;
 pub mod ops;
 
+pub use build_gen::gen_build;
+pub use component::check_component;
 pub use error::{Finding, NoVerdict};
 pub use ops::{check_doc, gen_doc, Outcome};
