@@ -71,12 +71,20 @@ func init() {
 // caller can count and report it; and it does not depend on the package's
 // crossCheck variable or the environment.  allowed is how many stricter-only
 // divergences (the spec's list, section 4.9) this one parse took: on a REAL
-// trace a caller must treat any as a failure.  The package-wide allowed counter
-// is process-global, so a caller must not run two of these at once.
+// trace a caller must treat any as a failure.
 //
-// It is a test instrument: TestMeasureIsNotUsedByProductionCode keeps it out of
-// production code.
+// It is also the engine of `kiln record census` (a diagnostic command that is
+// never run during a recording).  It never touched the garbage collector (that
+// is what keeps trace.Measure out of production); what it shared was the
+// process-global allowed counter, so the whole call now holds crossCheckMu and
+// two calls can never charge one trace the other's hits.  A parse that runs
+// under KILN_TRACE_DIFF in another goroutine could still add to the counter, so
+// a caller that needs an exact count runs without that variable and one call at
+// a time, as the census does.  TestParseCrossCheckedOnlyInCensus keeps every
+// other production file from calling it.
 func ParseCrossChecked(r io.Reader, initialCwd string, opts Options) (tr *Trace, err error, mismatch *CrossCheckMismatch, allowed int) {
+	crossCheckMu.Lock()
+	defer crossCheckMu.Unlock()
 	before := AllowedDivergences()
 	defer func() {
 		if p := recover(); p != nil {
@@ -91,6 +99,9 @@ func ParseCrossChecked(r io.Reader, initialCwd string, opts Options) (tr *Trace,
 	tr, err = parseCrossChecked(r, initialCwd, opts)
 	return
 }
+
+// crossCheckMu serialises ParseCrossChecked (see its comment).
+var crossCheckMu sync.Mutex
 
 // CrossCheckMismatch is what a failed cross-check panics with.
 type CrossCheckMismatch struct {

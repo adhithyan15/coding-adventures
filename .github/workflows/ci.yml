@@ -804,6 +804,11 @@ jobs:
 
       - name: Verify repo-wide metadata contracts
         run: |
+          # The inventory is pinned to cb60dc and the checker also verifies
+          # that committed audited inputs at HEAD still match that subject.
+          # Run this on the unconditional metadata path so inventory/checker
+          # edits cannot bypass the semantic controls.
+          python3 code/scripts/validate_dsp_filter_assurance_inventory.py --repo-root . --self-test
           # `lessons.d/` is one file per lesson so concurrent PRs cannot
           # conflict on it. `validate` is what keeps that true: it rejects a
           # duplicate title, a category absent from `_meta.md`, and a filename
@@ -1254,8 +1259,16 @@ jobs:
 
       - name: Install strace for the real-strace sandbox test
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        # Both runner images ship strace, so only touch apt when it is missing:
+        # refreshing the apt index against a stalled mirror failed this required job
+        # with nothing Kiln-related wrong (2026-11-19, PR #19689).
         run: |
-          bash code/scripts/ci/apt-install.sh strace
+          if command -v strace >/dev/null 2>&1; then
+            echo "strace preinstalled: $(strace -V | head -1)"
+          else
+            bash code/scripts/ci/apt-install.sh strace
+          fi
+          strace -V | head -1
 
       - name: Run the sandbox tests (skips are failures)
         working-directory: code/programs/go/kiln
@@ -4581,8 +4594,15 @@ jobs:
       - name: Install strace for the cargo runtime capability gate
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        # strace ships on the runner image; only touch apt when it is missing
+        # (an apt index refresh stalled on a mirror and failed kiln-sandbox, 2026-11-19).
         run: |
-          bash code/scripts/ci/apt-install.sh strace
+          if command -v strace >/dev/null 2>&1; then
+            echo "strace preinstalled: $(strace -V | head -1)"
+          else
+            bash code/scripts/ci/apt-install.sh strace
+          fi
+          strace -V | head -1
 
       - name: Install Venture Qt acceptance dependencies
         if: (needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'

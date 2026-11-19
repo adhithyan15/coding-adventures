@@ -151,7 +151,21 @@ func newPrepAt(t *testing.T, base string) *prep {
 // commit writes host-roots.json and commits the repository.
 func (p *prep) commit() {
 	p.t.Helper()
-	roots := append([]string{`{"path": "/bin", "kind": "image"}`, `{"path": "/sbin", "kind": "image"}`}, p.roots...)
+	// The default roots, /bin and /sbin as image roots, unless the test gave its
+	// own entry for the same path: then the test's entry replaces the default
+	// (a fixture that must not depend on the host's file times declares them
+	// ephemeral; see censusDirFix).
+	given := map[string]bool{}
+	for _, r := range p.roots {
+		given[rootPath(r)] = true
+	}
+	var roots []string
+	for _, d := range []string{`{"path": "/bin", "kind": "image"}`, `{"path": "/sbin", "kind": "image"}`} {
+		if !given[rootPath(d)] {
+			roots = append(roots, d)
+		}
+	}
+	roots = append(roots, p.roots...)
 	sort.Slice(roots, func(a, b int) bool { return rootPath(roots[a]) < rootPath(roots[b]) })
 	eph, absent := policyfix.Lists() // the real policy's lists (D27)
 	p.files["code/kiln/legacy/host-roots.json"] = `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ` + eph + `, "absent-ok": ` + absent + `}`
