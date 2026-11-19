@@ -968,31 +968,35 @@ no edit, signing operation, provider or trace event, storage, clock, network,
 or other external effect. Those compositions remain blockers; concrete HTTPS
 and live-provider readiness remain unavailable.
 
-A reviewed-path consuming entry point now closes the detached-key and
-caller-selected-role gaps for that exact `CertificateVerify`-to-Finished
-continuity. It accepts the strongest accumulated reviewed RSA server-path
-proof, takes ownership of one selected transcript, derives and validates the
-target certificate's SubjectPublicKeyInfo only through that retained path,
-and fixes the authenticated `CertificateVerify` role to `Server`. It then
-uses the existing consuming transitions to authenticate the exact decoded
-body against the pre-message transcript, append that same body as one complete
-handshake encoding, and verify server Finished directly over the resulting
-post-message transcript. Non-copyable success evidence retains the complete
-reviewed path together with the exact body, authorized scheme, path-derived
-key, before and after snapshots, owned transcript, Finished snapshot, and
-repository-owned Finished verdict. Every failure consumes the transcript and
-returns only a stable redacted category, so no detached key or partial state
-is returned for substitution or retry.
+A reviewed-path consuming entry point now closes the detached-certificate-key
+and caller-selected-`CertificateVerify`-role gaps for exact
+`CertificateVerify`-to-Finished-key transcript continuity. It accepts the
+strongest accumulated reviewed RSA server-path proof, takes ownership of one
+selected transcript, derives and validates the target certificate's
+SubjectPublicKeyInfo only through that retained path, and fixes the
+authenticated signature role to `Server`. It then uses the existing consuming
+transitions to authenticate the exact decoded body against the pre-message
+transcript, append that same body as one complete handshake encoding, and
+verify peer verify-data with one caller-supplied Finished key over the
+resulting post-message transcript. Non-copyable success evidence retains the
+complete reviewed path together with the exact body, authorized scheme,
+path-derived certificate key, before and after snapshots, owned transcript,
+Finished snapshot, and repository-owned Finished verdict. Every failure
+consumes the transcript and returns only a stable redacted category, so no
+partial state is returned for substitution or retry.
 
-This bounded composition does not prove the preceding server-flight order,
-append the Finished handshake encoding, verify the reviewed anchor's
-self-signature, select or enforce revocation, bind an HTTPS destination,
-protect records, perform I/O, authorize HTTP or OAuth transport, or open a
-network connection. It accesses no credential and causes no edit, signing
-operation, provider or trace event, storage, clock, network, or other external
-effect. Those ordered-state, anchor, revocation, destination, record, and
-transport compositions remain blockers; concrete HTTPS and live-provider
-readiness remain unavailable.
+The Finished key remains detached: role and selected-suite checks do not bind
+it to this handshake's ECDHE result, handshake traffic secret, or key-schedule
+evidence, and the result retains no such provenance. This bounded composition
+also does not prove the preceding server-flight order, append the Finished
+handshake encoding, verify the reviewed anchor's self-signature, select or
+enforce revocation, bind an HTTPS destination, protect records, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. It accesses
+no credential and causes no edit, signing operation, provider or trace event,
+storage, clock, network, or other external effect. Those key-schedule,
+ordered-state, anchor, revocation, destination, record, and transport
+compositions remain blockers; concrete HTTPS and live-provider readiness
+remain unavailable.
 
 A bounded `tls13-reviewed-server-path-certificate-verify` composition closes
 the detached-key and caller-selected-role gaps for one reviewed RSA server

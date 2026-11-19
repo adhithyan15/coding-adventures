@@ -27,8 +27,9 @@ use tls13_reviewed_server_path_certificate_verify::{
     verify_https_dns_destination_reviewed_server_path_anchor_self_signature_certificate_verify,
     verify_https_dns_destination_reviewed_server_path_certificate_verify,
     verify_reviewed_server_path_certificate_verify,
-    verify_reviewed_server_path_certificate_verify_finished_continuity,
-    ReviewedServerPathCertificateVerifyErrorKind, ReviewedServerPathFinishedContinuityErrorKind,
+    verify_reviewed_server_path_certificate_verify_finished_key_transcript_continuity,
+    ReviewedServerPathCertificateVerifyErrorKind,
+    ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind,
 };
 use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
 use tls13_server_name::TlsServerName;
@@ -489,7 +490,7 @@ fn server_finished_verify_data(
 }
 
 #[test]
-fn reviewed_path_continuity_retains_path_key_and_exact_finished_snapshot() {
+fn reviewed_path_finished_key_continuity_retains_path_key_and_exact_snapshot() {
     let leaf_encoded = fixture(LEAF_HEX);
     let intermediate_encoded = fixture(INTERMEDIATE_HEX);
     let root_encoded = fixture(ROOT_HEX);
@@ -509,21 +510,22 @@ fn reviewed_path_continuity_retains_path_key_and_exact_finished_snapshot() {
     let mut handshake_output = vec![0xa5; certificate_verify_body.len() + 8];
     let mut scratch = [0xa5; 223];
 
-    let verified = verify_reviewed_server_path_certificate_verify_finished_continuity(
-        &reviewed_path,
-        selected_transcript(&transcript_encoded),
-        authorized_scheme(),
-        &certificate_verify_body,
-        RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
-        Asn1Limits::default(),
-        &mut signed_input,
-        &mut handshake_output,
-        &mut scratch,
-        Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
-        &finished_key,
-        &verify_data,
-    )
-    .expect("reviewed leaf signature and exact following Finished must verify");
+    let verified =
+        verify_reviewed_server_path_certificate_verify_finished_key_transcript_continuity(
+            &reviewed_path,
+            selected_transcript(&transcript_encoded),
+            authorized_scheme(),
+            &certificate_verify_body,
+            RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+            Asn1Limits::default(),
+            &mut signed_input,
+            &mut handshake_output,
+            &mut scratch,
+            Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+            &finished_key,
+            &verify_data,
+        )
+        .expect("reviewed leaf signature and exact following Finished must verify");
 
     let expected_key = validate_rsa_public_key(
         leaf.tbs_certificate().subject_public_key_info(),
@@ -551,12 +553,12 @@ fn reviewed_path_continuity_retains_path_key_and_exact_finished_snapshot() {
     );
     assert_eq!(
         format!("{verified:?}"),
-        "VerifiedReviewedServerPathCertificateVerifyFinishedContinuity",
+        "VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity",
     );
 }
 
 #[test]
-fn reviewed_path_continuity_rejects_invalid_finished_without_returning_state() {
+fn reviewed_path_finished_key_continuity_rejects_invalid_verify_data_without_state() {
     let leaf_encoded = fixture(LEAF_HEX);
     let intermediate_encoded = fixture(INTERMEDIATE_HEX);
     let root_encoded = fixture(ROOT_HEX);
@@ -577,7 +579,7 @@ fn reviewed_path_continuity_rejects_invalid_finished_without_returning_state() {
     let mut handshake_output = vec![0xa5; certificate_verify_body.len() + 8];
     let mut scratch = [0xa5; 223];
 
-    let error = verify_reviewed_server_path_certificate_verify_finished_continuity(
+    let error = verify_reviewed_server_path_certificate_verify_finished_key_transcript_continuity(
         &reviewed_path,
         selected_transcript(&transcript_encoded),
         authorized_scheme(),
@@ -595,13 +597,13 @@ fn reviewed_path_continuity_rejects_invalid_finished_without_returning_state() {
 
     assert!(matches!(
         error.kind(),
-        ReviewedServerPathFinishedContinuityErrorKind::Finished(
+        ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind::Finished(
             CertificateVerifyFinishedContinuityErrorKind::Finished(_)
         )
     ));
     let display = error.to_string();
     let debug = format!("{error:?}");
-    for secret in ["www.apple.com", "transcript", "signature", "modulus"] {
+    for secret in ["www.apple.com", "signature", "modulus"] {
         assert!(!display.contains(secret));
         assert!(!debug.contains(secret));
     }

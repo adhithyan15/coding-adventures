@@ -16,9 +16,10 @@
 //! selected suite and completes that exact flight. A separate consuming entry
 //! point derives the RSA key only through the complete reviewed path and proves
 //! exact transcript continuity from authenticated server `CertificateVerify`
-//! through Finished. It does not prove the preceding flight order, append the
-//! Finished encoding, authenticate records, or provide TLS, HTTP, OAuth, or
-//! network readiness.
+//! through a caller-supplied Finished key. It checks that key's role and suite
+//! but does not establish its key-schedule or traffic-secret provenance. It
+//! does not prove the preceding flight order, append the Finished encoding,
+//! authenticate records, or provide TLS, HTTP, OAuth, or network readiness.
 
 #![forbid(unsafe_code)]
 
@@ -269,7 +270,7 @@ impl std::error::Error for ReviewedServerPathCertificateVerifyError {}
 /// Stable, payload-free failures from reviewed-path CertificateVerify-to-
 /// Finished continuity.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum ReviewedServerPathFinishedContinuityErrorKind {
+pub enum ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind {
     /// The reviewed target's exact SubjectPublicKeyInfo failed RSA policy.
     PublicKey(RsaPublicKeyErrorKind),
     /// Exact CertificateVerify authentication or transcript advancement failed.
@@ -280,38 +281,38 @@ pub enum ReviewedServerPathFinishedContinuityErrorKind {
 
 /// One redacted consuming reviewed-path continuity failure.
 #[derive(Clone, Copy, Eq, PartialEq)]
-pub struct ReviewedServerPathFinishedContinuityError {
-    kind: ReviewedServerPathFinishedContinuityErrorKind,
+pub struct ReviewedServerPathFinishedKeyTranscriptContinuityError {
+    kind: ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind,
 }
 
-impl ReviewedServerPathFinishedContinuityError {
+impl ReviewedServerPathFinishedKeyTranscriptContinuityError {
     /// Return the stable redacted failure category.
     #[must_use]
-    pub const fn kind(self) -> ReviewedServerPathFinishedContinuityErrorKind {
+    pub const fn kind(self) -> ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind {
         self.kind
     }
 }
 
-impl fmt::Debug for ReviewedServerPathFinishedContinuityError {
+impl fmt::Debug for ReviewedServerPathFinishedKeyTranscriptContinuityError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
-            .debug_struct("ReviewedServerPathFinishedContinuityError")
+            .debug_struct("ReviewedServerPathFinishedKeyTranscriptContinuityError")
             .field("kind", &self.kind)
             .finish()
     }
 }
 
-impl fmt::Display for ReviewedServerPathFinishedContinuityError {
+impl fmt::Display for ReviewedServerPathFinishedKeyTranscriptContinuityError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             formatter,
-            "reviewed server-path CertificateVerify-to-Finished continuity error {:?}",
+            "reviewed server-path CertificateVerify-to-Finished-key transcript continuity error {:?}",
             self.kind
         )
     }
 }
 
-impl std::error::Error for ReviewedServerPathFinishedContinuityError {}
+impl std::error::Error for ReviewedServerPathFinishedKeyTranscriptContinuityError {}
 
 /// Non-copyable evidence retaining the complete reviewed path and exact
 /// selected-transcript server signature verdict.
@@ -471,8 +472,8 @@ impl fmt::Debug
 }
 
 /// Non-copyable evidence retaining the complete reviewed path and exact
-/// consuming CertificateVerify-to-Finished transcript continuity graph.
-pub struct VerifiedReviewedServerPathCertificateVerifyFinishedContinuity<
+/// consuming CertificateVerify-to-Finished-key transcript continuity graph.
+pub struct VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity<
     'reviewed,
     'evidence,
     'initialized,
@@ -521,7 +522,7 @@ impl<
         'role_encoded,
         'body,
     >
-    VerifiedReviewedServerPathCertificateVerifyFinishedContinuity<
+    VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity<
         'reviewed,
         'evidence,
         'initialized,
@@ -569,7 +570,7 @@ impl<
 }
 
 impl fmt::Debug
-    for VerifiedReviewedServerPathCertificateVerifyFinishedContinuity<
+    for VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity<
         '_,
         '_,
         '_,
@@ -587,7 +588,8 @@ impl fmt::Debug
     >
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        formatter.write_str("VerifiedReviewedServerPathCertificateVerifyFinishedContinuity")
+        formatter
+            .write_str("VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity")
     }
 }
 
@@ -1478,13 +1480,16 @@ impl fmt::Debug
     }
 }
 
-/// Authenticate exact server CertificateVerify-to-Finished continuity with
-/// the target key derived only through the complete reviewed path.
+/// Verify exact server CertificateVerify-to-Finished-key transcript continuity
+/// with the target key derived only through the complete reviewed path.
 ///
 /// The selected transcript is consumed. Every failure returns only a stable
 /// redacted category and no transcript or partial verification evidence.
+/// The caller-supplied Finished key is checked for server role and exact suite,
+/// but this boundary does not establish its key-schedule or traffic-secret
+/// provenance and does not retain that provenance in its result.
 #[allow(clippy::too_many_arguments)]
-pub fn verify_reviewed_server_path_certificate_verify_finished_continuity<
+pub fn verify_reviewed_server_path_certificate_verify_finished_key_transcript_continuity<
     'reviewed,
     'evidence,
     'initialized,
@@ -1527,7 +1532,7 @@ pub fn verify_reviewed_server_path_certificate_verify_finished_continuity<
     finished_key: &FinishedKey<'_>,
     peer_verify_data: &[u8],
 ) -> Result<
-    VerifiedReviewedServerPathCertificateVerifyFinishedContinuity<
+    VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity<
         'reviewed,
         'evidence,
         'initialized,
@@ -1543,7 +1548,7 @@ pub fn verify_reviewed_server_path_certificate_verify_finished_continuity<
         'role_encoded,
         'body,
     >,
-    ReviewedServerPathFinishedContinuityError,
+    ReviewedServerPathFinishedKeyTranscriptContinuityError,
 > {
     let certificate = reviewed_server_path
         .subordinate_policy()
@@ -1557,9 +1562,13 @@ pub fn verify_reviewed_server_path_certificate_verify_finished_continuity<
         rsa_key_policy,
         rsa_key_limits,
     )
-    .map_err(|error| ReviewedServerPathFinishedContinuityError {
-        kind: ReviewedServerPathFinishedContinuityErrorKind::PublicKey(error.kind()),
-    })?;
+    .map_err(
+        |error| ReviewedServerPathFinishedKeyTranscriptContinuityError {
+            kind: ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind::PublicKey(
+                error.kind(),
+            ),
+        },
+    )?;
     let certificate_verify = verify_and_advance_owned_certificate_verify_transcript(
         transcript,
         CertificateVerifyRole::Server,
@@ -1571,20 +1580,28 @@ pub fn verify_reviewed_server_path_certificate_verify_finished_continuity<
         data_block_scratch,
         signature_limits,
     )
-    .map_err(|error| ReviewedServerPathFinishedContinuityError {
-        kind: ReviewedServerPathFinishedContinuityErrorKind::CertificateVerify(error.kind()),
-    })?;
+    .map_err(
+        |error| ReviewedServerPathFinishedKeyTranscriptContinuityError {
+            kind: ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind::CertificateVerify(
+                error.kind(),
+            ),
+        },
+    )?;
     let continuity = verify_finished_after_owned_certificate_verify(
         certificate_verify,
         finished_key,
         peer_verify_data,
     )
-    .map_err(|error| ReviewedServerPathFinishedContinuityError {
-        kind: ReviewedServerPathFinishedContinuityErrorKind::Finished(error.kind()),
-    })?;
+    .map_err(
+        |error| ReviewedServerPathFinishedKeyTranscriptContinuityError {
+            kind: ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind::Finished(
+                error.kind(),
+            ),
+        },
+    )?;
 
     Ok(
-        VerifiedReviewedServerPathCertificateVerifyFinishedContinuity {
+        VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity {
             reviewed_server_path,
             continuity,
         },

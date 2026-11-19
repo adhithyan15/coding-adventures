@@ -14,10 +14,14 @@ revocation proofs.
 A consuming reviewed-path entry point additionally takes ownership of one
 selected transcript, fixes the signature role to server, derives the RSA key
 only from the reviewed target certificate, authenticates and appends the exact
-`CertificateVerify` body, and verifies server Finished over that exact
-post-message transcript. Its non-copyable result retains the complete reviewed
-path and the full body, key, transcript-snapshot, and Finished evidence graph.
-Failure consumes the transcript and returns no partial state.
+`CertificateVerify` body, and verifies peer verify-data with one caller-
+supplied Finished key over that exact post-message transcript. Its non-copyable
+result retains the complete reviewed path and the full body, certificate key,
+transcript-snapshot, and Finished-verdict evidence graph. Failure consumes the
+transcript and returns no partial state. The caller-supplied Finished key is
+checked for server role and exact selected suite, but this boundary neither
+establishes nor retains its ECDHE, handshake-traffic-secret, or key-schedule
+provenance.
 
 The composition accepts only complete reviewed-path evidence, outer
 selected-transcript hash evidence, the exact decoded message, data-driven RSA
@@ -44,7 +48,8 @@ covers the direct, one-level nested, double-nested, recursive-responder, and
 alternative intermediate-status-responder no-check completions. It does not
 acquire or refresh revocation data, prove the preceding ordered handshake
 state, append the Finished handshake encoding, process records, perform I/O,
-or make TLS, HTTPS, HTTP, OAuth transport, or live-provider access available.
+establish Finished-key provenance, or make TLS, HTTPS, HTTP, OAuth transport,
+or live-provider access available.
 
 The end-to-end tests retain a public `www.apple.com` TLS 1.3 handshake capture
 from 2026-11-18 plus its 2026-11-11 leaf certificate. They reconstruct the
