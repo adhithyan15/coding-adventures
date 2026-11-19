@@ -207,6 +207,7 @@ var (
 	}
 
 	rngCorpusPaths                 = []string{"code/specs/fixtures/rng-v1"}
+	fenwickTreeContractPaths       = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
 	gameClockInputPaths            = []string{"code/specs/fixtures/game-clock-v1", "code/specs/game-clock.warrant"}
 	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
 	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
@@ -395,6 +396,20 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	{
+		name:     "dart/fenwick-tree",
+		language: "dart",
+		inputs:   "the shared DT06 Fenwick contract and v1 conformance fixture",
+		matches:  isFenwickTreeContractInput,
+		paths:    fenwickTreeContractPaths,
+	},
+	{
+		name:     "python/fenwick-tree",
+		language: "python",
+		inputs:   "the shared DT06 Fenwick contract and v1 conformance fixture",
+		matches:  isFenwickTreeContractInput,
+		paths:    fenwickTreeContractPaths,
+	},
 	{
 		name:     "python/dsp-filters",
 		language: "python",
@@ -1504,6 +1519,16 @@ func isGameInputFrameV1(changed string) bool {
 // excluding adjacent lookalike versions.
 func isBiquadSosFixture(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/biquad-sos-v1/")
+}
+
+// isFenwickTreeContractInput selects only the shared DT06 contract and v1
+// fixture, excluding neighboring versions and lookalike paths.
+func isFenwickTreeContractInput(changed string) bool {
+	if path.Clean(changed) != changed {
+		return false
+	}
+	return changed == "code/specs/DT06-fenwick-tree.md" ||
+		strings.HasPrefix(changed, "code/specs/fixtures/fenwick-tree-v1/")
 }
 
 // isTrigReferenceCorpus reports whether a changed path is a file of the shared
