@@ -129,11 +129,18 @@ func renderMarkdown(s *CensusSummary) string {
 	a := s.Actions
 	w("## Actions\n\n")
 	w("- total: %d\n- with a record.json: %d (parse ok %d, writes complete %d)\n- record.failed: %d\n- no verdict at all: %d\n", a.Total, a.WithRecord, a.RecordParseOK, a.RecordWritesComplete, a.RecordFailed, a.NoVerdict)
-	gatedNote := "not gated"
-	if a.EmittableGated {
-		gatedNote = "GATED: collect's header names a void reason, so nothing is emitted"
+	voidNote := "shard not void"
+	if a.ShardVoid {
+		voidNote = "SHARD VOID: collect's header names a void reason, so nothing is emitted"
 	}
-	w("- build did not fail (a believed record with no `failed` reason): %d\n- would emit as it stands (parse ok, writes complete, ZERO reasons in record.json, %s): %d\n", a.BuiltOK, gatedNote, a.Emittable)
+	w("- build did not fail (a believed record with no `failed` reason): %d\n- would emit as it stands, an UPPER BOUND (per action, before the merge: it cannot see reads-product or cross-action rules): %d (parse ok, writes complete, ZERO reasons in record.json, plan entry with no gate and a weak key, %s)\n", a.BuiltOK, a.Emittable, voidNote)
+	w("- gated by the plan (never emitted; the merge makes it a precondition): %d; unkeyed (no weak key): %d\n", a.Gated, a.Unkeyed)
+	w("- write set unknown (writes_complete false, or record.failed; a strict merge voids the run for any): %d\n", a.WritesUnknown)
+	yes := "no"
+	if a.StrictMergeVoidsShard {
+		yes = "yes"
+	}
+	w("- strict merge would void this shard: %s (writes unknown > 0, or the shard is void)\n", yes)
 	w("- census.json present and non-empty: %d\n- census.json present and empty, with a record whose parse succeeded (no reasons raised): %d\n", a.CensusNonEmpty, a.CensusClean)
 	w("- census.json EMPTY beside a failed parse half (the classifier never ran; not \"no host reads\"): %d\n", a.CensusEmptyParseFailed)
 	w("- census.json empty and no record: %d\n- census.json MISSING (a classify error; not \"no host reads\"): %d\n- census.json unreadable or invalid: %d\n\n", a.CensusEmptyNoRecord, a.CensusMissing, a.CensusInvalid)
@@ -253,8 +260,8 @@ func renderMarkdown(s *CensusSummary) string {
 	// "clean": an empty census beside a recordable record, i.e. no host reads.
 	w("## Share by language (all actions, and of builds that did not fail)\n\n")
 	for _, l := range s.Languages {
-		w("- %s: %d actions; %d built ok; recordable (parse ok and writes complete, NOT necessarily emittable) %d = %s of all, %s of built ok; no-reason (recordable with an empty census) %d; would emit (zero reasons, not gated) %d = %s of all, %s of built ok\n",
-			codeSpan(l.Language), l.Actions, l.BuiltOK, l.Recordable, pct(l.Share), pct(l.RecordableShareOfBuiltOK), l.Clean, l.Emittable, pct(l.EmittableShare), pct(l.EmittableShareOfBuiltOK))
+		w("- %s: %d actions; %d built ok; recordable (parse ok and writes complete, NOT necessarily emittable) %d = %s of all, %s of built ok; no-reason (recordable with an empty census) %d; would emit, upper bound (zero reasons, no gate, keyed, shard not void) %d = %s of all, %s of built ok; gated %d; unkeyed %d; writes unknown %d\n",
+			codeSpan(l.Language), l.Actions, l.BuiltOK, l.Recordable, pct(l.Share), pct(l.RecordableShareOfBuiltOK), l.Clean, l.Emittable, pct(l.EmittableShare), pct(l.EmittableShareOfBuiltOK), l.Gated, l.Unkeyed, l.WritesUnknown)
 	}
 	w("\n")
 

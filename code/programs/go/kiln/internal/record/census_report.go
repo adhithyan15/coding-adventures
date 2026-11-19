@@ -166,15 +166,30 @@ type ActionCounts struct {
 	// Emittable: nothing says its build was fine.
 	BuiltOK int `json:"built_ok"`
 	// Emittable counts the actions whose record would be emitted as it stands:
-	// parse ok, writes complete, ZERO reasons in record.json, and not gated (the
-	// shard's collect header names no void reason; unknown without --records).
+	// a believed record with parse ok, writes complete, ZERO reasons, a plan
+	// entry with NO gate and a weak key (an unkeyed action has nothing to be
+	// emitted under; a gated one the merge turns into precondition:<gate>), and
+	// not in a void shard (ShardVoid).  It is an UPPER BOUND: it is per action
+	// and pre-merge, so it cannot see reads-product or any cross-action rule.
 	// It is stricter than RecordWritesComplete: an action can be recordable
-	// (parse ok, writes complete) and still carry a host-read reason, and not
-	// "clean" or "recordable" means "would emit".
+	// (parse ok, writes complete) and still carry a host-read reason, and
+	// neither "clean" nor "recordable" means "would emit".
 	Emittable int `json:"emittable"`
-	// EmittableGated says collect's header lists a void reason, so Emittable is 0
-	// whatever the records say.
-	EmittableGated bool `json:"emittable_gated"`
+	// Gated counts actions whose plan entry carries a gate (the merge never
+	// emits them); Unkeyed those whose plan entry has no weak key (a refusal
+	// instead).  Both are counted over every action with a plan entry, whatever
+	// its record says.
+	Gated   int `json:"gated"`
+	Unkeyed int `json:"unkeyed"`
+	// WritesUnknown counts the actions whose write set is unknown: a believed
+	// record with writes_complete false, plus record.failed.  A strict merge
+	// voids the run for any of them.
+	WritesUnknown int `json:"writes_unknown"`
+	// ShardVoid says collect's header lists a void reason, so Emittable is 0
+	// whatever the records say (unknown without --records, then false).
+	ShardVoid bool `json:"shard_void"`
+	// StrictMergeVoidsShard: WritesUnknown > 0 or ShardVoid.
+	StrictMergeVoidsShard bool `json:"strict_merge_voids_shard"`
 }
 
 // KindSummary is the histogram of one reason kind.
@@ -335,8 +350,11 @@ type LangSummary struct {
 	Clean      int     `json:"clean"`
 	Share      float64 `json:"recordable_share"`
 	// BuiltOK and Emittable are as ActionCounts', for this language.
-	BuiltOK   int `json:"built_ok"`
-	Emittable int `json:"emittable"`
+	BuiltOK       int `json:"built_ok"`
+	Emittable     int `json:"emittable"`
+	Gated         int `json:"gated"`
+	Unkeyed       int `json:"unkeyed"`
+	WritesUnknown int `json:"writes_unknown"`
 	// The shares: of all actions, and of the actions whose build did not fail
 	// (0 when there are none).  RecordableShare is the existing Share over all.
 	RecordableShareOfBuiltOK float64 `json:"recordable_share_of_built_ok"`
@@ -391,7 +409,10 @@ type kindAcc struct {
 	prefixes                       map[string]*prefixAcc
 }
 
-type langAcc struct{ actions, recordable, clean, builtOK, emittable, recordableBuilt int }
+type langAcc struct {
+	actions, recordable, clean, builtOK, emittable, recordableBuilt int
+	gated, unkeyed, writesUnknown                                   int
+}
 
 // parseSample is one accepted timed parse: the trace's size, the parse time and
 // its share of the step's wall (-1 when the wall was not positive).
@@ -747,7 +768,27 @@ func (r *censusRun) action(hexName string) {
 			la.recordableBuilt++
 		}
 	}
-	if emittable(rec) {
+	// The plan's verdict on the action: a gate, or no weak key, means the merge
+	// never emits it, however good its record.  No plan entry (no verified pre/,
+	// an action not in the plan) means we cannot say: not emittable.
+	planned, inPlan := Action{}, false
+	if r.pre != nil && name != "" {
+		planned, inPlan = r.pre.Action(name)
+	}
+	gated, unkeyed, mergeable := planVerdict(planned, inPlan)
+	if gated {
+		a.actions.Gated++
+		la.gated++
+	}
+	if unkeyed {
+		a.actions.Unkeyed++
+		la.unkeyed++
+	}
+	if (rec != nil && !rec.WritesComplete) || failed {
+		a.actions.WritesUnknown++
+		la.writesUnknown++
+	}
+	if mergeable && emittable(rec) {
 		a.actions.Emittable++
 		la.emittable++
 	}
@@ -806,9 +847,21 @@ func builtOK(rec *ClassifiedRecord, scs map[int]StepSidecar) bool {
 	return true
 }
 
-// emittable says the record would be emitted as it stands: parse ok, writes
-// complete and not one reason.  (Gating by collect's void list is applied once
-// the header is read; see summary.)
+// planVerdict reads the plan's side of "would the merge emit this action": a
+// gate (the merge turns it into precondition:<gate>) or no weak key (nothing to
+// emit under) means never.  mergeable is false when there is no plan entry, too:
+// nothing can be claimed for an action the verified pre/ does not know.
+func planVerdict(planned Action, inPlan bool) (gated, unkeyed, mergeable bool) {
+	if !inPlan {
+		return false, false, false
+	}
+	gated, unkeyed = planned.Gate != "", planned.Weak == ""
+	return gated, unkeyed, !gated && !unkeyed
+}
+
+// emittable says the RECORD is emittable: parse ok, writes complete and not one
+// reason.  The caller adds the plan's side (no gate, a weak key), and summary
+// the shard's (collect's void list, once the header is read).
 func emittable(rec *ClassifiedRecord) bool {
 	return rec != nil && rec.ParseOK && rec.WritesComplete && rec.Record != nil && len(rec.Record.Reasons) == 0
 }
@@ -1425,10 +1478,11 @@ func (a *censusAcc) summary(top int) *CensusSummary {
 	// A collect header that names a void reason voids the whole shard: nothing
 	// in it is emitted, whatever each record says.
 	gated := a.collect != nil && len(a.collect.Void) > 0
-	s.Actions.EmittableGated = gated
+	s.Actions.ShardVoid = gated
 	if gated {
 		s.Actions.Emittable = 0
 	}
+	s.Actions.StrictMergeVoidsShard = gated || s.Actions.WritesUnknown > 0
 	ratio := func(n, d int) float64 {
 		if d == 0 {
 			return 0
@@ -1442,7 +1496,7 @@ func (a *censusAcc) summary(top int) *CensusSummary {
 			emit = 0
 		}
 		ls := LangSummary{Language: l, Actions: la.actions, Recordable: la.recordable, Clean: la.clean,
-			BuiltOK: la.builtOK, Emittable: emit,
+			BuiltOK: la.builtOK, Emittable: emit, Gated: la.gated, Unkeyed: la.unkeyed, WritesUnknown: la.writesUnknown,
 			Share:                    ratio(la.recordable, la.actions),
 			RecordableShareOfBuiltOK: ratio(la.recordableBuilt, la.builtOK),
 			EmittableShare:           ratio(emit, la.actions),

@@ -275,11 +275,11 @@ func TestCensusLanguagesBuiltOKAndEmittable(t *testing.T) {
 	if l.Share != 1 || l.RecordableShareOfBuiltOK != 1 || l.EmittableShare != 0.5 || l.EmittableShareOfBuiltOK != 0.5 {
 		t.Errorf("shares %+v", l)
 	}
-	if s.Actions.BuiltOK != 2 || s.Actions.Emittable != 1 || s.Actions.EmittableGated {
+	if s.Actions.BuiltOK != 2 || s.Actions.Emittable != 1 || s.Actions.ShardVoid {
 		t.Errorf("actions %+v", s.Actions)
 	}
 	md, _ := os.ReadFile(mdPath)
-	for _, want := range []string{"## Share by language", "NOT necessarily emittable", "would emit (zero reasons, not gated) 1 = 50.0%"} {
+	for _, want := range []string{"## Share by language", "NOT necessarily emittable", "would emit, upper bound (zero reasons, no gate, keyed, shard not void) 1 = 50.0%"} {
 		if !strings.Contains(string(md), want) {
 			t.Errorf("the Markdown lacks %q:\n%s", want, md)
 		}
@@ -316,14 +316,14 @@ func TestCensusGatedShardEmitsNothing(t *testing.T) {
 	a.actions.Emittable = 4
 	a.collect = &CollectSummary{Void: []string{"post-inventory"}}
 	s := a.summary(10)
-	if !s.Actions.EmittableGated || s.Actions.Emittable != 0 || s.Languages[0].Emittable != 0 || s.Languages[0].EmittableShare != 0 {
+	if !s.Actions.ShardVoid || s.Actions.Emittable != 0 || s.Languages[0].Emittable != 0 || s.Languages[0].EmittableShare != 0 {
 		t.Errorf("gated summary: %+v %+v", s.Actions, s.Languages[0])
 	}
-	if md, _, _ := RenderCensusMarkdown(s); !strings.Contains(md, "GATED") {
+	if md, _, _ := RenderCensusMarkdown(s); !strings.Contains(md, "SHARD VOID") {
 		t.Error("the Markdown does not say the shard is gated")
 	}
 	a.collect = &CollectSummary{}
-	if s := a.summary(10); s.Actions.EmittableGated || s.Languages[0].Emittable != 4 {
+	if s := a.summary(10); s.Actions.ShardVoid || s.Languages[0].Emittable != 4 {
 		t.Errorf("ungated summary: %+v", s.Actions)
 	}
 }
