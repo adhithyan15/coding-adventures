@@ -709,6 +709,111 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 2, result.stderr)
                 self.assertEqual(calls, [], "refused before adb is reached")
 
+    def test_flutter_state_diagnostic_is_bounded_and_cannot_mask_gate_failure(self) -> None:
+        gate = SCRIPT.parent / "mosaic-android-emulator-gate.sh"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            project = root / "mosaic-flutter-trestle-android" / "flutter"
+            apk = project / "build/app/outputs/flutter-apk/app-debug.apk"
+            apk.parent.mkdir(parents=True)
+            apk.write_bytes(b"diagnostic-test-apk")
+            (project / "pubspec.lock").write_text("lock data\n", encoding="utf-8")
+
+            android_home = root / "android-sdk"
+            build_tools = android_home / "build-tools" / "35.0.0"
+            build_tools.mkdir(parents=True)
+            aapt2 = build_tools / "aapt2"
+            aapt2.write_text(
+                "#!/usr/bin/env bash\n"
+                "printf \"package: name='dev.codingadventures.trestle' versionCode='1' versionName='1.0'\\n\"\n",
+                encoding="utf-8",
+            )
+            aapt2.chmod(0o755)
+
+            bin_dir = root / "bin"
+            bin_dir.mkdir()
+            adb = bin_dir / "adb"
+            adb.write_text(
+                "#!/usr/bin/env bash\n"
+                "case \"$1\" in\n"
+                "  install) exit 0 ;;\n"
+                "  logcat)\n"
+                "    if [[ \"$2\" == -c ]]; then exit 0; fi\n"
+                "    if [[ \"${DIAG_MODE:-ok}\" == ok ]]; then\n"
+                "      printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'\n"
+                "      exit 0\n"
+                "    fi\n"
+                "    exit 7\n"
+                "    ;;\n"
+                "  shell)\n"
+                "    command=\"$2\"\n"
+                "    case \"$command\" in\n"
+                "      *'am start -W'*) exit 0 ;;\n"
+                "      pidof) echo 4321; exit 0 ;;\n"
+                "      *'if test -e files/task-app/mosaic-state.v1.json'* )\n"
+                "        if [[ \"${DIAG_MODE:-ok}\" == ok ]]; then echo present_empty; exit 0; fi\n"
+                "        exit 9\n"
+                "        ;;\n"
+                "      *'test -s files/task-app/mosaic-state.v1.json'*) exit 1 ;;\n"
+                "      *) exit 0 ;;\n"
+                "    esac\n"
+                "    ;;\n"
+                "esac\n"
+                "exit 0\n",
+                encoding="utf-8",
+            )
+            adb.chmod(0o755)
+
+            sleep = bin_dir / "sleep"
+            sleep.write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+            sleep.chmod(0o755)
+            timeout = bin_dir / "timeout"
+            timeout.write_text(
+                "#!/usr/bin/env bash\nshift\nexec \"$@\"\n", encoding="utf-8"
+            )
+            timeout.chmod(0o755)
+            sha256sum = bin_dir / "sha256sum"
+            sha256sum.write_text(
+                "#!/usr/bin/env bash\nprintf '%064d  %s\\n' 0 \"$1\"\n",
+                encoding="utf-8",
+            )
+            sha256sum.chmod(0o755)
+
+            def run(mode: str) -> subprocess.CompletedProcess[str]:
+                return subprocess.run(
+                    [
+                        "bash",
+                        str(gate),
+                        str(apk),
+                        "dev.codingadventures.trestle",
+                        "task-app",
+                        ".MainActivity",
+                    ],
+                    env={
+                        "PATH": f"{bin_dir}:/usr/bin:/bin",
+                        "ANDROID_HOME": str(android_home),
+                        "MOSAIC_NATIVE_DIAGNOSTICS_CAPTURE": "1",
+                        "DIAG_MODE": mode,
+                    },
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+
+            successful_capture = run("ok")
+            self.assertEqual(successful_capture.returncode, 1)
+            self.assertIn("diagnostic_state_probe=present_empty", successful_capture.stdout)
+            self.assertIn(
+                "MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17",
+                successful_capture.stdout,
+            )
+            self.assertIn("diagnostic_apk_package_version=dev.codingadventures.trestle 1", successful_capture.stdout)
+
+            failed_capture = run("fail")
+            self.assertEqual(failed_capture.returncode, 1)
+            self.assertIn("diagnostic_state_probe=probe_failed", failed_capture.stdout)
+            self.assertIn("diagnostic_log_capture=failed", failed_capture.stdout)
+
     def test_a_lane_script_change_alone_requires_acceptance(self) -> None:
         """The Android scripts belong to no package; changing one must still
         run the lane that executes it."""

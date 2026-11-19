@@ -82,6 +82,113 @@ fail() {
   exit 1
 }
 
+# Failure-only, bounded context for the opt-in Flutter Trestle diagnostic APK.
+# This runs only after the unchanged state deadline has failed, so it cannot
+# give the app additional time to satisfy the gate.
+diagnostic_state_failure() {
+  [[ "${MOSAIC_NATIVE_DIAGNOSTICS_CAPTURE:-}" == 1 ]] || return 0
+  [[ "$package" == "dev.codingadventures.trestle" && "$application_id" == "task-app" ]] || return 0
+  [[ "$apk" == *"/mosaic-flutter-trestle-android/flutter/build/app/outputs/flutter-apk/app-debug.apk" ]] || return 0
+
+  echo "---- bounded Flutter Trestle diagnostics (failure only) ----"
+  local deadline=$((SECONDS + 6))
+  local apk_hash="unavailable"
+  if [[ -f "$apk" && $SECONDS -lt $deadline ]] && command -v sha256sum >/dev/null 2>&1 && command -v timeout >/dev/null 2>&1; then
+    apk_hash="$(timeout 1 sha256sum "$apk" | cut -c1-64)" || apk_hash="unavailable"
+    [[ "$apk_hash" =~ ^[0-9a-f]{64}$ ]] || apk_hash="unavailable"
+  fi
+  printf 'diagnostic_apk_sha256=%s\n' "$apk_hash"
+
+  local project_root=""
+  local lock_hash="unavailable"
+  if project_root="$(cd "$(dirname "$apk")/../../../.." 2>/dev/null && pwd)" && [[ -f "$project_root/pubspec.lock" && $SECONDS -lt $deadline ]] && command -v sha256sum >/dev/null 2>&1 && command -v timeout >/dev/null 2>&1; then
+    lock_hash="$(timeout 1 sha256sum "$project_root/pubspec.lock" | cut -c1-64)" || lock_hash="unavailable"
+    [[ "$lock_hash" =~ ^[0-9a-f]{64}$ ]] || lock_hash="unavailable"
+  fi
+  printf 'diagnostic_pubspec_lock_sha256=%s\n' "$lock_hash"
+
+  local aapt2=""
+  if [[ -n "${ANDROID_HOME:-}" ]]; then
+    for candidate in "$ANDROID_HOME"/build-tools/*/aapt2; do
+      [[ -x "$candidate" ]] && aapt2="$candidate"
+    done
+  fi
+  local apk_metadata="unavailable"
+  if [[ -n "$aapt2" && $SECONDS -lt $deadline ]] && command -v timeout >/dev/null 2>&1; then
+    local raw_metadata=""
+    raw_metadata="$(timeout 1 "$aapt2" dump badging "$apk" 2>/dev/null | sed -n "s/^package: name='\\([A-Za-z0-9._-]*\\)' versionCode='\\([0-9]*\\)'.*/\\1 \\2/p" | head -n 1)" || raw_metadata=""
+    if [[ "$raw_metadata" =~ ^[A-Za-z0-9._-]+\ [0-9]+$ ]]; then
+      apk_metadata="$raw_metadata"
+    fi
+  fi
+  printf 'diagnostic_apk_package_version=%s\n' "$apk_metadata"
+
+  local probe_result="probe_failed"
+  if [[ $SECONDS -lt $deadline ]] && command -v timeout >/dev/null 2>&1; then
+    local probe_output=""
+    local probe_status=0
+    probe_output="$(timeout 1 adb shell "run-as $package sh -c 'if test -e $state; then if test -s $state; then printf present_nonempty; else printf present_empty; fi; else printf absent; fi'" 2>/dev/null)" || probe_status=$?
+    probe_output="${probe_output//$'\r'/}"
+    if [[ $probe_status -eq 0 && "$probe_output" =~ ^(absent|present_empty|present_nonempty)$ ]]; then
+      probe_result="$probe_output"
+    fi
+  fi
+  printf 'diagnostic_state_probe=%s\n' "$probe_result"
+
+  local pid=""
+  local pid_status=0
+  if [[ $SECONDS -lt $deadline ]] && command -v timeout >/dev/null 2>&1; then
+    pid="$(timeout 1 adb shell pidof "$package" 2>/dev/null | tr -d '\r')" || pid_status=$?
+    [[ "$pid" =~ ^[0-9]+$ ]] || pid=""
+  else
+    pid_status=124
+  fi
+
+  local log_status="failed"
+  local raw_log=""
+  local max_log_bytes=49152
+  if [[ $SECONDS -lt $deadline ]] && command -v timeout >/dev/null 2>&1; then
+    raw_log="$(mktemp)" || raw_log=""
+    if [[ -n "$raw_log" ]]; then
+      set +e
+      timeout 1 adb logcat -d -v brief -t 4000 2>/dev/null | head -c "$max_log_bytes" > "$raw_log"
+      local pipeline_status=("${PIPESTATUS[@]}")
+      set -e
+      local log_bytes
+      log_bytes="$(wc -c < "$raw_log" | tr -d ' ')"
+      if [[ "$log_bytes" -ge "$max_log_bytes" ]]; then
+        log_status="clipped"
+      elif [[ "${pipeline_status[0]:-1}" -eq 124 ]]; then
+        log_status="timed_out"
+      elif [[ "${pipeline_status[0]:-1}" -ne 0 ]]; then
+        log_status="failed"
+      else
+        log_status="complete"
+      fi
+      printf 'diagnostic_log_capture=%s\n' "$log_status"
+      if [[ -n "$pid" && "$log_status" != failed && "$log_status" != timed_out ]]; then
+        local marker_lines
+        marker_lines="$(awk -v pid="$pid" 'match($0, "\\([[:space:]]*" pid "\\)") && index($0, "MOSAIC_NATIVE_DIAG v=1 ") { print }' "$raw_log" \
+          | grep -Eo 'MOSAIC_NATIVE_DIAG v=1 stage=[a-z_]+ result=[a-z_]+ elapsed_us=[0-9]+' \
+          | head -n 24 | cut -c1-240 || true)"
+        if [[ -n "$marker_lines" ]]; then
+          printf '%s\n' "$marker_lines"
+        else
+          printf 'diagnostic_host_markers=none_observed_for_current_pid\n'
+        fi
+      else
+        printf 'diagnostic_host_markers=unavailable_pid_or_log\n'
+      fi
+      rm -f -- "$raw_log"
+    else
+      printf 'diagnostic_log_capture=temporary_file_failed\n'
+    fi
+  else
+    printf 'diagnostic_log_capture=deadline_or_timeout_tool_unavailable\n'
+  fi
+  [[ -n "$pid" ]] || printf 'diagnostic_pid_probe=%s\n' "$([[ $pid_status -eq 124 ]] && echo timed_out || echo unavailable)"
+}
+
 # `adb shell` runs its arguments as ONE command line on the device; every
 # value spliced in here was validated above.
 in_app() {
@@ -134,8 +241,14 @@ eventually() {
 }
 
 expect_state_written() {
-  eventually "test -s $state" \
-    "no $state in $package's storage: the engine never answered an event, or the host persisted elsewhere"
+  for _ in $(seq 1 30); do
+    if in_app "test -s $state"; then
+      return 0
+    fi
+    sleep 1
+  done
+  diagnostic_state_failure || true
+  fail "no nonempty state check succeeded for $state in $package's storage before the existing deadline"
 }
 
 stop_app() {

@@ -27,6 +27,24 @@ SPEC.loader.exec_module(MODULE)
 
 
 class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
+    def test_android_diagnostic_define_is_opt_in_at_build_and_failure_capture(self) -> None:
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        build_start = workflow.index(
+            "- name: Build Trestle, Journal and Engram for Android with Flutter (UI89 §7)"
+        )
+        build_step = workflow[build_start : workflow.index("\n      - name:", build_start)]
+        self.assertIn("MOSAIC_NATIVE_DIAGNOSTICS: 'true'", build_step)
+        helper = (Path(__file__).resolve().parents[1] / "build-mosaic-flutter-phone-app.sh").read_text(encoding="utf-8")
+        self.assertIn('MOSAIC_NATIVE_DIAGNOSTICS:-false', helper)
+        self.assertIn("--dart-define=MOSAIC_NATIVE_DIAGNOSTICS=true", helper)
+        self.assertIn('flutter build apk --debug "${flutter_diagnostic_args[@]}"', helper)
+
+        gate_start = workflow.index(
+            "- name: Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)"
+        )
+        gate_step = workflow[gate_start : workflow.index("\n      - name:", gate_start)]
+        self.assertIn("MOSAIC_NATIVE_DIAGNOSTICS_CAPTURE: '1'", gate_step)
+
     def test_force_plan_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_flutter_runtime({"affected_packages": None})

@@ -94,6 +94,13 @@ repo="$(cd "$here/../.." && pwd)"
 program="$(cd "$program" && pwd)"
 runtime="$(cd "$runtime" && pwd)"
 
+# Diagnostics are absent by default, including release builds. The emulator
+# investigation opts in only for its temporary Flutter phone artifacts.
+flutter_diagnostic_args=()
+if [[ "${MOSAIC_NATIVE_DIAGNOSTICS:-false}" == true ]]; then
+  flutter_diagnostic_args+=(--dart-define=MOSAIC_NATIVE_DIAGNOSTICS=true)
+fi
+
 rm -rf -- "${output:?}"
 mkdir -p -- "$output"
 output="$(cd "$output" && pwd)"
@@ -153,7 +160,7 @@ checks="$(mktemp -d)"
 trap 'rm -rf -- "$checks"' EXIT
 
 if [[ "$platform" == android ]]; then
-  flutter build apk --debug
+  flutter build apk --debug "${flutter_diagnostic_args[@]}"
   apk=build/app/outputs/flutter-apk/app-debug.apk
   test -f "$apk"
   aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
@@ -190,7 +197,7 @@ if [[ "$platform" == android ]]; then
   done
   echo "built $output/flutter/$apk"
 else
-  flutter build ios --simulator --debug
+  flutter build ios --simulator --debug "${flutter_diagnostic_args[@]}"
   app=build/ios/iphonesimulator/Runner.app
   test -d "$app"
   test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist")" = "$org.$name"

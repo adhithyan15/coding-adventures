@@ -3918,6 +3918,8 @@ jobs:
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         shell: bash
         timeout-minutes: 50
+        env:
+          MOSAIC_NATIVE_DIAGNOSTICS: 'true'
         run: |
           set -euo pipefail
           # program | jniLibs built by its Compose step above | project name.
@@ -3946,6 +3948,7 @@ jobs:
         timeout-minutes: 65
         env:
           MOSAIC_FLUTTER_LANE: ${{ needs.detect.outputs.needs_mosaic_flutter_runtime }}
+          MOSAIC_NATIVE_DIAGNOSTICS_CAPTURE: '1'
         run: |
           set -euo pipefail
           # Let the runner's user open /dev/kvm (GitHub's documented recipe).
