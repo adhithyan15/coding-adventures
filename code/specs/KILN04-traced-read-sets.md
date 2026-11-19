@@ -1288,16 +1288,28 @@ concurrency group that queues and never cancels, and a job timeout.
   not all refused by both readers (`cross_check.accepted` is above 0 when
   `traces` is). The workflow flags a shard that exits 0 but misses any of these
   as "not clean" in its summary (`ci/census_not_clean.py`, which reads the JSON,
-  never the Markdown), and does not fail the job for it.
+  never the Markdown), and does not fail the job for it; it prints a positive
+  "clean" line otherwise, so a missing line is never read as clean. A workflow
+  that gates PR8 must FAIL on "not clean", not only annotate it.
 - *Never partly green.* The job's status is the worst of every shard. A shard
-  that was not started (the start deadline: no new shard starts 200 minutes
-  after the job start stamp, with a 300 minute job limit), a failed
+  that was not started (the start deadline: no new shard starts more than 200
+  minutes after the job start stamp), a failed
   `reset`/`clean` of the checkout, a failed `prepare` or `collect`, and a build
   that timed out or was killed (timeout or OOM) each fail the job, and each
   leaves a line in the summary. A failed `collect` still gets its census (it
   needs only `pre/` and `traces/`), run without `--records`. The status file is
   created as a failure before the loop, so a missing or unreadable one fails
-  the job.
+  the job. The job limit is 360 minutes (the hosted maximum), because the stamp
+  is taken after setup and the limit counts from the job's start: setup (at most
+  15) + the start deadline (200) + reset and prepare (at most 20; `VerifyTree` has
+  a 20 minute budget) + one shard's build (91) + collect, census and upload (at
+  most 25) is about 351 minutes. Three slow shards cannot all complete: the third
+  is skipped and the job fails, which is intended.
+- *Job start stamp.* The workflow stamps `JOB_START` after setup, which is more
+  permissive than section 5.3 ("the job's first step"). That is acceptable for
+  this census, which warns when apt installed strace. Stage-4 PR 3
+  (`kiln-record.yml`) must NOT copy it: it stamps first and fails if strace is
+  missing.
 - *Housekeeping.* `strace` is verified (or installed, with a `::warning::`)
   BEFORE the job start is stamped, so an apt install cannot turn every action
   into `host-read:setup-modified`. Every recorder command runs with `$RUNNER_TEMP`

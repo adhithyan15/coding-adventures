@@ -58,10 +58,13 @@ jobs:
       matrix:
         os: [ubuntu-24.04, ubuntu-26.04]
     # At most 3 shards, each a strace-traced build with -jobs 1 capped at 90
-    # minutes (SHARD_BUILD_TIMEOUT).  No new shard starts after 200 minutes
-    # (START_DEADLINE_SECS), so the last one that starts still finishes, with its
-    # collect, census and the upload, inside this limit.
-    timeout-minutes: 300
+    # minutes (SHARD_BUILD_TIMEOUT).  No new shard starts more than 200 minutes
+    # after JOB_START (START_DEADLINE_SECS), which is stamped after setup.  The
+    # worst case is setup (<=15) + deadline 200 + reset and prepare (<=20) + build
+    # 91 + collect, census and upload (<=25) = about 351 minutes, inside the
+    # hosted maximum of 360.  Three slow shards cannot all complete: the third is
+    # skipped and the job fails, which is intended.
+    timeout-minutes: 360
     permissions:
       contents: read
     env:
@@ -193,16 +196,16 @@ jobs:
           # One shard's traced build is cut off after this long; what the build
           # left is still collected and censused.
           SHARD_BUILD_TIMEOUT: 90m
-          # No new shard starts after this many seconds from JOB_START (the job
-          # timeout of 300 minutes minus one shard's build cap and a margin for
-          # collect, the census and the upload).  A shard not started is a
+          # No new shard starts after this many seconds from JOB_START (see the
+          # job's timeout-minutes for the arithmetic).  A shard not started is a
           # failure, so a partial run is never green.
           START_DEADLINE_SECS: '12000'
           MATRIX_OS: ${{ matrix.os }}
         run: |
           set -uo pipefail
-          # Never the checkout as cwd (the recorder refuses it, KILN04 P3); the
-          # checkout is passed explicitly wherever it is needed.
+          # The working directory is kept out of the checkout by choice (the
+          # tests run the recorder from / too); the checkout is passed
+          # explicitly wherever it is needed.
           cd "$RUNNER_TEMP"
           token=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
           echo "::stop-commands::$token"
@@ -269,7 +272,10 @@ jobs:
               continue
             fi
             rmrec "$rec"; rmrec "$shard_home"; rm -rf /tmp/kiln-tmp
-            mkdir -m 0700 "$shard_home"
+            if ! mkdir -m 0700 "$shard_home"; then
+              fail "$idx" "could not create the shard's fresh HOME"
+              continue
+            fi
 
             if ! HOME="$shard_home" "$kiln" record prepare \
                 --root "$GITHUB_WORKSPACE" --dir "$rec" --build-tool "$bt" \
@@ -333,7 +339,8 @@ jobs:
             # Soft passes (an exit 0 that left part of the sample unchecked) are
             # read from the JSON, never from the Markdown.
             if [[ -f "$CENSUS_OUT/census-$tag.json" ]]; then
-              python3 "$not_clean" "$CENSUS_OUT/census-$tag.json" "$idx" >> "$GITHUB_STEP_SUMMARY" || true
+              python3 "$not_clean" "$CENSUS_OUT/census-$tag.json" "$idx" >> "$GITHUB_STEP_SUMMARY" \
+                || echo "- shard $idx: **not-clean check did not run**" >> "$GITHUB_STEP_SUMMARY"
             fi
 
             # The record directory is never uploaded; drop it before the next.

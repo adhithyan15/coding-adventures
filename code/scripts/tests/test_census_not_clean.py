@@ -41,6 +41,31 @@ class NotCleanTests(unittest.TestCase):
             self.assertEqual(mod.main(["x", str(bad), "1"]), 0)
             self.assertEqual(mod.main(["x", str(pathlib.Path(d, "missing.json")), "2"]), 0)
 
+    def run_main(self, content: str) -> str:
+        import contextlib
+        import io
+
+        with tempfile.TemporaryDirectory() as d:
+            p = pathlib.Path(d, "c.json")
+            p.write_text(content)
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                self.assertEqual(mod.main(["x", str(p), "7"]), 0)
+            return out.getvalue()
+
+    def test_a_clean_shard_prints_a_positive_line(self):
+        out = self.run_main(json.dumps(summary()))
+        self.assertIn("- shard 7: clean (no skipped_too_large, no actions_skipped, not all refused)", out)
+        self.assertNotIn("not clean", out)
+
+    def test_any_exception_prints_only_its_type_name(self):
+        # Deep nesting raises RecursionError, which the old tuple did not catch.
+        out = self.run_main("[" * 200000)
+        self.assertIn("**not clean**: summary JSON unreadable (RecursionError)", out)
+        out = self.run_main('{"cross_check": 1, "bounds": {}}')
+        self.assertIn("unreadable (TypeError)", out)
+        self.assertNotIn("cross_check", out.split("unreadable")[1])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -37,11 +37,14 @@ def main(argv: list[str]) -> int:
     try:
         with open(path, encoding="utf-8") as f:
             why = reasons(json.load(f))
-    except (OSError, ValueError, KeyError, TypeError) as e:
+    except Exception as e:  # noqa: BLE001 - RecursionError, MemoryError and the rest too; only the type name is printed
         print(f"- shard {shard}: **not clean**: summary JSON unreadable ({type(e).__name__})\n")
         return 0
     if why:
         print(f"- shard {shard}: **not clean**: {'; '.join(why)}\n")
+    else:
+        # A positive line, so a missing line is never read as clean.
+        print(f"- shard {shard}: clean (no skipped_too_large, no actions_skipped, not all refused)\n")
     return 0
 
 
