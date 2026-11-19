@@ -13,6 +13,11 @@
 # WX-SV2), the record fault that is never inert: `field-zero` changes nothing on the zero initial
 # state (VOS02 13.4 F4, VOS-D065), `field-flip` makes it a mask of 1.  A harness that names
 # `field-flip` also honours WARRANT_EVIDENCE_ATTACK=<op>, so BUILD can flip one operation at a time.
+# `field-flip-last` (VOS-039c, VER04j 4.8): the three state-producing operations (`ret=Impl` with an `Impl`
+# argument) also list it.  `field-zero` and `field-flip` touch the FIRST numeric field, the bitmap; this fault
+# flips the lowest bit of the LAST one, the oracle register `choice`, which is the field the `any` block's
+# preservation claims (`insert_oracle_*`, `remove_oracle_*`, `dispatch_sound`) say the operation keeps.
+# `vos-link check-component` (CC11) requires it of every such operation of an `-any`.
 package vos_sched_any
 revision 0.1.0
 spec code/specs/vos-sched-any.warrant
@@ -31,10 +36,10 @@ enum Pick path=vos_sched_contract::Pick ctors=Idle,Run(0:u8)
 
 op init export=vos_ghost_init ret=Impl faults=field-flip
 op insert_out export=vos_ghost_insert_out args=Impl,u8 ret=Upd faults=wrong-ctor
-op insert_img export=vos_ghost_insert_img args=Impl,u8 ret=Impl faults=field-zero
+op insert_img export=vos_ghost_insert_img args=Impl,u8 ret=Impl faults=field-zero,field-flip-last
 op remove_out export=vos_ghost_remove_out args=Impl,u8 ret=Upd faults=wrong-ctor
-op remove_img export=vos_ghost_remove_img args=Impl,u8 ret=Impl faults=field-zero
+op remove_img export=vos_ghost_remove_img args=Impl,u8 ret=Impl faults=field-zero,field-flip-last
 op dispatch_out export=vos_ghost_dispatch_out args=Impl ret=Pick faults=wrong-ctor
-op dispatch_img export=vos_ghost_dispatch_img args=Impl ret=Impl faults=field-zero
+op dispatch_img export=vos_ghost_dispatch_img args=Impl ret=Impl faults=field-zero,field-flip-last
 op alpha_w export=vos_ghost_alpha_w args=Impl ret=AbsW faults=field-zero,field-flip
 op cfg_n export=vos_ghost_cfg_n ret=CfgN faults=field-zero

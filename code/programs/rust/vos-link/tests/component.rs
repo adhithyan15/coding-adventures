@@ -62,6 +62,51 @@ fn bindings(c: &str, property: u64, fuzz: u64) -> String {
     )
 }
 
+/// The fixture document of an `-any` crate.  CC11 type-checks the document (it needs the shape of
+/// `model build`), so unlike [`DOC`] this one is a valid Warrant document: `Impl(x, c)` with the
+/// oracle `c` last and outside the cone of `build`, and the state-producing operation `f`, which
+/// claim `c1` calls alone.
+fn any_doc() -> String {
+    DOC.replacen(
+        "  record Impl(x: U8)\n",
+        "  record M(a: Bool)\n  record Impl(x: U8, c: U8)\n  model build(m: M) -> Impl = (Impl(if m.a then 1u8 else 0u8, 0u8))\n",
+        1,
+    )
+    .replacen(
+        "  op alpha_w(s: Impl) -> U8\n",
+        "  op alpha_w(s: Impl) -> U8\n  op f(s: Impl, t: U8) -> Impl\n  op g() -> U8\n  op h() -> U8\n",
+        1,
+    )
+    .replacen(
+        "forall v: Bool. f(v) == f(v)",
+        "forall v: Bool. f(Impl(1u8, 2u8), 3u8).c == 2u8",
+        1,
+    )
+    .replacen("forall v: Bool. h(v) == h(v)", "forall v: Bool. h() == h()", 1)
+    // The type checker wants a secrecy label for every parameter of every operation.
+    .replacen(
+        "  claim c1:",
+        "  labels insert_out:\n    s public\n    t public\n  labels insert_img:\n    s public\n    t public\n  labels remove:\n    s public\n    t public\n  labels dispatch_out:\n    s public\n  labels alpha_w:\n    s public\n  labels f:\n    s public\n    t public\n  claim c1:",
+        1,
+    )
+}
+
+/// The bindings of an `-any` fixture: `f` produces a state from a state and lists `field-flip-last`.
+fn any_bindings(c: &str) -> String {
+    let m = c.replace('-', "_");
+    bindings(c, 4096, 5000)
+        .replacen(
+            "\nop f export=vos_ghost_f args=u8 ret=u8 faults=field-zero,wrong-ctor\n",
+            &format!("\nstruct Impl path={m}::Impl fields=x:u8,c:u8\nop f export=vos_ghost_f args=Impl,u8 ret=Impl faults=field-zero,wrong-ctor,field-flip-last\n"),
+            1,
+        )
+}
+
+/// The plan of an `-any` fixture: the ordinary plan and the CC11 entry.
+fn any_plan() -> String {
+    format!("{PLAN}exhaustive/c1 field-flip-last\n")
+}
+
 const PLAN: &str = "# plan\nexhaustive/c1 field-zero\nexhaustive/c2 wrong-ctor\nexample/e1 field-zero\nexhaustive/c1 field-flip attack=g\nexhaustive/c2 field-flip attack=h\n";
 
 /// A manifest of the fixture document.  `failing` ids get verdict `fail`.
@@ -152,10 +197,24 @@ fn good(label: &str, name: &str, kind: &str, excused: bool) -> Repo {
     r.write(&p(name, "Cargo.toml"), cargo_toml(name, publish));
     r.write(&p(name, "required_capabilities.json"), "{}\n");
     r.write(&p(name, "warrant/impl.part"), "-- x\n");
-    r.write(&p(name, "warrant/sabotage.plan"), PLAN);
-    r.write(&p(name, "evidence.bindings"), bindings(name, 4096, 5000));
+    let any = kind == "any";
+    r.write(
+        &p(name, "warrant/sabotage.plan"),
+        if any { any_plan() } else { PLAN.to_string() },
+    );
+    r.write(
+        &p(name, "evidence.bindings"),
+        if any {
+            any_bindings(name)
+        } else {
+            bindings(name, 4096, 5000)
+        },
+    );
     r.write(&p(name, "tests/generated/warrant_evidence.rs"), "// x\n");
-    r.write(&format!("code/specs/{name}.warrant"), DOC);
+    r.write(
+        &format!("code/specs/{name}.warrant"),
+        if any { any_doc() } else { DOC.to_string() },
+    );
     r.write(&p(name, "src/lib.rs"), SRC);
     r.write("code/specs/VOS-BACKLOG.md", BACKLOG);
     put_manifest(&r, name, manifest(&["c1", "c2"], 4096, 5000, 10, failing));
@@ -1685,8 +1744,13 @@ fn m4_resolved_withdrawn_done_in_this_pr_and_duplicate_rows_do_not_excuse() {
 /// Rewrite the fixture document with `f`, and re-bind the evidence manifest to it (CC08 would
 /// otherwise report the stale digest, and each control must fail for exactly one reason).
 fn with_doc(r: &Repo, name: &str, f: impl Fn(&str) -> String) {
-    let doc = f(DOC);
-    assert_ne!(doc, DOC, "the edit changed nothing");
+    with_doc_from(r, name, DOC, f)
+}
+
+/// [`with_doc`] over another base document (the `-any` fixture's).
+fn with_doc_from(r: &Repo, name: &str, base: &str, f: impl Fn(&str) -> String) {
+    let doc = f(base);
+    assert_ne!(doc, base, "the edit changed nothing");
     r.write(&format!("code/specs/{name}.warrant"), doc);
     put_manifest(r, name, manifest(&["c1", "c2"], 4096, 5000, 10, &[]));
 }
@@ -1757,7 +1821,7 @@ fn cc09_control_a_deleted_heap_or_steps_row() {
         "operation \"remove\" (ceiling operation \"remove\") has no heap row",
     );
     let r = good("cc09-nosteps", PROD, "any", false);
-    with_doc(&r, PROD, |d| {
+    with_doc_from(&r, PROD, &any_doc(), |d| {
         d.replacen(
             "bound dispatch_out:\n    steps <= 160\n    heap <= 0\n",
             "bound dispatch_out:\n    heap <= 0\n",
@@ -1928,4 +1992,241 @@ fn cc09_cannot_be_applied_without_a_contract_or_a_document() {
     let r = good("cc09-baddoc", PROD, "production", false);
     r.write(&format!("code/specs/{PROD}.warrant"), "not a document\n");
     has(&run(&r, PROD), "CC09", "code/specs/vos-fix-comp.warrant:");
+}
+
+// --- CC11: oracle preservation of every `-any` (VOS-039c, VOS-D080) ---------------------------------
+
+/// The `-any` fixture with its document, bindings and plan rewritten, regenerated (BUILD follows the
+/// plan) and re-bound to the manifest, so each control fails for exactly one reason.
+fn any_with(
+    label: &str,
+    doc: impl Fn(&str) -> String,
+    bind: impl Fn(&str) -> String,
+    plan: impl Fn(&str) -> String,
+) -> Outcome {
+    let r = good(label, ANY, "any", false);
+    r.write(&format!("code/specs/{ANY}.warrant"), doc(&any_doc()));
+    r.write(&p(ANY, "evidence.bindings"), bind(&any_bindings(ANY)));
+    r.write(&p(ANY, "warrant/sabotage.plan"), plan(&any_plan()));
+    put_manifest(&r, ANY, manifest(&["c1", "c2"], 4096, 5000, 10, &[]));
+    let g = gen_build(&r.pkg(ANY), None).expect("a verdict");
+    assert!(g.findings.is_empty(), "{}", show(&g));
+    run(&r, ANY)
+}
+
+fn same(s: &str) -> String {
+    s.to_string()
+}
+
+const FLIP_LAST: &str = "no `exhaustive/<claim> field-flip-last` entry";
+
+#[test]
+fn cc11_the_passing_any_fixture_is_clean() {
+    let o = any_with("cc11-pass", same, same, same);
+    assert!(o.findings.is_empty(), "{}", show(&o));
+}
+
+#[test]
+fn cc11_a_state_producing_operation_without_the_fault_fails() {
+    // `f` loses the fault; `g` takes it, so the bound fault stays attacked and the plan is valid.
+    let o = any_with(
+        "cc11-nofault",
+        same,
+        |b| {
+            b.replace("wrong-ctor,field-flip-last", "wrong-ctor")
+                .replace(
+                    "op g export=vos_ghost_g ret=u8 faults=field-flip",
+                    "op g export=vos_ghost_g ret=u8 faults=field-flip,field-flip-last",
+                )
+        },
+        same,
+    );
+    only(
+        &o,
+        "CC11",
+        "operation \"f\" produces a state from a state but does not list `field-flip-last`",
+    );
+}
+
+#[test]
+fn cc11_an_operation_no_claim_attacks_with_the_oracle_fault_fails() {
+    // The entry names `c2`, which calls `h` and no state-producing operation; and an `example` entry
+    // never counts: only an exhaustive claim that calls the operation can be shown to fail.
+    for (label, plan) in [
+        ("cc11-other-claim", "exhaustive/c2 field-flip-last\n"),
+        ("cc11-example-tier", "example/e1 field-flip-last\n"),
+    ] {
+        let o = any_with(label, same, same, |p| {
+            p.replace("exhaustive/c1 field-flip-last\n", plan)
+        });
+        only(&o, "CC11", FLIP_LAST);
+        has(
+            &o,
+            "CC11",
+            "calls \"f\" and no other state-producing operation",
+        );
+    }
+}
+
+#[test]
+fn cc11_a_claim_that_calls_two_state_producing_operations_attacks_neither() {
+    // `c1` calls both `f` and `f2`: a flipped oracle in either would fail it, so it proves neither.
+    let o = any_with(
+        "cc11-two",
+        |d| {
+            d.replacen(
+                "  op g() -> U8\n",
+                "  op f2(s: Impl, t: U8) -> Impl\n  op g() -> U8\n",
+                1,
+            )
+            .replacen(
+                "  labels f:",
+                "  labels f2:\n    s public\n    t public\n  labels f:",
+                1,
+            )
+            .replacen(
+                "f(Impl(1u8, 2u8), 3u8).c == 2u8",
+                "f(Impl(1u8, 2u8), 3u8).c == 2u8 and f2(Impl(1u8, 2u8), 3u8).c == 2u8",
+                1,
+            )
+        },
+        |b| {
+            b.replacen(
+                "op g export",
+                "op f2 export=vos_ghost_f2 args=Impl,u8 ret=Impl faults=field-zero,field-flip-last\nop g export",
+                1,
+            )
+        },
+        same,
+    );
+    assert_eq!(o.findings.len(), 2, "{}", show(&o));
+    has(
+        &o,
+        "CC11",
+        "calls \"f\" and no other state-producing operation",
+    );
+    has(
+        &o,
+        "CC11",
+        "calls \"f2\" and no other state-producing operation",
+    );
+}
+
+#[test]
+fn cc11_the_oracle_must_be_the_last_field_and_the_only_one_outside_the_cone() {
+    let build = "model build(m: M) -> Impl = (Impl(if m.a then 1u8 else 0u8, 0u8))";
+    // The oracle first: `field-flip-last` would corrupt the bitmap.
+    let o = any_with(
+        "cc11-first",
+        |d| {
+            d.replacen("record Impl(x: U8, c: U8)", "record Impl(c: U8, x: U8)", 1)
+                .replacen(
+                    build,
+                    "model build(m: M) -> Impl = (Impl(0u8, if m.a then 1u8 else 0u8))",
+                    1,
+                )
+                .replacen("3u8).c == 2u8", "3u8).c == 1u8", 1)
+        },
+        same,
+        same,
+    );
+    only(&o, "CC11", "outside the cone of `build` are 0;");
+    // No oracle at all, and two fields outside the cone.
+    for (label, new, shown) in [
+        ("cc11-none", "model build(m: M) -> Impl = (Impl(if m.a then 1u8 else 0u8, if m.a then 1u8 else 0u8))", "are none;"),
+        ("cc11-two-oracles", "model build(m: M) -> Impl = (Impl(0u8, 0u8))", "are 0, 1;"),
+    ] {
+        let o = any_with(label, |d| d.replacen(build, new, 1), same, same);
+        only(&o, "CC11", shown);
+    }
+}
+
+#[test]
+fn cc11_a_build_that_is_not_a_constructor_application_fails_closed() {
+    let build = "  model build(m: M) -> Impl = (Impl(if m.a then 1u8 else 0u8, 0u8))\n";
+    let o = any_with(
+        "cc11-ctor",
+        |d| {
+            d.replacen(
+                build,
+                "  model mk(m: M) -> Impl = (Impl(if m.a then 1u8 else 0u8, 0u8))\n  model build(m: M) -> Impl = mk(m)\n",
+                1,
+            )
+        },
+        same,
+        same,
+    );
+    only(&o, "CC11", "is not an `Impl(..)` constructor application");
+    let o = any_with("cc11-nobuild", |d| d.replacen(build, "", 1), same, same);
+    only(&o, "CC11", "the `build` model is missing");
+}
+
+#[test]
+fn cc11_an_any_crate_that_binds_no_state_producing_operation_fails() {
+    // Nothing returns an `Impl` from an `Impl`: there is nothing that could be shown to keep the oracle.
+    let o = any_with(
+        "cc11-nosucc",
+        same,
+        |b| {
+            b.replace(
+                "args=Impl,u8 ret=Impl faults=field-zero,wrong-ctor,field-flip-last",
+                "args=u8 ret=u8 faults=field-zero,wrong-ctor",
+            )
+            .replace(
+                "op g export=vos_ghost_g ret=u8 faults=field-flip",
+                "op g export=vos_ghost_g ret=u8 faults=field-flip,field-flip-last",
+            )
+        },
+        same,
+    );
+    only(
+        &o,
+        "CC11",
+        "no bound operation has `ret=Impl` and an `Impl` argument",
+    );
+}
+
+#[test]
+fn cc11_a_document_or_bindings_the_tools_refuse_is_a_finding() {
+    // The document no longer type-checks (an undeclared operation): the analysis refuses, and
+    // so does the plan's claim scan, but only the oracle rule's finding is the CC11 one.
+    let r = good("cc11-badstack", ANY, "any", false);
+    r.write(
+        &format!("code/specs/{ANY}.warrant"),
+        any_doc().replacen(
+            "f(Impl(1u8, 2u8), 3u8).c == 2u8",
+            "zz(Impl(1u8, 2u8), 3u8).c == 2u8",
+            1,
+        ),
+    );
+    put_manifest(&r, ANY, manifest(&["c1", "c2"], 4096, 5000, 10, &[]));
+    has(&run(&r, ANY), "CC11", "the document:");
+}
+
+#[test]
+fn cc11_does_not_apply_to_a_production_crate() {
+    // A production crate may bind a state-producing operation without `field-flip-last`: it has no oracle.
+    let r = good("cc11-prod", PROD, "production", false);
+    r.write(
+        &p(PROD, "evidence.bindings"),
+        any_bindings(PROD).replace(",field-flip-last", ""),
+    );
+    let o = run(&r, PROD);
+    assert!(o.findings.is_empty(), "{}", show(&o));
+}
+
+#[test]
+fn the_oracle_fault_is_the_one_the_spec_names() {
+    let spec = std::fs::read_to_string(
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../specs/VOS04-component-catalogue.md"),
+    )
+    .unwrap();
+    assert_eq!(vos_link::oracle::ORACLE_FAULT, "field-flip-last");
+    assert!(
+        spec.contains("`ORACLE_FAULT`")
+            && spec.contains("`field-flip-last`")
+            && spec.contains("CC11"),
+        "VOS04 5.6 must state CC11 and the constant"
+    );
 }

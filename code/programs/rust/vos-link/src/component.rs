@@ -21,6 +21,7 @@
 //!   CC04 inputs of generation: bindings, document, sabotage plan, tolerance script
 //!   CC09 `bound` rows against the ceilings of contract.vos (VOS-039b-2b, [`crate::bounds`])
 //!   CC10 a contract crate has no dependency, build script or proc-macro (VOS-D112)
+//!   CC11 every `-any` attacks the oracle of each state-producing operation (VOS-039c, [`crate::oracle`])
 //! ```
 //!
 //! ## Contract crates (VOS-039b-1)
@@ -60,6 +61,7 @@ use crate::error::{Finding, NoVerdict};
 use crate::fsio::{ensure_plain_dirs, esc, list_names, q, read_regular_opt};
 use crate::inputs::{resolve_layout, Layout};
 use crate::ops::Outcome;
+use crate::oracle;
 
 /// The repository's package standard for library coverage (CLAUDE.md rule 11, VOS04 5.6): a
 /// crate may declare a higher floor, never a lower one.
@@ -75,6 +77,7 @@ const BUILD_MAX_BYTES: usize = 256 * 1024;
 const MANIFEST_MAX_BYTES: usize = 4 * 1024 * 1024;
 const SCRIPT_MAX_BYTES: usize = 64 * 1024;
 const BUILD_ROWS_MAX_BYTES: usize = 4 * 1024 * 1024;
+const BINDINGS_MAX_BYTES: usize = 256 * 1024;
 
 /// The build tool's file of repository-input rows, relative to the repository root.
 pub const BUILD_TOOL_ROWS: &str = "code/programs/go/build-tool/repository_inputs.go";
@@ -286,6 +289,7 @@ pub fn check_component(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outc
         Ok(g) => {
             builds(&mut cx, &g)?;
             manifest(&mut cx, &g)?;
+            oracle_rule(&mut cx, &g)?;
         }
         Err(findings) => cx.f.extend(findings),
     }
@@ -296,7 +300,7 @@ pub fn check_component(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outc
     out.findings = cx.f;
     out.notes = cx.notes;
     out.notes.push(
-        "check-component: the file set, BUILD and BUILD_windows byte-equal to `gen-build` (VOS04 5.2 lines 1 to 9, the coverage gate and this command), the sabotage plan, the tolerance script, the build-tool row, publish = false for `-any`, the `bound` rows at or under the contract's ceilings (CC09) and the evidence manifest bound to the document are present and consistent. Not checked: that the lines PASS (the build does that), that a bound is the TRUE worst case (the step counter, VOS-D089), the exact operations-times-tiers control count (VOS-D105), a parser's fuzz corpus (VOS-D106), the command-type check (VOS-D077), deriving the plan (VOS-D108), and line 10 (SAT, n/a until VOS-029).".to_string(),
+        "check-component: the file set, BUILD and BUILD_windows byte-equal to `gen-build` (VOS04 5.2 lines 1 to 9, the coverage gate and this command), the sabotage plan, the tolerance script, the build-tool row, publish = false for `-any`, the `bound` rows at or under the contract's ceilings (CC09), the oracle attack of each state-producing operation of an `-any` (CC11) and the evidence manifest bound to the document are present and consistent. Not checked: that the lines PASS (the build does that), that a bound is the TRUE worst case (the step counter, VOS-D089), the exact operations-times-tiers control count (VOS-D105), a parser's fuzz corpus (VOS-D106), the command-type check (VOS-D077), deriving the plan (VOS-D108), and line 10 (SAT, n/a until VOS-029).".to_string(),
     );
     Ok(out)
 }
@@ -542,6 +546,47 @@ fn contract_dependencies(cx: &mut Ctx) -> Result<(), NoVerdict> {
                     esc(&name)
                 ),
             );
+        }
+    }
+    Ok(())
+}
+
+/// CC11 (VOS-039c), kind `any` only: the evidence can fail when an operation loses the oracle.
+///
+/// The inputs are read here and judged by [`oracle::judge`], which is pure.  A crate of another
+/// kind is not subject to the rule: a production crate has no oracle (CD07 requires every field
+/// of its `Impl` to be in the cone of `build`).
+fn oracle_rule(cx: &mut Ctx, g: &GenInputs) -> Result<(), NoVerdict> {
+    if cx.kind != Kind::Any {
+        return Ok(());
+    }
+    let Some(bindings) = read_text(
+        &cx.layout.impl_dir.join("evidence.bindings"),
+        BINDINGS_MAX_BYTES,
+    )?
+    else {
+        return Ok(()); // CC02 reported it
+    };
+    let Some(document) = read_text(
+        &cx.layout.specs_dir().join(cx.layout.doc_name()),
+        vos_manifest::caps::DOCUMENT_MAX_BYTES,
+    )?
+    else {
+        return Ok(()); // CC02 reported it
+    };
+    match oracle::load(&bindings, document)? {
+        Err(message) => cx.find("CC11", format!("oracle: {message}")),
+        Ok((build, successors)) => {
+            let facts = oracle::Facts {
+                build: &build,
+                successors: &successors,
+                faults: &g.faults,
+                plan: &g.plan,
+                calls: &g.calls,
+            };
+            for m in oracle::judge(&facts) {
+                cx.find("CC11", m);
+            }
         }
     }
     Ok(())

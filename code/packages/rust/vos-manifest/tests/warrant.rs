@@ -204,7 +204,7 @@ fn a_block_of_claims_is_read_and_anything_else_is_refused() {
 /// produced by `tests/claim_sha256_reference.py` (an independent Python implementation of
 /// D-GD7), not by this crate: if one changes, the definition or the obligation changed, and
 /// every generated document and lock must be regenerated.
-const PINS: [(&str, &str); 24] = [
+const PINS: [(&str, &str); 31] = [
     (
         "insert_safe",
         "ef3d7c1760812044ae6d87dfa9c58d03c123d61cdae97efe9e613ad1c3a39608",
@@ -270,6 +270,34 @@ const PINS: [(&str, &str); 24] = [
         "8ddfda72b86548a2c72eab4e22ab1d7b7021c5c2b32717ccbb0b1c2ce610ba5c",
     ),
     (
+        "insert_oracle_lo",
+        "a88575df61d85c61e6a444c237970350597ed129b1e68844e4140818b79674ce",
+    ),
+    (
+        "insert_oracle_hi",
+        "8d81b06db42b195873586c19bf6aa11d2ff84aaf86f6e3dc3095f7439dc3f89c",
+    ),
+    (
+        "insert_oracle_ids",
+        "222e9351828c2bf195927cba7ca3a46a4c39b78d2dbe4be4ed9cb63f12f34043",
+    ),
+    (
+        "remove_oracle_lo",
+        "8eb56c7af70155686c286d70a5871fef217e750f574864f75394a28ba0aefdfa",
+    ),
+    (
+        "remove_oracle_hi",
+        "837c07e9ccb6a1924ad441622746f6b5cfcefb37ad35ecaa16be8e77b006e74e",
+    ),
+    (
+        "remove_oracle_ids",
+        "7f0962551decfed1289c2b4f79872566c3900d0dda89e950c139676e7b2d947c",
+    ),
+    (
+        "alpha_build_with_oracle",
+        "62f19befe9b2c8b24a18b44c4bdf1b7888339cf4169237070c718f83880bc13a",
+    ),
+    (
         "rep_init",
         "5a34bfc3544c12d40b65ffc6e8895bf99656166dd4ad69fa80e8eaf8ae42e672",
     ),
@@ -324,7 +352,7 @@ fn the_real_obligation_blocks_have_the_expected_claims_and_pinned_digests() {
         (
             "any",
             include_str!("../../vos-sched-contract/warrant/obligations-any.part"),
-            3,
+            10,
         ),
         (
             "representation",

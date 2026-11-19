@@ -157,7 +157,8 @@ fn the_adopters_beyond_what_is_evaluated_are_refused_whole() {
 /// is blocked on `ir.fixed` or `16.2` any more.  Now: `ir.data` 100, `inout` 9, `W0701` 8 and 238
 /// emittable (of 355).  **The wasm-leb128 adopter (VER04r [D28]) splits the two `W0701` claims of
 /// wasm-leb128 into four `ok` ones**: 357 claims, `ir.data` 100, `inout` 9, `W0701` 6 and 242
-/// emittable.
+/// emittable.  **VOS-039c adds seven oracle-preservation claims to the `-any` contract block**: the
+/// `vos-sched-any` document is 15 claims, all `ir.data`, so 364 claims and `ir.data` 107.
 const PINS: [(&str, &[(&str, usize)]); 11] = [
     ("arithmetic", &[("ir.data", 55), ("ok", 8)]),
     ("ct-compare", &[("ok", 9)]),
@@ -168,7 +169,7 @@ const PINS: [(&str, &[(&str, usize)]); 11] = [
     ),
     ("logic-gates", &[("ir.data", 3), ("ok", 85)]),
     ("lzw", &[("ok", 21)]),
-    ("vos-sched-any", &[("ir.data", 8)]),
+    ("vos-sched-any", &[("ir.data", 15)]),
     ("vos-sched-fp-bitmap", &[("ir.data", 13)]),
     ("wasm-leb128", &[("ok", 44)]),
     ("x25519", &[("ok", 8)]),
@@ -218,7 +219,7 @@ fn the_first_blocker_histogram_of_every_adopter_is_pinned() {
         .flat_map(|(_, r)| r.iter())
         .map(|(_, n)| n)
         .sum();
-    assert_eq!(total, 357);
+    assert_eq!(total, 364);
 }
 
 #[test]
