@@ -71,29 +71,40 @@ const (
 	// CensusTopN is how many full paths (and prefixes) per kind the summary keeps.
 	CensusTopN = 200
 
-	maxCensusFailedBytes   = 64 << 10 // a record.failed is read at most this big
-	maxCensusRecordBytes   = 32 << 20 // a record.json is read at most this big
-	maxCensusEntries       = 65536    // entries in one census.json (the writer's own bound is 16384)
-	maxCensusKinds         = 128      // distinct kinds kept; the rest are "(other)"
-	maxCensusDistinct      = 100_000  // distinct (kind, path) pairs kept, over everything
-	maxCensusPathBytes     = 32 << 20 // total bytes of the distinct paths kept
-	maxCensusPrefixes      = 50_000   // distinct prefixes kept per kind
-	maxCensusLanguages     = 64       // distinct languages kept; the rest are "other"
-	maxCensusSteps         = 4096     // step files looked at per action
-	maxCensusActions       = 200_000  // action directories looked at
-	maxCensusPathRunes     = 512      // a path is cut to this many runes
-	maxCensusDetails       = 20       // cross-check details kept
-	maxCensusShapes        = 8        // distinct line outlines kept
-	maxCensusShapeCalls    = 64       // outline computations (each streams a trace twice at most)
-	maxCensusAllowedRows   = 64       // distinct allowed-row names kept
-	maxCensusDetailRunes   = 200
-	maxCensusHeaderBytes   = 1 << 20 // collect's header line
-	maxCensusRecordsBytes  = 4 << 30 // how far the records file is read to count lines
-	censusPrefixDepth      = 4
-	maxCensusCPUInfo       = 256 << 10
-	censusLargestActions   = 10
-	censusActionNameRunes  = 200
-	censusRecordsReadChunk = 1 << 20
+	maxCensusFailedBytes = 64 << 10 // a record.failed is read at most this big
+	maxCensusRecordBytes = 32 << 20 // a record.json is read at most this big
+	maxCensusEntries     = 65536    // entries in one census.json (the writer's own bound is 16384)
+	maxCensusKinds       = 128      // distinct kinds kept; the rest are "(other)"
+	maxCensusDistinct    = 100_000  // distinct (kind, path) pairs kept, over everything
+	maxCensusPathBytes   = 32 << 20 // total bytes of the distinct paths kept
+	maxCensusPrefixes    = 50_000   // distinct prefixes kept per kind
+	maxCensusLanguages   = 64       // distinct languages kept; the rest are "other"
+	maxCensusSteps       = 4096     // step files looked at per action
+	maxCensusActions     = 200_000  // action directories looked at
+	maxCensusPathRunes   = 512      // a path is cut to this many runes
+	maxCensusDetails     = 20       // cross-check details kept
+	// Line outlines (trace.Shape) have TWO budgets, so a flood of one refusal
+	// (many traces refused as refused:clone3) cannot starve the allowed
+	// stricter-only divergences, whose lines are the ones the default flip needs:
+	// allowed:* outlines get 8 slots and 32 computations of their own; refusals 8
+	// slots, 32 computations in all and 2 per distinct refusal code.  A trace is
+	// streamed at most twice per computation; all computations together scan at
+	// most maxCensusShapeBytes (2x each trace's size is charged).
+	maxCensusOpsSum          = 1 << 40 // the sum of one census.json's op counts
+	maxCensusShapes          = 8
+	maxCensusShapeCallsAllow = 32
+	maxCensusShapeCallsRefus = 32
+	maxCensusShapeCallsCode  = 2
+	maxCensusShapeBytes      = 4 << 30
+	maxCensusAllowedRows     = 64 // distinct allowed-row names kept
+	maxCensusDetailRunes     = 200
+	maxCensusHeaderBytes     = 1 << 20 // collect's header line
+	maxCensusRecordsBytes    = 4 << 30 // how far the records file is read to count lines
+	censusPrefixDepth        = 4
+	maxCensusCPUInfo         = 256 << 10
+	censusLargestActions     = 10
+	censusActionNameRunes    = 200
+	censusRecordsReadChunk   = 1 << 20
 )
 
 // censusKindRE is what a kind must look like.  The writer's kinds are a fixed
@@ -464,13 +475,18 @@ type censusAcc struct {
 	// of outline computations spent and the occurrences not kept.
 	shapes        []ShapeSummary
 	shapeIdx      map[string]int
-	shapeCalls    int
+	shapeCalls    map[string]int  // computations by class ("allowed", "refusal")
+	shapeKept     map[string]int  // slots used by class
+	shapeCode     map[string]int  // computations by refusal origin
+	shapeSeen     map[string]bool // (trace path, line) already shaped
+	shapeBytes    int64           // bytes charged against maxCensusShapeBytes
 	shapesDropped int
 }
 
 func newCensusAcc(red *redactor) *censusAcc {
 	return &censusAcc{red: red, explain: newExplain(), problems: map[string]int{}, kinds: map[string]*kindAcc{}, langs: map[string]*langAcc{},
-		cross: CrossCheckSummary{AllowedRows: map[string]int{}}, shapeIdx: map[string]int{}}
+		cross: CrossCheckSummary{AllowedRows: map[string]int{}}, shapeIdx: map[string]int{},
+		shapeCalls: map[string]int{}, shapeKept: map[string]int{}, shapeCode: map[string]int{}, shapeSeen: map[string]bool{}}
 }
 
 // problem counts one problem under a fixed code.
@@ -932,13 +948,21 @@ func (r *censusRun) readCensus(adir, name string) (censusState, *CensusDoc) {
 		a.problem("census_bounds")
 		return censusInvalid, nil
 	}
+	// The counts are summed across up to maxCensusActions files into int64s, so
+	// one file's op counts are held to a sum no wrap-around can follow
+	// (2^40 each, 2^18 files: 2^58).
+	var opsSum int64
 	for k, m := range doc.Ops {
 		if !censusKindRE.MatchString(k) || len(m) > len(traced.OpClasses) {
 			a.problem("census_bad_entry")
 			return censusInvalid, nil
 		}
 		for class, n := range m {
-			if !traced.IsOpClass(class) || n < 0 {
+			if !traced.IsOpClass(class) || n < 0 || n > maxCensusOpsSum {
+				a.problem("census_bad_entry")
+				return censusInvalid, nil
+			}
+			if opsSum += n; opsSum > maxCensusOpsSum {
 				a.problem("census_bad_entry")
 				return censusInvalid, nil
 			}
@@ -1213,14 +1237,16 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 		// refusal says why, the outline says what the line looked like.
 		var te *trace.Error
 		if errors.As(perr, &te) && te.Line > 0 {
-			r.noteShape(adir, path, j, "refusal:"+parseReasonCode(perr.Error()), te.Line)
+			// te.Line is the error's own line: for an unresumed-call that is the
+			// call's START (the unfinished half), not where the input ended.
+			r.noteShape(adir, path, j, size, "refusal:"+parseReasonCode(perr.Error()), te.Line)
 		}
 	default:
 		cc.Accepted++
 	}
 	if detail.Allowed > 0 {
 		cc.Allowed += detail.Allowed
-		r.noteAllowed(adir, path, j, detail)
+		r.noteAllowed(adir, path, j, size, detail)
 	}
 	return size
 }
@@ -1230,7 +1256,7 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 // outline of the line of each hit.  The row names are fixed program strings
 // (trace.CrossCheckDetail); the cut and the cap below only bound what a
 // misbehaving injected CrossCheck could return.
-func (r *censusRun) noteAllowed(adir, path string, j int, d trace.CrossCheckDetail) {
+func (r *censusRun) noteAllowed(adir, path string, j int, size int64, d trace.CrossCheckDetail) {
 	a := r.acc
 	for row, n := range d.Rows {
 		name, _ := safeText(row, 120, a.red)
@@ -1246,24 +1272,39 @@ func (r *censusRun) noteAllowed(adir, path string, j int, d trace.CrossCheckDeta
 			seen[name] = true
 			a.detail(fmt.Sprintf("%s step %d: allowed stricter-only divergence, row: %s (%d here, first at line %d)", hexName12(adir), j, name, d.Rows[h.Row], h.Line))
 		}
-		r.noteShape(adir, path, j, "allowed:"+name, h.Line)
+		r.noteShape(adir, path, j, size, "allowed:"+name, h.Line)
 	}
 }
 
 // noteShape computes the redacted outline of a line (trace.Shape) and folds it
-// into the census's few kept outlines.  The work is bounded: at most
-// maxCensusShapeCalls computations per census, at most maxCensusShapes distinct
-// outlines kept, and what was not kept is counted (bounds.shapes_dropped).
-func (r *censusRun) noteShape(adir, path string, j int, origin string, line int) {
+// into the census's few kept outlines.  The work is bounded three ways (see the
+// budgets at maxCensusShapes): by class (allowed:* and refusal:* never share a
+// budget), per refusal code, and in bytes scanned.  A (trace, line) already
+// shaped is not shaped again.  What was not kept is counted
+// (bounds.shapes_dropped).
+func (r *censusRun) noteShape(adir, path string, j int, size int64, origin string, line int) {
 	a := r.acc
 	if line <= 0 {
 		return
 	}
-	if a.shapeCalls >= maxCensusShapeCalls {
+	seenKey := path + "|" + strconv.Itoa(line)
+	if a.shapeSeen[seenKey] {
+		return
+	}
+	class, callCap := "refusal", maxCensusShapeCallsRefus
+	if strings.HasPrefix(origin, "allowed:") {
+		class, callCap = "allowed", maxCensusShapeCallsAllow
+	}
+	cost := 2 * size // at most two streaming passes
+	if a.shapeCalls[class] >= callCap || a.shapeBytes+cost > maxCensusShapeBytes ||
+		(class == "refusal" && a.shapeCode[origin] >= maxCensusShapeCallsCode) {
 		a.shapesDropped++
 		return
 	}
-	a.shapeCalls++
+	a.shapeSeen[seenKey] = true
+	a.shapeCalls[class]++
+	a.shapeCode[origin]++
+	a.shapeBytes += cost
 	var shapes []trace.LineShape
 	if !a.guard(func() {
 		shapes = trace.Shape(func() (io.ReadCloser, error) {
@@ -1286,10 +1327,11 @@ func (r *censusRun) noteShape(adir, path string, j int, origin string, line int)
 		a.shapes[i].Count++
 		return
 	}
-	if len(a.shapes) >= maxCensusShapes {
+	if a.shapeKept[class] >= maxCensusShapes {
 		a.shapesDropped++
 		return
 	}
+	a.shapeKept[class]++
 	a.shapeIdx[key] = len(a.shapes)
 	a.shapes = append(a.shapes, ShapeSummary{
 		Origin: origin, Count: 1, Lines: lines,
@@ -1651,12 +1693,15 @@ func sealedHomeTmp(pre *Pre) (home, tmp string) {
 // and stepTmp are "") every one is the invoker's.  Other labels are untouched.
 func relabelRunner(in []Redaction, stepHome, stepTmp string) []Redaction {
 	out := make([]Redaction, len(in))
+	// A trailing slash is not a different directory (newRedactor drops it too).
+	stepHome, stepTmp = strings.TrimRight(stepHome, "/"), strings.TrimRight(stepTmp, "/")
 	for i, r := range in {
 		out[i] = r
+		from := strings.TrimRight(r.From, "/")
 		switch {
-		case r.To == "$HOME" && (stepHome == "" || r.From != stepHome):
+		case r.To == "$HOME" && (stepHome == "" || from != stepHome):
 			out[i].To = "$RUNNER_HOME"
-		case r.To == "$TMPDIR" && (stepTmp == "" || r.From != stepTmp):
+		case r.To == "$TMPDIR" && (stepTmp == "" || from != stepTmp):
 			out[i].To = "$RUNNER_TMP"
 		}
 	}

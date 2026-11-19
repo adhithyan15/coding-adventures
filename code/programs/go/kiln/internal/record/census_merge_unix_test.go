@@ -30,6 +30,22 @@ func TestPlanVerdict(t *testing.T) {
 	}
 }
 
+// A census.json whose op counts could wrap an int64 when summed is invalid, and
+// a trailing slash does not make the sealed home a different directory.
+func TestCensusOpsSumCapAndTrailingSlash(t *testing.T) {
+	f := censusDirFix(t)
+	putCensusDoc(t, f, actZ, CensusDoc{Total: 1, Entries: []tracedEntry{{Kind: "host-read", Path: "/var/x", Count: 1}},
+		Ops: map[string]map[string]int64{"host-read": {"stat": 1 << 62, "open": 1 << 62}}})
+	_, s, _, _ := runCensus(t, f)
+	if s.Problems["census_bad_entry"] != 1 || s.Actions.CensusInvalid != 1 {
+		t.Errorf("problems %v actions %+v", s.Problems, s.Actions)
+	}
+	got := relabelRunner([]Redaction{{From: "/step/home/", To: "$HOME"}, {From: "/step/tmp", To: "$TMPDIR"}}, "/step/home", "/step/tmp/")
+	if got[0].To != "$HOME" || got[1].To != "$TMPDIR" {
+		t.Errorf("relabelRunner with trailing slashes: %+v", got)
+	}
+}
+
 // writes_unknown and the strict-merge line.
 func TestCensusWritesUnknownAndStrictMerge(t *testing.T) {
 	f := censusDirFix(t)

@@ -50,7 +50,7 @@ func TestCensusNamesTheAllowedRowAndShapesTheLine(t *testing.T) {
 		o.CrossCheck = func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, trace.CrossCheckDetail) {
 			return nil, nil, nil, trace.CrossCheckDetail{
 				Allowed: 2, Rows: map[string]int{"signed pid": 1, "trailing space": 1},
-				Hits: []trace.AllowedHit{{Row: "signed pid", Line: 1}, {Row: "trailing space", Line: 1}},
+				Hits: []trace.AllowedHit{{Row: "signed pid", Line: 1}, {Row: "trailing space", Line: 2}},
 			}
 		}
 	})
@@ -73,7 +73,7 @@ func TestCensusNamesTheAllowedRowAndShapesTheLine(t *testing.T) {
 			t.Errorf("shape %+v", sh)
 		}
 		last := sh.Lines[len(sh.Lines)-1]
-		if last.Role != "stop" || last.Line != 1 || !strings.HasPrefix(last.Tokens, "PID") {
+		if last.Role != "stop" || last.Line < 1 || !strings.HasPrefix(last.Tokens, "PID") {
 			t.Errorf("stop line %+v", last)
 		}
 	}
@@ -98,8 +98,7 @@ func TestCensusShapesAreBounded(t *testing.T) {
 		t.Fatalf("shapes: %+v", s.Shapes)
 	}
 
-	a := newCensusAcc(nil)
-	r := &censusRun{o: CensusOptions{}, acc: a}
+	// The budgets, on a trace of 20 distinct lines.
 	dir := t.TempDir()
 	tr := filepath.Join(dir, "0.trace")
 	var b bytes.Buffer
@@ -109,17 +108,74 @@ func TestCensusShapesAreBounded(t *testing.T) {
 	if err := os.WriteFile(tr, b.Bytes(), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	for i := 1; i <= 20; i++ {
-		r.noteShape(filepath.Join(dir, "x"), tr, 0, "refusal:size", i)
+	size := int64(b.Len())
+	adir := filepath.Join(dir, "x")
+	newRun := func() (*censusRun, *censusAcc) {
+		a := newCensusAcc(nil)
+		return &censusRun{o: CensusOptions{}, acc: a}, a
 	}
-	if len(a.shapes) != maxCensusShapes || a.shapesDropped != 20-maxCensusShapes {
+
+	// A refusal code gets maxCensusShapeCallsCode computations; the rest are counted.
+	r, a := newRun()
+	for i := 1; i <= 20; i++ {
+		r.noteShape(adir, tr, 0, size, "refusal:size", i)
+	}
+	if len(a.shapes) != maxCensusShapeCallsCode || a.shapesDropped != 20-maxCensusShapeCallsCode {
 		t.Errorf("kept %d, dropped %d", len(a.shapes), a.shapesDropped)
 	}
-	// Past the computation budget nothing is computed, only counted.
-	a.shapeCalls = maxCensusShapeCalls
-	before := a.shapesDropped
-	r.noteShape(filepath.Join(dir, "x"), tr, 0, "refusal:size", 1)
-	if a.shapesDropped != before+1 {
+
+	// A flood of one refusal cannot starve allowed:* lines: they have their own
+	// budget (8 slots, 32 computations).
+	r, a = newRun()
+	for i := 1; i <= 10; i++ {
+		r.noteShape(adir, tr, 0, size, "refusal:clone3", i)
+	}
+	for i := 1; i <= 20; i++ {
+		r.noteShape(adir, tr, 0, size, "allowed:row "+strings.Repeat("x", i), i)
+	}
+	allowed := 0
+	for _, sh := range a.shapes {
+		if strings.HasPrefix(sh.Origin, "allowed:") {
+			allowed++
+		}
+	}
+	// Lines 1 and 2 were shaped for clone3 already, so they are not shaped again
+	// (dedupe on trace path and line); the other 18 distinct lines fill 8 slots.
+	if allowed != maxCensusShapes {
+		t.Errorf("allowed shapes kept: %d, want %d (shapes %d)", allowed, maxCensusShapes, len(a.shapes))
+	}
+
+	// Refusal slots: 8 across codes, 2 computations per code, 32 in all.
+	r, a = newRun()
+	for i := 1; i <= 20; i++ {
+		r.noteShape(adir, tr, 0, size, "refusal:code"+strings.Repeat("x", i), i)
+	}
+	if len(a.shapes) != maxCensusShapes {
+		t.Errorf("refusal slots: %d, want %d", len(a.shapes), maxCensusShapes)
+	}
+
+	// The same (trace, line) is never shaped twice, and costs no budget.
+	r, a = newRun()
+	r.noteShape(adir, tr, 0, size, "allowed:a", 3)
+	r.noteShape(adir, tr, 0, size, "allowed:b", 3)
+	if a.shapeCalls["allowed"] != 1 || a.shapesDropped != 0 {
+		t.Errorf("calls %v dropped %d", a.shapeCalls, a.shapesDropped)
+	}
+
+	// The byte budget: 2x each trace's size is charged against 4 GiB; a trace
+	// that would exceed it is counted, not scanned.
+	r, a = newRun()
+	a.shapeBytes = maxCensusShapeBytes - 1
+	r.noteShape(adir, tr, 0, size, "allowed:a", 1)
+	if a.shapesDropped != 1 || len(a.shapes) != 0 || a.shapeCalls["allowed"] != 0 {
+		t.Errorf("dropped %d shapes %d", a.shapesDropped, len(a.shapes))
+	}
+
+	// The computation cap per class.
+	r, a = newRun()
+	a.shapeCalls["allowed"] = maxCensusShapeCallsAllow
+	r.noteShape(adir, tr, 0, size, "allowed:a", 1)
+	if a.shapesDropped != 1 {
 		t.Errorf("an over-budget outline was not counted")
 	}
 }

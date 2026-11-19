@@ -115,7 +115,7 @@ func renderMarkdown(s *CensusSummary) string {
 	// A trace over the cross-check size cap was timed but NOT cross-checked, so
 	// "ok" above says nothing about it: put the count beside the verdict, where
 	// a reader of only this section cannot miss it.
-	w("- cross-check SKIPPED (trace too large to cross-check, timed only): %d traces, %d bytes\n", cc.Skipped, cc.SkippedBytes)
+	w("- cross-check SKIPPED (trace too large to cross-check, timed only): %d traces, %d bytes (no line shape is made for such a trace either: shapes exist only for cross-checked traces)\n", cc.Skipped, cc.SkippedBytes)
 	if s.InfrastructureFailure != "" {
 		w("- infrastructure failure: %s\n", codeSpan(s.InfrastructureFailure))
 	} else {
@@ -234,7 +234,7 @@ func renderMarkdown(s *CensusSummary) string {
 	// stopped at.  Every token is a type name, a character class, a closed-table
 	// syscall name or ASCII punctuation (trace.Shape), and still sits in a code
 	// span.
-	w("## Line shapes of refusals and allowed divergences (redacted)\n\n")
+	w("## Line shapes of refusals and allowed divergences (redacted)\n\nShapes exist only for cross-checked traces (not for those skipped as too large). A refusal's line is the error's own line: the call's start for an unresumed call.\n\n")
 	if len(s.Shapes) == 0 {
 		w("None.\n\n")
 	}
