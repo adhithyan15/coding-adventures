@@ -34,3 +34,10 @@
   transcript continuation only when both retain the same traffic-secret
   object, suite, and ServerHello snapshot, then retain the ordered owner,
   transcript, and server Finished-key provenance in one non-cloneable wrapper.
+- Authenticate records through that joined owner, lend each ordered message
+  with its pre-message transcript snapshot to a synchronous authorization
+  handler, and hash its exact encoding only after authorization.
+- Retain the post-record transcript snapshot with the exact ciphertext,
+  authenticated record result, ordered state, and Finished-key proof; reject
+  unauthorized messages without hashing them and permanently close record
+  processing on rejection, transcript failure, or handler unwind.
