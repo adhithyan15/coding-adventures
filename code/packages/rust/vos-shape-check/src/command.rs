@@ -93,6 +93,30 @@
 //! trusts `u8` or `bool`, so a shadowing item that somehow escaped the rules
 //! above still fails closed.
 //!
+//! ## Attributes are a closed list too (VOS-D112)
+//!
+//! A path dependency could supply an attribute macro (`#[evil::rewrite]`) or a foreign
+//! derive (`#[derive(evil::Gen)]`) that rewrites an enum AFTER this check judged it.
+//! `vos-link check-component` closes the dependency side (CC10: a contract crate has
+//! none); this check closes the attribute side, as a whitelist over the spelling, not a
+//! blacklist of known-bad names:
+//!
+//! ```text
+//!   #[derive(A, B)]     only the BARE core traits Copy Clone Debug PartialEq Eq
+//!                       PartialOrd Ord Hash Default (no path: `core::clone::Clone` is out)
+//!   #[repr(..)]         only u8, C, transparent
+//!   #[no_std] #[must_use] #[inline] #[default]            as written, no arguments
+//!   #[forbid(..)] #[deny(..)] #[warn(..)] #[allow(..)]    a list of lint names (paths ok:
+//!                                                         `clippy::x` names a lint, not code)
+//!   #[doc = "text"]  #[doc(hidden)]
+//!   #[cfg(test)]        exactly that
+//!   #[non_exhaustive]   passes THIS pass; the closed-set rule above reports it
+//! ```
+//!
+//! Everything else is a finding: any `a::b` attribute, `cfg_attr`, `path`, `macro_use`,
+//! `proc_macro*`, `test`, `cfg(not(test))`, an unknown name.  `#[default]` is on the list
+//! because `derive(Default)` on an enum cannot be written without it.
+//!
 //! ## What this check does not see
 //!
 //! It is lexical.  It reads what is written (VOS03 section 6, item 18).  The HAL
@@ -414,9 +438,162 @@ fn vocabulary(cx: &mut Ctx<'_>) {
     cx.out.extend(found);
 }
 
+/// The traits a contract crate may derive, as bare names.
+pub const DERIVE_ALLOWED: [&str; 9] = [
+    "Copy",
+    "Clone",
+    "Debug",
+    "PartialEq",
+    "Eq",
+    "PartialOrd",
+    "Ord",
+    "Hash",
+    "Default",
+];
+
+/// The `repr` arguments a contract crate may use.
+pub const REPR_ALLOWED: [&str; 3] = ["u8", "C", "transparent"];
+
+/// Attributes written bare (no arguments).
+const BARE_ALLOWED: [&str; 5] = ["no_std", "must_use", "inline", "default", "non_exhaustive"];
+
+/// Attributes whose argument list is a list of lint names.
+const LINT_ATTRS: [&str; 4] = ["forbid", "deny", "warn", "allow"];
+
+/// The arguments of `name ( a , b , )`: the identifiers, when the tokens are exactly
+/// identifiers separated by commas (one trailing comma allowed) and nothing else.
+/// `lint` lets a name be a `::` path (`clippy::arithmetic_side_effects` names a lint).
+fn arg_list(body: &[crate::lexer::Token], lint: bool) -> Result<Vec<String>, String> {
+    let n = body.len();
+    if n < 3 || !body[1].is_punct("(") || !body[n - 1].is_punct(")") {
+        return Err("it takes a parenthesised list".to_string());
+    }
+    let mut names: Vec<String> = Vec::new();
+    let mut want_name = true;
+    for x in &body[2..n - 1] {
+        crate::steps::tick();
+        if want_name && x.kind == Kind::Ident {
+            names.push(x.text.clone());
+            want_name = false;
+        } else if !want_name && x.is_punct(",") {
+            want_name = true;
+        } else if lint && !want_name && (x.is_punct("::") || x.is_punct(":")) {
+            // `a :: b`: the next token continues the name.
+            want_name = true;
+            if let Some(last) = names.last_mut() {
+                last.push_str("::");
+            }
+        } else if lint && want_name && x.is_punct(":") {
+            // the second half of a `::` written as two `:` tokens.
+        } else {
+            return Err(format!("`{}` is not allowed in the list", show(&x.text)));
+        }
+    }
+    if names.is_empty() {
+        return Err("the list is empty".to_string());
+    }
+    Ok(names)
+}
+
+/// Why the attribute body `body` (the tokens between `[` and `]`) is not on the closed list, or
+/// `None` when it is.
+fn attribute_defect(body: &[crate::lexer::Token]) -> Option<String> {
+    crate::steps::tick();
+    let Some(first) = body.first().filter(|t| t.kind == Kind::Ident) else {
+        return Some("an attribute that does not start with a plain name".to_string());
+    };
+    let name = first.text.as_str();
+    if body
+        .get(1)
+        .is_some_and(|t| t.is_punct("::") || t.is_punct(":"))
+    {
+        return Some(format!(
+            "`{}::..` is a path attribute: it may be a macro of another crate that rewrites the item after this check judged it",
+            show(name)
+        ));
+    }
+    let listed = |allowed: &[&str], list: Vec<String>, what: &str| {
+        list.iter()
+            .find(|a| !allowed.contains(&a.as_str()))
+            .map(|a| {
+                format!(
+                    "`{what}` argument `{}` is not on the closed list ({})",
+                    show(a),
+                    allowed.join(", ")
+                )
+            })
+    };
+    match name {
+        "derive" => match arg_list(body, false) {
+            Ok(l) => listed(&DERIVE_ALLOWED, l, "derive"),
+            Err(e) => Some(format!("`derive`: {e}")),
+        },
+        "repr" => match arg_list(body, false) {
+            Ok(l) => listed(&REPR_ALLOWED, l, "repr"),
+            Err(e) => Some(format!("`repr`: {e}")),
+        },
+        n if LINT_ATTRS.contains(&n) => arg_list(body, true)
+            .err()
+            .map(|e| format!("`{}`: {e}", show(n))),
+        n if BARE_ALLOWED.contains(&n) => {
+            // Written bare, except the two argument forms `must_use = "why"` and `inline(always)`.
+            let must_use_reason = n == "must_use"
+                && body.len() == 3
+                && body[1].is_punct("=")
+                && body[2].kind == Kind::Str;
+            let inline_hint = n == "inline"
+                && body.len() == 4
+                && body[1].is_punct("(")
+                && (body[2].is_ident("always") || body[2].is_ident("never"))
+                && body[3].is_punct(")");
+            let ok = body.len() == 1 || must_use_reason || inline_hint;
+            (!ok).then(|| format!("`{}` takes no arguments here", show(n)))
+        }
+        "doc" => {
+            let text = body.len() == 3 && body[1].is_punct("=") && body[2].kind == Kind::Str;
+            let hidden = body.len() == 4
+                && body[1].is_punct("(")
+                && body[2].is_ident("hidden")
+                && body[3].is_punct(")");
+            (!(text || hidden)).then(|| "`doc` is `doc = \"text\"` or `doc(hidden)`".to_string())
+        }
+        "cfg" => {
+            let test = body.len() == 4
+                && body[1].is_punct("(")
+                && body[2].is_ident("test")
+                && body[3].is_punct(")");
+            (!test).then(|| "`cfg` is exactly `cfg(test)`".to_string())
+        }
+        other => Some(format!(
+            "`{}` is not on the closed list of attributes (derive of core traits, repr, no_std, forbid, deny, warn, allow, doc, must_use, inline, default, cfg(test))",
+            show(other)
+        )),
+    }
+}
+
+/// SH19 (h): every attribute of every file is on the closed list (see the module notes).
+fn attributes(cx: &mut Ctx<'_>) {
+    let mut found: Vec<Finding> = Vec::new();
+    for f in cx.files {
+        for a in &f.attrs {
+            crate::steps::tick();
+            if let Some(why) = attribute_defect(f.attr_body(a)) {
+                found.push(Finding {
+                    rule: Rule::Sh19,
+                    file: f.path.clone(),
+                    line: f.toks[a.start].line,
+                    message: format!("attribute: {why}"),
+                });
+            }
+        }
+    }
+    cx.out.extend(found);
+}
+
 /// SH19 over a crate that declares `kind = "contract"`.
 pub fn command_rules(cx: &mut Ctx<'_>) {
     vocabulary(cx);
+    attributes(cx);
     let names = Names::new(&cx.types);
 
     // 1. Local judgement, and the reverse-reference graph, over DISTINCT NAMES:
