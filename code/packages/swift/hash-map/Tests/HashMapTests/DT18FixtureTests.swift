@@ -650,6 +650,34 @@ final class DT18FixtureTests: XCTestCase {
     }
   }
 
+  func testDartOnlyCasesAreExplicitlyClassifiedWithoutSwiftRejectionClaims() throws {
+    let document = try fixture()
+    let cases = try rows(document["dart_only_cases"], "dart_only_cases")
+    let reasons: [String: String] = [
+      "negative-byte-before-later-overflow-byte": "raw integer values -1 and 256 are outside Swift UInt8 byte inputs",
+      "invalid-byte-in-sixteen-byte-siphash-key": "raw integer value 256 is outside Swift UInt8 key inputs",
+      "negative-murmur-seed": "seed -1 is outside Swift UInt32 seed inputs",
+      "murmur-seed-above-uint32": "seed 4294967296 is outside Swift UInt32 seed inputs",
+      "malformed-utf16-surrogate": "raw malformed UTF-16 code units cannot be supplied through Swift String input",
+      "invalid-capacity-precedes-iterable-request": "observable Dart Iterable request behavior cannot be expressed by Swift fromEntries array input",
+      "iterable-exception-propagates-after-one-entry": "throwing during iteration cannot be expressed by Swift fromEntries array input",
+      "iterable-consumed-once": "iterator request counting cannot be expressed by Swift fromEntries array input",
+      "from-entries-stops-after-first-invalid-entry": "throw-on-next-advance behavior cannot be expressed by Swift fromEntries array input",
+    ]
+    let actualIDs = try cases.map { try string($0["id"], "Dart-only case id") }
+    try require(cases.count == 9, "expected nine Dart-only cases")
+    try require(Set(actualIDs) == Set(reasons.keys), "Dart-only case classification does not cover the exact fixture IDs")
+    for row in cases {
+      let id = try string(row["id"], "Dart-only case id")
+      guard let reason = reasons[id] else { throw FixtureFailure(description: "unclassified Dart-only case \(id)") }
+      try require(!reason.isEmpty, "Dart-only case \(id) has no classification reason")
+      if id.hasPrefix("iterable-") || id == "invalid-capacity-precedes-iterable-request" || id == "from-entries-stops-after-first-invalid-entry" {
+        try require(try string(row["operation"], "Dart-only operation") == "HashMap.fromEntries", "iterator classification has the wrong operation for \(id)")
+      }
+    }
+    print("DT18 Dart-only classification: total=9 raw-domain-unrepresentable=5 Iterable-protocol-not-array-expressible=4; no Swift rejection credit")
+  }
+
   private struct ModelOperation {
     let op: String
     let keyID: String
@@ -726,7 +754,7 @@ final class DT18FixtureTests: XCTestCase {
     keyOrder: [String],
     semanticAlphabet: [UInt8],
     capacityAlphabet: [UInt8]
-  ) throws {
+  ) throws -> Int {
     guard let semantic = semanticStreams[strategyName],
       let physical = physicalStreams[strategyName],
       let capacity = capacityStreams[strategyName]
@@ -749,6 +777,19 @@ final class DT18FixtureTests: XCTestCase {
     try require(modelDictionary == expectedState, "independent association-list model differs from semantic stream at ordinal \(ordinal)")
     try require(try associationListSymbol(model, keyOrder: keyOrder) == semanticSymbol, "association-list encoding differs at ordinal \(ordinal)")
     try require(map.count == expectedState.count, "\(strategyName) semantic count differs at ordinal \(ordinal)")
+    for keyID in keyOrder {
+      guard let key = keys[keyID] else { throw FixtureFailure(description: "history key \(keyID) is absent") }
+      if let valueID = expectedState[keyID] {
+        try require(map.has(key), "\(strategyName) public has missed \(keyID) at ordinal \(ordinal)")
+        guard let actualValue = map.value(forKey: key) else {
+          throw FixtureFailure(description: "\(strategyName) public get missed present \(keyID) at ordinal \(ordinal)")
+        }
+        try require(actualValue == (try fixtureValue(id: valueID, values: values)), "\(strategyName) public get differs for \(keyID) at ordinal \(ordinal)")
+      } else {
+        try require(!map.has(key), "\(strategyName) public has found absent \(keyID) at ordinal \(ordinal)")
+        try require(map.value(forKey: key) == nil, "\(strategyName) public get returned a value for absent \(keyID) at ordinal \(ordinal)")
+      }
+    }
     let order = physicalTable[physicalID]
     guard let order else { throw FixtureFailure(description: "physical order id \(physicalID) is absent") }
     try require(map.entries.count == order.count, "physical order stream count differs at ordinal \(ordinal)")
@@ -763,6 +804,7 @@ final class DT18FixtureTests: XCTestCase {
     let ratio = Double(map.count) / Double(map.capacity)
     try require(abs(map.loadFactor - ratio) <= 1e-15, "load factor differs at ordinal \(ordinal)")
     _ = recipe
+    return 2 * keyOrder.count
   }
 
   func testExhaustiveHistoriesMatchIndependentModelAndEveryPrefixVersion() throws {
@@ -822,6 +864,7 @@ final class DT18FixtureTests: XCTestCase {
     var totalPublicUpdates = 0
     var totalPrefixChecks = 0
     var totalRetainedVersionChecks = 0
+    var totalPublicPointQueries = 0
     let offsets = historyLengths.map { length in
       (0..<length).reduce(0) { $0 + intPower(9, $1) }
     }
@@ -846,7 +889,7 @@ final class DT18FixtureTests: XCTestCase {
           var model: [ModelEntry] = []
           var mapVersions = [map]
           var modelVersions = [model]
-          try assertExhaustiveSnapshot(
+          totalPublicPointQueries += try assertExhaustiveSnapshot(
             map, model: model, ordinal: offsets[0] + 0,
             strategyName: strategyName, recipe: recipe, keys: keys, values: values,
             semanticStreams: semanticStreams, physicalStreams: physicalStreams,
@@ -880,7 +923,7 @@ final class DT18FixtureTests: XCTestCase {
             modelVersions.append(model)
             let prefixDigits = Array(digits.prefix(prefixLength + 1))
             let ordinal = offsets[prefixLength + 1] + baseNineRank(prefixDigits)
-            try assertExhaustiveSnapshot(
+            totalPublicPointQueries += try assertExhaustiveSnapshot(
               map, model: model, ordinal: ordinal,
               strategyName: strategyName, recipe: recipe, keys: keys, values: values,
               semanticStreams: semanticStreams, physicalStreams: physicalStreams,
@@ -896,7 +939,7 @@ final class DT18FixtureTests: XCTestCase {
                 "prior-prefix digits are not a valid base-nine rank"
               )
               let priorOrdinal = offsets[priorPrefix] + priorRank
-              try assertExhaustiveSnapshot(
+              totalPublicPointQueries += try assertExhaustiveSnapshot(
                 mapVersions[priorPrefix], model: modelVersions[priorPrefix], ordinal: priorOrdinal,
                 strategyName: strategyName, recipe: recipe, keys: keys, values: values,
                 semanticStreams: semanticStreams, physicalStreams: physicalStreams,
@@ -925,10 +968,12 @@ final class DT18FixtureTests: XCTestCase {
     try require(totalRetainedVersionChecks == 1_911_942, "unexpected prior-version recheck count")
     try require(totalPublicUpdates == 647_694, "unexpected exhaustive public update count")
     try require(totalPrefixChecks + totalRetainedVersionChecks == 2_692_496, "unexpected exhaustive state check count")
+    try require(totalPublicPointQueries == 16_154_976, "unexpected exhaustive public has/get query count")
     print(
       "DT18 Swift public history receipt: strategies=2 histories=\(totalHistories) " +
         "public_updates=\(totalPublicUpdates) prefix_checks=\(totalPrefixChecks) " +
-        "retained_version_rechecks=\(totalRetainedVersionChecks) total_state_checks=\(totalPrefixChecks + totalRetainedVersionChecks)"
+        "retained_version_rechecks=\(totalRetainedVersionChecks) total_state_checks=\(totalPrefixChecks + totalRetainedVersionChecks) " +
+        "public_has_get_queries=\(totalPublicPointQueries)"
     )
   }
 }
