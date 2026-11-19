@@ -1,5 +1,6 @@
 use core::ptr;
 
+use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk};
 use coding_adventures_sha256::sha256;
 use coding_adventures_sha384::sha384;
 use coding_adventures_sha512::sum512;
@@ -14,11 +15,15 @@ use tls13_certificate_verify_message::CertificateVerifyMessage;
 use tls13_certificate_verify_transcript_binding::{
     bind_certificate_verify_transcript, hash_transcript_bound_certificate_verify_input,
     verify_and_advance_owned_certificate_verify_transcript,
-    verify_transcript_bound_certificate_verify, CertificateVerifyTranscriptAdvanceErrorKind,
+    verify_finished_after_owned_certificate_verify, verify_transcript_bound_certificate_verify,
+    CertificateVerifyFinishedContinuityErrorKind, CertificateVerifyTranscriptAdvanceErrorKind,
+    OwnedVerifiedCertificateVerifyTranscript,
 };
 use tls13_cipher_suite_policy::{
     CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry, SelectedCipherSuite,
 };
+use tls13_finished::{derive_finished_key, FinishedKey, FinishedKeyStorage, FinishedRole};
+use tls13_finished_transcript_binding::TranscriptBoundFinishedErrorKind;
 use tls13_handshake::HandshakeErrorKind;
 use tls13_rsa_pss_certificate_verify::Tls13RsaPssCertificateVerifyErrorKind;
 use tls13_rsa_pss_signature_routing::{
@@ -137,6 +142,52 @@ fn certificate_verify_body(scheme: SignatureScheme, signature: &[u8]) -> Vec<u8>
     body.extend_from_slice(&(signature.len() as u16).to_be_bytes());
     body.extend_from_slice(signature);
     body
+}
+
+fn authenticated_advanced_transcript<'body, 'key>(
+    body: &'body [u8],
+    key: ValidatedRsaPublicKey<'key>,
+) -> OwnedVerifiedCertificateVerifyTranscript<'body, 'key> {
+    let transcript = selected_transcript(
+        CipherSuite::TlsChacha20Poly1305Sha256,
+        VERIFY_TRANSCRIPT_BYTES,
+    );
+    let mut signed_input_output = [0_u8; MAXIMUM_INPUT_LENGTH];
+    let mut handshake_output = vec![0_u8; 4 + body.len()];
+    let mut scratch = [0xa5; 223];
+    verify_and_advance_owned_certificate_verify_transcript(
+        transcript,
+        CertificateVerifyRole::Server,
+        authorized(SignatureScheme::RsaPssRsaeSha256),
+        body,
+        key,
+        &mut signed_input_output,
+        &mut handshake_output,
+        &mut scratch,
+        Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+    )
+    .unwrap()
+}
+
+fn with_finished_key<Result>(
+    suite: SelectedCipherSuite,
+    role: FinishedRole,
+    operation: impl FnOnce(FinishedKey<'_>) -> Result,
+) -> Result {
+    let (algorithm, bytes): (FixedHkdfHash, &[u8]) = match suite.parameters().hkdf_hash() {
+        tls13_cipher_suite_policy::HkdfHash::Sha256 => (FixedHkdfHash::Sha256, &[0x11; 32]),
+        tls13_cipher_suite_policy::HkdfHash::Sha384 => (FixedHkdfHash::Sha384, &[0x22; 48]),
+    };
+    let prk = HkdfPrk::import_exact(algorithm, bytes).unwrap();
+    let mut storage = FinishedKeyStorage::new(suite, role);
+    operation(derive_finished_key(&prk, &mut storage).unwrap())
+}
+
+fn valid_verify_data(key: &FinishedKey<'_>, transcript: &SelectedTls13Transcript) -> Vec<u8> {
+    let mut output = vec![0; transcript.snapshot().as_bytes().len()];
+    key.write_verify_data(transcript.snapshot().as_bytes(), &mut output)
+        .unwrap();
+    output
 }
 
 #[test]
@@ -661,4 +712,137 @@ fn transcript_limit_failure_withholds_partially_advanced_state() {
     );
     assert_eq!(&handshake_output[..4], &[15, 0, 1, 4]);
     assert_eq!(&handshake_output[4..], body);
+}
+
+#[test]
+fn finished_authenticates_the_exact_post_certificate_verify_snapshot() {
+    let encoded_key = decode_hex(PUBLIC_KEY_SPKI_HEX);
+    let key = validated_key(&encoded_key);
+    let scheme = SignatureScheme::RsaPssRsaeSha256;
+    let signature = decode_hex(SHA256_SIGNATURE_HEX);
+    let body = certificate_verify_body(scheme, &signature);
+    let certificate_verify = authenticated_advanced_transcript(&body, key);
+    let expected_before = certificate_verify.before_snapshot();
+    let expected_after = certificate_verify.after_snapshot();
+    let suite = certificate_verify.transcript().selected_suite();
+
+    with_finished_key(suite, FinishedRole::Server, |finished_key| {
+        let verify_data = valid_verify_data(&finished_key, certificate_verify.transcript());
+        let continuity = verify_finished_after_owned_certificate_verify(
+            certificate_verify,
+            &finished_key,
+            &verify_data,
+        )
+        .unwrap();
+
+        assert_eq!(
+            continuity.before_certificate_verify_snapshot(),
+            expected_before
+        );
+        assert_eq!(
+            continuity.after_certificate_verify_snapshot(),
+            expected_after
+        );
+        assert_eq!(continuity.finished().snapshot(), expected_after);
+        assert_eq!(
+            continuity.finished().transcript().snapshot(),
+            expected_after
+        );
+        assert_eq!(
+            continuity.finished().verification().transcript_hash(),
+            expected_after.as_bytes()
+        );
+        assert_eq!(continuity.role(), CertificateVerifyRole::Server);
+        assert_eq!(
+            continuity.finished().verification().role(),
+            FinishedRole::Server
+        );
+        assert_eq!(continuity.authorized_scheme().scheme(), scheme);
+        assert!(ptr::eq(
+            continuity.certificate_verify_body(),
+            body.as_slice()
+        ));
+        assert_eq!(continuity.public_key(), key);
+        assert_eq!(
+            continuity.encoded_certificate_verify_length(),
+            4 + body.len()
+        );
+        assert_eq!(
+            format!("{continuity:?}"),
+            "OwnedVerifiedCertificateVerifyFinishedContinuity"
+        );
+    });
+}
+
+#[test]
+fn finished_sender_role_must_match_certificate_verify_role() {
+    let encoded_key = decode_hex(PUBLIC_KEY_SPKI_HEX);
+    let key = validated_key(&encoded_key);
+    let signature = decode_hex(SHA256_SIGNATURE_HEX);
+    let body = certificate_verify_body(SignatureScheme::RsaPssRsaeSha256, &signature);
+    let certificate_verify = authenticated_advanced_transcript(&body, key);
+    let suite = certificate_verify.transcript().selected_suite();
+
+    with_finished_key(suite, FinishedRole::Client, |finished_key| {
+        let error =
+            verify_finished_after_owned_certificate_verify(certificate_verify, &finished_key, &[])
+                .unwrap_err();
+        assert_eq!(
+            error.kind(),
+            CertificateVerifyFinishedContinuityErrorKind::EndpointRoleMismatch
+        );
+    });
+}
+
+#[test]
+fn finished_suite_substitution_fails_before_peer_length_processing() {
+    let encoded_key = decode_hex(PUBLIC_KEY_SPKI_HEX);
+    let key = validated_key(&encoded_key);
+    let signature = decode_hex(SHA256_SIGNATURE_HEX);
+    let body = certificate_verify_body(SignatureScheme::RsaPssRsaeSha256, &signature);
+    let certificate_verify = authenticated_advanced_transcript(&body, key);
+    let other_suite = selected_suite(CipherSuite::TlsAes128GcmSha256);
+
+    with_finished_key(other_suite, FinishedRole::Server, |finished_key| {
+        let error =
+            verify_finished_after_owned_certificate_verify(certificate_verify, &finished_key, &[])
+                .unwrap_err();
+        assert_eq!(
+            error.kind(),
+            CertificateVerifyFinishedContinuityErrorKind::Finished(
+                TranscriptBoundFinishedErrorKind::CipherSuiteMismatch
+            )
+        );
+    });
+}
+
+#[test]
+fn invalid_finished_data_consumes_continuity_state_and_redacts() {
+    let encoded_key = decode_hex(PUBLIC_KEY_SPKI_HEX);
+    let key = validated_key(&encoded_key);
+    let signature = decode_hex(SHA256_SIGNATURE_HEX);
+    let body = certificate_verify_body(SignatureScheme::RsaPssRsaeSha256, &signature);
+    let certificate_verify = authenticated_advanced_transcript(&body, key);
+    let suite = certificate_verify.transcript().selected_suite();
+
+    with_finished_key(suite, FinishedRole::Server, |finished_key| {
+        let mut verify_data = valid_verify_data(&finished_key, certificate_verify.transcript());
+        verify_data[0] ^= 1;
+        let error = verify_finished_after_owned_certificate_verify(
+            certificate_verify,
+            &finished_key,
+            &verify_data,
+        )
+        .unwrap_err();
+        assert_eq!(
+            error.kind(),
+            CertificateVerifyFinishedContinuityErrorKind::Finished(
+                TranscriptBoundFinishedErrorKind::VerifyDataMismatch
+            )
+        );
+        for diagnostic in [format!("{error:?}"), error.to_string()] {
+            assert!(!diagnostic.contains(std::str::from_utf8(VERIFY_TRANSCRIPT_BYTES).unwrap()));
+            assert!(!diagnostic.contains(&SHA256_SIGNATURE_HEX[..32]));
+        }
+    });
 }

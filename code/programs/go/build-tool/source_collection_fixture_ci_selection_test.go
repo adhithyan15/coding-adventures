@@ -26,6 +26,7 @@ var sourceFixtureCases = []struct {
 }{
 	{"extension.json", []string{"csharp", "fsharp", "elixir", "go", "haskell", "lua", "perl", "python", "ruby", "rust", "swift", "typescript"}},
 	{"repository-rust-boundary.json", []string{"csharp", "fsharp", "swift"}},
+	{"repository-rust-game-clock-exact-inputs.json", []string{"csharp", "fsharp", "swift"}},
 	{"repository-swift-hash-map.json", []string{"csharp", "fsharp", "swift"}},
 	{"repository-typescript-game-input-frame-proof-inputs.json", []string{"csharp", "fsharp", "swift"}},
 	{"shared-input-conduit-before.json", []string{"csharp", "fsharp"}},

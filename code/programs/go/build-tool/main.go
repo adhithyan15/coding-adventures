@@ -1202,6 +1202,17 @@ func cacheHashPackages(execution, universe []discovery.Package, graph *directedg
 // several places that compute shards all read the same choice.
 var shardWeights *plan.ShardWeights
 
+func hashPackageWithRepositoryInputs(
+	pkg discovery.Package,
+	repoRoot string,
+	fallback func(discovery.Package) (string, error),
+) (string, error) {
+	if inputs := repositoryInputsForPackage(pkg.Name); len(inputs) > 0 {
+		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, inputs)
+	}
+	return fallback(pkg)
+}
+
 func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) int {
 	// CLI flags — using Go's standard flag package.
 	root := flag.String("root", "", "Repo root directory (auto-detect from .git)")
@@ -1331,10 +1342,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	}
 	basePackageHasher := hashPackage
 	hashPackage = func(pkg discovery.Package) (string, error) {
-		if inputs := repositoryInputsForPackage(pkg.Name); len(inputs) > 0 {
-			return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, inputs)
-		}
-		return basePackageHasher(pkg)
+		return hashPackageWithRepositoryInputs(pkg, repoRoot, basePackageHasher)
 	}
 
 	// The build starts from the code/ directory inside the repo root.
