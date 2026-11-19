@@ -847,6 +847,18 @@ mod unit_tests {
 
     #[test]
     fn ast_budget_is_bounded_and_counts_nested_nodes() {
+        let within_limit = node(
+            "root",
+            (0..MAX_AST_NODES - 1)
+                .map(|_| ASTNodeOrToken::Node(node("child", vec![])))
+                .collect(),
+        );
+        assert_eq!(
+            count_ast_nodes(&within_limit, MAX_AST_NODES + 1),
+            MAX_AST_NODES
+        );
+        assert!(ensure_ast_budget(&within_limit).is_ok());
+
         let children = (0..MAX_AST_NODES)
             .map(|_| ASTNodeOrToken::Node(node("child", vec![])))
             .collect();
@@ -871,9 +883,10 @@ mod unit_tests {
 
     #[test]
     fn wir_node_budget_reports_the_first_overflow() {
-        let mut budget = WirBudget {
-            count: MAX_WIR_EXPR_NODES,
-        };
+        let mut budget = WirBudget::default();
+        for _ in 0..MAX_WIR_EXPR_NODES {
+            assert!(budget.take().is_ok());
+        }
         assert_eq!(
             budget.take(),
             Err(BridgeError::TooManyWirNodes {

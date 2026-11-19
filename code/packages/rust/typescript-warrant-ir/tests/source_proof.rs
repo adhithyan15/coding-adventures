@@ -6,6 +6,7 @@
 
 use bit_blaster::bv::{self, BitVec};
 use coding_adventures_sha256::sha256_hex;
+use coding_adventures_typescript_lexer::tokenize_typescript;
 use coding_adventures_warrant_ir::sym::zero_extend;
 use coding_adventures_warrant_ir::{
     BinaryOp, Program, Prover, SymMemory, SymVal, UnaryOp, VerificationVerdict, WirExpr,
@@ -603,6 +604,43 @@ fn top_level_extra_statements_and_token_budget_are_refused() {
     assert!(matches!(
         lower_typescript_bytes(&oversized),
         Err(BridgeError::SourceTooLarge { .. })
+    ));
+}
+
+#[test]
+fn exact_source_and_token_caps_reach_the_next_pipeline_stage() {
+    let mut exact_bytes = SOURCE.to_vec();
+    exact_bytes.resize(typescript_warrant_ir::MAX_SOURCE_BYTES, b' ');
+    assert_eq!(exact_bytes.len(), typescript_warrant_ir::MAX_SOURCE_BYTES);
+    assert!(lower_typescript_bytes(&exact_bytes).is_ok());
+
+    let source = std::str::from_utf8(SOURCE).unwrap();
+    let initial_tokens = tokenize_typescript(source, typescript_warrant_ir::TYPESCRIPT_VERSION)
+        .unwrap()
+        .len();
+    assert!(initial_tokens < typescript_warrant_ir::MAX_TOKENS);
+    let at_cap = format!(
+        "{source}{}",
+        ";".repeat(typescript_warrant_ir::MAX_TOKENS - initial_tokens)
+    );
+    assert_eq!(
+        tokenize_typescript(&at_cap, typescript_warrant_ir::TYPESCRIPT_VERSION)
+            .unwrap()
+            .len(),
+        typescript_warrant_ir::MAX_TOKENS
+    );
+    assert!(!matches!(
+        lower_typescript_bytes(at_cap.as_bytes()),
+        Err(BridgeError::TooManyTokens { .. })
+    ), "exactly MAX_TOKENS must pass the token-budget gate even though the added top-level statements are later refused");
+
+    let over_cap = format!("{at_cap};");
+    assert!(matches!(
+        lower_typescript_bytes(over_cap.as_bytes()),
+        Err(BridgeError::TooManyTokens {
+            actual,
+            limit: typescript_warrant_ir::MAX_TOKENS
+        }) if actual == typescript_warrant_ir::MAX_TOKENS + 1
     ));
 }
 
