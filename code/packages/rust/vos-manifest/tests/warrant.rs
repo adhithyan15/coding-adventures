@@ -684,3 +684,45 @@ fn claim_calls_walks_the_parsed_body_so_strings_and_comments_hide_nothing() {
     assert_eq!(got[1], ("c2".to_string(), vec!["insert".to_string(), "dispatch".to_string()]));
     assert_eq!(got[2].1, ["unused", "dispatch", "insert"]);
 }
+
+// ---------------------------------------------------------------------------
+// declarations_of_block (VOS-039b-1): kinds, names and spans IN THE BLOCK
+// ---------------------------------------------------------------------------
+
+#[test]
+fn declarations_of_block_reports_kind_name_and_span_in_the_block() {
+    use vos_manifest::warrant::{declarations_of_block, DeclKind};
+    let block = "  -- a comment\n  model one(x: U8) -> U8 = x\n  claim c:\n    forall b: Bool. b == b\n  record R(a: Bool)\n";
+    let d = declarations_of_block(block).expect("parses");
+    assert_eq!(d.len(), 3);
+    assert_eq!(
+        (d[0].kind, d[0].name.as_str(), d[0].has_body),
+        (DeclKind::Model, "one", true)
+    );
+    assert_eq!(&block[d[0].start..d[0].end], "model one(x: U8) -> U8 = x");
+    assert_eq!((d[1].kind, d[1].name.as_str()), (DeclKind::Claim, "c"));
+    assert!(block[d[1].start..d[1].end].starts_with("claim c:"));
+    assert_eq!((d[2].kind, d[2].name.as_str()), (DeclKind::Other, ""));
+    assert!(block[d[2].start..d[2].end].starts_with("record R"));
+}
+
+#[test]
+fn declarations_of_block_refuses_text_the_parser_refuses_and_text_its_spans_would_not_index() {
+    use vos_manifest::warrant::declarations_of_block;
+    let e = declarations_of_block("  model broken(\n").unwrap_err();
+    assert_eq!(e.stage, WarrantStage::Parse);
+    // A CRLF line end is normalised away, so a span would not index the bytes: refused.
+    let e = declarations_of_block("  model a() -> U8 = 1u8\r\n").unwrap_err();
+    assert_eq!(e.stage, WarrantStage::Parse);
+    assert!(e.message.contains("normalised"));
+}
+
+#[test]
+fn claim_calls_finds_a_config_model_called_with_an_empty_argument_list() {
+    // `cfg_N()` is a call with no arguments: check-contract's "each config key is used by a
+    // lemma" rests on this.
+    let doc = "warrant t v1\n  model cfg_N() -> U8 = 8u8\n  claim uses:\n    forall t: U8. (t < cfg_N())\n  claim ignores:\n    forall t: U8. (t == t)\n";
+    let got = vos_manifest::warrant::claim_calls(doc, &["cfg_N".to_string()]).unwrap();
+    assert_eq!(got[0], ("uses".to_string(), vec!["cfg_N".to_string()]));
+    assert_eq!(got[1], ("ignores".to_string(), vec![]));
+}
