@@ -55,11 +55,10 @@ fn prove(program: &Program, helper: Helper) -> VerificationVerdict {
             let mask = args[0].to_bits()?;
             let slot = args[1].to_bits()?;
             let mut outputs = Vec::with_capacity(64);
-            for bit in 0..64 {
+            for (bit, held) in mask.bits.iter().copied().enumerate() {
                 // Select each output bit by an independent slot equality. The
                 // reference never shifts by the source's symbolic slot.
                 let selected = bv::eq(aig, &slot, &BitVec::constant(8, bit as u128));
-                let held = mask.bits[bit];
                 match helper {
                     Helper::BitIsSet => outputs.push(aig.and(selected, held)),
                     Helper::SetBit => outputs.push(aig.or(selected, held)),

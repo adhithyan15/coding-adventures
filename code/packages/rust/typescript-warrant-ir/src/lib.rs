@@ -470,19 +470,19 @@ fn lower_expression(node: &GrammarASTNode, budget: &mut WirBudget) -> Result<Wir
     if node.rule_name == "call_expression" {
         return lower_bigint_call(node, budget);
     }
-    if node.rule_name == "unary_expression" {
-        if node.children.len() == 2 && token_child(node, 0).is_some_and(|token| token.value == "~")
-        {
-            expect_operator(token_child(node, 0).expect("checked above"), "~", "TILDE")?;
-            let operand = node_child(node, 1).ok_or_else(|| {
-                BridgeError::UnsupportedAst("unary NOT requires one expression".to_string())
-            })?;
-            budget.take()?;
-            return Ok(WirExpr::Unary {
-                op: UnaryOp::Not,
-                expr: Box::new(lower_expression(operand, budget)?),
-            });
-        }
+    if node.rule_name == "unary_expression"
+        && node.children.len() == 2
+        && token_child(node, 0).is_some_and(|token| token.value == "~")
+    {
+        expect_operator(token_child(node, 0).expect("checked above"), "~", "TILDE")?;
+        let operand = node_child(node, 1).ok_or_else(|| {
+            BridgeError::UnsupportedAst("unary NOT requires one expression".to_string())
+        })?;
+        budget.take()?;
+        return Ok(WirExpr::Unary {
+            op: UnaryOp::Not,
+            expr: Box::new(lower_expression(operand, budget)?),
+        });
     }
 
     if node.children.len() == 3
