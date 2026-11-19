@@ -218,10 +218,12 @@ var (
 		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
 	}
 
-	rngCorpusPaths           = []string{"code/specs/fixtures/rng-v1"}
-	fenwickTreeContractPaths = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
-	dt17HashFunctionsPaths   = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
-	gameClockInputPaths      = []string{
+	rngCorpusPaths            = []string{"code/specs/fixtures/rng-v1"}
+	fenwickTreeContractPaths  = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths    = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
+	dt18HashMapPaths          = []string{"code/specs/DT18-hash-map.md", "code/specs/DT18-hash-map-dart-profile.md", "code/specs/fixtures/hash-map-v1"}
+	swiftHashMapFixtureInputs = []string{"code/specs/fixtures/hash-map-v1/cases.json"}
+	gameClockInputPaths       = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
 		"code/packages/rust/Cargo.lock",
@@ -424,6 +426,13 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	{
+		name:     "swift/hash-map",
+		language: "swift",
+		inputs:   "the shared DT18 hash-map contract and v1 fixture",
+		matches:  isDt18HashMapInput,
+		paths:    dt18HashMapPaths,
+	},
 	{
 		name:     "rust/hash-functions",
 		language: "rust",
@@ -1177,6 +1186,32 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isWarrantGoLanePilotInput,
 		paths:    warrantGoLanePilotPaths,
 	},
+}
+
+// repositoryInputsForPackage returns exact repository-relative files that
+// package tests read and that must participate in the fallback cache key.
+func repositoryInputsForPackage(packageName string) []string {
+	switch packageName {
+	case "rust/game-clock":
+		return gameClockInputPaths
+	case "typescript/game-input-frame":
+		return typescriptGameInputFrameInputs
+	case "swift/hash-map":
+		return swiftHashMapFixtureInputs
+	default:
+		return nil
+	}
+}
+
+// isDt18HashMapInput selects the two exact shared contracts and the
+// versioned v1 fixture tree, excluding neighboring spec and fixture names.
+func isDt18HashMapInput(changed string) bool {
+	if path.Clean(changed) != changed {
+		return false
+	}
+	return changed == "code/specs/DT18-hash-map.md" ||
+		changed == "code/specs/DT18-hash-map-dart-profile.md" ||
+		strings.HasPrefix(changed, "code/specs/fixtures/hash-map-v1/")
 }
 
 // warrantLaneRegistryPaths is the consumer registry. Every Rust package that

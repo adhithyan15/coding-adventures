@@ -74,7 +74,7 @@ let ``F sharp facade consumes every neutral source collection case`` () =
         Directory.GetFiles(Path.Combine(fixtureDirectory, "cases"), "source-collection-*.json")
         |> Array.sortWith (fun left right -> StringComparer.Ordinal.Compare(left, right))
 
-    Assert.Equal(22, fixturePaths.Length)
+    Assert.Equal(23, fixturePaths.Length)
 
     for fixturePath in fixturePaths do
         use fixture = JsonDocument.Parse(File.ReadAllText(fixturePath))

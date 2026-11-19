@@ -1207,14 +1207,10 @@ func hashPackageWithRepositoryInputs(
 	repoRoot string,
 	fallback func(discovery.Package) (string, error),
 ) (string, error) {
-	switch pkg.Name {
-	case "rust/game-clock":
-		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, gameClockInputPaths)
-	case "typescript/game-input-frame":
-		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, typescriptGameInputFrameInputs)
-	default:
-		return fallback(pkg)
+	if inputs := repositoryInputsForPackage(pkg.Name); len(inputs) > 0 {
+		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, inputs)
 	}
+	return fallback(pkg)
 }
 
 func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) int {
