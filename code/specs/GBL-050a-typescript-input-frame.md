@@ -49,11 +49,16 @@ walking input records:
    events before reducing them. In particular, a failure at one index must
    not access a later element or field, including a throwing accessor.
 
-The public result, error payload, frame, and axes are fresh frozen values.
-Inputs are never frozen or modified. Returned axes and nested records cannot
-alias caller-owned mutable arrays/objects. Any late failure is atomic and
-returns no partially reduced frame. Exact payload field names and wire shape
-must match the shared 21-case corpus and Rust public errors.
+The public API has a discriminated success/error result whose portable error
+codes and fields are exactly `TooManyChanges`; `InvalidPreviousAxisValue`
+(`axis_slot`, `value`); `InvalidButtonActionId` (`change_index`, `action_id`);
+`InvalidAxisActionId` (`change_index`, `action_id`); and `InvalidAxisValue`
+(`change_index`, `axis_slot`, `value`). The result, error payload, frame, and
+axes are fresh frozen values. Inputs are never frozen or modified. Returned
+axes and nested records cannot alias caller-owned mutable arrays/objects. Any
+late failure is atomic and returns no partially reduced frame. Exact payload
+field names and wire shape must match the shared 21-case corpus and Rust public
+errors.
 
 ## Production-source proof binding
 
