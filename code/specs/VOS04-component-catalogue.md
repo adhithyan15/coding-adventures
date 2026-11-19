@@ -1001,9 +1001,9 @@ end
 
 | Code | Check | Fails when |
 |---|---|---|
-| `CK01` | Inputs | `vos.toml` kind is not `contract`; a part is not admitted; `contract.vos` does not parse; a required file is missing (tier/part correspondence is the shared GD03) |
+| `CK01` | Inputs | the crate directory, `warrant/` or `warrant/mutants/` is a symlink; `vos.toml` kind is not `contract`; a part is not admitted; `contract.vos` does not parse; a required file is missing (tier/part correspondence is the shared GD03) |
 | `CK02` | Type check | `contract.part` + the cfg preamble + `lemmas.part` does not type-check; `lemmas.part` holds anything but claims, or no claim |
-| `CK03` | Budget and domain | a lemma is not a `forall`; a binder type is not `Bool` or `U8`; the product of the binder domains exceeds **400,000** (VOS04 5.4, VER04h 3); no case is admitted by the refinements |
+| `CK03` | Budget and domain | a lemma is not a `forall`; a binder type is not `Bool` or `U8`; the product of the binder domains exceeds **400,000** (VOS04 5.4, VER04h 3); `lemmas.part` holds more than **64** lemmas; no case is admitted by the refinements |
 | `CK04` | The lemma holds | a lemma fails on some case (the first failing binder values are printed), or does not evaluate |
 | `CK05` | Mutant set | the stems of `warrant/mutants/*.part` are not exactly the lemma names |
 | `CK06` | Mutant form | a mutant part is not exactly one `model` with a body, names a model the contract does not declare, does not type-check, or its lemma does not evaluate on it |
@@ -1013,7 +1013,9 @@ end
 
 The budget is VER04h's X1 per-claim case budget of **400,000** (the `exhaustive_budget` of every
 `evidence.bindings`); it is a constant of `vos-link`, and a test of `vos-link` reads this section
-and asserts that it states the number.
+and asserts that it states the number.  A `lemmas.part` is limited to **64** lemmas (the limit of the
+mutants directory), so the work of a run is bounded; and when CK02, CK05 or CK06 findings exist, the
+check returns them without evaluating anything.
 
 **Cost, measured.** `check-contract` on the real scheduler contract (10 lemmas, 10 mutants, 2
 config mutants; N = 8, 65,536 cases per lemma) takes about **10 s wall** (about 57 s of CPU, on 8 worker threads on a 14-core Apple-silicon host; measured twice: 9.84 s and 9.89 s) in a debug build, once, in

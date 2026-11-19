@@ -15,7 +15,7 @@ use vos_link::build_gen::{canonical_contract_build, MARKER};
 use vos_link::component::{row_in_consumers_with, strip_go};
 use vos_link::contract_check::{
     config_preamble, evaluation_document, run_lemma, splice, LemmaRun, Run, LEMMA_BUDGET,
-    MUTANTS_DIR, TABLE_FILE,
+    MAX_LEMMAS, MUTANTS_DIR, TABLE_FILE,
 };
 use vos_link::{check_component, check_contract, gen_build, gen_contract, NoVerdict, Outcome};
 
@@ -299,6 +299,19 @@ fn add_lemma(r: &Repo, text: &str) {
     let p = pkg_path("warrant/lemmas.part");
     let cur = r.read(&p);
     r.write(&p, format!("{cur}{text}"));
+    // A lemma with no mutant is CK05, and CK05 now returns before any lemma is evaluated; so
+    // each added lemma gets a placeholder mutant (a copy of another lemma's), which is well
+    // formed (CK06 does not evaluate it) and lets the lemma reach the check under test.
+    let name = text
+        .split("claim ")
+        .nth(1)
+        .and_then(|t| t.split(':').next())
+        .unwrap();
+    let placeholder = r.read(&pkg_path("warrant/mutants/ins_range.part"));
+    r.write(
+        &pkg_path(&format!("warrant/mutants/{name}.part")),
+        placeholder,
+    );
 }
 
 #[test]
@@ -448,7 +461,8 @@ fn ck05_a_missing_and_an_extra_mutant() {
     only(
         &chk(&r),
         "CK05",
-        "warrant/mutants/ghost.part names no lemma of lemmas.part",
+        // The stem is printed escaped, so it is quoted.
+        "warrant/mutants/\"ghost\".part names no lemma of lemmas.part",
     );
     assert_eq!(MUTANTS_DIR, "warrant/mutants");
 }
@@ -966,6 +980,11 @@ fn the_spec_states_the_budget_and_every_code() {
         "VOS04 5.6 must state the lemma budget"
     );
     assert_eq!(LEMMA_BUDGET, 400_000);
+    assert!(
+        spec.contains(&format!("**{MAX_LEMMAS}**")),
+        "VOS04 5.6 must state the lemma limit"
+    );
+    assert_eq!(MAX_LEMMAS, 64);
     for code in [
         "CK01", "CK02", "CK03", "CK04", "CK05", "CK06", "CK07", "CK08", "CK09",
     ] {
@@ -976,4 +995,58 @@ fn the_spec_states_the_budget_and_every_code() {
     }
     assert!(spec.contains("vosContractRow"));
     assert!(spec.contains(&format!("`{TABLE_FILE}`")) || spec.contains("warrant/lemmas.table"));
+}
+
+// --- security hardening -------------------------------------------------------------------------------------------
+
+#[test]
+fn a_mutant_stem_is_escaped_in_the_ck05_message() {
+    let r = generated("ck05-escape");
+    // A newline in a file name would forge a second finding line if it were printed raw.
+    let name = "evil\nCK04 forged.part";
+    r.write(
+        &pkg_path(&format!("warrant/mutants/{name}")),
+        "  model pre_ins(t: U8) -> Bool = true\n",
+    );
+    let o = chk(&r);
+    for f in &o.findings {
+        assert!(!f.message.contains('\n'), "raw newline in {}", show(&o));
+    }
+    has(&o, "CK05", "names no lemma of lemmas.part");
+}
+
+#[test]
+fn ck03_more_than_the_lemma_limit_is_refused() {
+    let r = fresh("ck03-count");
+    let mut extra = String::new();
+    for i in 0..=MAX_LEMMAS {
+        extra.push_str(&format!("  claim extra_{i}:\n    forall a: Bool. a == a\n"));
+    }
+    add_lemma(&r, &extra);
+    let o = chk(&r);
+    has(&o, "CK03", "over the limit of 64");
+}
+
+#[test]
+fn ck05_and_ck06_findings_return_before_any_evaluation() {
+    // The fixture's lemmas would all run; with a mutant missing, only CK05 is reported and the
+    // (otherwise passing) lemmas are not evaluated, so there is no table and no other finding.
+    let r = generated("ck05-noeval");
+    std::fs::remove_file(r.path(&pkg_path("warrant/mutants/ins_range.part"))).unwrap();
+    let o = chk(&r);
+    assert!(o.findings.iter().all(|f| f.code == "CK05"), "{}", show(&o));
+}
+
+#[cfg(unix)]
+#[test]
+fn a_symlinked_warrant_directory_is_ck01_for_check_and_gen() {
+    let r = generated("ck01-symlink-warrant");
+    let w = r.path(&pkg_path("warrant"));
+    let moved = r.path("elsewhere");
+    std::fs::rename(&w, &moved).unwrap();
+    std::os::unix::fs::symlink(&moved, &w).unwrap();
+    let before = std::fs::read(moved.join("lemmas.table")).unwrap();
+    only(&chk(&r), "CK01", "warrant: is a symlink");
+    only(&gen(&r), "CK01", "warrant: is a symlink");
+    assert_eq!(std::fs::read(moved.join("lemmas.table")).unwrap(), before);
 }

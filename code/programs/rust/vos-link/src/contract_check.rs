@@ -81,6 +81,11 @@ use crate::ops::Outcome;
 /// The X1 case budget per claim (VOS04 5.6, VER04h 3): a lemma whose binder domains multiply to
 /// more is refused (CK03), never run.  A test reads VOS04 and asserts the spec states it.
 pub const LEMMA_BUDGET: u64 = 400_000;
+/// At most this many lemmas in `lemmas.part` (CK03), the same number as the entries of the
+/// mutants directory (`fsio::MAX_DIR_ENTRIES`).  Every lemma costs up to [`LEMMA_BUDGET`]
+/// evaluations plus one mutant run, so an unbounded lemma list would be an unbounded amount of
+/// work for an author-controlled file.  A test reads VOS04 5.6 and asserts it states the number.
+pub const MAX_LEMMAS: usize = 64;
 /// At most this many evaluation threads.
 pub const MAX_WORKERS: usize = 8;
 /// The generated table, relative to the contract crate directory.
@@ -129,7 +134,31 @@ pub fn load_inputs(
 ) -> Result<Result<ContractInputs, Vec<Finding>>, NoVerdict> {
     let layout = resolve_layout(crate_arg, root_arg)?;
     ensure_plain_dirs(&layout.root, &["code", "packages", "rust"])?;
+    // `absolute_plain` refused a symlink in the path the user typed, but the crate directory
+    // and the directories under it are read and written below, so each is checked again here,
+    // at the point of use: a symlinked `warrant/` would carry the one write of `gen-contract`
+    // outside the crate.  Fail closed (CK01), before anything is read.
     let mut f: Vec<Finding> = Vec::new();
+    for (rel, shown) in [
+        ("", "the crate directory"),
+        ("warrant", "warrant"),
+        (MUTANTS_DIR, MUTANTS_DIR),
+    ] {
+        let dir = layout.impl_dir.join(rel);
+        if let Ok(md) = std::fs::symlink_metadata(&dir) {
+            if md.file_type().is_symlink() {
+                f.push(Finding::new(
+                    "CK01",
+                    format!(
+                        "{shown}: is a symlink, and a contract crate is read and written in place"
+                    ),
+                ));
+            }
+        }
+    }
+    if !f.is_empty() {
+        return Ok(Err(f));
+    }
     // The shared half: vos.toml kind, contract.vos, the tier files, the admission of every part.
     let pkg = load_contract_package(&layout, &layout.impl_pkg.clone(), &mut f)?;
     let Some(pkg) = pkg else {
@@ -518,6 +547,18 @@ pub fn check_inputs(inp: &ContractInputs) -> Result<Checked, NoVerdict> {
     // (A block with no declaration does not parse at all, so an empty lemma list cannot reach
     // here: `claims_of_block` has already said CK02.)
 
+    // --- CK03: a bounded number of lemmas, so the work is bounded -------------------------
+    if lemma_names.len() > MAX_LEMMAS {
+        out.find(
+            "CK03",
+            format!(
+                "warrant/lemmas.part holds {} lemmas, over the limit of {MAX_LEMMAS}",
+                lemma_names.len()
+            ),
+        );
+        return Ok(out);
+    }
+
     // --- CK02: the evaluation document type-checks ----------------------------------------
     let base = evaluation_document(&inp.contract, contract_text, lemmas_text, None);
     if let Err(e) = on_big_stack(|| type_check(&base))? {
@@ -543,7 +584,11 @@ pub fn check_inputs(inp: &ContractInputs) -> Result<Checked, NoVerdict> {
     for m in have.difference(&want) {
         out.find(
             "CK05",
-            format!("{MUTANTS_DIR}/{m}.part names no lemma of lemmas.part"),
+            // The stem is an author-controlled file name: escaped, like every name printed.
+            format!(
+                "{MUTANTS_DIR}/{}.part names no lemma of lemmas.part",
+                esc(m)
+            ),
         );
     }
 
@@ -602,6 +647,18 @@ pub fn check_inputs(inp: &ContractInputs) -> Result<Checked, NoVerdict> {
             }
         }
         callers_of.push(callers);
+    }
+
+    // --- no evaluation of a contract that is already refused --------------------------------
+    // A CK02, CK05 or CK06 finding means the documents are not the ones the lemmas were written
+    // for; running every lemma on them would spend up to `MAX_LEMMAS` x `LEMMA_BUDGET`
+    // evaluations to add findings nobody can act on first.  Return what is known.
+    if out
+        .findings
+        .iter()
+        .any(|x| matches!(x.code, "CK02" | "CK05" | "CK06"))
+    {
+        return Ok(out);
     }
 
     // --- the jobs, run together -------------------------------------------------------------

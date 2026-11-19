@@ -4,6 +4,12 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed (VOS-039b security hardening)
+
+- `check-contract` / `gen-contract`: a symlinked crate directory, `warrant/` or `warrant/mutants/` is a `CK01`
+  finding before anything is read or written; the CK05 mutant-stem message is escaped; CK02/CK05/CK06 findings
+  return before any evaluation is scheduled; at most 64 lemmas (`MAX_LEMMAS`, `CK03`).
+
 ### Added (VOS-039b-1, VOS02 D-GD11)
 
 - `vos-link gen-contract` and `check-contract <contract-crate-dir>` (VOS04 5.6, `src/contract_check.rs`): the
