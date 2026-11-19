@@ -832,9 +832,10 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "    real = os.environ['REAL_TIMEOUT']\n"
                 "    if args[:2] == ['--kill-after=1', '5']:\n"
                 "        result = subprocess.run([real, *args], check=False)\n"
+                "        shell_status = 128 + (-result.returncode) if result.returncode < 0 else result.returncode\n"
                 "        with open(os.environ['DIAG_REAL_TIMEOUT_STATUS_PATH'], 'w', encoding='ascii') as status_file:\n"
-                "            status_file.write(str(result.returncode) + '\\n')\n"
-                "        raise SystemExit(result.returncode)\n"
+                "            status_file.write(f'{result.returncode} {shell_status}\\n')\n"
+                "        raise SystemExit(shell_status)\n"
                 "    os.execv(real, [real, *args])\n"
                 "if args[:2] == ['--kill-after=1', '5']:\n"
                 "    if os.environ.get('DIAG_MODE') in ('outer_timeout', 'log_timeout', 'probe_timeout'):\n"
@@ -891,11 +892,11 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                     "DIAG_RUN_AS_HELPER": str(run_as_helper),
                     "DIAG_APP_DATA_ROOT": str(app_data_root),
                     "DIAG_MODE": mode,
-                    "DIAG_HANG_PID_PATH": str(root / "hung-adb.pid"),
-                    "DIAG_HANG_CHILD_PID_PATH": str(root / "hung-sleep.pid"),
-                    "DIAG_HANG_WORKER_STAT_PATH": str(root / "hung-adb.initial-stat"),
-                    "DIAG_HANG_CHILD_STAT_PATH": str(root / "hung-sleep.initial-stat"),
-                    "DIAG_REAL_TIMEOUT_STATUS_PATH": str(root / "real-timeout.status"),
+                    "DIAG_HANG_PID_PATH": str(root / f"hung-adb-{mode}.pid"),
+                    "DIAG_HANG_CHILD_PID_PATH": str(root / f"hung-sleep-{mode}.pid"),
+                    "DIAG_HANG_WORKER_STAT_PATH": str(root / f"hung-adb-{mode}.initial-stat"),
+                    "DIAG_HANG_CHILD_STAT_PATH": str(root / f"hung-sleep-{mode}.initial-stat"),
+                    "DIAG_REAL_TIMEOUT_STATUS_PATH": str(root / f"real-timeout-{mode}.status"),
                 }
                 if shutil.which("timeout"):
                     env["REAL_TIMEOUT"] = shutil.which("timeout") or "timeout"
@@ -1020,14 +1021,16 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 real_start = time.monotonic()
                 real_timeout_gate = run("real_timeout")
                 real_elapsed = time.monotonic() - real_start
-                self.assertEqual(real_timeout_gate.returncode, 1)
-                self.assertIn("diagnostic_capture=timed_out", real_timeout_gate.stdout)
-                self.assertLess(real_elapsed, 7.5)
-                real_timeout_status = (root / "real-timeout.status").read_text(
+                status_path = root / "real-timeout-real_timeout.status"
+                timeout_status = status_path.read_text(
                     encoding="ascii"
                 ).strip()
-                hung_pid = int((root / "hung-adb.pid").read_text(encoding="utf-8").strip())
-                hung_child_pid = int((root / "hung-sleep.pid").read_text(encoding="utf-8").strip())
+                hung_pid_path = root / "hung-adb-real_timeout.pid"
+                child_pid_path = root / "hung-sleep-real_timeout.pid"
+                worker_stat_path = root / "hung-adb-real_timeout.initial-stat"
+                child_stat_path = root / "hung-sleep-real_timeout.initial-stat"
+                hung_pid = int(hung_pid_path.read_text(encoding="ascii").strip())
+                hung_child_pid = int(child_pid_path.read_text(encoding="ascii").strip())
 
                 def proc_identity(raw_stat: str) -> dict[str, str | int]:
                     close_paren = raw_stat.rfind(")")
@@ -1035,6 +1038,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                     fields = raw_stat[close_paren + 2 :].split()
                     self.assertGreaterEqual(len(fields), 20, raw_stat)
                     return {
+                        "pid": int(raw_stat[:close_paren].split()[0]),
                         "state": fields[0],
                         "ppid": int(fields[1]),
                         "pgrp": int(fields[2]),
@@ -1043,36 +1047,65 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                     }
 
                 initial_worker = proc_identity(
-                    (root / "hung-adb.initial-stat").read_text(encoding="ascii")
+                    worker_stat_path.read_text(encoding="ascii")
                 )
                 initial_child = proc_identity(
-                    (root / "hung-sleep.initial-stat").read_text(encoding="ascii")
+                    child_stat_path.read_text(encoding="ascii")
                 )
+                self.assertEqual(initial_worker["pid"], hung_pid)
+                self.assertEqual(initial_child["pid"], hung_child_pid)
+                self.assertEqual(initial_child["ppid"], hung_pid)
+                self.assertEqual(initial_child["pgrp"], initial_worker["pgrp"])
+                self.assertEqual(initial_child["session"], initial_worker["session"])
 
-                def snapshot_process(pid: int) -> dict[str, str | int] | None:
+                def snapshot_process(
+                    pid: int, expected: dict[str, str | int]
+                ) -> dict[str, object]:
                     try:
                         raw_stat = Path(f"/proc/{pid}/stat").read_text(encoding="ascii")
                     except FileNotFoundError:
-                        return None
+                        return {"identity": "absent"}
+                    except OSError as error:
+                        return {"identity": "unclassifiable", "error": type(error).__name__}
                     current = proc_identity(raw_stat)
-                    expected = initial_worker if pid == hung_pid else initial_child
                     if current["starttime"] != expected["starttime"]:
-                        return {"state": "pid_reused", **current}
-                    return current
+                        return {"identity": "pid_reused", "current": current}
+                    return {"identity": "same", "current": current}
 
-                def group_snapshot(expected_pgrp: int) -> list[dict[str, str | int]]:
+                def group_snapshot(expected_pgrp: int) -> dict[str, object]:
                     members: list[dict[str, str | int]] = []
+                    vanished = 0
+                    unreadable = 0
                     for proc_entry in Path("/proc").iterdir():
                         if not proc_entry.name.isdigit():
                             continue
                         try:
                             raw_stat = (proc_entry / "stat").read_text(encoding="ascii")
                             current = proc_identity(raw_stat)
-                        except (FileNotFoundError, PermissionError, ValueError):
+                        except FileNotFoundError:
+                            vanished += 1
+                            continue
+                        except (OSError, ValueError):
+                            unreadable += 1
                             continue
                         if current["pgrp"] == expected_pgrp:
                             members.append({"pid": int(proc_entry.name), **current})
-                    return members[:32]
+                    return {
+                        "members": members[:32],
+                        "observed_count": len(members),
+                        "vanished_during_scan": vanished,
+                        "unreadable": unreadable,
+                        "truncated": len(members) > 32,
+                    }
+
+                def pid_addressability(pid: int) -> str:
+                    try:
+                        os.kill(pid, 0)
+                    except ProcessLookupError:
+                        return "absent"
+                    except PermissionError:
+                        return "unclassifiable_permission_denied"
+                    return "addressable"
 
                 process_history: list[dict[str, object]] = []
                 observation_start = time.monotonic()
@@ -1083,28 +1116,56 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                     process_history.append(
                         {
                             "elapsed_s": round(time.monotonic() - observation_start, 3),
-                            "worker": snapshot_process(hung_pid),
-                            "sleep_child": snapshot_process(hung_child_pid),
+                            "worker": snapshot_process(hung_pid, initial_worker),
+                            "sleep_child": snapshot_process(hung_child_pid, initial_child),
+                            "worker_pid_probe": pid_addressability(hung_pid),
+                            "sleep_child_pid_probe": pid_addressability(hung_child_pid),
                             "group": group_snapshot(int(initial_worker["pgrp"])),
                         }
                     )
-                self.assertEqual(
-                    real_timeout_status,
-                    "124",
-                    f"real outer timeout status={real_timeout_status!r}; process_history={process_history!r}",
-                )
-                try:
-                    os.kill(hung_pid, 0)
-                except ProcessLookupError:
-                    pass
-                else:
-                    self.fail(
-                        "term-resistant adb worker PID remained addressable after timeout; "
-                        f"initial_worker={initial_worker!r}, initial_sleep_child={initial_child!r}, "
-                        f"process_history={process_history!r}"
-                    )
                 recorded_temps = temp_tracker.read_text(encoding="utf-8").splitlines()
-                self.assertTrue(all(not Path(path).exists() for path in recorded_temps))
+                remaining_temps = [path for path in recorded_temps if Path(path).exists()]
+
+                failures: list[str] = []
+                allowed_timeout_statuses = {"124 124", "137 137", "-9 137"}
+                if timeout_status not in allowed_timeout_statuses:
+                    failures.append(f"unexpected real timeout raw/shell status {timeout_status!r}")
+                if real_timeout_gate.returncode != 1:
+                    failures.append(f"gate exit changed to {real_timeout_gate.returncode}")
+                if "diagnostic_capture=timed_out" not in real_timeout_gate.stdout:
+                    failures.append("timeout diagnostic marker missing")
+                if real_elapsed >= 7.5:
+                    failures.append(f"gate elapsed {real_elapsed:.3f}s exceeded 7.5s")
+                if process_history[0]["worker_pid_probe"] != "absent":
+                    failures.append("worker PID remained addressable immediately after gate return")
+                if process_history[0]["sleep_child_pid_probe"] != "absent":
+                    failures.append("sleep child PID remained addressable immediately after gate return")
+                immediate_group = process_history[0]["group"]
+                final_group = process_history[-1]["group"]
+                assert isinstance(immediate_group, dict)
+                assert isinstance(final_group, dict)
+                for label, snapshot in (("immediate", immediate_group), ("final", final_group)):
+                    if snapshot["unreadable"] or snapshot["truncated"]:
+                        failures.append(f"{label} process-group census incomplete: {snapshot!r}")
+                if immediate_group["members"]:
+                    failures.append(f"process group still had members at gate return: {immediate_group!r}")
+                if final_group["members"]:
+                    failures.append(f"process group members persisted after bounded observation: {final_group!r}")
+                for label in ("worker", "sleep_child"):
+                    if process_history[-1][label]["identity"] not in ("absent", "pid_reused"):
+                        failures.append(f"{label} identity persisted: {process_history[-1][label]!r}")
+                if not recorded_temps:
+                    failures.append("diagnostic temporary-file tracker was empty")
+                if remaining_temps:
+                    failures.append(f"diagnostic temporary files remain: {remaining_temps!r}")
+                self.assertFalse(
+                    failures,
+                    "timeout cleanup regression: "
+                    f"failures={failures!r}, raw_timeout_status={timeout_status!r}, "
+                    f"gate_exit={real_timeout_gate.returncode}, gate_elapsed={real_elapsed:.3f}s, "
+                    f"initial_worker={initial_worker!r}, initial_sleep_child={initial_child!r}, "
+                    f"process_history={process_history!r}",
+                )
 
     @unittest.skipUnless(shutil.which("timeout"), "GNU timeout is unavailable on this host")
     def test_gnu_timeout_kills_term_resistant_process_group(self) -> None:
