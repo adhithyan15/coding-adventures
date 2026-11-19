@@ -2,12 +2,18 @@
 //!
 //! This crate consumes only the existing exact-message retry base schedule,
 //! snapshots its retained transcript, and derives the client and server
-//! handshake traffic secrets into caller-owned wipe-on-drop storage.
+//! handshake traffic secrets into caller-owned wipe-on-drop storage. A second
+//! composition derives the server Finished key only from that exact retained
+//! server secret.
 
 #![forbid(unsafe_code)]
 
+use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk};
 use core::fmt;
-use tls13_cipher_suite_policy::SelectedCipherSuite;
+use tls13_cipher_suite_policy::{HkdfHash, SelectedCipherSuite};
+use tls13_finished::{
+    derive_finished_key, FinishedError, FinishedKey, FinishedKeyStorage, FinishedRole,
+};
 use tls13_handshake_traffic_secrets::{
     derive_handshake_traffic_secrets, HandshakeTrafficSecretError, HandshakeTrafficSecretStorage,
     HandshakeTrafficSecrets,
@@ -227,4 +233,146 @@ where
         evidence,
         traffic_secrets,
     })
+}
+
+/// Stable payload-free failures from exact retry server Finished-key binding.
+#[derive(Debug, Eq, PartialEq)]
+pub enum RetryServerFinishedKeyBindingError {
+    /// Caller-owned Finished-key storage selected the client sender role.
+    WrongEndpointRole,
+    /// Finished-key storage selected a suite different from the retained proof.
+    CipherSuiteMismatch,
+    /// The retained exact server secret could not be imported as one PRK.
+    SecretImport,
+    /// Repository-owned Finished-key derivation failed.
+    Finished(FinishedError),
+}
+
+impl fmt::Display for RetryServerFinishedKeyBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::WrongEndpointRole => {
+                "TLS 1.3 retry Finished-key storage selected the wrong endpoint role"
+            }
+            Self::CipherSuiteMismatch => {
+                "TLS 1.3 retry traffic secrets and Finished-key storage use different cipher suites"
+            }
+            Self::SecretImport => "TLS 1.3 retry server handshake traffic secret import failed",
+            Self::Finished(_) => "TLS 1.3 retry server Finished-key derivation failed",
+        })
+    }
+}
+
+impl std::error::Error for RetryServerFinishedKeyBindingError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Finished(error) => Some(error),
+            Self::WrongEndpointRole | Self::CipherSuiteMismatch | Self::SecretImport => None,
+        }
+    }
+}
+
+/// Server Finished key attached to one exact-message retry traffic-secret proof.
+///
+/// This value intentionally derives neither `Copy` nor `Clone` and retains the
+/// complete proof that supplied the exact server handshake traffic secret.
+pub struct BoundRetryServerFinishedKey<
+    'bound,
+    'key_storage,
+    'traffic_bound,
+    'traffic_storage,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    handshake_traffic_secrets:
+        &'bound BoundRetryHandshakeTrafficSecrets<'traffic_bound, 'traffic_storage, Evidence>,
+    finished_key: FinishedKey<'key_storage>,
+}
+
+impl<
+        'bound,
+        'key_storage,
+        'traffic_bound,
+        'traffic_storage,
+        Evidence: ExactRetryBaseSecrets + ?Sized,
+    >
+    BoundRetryServerFinishedKey<'bound, 'key_storage, 'traffic_bound, 'traffic_storage, Evidence>
+{
+    /// Borrow the complete exact-message retry traffic-secret proof.
+    #[must_use]
+    pub const fn handshake_traffic_secrets(
+        &self,
+    ) -> &'bound BoundRetryHandshakeTrafficSecrets<'traffic_bound, 'traffic_storage, Evidence> {
+        self.handshake_traffic_secrets
+    }
+
+    /// Borrow the server Finished key in caller-owned wipe-on-drop storage.
+    #[must_use]
+    pub const fn finished_key(&self) -> &FinishedKey<'key_storage> {
+        &self.finished_key
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for BoundRetryServerFinishedKey<'_, '_, '_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryServerFinishedKey")
+            .field("handshake_traffic_secrets", &"[RETAINED]")
+            .field("finished_key", &"[SECRET]")
+            .finish()
+    }
+}
+
+/// Derive the server Finished key only from exact retry traffic-secret proof.
+///
+/// Role and suite substitution fail before caller-owned Finished-key storage
+/// can be cleared or written. The server handshake traffic secret is selected
+/// only through the retained exact-message proof, imported under its selected
+/// suite, and delegated to the repository-owned fixed-label Finished boundary.
+pub fn bind_retry_server_finished_key<
+    'bound,
+    'key_storage,
+    'traffic_bound,
+    'traffic_storage,
+    Evidence,
+>(
+    handshake_traffic_secrets: &'bound BoundRetryHandshakeTrafficSecrets<
+        'traffic_bound,
+        'traffic_storage,
+        Evidence,
+    >,
+    storage: &'key_storage mut FinishedKeyStorage,
+) -> Result<
+    BoundRetryServerFinishedKey<'bound, 'key_storage, 'traffic_bound, 'traffic_storage, Evidence>,
+    RetryServerFinishedKeyBindingError,
+>
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    if storage.role() != FinishedRole::Server {
+        return Err(RetryServerFinishedKeyBindingError::WrongEndpointRole);
+    }
+    if storage.selected_suite() != handshake_traffic_secrets.traffic_secrets().selected_suite() {
+        return Err(RetryServerFinishedKeyBindingError::CipherSuiteMismatch);
+    }
+
+    let hash = fixed_hash(storage.selected_suite().parameters().hkdf_hash());
+    let server_secret = handshake_traffic_secrets.traffic_secrets().server_secret();
+    let server_prk = HkdfPrk::import_exact(hash, server_secret)
+        .map_err(|_| RetryServerFinishedKeyBindingError::SecretImport)?;
+    let finished_key = derive_finished_key(&server_prk, storage)
+        .map_err(RetryServerFinishedKeyBindingError::Finished)?;
+
+    Ok(BoundRetryServerFinishedKey {
+        handshake_traffic_secrets,
+        finished_key,
+    })
+}
+
+const fn fixed_hash(hash: HkdfHash) -> FixedHkdfHash {
+    match hash {
+        HkdfHash::Sha256 => FixedHkdfHash::Sha256,
+        HkdfHash::Sha384 => FixedHkdfHash::Sha384,
+    }
 }

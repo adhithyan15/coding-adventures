@@ -2,11 +2,13 @@
 name = "tls13-retry-handshake-traffic-secrets-binding"
 version = "0.1.0"
 edition = "2021"
-description = "Exact-message TLS 1.3 retry handshake traffic-secret binding"
+description = "Exact-message TLS 1.3 retry handshake traffic-secret and server Finished-key binding"
 license = "MIT"
 
 [dependencies]
+coding_adventures_hkdf = { path = "../hkdf" }
 tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-finished = { path = "../tls13-finished" }
 tls13-handshake-traffic-secrets = { path = "../tls13-handshake-traffic-secrets" }
 tls13-key-schedule = { path = "../tls13-key-schedule" }
 tls13-retry-key-schedule-binding = { path = "../tls13-retry-key-schedule-binding" }
