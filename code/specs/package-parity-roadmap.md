@@ -8,6 +8,22 @@ should have a pure implementation in each established language when practical.
 Platform, ABI, browser, firmware, and accelerator packages should instead have
 honest native implementations or thin tested wrappers.
 
+### Dart hash-functions child profile (2026-11-19)
+
+The existing `hash-functions-dart-java-kotlin-lane-parity` preparation is split
+into a Dart child, `hash-functions-dart-lane-parity`, for the next
+implementation tranche. Java and Kotlin remain pending under the existing
+umbrella. The source-level profile is [DT17b](DT17b-hash-functions-dart-profile.md).
+It fixes exact Dart and JavaScript integer behavior, byte and string domains,
+public result representations, explicit analysis samples, and the evidence
+needed on both Dart VM and Node. Production remains pure. Test-only fixture
+loading does not add runtime I/O.
+
+DT17b is documentary preparation only. Implementation must consume the shared
+DT17 vectors, execute public Dart APIs on VM and Node, and obtain independent
+review. No Dart Warrant engine or native proof is claimed. Java and Kotlin are
+not included in this tranche.
+
 This roadmap is the durable work queue for the autonomous package-parity PR
 loop. It is ordered by leverage: repair the inventory, finish nearly complete
 families, then classify and port sparse families in dependency-shaped waves.
