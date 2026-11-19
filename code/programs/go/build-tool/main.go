@@ -1208,6 +1208,8 @@ func hashPackageWithRepositoryInputs(
 	fallback func(discovery.Package) (string, error),
 ) (string, error) {
 	switch pkg.Name {
+	case "rust/fixed-point":
+		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, fixedPointInputPaths)
 	case "rust/game-clock":
 		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, gameClockInputPaths)
 	case "typescript/game-input-frame":

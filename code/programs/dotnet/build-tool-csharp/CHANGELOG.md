@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - fixed-point source boundary
+
+- Added `rust/fixed-point` to the exact repository-source boundary for the Q16.16 Warrant and corpus, Rust Cargo target config, and workspace lockfile. Extended the root Cargo-config exception only for that exact package and added its source-collection fixture to the native test roster.
+
 ## Unreleased - source-input boundary sync (GAME10 TypeScript clock)
 
 - Added `code/packages/typescript/game-clock` to `typescript-workspace-configuration`.

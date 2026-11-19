@@ -1082,3 +1082,21 @@ func TestRepositoryInputConsumersPlan(t *testing.T) {
 		t.Fatal("a failed plan created its output file")
 	}
 }
+
+func TestFixedPointInputsSelectOnlyRustConsumer(t *testing.T) {
+	packages := []discovery.Package{{Name: "rust/fixed-point", Language: "rust"}, {Name: "rust/game-clock", Language: "rust"}}
+	for _, input := range fixedPointInputPaths {
+		selected, err := repositoryInputConsumersForChange([]string{input}, packages, "rust")
+		if err != nil || !selected["rust/fixed-point"] || len(selected) != 1 {
+			t.Fatalf("Rust input %s selected %v, err %v", input, selected, err)
+		}
+	}
+	if !sort.StringsAreSorted(fixedPointInputPaths) {
+		t.Fatalf("fixed-point inputs are not byte-sorted: %v", fixedPointInputPaths)
+	}
+	for _, path := range []string{".cargo/config.toml.bak", "code/packages/rust/Cargo.lock.bak", "code/packages/rust/fixed-point/../../Cargo.toml", "code/specs/fixtures/fixed-point-q16-v10/cases.json", "code/specs/fixed-point.warrant.bak"} {
+		if isFixedPointInput(path) {
+			t.Errorf("fixed-point selector accepted lookalike %q", path)
+		}
+	}
+}

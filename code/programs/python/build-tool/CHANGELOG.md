@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - fixed-point repository input selection
+
+- Added exact fixed-point Warrant and Q16.16 corpus routing plus the exact Cargo configuration, workspace manifest, and lockfile consumer relation to process-free diff selection. Nearby lookalikes remain unselected.
+
 All notable changes to this project will be documented in this file.
 
 ## Unreleased - BUILD-001 registry update

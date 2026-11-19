@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - fixed-point source boundary fixture
+
+- Updated the F# facade neutral source-collection case roster to consume the new exact fixed-point repository-input fixture through the shared .NET engine.
+
 ## Unreleased
 
 - Fix two F# conformance tests to pass string element types to xUnit array

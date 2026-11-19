@@ -94,6 +94,10 @@ The change detector uses NUL-delimited Git paths, preserving non-ASCII names
 without quote-path escaping before fixture classification.
 The [CI-gate registry](../../../specs/ci-gate-registry.md) pins this relation.
 
+## Rust fixed-point cache inputs
+
+The `rust/fixed-point` package adds an exact repository-input relation for its Q16.16 Warrant model and named cases. The same six paths are used for change selection and package hashing: the root and Rust-workspace Cargo target configs, the workspace `Cargo.toml` and `Cargo.lock`, `code/specs/fixed-point.warrant`, and `code/specs/fixtures/fixed-point-q16-v1/cases.json`. The build tool tests the changed package against a persisted cache in an isolated repository copy; nearby names and untracked credentials remain outside the cache identity. Shared Cargo metadata also selects the existing Rust game-clock consumer.
+
 ## Portable source hashing
 
 Extension and declared-source collection share the language-neutral v1 rules.

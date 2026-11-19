@@ -411,3 +411,55 @@ def test_graph_and_diff_inputs_are_immutable_snapshots() -> None:
     )
     source_globs.append("tests/**/*.py")
     assert package.source_globs == ("src/**/*.py",)
+
+
+def test_fixed_point_exact_repository_inputs_select_only_declared_consumers() -> None:
+    boundary = _boundary()
+    packages = (
+        PackageSpec(
+            "rust/fixed-point",
+            "code/packages/rust/fixed-point",
+            "strict_globs",
+            (),
+        ),
+        PackageSpec(
+            "rust/game-clock", "code/packages/rust/game-clock", "strict_globs", ()
+        ),
+    )
+    expected = {
+        ".cargo/config.toml": ("rust/fixed-point", "rust/game-clock"),
+        "code/packages/rust/.cargo/config.toml": (
+            "rust/fixed-point",
+            "rust/game-clock",
+        ),
+        "code/packages/rust/Cargo.lock": ("rust/fixed-point", "rust/game-clock"),
+        "code/packages/rust/Cargo.toml": ("rust/fixed-point", "rust/game-clock"),
+        "code/specs/fixed-point.warrant": ("rust/fixed-point",),
+        "code/specs/fixtures/fixed-point-q16-v1/cases.json": ("rust/fixed-point",),
+    }
+    for changed_path, consumers in expected.items():
+        result = evaluate_diff_selection(
+            DiffSelectionInput(
+                packages=packages,
+                edges=(),
+                forced_packages=(),
+                unknown_path_policy="error",
+                changed_paths=(changed_path,),
+                boundary_sha256=boundary.digest(),
+                boundary=boundary,
+            )
+        )
+        assert result.error_code == "", changed_path
+        assert result.changed_packages == consumers, changed_path
+    lookalike = evaluate_diff_selection(
+        DiffSelectionInput(
+            packages=packages,
+            edges=(),
+            forced_packages=(),
+            unknown_path_policy="error",
+            changed_paths=("code/specs/fixed-point.warrant.bak",),
+            boundary_sha256=boundary.digest(),
+            boundary=boundary,
+        )
+    )
+    assert lookalike.error_code == "DIFF_UNKNOWN_PATH"

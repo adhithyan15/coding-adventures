@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - fixed-point source boundary
+
+- Added the exact `rust/fixed-point` Warrant and Q16.16 cases inputs, workspace lock authorization, and narrow root Cargo-config exception to the generated repository-boundary projection. The native source-collection suite now reads the fixed-point exact-input case.
+
 ## Unreleased - source-input boundary sync (GAME10 TypeScript clock)
 
 - Added `code/packages/typescript/game-clock` to `typescript-workspace-configuration`.

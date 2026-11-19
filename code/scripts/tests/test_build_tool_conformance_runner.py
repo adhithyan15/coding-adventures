@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 206)
+        self.assertEqual(summary["case_count"], 207)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -160,8 +160,8 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["conformance_status"], "not-run")
         self.assertEqual(summary["source_input_language_count"], 23)
         self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
-        self.assertEqual(summary["repository_source_boundary_count"], 23)
-        self.assertEqual(summary["repository_source_input_count"], 36)
+        self.assertEqual(summary["repository_source_boundary_count"], 25)
+        self.assertEqual(summary["repository_source_input_count"], 40)
         self.assertEqual(len(summary["repository_source_boundary_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
@@ -445,15 +445,15 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(
             summary,
             {
-                "boundary_count": 23,
-                "input_count": 36,
-                "scope_count": 512,
-                "authorization_count": 531,
+                "boundary_count": 25,
+                "input_count": 40,
+                "scope_count": 514,
+                "authorization_count": 535,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "8f9d93a5a7ee618baf31de0cc225b3f834121a7f673e0d8de920b70520a9745a",
+            "3341219ab2c7bce293f8f2c6c0da5d4dbcb99784d2daf8f3643cd9cb17669d0f",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         game_input_frame_inputs = by_id[
@@ -832,6 +832,18 @@ class CorpusTests(unittest.TestCase):
                 "REPOSITORY_SOURCE_ROLE_INVALID",
             )
         )
+        nearby_fixed_point_cargo_input = copy.deepcopy(canonical)
+        boundary_by_id(
+            nearby_fixed_point_cargo_input,
+            "repository-rust-fixed-point-q16-inputs",
+        )["inputs"][0]["path"] = ".cargo/config.toml.bak"
+        mutations.append(
+            (
+                "nearby-fixed-point-root-cargo-input",
+                nearby_fixed_point_cargo_input,
+                "REPOSITORY_SOURCE_ROLE_INVALID",
+            )
+        )
         nearby_game_clock_cargo_input = copy.deepcopy(canonical)
         boundary_by_id(
             nearby_game_clock_cargo_input, "repository-rust-game-clock-inputs"
@@ -1040,7 +1052,7 @@ class CorpusTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, expected_code)
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 485),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 487),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
@@ -1051,7 +1063,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "REPOSITORY_SOURCE_SCOPE_LIMIT")
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 487),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 489),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
@@ -5101,7 +5113,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 206)
+        self.assertEqual(summary["case_count"], 207)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

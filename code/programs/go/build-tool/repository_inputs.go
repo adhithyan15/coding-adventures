@@ -213,7 +213,15 @@ var (
 	rngCorpusPaths           = []string{"code/specs/fixtures/rng-v1"}
 	fenwickTreeContractPaths = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
 	dt17HashFunctionsPaths   = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
-	gameClockInputPaths      = []string{
+	fixedPointInputPaths     = []string{
+		".cargo/config.toml",
+		"code/packages/rust/.cargo/config.toml",
+		"code/packages/rust/Cargo.lock",
+		"code/packages/rust/Cargo.toml",
+		"code/specs/fixed-point.warrant",
+		"code/specs/fixtures/fixed-point-q16-v1/cases.json",
+	}
+	gameClockInputPaths = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
 		"code/packages/rust/Cargo.lock",
@@ -596,6 +604,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 		paths:    rngCorpusPaths,
+	},
+	{
+		name:     "rust/fixed-point",
+		language: "rust",
+		inputs:   "the GBL-020a1 Warrant model, v1 corpus, and exact Cargo workspace/build configuration",
+		matches:  isFixedPointInput,
+		paths:    fixedPointInputPaths,
 	},
 	{
 		name:     "rust/game-clock",
@@ -1553,6 +1568,17 @@ func isKilnToolchainPinInput(changed string) bool {
 //	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
 func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
+}
+
+// isFixedPointInput selects only the exact repository-owned inputs consumed by
+// the Rust fixed-point package. Nearby versions and lookalikes remain unselected.
+func isFixedPointInput(changed string) bool {
+	for _, input := range fixedPointInputPaths {
+		if changed == input {
+			return true
+		}
+	}
+	return false
 }
 
 // isGameClockInput selects the exact repository-owned files hashed for the

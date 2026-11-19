@@ -156,6 +156,10 @@ Swift coverage enforce those boundaries. Source hashing applies its complete
 related registry separately because discovery-only directories are still
 eligible package source.
 
+## Fixed-point repository inputs
+
+The checked repository source boundary includes one exact `rust/fixed-point` scope for the Warrant model and Q16.16 cases, plus the already scoped root/Rust Cargo target configs and workspace lockfile. The production hasher includes those authorized tracked files in the package identity; the native source-collection fixture verifies the selected paths and excludes nearby versions, backups, and an untracked credentials candidate. The Rust workspace manifest remains covered by its existing Rust-package ancestor authorization.
+
 ## Portable source hashing
 
 Source collection has its own exact generated-output boundary: `.git`, `.hg`,

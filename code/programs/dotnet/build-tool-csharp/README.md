@@ -37,6 +37,10 @@ dotnet run -- --language dotnet --force
 dotnet run -- --emit-plan --plan-file build-plan.json
 ```
 
+## Fixed-point repository inputs
+
+The shared source hasher recognizes an exact `rust/fixed-point` repository boundary for its Warrant model, Q16.16 cases, root and Rust Cargo target configs, and workspace lockfile. The workspace Cargo manifest remains covered by the existing Rust-package ancestor authorization. Its root Cargo-config exception applies only to the fixed-point package and the already registered consumers. The source-collection test reads the shared fixture and verifies that backup, neighboring-version, and untracked credential candidates are excluded.
+
 ## Design notes
 
 - `GraphDiffCore.EvaluateGraph(GraphInput)` and
