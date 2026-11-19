@@ -108,7 +108,7 @@ func renderMarkdown(s *CensusSummary) string {
 	w("## Verdict\n\n")
 	cc := s.CrossCheck
 	status := "ok"
-	if cc.Mismatches > 0 || cc.Allowed > 0 {
+	if cc.Mismatches > 0 || cc.Allowed > 0 || s.Problems["parse_panic"] > 0 {
 		status = "FAILED"
 	}
 	w("- cross-check: %s (traces %d, accepted %d, refused %d, mismatches %d, allowed divergences %d)\n", status, cc.Traces, cc.Accepted, cc.Refused, cc.Mismatches, cc.Allowed)

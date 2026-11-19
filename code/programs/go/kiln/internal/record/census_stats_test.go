@@ -276,6 +276,15 @@ func TestMarkdownLanguageAndKindAreCodeSpans(t *testing.T) {
 	}
 }
 
+// A parse panic exits 4, so the Verdict must say FAILED, not ok.
+func TestMarkdownVerdictFailedOnParsePanic(t *testing.T) {
+	s := &CensusSummary{Problems: map[string]int{"parse_panic": 1}}
+	md, _, _ := RenderCensusMarkdown(s)
+	if !strings.Contains(md, "cross-check: FAILED") {
+		t.Errorf("a parse_panic did not fail the verdict:\n%s", md)
+	}
+}
+
 // Traces that were timed but not cross-checked (too large) are named in the
 // Verdict section, beside the mismatch count, so "ok" cannot be read as covering them.
 func TestMarkdownVerdictShowsSkippedTooLarge(t *testing.T) {
