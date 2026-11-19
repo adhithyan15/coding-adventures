@@ -27,6 +27,18 @@ All notable changes to this package are documented here.
 - Tests: `bounds` (7), `publish` (18), CC09 controls (9) in `component`, CC10 controls (5) in `contract`; the
   component fixtures name their contract and carry `op` and `bound` rows.
 
+### Fixed (security review of VOS-039b-2b)
+
+- `check-publish` printed author-controlled `vos-*` directory names raw, so a directory named with a newline or an
+  ANSI escape could forge report lines; every name in PB01, PB02 and the `exempt` note now goes through `esc()`.
+  Test (unix only: Windows forbids such names).
+- The kind exemption was the author's word alone (a tooling crate escaped PB01 by adding a one-line `vos.toml`).  A
+  kind-exempt crate is now exempt only when `repository_inputs.go` registers it (`vosImplementationRow` or
+  `vosContractRow`, read by CC05's own scanner); otherwise the new code **PB03**.  A missing or unreadable row file
+  is no verdict (read only when a crate claims an exempt kind).
+- CC10 stands alone: it also refuses a top-level `[patch]`, `[replace]` or `[workspace]` and a `[lib] crate-type`
+  naming `proc-macro` (SH15 caught these too).
+
 ### Fixed (security review of VOS-039b-2a)
 
 - `check_enums`: the constructor-written-with-braces lookup is a precomputed map (enum name to constructor set), not

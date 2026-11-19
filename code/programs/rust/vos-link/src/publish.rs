@@ -17,21 +17,34 @@
 //!   without a `Cargo.toml` is not a crate.
 //! * **`PB01`** the crate does not say `publish = false` (the literal, in `[package]`).
 //! * **`PB02`** its `Cargo.toml` or `vos.toml` could not be read as TOML (the rule could not decide).
+//! * **`PB03`** its `vos.toml` claims kind production, reference or contract but the crate is not
+//!   registered in the build tool's `repositoryInputConsumers` by a `vosImplementationRow` or
+//!   `vosContractRow` line (see "The kind is the author's word" below).
 //! * **No verdict** (exit 2): a symlinked crate directory or `Cargo.toml`, an unreadable directory,
-//!   a file over its cap.  A symlink could make the sweep judge a crate other than the one reviewed.
+//!   a file over its cap, a missing or unreadable `repository_inputs.go` when a crate needs it.  A symlink could make the sweep judge a crate other than the one reviewed.
 //!
-//! The kind is the author's own word in `vos.toml`, as everywhere in the kit (VOS02 R6: it is checked
-//! against the document and the shape rules); exempting `production` does not let a crate escape the
-//! rule by lying, because a crate that claims a kind it is not fails its own checks.  `Cargo.toml` is
-//! read with the same reader as `check-component` CC06, so `publish = false` in a table, an inline
-//! table or a dotted key is the same path.
+//! ## The kind is the author's word, so the exemption needs a second key
+//!
+//! The kind is the author's own word in `vos.toml`.  A tooling crate that added a one-line `vos.toml`
+//! saying `kind = "production"` would escape PB01 if the kind alone exempted it: nothing runs
+//! `check-component` on a crate that nobody registered.  So a kind-exempt crate is exempt ONLY when
+//! it is also registered in `code/programs/go/build-tool/repository_inputs.go` (a `vosImplementationRow`
+//! or `vosContractRow` line inside `repositoryInputConsumers`; `check-component` then runs in its BUILD
+//! and judges whether the claim is true).  The row is read by the SAME scanner as CC05
+//! ([`row_in_consumers_with`]: comments and raw strings do not count).  A claim without a row is PB03.
+//!
+//! Every name printed in a message is escaped with [`esc`]: a directory is author-controlled, and one
+//! named `vos-x<newline>result: PASS` must not forge a report line.
+//!
+//! `Cargo.toml` is read with the same reader as `check-component` CC06, so `publish = false` in a
+//! table, an inline table or a dotted key is the same path.
 
 use std::path::{Path, PathBuf};
 
 use vos_shape_check::manifest::{parse_vos_toml, Kind, CARGO_TOML_MAX_BYTES, VOS_TOML_MAX_BYTES};
 use vos_shape_check::toml::{self as toml_reader, Value};
 
-use crate::component::read_text;
+use crate::component::{read_text, row_in_consumers_with, BUILD_TOOL_ROWS};
 use crate::error::{Finding, NoVerdict};
 use crate::fsio::{absolute_plain, ensure_plain_dirs, esc, q};
 use crate::ops::Outcome;
@@ -96,6 +109,8 @@ pub fn check_publish(root_arg: Option<&Path>) -> Result<Outcome, NoVerdict> {
     }
     let mut out = Outcome::default();
     let (mut swept, mut exempt) = (0usize, Vec::new());
+    // The build tool's rows, read the first time a crate claims an exempt kind.
+    let mut rows: Option<String> = None;
     for scope in SCOPES {
         let dir = scope.iter().fold(root.clone(), |p, s| p.join(s));
         for name in prefixed_children(&dir, MAX_ENTRIES)? {
@@ -118,7 +133,14 @@ pub fn check_publish(root_arg: Option<&Path>) -> Result<Outcome, NoVerdict> {
                 continue; // no Cargo.toml: not a crate (a fixture tree, a stray directory)
             };
             swept += 1;
-            judge(&mut out, &mut exempt, &crate_dir, &shown, &cargo)?;
+            let ctx = Judged {
+                root: &root,
+                crate_dir: &crate_dir,
+                name: &name,
+                shown: &shown,
+                cargo: &cargo,
+            };
+            judge(&mut out, &mut exempt, &mut rows, &ctx)?;
         }
     }
     out.header = format!("root {}, {swept} crates", q(&root));
@@ -178,46 +200,97 @@ pub fn prefixed_children(dir: &Path, max: usize) -> Result<Vec<String>, NoVerdic
     Ok(names)
 }
 
+/// Where one crate is, for [`judge`].
+struct Judged<'a> {
+    root: &'a Path,
+    crate_dir: &'a Path,
+    /// The directory name (also the crate name the build tool's rows use).
+    name: &'a str,
+    /// The path shown in a message, relative to the root.
+    shown: &'a str,
+    cargo: &'a str,
+}
+
+/// Is `name` registered in the build tool's consumer rows?  `rows` caches the file: it is read the
+/// first time and never when no crate claims an exempt kind.  A missing or unreadable file is no
+/// verdict (the rule could not decide), never a pass.
+fn registered(root: &Path, rows: &mut Option<String>, name: &str) -> Result<bool, NoVerdict> {
+    if rows.is_none() {
+        let path = root.join(BUILD_TOOL_ROWS);
+        let text = read_text(&path, ROWS_MAX_BYTES)?.ok_or_else(|| {
+            NoVerdict::new(format!(
+                "{}: not found (check-publish needs it to confirm a kind-exempt crate is registered)",
+                q(&path)
+            ))
+        })?;
+        *rows = Some(text);
+    }
+    let src = rows.as_deref().unwrap_or_default();
+    Ok(row_in_consumers_with(src, "vosImplementationRow", name)
+        || row_in_consumers_with(src, "vosContractRow", name))
+}
+
+/// The cap on the build tool's row file (the same as CC05's).
+const ROWS_MAX_BYTES: usize = 4 * 1024 * 1024;
+
 /// Judge one crate.
 fn judge(
     out: &mut Outcome,
     exempt: &mut Vec<String>,
-    crate_dir: &Path,
-    shown: &str,
-    cargo: &str,
+    rows: &mut Option<String>,
+    c: &Judged<'_>,
 ) -> Result<(), NoVerdict> {
-    let kind = match read_text(&crate_dir.join("vos.toml"), VOS_TOML_MAX_BYTES)? {
+    let shown = c.shown;
+    let kind = match read_text(&c.crate_dir.join("vos.toml"), VOS_TOML_MAX_BYTES)? {
         None => None,
         Some(text) => match parse_vos_toml(&text) {
             Ok(v) => v.kind,
             Err((line, why)) => {
                 out.findings.push(Finding::new(
                     "PB02",
-                    format!("{shown}/vos.toml:{line}: {}", esc(&why)),
+                    format!(
+                        "{}:{line}: {}",
+                        esc(&format!("{shown}/vos.toml")),
+                        esc(&why)
+                    ),
                 ));
                 return Ok(());
             }
         },
     };
-    if matches!(
-        kind,
-        Some(Kind::Production | Kind::Reference | Kind::Contract)
-    ) {
-        exempt.push(format!("`{}`", shown.rsplit('/').next().unwrap_or(shown)));
+    if let Some(k @ (Kind::Production | Kind::Reference | Kind::Contract)) = kind {
+        if registered(c.root, rows, c.name)? {
+            exempt.push(esc(c.name));
+        } else {
+            out.findings.push(Finding::new(
+                "PB03",
+                format!(
+                    "{}: claims kind {} but is not a registered VOS component ({BUILD_TOOL_ROWS} has no `vosImplementationRow` or `vosContractRow` line for it); either register it (check-component runs in its BUILD) or set publish = false",
+                    esc(shown),
+                    k.name()
+                ),
+            ));
+        }
         return Ok(());
     }
-    match says_publish_false(cargo) {
+    match says_publish_false(c.cargo) {
         Ok(true) => {}
         Ok(false) => out.findings.push(Finding::new(
             "PB01",
             format!(
-                "{shown}/Cargo.toml: `publish = false` is missing from [package]; a crate of kind {} is evidence or tooling and must not be publishable (VOS-D082, VOS-D104)",
+                "{}: `publish = false` is missing from [package]; a crate of kind {} is evidence or tooling and must not be publishable (VOS-D082, VOS-D104)",
+                esc(&format!("{shown}/Cargo.toml")),
                 kind.map_or("(none)", Kind::name)
             ),
         )),
         Err(e) => out.findings.push(Finding::new(
             "PB02",
-            format!("{shown}/Cargo.toml:{}: {}", e.line, esc(&e.message)),
+            format!(
+                "{}:{}: {}",
+                esc(&format!("{shown}/Cargo.toml")),
+                e.line,
+                esc(&e.message)
+            ),
         )),
     }
     Ok(())

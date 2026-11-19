@@ -1342,6 +1342,57 @@ fn cc10_control_a_build_script_a_build_key_and_a_proc_macro_are_refused() {
 }
 
 #[test]
+fn cc10_control_patch_replace_workspace_and_crate_type_proc_macro_are_refused() {
+    for (label, extra, shown) in [
+        (
+            "cc10-patch",
+            "\n[patch.crates-io]\nx = { path = \"../evil\" }\n",
+            "`\"patch\"`",
+        ),
+        (
+            "cc10-replace",
+            "\n[replace]\n\"x:1.0.0\" = { path = \"../evil\" }\n",
+            "`\"replace\"`",
+        ),
+        (
+            "cc10-workspace",
+            "\n[workspace]\nmembers = [\"../evil\"]\n",
+            "`\"workspace\"`",
+        ),
+        (
+            "cc10-workspace-deps",
+            "\n[workspace.dependencies]\nx = \"1\"\n",
+            "`\"workspace\"`",
+        ),
+    ] {
+        let r = with_manifest(label, extra);
+        only(&cc(&r), "CC10", shown);
+    }
+    let r = component("cc10-crate-type");
+    r.edit(
+        &pkg_path("Cargo.toml"),
+        "[lib]\n",
+        "[lib]\ncrate-type = [\"rlib\", \"proc-macro\"]\n",
+    );
+    only(&cc(&r), "CC10", "lib.crate-type");
+    let r = component("cc10-crate-type-scalar");
+    r.edit(
+        &pkg_path("Cargo.toml"),
+        "[lib]\n",
+        "[lib]\ncrate_type = \"proc-macro\"\n",
+    );
+    only(&cc(&r), "CC10", "lib.crate_type");
+    // An ordinary crate type is fine.
+    let r = component("cc10-crate-type-ok");
+    r.edit(
+        &pkg_path("Cargo.toml"),
+        "[lib]\n",
+        "[lib]\ncrate-type = [\"rlib\"]\n",
+    );
+    assert!(cc(&r).findings.is_empty());
+}
+
+#[test]
 fn cc10_an_unreadable_manifest_is_no_verdict_not_a_pass() {
     let r = component("cc10-unreadable");
     r.write(&pkg_path("Cargo.toml"), "[package\nname = \n");

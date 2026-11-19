@@ -895,7 +895,7 @@ over its cap) is *no verdict*, exit 2.
 | `CC07` | The coverage declaration (VOS-D070) | `vos.toml` has no `coverage-floor`, or it is below 95. The BUILD line that enforces it is part of the canonical region (`CC03`) |
 | `CC08` | The evidence manifest | see below |
 | `CC09` | `bound` rows against the ceilings (VOS-039b-2b, VOS-D055) | see below |
-| `CC10` | The dependencies and build of a contract crate (VOS-D112), kind `contract` only | `Cargo.toml` has an entry in `[dependencies]`, `[build-dependencies]` or any `[target.*.dependencies]` table, a `build` key or a `build.rs`, or a `[lib]` `proc-macro` that is not the literal `false` |
+| `CC10` | The dependencies and build of a contract crate (VOS-D112), kind `contract` only | `Cargo.toml` has an entry in `[dependencies]`, `[build-dependencies]` or any `[target.*.dependencies]` table, a `build` key or a `build.rs`, a `[lib]` `proc-macro` that is not the literal `false`, a `[lib]` `crate-type` naming `proc-macro`, or a top-level `[patch]`, `[replace]` or `[workspace]` table |
 
 **CC08, the manifest, bound to the document and the source.** `evidence/test-manifest.json`
 is read by the repository's `bounded-json`. It must have schema `warrant-test-evidence-v1`;
@@ -1106,13 +1106,20 @@ Negative controls, each in a fixture crate: `steps <= 161` on `insert_img` only;
 row; a deleted `bound remove_out` block (a ceiling operation with no operation); a non-literal bound; and the
 passing cases (a `reference` crate with no rows; an `alpha_w` row above every ceiling).
 
-**The sweep, `vos-link check-publish [--root R]` (VOS-D104, codes PB01 and PB02).** `check-component` judges
+**The sweep, `vos-link check-publish [--root R]` (VOS-D104, codes PB01, PB02 and PB03).** `check-component` judges
 implementation and contract crates; the evidence-only crates (a check program, a probe, the tooling itself)
 are nothing to it, and `publish = false` (VOS-D082) used to be applied by hand. The sweep is over the DIRECT
 children named `vos-*` of `code/packages/rust` and `code/programs/rust` that hold a `Cargo.toml` (no recursion:
 a fixture tree has no `Cargo.toml` of its own at that level). A crate's `vos.toml` is read with the shape
 checker's reader; kinds `production`, `reference` and `contract` are EXEMPT, with a note that the publish
-policy of a shipped crate is undecided and belongs to the release gate (that half of VOS-D104 stays open).
+policy of a shipped crate is undecided and belongs to the release gate (that half of VOS-D104 stays open),
+but ONLY when the crate is also registered in `code/programs/go/build-tool/repository_inputs.go` by a
+`vosImplementationRow("<crate>")` or `vosContractRow("<crate>")` line inside `repositoryInputConsumers` (the
+scanner of CC05, so comments and raw strings do not count): the kind is the author's word, and a tooling crate
+must not escape PB01 with a one-line `vos.toml`. A kind claim without a row is PB03 (register it, so
+`check-component` runs in its BUILD, or set `publish = false`); a missing or unreadable row file, when a crate
+needs it, is no verdict. Every directory name printed in a message is escaped (`esc`), so a hostile name cannot
+forge a report line.
 Every other crate (kind `any`, no kind, no `vos.toml`) must say `publish = false` in `[package]` (read with the
 `toml_reader`, as CC06 does): PB01 when it is missing or not the literal `false`; PB02 when its `Cargo.toml` or
 `vos.toml` cannot be read as TOML. A symlinked crate directory is NO VERDICT (exit 2). The sweep runs as one
@@ -1125,8 +1132,9 @@ of the crate's own text: a path dependency could supply an attribute macro (`#[e
 derive (`#[derive(evil::Gen)]`) that rewrites a command enum after SH19 judged it. Two closures, each fail
 closed. (1) `check-component` CC10, kind `contract`: `Cargo.toml` has NO entry in `[dependencies]`,
 `[build-dependencies]` or a `[target.*.dependencies]` table (empty tables are fine; the real crate has an empty
-`[dependencies]` with a comment), no `build` key (`package.build`) and no `build.rs`, and a `[lib]` `proc-macro`
-is absent or `false`. `[dev-dependencies]` are allowed (they run in tests only, SH12 judges that allowlist; the
+`[dependencies]` with a comment), no `build` key (`package.build`) and no `build.rs`, a `[lib]` `proc-macro`
+absent or `false`, no `[lib]` `crate-type` naming `proc-macro`, and no top-level `[patch]`, `[replace]` or
+`[workspace]` (each can redirect or inherit code, so CC10 stands alone and does not lean on SH15). `[dev-dependencies]` are allowed (they run in tests only, SH12 judges that allowlist; the
 real contract crate has none). (2) SH19 (h): in a contract crate every attribute, outer or inner, is one of a
 closed list: `derive` whose arguments are only the BARE names `Copy`, `Clone`, `Debug`, `PartialEq`, `Eq`,
 `PartialOrd`, `Ord`, `Hash`, `Default`; `repr` with arguments from `u8`, `C`, `transparent`; `no_std`,

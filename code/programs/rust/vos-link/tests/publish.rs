@@ -33,6 +33,22 @@ fn krate(r: &Repo, dir: &str, name: &str, cargo_extra: &str, vos: Option<&str>) 
     }
 }
 
+const ROWS: &str = "code/programs/go/build-tool/repository_inputs.go";
+
+/// Write the build tool's row file with the given `(function, crate)` rows in the consumers slice.
+fn register(r: &Repo, rows: &[(&str, &str)]) {
+    let mut src = String::from(
+        "package main\n\nvar (\n\trepositoryInputConsumers = []repositoryInputConsumer{\n",
+    );
+    for (f, c) in rows {
+        src.push_str(&format!("\t\t{f}(\"{c}\"),\n"));
+    }
+    src.push_str("\t}\n)\n");
+    // The slice ends at a line that is exactly `}`.
+    let src = src.replace("\t}\n)\n", "}\n)\n");
+    r.write(ROWS, src);
+}
+
 fn sweep(r: &Repo) -> Outcome {
     check_publish(Some(&r.root)).expect("a verdict")
 }
@@ -57,6 +73,14 @@ fn an_empty_tree_and_the_exempt_kinds_pass_with_the_policy_note() {
     let o = sweep(&r);
     assert!(o.findings.is_empty(), "{}", show(&o));
     assert!(o.header.contains("0 crates"), "{}", o.header);
+    register(
+        &r,
+        &[
+            ("vosImplementationRow", "vos-a"),
+            ("vosImplementationRow", "vos-b"),
+            ("vosContractRow", "vos-c"),
+        ],
+    );
     for (kind, name) in [
         ("production", "vos-a"),
         ("reference", "vos-b"),
@@ -77,7 +101,7 @@ fn an_empty_tree_and_the_exempt_kinds_pass_with_the_policy_note() {
         .iter()
         .find(|n| n.contains("publish policy undecided, release gate"))
         .unwrap();
-    for n in ["`vos-a`", "`vos-b`", "`vos-c`"] {
+    for n in ["\"vos-a\"", "\"vos-b\"", "\"vos-c\""] {
         assert!(note.contains(n), "{n} in {note}");
     }
 }
@@ -96,7 +120,7 @@ fn control_an_evidence_only_crate_without_the_flag_is_pb01() {
         only(
             &o,
             "PB01",
-            "code/programs/rust/vos-x/Cargo.toml: `publish = false` is missing from [package]",
+            "\"code/programs/rust/vos-x/Cargo.toml\": `publish = false` is missing from [package]",
         );
     }
     let r = tree("pub-pb01-kindname");
@@ -146,6 +170,7 @@ fn the_literal_false_in_package_passes_in_every_toml_spelling() {
 #[test]
 fn control_a_production_crate_without_the_flag_passes_only_because_it_is_exempt() {
     let r = tree("pub-prod");
+    register(&r, &[("vosImplementationRow", "vos-x")]);
     krate(
         &r,
         PKG,
@@ -192,7 +217,11 @@ fn scope_directories_without_a_cargo_toml_and_other_names_are_not_swept() {
 fn pb02_an_unreadable_cargo_toml_or_vos_toml_is_pb02_not_a_pass() {
     let r = tree("pub-pb02a");
     krate(&r, PKG, "vos-x", "publish = false\n[[", None);
-    only(&sweep(&r), "PB02", "code/packages/rust/vos-x/Cargo.toml:");
+    only(
+        &sweep(&r),
+        "PB02",
+        "\"code/packages/rust/vos-x/Cargo.toml\":",
+    );
     let r = tree("pub-pb02b");
     krate(
         &r,
@@ -201,7 +230,11 @@ fn pb02_an_unreadable_cargo_toml_or_vos_toml_is_pb02_not_a_pass() {
         "publish = false",
         Some("kind = \"nonsense\"\n"),
     );
-    only(&sweep(&r), "PB02", "code/packages/rust/vos-x/vos.toml:1");
+    only(
+        &sweep(&r),
+        "PB02",
+        "\"code/packages/rust/vos-x/vos.toml\":1",
+    );
     // A duplicate key is a parse failure of the reader (no silent last-wins).
     let r = tree("pub-pb02c");
     krate(&r, PKG, "vos-x", "publish = true\npublish = false", None);
@@ -298,7 +331,7 @@ fn the_real_repository_passes_from_the_crates_own_directory() {
         .iter()
         .find(|n| n.contains("publish policy undecided"))
         .unwrap();
-    assert!(note.contains("`vos-sched-fp-bitmap`") && note.contains("`vos-sched-contract`"));
+    assert!(note.contains("\"vos-sched-fp-bitmap\"") && note.contains("\"vos-sched-contract\""));
 }
 
 #[test]
@@ -324,7 +357,7 @@ fn the_command_line_sweeps_and_exits_0_1_2() {
     assert_eq!(o.status.code(), Some(1));
     let text = String::from_utf8_lossy(&o.stdout);
     assert!(
-        text.contains("PB01 code/packages/rust/vos-x/Cargo.toml"),
+        text.contains("PB01 \"code/packages/rust/vos-x/Cargo.toml\""),
         "{text}"
     );
     assert!(text.contains("result: FAIL, 1 findings"), "{text}");
@@ -384,4 +417,102 @@ fn the_command_line_outside_any_repository_is_no_verdict() {
         err.contains("not inside code/packages/rust or code/programs/rust"),
         "{err}"
     );
+}
+
+#[test]
+fn pb03_a_kind_claim_without_a_registered_row_is_not_exempt() {
+    for kind in ["production", "reference", "contract"] {
+        // No row at all, a row of another crate, a commented row and a row of the wrong shape.
+        let r = tree(&format!("pub-pb03-{kind}"));
+        krate(
+            &r,
+            PROG,
+            "vos-x",
+            "",
+            Some(&format!("class = \"K\"\nkind = \"{kind}\"\n")),
+        );
+        register(&r, &[("vosImplementationRow", "vos-other")]);
+        let o = sweep(&r);
+        only(
+            &o,
+            "PB03",
+            &format!("claims kind {kind} but is not a registered VOS component"),
+        );
+        assert!(o.findings[0].message.contains("set publish = false"));
+        assert!(
+            o.notes.iter().all(|n| !n.contains("exempt")),
+            "{}",
+            show(&o)
+        );
+    }
+    let r = tree("pub-pb03-comment");
+    krate(&r, PROG, "vos-x", "", Some("kind = \"production\"\n"));
+    r.write(
+        ROWS,
+        "package main\nvar repositoryInputConsumers = []repositoryInputConsumer{\n\t// vosImplementationRow(\"vos-x\"),\n}\n",
+    );
+    only(&sweep(&r), "PB03", "vos-x");
+    // Either row function registers it, whatever the kind.
+    for f in ["vosImplementationRow", "vosContractRow"] {
+        let r = tree("pub-pb03-ok");
+        krate(&r, PROG, "vos-x", "", Some("kind = \"production\"\n"));
+        register(&r, &[(f, "vos-x")]);
+        let o = sweep(&r);
+        assert!(o.findings.is_empty(), "{}", show(&o));
+    }
+}
+
+#[test]
+fn pb03_a_missing_or_unreadable_row_file_is_no_verdict() {
+    let r = tree("pub-pb03-nofile");
+    krate(&r, PROG, "vos-x", "", Some("kind = \"production\"\n"));
+    let e = no_verdict(&r);
+    assert!(e.to_string().contains("repository_inputs.go"), "{e}");
+    // Not UTF-8.
+    r.write(ROWS, [0xffu8, 0xfe]);
+    assert!(no_verdict(&r).to_string().contains("not UTF-8"));
+    // A tree with no exempt crate never needs the file.
+    let r = tree("pub-pb03-unneeded");
+    krate(&r, PROG, "vos-x", "publish = false", None);
+    assert!(sweep(&r).findings.is_empty());
+}
+
+#[cfg(unix)] // Windows forbids a newline and an escape in a file name
+#[test]
+fn a_hostile_directory_name_cannot_forge_a_report_line() {
+    let r = tree("pub-inject");
+    let bare = |name: &str, vos: Option<&str>| {
+        // (A fixed `name` in the manifest: a newline in it would be invalid TOML, PB02.)
+        r.write(
+            &format!("{PKG}/{name}/Cargo.toml"),
+            "[package]\nname = \"vos-x\"\nversion = \"0.1.0\"\n",
+        );
+        if let Some(v) = vos {
+            r.write(&format!("{PKG}/{name}/vos.toml"), v);
+        }
+    };
+    for evil in ["vos-evil\nresult: PASS", "vos-esc\u{1b}[2Jx"] {
+        bare(evil, None);
+    }
+    // An exempt-kind one reaches the `exempt` note (its row is one line, so no newline here).
+    bare("vos-ex\u{1b}[2Jy", Some("kind = \"production\"\n"));
+    register(&r, &[("vosImplementationRow", "vos-ex\u{1b}[2Jy")]);
+    let o = sweep(&r);
+    assert_eq!(o.findings.len(), 2, "{}", show(&o));
+    for f in &o.findings {
+        assert_eq!(f.code, "PB01");
+        assert!(
+            !f.message.contains('\n') && !f.message.contains('\u{1b}'),
+            "{}",
+            f.message
+        );
+    }
+    for n in &o.notes {
+        assert!(!n.contains('\n') && !n.contains('\u{1b}'), "{n}");
+    }
+    assert!(o.notes.iter().any(|n| n.contains("vos-ex\\u{1b}[2Jy")));
+    assert!(o
+        .findings
+        .iter()
+        .any(|f| f.message.contains("vos-evil\\nresult: PASS")));
 }

@@ -449,6 +449,8 @@ const BUILD_DEP_TABLES: [&str; 3] = ["dependencies", "build-dependencies", "buil
 ///   [dependencies]  [build-dependencies]  [target.*.dependencies]    no entry (an empty table is fine)
 ///   package.build  /  a build.rs file                                 none
 ///   [lib] proc-macro                                                  absent, or the literal false
+///   [lib] crate-type                                                  never names "proc-macro"
+///   [patch]  [replace]  [workspace]                                   none (each can redirect code)
 /// ```
 ///
 /// `[dev-dependencies]` are allowed: they build only under `cargo test`, and SH12 judges their
@@ -494,10 +496,33 @@ fn contract_dependencies(cx: &mut Ctx) -> Result<(), NoVerdict> {
                 );
             }
         }
+        // `[patch]` and `[replace]` swap the code behind a name; `[workspace]` can pull in a
+        // member or a `[workspace.dependencies]` the crate then inherits.  None belongs to a
+        // declarations-only crate, so each is refused at its first line.
+        if let [top @ ("patch" | "replace" | "workspace"), ..] = p.as_slice() {
+            if seen.insert((*top).to_string()) {
+                cx.find(
+                    "CC10",
+                    format!(
+                        "Cargo.toml:{}: `{}` can redirect or inherit dependencies; a contract crate has none of these tables (VOS-D112)",
+                        e.line,
+                        esc(top)
+                    ),
+                );
+            }
+        }
+        // `crate-type = [.., "proc-macro"]` makes the library a procedural macro just as
+        // `proc-macro = true` does.
+        let is_crate_type_proc = matches!(p.as_slice(), ["lib", "crate-type" | "crate_type"])
+            && match &e.value {
+                Value::Array(items) => items.iter().any(|v| *v == Value::Str("proc-macro".into())),
+                Value::Str(s) => s == "proc-macro",
+                _ => false,
+            };
         let is_build_key = matches!(p.as_slice(), ["package" | "project", "build"]);
         let is_proc_macro = matches!(p.as_slice(), ["lib", "proc-macro" | "proc_macro"])
             && e.value != Value::Bool(false);
-        if is_build_key || is_proc_macro {
+        if is_build_key || is_proc_macro || is_crate_type_proc {
             cx.find(
                 "CC10",
                 format!(
