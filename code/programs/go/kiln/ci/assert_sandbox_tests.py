@@ -24,6 +24,16 @@ script is the second, independent check, on the JSON stream itself:
     "PROBE: trace " after the go test file:line prefix.  Without this, a run in
     which every real trace is under 32 KB would pass G1 vacuously.
 
+  * the D34 cross-check of the traces the record CHILDREN wrote really ran: a
+    passing test logged at least one `PROBE: crosscheck traces=N accepted=K ...`
+    line, the traces total at least 1 and the ACCEPTED total at least 1 (a check
+    whose parameters drifted has both readers refuse every trace alike, which is
+    "agreement" with mismatches=0; accepted is what shows a trace was really
+    parsed), and every such line of a passing test says mismatches=0 and
+    allowed=0 (the Go test fails on anything else; this is the independent check,
+    and it keeps the check from going vacuous).  The line is anchored and read
+    exactly like a PROBE: trace line (probe_fields: first key wins).
+
 Usage: assert_sandbox_tests.py <go-test-json-file>
 Exit status 0 when all hold, 1 when not, 2 for a usage or input error.
 """
@@ -195,6 +205,11 @@ SYNTHETIC_TEST = "TestSandboxTraceGateSynthetic"
 PROBE_RE = re.compile(r"^ {4}[\w.\-]+\.go:\d+: (PROBE: trace (\S+) .*)$")
 
 
+# The D34 census line, anchored the same way: exactly four spaces, file:line, and a
+# payload that STARTS with "PROBE: crosscheck ".
+CROSSCHECK_RE = re.compile(r"^ {4}[\w.\-]+\.go:\d+: (PROBE: crosscheck .*)$")
+
+
 # The longest unterminated line terminated_lines will hold for one test.  A longer
 # one is "poisoned" (never yielded), which also keeps the buffering linear.
 MAX_PENDING_CHARS = 64 * 1024
@@ -309,6 +324,60 @@ def gate_problems(lines: list[str]) -> list[str]:
     return problems
 
 
+def crosscheck_lines(lines: list[str]) -> list[tuple[str, dict[str, str]]]:
+    """(test, fields) of every `PROBE: crosscheck` line a passing test logged."""
+    final: dict[str, str] = {}
+    events = []
+    for line in lines:
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        events.append(event)
+        if event.get("Test") and event.get("Action") in FINAL:
+            final[event["Test"]] = event["Action"]
+    out = []
+    for test, text in terminated_lines(events):
+        if final.get(test) != "pass":
+            continue
+        m = CROSSCHECK_RE.match(text)
+        if m:
+            out.append((test, probe_fields(m.group(1))))
+    return out
+
+
+def crosscheck_problems(lines: list[str]) -> list[str]:
+    """Problems with the D34 cross-check of child traces (empty: it ran on at
+    least one real trace and found no mismatch and no allowed divergence)."""
+    found = crosscheck_lines(lines)
+    if not found:
+        return ["D34: no passing test logged a `PROBE: crosscheck` line; the child traces were not cross-checked"]
+    problems = []
+    total = 0
+    accepted = 0
+    for test, fields in found:
+        numbers = {}
+        for key in ("traces", "accepted", "bytes", "mismatches", "allowed"):
+            value = fields.get(key, "")
+            if not value.isascii() or not value.isdigit():
+                problems.append(f"D34: {test}: crosscheck {key}={value or '(missing)'} is not a count")
+            else:
+                numbers[key] = int(value)
+        if len(numbers) != 5:
+            continue
+        total += numbers["traces"]
+        accepted += numbers["accepted"]
+        if numbers["accepted"] > numbers["traces"]:
+            problems.append(f"D34: {test}: crosscheck accepted={numbers['accepted']} exceeds traces={numbers['traces']}")
+        if numbers["mismatches"] or numbers["allowed"]:
+            problems.append(f"D34: {test}: crosscheck mismatches={numbers['mismatches']} allowed={numbers['allowed']} (both must be 0 on real traces)")
+    if total < 1:
+        problems.append("D34: every `PROBE: crosscheck` line says traces=0; no real trace was cross-checked")
+    if total >= 1 and accepted < 1:
+        problems.append("D34: no cross-checked trace was ACCEPTED (accepted=0 in total): the check's parameters may have drifted, so every trace was refused alike")
+    return problems
+
+
 def positive_finite(fields: dict[str, str], key: str) -> float | None:
     """fields[key] as a finite, positive float, or None when it is not one."""
     try:
@@ -351,7 +420,7 @@ def main(argv: list[str]) -> int:
     except OSError as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
-    problems = check(lines) + gate_problems(lines)
+    problems = check(lines) + gate_problems(lines) + crosscheck_problems(lines)
     for test, output in sorted(failing_output(lines).items()):
         print(f"::group::output of failing test {printable(test)}")
         print("\n".join(output))
