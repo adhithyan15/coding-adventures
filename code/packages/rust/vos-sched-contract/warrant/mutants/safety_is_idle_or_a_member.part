@@ -1,0 +1,5 @@
+  -- Mutant of the lemma `safety_is_idle_or_a_member` (VOS04 5.6, `vos-link check-contract`): the model `valid_pick` of
+  -- contract.part with one deliberate fault, which the lemma must catch: a pick is valid for any thread id below 8, ready or not.
+  -- It replaces the model of the same name by span; the tool refuses the mutant if the lemma still holds.
+  model valid_pick(m: Ready, o: Pick) -> Bool = (
+    match o with Idle -> true | Run(t) -> t < 8u8)

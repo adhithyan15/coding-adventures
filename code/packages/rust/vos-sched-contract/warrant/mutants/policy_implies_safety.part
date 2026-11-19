@@ -1,0 +1,5 @@
+  -- Mutant of the lemma `policy_implies_safety` (VOS04 5.6, `vos-link check-contract`): the model `valid_pick` of
+  -- contract.part with one deliberate fault, which the lemma must catch: valid_pick refuses thread 7, so the policy's own choice is not always safe.
+  -- It replaces the model of the same name by span; the tool refuses the mutant if the lemma still holds.
+  model valid_pick(m: Ready, o: Pick) -> Bool = (
+    match o with Idle -> true | Run(t) -> t < 7u8 and mem(m, t))
