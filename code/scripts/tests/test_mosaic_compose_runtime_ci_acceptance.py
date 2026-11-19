@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 import re
+import signal
 import shutil
 import subprocess
 import sys
@@ -715,6 +717,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         gate = SCRIPT.parent / "mosaic-android-emulator-gate.sh"
         gate_text = gate.read_text(encoding="utf-8")
         self.assertIn("timeout --kill-after=1 5 bash -c", gate_text)
+        self.assertIn("timeout --foreground 1 adb shell", gate_text)
         self.assertIn('adb logcat -d -v brief --pid="$pid" -t 4000', gate_text)
         self.assertIn("test -d files || ! test -x files", gate_text)
         self.assertIn("test -f $state && test -r $state", gate_text)
@@ -746,6 +749,21 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
 
             bin_dir = root / "bin"
             bin_dir.mkdir()
+            app_data_root = root / "app-data"
+            state_parent = app_data_root / "files" / "task-app"
+            state_parent.mkdir(parents=True)
+            state_path = state_parent / "mosaic-state.v1.json"
+            state_path.write_bytes(b"")
+            run_as_helper = root / "run-as-probe.py"
+            run_as_helper.write_text(
+                "import shlex, subprocess, sys\n"
+                "words = shlex.split(sys.argv[1])\n"
+                "if len(words) != 5 or words[0] != 'run-as' or words[2:4] != ['sh', '-c']:\n"
+                "    raise SystemExit(90)\n"
+                "result = subprocess.run(['/bin/sh', '-c', words[4]], cwd=sys.argv[2])\n"
+                "raise SystemExit(result.returncode)\n",
+                encoding="utf-8",
+            )
             adb = bin_dir / "adb"
             adb.write_text(
                 "#!/usr/bin/env bash\n"
@@ -763,7 +781,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "    if [[ \"${DIAG_MODE:-ok}\" == log_wrong_body ]]; then printf 'I/Other ( 9999): note mentions ( 4321) MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'; exit 0; fi\n"
                 "    if [[ \"${DIAG_MODE:-ok}\" == log_unknown ]]; then printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=unexpected elapsed_us=17\\n'; exit 0; fi\n"
                 "    if [[ \"${DIAG_MODE:-ok}\" == log_suffix ]]; then printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17 trailing\\n'; exit 0; fi\n"
-                "    if [[ \"${DIAG_MODE:-ok}\" == log_timeout ]]; then trap '' TERM; while true; do /bin/sleep 0.1; done; fi\n"
+                "    if [[ \"${DIAG_MODE:-ok}\" == log_timeout || \"${DIAG_MODE:-ok}\" == real_timeout ]]; then printf '%s\\n' \"$$\" > \"$DIAG_HANG_PID_PATH\"; trap '' TERM; while true; do /bin/sleep 0.1; done; fi\n"
                 "    if [[ \"${DIAG_MODE:-ok}\" != outer_timeout ]]; then\n"
                 "      printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17\\n'\n"
                 "      exit 0\n"
@@ -779,13 +797,9 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "        echo 4321; exit 0\n"
                 "        ;;\n"
                 "      *'test -d files'* )\n"
-                "        case \"${DIAG_MODE:-ok}\" in\n"
-                "          probe_fail) exit 9 ;;\n"
-                "          probe_absent) echo absent ;;\n"
-                "          probe_nonempty) echo present_nonempty ;;\n"
-                "          *) echo present_empty ;;\n"
-                "        esac\n"
-                "        exit 0\n"
+                "        if [[ \"${DIAG_MODE:-ok}\" == probe_fail ]]; then exit 9; fi\n"
+                "        python3 \"$DIAG_RUN_AS_HELPER\" \"$command\" \"$DIAG_APP_DATA_ROOT\"\n"
+                "        exit $?\n"
                 "        ;;\n"
                 "      *'test -s files/task-app/mosaic-state.v1.json'*) exit 1 ;;\n"
                 "      *) exit 0 ;;\n"
@@ -805,8 +819,11 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 f"#!{sys.executable}\n"
                 "import os, signal, subprocess, sys, time\n"
                 "args = sys.argv[1:]\n"
+                "if os.environ.get('DIAG_MODE') == 'real_timeout':\n"
+                "    real = os.environ['REAL_TIMEOUT']\n"
+                "    os.execv(real, [real, *args])\n"
                 "if args[:2] == ['--kill-after=1', '5']:\n"
-                "    if os.environ.get('DIAG_MODE') in ('outer_timeout', 'log_timeout'):\n"
+                "    if os.environ.get('DIAG_MODE') in ('outer_timeout', 'log_timeout', 'probe_timeout'):\n"
                 "        child = subprocess.Popen(args[2:], start_new_session=True)\n"
                 "        time.sleep(0.15)\n"
                 "        try: os.killpg(child.pid, signal.SIGTERM)\n"
@@ -818,6 +835,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "            child.wait()\n"
                 "        sys.exit(124)\n"
                 "    os.execvpe(args[2], args[2:], os.environ)\n"
+                "if args and args[0] == '--foreground': args = args[1:]\n"
                 "if len(args) > 1 and args[0] == '1': os.execvpe(args[1], args[1:], os.environ)\n"
                 "sys.exit(125)\n",
                 encoding="utf-8",
@@ -845,6 +863,24 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             mktemp.chmod(0o755)
 
             def run(mode: str) -> subprocess.CompletedProcess[str]:
+                if state_parent.is_dir():
+                    if mode == "probe_absent":
+                        state_path.unlink(missing_ok=True)
+                    elif mode == "probe_nonempty":
+                        state_path.write_bytes(b"{state:true}")
+                    else:
+                        state_path.write_bytes(b"")
+                env = {
+                    "PATH": f"{bin_dir}:/usr/bin:/bin",
+                    "ANDROID_HOME": str(android_home),
+                    "MOSAIC_NATIVE_DIAGNOSTICS_CAPTURE": "1",
+                    "DIAG_RUN_AS_HELPER": str(run_as_helper),
+                    "DIAG_APP_DATA_ROOT": str(app_data_root),
+                    "DIAG_MODE": mode,
+                    "DIAG_HANG_PID_PATH": str(root / "hung-adb.pid"),
+                }
+                if shutil.which("timeout"):
+                    env["REAL_TIMEOUT"] = shutil.which("timeout") or "timeout"
                 return subprocess.run(
                     [
                         "bash",
@@ -854,12 +890,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                         "task-app",
                         ".MainActivity",
                     ],
-                    env={
-                        "PATH": f"{bin_dir}:/usr/bin:/bin",
-                        "ANDROID_HOME": str(android_home),
-                        "MOSAIC_NATIVE_DIAGNOSTICS_CAPTURE": "1",
-                        "DIAG_MODE": mode,
-                    },
+                    env=env,
                     capture_output=True,
                     text=True,
                     check=False,
@@ -879,6 +910,10 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             self.assertIn("diagnostic_state_probe=probe_failed", probe_failure.stdout)
             self.assertIn("diagnostic_log_capture=complete", probe_failure.stdout)
 
+            probe_timeout = run("probe_timeout")
+            self.assertEqual(probe_timeout.returncode, 1)
+            self.assertIn("diagnostic_capture=timed_out", probe_timeout.stdout)
+
             absent_state = run("probe_absent")
             self.assertEqual(absent_state.returncode, 1)
             self.assertIn("diagnostic_state_probe=absent", absent_state.stdout)
@@ -886,6 +921,15 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             nonempty_state = run("probe_nonempty")
             self.assertEqual(nonempty_state.returncode, 1)
             self.assertIn("diagnostic_state_probe=present_nonempty", nonempty_state.stdout)
+
+            state_path.unlink(missing_ok=True)
+            state_parent.rmdir()
+            state_parent.write_text("not a directory", encoding="utf-8")
+            parent_unavailable = run("probe_parent_unavailable")
+            self.assertEqual(parent_unavailable.returncode, 1)
+            self.assertIn("diagnostic_state_probe=probe_failed", parent_unavailable.stdout)
+            state_parent.unlink()
+            state_parent.mkdir()
 
             log_failure = run("log_fail")
             self.assertEqual(log_failure.returncode, 1)
@@ -953,23 +997,48 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             self.assertTrue(recorded_temps)
             self.assertTrue(all(not Path(path).exists() for path in recorded_temps))
 
+            real_timeout = shutil.which("timeout")
+            if real_timeout:
+                real_start = time.monotonic()
+                real_timeout_gate = run("real_timeout")
+                real_elapsed = time.monotonic() - real_start
+                self.assertEqual(real_timeout_gate.returncode, 1)
+                self.assertIn("diagnostic_capture=timed_out", real_timeout_gate.stdout)
+                self.assertLess(real_elapsed, 7.5)
+                hung_pid = int((root / "hung-adb.pid").read_text(encoding="utf-8").strip())
+                with self.assertRaises(ProcessLookupError):
+                    os.kill(hung_pid, 0)
+                recorded_temps = temp_tracker.read_text(encoding="utf-8").splitlines()
+                self.assertTrue(all(not Path(path).exists() for path in recorded_temps))
+
     @unittest.skipUnless(shutil.which("timeout"), "GNU timeout is unavailable on this host")
     def test_gnu_timeout_kills_term_resistant_process_group(self) -> None:
         start = time.monotonic()
-        result = subprocess.run(
-            [
-                shutil.which("timeout") or "timeout",
-                "--kill-after=0.2",
-                "0.2",
-                "bash",
-                "-c",
-                "trap '' TERM; while :; do /bin/sleep 0.05; done",
-            ],
-            capture_output=True,
-            check=False,
-        )
-        self.assertEqual(result.returncode, 124)
-        self.assertLess(time.monotonic() - start, 2.0)
+        with tempfile.TemporaryDirectory() as directory:
+            pid_file = Path(directory) / "child.pid"
+            child = (
+                "trap '' TERM; printf '%s\\n' \"$$\" > \""
+                + str(pid_file)
+                + "\"; while :; do /bin/sleep 0.05; done"
+            )
+            result = subprocess.run(
+                [
+                    shutil.which("timeout") or "timeout",
+                    "--kill-after=0.2",
+                    "0.2",
+                    "bash",
+                    "-c",
+                    child,
+                ],
+                capture_output=True,
+                check=False,
+            )
+            elapsed = time.monotonic() - start
+            self.assertIn(result.returncode, (124, 137, -signal.SIGKILL))
+            self.assertLess(elapsed, 2.0)
+            pid = int(pid_file.read_text(encoding="utf-8").strip())
+            with self.assertRaises(ProcessLookupError):
+                os.kill(pid, 0)
 
     def test_a_lane_script_change_alone_requires_acceptance(self) -> None:
         """The Android scripts belong to no package; changing one must still

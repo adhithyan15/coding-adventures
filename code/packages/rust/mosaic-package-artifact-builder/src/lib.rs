@@ -2404,6 +2404,9 @@ fn flutter_main_with_phone_state_root(main_dart: &str) -> Result<String, BuildEr
     Ok(main_dart.replacen(
         MAIN,
         concat!(
+            "const bool _mosaicNativeDiagnostics = bool.fromEnvironment(\n",
+            "  'MOSAIC_NATIVE_DIAGNOSTICS',\n",
+            ");\n",
             "Future<void> main() async {\n",
             "  // UI89 §7.4: on a phone, state lives in the app-support directory,\n",
             "  // which only the platform knows. Found before the host loads; if it\n",
@@ -16997,6 +17000,12 @@ layout NativeEvents {
         assert!(pubspec.contains("  path_provider: 2.1.6\n"), "{pubspec}");
         let main = fs::read_to_string(flutter.join("lib/main.dart")).unwrap();
         assert!(main.contains("import 'package:path_provider/path_provider.dart';\n"));
+        // `main.dart` and the imported host are separate Dart libraries, so
+        // each file must read its own compile-time flag instead of reaching
+        // into the host's private namespace.
+        assert!(main.contains(
+            "const bool _mosaicNativeDiagnostics = bool.fromEnvironment(\n  'MOSAIC_NATIVE_DIAGNOSTICS',\n);"
+        ));
         assert!(main.contains("Future<void> main() async {\n"));
         assert!(main.contains("      final supportDirectory = await getApplicationSupportDirectory();\n"));
         assert!(main.contains("      mosaicStateRoot = supportDirectory.path;\n"));
