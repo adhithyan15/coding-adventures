@@ -11,6 +11,14 @@ intermediate-status-responder revocation entry points accept the leaf only
 through their exact existing destination-bound complete no-check fixed-path
 revocation proofs.
 
+A consuming reviewed-path entry point additionally takes ownership of one
+selected transcript, fixes the signature role to server, derives the RSA key
+only from the reviewed target certificate, authenticates and appends the exact
+`CertificateVerify` body, and verifies server Finished over that exact
+post-message transcript. Its non-copyable result retains the complete reviewed
+path and the full body, key, transcript-snapshot, and Finished evidence graph.
+Failure consumes the transcript and returns no partial state.
+
 The composition accepts only complete reviewed-path evidence, outer
 selected-transcript hash evidence, the exact decoded message, data-driven RSA
 key policy, typed verifier limits, and caller-owned scratch. It rejects a
@@ -34,9 +42,9 @@ revocation; the specialized entry points accept only complete proofs produced
 by existing repository-owned boundaries. The revocation composition currently
 covers the direct, one-level nested, double-nested, recursive-responder, and
 alternative intermediate-status-responder no-check completions. It does not
-acquire or refresh revocation data, prove ordered handshake state,
-authenticate Finished, process records, perform I/O, or make TLS, HTTPS, HTTP,
-OAuth transport, or live-provider access available.
+acquire or refresh revocation data, prove the preceding ordered handshake
+state, append the Finished handshake encoding, process records, perform I/O,
+or make TLS, HTTPS, HTTP, OAuth transport, or live-provider access available.
 
 The end-to-end tests retain a public `www.apple.com` TLS 1.3 handshake capture
 from 2026-11-18 plus its 2026-11-11 leaf certificate. They reconstruct the
@@ -47,8 +55,11 @@ destination-bound entry point and prove that it retains the same destination,
 path, transcript, message, and signature graph. Finally, they verify the
 reviewed root self-signature and exercise the strongest entry point over the
 same exact graph. These checked-in public fixtures are test data only; the
-package performs no network access. Focused revocation entry-point tests use
-the same public transcript, leaf, message, and signature to prove exact direct,
+package performs no network access. The same fixtures also prove exact path-
+derived key retention, post-`CertificateVerify` Finished snapshot equality,
+and failure without returned state for invalid Finished verify-data. Focused
+revocation entry-point tests use the same public transcript, leaf, message, and
+signature to prove exact direct,
 nested, double-nested, recursive-responder, and alternative intermediate-
 status-responder evidence retention, leaf-key derivation, and role-first
 scratch non-mutation; the upstream sealed destination-to-revocation boundary

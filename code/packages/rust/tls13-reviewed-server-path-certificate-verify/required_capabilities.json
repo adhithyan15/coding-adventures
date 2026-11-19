@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/tls13-reviewed-server-path-certificate-verify",
   "capabilities": [],
-  "justification": "Pure server-role authorization, public RSA key parsing and policy, and repository-owned signature verification over retained HTTPS DNS destination, certificate-path, reviewed anchor self-signature, complete fixed-path revocation, and transcript evidence plus caller-owned scratch. It performs no filesystem, network, process, environment, clock, entropy, credential, private-key, signing, trust-root loading, revocation lookup, record, HTTP I/O, OAuth, transport, audit, trace, or external-effect access."
+  "justification": "Pure server-role authorization, public RSA key parsing and policy, repository-owned signature verification, consuming transcript advancement, and Finished authentication over retained HTTPS DNS destination, certificate-path, reviewed anchor self-signature, complete fixed-path revocation, and transcript evidence plus caller-owned scratch. It performs no filesystem, network, process, environment, clock, entropy, credential, private-key, signing, trust-root loading, revocation lookup, record, HTTP I/O, OAuth, transport, audit, trace, or external-effect access."
 }
