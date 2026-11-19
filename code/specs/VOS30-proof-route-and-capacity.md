@@ -1950,8 +1950,8 @@ Run: `vos-capacity-probe` 0.1.0, `rustc 1.98.0 (88d9e12ae 2026-08-18)`, Darwin 2
 | D4 | t=256 k=8 | incremental | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 14,784 | 2.4 min | - | - | - | 114 MB | not run | 2.4 min / 119 MB | unknown (timeout) |
 | D4 | t=256 k=16 | certified | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 (5 distinct) | 14,357 | 2.3 min | - | - | - | 102 MB | not run | 2.4 min / 109 MB | unknown (timeout) |
 | D4 | t=256 k=16 | incremental | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 17,358 | 2.3 min | - | - | - | 120 MB | not run | 2.3 min / 120 MB | unknown (timeout) |
-| E1 | claim=dispatch_policy fixture=vos-sched-fp-bitmap binders=256 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | pass (318,606 cases/s, slowest) |
-| E1 | claim=insert_safe fixture=vos-sched-fp-bitmap binders=65536 | enum | - | - | - | - | 5/5 (1 distinct) | - | 779 ms | - | - | - | 2 MB | replayed | 779 ms / 2 MB | pass (84,177 cases/s, slowest) |
+| E1 | claim=dispatch_policy fixture=vos-sched-fp-bitmap binders=256 | enum | - | - | - | - | 5/5 (1 distinct) | - | 10 ms | - | - | - | 3 MB | replayed | 10 ms / 3 MB | pass (25,280 cases/s, slowest) |
+| E1 | claim=insert_safe fixture=vos-sched-fp-bitmap binders=65536 | enum | - | - | - | - | 5/5 (1 distinct) | - | 50.0 s | - | - | - | 3 MB | replayed | 50.0 s / 3 MB | pass (1,310 cases/s, slowest) |
 | E1 | claim=insert_n8_bool fixture=vos-probe-ready binders=65536 | enum | - | - | - | - | 5/5 (1 distinct) | - | 43 ms | - | - | - | 2 MB | replayed | 43 ms / 2 MB | pass (1,534,811 cases/s, slowest) |
 | E1 | claim=insert_n8_mask fixture=vos-probe-ready binders=65536 | enum | - | - | - | - | 5/5 (1 distinct) | - | 22 ms | - | - | - | 2 MB | replayed | 22 ms / 2 MB | pass (2,930,544 cases/s, slowest) |
 | E1 | claim=insert_n10 fixture=vos-probe-ready binders=262144 | enum | - | - | - | - | 5/5 (1 distinct) | - | 155 ms | - | - | - | 2 MB | replayed | 155 ms / 2 MB | pass (1,691,679 cases/s, slowest) |
