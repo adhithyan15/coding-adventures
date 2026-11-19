@@ -25,16 +25,42 @@
   unknown, duplicate or case-variant key; schema, action, kind and counts
   checked), and skipped with a counted problem code on any failure. Paths are
   sanitised, redacted (`$HOME`, `$TMPDIR`, `$RUNNER_TEMP`, the workspace, the
-  record directory) and cut to 512 runes. In the Markdown every path is in a
+  record directory) and cut to 512 runes. A prefix is replaced only at a
+  path-component boundary: it must be preceded by the start of the text,
+  whitespace, a quote, `=`, `:`, `,`, `(`, `[`, `<` or a one-letter `-X` flag
+  (`-L/tmp/x`), so `+` and `~` never start a path and `/tmp` leaves
+  `/usr/lib/tmpfiles.d`, `/var/tmp` and `/usr/include/c++/tmp` alone. In the Markdown every path is in a
   code span longer than any backtick run in it, other text is escaped, no table
   cell holds attacker text, no raw control character occurs and no line starts
   with `::`.
-- Exit status: 0 clean; 4 a cross-check mismatch or any allowed divergence
-  (strict); 1 infrastructure failure (no traces, an unverifiable `pre/`, an
+- Exit status: 0 clean; 4 a cross-check mismatch, any allowed divergence or a
+  `parse_panic` (a trace that crashes a reader is soak-relevant; strict); 1 infrastructure failure (no traces, an unverifiable `pre/`, an
   output that cannot be written) or a refusal (not a record directory, an output
   that exists or lies inside `--dir`; a refusal writes nothing); 2 usage. The
   summary is written whenever the directory was read. Outputs are created
   `O_EXCL`, mode 0600.
+
+- `explain`: why actions are not recordable, with fixed codes only (a code is a
+  member of a closed list, never a slice of the input): the path-free classifier
+  reason kinds of `record.json`, its parse reasons and the census's own parse
+  refusals, `record.failed` categories (timeout, traces-too-large, panic,
+  classifier-failed, ...) and sidecar facts (truncated by reason, not clean,
+  exit 125, non-zero root status).
+- G2 evidence by size: per log2 size bucket timing, a parse throughput
+  distribution, `g2_at_p99` (G2 judged at the census p99 trace size) and the
+  first (cold-start) parse reported separately, with an `accepted` flag, whatever
+  its outcome.
+- A `host` block: image id, kernel, strace version line, shard index and count
+  from the verified `pre/`, and the CPU model.
+- `record.failed` wins over a `record.json`, as in `collect`; a `record.json` of
+  another binding or sealed directory is counted and ignored. The census takes
+  the record directory's lock (exclusive, non-blocking) and refuses while a
+  recording holds it.
+- A trace over 256 MiB is timed but not cross-checked (`skipped_too_large`); a
+  panic in a parse is a counted `parse_panic` problem. Distinct paths are capped
+  at 100,000 and 32 MiB of text; the per-action step map is bounded.
+- Markdown: languages, kinds and every name are code spans in list items (no
+  autolink, no emoji).
 
 ### Changed
 
@@ -43,9 +69,13 @@
   reason `trace.Measure*` are test-only), only a process-global counter.
   `TestMeasureIsNotUsedByProductionCode` no longer lists it;
   `TestParseCrossCheckedOnlyInCensus` allows one caller,
-  `internal/record/census_report.go`.
+  `internal/record/census_report.go`; the check is syntax-tree based and flags
+  any reference, not only a call, and the injection point is
+  `CensusOptions.CrossCheck`.
 - `parseHelperTrace` builds its parse options through `helperParseOptions`, the
   function the census uses, so the two can never drift apart.
 - KILN04 gains the "`kiln record census`" section (inputs, schema, bounds,
   exit codes, security). `TestSandboxRecordCollect` also runs the command over
-  its real recording.
+  its real recording. A drift test parses `internal/traced` and `internal/trace`
+  and requires every reason constant to map to itself in the census's closed
+  lists, so a new reason cannot silently become `other`.
