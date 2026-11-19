@@ -22,3 +22,14 @@ must pin the roots it needs rather than lean on what this machine happens to
 have; and `GOOS=linux go test -c` / `go vet` only COMPILE the Linux build, they
 never run it, so a green cross-compile says nothing about Linux behaviour. Read
 the classifier's host-root path before trusting a "clean" expectation.
+
+**Second trap (found by the next CI run).** Covering `/usr`, `/lib` and `/lib64`
+was not enough. The default `/bin` root is an *image* root, which compares the
+ctime of what it covers with the fixture's fixed `JobStart` (1794000000). A
+runner image built after that stamp makes the `/bin` link itself
+`host-read:setup-modified:/bin`. A fixture that tests something other than the
+host-root rules must not depend on host file times: declare the roots the exec
+reaches as `ephemeral` (a fixture entry for `/bin` now replaces the default image
+root). Keep at least one image root, because prepare refuses an empty `ro_roots`.
+When a host-dependent test fails in CI, make the failure print what it found
+(here: the census summary). One diagnostic run beats a second blind guess.
