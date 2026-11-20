@@ -257,7 +257,7 @@ On Windows, use the compiled `.exe`:
 | `-language` | all | Filter to any canonical discovery bucket, or `all` |
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
-| `-validate-build-files` | true | Validate BUILD dependency metadata, established-lane package-root coverage, crate coverage, and tracked artifacts |
+| `-validate-build-files` | true | Validate BUILD dependency metadata, established-lane package-root coverage, crate coverage, tracked artifacts, BUILD-front invocations, and negative-control checker users declaring Python |
 | `-ci-gates` | code/specs/data/ci-gates.json | CI gate registry used to decide which Actions jobs this change needs; empty disables gating |
 | `-shard-count` | 0 | Split an emitted plan (`-emit-plan`) into this many prerequisite-closed CI shards |
 | `-shard-weights` | (none) | Measured per-package seconds (`ci-package-durations-v1`); selects locality-aware sharding v2 (see below) |
@@ -797,6 +797,17 @@ The rule is narrow on purpose:
   repository input consumers propagate; `-force` and the hash fallback are
   unchanged. The edited BUILD is still checked by `-validate-build-files`,
   which runs over every package on every pull request.
+
+`-validate-build-files` also fails when a `BUILD*` file directly in a package
+directory discovered for any platform (so a `BUILD_windows`-only package is
+covered on Linux; nested non-package BUILD files are not checked, as the build
+tool never runs them) contains `warrant_negctl.py` (the shared negative-control checker,
+plain substring match, comments included) but does not declare
+`# needs-toolchain: python` for the platform it serves (`_windows` as
+Windows, `_mac` as macOS, anything else as Linux). Unreadable files are reported, not skipped. CI installs Python only for
+packages that declare it. The check lives in
+`internal/validator/negctl_python.go` because a pull request that touches only a
+package's BUILD never selects this program's tests.
 
 What this does not cover: a dependent that relies on a toolchain only its
 prerequisite's BUILD declares with `# needs-toolchain:` is not re-run when
