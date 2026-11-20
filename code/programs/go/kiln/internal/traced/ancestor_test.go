@@ -164,3 +164,35 @@ func TestLiteralPrefix(t *testing.T) {
 		}
 	}
 }
+
+// D39 hardening: the ancestor rule covers a DIRECTORY node's type and stat
+// metadata only.  prepare verifies just the checkout's own chain, so an
+// ancestor of a declared root could on some host be a symlink (readlink shows
+// its target) or a regular file (an open and read shows its content).
+func TestAncestorThatIsNotADirectoryIsRefused(t *testing.T) {
+	// /opt/tc is an ancestor of the tool roots /opt/tc/go/1.26 and
+	// /opt/tc/ruby/3.4.
+	h := ancestorHarness(t)
+	h.fs.link("/opt/tc", "/elsewhere")
+	wantReason(t, h.run(lstat("/opt/tc")), "host-read:/opt/tc")
+	wantReason(t, h.run(base("readlink", trace.KindMetadata, "/opt/tc")), "host-read:/opt/tc")
+
+	h = ancestorHarness(t)
+	h.fs.file("/opt/tc", "secret")
+	wantReason(t, h.run(stat("/opt/tc")), "host-read:/opt/tc")
+	wantReason(t, h.run(openAbs("/opt/tc")), "host-read:/opt/tc")
+
+	// And a real directory at the same place is allowed (the control).
+	h = ancestorHarness(t)
+	wantNoReasons(t, h.run(stat("/opt/tc")))
+}
+
+// Extended attributes are content, not stat metadata.
+func TestAncestorXattrReadsAreRefused(t *testing.T) {
+	for _, sys := range []string{"getxattr", "lgetxattr", "listxattr", "llistxattr"} {
+		h := ancestorHarness(t)
+		wantReason(t, h.run(base(sys, trace.KindMetadata, "/opt/hostedtoolcache")), "host-read:/opt/hostedtoolcache")
+		// The same ancestor under stat is allowed.
+		wantNoReasons(t, h.run(stat("/opt/hostedtoolcache")))
+	}
+}

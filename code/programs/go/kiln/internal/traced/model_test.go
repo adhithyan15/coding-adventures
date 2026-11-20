@@ -1420,10 +1420,16 @@ func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
 // Home or Tmpdir: the model's reading of D39 rule (a).  (The model declares no
 // other anchors; the host-root and ephemeral anchors are covered by
 // ancestor_test.go.)
+//
+// The node must also be a directory on the model's disk (D39 hardening: a
+// symlink or file there is judged by the ordinary rules).  The model issues no
+// getxattr family calls, so the xattr exclusion has no model counterpart; it is
+// covered by ancestor_test.go.
 func (m *model) properAncestor(p string) bool {
 	for _, a := range []string{m.root, m.home, m.tmp} {
 		if p == "/" || strings.HasPrefix(a, p+"/") {
-			return true
+			n := m.byPath(p)
+			return n != nil && n.kind == KindDir
 		}
 	}
 	return false

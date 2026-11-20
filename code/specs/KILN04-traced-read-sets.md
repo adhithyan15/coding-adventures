@@ -3877,6 +3877,32 @@ replaces the "other ancestors stay `host-read`" clause of §5.5(c).
   The `absent-ok` entries `$HOME/.config` and `$HOME/.npmrc` become redundant and
   are left in place.
 
+**Hardening (review of D39).**
+
+1. *The node must be a directory.* Only the checkout's own chain is verified to
+   be real directories (§5.1, `prepare`). An ancestor of a declared root or a
+   literal prefix could on some host be a symlink (`readlink` shows its target)
+   or a regular file (an open and read shows its content). Rule (a) therefore
+   also requires the node to be a directory on the post-run disk
+   (`c.lookup(abs).kind == KindDir`); anything else falls through to the
+   existing rules and gives `host-read`.
+2. *No extended attributes.* `getxattr`, `lgetxattr`, `listxattr`,
+   `llistxattr` (the parser tables them as metadata calls, as `stat`) are
+   excluded from rule (a): an attribute value is content, not type or stat
+   metadata. `classifier.xattrCall` is set per event and read only here; the
+   census observer is unchanged. A walk to a path made by an xattr call
+   observes its ancestors under that call, so it is refused conservatively.
+3. *Rule (b) depends on the sandbox.* An absent probe under `Home` or `Tmpdir`
+   is a constant only because the sandbox mounts a fresh tmpfs on both in every
+   recording mode (`internal/sandbox/plan.go`; with a real home, the checkout's
+   parent chain is recreated inside the tmpfs). It also needs every host path
+   the sandbox binds beneath them to be a root traced declares (image, tool or
+   state), because `fresh` excludes declared roots; the one other kind, a state
+   root the recorder derives from an anchor, is verified empty
+   (`stateRootEmpty`). `internal/record/sandboxroots_test.go` pins that the
+   sandbox's read-only roots beneath `Home` and `Tmpdir` are a subset of the
+   declared roots; comments at `observeHost` and `plan.go` name each other.
+
 Not changed: a listing of any ancestor, a child probe of an ancestor, a present
 uncreated name under `$HOME`/`TMPDIR`, and the rules of each declared root
 (a tool root not keyed, an unpinned state root, an image root's ctime check).

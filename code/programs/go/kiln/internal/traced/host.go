@@ -188,6 +188,17 @@ func procMagicFinal(p string) bool {
 	return false
 }
 
+// isXattrRead says the syscall reads extended attributes by path or fd.  The
+// parser tables them as metadata calls (trace/table.go), so stat and getxattr
+// reach observeHost alike; the ancestor rule tells them apart here.
+func isXattrRead(sys string) bool {
+	switch sys {
+	case "getxattr", "lgetxattr", "fgetxattr", "listxattr", "llistxattr", "flistxattr", "getxattrat", "listxattrat":
+		return true
+	}
+	return false
+}
+
 // observeHost applies the host-root rules to an out-of-repository path the
 // action did not create.
 //
@@ -208,6 +219,11 @@ func (c *classifier) observeHost(abs string, present, listing bool) {
 		// every run.  Only the node: nothing under it (section 5.5).
 		return
 	}
+	// Rule 1b rests on the sandbox mounting a FRESH tmpfs on Home and Tmpdir in
+	// every recording mode (internal/sandbox/plan.go), and on every host path it
+	// binds beneath them being a declared root here (image, tool or state), or a
+	// state root the recorder derives and verifies empty.  Both are pinned by
+	// internal/record/sandboxroots_test.go.
 	if !present && c.underTmp(abs) {
 		return
 	}
@@ -215,13 +231,17 @@ func (c *classifier) observeHost(abs string, present, listing bool) {
 		c.observeRoot(r, abs, present)
 		return
 	}
-	// A directory that is an ancestor of an anchor is a real directory by
-	// construction.  A stat, access, readlink, chdir or O_DIRECTORY open shows
-	// its type and metadata only; a listing shows sibling names, which are host
-	// state, so it falls through.  A child of an ancestor (/home/go.work) is
+	// An ancestor of an anchor, looked at without listing it and without
+	// reading extended attributes, shows its type and stat metadata only.  It
+	// must really be a DIRECTORY on the disk: prepare verifies only the
+	// checkout's own chain, so an ancestor of a declared root or a literal
+	// prefix could on some host be a symlink (readlink would show its target)
+	// or a regular file (an open and read would show its content), and those
+	// fall through to host-read.  A listing shows sibling names, which are host
+	// state, and also falls through.  A child of an ancestor (/home/go.work) is
 	// not an ancestor and is judged by the rules below.  An ancestor inside a
 	// declared root (nested anchors) was handled by the root's own rule above.
-	if present && !listing && c.cfg.ancestors[abs] {
+	if present && !listing && !c.xattrCall && c.cfg.ancestors[abs] && c.lookup(abs).kind == KindDir {
 		return
 	}
 	if !present && c.absentOK(abs) {
