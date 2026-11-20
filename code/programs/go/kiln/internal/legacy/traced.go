@@ -73,7 +73,13 @@ const TracedSemantics uint64 = 2
 // unfinished call followed only by the task's exit) when the call is ignored,
 // fork, vfork, or a clone with readable and allowed flags.  A call that reads is
 // still refused.  Traces that were refused now parse, so every weak key changes.
-const RecorderVersion = 5
+//
+// Version 6: the recipe prefix rule (KILN04 D36).  An action that failed before
+// its last step has fewer step traces than recipe lines; when they are a byte
+// exact prefix of the recipe and the last one exited non-zero, that is no longer
+// `trace-incomplete:recipe-mismatch`.  The verdict for those actions changes, so
+// every weak key changes.
+const RecorderVersion = 6
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
