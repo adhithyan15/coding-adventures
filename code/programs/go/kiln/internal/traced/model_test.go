@@ -91,6 +91,9 @@ type model struct {
 	core            bool     // a process dumped core (L1)
 	sigpipe         bool     // a child was killed by SIGPIPE (M5)
 	noNetNS         bool     // the run has no fresh network namespace (W11)
+	// tmpLinked: a symbolic link was made (or moved) inside the fresh Home or
+	// Tmpdir.  KILN04 D40: until one is, a lookup there is own-or-absent.
+	tmpLinked bool
 }
 
 func (m *model) mkpath(abs string, n *mnode) {
@@ -398,6 +401,9 @@ func (m *model) doMkdirLike(pid int, sys, p, target string) []trace.Event {
 				n = &mnode{kind: KindLink, target: target}
 			}
 			r.parent.kids[r.name] = n
+			if sys == "symlink" && m.freshAbsent(r.final) {
+				m.tmpLinked = true
+			}
 			m.add(touch{path: r.final, write: true, wonly: true})
 			m.own[r.final] = true
 		}
@@ -458,6 +464,11 @@ func (m *model) doRenameLink(pid int, sys, a, b string, exchange bool) []trace.E
 		errno = "EINVAL"
 	case m.readOnlyHost(src.final) || m.readOnlyHost(dst.final):
 		errno = "EROFS"
+	case m.mountOf(src.final) != m.mountOf(dst.final) && (m.mountOf(src.final) != "" || m.mountOf(dst.final) != ""):
+		// The sandbox's HOME and TMPDIR are separate tmpfs mounts, and so is the
+		// bound checkout: a rename or link across them is EXDEV (KILN04 D40
+		// relies on it).  The model must not invent one that cannot happen.
+		errno = "EXDEV"
 	case exchange:
 		if dst.node == nil {
 			errno = "ENOENT"
@@ -501,6 +512,9 @@ func (m *model) doRenameLink(pid int, sys, a, b string, exchange bool) []trace.E
 	if errno == "" {
 		m.add(touch{path: src.final, write: true, wonly: true})
 		m.add(touch{path: dst.final, write: true, wonly: true})
+		if (src.node.kind == KindLink && m.freshAbsent(dst.final)) || (exchange && dst.node.kind == KindLink && m.freshAbsent(src.final)) {
+			m.tmpLinked = true
+		}
 		switch {
 		case exchange:
 			src.parent.kids[src.name], dst.parent.kids[dst.name] = dst.node, src.node
@@ -1386,6 +1400,12 @@ func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
 			if (tc.absent || m.byPath(tc.path) == nil) && m.freshAbsent(tc.path) {
 				continue
 			}
+			// KILN04 D40: with no symbolic link made inside the fresh tmpfs, any
+			// look strictly inside it found the action's own file or nothing,
+			// whatever the model's disk says: it is not an input.
+			if !m.tmpLinked && m.freshAbsent(tc.path) {
+				continue
+			}
 			fail(tc, "outside the repository, but the record has no reason")
 		}
 		if tc.write && !underAny(rec.Writes, rel) {
@@ -1447,6 +1467,21 @@ func (m *model) freshAbsent(p string) bool {
 		}
 	}
 	return false
+}
+
+// mountOf names the sandbox mount p lives on, when it is one of the three the
+// model distinguishes: "repo" (the bound checkout), "tmp" and "home" (the
+// scratch tmpfs).  "" is everything else (the read-only host).
+func (m *model) mountOf(p string) string {
+	switch {
+	case p == m.root || strings.HasPrefix(p, m.root+"/"):
+		return "repo"
+	case strings.HasPrefix(p, m.tmp+"/") || p == m.tmp:
+		return "tmp"
+	case strings.HasPrefix(p, m.home+"/") || p == m.home:
+		return "home"
+	}
+	return ""
 }
 
 func covered(rec *RawRecord, rel string) bool {

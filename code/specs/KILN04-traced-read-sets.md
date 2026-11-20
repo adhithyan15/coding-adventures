@@ -3906,9 +3906,68 @@ replaces the "other ancestors stay `host-read`" clause of §5.5(c).
 Not changed: a listing of any ancestor, a child probe of an ancestor, a present
 uncreated name under `$HOME`/`TMPDIR`, and the rules of each declared root
 (a tool root not keyed, an unpinned state root, an image root's ctime check).
-`kiln:recorder` is 7. The differential fuzzer's oracle (`model_test.go`) has the
+`kiln:recorder` was 7 here (D40 made it 8). The differential fuzzer's oracle (`model_test.go`) has the
 same two rules, so a record with no reason is still checked against the model.
 Tests: `internal/traced/ancestor_test.go`.
+
+**Decision D40: tmpfs containment (real-build census, `unstable-path` in about
+43 actions, all writes-incomplete; `kiln:recorder` 7 to 8).** Every high-count
+path was the action's own scratch file inside the fresh tmpfs: Go's build cache
+(`$HOME/.cache/go-build/HH/<hash>-a`, `-d`, and its directories),
+`$TMPDIR/go-buildN/...`, gcc's `$TMPDIR/ccXXXXXX.{o,s,res}` and clang's
+`name-hash.o`. Such files are re-created without `O_EXCL`, created and then
+removed, or renamed into place, which breaks the "created exactly once" and
+open-only rules of §5.1 and §5.5 (sub-codes `final-changed`, `own-overlap`,
+`component-changed`, `absent-changed`, `followed-absent-changed`,
+`removed-before-made`) and, through W8, voids the write set.
+
+*The rule.* If the action never made a symbolic link inside the fresh `Home` or
+`Tmpdir`, the stability rules do not apply to paths inside it. `classifier.tmpLinked`
+is set wherever a link is recorded at (or carried by `rename`, `RENAME_EXCHANGE`
+or `link` to) a path that is `underTmp` or a tmp root (`noteTmpLink`, `ops.go`).
+`classifier.contained(p) = !tmpLinked && underTmp(p)`; `judge` skips a contained
+path at the top of each of its eight loops (`seen`, `seenAbsent`, `seenFinal`,
+`relFinal`, `relAbs`, `gone`, `seenFile`, and `ownSeen`, which tests the looked-up
+path), and `stable` returns true for an `underTmp` path unless `tmpLinked`, in
+which case today's `createdOnce` still applies. `checkStability` runs once after
+every event has been classified, so `tmpLinked` is a whole-action fact when any
+`judge` runs; with one link anywhere under the tmpfs, every verdict is today's.
+`exec-unreadable:under-tmp` is unchanged.
+
+*Why it is safe.*
+
+1. Under the fresh tmpfs the classifier never asks the disk (`lookup`,
+   `resolve.go`): a name there is something the action made (`links`, `dirs`,
+   `created`) or it is absent. `fresh` excludes the checkout and its ancestors,
+   every declared root and their ancestors, so nothing the sandbox binds beneath
+   `$HOME` is in the set.
+2. A lookup can leave the tmpfs only through a symbolic link located inside it.
+   Hard links and renames from outside cannot exist: the scratch tmpfs are
+   separate mounts (and the checkout and each state root are binds), so they fail
+   with `EXDEV` (the fuzzer model now says so).
+3. So with no link there, a path under the tmpfs reaches the action's own files
+   or nothing: neither an input nor a repository write. `..` out of it is exact,
+   because no component is a link.
+4. Nothing but the action's own files is reachable under `Tmpdir` or `Home`
+   inside the sandbox. The staging directory `$TMPDIR/.kiln-newroot`
+   (`internal/sandbox/plan.go`, `StageDirName`, `StageRoot`) is built on the
+   STAGING tmpfs mounted on the OLD root's `Tmpdir` (`KindStageTmpfs`,
+   `KindStageDir`, `KindRootTmpfs`, `plan.go` in `Plan`); the step's own
+   `Tmpdir` is a second, fresh tmpfs mounted inside the new root
+   (`KindTmpfs`), and `pivot` detaches the old root (`MNT_DETACH`,
+   `sandbox_linux_amd64.go` `pivot`). The stage directory is therefore not visible
+   from inside. The read-only roots beneath `$HOME` are bound at declared paths
+   (`homeRoRoots`), which `fresh` excludes; the anchor tmpfs that hold them are
+   read-only, and a `$HOME/.cargo`-style anchor's missing parents are directories
+   the sandbox, not the action, made (a present look there is an ancestor node
+   under D39 rule (a) or a declared root's own rule).
+
+The census records, for an unstable path, the op class of the look that ENTERED
+the lookup set that failed the rule (`noteLookupOp(set, abs)`), not the first
+look of the path in any set; this is census-only and the record bytes are
+unchanged (`TestCensusDoesNotChangeTheRecord`). `kiln:recorder` is 8. The
+differential fuzzer's model treats any tmp lookup as own-or-absent while no link
+was made in the tmpfs. Tests: `internal/traced/tmpcontain_test.go`.
 
 **One explicit image label.** The record workflow and every job that consumes
 its records use one explicit `ubuntu-NN.04` label, never `ubuntu-latest`: the
