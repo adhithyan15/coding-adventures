@@ -363,6 +363,44 @@ admitted-case ordinal (`SuitePlan.check_admits`, `ir_eval.compile_admit_check`),
 subject-dependent argument the op's `admit` reads refused statically (VER04r 4.5 and 16.9).
 `tests/test_admit_calls.py` holds the same documents as the generator's `tests/admit_calls.rs`.
 
+## The v2 conformance kit (S5a)
+
+VER04r section 11 adds six categories to the shared fixture family `warrant-corpus-conformance-v1`:
+`v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk` and `v2-fault` (a seventh, `v2-binding`, is S5c's).
+The oracle **derives every expectation**: `src/coding_adventures_warrant_oracle/conformance.py` is the
+derivation module, and the hand-written case tables, the two small kit documents the chunk cases come from
+and `make_conformance.py` live in `tests/fixtures/conformance-v2/` (its README says how to add a case).
+
+| Category | The module derives it from |
+|---|---|
+| `v2-value` | the strict JSON reader of VER04i 9.1, the section 2.3 decoder (`decode_int_text` and the typed forms), the section 2.4 stream encoder |
+| `v2-arith` | one node of the typed IR evaluator over two `lit` operands |
+| `v2-ir` | the IR evaluator with each `subject_op` rewritten to a pure stand-in model for the value, and the pure call trace of section 4.4 on the unrewritten tree for `calls` |
+| `v2-domain` | a descriptor-JSON reader over `descriptor_size` and the leaf constructors, then `size()` and `nth()` |
+| `v2-chunk` | the chunk-file check of sections 5.5 and 14, then `SuitePlan.run_chunk` (one chunk, by unranking) |
+| `v2-fault` | the existing fault templates and the three wrappers of section 8.1 |
+
+A table row states a case's inputs and its **intent**; the oracle derives the outcome independently, and a row
+whose intent disagrees fails the build naming the case id. The oracle's own codes are mapped to the kit's closed
+vocabulary (section 16.13 R25) in `classify_ir_refusal`; each kit case triggers exactly one error.
+
+```bash
+python3 tests/fixtures/conformance-v2/make_conformance.py --write --fixture DIR   # the six v2-*.json files
+python3 tests/fixtures/conformance-v2/make_conformance.py --check --fixture DIR   # rebuild and compare bytes
+```
+
+`--fixture` defaults to the family directory `code/specs/fixtures/warrant-corpus-conformance-v1`; `--check` also
+requires an `index.json` that is present to hold one row per derived file and skips that check when there is none.
+Exit codes: 0 identical, 1 the bytes differ, 2 a table and its derivation disagree or any other error. The script
+never writes `index.json` (the family's v1 script does). S5a commits **no** fixture file; S5b does.
+
+`tests/test_conformance_mutants.py` is the mutant test of [D42]: sixteen named wrong evaluators (no wrap,
+saturation, a signed compare on the bit pattern, eager `and`, first-binder-fastest enumeration, a missing chunk
+index in the stream prefix, sequential `pre` rewrites ...), each of which must change the derived expectation of at
+least one case of each category it is named for. `tests/test_conformance_cross.py` re-derives slices of the kit by
+different algorithms (Python integers, `struct.pack`, a naive `itertools.product` enumerator, the cost model written
+out) and runs the v1 checker's strict reader and canonical writer over the v2 files.
+
 ## Not yet done
 
 * Evaluating `ir.data` (S11) and `inout`/`ensures` monitoring (S12): a document above `ir.fixed` and

@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import importlib.util
 import pathlib
+import sys
+from types import SimpleNamespace
 
 import pytest
 
@@ -55,3 +58,33 @@ TINY = b"""warrant tiny v1
 @pytest.fixture(scope="session")
 def tiny() -> bytes:
     return TINY
+
+
+# -- the v2 conformance kit (slice S5a) ---------------------------------------------------------------
+
+CONFORMANCE_DIR = pathlib.Path(__file__).resolve().parent / "fixtures" / "conformance-v2"
+
+
+def load_make_conformance():
+    """``tests/fixtures/conformance-v2/make_conformance.py`` as a module (it is a script, not a package)."""
+    spec = importlib.util.spec_from_file_location("make_conformance", CONFORMANCE_DIR / "make_conformance.py")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["make_conformance"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.fixture(scope="session")
+def kit():
+    """The whole v2 kit, derived once per test session (about a minute: the kit holds a 2**24 suite).
+
+    ``kit.kits`` are the derived kit documents, ``kit.tables`` the six case tables, ``kit.files`` the
+    text of the six ``v2-*.json`` files and ``kit.rows`` their index rows.
+    """
+    from coding_adventures_warrant_oracle import conformance as C
+
+    mc = load_make_conformance()
+    kits = mc.load_kits()
+    tables = mc.load_tables(kits)
+    files, rows = C.build_files(tables, kits)
+    return SimpleNamespace(mc=mc, kits=kits, tables=tables, files=files, rows=rows)
