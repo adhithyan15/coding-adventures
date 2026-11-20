@@ -236,6 +236,10 @@ func (c *classifier) isTmpRoot(abs string) bool {
 }
 
 // lookup says what abs is.  An unreadable path is a reason and reads as absent.
+//
+// It reads per-event state (callOK, for the sealed root's shortcut), so it must
+// only be called while an event is being classified, never from judge,
+// checkStability or settleReshaped, where callOK is the last event's.
 func (c *classifier) lookup(abs string) node {
 	if c.isTmpRoot(abs) {
 		return node{kind: KindDir}
@@ -245,8 +249,14 @@ func (c *classifier) lookup(abs string) node {
 		// absent.  The post-run disk is never asked.
 		return c.madeOrAbsent(abs)
 	}
-	if c.sealedOn() && !c.sandboxHas(abs) {
+	if c.sealedOn() && !c.callOK && !c.sandboxHas(abs) {
 		// The sealed root holds nothing here, whatever the host has (D43).
+		// Only a FAILED call is judged this way: its absence is what D43
+		// explains.  A call that SUCCEEDED (and an exec's ELF loader, resolved
+		// within it) found something the plan does not hold, so it keeps the
+		// verdict it always had, from the host's disk: a host-read, and never
+		// an unstable path invented by the shortcut (merged /usr: the
+		// loader /lib64/ld-linux-x86-64.so.2 with no /lib64 declared).
 		return node{}
 	}
 	n, ok := c.cache[abs]

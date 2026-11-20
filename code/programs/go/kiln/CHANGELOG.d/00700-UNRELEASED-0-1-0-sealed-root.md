@@ -45,3 +45,8 @@
   so a policy that does not declare the target keeps its pre-D43 verdict
   (`TestSealedRootFollowsASymlinkedDeclaredRoot`). The probe script of
   `TestSandboxSealedRoot` no longer ends in a false `test`.
+- The sealed lookup shortcut applies only while a FAILED call is judged. A
+  successful call, and an exec's ELF loader, read the host as before D43 and
+  keep the pre-D43 verdict (`TestSealedRootSuccessfulExecOnMergedUsr`, a full
+  merged-`/usr` host: on Linux CI, the loader under an undeclared `/lib64` turned
+  a successful exec into `unstable-path`).

@@ -3968,7 +3968,15 @@ EXISTS only if it is
   `internal/record`, whose fixture declares only `/bin` and `/sbin`; macOS, where
   `/bin` is a real directory, did not.
 
-Everything else is SANDBOX-ABSENT (`sandboxHas`, `sandboxAbsent`). The set is a
+Everything else is SANDBOX-ABSENT (`sandboxHas`, `sandboxAbsent`). Lookup answers a
+sandbox-absent path as absent without asking the host disk ONLY while it judges
+a FAILED call; that call's absence is what this decision explains. A call that
+SUCCEEDED found something the plan does not hold, and its walk (including an
+exec's ELF loader, resolved within the exec) reads the host as before D43. So it
+keeps exactly the pre-D43 verdict, a `host-read`, and the shortcut never invents
+an `unstable-path`. Linux CI found this: with merged `/usr` and no `/lib64`
+declared, the loader `/lib64/ld-linux-x86-64.so.2` of a successful exec was
+answered absent. The set is a
 SUPERSET of what the plan mounts (it admits every declared root whether or not
 the host has it), so an error in it can only keep today's behaviour. It is active
 only when `ScratchDirs` is non-empty; the recorder passes

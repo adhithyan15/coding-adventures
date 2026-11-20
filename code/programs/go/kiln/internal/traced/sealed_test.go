@@ -1,6 +1,8 @@
 package traced
 
 import (
+	"debug/elf"
+	"encoding/binary"
 	"strings"
 	"testing"
 
@@ -375,6 +377,59 @@ func TestSealedRootFollowsASymlinkedDeclaredRoot(t *testing.T) {
 	for _, r := range h.run(fail(stat("/usr/share/x"), "ENOENT")).Reasons {
 		if strings.Contains(r, "/usr/share") {
 			t.Errorf("an absent probe beside the root's target asked the host: %q", r)
+		}
+	}
+}
+
+// The whole merged-/usr host (/bin, /lib, /lib64 and /sbin all symlinks into
+// /usr, sh -> dash, the loader reached through /lib64 -> usr/lib64 and a
+// relative link back into /usr/lib) under a policy that declares only /bin
+// and /sbin: internal/record's fixture on Ubuntu.  A SUCCESSFUL exec found
+// its loader at a path the exists-set lacks.  Before the fix, lookup answered
+// "absent" for it and the action gained trace-incomplete:unstable-path.  The
+// sealed shortcut is for failed calls only, so the verdict is the pre-D43 one,
+// byte for byte.  A FAILED probe at a sandbox-absent path is still a
+// constant.
+func TestSealedRootSuccessfulExecOnMergedUsr(t *testing.T) {
+	const ld = "/lib64/ld-linux-x86-64.so.2"
+	merged := func(sealed bool) *harness {
+		h := newHarness(t)
+		if sealed {
+			h.cfg.ScratchDirs = scratchDirs
+		}
+		h.fs = newMemFS()
+		h.fs.tree = h.tree
+		h.cfg.FS = h.fs
+		for _, d := range []string{"/usr", "/usr/bin", "/usr/lib", "/usr/lib/x86_64-linux-gnu", "/usr/lib64", "/usr/sbin", "/usr/local", "/usr/local/bin", "/etc", "/tmp", "/home", "/dev", "/var"} {
+			h.fs.dir(d)
+		}
+		h.fs.link("/bin", "usr/bin").link("/lib", "usr/lib").link("/lib64", "usr/lib64").link("/sbin", "usr/sbin")
+		h.fs.link("/usr/bin/sh", "dash")
+		h.fs.bytes("/usr/bin/dash", buildELF(ld, elf.ELFCLASS64, binary.LittleEndian))
+		h.fs.link("/usr/lib64/ld-linux-x86-64.so.2", "../lib/x86_64-linux-gnu/ld-linux-x86-64.so.2")
+		h.fs.file("/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2")
+		h.cfg.HostRoots.Roots = []legacy.HostRoot{{Path: "/bin", Kind: legacy.RootImage}, {Path: "/sbin", Kind: legacy.RootImage}}
+		return h
+	}
+	for _, ev := range []trace.Event{execve("/bin/sh", "sh"), execve("/usr/bin/sh", "sh"), stat(ld), openAbs(ld)} {
+		before := merged(false).run(ev)
+		after := merged(true).run(ev)
+		if strings.Join(before.Reasons, "|") != strings.Join(after.Reasons, "|") {
+			t.Errorf("%s %s: the sealed root changed a successful call's verdict: before %q, after %q", ev.Syscall, ev.Path, before.Reasons, after.Reasons)
+		}
+		for _, r := range after.Reasons {
+			if strings.HasPrefix(r, rUnstable) {
+				t.Errorf("%s %s: %q", ev.Syscall, ev.Path, after.Reasons)
+			}
+		}
+	}
+	// PATH search: the failed exec of a name the host HAS but the sealed root
+	// cannot (/usr/local is not under any declared root or its target).
+	h := merged(true)
+	h.fs.file("/usr/local/bin/sh")
+	for _, r := range h.run(fail(execve("/usr/local/bin/sh", "sh"), "ENOENT")).Reasons {
+		if strings.Contains(r, "/usr/local") {
+			t.Errorf("a failed probe at a sandbox-absent path asked the host: %q", r)
 		}
 	}
 }
