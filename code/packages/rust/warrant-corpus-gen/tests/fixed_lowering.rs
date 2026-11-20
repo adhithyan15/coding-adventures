@@ -56,11 +56,6 @@ fn model_json(l: &Lowered, name: &str) -> String {
         .collect()
 }
 
-fn level_of(e: &GenError) -> Option<&'static str> {
-    assert_eq!(e.code, code::LEVEL, "{e}");
-    e.level
-}
-
 // ---- shapes and types -------------------------------------------------------------------------
 
 #[test]
@@ -110,12 +105,13 @@ fn a_bare_literal_takes_the_other_operands_type() {
     assert!(model_json(&l, "i").contains(r#"["lit",{"type":"Int","value":"3"}]"#));
 }
 
-// ---- Option is an IR-only intermediate (D23, R8) ---------------------------------------------------
+// ---- Option is a real type of ir.data; the intermediate use adds nothing (D48, R29) ---------------
 
 #[test]
-fn an_option_is_refused_with_ir_data_everywhere_but_under_unwrap_or() {
+fn an_option_lowers_everywhere_and_needs_ir_data_except_under_unwrap_or() {
+    // S11b: a model result, an op result, a parameter and a binder may be an `Option` ([D48]); each
+    // unit `requires` `ir.data` (R9, the type half).  Before S11b each was refused at `ir.data`.
     let cases: [(&[&str], &str); 4] = [
-        // a model result, an op result, a parameter, a binder
         (
             &OPS,
             "  model m(a: U8, b: U8) -> Option<U8> = checked_add(a, b)\n",
@@ -129,10 +125,18 @@ fn an_option_is_refused_with_ir_data_everywhere_but_under_unwrap_or() {
     ];
     for (ops, extra) in cases {
         let src = doc_ops(" v1", ops, extra);
-        let e = with_file(&src, |f| lower_document(f).unwrap_err());
-        assert_eq!(level_of(&e), Some("ir.data"), "{extra}: {e}");
+        let l = with_file(&src, lower_document).unwrap_or_else(|e| panic!("{extra}: {e}"));
+        let all: Vec<&[&str]> = l
+            .ops
+            .iter()
+            .map(|o| o.requires.as_slice())
+            .chain(l.models.iter().map(|m| m.requires.as_slice()))
+            .chain(l.suites.iter().map(|s| s.requires.as_slice()))
+            .collect();
+        assert!(all.iter().any(|r| r.contains(&"ir.data")), "{extra}: {all:?}");
     }
-    // an Option operand of anything but unwrap_or's first operand, and an Option in a branch
+    // an Option operand of anything but unwrap_or's first operand, and an Option in a branch, lowers
+    // (or is a typing error the checker names: `unwrap_or(0u8, ..)` has the wrong operand order)
     let operands = [
         "  model m(a: U8, b: U8) -> Bool = checked_add(a, b) == checked_add(b, a)\n",
         "  model m(a: U8, b: U8) -> U8 = unwrap_or(0u8, checked_add(a, b))\n",
@@ -140,13 +144,19 @@ fn an_option_is_refused_with_ir_data_everywhere_but_under_unwrap_or() {
     ];
     for extra in operands {
         let src = doc_ops(" v1", &OPS, extra);
-        // the checker may refuse these first; whichever refuses, it is never lowered
-        let e = with_file(&src, |f| lower_document(f).unwrap_err());
-        assert!(
-            e.code == code::CHECK || (e.code == code::LEVEL && e.level == Some("ir.data")),
-            "{extra}: {e}"
-        );
+        match with_file(&src, lower_document) {
+            Ok(l) => assert!(l.models[0].requires.contains(&"ir.data"), "{extra}"),
+            Err(e) => assert!(e.code == code::CHECK || e.code == code::TYPE, "{extra}: {e}"),
+        }
     }
+    // the intermediate use: `unwrap_or(producer(..), d)` is `ir.fixed` and no `ir.data` (R29 (b), (d))
+    let src = doc_ops(
+        " v1",
+        &OPS,
+        "  model m(a: U8, b: U8) -> U8 = unwrap_or(checked_add(a, b), 255u8)\n",
+    );
+    let l = with_file(&src, lower_document).unwrap();
+    assert_eq!(l.models[0].requires, ["ir.core", "ir.fixed"]);
 }
 
 // ---- the static width of from_be / from_le: one pass, the checker's rule ---------------------------
@@ -351,11 +361,11 @@ fn a_unit_is_named_by_its_first_unlowerable_construct_and_never_by_ir_fixed() {
             .and_then(|b| b.level)
     };
     // S10c-2 evaluates `ir.fixed` (and S10t-2 `ir.tuple`): a unit that uses only those is not
-    // blocked at all, and a constructor (`Some`, `ir.data`) still blocks, whatever precedes it
+    // blocked at all, and a constructor (`Some`, `ir.data`) lowers since S11b: nothing blocks it
     assert_eq!(level("only_fixed"), None);
     assert_eq!(level("fixed_then_tuple"), None);
     assert_eq!(level("tuple_then_fixed"), None);
-    assert_eq!(level("fixed_then_ctor"), Some("ir.data"));
+    assert_eq!(level("fixed_then_ctor"), None);
     let blocked = |n: &str| {
         rows.iter()
             .find(|r| r.kind == ItemKind::Model && r.name == n)
@@ -379,8 +389,10 @@ fn root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../..")
 }
 
-/// The real binary, on a document beyond what is evaluated (`vos-sched-any.warrant`, `ir.data`):
-/// refused naming the level, nothing is written.  (A refusal exits 2, the oracle's convention; 1 is reserved for a `--check` drift.)
+/// The real binary, on a document beyond what is generated (`arithmetic.warrant`: `ir.data` lowers since
+/// S11b, all 63 claims, and `generate` refuses it until S11c-2): refused naming the level, nothing is
+/// written.  (`vos-sched-any.warrant`, which this test used while `ir.data` was a lowering refusal, is refused
+/// by the `W0701` rule of an example now that it lowers.)  (A refusal exits 2, the oracle's convention; 1 is reserved for a `--check` drift.)
 #[test]
 fn the_binary_refuses_a_document_beyond_the_evaluated_levels_and_writes_nothing() {
     let bin = env!("CARGO_BIN_EXE_warrant-corpus-gen");
@@ -394,7 +406,7 @@ fn the_binary_refuses_a_document_beyond_the_evaluated_levels_and_writes_nothing(
         let mut cmd = Command::new(bin);
         cmd.current_dir(root()).args([
             "--warrant",
-            "code/specs/vos-sched-any.warrant",
+            "code/specs/arithmetic.warrant",
             "--profile",
             profile.to_str().unwrap(),
             "--out",
