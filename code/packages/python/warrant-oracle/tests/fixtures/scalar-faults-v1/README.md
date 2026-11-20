@@ -19,7 +19,7 @@ of the first argument's type.
 | `scalar_faults_v1.warrant` | generated synthetic document: `sat_<t>` for the eight fixed-width types, `satr_<t>` (a `Result` with a third, ignored parameter) for `U8`, `U64`, `I8`, `I64`, shift ops over each signedness and width combination, the scalar `missing-error` shapes (a parameter of the exact type, the zero, a `Bytes<4>` zero literal), `me_u8`'s second claim on its `Err` region (so that control has two required claims), and `sat_u8_tuple_param`, whose tuple parameter adds `ir.tuple` to the row's `requires` (R9) |
 | `scalar_faults_v1.profile` | the `corpus.profile`: one `fault <op> <fault>` line per op and fault |
 | `scalar_faults_v1.oracle-faults.json` | `parity_dumps.faults_view`: 41 fault rows and the 41 controls under the explicit closed gate and under the open gate (`controls_shipped` and `controls_gate_on`) |
-| `scalar_faults_v1.oracle-refusals.json` | every signature each fault refuses (`Nat` parameters, mixed widths or signs, other result types, a non-`Result` for `missing-error`, an `Option` payload, a variant payload, a named-width `Bytes` payload with nothing to take), each with the code `generation` and a message starting `fault:` |
+| `scalar_faults_v1.oracle-refusals.json` | every signature each fault refuses (`Nat` parameters, mixed widths or signs, other result types, a non-`Result` for `missing-error`, a variant payload (no parameter of its type, so no template: the reason is `missing-error has no template for this payload type`, in every position), a named-width `Bytes` payload with nothing to take), each with the code `generation` and a message starting `fault:` |
 
 `.gitattributes` (`* -text`) keeps the bytes exact on every platform.
 
@@ -49,3 +49,10 @@ controls) and refuse the signatures of `oracle-refusals.json` with the code `fau
 or version. Regenerate with `python3 make_scalar_faults.py`; never edit a file by hand.
 
 A record or `Option` payload of `missing-error` needs `ir.data` and is not in this directory (slice S11c-1).
+
+**52 refusal rows, not 53 (S11c-1, owner decision D71).** The first edition pinned `missing-error/an-option-payload`
+(`Result<Option<U8>,E>`) as refused. From S11c-1 the oracle has a template for it (`["none","U8"]`, VER04r 8.2), so
+the row was removed and this dump regenerated; every other byte of the four files is unchanged (the variant row keeps
+its bytes). `fault_row` has one rule and is always given the document's records and variants, as this script does.
+`rust/warrant-corpus-gen/tests/scalar_faults_parity.rs` asserts 52 rows; the generator keeps refusing the shape until
+S11c-2.
