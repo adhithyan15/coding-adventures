@@ -3534,7 +3534,7 @@ write-open counts, and so does a rewrite between two execs); otherwise
 **`/proc`.** The `ephemeral` list of `host-roots.json` (§5.3) is the one
 authoritative list. Its seed allows the ubiquitous entries: `/proc/self/{exe,maps,cgroup,mountinfo}`,
 `/proc/{meminfo,stat,cpuinfo,filesystems}`, `/sys/devices/system/cpu/**`,
-`/sys/fs/cgroup/**` and `/dev/fd/N`.
+`/sys/fs/cgroup/**`, `/dev/fd/N` and `/proc/self/fd` with `/proc/self/fd/N` (D37).
 
 `/proc/self/status` and `/proc/self/stat` reveal `TracerPid`, so a
 program could behave differently when traced. A read of either gives
@@ -3674,11 +3674,13 @@ Manifests never store out-of-repository paths. Instead,
      "fetchers": ["/opt/hostedtoolcache/rust/1.99.1/bin/cargo"]}
   ],
   "ephemeral": ["/dev/null", "/dev/urandom", "/dev/fd/*",
-                "/proc/self/exe", "/proc/self/maps", "/proc/self/cgroup",
-                "/proc/self/mountinfo", "/proc/meminfo", "/proc/stat",
+                "/proc/self/exe", "/proc/self/fd", "/proc/self/fd/*",
+                "/proc/self/maps", "/proc/self/cgroup", "/proc/self/mountinfo", "/proc/meminfo", "/proc/stat",
                 "/proc/cpuinfo", "/proc/filesystems",
                 "/sys/devices/system/cpu/**", "/sys/fs/cgroup/**"],
-  "absent-ok": ["$HOME/.config", "$HOME/.npmrc", "/selinux", "/sys/fs/selinux"]
+  "absent-ok": ["$HOME/.config", "$HOME/.npmrc", "/include", "/opt/rh", "/pyvenv.cfg",
+                "/selinux", "/sys/fs/selinux",
+                "/sys/kernel/mm/transparent_hugepage/hpage_pmd_size"]
 }
 ```
 
@@ -3755,6 +3757,42 @@ sandbox tests' policy fixtures derive their `ephemeral` and `absent-ok` lists
 from the real `code/kiln/legacy/host-roots.json` (they once carried their own
 short lists); and a change to `code/kiln/legacy/**` selects the job in
 `ci-gates.json`.
+
+**Decision D37: `/proc/self/fd` and four absent probes (first real-build
+censuses).** Every C/C++ action reads `/proc/self/fd/3` thousands of times
+(clang `readlink`s `/proc/self/fd/N` for each header it opens, after one
+`access("/proc/self/fd")` per process), and four absent probes were flagged
+`host-read`. The policy now has, and `kiln:recorder` needs no version bump
+(the change is in `policy:host-roots.json`, which is in `consumed` and so in
+the digest, as in D27):
+
+- `ephemeral` gains `/proc/self/fd` and `/proc/self/fd/*`: the same kernel
+  object as the `/dev/fd/*` entry already there. A single `*` matches one
+  component, and `X/**` is the only form that also covers `X`, so the directory
+  and its entries are two entries.
+- `absent-ok` gains the exact names `/sys/kernel/mm/transparent_hugepage/hpage_pmd_size`
+  (the Go runtime's probe, absent on these runners), `/pyvenv.cfg` (python),
+  `/opt/rh` and `/include` (compiler search paths). An `absent-ok` entry is
+  allowed only on a traced `ENOENT`. There is deliberately no
+  `transparent_hugepage/**`: `enabled` and `defrag` are tunable and change
+  runtime behaviour. None of the four is `ephemeral`.
+
+What the new entries do not cover (each pinned by `internal/traced/procfd_test.go`
+against the real policy file):
+
+- (a) An OPEN through `/proc/self/fd/N` or `/dev/fd/N` is classified by the
+  descriptor's own `-y` path, whatever the ephemeral list says
+  (`openVirtual`, `ops.go:226-233`): an open of a host file through it is a
+  `host-read` of that file. The list governs only metadata calls.
+- (b) A path that continues past the magic link (`/proc/self/fd/N/x`) is refused
+  as `proc-path` by `procMagicBeyond` (`host.go:150`), which `observeVirtual`
+  tests before `ephemeralMatch` (`host.go:120` against `host.go:124`).
+- (c) `/proc/<pid>/fd` and `/proc/<pid>/fd/N` for a numeric pid, and
+  `thread-self`, are not matched by the `self` entries and stay `proc-path`:
+  the pids in the trace are the tracer's.
+- (d) A PRESENT read of any of the four absent-ok names stays `host-read`
+  (`observeHost`, `host.go:208`: `absentOK` is consulted only when the path is
+  absent).
 
 **One explicit image label.** The record workflow and every job that consumes
 its records use one explicit `ubuntu-NN.04` label, never `ubuntu-latest`: the
