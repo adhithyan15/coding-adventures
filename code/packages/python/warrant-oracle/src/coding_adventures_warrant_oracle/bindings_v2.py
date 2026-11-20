@@ -426,7 +426,7 @@ def read_corpus(corpus: object) -> Corpus:
             oname, params, parse_ty(row["ret"], types, widths), list(widths), inout, bool(row.get("fresh"))
         )
         if row.get("fresh") and inout:
-            raise BindingKitError(f"op {oname}: fresh and inout together (VER04i section 5)")
+            raise BindingKitError(f"op {oname}: fresh and inout together (VER04r section 6)")
     # Field and payload types must parse too (they are what the signatures need, recursively).
     for row in types.values():
         if row["kind"] == "record":
