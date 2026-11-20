@@ -130,6 +130,7 @@ fn impl_type(
             while t.get(j + 1).is_some_and(|c| c.is_punct("::"))
                 && t.get(j + 2).is_some_and(|c| c.kind == Kind::Ident)
             {
+                crate::steps::tick();
                 name = t[j + 2].text.clone();
                 j += 2;
             }
@@ -288,9 +289,11 @@ pub fn recursion(cx: &mut Ctx<'_>) {
     let mut traits: BTreeSet<String> = BTreeSet::new();
     let mut gaps: Vec<Gap> = Vec::new();
     for (fi, f) in files.iter().enumerate() {
+        crate::steps::tick();
         collect_file(f, fi, &mut nodes, &mut traits, &mut gaps);
     }
     for g in &gaps {
+        crate::steps::tick();
         let file = files[g.file].path.clone();
         cx.add(Rule::Vt03, &file, g.line, g.message.clone());
     }

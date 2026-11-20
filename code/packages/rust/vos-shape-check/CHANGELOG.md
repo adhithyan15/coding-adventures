@@ -4,6 +4,22 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Added (VOS-039d, VOS-D089)
+
+- **The tick audit** (`tests/tick_audit.rs`, VOS03 section 7.1).  Every `while`, `loop` and `for` in `src/**/*.rs`
+  outside `#[cfg(test)]` calls `steps::tick()` in its own body or has a `// bounded: <reason>` line directly above
+  it; the test fails with every offending `file:line`.  Loops are found over RS01 tokens (`lex_documents`,
+  `FileCtx`), with no second scanner: `for` is a loop only with an `in` before its body, `for<'a>` and
+  `impl X for Y` are not, and an inner loop's tick does not excuse the outer loop.  Negative controls cover each
+  case.
+- **Ticks in 180 loops** that had none (the lexer adapter and comment scan, the shebang scan, `FileCtx`
+  construction, the outer loop of `mask_cfg_test`, and the outer loops of the rule passes, the loader, the manifest
+  reader and the TOML reader); two loops carry `// bounded:` (the lexer retry, at most four attempts; the fixed pair
+  of editions).  Findings are unchanged; only the step count grows.
+- **Linearity tests of the formerly invisible paths**: plain tokens, many block comments, comments after `#!`,
+  kept `#[..]` attributes and alternating `#[cfg(test)]` items, each n against 4n against 16n.
+
+
 ### Added (VOS-D112)
 
 - **SH19 (h), a closed attribute list for `kind = "contract"` crates** (`command::attributes`).  Every attribute is

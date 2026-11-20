@@ -78,6 +78,25 @@ broken variants (which must fail) under `tests/fixtures/`, CLI exit codes and
 filesystem refusals. Fixture manifests are stored as `Cargo.toml.fixture` so no
 nested Cargo root exists under the package. Per-item security regression tests live in `tests/security.rs`. Line coverage is reported by llvm-cov (see the changelog).
 
+## The step counter and the tick audit
+
+The linearity tests (`scales_linearly`, n against 4n against 16n) do not read a clock.  They read a
+deterministic step counter (`src/steps.rs`): a scanning loop calls `steps::tick()` once per iteration, and a rescan
+that turns quadratic shows up as a ratio near 16 instead of 4 for a 4x input.  A loop that does not tick is
+invisible to that counter, so VOS03 section 7.1 (VOS-D089) makes it a rule:
+
+```text
+every while / loop / for in src/**/*.rs (outside #[cfg(test)]) either
+  - calls tick() in its own body, or
+  - has the line  // bounded: <reason>  directly above it
+```
+
+`tests/tick_audit.rs` enforces the rule on this crate's own source.  It finds loops with the same grammar-driven
+lexer and `FileCtx` the checker uses (no second scanner), and a failure names every `file:line` that breaks it.
+Negative controls pin what counts: an inner loop's tick does not excuse the outer loop, and `impl X for Y` and
+`for<'a>` are not loops.  When you add a scanner loop, tick it; use `bounded:` only when the trip count is a
+constant or one step of an already-ticked outer loop.  Iterator chains and recursion are outside the audit.
+
 ## Dependencies
 
 Only in-repo crates: `grammar-tools`, `lexer`, `parser`, `coding-adventures-toml-lexer`

@@ -155,6 +155,7 @@ const SHOW_CAP: usize = 48;
 fn show(s: &str) -> String {
     let mut out = String::new();
     for (n, c) in s.chars().enumerate() {
+        crate::steps::tick();
         if n >= SHOW_CAP {
             out.push_str("...");
             break;
@@ -220,6 +221,7 @@ fn slots(t: &TypeDef) -> Vec<Slot> {
     let mut out = Vec::new();
     if t.keyword == "enum" {
         for v in &t.variants {
+            crate::steps::tick();
             for f in &v.fields {
                 crate::steps::tick();
                 out.push(Slot {
@@ -365,6 +367,7 @@ fn reserved(name: &str) -> bool {
 fn vocabulary(cx: &mut Ctx<'_>) {
     let mut found: Vec<Finding> = Vec::new();
     for f in cx.files {
+        crate::steps::tick();
         let t = &f.toks;
         let mut add = |line: u32, message: String| {
             found.push(Finding {
@@ -575,6 +578,7 @@ fn attribute_defect(body: &[crate::lexer::Token]) -> Option<String> {
 fn attributes(cx: &mut Ctx<'_>) {
     let mut found: Vec<Finding> = Vec::new();
     for f in cx.files {
+        crate::steps::tick();
         for a in &f.attrs {
             crate::steps::tick();
             if let Some(why) = attribute_defect(f.attr_body(a)) {
@@ -610,6 +614,7 @@ pub fn command_rules(cx: &mut Ctx<'_>) {
         }
         let mut defect = flag_defect(t);
         for s in slots(t) {
+            crate::steps::tick();
             match names.judge(&s.ty) {
                 Ok(Some(named)) => {
                     refs_by.entry(named).or_default().insert(t.name.as_str());
@@ -673,6 +678,7 @@ pub fn command_rules(cx: &mut Ctx<'_>) {
             );
         }
         for v in t.variants.iter().filter(|v| v.non_exhaustive) {
+            crate::steps::tick();
             add(
                 v.line,
                 format!(
@@ -694,6 +700,7 @@ pub fn command_rules(cx: &mut Ctx<'_>) {
             );
         }
         for s in slots(t) {
+            crate::steps::tick();
             match names.judge(&s.ty) {
                 Err(why) => add(
                     s.line,

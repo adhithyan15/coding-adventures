@@ -203,20 +203,25 @@ pub fn interior_mutable(types: &[TypeDef]) -> BTreeSet<String> {
     // in the number of mentions, not a quadratic fixed-point sweep).
     let mut users: BTreeMap<&str, Vec<usize>> = BTreeMap::new();
     for (n, td) in types.iter().enumerate() {
+        crate::steps::tick();
         for id in &td.idents {
+            crate::steps::tick();
             users.entry(id.as_str()).or_default().push(n);
         }
     }
     let mut set: BTreeSet<String> = BTreeSet::new();
     let mut work: Vec<String> = Vec::new();
     for td in types {
+        crate::steps::tick();
         if td.idents.iter().any(|x| is_interior_name(x)) && set.insert(td.name.clone()) {
             work.push(td.name.clone());
         }
     }
     while let Some(name) = work.pop() {
+        crate::steps::tick();
         if let Some(defs) = users.get(name.as_str()) {
             for &n in defs {
+                crate::steps::tick();
                 if set.insert(types[n].name.clone()) {
                     work.push(types[n].name.clone());
                 }
@@ -269,6 +274,7 @@ fn impl_header_mask(f: &FileCtx) -> Vec<bool> {
     let t = &f.toks;
     let mut mask = vec![false; t.len()];
     for i in 0..t.len() {
+        crate::steps::tick();
         if f.in_attr[i] || !t[i].is_ident("impl") {
             continue;
         }
@@ -281,6 +287,7 @@ fn impl_header_mask(f: &FileCtx) -> Vec<bool> {
         }
         let mut k = i;
         while k < t.len() {
+            crate::steps::tick();
             let x = &t[k];
             if x.kind == Kind::Punct {
                 match x.text.as_str() {
@@ -318,6 +325,7 @@ fn shadow_position(f: &FileCtx, body: (usize, usize), var: &str) -> usize {
     }
     let mut k = body.0;
     while k < body.1 {
+        crate::steps::tick();
         if t[k].is_punct("=>") {
             // A match arm's pattern may bind the variable: `i => a[i]`.  Read
             // back to the arm's start (`,` or the opening `{`, skipping groups).
@@ -325,6 +333,7 @@ fn shadow_position(f: &FileCtx, body: (usize, usize), var: &str) -> usize {
             let mut start = None;
             let floor = k.saturating_sub(512).max(body.0);
             while j > floor {
+                crate::steps::tick();
                 j -= 1;
                 let x = &t[j];
                 if x.kind == Kind::Punct {
@@ -352,6 +361,7 @@ fn shadow_position(f: &FileCtx, body: (usize, usize), var: &str) -> usize {
             let mut e = k + 1;
             while e < body.1 && !t[e].is_punct("=") && !t[e].is_punct(";") && !t[e].is_ident("let")
             {
+                crate::steps::tick();
                 if t[e].is_ident(var) {
                     return k;
                 }
@@ -377,6 +387,7 @@ fn for_loops(cx: &mut Ctx<'_>, f: &FileCtx) -> Vec<LoopInfo> {
     let mut good = Vec::new();
     let in_impl_header = impl_header_mask(f);
     for i in 0..t.len() {
+        crate::steps::tick();
         if f.in_attr[i]
             || !t[i].is_ident("for")
             || in_impl_header[i]
@@ -390,6 +401,7 @@ fn for_loops(cx: &mut Ctx<'_>, f: &FileCtx) -> Vec<LoopInfo> {
         let mut k = i + 1;
         let mut in_at = None;
         while k < t.len() {
+            crate::steps::tick();
             let x = &t[k];
             if x.kind == Kind::Punct {
                 match x.text.as_str() {
@@ -426,6 +438,7 @@ fn for_loops(cx: &mut Ctx<'_>, f: &FileCtx) -> Vec<LoopInfo> {
         // The range expression runs to the body brace.
         let mut j = p + 1;
         while j < t.len() && !t[j].is_punct("{") && !t[j].is_punct(";") && !t[j].is_ident("for") {
+            crate::steps::tick();
             if matches!(t[j].text.as_str(), "(" | "[") && t[j].kind == Kind::Punct {
                 j = f.pair[j];
             }
@@ -478,6 +491,7 @@ fn const_underscore_ranges(f: &FileCtx) -> Vec<(usize, usize)> {
     // file of unterminated `const _:` costs one pass, not one per item.
     let mut covered = 0usize;
     for i in 0..t.len() {
+        crate::steps::tick();
         if i >= covered
             && !f.in_attr[i]
             && t[i].is_ident("const")
@@ -549,6 +563,7 @@ fn enclosing_lt(t: &[Token], pair: &[usize], k: usize) -> Option<usize> {
     let mut j = k;
     let mut closes = 0usize;
     while j > lo {
+        crate::steps::tick();
         j -= 1;
         let x = &t[j];
         if x.kind != Kind::Punct {
@@ -631,6 +646,7 @@ fn type_ish(t: &[Token], pair: &[usize], from: usize, to: usize) -> bool {
     let mut k = from;
     let mut prev_ident = false;
     while k < to {
+        crate::steps::tick();
         let x = &t[k];
         match x.kind {
             Kind::Ident => {
@@ -676,6 +692,7 @@ fn closes_two_generics(t: &[Token], pair: &[usize], i: usize, after: Option<&Tok
     let mut closes = 0usize;
     let mut opens: Vec<usize> = Vec::new();
     while k > lo {
+        crate::steps::tick();
         k -= 1;
         let x = &t[k];
         if x.kind != Kind::Punct {
@@ -774,6 +791,7 @@ pub fn file_rules(cx: &mut Ctx<'_>, f: &FileCtx, im: &BTreeSet<String>) {
     let const_us = const_underscore_ranges(f);
     let mut skip_to = 0usize;
     for i in 0..t.len() {
+        crate::steps::tick();
         if f.in_attr[i] || i < skip_to {
             continue;
         }
@@ -1209,11 +1227,13 @@ fn signature_refs(cx: &mut Ctx<'_>, f: &FileCtx, fn_idx: usize) {
         }
     };
     while k < end {
+        crate::steps::tick();
         if t[k].kind == Kind::Punct {
             match t[k].text.as_str() {
                 "(" | "[" => {
                     // scan the group's own tokens for `&` before skipping it
                     for x in &t[k + 1..f.pair[k]] {
+                        crate::steps::tick();
                         if x.is_punct("&") {
                             cx.add(
                                 Rule::Sh10,
@@ -1281,6 +1301,7 @@ fn type_body_refs(cx: &mut Ctx<'_>, f: &FileCtx, i: usize) {
     };
     if let Some(k) = body {
         for x in &t[k + 1..f.pair[k]] {
+            crate::steps::tick();
             if x.is_punct("&") {
                 cx.add(
                     Rule::Sh10,
@@ -1312,6 +1333,7 @@ fn const_item(cx: &mut Ctx<'_>, f: &FileCtx, i: usize, im: &BTreeSet<String>) {
     let limit = (k + 256).min(t.len());
     let mut terminated = false;
     while k < limit {
+        crate::steps::tick();
         let x = &t[k];
         if x.kind == Kind::Punct {
             match x.text.as_str() {
