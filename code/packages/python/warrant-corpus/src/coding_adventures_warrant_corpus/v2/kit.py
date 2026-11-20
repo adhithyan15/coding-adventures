@@ -42,6 +42,7 @@ from pathlib import Path
 from ..errors import CorpusError
 from ..jsonio import parse_json, read_bytes
 from . import chunks as chunk_lib
+from .chunks import schema_index
 from .domains import descriptor_for
 from .errors import IrOverflow, KitError, Refusal
 from .faults import apply_fault
@@ -108,6 +109,14 @@ def load_family(directory: Path) -> Family:
     return Family(directory, index, cases)
 
 
+def kit_hex(text: object, what: str) -> bytes:
+    """The bytes of a hex field of a case; a field that is not hex is a *kit* error."""
+    try:
+        return bytes.fromhex(text)  # type: ignore[arg-type]
+    except (ValueError, TypeError) as error:
+        raise KitError(f"{what} is not hex") from error
+
+
 # ---------------------------------------------------------------------------
 # The per-category runners: each returns the kit's outcome object
 # ---------------------------------------------------------------------------
@@ -120,7 +129,7 @@ def outcome_value(case: dict, sem: Semantics) -> dict:
     """
     types = case["types"]
     try:
-        raw = read_json(bytes.fromhex(case["input_hex"]))
+        raw = read_json(kit_hex(case["input_hex"], "input_hex"))
         ty = parse_type(case["type"], types)
         value = decode_value(raw, ty, types, sem)
     except Refusal as refusal:
@@ -170,14 +179,21 @@ def outcome_ir(case: dict, sem: Semantics) -> dict:
             max_ir_cost=case.get("max_ir_cost", 2000),
             sem=sem,
         )
-        scope, env = {}, {}
+        # The environment is part of what the expression reaches (R69): its types
+        # are read first and checked for levels by the compile, its values after.
+        scope: dict = {}
         for name, tagged in case["env"]:
             try:
                 scope[name] = parse_type(tagged["type"], types)
+            except Refusal as refusal:
+                raise KitError(f"an env type is malformed: {refusal}") from refusal
+        compiled = program.compile(case["ir"], scope, role=case.get("role", "body"))
+        env = {}
+        for name, tagged in case["env"]:
+            try:
                 env[name] = decode_value(tagged["value"], scope[name], types, sem)
             except Refusal as refusal:
                 raise KitError(f"an env value is malformed: {refusal}") from refusal
-        compiled = program.compile(case["ir"], scope, role=case.get("role", "body"))
         table = SubjectTable(program, case["subjects"])
         value = evaluate(compiled, env)
     except IrOverflow as overflow:
@@ -187,7 +203,7 @@ def outcome_ir(case: dict, sem: Semantics) -> dict:
     if is_undetermined(compiled.ty):
         raise KitError("R41: a kit case has an undetermined result type")
     out = {
-        "type": str(compiled.ty),
+        "type": str(compiled.written or compiled.ty),
         "value": value_to_json(value, compiled.ty, types),
         "calls": table.calls,
     }
@@ -199,33 +215,46 @@ def outcome_ir(case: dict, sem: Semantics) -> dict:
     return out
 
 
-def outcome_domain(case: dict, sem: Semantics) -> dict:
-    """``v2-domain``: ``size()`` and ``nth()`` at an ``index`` or over a ``range``."""
+def _domain_window(case: dict) -> tuple[int, int]:
+    """The half-open window ``[lo, hi)`` of indices a ``v2-domain`` case asks about.
+
+    A case asks either about one ``index`` (the window ``[i, i+1)``) or about a
+    ``range`` ``[lo, hi]`` read half-open.  Either value is a JSON integer that
+    is not negative: a case that says otherwise has broken its own schema, which
+    is a defect of the fixture and never an outcome (R45).  A ``range`` whose
+    ``lo`` is above ``hi`` is not a broken schema -- it is the ``index`` outcome --
+    and is returned as it stands for the caller to judge against ``size``.
+    """
     if "index" in case:
-        chunk_lib.schema_index(case["index"], "index")
-    else:
-        if not isinstance(case["range"], list) or len(case["range"]) != 2:
-            raise KitError("range is a pair [lo, hi]")
-        for bound in case["range"]:
-            chunk_lib.schema_index(bound, "a range bound")
+        index = schema_index(case["index"], "index")
+        return index, index + 1
+    bounds = case["range"]
+    if not isinstance(bounds, list) or len(bounds) != 2:
+        raise KitError("range is a pair [lo, hi]")
+    low, high = (schema_index(b, "a range bound") for b in bounds)
+    return low, high
+
+
+def outcome_domain(case: dict, sem: Semantics) -> dict:
+    """``v2-domain``: ``size()`` and ``nth()`` at an ``index`` or over a ``range``.
+
+    The order of the codes (section 11): ``descriptor`` (1) -- the tree is not a
+    valid descriptor for the type -- then ``index`` (2): the window is not inside
+    ``0..size`` (or ``lo > hi``).  An accepted window reports ``size`` and the
+    section 2.4 bytes of each value in it, in index order.
+    """
+    low, high = _domain_window(case)
     types = case.get("types", {})
     try:
         desc, ty = descriptor_for(case["descriptor"], case["type"], types, sem)
     except Refusal as refusal:
         return {"error": refusal.code}
-    if "index" in case:
-        window = [case["index"]]
-        valid = case["index"] < desc.size
-    else:
-        low, high = case["range"]
-        valid = low <= high <= desc.size
-        window = list(range(low, high)) if valid else []
-    if not valid:
+    if low > high or high > desc.size:
         return {"error": "index"}
     encode = make_encoder(ty, types, sem)
     return {
         "size": desc.size,
-        "values_hex": [encode(desc.nth(i)).hex() for i in window],
+        "values_hex": [encode(desc.nth(i)).hex() for i in range(low, high)],
     }
 
 
@@ -235,7 +264,7 @@ def outcome_chunk(case: dict, sem: Semantics) -> dict:
         return chunk_lib.validate_and_run(
             case["corpus"],
             case["suite"],
-            bytes.fromhex(case["chunk_file_hex"]),
+            kit_hex(case["chunk_file_hex"], "chunk_file_hex"),
             case["chunk"],
             sem,
         )
@@ -423,7 +452,7 @@ class _SequentialWalks:
     def check(self, case: dict) -> list[str]:
         suite = chunk_lib.build_suite(case["corpus"], case["suite"], self.sem)
         lines = chunk_lib.check_chunk_file(
-            bytes.fromhex(case["chunk_file_hex"]), suite, self.sem
+            kit_hex(case["chunk_file_hex"], "chunk_file_hex"), suite, self.sem
         )
         key = case["suite"]["chunks_sha256"]
         last = case["chunk"]

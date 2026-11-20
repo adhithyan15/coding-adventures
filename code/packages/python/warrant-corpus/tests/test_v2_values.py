@@ -167,8 +167,6 @@ ROUND_TRIPS = [
     ("Option<U8>", {"none": True}),
     ("Option<Option<U8>>", {"some": {"some": "3"}}),
     ("Option<Option<U8>>", {"some": {"none": True}}),
-    ("List<U8>", []),
-    ("List<U8>", ["1", "2"]),
     ("Shape", {"ctor": "Dot", "fields": []}),
     ("Shape", {"ctor": "Line", "fields": ["4", "ff"]}),
     ("Shape", {"ctor": "Pair", "fields": [["1", "2"], False]}),
@@ -192,7 +190,7 @@ def test_a_value_decodes_and_writes_back_to_the_same_json(text, raw):
         ("Result<U8,E>", {}), ("Result<U8,E>", {"err": "NOPE"}), ("Result<U8,E>", {"err": 1}),
         ("Result<U8,E>", "ok"), ("(U8,Bool)", ["1"]), ("(U8,Bool)", "1"), ("Point", ["1"]),
         ("Option<U8>", {"some": "1", "none": True}), ("Option<U8>", {"none": False}),
-        ("Option<U8>", "none"), ("List<U8>", ["1"] * 4097), ("List<U8>", "1"),
+        ("Option<U8>", "none"), ("Option<U8>", {"none": 1}), ("Option<U8>", {"none": "true"}),
         ("Shape", {"ctor": "Dot"}), ("Shape", {"ctor": "Nope", "fields": []}),
         ("Shape", {"ctor": "Line", "fields": ["1"]}), ("Shape", {"ctor": "Dot", "fields": "x"}),
         ("Shape", {"ctor": 3, "fields": []}), ("Shape", []),
@@ -203,14 +201,28 @@ def test_a_value_that_is_not_the_declared_type_is_refused_as_value(text, raw):
 
 
 def test_a_value_of_an_undecodable_type_is_refused():
-    assert code_of(decode_value, "x", Ty("?"), TYPES) == "value"
+    assert code_of(decode_value, "x", Ty("?"), TYPES) == "type"
 
 
-def test_an_open_table_accepts_any_error_case_name():
-    assert decode_value({"err": "ANY"}, parse_type("Result<U8,E>", None), None) == (
-        "err",
-        "ANY",
-    )
+@pytest.mark.parametrize("text", ["List<U8>", "Option<List<U8>>", "(U8,List<Bool>)"])
+def test_a_list_type_is_the_level_ir_list(text):
+    """[D63]: no list is decoded, written or reported; the level is refused."""
+    ty = parse_type(text, TYPES)  # the grammar still names it
+    for call in (decode_value, value_to_json, encode_value):
+        assert code_of(call, [], ty, TYPES) == "level-missing"
+    assert code_of(make_encoder, ty, TYPES) == "level-missing"
+
+
+def test_a_record_that_contains_itself_is_refused_not_a_crash():
+    loop = {"Loop": {"kind": "record", "fields": [["me", "Loop"], ["x", "U8"]]}}
+    assert code_of(decode_value, [], Ty("Loop"), loop) == "type"
+
+
+def test_an_open_table_writes_an_error_case_but_cannot_read_one():
+    """Without a table (a descriptor, R44) no error type is declared."""
+    ty = parse_type("Result<U8,E>", None)
+    assert encode_value(("err", "ANY"), ty, None) == b"\x51\x03\x00\x00\x00ANY"
+    assert code_of(decode_value, {"err": "ANY"}, ty, None) == "value"
 
 
 def test_int_text_follows_the_d58_window():
@@ -245,7 +257,6 @@ def test_a_signed_value_is_sign_extended_to_64_bits():
         ("Result<Bool,E>", {"err": "BAD"}, "5103000000" "424144"),
         ("Option<U8>", {"none": True}, "40"),
         ("Option<U8>", {"some": "1"}, "41" "100100000000000000"),
-        ("List<U8>", ["1", "2"], "30" "02000000" "100100000000000000" "100200000000000000"),
         ("(U8,Bool)", ["1", True], "64" "02000000" "100100000000000000" "01"),
         ("Shape", {"ctor": "Dot", "fields": []}, "65" "03000000" "446f74" "00000000"),
         (

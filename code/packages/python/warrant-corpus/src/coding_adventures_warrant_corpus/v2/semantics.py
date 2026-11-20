@@ -44,10 +44,13 @@ class Semantics:
         (``Nat`` is ``0..2^64-1``, ``Int`` only ever appears in an IR literal).
         A value that does not fit is refused, never truncated.
         """
-        if not isinstance(text, str) or _DECIMAL.fullmatch(text) is None:
+        if not isinstance(text, str) or len(text) > MAX_DIGITS + 1:
+            # Text longer than a sign and twenty digits is never a legal integer;
+            # it is refused before any pattern looks at it.
+            raise Refusal("value", "an integer is decimal text of at most 20 digits")
+        if _DECIMAL.fullmatch(text) is None:
             raise Refusal("value", "an integer is canonical decimal text")
-        digits = text.lstrip("-")
-        if len(digits) > MAX_DIGITS:
+        if len(text.lstrip("-")) > MAX_DIGITS:
             raise Refusal("value", "more than 20 digits")
         number = int(text)
         if text.startswith("-") and (number == 0 or not self._may_be_negative(ty)):

@@ -17,6 +17,7 @@ import math
 import pytest
 
 from coding_adventures_warrant_corpus.v2 import chunks as C
+from coding_adventures_warrant_corpus.v2 import ir as ir_module
 from coding_adventures_warrant_corpus.v2.domains import build
 from coding_adventures_warrant_corpus.v2.errors import KitError, Refusal
 from coding_adventures_warrant_corpus.v2.ir import Program
@@ -76,6 +77,7 @@ def bare(
         ops=corpus["ops"],
         models=corpus["models"],
         model_order=corpus["model_order"],
+        levels=ir_module.IMPLEMENTED_LEVELS,
     )
     scope = {n: parse_type(t, corpus["types"]) for n, t, _d in binders}
     cost = (
@@ -265,9 +267,12 @@ def test_a_chunk_streams_prefix_ends_with_the_chunk_index(refined):
 
 
 # -- a binder too big to tabulate ------------------------------------------------------------
-def test_a_tuple_binder_with_a_v2_stream_is_enumerated_by_unranking():
+def test_a_tuple_binder_with_a_v2_stream_is_enumerated_by_unranking(monkeypatch):
     """2^24 tuples: no table, ``nth`` per value; chunk 1 alone equals the walk."""
     triple = {"d": "tuple", "of": [{"d": "u8_all", "size": 256}] * 3, "size": 1 << 24}
+    # Pretend, for the test, that the runner implements ir.tuple.
+    both = frozenset({"ir.core", "ir.tuple"})
+    monkeypatch.setattr(ir_module, "IMPLEMENTED_LEVELS", both)
     corpus, row = bare(
         [("t", "(U8,U8,U8)", triple)],
         header="warrant-stream-v2",
@@ -277,7 +282,19 @@ def test_a_tuple_binder_with_a_v2_stream_is_enumerated_by_unranking():
         models={},
         order=[],
     )
-    suite = C.build_suite(corpus, row)
+    # The runner that does *not* implement it refuses the suite as a level (D64).
+    with pytest.raises(Refusal) as caught:
+        C.build_suite(
+            corpus,
+            row | {"requires": ["ir.core", "ir.tuple"]},
+            levels=frozenset({"ir.core"}),
+        )
+    assert caught.value.code == "level-missing"
+    # a row that claims ir.core only, yet reaches a tuple, is wrong: a corpus error
+    with pytest.raises(Refusal) as caught:
+        C.build_suite(corpus, row, levels=frozenset({"ir.core"}))
+    assert caught.value.code == "corpus"
+    suite = C.build_suite(corpus, row, levels=both)
     assert C._Enumerator(suite, STANDARD).columns[0].values is None
     walked = C.run_sequential(suite, 1)
     assert C.run_chunk(suite, 1) == walked[1] and walked[1].cases == 65536
@@ -353,7 +370,7 @@ CORPUS_TAMPERS = {
         ir_cost=r["ir_cost"] + 1
     ),
     "an ir_cost that is a bool": lambda c, r: r.update(ir_cost=True),
-    "no binders": lambda c, r: r.update(binders=[]),
+    "no binders but a product of 2": lambda c, r: r.update(binders=[]),
     "nine binders": lambda c, r: r.update(binders=r["binders"][:1] * 9),
     "a product past 2^28": lambda c, r: r.update(
         binders=[["t", {"type": "(U8,U8,U8)", "domain": TRIPLE}]] * 2, product=1 << 48
@@ -386,9 +403,11 @@ def test_a_corpus_that_is_not_an_object_or_has_other_keys_is_refused(refined):
 
 
 def test_the_row_key_set_depends_on_the_oracle_kind_and_the_header():
-    base = C.row_keys({"oracle": {"kind": "predicate"}, "stream": "warrant-stream-v2"})
+    base = C.expected_row_keys(
+        {"oracle": {"kind": "predicate"}, "stream": "warrant-stream-v2"}
+    )
     assert "expected_sha256" not in base and "v1_inputs_sha256" not in base
-    reference = C.row_keys(
+    reference = C.expected_row_keys(
         {"oracle": {"kind": "reference"}, "stream": "warrant-stream-v1"}
     )
     assert {
@@ -475,3 +494,17 @@ def test_every_line_of_the_chunk_file_obeys_the_grammar(refined):
     )  # first_admitted wrong
     refuse([lines[0].upper(), *lines[1:]])  # upper-case hex
     refuse(["é" + lines[0], *lines[1:]])  # not ASCII
+
+
+def test_a_ground_claim_has_no_binders_and_one_case_with_an_empty_tuple():
+    """R75: zero binders is a product of 1: one chunk, one admitted case, empty input."""
+    corpus, row, data = sealed([], body=["lit", True], ops={}, models={}, order=[])
+    suite = C.build_suite(corpus, row)
+    assert (row["product"], row["chunks"], row["cases"]) == (1, 1, 1)
+    got = C.run_chunk(suite, 0)
+    assert got.cases == 1
+    assert (
+        got.inputs == hashlib.sha256(STANDARD.chunk_prefix(suite.context, 0)).digest()
+    )
+    assert C.run_sequential(suite, 0) == [got]
+    assert len(C.check_chunk_file(data, suite)) == 1

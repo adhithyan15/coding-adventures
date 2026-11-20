@@ -128,8 +128,12 @@ paths, so another drive or share is never "inside".
 ## v2 `ir.core` runner library (VER04r slice S6a)
 
 `coding_adventures_warrant_corpus.v2` is the first part of this lane's **v2** runner. It is the library
-for the `ir.core` level, written from VER04r and independent of the oracle (`python/warrant-oracle` is
-not imported; the conformance kit is what shows the two agree):
+for the `ir.core` level, written from VER04r. The package imports nothing from the oracle
+(`python/warrant-oracle`), and the conformance kit is the cross-check between the two. A review of the first
+version found five pieces that had been adapted from the oracle's kit code (`parse_type`, the value codec,
+the chunk-row and chunk-file checks, `fits`, and the domain outcome); those were deleted and rewritten from
+sections 2.1 to 2.4, 5.1 to 5.6 and 11 alone, with their own structure. That is what this README claims and no
+more: the independence is that of a second reading of one specification, and the repository cannot prove it.
 
 | Module | Implements |
 |---|---|
@@ -137,13 +141,15 @@ not imported; the conformance kit is what shows the two agree):
 | `values` | section 2.3 value decoder (every form), section 2.4 stream encoder |
 | `arith` | section 3: one wrapping rule; the `Nat`/`Int` window of 2^127 - 1 |
 | `ir` | section 4 and Appendix A: static checks, lazy `and`/`or`/`implies`/`if`, call counting, cost |
-| `domains` | section 5.1: descriptors, `size()` and `nth()` |
+| `domains` | section 5.1: descriptors, `size()` and `nth()` (`list` is the reserved level `ir.list`, refused) |
 | `chunks` | sections 5.2 to 5.5: chunk files, one chunk enumerated alone, the sequential walk |
 | `faults` | section 8: the `pre`, `post` and `replace` wrappers |
 | `semantics` | the seams where a wrong implementation would differ (below) |
 | `kit` | the conformance harness over the v2 kit |
 
-It does **not** yet read a v2 corpus, binding, session or manifest (slice S6b), and `python/ct-compare` still
+Levels are decided by what an expression reaches ([D64]): a model or op of a level the lane lacks is
+classified (`Program.not_live_models`, `not_live_ops`), and only the suites that reach it are `level-missing`. `subject_op`
+static widths (`width_params`) and bytes literals typed `Bytes<len>` are implemented. It does **not** yet read a v2 corpus, binding, session or manifest (slice S6b), and `python/ct-compare` still
 runs `warrant-corpus-v1` (slice S6c).
 
 ### Running the v2 conformance kit
@@ -166,7 +172,7 @@ names the case id and the outcome, never the input bytes.
 
 ### The harness can fail (falsification)
 
-`run_kit(..., sem=...)` takes a `Semantics` object. `Semantics.STANDARD` is the specification; a subclass that
+`run_kit(..., sem=...)` takes a `Semantics` object. `STANDARD` (the module-level instance of `Semantics`) is the specification; a subclass that
 overrides one method is a deliberately wrong implementation. `tests/v2_mutants.py` holds sixteen: no wrap, eager
 `and`, first-binder-fastest enumeration (the three VER04r row S6 names), saturating arithmetic, eager `if`, a
 signed comparison on the bit pattern, `neg` of the minimum raising, an unchecked `Nat` product, `take` that does

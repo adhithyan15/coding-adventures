@@ -43,7 +43,7 @@ from .errors import Refusal
 from .ir import IMPLEMENTED_LEVELS, Compiled, Program, evaluate
 from .semantics import STANDARD, Semantics
 from .values import decode_value, value_to_json
-from .wtypes import Ty
+from .wtypes import Ty, flows
 
 KINDS = ("pre", "post", "replace")
 
@@ -99,6 +99,65 @@ class CompiledFault:
         return faulted
 
 
+_KEYS_OF_A_FAULT = {
+    "pre": frozenset({"fault", "op", "kind", "rewrites", "requires"}),
+    "post": frozenset({"fault", "op", "kind", "expr", "requires"}),
+    "replace": frozenset({"fault", "op", "kind", "expr", "requires"}),
+}
+
+
+def _ill_formed(why: str) -> Refusal:
+    return Refusal("ill-typed", f"a fault row is malformed: {why}")
+
+
+def _check_fault_shape(fault: object) -> dict:
+    """The fault row, if it is a closed object of one of the three kinds (8.1)."""
+    if not isinstance(fault, dict) or fault.get("kind") not in KINDS:
+        raise _ill_formed("its kind is pre, post or replace")
+    if set(fault) != _KEYS_OF_A_FAULT[fault["kind"]]:
+        raise _ill_formed(f"the keys of a {fault['kind']} fault are fixed")
+    if type(fault["op"]) is not str or type(fault["fault"]) is not str:
+        raise _ill_formed("fault and op are names")
+    requires = fault["requires"]
+    if type(requires) is not list or not all(type(level) is str for level in requires):
+        raise _ill_formed("requires is a list of level names")
+    return fault
+
+
+def _check_rewrite_rows(rows: object, scope: dict[str, Ty]) -> list[tuple[str, object]]:
+    """The ``(parameter, expression)`` pairs of a ``pre`` fault, each row checked.
+
+    A rewrite names a parameter that exists, at most one rewrite names it, and
+    the row has exactly the two keys ``param`` and ``expr``.
+    """
+    if type(rows) is not list or not rows:
+        raise _ill_formed("a pre fault has at least one rewrite")
+    seen: set[str] = set()
+    pairs: list[tuple[str, object]] = []
+    for row in rows:
+        if type(row) is not dict or set(row) != {"param", "expr"}:
+            raise _ill_formed("a rewrite is {param, expr}")
+        param = row["param"]
+        if type(param) is not str or param not in scope:
+            raise _ill_formed("a rewrite names a parameter the op does not have")
+        if param in seen:
+            raise _ill_formed("two rewrites name the same parameter")
+        seen.add(param)
+        pairs.append((param, row["expr"]))
+    return pairs
+
+
+def _may_replace(produced: Ty, wanted: Ty) -> bool:
+    """May an expression of type ``produced`` stand where a ``wanted`` value goes?
+
+    Ordinary assignability, plus one allowance: ``Nat + 1`` is an ``Int`` (section
+    3.2) and the fault puts it where a ``Nat`` result goes.  The *value* is then
+    held to the declared type when it is written, so an out-of-range one is
+    refused there, never truncated.
+    """
+    return flows(produced, wanted) or (produced.is_exact and wanted.is_exact)
+
+
 def compile_fault(
     fault: object,
     op_row: object,
@@ -112,28 +171,34 @@ def compile_fault(
     ``requires`` (or a tag in its expressions) is a level this runner lacks -- a
     lane records such a control ``not-live``, it is not an error of the lane --
     and ``subject-forbidden`` for a ``subject_op`` in a fault expression.  A row
-    that is not a well-formed fault is ``ill-typed``.
+    that is not a well-formed fault, or whose expressions do not produce the type
+    of what they replace, is ``ill-typed`` (F6).
     """
-    if not isinstance(fault, dict) or fault.get("kind") not in KINDS:
-        raise Refusal("ill-typed", "a fault is pre, post or replace")
+    row = _check_fault_shape(fault)
     available = frozenset(levels) & IMPLEMENTED_LEVELS
-    if not set(fault.get("requires", ())) <= available:
+    if not set(row["requires"]) <= available:
         raise Refusal("level-missing", "the fault needs a level this runner lacks")
-    assert isinstance(op_row, dict)
-    program = Program(types=types, ops={fault["op"]: op_row}, levels=levels, sem=sem)
-    sig = program.ops[fault["op"]]
-    scope = {name: ty for name, ty in sig.params}
+    program = Program(types=types, ops={row["op"]: op_row}, levels=levels, sem=sem)
+    declared = program.op(row["op"])
+    params, ret = declared.unbound()
+    scope = dict(params)
     if "result" in scope:
         raise Refusal("ill-typed", "an op with a parameter named result")
-    if fault["kind"] == "pre":
-        rewrites = [
-            (row["param"], program.compile(row["expr"], scope, role="fault"))
-            for row in fault["rewrites"]
-        ]
-        return CompiledFault("pre", sig.params, sig.ret, types, sem, rewrites, None)
-    scope["result"] = sig.ret
-    expr = program.compile(fault["expr"], scope, role="fault")
-    return CompiledFault(fault["kind"], sig.params, sig.ret, types, sem, [], expr)
+    if row["kind"] == "pre":
+        rewrites = []
+        for param, expr in _check_rewrite_rows(row["rewrites"], scope):
+            compiled = program.compile(expr, scope, role="fault")
+            if not _may_replace(compiled.ty, scope[param]):
+                raise Refusal("ill-typed", f"the rewrite of {param} has the wrong type")
+            rewrites.append((param, compiled))
+        return CompiledFault("pre", params, ret, types, sem, rewrites, None)
+    scope["result"] = ret
+    expr = program.compile(row["expr"], scope, role="fault")
+    if not _may_replace(expr.ty, ret):
+        raise Refusal(
+            "ill-typed", "the fault expression is not of the op's result type"
+        )
+    return CompiledFault(row["kind"], params, ret, types, sem, [], expr)
 
 
 def apply_fault(

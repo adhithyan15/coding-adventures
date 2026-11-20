@@ -46,9 +46,6 @@ PRIMITIVE = frozenset({"Bool", "Nat", *FIXED})
 MAX_FIXED_WIDTH = 4096  # VER04h: bounds every Bytes<N>
 MAX_TYPE_DEPTH = 16  # enclosing constructors; a bare name is depth 0
 
-_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
-_WIDTH = re.compile(r"0|[1-9][0-9]*")
-
 UNKNOWN = "?"
 
 # A Warrant value in its Python form (see :mod:`.values`).  Deliberately loose: the
@@ -128,6 +125,159 @@ def fixed_range(ty: Ty) -> tuple[int, int]:
     return 0, (1 << bits) - 1
 
 
+# ---------------------------------------------------------------------------
+# Reading the canonical text of a type (section 2.1)
+# ---------------------------------------------------------------------------
+# The text is cut into tokens first and parsed second.  Cutting is one linear
+# pass over the characters, so a hostile string (a run of a million digits, a
+# million nested brackets) costs time proportional to its length and nothing
+# more; the parser then looks at tokens, never at raw characters.
+_TOKEN = re.compile(r"[A-Za-z_][A-Za-z0-9_]*|[0-9]+|[<>(),]")
+_WORD_FIRST = re.compile(r"[A-Za-z_]")
+MAX_WIDTH_DIGITS = 4  # 4096 is the largest legal width, so a longer run is refused
+
+
+def _cut_into_tokens(text: str) -> list[str]:
+    """Split ``text`` into names, digit runs and the five punctuation marks.
+
+    Anything else, whitespace included, makes the text *not a type*: the grammar
+    has no spaces, so ``"Option< U8>"`` is refused rather than tidied.
+    """
+    tokens: list[str] = []
+    cursor = 0
+    while cursor < len(text):
+        hit = _TOKEN.match(text, cursor)
+        if hit is None:
+            raise Refusal("type", f"unexpected character at offset {cursor}")
+        tokens.append(hit.group(0))
+        cursor = hit.end()
+    return tokens
+
+
+def _is_word(token: str) -> bool:
+    return _WORD_FIRST.match(token) is not None
+
+
+def _declared_kind(types: dict, name: str) -> object:
+    """The ``kind`` of the declaration called ``name``, or ``None`` if there is none."""
+    row = types.get(name)
+    return row.get("kind") if isinstance(row, dict) else None
+
+
+class _TypeReader:
+    """A small recursive-descent reader over the tokens of one type text.
+
+    The grammar of section 2.1, one method per production::
+
+        type   = tuple | Name [ "<" args ">" ]
+        tuple  = "(" type { "," type } ")"
+
+    ``enclosing`` counts the constructors that wrap the type being read (rule 1
+    of section 2.2, R40): a bare name is at depth 0 and each ``(``, ``List<``,
+    ``Option<`` or ``Result<`` around it adds one.  Sixteen are legal.
+    """
+
+    def __init__(
+        self,
+        tokens: list[str],
+        types: dict | None,
+        allow_int: bool,
+        widths: frozenset[str],
+    ) -> None:
+        self.tokens = tokens
+        self.at = 0
+        self.types = types
+        self.allow_int = allow_int
+        self.widths = widths
+
+    # -- token plumbing --------------------------------------------------------
+    def peek(self) -> str:
+        return self.tokens[self.at] if self.at < len(self.tokens) else ""
+
+    def take(self) -> str:
+        token = self.peek()
+        if not token:
+            raise Refusal("type", "the type text ends too soon")
+        self.at += 1
+        return token
+
+    def want(self, mark: str) -> None:
+        if self.take() != mark:
+            raise Refusal("type", f"expected {mark!r}")
+
+    def word(self) -> str:
+        token = self.take()
+        if not _is_word(token):
+            raise Refusal("type", "expected a name")
+        return token
+
+    # -- productions ------------------------------------------------------------
+    def read(self, enclosing: int) -> Ty:
+        if enclosing > MAX_TYPE_DEPTH:
+            raise Refusal("type", "constructors nested more than 16 deep")
+        if self.peek() == "(":
+            return self.tuple_of(enclosing)
+        name = self.word()
+        if name in ("List", "Option"):
+            self.want("<")
+            element = self.read(enclosing + 1)
+            self.want(">")
+            return Ty(name, (element,))
+        if name == "Result":
+            self.want("<")
+            payload = self.read(enclosing + 1)
+            self.want(",")
+            error = self.word()
+            self.want(">")
+            if self.types is not None and _declared_kind(self.types, error) != "error":
+                raise Refusal("type", f"{error} is not a declared error type")
+            return Ty("Result", (payload, Ty(error)))
+        if name == "Bytes":
+            return self.bytes_of()
+        if name == "Int":
+            if not self.allow_int:
+                raise Refusal("type", "Int is a name inside the IR only")
+            return INT
+        if name in PRIMITIVE:
+            return Ty(name)
+        if self.types is not None and _declared_kind(self.types, name) in (
+            "record",
+            "variant",
+        ):
+            return Ty(name)
+        raise Refusal("type", f"{name} names no type")
+
+    def tuple_of(self, enclosing: int) -> Ty:
+        self.want("(")
+        parts = [self.read(enclosing + 1)]
+        while self.peek() == ",":
+            self.at += 1
+            parts.append(self.read(enclosing + 1))
+        self.want(")")
+        if not 2 <= len(parts) <= 8:
+            raise Refusal("type", f"a tuple of {len(parts)} components")
+        return Ty("()", tuple(parts))
+
+    def bytes_of(self) -> Ty:
+        """``Bytes`` alone, or ``Bytes<N>`` with a literal or a static width name."""
+        if self.peek() != "<":
+            return BYTES
+        self.at += 1
+        token = self.take()
+        if token.isdigit():
+            if len(token) > MAX_WIDTH_DIGITS or (token[0] == "0" and token != "0"):
+                raise Refusal("type", "a width is a plain decimal of at most 4096")
+            width: int | str = int(token)
+            if width > MAX_FIXED_WIDTH:
+                raise Refusal("type", "a width over 4096")
+        elif _is_word(token) and token in self.widths:
+            width = token
+        else:
+            raise Refusal("type", "a width is a decimal literal")
+        self.want(">")
+        return Ty("Bytes", (width,))
+
+
 def parse_type(
     text: object,
     types: dict | None,
@@ -141,96 +291,43 @@ def parse_type(
     ``variant`` in it, and the error name of a ``Result`` an ``error`` in it.
     ``None`` is the *open* mode of a descriptor, which carries no table: there
     only the error name of a ``Result`` is free text.  ``widths`` are the static
-    width parameters (``Bytes<M>``) of an op signature.
-
-    Depth (section 2.2 rule 1, R40): a bare name is depth 0 and each ``(``,
-    ``List<``, ``Option<`` or ``Result<`` around it adds one, so sixteen nested
-    wrappers are accepted and seventeen refused.
+    width parameters (``Bytes<N>`` with a name for ``N``) of an op signature.
     """
     if not isinstance(text, str):
         raise Refusal("type", "a type is text")
-    pos = 0
-
-    def name() -> str:
-        nonlocal pos
-        hit = _NAME.match(text, pos)
-        if not hit:
-            raise Refusal("type", "a type name was expected")
-        pos = hit.end()
-        return hit.group(0)
-
-    def expect(char: str) -> None:
-        nonlocal pos
-        if text[pos : pos + 1] != char:
-            raise Refusal("type", f"{char!r} was expected")
-        pos += 1
-
-    def one(level: int) -> Ty:
-        nonlocal pos
-        if level > MAX_TYPE_DEPTH:
-            raise Refusal("type", "a type nested more than 16 deep")
-        if text[pos : pos + 1] == "(":
-            pos += 1
-            parts = [one(level + 1)]
-            while text[pos : pos + 1] == ",":
-                pos += 1
-                parts.append(one(level + 1))
-            expect(")")
-            if not 2 <= len(parts) <= 8:
-                raise Refusal("type", "a tuple has 2 to 8 components")
-            return Ty("()", tuple(parts))
-        head = name()
-        if head == "Bytes" and text[pos : pos + 1] == "<":
-            return bytes_width(level)
-        if head in ("List", "Option"):
-            expect("<")
-            inner = one(level + 1)
-            expect(">")
-            return Ty(head, (inner,))
-        if head == "Result":
-            expect("<")
-            ok = one(level + 1)
-            expect(",")
-            error = name()
-            expect(">")
-            if types is not None and types.get(error, {}).get("kind") != "error":
-                raise Refusal("type", "the error type of a Result must be declared")
-            return Ty("Result", (ok, Ty(error)))
-        if head == "Int":
-            if not allow_int:
-                raise Refusal("type", "Int exists inside the IR only")
-            return INT
-        if head in PRIMITIVE or head == "Bytes":
-            return Ty(head)
-        if types is not None and types.get(head, {}).get("kind") in (
-            "record",
-            "variant",
-        ):
-            return Ty(head)
-        raise Refusal("type", "not a type of section 2.1, or not in types")
-
-    def bytes_width(_level: int) -> Ty:
-        nonlocal pos
-        pos += 1  # the "<"
-        hit = _WIDTH.match(text, pos)
-        if hit:
-            pos = hit.end()
-            number = int(hit.group(0))
-            if number > MAX_FIXED_WIDTH:
-                raise Refusal("type", "Bytes<N> with N over 4096")
-            width: int | str = number
-        else:
-            parameter = name()
-            if parameter not in widths:
-                raise Refusal("type", "a Bytes width is a decimal literal")
-            width = parameter
-        expect(">")
-        return Ty("Bytes", (width,))
-
-    ty = one(0)
-    if pos != len(text):
-        raise Refusal("type", "text after the end of a type")
+    reader = _TypeReader(_cut_into_tokens(text), types, allow_int, widths)
+    ty = reader.read(0)
+    if reader.at != len(reader.tokens):
+        raise Refusal("type", "text follows the end of the type")
     return ty
+
+
+def forget_widths(ty: Ty) -> Ty:
+    """Replace every *named* width in ``ty`` by plain ``Bytes`` (R70)."""
+    if ty.head == "Bytes" and ty.args and isinstance(ty.args[0], str):
+        return BYTES
+    if not any(isinstance(a, Ty) for a in ty.args):
+        return ty
+    return Ty(
+        ty.head, tuple(forget_widths(a) if isinstance(a, Ty) else a for a in ty.args)
+    )
+
+
+def bind_widths(ty: Ty, widths: dict[str, int]) -> Ty:
+    """Replace each static width name in ``ty`` by its number (section 6, B2).
+
+    An op signature may say ``Bytes<N>`` with ``N`` one of the op's
+    ``width_params``; a call supplies the numbers (the fourth element of
+    ``subject_op``) and the signature is *bound* before any argument is typed.
+    """
+    if ty.head == "Bytes" and ty.args and isinstance(ty.args[0], str):
+        return Ty("Bytes", (widths[ty.args[0]],))
+    if not any(isinstance(a, Ty) for a in ty.args):
+        return ty
+    return Ty(
+        ty.head,
+        tuple(bind_widths(a, widths) if isinstance(a, Ty) else a for a in ty.args),
+    )
 
 
 # ---------------------------------------------------------------------------

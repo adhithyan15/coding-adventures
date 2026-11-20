@@ -5,8 +5,8 @@ It reads no v2 corpus, binding or manifest yet (S6b) and `python/ct-compare` sti
 runs `warrant-corpus-v1` (S6c). Everything new is in the sub-package
 `coding_adventures_warrant_corpus.v2`; the v1 modules are unchanged.
 
-- **Library at `ir.core`**, written from the spec and independent of the oracle
-  (`python/warrant-oracle` is not imported): `wtypes` (section 2.1 types, `flows`
+- **Library at `ir.core`**, written from the spec (`python/warrant-oracle` is not imported;
+  see entry 00160 for what the independence claim is and is not): `wtypes` (section 2.1 types, `flows`
   and `unify`), `values` (section 2.3 value decoder for every form, section 2.4
   stream encoder, signed `11` tag, tuple `64`, variant `65`), `arith` (section 3:
   one wrapping rule, the 128-bit `Nat`/`Int` window), `ir` (section 4 and

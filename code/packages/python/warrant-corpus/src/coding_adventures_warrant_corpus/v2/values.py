@@ -1,11 +1,17 @@
-"""Warrant values: the section 2.3 decoder and the section 2.4 stream encoder.
+"""Warrant values: reading them from corpus JSON and writing them as stream bytes.
 
-A value crosses two boundaries and each has its own form.
+A value crosses two boundaries and each has its own form (VER04r sections 2.3
+and 2.4).  This module builds, for one Warrant type, one **codec**: an object that
+knows all three spellings of the values of that type --
 
-**Corpus JSON (section 2.3).**  The corpus never tags a value with its own
-type: the reader holds the *declared* type and decodes to it, range-checking.
-Every integer is a decimal *string* (so a JavaScript reader cannot lose bits),
-bytes are lowercase hex, and the composites are:
+* ``decode(raw)``   corpus JSON  ->  the Python value the evaluator computes with;
+* ``encode(value)`` the Python value  ->  its canonical stream bytes (section 2.4);
+* ``to_json(value)`` the Python value  ->  corpus JSON again (for reporting).
+
+**Corpus JSON (section 2.3).**  The corpus never tags a value with its own type:
+the reader holds the *declared* type and reads to it, range-checking.  Every
+integer is a decimal *string* (a JavaScript reader cannot lose bits), bytes are
+lowercase hex, and the composites are
 
 =================  =========================================================
 type               JSON
@@ -14,52 +20,51 @@ type               JSON
 integers, ``Nat``  ``"18446744073709551615"``
 ``Bytes``          ``"0a0b"``
 tuple, record      an array in component / declared field order
-``List<T>``        an array, at most 4,096 elements
 ``Option<T>``      ``{"none":true}`` or ``{"some":v}``
 ``Result<T,E>``    ``{"ok":v}`` or ``{"err":"CASE"}``
 variant            ``{"ctor":"Name","fields":[...]}``
 =================  =========================================================
 
-**Python values inside the runner.**
+``List<T>`` has a JSON form too, but lists belong to the reserved level
+``ir.list`` ([D63]): this runner refuses the type, as the level it lacks, and
+never decodes, encodes or reports a list.
+
+**Python values inside the runner.**  The form is *type-directed*: two values
+are told apart by the type they are read at, never by their shape.
 
 =================  =========================================================
 ``Bool``           ``bool``
 integers, ``Nat``  ``int``
 ``Bytes``          ``bytes``
 tuple, record      ``tuple``
-``List<T>``        ``list``
 ``Option<T>``      ``("none",)`` or ``("some", v)``
 ``Result<T,E>``    ``("ok", v)`` or ``("err", "CASE")``
 variant            ``(ctor_name, (field, ...))``
 =================  =========================================================
 
-The Python form is *type-directed*: two values are told apart by the type they
-are read at, never by their shape, so ``("ok", 1)`` is unambiguous.
-
 **The stream (section 2.4).**  Digests are over bytes every lane can produce
-identically.  The tag byte says what follows::
+identically.  A leading tag byte says what follows; an integer is always eight
+bytes (the *type name* in the stream's context says how wide it really is), and
+every length or count is four bytes, little-endian::
 
-    Bool          00 | 01
-    U8..U64, Nat  10, then 8 bytes little-endian, unsigned
-    I8..I64       11, then 8 bytes two's complement little-endian, sign-extended
-    Bytes         20, u32-LE length, the bytes
-    List<T>       30, u32-LE count, elements
-    Option<T>     40 (none) | 41 then the inner value
-    Ok(v)/Err(E.V)  50 then inner | 51, u32-LE length, UTF-8 case name
-    tuple, record 64, u32-LE component count, components in order
-    variant       65, u32-LE name length, UTF-8 name, u32-LE field count, fields
+    Bool            00 | 01
+    U8..U64, Nat    10 + 8 bytes, unsigned
+    I8..I64         11 + 8 bytes, two's complement, sign-extended to 64 bits
+    Bytes           20 + length + the bytes
+    Option          40 | 41 + inner
+    Ok / Err        50 + inner | 51 + length + UTF-8 case name
+    tuple, record   64 + count + components
+    variant         65 + name length + UTF-8 name + field count + fields
 
-A worked example: the record ``Point(x: U8, y: U8)`` holding ``Point(1, 2)`` is
-``64 02000000  10 0100000000000000  10 0200000000000000``; the value ``-1`` as an
-``I8`` is ``11 ffffffffffffffff`` -- the *type name* in the stream's context says
-it is eight bits, the stream does not.  Nested composites carry a count and a tag
-because they must be self-delimiting: without them two different values could
-serialise to the same bytes.
+Worked example: the record ``Point(x: U8, y: U8)`` holding ``Point(1, 2)`` is
+``64 02000000  10 0100000000000000  10 0200000000000000``; ``-1`` as an ``I8`` is
+``11 ffffffffffffffff``.  A composite carries its tag and count because it must
+be self-delimiting: without them two different values could serialise to the
+same bytes.
 """
 
 from __future__ import annotations
 
-import re
 from collections.abc import Callable
 
 from ..errors import CorpusError
@@ -68,8 +73,10 @@ from .errors import Refusal
 from .semantics import STANDARD, Semantics
 from .wtypes import FIXED, MAX_FIXED_WIDTH, Ty, Value, fixed_range, parse_type
 
-_HEX = re.compile(r"(?:[0-9a-f]{2})*")
-MAX_LIST = 4096
+_HEX_DIGITS = frozenset("0123456789abcdef")
+# A Bytes value is at most MAX_FIXED_WIDTH bytes, so at most twice that many digits;
+# a longer string is refused before it is looked at digit by digit.
+_MAX_HEX_DIGITS = 2 * MAX_FIXED_WIDTH
 
 
 def read_json(data: bytes) -> object:
@@ -86,160 +93,301 @@ def read_json(data: bytes) -> object:
 
 
 # ---------------------------------------------------------------------------
-# The types table
+# The codecs
 # ---------------------------------------------------------------------------
-def _record_fields(types: dict, name: str) -> list[Ty]:
-    return [parse_type(text, types) for _field, text in types[name]["fields"]]
+class Codec:
+    """What is known about one type: how to read, write and report its values."""
+
+    def decode(self, raw: object) -> Value:
+        raise NotImplementedError
+
+    def encode(self, value: Value) -> bytes:
+        raise NotImplementedError
+
+    def to_json(self, value: Value) -> object:
+        raise NotImplementedError
 
 
-def _variant_ctors(types: dict, name: str) -> dict[str, list[Ty]]:
-    return {
-        ctor: [parse_type(text, types) for text in fields]
-        for ctor, fields in types[name]["ctors"]
-    }
+class _Truth(Codec):
+    def decode(self, raw: object) -> bool:
+        if raw is True or raw is False:
+            return raw
+        raise Refusal("value", "a Bool is the JSON literal true or false")
+
+    def encode(self, value: Value) -> bytes:
+        return b"\x01" if value else b"\x00"
+
+    def to_json(self, value: Value) -> object:
+        return bool(value)
 
 
-def _kind(ty: Ty, types: dict | None) -> str | None:
-    """``record`` / ``variant`` for a named type, else ``None``."""
-    if types is None or ty.head not in types:
-        return None
-    return types[ty.head].get("kind")
+class _Whole(Codec):
+    """An integer type: a fixed width (signed or not), ``Nat`` or ``Int``."""
+
+    def __init__(self, ty: Ty, sem: Semantics) -> None:
+        self.ty, self.sem = ty, sem
+        self.signed = ty.head in FIXED and ty.signed
+        if ty.head == "Nat":
+            self.low, self.high = 0, (1 << 64) - 1
+        elif ty.head in FIXED:
+            self.low, self.high = fixed_range(ty)
+        else:  # Int: an IR literal only; it has no stream form
+            self.low = self.high = None  # type: ignore[assignment]
+
+    def decode(self, raw: object) -> int:
+        return self.sem.decode_int(raw, self.ty)
+
+    def encode(self, value: Value) -> bytes:
+        if self.low is None:
+            raise Refusal("type", "Int has no stream form")
+        if type(value) is not int or not self.low <= value <= self.high:
+            raise Refusal("value", "the integer does not fit its type")
+        if self.signed:
+            return b"\x11" + self.sem.encode_signed(value)
+        return b"\x10" + value.to_bytes(8, "little")
+
+    def to_json(self, value: Value) -> object:
+        return str(value)
+
+
+class _Blob(Codec):
+    """``Bytes`` (``length`` is ``None``) or ``Bytes<N>`` (``length`` is ``N``)."""
+
+    def __init__(self, length: object, sem: Semantics) -> None:
+        self.length = length if type(length) is int else None
+        self.sem = sem
+
+    def decode(self, raw: object) -> bytes:
+        if not isinstance(raw, str) or len(raw) > _MAX_HEX_DIGITS:
+            raise Refusal("value", "Bytes is a hex string of at most 4096 bytes")
+        if len(raw) % 2 or not _HEX_DIGITS.issuperset(raw):
+            raise Refusal("value", "Bytes is lowercase hex of even length")
+        if self.length is not None and len(raw) != 2 * self.length:
+            raise Refusal("value", "Bytes<N> is exactly N bytes of hex")
+        return bytes.fromhex(raw)
+
+    def encode(self, value: Value) -> bytes:
+        return b"\x20" + self.sem.u32(len(value)) + value
+
+    def to_json(self, value: Value) -> object:
+        return value.hex()
+
+
+class _Maybe(Codec):
+    def __init__(self, inner: Codec, sem: Semantics) -> None:
+        self.inner, self.sem = inner, sem
+
+    def decode(self, raw: object) -> tuple:
+        if type(raw) is dict and len(raw) == 1:
+            if "none" in raw:
+                if raw["none"] is True:  # the literal true; 1 is not it (F11)
+                    return ("none",)
+            elif "some" in raw:
+                return ("some", self.inner.decode(raw["some"]))
+        raise Refusal("value", "an Option is {none: true} or {some: v}")
+
+    def encode(self, value: Value) -> bytes:
+        if value[0] == "none":
+            return b"\x40"
+        return b"\x41" + self.inner.encode(value[1])
+
+    def to_json(self, value: Value) -> object:
+        if value[0] == "none":
+            return {"none": True}
+        return {"some": self.inner.to_json(value[1])}
+
+
+class _Outcome(Codec):
+    """``Result<T,E>``: ``ok`` carries a ``T``, ``err`` names a case of ``E``."""
+
+    def __init__(self, ok: Codec, cases: tuple, sem: Semantics) -> None:
+        self.ok, self.cases, self.sem = ok, cases, sem
+
+    def decode(self, raw: object) -> tuple:
+        if type(raw) is dict and len(raw) == 1:
+            if "ok" in raw:
+                return ("ok", self.ok.decode(raw["ok"]))
+            if "err" in raw and raw["err"] in self.cases and type(raw["err"]) is str:
+                return ("err", raw["err"])
+        raise Refusal("value", "a Result is {ok: v} or {err: a case of E}")
+
+    def encode(self, value: Value) -> bytes:
+        if value[0] == "ok":
+            return b"\x50" + self.ok.encode(value[1])
+        name = value[1].encode("utf-8")
+        return b"\x51" + self.sem.u32(len(name)) + name
+
+    def to_json(self, value: Value) -> object:
+        if value[0] == "ok":
+            return {"ok": self.ok.to_json(value[1])}
+        return {"err": value[1]}
+
+
+class _Row(Codec):
+    """A tuple or a record: a fixed number of components, each with its own codec."""
+
+    def __init__(self, parts: list[Codec], sem: Semantics) -> None:
+        self.parts, self.sem = parts, sem
+
+    def decode(self, raw: object) -> tuple:
+        if type(raw) is not list or len(raw) != len(self.parts):
+            raise Refusal("value", f"an array of exactly {len(self.parts)} items")
+        return tuple(
+            part.decode(item) for part, item in zip(self.parts, raw, strict=True)
+        )
+
+    def encode(self, value: Value) -> bytes:
+        head = b"\x64" + self.sem.u32(len(self.parts))
+        return head + b"".join(
+            part.encode(item) for part, item in zip(self.parts, value, strict=True)
+        )
+
+    def to_json(self, value: Value) -> object:
+        return [
+            part.to_json(item) for part, item in zip(self.parts, value, strict=True)
+        ]
+
+
+class _Either(Codec):
+    """A variant: a constructor name and that constructor's fields."""
+
+    def __init__(self, shapes: dict[str, list[Codec]], sem: Semantics) -> None:
+        self.shapes, self.sem = shapes, sem
+
+    def decode(self, raw: object) -> tuple:
+        if type(raw) is not dict or set(raw) != {"ctor", "fields"}:
+            raise Refusal("value", "a variant is exactly {ctor, fields}")
+        name, fields = raw["ctor"], raw["fields"]
+        if type(name) is not str or name not in self.shapes:
+            raise Refusal("value", "a constructor the variant does not declare")
+        shape = self.shapes[name]
+        if type(fields) is not list or len(fields) != len(shape):
+            raise Refusal("value", "the wrong number of constructor fields")
+        return (
+            name,
+            tuple(part.decode(item) for part, item in zip(shape, fields, strict=True)),
+        )
+
+    def encode(self, value: Value) -> bytes:
+        name, fields = value
+        raw_name = name.encode("utf-8")
+        shape = self.shapes[name]
+        return (
+            b"\x65"
+            + self.sem.u32(len(raw_name))
+            + raw_name
+            + self.sem.u32(len(fields))
+            + b"".join(
+                part.encode(item) for part, item in zip(shape, fields, strict=True)
+            )
+        )
+
+    def to_json(self, value: Value) -> object:
+        name, fields = value
+        shape = self.shapes[name]
+        return {
+            "ctor": name,
+            "fields": [
+                part.to_json(item) for part, item in zip(shape, fields, strict=True)
+            ],
+        }
 
 
 # ---------------------------------------------------------------------------
-# section 2.3: JSON -> Python
+# Building a codec from a type
+# ---------------------------------------------------------------------------
+def codec_for(ty: Ty, types: dict | None = None, sem: Semantics = STANDARD) -> Codec:
+    """The codec of ``ty`` under the section 2.2 table ``types``.
+
+    A ``List`` is refused as the level ``ir.list`` ([D63]).  A record or variant
+    that contains itself, however far down, is refused as a ``type`` error: the
+    table is data from outside, and section 2.2 rule 1 forbids recursion.
+    """
+    try:
+        return _Builder(types or {}, sem).codec(ty)
+    except RecursionError as error:  # a chain of nested records, thousands long
+        raise Refusal("type", "declarations nested too deeply") from error
+
+
+class _Builder:
+    """Builds the codec of one type, remembering the declarations being expanded."""
+
+    def __init__(self, types: dict, sem: Semantics) -> None:
+        self.types, self.sem = types, sem
+        self.expanding: list[str] = []
+
+    def codec(self, ty: Ty) -> Codec:
+        head = ty.head
+        if head == "Bool":
+            return _Truth()
+        if head == "Nat" or head == "Int" or head in FIXED:
+            return _Whole(ty, self.sem)
+        if head == "Bytes":
+            return _Blob(ty.args[0] if ty.args else None, self.sem)
+        if head == "List":
+            raise Refusal("level-missing", "List<T> belongs to the level ir.list")
+        if head == "Option":
+            return _Maybe(self.codec(ty.args[0]), self.sem)
+        if head == "Result":
+            return _Outcome(
+                self.codec(ty.args[0]), self.cases_of(ty.args[1].head), self.sem
+            )
+        if head == "()":
+            return _Row([self.codec(part) for part in ty.args], self.sem)
+        return self.declared(head)
+
+    def cases_of(self, error: str) -> tuple:
+        """The declared cases of the error type ``error``.
+
+        A descriptor is read *without* a types table (R44), and then no error
+        type is declared: its values can be written but no ``err`` can be read.
+        """
+        row = self.types.get(error)
+        if isinstance(row, dict) and row.get("kind") == "error":
+            return tuple(row["cases"])
+        return ()
+
+    def declared(self, name: str) -> Codec:
+        row = self.types.get(name)
+        kind = row.get("kind") if isinstance(row, dict) else None
+        if kind not in ("record", "variant"):
+            raise Refusal("type", f"{name} is not a declared record or variant")
+        if name in self.expanding:
+            raise Refusal("type", f"{name} contains itself")
+        self.expanding.append(name)
+        try:
+            if kind == "record":
+                parts = [self.member(text) for _field, text in row["fields"]]
+                return _Row(parts, self.sem)
+            return _Either(
+                {
+                    ctor: [self.member(text) for text in texts]
+                    for ctor, texts in row["ctors"]
+                },
+                self.sem,
+            )
+        finally:
+            self.expanding.pop()
+
+    def member(self, text: object) -> Codec:
+        return self.codec(parse_type(text, self.types))
+
+
+# ---------------------------------------------------------------------------
+# The public entry points
 # ---------------------------------------------------------------------------
 def decode_value(
     raw: object, ty: Ty, types: dict | None, sem: Semantics = STANDARD
 ) -> object:
-    """Decode the JSON ``raw`` as a value of type ``ty``, or refuse ``value``."""
-    types = types or {}
-    head = ty.head
-    if head == "Bool":
-        if type(raw) is not bool:
-            raise Refusal("value", "a Bool is a JSON boolean")
-        return raw
-    if head == "Nat" or head in FIXED:
-        return sem.decode_int(raw, ty)
-    if head == "Bytes":
-        return _decode_bytes(raw, ty)
-    if head == "Result":
-        return _decode_result(raw, ty, types, sem)
-    if head == "Option":
-        if raw == {"none": True} and type(raw) is dict:
-            return ("none",)
-        if type(raw) is dict and len(raw) == 1 and "some" in raw:
-            return ("some", decode_value(raw["some"], ty.args[0], types, sem))
-        raise Refusal("value", "an Option is {none: true} or {some: v}")
-    if head == "List":
-        if type(raw) is not list or len(raw) > MAX_LIST:
-            raise Refusal("value", "a List is an array of at most 4096 elements")
-        return [decode_value(item, ty.args[0], types, sem) for item in raw]
-    if head == "()":
-        return _decode_sequence(raw, list(ty.args), types, sem)
-    kind = _kind(ty, types)
-    if kind == "record":
-        return _decode_sequence(raw, _record_fields(types, head), types, sem)
-    if kind == "variant":
-        return _decode_variant(raw, ty, types, sem)
-    raise Refusal("value", "a value of this type cannot be decoded")
+    """Read the corpus JSON ``raw`` as a value of type ``ty``, or refuse ``value``."""
+    return codec_for(ty, types, sem).decode(raw)
 
 
-def _decode_bytes(raw: object, ty: Ty) -> bytes:
-    if not isinstance(raw, str) or _HEX.fullmatch(raw) is None:
-        raise Refusal("value", "Bytes is lowercase even-length hex")
-    length = len(raw) // 2
-    if length > MAX_FIXED_WIDTH:
-        raise Refusal("value", "a Bytes value has at most 4096 bytes")
-    if ty.args and isinstance(ty.args[0], int) and length != ty.args[0]:
-        raise Refusal("value", "Bytes<N> has exactly N bytes")
-    return bytes.fromhex(raw)
-
-
-def _decode_result(raw: object, ty: Ty, types: dict, sem: Semantics) -> tuple:
-    if type(raw) is not dict or len(raw) != 1:
-        raise Refusal("value", "a Result has exactly one key")
-    if "ok" in raw:
-        return ("ok", decode_value(raw["ok"], ty.args[0], types, sem))
-    case = raw.get("err")
-    declared = types.get(ty.args[1].head, {}).get("cases")
-    if not isinstance(case, str) or (declared is not None and case not in declared):
-        raise Refusal("value", "an err case is a name the error type declares")
-    return ("err", case)
-
-
-def _decode_sequence(
-    raw: object, parts: list[Ty], types: dict, sem: Semantics
-) -> tuple:
-    if type(raw) is not list or len(raw) != len(parts):
-        raise Refusal("value", "a tuple or record is an array of its arity")
-    return tuple(
-        decode_value(item, part, types, sem)
-        for item, part in zip(raw, parts, strict=True)
-    )
-
-
-def _decode_variant(raw: object, ty: Ty, types: dict, sem: Semantics) -> tuple:
-    if type(raw) is not dict or set(raw) != {"ctor", "fields"}:
-        raise Refusal("value", "a variant has exactly the keys ctor and fields")
-    ctors = _variant_ctors(types, ty.head)
-    ctor, fields = raw["ctor"], raw["fields"]
-    if not isinstance(ctor, str) or ctor not in ctors or type(fields) is not list:
-        raise Refusal("value", "an undeclared constructor")
-    if len(fields) != len(ctors[ctor]):
-        raise Refusal("value", "a constructor's field count")
-    return (
-        ctor,
-        tuple(
-            decode_value(item, part, types, sem)
-            for item, part in zip(fields, ctors[ctor], strict=True)
-        ),
-    )
-
-
-# ---------------------------------------------------------------------------
-# Python -> JSON (the inverse; the harness writes outcomes with it)
-# ---------------------------------------------------------------------------
 def value_to_json(value: object, ty: Ty, types: dict | None = None) -> object:
     """The untagged corpus JSON of ``value`` at type ``ty`` (``Int`` included)."""
-    types = types or {}
-    head = ty.head
-    if head == "Bool":
-        return bool(value)
-    if head in FIXED or head in ("Nat", "Int"):
-        return str(value)
-    if head == "Bytes":
-        assert isinstance(value, bytes)
-        return value.hex()
-    assert isinstance(value, (tuple, list))
-    if head == "Result":
-        if value[0] == "ok":
-            return {"ok": value_to_json(value[1], ty.args[0], types)}
-        return {"err": value[1]}
-    if head == "Option":
-        if value[0] == "none":
-            return {"none": True}
-        return {"some": value_to_json(value[1], ty.args[0], types)}
-    if head == "List":
-        return [value_to_json(item, ty.args[0], types) for item in value]
-    if head == "()":
-        return [value_to_json(v, t, types) for v, t in zip(value, ty.args, strict=True)]
-    if _kind(ty, types) == "record":
-        parts = _record_fields(types, head)
-        return [value_to_json(v, t, types) for v, t in zip(value, parts, strict=True)]
-    ctor, fields = value
-    parts = _variant_ctors(types, head)[ctor]
-    return {
-        "ctor": ctor,
-        "fields": [
-            value_to_json(v, t, types) for v, t in zip(fields, parts, strict=True)
-        ],
-    }
+    return codec_for(ty, types).to_json(value)
 
 
-# ---------------------------------------------------------------------------
-# section 2.4: Python -> stream bytes
-# ---------------------------------------------------------------------------
 Encoder = Callable[[Value], bytes]
 
 
@@ -248,82 +396,10 @@ def make_encoder(
 ) -> Encoder:
     """A function from a value of type ``ty`` to its section 2.4 bytes.
 
-    The encoder is built **once** per type and then called per value: an
-    enumerated chunk encodes up to 65,536 tuples, and re-reading the type for
-    each one would dominate the run.
+    Built **once** per type and called per value: an enumerated chunk encodes up
+    to 65,536 tuples, and re-reading the type for each one would dominate the run.
     """
-    types = types or {}
-    head = ty.head
-    u32 = sem.u32
-    if head == "Bool":
-        return lambda value: b"\x01" if value else b"\x00"
-    if head == "Nat" or (head in FIXED and not ty.signed):
-        limit = (1 << 64) - 1 if head == "Nat" else (1 << FIXED[head][0]) - 1
-
-        def unsigned(value: Value) -> bytes:
-            if type(value) is not int or not 0 <= value <= limit:
-                raise Refusal("value", "a value outside its type cannot be encoded")
-            return b"\x10" + value.to_bytes(8, "little")
-
-        return unsigned
-    if head in FIXED:
-        low, high = fixed_range(ty)
-
-        def signed(value: Value) -> bytes:
-            if type(value) is not int or not low <= value <= high:
-                raise Refusal("value", "a value outside its type cannot be encoded")
-            return b"\x11" + sem.encode_signed(value)
-
-        return signed
-    if head == "Bytes":
-        return lambda value: b"\x20" + u32(len(value)) + value
-    if head == "Result":
-        ok = make_encoder(ty.args[0], types, sem)
-
-        def result(value: Value) -> bytes:
-            if value[0] == "ok":
-                return b"\x50" + ok(value[1])
-            name = value[1].encode("utf-8")
-            return b"\x51" + u32(len(name)) + name
-
-        return result
-    if head == "Option":
-        inner = make_encoder(ty.args[0], types, sem)
-        return lambda value: (
-            b"\x40" if value[0] == "none" else b"\x41" + inner(value[1])
-        )
-    if head == "List":
-        element = make_encoder(ty.args[0], types, sem)
-        return lambda value: (
-            b"\x30" + u32(len(value)) + b"".join(element(item) for item in value)
-        )
-    if head == "()" or _kind(ty, types) == "record":
-        parts = list(ty.args) if head == "()" else _record_fields(types, head)
-        encoders = [make_encoder(part, types, sem) for part in parts]
-        return lambda value: (
-            b"\x64"
-            + u32(len(encoders))
-            + b"".join(e(v) for e, v in zip(encoders, value, strict=True))
-        )
-    if _kind(ty, types) == "variant":
-        table = {
-            ctor: [make_encoder(part, types, sem) for part in parts]
-            for ctor, parts in _variant_ctors(types, head).items()
-        }
-
-        def variant(value: Value) -> bytes:
-            ctor, fields = value
-            name = ctor.encode("utf-8")
-            return (
-                b"\x65"
-                + u32(len(name))
-                + name
-                + u32(len(fields))
-                + b"".join(e(v) for e, v in zip(table[ctor], fields, strict=True))
-            )
-
-        return variant
-    raise Refusal("type", "a value of this type has no stream encoding")
+    return codec_for(ty, types, sem).encode
 
 
 def encode_value(

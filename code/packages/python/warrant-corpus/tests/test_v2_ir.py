@@ -200,11 +200,26 @@ def test_a_tree_far_deeper_than_python_can_recurse_is_refused_not_crashed():
     assert caught.value.code == "depth"
 
 
-def test_a_tree_of_nested_arrays_is_walked_iteratively():
+def test_a_tree_of_nested_arrays_is_not_a_tree_and_is_skipped_iteratively():
+    """F13: only the operand positions of a tag are followed; an array is no node."""
     nodes = [["not", ["lit", True]]]
     for _ in range(50_000):
         nodes = [nodes]
-    assert [n[0] for n, _d in walk(nodes)] == ["not", "lit"]
+    assert list(walk(nodes)) == []
+    assert [n[0] for n, _d in walk(["not", ["lit", True]])] == ["not", "lit"]
+
+
+def test_a_stray_item_in_an_argument_array_is_ill_typed_not_a_tag():
+    """F13: ``["model_call", "m", ["x"]]`` is a malformed argument, not a node ``x``."""
+    models = {"m": {"params": [["a", "U8"]], "body": ["lit", True]}}
+    got = outcome_ir(
+        case(["model_call", "m", ["x"]], models=models, model_order=["m"]), STANDARD
+    )
+    assert got == {"error": "ill-typed"}
+    got = outcome_ir(
+        case(["model_call", "m", [["x"]]], models=models, model_order=["m"]), STANDARD
+    )
+    assert got == {"error": "unknown-tag"}
 
 
 def test_the_deepest_legal_nesting_evaluates():
@@ -293,10 +308,15 @@ def test_model_order_refusals_found_before_compilation():
 
 def test_a_bad_declared_type_in_a_signature_is_ill_typed():
     bad_param = {"m": {"params": [["a", "Nope"]], "body": ["lit", True]}}
-    assert outcome_ir(
-        case(["lit", True], models=bad_param, model_order=["m"]), STANDARD
-    ) == {"error": "ill-typed"}
+    call_m = ["model_call", "m", [var("a")]]
+    assert outcome_ir(case(call_m, models=bad_param, model_order=["m"]), STANDARD) == {
+        "error": "ill-typed"
+    }
     bad_ret = {"op": {"params": [], "ret": "Nope", "requires": ["ir.core"]}}
+    assert outcome_ir(case(["subject_op", "op", []], ops=bad_ret), STANDARD) == {
+        "error": "ill-typed"
+    }
+    # R69 (i): validated in full even when nothing reaches them
     assert outcome_ir(case(["lit", True], ops=bad_ret), STANDARD) == {
         "error": "ill-typed"
     }
@@ -306,9 +326,11 @@ def test_a_type_of_a_level_the_runner_lacks_is_level_missing():
     tuple_op = {
         "t": {"params": [["p", "(U8,Bool)"]], "ret": "Bool", "requires": ["ir.tuple"]}
     }
-    assert outcome_ir(case(["lit", True], ops=tuple_op), STANDARD) == {
-        "error": "level-missing"
-    }
+    reach = ["subject_op", "t", [["lit", True]]]
+    assert outcome_ir(case(reach, ops=tuple_op), STANDARD) == {"error": "level-missing"}
+    # an op of a missing level nothing reaches is only classified, not refused
+    assert outcome_ir(case(["lit", True], ops=tuple_op), STANDARD)["value"] is True
+    assert "t" in Program(ops=tuple_op).not_live_ops
     assert outcome_ir(case(["lit", True], ops={}, levels=[]), STANDARD) == {
         "error": "level-missing"
     }
@@ -342,6 +364,7 @@ def test_a_stand_in_must_have_the_signature_of_the_op_it_plays():
         models={"wide": {"params": [["a", "U16"]], "body": ["lit", True]}},
         model_order=["wide"],
     )
+    program.compile(bump(), {"a": Ty("U8")})  # the call is what reaches the op
     with pytest.raises(KitError):
         SubjectTable(program, {"bump": "wide"})
     SubjectTable(
@@ -382,15 +405,20 @@ def test_inline_and_hook_arithmetic_agree(name, tag):
             assert low <= fast.fn(env) <= high
 
 
+CALL_INC = ["model_call", "inc", [var("a")]]
+CALL_BUMP = ["subject_op", "bump", [var("a")]]
+
+
 @pytest.mark.parametrize(
-    "edit",
+    ("ir", "edit"),
     [
-        {"models": {"inc": {"body": ["lit", True]}}},  # no params
-        {"models": {"inc": {"params": 5, "body": ["lit", True]}}},
-        {"models": {"inc": "not a row"}},
-        {"ops": {"bump": {"params": [["a"]], "ret": "U8"}}},
-        {"types": {"E": {"kind": "error"}}},  # an error type with no cases
+        (CALL_INC, {"models": {"inc": {"body": ["lit", True]}}}),  # no params
+        (CALL_INC, {"models": {"inc": {"params": 5, "body": ["lit", True]}}}),
+        (CALL_INC, {"models": {"inc": "not a row"}}),
+        (CALL_BUMP, {"ops": {"bump": {"params": [["a"]], "ret": "U8"}}}),
+        (["err", "X"], {"types": {"E": {"kind": "error"}}}),  # no cases declared
     ],
 )
-def test_a_row_of_the_wrong_shape_is_refused_not_a_crash(edit):
-    assert outcome_ir(case(["lit", True], **edit), STANDARD) == {"error": "ill-typed"}
+def test_a_row_of_the_wrong_shape_is_refused_not_a_crash(ir, edit):
+    got = outcome_ir(case(ir, **edit), STANDARD)
+    assert got == {"error": "ill-typed"}

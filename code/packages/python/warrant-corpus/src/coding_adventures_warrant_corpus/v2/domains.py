@@ -29,9 +29,11 @@ tuple / record          Cartesian product, **last component fastest**
 variant                 constructors in declaration order, each its field product
 option                  ``None``, then ``Some(x)`` for ``x`` in the payload domain
 result                  ``Ok(x)`` for ``x`` in the ok domain, then each error case
-list                    by length: 0; length 1 and 2 over the first 16 values;
-                        length 3 over the first 4; lexicographic within a length
 ======================  =======================================================
+
+The ``list`` descriptor of section 5.1 is **not** implemented: lists are the
+reserved level ``ir.list`` ([D63]), and a ``list`` node is refused as that level
+(``level-missing``) however well-formed it is.
 
 Every descriptor defines two **total** functions, ``size()`` and ``nth(i)`` (the
 ``i``-th value, ``0 <= i < size``).  ``nth`` is what lets a lane jump straight to
@@ -259,10 +261,12 @@ def _build_composite(node: dict, kind: str, sem: Semantics, depth: int) -> Desc:
         _need_keys(node, {"ok", "errs"})
         ok = build(node["ok"], sem, depth + 1)
         errs = _children(node, "errs")
-        if not 1 <= len(errs) <= 64 or not all(
-            isinstance(e, str) and _NAME.fullmatch(e) for e in errs
+        if (
+            not 1 <= len(errs) <= 64
+            or not all(isinstance(e, str) and _NAME.fullmatch(e) for e in errs)
+            or len(set(errs)) != len(errs)
         ):
-            raise _refuse("errs is 1 to 64 error case names")
+            raise _refuse("errs is 1 to 64 distinct error case names (R72)")
         return Desc(
             ok.size + len(errs),
             lambda i: ("ok", ok.nth(i)) if i < ok.size else ("err", errs[i - ok.size]),
@@ -270,8 +274,9 @@ def _build_composite(node: dict, kind: str, sem: Semantics, depth: int) -> Desc:
     if kind == "variant":
         return _variant(node, sem, depth)
     if kind == "list":
-        _need_keys(node, {"of"})
-        return _list(build(node["of"], sem, depth + 1))
+        raise Refusal(
+            "level-missing", "the list descriptor belongs to the level ir.list"
+        )
     raise _refuse("an unknown descriptor kind")
 
 
@@ -312,31 +317,16 @@ def _variant(node: dict, sem: Semantics, depth: int) -> Desc:
     return Desc(sum(f.size for _n, f in rows), nth)
 
 
-def _list(element: Desc) -> Desc:
-    """Lists by length: 0; 1 and 2 over the first 16 values; 3 over the first 4."""
-    wide, narrow = min(16, element.size), min(4, element.size)
-    lengths = [(0, 1), (1, wide), (2, wide**2), (3, narrow**3)]
-    total = sum(n for _length, n in lengths)
-
-    def nth(index: int) -> list:
-        for length, count in lengths:
-            if index < count:
-                base = wide if length < 3 else narrow
-                digits = []
-                for _ in range(length):
-                    index, digit = divmod(index, base)
-                    digits.append(digit)
-                return [element.nth(d) for d in reversed(digits)]
-            index -= count
-        raise IndexError(index)  # pragma: no cover - callers check the index
-
-    return Desc(total, nth)
-
-
 # ---------------------------------------------------------------------------
 # Is the tree one FOR this type?
 # ---------------------------------------------------------------------------
-_LEAF_TYPE = {
+# A descriptor is a *recipe for the values of one type*, and "one for this type"
+# is a question about shape: a ``bool`` leaf is the recipe for ``Bool``, a
+# ``tuple`` for a tuple *or* a record, a ``variant`` for a declared variant whose
+# constructors it lists by name, and so on.  The check walks the descriptor and
+# the type together.  It keeps its own list of pairs still to compare instead of
+# calling itself, so the depth of a tree never matters to the stack.
+_LEAF_RECIPES: dict[str, Ty] = {
     "bool": Ty("Bool"),
     "u8_all": Ty("U8"),
     "u64_edge": Ty("U64"),
@@ -346,50 +336,80 @@ _LEAF_TYPE = {
     "bytes_d1": BYTES,
 }
 
-
-def fits(node: dict, ty: Ty, types: dict) -> bool:
-    """Is the validated descriptor ``node`` one *for* the binder type ``ty``?"""
-    kind = node["d"]
-    if kind in _LEAF_TYPE:
-        return ty == _LEAF_TYPE[kind]
-    if kind == "bytes_n":
-        return ty == Ty("Bytes", (node["n"],))
-    if kind in ("fx_full", "fx_edge"):
-        return ty == Ty(node["t"])
-    if kind == "result":
-        return ty.head == "Result" and fits(node["ok"], ty.args[0], types)
-    if kind in ("option", "list"):
-        return ty.head == kind.capitalize() and fits(node["of"], ty.args[0], types)
-    if kind == "tuple":
-        parts = _component_types(ty, types)
-        return (
-            parts is not None
-            and len(parts) == len(node["of"])
-            and all(fits(n, t, types) for n, t in zip(node["of"], parts, strict=True))
-        )
-    return _variant_fits(node, ty, types)
+Pairs = list  # of (descriptor node, type) still to be compared
 
 
-def _component_types(ty: Ty, types: dict) -> list[Ty] | None:
+def _components_of(ty: Ty, types: dict) -> list[Ty] | None:
+    """The component types of a tuple or a record type, else ``None``."""
     if ty.head == "()":
         return list(ty.args)
-    if types.get(ty.head, {}).get("kind") == "record":
-        return [parse_type(t, types) for _f, t in types[ty.head]["fields"]]
+    row = types.get(ty.head)
+    if isinstance(row, dict) and row.get("kind") == "record":
+        return [parse_type(text, types) for _name, text in row["fields"]]
     return None
 
 
-def _variant_fits(node: dict, ty: Ty, types: dict) -> bool:
-    row = types.get(ty.head, {})
-    if row.get("kind") != "variant" or len(row["ctors"]) != len(node["ctors"]):
-        return False
-    for (name, texts), (dname, fields) in zip(row["ctors"], node["ctors"], strict=True):
-        if name != dname or len(texts) != len(fields):
+def _pair_up(nodes: list, wanted: list[Ty] | None) -> Pairs | None:
+    if wanted is None or len(nodes) != len(wanted):
+        return None
+    return list(zip(nodes, wanted, strict=True))
+
+
+def _compare_variant(node: dict, ty: Ty, types: dict) -> Pairs | None:
+    row = types.get(ty.head)
+    if not isinstance(row, dict) or row.get("kind") != "variant":
+        return None
+    if [name for name, _fields in row["ctors"]] != [n for n, _f in node["ctors"]]:
+        return None
+    pairs: Pairs = []
+    for (_name, texts), (_dname, nodes) in zip(
+        row["ctors"], node["ctors"], strict=True
+    ):
+        more = _pair_up(nodes, [parse_type(text, types) for text in texts])
+        if more is None:
+            return None
+        pairs += more
+    return pairs
+
+
+def _compare_result(node: dict, ty: Ty, types: dict) -> Pairs | None:
+    if ty.head != "Result":
+        return None
+    row = types.get(ty.args[1].head)
+    # With a types table the descriptor must list the error type's cases, in the
+    # order the type declares them; without one (R44) there is nothing to compare.
+    if isinstance(row, dict) and row.get("cases") != node["errs"]:
+        return None
+    return [(node["ok"], ty.args[0])]
+
+
+def _compare(node: dict, ty: Ty, types: dict) -> Pairs | None:
+    """Compare one node with one type: the pairs to compare next, or ``None``."""
+    kind = node["d"]
+    if kind in _LEAF_RECIPES:
+        return [] if ty == _LEAF_RECIPES[kind] else None
+    if kind == "bytes_n":
+        return [] if ty == Ty("Bytes", (node["n"],)) else None
+    if kind in ("fx_full", "fx_edge"):
+        return [] if ty == Ty(node["t"]) else None
+    if kind == "option":
+        return [(node["of"], ty.args[0])] if ty.head == "Option" else None
+    if kind == "result":
+        return _compare_result(node, ty, types)
+    if kind == "tuple":
+        return _pair_up(node["of"], _components_of(ty, types))
+    return _compare_variant(node, ty, types)
+
+
+def is_descriptor_for(node: dict, ty: Ty, types: dict) -> bool:
+    """Is the already-validated descriptor ``node`` a recipe for the type ``ty``?"""
+    pending: Pairs = [(node, ty)]
+    while pending:
+        here, wanted = pending.pop()
+        more = _compare(here, wanted, types)
+        if more is None:
             return False
-        if not all(
-            fits(f, parse_type(t, types), types)
-            for f, t in zip(fields, texts, strict=True)
-        ):
-            return False
+        pending.extend(more)
     return True
 
 
@@ -412,6 +432,10 @@ def descriptor_for(
         raise _refuse(f"not a binder type: {error.message}") from error
     desc = build(node, sem)
     assert type(node) is dict
-    if not fits(node, ty, types or {}):
+    try:
+        matches = is_descriptor_for(node, ty, types or {})
+    except Refusal as error:  # a field type of the types table that is not a type
+        raise _refuse(f"the types table does not parse: {error.message}") from error
+    if not matches:
         raise _refuse("a descriptor that is not one for the binder type")
     return desc, ty

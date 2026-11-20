@@ -16,7 +16,7 @@ from coding_adventures_warrant_corpus.v2.domains import (
     MAX_DESCRIPTOR_DEPTH,
     build,
     descriptor_for,
-    fits,
+    is_descriptor_for,
 )
 from coding_adventures_warrant_corpus.v2.errors import Refusal
 from coding_adventures_warrant_corpus.v2.semantics import STANDARD
@@ -153,19 +153,18 @@ def test_a_variant_is_its_constructors_in_order_each_a_field_product():
     )
 
 
-def test_a_list_goes_by_length_with_the_prefix_caps():
-    """Length 0; 1 and 2 over the first 16 values; 3 over the first 4 (section 5.1)."""
-    small = values({"d": "list", "of": BOOL, "size": 1 + 2 + 4 + 8})
-    assert small[0] == [] and small[1:3] == [[False], [True]]
-    assert small[3:7] == [[False, False], [False, True], [True, False], [True, True]]
-    assert small[7] == [False, False, False] and small[-1] == [True, True, True]
-    big = values({"d": "list", "of": U8, "size": 1 + 16 + 256 + 64})
-    assert len(big) == 1 + 16 + 256 + 64
-    assert big[1] == [0] and big[16] == [15] and big[17] == [0, 0] and big[18] == [0, 1]
+def test_a_list_descriptor_is_the_level_ir_list_whatever_its_size():
+    """[D63]: the formula of section 5.1 is not implemented; the level is refused."""
+    for node in (
+        {"d": "list", "of": BOOL, "size": 15},
+        {"d": "list", "of": BOOL, "size": 1},  # the size is never even compared
+    ):
+        assert code_of(build, node) == "level-missing"
     assert (
-        big[17 + 255] == [15, 15]
-        and big[17 + 256] == [0, 0, 0]
-        and big[-1] == [3, 3, 3]
+        code_of(
+            descriptor_for, {"d": "list", "of": BOOL, "size": 15}, "List<Bool>", None
+        )
+        == "level-missing"
     )
 
 
@@ -193,6 +192,18 @@ BAD = [
     ("nat_count past 4096", leaf("nat_count", 4098, k=4097)),
     ("nat_count negative", leaf("nat_count", 0, k=-1)),
     ("result errs not names", {"d": "result", "ok": BOOL, "errs": [1], "size": 3}),
+    (
+        "result with 65 errs",
+        {"d": "result", "ok": BOOL, "errs": [f"E{i}" for i in range(65)], "size": 67},
+    ),
+    (
+        "result with a duplicate err",
+        {"d": "result", "ok": BOOL, "errs": ["A", "A"], "size": 4},
+    ),
+    (
+        "result with a bad err name",
+        {"d": "result", "ok": BOOL, "errs": ["not a name"], "size": 3},
+    ),
     ("result with no errs", {"d": "result", "ok": BOOL, "errs": [], "size": 2}),
     ("result errs not a list", {"d": "result", "ok": BOOL, "errs": "BAD", "size": 3}),
     (
@@ -259,7 +270,6 @@ def test_a_tuple_descriptor_fits_a_tuple_or_a_record_type():
 
 def test_option_list_and_result_descriptors_fit_their_types():
     assert desc_for({"d": "option", "of": BOOL, "size": 3}, "Option<Bool>").size == 3
-    assert desc_for({"d": "list", "of": BOOL, "size": 15}, "List<Bool>").size == 15
     result = {"d": "result", "ok": BOOL, "errs": ["BAD", "WORSE"], "size": 4}
     assert desc_for(result, "Result<Bool,E>").size == 4
     assert descriptor_for(result, "Result<Bool,Free>", None)[1] == parse_type(
@@ -306,8 +316,8 @@ def test_a_bad_type_text_or_an_unknown_named_type_is_a_descriptor_refusal():
     ],
 )  # fmt: skip
 def test_every_leaf_fits_exactly_its_own_type(node, text):
-    assert fits(node, parse_type(text, {}), {})
-    assert not fits(node, Ty("Result", (Ty("Bool"), Ty("E"))), {})
+    assert is_descriptor_for(node, parse_type(text, {}), {})
+    assert not is_descriptor_for(node, Ty("Result", (Ty("Bool"), Ty("E"))), {})
 
 
 def test_the_semantics_supplies_the_fx_edge_values():

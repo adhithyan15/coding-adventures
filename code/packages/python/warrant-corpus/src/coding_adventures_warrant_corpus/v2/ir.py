@@ -63,10 +63,13 @@ from .wtypes import (
     BOOL,
     BYTES,
     INT,
+    MAX_FIXED_WIDTH,
     NAT,
     UNKNOWN_TY,
     Ty,
+    bind_widths,
     flows,
+    forget_widths,
     parse_type,
     unify,
 )
@@ -150,24 +153,44 @@ def is_node(value: object) -> bool:
     return type(value) is list and bool(value) and type(value[0]) is str
 
 
+# The tags whose operands are not simply "everything after the tag": a literal,
+# a variable and an error case carry data, not sub-expressions, and a call
+# carries a *name*, an array of argument expressions and (``subject_op``) an
+# array of numbers.  Reading each position for what it is (F13) means a stray
+# string or number in an argument array is a malformed node, never a tag.
+_DATA_TAGS = frozenset({"lit", "var", "err"})
+_CALL_TAGS = frozenset({"subject_op", "model_call"})
+
+
+def operands(node: list) -> list:
+    """The positions of ``node`` that are meant to hold sub-expressions, in order."""
+    tag = node[0]
+    if tag in _DATA_TAGS:
+        return []
+    if tag in _CALL_TAGS:
+        arguments = node[2] if len(node) > 2 else None
+        return arguments if type(arguments) is list else []
+    return node[1:]
+
+
 def walk(root: object) -> Iterator[tuple[list, int]]:
     """Yield ``(node, depth)`` for every IR node under ``root``, pre-order, iteratively.
 
     A node's *depth* is the number of nodes on the path from the root to it, the
-    root being 1 (a leaf alone is one level).  An argument array such as the
-    ``[a, b]`` of a ``model_call`` is not a node and adds no depth.  Iterative on
-    purpose: a hostile corpus may nest far deeper than Python's recursion limit
-    and must be *refused*, not crash the runner.
+    root being 1 (a leaf alone is one level).  The argument array of a call is
+    not a node and adds no depth.  Only the positions :func:`operands` names are
+    followed, and an item there that is not a node is *skipped* (the compiler
+    refuses it as ``ill-typed``).  Iterative on purpose: a hostile corpus may nest
+    far deeper than Python's recursion limit and must be *refused*, not crash
+    the runner.
     """
-    stack: list[tuple[object, int]] = [(root, 1)]
-    while stack:
-        item, depth = stack.pop()
-        if is_node(item):
-            yield item, depth  # type: ignore[misc]
-            children = item[1:]  # type: ignore[index]
-            stack.extend((child, depth + 1) for child in reversed(children))
-        elif type(item) is list:
-            stack.extend((child, depth) for child in reversed(item))
+    pending: list[tuple[object, int]] = [(root, 1)]
+    while pending:
+        item, depth = pending.pop()
+        if not is_node(item):
+            continue
+        yield item, depth  # type: ignore[misc]
+        pending.extend((child, depth + 1) for child in reversed(operands(item)))  # type: ignore[arg-type]
 
 
 # ---------------------------------------------------------------------------
@@ -181,7 +204,14 @@ class Compiled:
     value) to its value; ``cost`` its worst-path node count; ``subject`` whether a
     ``subject_op`` sits beneath it; ``frames`` the deepest chain of ``model_call``
     frames below it; ``calls`` the subject calls it makes per case (section 4.4:
-    a constant, or a function of the environment when a pure guard decides).
+    a constant, or a function of the environment when a pure guard decides);
+    ``nest`` how deeply its closures nest, which is what decides whether the
+    evaluation needs more Python stack than the default.
+
+    ``written`` is only set on a bytes literal.  Its static type is
+    ``Bytes<len(value)>`` (R51, [D60]) so that it flows into a parameter of that
+    width and no other, but the node keeps the type the corpus *wrote*, ``Bytes``,
+    for anything that reports it.
     """
 
     ty: Ty
@@ -190,6 +220,8 @@ class Compiled:
     subject: bool = False
     frames: int = 0
     calls: Calls = 0
+    nest: int = 1
+    written: Ty | None = None
 
 
 @dataclass
@@ -202,10 +234,34 @@ class ModelDef:
 
 @dataclass
 class OpSig:
-    """An operation signature from a section 6 ``ops`` row."""
+    """An operation signature from a section 6 ``ops`` row.
+
+    ``width_params`` are the names of the op's static widths, in order; the
+    signature mentions them as ``Bytes<N>`` and a call binds them to numbers.
+    """
 
     params: list[tuple[str, Ty]]
     ret: Ty
+    width_params: tuple[str, ...] = ()
+
+    def unbound(self) -> tuple[list[tuple[str, Ty]], Ty]:
+        """The signature with every named width left unstated: a plain ``Bytes`` (R70).
+
+        A fault row has no call site and so no widths; its expressions are typed
+        as if each ``Bytes<N>`` were ``Bytes``.
+        """
+        return (
+            [(name, forget_widths(ty)) for name, ty in self.params],
+            forget_widths(self.ret),
+        )
+
+    def bind(self, widths: list[int]) -> tuple[list[tuple[str, Ty]], Ty]:
+        """The parameters and result with the static widths substituted (B2)."""
+        table = dict(zip(self.width_params, widths, strict=True))
+        return (
+            [(name, bind_widths(ty, table)) for name, ty in self.params],
+            bind_widths(self.ret, table),
+        )
 
 
 def _sum_calls(parts: list[Calls]) -> Calls:
@@ -229,13 +285,23 @@ def calls_of(calls: Calls, env: dict) -> int:
 
 
 class Program:
-    """The models and ops of one corpus (or one conformance case), compiled.
+    """The models and ops of one corpus (or one conformance case), checked on demand.
 
     ``levels`` are the levels the evaluator is configured with; only those this
     runner :data:`IMPLEMENTED_LEVELS` take effect, so a case that names a level
-    the runner lacks sees ``level-missing`` for that level's tags.  Models are
-    checked and compiled in ``model_order``; everything about *all* of them
-    (depth, tags, subject calls, call order) is verified before any is compiled.
+    the runner lacks sees ``level-missing`` for that level's tags.
+
+    **Levels are decided per expression, from what it reaches** ([D64]).  A corpus
+    holds models and ops of every level its adopter needs, and a lane that lacks
+    one of those levels must still run the suites that do not need it: the
+    others are recorded not-live, not refused.  So nothing here is checked up
+    front.  Compiling an expression checks its environment, its literals and its
+    tags, then the *call closure*: every model it calls (and those models'
+    callees, and so on) and every op it calls.  A model or op nothing reaches is
+    never looked at, and a missing level it would have needed goes unnoticed --
+    which is exactly the point.  Only facts about the corpus as a whole (the
+    cost bound, ``model_order`` being a permutation of ``models``) are checked
+    when the program is built.
     """
 
     def __init__(
@@ -259,71 +325,206 @@ class Program:
             raise Refusal("ir-cost", "max_ir_cost is outside 2,000..=65,536")
         self.max_cost = max_ir_cost
         self.subject_hook: Callable[[str, list], object] | None = None
-        self._raw_models = models or {}
-        self._order = list(model_order or [])
-        self.ops: dict[str, OpSig] = {}
-        self.models: dict[str, ModelDef] = {}
-        self.errors: dict[str, tuple[str, ...]] = {}
-        try:
-            self.errors = {
-                name: tuple(row["cases"])
-                for name, row in self.types.items()
-                if row.get("kind") == "error"
-            }
-            self._build(ops or {})
-        except (KeyError, TypeError, IndexError, ValueError, AttributeError) as error:
-            # A row of the wrong shape is a corpus defect, never a crash.
-            raise Refusal(
-                "ill-typed", "a type, model or op row has the wrong shape"
-            ) from error
+        self._raw_models = models if models is not None else {}
+        self._raw_ops = ops if ops is not None else {}
+        self._order = list(model_order) if model_order is not None else []
+        # model_order is the declaration order of exactly the models there are
+        # (F9): a name twice, a name with no model and a model with no name are
+        # all the same defect, and each would let a call slip past rule 1.
+        if (
+            type(self._raw_models) is not dict
+            or type(self._raw_ops) is not dict
+            or not all(type(name) is str for name in self._order)
+            or len(set(self._order)) != len(self._order)
+            or set(self._order) != set(self._raw_models)
+        ):
+            raise Refusal("model-order", "model_order is not a permutation of models")
+        self._position = {name: place for place, name in enumerate(self._order)}
+        self._check_corpus_structure()
+        self._impure_guards = 0  # enclosing guards whose condition calls the subject
+        self.models: dict[str, ModelDef] = {}  # the ones compiled so far
+        self.reached_ops: dict[str, OpSig] = {}  # the ops whose signature was read
+        self.not_live_models: dict[str, str] = {}  # name -> why (a missing level)
+        self.not_live_ops: dict[str, str] = {}
+        self.errors: dict[str, tuple[str, ...]] = {
+            name: tuple(row["cases"])
+            for name, row in self.types.items()
+            if isinstance(row, dict)
+            and row.get("kind") == "error"
+            and isinstance(row.get("cases"), list)
+        }
+        self._validate_what_the_lane_can_run()
 
-    # -- construction ---------------------------------------------------------
-    def _type(self, text: object) -> Ty:
-        """A declared type of an op or model signature; any refusal is ``ill-typed``."""
-        try:
-            ty = parse_type(text, self.types)
-        except Refusal as error:
-            raise Refusal("ill-typed", f"bad declared type: {error.message}") from error
-        self._need_levels(type_level(ty, self.types), str(ty))
-        return ty
+    # -- what is wrong with a corpus whatever level the lane implements ------------
+    def _check_corpus_structure(self) -> None:
+        """The checks that are not a question of level, over *every* model (R69 d, R77).
 
-    def _need_levels(self, needed: set[str], what: str) -> None:
+        A model the lane cannot run because it needs a missing level is still
+        part of the corpus, and a corpus may not hide a defect behind a level:
+        an unknown tag, a subject call in a model body, a call to a model not
+        declared earlier, an expression nested too deep, a model body costing
+        more than the bound and a chain of models more than 64 deep are corpus
+        errors wherever they stand.  Nothing here looks at a type, so nothing
+        here needs a level.  Models are taken in declaration order, so each
+        model's cost and chain depth are known before any caller needs them.
+        """
+        chain: dict[str, int] = {}
+        for name in self._order:
+            row = self._raw_models[name]
+            if type(row) is not dict or "body" not in row:
+                raise Refusal("ill-typed", "a model row has no body")
+            body = row["body"]
+            callees = self.scan(body, owner=self._position[name], levels=False)
+            if any(self._position[c] >= self._position[name] for c in callees):
+                raise Refusal(
+                    "model-order", "a model_call to a model not declared earlier"
+                )
+            chain[name] = 1 + max((chain[c] for c in callees), default=0)
+            if chain[name] > MAX_FRAMES:
+                raise Refusal("depth", "more than 64 chained model_call frames")
+
+    def _validate_what_the_lane_can_run(self) -> None:
+        """Compile every model and read every op whose levels the lane has (R69 i).
+
+        A model or op whose own tags and types are inside the lane's levels is
+        validated in full whether or not anything reaches it: every code of
+        section 11 applies (an unused model with a subject call, a model body over
+        the cost bound ...).  One that needs a level the lane lacks cannot be
+        compiled; it is *classified* -- recorded in ``not_live_models`` or
+        ``not_live_ops`` with the level it needs -- and the suites and controls
+        that reach it are not-live (R69 c, [D65]: the model or op has no row of
+        its own).  The tag-name checks of tier (ii) already ran, over all models.
+        """
+        for name in self._order:
+            try:
+                self._reach_models([name], len(self._order))
+            except Refusal as refusal:
+                if refusal.code != "level-missing":
+                    raise
+                self.not_live_models[name] = refusal.message
+        for name in self._raw_ops:
+            try:
+                self.op(name)
+            except Refusal as refusal:
+                if refusal.code != "level-missing":
+                    raise
+                self.not_live_ops[name] = refusal.message
+
+    # -- declared types and levels ---------------------------------------------
+    def need_levels(self, needed: set[str], what: str) -> None:
         missing = needed - self.levels
         if missing:
             raise Refusal("level-missing", f"{what} needs {sorted(missing)[0]}")
 
-    def _build(self, ops: dict) -> None:
-        raw = self._raw_models
-        for name in self._order:
-            if name not in raw:
-                raise Refusal(
-                    "model-order", f"model_order names the missing model {name}"
-                )
-        # Static checks over EVERY model body before any is compiled.
-        for position, name in enumerate(self._order):
-            self.scan(raw[name]["body"], owner=position)
-        self.ops = {
-            name: OpSig(
-                [(p, self._type(t)) for p, t in row["params"]], self._type(row["ret"])
-            )
-            for name, row in ops.items()
-        }
-        for name in self._order:
-            row = raw[name]
-            scope = {p: self._type(t) for p, t in row["params"]}
-            body = self._compile(row["body"], scope)
-            self.models[name] = ModelDef(list(scope.items()), body)
+    def _declared(self, text: object, widths: frozenset[str] = frozenset()) -> Ty:
+        """A type written in a signature or binder; a bad text is ``ill-typed``."""
+        try:
+            ty = parse_type(text, self.types, widths=widths)
+        except Refusal as error:
+            raise Refusal("ill-typed", f"bad declared type: {error.message}") from error
+        self.need_levels(type_level(ty, self.types), str(ty))
+        return ty
 
-    # -- the static scans -------------------------------------------------------
-    def scan(self, root: object, *, owner: int | None, role: str = "body") -> None:
-        """Depth, tags, subject placement and call order of one expression.
+    def _scope_types(self, scope: dict[str, Ty]) -> None:
+        """The environment of an expression is part of what it reaches."""
+        for name, ty in scope.items():
+            self.need_levels(type_level(ty, self.types), f"the type of {name}")
+
+    # -- ops: read when a subject call reaches them -----------------------------
+    def op(self, name: object) -> OpSig:
+        """The signature of the op ``name``: parsed, level-checked and remembered."""
+        if type(name) is not str or name not in self._raw_ops:
+            raise Refusal("ill-typed", "a subject call to an op that is not in ops")
+        if name in self.reached_ops:
+            return self.reached_ops[name]
+        try:
+            row = self._raw_ops[name]
+            widths = row.get("width_params", [])
+            if (
+                type(widths) is not list
+                or not all(type(w) is str for w in widths)
+                or len(set(widths)) != len(widths)
+            ):
+                raise Refusal("ill-typed", "width_params is a list of distinct names")
+            names = frozenset(widths)
+            params = [(p, self._declared(t, names)) for p, t in row["params"]]
+            sig = OpSig(params, self._declared(row["ret"], names), tuple(widths))
+        except (KeyError, TypeError, IndexError, ValueError, AttributeError) as error:
+            raise Refusal("ill-typed", "an op row has the wrong shape") from error
+        self.reached_ops[name] = sig
+        return sig
+
+    # -- models: compiled when a call reaches them -------------------------------
+    def model(self, name: str) -> ModelDef:
+        """Compile the model ``name`` and what it calls (a corpus reader's door)."""
+        if name not in self._raw_models:
+            raise Refusal("model-order", "a model_call to an unknown model")
+        self._reach_models([name], len(self._order))
+        return self.models[name]
+
+    def _reach_models(self, called: list[str], caller: int) -> None:
+        """Make every model in the call closure of ``called`` checked and compiled.
+
+        ``caller`` is the position, in ``model_order``, of whoever makes the calls
+        (``len(order)`` for a top-level expression, which comes after every
+        model).  Rule 1 of section 4.2: a call must go to a model declared
+        *earlier*.  The closure is walked with a work list, not recursion, so a
+        corpus whose models call one another in a chain thousands long is
+        refused (or accepted) without touching Python's stack; the models are
+        then compiled in declaration order, so each finds its callees ready.
+        """
+        work = [(name, caller) for name in called]
+        closure: set[str] = set()
+        while work:
+            name, here = work.pop()
+            if name not in self._position or self._position[name] >= here:
+                raise Refusal(
+                    "model-order", "a model_call to a model not declared earlier"
+                )
+            if name in closure or name in self.models:
+                continue
+            closure.add(name)
+            try:
+                body = self._raw_models[name]["body"]
+            except (KeyError, TypeError) as error:
+                raise Refusal("ill-typed", "a model row has no body") from error
+            work.extend(
+                (callee, self._position[name])
+                for callee in self.scan(body, owner=self._position[name])
+            )
+        for name in sorted(closure, key=self._position.__getitem__):
+            self._compile_model(name)
+
+    def _compile_model(self, name: str) -> None:
+        try:
+            row = self._raw_models[name]
+            scope: dict[str, Ty] = {}
+            for param, text in row["params"]:
+                if param in scope or type(param) is not str:
+                    raise Refusal("ill-typed", "a model parameter name is repeated")
+                scope[param] = self._declared(text)
+            body = self._compile(row["body"], scope)
+        except (KeyError, TypeError, IndexError, ValueError, AttributeError) as error:
+            raise Refusal("ill-typed", "a model row has the wrong shape") from error
+        self.models[name] = ModelDef(list(scope.items()), body)
+
+    # -- the static scan ----------------------------------------------------------
+    def scan(
+        self,
+        root: object,
+        *,
+        owner: int | None,
+        role: str = "body",
+        levels: bool = True,
+    ) -> list[str]:
+        """Depth, tags and subject placement of one expression; its model callees.
 
         ``owner`` is the position of the model whose body this is in
-        ``model_order``, or ``None`` for a top-level expression (which comes
-        after every model).  All four checks are structural: they look at tags,
-        never at types, and they look at *every* node including the ones an
-        evaluation would never reach, because an untaken branch is still part of
-        the corpus.
+        ``model_order``, or ``None`` for a top-level expression.  The checks are
+        structural: they look at tags, never at types, and at *every* node of
+        the expression including the ones an evaluation would never reach,
+        because an untaken branch is still part of what the corpus says.  The
+        names of the models called are returned for the closure walk.
         """
         nodes = []
         for node, depth in walk(root):
@@ -332,13 +533,13 @@ class Program:
                     "depth", f"an expression nested more than {MAX_DEPTH} deep"
                 )
             nodes.append(node)
+        callees: list[str] = []
+        for node in nodes:  # a tag of no level is an error before any level question
+            if tag_level(node[0]) is None:
+                raise Refusal("unknown-tag", node[0])
         for node in nodes:
-            tag = node[0]
-            level = tag_level(tag)
-            if level is None:
-                raise Refusal("unknown-tag", tag)
-            if level not in self.levels:
-                raise Refusal("level-missing", tag)
+            if levels and tag_level(node[0]) not in self.levels:
+                raise Refusal("level-missing", node[0])
         for node in nodes:
             if node[0] == "subject_op" and (owner is not None or role != "body"):
                 raise Refusal(
@@ -346,16 +547,12 @@ class Program:
                 )
             if node[0] == "model_call":
                 callee = node[1] if len(node) > 1 else None
-                here = len(self._order) if owner is None else owner
-                if (
-                    not isinstance(callee, str)
-                    or callee not in self._raw_models
-                    or callee not in self._order
-                    or self._order.index(callee) >= here
-                ):
+                if type(callee) is not str or callee not in self._position:
                     raise Refusal(
-                        "model-order", "a model_call to a model not declared earlier"
+                        "model-order", "a model_call to a model that is not declared"
                     )
+                callees.append(callee)
+        return callees
 
     # -- compiling ---------------------------------------------------------------
     def compile(self, ir: object, scope: dict[str, Ty], role: str = "body") -> Compiled:
@@ -363,10 +560,15 @@ class Program:
 
         ``role`` is ``"body"`` (subject calls allowed) or any other word for an
         ``admit``, ``expected`` or fault expression, where a subject call is
-        ``subject-forbidden`` (section 4.2 rule 3).
+        ``subject-forbidden`` (section 4.2 rule 3).  Everything the expression
+        reaches is checked here and nothing else is.
         """
-        self.scan(ir, owner=None, role=role)
-        return self._compile(ir, scope)
+        try:
+            self._scope_types(scope)
+            self._reach_models(self.scan(ir, owner=None, role=role), len(self._order))
+            return self._compile(ir, scope)
+        except (KeyError, TypeError, IndexError, ValueError, AttributeError) as error:
+            raise Refusal("ill-typed", "an expression has the wrong shape") from error
 
     def _compile(self, node: object, scope: dict[str, Ty]) -> Compiled:
         try:
@@ -380,6 +582,27 @@ class Program:
         if compiled.frames > MAX_FRAMES:
             raise Refusal("depth", "more than 64 active model_call frames")
         return compiled
+
+    def _klass(self, subject_beneath: bool) -> str:
+        """The class of an overflow at a node (section 3.2, R71).
+
+        ``corpus`` exactly when the generator evaluates the node: nothing it
+        calls the subject through, and no guard above it whose condition does.
+        A pure node reached only under such a guard is not on the pure trace, so
+        its overflow depends on what the subject answered: a case failure.
+        """
+        return "case" if subject_beneath or self._impure_guards else "corpus"
+
+    def _under_guard(
+        self, guard: Compiled, node: object, scope: dict[str, Ty]
+    ) -> Compiled:
+        """Compile ``node``, a branch or operand, under the condition ``guard``."""
+        step = 1 if guard.subject else 0
+        self._impure_guards += step
+        try:
+            return self._compile(node, scope)
+        finally:
+            self._impure_guards -= step
 
     def _kids(self, node: list, scope: dict[str, Ty], count: int) -> list[Compiled]:
         """Compile the ``count`` operands of ``node`` (positions 1..count)."""
@@ -431,6 +654,7 @@ class Program:
             any(k.subject for k in kids),
             max((k.frames for k in kids), default=0),
             _sum_calls([k.calls for k in kids]) if calls is None else calls,
+            1 + max((k.nest for k in kids), default=0),
         )
 
     def _logic(self, node: list, scope: dict[str, Ty]) -> Compiled:
@@ -444,7 +668,10 @@ class Program:
         another call: ``impure-guard`` (section 4.4).
         """
         tag = node[0]
-        left, right = self._kids(node, scope, 2)
+        if len(node) != 3:
+            raise Refusal("ill-typed", f"{tag} takes 2 operand(s)")
+        left = self._compile(node[1], scope)
+        right = self._under_guard(left, node[2], scope)
         if left.ty != BOOL or right.ty != BOOL:
             raise Refusal("ill-typed", f"{tag} takes two Bool operands")
         if left.subject and right.subject:
@@ -472,6 +699,13 @@ class Program:
         )
 
     def _literal(self, node: list) -> Compiled:
+        """``true``/``false``, or a typed literal ``{"type": T, "value": V}``.
+
+        A Bool is written ``["lit", true]`` and no other way (the object form with
+        ``"type": "Bool"`` is ``ill-typed``).  A bytes literal is written with the
+        type ``Bytes`` -- ``Bytes<N>`` is refused -- and its *static* type is
+        ``Bytes<len(value)>`` (R51, [D60]); see :class:`Compiled`.
+        """
         if len(node) == 2 and type(node[1]) is bool:
             value: object = node[1]
             return Compiled(BOOL, lambda _env: value, 1)
@@ -480,16 +714,23 @@ class Program:
             raise Refusal("ill-typed", "a literal is true, false or {type, value}")
         try:
             ty = parse_type(spec["type"], self.types, allow_int=True)
-            if not (ty.is_number or ty.head in ("Bool", "Bytes")):
+            if ty.head == "Bool" or (ty.head == "Bytes" and ty.args):
                 raise Refusal(
-                    "ill-typed", "a literal of this type does not exist at ir.core"
+                    "ill-typed", "write a Bool as true or false and Bytes bare"
                 )
+            if not (ty.is_number or ty.head == "Bytes"):
+                raise Refusal("ill-typed", "no literal of this type exists at ir.core")
             if ty.head == "Int":
                 value = self.sem.decode_int(spec["value"], ty)
             else:
                 value = decode_value(spec["value"], ty, self.types, self.sem)
         except Refusal as error:
             raise Refusal("ill-typed", f"bad literal: {error.message}") from error
+        if ty.head == "Bytes":
+            assert isinstance(value, bytes)
+            return Compiled(
+                Ty("Bytes", (len(value),)), lambda _env: value, 1, written=ty
+            )
         return Compiled(ty, lambda _env: value, 1)
 
     def _err(self, node: list) -> Compiled:
@@ -504,7 +745,7 @@ class Program:
         return Compiled(Ty("Result", (UNKNOWN_TY, error)), lambda _env: value, 1)
 
     def _unary(self, tag: str, arg: Compiled) -> Compiled:
-        sem, f, klass = self.sem, arg.fn, "case" if arg.subject else "corpus"
+        sem, f, klass = self.sem, arg.fn, self._klass(arg.subject)
         if tag == "not":
             if arg.ty != BOOL:
                 raise Refusal("ill-typed", "not takes a Bool")
@@ -537,7 +778,11 @@ class Program:
         raise Refusal("ill-typed", "neg takes a number")
 
     def _if(self, node: list, scope: dict[str, Ty]) -> Compiled:
-        cond, then, other = self._kids(node, scope, 3)
+        if len(node) != 4:
+            raise Refusal("ill-typed", "if takes 3 operand(s)")
+        cond = self._compile(node[1], scope)
+        then = self._under_guard(cond, node[2], scope)
+        other = self._under_guard(cond, node[3], scope)
         if cond.ty != BOOL:
             raise Refusal("ill-typed", "an if condition is Bool")
         common = unify(then.ty, other.ty)
@@ -566,7 +811,7 @@ class Program:
 
     def _binary(self, tag: str, left: Compiled, right: Compiled) -> Compiled:
         sem, lf, rf = self.sem, left.fn, right.fn
-        klass = "case" if (left.subject or right.subject) else "corpus"
+        klass = self._klass(left.subject or right.subject)
         a, b = left.ty, right.ty
         if tag in ("eq", "ne"):
             if unify(a, b) is None:
@@ -673,32 +918,32 @@ class Program:
 
     def _call(self, node: list, scope: dict[str, Ty]) -> Compiled:
         tag = node[0]
-        if tag == "subject_op":
-            ok_shape = len(node) in (3, 4) and type(node[2]) is list
-        else:
-            ok_shape = len(node) == 3 and type(node[2]) is list
-        if not ok_shape or not isinstance(node[1], str):
+        shapes = (3, 4) if tag == "subject_op" else (3,)
+        if (
+            len(node) not in shapes
+            or type(node[2]) is not list
+            or type(node[1]) is not str
+        ):
             raise Refusal("ill-typed", f"malformed {tag}")
         name = node[1]
         args = [self._compile(arg, scope) for arg in node[2]]
         if tag == "subject_op":
-            if name not in self.ops:
-                raise Refusal("ill-typed", "a subject call to an op that is not in ops")
-            sig = self.ops[name]
-            if len(node) == 4:
-                widths = node[3]
-                if type(widths) is not list or not all(type(w) is int for w in widths):
-                    raise Refusal("ill-typed", "static widths are a list of integers")
+            wanted = self._bound_signature(name, node)
         else:
-            sig = self.models.get(name)  # type: ignore[assignment]
-            if sig is None:  # pragma: no cover - model-order refused it already
+            model = self.models.get(name)
+            if model is None:  # pragma: no cover - the closure walk compiled it
                 raise Refusal("model-order", "a model_call to an unknown model")
-        params = [t for _p, t in sig.params]
+            wanted = ([t for _p, t in model.params], model.body.ty)
+        params, result = wanted
         if len(args) != len(params) or not all(
             flows(a.ty, t) for a, t in zip(args, params, strict=True)
         ):
             raise Refusal("ill-typed", f"{name}: wrong argument count or types")
         fns = [a.fn for a in args]
+        tainted = any(a.subject for a in args)
+        blame_case = tainted or self._impure_guards > 0
+        deepest = max((a.nest for a in args), default=0)
+        frames = max((a.frames for a in args), default=0)
         if tag == "subject_op":
 
             def call_subject(env: dict) -> object:
@@ -708,20 +953,19 @@ class Program:
                 return hook(name, [f(env) for f in fns])
 
             return Compiled(
-                sig.ret,  # type: ignore[union-attr]
+                result,
                 call_subject,
                 1 + sum(a.cost for a in args),
                 True,
-                max((a.frames for a in args), default=0),
+                frames,
                 _plus(1, _sum_calls([a.calls for a in args])),
+                1 + deepest,
             )
-        model: ModelDef = sig  # type: ignore[assignment]
         names = [p for p, _t in model.params]
-        tainted = any(a.subject for a in args)
 
         def call_model(env: dict) -> object:
             inner = dict(zip(names, [f(env) for f in fns], strict=True))
-            if not tainted:
+            if not blame_case:
                 return model.body.fn(inner)
             try:
                 return model.body.fn(inner)
@@ -731,13 +975,42 @@ class Program:
                 raise IrOverflow("case", "an exact value left the window") from None
 
         return Compiled(
-            model.body.ty,
+            result,
             call_model,
             1 + sum(a.cost for a in args) + model.body.cost,
             tainted,
-            max(max((a.frames for a in args), default=0), 1 + model.body.frames),
+            max(frames, 1 + model.body.frames),
             _sum_calls([a.calls for a in args]),
+            1 + max(deepest, model.body.nest),
         )
+
+    def _bound_signature(self, name: str, node: list) -> tuple[list[Ty], Ty]:
+        """The parameter and result types of the op a ``subject_op`` calls (B2).
+
+        The fourth element of the node is the list of **static widths**: one
+        integer in ``0..=4096`` for each entry of the op's ``width_params``, in
+        order, substituted into the signature before the arguments are typed.  A
+        missing entry, an extra one, an entry out of range or not an integer, and
+        a list given to an op that has no ``width_params`` are all ``ill-typed``.
+        """
+        sig = self.op(name)
+        given = node[3] if len(node) == 4 else None
+        if len(node) == 4 and not sig.width_params:
+            raise Refusal("ill-typed", f"{name} has no static widths to bind")
+        if sig.width_params:
+            if (
+                type(given) is not list
+                or len(given) != len(sig.width_params)
+                or not all(type(w) is int and 0 <= w <= MAX_FIXED_WIDTH for w in given)
+            ):
+                raise Refusal(
+                    "ill-typed",
+                    f"{name} takes {len(sig.width_params)} static width(s) in 0..=4096",
+                )
+            params, result = sig.bind(given)
+        else:
+            params, result = sig.params, sig.ret
+        return [t for _p, t in params], result
 
 
 def _plus(constant: int, calls: Calls) -> Calls:
@@ -789,6 +1062,38 @@ def evaluate(compiled: Compiled, env: dict) -> object:
             raise Refusal("depth", "evaluation nested too deeply") from error
 
 
+# Python frames one nesting level of closures can use (a short-circuit operator
+# is a closure that calls a hook that calls a closure) and the room a caller's
+# own stack may already occupy.  Both are generous.
+_FRAMES_PER_LEVEL = 4
+_CALLER_SLACK = 300
+
+
+def guarded(fn: Callable[[dict], object], nest: int) -> Callable[[dict], object]:
+    """``fn``, run with only the stack its closure nesting ``nest`` needs.
+
+    The recursion guard (F14) belongs to the *evaluation of IR*, not to the loop
+    around it: an enumerator that calls the evaluator a million times must not
+    run its own bookkeeping, hashing and descriptor arithmetic under a limit
+    raised for someone else.  An expression whose closures nest shallowly runs
+    as itself, under the ordinary limit; only one that could overflow it is
+    wrapped, and the guard then lasts for that one call.
+    """
+    if nest * _FRAMES_PER_LEVEL + _CALLER_SLACK <= sys.getrecursionlimit():
+        return fn
+
+    def deep(env: dict) -> object:
+        with recursion_guard():
+            return fn(env)
+
+    return deep
+
+
+def evaluator(compiled: Compiled) -> Callable[[dict], object]:
+    """A function running ``compiled`` on an environment (see :func:`guarded`)."""
+    return guarded(compiled.fn, compiled.nest)
+
+
 @dataclass
 class SubjectTable:
     """Subject dispatch and the call counter (section 4.2 rule 3, section 4.4).
@@ -799,6 +1104,9 @@ class SubjectTable:
     maps an op name to the pure model that plays it.  ``calls`` is therefore
     *measured* (every dispatch adds one) and not computed, which is what lets a
     wrong evaluator -- one that evaluates an untaken branch -- be caught.
+
+    Only the ops the program's expressions actually call have stand-ins that
+    matter; an entry for any other op is ignored, as an unused binding is.
     """
 
     program: Program
@@ -806,12 +1114,22 @@ class SubjectTable:
     calls: int = field(default=0)
 
     def __post_init__(self) -> None:
-        for op, model in self.subjects.items():
-            sig, stand_in = self.program.ops.get(op), self.program.models.get(model)
-            if sig is None or stand_in is None:
-                continue  # an unused entry; a call to a missing op is ill-typed anyway
+        for op, sig in self.program.reached_ops.items():
+            model = self.subjects.get(op)
+            if model is None:
+                continue
+            try:
+                stand_in = self.program.model(model)
+            except Refusal as refusal:
+                raise KitError(
+                    f"the stand-in {model} for {op} is refused: {refusal}"
+                ) from refusal
             same = [t for _p, t in stand_in.params] == [t for _p, t in sig.params]
-            if not same or stand_in.body.ty != sig.ret:
+            if sig.width_params:  # a call binds the widths; compare per call, not here
+                same = len(stand_in.params) == len(sig.params)
+            elif stand_in.body.ty != sig.ret:
+                same = False
+            if not same:
                 raise KitError(
                     f"the stand-in {model} does not have the signature of {op}"
                 )
