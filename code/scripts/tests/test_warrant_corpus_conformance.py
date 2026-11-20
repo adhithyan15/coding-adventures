@@ -190,8 +190,11 @@ class V2Rows(unittest.TestCase):
 
     def test_the_reason_closed_set_is_scoped_to_the_v1_categories(self) -> None:
         def document(category: str) -> dict[str, bytes]:
-            case = '{"expect":{"error":"x","reason":"not-a-v1-reason"},"id":"%s/a"}' % category
-            text = '{"cases":[%s],"category":"%s","schema":"warrant-corpus-conformance-v1"}\n' % (case, category)
+            case = '{"expect":{"error":"x","reason":"not-a-v1-reason"},"id":"' + category + '/a"}'
+            text = (
+                '{"cases":[' + case + '],"category":"' + category
+                + '","schema":"warrant-corpus-conformance-v1"}\n'
+            )
             return {f"{category}.json": text.encode()}
 
         self.assertEqual(conf.structural_problems({}, document("v2-binding")), [])
