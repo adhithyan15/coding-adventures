@@ -32,6 +32,14 @@ WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/example/oracle_names_
 WARRANT_EVIDENCE_FAULT=field-flip WARRANT_EVIDENCE_ATTACK=init WARRANT_EVIDENCE_FILTER=/exhaustive/safety_init python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=field-flip WARRANT_EVIDENCE_ATTACK=alpha_w WARRANT_EVIDENCE_FILTER=/exhaustive/safety_init python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=field-flip WARRANT_EVIDENCE_ATTACK=alpha_w WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_covers_run python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=field-flip-last WARRANT_EVIDENCE_FILTER=/exhaustive/insert_oracle_lo python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/insert_oracle_hi python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/insert_oracle_ids python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=field-flip-last WARRANT_EVIDENCE_FILTER=/exhaustive/remove_oracle_lo python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/remove_oracle_hi python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/remove_oracle_ids python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/alpha_build_with_oracle python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=field-flip-last WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_sound python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
 # VOS-D070: line coverage of src/ must stay at or above `coverage-floor` (95) of vos.toml; Linux only (tarpaulin).
 if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p vos-sched-any --features ghost --lib --test behaviour --ignore-tests --engine llvm --include-files 'vos-sched-any/src/*' --fail-under 95 --skip-clean; fi
 # The component kit's check, last: it reads the manifest the run above rewrote.

@@ -6804,6 +6804,30 @@ transport; or open a network connection. Those repository-owned validation
 and transport compositions remain prerequisites, and concrete HTTPS and
 live-provider readiness remain unavailable.
 
+Each pending ordered retry message now also retains sealed access to the exact
+retry base-schedule evidence that supplied its traffic keys. For an
+`EncryptedExtensions` message at the post-accept
+`ExpectCertificateRequestOrCertificate` position, a repository-owned helper
+decodes the exact authenticated body under caller-selected structural limits,
+then applies the exact extension-context policy and final ClientHello extension
+offer retained by that same retry evidence. Success returns non-copyable proof
+retaining the pending message and structurally decoded, placement-authorized,
+offer-bound `EncryptedExtensions`; a different type or flight position,
+malformed body, unknown or forbidden extension placement, or unsolicited
+response fails with a stable payload-free category. This proof is suitable as
+the handler's reason to accept and hash that exact message without a detached
+ClientHello, policy, message body, or transcript snapshot.
+
+This validation proves only extension-vector structure, standard-table
+placement, and type-level offer binding. It does not semantically decode or
+negotiate any extension payload, select application protocols, parse later
+handshake bodies, authenticate CertificateVerify or Finished, validate
+certificates or hostnames, enforce revocation, select later epochs, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. Those
+repository-owned semantic, authentication, trust, revocation, and transport
+compositions remain prerequisites; concrete HTTPS and live-provider readiness
+remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

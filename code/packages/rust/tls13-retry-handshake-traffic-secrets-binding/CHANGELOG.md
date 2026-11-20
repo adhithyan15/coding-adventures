@@ -8,6 +8,9 @@
 - Derive and retain the server Finished key only through the exact-message
   retry handshake traffic-secret proof, with pre-mutation role and suite
   substitution checks.
+- Expose the retained final ClientHello extension block and original extension
+  context policy only through the sealed complete retry base-schedule evidence
+  so downstream validation cannot substitute detached policy inputs.
 
 ## 0.1.0
 

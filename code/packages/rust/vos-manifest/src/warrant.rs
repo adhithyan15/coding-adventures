@@ -39,12 +39,13 @@ use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 
 use coding_adventures_warrant_grammar::checker::check_warrant;
+use coding_adventures_warrant_grammar::evidence::type_mentions;
 use coding_adventures_warrant_grammar::layout::{
     capture_layout, LayoutLimits, LayoutToken, LayoutTokenKind, TokenSpan,
 };
 use coding_adventures_warrant_grammar::parser::{
     parse_document, AssumptionsDecl, BinaryOp, Declaration, Expression, Literal, ModelDecl,
-    ParserLimits,
+    ParserLimits, TypeExpr,
 };
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
 
@@ -100,6 +101,26 @@ pub enum BuildShape {
     },
 }
 
+/// The signature of one `op` of a document, reduced to what "does it produce a state from a
+/// state?" needs (VOS-039c, CC11).  "Mentions" means the type, RESOLVED THROUGH THE DOCUMENT'S
+/// ALIASES by the evidence generator's own resolution
+/// ([`coding_adventures_warrant_grammar::evidence::type_mentions`]), is `Impl` or has `Impl`
+/// anywhere inside it (`model State = Impl`, `Option<Impl>`, `Result<Impl, E>`, `(Impl, U8)`,
+/// `List<Impl>`): a composite is never read as "not a state", and a type the resolution cannot
+/// resolve counts as one, because the safe direction for a gate is to treat what it cannot
+/// classify as a state.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct OpFact {
+    /// The operation's name.
+    pub name: String,
+    /// The return type mentions `Impl`.
+    pub returns_state: bool,
+    /// How many parameters have a type that mentions `Impl`.
+    pub state_params: usize,
+    /// A parameter that mentions `Impl` is `inout`: the operation mutates a state in place.
+    pub inout_state: bool,
+}
+
 /// What the Warrant tools found in a document that type-checked.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Analysis {
@@ -113,6 +134,13 @@ pub struct Analysis {
     pub impl_fields: Option<usize>,
     /// The shape of `model build`.
     pub build: BuildShape,
+    /// Every `op` of the document, in order (VOS-039c: CC11 derives the state-to-state
+    /// operations from these, not from the bindings, which are optional).
+    pub ops: Vec<OpFact>,
+    /// The type of the LAST field of `record Impl` when it is a plain named type (`U8`,
+    /// `Bool`, ...), `Some("")` when it is a composite (`Option<..>`, a tuple, ...), `None`
+    /// without an `Impl` record.
+    pub impl_last_field_type: Option<String>,
 }
 
 /// Where the Warrant tools refused.
@@ -561,6 +589,8 @@ pub fn analyze_document_with_budget(text: &str, budget: u64) -> Result<Analysis,
             bound_declarations: 0,
             impl_fields: None,
             build: BuildShape::Missing,
+            ops: Vec::new(),
+            impl_last_field_type: None,
         };
         for d in &file.declarations {
             match d {
@@ -584,7 +614,26 @@ pub fn analyze_document_with_budget(text: &str, budget: u64) -> Result<Analysis,
                     })
                 }
                 Declaration::Bound(_) => a.bound_declarations += 1,
-                Declaration::Record(r) if r.name == "Impl" => a.impl_fields = Some(r.fields.len()),
+                Declaration::Record(r) if r.name == "Impl" => {
+                    a.impl_fields = Some(r.fields.len());
+                    a.impl_last_field_type = r.fields.last().map(|f| match &f.ty {
+                        TypeExpr::Named { name, .. } => (*name).to_string(),
+                        _ => String::new(),
+                    });
+                }
+                Declaration::Op(o) => a.ops.push(OpFact {
+                    name: o.name.to_string(),
+                    returns_state: type_mentions(file, &o.return_type, "Impl"),
+                    state_params: o
+                        .params
+                        .iter()
+                        .filter(|p| type_mentions(file, &p.param_type, "Impl"))
+                        .count(),
+                    inout_state: o
+                        .params
+                        .iter()
+                        .any(|p| p.inout && type_mentions(file, &p.param_type, "Impl")),
+                }),
                 Declaration::Model(m) if m.name == "build" => {
                     a.build =
                         build_shape(&taint, m.params.first().map(|p| p.name), m.body.as_ref());

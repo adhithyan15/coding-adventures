@@ -41,6 +41,7 @@ recognised), a bad or incomplete sabotage plan or tolerance script (`CC04`), a m
 (`CC05`, read inside the Go slice with comments and raw strings removed), an `-any` crate without
 `publish = false` (`CC06`), a missing or too-low `coverage-floor` (`CC07`) and an evidence manifest that
 is not the document's claims times the tiers (`CC08`: counts, controls that PASS, whole-id excuses).
+For kind `any` the oracle must be shown to survive (`CC11`, VOS-039c, VOS-D080): the `Impl` field outside the cone of `build` is exactly one, the LAST, and numeric, every state-producing operation (an `op` of the generated document that returns `Impl` and takes one; read from the document, not from the optional `ret=`/`args=` of the bindings) lists the fault `field-flip-last`, and the sabotage plan attacks each with a claim of the contract's `any` tier that calls it alone.  The claims themselves live in the contract (`insert_oracle_*`, `remove_oracle_*`, VOS10 9.3); the build proves that they fail under the fault.
 Since VOS-039b-1 a **contract crate** (kind `contract`) is a component too: `gen-build` writes a shorter,
 identical `BUILD` and `BUILD_windows` (tests, shape check, capability analyzer, `check-contract`,
 `check-component`; no environment variable, no python), and `check-component` judges its file set (`CC02`),

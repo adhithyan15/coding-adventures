@@ -1035,6 +1035,220 @@ fn authenticates_orders_authorizes_and_advances_exact_messages() {
 }
 
 #[test]
+fn validates_exact_encrypted_extensions_against_retained_final_offer() {
+    let mut x25519_output = [0xa5; 32];
+    with_retry_x25519_messages(CipherSuite::TlsAes128GcmSha256, |messages| {
+        let secret = derive_message_bound_retry_x25519_shared_secret(
+            messages,
+            &ALICE_PRIVATE,
+            &mut x25519_output,
+        )
+        .unwrap();
+        let transcript = bind_retry_transcript(
+            messages.messages().selection(),
+            TranscriptPolicy::new(4_096).unwrap(),
+        )
+        .unwrap();
+        let suite = transcript.transcript().selected_suite();
+        let mut base_storage = BaseSecretStorage::new(suite).unwrap();
+        let base = bind_retry_key_schedule(&secret, &transcript, &mut base_storage).unwrap();
+        let mut traffic_storage = HandshakeTrafficSecretStorage::new(suite).unwrap();
+        let traffic = bind_retry_handshake_traffic_secrets(&base, &mut traffic_storage).unwrap();
+        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(traffic);
+        let mut finished_storage = FinishedKeyStorage::new(suite, FinishedRole::Server);
+        let server_finished =
+            bind_retry_server_finished_key(issuer.traffic_secrets(), &mut finished_storage)
+                .unwrap();
+        let continuation = bind_retry_server_transcript_continuation(&server_finished).unwrap();
+        let mut server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+        let server_state = issuer
+            .issue(HandshakeTrafficSender::Server, &mut server_storage)
+            .unwrap();
+        let handshake_policy =
+            Tls13HandshakePolicy::new(&[Tls13HandshakeType::EncryptedExtensions], 16).unwrap();
+        let mut reassembly_storage = [0xa5; 32];
+        let reassembler = RetryHandshakeRecordReassembler::new(
+            server_state,
+            handshake_policy,
+            &mut reassembly_storage,
+        )
+        .unwrap();
+        let ordered = RetryOrderedServerFlight::new(reassembler).unwrap();
+        let mut bound = bind_retry_ordered_server_flight_transcript(ordered, continuation).unwrap();
+        let server_prk = HkdfPrk::import_exact(
+            fixed_hash(suite),
+            issuer.traffic_secrets().traffic_secrets().server_secret(),
+        )
+        .unwrap();
+        let mut peer_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+        let peer_material = derive_traffic_key_material(&server_prk, &mut peer_storage).unwrap();
+        let mut peer_state = RecordProtectionState::new(peer_material).unwrap();
+        let encrypted_extensions_body = [0, 4, 0, 10, 0, 0];
+        let mut plaintext = [0_u8; 10];
+        plaintext[..4].copy_from_slice(&[8, 0, 0, 6]);
+        plaintext[4..].copy_from_slice(&encrypted_extensions_body);
+        let ciphertext_policy = Tls13CiphertextPolicy::new(1_024).unwrap();
+        let inner_policy =
+            Tls13InnerPlaintextPolicy::new(&[TlsContentType::Handshake], 1_008).unwrap();
+        let mut scratch = [0xa5; 32];
+        let mut wire = [0xcc; 64];
+        let used = seal_tls13_record(
+            &mut peer_state,
+            &ciphertext_policy,
+            &inner_policy,
+            Tls13Plaintext::new(TlsContentType::Handshake, &plaintext, 0),
+            &mut scratch,
+            &mut wire,
+        )
+        .unwrap();
+        let mut opened = [0x5a; 32];
+        let mut validated = false;
+        let result = bound
+            .open_accept_and_advance(
+                &ciphertext_policy,
+                &inner_policy,
+                &wire[..used],
+                &mut opened,
+                |pending| {
+                    let proof = pending
+                        .validate_encrypted_extensions(ExtensionBlockLimits::new(64, 4).unwrap())
+                        .unwrap();
+                    assert_eq!(
+                        proof.pending().transcript_snapshot(),
+                        pending.transcript_snapshot(),
+                    );
+                    assert_eq!(
+                        proof.encrypted_extensions().body(),
+                        encrypted_extensions_body,
+                    );
+                    assert_eq!(proof.encrypted_extensions().extensions().len(), 1);
+                    assert_eq!(
+                        proof.encrypted_extensions().extensions().entries()[0]
+                            .extension_type()
+                            .wire_value(),
+                        10,
+                    );
+                    let debug = format!("{proof:?}");
+                    assert!(debug.contains("[RETAINED]"));
+                    assert!(debug.contains("[REDACTED]"));
+                    validated = true;
+                    true
+                },
+            )
+            .unwrap();
+        assert!(validated);
+        assert_eq!(result.completed_messages(), 1);
+        assert_eq!(
+            result.state(),
+            ServerFlightState::ExpectCertificateRequestOrCertificate
+        );
+    });
+}
+
+#[test]
+fn rejects_unsolicited_encrypted_extension_before_transcript_advancement() {
+    let mut x25519_output = [0xa5; 32];
+    with_retry_x25519_messages(CipherSuite::TlsAes128GcmSha256, |messages| {
+        let secret = derive_message_bound_retry_x25519_shared_secret(
+            messages,
+            &ALICE_PRIVATE,
+            &mut x25519_output,
+        )
+        .unwrap();
+        let transcript = bind_retry_transcript(
+            messages.messages().selection(),
+            TranscriptPolicy::new(4_096).unwrap(),
+        )
+        .unwrap();
+        let suite = transcript.transcript().selected_suite();
+        let retained_snapshot = transcript.transcript().snapshot();
+        let mut base_storage = BaseSecretStorage::new(suite).unwrap();
+        let base = bind_retry_key_schedule(&secret, &transcript, &mut base_storage).unwrap();
+        let mut traffic_storage = HandshakeTrafficSecretStorage::new(suite).unwrap();
+        let traffic = bind_retry_handshake_traffic_secrets(&base, &mut traffic_storage).unwrap();
+        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(traffic);
+        let mut finished_storage = FinishedKeyStorage::new(suite, FinishedRole::Server);
+        let server_finished =
+            bind_retry_server_finished_key(issuer.traffic_secrets(), &mut finished_storage)
+                .unwrap();
+        let continuation = bind_retry_server_transcript_continuation(&server_finished).unwrap();
+        let mut server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+        let server_state = issuer
+            .issue(HandshakeTrafficSender::Server, &mut server_storage)
+            .unwrap();
+        let handshake_policy =
+            Tls13HandshakePolicy::new(&[Tls13HandshakeType::EncryptedExtensions], 16).unwrap();
+        let mut reassembly_storage = [0xa5; 32];
+        let reassembler = RetryHandshakeRecordReassembler::new(
+            server_state,
+            handshake_policy,
+            &mut reassembly_storage,
+        )
+        .unwrap();
+        let ordered = RetryOrderedServerFlight::new(reassembler).unwrap();
+        let mut bound = bind_retry_ordered_server_flight_transcript(ordered, continuation).unwrap();
+        let server_prk = HkdfPrk::import_exact(
+            fixed_hash(suite),
+            issuer.traffic_secrets().traffic_secrets().server_secret(),
+        )
+        .unwrap();
+        let mut peer_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+        let peer_material = derive_traffic_key_material(&server_prk, &mut peer_storage).unwrap();
+        let mut peer_state = RecordProtectionState::new(peer_material).unwrap();
+        // ALPN (type 16) is allowed in EncryptedExtensions but the retained
+        // final ClientHello fixture did not offer it.
+        let encrypted_extensions_body = [0, 4, 0, 16, 0, 0];
+        let mut plaintext = [0_u8; 10];
+        plaintext[..4].copy_from_slice(&[8, 0, 0, 6]);
+        plaintext[4..].copy_from_slice(&encrypted_extensions_body);
+        let ciphertext_policy = Tls13CiphertextPolicy::new(1_024).unwrap();
+        let inner_policy =
+            Tls13InnerPlaintextPolicy::new(&[TlsContentType::Handshake], 1_008).unwrap();
+        let mut scratch = [0xa5; 32];
+        let mut wire = [0xcc; 64];
+        let used = seal_tls13_record(
+            &mut peer_state,
+            &ciphertext_policy,
+            &inner_policy,
+            Tls13Plaintext::new(TlsContentType::Handshake, &plaintext, 0),
+            &mut scratch,
+            &mut wire,
+        )
+        .unwrap();
+        let mut opened = [0x5a; 32];
+        let mut saw_unsolicited = false;
+        let error = bound
+            .open_accept_and_advance(
+                &ciphertext_policy,
+                &inner_policy,
+                &wire[..used],
+                &mut opened,
+                |pending| {
+                    saw_unsolicited = matches!(
+                        pending.validate_encrypted_extensions(
+                            ExtensionBlockLimits::new(64, 4).unwrap()
+                        ),
+                        Err(
+                            tls13_retry_handshake_traffic_key_material_binding::RetryEncryptedExtensionsValidationError::Context(
+                                tls13_extension_context_policy::ExtensionContextPolicyError::UnsolicitedExtension
+                            )
+                        )
+                    );
+                    false
+                },
+            )
+            .unwrap_err();
+        assert!(saw_unsolicited);
+        assert_eq!(
+            error,
+            RetryOrderedServerTranscriptAdvanceError::MessageRejected
+        );
+        assert_eq!(bound.transcript().snapshot(), retained_snapshot);
+        assert!(bound.ordered_flight().is_failed());
+    });
+}
+
+#[test]
 fn rejects_an_ordered_owner_from_another_traffic_secret_proof() {
     let mut x25519_output = [0xa5; 32];
     with_retry_x25519_messages(CipherSuite::TlsAes128GcmSha256, |messages| {
