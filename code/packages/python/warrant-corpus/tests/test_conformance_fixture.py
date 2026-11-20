@@ -12,6 +12,9 @@ Failure messages name the case id and never print the input bytes.
 from __future__ import annotations
 
 import hashlib
+import json
+import shutil
+from pathlib import Path
 
 import pytest
 from helpers import REPO_ROOT
@@ -45,15 +48,119 @@ def _ids(category: str) -> list[str]:
     return [case["id"] for case in CASES[category]]
 
 
+# The fixture family grows by categories (VER04r section 11, [D40]).  Every
+# category this lane knows must have a row; a row it does not know is accepted
+# only when its name starts with ``v2-``, and then only digest-checked, never
+# run (this runner does not read v2 yet).  Rows are ordered: the four v1 rows
+# in their present order, then the v2 rows, the known ones in the kit's order.
+V2_ORDER = ("v2-value", "v2-arith", "v2-ir", "v2-domain", "v2-chunk", "v2-fault", "v2-binding")
+
+
+def check_index(fixture: Path) -> int:
+    """Validate ``fixture/index.json`` and return the number of rows run.
+
+    Raises ``AssertionError`` on any violation.  Reads only through this
+    lane's strict reader and never opens a file outside ``fixture``.
+    """
+    document = parse_json((fixture / "index.json").read_bytes())
+    assert isinstance(document, dict)
+    assert document["schema"] == "warrant-corpus-conformance-v1"
+    files = document["files"]
+    names = [row["category"] for row in files]
+    assert len(set(names)) == len(names), "duplicate category row"
+    assert tuple(names[: len(CATEGORIES)]) == CATEGORIES, "v1 rows missing or out of order"
+    extra = names[len(CATEGORIES) :]
+    for name in extra:
+        assert name.startswith("v2-"), f"unknown category row {name!r}"
+    known = [name for name in extra if name in V2_ORDER]
+    assert known == sorted(known, key=V2_ORDER.index), "v2 rows out of order"
+    total = 0
+    for row in files:
+        path = row["path"]
+        assert path == Path(path).name and path != "index.json", f"{row['category']}: bad path"
+        file = fixture / path
+        assert file.is_file(), f"{row['category']}: file missing"
+        data = file.read_bytes()
+        assert hashlib.sha256(data).hexdigest() == row["sha256"], f"{row['category']}: sha256 moved"
+        body = parse_json(data)
+        assert isinstance(body, dict) and body["category"] == row["category"]
+        assert len(body["cases"]) == row["cases"], f"{row['category']}: case count moved"
+        total += row["cases"]
+    assert document["total_cases"] == total, "total_cases is not the sum of the rows"
+    return len(files)
+
+
 def test_index_matches_the_files_on_disk() -> None:
-    assert INDEX["schema"] == "warrant-corpus-conformance-v1"
+    assert check_index(FIXTURE) >= len(CATEGORIES)
     rows = {row["category"]: row for row in INDEX["files"]}
-    assert set(rows) == set(CATEGORIES)
-    for category, row in rows.items():
-        data = (FIXTURE / row["path"]).read_bytes()
-        assert hashlib.sha256(data).hexdigest() == row["sha256"]
-        assert len(CASES[category]) == row["cases"], f"{category}: case count moved"
-    assert INDEX["total_cases"] == sum(len(v) for v in CASES.values())
+    for category in CATEGORIES:
+        assert len(CASES[category]) == rows[category]["cases"], f"{category}: case count moved"
+
+
+def _scratch_fixture(tmp_path: Path, extra_rows: list[dict], files: dict[str, bytes]) -> Path:
+    """A temp copy of the fixture with extra index rows and files."""
+    scratch = tmp_path / "fixture"
+    shutil.copytree(FIXTURE, scratch)
+    document = json.loads((scratch / "index.json").read_text(encoding="utf-8"))
+    document["files"].extend(extra_rows)
+    document["total_cases"] += sum(row["cases"] for row in extra_rows)
+    (scratch / "index.json").write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+    for name, data in files.items():
+        (scratch / name).write_bytes(data)
+    return scratch
+
+
+def _extra_file(category: str, count: int = 2) -> tuple[dict, bytes]:
+    body = {"schema": "warrant-corpus-conformance-v1", "category": category, "cases": [{"id": f"{category}/{i}"} for i in range(count)]}
+    data = (json.dumps(body, indent=2) + "\n").encode("utf-8")
+    row = {"cases": count, "category": category, "path": f"{category}.json", "sha256": hashlib.sha256(data).hexdigest()}
+    return row, data
+
+
+def test_index_accepts_a_digest_checked_v2_row(tmp_path: Path) -> None:
+    row, data = _extra_file("v2-x")
+    assert check_index(_scratch_fixture(tmp_path, [row], {"v2-x.json": data})) == len(CATEGORIES) + 1
+
+
+def test_index_rejects_an_unknown_row_that_is_not_v2(tmp_path: Path) -> None:
+    row, data = _extra_file("extra")
+    with pytest.raises(AssertionError, match="unknown category"):
+        check_index(_scratch_fixture(tmp_path, [row], {"extra.json": data}))
+
+
+def test_index_rejects_a_v2_row_with_a_wrong_digest(tmp_path: Path) -> None:
+    row, data = _extra_file("v2-x")
+    row["sha256"] = "0" * 64
+    with pytest.raises(AssertionError, match="sha256"):
+        check_index(_scratch_fixture(tmp_path, [row], {"v2-x.json": data}))
+
+
+def test_index_rejects_a_v2_row_with_a_wrong_case_count(tmp_path: Path) -> None:
+    row, data = _extra_file("v2-x")
+    row["cases"] = 3
+    with pytest.raises(AssertionError, match="case count"):
+        check_index(_scratch_fixture(tmp_path, [row], {"v2-x.json": data}))
+
+
+def test_index_rejects_a_v2_row_with_a_missing_file(tmp_path: Path) -> None:
+    row, _ = _extra_file("v2-x")
+    with pytest.raises(AssertionError, match="file missing"):
+        check_index(_scratch_fixture(tmp_path, [row], {}))
+
+
+def test_index_rejects_a_missing_v1_row_and_v2_rows_out_of_order(tmp_path: Path) -> None:
+    scratch = _scratch_fixture(tmp_path, [], {})
+    document = json.loads((scratch / "index.json").read_text(encoding="utf-8"))
+    document["files"].pop()
+    (scratch / "index.json").write_text(json.dumps(document), encoding="utf-8")
+    with pytest.raises(AssertionError, match="v1 rows"):
+        check_index(scratch)
+    value, value_data = _extra_file("v2-value")
+    arith, arith_data = _extra_file("v2-arith")
+    files = {"v2-value.json": value_data, "v2-arith.json": arith_data}
+    check_index(_scratch_fixture(tmp_path / "ok", [value, arith], files))
+    with pytest.raises(AssertionError, match="out of order"):
+        check_index(_scratch_fixture(tmp_path / "bad", [arith, value], files))
 
 
 @pytest.mark.parametrize("case", CASES["json"], ids=_ids("json"))
