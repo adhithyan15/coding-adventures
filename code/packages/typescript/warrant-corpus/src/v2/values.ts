@@ -44,6 +44,7 @@
 
 import type { TfvValue } from "../values.ts";
 import { KitError } from "./errors.ts";
+import { firstMissing } from "./levels.ts";
 import { MAX_WIDTH, type Ty, type TypeTable, type Width, showType, typeLevels } from "./types.ts";
 
 /** A runtime value (see the table above). */
@@ -109,12 +110,14 @@ export function parseDecimal(text: unknown): bigint | undefined {
 // JSON -> value
 // ---------------------------------------------------------------------------
 
-/** The level a type this lane cannot hold would need (for the `level-missing` refusal). */
+/**
+ * The level a type this lane cannot hold would need (for the `level-missing` refusal), named by the one rule of
+ * {@link firstMissing} used everywhere else: `List<Option<U8>>` names `ir.list`, not `ir.data` ([D63]).
+ */
 function lackedLevel(ty: Ty): string {
   const levels = new Set<string>();
   typeLevels(ty, levels);
-  levels.delete("ir.core");
-  return [...levels].sort()[0] ?? "ir.data";
+  return firstMissing(levels, new Set(["ir.core"])) ?? "ir.data";
 }
 
 /**
@@ -156,7 +159,7 @@ export function decodeJson(raw: unknown, ty: Ty, table: TypeTable): Value {
     case "Result": {
       if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return bad("a Result is an object");
       const keys = Object.keys(raw);
-      if (keys.length !== 1) return bad("a Result has exactly one key");
+      if (keys.length !== 1) return bad("a Result value is an object with a single key");
       const record = raw as Record<string, unknown>;
       if (keys[0] === "ok") {
         if (ty.ok === null) return bad("an undetermined Result payload cannot be decoded");

@@ -65,19 +65,24 @@ export const INT: Ty = { k: "Int" };
 export const NAT: Ty = { k: "Nat" };
 export const BYTES: Ty = { k: "Bytes", n: null };
 
-const SCALARS: Record<string, Ty> = {
-  Bool: BOOL,
-  Nat: NAT,
-  Int: INT,
-  U8: { k: "U", w: 8 },
-  U16: { k: "U", w: 16 },
-  U32: { k: "U", w: 32 },
-  U64: { k: "U", w: 64 },
-  I8: { k: "I", w: 8 },
-  I16: { k: "I", w: 16 },
-  I32: { k: "I", w: 32 },
-  I64: { k: "I", w: 64 },
-};
+/**
+ * The scalar type names.  A `Map`, never a plain object: a name read from input
+ * (`constructor`, `toString`, `__proto__`...) must not find a member inherited
+ * from `Object.prototype` (section 2.2 rule 4).
+ */
+const SCALARS: ReadonlyMap<string, Ty> = new Map<string, Ty>([
+  ["Bool", BOOL],
+  ["Nat", NAT],
+  ["Int", INT],
+  ["U8", { k: "U", w: 8 }],
+  ["U16", { k: "U", w: 16 }],
+  ["U32", { k: "U", w: 32 }],
+  ["U64", { k: "U", w: 64 }],
+  ["I8", { k: "I", w: 8 }],
+  ["I16", { k: "I", w: 16 }],
+  ["I32", { k: "I", w: 32 }],
+  ["I64", { k: "I", w: 64 }],
+]);
 
 /** The largest `Bytes<N>` width and the largest `Bytes` value in a corpus (VER04h section 3). */
 export const MAX_WIDTH = 4096;
@@ -172,7 +177,7 @@ export function parseType(text: string, options: ParseOptions = {}): Ty {
       return { k: "Result", ok, err };
     }
     if (word === "Int" && options.allowInt !== true) return fail("Int is IR-internal");
-    const scalar = SCALARS[word];
+    const scalar = SCALARS.get(word);
     if (scalar !== undefined) return scalar;
     return { k: "Name", name: word };
   };
@@ -211,7 +216,7 @@ export function readTypeTable(raw: unknown, code: KitCode = "corpus"): TypeTable
   const errors = new Map<string, readonly string[]>();
   const data = new Map<string, "record" | "variant">();
   for (const [name, row] of Object.entries(raw as Record<string, unknown>)) {
-    if (!NAME.test(name) || name in SCALARS || ["Bytes", "List", "Option", "Result"].includes(name)) {
+    if (!NAME.test(name) || SCALARS.has(name) || ["Bytes", "List", "Option", "Result"].includes(name)) {
       throw new KitError(code, "a type name is not usable");
     }
     if (typeof row !== "object" || row === null || Array.isArray(row)) throw new KitError(code, "a types row is not an object");
@@ -308,9 +313,12 @@ export function typeLevels(ty: Ty, into: Set<string>): void {
 // ---------------------------------------------------------------------------
 
 /**
- * The canonical text of a type.  With `plain`, a `Bytes` width is dropped: the
- * kit's expected `type` field says `Bytes` for every bytes result, because a
- * width is a fact of the checker, not of a value (R51: "written nowhere").
+ * The canonical text of a type.  A `Bytes` width is part of the static type
+ * (R51, R73, Appendix A), so `Bytes<2>` prints as such: this is the text of a
+ * kit case's `expect.type`.  (R51's remark that a width is "written nowhere"
+ * is about the *corpus IR*, whose literals and signatures never state a result
+ * width; it does not say the checker forgets one.)  With `plain`, the width is
+ * dropped, which only a human-facing message wants.
  */
 export function showType(ty: Ty, plain = false): string {
   switch (ty.k) {

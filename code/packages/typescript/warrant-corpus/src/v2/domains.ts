@@ -148,8 +148,15 @@ type Node =
   | { readonly d: "nat_count"; readonly k: number; readonly size: number }
   | { readonly d: "result"; readonly ok: Node; readonly errs: readonly string[]; readonly size: number };
 
-const LEAF_SIZES: Record<string, number> = { bool: 2, u8_all: 256, u64_edge: 377, nat_0_64: 65, bytes_d1: 347, nat_shift: 73 };
-const LEVEL_OF_KIND: Record<string, string> = { tuple: "ir.tuple", variant: "ir.data", option: "ir.data", list: "ir.list" };
+/*
+ * On sharing: `nth` hands out the *same* `Uint8Array` or object for one index every time it is asked, and a suite's
+ * cases share them.  That is safe here because nothing in this lane writes to a value it was given: `take` and `drop`
+ * slice, `concat` allocates, a comparison only reads, and the fault wrappers copy the argument list before a rewrite.
+ * A lane that runs a *subject* which may mutate its arguments (S7b's `arg-mutated` fixture) must copy per case instead.
+ */
+/** Both tables are `Map`s: a descriptor kind read from input must not find an `Object.prototype` member. */
+const LEAF_SIZES: ReadonlyMap<string, number> = new Map([["bool", 2], ["u8_all", 256], ["u64_edge", 377], ["nat_0_64", 65], ["bytes_d1", 347], ["nat_shift", 73]]);
+const LEVEL_OF_KIND: ReadonlyMap<string, string> = new Map([["tuple", "ir.tuple"], ["variant", "ir.data"], ["option", "ir.data"], ["list", "ir.list"]]);
 
 /** `size` must be a JSON integer (not text, not a boolean) equal to the recomputed one. */
 function declaredSize(raw: unknown, recomputed: number): void {
@@ -177,13 +184,13 @@ function readNode(raw: unknown, depth: number): Node {
   const node = raw as Record<string, unknown>;
   const kind = node["d"];
   if (typeof kind !== "string") return refuse("a descriptor has no kind d");
-  const reserved = LEVEL_OF_KIND[kind];
+  const reserved = LEVEL_OF_KIND.get(kind);
   if (reserved !== undefined) {
     // [D63]: `list` is the reserved level, never an unknown kind; `tuple`, `variant`
     // and `option` belong to levels this lane does not implement.
     throw new KitError("level-missing", `the ${kind} descriptor belongs to ${reserved}`, { level: reserved });
   }
-  const sized = LEAF_SIZES[kind];
+  const sized = LEAF_SIZES.get(kind);
   if (sized !== undefined) {
     keysAre(node, ["d", "size"]);
     declaredSize(node["size"], sized);
@@ -235,7 +242,7 @@ function readNode(raw: unknown, depth: number): Node {
       return { d: "result", ok, errs: errs as string[], size };
     }
     default:
-      return refuse("an unknown descriptor kind");
+      return refuse("the descriptor kind is not one this document defines");
   }
 }
 
