@@ -125,6 +125,7 @@ func TestCensusDoesNotChangeTheRecord(t *testing.T) {
 	scenarios := map[string][]trace.Event{
 		"host reads":   {stat("/var/x/a"), fail(stat("/var/x/b"), "ENOENT"), openAbs("/var/x/c"), getdents("/var/x/d")},
 		"proc":         {openAbs("/proc/1234/cmdline")},
+		"proc ops":     {stat("/proc/1235/status"), getdents("/proc/1236/fd")},
 		"exec ghost":   {execve("/usr/bin/ghost", "g")},
 		"exec virtual": {execve("/proc/self/exe", "self")},
 		"exec tmp":     {execve("/home/runner/tool", "t")},
@@ -155,5 +156,97 @@ func TestCensusDoesNotChangeTheRecord(t *testing.T) {
 		if err1 != nil || err2 != nil || !bytes.Equal(a, b) {
 			t.Errorf("%s: the record changed with a Census attached:\nwith    %s\nwithout %s", name, a, b)
 		}
+	}
+}
+
+// opsOfKind is the census's op-class counts for one kind.
+func opsOfKind(c *Census, kind string) map[string]int64 { return c.Ops[kind] }
+
+// proc-path is split by op class at its raise sites: an open, a stat and a
+// listing of /proc paths land in three different classes.  Census only.
+func TestCensusSplitsProcPathByOpClass(t *testing.T) {
+	h := newHarness(t)
+	h.noSettle = true
+	rec, c := h.runCensus(
+		openAbs("/proc/1234/cmdline"),
+		stat("/proc/1235/status"),
+		getdents("/proc/1236/fd"),
+	)
+	wantReason(t, rec, "trace-incomplete:proc-path")
+	got := opsOfKind(c, "trace-incomplete:proc-path")
+	var total int64
+	for class, n := range got {
+		if !IsOpClass(class) {
+			t.Errorf("class %q is outside OpClasses", class)
+		}
+		total += n
+	}
+	if total < 3 || got["open"] < 1 || got["stat"] < 1 || got["listing"] < 1 {
+		t.Errorf("proc-path ops = %v, want an open, a stat and a listing", got)
+	}
+}
+
+// unstable-path is split by op class too, per sub-code, including the sub-codes
+// raised after the walk (checkStability), whose class was remembered while the
+// call was being observed.  Every occurrence has a class, and the counts add up
+// to the occurrences the census holds for the kind.
+func TestCensusSplitsUnstablePathByOpClass(t *testing.T) {
+	h := newHarness(t)
+	h.fs.link(abs("code/p/a/final-link"), "../b")
+	_, c := h.runCensus(
+		symlink("../b", "code/p/a/tmp-link"),
+		rename("code/p/a/tmp-link", "code/p/a/final-link"),
+		stat("code/p/a/final-link/b.txt"),
+	)
+	seen := 0
+	for _, e := range c.Entries() {
+		if !strings.HasPrefix(e.Kind, "trace-incomplete:unstable-path:") {
+			continue
+		}
+		seen++
+		var sum int64
+		for class, n := range opsOfKind(c, e.Kind) {
+			if !IsOpClass(class) {
+				t.Errorf("%s: class %q is outside OpClasses", e.Kind, class)
+			}
+			sum += n
+		}
+		if sum < e.Count {
+			t.Errorf("%s: ops sum %d < %d occurrences: %v", e.Kind, sum, e.Count, c.Ops[e.Kind])
+		}
+	}
+	if seen == 0 {
+		t.Fatalf("no unstable-path sub-code: %v", c.Entries())
+	}
+	// The path of a stat, after the walk: the stat's class, not the last event's.
+	found := false
+	for kind, m := range c.Ops {
+		if strings.HasPrefix(kind, "trace-incomplete:unstable-path:") && m["stat"] > 0 {
+			found = true
+		}
+	}
+	if !found {
+		t.Errorf("no unstable-path occurrence was classed as a stat: %v", c.Ops)
+	}
+}
+
+// The remembered class exists only with a Census, keeps the FIRST look's class
+// for a path, and a path with none is "other".
+func TestCensusLookupOpsOnlyWithACensus(t *testing.T) {
+	c := &classifier{}
+	c.noteLookupOp("/p")
+	if c.lookupOps != nil {
+		t.Errorf("lookupOps filled without a Census: %v", c.lookupOps)
+	}
+	c.census = NewCensus()
+	c.obsPresent, c.opKind = true, "stat"
+	c.noteLookupOp("/p")
+	c.opKind = "open"
+	c.noteLookupOp("/p")
+	if got := c.lookupOpOf("/p"); got != "stat" {
+		t.Errorf("lookupOpOf(/p) = %q, want the first look's class stat", got)
+	}
+	if got := c.lookupOpOf("/nowhere"); got != "other" {
+		t.Errorf("lookupOpOf(unknown) = %q", got)
 	}
 }

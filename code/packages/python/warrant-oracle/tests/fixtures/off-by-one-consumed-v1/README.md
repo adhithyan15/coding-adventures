@@ -28,5 +28,5 @@ would turn the generator red until its mirror landed. Here nothing exists to bre
 
 Slice S10o-2 (`rust/warrant-corpus-gen`) must reproduce `oracle-faults.json` byte for byte (the fault rows and the
 controls) and refuse the signatures of `oracle-refusals.json` with the code `fault`.
-The one exception is the `Option` row (`an-option-result`): a real generator refuses an `Option` in a signature earlier, at lowering, with the level `ir.data` ([D23]; `tests/off_by_one_consumed_parity.rs` asserts it); only the oracle's bare `fault_row` reaches the `fault` code for it. The dumps carry no generator
+The `Option` row (`an-option-result`) follows the rule of section 8.2: an `Option` in a signature is lowered ([D48], section 16.14), so an `Option` result reaches the `fault` code in both tools. That is true of the oracle since slice S11a and of the generator from slice S11b; until S11b the generator still refuses an `Option` in a signature at lowering with the level `ir.data` (the older rule, [D23]), which `tests/off_by_one_consumed_parity.rs` asserts, so the generator's reproduction of this one row is S11b's to make. The dumps carry no generator
 name or version. Regenerate with `python3 make_off_by_one_consumed.py`; never edit a file by hand.
