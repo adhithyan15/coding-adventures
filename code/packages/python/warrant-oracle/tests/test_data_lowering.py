@@ -281,13 +281,12 @@ def test_unwrap_or_takes_any_option_but_only_a_direct_producer_is_the_intermedia
 def test_requires_by_tag_pattern_and_type(body, params, ret, levels):
     m = model(body, params, ret)
     assert m.lowered and m.requires == levels, (body, m.requires)
-    # lowered but not evaluable: the evaluation refusal appears exactly when ir.data is required
-    assert (m.unsupported is not None) == (L.DATA in levels)
-    if m.unsupported is not None:
-        assert m.unsupported.code == "level" and m.unsupported.level == "ir.data"
+    # S11c-1: a unit that needs ir.data is evaluated, so it carries no evaluation refusal (S11a gave it
+    # ``level ir.data`` exactly when ``ir.data`` was required)
+    assert m.unsupported is None
 
 
-def test_a_suite_and_an_example_inherit_data_through_the_call_closure_and_the_evaluation_refusal():
+def test_a_suite_and_an_example_inherit_data_through_the_call_closure_and_are_evaluated():
     pre = "  model g(o: Option<U8>) -> Bool = match o with Some(_) -> true | None -> false\n"
     spec = lower(
         PRELUDE
@@ -296,15 +295,15 @@ def test_a_suite_and_an_example_inherit_data_through_the_call_closure_and_the_ev
         + "  example e:\n    g(Some(1u8)) == (f(1u8) == 1u8)\n"
     )
     assert spec.suites[0].requires == ("ir.core", "ir.data") and spec.suites[0].lowered
-    assert spec.suites[0].unsupported.level == "ir.data"
+    assert spec.suites[0].unsupported is None  # S11a: level ir.data at evaluation; S11c-1 evaluates
     assert spec.examples[0].requires == ("ir.core", "ir.data") and spec.examples[0].lowered
-    assert spec.examples[0].unsupported.level == "ir.data"
+    assert spec.examples[0].unsupported is None
     assert lowering_refusal(spec) is None  # nothing was refused at lowering
 
 
-def test_an_operation_with_a_data_signature_and_no_refinement_is_marked_unevaluated():
+def test_an_operation_with_a_data_signature_and_no_refinement_needs_ir_data_and_is_evaluated():
     spec = lower(PRELUDE + "  op g(p: Point) -> Option<U8>\n  op h(a: U8) -> U8\n")
-    assert spec.ops["g"].requires == ("ir.core", "ir.data") and spec.ops["g"].unsupported.level == "ir.data"
+    assert spec.ops["g"].requires == ("ir.core", "ir.data") and spec.ops["g"].unsupported is None
     assert spec.ops["h"].requires == ("ir.core",) and spec.ops["h"].unsupported is None
     assert spec.ops["g"].lowered
 
@@ -632,23 +631,21 @@ def test_the_typed_compiler_retypes_and_costs_every_tag():
     assert str(m.ty) == "U8" and m.cost == 1 + 1 + 1  # 1 + scrutinee + the worst arm
 
 
-def test_the_typed_compiler_refuses_to_evaluate_every_data_tag_and_pattern():
+def test_the_typed_compiler_evaluates_every_data_tag_and_pattern_since_s11c_1():
+    # S11a: the closures refused to run (``level ir.data``); S11c-1 evaluates them (the values are in test_data_eval.py)
     prog = program(lower(PRELUDE))
     tenv = {"a": U8, "o": OPT_U8}
-    for ir in (["some", ["var", "a"]], ["none", "U8"], ["ctor", "Dot", []]):
-        c = prog.compile(ir, tenv)
-        with pytest.raises(OracleError) as err:
-            c.fn({"a": 1})
-        assert err.value.code == "level" and err.value.level == "ir.data"
+    assert prog.compile(["some", ["var", "a"]], tenv).fn({"a": 1}) == ("some", 1)
+    assert prog.compile(["none", "U8"], tenv).fn({}) == ("none",)
+    assert prog.compile(["ctor", "Dot", []], tenv).fn({}) == ("Dot", ())
     m = prog.compile(["match", ["var", "o"], [[["some", ["wild"]], ["lit", True]], [["none"], ["lit", False]]]], tenv)
-    with pytest.raises(OracleError):
-        m.fn({"o": ("none",)})
-    with pytest.raises(OracleError):
-        P.compile_pattern(["some", ["wild"]])
+    assert m.fn({"o": ("none",)}) is False and m.fn({"o": ("some", 3)}) is True
+    assert P.compile_pattern(["some", ["wild"]])(("some", 1), {})
 
 
 def test_without_analyze_data_every_data_tag_and_option_is_the_level_ir_data():
-    prog = Program({}, {}, errors={"E": ("A",)}, adts={"Point": (("Point", (U8, U8)),)})
+    # ``analyze_data=False`` is the program of a lane that does not declare ir.data (the kit, ``conformance``)
+    prog = Program({}, {}, errors={"E": ("A",)}, adts={"Point": (("Point", (U8, U8)),)}, analyze_data=False)
     tenv = {"a": U8, "o": OPT_U8, "r": A.Ty("Result", (A.Ty("Bool"), A.Ty("E")))}
     for ir in (
         ["some", ["var", "a"]],
@@ -873,7 +870,7 @@ def test_the_dump_refuses_what_the_lowerer_refused_and_shows_what_it_lowered():
     assert err.value.level == "ir.seq"
 
 
-def test_emit_names_a_data_suite_not_live_at_ir_data_and_refuses_the_rest_by_its_own_level():
+def test_emit_enumerates_a_data_suite_since_s11c_1_and_the_census_counts_it_under_ir_core():
     doc = (
         PRELUDE
         + "  op g(p: Point) -> U8\n"
@@ -881,18 +878,15 @@ def test_emit_names_a_data_suite_not_live_at_ir_data_and_refuses_the_rest_by_its
         + "  claim plain:\n    forall a: U8. f(a) == a\n"
     )
     tree = emit(doc.encode())
-    assert tree["suites"]["data"] == {
-        "status": "not-live",
-        "level": "ir.data",
-        "reason": "ir.data is lowered, typed and costed but not evaluated yet (slice S11c-1)",
-    }
-    assert tree["suites"]["plain"]["status"] == "ok"
+    # S11a: ``{"status": "not-live", "level": "ir.data", "reason": "ir.data is lowered, typed and costed but not
+    # evaluated yet (slice S11c-1)"}``
+    assert tree["suites"]["data"]["status"] == "ok" and tree["suites"]["data"]["cases"] == 65536
+    assert tree["suites"]["data"]["descriptors"] == [{"d": "tuple", "of": [{"d": "u8_all", "size": 256}] * 2, "size": 65536}]
+    assert tree["suites"]["plain"]["status"] == "ok" and tree["summary"]["not-live"] == 0
     spec = lower(doc)
-    with pytest.raises(OracleError) as err:
-        SuitePlan(spec, build_program(spec), spec.suites[0])
-    assert err.value.level == "ir.data"
+    assert SuitePlan(spec, build_program(spec), spec.suites[0]).product == 65536
     c = census(spec)
-    assert c["suites_by_level"] == {"ir.data": 1, "ir.core": 1} and c["suites_refused_at_lowering"] == {}
+    assert c["suites_by_level"] == {"ir.core": 2} and c["suites_refused_at_lowering"] == {}
 
 
 def test_the_model_declared_before_a_refinement_that_calls_it_still_lowers():

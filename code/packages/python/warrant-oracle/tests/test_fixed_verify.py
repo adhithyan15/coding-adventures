@@ -150,7 +150,7 @@ def test_the_cli_emits_an_ir_fixed_document(tmp_path, capsys):
     out = tmp_path / "o.json"
     assert run(["emit-v2", "--spec", str(doc), "--out", str(out), "--depth", "full"]) == 0
     tree = json.loads(out.read_text())
-    assert tree["levels_implemented"] == ["ir.core", "ir.fixed", "ir.tuple"]
+    assert tree["levels_implemented"] == ["ir.core", "ir.data", "ir.fixed", "ir.tuple"]
     assert tree["summary"] == {"ok": 3, "not-live": 0, "refused": 0, "not_live_by_level": {}}
     assert tree["suites"]["c_rot"]["descriptors"][1] == {"d": "nat_shift", "size": 73}
     del capsys

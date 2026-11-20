@@ -116,11 +116,32 @@ def _require_core(spec: Spec) -> None:
 # -- JSON values, decoded by declared type (section 2.3) ------------------------------------
 
 
-def value_json(v: object, ty: A.Ty) -> object:
-    """An untagged JSON value of declared type ``ty`` (``ir.core`` and ``ir.tuple`` types).
+def _fields_of(spec: Spec | None, head: str, ctor: str | None = None) -> list | None:
+    """The declared field types of a record (``ctor`` ``None``) or of constructor ``ctor`` of a variant.
 
-    A tuple is a JSON array in component order (section 2.3); a ``Result`` over a tuple is
-    ``{"ok": [..]}``.
+    ``None`` when ``head`` is neither: the caller then refuses the type.  Without a ``spec`` there are no
+    records or variants (a caller that holds no document, as the older tests do, writes ``ir.core`` and
+    ``ir.tuple`` values only).
+    """
+    if spec is None:
+        return None
+    if ctor is None:
+        fields = spec.records.get(head)
+        return None if fields is None else [t for _, t in fields]
+    for name, fields in spec.variants.get(head, ()):
+        if name == ctor:
+            return [t for _, t in fields]
+    return None
+
+
+def value_json(v: object, ty: A.Ty, spec: Spec | None = None) -> object:
+    """An untagged JSON value of declared type ``ty`` (section 2.3).
+
+    A tuple or a record is a JSON array in component or declared field order (field names live in
+    ``types``); a ``Result`` over a tuple is ``{"ok": [..]}``; an ``Option`` is ``{"none": true}`` or
+    ``{"some": v}``; a variant is ``{"ctor": "Name", "fields": [..]}`` (slice S11c-1).  ``spec`` supplies the
+    declared records and variants; without it only the types of ``ir.core`` and ``ir.tuple`` and ``Option`` are
+    known.  The value of a type this writer cannot name (a list, ``ir.list``) is refused.
     """
     head = ty.head
     if head == "Bool":
@@ -130,12 +151,23 @@ def value_json(v: object, ty: A.Ty) -> object:
     if head == "Bytes":
         return v.hex()
     if head == "()":
-        return [value_json(x, t) for x, t in zip(v, ty.args)]
+        return [value_json(x, t, spec) for x, t in zip(v, ty.args)]
     if head == "Result":
         if v[0] == "ok":
-            return {"ok": value_json(v[1], ty.args[0])}
+            return {"ok": value_json(v[1], ty.args[0], spec)}
         return {"err": v[1]}
-    raise OracleError("level", "a value of this type needs a later level", level="ir.data")
+    if head == "Option":
+        if v[0] == "none":
+            return {"none": True}
+        return {"some": value_json(v[1], ty.args[0], spec)}
+    record = _fields_of(spec, head)
+    if record is not None:
+        return [value_json(x, t, spec) for x, t in zip(v, record)]
+    if spec is not None and head in spec.variants:
+        fields = _fields_of(spec, head, v[0])
+        return {"ctor": v[0], "fields": [value_json(x, t, spec) for x, t in zip(v[1], fields)]}
+    level = "ir.list" if head == "List" else "ir.data"  # a named head is a record or variant the spec did not give
+    raise OracleError("level", f"a value of this type needs the level {level}", level=level)
 
 
 MAX_EXAMPLE_BYTES = 4096  # the section 2.3 limit on a ``Bytes`` value in ``corpus.json``
@@ -150,14 +182,22 @@ def example_id(spec: Spec, ex) -> str:
     return f"warrant/{spec.name}/example/{ex.name}"
 
 
-def _over_limit(v: object, ty: A.Ty) -> bool:
-    """Is a ``Bytes`` inside ``v`` (itself, under an ``ok`` or in a tuple) over the section 2.3 limit?"""
+def _over_limit(v: object, ty: A.Ty, spec: Spec | None = None) -> bool:
+    """Is a ``Bytes`` inside ``v`` (itself, under an ``ok`` or a ``some``, in a tuple, a record or a variant)
+    over the section 2.3 limit?"""
     if ty.head == "Bytes":
         return len(v) > MAX_EXAMPLE_BYTES
     if ty.head == "()":
-        return any(_over_limit(x, t) for x, t in zip(v, ty.args))
+        return any(_over_limit(x, t, spec) for x, t in zip(v, ty.args))
     if ty.head == "Result" and v[0] == "ok":
-        return _over_limit(v[1], ty.args[0])
+        return _over_limit(v[1], ty.args[0], spec)
+    if ty.head == "Option" and v[0] == "some":
+        return _over_limit(v[1], ty.args[0], spec)
+    record = _fields_of(spec, ty.head)
+    if record is not None:
+        return any(_over_limit(x, t, spec) for x, t in zip(v, record))
+    if spec is not None and ty.head in spec.variants:
+        return any(_over_limit(x, t, spec) for x, t in zip(v[1], _fields_of(spec, ty.head, v[0])))
     return False
 
 
@@ -247,7 +287,7 @@ def omit_reason(spec: Spec, prog, ex) -> str:
         return "not-op-eq-pure"
     except SizeError:
         return "value-over-limit"
-    if any(_over_limit(a, t) for a, (_, t) in zip(args, ptypes)) or _over_limit(expected, ret):
+    if any(_over_limit(a, t, spec) for a, (_, t) in zip(args, ptypes)) or _over_limit(expected, ret, spec):
         return "value-over-limit"
     raise OracleError(
         "corpus", f"an omit_example line names an example that is emittable: `{eid}`"
@@ -278,7 +318,7 @@ def _examples(spec: Spec, prog, omit: list[str] = ()) -> tuple[list[dict], bytes
         # VER04r 2.3 and 14 (author refinement, CV2-F1): a ``Bytes`` value in an emitted example is
         # at most 4,096 bytes.  Only an ``omit_example`` line (reason ``value-over-limit``) excuses
         # a larger one; without it the example is a generation error, code ``limit``.
-        if any(_over_limit(a, t) for a, (_, t) in zip(args, ptypes)) or _over_limit(expected, ret):
+        if any(_over_limit(a, t, spec) for a, (_, t) in zip(args, ptypes)) or _over_limit(expected, ret, spec):
             raise OracleError(
                 "limit",
                 f"example `{ex.name}` has a Bytes argument or value over {MAX_EXAMPLE_BYTES} bytes "
@@ -288,14 +328,14 @@ def _examples(spec: Spec, prog, omit: list[str] = ()) -> tuple[list[dict], bytes
         row = {
             "id": eid,
             "op": op.name,
-            "args": [value_json(a, t) for a, (_, t) in zip(args, ptypes)],
-            "expected": value_json(expected, ret),
+            "args": [value_json(a, t, spec) for a, (_, t) in zip(args, ptypes)],
+            "expected": value_json(expected, ret, spec),
             "result_type": str(op.ret),
         }
         if width is not None:
             row["width"] = width
         rows.append(row)
-        lines.append(tfv.record(eid, op.name, ptypes, args, width, expected, ret))
+        lines.append(tfv.record(eid, op.name, ptypes, args, width, expected, ret, spec))
     return rows, tfv.document(lines), sorted(omitted, key=lambda r: r["id"].encode())
 
 

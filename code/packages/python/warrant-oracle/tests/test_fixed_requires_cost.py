@@ -172,7 +172,8 @@ def test_tuple_tags_and_match_on_a_result_lower_and_are_evaluable_since_s10t1():
     spec = lower(
         "warrant t v1\n  model m(a: U8) -> Bool = match a with x -> true\n"
     )
-    assert spec.models["m"].unsupported.level == "ir.data"  # match on anything else
+    assert spec.models["m"].unsupported is None  # match on anything else: ir.data, evaluated since S11c-1
+    assert "ir.data" in spec.models["m"].requires
 
 
 def test_a_claim_calling_an_unlowerable_model_inherits_its_level():
@@ -187,13 +188,15 @@ def test_a_claim_calling_an_unlowerable_model_inherits_its_level():
 
 
 def prog(**models: tuple) -> Program:
+    # ``analyze_data=False``: the program of a lane that does not declare ir.data (the Option consumer rule of D23);
+    # since S11c-1 the default program evaluates ir.data (see test_data_eval.py)
     return Program(
-        {n: ModelDef(n, p, r, ir) for n, (p, r, ir) in models.items()}, {}, analyze=True
+        {n: ModelDef(n, p, r, ir) for n, (p, r, ir) in models.items()}, {}, analyze=True, analyze_data=False
     )
 
 
 def compiled(ir: list, tenv: dict | None = None, **kw):
-    return Program({}, {}, analyze=True, **kw).compile(ir, tenv or {})
+    return Program({}, {}, analyze=True, analyze_data=kw.pop("analyze_data", False), **kw).compile(ir, tenv or {})
 
 
 @pytest.mark.parametrize(
@@ -364,7 +367,7 @@ def test_emit_enumerates_the_ir_fixed_suites():
     assert tree["suites"]["fixed"]["status"] == "ok"
     assert tree["suites"]["fixed"]["cases"] == 256
     assert tree["summary"]["not_live_by_level"] == {}
-    assert tree["levels_implemented"] == ["ir.core", "ir.fixed", "ir.tuple"]
+    assert tree["levels_implemented"] == ["ir.core", "ir.data", "ir.fixed", "ir.tuple"]
 
 
 def test_a_suite_plan_and_derive_accept_an_ir_fixed_document():

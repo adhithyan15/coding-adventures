@@ -132,17 +132,19 @@ fn every_refused_signature_has_the_generator_code_fault_and_the_oracles_reason()
     let names: Vec<&str> = dump.get("faults").a().iter().map(|f| f.s()).collect();
     assert_eq!(names, ["saturate-add", "saturate-sub", "shift-mask", "missing-error"]);
     let rows = dump.get("refusals").a();
-    assert_eq!(rows.len(), 53);
+    assert_eq!(rows.len(), 52);
     for r in rows {
         let name = r.get("name").s();
         let fault = r.get("fault").s();
         assert!(names.contains(&fault), "{name}: {fault}");
         assert_eq!(r.get("oracle_code").s(), "generation", "{name}");
-        // S11b: an `Option` or a variant signature lowers (`ir.data`, [D48]), so all 53 rows reach
-        // `instantiate`, the five that the generator's lowering used to stop first included
+        // S11b: an `Option` or a variant signature lowers (`ir.data`, [D48]), so all 52 rows reach
+        // `instantiate`, the four that the generator's lowering used to stop first included
         // (`saturate-add/an-option-result`, `saturate-sub/an-option-result`,
-        // `missing-error/an-option-payload`, `missing-error/a-variant-payload`,
-        // `missing-error/an-option-result`), and each carries the oracle's reason text.
+        // `missing-error/a-variant-payload`, `missing-error/an-option-result`), and each carries the oracle's
+        // reason text.  (CV2-S11c-1, owner decision D71: the oracle's `missing-error` now has a template for
+        // `Result<Option<U8>,E>`, so that row left the dump: 53 became 52.  The generator still refuses the shape
+        // until S11c-2, which adds `data-eval-v1` to its parity tests.)
         let op = lowered_op(r.get("source").s()).unwrap_or_else(|e| panic!("{fault}/{name}: {e}"));
         let e = instantiate(&op, fault).expect_err(name);
         assert_eq!(e.code, code::FAULT, "{fault}/{name}: {e}");

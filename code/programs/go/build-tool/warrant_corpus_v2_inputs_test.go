@@ -326,6 +326,29 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 			t.Fatalf("%s selected %v, want %v (err %v)", changed, got, want, err)
 		}
 	}
+	// CV2-S11c-1: the oracle's data-eval document, profile and six dumps are the generator's byte-parity target
+	// for slice S11c-2. data_eval_v1.warrant is a Warrant document, so rust/warrant-grammar is selected too.
+	for _, changed := range []string{
+		"code/packages/python/warrant-oracle/tests/fixtures/data-eval-v1/data_eval_v1.warrant",
+		"code/packages/python/warrant-oracle/tests/fixtures/data-eval-v1/data_eval_v1.profile",
+		"code/packages/python/warrant-oracle/tests/fixtures/data-eval-v1/data_eval_v1.oracle-lowering.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/data-eval-v1/data_eval_v1.oracle-evaluation.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/data-eval-v1/data_eval_v1.oracle-faults.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/data-eval-v1/data_eval_v1.oracle-values.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/data-eval-v1/data_eval_v1.oracle-domains.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/data-eval-v1/data_eval_v1.oracle-refusals.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/data-eval-v1/make_data_eval.py",
+		"code/packages/python/warrant-oracle/tests/fixtures/data-eval-v1/README.md",
+	} {
+		want := map[string]bool{"rust/warrant-corpus-gen": true}
+		if isWarrantDocument(changed) {
+			want["rust/warrant-grammar"] = true
+		}
+		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s selected %v, want %v (err %v)", changed, got, want, err)
+		}
+	}
 	// Lookalikes select neither: another version directory, the directory itself (a
 	// changed *file* is what is mapped), a backslash spelling, another crate's bindings.
 	for _, changed := range []string{
@@ -369,6 +392,8 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		"code/packages/python/warrant-oracle/tests/fixtures/scalar-faults-v1",
 		"code/packages/python/warrant-oracle/tests/fixtures/data-forms-v10/data_forms_v1.warrant",
 		"code/packages/python/warrant-oracle/tests/fixtures/data-forms-v1",
+		"code/packages/python/warrant-oracle/tests/fixtures/data-eval-v10/data_eval_v1.warrant",
+		"code/packages/python/warrant-oracle/tests/fixtures/data-eval-v1",
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.backup.json",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")

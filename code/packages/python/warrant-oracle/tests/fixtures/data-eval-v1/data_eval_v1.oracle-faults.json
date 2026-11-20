@@ -1,0 +1,1066 @@
+{
+  "accepted_blind_faults": [],
+  "controls_gate_on": [
+    {
+      "blind_claims": [
+        "warrant/data_eval/exhaustive/c_adder_err_only"
+      ],
+      "fault": "field-zero",
+      "id": "warrant/data_eval/negctl/exhaustive/op_adder/field-zero",
+      "op": "op_adder",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_adder",
+        "warrant/data_eval/exhaustive/c_adder_computed"
+      ],
+      "requires": [
+        "ir.data",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_adder"
+        },
+        {
+          "claim": "warrant/data_eval/exhaustive/c_adder_computed",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_adder/missing-error",
+      "op": "op_adder",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_adder",
+        "warrant/data_eval/exhaustive/c_adder_computed",
+        "warrant/data_eval/exhaustive/c_adder_err_only"
+      ],
+      "requires": [
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_adder"
+        },
+        {
+          "claim": "warrant/data_eval/exhaustive/c_adder_computed",
+          "unproven": true
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_adder_err_only"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "field-zero",
+      "id": "warrant/data_eval/negctl/exhaustive/op_adder_n/field-zero",
+      "op": "op_adder_n",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_adder_n"
+      ],
+      "requires": [
+        "ir.data",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_adder_n"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_adder_n/missing-error",
+      "op": "op_adder_n",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_adder_n"
+      ],
+      "requires": [
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_adder_n"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_alu/missing-error",
+      "op": "op_alu",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_alu"
+      ],
+      "requires": [
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_alu"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_dir_res/missing-error",
+      "op": "op_dir_res",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_dir_res"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_dir_res"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_holder/missing-error",
+      "op": "op_holder",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_holder"
+      ],
+      "requires": [
+        "ir.data",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_holder"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "field-zero",
+      "id": "warrant/data_eval/negctl/exhaustive/op_mk_point/field-zero",
+      "op": "op_mk_point",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_mk_point",
+        "warrant/data_eval/exhaustive/c_inline_ctor"
+      ],
+      "requires": [
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_mk_point"
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_inline_ctor"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "field-zero",
+      "id": "warrant/data_eval/negctl/exhaustive/op_mk_wide/field-zero",
+      "op": "op_mk_wide",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_mk_wide"
+      ],
+      "requires": [
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_mk_wide"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_pick/missing-error",
+      "op": "op_pick",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_pick"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_pick"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_pr/missing-error",
+      "op": "op_pr",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_pr"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_pr"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_tri/missing-error",
+      "op": "op_tri",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_tri"
+      ],
+      "requires": [
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_tri"
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "controls_shipped": [
+    {
+      "blind_claims": [],
+      "fault": "field-zero",
+      "id": "warrant/data_eval/negctl/exhaustive/op_adder/field-zero",
+      "op": "op_adder",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_adder",
+        "warrant/data_eval/exhaustive/c_adder_computed",
+        "warrant/data_eval/exhaustive/c_adder_err_only"
+      ],
+      "requires": [
+        "ir.data",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/data_eval/exhaustive/c_adder",
+          "deferred": "ir.data"
+        },
+        {
+          "claim": "warrant/data_eval/exhaustive/c_adder_computed",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/data_eval/exhaustive/c_adder_err_only",
+          "deferred": "ir.data"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_adder/missing-error",
+      "op": "op_adder",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_adder",
+        "warrant/data_eval/exhaustive/c_adder_computed",
+        "warrant/data_eval/exhaustive/c_adder_err_only"
+      ],
+      "requires": [
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/data_eval/exhaustive/c_adder",
+          "deferred": "ir.data"
+        },
+        {
+          "claim": "warrant/data_eval/exhaustive/c_adder_computed",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/data_eval/exhaustive/c_adder_err_only",
+          "deferred": "ir.data"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "field-zero",
+      "id": "warrant/data_eval/negctl/exhaustive/op_adder_n/field-zero",
+      "op": "op_adder_n",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_adder_n"
+      ],
+      "requires": [
+        "ir.data",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/data_eval/exhaustive/c_adder_n",
+          "deferred": "ir.data"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_adder_n/missing-error",
+      "op": "op_adder_n",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_adder_n"
+      ],
+      "requires": [
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/data_eval/exhaustive/c_adder_n",
+          "deferred": "ir.data"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_alu/missing-error",
+      "op": "op_alu",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_alu"
+      ],
+      "requires": [
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/data_eval/exhaustive/c_alu",
+          "deferred": "ir.data"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_dir_res/missing-error",
+      "op": "op_dir_res",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_dir_res"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/data_eval/exhaustive/c_dir_res",
+          "deferred": "ir.data"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_holder/missing-error",
+      "op": "op_holder",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_holder"
+      ],
+      "requires": [
+        "ir.data",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/data_eval/exhaustive/c_holder",
+          "deferred": "ir.data"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "field-zero",
+      "id": "warrant/data_eval/negctl/exhaustive/op_mk_point/field-zero",
+      "op": "op_mk_point",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_mk_point",
+        "warrant/data_eval/exhaustive/c_inline_ctor"
+      ],
+      "requires": [
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/data_eval/exhaustive/c_mk_point",
+          "deferred": "ir.data"
+        },
+        {
+          "claim": "warrant/data_eval/exhaustive/c_inline_ctor",
+          "deferred": "ir.data"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "field-zero",
+      "id": "warrant/data_eval/negctl/exhaustive/op_mk_wide/field-zero",
+      "op": "op_mk_wide",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_mk_wide"
+      ],
+      "requires": [
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/data_eval/exhaustive/c_mk_wide",
+          "deferred": "ir.data"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_pick/missing-error",
+      "op": "op_pick",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_pick"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/data_eval/exhaustive/c_pick",
+          "deferred": "ir.data"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_pr/missing-error",
+      "op": "op_pr",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_pr"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/data_eval/exhaustive/c_pr"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/data_eval/negctl/exhaustive/op_tri/missing-error",
+      "op": "op_tri",
+      "required_claims": [
+        "warrant/data_eval/exhaustive/c_tri"
+      ],
+      "requires": [
+        "ir.data"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/data_eval/exhaustive/c_tri",
+          "deferred": "ir.data"
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "faults": [
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "ctor",
+                "Sum",
+                [
+                  [
+                    "field",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    0
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "0"
+                    }
+                  ],
+                  [
+                    "field",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    2
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "field-zero",
+      "kind": "post",
+      "op": "op_adder",
+      "requires": [
+        "ir.data",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "ctor",
+            "Sum",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "0"
+                }
+              ],
+              [
+                "lit",
+                false
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "op_adder",
+      "requires": [
+        "ir.data"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "ctor",
+                "Sum",
+                [
+                  [
+                    "field",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    0
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "0"
+                    }
+                  ],
+                  [
+                    "field",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    2
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "field-zero",
+      "kind": "post",
+      "op": "op_adder_n",
+      "requires": [
+        "ir.data",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "ctor",
+            "Sum",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "n"
+              ],
+              [
+                "lit",
+                false
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "op_adder_n",
+      "requires": [
+        "ir.data"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "ctor",
+            "AluOut",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "lit",
+                false
+              ],
+              [
+                "lit",
+                false
+              ],
+              [
+                "lit",
+                false
+              ],
+              [
+                "lit",
+                false
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "op_alu",
+      "requires": [
+        "ir.data"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "d"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "op_dir_res",
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "ctor",
+            "Holder",
+            [
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": ""
+                }
+              ],
+              [
+                "tuple",
+                [
+                  [
+                    "lit",
+                    {
+                      "type": "Bytes",
+                      "value": ""
+                    }
+                  ],
+                  [
+                    "lit",
+                    false
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "op_holder",
+      "requires": [
+        "ir.data",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "ctor",
+        "Point",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ],
+          [
+            "field",
+            [
+              "var",
+              "result"
+            ],
+            1
+          ]
+        ]
+      ],
+      "fault": "field-zero",
+      "kind": "post",
+      "op": "op_mk_point",
+      "requires": [
+        "ir.data"
+      ]
+    },
+    {
+      "expr": [
+        "ctor",
+        "Wide",
+        [
+          [
+            "lit",
+            {
+              "type": "U16",
+              "value": "0"
+            }
+          ],
+          [
+            "field",
+            [
+              "var",
+              "result"
+            ],
+            1
+          ]
+        ]
+      ],
+      "fault": "field-zero",
+      "kind": "post",
+      "op": "op_mk_wide",
+      "requires": [
+        "ir.data"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "o"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "op_pick",
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "tuple",
+            [
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": ""
+                }
+              ],
+              [
+                "lit",
+                false
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "op_pr",
+      "requires": [
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "none",
+            "U8"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "op_tri",
+      "requires": [
+        "ir.data"
+      ]
+    }
+  ],
+  "gate_on": [
+    "ir.core",
+    "ir.data",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "gate_shipped": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "levels_gate_on": [
+    "ir.core",
+    "ir.data",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "levels_shipped": [
+    "ir.core",
+    "ir.data",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "module": "data_eval",
+  "schema": "warrant-fault-parity-v1"
+}

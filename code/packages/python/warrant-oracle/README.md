@@ -22,15 +22,15 @@ It is **stdlib-only**, shares no code, data file or table with the generator, an
 **never reads the generator's IR as truth**: it parses the `.warrant` source and
 lowers it itself, then only *compares*.
 
-## What is here (slice S4, parts 1 and 2, S10a, S10t-1, S10c-1 and S11a)
+## What is here (slice S4, parts 1 and 2, S10a, S10t-1, S10c-1, S11a and S11c-1)
 
 | Part | Module | Notes |
 |---|---|---|
 | reader | `lexer`, `parser`, `ast` | layout tokens, v0 + VER04j v1 + VER04k WX-G syntax, fail-closed, admission limits |
-| checker + lowering | `lower`, `levels`, `patterns`, `irtree`, `typenames` | typing, contextual literals, **unoptimised** syntax-directed IR, the 35 `ir.fixed` built-ins, tuples and `match` on a `Result` (`ir.tuple`), records, variants, `Option` and `match` on any scrutinee (`ir.data`, lowered and costed, **not evaluated**), `requires` inference, named level and feature refusals |
-| evaluator | `ir_eval` | `ir.core`, `ir.tuple` and the 35 `ir.fixed` built-ins, the single wrapping rule (VER04 section 3), `MAX_IR_VALUE`, cost bound, call counting (a `match` arm is a guard) |
+| checker + lowering | `lower`, `levels`, `patterns`, `irtree`, `typenames` | typing, contextual literals, **unoptimised** syntax-directed IR, the 35 `ir.fixed` built-ins, tuples and `match` on a `Result` (`ir.tuple`), records, variants, `Option` and `match` on any scrutinee (`ir.data`), `requires` inference, named level and feature refusals |
+| evaluator | `ir_eval` | `ir.core`, `ir.tuple`, the 35 `ir.fixed` built-ins and (S11c-1) the four `ir.data` tags and `match` with the data patterns, the single wrapping rule (VER04 section 3), `MAX_IR_VALUE`, cost bound, call counting (a `match` arm is a guard) |
 | domains | `domains` | every descriptor of VER04r 5.1 (`fx_edge` [D21, D25], `nat_shift` [D26]), `size`/`nth`, budget demotion, the shift-count rule, the consumer-side descriptor check |
-| streams | `stream` | `warrant-stream-v1/v2` encoders, chunk and suite framing, FNV-1a slim selection |
+| streams | `stream` | `warrant-stream-v1/v2` encoders (`40`/`41` `Option`, `64` record and tuple, `65` variant), chunk and suite framing, FNV-1a slim selection |
 | suites | `suites` | product enumeration, admission arithmetic, chunking, per-chunk digests |
 | gate | `corpus_v1`, `emit`, `cli`, `lowering_dump`, `parity_dumps`, `eval_dumps` | the ct-compare v1 gate, v2 digest emitter, level census, lowering, evaluation, fault, value and domain dumps |
 | v2 gate (part 2) | `corpus_v2`, `faults`, `tfv`, `verify_v2` | derives a whole v2 fixture from the `.warrant` and `corpus.profile`; `verify-v2` compares it with the directory |
@@ -40,17 +40,18 @@ arithmetic, x25519 (and the WX-G `inout`/`ensures` syntax of zeroize).
 
 ### Feature levels
 
-The evaluator implements **`ir.core`, `ir.tuple` and `ir.fixed`** (VER04r section 4.1; `ir.tuple` since
-slice S10t-1 and `ir.fixed` since slice S10c-1, see below), so `derive`, `emit-v2` and `verify-v2` accept a
-document that needs any of the three. **`ir.data`** (records, variants, `Option` as a real type, `match` on any
-scrutinee) is *lowered, typed and costed* since slice S11a but **not evaluated**: a unit that needs it is lowered
-completely and then refused at evaluation with `level ir.data` (slice S11c-1 opens that). What the oracle refuses at
+The evaluator implements **`ir.core`, `ir.tuple`, `ir.fixed` and `ir.data`** (VER04r section 4.1; `ir.tuple` since
+slice S10t-1, `ir.fixed` since slice S10c-1 and `ir.data` since slice S11c-1, see below), so `derive`, `emit-v2` and
+`verify-v2` accept a document that needs any of the four. **`ir.data`** (records, variants, `Option` as a real type, `match`
+on any scrutinee) was *lowered, typed and costed* by slice S11a and is **evaluated** since S11c-1: a unit that needs it is no
+longer refused at evaluation. What the oracle refuses at
 *lowering*, by name and never as `ir.data`, is what has no level it implements: the reserved `ir.list` (a list type
 anywhere, a list literal, `slice to_list to_bytes replicate`) and `ir.seq` (`fold map all any range count`), and the
 two feature names `err-value` (an `Err(e)` arm that uses `e`) and `fixed-cast` (`fixed<N>(b)`); none is ever skipped
 silently. The built-ins are still refused in a v0 document (VER04j 1.2: the names are version scoped).
 Census (the pins of `tests/test_lower.py::CENSUS`: suites whose evaluation is not blocked, `ir.core`, and
-the suites blocked at evaluation; `check --spec` also prints `suites_refused_at_lowering`):
+the suites blocked at evaluation; `check --spec` also prints `suites_refused_at_lowering`). **Since S11c-1 nothing is blocked
+at evaluation but what is refused at lowering**; the `ir.data` column is what S11a counted there:
 
 | Adopter | suites | live (`ir.core`) | `ir.data` | before S10c-1 (core / fixed / data) |
 |---|---:|---:|---:|---|
@@ -60,20 +61,19 @@ the suites blocked at evaluation; `check --spec` also prints `suites_refused_at_
 | x25519 | 8 | 8 | 0 | 6 / 2 / 0 |
 | lzw | 21 | 21 | 0 | 4 / 17 / 0 |
 | wasm-leb128 | 44 | 44 | 0 | 18 / 24 / 0 (42 claims; the two encoder bounds were split, VER04r D28) |
-| logic-gates | 88 | 85 | 3 | 28 / 57 / 3 |
-| hash-functions | 56 | 35 | 19 (+ 2 `err-value`) | 4 / 31 / 21 |
-| arithmetic | 63 | 8 | 55 | 7 / 11 / 45 |
+| logic-gates | 88 | 88 | 0 (was 3) | 28 / 57 / 3 |
+| hash-functions | 56 | 54 | 0 (was 19) (+ 2 `err-value`) | 4 / 31 / 21 |
+| arithmetic | 63 | 63 | 0 (was 55) | 7 / 11 / 45 |
 
 (Before S10t-1: wasm-leb128 10 / 8 / 24 tuple, logic-gates 28 / 55 / 2 tuple / 3, arithmetic 5 / 9 / 4 tuple / 45.
 S11a: **every suite of logic-gates and arithmetic now lowers whole**; arithmetic's 55 is the 45 that used to be refused at
 lowering plus the 10 that counted a record type in their `requires`, and hash-functions' 21 became 19 that lower (the claims that
-`match` on a bare tuple) and 2 refused as `err-value`.)
+`match` on a bare tuple) and 2 refused as `err-value`. S11c-1: those 19, logic-gates' 3 and arithmetic's 55 are evaluated.)
 
-### `ir.data`: lowering, typing, `requires` and cost, with evaluation still refusing (slice S11a)
+### `ir.data`: lowering, typing, `requires` and cost (slice S11a), evaluation (slice S11c-1)
 
 Records, variants (with and without a payload), `Option<T>` as a real type, the four tags of VER04r Appendix A.2 and
-`match` on **any** scrutinee are lowered by `lower.py`, typed and costed again by `ir_eval.Program(analyze_data=True)` (what
-`dump-lowering` uses) and counted in `requires`:
+`match` on **any** scrutinee are lowered by `lower.py`, typed and costed again by `ir_eval.Program` (`analyze_data=True`, the default since S11c-1) and counted in `requires`:
 
 | Source | IR | Cost |
 |---|---|---|
@@ -95,13 +95,47 @@ Records, variants (with and without a payload), `Option<T>` as a real type, the 
   pattern, never a binder.
 * **Refusal order** (R35): the declaration limits of section 2.2 first (`limit`: 64 constructors, 8 fields per constructor, 32 per
   record, 64 error cases), then a reserved level or feature before a type error of the same unit, then units in declaration order.
-* **Evaluation still refuses** (R37): a unit that lowered and needs `ir.data` carries the *evaluation* refusal `level ir.data`
-  (`LoweredModel.lowered` tells the two refusals apart; `emit-v2` reports the suite `not-live`), until slice S11c-1.
+* **Evaluation** (slice S11c-1; S11a refused it, R37): see the next section.
 * **The committed dumps** (`tests/fixtures/data-forms-v1/`, generated by `make_data_forms.py`, a new directory on purpose):
   `data_forms_v1.oracle-lowering.json` (86 models, 94 suites, 11 examples, the corpus `types` rows) and
   `data_forms_v1.oracle-refusals.json` (109 documents: every reserved level, the corpus limits, the typing rules and corpus errors of
   Appendix A.2, and the refusal order). **They make Appendix A.2 stop being provisional**; slice S11b must reproduce them byte for byte.
   The one row this slice moved in an existing dump is `tuple-forms-v1`'s `a-projection-of-a-non-tuple` (now a `type` error).
+
+### `ir.data` evaluation, values and faults (slice S11c-1)
+
+* **Values** (the domains' own): a record is the tuple of its fields in declaration order, a variant `(constructor, (field, ..))`,
+  an `Option` `("none",)` or `("some", v)`. `["some", e]`, `["none", "T"]`, `["ctor", "Name", [..]]` and `["field", e, i]` build and
+  read them; `match` evaluates exactly one arm with the patterns `some none ctor bool` (`patterns.compile_pattern`, which needs the
+  declared types to tell a record from a variant); equality of records, variants and options is structural and ordering is
+  undefined. `analyze_data=False` is the program of a lane that does **not** declare `ir.data` (the conformance kit's `levels`): every
+  data tag, an `Option` outside the intermediate use and a `match` on a non-`Result` are the level `ir.data`, as before S11a.
+* **Encodings**: JSON `{"none":true}` / `{"some":v}`, `[..]` for a record, `{"ctor":"Name","fields":[..]}` for a variant
+  (`corpus_v2.value_json`); stream `40`/`41`, `64`, `65` (`stream.make_encoder`, unchanged) and the **v1** header whenever every type
+  is in the v1 set (`Option<U8>` is, a record is not); TFV `L0`/`L1 x`, `L<n> ..`, `L2 S<ctor> L<k> ..` (`tfv.value`; VER04j 4.9).
+  The 4,096-byte limit of an example sees through all of them.
+* **Faults** (`faults.py`, section 8.2 [D49] [D50]): `field-zero` (the first numeric field of a record, bare or in an `Ok`; `ir.data`
+  and `ir.tuple`) and the record, `Option` and variant payloads of `missing-error` (`build`: a record is a `ctor` of its fields, a leaf is
+  the first parameter of exactly its type else its zero, `["none","T"]` for an `Option`, a variant has none). The registry holds
+  eighteen names. `wrong-ctor` is not in it ([D49]).
+* **The gate opens** (no flip, no version bump, [D52]): `faults.IMPLEMENTED` gains `ir.data`; a `{"deferred": "ir.data"}` witness is no
+  longer derivable and `verify-v2` rejects one (a negative test, the S10c pattern).
+* **R67 and R94, the first comparison of a fault row's type with a declared type**: a fault expression is compiled with the op's
+  declared result (or the parameter) as its *expected* type, so the zero literal of a component declared plain `Bytes` is a `Bytes`,
+  and must have a **common type** with it (not "flows to"; a tuple is invariant but for the `Nat`/`Int` widening of
+  `off-by-one-consumed`), **in every branch of an `if` and every arm of a `match`**, not only the first. Every fault row is typed once in
+  `derive_controls`, even when no claim can stand in for the subject. The common type of two `Result`s takes the error type from whichever arm
+  knows it (`Result<(Bytes,Bool),E>`, never the placeholder `?` of a bare `ok`).
+* **`fault_row(..., data_names, records)`** has **one rule** (owner decision D71): it is always given the document's records and variants
+  (`derive`, `make_scalar_faults.py` and the conformance kit's `instantiate_fault` all pass them), there is no data-blind call, and a variant
+  leaf with no parameter of its type is refused everywhere with `missing-error has no template for this payload type`. The committed
+  `scalar-faults-v1` refusals dump lost its `an-option-payload` row (53 rows became 52; `Result<Option<U8>,E>` has a template now) and was
+  regenerated; `a-variant-payload` keeps its bytes. A nested tuple component is always built (8.2, R31 (a)).
+* **TFV depth**: `tfv.value` counts every container it writes (`L`, `M`, `R`) and refuses over 64 with the code `limit` (VER04j 4.9, W0709).
+* **The committed dumps** (`tests/fixtures/data-eval-v1/`, `make_data_eval.py`, a new directory on purpose): the lowering, evaluation,
+  fault, value, domain and refusal dumps of a synthetic data document with a suite on each stream header, which the generator's slice
+  S11c-2 must reproduce byte for byte (every file: the typing rows of the refusals dump too). Its README records the oracle's derive time for both adopters (logic-gates about 60 s (60.1 to 61.6 s measured),
+  3,770,123 cases; arithmetic about 36 s, 2,655,437 cases) and arithmetic's largest `ir_cost` (1,524, under the default 2,000).
 
 ### `ir.tuple`: tuples and `match` on a `Result` (slice S10t-1)
 
@@ -150,7 +184,7 @@ Records, variants (with and without a payload), `Option<T>` as a real type, the 
   (`rem`, or `rem_trunc` when it is signed, by the width of the FIRST parameter's type). All three are
   `["ir.fixed"]` and live. `missing-error` now also takes a scalar payload (`Bool`, `Nat`, a fixed-width type:
   the first parameter of exactly that type, else the zero) and a `Bytes` payload with no `Bytes` parameter
-  (the zero literal); the record and `Option` payloads need `ir.data` and stay refused. `Nat` parameters, mixed
+  (the zero literal); the record, `Option` and variant payloads need `ir.data` (S11c-1, above). `Nat` parameters, mixed
   widths and other result types have no template (the code `fault`). The committed dump is in
   `tests/fixtures/scalar-faults-v1/` (`make_scalar_faults.py`, which `BUILD` runs with `--check`); the
   generator's slice S11f-2 must reproduce it byte for byte. The registry now holds seventeen names.
@@ -545,10 +579,10 @@ normalized shape (`lane`, `package`, `module`, `import`, `source`, `seed` as dec
 
 ## Not yet done
 
-* Evaluating `ir.data` (S11c-1; lowering, typing, `requires` and cost are done, S11a) and `inout`/`ensures`
-  monitoring (S12): a document that needs more than `ir.fixed` and `ir.tuple` is refused at evaluation, naming
-  the level, and the `ir.list`, `ir.seq`, `err-value` and `fixed-cast` constructs are refused at lowering. The
-  fault-evaluation gate for `ir.fixed` and `ir.tuple` is turned on at the atomic flip (S10c).
+* `inout`/`ensures` monitoring (S12): a document that needs more than `ir.fixed`, `ir.tuple` and `ir.data` is refused
+  at evaluation, naming the level, and the `ir.list`, `ir.seq`, `err-value` and `fixed-cast` constructs are refused at
+  lowering. The fault-evaluation gates for `ir.fixed` and `ir.tuple` opened at the atomic flip (S10c) and the one for
+  `ir.data` in S11c-1 (no flip, [D52]).
 * The oracle's `domain_label`/`depth` rows are emitted but not yet compared with a
   lane manifest.
 * The shape of `assumes` (VER04r 16.4 item 4); `verify-v2` expects `[]`.

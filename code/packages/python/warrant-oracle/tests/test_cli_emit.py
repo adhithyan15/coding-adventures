@@ -185,12 +185,14 @@ def test_gf256_evaluator_agrees_with_the_documented_examples():
         # still counted under ``ir.data`` here (arithmetic 55: the 45 that used to be refused at lowering
         # plus the 10 that only counted a record type in their ``requires``).  What changed is that none
         # is *refused at lowering* any more (``suites_refused_at_lowering``).
+        # S11c-1: ``ir.data`` is evaluated too, so nothing blocks a suite of any adopter (was logic-gates
+        # data 3, arithmetic data 55): every suite that lowers is counted under ``ir.core``.
         # This is the parse-and-lower census (``census``): enumerating these adopters is far too
         # heavy for a unit test (wasm-leb128 is 46 million cases), see ``test_fixed_lzw``.
         ("wasm-leb128", {}),
-        ("logic-gates", {"ir.data": 3}),
+        ("logic-gates", {}),
         ("lzw", {}),
-        ("arithmetic", {"ir.data": 55}),
+        ("arithmetic", {}),
         ("x25519", {}),
     ],
 )
@@ -241,9 +243,9 @@ def test_census_counts_levels():
     c = census(lower_document(parse_source(adopter_bytes("arithmetic"))))
     assert (
         c["suites"] == 63
-        and c["suites_by_level"] == {"ir.core": 8, "ir.data": 55}
+        and c["suites_by_level"] == {"ir.core": 63}  # S11c-1: was {"ir.core": 8, "ir.data": 55} (S11a)
         and c["suites_lowered"] == 63
-        and c["models_not_ir_core"] == 19
+        and c["models_not_ir_core"] == 0  # was 19 (S11a)
         and c["models_refused_at_lowering"] == 0
     )
 

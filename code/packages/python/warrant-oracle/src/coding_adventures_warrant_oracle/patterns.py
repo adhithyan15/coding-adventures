@@ -17,7 +17,9 @@ The six patterns of ``ir.tuple`` (Appendix A.1) and the four data patterns of ``
 
 The arms are tried in order and **exactly one body is evaluated**: the arm of the first pattern
 that matches (section 4.2 rule 2).  Values are the evaluator's own: a ``Result`` is
-``("ok", payload)`` or ``("err", case)`` and a tuple is a Python tuple.
+``("ok", payload)`` or ``("err", case)``, a tuple is a Python tuple, an ``Option`` is ``("none",)`` or
+``("some", v)``, a record is the tuple of its fields and a variant is ``(constructor, (field, ..))``
+(the data patterns are evaluated since slice S11c-1).
 
 Three author refinements (section 16.10 R2, Appendix A.1) are corpus errors (oracle code
 ``corpus``, generator code ``ir``) and are decided here, from the patterns and the scrutinee's
@@ -319,8 +321,22 @@ def check_arms(
 # -- matching at run time ------------------------------------------------------------------------
 
 
-def compile_pattern(pattern: list) -> Callable[[object, dict], bool]:
-    """A closure ``match(value, binds) -> bool`` for a typed IR pattern; it fills ``binds``."""
+def compile_pattern(pattern: list, types: Types | None = None) -> Callable[[object, dict], bool]:
+    """A closure ``match(value, binds) -> bool`` for a typed IR pattern; it fills ``binds``.
+
+    The values are the evaluator's own (module docstring) and the data patterns of Appendix A.2 read them
+    like this:
+
+    * ``["some", p]``: ``value[0] == "some"`` and ``p`` matches the payload ``value[1]``;
+    * ``["none"]``: ``value[0] == "none"``;
+    * ``["bool", b]``: the value is the ``Bool`` ``b`` (the pattern was typed against a ``Bool`` scrutinee, so
+      the value is a Python ``bool``);
+    * ``["ctor", "Name", [p..]]``: for a **record** the value is the tuple of its fields, so the field patterns
+      match it position by position; for a **variant** the value is ``(constructor, (field, ..))``, so the
+      constructor name must be equal first and the field patterns then match the fields.  Which of the two
+      ``Name`` is comes from ``types`` (a record is the one-constructor type named like its constructor,
+      VER04j section 4.2), which a ``ctor`` pattern therefore needs.
+    """
     tag = pattern[0]
     if tag == "wild":
         return lambda value, binds: True
@@ -333,17 +349,39 @@ def compile_pattern(pattern: list) -> Callable[[object, dict], bool]:
 
         return bind
     if tag == "ok":
-        inner = compile_pattern(pattern[1])
+        inner = compile_pattern(pattern[1], types)
         return lambda value, binds: value[0] == "ok" and inner(value[1], binds)
     if tag == "err_any":
         return lambda value, binds: value[0] == "err"
     if tag == "err":
         case = pattern[1]
         return lambda value, binds: value[0] == "err" and value[1] == case
-    if tag in ("some", "none", "ctor", "bool"):
-        # Slice S11a lowers, types and costs the data patterns; evaluating them is S11c-1.
-        raise OracleError("level", "a data pattern is not evaluated yet", level="ir.data")
-    parts = [compile_pattern(p) for p in pattern[1]]
+    if tag == "some":
+        payload = compile_pattern(pattern[1], types)
+        return lambda value, binds: value[0] == "some" and payload(value[1], binds)
+    if tag == "none":
+        return lambda value, binds: value[0] == "none"
+    if tag == "bool":
+        literal = pattern[1]
+        return lambda value, binds: value == literal
+    if tag == "ctor":
+        name = pattern[1]
+        fields = [compile_pattern(p, types) for p in pattern[2]]
+        if types is None or name not in types.ctors:
+            raise _fail("ir", "a constructor pattern needs the declared types")
+        owner, _ = types.ctors[name]
+        if len(types.adts[owner]) == 1 and types.adts[owner][0][0] == owner:  # a record: the tuple of fields
+
+            def match_record(value: object, binds: dict) -> bool:
+                return all(part(item, binds) for part, item in zip(fields, value))
+
+            return match_record
+
+        def match_variant(value: object, binds: dict) -> bool:
+            return value[0] == name and all(part(item, binds) for part, item in zip(fields, value[1]))
+
+        return match_variant
+    parts = [compile_pattern(p, types) for p in pattern[1]]
 
     def match_tuple(value: object, binds: dict) -> bool:
         return all(part(item, binds) for part, item in zip(parts, value))
