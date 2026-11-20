@@ -1,5 +1,6 @@
 use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk, HkdfPrkImportError};
 use std::error::Error;
+use tls13_certificate_request_message::CertificateRequestLimits;
 use tls13_cipher_suite_offer::ClientCipherSuiteOffer;
 use tls13_cipher_suite_policy::{
     CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry, HkdfHash, SelectedCipherSuite,
@@ -21,12 +22,12 @@ use tls13_record_protection_state::{RecordProtectionState, RecordProtectionState
 use tls13_retry_handshake_traffic_key_material_binding::{
     bind_retry_handshake_traffic_key_material, bind_retry_ordered_server_flight_transcript,
     open_retry_handshake_record, seal_retry_handshake_record, HandshakeTrafficSender,
-    RetryHandshakePlaintext, RetryHandshakeRecordBindingError,
-    RetryHandshakeRecordProtectionStateBindingError, RetryHandshakeRecordProtectionStateIssuer,
-    RetryHandshakeRecordReassembler, RetryHandshakeRecordReassemblyError,
-    RetryHandshakeTrafficKeyMaterialBindingError, RetryOrderedServerFlight,
-    RetryOrderedServerFlightError, RetryOrderedServerFlightTranscriptBindingError,
-    RetryOrderedServerTranscriptAdvanceError,
+    RetryCertificateRequestValidationError, RetryHandshakePlaintext,
+    RetryHandshakeRecordBindingError, RetryHandshakeRecordProtectionStateBindingError,
+    RetryHandshakeRecordProtectionStateIssuer, RetryHandshakeRecordReassembler,
+    RetryHandshakeRecordReassemblyError, RetryHandshakeTrafficKeyMaterialBindingError,
+    RetryOrderedServerFlight, RetryOrderedServerFlightError,
+    RetryOrderedServerFlightTranscriptBindingError, RetryOrderedServerTranscriptAdvanceError,
 };
 use tls13_retry_handshake_traffic_secrets_binding::{
     bind_retry_handshake_traffic_secrets, bind_retry_server_finished_key,
@@ -43,6 +44,7 @@ use tls13_server_hello_retry_selection::{
 };
 use tls13_server_hello_selection::bind_server_hello_selection;
 use tls13_server_hello_version_selection::bind_server_hello_version_selection;
+use tls13_signature_scheme_list::SignatureSchemeListLimits;
 use tls13_supported_groups::NamedGroupListLimits;
 use tls13_supported_versions::ClientVersionOffer;
 use tls13_traffic_key_material::{
@@ -1249,6 +1251,143 @@ fn rejects_unsolicited_encrypted_extension_before_transcript_advancement() {
 }
 
 #[test]
+fn validates_exact_main_handshake_certificate_request_and_signature_list() {
+    let mut x25519_output = [0xa5; 32];
+    with_retry_x25519_messages(CipherSuite::TlsAes128GcmSha256, |messages| {
+        let secret = derive_message_bound_retry_x25519_shared_secret(
+            messages,
+            &ALICE_PRIVATE,
+            &mut x25519_output,
+        )
+        .unwrap();
+        let transcript = bind_retry_transcript(
+            messages.messages().selection(),
+            TranscriptPolicy::new(4_096).unwrap(),
+        )
+        .unwrap();
+        let suite = transcript.transcript().selected_suite();
+        let mut base_storage = BaseSecretStorage::new(suite).unwrap();
+        let base = bind_retry_key_schedule(&secret, &transcript, &mut base_storage).unwrap();
+        let mut traffic_storage = HandshakeTrafficSecretStorage::new(suite).unwrap();
+        let traffic = bind_retry_handshake_traffic_secrets(&base, &mut traffic_storage).unwrap();
+        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(traffic);
+        let mut finished_storage = FinishedKeyStorage::new(suite, FinishedRole::Server);
+        let server_finished =
+            bind_retry_server_finished_key(issuer.traffic_secrets(), &mut finished_storage)
+                .unwrap();
+        let continuation = bind_retry_server_transcript_continuation(&server_finished).unwrap();
+        let mut server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+        let server_state = issuer
+            .issue(HandshakeTrafficSender::Server, &mut server_storage)
+            .unwrap();
+        let handshake_policy = Tls13HandshakePolicy::new(
+            &[
+                Tls13HandshakeType::EncryptedExtensions,
+                Tls13HandshakeType::CertificateRequest,
+            ],
+            32,
+        )
+        .unwrap();
+        let mut reassembly_storage = [0xa5; 64];
+        let reassembler = RetryHandshakeRecordReassembler::new(
+            server_state,
+            handshake_policy,
+            &mut reassembly_storage,
+        )
+        .unwrap();
+        let ordered = RetryOrderedServerFlight::new(reassembler).unwrap();
+        let mut bound = bind_retry_ordered_server_flight_transcript(ordered, continuation).unwrap();
+        let server_prk = HkdfPrk::import_exact(
+            fixed_hash(suite),
+            issuer.traffic_secrets().traffic_secrets().server_secret(),
+        )
+        .unwrap();
+        let mut peer_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+        let peer_material = derive_traffic_key_material(&server_prk, &mut peer_storage).unwrap();
+        let mut peer_state = RecordProtectionState::new(peer_material).unwrap();
+        let certificate_request_body = [
+            0, 0, 16, 0, 13, 0, 4, 0, 2, 8, 4, 0, 50, 0, 4, 0, 2, 8, 5,
+        ];
+        let mut plaintext = [0_u8; 29];
+        plaintext[..6].copy_from_slice(&[8, 0, 0, 2, 0, 0]);
+        plaintext[6..10].copy_from_slice(&[13, 0, 0, 19]);
+        plaintext[10..].copy_from_slice(&certificate_request_body);
+        let ciphertext_policy = Tls13CiphertextPolicy::new(1_024).unwrap();
+        let inner_policy =
+            Tls13InnerPlaintextPolicy::new(&[TlsContentType::Handshake], 1_008).unwrap();
+        let mut scratch = [0xa5; 64];
+        let mut wire = [0xcc; 96];
+        let used = seal_tls13_record(
+            &mut peer_state,
+            &ciphertext_policy,
+            &inner_policy,
+            Tls13Plaintext::new(TlsContentType::Handshake, &plaintext, 0),
+            &mut scratch,
+            &mut wire,
+        )
+        .unwrap();
+        let mut opened = [0x5a; 64];
+        let mut validated_request = false;
+        let result = bound
+            .open_accept_and_advance(
+                &ciphertext_policy,
+                &inner_policy,
+                &wire[..used],
+                &mut opened,
+                |pending| match pending.message().handshake_type() {
+                    Tls13HandshakeType::EncryptedExtensions => {
+                        pending
+                            .validate_encrypted_extensions(
+                                ExtensionBlockLimits::new(64, 4).unwrap(),
+                            )
+                            .unwrap();
+                        true
+                    }
+                    Tls13HandshakeType::CertificateRequest => {
+                        let proof = pending
+                            .validate_certificate_request(
+                                CertificateRequestLimits::new(
+                                    0,
+                                    ExtensionBlockLimits::new(64, 4).unwrap(),
+                                )
+                                .unwrap(),
+                                SignatureSchemeListLimits::new(8).unwrap(),
+                            )
+                            .unwrap();
+                        assert_eq!(
+                            proof.pending().transcript_snapshot(),
+                            pending.transcript_snapshot(),
+                        );
+                        assert_eq!(
+                            proof.certificate_request().encoded_body(),
+                            certificate_request_body,
+                        );
+                        assert!(proof.certificate_request().context().is_empty());
+                        assert_eq!(proof.signature_algorithms().len(), 1);
+                        assert_eq!(proof.signature_algorithms().get(0), Some(0x0804));
+                        let signature_algorithms_cert =
+                            proof.signature_algorithms_cert().unwrap();
+                        assert_eq!(signature_algorithms_cert.len(), 1);
+                        assert_eq!(signature_algorithms_cert.get(0), Some(0x0805));
+                        let debug = format!("{proof:?}");
+                        assert!(debug.contains("[RETAINED]"));
+                        assert!(debug.contains("[REDACTED]"));
+                        assert!(!debug.contains("2052"));
+                        validated_request = true;
+                        true
+                    }
+                    other => panic!("unexpected handshake type {other:?}"),
+                },
+            )
+            .unwrap();
+        assert!(validated_request);
+        assert_eq!(result.completed_messages(), 2);
+        assert_eq!(result.state(), ServerFlightState::ExpectCertificate);
+        assert!(result.client_authentication_requested());
+    });
+}
+
+#[test]
 fn rejects_an_ordered_owner_from_another_traffic_secret_proof() {
     let mut x25519_output = [0xa5; 32];
     with_retry_x25519_messages(CipherSuite::TlsAes128GcmSha256, |messages| {
@@ -1970,6 +2109,23 @@ fn errors_are_stable_and_payload_free() {
     );
     assert!(record_state.source().is_some());
     assert!(!format!("{record_state:?}").contains("retry-key-material"));
+
+    let nonempty_context = RetryCertificateRequestValidationError::NonEmptyContext;
+    assert_eq!(
+        nonempty_context.to_string(),
+        "TLS 1.3 main-handshake CertificateRequest context is not empty"
+    );
+    assert!(nonempty_context.source().is_none());
+
+    let invalid_signature_algorithms = RetryCertificateRequestValidationError::SignatureAlgorithms(
+        tls13_signature_scheme_list::SignatureSchemeListError::EmptyList,
+    );
+    assert_eq!(
+        invalid_signature_algorithms.to_string(),
+        "TLS 1.3 CertificateRequest signature_algorithms is invalid"
+    );
+    assert!(invalid_signature_algorithms.source().is_some());
+    assert!(!format!("{invalid_signature_algorithms:?}").contains("retry-key-material"));
 
     let unexpected = RetryHandshakeRecordBindingError::UnexpectedContentType;
     assert_eq!(

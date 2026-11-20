@@ -173,7 +173,7 @@ func TestCensusEndToEnd(t *testing.T) {
 		}
 	}
 	md, _ := os.ReadFile(mdPath)
-	for _, want := range []string{"# Kiln record census", "cross-check: ok", "## Reasons by kind", "## Recordable share by language"} {
+	for _, want := range []string{"# Kiln record census", "cross-check: ok", "## Reasons by kind", "## Share by language"} {
 		if !strings.Contains(string(md), want) {
 			t.Errorf("the Markdown lacks %q", want)
 		}
@@ -249,7 +249,7 @@ func TestCensusRedactsDirectories(t *testing.T) {
 		paths = append(paths, p.Path)
 	}
 	joined := strings.Join(paths, "\n")
-	for _, want := range []string{"$HOME/.cache/go/x", "$RECORD_DIR/pre/SEALED", "$TMPDIR/out"} {
+	for _, want := range []string{"$RUNNER_HOME/.cache/go/x", "$RECORD_DIR/pre/SEALED", "$RUNNER_TMP/out"} {
 		if !strings.Contains(joined, want) {
 			t.Errorf("no %q in %v", want, paths)
 		}
@@ -518,13 +518,13 @@ func TestCensusDropsNonPositiveWalls(t *testing.T) {
 // The cross-check is strict: a mismatch, or any allowed divergence, is exit 4,
 // and the summary still names it (by digest prefix, never by trace text).
 func TestCensusStrictCrossCheck(t *testing.T) {
-	type parse = func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, int)
+	type parse = func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, trace.CrossCheckDetail)
 	for name, stub := range map[string]parse{
-		"a mismatch": func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, int) {
-			return nil, nil, &trace.CrossCheckMismatch{Detail: "FAIL-OPEN: x", Window: "  > 1: \"secret trace line\""}, 0
+		"a mismatch": func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, trace.CrossCheckDetail) {
+			return nil, nil, &trace.CrossCheckMismatch{Detail: "FAIL-OPEN: x", Window: "  > 1: \"secret trace line\""}, trace.CrossCheckDetail{}
 		},
-		"an allowed divergence": func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, int) {
-			return nil, nil, nil, 1
+		"an allowed divergence": func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, trace.CrossCheckDetail) {
+			return nil, nil, nil, trace.CrossCheckDetail{Allowed: 1, Rows: map[string]int{"signed pid": 1}, Hits: []trace.AllowedHit{{Row: "signed pid", Line: 1}}}
 		},
 	} {
 		t.Run(name, func(t *testing.T) {

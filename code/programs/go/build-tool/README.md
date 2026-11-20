@@ -697,8 +697,33 @@ lives, so any changed path ending in `.warrant` (the glob `**/?*.warrant`, a
 bare `.warrant` excluded) selects it. A PR that adds an invalid document is
 therefore checked by the PR that adds it, instead of failing a later unrelated
 PR that rebuilds `warrant-grammar`. `*.warrant.draft` files are not documents
-and do not select it. Only that one package is selected, with its
-prerequisites, not the Warrant adopters.
+and do not select it. That guard selects only `rust/warrant-grammar`, with
+its prerequisites; the Warrant adopters are selected by the per-crate rows
+below.
+
+A third guard is the crate's **own spec**. Every Rust crate whose BUILD runs
+`gen_evidence -- --check <crate>` checks its committed evidence against
+`code/specs/<crate>.warrant`, a file outside the package. An edit to exactly
+that path (no lookalike, no `.warrant.draft`) selects `rust/<crate>`, in
+addition to whatever else the spec already selected (the grammar guard above,
+the corpus-v2 generator and oracle for the four corpus-v2 adopters, the lane
+registry rows). Before this rule (CV2-F13) a spec-only edit selected at most
+those consumers but not the crate itself, so the check first ran in some later
+unrelated PR. The rows are nine inline `warrantEvidenceRow` entries in the
+repository-input table (arithmetic, ct-compare, gf256, hash-functions,
+logic-gates, lzw, wasm-leb128, x25519, zeroize), next to the four VOS crates,
+which carry the same rule through `vosImplementationRow`.
+
+`TestWarrantEvidenceRowsCoverEveryEvidenceCrate` keeps the rows complete. It
+reads `code/packages/rust/*/evidence.bindings` and `BUILD*`, and requires a row
+named `rust/<dir>` that matches `code/specs/<dir>.warrant` for every directory
+with a bindings file or a `gen_evidence ... --check` line (argument order does
+not matter); it also fails on a `warrantEvidenceRow` whose crate directory
+exists but is no longer an adopter. Because that test reads those files, a PR
+that adds an adopter must run it: the row `go/programs/build-tool` is selected
+by exactly `code/packages/rust/<dir>/evidence.bindings` (one path segment). BUILD
+edits are not a trigger, since that would select the build tool on every Rust
+BUILD change; every adopter adds a bindings file anyway.
 
 ### Package-local files do not rebuild dependents
 

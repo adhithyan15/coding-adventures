@@ -6828,6 +6828,30 @@ repository-owned semantic, authentication, trust, revocation, and transport
 compositions remain prerequisites; concrete HTTPS and live-provider readiness
 remain unavailable.
 
+An authenticated ordered retry `CertificateRequest` at the post-accept
+`ExpectCertificate` position can now be decoded under explicit caller-selected
+context, extension, and signature-scheme count limits. The helper requires the
+ordered flight to have recorded a client-authentication request, requires the
+request context to be empty for this main-handshake boundary, applies the exact
+retained extension-context policy in the `CertificateRequest` context, requires
+the `signature_algorithms` extension, and structurally decodes its nonempty
+ordered scheme list. When `signature_algorithms_cert` is present, its list is
+decoded under the same count limit. Success returns a non-copyable proof that
+retains the exact pending message, decoded request, required handshake-signature
+list, and optional certificate-signature list; no detached context, extension
+block, algorithm list, policy, or transcript snapshot is accepted.
+
+This proof establishes only authenticated message provenance, main-handshake
+request-context emptiness, extension placement, required-list presence, and
+signature-list framing. It does not select a signature algorithm, decide
+whether client authentication is supported, access or choose credentials,
+sign, emit a client Certificate or CertificateVerify, authenticate the server,
+validate certificates or hostnames, enforce revocation, select later epochs,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those data-driven credential, signing, server-authentication, trust, revocation,
+and transport compositions remain prerequisites, and concrete HTTPS and
+live-provider readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

@@ -133,6 +133,10 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 			// CV2-S3d: the generator's BUILD runs --check against the committed v2 fixture.
 			want["rust/warrant-corpus-gen"] = true
 		}
+		if input == "code/specs/ct-compare.warrant" {
+			// CV2-F13: its BUILD checks the committed evidence against this spec.
+			want["rust/ct-compare"] = true
+		}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s: got %v, err %v", input, got, err)
 		}
@@ -375,6 +379,9 @@ func TestWarrantOracleInputsSelectOnlyTheOracle(t *testing.T) {
 		{Name: "go/warrant-corpus", Language: "go"},
 		{Name: "go/ct-compare", Language: "go"},
 		{Name: "python/warrant-oracle", Language: "python"},
+		{Name: "rust/gf256", Language: "rust"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "rust/x25519", Language: "rust"},
 	}
 	for _, input := range warrantOraclePaths {
 		got, err := repositoryInputConsumersForChange([]string{input}, packages, "python")
@@ -383,9 +390,9 @@ func TestWarrantOracleInputsSelectOnlyTheOracle(t *testing.T) {
 		}
 	}
 	// A spec the oracle reads selects the oracle and, because every .warrant document
-	// does (isWarrantDocument), the grammar guard; nothing else in this table.
+	// does (isWarrantDocument), the grammar guard and (CV2-F13) the crate whose BUILD checks evidence against it; nothing else.
 	got, err := repositoryInputConsumersForChange([]string{"code/specs/gf256.warrant"}, packages, "all")
-	if err != nil || !reflect.DeepEqual(got, map[string]bool{"python/warrant-oracle": true, "rust/warrant-grammar": true}) {
+	if err != nil || !reflect.DeepEqual(got, map[string]bool{"python/warrant-oracle": true, "rust/warrant-grammar": true, "rust/gf256": true}) {
 		t.Fatalf("gf256 spec: got %v, err %v", got, err)
 	}
 	for _, input := range []string{
