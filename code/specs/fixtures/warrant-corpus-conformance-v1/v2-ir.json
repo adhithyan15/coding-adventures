@@ -20715,6 +20715,4563 @@
       },
       "summary": "a concat past the limit below a subject call is a case failure",
       "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "Bytes<2>",
+            "value": "0a0b"
+          }
+        ],
+        [
+          "b",
+          {
+            "type": "Bytes<2>",
+            "value": "0a0b"
+          }
+        ]
+      ],
+      "expect": {
+        "calls": 1,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/width-params-one-width",
+      "ir": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          2
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "same"
+      ],
+      "models": {
+        "same": {
+          "body": [
+            "eq",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bytes"
+            ],
+            [
+              "b",
+              "Bytes"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "eq_fixed": {
+          "params": [
+            [
+              "a",
+              "Bytes<N>"
+            ],
+            [
+              "b",
+              "Bytes<N>"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "Bool",
+          "width_params": [
+            "N"
+          ]
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "eq_fixed": "same"
+      },
+      "summary": "a subject_op over an op with width_params carries one static width, [2]",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "Bytes<2>",
+            "value": "0a0b"
+          }
+        ],
+        [
+          "b",
+          {
+            "type": "Bytes<2>",
+            "value": "0a0b"
+          }
+        ]
+      ],
+      "expect": {
+        "error": "ill-typed"
+      },
+      "id": "v2-ir/width-params-width-mismatch",
+      "ir": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          3
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "same"
+      ],
+      "models": {
+        "same": {
+          "body": [
+            "eq",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bytes"
+            ],
+            [
+              "b",
+              "Bytes"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "eq_fixed": {
+          "params": [
+            [
+              "a",
+              "Bytes<N>"
+            ],
+            [
+              "b",
+              "Bytes<N>"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "Bool",
+          "width_params": [
+            "N"
+          ]
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "eq_fixed": "same"
+      },
+      "summary": "a static width of 3 does not accept Bytes<2> arguments",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "Bytes<0>",
+            "value": ""
+          }
+        ],
+        [
+          "b",
+          {
+            "type": "Bytes<0>",
+            "value": ""
+          }
+        ]
+      ],
+      "expect": {
+        "calls": 1,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/width-params-width-zero",
+      "ir": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          0
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "same"
+      ],
+      "models": {
+        "same": {
+          "body": [
+            "eq",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bytes"
+            ],
+            [
+              "b",
+              "Bytes"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "eq_fixed": {
+          "params": [
+            [
+              "a",
+              "Bytes<N>"
+            ],
+            [
+              "b",
+              "Bytes<N>"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "Bool",
+          "width_params": [
+            "N"
+          ]
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "eq_fixed": "same"
+      },
+      "summary": "the width 0 is a width: Bytes<0> arguments",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "Bytes<2>",
+            "value": "0a0b"
+          }
+        ],
+        [
+          "b",
+          {
+            "type": "Bytes<2>",
+            "value": "0a0b"
+          }
+        ]
+      ],
+      "expect": {
+        "error": "ill-typed"
+      },
+      "id": "v2-ir/width-params-missing-width",
+      "ir": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "same"
+      ],
+      "models": {
+        "same": {
+          "body": [
+            "eq",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bytes"
+            ],
+            [
+              "b",
+              "Bytes"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "eq_fixed": {
+          "params": [
+            [
+              "a",
+              "Bytes<N>"
+            ],
+            [
+              "b",
+              "Bytes<N>"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "Bool",
+          "width_params": [
+            "N"
+          ]
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "eq_fixed": "same"
+      },
+      "summary": "an op with width_params and a subject_op with no fourth element",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "Bytes<2>",
+            "value": "0a0b"
+          }
+        ],
+        [
+          "b",
+          {
+            "type": "Bytes<2>",
+            "value": "0a0b"
+          }
+        ]
+      ],
+      "expect": {
+        "error": "ill-typed"
+      },
+      "id": "v2-ir/width-params-extra-width",
+      "ir": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "same"
+      ],
+      "models": {
+        "same": {
+          "body": [
+            "eq",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bytes"
+            ],
+            [
+              "b",
+              "Bytes"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "eq_fixed": {
+          "params": [
+            [
+              "a",
+              "Bytes<N>"
+            ],
+            [
+              "b",
+              "Bytes<N>"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "Bool",
+          "width_params": [
+            "N"
+          ]
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "eq_fixed": "same"
+      },
+      "summary": "two widths for one width_param",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "Bytes<2>",
+            "value": "0a0b"
+          }
+        ],
+        [
+          "b",
+          {
+            "type": "Bytes<2>",
+            "value": "0a0b"
+          }
+        ]
+      ],
+      "expect": {
+        "error": "ill-typed"
+      },
+      "id": "v2-ir/width-params-width-over-4096",
+      "ir": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          4097
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "same"
+      ],
+      "models": {
+        "same": {
+          "body": [
+            "eq",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bytes"
+            ],
+            [
+              "b",
+              "Bytes"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "eq_fixed": {
+          "params": [
+            [
+              "a",
+              "Bytes<N>"
+            ],
+            [
+              "b",
+              "Bytes<N>"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "Bool",
+          "width_params": [
+            "N"
+          ]
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "eq_fixed": "same"
+      },
+      "summary": "the width 4,097",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "Bytes<2>",
+            "value": "0a0b"
+          }
+        ],
+        [
+          "b",
+          {
+            "type": "Bytes<2>",
+            "value": "0a0b"
+          }
+        ]
+      ],
+      "expect": {
+        "error": "ill-typed"
+      },
+      "id": "v2-ir/width-params-empty-widths-for-an-op-with-one",
+      "ir": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        []
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "same"
+      ],
+      "models": {
+        "same": {
+          "body": [
+            "eq",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bytes"
+            ],
+            [
+              "b",
+              "Bytes"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "eq_fixed": {
+          "params": [
+            [
+              "a",
+              "Bytes<N>"
+            ],
+            [
+              "b",
+              "Bytes<N>"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "Bool",
+          "width_params": [
+            "N"
+          ]
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "eq_fixed": "same"
+      },
+      "summary": "an empty widths list for an op that has one width_param",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "U8",
+            "value": "5"
+          }
+        ]
+      ],
+      "expect": {
+        "error": "ill-typed"
+      },
+      "id": "v2-ir/width-params-widths-on-an-op-without",
+      "ir": [
+        "subject_op",
+        "bump",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          2
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "inc"
+      ],
+      "models": {
+        "inc": {
+          "body": [
+            "add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "bump": {
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "U8"
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "bump": "inc"
+      },
+      "summary": "a widths list on an op without width_params",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "U8",
+            "value": "5"
+          }
+        ]
+      ],
+      "expect": {
+        "error": "ill-typed"
+      },
+      "id": "v2-ir/width-params-empty-widths-on-an-op-without",
+      "ir": [
+        "subject_op",
+        "bump",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ],
+        []
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "inc"
+      ],
+      "models": {
+        "inc": {
+          "body": [
+            "add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "bump": {
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "U8"
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "bump": "inc"
+      },
+      "summary": "an empty widths list on an op without width_params (the generator never writes one)",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "U8",
+            "value": "5"
+          }
+        ]
+      ],
+      "expect": {
+        "class": "case",
+        "error": "ir-overflow"
+      },
+      "id": "v2-ir/overflow-if-impure-guard-runs-case-class",
+      "ir": [
+        "if",
+        [
+          "eq",
+          [
+            "subject_op",
+            "bump",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "6"
+            }
+          ]
+        ],
+        [
+          "eq",
+          [
+            "mul",
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "18446744073709551615"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "18446744073709551615"
+              }
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Int",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "lit",
+          false
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "inc"
+      ],
+      "models": {
+        "inc": {
+          "body": [
+            "add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "bump": {
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "U8"
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "bump": "inc"
+      },
+      "summary": "if subject(..) then <pure overflow> else false: the stand-in makes the guarded node run, and the overflow is the case's",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "expect": {
+        "calls": 1,
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-ir/overflow-if-impure-guard-skips-the-node",
+      "ir": [
+        "if",
+        [
+          "eq",
+          [
+            "subject_op",
+            "bump",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "6"
+            }
+          ]
+        ],
+        [
+          "eq",
+          [
+            "mul",
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "18446744073709551615"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "18446744073709551615"
+              }
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Int",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "lit",
+          false
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "inc"
+      ],
+      "models": {
+        "inc": {
+          "body": [
+            "add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "bump": {
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "U8"
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "bump": "inc"
+      },
+      "summary": "the same tree with a stand-in whose answer takes the else branch: a value and one call",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "U8",
+            "value": "5"
+          }
+        ]
+      ],
+      "expect": {
+        "class": "case",
+        "error": "ir-overflow"
+      },
+      "id": "v2-ir/overflow-and-impure-guard-runs-case-class",
+      "ir": [
+        "and",
+        [
+          "eq",
+          [
+            "subject_op",
+            "bump",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "6"
+            }
+          ]
+        ],
+        [
+          "eq",
+          [
+            "mul",
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "18446744073709551615"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "18446744073709551615"
+              }
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Int",
+              "value": "0"
+            }
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "inc"
+      ],
+      "models": {
+        "inc": {
+          "body": [
+            "add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "bump": {
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "U8"
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "bump": "inc"
+      },
+      "summary": "subject(..) and <pure overflow>: the right operand runs and the overflow is the case's",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "expect": {
+        "calls": 1,
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-ir/overflow-and-impure-guard-skips-the-node",
+      "ir": [
+        "and",
+        [
+          "eq",
+          [
+            "subject_op",
+            "bump",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "6"
+            }
+          ]
+        ],
+        [
+          "eq",
+          [
+            "mul",
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "18446744073709551615"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "18446744073709551615"
+              }
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Int",
+              "value": "0"
+            }
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "inc"
+      ],
+      "models": {
+        "inc": {
+          "body": [
+            "add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "bump": {
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "U8"
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "bump": "inc"
+      },
+      "summary": "the same and with a false left operand: the overflow does not run",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "U8",
+            "value": "5"
+          }
+        ]
+      ],
+      "expect": {
+        "class": "corpus",
+        "error": "ir-overflow"
+      },
+      "id": "v2-ir/overflow-if-pure-guard-corpus-class",
+      "ir": [
+        "if",
+        [
+          "eq",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "5"
+            }
+          ]
+        ],
+        [
+          "eq",
+          [
+            "mul",
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "18446744073709551615"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "18446744073709551615"
+              }
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Int",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "if",
+          [
+            "eq",
+            [
+              "subject_op",
+              "bump",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "6"
+              }
+            ]
+          ],
+          [
+            "lit",
+            true
+          ],
+          [
+            "lit",
+            false
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "inc"
+      ],
+      "models": {
+        "inc": {
+          "body": [
+            "add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "bump": {
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "U8"
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "bump": "inc"
+      },
+      "summary": "the twin with a pure guard: the generator evaluates the taken branch, so the overflow is the corpus's",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "U8",
+            "value": "5"
+          }
+        ]
+      ],
+      "expect": {
+        "class": "case",
+        "error": "ir-overflow"
+      },
+      "id": "v2-ir/overflow-in-model-under-a-subject-argument-case-class",
+      "ir": [
+        "model_call",
+        "boom",
+        [
+          [
+            "subject_op",
+            "bump",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "inc",
+        "boom"
+      ],
+      "models": {
+        "boom": {
+          "body": [
+            "eq",
+            [
+              "mul",
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "18446744073709551615"
+                }
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "18446744073709551615"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Int",
+                "value": "0"
+              }
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ]
+        },
+        "inc": {
+          "body": [
+            "add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ]
+        }
+      },
+      "ops": {
+        "bump": {
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ],
+          "requires": [
+            "ir.core"
+          ],
+          "ret": "U8"
+        }
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {
+        "bump": "inc"
+      },
+      "summary": "a model body that overflows, called with a subject call as an argument: the walk never evaluates the body, so the overflow is the case's",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "U8",
+            "value": "5"
+          }
+        ]
+      ],
+      "expect": {
+        "class": "corpus",
+        "error": "ir-overflow"
+      },
+      "id": "v2-ir/overflow-in-model-with-a-pure-argument-corpus-class",
+      "ir": [
+        "model_call",
+        "boom",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "boom"
+      ],
+      "models": {
+        "boom": {
+          "body": [
+            "eq",
+            [
+              "mul",
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "18446744073709551615"
+                }
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "18446744073709551615"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Int",
+                "value": "0"
+              }
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ]
+        }
+      },
+      "ops": {},
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {},
+      "summary": "the same model called with a pure argument is the corpus's",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/lit-bytes-into-a-fixed-width-parameter",
+      "ir": [
+        "model_call",
+        "two",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "0a0b"
+            }
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "two"
+      ],
+      "models": {
+        "two": {
+          "body": [
+            "eq",
+            [
+              "len",
+              [
+                "var",
+                "a"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "2"
+              }
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bytes<2>"
+            ]
+          ]
+        }
+      },
+      "ops": {},
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {},
+      "summary": "a literal of two bytes passed to a Bytes<2> parameter has the static type Bytes<2>",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "error": "ill-typed"
+      },
+      "id": "v2-ir/lit-bytes-too-short-for-a-fixed-width-parameter",
+      "ir": [
+        "model_call",
+        "two",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "0a0b0c"
+            }
+          ]
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "two"
+      ],
+      "models": {
+        "two": {
+          "body": [
+            "eq",
+            [
+              "len",
+              [
+                "var",
+                "a"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "2"
+              }
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bytes<2>"
+            ]
+          ]
+        }
+      },
+      "ops": {},
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {},
+      "summary": "a literal of three bytes does not flow to Bytes<2>",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "error": "ill-typed"
+      },
+      "id": "v2-ir/lit-written-type-bytes-n",
+      "ir": [
+        "lit",
+        {
+          "type": "Bytes<2>",
+          "value": "0a0b"
+        }
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {},
+      "summary": "a lit whose written type is Bytes<2> (the written type is always Bytes)",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "error": "ill-typed"
+      },
+      "id": "v2-ir/lit-object-form-bool",
+      "ir": [
+        "lit",
+        {
+          "type": "Bool",
+          "value": true
+        }
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {},
+      "summary": "a Bool literal is the bare form: the object form with type Bool",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ],
+        [
+          "c",
+          {
+            "type": "U16",
+            "value": "2"
+          }
+        ],
+        [
+          "b",
+          {
+            "type": "Bytes",
+            "value": "00"
+          }
+        ]
+      ],
+      "expect": {
+        "error": "ill-typed"
+      },
+      "id": "v2-ir/ill-typed-take-count-fixed-width",
+      "ir": [
+        "take",
+        [
+          "var",
+          "b"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {},
+      "summary": "a fixed-width count: take(b, 1u8)",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "a",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ],
+        [
+          "c",
+          {
+            "type": "U16",
+            "value": "2"
+          }
+        ],
+        [
+          "b",
+          {
+            "type": "Bytes",
+            "value": "00"
+          }
+        ]
+      ],
+      "expect": {
+        "error": "ill-typed"
+      },
+      "id": "v2-ir/ill-typed-drop-count-fixed-width",
+      "ir": [
+        "drop",
+        [
+          "var",
+          "b"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {},
+      "summary": "a fixed-width count: drop(b, 1u8)",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "t",
+          {
+            "type": "(U8,U8)",
+            "value": [
+              "1",
+              "2"
+            ]
+          }
+        ]
+      ],
+      "expect": {
+        "error": "level-missing"
+      },
+      "id": "v2-ir/level-missing-env-tuple-type",
+      "ir": [
+        "lit",
+        true
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {},
+      "summary": "an env entry of a tuple type at levels ir.core: the type is ir.tuple, the tag is not needed",
+      "types": {}
+    },
+    {
+      "env": [
+        [
+          "l",
+          {
+            "type": "List<U8>",
+            "value": [
+              "1"
+            ]
+          }
+        ]
+      ],
+      "expect": {
+        "error": "level-missing"
+      },
+      "id": "v2-ir/level-missing-env-list-type",
+      "ir": [
+        "lit",
+        true
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [],
+      "models": {},
+      "ops": {},
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {},
+      "summary": "an env entry of type List<U8> at levels ir.core: the type is the reserved ir.list (D63)",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/level-missing-model-not-reached-is-a-value",
+      "ir": [
+        "lit",
+        true
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "fx"
+      ],
+      "models": {
+        "fx": {
+          "body": [
+            "bit_not",
+            [
+              "var",
+              "a"
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "U8"
+            ]
+          ]
+        }
+      },
+      "ops": {},
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {},
+      "summary": "a model with an ir.fixed tag that ir does not call causes no level-missing, and the case's requires is ir.core",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "error": "depth"
+      },
+      "id": "v2-ir/depth-model-chain-65-uncalled",
+      "ir": [
+        "lit",
+        true
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m7",
+        "m8",
+        "m9",
+        "m10",
+        "m11",
+        "m12",
+        "m13",
+        "m14",
+        "m15",
+        "m16",
+        "m17",
+        "m18",
+        "m19",
+        "m20",
+        "m21",
+        "m22",
+        "m23",
+        "m24",
+        "m25",
+        "m26",
+        "m27",
+        "m28",
+        "m29",
+        "m30",
+        "m31",
+        "m32",
+        "m33",
+        "m34",
+        "m35",
+        "m36",
+        "m37",
+        "m38",
+        "m39",
+        "m40",
+        "m41",
+        "m42",
+        "m43",
+        "m44",
+        "m45",
+        "m46",
+        "m47",
+        "m48",
+        "m49",
+        "m50",
+        "m51",
+        "m52",
+        "m53",
+        "m54",
+        "m55",
+        "m56",
+        "m57",
+        "m58",
+        "m59",
+        "m60",
+        "m61",
+        "m62",
+        "m63",
+        "m64",
+        "m65"
+      ],
+      "models": {
+        "m1": {
+          "body": [
+            "var",
+            "a"
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m10": {
+          "body": [
+            "model_call",
+            "m9",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m11": {
+          "body": [
+            "model_call",
+            "m10",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m12": {
+          "body": [
+            "model_call",
+            "m11",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m13": {
+          "body": [
+            "model_call",
+            "m12",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m14": {
+          "body": [
+            "model_call",
+            "m13",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m15": {
+          "body": [
+            "model_call",
+            "m14",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m16": {
+          "body": [
+            "model_call",
+            "m15",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m17": {
+          "body": [
+            "model_call",
+            "m16",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m18": {
+          "body": [
+            "model_call",
+            "m17",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m19": {
+          "body": [
+            "model_call",
+            "m18",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m2": {
+          "body": [
+            "model_call",
+            "m1",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m20": {
+          "body": [
+            "model_call",
+            "m19",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m21": {
+          "body": [
+            "model_call",
+            "m20",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m22": {
+          "body": [
+            "model_call",
+            "m21",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m23": {
+          "body": [
+            "model_call",
+            "m22",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m24": {
+          "body": [
+            "model_call",
+            "m23",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m25": {
+          "body": [
+            "model_call",
+            "m24",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m26": {
+          "body": [
+            "model_call",
+            "m25",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m27": {
+          "body": [
+            "model_call",
+            "m26",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m28": {
+          "body": [
+            "model_call",
+            "m27",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m29": {
+          "body": [
+            "model_call",
+            "m28",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m3": {
+          "body": [
+            "model_call",
+            "m2",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m30": {
+          "body": [
+            "model_call",
+            "m29",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m31": {
+          "body": [
+            "model_call",
+            "m30",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m32": {
+          "body": [
+            "model_call",
+            "m31",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m33": {
+          "body": [
+            "model_call",
+            "m32",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m34": {
+          "body": [
+            "model_call",
+            "m33",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m35": {
+          "body": [
+            "model_call",
+            "m34",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m36": {
+          "body": [
+            "model_call",
+            "m35",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m37": {
+          "body": [
+            "model_call",
+            "m36",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m38": {
+          "body": [
+            "model_call",
+            "m37",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m39": {
+          "body": [
+            "model_call",
+            "m38",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m4": {
+          "body": [
+            "model_call",
+            "m3",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m40": {
+          "body": [
+            "model_call",
+            "m39",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m41": {
+          "body": [
+            "model_call",
+            "m40",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m42": {
+          "body": [
+            "model_call",
+            "m41",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m43": {
+          "body": [
+            "model_call",
+            "m42",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m44": {
+          "body": [
+            "model_call",
+            "m43",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m45": {
+          "body": [
+            "model_call",
+            "m44",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m46": {
+          "body": [
+            "model_call",
+            "m45",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m47": {
+          "body": [
+            "model_call",
+            "m46",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m48": {
+          "body": [
+            "model_call",
+            "m47",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m49": {
+          "body": [
+            "model_call",
+            "m48",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m5": {
+          "body": [
+            "model_call",
+            "m4",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m50": {
+          "body": [
+            "model_call",
+            "m49",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m51": {
+          "body": [
+            "model_call",
+            "m50",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m52": {
+          "body": [
+            "model_call",
+            "m51",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m53": {
+          "body": [
+            "model_call",
+            "m52",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m54": {
+          "body": [
+            "model_call",
+            "m53",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m55": {
+          "body": [
+            "model_call",
+            "m54",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m56": {
+          "body": [
+            "model_call",
+            "m55",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m57": {
+          "body": [
+            "model_call",
+            "m56",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m58": {
+          "body": [
+            "model_call",
+            "m57",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m59": {
+          "body": [
+            "model_call",
+            "m58",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m6": {
+          "body": [
+            "model_call",
+            "m5",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m60": {
+          "body": [
+            "model_call",
+            "m59",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m61": {
+          "body": [
+            "model_call",
+            "m60",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m62": {
+          "body": [
+            "model_call",
+            "m61",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m63": {
+          "body": [
+            "model_call",
+            "m62",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m64": {
+          "body": [
+            "model_call",
+            "m63",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m65": {
+          "body": [
+            "model_call",
+            "m64",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m7": {
+          "body": [
+            "model_call",
+            "m6",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m8": {
+          "body": [
+            "model_call",
+            "m7",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m9": {
+          "body": [
+            "model_call",
+            "m8",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        }
+      },
+      "ops": {},
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {},
+      "summary": "a chain of 65 models that nothing calls: the depth of m65 is 65",
+      "types": {}
+    },
+    {
+      "env": [],
+      "expect": {
+        "calls": 0,
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-ir/depth-model-chain-64-uncalled-is-a-value",
+      "ir": [
+        "lit",
+        true
+      ],
+      "levels": [
+        "ir.core"
+      ],
+      "model_order": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m7",
+        "m8",
+        "m9",
+        "m10",
+        "m11",
+        "m12",
+        "m13",
+        "m14",
+        "m15",
+        "m16",
+        "m17",
+        "m18",
+        "m19",
+        "m20",
+        "m21",
+        "m22",
+        "m23",
+        "m24",
+        "m25",
+        "m26",
+        "m27",
+        "m28",
+        "m29",
+        "m30",
+        "m31",
+        "m32",
+        "m33",
+        "m34",
+        "m35",
+        "m36",
+        "m37",
+        "m38",
+        "m39",
+        "m40",
+        "m41",
+        "m42",
+        "m43",
+        "m44",
+        "m45",
+        "m46",
+        "m47",
+        "m48",
+        "m49",
+        "m50",
+        "m51",
+        "m52",
+        "m53",
+        "m54",
+        "m55",
+        "m56",
+        "m57",
+        "m58",
+        "m59",
+        "m60",
+        "m61",
+        "m62",
+        "m63",
+        "m64"
+      ],
+      "models": {
+        "m1": {
+          "body": [
+            "var",
+            "a"
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m10": {
+          "body": [
+            "model_call",
+            "m9",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m11": {
+          "body": [
+            "model_call",
+            "m10",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m12": {
+          "body": [
+            "model_call",
+            "m11",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m13": {
+          "body": [
+            "model_call",
+            "m12",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m14": {
+          "body": [
+            "model_call",
+            "m13",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m15": {
+          "body": [
+            "model_call",
+            "m14",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m16": {
+          "body": [
+            "model_call",
+            "m15",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m17": {
+          "body": [
+            "model_call",
+            "m16",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m18": {
+          "body": [
+            "model_call",
+            "m17",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m19": {
+          "body": [
+            "model_call",
+            "m18",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m2": {
+          "body": [
+            "model_call",
+            "m1",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m20": {
+          "body": [
+            "model_call",
+            "m19",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m21": {
+          "body": [
+            "model_call",
+            "m20",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m22": {
+          "body": [
+            "model_call",
+            "m21",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m23": {
+          "body": [
+            "model_call",
+            "m22",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m24": {
+          "body": [
+            "model_call",
+            "m23",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m25": {
+          "body": [
+            "model_call",
+            "m24",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m26": {
+          "body": [
+            "model_call",
+            "m25",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m27": {
+          "body": [
+            "model_call",
+            "m26",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m28": {
+          "body": [
+            "model_call",
+            "m27",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m29": {
+          "body": [
+            "model_call",
+            "m28",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m3": {
+          "body": [
+            "model_call",
+            "m2",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m30": {
+          "body": [
+            "model_call",
+            "m29",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m31": {
+          "body": [
+            "model_call",
+            "m30",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m32": {
+          "body": [
+            "model_call",
+            "m31",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m33": {
+          "body": [
+            "model_call",
+            "m32",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m34": {
+          "body": [
+            "model_call",
+            "m33",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m35": {
+          "body": [
+            "model_call",
+            "m34",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m36": {
+          "body": [
+            "model_call",
+            "m35",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m37": {
+          "body": [
+            "model_call",
+            "m36",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m38": {
+          "body": [
+            "model_call",
+            "m37",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m39": {
+          "body": [
+            "model_call",
+            "m38",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m4": {
+          "body": [
+            "model_call",
+            "m3",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m40": {
+          "body": [
+            "model_call",
+            "m39",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m41": {
+          "body": [
+            "model_call",
+            "m40",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m42": {
+          "body": [
+            "model_call",
+            "m41",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m43": {
+          "body": [
+            "model_call",
+            "m42",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m44": {
+          "body": [
+            "model_call",
+            "m43",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m45": {
+          "body": [
+            "model_call",
+            "m44",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m46": {
+          "body": [
+            "model_call",
+            "m45",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m47": {
+          "body": [
+            "model_call",
+            "m46",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m48": {
+          "body": [
+            "model_call",
+            "m47",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m49": {
+          "body": [
+            "model_call",
+            "m48",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m5": {
+          "body": [
+            "model_call",
+            "m4",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m50": {
+          "body": [
+            "model_call",
+            "m49",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m51": {
+          "body": [
+            "model_call",
+            "m50",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m52": {
+          "body": [
+            "model_call",
+            "m51",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m53": {
+          "body": [
+            "model_call",
+            "m52",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m54": {
+          "body": [
+            "model_call",
+            "m53",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m55": {
+          "body": [
+            "model_call",
+            "m54",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m56": {
+          "body": [
+            "model_call",
+            "m55",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m57": {
+          "body": [
+            "model_call",
+            "m56",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m58": {
+          "body": [
+            "model_call",
+            "m57",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m59": {
+          "body": [
+            "model_call",
+            "m58",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m6": {
+          "body": [
+            "model_call",
+            "m5",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m60": {
+          "body": [
+            "model_call",
+            "m59",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m61": {
+          "body": [
+            "model_call",
+            "m60",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m62": {
+          "body": [
+            "model_call",
+            "m61",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m63": {
+          "body": [
+            "model_call",
+            "m62",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m64": {
+          "body": [
+            "model_call",
+            "m63",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m7": {
+          "body": [
+            "model_call",
+            "m6",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m8": {
+          "body": [
+            "model_call",
+            "m7",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        },
+        "m9": {
+          "body": [
+            "model_call",
+            "m8",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          "params": [
+            [
+              "a",
+              "Bool"
+            ]
+          ]
+        }
+      },
+      "ops": {},
+      "requires": [
+        "ir.core"
+      ],
+      "subjects": {},
+      "summary": "a chain of 64 models that nothing calls is accepted",
+      "types": {}
     }
   ],
   "category": "v2-ir",

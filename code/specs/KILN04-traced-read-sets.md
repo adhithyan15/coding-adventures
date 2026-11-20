@@ -1183,7 +1183,7 @@ under the kind `trace-incomplete:<reason>:<sub>` (unstable-path:
 `component-changed`, `absent-changed`, `final-changed`,
 `followed-final-changed`, `followed-absent-changed`, `gone-but-found`,
 `removed-before-made`, `file-changed`, `own-overlap`, `through-missing`,
-`dotdot`, `fd-path-differs`; exec-unreadable: `modified-after-exec`,
+`dotdot`, `fd-path-differs`, `absent-before-made`; exec-unreadable: `modified-after-exec`,
 `virtual-exe`, `virtual-interpreter`, `under-tmp`, `in-repo`, `host-disk`); the
 sub-code is a string literal at each site, never a slice of the input.
 (2) **op classes**: `census.json` has an additive `ops` map, `{kind: {class: n}}`
@@ -3837,6 +3837,295 @@ open of either file is never allowed by the list. A writing open of a virtual
 name that is not an fd link makes the write set unknown (W5, `ops.go`), so the
 record carries `trace-incomplete:writes-unknown` and `writes_complete` is false.
 
+**Decision D39: ancestor nodes and absence under the fresh tmpfs (real-build
+census, `host-read` in about 45 actions; `kiln:recorder` 6 to 7).** The census
+showed `host-read` raised mostly by `stat` of the ancestors of the sandbox's own
+directories (`/`, `/home`, `$HOME`, `$HOME/work`, the workspace parent, `/opt`,
+`/opt/hostedtoolcache`, `/opt/hostedtoolcache/go`, `/tmp`, `/dev`), which every
+path walk visits, and by absent probes under the step's fresh tmpfs `$HOME` and
+`TMPDIR` (`$HOME/.proverc`, `$HOME/go`, `$HOME/.cache/go-build`, test directories
+the action removed and probed again). Two rules, both in `observeHost`; this
+replaces the "other ancestors stay `host-read`" clause of §5.5(c).
+
+- **(a) Ancestor nodes.** A *present, non-listing* observation of a PROPER
+  ANCESTOR of an anchor is allowed. The anchors are the checkout `Root`, every
+  declared host root, `Home`, `Tmpdir`, and the literal prefix of every
+  `ephemeral` and `absent-ok` entry (for a pattern, the components before the
+  first one containing `*` or `?`: `/dev/fd/*` gives `/dev/fd`). `/` is an
+  ancestor. An anchor is not its own ancestor, and an ancestor that lies inside
+  a declared root is judged by that root's rule, not this one (`prepare` builds
+  the set by walking `parentOf` from each anchor).
+  *Why it is safe.* Every anchor is canonical (`Root` is checked to be a real
+  directory chain, §5.1; the others are declared paths), so each ancestor is a
+  real directory by construction. A `stat`, `access`, `readlink`, `chdir` or
+  `O_DIRECTORY` open learns only the node's type and metadata, which the model
+  already treats as a non-input. A LISTING (`getdents`) still gives `host-read`:
+  the sibling names are host state. An absent probe of a CHILD of an ancestor
+  (`/home/go.work`, `/go.work`) is not an ancestor and stays refused, as does a
+  present read of a sibling file of an ancestor; reads beneath an ancestor
+  follow the existing rules.
+- **(b) Absence under the fresh tmpfs.** An ABSENT probe of a path strictly
+  inside the fresh `Home` or `Tmpdir` is allowed. *Why it is safe.* The tmpfs is
+  empty when the step starts, so an absent name is a constant unless the action
+  made it, and the trace knows when it did (`isCreated`, tested before
+  `observeHost`; a name the action made, removed and probed again is the
+  action's own). `underTmp` already excludes everything that could persist:
+  `fresh` refuses the checkout and anything under it, every ancestor of the
+  checkout (hosted runners put it under `$HOME`), and every declared root and
+  ancestor of one. A PRESENT look at something the action did not make stays
+  `host-read` (the state-preloaded void, §5.3, covers a pre-populated tmpfs).
+  The `absent-ok` entries `$HOME/.config` and `$HOME/.npmrc` become redundant and
+  are left in place.
+
+**Hardening (review of D39).**
+
+1. *The node must be a directory.* Only the checkout's own chain is verified to
+   be real directories (§5.1, `prepare`). An ancestor of a declared root or a
+   literal prefix could on some host be a symlink (`readlink` shows its target)
+   or a regular file (an open and read shows its content). Rule (a) therefore
+   also requires the node to be a directory on the post-run disk
+   (`c.lookup(abs).kind == KindDir`); anything else falls through to the
+   existing rules and gives `host-read`.
+2. *No extended attributes.* `getxattr`, `lgetxattr`, `listxattr`,
+   `llistxattr` (the parser tables them as metadata calls, as `stat`) are
+   excluded from rule (a): an attribute value is content, not type or stat
+   metadata. `classifier.xattrCall` is set per event and read only here; the
+   census observer is unchanged. A walk to a path made by an xattr call
+   observes its ancestors under that call, so it is refused conservatively.
+3. *Rule (b) depends on the sandbox.* An absent probe under `Home` or `Tmpdir`
+   is a constant only because the sandbox mounts a fresh tmpfs on both in every
+   recording mode (`internal/sandbox/plan.go`; with a real home, the checkout's
+   parent chain is recreated inside the tmpfs). It also needs every host path
+   the sandbox binds beneath them to be a root traced declares (image, tool or
+   state), because `fresh` excludes declared roots; the one other kind, a state
+   root the recorder derives from an anchor, is verified empty
+   (`stateRootEmpty`). `internal/record/sandboxroots_test.go` pins that the
+   sandbox's read-only roots beneath `Home` and `Tmpdir` are a subset of the
+   declared roots; comments at `observeHost` and `plan.go` name each other.
+
+Rule (a) covers looks only, never write-class calls: a rename, rmdir, unlink,
+chmod or utimensat of an ancestor stays `host-read` (D40 premise 4).
+
+Not changed: a listing of any ancestor, a child probe of an ancestor, a present
+uncreated name under `$HOME`/`TMPDIR`, and the rules of each declared root
+(a tool root not keyed, an unpinned state root, an image root's ctime check).
+`kiln:recorder` was 7 here (D40 made it 8). The differential fuzzer's oracle (`model_test.go`) has the
+same two rules, so a record with no reason is still checked against the model.
+Tests: `internal/traced/ancestor_test.go`.
+
+**Decision D41: metadata writes through an anonymous descriptor (real-build
+census, `fd-path` on dotnet's `fchmod(<fd>, mode) = 0`; `kiln:recorder` 8 to 9).**
+`fchmod`, `fchown`, `fsetxattr` and `fremovexattr` name their object by the -y
+annotation of the descriptor (`roleFdPath`), and an annotation that is not an
+absolute path was refused as `fd-path`. A pipe, a socket or an anonymous inode
+has the annotation `pipe:[N]`, `socket:[N]` or `anon_inode:NAME`, so csharp
+actions were refused.
+
+*The rule.* When the descriptor's annotation starts with one of those three
+prefixes (the same list the classifier's `anonymousFD` uses, now
+`trace.AnonymousFD`), the call yields no event and no error, whatever its result.
+A bare number (no annotation), any other non-absolute annotation and AT_FDCWD
+stay `fd-path`. An absolute annotation is unchanged.
+
+*Why it is safe.* The mode, owner or extended attributes of a pipe, a socket or
+an anonymous inode live outside every directory tree, so no file an action can
+read by path changes. The annotation comes from the kernel (strace's -y) and is
+the lexer's ANNOTATED token; a quoted string is another token kind, so a path
+containing `socket:[` cannot fake it (and `/x/socket:[1]` starts with `/`). Pass 2
+is shared, so both trace readers change together and the cross-check stays equal.
+
+**Decision D42: absent before made, metadata writes by path, and ephemeral
+device nodes (real-build census, `unstable-path:final-changed` in 31 actions;
+`kiln:recorder` 9 to 10).** The paths were C and C++ build outputs
+(`code/packages/{c,cpp}/*/_build/{gcc,clang}-<name>-tests`, and `_build` itself
+on newer images). The linker or driver `stat`s its output, gets ENOENT, creates
+it with a plain `O_CREAT` open (or `mkdir` for `_build`), then stats, chmods and
+runs it. A successful stat never enters the followed-final set (it is relaxed,
+section 5.5); the only stat that does is one that FAILED while the post-run disk
+shows the name present, and the earliest lookup then predates the creation, so
+`createdOnce` fails. Separately, a shell `>/dev/null` is an `O_CREAT|O_TRUNC`
+open, which logged a namespace change for `/dev/null` and raised `final-changed`
+and `own-overlap` on it.
+
+*Rule 1, absent before made (`absentBeforeMade`, `classify.go`; sub-code
+`absent-before-made`).* A call that FAILED with ENOENT on its final name `p`,
+where the post-run disk shows `p` present, is stable when ALL hold:
+
+- `p` is untracked (not a repository-tracked file) and was never a
+  `link()`/`linkat()` source or destination;
+- `p`'s change log is not empty and EVERY entry STARTED after the latest such
+  lookup COMPLETED (the interval of the lookups is the earliest start to the
+  latest completion; a split call carries its `<unfinished ...>` line as its
+  start, so this uses the same interval machinery as `unsafe`, never line
+  numbers compared naively);
+- the first entry is a creation that proves the action made the name: a clean
+  creation (mkdir, symlink, `O_EXCL` open) or an `O_CREAT` open keyed by the
+  descriptor's -y path;
+- no removal of `p` completed before that creation (`removedBeforeMade`).
+
+Otherwise it is judged by `createdOnce`, which is today's rule, so a verdict
+that was stable stays stable. Only calls whose ENOENT speaks for ONE final name
+feed the rule: `rename`, `link` (two names) and `execve` (the missing name may
+be the interpreter) never do. `classifier.callErrno` carries the errno.
+
+*Why it is safe.*
+
+1. The ENOENT says nothing was at the name when it was looked up, and the
+   absence is still recorded as an absent observation (`absentObs`, for the merge
+   job) by `observeResult`, exactly as before.
+2. It cannot have been a dangling symlink that the creating open then wrote
+   through: an `O_CREAT` open that followed a link is keyed by its -y path, which
+   is the link's TARGET, not this name, so an entry logged at `p` proves `p` was
+   not a link when that open ran. A link that was removed and replaced is a
+   removal before the creation, or a first entry that is not a creation.
+3. Every change-log entry starts after the lookup completed, so nothing the
+   action did to the name can have taken effect while the lookup ran, and the
+   first entry proves the action made the name: before it the name was absent
+   (or, for a plain `O_CREAT`, a regular file that is now the action's own).
+4. Every directory and link the walk crossed is a traversed component and keeps
+   the strict rule (`stable`), so the ENOENT cannot have come from a missing
+   ancestor that was created later.
+5. The lookups of calls that can write are judged again on their own interval
+   (the `wr` set), so a failed `chmod`/`open` that could not be placed still
+   voids the write set (W8) when the rule fails.
+
+*Rule 2, metadata writes by path (F3).* A SUCCESSFUL `chmod`, `fchmodat`,
+`fchmodat2`, `chown`, `fchownat`, `utimensat`, `utimes`, `futimesat`, `utime` or
+`setxattr` that follows its final name sets `classifier.relax` exactly as a
+successful stat does, so its followed final goes through the open-only rule
+(section 5.5) instead of `createdOnce`. This is the linker's post-link chmod.
+Under the open-only conditions (every log entry an `O_CREAT` open keyed by its
+-y path, the first completed before the lookup began, at most one trailing
+unlink that started after the lookup, no hard link) the name is provably the
+regular file the action made, so the metadata write lands on it. The write
+itself is still recorded and still observes a file the action did not make
+(`writes-tracked`, untracked observation), and the no-follow forms (`lchown`,
+`lsetxattr`, `AT_SYMLINK_NOFOLLOW`) are unchanged.
+
+*Rule 3, ephemeral device nodes.* `openResolved` does not log a namespace change
+for an `O_CREAT` open of a path that is under `/dev/` AND matches the host's
+ephemeral list (`ephemeralDevice`, `ops.go`; `/dev/null`). Both tests are
+needed: the list says the name is no input, `/dev/` says it is a device node and
+not a file a build could have made. Such a name is never created, replaced or
+read as content, so nothing the stability rules guard can depend on it; the write
+is still recorded.
+
+Tests: `internal/traced/absent_before_made_test.go`; the fuzzer model has four
+new bursts (stat ENOENT then create, `mkdir -p`, post-link chmod, dangling link
+replaced), and with the timing condition disabled `TestDifferentialSeeded` fails.
+
+**Decision D40: tmpfs containment (real-build census, `unstable-path` in about
+43 actions, all writes-incomplete; `kiln:recorder` 7 to 8).** Every high-count
+path was the action's own scratch file inside the fresh tmpfs: Go's build cache
+(`$HOME/.cache/go-build/HH/<hash>-a`, `-d`, and its directories),
+`$TMPDIR/go-buildN/...`, gcc's `$TMPDIR/ccXXXXXX.{o,s,res}` and clang's
+`name-hash.o`. Such files are re-created without `O_EXCL`, created and then
+removed, or renamed into place, which breaks the "created exactly once" and
+open-only rules of §5.1 and §5.5 (sub-codes `final-changed`, `own-overlap`,
+`component-changed`, `absent-changed`, `followed-absent-changed`,
+`removed-before-made`) and, through W8, voids the write set.
+
+*The rule.* If the action made no symbolic link inside the fresh `Home` or
+`Tmpdir`, AND made no directory rename or foreign rename there, the stability
+rules do not apply to paths inside it. Two whole-action flags say otherwise:
+
+- `classifier.tmpLinked`, set wherever a link is recorded at (or carried by
+  `rename`, `RENAME_EXCHANGE` or `link` to) a path that is `underTmp` or a tmp
+  root (`noteTmpLink`, `ops.go`);
+- `classifier.tmpMoved`, set by a SUCCESSFUL `rename`, `renameat`, `renameat2`
+  or `RENAME_EXCHANGE` with an endpoint under the tmpfs whose source is a
+  directory, or an object the action did not create (`noteTmpMove`). Renaming a
+  regular file the action created, into place (Go's build cache, gcc, clang),
+  sets nothing; an exchange needs BOTH names to be such files.
+
+`classifier.contained(p) = !tmpLinked && !tmpMoved && underTmp(p)`; `judge`
+skips a contained path at the top of each of its eight loops (`seen`,
+`seenAbsent`, `seenFinal`, `relFinal`, `relAbs`, `gone`, `seenFile`, and
+`ownSeen`, which tests the looked-up path). `stable` is unchanged (its one
+caller, the `seen` loop, tests `contained` first, so a version of `stable` that
+also tested the flags would be dead code). `checkStability` runs once after
+every event has been classified, so both flags are whole-action facts when any
+`judge` runs; with either set, every verdict is today's. `exec-unreadable:under-tmp`
+is unchanged. `fresh` also refuses the recorder's derived state roots
+(`~/.cargo/registry`, `~/.cargo/git`, `stateAnchors`), which are writable HOST
+binds passed as `traced.Config.HostBinds` (`record.DerivedStateRoots`); an
+absent probe of one is still allowed (they start empty), a present look is
+`host-read`.
+
+*Why it is safe.*
+
+1. Under the fresh tmpfs the classifier never asks the disk (`lookup`,
+   `resolve.go`): a name there is something the action made (`links`, `dirs`,
+   `created`) or it is absent. `fresh` excludes the checkout and its ancestors,
+   every declared root and every `HostBinds` path, and their ancestors, so no
+   host bind beneath `$HOME` is in the set.
+2. A lookup can leave the tmpfs by two routes only: a symbolic link located
+   inside it, or a directory that was renamed so that a path resolved physically
+   (`..`, a process's cwd) no longer matches the trace's TEXT. The trace keeps
+   each cwd as a text expression that a directory rename never updates, while
+   the kernel resolves `..` against the real directory; a renamed and re-created
+   name makes the stale text point at a different directory, with no link
+   anywhere. (Example: `chdir $HOME/a/b; rename $HOME/a/b $HOME/b2;
+   mkdir $HOME/a/b; unlink ../work/repo/f` reaches the bound checkout
+   `$HOME/work/repo/f` while the text says the action's own `$HOME/a/work/repo/f`.)
+   Hard links and renames from outside cannot exist: the scratch tmpfs are
+   separate mounts (and the checkout and each state root are binds), so they fail
+   with `EXDEV` (the fuzzer model says so).
+3. So with no link and no directory or foreign rename there, every component of
+   a path under the tmpfs is a directory the action made in place (or the tmpfs
+   root), and a path reaches the action's own files or nothing: neither an input
+   nor a repository write. `..` out of it is exact because no component moved.
+   Renaming a regular file the action created cannot change what any path
+   component or cwd is. A directory or foreign rename sets `tmpMoved` and the old
+   rules (a renamed directory has two changes and fails `createdOnce`) apply to
+   the whole action. Tests: `internal/traced/tmpmoved_test.go`; the fuzzer's
+   burst 13 and its `unsound` flag check that a path resolved from a stale cwd is
+   never recorded without a reason.
+4. Nothing but the action's own files is reachable under `Tmpdir` or `Home`
+   inside the sandbox, with ONE exception, the checkout's ancestor chain under
+   `Home`. When the checkout lies under `Home` (hosted runners), the sandbox
+   makes the chain (`$HOME/work/x`) as plain, writable directories of Home's
+   tmpfs and binds the checkout on top; only the anchors of read-only roots
+   are sealed. If the action could move that chain (`mv ~/work ~/y`), the
+   checkout root would be reachable at a name the action "created", and a
+   listing of it would count as own output. It cannot be moved unobserved:
+   D39 rule (a) covers LOOKS only, so a rename, rmdir, unlink, chmod, utimensat
+   or any other write-class call whose path is an ancestor is `host-read` (and
+   writes-incomplete), exactly as before D39 (`observeHost`, `!c.inWrite`;
+   `internal/traced/ancestor_write_test.go`; the fuzzer model now names the
+   checkout's parent and checks it). The staging directory `$TMPDIR/.kiln-newroot`
+   (`internal/sandbox/plan.go`, `StageDirName`, `StageRoot`) is built on the
+   STAGING tmpfs mounted on the OLD root's `Tmpdir` (`KindStageTmpfs`,
+   `KindStageDir`, `KindRootTmpfs`, `plan.go` in `Plan`); the step's own
+   `Tmpdir` is a second, fresh tmpfs mounted inside the new root
+   (`KindTmpfs`), and `pivot` detaches the old root (`MNT_DETACH`,
+   `sandbox_linux_amd64.go` `pivot`). The stage directory is therefore not visible
+   from inside. The read-only roots beneath `$HOME` are bound at declared paths
+   (`homeRoRoots`), which `fresh` excludes; the anchor tmpfs that hold them are
+   read-only, and a `$HOME/.cargo`-style anchor's missing parents are directories
+   the sandbox, not the action, made (a present look there is an ancestor node
+   under D39 rule (a) or a declared root's own rule).
+
+5. *Assumption: the parents of `Home` and `Tmpdir` are immutable.* `noteTmpMove`
+   ignores a rename with no endpoint under `Home` or `Tmpdir`, which is sound
+   only because nothing the action can rename sits above them: the new root
+   tmpfs is remounted read-only before the pivot (`KindSeal`, `plan.go` in
+   `Plan`, after the `KindProc` step), so `/`, `/home`, `/tmp` and every other
+   directory of it cannot be renamed, created in or removed from, and each
+   mount point (`Home`, `Tmpdir`, the checkout bind, the state roots) is
+   `EBUSY` to rename or remove. A future sandbox layout that made an ancestor
+   of `Home` writable (a writable root, or a `Home` that is a plain directory
+   of a writable tmpfs) would reopen a stale-text path, because a rename of
+   that ancestor would taint nothing. Such a change must extend `noteTmpMove`
+   first.
+
+The census records, for an unstable path, the op class of the look that ENTERED
+the lookup set that failed the rule (`noteLookupOp(set, abs)`), not the first
+look of the path in any set; this is census-only and the record bytes are
+unchanged (`TestCensusDoesNotChangeTheRecord`). `kiln:recorder` is 8. The
+differential fuzzer's model treats any tmp lookup as own-or-absent while no link
+was made in the tmpfs. Tests: `internal/traced/tmpcontain_test.go`.
+
 **One explicit image label.** The record workflow and every job that consumes
 its records use one explicit `ubuntu-NN.04` label, never `ubuntu-latest`: the
 host's image id is part of the weak key, so a floating label would change the
@@ -4008,7 +4297,11 @@ precondition provably holds; anything else stays on the strict rule.
   sandbox's tmpfs mount point, the same node in every run. Listing it is
   allowed too: it is the fresh tmpfs, whose contents are the same in every
   run apart from the mounts the sandbox itself makes. Only the node: the
-  checkout's other ancestors and everything under `$HOME` stay `host-read`.
+  checkout's other ancestors and everything under `$HOME` stay `host-read`,
+  **except as D39 now allows**: a present, non-listing look at a proper
+  ancestor of an anchor, and an absent probe strictly inside the fresh `$HOME`
+  or `TMPDIR`. A listing of an ancestor, a child of an ancestor and a present
+  uncreated name under `$HOME` still give `host-read`.
 
 **Tests.** A differential fuzzer runs an in-memory filesystem model with the
 true results and `-y` paths and gives the final state as the post-run disk. It

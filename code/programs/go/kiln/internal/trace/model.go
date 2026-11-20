@@ -1128,6 +1128,13 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		if f.cwd || !f.hasAnn {
 			return fail(reasonFDPath)
 		}
+		// D41: fchmod, fchown, fsetxattr and fremovexattr on a pipe, socket or
+		// anonymous inode change an object that lives in no directory, so no file
+		// readable by path changes.  No event, whatever the result.  A bare number
+		// or any other non-absolute annotation still falls through to fd-path.
+		if ent.role == roleFdPath && AnonymousFD(string(f.ann)) {
+			return nil, nil
+		}
 		ev.Path, r = fdPathText(f.ann, true)
 		if r != "" {
 			return fail(r)

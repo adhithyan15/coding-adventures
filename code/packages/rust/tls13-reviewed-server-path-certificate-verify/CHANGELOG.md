@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Exact decoded-leaf object composition between an authenticated retry
+  handshake `Certificate` proof and the sealed HTTPS DNS destination,
+  reviewed-path, path-derived RSA key, and server `CertificateVerify` verdict,
+  including byte-equal independently decoded substitution rejection.
 - Consuming reviewed-server-path `CertificateVerify`-to-Finished-key
   transcript continuity with a fixed server signature role, exact path-derived
   RSA key, retained proof graph, explicit detached Finished-key provenance,

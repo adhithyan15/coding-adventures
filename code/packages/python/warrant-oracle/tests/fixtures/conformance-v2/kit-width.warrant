@@ -1,0 +1,31 @@
+warrant width v1
+  model same(a: Bytes, b: Bytes) -> Bool = a == b
+  op eq_fixed<N: Nat>(a: Bytes<N>, b: Bytes<N>) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels eq_fixed:
+    a.contents secret
+    a.length public
+    b.contents secret
+    b.length public
+
+  input eq_fixed.a:
+    hostile
+    ensures no_panic, terminates
+  input eq_fixed.b:
+    hostile
+    ensures no_panic, terminates
+
+  bound eq_fixed:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+
+  claim fixed1:
+    forall a: Bytes<1>, b: Bytes<1>. eq_fixed<1>(a, b) == same(a, b)
+  claim ground:
+    eq_fixed<2>(b"0a0b", b"0a0b") == same(b"0a0b", b"0a0b")

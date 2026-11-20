@@ -88,6 +88,49 @@ func writeFollow(ev *trace.Event) bool {
 	return !flagSet(ev.Flags)["AT_SYMLINK_NOFOLLOW"]
 }
 
+// isPairCall says the syscall names TWO paths, so an ENOENT from it cannot be
+// attributed to either final name (rename, link and their at-forms).
+func isPairCall(sys string) bool {
+	switch sys {
+	case "rename", "renameat", "renameat2", "link", "linkat":
+		return true
+	}
+	return false
+}
+
+// metaWriteByPath says the call changes the mode, owner, times or extended
+// attributes of the file a PATH names, following a final symlink (chmod, chown,
+// utimensat, setxattr and their variants; the l* forms and AT_SYMLINK_NOFOLLOW
+// do not follow, and walk keeps their final name out of the followed set).
+// KILN04 D42: it is the linker's post-link chmod.
+func metaWriteByPath(sys string) bool {
+	switch sys {
+	case "chmod", "fchmodat", "fchmodat2", "chown", "fchownat",
+		"utimensat", "utimes", "futimesat", "utime", "setxattr":
+		return true
+	}
+	return false
+}
+
+// ephemeralDevice says abs is a device node the host declares ephemeral under
+// /dev (/dev/null, /dev/zero, /dev/tty): shell redirections open it with
+// O_CREAT|O_TRUNC, but it is never created, replaced or read as content, so no
+// namespace change is logged for it (KILN04 D42).  Only an EXACT, non-wildcard
+// ephemeral entry counts: /dev is a writable tmpfs, so a wildcard such as
+// "/dev/**" would also hide files the action creates there.  (/dev/fd/* is
+// virtual and never reaches this code.)
+func (c *classifier) ephemeralDevice(abs string) bool {
+	if !strings.HasPrefix(abs, "/dev/") {
+		return false
+	}
+	for _, pat := range c.cfg.ephemeral {
+		if pat == abs && !strings.ContainsAny(pat, "*?[") {
+			return true
+		}
+	}
+	return false
+}
+
 // open handles open, openat, openat2 and creat.
 //
 // The kernel's answer is the descriptor's -y annotation: the resolved path of
@@ -210,7 +253,7 @@ func (c *classifier) openResolved(abs string, f openFlags, creat, byRet bool) {
 		c.created[abs] = c.cur
 		delete(c.absent, abs)
 	}
-	if f.creat || creat {
+	if (f.creat || creat) && !c.ephemeralDevice(abs) {
 		// An O_CREAT open may have made the name: a namespace change.  Only
 		// with O_EXCL does the result prove it did.
 		c.nsChange(abs, f.creat && f.excl, byRet && !f.tmpfile && !f.nofollow && !f.path)
@@ -294,15 +337,9 @@ func procSameFile(abs, ret string) bool {
 }
 
 // anonymousFD says a descriptor's -y text names a pipe, socket or anonymous
-// inode: an object with no place in any directory.
-func anonymousFD(ret string) bool {
-	for _, p := range []string{"pipe:[", "socket:[", "anon_inode:"} {
-		if strings.HasPrefix(ret, p) {
-			return true
-		}
-	}
-	return false
-}
+// inode: an object with no place in any directory.  The definition lives in
+// the trace package (trace.AnonymousFD) so the trace model shares it.
+func anonymousFD(ret string) bool { return trace.AnonymousFD(ret) }
 
 // isFDLink matches /proc/self/fd/N and /dev/fd/N.
 func isFDLink(abs string) bool {
@@ -355,7 +392,11 @@ func (c *classifier) write(ev *trace.Event) {
 		e2.Path = stripSlashes(ev.Path)
 		ev = &e2
 	}
+	// A successful metadata write by path looks its final name up like a stat
+	// does, so the open-only rule may stand in for the post-run disk (D42).
+	c.relax = follow && ev.Result.OK && metaWriteByPath(ev.Syscall)
 	tg, ok := c.targetOf(ev, follow)
+	c.relax = false
 	if !ok {
 		c.incomplete = true // W1: a write call that could not be placed
 		return
@@ -383,6 +424,7 @@ func (c *classifier) write(ev *trace.Event) {
 		c.writePath(tg.abs)
 		c.markCreated(tg.abs, true)
 		c.links[tg.abs] = ev.Target
+		c.noteTmpLink(tg.abs)
 	case "unlink", "unlinkat", "rmdir":
 		c.observeSelf(tg.abs, true)
 		c.writePath(tg.abs)
@@ -439,6 +481,7 @@ func (c *classifier) rename(ev *trace.Event) {
 	c.writePath(src.abs)
 	c.writePath(dst.abs)
 	srcLink, srcIsLink := c.links[src.abs]
+	c.noteTmpMove(src.abs, dst.abs, flagSet(ev.Flags)["RENAME_EXCHANGE"])
 	if flagSet(ev.Flags)["RENAME_EXCHANGE"] {
 		// Both names existed before and still do: neither is created.
 		c.observeSelf(dst.abs, true)
@@ -453,9 +496,11 @@ func (c *classifier) rename(ev *trace.Event) {
 		delete(c.links, dst.abs)
 		if dstIsLink {
 			c.links[src.abs] = dstLink
+			c.noteTmpLink(src.abs)
 		}
 		if srcIsLink {
 			c.links[dst.abs] = srcLink
+			c.noteTmpLink(dst.abs)
 		}
 		return
 	}
@@ -464,6 +509,7 @@ func (c *classifier) rename(ev *trace.Event) {
 	c.markCreated(dst.abs, false)
 	if srcIsLink {
 		c.links[dst.abs] = srcLink
+		c.noteTmpLink(dst.abs)
 	}
 	if srcDir {
 		c.dirs[dst.abs] = true
@@ -521,6 +567,7 @@ func (c *classifier) link(ev *trace.Event) {
 	c.markCreated(dst.abs, false)
 	if srcIsLink {
 		c.links[dst.abs] = srcLink
+		c.noteTmpLink(dst.abs)
 	}
 }
 

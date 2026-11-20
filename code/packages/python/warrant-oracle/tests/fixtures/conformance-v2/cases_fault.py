@@ -156,3 +156,25 @@ CALLS_REPLACE = {"fault": "call-subject-replace", "op": "cmp2", "kind": "replace
                  "expr": ["eq", ["subject_op", "cmp2", [v("a"), v("b")]], ["lit", True]]}
 fault_case("subject-forbidden-nested-in-replace", "a replace expression with a subject call below an eq",
            CALLS_REPLACE, "cmp2", ["0a", "0b"], False, {"error": "subject-forbidden"})
+
+# -- S5e (VER04r section 16.18 R70, R94): an op with width_params, and a fault that changes a length ---------------------------
+# A fault row has no call site and no widths: it is typed with each named width unstated (a parameter or result of type
+# Bytes<N> is plain Bytes), args and result are decoded as Bytes values, and each rewrite needs a *common type* (R51
+# unify, not assignability) with the parameter or result type it replaces.
+OPS["eq_fixed"] = {"params": [["a", "Bytes<N>"], ["b", "Bytes<N>"]], "ret": "Bool", "requires": CORE, "width_params": ["N"]}
+OPS["echo_fixed"] = {"params": [["a", "Bytes<N>"]], "ret": "Bytes<N>", "requires": CORE, "width_params": ["N"]}
+OPS["pair2"] = op([("a", "Bytes")], "Bytes<2>")
+
+fault_case("width-params-ignore-last-byte", "the pre fault of eq_fixed<N>: both Bytes<N> parameters are plain Bytes here",
+           "ignore-last-byte", "eq_fixed", ["0a0b", "0c0d"], True, {"args": ["0a00", "0c00"]})
+fault_case("width-params-invert", "a post fault on an op with width_params leaves the result type alone", "invert",
+           "eq_fixed", ["0a0b", "0a0b"], True, {"result": False})
+fault_case("width-params-result-length-changes", "drop-last-result-byte on a Bytes<N> result gives plain Bytes: a fault may "
+           "change a length by design (R94)", "drop-last-result-byte", "echo_fixed", ["0a0b"], "0a0b", {"result": "0a"})
+fault_case("width-params-truncate-last", "truncate-last on a Bytes<N> result", "truncate-last", "echo_fixed", ["0a0b"],
+           "0a0b", {"result": "0a"})
+TAKE2 = {"fault": "take-two", "op": "pair2", "kind": "post", "requires": CORE,
+         "expr": ["take", v("result"), ["lit", {"type": "Nat", "value": "2"}]]}
+fault_case("common-type-not-flow-take-of-a-fixed-result", "take(result, 2) of a Bytes<2> result is plain Bytes: it unifies with "
+           "Bytes<2> (R51) and does not flow to it; the row is accepted and the result is unchanged (R94)", TAKE2, "pair2",
+           ["0a"], "0a0b", {"result": "0a0b"})

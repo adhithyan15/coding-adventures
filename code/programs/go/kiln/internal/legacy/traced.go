@@ -79,7 +79,30 @@ const TracedSemantics uint64 = 2
 // exact prefix of the recipe and the last one exited non-zero, that is no longer
 // `trace-incomplete:recipe-mismatch`.  The verdict for those actions changes, so
 // every weak key changes.
-const RecorderVersion = 6
+//
+// Version 7: the ancestor-node and fresh-tmpfs-absence rules (KILN04 D39).  A
+// present, non-listing look at a proper ancestor of the checkout, a declared
+// root, Home, Tmpdir or an ephemeral or absent-ok entry, and an absent probe
+// strictly inside the fresh Home or Tmpdir, are no longer `host-read`.  The
+// verdict for those actions changes, so every weak key changes.
+//
+// Version 8: tmpfs containment (KILN04 D40).  While the action has made no
+// symbolic link inside the fresh Home or Tmpdir, the stability rules do not
+// apply to paths there (its own scratch files are re-created, unlinked and
+// renamed freely), so such actions are no longer `trace-incomplete:unstable-path`
+// nor writes-incomplete.  The verdict changes, so every weak key changes.
+//
+// Version 9: descriptor metadata writes on anonymous objects (KILN04 D41).
+// fchmod, fchown, fsetxattr and fremovexattr on a descriptor whose -y text is
+// pipe:[..], socket:[..] or anon_inode:.. are no longer `trace-incomplete:fd-path`;
+// they record nothing.  The accept set grows, so every weak key changes.
+//
+// Version 10: absent-before-made (KILN04 D42).  A lookup that failed with ENOENT
+// on a name the action created afterwards, a metadata write by path (chmod,
+// chown, utimensat, setxattr) on a file the action made, and shell redirections
+// to /dev/null are no longer `trace-incomplete:unstable-path`.  The accept set
+// grows, so every weak key changes.
+const RecorderVersion = 10
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real

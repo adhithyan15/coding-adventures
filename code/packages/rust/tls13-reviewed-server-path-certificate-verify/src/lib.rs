@@ -48,6 +48,7 @@ use tls13_cipher_suite_policy::SelectedCipherSuite;
 use tls13_finished::{FinishedKey, FinishedRole, VerifiedFinished};
 use tls13_handshake::Tls13HandshakeType;
 use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightError};
+use tls13_retry_handshake_traffic_key_material_binding::BoundRetryServerCertificateLeaf;
 use tls13_rsa_pss_certificate_verify::Tls13RsaPssCertificateVerifyErrorKind;
 use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
 use tls13_signature_scheme_policy::AuthorizedSignatureScheme;
@@ -95,6 +96,21 @@ mod alternative_revocation_evidence_sealed {
     pub trait Sealed<'encoded> {
         fn server_certificate(&self) -> &X509Certificate<'encoded>;
     }
+}
+
+mod retry_reviewed_server_authentication_evidence_sealed {
+    use x509_certificate::X509Certificate;
+
+    pub trait Sealed<'encoded> {
+        fn server_certificate(&self) -> &X509Certificate<'encoded>;
+    }
+}
+
+/// Repository-sealed HTTPS destination, reviewed path, and server-signature
+/// evidence that may be joined to an authenticated retry Certificate leaf.
+pub trait RetryReviewedServerAuthenticationEvidence<'encoded>:
+    retry_reviewed_server_authentication_evidence_sealed::Sealed<'encoded>
+{
 }
 
 mod complete_revocation_certificate_verify_sealed {
@@ -1478,6 +1494,277 @@ impl fmt::Debug
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("VerifiedHttpsDnsDestinationReviewedServerPathCertificateVerify")
     }
+}
+
+impl<
+        'destination,
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    > retry_reviewed_server_authentication_evidence_sealed::Sealed<'target_encoded>
+    for VerifiedHttpsDnsDestinationReviewedServerPathCertificateVerify<
+        'destination,
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    >
+{
+    fn server_certificate(&self) -> &X509Certificate<'target_encoded> {
+        self.https_destination_reviewed_server_path()
+            .destination()
+            .certificate()
+    }
+}
+
+impl<
+        'destination,
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    > RetryReviewedServerAuthenticationEvidence<'target_encoded>
+    for VerifiedHttpsDnsDestinationReviewedServerPathCertificateVerify<
+        'destination,
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    >
+{
+}
+
+/// Stable payload-free failures while joining the authenticated retry leaf to
+/// complete HTTPS destination, reviewed-path, and signature evidence.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RetryReviewedServerAuthenticationBindingError {
+    /// The evidence graphs retain different decoded leaf objects.
+    LeafCertificateMismatch,
+}
+
+impl fmt::Display for RetryReviewedServerAuthenticationBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("authenticated retry leaf and reviewed server authentication leaf differ")
+    }
+}
+
+impl std::error::Error for RetryReviewedServerAuthenticationBindingError {}
+
+/// Authenticated retry Certificate leaf joined to reviewed server authentication.
+///
+/// This proof intentionally derives neither `Copy` nor `Clone`. It retains the
+/// complete ordered retry leaf proof beside sealed HTTPS destination, reviewed
+/// path, path-derived key, and server-signature evidence after exact decoded-
+/// leaf object identity succeeds.
+pub struct BoundRetryServerCertificateLeafToReviewedServerAuthentication<
+    'retry_leaf,
+    'binding,
+    'pending,
+    'message,
+    'retry_evidence,
+    'certificate,
+    'encoded,
+    'authentication,
+    Authentication: RetryReviewedServerAuthenticationEvidence<'encoded> + ?Sized,
+> {
+    retry_leaf: &'retry_leaf BoundRetryServerCertificateLeaf<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'certificate,
+        'encoded,
+    >,
+    authentication: &'authentication Authentication,
+}
+
+impl<
+        'retry_leaf,
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'certificate,
+        'encoded,
+        'authentication,
+        Authentication: RetryReviewedServerAuthenticationEvidence<'encoded> + ?Sized,
+    >
+    BoundRetryServerCertificateLeafToReviewedServerAuthentication<
+        'retry_leaf,
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'certificate,
+        'encoded,
+        'authentication,
+        Authentication,
+    >
+{
+    /// Borrow the complete authenticated ordered retry leaf proof.
+    #[must_use]
+    pub const fn retry_leaf(
+        &self,
+    ) -> &'retry_leaf BoundRetryServerCertificateLeaf<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'certificate,
+        'encoded,
+    > {
+        self.retry_leaf
+    }
+
+    /// Borrow the complete destination, reviewed-path, and signature evidence.
+    #[must_use]
+    pub const fn authentication(&self) -> &'authentication Authentication {
+        self.authentication
+    }
+}
+
+impl<'encoded, Authentication> fmt::Debug
+    for BoundRetryServerCertificateLeafToReviewedServerAuthentication<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        'encoded,
+        '_,
+        Authentication,
+    >
+where
+    Authentication: RetryReviewedServerAuthenticationEvidence<'encoded> + ?Sized,
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryServerCertificateLeafToReviewedServerAuthentication")
+            .field("retry_leaf", &"[REDACTED]")
+            .field("authentication", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Join an authenticated ordered retry Certificate leaf to sealed HTTPS DNS
+/// destination, reviewed server-path, path-derived key, and signature evidence.
+pub fn bind_retry_server_certificate_leaf_to_reviewed_server_authentication<
+    'retry_leaf,
+    'binding,
+    'pending,
+    'message,
+    'retry_evidence,
+    'certificate,
+    'encoded,
+    'authentication,
+    Authentication,
+>(
+    retry_leaf: &'retry_leaf BoundRetryServerCertificateLeaf<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'certificate,
+        'encoded,
+    >,
+    authentication: &'authentication Authentication,
+) -> Result<
+    BoundRetryServerCertificateLeafToReviewedServerAuthentication<
+        'retry_leaf,
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'certificate,
+        'encoded,
+        'authentication,
+        Authentication,
+    >,
+    RetryReviewedServerAuthenticationBindingError,
+>
+where
+    Authentication: RetryReviewedServerAuthenticationEvidence<'encoded> + ?Sized,
+{
+    let authentication_leaf =
+        retry_reviewed_server_authentication_evidence_sealed::Sealed::server_certificate(
+            authentication,
+        );
+    if !core::ptr::eq(retry_leaf.leaf_certificate(), authentication_leaf) {
+        return Err(RetryReviewedServerAuthenticationBindingError::LeafCertificateMismatch);
+    }
+    Ok(
+        BoundRetryServerCertificateLeafToReviewedServerAuthentication {
+            retry_leaf,
+            authentication,
+        },
+    )
 }
 
 /// Verify exact server CertificateVerify-to-Finished-key transcript continuity

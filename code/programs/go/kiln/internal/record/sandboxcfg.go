@@ -92,6 +92,51 @@ var stateAnchors = map[string][]string{
 	".cargo": {"registry", "git"},
 }
 
+// DerivedStateRoots are the writable host binds the recorder derives beneath
+// home from stateAnchors: for each read-only root that has an anchor (a root
+// deeper than a direct child of home), the anchor's state roots
+// (~/.cargo/registry, ~/.cargo/git).  They are host paths, not fresh tmpfs, so
+// the classifier must not treat them (or their ancestors) as the action's own
+// scratch space (traced.Config.HostBinds, KILN04 D40).  It does not look at the
+// disk: a root that turns out absent merely over-approximates.
+func DerivedStateRoots(home string, roots *legacy.HostRoots) []string {
+	if roots == nil {
+		return nil
+	}
+	var ro []string
+	for _, r := range roots.Roots {
+		if r.Kind != legacy.RootImage && r.Kind != legacy.RootTool {
+			continue
+		}
+		if p, err := expandRoot(r.Path, home); err == nil {
+			ro = append(ro, p)
+		}
+	}
+	return derivedFromRoots(home, ro)
+}
+
+// derivedFromRoots is the one derivation, shared with BuildSandboxConfig (which
+// passes the read-only roots it kept): for each root with an anchor beneath
+// home, the anchor's state roots from stateAnchors, sorted and de-duplicated.
+func derivedFromRoots(home string, ro []string) []string {
+	seen := map[string]bool{}
+	var out []string
+	for _, p := range ro {
+		anchor, beneath := sandbox.HomeAnchor(home, p)
+		if !beneath || anchor == p {
+			continue
+		}
+		for _, sub := range stateAnchors[anchor[len(home)+1:]] {
+			if s := path.Join(anchor, sub); !seen[s] {
+				seen[s] = true
+				out = append(out, s)
+			}
+		}
+	}
+	sort.Strings(out)
+	return out
+}
+
 // ConfigInput is everything the generator needs.
 type ConfigInput struct {
 	// Root is the checkout, Home the runner's $HOME, Tmpdir the step's TMPDIR
@@ -161,7 +206,6 @@ func BuildSandboxConfig(in ConfigInput) (*sandbox.Config, error) {
 
 	// Keep the roots that exist, and apply the rules for those beneath home.
 	var kept []string
-	anchors := map[string]bool{}
 	for _, p := range ro {
 		st, err := lstat(p)
 		if err != nil {
@@ -180,7 +224,6 @@ func BuildSandboxConfig(in ConfigInput) (*sandbox.Config, error) {
 					return nil, fmt.Errorf("sandbox config: ro root %q would anchor (seal read-only) all of %q, which holds state the recorder does not declare; "+
 						"add the anchor to the recorder's table with its state roots, or list a direct child of home", printable(p), printable(anchor))
 				}
-				anchors[anchor] = true
 			}
 		}
 		kept = append(kept, p)
@@ -188,12 +231,7 @@ func BuildSandboxConfig(in ConfigInput) (*sandbox.Config, error) {
 
 	// State roots: what each used anchor's toolchain writes, then the declared
 	// `state` roots of host-roots.json.
-	var state []string
-	for a := range anchors {
-		for _, sub := range stateAnchors[a[len(in.Home)+1:]] {
-			state = append(state, path.Join(a, sub))
-		}
-	}
+	state := derivedFromRoots(in.Home, kept)
 	state = append(state, declared...)
 	sort.Strings(state)
 	state = dedupe(state)

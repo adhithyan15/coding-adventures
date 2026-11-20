@@ -153,6 +153,10 @@ func FuzzLineDiff(f *testing.F) {
 		"1  clone3({flags=CLONE_VM|CLONE_THREAD, child_tid=0x1, parent_tid=0x1, exit_signal=0, stack=0x1, stack_size=0x1, tls=0x1} <unfinished ...>",
 		"1  <... clone3 resumed>, 88) = -1 ENOSYS (Function not implemented)",
 		"1  <... clone3 resumed>, 88) = -1 EPERM (Operation not permitted)", "1  clone3({flags=CLONE_VM}, 88) = ?",
+		"1  fchmod(3<socket:[1234]>, 0600) = 0", "1  fchmod(3<pipe:[7]>, 0600) = -1 EPERM (Operation not permitted)",
+		"1  fchown(3<anon_inode:[eventfd]>, 1, 2) = 0", "1  fsetxattr(3<socket:[1]>, \"user.x\", \"v\", 1, 0) = 0",
+		"1  fremovexattr(3<pipe:[1]>, \"user.x\") = 0", "1  fchmod(3, 0600) = 0", "1  fchmod(3<x>, 0600) = 0",
+		"1  fchmod(3</tmp/socket:[1]>, 0600) = 0", "1  fchmod(\"socket:[1]\", 0600) = 0",
 		"1  mount(0, 0) = -1 EPERM (Operation not permitted)", "1  mount(0, 0) = 0", "1  <... mount resumed>0) = -1 ENOENT (No such file or directory)",
 		"1  clone(child_stack=NULL, flags=CLONE_NEWUSER|SIGCHLD) = -1 EPERM (Operation not permitted)",
 	} {
@@ -194,6 +198,8 @@ func FuzzParseDiff(f *testing.F) {
 		f.Add(s)
 	}
 	for _, s := range []string{
+		"1  fchmod(3<socket:[1234]>, 0600) = 0\n1  fchown(3<pipe:[7]>, 1, 2) = -1 EPERM (Operation not permitted)\n1  +++ exited with 0 +++\n",
+		"1  fsetxattr(3<anon_inode:[eventfd]>, \"user.x\", \"v\", 1, 0) = 0\n1  fremovexattr(3<x>, \"user.x\") = 0\n",
 		"1  stat( <unfinished ...>\n1  <... stat resumed>\"a\", 0x1) = 0\n1  +++ exited with 0 +++\n",
 		"1  wait4(-1,  <unfinished ...>\n2  +++ exited with 0 +++\n1  <... wait4 resumed>[{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2\n1  +++ exited with 0 +++\n",
 		"1  ???( <unfinished ...>\n1  <... ??? resumed>) = ?\n1  +++ exited with 0 +++\n",

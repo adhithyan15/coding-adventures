@@ -6895,6 +6895,25 @@ Those repository-owned certificate-to-path, key, signature, hostname, trust,
 revocation, and transport compositions remain prerequisites, and concrete
 HTTPS and live-provider readiness remain unavailable.
 
+A stronger vertical composition can retain that authenticated retry leaf proof
+beside the complete HTTPS DNS destination, reviewed server path, and
+repository-owned `CertificateVerify` verdict only when both evidence graphs
+retain the same decoded leaf object. Byte equality alone is insufficient at
+this boundary: exact object identity prevents an independently decoded leaf
+from being substituted between the ordered record stream and the reviewed
+destination/path/signature graph. The admitted authentication evidence type is
+sealed by the repository, and the non-copyable result retains both complete
+inputs.
+
+This composition joins the authenticated Certificate bytes to the reviewed
+destination, path-derived RSA key, and server signature verdict, but it does
+not yet prove that the later ordered retry `CertificateVerify` callback used
+that same verdict, authenticate Finished, bind record epochs, enforce
+revocation freshness, perform I/O, authorize HTTP or OAuth transport, or open a
+network connection. Those ordered-transition, Finished, revocation, record,
+and transport compositions remain prerequisites, and concrete HTTPS and
+live-provider readiness remain unavailable.
+
 An authenticated ordered retry server `CertificateVerify` at the post-accept
 `ExpectFinished` position can now be decoded from the exact pending message and
 bound to the exact pre-message transcript snapshot. The helper decodes the

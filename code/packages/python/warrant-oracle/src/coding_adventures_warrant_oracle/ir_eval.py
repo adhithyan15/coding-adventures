@@ -746,6 +746,10 @@ class Program:
         statics: dict = {}
         if len(node) == 4:
             widths = node[3]
+            if not op.statics:
+                # VER04r 16.18 R70: the fourth element is present exactly when the op has width_params, so a
+                # list on an op without any (an empty one included) is refused.
+                raise OracleError("ir", "static widths on an op without width_params")
             if not isinstance(widths, list) or len(widths) != len(op.statics):
                 raise OracleError("ir", "wrong number of static widths")
             for sname, w in zip(op.statics, widths):
