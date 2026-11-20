@@ -256,6 +256,11 @@ type classifier struct {
 	// read after every event was classified (checkStability), and D40 turns
 	// the stability rules off for tmpfs paths while it is false.
 	tmpLinked bool
+	// tmpMoved says the action renamed something in the fresh tmpfs that
+	// could redirect a path without a link: a DIRECTORY, or an object it did
+	// not create (D40).  The trace keeps each process's cwd as TEXT, which a
+	// renamed directory leaves stale while the kernel resolves ".." physically.
+	tmpMoved bool
 	// incomplete is the negation of RawRecord.WritesComplete: set the moment
 	// something happens that could hide a write from Writes/TrackedWrites.
 	// Every setter says which trigger of KILN04 section 5.5 it is.
@@ -987,9 +992,10 @@ func (c *classifier) touchedFrom(abs string, from pos) bool {
 // can only say "reads-product" about what a trace reached by a stable path.
 func (c *classifier) stable(abs string, lookup pos) bool {
 	if c.underTmp(abs) {
-		// KILN04 D40: with no symbolic link in the fresh tmpfs, a name there is
-		// the action's own file or nothing, so there is nothing to vouch for.
-		return !c.tmpLinked || c.createdOnce(abs, lookup)
+		// The strict rule.  (D40's containment is decided by contained(), which
+		// the one caller, judge's seen loop, tests first: a path that reaches
+		// here is under the tmpfs of an action that is tainted.)
+		return c.createdOnce(abs, lookup)
 	}
 	if rel, ok := c.rel(abs); ok && rel != "" {
 		if c.cfg.Tree.Stat(rel).Kind != KindAbsent {
@@ -1009,7 +1015,28 @@ func (c *classifier) stable(abs string, lookup pos) bool {
 // build cache, gcc's ccXXXXXX.o and clang's temporaries, which are re-created
 // without O_EXCL, unlinked, or renamed into place, no longer void a run.
 func (c *classifier) contained(abs string) bool {
-	return !c.tmpLinked && c.underTmp(abs)
+	return !c.tmpLinked && !c.tmpMoved && c.underTmp(abs)
+}
+
+// noteTmpMove records a SUCCESSFUL rename (or exchange) of src to dst for D40.
+// Moving a regular file the action itself created, into place (Go's build
+// cache, an editor's temp file), cannot redirect any path.  Moving a directory
+// can: a process whose cwd text names it, or a name below it, then resolves
+// ".." to somewhere else, with no symbolic link involved.  Moving an object
+// the action did not create (a preloaded name, something it only opened) has
+// no history in the trace.  Either taints the whole action.  An exchange is
+// judged the same way for both names.
+func (c *classifier) noteTmpMove(src, dst string, exchange bool) {
+	if !c.underTmp(src) && !c.underTmp(dst) && !c.isTmpRoot(src) && !c.isTmpRoot(dst) {
+		return
+	}
+	ownFile := func(p string) bool {
+		_, made := c.created[p]
+		return made && !c.dirs[p]
+	}
+	if !ownFile(src) || (exchange && !ownFile(dst)) {
+		c.tmpMoved = true
+	}
 }
 
 // noteTmpLink records that a symbolic link now lives at abs, for D40.

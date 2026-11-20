@@ -119,6 +119,11 @@ type Config struct {
 	// HostRoots is the validated host-roots.json; nil means "no host root",
 	// so every out-of-repository read is a host-read.
 	HostRoots *legacy.HostRoots
+	// HostBinds are writable host paths the sandbox binds beneath Home that
+	// host-roots.json does not list (the recorder's derived state roots,
+	// ~/.cargo/registry and ~/.cargo/git).  They are not fresh tmpfs: fresh()
+	// refuses them and their ancestors, as it does a declared root (KILN04 D40).
+	HostBinds []string
 	// Pinned is the set of ecosystems in pinned.json.
 	Pinned map[string]bool
 	// Tools is the set of tool names in the weak key's tools section.

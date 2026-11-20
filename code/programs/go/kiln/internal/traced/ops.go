@@ -440,6 +440,7 @@ func (c *classifier) rename(ev *trace.Event) {
 	c.writePath(src.abs)
 	c.writePath(dst.abs)
 	srcLink, srcIsLink := c.links[src.abs]
+	c.noteTmpMove(src.abs, dst.abs, flagSet(ev.Flags)["RENAME_EXCHANGE"])
 	if flagSet(ev.Flags)["RENAME_EXCHANGE"] {
 		// Both names existed before and still do: neither is created.
 		c.observeSelf(dst.abs, true)

@@ -3924,33 +3924,62 @@ open-only rules of §5.1 and §5.5 (sub-codes `final-changed`, `own-overlap`,
 `component-changed`, `absent-changed`, `followed-absent-changed`,
 `removed-before-made`) and, through W8, voids the write set.
 
-*The rule.* If the action never made a symbolic link inside the fresh `Home` or
-`Tmpdir`, the stability rules do not apply to paths inside it. `classifier.tmpLinked`
-is set wherever a link is recorded at (or carried by `rename`, `RENAME_EXCHANGE`
-or `link` to) a path that is `underTmp` or a tmp root (`noteTmpLink`, `ops.go`).
-`classifier.contained(p) = !tmpLinked && underTmp(p)`; `judge` skips a contained
-path at the top of each of its eight loops (`seen`, `seenAbsent`, `seenFinal`,
-`relFinal`, `relAbs`, `gone`, `seenFile`, and `ownSeen`, which tests the looked-up
-path), and `stable` returns true for an `underTmp` path unless `tmpLinked`, in
-which case today's `createdOnce` still applies. `checkStability` runs once after
-every event has been classified, so `tmpLinked` is a whole-action fact when any
-`judge` runs; with one link anywhere under the tmpfs, every verdict is today's.
-`exec-unreadable:under-tmp` is unchanged.
+*The rule.* If the action made no symbolic link inside the fresh `Home` or
+`Tmpdir`, AND made no directory rename or foreign rename there, the stability
+rules do not apply to paths inside it. Two whole-action flags say otherwise:
+
+- `classifier.tmpLinked`, set wherever a link is recorded at (or carried by
+  `rename`, `RENAME_EXCHANGE` or `link` to) a path that is `underTmp` or a tmp
+  root (`noteTmpLink`, `ops.go`);
+- `classifier.tmpMoved`, set by a SUCCESSFUL `rename`, `renameat`, `renameat2`
+  or `RENAME_EXCHANGE` with an endpoint under the tmpfs whose source is a
+  directory, or an object the action did not create (`noteTmpMove`). Renaming a
+  regular file the action created, into place (Go's build cache, gcc, clang),
+  sets nothing; an exchange needs BOTH names to be such files.
+
+`classifier.contained(p) = !tmpLinked && !tmpMoved && underTmp(p)`; `judge`
+skips a contained path at the top of each of its eight loops (`seen`,
+`seenAbsent`, `seenFinal`, `relFinal`, `relAbs`, `gone`, `seenFile`, and
+`ownSeen`, which tests the looked-up path). `stable` is unchanged (its one
+caller, the `seen` loop, tests `contained` first, so a version of `stable` that
+also tested the flags would be dead code). `checkStability` runs once after
+every event has been classified, so both flags are whole-action facts when any
+`judge` runs; with either set, every verdict is today's. `exec-unreadable:under-tmp`
+is unchanged. `fresh` also refuses the recorder's derived state roots
+(`~/.cargo/registry`, `~/.cargo/git`, `stateAnchors`), which are writable HOST
+binds passed as `traced.Config.HostBinds` (`record.DerivedStateRoots`); an
+absent probe of one is still allowed (they start empty), a present look is
+`host-read`.
 
 *Why it is safe.*
 
 1. Under the fresh tmpfs the classifier never asks the disk (`lookup`,
    `resolve.go`): a name there is something the action made (`links`, `dirs`,
    `created`) or it is absent. `fresh` excludes the checkout and its ancestors,
-   every declared root and their ancestors, so nothing the sandbox binds beneath
-   `$HOME` is in the set.
-2. A lookup can leave the tmpfs only through a symbolic link located inside it.
+   every declared root and every `HostBinds` path, and their ancestors, so no
+   host bind beneath `$HOME` is in the set.
+2. A lookup can leave the tmpfs by two routes only: a symbolic link located
+   inside it, or a directory that was renamed so that a path resolved physically
+   (`..`, a process's cwd) no longer matches the trace's TEXT. The trace keeps
+   each cwd as a text expression that a directory rename never updates, while
+   the kernel resolves `..` against the real directory; a renamed and re-created
+   name makes the stale text point at a different directory, with no link
+   anywhere. (Example: `chdir $HOME/a/b; rename $HOME/a/b $HOME/b2;
+   mkdir $HOME/a/b; unlink ../work/repo/f` reaches the bound checkout
+   `$HOME/work/repo/f` while the text says the action's own `$HOME/a/work/repo/f`.)
    Hard links and renames from outside cannot exist: the scratch tmpfs are
    separate mounts (and the checkout and each state root are binds), so they fail
-   with `EXDEV` (the fuzzer model now says so).
-3. So with no link there, a path under the tmpfs reaches the action's own files
-   or nothing: neither an input nor a repository write. `..` out of it is exact,
-   because no component is a link.
+   with `EXDEV` (the fuzzer model says so).
+3. So with no link and no directory or foreign rename there, every component of
+   a path under the tmpfs is a directory the action made in place (or the tmpfs
+   root), and a path reaches the action's own files or nothing: neither an input
+   nor a repository write. `..` out of it is exact because no component moved.
+   Renaming a regular file the action created cannot change what any path
+   component or cwd is. A directory or foreign rename sets `tmpMoved` and the old
+   rules (a renamed directory has two changes and fails `createdOnce`) apply to
+   the whole action. Tests: `internal/traced/tmpmoved_test.go`; the fuzzer's
+   burst 13 and its `unsound` flag check that a path resolved from a stale cwd is
+   never recorded without a reason.
 4. Nothing but the action's own files is reachable under `Tmpdir` or `Home`
    inside the sandbox, with ONE exception, the checkout's ancestor chain under
    `Home`. When the checkout lies under `Home` (hosted runners), the sandbox

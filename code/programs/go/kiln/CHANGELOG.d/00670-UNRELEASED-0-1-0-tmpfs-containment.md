@@ -23,7 +23,20 @@
   `host-read` and writes-incomplete again. Without it, with the checkout under
   `Home`, `mv ~/work ~/y` then a listing of `~/y/x` was an unrecorded read of the
   checkout root once D40 skipped the tmpfs.
-- Spec: KILN04 D40 (premise 4 names the checkout's ancestor chain) and a D39 line.
+- Review fix (security, HIGH): a directory rename in the tmpfs leaves the trace's
+  cwd TEXT stale while the kernel resolves `..` physically, so a path could reach
+  the bound checkout with no symlink. `classifier.tmpMoved` (`noteTmpMove`) is set
+  by a successful rename or exchange under the tmpfs whose source is a directory
+  or an object the action did not create; `contained` is false when it is set.
+  Renaming a file the action created (Go cache, gcc) stays contained. Regression
+  tests in `tmpmoved_test.go` (the PoC sequence), a fuzzer burst for the stale cwd.
+- Review fix (LOW): the recorder's derived state roots (`~/.cargo/registry`,
+  `~/.cargo/git`) are writable host binds, not fresh tmpfs. `traced.Config.HostBinds`
+  (from `record.DerivedStateRoots`) makes `fresh()` refuse them and their
+  ancestors; an absent probe is still allowed.
+- `stable` is back to its original body: the `!c.tmpLinked ||` test was dead code
+  (its only caller, the `seen` loop, tests `contained` first).
+- Spec: KILN04 D40 (premises 2 and 3 rewritten, premise 4 names the checkout's ancestor chain) and a D39 line.
 
 ### Added
 

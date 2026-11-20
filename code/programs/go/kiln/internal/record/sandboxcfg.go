@@ -92,6 +92,42 @@ var stateAnchors = map[string][]string{
 	".cargo": {"registry", "git"},
 }
 
+// DerivedStateRoots are the writable host binds the recorder derives beneath
+// home from stateAnchors: for each read-only root that has an anchor (a root
+// deeper than a direct child of home), the anchor's state roots
+// (~/.cargo/registry, ~/.cargo/git).  They are host paths, not fresh tmpfs, so
+// the classifier must not treat them (or their ancestors) as the action's own
+// scratch space (traced.Config.HostBinds, KILN04 D40).  It does not look at the
+// disk: a root that turns out absent merely over-approximates.
+func DerivedStateRoots(home string, roots *legacy.HostRoots) []string {
+	if roots == nil {
+		return nil
+	}
+	seen := map[string]bool{}
+	var out []string
+	for _, r := range roots.Roots {
+		if r.Kind != legacy.RootImage && r.Kind != legacy.RootTool {
+			continue
+		}
+		p, err := expandRoot(r.Path, home)
+		if err != nil {
+			continue
+		}
+		anchor, beneath := sandbox.HomeAnchor(home, p)
+		if !beneath || anchor == p {
+			continue
+		}
+		for _, sub := range stateAnchors[anchor[len(home)+1:]] {
+			if s := path.Join(anchor, sub); !seen[s] {
+				seen[s] = true
+				out = append(out, s)
+			}
+		}
+	}
+	sort.Strings(out)
+	return out
+}
+
 // ConfigInput is everything the generator needs.
 type ConfigInput struct {
 	// Root is the checkout, Home the runner's $HOME, Tmpdir the step's TMPDIR

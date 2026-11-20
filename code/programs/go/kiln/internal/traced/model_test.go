@@ -94,6 +94,13 @@ type model struct {
 	// tmpLinked: a symbolic link was made (or moved) inside the fresh Home or
 	// Tmpdir.  KILN04 D40: until one is, a lookup there is own-or-absent.
 	tmpLinked bool
+	// staleCwd holds the cwd texts a rename left pointing at a directory that is
+	// no longer there (the kernel resolves ".." physically, the trace keeps
+	// text).  unsound says a path was resolved relative to one: nothing the
+	// model says about such a lookup is trustworthy, so the classifier must have
+	// refused (KILN04 D40).
+	staleCwd map[string]bool
+	unsound  bool
 }
 
 func (m *model) mkpath(abs string, n *mnode) {
@@ -172,6 +179,9 @@ func (m *model) resolve(p, from string, follow bool) mres {
 	trailing := strings.HasSuffix(p, "/")
 	if trailing {
 		follow = true
+	}
+	if !strings.HasPrefix(p, "/") && m.staleCwd[from] {
+		m.unsound = true
 	}
 	var stack []frame
 	if strings.HasPrefix(p, "/") {
@@ -482,7 +492,10 @@ func (m *model) doRenameLink(pid int, sys, a, b string, exchange bool) []trace.E
 		errno = "EEXIST"
 	case sys == "rename":
 		switch {
-		case m.underCwd(src.final):
+		case m.underCwd(src.final) && !(m.freshAbsent(src.final) && m.freshAbsent(dst.final)):
+			// A directory under a cwd is not renamed, except inside the fresh
+			// tmpfs: there the model lets it happen so it can check that the
+			// classifier refuses the stale cwd TEXT that results (KILN04 D40).
 			errno = "EBUSY"
 		case src.node.kind == KindDir && (dst.final == src.final || strings.HasPrefix(dst.final, src.final+"/")):
 			errno = "EINVAL"
@@ -512,6 +525,16 @@ func (m *model) doRenameLink(pid int, sys, a, b string, exchange bool) []trace.E
 	if errno == "" {
 		m.add(touch{path: src.final, write: true, wonly: true})
 		m.add(touch{path: dst.final, write: true, wonly: true})
+		if sys == "rename" && !exchange {
+			for _, q := range m.procs {
+				if q.cwdPath != "" && (q.cwdPath == src.final || strings.HasPrefix(q.cwdPath, src.final+"/")) {
+					if m.staleCwd == nil {
+						m.staleCwd = map[string]bool{}
+					}
+					m.staleCwd[q.cwdPath] = true
+				}
+			}
+		}
 		if (src.node.kind == KindLink && m.freshAbsent(dst.final)) || (exchange && dst.node.kind == KindLink && m.freshAbsent(src.final)) {
 			m.tmpLinked = true
 		}
@@ -934,6 +957,11 @@ var bursts = [][]burstOp{
 	{{100, "/t.o", false}, {12, "/t.o", false}, {5, "/t.o", false}},
 	{{100, "/code/p/a/leftlnk", true}, {12, "/code/p/a/leftlnk", true}, {5, "/code/p/a/leftlnk", true}},
 	{{101, "/code/p/a/leftlnk", true}, {12, "/code/p/a/leftlnk", true}, {5, "/code/p/a/leftlnk", true}},
+	// 13: the stale cwd (KILN04 D40).  mkdir o; chdir o; rename o away; mkdir o
+	// again; then a path relative to the cwd text, which now names a different
+	// directory from the one the kernel's cwd is in.  A suffix that starts with
+	// "~" is a literal relative path, not joined to the base.
+	{{0, "/o", false}, {14, "/o", false}, {2, "/o", false}, {0, "/o", false}, {12, "~../u.o", false}, {12, "~../o/x", false}},
 }
 
 // perturbations are the operations a burst may be followed by, aimed at the
@@ -1099,6 +1127,9 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		base := m.burstBase(byte(next()))
 		alt := base + "/u.o"
 		full := func(op burstOp) string {
+			if strings.HasPrefix(op.suffix, "~") {
+				return op.suffix[1:]
+			}
 			if op.inRoot {
 				return m.root + op.suffix
 			}
@@ -1306,6 +1337,9 @@ func runDifferential(t *testing.T, data []byte) {
 		}
 		if len(rec.Reasons) > 0 {
 			return // a record with a reason is never trusted: always safe
+		}
+		if m.unsound {
+			t.Fatalf("a path was resolved from a stale cwd (a directory renamed under it), but the record has no reason\nroot %s home %s tmp %s", m.root, m.home, m.tmp)
 		}
 		check(t, m, tree, rec)
 	}

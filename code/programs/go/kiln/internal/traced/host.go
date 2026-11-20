@@ -231,6 +231,16 @@ func (c *classifier) observeHost(abs string, present, listing bool) {
 		c.observeRoot(r, abs, present)
 		return
 	}
+	// A derived state root (Config.HostBinds) starts empty, like a declared one
+	// (the recorder verifies it, stateRootEmpty), so an absent probe is a
+	// constant; a present look at one is host state and falls through.
+	if !present {
+		for _, b := range c.cfg.HostBinds {
+			if covers(b, abs) {
+				return
+			}
+		}
+	}
 	// An ancestor of an anchor, looked at without listing it and without
 	// reading extended attributes, shows its type and stat metadata only.  It
 	// must really be a DIRECTORY on the disk: prepare verifies only the
