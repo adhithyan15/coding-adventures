@@ -33,14 +33,15 @@ use tls13_record_protection::{open_tls13_record, seal_tls13_record, Tls13Plainte
 use tls13_record_protection_state::{RecordProtectionState, RecordProtectionStateError};
 use tls13_retry_handshake_traffic_key_material_binding::{
     bind_retry_handshake_traffic_key_material, bind_retry_ordered_server_flight_transcript,
-    bind_retry_server_certificate_verify_signature, open_retry_handshake_record,
-    seal_retry_handshake_record, HandshakeTrafficSender, RetryCertificateRequestValidationError,
-    RetryHandshakePlaintext, RetryHandshakeRecordBindingError,
-    RetryHandshakeRecordProtectionStateBindingError, RetryHandshakeRecordProtectionStateIssuer,
-    RetryHandshakeRecordReassembler, RetryHandshakeRecordReassemblyError,
-    RetryHandshakeTrafficKeyMaterialBindingError, RetryOrderedServerFlight,
-    RetryOrderedServerFlightError, RetryOrderedServerFlightTranscriptBindingError,
-    RetryOrderedServerTranscriptAdvanceError, RetryServerCertificateValidationError,
+    bind_retry_server_certificate_leaf, bind_retry_server_certificate_verify_signature,
+    open_retry_handshake_record, seal_retry_handshake_record, HandshakeTrafficSender,
+    RetryCertificateRequestValidationError, RetryHandshakePlaintext,
+    RetryHandshakeRecordBindingError, RetryHandshakeRecordProtectionStateBindingError,
+    RetryHandshakeRecordProtectionStateIssuer, RetryHandshakeRecordReassembler,
+    RetryHandshakeRecordReassemblyError, RetryHandshakeTrafficKeyMaterialBindingError,
+    RetryOrderedServerFlight, RetryOrderedServerFlightError,
+    RetryOrderedServerFlightTranscriptBindingError, RetryOrderedServerTranscriptAdvanceError,
+    RetryServerCertificateLeafBindingError, RetryServerCertificateValidationError,
     RetryServerCertificateVerifySignatureBindingError, RetryServerCertificateVerifyValidationError,
 };
 use tls13_retry_handshake_traffic_secrets_binding::{
@@ -68,6 +69,7 @@ use tls13_traffic_key_material::{
 };
 use tls13_transcript::{TranscriptErrorKind, TranscriptPolicy};
 use tls13_x25519_key_share_binding::derive_message_bound_retry_x25519_shared_secret;
+use x509_certificate::decode_x509_certificate;
 use x509_rsa_public_key::{validate_rsa_public_key, RsaPublicKeyPolicy, ValidatedRsaPublicKey};
 use x509_subject_public_key_info::decode_x509_subject_public_key_info;
 
@@ -164,6 +166,23 @@ fn decode_hex(hexadecimal: &str) -> Vec<u8> {
         .iter()
         .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).unwrap(), 16).unwrap())
         .collect()
+}
+
+fn decode_fixture_hex(hexadecimal: &str) -> Vec<u8> {
+    let compact: String = hexadecimal
+        .chars()
+        .filter(|character| !character.is_ascii_whitespace())
+        .collect();
+    decode_hex(&compact)
+}
+
+fn encode_u24(value: usize) -> [u8; 3] {
+    assert!(value <= 0x00ff_ffff);
+    [
+        ((value >> 16) & 0xff) as u8,
+        ((value >> 8) & 0xff) as u8,
+        (value & 0xff) as u8,
+    ]
 }
 
 fn validated_rsa_key(encoded: &[u8]) -> ValidatedRsaPublicKey<'_> {
@@ -1657,6 +1676,14 @@ fn validates_exact_main_handshake_certificate_request_and_signature_list() {
 fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
     let mut x25519_output = [0xa5; 32];
     with_retry_x25519_messages(CipherSuite::TlsAes128GcmSha256, |messages| {
+        let leaf_der = decode_fixture_hex(include_str!(
+            "../../tls13-reviewed-server-path-certificate-verify/tests/fixtures/apple_www_2026_11_11_leaf.der.hex"
+        ));
+        let leaf = decode_x509_certificate(&leaf_der, Asn1Limits::default()).unwrap();
+        let other_der = decode_fixture_hex(include_str!(
+            "../../x509-ocsp-reviewed-server-revocation-binding/tests/fixtures/apple-ev-intermediate.der.hex"
+        ));
+        let other = decode_x509_certificate(&other_der, Asn1Limits::default()).unwrap();
         let secret = derive_message_bound_retry_x25519_shared_secret(
             messages,
             &ALICE_PRIVATE,
@@ -1688,10 +1715,10 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
                 Tls13HandshakeType::EncryptedExtensions,
                 Tls13HandshakeType::Certificate,
             ],
-            32,
+            4_096,
         )
         .unwrap();
-        let mut reassembly_storage = [0xa5; 64];
+        let mut reassembly_storage = [0xa5; 4_096];
         let reassembler = RetryHandshakeRecordReassembler::new(
             server_state,
             handshake_policy,
@@ -1708,16 +1735,33 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
         let mut peer_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
         let peer_material = derive_traffic_key_material(&server_prk, &mut peer_storage).unwrap();
         let mut peer_state = RecordProtectionState::new(peer_material).unwrap();
-        let certificate_body = [0, 0, 0, 12, 0, 0, 3, 0x30, 1, 0, 0, 4, 0, 5, 0, 0];
-        let mut plaintext = [0_u8; 26];
-        plaintext[..6].copy_from_slice(&[8, 0, 0, 2, 0, 0]);
-        plaintext[6..10].copy_from_slice(&[11, 0, 0, 16]);
-        plaintext[10..].copy_from_slice(&certificate_body);
-        let ciphertext_policy = Tls13CiphertextPolicy::new(1_024).unwrap();
+        let encoded_extensions = [0, 4, 0, 5, 0, 0];
+        let other_encoded_extensions = [0, 0];
+        let certificate_list_length = 3
+            + leaf_der.len()
+            + encoded_extensions.len()
+            + 3
+            + other_der.len()
+            + other_encoded_extensions.len();
+        let mut certificate_body = Vec::with_capacity(4 + certificate_list_length);
+        certificate_body.push(0);
+        certificate_body.extend_from_slice(&encode_u24(certificate_list_length));
+        certificate_body.extend_from_slice(&encode_u24(leaf_der.len()));
+        certificate_body.extend_from_slice(&leaf_der);
+        certificate_body.extend_from_slice(&encoded_extensions);
+        certificate_body.extend_from_slice(&encode_u24(other_der.len()));
+        certificate_body.extend_from_slice(&other_der);
+        certificate_body.extend_from_slice(&other_encoded_extensions);
+        let mut plaintext = Vec::with_capacity(10 + certificate_body.len());
+        plaintext.extend_from_slice(&[8, 0, 0, 2, 0, 0]);
+        plaintext.push(11);
+        plaintext.extend_from_slice(&encode_u24(certificate_body.len()));
+        plaintext.extend_from_slice(&certificate_body);
+        let ciphertext_policy = Tls13CiphertextPolicy::new(8_192).unwrap();
         let inner_policy =
-            Tls13InnerPlaintextPolicy::new(&[TlsContentType::Handshake], 1_008).unwrap();
-        let mut scratch = [0xa5; 64];
-        let mut wire = [0xcc; 96];
+            Tls13InnerPlaintextPolicy::new(&[TlsContentType::Handshake], 8_176).unwrap();
+        let mut scratch = [0xa5; 4_096];
+        let mut wire = [0xcc; 4_096];
         let used = seal_tls13_record(
             &mut peer_state,
             &ciphertext_policy,
@@ -1727,7 +1771,7 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
             &mut wire,
         )
         .unwrap();
-        let mut opened = [0x5a; 64];
+        let mut opened = [0x5a; 4_096];
         let mut validated_certificate = false;
         let result = bound
             .open_accept_and_advance(
@@ -1747,7 +1791,14 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
                     Tls13HandshakeType::Certificate => {
                         let redacted_structure_error = pending
                             .validate_server_certificate(
-                                Tls13CertificateMessageLimits::new(15, 0, 32, 2, 16, 16),
+                                Tls13CertificateMessageLimits::new(
+                                    certificate_body.len() - 1,
+                                    0,
+                                    certificate_list_length,
+                                    3,
+                                    leaf_der.len(),
+                                    16,
+                                ),
                                 ExtensionBlockLimits::new(16, 4).unwrap(),
                             )
                             .unwrap_err();
@@ -1768,7 +1819,14 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
                         assert!(!error_debug.contains("48"));
                         let proof = pending
                             .validate_server_certificate(
-                                Tls13CertificateMessageLimits::new(64, 0, 32, 2, 16, 16),
+                                Tls13CertificateMessageLimits::new(
+                                    certificate_body.len(),
+                                    0,
+                                    certificate_list_length,
+                                    3,
+                                    leaf_der.len(),
+                                    16,
+                                ),
                                 ExtensionBlockLimits::new(16, 4).unwrap(),
                             )
                             .unwrap();
@@ -1777,12 +1835,38 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
                             pending.transcript_snapshot(),
                         );
                         let certificate = proof.certificate();
-                        assert_eq!(certificate.encoded(), certificate_body);
+                        assert_eq!(certificate.encoded(), certificate_body.as_slice());
                         assert!(certificate.request_context().is_empty());
-                        assert_eq!(certificate.certificate_count(), 1);
-                        let entry = certificate.entries().next().unwrap();
-                        assert_eq!(entry.certificate_data(), [0x30, 1, 0]);
-                        assert_eq!(entry.encoded_extensions(), [0, 4, 0, 5, 0, 0]);
+                        assert_eq!(certificate.certificate_count(), 2);
+                        let mut entries = certificate.entries();
+                        let first_entry = entries.next().unwrap();
+                        assert_eq!(first_entry.certificate_data(), leaf_der.as_slice());
+                        assert_eq!(first_entry.encoded_extensions(), encoded_extensions);
+                        let second_entry = entries.next().unwrap();
+                        assert_eq!(second_entry.certificate_data(), other_der.as_slice());
+                        assert_eq!(
+                            second_entry.encoded_extensions(),
+                            other_encoded_extensions
+                        );
+                        assert!(entries.next().is_none());
+                        let leaf_mismatch = bind_retry_server_certificate_leaf(&proof, &other)
+                            .unwrap_err();
+                        assert_eq!(
+                            leaf_mismatch,
+                            RetryServerCertificateLeafBindingError::LeafCertificateMismatch
+                        );
+                        let leaf_proof =
+                            bind_retry_server_certificate_leaf(&proof, &leaf).unwrap();
+                        assert!(std::ptr::eq(
+                            leaf_proof.server_certificate(),
+                            &proof,
+                        ));
+                        assert!(std::ptr::eq(leaf_proof.leaf_certificate(), &leaf));
+                        assert_eq!(leaf_proof.leaf_certificate().encoded(), leaf_der);
+                        let leaf_debug = format!("{leaf_proof:?}");
+                        assert!(leaf_debug.contains("[RETAINED]"));
+                        assert!(leaf_debug.contains("[REDACTED]"));
+                        assert!(!leaf_debug.contains("apple"));
                         let debug = format!("{proof:?}");
                         assert!(debug.contains("[RETAINED]"));
                         assert!(debug.contains("[REDACTED]"));
@@ -2931,6 +3015,14 @@ fn errors_are_stable_and_payload_free() {
         "TLS 1.3 server Certificate entry extensions are invalid"
     );
     assert!(invalid_entry_extensions.source().is_some());
+
+    let leaf_mismatch = RetryServerCertificateLeafBindingError::LeafCertificateMismatch;
+    assert_eq!(
+        leaf_mismatch.to_string(),
+        "TLS 1.3 retry server Certificate leaf and decoded X.509 certificate differ"
+    );
+    assert!(leaf_mismatch.source().is_none());
+    assert!(!format!("{leaf_mismatch:?}").contains("apple"));
 
     let invalid_certificate_verify = RetryServerCertificateVerifyValidationError::Structure(
         CertificateVerifyMessageError::SignatureLengthMismatch,

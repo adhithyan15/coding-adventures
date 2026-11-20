@@ -28,6 +28,7 @@ tls13-signature-scheme-list = { path = "../tls13-signature-scheme-list" }
 tls13-signature-scheme-policy = { path = "../tls13-signature-scheme-policy" }
 tls13-traffic-key-material = { path = "../tls13-traffic-key-material" }
 tls13-transcript = { path = "../tls13-transcript" }
+x509-certificate = { path = "../x509-certificate" }
 
 [dev-dependencies]
 der-asn1 = { path = "../der-asn1" }

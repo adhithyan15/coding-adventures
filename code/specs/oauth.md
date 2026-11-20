@@ -6876,6 +6876,25 @@ Those repository-owned certificate, signature, trust, revocation, and transport
 compositions remain prerequisites, and concrete HTTPS and live-provider
 readiness remain unavailable.
 
+The exact first entry of that authenticated ordered retry server `Certificate`
+proof can now be bound to one caller-supplied certificate decoded by the
+repository-owned X.509 primitive. The binding requires byte-for-byte equality
+between the entry's retained `certificate_data` vector and the decoded
+certificate's complete retained DER document. Success returns a non-copyable
+proof that retains both the complete ordered server-certificate proof and the
+exact decoded X.509 certificate; no detached, re-encoded, or merely equivalent
+certificate can cross this boundary.
+
+This proof establishes exact authenticated leaf-byte identity and
+repository-owned structural decoding evidence only. It does not yet bind that
+leaf to a reviewed path or requested destination, extract or authorize its
+public key, authenticate CertificateVerify or Finished, establish trust,
+verify a hostname, load a trust root, enforce revocation, select later epochs,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those repository-owned certificate-to-path, key, signature, hostname, trust,
+revocation, and transport compositions remain prerequisites, and concrete
+HTTPS and live-provider readiness remain unavailable.
+
 An authenticated ordered retry server `CertificateVerify` at the post-accept
 `ExpectFinished` position can now be decoded from the exact pending message and
 bound to the exact pre-message transcript snapshot. The helper decodes the

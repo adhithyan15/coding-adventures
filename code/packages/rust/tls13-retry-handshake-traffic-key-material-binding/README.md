@@ -111,6 +111,14 @@ context. The non-cloneable proof retains the pending pre-message snapshot and
 the exact nonempty certificate message only after every entry passes. It does
 not parse X.509 bytes or semantically interpret entry extension payloads.
 
+The first exact entry can then be joined to one certificate decoded by the
+repository-owned X.509 primitive. The join requires byte-for-byte equality
+between the entry's retained certificate bytes and the decoded certificate's
+complete retained DER document. Its non-cloneable proof retains both complete
+inputs, so a detached, re-encoded, or merely equivalent certificate cannot be
+substituted. The package does not itself decode the certificate or connect this
+leaf proof to a reviewed path, destination, public key, or signature verdict.
+
 When the pending message is server `CertificateVerify`, the handler can decode
 its exact authenticated body at the post-accept `ExpectFinished` position. The
 helper decodes the retained final ClientHello's exact `signature_algorithms`
@@ -141,10 +149,11 @@ and server `Certificate` framing and entry-policy checks above, plus exact
 server `CertificateVerify` framing, offer membership, algorithm policy, and
 repository-owned RSA-PSS authentication when the caller supplies matching
 public-key evidence; the authorization bit is otherwise not body validation.
-This package does not parse X.509, access credentials, sign, authenticate
-Finished, bind the verified key to the preceding Certificate or a reviewed
-leaf/path, establish trust, verify hostnames, enforce revocation, perform I/O,
-authorize HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
+This package does not decode X.509, access credentials, sign, authenticate
+Finished, bind the decoded leaf to a reviewed path or destination, bind the
+verified key to the preceding Certificate, establish trust, verify hostnames,
+enforce revocation, perform I/O, authorize HTTP or OAuth, or provide TLS,
+HTTPS, or live-provider readiness.
 
 ## Verification
 
