@@ -52,7 +52,8 @@ def _ids(category: str) -> list[str]:
 # The fixture family grows by categories (VER04r section 11, [D40]).  Every
 # category this lane knows must have a row; a row it does not know is accepted
 # only when its name starts with ``v2-``, and then only digest-checked, never
-# run (this runner does not read v2 yet).  Rows are ordered: the four v1 rows
+# run here (the v2 categories this runner implements are run by
+# ``test_v2_conformance.py``, slice S6a).  Rows are ordered: the four v1 rows
 # in their present order, then the v2 rows, the known ones in the kit's order.
 V2_ORDER = ("v2-value", "v2-arith", "v2-ir", "v2-domain", "v2-chunk", "v2-fault", "v2-binding")
 
