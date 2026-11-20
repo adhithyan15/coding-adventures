@@ -103,9 +103,24 @@ def test_the_script_check_mode_passes_and_detects_a_difference(tmp_path, built):
         module.HERE = saved
 
 
-def test_the_script_runs_as_a_program():
-    done = subprocess.run([sys.executable, str(MAKER), "--check"], capture_output=True, text=True)
-    assert done.returncode == 0, done.stderr
+def test_the_script_is_a_program_whose_exit_status_is_the_check():
+    # The BUILD line runs ``make_data_eval.py --check`` as a program (about 30 s: it derives the whole fixture), so a
+    # test does not derive it a third time; it checks the entry point and, on a tiny argument, the program's plumbing.
+    text = MAKER.read_text(encoding="utf-8")
+    assert text.rstrip().endswith('if __name__ == "__main__":\n    raise SystemExit(run(sys.argv[1:]))')
+    done = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import sys; g={'__name__': 'maker', '__file__': sys.argv[1]}; "
+            "exec(compile(open(sys.argv[1]).read(), sys.argv[1], 'exec'), g); "
+            "g['build']=lambda: {}; sys.exit(g['run'](['--check']))",
+            str(MAKER),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert done.returncode == 0 and "ok: 0 files" in done.stdout, done.stderr
 
 
 def test_the_dumps_are_canonical_json_with_their_schema():
@@ -342,7 +357,7 @@ def test_the_refusal_dump_pins_the_data_fault_signatures_and_the_typing_of_r67_a
     assert "field-zero/a-record-with-no-numeric-field" in names and "wrong-ctor/is-not-in-the-registry" in names
     typing = {t["name"]: t for t in refusals["typing"]}
     assert typing["r67/a-tuple-payload-with-a-plain-bytes-zero"]["accepted"]
-    assert typing["r67/a-tuple-payload-with-a-plain-bytes-zero"]["type"] == "Result<(Bytes,Bool),?>"
+    assert typing["r67/a-tuple-payload-with-a-plain-bytes-zero"]["type"] == "Result<(Bytes,Bool),E>"  # R98b: holes filled, never `?`
     assert typing["r67/a-record-field-that-is-a-tuple-with-a-plain-bytes-zero"]["accepted"]
     assert not typing["r67/a-one-byte-literal-in-a-bytes-2-component"].get("accepted")
     assert "no common type" in typing["r67/a-one-byte-literal-in-a-bytes-2-component"]["message"]
@@ -354,4 +369,7 @@ def test_the_refusal_dump_pins_the_data_fault_signatures_and_the_typing_of_r67_a
         "r67/a-one-byte-literal-in-a-record-field-of-bytes-2",
         "r94/a-bool-against-a-declared-bytes-result",
         "r94/a-bytes-against-a-declared-u8-result",
+        "r94/a-bool-ok-in-the-else-branch-of-a-u8-result",
+        "r94/a-bool-ok-in-the-second-match-arm-of-a-u8-result",
     ]
+    assert all("?" not in t["type"] for t in refusals["typing"] if t.get("accepted"))

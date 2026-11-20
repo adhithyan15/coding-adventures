@@ -2,7 +2,7 @@
 
 VER04r section 13 (row S11c-1), 16.14 ([D46] to [D57], R27 to R39), 16.16 ([D60], R51 to R61), 16.17 (R67), 16.19 (R94), 8.2 and
 Appendix A.2. No version bump ([D52]): the generator is not changed (slice S11c-2 mirrors this one) and no committed fixture, kit
-file or dump byte moves.
+file or corpus dump byte moves. **Review fixes (owner decision D71 and the findings of the S11c-1 review) are listed at the end.**
 
 ### Added
 
@@ -24,7 +24,7 @@ file or dump byte moves.
   `RippleCarryResult` (both adders), `AluResult`, `tri_state`'s `["none","U8"]` and every row of the adopter table; `build(X)` (a tuple or a record is
   always built, a leaf is the first parameter of exactly its type else its zero, a variant has no zero); `requires` computed from the built tree
   (`ir.tuple` for a `tuple` node, `ir.data` for `ctor` or `none`, `ir.core` for a bare `var` or `lit`). The registry holds eighteen names
-  (`wrong-ctor` is not one, [D49]). `fault_row(..., records=...)` takes the document's record table.
+  (`wrong-ctor` is not one, [D49]). `fault_row(..., data_names, records)` takes the document's tables (see D71 below).
 - **The oracle's `ir.data` fault gate opens** (`faults.IMPLEMENTED` gains `ir.data`): a `{"deferred": "ir.data"}` witness is no longer derivable and
   `verify-v2` rejects one (negative tests, the S10c pattern; `emit-v2` and `verify-v2` on a synthetic data document, in `tests/test_data_eval.py`).
 - **R67 and R94, the first comparison of a fault row's type with a declared type** (`ir_eval.Program.compile(expected=...)`, `faults._typed`,
@@ -52,21 +52,44 @@ file or dump byte moves.
   by it as before and no kit byte moves.
 - `emit.py`: `levels_implemented` is `["ir.core", "ir.data", "ir.fixed", "ir.tuple"]`.
 
+### Review fixes (after the first review; owner decision D71)
+
+1. **D71: `scalar-faults-v1` regenerated, the data-blind bridge removed.** The row `missing-error/an-option-payload` (`Result<Option<U8>,E>`) leaves
+   `make_scalar_faults.py`, and `scalar_faults_v1.oracle-refusals.json` is regenerated: **52 rows, not 53**; the other three files and every other byte of
+   it are unchanged (`a-variant-payload` keeps its bytes). A variant leaf with no parameter of its type is refused everywhere with exactly
+   `missing-error has no template for this payload type`; the `data-eval-v1` refusals dump uses that wording (it read `a variant has no zero value`).
+   `_missing_error_core` and the `records=None` mode are gone: `fault_row` has one rule and is always given the document's records and variants
+   (`make_scalar_faults.py` passes them; the kit's `instantiate_fault` now passes the case's record fields and variant names, so `field-zero` and the
+   record and `Option` payloads of `missing-error` work there, which S11d needs). A nested tuple component is always built (8.2, R31 (a)).
+   `code/packages/rust/warrant-corpus-gen/tests/scalar_faults_parity.rs`: the literal `53` is `52` and its comment says why (the generator still
+   refuses the shape until S11c-2; nothing else in the file changed). The `scalar-faults-v1` README states the count. This answers open questions 1 and 2.
+2. **The typing rows no longer pin a placeholder.** `ir_eval._merge_result` takes payload and error type each from whichever arm knows it, so the
+   committed `typing` rows read `Result<(Bytes,Bool),E>`, not `Result<(Bytes,Bool),?>` (8.2: "the common type takes the other arm's error type").
+   The `data-eval-v1` README no longer calls these rows "oracle-only": every committed file is part of the byte parity S11c-2 owes.
+3. **R94 in every branch (a leniency closed).** The comparison saw only the first `Result` branch, so `["if", ["is_err", R], R, ["ok", ["lit", true]]]` on
+   `Result<U8,E>` and a `match` whose second arm is `ok(true)` were accepted. A fault compile now compares every branch of an `if` and every arm of a
+   `match` on the value spine with the declared type (R98a; an `if` in a condition or an operand is typed by R51 alone, tested) (`Program.branch_check`, set by `faults._typed`; a document's own models keep the branch-to-branch rule), then the whole.
+   Two probes are tests and two rows of the typing dump (`r94/a-bool-ok-in-the-else-branch...`, `r94/a-bool-ok-in-the-second-match-arm...`: the dump has 11
+   typing rows, 5 accepted and 6 refused). No row a template writes changes.
+4. **TFV depth (R99).** `tfv.value` counts the `L` and `M` containers open inside one field value (a variant is two: `L2` and `L<k>`; an `Option`,
+   a tuple, a record and a `Result` one each), starting at depth 0, and refuses the 65th with the code `limit` (VER04j 4.9, W0709, TF01 2.2). **The line's `R<n>`
+   does not count** (it is the record header, not a list or a map; every TFV reader starts a field value at depth 0). Tests: 64 accepted and 65 refused for a
+   chain of records and for one of variants, and the review's 40-link variant chain (80 containers, once unchecked). **Open question 5's reasoning was wrong**:
+   named types chain without adding depth to a *type expression* (a name is depth 0, so the 16-level limit says nothing), yet each link nests one container, or
+   two for a variant, in the line.
+5. **Nits.** The key `controls_shipped` is **kept**: the older committed dumps (`tuple-forms-v1`, `fixed-eval-v1`, `scalar-faults-v1`) use it, so the data
+   README says what it means here (the gate before this slice). The fallback refusal of `tfv.value` and `value_json` names `ir.data` for a record or variant
+   whose spec was not given (`ir.list` only for a `List`). `test_the_script_runs_as_a_program` no longer derives the fixture a third time (the BUILD line runs
+   it): it checks the entry point and the plumbing on an empty build. The kit has one common-type rule: S5e's `_require_common_types` (built on
+   `lower._unify`, no tuple widening) is deleted in favour of `faults._fault_unify` after merging origin/main, and `analyze_data=` is kept.
+
 ### Open questions for the owner (the spec is silent or in conflict; the most conservative reading was taken)
 
-1. **`scalar-faults-v1` pins an `Option` payload of `missing-error` as refused.** Its committed refusals dump (and S11f-1's unit test) has the row
-   `an-option-payload`, `op f(a: U8) -> Result<Option<U8>,E>`, refused with `fault: missing-error has no template for this payload type`, while [D50] and
-   R31 (c) give that payload a template (`["none","U8"]`, the `tri_state` row) and say no committed dump pins a refusal of it. No committed byte may move, so
-   `fault_row` keeps the rule before `ir.data` when it is **not told the document's records** (`records=None`, which is how that script and the kit call
-   it); `derive` always passes them. The follow-up is a decision: regenerate that dump without the row (and the generator's S11f-2 parity with it), or keep
-   the data-blind call as a documented mode.
-2. **Nested tuple components.** Section 8.2 says a tuple or a record is "always built, never taken whole from a parameter of its type", and `build` recurses; the
-   older rule took a *nested* tuple component from a parameter of exactly its type and refused one with none (`test_a_component_with_no_zero...`). The data-aware
-   rule follows the table (a nested tuple is built); the data-blind rule keeps the old behaviour. No committed row has a nested tuple.
+(1, 2 and 5 are answered above by D71 and the TFV fix.)
+
 3. **R94 and tuples.** R94 lists the unify cases (`Nat`/`Int`, `Bytes`, `Option`, `Result`) and no tuple rule, and R51 makes a tuple invariant; section 8.2's
    `off-by-one-consumed` paragraph says `(T1,Int,..)` and `(T1,Nat,..)` have a common type, and the committed wasm-leb128 fixture has that row. The comparison
    therefore allows exactly one tuple-component widening (`Nat`/`Int`) and nothing else (R67's second test needs `(Bytes<1>,Bool)` against `(Bytes<2>,Bool)`
    refused).
 4. **The consumer-side descriptor check** (`domains.descriptor_size`) does not validate a variant's constructor names (grammar, duplicates, the 64-constructor limit)
    or a result's `errs` (R72). Nothing was added: the generator's check is not specified to do more. The domains dump pins what the oracle does today.
-5. **TFV nesting depth** (VER04j 4.9, W0709: 64 containers) is not checked for a data value; a 16-deep type cannot exceed it (at most 3 containers per level).

@@ -214,8 +214,8 @@ def _build(ty, op: OpSig, records: dict, variants: frozenset) -> list:
     param = next((n for n, t in op.params if t == ty), None)
     if param is not None:
         return _var(param)
-    if ty.head in variants:
-        raise _fail("a variant has no zero value")
+    if ty.head in variants:  # no parameter of its type, and a variant has no zero (its default is wrong-ctor's decision)
+        raise _fail("missing-error has no template for this payload type")
     return _zero_option(ty) if ty.head == "Option" else _zero(ty)
 
 
@@ -237,36 +237,7 @@ def _levels_of(expr: list) -> list:
     return sorted(found) or [CORE]
 
 
-def _missing_error_core(op: OpSig) -> tuple:
-    """The ``missing-error`` forms that need no ``ir.data`` (slices S3c, S10t and S11f-1): ``Bytes``, tuple and scalar.
-
-    This is what :func:`fault_row` writes when it is **not told** what records and variants the document declares
-    (``records=None``: the older callers, the kit's ``instantiate_fault`` and the committed
-    ``scalar-faults-v1`` refusals dump, whose rows are byte-pinned).  A tuple component is the first parameter of
-    exactly its type, else its zero literal (``Bool``, ``Nat``, a fixed-width type, ``Bytes``), and a component of
-    any other type has no zero; an ``Option``, a variant or a record payload has no template.  Nothing here changed
-    in S11c-1: the data-aware rule is :func:`_missing_error`.
-    """
-    payload = op.ret.args[0]
-    if payload.head == "()":
-        parts = []
-        for component in payload.args:
-            param = next((n for n, t in op.params if t == component), None)
-            parts.append(_var(param) if param is not None else _zero(component))
-        expr = ["if", ["is_err", _var("result")], ["ok", ["tuple", parts]], _var("result")]
-        return "replace", [TUPLE_LEVEL], expr
-    if payload.head == "Bytes":
-        params = _bytes_params(op)
-        leaf = _var(params[0]) if params else _zero(payload)
-    elif payload.head == "Bool" or payload.head == "Nat" or payload.head in FIXED:
-        param = next((n for n, t in op.params if t == payload), None)
-        leaf = _var(param) if param is not None else _zero(payload)
-    else:
-        raise _fail("missing-error has no template for this payload type")
-    return "replace", [CORE], ["if", ["is_err", _var("result")], ["ok", leaf], _var("result")]
-
-
-def _missing_error(op: OpSig, errors, records: dict | None = None, variants: frozenset = frozenset()) -> tuple:
+def _missing_error(op: OpSig, errors, records: dict, variants: frozenset) -> tuple:
     """``if is_err(result) then Ok(<payload>) else result`` (VER04r 8.2, the one rule for every payload).
 
     ``P = build(X)`` for the payload type ``X`` of the ``Result`` (:func:`_build`):
@@ -288,15 +259,14 @@ def _missing_error(op: OpSig, errors, records: dict | None = None, variants: fro
     harness (this takes a parameter where the harness returns the first element of the payload's domain, so
     ``Ok(a)`` for ``Result<U8,E>`` where the harness has ``Ok(0)``) is the one [D50] records.
 
-    ``records`` is the document's record table (:attr:`.lower.Spec.records`); ``None`` means the caller did not say
-    what the document declares and selects :func:`_missing_error_core`, the rule before ``ir.data`` (module
-    docstring and the open question in the S11c-1 report: the committed ``scalar-faults-v1`` refusals dump still
-    pins an ``Option`` payload as refused, and no committed byte may move).
+    ``records`` is the document's record table (:attr:`.lower.Spec.records`) and ``variants`` the names of its
+    variants: there is **one rule**, no call that does not say what the document declares (owner decision D71: the
+    data-blind bridge S11c-1 first shipped, which refused an ``Option`` payload for the sake of the committed
+    ``scalar-faults-v1`` refusals dump, is gone and that dump's row with it).  A variant leaf with no parameter of
+    its type is refused everywhere with ``missing-error has no template for this payload type``.
     """
     if op.ret.head != "Result":
         raise _fail("missing-error needs a Result result")
-    if records is None:
-        return _missing_error_core(op)
     payload = op.ret.args[0]
     if payload.head == "Bytes":
         params = _bytes_params(op)
@@ -516,7 +486,7 @@ def _ok_as_err(op: OpSig, errors) -> tuple:
     return "post", [TUPLE_LEVEL], expr
 
 
-def _field_zero(op: OpSig, errors, records: dict | None = None, variants: frozenset = frozenset()) -> tuple:
+def _field_zero(op: OpSig, errors, records: dict, variants: frozenset) -> tuple:
     """``field-zero`` [D49, R32]: the first numeric field of a record result becomes ``0`` (8.2, exact JSON).
 
     The fault of VER04j 4.8 as the Rust harness applies it (``fault_field_zero``): inside an ``Ok`` for a
@@ -538,8 +508,6 @@ def _field_zero(op: OpSig, errors, records: dict | None = None, variants: frozen
     the type of field ``k``, so ``F`` has exactly the type ``N``.  An ``Err`` is returned unchanged.  Cost (a check):
     ``2n`` bare, ``2n + 3`` in the ``Ok`` form.
     """
-    if records is None:
-        raise _fail("field-zero needs the document's records")
     ret = op.ret
     inside = ret.head == "Result"
     target = ret.args[0] if inside else ret
@@ -677,14 +645,16 @@ def fault_row(
     needed by ``ok-as-err``; ``data_names`` are the record and variant names, for ``ir.data``.  ``records`` maps a
     record name to its ``[(field, type), ..]`` (:attr:`.lower.Spec.records`), which ``field-zero`` and the record
     payload of ``missing-error`` read (S11c-1); a name in ``data_names`` that is not in ``records`` is a variant.
-    With ``records=None`` (a caller that does not say what the document declares) ``field-zero`` has no template and
-    ``missing-error`` is the rule before ``ir.data`` (:func:`_missing_error_core`).
+    A caller always passes the document's tables (D71: there is no data-blind call); with none given the document
+    declares no record and no variant (``records=None`` is ``{}``), so ``field-zero`` has no template and a
+    ``missing-error`` payload is built from tuples and scalars only.
     """
     builder = REGISTRY.get(fault)
     if builder is None:
         raise _fail("an unknown fault name")
     if fault in _DATA_BUILDERS:
-        variants = frozenset(data_names) - frozenset(records or ())
+        records = records or {}
+        variants = frozenset(data_names) - frozenset(records)
         kind, levels, payload = builder(op, errors, records, variants)
     else:
         kind, levels, payload = builder(op, errors)
@@ -807,8 +777,22 @@ def _typed(prog: Program, op: OpSig, expr: list, tenv: dict, declared: A.Ty | No
 
     ``declared`` is ``None`` for a ``pre`` rewrite that names no parameter of the op: there is nothing to compare, and
     what such a row means is not this check's business (it was compiled, and never compared, before S11c-1).
+
+    The comparison is made on **every branch**, not only on the whole: an ``if`` merges the types of its branches
+    (:func:`.ir_eval._common`) and a branch ``ok(true)`` beside ``result`` would otherwise pass for ``Result<U8,E>``,
+    so each branch of an ``if`` and each arm of a ``match`` is compared with the declared type as it is compiled
+    (:attr:`.ir_eval.Program.branch_check`), and then the whole expression is.
     """
-    compiled = prog.compile(expr, tenv, False, expected=declared)
+
+    def check(got: A.Ty, want: A.Ty) -> None:
+        if _fault_unify(got, want) is None:
+            raise _fail(f"the {what} of a fault on `{op.name}` has no common type with the declared type")
+
+    prog.branch_check = check
+    try:
+        compiled = prog.compile(expr, tenv, False, expected=declared)
+    finally:
+        prog.branch_check = None
     if declared is not None and _fault_unify(compiled.ty, declared) is None:
         raise _fail(f"the {what} of a fault on `{op.name}` has no common type with the declared type")
     return compiled
@@ -821,7 +805,8 @@ def _compile_fault(prog: Program, op: OpSig, fault: dict, statics: dict):
     16.19 R94), which nothing did before: a ``pre`` rewrite with the type of the parameter it rewrites, a ``post`` or
     ``replace`` expression with the op's result, each as the *expected* type of its position (so a zero literal has
     the type it is the zero of, R67) and each by the common-type rule of R94 (:func:`_fault_unify`), never by "flows
-    to".  A pair with no common type is a ``generation`` error (code ``fault``); no committed row has one.
+    to", and in every branch of an ``if`` and arm of a ``match`` (:func:`_typed`).  A pair with no common type is a
+    ``generation`` error (code ``fault``); no committed row has one.
     """
     tenv = {p: _substitute(t, statics) for p, t in op.params}
     if fault["kind"] == "pre":
@@ -897,7 +882,7 @@ def derive_controls(
     profile lines (section 16.6 item 2); the three claim lists keep suite order.
 
     ``implemented`` is the **fault-evaluation gate** (the levels whose faults the witness search
-    evaluates).  The shipped value is :data:`IMPLEMENTED` (``ir.core``, ``ir.fixed``, ``ir.tuple``): a fault whose ``requires``
+    evaluates).  The shipped value is :data:`IMPLEMENTED` (``ir.core``, ``ir.fixed``, ``ir.tuple``, ``ir.data``): a fault whose ``requires``
     names any other level is emitted as data and each of its candidate claims that has a stand-in is
     ``{"claim": C, "deferred": L}`` with ``L`` the first level of the fault's ``requires`` that is not
     implemented (a fault needing two unimplemented levels names the first in sorted order).  The

@@ -123,13 +123,18 @@ Records, variants (with and without a payload), `Option<T>` as a real type, the 
 * **R67 and R94, the first comparison of a fault row's type with a declared type**: a fault expression is compiled with the op's
   declared result (or the parameter) as its *expected* type, so the zero literal of a component declared plain `Bytes` is a `Bytes`,
   and must have a **common type** with it (not "flows to"; a tuple is invariant but for the `Nat`/`Int` widening of
-  `off-by-one-consumed`). Every fault row is typed once in `derive_controls`, even when no claim can stand in for the subject.
-* **`fault_row(..., records=...)`**: the document's record table. A caller that passes none (`records=None`: the conformance kit and the
-  committed `scalar-faults-v1` refusals dump) gets the rule before `ir.data` (an `Option` payload of `missing-error` is still refused
-  there, and `field-zero` has no template), so no committed byte moves (an open question for the owner, in the CHANGELOG shard 00270).
+  `off-by-one-consumed`), **in every branch of an `if` and every arm of a `match`**, not only the first. Every fault row is typed once in
+  `derive_controls`, even when no claim can stand in for the subject. The common type of two `Result`s takes the error type from whichever arm
+  knows it (`Result<(Bytes,Bool),E>`, never the placeholder `?` of a bare `ok`).
+* **`fault_row(..., data_names, records)`** has **one rule** (owner decision D71): it is always given the document's records and variants
+  (`derive`, `make_scalar_faults.py` and the conformance kit's `instantiate_fault` all pass them), there is no data-blind call, and a variant
+  leaf with no parameter of its type is refused everywhere with `missing-error has no template for this payload type`. The committed
+  `scalar-faults-v1` refusals dump lost its `an-option-payload` row (53 rows became 52; `Result<Option<U8>,E>` has a template now) and was
+  regenerated; `a-variant-payload` keeps its bytes. A nested tuple component is always built (8.2, R31 (a)).
+* **TFV depth**: `tfv.value` counts every container it writes (`L`, `M`, `R`) and refuses over 64 with the code `limit` (VER04j 4.9, W0709).
 * **The committed dumps** (`tests/fixtures/data-eval-v1/`, `make_data_eval.py`, a new directory on purpose): the lowering, evaluation,
   fault, value, domain and refusal dumps of a synthetic data document with a suite on each stream header, which the generator's slice
-  S11c-2 must reproduce byte for byte. Its README records the oracle's derive time for both adopters (logic-gates about 60 s (60.1 to 61.6 s measured),
+  S11c-2 must reproduce byte for byte (every file: the typing rows of the refusals dump too). Its README records the oracle's derive time for both adopters (logic-gates about 60 s (60.1 to 61.6 s measured),
   3,770,123 cases; arithmetic about 36 s, 2,655,437 cases) and arithmetic's largest `ir_cost` (1,524, under the default 2,000).
 
 ### `ir.tuple`: tuples and `match` on a `Result` (slice S10t-1)

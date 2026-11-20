@@ -17,10 +17,10 @@ what the oracle computes from it. The Rust generator's slice S11c-2 must reprodu
 | `data_eval_v1.profile` | the `corpus.profile`: `budget 1048576`, `chunk_size 16384`, and 12 `fault` lines (below) |
 | `data_eval_v1.oracle-lowering.json` | `lowering_dump`, schema `warrant-lowering-parity-v1`, with the corpus `types` rows (R59) |
 | `data_eval_v1.oracle-evaluation.json` | schema `warrant-evaluation-parity-v1` under the gate this slice opens: per suite the levels, the stream header, the resolved descriptors with the `demoted` paths, `cases`, `discarded`, `expected_calls`, `wraps`, `ir_cost`, every chunk line and digest, the 23 examples (JSON and TFV) and `cases.tfv`; 68 suites, 1,839,544 cases, 169 chunk lines |
-| `data_eval_v1.oracle-faults.json` | schema `warrant-fault-parity-v1`: the 12 fault rows (section 8.2's JSON) and the 12 controls under two gates, `controls_shipped` with `gate_shipped` (`ir.core`, `ir.fixed`, `ir.tuple`: the gate **before** this slice, where every `ir.data` fault is `deferred`) and `controls_gate_on` with `gate_on` (those and `ir.data`: the witness search runs) |
+| `data_eval_v1.oracle-faults.json` | schema `warrant-fault-parity-v1`: the 12 fault rows (section 8.2's JSON) and the 12 controls under two gates, `controls_shipped` with `gate_shipped` (the key keeps the name the older fault dumps give it, `tuple-forms-v1`, `fixed-eval-v1` and `scalar-faults-v1`, which are committed and not renamed; here it is the gate **before** this slice, not what ships: `ir.core`, `ir.fixed`, `ir.tuple`, where every `ir.data` fault is `deferred`) and `controls_gate_on` with `gate_on` (those and `ir.data`: the witness search runs) |
 | `data_eval_v1.oracle-values.json` | schema `warrant-data-values-parity-v1` (`eval_dumps.data_values_view`): 28 values (`Option`, records, variants, `Result` of them) each in JSON, in the stream (hex) and in TFV, and 23 JSON forms a consumer must reject, with the reader's message |
 | `data_eval_v1.oracle-domains.json` | schema `warrant-data-domain-parity-v1` (`eval_dumps.data_domain_view`): 12 descriptors with their sizes and values, 6 budget demotions with their path text, 5 descriptors a consumer must accept and 11 it must reject |
-| `data_eval_v1.oracle-refusals.json` | schema `warrant-data-faults-refusals-v1`: 16 signatures a data fault refuses (code `generation`, message `fault: ...`) and 9 fault rows whose type R67 and R94 compare with the declared one (5 accepted, 4 refused) |
+| `data_eval_v1.oracle-refusals.json` | schema `warrant-data-faults-refusals-v1`: 16 signatures a data fault refuses (code `generation`, message `fault: ...`; a variant leaf with no parameter of its type is refused with the one wording of every position, `missing-error has no template for this payload type`) and 11 fault rows whose type R67 and R94 compare with the declared one (5 accepted, 6 refused, among them an `if` whose else branch is `ok(true)` and a `match` whose second arm is, on a `Result<U8,E>`) |
 
 `.gitattributes` (`* -text`) keeps the bytes exact on every platform.
 
@@ -42,7 +42,11 @@ what the oracle computes from it. The Rust generator's slice S11c-2 must reprodu
   `unproven` (a computed argument) and blind (a claim that only sees `Err`).
 * **The typing of R67 and R94** (the first comparison of a fault row's type with a declared type), in the refusals dump: a zero
   literal has the type it is the zero *of*, a tuple is invariant, and a fault expression needs a **common type** with the declared
-  one, not "flows to". These rows are oracle-only: the generator's evaluator is untyped (section 16.9 item 3).
+  one, not "flows to", **in every branch of an `if` and arm of a `match`**, not only the first. An accepted row records its type as
+  the spec has it: `Result<(Bytes,Bool),E>`, the error type taken from the other arm (8.2), never the oracle's internal
+  placeholder `?` for a bare `ok`. These rows are part of the file, so they are part of the byte parity below: a generator
+  reproduces the file only by typing a fault row with R67 and R94, which S11c-2 therefore owes (its evaluator for *source* stays untyped,
+  section 16.9 item 3; the verdict of 11 expressions is not source).
 
 ## The contract with the generator
 

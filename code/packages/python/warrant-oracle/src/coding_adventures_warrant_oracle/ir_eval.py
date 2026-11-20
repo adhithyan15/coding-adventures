@@ -160,8 +160,17 @@ def _assignable(src: A.Ty, dst: A.Ty, lift: bool = True) -> bool:
 
 
 def _merge_result(a: A.Ty, b: A.Ty) -> A.Ty:
-    """The more informative of two ``Result`` types (``?`` is the unknown)."""
-    return b if a.args[0] == _UNKNOWN else a
+    """The two ``Result`` types as one, each of payload and error type taken from whichever knows it (``?`` is the
+    unknown).
+
+    A bare ``ok`` is ``Result<T, ?>`` and a bare ``err`` ``Result<?, ?>``; merged with a ``Result<T, E>`` the common
+    type has the error type ``E`` (VER04r 8.2: "the common type takes the other arm's error type"), where this once
+    returned the first operand whole and so kept ``?``.  Whether the two *agree* is not decided here (the lax rule
+    ``if`` has always had); a fault row's branches are compared with the declared type by :attr:`Program.branch_check`.
+    """
+    payload = b.args[0] if a.args[0] == _UNKNOWN else a.args[0]
+    error = b.args[1] if a.args[1] == _UNKNOWN else a.args[1]
+    return A.Ty("Result", (payload, error))
 
 
 def _common(a: A.Ty, b: A.Ty) -> A.Ty | None:
@@ -520,6 +529,11 @@ class Program:
         #: any node.  False: the program of a lane that does not declare ``ir.data``; every data tag and every
         #: ``Option`` outside the intermediate use of ``ir.fixed`` is the level ``ir.data``, as it was before S11a.
         self.analyze_data = analyze_data
+        #: R94, for a fault's expression only (:func:`.faults._compile_fault` sets it): called as ``check(branch_type,
+        #: expected_type)`` for every branch of an ``if`` and every arm of a ``match`` compiled with an expected type,
+        #: and it refuses (``generation``) a branch with no common type with it.  ``None`` for a document's models,
+        #: whose branches are compared with each other only (:func:`_common`).
+        self.branch_check = None
         #: 2,000 unless the corpus profile declares more (never above 65,536).
         self.max_cost = max_cost
         self.stats = stats or Stats()
@@ -701,6 +715,9 @@ class Program:
         kids = [sub(child, w) for child, w in zip(node[1:], wanted)]
         for k in kids:
             self._no_option(k, f"an operand of {tag}")
+        if tag == "if" and expected is not None and self.branch_check is not None:
+            for k in kids[1:]:
+                self.branch_check(k.ty, expected)
         cost = 1 + sum(k.cost for k in kids)
         subj = any(k.subject for k in kids)
         return self._node(tag, kids, cost, subj)
@@ -933,6 +950,8 @@ class Program:
         for matcher, binders, body in arms:
             kid = self._compile(body, {**tenv, **binders}, allow_subject, depth + 1, expected)
             self._no_option(kid, "a match arm")
+            if expected is not None and self.branch_check is not None:
+                self.branch_check(kid.ty, expected)
             common = kid.ty if common is None else _common(common, kid.ty)
             if common is None:
                 raise OracleError("ir", "the arms of a match have no common type")

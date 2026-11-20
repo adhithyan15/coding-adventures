@@ -396,7 +396,6 @@ MISSING_ERROR_REFUSED = [
     "op f(a: U8) -> Bool",
     "op f(a: U8) -> Bytes",
     "op f(a: U8) -> Option<U8>",
-    "op f(a: U8) -> Result<Option<U8>,E>",  # ir.data: stays refused until the Option payload slice (S11c)
     "variant K = P | Q\n  op f(a: U8) -> Result<K,E>",  # a variant payload has no zero and no parameter of its type
     "op f<N: Nat>(a: U8) -> Result<Bytes<N>,E>",  # a named width has no zero literal
 ]
@@ -460,7 +459,7 @@ def test_every_bound_logic_gates_row_of_the_four_faults_instantiates_and_compile
     assert len(instantiated["shift-mask"]) == 2
     assert sum(len(instantiated[f]) for f in ("saturate-add", "saturate-sub", "shift-mask")) == 21
     # 22 bound missing-error rows: 17 scalar `Result<U8,E>`, 3 `Result<Bytes,E>`, the tuple of priority_encoder
-    # (all instantiated, as before) and tri_state's `Result<Option<U8>,E>`, which is ir.data and stays refused.
+    # (all instantiated, as before); tri_state's `Result<Option<U8>,E>` has a template since S11c-1 (D71).
     assert len(instantiated["missing-error"]) == 21
     assert refused_rows == [("tri_state", "missing-error")]
 
@@ -530,6 +529,7 @@ def test_the_committed_refusals_dump_names_the_fault_code_for_every_row():
     assert dump["schema"] == "warrant-faults-refusals-v2"
     assert dump["faults"] == ["saturate-add", "saturate-sub", "shift-mask", "missing-error"]
     assert len(dump["refusals"]) == 2 * len(SATURATE_REFUSED) + len(SHIFT_REFUSED) + len(MISSING_ERROR_REFUSED)
+    assert len(dump["refusals"]) == 52  # D71: the an-option-payload row left (53 before S11c-1); the generator asserts 52 too
     assert all(r["oracle_code"] == "generation" and r["message"].startswith("fault:") for r in dump["refusals"])
 
 

@@ -253,10 +253,11 @@ def test_missing_error_with_a_named_width_component_uses_the_parameter_of_that_t
         fault_row(z, "missing-error")
 
 
-def test_a_component_with_no_zero_and_no_matching_parameter_is_a_fault_error():
+def test_a_nested_tuple_component_is_built_in_turn():
+    # 8.2, R31 (a) (D71): a tuple is always built, so the pre-S11c refusal "no zero literal" is unreachable for one
     z = lower_document(parse_source("warrant z v1\n  error E = A\n  op f(a: Bool) -> Result<((Bool,Bool),Nat),E>\n")).ops["f"]
-    with pytest.raises(OracleError):
-        fault_row(z, "missing-error")  # the nested tuple has no zero literal
+    expr = fault_row(z, "missing-error")["expr"]
+    assert expr[2] == ["ok", ["tuple", [["tuple", [["var", "a"], ["var", "a"]]], ["lit", {"type": "Nat", "value": "0"}]]]]
     assert OK_PAYLOAD == "ok_payload"
 
 

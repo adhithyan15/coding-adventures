@@ -358,6 +358,74 @@ def test_a_value_the_writers_cannot_name_is_refused_as_the_reserved_level_ir_lis
         tfv.value((1, 2), A.Ty("Point"))
 
 
+def _chain(n: int, kind: str):
+    """A chain of ``n`` named types, each holding the next (no recursion, no wrapper in any type text): records
+    ``R0(f: R1) .. R<n-1>(f: Bool)`` or variants ``V0 = C0(f: V1) | E0 .. V<n-1> = E | F``; and a value of ``R0`` / ``V0``."""
+    lines = ["warrant t v1"]
+    if kind == "record":
+        for i in range(n):
+            lines.append(f"  record R{i}(f: R{i + 1})" if i < n - 1 else f"  record R{i}(f: Bool)")
+        value: object = (True,)
+        for _ in range(n - 1):
+            value = (value,)
+    else:
+        for i in range(n):
+            lines.append(f"  variant V{i} = C{i}(f: V{i + 1}) | E{i}" if i < n - 1 else f"  variant V{i} = E{i} | F{i}")
+        value = (f"E{n - 1}", ())
+        for i in reversed(range(n - 1)):
+            value = (f"C{i}", (value,))
+    return lower_document(parse_source(("\n".join(lines) + "\n").encode())), value
+
+
+def _line(spec, value, head: str) -> str:
+    return tfv.record("x", "mk", [], [], None, value, A.Ty(head), spec)
+
+
+def test_tfv_depth_is_64_containers_of_one_field_value_and_the_lines_r_does_not_count():
+    # R99: a record is one container, a variant two (``L2`` and ``L<k>``), the outermost of a field is depth 1; the 65th is
+    # refused with the code ``limit`` (VER04j 4.9, W0709).  A chain of *named* types adds nothing to a type expression's depth.
+    for kind, head, per_link in (("record", "R0", 1), ("variant", "V0", 2)):
+        fits = 64 // per_link  # 64 containers exactly
+        spec, value = _chain(fits, kind)
+        assert _line(spec, value, head).startswith("x R2 Kop S6d6b Kexpect L")
+        spec, value = _chain(fits + 1, kind)
+        with pytest.raises(OracleError) as err:
+            _line(spec, value, head)
+        assert err.value.code == "limit"
+    # the review's probe: a 40-link variant chain (80 containers) in an example's result
+    spec, value = _chain(40, "variant")
+    with pytest.raises(OracleError) as err:
+        _line(spec, value, "V0")
+    assert err.value.code == "limit"
+    # a Result's M1 (Ok and Err), an Option's L0 and L1 and a tuple's L<n> count as well
+    res = A.Ty("Result", (A.Ty("()", (A.Ty("U8"),)), A.Ty("E")))
+    assert tfv.value(("ok", (1,)), res, None, 62) == "M1 S6f6b L1 I1"
+    with pytest.raises(OracleError) as err:
+        tfv.value(("ok", (1,)), res, None, 63)  # M1 is container 64, the tuple's L1 is 65
+    assert err.value.code == "limit"
+    assert tfv.value(("err", "A"), res, None, 63) == "M1 S657272 S41" or tfv.value(("err", "A"), res, None, 63).startswith("M1")
+    with pytest.raises(OracleError):
+        tfv.value(("err", "A"), res, None, 64)
+    assert tfv.value(some(1), ty("Option<U8>"), None, 63) == "L1 I1" and tfv.value(NONE, ty("Option<U8>"), None, 63) == "L0"
+    for v in (some(1), NONE):
+        with pytest.raises(OracleError) as err:
+            tfv.value(v, ty("Option<U8>"), None, 64)
+        assert err.value.code == "limit"
+
+
+def test_the_fallback_refusal_names_the_level_of_the_missing_type():
+    # a record or a variant given without its document is ir.data; only List is the reserved ir.list
+    with pytest.raises(OracleError) as err:
+        tfv.value((1, 2), A.Ty("Point"))
+    assert err.value.level == "ir.data"
+    with pytest.raises(OracleError) as err:
+        value_json(("Dot", ()), A.Ty("Shape"))
+    assert err.value.level == "ir.data"
+    with pytest.raises(OracleError) as err:
+        tfv.value([], A.Ty("List", (A.Ty("U8"),)))
+    assert err.value.level == "ir.list"
+
+
 def test_the_4096_byte_limit_of_an_example_sees_through_options_records_and_variants():
     spec = lower_document(
         parse_source(b"warrant t v1\n  record Blob(d: Bytes, n: Nat)\n  variant Msg = Short | Big(d: Bytes)\n")
@@ -472,16 +540,36 @@ def test_field_zero_refuses_what_has_no_template(decl):
     assert err.value.code == "generation" and err.value.message.startswith("fault:")
 
 
-def test_a_caller_that_does_not_say_what_the_document_declares_keeps_the_pre_data_rules():
-    # records=None is the older call (the kit, the committed scalar-faults-v1 refusals dump): field-zero has no
-    # template and missing-error is the rule of S3c, S10t and S11f-1, so no committed byte moves (open question 1).
+def test_there_is_one_rule_and_no_data_blind_call():
+    # D71: records=None is not a mode.  A caller that passes no tables is a document that declares no record and no
+    # variant, so field-zero has no template there; and a document's own call writes the Option template that the
+    # committed scalar-faults-v1 dump once pinned as refused (its row is gone: 52 rows).
     spec = lower_document(parse_source(b"warrant t v1\n  error E = A\n  record P(x: U8)\n  op o(a: U8) -> Result<Option<U8>,E>\n  op p(a: U8) -> P\n"))
-    with pytest.raises(OracleError, match="no template for this payload type"):
-        fault_row(spec.ops["o"], "missing-error", spec.errors)
-    with pytest.raises(OracleError, match="document's records"):
+    assert fault_row(spec.ops["o"], "missing-error", spec.errors)["expr"][2] == ["ok", ["none", "U8"]]
+    with pytest.raises(OracleError, match="needs a record or Result<record, E> result"):
         fault_row(spec.ops["p"], "field-zero", spec.errors)
-    # ... and the data-aware call writes the template
     assert fault_row(spec.ops["o"], "missing-error", spec.errors, frozenset(["P"]), dict(spec.records))["expr"][2] == ["ok", ["none", "U8"]]
+    assert fault_row(spec.ops["p"], "field-zero", spec.errors, frozenset(["P"]), dict(spec.records))["requires"] == ["ir.data"]
+
+
+def test_a_nested_tuple_component_is_always_built_aware_or_not():
+    # 8.2, R31(a): the refusal "a component of this type has no zero literal" is unreachable for a tuple
+    spec = lower_document(parse_source(b"warrant t v1\n  error E = A\n  op f(n: Nat) -> Result<((Bool,Bool),Nat),E>\n"))
+    expr = fault_row(spec.ops["f"], "missing-error", spec.errors)["expr"]
+    assert expr[2] == ["ok", ["tuple", [["tuple", [FALSE, FALSE]], ["var", "n"]]]]
+
+
+def test_the_kit_instantiates_a_data_fault_with_the_cases_records():
+    from coding_adventures_warrant_oracle.conformance import instantiate_fault
+
+    types = {"P": {"kind": "record", "fields": [["x", "U8"], ["y", "Bool"]]}, "E": {"kind": "error", "cases": ["A"]}}
+    op = {"params": [["a", "U8"]], "ret": "Result<P,E>"}
+    row = instantiate_fault("field-zero", "f", op, types)
+    assert row["requires"] == ["ir.data", "ir.tuple"] and row["expr"][0] == "match"
+    assert instantiate_fault("missing-error", "f", op, types)["expr"][2] == [
+        "ok",
+        ["ctor", "P", [["var", "a"], FALSE]],
+    ]
 
 
 @pytest.mark.parametrize(
@@ -525,7 +613,7 @@ def test_missing_error_refuses_a_variant_with_no_parameter_and_what_is_not_a_res
 def test_a_variant_field_of_a_record_and_a_named_width_inside_an_option_have_no_zero():
     spec = lower_document(parse_source(b"warrant t v1\n  error E = A\n  variant K = P | Q\n  record W(k: K)\n  op f(a: U8) -> Result<W,E>\n  op g<N: Nat>(a: U8) -> Result<Option<Bytes<N>>,E>\n  op h(k: K) -> Result<W,E>\n"))
     data, records = frozenset(["K", "W"]), dict(spec.records)
-    with pytest.raises(OracleError, match="variant has no zero"):
+    with pytest.raises(OracleError, match="missing-error has no template for this payload type"):
         fault_row(spec.ops["f"], "missing-error", spec.errors, data, records)
     with pytest.raises(OracleError, match="named width"):
         fault_row(spec.ops["g"], "missing-error", spec.errors, data, records)
@@ -596,6 +684,57 @@ def test_a_pre_rewrite_is_typed_against_its_parameter():
     assert _compile_fault(prog, spec.ops["f"], wider, {})  # plain Bytes against Bytes<2>: a common type, not "flows to"
 
 
+def test_r94_compares_every_branch_of_an_if_with_the_declared_type_not_only_the_first():
+    # a review probe: the else branch ``ok(true)`` is a Result<Bool,?> where Result<U8,E> is declared; ``_merge_result``
+    # once kept the first branch (``result``) whole and the whole passed
+    bad = ["if", ["is_err", R], R, ["ok", ["lit", True]]]
+    with pytest.raises(OracleError, match="no common type"):
+        _typed_row("op f(a: Nat) -> Result<U8,E>", bad)
+    # the same shape with the right payload, in either branch, is accepted
+    assert callable(_typed_row("op f(a: Nat) -> Result<U8,E>", ["if", ["is_err", R], R, ["ok", U8_0]]))
+    assert callable(_typed_row("op f(a: Nat) -> Result<U8,E>", ["if", ["is_err", R], ["ok", U8_0], R]))
+    with pytest.raises(OracleError, match="no common type"):
+        _typed_row("op f(a: Nat) -> Result<U8,E>", ["if", ["is_err", R], ["ok", ["lit", True]], R])
+
+
+def test_r94_compares_every_arm_of_a_match_with_the_declared_type_not_only_the_first():
+    def arms(second):
+        return ["match", R, [[["ok", ["bind", "p"]], ["ok", ["var", "p"]]], [["err_any"], second]]]
+
+    with pytest.raises(OracleError, match="no common type"):
+        _typed_row("op f(a: Nat) -> Result<U8,E>", arms(["ok", ["lit", True]]))
+    assert callable(_typed_row("op f(a: Nat) -> Result<U8,E>", arms(R)))
+    # a nested if inside an arm inherits the declared type too
+    nested = arms(["if", ["is_err", R], R, ["ok", ["lit", True]]])
+    with pytest.raises(OracleError, match="no common type"):
+        _typed_row("op f(a: Nat) -> Result<U8,E>", nested)
+
+
+def test_r98a_an_if_or_match_in_an_operand_or_condition_is_typed_by_r51_alone():
+    # only the value spine (the branches of an if, the arms of a match, the payload of an ok, a tuple component, a ctor
+    # argument) is compared with the declared type; the inner ``if`` below has Bool branches inside a Bytes result
+    inner = ["if", ["lit", True], ["lit", True], ["lit", False]]
+    assert callable(_typed_row("op f(a: Nat) -> Bytes", ["if", inner, R, R]))
+    n1 = ["lit", {"type": "Nat", "value": "1"}]
+    nat_if = ["if", ["lit", True], n1, n1]
+    assert callable(_typed_row("op f(a: Nat) -> Bytes", ["take", R, nat_if]))
+    # ... while the same inner if as a *branch* is compared
+    with pytest.raises(OracleError, match="no common type"):
+        _typed_row("op f(a: Nat) -> Bytes", ["if", ["lit", True], inner, R])
+
+
+def test_the_merge_of_two_result_types_takes_each_part_from_whichever_knows_it():
+    from coding_adventures_warrant_oracle.ir_eval import _merge_result
+
+    q, e1 = A.Ty("?"), A.Ty("E1")
+    res = lambda p, e: A.Ty("Result", (p, e))  # noqa: E731
+    pair = ty("(Bytes,Bool)")
+    # 8.2: "the common type takes the other arm's error type" (the typing dump read Result<(Bytes,Bool),?>)
+    assert _merge_result(res(pair, q), res(pair, e1)) == res(pair, e1)
+    assert _merge_result(res(pair, e1), res(pair, q)) == res(pair, e1)
+    assert _merge_result(res(q, q), res(pair, e1)) == res(pair, e1)
+
+
 @pytest.mark.parametrize(
     "a,b,expected",
     [
@@ -608,6 +747,9 @@ def test_a_pre_rewrite_is_typed_against_its_parameter():
         ("(U64,Int)", "(U64,Nat)", "(U64,Int)"),  # the one component widening 8.2 states for off-by-one-consumed
         ("Option<(Bytes,Bool)>", "Option<(Bytes<2>,Bool)>", None),
         ("Option<Nat>", "Bool", None),
+        ("Option<Bytes<1>>", "Option<Bytes<3>>", "Option<Bytes>"),  # R94 at the top level ...
+        ("((Bytes<1>,Bool),Nat)", "((Bytes<3>,Bool),Nat)", None),  # ... but nothing lifts below a tuple, at any depth (R96)
+        ("(Option<Bytes<1>>,Bool)", "(Option<Bytes<3>>,Bool)", None),
     ],
 )
 def test_the_common_type_rule_of_r94(a, b, expected):

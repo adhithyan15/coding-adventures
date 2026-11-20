@@ -166,7 +166,8 @@ def value_json(v: object, ty: A.Ty, spec: Spec | None = None) -> object:
     if spec is not None and head in spec.variants:
         fields = _fields_of(spec, head, v[0])
         return {"ctor": v[0], "fields": [value_json(x, t, spec) for x, t in zip(v[1], fields)]}
-    raise OracleError("level", "a value of this type needs a later level", level="ir.list")
+    level = "ir.list" if head == "List" else "ir.data"  # a named head is a record or variant the spec did not give
+    raise OracleError("level", f"a value of this type needs the level {level}", level=level)
 
 
 MAX_EXAMPLE_BYTES = 4096  # the section 2.3 limit on a ``Bytes`` value in ``corpus.json``

@@ -57,7 +57,7 @@ from coding_adventures_warrant_oracle.corpus_v1 import build_program
 from coding_adventures_warrant_oracle.corpus_v2 import canonical, derive
 from coding_adventures_warrant_oracle.errors import OracleError
 from coding_adventures_warrant_oracle.eval_dumps import data_domain_view, data_values_view
-from coding_adventures_warrant_oracle.faults import _typed, fault_row
+from coding_adventures_warrant_oracle.faults import _fault_unify, _typed, fault_row
 from coding_adventures_warrant_oracle.lower import lower_document
 from coding_adventures_warrant_oracle.lowering_dump import dump
 from coding_adventures_warrant_oracle.parity_dumps import (
@@ -446,6 +446,14 @@ TYPING = [
     ("r94/plain-bytes-against-a-declared-bytes-2", "  op f(a: Nat) -> Bytes<2>\n", ["take", _R, ["lit", {"type": "Nat", "value": "1"}]], True),
     ("r94/a-bool-against-a-declared-bytes-result", "  op f(a: Nat) -> Bytes\n", ["lit", True], False),
     ("r94/a-bytes-against-a-declared-u8-result", "  op f(a: Nat) -> U8\n", _B("00"), False),
+    # R94 in every branch: the first branch is the declared type, the second is not (the whole used to pass on the first)
+    ("r94/a-bool-ok-in-the-else-branch-of-a-u8-result", "  op f(a: Nat) -> Result<U8,E>\n", ["if", ["is_err", _R], _R, ["ok", ["lit", True]]], False),
+    (
+        "r94/a-bool-ok-in-the-second-match-arm-of-a-u8-result",
+        "  op f(a: Nat) -> Result<U8,E>\n",
+        ["match", _R, [[["ok", ["bind", "p"]], ["ok", ["var", "p"]]], [["err_any"], ["ok", ["lit", True]]]]],
+        False,
+    ),
     ("r94/an-int-expression-against-a-declared-nat-result", "  op f(a: Nat) -> Nat\n", ["add", _R, ["lit", {"type": "Nat", "value": "1"}]], True),
 ]
 
@@ -475,7 +483,7 @@ def refusals() -> dict:
             typing.append({"name": name, "oracle_code": exc.code, "message": exc.message, "source": source, "expr": expr})
         else:
             assert accepted, name
-            typing.append({"name": name, "accepted": True, "type": str(compiled.ty), "source": source, "expr": expr})
+            typing.append({"name": name, "accepted": True, "type": str(_fault_unify(compiled.ty, op.ret)), "source": source, "expr": expr})
     return {"schema": "warrant-data-faults-refusals-v1", "refusals": rows, "typing": typing}
 
 
