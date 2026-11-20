@@ -1062,7 +1062,20 @@ sub-code is a string literal at each site, never a slice of the input.
 (only `host-read` is split), whose classes are the closed list `listing`,
 `absent-probe`, `open`, `stat`, `lookup` (a link crossed on the way), `exec`,
 `chdir`, `write`, `other`, chosen from the classifier's own state with
-precedence listing, then absent-probe, then the call's kind. The file holds `{schema, action, total,
+precedence listing, then absent-probe, then the call's kind.
+(3) **Caps and order**: the sub-coded kinds hold 256 paths each, the seven path
+kinds 1024, so the caps of every kind the classifier can feed add up to at most
+`MaxCensusEntries` (7*1024 + 18*256 = 11776 <= 16384; tested) and the overall
+bound never decides which kind loses. The stability pass walks Go maps, so its
+census notes are buffered and given sorted by kind and path: `census.json` is
+deterministic even at a cap (tested). Records are untouched.
+**Semantic change to `census_clean`**: a record that raised a READ-SIDE
+`trace-incomplete:unstable-path` or `trace-incomplete:exec-unreadable` now has a
+non-empty `census.json` (those reasons used to leave it empty), so such actions
+count as `census_nonempty`, not `census_clean`. `census_clean` therefore means
+"no path-carrying reason and no unstable-path or exec-unreadable", still not
+"would emit" (see `emittable`). `ci/census_not_clean.py` reads only
+`cross_check` and `bounds` and is unaffected. The file holds `{schema, action, total,
 overflow_total, overflow: {kind: n}, entries: [{kind, path, count}]}` with
 entries sorted by kind then path. Paths are printable and redacted
 (`$HOME`, `$TMPDIR`) as in a reason, and sanitised once: a path the classifier
@@ -1223,12 +1236,22 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   `built_ok` (a believed record with no `failed` reason; when the parse half
   failed and there are no reasons, no started step exited non-zero; an action
   with no believed record is not built_ok), `emittable` (parse ok, writes
-  complete, ZERO reasons in `record.json`, and not gated: a collect header that
-  names a void reason gates the shard, sets `actions.emittable_gated` and makes
-  every `emittable` 0; unknown without `--records`), and the shares
+  complete, ZERO reasons in `record.json`, a plan entry with NO gate and a weak key
+  (the merge turns a gate into `precondition:<gate>` and an unkeyed action has
+  nothing to be emitted under), and the shard not void: a collect header that
+  names a void reason sets `actions.shard_void` and makes every `emittable` 0;
+  unknown without `--records`). `emittable` is an UPPER BOUND: it is per action
+  and before the merge, so it cannot see reads-product or any cross-action rule.
+  `gated` and `unkeyed` count the actions whose plan entry has a gate or no weak
+  key (overall and per language), `writes_unknown` the actions with a believed
+  record whose `writes_complete` is false plus `record.failed`, and
+  `actions.strict_merge_voids_shard` is true when `writes_unknown > 0` or the
+  shard is void (the Markdown line "strict merge would void this shard: yes/no").
+  The shares
   `recordable_share_of_built_ok`, `emittable_share` and
   `emittable_share_of_built_ok` (a share over zero is 0). `actions` carries
-  `built_ok`, `emittable` and `emittable_gated` too. An empty census beside a
+  `built_ok`, `emittable`, `gated`, `unkeyed`, `writes_unknown`, `shard_void` and
+  `strict_merge_voids_shard` too. An empty census beside a
   record that holds a reason (an `exec-format` one, say) is `clean` but not
   `emittable`: "clean" never meant "would emit".
 - `shapes`: at most 8 distinct redacted outlines of the line where the grammar
@@ -1244,9 +1267,15 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   closed syscall table, ASCII punctuation for `PUNCT` (at most 8 characters; a
   non-ASCII run is `\x80`), nothing of `QUOTED`, `ANNOTATED`, `ERR_*`, `PID` or
   signal text beyond the type name, at most 96 tokens a line, and the `lineFacts`
-  booleans and three counts. The trace is streamed (a line is read to 1 MiB); at
-  most 64 outlines are computed per census; `bounds.shapes_dropped` counts the
-  rest. `TestParseCrossCheckedOnlyInCensus` keeps `Shape`, `LineShape`,
+  booleans and three counts. The trace is streamed (a line is read to 1 MiB).
+  Two budgets, so a flood of one refusal cannot starve the allowed-divergence
+  lines: `allowed:*` outlines get 8 slots and 32 computations of their own;
+  refusals get 8 slots, 32 computations and 2 per distinct refusal code. A
+  (trace, line) is shaped once, and all shaping together scans at most 4 GiB (twice
+  each trace's size is charged); `bounds.shapes_dropped` counts the rest. A
+  refusal's line is the error's own line (the call's start for an
+  `unresumed-call`), and shapes exist only for cross-checked traces, not those
+  skipped as too large. `TestParseCrossCheckedOnlyInCensus` keeps `Shape`, `LineShape`,
   `ParseCrossChecked` and `ParseCrossCheckedDetail` out of every production file
   but their definitions and `census_report.go`.
 - `reasons[].ops`: for `host-read`, the occurrences by op class (from the
@@ -1255,7 +1284,7 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   directory. The classifier labels the STEP's fresh HOME and TMPDIR `$HOME` and
   `$TMPDIR`, so the invoker's are labelled `$RUNNER_HOME` and `$RUNNER_TMP`
   unless they are the very directories the sealed `host-facts.json` names (then
-  they are the step's and keep `$HOME` / `$TMPDIR`). The Markdown section is
+  they are the step's and keep `$HOME` / `$TMPDIR`; a trailing slash is ignored). The Markdown section is
   "Share by language"; a record's reasons make `recordable` and `emittable`
   differ, and the line says so.
 
