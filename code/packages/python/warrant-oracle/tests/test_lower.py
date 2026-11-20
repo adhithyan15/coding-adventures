@@ -179,9 +179,10 @@ CENSUS = {
     # wasm-leb128 18/24, logic-gates 28/3/57 core/data/fixed, lzw 4/17, arithmetic 7/45/11,
     # x25519 6/2).
     "wasm-leb128": {"ir.core": 44},
-    "logic-gates": {"ir.core": 85, "ir.data": 3},
+    # S11c-1: ``ir.data`` is evaluated too, so nothing blocks a suite of logic-gates (was 85/3) or arithmetic (was 8/55).
+    "logic-gates": {"ir.core": 88},
     "lzw": {"ir.core": 21},
-    "arithmetic": {"ir.core": 8, "ir.data": 55},
+    "arithmetic": {"ir.core": 63},
     "x25519": {"ir.core": 8},
 }
 
@@ -198,8 +199,12 @@ def test_level_census_per_adopter(name):
 
 def test_unsupported_models_are_recorded_not_fatal():
     spec = lower(adopter_bytes("arithmetic"))
-    blocked = [m for m in spec.models.values() if m.unsupported is not None]
-    assert len(blocked) == 19 and all(m.unsupported.level == "ir.data" for m in blocked)
+    # S11c-1: the 19 models that needed ``ir.data`` (S11a gave them the evaluation refusal) are evaluated now
+    assert [m for m in spec.models.values() if m.unsupported is not None] == []
+    assert sum(1 for m in spec.models.values() if "ir.data" in m.requires) == 19
+    # a reserved level is still recorded, not fatal
+    listy = lower("warrant p v1\n  model g(a: U8) -> Bool = [a] == [a]\n")
+    assert listy.models["g"].unsupported.level == "ir.list" and not listy.models["g"].lowered
     wasm = lower(adopter_bytes("wasm-leb128"))
     assert wasm.models["low7"].unsupported is None and wasm.models["low7"].requires == (
         "ir.core",
@@ -211,10 +216,9 @@ def test_unsupported_models_are_recorded_not_fatal():
     "body,level",
     [
         # S11a: lists are the reserved ``ir.list``; ``Option`` and ``match`` lower and need ``ir.data``
-        # (the unit is then refused only at *evaluation*, with the same level name)
+        # (the unit was then refused only at *evaluation*, with the same level name).  S11c-1: they are
+        # evaluated, so they are no longer refusals at all (``test_data_is_lowered_and_evaluated_not_refused``).
         ("[a] == [a]", "ir.list"),
-        ("div(a, a) == div(a, a)", "ir.data"),
-        ("match a with x -> true", "ir.data"),
         ("all(a, a)", "ir.seq"),
         ("range(a)", "ir.seq"),
         ("len([a]) == 1", "ir.list"),
@@ -226,6 +230,12 @@ def test_unsupported_models_are_recorded_not_fatal():
 def test_level_errors_name_the_level(body, level):
     m = model_ir(body, params="a: U8", ret="Bool")
     assert m.unsupported is not None and m.unsupported.level == level
+
+
+@pytest.mark.parametrize("body", ["div(a, a) == div(a, a)", "match a with x -> true"])
+def test_data_is_lowered_and_evaluated_not_refused(body):
+    m = model_ir(body, params="a: U8", ret="Bool")
+    assert m.lowered and m.unsupported is None and "ir.data" in m.requires
 
 
 def test_suite_inherits_the_level_of_a_model_it_calls():

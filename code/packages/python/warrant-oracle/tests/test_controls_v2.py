@@ -112,6 +112,8 @@ def test_registry_covers_the_names_of_section_8_2():
         "off-by-one-consumed",
         # S11f-1 (VER04r 8.2): the scalar faults of the Rust harness
         "saturate-add", "saturate-sub", "shift-mask",
+        # S11c-1 (VER04r 8.2, D49): the fault that needs ir.data
+        "field-zero",
     }
 
 
@@ -359,9 +361,10 @@ def test_examples_values_and_tfv_follow_the_declared_types():
 
 
 def test_value_json_and_tfv_refuse_types_above_ir_core():
+    # a list is the reserved level ir.list since S11a/D46 (the writers named ir.data before S11c-1 opened it)
     with pytest.raises(OracleError) as err:
         value_json((), A.Ty("List", (A.Ty("U8"),)))
-    assert err.value.level == "ir.data"
+    assert err.value.level == "ir.list"
     with pytest.raises(OracleError):
         tfv.value((), A.Ty("List", (A.Ty("U8"),)))
     assert value_json(True, A.Ty("Bool")) is True

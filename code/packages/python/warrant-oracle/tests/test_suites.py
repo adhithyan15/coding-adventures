@@ -351,11 +351,13 @@ def test_composite_binders_enumerate_through_nth():
         b"\x64" + le32(2) + bytes([x]) + bytes([y]) for x, y in itertools.product((0, 1), repeat=2)
     )
     assert r.chunks[0].inputs == hashlib.sha256(plan.prefix + le32(0) + body).digest()
-    # Slice S11a lowers records but does not evaluate them (section 16.14 R37: ``level ir.data`` at
-    # evaluation until S11c-1), so the planner refuses the suite that has a record binder.
-    with pytest.raises(OracleError) as err:
-        plan_for(src, "rec")
-    assert err.value.code == "level" and err.value.level == "ir.data"
+    # Slice S11a lowered records but did not evaluate them (section 16.14 R37: ``level ir.data`` at evaluation
+    # until S11c-1), so the planner refused the suite that has a record binder; S11c-1 enumerates it: the record
+    # is the Cartesian product of its fields, last field fastest, and a tuple value carries the 64 tag.
+    plan, _ = plan_for(src, "rec")
+    r = plan.run("full")
+    assert r.cases == 16 and r.header == "warrant-stream-v2"
+    assert [d["d"] for d in r.descriptors] == ["tuple", "tuple"] and r.product == 16
 
 
 def test_suite_row_reports_demotions_labels_and_descriptors():

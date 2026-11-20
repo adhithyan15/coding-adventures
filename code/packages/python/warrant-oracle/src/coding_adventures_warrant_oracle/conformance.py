@@ -580,7 +580,7 @@ def derive_arith(case: dict) -> dict:
     operands = [case["lhs"]] if op == "neg" else [case["lhs"], case["rhs"]]
     ir = [op, *(["lit", {"type": ty, "value": text}] for text in operands)]
     try:
-        node = E.Program({}, {}).compile(ir, {}, False)
+        node = E.Program({}, {}, analyze_data=False).compile(ir, {}, False)
     except OracleError as exc:
         raise KitError(f"the oracle refuses the node: {exc}") from exc
     try:
@@ -728,14 +728,17 @@ def _models(case: dict, ops: dict, max_cost: int) -> E.Program:
     error in a body is found here, and a model that calls a later one cannot be built.
     """
     errors = {n: tuple(row["cases"]) for n, row in case["types"].items() if row.get("kind") == "error"}
+    # ``ir.data`` is evaluated only for a case that declares it (slice S11c-1 opened it in the evaluator; S11a's
+    # evaluator refused it for every case).  A case that does not is refused by the level, as before.
+    data = L.DATA in set(case["levels"])
     defs: dict = {}
     for name in case["model_order"]:
         row = case["models"][name]
         params = [(p, parse_type(t, case["types"])) for p, t in row["params"]]
-        probe = E.Program(dict(defs), ops, max_cost=max_cost, errors=errors)
+        probe = E.Program(dict(defs), ops, max_cost=max_cost, errors=errors, analyze_data=data)
         ret = probe.compile(row["body"], dict(params), False).ty
         defs[name] = E.ModelDef(name, params, ret, row["body"])
-    return E.Program(defs, ops, max_cost=max_cost, errors=errors)
+    return E.Program(defs, ops, max_cost=max_cost, errors=errors, analyze_data=data)
 
 
 def _rewrite_subjects(ir: object, subjects: dict) -> object:
@@ -823,7 +826,9 @@ def derive_ir(case: dict) -> dict:
     rewritten = _rewrite_subjects(built.ir, built.subjects)
     # The rewritten tree is only evaluated: its cost (a stand-in's body counts as IR work, a
     # subject's does not) is not the case's cost, so it is compiled under the ceiling.
-    plain = E.Program(built.prog.models, ops, max_cost=65_536, errors=built.prog.errors)
+    plain = E.Program(
+        built.prog.models, ops, max_cost=65_536, errors=built.prog.errors, analyze_data=built.prog.analyze_data
+    )
     try:
         value = plain.compile(rewritten, built.tenv, False).fn(built.env)
         n_calls = calls(built.env) if callable(calls) else calls
@@ -1275,7 +1280,7 @@ def derive_fault(case: dict) -> dict:
     if any(E.has_subject(t) for t in trees):
         return {"error": "subject-forbidden"}
     errors = {n: tuple(row["cases"]) for n, row in types.items() if row.get("kind") == "error"}
-    prog = E.Program({}, {}, errors=errors)
+    prog = E.Program({}, {}, errors=errors, analyze_data=L.DATA in set(case["levels"]))
     try:
         compiled = _compile_fault(prog, op, fault, {})
     except OracleError as exc:

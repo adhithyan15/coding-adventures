@@ -277,7 +277,7 @@ FIXED_FAULTS = [
 
 
 def test_the_shipped_gate_is_open_and_the_closed_gate_defers_every_ir_fixed_fault():
-    assert IMPLEMENTED == ("ir.core", "ir.fixed", "ir.tuple")
+    assert IMPLEMENTED == ("ir.core", "ir.fixed", "ir.tuple", "ir.data")  # ir.data opened in S11c-1
     shipped = controls(("ir.core",), FIXED_FAULTS)
     for key, control in shipped.items():
         level = next((lv for lv in control["requires"] if lv != "ir.core"), None)
@@ -312,7 +312,7 @@ def test_a_single_library_parameter_opens_the_gate_and_nothing_else_does():
     assert "implemented" in inspect.signature(derive).parameters
     assert "implemented" in inspect.signature(faults.derive_controls).parameters
     assert "implemented" not in inspect.getsource(cli)
-    assert faults.IMPLEMENTED == ("ir.core", "ir.fixed", "ir.tuple")
+    assert faults.IMPLEMENTED == ("ir.core", "ir.fixed", "ir.tuple", "ir.data")
 
 
 # -- the witness search against brute force ------------------------------------------------------------------

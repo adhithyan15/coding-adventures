@@ -41,6 +41,11 @@ GATE_ON = ("ir.core", "ir.tuple")
 #: The test-only **open** gate of slice S10c-1: every level this oracle evaluates.  The flip (S10c,
 #: [D29]) turns it on in the shipped path; until then only a library parameter reaches it.
 GATE_OPEN = ("ir.core", "ir.fixed", "ir.tuple")
+#: The gates of slice S11c-1 (``tests/fixtures/data-eval-v1``): the gate *before* it, where every ``ir.data`` fault
+#: is ``deferred`` (the generator's gate until its S11c-2), and the gate it opens, every level this oracle evaluates.
+#: Explicit literals, not ``faults.IMPLEMENTED``, so a later gate cannot move a committed dump.
+GATE_BEFORE_DATA = ("ir.core", "ir.fixed", "ir.tuple")
+GATE_DATA = ("ir.core", "ir.data", "ir.fixed", "ir.tuple")
 _GENERATOR = {"name": "parity-dump", "version": "0"}
 
 #: Suite-row keys of the evaluation view, in no particular order (the writer sorts).
@@ -122,11 +127,18 @@ def faults_view(
 
     ``gate`` is ``"tuple"`` (the S10t-1 fixture: ``ir.tuple`` evaluated, ``ir.fixed`` not) or
     ``"fixed"`` (the S10c-1 fixture: the open gate :data:`GATE_OPEN`, which also records both gates
-    as lists so that a reader sees what ``controls_shipped`` and ``controls_gate_on`` mean).
+    as lists so that a reader sees what ``controls_shipped`` and ``controls_gate_on`` mean) or ``"data"`` (the
+    S11c-1 fixture: ``controls_shipped`` is the gate *before* the slice, :data:`GATE_BEFORE_DATA`, where an
+    ``ir.data`` fault is ``deferred``, and ``controls_gate_on`` the gate it opens, :data:`GATE_DATA`; both are listed).
     """
-    gate_on = {"tuple": GATE_ON, "fixed": GATE_OPEN}[gate]
+    gate_on = {"tuple": GATE_ON, "fixed": GATE_OPEN, "data": GATE_DATA}[gate]
     if shipped is None:
-        shipped = shipped_derivation(spec_bytes, profile_raw, spec_ref)
+        if gate == "data":
+            shipped = derive(
+                spec_bytes, profile_raw, spec_ref=spec_ref, generator=_GENERATOR, implemented=GATE_BEFORE_DATA
+            )
+        else:
+            shipped = shipped_derivation(spec_bytes, profile_raw, spec_ref)
     on = derive(
         spec_bytes,
         profile_raw,
@@ -136,8 +148,8 @@ def faults_view(
     )
     assert shipped.corpus["faults"] == on.corpus["faults"]  # the rows never depend on the gate
     view = _faults_dict(shipped, on)
-    if gate == "fixed":
-        view["gate_shipped"] = list(GATE_CLOSED)
+    if gate in ("fixed", "data"):
+        view["gate_shipped"] = list(GATE_BEFORE_DATA if gate == "data" else GATE_CLOSED)
         view["gate_on"] = list(gate_on)
     return view
 

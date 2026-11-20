@@ -386,7 +386,7 @@ def witness(control: dict) -> dict:
 
 
 def test_the_shipped_gate_is_open_and_the_closed_gate_defers_tuple_faults():
-    assert IMPLEMENTED == ("ir.core", "ir.fixed", "ir.tuple")
+    assert IMPLEMENTED == ("ir.core", "ir.fixed", "ir.tuple", "ir.data")  # ir.data opened in S11c-1
     assert GATE_CLOSED == ("ir.core",)
     by, out = controls()
     assert witness(by["pair/drop-consumed"]) == {"pair_claim": "ir.tuple", "pair_pred": True}
@@ -491,6 +491,8 @@ def test_the_registry_has_the_seventeen_names():
             "saturate-add",
             "saturate-sub",
             "shift-mask",
+            # S11c-1 (VER04r 8.2, D49): the fault that needs ir.data
+            "field-zero",
         ]
     )
 
