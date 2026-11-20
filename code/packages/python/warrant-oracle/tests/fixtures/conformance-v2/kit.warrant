@@ -1,0 +1,96 @@
+warrant kit v1
+  error E = BAD | WORSE
+  model m3(a: U8, b: U8, c: U8) -> U8 = (a + b) + c
+  model twice(a: U8) -> U8 = a + a
+  model okay(a: Result<Bool, E>) -> Bool = a == Ok(true)
+  model same(a: Bytes, b: Bytes) -> Bool = a == b
+  op f3(a: U8, b: U8, c: U8) -> U8
+  op g(a: U8) -> U8
+  op negate(a: I8) -> I8
+  op wrap_r(a: Result<Bool, E>) -> Bool
+  op cmp(a: Bytes, b: Bytes) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels f3:
+    a secret
+    b secret
+    c secret
+  labels g:
+    a secret
+  labels negate:
+    a secret
+  labels wrap_r:
+    a secret
+  labels cmp:
+    a.contents secret
+    a.length public
+    b.contents secret
+    b.length public
+
+  input f3.a:
+    hostile
+    ensures no_panic, terminates
+  input f3.b:
+    hostile
+    ensures no_panic, terminates
+  input f3.c:
+    hostile
+    ensures no_panic, terminates
+  input g.a:
+    hostile
+    ensures no_panic, terminates
+  input negate.a:
+    hostile
+    ensures no_panic, terminates
+  input wrap_r.a:
+    hostile
+    ensures no_panic, terminates
+  input cmp.a:
+    hostile
+    ensures no_panic, terminates
+  input cmp.b:
+    hostile
+    ensures no_panic, terminates
+
+  bound f3:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound g:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound negate:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound wrap_r:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound cmp:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+
+  claim big:
+    forall a: U8, b: U8, c: U8. f3(a, b, c) == m3(a, b, c)
+  claim short:
+    forall a: U8 | a != 0u8, b: U8. if a > b then g(a) == g(b) else true
+  claim negs:
+    forall a: I8. negate(a) == -a
+  claim res:
+    forall a: Result<Bool, E>. wrap_r(a) == okay(a)
+  claim two_bytes:
+    forall a: Bytes, b: Bytes. cmp(a, b) == same(a, b)
+
+  example g_twice:
+    g(3u8) == twice(3u8)
