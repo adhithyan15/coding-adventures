@@ -265,6 +265,31 @@ jobs:
           cargo install cargo-tarpaulin --version 0.37.2 --locked --force
           cargo tarpaulin --version
 
+      # Where the installs land is pinned, not left to each action's default,
+      # because the declared roots are $HOME/.ghcup and $HOME/.dotnet and a root
+      # that is a symlink is refused (KILN04 2b-1).
+      #   haskell-actions/setup@6037f33 (src/installer.ts) puts $HOME/.ghcup/bin
+      #   on PATH and runs the `ghcup` already on the runner image.  The image's
+      #   ghcup keeps its tree in /usr/local/.ghcup (GHCUP_INSTALL_BASE_PREFIX)
+      #   and links $HOME/.ghcup to it, so the GHC would land outside $HOME.  Point
+      #   the base prefix at $HOME and drop the link (the link only, never what
+      #   it points at).
+      #   actions/setup-dotnet@0f4a354 (src/installer.ts, DotnetInstallDir)
+      #   defaults to /usr/share/dotnet on Linux when that is writable and falls
+      #   back to $HOME/.dotnet when it is not: DOTNET_INSTALL_DIR names it.
+      - name: Pin the Haskell and .NET install locations
+        if: env.HOME_MODE == 'runner'
+        run: |
+          set -euo pipefail
+          if [[ -L "$HOME/.ghcup" ]]; then
+            echo "$HOME/.ghcup is a symlink to $(readlink "$HOME/.ghcup"); removing the link"
+            unlink "$HOME/.ghcup"
+          fi
+          {
+            echo "GHCUP_INSTALL_BASE_PREFIX=$HOME"
+            echo "DOTNET_INSTALL_DIR=$HOME/.dotnet"
+          } >> "$GITHUB_ENV"
+
       - name: Set up Haskell
         if: env.HOME_MODE == 'runner'
         uses: haskell-actions/setup@6037f33647c3f17758a2356c80fc4a53d7e0685d # v2.12.0
@@ -319,6 +344,14 @@ jobs:
             echo "::error::$name resolves to $p, which no declared tool root covers"
             bad=1
           }
+          # A declared root that is a symlink is refused by prepare (and would make
+          # the sandbox bind something other than the root); require real dirs.
+          for d in "$HOME/.ghcup" "$HOME/.dotnet" "$HOME/.rustup" "$HOME/.cargo/bin"; do
+            if [[ -L "$d" || ! -d "$d" ]]; then
+              echo "::error::$d is not a real directory"
+              bad=1
+            fi
+          done
           check python3 "$(command -v python3)"
           check ruby "$(command -v ruby)"
           check go "$(command -v go)"
@@ -345,6 +378,7 @@ jobs:
           # The not-clean checker runs after each shard's build, and a build can
           # write the checkout: copy it out with the binaries, before any shard.
           install -m 0555 code/programs/go/kiln/ci/census_not_clean.py "$RUNNER_TEMP/bin/census_not_clean.py"
+          install -m 0555 code/programs/go/kiln/ci/census_probes_ok.py "$RUNNER_TEMP/bin/census_probes_ok.py"
           ls -l "$RUNNER_TEMP/bin"
 
       # The job's start stamp: prepare binds it (KILN04 5.3, --job-start), and
@@ -398,6 +432,7 @@ jobs:
           kiln="$RUNNER_TEMP/bin/kiln"
           bt="$RUNNER_TEMP/bin/build-tool"
           not_clean="$RUNNER_TEMP/bin/census_not_clean.py"  # copied before any build ran
+          probes_ok="$RUNNER_TEMP/bin/census_probes_ok.py"  # likewise
           real_home="$HOME"
           # home: fresh uses a fixed-name fresh HOME, so redacted text aggregates
           # across shards.  home: runner uses the runner's own HOME and never
@@ -462,7 +497,7 @@ jobs:
             tag="$MATRIX_OS-shard$idx"
             # The coverage banner is the first line of every shard's summary.
             if [[ "$HOME_MODE" == runner ]]; then
-              printf '**coverage: runner HOME, ci.yml toolchains; exit 0 with every shard clean is the PR8 gate** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+              printf '**coverage: runner HOME, ci.yml toolchains; not the PR8 gate unless every installed toolchain probed OK** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
             else
               printf '**coverage: fresh HOME, Go toolchain only; not the PR8 gate** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
             fi
@@ -496,6 +531,23 @@ jobs:
               fail "$idx" "prepare failed"
               drop_home
               continue
+            fi
+
+            # home: runner only: prepare ran a probe per toolchain INSIDE the
+            # sandbox and sealed the results in pre/probes.json.  Every installed
+            # tool must have probed ok there, or the shard would record "not
+            # found" steps under a PR8 label (the host-side check cannot see a
+            # PATH, pin or symlink problem the sandbox has).  Fail before the
+            # 90 minute build.  Strict: a missing or malformed file fails too.
+            if [[ "$HOME_MODE" == runner ]]; then
+              python3 "$probes_ok" "$rec/pre/probes.json" "$idx" >> "$GITHUB_STEP_SUMMARY"
+              probes_rc=$?
+              if (( probes_rc != 0 )); then
+                fail "$idx" "toolchain probes not OK in the sandbox (see the summary); not the PR8 gate"
+                drop_home
+                rmrec "$rec"; rm -rf /tmp/kiln-tmp
+                continue
+              fi
             fi
 
             # The build tool's environment is EXACTLY build_tool_env: a shell's

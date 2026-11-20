@@ -1544,7 +1544,33 @@ concurrency group that queues and never cancels, and a job timeout.
   - fails the job on a shard that is not clean (`census_not_clean.py --strict`,
     below), and on a census that exited 0 but left no summary JSON.
 
-  **A `runner` run that exits 0 is the PR8 gate.** Not installed, because
+  - requires, per shard and straight after `prepare`, that every installed
+    tool probed ok INSIDE the sandbox: `ci/census_probes_ok.py` reads the sealed
+    `pre/probes.json` (`toolchains`: sorted `{tool, status[, detail]}`, status one
+    of ok, absent, refused, mismatch, timeout; the probes run in the recorder's
+    own sandbox, so they see its PATH, roots and pins) and fails the shard, before
+    the build, unless python3, ruby, go, node, cargo, rustc, dotnet and ghc are
+    all ok (uv, bundle and cabal are reported only). The file is parsed strictly:
+    a missing or malformed file fails. Without it a run in which every non-Go
+    step still failed "not found" inside the sandbox (a PATH or pin mismatch, a
+    root that is a host symlink) would pass `--strict` and the host-side check
+    and be the fresh-HOME census under a PR8 label. The summary line says "not
+    the PR8 gate unless every installed toolchain probed OK" until a shard's probe
+    line says every installed toolchain probed OK;
+  - pins the install locations that the actions would otherwise choose:
+    `GHCUP_INSTALL_BASE_PREFIX=$HOME` (the runner image keeps ghcup in
+    `/usr/local/.ghcup` behind a `~/.ghcup` link, and a symlinked root is refused;
+    haskell-actions/setup@6037f33 only prepends `~/.ghcup/bin`) and
+    `DOTNET_INSTALL_DIR=$HOME/.dotnet` (actions/setup-dotnet@0f4a354 defaults to
+    `/usr/share/dotnet` on Linux when writable, else `~/.dotnet`).
+
+  **A `runner` run that exits 0 is the PR8 gate**, with at least three shards
+  sampled on both images (ubuntu-24.04 and ubuntu-26.04). Installing before the
+  job stamp makes the apt packages under `/usr`, pip fonttools in the toolcache
+  Python, npm@11.13.0 in the Node root and cargo-tarpaulin in `~/.cargo/bin`
+  image or tool content. That is acceptable for a census, but they are inputs no
+  key names: stage-4 PR 3 (`kiln-record.yml`) must decide how to key them, or keep
+  them out of the record job, before it reuses this setup. Not installed, because
   `host-roots.json` declares no tool root for them: Lua, Perl, Elixir/Erlang,
   Dart/Flutter, Java/Kotlin, OCaml, Swift, Clang and Qt; their steps fail at
   "not found" and are recorded as failed steps, not as unclean. Expect new

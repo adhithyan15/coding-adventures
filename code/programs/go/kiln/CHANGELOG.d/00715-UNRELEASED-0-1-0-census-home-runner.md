@@ -22,3 +22,14 @@
   missing summary. A `runner` run that exits 0 is the PR8 gate.
 - `census_not_clean.py` gains `--strict`; without it the checker still always
   exits 0.
+
+### Fixed (census `home: runner`: the gate could pass vacuously)
+
+- New `ci/census_probes_ok.py`: after `prepare`, each shard must have every
+  installed toolchain (python3, ruby, go, node, cargo, rustc, dotnet, ghc) probed
+  ok in the sandbox, read strictly from the sealed `pre/probes.json`; otherwise
+  the shard fails before the build. The coverage line now says "not the PR8 gate
+  unless every installed toolchain probed OK".
+- GHCUP_INSTALL_BASE_PREFIX and DOTNET_INSTALL_DIR pin where GHC and the .NET SDK
+  install, so they land under `$HOME/.ghcup` and `$HOME/.dotnet`; the verify step
+  also requires those roots to be real directories.
