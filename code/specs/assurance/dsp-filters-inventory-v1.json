@@ -2517,21 +2517,21 @@
         "path": "code/packages/typescript/test-bootstrap/src/fuzz.ts",
         "historical_blob_oid": "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",
         "comparison_base_blob_oid": "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",
-        "reviewed_current_blob_oid": "1ab1e6c378bebe54a5733132a8b01bd4cf5ee8c9",
+        "reviewed_current_blob_oid": "ad357c479f730d50702dd0cb5991e1d69a2dfcea",
         "reason": "AF-04c1 TypeScript fuzz producer"
       },
       {
         "path": "code/packages/typescript/test-bootstrap/tests/fuzz.test.ts",
         "historical_blob_oid": "63d4b83469ea5d75556078af37de0f05bf0223b2",
         "comparison_base_blob_oid": "63d4b83469ea5d75556078af37de0f05bf0223b2",
-        "reviewed_current_blob_oid": "032bea2ebb627357a712516789b68bce478fabc6",
+        "reviewed_current_blob_oid": "1ae38bf583109c6cba312f037a5604e6db07f785",
         "reason": "AF-04c1 bootstrap fuzz outcome and limit tests"
       },
       {
         "path": "code/scripts/validate_dsp_filter_assurance_inventory.py",
         "historical_blob_oid": null,
         "comparison_base_blob_oid": "d209f13418af5fb17b582b7c78989dc5416a84f9",
-        "reviewed_current_blob_oid": "193a445e908b2707a69340637bb5457493329e8c",
+        "reviewed_current_blob_oid": "f67c4204076e0b8e7d6ea95dbe6e545e95faadc6",
         "reason": "AF-04c1 committed-HEAD source-drift checker"
       }
     ]

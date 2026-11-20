@@ -140,18 +140,21 @@ The initial corpus length is captured once and membership is read by bounded
 numeric indices, not the caller's overridable array iterator. It may contain
 at most 4,096 byte arrays and 16 MiB in aggregate, with no individual seed
 exceeding 1 MiB as measured by the typed-array intrinsic length accessor (so an
-own `length` property cannot bypass the cap). Inputs are copied before any
-callback. A callback cannot extend initial triage by appending to the caller's
-corpus array, and mutation of a callback's input cannot rewrite a stored seed.
+own `length` property cannot bypass the cap). A fixed-size destination is
+allocated from that validated length before copying, so a resizable backing
+store cannot enlarge the allocation; concurrent writes to shared backing bytes
+are not an atomic snapshot guarantee. Inputs are copied before any callback. A
+callback cannot extend initial triage by appending to the caller's corpus array,
+and mutation of a callback's input cannot rewrite a stored seed.
 If the caller supplies an empty corpus, preserve the historical
 one-zero-byte fallback seed and report `usedFallbackSeed: true`; that fallback
 can exercise the target but cannot produce a `clean` report.
 
 The active corpus is bounded to 4,096 seeds and 16 MiB. A pass that discovers
 new edges but cannot fit in that budget increments `corpusLimitDrops`; its
-edges remain represented in the bounded 65,536-bit bitmap. Mutation energy
-is bounded by the configured safe `baseEnergy` domain and is clipped to the
-remaining mutation-call budget before a batch starts. Every nonempty scheduled
+edges remain represented in the bounded 65,536-bit bitmap. The `baseEnergy`
+input is a safe integer in 0 through 65,536. Each calculated mutation batch is
+clipped to the remaining mutation-call budget before it starts. Every nonempty scheduled
 batch therefore satisfies `1 <= batch <= remaining`, and no callback is
 scheduled after the budget is exhausted.
 
@@ -224,19 +227,19 @@ which failed the injected callback and passed the healthy callback.
 Two `test-bootstrap` source mutants were recompiled with `npx tsc` and run in
 fresh Node processes against `tests/fuzz.test.ts` by importing its
 `../dist/fuzz.js`. The restored producer source SHA-256 was
-`037d9cdecb5879444fe37e0d1fe6ffefd10f810198061e3b079c840011050cfd` and the
+`ea21f47fc4f985f27fad63932e6445704d5a6413b1e0881d5ff94f3c70e72629` and the
 loaded artifact `code/packages/typescript/test-bootstrap/dist/fuzz.js` SHA-256
-was `37e166ebaeca434db070de61d203588228aabdca115a113137f6481ce5b29b90`.
+was `75cf03337a232cad9b5e8f8de779568cdd49ba2d9659280150bba3f1ae32a87d`.
 Removing the timeout increment used mutant source SHA-256
-`922ad45e5ac16883fd77ba00a3db9a3c5dc4c5a5260d5c00224c6781c8e6856c` and
+`b5bb0a90842f4cf0cca075050348605fe8fe72b1241f9957ad3a8bd3db2802f3` and
 loaded artifact SHA-256
-`13c2b5d6a60513a2c33ebbd175cf2a6840d26f106cbf40772036c7907a2c0485`; the
+`6e17db5b0687e649ad3ed171b15a47b17841d51d7fbfa8e833a91024ebe2bac7`; the
 `accounts every returned phase outcome...` assertion failed with timeout count
 0 instead of 1. Replacing the remaining-budget clamp with `remaining + 1`
 used mutant source SHA-256
-`3b7b356f0e34e70199482e4aafedc1ae3b8af74ddae9e7c584b565ca76178efa` and
+`06c80dde1bd19de2bec2da168854b5b6958238c1e36aba388c8f26835e1347a9` and
 loaded artifact SHA-256
-`d9c861bf6b43909f32581dd42a2b5cf4298b2720e4217b0bfb9f31521209afb2`; the
+`6fbe64d92db0ea0da629765bfab4684739a2a4cfc6611970abb468a691250bcb`; the
 `clips an oversized energy schedule...` assertion failed at the progress
 invariant. Source was restored and recompiled to the baseline identities above;
 both intended assertions passed on the restored artifact. The source hashes

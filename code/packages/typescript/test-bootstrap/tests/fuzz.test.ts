@@ -570,6 +570,15 @@ describe("Fuzz Engine Unit & Component Tests", () => {
 
   it("uses the intrinsic byte length and rejects a shadowed oversized view before callbacks", () => {
     let calls = 0;
+    const inBounds = new Uint8Array([4, 5]);
+    Object.defineProperty(inBounds, "length", { value: 0 });
+    let observed: number[] = [];
+    fuzzTarget([inBounds], { maxIterations: 0 }, (input) => {
+      observed = Array.from(input);
+      return { status: "pass" };
+    });
+    assert.deepEqual(observed, [4, 5]);
+
     const input = new Uint8Array(1_048_577);
     Object.defineProperty(input, "length", { value: 0 });
     assert.throws(() => fuzzTarget([input], { maxIterations: 0 }, () => {

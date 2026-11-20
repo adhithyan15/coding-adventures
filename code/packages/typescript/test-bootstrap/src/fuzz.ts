@@ -617,7 +617,12 @@ function validateFuzzOptions(initialCorpus: Uint8Array[], opts: FuzzOptions): {
     if (totalBytes > MAX_CORPUS_BYTES) {
       throw new RangeError(`initialCorpus exceeds ${MAX_CORPUS_BYTES} bytes`);
     }
-    snapshot.push(new Uint8Array(input));
+    // Allocate from the validated length, then use the intrinsic copy method.
+    // A growable backing store cannot make this snapshot allocate beyond the cap;
+    // if it grew before the copy, the fixed destination makes set() reject it.
+    const copy = new Uint8Array(inputLength);
+    Uint8Array.prototype.set.call(copy, input);
+    snapshot.push(copy);
   }
   return { maxIterations, seed: BigInt(seedOption), maxInputLen, baseEnergy, snapshot };
 }
