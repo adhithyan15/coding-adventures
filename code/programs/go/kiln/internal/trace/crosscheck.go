@@ -83,10 +83,54 @@ func init() {
 // a time, as the census does.  TestParseCrossCheckedOnlyInCensus keeps every
 // other production file from calling it.
 func ParseCrossChecked(r io.Reader, initialCwd string, opts Options) (tr *Trace, err error, mismatch *CrossCheckMismatch, allowed int) {
+	tr, err, mismatch, d := ParseCrossCheckedDetail(r, initialCwd, opts)
+	return tr, err, mismatch, d.Allowed
+}
+
+// CrossCheckDetail is what ParseCrossCheckedDetail says about the allowed
+// (stricter-only) divergences of one parse, beyond how many there were.
+//
+// Every string in it is a FIXED program string: Rows' keys are the names of
+// the rows of stricterRow below (string literals in this file), never a slice
+// of the trace.  So the names are safe to print anywhere, and the number of
+// distinct keys is bounded by the table.
+type CrossCheckDetail struct {
+	// Allowed is the number of stricter-only divergences this one parse took.
+	Allowed int
+	// Rows counts them by the name of the spec's row that allowed each.
+	Rows map[string]int
+	// Hits are the first MaxAllowedHits of them, in trace order, each with the
+	// 1-based line where the grammar path stopped.
+	Hits []AllowedHit
+}
+
+// AllowedHit is one allowed divergence: the row's fixed name and the trace line
+// the grammar path refused.
+type AllowedHit struct {
+	Row  string
+	Line int
+}
+
+// MaxAllowedHits bounds CrossCheckDetail.Hits.
+const MaxAllowedHits = 16
+
+// ParseCrossCheckedDetail is ParseCrossChecked that also names the row of each
+// allowed divergence and the line it happened on (the census's reporting
+// needs "which row?", not only "how many?").  It changes nothing about what is
+// parsed or compared: the same body, the same mutex, and noteAllowed does
+// the extra bookkeeping into a per-call log.
+func ParseCrossCheckedDetail(r io.Reader, initialCwd string, opts Options) (tr *Trace, err error, mismatch *CrossCheckMismatch, detail CrossCheckDetail) {
 	crossCheckMu.Lock()
 	defer crossCheckMu.Unlock()
 	before := AllowedDivergences()
+	log := &CrossCheckDetail{Rows: map[string]int{}}
+	allowedMu.Lock()
+	allowedLog = log
+	allowedMu.Unlock()
 	defer func() {
+		allowedMu.Lock()
+		allowedLog = nil
+		allowedMu.Unlock()
 		if p := recover(); p != nil {
 			m, ok := p.(*CrossCheckMismatch)
 			if !ok {
@@ -94,7 +138,8 @@ func ParseCrossChecked(r io.Reader, initialCwd string, opts Options) (tr *Trace,
 			}
 			tr, err, mismatch = nil, nil, m
 		}
-		allowed = AllowedDivergences() - before
+		log.Allowed = AllowedDivergences() - before
+		detail = *log
 	}()
 	tr, err = parseCrossChecked(r, initialCwd, opts)
 	return
@@ -137,9 +182,20 @@ var (
 	allowedStats = map[string]int{}
 )
 
-func noteAllowed(row string) {
+// allowedLog, when not nil, is the per-call log of the ParseCrossCheckedDetail
+// in progress (set and cleared under allowedMu, and only ever set while
+// crossCheckMu is held, so one call's log never sees another's hits).
+var allowedLog *CrossCheckDetail
+
+func noteAllowed(row string, line int) {
 	allowedMu.Lock()
 	allowedStats[row]++
+	if allowedLog != nil {
+		allowedLog.Rows[row]++
+		if len(allowedLog.Hits) < MaxAllowedHits {
+			allowedLog.Hits = append(allowedLog.Hits, AllowedHit{Row: row, Line: line})
+		}
+	}
 	allowedMu.Unlock()
 }
 
@@ -254,14 +310,14 @@ func compareParses(data []byte, opts Options, panicked bool, trOld *Trace, errOl
 			old = "" // the old scanner accepted the line the grammar path refused
 		}
 		if row := stricterRow(lineAt(data, a2), old, e2.Reason, data, a2, maxLine); row != "" {
-			noteAllowed(row)
+			noteAllowed(row, a2)
 			return "", 0
 		}
 	case e1 == nil && e2 != nil:
 		// The old scanner read every line; the grammar path refused one (and the
 		// old scanner refused later, in the model, or not at all).
 		if row := stricterRow(lineAt(data, a2), "", e2.Reason, data, a2, maxLine); row != "" {
-			noteAllowed(row)
+			noteAllowed(row, a2)
 			return "", 0
 		}
 	}

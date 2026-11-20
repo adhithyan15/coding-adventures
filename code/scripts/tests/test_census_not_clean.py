@@ -29,6 +29,16 @@ class NotCleanTests(unittest.TestCase):
         self.assertEqual(len(mod.reasons(summary(traces=3, accepted=0))), 1)
         self.assertEqual(len(mod.reasons(summary(skipped=1, actions_skipped=1, accepted=0))), 3)
 
+    def test_additive_census_reporting_fields_do_not_change_the_verdict(self):
+        # The census-reporting fields (shapes, shard_void, allowed_rows, ...) are
+        # additive: the soft-pass flags read only the fields they always read.
+        s = summary()
+        s["shapes"] = [{"origin": "refusal:size", "count": 1}]
+        s["actions"] = {"shard_void": True, "writes_unknown": 3, "strict_merge_voids_shard": True}
+        s["cross_check"]["allowed_rows"] = {"signed pid": 1}
+        s["bounds"]["shapes_dropped"] = 9
+        self.assertEqual(mod.reasons(s), [])
+
     def test_no_traces_is_not_all_refused(self):
         self.assertEqual(mod.reasons(summary(traces=0, accepted=0)), [])
 

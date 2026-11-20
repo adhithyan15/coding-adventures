@@ -90,17 +90,29 @@ to a detached offer or policy. This helper validates only extension-block
 structure, message placement, allowed context, uniqueness, and offer matching;
 it does not interpret extension payload semantics.
 
+When the pending message is a main-handshake `CertificateRequest`, the handler
+can decode its exact authenticated body under explicit context, extension, and
+signature-list limits. The helper requires the exact post-request ordered
+state and client-authentication flag, an empty request context, and the
+retained policy's `CertificateRequest` placement rules. It then requires and
+structurally decodes `signature_algorithms`, and similarly decodes
+`signature_algorithms_cert` when present. The non-cloneable proof retains the
+pending pre-message snapshot, exact request, required handshake-signature list,
+and optional certificate-signature list. It does not select an algorithm,
+access credentials, sign, or decide whether client authentication is supported.
+
 This package derives one direction's handshake key and IV, creates matching
 record state, protects exact retry-handshake records in caller-owned buffers,
 enforces the public no-PSK server-flight type order, joins fresh ordered state
 to exact retry transcript and Finished-key provenance, and advances that
 transcript only after explicit caller authorization of authenticated ordered
 messages. It provides the bounded `EncryptedExtensions` structure and retained
-offer/context check above; the authorization bit is otherwise not body
-validation. This package does not interpret extension payloads or other message
-bodies, authenticate CertificateVerify or Finished, validate certificates,
-establish trust, verify hostnames, enforce revocation, perform I/O, authorize
-HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
+offer/context check and the bounded main-handshake `CertificateRequest` checks
+above; the authorization bit is otherwise not body validation. This package
+does not select signature algorithms, access credentials, sign, authenticate
+CertificateVerify or Finished, validate certificates, establish trust, verify
+hostnames, enforce revocation, perform I/O, authorize HTTP or OAuth, or provide
+TLS, HTTPS, or live-provider readiness.
 
 ## Verification
 
