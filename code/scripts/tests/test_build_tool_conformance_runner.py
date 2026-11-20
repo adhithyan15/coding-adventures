@@ -1101,6 +1101,18 @@ class CorpusTests(unittest.TestCase):
             canonical_digest,
         )
 
+        def change_input_role(value) -> None:
+            item = next(
+                item for entry in value["boundaries"] for item in entry["inputs"]
+            )
+            previous = item["role"]
+            item["role"] = (
+                "shared_ancestor"
+                if previous == "cross_package_exact"
+                else "cross_package_exact"
+            )
+            self.assertNotEqual(item["role"], previous)
+
         mutations = []
         for name, mutate in (
             ("schema-version", lambda value: value.__setitem__("schema_version", 2)),
@@ -1134,12 +1146,7 @@ class CorpusTests(unittest.TestCase):
                     "path", "code/packages/haskell/cabal-v2.project"
                 ),
             ),
-            (
-                "input-role",
-                lambda value: value["boundaries"][0]["inputs"][0].__setitem__(
-                    "role", "cross_package_exact"
-                ),
-            ),
+            ("input-role", change_input_role),
             (
                 "generated-component",
                 lambda value: next(
@@ -1165,6 +1172,7 @@ class CorpusTests(unittest.TestCase):
 
         for name, changed in mutations:
             with self.subTest(name=name):
+                self.assertNotEqual(changed, canonical)
                 self.assertNotEqual(
                     runner.repository_source_input_boundary_digest(changed),
                     canonical_digest,
