@@ -142,6 +142,11 @@ type result struct {
 	ann     []byte // -y annotation on a returned descriptor
 	hasAnn  bool
 	unknown bool // "= ?"
+	// minusOne says the value was the exact decimal text "-1", as strace prints
+	// a failed call.  The hex spelling of the same number and "-01" are not
+	// what strace prints, so the sandbox filter's answer (filterAnswered)
+	// requires this, not just value == -1.
+	minusOne bool
 	// host is the pid in strace's own PID namespace, from the annotation
 	// `= 2 /* 5030 in strace's PID NS */` that --pidns-translation adds to a
 	// pid returned inside another PID namespace; hasHost says it was printed.
@@ -520,6 +525,7 @@ func parseResult(s string) (result, string) {
 			return r, reasonResult
 		}
 		r.value, r.hasVal = v, true
+		r.minusOne = s[:k] == "-1"
 		s = s[k:]
 		if h, rest, ok := parsePidnsNote(s); ok && v > 0 {
 			r.host, r.hasHost = h, true
@@ -838,7 +844,8 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		return nil, incomplete(lineNo, reasonInterleaved)
 	}
 	if unfinished {
-		if !st.helper {
+		// A refused name is judged by its result, at the resumed half.
+		if !st.helper && lookup(call.name).class != classRefused {
 			if e := classifyName(call.name, lineNo); e != nil {
 				return nil, e
 			}
@@ -868,10 +875,12 @@ func finishCall(pid, lineNo int, call rawCall, split, deferClass bool) (*record,
 	if call.ret.hasHost && !isSpawn(call.name) && !isWaitName(call.name) {
 		return nil, incomplete(lineNo, reasonResult)
 	}
-	if !deferClass {
-		if e := classifyName(call.name, lineNo); e != nil {
-			return nil, e
-		}
+	// A refused name the sandbox filter answered (clone3 = -1 ENOSYS, mount =
+	// -1 EPERM) is the filter working: drop it, in both modes.
+	if tolerated, e := classifyCall(call.name, call.ret, lineNo); tolerated {
+		return nil, nil
+	} else if e != nil && !deferClass {
+		return nil, e
 	}
 	if lookup(call.name).class == classIgnored {
 		if isExitName(call.name) && !split && call.ret.unknown {

@@ -153,7 +153,8 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 			return nil, incomplete(lineNo, reasonInterleaved)
 		}
 		if unfinished {
-			if !st.helper {
+			// A refused name is judged by its result, at the resumed half.
+			if !st.helper && lookup(call.name).class != classRefused {
 				if e := classifyName(call.name, lineNo); e != nil {
 					return nil, e
 				}

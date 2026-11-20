@@ -408,6 +408,11 @@ func (m *model) buildSpawns(recs []record) *Error {
 			} else {
 				flags, share, r = analyzeClone(c.args)
 			}
+			if r != "" && c.name == "clone" && filterAnswered("clone", c.ret) && cloneOnlyForbidden(c.args) {
+				// The filter's own EPERM for a clone with CLONE_UNTRACED or
+				// CLONE_NEW* (section 4.3 item 5): nothing was spawned.
+				r = ""
+			}
 			if r != "" {
 				// Judged below: the helper's own group may clone into new
 				// namespaces; nobody else may.
@@ -627,6 +632,55 @@ func analyzeClone(args []string) (flags string, shareFS bool, reason string) {
 	return "", false, reasonCloneFlags
 }
 
+// knownCloneToken is the closed set of names strace prints in a clone's flags=
+// argument: the Linux CLONE_* flags and the signal names an exit signal can be.
+// A token outside it (CLONE_BOGUS) is one we cannot vouch for, so a clone that
+// carries it stays clone-flags even when it failed with the filter's EPERM.
+var knownCloneToken = func() map[string]bool {
+	m := map[string]bool{}
+	for _, n := range []string{
+		"CLONE_VM", "CLONE_FS", "CLONE_FILES", "CLONE_SIGHAND", "CLONE_PIDFD", "CLONE_PTRACE",
+		"CLONE_VFORK", "CLONE_PARENT", "CLONE_THREAD", "CLONE_NEWNS", "CLONE_SYSVSEM",
+		"CLONE_SETTLS", "CLONE_PARENT_SETTID", "CLONE_CHILD_CLEARTID", "CLONE_DETACHED",
+		"CLONE_UNTRACED", "CLONE_CHILD_SETTID", "CLONE_NEWCGROUP", "CLONE_NEWUTS",
+		"CLONE_NEWIPC", "CLONE_NEWUSER", "CLONE_NEWPID", "CLONE_NEWNET", "CLONE_IO",
+		"CLONE_CLEAR_SIGHAND", "CLONE_INTO_CGROUP", "CLONE_NEWTIME",
+		"SIGHUP", "SIGINT", "SIGQUIT", "SIGILL", "SIGTRAP", "SIGABRT", "SIGBUS", "SIGFPE",
+		"SIGKILL", "SIGUSR1", "SIGSEGV", "SIGUSR2", "SIGPIPE", "SIGALRM", "SIGTERM",
+		"SIGSTKFLT", "SIGCHLD", "SIGCONT", "SIGSTOP", "SIGTSTP", "SIGTTIN", "SIGTTOU",
+		"SIGURG", "SIGXCPU", "SIGXFSZ", "SIGVTALRM", "SIGPROF", "SIGWINCH", "SIGIO",
+		"SIGPWR", "SIGSYS",
+	} {
+		m[n] = true
+	}
+	return m
+}()
+
+// cloneOnlyForbidden reports whether the only thing wrong with a clone's flags
+// is a forbidden one (CLONE_UNTRACED or CLONE_NEW*): every token is in
+// knownCloneToken.  Only then is a clone that failed with the filter's EPERM tolerated; a
+// flag we cannot name stays clone-flags whatever the result.
+func cloneOnlyForbidden(args []string) bool {
+	forbidden := false
+	for _, a := range args {
+		v, ok := strings.CutPrefix(a, "flags=")
+		if !ok {
+			continue
+		}
+		for _, tok := range strings.Split(v, "|") {
+			tok = strings.TrimSpace(tok)
+			if !knownCloneToken[tok] {
+				return false
+			}
+			if tok == "CLONE_UNTRACED" || strings.HasPrefix(tok, "CLONE_NEW") {
+				forbidden = true
+			}
+		}
+		return forbidden
+	}
+	return false
+}
+
 // get returns the state of pid, creating it the first time it is seen.
 //
 // A child is normally created the moment its parent's fork/vfork/clone
@@ -838,8 +892,14 @@ func (m *model) apply(rec *record) *Error {
 			p.cwd = &cwdCell{path: p.cwd.path, refs: 1}
 			return nil
 		}
-		// Classification was deferred in pass 1.
-		if e := classifyName(c.name, rec.line); e != nil {
+		// Classification was deferred in pass 1.  A refused name the sandbox
+		// filter answered (clone3 = -1 ENOSYS, mount = -1 EPERM) is the
+		// filter working, in the init window and in the step alike: no
+		// event, no error.  (finishCall already drops these; the check is
+		// kept here because this is the path a recording takes.)
+		if tolerated, e := classifyCall(c.name, c.ret, rec.line); tolerated {
+			return nil
+		} else if e != nil {
 			if inWindow {
 				if c.name == "clone3" && c.ret.ok() {
 					// A clone3 of the init's window is tolerated like clone
@@ -1076,6 +1136,9 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		// nothing to record beyond the result (the child pid)
 	case roleClone:
 		ev.Flags, _, r = analyzeClone(c.args)
+		if r != "" && filterAnswered("clone", c.ret) && cloneOnlyForbidden(c.args) {
+			r = "" // the filter's EPERM: nothing was spawned (see cloneOnlyForbidden)
+		}
 		if r != "" {
 			return fail(r)
 		}
