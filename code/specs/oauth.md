@@ -6852,6 +6852,30 @@ Those data-driven credential, signing, server-authentication, trust, revocation,
 and transport compositions remain prerequisites, and concrete HTTPS and
 live-provider readiness remain unavailable.
 
+An authenticated ordered retry server `Certificate` at the post-accept
+`ExpectCertificateVerify` position can now be decoded under explicit
+caller-selected message and per-entry extension limits. The main-handshake
+helper requires an empty request context and at least one certificate entry,
+then structurally decodes every entry's exact length-prefixed extension vector
+and applies the exact retained extension-context policy and final ClientHello
+offer in the server `Certificate` context. The certificate framing primitive
+therefore retains both each extension payload and its exact two-byte-length-
+prefixed vector so this composition accepts no reconstructed or detached
+extension block. Success returns a non-copyable proof retaining the pending
+message and exact decoded nonempty server certificate chain after all entry
+extensions pass placement, uniqueness, and offer binding.
+
+This proof establishes only authenticated message provenance, server-certificate
+framing, main-handshake empty context, nonempty chain presence, and per-entry
+extension structure and type-level policy. It does not parse X.509 certificate
+bytes, semantically decode certificate-entry extension payloads, construct or
+validate a certificate path, authenticate CertificateVerify or Finished,
+establish trust, verify a hostname, enforce revocation, select later epochs,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those repository-owned certificate, signature, trust, revocation, and transport
+compositions remain prerequisites, and concrete HTTPS and live-provider
+readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

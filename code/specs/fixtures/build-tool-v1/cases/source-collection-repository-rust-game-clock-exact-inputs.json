@@ -20,7 +20,7 @@
       "mode": "repository_boundary",
       "language": "rust",
       "package_root": "code/packages/rust/game-clock",
-      "boundary_sha256": "26695743e45ef2e91909e42444705a4344af540fc808c2496072baafde2e4642",
+      "boundary_sha256": "411049c9f4c7d156aec9280209f36fb6d7dab3496580e751bc3841a32789ed6f",
       "candidates": [
         {
           "path": ".cargo/config.toml",

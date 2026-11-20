@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - Dart DT18 hash-map input binding
+
+- Regenerate the immutable source-input projection with the exact Dart hash-map corpus grant and replay the merged neutral source-collection corpus.
+
 ## Unreleased - fixed-point source boundary
 
 - Added `rust/fixed-point` to the exact repository-source boundary for the Q16.16 Warrant and corpus, Rust Cargo target config, and workspace lockfile. Extended the root Cargo-config exception only for that exact package and added its source-collection fixture to the native test roster.

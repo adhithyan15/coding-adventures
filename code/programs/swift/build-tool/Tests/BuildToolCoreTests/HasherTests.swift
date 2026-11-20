@@ -317,12 +317,12 @@ struct HasherTests {
         )
 
         #expect(checkedObject.isEqual(productionObject))
-        #expect(checked.boundaries.count == 26)
-        #expect(checked.boundaries.flatMap(\.inputs).count == 41)
+        #expect(checked.boundaries.count == 27)
+        #expect(checked.boundaries.flatMap(\.inputs).count == 42)
         #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 33)
         #expect(
             Hasher.repositorySourceInputBoundaryDigest
-                == "26695743e45ef2e91909e42444705a4344af540fc808c2496072baafde2e4642"
+                == "411049c9f4c7d156aec9280209f36fb6d7dab3496580e751bc3841a32789ed6f"
         )
         #expect(
             try Hasher.canonicalRepositorySourceInputBoundaryDigest(from: checkedData)
@@ -336,6 +336,7 @@ struct HasherTests {
 
     @Test(arguments: [
         "source-collection-repository-cross-language-workspace.json",
+        "source-collection-repository-dart-hash-map.json",
         "source-collection-repository-direct-build-inputs.json",
         "source-collection-repository-link-boundaries.json",
         "source-collection-repository-python-workspace.json",

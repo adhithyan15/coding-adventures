@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - Dart DT18 hash-map input binding
+
+- Replay the exact Dart hash-map repository-corpus case through the production selector and validate the merged canonical corpus.
+
 ## Unreleased - fixed-point repository input selection
 
 - Added exact fixed-point Warrant and Q16.16 corpus routing plus the exact Cargo configuration, workspace manifest, and lockfile consumer relation to process-free diff selection. Nearby lookalikes remain unselected.

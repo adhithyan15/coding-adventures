@@ -115,6 +115,7 @@ impl std::error::Error for Tls13CertificateMessageError {}
 #[derive(Clone, Copy, Eq, PartialEq)]
 pub struct Tls13CertificateEntry<'a> {
     certificate_data: &'a [u8],
+    encoded_extensions: &'a [u8],
     extensions: &'a [u8],
     index: usize,
 }
@@ -137,6 +138,11 @@ impl<'a> Tls13CertificateEntry<'a> {
 
     pub const fn extensions(self) -> &'a [u8] {
         self.extensions
+    }
+
+    /// Borrow the exact two-byte-length-prefixed extension vector.
+    pub const fn encoded_extensions(self) -> &'a [u8] {
+        self.encoded_extensions
     }
 
     pub const fn index(self) -> usize {
@@ -218,10 +224,12 @@ impl<'a> Iterator for Tls13CertificateEntries<'a> {
         let extensions_length =
             read_u16(self.remaining.get(certificate_end..extensions_length_end)?)?;
         let extensions_end = extensions_length_end.checked_add(extensions_length)?;
+        let encoded_extensions = self.remaining.get(certificate_end..extensions_end)?;
         let extensions = self.remaining.get(extensions_length_end..extensions_end)?;
         self.remaining = self.remaining.get(extensions_end..)?;
         let entry = Tls13CertificateEntry {
             certificate_data,
+            encoded_extensions,
             extensions,
             index: self.index,
         };

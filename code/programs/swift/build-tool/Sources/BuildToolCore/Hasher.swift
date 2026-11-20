@@ -87,7 +87,7 @@ public enum Hasher {
         "4b695e89c165297a539091b9e74b60a3be0fd6b056c13fb36d66cdc696e7a1d2"
     static let repositorySourceInputBoundaryRegistry = RepositorySourceInputBoundaryProjection.value
     static let repositorySourceInputBoundaryDigest =
-        "26695743e45ef2e91909e42444705a4344af540fc808c2496072baafde2e4642"
+        "411049c9f4c7d156aec9280209f36fb6d7dab3496580e751bc3841a32789ed6f"
     static var repositoryBoundaryRegisteredPaths: [String] {
         repositorySourceInputBoundaryRegistry.registeredInputPaths
     }

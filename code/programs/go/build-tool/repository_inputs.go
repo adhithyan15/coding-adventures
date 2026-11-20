@@ -469,6 +469,13 @@ var (
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name:     "dart/hash-map",
+		language: "dart",
+		inputs:   "the shared DT18 hash-map contract and v1 fixture",
+		matches:  isDt18HashMapInput,
+		paths:    dt18HashMapPaths,
+	},
+	{
 		name:     "swift/hash-map",
 		language: "swift",
 		inputs:   "the shared DT18 hash-map contract and v1 fixture",
@@ -1276,7 +1283,7 @@ func repositoryInputsForPackage(packageName string) []string {
 		return gameClockInputPaths
 	case "typescript/game-input-frame":
 		return typescriptGameInputFrameInputs
-	case "swift/hash-map":
+	case "swift/hash-map", "dart/hash-map":
 		return swiftHashMapFixtureInputs
 	default:
 		return nil

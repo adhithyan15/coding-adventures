@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - Dart HashMap source fixture
+
+- Add the Dart hash-map repository-boundary case to the shared .NET source-collection replay.
+
 ## Unreleased - fixed-point source boundary fixture
 
 - Updated the F# facade neutral source-collection case roster to consume the new exact fixed-point repository-input fixture through the shared .NET engine.

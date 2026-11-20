@@ -19090,23 +19090,23 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "The Dart DT17 hash-functions prerequisite is merged. The Dart DT18 hash-map gap is split into hash-map-dart-lane-parity and remains missing while its profile, shared-fixture, implementation, VM/Node, coverage, and merge gates are pending. This umbrella retains the other missing Dart identities: bloom-filter, hash-set, HyperLogLog, in-memory store/protocol/engine, radix-tree, RESP, skip-list, and tree-set. Hash-set depends on the map child, tree-set needs its tree substrate, and the store engine needs several data structures. Keep the full server/AOF outside scope without applicability review."
+      "notes": "The Dart DT17 hash-functions prerequisite is merged. DT18 hash-map is now split into its dedicated leaf and the shared-conformance foundation; the foundation merged in PR #19704 as f16757fd0cec42ad96b36b7d0b16bc001ad2f969. This umbrella retains the other missing Dart identities: bloom-filter, hash-set, HyperLogLog, in-memory store/protocol/engine, radix-tree, RESP, skip-list, and tree-set. Hash-set depends on the map child, tree-set needs its tree substrate, and the store engine needs several data structures. Keep the full server/AOF outside scope without applicability review."
     },
     {
       "id": "hash-map-dt18-shared-conformance-foundation",
       "title": "Add DT18 shared conformance and cache-input bindings",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "hash-functions-dt17-vector-and-documentation-correction",
         "hash-functions-dart-lane-parity",
         "swift-hash-map-lane-parity"
       ],
       "branch": "codex/dt18-map-conformance-foundation-20261119",
-      "pr_number": null,
+      "pr_number": 19704,
       "selection_blocked": false,
       "selection_revision": "b779d10a1601c203bc377ef74e448ac947906c66",
-      "publication_readiness": "ready_for_pr",
-      "notes": "Phase 2 freezes a shared DT18 corpus with independent association-list and physical-layout models, compact lossless exhaustive-history streams, directed cases, and hash vectors. The real Swift public HashMap consumer and build-tool fixture routing pass on the Phase 2 source. This foundation contains no Dart production implementation and earns no Dart slot credit. Independent review and the publication PR must complete before selecting the Dart implementation owner.",
+      "publication_readiness": "merged",
+      "notes": "The shared DT18 corpus, independent association-list and physical-layout models, exhaustive short-history streams, directed public-operation cases, real Swift public API consumer, and build-tool fixture routing merged in PR #19704 as f16757fd0cec42ad96b36b7d0b16bc001ad2f969. This foundation contains no Dart production implementation and earns no Dart slot credit.",
       "profile_evidence": {
         "pull_request": 19693,
         "merge_revision": "eaa6fb8d547d63eff010739ad36aa25508046c34",
@@ -19120,23 +19120,24 @@
         "history_count_per_strategy": 66430,
         "consumer": "actual Swift public API",
         "production_dart_claim": false
-      }
+      },
+      "merge_revision": "f16757fd0cec42ad96b36b7d0b16bc001ad2f969"
     },
     {
       "id": "hash-map-dart-lane-parity",
       "title": "Implement and validate the Dart DT18 hash-map profile",
-      "status": "pending",
+      "status": "implementation-in-progress",
       "depends_on": [
         "hash-functions-dt17-vector-and-documentation-correction",
         "hash-functions-dart-lane-parity",
         "hash-map-dt18-shared-conformance-foundation"
       ],
-      "branch": null,
+      "branch": "codex/parity-dart-hash-map-implementation-20261119",
       "pr_number": null,
-      "selection_blocked": true,
-      "selection_revision": "b779d10a1601c203bc377ef74e448ac947906c66",
-      "selection_notes": "Fresh exact-main inventory at b779d10a1601c203bc377ef74e448ac947906c66 reports 5,164 structural package slots and DT18 hash-map coverage of 14/15 established lanes, with Dart the sole missing lane. The six open PRs had no map overlap. Select this dedicated leaf after Dart DT17 PR #19687 merged.",
-      "notes": "The DT18 profile and ownership split merged in PR #19693 as eaa6fb8d547d63eff010739ad36aa25508046c34. Its Phase 2 shared conformance foundation is tracked separately and must merge before Dart production work begins. The Dart package implementation, public API tests, VM/Node validation, and production-boundary checks remain outstanding. This owner still carries no Dart slot credit.",
+      "selection_blocked": false,
+      "selection_revision": "6a114eb5a0df7431bd97162c4fc2169f8a50a6aa",
+      "selection_notes": "Selected after foundation PR #19704 merged as f16757fd0cec42ad96b36b7d0b16bc001ad2f969 and post-merge validation completed. The dedicated clean worktree starts from exact main 6a114eb5a0df7431bd97162c4fc2169f8a50a6aa. The profile remains frozen in merged PR #19693. Implementation is now in progress; no Dart slot credit is granted until production, public VM/Node tests, coverage, mutation controls, BUILD integration, independent review, and merge all complete.",
+      "notes": "Implement the frozen DT18 Dart profile using the merged shared foundation and the sibling DT17 hash-functions package. The real Swift consumer proves the shared fixture gate only; Dart conformance is pending until the actual public Dart API runs on VM and Node. Required work includes both strategies, persistent operations, key/hash configuration validation, actual production boundaries, generated source-input routing, package BUILD fronts, and independent source/security review. This owner carries no Dart slot credit.",
       "postmerge_preparation_evidence": [
         "code/specs/DT18-hash-map-dart-profile.md"
       ],
@@ -19156,7 +19157,24 @@
         "histories_per_strategy": 66430,
         "consumer": "actual Swift public HashMap API",
         "dart_conformance_claimed": false,
-        "production_implementation_authorized": false
+        "production_implementation_authorized": true
+      },
+      "implementation_gate": {
+        "status": "in_progress",
+        "base_revision": "6a114eb5a0df7431bd97162c4fc2169f8a50a6aa",
+        "profile_revision": "6c6224602972d91ee5f3683a13d4f4f106c9e585",
+        "foundation_pr": 19704,
+        "foundation_merge_revision": "f16757fd0cec42ad96b36b7d0b16bc001ad2f969",
+        "test_owner": "Luna_parity",
+        "public_validation_required": [
+          "Dart VM",
+          "Dart Node",
+          "line coverage",
+          "branch coverage",
+          "source mutation controls",
+          "production maximum boundaries",
+          "BUILD and BUILD_windows"
+        ]
       }
     },
     {

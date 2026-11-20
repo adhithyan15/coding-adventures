@@ -12,7 +12,7 @@
       "mode": "repository_boundary",
       "language": "python",
       "package_root": "code/packages/python/logic-gates",
-      "boundary_sha256": "26695743e45ef2e91909e42444705a4344af540fc808c2496072baafde2e4642",
+      "boundary_sha256": "411049c9f4c7d156aec9280209f36fb6d7dab3496580e751bc3841a32789ed6f",
       "candidates": [
         {"path": "code/packages/python/pyproject.toml", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
         {"path": "code/packages/python/uv.lock", "kind": "file", "tracked": false, "content_hex": "6c6f63616c0a"},
