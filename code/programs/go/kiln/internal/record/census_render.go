@@ -115,7 +115,7 @@ func renderMarkdown(s *CensusSummary) string {
 	// A trace over the cross-check size cap was timed but NOT cross-checked, so
 	// "ok" above says nothing about it: put the count beside the verdict, where
 	// a reader of only this section cannot miss it.
-	w("- cross-check SKIPPED (trace too large to cross-check, timed only): %d traces, %d bytes\n", cc.Skipped, cc.SkippedBytes)
+	w("- cross-check SKIPPED (trace too large to cross-check, timed only): %d traces, %d bytes (no line shape is made for such a trace either: shapes exist only for cross-checked traces)\n", cc.Skipped, cc.SkippedBytes)
 	if s.InfrastructureFailure != "" {
 		w("- infrastructure failure: %s\n", codeSpan(s.InfrastructureFailure))
 	} else {
@@ -129,6 +129,18 @@ func renderMarkdown(s *CensusSummary) string {
 	a := s.Actions
 	w("## Actions\n\n")
 	w("- total: %d\n- with a record.json: %d (parse ok %d, writes complete %d)\n- record.failed: %d\n- no verdict at all: %d\n", a.Total, a.WithRecord, a.RecordParseOK, a.RecordWritesComplete, a.RecordFailed, a.NoVerdict)
+	voidNote := "shard not void"
+	if a.ShardVoid {
+		voidNote = "SHARD VOID: collect's header names a void reason, so nothing is emitted"
+	}
+	w("- build did not fail (a believed record with no `failed` reason): %d\n- would emit as it stands, an UPPER BOUND (per action, before the merge: it cannot see reads-product or cross-action rules): %d (parse ok, writes complete, ZERO reasons in record.json, plan entry with no gate and a weak key, %s)\n", a.BuiltOK, a.Emittable, voidNote)
+	w("- gated by the plan (never emitted; the merge makes it a precondition): %d; unkeyed (no weak key): %d\n", a.Gated, a.Unkeyed)
+	w("- write set unknown (writes_complete false, or record.failed; a strict merge voids the run for any): %d\n", a.WritesUnknown)
+	yes := "no"
+	if a.StrictMergeVoidsShard {
+		yes = "yes"
+	}
+	w("- strict merge would void this shard: %s (writes unknown > 0, or the shard is void)\n", yes)
 	w("- census.json present and non-empty: %d\n- census.json present and empty, with a record whose parse succeeded (no reasons raised): %d\n", a.CensusNonEmpty, a.CensusClean)
 	w("- census.json EMPTY beside a failed parse half (the classifier never ran; not \"no host reads\"): %d\n", a.CensusEmptyParseFailed)
 	w("- census.json empty and no record: %d\n- census.json MISSING (a classify error; not \"no host reads\"): %d\n- census.json unreadable or invalid: %d\n\n", a.CensusEmptyNoRecord, a.CensusMissing, a.CensusInvalid)
@@ -203,17 +215,53 @@ func renderMarkdown(s *CensusSummary) string {
 	}
 
 	w("## Cross-check\n\n- traces %d, bytes %d\n- accepted %d, refused %d\n- skipped as too large to cross-check: %d (%d bytes)\n- mismatches %d\n- allowed stricter-only divergences %d\n", cc.Traces, cc.Bytes, cc.Accepted, cc.Refused, cc.Skipped, cc.SkippedBytes, cc.Mismatches, cc.Allowed)
+	// The rows' names are fixed program strings; they still go in code spans (the
+	// rule of this file: no free-standing text that is not ours by construction).
+	w("- allowed divergences by the spec's stricter-only row:")
+	if len(cc.AllowedRows) == 0 {
+		w(" none")
+	}
+	for _, k := range sortedStrings(cc.AllowedRows) {
+		w(" %s %d;", codeSpan(k), cc.AllowedRows[k])
+	}
+	w("\n")
 	for _, d := range cc.Details {
 		w("- detail: %s\n", codeSpan(d))
+	}
+	w("\n")
+
+	// The redacted outlines of the lines refusals and allowed divergences
+	// stopped at.  Every token is a type name, a character class, a closed-table
+	// syscall name or ASCII punctuation (trace.Shape), and still sits in a code
+	// span.
+	w("## Line shapes of refusals and allowed divergences (redacted)\n\nShapes exist only for cross-checked traces (not for those skipped as too large). A refusal's line is the error's own line: the call's start for an unresumed call.\n\n")
+	if len(s.Shapes) == 0 {
+		w("None.\n\n")
+	}
+	for _, sh := range s.Shapes {
+		w("- %s, seen %d time(s), first at %s\n", codeSpan(sh.Origin), sh.Count, codeSpan(sh.Where))
+		for _, l := range sh.Lines {
+			cut := ""
+			if l.Truncated {
+				cut = " (cut)"
+			}
+			w("  - %s line %d%s: %s; facts %s\n", l.Role, l.Line, cut, codeSpan(l.Tokens), codeSpan(l.Facts))
+		}
 	}
 	w("\n")
 
 	// Language names are validated, but a bare name can still autolink
 	// (www.evil.example) or render as an emoji (:smile:), so each is in a code
 	// span, in a list item and not in a table cell.
-	w("## Recordable share by language\n\n")
+	//
+	// Wording matters here.  "recordable" is only parse ok + writes complete: it
+	// says nothing about reasons, so it is NOT "would emit" (that is `emittable`:
+	// recordable AND zero reasons AND not gated).  "no-reason" replaces the old
+	// "clean": an empty census beside a recordable record, i.e. no host reads.
+	w("## Share by language (all actions, and of builds that did not fail)\n\n")
 	for _, l := range s.Languages {
-		w("- %s: %d actions, %d recordable, %d clean, %s\n", codeSpan(l.Language), l.Actions, l.Recordable, l.Clean, pct(l.Share))
+		w("- %s: %d actions; %d built ok; recordable (parse ok and writes complete, NOT necessarily emittable) %d = %s of all, %s of built ok; no-reason (recordable with an empty census) %d; would emit, upper bound (zero reasons, no gate, keyed, shard not void) %d = %s of all, %s of built ok; gated %d; unkeyed %d; writes unknown %d\n",
+			codeSpan(l.Language), l.Actions, l.BuiltOK, l.Recordable, pct(l.Share), pct(l.RecordableShareOfBuiltOK), l.Clean, l.Emittable, pct(l.EmittableShare), pct(l.EmittableShareOfBuiltOK), l.Gated, l.Unkeyed, l.WritesUnknown)
 	}
 	w("\n")
 
@@ -235,6 +283,18 @@ func renderMarkdown(s *CensusSummary) string {
 	for _, k := range s.Reasons {
 		w("### Kind %s\n\n", codeSpan(k.Kind))
 		w("- occurrences %d, raised in %d actions, %d distinct paths kept, overflow shed by the classifier %d, dropped here %d\n", k.Occurrences, k.Actions, k.DistinctPaths, k.Overflow, k.DroppedPaths)
+		if len(k.Ops) > 0 {
+			w("- by the kind of look that raised it:")
+			names := make([]string, 0, len(k.Ops))
+			for c := range k.Ops {
+				names = append(names, c)
+			}
+			sort.Strings(names)
+			for _, c := range names {
+				w(" %s %d;", codeSpan(c), k.Ops[c])
+			}
+			w("\n")
+		}
 		if len(k.Prefixes) > 0 {
 			w("\nBy path prefix (depth at most %d):\n\n", censusPrefixDepth)
 			for _, p := range k.Prefixes {
@@ -252,7 +312,7 @@ func renderMarkdown(s *CensusSummary) string {
 
 	bd := s.Bounds
 	w("## Bounds\n\n- JSON at most %d bytes, Markdown at most %d bytes; lists in this rendering cut to %d per kind\n", bd.JSONMaxBytes, bd.MDMaxBytes, bd.TopPerKind)
-	w("- paths cut to %d characters: %d; paths dropped at the distinct-path cap: %d; prefixes dropped: %d; kinds collapsed: %d; languages collapsed: %d; actions skipped: %d\n", maxCensusPathRunes, bd.PathsTruncated, bd.PathsDropped, bd.PrefixesDropped, bd.KindsCollapsed, bd.LanguagesCollapsed, bd.ActionsSkipped)
+	w("- paths cut to %d characters: %d; paths dropped at the distinct-path cap: %d; prefixes dropped: %d; kinds collapsed: %d; languages collapsed: %d; actions skipped: %d; line shapes not kept: %d\n", maxCensusPathRunes, bd.PathsTruncated, bd.PathsDropped, bd.PrefixesDropped, bd.KindsCollapsed, bd.LanguagesCollapsed, bd.ActionsSkipped, bd.ShapesDropped)
 	return b.String()
 }
 

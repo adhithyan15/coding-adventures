@@ -1763,6 +1763,24 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		// A BUILD front edited in place is package-local only if selection
 		// can see who runs it (internal/validator/build_front_invocations.go).
 		frontErr := validator.ValidateBuildFrontInvocations(repoRoot, knownPackages)
+		// BUILD files that run the shared negative-control checker must
+		// declare Python (internal/validator/negctl_python.go). Package-local
+		// BUILD edits never select this program's own tests, so the rule is
+		// enforced here, on every pull request.
+		//
+		// CI's validation job runs on Linux, where host-only discovery misses
+		// a directory whose only BUILD file is BUILD_windows or BUILD_mac, so
+		// outside plan mode this check discovers every platform's packages.
+		negctlPackages := knownPackages
+		if !usedPlan {
+			allPackages, allErr := discovery.DiscoverPackagesAllPlatforms(codeRoot)
+			if allErr != nil {
+				fmt.Fprintf(os.Stderr, "negative-control checker validation: all-platform discovery failed: %v\n", allErr)
+				return 1
+			}
+			negctlPackages = allPackages
+		}
+		negctlErr := validator.ValidateNegctlUsersDeclarePython(repoRoot, negctlPackages)
 
 		if buildErr != nil {
 			fmt.Fprintln(os.Stderr, buildErr)
@@ -1782,7 +1800,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		if frontErr != nil {
 			fmt.Fprintln(os.Stderr, frontErr)
 		}
-		if buildErr != nil || orphanErr != nil || packageRootErr != nil || artifactErr != nil || metadataErr != nil || frontErr != nil {
+		if negctlErr != nil {
+			fmt.Fprintln(os.Stderr, negctlErr)
+		}
+		if buildErr != nil || orphanErr != nil || packageRootErr != nil || artifactErr != nil || metadataErr != nil || frontErr != nil || negctlErr != nil {
 			return 1
 		}
 

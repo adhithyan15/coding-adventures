@@ -25,6 +25,7 @@ fn run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> u8 {
     let mut policy = Policy::default();
     let mut i = 0;
     while i < args.len() {
+        vos_shape_check::steps::tick();
         match args[i].as_str() {
             "-h" | "--help" => {
                 let _ = out.write_all(USAGE.as_bytes());

@@ -53,6 +53,7 @@ const GHOST_PREFIX: &str = "vos_ghost_";
 fn features_in(toks: &[Token]) -> Vec<String> {
     let mut out = Vec::new();
     for w in toks.windows(3) {
+        crate::steps::tick();
         if w[0].is_ident("feature") && w[1].is_punct("=") && w[2].kind == Kind::Str {
             out.push(w[2].text.clone());
         }
@@ -80,6 +81,7 @@ fn gates_ghost_item(f: &FileCtx, a: &Attr) -> bool {
     let mut j = a.close + 1;
     while t.get(j).is_some_and(|x| x.is_punct("#")) && t.get(j + 1).is_some_and(|x| x.is_punct("["))
     {
+        crate::steps::tick();
         j = f.pair[j + 1] + 1;
     }
     let mut public = false;
@@ -110,6 +112,7 @@ fn gates_ghost_item(f: &FileCtx, a: &Attr) -> bool {
 pub fn ghost_rules(cx: &mut Ctx<'_>) {
     let files = cx.files;
     for f in files {
+        crate::steps::tick();
         cfg_gating(cx, f);
         ghost_leaks(cx, f);
         ghost_module_gating(cx, f);
@@ -127,6 +130,7 @@ fn cfg_gating(cx: &mut Ctx<'_>, f: &FileCtx) {
     let declared = |name: &str| cx.cargo.is_none_or(|c| c.features.contains_key(name));
     let mut uses: Vec<(String, u32, bool, Option<&Attr>)> = Vec::new();
     for a in &f.attrs {
+        crate::steps::tick();
         let body = f.attr_body(a);
         let Some(first) = body.first() else { continue };
         let is_cfg = first.is_ident("cfg");
@@ -134,16 +138,19 @@ fn cfg_gating(cx: &mut Ctx<'_>, f: &FileCtx) {
             continue;
         }
         for feat in features_in(body) {
+            crate::steps::tick();
             uses.push((feat, first.line, is_cfg, Some(a)));
         }
     }
     for i in 0..t.len() {
+        crate::steps::tick();
         if !f.in_attr[i]
             && t[i].is_ident("cfg")
             && t.get(i + 1).is_some_and(|x| x.is_punct("!"))
             && t.get(i + 2).is_some_and(|x| x.is_punct("("))
         {
             for feat in features_in(&t[i + 3..f.pair[i + 2]]) {
+                crate::steps::tick();
                 uses.push((feat, t[i].line, false, None));
             }
         }
@@ -154,6 +161,7 @@ fn cfg_gating(cx: &mut Ctx<'_>, f: &FileCtx) {
     // cfg a shape-checked crate may carry is the exact gate of `mod ghost` /
     // `pub use ghost::..` (the `cfg(test)` items are masked earlier).
     for a in &f.attrs {
+        crate::steps::tick();
         let body = f.attr_body(a);
         let Some(first) = body.first() else { continue };
         if !(first.is_ident("cfg") || first.is_ident("cfg_attr")) {
@@ -172,6 +180,7 @@ fn cfg_gating(cx: &mut Ctx<'_>, f: &FileCtx) {
         }
     }
     for i in 0..t.len() {
+        crate::steps::tick();
         if !f.in_attr[i] && t[i].is_ident("cfg") && t.get(i + 1).is_some_and(|x| x.is_punct("!")) {
             msgs.push((
                 t[i].line,
@@ -180,6 +189,7 @@ fn cfg_gating(cx: &mut Ctx<'_>, f: &FileCtx) {
         }
     }
     for (feat, line, plain_cfg, attr) in uses {
+        crate::steps::tick();
         if !declared(&feat) {
             msgs.push((
                 line,
@@ -208,6 +218,7 @@ fn cfg_gating(cx: &mut Ctx<'_>, f: &FileCtx) {
         }
     }
     for (line, m) in msgs {
+        crate::steps::tick();
         cx.add(Rule::Sh18, &f.path, line, m);
     }
 }
@@ -220,6 +231,7 @@ fn ghost_leaks(cx: &mut Ctx<'_>, f: &FileCtx) {
     let mut allowed = vec![false; t.len()];
     let mut covered = 0usize;
     for i in 0..t.len() {
+        crate::steps::tick();
         if i < covered || f.in_attr[i] || !t[i].is_ident("use") || f.in_ghost(i) {
             continue;
         }
@@ -232,11 +244,13 @@ fn ghost_leaks(cx: &mut Ctx<'_>, f: &FileCtx) {
             let end = item_end(t, &f.pair, i);
             covered = end + 1;
             for a in &mut allowed[i..=end.min(t.len() - 1)] {
+                crate::steps::tick();
                 *a = true;
             }
         }
     }
     for i in 0..t.len() {
+        crate::steps::tick();
         if f.in_attr[i] || f.in_ghost(i) || t[i].kind != Kind::Ident {
             continue;
         }
@@ -265,6 +279,7 @@ fn ghost_leaks(cx: &mut Ctx<'_>, f: &FileCtx) {
 /// SH13 (a): each `mod ghost` carries exactly the gating attribute.
 fn ghost_module_gating(cx: &mut Ctx<'_>, f: &FileCtx) {
     for g in &f.ghost_mods {
+        crate::steps::tick();
         let gated = f
             .attrs_before(g.mod_idx)
             .iter()
@@ -285,6 +300,7 @@ fn ghost_module_gating(cx: &mut Ctx<'_>, f: &FileCtx) {
 fn stray_ghost_fns(cx: &mut Ctx<'_>, f: &FileCtx) {
     let t = &f.toks;
     for i in 0..t.len() {
+        crate::steps::tick();
         if f.in_attr[i] || f.in_ghost(i) || !t[i].is_ident("fn") {
             continue;
         }
@@ -311,6 +327,7 @@ fn ghost_without_mod(cx: &mut Ctx<'_>) {
     let any_mod = files.iter().any(|f| !f.ghost_mods.is_empty());
     if !any_mod {
         for f in files.iter().filter(|f| f.ghost_file) {
+            crate::steps::tick();
             cx.add(
                 Rule::Sh13,
                 &f.path,
@@ -330,11 +347,13 @@ fn default_features(cx: &mut Ctx<'_>) {
     let mut seen: BTreeSet<&str> = BTreeSet::new();
     let mut stack: Vec<&str> = vec!["default"];
     while let Some(n) = stack.pop() {
+        crate::steps::tick();
         if !seen.insert(n) {
             continue;
         }
         if let Some((_, items)) = c.features.get(n) {
             for it in items {
+                crate::steps::tick();
                 if c.features.contains_key(it.as_str()) {
                     stack.push(it.as_str());
                 }
@@ -348,6 +367,7 @@ fn default_features(cx: &mut Ctx<'_>) {
         .map(|n| (*n).to_string())
         .collect();
     for n in hit {
+        crate::steps::tick();
         cx.add(
             Rule::Sh13,
             "Cargo.toml",
@@ -376,7 +396,9 @@ fn state_privacy(cx: &mut Ctx<'_>) {
         .iter()
         .filter(|t| (t.keyword == "struct" || t.keyword == "union") && !t.in_ghost)
     {
+        crate::steps::tick();
         for fld in td.fields.iter().filter(|x| x.public) {
+            crate::steps::tick();
             msgs.push((
                 files[td.file].path.clone(),
                 fld.line,
@@ -388,6 +410,7 @@ fn state_privacy(cx: &mut Ctx<'_>) {
         }
     }
     for (p, l, m) in msgs {
+        crate::steps::tick();
         cx.add(Rule::Sh14, &p, l, m);
     }
 }
@@ -401,6 +424,7 @@ fn braced_names(f: &FileCtx, open: usize) -> (Vec<String>, bool) {
     let mut j = open + 1;
     let mut fresh = true;
     while j < close {
+        crate::steps::tick();
         if t[j].is_punct("..") {
             rest = true;
         }
@@ -432,9 +456,11 @@ fn wrappers(cx: &mut Ctx<'_>) {
     let mut msgs: Vec<(String, u32, String)> = Vec::new();
     let mut gaps: Vec<(String, u32, String)> = Vec::new();
     for f in files {
+        crate::steps::tick();
         let t = &f.toks;
         reexport_prefixes(f, &mut msgs);
         for i in 0..t.len() {
+            crate::steps::tick();
             if f.in_attr[i] || !f.in_ghost(i) || !t[i].is_ident("fn") {
                 continue;
             }
@@ -476,6 +502,7 @@ fn wrappers(cx: &mut Ctx<'_>) {
         .iter()
         .filter(|d| d.keyword == "struct" && d.in_ghost && d.name == "Image")
     {
+        crate::steps::tick();
         if !paired.contains(&td.name) {
             msgs.push((
                 files[td.file].path.clone(),
@@ -485,9 +512,11 @@ fn wrappers(cx: &mut Ctx<'_>) {
         }
     }
     for (p, l, m) in msgs {
+        crate::steps::tick();
         cx.add(Rule::Sh17, &p, l, m);
     }
     for (p, l, m) in gaps {
+        crate::steps::tick();
         cx.add(Rule::Vt03, &p, l, m);
     }
 }
@@ -497,6 +526,7 @@ fn reexport_prefixes(f: &FileCtx, msgs: &mut Vec<(String, u32, String)>) {
     let t = &f.toks;
     let mut covered = 0usize;
     for i in 0..t.len() {
+        crate::steps::tick();
         if i < covered || f.in_attr[i] || f.in_ghost(i) || !t[i].is_ident("use") {
             continue;
         }
@@ -515,6 +545,7 @@ fn reexport_prefixes(f: &FileCtx, msgs: &mut Vec<(String, u32, String)>) {
         covered = end + 1;
         let mut j = k + 2;
         while j <= end && j < t.len() {
+            crate::steps::tick();
             let x = &t[j];
             if x.is_punct("*") {
                 msgs.push((f.path.clone(), x.line, "glob re-export `ghost::*` cannot be checked for the `vos_ghost_` prefix; name each item".to_string()));
@@ -567,6 +598,7 @@ fn wrapper_body(
     // UFCS calls: `< .. as .. > :: f (`.
     let mut ufcs: Vec<(usize, usize, usize)> = Vec::new();
     for k in b + 1..end {
+        crate::steps::tick();
         if t[k].is_punct(">")
             && t.get(k + 1).is_some_and(|x| x.is_punct("::"))
             && t.get(k + 2).is_some_and(|x| x.kind == Kind::Ident)
@@ -576,6 +608,7 @@ fn wrapper_body(
                 let mut depth = 1usize;
                 let mut has_as = false;
                 for x in &t[open + 1..k] {
+                    crate::steps::tick();
                     if x.is_punct("<") {
                         depth += 1;
                     } else if x.is_punct(">") {
@@ -622,9 +655,11 @@ fn wrapper_body(
     // let-pattern ranges: `let PATTERN = ..`
     let mut let_ranges: Vec<(usize, usize)> = Vec::new();
     for k in b + 1..end {
+        crate::steps::tick();
         if t[k].is_ident("let") {
             let mut e = k + 1;
             while e < end && !t[e].is_punct("=") && !t[e].is_punct(";") && !t[e].is_ident("let") {
+                crate::steps::tick();
                 if t[e].kind == Kind::Punct && matches!(t[e].text.as_str(), "(" | "[" | "{") {
                     e = f.pair[e];
                 }
@@ -635,6 +670,7 @@ fn wrapper_body(
     }
     let in_let = |k: usize| let_ranges.iter().any(|&(a, e)| k >= a && k < e);
     for k in b + 1..end {
+        crate::steps::tick();
         let x = &t[k];
         let nxt = t.get(k + 1);
         if x.kind == Kind::Ident {
@@ -691,7 +727,9 @@ fn wrapper_body(
     // Exhaustive destructure: struct patterns in `let` patterns.
     let mut production: Option<&TypeDef> = None;
     for &(a, e) in &let_ranges {
+        crate::steps::tick();
         for k in a..e {
+            crate::steps::tick();
             if t[k].kind == Kind::Ident && t.get(k + 1).is_some_and(|n| n.is_punct("{")) {
                 let (names, rest) = braced_names(f, k + 1);
                 if rest {
@@ -720,6 +758,7 @@ fn wrapper_body(
     // Image mirrors: ghost structs built in the body.
     if let Some(s) = production {
         for k in b + 1..end {
+            crate::steps::tick();
             if in_let(k)
                 || t[k].kind != Kind::Ident
                 || !t.get(k + 1).is_some_and(|n| n.is_punct("{"))

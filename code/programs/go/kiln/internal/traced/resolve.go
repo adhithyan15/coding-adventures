@@ -406,7 +406,10 @@ func (c *classifier) resolve(full string, follow bool) (target, bool) {
 	}
 	for _, l := range w.links {
 		c.noteTraversal(l)
+		saved := c.opKind
+		c.opKind = "lookup" // census only: a link crossed on the way, not the call's own target
 		c.observe(l, true, false)
+		c.opKind = saved
 	}
 	for _, d := range w.dirs {
 		c.noteTraversal(d)
@@ -442,11 +445,11 @@ func (c *classifier) resolve(full string, follow bool) (target, bool) {
 		// A successful call went THROUGH a component the post-run disk shows as
 		// missing (or not a directory): the disk contradicts the call, so
 		// something changed it, and nothing here can say what the call saw.
-		c.reason(rUnstable)
+		c.reasonSub(rUnstable, "through-missing", w.stop)
 	}
 	if w.dotdot {
 		if c.callOK {
-			c.reason(rUnstable)
+			c.reasonSub(rUnstable, "dotdot", full)
 		} else {
 			c.observe(w.stop, w.stopPresent, false)
 		}

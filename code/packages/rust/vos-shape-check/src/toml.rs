@@ -113,6 +113,7 @@ fn key_path(key: &GrammarASTNode) -> Result<Vec<String>, TomlError> {
     let line = line_of(key);
     let mut parts = Vec::new();
     for simple in child_nodes(key) {
+        crate::steps::tick();
         let Some((kind, text)) = only_token(simple) else {
             return err(line, "unsupported key form");
         };
@@ -167,7 +168,9 @@ fn value(node: &GrammarASTNode, path: &[String], out: &mut Vec<Entry>) -> Result
             sub.push("[]".to_string());
             let mut items = Vec::new();
             for values in child_nodes(inner) {
+                crate::steps::tick();
                 for v in child_nodes(values) {
+                    crate::steps::tick();
                     items.push(value(v, &sub, out)?);
                 }
             }
@@ -175,6 +178,7 @@ fn value(node: &GrammarASTNode, path: &[String], out: &mut Vec<Entry>) -> Result
         }
         "inline_table" => {
             for kv in child_nodes(inner) {
+                crate::steps::tick();
                 let mut full = path.to_vec();
                 let mut nodes = child_nodes(kv);
                 let (Some(k), Some(v)) = (nodes.next(), nodes.next()) else {
@@ -210,6 +214,7 @@ pub fn parse(text: &str) -> Result<Vec<Entry>, TomlError> {
     let mut generation = 0usize;
     let mut generations: Vec<usize> = Vec::new();
     for expr in child_nodes(&ast) {
+        crate::steps::tick();
         let Some(inner) = child_nodes(expr).next() else {
             continue;
         };
@@ -252,6 +257,7 @@ pub fn parse(text: &str) -> Result<Vec<Entry>, TomlError> {
     let mut seen: std::collections::BTreeSet<(usize, &Vec<String>)> =
         std::collections::BTreeSet::new();
     for (e, g) in out.iter().zip(&generations) {
+        crate::steps::tick();
         // elements of an array of inline tables share the path `.. [] ..`
         let in_array = e.path.iter().any(|p| p == "[]");
         if e.value != Value::Table && !in_array && !seen.insert((*g, &e.path)) {

@@ -1,16 +1,15 @@
 package main
 
 import (
-	"io/fs"
 	"os"
 	"path/filepath"
 	"reflect"
-	"slices"
 	"strings"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/validator"
 )
 
 func TestWarrantGrammarInputsSelectOnlyTheirConsumer(t *testing.T) {
@@ -132,6 +131,10 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 		if isWarrantCorpusGenInput(input) {
 			// CV2-S3d: the generator's BUILD runs --check against the committed v2 fixture.
 			want["rust/warrant-corpus-gen"] = true
+		}
+		if input == "code/specs/ct-compare.warrant" {
+			// CV2-F13: its BUILD checks the committed evidence against this spec.
+			want["rust/ct-compare"] = true
 		}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s: got %v, err %v", input, got, err)
@@ -325,15 +328,18 @@ func TestGoWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 	}
 }
 
-// WD-100: the shared runner conformance fixture is read by every lane runner's
-// own tests, so an edit selects each runner package and nothing else; a
-// lookalike directory selects nothing, and a missing runner fails closed.
+// WD-100: the shared runner conformance fixture is read by the own tests of
+// every lane runner (Python, TypeScript and Go, R23), so an edit selects each
+// runner package and nothing else; a lookalike directory selects nothing, and a
+// missing runner fails closed.
 func TestWarrantConformanceFixtureSelectsEveryRunnerPackage(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "python/warrant-corpus", Language: "python"},
 		{Name: "python/ct-compare", Language: "python"},
 		{Name: "typescript/warrant-corpus", Language: "typescript"},
 		{Name: "typescript/ct-compare", Language: "typescript"},
+		{Name: "go/warrant-corpus", Language: "go"},
+		{Name: "go/ct-compare", Language: "go"},
 	}
 	for _, input := range []string{
 		"code/specs/fixtures/warrant-corpus-conformance-v1/json.json",
@@ -341,12 +347,15 @@ func TestWarrantConformanceFixtureSelectsEveryRunnerPackage(t *testing.T) {
 		"code/specs/fixtures/warrant-corpus-conformance-v1/.gitattributes",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
-		want := map[string]bool{"python/warrant-corpus": true, "typescript/warrant-corpus": true}
+		want := map[string]bool{"python/warrant-corpus": true, "typescript/warrant-corpus": true, "go/warrant-corpus": true}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s: got %v, err %v", input, got, err)
 		}
 		if _, err := repositoryInputConsumersForChange([]string{input}, packages[1:2], "python"); err == nil {
 			t.Fatalf("%s: a missing runner package must fail closed", input)
+		}
+		if _, err := repositoryInputConsumersForChange([]string{input}, packages[5:], "go"); err == nil {
+			t.Fatalf("%s: a missing Go runner package must fail closed", input)
 		}
 	}
 	for _, input := range []string{
@@ -375,6 +384,9 @@ func TestWarrantOracleInputsSelectOnlyTheOracle(t *testing.T) {
 		{Name: "go/warrant-corpus", Language: "go"},
 		{Name: "go/ct-compare", Language: "go"},
 		{Name: "python/warrant-oracle", Language: "python"},
+		{Name: "rust/gf256", Language: "rust"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "rust/x25519", Language: "rust"},
 	}
 	for _, input := range warrantOraclePaths {
 		got, err := repositoryInputConsumersForChange([]string{input}, packages, "python")
@@ -383,9 +395,9 @@ func TestWarrantOracleInputsSelectOnlyTheOracle(t *testing.T) {
 		}
 	}
 	// A spec the oracle reads selects the oracle and, because every .warrant document
-	// does (isWarrantDocument), the grammar guard; nothing else in this table.
+	// does (isWarrantDocument), the grammar guard and (CV2-F13) the crate whose BUILD checks evidence against it; nothing else.
 	got, err := repositoryInputConsumersForChange([]string{"code/specs/gf256.warrant"}, packages, "all")
-	if err != nil || !reflect.DeepEqual(got, map[string]bool{"python/warrant-oracle": true, "rust/warrant-grammar": true}) {
+	if err != nil || !reflect.DeepEqual(got, map[string]bool{"python/warrant-oracle": true, "rust/warrant-grammar": true, "rust/gf256": true}) {
 		t.Fatalf("gf256 spec: got %v, err %v", got, err)
 	}
 	for _, input := range []string{
@@ -492,62 +504,41 @@ func TestNegativeControlCheckerSelectsOnlyItsTestHome(t *testing.T) {
 	}
 }
 
-// WD-HARN1c: every BUILD file that calls the shared negative-control checker
-// (code/scripts/warrant_negctl.py) runs it with `python3` (`python` on
-// Windows), so that file must itself declare `# needs-toolchain: python`:
-// CI installs Python on Linux only for a package that declares it. The files
-// are found by scanning every BUILD* under code/packages and code/programs for
-// the script name, not from a list, so a package migrated later is pinned the
-// moment its BUILD starts calling the checker. warrant-grammar is among them
-// because its BUILD runs the checker's own tests.
+// WD-HARN1c / BT-BUILDLOCAL-1: every BUILD file that calls the shared
+// negative-control checker must declare `# needs-toolchain: python`. The rule
+// now lives in validator.ValidateNegctlUsersDeclarePython, which
+// -validate-build-files runs on every pull request (a package-local BUILD edit
+// never selects this program, so a test here alone cannot catch it). This test
+// runs that same validator over the real checkout, so build-tool pull requests
+// still exercise it. The rule's own cases (variants, comments, lookalikes) are
+// unit-tested in internal/validator.
 func TestEveryBuildFileUsingTheNegctlCheckerDeclaresPython(t *testing.T) {
 	repoRoot := toolchainFixtureRepoRoot(t)
-	users := make(map[string]string)
-	for _, top := range []string{"packages", "programs"} {
-		root := filepath.Join(repoRoot, "code", top)
-		err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
-			if walkErr != nil {
-				return walkErr
-			}
-			if entry.IsDir() {
-				switch entry.Name() {
-				case "node_modules", "target", ".git", "vendor":
-					return filepath.SkipDir
+	packages, err := discovery.DiscoverPackagesAllPlatforms(filepath.Join(repoRoot, "code"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := validator.ValidateNegctlUsersDeclarePython(repoRoot, packages); err != nil {
+		t.Fatal(err)
+	}
+	// Non-vacuity: warrant-grammar's BUILD runs the checker's own tests, so
+	// when that package is in the checkout at least one discovered package
+	// uses the checker. (Sparse checkouts without it skip the assertion.)
+	if _, err := os.Stat(filepath.Join(repoRoot, "code", "packages", "rust", "warrant-grammar", "BUILD")); err == nil {
+		users := 0
+		for _, pkg := range packages {
+			entries, _ := os.ReadDir(pkg.Path)
+			for _, entry := range entries {
+				if !strings.HasPrefix(entry.Name(), "BUILD") {
+					continue
 				}
-				return nil
+				if data, err := os.ReadFile(filepath.Join(pkg.Path, entry.Name())); err == nil && strings.Contains(string(data), "warrant_negctl.py") {
+					users++
+				}
 			}
-			if !strings.HasPrefix(entry.Name(), "BUILD") {
-				return nil
-			}
-			content, err := os.ReadFile(path)
-			if err != nil {
-				return err
-			}
-			if strings.Contains(string(content), "warrant_negctl.py") {
-				users[path] = string(content)
-			}
-			return nil
-		})
-		if err != nil {
-			t.Fatal(err)
 		}
-	}
-	if len(users) == 0 {
-		t.Fatal("found no BUILD file that calls warrant_negctl.py; the scan is broken")
-	}
-	for path, content := range users {
-		name := filepath.Base(path)
-		goos := "linux"
-		switch {
-		case strings.HasSuffix(name, "_windows"):
-			goos = "windows"
-		case strings.HasSuffix(name, "_mac"):
-			goos = "darwin"
-		}
-		got := discovery.ExtraToolchainsForSnapshot(map[string]string{name: content}, goos)
-		if !slices.Contains(got, "python") {
-			rel, _ := filepath.Rel(repoRoot, path)
-			t.Errorf("%s calls warrant_negctl.py but declares %v, want python (add `# needs-toolchain: python`)", filepath.ToSlash(rel), got)
+		if users == 0 {
+			t.Fatal("no discovered package uses warrant_negctl.py although rust/warrant-grammar exists; the scan is broken")
 		}
 	}
 }

@@ -330,7 +330,9 @@ steps, then `execve`s the step:
    and `ENOSYS` for `clone3`, whose flags a filter cannot inspect, so
    libc falls back to `clone`, and for every system call number above the
    highest one the pinned strace knows (§4.7, "Calls newer than the pinned
-   strace").
+   strace"). strace still prints these failed calls, and the parser
+   tolerates exactly the filter's own answer to a refused call (§4.4,
+   §4.5): `-1 EPERM`, or `-1 ENOSYS` for `clone3`.
 
    The filter's first instructions check two things: that
    `seccomp_data.arch` is `AUDIT_ARCH_X86_64`, and that the syscall number
@@ -465,8 +467,14 @@ path the tracer sees, or change what paths mean: `io_uring_setup`,
 `process_vm_writev`, `userfaultfd`, `kexec_load`, `kexec_file_load`,
 `perf_event_open`, `add_key`, `request_key`, `keyctl`. Also refused: a `clone` whose
 flags include `CLONE_UNTRACED` or any `CLONE_NEW*`, and any `clone3`. The
-sandbox's filter already blocks these (§4.3); seeing one in the trace
-means the filter failed (`trace-incomplete:clone-flags`).
+sandbox's filter already blocks these (§4.3), and strace prints the blocked
+call with the filter's answer. A refused-class call is **tolerated** (dropped,
+no event) exactly when its result is that answer: `-1 EPERM` (for `clone3`,
+`-1 ENOSYS`; likewise a `clone` with only forbidden flags that returned
+`-1 EPERM`). A refused call with any other result (a success, another errno,
+`= ?`) means the filter failed and is refused; one that never resumed is an
+`unresumed-call`. The `<unfinished ...>` half of a refused name is not judged;
+its resumed half is.
 
 **Failures.** A path call that fails is an observation of that path
 (`ENOENT`: absent; `EEXIST`: present), never a write. A personality-change
@@ -486,11 +494,12 @@ reason strings.
 
 **Reasons.** Every refusal is `trace-incomplete:<detail>`; a detail never
 contains path text.
-- A refused name is `refused:<name>`, an unknown one
-  `unknown-syscall:<name>`.
+- A refused name whose result is not the filter's own answer (§4.4) is
+  `refused:<name>`, an unknown one `unknown-syscall:<name>`.
 - `clone` with `CLONE_UNTRACED`, any `CLONE_NEW*`, a missing `flags=` or
-  a flag token it cannot name is `clone-flags`. `clone3` is
-  `refused:clone3`.
+  a flag token it cannot name is `clone-flags`, unless the call failed with the
+  filter's `-1 EPERM` and the flags are all nameable. A `clone3` that did not
+  fail with `-1 ENOSYS` is `refused:clone3`.
 - A process-tree fault is `pid-reuse` (a pid returned twice, or by its
   own process, or the root's pid), `orphan-pid` (a pid nobody spawned),
   `process-cycle` (or a parent chain over 4096 deep), `missing-exit`,
@@ -1046,7 +1055,36 @@ hides all but a few, and so it can see the path behind
 optional observer that sees every path-carrying reason (`host-read`,
 `writes-tracked`, `trace-visible`, `state-write`, `network`, `daemon`, and each
 `proc-path`) as the classifier raises it. It only counts: the record is
-byte-identical with and without it. The file holds `{schema, action, total,
+byte-identical with and without it (`TestCensusDoesNotChangeTheRecord`).
+Two further observations are census-only and never change a reason string:
+(1) **sub-codes**: `trace-incomplete:unstable-path` and
+`trace-incomplete:exec-unreadable` carry no path in the record, so at each raise
+site the classifier tells the census a fixed sub-code and the redacted path,
+under the kind `trace-incomplete:<reason>:<sub>` (unstable-path:
+`component-changed`, `absent-changed`, `final-changed`,
+`followed-final-changed`, `followed-absent-changed`, `gone-but-found`,
+`removed-before-made`, `file-changed`, `own-overlap`, `through-missing`,
+`dotdot`, `fd-path-differs`; exec-unreadable: `modified-after-exec`,
+`virtual-exe`, `virtual-interpreter`, `under-tmp`, `in-repo`, `host-disk`); the
+sub-code is a string literal at each site, never a slice of the input.
+(2) **op classes**: `census.json` has an additive `ops` map, `{kind: {class: n}}`
+(only `host-read` is split), whose classes are the closed list `listing`,
+`absent-probe`, `open`, `stat`, `lookup` (a link crossed on the way), `exec`,
+`chdir`, `write`, `other`, chosen from the classifier's own state with
+precedence listing, then absent-probe, then the call's kind.
+(3) **Caps and order**: the sub-coded kinds hold 256 paths each, the nine path
+kinds 1024, so the caps of every kind the classifier can feed add up to at most
+`MaxCensusEntries` (9*1024 + 18*256 = 13824 <= 16384; tested) and the overall
+bound never decides which kind loses. The stability pass walks Go maps, so its
+census notes are buffered and given sorted by kind and path: `census.json` is
+deterministic even at a cap (tested). Records are untouched.
+**Semantic change to `census_clean`**: a record that raised a READ-SIDE
+`trace-incomplete:unstable-path` or `trace-incomplete:exec-unreadable` now has a
+non-empty `census.json` (those reasons used to leave it empty), so such actions
+count as `census_nonempty`, not `census_clean`. `census_clean` therefore means
+"no path-carrying reason and no unstable-path or exec-unreadable", still not
+"would emit" (see `emittable`). `ci/census_not_clean.py` reads only
+`cross_check` and `bounds` and is unaffected. The file holds `{schema, action, total,
 overflow_total, overflow: {kind: n}, entries: [{kind, path, count}]}` with
 entries sorted by kind then path. Paths are printable and redacted
 (`$HOME`, `$TMPDIR`) as in a reason, and sanitised once: a path the classifier
@@ -1134,7 +1172,7 @@ environment deliberately lacks `KILN_TRACE_DIFF`).
 optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
 `infrastructure_failure` (text or ""), `problems` (code to count), `actions`,
 `reasons`, `trace_sizes`, `timing`, `per_action`, `cross_check`, `languages`,
-`collect` (null without `--records`) and `bounds`.
+`collect` (null without `--records`), `bounds` and `shapes`.
 
 - `actions`: `total`, `with_record`, `record_parse_ok`, `record_writes_complete`,
   `record_failed`, `no_verdict`, and the census states, each counted separately
@@ -1165,7 +1203,9 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   `trace-incomplete:unstable-path`, `trace-incomplete:recipe-mismatch`, ...),
   `record_parse_reasons` (record.json's `parse_reasons` by code:
   `unparsable-line`, `unresumed-call`, `size`, `sandbox-refused`,
-  `unclean:<reason>`, ...), `parse_refusals` (the same codes for the traces this
+  `unclean:<reason>`, `refused:<syscall>`, ...; `refused:<name>` keeps the name
+  only when it is a member of the parser's closed refused class
+  (`trace.SyscallClass`), else `refused:other`), `parse_refusals` (the same codes for the traces this
   census's own parse refused), `record_failed` (the text of `record.failed`
   mapped to `timeout`, `traces-too-large`, `record-too-large`, `panic`,
   `classifier-failed`, `classifier-not-started`, `record-invalid`, `other`) and
@@ -1188,7 +1228,11 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
 - `per_action`: the total trace bytes of each action against the 2 GiB cap
   (`DefaultMaxTraceTotal`): a distribution, how many reach 50%, 90% and 100% of
   the cap, and the ten largest (sanitised names).
-- `cross_check`: `traces`, `bytes`, `accepted`, `mismatches`, `allowed`, `refused`,
+- `cross_check`: `traces`, `bytes`, `accepted`, `mismatches`, `allowed`,
+  `allowed_rows` (`allowed` by the NAME of the section 4.9 stricter-only row that
+  allowed each: a fixed program string of `crosscheck.go`, from
+  `trace.ParseCrossCheckedDetail`, whose per-call log gives each row and line),
+  `refused`,
   `skipped_too_large` and `skipped_bytes` (a trace over 256 MiB is timed but not
   cross-checked, because the cross-check buffers it whole and parses it twice; the
   workflow should set `GOMEMLIMIT`) and at most 20 `details` (an action's digest prefix, step and the mismatch's
@@ -1196,7 +1240,62 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
 - `languages`: per language (the plan's, else `code/packages/<lang>/`; at most
   64, the rest `other`; shown as code spans in list items, so `www.x.example` and
   `:emoji:` cannot autolink or render): `actions`, `recordable` (`record.json` believed and
-  `writes_complete`), `clean` (recordable with an empty census) and the share.
+  `writes_complete`: NOT "would emit"), `clean` (recordable with an empty census;
+  labelled "no-reason" in the Markdown), `recordable_share` (of all actions),
+  `built_ok` (a believed record with no `failed` reason; when the parse half
+  failed and there are no reasons, no started step exited non-zero; an action
+  with no believed record is not built_ok), `emittable` (parse ok, writes
+  complete, ZERO reasons in `record.json`, a plan entry with NO gate and a weak key
+  (the merge turns a gate into `precondition:<gate>` and an unkeyed action has
+  nothing to be emitted under), and the shard not void: a collect header that
+  names a void reason sets `actions.shard_void` and makes every `emittable` 0;
+  unknown without `--records`). `emittable` is an UPPER BOUND: it is per action
+  and before the merge, so it cannot see reads-product or any cross-action rule.
+  `gated` and `unkeyed` count the actions whose plan entry has a gate or no weak
+  key (overall and per language), `writes_unknown` the actions with a believed
+  record whose `writes_complete` is false, plus `record.failed` and every action with no verdict at all, and
+  `actions.strict_merge_voids_shard` is true when `writes_unknown > 0` or the
+  shard is void (the Markdown line "strict merge would void this shard: yes/no").
+  The shares
+  `recordable_share_of_built_ok`, `emittable_share` and
+  `emittable_share_of_built_ok` (a share over zero is 0). `actions` carries
+  `built_ok`, `emittable`, `gated`, `unkeyed`, `writes_unknown`, `shard_void` and
+  `strict_merge_voids_shard` too. An empty census beside a
+  record that holds a reason (an `exec-format` one, say) is `clean` but not
+  `emittable`: "clean" never meant "would emit".
+- `shapes`: at most 8 distinct redacted outlines of the line where the grammar
+  stopped (a refusal with a line, origin `refusal:<parse code>`) or at which a
+  stricter-only divergence was allowed (origin `allowed:<row>`), each with its
+  count, first location (digest prefix, step, line) and its `lines`: the pid's
+  pending `<unfinished ...>` half, when there is one, then the stop line. A line
+  is `{role, line, tokens, facts, truncated}`. `trace.Shape` (never
+  `trace.Diagnose`, whose window quotes the trace) prints ONLY token TYPE names
+  from `strace.tokens` (a name off the closed list is `TOKEN?`), a character class
+  for `WORD` and `ASSIGN` tokens (`digits`, `hex`, `upper`, `lower`, `mixed`), the
+  call name of `SYSCALL`, `RESUMED` and `WORD` tokens only when it is in the
+  closed syscall table, ASCII punctuation for `PUNCT` (at most 8 characters; a
+  non-ASCII run is `\x80`), nothing of `QUOTED`, `ANNOTATED`, `ERR_*`, `PID` or
+  signal text beyond the type name, at most 96 tokens a line, and the `lineFacts`
+  booleans and three counts. The trace is streamed (a line is read to 1 MiB).
+  Two budgets, so a flood of one refusal cannot starve the allowed-divergence
+  lines: `allowed:*` outlines get 8 slots and 32 computations of their own;
+  refusals get 8 slots, 32 computations and 2 per distinct refusal code. A
+  (trace, line) is shaped once, and all shaping together scans at most 4 GiB (twice
+  each trace's size is charged); `bounds.shapes_dropped` counts the rest. A
+  refusal's line is the error's own line (the call's start for an
+  `unresumed-call`), and shapes exist only for cross-checked traces, not those
+  skipped as too large. `TestParseCrossCheckedOnlyInCensus` keeps `Shape`, `LineShape`,
+  `ParseCrossChecked` and `ParseCrossCheckedDetail` out of every production file
+  but their definitions and `census_report.go`.
+- `reasons[].ops`: for `host-read`, the occurrences by op class (from the
+  `census.json` `ops`, validated against the closed list).
+- *Labels.* `kiln record census` runs with the RUNNER's real HOME and temp
+  directory. The classifier labels the STEP's fresh HOME and TMPDIR `$HOME` and
+  `$TMPDIR`, so the invoker's are labelled `$RUNNER_HOME` and `$RUNNER_TMP`
+  unless they are the very directories the sealed `host-facts.json` names (then
+  they are the step's and keep `$HOME` / `$TMPDIR`; a trailing slash is ignored). The Markdown section is
+  "Share by language"; a record's reasons make `recordable` and `emittable`
+  differ, and the line says so.
 
 *Bounds.* If the encoded JSON exceeds 512 KiB, the top lists are halved until it
 fits (`bounds.json_lists_cut`); the Markdown is rendered the same way and then
@@ -2637,7 +2736,11 @@ version of this section led to these. Each is a decision, not a sketch.
   init window is `helper-spawn`, and `CLONE_NEW*` or `CLONE_UNTRACED` is
   `clone-flags`); anywhere else, the step's own included, it is
   `refused:clone3`, because the sandbox filter answers `ENOSYS` and a `clone3`
-  in a trace of the step means the filter failed.
+  that did not fail with `ENOSYS` means the filter failed. A `clone3 = -1
+  ENOSYS` (what glibc's `pthread_create` and `posix_spawn` try first before
+  falling back to `clone`) is the filter working: it is tolerated everywhere,
+  its struct is not decoded, and it spawns nothing. `RecorderVersion` is 4 since
+  this rule.
 - **No late runtime threads.** Both helpers call `debug.SetGCPercent(-1)`, so
   no garbage-collector worker thread starts after the spawn.
 - **CI.** `ci.yml` has a required `kiln-sandbox` job (linux/amd64,
@@ -4022,7 +4125,7 @@ the field is still unknown. The classifier now computes the field
 the recorder copies it to the shard record's `writes_complete`. The switch
 stays off until the recorder (stage 4, PR 2b) turns it on, so PR 4 changes
 no merge outcome by itself. Because the record's semantics changed,
-`RecorderVersion` is now `2`: every weak key changes and manifests recorded by
+`RecorderVersion` became `2` here (it is higher now): every weak key changes and manifests recorded by
 the version-1 recorder are never looked up. The read-side reasons that `writes_complete: true` may
 excuse are the other `trace-incomplete` reasons (`exec-unreadable`, a
 read-only `unstable-path`, and so on). **A recipe mismatch is never
@@ -4485,7 +4588,7 @@ is what the code does.
    `tools` of the weak key and `HOME`. A variable whose name contains `:` is
    refused. The `kiln:` entries are keyed but never exported to the process.
    Every origin is `0`.
-9. **`kiln:recorder`** is the integer constant `RecorderVersion` (now `2`;
+9. **`kiln:recorder`** is the integer constant `RecorderVersion` (see `internal/legacy/traced.go` for the current value;
    `1` was the recorder before `writes_complete`, stage 4 PR 4) in
    `internal/legacy/traced.go`, to be bumped by hand with any change to §4 to
    §7. **`kiln:executor-args`** is each flag as one `-name=value` token,

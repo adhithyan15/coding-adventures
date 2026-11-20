@@ -146,7 +146,7 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 			t.Fatalf("Rust-only input %s selected %v, err %v; want rust/game-clock", input, selected, err)
 		}
 	}
-	if got, err := repositoryInputConsumersForChange([]string{"code/specs/wasm-leb128.warrant"}, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-grammar": true, "python/warrant-oracle": true, "rust/warrant-corpus-gen": true}) {
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/wasm-leb128.warrant"}, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/wasm-leb128": true, "rust/warrant-grammar": true, "python/warrant-oracle": true, "rust/warrant-corpus-gen": true}) {
 		t.Fatalf("other Warrant consumers selection got %v, err %v", got, err)
 	}
 	for path, want := range map[string]bool{
@@ -898,12 +898,19 @@ func TestHashFunctionsV1GraphExportsExactRepositoryInputs(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := []string{
+	dt17 := []string{
 		"code/specs/DT17-hash-functions.md",
 		"code/specs/DT17b-hash-functions-dart-profile.md",
 		"code/specs/fixtures/hash-functions-v1",
 	}
+	// The Rust crate also checks its committed evidence against its own Warrant spec
+	// (CV2-F13, warrantEvidenceRow); the Dart package does not read that spec.
+	wants := map[string][]string{
+		"rust/hash-functions": append(append([]string{}, dt17...), "code/specs/hash-functions.warrant"),
+		"dart/hash-functions": dt17,
+	}
 	for _, name := range []string{"rust/hash-functions", "dart/hash-functions"} {
+		want := wants[name]
 		var found *kilnLegacyPackage
 		for i := range graph.Packages {
 			if graph.Packages[i].Name == name {

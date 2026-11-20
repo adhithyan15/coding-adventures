@@ -200,6 +200,7 @@ fn mask_cfg_test(toks: Vec<Token>, pair: &[usize]) -> Vec<Token> {
     // the whole pass is linear however many `#[cfg(test)]` there are.
     let mut masked_to = 0usize;
     for a in &attrs {
+        crate::steps::tick();
         if a.start < masked_to || a.inner || !is_cfg_test(&toks, a) {
             continue;
         }
@@ -208,6 +209,7 @@ fn mask_cfg_test(toks: Vec<Token>, pair: &[usize]) -> Vec<Token> {
         while toks.get(j).is_some_and(|t| t.is_punct("#"))
             && toks.get(j + 1).is_some_and(|t| t.is_punct("["))
         {
+            crate::steps::tick();
             j = pair[j + 1] + 1;
         }
         let end = if j < toks.len() {
@@ -244,6 +246,7 @@ impl FileCtx {
         let attrs = find_attrs(&toks, &pair);
         let mut in_attr = vec![false; toks.len()];
         for a in &attrs {
+            crate::steps::tick();
             for x in &mut in_attr[a.start..=a.close] {
                 crate::steps::tick();
                 *x = true;
@@ -268,6 +271,7 @@ impl FileCtx {
         // highest point reached keeps this linear however deep they nest.
         let mut hi = 0usize;
         for g in &ghost_mods {
+            crate::steps::tick();
             if let Some((a, b)) = g.body {
                 let from = a.max(hi);
                 if b > from {

@@ -9,7 +9,8 @@
  * case id and never print the input bytes.
  */
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join, posix, win32 } from "node:path";
 import { describe, expect, it } from "vitest";
 import { relativeInside } from "../src/containment.ts";
@@ -35,16 +36,139 @@ const cases: Record<string, Case[]> = Object.fromEntries(
   CATEGORIES.map((category) => [category, load(`${category}.json`)["cases"] as Case[]]),
 );
 
+// The fixture family grows by categories (VER04r section 11, [D40]). Every
+// category this lane knows must have a row; a row it does not know is accepted
+// only when its name starts with `v2-`, and then only digest-checked, never run
+// (this runner does not read v2 yet). Rows are ordered: the four v1 rows in
+// their present order, then the v2 rows, the known ones in the kit's order.
+const V2_ORDER = ["v2-value", "v2-arith", "v2-ir", "v2-domain", "v2-chunk", "v2-fault", "v2-binding"];
+
+/** Validate `dir/index.json`; throws an `Error` with a clear message on any violation, a malformed row included. */
+function checkIndex(dir: string): number {
+  const read = (name: string): Uint8Array => new Uint8Array(readFileSync(join(dir, name)));
+  const document = parseJson(read("index.json")) as Case;
+  if (document["schema"] !== "warrant-corpus-conformance-v1") throw new Error("wrong index schema");
+  const files = document["files"] as Case[];
+  if (!Array.isArray(files) || files.some((row) => typeof row !== "object" || row === null)) {
+    throw new Error("malformed files list");
+  }
+  const names = files.map((row) => row["category"] as string);
+  if (names.some((name) => typeof name !== "string")) throw new Error("malformed row: category is not a string");
+  if (new Set(names).size !== names.length) throw new Error("duplicate category row");
+  if (JSON.stringify(names.slice(0, CATEGORIES.length)) !== JSON.stringify(CATEGORIES)) {
+    throw new Error("v1 rows missing or out of order");
+  }
+  const extra = names.slice(CATEGORIES.length);
+  for (const name of extra) if (!name.startsWith("v2-")) throw new Error(`unknown category row ${name}`);
+  const known = extra.filter((name) => V2_ORDER.includes(name)).map((name) => V2_ORDER.indexOf(name));
+  if (known.some((value, i) => i > 0 && value < (known[i - 1] as number))) throw new Error("v2 rows out of order");
+  let total = 0;
+  for (const row of files) {
+    const category = row["category"] as string;
+    const path = row["path"] as string;
+    // The category name is safe to splice into a file name: non-empty, no
+    // separators and no `..` (known v1 names and `v2-` names were checked above).
+    if (category === "" || /[\\/]/.test(category) || category.includes("..")) {
+      throw new Error(`${JSON.stringify(category)}: unsafe category name`);
+    }
+    if (path !== `${category}.json`) throw new Error(`${category}: bad path`);
+    if (!existsSync(join(dir, path))) throw new Error(`${category}: file missing`);
+    const data = read(path);
+    if (sha256(data) !== row["sha256"]) throw new Error(`${category}: sha256 moved`);
+    const body = parseJson(data) as Case;
+    if (body["category"] !== category) throw new Error(`${category}: wrong category in file`);
+    if (!Number.isInteger(row["cases"])) throw new Error(`${category}: cases is not an integer`);
+    if (!Array.isArray(body["cases"])) throw new Error(`${category}: file cases is not a list`);
+    if ((body["cases"] as Case[]).length !== row["cases"]) throw new Error(`${category}: case count moved`);
+    total += row["cases"] as number;
+  }
+  if (!Number.isInteger(document["total_cases"])) throw new Error("total_cases is not an integer");
+  if (document["total_cases"] !== total) throw new Error("total_cases is not the sum of the rows");
+  return files.length;
+}
+
+/** A temp copy of the fixture with extra index rows and files; the caller removes it. */
+function scratchFixture(extraRows: Case[], files: Record<string, Buffer>): string {
+  const scratch = mkdtempSync(join(tmpdir(), "warrant-fixture-"));
+  cpSync(FIXTURE, scratch, { recursive: true });
+  const document = JSON.parse(readFileSync(join(scratch, "index.json"), "utf8"));
+  document.files.push(...extraRows);
+  document.total_cases += extraRows.reduce((sum, row) => sum + row["cases"], 0);
+  writeFileSync(join(scratch, "index.json"), `${JSON.stringify(document, null, 2)}\n`);
+  for (const [name, data] of Object.entries(files)) writeFileSync(join(scratch, name), data);
+  return scratch;
+}
+
+function extraFile(category: string, count = 2): [Case, Buffer] {
+  const cases = Array.from({ length: count }, (_, i) => ({ id: `${category}/${i}` }));
+  const data = Buffer.from(`${JSON.stringify({ schema: "warrant-corpus-conformance-v1", category, cases }, null, 2)}\n`);
+  return [{ cases: count, category, path: `${category}.json`, sha256: sha256(data) }, data];
+}
+
+/** Run `check` against a scratch fixture and always remove the scratch copy. */
+function withScratch<T>(rows: Case[], files: Record<string, Buffer>, check: (dir: string) => T): T {
+  const dir = scratchFixture(rows, files);
+  try {
+    return check(dir);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 describe("fixture index", () => {
   it("matches the files on disk", () => {
-    expect(index["schema"]).toBe("warrant-corpus-conformance-v1");
+    expect(checkIndex(FIXTURE)).toBeGreaterThanOrEqual(CATEGORIES.length);
     const rows = new Map<string, Case>((index["files"] as Case[]).map((row) => [row["category"], row]));
-    expect([...rows.keys()].sort()).toEqual([...CATEGORIES].sort());
-    for (const [category, row] of rows) {
-      expect(sha256(bytes(row["path"]))).toBe(row["sha256"]);
-      expect(cases[category]?.length, `${category}: case count moved`).toBe(row["cases"]);
+    for (const category of CATEGORIES) {
+      expect(cases[category]?.length, `${category}: case count moved`).toBe(rows.get(category)?.["cases"]);
     }
-    expect(index["total_cases"]).toBe(Object.values(cases).reduce((sum, list) => sum + list.length, 0));
+  });
+
+  it("accepts a digest-checked v2-x row without running it", () => {
+    const [row, data] = extraFile("v2-x");
+    expect(withScratch([row], { "v2-x.json": data }, checkIndex)).toBe(CATEGORIES.length + 1);
+  });
+
+  it("rejects an unknown row that is not v2-", () => {
+    const [row, data] = extraFile("extra");
+    expect(() => withScratch([row], { "extra.json": data }, checkIndex)).toThrow(/unknown category/);
+  });
+
+  it("rejects a v2 row with a wrong digest", () => {
+    const [row, data] = extraFile("v2-x");
+    row["sha256"] = "0".repeat(64);
+    expect(() => withScratch([row], { "v2-x.json": data }, checkIndex)).toThrow(/sha256/);
+  });
+
+  it("rejects a v2 row with a wrong case count", () => {
+    const [row, data] = extraFile("v2-x");
+    row["cases"] = 3;
+    expect(() => withScratch([row], { "v2-x.json": data }, checkIndex)).toThrow(/case count/);
+  });
+
+  it("rejects a row whose path is not <category>.json", () => {
+    const [row, data] = extraFile("v2-x");
+    row["path"] = "v2-y.json";
+    expect(() => withScratch([row], { "v2-x.json": data, "v2-y.json": data }, checkIndex)).toThrow(/bad path/);
+  });
+
+  it("rejects a boolean case count", () => {
+    const [row, data] = extraFile("v2-x", 1);
+    row["cases"] = true;
+    expect(() => withScratch([row], { "v2-x.json": data }, checkIndex)).toThrow(/not an integer/);
+  });
+
+  it("rejects a v2 row with a missing file", () => {
+    const [row] = extraFile("v2-x");
+    expect(() => withScratch([row], {}, checkIndex)).toThrow(/file missing/);
+  });
+
+  it("rejects v2 rows out of the kit's order", () => {
+    const [value, valueData] = extraFile("v2-value");
+    const [arith, arithData] = extraFile("v2-arith");
+    const files = { "v2-value.json": valueData, "v2-arith.json": arithData };
+    expect(withScratch([value, arith], files, checkIndex)).toBe(CATEGORIES.length + 2);
+    expect(() => withScratch([arith, value], files, checkIndex)).toThrow(/out of order/);
   });
 });
 

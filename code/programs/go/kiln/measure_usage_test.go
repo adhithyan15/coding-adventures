@@ -55,6 +55,17 @@ func TestMeasureIsNotUsedByProductionCode(t *testing.T) {
 // stored in a variable, an alias import, a dot import), not just a textual
 // "ParseCrossChecked(".  Its definition file and census_report.go are the only
 // exceptions.
+//
+// The same guard covers ParseCrossCheckedDetail (the census's variant that names
+// each allowed divergence's row) and trace.Shape, the REDACTED line outline that
+// is safe only because the census is its one caller (internal/trace/shape.go):
+// it prints no byte of a token's text, but it reads real trace lines, so no
+// recording path may reach it, and its identifiers (Shape, LineShape) are
+// flagged anywhere else.
+var censusOnly = map[string]bool{
+	"ParseCrossChecked": true, "ParseCrossCheckedDetail": true, "Shape": true, "LineShape": true,
+}
+
 func TestParseCrossCheckedOnlyInCensus(t *testing.T) {
 	fset := token.NewFileSet()
 	err := filepath.WalkDir(".", func(path string, d os.DirEntry, err error) error {
@@ -64,7 +75,7 @@ func TestParseCrossCheckedOnlyInCensus(t *testing.T) {
 		if d.IsDir() || !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
 			return nil
 		}
-		if slash := filepath.ToSlash(path); slash == "internal/trace/crosscheck.go" || slash == "internal/record/census_report.go" {
+		if slash := filepath.ToSlash(path); slash == "internal/trace/crosscheck.go" || slash == "internal/trace/shape.go" || slash == "internal/record/census_report.go" {
 			return nil
 		}
 		f, err := parser.ParseFile(fset, path, nil, 0)
@@ -79,12 +90,12 @@ func TestParseCrossCheckedOnlyInCensus(t *testing.T) {
 		ast.Inspect(f, func(n ast.Node) bool {
 			switch x := n.(type) {
 			case *ast.SelectorExpr:
-				if x.Sel.Name == "ParseCrossChecked" {
-					t.Errorf("%s: references ParseCrossChecked outside `kiln record census`", fset.Position(x.Pos()))
+				if censusOnly[x.Sel.Name] {
+					t.Errorf("%s: references %s outside `kiln record census`", fset.Position(x.Pos()), x.Sel.Name)
 				}
 			case *ast.Ident:
-				if x.Name == "ParseCrossChecked" {
-					t.Errorf("%s: mentions ParseCrossChecked outside `kiln record census`", fset.Position(x.Pos()))
+				if censusOnly[x.Name] {
+					t.Errorf("%s: mentions %s outside `kiln record census`", fset.Position(x.Pos()), x.Name)
 				}
 			}
 			return true
