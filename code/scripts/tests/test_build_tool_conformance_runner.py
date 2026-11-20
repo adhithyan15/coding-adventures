@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 207)
+        self.assertEqual(summary["case_count"], 208)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -160,8 +160,8 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["conformance_status"], "not-run")
         self.assertEqual(summary["source_input_language_count"], 23)
         self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
-        self.assertEqual(summary["repository_source_boundary_count"], 24)
-        self.assertEqual(summary["repository_source_input_count"], 37)
+        self.assertEqual(summary["repository_source_boundary_count"], 25)
+        self.assertEqual(summary["repository_source_input_count"], 38)
         self.assertEqual(len(summary["repository_source_boundary_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
@@ -445,17 +445,26 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(
             summary,
             {
-                "boundary_count": 24,
-                "input_count": 37,
-                "scope_count": 513,
-                "authorization_count": 532,
+                "boundary_count": 25,
+                "input_count": 38,
+                "scope_count": 514,
+                "authorization_count": 533,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "b8afd2020cf3cf50eb133eb95cac12bb4f568f5451fb624aa68544e6ff6add71",
+            "1213aa54bfa4187639fd56ebd86a17a31f3d90aff919386f8abedc3aac854c46",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
+        self.assertEqual(
+            by_id["dart-hash-map-v1-corpus-input"]["applies_to"]["exact_roots"],
+            ["code/packages/dart/hash-map"],
+        )
+        self.assertEqual(
+            by_id["dart-hash-map-v1-corpus-input"]["inputs"],
+            [{"path": "code/specs/fixtures/hash-map-v1/cases.json",
+              "role": "cross_package_exact"}],
+        )
         game_input_frame_inputs = by_id[
             "repository-typescript-game-input-frame-corpus-inputs"
         ]
@@ -1092,6 +1101,18 @@ class CorpusTests(unittest.TestCase):
             canonical_digest,
         )
 
+        def change_input_role(value) -> None:
+            item = next(
+                item for entry in value["boundaries"] for item in entry["inputs"]
+            )
+            previous = item["role"]
+            item["role"] = (
+                "shared_ancestor"
+                if previous == "cross_package_exact"
+                else "cross_package_exact"
+            )
+            self.assertNotEqual(item["role"], previous)
+
         mutations = []
         for name, mutate in (
             ("schema-version", lambda value: value.__setitem__("schema_version", 2)),
@@ -1125,12 +1146,7 @@ class CorpusTests(unittest.TestCase):
                     "path", "code/packages/haskell/cabal-v2.project"
                 ),
             ),
-            (
-                "input-role",
-                lambda value: value["boundaries"][0]["inputs"][0].__setitem__(
-                    "role", "cross_package_exact"
-                ),
-            ),
+            ("input-role", change_input_role),
             (
                 "generated-component",
                 lambda value: next(
@@ -1156,6 +1172,7 @@ class CorpusTests(unittest.TestCase):
 
         for name, changed in mutations:
             with self.subTest(name=name):
+                self.assertNotEqual(changed, canonical)
                 self.assertNotEqual(
                     runner.repository_source_input_boundary_digest(changed),
                     canonical_digest,
@@ -3454,6 +3471,7 @@ class PureDomainValidationTests(unittest.TestCase):
         )
         boundary_digest = runner.repository_source_input_boundary_digest(boundary)
         case_names = [
+            "source-collection-repository-dart-hash-map.json",
             "source-collection-repository-cross-language-workspace.json",
             "source-collection-repository-direct-build-inputs.json",
             "source-collection-repository-link-boundaries.json",
@@ -4294,8 +4312,10 @@ class PureDomainValidationTests(unittest.TestCase):
                 "CARGO_MANIFEST_TABLE_UNSUPPORTED",
             ),
             (
-                "target.'cfg(unix)' = { dev-dependencies = { "
-                "compiler = { path = '../compiler' } } }\n",
+                (
+                    "target.'cfg(unix)' = { dev-dependencies = { "
+                    "compiler = { path = '../compiler' } } }\n"
+                ),
                 "CARGO_MANIFEST_TABLE_UNSUPPORTED",
             ),
             (
@@ -5102,7 +5122,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 207)
+        self.assertEqual(summary["case_count"], 208)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"
