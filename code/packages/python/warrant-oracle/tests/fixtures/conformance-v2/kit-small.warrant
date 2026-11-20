@@ -1,0 +1,51 @@
+warrant small v1
+  error E = BAD | WORSE
+  model gm(a: U8, b: U8) -> U8 = a + b
+  model rm(n: Nat, a: U8) -> Nat = n
+  op gop(a: U8, b: U8) -> U8
+  op rop(n: Nat, a: U8) -> Nat
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels gop:
+    a secret
+    b secret
+  labels rop:
+    n secret
+    a secret
+
+  input gop.a:
+    hostile
+    ensures no_panic, terminates
+  input gop.b:
+    hostile
+    ensures no_panic, terminates
+  input rop.n:
+    hostile
+    ensures no_panic, terminates
+  input rop.a:
+    hostile
+    ensures no_panic, terminates
+
+  bound gop:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound rop:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  claim grid:
+    forall a: U8, b: U8. gop(a, b) == gm(a, b)
+  claim gap:
+    forall a: U8 | a < 2u8 or a > 253u8, b: U8. gop(a, b) == gm(a, b)
+  claim ragged:
+    forall n: Nat, a: U8. rop(n, a) == rm(n, a)
+
+  example grid_one:
+    gop(1u8, 2u8) == gm(1u8, 2u8)
