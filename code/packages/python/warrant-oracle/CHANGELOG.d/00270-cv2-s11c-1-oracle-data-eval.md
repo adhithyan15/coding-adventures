@@ -83,13 +83,16 @@ file or corpus dump byte moves. **Review fixes (owner decision D71 and the findi
    it): it checks the entry point and the plumbing on an empty build. The kit has one common-type rule: S5e's `_require_common_types` (built on
    `lower._unify`, no tuple widening) is deleted in favour of `faults._fault_unify` after merging origin/main, and `analyze_data=` is kept.
 
-### Open questions for the owner (the spec is silent or in conflict; the most conservative reading was taken)
+### Questions this slice raised, and where they are answered
 
-(1, 2 and 5 are answered above by D71 and the TFV fix.)
+1, 2 and 5 are answered above by D71 and the TFV fix. The other two are answered by the S11c-1-0 erratum (VER04r section 16.20):
 
-3. **R94 and tuples.** R94 lists the unify cases (`Nat`/`Int`, `Bytes`, `Option`, `Result`) and no tuple rule, and R51 makes a tuple invariant; section 8.2's
-   `off-by-one-consumed` paragraph says `(T1,Int,..)` and `(T1,Nat,..)` have a common type, and the committed wasm-leb128 fixture has that row. The comparison
-   therefore allows exactly one tuple-component widening (`Nat`/`Int`) and nothing else (R67's second test needs `(Bytes<1>,Bool)` against `(Bytes<2>,Bool)`
-   refused).
-4. **The consumer-side descriptor check** (`domains.descriptor_size`) does not validate a variant's constructor names (grammar, duplicates, the 64-constructor limit)
-   or a result's `errs` (R72). Nothing was added: the generator's check is not specified to do more. The domains dump pins what the oracle does today.
+3. **R94 and tuples (answered by R96).** R94 lists the unify cases (`Nat`/`Int`, `Bytes`, `Option`, `Result`) and no tuple rule, and R51 makes a tuple
+   invariant; section 8.2's `off-by-one-consumed` paragraph says `(T1,Int,..)` and `(T1,Nat,..)` have a common type, and the committed wasm-leb128 fixture
+   has that row. R96 settles it for fault rows: components unify pairwise under a narrow relation (equal types, `Nat`/`Int`, `Option`/`Result` of related
+   components, nested tuples) with no `Bytes` width lifting (R67's second test keeps `(Bytes<1>,Bool)` against `(Bytes<2>,Bool)` refused). The code here
+   already does exactly that.
+4. **The consumer-side descriptor check (answered by R103, not done here).** `domains.descriptor_size` does not validate a variant descriptor's constructor
+   names, count, duplicates or fields, nor a `tuple` descriptor's arity. (A result's `errs` is validated since S5e, R72.) R103 records the rule under
+   CV2-F17; it lands before S11d derives the `v2-domain` variant vectors. The domains dump pins what the oracle does today, and every row is correct under
+   the spec.
