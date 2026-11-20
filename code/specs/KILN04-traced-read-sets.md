@@ -3837,6 +3837,53 @@ open of either file is never allowed by the list. A writing open of a virtual
 name that is not an fd link makes the write set unknown (W5, `ops.go`), so the
 record carries `trace-incomplete:writes-unknown` and `writes_complete` is false.
 
+**Decision D39: ancestor nodes and absence under the fresh tmpfs (real-build
+census, `host-read` in about 45 actions; `kiln:recorder` 6 to 7).** The census
+showed `host-read` raised mostly by `stat` of the ancestors of the sandbox's own
+directories (`/`, `/home`, `$HOME`, `$HOME/work`, the workspace parent, `/opt`,
+`/opt/hostedtoolcache`, `/opt/hostedtoolcache/go`, `/tmp`, `/dev`), which every
+path walk visits, and by absent probes under the step's fresh tmpfs `$HOME` and
+`TMPDIR` (`$HOME/.proverc`, `$HOME/go`, `$HOME/.cache/go-build`, test directories
+the action removed and probed again). Two rules, both in `observeHost`; this
+replaces the "other ancestors stay `host-read`" clause of §5.5(c).
+
+- **(a) Ancestor nodes.** A *present, non-listing* observation of a PROPER
+  ANCESTOR of an anchor is allowed. The anchors are the checkout `Root`, every
+  declared host root, `Home`, `Tmpdir`, and the literal prefix of every
+  `ephemeral` and `absent-ok` entry (for a pattern, the components before the
+  first one containing `*` or `?`: `/dev/fd/*` gives `/dev/fd`). `/` is an
+  ancestor. An anchor is not its own ancestor, and an ancestor that lies inside
+  a declared root is judged by that root's rule, not this one (`prepare` builds
+  the set by walking `parentOf` from each anchor).
+  *Why it is safe.* Every anchor is canonical (`Root` is checked to be a real
+  directory chain, §5.1; the others are declared paths), so each ancestor is a
+  real directory by construction. A `stat`, `access`, `readlink`, `chdir` or
+  `O_DIRECTORY` open learns only the node's type and metadata, which the model
+  already treats as a non-input. A LISTING (`getdents`) still gives `host-read`:
+  the sibling names are host state. An absent probe of a CHILD of an ancestor
+  (`/home/go.work`, `/go.work`) is not an ancestor and stays refused, as does a
+  present read of a sibling file of an ancestor; reads beneath an ancestor
+  follow the existing rules.
+- **(b) Absence under the fresh tmpfs.** An ABSENT probe of a path strictly
+  inside the fresh `Home` or `Tmpdir` is allowed. *Why it is safe.* The tmpfs is
+  empty when the step starts, so an absent name is a constant unless the action
+  made it, and the trace knows when it did (`isCreated`, tested before
+  `observeHost`; a name the action made, removed and probed again is the
+  action's own). `underTmp` already excludes everything that could persist:
+  `fresh` refuses the checkout and anything under it, every ancestor of the
+  checkout (hosted runners put it under `$HOME`), and every declared root and
+  ancestor of one. A PRESENT look at something the action did not make stays
+  `host-read` (the state-preloaded void, §5.3, covers a pre-populated tmpfs).
+  The `absent-ok` entries `$HOME/.config` and `$HOME/.npmrc` become redundant and
+  are left in place.
+
+Not changed: a listing of any ancestor, a child probe of an ancestor, a present
+uncreated name under `$HOME`/`TMPDIR`, and the rules of each declared root
+(a tool root not keyed, an unpinned state root, an image root's ctime check).
+`kiln:recorder` is 7. The differential fuzzer's oracle (`model_test.go`) has the
+same two rules, so a record with no reason is still checked against the model.
+Tests: `internal/traced/ancestor_test.go`.
+
 **One explicit image label.** The record workflow and every job that consumes
 its records use one explicit `ubuntu-NN.04` label, never `ubuntu-latest`: the
 host's image id is part of the weak key, so a floating label would change the
@@ -4008,7 +4055,11 @@ precondition provably holds; anything else stays on the strict rule.
   sandbox's tmpfs mount point, the same node in every run. Listing it is
   allowed too: it is the fresh tmpfs, whose contents are the same in every
   run apart from the mounts the sandbox itself makes. Only the node: the
-  checkout's other ancestors and everything under `$HOME` stay `host-read`.
+  checkout's other ancestors and everything under `$HOME` stay `host-read`,
+  **except as D39 now allows**: a present, non-listing look at a proper
+  ancestor of an anchor, and an absent probe strictly inside the fresh `$HOME`
+  or `TMPDIR`. A listing of an ancestor, a child of an ancestor and a present
+  uncreated name under `$HOME` still give `host-read`.
 
 **Tests.** A differential fuzzer runs an in-memory filesystem model with the
 true results and `-y` paths and gives the final state as the post-run disk. It
