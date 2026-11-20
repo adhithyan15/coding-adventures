@@ -34,6 +34,22 @@ type ExplainSummary struct {
 	RecordParseReasons map[string]int `json:"record_parse_reasons"`
 	// ParseRefusals: step traces THIS census's own timed parse refused, by code.
 	ParseRefusals map[string]int `json:"parse_refusals"`
+	// RecordParseReasonsByLanguage is RecordParseReasons split by the action's
+	// language: language -> code -> actions.  Languages are the validated names
+	// of the share-by-language section (at most maxCensusLanguages, then
+	// "other"); codes are the closed list of parseReasonCode.
+	RecordParseReasonsByLanguage CountTable `json:"record_parse_reasons_by_language"`
+	// ParseRefusalsByLanguage is ParseRefusals split the same way.
+	ParseRefusalsByLanguage CountTable `json:"parse_refusals_by_language"`
+	// ParseRefusalSyscalls is the histogram reason x syscall of the refusals
+	// of this census's cross-checked parse: code -> syscall -> traces.  The
+	// syscall is a member of the parser's closed syscall table (refusalSyscall),
+	// or "other" when the refusal is not tied to a modelled call (an
+	// unparsable line, an unresumed call) or the call is not in the table.
+	ParseRefusalSyscalls CountTable `json:"parse_refusal_syscalls"`
+	// ParseRefusalSyscallsByLanguage is the same, split by language:
+	// language -> code -> syscall -> traces.
+	ParseRefusalSyscallsByLanguage CountTable3 `json:"parse_refusal_syscalls_by_language"`
 	// RecordFailed: actions with a record.failed, by category.
 	RecordFailed map[string]int `json:"record_failed"`
 	// Sidecar: facts from every step sidecar that decoded.
@@ -54,8 +70,56 @@ func newExplain() ExplainSummary {
 	return ExplainSummary{
 		RecordReasonKinds: map[string]int{}, RecordParseReasons: map[string]int{},
 		ParseRefusals: map[string]int{}, RecordFailed: map[string]int{},
+		RecordParseReasonsByLanguage: CountTable{}, ParseRefusalsByLanguage: CountTable{},
+		ParseRefusalSyscalls: CountTable{}, ParseRefusalSyscallsByLanguage: CountTable3{},
 		Sidecar: SidecarFacts{Truncated: map[string]int{}, Unclean: map[string]int{}},
 	}
+}
+
+// CountTable is a two-level count, a -> b -> n.  Every key is a member of a
+// closed list (a validated language name, a parseReasonCode, a syscall-table
+// name), so its size is bounded by those lists.
+type CountTable map[string]map[string]int
+
+func (t CountTable) add(a, b string) {
+	m := t[a]
+	if m == nil {
+		m = map[string]int{}
+		t[a] = m
+	}
+	m[b]++
+}
+
+// CountTable3 is a three-level count, a -> b -> c -> n.
+type CountTable3 map[string]CountTable
+
+func (t CountTable3) add(a, b, c string) {
+	m := t[a]
+	if m == nil {
+		m = CountTable{}
+		t[a] = m
+	}
+	m.add(b, c)
+}
+
+// refusalSyscall names the call a parse refusal is about, from CLOSED data only.
+//
+//	refused:<name>   the name is the code's own, already checked against the
+//	                 table by refusedCode
+//	otherwise        trace.Error.Call, which the parser sets only to a table
+//	                 name (cwd-race: chdir or fchdir; fd-path: fchmod, ...)
+//	else             "other"
+//
+// It is looked up again here, so a hostile or stale error can never put its
+// own text into the report.
+func refusalSyscall(code string, e *trace.Error) string {
+	if name, ok := strings.CutPrefix(code, "refused:"); ok && name != "other" && trace.SyscallClass(name) == "refused" {
+		return name
+	}
+	if e != nil && e.Call != "" && trace.SyscallClass(e.Call) != "" {
+		return e.Call
+	}
+	return "other"
 }
 
 // matchCode returns the first member of codes that s equals or starts, as a
