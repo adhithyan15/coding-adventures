@@ -406,8 +406,9 @@ subject-dependent argument the op's `admit` reads refused statically (VER04r 4.5
 ## The v2 conformance kit (S5a, S5b, S5e)
 
 VER04r section 11 adds six categories to the shared fixture family `warrant-corpus-conformance-v1`:
-`v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk` and `v2-fault` (a seventh, `v2-binding`, is S5c's: see
-"The reference binding validator" below).
+`v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk` and `v2-fault`, and a seventh, `v2-binding` (S5c derives it,
+S5d commits it: see "The reference binding validator" below). All seven files are committed: 958 cases, 1,419 in the
+family with the four v1 categories.
 The oracle **derives every expectation**: `src/coding_adventures_warrant_oracle/conformance.py` is the
 derivation module, and the hand-written case tables, the three small kit documents the chunk cases come from
 and `make_conformance.py` live in `tests/fixtures/conformance-v2/` (its README says how to add a case).
@@ -439,9 +440,9 @@ S5b commits the six `v2-*.json` files (734 cases) and their rows of `index.json`
 adds 48 cases to the tables, 782 in all (`v2-ir` 248, `v2-domain` 162, `v2-chunk` 74, `v2-fault` 41, the other two
 unchanged), and the derivation changes they need (VER04r section 16.18 R69 to R77: a `width_params` op in the kit,
 `level-missing` and `requires` by what `ir` reaches, the `errs` rules, the chain depth of an uncalled model); the
-committed `v2-*.json` files and `index.json` (1,243 cases once regenerated) are the **fixture PR's**, which only adds
-cases, so until it lands `make_conformance.py --check` against the family directory reports the six files stale. **Regeneration is two steps**:
-`make_conformance.py --write` (the six files), then `python3 code/scripts/warrant_corpus_conformance.py --write`
+committed `v2-*.json` files and `index.json` are the fixture PRs': S5e's regenerated the six (782 cases) and S5d
+(`v2-binding.json`, 176 cases) brought the family to 1,419. **Regeneration is two steps**:
+`make_conformance.py --write` (the seven files), then `python3 code/scripts/warrant_corpus_conformance.py --write`
 (`index.json`: the four v1 rows, then one row per `v2-*.json` on disk in the fixed order). `BUILD` runs
 `make_conformance.py --check --fixture ../../../specs/fixtures/warrant-corpus-conformance-v1` (a second derivation of
 the `2**24` suite, about a minute, that the pytest session fixture does not share), the v1 checker
@@ -478,9 +479,12 @@ refused; every one `requires` `["ir.core"]`; the normalized form of an accepted 
 equality, never by sub-object). A refused case is the valid base binding of its corpus with **one** line
 changed, and the build demands that the validator finds exactly one violation in it, so no case depends on which of two
 problems an implementation meets first. `make_conformance.py --write` writes `v2-binding.json` beside the six other files;
-`--check` holds it to the derivation as soon as the file or its index row exists, and reports it as *not committed yet*
-(S5d commits it) while neither does, so a family directory that holds the six S5b files stays green. The file is not
-written into `code/specs/fixtures` by S5c.
+`--check` holds it to the derivation like every other category: S5d commits the file and removes the "not committed
+yet" branch S5c had (VER04r section 16.19 R93), so a missing file, a missing index row, or both together, is exit 1.
+The v1 checker `code/scripts/warrant_corpus_conformance.py` indexes the file, requires every case id of every category
+to be printable ASCII (U+0021 to U+007E) and checks each `v2-binding` `expect.reason` against the 39 names above (a set
+it carries as a literal, held equal to VER04r R85 (d) by its tests); the closed set of the four v1 categories applies to
+them only.
 
 ### The `v2-binding` reason set
 

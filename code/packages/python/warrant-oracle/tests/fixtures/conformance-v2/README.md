@@ -1,7 +1,7 @@
 # conformance-v2: the case tables of the v2 conformance kit (VER04r section 11, slice S5a)
 
-This directory holds the **inputs** of the six v2 categories of `warrant-corpus-conformance-v1`
-(`v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk`, `v2-fault`) and the script that turns them into
+This directory holds the **inputs** of the seven v2 categories of `warrant-corpus-conformance-v1`
+(`v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk`, `v2-fault`, `v2-binding`) and the script that turns them into
 fixture files. It holds no fixture JSON: S5b committed the files into
 `code/specs/fixtures/warrant-corpus-conformance-v1/`, and `BUILD` runs `--check` against that directory.
 Regeneration is two steps: `--write` here, then `python3 code/scripts/warrant_corpus_conformance.py --write` for `index.json`.
@@ -45,13 +45,11 @@ case that needs another level belongs to S10d or S11 and fails the build here.
 
 `kit.warrant` is the expensive part (about a minute, 256 chunks of the `big` suite); it is derived once per run.
 
-## `v2-binding` (S5c): written always, checked once committed
+## `v2-binding` (S5c derives it, S5d commits it)
 
-`--write` writes `v2-binding.json` (176 cases) beside the six files. S5c does not commit it (S5d does), so `--check`
-treats it as **pending** while the directory has neither the file nor a `v2-binding` row in `index.json`: it prints
-"not committed yet" and compares only the six files and their index rows, so the committed S5b family stays green. Once
-the file or its index row exists, it is held to the derivation like the others (a row without the file, a file that differs
-and a file without a row are exit 1). Regeneration stays two steps: `--write`, then `code/scripts/warrant_corpus_conformance.py --write`.
+`--write` writes `v2-binding.json` (176 cases) beside the six files, and S5d committed it. `--check` holds it to the
+derivation like the others: a row without the file, a file that differs, a file without a row, and a directory with
+neither the file nor its row (the "not committed yet" branch is removed, VER04r section 16.19 R93) are all exit 1. Regeneration stays two steps: `--write`, then `code/scripts/warrant_corpus_conformance.py --write`.
 
 ## Choices the spec leaves open (see section 16.15 of VER04r)
 

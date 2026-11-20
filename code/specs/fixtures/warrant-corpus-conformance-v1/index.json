@@ -59,8 +59,14 @@
       "category": "v2-fault",
       "path": "v2-fault.json",
       "sha256": "d8af85dcca3e97f1edc62bf2fa6a4fb46b3240c0c12e31fbd819db5ee020e795"
+    },
+    {
+      "cases": 176,
+      "category": "v2-binding",
+      "path": "v2-binding.json",
+      "sha256": "9af9b1b70b4410962add9fe845ba2e64eca07b7b38d2e8ad66f21dfe1ac1819f"
     }
   ],
   "schema": "warrant-corpus-conformance-v1",
-  "total_cases": 1243
+  "total_cases": 1419
 }
