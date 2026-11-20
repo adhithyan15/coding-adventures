@@ -34,6 +34,12 @@ addopts = "--cov=coding_adventures_warrant_corpus --cov-report=term-missing --co
 
 [tool.coverage.run]
 source = ["src/coding_adventures_warrant_corpus"]
+# The v2 conformance harness walks the 16.7 million cases of the kit's 2^24
+# suite in sequence (VER04r section 11: "chunk c alone equals sequential").  The
+# default tracer would make that walk three times slower than the code it
+# measures; the `sysmon` core (Python 3.12+, line coverage only) costs almost
+# nothing.
+core = "sysmon"
 
 [tool.coverage.report]
 fail_under = 95
