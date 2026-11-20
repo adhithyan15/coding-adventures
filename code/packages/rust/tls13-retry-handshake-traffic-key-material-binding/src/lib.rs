@@ -11,6 +11,10 @@
 use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk, HkdfPrkImportError};
 use core::cell::Cell;
 use core::fmt;
+use tls13_certificate_message::{
+    decode_tls13_certificate_message, Tls13CertificateMessage, Tls13CertificateMessageErrorKind,
+    Tls13CertificateMessageLimits,
+};
 use tls13_certificate_request_message::{
     decode_certificate_request, CertificateRequest, CertificateRequestError,
     CertificateRequestLimits,
@@ -19,7 +23,9 @@ use tls13_cipher_suite_policy::{HkdfHash, SelectedCipherSuite};
 use tls13_encrypted_extensions_message::{
     decode_encrypted_extensions_message, EncryptedExtensionsMessage,
 };
-use tls13_extension_block::{ExtensionBlockError, ExtensionBlockLimits, ExtensionType};
+use tls13_extension_block::{
+    decode_extension_block, ExtensionBlockError, ExtensionBlockLimits, ExtensionType,
+};
 use tls13_extension_context_policy::{ExtensionContextPolicyError, ServerExtensionContext};
 use tls13_handshake::{Tls13HandshakeMessage, Tls13HandshakePolicy};
 use tls13_handshake_reassembly::{ReassemblyError, ReassemblyProgress, Tls13HandshakeReassembler};
@@ -1654,6 +1660,49 @@ impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'r
             signature_algorithms_cert,
         })
     }
+
+    /// Decode and policy-bind this exact pending main-handshake server
+    /// `Certificate` message.
+    pub fn validate_server_certificate(
+        &self,
+        limits: Tls13CertificateMessageLimits,
+        extension_limits: ExtensionBlockLimits,
+    ) -> Result<
+        BoundRetryServerCertificate<'_, 'message, 'retry_evidence>,
+        RetryServerCertificateValidationError,
+    > {
+        if self.message.handshake_type() != tls13_handshake::Tls13HandshakeType::Certificate {
+            return Err(RetryServerCertificateValidationError::WrongMessageType);
+        }
+        if self.state != ServerFlightState::ExpectCertificateVerify {
+            return Err(RetryServerCertificateValidationError::WrongFlightState);
+        }
+        let certificate = decode_tls13_certificate_message(self.message.body(), limits)
+            .map_err(|error| RetryServerCertificateValidationError::Structure(error.kind()))?;
+        if !certificate.request_context().is_empty() {
+            return Err(RetryServerCertificateValidationError::NonEmptyContext);
+        }
+        if certificate.certificate_count() == 0 {
+            return Err(RetryServerCertificateValidationError::EmptyCertificateList);
+        }
+        let policy = self.retry_evidence.extension_context_policy();
+        let final_client_hello = self.retry_evidence.final_client_hello_extensions();
+        for entry in certificate.entries() {
+            let extensions = decode_extension_block(entry.encoded_extensions(), extension_limits)
+                .map_err(RetryServerCertificateValidationError::EntryExtensions)?;
+            policy
+                .validate_server_message(
+                    ServerExtensionContext::Certificate,
+                    &extensions,
+                    final_client_hello,
+                )
+                .map_err(RetryServerCertificateValidationError::EntryContext)?;
+        }
+        Ok(BoundRetryServerCertificate {
+            pending: self,
+            certificate,
+        })
+    }
 }
 
 impl fmt::Debug for PendingRetryServerTranscriptMessage<'_, '_> {
@@ -1860,6 +1909,97 @@ impl fmt::Debug for BoundRetryCertificateRequest<'_, '_, '_> {
             .field("certificate_request", &"[REDACTED]")
             .field("signature_algorithms", &"[REDACTED]")
             .field("signature_algorithms_cert", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Stable payload-free failures for exact retry server `Certificate` validation.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RetryServerCertificateValidationError {
+    /// The pending ordered message was not `Certificate`.
+    WrongMessageType,
+    /// The ordered flight was not immediately after server `Certificate`.
+    WrongFlightState,
+    /// The exact authenticated body was structurally invalid.
+    Structure(Tls13CertificateMessageErrorKind),
+    /// A main-handshake server `Certificate` carried a nonempty context.
+    NonEmptyContext,
+    /// The server supplied no certificate entries.
+    EmptyCertificateList,
+    /// One exact entry extension vector was structurally invalid.
+    EntryExtensions(ExtensionBlockError),
+    /// Placement or final ClientHello offer policy rejected one entry extension.
+    EntryContext(ExtensionContextPolicyError),
+}
+
+impl fmt::Display for RetryServerCertificateValidationError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::WrongMessageType => "TLS 1.3 retry message is not Certificate",
+            Self::WrongFlightState => {
+                "TLS 1.3 retry server Certificate has the wrong ordered-flight state"
+            }
+            Self::Structure(_) => "TLS 1.3 retry server Certificate structure is invalid",
+            Self::NonEmptyContext => {
+                "TLS 1.3 main-handshake server Certificate context is not empty"
+            }
+            Self::EmptyCertificateList => "TLS 1.3 server Certificate list is empty",
+            Self::EntryExtensions(_) => "TLS 1.3 server Certificate entry extensions are invalid",
+            Self::EntryContext(_) => {
+                "TLS 1.3 server Certificate policy rejected an entry extension"
+            }
+        })
+    }
+}
+
+impl std::error::Error for RetryServerCertificateValidationError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::EntryExtensions(error) => Some(error),
+            Self::EntryContext(error) => Some(error),
+            Self::WrongMessageType
+            | Self::WrongFlightState
+            | Self::Structure(_)
+            | Self::NonEmptyContext
+            | Self::EmptyCertificateList => None,
+        }
+    }
+}
+
+/// Exact authenticated nonempty main-handshake server `Certificate` proof.
+///
+/// This proof intentionally derives neither `Copy` nor `Clone`. It retains the
+/// pending ordered message and exact decoded certificate body after every entry
+/// extension vector passed retained placement and offer policy.
+pub struct BoundRetryServerCertificate<'pending, 'message, 'retry_evidence> {
+    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence>,
+    certificate: Tls13CertificateMessage<'message>,
+}
+
+impl<'pending, 'message, 'retry_evidence>
+    BoundRetryServerCertificate<'pending, 'message, 'retry_evidence>
+{
+    /// Borrow the exact pending ordered message and pre-message snapshot.
+    #[must_use]
+    pub const fn pending(
+        &self,
+    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+        self.pending
+    }
+
+    /// Borrow the exact structurally decoded and policy-authorized certificate.
+    #[must_use]
+    pub const fn certificate(&self) -> &Tls13CertificateMessage<'message> {
+        &self.certificate
+    }
+}
+
+impl fmt::Debug for BoundRetryServerCertificate<'_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryServerCertificate")
+            .field("pending", &"[RETAINED]")
+            .field("certificate", &"[REDACTED]")
             .finish()
     }
 }

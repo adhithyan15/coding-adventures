@@ -49,3 +49,6 @@
   require its empty context and `signature_algorithms` extension, apply the
   retained request-context placement policy, and retain structurally decoded
   handshake and optional certificate signature-scheme lists in the proof.
+- Decode an exact authenticated ordered main-handshake server `Certificate`,
+  require its empty context and nonempty entry list, and validate every exact
+  entry extension vector against retained placement and final-offer policy.
