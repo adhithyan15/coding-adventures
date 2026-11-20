@@ -188,10 +188,35 @@ func (c *classifier) fresh(abs string) bool {
 	return true
 }
 
-// underTmp says abs is strictly inside the fresh scrubbed HOME or TMPDIR.
+// freshRoots are the mount points of the fresh sandbox tmpfs: the scrubbed HOME
+// and TMPDIR and, when the action ran in the sealed root (D43), the scratch
+// directories (/tmp, /var/tmp, /run).
+func (c *classifier) freshRoots() []string {
+	out := make([]string, 0, 2+len(c.cfg.ScratchDirs))
+	for _, d := range []string{c.cfg.Home, c.cfg.Tmpdir} {
+		if d != "" {
+			out = append(out, d)
+		}
+	}
+	return append(out, c.cfg.ScratchDirs...)
+}
+
+// underTmp says abs is strictly inside the fresh scrubbed HOME or TMPDIR, or a
+// scratch directory.  A scratch directory is a fresh tmpfs mounted exactly as
+// HOME and TMPDIR are, so D39 and D40 apply to it unchanged.  The one
+// difference: Home or Tmpdir may sit beneath /tmp, and the directories the
+// plan creates there only to mount them (ancestor-chain nodes) exist in every
+// run, so they are not "absent unless the action made them".
 func (c *classifier) underTmp(abs string) bool {
 	for _, d := range []string{c.cfg.Home, c.cfg.Tmpdir} {
 		if d != "" && strings.HasPrefix(abs, d+"/") && c.fresh(abs) {
+			return true
+		}
+	}
+	for _, d := range c.cfg.ScratchDirs {
+		// Home and Tmpdir are mount points of their own, never "inside"
+		// /tmp for the rules of D39 and D40.
+		if strings.HasPrefix(abs, d+"/") && c.fresh(abs) && !c.cfg.ancestors[abs] && abs != c.cfg.Home && abs != c.cfg.Tmpdir {
 			return true
 		}
 	}
@@ -199,10 +224,22 @@ func (c *classifier) underTmp(abs string) bool {
 }
 
 func (c *classifier) isTmpRoot(abs string) bool {
-	return abs != "" && (abs == c.cfg.Home || abs == c.cfg.Tmpdir) && c.fresh(abs)
+	if abs == "" || !c.fresh(abs) {
+		return false
+	}
+	for _, d := range c.freshRoots() {
+		if abs == d {
+			return true
+		}
+	}
+	return false
 }
 
 // lookup says what abs is.  An unreadable path is a reason and reads as absent.
+//
+// It reads per-event state (callOK, for the sealed root's shortcut), so it must
+// only be called while an event is being classified, never from judge,
+// checkStability or settleReshaped, where callOK is the last event's.
 func (c *classifier) lookup(abs string) node {
 	if c.isTmpRoot(abs) {
 		return node{kind: KindDir}
@@ -210,15 +247,16 @@ func (c *classifier) lookup(abs string) node {
 	if c.underTmp(abs) {
 		// Fresh tmpfs: either the action made it (the trace knows) or it is
 		// absent.  The post-run disk is never asked.
-		if t, ok := c.links[abs]; ok {
-			return node{kind: KindLink, target: t}
-		}
-		if c.dirs[abs] {
-			return node{kind: KindDir}
-		}
-		if _, ok := c.created[abs]; ok {
-			return node{kind: KindFile}
-		}
+		return c.madeOrAbsent(abs)
+	}
+	if c.sealedOn() && !c.callOK && !c.sandboxHas(abs) {
+		// The sealed root holds nothing here, whatever the host has (D43).
+		// Only a FAILED call is judged this way: its absence is what D43
+		// explains.  A call that SUCCEEDED (and an exec's ELF loader, resolved
+		// within it) found something the plan does not hold, so it keeps the
+		// verdict it always had, from the host's disk: a host-read, and never
+		// an unstable path invented by the shortcut (merged /usr: the
+		// loader /lib64/ld-linux-x86-64.so.2 with no /lib64 declared).
 		return node{}
 	}
 	n, ok := c.cache[abs]
@@ -230,6 +268,20 @@ func (c *classifier) lookup(abs string) node {
 		c.incomplete = true
 	}
 	return n
+}
+
+// madeOrAbsent answers a lookup inside a fresh tmpfs from the trace alone.
+func (c *classifier) madeOrAbsent(abs string) node {
+	if t, ok := c.links[abs]; ok {
+		return node{kind: KindLink, target: t}
+	}
+	if c.dirs[abs] {
+		return node{kind: KindDir}
+	}
+	if _, ok := c.created[abs]; ok {
+		return node{kind: KindFile}
+	}
+	return node{}
 }
 
 func (c *classifier) lookupFS(abs string) node {
@@ -461,6 +513,13 @@ func (c *classifier) resolve(full string, follow bool) (target, bool) {
 			c.reasonSub(rUnstable, "dotdot", full)
 		} else {
 			c.observe(w.stop, w.stopPresent, false)
+			// The call failed at a component of the TEXT path that the post-run
+			// disk lacks, and a ".." followed it.  That ENOENT speaks for the
+			// text only if the cwd text is where the kernel started; a renamed
+			// directory leaves it stale (settleReshaped).
+			if c.dotdotAt == "" {
+				c.dotdotAt = full
+			}
 		}
 		return target{}, false
 	}

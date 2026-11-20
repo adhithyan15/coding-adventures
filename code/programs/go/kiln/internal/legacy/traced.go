@@ -102,7 +102,16 @@ const TracedSemantics uint64 = 2
 // chown, utimensat, setxattr) on a file the action made, and shell redirections
 // to /dev/null are no longer `trace-incomplete:unstable-path`.  The accept set
 // grows, so every weak key changes.
-const RecorderVersion = 10
+//
+// Version 11: the sealed root (KILN04 D43).  An absent probe of a path the
+// sandbox's new root does not contain (/run/systemd/resolve/stub-resolv.conf,
+// the package.json above the checkout, /var/run) is no longer `host-read`, and
+// the scratch directories (/tmp, /var/tmp, /run) are fresh tmpfs like Home and
+// Tmpdir.  New refusals too: a call that SUCCEEDED where the plan has nothing,
+// and any absent probe allowed here or by D39 inside a scratch directory after
+// the action moved a directory.  The verdict changes both ways, so every weak
+// key changes.
+const RecorderVersion = 11
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
