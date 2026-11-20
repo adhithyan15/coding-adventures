@@ -658,7 +658,7 @@ func (c *classifier) observe(abs string, present, listing bool) {
 		if rel, ok := c.rel(abs); ok {
 			c.observeRepo(rel, present, listing)
 		} else {
-			c.observeHost(abs, present)
+			c.observeHost(abs, present, listing)
 		}
 	}
 }

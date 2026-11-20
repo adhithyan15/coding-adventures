@@ -190,7 +190,14 @@ func procMagicFinal(p string) bool {
 
 // observeHost applies the host-root rules to an out-of-repository path the
 // action did not create.
-func (c *classifier) observeHost(abs string, present bool) {
+//
+// Two rules keep the sandbox's scaffolding from being an input (KILN04 D39).
+// A present, non-listing look at a PROPER ANCESTOR of an anchor (checkout,
+// declared root, Home, Tmpdir, the literal prefix of an ephemeral or absent-ok
+// entry) learns only that node's type and metadata.  And an absent probe
+// strictly inside the fresh Home or Tmpdir is a constant: the tmpfs starts
+// empty and the trace says when the action made a name.
+func (c *classifier) observeHost(abs string, present, listing bool) {
 	if c.ephemeralMatch(abs) {
 		return
 	}
@@ -201,8 +208,20 @@ func (c *classifier) observeHost(abs string, present bool) {
 		// every run.  Only the node: nothing under it (section 5.5).
 		return
 	}
+	if !present && c.underTmp(abs) {
+		return
+	}
 	if r := c.rootOf(abs); r != nil {
 		c.observeRoot(r, abs, present)
+		return
+	}
+	// A directory that is an ancestor of an anchor is a real directory by
+	// construction.  A stat, access, readlink, chdir or O_DIRECTORY open shows
+	// its type and metadata only; a listing shows sibling names, which are host
+	// state, so it falls through.  A child of an ancestor (/home/go.work) is
+	// not an ancestor and is judged by the rules below.  An ancestor inside a
+	// declared root (nested anchors) was handled by the root's own rule above.
+	if present && !listing && c.cfg.ancestors[abs] {
 		return
 	}
 	if !present && c.absentOK(abs) {
