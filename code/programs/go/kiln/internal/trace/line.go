@@ -838,7 +838,8 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		return nil, incomplete(lineNo, reasonInterleaved)
 	}
 	if unfinished {
-		if !st.helper {
+		// A refused name is judged by its result, at the resumed half.
+		if !st.helper && lookup(call.name).class != classRefused {
 			if e := classifyName(call.name, lineNo); e != nil {
 				return nil, e
 			}
@@ -868,10 +869,12 @@ func finishCall(pid, lineNo int, call rawCall, split, deferClass bool) (*record,
 	if call.ret.hasHost && !isSpawn(call.name) && !isWaitName(call.name) {
 		return nil, incomplete(lineNo, reasonResult)
 	}
-	if !deferClass {
-		if e := classifyName(call.name, lineNo); e != nil {
-			return nil, e
-		}
+	// A refused name the sandbox filter answered (clone3 = -1 ENOSYS, mount =
+	// -1 EPERM) is the filter working: drop it, in both modes.
+	if tolerated, e := classifyCall(call.name, call.ret, lineNo); tolerated {
+		return nil, nil
+	} else if e != nil && !deferClass {
+		return nil, e
 	}
 	if lookup(call.name).class == classIgnored {
 		if isExitName(call.name) && !split && call.ret.unknown {
