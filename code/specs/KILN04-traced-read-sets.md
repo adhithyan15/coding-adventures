@@ -786,10 +786,10 @@ and a step that never started is the executor's `failed to start step` case,
 which `collect` handles from the step counts).
 
 *Why it is safe.* (a) The build tool runs an action's steps in order and stops
-at the first that fails: the loop at
-`build-tool/internal/executor/executor.go:474` returns the `failed` result at
-`executor.go:531` on the first step error, and no later step of that action is
-started. So the writes of a failed action are exactly those of the traced steps;
+at the first that fails: `runCommands` in
+`build-tool/internal/executor/executor.go` (currently near line 474) loops over
+the step commands and returns the `failed` result (currently near line 531) on
+the first step error, and no later step of that action is started. So the writes of a failed action are exactly those of the traced steps;
 nothing runs after the failure. (b) A failed action emits no manifest, so the
 prefix rule never produces a cache entry. (c) A rewritten BUILD that drops
 trailing steps ends on a step that SUCCEEDED, which condition 3 rejects; to pass,
@@ -799,6 +799,15 @@ a descendant held the output pipe, a timeout or interrupt) either has exit 0 or
 no clean non-zero exit, and stays a mismatch. The exit status is the one
 `stepStatus` already reads (`Trace.StepExit`); no new source. `RecorderVersion`
 5 to 6, because the verdict for these actions changes.
+
+*What D36 does NOT change: the strict void.* Before this rule these actions were
+`trace-incomplete:recipe-mismatch`, which the merge treats as a HARD unknown
+(`unkHard`, recmerge `unknown()`): a run-void in BOTH the strict and the relaxed
+verdicts. After it they carry `failed`, which is `unkTruncated`: the strict
+verdict still voids the run (M-1: the build on main would have run the rest),
+and the relaxed one only loses that action (`voidStrict`, `relaxLost`). The
+change is hard-void to strict-only. It is correct that the strict void stays:
+D36 makes the write set known, it does not make a failed action a built one.
 
 **Addresses.** `socket` needs a symbolic `AF_*` domain, and `connect` and
 `bind` need a `sockaddr`; otherwise `sockaddr`. Only `sendto` may have a
@@ -1364,8 +1373,19 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   `gated` and `unkeyed` count the actions whose plan entry has a gate or no weak
   key (overall and per language), `writes_unknown` the actions with a believed
   record whose `writes_complete` is false, plus `record.failed` and every action with no verdict at all, and
-  `actions.strict_merge_voids_shard` is true when `writes_unknown > 0` or the
-  shard is void (the Markdown line "strict merge would void this shard: yes/no").
+  `truncated` the actions with a KNOWN write set whose execution was cut short,
+  the merge's `unkTruncated` (a believed record with a `failed` or `daemon-left`
+  reason, or fewer steps run than the plan lists; mirrored from recmerge
+  `unknown()` as far as the census's inputs allow, and not counted again when
+  already in `writes_unknown`), `relaxed_would_lose` the actions the relaxed
+  merge would drop (equal to `truncated`), `relaxed_merge_voids_shard` true when
+  `writes_unknown > 0` or the shard is void (a hard unknown voids both
+  verdicts), and
+  `actions.strict_merge_voids_shard` is true when `writes_unknown > 0`,
+  `truncated > 0` or the shard is void (the Markdown line "strict merge would
+  void this shard: yes/no"). Since D36 a failed action with complete writes is
+  `truncated`, not `writes_unknown`. The three counts are additive JSON keys,
+  also per language.
   The shares
   `recordable_share_of_built_ok`, `emittable_share` and
   `emittable_share_of_built_ok` (a share over zero is 0). `actions` carries

@@ -25,8 +25,8 @@ import "github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/
 //
 // The failed prefix (KILN04 section 4.3, D36).  The build tool runs an action's
 // steps one after another and stops at the first that fails
-// (build-tool/internal/executor/executor.go: the loop at line 474 returns at
-// line 531, "failed", on the first step error), so an action that failed has
+// (`runCommands` in build-tool/internal/executor/executor.go, currently near
+// lines 474 to 531, returns "failed" on the first step error), so an action that failed has
 // FEWER traces than recipe lines, and that is not a mismatch: the later steps
 // never ran, so they wrote nothing.  Fewer traces are accepted exactly when
 //
@@ -36,6 +36,11 @@ import "github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/
 //	step only because they succeeded), and
 //	the LAST trace's step exited on its own with a non-zero status: it has an
 //	exit line, it was not killed by a signal, and the code is not 0.
+//
+// The merge class changes too: a recipe-mismatch is a HARD unknown (a run-void in
+// the strict and the relaxed merge), `failed` is TRUNCATED, so these actions go
+// from hard-void to strict-only (the relaxed report loses just that action).
+// This does NOT remove the strict void, which is correct by M-1.
 //
 // Then the verdict is the one the step statuses already give: stepStatus raised
 // `failed` for the last step, and the write set stays whatever the traces say

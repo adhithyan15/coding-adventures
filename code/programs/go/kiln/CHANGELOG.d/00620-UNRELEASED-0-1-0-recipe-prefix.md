@@ -12,13 +12,30 @@
 - Unchanged, still a mismatch: more traces than lines, a prefix whose last step
   succeeded, a differing or reordered step, an earlier step that failed, a killed
   last step, and an empty trace set beside a non-empty recipe.
+- Verdict class: these actions were a HARD unknown (`recipe-mismatch`, a run-void
+  in both the strict and the relaxed merge). They are now `failed`, which the merge
+  classes as truncated: hard-void -> strict-only (the relaxed report loses only
+  that action). D36 does NOT remove the strict void, which is correct by M-1.
 - Why it is safe: the build tool stops at the first failing step
-  (`build-tool/internal/executor/executor.go:474`, returns at `:531`), a failed
+  (`runCommands` in `build-tool/internal/executor/executor.go`, currently near
+  line 474, returns near 531), a failed
   action emits no manifest, and a BUILD rewritten to drop trailing steps ends on
   a step that succeeded, which still mismatches. KILN04 D36 (section 4.5) says so.
 - `RecorderVersion` 5 -> 6: the verdict for these actions changes, so every weak
   key changes.
 
+### Changed (census strict flag)
+
+- The census counted `writes_unknown` as `writes_complete` false plus
+  `record.failed`, so a failed action with complete writes dropped out of
+  `strict_merge_voids_shard` although the merge still strict-voids it. New
+  additive keys, overall and per language: `truncated` (a believed record with
+  `failed` or `daemon-left`, or fewer steps than planned; mirrors recmerge
+  `unknown()`), `relaxed_would_lose`, and `relaxed_merge_voids_shard`.
+  `strict_merge_voids_shard` is now `writes_unknown > 0 || truncated > 0 || shard_void`.
+
 ### Added
+
+- `TestCensusTruncatedActionsAndRelaxedLoss`.
 
 - `TestCheckRecipeFailedPrefix` (table) and `TestClassifyFailedPrefixRaisesOnlyFailed`.
