@@ -46,7 +46,7 @@ case that needs another level belongs to S10d or S11 and fails the build here.
 
 ## `v2-binding` (S5c): written always, checked once committed
 
-`--write` writes `v2-binding.json` (160 cases) beside the six files. S5c does not commit it (S5d does), so `--check`
+`--write` writes `v2-binding.json` (176 cases) beside the six files. S5c does not commit it (S5d does), so `--check`
 treats it as **pending** while the directory has neither the file nor a `v2-binding` row in `index.json`: it prints
 "not committed yet" and compares only the six files and their index rows, so the committed S5b family stays green. Once
 the file or its index row exists, it is held to the derivation like the others (a row without the file, a file that differs

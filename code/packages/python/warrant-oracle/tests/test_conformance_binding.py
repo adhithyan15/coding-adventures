@@ -336,6 +336,63 @@ def test_a_reader_that_skips_a_bom_is_killed(baseline, monkeypatch):
     assert "bom-at-the-start" in changed(baseline)
 
 
+def test_a_package_name_regex_of_lowercase_and_hyphen_only_is_killed(baseline, monkeypatch):
+    monkeypatch.setattr(BV, "_PACKAGE_NAME", re.compile(r"[a-z0-9][a-z0-9-]*"))
+    killed = changed(baseline)
+    assert {"accept-package-name-with-underscore", "accept-package-name-with-capitals"} <= set(killed)
+    assert "accept-package-name-with-a-dot" in killed
+
+
+def test_a_package_name_regex_that_allows_a_leading_dot_is_killed(baseline, monkeypatch):
+    monkeypatch.setattr(BV, "_PACKAGE_NAME", re.compile(r"[A-Za-z0-9._-]+"))
+    assert "bad-value-package-name-leading-dot" in changed(baseline)
+
+
+def test_a_fresh_check_that_accepts_any_composite_is_killed(baseline, monkeypatch):
+    monkeypatch.setattr(BV, "_immutable", lambda *args: True)
+    assert {"fresh-immutable-on-a-record-of-a-mutable-host", "fresh-immutable-on-a-tuple-with-a-mutable-component"} <= set(
+        changed(baseline)
+    )
+
+
+def test_a_reader_that_splits_lines_at_unicode_separators_is_killed(baseline, monkeypatch):
+    real = BV.byte_violation
+
+    def splitting(data):
+        found, text = real(data)
+        return found, "\n".join(text.splitlines()) + "\n" if text else text
+
+    monkeypatch.setattr(BV, "byte_violation", splitting)
+    assert {"accept-comment-with-a-line-separator", "accept-comment-with-a-c1-control"} <= set(changed(baseline))
+
+
+def test_a_reader_that_requires_a_final_line_feed_is_killed(baseline, monkeypatch):
+    real = BV.byte_violation
+    monkeypatch.setattr(
+        BV, "byte_violation", lambda data: real(data) if data.endswith(b"\n") else (BV.Violation("syntax", "eof"), "")
+    )
+    assert "accept-no-final-line-feed" in changed(baseline)
+
+
+def test_a_reader_that_allows_an_indented_comment_is_killed(baseline, monkeypatch):
+    real = BV.parse_lines
+    monkeypatch.setattr(BV, "parse_lines", lambda text: real("\n".join(x.lstrip(" ") for x in text.split("\n"))))
+    assert "syntax-indented-comment" in changed(baseline)
+
+
+def test_a_reader_that_refuses_c1_controls_is_killed(baseline, monkeypatch):
+    real = BV.byte_violation
+
+    def strict(data):
+        found, text = real(data)
+        if not found and any(0x80 <= ord(c) <= 0x9F for c in text):
+            return BV.Violation("control-character", "C1"), ""
+        return found, text
+
+    monkeypatch.setattr(BV, "byte_violation", strict)
+    assert "accept-comment-with-a-c1-control" in changed(baseline)
+
+
 def test_a_validator_that_ignores_what_an_inout_form_fits_is_killed(baseline, monkeypatch):
     monkeypatch.setattr(BV, "_form_fits", lambda form, ty: True)
     assert {"inout-form-cell-for-bytes", "inout-form-mutable-for-an-integer"} <= set(changed(baseline))

@@ -119,6 +119,8 @@ def check(directory: pathlib.Path) -> int:
         except (ValueError, KeyError, TypeError):
             held = None
     # v2-binding.json is pending (S5d commits it) while neither the file nor an index row exists.
+    # S5d MUST delete this branch (and the "pending" print below) in the commit that adds v2-binding.json:
+    # left in, removing both the file and its index row would stay green here and in the family checker.
     pending = not (directory / BINDING_FILE).is_file() and not any(
         isinstance(r, dict) and r.get("category") == BV.CATEGORY for r in held or []
     )

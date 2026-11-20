@@ -253,7 +253,7 @@ accept(
     "accept-comments-order-and-blank-lines",
     "comments (one with non-ASCII text), blank lines and a different line order normalize to the same binding",
     [
-        "# a comment may hold any UTF-8: café, —",
+        "# a comment may hold any UTF-8: caf\u00e9, \u2014",
         "",
         *reversed(CT_LINES[:8]),
         "",
@@ -341,6 +341,7 @@ accept(
     "fresh=probe where the representation (bytearray) is mutable",
     swap(swap(CT_LINES, "values ", "values Bool=bool Bytes=bytearray Nat=int U64=int"), SELECT, f"{SELECT} {ERR_MAP} fresh=probe"),
     CT,
+    {**CT_NORMALIZED, "values": {"Bool": "bool", "Bytes": "bytearray", "Nat": "int", "U64": "int"}},
 )
 accept(
     "accept-err-any-on-a-single-case-error",
@@ -387,6 +388,15 @@ accept(
     "the growable and returned forms",
     swap(swap(INOUT_LINES, "op zeroize", "op zeroize export=zeroize inout=buf:growable"), "op bump", "op bump export=bump inout=n:returned"),
     INOUT,
+    {
+        **CT_NORMALIZED,
+        "values": {"Bool": "bool", "Bytes": "bytes", "U8": "int"},
+        "ops": {
+            "zeroize": {"export": "zeroize", "inout": {"buf": "growable"}},
+            "bump": {"export": "bump", "inout": {"n": "returned"}},
+            "eq": {"export": "ct_eq"},
+        },
+    },
 )
 accept(
     "accept-record-variant-and-tuple",
@@ -413,6 +423,7 @@ accept(
     "a host whose U64 is int64 only (section 7.2, the OCaml row) accepts U64=int64",
     swap(CT_LINES, "values ", "values Bool=bool Bytes=bytes Nat=int64 U64=int64"),
     CT,
+    {**CT_NORMALIZED, "values": {"Bool": "bool", "Bytes": "bytes", "Nat": "int64", "U64": "int64"}},
     host=HOST_NARROW,
 )
 
@@ -423,6 +434,104 @@ accept(
     "a binding of exactly 65,536 bytes is within the size cap",
     _base + b"# " + b"x" * _room + b"\n",
     CT,
+    CT_NORMALIZED,
+)
+
+accept(
+    "accept-comment-with-a-line-separator",
+    "U+2028 inside a comment is part of the comment: only LF ends a line, so the op line after it is not a line",
+    ["# x\u2028op eq export=ct_eq", *CT_LINES],
+    CT,
+    CT_NORMALIZED,
+)
+accept(
+    "accept-comment-with-a-c1-control",
+    "U+0085 (NEL, a C1 control) inside a comment is valid UTF-8 text: only C0 controls and DEL are refused",
+    ["# x\u0085op eq export=ct_eq", *CT_LINES],
+    CT,
+    CT_NORMALIZED,
+)
+accept(
+    "accept-no-final-line-feed",
+    "the last line needs no LF after it",
+    text(CT_LINES).rstrip("\n"),
+    CT,
+    CT_NORMALIZED,
+)
+accept(
+    "accept-package-name-with-underscore",
+    "a package directory name may hold _ (elixir/gf256_native)",
+    swap(swap(CT_LINES, "lane ", "lane elixir"), "package ", "package elixir/gf256_native"),
+    CT,
+    {**CT_NORMALIZED, "lane": "elixir", "package": "elixir/gf256_native"},
+)
+accept(
+    "accept-package-name-with-capitals",
+    "a package directory name may hold capitals and digits (swift/Barcode1D)",
+    swap(swap(CT_LINES, "lane ", "lane swift"), "package ", "package swift/Barcode1D"),
+    CT,
+    {**CT_NORMALIZED, "lane": "swift", "package": "swift/Barcode1D"},
+)
+accept(
+    "accept-package-name-with-a-dot",
+    "a package directory name may hold . (csharp/Mosaic.Flux)",
+    swap(swap(CT_LINES, "lane ", "lane csharp"), "package ", "package csharp/Mosaic.Flux"),
+    CT,
+    {**CT_NORMALIZED, "lane": "csharp", "package": "csharp/Mosaic.Flux"},
+)
+accept(
+    "accept-seed-decimal-leading-zeros",
+    "leading zeros of a decimal seed mean nothing, however many: only the 20 significant digits are bounded",
+    swap(CT_LINES, "seed ", "seed " + "0" * 40 + "7"),
+    CT,
+    {**CT_NORMALIZED, "seed": "7"},
+)
+accept(
+    "accept-seed-hex-leading-zeros",
+    "leading zeros of a hex seed mean nothing: only the 16 significant digits are bounded",
+    swap(CT_LINES, "seed ", "seed 0x0000_0000_0000_0000_0000_00ff"),
+    CT,
+    {**CT_NORMALIZED, "seed": "255"},
+)
+
+FRESH_DATA = {
+    "types": DATA["types"],
+    "ops": {
+        **DATA["ops"],
+        "make_point": {**DATA["ops"]["make_point"], "fresh": True},
+        "split": {**DATA["ops"]["split"], "fresh": True},
+    },
+}
+HOST_POINT_IMMUTABLE = {**HOST, "immutable": [*HOST["immutable"], "Point"]}
+DATA_NORMALIZED = {
+    **CT_NORMALIZED,
+    "levels": ["ir.core", "ir.data", "ir.tuple"],
+    "values": {"Bool": "bool", "Bytes": "bytes", "Nat": "int", "Tuple": "tuple", "U8": "int"},
+    "types": {
+        "Point": {"host": "Point", "fields": ["x", "y"]},
+        "Decoded": {"host": "Decoded", "ctors": ["Short", "Done"]},
+    },
+    "ops": {
+        "make_point": {"export": "make_point", "fresh": "probe"},
+        "decode": {"export": "decode", "error": "TOO_SHORT"},
+        "split": {"export": "split", "fresh": "probe"},
+    },
+}
+MAKE_POINT_IMMUTABLE = swap(DATA_LINES, "op make_point", "op make_point export=make_point fresh=immutable")
+accept(
+    "accept-fresh-immutable-on-a-record-of-an-immutable-host",
+    "fresh=immutable on a record result whose host class the lane lists as immutable by construction",
+    MAKE_POINT_IMMUTABLE,
+    FRESH_DATA,
+    {**DATA_NORMALIZED, "ops": {**DATA_NORMALIZED["ops"], "make_point": {"export": "make_point", "fresh": "immutable"}}},
+    host=HOST_POINT_IMMUTABLE,
+)
+accept(
+    "accept-fresh-immutable-on-a-tuple-of-immutable-components",
+    "fresh=immutable on a tuple whose container and every component are immutable representations",
+    swap(DATA_LINES, "op split", "op split export=split fresh=immutable"),
+    FRESH_DATA,
+    {**DATA_NORMALIZED, "ops": {**DATA_NORMALIZED["ops"], "split": {"export": "split", "fresh": "immutable"}}},
 )
 
 # ===================================================================================================================
@@ -455,7 +564,8 @@ reject("control-character-escape", "ESC (0x1b) inside a comment", b"# a\x1bb\n" 
 reject("syntax-double-space", "two spaces between tokens", swap(CT_LINES, "lane ", "lane  python"), CT, "syntax")
 reject("syntax-leading-space", "a space before the directive", swap(CT_LINES, "lane ", " lane python"), CT, "syntax")
 reject("syntax-trailing-space", "a space after the last token", swap(CT_LINES, "lane ", "lane python "), CT, "syntax")
-reject("syntax-non-ascii-outside-a-comment", "a non-ASCII character in a module name", swap(CT_LINES, "module ", "module ct_compäre"), CT, "syntax")
+reject("syntax-indented-comment", "a comment is a line whose first character is #: an indented one is a malformed directive line", [" # a note", *CT_LINES], CT, "syntax")
+reject("syntax-non-ascii-outside-a-comment", "a non-ASCII character in a module name", swap(CT_LINES, "module ", "module ct_comp\u00e4re"), CT, "syntax")
 reject("syntax-directive-without-argument", "depth with no argument", swap(CT_LINES, "depth ", "depth"), CT, "syntax")
 reject("syntax-directive-with-two-arguments", "lane with two arguments", swap(CT_LINES, "lane ", "lane python go"), CT, "syntax")
 reject("syntax-values-pair-without-equals", "a values item that is not Name=host", swap(CT_LINES, "values ", "values Bool=bool Bytes"), CT, "syntax")
@@ -490,6 +600,8 @@ reject("bad-value-seed-double-underscore", "two underscores in a row", swap(CT_L
 reject("bad-value-seed-trailing-underscore", "a trailing underscore", swap(CT_LINES, "seed ", "seed 10_"), CT, "bad-value")
 reject("bad-value-seed-negative", "a negative seed", swap(CT_LINES, "seed ", "seed -1"), CT, "bad-value")
 reject("bad-value-seed-uppercase-prefix", "0X is not the hex prefix", swap(CT_LINES, "seed ", "seed 0X10"), CT, "bad-value")
+reject("bad-value-seed-too-many-digits", "a 5,000-digit decimal seed is refused as a value, not met as a crash of the integer conversion", swap(CT_LINES, "seed ", "seed " + "9" * 5000), CT, "bad-value")
+reject("bad-value-package-name-leading-dot", "a package directory name starts with a letter or a digit", swap(swap(CT_LINES, "lane ", "lane swift"), "package ", "package swift/.hidden"), CT, "bad-value")
 reject("bad-value-repeated-level", "a level named twice", swap(CT_LINES, "levels ", "levels ir.core,ir.core"), CT, "bad-value")
 
 # ===================================================================================================================
@@ -523,6 +635,7 @@ reject("values-missing-bytes", "the corpus signatures need Bytes and the binding
 reject("values-missing-u64", "eq_u64 needs U64", swap(CT_LINES, "values ", "values Bool=bool Bytes=bytes"), CT, "values-missing")
 reject("values-missing-for-a-variant-payload", "the payload of a variant constructor needs Nat", swap(DATA_LINES, "values ", "values Bool=bool Bytes=bytes Tuple=tuple U8=int"), DATA, "values-missing")
 reject("values-missing-tuple", "a tuple result needs Tuple=", swap(DATA_LINES, "values ", "values Bool=bool Bytes=bytes Nat=int U8=int"), DATA, "values-missing")
+reject("values-missing-for-a-tuple-component", "the components of a tuple need their value names too: (Bytes,Bool) needs Bool", swap(DATA_LINES, "values ", "values Bytes=bytes Nat=int Tuple=tuple U8=int"), DATA, "values-missing")
 reject("values-missing-for-a-record-field", "the fields of a record need their value names", swap(DATA_LINES, "values ", "values Bool=bool Bytes=bytes Nat=int Tuple=tuple"), DATA, "values-missing")
 
 reject("type-unknown-name", "a type line for a name the corpus does not declare", add(DATA_LINES, "type Ghost host=Point fields=x"), DATA, "type-unknown")
@@ -596,8 +709,8 @@ reject("inout-param-not-inout-in-the-corpus", "inout= on a parameter the corpus 
 reject("inout-param-twice", "a parameter given two forms", swap(INOUT_LINES, "op zeroize", "op zeroize export=zeroize inout=buf:mutable,buf:returned"), INOUT, "inout-param")
 reject("inout-param-malformed-pair", "an inout= item that is not param:form", swap(INOUT_LINES, "op zeroize", "op zeroize export=zeroize inout=buf"), INOUT, "inout-param")
 reject("inout-form-unknown", "a form that is not one of the four of section 7.6", swap(INOUT_LINES, "op zeroize", "op zeroize export=zeroize inout=buf:inplace"), INOUT, "inout-form")
-reject("inout-form-reserved-record-form", "struct: is reserved (ir.inout.records) and not implemented", swap(INOUT_LINES, "op zeroize", "op zeroize export=zeroize inout=buf:struct:Point"), INOUT, "inout-form")
 reject("inout-form-cell-for-bytes", "a cell holds an integer or a Bool, not a Bytes", swap(INOUT_LINES, "op zeroize", "op zeroize export=zeroize inout=buf:cell"), INOUT, "inout-form")
+reject("inout-form-growable-for-an-integer", "a growable buffer is a Bytes form, not an integer's", swap(INOUT_LINES, "op bump", "op bump export=bump inout=n:growable"), INOUT, "inout-form")
 reject("inout-form-mutable-for-an-integer", "a mutable byte array is a Bytes form, not an integer's", swap(INOUT_LINES, "op bump", "op bump export=bump inout=n:mutable"), INOUT, "inout-form")
 
 reject("fresh-on-an-op-that-is-not-fresh", "fresh= on an op the corpus does not mark fresh", swap(CT_LINES, "op eq export", "op eq export=ct_eq fresh=probe"), CT, "fresh")
@@ -614,5 +727,19 @@ reject(
     "fresh=immutable with a ret= override that names a mutable representation",
     swap(CT_LINES, SELECT, f"{SELECT} {ERR_MAP} ret=bytearray fresh=immutable"),
     CT,
+    "fresh",
+)
+reject(
+    "fresh-immutable-on-a-record-of-a-mutable-host",
+    "fresh=immutable on a record result whose host class is not in the lane's immutable list",
+    MAKE_POINT_IMMUTABLE,
+    FRESH_DATA,
+    "fresh",
+)
+reject(
+    "fresh-immutable-on-a-tuple-with-a-mutable-component",
+    "an immutable tuple holding a bytearray is writable through it: every component must be immutable too",
+    swap(swap(DATA_LINES, "values ", "values Bool=bool Bytes=bytearray Nat=int Tuple=tuple U8=int"), "op split", "op split export=split fresh=immutable"),
+    FRESH_DATA,
     "fresh",
 )

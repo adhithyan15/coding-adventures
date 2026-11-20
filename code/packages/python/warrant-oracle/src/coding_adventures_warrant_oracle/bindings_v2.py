@@ -40,9 +40,13 @@ The order of the checks (so that "the first" is well defined)
    ``control-character``.
 2. *The lines* (every line is read; if any violation is found, stop): ``syntax``, ``unknown-directive``,
    ``duplicate-directive``, ``bad-value``, ``op-key``, ``type-shape`` for a repeated or unknown key.
-3. *The model* (every check runs): ``missing-directive``; ``level-unknown`` and ``level-implication``;
-   ``values-name``, ``values-representation``; the ``type`` lines; ``values-missing`` and
-   ``type-missing`` (what the corpus's signatures need); the ``op`` lines, in the order of the corpus.
+3. *The model* (every check runs, in this order): ``missing-directive``; ``bad-value`` for a ``package``
+   whose lane is not the ``lane`` line's; ``level-unknown`` and ``level-implication``; ``values-name``,
+   ``values-representation``; the ``type`` lines (``type-unknown``, ``type-shape``, and ``export-unknown`` for a
+   ``host=`` that is no export); ``values-missing`` and ``type-missing`` (what the corpus's signatures need);
+   ``op-unknown`` for an ``op`` line the corpus does not declare; then the corpus's ops in corpus order,
+   each with ``op-missing`` or ``export-missing`` / ``export-unknown``, ``args``, ``ret``, ``width``, the error
+   rules, ``inout-param`` / ``inout-form`` and ``fresh``.
 
 The ``reason`` set, one line each
 ---------------------------------
@@ -112,7 +116,8 @@ What the file may contain (section 7.1 and VER04i section 5.1)
     module ct_compare                        the Warrant module name
     import coding_adventures_ct_compare      one printable token; resolved by the lane, not here
     source src/coding_adventures_ct_compare  a relative path: no leading ``/``, no ``..``, ``\\`` or ``:``
-    seed 0x5741_5252_414e_5421               a ``u64``, decimal or ``0x`` hex, ``_`` between digit groups
+    seed 0x5741_5252_414e_5421               a ``u64``, decimal or lowercase ``0x`` hex, ``_`` between digit groups,
+                                             leading zeros allowed (at most 20 / 16 significant digits)
     depth full|slim
     levels ir.core,ir.fixed,...              comma-separated level names, no repeats
     values Bool=bool Bytes=bytes ...         ``WarrantName=hostname`` pairs, from a closed list per name
@@ -239,7 +244,8 @@ TYPE_KEYS = ("host", "fields", "ctors")
 _TOKEN = re.compile(r"[\x21-\x7e]+")
 _IDENT = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 _LANE = re.compile(r"[a-z][a-z0-9]*")
-_PACKAGE_NAME = re.compile(r"[a-z0-9][a-z0-9-]*")
+# A package directory name as the repository spells it: elixir/gf256_native, swift/Barcode1D, csharp/Mosaic.Flux.
+_PACKAGE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]*")
 _SEED = re.compile(r"(?:[0-9]+(?:_[0-9]+)*|0x[0-9a-fA-F]+(?:_[0-9a-fA-F]+)*)")
 
 
@@ -287,7 +293,7 @@ class Ty:
 _PRIMS = frozenset({"Bool", "U8", "U16", "U32", "U64", "I8", "I16", "I32", "I64", "Nat"})
 
 
-def parse_ty(text: object, types: dict) -> Ty:
+def parse_ty(text: object, types: dict, widths: tuple = ()) -> Ty:
     """The shape of a signature type, or :class:`BindingKitError` (a corpus that breaks its own schema)."""
     if not isinstance(text, str):
         raise BindingKitError(f"a type is text, not {text!r}")
@@ -319,13 +325,16 @@ def parse_ty(text: object, types: dict) -> Ty:
                 pos += 1
                 parts.append(one())
             eat(")")
+            if len(parts) < 2:
+                raise fail("a tuple has at least two components")
             return Ty("tuple", args=tuple(parts))
         head = name()
         if head == "Bytes":
             if text[pos : pos + 1] == "<":
                 end = text.find(">", pos)
-                if end < 0 or not re.fullmatch(r"[A-Za-z0-9_]+", text[pos + 1 : end]):
-                    raise fail("a Bytes width is a literal or a width parameter")
+                width = text[pos + 1 : end] if end >= 0 else ""
+                if not (re.fullmatch(r"0|[1-9][0-9]{0,3}", width) and int(width) <= 4096 or width in widths):
+                    raise fail("a Bytes width is a decimal literal 0..=4096 or a width parameter of the op")
                 pos = end + 1
             return Ty("bytes")
         if head in ("List", "Option"):
@@ -407,14 +416,17 @@ def read_corpus(corpus: object) -> Corpus:
     for oname, row in ops.items():
         if not isinstance(row, dict) or "params" not in row or "ret" not in row:
             raise BindingKitError(f"op {oname}: params and ret are required")
-        params = [(p[0], parse_ty(p[1], types)) for p in row["params"]]
+        widths = tuple(row.get("width_params", []))
+        params = [(p[0], parse_ty(p[1], types, widths)) for p in row["params"]]
         names = [p for p, _ in params]
         inout = list(row.get("inout", []))
         if not set(inout) <= set(names):
             raise BindingKitError(f"op {oname}: inout names a parameter that does not exist")
         sigs[oname] = OpSig(
-            oname, params, parse_ty(row["ret"], types), list(row.get("width_params", [])), inout, bool(row.get("fresh"))
+            oname, params, parse_ty(row["ret"], types, widths), list(widths), inout, bool(row.get("fresh"))
         )
+        if row.get("fresh") and inout:
+            raise BindingKitError(f"op {oname}: fresh and inout together (VER04i section 5)")
     # Field and payload types must parse too (they are what the signatures need, recursively).
     for row in types.values():
         if row["kind"] == "record":
@@ -493,7 +505,7 @@ def byte_violation(binding: bytes) -> tuple[Violation | None, str]:
         text = binding.decode("utf-8")  # strict: no overlong form, no surrogate, nothing past U+10FFFF
     except UnicodeDecodeError:
         return Violation("invalid-utf8", "not UTF-8"), ""
-    if text.startswith("﻿"):
+    if text.startswith("\ufeff"):
         return Violation("bom", "a byte order mark"), ""
     if "\r" in text:
         return Violation("cr", "a carriage return"), ""
@@ -566,7 +578,8 @@ def _single(parsed: Parsed, directive: str, args: list, line: int, bad) -> None:
             seg not in ("", "..") for seg in value.split("/")
         )
     elif directive == "seed":
-        ok = bool(_SEED.fullmatch(value)) and seed_value(value) < 1 << 64
+        seed = seed_value(value) if _SEED.fullmatch(value) else None
+        ok = seed is not None and seed < 1 << 64
     elif directive == "depth":
         ok = value in ("full", "slim")
     elif directive == "levels":
@@ -581,10 +594,28 @@ def _single(parsed: Parsed, directive: str, args: list, line: int, bad) -> None:
     parsed.single[directive] = (value, line)
 
 
-def seed_value(text: str) -> int:
-    """The integer of a ``seed`` text (the regex has already allowed only digit groups and ``_``)."""
+#: The most significant digits a ``u64`` can have: ``2**64 - 1`` is 20 decimal digits, 16 hex digits.
+SEED_MAX_DECIMAL_DIGITS = 20
+SEED_MAX_HEX_DIGITS = 16
+
+
+def seed_value(text: str) -> int | None:
+    """The integer of a ``seed`` text, or ``None`` if it has too many significant digits.
+
+    The regex has already allowed only digit groups and ``_``.  Leading zeros are allowed and mean
+    nothing, so they are stripped, with the ``_``, **before** ``int()`` sees the text: Python refuses
+    to convert a decimal string of more than 4,300 digits (``ValueError``), and a 64 KiB binding can
+    hold far more than that.  More than 20 significant decimal digits, or more than 16 significant hex
+    digits, cannot fit a ``u64``, so the answer is ``None`` (``bad-value``) without converting at all.
+    """
     body = text.replace("_", "")
-    return int(body, 16) if body.startswith("0x") else int(body)
+    if body.startswith("0x"):
+        digits, base, limit = body[2:].lstrip("0"), 16, SEED_MAX_HEX_DIGITS
+    else:
+        digits, base, limit = body.lstrip("0"), 10, SEED_MAX_DECIMAL_DIGITS
+    if len(digits) > limit:
+        return None
+    return int(digits, base) if digits else 0
 
 
 def _values(parsed: Parsed, args: list, line: int, bad) -> None:
@@ -709,7 +740,7 @@ def _run(binding: bytes, corpus: Corpus, host: Host) -> tuple[list[Violation], d
         if "lane" in single and single["package"].split("/")[0] != single["lane"]:
             bad("bad-value", "the package's lane is not the lane")
     if "seed" in single:
-        normalized["seed"] = str(seed_value(single["seed"]))
+        normalized["seed"] = str(seed_value(single["seed"]))  # a refused seed never gets here
     _levels(single, normalized, bad)
     values = _check_values(parsed, host, normalized, bad)
     types = _check_types(parsed, corpus, host, normalized, bad)
@@ -851,7 +882,7 @@ def _check_op(sig: OpSig, line: OpLine, corpus: Corpus, host: Host, values: dict
     _check_width(sig, kv, out, where, bad)
     _check_errors(sig, kv, out, corpus, host, where, bad)
     _check_inout(sig, kv, out, where, bad)
-    _check_fresh(sig, kv, out, host, values, where, bad)
+    _check_fresh(sig, kv, out, host, values, types, where, bad)
     return out
 
 
@@ -961,7 +992,25 @@ def _check_inout(sig: OpSig, kv: dict, out: dict, where: str, bad) -> None:
         out["inout"] = forms
 
 
-def _check_fresh(sig: OpSig, kv: dict, out: dict, host: Host, values: dict, where: str, bad) -> None:
+def _immutable(ty: Ty, override: str | None, host: Host, values: dict, types: dict) -> bool:
+    """Is every host representation that carries ``ty`` immutable by construction (section 7.4)?
+
+    ``override`` is a ``ret=`` item, which replaces the representation of the outermost type only.  A
+    record or variant counts as the host type its ``type`` line names; a tuple, a list or an option
+    counts as its container *and* every component, since a mutable ``bytearray`` inside an immutable
+    ``tuple`` can still be written through.  A representation the binding has not given (a missing
+    ``values`` entry or ``type`` line) is already a violation of its own and is not judged twice.
+    """
+    if ty.kind == "result":
+        return _immutable(ty.args[0], override, host, values, types)
+    key = key_of(ty)
+    rep = override or (values.get(key) if key is not None else types.get(ty.name, {}).get("host"))
+    if rep is not None and rep not in host.immutable:
+        return False
+    return all(_immutable(child, None, host, values, types) for child in ty.args)
+
+
+def _check_fresh(sig: OpSig, kv: dict, out: dict, host: Host, values: dict, types: dict, where: str, bad) -> None:
     value = kv.get("fresh")
     if value is None:
         if sig.fresh:
@@ -971,12 +1020,10 @@ def _check_fresh(sig: OpSig, kv: dict, out: dict, host: Host, values: dict, wher
         bad("fresh", f"{where}: fresh= on an op that is not fresh")
     elif value not in ("probe", "immutable"):
         bad("fresh", f"{where}: fresh={value}")
+    elif value == "immutable" and not _immutable(sig.ret, kv.get("ret"), host, values, types):
+        bad("fresh", f"{where}: the result is not immutable by construction")
     else:
-        rep = kv.get("ret") or values.get(key_of(sig.ret) or "")
-        if value == "immutable" and rep is not None and rep not in host.immutable:
-            bad("fresh", f"{where}: {rep} is not immutable by construction")
-        else:
-            out["fresh"] = value
+        out["fresh"] = value
 
 
 def validate_binding(binding: bytes, corpus: object, host: object) -> dict:
@@ -1024,6 +1071,10 @@ def build_binding(rows: list[Row]) -> tuple[str, dict]:
             raise KitError(str(exc), case_id) from exc
         if expect["outcome"] == "reject" and expect["reason"] not in REASONS:
             raise KitError("a reason outside the closed set", case_id)
+        if expect["outcome"] == "accept" and row.intent.get("normalized") != expect["normalized"]:
+            # The normalized form of an accepted case is written by hand and compared by equality, never by
+            # sub-object: an extra or missing key in the derivation must be seen.
+            raise KitError("the table's normalized binding is not equal to the derived one", case_id)
         cases.append(finish_case(CATEGORY, row, expect))
     ids = [c["id"] for c in cases]
     if len(set(ids)) != len(ids):

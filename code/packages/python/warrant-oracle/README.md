@@ -428,8 +428,9 @@ BV.validate_binding(binding_bytes, {"types": {...}, "ops": {...}}, host)   # the
 BV.violations(binding_bytes, corpus, host)                                  # every violation, in the order of the checks
 ```
 
-`tests/fixtures/conformance-v2/cases_binding.py` is the hand-written `v2-binding` table (160 cases: 20 accepted, 140
-refused; every one `requires` `["ir.core"]`). A refused case is the valid base binding of its corpus with **one** line
+`tests/fixtures/conformance-v2/cases_binding.py` is the hand-written `v2-binding` table (176 cases: 30 accepted, 146
+refused; every one `requires` `["ir.core"]`; the normalized form of an accepted case is written by hand and compared by
+equality, never by sub-object). A refused case is the valid base binding of its corpus with **one** line
 changed, and the build demands that the validator finds exactly one violation in it, so no case depends on which of two
 problems an implementation meets first. `make_conformance.py --write` writes `v2-binding.json` beside the six other files;
 `--check` holds it to the derivation as soon as the file or its index row exists, and reports it as *not committed yet*

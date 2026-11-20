@@ -178,7 +178,7 @@ def test_signature_types_parse_to_shapes():
         "E": {"kind": "error", "cases": ["BAD"]},
         "P": {"kind": "record", "fields": [["x", "U8"]]},
     }
-    ty = BV.parse_ty("List<Option<(Bytes<N>,P)>>", types)
+    ty = BV.parse_ty("List<Option<(Bytes<N>,P)>>", types, ("N",))
     assert ty.kind == "list" and ty.args[0].kind == "option"
     tup = ty.args[0].args[0]
     assert [t.kind for t in tup.args] == ["bytes", "named"]
@@ -243,6 +243,7 @@ def test_a_discriminator_may_hold_a_colon_and_an_inout_form_may_hold_one_too():
     }
     host = {**HOST, "exports": ["z"]}
     body = "values Bytes=bytes\nop z export=z inout=b:"
+    assert reasons(lines(body + "struct:Q"), corpus, host) == ["inout-form"]  # reserved (ir.inout.records)
     assert reasons(lines(body + "slice-of:struct:Q"), corpus, host) == ["inout-form"]
     assert reasons(lines(body + "codec:Q"), corpus, host) == ["inout-form"]
     assert reasons(lines(body + "vec-of:struct:Q"), corpus, host) == ["inout-form"]
@@ -266,6 +267,65 @@ def test_fresh_defaults_to_probe_in_the_normalized_form():
     assert got["ops"]["f"] == {"export": "f", "fresh": "probe"}
 
 
+def test_fresh_immutable_checks_a_record_by_its_host_class_and_a_tuple_by_its_components():
+    corpus = {
+        "types": {"P": {"kind": "record", "fields": [["x", "U8"]]}},
+        "ops": {
+            "r": {"params": [], "ret": "P", "fresh": True},
+            "t": {"params": [], "ret": "(Bytes,Bool)", "fresh": True},
+        },
+    }
+    host = {**HOST, "exports": ["f", "g", "Point"], "immutable": ["bytes", "bool", "tuple", "int"]}
+    head = "values Bytes=bytes Bool=bool Tuple=tuple U8=int\ntype P host=Point fields=x\n"
+    assert reasons(lines(head + "op r export=f fresh=immutable\nop t export=g"), corpus, host) == ["fresh"]
+    both = {**host, "immutable": [*host["immutable"], "Point"]}
+    assert reasons(lines(head + "op r export=f fresh=immutable\nop t export=g fresh=immutable"), corpus, both) == []
+    mutable_part = head.replace("Bytes=bytes", "Bytes=bytearray")
+    host_ba = {**both, "values": {**HOST["values"], "Bytes": ["bytes", "bytearray"]}}
+    assert reasons(lines(mutable_part + "op r export=f\nop t export=g fresh=immutable"), corpus, host_ba) == ["fresh"]
+
+
+# -- the seed: strict grammar, bounded before int() ---------------------------------------------------------------------------
+
+
+def seed_of(text: str):
+    binding = HEAD.replace("seed 1", f"seed {text}") + F_LINE + "\n"
+    found = reasons(binding.encode())
+    return found, (BV.validate_binding(binding.encode(), CORPUS, HOST)["seed"] if not found else None)
+
+
+def test_a_seed_is_bounded_by_its_significant_digits_before_it_is_converted():
+    assert seed_of("0" * 4400 + "1") == ([], "1")  # one significant digit: no int() over 4,300 characters
+    assert seed_of("0x" + "0" * 4400 + "1") == ([], "1")
+    assert seed_of("0_0_0_7") == ([], "7")
+    assert seed_of("0") == ([], "0") and seed_of("0x0") == ([], "0") and seed_of("0" * 30) == ([], "0")
+    assert seed_of("18446744073709551615")[0] == [] and seed_of("0xffff_ffff_ffff_ffff")[0] == []
+    for refused in ("9" * 5000, "1" + "0" * 20, "18446744073709551616", "0x1" + "0" * 16, "0x1_0000_0000_0000_0000"):
+        assert seed_of(refused)[0] == ["bad-value"], refused[:30]
+    assert BV.seed_value("9" * 5000) is None and BV.seed_value("0x" + "f" * 17) is None
+
+
+def test_a_package_name_follows_the_repository_spelling():
+    for ok in ("x", "gf256_native", "Barcode1D", "Mosaic.Flux", "a-b_c.d", "7zip"):
+        binding = HEAD.replace("package python/x", f"package python/{ok}") + F_LINE + "\n"
+        assert reasons(binding.encode()) == [], ok
+    for refused in ("-x", ".x", "_x", "a/b", "a b", ""):
+        binding = HEAD.replace("package python/x", f"package python/{refused}") + F_LINE + "\n"
+        assert reasons(binding.encode()) != [], refused
+
+
+def test_a_corpus_that_breaks_the_grammar_of_section_2_1_is_a_kit_error():
+    for ret in ("(Bytes)", "Bytes<0999>", "Bytes<4097>", "Bytes<M>"):  # one component, leading zero, too wide, no width_param
+        corpus = {"types": {}, "ops": {"f": {"params": [], "ret": ret}}}
+        with pytest.raises(BV.BindingKitError):
+            BV.read_corpus(corpus)
+    ok = {"types": {}, "ops": {"f": {"params": [["a", "Bytes<M>"], ["b", "Bytes<4096>"]], "ret": "Bytes<0>", "width_params": ["M"]}}}
+    assert BV.read_corpus(ok)
+    both = {"types": {}, "ops": {"f": {"params": [["a", "Bytes"]], "ret": "Bytes", "inout": ["a"], "fresh": True}}}
+    with pytest.raises(BV.BindingKitError, match="fresh and inout"):
+        BV.read_corpus(both)
+
+
 # -- the kit helpers --------------------------------------------------------------------------------------------------------
 
 
@@ -284,11 +344,16 @@ def test_derive_binding_outcomes_and_kit_errors():
 
 def test_build_binding_names_the_case_on_a_disagreement_and_refuses_a_duplicate_id(monkeypatch):
     fields = {"binding_hex": lines(F_LINE).hex(), "corpus": CORPUS, "host": HOST}
-    row = Row("one", "one case", fields, {"outcome": "accept"})
+    normalized = BV.derive_binding(fields)["normalized"]
+    row = Row("one", "one case", fields, {"outcome": "accept", "normalized": normalized})
     text, index = BV.build_binding([row])
     assert index["cases"] == 1 and index["path"] == "v2-binding.json" and text.endswith("}\n")
     with pytest.raises(KitError, match=r"v2-binding/one"):
         BV.build_binding([Row("one", "one case", fields, {"outcome": "reject"})])
+    # the normalized form of an accepted case is compared by equality: a missing or an extra key is seen
+    for intent in ({"outcome": "accept"}, {"outcome": "accept", "normalized": {**normalized, "extra": 1}}):
+        with pytest.raises(KitError, match=r"v2-binding/one.*not equal"):
+            BV.build_binding([Row("one", "one case", fields, intent)])
     with pytest.raises(KitError, match="duplicate id"):
         BV.build_binding([row, row])
     bad_fields = {**fields, "binding_hex": "zz"}
