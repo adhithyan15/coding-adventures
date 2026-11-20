@@ -97,12 +97,12 @@ export function compileFault(program: Program, raw: unknown, op: OpSig): Compile
     for (const rewrite of list as unknown[]) {
       if (typeof rewrite !== "object" || rewrite === null || Array.isArray(rewrite)) return refuse("a rewrite is an object");
       const entry = rewrite as Record<string, unknown>;
-      if (Object.keys(entry).length !== 2 || typeof entry["param"] !== "string") return refuse("a rewrite is {param, expr}");
+      if (Object.keys(entry).length !== 2 || typeof entry["param"] !== "string") return refuse("each rewrite carries exactly param and expr");
       const slot = params.findIndex((p) => p.name === entry["param"]);
       if (slot < 0 || seen.has(entry["param"])) return refuse("a rewrite names a parameter once");
       seen.add(entry["param"]);
       const typed = program.compileExpr(entry["expr"], params, "fault");
-      if (unify(typed.ty, (params[slot] as Param).ty) === null) throw new KitError("ill-typed", "a rewrite has no common type with its parameter");
+      if (unify(typed.ty, (params[slot] as Param).ty) === null) throw new KitError("ill-typed", "a rewrite shares no type with the parameter it replaces");
       compiled.push({ slot, run: typed.run });
     }
     return {
@@ -122,7 +122,7 @@ export function compileFault(program: Program, raw: unknown, op: OpSig): Compile
   }
 
   const typed = program.compileExpr(row["expr"], withResult, "fault");
-  if (unify(typed.ty, ret) === null) throw new KitError("ill-typed", "an expression has no common type with the result");
+  if (unify(typed.ty, ret) === null) throw new KitError("ill-typed", "the expression shares no type with the op's result");
   return {
     kind,
     fault: row["fault"],

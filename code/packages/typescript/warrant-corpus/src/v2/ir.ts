@@ -46,7 +46,7 @@
  */
 
 import { KitError, type KitCode } from "./errors.ts";
-import { firstMissing, levelOfTag } from "./levels.ts";
+import { DEFINED_LEVELS, firstMissing, levelOfTag } from "./levels.ts";
 import {
   BOOL,
   BYTES,
@@ -145,6 +145,15 @@ function fail(code: KitCode, why: string): never {
 // Reading ops
 // ---------------------------------------------------------------------------
 
+/** Two parameters (or binders) of one signature may not share a name: the later would silently shadow the earlier. */
+function distinctNames(params: readonly Param[], why: string): void {
+  const seen = new Set<string>();
+  for (const p of params) {
+    if (seen.has(p.name)) fail("ill-typed", why);
+    seen.add(p.name);
+  }
+}
+
 /** Read one op row.  Types parse with named widths allowed; each named width must be declared. */
 export function readOp(name: string, raw: unknown): OpSig {
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return fail("ill-typed", "an op row is an object");
@@ -162,10 +171,11 @@ export function readOp(name: string, raw: unknown): OpSig {
   if (!Array.isArray(paramsRaw)) return fail("ill-typed", "params is a list");
   const params: Param[] = paramsRaw.map((pair) => {
     if (!Array.isArray(pair) || pair.length !== 2 || typeof pair[0] !== "string" || typeof pair[1] !== "string") {
-      return fail("ill-typed", "a parameter is a [name, type] pair");
+      return fail("ill-typed", "an op parameter is written [name, type]");
     }
     return { name: pair[0], ty: parseType(pair[1], { allowNamedWidth: true, code: "ill-typed" }) };
   });
+  distinctNames(params, "an op names each parameter once");
   if (typeof row["ret"] !== "string") return fail("ill-typed", "ret is a type");
   const ret = parseType(row["ret"], { allowNamedWidth: true, code: "ill-typed" });
   const named = (ty: Ty): void => {
@@ -177,8 +187,15 @@ export function readOp(name: string, raw: unknown): OpSig {
   };
   params.forEach((p) => named(p.ty));
   named(ret);
+  // An op's `requires` is a list of defined level names (section 4.2 rule 7: an undefined level is a corpus error wherever it stands).
   const requiresRaw = row["requires"];
-  const requires = Array.isArray(requiresRaw) ? requiresRaw.filter((x): x is string => typeof x === "string") : [];
+  let requires: string[] = [];
+  if (requiresRaw !== undefined) {
+    if (!Array.isArray(requiresRaw) || requiresRaw.some((x) => typeof x !== "string" || !DEFINED_LEVELS.has(x))) {
+      return fail("ill-typed", "an op's requires lists only levels this document defines");
+    }
+    requires = requiresRaw as string[];
+  }
   return { name, params, ret, widthParams, requires };
 }
 
@@ -271,7 +288,21 @@ interface ModelInfo {
   ty?: Ty;
   cost: number;
   chain: number;
-  readonly runners: [((frame: Env) => Value) | undefined, ((frame: Env) => Value) | undefined];
+  readonly runners: [Cell | undefined, Cell | undefined];
+}
+
+/**
+ * A model body, compiled lazily and *outside* the recursion that asked for it.
+ *
+ * A `model_call` closure holds the model's `Cell` and calls `cell.run` at
+ * evaluation time.  The body is compiled later, by {@link Program.drain}, from a
+ * work list: compiling a chain of 64 models therefore never nests 64 compilers
+ * (each of which recurses over a body up to 64 deep), so a spec-legal corpus
+ * cannot overflow the stack while it is being compiled (section 14: 64 frames
+ * of depth 64).
+ */
+interface Cell {
+  run: (frame: Env) => Value;
 }
 
 /** The inputs of a program: the parts of a `corpus.json` an expression needs (section 1.4). */
@@ -298,6 +329,8 @@ export interface Compiled {
   readonly sub: boolean;
   /** Evaluate it over an environment (the slots are the `vars` it was compiled with). */
   readonly run: Closure;
+  /** The ops the expression reaches, through the models it calls too (R100 compiles a stand-in for each). */
+  readonly ops: readonly string[];
   /** The number of subject calls on the pure trace of section 4.4, as a constant or a function of the environment. */
   readonly trace: { readonly fixed: number } | { readonly dynamic: (env: Env) => number };
 }
@@ -325,6 +358,8 @@ export class Program {
   };
   private readonly models = new Map<string, ModelInfo>();
   private readonly order = new Map<string, number>();
+  /** Bodies whose `Cell` has been handed out but whose closure is not built yet. */
+  private readonly pending: (() => void)[] = [];
 
   constructor(input: ProgramInput) {
     const structural = input.structuralCode ?? "corpus";
@@ -355,6 +390,9 @@ export class Program {
       }
       this.order.set(name as string, index);
     });
+    // Section 1.4: `model_order` holds "the same names" as `models`, so a model that is declared and not listed is refused
+    // too; every model of the lane's levels is then typed, costed and chain-checked below (R69 (c) tier 1).
+    if (this.order.size !== Object.keys(models).length) fail("model-order", "a model is missing from model_order");
 
     // Tier 1 and 2 (scan): every model, listed or not, is read by tag name.
     for (const [name, row] of Object.entries(models)) {
@@ -364,10 +402,11 @@ export class Program {
       if (!Array.isArray(paramsRaw)) return fail(structural, "a model's params is a list");
       const params: Param[] = paramsRaw.map((pair) => {
         if (!Array.isArray(pair) || pair.length !== 2 || typeof pair[0] !== "string" || typeof pair[1] !== "string") {
-          return fail("ill-typed", "a model parameter is a [name, type] pair");
+          return fail("ill-typed", "a model parameter is written [name, type]");
         }
         return { name: pair[0], ty: parseType(pair[1], { code: "ill-typed" }) };
       });
+      distinctNames(params, "a model names each parameter once");
       const scan = newInfo();
       const index = this.order.get(name) ?? -1;
       scanExpr(record["body"], 1, "model", index === -1 ? -1 : index, this.order, scan);
@@ -413,6 +452,37 @@ export class Program {
   /** Is `name` an op, model or type this program knows?  (used by the harness) */
   hasModel(name: string): boolean {
     return this.models.has(name);
+  }
+
+  /** Every model and op a tree reaches, transitively through the models it calls (a work list, not a recursion). */
+  private closure(scan: ScanInfo): { models: Set<string>; ops: Set<string> } {
+    const models = new Set<string>();
+    const ops = new Set<string>();
+    const work: ScanInfo[] = [scan];
+    for (let info = work.pop(); info !== undefined; info = work.pop()) {
+      for (const op of info.ops) if (this.ops.has(op)) ops.add(op);
+      for (const name of info.models) {
+        if (models.has(name)) continue;
+        models.add(name);
+        work.push((this.models.get(name) as ModelInfo).scan);
+      }
+    }
+    return { models, ops };
+  }
+
+  /** The static signature of a live model (the parameters and the result type), or `undefined` when it is unknown or not live. */
+  modelSignature(name: string): { readonly params: readonly Param[]; readonly ty: Ty } | undefined {
+    const info = this.models.get(name);
+    return info === undefined || info.ty === undefined ? undefined : { params: info.params, ty: info.ty };
+  }
+
+  /**
+   * The tag-name checks alone, over a tree that may need a level this lane lacks:
+   * `depth`, `unknown-tag`, `subject-forbidden`, `model-order`.  A suite runs this over every expression it holds
+   * *before* it records `level-missing`, so that an unknown tag cannot hide inside a not-live suite (R69 (c) tier 2, (d)).
+   */
+  scanTags(ir: unknown, role: Role): void {
+    scanExpr(ir, 1, role, Number.POSITIVE_INFINITY, this.order, newInfo());
   }
 
   /**
@@ -488,13 +558,10 @@ export class Program {
     const scope = new Map(vars.map((v, slot) => [v.name, { slot, ty: v.ty }]));
     const typed = this.typeExpr(ir, scope);
     if (typed.cost > this.maxCost) fail("ir-cost", "an expression costs more than max_ir_cost");
-    return {
-      ty: typed.ty,
-      cost: typed.cost,
-      sub: typed.sub,
-      run: this.compile(typed, false),
-      trace: this.trace(typed),
-    };
+    const run = this.compile(typed, false);
+    const trace = this.trace(typed);
+    this.drain();
+    return { ty: typed.ty, cost: typed.cost, sub: typed.sub, run, trace, ops: [...this.closure(scan).ops] };
   }
 
   /** Does this program's lane have every level of `needed`?  (a suite's or fault's declared `requires`) */
@@ -506,7 +573,14 @@ export class Program {
   callModel(name: string, args: Value[]): Value {
     const info = this.models.get(name);
     if (info === undefined || info.body === undefined) throw new Error("the stand-in model is not live");
-    return this.runner(info, true)(args.slice());
+    const cell = this.runner(info, true);
+    this.drain();
+    return cell.run(args.slice());
+  }
+
+  /** Build every model body that a compile asked for, one at a time and iteratively. */
+  private drain(): void {
+    for (let job = this.pending.pop(); job !== undefined; job = this.pending.pop()) job();
   }
 
   // -------------------------------------------------------------------------
@@ -517,7 +591,7 @@ export class Program {
     if (!isNodeArray(ir)) return fail("ill-typed", "an IR node is an array that starts with a tag");
     const tag = ir[0] as string;
     const sized = (count: number): void => {
-      if (ir.length !== count + 1) fail("ill-typed", `${tag} takes ${count} operand(s)`);
+      if (ir.length !== count + 1) fail("ill-typed", `${tag} must carry ${count} operand${count === 1 ? "" : "s"}`);
     };
     const kidsOf = (from: number, count: number): T[] => {
       sized(count);
@@ -561,13 +635,13 @@ export class Program {
       case "var": {
         sized(1);
         const found = typeof ir[1] === "string" ? scope.get(ir[1]) : undefined;
-        if (found === undefined) return fail("ill-typed", "an unbound variable");
+        if (found === undefined) return fail("ill-typed", "a var names nothing in scope");
         return { tag, ty: found.ty, kids: [], sub: false, cost: 1, slot: found.slot };
       }
       case "err": {
         sized(1);
         const name = ir[1];
-        if (typeof name !== "string") return fail("ill-typed", "err takes a case name");
+        if (typeof name !== "string") return fail("ill-typed", "err must name an error case as text");
         const owners = [...this.table.errors].filter(([, cases]) => cases.includes(name)).map(([type]) => type);
         if (owners.length === 0) return fail("ill-typed", "no error type declares this case");
         const ty: Ty = owners.length === 1 ? { k: "Result", ok: null, err: owners[0] as string } : { k: "Result", ok: null, err: null, cands: owners };
@@ -579,18 +653,18 @@ export class Program {
       }
       case "is_err": {
         const [operand] = kidsOf(1, 1) as [T];
-        if (operand.ty.k !== "Result") fail("ill-typed", "is_err takes a Result");
+        if (operand.ty.k !== "Result") fail("ill-typed", "is_err inspects a Result value");
         return make(BOOL, [operand]);
       }
       case "len": {
         const [operand] = kidsOf(1, 1) as [T];
-        if (operand.ty.k !== "Bytes") fail("ill-typed", "len takes Bytes");
+        if (operand.ty.k !== "Bytes") fail("ill-typed", "len measures a Bytes value");
         return make(NAT, [operand]);
       }
       case "concat": {
         const kids = kidsOf(1, 2);
         const [a, b] = kids as [T, T];
-        if (a.ty.k !== "Bytes" || b.ty.k !== "Bytes") fail("ill-typed", "concat takes two Bytes");
+        if (a.ty.k !== "Bytes" || b.ty.k !== "Bytes") fail("ill-typed", "concat joins two Bytes values");
         const widths = typeof a.ty.n === "number" && typeof b.ty.n === "number" ? a.ty.n + b.ty.n : null;
         return make(widths === null ? BYTES : { k: "Bytes", n: widths }, kids);
       }
@@ -598,13 +672,13 @@ export class Program {
       case "drop": {
         const kids = kidsOf(1, 2);
         const [bytes, count] = kids as [T, T];
-        if (bytes.ty.k !== "Bytes") fail("ill-typed", `${tag} takes Bytes`);
+        if (bytes.ty.k !== "Bytes") fail("ill-typed", `${tag} cuts a Bytes value`);
         if (!isExact(count.ty)) fail("ill-typed", `a ${tag} count is a Nat or an Int`);
         return make(BYTES, kids);
       }
       case "not": {
         const [operand] = kidsOf(1, 1) as [T];
-        if (operand.ty.k !== "Bool") fail("ill-typed", "not takes a Bool");
+        if (operand.ty.k !== "Bool") fail("ill-typed", "the operand of not must be a Bool");
         return make(BOOL, [operand]);
       }
       case "and":
@@ -612,7 +686,7 @@ export class Program {
       case "implies": {
         const kids = kidsOf(1, 2);
         const [left, right] = kids as [T, T];
-        if (left.ty.k !== "Bool" || right.ty.k !== "Bool") fail("ill-typed", `${tag} takes two Bools`);
+        if (left.ty.k !== "Bool" || right.ty.k !== "Bool") fail("ill-typed", `${tag} combines two Bool operands`);
         // Section 4.4: the left operand guards the right one.
         if (left.sub && right.sub) fail("impure-guard", "a subject call under a guard that contains a subject call");
         return make(BOOL, kids);
@@ -623,7 +697,7 @@ export class Program {
         if (cond.ty.k !== "Bool") fail("ill-typed", "an if condition is a Bool");
         if (cond.sub && (then.sub || otherwise.sub)) fail("impure-guard", "a subject call under a guard that contains a subject call");
         const common = unify(then.ty, otherwise.ty);
-        if (common === null) return fail("ill-typed", "the branches of an if have no common type");
+        if (common === null) return fail("ill-typed", "the two arms of an if share no type");
         // Worst path: 1 + cond + max(then, else) (a short circuit is never credited, but a branch not taken is not charged).
         return { tag, ty: common, kids, sub: kids.some((k) => k.sub), cost: 1 + cond.cost + Math.max(then.cost, otherwise.cost) };
       }
@@ -632,7 +706,7 @@ export class Program {
         const kids = kidsOf(1, 2);
         const [a, b] = kids as [T, T];
         const common = unify(a.ty, b.ty);
-        if (common === null) return fail("ill-typed", "the operands of an equality have no common type");
+        if (common === null) return fail("ill-typed", "the sides of an equality share no type");
         if (common.k !== "Bool" && !isInteger(common) && common.k !== "Bytes" && common.k !== "Result") {
           fail("ill-typed", "this type has no equality at this level");
         }
@@ -645,7 +719,7 @@ export class Program {
         const kids = kidsOf(1, 2);
         const [a, b] = kids as [T, T];
         if (!isInteger(a.ty) || !isInteger(b.ty)) fail("ill-typed", "an ordering compares integers");
-        if (unify(a.ty, b.ty) === null) fail("ill-typed", "the operands of an ordering have no common type");
+        if (unify(a.ty, b.ty) === null) fail("ill-typed", "the sides of a comparison share no type");
         return make(BOOL, kids);
       }
       case "add":
@@ -658,16 +732,16 @@ export class Program {
           return make(a.ty, kids);
         }
         if (isExact(a.ty) && isExact(b.ty)) return make(INT, kids);
-        return fail("ill-typed", "arithmetic takes two integers of one type");
+        return fail("ill-typed", "arithmetic needs two integers of the same kind");
       }
       case "neg": {
         const [operand] = kidsOf(1, 1) as [T];
         if (isFixed(operand.ty)) return make(operand.ty, [operand]);
         if (isExact(operand.ty)) return make(INT, [operand]);
-        return fail("ill-typed", "neg takes an integer");
+        return fail("ill-typed", "neg needs an integer");
       }
       case "model_call": {
-        if (ir.length !== 3 || typeof ir[1] !== "string" || !Array.isArray(ir[2])) return fail("ill-typed", "model_call takes a name and a list");
+        if (ir.length !== 3 || typeof ir[1] !== "string" || !Array.isArray(ir[2])) return fail("ill-typed", "model_call is a model name and an argument list");
         const info = this.models.get(ir[1]);
         if (info === undefined || info.body === undefined || info.ty === undefined) return fail("model-order", "a model_call names a model that is not live");
         const args = (ir[2] as unknown[]).map((child) => this.typeExpr(child, scope));
@@ -679,7 +753,7 @@ export class Program {
         return { ...node, cost: node.cost + info.cost };
       }
       case "subject_op": {
-        if (ir.length < 3 || ir.length > 4 || typeof ir[1] !== "string" || !Array.isArray(ir[2])) return fail("ill-typed", "subject_op takes a name, arguments and maybe widths");
+        if (ir.length < 3 || ir.length > 4 || typeof ir[1] !== "string" || !Array.isArray(ir[2])) return fail("ill-typed", "subject_op is an op name, an argument list and optionally widths");
         const op = this.ops.get(ir[1]);
         if (op === undefined) return fail("ill-typed", "a subject_op names an op that is missing from ops");
         let widths: number[] = [];
@@ -711,13 +785,20 @@ export class Program {
   // Step 4: compile
   // -------------------------------------------------------------------------
 
-  private runner(info: ModelInfo, tainted: boolean): (frame: Env) => Value {
+  private runner(info: ModelInfo, tainted: boolean): Cell {
     const slot = tainted ? 1 : 0;
     let made = info.runners[slot];
     if (made === undefined) {
-      const body = this.compile(info.body as T, tainted);
-      made = (frame) => body(frame);
-      info.runners[slot] = made;
+      const cell: Cell = {
+        run: () => {
+          throw new Error("a model body was called before it was compiled");
+        },
+      };
+      made = cell;
+      info.runners[slot] = cell;
+      this.pending.push(() => {
+        cell.run = this.compile(info.body as T, tainted);
+      });
     }
     return made;
   }
@@ -867,12 +948,12 @@ export class Program {
         const info = this.models.get(t.name as string) as ModelInfo;
         const args = t.kids.map((_k, i) => kid(i));
         const entered = ctx || t.kids.some((k) => k.sub);
-        const body = this.runner(info, entered);
+        const cell = this.runner(info, entered);
         const count = args.length;
         return (env) => {
           const frame: Env = new Array<Value>(count);
           for (let i = 0; i < count; i += 1) frame[i] = (args[i] as Closure)(env);
-          return body(frame);
+          return cell.run(frame);
         };
       }
       case "subject_op": {
@@ -993,7 +1074,7 @@ function smallWrap(ty: Ty): (x: number) => number {
   return (x) => x | 0;
 }
 
-/** The text of a static type for the kit's `type` field. */
+/** The text of a static type for the kit's `type` field: widths kept, `Bytes<2>` for a two-byte result. */
 export function typeText(ty: Ty): string {
-  return showType(ty, true);
+  return showType(ty);
 }
