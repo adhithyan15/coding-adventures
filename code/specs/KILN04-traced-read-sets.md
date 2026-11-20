@@ -3913,6 +3913,27 @@ uncreated name under `$HOME`/`TMPDIR`, and the rules of each declared root
 same two rules, so a record with no reason is still checked against the model.
 Tests: `internal/traced/ancestor_test.go`.
 
+**Decision D41: metadata writes through an anonymous descriptor (real-build
+census, `fd-path` on dotnet's `fchmod(<fd>, mode) = 0`; `kiln:recorder` 8 to 9).**
+`fchmod`, `fchown`, `fsetxattr` and `fremovexattr` name their object by the -y
+annotation of the descriptor (`roleFdPath`), and an annotation that is not an
+absolute path was refused as `fd-path`. A pipe, a socket or an anonymous inode
+has the annotation `pipe:[N]`, `socket:[N]` or `anon_inode:NAME`, so csharp
+actions were refused.
+
+*The rule.* When the descriptor's annotation starts with one of those three
+prefixes (the same list the classifier's `anonymousFD` uses, now
+`trace.AnonymousFD`), the call yields no event and no error, whatever its result.
+A bare number (no annotation), any other non-absolute annotation and AT_FDCWD
+stay `fd-path`. An absolute annotation is unchanged.
+
+*Why it is safe.* The mode, owner or extended attributes of a pipe, a socket or
+an anonymous inode live outside every directory tree, so no file an action can
+read by path changes. The annotation comes from the kernel (strace's -y) and is
+the lexer's ANNOTATED token; a quoted string is another token kind, so a path
+containing `socket:[` cannot fake it (and `/x/socket:[1]` starts with `/`). Pass 2
+is shared, so both trace readers change together and the cross-check stays equal.
+
 **Decision D40: tmpfs containment (real-build census, `unstable-path` in about
 43 actions, all writes-incomplete; `kiln:recorder` 7 to 8).** Every high-count
 path was the action's own scratch file inside the fresh tmpfs: Go's build cache

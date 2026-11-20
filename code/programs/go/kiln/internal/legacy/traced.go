@@ -91,7 +91,12 @@ const TracedSemantics uint64 = 2
 // apply to paths there (its own scratch files are re-created, unlinked and
 // renamed freely), so such actions are no longer `trace-incomplete:unstable-path`
 // nor writes-incomplete.  The verdict changes, so every weak key changes.
-const RecorderVersion = 8
+//
+// Version 9: descriptor metadata writes on anonymous objects (KILN04 D41).
+// fchmod, fchown, fsetxattr and fremovexattr on a descriptor whose -y text is
+// pipe:[..], socket:[..] or anon_inode:.. are no longer `trace-incomplete:fd-path`;
+// they record nothing.  The accept set grows, so every weak key changes.
+const RecorderVersion = 9
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
