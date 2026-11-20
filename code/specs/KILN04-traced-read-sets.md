@@ -330,7 +330,9 @@ steps, then `execve`s the step:
    and `ENOSYS` for `clone3`, whose flags a filter cannot inspect, so
    libc falls back to `clone`, and for every system call number above the
    highest one the pinned strace knows (§4.7, "Calls newer than the pinned
-   strace").
+   strace"). strace still prints these failed calls, and the parser
+   tolerates exactly the filter's own answer to a refused call (§4.4,
+   §4.5): `-1 EPERM`, or `-1 ENOSYS` for `clone3`.
 
    The filter's first instructions check two things: that
    `seccomp_data.arch` is `AUDIT_ARCH_X86_64`, and that the syscall number
@@ -465,8 +467,14 @@ path the tracer sees, or change what paths mean: `io_uring_setup`,
 `process_vm_writev`, `userfaultfd`, `kexec_load`, `kexec_file_load`,
 `perf_event_open`, `add_key`, `request_key`, `keyctl`. Also refused: a `clone` whose
 flags include `CLONE_UNTRACED` or any `CLONE_NEW*`, and any `clone3`. The
-sandbox's filter already blocks these (§4.3); seeing one in the trace
-means the filter failed (`trace-incomplete:clone-flags`).
+sandbox's filter already blocks these (§4.3), and strace prints the blocked
+call with the filter's answer. A refused-class call is **tolerated** (dropped,
+no event) exactly when its result is that answer: `-1 EPERM` (for `clone3`,
+`-1 ENOSYS`; likewise a `clone` with only forbidden flags that returned
+`-1 EPERM`). A refused call with any other result (a success, another errno,
+`= ?`) means the filter failed and is refused; one that never resumed is an
+`unresumed-call`. The `<unfinished ...>` half of a refused name is not judged;
+its resumed half is.
 
 **Failures.** A path call that fails is an observation of that path
 (`ENOENT`: absent; `EEXIST`: present), never a write. A personality-change
@@ -486,11 +494,12 @@ reason strings.
 
 **Reasons.** Every refusal is `trace-incomplete:<detail>`; a detail never
 contains path text.
-- A refused name is `refused:<name>`, an unknown one
-  `unknown-syscall:<name>`.
+- A refused name whose result is not the filter's own answer (§4.4) is
+  `refused:<name>`, an unknown one `unknown-syscall:<name>`.
 - `clone` with `CLONE_UNTRACED`, any `CLONE_NEW*`, a missing `flags=` or
-  a flag token it cannot name is `clone-flags`. `clone3` is
-  `refused:clone3`.
+  a flag token it cannot name is `clone-flags`, unless the call failed with the
+  filter's `-1 EPERM` and the flags are all nameable. A `clone3` that did not
+  fail with `-1 ENOSYS` is `refused:clone3`.
 - A process-tree fault is `pid-reuse` (a pid returned twice, or by its
   own process, or the root's pid), `orphan-pid` (a pid nobody spawned),
   `process-cycle` (or a parent chain over 4096 deep), `missing-exit`,
@@ -2727,7 +2736,11 @@ version of this section led to these. Each is a decision, not a sketch.
   init window is `helper-spawn`, and `CLONE_NEW*` or `CLONE_UNTRACED` is
   `clone-flags`); anywhere else, the step's own included, it is
   `refused:clone3`, because the sandbox filter answers `ENOSYS` and a `clone3`
-  in a trace of the step means the filter failed.
+  that did not fail with `ENOSYS` means the filter failed. A `clone3 = -1
+  ENOSYS` (what glibc's `pthread_create` and `posix_spawn` try first before
+  falling back to `clone`) is the filter working: it is tolerated everywhere,
+  its struct is not decoded, and it spawns nothing. `RecorderVersion` is 4 since
+  this rule.
 - **No late runtime threads.** Both helpers call `debug.SetGCPercent(-1)`, so
   no garbage-collector worker thread starts after the spawn.
 - **CI.** `ci.yml` has a required `kiln-sandbox` job (linux/amd64,
