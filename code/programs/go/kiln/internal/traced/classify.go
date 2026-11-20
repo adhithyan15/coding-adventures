@@ -962,6 +962,9 @@ func (c *classifier) absentBeforeMade(p string, sp span) bool {
 	if len(ms) == 0 || c.hard[p] {
 		return false
 	}
+	// Outside the repository there is nothing tracked to check: a name there
+	// has change-log entries only if the action itself made them, so it can only
+	// be one of the action's own writable roots.
 	if rel, ok := c.rel(p); ok && c.cfg.Tree.Stat(rel).Kind != KindAbsent {
 		return false
 	}

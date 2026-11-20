@@ -977,6 +977,9 @@ var bursts = [][]burstOp{
 	{{12, "/o", false}, {0, "/o", false}, {0, "/o/x", false}},
 	{{8, "/t.o", false}, {104, "/t.o", false}, {12, "/t.o", false}, {104, "/t.o", false}},
 	{{1, "/t.o", false}, {12, "/t.o", false}, {5, "/t.o", false}, {10, "/t.o", false}, {104, "/t.o", false}},
+	//   18  stat ENOENT of u.o; create t.o; rename t.o INTO u.o: the first entry
+	//       of u.o is a rename, not a creation, so the rule must refuse
+	{{12, "/u.o", false}, {8, "/t.o", false}, {2, "/t.o", false}, {12, "/u.o", false}},
 }
 
 // perturbations are the operations a burst may be followed by, aimed at the

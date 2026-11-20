@@ -173,6 +173,13 @@ func TestDevNullRedirectionLogsNothing(t *testing.T) {
 	wantStable(t, "/dev/null", rec)
 
 	c := newClassifier(&prepared{ephemeral: []string{"/dev/null", "/usr/special/**"}})
+	// A hypothetical wildcard entry must not blind the log for /dev/foo.
+	w := newClassifier(&prepared{ephemeral: []string{"/dev/**", "/dev/n?ll", "/dev/[a]"}})
+	for _, p := range []string{"/dev/foo", "/dev/null", "/dev/a"} {
+		if w.ephemeralDevice(p) {
+			t.Errorf("wildcard entry suppressed the log for %q", p)
+		}
+	}
 	for p, want := range map[string]bool{
 		"/dev/null": true, "/dev/sda": false, "/usr/special/x": false, "/dev/null/x": false,
 	} {

@@ -115,11 +115,20 @@ func metaWriteByPath(sys string) bool {
 // ephemeralDevice says abs is a device node the host declares ephemeral under
 // /dev (/dev/null, /dev/zero, /dev/tty): shell redirections open it with
 // O_CREAT|O_TRUNC, but it is never created, replaced or read as content, so no
-// namespace change is logged for it (KILN04 D42).  Both tests are needed: the
-// ephemeral list says the path is no input, and /dev says it is a device name
-// and not a file a build could have made.
+// namespace change is logged for it (KILN04 D42).  Only an EXACT, non-wildcard
+// ephemeral entry counts: /dev is a writable tmpfs, so a wildcard such as
+// "/dev/**" would also hide files the action creates there.  (/dev/fd/* is
+// virtual and never reaches this code.)
 func (c *classifier) ephemeralDevice(abs string) bool {
-	return strings.HasPrefix(abs, "/dev/") && c.ephemeralMatch(abs)
+	if !strings.HasPrefix(abs, "/dev/") {
+		return false
+	}
+	for _, pat := range c.cfg.ephemeral {
+		if pat == abs && !strings.ContainsAny(pat, "*?[") {
+			return true
+		}
+	}
+	return false
 }
 
 // open handles open, openat, openat2 and creat.
