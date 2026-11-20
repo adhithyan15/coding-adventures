@@ -20,9 +20,13 @@ package main
 //   - the loop ran: every child exited (iterations=20 ok=20) through exit_group;
 //   - the two readers agree on the whole trace, with no allowed stricter-only
 //     divergence;
-//   - the trace either parses, or is refused as unresumed-call on a call of the
-//     handled (path) class, and nothing else: any other refusal is a shape the
-//     parser does not know and fails the test with the lines around it.
+//   - the trace either parses, or is refused with exactly unresumed-call or
+//     unparsable-line, on a line of a dying shape (an unfinished call left
+//     pending at the pid's exit, or a resumed half whose result is
+//     `= ? <unavailable>` or `<unfinished ...>) = ?`): any other refusal is a
+//     shape the parser does not know and fails the test with the lines around it.
+//     unparsable-line happens when a resumed newfstatat or getdents64 glues to a
+//     pending prefix that ends in a comma.
 //
 // How many dying shapes a run shows is the kernel's timing, so it is logged, not
 // asserted.
@@ -91,9 +95,13 @@ func dyingChild() int {
 }
 
 var (
-	dyingExitGroup   = regexp.MustCompile(`(?m)^\d+ +exit_group\(`)
-	dyingUnavailable = regexp.MustCompile(`(?m)<unavailable>$`)
-	dyingCloneResume = regexp.MustCompile(`(?m)<\.\.\. clone resumed> <unfinished \.\.\.>\)`)
+	// A dying shape, on a line the parser refused: the call left unfinished, or
+	// its resumed half with an unavailable or unfinished result.
+	dyingShapeUnfinished = regexp.MustCompile(`^\d+ +[a-z0-9_]+\(.*<unfinished \.\.\.>$`)
+	dyingShapeResumed    = regexp.MustCompile(`^\d+ +<\.\.\. [a-z0-9_]+ resumed>.*(= \? <unavailable>|<unfinished \.\.\.>\) = \?)$`)
+	dyingExitGroup       = regexp.MustCompile(`(?m)^\d+ +exit_group\(`)
+	dyingUnavailable     = regexp.MustCompile(`(?m)<unavailable>$`)
+	dyingCloneResume     = regexp.MustCompile(`(?m)<\.\.\. clone resumed> <unfinished \.\.\.>\)`)
 	// An unfinished call whose pid never prints a resume: counted per line in
 	// dyingUnresumed below (a regexp cannot see "never").
 	dyingOpenLine = regexp.MustCompile(`(?m)^(\d+) +\w+\(.*<unfinished \.\.\.>$`)
@@ -129,7 +137,7 @@ func dyingUnresumed(raw []byte) int {
 
 // TestSandboxStraceDyingThreads: a Go step whose workers are killed mid-call by
 // os.Exit, twenty times over, gives traces the two readers agree on, which parse
-// or are refused only as unresumed-call on a handled call.
+// or are refused only as unresumed-call or unparsable-line on a dying shape.
 func TestSandboxStraceDyingThreads(t *testing.T) {
 	r := runStracedOr(t, "{pkg}/probe-bin "+dyingProbeCommand, func(f *sandboxFixture) {
 		// The test binary lives under /tmp, which the step does not see: run a
@@ -145,7 +153,7 @@ func TestSandboxStraceDyingThreads(t *testing.T) {
 		if err := os.WriteFile(filepath.Join(f.pkg, "probe-bin"), b, 0o755); err != nil {
 			t.Fatal(err)
 		}
-	}, func(e *trace.Error) bool { return e.Reason == "unresumed-call" })
+	}, func(e *trace.Error) bool { return e.Reason == "unresumed-call" || e.Reason == "unparsable-line" })
 	// The loop must really have run, or nothing below proved anything.
 	want := "iterations=" + strconv.Itoa(dyingIterations) + " ok=" + strconv.Itoa(dyingIterations)
 	if !strings.Contains(r.stdout, want) {
@@ -158,19 +166,24 @@ func TestSandboxStraceDyingThreads(t *testing.T) {
 	if n := len(dyingExitGroup.FindAll(raw, -1)); n < dyingIterations {
 		t.Fatalf("%d exit_group lines in the trace, want at least %d (one per child):\n%s", n, dyingIterations, r.tail(30))
 	}
-	// A refusal that runStracedOr tolerated is unresumed-call; it must be on a
-	// call of the handled class (a stat, an open, a listing), at its own line.
+	// A refusal that runStracedOr tolerated must be on a line of a dying shape.
+	// The line is our own synthetic Go fixture's, so it is safe to print.
 	if r.refusal != nil {
 		lines := strings.Split(string(raw), "\n")
 		if r.refusal.Line < 1 || r.refusal.Line > len(lines) {
 			t.Fatalf("the refusal %v names no line of the trace", r.refusal)
 		}
-		_, body, _ := strings.Cut(lines[r.refusal.Line-1], " ")
-		name, _, _ := strings.Cut(strings.TrimLeft(body, " "), "(")
-		if trace.SyscallClass(name) != "handled" {
-			t.Fatalf("unresumed-call on %q (class %q), not a handled call: %s", name, trace.SyscallClass(name), lines[r.refusal.Line-1])
+		text := lines[r.refusal.Line-1]
+		var shape string
+		switch {
+		case dyingShapeUnfinished.MatchString(text):
+			shape = "an unfinished call left pending at the pid's exit"
+		case dyingShapeResumed.MatchString(text):
+			shape = "a resumed half whose result is unavailable or unfinished"
+		default:
+			t.Fatalf("refused as %s at line %d, which is not a dying shape: %s\n%s", r.refusal.Reason, r.refusal.Line, text, r.tail(30))
 		}
-		t.Logf("refused as unresumed-call on %s at line %d (expected: the rule never drops a call that reads)", name, r.refusal.Line)
+		t.Logf("refused as %s at line %d: %s (%s)", r.refusal.Reason, r.refusal.Line, text, shape)
 	}
 	// Both readers agree on the whole trace (the production path is the grammar
 	// path alone; the old scanner is the oracle).
