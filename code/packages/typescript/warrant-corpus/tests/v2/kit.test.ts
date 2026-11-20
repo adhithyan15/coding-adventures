@@ -117,16 +117,26 @@ describe("the harness", () => {
     expect(() => runKit(edit((d) => { row(d)["path"] = "nope.json"; }), { sequential: false })).toThrow(/file missing/);
   });
 
-  it("reports a chunk file that is consistent but is not what the enumeration gives", () => {
-    const dir = tamperedKit("v2-chunk", (cases) => {
-      const c = cases.find((x: { id: string }) => x.id === "v2-chunk/ragged-short-last-chunk") as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
-      // an expected expression of cost 1 instead of 4: same row, different expected stream
-      c["suite"]["oracle"]["expected"] = ["lit", { type: "Nat", value: "0" }];
-      c["suite"]["ir_cost"] -= 3;
-      c["expect"] = { error: "chunk-file" };
-    });
+  it("reports a chunk file that is consistent but is not what the enumeration gives as values, never as chunk-file (section 11 v2-chunk (b), (c))", () => {
+    const edit = (expectation: (c: Record<string, any>) => void) => // eslint-disable-line @typescript-eslint/no-explicit-any
+      tamperedKit("v2-chunk", (cases) => {
+        const c = cases.find((x: { id: string }) => x.id === "v2-chunk/ragged-short-last-chunk") as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+        // an expected expression of cost 1 instead of 4: same row and file, different expected stream.  The body is
+        // `subject == expected`, so it names the new expected as well and its cost counts twice.
+        const was = JSON.stringify(c["suite"]["oracle"]["expected"]);
+        c["suite"]["oracle"]["expected"] = ["lit", { type: "Nat", value: "0" }];
+        c["suite"]["body"] = c["suite"]["body"].map((side: unknown) => (JSON.stringify(side) === was ? ["lit", { type: "Nat", value: "0" }] : side));
+        c["suite"]["ir_cost"] -= 6;
+        expectation(c);
+      });
+    // The committed expectation is no longer what the lane computes: a failed case with a value outcome, not a chunk-file refusal.
+    const dir = edit(() => undefined);
     const chunk = runKit(dir, { sequential: false, only: ["v2-chunk"] }).categories.find((row) => row.category === "v2-chunk");
-    expect(chunk?.failed).toEqual([]);
+    expect(chunk?.failed).toEqual([{ id: "v2-chunk/ragged-short-last-chunk", note: "outcome differs (a value)" }]);
+    // A refusal of that case is not what happens: expecting `chunk-file` fails too.
+    const asRefusal = edit((c) => { c["expect"] = { error: "chunk-file" }; });
+    const refusal = runKit(asRefusal, { sequential: false, only: ["v2-chunk"] }).categories.find((row) => row.category === "v2-chunk");
+    expect(refusal?.failed).toHaveLength(1);
   });
 
   it("reports a value case whose type needs a level this runner lacks as a harness error", () => {

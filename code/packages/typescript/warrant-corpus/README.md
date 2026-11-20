@@ -187,8 +187,8 @@ levels -> types -> values -> domains -> ir -> chunks -> faults -> corpus -> kit
 | `ir.ts` | scan, reach, typer, worst-path cost, closure compiler and the pure call trace |
 | `chunks.ts` | suite rows (closed key sets, bounds), the chunk file grammar and its cross-checks, and enumeration by unranking |
 | `faults.ts` | the three wrappers `pre`, `post`, `replace` |
-| `corpus.ts` | a committed v2 corpus read **per unit**: suites and controls classified live or not-live |
-| `kit.ts` | `runKit`: the six `v2-*` conformance categories, run by `requires` |
+| `corpus.ts` | a committed v2 corpus read **per unit**: suites and controls classified live or not-live, paths checked component by component, `checkWork` before any suite runs |
+| `kit.ts` | `runKit` (and `runCase`, one case): the six `v2-*` conformance categories, run by `requires` |
 
 ### Arithmetic and the two kinds of overflow
 
@@ -215,7 +215,10 @@ wasm-leb128), in three tiers:
    and validated **whether or not anything reaches it**;
 2. one that needs a missing level is **not compiled**, but the checks that read
    tag names alone still apply (`unknown-tag`, `subject-forbidden`,
-   `model-order`, the expression depth and the model-chain depth of R77);
+   `model-order`, the expression depth and the model-chain depth of R77). A
+   *suite* gets the same treatment: `loadSuite` scans every expression it holds
+   (`admit`, `body`, `oracle.expected`, `oracle.subject`) by tag name **before** it
+   records `level-missing`, so an unknown tag cannot hide in a not-live suite;
 3. only `level-missing` is scoped by reach.
 
 A `list` descriptor, a `List<T>` type and the `list` tag are **names of the
@@ -292,9 +295,49 @@ and the reserved levels are not implemented, and TFV is only *decoded* (the
 - A suite whose row says `requires` inside the lane's levels but that reaches a
   missing level is a corpus error (R69 e); the opposite is `not-live`.
 - A chunk file whose line is consistent with the suite row but not with the
-  enumeration is `chunk-file`: the kit pins no code for it.
+  enumeration is **not** a `chunk-file` refusal: section 11 `v2-chunk` (b) and (c)
+  have the lane recompute `cases`, `calls` and the digests from its own
+  enumeration and report those, so the mismatch shows as values. (`runSuite`,
+  which compares the enumeration with the file, does refuse it.) The check that
+  the file's `calls` sum to `expected_calls` stays: section 5.4 defines it.
+- `v2-chunk` never answers `level-missing` (it is outside the closed set): a suite
+  whose `requires` is inside the lane's levels but whose reach is not is `corpus`
+  in the kit as in a corpus (R69 e).
+- `expect.type` is the **static** type and keeps byte widths: `Bytes<2>` for a
+  `var` declared so, a `concat` of two literals, an `if` of equal widths, a
+  `subject_op` at a width, and `Bytes<len>` for a bare literal (R51, R73). R51's
+  "written nowhere" is about the corpus IR, which states no result width.
+- A kit row with an undetermined result type (`Result<?,?>`), a stand-in that is
+  missing, not live or of another signature than its op (R100), or the wrong
+  number of `args` is a **harness error**, not an outcome (R41, R98 b).
+- Where VER04r is silent this lane refuses: a duplicated parameter or binder name,
+  an op whose `requires` is not a list of defined levels, a control whose
+  `required_claims` is not a list of suite ids, a `reference` suite whose `body` is
+  not `subject == expected` in one order or the other, an `oracle.subject` that
+  does not fit `result_type`, and a suite that admits no case.
+- `levels` must be the union of the `requires` of the suites, ops, faults and
+  controls; a present `omitted_examples` is a non-empty, sorted list of
+  `{id, reason}` rows with a reason of the closed set.
+- A path is opened only after every component below the fixture directory has been
+  looked at with `lstat`: a symbolic link is refused, not followed, and so is a
+  missing file (a clean `corpus` or `chunk-file` error, never a raw `ENOENT`). The
+  directory the caller passes is the caller's and may itself be a link.
+- Names that `Object.prototype` also has (`constructor`, `toString`, `__proto__`)
+  are ordinary type, error-type and descriptor names: every table keyed by a name
+  read from input is a `Map`.
+- Domain values are shared by the cases of a suite. That is safe here because no
+  node mutates an operand; a lane that runs a subject which may (S7b) must copy.
 
 ## Bounded work
+
+`checkWork` (exported, and called by `runSuite` before anything runs) meters a run
+in the two units of section 14: product ordinals and IR work. A `slim` run counts
+each suite's `slim_chunks` once and again for every suite a live control re-runs
+(its `required_claims`), against 32,000,000 cases and 64,000,000,000 node
+evaluations; a `full` run counts every product ordinal. Every slim chunk is
+re-validated as an integer below `m`, so a bad entry can never turn a total into
+`NaN` and slip under a limit. A suite's `slim_chunks` is itself validated when the
+row is read (at most 32 entries, the first and last chunk, ascending, integers).
 
 Before any case runs, a suite's domain product must equal its declared
 `cases + discarded`, a suite must admit at least one case, and the product stays

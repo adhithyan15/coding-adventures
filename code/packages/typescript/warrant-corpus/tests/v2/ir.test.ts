@@ -48,7 +48,7 @@ function evaluate(ir: Json, vars: [string, string, Value][] = [], p: Program = p
   const compiled = p.compileExpr(ir, params, role);
   p.state.calls = 0;
   const value = compiled.run(vars.map(([, , v]) => v));
-  return { value, type: showType(compiled.ty, true), calls: p.state.calls };
+  return { value, type: showType(compiled.ty), calls: p.state.calls };
 }
 
 describe("literals, variables and operators", () => {
@@ -435,8 +435,10 @@ function nestSum(count: number): Json {
 }
 
 describe("a shown type for the kit", () => {
-  it("is plain Bytes for every bytes result", () => {
-    expect(evaluate(BYTES("0a")).type).toBe("Bytes");
-    expect(evaluate(["ok", BYTES("0a")]).type).toBe("Result<Bytes,?>");
+  it("keeps a bytes width: a bare literal is Bytes<len> (R73) and the width survives an ok", () => {
+    expect(evaluate(BYTES("0a")).type).toBe("Bytes<1>");
+    expect(evaluate(BYTES("0a0b0c")).type).toBe("Bytes<3>");
+    expect(evaluate(["ok", BYTES("0a")]).type).toBe("Result<Bytes<1>,?>");
+    expect(evaluate(["take", BYTES("0a0b"), NAT(1)]).type).toBe("Bytes");
   });
 });

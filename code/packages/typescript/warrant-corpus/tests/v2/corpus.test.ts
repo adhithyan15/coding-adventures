@@ -151,7 +151,17 @@ describe("loading a hostile corpus directory", () => {
     const full = checkWork(corpus, "full");
     const slim = checkWork(corpus, "slim");
     expect(full.ordinals).toBe(corpus.suites.reduce((sum, s) => sum + (s.suite?.product ?? 0), 0));
-    expect(slim.ordinals).toBeLessThanOrEqual(full.ordinals);
+    // A slim run executes each suite's slim chunk set once, plus once more for every suite an ok control re-runs (section 14).
+    const slimOf = (s: (typeof corpus.suites)[number]): number =>
+      (s.suite?.slimChunks ?? []).reduce((sum, c) => sum + Math.min(s.suite?.chunkSize ?? 0, (s.suite?.product ?? 0) - c * (s.suite?.chunkSize ?? 0)), 0);
+    const live = corpus.suites.filter((s) => s.state === "live");
+    const direct = live.reduce((sum, s) => sum + slimOf(s), 0);
+    const rerun = corpus.controls
+      .filter((c) => c.state === "ok")
+      .flatMap((c) => c.requiredClaims)
+      .reduce((sum, id) => sum + slimOf(live.find((s) => s.id === id) ?? { id, state: "live" }), 0);
+    expect(rerun).toBeGreaterThan(0);
+    expect(slim.ordinals).toBe(direct + rerun);
     expect(full.irWork).toBeGreaterThan(0);
     const heavy = { ...corpus, suites: [{ id: "x", state: "live" as const, suite: { ...(corpus.suites[0] as { suite: object }).suite, product: 2 ** 33, chunkSize: 65536, slimChunks: [0], irCost: 1 } }] };
     expect(() => checkWork(heavy as never, "full")).toThrow(/total work/);
@@ -244,8 +254,11 @@ describe("loading a hostile corpus directory", () => {
     const victim = original.suites.find((s) => s.suite?.claim === "eq_agrees")?.suite;
     const row = document.suites.find((s) => s["claim"] === "eq_agrees") as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
     // an expected expression of cost 1 (a literal) in place of the model call: the row and file are untouched
+    const was = JSON.stringify(row["oracle"]["expected"]);
     row["oracle"]["expected"] = ["lit", true];
-    row["ir_cost"] -= (victim?.expected?.cost ?? 1) - 1;
+    // the body *is* subject == expected (section 4.3), so it names the new expected too, and its cost counts twice
+    row["body"] = row["body"].map((side: unknown) => (JSON.stringify(side) === was ? ["lit", true] : side));
+    row["ir_cost"] -= 2 * ((victim?.expected?.cost ?? 1) - 1);
     write(dir, document);
     const corpus = loadV2Corpus(dir);
     expect(() => runSuite(corpus, corpus.suites.find((s) => s.suite?.claim === "eq_agrees") as never)).toThrow(/chunk differs/);

@@ -190,12 +190,12 @@ const MUTANTS: readonly Mutant[] = [
   {
     name: "fault-flow-demanded-instead-of-a-common-type", area: "faults", file: "faults.ts", kills: ["v2-fault"],
     rule: "a fault expression has a common type with its result, it need not flow (R94)",
-    edits: [['if (unify(typed.ty, ret) === null) throw new KitError("ill-typed", "an expression has no common type with the result");', 'if (!flows(typed.ty, ret)) throw new KitError("ill-typed", "an expression has no common type with the result");']],
+    edits: [['if (unify(typed.ty, ret) === null) throw new KitError("ill-typed", "the expression shares no type with the op\'s result");', 'if (!flows(typed.ty, ret)) throw new KitError("ill-typed", "the expression shares no type with the op\'s result");']],
   },
 ];
 
 /** The scratch copy and the mutated kit runner of one mutant. */
-async function load(mutant: Mutant): Promise<{ runKit: (dir: string, options: { sequential: boolean }) => { categories: { category: string; failed: { id: string }[] }[]; failed: number } }> {
+async function load(mutant: Mutant): Promise<{ runKit: (dir: string, options: { sequential: boolean }) => { categories: { category: string; failed: { id: string; note: string }[] }[]; failed: number } }> {
   const root = tempDir(`warrant-mutant-${mutant.name.slice(0, 20)}-`);
   cpSync(SRC, join(root, "src"), { recursive: true });
   const path = join(root, "src", "v2", mutant.file);
@@ -233,6 +233,11 @@ describe("falsification: every mutant makes the kit fail", () => {
         const row = report.categories.find((r) => r.category === category);
         expect(row?.failed.length, `${mutant.name} must fail a ${category} case`).toBeGreaterThan(0);
         expect(row?.failed[0]?.id.startsWith(`${category}/`)).toBe(true);
+        // N9: a mutant is killed by an *outcome that differs*, never only by a harness crash, which any bug would cause.
+        expect(
+          row?.failed.some((f) => f.note.startsWith("outcome differs")),
+          `${mutant.name} must change an outcome in ${category}, not only crash the harness`,
+        ).toBe(true);
       }
     }, 120_000);
   }
