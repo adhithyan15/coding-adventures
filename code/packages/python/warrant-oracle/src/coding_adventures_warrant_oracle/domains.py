@@ -44,6 +44,7 @@ results and ``(ctor_name, fields)`` variants.
 from __future__ import annotations
 
 import itertools
+import re
 from dataclasses import dataclass
 
 from . import ast as A
@@ -505,6 +506,10 @@ def refine_counts(descs: list[Desc], binders: list, body: object, version: str) 
     return refined
 
 
+#: The name grammar of VER04r section 2.2 rule 4 (an error case name, ``errs`` of a ``result`` descriptor).
+_CASE_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+
+
 def descriptor_size(d: object, depth: int = 1) -> int:
     """Recompute the ``size`` of a descriptor tree and check it as a consumer must (VER04r 5.1).
 
@@ -578,8 +583,16 @@ def descriptor_size(d: object, depth: int = 1) -> int:
         size = _checked_size(1 + descriptor_size(d["of"], depth + 1))
     elif kind == "result":
         need({"ok", "errs"})
-        if not isinstance(d["errs"], list) or not all(isinstance(e, str) for e in d["errs"]):
+        errs = d["errs"]
+        if not isinstance(errs, list) or not all(isinstance(e, str) for e in errs):
             raise OracleError("generation", "a result descriptor lists error cases")
+        # VER04r 5.1 and 16.18 R72 (CV2-F17): 1 to 64 names of the name grammar, no duplicates.
+        if not 1 <= len(errs) <= 64:
+            raise OracleError("generation", "a result descriptor lists 1 to 64 error cases")
+        if len(set(errs)) != len(errs):
+            raise OracleError("generation", "a result descriptor repeats an error case")
+        if not all(_CASE_NAME.fullmatch(e) for e in errs):
+            raise OracleError("generation", "an error case name is outside the name grammar")
         size = _checked_size(descriptor_size(d["ok"], depth + 1) + len(d["errs"]))
     elif kind == "list":
         need({"of"})

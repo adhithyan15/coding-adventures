@@ -403,13 +403,13 @@ admitted-case ordinal (`SuitePlan.check_admits`, `ir_eval.compile_admit_check`),
 subject-dependent argument the op's `admit` reads refused statically (VER04r 4.5 and 16.9).
 `tests/test_admit_calls.py` holds the same documents as the generator's `tests/admit_calls.rs`.
 
-## The v2 conformance kit (S5a, S5b)
+## The v2 conformance kit (S5a, S5b, S5e)
 
 VER04r section 11 adds six categories to the shared fixture family `warrant-corpus-conformance-v1`:
 `v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk` and `v2-fault` (a seventh, `v2-binding`, is S5c's: see
 "The reference binding validator" below).
 The oracle **derives every expectation**: `src/coding_adventures_warrant_oracle/conformance.py` is the
-derivation module, and the hand-written case tables, the two small kit documents the chunk cases come from
+derivation module, and the hand-written case tables, the three small kit documents the chunk cases come from
 and `make_conformance.py` live in `tests/fixtures/conformance-v2/` (its README says how to add a case).
 
 | Category | The module derives it from |
@@ -435,7 +435,12 @@ requires an `index.json` that is present to hold one row per derived file and sk
 Exit codes: 0 identical, 1 the bytes differ, 2 a table and its derivation disagree or any other error. The script
 never writes `index.json` (the family's v1 script does).
 
-S5b commits the six `v2-*.json` files (734 cases) and their rows of `index.json`. **Regeneration is two steps**:
+S5b commits the six `v2-*.json` files (734 cases) and their rows of `index.json`. S5e's oracle PR (this package)
+adds 48 cases to the tables, 782 in all (`v2-ir` 248, `v2-domain` 162, `v2-chunk` 74, `v2-fault` 41, the other two
+unchanged), and the derivation changes they need (VER04r section 16.18 R69 to R77: a `width_params` op in the kit,
+`level-missing` and `requires` by what `ir` reaches, the `errs` rules, the chain depth of an uncalled model); the
+committed `v2-*.json` files and `index.json` (1,243 cases once regenerated) are the **fixture PR's**, which only adds
+cases, so until it lands `make_conformance.py --check` against the family directory reports the six files stale. **Regeneration is two steps**:
 `make_conformance.py --write` (the six files), then `python3 code/scripts/warrant_corpus_conformance.py --write`
 (`index.json`: the four v1 rows, then one row per `v2-*.json` on disk in the fixed order). `BUILD` runs
 `make_conformance.py --check --fixture ../../../specs/fixtures/warrant-corpus-conformance-v1` (a second derivation of

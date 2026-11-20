@@ -12,8 +12,8 @@ lists them with case counts and SHA-256.
 | `label-digest.json` | manifest digest | `manifest` object to its SHA-256 |
 
 Six more categories, the **v2 kit** (VER04r section 11, slice S5b), sit beside them in
-the same layout: `v2-value.json` (128 cases), `v2-arith.json` (129), `v2-ir.json` (221),
-`v2-domain.json` (154), `v2-chunk.json` (66) and `v2-fault.json` (36), 734 cases. Every
+the same layout: `v2-value.json` (128 cases), `v2-arith.json` (129), `v2-ir.json` (248),
+`v2-domain.json` (162), `v2-chunk.json` (74) and `v2-fault.json` (41), 782 cases (S5b committed 734; S5e added 48). Every
 case carries `id`, `summary`, `requires` and `expect`; a lane runs a case exactly when it
 implements the levels in `requires`. `v2-binding` (S5d) is not here yet; the levels
 `ir.fixed`, `ir.tuple`, `ir.data` and `ir.list` add vectors in S10d and S11. A runner
@@ -54,6 +54,15 @@ Where each mandatory vector is discharged (VER04r section 11, R17); "S5b" means 
 | Accounting | S6, S7 (the lane's own `check`); S9 |
 | Paths: claim fields (generation error) | existing generator and oracle tests |
 | Paths: a symbolic link or an undeclared file in `chunks/` | S6, S7 runner tests |
+| Static widths: an op with `width_params` in `v2-ir`, `v2-chunk` and `v2-fault`; the four refused width lists | S5e (VER04r 16.18 R70) |
+| Overflow class under an impure guard, with its pure-guard twin, and in a model body entered with a subject argument | S5e `v2-ir` (R71) |
+| `errs`: empty, 65 names, a duplicate, a bad name; a list that differs from the declared cases | S5e `v2-domain` and `v2-chunk` (R72) |
+| Bytes `lit`: one accepted, two refused | S5e `v2-ir` (R73) |
+| A fixed-width `take` or `drop` count | S5e `v2-ir` (R74) |
+| Binders: a ground suite with none (accepted); nine, and a product over `2^28` (refused) | S5e `v2-chunk` (R75) |
+| `level-missing` by a type; a model of a missing level that is not reached | S5e `v2-ir` (R69) |
+| The level of `match`; `len` on a list operand | S10d and S11d `v2-ir` (R76) |
+| A model chain of 65 that nothing calls | S5e `v2-ir` (R77) |
 
 The two generation-time refusals of section 3.4 stay pinned by the generator's and the oracle's own tests
 (`v2-arith/nat-bound-generation-error` and `v2-arith/v0-u8-wrap-guard` are their lane-observable forms, [D45]).
@@ -85,7 +94,7 @@ python3 code/scripts/warrant_corpus_conformance.py --write  # regenerate
 
 Cases are only ever added within `-v1`; changing an expectation means `-v2`.
 Containment includes the WD-100b cases (Windows reserved device names refused,
-win32 case folding ASCII-only; 141 cases, 461 in the four v1 categories, 1195 with the v2 kit).
+win32 case folding ASCII-only; 141 cases, 461 in the four v1 categories, 1243 with the v2 kit).
 Lanes: Python, TypeScript and Go run all four v1 categories and digest-check the `v2-*` rows (the runners
 read v2 in S6a and S7a) (Go: `conformance_test.go` in
 `code/packages/go/warrant-corpus`).
