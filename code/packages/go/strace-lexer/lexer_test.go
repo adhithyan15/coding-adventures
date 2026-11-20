@@ -198,6 +198,14 @@ func TestTokenShapes(t *testing.T) {
 		// 65 characters is too long for a syscall name.
 		{`7  ` + strings.Repeat("a", 65) + `(`, []tv{{"PID", "7  "}, {"FUNC", strings.Repeat("a", 65) + "("}}},
 		{`7  [ ] { }`, []tv{{"PID", "7  "}, {"LBRACKET", "["}, {"RBRACKET", "]"}, {"LBRACE", "{"}, {"RBRACE", "}"}}},
+		// The result of a call whose tracee died (KILN04 D35): its own token, not
+		// an ERR_LT; a word glued to it is still an annotation.
+		{`7  <... tgkill resumed>) = ? <unavailable>`, []tv{
+			{"PID", "7  "}, {"RESUMED", "<... tgkill resumed>"}, {"RPAREN", ")"}, {"PUNCT", "="}, {"PUNCT", "?"}, {"UNAVAILABLE", "<unavailable>"}}},
+		{`7  stat(a) = 0<unavailable>`, []tv{
+			{"PID", "7  "}, {"SYSCALL", "stat("}, {"WORD", "a"}, {"RPAREN", ")"}, {"PUNCT", "="}, {"ANNOTATED", "0<unavailable>"}}},
+		{`7  <... clone resumed> <unfinished ...>) = ?`, []tv{
+			{"PID", "7  "}, {"RESUMED", "<... clone resumed>"}, {"UNFINISHED", "<unfinished ...>"}, {"RPAREN", ")"}, {"PUNCT", "="}, {"PUNCT", "?"}}},
 	}
 	for _, c := range cases {
 		got := lex(t, c.line)

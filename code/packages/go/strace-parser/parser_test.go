@@ -204,6 +204,11 @@ func TestAcceptedShapes(t *testing.T) {
 		{`1  <... openat resumed>)            = 6</work/main.o>`, "resumed_line", nil, `            = 6</work/main.o>`, true},
 		{`1  <... clone resumed>)                    = 201`, "resumed_line", nil, `                    = 201`, true},
 		{`1  <... openat resumed>, 0666) = 3`, "resumed_line", nil, ` = 3`, true},
+		// The dying-call shapes (KILN04 D35): the grammar is loose, the consumer
+		// pins the spelling.
+		{`2  <... tgkill resumed>) = ? <unavailable>`, "resumed_line", nil, ` = ? <unavailable>`, true},
+		{`2  <... clone resumed> <unfinished ...>) = ?`, "resumed_line", nil, ` = ?`, true},
+		{`2  tgkill(1, 1) = ? <unavailable>`, "call_line", []string{`1`, `1`}, ` = ? <unavailable>`, true},
 		// exit and signal lines
 		{`1  +++ exited with 0 +++`, "exit_line", nil, ``, true},
 		{`1  +++ killed by SIGKILL +++`, "exit_line", nil, ``, true},
