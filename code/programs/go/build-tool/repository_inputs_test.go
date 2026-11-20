@@ -910,7 +910,7 @@ func TestHashFunctionsV1GraphExportsExactRepositoryInputs(t *testing.T) {
 	}
 }
 
-func TestHashMapV1SelectsOnlySwiftPublicConsumer(t *testing.T) {
+func TestHashMapV1SelectsSwiftAndDartPublicConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "swift/hash-map", Language: "swift"},
 		{Name: "dart/hash-map", Language: "dart"},
@@ -931,7 +931,7 @@ func TestHashMapV1SelectsOnlySwiftPublicConsumer(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if want := map[string]bool{"swift/hash-map": true}; !reflect.DeepEqual(got, want) {
+		if want := map[string]bool{"swift/hash-map": true, "dart/hash-map": true}; !reflect.DeepEqual(got, want) {
 			t.Errorf("consumers for %q = %v, want %v", changed, got, want)
 		}
 	}
@@ -957,7 +957,7 @@ func TestHashMapV1SelectsOnlySwiftPublicConsumer(t *testing.T) {
 	}
 	for language, want := range map[string]map[string]bool{
 		"swift": {"swift/hash-map": true},
-		"dart":  {},
+		"dart":  {"dart/hash-map": true},
 	} {
 		got, err := repositoryInputConsumersForChange([]string{accepted[0]}, packages, language)
 		if err != nil {
@@ -1020,6 +1020,33 @@ func TestDiscoveredSwiftHashMapExportsDT18RepositoryInputs(t *testing.T) {
 		return
 	}
 	t.Fatal("graph omitted discovered swift/hash-map package")
+}
+
+func TestDiscoveredDartHashMapExportsDT18RepositoryInputs(t *testing.T) {
+	root := findRepoRoot("")
+	packageRoot := filepath.Join(root, "code", "packages", "dart", "hash-map")
+	packages, err := discovery.DiscoverPackages(packageRoot)
+	if err != nil {
+		t.Fatalf("discover actual Dart hash-map package: %v", err)
+	}
+	if len(packages) != 1 || packages[0].Name != "dart/hash-map" {
+		t.Fatalf("discovered packages = %#v, want actual dart/hash-map package", packages)
+	}
+	graph, err := buildKilnLegacyGraph(packages, root)
+	if err != nil {
+		t.Fatalf("export actual Dart hash-map graph node: %v", err)
+	}
+	for _, node := range graph.Packages {
+		if node.Name != "dart/hash-map" {
+			continue
+		}
+		want := []string{"code/specs/DT18-hash-map-dart-profile.md", "code/specs/DT18-hash-map.md", "code/specs/fixtures/hash-map-v1"}
+		if !reflect.DeepEqual(node.RepoInputs, want) {
+			t.Fatalf("actual dart/hash-map repo_inputs = %v, want %v", node.RepoInputs, want)
+		}
+		return
+	}
+	t.Fatal("graph omitted discovered dart/hash-map package")
 }
 
 func TestVer04pDomainDiagnosticSelectsWarrantGrammar(t *testing.T) {

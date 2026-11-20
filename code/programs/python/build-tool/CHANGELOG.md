@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - Dart DT18 hash-map input binding
+
+- Replay the Dart hash-map exact-corpus boundary case alongside existing repository cases. Update neutral corpus and canonical boundary pins without broadening package-local input authority.
+
 All notable changes to this project will be documented in this file.
 
 ## Unreleased - BUILD-001 registry update
