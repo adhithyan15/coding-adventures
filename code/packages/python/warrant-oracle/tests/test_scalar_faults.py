@@ -436,7 +436,7 @@ def logic_gates():
     return spec, parse_bindings_faults(LOGIC_GATES_BINDINGS.read_bytes())
 
 
-def test_every_bound_logic_gates_row_of_the_four_faults_instantiates_and_compiles_except_the_option_payload():
+def test_every_bound_logic_gates_row_of_the_four_faults_instantiates_and_compiles():
     spec, bound = logic_gates()
     four = {"saturate-add", "saturate-sub", "shift-mask", "missing-error"}
     instantiated: dict[str, list[str]] = {f: [] for f in sorted(four)}
@@ -459,9 +459,11 @@ def test_every_bound_logic_gates_row_of_the_four_faults_instantiates_and_compile
     assert len(instantiated["shift-mask"]) == 2
     assert sum(len(instantiated[f]) for f in ("saturate-add", "saturate-sub", "shift-mask")) == 21
     # 22 bound missing-error rows: 17 scalar `Result<U8,E>`, 3 `Result<Bytes,E>`, the tuple of priority_encoder
-    # (all instantiated, as before); tri_state's `Result<Option<U8>,E>` has a template since S11c-1 (D71).
-    assert len(instantiated["missing-error"]) == 21
-    assert refused_rows == [("tri_state", "missing-error")]
+    # (all instantiated, as before), and tri_state's `Result<Option<U8>,E>`, which has a template since
+    # S11c-1 ([D50], [D71]: the empty payload `["none","U8"]`).  No bound row of the four is refused now.
+    assert len(instantiated["missing-error"]) == 22
+    assert "tri_state" in instantiated["missing-error"]
+    assert refused_rows == []
 
 
 def test_the_logic_gates_rows_are_the_json_of_the_spec():
