@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Write or check the six ``v2-*.json`` categories of ``warrant-corpus-conformance-v1`` (VER04r section 11, S5a).
+"""Write or check the ``v2-*.json`` categories of ``warrant-corpus-conformance-v1`` (VER04r section 11, S5a, S5c).
 
 The kit's case tables are hand-written beside this script (``cases_*.py``) and state each case's inputs and
 its *intent*; ``coding_adventures_warrant_oracle.conformance`` derives every outcome independently, and the
 build fails naming the case id if the two disagree.  **No fixture JSON is edited by hand.**
 
-    make_conformance.py --write [--fixture DIR]   write the six v2-*.json files into DIR
+    make_conformance.py --write [--fixture DIR]   write the seven v2-*.json files into DIR
     make_conformance.py --check [--fixture DIR]   rebuild them in memory and require DIR's bytes to be identical
 
 ``DIR`` defaults to the family directory ``code/specs/fixtures/warrant-corpus-conformance-v1``.  This
@@ -16,6 +16,13 @@ that one check in a directory that has no ``index.json`` (S5a's scratch run).
 
 Exit codes (the oracle's convention, R19): ``0`` identical (or written), ``1`` the committed bytes differ,
 ``2`` a table and its derivation disagree, or any other error.
+
+**``v2-binding.json`` (S5c) is written always and checked once it is committed.**  S5c adds the validator and the
+table; S5d commits the file.  ``--check`` therefore treats ``v2-binding.json`` as *pending* when the directory has
+no such file **and** ``index.json`` (if there is one) has no ``v2-binding`` row: it is reported as not yet committed,
+and neither the file nor its index row is compared, so a directory that holds the six S5b files stays green.  As soon as
+the file or an index row exists it is held to the derivation like every other file (a row without the file, or a file
+that differs, is exit 1).  Nothing else of the check changes.
 
 The two kit documents are derived once per run: ``kit.warrant`` takes about a minute (it holds a ``2**24``
 suite, 256 chunks), ``kit-small.warrant`` a fraction of a second.
@@ -32,6 +39,7 @@ import sys
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
+from coding_adventures_warrant_oracle import bindings_v2 as BV  # noqa: E402
 from coding_adventures_warrant_oracle import conformance as C  # noqa: E402
 
 #: ``code/specs/fixtures/warrant-corpus-conformance-v1``: HERE is ``code/packages/python/warrant-oracle/tests/fixtures/conformance-v2``.
@@ -70,13 +78,26 @@ def load_tables(kits: dict) -> dict:
 
 
 def build() -> tuple[dict, list]:
-    """``({file name: text}, [index rows])``, every case derived and checked against its table intent."""
+    """``({file name: text}, [index rows])`` of the six S5a categories, each case checked against its table intent."""
     kits = load_kits()
     return C.build_files(load_tables(kits), kits)
 
 
+#: The seventh category's file (S5c).
+BINDING_FILE = f"{BV.CATEGORY}.json"
+
+
+def build_binding() -> tuple[str, dict]:
+    """``(text of v2-binding.json, its index row)``: the validator derives every case of ``cases_binding.py``."""
+    import cases_binding
+
+    return BV.build_binding(cases_binding.ROWS)
+
+
 def write(directory: pathlib.Path) -> int:
     files, rows = build()
+    text, binding_row = build_binding()
+    files, rows = {**files, BINDING_FILE: text}, [*rows, binding_row]
     directory.mkdir(parents=True, exist_ok=True)
     for name, text in files.items():
         (directory / name).write_bytes(text.encode("ascii"))  # bytes, never text mode: LF stays LF
@@ -88,19 +109,29 @@ def write(directory: pathlib.Path) -> int:
 
 def check(directory: pathlib.Path) -> int:
     files, rows = build()
+    text, binding_row = build_binding()
     stale = []
-    for name, text in files.items():
-        path = directory / name
-        if not path.is_file() or path.read_bytes() != text.encode("ascii"):
-            stale.append(f"{name} differs from the derived bytes")
     index = directory / "index.json"
+    held = None
     if index.is_file():
         try:
             held = [r for r in json.loads(index.read_bytes())["files"] if str(r.get("category", "")).startswith("v2-")]
         except (ValueError, KeyError, TypeError):
             held = None
-        if held != rows:
-            stale.append("index.json does not hold exactly one row per derived file, with its cases and sha256")
+    # v2-binding.json is pending (S5d commits it) while neither the file nor an index row exists.
+    pending = not (directory / BINDING_FILE).is_file() and not any(
+        isinstance(r, dict) and r.get("category") == BV.CATEGORY for r in held or []
+    )
+    if pending:
+        print(f"make_conformance: {BINDING_FILE} is not committed yet (S5d): not checked", file=sys.stderr)
+    else:
+        files, rows = {**files, BINDING_FILE: text}, [*rows, binding_row]
+    for name, derived in files.items():
+        path = directory / name
+        if not path.is_file() or path.read_bytes() != derived.encode("ascii"):
+            stale.append(f"{name} differs from the derived bytes")
+    if index.is_file() and held != rows:
+        stale.append("index.json does not hold exactly one row per derived file, with its cases and sha256")
     for message in stale:
         print(f"make_conformance: {message}", file=sys.stderr)
     if not stale:
@@ -111,7 +142,7 @@ def check(directory: pathlib.Path) -> int:
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     mode = parser.add_mutually_exclusive_group(required=True)
-    mode.add_argument("--write", action="store_true", help="write the six v2-*.json files")
+    mode.add_argument("--write", action="store_true", help="write the seven v2-*.json files")
     mode.add_argument("--check", action="store_true", help="require the bytes on disk to be identical")
     parser.add_argument("--fixture", type=pathlib.Path, default=FAMILY, help="the family directory")
     args = parser.parse_args(argv)

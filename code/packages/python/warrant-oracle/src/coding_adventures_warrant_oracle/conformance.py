@@ -91,6 +91,8 @@ ERROR_CODES = {
     "v2-domain": frozenset({"descriptor", "index"}),
     "v2-chunk": frozenset({"chunk-file", "slim-chunks", "corpus"}),
     "v2-fault": frozenset({"level-missing", "subject-forbidden"}),
+    # S5c (:mod:`.bindings_v2`): one code; the ``reason`` beside it is the closed set of that module.
+    "v2-binding": frozenset({"BindingInvalid"}),
 }
 
 #: Every S5 case has exactly this ``requires`` (R24): the kit at ``ir.core``.
