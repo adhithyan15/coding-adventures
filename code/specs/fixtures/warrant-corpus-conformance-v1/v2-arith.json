@@ -1,0 +1,1905 @@
+{
+  "cases": [
+    {
+      "expect": {
+        "type": "U8",
+        "value": "0"
+      },
+      "id": "v2-arith/u8-add-wrap",
+      "lhs": "255",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "U8 255 + 1 wraps",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "U8",
+        "value": "3"
+      },
+      "id": "v2-arith/u8-add-exact",
+      "lhs": "1",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "2",
+      "summary": "U8 1 + 2 does not wrap",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "U8",
+        "value": "255"
+      },
+      "id": "v2-arith/u8-sub-wrap",
+      "lhs": "0",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "U8 0 - 1 wraps",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "U8",
+        "value": "2"
+      },
+      "id": "v2-arith/u8-sub-exact",
+      "lhs": "5",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "3",
+      "summary": "U8 5 - 3 does not wrap",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "U8",
+        "value": "0"
+      },
+      "id": "v2-arith/u8-mul-wrap",
+      "lhs": "16",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "16",
+      "summary": "U8 16 * 16 wraps",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "U8",
+        "value": "15"
+      },
+      "id": "v2-arith/u8-mul-exact",
+      "lhs": "3",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "5",
+      "summary": "U8 3 * 5 does not wrap",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "U8",
+        "value": "0"
+      },
+      "id": "v2-arith/u8-neg-zero",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U8 -0 is 0",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "U8",
+        "value": "255"
+      },
+      "id": "v2-arith/u8-neg-one",
+      "lhs": "1",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U8 -1 is read back in U8",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "U8",
+        "value": "0"
+      },
+      "id": "v2-arith/u8-neg-min",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U8 negating the minimum 0",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "U8",
+        "value": "1"
+      },
+      "id": "v2-arith/u8-neg-max",
+      "lhs": "255",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U8 negating the maximum 255",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "U16",
+        "value": "0"
+      },
+      "id": "v2-arith/u16-add-wrap",
+      "lhs": "65535",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "U16 65535 + 1 wraps",
+      "type": "U16"
+    },
+    {
+      "expect": {
+        "type": "U16",
+        "value": "3"
+      },
+      "id": "v2-arith/u16-add-exact",
+      "lhs": "1",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "2",
+      "summary": "U16 1 + 2 does not wrap",
+      "type": "U16"
+    },
+    {
+      "expect": {
+        "type": "U16",
+        "value": "65535"
+      },
+      "id": "v2-arith/u16-sub-wrap",
+      "lhs": "0",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "U16 0 - 1 wraps",
+      "type": "U16"
+    },
+    {
+      "expect": {
+        "type": "U16",
+        "value": "2"
+      },
+      "id": "v2-arith/u16-sub-exact",
+      "lhs": "5",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "3",
+      "summary": "U16 5 - 3 does not wrap",
+      "type": "U16"
+    },
+    {
+      "expect": {
+        "type": "U16",
+        "value": "1"
+      },
+      "id": "v2-arith/u16-mul-wrap",
+      "lhs": "65535",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "65535",
+      "summary": "U16 65535 * 65535 wraps",
+      "type": "U16"
+    },
+    {
+      "expect": {
+        "type": "U16",
+        "value": "15"
+      },
+      "id": "v2-arith/u16-mul-exact",
+      "lhs": "3",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "5",
+      "summary": "U16 3 * 5 does not wrap",
+      "type": "U16"
+    },
+    {
+      "expect": {
+        "type": "U16",
+        "value": "0"
+      },
+      "id": "v2-arith/u16-neg-zero",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U16 -0 is 0",
+      "type": "U16"
+    },
+    {
+      "expect": {
+        "type": "U16",
+        "value": "65535"
+      },
+      "id": "v2-arith/u16-neg-one",
+      "lhs": "1",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U16 -1 is read back in U16",
+      "type": "U16"
+    },
+    {
+      "expect": {
+        "type": "U16",
+        "value": "0"
+      },
+      "id": "v2-arith/u16-neg-min",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U16 negating the minimum 0",
+      "type": "U16"
+    },
+    {
+      "expect": {
+        "type": "U16",
+        "value": "1"
+      },
+      "id": "v2-arith/u16-neg-max",
+      "lhs": "65535",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U16 negating the maximum 65535",
+      "type": "U16"
+    },
+    {
+      "expect": {
+        "type": "U32",
+        "value": "0"
+      },
+      "id": "v2-arith/u32-add-wrap",
+      "lhs": "4294967295",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "U32 4294967295 + 1 wraps",
+      "type": "U32"
+    },
+    {
+      "expect": {
+        "type": "U32",
+        "value": "3"
+      },
+      "id": "v2-arith/u32-add-exact",
+      "lhs": "1",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "2",
+      "summary": "U32 1 + 2 does not wrap",
+      "type": "U32"
+    },
+    {
+      "expect": {
+        "type": "U32",
+        "value": "4294967295"
+      },
+      "id": "v2-arith/u32-sub-wrap",
+      "lhs": "0",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "U32 0 - 1 wraps",
+      "type": "U32"
+    },
+    {
+      "expect": {
+        "type": "U32",
+        "value": "2"
+      },
+      "id": "v2-arith/u32-sub-exact",
+      "lhs": "5",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "3",
+      "summary": "U32 5 - 3 does not wrap",
+      "type": "U32"
+    },
+    {
+      "expect": {
+        "type": "U32",
+        "value": "1"
+      },
+      "id": "v2-arith/u32-mul-wrap",
+      "lhs": "4294967295",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "4294967295",
+      "summary": "U32 4294967295 * 4294967295 wraps",
+      "type": "U32"
+    },
+    {
+      "expect": {
+        "type": "U32",
+        "value": "15"
+      },
+      "id": "v2-arith/u32-mul-exact",
+      "lhs": "3",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "5",
+      "summary": "U32 3 * 5 does not wrap",
+      "type": "U32"
+    },
+    {
+      "expect": {
+        "type": "U32",
+        "value": "0"
+      },
+      "id": "v2-arith/u32-neg-zero",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U32 -0 is 0",
+      "type": "U32"
+    },
+    {
+      "expect": {
+        "type": "U32",
+        "value": "4294967295"
+      },
+      "id": "v2-arith/u32-neg-one",
+      "lhs": "1",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U32 -1 is read back in U32",
+      "type": "U32"
+    },
+    {
+      "expect": {
+        "type": "U32",
+        "value": "0"
+      },
+      "id": "v2-arith/u32-neg-min",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U32 negating the minimum 0",
+      "type": "U32"
+    },
+    {
+      "expect": {
+        "type": "U32",
+        "value": "1"
+      },
+      "id": "v2-arith/u32-neg-max",
+      "lhs": "4294967295",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U32 negating the maximum 4294967295",
+      "type": "U32"
+    },
+    {
+      "expect": {
+        "type": "U64",
+        "value": "0"
+      },
+      "id": "v2-arith/u64-add-wrap",
+      "lhs": "18446744073709551615",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "U64 18446744073709551615 + 1 wraps",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "U64",
+        "value": "3"
+      },
+      "id": "v2-arith/u64-add-exact",
+      "lhs": "1",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "2",
+      "summary": "U64 1 + 2 does not wrap",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "U64",
+        "value": "18446744073709551615"
+      },
+      "id": "v2-arith/u64-sub-wrap",
+      "lhs": "0",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "U64 0 - 1 wraps",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "U64",
+        "value": "2"
+      },
+      "id": "v2-arith/u64-sub-exact",
+      "lhs": "5",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "3",
+      "summary": "U64 5 - 3 does not wrap",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "U64",
+        "value": "1"
+      },
+      "id": "v2-arith/u64-mul-wrap",
+      "lhs": "18446744073709551615",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "18446744073709551615",
+      "summary": "U64 18446744073709551615 * 18446744073709551615 wraps",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "U64",
+        "value": "15"
+      },
+      "id": "v2-arith/u64-mul-exact",
+      "lhs": "3",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "5",
+      "summary": "U64 3 * 5 does not wrap",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "U64",
+        "value": "0"
+      },
+      "id": "v2-arith/u64-neg-zero",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U64 -0 is 0",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "U64",
+        "value": "18446744073709551615"
+      },
+      "id": "v2-arith/u64-neg-one",
+      "lhs": "1",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U64 -1 is read back in U64",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "U64",
+        "value": "0"
+      },
+      "id": "v2-arith/u64-neg-min",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U64 negating the minimum 0",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "U64",
+        "value": "1"
+      },
+      "id": "v2-arith/u64-neg-max",
+      "lhs": "18446744073709551615",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "U64 negating the maximum 18446744073709551615",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "I8",
+        "value": "-128"
+      },
+      "id": "v2-arith/i8-add-wrap",
+      "lhs": "127",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "I8 127 + 1 wraps",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "I8",
+        "value": "3"
+      },
+      "id": "v2-arith/i8-add-exact",
+      "lhs": "1",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "2",
+      "summary": "I8 1 + 2 does not wrap",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "I8",
+        "value": "127"
+      },
+      "id": "v2-arith/i8-sub-wrap",
+      "lhs": "-128",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "I8 -128 - 1 wraps",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "I8",
+        "value": "2"
+      },
+      "id": "v2-arith/i8-sub-exact",
+      "lhs": "5",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "3",
+      "summary": "I8 5 - 3 does not wrap",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "I8",
+        "value": "-128"
+      },
+      "id": "v2-arith/i8-mul-wrap",
+      "lhs": "-128",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "-1",
+      "summary": "I8 -128 * -1 wraps",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "I8",
+        "value": "-15"
+      },
+      "id": "v2-arith/i8-mul-exact",
+      "lhs": "-3",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "5",
+      "summary": "I8 -3 * 5 does not wrap",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "I8",
+        "value": "0"
+      },
+      "id": "v2-arith/i8-neg-zero",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I8 -0 is 0",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "I8",
+        "value": "-1"
+      },
+      "id": "v2-arith/i8-neg-one",
+      "lhs": "1",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I8 -1 is read back in I8",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "I8",
+        "value": "-128"
+      },
+      "id": "v2-arith/i8-neg-min",
+      "lhs": "-128",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I8 negating the minimum -128",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "I8",
+        "value": "-127"
+      },
+      "id": "v2-arith/i8-neg-max",
+      "lhs": "127",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I8 negating the maximum 127",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "I16",
+        "value": "-32768"
+      },
+      "id": "v2-arith/i16-add-wrap",
+      "lhs": "32767",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "I16 32767 + 1 wraps",
+      "type": "I16"
+    },
+    {
+      "expect": {
+        "type": "I16",
+        "value": "3"
+      },
+      "id": "v2-arith/i16-add-exact",
+      "lhs": "1",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "2",
+      "summary": "I16 1 + 2 does not wrap",
+      "type": "I16"
+    },
+    {
+      "expect": {
+        "type": "I16",
+        "value": "32767"
+      },
+      "id": "v2-arith/i16-sub-wrap",
+      "lhs": "-32768",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "I16 -32768 - 1 wraps",
+      "type": "I16"
+    },
+    {
+      "expect": {
+        "type": "I16",
+        "value": "2"
+      },
+      "id": "v2-arith/i16-sub-exact",
+      "lhs": "5",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "3",
+      "summary": "I16 5 - 3 does not wrap",
+      "type": "I16"
+    },
+    {
+      "expect": {
+        "type": "I16",
+        "value": "-32768"
+      },
+      "id": "v2-arith/i16-mul-wrap",
+      "lhs": "-32768",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "-1",
+      "summary": "I16 -32768 * -1 wraps",
+      "type": "I16"
+    },
+    {
+      "expect": {
+        "type": "I16",
+        "value": "-15"
+      },
+      "id": "v2-arith/i16-mul-exact",
+      "lhs": "-3",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "5",
+      "summary": "I16 -3 * 5 does not wrap",
+      "type": "I16"
+    },
+    {
+      "expect": {
+        "type": "I16",
+        "value": "0"
+      },
+      "id": "v2-arith/i16-neg-zero",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I16 -0 is 0",
+      "type": "I16"
+    },
+    {
+      "expect": {
+        "type": "I16",
+        "value": "-1"
+      },
+      "id": "v2-arith/i16-neg-one",
+      "lhs": "1",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I16 -1 is read back in I16",
+      "type": "I16"
+    },
+    {
+      "expect": {
+        "type": "I16",
+        "value": "-32768"
+      },
+      "id": "v2-arith/i16-neg-min",
+      "lhs": "-32768",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I16 negating the minimum -32768",
+      "type": "I16"
+    },
+    {
+      "expect": {
+        "type": "I16",
+        "value": "-32767"
+      },
+      "id": "v2-arith/i16-neg-max",
+      "lhs": "32767",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I16 negating the maximum 32767",
+      "type": "I16"
+    },
+    {
+      "expect": {
+        "type": "I32",
+        "value": "-2147483648"
+      },
+      "id": "v2-arith/i32-add-wrap",
+      "lhs": "2147483647",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "I32 2147483647 + 1 wraps",
+      "type": "I32"
+    },
+    {
+      "expect": {
+        "type": "I32",
+        "value": "3"
+      },
+      "id": "v2-arith/i32-add-exact",
+      "lhs": "1",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "2",
+      "summary": "I32 1 + 2 does not wrap",
+      "type": "I32"
+    },
+    {
+      "expect": {
+        "type": "I32",
+        "value": "2147483647"
+      },
+      "id": "v2-arith/i32-sub-wrap",
+      "lhs": "-2147483648",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "I32 -2147483648 - 1 wraps",
+      "type": "I32"
+    },
+    {
+      "expect": {
+        "type": "I32",
+        "value": "2"
+      },
+      "id": "v2-arith/i32-sub-exact",
+      "lhs": "5",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "3",
+      "summary": "I32 5 - 3 does not wrap",
+      "type": "I32"
+    },
+    {
+      "expect": {
+        "type": "I32",
+        "value": "-2147483648"
+      },
+      "id": "v2-arith/i32-mul-wrap",
+      "lhs": "-2147483648",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "-1",
+      "summary": "I32 -2147483648 * -1 wraps",
+      "type": "I32"
+    },
+    {
+      "expect": {
+        "type": "I32",
+        "value": "-15"
+      },
+      "id": "v2-arith/i32-mul-exact",
+      "lhs": "-3",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "5",
+      "summary": "I32 -3 * 5 does not wrap",
+      "type": "I32"
+    },
+    {
+      "expect": {
+        "type": "I32",
+        "value": "0"
+      },
+      "id": "v2-arith/i32-neg-zero",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I32 -0 is 0",
+      "type": "I32"
+    },
+    {
+      "expect": {
+        "type": "I32",
+        "value": "-1"
+      },
+      "id": "v2-arith/i32-neg-one",
+      "lhs": "1",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I32 -1 is read back in I32",
+      "type": "I32"
+    },
+    {
+      "expect": {
+        "type": "I32",
+        "value": "-2147483648"
+      },
+      "id": "v2-arith/i32-neg-min",
+      "lhs": "-2147483648",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I32 negating the minimum -2147483648",
+      "type": "I32"
+    },
+    {
+      "expect": {
+        "type": "I32",
+        "value": "-2147483647"
+      },
+      "id": "v2-arith/i32-neg-max",
+      "lhs": "2147483647",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I32 negating the maximum 2147483647",
+      "type": "I32"
+    },
+    {
+      "expect": {
+        "type": "I64",
+        "value": "-9223372036854775808"
+      },
+      "id": "v2-arith/i64-add-wrap",
+      "lhs": "9223372036854775807",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "I64 9223372036854775807 + 1 wraps",
+      "type": "I64"
+    },
+    {
+      "expect": {
+        "type": "I64",
+        "value": "3"
+      },
+      "id": "v2-arith/i64-add-exact",
+      "lhs": "1",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "2",
+      "summary": "I64 1 + 2 does not wrap",
+      "type": "I64"
+    },
+    {
+      "expect": {
+        "type": "I64",
+        "value": "9223372036854775807"
+      },
+      "id": "v2-arith/i64-sub-wrap",
+      "lhs": "-9223372036854775808",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "I64 -9223372036854775808 - 1 wraps",
+      "type": "I64"
+    },
+    {
+      "expect": {
+        "type": "I64",
+        "value": "2"
+      },
+      "id": "v2-arith/i64-sub-exact",
+      "lhs": "5",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "3",
+      "summary": "I64 5 - 3 does not wrap",
+      "type": "I64"
+    },
+    {
+      "expect": {
+        "type": "I64",
+        "value": "-9223372036854775808"
+      },
+      "id": "v2-arith/i64-mul-wrap",
+      "lhs": "-9223372036854775808",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "-1",
+      "summary": "I64 -9223372036854775808 * -1 wraps",
+      "type": "I64"
+    },
+    {
+      "expect": {
+        "type": "I64",
+        "value": "-15"
+      },
+      "id": "v2-arith/i64-mul-exact",
+      "lhs": "-3",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "5",
+      "summary": "I64 -3 * 5 does not wrap",
+      "type": "I64"
+    },
+    {
+      "expect": {
+        "type": "I64",
+        "value": "0"
+      },
+      "id": "v2-arith/i64-neg-zero",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I64 -0 is 0",
+      "type": "I64"
+    },
+    {
+      "expect": {
+        "type": "I64",
+        "value": "-1"
+      },
+      "id": "v2-arith/i64-neg-one",
+      "lhs": "1",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I64 -1 is read back in I64",
+      "type": "I64"
+    },
+    {
+      "expect": {
+        "type": "I64",
+        "value": "-9223372036854775808"
+      },
+      "id": "v2-arith/i64-neg-min",
+      "lhs": "-9223372036854775808",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I64 negating the minimum -9223372036854775808",
+      "type": "I64"
+    },
+    {
+      "expect": {
+        "type": "I64",
+        "value": "-9223372036854775807"
+      },
+      "id": "v2-arith/i64-neg-max",
+      "lhs": "9223372036854775807",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "I64 negating the maximum 9223372036854775807",
+      "type": "I64"
+    },
+    {
+      "document": "v0",
+      "expect": {
+        "type": "U8",
+        "value": "0"
+      },
+      "id": "v2-arith/v0-u8-wrap-guard",
+      "lhs": "255",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "255u8 + 1u8 = 0u8 in a corpus compiled from a v0 document: a lane wraps as usual",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "12"
+      },
+      "id": "v2-arith/nat-add-exact",
+      "lhs": "5",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "7",
+      "summary": "Nat 5 + 7 is exact and has type Int",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "36893488147419103230"
+      },
+      "id": "v2-arith/nat-add-large",
+      "lhs": "18446744073709551615",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "18446744073709551615",
+      "summary": "two Nat maxima add exactly",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "42"
+      },
+      "id": "v2-arith/nat-mul-small",
+      "lhs": "6",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "7",
+      "summary": "Nat 6 * 7",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "100000000000000000000000000000000000000"
+      },
+      "id": "v2-arith/nat-mul-below-window",
+      "lhs": "10000000000000000000",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "10000000000000000000",
+      "summary": "10^19 * 10^19 = 10^38 is inside the window",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "-2"
+      },
+      "id": "v2-arith/nat-sub-is-int",
+      "lhs": "3",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "5",
+      "summary": "Nat 3 - 5 = -2 has type Int",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "0"
+      },
+      "id": "v2-arith/nat-sub-zero",
+      "lhs": "5",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "5",
+      "summary": "Nat 5 - 5 = 0 is still an Int",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "5"
+      },
+      "id": "v2-arith/nat-sub-positive",
+      "lhs": "9",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "4",
+      "summary": "Nat 9 - 4 = 5 is an Int",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "-18446744073709551615"
+      },
+      "id": "v2-arith/nat-sub-large-negative",
+      "lhs": "0",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "18446744073709551615",
+      "summary": "Nat 0 - (2^64-1)",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "-5"
+      },
+      "id": "v2-arith/nat-neg",
+      "lhs": "5",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "negating a Nat gives an Int",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "0"
+      },
+      "id": "v2-arith/nat-neg-zero",
+      "lhs": "0",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "negating Nat 0",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "error": "ir-overflow"
+      },
+      "id": "v2-arith/nat-bound-generation-error",
+      "lhs": "18446744073709551615",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "18446744073709551615",
+      "summary": "(2^64-1) * (2^64-1) leaves the 2^127 window",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "36893488147419103230"
+      },
+      "id": "v2-arith/nat-mul-max-by-two",
+      "lhs": "18446744073709551615",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "2",
+      "summary": "(2^64-1) * 2 stays inside the window",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "-7"
+      },
+      "id": "v2-arith/int-add-negative",
+      "lhs": "-3",
+      "op": "add",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "-4",
+      "summary": "Int -3 + -4",
+      "type": "Int"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "1"
+      },
+      "id": "v2-arith/int-sub-negative",
+      "lhs": "-3",
+      "op": "sub",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "-4",
+      "summary": "Int -3 - -4",
+      "type": "Int"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "-42"
+      },
+      "id": "v2-arith/int-mul-negative",
+      "lhs": "-6",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "7",
+      "summary": "Int -6 * 7",
+      "type": "Int"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "5"
+      },
+      "id": "v2-arith/int-neg-negative",
+      "lhs": "-5",
+      "op": "neg",
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "negating Int -5",
+      "type": "Int"
+    },
+    {
+      "expect": {
+        "error": "ir-overflow"
+      },
+      "id": "v2-arith/int-mul-overflow",
+      "lhs": "99999999999999999999",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "99999999999999999999",
+      "summary": "(10^20-1)^2 is about 10^40, past the window",
+      "type": "Int"
+    },
+    {
+      "expect": {
+        "type": "Int",
+        "value": "100000000000000000000000000000000000000"
+      },
+      "id": "v2-arith/int-mul-below-window",
+      "lhs": "10000000000000000000",
+      "op": "mul",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "10000000000000000000",
+      "summary": "10^19 * 10^19 as Int",
+      "type": "Int"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/i8-lt-minus-one-one",
+      "lhs": "-1",
+      "op": "lt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "I8 -1 < 1 (a bit-pattern compare would say 255 < 1)",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/i8-gt-one-minus-one",
+      "lhs": "1",
+      "op": "gt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "-1",
+      "summary": "I8 1 > -1",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/i8-le-minus-one-one",
+      "lhs": "-1",
+      "op": "le",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "I8 -1 <= 1",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-arith/i8-ge-minus-one-one",
+      "lhs": "-1",
+      "op": "ge",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "I8 -1 >= 1 is false",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/i8-lt-min-max",
+      "lhs": "-128",
+      "op": "lt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "127",
+      "summary": "I8 -128 < 127",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-arith/i8-gt-min-max",
+      "lhs": "-128",
+      "op": "gt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "127",
+      "summary": "I8 -128 > 127 is false",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/i8-eq-min-min",
+      "lhs": "-128",
+      "op": "eq",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "-128",
+      "summary": "I8 -128 == -128",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/i8-ne-min-max",
+      "lhs": "-128",
+      "op": "ne",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "127",
+      "summary": "I8 -128 != 127",
+      "type": "I8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/i16-lt-min-zero",
+      "lhs": "-32768",
+      "op": "lt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "0",
+      "summary": "I16 minimum < 0",
+      "type": "I16"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/i32-gt-zero-min",
+      "lhs": "0",
+      "op": "gt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "-2147483648",
+      "summary": "I32 0 > minimum",
+      "type": "I32"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/i64-lt-min-max",
+      "lhs": "-9223372036854775808",
+      "op": "lt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "9223372036854775807",
+      "summary": "I64 minimum < maximum",
+      "type": "I64"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/i64-ge-max-min",
+      "lhs": "9223372036854775807",
+      "op": "ge",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "-9223372036854775808",
+      "summary": "I64 maximum >= minimum",
+      "type": "I64"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-arith/u8-lt-255-1",
+      "lhs": "255",
+      "op": "lt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "U8 255 < 1 is false",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/u8-gt-255-1",
+      "lhs": "255",
+      "op": "gt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "U8 255 > 1",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/u8-eq-same",
+      "lhs": "7",
+      "op": "eq",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "7",
+      "summary": "U8 7 == 7",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-arith/u8-ne-same",
+      "lhs": "7",
+      "op": "ne",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "7",
+      "summary": "U8 7 != 7 is false",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/u8-le-equal",
+      "lhs": "7",
+      "op": "le",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "7",
+      "summary": "U8 7 <= 7",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/u8-ge-equal",
+      "lhs": "7",
+      "op": "ge",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "7",
+      "summary": "U8 7 >= 7",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/u16-lt-small-large",
+      "lhs": "2",
+      "op": "lt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "65535",
+      "summary": "U16 2 < 65535",
+      "type": "U16"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/u32-gt-max-zero",
+      "lhs": "4294967295",
+      "op": "gt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "0",
+      "summary": "U32 maximum > 0",
+      "type": "U32"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": false
+      },
+      "id": "v2-arith/u64-lt-max-zero",
+      "lhs": "18446744073709551615",
+      "op": "lt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "0",
+      "summary": "U64 maximum < 0 is false",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/u64-gt-max-zero",
+      "lhs": "18446744073709551615",
+      "op": "gt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "0",
+      "summary": "U64 maximum > 0",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/u64-eq-max-max",
+      "lhs": "18446744073709551615",
+      "op": "eq",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "18446744073709551615",
+      "summary": "U64 maximum == maximum",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/nat-lt-small",
+      "lhs": "2",
+      "op": "lt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "3",
+      "summary": "Nat 2 < 3",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/nat-ge-max-zero",
+      "lhs": "18446744073709551615",
+      "op": "ge",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "0",
+      "summary": "Nat maximum >= 0",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/nat-eq-max",
+      "lhs": "18446744073709551615",
+      "op": "eq",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "18446744073709551615",
+      "summary": "Nat maximum == maximum",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/nat-ne-zero-one",
+      "lhs": "0",
+      "op": "ne",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "1",
+      "summary": "Nat 0 != 1",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/int-lt-negative",
+      "lhs": "-5",
+      "op": "lt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "3",
+      "summary": "Int -5 < 3",
+      "type": "Int"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/int-gt-negative",
+      "lhs": "-5",
+      "op": "gt",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "-6",
+      "summary": "Int -5 > -6",
+      "type": "Int"
+    },
+    {
+      "expect": {
+        "type": "Bool",
+        "value": true
+      },
+      "id": "v2-arith/int-eq-negative",
+      "lhs": "-1",
+      "op": "eq",
+      "requires": [
+        "ir.core"
+      ],
+      "rhs": "-1",
+      "summary": "Int -1 == -1",
+      "type": "Int"
+    }
+  ],
+  "category": "v2-arith",
+  "schema": "warrant-corpus-conformance-v1"
+}

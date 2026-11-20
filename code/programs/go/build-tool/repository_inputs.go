@@ -416,7 +416,16 @@ var (
 		warrantScalarFaultsFixture,
 	}...)
 	// warrantOracleRowPaths adds each adopter's fixture directory to the oracle's exact files.
-	warrantOracleRowPaths = append(append([]string{}, warrantOraclePaths...), warrantAdopterFixtures()...)
+	// warrantOracleConformanceScripts are the v1 conformance checker and its tests. The oracle's BUILD
+	// runs both (VER04r 16.13 R23, S5b), beside make_conformance.py --check against the conformance
+	// fixture directory, so an edit to any of them or to the fixture selects the oracle in addition to
+	// the three lane runners the fixture already selects.
+	warrantOracleConformanceScripts = []string{
+		"code/scripts/warrant_corpus_conformance.py",
+		"code/scripts/tests/test_warrant_corpus_conformance.py",
+	}
+	warrantOracleRowPaths = append(append(append([]string{}, warrantOraclePaths...), warrantAdopterFixtures()...),
+		append([]string{warrantConformanceFixture}, warrantOracleConformanceScripts...)...)
 	// warrantAssurancePaths are the shared Warrant lane artifacts the
 	// assurance report validates directly (see isWarrantAssuranceInput).
 	// The Kiln graph export reads them, so they must list every path the
@@ -1176,7 +1185,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "python/warrant-oracle",
 		language: "python",
-		inputs:   "the adopter Warrant specs, the v1 ct-compare corpus, and each adopter's bindings and committed v2 fixture the oracle gates (warrantAdopters)",
+		inputs:   "the adopter Warrant specs, the v1 ct-compare corpus, each adopter's bindings and committed v2 fixture the oracle gates (warrantAdopters), and the conformance fixture with the v1 checker and its tests its BUILD runs (S5b)",
 		matches:  isWarrantOracleInput,
 		paths:    warrantOracleRowPaths,
 	},
@@ -1315,15 +1324,22 @@ func warrantAdopterInputs() []string {
 
 // isWarrantOracleInput selects python/warrant-oracle when an adopter spec it
 // parses, the v1 corpus it gates, the Rust bindings its verify-v2 lines read, or
-// a file of a committed v2 fixture changes. Exact files, plus each fixture
-// directory by slash-delimited prefix (so ct-compare-warrant-v20 is not it).
+// a file of a committed v2 fixture changes, or (S5b) a file of the conformance
+// fixture, the v1 conformance checker or its test file. Exact files, plus each
+// fixture directory by slash-delimited prefix (so ct-compare-warrant-v20 and
+// warrant-corpus-conformance-v10 are not it).
 func isWarrantOracleInput(changed string) bool {
 	for _, path := range warrantOraclePaths {
 		if changed == path {
 			return true
 		}
 	}
-	return isWarrantCorpusV2Fixture(changed)
+	for _, path := range warrantOracleConformanceScripts {
+		if changed == path {
+			return true
+		}
+	}
+	return isWarrantCorpusV2Fixture(changed) || isWarrantConformanceInput(changed)
 }
 
 // isWarrantCorpusV2Fixture reports whether a changed path is a file of a

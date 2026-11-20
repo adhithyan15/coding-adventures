@@ -23,8 +23,44 @@
       "category": "label-digest",
       "path": "label-digest.json",
       "sha256": "eaffd7adb2162eaa6cf5abc7e462671b2a0bda12762266d427e90791eca8a9a5"
+    },
+    {
+      "cases": 128,
+      "category": "v2-value",
+      "path": "v2-value.json",
+      "sha256": "e580fbdb61f2661110c16e70a285e16884083674bce29524ec06f35e121b5803"
+    },
+    {
+      "cases": 129,
+      "category": "v2-arith",
+      "path": "v2-arith.json",
+      "sha256": "49664e2866be98c37f1d588c1a6b2a565baa6fdf8c8125236b89310b971653bd"
+    },
+    {
+      "cases": 221,
+      "category": "v2-ir",
+      "path": "v2-ir.json",
+      "sha256": "e650b800859511036208f51bd5388d7e54b679a1f88fb15d3615591c49d56705"
+    },
+    {
+      "cases": 154,
+      "category": "v2-domain",
+      "path": "v2-domain.json",
+      "sha256": "013449631a3ba3e1d819d86c0192257d7c45dd90b2b11ea52923f79c842ab2c6"
+    },
+    {
+      "cases": 66,
+      "category": "v2-chunk",
+      "path": "v2-chunk.json",
+      "sha256": "df4b09bec1ccb41164a69c74a64d21d5adbe824ec34d3235d94a65a37735e83d"
+    },
+    {
+      "cases": 36,
+      "category": "v2-fault",
+      "path": "v2-fault.json",
+      "sha256": "9686ceb638b79939e5547e08e8914f0d52c726ea23b03ccacf03baa2aa5530e0"
     }
   ],
   "schema": "warrant-corpus-conformance-v1",
-  "total_cases": 461
+  "total_cases": 1195
 }

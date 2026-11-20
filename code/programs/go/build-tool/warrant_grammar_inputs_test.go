@@ -340,21 +340,24 @@ func TestWarrantConformanceFixtureSelectsEveryRunnerPackage(t *testing.T) {
 		{Name: "typescript/ct-compare", Language: "typescript"},
 		{Name: "go/warrant-corpus", Language: "go"},
 		{Name: "go/ct-compare", Language: "go"},
+		{Name: "python/warrant-oracle", Language: "python"},
 	}
 	for _, input := range []string{
 		"code/specs/fixtures/warrant-corpus-conformance-v1/json.json",
 		"code/specs/fixtures/warrant-corpus-conformance-v1/index.json",
 		"code/specs/fixtures/warrant-corpus-conformance-v1/.gitattributes",
+		"code/specs/fixtures/warrant-corpus-conformance-v1/v2-chunk.json",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
-		want := map[string]bool{"python/warrant-corpus": true, "typescript/warrant-corpus": true, "go/warrant-corpus": true}
+		// S5b: the oracle's BUILD runs make_conformance.py --check against the fixture, so it is selected too.
+		want := map[string]bool{"python/warrant-corpus": true, "typescript/warrant-corpus": true, "go/warrant-corpus": true, "python/warrant-oracle": true}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s: got %v, err %v", input, got, err)
 		}
 		if _, err := repositoryInputConsumersForChange([]string{input}, packages[1:2], "python"); err == nil {
 			t.Fatalf("%s: a missing runner package must fail closed", input)
 		}
-		if _, err := repositoryInputConsumersForChange([]string{input}, packages[5:], "go"); err == nil {
+		if _, err := repositoryInputConsumersForChange([]string{input}, packages[5:6], "go"); err == nil {
 			t.Fatalf("%s: a missing Go runner package must fail closed", input)
 		}
 	}
@@ -362,6 +365,53 @@ func TestWarrantConformanceFixtureSelectsEveryRunnerPackage(t *testing.T) {
 		"code/specs/fixtures/warrant-corpus-conformance-v10/json.json",
 		"code/specs/fixtures/warrant-corpus-conformance-v1",
 		"docs/code/specs/fixtures/warrant-corpus-conformance-v1/json.json",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || len(got) != 0 {
+			t.Errorf("lookalike %s: got %v, err %v", input, got, err)
+		}
+	}
+}
+
+// VER04r S5b (R23): the oracle's BUILD runs make_conformance.py --check against the conformance fixture
+// directory, the v1 checker script and that script's tests, so an edit to any of them selects the oracle;
+// the script and its test select nothing else (the lane runners read only the fixture). A lookalike path
+// selects nothing.
+func TestWarrantConformanceKitInputsSelectTheOracle(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/warrant-corpus", Language: "python"},
+		{Name: "typescript/warrant-corpus", Language: "typescript"},
+		{Name: "go/warrant-corpus", Language: "go"},
+		{Name: "python/warrant-oracle", Language: "python"},
+	}
+	fixture := "code/specs/fixtures/warrant-corpus-conformance-v1/"
+	for _, input := range []string{fixture + "v2-value.json", fixture + "index.json", fixture + "README.md"} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		want := map[string]bool{"python/warrant-corpus": true, "typescript/warrant-corpus": true, "go/warrant-corpus": true, "python/warrant-oracle": true}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("%s: got %v, err %v; want the three runners and the oracle", input, got, err)
+		}
+	}
+	for _, input := range []string{
+		"code/scripts/warrant_corpus_conformance.py",
+		"code/scripts/tests/test_warrant_corpus_conformance.py",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, map[string]bool{"python/warrant-oracle": true}) {
+			t.Errorf("%s: got %v, err %v; want only the oracle", input, got, err)
+		}
+	}
+	for _, input := range []string{
+		"code/scripts/warrant_corpus_conformance.pyc",
+		"code/scripts/warrant_corpus_conformance.py.bak",
+		"code/scripts/tests/test_warrant_corpus_conformance.py~",
+		"code/scripts/tests/test_warrant_corpus_conformance_extra.py",
+		"code/scripts/warrant_corpus_conformance_v2.py",
+		"scripts/warrant_corpus_conformance.py",
+		"docs/code/scripts/warrant_corpus_conformance.py",
+		"code/specs/fixtures/warrant-corpus-conformance-v10/v2-value.json",
+		"code/specs/fixtures/warrant-corpus-conformance-v1",
+		"code/specs/fixtures/warrant-corpus-conformance-v2/v2-value.json",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
 		if err != nil || len(got) != 0 {

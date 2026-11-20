@@ -2,6 +2,13 @@ uv venv --quiet --clear
 uv pip install -e ".[dev]" --quiet
 .venv/bin/python -m ruff check src tests
 .venv/bin/python -m pytest tests/ -v --tb=short
+# CV2-S5b (VER04r 11, R23): the committed v2 conformance kit.  make_conformance.py --check rebuilds the six v2-*.json
+# files from the case tables and the oracle (it derives the 2**24 suite, about a minute, once) and requires the
+# committed bytes and the v2 rows of index.json to be identical.  The v1 checker indexes and structurally checks the
+# same files without importing the oracle, and its own tests are run here too: none of the three ran in CI before.
+.venv/bin/python tests/fixtures/conformance-v2/make_conformance.py --check --fixture ../../../specs/fixtures/warrant-corpus-conformance-v1
+.venv/bin/python ../../../scripts/warrant_corpus_conformance.py --fixture ../../../specs/fixtures/warrant-corpus-conformance-v1
+.venv/bin/python -m unittest discover -s ../../../scripts/tests -p test_warrant_corpus_conformance.py
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v1 --spec ../../../specs/ct-compare.warrant --corpus ../../../specs/fixtures/ct-compare-warrant-v1/corpus.json
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/synth-v2/corpus --warrant tests/fixtures/synth-v2/synth.warrant --profile tests/fixtures/synth-v2/corpus.profile --expect-generator warrant-corpus-gen@0.6.0
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/accept-blind-v2/corpus --warrant tests/fixtures/accept-blind-v2/blind.warrant --profile tests/fixtures/accept-blind-v2/corpus.profile
