@@ -259,8 +259,8 @@ def test_a_suite_that_admits_nothing_is_a_generation_error():
 
 
 def test_unsupported_suite_cannot_be_planned():
-    # ``ir.fixed`` is evaluated since S10c-1, so the suite of a level the oracle lacks is an
-    # ``ir.data`` one (a list literal)
+    # ``ir.fixed`` is evaluated since S10c-1, so the suite of a level the oracle lacks is one of the
+    # reserved ``ir.list`` (a list literal, refused at lowering since S11a)
     spec = lower_document(
         parse_source(
             b"warrant u v1\n  op f(a: U8) -> U8\n  claim c:\n    forall a: U8. f(a) == [a]\n"
@@ -268,7 +268,7 @@ def test_unsupported_suite_cannot_be_planned():
     )
     with pytest.raises(OracleError) as err:
         SuitePlan(spec, build_program(spec), spec.suites[0])
-    assert err.value.code == "level" and err.value.level == "ir.data"
+    assert err.value.code == "level" and err.value.level == "ir.list"
 
 
 def test_budget_demotion_and_refusal_flow_through_the_plan():
@@ -351,8 +351,11 @@ def test_composite_binders_enumerate_through_nth():
         b"\x64" + le32(2) + bytes([x]) + bytes([y]) for x, y in itertools.product((0, 1), repeat=2)
     )
     assert r.chunks[0].inputs == hashlib.sha256(plan.prefix + le32(0) + body).digest()
-    plan, _ = plan_for(src, "rec")
-    assert plan.run("full").cases == 4 * 4
+    # Slice S11a lowers records but does not evaluate them (section 16.14 R37: ``level ir.data`` at
+    # evaluation until S11c-1), so the planner refuses the suite that has a record binder.
+    with pytest.raises(OracleError) as err:
+        plan_for(src, "rec")
+    assert err.value.code == "level" and err.value.level == "ir.data"
 
 
 def test_suite_row_reports_demotions_labels_and_descriptors():

@@ -416,7 +416,9 @@ OTHER_REFUSALS = [
     (
         "a-projection-of-a-non-tuple",
         "  model m(t: Bool) -> Bool = t.0\n",
-        "level",
+        # S11a (VER04r 16.14 R39 (c)): `e.i` on a non-tuple is a typing error; it was the level `ir.data`
+        # while records could not be lowered.  The generator's `tuple_parity.rs` reads only the code class.
+        "type",
     ),
 ]
 

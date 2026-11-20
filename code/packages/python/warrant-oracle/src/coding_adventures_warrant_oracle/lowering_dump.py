@@ -17,7 +17,12 @@ a document is the oracle's *parity view*:
     (the sum of the worst-path costs of ``admit``, ``body`` and, for a ``reference`` suite,
     ``expected``, section 4.2 rule 6);
 ``examples``
-    each example's lowered ``body`` and its two sides.
+    each example's lowered ``body`` and its two sides;
+``types``
+    **only when the document declares a record or a variant** (slice S11a): each one's corpus ``types`` row
+    (section 2.2: ``{"kind": "record", "fields": [[name, type], ..]}``, ``{"kind": "variant", "ctors":
+    [[ctor, [type, ..]], ..]}``), so a document with none of them dumps byte for byte as it did before the
+    level existed.
 
 It is the same view the three ``*.oracle-lowering.json`` files of the generator's fixtures
 show for ``ir.core`` documents (``dump_oracle_lowering.py``), extended with ``requires`` and
@@ -36,12 +41,12 @@ from .corpus_v1 import build_program
 from .corpus_v2 import canonical
 from .errors import OracleError
 from .ir_eval import MAX_IR_COST
-from .lower import Spec, lower_document
+from .lower import Spec, lower_document, lowering_refusal
 from .parser import parse_source
 
 SCHEMA = "warrant-lowering-parity-v1"
-#: The levels a lowering dump can show: everything the lowerer lowers (S10a, S10t-1).
-LOWERED_LEVELS = frozenset([L.CORE, L.FIXED, L.TUPLE])
+#: The levels a lowering dump can show: everything the lowerer lowers (S10a, S10t-1, S11a).
+LOWERED_LEVELS = frozenset([L.CORE, L.FIXED, L.TUPLE, L.DATA])
 
 
 def _params(pairs: list) -> list:
@@ -50,12 +55,19 @@ def _params(pairs: list) -> list:
 
 def _refuse(kind: str, name: str, exc: OracleError | None) -> OracleError:
     why = f"{exc.code}: {exc.message}" if exc is not None else "needs a level this dump cannot show"
-    level = exc.level if exc is not None and exc.level is not None else L.DATA
-    return OracleError("level", f"{kind} `{name}` is beyond ir.tuple ({why})", level=level)
+    level = exc.level if exc is not None and exc.level is not None else L.LIST
+    return OracleError("level", f"{kind} `{name}` is beyond ir.data ({why})", level=level)
 
 
 def _check_lowered(spec: Spec) -> None:
-    """Refuse a document with any part the lowerer could not lower (fail closed)."""
+    """Refuse a document with any part the lowerer could not lower (fail closed).
+
+    The refusal is the one the lowerer *recorded*, first in declaration order (section 16.14 R35); the
+    evaluation refusal of a unit that lowered and needs ``ir.data`` is not one: the dump shows it.
+    """
+    first = lowering_refusal(spec)
+    if first is not None:
+        raise first
     for model in spec.models.values():
         if model.ir is None or not set(model.requires) <= LOWERED_LEVELS:
             raise _refuse("model", model.name, model.unsupported)
@@ -78,7 +90,7 @@ def view(spec_bytes: bytes, max_cost: int = MAX_IR_COST) -> dict:
     """The parity view of one document (see the module docstring)."""
     spec = lower_document(parse_source(spec_bytes))
     _check_lowered(spec)
-    prog = build_program(spec, max_cost=max_cost, analyze=True)
+    prog = build_program(spec, max_cost=max_cost, analyze=True, analyze_data=True)
     models = {}
     for name, m in spec.models.items():
         models[name] = {
@@ -123,7 +135,7 @@ def view(spec_bytes: bytes, max_cost: int = MAX_IR_COST) -> dict:
                 "result_type": str(x.result) if referenced else "",
             }
         )
-    return {
+    out = {
         "schema": SCHEMA,
         "module": spec.name,
         "document": spec.version,
@@ -134,6 +146,22 @@ def view(spec_bytes: bytes, max_cost: int = MAX_IR_COST) -> dict:
         "suites": suites,
         "examples": examples,
     }
+    if spec.records or spec.variants:
+        out["types"] = _types(spec)
+    return out
+
+
+def _types(spec: Spec) -> dict:
+    """The corpus ``types`` rows of the records and variants (section 2.2), in declaration order."""
+    rows: dict = {}
+    for name, fields in spec.records.items():
+        rows[name] = {"kind": "record", "fields": [[n, str(t)] for n, t in fields]}
+    for name, ctors in spec.variants.items():
+        rows[name] = {
+            "kind": "variant",
+            "ctors": [[c, [str(t) for _, t in fs]] for c, fs in ctors],
+        }
+    return rows
 
 
 def dump(spec_bytes: bytes, max_cost: int = MAX_IR_COST) -> bytes:

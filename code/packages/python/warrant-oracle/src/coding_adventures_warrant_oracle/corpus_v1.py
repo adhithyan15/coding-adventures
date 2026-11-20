@@ -89,7 +89,9 @@ def build_program(spec: Spec, *, analyze: bool = False, **kwargs) -> Program:
         for n, m in spec.models.items()
         if (m.ir is not None if analyze else m.unsupported is None)
     }
-    return Program(models, spec.ops, analyze=analyze, errors=dict(spec.errors), **kwargs)
+    return Program(
+        models, spec.ops, analyze=analyze, errors=dict(spec.errors), adts=spec.adts, **kwargs
+    )
 
 
 # -- v1 spellings ------------------------------------------------------------------------

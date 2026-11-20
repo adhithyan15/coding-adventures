@@ -170,10 +170,10 @@
     },
     {
       "generator_code": "",
-      "message": "projection needs ir.data",
+      "message": "a projection needs a tuple (e.i) or a record (e.name)",
       "name": "a-projection-of-a-non-tuple",
-      "oracle_code": "level",
-      "oracle_level": "ir.data",
+      "oracle_code": "type",
+      "oracle_level": "",
       "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(t: Bool) -> Bool = t.0\n"
     }
   ],

@@ -181,12 +181,16 @@ def test_gf256_evaluator_agrees_with_the_documented_examples():
         # fixed 55 + data 3 + tuple 2, arithmetic fixed 9 + data 45 + tuple 4).  S10c-1: ``ir.fixed``
         # is evaluated too, so only ``ir.data`` still blocks a suite (was wasm-leb128 fixed 24,
         # logic-gates fixed 57 + data 3, lzw fixed 17, arithmetic fixed 11 + data 45, x25519 fixed 2).
+        # S11a: ``ir.data`` is lowered, typed and costed but not evaluated, so a suite that needs it is
+        # still counted under ``ir.data`` here (arithmetic 55: the 45 that used to be refused at lowering
+        # plus the 10 that only counted a record type in their ``requires``).  What changed is that none
+        # is *refused at lowering* any more (``suites_refused_at_lowering``).
         # This is the parse-and-lower census (``census``): enumerating these adopters is far too
         # heavy for a unit test (wasm-leb128 is 46 million cases), see ``test_fixed_lzw``.
         ("wasm-leb128", {}),
         ("logic-gates", {"ir.data": 3}),
         ("lzw", {}),
-        ("arithmetic", {"ir.data": 45}),
+        ("arithmetic", {"ir.data": 55}),
         ("x25519", {}),
     ],
 )
@@ -195,6 +199,9 @@ def test_later_adopters_report_not_live_by_level(name, levels):
     blocked = {k: v for k, v in c["suites_by_level"].items() if k != "ir.core"}
     assert blocked == levels
     assert sum(c["suites_by_level"].values()) == c["suites"]
+    # S11a (section 16.14 acceptance): every suite of these adopters lowers whole
+    assert c["suites_lowered"] == c["suites"] and c["suites_refused_at_lowering"] == {}
+    assert c["models_refused_at_lowering"] == 0 and c["examples_refused_at_lowering"] == 0
 
 
 def test_emit_can_select_suites_and_depth(tmp_path):
@@ -234,8 +241,10 @@ def test_census_counts_levels():
     c = census(lower_document(parse_source(adopter_bytes("arithmetic"))))
     assert (
         c["suites"] == 63
-        and c["suites_by_level"] == {"ir.core": 18, "ir.data": 45}
+        and c["suites_by_level"] == {"ir.core": 8, "ir.data": 55}
+        and c["suites_lowered"] == 63
         and c["models_not_ir_core"] == 19
+        and c["models_refused_at_lowering"] == 0
     )
 
 

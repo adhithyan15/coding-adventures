@@ -19,40 +19,61 @@ Feature levels (VER04r section 4.1)
 -----------------------------------
 The oracle *evaluates* ``ir.core``, ``ir.tuple`` (slice S10t-1) and ``ir.fixed`` (slice S10c-1); since
 slice S10a it *lowers and types* the 35 built-ins of ``ir.fixed`` (Appendix A.1) and, since slice S10c-1,
-:mod:`.ir_eval` evaluates them too, so a model, op admit, claim or example that uses one of those
-is lowered completely (its IR, its ``requires`` and its cost) and is evaluable like any other.  In a
-v0 document the built-ins keep the ``ir.fixed`` ``level`` refusal (VER04j 1.2: the names are
-version scoped).
+:mod:`.ir_eval` evaluates them too.  In a v0 document the built-ins keep the ``ir.fixed`` ``level``
+refusal (VER04j 1.2: the names are version scoped).
 
 ``ir.tuple`` (slice S10t-1)
 ---------------------------
 Tuple types ``(T1,..,Tn)``, the tuple literal, ``t.i`` / ``e.i`` projection and ``match`` on a
 ``Result`` (the six patterns ``ok err err_any tuple bind wild``) are lowered to
 ``["tuple", [..]]``, ``["project", e, i]`` and ``["match", s, [[pat, arm], ..]]`` (Appendix A.1) and
-evaluated.  A ``match`` is ``ir.tuple`` exactly when its scrutinee is a ``Result`` and ``ir.data``
-otherwise (section 4.1, D35).  The patterns are checked **before** any arm body is lowered, so the
-corpus errors of A.1 (fall-through, an unreachable arm, a duplicate or shadowing ``bind``, oracle
-code ``corpus``) cannot be hidden by a body that is only recorded as a level error.
+evaluated.  The patterns are checked **before** any arm body is lowered, so the corpus errors of A.1
+(fall-through, an unreachable arm, a duplicate or shadowing ``bind``, oracle code ``corpus``) cannot be
+hidden by a body that is only recorded as a level error.
 
-Every other source construct that belongs to a level the lowerer cannot lower (``ir.data`` lists,
-records, variants and ``Option`` anywhere but the intermediate use of ``ir.fixed``, ``match`` on
-anything but a ``Result``, ``ir.seq`` ...) raises ``OracleError("level", ..., level=...)``.  The
-error is *recorded per model and per suite* rather than aborting the document, so the oracle can still
-check every suite whose closure is within what it evaluates and report, by name, the suites it
-cannot.  A construct is never skipped.
+``ir.data`` (slice S11a, VER04r section 16.14 [D46] to [D48], Appendix A.2)
+---------------------------------------------------------------------------
+Records, variants and ``Option<T>`` are real types; the four tags ``["some", e]``, ``["none", "T"]``,
+``["ctor", "Name", [e..]]`` and ``["field", e, i]`` are lowered, typed and costed; ``match`` is lowered on
+**any** scrutinee with the data patterns ``some none ctor bool`` joining the six of A.1.  What the oracle
+does *not* do yet is evaluate them: a unit that needs ``ir.data`` is lowered completely (its IR, its
+``requires``, its cost) and then marked ``unsupported`` with the *evaluation* refusal ``level ir.data``
+(:data:`EVAL_REFUSAL`), the pattern ``ir.fixed`` followed in S10a, until slice S11c-1 opens the gate.
+:attr:`LoweredModel.lowered` (and its siblings) tells a unit that *lowered* from one that was *refused*.
 
-``Option<T>`` is an IR-only intermediate (section 16.10 D23, R8)
-----------------------------------------------------------------
-Nine built-ins return an ``Option`` and ``unwrap_or`` is the **only** consumer, as its first
-operand and directly.  :meth:`_Lowerer.expr` therefore refuses (level ``ir.data``) an
-``Option``-typed expression unless the caller is that one operand, and refuses an ``Option``
-in a signature or binder.  ``div``/``rem`` on two ``Nat`` operands are typed ``Option<Int>``
-(R7, the grammar checker's rule).
+``ir.list``, ``ir.seq`` and the two feature names (section 16.14 R27, R28)
+--------------------------------------------------------------------------
+Everything else that has no level the oracle implements is **refused**, by name, and the refusal is
+recorded per unit (so a census can still report the units that do lower): ``ir.list`` for a list type
+anywhere, a list literal and the source built-ins ``slice to_list to_bytes replicate``; ``ir.seq`` for
+``fold map all any range count``; ``fixed-cast`` for the built-in ``fixed<N>(b)``; ``err-value`` for an
+``Err(e)`` arm that *uses* ``e``.  Feature names stand in the level position of the refusal exactly as
+``inout`` and ``ensures`` do.  A list type in a record, variant or alias declaration or in an op signature
+is a unit of its own (R35) with no row to record on, so it is raised, refusing the whole document.
+
+Refusal order (section 16.14 R35)
+---------------------------------
+(1) the declaration limits of section 2.2 come first (``limit``, :func:`_check_limits`); (2) within one unit
+a level or feature refusal is named in preference to a *type* error of the same unit, and of several the
+first in source order (:func:`_feature_scan`, a pre-order walk of the unit's source, consulted when the
+unit raises a ``type`` error); (3) within a ``match`` every pattern is checked before any arm body, in arm
+order, and inside a pattern outside in (an unknown constructor, a constructor or literal that does not fit,
+a wrong field count, *then* the duplicate-bind and shadowing rules); (4) unreachable arms before
+fall-through; (5) units in declaration order, so a raised error does not hide a refusal an *earlier* unit
+recorded (:func:`_raise_in_order`).  The oracle lowers models before operation refinements, so across those
+two kinds the order is the processing order (SPEC-QUESTION 1 of the S11a report).
+
+``Option<T>`` and the intermediate use (section 16.10 D23 as amended by [D48]; R29)
+-----------------------------------------------------------------------------------
+``Option`` may appear wherever a type may.  The **intermediate use** (a producer node of
+:data:`.levels.OPTION_PRODUCERS` that is directly the first operand of ``unwrap_or``) adds no ``ir.data``
+(:meth:`_Lowerer.expr`); ``div``/``rem`` on two ``Nat`` operands are typed ``Option<Int>`` (R7).
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from functools import cached_property
 
 from . import ast as A
 from . import levels as L
@@ -84,13 +105,27 @@ FIXED = {
 MAX_EXPR_DEPTH = 64
 _PRIMITIVES = frozenset({"Bool", "Int", "Nat", "Bytes", *FIXED})
 
-#: Source built-ins of ``ir.data`` that this lowerer does not lower (section 4.1).  The
-#: ``ir.fixed`` names are :data:`.levels.FIXED_TAGS`; the core ones (``len concat Ok Err``) are
-#: handled by the lowering itself.
-_LEVEL_DATA = frozenset(["Some", "None", "fixed", "slice", "to_list", "to_bytes", "replicate", "range"])
+#: The source built-ins assigned to the reserved ``ir.list`` by name, whatever their operand (section 16.14
+#: R28): the WX-D1 sequence built-ins of VER04k.
+_LEVEL_LIST = frozenset(["slice", "to_list", "to_bytes", "replicate"])
+#: The source built-ins of the reserved ``ir.seq`` (section 4.1; ``range`` is named there, R28).
+_LEVEL_SEQ = frozenset(["fold", "map", "all", "any", "count", "range"])
+#: The one built-in outside every level (R28): ``fixed<N>(b)``, refused with the feature name below.
+_FIXED_CAST = "fixed"
+#: The two feature names (section 4.1, [D55], R28), in the level position of a refusal.
+FIXED_CAST = "fixed-cast"
+ERR_VALUE = "err-value"
 _FIXED_MESSAGE = "fixed-width built-ins need ir.fixed"
-_OPTION_MESSAGE = "Option is an IR-only intermediate (its only consumer is unwrap_or)"
-_LEVEL_SEQ = frozenset(["fold", "map", "all", "any", "count"])
+
+#: The refusal every unit that needs ``ir.data`` carries *after it has lowered*: evaluation is slice
+#: S11c-1 (section 16.14 R37: "`level ir.data` at evaluation, the S10a/S10b pattern").
+EVAL_REFUSAL_MESSAGE = "ir.data is lowered, typed and costed but not evaluated yet (slice S11c-1)"
+
+
+def eval_refusal() -> OracleError:
+    """The evaluation refusal of a unit that lowered and needs ``ir.data`` (a fresh error each time)."""
+    return OracleError("level", EVAL_REFUSAL_MESSAGE, level=L.DATA)
+
 
 #: The names every document reserves (VER04 section 2; the checker's ``V0_BUILTINS``): the core
 #: types, the core built-ins and the four constructors.
@@ -104,7 +139,7 @@ _RESERVED_V0 = frozenset(
 #: ``ir.fixed`` built-ins, the ``ir.data`` and ``ir.seq`` sequence names, and ``take``/``drop``.
 #: Built from the tables above, so a built-in the lowerer learns is reserved with no second edit.
 _RESERVED_V1 = frozenset(
-    [*FIXED, *L.FIXED_TAGS, *_LEVEL_DATA, *_LEVEL_SEQ, "take", "drop"]
+    [*FIXED, *L.FIXED_TAGS, "Some", "None", "fixed", *_LEVEL_LIST, *_LEVEL_SEQ, "take", "drop"]
 ) | _RESERVED_V0
 
 
@@ -128,10 +163,17 @@ class LoweredModel:
     #: a level the lowerer cannot lower).  A model that needs ``ir.fixed`` *has* its IR and
     #: is still ``unsupported`` (evaluation refuses), so a dump can show what S10a lowers.
     ir: object | None = None
+    #: Why the unit cannot be *evaluated* (a lowering refusal, or after S11a the evaluation refusal of a
+    #: unit that lowered and needs ``ir.data``).  ``lowered`` says which of the two it is.
     unsupported: OracleError | None = None
     line: int = 0
     #: The sorted levels of the body and of its call closure (R9); ``()`` when not lowered.
     requires: tuple = ()
+
+    @property
+    def lowered(self) -> bool:
+        """Did the model lower (its IR exists), whether or not it can be evaluated?"""
+        return self.ir is not None
 
 
 @dataclass
@@ -147,6 +189,9 @@ class OpSig:
     unsupported: OracleError | None = None
     #: The levels the op's ``admit`` needs (R9); ``ir.core`` at least (section 6).
     requires: tuple = ("ir.core",)
+    line: int = 0
+    #: False when a *lowering* refusal (not the evaluation refusal of ``ir.data``) was recorded.
+    lowered: bool = True
 
     def corpus_row_v2(self) -> dict:
         """The ``ops.<name>`` row of a v2 corpus (VER04r section 6)."""
@@ -184,6 +229,9 @@ class LoweredSuite:
     #: A lowering-time ``W0701`` (VER04r 4.3, 4.4): a subject call under an impure guard, or a
     #: claim that calls no operation.  ``None`` for a claim the generator's lowering accepts.
     refusal: OracleError | None = None
+    #: Did the claim lower?  False when a *lowering* refusal was recorded in ``unsupported``; true for a
+    #: claim that lowered, whether or not the oracle can evaluate it (``ir.data``, slice S11a).
+    lowered: bool = True
 
 
 @dataclass
@@ -196,6 +244,8 @@ class LoweredExample:
     unsupported: OracleError | None = None
     line: int = 0
     requires: tuple = ()
+    #: False when a *lowering* refusal was recorded (see :attr:`LoweredSuite.lowered`).
+    lowered: bool = True
 
 
 class Spec:
@@ -216,35 +266,142 @@ class Spec:
         self.input_rejects: list = []
         self.ensures: dict[str, tuple] = {}
         self.model_names: set[str] = set()
+        #: Constructor name -> (type name, index): a record's one constructor is named like the record
+        #: and a variant's are its own (one namespace, VER04j 4.2).  Filled by :func:`_declare`.
+        self.ctors: dict[str, tuple[str, int]] = {}
+        #: Reserved levels named in a type declaration or an operation signature, ``(line, error)``: these
+        #: units have no row to be recorded on, so :func:`lower_document` raises the earliest one *unless a
+        #: unit declared before it recorded a refusal* (section 16.14 R35 (5)).
+        self.declaration_refusals: list[tuple[int, OracleError]] = []
+
+    @cached_property
+    def adts(self) -> dict[str, tuple]:
+        """Every record and variant as ``name -> ((constructor, (field type, ..)), ..)`` (patterns need it).
+
+        Computed once, on first use, which is after :func:`_declare` has resolved every declaration: nothing
+        reads it while the declarations are still being resolved.
+        """
+        out: dict[str, tuple] = {}
+        for name, fields in self.records.items():
+            out[name] = ((name, tuple(t for _, t in fields)),)
+        for name, ctors in self.variants.items():
+            out[name] = tuple((c, tuple(t for _, t in fs)) for c, fs in ctors)
+        return out
+
+    @cached_property
+    def _pattern_types(self) -> P.Types:
+        return P.Types(self.errors, self.adts)
+
+    def pattern_types(self) -> P.Types:
+        """The declared types a pattern is checked against (:class:`.patterns.Types`)."""
+        return self._pattern_types
 
 
 # -- the checker/lowerer ---------------------------------------------------------
 
 
 def lower_document(doc: A.Document) -> Spec:
-    """Check ``doc`` and lower every model, claim and example."""
+    """Check ``doc`` and lower every model, claim and example.
+
+    The declaration limits of section 2.2 come first (R35 (1)); then the declarations (types, operation
+    signatures); then every model, every operation refinement, every claim and example.  A ``level``
+    refusal of a unit is *recorded* on it (the census and the dumps read it); every other error is
+    raised, but never over a refusal an earlier-declared unit already holds (:func:`_in_order`).  A reserved
+    level named in a type declaration or a signature has no row to be recorded on and refuses the whole
+    document: it is raised at the end, unless an earlier unit recorded a refusal (R35 (5)).
+    """
     spec = Spec(doc)
+    _check_limits(doc)
     _declare(spec)
     low = _Lowerer(spec)
     for decl in doc.decls:
         if isinstance(decl, A.ModelDecl):
-            low.lower_model(decl)
+            _in_order(spec, decl.line, low.lower_model, decl)
     for op in spec.ops.values():
-        low.lower_op_admit(op)
+        _in_order(spec, op.line, low.lower_op_admit, op)
     for decl in doc.decls:
         if isinstance(decl, A.ClaimDecl):
-            spec.suites.append(low.lower_claim(decl))
+            spec.suites.append(_in_order(spec, decl.line, low.lower_claim, decl))
         elif isinstance(decl, A.ExampleDecl):
-            spec.examples.append(low.lower_example(decl))
+            spec.examples.append(_in_order(spec, decl.line, low.lower_example, decl))
         elif isinstance(decl, A.InputDecl):
             spec.input_rejects.append(decl)
         elif isinstance(decl, A.EnsuresDecl):
             spec.ensures[decl.op] = decl.rows
+    if spec.declaration_refusals:
+        raise _earliest(spec, None)
     return spec
 
 
+def _refusals(spec: Spec) -> list[tuple[int, OracleError]]:
+    """Every refusal held so far, ``(line, error)``: the recorded ones of lowered-away units, then the declarations'."""
+    found: list[tuple[int, OracleError]] = []
+    for model in spec.models.values():
+        if not model.lowered and model.unsupported is not None:
+            found.append((model.line, model.unsupported))
+    for op in spec.ops.values():
+        if not op.lowered and op.unsupported is not None:
+            found.append((op.line, op.unsupported))
+    for unit in [*spec.suites, *spec.examples]:
+        if not unit.lowered and unit.unsupported is not None:
+            found.append((unit.line, unit.unsupported))
+    return [*found, *spec.declaration_refusals]
+
+
+def _earliest(spec: Spec, before: int | None) -> OracleError | None:
+    """The refusal of the earliest-declared unit, or ``None`` if none is declared before line ``before``."""
+    held = _refusals(spec)
+    if not held:
+        return None
+    line, exc = min(held, key=lambda pair: pair[0])
+    return exc if before is None or line < before else None
+
+
+def lowering_refusal(spec: Spec) -> OracleError | None:
+    """The first refusal a unit *recorded while lowering*, in declaration order, or ``None``.
+
+    A refusal is a ``level`` error (``ir.list``, ``ir.seq``, ``err-value``, ``fixed-cast``, ``ir.fixed``
+    in a v0 document ...): the unit did not lower.  The evaluation refusal of a unit that lowered and needs
+    ``ir.data`` is not one (:attr:`LoweredModel.lowered`).  Units are ordered by their source line, which
+    is declaration order (R35 (5)).
+    """
+    return _earliest(spec, None)
+
+
+def _in_order(spec: Spec, line: int, lower, *args):
+    """Run one unit's lowering; an error it raises yields to a refusal an earlier unit holds (R35 (5))."""
+    try:
+        return lower(*args)
+    except OracleError as exc:
+        if exc.code == "level":
+            raise
+        earlier = _earliest(spec, line)
+        if earlier is not None:
+            raise earlier from exc
+        raise
+
+
+def _check_limits(doc: A.Document) -> None:
+    """The declaration limits of section 2.2 rule 3 (the corpus limits, R34), in declaration order.
+
+    An error type has 1 to 64 cases, a record 1 to 32 fields, a variant at most 64 constructors and a
+    constructor at most 8 fields.  A document over one is refused whole with ``limit``, before any
+    expression is lowered; raising a limit is an erratum to section 2.2 (VER04j allows 256 and 32).
+    """
+    for d in doc.decls:
+        if isinstance(d, A.ErrorDecl) and len(d.cases) > 64:
+            raise OracleError("limit", "an error type has at most 64 cases")
+        if isinstance(d, A.RecordDecl) and len(d.fields) > 32:
+            raise OracleError("limit", "a record has at most 32 fields")
+        if isinstance(d, A.VariantDecl):
+            if len(d.ctors) > 64:
+                raise OracleError("limit", "a variant has at most 64 constructors")
+            if any(len(fields) > 8 for _name, fields in d.ctors):
+                raise OracleError("limit", "a constructor has at most 8 fields")
+
+
 def _declare(spec: Spec) -> None:
-    """First pass: names, uniqueness and signatures (no bodies yet)."""
+    """First pass: names, uniqueness, type declarations and signatures (no bodies yet)."""
     seen: set[str] = set()
 
     def claim_name(name: str) -> None:
@@ -261,10 +418,14 @@ def _declare(spec: Spec) -> None:
             spec.errors[d.name] = d.cases
         elif isinstance(d, A.RecordDecl):
             claim_name(d.name)
-            spec.records[d.name] = d.fields
+            spec.records[d.name] = d.fields  # resolved below, once every name is known
+            spec.ctors[d.name] = (d.name, 0)
         elif isinstance(d, A.VariantDecl):
             claim_name(d.name)
             spec.variants[d.name] = d.ctors
+            for index, (ctor, _fields) in enumerate(d.ctors):
+                claim_name(ctor)  # constructors share the one namespace (VER04j 4.2)
+                spec.ctors[ctor] = (d.name, index)
         elif isinstance(d, A.AliasDecl):
             claim_name(d.name)
             spec.aliases[d.name] = d.ty
@@ -277,11 +438,22 @@ def _declare(spec: Spec) -> None:
             if d.name in test_names:
                 raise OracleError("type", "an example or claim name is declared twice")
             test_names.add(d.name)
+    # Type declarations, in declaration order: each is a unit (R35 (5)), so a reserved level named in it
+    # is raised (it has no row to be recorded on) in preference to a type error of the same unit.
+    for d in spec.doc.decls:
+        if isinstance(d, (A.AliasDecl, A.RecordDecl, A.VariantDecl)):
+            _in_order(spec, d.line, _declare_type, spec, d)
+    _check_cycles(spec)
     for d in spec.doc.decls:
         if isinstance(d, A.OpDecl):
             params = []
             refinements = []
             pnames: set[str] = set()
+            low = _Lowerer(spec)
+            refused = low.scan_signature(d)
+            if refused is not None:
+                spec.declaration_refusals.append((d.line, refused))
+                continue
             for p in d.params:
                 if p.name in pnames:
                     raise OracleError("type", "duplicate parameter name")
@@ -296,7 +468,75 @@ def _declare(spec: Spec) -> None:
                 _resolve(spec, d.ret, set(d.statics)),
                 d.fresh,
                 refinements,
+                line=d.line,
             )
+
+
+def _declare_type(spec: Spec, d: A.AliasDecl | A.RecordDecl | A.VariantDecl) -> None:
+    """Resolve the types a type declaration names (a field, a constructor field, an alias target).
+
+    A list is the reserved ``ir.list`` and wins over any type error of the declaration (R35 (2)); a
+    record needs distinct field names; a variant has at least two constructors (a one-constructor sum is
+    a record, section 2.2 rule 3) and a constructor's fields are distinct.
+    """
+    refused = _Lowerer(spec).scan_type_decl(d)
+    if refused is not None:
+        spec.declaration_refusals.append((d.line, refused))
+        return
+    if isinstance(d, A.AliasDecl):
+        return  # resolved where it is used
+    if isinstance(d, A.RecordDecl):
+        if len({n for n, _ in d.fields}) != len(d.fields):
+            raise OracleError("type", "duplicate field name")
+        spec.records[d.name] = tuple((n, _resolve(spec, t)) for n, t in d.fields)
+        return
+    if len(d.ctors) < 2:
+        raise OracleError("type", "a variant has at least two constructors (a one-constructor sum is a record)")
+    resolved = []
+    for ctor, fields in d.ctors:
+        if len({n for n, _ in fields}) != len(fields):
+            raise OracleError("type", "duplicate field name")
+        resolved.append((ctor, tuple((n, _resolve(spec, t)) for n, t in fields)))
+    spec.variants[d.name] = tuple(resolved)
+
+
+def _check_cycles(spec: Spec) -> None:
+    """A record or variant may not contain itself, directly or through any chain (section 2.2 rule 1)."""
+    edges: dict[str, set[str]] = {}
+
+    def mentions(ty: A.Ty) -> set[str]:
+        out: set[str] = set()
+        stack = [ty]
+        while stack:
+            t = stack.pop()
+            if isinstance(t, A.Ty):
+                if t.head in spec.records or t.head in spec.variants:
+                    out.add(t.head)
+                stack.extend(t.args)
+        return out
+
+    for name, fields in spec.records.items():
+        edges[name] = set().union(*[mentions(t) for _, t in fields])
+    for name, ctors in spec.variants.items():
+        edges[name] = set().union(*[mentions(t) for _c, fs in ctors for _n, t in fs])
+    state: dict[str, int] = {}
+    for root in edges:
+        if state.get(root):
+            continue
+        stack = [(root, iter(sorted(edges[root])))]
+        state[root] = 1
+        while stack:
+            node, it = stack[-1]
+            for nxt in it:
+                if state.get(nxt) == 1:
+                    raise OracleError("type", "a record or variant contains itself")
+                if not state.get(nxt):
+                    state[nxt] = 1
+                    stack.append((nxt, iter(sorted(edges[nxt]))))
+                    break
+            else:
+                state[node] = 2
+                stack.pop()
 
 
 def _resolve(spec: Spec, ty: A.Ty, statics: set[str] | None = None, depth: int = 0) -> A.Ty:
@@ -380,6 +620,10 @@ def _needs_context(e) -> bool:
         return e.suffix is None
     if isinstance(e, A.Call) and len(e.name) == 1 and e.name[0] in ("Ok", "Err"):
         return True
+    if isinstance(e, A.Name) and e.parts == ("None",):
+        return True  # a typed none needs the type its context fixes (R39 (b))
+    if isinstance(e, A.Call) and e.name == ("Some",) and e.args is not None and len(e.args) == 1:
+        return _needs_context(e.args[0])
     if isinstance(e, A.Unary) and e.op == "neg":
         return _needs_context(e.operand)
     if isinstance(e, A.If):
@@ -419,6 +663,12 @@ class _Lowerer:
         #: Both feed the v0 guard, VER04r 3.3 rule 3 (:meth:`_v0_rule_3`).
         self._fixed_arith: dict = {}
         self._wrapping_models: set = set()
+        #: The levels of every ``match`` lowered so far, ``id(node) -> frozenset`` (the node is kept in
+        #: ``_match_nodes`` so its id is never reused): ``ir.tuple`` for a ``Result`` scrutinee,
+        #: ``ir.data`` for any other, and ``ir.data`` as well when a data pattern appears (A.2).  The IR
+        #: alone does not carry the scrutinee's type, so :meth:`seal` hands this to :func:`.levels.ir_levels`.
+        self._match_levels: dict = {}
+        self._match_nodes: list = []
 
     # -- helpers ---------------------------------------------------------------
 
@@ -432,29 +682,106 @@ class _Lowerer:
         """The ``requires`` of a fully lowered unit and its evaluation refusal.
 
         ``requires`` is :func:`.levels.ir_levels` over ``irs`` and the call closure of every
-        ``model_call`` (R9).  Since slice S10c-1 the oracle evaluates ``ir.core``, ``ir.tuple`` and
-        ``ir.fixed``, so a unit that lowered completely is never refused here: the second result
-        is always ``None`` and is kept so that every caller (and the generator's mirror of this
-        function) still has one place that could mark a unit ``unsupported`` for a level the
-        evaluator lacks.  A construct of ``ir.data`` or ``ir.seq`` never reaches this point: the
-        lowerer raises a ``level`` error for it.
+        ``model_call`` (R9), plus the levels of the types the unit met (:attr:`_type_levels`), plus the
+        levels of each ``match`` (:attr:`_match_levels`).  The second result is the **evaluation** refusal:
+        ``None`` for a unit the oracle evaluates (``ir.core``, ``ir.tuple``, ``ir.fixed``) and
+        :func:`eval_refusal` (``level ir.data``) for a unit that needs ``ir.data``, which is lowered and
+        costed (slice S11a) but not evaluated until slice S11c-1.
         """
         # ``ir.core`` is always in a row's requires (VER04r section 6: "at least").  The call
         # closure is read from each callee's own ``requires`` (already closed over its callees,
         # in declaration order) instead of walking it again for every unit.
-        found = {L.CORE, *L.ir_levels(list(irs), follow=False)}
+        found = {L.CORE, *L.ir_levels(list(irs), follow=False, match_levels=self._match_levels)}
         for tree in irs:
             for node in walk(tree):
                 if node[0] == "model_call":
                     found.update(self.spec.models[node[1]].requires)
         found |= self._type_levels
-        return tuple(sorted(found)), None
+        return tuple(sorted(found)), (eval_refusal() if L.DATA in found else None)
 
     def check_type(self, ty: A.Ty) -> None:
-        """A type of a signature or binder: refuse ``Option`` (D23), count a tuple (R9)."""
+        """A type of a signature or binder: a list is the reserved ``ir.list`` (R27), the rest is counted (R9)."""
         if L.type_refusal(ty) is not None:
-            raise self.level(L.DATA, _OPTION_MESSAGE)
+            raise self.level(L.LIST, "a list type needs the reserved ir.list level")
         self._type_levels |= L.type_levels(ty, self._data_names)
+
+    # -- refusal order (section 16.14 R35) -------------------------------------
+
+    def scan_type_decl(self, d) -> OracleError | None:
+        """The first reserved level named in a record, variant or alias declaration, or ``None``."""
+        return self._scan(d)
+
+    def scan_signature(self, d: A.OpDecl) -> OracleError | None:
+        """The first reserved level named in an operation's parameter and result types, or ``None``."""
+        for p in d.params:
+            found = self._scan(p.ty)
+            if found is not None:
+                return found
+        return self._scan(d.ret)
+
+    def _prefer_feature(self, exc: OracleError, unit) -> OracleError:
+        """R35 (2): a level or feature refusal in a unit is named in preference to a ``type`` error of it."""
+        if exc.code == "type":
+            found = self._scan(unit)
+            if found is not None:
+                return found
+        return exc
+
+    def _scan(self, node: object, errvars: frozenset = frozenset()) -> OracleError | None:
+        """The first reserved level or feature name in a unit's *source*, in pre-order (left to right).
+
+        Consulted when a unit raises a ``type`` error, and for type declarations and signatures, so that
+        ``ir.list``, ``ir.seq``, ``fixed-cast`` and ``err-value`` win over a type error of the same unit
+        (R35 (2)).  ``errvars`` are the names an enclosing ``Err(e)`` pattern bound: using one is the
+        error value of [D55].
+        """
+        spec = self.spec
+        if isinstance(node, A.Ty):
+            if node.head == "List":
+                return self.level(L.LIST, "a list type needs the reserved ir.list level")
+            return self._scan(node.args, errvars)
+        if isinstance(node, A.ListLit):
+            return self.level(L.LIST, "a list literal needs the reserved ir.list level")
+        if isinstance(node, A.Name):
+            if node.parts[0] in errvars:
+                return self.level(ERR_VALUE, "an error value bound by a pattern has no IR form")
+            return None
+        if isinstance(node, A.Call):
+            head = node.name[0]
+            if head in errvars:
+                return self.level(ERR_VALUE, "an error value bound by a pattern has no IR form")
+            user = head in spec.ops or head in spec.model_names or head in spec.ctors
+            if len(node.name) == 1 and not user:
+                if head in _LEVEL_LIST:
+                    return self.level(L.LIST, "a list built-in needs the reserved ir.list level")
+                if head in _LEVEL_SEQ:
+                    return self.level(L.SEQ, "sequence built-ins need the reserved ir.seq level")
+                if head == _FIXED_CAST:
+                    return self.level(FIXED_CAST, "fixed<N>(b) has no IR form")
+            return self._scan(node.args, errvars)
+        if isinstance(node, A.Match):
+            found = self._scan(node.scrutinee, errvars)
+            if found is not None:
+                return found
+            for pattern, body in node.arms:
+                found = self._scan(body, errvars | _err_binds(pattern))
+                if found is not None:
+                    return found
+            return None
+        if isinstance(node, A.Pattern):
+            return None
+        if isinstance(node, tuple | list):
+            for item in node:
+                found = self._scan(item, errvars)
+                if found is not None:
+                    return found
+            return None
+        if hasattr(node, "__slots__") and not isinstance(node, str):
+            for name in node.__slots__:
+                found = self._scan(getattr(node, name, None), errvars)
+                if found is not None:
+                    return found
+        return None
 
     # -- models ----------------------------------------------------------------
 
@@ -495,8 +822,9 @@ class _Lowerer:
                 self._wrapping_models.add(decl.name)
             model.requires, model.unsupported = self.seal(ir)
         except OracleError as exc:
+            exc = self._prefer_feature(exc, decl)
             if exc.code != "level":
-                raise
+                raise exc
             model.ir = None
             model.unsupported = exc
         spec.models[decl.name] = model
@@ -532,9 +860,11 @@ class _Lowerer:
                     raise self.err("a refinement must be Bool")
                 parts.append(ir)
         except OracleError as exc:
+            exc = self._prefer_feature(exc, tuple(r for _, r in op.refinements))
             if exc.code != "level":
-                raise
+                raise exc
             op.unsupported = exc
+            op.lowered = False
             return
         if parts:
             op.admit = parts[0]
@@ -544,6 +874,8 @@ class _Lowerer:
         else:
             # No admit, but the signature itself may need ir.tuple / ir.data (R9).
             op.requires = tuple(sorted({L.CORE, *self._type_levels}))
+            if L.DATA in op.requires:
+                op.unsupported = eval_refusal()
 
     # -- claims and examples -----------------------------------------------------
 
@@ -559,6 +891,7 @@ class _Lowerer:
         admit: object = ["lit", True]
         ir: object = ["lit", True]
         lowered = False
+        refused_at_lowering = False
         requires: tuple = ()
         try:
             if isinstance(body, A.Quant):
@@ -588,10 +921,12 @@ class _Lowerer:
             lowered = True
             requires, unsupported = self.seal(admit, ir)
         except OracleError as exc:
+            exc = self._prefer_feature(exc, decl)
             if exc.code != "level":
-                raise
+                raise exc
             unsupported = exc
             lowered = False
+            refused_at_lowering = True
         # VER04r 4.4 and 4.3, applied at lowering as the generator's lowering applies them: a
         # subject call under an impure guard, and a claim that calls no op, are W0701.  The claim
         # is still lowered (its IR is what a census and the dump show); the refusal is recorded
@@ -637,6 +972,7 @@ class _Lowerer:
             decl.line,
             requires,
             refusal,
+            not refused_at_lowering,
         )
 
     def _v0_rule_3(self, ir: object) -> None:
@@ -686,9 +1022,12 @@ class _Lowerer:
                 raise self.err("an example body must be Bool")
             requires, unsupported = self.seal(ir)
         except OracleError as exc:
+            exc = self._prefer_feature(exc, decl)
             if exc.code != "level":
-                raise
-            return LoweredExample(decl.name, ["lit", True], None, None, None, exc, decl.line)
+                raise exc
+            return LoweredExample(
+                decl.name, ["lit", True], None, None, None, exc, decl.line, (), False
+            )
         subject = expected = None
         result = None
         if ir[0] == "eq" and _has_subject(ir[1]) != _has_subject(ir[2]):
@@ -703,25 +1042,26 @@ class _Lowerer:
     # -- expressions -------------------------------------------------------------
 
     def expr(
-        self, e, expected: A.Ty | None, *, option_ok: bool = False
+        self, e, expected: A.Ty | None, *, intermediate: bool = False
     ) -> tuple[object, A.Ty]:
-        """Lower ``e``; ``expected`` types bare literals and ``Ok``/``Err``.
+        """Lower ``e``; ``expected`` types bare literals, ``Ok``/``Err``, ``Some`` payloads and ``None``.
 
         Nesting is capped at 64 (VER04 section 2: "64 nested expression nodes on any
         path"): a left-associative chain of 2,000 additions is a path of depth 2,000.
 
-        ``option_ok`` is true for exactly one caller: ``unwrap_or``, for its first operand
-        (section 16.10 D23, R8).  An ``Option``-typed result anywhere else is the level
-        ``ir.data``, so no node but ``unwrap_or`` ever receives an ``Option``.
+        ``intermediate`` is true for exactly one caller: ``unwrap_or``, for its first operand.  A node of
+        one of the nine producers there is the **intermediate use** of section 16.10 D23 as amended by
+        [D48]: its ``Option`` type adds no ``ir.data`` (section 16.14 R29 (b), (d)).  Every other
+        ``Option``-typed node, wherever it is, is typed like any other and brings ``ir.data`` by the
+        type rule (:func:`.levels.type_levels`).
         """
         self._nest += 1
         try:
             if self._nest > MAX_EXPR_DEPTH:
                 raise OracleError("limit", "an expression nests deeper than 64 nodes")
             ir, ty = self._expr(e, expected)
-            if ty.head == "Option" and not option_ok:
-                raise self.level(L.DATA, _OPTION_MESSAGE)
-            self._type_levels |= L.type_levels(ty, self._data_names)
+            if not (intermediate and ty.head == "Option" and ir[0] in L.OPTION_PRODUCERS):
+                self._type_levels |= L.type_levels(ty, self._data_names)
             return ir, ty
         except RecursionError as exc:
             raise OracleError("limit", "an expression nests too deeply") from exc
@@ -752,14 +1092,14 @@ class _Lowerer:
                 name = e.parts[0]
                 if name in self.scope:
                     return ["var", name], self.scope[name]
-                if name == "None" or name in spec.records or _is_ctor(spec, name):
-                    raise self.level("ir.data", "constructors need ir.data")
+                if name == "None":
+                    return self.none_literal(expected)
+                if name in spec.ctors:
+                    return self.constructor(name, None)
                 raise self.err("an unbound name")
             head = e.parts[0]
             if head in self.scope:
-                if self.scope[head].head == "()":
-                    return self.project(["var", head], self.scope[head], e.parts[1:])
-                raise self.level("ir.data", "projection needs ir.data")
+                return self.project(["var", head], self.scope[head], e.parts[1:])
             raise self.err("a qualified name is only valid inside Err(...)")
         if isinstance(e, A.Call):
             return self.call(e, expected)
@@ -789,13 +1129,9 @@ class _Lowerer:
             return self.tuple_literal(e, expected)
         if isinstance(e, A.Proj):
             base_ir, base_ty = self.expr(e.base, None)
-            if base_ty.head == "()":
-                return self.project(base_ir, base_ty, (e.field,))
-            if base_ty.head in spec.records or base_ty.head in spec.variants:
-                raise self.level(L.DATA, "projection needs ir.data")
-            raise self.err("a projection needs a tuple")
+            return self.project(base_ir, base_ty, (e.field,))
         if isinstance(e, A.ListLit):
-            raise self.level(L.DATA, "lists need ir.data")
+            raise self.level(L.LIST, "a list literal needs the reserved ir.list level")
         if isinstance(e, A.Match):
             return self.match(e, expected)
         if isinstance(e, A.Quant):
@@ -824,36 +1160,109 @@ class _Lowerer:
         return ["tuple", [ir for ir, _ in lowered]], A.Ty("()", tuple(ty for _, ty in lowered))
 
     def project(self, ir: object, ty: A.Ty, parts: tuple) -> tuple[object, A.Ty]:
-        """Chain ``["project", e, i]`` for each index in ``parts`` (``t.0.1``); ``i`` is a JSON integer."""
+        """Chain ``["project", e, i]`` (a tuple) and ``["field", e, i]`` (a record) for each name in ``parts``.
+
+        ``t.0.1`` is two ``project`` nodes, ``r.x`` one ``field`` node whose index is the position of
+        ``x`` among the record's declared fields (the name stays in ``types``, Appendix A.2); both
+        indices are JSON integers.  Projecting ``e.i`` on a value that is not a tuple, or ``e.name`` on a
+        value that is not a record (a variant is reached through ``match``), is a **type** error from
+        slice S11a (section 16.14 R39 (c)); it was the level ``ir.data`` before.
+        """
         for part in parts:
-            index = _tuple_index(part)
-            if ty.head != "()" or index is None or index >= len(ty.args):
-                raise self.err("a tuple projection is a component index of a tuple")
-            ir, ty = ["project", ir, index], ty.args[index]
+            if ty.head == "()":
+                index = _tuple_index(part)
+                if index is None or index >= len(ty.args):
+                    raise self.err("a tuple projection is a component index of a tuple")
+                ir, ty = ["project", ir, index], ty.args[index]
+            elif ty.head in self.spec.records:
+                fields = self.spec.records[ty.head]
+                names = [n for n, _ in fields]
+                if part not in names:
+                    raise self.err("a record has no field of that name")
+                index = names.index(part)
+                ir, ty = ["field", ir, index], fields[index][1]
+            else:
+                raise self.err("a projection needs a tuple (e.i) or a record (e.name)")
             self._type_levels |= L.type_levels(ty, self._data_names)
         return ir, ty
 
-    def match(self, e: A.Match, expected: A.Ty | None) -> tuple[object, A.Ty]:
-        """``match r with Ok(..) -> .. | Err(..) -> ..`` on a ``Result`` (A.1; ``ir.tuple``, D35).
+    # -- ir.data: Option, constructors, records (slice S11a, Appendix A.2) -------------------------
 
-        ``match`` is ``ir.tuple`` exactly when its scrutinee is a ``Result`` and ``ir.data`` for any
-        other type (section 4.1), so the scrutinee is typed first.  The patterns are lowered and the
-        corpus-error rules (fall-through, an unreachable arm, a duplicate or shadowing ``bind``) are
-        decided *before* any arm body is lowered, so such a document is refused even if a body would
-        have been recorded as a level error.  Arm bodies are typed with the pattern's binders in scope
-        (an arm that needs a context takes the first self-typed arm's type, as ``if`` does); the arms
-        must have one type.
+    def none_literal(self, expected: A.Ty | None) -> tuple[object, A.Ty]:
+        """``None`` -> ``["none", "T"]`` of type ``Option<T>``, ``T`` the payload type the context fixes.
+
+        A source ``None`` whose payload type its context does not fix (``None == None``,
+        ``match None with ..``) is a **type** error, never a guess (section 16.14 R39 (b)): the typed node
+        has nothing to write.  ``T`` is written as its canonical type name (section 2.1).
+        """
+        if expected is None or expected.head != "Option":
+            raise self.err("None needs an Option type from its context")
+        return ["none", str(expected.args[0])], expected
+
+    def some_literal(self, e: A.Call, expected: A.Ty | None) -> tuple[object, A.Ty]:
+        """``Some(e)`` -> ``["some", e]`` of type exactly ``Option<type(e)>`` (R39 (a)).
+
+        The payload is typed with the payload type of ``expected`` when that is an ``Option``, so a bare
+        literal in ``Some(1)`` takes the type its context asks for; the result is *not* lifted to the
+        expected type (``Option<Bytes<4>>`` is not ``Option<Bytes>`` and ``Option<Nat>`` is not
+        ``Option<Int>``: ``Option`` is a composite for the no-lifting rule of VER04j 4.4).
+        """
+        self.arity(e, 1)
+        inner = expected.args[0] if expected is not None and expected.head == "Option" else None
+        ir, ty = self.expr(e.args[0], inner)
+        return ["some", ir], A.Ty("Option", (ty,))
+
+    def constructor(self, name: str, args: tuple | None) -> tuple[object, A.Ty]:
+        """``Name(e1, .., en)`` and the bare name of a payload-free constructor -> ``["ctor", "Name", [..]]``.
+
+        ``Name`` is a record (whose one constructor is named like it) or a constructor of a variant; the
+        node has that type.  One operand per declared field, in order, each typed against its field and
+        accepted by the grammar checker's per-argument assignability (``Nat`` to ``Int`` and ``Bytes<N>``
+        to ``Bytes``, nothing through a composite).  A wrong operand count, a bare name with fields and
+        parentheses on a payload-free constructor are type errors (the checker's ``ArityMismatch`` and
+        ``NullaryWithParens``).
+        """
+        type_name, index = self.spec.ctors[name]
+        fields = self.spec.adts[type_name][index][1]
+        if args is None:
+            if fields:
+                raise self.err("a constructor with fields needs its arguments")
+            args = ()
+        elif not fields:
+            raise self.err("a payload-free constructor takes no parentheses")
+        if len(args) != len(fields):
+            raise self.err("wrong number of constructor arguments")
+        operands = []
+        for arg, field_ty in zip(args, fields):
+            ir, ty = self.expr(arg, field_ty)
+            if not self._flows(ir, ty, field_ty):
+                raise self.err("a constructor argument does not match its field type")
+            operands.append(ir)
+        return ["ctor", name, operands], A.Ty(type_name)
+
+    def match(self, e: A.Match, expected: A.Ty | None) -> tuple[object, A.Ty]:
+        """``match s with p1 -> e1 | ..`` on **any** scrutinee (Appendix A.1 and A.2).
+
+        ``match`` is ``ir.tuple`` exactly when its scrutinee is a ``Result`` and ``ir.data`` for any other
+        type, and ``ir.data`` as well whenever one of its patterns is a data pattern (section 4.1, [D35];
+        A.2): the levels are recorded per node (:attr:`_match_levels`) for :meth:`seal`.  The scrutinee is
+        typed first, then **every pattern is checked before any arm body is lowered** (R35 (3)): inside a
+        pattern the structure (an unknown constructor, a constructor or literal that does not fit the
+        scrutinee's type, a wrong field count) and only then the duplicate-bind and shadowing rules
+        (:meth:`_check_binds`); then the arm set (unreachable arms before fall-through, :func:`.patterns.check_arms`).
+        Arm bodies are typed with the pattern's binders in scope (an arm that needs a context takes the
+        first self-typed arm's type, as ``if`` does); the arms must have one type.
         """
         s_ir, s_ty = self.expr(e.scrutinee, None)
-        if s_ty.head != "Result":
-            raise self.level(L.DATA, "match needs ir.data")
+        env = self.spec.pattern_types()
         patterns: list = []
         bound: list = []
         for pattern, _ in e.arms:
             binds: list = []
-            patterns.append(self.pattern(pattern, s_ty, binds, set()))
+            patterns.append(self.pattern(pattern, s_ty, binds))
+            self._check_binds(binds)
             bound.append(binds)
-        P.check_arms(patterns, s_ty, self.spec.errors)
+        P.check_arms(patterns, s_ty, env)
         arms = e.arms
         bodies: list = [None] * len(arms)
         types: list = [None] * len(arms)
@@ -868,7 +1277,9 @@ class _Lowerer:
                     if ty is not None:
                         self.scope[name] = ty
                     elif _mentions(body, name):
-                        raise self.level(L.DATA, "an error value bound by a pattern has no IR form")
+                        raise self.level(
+                            ERR_VALUE, "an error value bound by a pattern has no IR form"
+                        )
                 bodies[i], types[i] = self.expr(body, hint)
             finally:
                 self.scope = saved
@@ -880,73 +1291,111 @@ class _Lowerer:
         if common is None:
             raise self.err("the arms of a match have no common type")
         node = ["match", s_ir, [[p, b] for p, b in zip(patterns, bodies)]]
+        levels = {L.TUPLE} if s_ty.head == "Result" else {L.DATA}
+        if any(L.has_data_pattern(p) for p in patterns):
+            levels.add(L.DATA)
+        self._match_levels[id(node)] = frozenset(levels)
+        self._match_nodes.append(node)
         return node, common
 
-    def pattern(
-        self, p: A.Pattern, ty: A.Ty, binds: list, seen: set, depth: int = 1
-    ) -> list:
-        """Lower one source pattern against the static type ``ty`` to its IR pattern (A.1).
+    def pattern(self, p: A.Pattern, ty: A.Ty, binds: list, depth: int = 1) -> list:
+        """Lower one source pattern against the static type ``ty`` to its IR pattern (A.1, A.2).
 
         ``Ok(p)`` is ``["ok", p]``; ``Err(E.CASE)`` is ``["err", "CASE"]``; ``Err(_)`` and ``Err(e)``
         are ``["err_any"]`` (an error value has no IR form, so ``e`` may not be *used*; it is still
         declared, for the duplicate and shadowing rules); a tuple pattern is ``["tuple", [..]]``; a
-        name is ``["bind", name]`` and ``_`` is ``["wild"]``.  A literal pattern (``true``) is not
-        one of the six and is the level ``ir.data``.
+        name is ``["bind", name]`` and ``_`` is ``["wild"]``; ``Some(p)`` is ``["some", p]``, ``None`` is
+        ``["none"]``, ``true``/``false`` are ``["bool", v]`` and ``Name(p1, ..)`` is ``["ctor", "Name",
+        [..]]`` for a record or variant constructor (the bare name of a payload-free constructor is
+        ``["ctor", "Name", []]``).  A name that is a declared constructor is *always* a constructor
+        pattern, never a binder (VER04j 4.3), so a bind "named like a constructor" cannot arise.
+
+        This checks the **structure** only and collects ``(name, type)`` for every binder in ``binds``;
+        the duplicate and shadowing rules run afterwards on the whole pattern (:meth:`_check_binds`).
         """
         if depth > P.MAX_PATTERN_DEPTH:
             raise OracleError("limit", "pattern nesting exceeds 8 levels")
+        spec = self.spec
         kind = p.kind
         if kind == "wild":
             return ["wild"]
         if kind == "bool":
-            raise self.level(L.DATA, "a literal pattern needs ir.data")
+            if ty != BOOL:
+                raise self.err("a Bool pattern needs a Bool")
+            return ["bool", p.value]
         if kind == "bind":
             name = p.name[0]
-            self._reject_constructor_name(name)
-            self._declare(name, ty, binds, seen)
+            if name == "None":
+                if ty.head != "Option":
+                    raise self.err("None needs an Option")
+                return ["none"]
+            if name in spec.ctors:
+                return self.ctor_pattern(name, (), ty, binds, depth)
+            if name in ("Ok", "Err"):
+                raise self.err("Ok and Err are constructors, not names")
+            binds.append((name, ty))
             return ["bind", name]
         if kind == "tuple":
             if ty.head != "()" or len(ty.args) != len(p.items):
                 raise self.err("a tuple pattern does not match the type of its value")
             return [
                 "tuple",
-                [self.pattern(item, t, binds, seen, depth + 1) for item, t in zip(p.items, ty.args)],
+                [self.pattern(item, t, binds, depth + 1) for item, t in zip(p.items, ty.args)],
             ]
         parts = p.name
         if parts == ("Ok",):
             if ty.head != "Result" or len(p.items) != 1:
                 raise self.err("Ok takes one pattern and needs a Result")
-            return ["ok", self.pattern(p.items[0], ty.args[0], binds, seen, depth + 1)]
+            return ["ok", self.pattern(p.items[0], ty.args[0], binds, depth + 1)]
         if parts == ("Err",):
             if ty.head != "Result" or len(p.items) != 1:
                 raise self.err("Err takes one pattern and needs a Result")
             inner = p.items[0]
             if inner.kind == "wild":
                 return ["err_any"]
-            if inner.kind == "bind":
-                self._reject_constructor_name(inner.name[0])
-                self._declare(inner.name[0], None, binds, seen)
+            if inner.kind == "bind" and inner.name[0] not in spec.ctors and inner.name[0] != "None":
+                if inner.name[0] in ("Ok", "Err"):
+                    raise self.err("Ok and Err are constructors, not names")
+                binds.append((inner.name[0], None))
                 return ["err_any"]
             if inner.kind == "ctor" and len(inner.name) == 2 and not inner.items:
                 err_name, case = inner.name
-                if err_name != ty.args[1].head or case not in self.spec.errors.get(err_name, ()):
+                if err_name != ty.args[1].head or case not in spec.errors.get(err_name, ()):
                     raise self.err("an error case of the wrong error type")
                 return ["err", case]
             raise self.err("an Err pattern is an error case, a name or _")
-        if len(parts) == 1 and (parts[0] in ("Some", "None") or _is_ctor(self.spec, parts[0])):
-            raise self.level(L.DATA, "constructor patterns need ir.data")
+        if parts == ("Some",):
+            if ty.head != "Option" or len(p.items) != 1:
+                raise self.err("Some takes one pattern and needs an Option")
+            return ["some", self.pattern(p.items[0], ty.args[0], binds, depth + 1)]
+        if len(parts) == 1 and parts[0] in spec.ctors:
+            return self.ctor_pattern(parts[0], p.items, ty, binds, depth)
         raise self.err("an unknown constructor in a pattern")
 
-    def _reject_constructor_name(self, name: str) -> None:
-        # A record's name is both its type and its one constructor (the checker keeps it in
-        # ``ctor_index``), so a bind spelling a record is refused like a variant constructor.
-        if name in ("Some", "None") or name in self.spec.records or _is_ctor(self.spec, name):
-            raise self.level(L.DATA, "constructor patterns need ir.data")
-        if name in ("Ok", "Err"):
-            raise self.err("Ok and Err are constructors, not names")
+    def ctor_pattern(
+        self, name: str, items: tuple, ty: A.Ty, binds: list, depth: int
+    ) -> list:
+        """``Name(p1, .., pn)`` against ``ty``: the type must be the one that declares ``Name`` and ``n`` its field count."""
+        type_name, index = self.spec.ctors[name]
+        if ty.head != type_name:
+            raise self.err("a constructor pattern does not match the type of its value")
+        fields = self.spec.adts[type_name][index][1]
+        if len(items) != len(fields):
+            raise self.err("a constructor pattern has the wrong number of fields")
+        return [
+            "ctor",
+            name,
+            [self.pattern(item, t, binds, depth + 1) for item, t in zip(items, fields)],
+        ]
 
-    def _declare(self, name: str, ty: A.Ty | None, binds: list, seen: set) -> None:
-        """Declare a pattern binder: a duplicate or a shadowing name is a corpus error (A.1, R2)."""
+    def _check_binds(self, binds: list) -> None:
+        """The binders of one pattern: a duplicate or a shadowing name is a corpus error (A.1, R2)."""
+        seen: set[str] = set()
+        for name, _ty in binds:
+            self._declare(name, seen)
+
+    def _declare(self, name: str, seen: set) -> None:
+        """Check one pattern binder name: a duplicate or a shadowing name is a corpus error (A.1, R2)."""
         if name in seen:
             raise OracleError("corpus", "the same bind name twice in one pattern")
         spec = self.spec
@@ -955,9 +1404,9 @@ class _Lowerer:
         # by what it is declared as, so a bind called ``take`` or ``rotl`` would let the two
         # tools disagree about what the name refers to inside the arm: the checker types ``take(..)``
         # as the built-in while an evaluator would call the bound value.  Refusing the bind keeps
-        # every name meaning one thing.  Constructors never reach here (see
-        # :meth:`_reject_constructor_name`).  Built-ins are version scoped: a v0 document may bind
-        # a name that only a v1 document reserves.
+        # every name meaning one thing.  A constructor never reaches here: a name that is a declared
+        # constructor is a constructor pattern (:meth:`pattern`).  Built-ins are version scoped: a v0
+        # document may bind a name that only a v1 document reserves.
         reserved = _RESERVED_V1 if spec.version == "v1" else _RESERVED_V0
         if (
             name in spec.model_names
@@ -974,7 +1423,6 @@ class _Lowerer:
                 "corpus", "a bind name shadows a binder, a parameter, result or an outer bind"
             )
         seen.add(name)
-        binds.append((name, ty))
 
     def int_literal(self, e: A.IntLit, expected: A.Ty | None) -> tuple[object, A.Ty]:
         if e.suffix is None:
@@ -1075,17 +1523,17 @@ class _Lowerer:
         if name == "len":
             self.arity(e, 1)
             ir, ty = self.expr(e.args[0], None)
-            if ty.head in ("List", "Option", "()") or ty.head in self.spec.records:
-                raise self.level("ir.data", "len of a non-Bytes sequence needs ir.data")
             if ty.head != "Bytes":
-                raise self.err("len needs a sequence")
+                # ``len`` of a list is the reserved ir.list, but a list type is refused where it is
+                # declared, so no list-typed operand exists here (section 16.14 R27).
+                raise self.err("len needs Bytes")
             return ["len", ir], NAT
         if name == "concat":
             self.arity(e, 2)
             a_ir, a_ty = self.expr(e.args[0], None)
             b_ir, b_ty = self.expr(e.args[1], None)
             if a_ty.head != "Bytes" or b_ty.head != "Bytes":
-                raise self.level("ir.data", "concat of lists needs ir.data")
+                raise self.err("concat needs Bytes")
             node = ["concat", a_ir, b_ir]
             wa, wb = self._static_width(a_ir, a_ty), self._static_width(b_ir, b_ty)
             if wa is not None and wb is not None:
@@ -1102,7 +1550,7 @@ class _Lowerer:
         if name in ("take", "drop") and e.args is not None and len(e.args) == 2:
             a_ir, a_ty = self.expr(e.args[0], None)
             if a_ty.head != "Bytes":
-                raise self.level("ir.data", "take/drop of lists needs ir.data")
+                raise self.err("take and drop need Bytes")
             n_ir, n_ty = self.expr(e.args[1], NAT)
             if n_ty.head not in ("Nat", "Int"):
                 raise self.err("a take/drop count is a Nat")
@@ -1130,12 +1578,18 @@ class _Lowerer:
             return ["err", case], expected
         if name in L.FIXED_TAGS:
             return self.fixed_call(name, e)
-        if name in _LEVEL_DATA or name in ("Some",):
-            raise self.level("ir.data", "Option and list built-ins need ir.data")
+        if name == "Some":
+            return self.some_literal(e, expected)
+        if name in spec.ctors:
+            if e.statics:
+                raise self.err("a constructor takes no static arguments")
+            return self.constructor(name, e.args)
+        if name in _LEVEL_LIST:
+            raise self.level(L.LIST, "a list built-in needs the reserved ir.list level")
         if name in _LEVEL_SEQ:
-            raise self.level("ir.seq", "sequence built-ins need the reserved ir.seq level")
-        if name in spec.records or _is_ctor(spec, name):
-            raise self.level("ir.data", "constructors need ir.data")
+            raise self.level(L.SEQ, "sequence built-ins need the reserved ir.seq level")
+        if name == _FIXED_CAST:
+            raise self.level(FIXED_CAST, "fixed<N>(b) has no IR form (outside every level)")
         raise self.err(f"unknown callable `{name}`")
 
     # -- the ir.fixed built-ins (Appendix A.1) ---------------------------------------
@@ -1241,20 +1695,17 @@ class _Lowerer:
             return [name, a_ir, b_ir], INT
         if name == "at":
             b_ir, b_ty = self.expr(args[0], None)
-            if b_ty.head == "List":
-                raise self.level(L.DATA, "at on a list needs ir.data")
             i_ir, i_ty = self.expr(args[1], NAT)
             if b_ty.head != "Bytes":
                 raise self.err("at needs Bytes")
             if i_ty.head not in ("Nat", "Int"):
                 raise self.err("an index is a Nat or an Int")
             return [name, b_ir, i_ir], A.Ty("Option", (A.Ty("U8"),))
-        # unwrap_or(o, d): the one consumer of an Option, as the first operand and directly.
-        o_ir, o_ty = self.expr(args[0], None, option_ok=True)
+        # unwrap_or(o, d): any ``Option``-typed first operand (section 16.14 R29 (e)); the one that is
+        # directly a producer node is the intermediate use and adds no ir.data (``expr``).
+        o_ir, o_ty = self.expr(args[0], None, intermediate=True)
         if o_ty.head != "Option":
             raise self.err("unwrap_or needs an Option")
-        if o_ir[0] not in L.OPTION_PRODUCERS:
-            raise self.level(L.DATA, "an Option reaches unwrap_or only straight from a built-in")
         inner = o_ty.args[0]
         d_ir, d_ty = self.expr(args[1], inner)
         if not _assignable(d_ty, inner):
@@ -1356,6 +1807,20 @@ class _Lowerer:
         return node, _substitute(op.ret, statics)
 
 
+def _err_binds(pattern: object) -> frozenset:
+    """The names an ``Err(e)`` pattern, at any depth of ``pattern``, binds to an error value."""
+    out: set[str] = set()
+    stack = [pattern]
+    while stack:
+        p = stack.pop()
+        if not isinstance(p, A.Pattern):
+            continue
+        if p.kind == "ctor" and p.name == ("Err",) and len(p.items) == 1 and p.items[0].kind == "bind":
+            out.add(p.items[0].name[0])
+        stack.extend(p.items)
+    return frozenset(out)
+
+
 def _tuple_index(text: str) -> int | None:
     """A projection index: canonical decimal digits (no sign, no leading zero), else ``None``."""
     if text.isascii() and text.isdigit() and (text == "0" or text[0] != "0"):
@@ -1402,10 +1867,6 @@ def _calls_op(spec: Spec, node: object) -> bool:
         elif hasattr(item, "__slots__") and not isinstance(item, str):
             stack.extend(getattr(item, f, None) for f in item.__slots__)
     return False
-
-
-def _is_ctor(spec: Spec, name: str) -> bool:
-    return any(name == c for ctors in spec.variants.values() for c, _ in ctors)
 
 
 def _substitute(ty: A.Ty, statics: dict) -> A.Ty:

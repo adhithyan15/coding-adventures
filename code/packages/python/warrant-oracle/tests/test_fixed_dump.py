@@ -152,10 +152,13 @@ def test_every_view_row_has_the_keys_the_generator_will_compare():
 
 def test_the_dump_refuses_a_document_it_cannot_show():
     base = "warrant d v1\n  op f(a: U8) -> U8\n"
+    # Slice S11a: ``Option`` and the data constructs lower and dump; what has no level the oracle
+    # implements is refused by its reserved name (section 16.14 R27, R28).
     for body, level in (
-        ("  model m(a: Int) -> Bool = div(a, a) == div(a, a)\n", "ir.data"),
-        ("  claim c:\n    forall a: U8. f(a) == [a]\n", "ir.data"),
-        ("  op g(a: U8) -> Option<U8>\n", "ir.data"),
+        ("  claim c:\n    forall a: U8. f(a) == [a]\n", "ir.list"),
+        ("  model m(a: U8) -> Bool = all(a)\n", "ir.seq"),
+        ("  model m(a: Bytes) -> Bool = fixed<4>(a) == None\n", "fixed-cast"),
+        ("  op g(a: List<U8>) -> U8\n", "ir.list"),
     ):
         with pytest.raises(OracleError) as err:
             dump((base + body).encode())
@@ -206,4 +209,4 @@ def test_dump_lowering_reports_a_document_beyond_ir_fixed(tmp_path, capsys):
     doc = tmp_path / "d.warrant"
     doc.write_text("warrant d v1\n  model m(a: U8) -> Bool = [a] == [a]\n")
     assert run(["dump-lowering", "--spec", str(doc), "--out", str(tmp_path / "o.json")]) == 2
-    assert "beyond ir.tuple" in capsys.readouterr().err
+    assert "ir.list" in capsys.readouterr().err

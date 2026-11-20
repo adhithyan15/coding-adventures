@@ -52,6 +52,16 @@ falls through, an arm no value can reach, the same ``bind`` twice in a pattern, 
 a binder, a parameter, ``result`` or an outer ``bind``) are ``corpus`` errors.  A ``match`` arm is a
 *guard* for call counting (section 4.4): a subject call in an arm needs a pure scrutinee.
 
+``ir.data`` (slice S11a)
+-----------------------
+With ``Program(..., analyze_data=True)`` (what the lowering dump uses) the four tags ``some none ctor field``
+and ``match`` on any scrutinee with the data patterns are **typed and costed** (Appendix A.2: ``some``,
+``ctor`` and ``field`` cost ``1 +`` their operands, ``none`` costs 1, ``match`` ``1 +`` the scrutinee
+``+`` the worst arm) and ``Option`` may be the type of any node; their closures *refuse* to run
+(``level ir.data``), because evaluating them is slice S11c-1.  Without ``analyze_data`` every data tag and
+every ``Option`` outside the intermediate use of ``ir.fixed`` is the level ``ir.data``, as before.  A list
+(``ir.list``, reserved) is refused in both modes.
+
 ``ir.fixed`` (slices S10a and S10c-1)
 -------------------------------------
 The 35 built-ins of Appendix A.1 are typed, costed (``1 +`` the operands) and **evaluated** on Python
@@ -81,6 +91,7 @@ from .errors import OracleError, SizeError
 from .irtree import children, is_node, match_arms
 from .lower import BOOL, BYTES, FIXED, INT, NAT, _substitute, _unify
 from .lower import _assignable as _strict_assignable
+from .typenames import parse_type_name
 
 MAX_IR_DEPTH = 64
 MAX_MODEL_DEPTH = 64
@@ -225,19 +236,21 @@ def decode_int_text(text: object, ty: str) -> int:
     return value
 
 
-def _no_option(c: Compiled, where: str) -> None:
-    """``Option<T>`` is an IR-only intermediate whose one consumer is ``unwrap_or`` (D23, R8)."""
-    if c.ty.head == "Option":
-        raise OracleError(
-            "level", f"an Option is not allowed as {where}; only unwrap_or consumes one", level=L.DATA
-        )
+def _has_option(ty: A.Ty) -> bool:
+    """Does ``ty`` mention ``Option`` anywhere?"""
+    stack = [ty]
+    while stack:
+        t = stack.pop()
+        if isinstance(t, A.Ty):
+            if t.head == "Option":
+                return True
+            stack.extend(t.args)
+    return False
 
 
-def _refuse_type(ty: A.Ty) -> None:
-    """A type of a binder, parameter, result or value must be allowed (D23, R9)."""
-    level = L.type_refusal(ty)
-    if level is not None:
-        raise OracleError("level", "a type that needs a higher level", level=level)
+def _unevaluated(*_args: object) -> object:
+    """The closure of an ``ir.data`` node in analysis mode: typing and cost only (slice S11c-1 evaluates)."""
+    raise OracleError("level", "ir.data is typed and costed here, not evaluated yet", level=L.DATA)
 
 
 def _inside(source: str, target: str) -> bool:
@@ -448,6 +461,8 @@ class Program:
         max_cost: int = MAX_IR_COST,
         analyze: bool = False,
         errors: dict | None = None,
+        adts: dict | None = None,
+        analyze_data: bool = False,
     ) -> None:
         self.models = models
         self.ops = ops
@@ -455,8 +470,15 @@ class Program:
         #: against it and the exhaustiveness check completes a ``Result`` with it.  An error type
         #: that is not listed is an open set (:mod:`.patterns`).
         self.errors = errors or {}
+        #: The declared records and variants, ``name -> ((constructor, (field type, ..)), ..)``
+        #: (:attr:`.lower.Spec.adts`), for ``ctor``, ``field`` and the constructor patterns.
+        self.types = P.Types(self.errors, adts)
         #: Kept for compatibility: since S10c-1 the ``ir.fixed`` built-ins are always evaluated.
         self.analyze = analyze
+        #: True for the lowering dump (slice S11a): ``ir.data`` is typed and costed but never evaluated, and
+        #: an ``Option`` may be the type of any node.  Off, every data tag and every ``Option`` outside the
+        #: intermediate use of ``ir.fixed`` is the level ``ir.data``, as it was before S11a.
+        self.analyze_data = analyze_data
         #: 2,000 unless the corpus profile declares more (never above 65,536).
         self.max_cost = max_cost
         self.stats = stats or Stats()
@@ -474,6 +496,25 @@ class Program:
         #: follow-up): the D19 pass and its cost both ask for the same row at every call site.
         self._admits: dict[tuple, Compiled] = {}
 
+    # -- the Option and type rules (D23 as amended by D48; R27) --------------------------------
+
+    def _no_option(self, c: Compiled, where: str) -> None:
+        """``Option<T>`` outside the intermediate use is ``ir.data``: refused unless ``ir.data`` is analysed."""
+        if c.ty.head == "Option" and not self.analyze_data:
+            raise OracleError(
+                "level",
+                f"an Option is not allowed as {where}; only unwrap_or consumes one",
+                level=L.DATA,
+            )
+
+    def _refuse_type(self, ty: A.Ty) -> None:
+        """A type of a binder, parameter, result or value must be allowed: a list is ``ir.list`` (R27)."""
+        level = L.type_refusal(ty)
+        if level is not None:
+            raise OracleError("level", "a type that needs a reserved level", level=level)
+        if not self.analyze_data and _has_option(ty):
+            raise OracleError("level", "a type that needs a higher level", level=L.DATA)
+
     # -- public ----------------------------------------------------------------
 
     def compile(self, ir: object, tenv: dict[str, A.Ty], allow_subject: bool = True) -> Compiled:
@@ -487,7 +528,7 @@ class Program:
             raise OracleError("limit", "IR nests too deeply") from exc
         finally:
             self._dstack.pop()
-        _no_option(c, "an expression")
+        self._no_option(c, "an expression")
         if c.cost > self.max_cost:
             raise OracleError("limit", "ir-cost: expression exceeds MAX_IR_COST")
         return c
@@ -534,9 +575,9 @@ class Program:
         if self._depth[name] > MAX_MODEL_DEPTH:
             raise OracleError("limit", "model calls nest deeper than 64 frames")
         for _, pty in m.params:
-            _refuse_type(pty)
-        _refuse_type(m.ret)
-        _no_option(body, "a model result")
+            self._refuse_type(pty)
+        self._refuse_type(m.ret)
+        self._no_option(body, "a model result")
         if not _assignable(body.ty, m.ret):
             raise OracleError("ir", "a model body does not have its declared type")
         if body.cost > self.max_cost:
@@ -564,7 +605,9 @@ class Program:
             if tag == "match":
                 return self._match(node, tenv, allow_subject, depth)
             if tag in _DATA_TAGS:
-                raise OracleError("level", "a tag of level ir.data", level="ir.data")
+                return self._data(node, tenv, allow_subject, depth)
+            if tag in L.LIST_TAGS:
+                raise OracleError("level", "a tag of the reserved level ir.list", level=L.LIST)
             if tag in _SEQ_TAGS:
                 raise OracleError("level", "a tag of level ir.seq", level="ir.seq")
             raise OracleError("ir", "an unknown IR tag")
@@ -574,7 +617,7 @@ class Program:
             if len(node) != 2 or not isinstance(node[1], str) or node[1] not in tenv:
                 raise OracleError("ir", "an unbound IR variable")
             name = node[1]
-            _refuse_type(tenv[name])
+            self._refuse_type(tenv[name])
             return Compiled(tenv[name], lambda env: env[name], 1, False)
         if tag == "subject_op":
             return self._subject(node, tenv, allow_subject, depth)
@@ -592,7 +635,7 @@ class Program:
             raise OracleError("ir", "a malformed IR node")
         kids = [sub(child) for child in node[1:]]
         for k in kids:
-            _no_option(k, f"an operand of {tag}")
+            self._no_option(k, f"an operand of {tag}")
         cost = 1 + sum(k.cost for k in kids)
         subj = any(k.subject for k in kids)
         return self._node(tag, kids, cost, subj)
@@ -643,11 +686,11 @@ class Program:
         elif op.statics:
             raise OracleError("ir", "a missing static width")
         for _, pty in op.params:
-            _refuse_type(pty)
-        _refuse_type(op.ret)
+            self._refuse_type(pty)
+        self._refuse_type(op.ret)
         kids = [self._compile(a, tenv, True, depth + 1) for a in node[2]]
         for k, (_, pty) in zip(kids, op.params):
-            _no_option(k, "an argument of a subject call")
+            self._no_option(k, "an argument of a subject call")
             if not _assignable(k.ty, _substitute(pty, statics)):
                 raise OracleError("ir", "a subject argument has the wrong type")
         ret = _substitute(op.ret, statics)
@@ -674,7 +717,7 @@ class Program:
             raise OracleError("ir", "a model call has the wrong arity")
         kids = [self._compile(a, tenv, allow, depth + 1) for a in node[2]]
         for k, (_, pty) in zip(kids, m.params):
-            _no_option(k, "an argument of a model call")
+            self._no_option(k, "an argument of a model call")
             if not _assignable(k.ty, pty):
                 raise OracleError("ir", "a model argument has the wrong type")
         if any(k.subject for k in kids) and not allow:
@@ -727,7 +770,7 @@ class Program:
             raise OracleError("ir", "a tuple has 2 to 8 components")
         kids = [self._compile(child, tenv, allow_subject, depth + 1) for child in operands]
         for k in kids:
-            _no_option(k, "a tuple component")
+            self._no_option(k, "a tuple component")
         fns = [k.fn for k in kids]
         return Compiled(
             A.Ty("()", tuple(k.ty for k in kids)),
@@ -741,7 +784,7 @@ class Program:
         if len(node) != 3 or type(node[2]) is not int or not isinstance(node[1], list):
             raise OracleError("ir", "a malformed project node")
         base = self._compile(node[1], tenv, allow_subject, depth + 1)
-        _no_option(base, "an operand of project")
+        self._no_option(base, "an operand of project")
         index = node[2]
         if base.ty.head != "()":
             raise OracleError("ir", "project needs a tuple")
@@ -755,6 +798,9 @@ class Program:
     ) -> tuple[Compiled, list]:
         """Type the scrutinee and patterns of a ``match``: ``(scrutinee, [(matcher, binders, body)])``.
 
+        On a ``Result`` with the six patterns of A.1 this is ``ir.tuple``; any other scrutinee, or a data
+        pattern, is ``ir.data``: refused unless the program analyses (typing and cost only, S11a).
+
         ``binders`` is the arm's ``{name: type}``; ``matcher(value, binds)`` fills ``binds`` and says
         whether the pattern matches.  This is everything about a ``match`` that does not compile an
         arm body, so the call-counting analyses (a ``match`` arm is a guard, section 4.4) can compile
@@ -762,16 +808,20 @@ class Program:
         """
         arms = match_arms(node)
         s = self._compile(node[1], tenv, allow_subject, depth + 1)
-        _no_option(s, "a match scrutinee")
-        if s.ty.head != "Result":
-            raise OracleError("level", "match on a scrutinee that is not a Result", level=L.DATA)
+        self._no_option(s, "a match scrutinee")
+        if not self.analyze_data and (
+            s.ty.head != "Result" or any(L.has_data_pattern(pattern) for pattern, _ in arms)
+        ):
+            raise OracleError(
+                "level", "match on a scrutinee that is not a Result, or with a data pattern", level=L.DATA
+            )
         if len(arms) > P.MAX_ARMS:
             raise OracleError("limit", "a match has more than 256 arms")
         out: list = []
         patterns: list = []
         for pattern, body in arms:
             binds: list = []
-            P.type_pattern(pattern, s.ty, self.errors, binds)
+            P.type_pattern(pattern, s.ty, self.types, binds)
             names = [n for n, _ in binds]
             if len(set(names)) != len(names):
                 raise OracleError("corpus", "the same bind name twice in one pattern")
@@ -782,8 +832,9 @@ class Program:
                         "a bind name shadows a binder, a parameter, result or an outer bind",
                     )
             patterns.append(pattern)
-            out.append((P.compile_pattern(pattern), dict(binds), body))
-        P.check_arms(patterns, s.ty, self.errors)
+            matcher = _unevaluated if L.has_data_pattern(pattern) else P.compile_pattern(pattern)
+            out.append((matcher, dict(binds), body))
+        P.check_arms(patterns, s.ty, self.types)
         return s, out
 
     def _match(self, node: list, tenv: dict, allow_subject: bool, depth: int) -> Compiled:
@@ -799,7 +850,7 @@ class Program:
         subject = s.subject
         for matcher, binders, body in arms:
             kid = self._compile(body, {**tenv, **binders}, allow_subject, depth + 1)
-            _no_option(kid, "a match arm")
+            self._no_option(kid, "a match arm")
             common = kid.ty if common is None else _common(common, kid.ty)
             if common is None:
                 raise OracleError("ir", "the arms of a match have no common type")
@@ -817,6 +868,99 @@ class Program:
             raise OracleError("ir", "a match fell through")  # pragma: no cover (exhaustive)
 
         return Compiled(common, run, 1 + s.cost + worst, subject)
+
+    # -- ir.data: some, none, ctor and field, typed and costed (slice S11a) ---------------------
+
+    def _data(self, node: list, tenv: dict, allow_subject: bool, depth: int) -> Compiled:
+        """Type and cost one of the four tags of Appendix A.2 (never evaluated before slice S11c-1).
+
+        ``["some", e]`` is ``Option<type(e)>`` and costs ``1 +`` the operand; ``["none", "T"]`` is
+        ``Option<T>``, ``T`` read back from its canonical name, and costs 1; ``["ctor", "Name", [e..]]`` is
+        the record or variant that declares ``Name``, one operand per declared field, each assignable to
+        its field, and costs ``1 +`` the operands; ``["field", e, i]`` is the declared type of field ``i``
+        of a record and costs ``1 +`` the operand.  A mismatch is an ``ir`` error (a corpus error).  Without
+        ``analyze_data`` the tag is the level ``ir.data``.
+        """
+        if not self.analyze_data:
+            raise OracleError("level", "a tag of level ir.data", level=L.DATA)
+        tag = node[0]
+        if tag == "none":
+            if len(node) != 2:
+                raise OracleError("ir", "a malformed none node")
+            try:
+                payload = parse_type_name(node[1])
+            except ValueError as exc:
+                raise OracleError("ir", "a none needs a canonical type name") from exc
+            self._declared_type(payload)
+            return Compiled(A.Ty("Option", (payload,)), _unevaluated, 1, False)
+        if tag == "some":
+            if len(node) != 2:
+                raise OracleError("ir", "a malformed some node")
+            kid = self._compile(node[1], tenv, allow_subject, depth + 1)
+            return Compiled(A.Ty("Option", (kid.ty,)), _unevaluated, 1 + kid.cost, kid.subject)
+        if tag == "ctor":
+            if len(node) != 3 or not isinstance(node[1], str) or not isinstance(node[2], list):
+                raise OracleError("ir", "a malformed ctor node")
+            owner = self.types.ctors.get(node[1])
+            if owner is None:
+                raise OracleError("ir", "a ctor names no declared constructor")
+            type_name, index = owner
+            fields = self.types.adts[type_name][index][1]
+            if len(node[2]) != len(fields):
+                raise OracleError("ir", "a ctor has the wrong number of operands")
+            kids = [self._compile(child, tenv, allow_subject, depth + 1) for child in node[2]]
+            for kid, field_ty in zip(kids, fields):
+                if not _assignable(kid.ty, field_ty):
+                    raise OracleError("ir", "a ctor operand does not have its field's type")
+            return Compiled(
+                A.Ty(type_name), _unevaluated, 1 + sum(k.cost for k in kids), any(k.subject for k in kids)
+            )
+        # field
+        if len(node) != 3 or type(node[2]) is not int or not isinstance(node[1], list):
+            raise OracleError("ir", "a malformed field node")
+        base = self._compile(node[1], tenv, allow_subject, depth + 1)
+        if base.ty.head not in self.types.adts or base.ty.head not in self._records():
+            raise OracleError("ir", "field needs a record")
+        fields = self.types.adts[base.ty.head][0][1]
+        if not 0 <= node[2] < len(fields):
+            raise OracleError("ir", "a field index outside the record")
+        return Compiled(fields[node[2]], _unevaluated, 1 + base.cost, base.subject)
+
+    def _records(self) -> set[str]:
+        """The record names: an ADT with exactly one constructor named like itself."""
+        return {
+            name
+            for name, ctors in self.types.adts.items()
+            if len(ctors) == 1 and ctors[0][0] == name
+        }
+
+    def _declared_type(self, ty: A.Ty) -> None:
+        """A type named in IR (a ``none``'s payload) must be allowed and declared: ``ir`` otherwise, a list is ``ir.list``."""
+        level = L.type_refusal(ty)
+        if level is not None:
+            raise OracleError("level", "a type that needs a reserved level", level=level)
+        stack = [ty]
+        while stack:
+            t = stack.pop()
+            if t.head == "Bytes":
+                if t.args and not (isinstance(t.args[0], int) and t.args[0] <= 4096):
+                    raise OracleError("ir", "a Bytes width is at most 4096")
+                continue
+            if t.head == "Result":
+                if t.args[1].head not in self.errors:
+                    raise OracleError("ir", "a Result names an undeclared error type")
+                stack.append(t.args[0])
+                continue
+            if t.head in ("()", "Option"):
+                stack.extend(t.args)
+                continue
+            if (
+                t.head in ("Bool", "Int", "Nat")
+                or t.head in FIXED
+                or t.head in self.types.adts
+            ):
+                continue
+            raise OracleError("ir", "a type name that is not declared")
 
     # -- the ir.fixed built-ins, typed and costed (slice S10a) -----------------------------
 
@@ -844,9 +988,11 @@ class Program:
         kids = [self._compile(child, tenv, allow_subject, depth + 1) for child in operands]
         for i, k in enumerate(kids):
             if k.ty.head == "Option":
+                # R29 (e): the intermediate use is the evaluated one; ``unwrap_or`` over any other Option,
+                # and every other consumer, is ``ir.data`` (analysed in the lowering dump, S11a).
                 direct = tag == "unwrap_or" and i == 0 and operands[0][0] in L.OPTION_PRODUCERS
                 if not direct:
-                    _no_option(k, f"an operand of {tag}")
+                    self._no_option(k, f"an operand of {tag}")
         ty = self._fixed_type(tag, static, kids)
         cost = 1 + sum(k.cost for k in kids)
         return Compiled(ty, _fixed_fn(tag, static, kids), cost, any(k.subject for k in kids))
@@ -921,8 +1067,6 @@ class Program:
             return INT
         if tag == "at":
             b, i = types
-            if b.head == "List":
-                raise OracleError("level", "at on a list needs ir.data", level=L.DATA)
             if b.head != "Bytes" or i.head not in ("Nat", "Int"):
                 raise bad("at needs Bytes and a Nat or Int index")
             return A.Ty("Option", (A.Ty("U8"),))

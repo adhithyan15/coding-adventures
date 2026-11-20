@@ -257,9 +257,11 @@ def test_every_corpus_error_of_appendix_a1_is_refused_with_the_code_corpus():
         "a-tuple-pattern-of-the-wrong-arity",
         "an-unknown-error-case",
         "a-projection-index-out-of-range",
+        # S11a (VER04r 16.14 R39 (c)): `e.i` on a non-tuple is a typing error, no longer `level ir.data`
+        "a-projection-of-a-non-tuple",
     ):
         assert by[name]["oracle_code"] == "type" and by[name]["generator_code"] == ""
-    assert by["a-projection-of-a-non-tuple"]["oracle_level"] == "ir.data"
+    assert by["a-projection-of-a-non-tuple"]["oracle_level"] == ""
     messages = " ".join(r["message"] for r in tree["refusals"])
     assert "fall through" in messages and "no value can reach" in messages
     assert "twice" in messages and "shadows" in messages

@@ -63,7 +63,6 @@ HEAD = (
     "  op clash(ok_payload: Bytes) -> Result<Bytes,E>\n"
     "  op res_pt(a: Bool) -> Result<Point,E>\n"
     "  op res_word<N: Nat>(w: Bytes<N>) -> Result<(Bytes<N>,Nat),E>\n"
-    "  op res_list(a: Bool) -> Result<List<U8>,E>\n"
 )
 
 

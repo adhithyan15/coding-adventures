@@ -2,8 +2,10 @@
 
 Every built-in is lowered to the exact JSON shape of Appendix A.1, typed from its operands, and
 the unit that uses it is evaluable since slice S10c-1 (it was marked ``unsupported`` at the level
-``ir.fixed`` in S10a, when evaluation still refused).  ``Option<T>`` is an IR-only intermediate whose only consumer is ``unwrap_or``
-(section 16.10 D23, R8) and ``div``/``rem`` on two ``Nat`` operands give ``Option<Int>`` (R7).
+``ir.fixed`` in S10a, when evaluation still refused).  ``Option<T>`` was an IR-only intermediate whose only
+consumer is ``unwrap_or`` (section 16.10 D23, R8); since slice S11a it is a real type of ``ir.data`` and what
+this file pins is the **intermediate use** that stays ``ir.fixed`` (R29).  ``div``/``rem`` on two ``Nat``
+operands give ``Option<Int>`` (R7).
 """
 
 from __future__ import annotations
@@ -224,8 +226,8 @@ def test_at_on_bytes_with_a_nat_or_an_int_index():
     assert lowered_ir("unwrap_or(at(b, 0), 0u8)", "b: Bytes", "U8")[1][2] == lit("Nat", 0)
 
 
-def test_at_on_a_list_is_ir_data():
-    refused_level("unwrap_or(at(b, 0), 0u8)", "b: List<U8>", "U8", "ir.data")
+def test_at_on_a_list_is_the_reserved_ir_list():
+    refused_level("unwrap_or(at(b, 0), 0u8)", "b: List<U8>", "U8", "ir.list")
     refused_type("unwrap_or(at(b, 0), 0u8)", "b: Nat", "U8")
     refused_type("unwrap_or(at(b, true), 0u8)", "b: Bytes", "U8")
 
@@ -341,7 +343,7 @@ def test_a_user_model_may_shadow_a_built_in_name():
     assert spec.models["m"].ir == ["model_call", "rem", [["var", "a"]]]
 
 
-# -- Option<T> is an IR-only intermediate ---------------------------------------------------
+# -- Option<T>: the intermediate use is ir.fixed, every other Option is ir.data (R29) -----------
 
 
 @pytest.mark.parametrize(
@@ -349,13 +351,7 @@ def test_a_user_model_may_shadow_a_built_in_name():
     [
         ("div(a, b) == div(a, b)", "a: U8, b: U8", "Bool"),  # eq operand
         ("div(a, b) != div(a, b)", "a: U8, b: U8", "Bool"),  # ne operand
-        ("rem(a, b) == a", "a: Nat, b: Nat", "Bool"),
-        ("if c then div(a, b) else div(b, a) == a", "c: Bool, a: Nat, b: Nat", "Bool"),
         ("unwrap_or(if c then div(a, b) else div(b, a), 0)", "c: Bool, a: Nat, b: Nat", "Int"),
-        ("unwrap_or(div(div(a, b), b), 0)", "a: Nat, b: Nat", "Int"),  # nested producer
-        ("unwrap_or(rem(a, b), rem(a, b))", "a: Nat, b: Nat", "Int"),  # second operand
-        ("id(div(a, b)) == a", "a: Nat, b: Nat", "Bool"),  # a model argument
-        ("div(a, b)", "a: Nat, b: Nat", "Bool"),  # the result of a model
         ("try<U8>(a) == try<U8>(a)", "a: Int", "Bool"),
         ("checked_add(a, a) == checked_add(a, a)", "a: U8", "Bool"),
         ("at(b, 0) == at(b, 1)", "b: Bytes", "Bool"),
@@ -363,40 +359,65 @@ def test_a_user_model_may_shadow_a_built_in_name():
         ("div(a, b) == div(a, b) and true", "a: U8, b: U8", "Bool"),
     ],
 )
-def test_an_option_anywhere_but_unwrap_or_is_ir_data(body, params, ret):
-    prelude = "  model id(a: Int) -> Int = a\n"
-    m = model(body, params, ret, prelude=prelude)
-    assert m.unsupported is not None, body
-    assert m.unsupported.code == "level" and m.unsupported.level == "ir.data", body
+def test_an_option_anywhere_but_the_intermediate_use_requires_ir_data(body, params, ret):
+    """R29 (d): a producer that is not directly the first operand of ``unwrap_or`` brings ``ir.data``."""
+    m = model(body, params, ret)
+    assert m.lowered and m.ir is not None, body
+    assert "ir.data" in m.requires and "ir.fixed" in m.requires, body
+    # lowered but not evaluated yet: the evaluation refusal of S11a, never a lowering refusal
+    assert m.unsupported is not None and m.unsupported.level == "ir.data", body
 
 
-def test_an_option_is_not_a_signature_binder_or_value_type():
-    ret = refused_level("a", "a: U8", "Option<U8>", "ir.data")
-    assert "Option" in ret.message
-    refused_level("a == a", "a: Option<U8>", "Bool", "ir.data")
-    refused_level("true", "a: List<Option<U8>>", "Bool", "ir.data")
+@pytest.mark.parametrize(
+    "body,params,ret",
+    [
+        ("rem(a, b) == a", "a: Nat, b: Nat", "Bool"),  # Option<Int> against a Nat
+        ("unwrap_or(div(div(a, b), b), 0)", "a: Nat, b: Nat", "Int"),  # div of an Option
+        ("unwrap_or(rem(a, b), rem(a, b))", "a: Nat, b: Nat", "Int"),  # an Option as the default
+        ("id(div(a, b)) == a", "a: Nat, b: Nat", "Bool"),  # a model argument of the wrong type
+        ("div(a, b)", "a: Nat, b: Nat", "Bool"),  # an Option where a Bool is declared
+        ("if c then div(a, b) else div(b, a) == a", "c: Bool, a: Nat, b: Nat", "Bool"),
+    ],
+)
+def test_an_option_that_does_not_fit_where_it_is_used_is_a_type_error(body, params, ret):
+    """The consumer rule is relaxed, not removed (R29 (e)): an Option still has to have the right type."""
+    refused_type_with_prelude(body, params, ret)
+
+
+def refused_type_with_prelude(body: str, params: str, ret: str) -> OracleError:
+    with pytest.raises(OracleError) as err:
+        model(body, params, ret, prelude="  model id(a: Int) -> Int = a\n")
+    assert err.value.code == "type", err.value
+    return err.value
+
+
+def test_an_option_is_a_real_signature_binder_and_value_type():
     spec = lower(
         "warrant p v1\n  op f(a: U8) -> Option<U8>\n  op g(a: Option<U8>) -> U8\n"
         "  claim c:\n    forall a: U8. f(a) == f(a)\n"
         "  claim d:\n    forall a: Option<U8>. g(a) == g(a)\n"
     )
-    assert spec.ops["f"].unsupported.level == "ir.data"
-    assert spec.ops["g"].unsupported.level == "ir.data"
-    assert [s.unsupported.level for s in spec.suites] == ["ir.data", "ir.data"]
+    assert spec.ops["f"].requires == spec.ops["g"].requires == ("ir.core", "ir.data")
+    assert [s.requires for s in spec.suites] == [("ir.core", "ir.data")] * 2
+    # lowered; the only refusal is the evaluation one of slice S11a
+    assert all(s.lowered and s.unsupported.level == "ir.data" for s in spec.suites)
+    refused_type("a", "a: U8", "Option<U8>")  # a U8 is not an Option<U8>: Some(a) is
 
 
-def test_some_none_and_match_on_an_option_stay_ir_data():
+def test_some_none_and_match_on_an_option_are_ir_data():
     for body in ("unwrap_or(Some(a), 0u8) == a", "match try<U8>(a) with Some(x) -> true | None -> false"):
-        m = model(body, "a: Int", "Bool")
-        assert m.unsupported.level == "ir.data" and m.ir is None
+        m = model(body, "a: U8", "Bool") if "Some(a)" in body else model(body, "a: Int", "Bool")
+        assert m.lowered and "ir.data" in m.requires and m.unsupported.level == "ir.data", body
 
 
-def test_an_option_from_a_subject_op_is_refused_too():
-    # ``unwrap_or`` consumes a built-in's Option directly, never a call that returns one.
+def test_an_option_from_a_subject_op_may_be_unwrapped_and_requires_both_levels():
+    # ``unwrap_or`` takes any Option (R29 (e)); only a producer node in the direct position is the
+    # intermediate use, so this one requires ir.data as well as ir.fixed.
     spec = lower(
         "warrant p v1\n  op f(a: U8) -> Option<U8>\n  claim c:\n    forall a: U8. unwrap_or(f(a), 0u8) == a\n"
     )
-    assert spec.suites[0].unsupported.level == "ir.data"
+    assert spec.suites[0].requires == ("ir.core", "ir.data", "ir.fixed")
+    assert spec.suites[0].lowered
 
 
 def test_a_producer_in_a_claim_is_lowered_and_requires_ir_fixed():
@@ -418,15 +439,16 @@ def test_type_levels_look_inside_type_arguments():
     tup = A.Ty("()", (A.Ty("U8"), A.Ty("Nat")))
     assert L.type_levels(A.Ty("U8")) == set()
     assert L.type_levels(tup) == {"ir.tuple"}
-    assert L.type_levels(A.Ty("List", (tup,))) == {"ir.data", "ir.tuple"}
-    assert L.type_levels(A.Ty("List", (A.Ty("U8"),))) == {"ir.data"}
     assert L.type_levels(A.Ty("Result", (tup, A.Ty("E")))) == {"ir.tuple"}
     assert L.type_levels(A.Ty("P"), {"P"}) == {"ir.data"}  # a record or variant name
     assert L.type_levels(A.Ty("P")) == set()
-    assert L.type_levels(A.Ty("Option", (A.Ty("U8"),))) == set()  # refused, not counted
+    # slice S11a: ``Option`` is counted (R29 (d)), a list is not counted but refused (R27)
+    assert L.type_levels(A.Ty("Option", (A.Ty("U8"),))) == {"ir.data"}
+    assert L.type_levels(A.Ty("Option", (tup,))) == {"ir.data", "ir.tuple"}
+    assert L.type_levels(A.Ty("List", (A.Ty("U8"),))) == set()
     assert L.type_refusal(tup) is None  # counted in requires, not refused
-    assert L.type_refusal(A.Ty("Option", (A.Ty("U8"),))) == "ir.data"
-    assert L.type_refusal(A.Ty("List", (A.Ty("Option", (tup,)),))) == "ir.data"
+    assert L.type_refusal(A.Ty("Option", (A.Ty("U8"),))) is None
+    assert L.type_refusal(A.Ty("List", (A.Ty("Option", (tup,)),))) == "ir.list"
 
 
 def test_static_width_follows_the_checker_literals_concat_and_if():
@@ -468,23 +490,33 @@ def test_requires_always_includes_ir_core_for_ops_and_units():
     assert spec.models["m"].requires == ("ir.core", "ir.fixed")
 
 
-def test_list_record_and_variant_types_add_ir_data():
+def test_record_variant_and_option_types_add_ir_data_and_a_list_is_refused():
     spec = lower(
         "warrant r v1\n  record P(x: Bool, y: Bool)\n  variant V = A | B\n"
-        "  op g(t: List<Bool>) -> Bool\n  op h(p: P) -> Bool\n  op k(v: V) -> Bool\n"
+        "  op h(p: P) -> Bool\n  op k(v: V) -> Bool\n  op o(a: U8) -> Option<U8>\n"
         "  op plain(a: U8) -> Bool\n"
-        "  claim cl:\n    forall t: List<Bool>. g(t) == true\n"
         "  claim cr:\n    forall p: P. h(p) == true\n"
         "  claim cp:\n    forall a: U8. plain(a) == true\n"
     )
     assert {s.claim: s.requires for s in spec.suites} == {
-        "cl": ("ir.core", "ir.data"),
         "cr": ("ir.core", "ir.data"),
         "cp": ("ir.core",),
     }
-    assert spec.ops["g"].requires == spec.ops["h"].requires == ("ir.core", "ir.data")
-    assert spec.ops["k"].requires == ("ir.core", "ir.data")
+    assert spec.ops["h"].requires == ("ir.core", "ir.data")
+    assert spec.ops["k"].requires == spec.ops["o"].requires == ("ir.core", "ir.data")
     assert spec.ops["plain"].requires == ("ir.core",)
+    # a list type in a signature is the reserved ir.list, and refuses the document whole (R27)
+    with pytest.raises(OracleError) as err:
+        lower("warrant r v1\n  op g(t: List<Bool>) -> Bool\n")
+    assert err.value.code == "level" and err.value.level == "ir.list"
+    # in a claim binder or a model it is recorded on the unit, which did not lower
+    spec = lower(
+        "warrant r v1\n  op plain(a: U8) -> Bool\n"
+        "  model m(t: List<Bool>) -> Bool = true\n"
+        "  claim cl:\n    forall t: List<Bool>. plain(0u8) == true\n"
+    )
+    assert spec.models["m"].unsupported.level == "ir.list" and not spec.models["m"].lowered
+    assert spec.suites[0].unsupported.level == "ir.list" and not spec.suites[0].lowered
 
 
 def test_seal_reads_callee_requires_without_rewalking_the_closure():
