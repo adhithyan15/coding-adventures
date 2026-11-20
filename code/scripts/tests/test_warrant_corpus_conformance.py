@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import re
 import shutil
 import sys
 import tempfile
@@ -111,7 +112,7 @@ class Fixture(unittest.TestCase):
 
 
 V1 = ("json", "tagged", "containment", "label-digest")
-V2 = ("v2-value", "v2-arith", "v2-ir", "v2-domain", "v2-chunk", "v2-fault")
+V2 = ("v2-value", "v2-arith", "v2-ir", "v2-domain", "v2-chunk", "v2-fault", "v2-binding")
 
 
 def _copy() -> tuple[tempfile.TemporaryDirectory, Path]:
@@ -133,9 +134,10 @@ class V2Rows(unittest.TestCase):
             self.assertEqual(row["sha256"], conf.sha256_hex(data))
             self.assertEqual(row["cases"], len(conf.read_json(data)["cases"]))
 
-    def test_v2_binding_would_sort_last(self) -> None:
+    def test_v2_binding_is_committed_and_sorts_last(self) -> None:
         self.assertEqual(conf.V2_CATEGORIES[-1], "v2-binding")
-        self.assertEqual(conf.V2_CATEGORIES[:6], V2)
+        self.assertEqual(conf.V2_CATEGORIES, V2)
+        self.assertTrue((conf.DEFAULT_FIXTURE / "v2-binding.json").is_file())
 
     def test_write_indexes_whatever_v2_files_are_on_disk_in_the_fixed_order(self) -> None:
         tmp, copy = _copy()
@@ -144,7 +146,7 @@ class V2Rows(unittest.TestCase):
             (copy / "v2-value.json").unlink()
             self.assertEqual(conf.main(["--fixture", str(copy), "--write"]), 0)
             index = conf.read_json((copy / "index.json").read_bytes())
-            self.assertEqual([r["category"] for r in index["files"]], list(V1 + ("v2-arith", "v2-ir", "v2-domain", "v2-fault")))
+            self.assertEqual([r["category"] for r in index["files"]], list(V1 + ("v2-arith", "v2-ir", "v2-domain", "v2-fault", "v2-binding")))
             self.assertEqual(conf.main(["--fixture", str(copy)]), 0)
 
     def test_a_v1_only_directory_still_checks(self) -> None:
@@ -188,23 +190,84 @@ class V2Rows(unittest.TestCase):
         twice = {"v2-arith.json": v2["v2-arith.json"], "v2-ir.json": v2["v2-arith.json"]}
         self.assertTrue(conf.structural_problems({}, twice))
 
-    def test_the_reason_closed_set_is_scoped_to_the_v1_categories(self) -> None:
-        def document(category: str) -> dict[str, bytes]:
-            case = (
-                '{"expect":{"error":"x","reason":"not-a-v1-reason"},"id":"' + category
-                + '/a","requires":[],"summary":"s"}'
-            )
-            text = (
-                '{"cases":[' + case + '],"category":"' + category
-                + '","schema":"warrant-corpus-conformance-v1"}\n'
-            )
-            return {f"{category}.json": text.encode()}
+    @staticmethod
+    def _document(category: str, reason: object, case_id: str | None = None) -> dict[str, bytes]:
+        case = {
+            "expect": {"error": "x", "reason": reason},
+            "id": case_id or f"{category}/a",
+            "requires": [],
+            "summary": "s",
+        }
+        data = conf.canonical({"cases": [case], "category": category, "schema": conf.SCHEMA}).encode()
+        return {f"{category}.json": data}
 
-        self.assertEqual(conf.structural_problems({}, document("v2-binding")), [])
-        self.assertEqual(conf.structural_problems({}, document("v2-ir")), [])
-        problems = conf.structural_problems({}, document("json"))
+    def test_the_v1_reason_closed_set_is_scoped_to_the_v1_categories(self) -> None:
+        self.assertEqual(conf.structural_problems({}, self._document("v2-ir", "not-a-v1-reason")), [])
+        problems = conf.structural_problems({}, self._document("json", "not-a-v1-reason"))
         self.assertEqual(len(problems), 1)
         self.assertIn("closed set", problems[0])
+
+    def test_a_v2_binding_reason_is_checked_against_its_own_39(self) -> None:
+        self.assertEqual(len(conf.BINDING_REASONS), 39)
+        for reason in sorted(conf.BINDING_REASONS):
+            with self.subTest(reason=reason):
+                self.assertEqual(conf.structural_problems({}, self._document("v2-binding", reason)), [])
+        for reason in ("not-a-v1-reason", "depth", "Syntax", "", 7, ["syntax"]):
+            with self.subTest(reason=reason):
+                problems = conf.structural_problems({}, self._document("v2-binding", reason))
+                self.assertEqual(len(problems), 1)
+                self.assertIn("closed set of v2-binding", problems[0])
+
+    def test_the_binding_reason_set_is_the_39_of_the_spec(self) -> None:
+        spec_path = Path(__file__).resolve().parents[2] / "specs" / "VER04r-warrant-corpus-v2.md"
+        if not spec_path.is_file():
+            self.skipTest("the spec is not in this checkout")
+        text = spec_path.read_text(encoding="utf-8")
+        start = text.index("(d) *The reason set* is closed at 39")
+        end = text.index("(the model; two reasons", start)
+        listed = [name for group in re.findall(r"`([^`]+)`", text[start:end]) for name in group.split()]
+        self.assertEqual(len(listed), 39)
+        self.assertEqual(set(listed), conf.BINDING_REASONS)
+
+    def test_the_committed_binding_file_passes_its_own_reason_check(self) -> None:
+        v2, problems = conf.v2_files(conf.DEFAULT_FIXTURE)
+        self.assertEqual(problems, [])
+        self.assertEqual(conf.structural_problems({}, {"v2-binding.json": v2["v2-binding.json"]}), [])
+        document = conf.read_json(v2["v2-binding.json"])
+        self.assertEqual(len(document["cases"]), 176)
+        self.assertLessEqual({c["expect"]["reason"] for c in document["cases"] if "reason" in c["expect"]}, conf.BINDING_REASONS)
+
+    def test_a_committed_binding_file_with_a_stray_reason_is_refused(self) -> None:
+        tmp, copy = _copy()
+        with tmp:
+            path = copy / "v2-binding.json"
+            path.write_bytes(path.read_bytes().replace(b'"reason": "fresh"', b'"reason": "frash"', 1))
+            self.assertEqual(conf.main(["--fixture", str(copy)]), 1)
+
+    def test_a_case_id_must_be_printable_ascii(self) -> None:
+        ok = conf.structural_problems({}, self._document("v2-binding", "syntax", "v2-binding/a~!"))
+        self.assertEqual(ok, [])
+        for bad in ("v2-binding/caf\u00e9", "v2-binding/a b", "v2-binding/a\tb", "v2-binding/a\x7f", "v2-binding/", "v2-binding/\u2603"):
+            for category, reason in (("v2-binding", "syntax"), ("v2-ir", "syntax")):
+                case_id = bad.replace("v2-binding", category, 1)
+                with self.subTest(case_id=case_id):
+                    problems = conf.structural_problems({}, self._document(category, reason, case_id))
+                    if case_id.endswith("/"):
+                        self.assertEqual(problems, [])  # an empty slug is not this check's concern
+                    else:
+                        self.assertTrue(any("not printable ASCII" in p for p in problems), problems)
+
+    def test_an_escaped_non_ascii_id_passes_the_ascii_byte_check_and_is_refused_by_the_id_rule(self) -> None:
+        data = self._document("v2-binding", "syntax", "v2-binding/caf\u00e9")["v2-binding.json"]
+        self.assertTrue(data.isascii())  # the file's bytes are ASCII: only the id rule can see it
+        self.assertEqual(len(conf.structural_problems({}, {"v2-binding.json": data})), 1)
+
+    def test_a_violating_fixture_directory_is_refused(self) -> None:
+        tmp, copy = _copy()
+        with tmp:
+            path = copy / "v2-binding.json"
+            path.write_bytes(path.read_bytes().replace(b'"v2-binding/', b'"v2-binding/\\u00e9', 1))
+            self.assertEqual(conf.main(["--fixture", str(copy)]), 1)
 
 
 class ReviewFindingsS5b(unittest.TestCase):
