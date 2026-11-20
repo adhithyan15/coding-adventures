@@ -217,11 +217,14 @@ def test_write_puts_the_binding_file_beside_the_six_and_check_accepts_it(fast, t
     assert fast.main(["--check", "--fixture", str(tmp_path)]) == 0
 
 
-def test_the_binding_file_is_pending_until_it_or_its_index_row_exists(fast, tmp_path, capsys, built):
-    assert fast.main(["--check", "--fixture", str(tmp_path)]) == 0  # no file, no index
-    assert "not committed yet" in capsys.readouterr().err
+def test_a_missing_binding_file_and_a_missing_index_row_together_never_pass(fast, tmp_path, capsys, built):
+    """R93: the S5c "not committed yet" branch is gone, so removing both the file and its row is exit 1."""
+    assert fast.main(["--check", "--fixture", str(tmp_path)]) == 1  # no file, no index
+    err = capsys.readouterr().err
+    assert "v2-binding.json differs" in err and "not committed yet" not in err
     (tmp_path / "index.json").write_bytes(index_bytes([]))
-    assert fast.main(["--check", "--fixture", str(tmp_path)]) == 0  # no file, an index without a row
+    assert fast.main(["--check", "--fixture", str(tmp_path)]) == 1  # no file, an index without a row
+    assert "index.json" in capsys.readouterr().err
     (tmp_path / "index.json").write_bytes(index_bytes([built.row]))
     assert fast.main(["--check", "--fixture", str(tmp_path)]) == 1  # a row without the file
     assert "v2-binding.json differs" in capsys.readouterr().err

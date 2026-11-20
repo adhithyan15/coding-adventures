@@ -11,11 +11,12 @@ lists them with case counts and SHA-256.
 | `containment.json` | containment helper | `root` and `child` as text, with the `flavor`'s path rules |
 | `label-digest.json` | manifest digest | `manifest` object to its SHA-256 |
 
-Six more categories, the **v2 kit** (VER04r section 11, slice S5b), sit beside them in
+Seven more categories, the **v2 kit** (VER04r section 11, slices S5b and S5d), sit beside them in
 the same layout: `v2-value.json` (128 cases), `v2-arith.json` (129), `v2-ir.json` (248),
-`v2-domain.json` (162), `v2-chunk.json` (74) and `v2-fault.json` (41), 782 cases (S5b committed 734; S5e added 48). Every
+`v2-domain.json` (162), `v2-chunk.json` (74), `v2-fault.json` (41) and `v2-binding.json` (176), 958 cases (S5b committed
+734 in six files; S5e added 48; S5d added the 176 of `v2-binding`), 1,419 with the four v1 categories. Every
 case carries `id`, `summary`, `requires` and `expect`; a lane runs a case exactly when it
-implements the levels in `requires`. `v2-binding` (S5d) is not here yet; the levels
+implements the levels in `requires`. The levels
 `ir.fixed`, `ir.tuple`, `ir.data` and `ir.list` add vectors in S10d and S11. A runner
 that does not know a `v2-*` category digest-checks its file and does not run it.
 
@@ -27,6 +28,7 @@ that does not know a `v2-*` category digest-checks its file and does not run it.
 | `v2-domain.json` | a descriptor and a binder type, enumerated by `index` or `range` |
 | `v2-chunk.json` | a self-contained corpus, suite row and `chunk_file_hex`; the chunk's validation or its error |
 | `v2-fault.json` | a fault row instantiated over an op row, the args and the result |
+| `v2-binding.json` | `binding_hex` (the binding file's bytes), the case's `corpus` (`types`, `ops`) and `host` (four closed lists); the normalized binding, or one `reason` of the closed set of 39 (VER04r section 16.19 R85 (d)) |
 
 Where each mandatory vector is discharged (VER04r section 11, R17); "S5b" means `ir.core` kit data:
 
@@ -47,7 +49,7 @@ Where each mandatory vector is discharged (VER04r section 11, R17); "S5b" means 
 | Negative: a wrong subject on a `reference` suite; a reordered enumeration | S6, S7 runner tests |
 | Negative: `first_admitted` off by one; `slim_chunks` omitting the first or last chunk | S5b `v2-chunk` |
 | Negative: `full` claimed after a slim run | S6, S7 (the lane's own `check`); S9 |
-| Negative: a shared discriminator; `err_any` on a two-case error type | S5d `v2-binding` |
+| Negative: a shared discriminator; `err_any` on a two-case error type | S5d `v2-binding` (`discriminator-shared`, `err-any-multi`) |
 | Aliasing (four fixtures) | S6, S7 runner fixtures, per lane; `v2-binding` carries only the directive-level cases |
 | Bounds: the `Nat` overflow in both classes; the doubling `concat` | S5b `v2-ir`; "before allocation" is asserted by each lane's test (S6a, S7a) |
 | Bounds: a v0 fixed-width node over a subject result | existing generator and oracle tests (section 3.3 rule 3); not lane data |
@@ -84,7 +86,9 @@ python3 code/scripts/warrant_corpus_conformance.py --write                      
 `make_conformance.py --check` requires the committed v2 bytes and the v2 rows of `index.json` to
 match its derivation. The v1 script indexes the `v2-*` files on disk (after the four v1 rows, in
 the order `v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk`, `v2-fault`, `v2-binding`),
-checks them structurally, and never imports the oracle or a lane. The four v1 category files
+checks them structurally (every case id of every category is printable ASCII, U+0021 to U+007E; a `v2-binding`
+`reason` is one of its 39; the closed set of `expect.reason` of the four v1 categories applies to them only), and never
+imports the oracle or a lane. The four v1 category files
 come from that script's own case tables and independent reference implementation:
 
 ```text
@@ -94,7 +98,7 @@ python3 code/scripts/warrant_corpus_conformance.py --write  # regenerate
 
 Cases are only ever added within `-v1`; changing an expectation means `-v2`.
 Containment includes the WD-100b cases (Windows reserved device names refused,
-win32 case folding ASCII-only; 141 cases, 461 in the four v1 categories, 1243 with the v2 kit).
+win32 case folding ASCII-only; 141 cases, 461 in the four v1 categories, 1419 with the v2 kit).
 Lanes: Python, TypeScript and Go run all four v1 categories and digest-check the `v2-*` rows (the runners
-read v2 in S6a and S7a) (Go: `conformance_test.go` in
+read v2 in S6 and S7; `v2-binding` is run by S6b and S7b) (Go: `conformance_test.go` in
 `code/packages/go/warrant-corpus`).

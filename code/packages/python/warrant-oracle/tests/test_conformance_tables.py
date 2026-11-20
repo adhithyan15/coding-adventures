@@ -259,13 +259,18 @@ def prebuilt(kit, monkeypatch):
     return kit
 
 
+def all_rows(kit):
+    """The six derived rows and the seventh, ``v2-binding`` (S5d: ``--check`` requires it like the others)."""
+    return [*kit.rows, kit.mc.build_binding()[1]]
+
+
 def write_files(kit, directory, index=True):
     directory.mkdir(parents=True, exist_ok=True)
-    for name, text in kit.files.items():
+    for name, text in {**kit.files, "v2-binding.json": kit.mc.build_binding()[0]}.items():
         (directory / name).write_bytes(text.encode())
     if index:
         v1 = [{"category": "json", "path": "json.json", "cases": 1, "sha256": "0" * 64}]
-        (directory / "index.json").write_bytes(canonical({"schema": "x", "total_cases": 1, "files": v1 + kit.rows}))
+        (directory / "index.json").write_bytes(canonical({"schema": "x", "total_cases": 1, "files": v1 + all_rows(kit)}))
 
 
 def test_check_exit_codes(prebuilt, tmp_path, capsys):
@@ -296,7 +301,7 @@ def test_check_verifies_index_rows_and_skips_a_missing_index(prebuilt, tmp_path,
     ):
         write_files(kit, tmp_path / name)
         v1 = [{"category": "json", "path": "json.json", "cases": 1, "sha256": "0" * 64}]
-        (tmp_path / name / "index.json").write_bytes(canonical({"schema": "x", "total_cases": 1, "files": v1 + edit(kit.rows)}))
+        (tmp_path / name / "index.json").write_bytes(canonical({"schema": "x", "total_cases": 1, "files": v1 + edit(all_rows(kit))}))
         assert mc.main(["--check", "--fixture", str(tmp_path / name)]) == 1, name
         assert "index.json" in capsys.readouterr().err
     (tmp_path / "ok" / "index.json").write_bytes(b"not json")

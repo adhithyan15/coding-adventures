@@ -28,8 +28,10 @@ The ``v2-*.json`` files (VER04r section 11) are written by the oracle's
 (``--write`` gives ``index.json`` one row per file after the four v1 rows, in
 the fixed order ``v2-value``, ``v2-arith``, ``v2-ir``, ``v2-domain``,
 ``v2-chunk``, ``v2-fault``, ``v2-binding``, with ``cases`` and ``sha256``) and
-checks them structurally (line endings, schema, category, ids); the closed set
-of ``expect.reason`` is the v1 kit's and applies to the four v1 categories only.
+checks them structurally (line endings, schema, category, ids, every id
+printable ASCII U+0021 to U+007E); the closed set of ``expect.reason`` of
+``REASONS`` is the v1 kit's and applies to the four v1 categories only, and a
+``v2-binding`` reason is checked against its own set of 39, ``BINDING_REASONS``.
 Regeneration is two steps: ``make_conformance.py --write``, then this script's
 ``--write``.
 
@@ -95,6 +97,30 @@ REASONS = frozenset(
         "depth",
     }
 )
+
+
+#: The closed set of ``expect.reason`` of ``v2-binding``: the 39 reasons the oracle's reference binding validator
+#: reports, listed in VER04r section 16.19 R85 (d) and fixed by S5c (section 16.13 R20).  Written out here, not
+#: imported, because this script imports nothing from the oracle or a lane; the oracle's own tests hold its
+#: ``REASONS`` equal to the same 39 names.
+BINDING_REASONS = frozenset(
+    {
+        # the bytes
+        "too-large", "invalid-utf8", "bom", "cr", "control-character",
+        # the lines
+        "syntax", "unknown-directive", "duplicate-directive", "bad-value", "op-key",
+        # the model
+        "missing-directive", "level-unknown", "level-implication", "values-name", "values-representation",
+        "values-missing", "type-unknown", "type-shape", "type-missing", "op-unknown", "op-missing",
+        "export-missing", "export-unknown", "args", "ret", "width", "errors-form", "errors-missing",
+        "errors-unexpected", "errors-case", "errors-incomplete", "discriminator-shared", "discriminator-bare",
+        "discriminator-unknown", "err-any-multi", "panics-form", "inout-param", "inout-form", "fresh",
+    }
+)
+
+#: A case id is printable ASCII, U+0021 to U+007E: no space, no control character, nothing above ``~``
+#: (VER04r section 9.1, section 16.17 R63).  ``re.ASCII`` plus an explicit range, never ``\w`` or ``\S``.
+CASE_ID_RE = re.compile(r"[\x21-\x7e]+")
 
 
 class Reject(Exception):
@@ -1356,8 +1382,11 @@ def structural_problems(files: dict[str, str], v2: dict[str, bytes] | None = Non
     """Checks that do not depend on the case tables (ids, reasons, ASCII ...).
 
     ``v2`` are the bytes of the ``v2-*.json`` files: they get the same checks of line endings, schema, category,
-    case count and id, but **not** the closed set of ``expect.reason`` below, which is the v1 kit's (the v2
-    categories have closed error sets of their own, fixed by VER04r section 11 and checked by the oracle).
+    case count and id, but **not** the v1 closed set of ``expect.reason`` below (``REASONS``, the four v1
+    categories only).  ``v2-binding`` is held to its own closed set, ``BINDING_REASONS`` (the 39 of VER04r
+    section 16.19 R85 (d), fixed by S5c); the other v2 categories have closed error sets of their own, fixed by
+    VER04r section 11 and checked by the oracle.  Every case id of every category is printable ASCII
+    (section 9.1, R63): the file's bytes being ASCII is not enough, an escaped ``\\u00e9`` in an id passes that.
     """
     problems: list[str] = []
     seen: set[str] = set()
@@ -1390,6 +1419,8 @@ def structural_problems(files: dict[str, str], v2: dict[str, bytes] | None = Non
             if not isinstance(case_id, str):
                 problems.append(f"{where}: id missing or not a string")
                 continue
+            if CASE_ID_RE.fullmatch(case_id) is None:
+                problems.append(f"{where}: id {case_id!r} is not printable ASCII (U+0021 to U+007E)")
             if case_id in seen:
                 problems.append(f"duplicate case id {case_id}")
             seen.add(case_id)
@@ -1402,6 +1433,10 @@ def structural_problems(files: dict[str, str], v2: dict[str, bytes] | None = Non
             reason = expect.get("reason")
             if document["category"] in V1_CATEGORIES and reason is not None and reason not in REASONS:
                 problems.append(f"{case_id}: reason {reason!r} is not in the closed set")
+            if document["category"] == "v2-binding" and reason is not None and (
+                not isinstance(reason, str) or reason not in BINDING_REASONS
+            ):
+                problems.append(f"{case_id}: reason {reason!r} is not in the closed set of v2-binding")
     return problems
 
 
