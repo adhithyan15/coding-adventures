@@ -1,8 +1,18 @@
 use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk, HkdfPrkImportError};
+use der_asn1::{Asn1Decoder, Asn1Limits};
+use rsa_pss_sha256_signature::RsaPssSha256SignatureLimits;
+use rsa_pss_sha384_signature::RsaPssSha384SignatureLimits;
 use std::error::Error;
 use tls13_certificate_message::Tls13CertificateMessageLimits;
 use tls13_certificate_request_message::CertificateRequestLimits;
-use tls13_certificate_verify_message::MessageError as CertificateVerifyMessageError;
+use tls13_certificate_verify_input::{CertificateVerifyRole, MAXIMUM_INPUT_LENGTH};
+use tls13_certificate_verify_message::{
+    CertificateVerifyMessage, MessageError as CertificateVerifyMessageError,
+};
+use tls13_certificate_verify_transcript_binding::{
+    bind_certificate_verify_transcript, hash_transcript_bound_certificate_verify_input,
+    verify_transcript_bound_certificate_verify,
+};
 use tls13_cipher_suite_offer::ClientCipherSuiteOffer;
 use tls13_cipher_suite_policy::{
     CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry, HkdfHash, SelectedCipherSuite,
@@ -23,6 +33,7 @@ use tls13_record_protection::{open_tls13_record, seal_tls13_record, Tls13Plainte
 use tls13_record_protection_state::{RecordProtectionState, RecordProtectionStateError};
 use tls13_retry_handshake_traffic_key_material_binding::{
     bind_retry_handshake_traffic_key_material, bind_retry_ordered_server_flight_transcript,
+    bind_retry_server_certificate_leaf, bind_retry_server_certificate_verify_signature,
     open_retry_handshake_record, seal_retry_handshake_record, HandshakeTrafficSender,
     RetryCertificateRequestValidationError, RetryHandshakePlaintext,
     RetryHandshakeRecordBindingError, RetryHandshakeRecordProtectionStateBindingError,
@@ -30,7 +41,8 @@ use tls13_retry_handshake_traffic_key_material_binding::{
     RetryHandshakeRecordReassemblyError, RetryHandshakeTrafficKeyMaterialBindingError,
     RetryOrderedServerFlight, RetryOrderedServerFlightError,
     RetryOrderedServerFlightTranscriptBindingError, RetryOrderedServerTranscriptAdvanceError,
-    RetryServerCertificateValidationError, RetryServerCertificateVerifyValidationError,
+    RetryServerCertificateLeafBindingError, RetryServerCertificateValidationError,
+    RetryServerCertificateVerifySignatureBindingError, RetryServerCertificateVerifyValidationError,
 };
 use tls13_retry_handshake_traffic_secrets_binding::{
     bind_retry_handshake_traffic_secrets, bind_retry_server_finished_key,
@@ -38,6 +50,7 @@ use tls13_retry_handshake_traffic_secrets_binding::{
 };
 use tls13_retry_key_schedule_binding::bind_retry_key_schedule;
 use tls13_retry_transcript_binding::bind_retry_transcript;
+use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
 use tls13_server_hello_message::{
     decode_tls13_server_hello, Tls13ServerHelloLimits, TLS13_HELLO_RETRY_REQUEST_RANDOM,
 };
@@ -56,6 +69,9 @@ use tls13_traffic_key_material::{
 };
 use tls13_transcript::{TranscriptErrorKind, TranscriptPolicy};
 use tls13_x25519_key_share_binding::derive_message_bound_retry_x25519_shared_secret;
+use x509_certificate::decode_x509_certificate;
+use x509_rsa_public_key::{validate_rsa_public_key, RsaPublicKeyPolicy, ValidatedRsaPublicKey};
+use x509_subject_public_key_info::decode_x509_subject_public_key_info;
 
 // RFC 7748 section 6.1 Alice and Bob values.
 const ALICE_PRIVATE: [u8; 32] = [
@@ -74,6 +90,108 @@ const SESSION_ID: &[u8] = b"retry-key-material";
 const CLIENT_RANDOM: [u8; 32] = [0x11; 32];
 const FINAL_SERVER_RANDOM: [u8; 32] = [0x22; 32];
 const TLS13: u16 = 0x0304;
+
+// Generated with OpenSSL 3.x from one disposable 2048-bit RSA key over the
+// exact server CertificateVerify input used by the ordered retry fixture.
+// Test execution uses only the repository-owned RSA-PSS verifier.
+const PUBLIC_KEY_SPKI_HEX: &str = concat!(
+    "30820122300d06092a864886f70d01010105000382010f003082010a0282010100",
+    "83d3ec05517aaeab255522497d6e6a1f1ff9a58d71aadc1393a06f5e196eccf1",
+    "875a66fb4ded8d6f0bb1d3e944f3a886d81fad2ddd3be809a635827ef2603e0c",
+    "f5a320cf31e6a0ba3ad8c5d3a5b91d390e321400c59f8f6654a204d0c306a98",
+    "9fad47061f5f0a782657732d7f9845d94eafb10b9fc9181b7ca1c5733ea90747",
+    "6dc7303baa2b9bdd9f3ff25e9730943b711f8ee158a3921af3fc24461c5aa22c6",
+    "434a6e5feaf026c556282009cab46595bf49c588bf792027fa5a46bc132fb2762",
+    "d40bad19bddd79a28a9561c041e8e574219828a9ec0d901f4c7708295ae21efec",
+    "2c4dce0398465adee92c6aed48da998e5c08e8fcbb8f01af21b7ca1d7cb3910",
+    "203010001",
+);
+const SERVER_SHA256_SIGNATURE_HEX: &str = concat!(
+    "7d4fa22e0d100a2b4d852b8be255e67a7bb47f74b163de6eecd6af419e6db404",
+    "fd3044288fe8b7ad4f5c0c02cbe5d9d5ed99b674d15a5d9add4458303a998941",
+    "13845b059835f9f11bcccb503b7563017ee18763473722d3d06fe8d0fced59f5",
+    "ae4bf985653a9d9ecfb441ea8cfe2f5dcaf18709c0e5f86486f0ac0a9cd502fc",
+    "6a205efbc2c70365310c20ff17669fbc4e93af88a6c8e0caeb6aeebd75588be9",
+    "bbd525c2157ae71d12e8b962b9a182e066c04d76d5d23d7785d3a92d7c2f5611",
+    "9683450d4fdf4f0fbece2119b4cf2aa431d64010c46d5cf5831e3091c277334a",
+    "29e7b414ef26e020a73246460e47b1fc9ae8a845f58d0faaf5d613c8d3ec444f",
+);
+const CLIENT_SHA256_SIGNATURE_HEX: &str = concat!(
+    "1ed510f2c43b9485d1fed00cfad4c0ff30ea1c1385c97e05a474f73020e2db5d",
+    "654991023ca285040bb114eb5937c00a4c6cbb4b84d0b274c2699a8cecea59e0",
+    "ca472cde3869b9135efc91629481847114050b7c26672c9900d2315388ceb737",
+    "5eb2ede599b337a970adea080130f4c6969cf9868a7664d551d7184289cf79a7",
+    "151a60d2b85ccd964822530e73f058afd59f12e29fc3fb408ea0f986c5ff891",
+    "4c00d378a2a745f8d24eecf741a23f396c4bcb6c9f6e06ceef17697c817b13f",
+    "a434179fc299c4d692c40dbec7d9d427f24e851a69256ee74c74632a65e3afb",
+    "44e3c2da35fdc2837418cf4fda5cd25a0d57b71f36edf23f8408cff89c68d2b4a4b",
+);
+const PREFLIGHT_SERVER_SHA256_SIGNATURE_HEX: &str = concat!(
+    "6542f4a740e79654efb3ae85c3032622269cec70a4795c20f89be275b0dc45aa",
+    "571709388bbc1b1a1cf0bdc5eb9a8514a568592729992dabbabe5d09ab011919",
+    "6114e554d13dc323d5b7a602eb8e13d1f2ffaf42fcc60a3dc53a8c6d7df89ee",
+    "006b2dd944e0a013da76e93d039a5ecfd29e1113eddcd8ad9e8e581ea3b8b69c9",
+    "e65fa66b14359da422cdbc4b991609475bde66b9bb1b8f37df85c2c085f011fb",
+    "47514b015cedc81d2acfea0f9f7b402d55b62bbfc597884dbedf6e69d46c8517",
+    "e28fcdf72b7c70dbfc7d6676d0ac8923ad72583b32f54aeed3f268b978d0194b",
+    "8df436ad3df7c39ce69eedbba82b2cb0f58ef5765ed4a5af540af3e0731d5a81",
+);
+const ALTERNATE_SERVER_SHA256_SIGNATURE_HEX: &str = concat!(
+    "106653910efd1106e7e9bd08cb9752f14e3ff8d60784a19aac429b75b6dc3823",
+    "60879ac5b4e2945694486c5ac01104b090b5a8e60d00c3a2bf04570366fea3fb",
+    "4129e21118918a6ed46f1889904c540fd6d70754277fdbce1bb322a2708041d2",
+    "0c4d4be9f1cc032830b88f75b93773d6b95c4d52001ad60b148af8d61e907567",
+    "ff64a6e952d9ff7ee46bfabd3849947578cfa25cc1863ca8bfd00341c09a249f",
+    "41830a1ae70749b39e840002b4e43205f30b0b8d6e08e97bb09b81473670629e",
+    "032258477d9d99da077253145de0cf4f42dc1966b6f3a67282b8f043f9a022ba",
+    "fde78f61a2a923359909ee47d066bd4f90b0f75262c743924ddc52d9470b07c1",
+);
+const SERVER_SHA384_SIGNATURE_HEX: &str = concat!(
+    "7a162638f1df60c3cbf8a77c989e5cd65d347225b4949655779ffc68386b02a06",
+    "170a3f002cd94fdfd84406c47ac292ad60f78c703cf98128fc2495b9e9dc774",
+    "030277a0cc7e8bfe885e8543605f7a64ed8c13b25bd9925a7167dedf054db7e",
+    "5a73fc5f464f76495f50d5c89de07f1642f881dd533de72f78026cf219bdd8b64",
+    "6ab8340d1a97fae5c2efd7298b470a73c053589b47ccfd6cd8812de4d078250c",
+    "d21fe6d8470ab018e95261de43aa979f9052e2f91d756e5b9fe7bb357d913685",
+    "0aa136e781dfcce0e35faa316082d42f6864a92b8bbf5a7d8703184a5f92d8f",
+    "680ec404e91abf451399a4ce7bea18fd12d20f23ca3ea9686e1849a196868198b",
+);
+
+fn decode_hex(hexadecimal: &str) -> Vec<u8> {
+    assert!(hexadecimal.len().is_multiple_of(2));
+    hexadecimal
+        .as_bytes()
+        .as_chunks::<2>()
+        .0
+        .iter()
+        .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).unwrap(), 16).unwrap())
+        .collect()
+}
+
+fn decode_fixture_hex(hexadecimal: &str) -> Vec<u8> {
+    let compact: String = hexadecimal
+        .chars()
+        .filter(|character| !character.is_ascii_whitespace())
+        .collect();
+    decode_hex(&compact)
+}
+
+fn encode_u24(value: usize) -> [u8; 3] {
+    assert!(value <= 0x00ff_ffff);
+    [
+        ((value >> 16) & 0xff) as u8,
+        ((value >> 8) & 0xff) as u8,
+        (value & 0xff) as u8,
+    ]
+}
+
+fn validated_rsa_key(encoded: &[u8]) -> ValidatedRsaPublicKey<'_> {
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(encoded).unwrap();
+    let subject_public_key_info = decode_x509_subject_public_key_info(&mut decoder, root).unwrap();
+    let policy = RsaPublicKeyPolicy::new(2048, 2048, &[65_537]).unwrap();
+    validate_rsa_public_key(subject_public_key_info, policy, Asn1Limits::default()).unwrap()
+}
 
 fn selected_suite(suite: CipherSuite) -> SelectedCipherSuite {
     let entry = CipherSuitePolicyEntry::new(suite, 1_000).unwrap();
@@ -1558,6 +1676,14 @@ fn validates_exact_main_handshake_certificate_request_and_signature_list() {
 fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
     let mut x25519_output = [0xa5; 32];
     with_retry_x25519_messages(CipherSuite::TlsAes128GcmSha256, |messages| {
+        let leaf_der = decode_fixture_hex(include_str!(
+            "../../tls13-reviewed-server-path-certificate-verify/tests/fixtures/apple_www_2026_11_11_leaf.der.hex"
+        ));
+        let leaf = decode_x509_certificate(&leaf_der, Asn1Limits::default()).unwrap();
+        let other_der = decode_fixture_hex(include_str!(
+            "../../x509-ocsp-reviewed-server-revocation-binding/tests/fixtures/apple-ev-intermediate.der.hex"
+        ));
+        let other = decode_x509_certificate(&other_der, Asn1Limits::default()).unwrap();
         let secret = derive_message_bound_retry_x25519_shared_secret(
             messages,
             &ALICE_PRIVATE,
@@ -1589,10 +1715,10 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
                 Tls13HandshakeType::EncryptedExtensions,
                 Tls13HandshakeType::Certificate,
             ],
-            32,
+            4_096,
         )
         .unwrap();
-        let mut reassembly_storage = [0xa5; 64];
+        let mut reassembly_storage = [0xa5; 4_096];
         let reassembler = RetryHandshakeRecordReassembler::new(
             server_state,
             handshake_policy,
@@ -1609,16 +1735,33 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
         let mut peer_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
         let peer_material = derive_traffic_key_material(&server_prk, &mut peer_storage).unwrap();
         let mut peer_state = RecordProtectionState::new(peer_material).unwrap();
-        let certificate_body = [0, 0, 0, 12, 0, 0, 3, 0x30, 1, 0, 0, 4, 0, 5, 0, 0];
-        let mut plaintext = [0_u8; 26];
-        plaintext[..6].copy_from_slice(&[8, 0, 0, 2, 0, 0]);
-        plaintext[6..10].copy_from_slice(&[11, 0, 0, 16]);
-        plaintext[10..].copy_from_slice(&certificate_body);
-        let ciphertext_policy = Tls13CiphertextPolicy::new(1_024).unwrap();
+        let encoded_extensions = [0, 4, 0, 5, 0, 0];
+        let other_encoded_extensions = [0, 0];
+        let certificate_list_length = 3
+            + leaf_der.len()
+            + encoded_extensions.len()
+            + 3
+            + other_der.len()
+            + other_encoded_extensions.len();
+        let mut certificate_body = Vec::with_capacity(4 + certificate_list_length);
+        certificate_body.push(0);
+        certificate_body.extend_from_slice(&encode_u24(certificate_list_length));
+        certificate_body.extend_from_slice(&encode_u24(leaf_der.len()));
+        certificate_body.extend_from_slice(&leaf_der);
+        certificate_body.extend_from_slice(&encoded_extensions);
+        certificate_body.extend_from_slice(&encode_u24(other_der.len()));
+        certificate_body.extend_from_slice(&other_der);
+        certificate_body.extend_from_slice(&other_encoded_extensions);
+        let mut plaintext = Vec::with_capacity(10 + certificate_body.len());
+        plaintext.extend_from_slice(&[8, 0, 0, 2, 0, 0]);
+        plaintext.push(11);
+        plaintext.extend_from_slice(&encode_u24(certificate_body.len()));
+        plaintext.extend_from_slice(&certificate_body);
+        let ciphertext_policy = Tls13CiphertextPolicy::new(8_192).unwrap();
         let inner_policy =
-            Tls13InnerPlaintextPolicy::new(&[TlsContentType::Handshake], 1_008).unwrap();
-        let mut scratch = [0xa5; 64];
-        let mut wire = [0xcc; 96];
+            Tls13InnerPlaintextPolicy::new(&[TlsContentType::Handshake], 8_176).unwrap();
+        let mut scratch = [0xa5; 4_096];
+        let mut wire = [0xcc; 4_096];
         let used = seal_tls13_record(
             &mut peer_state,
             &ciphertext_policy,
@@ -1628,7 +1771,7 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
             &mut wire,
         )
         .unwrap();
-        let mut opened = [0x5a; 64];
+        let mut opened = [0x5a; 4_096];
         let mut validated_certificate = false;
         let result = bound
             .open_accept_and_advance(
@@ -1648,7 +1791,14 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
                     Tls13HandshakeType::Certificate => {
                         let redacted_structure_error = pending
                             .validate_server_certificate(
-                                Tls13CertificateMessageLimits::new(15, 0, 32, 2, 16, 16),
+                                Tls13CertificateMessageLimits::new(
+                                    certificate_body.len() - 1,
+                                    0,
+                                    certificate_list_length,
+                                    3,
+                                    leaf_der.len(),
+                                    16,
+                                ),
                                 ExtensionBlockLimits::new(16, 4).unwrap(),
                             )
                             .unwrap_err();
@@ -1669,7 +1819,14 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
                         assert!(!error_debug.contains("48"));
                         let proof = pending
                             .validate_server_certificate(
-                                Tls13CertificateMessageLimits::new(64, 0, 32, 2, 16, 16),
+                                Tls13CertificateMessageLimits::new(
+                                    certificate_body.len(),
+                                    0,
+                                    certificate_list_length,
+                                    3,
+                                    leaf_der.len(),
+                                    16,
+                                ),
                                 ExtensionBlockLimits::new(16, 4).unwrap(),
                             )
                             .unwrap();
@@ -1678,12 +1835,38 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
                             pending.transcript_snapshot(),
                         );
                         let certificate = proof.certificate();
-                        assert_eq!(certificate.encoded(), certificate_body);
+                        assert_eq!(certificate.encoded(), certificate_body.as_slice());
                         assert!(certificate.request_context().is_empty());
-                        assert_eq!(certificate.certificate_count(), 1);
-                        let entry = certificate.entries().next().unwrap();
-                        assert_eq!(entry.certificate_data(), [0x30, 1, 0]);
-                        assert_eq!(entry.encoded_extensions(), [0, 4, 0, 5, 0, 0]);
+                        assert_eq!(certificate.certificate_count(), 2);
+                        let mut entries = certificate.entries();
+                        let first_entry = entries.next().unwrap();
+                        assert_eq!(first_entry.certificate_data(), leaf_der.as_slice());
+                        assert_eq!(first_entry.encoded_extensions(), encoded_extensions);
+                        let second_entry = entries.next().unwrap();
+                        assert_eq!(second_entry.certificate_data(), other_der.as_slice());
+                        assert_eq!(
+                            second_entry.encoded_extensions(),
+                            other_encoded_extensions
+                        );
+                        assert!(entries.next().is_none());
+                        let leaf_mismatch = bind_retry_server_certificate_leaf(&proof, &other)
+                            .unwrap_err();
+                        assert_eq!(
+                            leaf_mismatch,
+                            RetryServerCertificateLeafBindingError::LeafCertificateMismatch
+                        );
+                        let leaf_proof =
+                            bind_retry_server_certificate_leaf(&proof, &leaf).unwrap();
+                        assert!(std::ptr::eq(
+                            leaf_proof.server_certificate(),
+                            &proof,
+                        ));
+                        assert!(std::ptr::eq(leaf_proof.leaf_certificate(), &leaf));
+                        assert_eq!(leaf_proof.leaf_certificate().encoded(), leaf_der);
+                        let leaf_debug = format!("{leaf_proof:?}");
+                        assert!(leaf_debug.contains("[RETAINED]"));
+                        assert!(leaf_debug.contains("[REDACTED]"));
+                        assert!(!leaf_debug.contains("apple"));
                         let debug = format!("{proof:?}");
                         assert!(debug.contains("[RETAINED]"));
                         assert!(debug.contains("[REDACTED]"));
@@ -1706,6 +1889,28 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
 fn validates_exact_server_certificate_verify_against_offer_and_algorithm_policy() {
     let mut x25519_output = [0xa5; 32];
     with_retry_x25519_messages(CipherSuite::TlsAes128GcmSha256, |messages| {
+        let signature = decode_hex(SERVER_SHA256_SIGNATURE_HEX);
+        let certificate_verify_message =
+            CertificateVerifyMessage::new(SignatureScheme::RsaPssRsaeSha256.wire_id(), &signature)
+                .unwrap();
+        let mut certificate_verify_body = Vec::with_capacity(4 + signature.len());
+        certificate_verify_body
+            .extend_from_slice(&SignatureScheme::RsaPssRsaeSha256.wire_id().to_be_bytes());
+        certificate_verify_body.extend_from_slice(&(signature.len() as u16).to_be_bytes());
+        certificate_verify_body.extend_from_slice(&signature);
+        let certificate_body = [0, 0, 0, 8, 0, 0, 3, 0x30, 1, 0, 0, 0];
+        let mut plaintext = Vec::with_capacity(26 + certificate_verify_body.len());
+        plaintext.extend_from_slice(&[8, 0, 0, 2, 0, 0]);
+        plaintext.extend_from_slice(&[11, 0, 0, 12]);
+        plaintext.extend_from_slice(&certificate_body);
+        plaintext.extend_from_slice(&[
+            15,
+            ((certificate_verify_body.len() >> 16) & 0xff) as u8,
+            ((certificate_verify_body.len() >> 8) & 0xff) as u8,
+            (certificate_verify_body.len() & 0xff) as u8,
+        ]);
+        plaintext.extend_from_slice(&certificate_verify_body);
+
         let secret = derive_message_bound_retry_x25519_shared_secret(
             messages,
             &ALICE_PRIVATE,
@@ -1715,6 +1920,133 @@ fn validates_exact_server_certificate_verify_against_offer_and_algorithm_policy(
         let transcript = bind_retry_transcript(
             messages.messages().selection(),
             TranscriptPolicy::new(4_096).unwrap(),
+        )
+        .unwrap();
+        let allowed = [SignatureScheme::RsaPssRsaeSha256];
+        let policy = SignatureSchemePolicy::new(&allowed).unwrap();
+        let preflight_transcript = transcript.reconstruct_transcript().unwrap();
+        let mut verifier_transcript = transcript.reconstruct_transcript().unwrap();
+        verifier_transcript.update(&plaintext[..22]).unwrap();
+        let mut signed_input_output = [0_u8; MAXIMUM_INPUT_LENGTH];
+        let verifier_input = bind_certificate_verify_transcript(
+            &verifier_transcript,
+            CertificateVerifyRole::Server,
+            &mut signed_input_output,
+        )
+        .unwrap();
+        let verifier_hash = hash_transcript_bound_certificate_verify_input(
+            policy
+                .select(SignatureScheme::RsaPssRsaeSha256.wire_id())
+                .unwrap(),
+            &verifier_input,
+        );
+        let public_key_bytes = decode_hex(PUBLIC_KEY_SPKI_HEX);
+        let public_key = validated_rsa_key(&public_key_bytes);
+        let mut verification_scratch = [0xa5; 223];
+        let verification = verify_transcript_bound_certificate_verify(
+            &verifier_hash,
+            &certificate_verify_message,
+            public_key,
+            &mut verification_scratch,
+            Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+        )
+        .unwrap();
+
+        let client_signature = decode_hex(CLIENT_SHA256_SIGNATURE_HEX);
+        let client_message = CertificateVerifyMessage::new(
+            SignatureScheme::RsaPssRsaeSha256.wire_id(),
+            &client_signature,
+        )
+        .unwrap();
+        let mut client_output = [0_u8; MAXIMUM_INPUT_LENGTH];
+        let client_input = bind_certificate_verify_transcript(
+            &verifier_transcript,
+            CertificateVerifyRole::Client,
+            &mut client_output,
+        )
+        .unwrap();
+        let client_hash = hash_transcript_bound_certificate_verify_input(
+            policy
+                .select(SignatureScheme::RsaPssRsaeSha256.wire_id())
+                .unwrap(),
+            &client_input,
+        );
+        let mut client_scratch = [0xa5; 223];
+        let client_verification = verify_transcript_bound_certificate_verify(
+            &client_hash,
+            &client_message,
+            public_key,
+            &mut client_scratch,
+            Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+        )
+        .unwrap();
+
+        let preflight_signature = decode_hex(PREFLIGHT_SERVER_SHA256_SIGNATURE_HEX);
+        let preflight_message = CertificateVerifyMessage::new(
+            SignatureScheme::RsaPssRsaeSha256.wire_id(),
+            &preflight_signature,
+        )
+        .unwrap();
+        let mut preflight_output = [0_u8; MAXIMUM_INPUT_LENGTH];
+        let preflight_input = bind_certificate_verify_transcript(
+            &preflight_transcript,
+            CertificateVerifyRole::Server,
+            &mut preflight_output,
+        )
+        .unwrap();
+        let preflight_hash = hash_transcript_bound_certificate_verify_input(
+            policy
+                .select(SignatureScheme::RsaPssRsaeSha256.wire_id())
+                .unwrap(),
+            &preflight_input,
+        );
+        let mut preflight_scratch = [0xa5; 223];
+        let preflight_verification = verify_transcript_bound_certificate_verify(
+            &preflight_hash,
+            &preflight_message,
+            public_key,
+            &mut preflight_scratch,
+            Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+        )
+        .unwrap();
+
+        let alternate_signature = decode_hex(ALTERNATE_SERVER_SHA256_SIGNATURE_HEX);
+        let alternate_message = CertificateVerifyMessage::new(
+            SignatureScheme::RsaPssRsaeSha256.wire_id(),
+            &alternate_signature,
+        )
+        .unwrap();
+        let mut alternate_scratch = [0xa5; 223];
+        let alternate_verification = verify_transcript_bound_certificate_verify(
+            &verifier_hash,
+            &alternate_message,
+            public_key,
+            &mut alternate_scratch,
+            Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+        )
+        .unwrap();
+
+        let sha384_signature = decode_hex(SERVER_SHA384_SIGNATURE_HEX);
+        let sha384_message = CertificateVerifyMessage::new(
+            SignatureScheme::RsaPssRsaeSha384.wire_id(),
+            &sha384_signature,
+        )
+        .unwrap();
+        let sha384_allowed = [SignatureScheme::RsaPssRsaeSha384];
+        let sha384_policy = SignatureSchemePolicy::new(&sha384_allowed).unwrap();
+        let sha384_hash = hash_transcript_bound_certificate_verify_input(
+            sha384_policy
+                .select(SignatureScheme::RsaPssRsaeSha384.wire_id())
+                .unwrap(),
+            &verifier_input,
+        );
+        let mut sha384_scratch = [0xa5; 207];
+        let sha384_verification = verify_transcript_bound_certificate_verify(
+            &sha384_hash,
+            &sha384_message,
+            public_key,
+            &mut sha384_scratch,
+            Tls13RsaPssSignatureLimits::Sha384(RsaPssSha384SignatureLimits::new(300, 300).unwrap()),
         )
         .unwrap();
         let suite = transcript.transcript().selected_suite();
@@ -1738,10 +2070,10 @@ fn validates_exact_server_certificate_verify_against_offer_and_algorithm_policy(
                 Tls13HandshakeType::Certificate,
                 Tls13HandshakeType::CertificateVerify,
             ],
-            32,
+            512,
         )
         .unwrap();
-        let mut reassembly_storage = [0xa5; 96];
+        let mut reassembly_storage = [0xa5; 384];
         let reassembler = RetryHandshakeRecordReassembler::new(
             server_state,
             handshake_policy,
@@ -1758,19 +2090,11 @@ fn validates_exact_server_certificate_verify_against_offer_and_algorithm_policy(
         let mut peer_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
         let peer_material = derive_traffic_key_material(&server_prk, &mut peer_storage).unwrap();
         let mut peer_state = RecordProtectionState::new(peer_material).unwrap();
-        let certificate_body = [0, 0, 0, 8, 0, 0, 3, 0x30, 1, 0, 0, 0];
-        let certificate_verify_body = [8, 4, 0, 3, 0xaa, 0xbb, 0xcc];
-        let mut plaintext = [0_u8; 33];
-        plaintext[..6].copy_from_slice(&[8, 0, 0, 2, 0, 0]);
-        plaintext[6..10].copy_from_slice(&[11, 0, 0, 12]);
-        plaintext[10..22].copy_from_slice(&certificate_body);
-        plaintext[22..26].copy_from_slice(&[15, 0, 0, 7]);
-        plaintext[26..].copy_from_slice(&certificate_verify_body);
         let ciphertext_policy = Tls13CiphertextPolicy::new(1_024).unwrap();
         let inner_policy =
             Tls13InnerPlaintextPolicy::new(&[TlsContentType::Handshake], 1_008).unwrap();
-        let mut scratch = [0xa5; 64];
-        let mut wire = [0xcc; 96];
+        let mut scratch = [0xa5; 384];
+        let mut wire = [0xcc; 384];
         let used = seal_tls13_record(
             &mut peer_state,
             &ciphertext_policy,
@@ -1780,9 +2104,7 @@ fn validates_exact_server_certificate_verify_against_offer_and_algorithm_policy(
             &mut wire,
         )
         .unwrap();
-        let mut opened = [0x5a; 64];
-        let allowed = [SignatureScheme::RsaPssRsaeSha256];
-        let policy = SignatureSchemePolicy::new(&allowed).unwrap();
+        let mut opened = [0x5a; 384];
         let disallowed = [SignatureScheme::RsaPssRsaeSha384];
         let disallowed_policy = SignatureSchemePolicy::new(&disallowed).unwrap();
         let mut validated_certificate_verify = false;
@@ -1843,7 +2165,7 @@ fn validates_exact_server_certificate_verify_against_offer_and_algorithm_policy(
                             pending.transcript_snapshot(),
                         );
                         assert_eq!(proof.message().algorithm_wire_id(), 0x0804);
-                        assert_eq!(proof.message().signature(), [0xaa, 0xbb, 0xcc]);
+                        assert_eq!(proof.message().signature(), signature);
                         assert_eq!(proof.offered_signature_algorithms().len(), 1);
                         assert_eq!(proof.offered_signature_algorithms().get(0), Some(0x0804));
                         assert_eq!(
@@ -1854,6 +2176,49 @@ fn validates_exact_server_certificate_verify_against_offer_and_algorithm_policy(
                         assert!(debug.contains("[RETAINED]"));
                         assert!(debug.contains("[REDACTED]"));
                         assert!(!debug.contains("aabbcc"));
+                        assert_eq!(
+                            bind_retry_server_certificate_verify_signature(
+                                &proof,
+                                &client_verification,
+                            )
+                            .unwrap_err(),
+                            RetryServerCertificateVerifySignatureBindingError::WrongEndpointRole,
+                        );
+                        assert_eq!(
+                            bind_retry_server_certificate_verify_signature(
+                                &proof,
+                                &preflight_verification,
+                            )
+                            .unwrap_err(),
+                            RetryServerCertificateVerifySignatureBindingError::TranscriptSnapshotMismatch,
+                        );
+                        assert_eq!(
+                            bind_retry_server_certificate_verify_signature(
+                                &proof,
+                                &sha384_verification,
+                            )
+                            .unwrap_err(),
+                            RetryServerCertificateVerifySignatureBindingError::SignatureSchemeMismatch,
+                        );
+                        assert_eq!(
+                            bind_retry_server_certificate_verify_signature(
+                                &proof,
+                                &alternate_verification,
+                            )
+                            .unwrap_err(),
+                            RetryServerCertificateVerifySignatureBindingError::MessageMismatch,
+                        );
+                        let signed = bind_retry_server_certificate_verify_signature(
+                            &proof,
+                            &verification,
+                        )
+                        .unwrap();
+                        assert!(core::ptr::eq(signed.binding(), &proof));
+                        assert!(core::ptr::eq(signed.verification(), &verification));
+                        assert_eq!(
+                            format!("{signed:?}"),
+                            "VerifiedBoundRetryServerCertificateVerifySignature",
+                        );
                         validated_certificate_verify = true;
                         true
                     }
@@ -2651,6 +3016,14 @@ fn errors_are_stable_and_payload_free() {
     );
     assert!(invalid_entry_extensions.source().is_some());
 
+    let leaf_mismatch = RetryServerCertificateLeafBindingError::LeafCertificateMismatch;
+    assert_eq!(
+        leaf_mismatch.to_string(),
+        "TLS 1.3 retry server Certificate leaf and decoded X.509 certificate differ"
+    );
+    assert!(leaf_mismatch.source().is_none());
+    assert!(!format!("{leaf_mismatch:?}").contains("apple"));
+
     let invalid_certificate_verify = RetryServerCertificateVerifyValidationError::Structure(
         CertificateVerifyMessageError::SignatureLengthMismatch,
     );
@@ -2660,6 +3033,30 @@ fn errors_are_stable_and_payload_free() {
     );
     assert!(invalid_certificate_verify.source().is_some());
     assert!(!format!("{invalid_certificate_verify:?}").contains("aabbcc"));
+
+    let signature_binding_errors = [
+        (
+            RetryServerCertificateVerifySignatureBindingError::WrongEndpointRole,
+            "TLS 1.3 retry CertificateVerify signature verdict has the wrong endpoint role",
+        ),
+        (
+            RetryServerCertificateVerifySignatureBindingError::TranscriptSnapshotMismatch,
+            "TLS 1.3 retry CertificateVerify signature verdict has a different transcript snapshot",
+        ),
+        (
+            RetryServerCertificateVerifySignatureBindingError::SignatureSchemeMismatch,
+            "TLS 1.3 retry CertificateVerify signature verdict has a different authorized scheme",
+        ),
+        (
+            RetryServerCertificateVerifySignatureBindingError::MessageMismatch,
+            "TLS 1.3 retry CertificateVerify signature verdict has a different message",
+        ),
+    ];
+    for (error, expected) in signature_binding_errors {
+        assert_eq!(error.to_string(), expected);
+        assert!(error.source().is_none());
+        assert!(!format!("{error:?}").contains("7d4fa22e"));
+    }
 
     let unexpected = RetryHandshakeRecordBindingError::UnexpectedContentType;
     assert_eq!(

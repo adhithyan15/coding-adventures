@@ -71,10 +71,11 @@ def test_a_whole_value_bind_is_refused():
 
 
 def test_constructors_are_still_refused():
-    # A level refusal is recorded on the model, not raised (an `ir.data` document still lowers).
-    for ctor in ("Some", "Circle"):
-        m = lower(f"match r with Ok({ctor}) -> true | Err(_) -> false").models["m"]
-        assert m.unsupported is not None and m.unsupported.code == "level"
+    # Slice S11a: a name that is a declared constructor is a constructor *pattern*, never a bind, so
+    # `Circle` (which has a field) is a wrong-field-count type error, and the built-in `Some` is still a
+    # reserved name (a corpus error as a bind).  `Ok` and `Err` are constructors, not names.
+    assert refused("match r with Ok(Some) -> true | Err(_) -> false").code == "corpus"
+    assert refused("match r with Ok(Circle) -> true | Err(_) -> false").code == "type"
     assert refused("match r with Ok(Ok) -> true | Err(_) -> false").code == "type"
 
 
@@ -126,6 +127,8 @@ def test_a_bind_named_like_a_record_is_refused(pattern):
         + ("Err(_)" if pattern.startswith("Ok") else "Ok(_)")
         + " -> false\n"
     )
-    # A level refusal is recorded on the model, not raised.
-    m = lower_document(parse_source(text)).models["m"]
-    assert m.unsupported is not None and m.unsupported.code == "level"
+    # Slice S11a: `Point` is the record's one constructor, so this is a constructor pattern against a
+    # `Bool`, a type error (it was the level `ir.data` while records could not be lowered).
+    with pytest.raises(OracleError) as err:
+        lower_document(parse_source(text))
+    assert err.value.code == "type"

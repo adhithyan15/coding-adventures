@@ -762,6 +762,53 @@ first successful exec of a non-Kiln path is the step.**
   at entry and a call killed while blocked print identically. It is strictly
   better than before D19, when every kill was `missing-exit`.
 
+**A failed action's traces are a prefix of the recipe (D36).** `CheckRecipe`
+used to demand one step trace per recipe line. A multi-step BUILD that fails
+before its last step leaves fewer traces than lines, and every such action was
+`trace-incomplete:recipe-mismatch` (W10): an unknown write set, so a run-void
+under the strict merge. In real-build census runs that was about 33 actions per
+shard, about half of all unknown write sets. Fewer traces are now accepted when
+ALL of these hold, and the verdict is then only `failed` (raised by
+`stepStatus`), with `writes_complete` left to the traces:
+
+1. every trace matches its recipe line, in order, exactly as before (a shell
+   `-c` argv whose line is byte-equal): the traces are a prefix of the recipe;
+2. every trace but the last has an exit line and exited 0;
+3. the last trace has an exit line, was not killed by a signal, and exited
+   non-zero.
+
+Everything else stays `trace-incomplete:recipe-mismatch`: more traces than
+lines; a prefix whose last step succeeded; a step that differs from its line; a
+reordered or gapped recipe; an earlier step that failed or was killed; and an
+EMPTY trace set beside a non-empty recipe (no step ran, so there is no failed
+step to excuse the missing ones; `Classify` refuses an empty set earlier anyway,
+and a step that never started is the executor's `failed to start step` case,
+which `collect` handles from the step counts).
+
+*Why it is safe.* (a) The build tool runs an action's steps in order and stops
+at the first that fails: `runCommands` in
+`build-tool/internal/executor/executor.go` (currently near line 474) loops over
+the step commands and returns the `failed` result (currently near line 531) on
+the first step error, and no later step of that action is started. So the writes of a failed action are exactly those of the traced steps;
+nothing runs after the failure. (b) A failed action emits no manifest, so the
+prefix rule never produces a cache entry. (c) A rewritten BUILD that drops
+trailing steps ends on a step that SUCCEEDED, which condition 3 rejects; to pass,
+a rewrite would have to end on a failing step, which is the honest failed case.
+(d) A step stopped for a reason the traces do not show (it could not be started,
+a descendant held the output pipe, a timeout or interrupt) either has exit 0 or
+no clean non-zero exit, and stays a mismatch. The exit status is the one
+`stepStatus` already reads (`Trace.StepExit`); no new source. `RecorderVersion`
+5 to 6, because the verdict for these actions changes.
+
+*What D36 does NOT change: the strict void.* Before this rule these actions were
+`trace-incomplete:recipe-mismatch`, which the merge treats as a HARD unknown
+(`unkHard`, recmerge `unknown()`): a run-void in BOTH the strict and the relaxed
+verdicts. After it they carry `failed`, which is `unkTruncated`: the strict
+verdict still voids the run (M-1: the build on main would have run the rest),
+and the relaxed one only loses that action (`voidStrict`, `relaxLost`). The
+change is hard-void to strict-only. It is correct that the strict void stays:
+D36 makes the write set known, it does not make a failed action a built one.
+
 **Addresses.** `socket` needs a symbolic `AF_*` domain, and `connect` and
 `bind` need a `sockaddr`; otherwise `sockaddr`. Only `sendto` may have a
 `NULL` address. `sendmsg` and `sendmmsg` give one event per distinct
@@ -1326,8 +1373,19 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   `gated` and `unkeyed` count the actions whose plan entry has a gate or no weak
   key (overall and per language), `writes_unknown` the actions with a believed
   record whose `writes_complete` is false, plus `record.failed` and every action with no verdict at all, and
-  `actions.strict_merge_voids_shard` is true when `writes_unknown > 0` or the
-  shard is void (the Markdown line "strict merge would void this shard: yes/no").
+  `truncated` the actions with a KNOWN write set whose execution was cut short,
+  the merge's `unkTruncated` (a believed record with a `failed` or `daemon-left`
+  reason, or fewer steps run than the plan lists; mirrored from recmerge
+  `unknown()` as far as the census's inputs allow, and not counted again when
+  already in `writes_unknown`), `relaxed_would_lose` the actions the relaxed
+  merge would drop (equal to `truncated`), `relaxed_merge_voids_shard` true when
+  `writes_unknown > 0` or the shard is void (a hard unknown voids both
+  verdicts), and
+  `actions.strict_merge_voids_shard` is true when `writes_unknown > 0`,
+  `truncated > 0` or the shard is void (the Markdown line "strict merge would
+  void this shard: yes/no"). Since D36 a failed action with complete writes is
+  `truncated`, not `writes_unknown`. The three counts are additive JSON keys,
+  also per language.
   The shares
   `recordable_share_of_built_ok`, `emittable_share` and
   `emittable_share_of_built_ok` (a share over zero is 0). `actions` carries
@@ -2162,14 +2220,14 @@ has a random suffix and the parent directory is synced after the link.
    tree disagreed: `TreeError.Partial`) counts one more, because the paths it
    names are not the files that changed on disk.
 
-*A limitation, and a follow-up.* A failed action that stops mid-recipe has fewer
-traces than recipe lines, so the classifier's `CheckRecipe` says
-`trace-incomplete:recipe-mismatch` (W10) and its write set is unknown: the merge
-treats it as run-void in the relaxed report too, not as a truncated execution.
-The merge's `steps-missing` branch is reachable only for a failure on the last
-step. Fixing it is a classifier change (compare the traced prefix of the recipe
-when the build tool says the action failed), logged as a follow-up; `collect`
-reports what the classifier says.
+*A limitation, now narrowed (D36).* A failed action that stops mid-recipe has
+fewer traces than recipe lines. When the traces are a byte-exact prefix whose
+last step exited non-zero, the classifier raises only `failed` and the write set
+is whatever the traces say (section 4.5, D36); the merge's `failed` handling
+(M-1, truncated execution) applies. Any other shortfall (the last step
+succeeded, a step differs) is still `trace-incomplete:recipe-mismatch` (W10) and
+an unknown write set: the merge treats it as run-void in the relaxed report too.
+`collect` reports what the classifier says.
 
 **P13. Records are classified at action end, and recording is serial
 (2b-2b-i).** `traced.Classify` resolves paths against the disk, so a record
@@ -3476,7 +3534,7 @@ write-open counts, and so does a rewrite between two execs); otherwise
 **`/proc`.** The `ephemeral` list of `host-roots.json` (§5.3) is the one
 authoritative list. Its seed allows the ubiquitous entries: `/proc/self/{exe,maps,cgroup,mountinfo}`,
 `/proc/{meminfo,stat,cpuinfo,filesystems}`, `/sys/devices/system/cpu/**`,
-`/sys/fs/cgroup/**` and `/dev/fd/N`.
+`/sys/fs/cgroup/**`, `/dev/fd/N` and `/proc/self/fd` with `/proc/self/fd/N` (D37).
 
 `/proc/self/status` and `/proc/self/stat` reveal `TracerPid`, so a
 program could behave differently when traced. A read of either gives
@@ -3616,11 +3674,13 @@ Manifests never store out-of-repository paths. Instead,
      "fetchers": ["/opt/hostedtoolcache/rust/1.99.1/bin/cargo"]}
   ],
   "ephemeral": ["/dev/null", "/dev/urandom", "/dev/fd/*",
-                "/proc/self/exe", "/proc/self/maps", "/proc/self/cgroup",
-                "/proc/self/mountinfo", "/proc/meminfo", "/proc/stat",
+                "/proc/self/exe", "/proc/self/fd", "/proc/self/fd/*",
+                "/proc/self/maps", "/proc/self/cgroup", "/proc/self/mountinfo", "/proc/meminfo", "/proc/stat",
                 "/proc/cpuinfo", "/proc/filesystems",
                 "/sys/devices/system/cpu/**", "/sys/fs/cgroup/**"],
-  "absent-ok": ["$HOME/.config", "$HOME/.npmrc", "/selinux", "/sys/fs/selinux"]
+  "absent-ok": ["$HOME/.config", "$HOME/.npmrc", "/include", "/opt/rh", "/pyvenv.cfg",
+                "/selinux", "/sys/fs/selinux",
+                "/sys/kernel/mm/transparent_hugepage/hpage_pmd_size"]
 }
 ```
 
@@ -3697,6 +3757,42 @@ sandbox tests' policy fixtures derive their `ephemeral` and `absent-ok` lists
 from the real `code/kiln/legacy/host-roots.json` (they once carried their own
 short lists); and a change to `code/kiln/legacy/**` selects the job in
 `ci-gates.json`.
+
+**Decision D37: `/proc/self/fd` and four absent probes (first real-build
+censuses).** Every C/C++ action reads `/proc/self/fd/3` thousands of times
+(clang `readlink`s `/proc/self/fd/N` for each header it opens, after one
+`access("/proc/self/fd")` per process), and four absent probes were flagged
+`host-read`. The policy now has, and `kiln:recorder` needs no version bump
+(the change is in `policy:host-roots.json`, which is in `consumed` and so in
+the digest, as in D27):
+
+- `ephemeral` gains `/proc/self/fd` and `/proc/self/fd/*`: the same kernel
+  object as the `/dev/fd/*` entry already there. A single `*` matches one
+  component, and `X/**` is the only form that also covers `X`, so the directory
+  and its entries are two entries.
+- `absent-ok` gains the exact names `/sys/kernel/mm/transparent_hugepage/hpage_pmd_size`
+  (the Go runtime's probe, absent on these runners), `/pyvenv.cfg` (python),
+  `/opt/rh` and `/include` (compiler search paths). An `absent-ok` entry is
+  allowed only on a traced `ENOENT`. There is deliberately no
+  `transparent_hugepage/**`: `enabled` and `defrag` are tunable and change
+  runtime behaviour. None of the four is `ephemeral`.
+
+What the new entries do not cover (each pinned by `internal/traced/procfd_test.go`
+against the real policy file):
+
+- (a) An OPEN through `/proc/self/fd/N` or `/dev/fd/N` is classified by the
+  descriptor's own `-y` path, whatever the ephemeral list says
+  (`openVirtual`, `ops.go:226-233`): an open of a host file through it is a
+  `host-read` of that file. The list governs only metadata calls.
+- (b) A path that continues past the magic link (`/proc/self/fd/N/x`) is refused
+  as `proc-path` by `procMagicBeyond` (`host.go:150`), which `observeVirtual`
+  tests before `ephemeralMatch` (`host.go:120` against `host.go:124`).
+- (c) `/proc/<pid>/fd` and `/proc/<pid>/fd/N` for a numeric pid, and
+  `thread-self`, are not matched by the `self` entries and stay `proc-path`:
+  the pids in the trace are the tracer's.
+- (d) A PRESENT read of any of the four absent-ok names stays `host-read`
+  (`observeHost`, `host.go:208`: `absentOK` is consulted only when the path is
+  absent).
 
 **One explicit image label.** The record workflow and every job that consumes
 its records use one explicit `ubuntu-NN.04` label, never `ubuntu-latest`: the

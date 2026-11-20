@@ -10,7 +10,9 @@ coding_adventures_hkdf = { path = "../hkdf" }
 tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
 tls13-certificate-message = { path = "../tls13-certificate-message" }
 tls13-certificate-request-message = { path = "../tls13-certificate-request-message" }
+tls13-certificate-verify-input = { path = "../tls13-certificate-verify-input" }
 tls13-certificate-verify-message = { path = "../tls13-certificate-verify-message" }
+tls13-certificate-verify-transcript-binding = { path = "../tls13-certificate-verify-transcript-binding" }
 tls13-encrypted-extensions-message = { path = "../tls13-encrypted-extensions-message" }
 tls13-extension-block = { path = "../tls13-extension-block" }
 tls13-extension-context-policy = { path = "../tls13-extension-context-policy" }
@@ -26,8 +28,12 @@ tls13-signature-scheme-list = { path = "../tls13-signature-scheme-list" }
 tls13-signature-scheme-policy = { path = "../tls13-signature-scheme-policy" }
 tls13-traffic-key-material = { path = "../tls13-traffic-key-material" }
 tls13-transcript = { path = "../tls13-transcript" }
+x509-certificate = { path = "../x509-certificate" }
 
 [dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+rsa-pss-sha256-signature = { path = "../rsa-pss-sha256-signature" }
+rsa-pss-sha384-signature = { path = "../rsa-pss-sha384-signature" }
 tls13-finished = { path = "../tls13-finished" }
 tls13-cipher-suite-offer = { path = "../tls13-cipher-suite-offer" }
 tls13-client-hello-message = { path = "../tls13-client-hello-message" }
@@ -37,6 +43,7 @@ tls13-key-share = { path = "../tls13-key-share" }
 tls13-named-group-policy = { path = "../tls13-named-group-policy" }
 tls13-retry-key-schedule-binding = { path = "../tls13-retry-key-schedule-binding" }
 tls13-retry-transcript-binding = { path = "../tls13-retry-transcript-binding" }
+tls13-rsa-pss-signature-routing = { path = "../tls13-rsa-pss-signature-routing" }
 tls13-server-hello-message = { path = "../tls13-server-hello-message" }
 tls13-server-hello-retry-selection = { path = "../tls13-server-hello-retry-selection" }
 tls13-server-hello-selection = { path = "../tls13-server-hello-selection" }
@@ -44,3 +51,5 @@ tls13-server-hello-version-selection = { path = "../tls13-server-hello-version-s
 tls13-supported-groups = { path = "../tls13-supported-groups" }
 tls13-supported-versions = { path = "../tls13-supported-versions" }
 tls13-x25519-key-share-binding = { path = "../tls13-x25519-key-share-binding" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }
+x509-subject-public-key-info = { path = "../x509-subject-public-key-info" }

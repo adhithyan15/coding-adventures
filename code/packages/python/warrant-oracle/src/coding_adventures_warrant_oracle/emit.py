@@ -127,20 +127,42 @@ def _summary(rows: dict) -> dict:
 
 
 def census(spec: Spec) -> dict:
-    """What each IR level would be needed for: a parse-only report of a document."""
+    """What each IR level would be needed for: a parse-only report of a document.
+
+    Two views of the same suites (slice S11a split them):
+
+    ``suites_by_level``
+        what *evaluating* a suite needs: ``ir.core`` for a suite the oracle evaluates, otherwise the level
+        or feature that refuses it.  A suite that lowered and needs ``ir.data`` is counted under ``ir.data``
+        here until slice S11c-1 evaluates it, which is the pattern ``ir.fixed`` followed in S10a.
+    ``suites_lowered`` and ``suites_refused_at_lowering``
+        whether the suite *lowered* at all, and for each one that did not the reserved level or feature
+        name that refused it (``ir.list``, ``ir.seq``, ``err-value``, ``fixed-cast``, section 16.14 R28).
+    ``suites_w0701``
+        how many suites lowered but carry a generation-time ``W0701`` (a subject call under an impure guard,
+        or a claim that calls no operation): the generator refuses them at lowering too.
+    """
     levels: dict = {}
+    refused: dict = {}
     for suite in spec.suites:
         key = suite.unsupported.level if suite.unsupported is not None else "ir.core"
         levels[key] = levels.get(key, 0) + 1
+        if not suite.lowered:
+            refused[key] = refused.get(key, 0) + 1
     return {
         "module": spec.name,
         "document": spec.version,
         "ops": len(spec.ops),
         "models": len(spec.models),
         "models_not_ir_core": sum(1 for m in spec.models.values() if m.unsupported),
+        "models_refused_at_lowering": sum(1 for m in spec.models.values() if not m.lowered),
         "suites": len(spec.suites),
         "suites_by_level": levels,
+        "suites_lowered": sum(1 for s in spec.suites if s.lowered),
+        "suites_refused_at_lowering": refused,
+        "suites_w0701": sum(1 for s in spec.suites if s.refusal is not None),
         "examples": len(spec.examples),
+        "examples_refused_at_lowering": sum(1 for x in spec.examples if not x.lowered),
     }
 
 

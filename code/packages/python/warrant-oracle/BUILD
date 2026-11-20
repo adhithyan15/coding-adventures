@@ -54,6 +54,12 @@ uv pip install -e ".[dev]" --quiet
 # CV2-S10o-1: the synthetic off-by-one-consumed document (VER04r 8.2, D36) and its committed faults and
 # refusals dumps, the files the generator's slice S10o-2 must reproduce byte for byte.
 .venv/bin/python tests/fixtures/off-by-one-consumed-v1/make_off_by_one_consumed.py --check
+# CV2-S11a: the synthetic ir.data document (VER04r Appendix A.2: records, variants, Option, some / none / ctor /
+# field, match on every scrutinee with the data patterns, the intermediate use of unwrap_or) and its committed
+# dumps (lowering, refusals), the files the generator's slice S11b must reproduce byte for byte.  The directory is
+# new on purpose: the generator's tuple_parity.rs and fixed_parity.rs reproduce the older directories exactly.
+.venv/bin/python tests/fixtures/data-forms-v1/make_data_forms.py --check
+.venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/data-forms-v1/data_forms_v1.warrant --check tests/fixtures/data-forms-v1/data_forms_v1.oracle-lowering.json
 # CV2-S11f-1: the synthetic scalar-faults document (saturate-add, saturate-sub, shift-mask, scalar missing-error;
 # VER04r 8.2) and its committed faults and refusals dumps, the files the generator's slice S11f-2 must reproduce.
 .venv/bin/python tests/fixtures/scalar-faults-v1/make_scalar_faults.py --check

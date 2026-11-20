@@ -151,11 +151,22 @@ def test_tuple_equality_lowers_and_is_structural(op, tag):
     assert c.fn({"a": same, "b": other}) is (tag == "ne")
 
 
-def test_equality_unifies_nat_with_int_and_widths_per_component():
+def test_equality_of_tuples_is_invariant_in_every_component():
+    """A tuple never lifts a component (VER04r 16.16 R51, the checker's ``common_type`` has no tuple rule)."""
     assert model("a == (true, 3)", "a: (Bool,Nat)").unsupported is None
     ir = ["eq", ["tuple", [lit("Bytes", "0001"), lit("Nat", 1)]], var("t")]
     ir[1][1][0] = ["lit", {"type": "Bytes", "value": "0001"}]
-    assert typed(ir, {"t": A.Ty("()", (A.Ty("Bytes"), NAT))}).ty == BOOL
+    assert typed(ir, {"t": A.Ty("()", (A.Ty("Bytes", (2,)), NAT))}).ty == BOOL
+    # ... but Bytes<2> against Bytes, and Nat against Int, inside a tuple, are no longer unified
+    with pytest.raises(OracleError) as err:
+        typed(ir, {"t": A.Ty("()", (A.Ty("Bytes"), NAT))})
+    assert err.value.code == "ir"
+    with pytest.raises(OracleError) as err:
+        model("a == b", "a: (Bool,Nat), b: (Bool,Int)")
+    assert err.value.code == "type"
+    with pytest.raises(OracleError) as err:
+        model("a", "a: (Nat,Nat)", "(Int,Int)")
+    assert err.value.code == "type"
 
 
 def test_equality_of_tuples_of_different_shapes_is_a_type_error():
@@ -215,11 +226,13 @@ def test_a_non_canonical_index_is_refused_by_the_lexer():
     assert err.value.code == "lex"
 
 
-def test_projection_of_a_non_tuple_is_the_level_ir_data_and_of_a_bytes_is_a_type_error():
-    assert model("a.0", "a: Bool").unsupported.level == "ir.data"
-    with pytest.raises(OracleError) as err:
-        model("(a, a).0.0", "a: Bool")  # postfix projection of a Bool
-    assert err.value.code == "type"
+def test_projection_of_a_non_tuple_is_a_type_error():
+    # Slice S11a (VER04r 16.14 R39 (c)): `e.i` on a value that is not a tuple was the level `ir.data`
+    # (records could not be lowered); it is a typing error now, a name or a postfix form alike.
+    for body in ("a.0", "(a, a).0.0"):
+        with pytest.raises(OracleError) as err:
+            model(body, "a: Bool")
+        assert err.value.code == "type", body
 
 
 def test_project_ir_errors():
@@ -337,12 +350,15 @@ def test_match_is_ir_tuple_only_on_a_result():
 
 
 def test_match_patterns_outside_the_six_are_refused_by_level_or_type():
-    # a literal pattern is not one of the six
-    assert model("match h(a) with Ok(true) -> true | Err(_) -> false").unsupported.level == "ir.data"
-    # an Option constructor on a Result
-    assert model("match h(a) with Some(x) -> true | _ -> false").unsupported.level == "ir.data"
-    assert model("match h(a) with None -> true | _ -> false").unsupported.level == "ir.data"
+    # Slice S11a: the literal pattern `bool` is a data pattern; `Ok(true)` on a Result needs BOTH levels
+    # (a `match` on a Result is ir.tuple, and a data pattern inside it adds ir.data, Appendix A.2)
+    m = model("match r with Ok(true) -> true | Ok(false) -> false | Err(_) -> false", "r: Result<Bool,E>")
+    assert m.requires == ("ir.core", "ir.data", "ir.tuple") and m.lowered
+    assert m.unsupported.level == "ir.data"  # lowered, not evaluated yet
     for body in (
+        # an Option constructor on a Result is a type error (it was the level ir.data)
+        "match h(a) with Some(x) -> true | _ -> false",
+        "match h(a) with None -> true | _ -> false",
         "match h(a) with Ok -> true | _ -> false",  # a constructor name used as a binder
         "match h(a) with Ok(x, y) -> true | _ -> false",  # arity
         "match h(a) with Err(E.A, E.B) -> true | _ -> false",
@@ -362,7 +378,9 @@ def test_an_error_value_bound_by_a_pattern_has_no_ir_form_so_it_may_not_be_used(
     r = "r: Result<Bool,E>"
     assert model("match r with Ok(x) -> x | Err(e) -> false", r).unsupported is None
     used = model("match r with Ok(x) -> x | Err(e) -> e == e", r)
-    assert used.unsupported.code == "level" and used.unsupported.level == "ir.data"
+    # outside every level: the feature name, not a level (VER04r 4.1, 16.14 R28); the model did not lower
+    assert used.unsupported.code == "level" and used.unsupported.level == "err-value"
+    assert not used.lowered
 
 
 def test_the_bool_scrutinee_of_a_tuple_projection_in_match_arm_scope():
@@ -401,8 +419,8 @@ def test_a_match_that_can_fall_through_is_a_corpus_error_unless_it_is_exhaustive
 
 def test_fall_through_through_a_partial_tuple_and_nested_result():
     body = "match r with Ok((true, b)) -> b | Err(_) -> false"
-    # a literal pattern is not one of the six: recorded as the level ir.data
-    assert model(body, "r: Result<(Bool,Bool),E>").unsupported.level == "ir.data"
+    # `Ok((true, b))` is a data pattern (bool) and leaves `Ok((false, _))` uncovered
+    assert "fall through" in corpus_error(body, "r: Result<(Bool,Bool),E>")
     # Ok(Ok(_)) and Err(_) leave Ok(Err(_)) uncovered
     msg = corpus_error(
         "match r with Ok(Ok(_)) -> true | Err(_) -> false", "r: Result<Result<Bool,E>,E>"
@@ -852,17 +870,21 @@ def test_model_def_programs_accept_a_match_in_a_model_body():
 # -- a few more edges ---------------------------------------------------------------------------------------------
 
 
-def test_projection_of_a_record_is_the_level_ir_data():
+def test_projection_of_a_record_lowers_to_field_and_needs_ir_data():
     spec = lower(
         "warrant r v1\n  record Point(x: U8, y: U8)\n  op f(a: U8) -> Point\n"
-        "  model m(a: U8) -> U8 = f(a).x\n"
+        "  model m(p: Point) -> U8 = p.y\n"
     )
-    assert spec.models["m"].unsupported.level == "ir.data"
+    m = spec.models["m"]
+    assert m.ir == ["field", ["var", "p"], 1] and m.requires == ("ir.core", "ir.data")
+    assert m.lowered and m.unsupported.level == "ir.data"  # the evaluation refusal (S11c-1)
     spec = lower(
         "warrant r v1\n  record Point(x: U8, y: U8)\n  op f(a: U8) -> Point\n"
         "  claim c:\n    forall a: U8. f(a).x == a\n"
     )
-    assert spec.suites[0].unsupported.level == "ir.data"
+    s = spec.suites[0]
+    assert s.lowered and s.requires == ("ir.core", "ir.data")
+    assert s.subject == ["field", ["subject_op", "f", [["var", "a"]]], 0]
 
 
 def test_a_match_with_no_context_types_its_arms_from_the_first_typed_arm():

@@ -199,10 +199,11 @@ def test_a_binder_rewritten_at_only_some_of_its_positions_has_no_stand_in():
 
 
 def test_the_stand_in_follows_the_static_widths():
-    src = BASE + "  op fixed<N: Nat>(a: Bytes<N>, b: Bytes<N>) -> Bool\n"
+    # (the op is not named `fixed`: a document may not declare a reserved built-in, R58)
+    src = BASE + "  op same_n<N: Nat>(a: Bytes<N>, b: Bytes<N>) -> Bool\n"
     out = build(
-        "  claim w3:\n    forall a: Bytes<3>, b: Bytes<3>. fixed<3>(a, b) == (a == b)\n",
-        "fault fixed ignore-last-byte\nfault fixed invert\n",
+        "  claim w3:\n    forall a: Bytes<3>, b: Bytes<3>. same_n<3>(a, b) == (a == b)\n",
+        "fault same_n ignore-last-byte\nfault same_n invert\n",
         src,
     )
     assert [c["fault"] for c in out.corpus["controls"]] == ["ignore-last-byte", "invert"]
@@ -305,7 +306,7 @@ def test_a_suite_that_admits_nothing_and_a_document_above_ir_core_are_refused():
     )
     refused("  assume platform:\n    memory.bounded\n  claim z:\n    forall a: U8. id8(a) == a\n")
     refused(
-        "  op bit(a: U8 | len([a]) == 1) -> U8\n  claim z:\n    forall a: U8. id8(a) == a\n",
+        "  op bit_op(a: U8 | len([a]) == 1) -> U8\n  claim z:\n    forall a: U8. id8(a) == a\n",
         code="level",
     )
 

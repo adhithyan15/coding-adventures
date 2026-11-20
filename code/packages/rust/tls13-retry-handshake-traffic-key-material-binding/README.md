@@ -111,6 +111,14 @@ context. The non-cloneable proof retains the pending pre-message snapshot and
 the exact nonempty certificate message only after every entry passes. It does
 not parse X.509 bytes or semantically interpret entry extension payloads.
 
+The first exact entry can then be joined to one certificate decoded by the
+repository-owned X.509 primitive. The join requires byte-for-byte equality
+between the entry's retained certificate bytes and the decoded certificate's
+complete retained DER document. Its non-cloneable proof retains both complete
+inputs, so a detached, re-encoded, or merely equivalent certificate cannot be
+substituted. The package does not itself decode the certificate or connect this
+leaf proof to a reviewed path, destination, public key, or signature verdict.
+
 When the pending message is server `CertificateVerify`, the handler can decode
 its exact authenticated body at the post-accept `ExpectFinished` position. The
 helper decodes the retained final ClientHello's exact `signature_algorithms`
@@ -121,6 +129,15 @@ the pending pre-message transcript snapshot, decoded message, exact offer, and
 authorized RSA-PSS scheme. An empty signature remains structurally valid at
 this boundary and must fail later cryptographic verification.
 
+That exact ordered-message proof can now be joined to one repository-owned
+RSA-PSS verification verdict. The join requires the verifier's server role,
+selected-transcript snapshot, policy-authorized scheme, and complete decoded
+message to equal the values retained by the authenticated ordered proof.
+Success is non-cloneable evidence retaining both complete proofs. This binds
+signature verification to the exact ordered retry message, but it does not
+prove that the caller-supplied RSA key came from the preceding Certificate or
+from a reviewed path, hostname, trust root, or revocation decision.
+
 This package derives one direction's handshake key and IV, creates matching
 record state, protects exact retry-handshake records in caller-owned buffers,
 enforces the public no-PSK server-flight type order, joins fresh ordered state
@@ -129,12 +146,14 @@ transcript only after explicit caller authorization of authenticated ordered
 messages. It provides the bounded `EncryptedExtensions` structure and retained
 offer/context check and the bounded main-handshake `CertificateRequest` checks
 and server `Certificate` framing and entry-policy checks above, plus exact
-server `CertificateVerify` framing, offer membership, and algorithm policy; the
-authorization bit is otherwise not body validation. This package does not
-parse X.509, access credentials, sign, cryptographically authenticate
-CertificateVerify or Finished, bind a reviewed leaf key, validate certificate paths,
-establish trust, verify hostnames, enforce revocation, perform I/O, authorize
-HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
+server `CertificateVerify` framing, offer membership, algorithm policy, and
+repository-owned RSA-PSS authentication when the caller supplies matching
+public-key evidence; the authorization bit is otherwise not body validation.
+This package does not decode X.509, access credentials, sign, authenticate
+Finished, bind the decoded leaf to a reviewed path or destination, bind the
+verified key to the preceding Certificate, establish trust, verify hostnames,
+enforce revocation, perform I/O, authorize HTTP or OAuth, or provide TLS,
+HTTPS, or live-provider readiness.
 
 ## Verification
 

@@ -192,3 +192,78 @@ func TestFromParsedStraceText(t *testing.T) {
 		t.Fatal(rec.Package)
 	}
 }
+
+// exiting is a one-process step trace of `sh -c line` that ended with code.
+func exiting(line string, code int) *trace.Trace {
+	t := shStep(line)
+	t.Procs[1].Exit.Code = code
+	return t
+}
+
+// killedStep is exiting's counterpart for a step killed by a signal.
+func killedStep(line string) *trace.Trace {
+	t := shStep(line)
+	t.Procs[1].Exit.Killed = true
+	t.Procs[1].Exit.Signal = "SIGKILL"
+	return t
+}
+
+// TestCheckRecipeFailedPrefix is the recipe prefix rule (KILN04 D36): fewer
+// traces than lines are fine only as a byte-exact prefix that ends on a step
+// that exited non-zero by itself, after steps that exited zero.
+func TestCheckRecipeFailedPrefix(t *testing.T) {
+	lines := []string{"make", "make test", "make install"}
+	for _, c := range []struct {
+		name  string
+		steps []*trace.Trace
+		lines []string
+		ok    bool
+	}{
+		{"prefix, last step failed", []*trace.Trace{exiting("make", 0), exiting("make test", 2)}, lines, true},
+		{"prefix of one, failed", []*trace.Trace{exiting("make", 1)}, lines, true},
+		{"prefix, last step succeeded", []*trace.Trace{exiting("make", 0), exiting("make test", 0)}, lines, false},
+		{"prefix, last step killed", []*trace.Trace{exiting("make", 0), killedStep("make test")}, lines, false},
+		{"prefix, last step has no exit line", []*trace.Trace{exiting("make", 0), func() *trace.Trace {
+			s := shStep("make test")
+			s.Procs[1].Exit = nil
+			return s
+		}()}, lines, false},
+		{"prefix, an earlier step failed too", []*trace.Trace{exiting("make", 3), exiting("make test", 2)}, lines, false},
+		{"prefix, an earlier step was killed", []*trace.Trace{killedStep("make"), exiting("make test", 2)}, lines, false},
+		{"prefix, a step differs", []*trace.Trace{exiting("make", 0), exiting("make check", 2)}, lines, false},
+		{"reordered recipe", []*trace.Trace{exiting("make test", 0), exiting("make", 2)}, lines, false},
+		{"gap: first and third", []*trace.Trace{exiting("make", 0), exiting("make install", 2)}, lines, false},
+		{"empty trace set, non-empty recipe", nil, lines, false},
+		{"more traces than lines", []*trace.Trace{exiting("make", 0), exiting("make test", 2)}, []string{"make"}, false},
+		{"full match, all succeeded (unchanged)", []*trace.Trace{exiting("make", 0), exiting("make test", 0), exiting("make install", 0)}, lines, true},
+		{"full match, last failed (unchanged)", []*trace.Trace{exiting("make", 0), exiting("make test", 0), exiting("make install", 9)}, lines, true},
+		{"empty both (unchanged)", nil, nil, true},
+	} {
+		got := CheckRecipe(c.steps, c.lines)
+		if c.ok != (got == nil) {
+			t.Errorf("%s: got %q, want ok=%v", c.name, got, c.ok)
+		}
+	}
+}
+
+// TestClassifyFailedPrefixRaisesOnlyFailed checks the record: a failed prefix
+// carries `failed` and no recipe-mismatch, and its write set stays complete; a
+// prefix whose last step succeeded is a mismatch and incomplete.
+func TestClassifyFailedPrefixRaisesOnlyFailed(t *testing.T) {
+	h := newHarness(t)
+	lines := []string{"make", "make test"}
+	rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: []*trace.Trace{exiting("make", 2)}, Recipe: lines})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hasReason(rec, "trace-incomplete:recipe-mismatch") || !hasReason(rec, "failed") || !rec.WritesComplete {
+		t.Fatalf("failed prefix: %q complete=%v", rec.Reasons, rec.WritesComplete)
+	}
+	rec, err = Classify(h.cfg, Input{Package: "code/p/a", Traces: []*trace.Trace{exiting("make", 0)}, Recipe: lines})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !hasReason(rec, "trace-incomplete:recipe-mismatch") || rec.WritesComplete {
+		t.Fatalf("succeeded prefix: %q complete=%v", rec.Reasons, rec.WritesComplete)
+	}
+}

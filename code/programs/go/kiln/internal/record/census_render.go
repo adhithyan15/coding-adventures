@@ -136,11 +136,16 @@ func renderMarkdown(s *CensusSummary) string {
 	w("- build did not fail (a believed record with no `failed` reason): %d\n- would emit as it stands, an UPPER BOUND (per action, before the merge: it cannot see reads-product or cross-action rules): %d (parse ok, writes complete, ZERO reasons in record.json, plan entry with no gate and a weak key, %s)\n", a.BuiltOK, a.Emittable, voidNote)
 	w("- gated by the plan (never emitted; the merge makes it a precondition): %d; unkeyed (no weak key): %d\n", a.Gated, a.Unkeyed)
 	w("- write set unknown (writes_complete false, or record.failed; a strict merge voids the run for any): %d\n", a.WritesUnknown)
+	w("- write set known but execution truncated (failed, daemon-left, steps missing; recmerge unkTruncated): %d; the relaxed merge would lose %d action(s)", a.Truncated, a.RelaxedWouldLose)
+	if a.RelaxedMergeVoidsShard {
+		w(", but a hard unknown or a void shard voids it in both verdicts")
+	}
+	w("\n")
 	yes := "no"
 	if a.StrictMergeVoidsShard {
 		yes = "yes"
 	}
-	w("- strict merge would void this shard: %s (writes unknown > 0, or the shard is void)\n", yes)
+	w("- strict merge would void this shard: %s (writes unknown > 0, truncated > 0, or the shard is void)\n", yes)
 	w("- census.json present and non-empty: %d\n- census.json present and empty, with a record whose parse succeeded (no reasons raised): %d\n", a.CensusNonEmpty, a.CensusClean)
 	w("- census.json EMPTY beside a failed parse half (the classifier never ran; not \"no host reads\"): %d\n", a.CensusEmptyParseFailed)
 	w("- census.json empty and no record: %d\n- census.json MISSING (a classify error; not \"no host reads\"): %d\n- census.json unreadable or invalid: %d\n\n", a.CensusEmptyNoRecord, a.CensusMissing, a.CensusInvalid)
