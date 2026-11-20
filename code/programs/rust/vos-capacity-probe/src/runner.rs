@@ -6,6 +6,7 @@
 //! ```text
 //!   parent                                    child (own process group)
 //!   ------                                    -------------------------
+//!   /bin/sh -c 'ulimit -t "$1"; shift; exec "$@"' sh N     (unix: the CPU backstop, below)
 //!   /usr/bin/time -l  vos-capacity-probe row --spec <json> --wall 120
 //!        |                                        |  stdout: {"progress":row}  (after the build)
 //!        |  every 50 ms: resident set of the      |          {"row":row}       (the answer)
@@ -19,8 +20,21 @@
 //! checker running to its work limit) is bounded as well as the solver loop, and `/usr/bin/time`
 //! and the child die together.  `RLIMIT_AS` is not used: it does not bound resident memory on
 //! macOS.
+//!
+//! ## Hardening (VOS-D097, VOS30 section 9.12 item 2, 3 and 5)
+//!
+//! * **No shell injection.**  The only shell text is the fixed literal [`ULIMIT_SCRIPT`].  The CPU
+//!   limit N is a `u64` computed from the row-budget constants and formatted from the number; it,
+//!   the program and every argument (the row's spec JSON included) are separate argv entries after
+//!   the script, so they can never be parsed as shell syntax.
+//! * **A bounded kill.**  The group kill checks the exit status of `/bin/kill`, falls back to
+//!   `Child::kill`, and the reaping wait is a `try_wait` loop of at most [`REAP_LIMIT`]: a child
+//!   that ignores both can never hang the parent.
+//! * **Capped output.**  A child's stdout and stderr are read through `take(1 MiB)` and the rest
+//!   is drained and discarded, so a child that prints without end neither fills the parent's
+//!   memory nor blocks on a full pipe.
 
-use crate::exp::{RowSpec, CONTROL_WALL};
+use crate::exp::{row_wall_s, wall_field, RowSpec, CONTROL_WALL};
 use crate::results::{green, RSS_CAP_KB, TIMEOUT_S};
 use crate::row::{Control, Knob, Row};
 use coding_adventures_bounded_json::{parse, serialize, JsonNumber, JsonValue};
@@ -38,10 +52,33 @@ use std::time::{Duration, Instant};
 /// proof checker's own work limit (2^32 visits) bounds a check to about two minutes.
 pub const KILL_SLACK: Duration = Duration::from_secs(150);
 
-/// The wall time after which the parent kills a row's process group.
-pub fn hard_limit() -> Duration {
-    Duration::from_secs(TIMEOUT_S) + CONTROL_WALL + KILL_SLACK
+/// The wall time after which the parent kills a row's process group, for a row whose budget is
+/// `wall_s` seconds: the budget, the control stage and the slack (VOS30 section 9.5 item 3).
+pub fn hard_limit_for(wall_s: u64) -> Duration {
+    Duration::from_secs(wall_s) + CONTROL_WALL + KILL_SLACK
 }
+
+/// The hard limit of a 120 s (non-chain) row.
+pub fn hard_limit() -> Duration {
+    hard_limit_for(TIMEOUT_S)
+}
+
+/// The most a parent waits for a killed child to be reaped before it gives up and moves on.
+pub const REAP_LIMIT: Duration = Duration::from_secs(5);
+
+/// The most output (bytes) read from each of a child's stdout and stderr.
+pub const CHILD_OUTPUT_CAP: u64 = 1024 * 1024;
+
+/// The CPU-seconds backstop N of a row whose budget is `wall_s`: the hard limit in whole seconds,
+/// computed from the budget constants, never read from text.  CPU time never exceeds wall time
+/// for a single-threaded solver, so this only ever fires for a child the wall-clock kill missed.
+pub fn cpu_limit_s(wall_s: u64) -> u64 {
+    hard_limit_for(wall_s).as_secs()
+}
+
+/// The one piece of shell text the probe ever runs: set the CPU limit from argument 1, drop it,
+/// and `exec` the rest.  Everything variable is an argument, not part of this string.
+pub const ULIMIT_SCRIPT: &str = "ulimit -t \"$1\"; shift; exec \"$@\"";
 
 /// A [`RowSpec`] as the JSON a child receives.
 pub fn spec_to_json(s: &RowSpec) -> String {
@@ -181,12 +218,50 @@ fn group_rss_kb(pgid: u32) -> Option<u64> {
     seen.then_some(total)
 }
 
-fn kill_group(pgid: u32) {
-    let _ = Command::new("/bin/kill")
+/// Signal the whole process group; whether `/bin/kill` ran and reported success.
+fn kill_group(pgid: u32) -> bool {
+    Command::new("/bin/kill")
         .args(["-KILL", "--", &format!("-{pgid}")])
         .stdout(Stdio::null())
         .stderr(Stdio::null())
-        .status();
+        .status()
+        .is_ok_and(|s| s.success())
+}
+
+/// A kill-on-drop guard on a child's process group: if the parent unwinds (a panic) or returns
+/// early while the child is still running, dropping the guard kills the group instead of
+/// orphaning it.  Disarmed once the child has been reaped.
+pub struct GroupGuard {
+    pgid: u32,
+    armed: bool,
+}
+
+impl GroupGuard {
+    /// Guard process group `pgid`.
+    pub fn new(pgid: u32) -> GroupGuard {
+        GroupGuard { pgid, armed: true }
+    }
+    /// The child is gone: nothing left to kill.
+    pub fn disarm(&mut self) {
+        self.armed = false;
+    }
+}
+
+impl Drop for GroupGuard {
+    fn drop(&mut self) {
+        if self.armed {
+            kill_group(self.pgid);
+        }
+    }
+}
+
+fn kill_and_reap(child: &mut std::process::Child, pgid: u32) {
+    let _ = terminate(
+        child,
+        &mut || kill_group(pgid),
+        REAP_LIMIT,
+        Duration::from_millis(10),
+    );
 }
 
 /// How a child ended, from the parent's point of view.
@@ -212,8 +287,86 @@ pub struct Child {
     pub polled_kb: u64,
 }
 
-/// Run `exe row --spec .. --wall ..` under `/usr/bin/time` in its own process group, polling its
-/// group's resident memory every 50 ms.
+/// The command that runs one row: on unix `/bin/sh -c ULIMIT_SCRIPT sh N /usr/bin/time FLAG EXE
+/// row --spec JSON --wall W`, with the spec JSON and every other variable part a separate argv
+/// entry.  Elsewhere there is no `ulimit`, and the command is `/usr/bin/time` alone (which fails
+/// to start, reported by [`run_child`]).
+pub fn launch_command(exe: &Path, spec: &RowSpec, wall_s: u64) -> Command {
+    #[cfg(unix)]
+    let mut cmd = {
+        let mut c = Command::new("/bin/sh");
+        c.arg("-c")
+            .arg(ULIMIT_SCRIPT)
+            .arg("sh")
+            .arg(cpu_limit_s(wall_s).to_string())
+            .arg("/usr/bin/time");
+        c
+    };
+    #[cfg(not(unix))]
+    let mut cmd = Command::new("/usr/bin/time");
+    cmd.arg(time_flag());
+    cmd.arg(exe).args([
+        "row",
+        "--spec",
+        &spec_to_json(spec),
+        "--wall",
+        &wall_s.to_string(),
+    ]);
+    cmd
+}
+
+/// Read at most `cap` bytes from `r` as text (lossy), then drain and discard the rest so the
+/// writer never blocks on a full pipe.
+pub fn read_capped(mut r: impl Read, cap: u64) -> String {
+    let mut buf = Vec::new();
+    let _ = r.by_ref().take(cap).read_to_end(&mut buf);
+    let _ = std::io::copy(&mut r, &mut std::io::sink());
+    String::from_utf8_lossy(&buf).into_owned()
+}
+
+/// What [`terminate`] needs of a child.
+pub trait Reap {
+    /// Has it exited?  (`Ok(true)` once it has.)
+    fn exited(&mut self) -> std::io::Result<bool>;
+    /// Kill it directly (the fallback when the group kill failed).
+    fn kill_it(&mut self);
+}
+
+impl Reap for std::process::Child {
+    fn exited(&mut self) -> std::io::Result<bool> {
+        self.try_wait().map(|s| s.is_some())
+    }
+    fn kill_it(&mut self) {
+        let _ = self.kill();
+    }
+}
+
+/// Kill a child and wait for it for at most `limit`.  `group_kill` returns whether `/bin/kill`
+/// reported success; if not, the child is killed directly.  Returns whether the child was reaped:
+/// `false` means it ignored the kill, and the caller moves on rather than hang.
+pub fn terminate(
+    c: &mut dyn Reap,
+    group_kill: &mut dyn FnMut() -> bool,
+    limit: Duration,
+    poll: Duration,
+) -> bool {
+    if !group_kill() {
+        c.kill_it();
+    }
+    let t0 = Instant::now();
+    loop {
+        if matches!(c.exited(), Ok(true)) {
+            return true;
+        }
+        if t0.elapsed() >= limit {
+            return false;
+        }
+        std::thread::sleep(poll);
+    }
+}
+
+/// Run `exe row --spec .. --wall ..` under `/usr/bin/time` (behind the `ulimit` wrapper) in its
+/// own process group, polling its group's resident memory every 50 ms.
 pub fn run_child(
     exe: &Path,
     spec: &RowSpec,
@@ -221,17 +374,8 @@ pub fn run_child(
     rss_cap_kb: u64,
     hard: Duration,
 ) -> Result<Child, String> {
-    let mut cmd = Command::new("/usr/bin/time");
-    cmd.arg(time_flag())
-        .arg(exe)
-        .args([
-            "row",
-            "--spec",
-            &spec_to_json(spec),
-            "--wall",
-            &wall_s.to_string(),
-        ])
-        .stdout(Stdio::piped())
+    let mut cmd = launch_command(exe, spec, wall_s);
+    cmd.stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .stdin(Stdio::null());
     // Its own process group, so one signal to the group reaches `/usr/bin/time` and the probe.
@@ -241,19 +385,16 @@ pub fn run_child(
         .spawn()
         .map_err(|e| format!("cannot start /usr/bin/time: {e}"))?;
     let pgid = child.id();
+    let mut guard = GroupGuard::new(pgid);
     let (tx_o, rx_o) = mpsc::channel::<String>();
     let (tx_e, rx_e) = mpsc::channel::<String>();
-    let mut so = child.stdout.take().ok_or("no stdout")?;
-    let mut se = child.stderr.take().ok_or("no stderr")?;
+    let so = child.stdout.take().ok_or("no stdout")?;
+    let se = child.stderr.take().ok_or("no stderr")?;
     let ho = std::thread::spawn(move || {
-        let mut s = String::new();
-        let _ = so.read_to_string(&mut s);
-        let _ = tx_o.send(s);
+        let _ = tx_o.send(read_capped(so, CHILD_OUTPUT_CAP));
     });
     let he = std::thread::spawn(move || {
-        let mut s = String::new();
-        let _ = se.read_to_string(&mut s);
-        let _ = tx_e.send(s);
+        let _ = tx_e.send(read_capped(se, CHILD_OUTPUT_CAP));
     });
     let t0 = Instant::now();
     let mut polled = 0u64;
@@ -266,18 +407,17 @@ pub fn run_child(
         if let Some(kb) = group_rss_kb(pgid) {
             polled = polled.max(kb);
             if kb > rss_cap_kb {
-                kill_group(pgid);
-                let _ = child.wait();
+                kill_and_reap(&mut child, pgid);
                 break End::Oom;
             }
         }
         if t0.elapsed() > hard {
-            kill_group(pgid);
-            let _ = child.wait();
+            kill_and_reap(&mut child, pgid);
             break End::Killed;
         }
         std::thread::sleep(Duration::from_millis(50));
     };
+    guard.disarm();
     let _ = ho.join();
     let _ = he.join();
     Ok(Child {
@@ -363,8 +503,39 @@ pub fn finish_row(spec: &RowSpec, ch: &Child) -> Row {
         },
     };
     row.tier = spec.tier.clone();
+    row.wall_s = wall_field(&spec.experiment);
     row.green = green(&row);
     row
+}
+
+/// The most children a run starts at once.
+pub const MAX_JOBS: usize = 64;
+
+/// `jobs` clamped to `1..=MAX_JOBS` (VOS-D097 item 5).
+pub fn clamp_jobs(jobs: usize) -> usize {
+    jobs.clamp(1, MAX_JOBS)
+}
+
+/// Run one row as a child under its own budget (VOS-D095) and turn the outcome into a row.
+pub fn run_one(exe: &Path, spec: &RowSpec) -> Row {
+    let wall_s = row_wall_s(&spec.experiment);
+    match run_child(exe, spec, wall_s, RSS_CAP_KB, hard_limit_for(wall_s)) {
+        Ok(ch) => finish_row(spec, &ch),
+        Err(e) => {
+            let mut r = Row::new(
+                &spec.experiment,
+                spec.knob.clone(),
+                &spec.mode,
+                spec.seed,
+                spec.seeds,
+            );
+            r.tier = spec.tier.clone();
+            r.wall_s = wall_field(&spec.experiment);
+            r.note = e;
+            r.peak_rss_kb = 1;
+            r
+        }
+    }
 }
 
 /// Run a list of rows with `jobs` children at a time, calling `on_row` as each finishes (in
@@ -378,26 +549,11 @@ pub fn run_rows(
     let next = std::sync::atomic::AtomicUsize::new(0);
     let slots: std::sync::Mutex<Vec<Option<Row>>> = std::sync::Mutex::new(vec![None; specs.len()]);
     std::thread::scope(|s| {
-        for _ in 0..jobs.max(1) {
+        for _ in 0..clamp_jobs(jobs) {
             s.spawn(|| loop {
                 let i = next.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
                 let Some(spec) = specs.get(i) else { break };
-                let row = match run_child(exe, spec, TIMEOUT_S, RSS_CAP_KB, hard_limit()) {
-                    Ok(ch) => finish_row(spec, &ch),
-                    Err(e) => {
-                        let mut r = Row::new(
-                            &spec.experiment,
-                            spec.knob.clone(),
-                            &spec.mode,
-                            spec.seed,
-                            spec.seeds,
-                        );
-                        r.tier = spec.tier.clone();
-                        r.note = e;
-                        r.peak_rss_kb = 1;
-                        r
-                    }
-                };
+                let row = run_one(exe, spec);
                 on_row(i, &row);
                 slots.lock().unwrap_or_else(|e| e.into_inner())[i] = Some(row);
             });
@@ -523,6 +679,164 @@ mod tests {
         p.instance_sha256 = "ab".repeat(32);
         let k = finish_row(&spec(), &child(&progress_line(&p), "", End::Killed));
         assert_eq!(k.instance_sha256, "ab".repeat(32));
+    }
+
+    /// A child that ignores every kill: it never reports exit.
+    struct Stubborn {
+        kills: u32,
+    }
+    impl Reap for Stubborn {
+        fn exited(&mut self) -> std::io::Result<bool> {
+            Ok(false)
+        }
+        fn kill_it(&mut self) {
+            self.kills += 1;
+        }
+    }
+
+    /// A child that exits as soon as it is killed.
+    struct Obedient {
+        dead: bool,
+    }
+    impl Reap for Obedient {
+        fn exited(&mut self) -> std::io::Result<bool> {
+            Ok(self.dead)
+        }
+        fn kill_it(&mut self) {
+            self.dead = true;
+        }
+    }
+
+    /// A child whose wait fails.
+    struct Broken;
+    impl Reap for Broken {
+        fn exited(&mut self) -> std::io::Result<bool> {
+            Err(std::io::Error::other("wait failed"))
+        }
+        fn kill_it(&mut self) {}
+    }
+
+    #[test]
+    fn a_stub_child_that_ignores_the_kill_cannot_hang_the_bounded_wait() {
+        let mut c = Stubborn { kills: 0 };
+        let t0 = Instant::now();
+        // The group kill reports failure: the fallback kills the child directly, once.
+        let reaped = terminate(
+            &mut c,
+            &mut || false,
+            Duration::from_millis(80),
+            Duration::from_millis(5),
+        );
+        assert!(!reaped, "it ignored the kill: not reaped, but we returned");
+        assert_eq!(c.kills, 1, "the fallback ran");
+        assert!(t0.elapsed() >= Duration::from_millis(80));
+        assert!(
+            t0.elapsed() < Duration::from_secs(5),
+            "bounded by the limit, not forever"
+        );
+        // The group kill succeeded: no fallback, and a still-running child is still not waited on
+        // past the limit.
+        let mut c = Stubborn { kills: 0 };
+        assert!(!terminate(
+            &mut c,
+            &mut || true,
+            Duration::from_millis(30),
+            Duration::from_millis(5)
+        ));
+        assert_eq!(c.kills, 0);
+        // A wait that errors is not a reap either.
+        assert!(!terminate(
+            &mut Broken,
+            &mut || true,
+            Duration::from_millis(30),
+            Duration::from_millis(5)
+        ));
+        // An obedient child is reaped at once.
+        let mut o = Obedient { dead: false };
+        assert!(terminate(
+            &mut o,
+            &mut || false,
+            REAP_LIMIT,
+            Duration::from_millis(5)
+        ));
+        assert!(o.dead);
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn dropping_an_armed_guard_kills_the_process_group_and_a_disarmed_one_does_not() {
+        use std::os::unix::process::CommandExt;
+        let mut ch = Command::new("sleep")
+            .arg("30")
+            .process_group(0)
+            .spawn()
+            .unwrap();
+        drop(GroupGuard::new(ch.id()));
+        assert!(terminate(
+            &mut ch,
+            &mut || true,
+            REAP_LIMIT,
+            Duration::from_millis(5)
+        ));
+        let mut ch = Command::new("sleep")
+            .arg("30")
+            .process_group(0)
+            .spawn()
+            .unwrap();
+        let mut g = GroupGuard::new(ch.id());
+        g.disarm();
+        drop(g);
+        std::thread::sleep(Duration::from_millis(100));
+        assert!(matches!(ch.try_wait(), Ok(None)), "still running");
+        let _ = ch.kill();
+        let _ = ch.wait();
+    }
+
+    #[test]
+    fn the_real_child_impl_reaps_a_killed_process() {
+        let mut ch = Command::new("sleep").arg("30").spawn().unwrap();
+        assert!(terminate(
+            &mut ch,
+            &mut || false,
+            REAP_LIMIT,
+            Duration::from_millis(5)
+        ));
+    }
+
+    #[test]
+    fn output_is_read_through_a_cap_and_the_rest_is_drained() {
+        let data = vec![b'x'; 5000];
+        let s = read_capped(std::io::Cursor::new(data), 1000);
+        assert_eq!(s.len(), 1000);
+        assert_eq!(
+            read_capped(std::io::Cursor::new(b"abc".to_vec()), 1000),
+            "abc"
+        );
+        // Invalid UTF-8 is replaced, never an error that loses the whole output.
+        assert!(read_capped(std::io::Cursor::new(vec![0xff, b'a']), 10).ends_with('a'));
+        assert_eq!(CHILD_OUTPUT_CAP, 1024 * 1024);
+    }
+
+    #[test]
+    fn jobs_are_clamped_and_a_chain_row_records_its_budget() {
+        assert_eq!(
+            (clamp_jobs(0), clamp_jobs(7), clamp_jobs(9999)),
+            (1, 7, MAX_JOBS)
+        );
+        let b3 = RowSpec {
+            experiment: "B3".into(),
+            knob: Knob::of(&[("length", Kv::I(25))]),
+            mode: "certified".into(),
+            seed: 1,
+            seeds: 5,
+            tier: "full".into(),
+        };
+        for end in [End::Killed, End::Oom, End::Exited(Some(1))] {
+            assert_eq!(finish_row(&b3, &child("", "", end)).wall_s, Some(600));
+            assert_eq!(finish_row(&spec(), &child("", "", end)).wall_s, None);
+        }
+        assert_eq!(cpu_limit_s(600), 780);
+        assert_eq!(cpu_limit_s(120), 300);
     }
 
     #[test]

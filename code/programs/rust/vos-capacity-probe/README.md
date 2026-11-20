@@ -52,18 +52,28 @@ Every row carries the guards of VOS30 section 9.4:
 * **G4** `(experiment, knob, seed)` fixes the DIMACS text bit for bit.
 
 And the limits of section 9.5: one child process per row in its own process group, a conflict cap
-with proof logging, a 120 s wall timeout, a 2 GiB resident-set cap polled every 50 ms, and the
-checker always run under `Limits::default()` (the probe never raises a limit).
+with proof logging, a 120 s wall timeout per obligation (a split or chain, B3, D3 and D4, gets a
+600 s row budget and records it as `wall_s`; VOS-D095), a 2 GiB resident-set cap polled every 50
+ms, and the checker always run under `Limits::default()` (the probe never raises a limit).
+
+Hardening (0.2.0, VOS-D097): the child is launched through `/bin/sh` with the fixed script
+`ulimit -t "$1"; shift; exec "$@"` as a CPU backstop, every variable part (the limit, the program,
+the row's spec) a separate argv entry, so nothing from a results file reaches shell text; the
+kill checks `/bin/kill`'s status, falls back to `Child::kill` and waits at most 5 s; child output
+is capped at 1 MiB; `--out` is written atomically; `--jobs` is clamped to 1..=64; and `validate`
+holds every row's `(experiment, mode, knob)` to the plan's closed set, values included. The
+process-group, `sh` and `ulimit` code is unix-only; the Windows BUILD runs `check` in process
+and skips the sampled re-run, saying so.
 
 ## Usage
 
 ```text
 vos-capacity-probe list
 vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] --out results.json
-vos-capacity-probe check code/specs/data/vos30-capacity-results.json
+vos-capacity-probe check [--full] code/specs/data/vos30-capacity-results.json [--jobs N]
 vos-capacity-probe table [--check | --write]
 vos-capacity-probe decide
-vos-capacity-probe merge --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
+vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
 ```
 
 * `run --tier quick` is what BUILD runs: the smallest knob of every experiment, five seeds each,
@@ -72,9 +82,21 @@ vos-capacity-probe merge --base A.json --fresh B.json --experiment E1 [--where f
   reviewer has regenerated it on a stated host; `dirty_tree`, `binary_sha256` and the regeneration
   banner are **self-reported**, so that review is a process control.
 * `check` validates every row against the schema and the guards, then **re-runs every quick-tier row**
-  and compares the instance digest, the verdict, the control and the conflict count.
+  and compares the instance digest, the verdict, the control and the conflict count. It then
+  prints a non-fatal `stale:` line for every recorded tree id (`trees`: the probe and its four
+  solver crates, `git rev-parse HEAD:<path>`) that differs from the working tree, and runs a
+  **seeded spot check**: full-tier non-E rows are drawn in an order seeded by the SHA-256 of the
+  results file's own bytes (so any edit reshuffles the sample), each re-run in a child process
+  under `run`'s limits, until a fixed 60 s budget is spent; rows whose recorded cost is over 20 s
+  are skipped but counted (`skipped over cap: n`). This is a spot check, not proof: a single edited
+  row among about 1,600 is caught with probability about `sample / population`.
+* `check --full` is the release gate: it **refuses** unless every recorded tree id equals the
+  working tree's (a file that records none cannot say which tree it describes), then re-runs
+  every full-tier row, no sampling, each in a child (about two hours).
 * `merge` refreshes a subset of the committed rows from a fresh `run` (VOS30 section 9.2): the
-  other rows stay byte-identical, a dirty fresh run or a changed row identity is refused. Use it
+  other rows stay byte-identical, a dirty fresh run or a changed row identity is refused.
+  `merge --add` instead appends fresh rows whose identities are all absent from the base (a plan
+  change that brings new knobs), records `"kind": "add"`, and refuses any overlap. Use `merge` 
   when `check` reports `instance_sha256 differs` on the E1 `vos-sched-fp-bitmap` rows after that
   crate's generated document changed (VOS-D103): commit, `run --tier full --only E1 --out F`,
   `merge --base R --fresh F --experiment E1 --where fixture=vos-sched-fp-bitmap --ignore-outside --out R`, then

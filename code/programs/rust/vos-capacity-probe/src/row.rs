@@ -195,6 +195,10 @@ pub struct Row {
     pub note: String,
     /// Experiment-specific numbers.
     pub metrics: Vec<(String, f64)>,
+    /// The row budget in seconds when it is not the 120 s default (VOS-D095, VOS30 section 9.5):
+    /// a chain row records its 600 s here; `None` means 120, so a row that does not change keeps
+    /// its recorded bytes.
+    pub wall_s: Option<u64>,
 }
 
 impl Row {
@@ -233,6 +237,7 @@ impl Row {
             cap: "none".to_string(),
             note: String::new(),
             metrics: Vec::new(),
+            wall_s: None,
         }
     }
 
@@ -254,7 +259,7 @@ impl Row {
         let o = |pairs: Vec<(&str, JsonValue)>| {
             JsonValue::Object(pairs.into_iter().map(|(k, v)| (k.to_string(), v)).collect())
         };
-        o(vec![
+        let mut fields = vec![
             ("experiment", JsonValue::String(self.experiment.clone())),
             ("knob", self.knob.to_json()),
             ("mode", JsonValue::String(self.mode.clone())),
@@ -310,16 +315,21 @@ impl Row {
             ("green", JsonValue::Bool(self.green)),
             ("cap", JsonValue::String(self.cap.clone())),
             ("note", JsonValue::String(self.note.clone())),
-            (
-                "metrics",
-                JsonValue::Object(
-                    self.metrics
-                        .iter()
-                        .map(|(k, v)| (k.clone(), flt(*v)))
-                        .collect(),
-                ),
+        ];
+        // Omitted when it is the default 120 s, so recorded rows keep their bytes.
+        if let Some(w) = self.wall_s {
+            fields.push(("wall_s", int(w)));
+        }
+        fields.push((
+            "metrics",
+            JsonValue::Object(
+                self.metrics
+                    .iter()
+                    .map(|(k, v)| (k.clone(), flt(*v)))
+                    .collect(),
             ),
-        ])
+        ));
+        o(fields)
     }
 
     /// Read a row back from its JSON.
@@ -445,6 +455,11 @@ impl Row {
             cap: s("cap")?,
             note: s("note")?,
             metrics,
+            wall_s: match pairs.iter().find(|(n, _)| n == "wall_s") {
+                None => None,
+                Some((_, JsonValue::Number(JsonNumber::Integer(i)))) if *i >= 0 => Some(*i as u64),
+                Some(_) => return Err("wall_s is not a non-negative integer".into()),
+            },
         })
     }
 
@@ -496,6 +511,19 @@ mod tests {
         let r = sample();
         let back = Row::from_line(&r.to_line()).unwrap();
         assert_eq!(back, r);
+    }
+
+    #[test]
+    fn wall_s_is_omitted_when_default_round_trips_and_is_strict() {
+        let mut r = sample();
+        assert!(!r.to_line().contains("wall_s"));
+        r.wall_s = Some(600);
+        assert!(r.to_line().contains("\"wall_s\":600"));
+        assert_eq!(Row::from_line(&r.to_line()).unwrap(), r);
+        let bad = r.to_line().replace("\"wall_s\":600", "\"wall_s\":\"600\"");
+        assert!(Row::from_line(&bad).unwrap_err().contains("wall_s"));
+        let neg = r.to_line().replace("\"wall_s\":600", "\"wall_s\":-1");
+        assert!(Row::from_line(&neg).is_err());
     }
 
     #[test]

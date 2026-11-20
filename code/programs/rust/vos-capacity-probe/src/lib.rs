@@ -22,4 +22,5 @@ pub mod runner;
 pub mod sem;
 pub mod shapes;
 pub mod solve;
+pub mod spot;
 pub mod table;

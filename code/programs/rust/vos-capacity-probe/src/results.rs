@@ -18,7 +18,7 @@
 //! that every quick-tier row reproduces from `(experiment, knob, seed)`, bit for bit in its digest
 //! and in its conflict count, and that every row obeys the guards.
 
-use crate::exp::{plan, run_row, RowSpec, Tier, EXPERIMENTS};
+use crate::exp::{knobs, plan, row_wall_s, run_row, RowSpec, Tier, CHAIN_EXPERIMENTS, EXPERIMENTS};
 use crate::row::{Control, Knob, Row};
 use crate::solve::{CONFLICT_SLICE, PROOF_CONFLICT_CAP};
 use coding_adventures_bounded_json::{parse, JsonNumber, JsonValue};
@@ -66,6 +66,11 @@ pub struct Meta {
     pub regeneration: Option<(String, String)>,
     /// The subset refreshes applied to the file by `merge` (VOS30 section 9.2), oldest first.
     pub merges: Vec<Merge>,
+    /// Content-addressed tree ids (`git rev-parse HEAD:<path>`) of the probe and its four solver
+    /// crates when the run was made (VOS-D097), empty for a file recorded before 0.2.0.  A tree
+    /// id, not a revision, because the repository squash-merges and a recorded revision is
+    /// generally not an ancestor of HEAD.
+    pub trees: Vec<(String, String)>,
 }
 
 /// One `merge`: which rows were refreshed, by which run.  The file's `tool`, `host` and
@@ -86,6 +91,37 @@ pub struct Merge {
     pub rows: Vec<String>,
     /// UTC time of the merge.
     pub at: String,
+    /// `Some("add")` for `merge --add` (VOS30 section 9.2), `None` for a refresh (the key is then
+    /// omitted, so an existing entry keeps its bytes).
+    pub kind: Option<String>,
+    /// The fresh run's tree ids (as [`Meta::trees`]); empty for an entry recorded before 0.2.0.
+    pub trees: Vec<(String, String)>,
+}
+
+/// The names a `trees` object must carry, in order: the probe and the four solver crates.
+pub const TREE_NAMES: [&str; 5] = [
+    "vos-capacity-probe",
+    "bit-blaster",
+    "cdcl-sat",
+    "drat-check",
+    "riscv-simulator",
+];
+
+fn trees_json(t: &[(String, String)]) -> JsonValue {
+    JsonValue::Object(t.iter().map(|(k, v)| (k.clone(), string(v))).collect())
+}
+
+fn trees_from(v: &JsonValue) -> Result<Vec<(String, String)>, String> {
+    match v {
+        JsonValue::Object(p) => p
+            .iter()
+            .map(|(k, x)| match x {
+                JsonValue::String(s) => Ok((k.clone(), s.clone())),
+                _ => Err("a tree id is not a string".to_string()),
+            })
+            .collect(),
+        _ => Err("trees is not an object".into()),
+    }
 }
 
 /// The text identity of a row, as used in `merges` and in messages.
@@ -139,17 +175,18 @@ impl Results {
     /// The JSON document.
     pub fn to_json(&self) -> JsonValue {
         let m = &self.meta;
+        let mut tool = vec![
+            ("name", string(&m.name)),
+            ("version", string(&m.version)),
+            ("binary_sha256", string(&m.binary_sha256)),
+            ("dirty_tree", JsonValue::Bool(m.dirty_tree)),
+        ];
+        if !m.trees.is_empty() {
+            tool.push(("trees", trees_json(&m.trees)));
+        }
         let mut top = vec![
             ("schema", int(SCHEMA)),
-            (
-                "tool",
-                obj(vec![
-                    ("name", string(&m.name)),
-                    ("version", string(&m.version)),
-                    ("binary_sha256", string(&m.binary_sha256)),
-                    ("dirty_tree", JsonValue::Bool(m.dirty_tree)),
-                ]),
-            ),
+            ("tool", obj(tool)),
             (
                 "host",
                 obj(vec![
@@ -201,7 +238,7 @@ impl Results {
                     m.merges
                         .iter()
                         .map(|g| {
-                            obj(vec![
+                            let mut e = vec![
                                 ("rev", string(&g.rev)),
                                 ("binary_sha256", string(&g.binary_sha256)),
                                 ("dirty_tree", JsonValue::Bool(g.dirty_tree)),
@@ -212,7 +249,14 @@ impl Results {
                                     JsonValue::Array(g.rows.iter().map(|x| string(x)).collect()),
                                 ),
                                 ("at", string(&g.at)),
-                            ])
+                            ];
+                            if let Some(k) = &g.kind {
+                                e.push(("kind", string(k)));
+                            }
+                            if !g.trees.is_empty() {
+                                e.push(("trees", trees_json(&g.trees)));
+                            }
+                            obj(e)
                         })
                         .collect(),
                 ),
@@ -322,6 +366,12 @@ impl Results {
                         where_: st(sub(g, "where")?)?,
                         rows: strs,
                         at: st(sub(g, "at")?)?,
+                        kind: sub(g, "kind").ok().map(st).transpose()?,
+                        trees: sub(g, "trees")
+                            .ok()
+                            .map(|t| trees_from(&t))
+                            .transpose()?
+                            .unwrap_or_default(),
                     })
                 })
                 .collect::<Result<Vec<_>, String>>()?,
@@ -346,6 +396,11 @@ impl Results {
                 revisions,
                 regeneration,
                 merges,
+                trees: sub(tool, "trees")
+                    .ok()
+                    .map(|t| trees_from(&t))
+                    .transpose()?
+                    .unwrap_or_default(),
             },
             rows,
         })
@@ -426,6 +481,7 @@ pub fn validate(res: &Results) -> Vec<String> {
         v.push("the file has no rows".to_string());
     }
     let ids: std::collections::BTreeSet<String> = res.rows.iter().map(row_text_id).collect();
+    v.extend(trees_violations("tool", &res.meta.trees));
     for (i, g) in res.meta.merges.iter().enumerate() {
         let at = format!("merges[{i}]");
         let hex = |x: &str, n: usize| x.len() == n && x.bytes().all(|b| b.is_ascii_hexdigit());
@@ -446,6 +502,10 @@ pub fn validate(res: &Results) -> Vec<String> {
         if g.rows.is_empty() {
             v.push(format!("{at}: lists no rows"));
         }
+        if g.kind.as_deref().is_some_and(|k| k != "add") {
+            v.push(format!("{at}: kind {:?} is not \"add\"", g.kind));
+        }
+        v.extend(trees_violations(&at, &g.trees));
         let mut once = std::collections::BTreeSet::new();
         for id in &g.rows {
             if !ids.contains(id) {
@@ -456,6 +516,7 @@ pub fn validate(res: &Results) -> Vec<String> {
             }
         }
     }
+    let planned = planned_identities();
     let mut seeds: BTreeMap<String, (std::collections::BTreeSet<u64>, u32)> = BTreeMap::new();
     for r in &res.rows {
         let id = format!(
@@ -470,6 +531,27 @@ pub fn validate(res: &Results) -> Vec<String> {
                 "{id}: result {:?} is not one of the closed set",
                 r.result
             ));
+        }
+        // VOS-D097 item 4: the knob VALUES are a closed set too.  A hand-edited length of 10^9
+        // is refused here, never run (a row that is re-run is built from its knob).
+        if EXPERIMENTS.contains(&r.experiment.as_str())
+            && !planned.contains(&(r.experiment.clone(), r.mode.clone(), r.knob.key()))
+        {
+            v.push(format!(
+                "{id}: the (mode, knob) is not one of the plan's knobs for {}",
+                r.experiment
+            ));
+        }
+        // VOS-D095: only a chain row records a budget, and it is the chain budget; a chain row
+        // recorded before the budget existed omits the field (120 s).
+        if let Some(w) = r.wall_s {
+            if !CHAIN_EXPERIMENTS.contains(&r.experiment.as_str()) || w != row_wall_s(&r.experiment)
+            {
+                v.push(format!(
+                    "{id}: wall_s {w} is not the row budget of {} (only a chain records one)",
+                    r.experiment
+                ));
+            }
         }
         if r.peak_rss_kb == 0 {
             v.push(format!(
@@ -552,6 +634,36 @@ pub fn validate(res: &Results) -> Vec<String> {
                 "{k}: {} distinct seeds (at least {MIN_SEEDS} per knob)",
                 set.len()
             ));
+        }
+    }
+    v
+}
+
+/// Every `(experiment, mode, knob key)` the plan has: the closed set `validate` holds rows to.
+pub fn planned_identities() -> std::collections::BTreeSet<(String, String, String)> {
+    let mut set = std::collections::BTreeSet::new();
+    for exp in EXPERIMENTS {
+        for k in knobs(exp) {
+            set.insert((exp.to_string(), k.mode.to_string(), k.knob.key()));
+        }
+    }
+    set
+}
+
+/// Is a recorded `trees` object well formed: empty (a file from before 0.2.0), or exactly the
+/// names of [`TREE_NAMES`], each a 40- or 64-digit hex object id?
+fn trees_violations(at: &str, t: &[(String, String)]) -> Vec<String> {
+    let mut v = Vec::new();
+    if t.is_empty() {
+        return v;
+    }
+    let names: Vec<&str> = t.iter().map(|(k, _)| k.as_str()).collect();
+    if names != TREE_NAMES {
+        v.push(format!("{at}: trees must name exactly {TREE_NAMES:?}"));
+    }
+    for (k, x) in t {
+        if !((x.len() == 40 || x.len() == 64) && x.bytes().all(|b| b.is_ascii_hexdigit())) {
+            v.push(format!("{at}: tree id of {k} is not a hex object id"));
         }
     }
     v

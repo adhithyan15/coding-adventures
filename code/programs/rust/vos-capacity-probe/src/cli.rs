@@ -11,6 +11,7 @@ use crate::meta;
 use crate::results::{self, decide, Merge, Results, MIN_SEEDS, TIMEOUT_S};
 use crate::row::Row;
 use crate::runner;
+use crate::spot;
 use crate::table;
 use std::io::Write;
 use std::path::{Path, PathBuf};
@@ -36,14 +37,27 @@ fn has(args: &[String], name: &str) -> bool {
     args.iter().any(|a| a == name)
 }
 
+/// `--jobs`, clamped to `1..=64` (VOS-D097 item 5); the default is the host's parallelism, at
+/// most 4.
 fn jobs(args: &[String]) -> usize {
-    flag(args, "--jobs")
-        .and_then(|j| j.parse().ok())
-        .unwrap_or_else(|| {
-            std::thread::available_parallelism()
-                .map(|n| n.get().min(4))
-                .unwrap_or(2)
-        })
+    runner::clamp_jobs(
+        flag(args, "--jobs")
+            .and_then(|j| j.parse().ok())
+            .unwrap_or_else(|| {
+                std::thread::available_parallelism()
+                    .map(|n| n.get().min(4))
+                    .unwrap_or(2)
+            }),
+    )
+}
+
+/// The executable that runs a row as a child: `--exe`, else this one (a test passes `--exe`
+/// because its own executable is the test harness).
+fn exe_of(args: &[String]) -> Result<PathBuf, Failure> {
+    match flag(args, "--exe") {
+        Some(p) => Ok(PathBuf::from(p)),
+        None => std::env::current_exe().map_err(|e| Failure::Usage(e.to_string())),
+    }
 }
 
 fn read(path: &Path) -> Result<String, Failure> {
@@ -166,12 +180,8 @@ pub fn cmd_run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Res
         }
     }
     let specs = plan(tier, &only, seeds);
-    // Each row is a child process of this same executable (a test passes `--exe` because its own
-    // executable is the test harness).
-    let exe = match flag(args, "--exe") {
-        Some(p) => PathBuf::from(p),
-        None => std::env::current_exe().map_err(|e| Failure::Usage(e.to_string()))?,
-    };
+    // Each row is a child process of this same executable.
+    let exe = exe_of(args)?;
     let total = specs.len();
     let done = std::sync::atomic::AtomicUsize::new(0);
     let progress = |_: usize, r: &Row| {
@@ -192,8 +202,7 @@ pub fn cmd_run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Res
     let rows = runner::run_rows(&exe, &specs, jobs(args), &progress);
     let results = Results { meta, rows };
     if let Some(path) = flag(args, "--out") {
-        std::fs::write(&path, results.to_text())
-            .map_err(|e| Failure::Usage(format!("cannot write {path}: {e}")))?;
+        write_atomic(&path, &results.to_text())?;
     }
     let mut counts: std::collections::BTreeMap<String, usize> = Default::default();
     for r in &results.rows {
@@ -240,6 +249,66 @@ pub fn merge_results(
     at: &str,
     is_ancestor: &dyn Fn(&str) -> Result<bool, String>,
 ) -> Result<Results, String> {
+    merge_with(
+        MergeKind::Refresh,
+        base,
+        fresh,
+        experiment,
+        sel,
+        ignore_outside,
+        at,
+        is_ancestor,
+    )
+}
+
+/// What a merge does with the fresh rows.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum MergeKind {
+    /// Replace the rows of the subset; a merge never adds, drops or renames a row.
+    Refresh,
+    /// `merge --add` (VOS30 section 9.2): append fresh rows whose identities are ALL absent from
+    /// the base, for a plan change that brings new knobs.
+    Add,
+}
+
+/// The pure part of `merge --add`: append, to `base`, the rows of `fresh` that belong to the
+/// subset, all of whose `(experiment, knob, mode, seed)` identities must be absent from the base;
+/// the `merges` entry records `"kind": "add"`.  Every other refusal of [`merge_results`] applies
+/// unchanged except the two that only make sense for a refresh: that the subset's identities
+/// equal the base's (the point of an add is that they do not), and that a `where` field exists in
+/// a base row of the experiment (a new experiment has none).  An overlap with the base is refused.
+pub fn add_results(
+    base: &Results,
+    fresh: &Results,
+    experiment: &str,
+    sel: Option<(&str, &str)>,
+    ignore_outside: bool,
+    at: &str,
+    is_ancestor: &dyn Fn(&str) -> Result<bool, String>,
+) -> Result<Results, String> {
+    merge_with(
+        MergeKind::Add,
+        base,
+        fresh,
+        experiment,
+        sel,
+        ignore_outside,
+        at,
+        is_ancestor,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn merge_with(
+    kind: MergeKind,
+    base: &Results,
+    fresh: &Results,
+    experiment: &str,
+    sel: Option<(&str, &str)>,
+    ignore_outside: bool,
+    at: &str,
+    is_ancestor: &dyn Fn(&str) -> Result<bool, String>,
+) -> Result<Results, String> {
     if fresh.meta.dirty_tree {
         return Err("the fresh run has dirty_tree = true; commit, then run again".into());
     }
@@ -262,7 +331,7 @@ pub fn merge_results(
             }
         }
     }
-    if let Some((f, _)) = sel {
+    if let (MergeKind::Refresh, Some((f, _))) = (kind, sel) {
         let exists = base
             .rows
             .iter()
@@ -285,25 +354,39 @@ pub fn merge_results(
             fresh.rows.len() - fresh_rows.len()
         ));
     }
-    let mut sorted_base: Vec<_> = base
-        .rows
-        .iter()
-        .filter(|r| in_subset(r, experiment, sel))
-        .map(row_id)
-        .collect();
-    let mut fresh_ids: Vec<_> = fresh_rows.iter().map(|r| row_id(r)).collect();
-    sorted_base.sort();
-    fresh_ids.sort();
-    if sorted_base.is_empty() {
-        return Err("the subset selects no row of the base file".into());
-    }
-    if sorted_base != fresh_ids {
-        return Err(format!(
-            "the subset has {} rows in the base and {} in the fresh run, or their identities \
-             differ: a merge never adds, drops or renames a row",
-            sorted_base.len(),
-            fresh_ids.len()
-        ));
+    if kind == MergeKind::Refresh {
+        let mut sorted_base: Vec<_> = base
+            .rows
+            .iter()
+            .filter(|r| in_subset(r, experiment, sel))
+            .map(row_id)
+            .collect();
+        let mut fresh_ids: Vec<_> = fresh_rows.iter().map(|r| row_id(r)).collect();
+        sorted_base.sort();
+        fresh_ids.sort();
+        if sorted_base.is_empty() {
+            return Err("the subset selects no row of the base file".into());
+        }
+        if sorted_base != fresh_ids {
+            return Err(format!(
+                "the subset has {} rows in the base and {} in the fresh run, or their identities \
+                 differ: a merge never adds, drops or renames a row",
+                sorted_base.len(),
+                fresh_ids.len()
+            ));
+        }
+    } else {
+        if fresh_rows.is_empty() {
+            return Err("the subset selects no row of the fresh run: nothing to add".into());
+        }
+        let have: std::collections::BTreeSet<_> = base.rows.iter().map(row_id).collect();
+        if let Some(r) = fresh_rows.iter().find(|r| have.contains(&row_id(r))) {
+            return Err(format!(
+                "merge --add refuses an overlap with the base: {} is already there (a refresh is \
+                 a merge without --add)",
+                results::row_text_id(r)
+            ));
+        }
     }
     let rev = fresh
         .meta
@@ -317,19 +400,27 @@ pub fn merge_results(
             "the fresh run's revision {rev} is neither HEAD nor an ancestor of it"
         ));
     }
-    let mut rows = Vec::with_capacity(base.rows.len());
+    let mut rows = Vec::with_capacity(base.rows.len() + fresh_rows.len());
     let mut replaced = Vec::new();
-    for r in &base.rows {
-        if in_subset(r, experiment, sel) {
-            let id = row_id(r);
-            let f = fresh_rows
-                .iter()
-                .find(|f| row_id(f) == id)
-                .ok_or("internal: a matched identity vanished")?;
-            replaced.push(results::row_text_id(r));
+    if kind == MergeKind::Add {
+        rows.extend(base.rows.iter().cloned());
+        for f in &fresh_rows {
+            replaced.push(results::row_text_id(f));
             rows.push((*f).clone());
-        } else {
-            rows.push(r.clone());
+        }
+    } else {
+        for r in &base.rows {
+            if in_subset(r, experiment, sel) {
+                let id = row_id(r);
+                let f = fresh_rows
+                    .iter()
+                    .find(|f| row_id(f) == id)
+                    .ok_or("internal: a matched identity vanished")?;
+                replaced.push(results::row_text_id(r));
+                rows.push((*f).clone());
+            } else {
+                rows.push(r.clone());
+            }
         }
     }
     let mut meta = base.meta.clone();
@@ -341,6 +432,8 @@ pub fn merge_results(
         where_: sel.map(|(f, v)| format!("{f}={v}")).unwrap_or_default(),
         rows: replaced,
         at: at.to_string(),
+        kind: (kind == MergeKind::Add).then(|| "add".to_string()),
+        trees: fresh.meta.trees.clone(),
     });
     let merged = Results { meta, rows };
     let bad = results::validate(&merged);
@@ -384,7 +477,7 @@ fn write_atomic(path: &str, text: &str) -> Result<(), Failure> {
 /// `merge`: refresh a subset of the committed results through the tool, never by hand.
 ///
 /// ```text
-/// merge --base results.json --fresh fresh.json --experiment E1 [--where fixture=NAME]
+/// merge [--add] --base results.json --fresh fresh.json --experiment E1 [--where fixture=NAME]
 ///       [--ignore-outside] --out out.json
 /// ```
 pub fn cmd_merge(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
@@ -405,7 +498,12 @@ pub fn cmd_merge(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
         ),
         None => None,
     };
-    let merged = merge_results(
+    let merge = if has(args, "--add") {
+        add_results
+    } else {
+        merge_results
+    };
+    let merged = merge(
         &base,
         &fresh,
         &experiment,
@@ -418,38 +516,131 @@ pub fn cmd_merge(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
     let path = need("--out")?;
     write_atomic(&path, &merged.to_text())?;
     let n = merged.meta.merges.last().map_or(0, |g| g.rows.len());
-    writeln!(out, "merged {n} rows of {experiment} into {path}")
+    let verb = if has(args, "--add") {
+        "added"
+    } else {
+        "merged"
+    };
+    writeln!(out, "{verb} {n} rows of {experiment} into {path}")
         .map_err(|e| Failure::Usage(e.to_string()))
 }
 
-/// `check`.
-pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Result<(), Failure> {
-    let path = args
-        .iter()
-        .find(|a| {
-            !a.starts_with("--")
-                && args
-                    .iter()
-                    .position(|b| b == *a)
-                    .map(|i| i == 0 || args[i - 1] != "--jobs")
-                    .unwrap_or(true)
+/// The positional arguments of a command: those that are neither a flag nor the value of a flag
+/// that takes one.
+fn positionals(args: &[String]) -> Vec<&String> {
+    const WITH_VALUE: [&str; 2] = ["--jobs", "--exe"];
+    args.iter()
+        .enumerate()
+        .filter(|(i, a)| {
+            !a.starts_with("--") && (*i == 0 || !WITH_VALUE.contains(&args[i - 1].as_str()))
         })
+        .map(|(_, a)| a)
+        .collect()
+}
+
+/// Why `check --full` refuses, given the file and the working tree's ids: a file that records no
+/// tree ids cannot say which tree it describes, and a recorded id that differs says it no longer
+/// describes this one.  Both must be fixed by regenerating the rows, never by editing the ids.
+pub fn full_refusals(res: &Results, current: &[(String, String)]) -> Vec<String> {
+    let mut v = Vec::new();
+    if res.meta.trees.is_empty() {
+        v.push(
+            "check --full refuses: the file records no tree ids (it predates 0.2.0), so it cannot \
+             say which tree it describes; regenerate the rows"
+                .to_string(),
+        );
+    }
+    let mut records = vec![("tool".to_string(), &res.meta.trees)];
+    for (i, g) in res.meta.merges.iter().enumerate() {
+        records.push((format!("merges[{i}]"), &g.trees));
+    }
+    for (what, trees) in records {
+        if what != "tool" && trees.is_empty() {
+            v.push(format!(
+                "check --full refuses: {what} records no tree ids; regenerate its rows"
+            ));
+        }
+        for line in meta::stale_lines(&what, trees, current) {
+            v.push(format!(
+                "check --full refuses ({}); regenerate the rows",
+                line.trim_start_matches("stale: ")
+            ));
+        }
+    }
+    v
+}
+
+/// `check [--full] FILE [--jobs N] [--exe PATH]`.
+pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Result<(), Failure> {
+    let path = positionals(args)
+        .first()
+        .copied()
         .ok_or_else(|| Failure::Usage("check needs a results file".into()))?;
     let res = Results::from_text(&read(Path::new(path))?).map_err(Failure::Usage)?;
+    let w = |e: std::io::Error| Failure::Usage(e.to_string());
     let mut bad = results::validate(&res);
     bad.extend(results::quick_plan_covered(&res));
     let quick = results::quick_specs(&res).len();
-    bad.extend(results::rerun(&res, jobs(args)));
+    let current = meta::working_trees();
+    // Non-fatal: a fatal rule would couple every edit of a solver crate to a regeneration of the
+    // results file (the VOS-D103 failure mode).  The teeth are the spot check and `--full`.
+    let mut stale = meta::stale_lines("tool", &res.meta.trees, &current);
+    for (i, g) in res.meta.merges.iter().enumerate() {
+        stale.extend(meta::stale_lines(
+            &format!("merges[{i}]"),
+            &g.trees,
+            &current,
+        ));
+    }
+    for line in &stale {
+        writeln!(out, "{line}").map_err(w)?;
+    }
+    let tail;
+    if has(args, "--full") {
+        let refusals = full_refusals(&res, &current);
+        if refusals.is_empty() && bad.is_empty() {
+            bad.extend(results::rerun(&res, jobs(args)));
+            let exe = exe_of(args)?;
+            let progress = |n: usize, total: usize| {
+                if n.is_multiple_of(25) || n == total {
+                    eprintln!("[full {n}/{total}]");
+                }
+            };
+            bad.extend(spot::full_rerun(&res, &exe, jobs(args), &progress));
+            tail = format!(
+                "{} rows; every full-tier row re-run in a child and reproduced",
+                res.rows.len()
+            );
+        } else {
+            bad.extend(refusals);
+            tail = String::new();
+        }
+    } else {
+        bad.extend(results::rerun(&res, jobs(args)));
+        // Only a file with something to sample needs an executable to sample with.
+        let report = if spot::population(&res).is_empty() {
+            spot::SpotReport::default()
+        } else {
+            spot::spot_check(
+                &res,
+                &exe_of(args)?,
+                jobs(args),
+                spot::SPOT_BUDGET,
+                spot::SPOT_ROW_CAP_MS,
+            )
+        };
+        bad.extend(report.violations.iter().cloned());
+        writeln!(out, "check: {}", report.line()).map_err(w)?;
+        tail = format!(
+            "{} rows, {quick} quick-tier rows re-run and reproduced",
+            res.rows.len()
+        );
+    }
     for b in &bad {
         let _ = writeln!(err, "check: {b}");
     }
     if bad.is_empty() {
-        writeln!(
-            out,
-            "check: ok ({} rows, {quick} quick-tier rows re-run and reproduced)",
-            res.rows.len()
-        )
-        .map_err(|e| Failure::Usage(e.to_string()))?;
+        writeln!(out, "check: ok ({tail})").map_err(w)?;
         Ok(())
     } else {
         Err(Failure::Violations(bad.len()))
@@ -518,9 +709,11 @@ pub fn cmd_row(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
         &flag(args, "--spec").ok_or_else(|| Failure::Usage("row needs --spec".into()))?,
     )
     .map_err(Failure::Usage)?;
+    // The child never gets more than the chain budget, whatever the command line says.
     let wall: u64 = flag(args, "--wall")
         .and_then(|s| s.parse().ok())
-        .unwrap_or(TIMEOUT_S);
+        .unwrap_or(TIMEOUT_S)
+        .min(crate::exp::CHAIN_WALL_S);
     let mut progress = |r: &Row| {
         let _ = writeln!(out_sink(), "{}", runner::progress_line(r));
     };
@@ -544,4 +737,36 @@ fn out_sink() -> impl Write {
         }
     }
     Flushing(std::io::stdout())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn a(v: &[&str]) -> Vec<String> {
+        v.iter().map(|s| s.to_string()).collect()
+    }
+
+    #[test]
+    fn jobs_default_is_small_and_an_explicit_value_is_clamped() {
+        assert_eq!(jobs(&a(&["--jobs", "0"])), 1);
+        assert_eq!(jobs(&a(&["--jobs", "8"])), 8);
+        assert_eq!(jobs(&a(&["--jobs", "100000"])), 64);
+        assert!((1..=4).contains(&jobs(&a(&["--jobs", "junk"]))));
+        assert!((1..=4).contains(&jobs(&a(&[]))));
+    }
+
+    #[test]
+    fn positionals_skip_flags_and_the_values_of_flags_that_take_one() {
+        let args = a(&["--jobs", "4", "f.json", "--full", "--exe", "/x/probe"]);
+        assert_eq!(positionals(&args), vec!["f.json"]);
+        assert_eq!(positionals(&a(&["f.json"])), vec!["f.json"]);
+        assert!(positionals(&a(&["--full"])).is_empty());
+    }
+
+    #[test]
+    fn exe_defaults_to_this_executable() {
+        assert_eq!(exe_of(&a(&["--exe", "/p"])).unwrap(), PathBuf::from("/p"));
+        assert!(exe_of(&a(&[])).is_ok());
+    }
 }

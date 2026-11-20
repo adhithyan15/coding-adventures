@@ -361,6 +361,38 @@ pub fn segments_for(spec: &RowSpec) -> Result<Vec<Box<dyn Shape>>, String> {
 /// The seconds the control stage may take.
 pub const CONTROL_WALL: Duration = Duration::from_secs(30);
 
+/// The experiments whose row is a split or a chain of obligations (VOS30 section 9.5, VOS-D095).
+pub const CHAIN_EXPERIMENTS: [&str; 3] = ["B3", "D3", "D4"];
+
+/// The row budget of a chain row, seconds (VOS-D095): the 8.3 feasibility total is about ten
+/// minutes, so a chain's whole row gets 600 s while each obligation keeps [`OBLIGATION_WALL`].
+pub const CHAIN_WALL_S: u64 = 600;
+
+/// The wall timeout of one obligation, and of a non-chain row, seconds.
+pub const OBLIGATION_WALL_S: u64 = 120;
+
+/// The row budget of an experiment's rows, seconds: 600 for a chain, 120 for everything else.
+pub fn row_wall_s(exp: &str) -> u64 {
+    if CHAIN_EXPERIMENTS.contains(&exp) {
+        CHAIN_WALL_S
+    } else {
+        OBLIGATION_WALL_S
+    }
+}
+
+/// The `wall_s` field a row of `exp` records: the budget when it is not 120, else `None` (so a
+/// row that did not change keeps its recorded bytes).
+pub fn wall_field(exp: &str) -> Option<u64> {
+    let w = row_wall_s(exp);
+    (w != OBLIGATION_WALL_S).then_some(w)
+}
+
+/// The deadline of one obligation: it ends at the row's deadline or `obligation` after `now`,
+/// whichever is first, so a chain's budget never lets one obligation run longer than its own wall.
+pub fn obligation_deadline(row_deadline: Instant, now: Instant, obligation: Duration) -> Instant {
+    row_deadline.min(now + obligation)
+}
+
 /// Print a stage timing to stderr when `VOS_PROBE_TRACE` is set (a diagnostic for the tool's
 /// author: the file never depends on it).
 fn trace(stage: &str, t0: Instant) {
@@ -378,6 +410,7 @@ fn base_row(spec: &RowSpec) -> Row {
         spec.seeds,
     );
     r.tier = spec.tier.clone();
+    r.wall_s = wall_field(&spec.experiment);
     r
 }
 
@@ -399,6 +432,7 @@ pub fn run_row(spec: &RowSpec, wall: Duration, progress: &mut dyn FnMut(&Row)) -
         other => failed(spec, &format!("unknown experiment {other}")),
     };
     row.tier = spec.tier.clone();
+    row.wall_s = wall_field(&spec.experiment);
     row
 }
 
@@ -667,6 +701,11 @@ fn chain_row(
             row.ands = c.ands;
             progress(&row);
         }
+        let ob_deadline = obligation_deadline(
+            deadline,
+            Instant::now(),
+            Duration::from_secs(OBLIGATION_WALL_S),
+        );
         let (v, conflicts, props, ms, drat) = if incremental {
             let mut ts = Tseitin::new();
             for p in &inst.premises {
@@ -675,7 +714,7 @@ fn chain_row(
             let lit = ts.lit(&inst.aig, inst.miter, &mut solver);
             let t0 = Instant::now();
             let p0 = solver.stats().propagations;
-            let (v, conf) = solve_assuming(&mut solver, &[lit], deadline);
+            let (v, conf) = solve_assuming(&mut solver, &[lit], ob_deadline);
             (
                 v,
                 conf,
@@ -687,7 +726,7 @@ fn chain_row(
             let o = solve_cnf(
                 &cnf,
                 &SolveOpts {
-                    deadline,
+                    deadline: ob_deadline,
                     proof: true,
                     conflict_cap: None,
                 },

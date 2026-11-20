@@ -2,6 +2,41 @@
 
 All notable changes to this package are documented here.
 
+## [0.2.0] - Unreleased
+
+### Added (VOS-028c2, VOS30 sections 9.2, 9.5, 9.6 and 9.12; no new experiment)
+
+- **Chain budget (VOS-D095).** A split or chain (B3, D3, D4) is one row with a 600 s row budget;
+  each obligation keeps its own 120 s (`exp::obligation_deadline`), and the parent's hard kill
+  moves with the budget (600 s + 30 s control + 150 s slack). The row records `wall_s` (omitted
+  when 120, so unchanged rows keep their bytes); `validate` accepts only the chain budget, and only
+  on a chain experiment.
+- **`merge --add`.** Appends fresh rows whose `(experiment, knob, mode, seed)` identities are all
+  absent from the base, records `"kind": "add"`, refuses any overlap and every refusal of a
+  refresh that still applies. A refresh keeps its entry's bytes (no `kind` key).
+- **Provenance by tree id (VOS-D097 item 1).** New runs and merges record `trees` (the probe and
+  its four solver crates); `check` prints a non-fatal `stale:` line when one differs from the
+  working tree, then runs a **seeded spot check** (seed: SHA-256 of the file's own bytes; every
+  full-tier non-E row; each re-run in a child process under `run`'s limits; fixed 60 s budget;
+  rows over a 20 s recorded cost skipped and counted). **`check --full`** refuses unless every
+  recorded tree equals the working tree, then re-runs every full-tier row.
+- **Hardening (VOS-D097 items 2 to 5).** The kill checks `/bin/kill`'s status, falls back to
+  `Child::kill` and bounds the wait at 5 s; the child runs behind the fixed `ulimit -t "$1"; shift;
+  exec "$@"` wrapper with the limit and every other variable part as separate argv entries;
+  `validate` requires every row's `(experiment, mode, knob)` to equal one of `knobs(exp)`, values
+  included; child output is read through a 1 MiB cap; `--out` is written atomically; `--jobs` is
+  clamped to 1..=64. All process code is `cfg(unix)`-safe; the Windows BUILD runs `check` in
+  process and skips the sampled re-run, saying so.
+- Tests: `tests/hardening.rs` (negative controls for every clause above, on real child processes
+  where the clause is about a process) and unit tests in `runner`, `row` and `cli`.
+
+### Changed
+
+- `run_child` and `run_rows` take the row budget from the experiment; `hard_limit_for(wall_s)`
+  replaces the single constant (`hard_limit()` remains the 120 s row's).
+- The merge tests of `tests/results_logic.rs` use planned B4 knobs instead of an invented
+  `fixture` field, because `validate` now holds every knob to the plan.
+
 ## [0.1.0] - Unreleased
 
 ### Added (VOS-038c CI fix)
