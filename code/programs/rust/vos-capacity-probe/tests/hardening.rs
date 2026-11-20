@@ -434,7 +434,7 @@ fn check_prints_a_non_fatal_stale_line_when_a_recorded_tree_differs() {
     assert!(o.contains("spot check: population 1420"), "{o}");
     assert!(o.contains("structural rebuild: population"), "{o}");
     assert!(
-        o.contains("decision-critical groups not re-solved: 11"),
+        o.contains("decision-critical groups not re-solved by this run: "),
         "{o}"
     );
     // The same recorded trees on a file with only its quick rows: the stale line still prints,

@@ -42,6 +42,21 @@ All notable changes to this package are documented here.
   `fsync`, rename; refuses a symlink target) for `run --out`, `merge --out` and `table --write`.
   L3: the wrapper is `ulimit -t "$1" || exit 126; shift; exec "$@"`; the group kill is retried
   once before `Child::kill`. New: `check --spot-budget SECS`.
+- **Security review, round 3 (VOS30 9.12 "Hardening, round 3"; tests in `tests/review_fixes3.rs`).**
+  Owner decision 2026-11-20: the CI gap for solver and timing fields of expensive rows is accepted
+  (no scheduled or per-PR `--full`); the c3 decision stays provisional until a `check --full` at
+  one tree passes and a named reviewer signs off. 1: a red `unsat` row relabelled `collapsed` is
+  refused: `validate` (`results::collapse_violations`) requires `conflicts == 0 || clauses <= 2`
+  for any reason, `ands == 0` for identical-structure and constant-fold, identical-structure only
+  for a chain row, and a G2 note whose numbers match the row for a reason-less collapse; the
+  `structure` child reports the rebuilt instance's own collapse verdicts
+  (`Instance::structural_collapse_reason`, entropy half rule, 25% AND rule) and `compare_structure`
+  holds a recorded `unsat` or `collapsed` row to them; `verify_collapse_reason` is now called by
+  the child. 2: the decision rows have their own structural budget (`DECISION_STRUCT_BUDGET` =
+  150 s) and one not reached or not verified is a violation naming it (`check --jobs 1
+  --spot-budget 1` used to pass with 50 of 85). 3: `decision-critical groups not re-solved by this
+  run: N` follows what the run re-solved. 4: `structure_comparable` is false for a chain row that
+  ended `sat`.
 - Tests: `tests/hardening.rs` (negative controls for every clause above, on real child processes
   where the clause is about a process) and unit tests in `runner`, `row` and `cli`.
 

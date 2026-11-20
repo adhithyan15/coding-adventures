@@ -2440,8 +2440,12 @@ below is a separate step, run on the committed tree and merged in a second commi
       `check`: their solver-derived and timing-derived fields (the conflict counts, the
       verdict, the control, the proof size, `green`) are verified **only by `check --full`**,
       which is the release gate for the decision. A plain `check` prints
-      `decision-critical groups not re-solved: N` (N = 11 on the committed file) so the gap is
-      never silent. What a plain `check` does verify of an expensive row is its **structure**
+      `decision-critical groups not re-solved by this run: N`, where N is computed from what
+      THIS run re-solved (round 3, finding 3): the decision groups with no quick-tier row and
+      no row the spot check re-ran to completion. It is 11 when every cheap-class decision
+      row was re-run, and larger on a host that sampled fewer rows (12 at `--jobs 2`, 17 with
+      `--spot-budget 1`), so the printed figure is a lower bound on the gap, never a plan
+      constant. What a plain `check` does verify of an expensive row is its **structure**
       (round 2 below).
   * **What the spot check proves, honestly (finding M3).** The first draft claimed an
     editor could not know in advance which rows would be re-run, because any edit reshuffles it.
@@ -2456,8 +2460,9 @@ below is a separate step, run on the committed tree and merged in a second commi
     never makes one eligible; this is what finding 1 of the second review found: an edit of
     10 rows in decision-critical expensive groups flipped `decide` to row 2 with `check: ok`).
     The structural rebuild below catches an edit of those rows that touches the instance's
-    digest, size or entropy, with a sample probability that is 1 for the decision rows and
-    roughly the budgeted fraction for the others; an edit of **only** solver-derived or timing
+    digest, size or entropy, for every comparable decision row that is not plan-heavy (round 3, finding 2: a row left
+    unreached or unverified is a violation, not a count) and for a seeded, budgeted sample of
+    the others; an edit of **only** solver-derived or timing
     fields of an expensive row (for example D3 at T = 8, k = 16: worst-step conflicts, solve
     time, DRAT size and `green`) is **not** caught by a plain `check`, whatever the sample. It
     is **not proof** of the file against a determined editor.
@@ -2541,10 +2546,10 @@ below is a separate step, run on the committed tree and merged in a second commi
      k = 16; every other group builds in at most 4.4 s). Those five groups are the plan's
      `cost::STRUCT_HEAVY` and are rebuilt only by `check --full`; the rest runs under the 45 s
      budget, so the structural pass is a **seeded sample for the non-decision rows** and covers
-     the decision rows except those five groups (80 of 85 on the committed file). A plain `check`
-     on the committed file takes about 111 s on the reference host (it took 66 s before this
-     round: the spot check's 60 s budget is unchanged, the structural pass adds at most 45 s plus
-     slack); the structural line prints the counts. (c) `check` prints
+     the decision rows except the plan-heavy ones and those whose recorded structure is partial
+     (the committed file: 85 decision rows, of which 80 are rebuilt or re-run, 3 are
+     plan-heavy and 2 are partial; round 3 below makes the 80 mandatory). The structural line
+     prints the counts. (c) `check` prints
      `decision-critical groups not re-solved: N`, the number of groups `results::decision_read`
      (which mirrors `decide`'s `find` calls; a test pins that it covers every group whose
      redness changes the decision of an all-green synthetic file) names that are in neither the
@@ -2590,6 +2595,50 @@ below is a separate step, run on the committed tree and merged in a second commi
   8. **The atomic writer (finding 8).** The finished file keeps `mode & 0o777` (setuid, setgid
      and sticky are dropped), and the target's name is cut to `TMP_STEM_MAX` = 150 bytes (on a
      character boundary) in the temporary name, which therefore stays under 255 bytes.
+* **Hardening, round 3 (third security review; tests in `tests/review_fixes3.rs`).**
+  **Owner decision, 2026-11-20:** the CI gap for the solver-derived and timing-derived fields
+  of expensive rows is **accepted**. There is no scheduled or per-PR `check --full` job. The
+  VOS-028c3 re-plan decision stays **provisional** until a `check --full` at one tree passes
+  and a named reviewer signs off (the release gate above).
+  1. **Collapse relabel (MEDIUM).** A red `unsat` row relabelled `"result":"collapsed",
+     "collapsed_reason":"propagation-only"` passed a plain `check` and turned a decision group
+     green (collapsed rows are excluded from every statistic; reproduction: B3 certified at
+     1000 instructions, 25% divergence, every8 cuts, seed 2). Fixed without solving. (a)
+     `validate` (`results::collapse_violations`): a reason needs `conflicts == 0 || clauses <=
+     2`; `identical-structure` and `constant-fold` need `ands == 0`; a chain row collapses only
+     as `identical-structure`; a collapsed row with no reason must carry one of the two G2
+     notes of `exp::g2_entropy_note` and `exp::g2_ands_note` whose numbers match the row's own
+     fields (`entropy_bits * 2 < declared_bits`, or `ands * 4 < full`). Every one of the 19
+     collapsed rows of the committed file satisfies them (a test pins it). (b) The `structure`
+     child reports the verdicts the rebuilt instance gives by itself
+     (`Instance::structural_collapse_reason`, the entropy half rule, the 25% AND rule at
+     divergence 100%, and for a chain `ands == 0` and the entropy half rule on the totals), and
+     `compare_structure` requires a recorded `unsat` row not to collapse on rebuild and a
+     recorded `collapsed` row to say exactly what the rebuild says. **What a rebuild cannot
+     see** is a `propagation-only` collapse on a CNF of more than two clauses (zero conflicts
+     is the solver's measurement); such a row on a single instance is refused by the rebuild
+     and left to a re-solve (the spot check or `check --full`). A chain row cannot carry it at
+     all (rule above), which covers D3 at T = 256, the decision rows the rebuild skips as
+     plan-heavy. (c) `Instance::verify_collapse_reason` is now called, by the `structure`
+     child on every structural reason, instead of guarding nothing.
+  2. **Unreached decision rows (MEDIUM).** The structural pass has two budgets. The decision
+     rows (`results::decision_read`) come first under `DECISION_STRUCT_BUDGET` = 150 s (the 80
+     comparable, non-heavy decision rows take about 75 s on one job on the reference host,
+     Apple silicon, release build), and every comparable, non-`STRUCT_HEAVY` decision row that
+     is not reached or not verified is a **violation naming its identity**. The others keep
+     `STRUCT_BUDGET` = 45 s and are counted if not reached. Before this, `check
+     --jobs 1 --spot-budget 1` printed `decision rows verified 50 of 85` and passed; it now
+     verifies 80 of 85 (3 plan-heavy and 2 partial rows are named in the line) or fails. A
+     host more than twice as slow as the reference at `--jobs 1` fails loudly. Measured
+     wall time of a plain `check` on the committed file (14-core reference host): 2 min 15 s
+     at the default jobs, 2 min 24 s at `--jobs 2`.
+  3. **Overclaims.** The count of decision groups not re-solved follows the run (finding 1(c)
+     text above); the sampling statements say what is verified for which rows: the spot check
+     re-solves only the cheap-class rows it reaches inside its budget, so the number of rows is
+     host-dependent; the structural rebuild is mandatory for the decision rows except the five
+     plan-heavy groups, and a sample for the rest.
+  4. **`structure_comparable`** returned true for a chain row that ended `sat`, though such a
+     row built only the segments up to the counterexample; it now returns false.
 * E1 rows are untouched (VOS-D103).
 * **As built, the constants and the choices the text above left open.** The spot check's
   total budget is **60 s** (`spot::SPOT_BUDGET`; `check --spot-budget SECS` shortens it for

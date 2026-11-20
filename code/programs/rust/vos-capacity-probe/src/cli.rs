@@ -772,11 +772,12 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
         );
         bad.extend(structure.violations.iter().cloned());
         writeln!(out, "check: {}", structure.line()).map_err(w)?;
-        let unsolved = results::decision_groups_not_resolved(&res.rows);
+        let unsolved = results::decision_groups_not_resolved(&res.rows, &report.verified_rows);
         writeln!(
             out,
-            "check: decision-critical groups not re-solved: {} (verified only by `check --full`, \
-             the release gate for the decision)",
+            "check: decision-critical groups not re-solved by this run: {} (their solver and \
+             timing fields are verified only by `check --full`, the release gate for the \
+             decision)",
             unsolved.len()
         )
         .map_err(w)?;
@@ -892,8 +893,16 @@ pub fn cmd_structure(args: &[String], out: &mut dyn Write) -> Result<(), Failure
             spec.seed,
             spec.seeds,
         );
-        // Not a verdict: a row that is not `crashed` (the blank row's word) means "built".
+        // Not a verdict: a row that is not `crashed` (the blank row's word) means "built",
+        // except that a rebuilt instance that collapses says so, with the reason or the note the
+        // solving path would write (round 3, finding 1: a recorded `collapsed` or `unsat` row is
+        // held to it).
         r.result = "unknown".into();
+        if s.collapse_reason.is_some() || !s.collapse_note.is_empty() {
+            r.result = "collapsed".into();
+            r.collapsed_reason = s.collapse_reason;
+            r.note = s.collapse_note;
+        }
         r.instance_sha256 = s.instance_sha256;
         r.ands = s.ands;
         r.vars = s.vars;

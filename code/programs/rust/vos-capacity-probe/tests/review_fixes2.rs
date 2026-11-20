@@ -83,7 +83,16 @@ fn d3_t8_k16() -> Vec<Row> {
 #[test]
 fn the_committed_file_has_decision_groups_that_a_plain_check_does_not_re_solve() {
     let f = committed();
-    let unsolved = decision_groups_not_resolved(&f.rows);
+    // Nothing re-run by the spot check: the quick groups only (round 3: the count follows the run).
+    let cheap_rows: Vec<usize> = f
+        .rows
+        .iter()
+        .enumerate()
+        .filter(|(_, r)| decision_read(r) && is_cheap(&r.experiment, &r.mode, &r.knob.key()))
+        .map(|(i, _)| i)
+        .collect();
+    // The spot check that re-ran every cheap decision row leaves the 11 groups of round 2.
+    let unsolved = decision_groups_not_resolved(&f.rows, &cheap_rows);
     assert_eq!(unsolved.len(), 11, "{unsolved:?}");
     // The reviewer's two targets are among them.
     assert!(unsolved
@@ -244,7 +253,7 @@ fn an_edit_that_touches_only_timing_fields_of_a_decision_group_is_not_structural
         }
     }
     let f = small_file(rows);
-    assert!(decision_groups_not_resolved(&f.rows)
+    assert!(decision_groups_not_resolved(&f.rows, &[])
         .iter()
         .any(|g| g.starts_with("D3|split|{\"t\":8,\"k\":16}")));
     // And the spec says so in plain words.
@@ -296,7 +305,8 @@ fn a_partial_record_is_not_structurally_comparable_and_a_complete_one_is() {
     for (res, want) in [
         ("unsat", true),
         ("collapsed", true),
-        ("sat", true),
+        // Round 3, finding 4: a chain that stopped on a SAT segment is a partial record.
+        ("sat", false),
         ("unknown", false),
         ("killed", false),
         ("oom", false),

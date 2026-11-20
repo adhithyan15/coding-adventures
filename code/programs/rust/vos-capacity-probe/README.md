@@ -101,10 +101,11 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
   `cap`, `note`, the metric key set and the non-timing metric values); it compares no times. **A
   plain `check` re-solves only cheap-class rows**: the expensive ones, including groups
   `decide` reads, are verified only by `check --full`; `check` prints `decision-critical groups
-  not re-solved: N`. It also **rebuilds, without solving, the instance of every full-tier row** it
-  can (decision rows first, then a seeded sample, 45 s budget, in child processes; the five D3
+  not re-solved by this run: N` (computed from what the run re-solved). It also **rebuilds, without solving, the instance of every full-tier row** it
+  can (decision rows first, under their own 150 s budget: every comparable, non-plan-heavy decision row must be rebuilt or the check fails naming it; then a seeded sample, 45 s budget, in child processes; the five D3
   groups at T = 256 take about a minute each and are left to `--full`) and compares the instance
-  digest, `ands`, `vars`, `clauses`, `entropy_bits` and `declared_bits`. The sample is
+  digest, `ands`, `vars`, `clauses`, `entropy_bits` and `declared_bits`, and requires a recorded
+  `collapsed` or `unsat` row to agree with the rebuilt instance's own collapse verdicts. The sample is
   deterministic, so a determined editor can grind the file to fall outside it, and an edit of only
   the timing or solver fields of an expensive row is not caught: this is **not proof**. `check`,
   `table`, `decide` and `merge` refuse a file that is not in the tool's canonical form (duplicate

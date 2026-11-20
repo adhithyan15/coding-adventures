@@ -368,6 +368,15 @@ pub fn full_rerun_collect(
 /// The total time `check` spends on structural rebuilds of full-tier rows.
 pub const STRUCT_BUDGET: Duration = Duration::from_secs(45);
 
+/// The total time `check` spends on the structural rebuild of the rows `decide` reads (round 3,
+/// finding 2).  It is its own budget, separate from [`STRUCT_BUDGET`], because these rows are not
+/// optional: every comparable, non-[`crate::cost::STRUCT_HEAVY`] decision row must be rebuilt and
+/// compared, and one not reached or not verified is a violation naming the row.  Sized from the
+/// plan: the 80 such rows rebuild in about 75 s on one job on the reference host (Apple silicon,
+/// release build), so 150 s is twice that; a host more than twice as slow at `--jobs 1` fails
+/// loudly rather than skipping rows quietly.
+pub const DECISION_STRUCT_BUDGET: Duration = Duration::from_secs(150);
+
 /// Slack past the end of the structural budget for a child that started inside it.
 pub const STRUCT_SLACK: Duration = Duration::from_secs(30);
 
@@ -383,8 +392,10 @@ pub fn structure_comparable(r: &Row) -> bool {
     }
     let chain = crate::exp::CHAIN_EXPERIMENTS.contains(&r.experiment.as_str());
     match r.result.as_str() {
-        "unsat" | "collapsed" | "sat" => true,
-        "unknown" => !chain,
+        "unsat" | "collapsed" => true,
+        // A chain that stopped on a SAT segment built only the segments up to it (round 3,
+        // finding 4); a single instance that came out SAT was built whole.
+        "sat" | "unknown" => !chain,
         _ => false,
     }
 }
@@ -410,6 +421,10 @@ pub struct StructReport {
     pub critical: usize,
     /// Of those, rows re-run by the spot check or rebuilt, and compared.
     pub critical_verified: usize,
+    /// Of those, rows the plan classes too slow to rebuild (left to `check --full`).
+    pub critical_heavy: usize,
+    /// Of those, rows whose recorded structure is partial (left to `check --full`).
+    pub critical_partial: usize,
     /// What differed.
     pub violations: Vec<String>,
     /// Why nothing ran (no process limits off unix).
@@ -424,7 +439,8 @@ impl StructReport {
             None => format!(
                 "structural rebuild: population {}, re-run in full by the spot check {}, rebuilt \
                  {}, plan-heavy (left to --full): {}, partial record: {}, not reached: {}; \
-                 decision rows verified {} of {}",
+                 decision rows verified {} of {} ({} plan-heavy, {} partial record: left to \
+                 --full; any other decision row not verified is a violation)",
                 self.population,
                 self.covered_by_spot,
                 self.verified,
@@ -432,7 +448,9 @@ impl StructReport {
                 self.not_comparable,
                 self.not_reached,
                 self.critical_verified,
-                self.critical
+                self.critical,
+                self.critical_heavy,
+                self.critical_partial
             ),
         }
     }
@@ -495,10 +513,81 @@ pub fn structure_one(
     compare_structure(rec, &now)
 }
 
-/// Rebuild, in children and under a total budget, the structure of every full-tier row the plan
-/// does not class heavy: decision rows first, then a file-seeded order.  `covered` (sorted) are
-/// the rows the spot check already re-ran in full and compared; they are not rebuilt again.  Off
-/// unix nothing runs.
+/// What one pass of the structural rebuild did over a list of rows.
+#[derive(Default)]
+struct Pass {
+    verified: Vec<usize>,
+    not_comparable: usize,
+    heavy: usize,
+    unverified: usize,
+    violations: Vec<String>,
+    /// The rows whose turn came (compared, counted as partial or heavy) before the budget ended.
+    reached: std::collections::BTreeSet<usize>,
+}
+
+/// Rebuild the rows of `order` in children, `jobs` at a time, until `budget` is spent.
+fn structure_pass(
+    res: &Results,
+    exe: &Path,
+    jobs: usize,
+    budget: Duration,
+    slack: Duration,
+    order: &[usize],
+) -> Pass {
+    let planned = planned_identities();
+    let start = Instant::now();
+    let next = AtomicUsize::new(0);
+    let state = Mutex::new(Pass::default());
+    std::thread::scope(|s| {
+        for _ in 0..runner::clamp_jobs(jobs) {
+            s.spawn(|| loop {
+                let i = next.fetch_add(1, Ordering::SeqCst);
+                let Some(&row_index) = order.get(i) else {
+                    break;
+                };
+                let rec = &res.rows[row_index];
+                if !structure_comparable(rec) {
+                    let mut g = state.lock().unwrap_or_else(|e| e.into_inner());
+                    g.not_comparable += 1;
+                    g.reached.insert(row_index);
+                    continue;
+                }
+                if crate::cost::structure_heavy(&rec.experiment, &rec.mode, &rec.knob.key()) {
+                    let mut g = state.lock().unwrap_or_else(|e| e.into_inner());
+                    g.heavy += 1;
+                    g.reached.insert(row_index);
+                    continue;
+                }
+                let spent = start.elapsed();
+                if spent >= budget {
+                    break;
+                }
+                let bound = budget.saturating_sub(spent) + slack;
+                let diffs = structure_one(exe, rec, &planned, Some(bound));
+                let mut g = state.lock().unwrap_or_else(|e| e.into_inner());
+                g.reached.insert(row_index);
+                let unverified = diffs
+                    .iter()
+                    .filter(|d| d.contains(": not verified"))
+                    .count();
+                g.unverified += unverified;
+                if unverified == 0 {
+                    g.verified.push(row_index);
+                }
+                g.violations.extend(diffs);
+            });
+        }
+    });
+    state.into_inner().unwrap_or_else(|e| e.into_inner())
+}
+
+/// Rebuild, in children, the structure of every full-tier row the plan does not class heavy, in
+/// two passes (round 3, finding 2).  First the rows `decide` reads, under
+/// [`DECISION_STRUCT_BUDGET`]: each comparable, non-heavy one must be rebuilt and compared, and one
+/// left unreached (or not verified) is a violation naming it.  Then every other row under
+/// `budget`, where a row past the budget is only counted.  `covered` (sorted) are the rows the
+/// spot check already re-ran in full and compared; they are not rebuilt again.  Off unix nothing
+/// runs.
 pub fn structure_check(
     res: &Results,
     exe: &Path,
@@ -507,10 +596,33 @@ pub fn structure_check(
     slack: Duration,
     covered: &[usize],
 ) -> StructReport {
+    structure_check_with(
+        res,
+        exe,
+        jobs,
+        DECISION_STRUCT_BUDGET,
+        budget,
+        slack,
+        covered,
+    )
+}
+
+/// [`structure_check`] with the decision pass's budget given (tests shorten it).
+pub fn structure_check_with(
+    res: &Results,
+    exe: &Path,
+    jobs: usize,
+    decision_budget: Duration,
+    budget: Duration,
+    slack: Duration,
+    covered: &[usize],
+) -> StructReport {
     // A row the spot check already re-ran in full has had its structure compared too.
     let all = structure_order(res);
     let (done, order): (Vec<usize>, Vec<usize>) =
         all.iter().partition(|i| covered.binary_search(i).is_ok());
+    let (decision_order, rest_order): (Vec<usize>, Vec<usize>) =
+        order.iter().partition(|&&i| decision_read(&res.rows[i]));
     let in_decision = |v: &[usize]| v.iter().filter(|&&i| decision_read(&res.rows[i])).count();
     let mut report = StructReport {
         population: all.len(),
@@ -523,70 +635,40 @@ pub fn structure_check(
         report.skipped = Some("the process limits are unix-only".to_string());
         return report;
     }
-    let planned = planned_identities();
-    let start = Instant::now();
-    let next = AtomicUsize::new(0);
-    // (verified, critical verified, not comparable, heavy, unverified, violations, reached)
-    let state = Mutex::new((
-        0usize,
-        0usize,
-        0usize,
-        0usize,
-        0usize,
-        Vec::<String>::new(),
-        0usize,
-    ));
-    std::thread::scope(|s| {
-        for _ in 0..runner::clamp_jobs(jobs) {
-            s.spawn(|| loop {
-                let i = next.fetch_add(1, Ordering::SeqCst);
-                let Some(&row_index) = order.get(i) else {
-                    break;
-                };
-                let rec = &res.rows[row_index];
-                if !structure_comparable(rec) {
-                    let mut g = state.lock().unwrap_or_else(|e| e.into_inner());
-                    g.2 += 1;
-                    g.6 += 1;
-                    continue;
-                }
-                if crate::cost::structure_heavy(&rec.experiment, &rec.mode, &rec.knob.key()) {
-                    let mut g = state.lock().unwrap_or_else(|e| e.into_inner());
-                    g.3 += 1;
-                    g.6 += 1;
-                    continue;
-                }
-                let spent = start.elapsed();
-                if spent >= budget {
-                    break;
-                }
-                let bound = budget.saturating_sub(spent) + slack;
-                let diffs = structure_one(exe, rec, &planned, Some(bound));
-                let mut g = state.lock().unwrap_or_else(|e| e.into_inner());
-                g.6 += 1;
-                let unverified = diffs
-                    .iter()
-                    .filter(|d| d.contains(": not verified"))
-                    .count();
-                g.4 += unverified;
-                if unverified == 0 {
-                    g.0 += 1;
-                    if decision_read(rec) {
-                        g.1 += 1;
-                    }
-                }
-                g.5.extend(diffs);
-            });
+    let first = structure_pass(res, exe, jobs, decision_budget, slack, &decision_order);
+    let second = structure_pass(res, exe, jobs, budget, slack, &rest_order);
+    let mut violations = first.violations;
+    // A comparable, non-heavy decision row whose turn never came is a violation, never a count.
+    for &i in &decision_order {
+        let rec = &res.rows[i];
+        if !first.reached.contains(&i) {
+            violations.push(format!(
+                "{}: decision row not verified: the structural rebuild did not reach it inside \
+                 the decision budget ({}s)",
+                row_text_id(rec),
+                decision_budget.as_secs()
+            ));
         }
-    });
-    let (verified, critical_verified, not_comparable, heavy, unverified, mut violations, reached) =
-        state.into_inner().unwrap_or_else(|e| e.into_inner());
-    report.verified = verified;
-    report.critical_verified += critical_verified;
-    report.not_comparable = not_comparable;
-    report.heavy = heavy;
-    report.unverified = unverified;
-    report.not_reached = order.len().saturating_sub(reached);
+    }
+    report.verified = first.verified.len() + second.verified.len();
+    report.critical_verified += first.verified.len();
+    report.not_comparable = first.not_comparable + second.not_comparable;
+    report.heavy = first.heavy + second.heavy;
+    report.critical_heavy = decision_order
+        .iter()
+        .filter(|&&i| {
+            let r = &res.rows[i];
+            structure_comparable(r)
+                && crate::cost::structure_heavy(&r.experiment, &r.mode, &r.knob.key())
+        })
+        .count();
+    report.critical_partial = decision_order
+        .iter()
+        .filter(|&&i| !structure_comparable(&res.rows[i]))
+        .count();
+    report.unverified = first.unverified + second.unverified;
+    report.not_reached = rest_order.len().saturating_sub(second.reached.len());
+    violations.extend(second.violations);
     violations.sort();
     report.violations = violations;
     report

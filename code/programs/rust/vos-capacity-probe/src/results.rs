@@ -721,15 +721,7 @@ pub fn validate(res: &Results) -> Vec<String> {
             ));
         }
         if r.result == "collapsed" {
-            if let Some(reason) = &r.collapsed_reason {
-                if !crate::inst::COLLAPSE_REASONS.contains(&reason.as_str()) {
-                    v.push(format!(
-                        "{id}: collapsed_reason {reason:?} is not in the section 4.5 enum"
-                    ));
-                }
-            } else if r.note.is_empty() {
-                v.push(format!("{id}: a collapsed row without a reason or a note"));
-            }
+            v.extend(collapse_violations(&id, r));
         }
         if r.result == "unknown" && r.cap == "none" {
             v.push(format!(
@@ -989,6 +981,53 @@ pub fn compare_structure(rec: &Row, now: &Row) -> Vec<String> {
         rec.declared_bits.to_string(),
         now.declared_bits.to_string(),
     );
+    v.extend(collapse_agreement(&id, rec, now));
+    v
+}
+
+/// The structural verdicts (round 3, finding 1).  The `structure` child reports `collapsed` (with
+/// the reason or the G2 note the solving path would write) when the rebuilt instance collapses by
+/// itself, and `unknown` ("built") otherwise.  A recorded `unsat` row must not collapse on
+/// rebuild, and a recorded `collapsed` row must say exactly what the rebuild says.  The one
+/// collapse a rebuild cannot see is `propagation-only` on a CNF of more than two clauses (zero
+/// conflicts is the solver's measurement); such a row is refused here and left to a re-solve
+/// (`check --full`, or the spot check when it samples the row), which is the honest statement of
+/// what a rebuild can verify.
+fn collapse_agreement(id: &str, rec: &Row, now: &Row) -> Vec<String> {
+    let mut v = Vec::new();
+    let now_collapsed = now.result == "collapsed";
+    let says = if now_collapsed {
+        now.collapsed_reason
+            .clone()
+            .unwrap_or_else(|| now.note.clone())
+    } else {
+        "no collapse".to_string()
+    };
+    match rec.result.as_str() {
+        "unsat" if now_collapsed => v.push(format!(
+            "{id}: recorded unsat, but the rebuilt instance collapses ({says}): a refuted row \
+             is not a collapse"
+        )),
+        "collapsed" => {
+            let agrees = match (&rec.collapsed_reason, now_collapsed) {
+                (Some(r), true) => now.collapsed_reason.as_ref() == Some(r),
+                (None, true) => {
+                    now.collapsed_reason.is_none() && rec.note.starts_with(now.note.as_str())
+                }
+                (_, false) => false,
+            };
+            if !agrees {
+                v.push(format!(
+                    "{id}: recorded collapsed ({}), but the rebuilt instance gives: {says} \
+                     (a collapse is verified structurally, or by a re-solve in `check --full`)",
+                    rec.collapsed_reason
+                        .clone()
+                        .unwrap_or_else(|| rec.note.clone())
+                ));
+            }
+        }
+        _ => {}
+    }
     v
 }
 
@@ -1055,6 +1094,104 @@ pub fn compare_timing(rec: &Row, now: &Row) -> Vec<String> {
         ));
     }
     v
+}
+
+/// What a `collapsed` row must record to be believable, by the rules of VOS30 section 4.5 and the
+/// guards of `exp::apply_guards` / `chain_row` (round 3, finding 1).  A `collapsed` row is
+/// excluded from every statistic, so a red `unsat` row relabelled `collapsed` used to turn a
+/// decision group green on a plain `check`.  Every rule here is a necessary condition of the
+/// genuine writer, checked against every collapsed row of the committed file:
+///
+/// * a reason needs `conflicts == 0 || clauses <= 2` (the two ways `collapse_reason` fires);
+/// * `identical-structure` and `constant-fold` need `ands == 0` (a pair of equal outputs has a
+///   constant miter and an empty cone); a chain row can collapse for no other reason (its
+///   `propagation-only` would need a solve the chain writer never classifies);
+/// * with no reason the note must be one of the two G2 notes, naming numbers the row's own
+///   fields reproduce: `entropy_bits * 2 < declared_bits`, or `ands * 4 < full` for the 25% rule.
+pub fn collapse_violations(id: &str, r: &Row) -> Vec<String> {
+    let mut v = Vec::new();
+    let chain = CHAIN_EXPERIMENTS.contains(&r.experiment.as_str());
+    if let Some(reason) = &r.collapsed_reason {
+        if !crate::inst::COLLAPSE_REASONS.contains(&reason.as_str()) {
+            v.push(format!(
+                "{id}: collapsed_reason {reason:?} is not in the section 4.5 enum"
+            ));
+            return v;
+        }
+        if r.conflicts != 0 && r.clauses > 2 {
+            v.push(format!(
+                "{id}: collapsed_reason {reason:?} needs conflicts == 0 or at most 2 clauses, \
+                 but the row records {} conflicts and {} clauses (a refuted row relabelled \
+                 collapsed)",
+                r.conflicts, r.clauses
+            ));
+        }
+        let pair_reason = matches!(reason.as_str(), "identical-structure" | "constant-fold");
+        if pair_reason && r.ands != 0 {
+            v.push(format!(
+                "{id}: collapsed_reason {reason:?} needs an empty miter cone (ands 0), but the \
+                 row records {} ANDs",
+                r.ands
+            ));
+        }
+        if chain && reason != "identical-structure" {
+            v.push(format!(
+                "{id}: a chain row collapses only as identical-structure, not {reason:?}"
+            ));
+        }
+        return v;
+    }
+    if r.note.is_empty() {
+        v.push(format!("{id}: a collapsed row without a reason or a note"));
+    } else if let Some((sens, decl)) = parse_g2_entropy(&r.note) {
+        if sens != r.entropy_bits || decl != r.declared_bits || sens * 2 >= decl {
+            v.push(format!(
+                "{id}: the G2 entropy note {:?} does not match the row's entropy_bits {} of \
+                 declared_bits {} (or they are not below half)",
+                r.note, r.entropy_bits, r.declared_bits
+            ));
+        }
+    } else if let Some((ands, full)) = parse_g2_ands(&r.note).filter(|_| !chain) {
+        if ands != r.ands || ands * 4 >= full {
+            v.push(format!(
+                "{id}: the G2 note {:?} does not match the row's {} ANDs (or they are not under \
+                 25%)",
+                r.note, r.ands
+            ));
+        }
+    } else {
+        v.push(format!(
+            "{id}: a collapsed row with no reason must carry a G2 note, not {:?}",
+            r.note
+        ));
+    }
+    v
+}
+
+fn two_numbers(note: &str, prefix: &str, mid: &str, suffix: &str) -> Option<(u64, u64)> {
+    let rest = note.strip_prefix(prefix)?;
+    let (a, rest) = rest.split_once(mid)?;
+    let b = rest.strip_suffix(suffix)?;
+    Some((a.parse().ok()?, b.parse().ok()?))
+}
+
+/// `(sensitive, declared)` of a G2 entropy note (the text of `exp::g2_entropy_note`, possibly
+/// followed by another sentence a later step appended).
+fn parse_g2_entropy(note: &str) -> Option<(u64, u64)> {
+    let rest = note.strip_prefix("G2: ")?;
+    let (a, rest) = rest.split_once(" of ")?;
+    let (b, _) = rest.split_once(" declared bits are sensitive")?;
+    Some((a.parse().ok()?, b.parse().ok()?))
+}
+
+/// `(ands, full)` of a G2 AND-count note (the text of `exp::g2_ands_note`).
+fn parse_g2_ands(note: &str) -> Option<(u64, u64)> {
+    two_numbers(
+        note,
+        "G2: ",
+        " ANDs is under 25% of ",
+        " at divergence 100%",
+    )
 }
 
 /// Re-run every quick-tier row in this process and compare (`jobs` threads).
@@ -1357,21 +1494,25 @@ pub fn decision_read(r: &Row) -> bool {
     }
 }
 
-/// The groups [`decide`] reads that a plain `check` does not re-solve: not in the quick tier
-/// (re-run in process) and not in the plan's cheap class (`cost::CHEAP`, sampled).  Their
-/// timing-derived and solver-derived fields are verified only by `check --full` (round 2,
-/// finding 1(c)); `check` prints this count so the gap is never silent.
-pub fn decision_groups_not_resolved(rows: &[Row]) -> Vec<String> {
-    let mut keys = std::collections::BTreeSet::new();
-    for r in rows {
-        if decision_read(r)
-            && r.tier != "quick"
-            && !crate::cost::is_cheap(&r.experiment, &r.mode, &r.knob.key())
-        {
-            keys.insert(group_key(r));
+/// The groups [`decide`] reads that THIS run did not re-solve: no row of the group is in the
+/// quick tier (re-run in process by every `check`) and none is in `resolved`, the sorted indexes
+/// of the rows the spot check re-ran in full to completion (round 3, finding 3).  The count
+/// follows what the run did, not the plan's classes, so a slow host that sampled fewer rows prints
+/// a larger number.  Their timing-derived and solver-derived fields are verified only by
+/// `check --full`.
+pub fn decision_groups_not_resolved(rows: &[Row], resolved: &[usize]) -> Vec<String> {
+    let mut all = std::collections::BTreeSet::new();
+    let mut solved = std::collections::BTreeSet::new();
+    for (i, r) in rows.iter().enumerate() {
+        if decision_read(r) {
+            let k = group_key(r);
+            if r.tier == "quick" || resolved.binary_search(&i).is_ok() {
+                solved.insert(k.clone());
+            }
+            all.insert(k);
         }
     }
-    keys.into_iter().collect()
+    all.difference(&solved).cloned().collect()
 }
 
 /// Section 8.3 applied to the rows, worst case first; any shape that is missing or not green
