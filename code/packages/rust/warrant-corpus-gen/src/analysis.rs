@@ -79,7 +79,9 @@ fn guards(ir: &Ir) -> Result<(), GenError> {
         }
         // A `match` arm is a guard whose condition is the scrutinee (VER04r 4.4): a subject call in
         // an arm needs a pure scrutinee.  With no call in any arm only the scrutinee is of interest.
-        Ir::Match { scrutinee, arms } => {
+        Ir::Match {
+            scrutinee, arms, ..
+        } => {
             if arms.iter().any(|(_, body)| body.has_subject()) {
                 if scrutinee.has_subject() {
                     return Err(impure());
@@ -282,6 +284,7 @@ mod tests {
         let m = |scrutinee: Box<Ir>, body: Box<Ir>| Ir::Match {
             scrutinee,
             arms: arms(body),
+            on_result: true,
         };
         // a pure scrutinee over an arm that calls: fine
         assert!(check_pure_guards(&m(var("r"), subj("f"))).is_ok());
@@ -295,6 +298,7 @@ mod tests {
                 (Pat::Ok(Box::new(Pat::Wild)), Ir::Bool(true)),
                 (Pat::ErrAny, *subj("f")),
             ],
+            on_result: true,
         };
         assert!(check_pure_guards(&second).is_err());
         // no arm calls: descend into the scrutinee as usual (a call there guards nothing)

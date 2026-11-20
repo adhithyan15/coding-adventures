@@ -118,17 +118,10 @@ fn every_refused_signature_has_the_generator_code_fault_and_the_oracles_reason()
     for r in rows {
         let name = r.get("name").s();
         assert_eq!(r.get("oracle_code").s(), "generation", "{name}");
-        let op = match lowered_op(r.get("source").s()) {
-            Ok(op) => op,
-            Err(e) => {
-                // An `Option` result never reaches the fault: the generator's lowering refuses the
-                // signature itself (`Option` is an IR-only intermediate), which is no weaker.
-                assert_eq!(name, "an-option-result", "{name}: {e}");
-                assert_eq!(e.code, code::LEVEL, "{e}");
-                assert_eq!(e.level, Some("ir.data"), "{e}");
-                continue;
-            }
-        };
+        // S11b: an `Option` signature lowers (`ir.data`, [D48]), so every row, `an-option-result`
+        // included, reaches the fault and is refused with the `fault` code of section 8.2 and the
+        // oracle's reason (before S11b the generator's lowering stopped that one row first).
+        let op = lowered_op(r.get("source").s()).unwrap_or_else(|e| panic!("{name}: {e}"));
         let e = instantiate(&op, "off-by-one-consumed").expect_err(name);
         assert_eq!(e.code, code::FAULT, "{name}: {e}");
         assert_eq!(

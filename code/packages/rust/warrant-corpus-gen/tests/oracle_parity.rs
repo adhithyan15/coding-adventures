@@ -100,9 +100,15 @@ fn kids_mut(ir: &mut Ir) -> Vec<&mut Ir> {
         // `ir.tuple` (S10t-2): the sub-expressions only, never a pattern (`Ir::children`'s rule)
         Ir::Tuple(parts) => parts.iter_mut().collect(),
         Ir::Project(base, _) => vec![base],
-        Ir::Match { scrutinee, arms } => std::iter::once(&mut **scrutinee)
+        Ir::Match {
+            scrutinee, arms, ..
+        } => std::iter::once(&mut **scrutinee)
             .chain(arms.iter_mut().map(|(_, body)| body))
             .collect(),
+        // `ir.data` (S11b): the operands only, never a name, a type or a pattern
+        Ir::Some(inner) | Ir::Field(inner, _) => vec![inner],
+        Ir::None(_) => vec![],
+        Ir::Ctor { args, .. } => args.iter_mut().collect(),
     }
 }
 

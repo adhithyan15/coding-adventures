@@ -300,6 +300,8 @@ fn ok_form(op: &LoweredOp, fault: &str, body: impl Fn(Ir) -> Ir) -> Result<Ir, G
             ),
             (Pat::ErrAny, Ir::Var(RESULT.to_string())),
         ],
+        // a fault template matches on the op's `Result`: `ir.tuple`
+        on_result: true,
     })
 }
 
@@ -811,6 +813,7 @@ pub fn instantiate_in(
                     (Pat::Ok(Box::new(Pat::Wild)), Ir::Err(first.clone())),
                     (Pat::ErrAny, Ir::Var(RESULT.to_string())),
                 ],
+                on_result: true,
             };
             (Kind::Post(expr_of(expr)), vec![Level::Tuple])
         }
