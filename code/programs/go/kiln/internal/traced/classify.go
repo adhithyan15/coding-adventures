@@ -989,7 +989,15 @@ func (c *classifier) touchedAfterParents(abs string, after pos) bool {
 // lookups.
 func (c *classifier) checkStability() {
 	idx := map[string]*modIndex{}
-	c.judge(&c.lookupSet, idx, func(p, sub string) { c.reasonSub(rUnstable, sub, p) })
+	// The census is told about each unstable lookup AFTER the pass, sorted: judge
+	// walks Go maps, whose order differs from run to run, and which paths a full
+	// kind keeps must not depend on it (census.json is a diagnostic people diff).
+	// The verdict side is exactly what it was: reason() is called as before.
+	var notes censusNotes
+	c.judge(&c.lookupSet, idx, func(p, sub string) {
+		c.reason(rUnstable)
+		notes.add(c.census, rUnstable+":"+sub, p)
+	})
 	c.judge(&c.wr, idx, func(string, string) { c.incomplete = true })
 	for p, from := range c.execReads {
 		// Measured from the FIRST exec's start: any change that completed after
@@ -999,9 +1007,11 @@ func (c *classifier) checkStability() {
 			bad = true
 		}
 		if bad {
-			c.reasonSub(rExecUnreadable, "modified-after-exec", p)
+			c.reason(rExecUnreadable)
+			notes.add(c.census, rExecUnreadable+":modified-after-exec", p)
 		}
 	}
+	notes.flush(c)
 }
 
 // judge applies the stability rule to the lookups in l; bad is called once

@@ -2,6 +2,7 @@ package traced
 
 import (
 	"sort"
+	"strings"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
@@ -30,10 +31,81 @@ import (
 // kinds together are still bounded.  There are about ten kinds, so the overall
 // bound is a safety net well above kinds x per-kind: were it near the sum of
 // the per-kind caps, early kinds could fill it and starve a late one again.
+//
+// The invariant (TestCensusKindCapsFitTheOverallBound): the per-kind caps of
+// every kind the classifier can feed add up to at most MaxCensusEntries, so the
+// overall bound never decides which kind loses.  The sub-coded kinds
+// (unstable-path:*, exec-unreadable:*: eighteen of them) hold 256 paths each,
+// the seven path kinds 1024: 7*1024 + 18*256 = 11776 <= 16384.
 const (
 	MaxCensusPerKind = 1024
-	MaxCensusEntries = 16384
+	// MaxCensusPerSubKind is the cap of a sub-coded kind.
+	MaxCensusPerSubKind = 256
+	MaxCensusEntries    = 16384
 )
+
+// censusSubKindPrefixes start the kinds that have sub-codes.
+var censusSubKindPrefixes = []string{"trace-incomplete:unstable-path:", "trace-incomplete:exec-unreadable:"}
+
+// censusSubCodes is every sub-code reasonSub / censusNotes can be given, per
+// reason (a fixed vocabulary: each is a string literal at its raise site).
+var censusSubCodes = map[string][]string{
+	"trace-incomplete:unstable-path": {
+		"component-changed", "absent-changed", "final-changed", "followed-final-changed",
+		"followed-absent-changed", "gone-but-found", "removed-before-made", "file-changed",
+		"own-overlap", "through-missing", "dotdot", "fd-path-differs",
+	},
+	"trace-incomplete:exec-unreadable": {
+		"modified-after-exec", "virtual-exe", "virtual-interpreter", "under-tmp", "in-repo", "host-disk",
+	},
+}
+
+// kindCap is the most distinct paths the census holds of kind.
+func kindCap(kind string) int {
+	for _, p := range censusSubKindPrefixes {
+		if strings.HasPrefix(kind, p) {
+			return MaxCensusPerSubKind
+		}
+	}
+	return MaxCensusPerKind
+}
+
+// censusNotes collects the notes of a pass that walks Go maps, so they can be
+// given to the census in sorted order (see checkStability).
+type censusNote struct{ kind, path string }
+type censusNotes struct{ list []censusNote }
+
+// The buffer is bounded by what the pass walks: one note per unstable lookup, and
+// the lookup sets already hold every one of those in memory.
+func (n *censusNotes) add(c *Census, kind, path string) {
+	if c == nil {
+		return
+	}
+	n.list = append(n.list, censusNote{kind, path})
+}
+
+// flush gives the buffered notes to the classifier's census, by kind then path
+// (the path as the classifier redacts it).
+func (n *censusNotes) flush(c *classifier) {
+	if c.census == nil {
+		return
+	}
+	type red struct{ kind, path string }
+	out := make([]red, len(n.list))
+	for i, e := range n.list {
+		out[i] = red{e.kind, c.redact(e.path)}
+	}
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].kind != out[j].kind {
+			return out[i].kind < out[j].kind
+		}
+		return out[i].path < out[j].path
+	})
+	for _, e := range out {
+		c.census.noteClean(e.kind, e.path)
+	}
+	n.list = nil
+}
 
 // CensusEntry is one distinct (kind, path) pair and how often it was raised.
 type CensusEntry struct {
@@ -164,7 +236,7 @@ func (c *Census) Note(kind, path string) {
 func (c *Census) noteClean(kind, path string) {
 	k := censusKey{kind, path}
 	c.Total++
-	if _, ok := c.m[k]; !ok && (c.nKind[kind] >= MaxCensusPerKind || len(c.m) >= MaxCensusEntries) {
+	if _, ok := c.m[k]; !ok && (c.nKind[kind] >= kindCap(kind) || len(c.m) >= MaxCensusEntries) {
 		c.Overflow[kind]++
 		return
 	}
