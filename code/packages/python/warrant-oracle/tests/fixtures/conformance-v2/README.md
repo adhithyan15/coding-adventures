@@ -2,8 +2,9 @@
 
 This directory holds the **inputs** of the six v2 categories of `warrant-corpus-conformance-v1`
 (`v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk`, `v2-fault`) and the script that turns them into
-fixture files. It holds no fixture JSON: S5a writes the files into a scratch directory only, and S5b commits
-them into `code/specs/fixtures/warrant-corpus-conformance-v1/`.
+fixture files. It holds no fixture JSON: S5b committed the files into
+`code/specs/fixtures/warrant-corpus-conformance-v1/`, and `BUILD` runs `--check` against that directory.
+Regeneration is two steps: `--write` here, then `python3 code/scripts/warrant_corpus_conformance.py --write` for `index.json`.
 
 ```text
 make_conformance.py --write [--fixture DIR]   # DIR defaults to the family directory

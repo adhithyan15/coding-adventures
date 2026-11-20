@@ -363,7 +363,7 @@ admitted-case ordinal (`SuitePlan.check_admits`, `ir_eval.compile_admit_check`),
 subject-dependent argument the op's `admit` reads refused statically (VER04r 4.5 and 16.9).
 `tests/test_admit_calls.py` holds the same documents as the generator's `tests/admit_calls.rs`.
 
-## The v2 conformance kit (S5a)
+## The v2 conformance kit (S5a, S5b)
 
 VER04r section 11 adds six categories to the shared fixture family `warrant-corpus-conformance-v1`:
 `v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk` and `v2-fault` (a seventh, `v2-binding`, is S5c's).
@@ -392,7 +392,16 @@ python3 tests/fixtures/conformance-v2/make_conformance.py --check --fixture DIR 
 `--fixture` defaults to the family directory `code/specs/fixtures/warrant-corpus-conformance-v1`; `--check` also
 requires an `index.json` that is present to hold one row per derived file and skips that check when there is none.
 Exit codes: 0 identical, 1 the bytes differ, 2 a table and its derivation disagree or any other error. The script
-never writes `index.json` (the family's v1 script does). S5a commits **no** fixture file; S5b does.
+never writes `index.json` (the family's v1 script does).
+
+S5b commits the six `v2-*.json` files (734 cases) and their rows of `index.json`. **Regeneration is two steps**:
+`make_conformance.py --write` (the six files), then `python3 code/scripts/warrant_corpus_conformance.py --write`
+(`index.json`: the four v1 rows, then one row per `v2-*.json` on disk in the fixed order). `BUILD` runs
+`make_conformance.py --check --fixture ../../../specs/fixtures/warrant-corpus-conformance-v1` (a second derivation of
+the `2**24` suite, about a minute, that the pytest session fixture does not share), the v1 checker
+`code/scripts/warrant_corpus_conformance.py` (which indexes and structurally checks the `v2-*` files without importing
+the oracle or a lane) and its tests, so either tool alone catches a stale index. An edit to the fixture directory,
+the checker or its test selects this package (build-tool `isWarrantOracleInput`).
 
 `tests/test_conformance_mutants.py` is the mutant test of [D42]: sixteen named wrong evaluators (no wrap,
 saturation, a signed compare on the bit pattern, eager `and`, first-binder-fastest enumeration, a missing chunk

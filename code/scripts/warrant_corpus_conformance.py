@@ -23,6 +23,16 @@ the *intent* of each case), and ``check`` rebuilds the same bytes in memory and
 requires the files on disk to be identical, then runs structural checks
 (unique ids, closed reason set, index counts and digests, line endings).
 
+The ``v2-*.json`` files (VER04r section 11) are written by the oracle's
+``make_conformance.py``, not here.  This script **indexes** the ones on disk
+(``--write`` gives ``index.json`` one row per file after the four v1 rows, in
+the fixed order ``v2-value``, ``v2-arith``, ``v2-ir``, ``v2-domain``,
+``v2-chunk``, ``v2-fault``, ``v2-binding``, with ``cases`` and ``sha256``) and
+checks them structurally (line endings, schema, category, ids); the closed set
+of ``expect.reason`` is the v1 kit's and applies to the four v1 categories only.
+Regeneration is two steps: ``make_conformance.py --write``, then this script's
+``--write``.
+
 The table states an **intent** for every case ("accept" or the reject reason)
 *and* the reference implementation derives the outcome independently.  The
 two must agree, which is double-entry bookkeeping: a typo in the table and a
@@ -59,6 +69,14 @@ SAFE_MAX = 2**53 - 1
 MAX_DEPTH = 256  # nested containers; the 257th is rejected (VER04i 9.1)
 U64_MAX = 2**64 - 1
 CANONICAL_TEXT_LIMIT = 2048  # larger renderings are pinned by digest alone
+
+#: The four categories this script derives (the v1 kit).  Only they are held to ``REASONS``.
+V1_CATEGORIES = ("json", "tagged", "containment", "label-digest")
+
+#: The v2 categories (VER04r section 11) in the fixed order of their rows in ``index.json``.  Their files are
+#: written by the oracle's ``make_conformance.py`` (``v2-binding`` by S5d), never by this script, which only
+#: indexes and structurally checks the ones that are on disk and imports nothing from the oracle or a lane.
+V2_CATEGORIES = ("v2-value", "v2-arith", "v2-ir", "v2-domain", "v2-chunk", "v2-fault", "v2-binding")
 
 REASONS = frozenset(
     {
@@ -1270,17 +1288,54 @@ def build_cases() -> dict[str, list[dict[str, Any]]]:
     }
 
 
-def build_files() -> dict[str, str]:
-    """The exact text of every fixture file, keyed by file name."""
+def v2_files(fixture: Path) -> tuple[dict[str, bytes], list[str]]:
+    """``({file name: bytes}, problems)`` for the ``v2-*.json`` files in ``fixture``, in the fixed row order.
+
+    A ``v2-*.json`` file whose category is not in ``V2_CATEGORIES`` is a problem (it would never be indexed).
+    A fixture directory without v2 files, such as a copy taken before S5b, yields no rows.
+    """
+    found: dict[str, bytes] = {}
+    problems: list[str] = []
+    if fixture.is_dir():
+        for path in sorted(fixture.glob("v2-*.json")):
+            if path.stem not in V2_CATEGORIES:
+                problems.append(f"{path.name}: not a v2 category this script indexes")
+            else:
+                found[path.name] = path.read_bytes()
+    return {f"{c}.json": found[f"{c}.json"] for c in V2_CATEGORIES if f"{c}.json" in found}, problems
+
+
+def _index_row(category: str, name: str, cases: int, data: bytes) -> dict[str, Any]:
+    return {"category": category, "path": name, "cases": cases, "sha256": sha256_hex(data)}
+
+
+def v2_index_rows(v2: dict[str, bytes]) -> list[dict[str, Any]]:
+    """One row per v2 file, with its ``cases`` and ``sha256``; a file that does not read gets ``cases`` 0
+    (``structural_problems`` reports it)."""
+    rows = []
+    for name, data in v2.items():
+        try:
+            cases = len(read_json(data)["cases"])
+        except (Reject, KeyError, TypeError):
+            cases = 0
+        rows.append(_index_row(name[: -len(".json")], name, cases, data))
+    return rows
+
+
+def build_files(fixture: Path | None = None) -> dict[str, str]:
+    """The exact text of every file this script writes, keyed by file name.
+
+    ``index.json`` holds the four v1 rows and then one row per ``v2-*.json`` found in ``fixture`` (default: the
+    family directory), in the fixed order of ``V2_CATEGORIES``; the v2 files themselves are not returned.
+    """
     files: dict[str, str] = {}
     index_rows = []
     for category, cases in build_cases().items():
         text = canonical({"schema": SCHEMA, "category": category, "cases": cases})
         name = f"{category}.json"
         files[name] = text
-        index_rows.append(
-            {"category": category, "path": name, "cases": len(cases), "sha256": sha256_hex(text.encode("utf-8"))}
-        )
+        index_rows.append(_index_row(category, name, len(cases), text.encode("utf-8")))
+    index_rows += v2_index_rows(v2_files(DEFAULT_FIXTURE if fixture is None else fixture)[0])
     files["index.json"] = canonical(
         {"schema": SCHEMA, "total_cases": sum(r["cases"] for r in index_rows), "files": index_rows}
     )
@@ -1291,17 +1346,32 @@ def build_files() -> dict[str, str]:
     return files
 
 
-def structural_problems(files: dict[str, str]) -> list[str]:
-    """Checks that do not depend on the case tables (ids, reasons, ASCII ...)."""
+def structural_problems(files: dict[str, str], v2: dict[str, bytes] | None = None) -> list[str]:
+    """Checks that do not depend on the case tables (ids, reasons, ASCII ...).
+
+    ``v2`` are the bytes of the ``v2-*.json`` files: they get the same checks of line endings, schema, category,
+    case count and id, but **not** the closed set of ``expect.reason`` below, which is the v1 kit's (the v2
+    categories have closed error sets of their own, fixed by VER04r section 11 and checked by the oracle).
+    """
     problems: list[str] = []
     seen: set[str] = set()
-    for name, text in files.items():
-        if name == ".gitattributes":
-            continue
-        if "\r" in text or not text.endswith("\n") or not text.isascii():
+    documents = {name: text.encode("utf-8") for name, text in files.items() if name != ".gitattributes"}
+    documents.update(v2 or {})
+    for name, data in documents.items():
+        if b"\r" in data or not data.endswith(b"\n") or not data.isascii():
             problems.append(f"{name}: must be LF-only ASCII ending in a newline")
-        document = read_json(text.encode("utf-8"))
+        try:
+            document = read_json(data)
+        except Reject as error:
+            problems.append(f"{name}: does not read as strict JSON ({error.reason})")
+            continue
         if name == "index.json":
+            continue
+        if not isinstance(document, dict) or not isinstance(document.get("cases"), list):
+            problems.append(f"{name}: not a {{schema, category, cases}} document")
+            continue
+        if document.get("schema") != SCHEMA or f"{document.get('category')}.json" != name:
+            problems.append(f"{name}: schema or category does not match the file")
             continue
         for case in document["cases"]:
             if case["id"] in seen:
@@ -1310,7 +1380,7 @@ def structural_problems(files: dict[str, str]) -> list[str]:
             if not case["id"].startswith(document["category"] + "/"):
                 problems.append(f"{case['id']}: id must start with its category")
             reason = case.get("expect", {}).get("reason")
-            if reason is not None and reason not in REASONS:
+            if document["category"] in V1_CATEGORIES and reason is not None and reason not in REASONS:
                 problems.append(f"{case['id']}: reason {reason!r} is not in the closed set")
     return problems
 
@@ -1441,13 +1511,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--write", action="store_true", help="regenerate the fixture files")
     args = parser.parse_args(argv)
 
-    files = build_files()
-    problems = structural_problems(files) + second_opinions()
+    v2, problems = v2_files(args.fixture)
+    files = build_files(args.fixture)
+    problems += structural_problems(files, v2) + second_opinions()
     if args.write:
         args.fixture.mkdir(parents=True, exist_ok=True)
         for name, text in files.items():
             (args.fixture / name).write_bytes(text.encode("utf-8"))
-        print(f"wrote {len(files)} files to {args.fixture}")
+        print(f"wrote {len(files)} files to {args.fixture} (index.json holds {len(v2)} v2 rows)")
     else:
         for name, text in files.items():
             path = args.fixture / name
@@ -1456,14 +1527,18 @@ def main(argv: list[str] | None = None) -> int:
             elif path.read_bytes() != text.encode("utf-8"):
                 problems.append(f"{name}: differs from the reference derivation (run with --write)")
         present = {p.name for p in args.fixture.iterdir()} if args.fixture.is_dir() else set()
-        for extra in sorted(present - set(files) - {"README.md"}):
+        for extra in sorted(present - set(files) - set(v2) - {"README.md"}):
             problems.append(f"{extra}: not part of the fixture")
     for problem in problems:
         print(f"not ok {problem}")
     if problems:
         return 1
     total = sum(len(c) for c in build_cases().values())
-    print(f"ok warrant-corpus-conformance-v1: {total} cases agree with the reference implementation")
+    v2_total = sum(r["cases"] for r in v2_index_rows(v2))
+    print(
+        f"ok warrant-corpus-conformance-v1: {total} v1 cases agree with the reference implementation; "
+        f"{v2_total} cases in {len(v2)} v2 files are indexed and structurally sound"
+    )
     return 0
 
 
