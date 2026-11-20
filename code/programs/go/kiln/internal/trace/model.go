@@ -310,6 +310,9 @@ type model struct {
 	exitCand  map[int]int
 	rawExits  map[int]bool
 	walkSteps int // thread-chain steps taken (a test watches this stays linear)
+	// orphans are the pids whose only record is their exit and that the dropped
+	// dying spawns can account for (D44); nil when there are too many.
+	orphans map[int]bool
 }
 
 // Parse reads a strace trace from r.  initialCwd is the working directory of
@@ -356,6 +359,7 @@ func parseWith(r io.Reader, initialCwd string, opts Options, grammar bool) (*Tra
 	if e := m.buildSpawns(recs); e != nil {
 		return nil, e
 	}
+	m.findOrphans(recs)
 	for i := range recs {
 		if e := m.apply(&recs[i]); e != nil {
 			return nil, e
@@ -820,7 +824,54 @@ func (m *model) threadGroupOf(pid int) int {
 	return res
 }
 
+// findOrphans (D44) finds the pids that appear only as an exit: the children of
+// a spawn whose return line died with its parent, so no spawn record names
+// them.  They are accepted only when the dropped dying spawns (record
+// .spawnDropped) are at least as many as the orphans; with more orphans than
+// spawns some orphan is unexplained and ALL of them keep refusing as orphan-pid.
+//
+// "Only record" means no call, start marker or exit_group marker: the lines
+// that leave no record are ignored-class calls, signals and filter-answered
+// refusals, none of which touches a path.  A pid with two records (even two
+// exits) is not an orphan.  Deferred (model.go get): matching each orphan to a
+// particular dropped spawn, and its clone flags for DaemonLeft; the orphan's
+// exit stays in Trace.Exits with no Procs entry, which DaemonLeft already
+// counts as a possible survivor (fail closed).
+func (m *model) findOrphans(recs []record) {
+	dropped := 0
+	count := map[int]int{}
+	for i := range recs {
+		if recs[i].spawnDropped {
+			dropped++
+		}
+		count[recs[i].pid]++
+	}
+	var orphans []int
+	for i := range recs {
+		pid := recs[i].pid
+		if recs[i].exit == nil || count[pid] != 1 || pid == m.root {
+			continue
+		}
+		if _, spawned := m.spawns[pid]; spawned {
+			continue
+		}
+		orphans = append(orphans, pid)
+	}
+	if len(orphans) == 0 || len(orphans) > dropped {
+		return
+	}
+	m.orphans = map[int]bool{}
+	for _, pid := range orphans {
+		m.orphans[pid] = true
+	}
+}
+
 func (m *model) apply(rec *record) *Error {
+	if rec.exit != nil && m.orphans[rec.pid] {
+		m.trace.Exits = append(m.trace.Exits, *rec.exit)
+		m.trace.ExitLines = append(m.trace.ExitLines, rec.line)
+		return nil
+	}
 	p, e := m.get(rec.pid, rec.line)
 	if e != nil {
 		return e
@@ -1094,6 +1145,9 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 	if len(c.args) < ent.min || len(c.args) > ent.max {
 		return fail(reasonArity)
 	}
+	if shortMknod(c) {
+		return fail(reasonArity) // a device node always prints its dev (D44)
+	}
 	if c.ret.unknown {
 		return fail(reasonResult)
 	}
@@ -1239,6 +1293,62 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 
 // fillPath extracts dirfd, path, dirfd2, path2, flags and symlink target
 // according to the table entry.
+// shortMknod reports a mknod/mknodat in its short form (no dev argument) whose
+// mode names a character or block device.  strace prints dev for exactly those
+// two file types, so such a line is not a call we understand.  The short form
+// of every other type (S_IFREG, S_IFIFO, S_IFSOCK, or a bare permission mask,
+// which is a regular file) is what strace prints.  A mode that is not
+// symbolic is judged by its tokens: an unrecognised token also refuses.
+func shortMknod(c *rawCall) bool {
+	var modeIdx int
+	switch c.name {
+	case "mknod":
+		modeIdx = 1
+	case "mknodat":
+		modeIdx = 2
+	default:
+		return false
+	}
+	if len(c.args) != modeIdx+1 {
+		return false // the long form, judged by the ordinary arity check
+	}
+	for _, tok := range strings.Split(c.args[modeIdx], "|") {
+		tok = strings.TrimSpace(tok)
+		switch tok {
+		case "S_IFREG", "S_IFIFO", "S_IFSOCK":
+			continue
+		}
+		if isOctalToken(tok) && permBitsOnly(tok) {
+			continue
+		}
+		return true // S_IFCHR, S_IFBLK, a mode with file-type bits, or anything unrecognised
+	}
+	return false
+}
+
+// isOctalToken reports a permission mask as strace prints it: a leading 0 and
+// octal digits ("0600", "0").
+func isOctalToken(s string) bool {
+	if s == "" || s[0] != '0' {
+		return false
+	}
+	for i := 1; i < len(s); i++ {
+		if s[i] < '0' || s[i] > '7' {
+			return false
+		}
+	}
+	return true
+}
+
+// permBitsOnly says an octal token carries permission bits alone (at most
+// 07777).  strace prints a mode's file type symbolically (S_IFCHR|0600), so an
+// octal literal with type bits (020600, a character device) is not strace's
+// own spelling of a non-device and must not pass for one.
+func permBitsOnly(s string) bool {
+	v, err := strconv.ParseUint(s, 8, 32)
+	return err == nil && v <= 0o7777
+}
+
 func (m *model) fillPath(ev *Event, ent entry, args []string) string {
 	var r string
 	if ent.dirfd > 0 {

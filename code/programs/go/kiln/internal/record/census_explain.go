@@ -119,6 +119,16 @@ func refusalSyscall(code string, e *trace.Error) string {
 	if e != nil && e.Call != "" && trace.SyscallClass(e.Call) != "" {
 		return e.Call
 	}
+	// D44: a dying call outside the table says only whether its name is
+	// strace's unknown-number spelling, as one of two fixed codes.  The value
+	// is compared to those constants, so a hostile error cannot put its own
+	// text into the report.
+	if code == "unresumed-call" && e != nil {
+		switch e.UnknownNumber {
+		case "unknown-number:yes", "unknown-number:no":
+			return e.UnknownNumber
+		}
+	}
 	return "other"
 }
 

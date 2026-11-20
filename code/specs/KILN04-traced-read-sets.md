@@ -3981,6 +3981,61 @@ the lexer's ANNOTATED token; a quoted string is another token kind, so a path
 containing `socket:[` cannot fake it (and `/x/socket:[1]` starts with `/`). Pass 2
 is shared, so both trace readers change together and the cross-check stays equal.
 
+**Decision D44: orphan exits, NULL-path dying calls, short mknod, and the
+unknown-number census code (census run 8; `kiln:recorder` 11 to 12).** Three
+refusals left in the census are explained by shapes that cannot hide a read,
+and a fourth needs a decision first.
+
+1. *Orphan exits (`orphan-pid`, Go, one action per image).* The child of a
+   spawn whose return line died with its parent has no spawn record (D35 drops
+   a dying fork, vfork or clone, so none is made), so its first line is
+   unexplained. If that line is its EXIT, and the pid has no other record, it
+   is accepted, but only while the number of such pids is at most the number of
+   dying spawns D35 dropped in this trace (counted on the exit record that
+   ended each one, `record.spawnDropped`; clone3 is refused-class and never
+   dropped, so it counts for nothing). With more orphans than dropped spawns
+   some orphan is unexplained, and ALL of them keep refusing as `orphan-pid`.
+   *Soundness.* A pid with nothing but an exit made no recorded call, so it
+   read nothing the model infers reads from (open and stat records). The count
+   bounds how many such pids the dropped spawns can have produced, so a stray
+   pid, a pid reused by another trace's process, or a spawn lost by any other
+   route is not covered. A pid with any other record (a stat, a second exit)
+   is not an orphan. The lines that leave no record (ignored-class calls,
+   signals, filter-answered refusals) carry no path. The orphan's exit stays in
+   `Trace.Exits` and `ExitLines` but gets no `Procs` entry, so `DaemonLeft`
+   treats it as a possible survivor (a missing entry is "not proven outside the
+   init's tree"): an orphan that dies after the init's exit_group still
+   refuses as `daemon-left`. *Deferred:* matching each orphan to a particular
+   dropped spawn and keeping its clone flags, which would let an orphan thread
+   of the init group be recognised as one; `model.get` is unchanged.
+2. *NULL-path dying calls.* A dying `stat`, `lstat`, `access` or `readlink`
+   whose first argument is printed exactly `NULL` is dropped like the ignored
+   class. *Soundness.* The kernel copies the path in before any lookup, so a
+   NULL pointer fails with EFAULT having looked at nothing; there is no result
+   a sibling could use. `newfstatat` and `statx` are NOT included: with
+   `AT_EMPTY_PATH` a NULL or empty path means the descriptor itself, which is
+   a read. A real path, an address (shape 3 prints one) or any other call keeps
+   D35's refusal.
+3. *`mknod` and `mknodat` arity.* strace prints the `dev` argument only when
+   the mode's type is `S_IFCHR` or `S_IFBLK` (strace `src/mknod.c`,
+   `decode_mknod`), so the minimum arity is 2 and 3, in the one table both
+   readers share. The long spelling stays accepted. *Soundness.* A short call
+   whose mode has `S_IFCHR`, `S_IFBLK` or any token the model does not
+   recognise is still `arity`: such a line is not what strace prints.
+   `S_IFREG` with the short form is what strace prints for a regular file, so
+   it is accepted (it is a write of the path, exactly as with a device
+   argument).
+4. *Census only: unknown-number (`unresumed-call`, Go, 24.04 only, nine).* For
+   a refused dying call whose name is OUTSIDE the closed table, the census now
+   says whether the name is strace's unknown-number spelling, as the fixed code
+   `unknown-number:yes` or `unknown-number:no` in the refusal-by-syscall
+   tables (`trace.Error.UnknownNumber`; the name is never reported). The
+   spelling is `syscall_` followed by the number in C's `%#lx`
+   (strace `src/syscall.c`: `xsprintf(buf, "syscall_%#" PRI_klx, scno)`):
+   lowercase hex with a `0x` prefix and no leading zeros, `0` for zero, at most
+   16 digits. No drop rule is added: a call we cannot name may read, and that
+   waits on a decision.
+
 **Decision D43: the sealed root (real-build census, the last `host-read`s were
 absent probes of places the sandbox does not contain; `kiln:recorder` 10 to 11).**
 The remaining census entries were `/run/systemd/resolve/stub-resolv.conf` (317
