@@ -224,7 +224,6 @@ def test_every_existing_row_keeps_its_exact_shape():
         ("res_b", "drop-consumed"),
         ("res_nested", "swap-components"),  # ((Bool,Bool),Nat): components differ
         ("flag", "missing-error"),  # not a Result
-        ("res_u8", "missing-error"),  # a U8 payload is neither Bytes nor a tuple
         ("res_pt", "missing-error"),
         ("flag", "flip-result-bit"),
         ("res_pt", "flip-result-bit"),
@@ -471,7 +470,7 @@ def test_derive_controls_takes_the_gate_as_a_parameter_and_defaults_to_the_shipp
     assert shipped[1] != closed[1]  # the shipped gate is no longer the closed one
 
 
-def test_the_registry_has_the_fourteen_names():
+def test_the_registry_has_the_seventeen_names():
     assert sorted(REGISTRY) == sorted(
         [
             "invert",
@@ -489,6 +488,10 @@ def test_the_registry_has_the_fourteen_names():
             "swap-components",
             # S10o-1 (VER04r 8.2, D36)
             "off-by-one-consumed",
+            # S11f-1 (VER04r 8.2)
+            "saturate-add",
+            "saturate-sub",
+            "shift-mask",
         ]
     )
 

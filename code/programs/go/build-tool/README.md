@@ -462,7 +462,7 @@ flags (C# and F# share `dotnet`). A source-reference test guards map drift.
 
 The flat `source-collection-*.json` cases have three separate native reader
 sets. The seven package-local cases seed C#, F#, Elixir, Go, Haskell, Lua,
-Perl, Python, Ruby, Rust, Swift, and TypeScript. The nine `repository-` cases
+Perl, Python, Ruby, Rust, Swift, and TypeScript. The thirteen `repository-` cases
 seed only C#, F#, and Swift; the four `shared-input-` cases seed only C# and
 F#. C# and F# enumerate every checked case, while other fronts execute only
 their declared subfamilies or subsets. This exact relation schedules native

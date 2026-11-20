@@ -12,7 +12,7 @@ import { createHash } from "node:crypto";
 import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, posix, win32 } from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it } from "vitest";
 import { relativeInside } from "../src/containment.ts";
 import { CorpusError } from "../src/errors.ts";
 import { parseJson, renderJson } from "../src/jsonio.ts";
@@ -87,11 +87,20 @@ function checkIndex(dir: string): number {
   return files.length;
 }
 
-/** A temp copy of the fixture with extra index rows and files; the caller removes it. */
-function scratchFixture(extraRows: Case[], files: Record<string, Buffer>): string {
+/**
+ * A temp copy of `base` with extra index rows and files; the caller removes it.
+ * Any `v2-*` rows (and their files) the base index already holds are stripped
+ * first, so the tests do not depend on how many v2 rows are committed ([D59]).
+ */
+function scratchFixture(extraRows: Case[], files: Record<string, Buffer>, base: string = FIXTURE): string {
   const scratch = mkdtempSync(join(tmpdir(), "warrant-fixture-"));
-  cpSync(FIXTURE, scratch, { recursive: true });
+  cpSync(base, scratch, { recursive: true });
   const document = JSON.parse(readFileSync(join(scratch, "index.json"), "utf8"));
+  for (const row of (document.files as Case[]).filter((r) => String(r["category"]).startsWith("v2-"))) {
+    rmSync(join(scratch, row["path"]), { force: true });
+    document.files.splice(document.files.indexOf(row), 1);
+    document.total_cases -= row["cases"];
+  }
   document.files.push(...extraRows);
   document.total_cases += extraRows.reduce((sum, row) => sum + row["cases"], 0);
   writeFileSync(join(scratch, "index.json"), `${JSON.stringify(document, null, 2)}\n`);
@@ -106,13 +115,83 @@ function extraFile(category: string, count = 2): [Case, Buffer] {
 }
 
 /** Run `check` against a scratch fixture and always remove the scratch copy. */
-function withScratch<T>(rows: Case[], files: Record<string, Buffer>, check: (dir: string) => T): T {
-  const dir = scratchFixture(rows, files);
+function withScratch<T>(rows: Case[], files: Record<string, Buffer>, check: (dir: string) => T, base: string = FIXTURE): T {
+  const dir = scratchFixture(rows, files, base);
   try {
     return check(dir);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+}
+
+/**
+ * The index-rule tests, run against `base`: the committed fixture, and again
+ * (below) against a simulated committed index that already holds v2 rows.
+ */
+function indexRuleTests(base: string): void {
+  const scratch = <T>(rows: Case[], files: Record<string, Buffer>, check: (dir: string) => T): T =>
+    withScratch(rows, files, check, base);
+  const noRows = withScratch([], {}, (dir) => checkIndex(dir), base);
+
+  it("accepts a digest-checked v2-x row without running it", () => {
+    const [row, data] = extraFile("v2-x");
+    expect(noRows).toBe(CATEGORIES.length);
+    expect(scratch([row], { "v2-x.json": data }, checkIndex)).toBe(noRows + 1);
+  });
+
+  it("rejects an unknown row that is not v2-", () => {
+    const [row, data] = extraFile("extra");
+    expect(() => scratch([row], { "extra.json": data }, checkIndex)).toThrow(/unknown category/);
+  });
+
+  it("rejects a v2 row with a wrong digest", () => {
+    const [row, data] = extraFile("v2-x");
+    row["sha256"] = "0".repeat(64);
+    expect(() => scratch([row], { "v2-x.json": data }, checkIndex)).toThrow(/sha256/);
+  });
+
+  it("rejects a v2 row with a wrong case count", () => {
+    const [row, data] = extraFile("v2-x");
+    row["cases"] = 3;
+    expect(() => scratch([row], { "v2-x.json": data }, checkIndex)).toThrow(/case count/);
+  });
+
+  it("rejects a row whose path is not <category>.json", () => {
+    const [row, data] = extraFile("v2-x");
+    row["path"] = "v2-y.json";
+    expect(() => scratch([row], { "v2-x.json": data, "v2-y.json": data }, checkIndex)).toThrow(/bad path/);
+  });
+
+  it("rejects a boolean case count", () => {
+    const [row, data] = extraFile("v2-x", 1);
+    row["cases"] = true;
+    expect(() => scratch([row], { "v2-x.json": data }, checkIndex)).toThrow(/not an integer/);
+  });
+
+  it("rejects a v2 row with a missing file", () => {
+    const [row] = extraFile("v2-x");
+    expect(() => scratch([row], {}, checkIndex)).toThrow(/file missing/);
+  });
+
+  it("rejects a missing v1 row, removed by name", () => {
+    const dir = scratchFixture([], {}, base);
+    try {
+      const document = JSON.parse(readFileSync(join(dir, "index.json"), "utf8"));
+      document.files = document.files.filter((row: Case) => row["category"] !== CATEGORIES[CATEGORIES.length - 1]);
+      writeFileSync(join(dir, "index.json"), JSON.stringify(document));
+      expect(() => checkIndex(dir)).toThrow(/v1 rows/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects v2 rows out of the kit's order", () => {
+    const [value, valueData] = extraFile("v2-value");
+    const [arith, arithData] = extraFile("v2-arith");
+    const files = { "v2-value.json": valueData, "v2-arith.json": arithData };
+    expect(scratch([value, arith], files, checkIndex)).toBe(noRows + 2);
+    expect(() => scratch([arith, value], files, checkIndex)).toThrow(/out of order/);
+  });
 }
 
 describe("fixture index", () => {
@@ -124,52 +203,23 @@ describe("fixture index", () => {
     }
   });
 
-  it("accepts a digest-checked v2-x row without running it", () => {
-    const [row, data] = extraFile("v2-x");
-    expect(withScratch([row], { "v2-x.json": data }, checkIndex)).toBe(CATEGORIES.length + 1);
+  indexRuleTests(FIXTURE);
+});
+
+// S5-1b ([D59]): the same tests, against a simulated committed index that
+// already holds v2-value and v2-arith rows, as it will once the real v2 rows land.
+describe("fixture index with v2 rows already committed", () => {
+  const [value, valueData] = extraFile("v2-value", 3);
+  const [arith, arithData] = extraFile("v2-arith", 5);
+  const committed = scratchFixture([value, arith], { "v2-value.json": valueData, "v2-arith.json": arithData });
+
+  afterAll(() => rmSync(committed, { recursive: true, force: true }));
+
+  it("is itself a valid index with the two v2 rows", () => {
+    expect(checkIndex(committed)).toBe(CATEGORIES.length + 2);
   });
 
-  it("rejects an unknown row that is not v2-", () => {
-    const [row, data] = extraFile("extra");
-    expect(() => withScratch([row], { "extra.json": data }, checkIndex)).toThrow(/unknown category/);
-  });
-
-  it("rejects a v2 row with a wrong digest", () => {
-    const [row, data] = extraFile("v2-x");
-    row["sha256"] = "0".repeat(64);
-    expect(() => withScratch([row], { "v2-x.json": data }, checkIndex)).toThrow(/sha256/);
-  });
-
-  it("rejects a v2 row with a wrong case count", () => {
-    const [row, data] = extraFile("v2-x");
-    row["cases"] = 3;
-    expect(() => withScratch([row], { "v2-x.json": data }, checkIndex)).toThrow(/case count/);
-  });
-
-  it("rejects a row whose path is not <category>.json", () => {
-    const [row, data] = extraFile("v2-x");
-    row["path"] = "v2-y.json";
-    expect(() => withScratch([row], { "v2-x.json": data, "v2-y.json": data }, checkIndex)).toThrow(/bad path/);
-  });
-
-  it("rejects a boolean case count", () => {
-    const [row, data] = extraFile("v2-x", 1);
-    row["cases"] = true;
-    expect(() => withScratch([row], { "v2-x.json": data }, checkIndex)).toThrow(/not an integer/);
-  });
-
-  it("rejects a v2 row with a missing file", () => {
-    const [row] = extraFile("v2-x");
-    expect(() => withScratch([row], {}, checkIndex)).toThrow(/file missing/);
-  });
-
-  it("rejects v2 rows out of the kit's order", () => {
-    const [value, valueData] = extraFile("v2-value");
-    const [arith, arithData] = extraFile("v2-arith");
-    const files = { "v2-value.json": valueData, "v2-arith.json": arithData };
-    expect(withScratch([value, arith], files, checkIndex)).toBe(CATEGORIES.length + 2);
-    expect(() => withScratch([arith, value], files, checkIndex)).toThrow(/out of order/);
-  });
+  indexRuleTests(committed);
 });
 
 describe("json", () => {
