@@ -14,6 +14,7 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import sys
 from pathlib import Path
 
 import pytest
@@ -111,10 +112,19 @@ def test_index_matches_the_files_on_disk() -> None:
 
 
 def _scratch_fixture(tmp_path: Path, extra_rows: list[dict], files: dict[str, bytes]) -> Path:
-    """A temp copy of the fixture with extra index rows and files."""
+    """A temp copy of the fixture with extra index rows and files.
+
+    Any ``v2-*`` rows (and their files) the committed index already holds are
+    stripped first, so these tests do not depend on how many v2 rows are
+    committed ([D59]); only the rows a test adds are present beyond v1.
+    """
     scratch = tmp_path / "fixture"
     shutil.copytree(FIXTURE, scratch)
     document = json.loads((scratch / "index.json").read_text(encoding="utf-8"))
+    for row in [r for r in document["files"] if r["category"].startswith("v2-")]:
+        (scratch / row["path"]).unlink()
+        document["files"].remove(row)
+        document["total_cases"] -= row["cases"]
     document["files"].extend(extra_rows)
     document["total_cases"] += sum(row["cases"] for row in extra_rows)
     (scratch / "index.json").write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
@@ -130,9 +140,17 @@ def _extra_file(category: str, count: int = 2) -> tuple[dict, bytes]:
     return row, data
 
 
+def _scratch_rows(tmp_path: Path) -> list[dict]:
+    """The index rows of a scratch fixture that adds nothing."""
+    scratch = _scratch_fixture(tmp_path, [], {})
+    return json.loads((scratch / "index.json").read_text(encoding="utf-8"))["files"]
+
+
 def test_index_accepts_a_digest_checked_v2_row(tmp_path: Path) -> None:
     row, data = _extra_file("v2-x")
-    assert check_index(_scratch_fixture(tmp_path, [row], {"v2-x.json": data})) == len(CATEGORIES) + 1
+    base = len(_scratch_rows(tmp_path / "base"))
+    assert base == len(CATEGORIES)
+    assert check_index(_scratch_fixture(tmp_path, [row], {"v2-x.json": data})) == base + 1
 
 
 def test_index_rejects_an_unknown_row_that_is_not_v2(tmp_path: Path) -> None:
@@ -164,7 +182,7 @@ def test_index_rejects_a_v2_row_with_a_missing_file(tmp_path: Path) -> None:
 def test_index_rejects_a_missing_v1_row_and_v2_rows_out_of_order(tmp_path: Path) -> None:
     scratch = _scratch_fixture(tmp_path, [], {})
     document = json.loads((scratch / "index.json").read_text(encoding="utf-8"))
-    document["files"].pop()
+    document["files"] = [row for row in document["files"] if row["category"] != CATEGORIES[-1]]
     (scratch / "index.json").write_text(json.dumps(document), encoding="utf-8")
     with pytest.raises(AssertionError, match="v1 rows"):
         check_index(scratch)
@@ -306,3 +324,36 @@ def test_index_rejects_a_boolean_case_count(tmp_path: Path) -> None:
     row["cases"] = True
     with pytest.raises(AssertionError, match="not an integer"):
         check_index(_scratch_fixture(tmp_path, [row], {"v2-x.json": data}))
+
+
+# ---------------------------------------------------------------------------
+# S5-1b ([D59]): the index tests must not care how many v2 rows are committed.
+# The simulation below builds a "committed" fixture that already holds real-
+# looking v2-value and v2-arith rows, points the helpers at it, and re-runs
+# every test that adds or removes rows.
+# ---------------------------------------------------------------------------
+
+_INDEX_ROW_TESTS = (
+    test_index_accepts_a_digest_checked_v2_row,
+    test_index_rejects_an_unknown_row_that_is_not_v2,
+    test_index_rejects_a_v2_row_with_a_wrong_digest,
+    test_index_rejects_a_v2_row_with_a_wrong_case_count,
+    test_index_rejects_a_v2_row_with_a_missing_file,
+    test_index_rejects_a_missing_v1_row_and_v2_rows_out_of_order,
+    test_index_rejects_a_row_whose_path_is_not_category_json,
+    test_index_rejects_a_boolean_case_count,
+)
+
+
+def test_index_row_tests_pass_when_the_committed_index_already_holds_v2_rows(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    value, value_data = _extra_file("v2-value", 3)
+    arith, arith_data = _extra_file("v2-arith", 5)
+    committed = _scratch_fixture(tmp_path / "committed", [value, arith], {"v2-value.json": value_data, "v2-arith.json": arith_data})
+    assert check_index(committed) == len(CATEGORIES) + 2
+    monkeypatch.setattr(sys.modules[__name__], "FIXTURE", committed)
+    for number, test in enumerate(_INDEX_ROW_TESTS):
+        test(tmp_path / f"run{number}")
+    # The committed copy itself is never modified by the scratch copies.
+    assert check_index(committed) == len(CATEGORIES) + 2
