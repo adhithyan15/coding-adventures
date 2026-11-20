@@ -2531,7 +2531,7 @@
         "path": "code/scripts/validate_dsp_filter_assurance_inventory.py",
         "historical_blob_oid": null,
         "comparison_base_blob_oid": "d209f13418af5fb17b582b7c78989dc5416a84f9",
-        "reviewed_current_blob_oid": "35e3c64419380ddc0a588c9da0d5eb02bca0073e",
+        "reviewed_current_blob_oid": "193a445e908b2707a69340637bb5457493329e8c",
         "reason": "AF-04c1 committed-HEAD source-drift checker"
       }
     ]

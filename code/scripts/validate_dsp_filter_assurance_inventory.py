@@ -26,13 +26,13 @@ EXPECTED_SOURCE_MIGRATIONS = {
     "code/packages/typescript/test-bootstrap/src/fuzz.ts": (
         "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",
         "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",
-        "b81d3a3994855a823ad5b95311f1e0084e828f6b",
+        "1ab1e6c378bebe54a5733132a8b01bd4cf5ee8c9",
         "AF-04c1 TypeScript fuzz producer",
     ),
     "code/packages/typescript/test-bootstrap/tests/fuzz.test.ts": (
         "63d4b83469ea5d75556078af37de0f05bf0223b2",
         "63d4b83469ea5d75556078af37de0f05bf0223b2",
-        "2af7ce9aab0d963f7546fdcf71ce2d1557deda2e",
+        "032bea2ebb627357a712516789b68bce478fabc6",
         "AF-04c1 bootstrap fuzz outcome and limit tests",
     ),
     "code/packages/typescript/dsp-filters/tests/checked-properties.test.ts": (
