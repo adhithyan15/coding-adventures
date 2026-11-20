@@ -1,0 +1,2740 @@
+{
+  "cases": [
+    {
+      "args": [
+        "0a",
+        "0a"
+      ],
+      "expect": {
+        "result": false
+      },
+      "fault": {
+        "expr": [
+          "not",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        "fault": "invert",
+        "kind": "post",
+        "op": "cmp2",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/invert-true-result",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ],
+          [
+            "b",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bool"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": true,
+      "summary": "invert flips a true result",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a",
+        "0b"
+      ],
+      "expect": {
+        "result": true
+      },
+      "fault": {
+        "expr": [
+          "not",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        "fault": "invert",
+        "kind": "post",
+        "op": "cmp2",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/invert-false-result",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ],
+          [
+            "b",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bool"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": false,
+      "summary": "invert flips a false result",
+      "types": {}
+    },
+    {
+      "args": [
+        "2",
+        "3"
+      ],
+      "expect": {
+        "result": "0"
+      },
+      "fault": {
+        "expr": [
+          "add",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        "fault": "off-by-one",
+        "kind": "post",
+        "op": "mul8",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/off-by-one-u8-wraps",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "U8"
+          ],
+          [
+            "b",
+            "U8"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "U8"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "255",
+      "summary": "255 + 1 wraps to 0 on a U8 result",
+      "types": {}
+    },
+    {
+      "args": [
+        "2",
+        "3"
+      ],
+      "expect": {
+        "result": "7"
+      },
+      "fault": {
+        "expr": [
+          "add",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        "fault": "off-by-one",
+        "kind": "post",
+        "op": "mul8",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/off-by-one-u8",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "U8"
+          ],
+          [
+            "b",
+            "U8"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "U8"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "6",
+      "summary": "6 + 1 on a U8 result",
+      "types": {}
+    },
+    {
+      "args": [
+        "2",
+        "3"
+      ],
+      "expect": {
+        "result": "1"
+      },
+      "fault": {
+        "expr": [
+          "add",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        "fault": "off-by-one",
+        "kind": "post",
+        "op": "mul8",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/off-by-one-u8-from-zero",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "U8"
+          ],
+          [
+            "b",
+            "U8"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "U8"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "0",
+      "summary": "0 + 1 on a U8 result",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a0b"
+      ],
+      "expect": {
+        "result": "6"
+      },
+      "fault": {
+        "expr": [
+          "add",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "1"
+            }
+          ]
+        ],
+        "fault": "off-by-one",
+        "kind": "post",
+        "op": "count_op",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/off-by-one-nat",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Nat"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "5",
+      "summary": "5 + 1 on a Nat result is exact",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a0b"
+      ],
+      "expect": {
+        "result": "1"
+      },
+      "fault": {
+        "expr": [
+          "add",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "1"
+            }
+          ]
+        ],
+        "fault": "off-by-one",
+        "kind": "post",
+        "op": "count_op",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/off-by-one-nat-from-zero",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Nat"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "0",
+      "summary": "0 + 1 on a Nat result",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a0b"
+      ],
+      "expect": {
+        "result": "18446744073709551615"
+      },
+      "fault": {
+        "expr": [
+          "add",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "1"
+            }
+          ]
+        ],
+        "fault": "off-by-one",
+        "kind": "post",
+        "op": "count_op",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/off-by-one-nat-below-max",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Nat"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "18446744073709551614",
+      "summary": "the largest Nat is reachable: 2^64-2 + 1",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a"
+      ],
+      "expect": {
+        "result": "0a0b"
+      },
+      "fault": {
+        "expr": [
+          "if",
+          [
+            "gt",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "take",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "sub",
+              [
+                "len",
+                [
+                  "var",
+                  "result"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "var",
+            "result"
+          ]
+        ],
+        "fault": "truncate-last",
+        "kind": "post",
+        "op": "echo",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/truncate-last-three-bytes",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "0a0b0c",
+      "summary": "the last byte of a non-empty result is cut",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a"
+      ],
+      "expect": {
+        "result": ""
+      },
+      "fault": {
+        "expr": [
+          "if",
+          [
+            "gt",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "take",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "sub",
+              [
+                "len",
+                [
+                  "var",
+                  "result"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "var",
+            "result"
+          ]
+        ],
+        "fault": "truncate-last",
+        "kind": "post",
+        "op": "echo",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/truncate-last-one-byte",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "0a",
+      "summary": "a one-byte result becomes empty",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a"
+      ],
+      "expect": {
+        "result": ""
+      },
+      "fault": {
+        "expr": [
+          "if",
+          [
+            "gt",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "take",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "sub",
+              [
+                "len",
+                [
+                  "var",
+                  "result"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "var",
+            "result"
+          ]
+        ],
+        "fault": "truncate-last",
+        "kind": "post",
+        "op": "echo",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/truncate-last-empty",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "",
+      "summary": "an empty result is left alone (the length guard)",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a"
+      ],
+      "expect": {
+        "result": "0a0b"
+      },
+      "fault": {
+        "expr": [
+          "if",
+          [
+            "gt",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "take",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "sub",
+              [
+                "len",
+                [
+                  "var",
+                  "result"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ]
+        ],
+        "fault": "drop-last-result-byte",
+        "kind": "post",
+        "op": "echo",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/drop-last-three-bytes",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "0a0b0c",
+      "summary": "the core form drops the last byte",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a"
+      ],
+      "expect": {
+        "result": ""
+      },
+      "fault": {
+        "expr": [
+          "if",
+          [
+            "gt",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "take",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "sub",
+              [
+                "len",
+                [
+                  "var",
+                  "result"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ]
+        ],
+        "fault": "drop-last-result-byte",
+        "kind": "post",
+        "op": "echo",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/drop-last-one-byte",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "ff",
+      "summary": "a one-byte result becomes empty",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a"
+      ],
+      "expect": {
+        "result": "00"
+      },
+      "fault": {
+        "expr": [
+          "if",
+          [
+            "gt",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "take",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "sub",
+              [
+                "len",
+                [
+                  "var",
+                  "result"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ]
+        ],
+        "fault": "drop-last-result-byte",
+        "kind": "post",
+        "op": "echo",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/drop-last-empty-gives-00",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "",
+      "summary": "the empty result becomes the byte 00",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a",
+        "0b0c",
+        true
+      ],
+      "expect": {
+        "result": {
+          "ok": "0a"
+        }
+      },
+      "fault": {
+        "expr": [
+          "if",
+          [
+            "is_err",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "ok",
+            [
+              "var",
+              "a"
+            ]
+          ],
+          [
+            "var",
+            "result"
+          ]
+        ],
+        "fault": "missing-error",
+        "kind": "replace",
+        "op": "pick",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/missing-error-on-err",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ],
+          [
+            "b",
+            "Bytes"
+          ],
+          [
+            "choice",
+            "Bool"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Result<Bytes,E>"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": {
+        "err": "BAD"
+      },
+      "summary": "an Err result becomes Ok(first Bytes argument)",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "args": [
+        "0a",
+        "0b0c",
+        true
+      ],
+      "expect": {
+        "result": {
+          "ok": "0102"
+        }
+      },
+      "fault": {
+        "expr": [
+          "if",
+          [
+            "is_err",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "ok",
+            [
+              "var",
+              "a"
+            ]
+          ],
+          [
+            "var",
+            "result"
+          ]
+        ],
+        "fault": "missing-error",
+        "kind": "replace",
+        "op": "pick",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/missing-error-on-ok",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ],
+          [
+            "b",
+            "Bytes"
+          ],
+          [
+            "choice",
+            "Bool"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Result<Bytes,E>"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": {
+        "ok": "0102"
+      },
+      "summary": "an Ok result is returned unchanged",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "args": [
+        "",
+        "0b",
+        false
+      ],
+      "expect": {
+        "result": {
+          "ok": ""
+        }
+      },
+      "fault": {
+        "expr": [
+          "if",
+          [
+            "is_err",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "ok",
+            [
+              "var",
+              "a"
+            ]
+          ],
+          [
+            "var",
+            "result"
+          ]
+        ],
+        "fault": "missing-error",
+        "kind": "replace",
+        "op": "pick",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/missing-error-empty-first-argument",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ],
+          [
+            "b",
+            "Bytes"
+          ],
+          [
+            "choice",
+            "Bool"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Result<Bytes,E>"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": {
+        "err": "WORSE"
+      },
+      "summary": "the first Bytes argument may be empty",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "args": [
+        "0a",
+        "0b",
+        true
+      ],
+      "expect": {
+        "args": [
+          "0a",
+          "0b",
+          false
+        ]
+      },
+      "fault": {
+        "fault": "swap-choice",
+        "kind": "pre",
+        "op": "pick",
+        "requires": [
+          "ir.core"
+        ],
+        "rewrites": [
+          {
+            "expr": [
+              "not",
+              [
+                "var",
+                "choice"
+              ]
+            ],
+            "param": "choice"
+          }
+        ]
+      },
+      "id": "v2-fault/swap-choice-true",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ],
+          [
+            "b",
+            "Bytes"
+          ],
+          [
+            "choice",
+            "Bool"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Result<Bytes,E>"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": {
+        "ok": "0a"
+      },
+      "summary": "the choice flag is negated before the call",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "args": [
+        "0a",
+        "0b",
+        false
+      ],
+      "expect": {
+        "args": [
+          "0a",
+          "0b",
+          true
+        ]
+      },
+      "fault": {
+        "fault": "swap-choice",
+        "kind": "pre",
+        "op": "pick",
+        "requires": [
+          "ir.core"
+        ],
+        "rewrites": [
+          {
+            "expr": [
+              "not",
+              [
+                "var",
+                "choice"
+              ]
+            ],
+            "param": "choice"
+          }
+        ]
+      },
+      "id": "v2-fault/swap-choice-false",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ],
+          [
+            "b",
+            "Bytes"
+          ],
+          [
+            "choice",
+            "Bool"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Result<Bytes,E>"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": {
+        "ok": "0b"
+      },
+      "summary": "false becomes true; the Bytes arguments are reported unchanged",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "args": [
+        "0a0b",
+        "0c0d"
+      ],
+      "expect": {
+        "args": [
+          "0a00",
+          "0c00"
+        ]
+      },
+      "fault": {
+        "fault": "ignore-last-byte",
+        "kind": "pre",
+        "op": "cmp2",
+        "requires": [
+          "ir.core"
+        ],
+        "rewrites": [
+          {
+            "expr": [
+              "if",
+              [
+                "gt",
+                [
+                  "len",
+                  [
+                    "var",
+                    "a"
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "concat",
+                [
+                  "take",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "sub",
+                    [
+                      "len",
+                      [
+                        "var",
+                        "a"
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ],
+              [
+                "var",
+                "a"
+              ]
+            ],
+            "param": "a"
+          },
+          {
+            "expr": [
+              "if",
+              [
+                "gt",
+                [
+                  "len",
+                  [
+                    "var",
+                    "b"
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "concat",
+                [
+                  "take",
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "sub",
+                    [
+                      "len",
+                      [
+                        "var",
+                        "b"
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ],
+            "param": "b"
+          }
+        ]
+      },
+      "id": "v2-fault/ignore-last-byte-both-arguments",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ],
+          [
+            "b",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bool"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": true,
+      "summary": "both Bytes parameters are rewritten",
+      "types": {}
+    },
+    {
+      "args": [
+        "",
+        "0c"
+      ],
+      "expect": {
+        "args": [
+          "",
+          "00"
+        ]
+      },
+      "fault": {
+        "fault": "ignore-last-byte",
+        "kind": "pre",
+        "op": "cmp2",
+        "requires": [
+          "ir.core"
+        ],
+        "rewrites": [
+          {
+            "expr": [
+              "if",
+              [
+                "gt",
+                [
+                  "len",
+                  [
+                    "var",
+                    "a"
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "concat",
+                [
+                  "take",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "sub",
+                    [
+                      "len",
+                      [
+                        "var",
+                        "a"
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ],
+              [
+                "var",
+                "a"
+              ]
+            ],
+            "param": "a"
+          },
+          {
+            "expr": [
+              "if",
+              [
+                "gt",
+                [
+                  "len",
+                  [
+                    "var",
+                    "b"
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "concat",
+                [
+                  "take",
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "sub",
+                    [
+                      "len",
+                      [
+                        "var",
+                        "b"
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ],
+            "param": "b"
+          }
+        ]
+      },
+      "id": "v2-fault/ignore-last-byte-empty-argument",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ],
+          [
+            "b",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bool"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": true,
+      "summary": "an empty argument stays empty (the length guard); a one-byte one becomes 00",
+      "types": {}
+    },
+    {
+      "args": [
+        "aabbcc"
+      ],
+      "expect": {
+        "args": [
+          "aabb00"
+        ]
+      },
+      "fault": {
+        "fault": "ignore-last-byte",
+        "kind": "pre",
+        "op": "echo",
+        "requires": [
+          "ir.core"
+        ],
+        "rewrites": [
+          {
+            "expr": [
+              "if",
+              [
+                "gt",
+                [
+                  "len",
+                  [
+                    "var",
+                    "a"
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "concat",
+                [
+                  "take",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "sub",
+                    [
+                      "len",
+                      [
+                        "var",
+                        "a"
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ],
+              [
+                "var",
+                "a"
+              ]
+            ],
+            "param": "a"
+          }
+        ]
+      },
+      "id": "v2-fault/ignore-last-byte-one-parameter",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "aabbcc",
+      "summary": "an op with one Bytes parameter",
+      "types": {}
+    },
+    {
+      "args": [
+        "3",
+        "4"
+      ],
+      "expect": {
+        "args": [
+          "4",
+          "3"
+        ]
+      },
+      "fault": {
+        "fault": "swap-operands",
+        "kind": "pre",
+        "op": "swap_op",
+        "requires": [
+          "ir.core"
+        ],
+        "rewrites": [
+          {
+            "expr": [
+              "var",
+              "b"
+            ],
+            "param": "a"
+          },
+          {
+            "expr": [
+              "var",
+              "a"
+            ],
+            "param": "b"
+          }
+        ]
+      },
+      "id": "v2-fault/pre-swaps-simultaneously",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "U8"
+          ],
+          [
+            "b",
+            "U8"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "U8"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "7",
+      "summary": "a and b are exchanged: every rewrite reads the arguments as passed in",
+      "types": {}
+    },
+    {
+      "args": [
+        "3",
+        "4"
+      ],
+      "expect": {
+        "args": [
+          "4",
+          "4"
+        ]
+      },
+      "fault": {
+        "fault": "shift-operands",
+        "kind": "pre",
+        "op": "swap_op",
+        "requires": [
+          "ir.core"
+        ],
+        "rewrites": [
+          {
+            "expr": [
+              "var",
+              "b"
+            ],
+            "param": "a"
+          },
+          {
+            "expr": [
+              "add",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "1"
+                }
+              ]
+            ],
+            "param": "b"
+          }
+        ]
+      },
+      "id": "v2-fault/pre-rewrites-read-the-original-arguments",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "U8"
+          ],
+          [
+            "b",
+            "U8"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "U8"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "7",
+      "summary": "b := a + 1 reads the passed-in a, not the rewritten one",
+      "types": {}
+    },
+    {
+      "args": [
+        "3",
+        "4"
+      ],
+      "expect": {
+        "args": [
+          "7",
+          "4"
+        ]
+      },
+      "fault": {
+        "fault": "rewrite-first",
+        "kind": "pre",
+        "op": "swap_op",
+        "requires": [
+          "ir.core"
+        ],
+        "rewrites": [
+          {
+            "expr": [
+              "add",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ],
+            "param": "a"
+          }
+        ]
+      },
+      "id": "v2-fault/pre-unchanged-arguments-are-reported",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "U8"
+          ],
+          [
+            "b",
+            "U8"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "U8"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "7",
+      "summary": "an argument with no rewrite is reported as passed in",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a",
+        "0b"
+      ],
+      "expect": {
+        "result": true
+      },
+      "fault": {
+        "expr": [
+          "lit",
+          true
+        ],
+        "fault": "always-true",
+        "kind": "replace",
+        "op": "cmp2",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/replace-ignores-the-result",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ],
+          [
+            "b",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bool"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": false,
+      "summary": "a replace fault supplies the result without trusting the call",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a"
+      ],
+      "expect": {
+        "result": "0a"
+      },
+      "fault": {
+        "expr": [
+          "var",
+          "a"
+        ],
+        "fault": "return-argument",
+        "kind": "replace",
+        "op": "echo",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/replace-returns-an-argument",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "ff",
+      "summary": "replace with a parameter",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a"
+      ],
+      "expect": {
+        "result": "0b0a"
+      },
+      "fault": {
+        "expr": [
+          "concat",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ],
+        "fault": "append-argument",
+        "kind": "post",
+        "op": "echo",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/post-reads-parameters-and-result",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "0b",
+      "summary": "a post fault sees the parameters and result",
+      "types": {}
+    },
+    {
+      "args": [
+        "2",
+        "3"
+      ],
+      "expect": {
+        "error": "level-missing"
+      },
+      "fault": {
+        "expr": [
+          "bit_xor",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        "fault": "xor-lsb",
+        "kind": "post",
+        "op": "mul8",
+        "requires": [
+          "ir.fixed"
+        ]
+      },
+      "id": "v2-fault/level-missing-xor-lsb",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "U8"
+          ],
+          [
+            "b",
+            "U8"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "U8"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "6",
+      "summary": "xor-lsb is an ir.fixed template and levels lacks ir.fixed",
+      "types": {}
+    },
+    {
+      "args": [
+        "1"
+      ],
+      "expect": {
+        "error": "level-missing"
+      },
+      "fault": {
+        "fault": "ignore-high-bit",
+        "kind": "pre",
+        "op": "wide",
+        "requires": [
+          "ir.fixed"
+        ],
+        "rewrites": [
+          {
+            "expr": [
+              "bit_and",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U64",
+                  "value": "9223372036854775807"
+                }
+              ]
+            ],
+            "param": "a"
+          }
+        ]
+      },
+      "id": "v2-fault/level-missing-ignore-high-bit",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "U64"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "U64"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "1",
+      "summary": "ignore-high-bit (a pre fault) needs ir.fixed",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a"
+      ],
+      "expect": {
+        "error": "level-missing"
+      },
+      "fault": {
+        "expr": [
+          "if",
+          [
+            "gt",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "concat",
+            [
+              "be_bytes",
+              [
+                "bit_xor",
+                [
+                  "unwrap_or",
+                  [
+                    "at",
+                    [
+                      "var",
+                      "result"
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "0"
+                      }
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "1"
+                  }
+                ]
+              ]
+            ],
+            [
+              "drop",
+              [
+                "var",
+                "result"
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "01"
+            }
+          ]
+        ],
+        "fault": "flip-result-bit",
+        "kind": "post",
+        "op": "echo",
+        "requires": [
+          "ir.fixed"
+        ]
+      },
+      "id": "v2-fault/level-missing-flip-result-bit",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "0b",
+      "summary": "flip-result-bit on Bytes needs ir.fixed",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a",
+        "0b",
+        true
+      ],
+      "expect": {
+        "error": "level-missing"
+      },
+      "fault": {
+        "expr": [
+          "match",
+          [
+            "var",
+            "result"
+          ],
+          [
+            [
+              [
+                "ok",
+                [
+                  "bind",
+                  "ok_payload"
+                ]
+              ],
+              [
+                "ok",
+                [
+                  "if",
+                  [
+                    "gt",
+                    [
+                      "len",
+                      [
+                        "var",
+                        "ok_payload"
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "0"
+                      }
+                    ]
+                  ],
+                  [
+                    "take",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    [
+                      "sub",
+                      [
+                        "len",
+                        [
+                          "var",
+                          "ok_payload"
+                        ]
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "Nat",
+                          "value": "1"
+                        }
+                      ]
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Bytes",
+                      "value": "00"
+                    }
+                  ]
+                ]
+              ]
+            ],
+            [
+              [
+                "err_any"
+              ],
+              [
+                "var",
+                "result"
+              ]
+            ]
+          ]
+        ],
+        "fault": "drop-last-result-byte",
+        "kind": "post",
+        "op": "pick",
+        "requires": [
+          "ir.core",
+          "ir.tuple"
+        ]
+      },
+      "id": "v2-fault/level-missing-ok-form-needs-tuple",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ],
+          [
+            "b",
+            "Bytes"
+          ],
+          [
+            "choice",
+            "Bool"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Result<Bytes,E>"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": {
+        "ok": "0a"
+      },
+      "summary": "the Ok form of drop-last-result-byte needs ir.tuple for its match",
+      "types": {
+        "E": {
+          "cases": [
+            "BAD",
+            "WORSE"
+          ],
+          "kind": "error"
+        }
+      }
+    },
+    {
+      "args": [
+        "1",
+        "2"
+      ],
+      "expect": {
+        "error": "level-missing"
+      },
+      "fault": {
+        "expr": [
+          "bit_and",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        "fault": "bit-and-one",
+        "kind": "post",
+        "op": "swap_op",
+        "requires": [
+          "ir.core",
+          "ir.fixed"
+        ]
+      },
+      "id": "v2-fault/level-missing-hand-written-fixed-row",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "U8"
+          ],
+          [
+            "b",
+            "U8"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "U8"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "3",
+      "summary": "a hand-written row that names ir.fixed",
+      "types": {}
+    },
+    {
+      "args": [
+        "2",
+        "3"
+      ],
+      "expect": {
+        "error": "subject-forbidden"
+      },
+      "fault": {
+        "expr": [
+          "subject_op",
+          "mul8",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        "fault": "call-subject",
+        "kind": "post",
+        "op": "mul8",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/subject-forbidden-post",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "U8"
+          ],
+          [
+            "b",
+            "U8"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "U8"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "6",
+      "summary": "a post expression that calls the subject",
+      "types": {}
+    },
+    {
+      "args": [
+        "2",
+        "3"
+      ],
+      "expect": {
+        "error": "subject-forbidden"
+      },
+      "fault": {
+        "fault": "call-subject-pre",
+        "kind": "pre",
+        "op": "mul8",
+        "requires": [
+          "ir.core"
+        ],
+        "rewrites": [
+          {
+            "expr": [
+              "subject_op",
+              "mul8",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ],
+            "param": "a"
+          }
+        ]
+      },
+      "id": "v2-fault/subject-forbidden-pre",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "U8"
+          ],
+          [
+            "b",
+            "U8"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "U8"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "6",
+      "summary": "a pre rewrite that calls the subject",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a",
+        "0b"
+      ],
+      "expect": {
+        "error": "subject-forbidden"
+      },
+      "fault": {
+        "expr": [
+          "eq",
+          [
+            "subject_op",
+            "cmp2",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ],
+          [
+            "lit",
+            true
+          ]
+        ],
+        "fault": "call-subject-replace",
+        "kind": "replace",
+        "op": "cmp2",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/subject-forbidden-nested-in-replace",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ],
+          [
+            "b",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bool"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": false,
+      "summary": "a replace expression with a subject call below an eq",
+      "types": {}
+    }
+  ],
+  "category": "v2-fault",
+  "schema": "warrant-corpus-conformance-v1"
+}

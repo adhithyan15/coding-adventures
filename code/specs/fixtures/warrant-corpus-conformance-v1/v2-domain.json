@@ -1,0 +1,5327 @@
+{
+  "cases": [
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "size": 2,
+        "values_hex": [
+          "00"
+        ]
+      },
+      "id": "v2-domain/bool-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bool: the first value",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "size": 2,
+        "values_hex": [
+          "00",
+          "01"
+        ]
+      },
+      "id": "v2-domain/bool-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bool: indices 0 and 1",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "size": 2,
+        "values_hex": [
+          "00",
+          "01"
+        ]
+      },
+      "id": "v2-domain/bool-range-last-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bool: indices size-2 and size-1",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "size": 2,
+        "values_hex": [
+          "01"
+        ]
+      },
+      "id": "v2-domain/bool-index-last",
+      "index": 1,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bool: the last value",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/bool-index-size",
+      "index": 2,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bool: index == size is out of range",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "u8_all",
+        "size": 256
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "100000000000000000"
+        ]
+      },
+      "id": "v2-domain/u8-all-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "u8-all: the first value",
+      "type": "U8"
+    },
+    {
+      "descriptor": {
+        "d": "u8_all",
+        "size": 256
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000"
+        ]
+      },
+      "id": "v2-domain/u8-all-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "u8-all: indices 0 and 1",
+      "type": "U8"
+    },
+    {
+      "descriptor": {
+        "d": "u8_all",
+        "size": 256
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "10fe00000000000000",
+          "10ff00000000000000"
+        ]
+      },
+      "id": "v2-domain/u8-all-range-last-two",
+      "range": [
+        254,
+        256
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "u8-all: indices size-2 and size-1",
+      "type": "U8"
+    },
+    {
+      "descriptor": {
+        "d": "u8_all",
+        "size": 256
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "10ff00000000000000"
+        ]
+      },
+      "id": "v2-domain/u8-all-index-last",
+      "index": 255,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "u8-all: the last value",
+      "type": "U8"
+    },
+    {
+      "descriptor": {
+        "d": "u8_all",
+        "size": 256
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/u8-all-index-size",
+      "index": 256,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "u8-all: index == size is out of range",
+      "type": "U8"
+    },
+    {
+      "descriptor": {
+        "d": "u64_edge",
+        "size": 377
+      },
+      "expect": {
+        "size": 377,
+        "values_hex": [
+          "100000000000000000"
+        ]
+      },
+      "id": "v2-domain/u64-edge-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "u64-edge: the first value",
+      "type": "U64"
+    },
+    {
+      "descriptor": {
+        "d": "u64_edge",
+        "size": 377
+      },
+      "expect": {
+        "size": 377,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000"
+        ]
+      },
+      "id": "v2-domain/u64-edge-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "u64-edge: indices 0 and 1",
+      "type": "U64"
+    },
+    {
+      "descriptor": {
+        "d": "u64_edge",
+        "size": 377
+      },
+      "expect": {
+        "size": 377,
+        "values_hex": [
+          "10ffffffffffffffbf",
+          "10ffffffffffffff7f"
+        ]
+      },
+      "id": "v2-domain/u64-edge-range-last-two",
+      "range": [
+        375,
+        377
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "u64-edge: indices size-2 and size-1",
+      "type": "U64"
+    },
+    {
+      "descriptor": {
+        "d": "u64_edge",
+        "size": 377
+      },
+      "expect": {
+        "size": 377,
+        "values_hex": [
+          "10ffffffffffffff7f"
+        ]
+      },
+      "id": "v2-domain/u64-edge-index-last",
+      "index": 376,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "u64-edge: the last value",
+      "type": "U64"
+    },
+    {
+      "descriptor": {
+        "d": "u64_edge",
+        "size": 377
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/u64-edge-index-size",
+      "index": 377,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "u64-edge: index == size is out of range",
+      "type": "U64"
+    },
+    {
+      "descriptor": {
+        "d": "nat_0_64",
+        "size": 65
+      },
+      "expect": {
+        "size": 65,
+        "values_hex": [
+          "100000000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-0-64-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-0-64: the first value",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_0_64",
+        "size": 65
+      },
+      "expect": {
+        "size": 65,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-0-64-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-0-64: indices 0 and 1",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_0_64",
+        "size": 65
+      },
+      "expect": {
+        "size": 65,
+        "values_hex": [
+          "103f00000000000000",
+          "104000000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-0-64-range-last-two",
+      "range": [
+        63,
+        65
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-0-64: indices size-2 and size-1",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_0_64",
+        "size": 65
+      },
+      "expect": {
+        "size": 65,
+        "values_hex": [
+          "104000000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-0-64-index-last",
+      "index": 64,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-0-64: the last value",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_0_64",
+        "size": 65
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/nat-0-64-index-size",
+      "index": 65,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-0-64: index == size is out of range",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_d1",
+        "size": 347
+      },
+      "expect": {
+        "size": 347,
+        "values_hex": [
+          "2000000000"
+        ]
+      },
+      "id": "v2-domain/bytes-d1-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-d1: the first value",
+      "type": "Bytes"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_d1",
+        "size": 347
+      },
+      "expect": {
+        "size": 347,
+        "values_hex": [
+          "2000000000",
+          "200100000000"
+        ]
+      },
+      "id": "v2-domain/bytes-d1-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-d1: indices 0 and 1",
+      "type": "Bytes"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_d1",
+        "size": 347
+      },
+      "expect": {
+        "size": 347,
+        "values_hex": [
+          "20080000000000000000000000",
+          "2008000000a5a5a5a5a5a5a5a5"
+        ]
+      },
+      "id": "v2-domain/bytes-d1-range-last-two",
+      "range": [
+        345,
+        347
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-d1: indices size-2 and size-1",
+      "type": "Bytes"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_d1",
+        "size": 347
+      },
+      "expect": {
+        "size": 347,
+        "values_hex": [
+          "2008000000a5a5a5a5a5a5a5a5"
+        ]
+      },
+      "id": "v2-domain/bytes-d1-index-last",
+      "index": 346,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-d1: the last value",
+      "type": "Bytes"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_d1",
+        "size": 347
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/bytes-d1-index-size",
+      "index": 347,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-d1: index == size is out of range",
+      "type": "Bytes"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 0,
+        "size": 1
+      },
+      "expect": {
+        "size": 1,
+        "values_hex": [
+          "2000000000"
+        ]
+      },
+      "id": "v2-domain/bytes-n-0-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes_n 0 has exactly one value",
+      "type": "Bytes<0>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 0,
+        "size": 1
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/bytes-n-0-index-size",
+      "index": 1,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes_n 0: index 1 is out of range",
+      "type": "Bytes<0>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 1,
+        "size": 256
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "200100000000"
+        ]
+      },
+      "id": "v2-domain/bytes-n-1-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-1: the first value",
+      "type": "Bytes<1>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 1,
+        "size": 256
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "200100000000",
+          "200100000001"
+        ]
+      },
+      "id": "v2-domain/bytes-n-1-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-1: indices 0 and 1",
+      "type": "Bytes<1>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 1,
+        "size": 256
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "2001000000fe",
+          "2001000000ff"
+        ]
+      },
+      "id": "v2-domain/bytes-n-1-range-last-two",
+      "range": [
+        254,
+        256
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-1: indices size-2 and size-1",
+      "type": "Bytes<1>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 1,
+        "size": 256
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "2001000000ff"
+        ]
+      },
+      "id": "v2-domain/bytes-n-1-index-last",
+      "index": 255,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-1: the last value",
+      "type": "Bytes<1>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 1,
+        "size": 256
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/bytes-n-1-index-size",
+      "index": 256,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-1: index == size is out of range",
+      "type": "Bytes<1>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 2,
+        "size": 16
+      },
+      "expect": {
+        "size": 16,
+        "values_hex": [
+          "20020000000000"
+        ]
+      },
+      "id": "v2-domain/bytes-n-2-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-2: the first value",
+      "type": "Bytes<2>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 2,
+        "size": 16
+      },
+      "expect": {
+        "size": 16,
+        "values_hex": [
+          "20020000000000",
+          "20020000000001"
+        ]
+      },
+      "id": "v2-domain/bytes-n-2-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-2: indices 0 and 1",
+      "type": "Bytes<2>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 2,
+        "size": 16
+      },
+      "expect": {
+        "size": 16,
+        "values_hex": [
+          "2002000000ff80",
+          "2002000000ffff"
+        ]
+      },
+      "id": "v2-domain/bytes-n-2-range-last-two",
+      "range": [
+        14,
+        16
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-2: indices size-2 and size-1",
+      "type": "Bytes<2>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 2,
+        "size": 16
+      },
+      "expect": {
+        "size": 16,
+        "values_hex": [
+          "2002000000ffff"
+        ]
+      },
+      "id": "v2-domain/bytes-n-2-index-last",
+      "index": 15,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-2: the last value",
+      "type": "Bytes<2>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 2,
+        "size": 16
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/bytes-n-2-index-size",
+      "index": 16,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-2: index == size is out of range",
+      "type": "Bytes<2>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 4,
+        "size": 16
+      },
+      "expect": {
+        "size": 16,
+        "values_hex": [
+          "200400000000000000"
+        ]
+      },
+      "id": "v2-domain/bytes-n-4-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-4: the first value",
+      "type": "Bytes<4>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 4,
+        "size": 16
+      },
+      "expect": {
+        "size": 16,
+        "values_hex": [
+          "200400000000000000",
+          "200400000001010101"
+        ]
+      },
+      "id": "v2-domain/bytes-n-4-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-4: indices 0 and 1",
+      "type": "Bytes<4>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 4,
+        "size": 16
+      },
+      "expect": {
+        "size": 16,
+        "values_hex": [
+          "200400000000000080",
+          "2004000000000000ff"
+        ]
+      },
+      "id": "v2-domain/bytes-n-4-range-last-two",
+      "range": [
+        14,
+        16
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-4: indices size-2 and size-1",
+      "type": "Bytes<4>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 4,
+        "size": 16
+      },
+      "expect": {
+        "size": 16,
+        "values_hex": [
+          "2004000000000000ff"
+        ]
+      },
+      "id": "v2-domain/bytes-n-4-index-last",
+      "index": 15,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-4: the last value",
+      "type": "Bytes<4>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 4,
+        "size": 16
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/bytes-n-4-index-size",
+      "index": 16,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-4: index == size is out of range",
+      "type": "Bytes<4>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 16,
+        "size": 52
+      },
+      "expect": {
+        "size": 52,
+        "values_hex": [
+          "201000000000000000000000000000000000000000"
+        ]
+      },
+      "id": "v2-domain/bytes-n-16-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-16: the first value",
+      "type": "Bytes<16>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 16,
+        "size": 52
+      },
+      "expect": {
+        "size": 52,
+        "values_hex": [
+          "201000000000000000000000000000000000000000",
+          "201000000001010101010101010101010101010101"
+        ]
+      },
+      "id": "v2-domain/bytes-n-16-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-16: indices 0 and 1",
+      "type": "Bytes<16>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 16,
+        "size": 52
+      },
+      "expect": {
+        "size": 52,
+        "values_hex": [
+          "201000000000000000000000000000000000000080",
+          "2010000000000000000000000000000000000000ff"
+        ]
+      },
+      "id": "v2-domain/bytes-n-16-range-last-two",
+      "range": [
+        50,
+        52
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-16: indices size-2 and size-1",
+      "type": "Bytes<16>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 16,
+        "size": 52
+      },
+      "expect": {
+        "size": 52,
+        "values_hex": [
+          "2010000000000000000000000000000000000000ff"
+        ]
+      },
+      "id": "v2-domain/bytes-n-16-index-last",
+      "index": 51,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-16: the last value",
+      "type": "Bytes<16>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 16,
+        "size": 52
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/bytes-n-16-index-size",
+      "index": 52,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes-n-16: index == size is out of range",
+      "type": "Bytes<16>"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 0,
+        "size": 1
+      },
+      "expect": {
+        "size": 1,
+        "values_hex": [
+          "100000000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-0-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat_count 0 has exactly one value",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 0,
+        "size": 1
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/nat-count-0-index-size",
+      "index": 1,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat_count 0: index 1 is out of range",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 1,
+        "size": 2
+      },
+      "expect": {
+        "size": 2,
+        "values_hex": [
+          "100000000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-1-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-1: the first value",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 1,
+        "size": 2
+      },
+      "expect": {
+        "size": 2,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-1-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-1: indices 0 and 1",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 1,
+        "size": 2
+      },
+      "expect": {
+        "size": 2,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-1-range-last-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-1: indices size-2 and size-1",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 1,
+        "size": 2
+      },
+      "expect": {
+        "size": 2,
+        "values_hex": [
+          "100100000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-1-index-last",
+      "index": 1,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-1: the last value",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 1,
+        "size": 2
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/nat-count-1-index-size",
+      "index": 2,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-1: index == size is out of range",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 2,
+        "size": 3
+      },
+      "expect": {
+        "size": 3,
+        "values_hex": [
+          "100000000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-2-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-2: the first value",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 2,
+        "size": 3
+      },
+      "expect": {
+        "size": 3,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-2-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-2: indices 0 and 1",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 2,
+        "size": 3
+      },
+      "expect": {
+        "size": 3,
+        "values_hex": [
+          "100100000000000000",
+          "100200000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-2-range-last-two",
+      "range": [
+        1,
+        3
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-2: indices size-2 and size-1",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 2,
+        "size": 3
+      },
+      "expect": {
+        "size": 3,
+        "values_hex": [
+          "100200000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-2-index-last",
+      "index": 2,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-2: the last value",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 2,
+        "size": 3
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/nat-count-2-index-size",
+      "index": 3,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-2: index == size is out of range",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 4096,
+        "size": 4097
+      },
+      "expect": {
+        "size": 4097,
+        "values_hex": [
+          "100000000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-4096-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-4096: the first value",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 4096,
+        "size": 4097
+      },
+      "expect": {
+        "size": 4097,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-4096-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-4096: indices 0 and 1",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 4096,
+        "size": 4097
+      },
+      "expect": {
+        "size": 4097,
+        "values_hex": [
+          "10ff0f000000000000",
+          "100010000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-4096-range-last-two",
+      "range": [
+        4095,
+        4097
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-4096: indices size-2 and size-1",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 4096,
+        "size": 4097
+      },
+      "expect": {
+        "size": 4097,
+        "values_hex": [
+          "100010000000000000"
+        ]
+      },
+      "id": "v2-domain/nat-count-4096-index-last",
+      "index": 4096,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-4096: the last value",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 4096,
+        "size": 4097
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/nat-count-4096-index-size",
+      "index": 4097,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat-count-4096: index == size is out of range",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 256,
+        "t": "I8"
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "1180ffffffffffffff"
+        ]
+      },
+      "id": "v2-domain/fx-full-i8-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-i8: the first value",
+      "type": "I8"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 256,
+        "t": "I8"
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "1180ffffffffffffff",
+          "1181ffffffffffffff"
+        ]
+      },
+      "id": "v2-domain/fx-full-i8-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-i8: indices 0 and 1",
+      "type": "I8"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 256,
+        "t": "I8"
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "117e00000000000000",
+          "117f00000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-full-i8-range-last-two",
+      "range": [
+        254,
+        256
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-i8: indices size-2 and size-1",
+      "type": "I8"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 256,
+        "t": "I8"
+      },
+      "expect": {
+        "size": 256,
+        "values_hex": [
+          "117f00000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-full-i8-index-last",
+      "index": 255,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-i8: the last value",
+      "type": "I8"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 256,
+        "t": "I8"
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/fx-full-i8-index-size",
+      "index": 256,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-i8: index == size is out of range",
+      "type": "I8"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 65536,
+        "t": "U16"
+      },
+      "expect": {
+        "size": 65536,
+        "values_hex": [
+          "100000000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-full-u16-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-u16: the first value",
+      "type": "U16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 65536,
+        "t": "U16"
+      },
+      "expect": {
+        "size": 65536,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-full-u16-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-u16: indices 0 and 1",
+      "type": "U16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 65536,
+        "t": "U16"
+      },
+      "expect": {
+        "size": 65536,
+        "values_hex": [
+          "10feff000000000000",
+          "10ffff000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-full-u16-range-last-two",
+      "range": [
+        65534,
+        65536
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-u16: indices size-2 and size-1",
+      "type": "U16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 65536,
+        "t": "U16"
+      },
+      "expect": {
+        "size": 65536,
+        "values_hex": [
+          "10ffff000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-full-u16-index-last",
+      "index": 65535,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-u16: the last value",
+      "type": "U16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 65536,
+        "t": "U16"
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/fx-full-u16-index-size",
+      "index": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-u16: index == size is out of range",
+      "type": "U16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 65536,
+        "t": "I16"
+      },
+      "expect": {
+        "size": 65536,
+        "values_hex": [
+          "110080ffffffffffff"
+        ]
+      },
+      "id": "v2-domain/fx-full-i16-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-i16: the first value",
+      "type": "I16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 65536,
+        "t": "I16"
+      },
+      "expect": {
+        "size": 65536,
+        "values_hex": [
+          "110080ffffffffffff",
+          "110180ffffffffffff"
+        ]
+      },
+      "id": "v2-domain/fx-full-i16-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-i16: indices 0 and 1",
+      "type": "I16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 65536,
+        "t": "I16"
+      },
+      "expect": {
+        "size": 65536,
+        "values_hex": [
+          "11fe7f000000000000",
+          "11ff7f000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-full-i16-range-last-two",
+      "range": [
+        65534,
+        65536
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-i16: indices size-2 and size-1",
+      "type": "I16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 65536,
+        "t": "I16"
+      },
+      "expect": {
+        "size": 65536,
+        "values_hex": [
+          "11ff7f000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-full-i16-index-last",
+      "index": 65535,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-i16: the last value",
+      "type": "I16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 65536,
+        "t": "I16"
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/fx-full-i16-index-size",
+      "index": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-full-i16: index == size is out of range",
+      "type": "I16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 281,
+        "t": "U16"
+      },
+      "expect": {
+        "size": 281,
+        "values_hex": [
+          "100000000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-u16-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-u16: the first value",
+      "type": "U16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 281,
+        "t": "U16"
+      },
+      "expect": {
+        "size": 281,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-u16-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-u16: indices 0 and 1",
+      "type": "U16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 281,
+        "t": "U16"
+      },
+      "expect": {
+        "size": 281,
+        "values_hex": [
+          "10ffbf000000000000",
+          "10ff7f000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-u16-range-last-two",
+      "range": [
+        279,
+        281
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-u16: indices size-2 and size-1",
+      "type": "U16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 281,
+        "t": "U16"
+      },
+      "expect": {
+        "size": 281,
+        "values_hex": [
+          "10ff7f000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-u16-index-last",
+      "index": 280,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-u16: the last value",
+      "type": "U16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 281,
+        "t": "U16"
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/fx-edge-u16-index-size",
+      "index": 281,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-u16: index == size is out of range",
+      "type": "U16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 313,
+        "t": "U32"
+      },
+      "expect": {
+        "size": 313,
+        "values_hex": [
+          "100000000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-u32-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-u32: the first value",
+      "type": "U32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 313,
+        "t": "U32"
+      },
+      "expect": {
+        "size": 313,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-u32-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-u32: indices 0 and 1",
+      "type": "U32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 313,
+        "t": "U32"
+      },
+      "expect": {
+        "size": 313,
+        "values_hex": [
+          "10ffffffbf00000000",
+          "10ffffff7f00000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-u32-range-last-two",
+      "range": [
+        311,
+        313
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-u32: indices size-2 and size-1",
+      "type": "U32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 313,
+        "t": "U32"
+      },
+      "expect": {
+        "size": 313,
+        "values_hex": [
+          "10ffffff7f00000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-u32-index-last",
+      "index": 312,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-u32: the last value",
+      "type": "U32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 313,
+        "t": "U32"
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/fx-edge-u32-index-size",
+      "index": 313,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-u32: index == size is out of range",
+      "type": "U32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 527,
+        "t": "I16"
+      },
+      "expect": {
+        "size": 527,
+        "values_hex": [
+          "110080ffffffffffff"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i16-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i16: the first value",
+      "type": "I16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 527,
+        "t": "I16"
+      },
+      "expect": {
+        "size": 527,
+        "values_hex": [
+          "110080ffffffffffff",
+          "11ffbfffffffffffff"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i16-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i16: indices 0 and 1",
+      "type": "I16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 527,
+        "t": "I16"
+      },
+      "expect": {
+        "size": 527,
+        "values_hex": [
+          "110040000000000000",
+          "11ff7f000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i16-range-last-two",
+      "range": [
+        525,
+        527
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i16: indices size-2 and size-1",
+      "type": "I16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 527,
+        "t": "I16"
+      },
+      "expect": {
+        "size": 527,
+        "values_hex": [
+          "11ff7f000000000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i16-index-last",
+      "index": 526,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i16: the last value",
+      "type": "I16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 527,
+        "t": "I16"
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/fx-edge-i16-index-size",
+      "index": 527,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i16: index == size is out of range",
+      "type": "I16"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 559,
+        "t": "I32"
+      },
+      "expect": {
+        "size": 559,
+        "values_hex": [
+          "1100000080ffffffff"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i32-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i32: the first value",
+      "type": "I32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 559,
+        "t": "I32"
+      },
+      "expect": {
+        "size": 559,
+        "values_hex": [
+          "1100000080ffffffff",
+          "11ffffffbfffffffff"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i32-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i32: indices 0 and 1",
+      "type": "I32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 559,
+        "t": "I32"
+      },
+      "expect": {
+        "size": 559,
+        "values_hex": [
+          "110000004000000000",
+          "11ffffff7f00000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i32-range-last-two",
+      "range": [
+        557,
+        559
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i32: indices size-2 and size-1",
+      "type": "I32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 559,
+        "t": "I32"
+      },
+      "expect": {
+        "size": 559,
+        "values_hex": [
+          "11ffffff7f00000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i32-index-last",
+      "index": 558,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i32: the last value",
+      "type": "I32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 559,
+        "t": "I32"
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/fx-edge-i32-index-size",
+      "index": 559,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i32: index == size is out of range",
+      "type": "I32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 623,
+        "t": "I64"
+      },
+      "expect": {
+        "size": 623,
+        "values_hex": [
+          "110000000000000080"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i64-index-0",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i64: the first value",
+      "type": "I64"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 623,
+        "t": "I64"
+      },
+      "expect": {
+        "size": 623,
+        "values_hex": [
+          "110000000000000080",
+          "11ffffffffffffffbf"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i64-range-first-two",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i64: indices 0 and 1",
+      "type": "I64"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 623,
+        "t": "I64"
+      },
+      "expect": {
+        "size": 623,
+        "values_hex": [
+          "110000000000000040",
+          "11ffffffffffffff7f"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i64-range-last-two",
+      "range": [
+        621,
+        623
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i64: indices size-2 and size-1",
+      "type": "I64"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 623,
+        "t": "I64"
+      },
+      "expect": {
+        "size": 623,
+        "values_hex": [
+          "11ffffffffffffff7f"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i64-index-last",
+      "index": 622,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i64: the last value",
+      "type": "I64"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 623,
+        "t": "I64"
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/fx-edge-i64-index-size",
+      "index": 623,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx-edge-i64: index == size is out of range",
+      "type": "I64"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 313,
+        "t": "U32"
+      },
+      "expect": {
+        "size": 313,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000",
+          "100200000000000000",
+          "100300000000000000",
+          "100400000000000000",
+          "100500000000000000",
+          "100600000000000000",
+          "100700000000000000",
+          "100800000000000000",
+          "100900000000000000",
+          "100a00000000000000",
+          "100b00000000000000",
+          "100c00000000000000",
+          "100d00000000000000",
+          "100e00000000000000",
+          "100f00000000000000",
+          "101000000000000000",
+          "101100000000000000",
+          "101200000000000000",
+          "101300000000000000",
+          "101400000000000000",
+          "101500000000000000",
+          "101600000000000000",
+          "101700000000000000",
+          "101800000000000000",
+          "101900000000000000",
+          "101a00000000000000",
+          "101b00000000000000",
+          "101c00000000000000",
+          "101d00000000000000",
+          "101e00000000000000",
+          "101f00000000000000",
+          "102000000000000000",
+          "102100000000000000",
+          "102200000000000000",
+          "102300000000000000",
+          "102400000000000000",
+          "102500000000000000",
+          "102600000000000000",
+          "102700000000000000",
+          "102800000000000000",
+          "102900000000000000",
+          "102a00000000000000",
+          "102b00000000000000",
+          "102c00000000000000",
+          "102d00000000000000",
+          "102e00000000000000",
+          "102f00000000000000",
+          "103000000000000000",
+          "103100000000000000",
+          "103200000000000000",
+          "103300000000000000",
+          "103400000000000000",
+          "103500000000000000",
+          "103600000000000000",
+          "103700000000000000",
+          "103800000000000000",
+          "103900000000000000",
+          "103a00000000000000",
+          "103b00000000000000",
+          "103c00000000000000",
+          "103d00000000000000",
+          "103e00000000000000",
+          "103f00000000000000",
+          "104000000000000000",
+          "104100000000000000",
+          "104200000000000000",
+          "104300000000000000",
+          "104400000000000000",
+          "104500000000000000",
+          "104600000000000000",
+          "104700000000000000",
+          "104800000000000000",
+          "104900000000000000",
+          "104a00000000000000",
+          "104b00000000000000",
+          "104c00000000000000",
+          "104d00000000000000",
+          "104e00000000000000",
+          "104f00000000000000",
+          "105000000000000000",
+          "105100000000000000",
+          "105200000000000000",
+          "105300000000000000",
+          "105400000000000000",
+          "105500000000000000",
+          "105600000000000000",
+          "105700000000000000",
+          "105800000000000000",
+          "105900000000000000",
+          "105a00000000000000",
+          "105b00000000000000",
+          "105c00000000000000",
+          "105d00000000000000",
+          "105e00000000000000",
+          "105f00000000000000",
+          "106000000000000000",
+          "106100000000000000",
+          "106200000000000000",
+          "106300000000000000",
+          "106400000000000000",
+          "106500000000000000",
+          "106600000000000000",
+          "106700000000000000",
+          "106800000000000000",
+          "106900000000000000",
+          "106a00000000000000",
+          "106b00000000000000",
+          "106c00000000000000",
+          "106d00000000000000",
+          "106e00000000000000",
+          "106f00000000000000",
+          "107000000000000000",
+          "107100000000000000",
+          "107200000000000000",
+          "107300000000000000",
+          "107400000000000000",
+          "107500000000000000",
+          "107600000000000000",
+          "107700000000000000",
+          "107800000000000000",
+          "107900000000000000",
+          "107a00000000000000",
+          "107b00000000000000",
+          "107c00000000000000",
+          "107d00000000000000",
+          "107e00000000000000",
+          "107f00000000000000",
+          "108000000000000000",
+          "108100000000000000",
+          "108200000000000000",
+          "108300000000000000",
+          "108400000000000000",
+          "108500000000000000",
+          "108600000000000000",
+          "108700000000000000",
+          "108800000000000000",
+          "108900000000000000",
+          "108a00000000000000",
+          "108b00000000000000",
+          "108c00000000000000",
+          "108d00000000000000",
+          "108e00000000000000",
+          "108f00000000000000",
+          "109000000000000000",
+          "109100000000000000",
+          "109200000000000000",
+          "109300000000000000",
+          "109400000000000000",
+          "109500000000000000",
+          "109600000000000000",
+          "109700000000000000",
+          "109800000000000000",
+          "109900000000000000",
+          "109a00000000000000",
+          "109b00000000000000",
+          "109c00000000000000",
+          "109d00000000000000",
+          "109e00000000000000",
+          "109f00000000000000",
+          "10a000000000000000",
+          "10a100000000000000",
+          "10a200000000000000",
+          "10a300000000000000",
+          "10a400000000000000",
+          "10a500000000000000",
+          "10a600000000000000",
+          "10a700000000000000",
+          "10a800000000000000",
+          "10a900000000000000",
+          "10aa00000000000000",
+          "10ab00000000000000",
+          "10ac00000000000000",
+          "10ad00000000000000",
+          "10ae00000000000000",
+          "10af00000000000000",
+          "10b000000000000000",
+          "10b100000000000000",
+          "10b200000000000000",
+          "10b300000000000000",
+          "10b400000000000000",
+          "10b500000000000000",
+          "10b600000000000000",
+          "10b700000000000000",
+          "10b800000000000000",
+          "10b900000000000000",
+          "10ba00000000000000",
+          "10bb00000000000000",
+          "10bc00000000000000",
+          "10bd00000000000000",
+          "10be00000000000000",
+          "10bf00000000000000",
+          "10c000000000000000",
+          "10c100000000000000",
+          "10c200000000000000",
+          "10c300000000000000",
+          "10c400000000000000",
+          "10c500000000000000",
+          "10c600000000000000",
+          "10c700000000000000",
+          "10c800000000000000",
+          "10c900000000000000",
+          "10ca00000000000000",
+          "10cb00000000000000",
+          "10cc00000000000000",
+          "10cd00000000000000",
+          "10ce00000000000000",
+          "10cf00000000000000",
+          "10d000000000000000",
+          "10d100000000000000",
+          "10d200000000000000",
+          "10d300000000000000",
+          "10d400000000000000",
+          "10d500000000000000",
+          "10d600000000000000",
+          "10d700000000000000",
+          "10d800000000000000",
+          "10d900000000000000",
+          "10da00000000000000",
+          "10db00000000000000",
+          "10dc00000000000000",
+          "10dd00000000000000",
+          "10de00000000000000",
+          "10df00000000000000",
+          "10e000000000000000",
+          "10e100000000000000",
+          "10e200000000000000",
+          "10e300000000000000",
+          "10e400000000000000",
+          "10e500000000000000",
+          "10e600000000000000",
+          "10e700000000000000",
+          "10e800000000000000",
+          "10e900000000000000",
+          "10ea00000000000000",
+          "10eb00000000000000",
+          "10ec00000000000000",
+          "10ed00000000000000",
+          "10ee00000000000000",
+          "10ef00000000000000",
+          "10f000000000000000",
+          "10f100000000000000",
+          "10f200000000000000",
+          "10f300000000000000",
+          "10f400000000000000",
+          "10f500000000000000",
+          "10f600000000000000",
+          "10f700000000000000",
+          "10f800000000000000",
+          "10f900000000000000",
+          "10fa00000000000000",
+          "10fb00000000000000",
+          "10fc00000000000000",
+          "10fd00000000000000",
+          "10fe00000000000000",
+          "10ff00000000000000",
+          "100001000000000000",
+          "100002000000000000",
+          "100004000000000000",
+          "100008000000000000",
+          "100010000000000000",
+          "100020000000000000",
+          "100040000000000000",
+          "100080000000000000",
+          "100000010000000000",
+          "100000020000000000",
+          "100000040000000000",
+          "100000080000000000",
+          "100000100000000000",
+          "100000200000000000",
+          "100000400000000000",
+          "100000800000000000",
+          "100000000100000000",
+          "100000000200000000",
+          "100000000400000000",
+          "100000000800000000",
+          "100000001000000000",
+          "100000002000000000",
+          "100000004000000000",
+          "100000008000000000",
+          "10ffffffff00000000",
+          "10feffffff00000000",
+          "10fdffffff00000000",
+          "10fbffffff00000000",
+          "10f7ffffff00000000",
+          "10efffffff00000000",
+          "10dfffffff00000000",
+          "10bfffffff00000000",
+          "107fffffff00000000",
+          "10fffeffff00000000",
+          "10fffdffff00000000",
+          "10fffbffff00000000",
+          "10fff7ffff00000000",
+          "10ffefffff00000000",
+          "10ffdfffff00000000",
+          "10ffbfffff00000000",
+          "10ff7fffff00000000",
+          "10fffffeff00000000",
+          "10fffffdff00000000",
+          "10fffffbff00000000",
+          "10fffff7ff00000000",
+          "10ffffefff00000000",
+          "10ffffdfff00000000",
+          "10ffffbfff00000000",
+          "10ffff7fff00000000",
+          "10fffffffe00000000",
+          "10fffffffd00000000",
+          "10fffffffb00000000",
+          "10fffffff700000000",
+          "10ffffffef00000000",
+          "10ffffffdf00000000",
+          "10ffffffbf00000000",
+          "10ffffff7f00000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-u32-in-full",
+      "range": [
+        0,
+        313
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "every value of the descriptor, indices 0..312",
+      "type": "U32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 559,
+        "t": "I32"
+      },
+      "expect": {
+        "size": 559,
+        "values_hex": [
+          "1100000080ffffffff",
+          "11ffffffbfffffffff",
+          "11ffffffdfffffffff",
+          "11ffffffefffffffff",
+          "11fffffff7ffffffff",
+          "11fffffffbffffffff",
+          "11fffffffdffffffff",
+          "11fffffffeffffffff",
+          "11ffff7fffffffffff",
+          "11ffffbfffffffffff",
+          "11ffffdfffffffffff",
+          "11ffffefffffffffff",
+          "11fffff7ffffffffff",
+          "11fffffbffffffffff",
+          "11fffffdffffffffff",
+          "11fffffeffffffffff",
+          "11ff7fffffffffffff",
+          "11ffbfffffffffffff",
+          "11ffdfffffffffffff",
+          "11ffefffffffffffff",
+          "11fff7ffffffffffff",
+          "11fffbffffffffffff",
+          "11fffdffffffffffff",
+          "11fffeffffffffffff",
+          "1101ffffffffffffff",
+          "1102ffffffffffffff",
+          "1103ffffffffffffff",
+          "1104ffffffffffffff",
+          "1105ffffffffffffff",
+          "1106ffffffffffffff",
+          "1107ffffffffffffff",
+          "1108ffffffffffffff",
+          "1109ffffffffffffff",
+          "110affffffffffffff",
+          "110bffffffffffffff",
+          "110cffffffffffffff",
+          "110dffffffffffffff",
+          "110effffffffffffff",
+          "110fffffffffffffff",
+          "1110ffffffffffffff",
+          "1111ffffffffffffff",
+          "1112ffffffffffffff",
+          "1113ffffffffffffff",
+          "1114ffffffffffffff",
+          "1115ffffffffffffff",
+          "1116ffffffffffffff",
+          "1117ffffffffffffff",
+          "1118ffffffffffffff",
+          "1119ffffffffffffff",
+          "111affffffffffffff",
+          "111bffffffffffffff",
+          "111cffffffffffffff",
+          "111dffffffffffffff",
+          "111effffffffffffff",
+          "111fffffffffffffff",
+          "1120ffffffffffffff",
+          "1121ffffffffffffff",
+          "1122ffffffffffffff",
+          "1123ffffffffffffff",
+          "1124ffffffffffffff",
+          "1125ffffffffffffff",
+          "1126ffffffffffffff",
+          "1127ffffffffffffff",
+          "1128ffffffffffffff",
+          "1129ffffffffffffff",
+          "112affffffffffffff",
+          "112bffffffffffffff",
+          "112cffffffffffffff",
+          "112dffffffffffffff",
+          "112effffffffffffff",
+          "112fffffffffffffff",
+          "1130ffffffffffffff",
+          "1131ffffffffffffff",
+          "1132ffffffffffffff",
+          "1133ffffffffffffff",
+          "1134ffffffffffffff",
+          "1135ffffffffffffff",
+          "1136ffffffffffffff",
+          "1137ffffffffffffff",
+          "1138ffffffffffffff",
+          "1139ffffffffffffff",
+          "113affffffffffffff",
+          "113bffffffffffffff",
+          "113cffffffffffffff",
+          "113dffffffffffffff",
+          "113effffffffffffff",
+          "113fffffffffffffff",
+          "1140ffffffffffffff",
+          "1141ffffffffffffff",
+          "1142ffffffffffffff",
+          "1143ffffffffffffff",
+          "1144ffffffffffffff",
+          "1145ffffffffffffff",
+          "1146ffffffffffffff",
+          "1147ffffffffffffff",
+          "1148ffffffffffffff",
+          "1149ffffffffffffff",
+          "114affffffffffffff",
+          "114bffffffffffffff",
+          "114cffffffffffffff",
+          "114dffffffffffffff",
+          "114effffffffffffff",
+          "114fffffffffffffff",
+          "1150ffffffffffffff",
+          "1151ffffffffffffff",
+          "1152ffffffffffffff",
+          "1153ffffffffffffff",
+          "1154ffffffffffffff",
+          "1155ffffffffffffff",
+          "1156ffffffffffffff",
+          "1157ffffffffffffff",
+          "1158ffffffffffffff",
+          "1159ffffffffffffff",
+          "115affffffffffffff",
+          "115bffffffffffffff",
+          "115cffffffffffffff",
+          "115dffffffffffffff",
+          "115effffffffffffff",
+          "115fffffffffffffff",
+          "1160ffffffffffffff",
+          "1161ffffffffffffff",
+          "1162ffffffffffffff",
+          "1163ffffffffffffff",
+          "1164ffffffffffffff",
+          "1165ffffffffffffff",
+          "1166ffffffffffffff",
+          "1167ffffffffffffff",
+          "1168ffffffffffffff",
+          "1169ffffffffffffff",
+          "116affffffffffffff",
+          "116bffffffffffffff",
+          "116cffffffffffffff",
+          "116dffffffffffffff",
+          "116effffffffffffff",
+          "116fffffffffffffff",
+          "1170ffffffffffffff",
+          "1171ffffffffffffff",
+          "1172ffffffffffffff",
+          "1173ffffffffffffff",
+          "1174ffffffffffffff",
+          "1175ffffffffffffff",
+          "1176ffffffffffffff",
+          "1177ffffffffffffff",
+          "1178ffffffffffffff",
+          "1179ffffffffffffff",
+          "117affffffffffffff",
+          "117bffffffffffffff",
+          "117cffffffffffffff",
+          "117dffffffffffffff",
+          "117effffffffffffff",
+          "117fffffffffffffff",
+          "1180ffffffffffffff",
+          "1181ffffffffffffff",
+          "1182ffffffffffffff",
+          "1183ffffffffffffff",
+          "1184ffffffffffffff",
+          "1185ffffffffffffff",
+          "1186ffffffffffffff",
+          "1187ffffffffffffff",
+          "1188ffffffffffffff",
+          "1189ffffffffffffff",
+          "118affffffffffffff",
+          "118bffffffffffffff",
+          "118cffffffffffffff",
+          "118dffffffffffffff",
+          "118effffffffffffff",
+          "118fffffffffffffff",
+          "1190ffffffffffffff",
+          "1191ffffffffffffff",
+          "1192ffffffffffffff",
+          "1193ffffffffffffff",
+          "1194ffffffffffffff",
+          "1195ffffffffffffff",
+          "1196ffffffffffffff",
+          "1197ffffffffffffff",
+          "1198ffffffffffffff",
+          "1199ffffffffffffff",
+          "119affffffffffffff",
+          "119bffffffffffffff",
+          "119cffffffffffffff",
+          "119dffffffffffffff",
+          "119effffffffffffff",
+          "119fffffffffffffff",
+          "11a0ffffffffffffff",
+          "11a1ffffffffffffff",
+          "11a2ffffffffffffff",
+          "11a3ffffffffffffff",
+          "11a4ffffffffffffff",
+          "11a5ffffffffffffff",
+          "11a6ffffffffffffff",
+          "11a7ffffffffffffff",
+          "11a8ffffffffffffff",
+          "11a9ffffffffffffff",
+          "11aaffffffffffffff",
+          "11abffffffffffffff",
+          "11acffffffffffffff",
+          "11adffffffffffffff",
+          "11aeffffffffffffff",
+          "11afffffffffffffff",
+          "11b0ffffffffffffff",
+          "11b1ffffffffffffff",
+          "11b2ffffffffffffff",
+          "11b3ffffffffffffff",
+          "11b4ffffffffffffff",
+          "11b5ffffffffffffff",
+          "11b6ffffffffffffff",
+          "11b7ffffffffffffff",
+          "11b8ffffffffffffff",
+          "11b9ffffffffffffff",
+          "11baffffffffffffff",
+          "11bbffffffffffffff",
+          "11bcffffffffffffff",
+          "11bdffffffffffffff",
+          "11beffffffffffffff",
+          "11bfffffffffffffff",
+          "11c0ffffffffffffff",
+          "11c1ffffffffffffff",
+          "11c2ffffffffffffff",
+          "11c3ffffffffffffff",
+          "11c4ffffffffffffff",
+          "11c5ffffffffffffff",
+          "11c6ffffffffffffff",
+          "11c7ffffffffffffff",
+          "11c8ffffffffffffff",
+          "11c9ffffffffffffff",
+          "11caffffffffffffff",
+          "11cbffffffffffffff",
+          "11ccffffffffffffff",
+          "11cdffffffffffffff",
+          "11ceffffffffffffff",
+          "11cfffffffffffffff",
+          "11d0ffffffffffffff",
+          "11d1ffffffffffffff",
+          "11d2ffffffffffffff",
+          "11d3ffffffffffffff",
+          "11d4ffffffffffffff",
+          "11d5ffffffffffffff",
+          "11d6ffffffffffffff",
+          "11d7ffffffffffffff",
+          "11d8ffffffffffffff",
+          "11d9ffffffffffffff",
+          "11daffffffffffffff",
+          "11dbffffffffffffff",
+          "11dcffffffffffffff",
+          "11ddffffffffffffff",
+          "11deffffffffffffff",
+          "11dfffffffffffffff",
+          "11e0ffffffffffffff",
+          "11e1ffffffffffffff",
+          "11e2ffffffffffffff",
+          "11e3ffffffffffffff",
+          "11e4ffffffffffffff",
+          "11e5ffffffffffffff",
+          "11e6ffffffffffffff",
+          "11e7ffffffffffffff",
+          "11e8ffffffffffffff",
+          "11e9ffffffffffffff",
+          "11eaffffffffffffff",
+          "11ebffffffffffffff",
+          "11ecffffffffffffff",
+          "11edffffffffffffff",
+          "11eeffffffffffffff",
+          "11efffffffffffffff",
+          "11f0ffffffffffffff",
+          "11f1ffffffffffffff",
+          "11f2ffffffffffffff",
+          "11f3ffffffffffffff",
+          "11f4ffffffffffffff",
+          "11f5ffffffffffffff",
+          "11f6ffffffffffffff",
+          "11f7ffffffffffffff",
+          "11f8ffffffffffffff",
+          "11f9ffffffffffffff",
+          "11faffffffffffffff",
+          "11fbffffffffffffff",
+          "11fcffffffffffffff",
+          "11fdffffffffffffff",
+          "11feffffffffffffff",
+          "11ffffffffffffffff",
+          "110000000000000000",
+          "110100000000000000",
+          "110200000000000000",
+          "110300000000000000",
+          "110400000000000000",
+          "110500000000000000",
+          "110600000000000000",
+          "110700000000000000",
+          "110800000000000000",
+          "110900000000000000",
+          "110a00000000000000",
+          "110b00000000000000",
+          "110c00000000000000",
+          "110d00000000000000",
+          "110e00000000000000",
+          "110f00000000000000",
+          "111000000000000000",
+          "111100000000000000",
+          "111200000000000000",
+          "111300000000000000",
+          "111400000000000000",
+          "111500000000000000",
+          "111600000000000000",
+          "111700000000000000",
+          "111800000000000000",
+          "111900000000000000",
+          "111a00000000000000",
+          "111b00000000000000",
+          "111c00000000000000",
+          "111d00000000000000",
+          "111e00000000000000",
+          "111f00000000000000",
+          "112000000000000000",
+          "112100000000000000",
+          "112200000000000000",
+          "112300000000000000",
+          "112400000000000000",
+          "112500000000000000",
+          "112600000000000000",
+          "112700000000000000",
+          "112800000000000000",
+          "112900000000000000",
+          "112a00000000000000",
+          "112b00000000000000",
+          "112c00000000000000",
+          "112d00000000000000",
+          "112e00000000000000",
+          "112f00000000000000",
+          "113000000000000000",
+          "113100000000000000",
+          "113200000000000000",
+          "113300000000000000",
+          "113400000000000000",
+          "113500000000000000",
+          "113600000000000000",
+          "113700000000000000",
+          "113800000000000000",
+          "113900000000000000",
+          "113a00000000000000",
+          "113b00000000000000",
+          "113c00000000000000",
+          "113d00000000000000",
+          "113e00000000000000",
+          "113f00000000000000",
+          "114000000000000000",
+          "114100000000000000",
+          "114200000000000000",
+          "114300000000000000",
+          "114400000000000000",
+          "114500000000000000",
+          "114600000000000000",
+          "114700000000000000",
+          "114800000000000000",
+          "114900000000000000",
+          "114a00000000000000",
+          "114b00000000000000",
+          "114c00000000000000",
+          "114d00000000000000",
+          "114e00000000000000",
+          "114f00000000000000",
+          "115000000000000000",
+          "115100000000000000",
+          "115200000000000000",
+          "115300000000000000",
+          "115400000000000000",
+          "115500000000000000",
+          "115600000000000000",
+          "115700000000000000",
+          "115800000000000000",
+          "115900000000000000",
+          "115a00000000000000",
+          "115b00000000000000",
+          "115c00000000000000",
+          "115d00000000000000",
+          "115e00000000000000",
+          "115f00000000000000",
+          "116000000000000000",
+          "116100000000000000",
+          "116200000000000000",
+          "116300000000000000",
+          "116400000000000000",
+          "116500000000000000",
+          "116600000000000000",
+          "116700000000000000",
+          "116800000000000000",
+          "116900000000000000",
+          "116a00000000000000",
+          "116b00000000000000",
+          "116c00000000000000",
+          "116d00000000000000",
+          "116e00000000000000",
+          "116f00000000000000",
+          "117000000000000000",
+          "117100000000000000",
+          "117200000000000000",
+          "117300000000000000",
+          "117400000000000000",
+          "117500000000000000",
+          "117600000000000000",
+          "117700000000000000",
+          "117800000000000000",
+          "117900000000000000",
+          "117a00000000000000",
+          "117b00000000000000",
+          "117c00000000000000",
+          "117d00000000000000",
+          "117e00000000000000",
+          "117f00000000000000",
+          "118000000000000000",
+          "118100000000000000",
+          "118200000000000000",
+          "118300000000000000",
+          "118400000000000000",
+          "118500000000000000",
+          "118600000000000000",
+          "118700000000000000",
+          "118800000000000000",
+          "118900000000000000",
+          "118a00000000000000",
+          "118b00000000000000",
+          "118c00000000000000",
+          "118d00000000000000",
+          "118e00000000000000",
+          "118f00000000000000",
+          "119000000000000000",
+          "119100000000000000",
+          "119200000000000000",
+          "119300000000000000",
+          "119400000000000000",
+          "119500000000000000",
+          "119600000000000000",
+          "119700000000000000",
+          "119800000000000000",
+          "119900000000000000",
+          "119a00000000000000",
+          "119b00000000000000",
+          "119c00000000000000",
+          "119d00000000000000",
+          "119e00000000000000",
+          "119f00000000000000",
+          "11a000000000000000",
+          "11a100000000000000",
+          "11a200000000000000",
+          "11a300000000000000",
+          "11a400000000000000",
+          "11a500000000000000",
+          "11a600000000000000",
+          "11a700000000000000",
+          "11a800000000000000",
+          "11a900000000000000",
+          "11aa00000000000000",
+          "11ab00000000000000",
+          "11ac00000000000000",
+          "11ad00000000000000",
+          "11ae00000000000000",
+          "11af00000000000000",
+          "11b000000000000000",
+          "11b100000000000000",
+          "11b200000000000000",
+          "11b300000000000000",
+          "11b400000000000000",
+          "11b500000000000000",
+          "11b600000000000000",
+          "11b700000000000000",
+          "11b800000000000000",
+          "11b900000000000000",
+          "11ba00000000000000",
+          "11bb00000000000000",
+          "11bc00000000000000",
+          "11bd00000000000000",
+          "11be00000000000000",
+          "11bf00000000000000",
+          "11c000000000000000",
+          "11c100000000000000",
+          "11c200000000000000",
+          "11c300000000000000",
+          "11c400000000000000",
+          "11c500000000000000",
+          "11c600000000000000",
+          "11c700000000000000",
+          "11c800000000000000",
+          "11c900000000000000",
+          "11ca00000000000000",
+          "11cb00000000000000",
+          "11cc00000000000000",
+          "11cd00000000000000",
+          "11ce00000000000000",
+          "11cf00000000000000",
+          "11d000000000000000",
+          "11d100000000000000",
+          "11d200000000000000",
+          "11d300000000000000",
+          "11d400000000000000",
+          "11d500000000000000",
+          "11d600000000000000",
+          "11d700000000000000",
+          "11d800000000000000",
+          "11d900000000000000",
+          "11da00000000000000",
+          "11db00000000000000",
+          "11dc00000000000000",
+          "11dd00000000000000",
+          "11de00000000000000",
+          "11df00000000000000",
+          "11e000000000000000",
+          "11e100000000000000",
+          "11e200000000000000",
+          "11e300000000000000",
+          "11e400000000000000",
+          "11e500000000000000",
+          "11e600000000000000",
+          "11e700000000000000",
+          "11e800000000000000",
+          "11e900000000000000",
+          "11ea00000000000000",
+          "11eb00000000000000",
+          "11ec00000000000000",
+          "11ed00000000000000",
+          "11ee00000000000000",
+          "11ef00000000000000",
+          "11f000000000000000",
+          "11f100000000000000",
+          "11f200000000000000",
+          "11f300000000000000",
+          "11f400000000000000",
+          "11f500000000000000",
+          "11f600000000000000",
+          "11f700000000000000",
+          "11f800000000000000",
+          "11f900000000000000",
+          "11fa00000000000000",
+          "11fb00000000000000",
+          "11fc00000000000000",
+          "11fd00000000000000",
+          "11fe00000000000000",
+          "11ff00000000000000",
+          "110001000000000000",
+          "110002000000000000",
+          "110004000000000000",
+          "110008000000000000",
+          "110010000000000000",
+          "110020000000000000",
+          "110040000000000000",
+          "110080000000000000",
+          "110000010000000000",
+          "110000020000000000",
+          "110000040000000000",
+          "110000080000000000",
+          "110000100000000000",
+          "110000200000000000",
+          "110000400000000000",
+          "110000800000000000",
+          "110000000100000000",
+          "110000000200000000",
+          "110000000400000000",
+          "110000000800000000",
+          "110000001000000000",
+          "110000002000000000",
+          "110000004000000000",
+          "11ffffff7f00000000"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i32-in-full",
+      "range": [
+        0,
+        559
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "every value of the descriptor, indices 0..558",
+      "type": "I32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 623,
+        "t": "I64"
+      },
+      "expect": {
+        "size": 623,
+        "values_hex": [
+          "110000000000000080",
+          "11ffffffffffffffbf",
+          "11ffffffffffffffdf",
+          "11ffffffffffffffef",
+          "11fffffffffffffff7",
+          "11fffffffffffffffb",
+          "11fffffffffffffffd",
+          "11fffffffffffffffe",
+          "11ffffffffffff7fff",
+          "11ffffffffffffbfff",
+          "11ffffffffffffdfff",
+          "11ffffffffffffefff",
+          "11fffffffffffff7ff",
+          "11fffffffffffffbff",
+          "11fffffffffffffdff",
+          "11fffffffffffffeff",
+          "11ffffffffff7fffff",
+          "11ffffffffffbfffff",
+          "11ffffffffffdfffff",
+          "11ffffffffffefffff",
+          "11fffffffffff7ffff",
+          "11fffffffffffbffff",
+          "11fffffffffffdffff",
+          "11fffffffffffeffff",
+          "11ffffffff7fffffff",
+          "11ffffffffbfffffff",
+          "11ffffffffdfffffff",
+          "11ffffffffefffffff",
+          "11fffffffff7ffffff",
+          "11fffffffffbffffff",
+          "11fffffffffdffffff",
+          "11fffffffffeffffff",
+          "11ffffff7fffffffff",
+          "11ffffffbfffffffff",
+          "11ffffffdfffffffff",
+          "11ffffffefffffffff",
+          "11fffffff7ffffffff",
+          "11fffffffbffffffff",
+          "11fffffffdffffffff",
+          "11fffffffeffffffff",
+          "11ffff7fffffffffff",
+          "11ffffbfffffffffff",
+          "11ffffdfffffffffff",
+          "11ffffefffffffffff",
+          "11fffff7ffffffffff",
+          "11fffffbffffffffff",
+          "11fffffdffffffffff",
+          "11fffffeffffffffff",
+          "11ff7fffffffffffff",
+          "11ffbfffffffffffff",
+          "11ffdfffffffffffff",
+          "11ffefffffffffffff",
+          "11fff7ffffffffffff",
+          "11fffbffffffffffff",
+          "11fffdffffffffffff",
+          "11fffeffffffffffff",
+          "1101ffffffffffffff",
+          "1102ffffffffffffff",
+          "1103ffffffffffffff",
+          "1104ffffffffffffff",
+          "1105ffffffffffffff",
+          "1106ffffffffffffff",
+          "1107ffffffffffffff",
+          "1108ffffffffffffff",
+          "1109ffffffffffffff",
+          "110affffffffffffff",
+          "110bffffffffffffff",
+          "110cffffffffffffff",
+          "110dffffffffffffff",
+          "110effffffffffffff",
+          "110fffffffffffffff",
+          "1110ffffffffffffff",
+          "1111ffffffffffffff",
+          "1112ffffffffffffff",
+          "1113ffffffffffffff",
+          "1114ffffffffffffff",
+          "1115ffffffffffffff",
+          "1116ffffffffffffff",
+          "1117ffffffffffffff",
+          "1118ffffffffffffff",
+          "1119ffffffffffffff",
+          "111affffffffffffff",
+          "111bffffffffffffff",
+          "111cffffffffffffff",
+          "111dffffffffffffff",
+          "111effffffffffffff",
+          "111fffffffffffffff",
+          "1120ffffffffffffff",
+          "1121ffffffffffffff",
+          "1122ffffffffffffff",
+          "1123ffffffffffffff",
+          "1124ffffffffffffff",
+          "1125ffffffffffffff",
+          "1126ffffffffffffff",
+          "1127ffffffffffffff",
+          "1128ffffffffffffff",
+          "1129ffffffffffffff",
+          "112affffffffffffff",
+          "112bffffffffffffff",
+          "112cffffffffffffff",
+          "112dffffffffffffff",
+          "112effffffffffffff",
+          "112fffffffffffffff",
+          "1130ffffffffffffff",
+          "1131ffffffffffffff",
+          "1132ffffffffffffff",
+          "1133ffffffffffffff",
+          "1134ffffffffffffff",
+          "1135ffffffffffffff",
+          "1136ffffffffffffff",
+          "1137ffffffffffffff",
+          "1138ffffffffffffff",
+          "1139ffffffffffffff",
+          "113affffffffffffff",
+          "113bffffffffffffff",
+          "113cffffffffffffff",
+          "113dffffffffffffff",
+          "113effffffffffffff",
+          "113fffffffffffffff",
+          "1140ffffffffffffff",
+          "1141ffffffffffffff",
+          "1142ffffffffffffff",
+          "1143ffffffffffffff",
+          "1144ffffffffffffff",
+          "1145ffffffffffffff",
+          "1146ffffffffffffff",
+          "1147ffffffffffffff",
+          "1148ffffffffffffff",
+          "1149ffffffffffffff",
+          "114affffffffffffff",
+          "114bffffffffffffff",
+          "114cffffffffffffff",
+          "114dffffffffffffff",
+          "114effffffffffffff",
+          "114fffffffffffffff",
+          "1150ffffffffffffff",
+          "1151ffffffffffffff",
+          "1152ffffffffffffff",
+          "1153ffffffffffffff",
+          "1154ffffffffffffff",
+          "1155ffffffffffffff",
+          "1156ffffffffffffff",
+          "1157ffffffffffffff",
+          "1158ffffffffffffff",
+          "1159ffffffffffffff",
+          "115affffffffffffff",
+          "115bffffffffffffff",
+          "115cffffffffffffff",
+          "115dffffffffffffff",
+          "115effffffffffffff",
+          "115fffffffffffffff",
+          "1160ffffffffffffff",
+          "1161ffffffffffffff",
+          "1162ffffffffffffff",
+          "1163ffffffffffffff",
+          "1164ffffffffffffff",
+          "1165ffffffffffffff",
+          "1166ffffffffffffff",
+          "1167ffffffffffffff",
+          "1168ffffffffffffff",
+          "1169ffffffffffffff",
+          "116affffffffffffff",
+          "116bffffffffffffff",
+          "116cffffffffffffff",
+          "116dffffffffffffff",
+          "116effffffffffffff",
+          "116fffffffffffffff",
+          "1170ffffffffffffff",
+          "1171ffffffffffffff",
+          "1172ffffffffffffff",
+          "1173ffffffffffffff",
+          "1174ffffffffffffff",
+          "1175ffffffffffffff",
+          "1176ffffffffffffff",
+          "1177ffffffffffffff",
+          "1178ffffffffffffff",
+          "1179ffffffffffffff",
+          "117affffffffffffff",
+          "117bffffffffffffff",
+          "117cffffffffffffff",
+          "117dffffffffffffff",
+          "117effffffffffffff",
+          "117fffffffffffffff",
+          "1180ffffffffffffff",
+          "1181ffffffffffffff",
+          "1182ffffffffffffff",
+          "1183ffffffffffffff",
+          "1184ffffffffffffff",
+          "1185ffffffffffffff",
+          "1186ffffffffffffff",
+          "1187ffffffffffffff",
+          "1188ffffffffffffff",
+          "1189ffffffffffffff",
+          "118affffffffffffff",
+          "118bffffffffffffff",
+          "118cffffffffffffff",
+          "118dffffffffffffff",
+          "118effffffffffffff",
+          "118fffffffffffffff",
+          "1190ffffffffffffff",
+          "1191ffffffffffffff",
+          "1192ffffffffffffff",
+          "1193ffffffffffffff",
+          "1194ffffffffffffff",
+          "1195ffffffffffffff",
+          "1196ffffffffffffff",
+          "1197ffffffffffffff",
+          "1198ffffffffffffff",
+          "1199ffffffffffffff",
+          "119affffffffffffff",
+          "119bffffffffffffff",
+          "119cffffffffffffff",
+          "119dffffffffffffff",
+          "119effffffffffffff",
+          "119fffffffffffffff",
+          "11a0ffffffffffffff",
+          "11a1ffffffffffffff",
+          "11a2ffffffffffffff",
+          "11a3ffffffffffffff",
+          "11a4ffffffffffffff",
+          "11a5ffffffffffffff",
+          "11a6ffffffffffffff",
+          "11a7ffffffffffffff",
+          "11a8ffffffffffffff",
+          "11a9ffffffffffffff",
+          "11aaffffffffffffff",
+          "11abffffffffffffff",
+          "11acffffffffffffff",
+          "11adffffffffffffff",
+          "11aeffffffffffffff",
+          "11afffffffffffffff",
+          "11b0ffffffffffffff",
+          "11b1ffffffffffffff",
+          "11b2ffffffffffffff",
+          "11b3ffffffffffffff",
+          "11b4ffffffffffffff",
+          "11b5ffffffffffffff",
+          "11b6ffffffffffffff",
+          "11b7ffffffffffffff",
+          "11b8ffffffffffffff",
+          "11b9ffffffffffffff",
+          "11baffffffffffffff",
+          "11bbffffffffffffff",
+          "11bcffffffffffffff",
+          "11bdffffffffffffff",
+          "11beffffffffffffff",
+          "11bfffffffffffffff",
+          "11c0ffffffffffffff",
+          "11c1ffffffffffffff",
+          "11c2ffffffffffffff",
+          "11c3ffffffffffffff",
+          "11c4ffffffffffffff",
+          "11c5ffffffffffffff",
+          "11c6ffffffffffffff",
+          "11c7ffffffffffffff",
+          "11c8ffffffffffffff",
+          "11c9ffffffffffffff",
+          "11caffffffffffffff",
+          "11cbffffffffffffff",
+          "11ccffffffffffffff",
+          "11cdffffffffffffff",
+          "11ceffffffffffffff",
+          "11cfffffffffffffff",
+          "11d0ffffffffffffff",
+          "11d1ffffffffffffff",
+          "11d2ffffffffffffff",
+          "11d3ffffffffffffff",
+          "11d4ffffffffffffff",
+          "11d5ffffffffffffff",
+          "11d6ffffffffffffff",
+          "11d7ffffffffffffff",
+          "11d8ffffffffffffff",
+          "11d9ffffffffffffff",
+          "11daffffffffffffff",
+          "11dbffffffffffffff",
+          "11dcffffffffffffff",
+          "11ddffffffffffffff",
+          "11deffffffffffffff",
+          "11dfffffffffffffff",
+          "11e0ffffffffffffff",
+          "11e1ffffffffffffff",
+          "11e2ffffffffffffff",
+          "11e3ffffffffffffff",
+          "11e4ffffffffffffff",
+          "11e5ffffffffffffff",
+          "11e6ffffffffffffff",
+          "11e7ffffffffffffff",
+          "11e8ffffffffffffff",
+          "11e9ffffffffffffff",
+          "11eaffffffffffffff",
+          "11ebffffffffffffff",
+          "11ecffffffffffffff",
+          "11edffffffffffffff",
+          "11eeffffffffffffff",
+          "11efffffffffffffff",
+          "11f0ffffffffffffff",
+          "11f1ffffffffffffff",
+          "11f2ffffffffffffff",
+          "11f3ffffffffffffff",
+          "11f4ffffffffffffff",
+          "11f5ffffffffffffff",
+          "11f6ffffffffffffff",
+          "11f7ffffffffffffff",
+          "11f8ffffffffffffff",
+          "11f9ffffffffffffff",
+          "11faffffffffffffff",
+          "11fbffffffffffffff",
+          "11fcffffffffffffff",
+          "11fdffffffffffffff",
+          "11feffffffffffffff",
+          "11ffffffffffffffff",
+          "110000000000000000",
+          "110100000000000000",
+          "110200000000000000",
+          "110300000000000000",
+          "110400000000000000",
+          "110500000000000000",
+          "110600000000000000",
+          "110700000000000000",
+          "110800000000000000",
+          "110900000000000000",
+          "110a00000000000000",
+          "110b00000000000000",
+          "110c00000000000000",
+          "110d00000000000000",
+          "110e00000000000000",
+          "110f00000000000000",
+          "111000000000000000",
+          "111100000000000000",
+          "111200000000000000",
+          "111300000000000000",
+          "111400000000000000",
+          "111500000000000000",
+          "111600000000000000",
+          "111700000000000000",
+          "111800000000000000",
+          "111900000000000000",
+          "111a00000000000000",
+          "111b00000000000000",
+          "111c00000000000000",
+          "111d00000000000000",
+          "111e00000000000000",
+          "111f00000000000000",
+          "112000000000000000",
+          "112100000000000000",
+          "112200000000000000",
+          "112300000000000000",
+          "112400000000000000",
+          "112500000000000000",
+          "112600000000000000",
+          "112700000000000000",
+          "112800000000000000",
+          "112900000000000000",
+          "112a00000000000000",
+          "112b00000000000000",
+          "112c00000000000000",
+          "112d00000000000000",
+          "112e00000000000000",
+          "112f00000000000000",
+          "113000000000000000",
+          "113100000000000000",
+          "113200000000000000",
+          "113300000000000000",
+          "113400000000000000",
+          "113500000000000000",
+          "113600000000000000",
+          "113700000000000000",
+          "113800000000000000",
+          "113900000000000000",
+          "113a00000000000000",
+          "113b00000000000000",
+          "113c00000000000000",
+          "113d00000000000000",
+          "113e00000000000000",
+          "113f00000000000000",
+          "114000000000000000",
+          "114100000000000000",
+          "114200000000000000",
+          "114300000000000000",
+          "114400000000000000",
+          "114500000000000000",
+          "114600000000000000",
+          "114700000000000000",
+          "114800000000000000",
+          "114900000000000000",
+          "114a00000000000000",
+          "114b00000000000000",
+          "114c00000000000000",
+          "114d00000000000000",
+          "114e00000000000000",
+          "114f00000000000000",
+          "115000000000000000",
+          "115100000000000000",
+          "115200000000000000",
+          "115300000000000000",
+          "115400000000000000",
+          "115500000000000000",
+          "115600000000000000",
+          "115700000000000000",
+          "115800000000000000",
+          "115900000000000000",
+          "115a00000000000000",
+          "115b00000000000000",
+          "115c00000000000000",
+          "115d00000000000000",
+          "115e00000000000000",
+          "115f00000000000000",
+          "116000000000000000",
+          "116100000000000000",
+          "116200000000000000",
+          "116300000000000000",
+          "116400000000000000",
+          "116500000000000000",
+          "116600000000000000",
+          "116700000000000000",
+          "116800000000000000",
+          "116900000000000000",
+          "116a00000000000000",
+          "116b00000000000000",
+          "116c00000000000000",
+          "116d00000000000000",
+          "116e00000000000000",
+          "116f00000000000000",
+          "117000000000000000",
+          "117100000000000000",
+          "117200000000000000",
+          "117300000000000000",
+          "117400000000000000",
+          "117500000000000000",
+          "117600000000000000",
+          "117700000000000000",
+          "117800000000000000",
+          "117900000000000000",
+          "117a00000000000000",
+          "117b00000000000000",
+          "117c00000000000000",
+          "117d00000000000000",
+          "117e00000000000000",
+          "117f00000000000000",
+          "118000000000000000",
+          "118100000000000000",
+          "118200000000000000",
+          "118300000000000000",
+          "118400000000000000",
+          "118500000000000000",
+          "118600000000000000",
+          "118700000000000000",
+          "118800000000000000",
+          "118900000000000000",
+          "118a00000000000000",
+          "118b00000000000000",
+          "118c00000000000000",
+          "118d00000000000000",
+          "118e00000000000000",
+          "118f00000000000000",
+          "119000000000000000",
+          "119100000000000000",
+          "119200000000000000",
+          "119300000000000000",
+          "119400000000000000",
+          "119500000000000000",
+          "119600000000000000",
+          "119700000000000000",
+          "119800000000000000",
+          "119900000000000000",
+          "119a00000000000000",
+          "119b00000000000000",
+          "119c00000000000000",
+          "119d00000000000000",
+          "119e00000000000000",
+          "119f00000000000000",
+          "11a000000000000000",
+          "11a100000000000000",
+          "11a200000000000000",
+          "11a300000000000000",
+          "11a400000000000000",
+          "11a500000000000000",
+          "11a600000000000000",
+          "11a700000000000000",
+          "11a800000000000000",
+          "11a900000000000000",
+          "11aa00000000000000",
+          "11ab00000000000000",
+          "11ac00000000000000",
+          "11ad00000000000000",
+          "11ae00000000000000",
+          "11af00000000000000",
+          "11b000000000000000",
+          "11b100000000000000",
+          "11b200000000000000",
+          "11b300000000000000",
+          "11b400000000000000",
+          "11b500000000000000",
+          "11b600000000000000",
+          "11b700000000000000",
+          "11b800000000000000",
+          "11b900000000000000",
+          "11ba00000000000000",
+          "11bb00000000000000",
+          "11bc00000000000000",
+          "11bd00000000000000",
+          "11be00000000000000",
+          "11bf00000000000000",
+          "11c000000000000000",
+          "11c100000000000000",
+          "11c200000000000000",
+          "11c300000000000000",
+          "11c400000000000000",
+          "11c500000000000000",
+          "11c600000000000000",
+          "11c700000000000000",
+          "11c800000000000000",
+          "11c900000000000000",
+          "11ca00000000000000",
+          "11cb00000000000000",
+          "11cc00000000000000",
+          "11cd00000000000000",
+          "11ce00000000000000",
+          "11cf00000000000000",
+          "11d000000000000000",
+          "11d100000000000000",
+          "11d200000000000000",
+          "11d300000000000000",
+          "11d400000000000000",
+          "11d500000000000000",
+          "11d600000000000000",
+          "11d700000000000000",
+          "11d800000000000000",
+          "11d900000000000000",
+          "11da00000000000000",
+          "11db00000000000000",
+          "11dc00000000000000",
+          "11dd00000000000000",
+          "11de00000000000000",
+          "11df00000000000000",
+          "11e000000000000000",
+          "11e100000000000000",
+          "11e200000000000000",
+          "11e300000000000000",
+          "11e400000000000000",
+          "11e500000000000000",
+          "11e600000000000000",
+          "11e700000000000000",
+          "11e800000000000000",
+          "11e900000000000000",
+          "11ea00000000000000",
+          "11eb00000000000000",
+          "11ec00000000000000",
+          "11ed00000000000000",
+          "11ee00000000000000",
+          "11ef00000000000000",
+          "11f000000000000000",
+          "11f100000000000000",
+          "11f200000000000000",
+          "11f300000000000000",
+          "11f400000000000000",
+          "11f500000000000000",
+          "11f600000000000000",
+          "11f700000000000000",
+          "11f800000000000000",
+          "11f900000000000000",
+          "11fa00000000000000",
+          "11fb00000000000000",
+          "11fc00000000000000",
+          "11fd00000000000000",
+          "11fe00000000000000",
+          "11ff00000000000000",
+          "110001000000000000",
+          "110002000000000000",
+          "110004000000000000",
+          "110008000000000000",
+          "110010000000000000",
+          "110020000000000000",
+          "110040000000000000",
+          "110080000000000000",
+          "110000010000000000",
+          "110000020000000000",
+          "110000040000000000",
+          "110000080000000000",
+          "110000100000000000",
+          "110000200000000000",
+          "110000400000000000",
+          "110000800000000000",
+          "110000000100000000",
+          "110000000200000000",
+          "110000000400000000",
+          "110000000800000000",
+          "110000001000000000",
+          "110000002000000000",
+          "110000004000000000",
+          "110000008000000000",
+          "110000000001000000",
+          "110000000002000000",
+          "110000000004000000",
+          "110000000008000000",
+          "110000000010000000",
+          "110000000020000000",
+          "110000000040000000",
+          "110000000080000000",
+          "110000000000010000",
+          "110000000000020000",
+          "110000000000040000",
+          "110000000000080000",
+          "110000000000100000",
+          "110000000000200000",
+          "110000000000400000",
+          "110000000000800000",
+          "110000000000000100",
+          "110000000000000200",
+          "110000000000000400",
+          "110000000000000800",
+          "110000000000001000",
+          "110000000000002000",
+          "110000000000004000",
+          "110000000000008000",
+          "110000000000000001",
+          "110000000000000002",
+          "110000000000000004",
+          "110000000000000008",
+          "110000000000000010",
+          "110000000000000020",
+          "110000000000000040",
+          "11ffffffffffffff7f"
+        ]
+      },
+      "id": "v2-domain/fx-edge-i64-in-full",
+      "range": [
+        0,
+        623
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "every value of the descriptor, indices 0..622",
+      "type": "I64"
+    },
+    {
+      "descriptor": {
+        "d": "u64_edge",
+        "size": 377
+      },
+      "expect": {
+        "size": 377,
+        "values_hex": [
+          "100000000000000000",
+          "100100000000000000",
+          "100200000000000000",
+          "100300000000000000",
+          "100400000000000000",
+          "100500000000000000",
+          "100600000000000000",
+          "100700000000000000",
+          "100800000000000000",
+          "100900000000000000",
+          "100a00000000000000",
+          "100b00000000000000",
+          "100c00000000000000",
+          "100d00000000000000",
+          "100e00000000000000",
+          "100f00000000000000",
+          "101000000000000000",
+          "101100000000000000",
+          "101200000000000000",
+          "101300000000000000",
+          "101400000000000000",
+          "101500000000000000",
+          "101600000000000000",
+          "101700000000000000",
+          "101800000000000000",
+          "101900000000000000",
+          "101a00000000000000",
+          "101b00000000000000",
+          "101c00000000000000",
+          "101d00000000000000",
+          "101e00000000000000",
+          "101f00000000000000",
+          "102000000000000000",
+          "102100000000000000",
+          "102200000000000000",
+          "102300000000000000",
+          "102400000000000000",
+          "102500000000000000",
+          "102600000000000000",
+          "102700000000000000",
+          "102800000000000000",
+          "102900000000000000",
+          "102a00000000000000",
+          "102b00000000000000",
+          "102c00000000000000",
+          "102d00000000000000",
+          "102e00000000000000",
+          "102f00000000000000",
+          "103000000000000000",
+          "103100000000000000",
+          "103200000000000000",
+          "103300000000000000",
+          "103400000000000000",
+          "103500000000000000",
+          "103600000000000000",
+          "103700000000000000",
+          "103800000000000000",
+          "103900000000000000",
+          "103a00000000000000",
+          "103b00000000000000",
+          "103c00000000000000",
+          "103d00000000000000",
+          "103e00000000000000",
+          "103f00000000000000",
+          "104000000000000000",
+          "104100000000000000",
+          "104200000000000000",
+          "104300000000000000",
+          "104400000000000000",
+          "104500000000000000",
+          "104600000000000000",
+          "104700000000000000",
+          "104800000000000000",
+          "104900000000000000",
+          "104a00000000000000",
+          "104b00000000000000",
+          "104c00000000000000",
+          "104d00000000000000",
+          "104e00000000000000",
+          "104f00000000000000",
+          "105000000000000000",
+          "105100000000000000",
+          "105200000000000000",
+          "105300000000000000",
+          "105400000000000000",
+          "105500000000000000",
+          "105600000000000000",
+          "105700000000000000",
+          "105800000000000000",
+          "105900000000000000",
+          "105a00000000000000",
+          "105b00000000000000",
+          "105c00000000000000",
+          "105d00000000000000",
+          "105e00000000000000",
+          "105f00000000000000",
+          "106000000000000000",
+          "106100000000000000",
+          "106200000000000000",
+          "106300000000000000",
+          "106400000000000000",
+          "106500000000000000",
+          "106600000000000000",
+          "106700000000000000",
+          "106800000000000000",
+          "106900000000000000",
+          "106a00000000000000",
+          "106b00000000000000",
+          "106c00000000000000",
+          "106d00000000000000",
+          "106e00000000000000",
+          "106f00000000000000",
+          "107000000000000000",
+          "107100000000000000",
+          "107200000000000000",
+          "107300000000000000",
+          "107400000000000000",
+          "107500000000000000",
+          "107600000000000000",
+          "107700000000000000",
+          "107800000000000000",
+          "107900000000000000",
+          "107a00000000000000",
+          "107b00000000000000",
+          "107c00000000000000",
+          "107d00000000000000",
+          "107e00000000000000",
+          "107f00000000000000",
+          "108000000000000000",
+          "108100000000000000",
+          "108200000000000000",
+          "108300000000000000",
+          "108400000000000000",
+          "108500000000000000",
+          "108600000000000000",
+          "108700000000000000",
+          "108800000000000000",
+          "108900000000000000",
+          "108a00000000000000",
+          "108b00000000000000",
+          "108c00000000000000",
+          "108d00000000000000",
+          "108e00000000000000",
+          "108f00000000000000",
+          "109000000000000000",
+          "109100000000000000",
+          "109200000000000000",
+          "109300000000000000",
+          "109400000000000000",
+          "109500000000000000",
+          "109600000000000000",
+          "109700000000000000",
+          "109800000000000000",
+          "109900000000000000",
+          "109a00000000000000",
+          "109b00000000000000",
+          "109c00000000000000",
+          "109d00000000000000",
+          "109e00000000000000",
+          "109f00000000000000",
+          "10a000000000000000",
+          "10a100000000000000",
+          "10a200000000000000",
+          "10a300000000000000",
+          "10a400000000000000",
+          "10a500000000000000",
+          "10a600000000000000",
+          "10a700000000000000",
+          "10a800000000000000",
+          "10a900000000000000",
+          "10aa00000000000000",
+          "10ab00000000000000",
+          "10ac00000000000000",
+          "10ad00000000000000",
+          "10ae00000000000000",
+          "10af00000000000000",
+          "10b000000000000000",
+          "10b100000000000000",
+          "10b200000000000000",
+          "10b300000000000000",
+          "10b400000000000000",
+          "10b500000000000000",
+          "10b600000000000000",
+          "10b700000000000000",
+          "10b800000000000000",
+          "10b900000000000000",
+          "10ba00000000000000",
+          "10bb00000000000000",
+          "10bc00000000000000",
+          "10bd00000000000000",
+          "10be00000000000000",
+          "10bf00000000000000",
+          "10c000000000000000",
+          "10c100000000000000",
+          "10c200000000000000",
+          "10c300000000000000",
+          "10c400000000000000",
+          "10c500000000000000",
+          "10c600000000000000",
+          "10c700000000000000",
+          "10c800000000000000",
+          "10c900000000000000",
+          "10ca00000000000000",
+          "10cb00000000000000",
+          "10cc00000000000000",
+          "10cd00000000000000",
+          "10ce00000000000000",
+          "10cf00000000000000",
+          "10d000000000000000",
+          "10d100000000000000",
+          "10d200000000000000",
+          "10d300000000000000",
+          "10d400000000000000",
+          "10d500000000000000",
+          "10d600000000000000",
+          "10d700000000000000",
+          "10d800000000000000",
+          "10d900000000000000",
+          "10da00000000000000",
+          "10db00000000000000",
+          "10dc00000000000000",
+          "10dd00000000000000",
+          "10de00000000000000",
+          "10df00000000000000",
+          "10e000000000000000",
+          "10e100000000000000",
+          "10e200000000000000",
+          "10e300000000000000",
+          "10e400000000000000",
+          "10e500000000000000",
+          "10e600000000000000",
+          "10e700000000000000",
+          "10e800000000000000",
+          "10e900000000000000",
+          "10ea00000000000000",
+          "10eb00000000000000",
+          "10ec00000000000000",
+          "10ed00000000000000",
+          "10ee00000000000000",
+          "10ef00000000000000",
+          "10f000000000000000",
+          "10f100000000000000",
+          "10f200000000000000",
+          "10f300000000000000",
+          "10f400000000000000",
+          "10f500000000000000",
+          "10f600000000000000",
+          "10f700000000000000",
+          "10f800000000000000",
+          "10f900000000000000",
+          "10fa00000000000000",
+          "10fb00000000000000",
+          "10fc00000000000000",
+          "10fd00000000000000",
+          "10fe00000000000000",
+          "10ff00000000000000",
+          "100001000000000000",
+          "100002000000000000",
+          "100004000000000000",
+          "100008000000000000",
+          "100010000000000000",
+          "100020000000000000",
+          "100040000000000000",
+          "100080000000000000",
+          "100000010000000000",
+          "100000020000000000",
+          "100000040000000000",
+          "100000080000000000",
+          "100000100000000000",
+          "100000200000000000",
+          "100000400000000000",
+          "100000800000000000",
+          "100000000100000000",
+          "100000000200000000",
+          "100000000400000000",
+          "100000000800000000",
+          "100000001000000000",
+          "100000002000000000",
+          "100000004000000000",
+          "100000008000000000",
+          "100000000001000000",
+          "100000000002000000",
+          "100000000004000000",
+          "100000000008000000",
+          "100000000010000000",
+          "100000000020000000",
+          "100000000040000000",
+          "100000000080000000",
+          "100000000000010000",
+          "100000000000020000",
+          "100000000000040000",
+          "100000000000080000",
+          "100000000000100000",
+          "100000000000200000",
+          "100000000000400000",
+          "100000000000800000",
+          "100000000000000100",
+          "100000000000000200",
+          "100000000000000400",
+          "100000000000000800",
+          "100000000000001000",
+          "100000000000002000",
+          "100000000000004000",
+          "100000000000008000",
+          "100000000000000001",
+          "100000000000000002",
+          "100000000000000004",
+          "100000000000000008",
+          "100000000000000010",
+          "100000000000000020",
+          "100000000000000040",
+          "100000000000000080",
+          "10ffffffffffffffff",
+          "10feffffffffffffff",
+          "10fdffffffffffffff",
+          "10fbffffffffffffff",
+          "10f7ffffffffffffff",
+          "10efffffffffffffff",
+          "10dfffffffffffffff",
+          "10bfffffffffffffff",
+          "107fffffffffffffff",
+          "10fffeffffffffffff",
+          "10fffdffffffffffff",
+          "10fffbffffffffffff",
+          "10fff7ffffffffffff",
+          "10ffefffffffffffff",
+          "10ffdfffffffffffff",
+          "10ffbfffffffffffff",
+          "10ff7fffffffffffff",
+          "10fffffeffffffffff",
+          "10fffffdffffffffff",
+          "10fffffbffffffffff",
+          "10fffff7ffffffffff",
+          "10ffffefffffffffff",
+          "10ffffdfffffffffff",
+          "10ffffbfffffffffff",
+          "10ffff7fffffffffff",
+          "10fffffffeffffffff",
+          "10fffffffdffffffff",
+          "10fffffffbffffffff",
+          "10fffffff7ffffffff",
+          "10ffffffefffffffff",
+          "10ffffffdfffffffff",
+          "10ffffffbfffffffff",
+          "10ffffff7fffffffff",
+          "10fffffffffeffffff",
+          "10fffffffffdffffff",
+          "10fffffffffbffffff",
+          "10fffffffff7ffffff",
+          "10ffffffffefffffff",
+          "10ffffffffdfffffff",
+          "10ffffffffbfffffff",
+          "10ffffffff7fffffff",
+          "10fffffffffffeffff",
+          "10fffffffffffdffff",
+          "10fffffffffffbffff",
+          "10fffffffffff7ffff",
+          "10ffffffffffefffff",
+          "10ffffffffffdfffff",
+          "10ffffffffffbfffff",
+          "10ffffffffff7fffff",
+          "10fffffffffffffeff",
+          "10fffffffffffffdff",
+          "10fffffffffffffbff",
+          "10fffffffffffff7ff",
+          "10ffffffffffffefff",
+          "10ffffffffffffdfff",
+          "10ffffffffffffbfff",
+          "10ffffffffffff7fff",
+          "10fffffffffffffffe",
+          "10fffffffffffffffd",
+          "10fffffffffffffffb",
+          "10fffffffffffffff7",
+          "10ffffffffffffffef",
+          "10ffffffffffffffdf",
+          "10ffffffffffffffbf",
+          "10ffffffffffffff7f"
+        ]
+      },
+      "id": "v2-domain/fx-edge-u64-as-u64-edge-in-full",
+      "range": [
+        0,
+        377
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "every value of the descriptor, indices 0..376",
+      "type": "U64"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "BAD",
+          "WORSE"
+        ],
+        "ok": {
+          "d": "bool",
+          "size": 2
+        },
+        "size": 4
+      },
+      "expect": {
+        "size": 4,
+        "values_hex": [
+          "5000",
+          "5001",
+          "5103000000424144",
+          "5105000000574f525345"
+        ]
+      },
+      "id": "v2-domain/result-bool-in-full",
+      "range": [
+        0,
+        4
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "Ok(false), Ok(true), then the error cases in declaration order",
+      "type": "Result<Bool,E>"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "BAD",
+          "WORSE"
+        ],
+        "ok": {
+          "d": "bool",
+          "size": 2
+        },
+        "size": 4
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/result-bool-index-size",
+      "index": 4,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "result: index == size is out of range",
+      "type": "Result<Bool,E>"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "X"
+        ],
+        "ok": {
+          "d": "u8_all",
+          "size": 256
+        },
+        "size": 257
+      },
+      "expect": {
+        "size": 257,
+        "values_hex": [
+          "5010ff00000000000000",
+          "510100000058"
+        ]
+      },
+      "id": "v2-domain/result-u8-last-two",
+      "range": [
+        255,
+        257
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "result over u8_all: Ok(255) then the one error case",
+      "type": "Result<U8,E>"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "X"
+        ],
+        "ok": {
+          "d": "u8_all",
+          "size": 256
+        },
+        "size": 257
+      },
+      "expect": {
+        "size": 257,
+        "values_hex": [
+          "50100000000000000000"
+        ]
+      },
+      "id": "v2-domain/result-u8-first",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "result over u8_all: Ok(0) first",
+      "type": "Result<U8,E>"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "X"
+        ],
+        "ok": {
+          "d": "fx_full",
+          "size": 256,
+          "t": "I8"
+        },
+        "size": 257
+      },
+      "expect": {
+        "size": 257,
+        "values_hex": [
+          "501180ffffffffffffff"
+        ]
+      },
+      "id": "v2-domain/result-signed-ok",
+      "range": [
+        0,
+        1
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "result over a signed leaf",
+      "type": "Result<I8,E>"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "X"
+        ],
+        "ok": {
+          "d": "result",
+          "errs": [
+            "X"
+          ],
+          "ok": {
+            "d": "result",
+            "errs": [
+              "X"
+            ],
+            "ok": {
+              "d": "result",
+              "errs": [
+                "X"
+              ],
+              "ok": {
+                "d": "result",
+                "errs": [
+                  "X"
+                ],
+                "ok": {
+                  "d": "result",
+                  "errs": [
+                    "X"
+                  ],
+                  "ok": {
+                    "d": "result",
+                    "errs": [
+                      "X"
+                    ],
+                    "ok": {
+                      "d": "result",
+                      "errs": [
+                        "X"
+                      ],
+                      "ok": {
+                        "d": "result",
+                        "errs": [
+                          "X"
+                        ],
+                        "ok": {
+                          "d": "result",
+                          "errs": [
+                            "X"
+                          ],
+                          "ok": {
+                            "d": "result",
+                            "errs": [
+                              "X"
+                            ],
+                            "ok": {
+                              "d": "result",
+                              "errs": [
+                                "X"
+                              ],
+                              "ok": {
+                                "d": "result",
+                                "errs": [
+                                  "X"
+                                ],
+                                "ok": {
+                                  "d": "result",
+                                  "errs": [
+                                    "X"
+                                  ],
+                                  "ok": {
+                                    "d": "result",
+                                    "errs": [
+                                      "X"
+                                    ],
+                                    "ok": {
+                                      "d": "bool",
+                                      "size": 2
+                                    },
+                                    "size": 3
+                                  },
+                                  "size": 4
+                                },
+                                "size": 5
+                              },
+                              "size": 6
+                            },
+                            "size": 7
+                          },
+                          "size": 8
+                        },
+                        "size": 9
+                      },
+                      "size": 10
+                    },
+                    "size": 11
+                  },
+                  "size": 12
+                },
+                "size": 13
+              },
+              "size": 14
+            },
+            "size": 15
+          },
+          "size": 16
+        },
+        "size": 17
+      },
+      "expect": {
+        "size": 17,
+        "values_hex": [
+          "510100000058"
+        ]
+      },
+      "id": "v2-domain/result-nested-15-accepted",
+      "index": 16,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a tree of 16 levels is exactly at the limit",
+      "type": "Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Bool,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "X"
+        ],
+        "ok": {
+          "d": "result",
+          "errs": [
+            "X"
+          ],
+          "ok": {
+            "d": "result",
+            "errs": [
+              "X"
+            ],
+            "ok": {
+              "d": "result",
+              "errs": [
+                "X"
+              ],
+              "ok": {
+                "d": "result",
+                "errs": [
+                  "X"
+                ],
+                "ok": {
+                  "d": "result",
+                  "errs": [
+                    "X"
+                  ],
+                  "ok": {
+                    "d": "result",
+                    "errs": [
+                      "X"
+                    ],
+                    "ok": {
+                      "d": "result",
+                      "errs": [
+                        "X"
+                      ],
+                      "ok": {
+                        "d": "result",
+                        "errs": [
+                          "X"
+                        ],
+                        "ok": {
+                          "d": "result",
+                          "errs": [
+                            "X"
+                          ],
+                          "ok": {
+                            "d": "result",
+                            "errs": [
+                              "X"
+                            ],
+                            "ok": {
+                              "d": "result",
+                              "errs": [
+                                "X"
+                              ],
+                              "ok": {
+                                "d": "result",
+                                "errs": [
+                                  "X"
+                                ],
+                                "ok": {
+                                  "d": "result",
+                                  "errs": [
+                                    "X"
+                                  ],
+                                  "ok": {
+                                    "d": "result",
+                                    "errs": [
+                                      "X"
+                                    ],
+                                    "ok": {
+                                      "d": "result",
+                                      "errs": [
+                                        "X"
+                                      ],
+                                      "ok": {
+                                        "d": "bool",
+                                        "size": 2
+                                      },
+                                      "size": 3
+                                    },
+                                    "size": 4
+                                  },
+                                  "size": 5
+                                },
+                                "size": 6
+                              },
+                              "size": 7
+                            },
+                            "size": 8
+                          },
+                          "size": 9
+                        },
+                        "size": 10
+                      },
+                      "size": 11
+                    },
+                    "size": 12
+                  },
+                  "size": 13
+                },
+                "size": 14
+              },
+              "size": 15
+            },
+            "size": 16
+          },
+          "size": 17
+        },
+        "size": 18
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/result-nested-16-refused",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a tree of 17 levels is one past the limit of 16",
+      "type": "Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Bool,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "X"
+        ],
+        "ok": {
+          "d": "result",
+          "errs": [
+            "X"
+          ],
+          "ok": {
+            "d": "result",
+            "errs": [
+              "X"
+            ],
+            "ok": {
+              "d": "result",
+              "errs": [
+                "X"
+              ],
+              "ok": {
+                "d": "result",
+                "errs": [
+                  "X"
+                ],
+                "ok": {
+                  "d": "result",
+                  "errs": [
+                    "X"
+                  ],
+                  "ok": {
+                    "d": "result",
+                    "errs": [
+                      "X"
+                    ],
+                    "ok": {
+                      "d": "result",
+                      "errs": [
+                        "X"
+                      ],
+                      "ok": {
+                        "d": "result",
+                        "errs": [
+                          "X"
+                        ],
+                        "ok": {
+                          "d": "result",
+                          "errs": [
+                            "X"
+                          ],
+                          "ok": {
+                            "d": "result",
+                            "errs": [
+                              "X"
+                            ],
+                            "ok": {
+                              "d": "result",
+                              "errs": [
+                                "X"
+                              ],
+                              "ok": {
+                                "d": "result",
+                                "errs": [
+                                  "X"
+                                ],
+                                "ok": {
+                                  "d": "result",
+                                  "errs": [
+                                    "X"
+                                  ],
+                                  "ok": {
+                                    "d": "result",
+                                    "errs": [
+                                      "X"
+                                    ],
+                                    "ok": {
+                                      "d": "result",
+                                      "errs": [
+                                        "X"
+                                      ],
+                                      "ok": {
+                                        "d": "result",
+                                        "errs": [
+                                          "X"
+                                        ],
+                                        "ok": {
+                                          "d": "bool",
+                                          "size": 2
+                                        },
+                                        "size": 3
+                                      },
+                                      "size": 4
+                                    },
+                                    "size": 5
+                                  },
+                                  "size": 6
+                                },
+                                "size": 7
+                              },
+                              "size": 8
+                            },
+                            "size": 9
+                          },
+                          "size": 10
+                        },
+                        "size": 11
+                      },
+                      "size": 12
+                    },
+                    "size": 13
+                  },
+                  "size": 14
+                },
+                "size": 15
+              },
+              "size": 16
+            },
+            "size": 17
+          },
+          "size": 18
+        },
+        "size": 19
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/result-nested-17-refused",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a tree of 18 levels is past the limit of 16",
+      "type": "Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Result<Bool,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>,E>"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "size": 2,
+        "values_hex": []
+      },
+      "id": "v2-domain/range-empty-at-zero",
+      "range": [
+        0,
+        0
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "an empty range [0, 0) is valid",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "size": 2,
+        "values_hex": []
+      },
+      "id": "v2-domain/range-empty-at-size",
+      "range": [
+        2,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "an empty range [size, size) is valid",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "size": 2,
+        "values_hex": [
+          "00",
+          "01"
+        ]
+      },
+      "id": "v2-domain/range-whole",
+      "range": [
+        0,
+        2
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "the whole domain as a range",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/range-lo-above-hi",
+      "range": [
+        2,
+        1
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a range with lo > hi",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/range-hi-above-size",
+      "range": [
+        0,
+        3
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a range whose hi is past the size",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/range-starts-at-size",
+      "range": [
+        2,
+        3
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a range that starts at size and is not empty",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "error": "index"
+      },
+      "id": "v2-domain/index-size-plus-one",
+      "index": 3,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "an index past size",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "frobnicate",
+        "size": 2
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-unknown-kind",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "an unknown d",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool"
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-missing-size",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a missing size",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": "2"
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-size-is-text",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "size is a JSON integer, not text",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": true
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-size-is-bool",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "size is not a JSON boolean",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 3
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-wrong-size",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a size that is not the recomputed one",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "k": 1,
+        "size": 2
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-extra-key",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "an extra key",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "size": 16
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-missing-key",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a missing key: bytes_n needs n",
+      "type": "Bytes<2>"
+    },
+    {
+      "descriptor": [
+        "bool",
+        2
+      ],
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-not-an-object",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a descriptor that is not an object",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 256,
+        "t": "U8"
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-fx-edge-u8",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx_edge for an 8-bit type is illegal (D25)",
+      "type": "U8"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 256,
+        "t": "I8"
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-fx-edge-i8",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx_edge for I8 is illegal (D25)",
+      "type": "I8"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 377,
+        "t": "U64"
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-fx-edge-u64",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a U64 binder is u64_edge, never fx_edge",
+      "type": "U64"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 377,
+        "t": "I64"
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-fx-edge-i64-withdrawn-377",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "the withdrawn 377-value signed set of the first draft (D21)",
+      "type": "I64"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 313
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-fx-edge-no-type",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx_edge without t",
+      "type": "U32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 256,
+        "t": "U8"
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-fx-full-u8",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a U8 binder is u8_all in every document version",
+      "type": "U8"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 4294967296,
+        "t": "U32"
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-fx-full-32-bit",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx_full is for 8- and 16-bit types",
+      "type": "U32"
+    },
+    {
+      "descriptor": {
+        "d": "fx_full",
+        "size": 256,
+        "t": "Nat"
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-fx-full-not-fixed",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx_full names a fixed-width type",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 4097,
+        "size": 12295
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-bytes-n-too-wide",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes_n past 4,096",
+      "type": "Bytes"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": -1,
+        "size": 1
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-bytes-n-negative",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a negative bytes_n width",
+      "type": "Bytes"
+    },
+    {
+      "descriptor": {
+        "d": "nat_count",
+        "k": 4097,
+        "size": 4098
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-nat-count-too-large",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "nat_count K past 4,096",
+      "type": "Nat"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          1
+        ],
+        "ok": {
+          "d": "bool",
+          "size": 2
+        },
+        "size": 3
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-result-errs-not-names",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a result's errs are names",
+      "type": "Result<Bool,E>"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "BAD",
+          "WORSE"
+        ],
+        "ok": {
+          "d": "bool",
+          "size": 2
+        },
+        "size": 5
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-result-wrong-size",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a result size that is not ok + errs",
+      "type": "Result<Bool,E>"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "BAD",
+          "WORSE"
+        ],
+        "ok": {
+          "d": "bool",
+          "size": 3
+        },
+        "size": 5
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-result-inner-wrong-size",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a wrong size inside a result",
+      "type": "Result<Bool,E>"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-for-another-type-bool-for-u8",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a bool descriptor for a U8 binder",
+      "type": "U8"
+    },
+    {
+      "descriptor": {
+        "d": "u8_all",
+        "size": 256
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-for-another-type-u8-for-i8",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a u8_all descriptor for an I8 binder",
+      "type": "I8"
+    },
+    {
+      "descriptor": {
+        "d": "nat_0_64",
+        "size": 65
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-for-another-type-nat-for-u8",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a Nat descriptor for a U8 binder",
+      "type": "U8"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_n",
+        "n": 2,
+        "size": 16
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-for-another-type-bytes-width",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes_n 2 for a Bytes<3> binder",
+      "type": "Bytes<3>"
+    },
+    {
+      "descriptor": {
+        "d": "bytes_d1",
+        "size": 347
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-for-another-type-bytes-unsized",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "bytes_d1 for a Bytes<1> binder",
+      "type": "Bytes<1>"
+    },
+    {
+      "descriptor": {
+        "d": "fx_edge",
+        "size": 281,
+        "t": "U16"
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-for-another-type-fx-edge-width",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "fx_edge U16 for an I16 binder",
+      "type": "I16"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "BAD",
+          "WORSE"
+        ],
+        "ok": {
+          "d": "bool",
+          "size": 2
+        },
+        "size": 4
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-for-another-type-result-payload",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a result over a bool for a Result<U8,E> binder",
+      "type": "Result<U8,E>"
+    },
+    {
+      "descriptor": {
+        "d": "result",
+        "errs": [
+          "BAD",
+          "WORSE"
+        ],
+        "ok": {
+          "d": "bool",
+          "size": 2
+        },
+        "size": 4
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-for-another-type-result-for-plain",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a result descriptor for a Bool binder",
+      "type": "Bool"
+    },
+    {
+      "descriptor": {
+        "d": "bool",
+        "size": 2
+      },
+      "expect": {
+        "error": "descriptor"
+      },
+      "id": "v2-domain/descriptor-for-an-unknown-type",
+      "index": 0,
+      "requires": [
+        "ir.core"
+      ],
+      "summary": "a binder type that is not a type at all",
+      "type": "Frob"
+    }
+  ],
+  "category": "v2-domain",
+  "schema": "warrant-corpus-conformance-v1"
+}
