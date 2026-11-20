@@ -521,7 +521,8 @@ version; until then the canned fixtures are hand-written.
 directory is the one current at its `<unfinished ...>` line. An unfinished
 call may end at the process's exit line only if it carries no path
 (`wait4`, `exit_group`); an unfinished path call that never resumes is
-`unresumed-call`, with one exception (the phantom `execve`, D33, below). Another shape is accepted: a thread killed at syscall
+`unresumed-call`, with two exceptions (the phantom `execve`, D33, and a task
+that died inside a call because its thread group was exiting, D35, both below). Another shape is accepted: a thread killed at syscall
 entry. When a fatal signal is already pending (a sibling's `exit_group`, a
 SIGKILL, an exec by another thread), strace cannot name the call and prints
 `???`, in exactly one of three spellings, each followed by that thread's exit
@@ -592,6 +593,77 @@ recorded. That binary never runs (the sibling was torn down before its image
 changed), and the owner's open of the path is recorded. We judge this
 acceptable: it needs a deliberate race inside one step, and the reviewers
 judged it theoretical.
+
+**A task that dies inside a call (D35).** When a thread group exits (Go's
+`exit_group`, a fatal signal), the kernel kills the group's other threads
+wherever they are, and every threaded runtime makes some of them die inside a
+system call. strace prints three shapes for that, and every real-build census
+run hit them (Go actions were unparsed before this rule):
+
+```
+2  tgkill(1, 1, SIGURG <unfinished ...>
+2  <... tgkill resumed>) = ? <unavailable>                          (1)
+
+2  clone(child_stack=0x7f..., flags=CLONE_VM|... <unfinished ...>
+2  <... clone resumed> <unfinished ...>) = ?                       (2)
+
+2  openat(AT_FDCWD</w>, 0x7f3a6c001230, O_RDONLY|O_CLOEXEC <unfinished ...>
+2  +++ exited with 0 +++                                           (3)
+```
+
+In (1) strace could not fetch the result because the tracee was already gone.
+In (2) it printed at `PTRACE_EVENT_EXIT` with the call still open, so the
+`<unfinished ...>` marker follows the resume. In (3) the task was killed out of
+its syscall-entry stop, so strace could no longer read its memory and the path
+prints as an address. In all three the call's result is unknown.
+
+*Syntax (the only part that differs between the readers; both accept
+identically).* The result `= ? <unavailable>` is a token of its own
+(`UNAVAILABLE`, `strace.tokens`, before `ERR_LT`) and the `tail` rule allows
+it; a resumed line may carry the marker (`RESUMED inner UNFINISHED RPAREN
+tail`). The grammar is looser than the rule, on purpose, as for every result:
+the shared result parser accepts exactly `= ? <unavailable>` (one space, nothing
+after it, no errno, no value), and exactly ` <unfinished ...>)` followed by
+`= ?` after a resume (no other argument text, no other result). The stricter-only
+row for "an `ERR` token in the text after the close" is NOT widened: the text
+`<unavailable>` simply is not an `ERR_LT` any more.
+
+*Policy (shared code, so the readers cannot drift).* Shapes (1) and (2) leave
+the pid with a *dying* call: its NEXT line must be its own exit
+(`+++ exited ...` or `+++ killed ...`); a signal line, a second resume or a new
+call is `interleaved-call` or `unmatched-resume`. Shape (3) is an unfinished
+call followed by the pid's exit. At that exit:
+
+| the call | verdict |
+|---|---|
+| ignored class (`tgkill`, `wait4`, ...) | dropped |
+| `fork`, `vfork` | dropped, and **no spawn is recorded**. A child that did start has a first line with no spawn record: `orphan-pid`, which fails closed. |
+| `clone` whose flags are readable and allowed: `flags=` is present, every token is a name strace prints (the closed set of `CLONE_*` and signal names), and none is `CLONE_UNTRACED` or `CLONE_NEW*` (the `analyzeClone` check) | dropped, no spawn recorded, as for `fork` |
+| a `clone` with any other flags (`CLONE_UNTRACED`, `CLONE_NEW*`, a hex leftover, an unknown token, no `flags=`); `clone3` (a refused name; a dying `clone3` at entry stays `unresumed-call`) | `unresumed-call`, as before |
+| everything else: a call that READS (a metadata call, a listing, an `open`, `openat`), a write, a network call, `chdir`, `fchdir`, `execve`, an unknown or refused name | `unresumed-call`, as before |
+
+Both readers share one table (`dyingPolicy`) and one exit handler
+(`exitInsideCall`), and pass 2 has no part in it.
+
+*Why a call that reads is not dropped.* The model infers what a step read only
+from the `open` and `stat` records: `read` is not traced. So dropping one removes
+an input from the read set, and the call's result is lost, not absent. A live
+sibling thread can use the descriptor or the buffer, a sibling's `fork` in the
+window copies it, a sibling's `exec` keeps the descriptor (no `CLOEXEC`), and a
+stat buffer lives in memory every thread shares. No guard short of "shares
+nothing with any live task" is sound, and that excludes every thread. (An
+earlier design dropped such a call when its thread group was ending; it was
+withdrawn for exactly this reason.) A dropped spawn records nothing, and a child
+it may have made cannot be traced without being refused. Writes, network calls
+and exec are not dropped because their effect, or their target (which the lost
+memory read hid), may have happened. `RecorderVersion` is 5 since this rule.
+
+Consequence: a Go (or any threaded) action whose worker is inside `openat` or
+`newfstatat` when the group exits is still `unresumed-call`. Only the other two
+shapes, which Go also produces, are accepted now. Follow-up idea, not built:
+record such a call as an OBSERVED READ with an unknown result (the path is lost,
+so the observation would have to be "something under the working directory may
+have been read"), which a later stage could judge.
 
 
 **Process model.**
@@ -2838,6 +2910,7 @@ byte as an `ERR_*` token), so it can never panic on hostile input.
 | a call line with trailing spaces (reported ahead of any other fault the line has) | accepted, or refused for another reason | refused, `unparsable-line` | the lexer skips spaces, so the grammar cannot see a trailing one; refusing is the safe side | `TestStricterOnlyDivergences` (strace-parser) |
 | `+++ exited with +5 +++`, `-0` (a signed exit code) | accepted (`Atoi` takes a sign) | refused, `unparsable-line` | the exit code is digits only; no real strace prints a sign | `TestStricterOnlyDivergences` |
 | an `ERR_*` token in the text after a call's `)` (an unterminated quote, a bad `<`, a resume marker) | refused, `result` or `ambiguous-path` | refused, `unparsable-line` (or `ambiguous-path` for a bad annotation) | the lexer cannot know a quote is "in the result"; both refuse the whole trace | `TestStricterOnlyDivergences` |
+| `= ? <unavailable>` after a call, `<... NAME resumed> <unfinished ...>) = ?`, and an unfinished ignored-class call, `fork`, `vfork` or `clone` with allowed flags followed by the pid's exit (D35, the dying-call rule) | refused, `unresumed-call` or `result` | accepted, the call is dropped | none: the grammar has `UNAVAILABLE` and `RESUMED inner UNFINISHED RPAREN tail`, and the readers share `parseResult`, `dyingResumeTail`, `dyingPolicy` and `exitInsideCall`; the `ERR token` row above is not widened (`<unavailable>` is no `ERR_LT`). Both readers do the same, so this is not a divergence between them; the row records the grammar change | `TestDyingCallShapesAreAccepted`, `TestDyingCallRefused`, `TestDyingLineSeedsAgree` |
 | a `<... NAME resumed>` whose NAME has a character outside `[A-Za-z0-9_?]` | refused, `unmatched-resume` | refused, `unparsable-line` | NAME is lexed as a name; anything else is a bad marker | `TestRefusals` (`ERR_RESUME`) |
 | a split call whose glued text (prefix plus resumed half) is over the line byte limit, though each half is under it | accepted | refused, `size` | the grammar path reads the glued call as one line, so the limit applies to the call; a same-pid signal line between the halves does not break the glue, so the row applies across it too | `TestGluedCallOverTheByteLimit`, `TestGluedCallOverTheByteLimitAcrossSignal` |
 | `= 5 /* 9 in strace's PID NS */<x>` (an annotation, or a marker, after the pid-namespace note with no word before the `<`) | accepted | refused, `unparsable-line` (`ERR_LT`) | strace prints the annotation first; a bare `<` is an `ERR_LT` | `TestPR5Divergences` |
@@ -4781,6 +4854,17 @@ scheduled and dispatched full build.
 ## 14. Residual risks
 
 These are known and named. They are measured rather than closed.
+
+- **A dying call that reads is refused, not dropped (D35).** A thread killed
+  inside `openat`, `newfstatat` or a listing when its group exits leaves an
+  `unresumed-call` refusal, so some threaded actions (Go's worker threads in a
+  file-system loop) stay unrecorded. Dropping the call would remove an input from
+  the read set: reads are inferred from the open and stat records alone, and a
+  live sibling thread, a sibling's `fork` in the window, a sibling's `exec` (the
+  descriptor survives without `CLOEXEC`) or a stat buffer in shared memory can
+  still use what the call returned. A dying `clone3` at entry stays
+  `unresumed-call` too. Recording such a call as an observed read with an unknown
+  result is the follow-up.
 
 - **The absent-ok child rule looks at the entry at classification time.** It
   checks the entry with `lstat` when the action ends, so an entry that existed

@@ -88,7 +88,7 @@ var shapeTokenNames = map[string]bool{
 	"LBRACE": true, "RBRACE": true, "PUNCT": true, "ERR_LT": true, "ERR_CTRL": true, "ERR_ANY": true,
 	"PID_TAG": true, "PID": true, "ERR_PID": true, "DEAD_RESUMED": true, "RESUMED": true,
 	"ERR_RESUME": true, "EXITED_LINE": true, "KILLED_LINE": true, "KILLED_CORE_LINE": true,
-	"SIG_OPEN": true, "DEAD_OPEN": true, "DEAD_WHOLE": true, "SIG_SP": true, "SIG_TEXT": true,
+	"UNAVAILABLE": true, "SIG_OPEN": true, "DEAD_OPEN": true, "DEAD_WHOLE": true, "SIG_SP": true, "SIG_TEXT": true,
 }
 
 // Shape returns the outline of line n (1-based) of the trace open() yields,

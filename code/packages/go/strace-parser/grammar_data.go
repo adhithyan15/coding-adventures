@@ -109,17 +109,26 @@ var ParserGrammarData = &gt.ParserGrammar{
 			gt.RuleReference{Name: `COMMA`, IsToken: true},
 			gt.RuleReference{Name: `group`, IsToken: false},
 		}}}, LineNumber: 69},
-		{Name: `resumed_line`, Body: gt.Sequence{Elements: []gt.GrammarElement{
-			gt.RuleReference{Name: `RESUMED`, IsToken: true},
-			gt.RuleReference{Name: `inner`, IsToken: false},
-			gt.RuleReference{Name: `RPAREN`, IsToken: true},
-			gt.RuleReference{Name: `tail`, IsToken: false},
-		}}, LineNumber: 79},
+		{Name: `resumed_line`, Body: gt.Alternation{Choices: []gt.GrammarElement{
+			gt.Sequence{Elements: []gt.GrammarElement{
+				gt.RuleReference{Name: `RESUMED`, IsToken: true},
+				gt.RuleReference{Name: `inner`, IsToken: false},
+				gt.RuleReference{Name: `RPAREN`, IsToken: true},
+				gt.RuleReference{Name: `tail`, IsToken: false},
+			}},
+			gt.Sequence{Elements: []gt.GrammarElement{
+				gt.RuleReference{Name: `RESUMED`, IsToken: true},
+				gt.RuleReference{Name: `inner`, IsToken: false},
+				gt.RuleReference{Name: `UNFINISHED`, IsToken: true},
+				gt.RuleReference{Name: `RPAREN`, IsToken: true},
+				gt.RuleReference{Name: `tail`, IsToken: false},
+			}},
+		}}, LineNumber: 85},
 		{Name: `exit_line`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 			gt.RuleReference{Name: `EXITED_LINE`, IsToken: true},
 			gt.RuleReference{Name: `KILLED_LINE`, IsToken: true},
 			gt.RuleReference{Name: `KILLED_CORE_LINE`, IsToken: true},
-		}}, LineNumber: 85},
+		}}, LineNumber: 92},
 		{Name: `signal_line`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 			gt.RuleReference{Name: `SIG_OPEN`, IsToken: true},
 			gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
@@ -130,7 +139,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 				}}},
 			}}},
 			gt.RuleReference{Name: `signal_close`, IsToken: false},
-		}}, LineNumber: 98},
+		}}, LineNumber: 105},
 		{Name: `signal_close`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 			gt.RuleReference{Name: `SIG_SP`, IsToken: true},
 			gt.Literal{Value: `---`},
@@ -138,12 +147,12 @@ var ParserGrammarData = &gt.ParserGrammar{
 				gt.RuleReference{Name: `SIG_SP`, IsToken: true},
 				gt.RuleReference{Name: `SIG_TEXT`, IsToken: true},
 			}}}},
-		}}, LineNumber: 100},
+		}}, LineNumber: 107},
 		{Name: `dead_line`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 			gt.RuleReference{Name: `DEAD_OPEN`, IsToken: true},
 			gt.RuleReference{Name: `DEAD_WHOLE`, IsToken: true},
-		}}, LineNumber: 107},
-		{Name: `dead_resumed_line`, Body: gt.RuleReference{Name: `DEAD_RESUMED`, IsToken: true}, LineNumber: 110},
+		}}, LineNumber: 114},
+		{Name: `dead_resumed_line`, Body: gt.RuleReference{Name: `DEAD_RESUMED`, IsToken: true}, LineNumber: 117},
 		{Name: `tail`, Body: gt.Repetition{Element: gt.Alternation{Choices: []gt.GrammarElement{
 			gt.RuleReference{Name: `WORD`, IsToken: true},
 			gt.RuleReference{Name: `ASSIGN`, IsToken: true},
@@ -151,6 +160,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 			gt.RuleReference{Name: `QUOTED`, IsToken: true},
 			gt.RuleReference{Name: `PUNCT`, IsToken: true},
 			gt.RuleReference{Name: `COMMA`, IsToken: true},
+			gt.RuleReference{Name: `UNAVAILABLE`, IsToken: true},
 			gt.RuleReference{Name: `LPAREN`, IsToken: true},
 			gt.RuleReference{Name: `RPAREN`, IsToken: true},
 			gt.RuleReference{Name: `LBRACKET`, IsToken: true},
@@ -159,6 +169,6 @@ var ParserGrammarData = &gt.ParserGrammar{
 			gt.RuleReference{Name: `RBRACE`, IsToken: true},
 			gt.RuleReference{Name: `SYSCALL`, IsToken: true},
 			gt.RuleReference{Name: `FUNC`, IsToken: true},
-		}}}, LineNumber: 122},
+		}}}, LineNumber: 132},
 	},
 }

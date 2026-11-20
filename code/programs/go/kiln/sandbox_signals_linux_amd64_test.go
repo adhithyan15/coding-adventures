@@ -33,6 +33,7 @@ import (
 type stracedRun struct {
 	f       *sandboxFixture
 	tr      *trace.Trace
+	refusal *trace.Error  // set by runStracedOr when a tolerated refusal ended the parse
 	stdout  string        // what the step wrote to its descriptor 1 (logged, never an error)
 	stderr  string        // and to its descriptor 2
 	data    string        // the data file the script may read
@@ -79,6 +80,15 @@ func runStraced(t *testing.T, script string) *stracedRun {
 // helper binary in the checkout, say) before the step runs.  "{pkg}" in the
 // script is the checkout directory the step starts in.
 func runStracedWith(t *testing.T, script string, setup func(f *sandboxFixture)) *stracedRun {
+	t.Helper()
+	return runStracedOr(t, script, setup, nil)
+}
+
+// runStracedOr is runStracedWith that lets the caller accept some refusals of
+// the trace: when tolerate says yes to a refusal, the run is returned with
+// refusal set and tr nil, for the caller to judge.  Any other refusal fails the
+// test as before.
+func runStracedOr(t *testing.T, script string, setup func(f *sandboxFixture), tolerate func(*trace.Error) bool) *stracedRun {
 	t.Helper()
 	straceBin, err := exec.LookPath("strace")
 	if err != nil {
@@ -186,6 +196,10 @@ func runStracedWith(t *testing.T, script string, setup func(f *sandboxFixture)) 
 		var te *trace.Error
 		if errors.As(err, &te) {
 			at = te.Line
+			if tolerate != nil && tolerate(te) {
+				r.tr, r.refusal = nil, te
+				return r
+			}
 		}
 		lo, hi := at-15, at+5
 		if lo < 0 {
