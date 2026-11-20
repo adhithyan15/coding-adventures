@@ -99,6 +99,7 @@ pub fn dispatch(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
         Some("decide") => cmd_decide(&args[1..], out),
         Some("merge") => cmd_merge(&args[1..], out),
         Some("row") => cmd_row(&args[1..], out),
+        Some("structure") => cmd_structure(&args[1..], out),
         Some(other) => Err(Failure::Usage(format!(
             "unknown command {other}; try list, run, check, table, decide, merge"
         ))),
@@ -471,6 +472,21 @@ fn merge_with(
     Ok(merged)
 }
 
+/// The most bytes of the target's file name kept in the temporary name (round 2, finding 8): the
+/// temporary is `.STEM.PID.N.NANOS.tmp`, at most about 60 bytes besides the stem, and a file name
+/// is limited to 255 bytes, so a long target name must not make the temporary name too long to
+/// create.
+pub const TMP_STEM_MAX: usize = 150;
+
+/// The target's file name cut to at most [`TMP_STEM_MAX`] bytes on a character boundary.
+pub fn tmp_name_stem(name: &str) -> String {
+    let mut end = name.len().min(TMP_STEM_MAX);
+    while !name.is_char_boundary(end) {
+        end -= 1;
+    }
+    name[..end].to_string()
+}
+
 /// Distinguishes the temporary files of one process.
 static TMP_COUNTER: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 
@@ -479,9 +495,9 @@ static TMP_COUNTER: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64:
 /// with the process id, a counter and the clock so it cannot be guessed, written, `fsync`ed and
 /// renamed over `path`, and the directory `fsync`ed.  A `path` that is a symlink is refused:
 /// the rename would replace the link, not write through it, and an `--out` that is a link is
-/// never what the caller meant.  The finished file keeps the mode of the file it replaces, or
-/// 0644.
-fn write_atomic(path: impl AsRef<Path>, text: &str) -> Result<(), Failure> {
+/// never what the caller meant.  The finished file keeps the permission bits (`mode & 0o777`: the
+/// setuid, setgid and sticky bits are dropped, round 2 finding 8) of the file it replaces, or 0644.
+pub fn write_atomic(path: impl AsRef<Path>, text: &str) -> Result<(), Failure> {
     let target = path.as_ref();
     let fail =
         |e: std::io::Error| Failure::Usage(format!("cannot write {}: {e}", target.display()));
@@ -500,10 +516,11 @@ fn write_atomic(path: impl AsRef<Path>, text: &str) -> Result<(), Failure> {
         .ok_or_else(|| Failure::Usage(format!("{} has no file name", target.display())))?
         .to_string_lossy()
         .into_owned();
+    let name = tmp_name_stem(&name);
     #[cfg(unix)]
     let mode = {
         use std::os::unix::fs::PermissionsExt;
-        std::fs::metadata(target).map_or(0o644, |m| m.permissions().mode() & 0o7777)
+        std::fs::metadata(target).map_or(0o644, |m| m.permissions().mode() & 0o777)
     };
     for _ in 0..32 {
         let n = TMP_COUNTER.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
@@ -560,8 +577,10 @@ fn write_atomic(path: impl AsRef<Path>, text: &str) -> Result<(), Failure> {
 /// ```
 pub fn cmd_merge(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
     let need = |n: &str| flag(args, n).ok_or_else(|| Failure::Usage(format!("merge needs {n}")));
-    let base = Results::from_text(&read(Path::new(&need("--base")?))?).map_err(Failure::Usage)?;
-    let fresh = Results::from_text(&read(Path::new(&need("--fresh")?))?).map_err(Failure::Usage)?;
+    let base = Results::from_canonical_text(&read(Path::new(&need("--base")?))?)
+        .map_err(Failure::Usage)?;
+    let fresh = Results::from_canonical_text(&read(Path::new(&need("--fresh")?))?)
+        .map_err(Failure::Usage)?;
     let experiment = need("--experiment")?;
     if !EXPERIMENTS.contains(&experiment.as_str()) {
         return Err(Failure::Usage(format!("unknown experiment {experiment}")));
@@ -604,7 +623,7 @@ pub fn cmd_merge(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
 /// The positional arguments of a command: those that are neither a flag nor the value of a flag
 /// that takes one.
 fn positionals(args: &[String]) -> Vec<&String> {
-    const WITH_VALUE: [&str; 3] = ["--jobs", "--exe", "--spot-budget"];
+    const WITH_VALUE: [&str; 4] = ["--jobs", "--exe", "--spot-budget", "--struct-budget"];
     args.iter()
         .enumerate()
         .filter(|(i, a)| {
@@ -654,7 +673,17 @@ fn spot_budget(args: &[String]) -> Duration {
         .map_or(spot::SPOT_BUDGET, |n| Duration::from_secs(n.clamp(1, 600)))
 }
 
-/// `check [--full] FILE [--jobs N] [--exe PATH] [--spot-budget SECS]`.
+/// `--struct-budget SECS`, the structural rebuild's total time (default [`spot::STRUCT_BUDGET`], at
+/// most 600 s); a shorter one is for tests and local runs.
+fn struct_budget(args: &[String]) -> Duration {
+    flag(args, "--struct-budget")
+        .and_then(|s| s.parse::<u64>().ok())
+        .map_or(spot::STRUCT_BUDGET, |n| {
+            Duration::from_secs(n.clamp(1, 600))
+        })
+}
+
+/// `check [--full] FILE [--jobs N] [--exe PATH] [--spot-budget SECS] [--struct-budget SECS]`.
 ///
 /// The order matters (finding M2): everything that needs no instance is checked first, and a file
 /// that fails any of it returns at once, before a single row is re-run, in process or in a child.
@@ -664,7 +693,7 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
         .first()
         .copied()
         .ok_or_else(|| Failure::Usage("check needs a results file".into()))?;
-    let res = Results::from_text(&read(Path::new(path))?).map_err(Failure::Usage)?;
+    let res = Results::from_canonical_text(&read(Path::new(path))?).map_err(Failure::Usage)?;
     let w = |e: std::io::Error| Failure::Usage(e.to_string());
     let mut bad = results::validate(&res);
     bad.extend(results::quick_plan_covered(&res));
@@ -691,30 +720,66 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
         // Nothing is re-run: the file is already refused.
         String::new()
     } else if full {
-        bad.extend(results::rerun(&res, jobs(args)));
+        let (quick_bad, mut rerun_rows) = results::rerun_collect(&res, jobs(args), true);
+        bad.extend(quick_bad);
         let exe = exe_of(args)?;
         let progress = |n: usize, total: usize| {
             if n.is_multiple_of(25) || n == total {
                 eprintln!("[full {n}/{total}]");
             }
         };
-        bad.extend(spot::full_rerun(&res, &exe, jobs(args), &progress));
+        let (full_bad, full_rows) = spot::full_rerun_collect(&res, &exe, jobs(args), &progress);
+        bad.extend(full_bad);
+        rerun_rows.extend(full_rows);
+        // Round 2, finding 3: the decision the re-run rows give must be the recorded one.
+        let again: Vec<Row> = res
+            .rows
+            .iter()
+            .map(|r| {
+                rerun_rows
+                    .get(&results::row_text_id(r))
+                    .cloned()
+                    .unwrap_or_else(|| r.clone())
+            })
+            .collect();
+        bad.extend(results::decision_differences(&res.rows, &again));
         format!(
-            "{} rows; every full-tier row re-run in a child and reproduced, timings within the \
-             band",
+            "{} rows; every row re-run (quick in process, full in a child) and reproduced, \
+             timings within the band, and the decision equal on the re-run rows",
             res.rows.len()
         )
     } else {
         let quick = results::quick_specs(&res).len();
         bad.extend(results::rerun(&res, jobs(args)));
         // Only a file with something to sample needs an executable to sample with.
+        let exe = exe_of(args)?;
         let report = if spot::population(&res).is_empty() {
             spot::SpotReport::default()
         } else {
-            spot::spot_check(&res, &exe_of(args)?, jobs(args), spot_budget(args))
+            spot::spot_check(&res, &exe, jobs(args), spot_budget(args))
         };
         bad.extend(report.violations.iter().cloned());
         writeln!(out, "check: {}", report.line()).map_err(w)?;
+        // Round 2, finding 1: every full-tier row has its instance rebuilt (not solved) and its
+        // digest, size and entropy compared; what the plan classes too slow is counted.
+        let structure = spot::structure_check(
+            &res,
+            &exe,
+            jobs(args),
+            struct_budget(args),
+            spot::STRUCT_SLACK,
+            &report.verified_rows,
+        );
+        bad.extend(structure.violations.iter().cloned());
+        writeln!(out, "check: {}", structure.line()).map_err(w)?;
+        let unsolved = results::decision_groups_not_resolved(&res.rows);
+        writeln!(
+            out,
+            "check: decision-critical groups not re-solved: {} (verified only by `check --full`, \
+             the release gate for the decision)",
+            unsolved.len()
+        )
+        .map_err(w)?;
         format!(
             "{} rows, {quick} quick-tier rows re-run and reproduced",
             res.rows.len()
@@ -747,7 +812,7 @@ pub fn cmd_table(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
     let (rp, sp) = paths(args);
     let spec = read(&sp)?;
     let res = if rp.exists() {
-        Some(Results::from_text(&read(&rp)?).map_err(Failure::Usage)?)
+        Some(Results::from_canonical_text(&read(&rp)?).map_err(Failure::Usage)?)
     } else {
         None
     };
@@ -777,7 +842,7 @@ pub fn cmd_table(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
 /// `decide`.
 pub fn cmd_decide(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
     let (rp, _) = paths(args);
-    let res = Results::from_text(&read(&rp)?).map_err(Failure::Usage)?;
+    let res = Results::from_canonical_text(&read(&rp)?).map_err(Failure::Usage)?;
     let d = decide(&res.rows);
     let w = |e: std::io::Error| Failure::Usage(e.to_string());
     writeln!(out, "row {}: {}", d.row, d.title).map_err(w)?;
@@ -802,6 +867,41 @@ pub fn cmd_row(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
         let _ = writeln!(out_sink(), "{}", runner::progress_line(r));
     };
     let row = run_row(&spec, Duration::from_secs(wall), &mut progress);
+    writeln!(out, "{}", runner::row_line(&row)).map_err(|e| Failure::Usage(e.to_string()))?;
+    out.flush().map_err(|e| Failure::Usage(e.to_string()))?;
+    Ok(())
+}
+
+/// `structure`: the child process of `check`'s structural rebuild (VOS-028c2 round 2, finding
+/// 1(b)).  It builds the row's instance and prints a row carrying only the deterministic
+/// structural fields (`exp::structure_of`), never solving.  An enumeration row has no instance,
+/// and it is cheap, so it is simply run (its deterministic metrics are the structure).
+pub fn cmd_structure(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
+    let spec = runner::spec_from_json(
+        &flag(args, "--spec").ok_or_else(|| Failure::Usage("structure needs --spec".into()))?,
+    )
+    .map_err(Failure::Usage)?;
+    let row = if spec.experiment.starts_with('E') {
+        run_row(&spec, Duration::from_secs(TIMEOUT_S), &mut |_| {})
+    } else {
+        let s = crate::exp::structure_of(&spec).map_err(Failure::Usage)?;
+        let mut r = Row::new(
+            &spec.experiment,
+            spec.knob.clone(),
+            &spec.mode,
+            spec.seed,
+            spec.seeds,
+        );
+        // Not a verdict: a row that is not `crashed` (the blank row's word) means "built".
+        r.result = "unknown".into();
+        r.instance_sha256 = s.instance_sha256;
+        r.ands = s.ands;
+        r.vars = s.vars;
+        r.clauses = s.clauses;
+        r.entropy_bits = s.entropy_bits;
+        r.declared_bits = s.declared_bits;
+        r
+    };
     writeln!(out, "{}", runner::row_line(&row)).map_err(|e| Failure::Usage(e.to_string()))?;
     out.flush().map_err(|e| Failure::Usage(e.to_string()))?;
     Ok(())

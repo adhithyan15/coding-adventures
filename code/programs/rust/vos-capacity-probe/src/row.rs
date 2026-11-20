@@ -251,7 +251,8 @@ impl Row {
 
     /// The JSON object of the row.
     pub fn to_json(&self) -> JsonValue {
-        let int = |v: u64| JsonValue::Number(JsonNumber::Integer(v as i64));
+        let int =
+            |v: u64| JsonValue::Number(JsonNumber::Integer(i64::try_from(v).unwrap_or(i64::MAX)));
         let flt =
             |v: f64| JsonValue::Number(JsonNumber::Float(if v.is_finite() { v } else { 0.0 }));
         let ostr = |v: &Option<String>| v.clone().map(JsonValue::String).unwrap_or(JsonValue::Null);
@@ -424,7 +425,7 @@ impl Row {
             mode: s("mode")?,
             tier: s("tier")?,
             seed: u("seed")?,
-            seeds: u("seeds")? as u32,
+            seeds: u32::try_from(u("seeds")?).map_err(|_| "seeds does not fit in 32 bits")?,
             instance_sha256: s("instance_sha256")?,
             drat_sha256: os("drat_sha256")?,
             control_instance_sha256: s("control_instance_sha256")?,

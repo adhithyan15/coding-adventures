@@ -91,7 +91,9 @@ pub fn spec_to_json(s: &RowSpec) -> String {
         ("mode".into(), JsonValue::String(s.mode.clone())),
         (
             "seed".into(),
-            JsonValue::Number(JsonNumber::Integer(s.seed as i64)),
+            JsonValue::Number(JsonNumber::Integer(
+                i64::try_from(s.seed).unwrap_or(i64::MAX),
+            )),
         ),
         (
             "seeds".into(),
@@ -131,7 +133,8 @@ pub fn spec_from_json(text: &str) -> Result<RowSpec, String> {
         knob: Knob::from_json(get("knob")?)?,
         mode: s("mode")?,
         seed: n("seed")?,
-        seeds: n("seeds")? as u32,
+        seeds: u32::try_from(n("seeds")?)
+            .map_err(|_| "seeds does not fit in 32 bits".to_string())?,
         tier: s("tier")?,
     })
 }
@@ -295,6 +298,12 @@ pub struct Child {
 /// entry.  Elsewhere there is no `ulimit`, and the command is `/usr/bin/time` alone (which fails
 /// to start, reported by [`run_child`]).
 pub fn launch_command(exe: &Path, spec: &RowSpec, wall_s: u64) -> Command {
+    launch_command_sub(exe, "row", spec, wall_s)
+}
+
+/// [`launch_command`] for the child subcommand `sub` (`row`, or `structure` for `check`'s
+/// structural rebuild): the same limits, the same argv discipline.
+pub fn launch_command_sub(exe: &Path, sub: &str, spec: &RowSpec, wall_s: u64) -> Command {
     #[cfg(unix)]
     let mut cmd = {
         let mut c = Command::new("/bin/sh");
@@ -309,7 +318,7 @@ pub fn launch_command(exe: &Path, spec: &RowSpec, wall_s: u64) -> Command {
     let mut cmd = Command::new("/usr/bin/time");
     cmd.arg(time_flag());
     cmd.arg(exe).args([
-        "row",
+        sub,
         "--spec",
         &spec_to_json(spec),
         "--wall",
@@ -379,7 +388,29 @@ pub fn run_child(
     rss_cap_kb: u64,
     hard: Duration,
 ) -> Result<Child, String> {
-    let mut cmd = launch_command(exe, spec, wall_s);
+    run_child_sub(exe, "row", spec, wall_s, rss_cap_kb, hard, READER_WAIT)
+}
+
+/// How long the parent waits for a child's output readers after the child has ended (round 2,
+/// finding 7).  A reader finishes when the pipe closes; a process that outlived the kill (an
+/// orphan of a failed group kill) holds the pipe open, and an unbounded `join` would then hold
+/// the parent for as long as the orphan lives, defeating the wall bound.
+pub const READER_WAIT: Duration = Duration::from_secs(5);
+
+/// [`run_child`] for the subcommand `sub`, with an explicit reader deadline.  When a reader does
+/// not finish inside `reader_wait` the threads are detached (they end when the orphan closes the
+/// pipe), the output is treated as lost and the row ends [`End::Killed`]: unverified, never a
+/// partial answer.
+pub fn run_child_sub(
+    exe: &Path,
+    sub: &str,
+    spec: &RowSpec,
+    wall_s: u64,
+    rss_cap_kb: u64,
+    hard: Duration,
+    reader_wait: Duration,
+) -> Result<Child, String> {
+    let mut cmd = launch_command_sub(exe, sub, spec, wall_s);
     cmd.stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .stdin(Stdio::null());
@@ -423,11 +454,28 @@ pub fn run_child(
         std::thread::sleep(Duration::from_millis(50));
     };
     guard.disarm();
-    let _ = ho.join();
-    let _ = he.join();
+    // Wait for the readers with ONE shared deadline, never `join` (finding 7).  On a timeout the
+    // handles are dropped, which detaches the threads.
+    let until = Instant::now() + reader_wait;
+    let left = || until.saturating_duration_since(Instant::now());
+    let stdout = rx_o.recv_timeout(left());
+    let stderr = rx_e.recv_timeout(left());
+    let (stdout, stderr, end) = match (stdout, stderr) {
+        (Ok(o), Ok(e)) => {
+            let _ = ho.join();
+            let _ = he.join();
+            (o, e, end)
+        }
+        (o, e) => (
+            o.unwrap_or_default(),
+            e.unwrap_or_default(),
+            // The output is incomplete: the row is unverified, whatever the exit status said.
+            End::Killed,
+        ),
+    };
     Ok(Child {
-        stdout: rx_o.recv().unwrap_or_default(),
-        stderr: rx_e.recv().unwrap_or_default(),
+        stdout,
+        stderr,
         end,
         polled_kb: polled,
     })
@@ -531,9 +579,15 @@ pub fn run_one(exe: &Path, spec: &RowSpec) -> Row {
 /// would run for minutes cannot hold `check` for minutes.  A child killed by the bound ends as a
 /// `killed` row, exactly as one killed by its own hard limit.
 pub fn run_one_bounded(exe: &Path, spec: &RowSpec, bound: Option<Duration>) -> Row {
+    run_sub_bounded(exe, "row", spec, bound)
+}
+
+/// [`run_one_bounded`] for the child subcommand `sub` (`structure`: the structural rebuild of
+/// `check`, which builds an instance and never solves it).
+pub fn run_sub_bounded(exe: &Path, sub: &str, spec: &RowSpec, bound: Option<Duration>) -> Row {
     let wall_s = row_wall_s(&spec.experiment);
     let hard = bound.map_or(hard_limit_for(wall_s), |b| b.min(hard_limit_for(wall_s)));
-    match run_child(exe, spec, wall_s, RSS_CAP_KB, hard) {
+    match run_child_sub(exe, sub, spec, wall_s, RSS_CAP_KB, hard, READER_WAIT) {
         Ok(ch) => finish_row(spec, &ch),
         Err(e) => {
             let mut r = Row::new(

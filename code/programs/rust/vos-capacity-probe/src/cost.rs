@@ -257,6 +257,29 @@ pub const CHEAP: &[(&str, &str, &str)] = &[
     ("D4", "incremental", "{\"t\":8,\"k\":4}"), // 1405 ms
 ];
 
+/// `(experiment, mode, knob key)` of the knob groups whose instance takes too long to merely
+/// BUILD (no solve) for `check`'s structural rebuild (`spot::structure_check`, VOS-028c2 round 2).
+/// These are the five D3 groups at T = 256: the split builds 256 obligations, each a
+/// T-parameterised self-composition, and one seed takes 50 s (k = 1) to 92 s (k = 16) on the
+/// reference host (Apple silicon, release build, measured when the structural rebuild was added),
+/// where every other full-tier non-E group builds in at most 4.4 s.  They are rebuilt only by
+/// `check --full`.  Like [`CHEAP`] this is a reviewed constant keyed by the plan, never read from
+/// the file; the test `structure_heavy_is_exactly_the_t_256_splits` pins its extent.
+pub const STRUCT_HEAVY: &[(&str, &str, &str)] = &[
+    ("D3", "split", "{\"t\":256,\"k\":1}"),  // 52 s
+    ("D3", "split", "{\"t\":256,\"k\":2}"),  // 51 s
+    ("D3", "split", "{\"t\":256,\"k\":4}"),  // 57 s
+    ("D3", "split", "{\"t\":256,\"k\":8}"),  // 68 s
+    ("D3", "split", "{\"t\":256,\"k\":16}"), // 92 s
+];
+
+/// Is the group of this row too slow to rebuild in CI, by the plan alone?
+pub fn structure_heavy(experiment: &str, mode: &str, knob_key: &str) -> bool {
+    STRUCT_HEAVY
+        .iter()
+        .any(|(e, m, k)| *e == experiment && *m == mode && *k == knob_key)
+}
+
 /// Is the group of this row cheap, by the plan alone?
 pub fn is_cheap(experiment: &str, mode: &str, knob_key: &str) -> bool {
     CHEAP
@@ -281,6 +304,25 @@ mod tests {
             assert!(seen.insert((e, m, k)), "{e} {m} {k} is listed twice");
             assert!(!e.starts_with('E'), "enumeration rows are never sampled");
         }
+    }
+
+    #[test]
+    fn structure_heavy_is_exactly_the_t_256_splits() {
+        let planned = planned_identities();
+        assert_eq!(STRUCT_HEAVY.len(), 5);
+        for (e, m, k) in STRUCT_HEAVY {
+            assert!(planned.contains(&(e.to_string(), m.to_string(), k.to_string())));
+            assert!(structure_heavy(e, m, k));
+            assert_eq!((*e, *m), ("D3", "split"));
+            assert!(k.starts_with("{\"t\":256,"));
+        }
+        assert!(!structure_heavy("D3", "split", r#"{"t":64,"k":16}"#));
+        // Exactly the plan's D3 groups at T = 256 and nothing else.
+        let t256 = planned
+            .iter()
+            .filter(|(e, _, k)| e == "D3" && k.starts_with("{\"t\":256,"))
+            .count();
+        assert_eq!(t256, STRUCT_HEAVY.len());
     }
 
     #[test]

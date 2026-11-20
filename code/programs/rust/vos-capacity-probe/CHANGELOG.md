@@ -45,6 +45,25 @@ All notable changes to this package are documented here.
 - Tests: `tests/hardening.rs` (negative controls for every clause above, on real child processes
   where the clause is about a process) and unit tests in `runner`, `row` and `cli`.
 
+- **Security review, round 2 (VOS30 9.12 "Hardening, round 2"; tests in `tests/review_fixes2.rs`).**
+  1: a plain `check` re-solves only cheap-class rows, which the spec and README now say
+  (expensive rows, decision-critical ones included, are verified only by `check --full`);
+  `check` rebuilds every full-tier row's instance WITHOUT solving it in a child (new hidden
+  `structure` command, `exp::structure_of`) and compares `instance_sha256`, `ands`, `vars`,
+  `clauses`, `entropy_bits`, `declared_bits` (decision rows first, then a seeded sample, 45 s
+  budget; `cost::STRUCT_HEAVY`, the five D3 T = 256 groups, left to `--full`) and prints
+  `decision-critical groups not re-solved: N`. 2: `compare_rerun` compares every deterministic
+  field (vars, clauses, entropy, propagations, proof size and work, cap, note, `wall_s`, the
+  metric key set both ways and every non-timing metric); `--full` also applies the timing band
+  and the `green` recomputation to the in-process quick rows. 3: `--full` requires the re-run
+  rows' decision to equal the recorded one. 4: `check`, `table`, `decide` and `merge` refuse a
+  non-canonical file (`Results::from_canonical_text`); `seeds` and every narrowing conversion
+  use `try_from`. 5: `validate` bounds times, counters, metrics and the orderings that hold by
+  construction. 6: `SPOT_FLOOR` is a plain 16 and the cheap table is pinned (at least 100 groups,
+  500 eligible rows). 7: the parent waits for a child's output readers with a 5 s deadline
+  (`READER_WAIT`) and ends the row `killed` instead of blocking on an orphan's pipe. 8:
+  `write_atomic` keeps `mode & 0o777` and cuts the temporary name's stem to 150 bytes.
+
 ### Changed
 
 - `run_child` and `run_rows` take the row budget from the experiment; `hard_limit_for(wall_s)`

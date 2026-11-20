@@ -2427,19 +2427,40 @@ below is a separate step, run on the committed tree and merged in a second commi
       expensive): n`). Each child's hard limit is the smaller of its row limit and the
       remaining budget plus `SPOT_SLACK` = 15 s (finding M5); a child that does not finish
       in that time is **not verified**, which is a `check` failure for a cheap-class row,
-      never a pass. `check` also fails if fewer than `SPOT_FLOOR` = 16 rows (or all the
-      eligible ones, if fewer) were verified. Each re-run is compared by `compare_rerun`:
-      digests, verdict, control, conflict counts and step counts; **the CI spot check does
-      not compare times or memory**.
+      never a pass. `check` also fails if fewer than `SPOT_FLOOR` = 16 rows were verified,
+      and if fewer than 16 rows are eligible at all (round 2, finding 6: the floor is a plain
+      constant, no longer `min(16, eligible)`). Each re-run is compared by `compare_rerun`
+      (every deterministic field, see round 2 below); **the CI spot check does not compare
+      times or memory**.
+    * **A plain `check` re-solves only cheap-class rows (round 2, finding 1).** The plan's
+      expensive rows, 920 of the 1,420 full-tier non-E rows, **including groups that `decide`
+      reads** (11 groups: D3 at k = 16 and T = 8, 64 and 256; C1 base b at 200 and 1000
+      instructions and 25%; B3 at 1000 instructions, 25%, with every1, every8 and every32
+      cuts; B4 re-association at n = 5 to 7), are never re-solved by a plain
+      `check`: their solver-derived and timing-derived fields (the conflict counts, the
+      verdict, the control, the proof size, `green`) are verified **only by `check --full`**,
+      which is the release gate for the decision. A plain `check` prints
+      `decision-critical groups not re-solved: N` (N = 11 on the committed file) so the gap is
+      never silent. What a plain `check` does verify of an expensive row is its **structure**
+      (round 2 below).
   * **What the spot check proves, honestly (finding M3).** The first draft claimed an
     editor could not know in advance which rows would be re-run, because any edit reshuffles it.
     That is false as a defence: the seed is deterministic, an editor holds both the file and
     this code, and so can compute the sample of a candidate file and **grind** it (change a
     byte somewhere harmless, such as a note) until the edited row falls outside the sample.
     The spot check catches an **accidental** drift (a row regenerated at another tree) and a
-    **lazy** edit that does not grind. For a single edit among about 1,625 rows and a sample
-    of 16 to 90, an unprepared edit is caught with probability about `sample / population`.
-    It is **not proof** of the file against a determined editor.
+    **lazy** edit that does not grind. The sampling statement applies to the **cheap-class
+    rows only**: for a single edit of a cheap row among the 500 eligible rows and a sample of
+    16 to 300, an unprepared edit is caught with probability about `sample / population`. For
+    an **expensive** row the probability that the CI spot check re-solves it is **0** (the plan
+    never makes one eligible; this is what finding 1 of the second review found: an edit of
+    10 rows in decision-critical expensive groups flipped `decide` to row 2 with `check: ok`).
+    The structural rebuild below catches an edit of those rows that touches the instance's
+    digest, size or entropy, with a sample probability that is 1 for the decision rows and
+    roughly the budgeted fraction for the others; an edit of **only** solver-derived or timing
+    fields of an expensive row (for example D3 at T = 8, k = 16: worst-step conflicts, solve
+    time, DRAT size and `green`) is **not** caught by a plain `check`, whatever the sample. It
+    is **not proof** of the file against a determined editor.
   * **The real teeth: `check --full` and a release gate.** `check --full` re-runs **every**
     full-tier row, no sampling, locally or nightly (about 2 h), each row under the limits
     of item (3). It **refuses when a recorded tree id differs from the working tree**
@@ -2453,7 +2474,12 @@ below is a separate step, run on the committed tree and merged in a second commi
     `TIMING_SLACK_MS` = 50 (times) and `RSS_SLACK_KB` = 8192, and `green` is **recomputed
     from the re-run's own measurements** and must equal the recorded one. A row that ended
     `killed`, `oom` or `crashed` has no reproducible time and is compared on its result
-    only. So timing-derived verdicts are verified only by `check --full`, and `check --full` is
+    only. `check --full` also compares the timing-derived fields of the in-process quick rows
+    (round 2, finding 2) and requires the decision of the **re-run** rows to equal the
+    recorded decision, in its row number and its `because` lines (the worst-solve figure, a
+    time, is cut out; finding 3), which covers predicates outside `green` such as row 3's
+    `solve_ms + check_ms <= 60 000`. So timing-derived verdicts are verified only by `check
+    --full`, and `check --full` is
     the release gate: the VOS-028c3 decision stays **provisional** until a full re-run (`check
     --full` at the tree that ran) has reproduced every full-tier row and the named reviewer
     of section 8.5 has signed that off. This is a release gate, not a CI step; on the
@@ -2493,13 +2519,84 @@ below is a separate step, run on the committed tree and merged in a second commi
   the result keeps the target's mode, or 0644. Process-group, `sh`
   and `ulimit` code is `cfg(unix)`: the Windows BUILD runs `check` in process only
   (its `validate` still applies; the sampled re-run is skipped there and says so).
+* **Hardening, round 2 (second security review; tests in `tests/review_fixes2.rs`).**
+  1. **Expensive rows (finding 1, MEDIUM).** (a) The statements above: a plain `check`
+     re-solves only cheap-class rows; the expensive ones, decision-critical groups included,
+     are verified only by `check --full`, the release gate; the sampling probability applies to
+     cheap rows only. (b) **Structural rebuild.** Every full-tier row's instance is rebuilt in
+     a child **without solving** (`vos-capacity-probe structure --spec`, under `run`'s limits;
+     `exp::structure_of`, which mirrors `mono_row` and `chain_row`, pinned equal to `run_row` on
+     the quick tier by a test), and its `instance_sha256`, `ands`, `vars`, `clauses`,
+     `entropy_bits` and `declared_bits` are compared exactly (`compare_structure`). (The control
+     digest needs the SAT search to find the control's site, so it is not rebuilt.) An
+     enumeration row has no instance and is re-run and compared in full. Quick rows are
+     already re-run in full in process. The rebuild visits the rows of the groups `decide`
+     reads first, then the rest in the file-seeded order, skipping rows the spot check has
+     already re-run, under a total budget `STRUCT_BUDGET` = 45 s with `STRUCT_SLACK` = 30 s per
+     child (a child that does not finish is **not verified**, a failure, as in the spot
+     check). A row whose recorded structure is partial (`killed`, `oom`, `crashed`, a chain
+     that stopped on a cap or a SAT segment) is counted and left to `check --full`.
+     **Cost, measured:** the whole population would take about 6 minutes of CPU (about 90 s at 4
+     jobs), 320 s of it in the five D3 groups at T = 256 (one seed takes 52 s at k = 1 to 92 s at
+     k = 16; every other group builds in at most 4.4 s). Those five groups are the plan's
+     `cost::STRUCT_HEAVY` and are rebuilt only by `check --full`; the rest runs under the 45 s
+     budget, so the structural pass is a **seeded sample for the non-decision rows** and covers
+     the decision rows except those five groups (80 of 85 on the committed file). A plain `check`
+     on the committed file takes about 111 s on the reference host (it took 66 s before this
+     round: the spot check's 60 s budget is unchanged, the structural pass adds at most 45 s plus
+     slack); the structural line prints the counts. (c) `check` prints
+     `decision-critical groups not re-solved: N`, the number of groups `results::decision_read`
+     (which mirrors `decide`'s `find` calls; a test pins that it covers every group whose
+     redness changes the decision of an all-green synthetic file) names that are in neither the
+     quick tier nor `cost::CHEAP`.
+  2. **`compare_rerun` compares every deterministic field (finding 2).** Exactly: experiment,
+     knob, mode, tier, seed, seeds, the three digests, `ands`, `vars`, `clauses`,
+     `entropy_bits`, `declared_bits`, `result`, `collapsed_reason`, `control`, `conflicts`,
+     `propagations`, `worst_step_conflicts`, `steps`, `drat_bytes`, `check_work`, whether
+     `check_ms` is present, `pass_default_limits`, `cap`, `note` and `wall_s`. The solver and
+     the checker are deterministic (a test re-runs rows of four experiments twice and compares
+     all of them; the 85 quick rows and the sampled rows of the committed file reproduce them
+     on `check`). **Nondeterministic, compared only by `check --full`'s two-sided band:**
+     `solve_ms`, `worst_step_solve_ms`, `check_ms` (wall times) and `peak_rss_kb`; `green` is a
+     function of those and is recomputed. Metrics are compared as a **symmetric key set** (an
+     extra or a missing key is a finding, including the recorded keys the old code never
+     looked at) with exact values except `run_ms` and `cases_per_s`
+     (`results::NONDETERMINISTIC_METRICS`, timings and rates). Under `--full` the in-process
+     quick rows also go through `compare_timing` and the `green` recomputation (they borrow the
+     recorded resident set, which they do not measure).
+  3. **The re-run decision (finding 3).** `check --full` requires `decide(re-run rows)` to equal
+     `decide(recorded rows)` in row number and `because` lines (`results::decision_differences`).
+  4. **Canonical input (finding 4).** `check`, `table`, `decide` and `merge` (both inputs)
+     refuse a file whose `to_text(from_text(text))` differs from the text
+     (`Results::from_canonical_text`): a duplicate key (the parser keeps the first), an unknown
+     key, a re-spaced field. The committed file round-trips exactly. Every narrowing conversion
+     is a `try_from` that refuses on overflow (`seeds` was truncated from 64 to 32 bits).
+  5. **Numeric bounds (finding 5).** `validate` requires every time to be finite and in 0 to
+     `MAX_TIME_MS` = 3,600,000 (one hour: the longest budget is 600 s), `check_ms` finite or
+     absent, and every counter under a bound with a stated reason (`MAX_CONFLICTS` = 2^40,
+     `MAX_PROPAGATIONS` = 2^50, `MAX_SIZE` = 2^36 for ANDs, variables, clauses and entropy bits,
+     `MAX_PROOF` = 2^40 for DRAT bytes and checker work, `MAX_STEPS` = 2^16, `MAX_RSS_KB` = 16
+     GiB, `MAX_SEEDS` = 1000, metrics finite in 0 to 10^18), that `entropy_bits <=
+     declared_bits`, that `worst_step_conflicts <= conflicts`, and that `seed` is in `1..=seeds`.
+  6. **The cheap table cannot shrink quietly (finding 6).** `CHEAP` has at least 100 groups and
+     at least 500 eligible rows (its current extent: 100 groups, 500 rows); a test pins both, so
+     shrinking the table is a visible change to this text and that test. `SPOT_FLOOR` = 16 is a
+     plain constant, and fewer than 16 eligible rows is a `check` failure.
+  7. **Reader threads (finding 7).** The parent no longer `join`s a child's output readers: it
+     waits for them with a shared deadline (`READER_WAIT` = 5 s, `recv_timeout`), detaches them
+     on a timeout and ends the row `killed` (unverified). A failed group kill leaves an orphan
+     holding the pipes; before this the wall bound was defeated. A test uses a child that leaves
+     a background process holding both pipes.
+  8. **The atomic writer (finding 8).** The finished file keeps `mode & 0o777` (setuid, setgid
+     and sticky are dropped), and the target's name is cut to `TMP_STEM_MAX` = 150 bytes (on a
+     character boundary) in the temporary name, which therefore stays under 255 bytes.
 * E1 rows are untouched (VOS-D103).
 * **As built, the constants and the choices the text above left open.** The spot check's
   total budget is **60 s** (`spot::SPOT_BUDGET`; `check --spot-budget SECS` shortens it for
   tests and local runs, up to 600 s, and the floor still applies), the slack of a child's
   hard limit **15 s** (`SPOT_SLACK`) and the floor of verified rows **16** (`SPOT_FLOOR`).
   The cost class is `cost::CHEAP`, 100 of the 284 full-tier non-E knob groups (500 of the
-  1,420 rows), those whose slowest seed took at most 3 s; a test fails until the table
+  1,420 rows), those whose slowest seed took at most 3 s (`CHEAP_MAX_MS` = 3000); a test fails until the table
   agrees with the committed recording, so a re-record that moves a group changes the table
   in the same commit. The seed is the SHA-256 of
   `Results::to_text()` (the canonical serialisation; the committed file is canonical, so

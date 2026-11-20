@@ -95,14 +95,26 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
   are drawn in an order seeded by the SHA-256 of the results file's own bytes, each re-run in a
   child process under `run`'s limits and under what is left of a fixed 60 s budget (plus 15 s), until
   the budget is spent; expensive groups are skipped but counted; a child that does not finish is
-  **not verified** and fails the check, as does verifying fewer than 16 rows. The sample is
-  deterministic, so a determined editor can grind the file to fall outside it: this is a spot check
-  of digests, verdicts, controls and conflict counts, **not proof**, and it compares no times.
+  **not verified** and fails the check, as does verifying fewer than 16 rows (or having fewer than
+  16 eligible rows: the floor is a plain constant). A re-run compares every deterministic field
+  exactly (digests, size, entropy, verdict, control, conflict, propagation and proof counters,
+  `cap`, `note`, the metric key set and the non-timing metric values); it compares no times. **A
+  plain `check` re-solves only cheap-class rows**: the expensive ones, including groups
+  `decide` reads, are verified only by `check --full`; `check` prints `decision-critical groups
+  not re-solved: N`. It also **rebuilds, without solving, the instance of every full-tier row** it
+  can (decision rows first, then a seeded sample, 45 s budget, in child processes; the five D3
+  groups at T = 256 take about a minute each and are left to `--full`) and compares the instance
+  digest, `ands`, `vars`, `clauses`, `entropy_bits` and `declared_bits`. The sample is
+  deterministic, so a determined editor can grind the file to fall outside it, and an edit of only
+  the timing or solver fields of an expensive row is not caught: this is **not proof**. `check`,
+  `table`, `decide` and `merge` refuse a file that is not in the tool's canonical form (duplicate
+  or unknown keys), and `validate` bounds every number.
 * `check --full` is the release gate: it **refuses** unless every recorded tree id equals the
   working tree's (a file that records none cannot say which tree it describes), then re-runs
   every full-tier row, no sampling, each in a child (about two hours), and also requires each
   recorded solve time, check time and peak RSS to lie within a two-sided 4x band of the re-run
-  and the recorded `green` to equal `green` recomputed from the re-run's measurements.
+  and the recorded `green` to equal `green` recomputed from the re-run's measurements (in-process
+  quick rows included), and the decision of the re-run rows to equal the recorded one.
 * `merge` refreshes a subset of the committed rows from a fresh `run` (VOS30 section 9.2): the
   other rows stay byte-identical, a dirty fresh run or a changed row identity is refused.
   `merge --add` instead appends fresh rows whose identities are all absent from the base (a plan

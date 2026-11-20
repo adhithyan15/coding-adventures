@@ -299,6 +299,24 @@ impl Results {
         out
     }
 
+    /// Read a results file that must be in the tool's own **canonical form** (round 2, finding
+    /// 4): the text must equal `to_text` of what it parses to.  The JSON parser keeps the first of
+    /// two duplicate keys and the reader ignores unknown ones, so a file can say one thing to the
+    /// reader and another to a human or to a different parser; refusing every file the tool would
+    /// not itself have written closes that (the committed file round-trips exactly).
+    pub fn from_canonical_text(text: &str) -> Result<Results, String> {
+        let res = Results::from_text(text)?;
+        if res.to_text() != text {
+            return Err(
+                "the results file is not in canonical form: it differs from what the tool \
+                 writes for the same content (a duplicate or unknown key, a reordered or \
+                 re-spaced field, or a number written another way)"
+                    .into(),
+            );
+        }
+        Ok(res)
+    }
+
     /// Read a results file.
     pub fn from_text(text: &str) -> Result<Results, String> {
         let v = parse(text).map_err(|e| format!("the results file is not JSON: {e}"))?;
@@ -471,6 +489,99 @@ pub fn group_key(r: &Row) -> String {
     format!("{}|{}|{}", r.experiment, r.mode, r.knob.key())
 }
 
+/// The largest time a row may record, milliseconds (one hour).  The longest budget is a chain's
+/// 600 s; the solve and check times of a row sum obligations that all ended inside that budget,
+/// so an hour is far beyond anything a run can write and well inside what a hand edit can
+/// (round 2, finding 5: a negative or 1e300 time was accepted).
+pub const MAX_TIME_MS: f64 = 3_600_000.0;
+/// The largest conflict count a row may record (2^40): one obligation is capped at 100k
+/// conflicts to be green and at 120 s of solving to finish; no solver here does 10^12.
+pub const MAX_CONFLICTS: u64 = 1 << 40;
+/// The largest propagation count (2^50): a few hundred million per second for an hour.
+pub const MAX_PROPAGATIONS: u64 = 1 << 50;
+/// The largest AND, variable, clause, entropy or declared-bit count (2^36): the child's resident
+/// set is capped at 2 GiB, so a CNF cannot have more clauses than that, even summed over the 256
+/// obligations of the largest chain.
+pub const MAX_SIZE: u64 = 1 << 36;
+/// The largest DRAT size or checker work figure (2^40): the checker's own work limit is 2^32 per
+/// obligation and a proof is held in memory (2 GiB cap).
+pub const MAX_PROOF: u64 = 1 << 40;
+/// The largest obligation count of a row (2^16); the largest plan has 256.
+pub const MAX_STEPS: u64 = 1 << 16;
+/// The largest peak resident set a row may record, KiB (16 GiB): the cap is 2 GiB and a polled
+/// figure may overshoot it, but not by 8x.
+pub const MAX_RSS_KB: u64 = 16 * 1024 * 1024;
+/// The largest seed count per knob a row may record.
+pub const MAX_SEEDS: u32 = 1000;
+/// The largest value a metric may hold (10^18): counts and rates of enumeration rows.
+pub const MAX_METRIC: f64 = 1e18;
+
+/// The numeric sanity rules of one row (round 2, finding 5): times finite and in `0..=MAX_TIME_MS`,
+/// `check_ms` finite or absent, every counter under its stated bound, and the orderings that hold
+/// by construction (sensitive bits at most declared bits, the worst obligation's conflicts at most
+/// the total, a seed within the seed count).
+pub fn bounds_violations(id: &str, r: &Row) -> Vec<String> {
+    let mut v = Vec::new();
+    let mut time = |name: &str, x: f64| {
+        if !x.is_finite() || !(0.0..=MAX_TIME_MS).contains(&x) {
+            v.push(format!(
+                "{id}: {name} {x} is not a finite time in 0..={MAX_TIME_MS} ms"
+            ));
+        }
+    };
+    time("solve_ms", r.solve_ms);
+    time("worst_step_solve_ms", r.worst_step_solve_ms);
+    if let Some(c) = r.check_ms {
+        time("check_ms", c);
+    }
+    let mut count = |name: &str, x: u64, max: u64| {
+        if x > max {
+            v.push(format!("{id}: {name} {x} is over the bound {max}"));
+        }
+    };
+    count("conflicts", r.conflicts, MAX_CONFLICTS);
+    if let Some(w) = r.worst_step_conflicts {
+        count("worst_step_conflicts", w, MAX_CONFLICTS);
+    }
+    count("propagations", r.propagations, MAX_PROPAGATIONS);
+    for (name, x) in [
+        ("ands", r.ands),
+        ("vars", r.vars),
+        ("clauses", r.clauses),
+        ("entropy_bits", r.entropy_bits),
+        ("declared_bits", r.declared_bits),
+    ] {
+        count(name, x, MAX_SIZE);
+    }
+    count("drat_bytes", r.drat_bytes.unwrap_or(0), MAX_PROOF);
+    count("check_work", r.check_work.unwrap_or(0), MAX_PROOF);
+    count("steps", r.steps, MAX_STEPS);
+    count("peak_rss_kb", r.peak_rss_kb, MAX_RSS_KB);
+    count("seeds", u64::from(r.seeds), u64::from(MAX_SEEDS));
+    if r.entropy_bits > r.declared_bits {
+        v.push(format!(
+            "{id}: entropy_bits {} exceeds declared_bits {}",
+            r.entropy_bits, r.declared_bits
+        ));
+    }
+    if r.worst_step_conflicts.is_some_and(|w| w > r.conflicts) {
+        v.push(format!(
+            "{id}: worst_step_conflicts exceeds the total conflicts"
+        ));
+    }
+    if r.seed == 0 || r.seed > u64::from(r.seeds) {
+        v.push(format!("{id}: seed {} is not in 1..={}", r.seed, r.seeds));
+    }
+    for (k, x) in &r.metrics {
+        if !x.is_finite() || !(0.0..=MAX_METRIC).contains(x) {
+            v.push(format!(
+                "{id}: metric {k} {x} is not finite in 0..={MAX_METRIC}"
+            ));
+        }
+    }
+    v
+}
+
 /// The schema and guard rules of `check`, row by row and across rows.  Returns every violation.
 pub fn validate(res: &Results) -> Vec<String> {
     let mut v = Vec::new();
@@ -573,6 +684,7 @@ pub fn validate(res: &Results) -> Vec<String> {
                 "{id}: peak RSS is missing or 0 (an unparsed value is invalid)"
             ));
         }
+        v.extend(bounds_violations(&id, r));
         if r.green != green(r) {
             v.push(format!(
                 "{id}: green is {} but section 8.3 gives {}",
@@ -644,7 +756,7 @@ pub fn validate(res: &Results) -> Vec<String> {
         e.1 = r.seeds;
     }
     for (k, (set, _)) in &seeds {
-        if (set.len() as u32) < MIN_SEEDS {
+        if u32::try_from(set.len()).unwrap_or(u32::MAX) < MIN_SEEDS {
             v.push(format!(
                 "{k}: {} distinct seeds (at least {MIN_SEEDS} per knob)",
                 set.len()
@@ -725,15 +837,27 @@ pub fn quick_specs(res: &Results) -> Vec<(RowSpec, &Row)> {
         .collect()
 }
 
-/// Compare a re-run row with its recorded one: digests, verdict, control, conflict count.
+/// The metrics whose VALUES are timings or rates, so they differ on every run.  Every other
+/// metric is a count and is compared exactly (round 2, finding 2).  A nondeterministic metric
+/// must still be PRESENT on both sides: the key set is compared symmetrically.
+pub const NONDETERMINISTIC_METRICS: [&str; 2] = ["run_ms", "cases_per_s"];
+
+/// Compare a re-run row with its recorded one: **every deterministic field**, exactly.
+///
+/// Deterministic (compared): experiment, knob, mode, tier, seed, seeds, the three digests, the
+/// instance's size and entropy (`ands`, `vars`, `clauses`, `entropy_bits`, `declared_bits`), the
+/// verdict (`result`, `collapsed_reason`, `control`, `cap`, `pass_default_limits`), the solver's
+/// work (`conflicts`, `propagations`, `worst_step_conflicts`, `steps`), the proof (`drat_bytes`,
+/// `check_work`), whether a `check_ms` is present, the `note` and `wall_s`.  The solver and the
+/// checker are deterministic functions of the instance, so their counters and the proof's length
+/// are as reproducible as its digest (re-running a row twice gives them bit for bit).
+///
+/// Nondeterministic (not compared here): `solve_ms`, `worst_step_solve_ms`, `check_ms`,
+/// `peak_rss_kb` (compared in a two-sided band by [`compare_timing`] under `check --full`), `green`
+/// (a function of those, recomputed by `validate` and, under `--full`, from the re-run), and the
+/// values of the metrics in [`NONDETERMINISTIC_METRICS`].
 pub fn compare_rerun(rec: &Row, now: &Row) -> Vec<String> {
-    let id = format!(
-        "{} {} {} seed {}",
-        rec.experiment,
-        rec.knob.key(),
-        rec.mode,
-        rec.seed
-    );
+    let id = row_text_id(rec);
     let mut v = Vec::new();
     let mut diff = |name: &str, a: String, b: String| {
         if a != b {
@@ -742,70 +866,129 @@ pub fn compare_rerun(rec: &Row, now: &Row) -> Vec<String> {
             ));
         }
     };
+    let d = |x: &dyn std::fmt::Debug| format!("{x:?}");
+    diff("experiment", rec.experiment.clone(), now.experiment.clone());
+    diff("knob", rec.knob.key(), now.knob.key());
+    diff("mode", rec.mode.clone(), now.mode.clone());
+    diff("tier", rec.tier.clone(), now.tier.clone());
+    diff("seed", rec.seed.to_string(), now.seed.to_string());
+    diff("seeds", rec.seeds.to_string(), now.seeds.to_string());
     diff(
         "instance_sha256",
         rec.instance_sha256.clone(),
         now.instance_sha256.clone(),
     );
-    diff(
-        "drat_sha256",
-        format!("{:?}", rec.drat_sha256),
-        format!("{:?}", now.drat_sha256),
-    );
+    diff("drat_sha256", d(&rec.drat_sha256), d(&now.drat_sha256));
     diff(
         "control_instance_sha256",
         rec.control_instance_sha256.clone(),
         now.control_instance_sha256.clone(),
     );
+    diff("ands", rec.ands.to_string(), now.ands.to_string());
+    diff("vars", rec.vars.to_string(), now.vars.to_string());
+    diff("clauses", rec.clauses.to_string(), now.clauses.to_string());
+    diff(
+        "entropy_bits",
+        rec.entropy_bits.to_string(),
+        now.entropy_bits.to_string(),
+    );
+    diff(
+        "declared_bits",
+        rec.declared_bits.to_string(),
+        now.declared_bits.to_string(),
+    );
     diff("result", rec.result.clone(), now.result.clone());
     diff(
         "collapsed_reason",
-        format!("{:?}", rec.collapsed_reason),
-        format!("{:?}", now.collapsed_reason),
+        d(&rec.collapsed_reason),
+        d(&now.collapsed_reason),
     );
-    diff(
-        "control",
-        format!("{:?}", rec.control),
-        format!("{:?}", now.control),
-    );
+    diff("control", d(&rec.control), d(&now.control));
     diff(
         "conflicts",
         rec.conflicts.to_string(),
         now.conflicts.to_string(),
     );
     diff(
+        "propagations",
+        rec.propagations.to_string(),
+        now.propagations.to_string(),
+    );
+    diff(
         "worst_step_conflicts",
-        format!("{:?}", rec.worst_step_conflicts),
-        format!("{:?}", now.worst_step_conflicts),
+        d(&rec.worst_step_conflicts),
+        d(&now.worst_step_conflicts),
     );
     diff("steps", rec.steps.to_string(), now.steps.to_string());
-    diff("ands", rec.ands.to_string(), now.ands.to_string());
+    diff("drat_bytes", d(&rec.drat_bytes), d(&now.drat_bytes));
+    diff(
+        "check_ms present",
+        rec.check_ms.is_some().to_string(),
+        now.check_ms.is_some().to_string(),
+    );
+    diff("check_work", d(&rec.check_work), d(&now.check_work));
     diff(
         "pass_default_limits",
-        format!("{:?}", rec.pass_default_limits),
-        format!("{:?}", now.pass_default_limits),
+        d(&rec.pass_default_limits),
+        d(&now.pass_default_limits),
     );
+    diff("cap", rec.cap.clone(), now.cap.clone());
+    diff("note", rec.note.clone(), now.note.clone());
+    diff("wall_s", d(&rec.wall_s), d(&now.wall_s));
+    // Metrics: a symmetric key set (an extra or a missing key is a finding), exact values except
+    // for the timing metrics.
+    fn keys(r: &Row) -> Vec<&str> {
+        let mut k: Vec<&str> = r.metrics.iter().map(|(n, _)| n.as_str()).collect();
+        k.sort_unstable();
+        k
+    }
+    diff("metric keys", d(&keys(rec)), d(&keys(now)));
     for (name, val) in &rec.metrics {
-        // Counts are deterministic; rates and times are not.
-        if matches!(
-            name.as_str(),
-            "cases"
-                | "discarded"
-                | "binder_product"
-                | "control_binder_product"
-                | "domain_bytes"
-                | "enumerated"
-                | "values_held"
-                | "live_steps"
-                | "segments"
-        ) {
+        if NONDETERMINISTIC_METRICS.contains(&name.as_str()) {
+            continue;
+        }
+        if let Some(other) = now.metric(name) {
             diff(
                 &format!("metric {name}"),
                 val.to_string(),
-                now.metric(name).map(|x| x.to_string()).unwrap_or_default(),
+                other.to_string(),
             );
         }
     }
+    v
+}
+
+/// The structural fields of a row that [`crate::exp::structure_of`] reproduces without solving:
+/// the digest of the instance and its size and entropy.  The `structure` child fills ONLY these
+/// (the rest of its row is a blank), so only these are compared.
+pub fn compare_structure(rec: &Row, now: &Row) -> Vec<String> {
+    let id = row_text_id(rec);
+    let mut v = Vec::new();
+    let mut diff = |name: &str, a: String, b: String| {
+        if a != b {
+            v.push(format!(
+                "{id}: {name} differs on structural rebuild (recorded {a}, now {b})"
+            ));
+        }
+    };
+    diff(
+        "instance_sha256",
+        rec.instance_sha256.clone(),
+        now.instance_sha256.clone(),
+    );
+    diff("ands", rec.ands.to_string(), now.ands.to_string());
+    diff("vars", rec.vars.to_string(), now.vars.to_string());
+    diff("clauses", rec.clauses.to_string(), now.clauses.to_string());
+    diff(
+        "entropy_bits",
+        rec.entropy_bits.to_string(),
+        now.entropy_bits.to_string(),
+    );
+    diff(
+        "declared_bits",
+        rec.declared_bits.to_string(),
+        now.declared_bits.to_string(),
+    );
     v
 }
 
@@ -876,12 +1059,29 @@ pub fn compare_timing(rec: &Row, now: &Row) -> Vec<String> {
 
 /// Re-run every quick-tier row in this process and compare (`jobs` threads).
 pub fn rerun(res: &Results, jobs: usize) -> Vec<String> {
+    rerun_collect(res, jobs, false).0
+}
+
+/// [`rerun`], and under `timing` (`check --full`, round 2 finding 2) also the timing-derived
+/// comparison of [`compare_timing`] on these in-process rows: they were never compared on time
+/// before, because only the full-tier children were.  An in-process row measures no resident set,
+/// so it borrows the recorded one (the band on it is vacuous and `green` is recomputed from the
+/// re-run's own times, counters and proof figures plus that recorded set).  Also returns the
+/// re-run rows by [`row_text_id`] (with `green` recomputed), for the decision comparison.
+pub fn rerun_collect(
+    res: &Results,
+    jobs: usize,
+    timing: bool,
+) -> (Vec<String>, BTreeMap<String, Row>) {
     let specs = quick_specs(res);
     if specs.is_empty() {
-        return vec!["the file has no quick-tier row to re-run".to_string()];
+        return (
+            vec!["the file has no quick-tier row to re-run".to_string()],
+            BTreeMap::new(),
+        );
     }
     let next = std::sync::atomic::AtomicUsize::new(0);
-    let out = std::sync::Mutex::new(Vec::new());
+    let out = std::sync::Mutex::new((Vec::new(), BTreeMap::new()));
     std::thread::scope(|s| {
         for _ in 0..jobs.max(1) {
             s.spawn(|| loop {
@@ -889,14 +1089,55 @@ pub fn rerun(res: &Results, jobs: usize) -> Vec<String> {
                 let Some((spec, rec)) = specs.get(i) else {
                     break;
                 };
-                let now = run_row(spec, Duration::from_secs(TIMEOUT_S), &mut |_| {});
-                let diffs = compare_rerun(rec, &now);
-                out.lock().unwrap_or_else(|e| e.into_inner()).extend(diffs);
+                let mut now = run_row(spec, Duration::from_secs(TIMEOUT_S), &mut |_| {});
+                let mut diffs = compare_rerun(rec, &now);
+                now.peak_rss_kb = rec.peak_rss_kb;
+                now.green = green(&now);
+                if timing {
+                    diffs.extend(compare_timing(rec, &now));
+                }
+                let mut g = out.lock().unwrap_or_else(|e| e.into_inner());
+                g.0.extend(diffs);
+                g.1.insert(row_text_id(rec), now);
             });
         }
     });
-    let mut v = out.into_inner().unwrap_or_else(|e| e.into_inner());
+    let (mut v, rows) = out.into_inner().unwrap_or_else(|e| e.into_inner());
     v.sort();
+    (v, rows)
+}
+
+/// The decision's `because` lines with the one nondeterministic figure removed: `describe` prints
+/// the worst solve time, which differs on every run, so a line is cut at that figure.
+fn because_stable(d: &Decision) -> Vec<String> {
+    d.because
+        .iter()
+        .map(|b| match b.find(", worst solve") {
+            Some(at) => b[..at].to_string(),
+            None => b.clone(),
+        })
+        .collect()
+}
+
+/// `check --full` (round 2, finding 3): the decision the RE-RUN rows give must equal the decision
+/// the recorded rows give, in its row number and its (time-stripped) `because` lines.  This covers
+/// every predicate `decide` reads, including those outside `green`, such as row 3's
+/// `solve_ms + check_ms <= 60 000`, which the band on single rows does not bound tightly enough.
+pub fn decision_differences(recorded: &[Row], rerun: &[Row]) -> Vec<String> {
+    let (a, b) = (decide(recorded), decide(rerun));
+    let mut v = Vec::new();
+    if a.row != b.row {
+        v.push(format!(
+            "the decision is row {} on the recorded rows but row {} on the re-run rows",
+            a.row, b.row
+        ));
+    } else if because_stable(&a) != because_stable(&b) {
+        v.push(format!(
+            "the decision's reasons differ: recorded {:?}, re-run {:?}",
+            because_stable(&a),
+            because_stable(&b)
+        ));
+    }
     v
 }
 
@@ -954,7 +1195,7 @@ fn plan_gaps(res: &Results, tier: Tier, label: &str) -> Vec<String> {
         }
     }
     for ((e, m, k), (set, seeds)) in &groups {
-        if set.len() as u32 != *seeds {
+        if u32::try_from(set.len()).unwrap_or(u32::MAX) != *seeds {
             v.push(format!(
                 "{e} {k} {m}: rows record seeds = {seeds} but {} seeds are present",
                 set.len()
@@ -1090,6 +1331,47 @@ fn b3<'a>(gs: &'a [Group<'a>], len: i64, cut: &str) -> Option<&'a Group<'a>> {
     find(gs, "B3", "certified", |k| {
         k.int("length") == len && (k.f("divergence") - 0.25).abs() < 1e-9 && k.s("cut") == cut
     })
+}
+
+/// Is this row in a group that [`decide`] reads?  (Round 2, finding 1.)  `check` re-solves only
+/// the plan's cheap rows, so which groups the decision rests on, and which of them are never
+/// re-solved by a plain `check`, must be visible: `check` prints that count.  The predicate
+/// mirrors the `find` calls of `decide`, one line per condition; a test pins that every group
+/// whose redness changes the decision on an all-green file satisfies it.
+pub fn decision_read(r: &Row) -> bool {
+    let k = &r.knob;
+    let d25 = (k.f("divergence") - 0.25).abs() < 1e-9;
+    match (r.experiment.as_str(), r.mode.as_str()) {
+        ("A1" | "A2", "monolithic") => matches!(k.int("n"), 32 | 64),
+        ("D3", "split") => k.int("k") == 16 && matches!(k.int("t"), 8 | 64 | 256),
+        ("D2", "monolithic") => k.int("t") == 64 && k.int("k") == 16,
+        ("B3", "certified") => {
+            d25 && matches!(
+                (k.int("length"), k.s("cut")),
+                (200, "every1") | (1000, "every1" | "every8" | "every32")
+            )
+        }
+        ("C1", "monolithic") => k.s("base") == "b" && d25 && matches!(k.int("length"), 200 | 1000),
+        ("B4", "monolithic") => k.s("shape") == "assoc" && (5..=7).contains(&k.int("n")),
+        _ => false,
+    }
+}
+
+/// The groups [`decide`] reads that a plain `check` does not re-solve: not in the quick tier
+/// (re-run in process) and not in the plan's cheap class (`cost::CHEAP`, sampled).  Their
+/// timing-derived and solver-derived fields are verified only by `check --full` (round 2,
+/// finding 1(c)); `check` prints this count so the gap is never silent.
+pub fn decision_groups_not_resolved(rows: &[Row]) -> Vec<String> {
+    let mut keys = std::collections::BTreeSet::new();
+    for r in rows {
+        if decision_read(r)
+            && r.tier != "quick"
+            && !crate::cost::is_cheap(&r.experiment, &r.mode, &r.knob.key())
+        {
+            keys.insert(group_key(r));
+        }
+    }
+    keys.into_iter().collect()
 }
 
 /// Section 8.3 applied to the rows, worst case first; any shape that is missing or not green

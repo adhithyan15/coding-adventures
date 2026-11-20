@@ -625,6 +625,76 @@ fn mono_row(
     row
 }
 
+/// The deterministic structure of a row's instance: everything a row records that depends only on
+/// `(experiment, knob, mode, seed)` and on the instance builders, never on the solver (VOS-028c2
+/// round 2, finding 1(b)).  [`structure_of`] builds the instance exactly as [`run_row`] does and
+/// stops before the solve, so a row too expensive to solve in `check` can still have its digest,
+/// size and entropy verified.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Structure {
+    /// SHA-256 of the DIMACS text (of every segment, for a chain).
+    pub instance_sha256: String,
+    /// AND nodes in the miter cone.
+    pub ands: u64,
+    /// CNF variables.
+    pub vars: u64,
+    /// CNF clauses.
+    pub clauses: u64,
+    /// Sensitive declared bits.
+    pub entropy_bits: u64,
+    /// Declared bits.
+    pub declared_bits: u64,
+}
+
+/// Build the instance of a non-enumeration row without solving it.  Mirrors `mono_row` (one
+/// instance) and `chain_row` (every segment, summed); a test pins that the two agree on rows of
+/// every shape.
+pub fn structure_of(spec: &RowSpec) -> Result<Structure, String> {
+    match spec.experiment.as_str() {
+        "A1" | "A2" | "B1" | "B2" | "B4" | "C1" | "C2" | "D1" | "D2" => {
+            let shape = shape_for(spec)?;
+            let inst = shape
+                .build(spec.seed, None)
+                .map_err(|e| format!("build: {e}"))?;
+            let (cnf, _ts) = inst.cnf();
+            let ent = entropy(&inst, spec.seed);
+            Ok(Structure {
+                instance_sha256: dimacs_sha(&cnf).1,
+                ands: inst.cone_ands() as u64,
+                vars: cnf.num_vars as u64,
+                clauses: cnf.clauses.len() as u64,
+                entropy_bits: ent.sensitive as u64,
+                declared_bits: ent.declared as u64,
+            })
+        }
+        "B3" | "D3" | "D4" => {
+            let segs = segments_for(spec)?;
+            let mut hash = Sha256Hasher::new();
+            let mut s = Structure::default();
+            for (i, seg) in segs.iter().enumerate() {
+                let inst = seg
+                    .build(spec.seed, None)
+                    .map_err(|e| format!("build segment {i}: {e}"))?;
+                let (cnf, _ts) = inst.cnf();
+                hash.update(format!("c segment {i}\n").as_bytes());
+                hash.update(cdcl_sat::write_dimacs(&cnf).as_bytes());
+                let ands = inst.cone_ands() as u64;
+                s.ands += ands;
+                s.vars += cnf.num_vars as u64;
+                s.clauses += cnf.clauses.len() as u64;
+                if ands > 0 {
+                    let e = entropy(&inst, spec.seed);
+                    s.entropy_bits += e.sensitive as u64;
+                    s.declared_bits += e.declared as u64;
+                }
+            }
+            s.instance_sha256 = hash.hex_digest();
+            Ok(s)
+        }
+        other => Err(format!("{other} has no solver instance")),
+    }
+}
+
 /// Totals of a chain row.
 #[derive(Default)]
 struct Chain {
