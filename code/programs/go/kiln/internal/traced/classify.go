@@ -270,6 +270,21 @@ type classifier struct {
 	// not create (D40).  The trace keeps each process's cwd as TEXT, which a
 	// renamed directory leaves stale while the kernel resolves ".." physically.
 	tmpMoved bool
+	// reshaped says the action successfully renamed or exchanged something
+	// other than a regular file it created itself, or could not place such a
+	// call (D43).  A directory rename leaves a cwd TEXT stale, so the sealed-
+	// root absences remembered in sealedProbes are refused if it is true.
+	reshaped     bool
+	sealedProbes map[string]bool
+	// dotdotAt is the first path of a FAILED call whose walk stopped at a
+	// component the post-run disk lacks with a ".." after it: where that call
+	// really looked is unknown if a cwd text went stale (settleReshaped).
+	dotdotAt string
+	// rootLinks are the host-side targets of the declared roots that are
+	// symlinks on the host (merged-/usr: /bin -> usr/bin), for sandboxHas;
+	// computed once (rootLinksDone).
+	rootLinks     []string
+	rootLinksDone bool
 	// incomplete is the negation of RawRecord.WritesComplete: set the moment
 	// something happens that could hide a write from Writes/TrackedWrites.
 	// Every setter says which trigger of KILN04 section 5.5 it is.

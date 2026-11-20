@@ -124,6 +124,15 @@ type Config struct {
 	// ~/.cargo/registry and ~/.cargo/git).  They are not fresh tmpfs: fresh()
 	// refuses them and their ancestors, as it does a declared root (KILN04 D40).
 	HostBinds []string
+	// ScratchDirs are the fresh, empty tmpfs the sandbox mounts besides Home and
+	// Tmpdir (/tmp, /var/tmp, /run: sandbox.ScratchDirs).  A non-empty list says
+	// the action ran in the SEALED new root (KILN04 D43): the sandbox contains
+	// only the checkout, the declared host roots, HostBinds, Home, Tmpdir, these
+	// directories, the ancestors of all of those, and /dev, /proc and /sys, so
+	// every other path is absent by construction.  The recorder passes
+	// sandbox.ScratchDirs itself, so the two cannot drift; empty (the default)
+	// keeps the pre-D43 behaviour of asking the post-run disk.
+	ScratchDirs []string
 	// Pinned is the set of ecosystems in pinned.json.
 	Pinned map[string]bool
 	// Tools is the set of tool names in the weak key's tools section.
@@ -252,6 +261,7 @@ func Classify(cfg Config, in Input) (*RawRecord, error) {
 		c.incomplete = true
 	}
 	c.checkStability()
+	c.settleReshaped()
 	return c.record(in.Package), nil
 }
 
@@ -301,6 +311,11 @@ func prepare(cfg Config) (*prepared, error) {
 			return nil, fmt.Errorf("traced: %q is not a real directory (Root must be a resolved path)", p)
 		}
 	}
+	for _, d := range cfg.ScratchDirs {
+		if !strings.HasPrefix(d, "/") || d == "/" || path.Clean(d) != d {
+			return nil, fmt.Errorf("traced: a scratch directory must be an absolute, clean path other than /, got %q", d)
+		}
+	}
 	// The scrubbed HOME and TMPDIR are fresh tmpfs; the checkout is neither
 	// inside nor equal to them as a whole.  (It may lie beneath HOME, as on
 	// hosted runners; the fresh-tmpfs rule then excludes it, see classifier.fresh.)
@@ -324,6 +339,11 @@ func prepare(cfg Config) (*prepared, error) {
 		if d != "" {
 			anchor(d)
 		}
+	}
+	// The directories the plan creates to mount a scratch tmpfs (/var for
+	// /var/tmp) are ancestor-chain nodes too (D43).
+	for _, d := range cfg.ScratchDirs {
+		anchor(d)
 	}
 	if cfg.HostRoots == nil {
 		return p, nil

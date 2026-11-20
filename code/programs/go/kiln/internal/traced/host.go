@@ -225,6 +225,17 @@ func (c *classifier) observeHost(abs string, present, listing bool) {
 	// state root the recorder derives and verifies empty.  Both are pinned by
 	// internal/record/sandboxroots_test.go.
 	if !present && c.underTmp(abs) {
+		if c.underScratch(abs) {
+			c.noteSealedProbe(abs) // D43: refused at the end if a directory moved
+		}
+		return
+	}
+	// D43: the sealed new root holds nothing the plan did not mount, so an
+	// absent probe of a path outside the plan, or of a name nobody made inside
+	// a scratch tmpfs, is a constant of the plan.  A probe that FOUND something
+	// there contradicts the plan and falls through to host-read below.
+	if !present && c.sealedOn() && !c.sandboxHas(abs) {
+		c.noteSealedProbe(abs)
 		return
 	}
 	if r := c.rootOf(abs); r != nil {
@@ -319,6 +330,13 @@ func (c *classifier) observeRoot(r *preparedRoot, abs string, present bool) {
 // out-of-repository write is to the action's own scratch space or fails on the
 // read-only filesystem; neither is an input.
 func (c *classifier) writeHost(abs string) {
+	if c.sandboxAbsent(abs) {
+		// D43: a call succeeded at a place the sealed root does not contain
+		// (it is read-only above the mounts), so the model is wrong, and
+		// nothing it says can be trusted.
+		c.reason("host-read:" + c.redact(abs))
+		return
+	}
 	if r := c.rootOf(abs); r != nil && r.kind == legacy.RootState {
 		c.reason("state-write:" + c.redact(abs))
 	}
