@@ -268,6 +268,10 @@ type record struct {
 	// ghosts are the phantom execve lines (D33) that were accepted against this
 	// completed execve; pass 2 checks they share its thread group.
 	ghosts []ghost
+	// spawnDropped, on an exit record, says the dying call this exit ended was
+	// a fork, vfork or clone that dyingPolicy dropped (D44).  The model counts
+	// them to decide how many orphan exits it may accept.
+	spawnDropped bool
 }
 
 // ghost is a phantom "execve(" line accepted by ghostOwner: the pid that
@@ -388,36 +392,82 @@ func (st *lineState) clearPending(pid int) {
 // its owner and ends; a call the task died inside (D35) ends under
 // dyingPolicy; anything else is an unresumed call, refused at the call's own
 // line.
-func exitInsideCall(st *lineState, pid int, ex *Exit) *Error {
+func exitInsideCall(st *lineState, pid int, ex *Exit) (spawnDropped bool, e *Error) {
 	p := st.pend[pid]
 	if p == nil {
-		return nil
+		return false, nil
 	}
 	if p.dying {
 		// strace already said the result is unknown because the task died: the
 		// policy alone decides, with no other way out.
 		if !dyingPolicy(p) {
-			return incomplete(p.line, reasonUnresumed)
+			return false, unresumedError(p)
 		}
 		st.clearPending(pid)
-		return nil
+		return isSpawnCall(p.name), nil
 	}
 	if lookup(p.name).class == classIgnored || p.dead {
 		st.clearPending(pid)
-		return nil
+		return false, nil
 	}
 	if l := ghostOwner(st, pid, p, ex); l != nil {
 		l.ghosts = append(l.ghosts, ghost{pid, p.line})
 		st.clearPending(pid)
-		return nil
+		return false, nil
 	}
 	// A task killed out of its syscall-ENTRY stop prints "<unfinished ...>" and
 	// then only its exit: the same dying-call rule applies (shape 3).
 	if dyingPolicy(p) {
 		st.clearPending(pid)
-		return nil
+		return isSpawnCall(p.name), nil
 	}
-	return incomplete(p.line, reasonUnresumed)
+	return false, unresumedError(p)
+}
+
+// isSpawnCall: a call dyingPolicy may have dropped that could have started a
+// child (fork, vfork, clone).  clone3 is refused-class and never dropped.
+func isSpawnCall(name string) bool {
+	ent := lookup(name)
+	return ent.class == classHandled && (ent.role == roleFork || ent.role == roleClone)
+}
+
+// unresumedError is the refusal of a call that never completed.  For a name
+// outside the closed table it also carries the census's unknown-number code
+// (D44); the name itself never leaves this function.
+func unresumedError(p *pending) *Error {
+	e := incomplete(p.line, reasonUnresumed)
+	if lookup(p.name).class == classUnknown {
+		e.UnknownNumber = "unknown-number:no"
+		if isUnknownNumberName(p.name) {
+			e.UnknownNumber = "unknown-number:yes"
+		}
+	}
+	return e
+}
+
+// isUnknownNumberName reports whether name is exactly how strace spells a
+// syscall number it has no table entry for.  Source: strace's src/syscall.c
+// (xsprintf(s->buf, "syscall_%#" PRI_klx, scno)): "syscall_" followed by the
+// number in C's "%#lx": lowercase hex with a 0x prefix and no leading zeros,
+// and plain "0" for zero.  At most 16 hex digits (64 bits).
+func isUnknownNumberName(name string) bool {
+	rest, ok := strings.CutPrefix(name, "syscall_")
+	if !ok {
+		return false
+	}
+	if rest == "0" {
+		return true
+	}
+	h, ok := strings.CutPrefix(rest, "0x")
+	if !ok || h == "" || len(h) > 16 || h[0] == '0' {
+		return false
+	}
+	for i := 0; i < len(h); i++ {
+		if c := h[i]; !((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')) {
+			return false
+		}
+	}
+	return true
 }
 
 // dyingPolicy is the table of the dying-call rule (KILN04 D35): whether the call
@@ -448,6 +498,9 @@ func dyingPolicy(p *pending) bool {
 	case classIgnored:
 		return true
 	case classHandled:
+		if nullPathDying(p) {
+			return true
+		}
 	default:
 		return false
 	}
@@ -456,6 +509,19 @@ func dyingPolicy(p *pending) bool {
 		return true
 	case roleClone:
 		return cloneArgsAllowed(p.args)
+	}
+	return false
+}
+
+// nullPathDying (D44): a dying stat, lstat, access or readlink whose path
+// argument was printed as NULL.  The kernel copies the path in before it looks
+// anything up, so a NULL pointer fails with EFAULT having read nothing, and no
+// sibling can use a result that does not exist.  newfstatat and statx are NOT
+// here: with AT_EMPTY_PATH a NULL or "" path means "the descriptor itself".
+func nullPathDying(p *pending) bool {
+	switch p.name {
+	case "stat", "lstat", "access", "readlink":
+		return len(p.args) > 0 && p.args[0] == "NULL"
 	}
 	return false
 }
@@ -927,10 +993,11 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		// A process killed or exiting inside a call that has no effect on paths
 		// is normal (wait4 interrupted by SIGKILL).  A path call that never
 		// returned is not: its result is unknown (but see D33).
-		if e := exitInsideCall(st, pid, ex); e != nil {
+		dropped, e := exitInsideCall(st, pid, ex)
+		if e != nil {
 			return nil, e
 		}
-		return &record{line: lineNo, pid: pid, exit: ex}, nil
+		return &record{line: lineNo, pid: pid, exit: ex, spawnDropped: dropped}, nil
 	case strings.HasPrefix(body, "--- "):
 		if !strings.HasSuffix(body, " ---") || len(body) < 8 {
 			return nil, incomplete(lineNo, reasonUnparsable)

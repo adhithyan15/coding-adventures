@@ -81,10 +81,11 @@ func handleLineGLegacy(text string, lineNo int, st *lineState) (rec *record, e *
 		if !ok {
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
-		if e := exitInsideCall(st, pid, ex); e != nil {
+		dropped, e := exitInsideCall(st, pid, ex)
+		if e != nil {
 			return nil, e
 		}
-		return &record{line: lineNo, pid: pid, exit: ex}, nil
+		return &record{line: lineNo, pid: pid, exit: ex, spawnDropped: dropped}, nil
 
 	case "signal_line":
 		if p := pend[pid]; p != nil {

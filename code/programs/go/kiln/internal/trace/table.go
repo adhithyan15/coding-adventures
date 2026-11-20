@@ -152,8 +152,12 @@ func buildTable() map[string]entry {
 	h("fchown", entry{kind: KindWrite, role: roleFdPath, min: 3, max: 3})
 	h("fsetxattr", entry{kind: KindWrite, role: roleFdPath, min: 5, max: 5})
 	h("fremovexattr", entry{kind: KindWrite, role: roleFdPath, min: 2, max: 2})
-	h("mknod", entry{kind: KindWrite, min: 3, max: 3, pth: 1})
-	h("mknodat", entry{kind: KindWrite, min: 4, max: 4, dirfd: 1, pth: 2})
+	// mknod/mknodat: strace prints the device number only for S_IFCHR and
+	// S_IFBLK (strace's mknod.c: decode_mknod switches on mode & S_IFMT).  For
+	// a regular file, FIFO or socket the call has one argument fewer, so the
+	// minimum is the short form; call() refuses a short device node (D44).
+	h("mknod", entry{kind: KindWrite, min: 2, max: 3, pth: 1})
+	h("mknodat", entry{kind: KindWrite, min: 3, max: 4, dirfd: 1, pth: 2})
 
 	// Process.
 	h("execve", entry{kind: KindProcess, role: roleExec, min: 3, max: 3, pth: 1})

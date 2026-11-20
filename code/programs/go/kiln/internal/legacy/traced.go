@@ -111,7 +111,13 @@ const TracedSemantics uint64 = 2
 // and any absent probe allowed here or by D39 inside a scratch directory after
 // the action moved a directory.  The verdict changes both ways, so every weak
 // key changes.
-const RecorderVersion = 11
+//
+// Version 12: more dying calls and orphans accepted (KILN04 D44).  A dying
+// stat, lstat, access or readlink with a NULL path is dropped; a pid whose
+// only line is its exit is accepted when dropped dying spawns can account for
+// it; mknod/mknodat without a device argument (regular file, FIFO, socket) is
+// no longer `arity`.  The accept set grows, so every weak key changes.
+const RecorderVersion = 12
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
