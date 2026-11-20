@@ -31,10 +31,12 @@ fn concat_literals_and_if_of_sized_operands_flow_to_bytes_n_everywhere() {
     let ok = "  model w1(a: Bytes<2>) -> Bytes<4> = concat(a, b\"0102\")\n  model w2(c: Bool) -> Bytes<2> = if c then concat(b\"00\", b\"01\") else concat(b\"02\", b\"03\")\n  model take4(x: Bytes<4>) -> Bool = true\n  model w4(a: Bytes<2>) -> Bool = take4(concat(a, b\"0102\"))\n";
     let l = lower(ok).expect("static widths flow");
     assert_eq!(l.models.len(), 4);
-    // The oracle's rule is on the `Bytes` expression itself, not through a `Result`: the Ok payload
-    // flows, but the `Result<Bytes,E>` it builds is not assignable to `Result<Bytes<3>,E>`.  The
-    // generator mirrors that (the oracle is the reference).
-    assert!(lower("  model w3(a: Bytes<1>) -> Result<Bytes<3>, E> = Ok(concat(a, b\"0102\"))\n").is_err());
+    // R51 and R13 (c), turned round by S11b: the width is part of the type, so `Ok(e)` wraps the type of
+    // `e` and `Ok(concat(a, b"0102"))` with `a: Bytes<1>` is a `Result<Bytes<3>,E>`.  (Before S11b this
+    // was refused, a pre-existing over-refusal the generator copied from the oracle.)
+    let l = lower("  model w3(a: Bytes<1>) -> Result<Bytes<3>, E> = Ok(concat(a, b\"0102\"))\n")
+        .expect("Ok wraps the width");
+    assert_eq!(l.model("w3").unwrap().ret.name(), "Result<Bytes<3>,E>");
     // a wrong width does not
     for bad in [
         "  model b1(a: Bytes<2>) -> Bytes<5> = concat(a, b\"0102\")\n",
@@ -44,6 +46,41 @@ fn concat_literals_and_if_of_sized_operands_flow_to_bytes_n_everywhere() {
         let e = lower(bad).expect_err(bad);
         assert!(e.code == code::TYPE || e.code == code::CHECK, "{bad}: {e}");
     }
+}
+
+#[test]
+fn the_width_is_part_of_the_type_through_ok_some_if_and_match_r51() {
+    // each document is accepted exactly when the type of the payload is the wanted width, or the wanted
+    // type is a plain `Bytes` (R51: the same rule the checker applies, in both tools)
+    let ok = [
+        "  model a1() -> Result<Bytes<2>, E> = Ok(b\"6162\")\n",
+        "  model a2() -> Result<Bytes, E> = Ok(b\"6162\")\n",
+        "  model a3() -> Option<Bytes<2>> = Some(b\"6162\")\n",
+        "  model a4() -> Option<Bytes> = Some(b\"6162\")\n",
+        "  model a5(a: Bytes<1>) -> Option<Bytes<3>> = Some(concat(a, b\"0102\"))\n",
+        "  model a6(c: Bool) -> Option<Bytes<2>> = if c then Some(b\"6162\") else Some(b\"6364\")\n",
+        "  model a7(c: Bool) -> Result<Bytes<2>, E> = match c with true -> Ok(b\"6162\") | false -> Err(E.X)\n",
+        "  model a8(a: Bytes<4>) -> Result<Bytes, E> = Ok(take(a, 1))\n",
+    ];
+    for src in ok {
+        lower(src).unwrap_or_else(|e| panic!("{src}: {e}"));
+    }
+    let bad = [
+        // a width the payload does not have
+        "  model b1() -> Option<Bytes<3>> = Some(b\"6162\")\n",
+        "  model b2(a: Bytes<1>) -> Option<Bytes<4>> = Some(concat(a, b\"0102\"))\n",
+        // `take` gives a plain `Bytes`: it does not flow to a sized one
+        "  model b3(a: Bytes<4>) -> Result<Bytes<1>, E> = Ok(take(a, 1))\n",
+        // nothing lifts through a tuple: `(b\"6162\", n)` is a `(Bytes<2>,Nat)`
+        "  model b4(n: Nat) -> (Bytes, Nat) = (b\"6162\", n)\n",
+    ];
+    for src in bad {
+        let e = lower(src).expect_err(src);
+        assert!(e.code == code::TYPE || e.code == code::CHECK, "{src}: {e}");
+    }
+    // and the width is carried in the written type of a `none`: `["none","Bytes<2>"]`
+    let l = lower("  model n(o: Option<Bytes<2>>) -> Bool = o == None\n").unwrap();
+    assert!(json(&l, "n").contains(r#"["none","Bytes<2>"]"#), "{}", json(&l, "n"));
 }
 
 #[test]
@@ -71,13 +108,13 @@ fn match_lowers_every_pattern_and_err_e_is_err_any() {
             r#"[["err","X"],["lit",{"type":"Nat","value":"2"}]],[["err_any"],["lit",{"type":"Nat","value":"3"}]]]]"#
         )
     );
-    // an arm that USES the error value has no IR form: ir.data
+    // an arm that USES the error value has no IR form: the feature `err-value` ([D55], R28)
     let e = lower("  model u(r: Result<Bool,E>) -> Bool = match r with Ok(x) -> x | Err(e) -> e == e\n")
         .expect_err("uses e");
-    assert!(e.code == code::LEVEL || e.code == code::CHECK, "{e}");
-    // a match on a non-Result is ir.data
-    let e = lower("  model d(o: Bool) -> Nat = match o with true -> 1 | false -> 0\n").unwrap_err();
-    assert_eq!(e.level, Some("ir.data"));
+    assert_eq!((e.code, e.level), (code::LEVEL, Some("err-value")), "{e}");
+    // a match on a non-Result is `ir.data` (it lowers since S11b, and requires the level)
+    let l = lower("  model d(o: Bool) -> Nat = match o with true -> 1 | false -> 0\n").unwrap();
+    assert_eq!(l.model("d").unwrap().requires, ["ir.core", "ir.data"]);
 }
 
 #[test]

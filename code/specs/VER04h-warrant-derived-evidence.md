@@ -65,6 +65,7 @@ and generator produce. The same command is in the package `BUILD` and
 | every suite above | negative control: the suite is re-run with a deliberate fault injected at the adapter and must fail with a registered failure id | same adapter | `negctl/<suite>/<claim>/<fault>` |
 | `labels <op>` with `secret` rows | 2-safety (constant-time) proof obligation on the real lowered source | `src/lib.rs` lowered by `warrant-ir` | `proof/<op>/constant-time` |
 | `bound <op>` `steps <= f(n)` | `BoundProver` obligation per concrete size | same lowered source | `proof/<op>/steps-bound` |
+| operation with only public labels, no `steps` bound and no cost-proof anchor | refusal-only source-equivalence disposition; actual public export is attempted by the Rust-subset/WIR frontend, but frontend acceptance alone is not equivalence | actual public export and current source tree | `source-equivalence/<op>` |
 | `bound <op>` `heap`/`depth` | not discharged by the pilot prover; recorded `unchecked` | n/a | `proof/<op>/heap-bound`, `…/depth-bound` |
 | `input … rejects … with E` | covered by claims of the form `op(...) == Err(E)`; a `rejects` row with no such claim is reported as uncovered | real export | via claim |
 | `fresh` op | adapter checks the output buffer does not alias an input and that inputs are unchanged after the caller mutates the output | real export | folded into every claim on the op |
@@ -340,8 +341,8 @@ and `target` (the suite id attacked).
 
 `evidence/proof-manifest.json` (`schema: "warrant-proof-evidence-v1"`) lists
 obligations with `id`, `op`, `function`, `kind`
-(`constant-time | steps-bound | negative-control`), `label`
-(`proved | bounded(K) | unknown | falsified-as-expected | unchecked`),
+(`constant-time | steps-bound | negative-control | source-equivalence`), `label`
+(`proved | bounded(K) | unknown | falsified-as-expected | unchecked | not-live`),
 `verdict`, `max_len`, per-shape `runs`, `certificates`
 (`{id, kind, count}`; `kind` is `miter` or `trivial-miter-collapsed`) and, for
 the obligations a run discharges, `obligation_sha256`: the SHA-256 of the
@@ -361,6 +362,67 @@ per file, sorted by path bytes:
     u64-LE path length,    path bytes   (relative to src/, "/" separators)
     u64-LE content length, content bytes
 ```
+
+### 8.1 Refusal-only source-equivalence anchor
+
+Some Warrant documents have no secret operands and no `steps` bound. They have
+no constant-time or cost proof obligation for the report to derive, even when
+the package still needs one claim row per operation. Such an operation may use
+one `source-equivalence` entry only as an explicit **refusal-only fallback**:
+
+* The operation must have every parameter explicitly labelled `public`, no
+  `secret` label, and no `steps` bound. It must have no `constant-time` or
+  `steps-bound` entry that already anchors its report claim. This fallback
+  cannot replace, weaken, or hide a declared cost obligation.
+* Its id is exactly `warrant/<module>/source-equivalence/<op>`, its `kind` is
+  exactly `source-equivalence`, and its `function` is the exact public export
+  named by the operation's validated `evidence.bindings` row. The initial
+  supported export surface is a direct module-level `pub fn` in `src/lib.rs`;
+  a same-named function in a private child module, a re-export, a duplicate
+  root definition, or any other unresolved route is refused. Its `label` and
+  `verdict` are exactly `not-live`, `max_len` is zero, and it has no
+  certificates or obligation digest. `evidence.bindings` must declare
+  `proofs_not_live=<reason>` for that operation.
+* The supported crate target is Cargo's default library target discovered as
+  `src/lib.rs`. The bounded manifest bytes are parsed as TOML; the manifest
+  must identify a package, omit a `[lib]` override, and omit or enable
+  `package.autolib`. A custom target, disabled auto-discovery, malformed TOML,
+  or any other target form is unsupported. The
+  export must be an unconditional root item: candidate-like tokens inside
+  parentheses, brackets, macro input, or nested braces do not count. An
+  attached `cfg`/`cfg_attr` or crate-level conditional attribute makes the
+  candidate ineligible; other unrelated item attributes, including `derive`,
+  remain allowed. This restriction establishes the active public export
+  without pretending the subset lexer is a complete Rust item resolver.
+* The pilot export signature profile is intentionally closed: `pub fn <name>`
+  with named parameters whose types are simple paths, optionally followed by
+  a return type that is a simple path or one generic path level with simple,
+  comma-separated type arguments, and then the function body. Generic
+  functions, nested generic types, const-generic syntax, references, `where`
+  clauses, type macros, or any unrecognized signature token are identity
+  failures. They are not frontend refusals and cannot produce this fallback.
+  Only after target, root-item and signature identity are resolved does a
+  parser or lowering refusal count as the reproduced frontend result.
+* The report checker reruns the Rust-subset/WIR frontend on that actual public
+  export. Producer and checker each capture the bounded `src/**/*.rs` tree
+  once, reject a symlinked `src` root or any symlink in the tree, and derive
+  both the source digest and the isolated frontend input from that same
+  in-memory snapshot. They do not reread `lib.rs` after hashing it or use a
+  compile-time source copy as the subject. The check is also bound to the
+  current Warrant document through its manifest hash. The recorded refusal
+  must be reproducible. A newly accepted export, mismatched function, missing
+  opt-in, stale source/spec pin, any other status or label, or any certificate
+  makes checking fail.
+* This entry records only that the source frontend refused the export. It never
+  asserts semantic equivalence, receives a passing rank, discharges CWE-400,
+  CWE-208 or another weakness, or makes E5 pass. E5 remains `not-live` when an
+  operation is anchored only by these fallback entries. SAT/DRAT circuit
+  evidence is separate and cannot be represented as a source-level result.
+
+If a future frontend parses and lowers an export but no source-to-Warrant
+equivalence proof is available, this fallback does not apply: the proof status
+is not a frontend refusal. That result stays unsupported until a separately
+specified proof kind is implemented.
 
 Every field is length-prefixed, so different file sets never frame to the same
 bytes.  A symlink, a non-UTF-8 name, an oversized or too deeply nested file
@@ -564,9 +626,12 @@ Further checks added by the security review (each has a falsification test in
     input) or `decompressor`.  `rows` must declare CWE-326, CWE-327 and CWE-407
     (an absent row refuses the file: nothing defaults to a sentence) and may
     declare CWE-409 for a `transform` only; no other CWE may be declared.
-    `applicability` has exactly one value, `excluded`; a profile cannot declare a
-    row discharged, an exemption or approved.  `reason` is one line of printable
-    ASCII, 1 to 2048 bytes, without the reserved suffix the matrix appends itself.
+    `applicability` is `excluded`, except CWE-407 may also be `applicable` under
+    [VER15 §5](VER15-weakness-registry.md#5-missing-cost-bound-coverage-ver-p048).
+    A profile cannot declare a row discharged, an exemption or
+    approved. `reason` is one line of printable ASCII, 1 to 2048 bytes, without
+    the reserved suffix the matrix appends itself; for `applicable`, it is
+    descriptive input only and is not copied into the computed disposition.
 
     *What stays in code, and cannot be weakened by data.*  The profile supplies the
     wording of a row and the declaration that it is excluded; the matrix still
@@ -577,6 +642,14 @@ Further checks added by the security review (each has a falsification test in
     | CWE-326, 327 | the effect certificate declares a `rand:` capability (key material needs entropy) |
     | CWE-407 | the document has no operation, or an operation with no `steps` bound row |
     | CWE-409 | the kind is `decompressor` (refused when the file is loaded), or the document declares an `output` row |
+
+    A CWE-407 `applicable` row is valid only for a nonempty Warrant module with
+    at least one operation lacking a declared `steps` bound. The reporter
+    computes unapproved, evidence-empty CWE-400 and CWE-407 exemptions from the
+    exact missing-operation set as specified by VER-P048. The profile cannot
+    declare or approve those exemptions. A `407: excluded` row remains invalid
+    when any operation lacks a step bound, and `407: applicable` fails closed
+    when all operations are bounded or the module has no operations.
 
     Every other row (memory safety, CWE-208, CWE-400, the capability rows) is not
     declarable and is computed exactly as before.  CWE-409 is still derived from the
@@ -626,6 +699,14 @@ Further checks added by the security review (each has a falsification test in
     varint-codec, boolean-logic, bit-arithmetic, lossless-compression) moved
     verbatim into their `assurance-profile.json`; each committed report changes only
     by the added `profile_sha256` line.
+
+23. **Source-equivalence fallback is refusal-only** (VER-P047). It is accepted
+    only for a fully public operation with no `steps` bound and no recognized
+    cost-proof anchor, with the exact operation id and bound export symbol,
+    explicit `proofs_not_live` opt-in, current source/spec pins and a refusal
+    reproduced by the Rust-subset/WIR frontend. It is never a passing proof or
+    weakness discharge, and it leaves E5 `not-live`; all existing constant-time
+    and steps-bound rules remain unchanged.
 
 Evidence ids come from three places: manifest entries (`warrant/...`,
 `bench/...`; must exist and have verdict `pass`), attestations derived from the

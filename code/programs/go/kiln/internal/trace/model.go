@@ -1084,7 +1084,13 @@ func joinCwd(cwd, p string) (string, bool) {
 func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 	c := rec.call
 	ent := lookup(c.name)
-	fail := func(r string) ([]Event, *Error) { return nil, incomplete(rec.line, r) }
+	fail := func(r string) ([]Event, *Error) {
+		e := incomplete(rec.line, r)
+		if SyscallClass(c.name) != "" {
+			e.Call = c.name // a closed-table name, census only (Error.Call)
+		}
+		return nil, e
+	}
 	if len(c.args) < ent.min || len(c.args) > ent.max {
 		return fail(reasonArity)
 	}
@@ -1121,6 +1127,13 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		}
 		if f.cwd || !f.hasAnn {
 			return fail(reasonFDPath)
+		}
+		// D41: fchmod, fchown, fsetxattr and fremovexattr on a pipe, socket or
+		// anonymous inode change an object that lives in no directory, so no file
+		// readable by path changes.  No event, whatever the result.  A bare number
+		// or any other non-absolute annotation still falls through to fd-path.
+		if ent.role == roleFdPath && AnonymousFD(string(f.ann)) {
+			return nil, nil
 		}
 		ev.Path, r = fdPathText(f.ann, true)
 		if r != "" {

@@ -1134,6 +1134,224 @@ func TestHashPackageFramesRepositoryPathAndRawContent(t *testing.T) {
 	}
 }
 
+func TestHashPackageWithRepositoryTreeInputsTracksFilesystemTreeAndRejectsLinks(t *testing.T) {
+	root := t.TempDir()
+	pkgPath := filepath.Join(root, "code/packages/rust/warrant-ir")
+	for path, contents := range map[string]string{
+		filepath.Join(pkgPath, "Cargo.toml"):                             "[package]\nname = \"warrant-ir\"\nversion = \"0.1.0\"\n",
+		filepath.Join(pkgPath, "BUILD"):                                  "echo tree-input-test\n",
+		filepath.Join(pkgPath, "src/lib.rs"):                             "pub fn local() -> u8 { 1 }\n",
+		filepath.Join(root, "code/packages/rust/fixed-point/src/lib.rs"): "pub fn external() -> u8 { 1 }\n",
+	} {
+		absolute := path
+		if err := os.MkdirAll(filepath.Dir(absolute), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(absolute, []byte(contents), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "rust/warrant-ir", Language: "rust", Path: pkgPath}
+	inputs := []string{"code/packages/rust/fixed-point/src"}
+	hash := func() string {
+		t.Helper()
+		value, err := HashPackageWithRepositoryInputsAndTrees(pkg, root, nil, inputs)
+		if err != nil {
+			t.Fatalf("hash repository tree: %v", err)
+		}
+		return value
+	}
+	baseline := hash()
+	newFile := filepath.Join(root, "code/packages/rust/fixed-point/src/untracked.rs")
+	if err := os.WriteFile(newFile, []byte("pub fn untracked() -> u8 { 1 }\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	added := hash()
+	if added == baseline {
+		t.Fatal("new untracked file under a consumed tree did not change its cache identity")
+	}
+	if err := os.Remove(newFile); err != nil {
+		t.Fatal(err)
+	}
+	if restored := hash(); restored != baseline {
+		t.Fatalf("removing the new file did not restore tree identity: got %s want %s", restored, baseline)
+	}
+	if runtime.GOOS != "windows" {
+		if err := os.Symlink(filepath.Join(root, "code/packages/rust/fixed-point/src/lib.rs"), newFile); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := HashPackageWithRepositoryInputsAndTrees(pkg, root, nil, inputs); err == nil {
+			t.Fatal("a symlink under a consumed tree was hashed")
+		}
+	}
+}
+
+func TestRepositoryInputKindIsExplicitAndRejectsSubstitution(t *testing.T) {
+	root := t.TempDir()
+	pkgPath := filepath.Join(root, "code/packages/rust/demo")
+	if err := os.MkdirAll(filepath.Join(pkgPath, "src"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(pkgPath, "Cargo.toml"), []byte("[package]\nname='demo'\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(pkgPath, "BUILD"), []byte("echo test\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(pkgPath, "src/lib.rs"), []byte("pub fn f() {}\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	pkg := discovery.Package{Name: "rust/demo", Language: "rust", Path: pkgPath}
+	input := "code/packages/rust/external"
+	inputPath := filepath.Join(root, filepath.FromSlash(input))
+	if err := os.MkdirAll(inputPath, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := HashPackageWithRepositoryInputs(pkg, root, []string{input}); err == nil {
+		t.Fatal("file registration accepted a directory")
+	}
+	if err := os.Remove(inputPath); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(inputPath, []byte("ordinary file"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := HashPackageWithRepositoryInputsAndTrees(pkg, root, nil, []string{input}); err == nil {
+		t.Fatal("tree registration accepted a regular file")
+	}
+}
+
+func TestRepositoryTreeRejectsSymlinkedAncestorsForEmptyTree(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("symlink creation may require elevated privileges on Windows")
+	}
+	base := t.TempDir()
+	actualRepo := filepath.Join(base, "actual")
+	if err := os.MkdirAll(filepath.Join(actualRepo, "code/packages/rust/demo/src"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	linkRepo := filepath.Join(base, "linked")
+	if err := os.Symlink(actualRepo, linkRepo); err != nil {
+		t.Fatal(err)
+	}
+	pkg := discovery.Package{Name: "rust/demo", Language: "rust", Path: filepath.Join(actualRepo, "code/packages/rust/demo")}
+	if _, err := HashPackageWithRepositoryInputsAndTrees(pkg, linkRepo, nil, []string{"code/packages/rust/demo/src"}); err == nil {
+		t.Fatal("empty tree under linked repository ancestor was accepted")
+	}
+}
+
+func TestRepositoryTreeInventoryChargesPagedEntriesBeforeRetaining(t *testing.T) {
+	root := t.TempDir()
+	tree := filepath.Join(root, "code/packages/rust/large/src")
+	if err := os.MkdirAll(tree, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"a.rs", "b.rs", "c.rs", "d.rs"} {
+		if err := os.WriteFile(filepath.Join(tree, name), []byte("x"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	limits := defaultRepositoryTreeLimits
+	limits.maxEntries = 3 // registered root plus at most two retained entries
+	if _, err := collectRepositoryTreeSnapshot(root, "code/packages/rust/large/src", limits); err == nil {
+		t.Fatal("inventory accepted entries beyond its charged page budget")
+	}
+}
+
+func TestRepositoryTreeCanonicalPathBudgetUsesOneRepositoryRelativePath(t *testing.T) {
+	root := t.TempDir()
+	tree := filepath.Join(root, "code/packages/rust/demo/src")
+	if err := os.MkdirAll(tree, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(tree, "x.rs"), []byte("x"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	limits := defaultRepositoryTreeLimits
+	limits.maxPathBytes = len("code/packages/rust/demo/src/x.rs")
+	if _, err := collectRepositoryTreeSnapshot(root, "code/packages/rust/demo/src", limits); err != nil {
+		t.Fatalf("canonical near-limit path was rejected: %v", err)
+	}
+	limits.maxPathBytes--
+	if _, err := collectRepositoryTreeSnapshot(root, "code/packages/rust/demo/src", limits); err == nil {
+		t.Fatal("path over the canonical byte limit was accepted")
+	}
+}
+
+func TestRepositoryTreeAggregateByteLimitIsPerTree(t *testing.T) {
+	root := t.TempDir()
+	trees := []string{"code/packages/rust/one/src", "code/packages/rust/two/src"}
+	for _, tree := range trees {
+		directory := filepath.Join(root, filepath.FromSlash(tree))
+		if err := os.MkdirAll(directory, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(directory, "input.bin"), []byte("12345678"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	limits := defaultRepositoryTreeLimits
+	limits.maxFileBytes = 8
+	limits.maxTotalBytes = 8
+	if err := hashRepositoryTreeInputs(sha256.New(), "rust/consumer", root, trees, limits); err != nil {
+		t.Fatalf("two separately legal trees exceeded a shared byte budget: %v", err)
+	}
+}
+
+func TestStableContentFrameRejectsAtomicReplacementAndGrowth(t *testing.T) {
+	t.Run("replacement", func(t *testing.T) {
+		if runtime.GOOS == "windows" {
+			t.Skip("Windows rename does not atomically replace an existing file")
+		}
+		root := t.TempDir()
+		path := filepath.Join(root, "source.bin")
+		if err := os.WriteFile(path, []byte("same size"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		hash := sha256.New()
+		err := writeStableContentFrameBoundedWithHook(hash, root, path, nil, 64, nil, 0, func() error {
+			replacement := filepath.Join(root, "replacement.bin")
+			if err := os.WriteFile(replacement, []byte("same size"), 0o644); err != nil {
+				return err
+			}
+			info, err := os.Stat(path)
+			if err != nil {
+				return err
+			}
+			if err := os.Chtimes(replacement, info.ModTime(), info.ModTime()); err != nil {
+				return err
+			}
+			return os.Rename(replacement, path)
+		})
+		if err == nil {
+			t.Fatal("same-name atomic replacement after open was accepted")
+		}
+	})
+	t.Run("growth", func(t *testing.T) {
+		root := t.TempDir()
+		path := filepath.Join(root, "source.bin")
+		if err := os.WriteFile(path, []byte("short"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		hash := sha256.New()
+		err := writeStableContentFrameBoundedWithHook(hash, root, path, nil, 64, nil, 0, func() error {
+			file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0)
+			if err != nil {
+				return err
+			}
+			_, writeErr := file.Write([]byte(" grew"))
+			closeErr := file.Close()
+			if writeErr != nil {
+				return writeErr
+			}
+			return closeErr
+		})
+		if err == nil {
+			t.Fatal("file growth after open was accepted")
+		}
+	})
+}
+
 func TestHashPackageFramesAndSortsMultipleFilesByUTF8Bytes(t *testing.T) {
 	root := t.TempDir()
 	pkgPath := filepath.Join(root, "demo")

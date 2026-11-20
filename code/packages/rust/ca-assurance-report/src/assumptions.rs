@@ -362,7 +362,10 @@ fn exemption_selector(id: &str) -> Option<Selector> {
         let below_wir: [&str; 5] = ["cc", "mc", "uarch", "gate", "phys"];
         return Some(Box::new(move |e| below_wir.contains(&e.layer.as_str()) || e.id == "wir.cost.step-model"));
     }
-    if id == "EXEMPT-CWE-400-NO-STEP-PROOF" {
+    if id == "EXEMPT-CWE-400-NO-STEP-PROOF"
+        || id == "EXEMPT-CWE-400-MISSING-STEP-BOUNDS"
+        || id == "EXEMPT-CWE-407-MISSING-STEP-BOUNDS"
+    {
         // No section 3.9 row: the exemption records an *absence* of proof
         // (not-live obligations), not a reliance on assumptions.
         return Some(Box::new(|_| false));

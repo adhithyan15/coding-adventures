@@ -38,10 +38,20 @@ case that needs another level belongs to S10d or S11 and fails the build here.
 | `cases_domain.py` | `v2-domain`: descriptor JSON, binder type, `index` or `range`; every `ir.core` leaf |
 | `cases_chunk.py` | `v2-chunk`: `corpus`, `suite` row, `chunk_file_hex`, `chunk`; valid cases and one tamper per error |
 | `cases_fault.py` | `v2-fault`: a fault row instantiated by the oracle's templates (or written by hand), the op row, args and result |
+| `cases_binding.py` | `v2-binding` (S5c): `binding_hex` (the file's bytes), `corpus` (`types` and `ops`), `host` (four closed lists); derived by `bindings_v2.py`, the lane-neutral reference binding validator; every refused case changes one line of a valid base binding and triggers exactly one `reason` of the closed set listed in the package README |
 | `kit.warrant`, `kit.profile` | the `v2-chunk` suites at the default `chunk_size` (a `2**24` suite among them); the profile declares no fault |
 | `kit-small.warrant`, `kit-small.profile` | the suites at `chunk_size 1024` (a lane uses the recorded value); the profile declares no fault |
+| `kit-width.warrant`, `kit-width.profile` | S5e: an op with `width_params` (`eq_fixed<N>`) and a ground claim, at `chunk_size 1024`. A third document, so that no byte of an S5b case moves |
 
 `kit.warrant` is the expensive part (about a minute, 256 chunks of the `big` suite); it is derived once per run.
+
+## `v2-binding` (S5c): written always, checked once committed
+
+`--write` writes `v2-binding.json` (176 cases) beside the six files. S5c does not commit it (S5d does), so `--check`
+treats it as **pending** while the directory has neither the file nor a `v2-binding` row in `index.json`: it prints
+"not committed yet" and compares only the six files and their index rows, so the committed S5b family stays green. Once
+the file or its index row exists, it is held to the derivation like the others (a row without the file, a file that differs
+and a file without a row are exit 1). Regeneration stays two steps: `--write`, then `code/scripts/warrant_corpus_conformance.py --write`.
 
 ## Choices the spec leaves open (see section 16.15 of VER04r)
 
@@ -81,3 +91,31 @@ not an integer, a `chunks` count that disagrees with `ceil(product / chunk_size)
 `discarded` that disagrees with the chunk file, a `max_ir_cost` below 2,000 in the *corpus* part of a `v2-chunk` case,
 a `Bytes<07>` width, and a `level-missing` caused by a *type* (S5-0 says
 the S5b vectors use tags). A later PR that settles one of them may add the case.
+
+## S5e: the vectors of section 16.18 (the *S6a-0 additions* bullet of section 11)
+
+Each is a case of this directory's tables, derived by the oracle (every intent is checked against the derivation); the
+committed files are the fixture PR's. "Oracle change" is what the derivation or the oracle had to learn first.
+
+| Vector | Case id (all `requires` `["ir.core"]`) | Outcome | Oracle change |
+|---|---|---|---|
+| R70 an op with `width_params`, `v2-ir` | `width-params-one-width`, `-width-zero` | a value, `calls` 1 | the kit's op reader reads a named width (`parse_type(widths=..)`); a stand-in has plain `Bytes` |
+| R70 `v2-chunk` | `width-params-first-chunk`, `-last-chunk` | accepted (1024 cases) | third kit document `kit-width.warrant` |
+| R70 `v2-fault` | `width-params-ignore-last-byte`, `-invert`, `-result-length-changes`, `-truncate-last` | args or result | a fault row is typed with each named width unstated; args and result decode as `Bytes` |
+| R70 refused widths, `v2-ir` | `width-params-missing-width`, `-extra-width`, `-width-over-4096`, `-widths-on-an-op-without`, `-empty-widths-on-an-op-without` (and `-empty-widths-for-an-op-with-one`, `-width-mismatch`) | `ill-typed` | an empty widths list on an op without `width_params` is refused (`ir_eval._subject`) |
+| R71 impure guard, `v2-ir` | `overflow-if-impure-guard-runs-case-class`, `overflow-and-impure-guard-runs-case-class` | `ir-overflow`, `case` | none (the derivation already said `case`) |
+| R71 stand-in that skips the node | `overflow-if-impure-guard-skips-the-node` (and `overflow-and-impure-guard-skips-the-node`) | a value, `calls` 1 | none |
+| R71 pure-guard twin | `overflow-if-pure-guard-corpus-class` | `ir-overflow`, `corpus` | none |
+| R71 model body under a subject argument | `overflow-in-model-under-a-subject-argument-case-class` (twin: `overflow-in-model-with-a-pure-argument-corpus-class`) | `ir-overflow`, `case` / `corpus` | none |
+| R72 `errs`, `v2-domain` | `descriptor-errs-empty`, `-65-names`, `-duplicate`, `-bad-name` (and `-name-starts-with-a-digit`, `-empty-name`, `-64-names-accepted`, `-underscore-name-accepted`) | `descriptor` | CV2-F17: `descriptor_size` checks 1 to 64 names, the name grammar, no duplicates |
+| R72 `errs` against the declared cases, `v2-chunk` | `corpus-errs-in-another-order`, `-name-not-declared`, `-fewer-than-declared` | `corpus` | `check_corpus_and_row` compares `errs` with the error type's `cases` |
+| R73 bytes `lit`, `v2-ir` | `lit-bytes-into-a-fixed-width-parameter` (accepted); `lit-written-type-bytes-n`, `lit-object-form-bool` (`ill-typed`) | | none |
+| R74 count, `v2-ir` | `ill-typed-take-count-fixed-width`, `ill-typed-drop-count-fixed-width` | `ill-typed` | none |
+| R75 binders, `v2-chunk` | `ground-suite-no-binder` (accepted, `cases` 1); `corpus-nine-binders`, `corpus-product-over-2-28` | `corpus` | `check_corpus_and_row` checks 0 to 8 binders and the product bound |
+| R69 `level-missing` by a type, `v2-ir` | `level-missing-env-tuple-type`, `level-missing-env-list-type` | `level-missing` | static pass and `requires_of` decided over `reach()` |
+| R69 a model `ir` does not call | `level-missing-model-not-reached-is-a-value` | a value | same |
+| R77 uncalled chain, `v2-ir` | `depth-model-chain-65-uncalled` (and `-64-uncalled-is-a-value`) | `depth` | every model is compiled as a model, so the depth of `m65` is 65 |
+| R94 common type, not flow, `v2-fault` | `common-type-not-flow-take-of-a-fixed-result` | accepted, result unchanged | the kit checks a common type (`unify`); the oracle's own fault path still compares nothing (CV2-F17) |
+
+Left out on purpose: whether a stand-in model that holds a tag of a missing level counts as reached (R69 a names the
+call closure of `ir`, which does not follow `subjects`).

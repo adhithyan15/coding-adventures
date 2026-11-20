@@ -132,6 +132,10 @@ The canonical report is emitted as `<package_root>/assurance_report.json` with t
    Requires fuzz suites to execute across target mutations with crash deduplication.
 6. **E5 (Formal Proofs):**
    Requires formal WIR-level or SAT/DRAT verified proofs for all target claims.
+   The VER-P047 `source-equivalence` refusal-only fallback may anchor a fully
+   public operation with no declared step-cost obligation when the WIR frontend
+   refuses its actual export. That fallback is not a proof or a pass: it leaves
+   E5 `not-live` and cannot discharge a weakness row.
 
 **Lane rungs (WD-004b2).** The `lanes` array holds one rung per registered non-Rust lane (`live`, `planned` or `absent`; format and checks in VER04i section 8.3). It is derived from the lane loader and the consumer registry only, never from the Rust proof or effect evidence above, and it does not enter the verdict: a Rust report is not made `pass` by a live lane, nor `report-only` by an absent one. `release_ready` is always `false` and `sandbox` always `absent` until a lane arms a runtime jail (VER04i section 12).
 

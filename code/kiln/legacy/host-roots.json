@@ -79,6 +79,8 @@
     "/proc/self/maps",
     "/proc/self/mountinfo",
     "/proc/stat",
+    "/proc/sys/vm/overcommit_memory",
+    "/proc/version_signature",
     "/sys/devices/system/cpu/**",
     "/sys/fs/cgroup/**"
   ],

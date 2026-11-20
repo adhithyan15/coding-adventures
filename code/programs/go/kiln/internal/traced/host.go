@@ -188,9 +188,27 @@ func procMagicFinal(p string) bool {
 	return false
 }
 
+// isXattrRead says the syscall reads extended attributes by path or fd.  The
+// parser tables them as metadata calls (trace/table.go), so stat and getxattr
+// reach observeHost alike; the ancestor rule tells them apart here.
+func isXattrRead(sys string) bool {
+	switch sys {
+	case "getxattr", "lgetxattr", "fgetxattr", "listxattr", "llistxattr", "flistxattr", "getxattrat", "listxattrat":
+		return true
+	}
+	return false
+}
+
 // observeHost applies the host-root rules to an out-of-repository path the
 // action did not create.
-func (c *classifier) observeHost(abs string, present bool) {
+//
+// Two rules keep the sandbox's scaffolding from being an input (KILN04 D39).
+// A present, non-listing look at a PROPER ANCESTOR of an anchor (checkout,
+// declared root, Home, Tmpdir, the literal prefix of an ephemeral or absent-ok
+// entry) learns only that node's type and metadata.  And an absent probe
+// strictly inside the fresh Home or Tmpdir is a constant: the tmpfs starts
+// empty and the trace says when the action made a name.
+func (c *classifier) observeHost(abs string, present, listing bool) {
 	if c.ephemeralMatch(abs) {
 		return
 	}
@@ -201,12 +219,57 @@ func (c *classifier) observeHost(abs string, present bool) {
 		// every run.  Only the node: nothing under it (section 5.5).
 		return
 	}
+	// Rule 1b rests on the sandbox mounting a FRESH tmpfs on Home and Tmpdir in
+	// every recording mode (internal/sandbox/plan.go), and on every host path it
+	// binds beneath them being a declared root here (image, tool or state), or a
+	// state root the recorder derives and verifies empty.  Both are pinned by
+	// internal/record/sandboxroots_test.go.
+	if !present && c.underTmp(abs) {
+		return
+	}
 	if r := c.rootOf(abs); r != nil {
 		c.observeRoot(r, abs, present)
 		return
 	}
+	// A derived state root (Config.HostBinds) starts empty, like a declared one
+	// (the recorder verifies it, stateRootEmpty), so an absent probe is a
+	// constant; a present look at one is host state and falls through.
+	if !present {
+		for _, b := range c.cfg.HostBinds {
+			if covers(b, abs) {
+				return
+			}
+		}
+	}
+	// An ancestor of an anchor, looked at without listing it and without
+	// reading extended attributes, shows its type and stat metadata only.  It
+	// must really be a DIRECTORY on the disk: prepare verifies only the
+	// checkout's own chain, so an ancestor of a declared root or a literal
+	// prefix could on some host be a symlink (readlink would show its target)
+	// or a regular file (an open and read would show its content), and those
+	// fall through to host-read.  A listing shows sibling names, which are host
+	// state, and also falls through.  A child of an ancestor (/home/go.work) is
+	// not an ancestor and is judged by the rules below.  An ancestor inside a
+	// declared root (nested anchors) was handled by the root's own rule above.
+	//
+	// And it must be a LOOK.  A write-class call (rename, rmdir, unlink, chmod,
+	// utimensat, ...) CHANGES the node, and moving or removing an ancestor of
+	// the checkout would let the action rebuild the path to it unobserved
+	// (KILN04 D40: `mv ~/work ~/y`, then a listing of ~/y/x is "own output"), so
+	// a write falls through to host-read, as it did before D39.  Every KindWrite
+	// call and every opening that can write runs with inWrite set.  A write that
+	// FAILED (mkdir -p's EEXIST on each existing prefix) changed nothing: it is
+	// an observation of the path, never a write (ops.go), so it stays a look.
+	if present && !listing && (!c.inWrite || !c.callOK) && !c.xattrCall && c.cfg.ancestors[abs] && c.lookup(abs).kind == KindDir {
+		return
+	}
 	if !present && c.absentOK(abs) {
 		return
+	}
+	if c.inWrite && c.callOK && c.cfg.ancestors[abs] {
+		// A write to an ancestor may have moved the checkout's own path: nothing
+		// said about where later writes landed can be trusted.
+		c.incomplete = true
 	}
 	c.reason("host-read:" + c.redact(abs))
 }

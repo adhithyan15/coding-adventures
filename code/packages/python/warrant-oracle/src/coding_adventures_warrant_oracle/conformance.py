@@ -61,7 +61,7 @@ from .corpus_v2 import canonical, chunk_file_name, derive
 from .errors import OracleError
 from .faults import _compile_fault, fault_row
 from .irtree import children, is_node
-from .lower import FIXED, OpSig, lower_document
+from .lower import FIXED, OpSig, _unify, lower_document
 from .parser import parse_source
 from .profile import parse_profile
 from .suites import SuitePlan
@@ -91,6 +91,8 @@ ERROR_CODES = {
     "v2-domain": frozenset({"descriptor", "index"}),
     "v2-chunk": frozenset({"chunk-file", "slim-chunks", "corpus"}),
     "v2-fault": frozenset({"level-missing", "subject-forbidden"}),
+    # S5c (:mod:`.bindings_v2`): one code; the ``reason`` beside it is the closed set of that module.
+    "v2-binding": frozenset({"BindingInvalid"}),
 }
 
 #: Every S5 case has exactly this ``requires`` (R24): the kit at ``ir.core``.
@@ -313,13 +315,15 @@ _HEX = re.compile(r"(?:[0-9a-f]{2})*")
 _PRIMITIVE = frozenset({"Bool", "Nat", "Bytes", *FIXED})
 
 
-def parse_type(text: object, types: dict | None, *, allow_int: bool = False) -> A.Ty:
+def parse_type(text: object, types: dict | None, *, allow_int: bool = False, widths: frozenset = frozenset()) -> A.Ty:
     """The canonical type text of section 2.1 as a :class:`.ast.Ty`, or :class:`Refused` ``("type")``.
 
     ``types`` is the section 2.2 table (a name must be in it); ``None`` is the *open* mode of
     ``v2-domain``, which has no ``types`` field, where only the error name of a ``Result`` is free.
     ``Int`` exists inside the IR only and is refused as a value type unless ``allow_int`` (an IR
-    ``lit``).  The depth of a type expression is at most 16 (section 2.2 rule 1): a bare name is depth 0
+    ``lit``).  ``widths`` are the ``width_params`` of an op row (section 6, R70): the one place a *named* width
+    may be written, ``Bytes<N>`` with ``N`` one of them (kept as ``Ty("Bytes", ("N",))``, which is what the
+    oracle's lowering produces); everywhere else a width is a decimal literal.  The depth of a type expression is at most 16 (section 2.2 rule 1): a bare name is depth 0
     (the generator's ``resolve`` counts the same way) and every ``(``, ``List<``, ``Option<`` or
     ``Result<`` wrapper adds one, so 16 nested ``Result`` wrappers around ``Bool`` are accepted and 17 refused.
     """
@@ -358,6 +362,11 @@ def parse_type(text: object, types: dict | None, *, allow_int: bool = False) -> 
         head = name()
         if head == "Bytes" and text[pos : pos + 1] == "<":
             pos += 1
+            named = _NAME.match(text, pos)
+            if named and named.group(0) in widths:
+                pos = named.end()
+                expect(">")
+                return A.Ty("Bytes", (named.group(0),))
             m = _WIDTH.match(text, pos)
             if not m:
                 raise Refused("type", "a Bytes width is a decimal literal")
@@ -395,7 +404,9 @@ def parse_type(text: object, types: dict | None, *, allow_int: bool = False) -> 
 
 
 def type_levels(ty: A.Ty, types: dict | None = None) -> set[str]:
-    """The levels a type brings (R9): ``ir.tuple`` for a tuple, ``ir.data`` for list, option, record, variant."""
+    """The levels a type brings (R9, R69 b): ``ir.tuple`` for a tuple, ``ir.data`` for an option, a record or a
+    variant, and the reserved ``ir.list`` for ``List<T>`` (the document-level oracle refuses a list whole, the kit
+    names its level)."""
     names = {n for n, row in (types or {}).items() if row.get("kind") in ("record", "variant")}
     found = L.type_levels(ty, frozenset(names))
     stack = [ty]
@@ -404,6 +415,8 @@ def type_levels(ty: A.Ty, types: dict | None = None) -> set[str]:
         if isinstance(t, A.Ty):
             if t.head == "Option":
                 found.add(L.DATA)
+            if t.head == "List":
+                found.add(L.LIST)
             stack.extend(a for a in t.args if isinstance(a, A.Ty))
     return found
 
@@ -611,11 +624,67 @@ def _nodes(ir: object):
             continue
 
 
+def reach(case: dict) -> tuple[list, list[str], list[str]]:
+    """What the checked expression reaches (section 16.18 R69 a, g): ``(trees, models, ops)``.
+
+    ``ir`` itself, then every model in the call closure of the trees it holds (a ``model_call``; the stand-in
+    that ``subjects`` names for an op is *not* followed, R69 a names the closure of ``ir`` and the kit pins
+    nothing about a stand-in's own tags), each once and in first-reached order, and every op a ``subject_op``
+    names.  ``trees`` is ``ir``
+    followed by the bodies of those models.  A model, an op or a ``types`` row that nothing here names is not
+    reached and causes no ``level-missing`` and no ``requires`` (R69 g).
+    """
+    models: list[str] = []
+    ops: list[str] = []
+    trees = [case["ir"]]
+    i = 0
+    while i < len(trees):
+        for node in _nodes(trees[i]):
+            called = None
+            if node[0] == "model_call" and len(node) > 1:
+                called = node[1]
+            elif node[0] == "subject_op" and len(node) > 1 and node[1] not in ops:
+                ops.append(node[1])
+            if isinstance(called, str) and called in case["models"] and called not in models:
+                models.append(called)
+                trees.append(case["models"][called]["body"])
+        i += 1
+    return trees, models, [o for o in ops if o in case["ops"]]
+
+
+def reached_levels(case: dict, trees: list, models: list[str], ops: list[str]) -> set[str]:
+    """The levels of the tags of the reached trees and of the types the case reaches (R69 b).
+
+    Types: the ``env`` entries, the parameters of the reached models, the parameters and result of the
+    reached ops (a named width of an op's ``width_params`` is plain ``Bytes`` for the level).  A type text
+    that does not parse brings no level here: it is the oracle's ``ill-typed`` or ``type`` to name.
+    """
+    found: set[str] = set()
+    for ir in trees:
+        found |= set(L.ir_levels(ir, follow=False)) if is_node(ir) else set()
+    texts = [(tagged["type"], frozenset()) for _name, tagged in case["env"]]
+    for name in models:
+        texts += [(t, frozenset()) for _, t in case["models"][name]["params"]]
+    for name in ops:
+        row = case["ops"][name]
+        widths = frozenset(row.get("width_params", ()))
+        texts += [(t, widths) for _, t in [*row["params"], ("ret", row["ret"])]]
+    for text, widths in texts:
+        try:
+            found |= type_levels(parse_type(text, case["types"], widths=widths), case["types"])
+        except Refused:
+            continue
+    return found
+
+
 def static_refusal(case: dict) -> Refused | None:
     """The four *structural* static codes of ``v2-ir``, found before the oracle compiles anything.
 
-    * ``unknown-tag``: a tag of no level this document defines (:func:`.levels.tag_level`);
-    * ``level-missing``: a tag of a defined level that is not in the case's ``levels``;
+    * ``unknown-tag``: a tag of no level this document defines (:func:`.levels.tag_level`), **wherever it
+      stands**, in a model that nothing calls too (section 4.2 rule 7);
+    * ``level-missing``: a tag **or a type** of a defined level that is not in the case's ``levels``, decided
+      over what ``ir`` reaches (:func:`reach`, section 16.18 R69): a model, an op or a ``types`` row that
+      ``ir`` does not reach causes none;
     * ``model-order``: a ``model_call`` to a model that is missing from ``models`` or ``model_order``,
       or is not earlier in ``model_order`` than its caller (section 4.2 rule 1; the order is the
       ``model_order`` array, never the key order of ``models``);
@@ -632,11 +701,17 @@ def static_refusal(case: dict) -> Refused | None:
     for _owner, ir in bodies:
         for node in _nodes(ir):
             tag = node[0]
-            level = L.TUPLE if tag == "match" else L.tag_level(tag)
-            if level is None:
+            if tag != "match" and L.tag_level(tag) is None:
                 return Refused("unknown-tag", tag)
+    trees, models, ops = reach(case)
+    for ir in trees:
+        for node in _nodes(ir):
+            tag = node[0]
+            level = L.TUPLE if tag == "match" else L.tag_level(tag)
             if level not in levels:
                 return Refused("level-missing", tag)
+    for level in sorted(reached_levels(case, trees, models, ops) - levels):
+        return Refused("level-missing", f"a type of {level}")
     for owner, ir in bodies:
         for node in _nodes(ir):
             if node[0] == "subject_op" and (owner is not None or case.get("role", "body") != "body"):
@@ -707,15 +782,13 @@ class IrCase:
 def _ops(case: dict) -> dict:
     out = {}
     for name, row in case["ops"].items():
-        params = [(p, parse_type(t, case["types"])) for p, t in row["params"]]
-        out[name] = OpSig(
-            name,
-            tuple(row.get("width_params", ())),
-            params,
-            parse_type(row["ret"], case["types"]),
-            bool(row.get("fresh", False)),
-        )
+        out[name] = op_sig(name, row, case["types"])
     return out
+
+
+def order_of(case: dict) -> list[str]:
+    """The models to compile, in ``model_order`` (a model that ``model_order`` omits is never built)."""
+    return [n for n in case["model_order"] if n in case["models"]]
 
 
 def _models(case: dict, ops: dict, max_cost: int) -> E.Program:
@@ -733,7 +806,14 @@ def _models(case: dict, ops: dict, max_cost: int) -> E.Program:
         probe = E.Program(dict(defs), ops, max_cost=max_cost, errors=errors)
         ret = probe.compile(row["body"], dict(params), False).ty
         defs[name] = E.ModelDef(name, params, ret, row["body"])
-    return E.Program(defs, ops, max_cost=max_cost, errors=errors)
+    prog = E.Program(defs, ops, max_cost=max_cost, errors=errors)
+    # Every model is compiled *as a model* once more, called or not (R77, section 14): the probe above types a
+    # body as an expression, so it never computed the depth of the model itself.  The depth of a model is 1 plus
+    # the largest depth of a model its body calls, and over 64 is refused for a chain nothing calls too (the
+    # oracle counted frames from the caller before S5e, so it accepted 65 uncalled models and refused 66).
+    for name in order_of(case):
+        prog.model(name)
+    return prog
 
 
 def _rewrite_subjects(ir: object, subjects: dict) -> object:
@@ -815,7 +895,8 @@ def derive_ir(case: dict) -> dict:
         if op not in ops:
             continue
         stand_in = built.prog.models.get(model)
-        want = ([t for _, t in ops[op].params], ops[op].ret)
+        # R70: a model has no width_params, so the stand-in has plain Bytes in place of each named-width type.
+        want = ([unstated(t) for _, t in ops[op].params], unstated(ops[op].ret))
         if stand_in is None or ([t for _, t in stand_in.params], stand_in.ret) != want:
             raise KitError(f"the stand-in {model!r} does not have the signature of the op {op!r}")
     rewritten = _rewrite_subjects(built.ir, built.subjects)
@@ -1005,6 +1086,28 @@ _LINE = re.compile(
 )
 MAX_CHUNKS = 4096
 MAX_SLIM_CHUNKS = 32
+MAX_BINDERS = 8  # section 5.3 and 14: a suite has 0 to 8 binders (R75)
+MAX_SUITE_PRODUCT = 1 << 28  # section 14: ``MAX_SUITE_PRODUCT``
+
+
+def _check_errs(d: dict, ty: A.Ty, types: dict) -> None:
+    """R72: a ``result`` descriptor's ``errs`` equals the declared ``cases`` of its binder type's error type.
+
+    ``d`` and ``ty`` are walked together through ``result``, ``option``, ``list`` and ``tuple`` (a variant's
+    fields have no type here).  Equality is of the two lists, order included.  A mismatch raises
+    :class:`Refused` ``("corpus")``; a descriptor that is not one for the type is the caller's to refuse.
+    """
+    kind = d.get("d") if isinstance(d, dict) else None
+    if kind == "result" and ty.head == "Result":
+        row = types.get(ty.args[1].head, {})
+        if row.get("kind") != "error" or d["errs"] != row["cases"]:
+            raise Refused("corpus", "errs differs from the declared cases of the error type (R72)")
+        _check_errs(d["ok"], ty.args[0], types)
+    elif kind in ("option", "list") and ty.head in ("Option", "List"):
+        _check_errs(d["of"], ty.args[0], types)
+    elif kind == "tuple" and ty.head == "()" and len(d["of"]) == len(ty.args):
+        for part, sub in zip(d["of"], ty.args):
+            _check_errs(part, sub, types)
 
 
 def row_keys(row: dict) -> frozenset:
@@ -1047,12 +1150,17 @@ def check_corpus_and_row(corpus: object, row: object, chunk: object) -> tuple[in
         raise Refused("corpus", "max_ir_cost is in 2,000..=65,536")
     if not isinstance(row, dict) or set(row) != row_keys(row):
         raise Refused("corpus", "the suite row has an unknown or missing key")
+    if not isinstance(row["binders"], list) or len(row["binders"]) > MAX_BINDERS:
+        raise Refused("corpus", "a suite has 0 to 8 binders (R75)")
     product = 1
     try:
         for binder in row["binders"]:
             product *= D.descriptor_size(binder[1]["domain"])
-    except (OracleError, KeyError, IndexError, TypeError) as exc:
+            _check_errs(binder[1]["domain"], parse_type(binder[1]["type"], corpus["types"]), corpus["types"])
+    except (OracleError, Refused, KeyError, IndexError, TypeError) as exc:
         raise Refused("corpus", "a binder descriptor is wrong") from exc
+    if product > MAX_SUITE_PRODUCT:
+        raise Refused("corpus", "a suite product over 2^28 (R75)")
     if row["product"] != product:
         raise Refused("corpus", "product is not the product of the descriptor sizes")
     m = max(1, -(-product // size))
@@ -1222,14 +1330,10 @@ def post_value(fault: dict, fn, penv: dict) -> object:
 
 def op_sig(name: str, row: dict, types: dict) -> OpSig:
     """The section 6 op row as an :class:`.lower.OpSig` (the row itself carries no name)."""
-    params = [(p, parse_type(t, types)) for p, t in row["params"]]
-    return OpSig(
-        name,
-        tuple(row.get("width_params", ())),
-        params,
-        parse_type(row["ret"], types),
-        bool(row.get("fresh", False)),
-    )
+    statics = tuple(row.get("width_params", ()))
+    widths = frozenset(statics)
+    params = [(p, parse_type(t, types, widths=widths)) for p, t in row["params"]]
+    return OpSig(name, statics, params, parse_type(row["ret"], types, widths=widths), bool(row.get("fresh", False)))
 
 
 def instantiate_fault(name: str, op_name: str, op_row: dict, types: dict) -> dict:
@@ -1253,6 +1357,17 @@ def fault_levels(fault: dict, op: OpSig) -> set[str]:
     return needs
 
 
+def unstated(ty: A.Ty) -> A.Ty:
+    """``ty`` with every *named* width left unstated: ``Bytes<N>`` with a name ``N`` is plain ``Bytes``.
+
+    A lane wraps an op once, with no call site and so no static widths (section 16.18 R70), so it types a fault
+    row with this reading of the op's signature.  A literal width (``Bytes<2>``) is kept.
+    """
+    if ty.head == "Bytes" and ty.args and isinstance(ty.args[0], str):
+        return A.Ty("Bytes")
+    return A.Ty(ty.head, tuple(unstated(a) if isinstance(a, A.Ty) else a for a in ty.args))
+
+
 def derive_fault(case: dict) -> dict:
     """``{"args": [..]}`` for ``pre``, ``{"result": V}`` for ``post`` / ``replace``, or a closed error.
 
@@ -1262,7 +1377,10 @@ def derive_fault(case: dict) -> dict:
     unchanged ones included (R26).  A fault's row must state the ``requires`` the oracle computes.
     """
     fault, types = case["fault"], case["types"]
-    op = op_sig(fault["op"], case["op"], types)
+    named = op_sig(fault["op"], case["op"], types)
+    # R70 and R94: no call site, no widths.  The row is typed with each named width unstated (a parameter or
+    # result `Bytes<N>` is plain `Bytes`), and `args` and `result` are decoded as `Bytes` values.
+    op = OpSig(named.name, named.statics, [(p, unstated(t)) for p, t in named.params], unstated(named.ret), named.fresh)
     used = fault_levels(fault, op)
     stated = set(fault["requires"])
     if not (used - {L.CORE} <= stated <= used) or fault["requires"] != sorted(stated):
@@ -1276,6 +1394,7 @@ def derive_fault(case: dict) -> dict:
     prog = E.Program({}, {}, errors=errors)
     try:
         compiled = _compile_fault(prog, op, fault, {})
+        _require_common_types(prog, op, fault)
     except OracleError as exc:
         raise KitError(f"the oracle cannot compile the fault: {exc}") from exc
     if len(case["args"]) != len(op.params):
@@ -1294,6 +1413,29 @@ def derive_fault(case: dict) -> dict:
     result = value_to_json(out, op.ret)
     _check_derived(result, op.ret, types)
     return {"result": result}
+
+
+def _require_common_types(prog: E.Program, op: OpSig, fault: dict) -> None:
+    """R94: each rewrite (or the ``post`` / ``replace`` expression) has a **common type** with what it replaces.
+
+    A common type (:func:`.lower._unify`, R51), not assignability: a fault may change a length by design, so
+    ``take(result, 2)`` of a ``Bytes<2>`` result is plain ``Bytes``, which unifies with ``Bytes<2>`` and does
+    not flow to it.  The oracle's own fault path (:func:`.faults._compile_fault`) compares nothing, so it is
+    more lenient than this (CV2-F17); only the kit's derivation checks, and a failure is a bug in the table.
+    """
+    params = dict(op.params)
+    if fault["kind"] == "pre":
+        pairs = [(r["expr"], params[r["param"]]) for r in fault["rewrites"]]
+        tenv = dict(params)
+    else:
+        pairs = [(fault["expr"], op.ret)]
+        tenv = {**params, "result": op.ret}
+    for expr, want in pairs:
+        got = prog.compile(expr, tenv, False).ty
+        # A bare ``ok`` / ``err`` has the unknown error type ``?`` (section 16.16 R51), which :func:`unify` does
+        # not know: the oracle's own tolerant assignability stands for it there.
+        if _unify(got, want) is None and not (_undetermined(got) and E._assignable(got, want)):
+            raise OracleError("type", f"a fault expression of type {got} has no common type with {want}")
 
 
 def _check_derived(raw: object, ty: A.Ty, types: dict) -> None:
@@ -1344,15 +1486,8 @@ def requires_of(category: str, fields: dict, expect: dict) -> list[str]:
     if category == "v2-ir":
         if expect.get("error") in ("level-missing", "unknown-tag"):
             return sorted(fields["levels"])
-        found = {L.CORE}
-        for ir in [fields["ir"], *(m["body"] for m in fields["models"].values())]:
-            found |= set(L.ir_levels(ir, follow=False)) if is_node(ir) else set()
-        for _name, tagged in fields["env"]:
-            found |= type_levels(parse_type(tagged["type"], fields["types"]), fields["types"])
-        for row in [*fields["ops"].values(), *fields["models"].values()]:
-            for _, t in row["params"]:
-                found |= type_levels(parse_type(t, fields["types"]), fields["types"])
-        return sorted(found)
+        trees, models, ops = reach(fields)
+        return sorted({L.CORE} | reached_levels(fields, trees, models, ops))
     if category == "v2-value":
         try:
             return sorted({L.CORE} | type_levels(parse_type(fields["type"], fields["types"]), fields["types"]))

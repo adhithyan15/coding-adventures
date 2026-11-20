@@ -39,29 +39,48 @@ impl Sandbox {
         let pkg = root.join("code/packages/rust").join(name);
         copy_dir(&real.join("evidence"), &pkg.join("evidence"));
         copy_dir(&real.join("src"), &pkg.join("src"));
-        fs::copy(real.join("effect_certificate.json"), pkg.join("effect_certificate.json")).unwrap();
+        fs::copy(
+            real.join("effect_certificate.json"),
+            pkg.join("effect_certificate.json"),
+        )
+        .unwrap();
         // The reviewed bindings file: it is where a package declares an
         // operation's proofs `not-live`.
-        fs::copy(real.join("evidence.bindings"), pkg.join("evidence.bindings")).unwrap();
+        fs::copy(
+            real.join("evidence.bindings"),
+            pkg.join("evidence.bindings"),
+        )
+        .unwrap();
         // `--generate` names the report after the package directory and reads
         // its version from Cargo.toml.
         fs::copy(real.join("Cargo.toml"), pkg.join("Cargo.toml")).unwrap();
         // The audit profile is the package's own data file (VER04h section 9 item 22).
-        fs::copy(real.join("assurance-profile.json"), pkg.join("assurance-profile.json")).unwrap();
+        fs::copy(
+            real.join("assurance-profile.json"),
+            pkg.join("assurance-profile.json"),
+        )
+        .unwrap();
         fs::create_dir_all(root.join("code/specs")).unwrap();
         fs::copy(
-            manifest.join("../../../specs").join(format!("{name}.warrant")),
+            manifest
+                .join("../../../specs")
+                .join(format!("{name}.warrant")),
             root.join("code/specs").join(format!("{name}.warrant")),
         )
         .unwrap();
         // The VER13 catalogue is found above the package, like the spec.
-        copy_dir(&manifest.join("../../../assumptions"), &root.join("code/assumptions"));
+        copy_dir(
+            &manifest.join("../../../assumptions"),
+            &root.join("code/assumptions"),
+        );
         Sandbox { root, pkg }
     }
 
     /// The `source_sha256` of this sandbox's `src/**/*.rs` (shared framing).
     pub fn src_digest(&self) -> String {
-        let framed = coding_adventures_test_bootstrap::manifest::source_tree_framing(&self.pkg.join("src")).unwrap();
+        let framed =
+            coding_adventures_test_bootstrap::manifest::source_tree_framing(&self.pkg.join("src"))
+                .unwrap();
         coding_adventures_sha256::sha256_hex(&framed)
     }
 

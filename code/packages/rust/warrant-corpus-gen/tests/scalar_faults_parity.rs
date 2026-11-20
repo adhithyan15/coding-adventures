@@ -133,24 +133,17 @@ fn every_refused_signature_has_the_generator_code_fault_and_the_oracles_reason()
     assert_eq!(names, ["saturate-add", "saturate-sub", "shift-mask", "missing-error"]);
     let rows = dump.get("refusals").a();
     assert_eq!(rows.len(), 53);
-    let mut instantiated = 0;
-    let mut by_lowering = Vec::new();
     for r in rows {
         let name = r.get("name").s();
         let fault = r.get("fault").s();
         assert!(names.contains(&fault), "{name}: {fault}");
         assert_eq!(r.get("oracle_code").s(), "generation", "{name}");
-        let op = match lowered_op(r.get("source").s()) {
-            Ok(op) => op,
-            Err(e) => {
-                // An `Option` or a variant never reaches the fault: the generator's lowering refuses the
-                // signature itself (both are IR-only or `ir.data`), which is no weaker.
-                assert_eq!(e.code, code::LEVEL, "{e}");
-                assert_eq!(e.level, Some("ir.data"), "{e}");
-                by_lowering.push(format!("{fault}/{name}"));
-                continue;
-            }
-        };
+        // S11b: an `Option` or a variant signature lowers (`ir.data`, [D48]), so all 53 rows reach
+        // `instantiate`, the five that the generator's lowering used to stop first included
+        // (`saturate-add/an-option-result`, `saturate-sub/an-option-result`,
+        // `missing-error/an-option-payload`, `missing-error/a-variant-payload`,
+        // `missing-error/an-option-result`), and each carries the oracle's reason text.
+        let op = lowered_op(r.get("source").s()).unwrap_or_else(|e| panic!("{fault}/{name}: {e}"));
         let e = instantiate(&op, fault).expect_err(name);
         assert_eq!(e.code, code::FAULT, "{fault}/{name}: {e}");
         assert_eq!(
@@ -162,21 +155,7 @@ fn every_refused_signature_has_the_generator_code_fault_and_the_oracles_reason()
             "{fault}/{name}: generator vs oracle `{}`",
             r.get("message").s()
         );
-        instantiated += 1;
     }
-    assert_eq!(instantiated + by_lowering.len(), 53);
-    // Only the `Option` and variant signatures are stopped earlier, by the lowering: exactly these.
-    // S11b (ir.data lowering in the generator) removes this carve-out: these rows then reach instantiate and must match the oracle's reason text; delete the exception, as also in off_by_one_consumed_parity.rs.
-    by_lowering.sort();
-    let mut expected = vec![
-        "saturate-add/an-option-result",
-        "saturate-sub/an-option-result",
-        "missing-error/an-option-payload",
-        "missing-error/a-variant-payload",
-        "missing-error/an-option-result",
-    ];
-    expected.sort();
-    assert_eq!(by_lowering, expected);
 }
 
 // ---- unit tests of each new form (exact compact JSON, VER04r 8.2) -----------------------------

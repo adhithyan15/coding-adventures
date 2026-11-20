@@ -9,7 +9,9 @@ use coding_adventures_warrant_grammar::binding::{
     parse_evidence_bindings, parse_host_ty, split_top, HostShape, HostTy,
 };
 use coding_adventures_warrant_grammar::codegen::DiagnosticCode;
-use coding_adventures_warrant_grammar::evidence::{generate_evidence_harness, EvidenceOptions};
+use coding_adventures_warrant_grammar::evidence::{
+    compile_rust_evidence_harness, generate_evidence_harness, EvidenceOptions,
+};
 use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
 use coding_adventures_warrant_grammar::parser::{parse_document, ParserLimits};
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
@@ -231,7 +233,7 @@ fn only_documents_that_use_composites_switch_the_prelude_on() {
 
 fn fault_doc(ret: &str) -> String {
     format!(
-        "warrant t v1\n  error E = X | Y\n  record Rec(a: U8, flag: Bool)\n  record NoNum(flag: Bool, other: Bool)\n  record Two(a: U8, b: U8)\n  variant Vr = A | B(x: U8)\n  op h(a: U8) -> {ret}\n  claim c:\n    forall a: U8. h(a) == h(a)\n"
+        "warrant t v1\n  error E = X | Y\n  record Rec(a: U8, flag: Bool)\n  record NoNum(flag: Bool, other: Bool)\n  record Two(a: U8, b: U8)\n  record FlagTwo(a: U8, b: U8, flag: Bool)\n  variant Vr = A | B(x: U8)\n  op h(a: U8) -> {ret}\n  claim c:\n    forall a: U8. h(a) == h(a)\n"
     )
 }
 
@@ -244,6 +246,7 @@ fn attack(ret: &str, fault: &str, extra: &str) -> Result<String, (DiagnosticCode
             "struct Rec path=subject::Rec fields=a:u8,flag:bool",
             "struct NoNum path=subject::NoNum fields=flag:bool,other:bool",
             "struct Two path=subject::Two fields=a:u8,b:u8",
+            "struct FlagTwo path=subject::FlagTwo fields=a:u8,b:u8,flag:bool",
             "enum Vr path=subject::Vr ctors=A,B(x:u8)",
             &line,
         ],
@@ -351,6 +354,99 @@ fn field_flip_is_emitted_only_for_a_binding_that_names_it() {
 }
 
 #[test]
+fn bool_field_flip_accepts_only_declared_records_with_direct_bool_fields_and_one_wrapper() {
+    let src = "warrant t v1\n  error E = X\n  model FlagAlias = Bool\n  model RecAlias = Rec\n  record Rec(first: FlagAlias, second: Bool, nested: Child)\n  record Child(flag: Bool)\n  record NoBool(value: U8)\n  record NestedOnly(child: Child)\n  variant Single = Only(flag: Bool) | Other\n  op h(a: U8) -> RecAlias\n  labels h:\n    a public\n  claim c:\n    forall a: U8. h(a) == h(a)\n";
+    let lines = [
+        "struct Rec path=subject::Rec fields=first:bool,second:bool,nested:Child",
+        "struct Child path=subject::Child fields=flag:bool",
+        "struct NoBool path=subject::NoBool fields=value:u8",
+        "struct NestedOnly path=subject::NestedOnly fields=child:Child",
+        "enum Single path=subject::Single ctors=Only(flag:bool),Other",
+        "op h export=h faults=bool-field-flip",
+    ];
+    let make = |ret: &str| {
+        let doc = src.replace("-> RecAlias", &format!("-> {ret}"));
+        let op = if ret.starts_with("Result<") {
+            "op h export=h error=X faults=bool-field-flip"
+        } else {
+            "op h export=h faults=bool-field-flip"
+        };
+        let all_lines = [lines[0], lines[1], lines[2], lines[3], lines[4], op];
+        let bind = bindings_text(REFERENCE, &all_lines);
+        let b = parse_evidence_bindings(&bind).expect("bindings parse");
+        let source = SourceDocument::admit(doc.as_bytes(), SourceLimits::default()).expect("admit");
+        let layout = capture_layout(&source, LayoutLimits::default()).expect("layout");
+        let file = parse_document(&layout, &source, ParserLimits::default()).expect("parse");
+        let checked = coding_adventures_warrant_grammar::checker::check_warrant(&file)
+            .expect("fixture type-checks");
+        compile_rust_evidence_harness(
+            &file,
+            &checked,
+            &b.manifest,
+            &EvidenceOptions {
+                package_crate: "subject".into(),
+                spec_path: "code/specs/t.warrant".into(),
+                spec_sha256: "0".repeat(64),
+                seed: 1,
+                property_cases: 10,
+                fuzz_iterations: 10,
+                negctl_fuzz_iterations: 10,
+                exhaustive_budget: REFERENCE,
+                arg_types: b.arg_types.clone(),
+                hosts: b.hosts.clone(),
+            },
+        )
+        .map_err(|e| (e.code, format!("{e}")))
+    };
+
+    // Direct record, record alias, one Result wrapper, and one Option wrapper.
+    for ret in ["Rec", "RecAlias", "Result<Rec, E>", "Option<Rec>"] {
+        let text = make(ret).unwrap_or_else(|e| panic!("{ret}: {e:?}"));
+        assert!(text.contains("Fault::BoolFieldFlip => fault_bool_field_flip(v),"));
+        assert!(text.contains("const HARNESS_OPS: &[&str]"));
+        assert!(text.contains("const HARNESS_BOOL_FIELD_FLIP_OPS: &[&str]"));
+        assert!(text.contains("check_bool_field_attack"));
+        assert!(!text.contains("fn fault_field_flip(v: V)"));
+    }
+
+    // Nested/multiple wrappers, variant (including a one-constructor variant),
+    // no direct Bool, and non-record values all fail closed at generation.
+    for ret in [
+        "Result<Option<Rec>, E>",
+        "Option<Result<Rec, E>>",
+        "Option<Option<Rec>>",
+        "Single",
+        "NoBool",
+        "NestedOnly",
+        "U8",
+        "(Bool, U8)",
+        "Bytes",
+    ] {
+        let err = make(ret).unwrap_err();
+        assert_eq!(err.0, DiagnosticCode::W0701, "{ret}: {}", err.1);
+    }
+}
+
+#[test]
+fn bool_field_flip_is_opt_in_and_keeps_legacy_numeric_fault_helper_separate() {
+    let bool_only = attack("Rec", "bool-field-flip", "").unwrap();
+    assert!(bool_only.contains("fn fault_bool_field_flip(v: V) -> V {"));
+    assert!(bool_only.contains("const HARNESS_OPS: &[&str]"));
+    assert!(bool_only.contains("const HARNESS_BOOL_FIELD_FLIP_OPS: &[&str]"));
+    assert!(bool_only.contains("Fault::BoolFieldFlip => fault_bool_field_flip(v),"));
+    assert!(!bool_only.contains("fn fault_field_flip(v: V)"));
+
+    let numeric_only = attack("Rec", "field-flip", "").unwrap();
+    assert!(numeric_only.contains("fn fault_field_flip(v: V) -> V {"));
+    assert!(!numeric_only.contains("fn fault_bool_field_flip(v: V)"));
+    assert!(!numeric_only.contains("BoolFieldFlip"));
+
+    let both = attack("Rec", "field-flip,bool-field-flip", "").unwrap();
+    assert!(both.contains("Fault::FieldFlip => fault_field_flip(v),"));
+    assert!(both.contains("Fault::BoolFieldFlip => fault_bool_field_flip(v),"));
+}
+
+#[test]
 fn field_flip_last_is_emitted_only_for_a_binding_that_names_it() {
     // VOS-039c: the prelude region and the enum variant exist only on request.
     let flip = attack("Two", "field-flip", "").unwrap();
@@ -362,11 +458,17 @@ fn field_flip_last_is_emitted_only_for_a_binding_that_names_it() {
     assert!(last.contains("FieldFlipLast,") && last.contains("\"field-flip-last\""));
     // It carries no per-operation sabotage switch: that belongs to `field-flip` alone.
     assert!(!last.contains("WARRANT_EVIDENCE_ATTACK") && !last.contains("sabotage_op"));
+    assert!(!last.contains("HARNESS_OPS") && !last.contains("fault_bool_field_flip"));
     // The two flips are independent regions: naming both emits both.
     let both = attack("Two", "field-flip,field-flip-last", "").unwrap();
     assert!(both.contains("fn fault_field_flip(v: V) -> V {"));
     assert!(both.contains("fn fault_field_flip_last(v: V) -> V {"));
     assert!(both.contains("Fault::FieldFlip => fault_field_flip(v),"));
+    let bool_and_last = attack("FlagTwo", "bool-field-flip,field-flip-last", "").unwrap();
+    assert!(bool_and_last.contains("fn fault_bool_field_flip(v: V) -> V {"));
+    assert!(bool_and_last.contains("fn fault_field_flip_last(v: V) -> V {"));
+    assert!(bool_and_last.contains("check_bool_field_attack"));
+    assert!(bool_and_last.contains("HARNESS_BOOL_FIELD_FLIP_OPS"));
 }
 
 // ---------------------------------------------------------------------------

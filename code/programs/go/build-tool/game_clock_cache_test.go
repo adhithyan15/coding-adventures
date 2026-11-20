@@ -25,6 +25,7 @@ func writeGameClockCacheFixture(t *testing.T) (string, discovery.Package, *direc
 	t.Helper()
 	root := t.TempDir()
 	repositoryRoot := toolchainFixtureRepoRoot(t)
+	copyFixedPointReaderInputs(t, repositoryRoot, root)
 	for _, input := range gameClockInputPaths {
 		original, err := os.ReadFile(filepath.Join(repositoryRoot, filepath.FromSlash(input)))
 		if err != nil {
@@ -54,6 +55,7 @@ func writeGameClockCacheFixture(t *testing.T) (string, discovery.Package, *direc
 	if err := os.WriteFile(filepath.Join(root, "code/BUILD-EXEMPTIONS"), []byte(exemptions), 0o644); err != nil {
 		t.Fatal(err)
 	}
+	ensureFixedPointReaderPackages(t, root)
 	for _, entry := range []struct{ path, contents string }{
 		{"Cargo.toml", "[package]\nname = \"game-clock\"\nversion = \"0.1.0\"\nedition = \"2021\"\n"},
 		{"BUILD", "echo game-clock-cache-probe\n"},

@@ -9,6 +9,7 @@ license = "MIT"
 bit-blaster = { path = "../bit-blaster" }
 cdcl-sat = { path = "../cdcl-sat" }
 drat-check = { path = "../drat-check" }
+toml = "0.8.23"
 
 [dev-dependencies]
 coding_adventures_ct_compare = { path = "../ct-compare" }
@@ -72,4 +73,9 @@ harness = false
 [[test]]
 name = "arithmetic_proofs"
 path = "tests/arithmetic_proofs.rs"
+harness = false
+
+[[test]]
+name = "fixed_point_proofs"
+path = "tests/fixed_point_proofs.rs"
 harness = false

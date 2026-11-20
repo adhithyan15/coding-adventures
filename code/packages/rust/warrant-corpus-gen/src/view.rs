@@ -24,6 +24,9 @@
 //! `requires` either; `admit` is the op's refinements as IR, lowered by the oracle's own typer
 //! in the dump script.
 //!
+//! The `types` key is present **only** for a document that declares a record or a variant (slice S11b,
+//! R59); see [`oracle_view_v1`].
+//!
 //! ## The `v1` view (slice S10b)
 //!
 //! [`oracle_view_v1`] is the schema `warrant-lowering-parity-v1` of the oracle's `dump-lowering`
@@ -36,7 +39,7 @@ use crate::cost::{suite_cost, ModelCosts};
 use crate::error::{code, GenError};
 use crate::ir::{Ir, MAX_IR_DEPTH};
 use crate::json::Json;
-use crate::lower::{Lowered, SuiteKind};
+use crate::lower::{Lowered, LoweredType, SuiteKind};
 
 /// The `schema` string of the `v0` view.
 pub const VIEW_SCHEMA: &str = "warrant-lowering-parity-v0";
@@ -190,7 +193,7 @@ fn view(lowered: &Lowered, limit: u64, v1: bool) -> Result<Json, GenError> {
             ("result_type", Json::str(result)),
         ]));
     }
-    Ok(Json::obj([
+    let mut root = vec![
         (
             "schema",
             Json::str(if v1 { VIEW_SCHEMA_V1 } else { VIEW_SCHEMA }),
@@ -206,5 +209,45 @@ fn view(lowered: &Lowered, limit: u64, v1: bool) -> Result<Json, GenError> {
         ("models", Json::Obj(models)),
         ("suites", Json::arr(suites)),
         ("examples", Json::arr(examples)),
-    ]))
+    ];
+    // The corpus `types` rows of the records and variants (VER04r 2.2), **only for a document that
+    // declares one** (R59), so every older dump keeps its bytes.  No error type is here (those stay under
+    // `errors`); the writer sorts the keys, the order inside a row is the declared one.
+    if !lowered.types.is_empty() {
+        root.push((
+            "types",
+            Json::obj(lowered.types.iter().map(|t| (t.name().to_string(), type_row(t)))),
+        ));
+    }
+    Ok(Json::obj(root))
+}
+
+/// One `types` row: `{"kind": "record", "fields": [[name, type], ..]}` or
+/// `{"kind": "variant", "ctors": [[ctor, [type, ..]], ..]}`.
+fn type_row(t: &LoweredType) -> Json {
+    match t {
+        LoweredType::Record { fields, .. } => Json::obj([
+            ("kind", Json::str("record")),
+            (
+                "fields",
+                Json::arr(
+                    fields
+                        .iter()
+                        .map(|(n, ty)| Json::arr([Json::str(n.as_str()), Json::str(ty.name())])),
+                ),
+            ),
+        ]),
+        LoweredType::Variant { ctors, .. } => Json::obj([
+            ("kind", Json::str("variant")),
+            (
+                "ctors",
+                Json::arr(ctors.iter().map(|(c, tys)| {
+                    Json::arr([
+                        Json::str(c.as_str()),
+                        Json::arr(tys.iter().map(|ty| Json::str(ty.name()))),
+                    ])
+                })),
+            ),
+        ]),
+    }
 }

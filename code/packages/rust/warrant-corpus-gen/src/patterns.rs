@@ -1,6 +1,6 @@
-//! # Patterns of `match` on a `Result` (`ir.tuple`, VER04r Appendix A.1 and section 16.10 [D35])
+//! # Patterns of `match` (`ir.tuple` on a `Result`, `ir.data` on anything else, VER04r Appendix A.1, A.2)
 //!
-//! The six patterns of a `match` (see [`Pat`]) and the three **corpus errors** that are decided
+//! The ten patterns of a `match` (see [`Pat`]: the six of A.1, the four data patterns of A.2) and the three **corpus errors** that are decided
 //! from the patterns and the scrutinee's static type alone (the fourth, a `bind` that shadows a
 //! name in scope, needs the scope and is checked by the lowerer):
 //!
@@ -33,9 +33,10 @@
 //! ```
 //!
 //! Constructors are those of the *type*: `Result<X,E>` has `ok` (one field of type `X`) and `err`
-//! (one field of the error enum `E`, whose constructors are its cases, with no fields); a tuple
-//! has one constructor with one field per component; every other type has none (only a wild or
-//! a bind can match it).  Errors are checked in the order of VER04r 16.10 R12: **unreachable arms
+//! (one field of the error enum `E`, whose constructors are its cases, with no fields); `Option<T>` has
+//! `some` and `none`; `Bool` has `true` and `false`; a tuple has one constructor with one field per
+//! component; a record has one constructor named like itself and a variant one per declared
+//! constructor (S11b); every other type has none (only a wild or a bind can match it).  Errors are checked in the order of VER04r 16.10 R12: **unreachable arms
 //! first, in arm order, then fall-through**.
 //!
 //! The check is exponential in the worst case, so it carries a work budget and refuses (`limit`)
@@ -75,6 +76,10 @@ pub const FALLS_THROUGH: &str = "a match that can fall through";
 pub const DUPLICATE_BIND: &str = "the same bind name twice in one pattern";
 /// The message of the refusal of a bind that shadows a name in scope.
 pub const SHADOWING_BIND: &str = "a bind name shadows a binder, a parameter, result or an outer bind";
+/// The message of the refusal of a bind named like a model, an operation, an error type or a reserved
+/// built-in (the oracle's sentence since CV2-F8; the generator said [`SHADOWING_BIND`] for it before S11b).
+pub const RESERVED_BIND: &str =
+    "a bind name shadows a model, an operation, an error type or a reserved built-in";
 
 /// An abstract pattern: a wildcard (a `wild` or a `bind`), or a constructor with sub-patterns.
 #[derive(Debug, Clone)]
@@ -83,37 +88,62 @@ enum Ab {
     Ctor(String, Vec<Ab>),
 }
 
-/// The shape of a column's type, as far as patterns can see into it.
+/// The declared records and variants, as `type name -> ((constructor, (field type, ..)), ..)`.  A
+/// record has exactly one constructor, named like itself (VER04j 4.2).  Built by the lowerer.
+pub type Adts = HashMap<String, Vec<(String, Vec<Ty>)>>;
+
+/// One column of the pattern matrix: the type the patterns of that column meet.
+///
+/// A column is a *type*, looked at lazily (a record's field types are read when the column is
+/// specialised, never expanded up front), so a deep nest of records costs what the patterns cost and
+/// not the product of the declarations.
 #[derive(Debug, Clone)]
-enum Shape {
-    /// `Result<X,E>`: the payload shape and the error cases (`None`: an open set).
-    Result(Box<Shape>, Option<Vec<String>>),
-    /// The field of `err`: the error enum with these cases (`None`: an open set).
-    ErrOf(Option<Vec<String>>),
-    /// A tuple.
-    Tuple(Vec<Shape>),
-    /// Any other type, or one not known: no constructor, only a wild or bind matches.
-    Other,
+enum Col {
+    /// A value type.
+    Ty(Ty),
+    /// The field of `err`: the error enum of that name (its cases are the constructors).
+    ErrOf(String),
+    /// Not known (the field of a constructor the type does not have): only a wild or bind matches.
+    Unknown,
 }
 
-fn shape(ty: &Ty, errors: &ErrorCases) -> Shape {
-    match ty {
-        Ty::Result(ok, e) => Shape::Result(Box::new(shape(ok, errors)), errors.get(e).cloned()),
-        Ty::Tuple(parts) => Shape::Tuple(parts.iter().map(|p| shape(p, errors)).collect()),
-        _ => Shape::Other,
-    }
+/// What the check needs to know about the document's declared types.
+struct Env<'a> {
+    errors: &'a ErrorCases,
+    adts: &'a Adts,
 }
 
-/// The constructors of `shape` with their field shapes, or `None` when the set is open.
-fn signature(s: &Shape) -> Option<Vec<(String, Vec<Shape>)>> {
-    match s {
-        Shape::Result(ok, cases) => Some(vec![
-            ("ok".to_string(), vec![(**ok).clone()]),
-            ("err".to_string(), vec![Shape::ErrOf(cases.clone())]),
+/// The constructors of a column with their field columns, or `None` when the set is open.
+///
+/// `Result<X,E>` has `ok` and `err`; `Option<T>` has `some` and `none`; `Bool` has `true` and `false`; a
+/// tuple has one constructor with a field per component; a record or variant has its declared
+/// constructors; the field of `err` has the cases of its error enum; every other type has none.
+fn signature(col: &Col, env: &Env<'_>) -> Option<Vec<(String, Vec<Col>)>> {
+    match col {
+        Col::Ty(Ty::Result(ok, e)) => Some(vec![
+            ("ok".to_string(), vec![Col::Ty((**ok).clone())]),
+            ("err".to_string(), vec![Col::ErrOf(e.clone())]),
         ]),
-        Shape::Tuple(parts) => Some(vec![("tuple".to_string(), parts.clone())]),
-        Shape::ErrOf(Some(cases)) => Some(cases.iter().map(|c| (c.clone(), vec![])).collect()),
-        Shape::ErrOf(None) | Shape::Other => None,
+        Col::Ty(Ty::Option(inner)) => Some(vec![
+            ("some".to_string(), vec![Col::Ty((**inner).clone())]),
+            ("none".to_string(), vec![]),
+        ]),
+        Col::Ty(Ty::Bool) => Some(vec![("true".to_string(), vec![]), ("false".to_string(), vec![])]),
+        Col::Ty(Ty::Tuple(parts)) => Some(vec![(
+            "tuple".to_string(),
+            parts.iter().cloned().map(Col::Ty).collect(),
+        )]),
+        Col::Ty(Ty::Named(name)) => env.adts.get(name).map(|ctors| {
+            ctors
+                .iter()
+                .map(|(c, fields)| (c.clone(), fields.iter().cloned().map(Col::Ty).collect()))
+                .collect()
+        }),
+        Col::ErrOf(name) => env
+            .errors
+            .get(name)
+            .map(|cases| cases.iter().map(|c| (c.clone(), vec![])).collect()),
+        Col::Ty(_) | Col::Unknown => None,
     }
 }
 
@@ -124,6 +154,10 @@ fn normalise(p: &Pat) -> Ab {
         Pat::Err(case) => Ab::Ctor("err".to_string(), vec![Ab::Ctor(case.clone(), vec![])]),
         Pat::ErrAny => Ab::Ctor("err".to_string(), vec![Ab::Wild]),
         Pat::Tuple(parts) => Ab::Ctor("tuple".to_string(), parts.iter().map(normalise).collect()),
+        Pat::Some(inner) => Ab::Ctor("some".to_string(), vec![normalise(inner)]),
+        Pat::None => Ab::Ctor("none".to_string(), vec![]),
+        Pat::Bool(v) => Ab::Ctor(if *v { "true" } else { "false" }.to_string(), vec![]),
+        Pat::Ctor(name, parts) => Ab::Ctor(name.clone(), parts.iter().map(normalise).collect()),
     }
 }
 
@@ -166,22 +200,28 @@ fn specialise(rows: &[Row], ctor: &str, arity: usize) -> Vec<Row> {
 }
 
 /// Is the pattern vector `vec` useful with respect to `rows` (all of the column types `tys`)?
-fn useful(rows: &[Row], vec: &[Ab], tys: &[Shape], budget: &mut Budget) -> Result<bool, GenError> {
+fn useful(
+    rows: &[Row],
+    vec: &[Ab],
+    tys: &[Col],
+    env: &Env<'_>,
+    budget: &mut Budget,
+) -> Result<bool, GenError> {
     budget.spend(1 + rows.len())?;
     let Some(head) = vec.first() else {
         return Ok(rows.is_empty());
     };
-    let sig = signature(&tys[0]);
+    let sig = signature(&tys[0], env);
     match head {
         Ab::Ctor(ctor, args) => {
             let fields = sig
                 .and_then(|s| s.into_iter().find(|(c, _)| c == ctor))
-                .map_or_else(|| vec![Shape::Other; args.len()], |(_, f)| f);
+                .map_or_else(|| vec![Col::Unknown; args.len()], |(_, f)| f);
             let mut v: Vec<Ab> = args.clone();
             v.extend(vec[1..].iter().cloned());
             let mut t = fields;
             t.extend(tys[1..].iter().cloned());
-            useful(&specialise(rows, ctor, args.len()), &v, &t, budget)
+            useful(&specialise(rows, ctor, args.len()), &v, &t, env, budget)
         }
         Ab::Wild => {
             let present: Vec<&str> = rows
@@ -191,13 +231,16 @@ fn useful(rows: &[Row], vec: &[Ab], tys: &[Shape], budget: &mut Budget) -> Resul
                     Ab::Wild => None,
                 })
                 .collect();
-            if let Some(sig) = sig.as_ref().filter(|s| s.iter().all(|(c, _)| present.contains(&c.as_str()))) {
+            if let Some(sig) = sig
+                .as_ref()
+                .filter(|s| s.iter().all(|(c, _)| present.contains(&c.as_str())))
+            {
                 for (ctor, fields) in sig {
                     let mut v: Vec<Ab> = vec![Ab::Wild; fields.len()];
                     v.extend(vec[1..].iter().cloned());
                     let mut t = fields.clone();
                     t.extend(tys[1..].iter().cloned());
-                    if useful(&specialise(rows, ctor, fields.len()), &v, &t, budget)? {
+                    if useful(&specialise(rows, ctor, fields.len()), &v, &t, env, budget)? {
                         return Ok(true);
                     }
                 }
@@ -208,36 +251,53 @@ fn useful(rows: &[Row], vec: &[Ab], tys: &[Shape], budget: &mut Budget) -> Resul
                 .filter(|r| matches!(r[0], Ab::Wild))
                 .map(|r| r[1..].to_vec())
                 .collect();
-            useful(&default, &vec[1..], &tys[1..], budget)
+            useful(&default, &vec[1..], &tys[1..], env, budget)
         }
     }
+}
+
+/// Refuse a match that can fall through or has an arm no value can reach (generator code `ir`), over a
+/// scrutinee whose type holds no record or variant (see [`check_arms_with`]).
+///
+/// # Errors
+///
+/// As [`check_arms_with`].
+pub fn check_arms(patterns: &[&Pat], ty: &Ty, errors: &ErrorCases) -> Result<(), GenError> {
+    check_arms_with(patterns, ty, errors, &Adts::new())
 }
 
 /// Refuse a match that can fall through or has an arm no value can reach (generator code `ir`).
 ///
 /// `patterns` are the IR patterns of the arms in order, already typed against `ty` (the type of
-/// the scrutinee, a `Result`); `errors` maps an error type to its cases.  Unreachable arms are
-/// found first, in arm order, then fall-through (VER04r 16.10 R12).
+/// the scrutinee: a `Result`, an `Option`, a `Bool`, a tuple, a record or a variant); `errors` maps an
+/// error type to its cases and `adts` a record or variant to its constructors.  Unreachable arms are
+/// found first, in arm order, then fall-through (VER04r 16.10 R12, now over every scrutinee type, R35 (4)).
 ///
 /// # Errors
 ///
 /// `limit` for 0 or more than [`MAX_ARMS`] arms or past the work budget; `ir` for the two
 /// corpus errors.
-pub fn check_arms(patterns: &[&Pat], ty: &Ty, errors: &ErrorCases) -> Result<(), GenError> {
+pub fn check_arms_with(
+    patterns: &[&Pat],
+    ty: &Ty,
+    errors: &ErrorCases,
+    adts: &Adts,
+) -> Result<(), GenError> {
     if patterns.is_empty() || patterns.len() > MAX_ARMS {
         return Err(GenError::new(code::LIMIT, "", "a match has 1 to 256 arms"));
     }
-    let column = [shape(ty, errors)];
+    let env = Env { errors, adts };
+    let column = [Col::Ty(ty.clone())];
     let mut budget = Budget(WORK_BUDGET);
     let mut rows: Vec<Row> = Vec::new();
     for p in patterns {
         let abstract_pattern = normalise(p);
-        if !useful(&rows, std::slice::from_ref(&abstract_pattern), &column, &mut budget)? {
+        if !useful(&rows, std::slice::from_ref(&abstract_pattern), &column, &env, &mut budget)? {
             return Err(fail(UNREACHABLE));
         }
         rows.push(vec![abstract_pattern]);
     }
-    if useful(&rows, &[Ab::Wild], &column, &mut budget)? {
+    if useful(&rows, &[Ab::Wild], &column, &env, &mut budget)? {
         return Err(fail(FALLS_THROUGH));
     }
     Ok(())
@@ -271,6 +331,10 @@ pub fn match_pattern<'p>(
                 .all(|(part, item)| match_pattern(part, item, binds)),
             _ => false,
         },
+        // The four data patterns (`ir.data`, slice S11b) have no runtime value to meet yet: an
+        // `Option`, a record and a variant are values of S11c-2.  The evaluator refuses a `match` that
+        // holds one *before* it matches (`level ir.data`), so this arm is never the one that decides.
+        Pat::Some(_) | Pat::None | Pat::Ctor(..) | Pat::Bool(_) => false,
     }
 }
 
@@ -450,5 +514,175 @@ mod tests {
         let bind_w = Pat::Bind("w".into());
         assert!(match_pattern(&bind_w, &err, &mut b));
         assert_eq!(b, vec![("w", err)]);
+    }
+
+    // -- ir.data (slice S11b): Bool, Option, records and variants ---------------------------------
+
+    fn opt(t: Ty) -> Ty {
+        Ty::Option(Box::new(t))
+    }
+
+    fn named(n: &str) -> Ty {
+        Ty::Named(n.into())
+    }
+
+    /// `record P(x: Bool, y: Bool)`, `variant V = Circle(Bool) | Rect(Bool, Bool) | Dot`,
+    /// `variant K = Red | Green | Blue`.
+    fn adts() -> Adts {
+        let mut a = Adts::new();
+        a.insert("P".into(), vec![("P".into(), vec![Ty::Bool, Ty::Bool])]);
+        a.insert(
+            "V".into(),
+            vec![
+                ("Circle".into(), vec![Ty::Bool]),
+                ("Rect".into(), vec![Ty::Bool, Ty::Bool]),
+                ("Dot".into(), vec![]),
+            ],
+        );
+        a.insert(
+            "K".into(),
+            vec![
+                ("Red".into(), vec![]),
+                ("Green".into(), vec![]),
+                ("Blue".into(), vec![]),
+            ],
+        );
+        a
+    }
+
+    fn check_data(pats: &[Pat], ty: &Ty) -> Result<(), String> {
+        let refs: Vec<&Pat> = pats.iter().collect();
+        check_arms_with(&refs, ty, &errs(), &adts()).map_err(|e| format!("{}: {}", e.code, e.message))
+    }
+
+    fn ctor(n: &str, parts: Vec<Pat>) -> Pat {
+        Pat::Ctor(n.into(), parts)
+    }
+
+    fn some(p: Pat) -> Pat {
+        Pat::Some(Box::new(p))
+    }
+
+    #[test]
+    fn bool_and_option_are_closed_sets_of_two() {
+        assert!(check_data(&[Pat::Bool(true), Pat::Bool(false)], &Ty::Bool).is_ok());
+        assert!(check_data(&[Pat::Bool(true), Pat::Wild], &Ty::Bool).is_ok());
+        assert_eq!(
+            check_data(&[Pat::Bool(true)], &Ty::Bool).unwrap_err(),
+            format!("ir: {FALLS_THROUGH}")
+        );
+        assert_eq!(
+            check_data(&[Pat::Bool(true), Pat::Bool(true), Pat::Bool(false)], &Ty::Bool).unwrap_err(),
+            format!("ir: {UNREACHABLE}")
+        );
+        let o = opt(Ty::Bool);
+        assert!(check_data(&[some(Pat::Wild), Pat::None], &o).is_ok());
+        assert!(check_data(&[some(Pat::Bind("x".into())), Pat::Wild], &o).is_ok());
+        assert_eq!(check_data(&[some(Pat::Wild)], &o).unwrap_err(), format!("ir: {FALLS_THROUGH}"));
+        assert_eq!(check_data(&[Pat::None], &o).unwrap_err(), format!("ir: {FALLS_THROUGH}"));
+        // an arm after a wild, and a repeated `Some`, are unreachable
+        assert_eq!(
+            check_data(&[Pat::Wild, some(Pat::Wild)], &o).unwrap_err(),
+            format!("ir: {UNREACHABLE}")
+        );
+        assert_eq!(
+            check_data(&[some(Pat::Wild), some(Pat::Wild), Pat::None], &o).unwrap_err(),
+            format!("ir: {UNREACHABLE}")
+        );
+        // nesting: `Some(Some(_))` and `None` leave `Some(None)`
+        let oo = opt(opt(Ty::Bool));
+        assert_eq!(
+            check_data(&[some(some(Pat::Wild)), Pat::None], &oo).unwrap_err(),
+            format!("ir: {FALLS_THROUGH}")
+        );
+        assert!(check_data(&[some(some(Pat::Wild)), some(Pat::None), Pat::None], &oo).is_ok());
+        // a refutable payload: `Some(true)` leaves `Some(false)`
+        assert_eq!(
+            check_data(&[some(Pat::Bool(true)), Pat::None], &o).unwrap_err(),
+            format!("ir: {FALLS_THROUGH}")
+        );
+    }
+
+    #[test]
+    fn variants_and_records_have_the_constructors_they_declare() {
+        let k = named("K");
+        assert!(check_data(&[ctor("Red", vec![]), ctor("Green", vec![]), ctor("Blue", vec![])], &k).is_ok());
+        assert_eq!(
+            check_data(&[ctor("Red", vec![]), ctor("Green", vec![])], &k).unwrap_err(),
+            format!("ir: {FALLS_THROUGH}")
+        );
+        assert_eq!(
+            check_data(&[ctor("Red", vec![]), ctor("Red", vec![]), Pat::Wild], &k).unwrap_err(),
+            format!("ir: {UNREACHABLE}")
+        );
+        // a wild after every constructor is unreachable
+        assert_eq!(
+            check_data(
+                &[ctor("Red", vec![]), ctor("Green", vec![]), ctor("Blue", vec![]), Pat::Wild],
+                &k
+            )
+            .unwrap_err(),
+            format!("ir: {UNREACHABLE}")
+        );
+        // constructors with fields
+        let v = named("V");
+        let full = [
+            ctor("Circle", vec![Pat::Wild]),
+            ctor("Rect", vec![Pat::Wild, Pat::Wild]),
+            ctor("Dot", vec![]),
+        ];
+        assert!(check_data(&full, &v).is_ok());
+        assert_eq!(
+            check_data(&full[..2], &v).unwrap_err(),
+            format!("ir: {FALLS_THROUGH}")
+        );
+        // a record is one constructor named like it; a refutable field leaves a hole
+        let p = named("P");
+        assert!(check_data(&[ctor("P", vec![Pat::Wild, Pat::Wild])], &p).is_ok());
+        assert_eq!(
+            check_data(&[ctor("P", vec![Pat::Wild, Pat::Bool(true)])], &p).unwrap_err(),
+            format!("ir: {FALLS_THROUGH}")
+        );
+        assert!(check_data(
+            &[ctor("P", vec![Pat::Wild, Pat::Bool(true)]), ctor("P", vec![Pat::Wild, Pat::Bool(false)])],
+            &p
+        )
+        .is_ok());
+        assert_eq!(
+            check_data(
+                &[ctor("P", vec![Pat::Wild, Pat::Wild]), ctor("P", vec![Pat::Wild, Pat::Bool(true)])],
+                &p
+            )
+            .unwrap_err(),
+            format!("ir: {UNREACHABLE}")
+        );
+        // a data pattern inside a Result and inside a tuple
+        let r = res(Ty::Bool);
+        assert!(check_data(&[ok(Pat::Bool(true)), ok(Pat::Bool(false)), Pat::ErrAny], &r).is_ok());
+        assert_eq!(
+            check_data(&[ok(Pat::Bool(true)), Pat::ErrAny], &r).unwrap_err(),
+            format!("ir: {FALLS_THROUGH}")
+        );
+        let t = Ty::Tuple(vec![Ty::Bool, opt(Ty::Bool)]);
+        assert!(check_data(
+            &[Pat::Tuple(vec![Pat::Bool(true), Pat::Wild]), Pat::Tuple(vec![Pat::Bool(false), Pat::Wild])],
+            &t
+        )
+        .is_ok());
+        // a type the declarations do not know has no constructor: only a wild or a bind closes it
+        let unknown = named("Q");
+        assert_eq!(
+            check_data(&[ctor("Red", vec![])], &unknown).unwrap_err(),
+            format!("ir: {FALLS_THROUGH}")
+        );
+        assert!(check_data(&[ctor("Red", vec![]), Pat::Wild], &unknown).is_ok());
+    }
+
+    #[test]
+    fn data_patterns_have_no_runtime_value_before_s11c_and_never_match() {
+        let v = Value::Bool(true);
+        for p in [Pat::Some(Box::new(Pat::Wild)), Pat::None, Pat::Ctor("P".into(), vec![]), Pat::Bool(true)] {
+            assert!(!match_pattern(&p, &v, &mut Vec::new()));
+        }
     }
 }

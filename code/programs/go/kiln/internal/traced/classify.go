@@ -118,6 +118,11 @@ type lookupSet struct {
 	// the start of the earliest lookup and whether any call found something
 	// there (it succeeded, or failed with an errno that says so).  See judge.
 	gone map[string]goneLook
+	// before holds the followed final names of a call that FAILED with ENOENT
+	// while the post-run disk shows the name present (KILN04 D42): the call
+	// looked, found nothing, and the action made the name afterwards.  The span
+	// is the earliest start and the latest completion of such lookups.
+	before map[string]span
 }
 
 func newLookupSet() lookupSet {
@@ -125,6 +130,7 @@ func newLookupSet() lookupSet {
 		seen: map[string]pos{}, seenAbsent: map[string]span{}, ownSeen: map[string]span{},
 		seenFile: map[string]bool{}, seenFinal: map[string]pos{},
 		relFinal: map[string]span{}, relAbs: map[string]span{}, gone: map[string]goneLook{},
+		before: map[string]span{},
 	}
 }
 
@@ -177,6 +183,8 @@ func (l *lookupSet) goneAt(abs string, start pos, present bool) {
 	l.gone[abs] = g
 }
 
+func (l *lookupSet) lookedBefore(abs string, start, cur pos) { widen(l.before, abs, start, cur) }
+
 func (l *lookupSet) own(p string, start, cur pos) { widen(l.ownSeen, p, start, cur) }
 
 // classifier is the state of one action across all of its steps.
@@ -221,7 +229,8 @@ type classifier struct {
 	// second says whether a write may have landed somewhere else (W8).
 	lookupSet
 	wr lookupSet
-	// relax is set while a successful stat or exec target is resolved.
+	// relax is set while a successful stat, exec, or metadata write by path
+	// (chmod, chown, utimensat, setxattr: KILN04 D42) target is resolved.
 	relax bool
 	// execReads maps an untracked file whose head was read from the post-run
 	// disk (for a "#!" line or an ELF header) to the exec that read it.
@@ -235,8 +244,32 @@ type classifier struct {
 	// opKind, obsPresent and obsListing say what the call being observed IS, for
 	// the census alone (census.go, "op class"): the classifier's decisions never
 	// read them.  opKind is set per event, obsPresent and obsListing per observe.
-	opKind                 string
+	opKind string
+	// xattrCall says the call being classified reads extended attributes
+	// (getxattr, lgetxattr, listxattr, llistxattr and their f forms).  Unlike
+	// opKind this one IS read by a decision: the ancestor rule of KILN04 D39
+	// covers a node's type and stat metadata only, and an xattr value is
+	// content.  It is set per event.
+	xattrCall              bool
 	obsPresent, obsListing bool
+	// lookupOps is, for the census alone, the op class (opClass) of the look
+	// that ENTERED each path into each lookup set (keyed set+NUL+path, see
+	// noteLookupOp), so an unstable path reports the call whose set failed.  checkStability judges the
+	// lookups after the walk, when opKind and the obs flags describe nothing,
+	// so the class has to be remembered at the time.  Nil without a Census;
+	// written by noteLookupOp only; read by checkStability only to tell the
+	// census, never to decide anything.
+	lookupOps map[string]string
+	// tmpLinked says the action created a symbolic link inside the fresh
+	// tmpfs (or renamed one into it).  It is a whole-action fact: it is only
+	// read after every event was classified (checkStability), and D40 turns
+	// the stability rules off for tmpfs paths while it is false.
+	tmpLinked bool
+	// tmpMoved says the action renamed something in the fresh tmpfs that
+	// could redirect a path without a link: a DIRECTORY, or an object it did
+	// not create (D40).  The trace keeps each process's cwd as TEXT, which a
+	// renamed directory leaves stale while the kernel resolves ".." physically.
+	tmpMoved bool
 	// incomplete is the negation of RawRecord.WritesComplete: set the moment
 	// something happens that could hide a write from Writes/TrackedWrites.
 	// Every setter says which trigger of KILN04 section 5.5 it is.
@@ -250,6 +283,10 @@ type classifier struct {
 	cur     pos // completion of the current call
 	start   pos // start of the current call
 	callOK  bool
+	// callErrno is the errno of the call being classified ("" when it
+	// succeeded, and for calls whose ENOENT does not speak for one final name:
+	// a rename or link has two names, an exec may fail on its interpreter).
+	callErrno string
 	// callPresent says the call found something at its path (presence).
 	callPresent bool
 	// openRet is the -y path of the descriptor while the path of a successful
@@ -301,6 +338,7 @@ func (c *classifier) reason(r string) {
 func (c *classifier) reasonAt(r, path string) {
 	if c.census != nil {
 		c.census.noteClean(r, c.redact(path))
+		c.census.noteOp(r, c.opClass()) // census only: what kind of look raised it
 	}
 	c.reason(r)
 }
@@ -313,6 +351,9 @@ func (c *classifier) reasonAt(r, path string) {
 func (c *classifier) reasonSub(r, sub, path string) {
 	if c.census != nil {
 		c.census.noteClean(r+":"+sub, c.redact(path))
+		if r == rUnstable {
+			c.census.noteOp(r+":"+sub, c.opClass()) // census only, as for reasonAt
+		}
 	}
 	c.reason(r)
 }
@@ -350,8 +391,13 @@ func (c *classifier) event(t *trace.Trace, ev *trace.Event) {
 		c.start = c.cur
 	}
 	c.callOK = ev.Result.OK
+	c.callErrno = ""
+	if ev.Kind != trace.KindProcess && !isPairCall(ev.Syscall) {
+		c.callErrno = ev.Result.Errno
+	}
 	c.callPresent = presence(ev.Result)
 	c.opKind = opKindOf(ev)
+	c.xattrCall = isXattrRead(ev.Syscall)
 	switch ev.Kind {
 	case trace.KindOpen:
 		c.open(ev)
@@ -618,6 +664,7 @@ func (c *classifier) isCreated(abs string) bool {
 	for p := abs; p != ""; p = parentOf(p) {
 		if at, ok := c.created[p]; ok && at.before(c.start) {
 			if !c.noOwnSeen {
+				c.noteLookupOp(setOwn, p)
 				c.lookupSet.own(p, c.start, c.cur)
 				if c.inWrite {
 					c.wr.own(p, c.start, c.cur)
@@ -646,7 +693,7 @@ func (c *classifier) observe(abs string, present, listing bool) {
 		if rel, ok := c.rel(abs); ok {
 			c.observeRepo(rel, present, listing)
 		} else {
-			c.observeHost(abs, present)
+			c.observeHost(abs, present, listing)
 		}
 	}
 }
@@ -802,6 +849,11 @@ func (c *classifier) nsChange(abs string, clean, opened bool) {
 // open-only rule: absent says the post-run disk shows it absent (relAbs), else
 // it is a file (relFinal).
 func (c *classifier) noteRel(abs string, absent bool) {
+	if absent {
+		c.noteLookupOp(setRelAbs, abs)
+	} else {
+		c.noteLookupOp(setRelFinal, abs)
+	}
 	c.lookupSet.rel(abs, absent, c.start, c.cur)
 	if c.inWrite {
 		c.wr.rel(abs, absent, c.start, c.cur)
@@ -850,6 +902,7 @@ func (c *classifier) openOnly(p string, sp span, absent bool) bool {
 
 // noteFinal records a followed final component that the disk shows present.
 func (c *classifier) noteFinal(abs string) {
+	c.noteLookupOp(setFinal, abs)
 	c.lookupSet.final(abs, c.start)
 	if c.inWrite {
 		c.wr.final(abs, c.start)
@@ -864,14 +917,71 @@ func (c *classifier) noteFinal(abs string) {
 // unstable when the last change to it before the lookup was a creation; a file
 // there is unstable if the action touched it at all.
 func (c *classifier) noteMissing(abs string, isFile bool) {
+	if isFile {
+		c.noteLookupOp(setFile, abs)
+	} else {
+		c.noteLookupOp(setAbsent, abs)
+	}
 	c.lookupSet.missing(abs, isFile, c.start, c.cur)
 	if c.inWrite {
 		c.wr.missing(abs, isFile, c.start, c.cur)
 	}
 }
 
+// noteBefore records a followed final name that a call looked up, found absent
+// (ENOENT) and that the post-run disk shows present, for the absent-before-made
+// rule (KILN04 D42).
+func (c *classifier) noteBefore(abs string) {
+	c.noteLookupOp(setBefore, abs)
+	c.lookupSet.lookedBefore(abs, c.start, c.cur)
+	if c.inWrite {
+		c.wr.lookedBefore(abs, c.start, c.cur)
+	}
+}
+
+// absentBeforeMade is the rule of KILN04 D42.  A call that failed with ENOENT
+// on the final name p, which the post-run disk shows present, saw p absent
+// when ALL of these hold:
+//
+//   - p is not tracked (a tracked file was there from the start, so an ENOENT
+//     about it was about something else) and never a hard-link end;
+//   - p's change log is not empty and EVERY entry STARTED after the latest such
+//     lookup COMPLETED (nothing the action did to p can have taken effect while
+//     the lookup ran);
+//   - the first entry is a creation that proves the action made the name: a
+//     clean creation (mkdir, symlink, O_EXCL) or an O_CREAT open keyed by the
+//     descriptor's -y path (an O_CREAT open through a link is keyed at the
+//     link's target, so an entry at p proves p was not a link when it ran);
+//   - no removal of p precedes that creation.
+//
+// Without the rule, the creating open (a plain O_CREAT, never "clean") fails
+// createdOnce and the whole action is refused: this is the linker that stats
+// its output, finds nothing, and then creates it.
+func (c *classifier) absentBeforeMade(p string, sp span) bool {
+	ms := c.mods[p]
+	if len(ms) == 0 || c.hard[p] {
+		return false
+	}
+	// Outside the repository there is nothing tracked to check: a name there
+	// has change-log entries only if the action itself made them, so it can only
+	// be one of the action's own writable roots.
+	if rel, ok := c.rel(p); ok && c.cfg.Tree.Stat(rel).Kind != KindAbsent {
+		return false
+	}
+	for _, m := range ms {
+		if !sp.e.before(m.start) {
+			return false
+		}
+	}
+	if !ms[0].clean && !ms[0].opened {
+		return false
+	}
+	return !removedBeforeMade(ms, c.firstMade(ms), sp.s)
+}
+
 // noteGone records a followed final name that the post-run disk shows absent.
 func (c *classifier) noteGone(abs string) {
+	c.noteLookupOp(setGone, abs)
 	c.lookupSet.goneAt(abs, c.start, c.callPresent)
 	if c.inWrite {
 		c.wr.goneAt(abs, c.start, c.callPresent)
@@ -902,6 +1012,7 @@ func (c *classifier) markRemoved(abs string, unlink bool) {
 // start of the current call.  Only the earliest lookup matters: if the rule
 // holds for it, it holds for every later one.
 func (c *classifier) noteTraversal(abs string) {
+	c.noteLookupOp(setSeen, abs)
 	c.lookupSet.traversal(abs, c.start)
 	if c.inWrite {
 		c.wr.traversal(abs, c.start)
@@ -949,6 +1060,9 @@ func (c *classifier) touchedFrom(abs string, from pos) bool {
 // can only say "reads-product" about what a trace reached by a stable path.
 func (c *classifier) stable(abs string, lookup pos) bool {
 	if c.underTmp(abs) {
+		// The strict rule.  (D40's containment is decided by contained(), which
+		// the one caller, judge's seen loop, tests first: a path that reaches
+		// here is under the tmpfs of an action that is tainted.)
 		return c.createdOnce(abs, lookup)
 	}
 	if rel, ok := c.rel(abs); ok && rel != "" {
@@ -958,6 +1072,46 @@ func (c *classifier) stable(abs string, lookup pos) bool {
 		return c.createdOnce(abs, lookup)
 	}
 	return !c.touchedAfter(abs, pos{}, true)
+}
+
+// contained says abs lies in the fresh tmpfs and the action never made a
+// symbolic link there (KILN04 D40).  A lookup can leave the tmpfs only through
+// a link inside it, and hard links and renames cannot cross the mount (EXDEV),
+// so such a path reaches only the action's own files or nothing: it is neither
+// an input nor a repository write, and the stability rules, whose job is to
+// vouch for the post-run disk, have nothing to vouch for.  This is why Go's
+// build cache, gcc's ccXXXXXX.o and clang's temporaries, which are re-created
+// without O_EXCL, unlinked, or renamed into place, no longer void a run.
+func (c *classifier) contained(abs string) bool {
+	return !c.tmpLinked && !c.tmpMoved && c.underTmp(abs)
+}
+
+// noteTmpMove records a SUCCESSFUL rename (or exchange) of src to dst for D40.
+// Moving a regular file the action itself created, into place (Go's build
+// cache, an editor's temp file), cannot redirect any path.  Moving a directory
+// can: a process whose cwd text names it, or a name below it, then resolves
+// ".." to somewhere else, with no symbolic link involved.  Moving an object
+// the action did not create (a preloaded name, something it only opened) has
+// no history in the trace.  Either taints the whole action.  An exchange is
+// judged the same way for both names.
+func (c *classifier) noteTmpMove(src, dst string, exchange bool) {
+	if !c.underTmp(src) && !c.underTmp(dst) && !c.isTmpRoot(src) && !c.isTmpRoot(dst) {
+		return
+	}
+	ownFile := func(p string) bool {
+		_, made := c.created[p]
+		return made && !c.dirs[p]
+	}
+	if !ownFile(src) || (exchange && !ownFile(dst)) {
+		c.tmpMoved = true
+	}
+}
+
+// noteTmpLink records that a symbolic link now lives at abs, for D40.
+func (c *classifier) noteTmpLink(abs string) {
+	if c.underTmp(abs) || c.isTmpRoot(abs) {
+		c.tmpLinked = true
+	}
 }
 
 func (c *classifier) createdOnce(abs string, lookup pos) bool {
@@ -996,7 +1150,7 @@ func (c *classifier) checkStability() {
 	var notes censusNotes
 	c.judge(&c.lookupSet, idx, func(p, sub string) {
 		c.reason(rUnstable)
-		notes.add(c.census, rUnstable+":"+sub, p)
+		notes.addOp(c.census, rUnstable+":"+sub, p, c.lookupOpOf(sub, p))
 	})
 	c.judge(&c.wr, idx, func(string, string) { c.incomplete = true })
 	for p, from := range c.execReads {
@@ -1020,11 +1174,17 @@ func (c *classifier) checkStability() {
 // ignores both arguments).
 func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path, sub string)) {
 	for p, at := range l.seen {
+		if c.contained(p) {
+			continue
+		}
 		if !c.stable(p, at) {
 			bad(p, "component-changed")
 		}
 	}
 	for p, sp := range l.seenAbsent {
+		if c.contained(p) {
+			continue
+		}
 		c.steps += 8
 		if c.steps > walkBudget {
 			c.budgetOut()
@@ -1044,6 +1204,9 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path
 		}
 	}
 	for p, at := range l.seenFinal {
+		if c.contained(p) {
+			continue
+		}
 		// A path the action never changed is what the disk says (an untracked
 		// leftover is then an untracked observation, for the merge job); one it
 		// changed must satisfy the creation rule.
@@ -1054,13 +1217,16 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path
 	// The followed finals of a successful stat or exec: the open-only rule,
 	// else the strict rules they would have met as ordinary lookups.
 	for p, sp := range l.relFinal {
+		if c.contained(p) {
+			continue
+		}
 		if len(c.mods[p]) > 0 && !c.openOnly(p, sp, false) && !c.createdOnce(p, sp.s) {
 			bad(p, "followed-final-changed")
 		}
 	}
 	for p, sp := range l.relAbs {
 		ms := c.mods[p]
-		if len(ms) == 0 || c.openOnly(p, sp, true) {
+		if c.contained(p) || len(ms) == 0 || c.openOnly(p, sp, true) {
 			continue
 		}
 		c.steps += 8
@@ -1077,6 +1243,16 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path
 			bad(p, "followed-absent-changed")
 		}
 	}
+	// A followed final name whose lookup FAILED with ENOENT while the disk shows
+	// it present: the action made it afterwards (D42), or today's rule applies.
+	for p, sp := range l.before {
+		if c.contained(p) {
+			continue
+		}
+		if len(c.mods[p]) > 0 && !c.absentBeforeMade(p, sp) && !c.createdOnce(p, sp.s) {
+			bad(p, "absent-before-made")
+		}
+	}
 	// A followed final name that the post-run disk shows absent was removed, or
 	// never there.  A call that found something there needs the action to have
 	// made the name: the creation must have COMPLETED before the earliest
@@ -1084,6 +1260,9 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path
 	// completed after the earliest lookup began, may have taken a link or file
 	// the lookup went through (a pre-existing object the disk no longer shows).
 	for p, g := range l.gone {
+		if c.contained(p) {
+			continue
+		}
 		ms := c.mods[p]
 		firstMade := c.firstMade(ms)
 		if g.present && !firstMade.before(g.from) {
@@ -1094,11 +1273,17 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path
 		}
 	}
 	for p := range l.seenFile {
+		if c.contained(p) {
+			continue
+		}
 		if c.touchedAfter(p, pos{}, true) {
 			bad(p, "file-changed")
 		}
 	}
 	for p, sp := range l.ownSeen {
+		if c.contained(p) {
+			continue
+		}
 		// Anything that may have taken effect while such a call ran: a change
 		// to the path or an ancestor that completed after the call began and
 		// began before it ended.

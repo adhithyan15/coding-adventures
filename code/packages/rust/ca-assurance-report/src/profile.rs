@@ -32,8 +32,9 @@
 //! * `rows` must declare 326, 327 and 407, and may declare 409 for a `transform`
 //!   only.  No other CWE is declarable: memory safety, CWE-208, CWE-400 and the
 //!   capability rows are computed from evidence and a file cannot touch them.
-//! * `applicability` has exactly one value, `excluded`.  A profile cannot declare
-//!   a row discharged, an exemption or approved.
+//! * `applicability` is `excluded`, except CWE-407 may say `applicable` when
+//!   missing step bounds are derived. A profile cannot declare a verdict,
+//!   exemption or approval.
 //! * Every object has exactly the keys documented; an unknown key is refused (a
 //!   typo must not silently drop a claim).
 
@@ -116,9 +117,21 @@ pub struct AuditProfile {
     pub name: String,
     pub kind: ProfileKind,
     /// CWE -> the reason sentence of a declared exclusion.
-    rows: BTreeMap<u32, String>,
+    rows: BTreeMap<u32, ProfileRow>,
     /// SHA-256 (hex) of the exact bytes the profile was parsed from.
     pub sha256: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct ProfileRow {
+    applicability: RowApplicability,
+    reason: String,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum RowApplicability {
+    Excluded,
+    Applicable,
 }
 
 impl AuditProfile {
@@ -130,7 +143,13 @@ impl AuditProfile {
 
     /// The declared reason for `cwe`, if the profile declares that row.
     pub fn row_reason(&self, cwe: u32) -> Option<&str> {
-        self.rows.get(&cwe).map(String::as_str)
+        self.rows.get(&cwe).map(|row| row.reason.as_str())
+    }
+
+    /// Declared applicability for a profile row. Only CWE-407 can explicitly
+    /// declare itself applicable; this never carries a verdict or exemption.
+    pub fn row_applicability(&self, cwe: u32) -> Option<RowApplicability> {
+        self.rows.get(&cwe).map(|row| row.applicability)
     }
 
     /// Hold the profile to the pin a package's BUILD line passes (`--profile NAME`
@@ -206,17 +225,29 @@ impl AuditProfile {
                 .as_object()
                 .ok_or_else(|| ProfileError(format!("row {cwe} must be an object")))?;
             exact_keys(row_obj, &["applicability", "reason"], &format!("row {cwe}"))?;
-            match string_field(row_obj, "applicability")?.as_str() {
-                "excluded" => {}
-                other => {
+            let applicability = match string_field(row_obj, "applicability")?.as_str() {
+                "excluded" => RowApplicability::Excluded,
+                "applicable" if cwe == 407 => RowApplicability::Applicable,
+                "applicable" => {
                     return bad(format!(
-                        "row {cwe}: applicability `{other}` is not supported; a profile can only declare `excluded`"
+                        "row {cwe}: `applicable` is supported only for CWE-407"
                     ))
                 }
-            }
+                other => {
+                    return bad(format!(
+                        "row {cwe}: applicability `{other}` is not supported; profiles declare `excluded`, or CWE-407 `applicable`"
+                    ))
+                }
+            };
             let reason = string_field(row_obj, "reason")?;
             check_reason(cwe, &reason)?;
-            rows.insert(cwe, reason);
+            rows.insert(
+                cwe,
+                ProfileRow {
+                    applicability,
+                    reason,
+                },
+            );
         }
         for cwe in REQUIRED_ROWS {
             if !rows.contains_key(&cwe) {

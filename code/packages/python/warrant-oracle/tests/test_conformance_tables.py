@@ -114,18 +114,27 @@ def test_every_appendix_a_tag_occurs_in_v2_ir(kit):
 
 
 def test_level_missing_uses_only_fixed_and_tuple_tags_and_unknown_tag_avoids_reserved_names(kit):
-    """S5-0 erratum (PR 19723): an unknown-tag vector never uses a tag of ir.data or ir.seq."""
+    """S5-0 erratum (PR 19723): an unknown-tag vector never uses a tag of ir.data or ir.seq.
+
+    S5e (R69): a ``level-missing`` that a *type* causes has no offending tag, and a model that ``ir`` does not
+    reach may hold a tag of a missing level in a case that derives a value.
+    """
     reserved = {"some", "none", "ctor", "field", "list", *L.SEQ_TAGS}
     for case in cases_of(kit, "v2-ir"):
         tags = tags_of(case["ir"]).union(*(tags_of(m["body"]) for m in case["models"].values()))
+        reached = set().union(*(tags_of(t) for t in C.reach(case)[0]))
         if case["expect"].get("error") == "level-missing":
             offending = {t for t in tags if t not in L.CORE_TAGS}
-            assert offending and offending <= (L.FIXED_TAGS | L.TUPLE_TAGS), case["id"]
+            if offending:
+                assert offending <= (L.FIXED_TAGS | L.TUPLE_TAGS), case["id"]
+            else:  # a type of a missing level in env: a tuple or the reserved ir.list
+                assert any(t["type"].startswith(("(", "List<")) for _, t in case["env"]), case["id"]
         if case["expect"].get("error") == "unknown-tag":
             assert not (tags & reserved), case["id"]
             assert any(L.tag_level(t) is None and t != "match" for t in tags), case["id"]
         if case["expect"].get("error") not in ("level-missing", "unknown-tag"):
-            assert tags <= L.CORE_TAGS, case["id"]
+            assert reached <= L.CORE_TAGS, case["id"]
+            assert tags <= L.CORE_TAGS or case["id"] == "v2-ir/level-missing-model-not-reached-is-a-value", case["id"]
 
 
 LEAVES = {
@@ -238,7 +247,8 @@ def test_the_fault_cases_use_the_oracles_own_templates(kit):
 def test_write_then_check_into_a_scratch_directory(kit, tmp_path):
     assert kit.mc.main(["--write", "--fixture", str(tmp_path / "out")]) == 0
     written = {p.name: p.read_bytes() for p in (tmp_path / "out").iterdir()}
-    assert written == {name: text.encode() for name, text in kit.files.items()}  # six files, no index.json
+    binding_text, _ = kit.mc.build_binding()  # S5c: the seventh file is written beside the six, still no index.json
+    assert written == {**{name: text.encode() for name, text in kit.files.items()}, "v2-binding.json": binding_text.encode()}
     assert kit.mc.main(["--check", "--fixture", str(tmp_path / "out")]) == 0
 
 

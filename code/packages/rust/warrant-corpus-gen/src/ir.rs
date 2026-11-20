@@ -42,6 +42,24 @@
 //! `a-generic-ir-walker-that-reads-node-1-...`: grep for a walker that reads the node's raw
 //! fields before adding a shape.)
 //!
+//! ## `ir.data` (slice S11b)
+//!
+//! Four more shapes (VER04r Appendix A.2) and four more patterns:
+//!
+//! ```text
+//!   ["some", e]                  Some(e), of type Option<type(e)>
+//!   ["none", "T"]                None; T is the payload's canonical type name, a JSON STRING
+//!   ["ctor", "Name", [e1, ..]]   a record or variant constructor; the operands are ONE list at 2
+//!   ["field", e, i]              the i-th field (a JSON integer) of a record
+//!   patterns   ["some", p]  ["none"]  ["ctor", "Name", [p..]]  ["bool", true]
+//! ```
+//!
+//! [`Ir::Ctor`] is a shape a generic walker gets wrong in the same way as `subject_op`, and
+//! [`Ir::None`]'s type is a name, not an operand.  A `match` is `ir.tuple` when its scrutinee is a
+//! `Result` and `ir.data` for any other type, which the tree must remember ([`Ir::Match::on_result`]),
+//! because the patterns alone cannot tell a `Result` scrutinee that is only `bind`/`wild` arms from
+//! a tuple one.
+//!
 //! ## Wire form
 //!
 //! The JSON is the v1 array encoding, unchanged: `["var","a"]`, `["lit",true]`,
@@ -222,19 +240,38 @@ pub enum Ir {
     },
     /// `["tuple", [e1, .., en]]`, `2 <= n <= 8` (`ir.tuple`).
     Tuple(Vec<Ir>),
+    /// `["some", e]` (`ir.data`): `Some(e)`.
+    Some(Box<Ir>),
+    /// `["none", "T"]` (`ir.data`): `None`, carrying the **payload** type `T` its position expects
+    /// (the [D24] convention: a consumer that types IR bottom-up has no other source for it).
+    None(Ty),
+    /// `["ctor", "Name", [e1, .., en]]` (`ir.data`): the constructor `Name` of a record (named like the
+    /// record) or of a variant, one operand per declared field.
+    Ctor {
+        /// The record's or the constructor's name.
+        name: String,
+        /// The operands, in field order.
+        args: Vec<Ir>,
+    },
+    /// `["field", e, i]` (`ir.data`): field `i` (0-based, in declaration order) of a record.
+    Field(Box<Ir>, usize),
     /// `["project", e, i]`: the `i`-th component (0-based) of a tuple (`ir.tuple`).
     Project(Box<Ir>, usize),
     /// `["match", s, [[pattern, arm], ..]]` on a `Result` scrutinee (`ir.tuple`, [D35]): the
     /// arms are tried in order and **exactly one** arm body is evaluated.
     Match {
-        /// The scrutinee, of a `Result` type.
+        /// The scrutinee.
         scrutinee: Box<Ir>,
         /// `(pattern, body)` in source order; never empty.
         arms: Vec<(Pat, Ir)>,
+        /// Is the scrutinee's static type a `Result`?  Then the `match` is `ir.tuple` ([D35]); for any
+        /// other type it is `ir.data` (Appendix A.2).  Not part of the JSON: the oracle's IR does not
+        /// carry types either, the lowerer hands the answer to `requires`.
+        on_result: bool,
     },
 }
 
-/// A pattern of a `match` on a `Result` (Appendix A.1): one of exactly six.
+/// A pattern of a `match` (Appendix A.1 and A.2): one of exactly ten.
 ///
 /// ```text
 ///   ["ok", pat]           an `Ok` whose payload matches `pat`
@@ -243,6 +280,10 @@ pub enum Ir {
 ///   ["tuple", [pats]]     a tuple of the same arity, component by component
 ///   ["bind", "name"]      anything; binds `name` to the matched value
 ///   ["wild"]              anything
+///   ["some", pat]         a `Some` whose payload matches `pat`                  (ir.data)
+///   ["none"]              a `None`                                              (ir.data)
+///   ["ctor", "N", [pats]] the constructor `N` with every field matching         (ir.data)
+///   ["bool", true]        that `Bool` literal                                   (ir.data)
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Pat {
@@ -258,19 +299,27 @@ pub enum Pat {
     ErrAny,
     /// `["tuple", [p1, .., pn]]`.
     Tuple(Vec<Pat>),
+    /// `["some", p]` (`ir.data`).
+    Some(Box<Pat>),
+    /// `["none"]` (`ir.data`).
+    None,
+    /// `["ctor", "Name", [p1, .., pn]]` (`ir.data`): `n` is the declared field count.
+    Ctor(String, Vec<Pat>),
+    /// `["bool", true]` (`ir.data`).
+    Bool(bool),
 }
 
 impl Pat {
-    /// The names this pattern binds, in source order (looking inside `ok` and `tuple`).
+    /// The names this pattern binds, in source order (looking inside `ok`, `some`, `tuple` and `ctor`).
     pub fn binds(&self) -> Vec<&str> {
         let mut out = Vec::new();
         let mut stack = vec![self];
         while let Some(p) = stack.pop() {
             match p {
                 Pat::Bind(n) => out.push(n.as_str()),
-                Pat::Ok(inner) => stack.push(inner),
-                Pat::Tuple(parts) => stack.extend(parts.iter().rev()),
-                Pat::Wild | Pat::Err(_) | Pat::ErrAny => {}
+                Pat::Ok(inner) | Pat::Some(inner) => stack.push(inner),
+                Pat::Tuple(parts) | Pat::Ctor(_, parts) => stack.extend(parts.iter().rev()),
+                Pat::Wild | Pat::Err(_) | Pat::ErrAny | Pat::None | Pat::Bool(_) => {}
             }
         }
         out
@@ -288,14 +337,35 @@ impl Pat {
                 Json::str("tuple"),
                 Json::arr(parts.iter().map(Pat::to_json)),
             ]),
+            Pat::Some(inner) => Json::arr([Json::str("some"), inner.to_json()]),
+            Pat::None => Json::arr([Json::str("none")]),
+            Pat::Ctor(name, parts) => Json::arr([
+                Json::str("ctor"),
+                Json::str(name.as_str()),
+                Json::arr(parts.iter().map(Pat::to_json)),
+            ]),
+            Pat::Bool(v) => Json::arr([Json::str("bool"), Json::Bool(*v)]),
+        }
+    }
+
+    /// Is this pattern, or any pattern inside it, a **data pattern** (`some none ctor bool`,
+    /// Appendix A.2)?  Such a pattern adds `ir.data` to the `match` it is in, whatever the scrutinee.
+    pub fn has_data(&self) -> bool {
+        match self {
+            Pat::Some(_) | Pat::None | Pat::Ctor(..) | Pat::Bool(_) => true,
+            Pat::Ok(inner) => inner.has_data(),
+            Pat::Tuple(parts) => parts.iter().any(Pat::has_data),
+            Pat::Wild | Pat::Bind(_) | Pat::Err(_) | Pat::ErrAny => false,
         }
     }
 
     /// How deeply the pattern nests (a leaf is 1).
     pub fn depth(&self) -> usize {
         match self {
-            Pat::Ok(inner) => 1 + inner.depth(),
-            Pat::Tuple(parts) => 1 + parts.iter().map(Pat::depth).max().unwrap_or(0),
+            Pat::Ok(inner) | Pat::Some(inner) => 1 + inner.depth(),
+            Pat::Tuple(parts) | Pat::Ctor(_, parts) => {
+                1 + parts.iter().map(Pat::depth).max().unwrap_or(0)
+            }
             _ => 1,
         }
     }
@@ -303,6 +373,9 @@ impl Pat {
 
 /// The tags of `ir.tuple` (Appendix A.1).
 pub const TUPLE_TAGS: [&str; 3] = ["tuple", "project", "match"];
+
+/// The four tags of `ir.data` (Appendix A.2, [D47]).  A `match` is type-directed and is not one.
+pub const DATA_TAGS: [&str; 4] = ["some", "none", "ctor", "field"];
 
 /// Exactly the 35 names of `ir.fixed` (VER04r 4.1, Appendix A.1, [D24]), in the oracle's order.
 /// `try` is spelled `try`.
@@ -344,8 +417,9 @@ pub const FIXED_TAGS: [&str; 35] = [
     "unwrap_or",
 ];
 
-/// The nine built-ins whose result is an `Option<T>` (VER04r 16.10 [D23]); `unwrap_or` is the
-/// only consumer of an `Option`, as its first operand and directly.
+/// The nine built-ins whose result is an `Option<T>` (VER04r 16.10 [D23]).  A producer that is directly the
+/// first operand of an `unwrap_or` is the **intermediate use**, whose `Option` type adds no `ir.data`
+/// (R29, [D48]); since S11b an `Option` may be the type of any node and `unwrap_or` takes any of them.
 pub const OPTION_PRODUCERS: [&str; 9] = [
     "try",
     "checked_add",
@@ -377,7 +451,9 @@ pub fn fixed_tag(name: &str) -> Option<&'static str> {
 /// The `requires` of lowered trees (VER04r 16.10 R9, the tag part; the spec calls it
 /// `ir::levels`): `ir.core` (always present), `ir.fixed` for every [`Ir::Fixed`] node, `ir.tuple`
 /// for every [`Ir::Tuple`], [`Ir::Project`] and [`Ir::Match`] (a `match` on a `Result` is
-/// `ir.tuple`, [D35]; the type half of R9 is the lowerer's), and, for
+/// `ir.tuple`, [D35]; the type half of R9 is the lowerer's), `ir.data` for the four tags of
+/// Appendix A.2, and for a `match` whose scrutinee is not a `Result` or that has a data pattern
+/// ([`Ir::Match::on_result`], [`Pat::has_data`]), and, for
 /// every `model_call`, the callee's own `requires` as `callee` returns it (already closed over
 /// the callee's callees, so the closure is never walked again).  Sorted and duplicate-free.
 pub fn levels<'t>(
@@ -390,8 +466,21 @@ pub fn levels<'t>(
             Ir::Fixed { .. } => {
                 found.insert("ir.fixed");
             }
-            Ir::Tuple(_) | Ir::Project(..) | Ir::Match { .. } => {
+            Ir::Tuple(_) | Ir::Project(..) => {
                 found.insert("ir.tuple");
+            }
+            Ir::Some(_) | Ir::None(_) | Ir::Ctor { .. } | Ir::Field(..) => {
+                found.insert("ir.data");
+            }
+            // [D35] and Appendix A.2: `ir.tuple` for a `Result` scrutinee, `ir.data` for any other, and
+            // `ir.data` as well whenever a pattern, at any depth, is a data pattern.
+            Ir::Match {
+                arms, on_result, ..
+            } => {
+                found.insert(if *on_result { "ir.tuple" } else { "ir.data" });
+                if arms.iter().any(|(p, _)| p.has_data()) {
+                    found.insert("ir.data");
+                }
             }
             Ir::Model { name, .. } => found.extend(callee(name)),
             _ => {}
@@ -470,6 +559,10 @@ impl Ir {
             Ir::Tuple(_) => "tuple",
             Ir::Project(..) => "project",
             Ir::Match { .. } => "match",
+            Ir::Some(_) => "some",
+            Ir::None(_) => "none",
+            Ir::Ctor { .. } => "ctor",
+            Ir::Field(..) => "field",
         }
     }
 
@@ -478,13 +571,19 @@ impl Ir {
     /// The one place that says which parts of a node are expressions.
     pub fn children(&self) -> Vec<&Ir> {
         match self {
-            Ir::Bool(_) | Ir::Int { .. } | Ir::Bytes(_) | Ir::Var(_) | Ir::Err(_) => vec![],
-            Ir::Subject { args, .. } | Ir::Model { args, .. } | Ir::Fixed { args, .. } => {
-                args.iter().collect()
+            Ir::Bool(_) | Ir::Int { .. } | Ir::Bytes(_) | Ir::Var(_) | Ir::Err(_) | Ir::None(_) => {
+                vec![]
             }
+            Ir::Subject { args, .. }
+            | Ir::Model { args, .. }
+            | Ir::Fixed { args, .. }
+            | Ir::Ctor { args, .. } => args.iter().collect(),
             Ir::Tuple(parts) => parts.iter().collect(),
-            Ir::Project(base, _) => vec![base],
-            Ir::Match { scrutinee, arms } => std::iter::once(&**scrutinee)
+            Ir::Project(base, _) | Ir::Field(base, _) => vec![base],
+            Ir::Some(inner) => vec![inner],
+            Ir::Match {
+                scrutinee, arms, ..
+            } => std::iter::once(&**scrutinee)
                 .chain(arms.iter().map(|(_, body)| body))
                 .collect(),
             Ir::Len(a) | Ir::Ok(a) | Ir::Not(a) | Ir::IsErr(a) | Ir::Neg(_, a) => vec![a],
@@ -582,8 +681,19 @@ impl Ir {
             ]),
             Ir::Err(case) => Json::arr([tag(), Json::str(case.as_str())]),
             Ir::Tuple(parts) => Json::arr([tag(), Json::arr(parts.iter().map(Ir::to_json))]),
-            Ir::Project(base, index) => Json::arr([tag(), base.to_json(), Json::Int(*index as u64)]),
-            Ir::Match { scrutinee, arms } => Json::arr([
+            Ir::Project(base, index) | Ir::Field(base, index) => {
+                Json::arr([tag(), base.to_json(), Json::Int(*index as u64)])
+            }
+            // `none` carries the payload type as its canonical name, a JSON string (A.2, [D24]).
+            Ir::None(payload) => Json::arr([tag(), Json::str(payload.name())]),
+            Ir::Ctor { name, args } => Json::arr([
+                tag(),
+                Json::str(name.as_str()),
+                Json::arr(args.iter().map(Ir::to_json)),
+            ]),
+            Ir::Match {
+                scrutinee, arms, ..
+            } => Json::arr([
                 tag(),
                 scrutinee.to_json(),
                 Json::arr(
@@ -834,6 +944,7 @@ mod tests {
                 (Pat::Err("X".into()), Ir::Bool(true)),
                 (Pat::ErrAny, Ir::Bool(false)),
             ],
+            on_result: true,
         };
         assert_eq!(
             j(&m),
@@ -860,6 +971,87 @@ mod tests {
             assert_eq!(levels([tree], &none), ["ir.core", "ir.tuple"]);
         }
         assert_eq!(TUPLE_TAGS, ["tuple", "project", "match"]);
+    }
+
+    #[test]
+    fn the_four_data_tags_and_patterns_have_the_appendix_a2_json_and_levels() {
+        let j = |ir: &Ir| {
+            ir.to_json()
+                .render()
+                .unwrap()
+                .split_whitespace()
+                .collect::<String>()
+        };
+        let some = Ir::Some(var("a"));
+        assert_eq!(j(&some), r#"["some",["var","a"]]"#);
+        // the payload type of a `none` is its canonical name, a JSON string
+        let none = Ir::None(Ty::bytes_n(2));
+        assert_eq!(j(&none), r#"["none","Bytes<2>"]"#);
+        assert_eq!(
+            j(&Ir::None(Ty::Tuple(vec![Ty::Bool, Ty::Nat]))),
+            r#"["none","(Bool,Nat)"]"#
+        );
+        let ctor = Ir::Ctor {
+            name: "Point".into(),
+            args: vec![*var("x"), *var("y")],
+        };
+        assert_eq!(j(&ctor), r#"["ctor","Point",[["var","x"],["var","y"]]]"#);
+        let dot = Ir::Ctor {
+            name: "Dot".into(),
+            args: vec![],
+        };
+        assert_eq!(j(&dot), r#"["ctor","Dot",[]]"#);
+        let field = Ir::Field(Box::new(ctor.clone()), 1);
+        assert_eq!(j(&field), r#"["field",["ctor","Point",[["var","x"],["var","y"]]],1]"#);
+        // children: the operands of a ctor (one list at 2), never a name or a type
+        assert_eq!(ctor.children().len(), 2);
+        assert!(none.children().is_empty() && dot.children().is_empty());
+        assert_eq!(some.children().len(), 1);
+        assert_eq!(field.children().len(), 1);
+        assert_eq!(some.depth(), 2);
+        assert_eq!(DATA_TAGS, ["some", "none", "ctor", "field"]);
+        // every one is ir.data and nothing else (the tag half of R9)
+        let nocall = |_: &str| vec!["ir.core"];
+        for tree in [&some, &none, &ctor, &dot, &field] {
+            assert_eq!(levels([tree], &nocall), ["ir.core", "ir.data"]);
+        }
+        // the patterns
+        let arms = vec![
+            (Pat::Some(Box::new(Pat::Bind("x".into()))), Ir::Var("x".into())),
+            (Pat::None, Ir::Bool(false)),
+        ];
+        let m = |on_result: bool, arms: Vec<(Pat, Ir)>| Ir::Match {
+            scrutinee: var("o"),
+            arms,
+            on_result,
+        };
+        assert_eq!(
+            j(&m(false, arms.clone())),
+            r#"["match",["var","o"],[[["some",["bind","x"]],["var","x"]],[["none"],["lit",false]]]]"#
+        );
+        let pc = Pat::Ctor("Rect".into(), vec![Pat::Bind("w".into()), Pat::Wild]);
+        assert_eq!(pc.to_json().render().unwrap().split_whitespace().collect::<String>(), r#"["ctor","Rect",[["bind","w"],["wild"]]]"#);
+        assert_eq!(pc.binds(), ["w"]);
+        assert_eq!(pc.depth(), 2);
+        assert_eq!(
+            Pat::Bool(true).to_json().render().unwrap().split_whitespace().collect::<String>(),
+            r#"["bool",true]"#
+        );
+        assert_eq!(Pat::Some(Box::new(pc.clone())).binds(), ["w"]);
+        assert_eq!(Pat::Some(Box::new(pc)).depth(), 3);
+        // a match is ir.tuple on a Result, ir.data on anything else, and ir.data as well when a pattern
+        // is a data pattern at any depth ([D35], A.2)
+        let plain = vec![(Pat::Wild, Ir::Bool(true))];
+        assert_eq!(levels([&m(true, plain.clone())], &nocall), ["ir.core", "ir.tuple"]);
+        assert_eq!(levels([&m(false, plain.clone())], &nocall), ["ir.core", "ir.data"]);
+        let ok_true = vec![(Pat::Ok(Box::new(Pat::Bool(true))), Ir::Bool(true)), (Pat::ErrAny, Ir::Bool(false))];
+        assert_eq!(levels([&m(true, ok_true)], &nocall), ["ir.core", "ir.data", "ir.tuple"]);
+        assert!(!Pat::Tuple(vec![Pat::Wild, Pat::Bind("a".into())]).has_data());
+        assert!(Pat::Tuple(vec![Pat::Wild, Pat::None]).has_data());
+        // a pattern is not a data node: only scrutinee and bodies are walked
+        let mut tags = vec![];
+        m(false, arms).walk(&mut |n| tags.push(n.tag()));
+        assert_eq!(tags, ["match", "var", "var", "lit"]);
     }
 
     #[test]

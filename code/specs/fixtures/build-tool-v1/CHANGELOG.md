@@ -2,7 +2,7 @@
 
 ## Unreleased - Dart DT18 hash-map input binding
 
-- Add the real Dart DT18 hash-map consumer as an exact repository-boundary grant and a neutral source-collection case. The corpus has 208 cases; the boundary has 25 entries, 38 input registrations, 514 scopes and 533 authorizations over 31 unique paths. Existing Swift hash-map, Rust game-clock and TypeScript input-frame grants remain intact.
+- Add the real Dart DT18 hash-map consumer as an exact repository-boundary grant and a neutral source-collection case. The corpus has 209 cases; the boundary has 27 entries, 42 input registrations, 516 scopes and 537 authorizations over 33 unique paths. Existing Swift hash-map, Rust game-clock and TypeScript input-frame grants remain intact.
 
 ## 2026-11-18
 

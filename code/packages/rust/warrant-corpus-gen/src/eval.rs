@@ -83,7 +83,7 @@ use coding_adventures_warrant_grammar::fixed::{self, FixedTy};
 use crate::arith::{
     check_value_len, exact_neg, exact_op, fixed_neg, fixed_op, EXACT_BOUND, MAX_IR_VALUE,
 };
-use crate::error::{code, GenError};
+use crate::error::{code, Beyond, GenError};
 use crate::ir::{Arith, Cmp, Ir, Logic, Pat};
 use crate::lower::{LoweredModel, LoweredOp};
 use crate::patterns::match_pattern;
@@ -565,9 +565,22 @@ impl<'a> Program<'a> {
                 tasks.push(Task::Apply(node));
                 tasks.push(Task::Eval(base));
             }
-            Ir::Match { scrutinee, arms } => {
+            Ir::Match {
+                scrutinee,
+                arms,
+                on_result,
+            } => {
+                // `ir.data` is lowered, typed and costed but never evaluated before S11c-2 (VER04r 16.14
+                // R37): a `match` on anything but a `Result`, or with a data pattern, is refused here,
+                // before a pattern can meet a value it has no form for.
+                if !*on_result || arms.iter().any(|(p, _)| p.has_data()) {
+                    return Err(data_not_evaluated());
+                }
                 tasks.push(Task::Arms(arms));
                 tasks.push(Task::Eval(scrutinee));
+            }
+            Ir::Some(_) | Ir::None(_) | Ir::Ctor { .. } | Ir::Field(..) => {
+                return Err(data_not_evaluated());
             }
             // The 35 built-ins of Appendix A.1 (S10c-2): every operand left to right, then the
             // node.  `unwrap_or` evaluates both of its operands (no short circuit).
@@ -788,7 +801,9 @@ impl<'a> Program<'a> {
                         stack.push((a, scope));
                     }
                 }
-                Ir::Match { scrutinee, arms } => {
+                Ir::Match {
+                    scrutinee, arms, ..
+                } => {
                     // A `match` arm is a guard whose condition is the scrutinee (VER04r 4.4).
                     if arms.iter().any(|(_, body)| body.has_subject()) {
                         if scrutinee.has_subject() {
@@ -848,6 +863,16 @@ impl<'a> Program<'a> {
         }
         Some(calls)
     }
+}
+
+/// The refusal of every evaluation of an `ir.data` node: lowered, typed and costed by S11b, evaluated
+/// by S11c-2 (VER04r 16.14 R37, the S10a/S10b pattern).
+pub fn data_not_evaluated() -> GenError {
+    GenError::level(
+        Beyond::IrData,
+        "",
+        "ir.data is lowered, typed and costed but not evaluated yet (slice S11c-2)",
+    )
 }
 
 /// The refusal of [D19] for a subject call outside its op's `admit` (the caller adds the
@@ -1788,6 +1813,7 @@ mod tests {
         Ir::Match {
             scrutinee: Box::new(scrutinee),
             arms,
+            on_result: true,
         }
     }
     fn okp(p: Pat) -> Pat {
@@ -1861,6 +1887,47 @@ mod tests {
         assert_eq!(st.wraps, 0);
         p.eval(&m, &r(Value::Err("E".into())), &mut st).unwrap();
         assert_eq!(st.wraps, 1);
+    }
+
+    #[test]
+    fn ir_data_is_lowered_and_costed_but_not_evaluated_before_s11c_2() {
+        // VER04r 16.14 R37: the four tags, a `match` on anything but a `Result` and a data pattern are
+        // refused at evaluation with `level ir.data`, never silently matched or computed
+        let refused = |ir: &Ir| {
+            let e = run(ir).unwrap_err();
+            assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.data")), "{e}");
+        };
+        refused(&Ir::Some(nat(1)));
+        refused(&Ir::None(Ty::Nat));
+        refused(&Ir::Ctor {
+            name: "P".into(),
+            args: vec![*nat(1)],
+        });
+        refused(&Ir::Field(nat(1), 0));
+        // a match on a non-Result scrutinee (`on_result` false), though every pattern is of A.1
+        let tuple_match = Ir::Match {
+            scrutinee: Box::new(tup(vec![*nat(1), *nat(2)])),
+            arms: vec![(Pat::Tuple(vec![bind("a"), Pat::Wild]), *var("a"))],
+            on_result: false,
+        };
+        refused(&tuple_match);
+        // a data pattern on a Result: `Ok(true)`
+        let ok_true = Ir::Match {
+            scrutinee: Box::new(Ir::Ok(Box::new(Ir::Bool(true)))),
+            arms: vec![
+                (okp(Pat::Bool(true)), Ir::Bool(true)),
+                (okp(Pat::Bool(false)), Ir::Bool(false)),
+                (Pat::ErrAny, Ir::Bool(false)),
+            ],
+            on_result: true,
+        };
+        refused(&ok_true);
+        // the same match with the patterns of A.1 only still evaluates
+        let plain = mt(
+            Ir::Ok(Box::new(Ir::Bool(true))),
+            vec![(okp(Pat::Wild), Ir::Bool(true)), (Pat::ErrAny, Ir::Bool(false))],
+        );
+        assert_eq!(run(&plain).unwrap(), Value::Bool(true));
     }
 
     #[test]
