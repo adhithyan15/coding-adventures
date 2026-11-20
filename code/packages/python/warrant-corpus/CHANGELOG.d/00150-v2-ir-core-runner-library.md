@@ -21,7 +21,7 @@ runs `warrant-corpus-v1` (S6c). Everything new is in the sub-package
   `requires` is a subset of the implemented levels and skips the rest, reporting per
   category `run`, `skipped` and `failed` (case ids). Run plus skipped equals the
   index row's count; a category the runner does not know (`v2-binding`) is
-  digest-checked and skipped whole. Result on the committed kit: 734 run, 0 skipped,
+  digest-checked and skipped whole. Result on the committed kit: 734 run (782 after S5e), 0 skipped,
   0 failed (`v2-value` 128, `v2-arith` 129, `v2-ir` 221, `v2-domain` 154,
   `v2-chunk` 66, `v2-fault` 36).
 - **"Chunk `c` alone equals sequential"** is checked for every `also_sequential`

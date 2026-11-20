@@ -164,8 +164,8 @@ assert report.ok                      # every category accounted for, nothing fa
 ```
 
 A lane runs a case if and only if its `requires` is a subset of the levels it implements (`ir.core`) and
-skips the rest; per category **run plus skipped equals the index count**. The committed kit has 734 cases, all
-`ir.core`: 734 run, 0 skipped, 0 failed. Cases with `also_sequential` are also walked sequentially:
+skips the rest; per category **run plus skipped equals the index count**. The committed kit has 782 cases (734 from S5b, 48 from S5e), all
+`ir.core`: 782 run, 0 skipped, 0 failed. Cases with `also_sequential` are also walked sequentially:
 chunks `0..=c` from product ordinal 0 must equal the committed chunk file, and chunk `c` enumerated alone by
 unranking must equal the walk (about 50 seconds for the 16.7-million-case suite of the kit). A failure line
 names the case id and the outcome, never the input bytes.

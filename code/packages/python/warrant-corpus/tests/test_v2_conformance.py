@@ -1,9 +1,9 @@
 """Run the whole v2 conformance kit through this lane's own library (slice S6a).
 
-``code/specs/fixtures/warrant-corpus-conformance-v1`` holds 734 v2 cases at
+``code/specs/fixtures/warrant-corpus-conformance-v1`` holds 782 v2 cases at
 ``ir.core`` (VER04r section 11).  This lane runs every case whose ``requires`` it
 implements and skips the rest; per category, **run plus skipped equals the index
-count**, and every case runs: 734 run, 0 failed.  The ``also_sequential`` chunk
+count**, and every case runs: 782 run, 0 failed.  The ``also_sequential`` chunk
 cases are walked sequentially too ("chunk ``c`` alone equals sequential").
 
 The harness itself is tested here (digests, accounting, skipping, failure
@@ -44,7 +44,7 @@ def full_report():
 def test_every_case_runs_and_passes(full_report):
     assert full_report.ok, full_report.lines()
     assert list(full_report.categories) == list(V2)
-    assert sum(c.run for c in full_report.categories.values()) == 734
+    assert sum(c.run for c in full_report.categories.values()) == 782
     assert all(not c.failed and not c.skipped for c in full_report.categories.values())
 
 
