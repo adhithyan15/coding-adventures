@@ -1440,7 +1440,8 @@ func runDifferential(t *testing.T, data []byte) {
 		// The last byte picks a whole-trace perturbation (W10).  Each must make
 		// WritesComplete false; the writes-complete oracle is then moot.
 		cut := perturbTrace(data[len(data)-1], steps, recipe)
-		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe, StepNetNS: !m.noNetNS})
+		census := NewCensus() // observer only: the record is byte-identical with it
+		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe, StepNetNS: !m.noNetNS, Census: census})
 		if err != nil {
 			// The action moved or removed the checkout's own directories: the
 			// post-run disk no longer shows a real Root, which is refused.
@@ -1466,9 +1467,11 @@ func runDifferential(t *testing.T, data []byte) {
 		// component with a ".." after it speaks for the text only if the cwd
 		// text is where the kernel started.  When the action reshaped the
 		// namespace, the classifier must refuse it as an unplaced lookup
-		// (unstable-path), whatever else it said about the action.
-		if m.reshaped && m.hasDotdotStop() && !inSet(rec.Reasons, rUnstable) {
-			t.Fatalf("the action reshaped the namespace, but a failed probe through .. after a missing component was not refused as unstable-path\nreasons %q\nroot %s home %s tmp %s probes %q", rec.Reasons, m.root, m.home, m.tmp, m.dotdotProbes)
+		// (unstable-path) with the DOTDOT sub-code, which only the census
+		// shows: another unstable-path (component-changed, ...) must not stand
+		// in for it, or breaking the dotdot refusal would go unnoticed.
+		if m.reshaped && m.hasDotdotStop() && len(censusKinds(census)["trace-incomplete:unstable-path:dotdot"]) == 0 {
+			t.Fatalf("the action reshaped the namespace, but a failed probe through .. after a missing component was not refused as unstable-path:dotdot\nreasons %q census %v\nroot %s home %s tmp %s probes %q", rec.Reasons, censusKinds(census), m.root, m.home, m.tmp, m.dotdotProbes)
 		}
 		if len(rec.Reasons) > 0 {
 			return // a record with a reason is never trusted: always safe
@@ -1491,34 +1494,47 @@ func runDifferential(t *testing.T, data []byte) {
 	}
 }
 
-// hasDotdotStop says one of the failed relative probes, walked as TEXT over the
-// model's final disk, reaches a missing component and then a "..".  A link on
-// the way gives up (the classifier's walk follows it, the model's lexical walk
-// does not), which only weakens the oracle.
+// hasDotdotStop says one of the failed relative probes has, in its text, a
+// component that NEVER existed during the whole action (absent on the final
+// disk and never created, written or removed by any call) followed by a "..".
+// Whatever order the classifier replays the calls in, and whether or not a
+// renamed-away cwd directory was made again meanwhile, its walk goes plain at
+// that component and meets the "..": the refusal must be the dotdot one.  (A
+// component the action DID make and later moved is ambiguous, because the
+// classifier judges names inside a fresh tmpfs from the trace's history at the
+// time of the call: the unit test pins that case in a fixed order.)  A link on
+// the way gives up: the classifier follows it, this lexical walk does not.
 func (m *model) hasDotdotStop() bool {
+	touched := map[string]bool{}
+	for _, tc := range m.touches {
+		if tc.create || tc.write || tc.wonly {
+			touched[tc.path] = true
+		}
+	}
 	for _, pr := range m.dotdotProbes {
-		cur, plain := m.top, true
-		var stack []*mnode
+		var path []string
+		sawNever := false
 		for _, name := range splitPath(pr.cwd + "/" + pr.p) {
-			switch {
-			case name == ".":
-			case name == "..":
-				if !plain {
+			switch name {
+			case ".":
+				continue
+			case "..":
+				if sawNever {
 					return true
 				}
-				if len(stack) > 0 {
-					cur, stack = stack[len(stack)-1], stack[:len(stack)-1]
+				if len(path) > 0 {
+					path = path[:len(path)-1]
 				}
-			case !plain:
-			case cur.kind != KindDir || cur.kids[name] == nil:
-				plain = false
-			case cur.kids[name].kind == KindLink:
-				cur = nil
-			default:
-				stack, cur = append(stack, cur), cur.kids[name]
+				continue
 			}
-			if cur == nil {
-				break
+			path = append(path, name)
+			full := "/" + strings.Join(path, "/")
+			if n := m.byPath(full); n != nil {
+				if n.kind == KindLink {
+					break
+				}
+			} else if !touched[full] {
+				sawNever = true
 			}
 		}
 	}
