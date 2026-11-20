@@ -20,13 +20,20 @@ package main
 //   - the loop ran: every child exited (iterations=20 ok=20) through exit_group;
 //   - the two readers agree on the whole trace, with no allowed stricter-only
 //     divergence;
-//   - the trace either parses, or is refused with exactly unresumed-call or
-//     unparsable-line, on a line of a dying shape (an unfinished call left
-//     pending at the pid's exit, or a resumed half whose result is
-//     `= ? <unavailable>` or `<unfinished ...>) = ?`): any other refusal is a
-//     shape the parser does not know and fails the test with the lines around it.
+//   - the trace either parses, or is refused with exactly unresumed-call,
+//     unparsable-line or result, on a line of a dying shape (an unfinished call
+//     left pending at the pid's exit, a resumed half whose result is
+//     `= ? <unavailable>` or `<unfinished ...>) = ?`, or a resumed half whose
+//     result is `-1` with an errno strace could not name, `(errno N)`, followed
+//     by that pid's own exit): any other refusal is a shape the parser does not
+//     know and fails the test with the lines around it.
 //     unparsable-line happens when a resumed newfstatat or getdents64 glues to a
-//     pending prefix that ends in a comma.
+//     pending prefix that ends in a comma.  The `(errno N)` form was first seen
+//     on ubuntu-24.04 (PR #19750's kiln-sandbox run): a worker killed between
+//     its openat's kernel return and strace's exit stop resumed with
+//     `= -1 (errno 18446744073709551544)` (-72 read as unsigned) and then
+//     exited.  Both readers refuse it as `result`, which fails closed; the rule
+//     for dying calls (D35) is not widened for it.
 //
 // How many dying shapes a run shows is the kernel's timing, so it is logged, not
 // asserted.
@@ -99,13 +106,28 @@ var (
 	// its resumed half with an unavailable or unfinished result.
 	dyingShapeUnfinished = regexp.MustCompile(`^\d+ +[a-z0-9_]+\(.*<unfinished \.\.\.>$`)
 	dyingShapeResumed    = regexp.MustCompile(`^\d+ +<\.\.\. [a-z0-9_]+ resumed>.*(= \? <unavailable>|<unfinished \.\.\.>\) = \?)$`)
-	dyingExitGroup       = regexp.MustCompile(`(?m)^\d+ +exit_group\(`)
-	dyingUnavailable     = regexp.MustCompile(`(?m)<unavailable>$`)
-	dyingCloneResume     = regexp.MustCompile(`(?m)<\.\.\. clone resumed> <unfinished \.\.\.>\)`)
+	// A resumed half whose result is -1 with an errno strace could not name.
+	dyingShapeBadErrno = regexp.MustCompile(`^(\d+) +<\.\.\. [a-z0-9_]+ resumed>.*= -1 \(errno \d+\)$`)
+	dyingExitGroup     = regexp.MustCompile(`(?m)^\d+ +exit_group\(`)
+	dyingUnavailable   = regexp.MustCompile(`(?m)<unavailable>$`)
+	dyingCloneResume   = regexp.MustCompile(`(?m)<\.\.\. clone resumed> <unfinished \.\.\.>\)`)
 	// An unfinished call whose pid never prints a resume: counted per line in
 	// dyingUnresumed below (a regexp cannot see "never").
 	dyingOpenLine = regexp.MustCompile(`(?m)^(\d+) +\w+\(.*<unfinished \.\.\.>$`)
 )
+
+// nextOwnLineIsExit reports whether the first line after line (1-based) printed
+// by pid is that pid's own exit (`+++ exited` or `+++ killed`).
+func nextOwnLineIsExit(lines []string, line int, pid string) bool {
+	for _, l := range lines[line:] {
+		f := strings.Fields(l)
+		if len(f) < 2 || f[0] != pid {
+			continue
+		}
+		return f[1] == "+++"
+	}
+	return false
+}
 
 // dyingUnresumed counts the unfinished lines whose pid does not resume them: the
 // shape 3 lines (killed out of the syscall-entry stop).
@@ -153,7 +175,9 @@ func TestSandboxStraceDyingThreads(t *testing.T) {
 		if err := os.WriteFile(filepath.Join(f.pkg, "probe-bin"), b, 0o755); err != nil {
 			t.Fatal(err)
 		}
-	}, func(e *trace.Error) bool { return e.Reason == "unresumed-call" || e.Reason == "unparsable-line" })
+	}, func(e *trace.Error) bool {
+		return e.Reason == "unresumed-call" || e.Reason == "unparsable-line" || e.Reason == "result"
+	})
 	// The loop must really have run, or nothing below proved anything.
 	want := "iterations=" + strconv.Itoa(dyingIterations) + " ok=" + strconv.Itoa(dyingIterations)
 	if !strings.Contains(r.stdout, want) {
@@ -180,6 +204,8 @@ func TestSandboxStraceDyingThreads(t *testing.T) {
 			shape = "an unfinished call left pending at the pid's exit"
 		case dyingShapeResumed.MatchString(text):
 			shape = "a resumed half whose result is unavailable or unfinished"
+		case dyingShapeBadErrno.MatchString(text) && nextOwnLineIsExit(lines, r.refusal.Line, dyingShapeBadErrno.FindStringSubmatch(text)[1]):
+			shape = "a resumed half with an unnamed errno, then the pid's exit"
 		default:
 			t.Fatalf("refused as %s at line %d, which is not a dying shape: %s\n%s", r.refusal.Reason, r.refusal.Line, text, r.tail(30))
 		}
