@@ -204,7 +204,8 @@ def test_parse_type_int_only_when_allowed_and_open_mode_for_error_names():
 def test_type_levels():
     assert C.type_levels(C.parse_type("Result<Bool,E>", ERR), ERR) == set()
     assert C.type_levels(C.parse_type("(U8,Bool)", {})) == {"ir.tuple"}
-    assert C.type_levels(C.parse_type("List<U8>", {})) == set()  # a list is refused whole, never counted (S11a)
+    # the document-level oracle refuses a list whole (S11a); the kit names its level, the reserved ir.list (R69 b, D63)
+    assert C.type_levels(C.parse_type("List<U8>", {})) == {"ir.list"}
     assert C.type_levels(C.parse_type("Option<U8>", {})) == {"ir.data"}
     assert C.type_levels(C.parse_type("Point", REC), REC) == {"ir.data"}
 
@@ -947,7 +948,10 @@ def test_requires_of_every_category():
     assert r("v2-ir", ir_case(["bit_not", U8], levels=["ir.core", "ir.fixed"]), {"type": "U8"}) == ["ir.core", "ir.fixed"]
     tup = ir_case(["lit", True], env=[["t", {"type": "(U8,U8)", "value": ["1", "2"]}]])
     assert r("v2-ir", tup, {"type": "Bool"}) == ["ir.core", "ir.tuple"]
-    assert r("v2-ir", ir_case(["lit", True], ops={"o": {"params": [["a", "(U8,U8)"]], "ret": "U8"}}), {}) == ["ir.core", "ir.tuple"]
+    tuple_op = {"o": {"params": [["a", "(U8,U8)"]], "ret": "U8"}}
+    # R69 g: an op that ir does not reach is not counted; one it calls is
+    assert r("v2-ir", ir_case(["lit", True], ops=tuple_op), {}) == ["ir.core"]
+    assert r("v2-ir", ir_case(["subject_op", "o", []], ops=tuple_op), {}) == ["ir.core", "ir.tuple"]
     assert r("v2-value", value_case("1", "(U8,U8)"), {}) == ["ir.core", "ir.tuple"]
     assert r("v2-value", value_case("1", "Zzz"), {}) == ["ir.core"]
     assert r("v2-domain", {"descriptor": {"d": "option", "of": {"d": "bool", "size": 2}, "size": 3}}, {}) == ["ir.core", "ir.data"]

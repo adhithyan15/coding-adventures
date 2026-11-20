@@ -2733,6 +2733,465 @@
       "result": false,
       "summary": "a replace expression with a subject call below an eq",
       "types": {}
+    },
+    {
+      "args": [
+        "0a0b",
+        "0c0d"
+      ],
+      "expect": {
+        "args": [
+          "0a00",
+          "0c00"
+        ]
+      },
+      "fault": {
+        "fault": "ignore-last-byte",
+        "kind": "pre",
+        "op": "eq_fixed",
+        "requires": [
+          "ir.core"
+        ],
+        "rewrites": [
+          {
+            "expr": [
+              "if",
+              [
+                "gt",
+                [
+                  "len",
+                  [
+                    "var",
+                    "a"
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "concat",
+                [
+                  "take",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "sub",
+                    [
+                      "len",
+                      [
+                        "var",
+                        "a"
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ],
+              [
+                "var",
+                "a"
+              ]
+            ],
+            "param": "a"
+          },
+          {
+            "expr": [
+              "if",
+              [
+                "gt",
+                [
+                  "len",
+                  [
+                    "var",
+                    "b"
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "concat",
+                [
+                  "take",
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "sub",
+                    [
+                      "len",
+                      [
+                        "var",
+                        "b"
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ],
+            "param": "b"
+          }
+        ]
+      },
+      "id": "v2-fault/width-params-ignore-last-byte",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes<N>"
+          ],
+          [
+            "b",
+            "Bytes<N>"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bool",
+        "width_params": [
+          "N"
+        ]
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": true,
+      "summary": "the pre fault of eq_fixed<N>: both Bytes<N> parameters are plain Bytes here",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a0b",
+        "0a0b"
+      ],
+      "expect": {
+        "result": false
+      },
+      "fault": {
+        "expr": [
+          "not",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        "fault": "invert",
+        "kind": "post",
+        "op": "eq_fixed",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/width-params-invert",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes<N>"
+          ],
+          [
+            "b",
+            "Bytes<N>"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bool",
+        "width_params": [
+          "N"
+        ]
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": true,
+      "summary": "a post fault on an op with width_params leaves the result type alone",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a0b"
+      ],
+      "expect": {
+        "result": "0a"
+      },
+      "fault": {
+        "expr": [
+          "if",
+          [
+            "gt",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "take",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "sub",
+              [
+                "len",
+                [
+                  "var",
+                  "result"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ]
+        ],
+        "fault": "drop-last-result-byte",
+        "kind": "post",
+        "op": "echo_fixed",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/width-params-result-length-changes",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes<N>"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes<N>",
+        "width_params": [
+          "N"
+        ]
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "0a0b",
+      "summary": "drop-last-result-byte on a Bytes<N> result gives plain Bytes: a fault may change a length by design (R94)",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a0b"
+      ],
+      "expect": {
+        "result": "0a"
+      },
+      "fault": {
+        "expr": [
+          "if",
+          [
+            "gt",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "take",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "sub",
+              [
+                "len",
+                [
+                  "var",
+                  "result"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "var",
+            "result"
+          ]
+        ],
+        "fault": "truncate-last",
+        "kind": "post",
+        "op": "echo_fixed",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/width-params-truncate-last",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes<N>"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes<N>",
+        "width_params": [
+          "N"
+        ]
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "0a0b",
+      "summary": "truncate-last on a Bytes<N> result",
+      "types": {}
+    },
+    {
+      "args": [
+        "0a"
+      ],
+      "expect": {
+        "result": "0a0b"
+      },
+      "fault": {
+        "expr": [
+          "take",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "2"
+            }
+          ]
+        ],
+        "fault": "take-two",
+        "kind": "post",
+        "op": "pair2",
+        "requires": [
+          "ir.core"
+        ]
+      },
+      "id": "v2-fault/common-type-not-flow-take-of-a-fixed-result",
+      "levels": [
+        "ir.core"
+      ],
+      "op": {
+        "params": [
+          [
+            "a",
+            "Bytes"
+          ]
+        ],
+        "requires": [
+          "ir.core"
+        ],
+        "ret": "Bytes<2>"
+      },
+      "requires": [
+        "ir.core"
+      ],
+      "result": "0a0b",
+      "summary": "take(result, 2) of a Bytes<2> result is plain Bytes: it unifies with Bytes<2> (R51) and does not flow to it; the row is accepted and the result is unchanged (R94)",
+      "types": {}
     }
   ],
   "category": "v2-fault",

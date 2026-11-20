@@ -220,3 +220,24 @@ dom("descriptor-for-another-type-result-for-plain", "a result descriptor for a B
     {"error": "descriptor"})
 dom("descriptor-for-an-unknown-type", "a binder type that is not a type at all", BOOL, "Frob", {"index": 0},
     {"error": "descriptor"})
+
+# -- S5e (VER04r section 16.18 R72): errs is 1 to 64 names of the name grammar, without duplicates -------------------------
+# At ir.core a v2-domain case has no types field (R44), so the list is checked by itself.
+
+
+def _errs(slug, summary, names, intent):
+    dom(slug, summary, {"d": "result", "ok": {"d": "bool", "size": 2}, "errs": names, "size": 2 + len(names)},
+        "Result<Bool,E>", {"index": 0}, intent)
+
+
+_errs("descriptor-errs-empty", "an empty errs list (an error type has at least one case)", [], {"error": "descriptor"})
+_errs("descriptor-errs-65-names", "65 error cases (an error type has at most 64)", [f"C{i}" for i in range(65)],
+      {"error": "descriptor"})
+_errs("descriptor-errs-duplicate", "a case name repeated in errs", ["BAD", "BAD"], {"error": "descriptor"})
+_errs("descriptor-errs-bad-name", "a case name outside the name grammar (a hyphen)", ["BAD-NAME"], {"error": "descriptor"})
+_errs("descriptor-errs-name-starts-with-a-digit", "a case name that starts with a digit", ["1BAD"], {"error": "descriptor"})
+_errs("descriptor-errs-empty-name", "the empty string is not a name", [""], {"error": "descriptor"})
+_errs("descriptor-errs-64-names-accepted", "64 error cases are allowed: size 2 + 64 = 66", [f"C{i}" for i in range(64)],
+      {"size": 66})
+_errs("descriptor-errs-underscore-name-accepted", "the name grammar allows a leading underscore and digits after it",
+      ["_A1", "b_2"], {"size": 4})

@@ -46,7 +46,11 @@ from coding_adventures_warrant_oracle import conformance as C  # noqa: E402
 FAMILY = HERE.parents[5] / "specs" / "fixtures" / "warrant-corpus-conformance-v1"
 
 #: The kit documents: name, ``.warrant`` file, ``corpus.profile`` file.
-KITS = (("kit", "kit.warrant", "kit.profile"), ("small", "kit-small.warrant", "kit-small.profile"))
+KITS = (
+    ("kit", "kit.warrant", "kit.profile"),
+    ("small", "kit-small.warrant", "kit-small.profile"),
+    ("width", "kit-width.warrant", "kit-width.profile"),
+)
 
 
 @functools.cache
