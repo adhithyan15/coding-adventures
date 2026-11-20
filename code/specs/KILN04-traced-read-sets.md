@@ -3812,6 +3812,31 @@ against the real policy file):
   (`observeHost`, `host.go:208`: `absentOK` is consulted only when the path is
   absent).
 
+**Decision D38: two `/proc` reads and `GOWORK=off` (second real-build
+census).** Two more `/proc` opens were flagged `trace-incomplete:proc-path`, and
+Go's upward `go.work` search probed `/go.work` and `/home/go.work`. As in D27 and
+D37 the change is policy-only, with no `kiln:recorder` bump (`host-roots.json`
+is in `consumed`; `env.json` is a keyed input):
+
+- `ephemeral` gains the exact names `/proc/sys/vm/overcommit_memory` (allocator
+  tuning, the same class as `/proc/meminfo`, already listed) and
+  `/proc/version_signature` (the kernel build identity; `uname(2)` is not traced
+  and gives a program the same information, so the file adds no exposure). There
+  is deliberately no `/proc/sys/**`: `swappiness`, `max_map_count` and the rest
+  stay `proc-path`, and `/proc/version` is not added.
+- `env.json` gains `GOWORK`. The census recording step runs `kiln record
+  prepare` with `GOWORK=off`, which flows into the sealed build-tool
+  environment. `GOWORK=off` stops the upward search that would otherwise read
+  `/go.work` and `/home/go.work` on the host. The repository tracks no `go.work`,
+  so build semantics are unchanged, and the value is part of the key.
+
+What the entries do not cover (pinned by `internal/traced/procsys_test.go`
+against the real policy file): a name beneath either file
+(`overcommit_memory/x`) and the sibling tunables stay `proc-path`; and a WRITE
+open of either file is never allowed by the list. A writing open of a virtual
+name that is not an fd link makes the write set unknown (W5, `ops.go`), so the
+record carries `trace-incomplete:writes-unknown` and `writes_complete` is false.
+
 **One explicit image label.** The record workflow and every job that consumes
 its records use one explicit `ubuntu-NN.04` label, never `ubuntu-latest`: the
 host's image id is part of the weak key, so a floating label would change the

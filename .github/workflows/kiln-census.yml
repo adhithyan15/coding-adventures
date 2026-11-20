@@ -284,7 +284,10 @@ jobs:
               continue
             fi
 
-            if ! HOME="$shard_home" "$kiln" record prepare \
+            # GOWORK=off stops Go's upward go.work search past the checkout, which
+            # would probe /go.work and /home/go.work (host reads).  The repo tracks no
+            # go.work and GOWORK is keyed (code/kiln/legacy/env.json), KILN04 D38.
+            if ! HOME="$shard_home" GOWORK=off "$kiln" record prepare \
                 --root "$GITHUB_WORKSPACE" --dir "$rec" --build-tool "$bt" \
                 --shard-index "$idx" --shard-count "$SHARD_COUNT" --job-start "$JOB_START"; then
               fail "$idx" "prepare failed"
