@@ -144,7 +144,6 @@ def test_the_node_keeps_the_written_type_for_reporting():
     [
         {"type": "Bytes<2>", "value": "0a0b"},
         {"type": "Bool", "value": True},
-        {"type": "(U8,U8)", "value": ["1", "2"]},
     ],
 )
 def test_a_literal_written_with_the_wrong_type_is_ill_typed(literal):
@@ -616,3 +615,50 @@ def test_a_model_that_needs_a_missing_level_is_classified_not_compiled():
     }
     program = Program(models=models, model_order=["fx", "ok", "outer"])
     assert sorted(program.not_live_models) == ["fx", "outer"]
+
+
+def test_a_fault_may_change_a_length_but_not_the_kind_of_value():
+    op = {"params": [["a", "U8"]], "ret": "Bytes<32>", "requires": ["ir.core"]}
+    drop = [
+        "take",
+        ["var", "result"],
+        ["sub", ["len", ["var", "result"]], ["lit", {"type": "Nat", "value": "1"}]],
+    ]
+    row = {
+        "fault": "d",
+        "op": "op",
+        "kind": "post",
+        "expr": drop,
+        "requires": ["ir.core"],
+    }
+    compile_fault(row, op, {})
+    with pytest.raises(Refusal) as caught:
+        compile_fault(row | {"expr": ["lit", True]}, op, {})
+    assert caught.value.code == "ill-typed"
+
+
+def test_a_literal_written_with_a_tuple_type_is_a_level_before_it_is_a_bad_literal():
+    got = outcome_ir(case(["lit", {"type": "(U8,U8)", "value": ["1", "2"]}]), STANDARD)
+    assert got == {"error": "level-missing"}
+
+
+def test_a_stand_in_for_an_op_with_widths_is_compared_with_plain_bytes():
+    from coding_adventures_warrant_corpus.v2.ir import SubjectTable
+
+    ops = {
+        "f": {
+            "params": [["a", "Bytes<N>"]],
+            "ret": "Bool",
+            "width_params": ["N"],
+            "requires": ["ir.core"],
+        }
+    }
+    good = {"s": {"params": [["a", "Bytes"]], "body": ["lit", True]}}
+    bad = {"s": {"params": [["a", "U8"]], "body": ["lit", True]}}
+    for models, fine in ((good, True), (bad, False)):
+        program = Program(ops=ops, models=models, model_order=["s"])
+        if fine:
+            SubjectTable(program, {"f": "s"})
+        else:
+            with pytest.raises(KitError):
+                SubjectTable(program, {"f": "s"})

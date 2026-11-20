@@ -112,7 +112,7 @@ class _Truth(Codec):
     def decode(self, raw: object) -> bool:
         if raw is True or raw is False:
             return raw
-        raise Refusal("value", "a Bool is the JSON literal true or false")
+        raise Refusal("value", "only the JSON words true and false are booleans")
 
     def encode(self, value: Value) -> bytes:
         return b"\x01" if value else b"\x00"
@@ -159,11 +159,15 @@ class _Blob(Codec):
 
     def decode(self, raw: object) -> bytes:
         if not isinstance(raw, str) or len(raw) > _MAX_HEX_DIGITS:
-            raise Refusal("value", "Bytes is a hex string of at most 4096 bytes")
+            raise Refusal(
+                "value", "bytes must be a hex string no longer than the byte limit"
+            )
         if len(raw) % 2 or not _HEX_DIGITS.issuperset(raw):
-            raise Refusal("value", "Bytes is lowercase hex of even length")
+            raise Refusal("value", "bytes must be an even run of lowercase hex digits")
         if self.length is not None and len(raw) != 2 * self.length:
-            raise Refusal("value", "Bytes<N> is exactly N bytes of hex")
+            raise Refusal(
+                "value", "this fixed-width bytes value has the wrong number of bytes"
+            )
         return bytes.fromhex(raw)
 
     def encode(self, value: Value) -> bytes:
@@ -184,7 +188,9 @@ class _Maybe(Codec):
                     return ("none",)
             elif "some" in raw:
                 return ("some", self.inner.decode(raw["some"]))
-        raise Refusal("value", "an Option is {none: true} or {some: v}")
+        raise Refusal(
+            "value", "an optional value is a single-key object, none:true or some:value"
+        )
 
     def encode(self, value: Value) -> bytes:
         if value[0] == "none":
@@ -209,7 +215,9 @@ class _Outcome(Codec):
                 return ("ok", self.ok.decode(raw["ok"]))
             if "err" in raw and raw["err"] in self.cases and type(raw["err"]) is str:
                 return ("err", raw["err"])
-        raise Refusal("value", "a Result is {ok: v} or {err: a case of E}")
+        raise Refusal(
+            "value", "a result is a single-key object, ok:value or err:a declared case"
+        )
 
     def encode(self, value: Value) -> bytes:
         if value[0] == "ok":
@@ -256,13 +264,17 @@ class _Either(Codec):
 
     def decode(self, raw: object) -> tuple:
         if type(raw) is not dict or set(raw) != {"ctor", "fields"}:
-            raise Refusal("value", "a variant is exactly {ctor, fields}")
+            raise Refusal(
+                "value", "a variant value has the keys ctor and fields and no others"
+            )
         name, fields = raw["ctor"], raw["fields"]
         if type(name) is not str or name not in self.shapes:
-            raise Refusal("value", "a constructor the variant does not declare")
+            raise Refusal("value", "the variant has no constructor of that name")
         shape = self.shapes[name]
         if type(fields) is not list or len(fields) != len(shape):
-            raise Refusal("value", "the wrong number of constructor fields")
+            raise Refusal(
+                "value", "the constructor was given the wrong count of fields"
+            )
         return (
             name,
             tuple(part.decode(item) for part, item in zip(shape, fields, strict=True)),

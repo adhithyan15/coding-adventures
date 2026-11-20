@@ -322,7 +322,9 @@ class Program:
             type(max_ir_cost) is not int
             or not MAX_IR_COST <= max_ir_cost <= MAX_IR_COST_CEILING
         ):
-            raise Refusal("ir-cost", "max_ir_cost is outside 2,000..=65,536")
+            raise Refusal(
+                "ir-cost", "max_ir_cost lies outside the permitted budget range"
+            )
         self.max_cost = max_ir_cost
         self.subject_hook: Callable[[str, list], object] | None = None
         self._raw_models = models if models is not None else {}
@@ -338,7 +340,9 @@ class Program:
             or len(set(self._order)) != len(self._order)
             or set(self._order) != set(self._raw_models)
         ):
-            raise Refusal("model-order", "model_order is not a permutation of models")
+            raise Refusal(
+                "model-order", "model_order and models do not name the same models"
+            )
         self._position = {name: place for place, name in enumerate(self._order)}
         self._check_corpus_structure()
         self._impure_guards = 0  # enclosing guards whose condition calls the subject
@@ -377,11 +381,14 @@ class Program:
             callees = self.scan(body, owner=self._position[name], levels=False)
             if any(self._position[c] >= self._position[name] for c in callees):
                 raise Refusal(
-                    "model-order", "a model_call to a model not declared earlier"
+                    "model-order",
+                    "a model calls one that comes no earlier in the order",
                 )
             chain[name] = 1 + max((chain[c] for c in callees), default=0)
             if chain[name] > MAX_FRAMES:
-                raise Refusal("depth", "more than 64 chained model_call frames")
+                raise Refusal(
+                    "depth", "models call each other in a chain longer than the limit"
+                )
 
     def _validate_what_the_lane_can_run(self) -> None:
         """Compile every model and read every op whose levels the lane has (R69 i).
@@ -434,7 +441,9 @@ class Program:
     def op(self, name: object) -> OpSig:
         """The signature of the op ``name``: parsed, level-checked and remembered."""
         if type(name) is not str or name not in self._raw_ops:
-            raise Refusal("ill-typed", "a subject call to an op that is not in ops")
+            raise Refusal(
+                "ill-typed", "a subject call names an op the corpus does not declare"
+            )
         if name in self.reached_ops:
             return self.reached_ops[name]
         try:
@@ -445,7 +454,9 @@ class Program:
                 or not all(type(w) is str for w in widths)
                 or len(set(widths)) != len(widths)
             ):
-                raise Refusal("ill-typed", "width_params is a list of distinct names")
+                raise Refusal(
+                    "ill-typed", "width_params must be a list of different names"
+                )
             names = frozenset(widths)
             params = [(p, self._declared(t, names)) for p, t in row["params"]]
             sig = OpSig(params, self._declared(row["ret"], names), tuple(widths))
@@ -479,7 +490,8 @@ class Program:
             name, here = work.pop()
             if name not in self._position or self._position[name] >= here:
                 raise Refusal(
-                    "model-order", "a model_call to a model not declared earlier"
+                    "model-order",
+                    "a model calls one that comes no earlier in the order",
                 )
             if name in closure or name in self.models:
                 continue
@@ -543,13 +555,13 @@ class Program:
         for node in nodes:
             if node[0] == "subject_op" and (owner is not None or role != "body"):
                 raise Refusal(
-                    "subject-forbidden", "a subject call outside a claim body"
+                    "subject-forbidden", "subject calls may appear only in a claim body"
                 )
             if node[0] == "model_call":
                 callee = node[1] if len(node) > 1 else None
                 if type(callee) is not str or callee not in self._position:
                     raise Refusal(
-                        "model-order", "a model_call to a model that is not declared"
+                        "model-order", "a model_call names a model that does not exist"
                     )
                 callees.append(callee)
         return callees
@@ -574,13 +586,15 @@ class Program:
         try:
             compiled = self._node(node, scope)
         except RecursionError as error:  # pragma: no cover - depth is capped at 64
-            raise Refusal("depth", "the expression is too deep to compile") from error
+            raise Refusal(
+                "depth", "the expression nests too deeply to compile"
+            ) from error
         if compiled.cost > self.max_cost:
             raise Refusal(
                 "ir-cost", f"worst-path cost {compiled.cost} exceeds {self.max_cost}"
             )
         if compiled.frames > MAX_FRAMES:
-            raise Refusal("depth", "more than 64 active model_call frames")
+            raise Refusal("depth", "model calls nest deeper than the limit")
         return compiled
 
     def _klass(self, subject_beneath: bool) -> str:
@@ -612,7 +626,9 @@ class Program:
 
     def _node(self, node: object, scope: dict[str, Ty]) -> Compiled:
         if not is_node(node):
-            raise Refusal("ill-typed", "an IR node is a list whose first item is a tag")
+            raise Refusal(
+                "ill-typed", "an IR node must be a list that starts with a tag name"
+            )
         assert isinstance(node, list)
         tag = node[0]
         if tag == "lit":
@@ -676,7 +692,8 @@ class Program:
             raise Refusal("ill-typed", f"{tag} takes two Bool operands")
         if left.subject and right.subject:
             raise Refusal(
-                "impure-guard", "a subject call under a guard that calls the subject"
+                "impure-guard",
+                "a guard that calls the subject sits over a subject call",
             )
         lf, rf = left.fn, right.fn
         sem = self.sem
@@ -711,20 +728,29 @@ class Program:
             return Compiled(BOOL, lambda _env: value, 1)
         spec = node[1] if len(node) == 2 else None
         if type(spec) is not dict or set(spec) != {"type", "value"}:
-            raise Refusal("ill-typed", "a literal is true, false or {type, value}")
+            raise Refusal(
+                "ill-typed",
+                "a literal is a bare boolean or an object "
+                "with exactly a type and a value",
+            )
         try:
             ty = parse_type(spec["type"], self.types, allow_int=True)
+            # The written type of a literal counts for levels (section 11): a tuple
+            # type is a missing level before it is a bad literal.
+            self.need_levels(type_level(ty, self.types), f"the literal type {ty}")
             if ty.head == "Bool" or (ty.head == "Bytes" and ty.args):
                 raise Refusal(
-                    "ill-typed", "write a Bool as true or false and Bytes bare"
+                    "ill-typed", "booleans are written bare and Bytes without a width"
                 )
             if not (ty.is_number or ty.head == "Bytes"):
-                raise Refusal("ill-typed", "no literal of this type exists at ir.core")
+                raise Refusal("ill-typed", "this type has no literal form here")
             if ty.head == "Int":
                 value = self.sem.decode_int(spec["value"], ty)
             else:
                 value = decode_value(spec["value"], ty, self.types, self.sem)
         except Refusal as error:
+            if error.code == "level-missing":
+                raise
             raise Refusal("ill-typed", f"bad literal: {error.message}") from error
         if ty.head == "Bytes":
             assert isinstance(value, bytes)
@@ -735,11 +761,11 @@ class Program:
 
     def _err(self, node: list) -> Compiled:
         if len(node) != 2 or not isinstance(node[1], str):
-            raise Refusal("ill-typed", "err takes the name of an error case")
+            raise Refusal("ill-typed", "err needs the name of an error case")
         case = node[1]
         owners = [n for n, cases in self.errors.items() if case in cases]
         if not owners:
-            raise Refusal("ill-typed", "an err case that no error type declares")
+            raise Refusal("ill-typed", "no error type declares that case")
         error = Ty(owners[0]) if len(owners) == 1 else UNKNOWN_TY
         value = ("err", case)
         return Compiled(Ty("Result", (UNKNOWN_TY, error)), lambda _env: value, 1)
@@ -784,13 +810,14 @@ class Program:
         then = self._under_guard(cond, node[2], scope)
         other = self._under_guard(cond, node[3], scope)
         if cond.ty != BOOL:
-            raise Refusal("ill-typed", "an if condition is Bool")
+            raise Refusal("ill-typed", "an if condition must be true-or-false")
         common = unify(then.ty, other.ty)
         if common is None:
-            raise Refusal("ill-typed", "the branches of an if have no common type")
+            raise Refusal("ill-typed", "the two branches of an if share no type")
         if cond.subject and (then.subject or other.subject):
             raise Refusal(
-                "impure-guard", "a subject call under a guard that calls the subject"
+                "impure-guard",
+                "a guard that calls the subject sits over a subject call",
             )
         cf, tf, ef, sem = cond.fn, then.fn, other.fn, self.sem
         # An impure condition may not guard a call (checked above), so the branches
@@ -815,7 +842,7 @@ class Program:
         a, b = left.ty, right.ty
         if tag in ("eq", "ne"):
             if unify(a, b) is None:
-                raise Refusal("ill-typed", "equality needs operands of one type")
+                raise Refusal("ill-typed", "equality compares values of one type only")
             if tag == "eq":
                 return self._combine(
                     BOOL, lambda env: lf(env) == rf(env), [left, right]
@@ -825,7 +852,9 @@ class Program:
             if not (a.is_number and b.is_number) or (
                 (a.is_fixed or b.is_fixed) and a != b
             ):
-                raise Refusal("ill-typed", "an ordering needs two numbers of one kind")
+                raise Refusal(
+                    "ill-typed", "an ordering compares two numbers of the same kind"
+                )
             compare = {
                 "lt": lambda x, y: x < y,
                 "gt": lambda x, y: x > y,
@@ -1059,7 +1088,9 @@ def evaluate(compiled: Compiled, env: dict) -> object:
         except (
             RecursionError
         ) as error:  # pragma: no cover - the static limits prevent it
-            raise Refusal("depth", "evaluation nested too deeply") from error
+            raise Refusal(
+                "depth", "evaluation recursed past the stack bound"
+            ) from error
 
 
 # Python frames one nesting level of closures can use (a short-circuit operator
@@ -1124,10 +1155,11 @@ class SubjectTable:
                 raise KitError(
                     f"the stand-in {model} for {op} is refused: {refusal}"
                 ) from refusal
-            same = [t for _p, t in stand_in.params] == [t for _p, t in sig.params]
-            if sig.width_params:  # a call binds the widths; compare per call, not here
-                same = len(stand_in.params) == len(sig.params)
-            elif stand_in.body.ty != sig.ret:
+            # A stand-in is written without a call site, so an op's named widths
+            # read as plain Bytes there (R70).
+            params, ret = sig.unbound()
+            same = [t for _p, t in stand_in.params] == [t for _p, t in params]
+            if stand_in.body.ty != ret:
                 same = False
             if not same:
                 raise KitError(

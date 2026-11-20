@@ -155,7 +155,7 @@ def _is_int(value: object) -> bool:
 
 def _need_keys(node: dict, extra: set[str]) -> None:
     if set(node) != {"d", "size", *extra}:
-        raise _refuse("a descriptor has exactly its own keys")
+        raise _refuse("a descriptor has a key too many or too few for its kind")
 
 
 def build(
@@ -171,15 +171,15 @@ def build(
     question, :func:`descriptor_for`.)
     """
     if depth > MAX_DESCRIPTOR_DEPTH:
-        raise _refuse("a descriptor tree deeper than 16 levels")
+        raise _refuse("the descriptor tree nests past sixteen levels")
     if type(node) is not dict or type(node.get("d")) is not str:
-        raise _refuse("a descriptor is an object with a d")
+        raise _refuse("a descriptor must be an object that names its kind")
     kind = node["d"]
     desc = _build_leaf(node, kind, sem)
     if desc is None:
         desc = _build_composite(node, kind, sem, depth)
     if not _is_int(node["size"]) or node["size"] != desc.size:
-        raise _refuse("a size that is not the recomputed one")
+        raise _refuse("the stated size differs from the size computed here")
     return desc
 
 
@@ -204,13 +204,13 @@ def _build_leaf(node: dict, kind: str, sem: Semantics) -> Desc | None:
         _need_keys(node, {"n"})
         width = node["n"]
         if not _is_int(width) or not 0 <= width <= MAX_BYTES_N:
-            raise _refuse("bytes_n needs 0 <= n <= 4096")
+            raise _refuse("bytes_n's length is outside the allowed range")
         return Desc(_bytes_n_size(width), _bytes_n_nth(width))
     if kind == "nat_count":
         _need_keys(node, {"k"})
         count = node["k"]
         if not _is_int(count) or not 0 <= count <= MAX_NAT_COUNT:
-            raise _refuse("nat_count needs 0 <= k <= 4096")
+            raise _refuse("nat_count's bound is outside the allowed range")
         return Desc(count + 1, lambda i: i)
     if kind in ("fx_full", "fx_edge"):
         _need_keys(node, {"t"})
@@ -220,18 +220,18 @@ def _build_leaf(node: dict, kind: str, sem: Semantics) -> Desc | None:
 
 def _fixed_leaf(kind: str, name: object, sem: Semantics) -> Desc:
     if not isinstance(name, str) or name not in FIXED:
-        raise _refuse("t is a fixed-width type")
+        raise _refuse("t must name one of the fixed-width integer types")
     bits, signed = FIXED[name]
     ty = Ty(name)
     if kind == "fx_full":
         # Every value of an 8- or 16-bit type; a U8 binder is u8_all everywhere.
         if bits > 16 or name == "U8":
-            raise _refuse("fx_full is for 8- and 16-bit types other than U8")
+            raise _refuse("fx_full covers only the 8- and 16-bit types, U8 excepted")
         low = -(1 << (bits - 1)) if signed else 0
         return Desc(1 << bits, lambda i: low + i)
     # fx_edge: 16-, 32- and 64-bit types, U64 excluded (that is u64_edge).
     if bits < 16 or name == "U64":
-        raise _refuse("fx_edge is for 16-, 32- and 64-bit types other than U64")
+        raise _refuse("fx_edge covers only wider integer types, and not U64")
     values = sem.fx_edge_values(ty)
     return Desc(len(values), lambda i: values[i])
 
@@ -248,7 +248,7 @@ def _build_composite(node: dict, kind: str, sem: Semantics, depth: int) -> Desc:
         _need_keys(node, {"of"})
         parts = [build(p, sem, depth + 1) for p in _children(node, "of")]
         if not 2 <= len(parts) <= 8:
-            raise _refuse("a tuple has 2 to 8 components")
+            raise _refuse("a tuple descriptor has too few or too many components")
         return _product(parts)
     if kind == "option":
         _need_keys(node, {"of"})
@@ -266,7 +266,10 @@ def _build_composite(node: dict, kind: str, sem: Semantics, depth: int) -> Desc:
             or not all(isinstance(e, str) and _NAME.fullmatch(e) for e in errs)
             or len(set(errs)) != len(errs)
         ):
-            raise _refuse("errs is 1 to 64 distinct error case names (R72)")
+            raise _refuse(
+                "errs must list between one and sixty-four "
+                "distinct, well-formed case names"
+            )
         return Desc(
             ok.size + len(errs),
             lambda i: ("ok", ok.nth(i)) if i < ok.size else ("err", errs[i - ok.size]),
@@ -277,7 +280,7 @@ def _build_composite(node: dict, kind: str, sem: Semantics, depth: int) -> Desc:
         raise Refusal(
             "level-missing", "the list descriptor belongs to the level ir.list"
         )
-    raise _refuse("an unknown descriptor kind")
+    raise _refuse("no descriptor of that kind exists")
 
 
 def _product(parts: list[Desc]) -> Desc:
@@ -301,11 +304,13 @@ def _variant(node: dict, sem: Semantics, depth: int) -> Desc:
     rows = []
     for entry in _children(node, "ctors"):
         if type(entry) is not list or len(entry) != 2 or not isinstance(entry[0], str):
-            raise _refuse("a constructor is [name, [field descriptors]]")
+            raise _refuse(
+                "a constructor entry is a name plus a list of field descriptors"
+            )
         fields = [build(f, sem, depth + 1) for f in _children({"x": entry[1]}, "x")]
         rows.append((entry[0], _product(fields) if fields else Desc(1, lambda _i: ())))
     if not 2 <= len(rows) <= 64:
-        raise _refuse("a variant has 2 to 64 constructors")
+        raise _refuse("a variant descriptor has too few or too many constructors")
 
     def nth(index: int) -> tuple:
         for name, fields in rows:
@@ -437,5 +442,5 @@ def descriptor_for(
     except Refusal as error:  # a field type of the types table that is not a type
         raise _refuse(f"the types table does not parse: {error.message}") from error
     if not matches:
-        raise _refuse("a descriptor that is not one for the binder type")
+        raise _refuse("the descriptor does not describe the binder's type")
     return desc, ty

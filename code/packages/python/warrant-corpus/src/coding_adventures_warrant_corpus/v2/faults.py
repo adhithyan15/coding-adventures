@@ -43,7 +43,7 @@ from .errors import Refusal
 from .ir import IMPLEMENTED_LEVELS, Compiled, Program, evaluate
 from .semantics import STANDARD, Semantics
 from .values import decode_value, value_to_json
-from .wtypes import Ty, flows
+from .wtypes import Ty, unify
 
 KINDS = ("pre", "post", "replace")
 
@@ -131,7 +131,7 @@ def _check_rewrite_rows(rows: object, scope: dict[str, Ty]) -> list[tuple[str, o
     the row has exactly the two keys ``param`` and ``expr``.
     """
     if type(rows) is not list or not rows:
-        raise _ill_formed("a pre fault has at least one rewrite")
+        raise _ill_formed("a pre fault must rewrite something")
     seen: set[str] = set()
     pairs: list[tuple[str, object]] = []
     for row in rows:
@@ -139,9 +139,9 @@ def _check_rewrite_rows(rows: object, scope: dict[str, Ty]) -> list[tuple[str, o
             raise _ill_formed("a rewrite is {param, expr}")
         param = row["param"]
         if type(param) is not str or param not in scope:
-            raise _ill_formed("a rewrite names a parameter the op does not have")
+            raise _ill_formed("a rewrite targets a parameter missing from the op")
         if param in seen:
-            raise _ill_formed("two rewrites name the same parameter")
+            raise _ill_formed("a parameter is rewritten twice")
         seen.add(param)
         pairs.append((param, row["expr"]))
     return pairs
@@ -150,12 +150,15 @@ def _check_rewrite_rows(rows: object, scope: dict[str, Ty]) -> list[tuple[str, o
 def _may_replace(produced: Ty, wanted: Ty) -> bool:
     """May an expression of type ``produced`` stand where a ``wanted`` value goes?
 
-    Ordinary assignability, plus one allowance: ``Nat + 1`` is an ``Int`` (section
-    3.2) and the fault puts it where a ``Nat`` result goes.  The *value* is then
-    held to the declared type when it is written, so an out-of-range one is
-    refused there, never truncated.
+    A fault changes values on purpose, and sometimes their length: dropping the
+    last byte of a ``Bytes<32>`` result yields a plain ``Bytes``, and ``Nat + 1``
+    is an ``Int`` (section 3.2).  So the test is the weaker one the checker uses
+    for two branches, that the two types have a *common* type (R51), not that one
+    flows into the other.  The value is held to the declared type when it is
+    written, so an out-of-range or wrong-length one is refused there, never
+    truncated.
     """
-    return flows(produced, wanted) or (produced.is_exact and wanted.is_exact)
+    return unify(produced, wanted) is not None
 
 
 def compile_fault(

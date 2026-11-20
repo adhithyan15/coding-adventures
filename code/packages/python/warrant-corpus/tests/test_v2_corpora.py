@@ -140,3 +140,26 @@ def test_a_mixed_corpus_is_classified_and_its_ir_core_suites_run():
             chunk_lib.run_chunk(suite, 0)
             live.append(row["id"])
     assert (len(live), len(not_live)) == (4, 17)
+
+
+@pytest.mark.parametrize(
+    ("name", "ok", "not_live"),
+    [("ct-compare", 7, 1), ("lzw", 2, 3), ("wasm-leb128", 2, 18), ("x25519", 2, 3)],
+)
+def test_every_fault_row_of_a_committed_corpus_compiles_or_is_not_live(
+    name, ok, not_live
+):
+    """N1: a fault may change a length (``drop-last-result-byte``); none is ill-typed."""
+    from coding_adventures_warrant_corpus.v2.faults import compile_fault
+
+    corpus = load(name)
+    counts = {"ok": 0, "not-live": 0}
+    for fault in corpus["faults"]:
+        try:
+            compile_fault(fault, corpus["ops"][fault["op"]], corpus["types"], CORE)
+        except Refusal as refusal:
+            assert refusal.code == "level-missing", (fault["fault"], refusal)
+            counts["not-live"] += 1
+        else:
+            counts["ok"] += 1
+    assert counts == {"ok": ok, "not-live": not_live}

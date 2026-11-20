@@ -232,7 +232,8 @@ def build_suite(
     chunk_size, max_cost = _read_corpus_part(corpus)
     if not isinstance(row, dict) or set(row) != expected_row_keys(row):
         raise _corpus_error(
-            "the suite row's keys are not the keys of its kind of suite"
+            "the suite row carries keys that do not "
+            "match the kind of suite it describes"
         )
     try:
         return _assemble_suite(corpus, row, chunk_size, max_cost, sem, levels)  # type: ignore[arg-type]
@@ -240,13 +241,15 @@ def build_suite(
         if error.code == "level-missing" and _row_is_live(row, levels):
             # The row says the lane can run it and it cannot: the row is wrong.
             raise _corpus_error(
-                f"requires is inside the levels but: {error.message}"
+                f"the row claims levels it does not stay within: {error.message}"
             ) from error
         if error.code in ("corpus", "level-missing"):
             raise
         raise _corpus_error(f"{error.code}: {error.message}") from error
     except (KeyError, IndexError, TypeError, AttributeError, ValueError) as error:
-        raise _corpus_error("a field of the suite row has the wrong shape") from error
+        raise _corpus_error(
+            "some field of the suite row is not the shape it must be"
+        ) from error
 
 
 def _row_is_live(row: dict, levels: frozenset[str] | set[str]) -> bool:
@@ -258,12 +261,14 @@ def _row_is_live(row: dict, levels: frozenset[str] | set[str]) -> bool:
 def _read_corpus_part(corpus: object) -> tuple[int, int]:
     """The recorded ``chunk_size`` and ``max_ir_cost`` of a valid corpus part."""
     if not isinstance(corpus, dict) or set(corpus) != CHUNK_CORPUS_KEYS:
-        raise _corpus_error("the corpus part is not exactly the six keys of section 11")
+        raise _corpus_error(
+            "the corpus part must hold the six named pieces and nothing more"
+        )
     size, cost = corpus["chunk_size"], corpus["max_ir_cost"]
     if not is_index(size) or size not in {1 << power for power in range(10, 17)}:
-        raise _corpus_error("chunk_size is a power of two from 2^10 to 2^16")
+        raise _corpus_error("chunk_size must be 1024, 2048, ... or 65536")
     if not is_index(cost) or not 2_000 <= cost <= 65_536:
-        raise _corpus_error("max_ir_cost is from 2,000 to 65,536")
+        raise _corpus_error("max_ir_cost lies outside the permitted budget range")
     return size, cost
 
 
@@ -273,27 +278,33 @@ def _read_binders(
     """Names, types, built descriptors and the product size of a suite's binders."""
     entries = row["binders"]
     if type(entries) is not list or len(entries) > MAX_BINDERS:
-        raise _corpus_error("a claim has from 0 to 8 binders")
+        raise _corpus_error("a suite may bind at most eight variables")
     names: list[str] = []
     tys: list[Ty] = []
     descs: list[Desc] = []
     product = 1
     for entry in entries:
         if type(entry) is not list or len(entry) != 2 or type(entry[0]) is not str:
-            raise _corpus_error("a binder is [name, {type, domain}]")
+            raise _corpus_error(
+                "each binder must be a name paired with its type and domain"
+            )
         name, body = entry
         if type(body) is not dict or set(body) != {"type", "domain"}:
-            raise _corpus_error("a binder body is {type, domain}")
+            raise _corpus_error(
+                "a binder's second element must have only a type and a domain"
+            )
         desc = build_descriptor(body["domain"], sem)
         ty = parse_type(body["type"], types)
         if not is_descriptor_for(body["domain"], ty, types):
-            raise _corpus_error("a binder's descriptor is not a recipe for its type")
+            raise _corpus_error(
+                "a binder's domain does not enumerate values of the binder's type"
+            )
         names.append(name)
         tys.append(ty)
         descs.append(desc)
         product *= desc.size
     if len(set(names)) != len(names):
-        raise _corpus_error("two binders have the same name")
+        raise _corpus_error("a variable name is bound twice")
     return names, tys, descs, product
 
 
@@ -308,16 +319,20 @@ def _assemble_suite(
     types = corpus["types"]
     names, tys, descs, product = _read_binders(row, types, sem)
     if product > MAX_SUITE_PRODUCT:
-        raise _corpus_error("the product is more than 2^28 ordinals")
+        raise _corpus_error(
+            "the domains multiply to more ordinals than a suite may hold"
+        )
     if not is_index(row["product"]) or row["product"] != product:
-        raise _corpus_error("product is not the product of the descriptor sizes")
+        raise _corpus_error("the recorded product disagrees with the domain sizes")
     count = max(1, -(-product // chunk_size))
     if count > MAX_CHUNKS or not is_index(row["chunks"]) or row["chunks"] != count:
-        raise _corpus_error("chunks is not ceil(product / chunk_size)")
+        raise _corpus_error(
+            "the recorded chunk count disagrees with product and chunk_size"
+        )
     if row["stream"] not in HEADERS:
-        raise _corpus_error("an unknown stream header")
+        raise _corpus_error("the stream header is not one this runner knows")
     if row["kind"] != "exhaustive":
-        raise _corpus_error("a suite's kind is exhaustive")
+        raise _corpus_error("the only kind of suite is the exhaustive one")
 
     program = Program(
         types=types,
@@ -334,11 +349,13 @@ def _assemble_suite(
     admit = program.compile(row["admit"], scope, role="admit")
     body = program.compile(row["body"], scope, role="body")
     if admit.ty != BOOL or body.ty != BOOL:
-        raise _corpus_error("admit and body are Bool expressions")
+        raise _corpus_error("both admit and body must be true-or-false expressions")
     expected = _compile_oracle(row, program, scope, body, result_ty)
     cost = admit.cost + body.cost + (expected.cost if expected else 0)
     if not is_index(row["ir_cost"]) or row["ir_cost"] != cost:
-        raise _corpus_error("ir_cost is not the sum of the worst-path costs")
+        raise _corpus_error(
+            "the recorded ir_cost disagrees with the recomputed worst-path costs"
+        )
     return Suite(
         row=row,
         names=names,
@@ -368,7 +385,7 @@ def _compile_oracle(
     """
     oracle = row["oracle"]
     if type(oracle) is not dict:
-        raise _corpus_error("oracle is an object")
+        raise _corpus_error("the oracle entry must be an object")
     if oracle.get("kind") == "predicate" and set(oracle) == {"kind"}:
         return None
     if oracle.get("kind") != "reference" or set(oracle) != {
@@ -376,12 +393,14 @@ def _compile_oracle(
         "subject",
         "expected",
     }:
-        raise _corpus_error("oracle is {kind: predicate} or {kind, subject, expected}")
+        raise _corpus_error(
+            "the oracle entry is neither a bare predicate nor a full reference"
+        )
     subject = program.compile(oracle["subject"], scope, role="body")
     expected = program.compile(oracle["expected"], scope, role="expected")
     if not flows(expected.ty, result_ty) or unify(subject.ty, result_ty) is None:
         raise _corpus_error(
-            "the two sides of a reference suite are not of its result type"
+            "a reference suite's sides do not produce its declared result type"
         )
     return expected
 
@@ -402,7 +421,7 @@ def check_slim_chunks(row: dict, m: int) -> None:
     """
     chosen = row["slim_chunks"]
     if not isinstance(chosen, list):
-        raise Refusal("slim-chunks", "slim_chunks is a list")
+        raise Refusal("slim-chunks", "slim_chunks must be a list")
     for entry in chosen:
         schema_index(entry, "a slim_chunks entry")
     reasons = (
@@ -449,14 +468,14 @@ def _count_field(text: str) -> int:
         or not text.isdigit()
         or (text[0] == "0" and len(text) > 1)
     ):
-        raise _bad_file("a count is a canonical decimal")
+        raise _bad_file("a count must be written as a plain decimal number")
     return int(text)
 
 
 def _digest_field(text: str) -> str:
     """A SHA-256 digest as 64 lowercase hex digits."""
     if len(text) != 64 or not _LOWER_HEX.issuperset(text):
-        raise _bad_file("a digest is 64 lowercase hex digits")
+        raise _bad_file("a digest must be sixty-four lowercase hex characters")
     return text
 
 
@@ -469,7 +488,9 @@ def parse_chunk_line(line: str, has_expected: bool) -> ChunkLine:
     """
     fields = line.split(" ")
     if len(fields) != (6 if has_expected else 5):
-        raise _bad_file("a line has the wrong number of fields for its suite")
+        raise _bad_file(
+            "a line has a different number of columns than this suite needs"
+        )
     index, cases, first, calls = (_count_field(f) for f in fields[:4])
     inputs = _digest_field(fields[4])
     expected = _digest_field(fields[5]) if has_expected else None
@@ -492,25 +513,25 @@ def check_chunk_file(
     """
     row = suite.row
     if len(data) > MAX_CHUNK_FILE_BYTES:
-        raise _bad_file("the file is larger than 2 MiB")
+        raise _bad_file("the file exceeds the size a chunk file may have")
     if hashlib.sha256(data).hexdigest() != row["chunks_sha256"]:
-        raise _bad_file("chunks_sha256 is not the digest of the file")
+        raise _bad_file("the file does not hash to the recorded chunks_sha256")
     try:
         text = data.decode("ascii")
     except UnicodeDecodeError as error:
-        raise _bad_file("the file is not ASCII") from error
+        raise _bad_file("the file contains bytes outside ASCII") from error
     pieces = text.split("\n")
     if pieces[-1] != "" or len(pieces) - 1 != suite.m:
-        raise _bad_file("the file is not exactly m LF-terminated lines")
+        raise _bad_file("the file does not consist of one newline-ended line per chunk")
     has_expected = is_reference(row)
     lines: list[ChunkLine] = []
     admitted_so_far = 0
     for position, piece in enumerate(pieces[:-1]):
         line = parse_chunk_line(piece, has_expected)
         if line.index != position:
-            raise _bad_file("a chunk index is out of sequence")
+            raise _bad_file("a line carries the wrong chunk number for its place")
         if line.first_admitted != admitted_so_far:
-            raise _bad_file("first_admitted is not the running total of cases")
+            raise _bad_file("first_admitted does not equal the cases counted so far")
         admitted_so_far = sem.advance_admitted(
             admitted_so_far, line.cases, suite.chunk_size
         )
@@ -520,15 +541,17 @@ def check_chunk_file(
         or row["discarded"] != row["product"] - admitted_so_far
     ):
         raise _bad_file(
-            "the chunks' cases do not add up to the row's cases and discarded"
+            "the chunk case counts disagree with the row's cases and discarded"
         )
     inputs_digest = chunk_digest_framing([bytes.fromhex(x.inputs) for x in lines], sem)
     if inputs_digest != row["inputs_sha256"]:
-        raise _bad_file("inputs_sha256 is not the framing of the chunk digests")
+        raise _bad_file("inputs_sha256 is not what the chunk input digests combine to")
     if has_expected:
         framed = [bytes.fromhex(x.expected or "") for x in lines]
         if chunk_digest_framing(framed, sem) != row["expected_sha256"]:
-            raise _bad_file("expected_sha256 is not the framing of the chunk digests")
+            raise _bad_file(
+                "expected_sha256 is not what the chunk expected digests combine to"
+            )
     return lines
 
 
