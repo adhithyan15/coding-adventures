@@ -294,15 +294,9 @@ func procSameFile(abs, ret string) bool {
 }
 
 // anonymousFD says a descriptor's -y text names a pipe, socket or anonymous
-// inode: an object with no place in any directory.
-func anonymousFD(ret string) bool {
-	for _, p := range []string{"pipe:[", "socket:[", "anon_inode:"} {
-		if strings.HasPrefix(ret, p) {
-			return true
-		}
-	}
-	return false
-}
+// inode: an object with no place in any directory.  The definition lives in
+// the trace package (trace.AnonymousFD) so the trace model shares it.
+func anonymousFD(ret string) bool { return trace.AnonymousFD(ret) }
 
 // isFDLink matches /proc/self/fd/N and /dev/fd/N.
 func isFDLink(abs string) bool {
