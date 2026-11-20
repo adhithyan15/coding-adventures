@@ -491,6 +491,27 @@ describe("Fuzz Engine Unit & Component Tests", () => {
     assert.equal(report.clean, false);
   });
 
+  it("copies bounded crash frames before retaining a deduplicated record", () => {
+    const frames = ["original-frame"];
+    let calls = 0;
+    const report = fuzzTarget(
+      [new Uint8Array([1]), new Uint8Array([2])],
+      { maxIterations: 0 },
+      () => {
+        calls++;
+        if (calls === 1) return { status: "crash", kind: "mutable", frames };
+        frames[0] = "later-frame";
+        frames.push(...Array.from({ length: 64 }, () => "extra-frame"));
+        return { status: "pass" };
+      },
+    );
+    assert.equal(report.triage.crash, 1);
+    assert.deepEqual(report.crashes[0].frames, ["original-frame"]);
+    assert.equal(report.crashes[0].signature, crashSignature("mutable", ["original-frame"]));
+    frames[0] = "post-report-frame";
+    assert.deepEqual(report.crashes[0].frames, ["original-frame"]);
+  });
+
   it("validates limits before callbacks and snapshots caller corpus membership and bytes", () => {
     let calls = 0;
     const target = () => {
@@ -529,6 +550,55 @@ describe("Fuzz Engine Unit & Component Tests", () => {
     assert.equal(report.usedFallbackSeed, false);
     assert.equal(original[0], 9);
     assert.equal(calls, 2);
+  });
+
+  it("bounds corpus snapshot by captured array length instead of its iterator", () => {
+    let calls = 0;
+    const corpus = [new Uint8Array([1])];
+    Object.defineProperty(corpus, Symbol.iterator, {
+      value: function* () {
+        for (let index = 0; index < 4_097; index++) yield new Uint8Array(0);
+      },
+    });
+    const report = fuzzTarget(corpus, { maxIterations: 0 }, () => {
+      calls++;
+      return { status: "pass" };
+    });
+    assert.equal(calls, 1);
+    assert.equal(report.triage.calls, 1);
+  });
+
+  it("uses the intrinsic byte length and rejects a shadowed oversized view before callbacks", () => {
+    let calls = 0;
+    const input = new Uint8Array(1_048_577);
+    Object.defineProperty(input, "length", { value: 0 });
+    assert.throws(() => fuzzTarget([input], { maxIterations: 0 }, () => {
+      calls++;
+      return { status: "pass" };
+    }), RangeError);
+    assert.equal(calls, 0);
+  });
+
+  it("reads a returned status once before counting and admission", () => {
+    let statusReads = 0;
+    let calls = 0;
+    const changingOutcome = {
+      get status(): "timeout" | "pass" {
+        statusReads++;
+        return statusReads === 1 ? "timeout" : "pass";
+      },
+    } as FuzzOutcome;
+    const report = fuzzTarget([new Uint8Array([1])], { maxIterations: 0 }, (_input, coverage) => {
+      calls++;
+      coverage.recordEdge(7);
+      return changingOutcome;
+    });
+    assert.equal(calls, 1);
+    assert.equal(statusReads, 1);
+    assert.equal(report.triage.timeout, 1);
+    assert.equal(report.triage.pass, 0);
+    assert.equal(report.admittedSeeds, 0);
+    assert.equal(report.clean, false);
   });
 
   it("keeps empty-corpus fallback and zero mutation budgets explicitly non-clean", () => {

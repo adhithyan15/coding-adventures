@@ -553,6 +553,17 @@ const MAX_RECORDED_CRASHES = 1_024;
 const MAX_RECORDED_CRASH_BYTES = 32 * 1_048_576;
 const MAX_CRASH_FRAMES = 64;
 const MAX_CRASH_TEXT_LENGTH = 256;
+const typedArrayLengthGetter = Object.getOwnPropertyDescriptor(
+  Object.getPrototypeOf(Uint8Array.prototype),
+  "length",
+)?.get;
+
+function uint8ArrayLength(input: Uint8Array): number {
+  if (!typedArrayLengthGetter) {
+    throw new TypeError("typed array length accessor is unavailable");
+  }
+  return typedArrayLengthGetter.call(input) as number;
+}
 
 function validateFuzzOptions(initialCorpus: Uint8Array[], opts: FuzzOptions): {
   maxIterations: number;
@@ -582,19 +593,27 @@ function validateFuzzOptions(initialCorpus: Uint8Array[], opts: FuzzOptions): {
   if (!Array.isArray(initialCorpus)) {
     throw new TypeError("initialCorpus must be an array of Uint8Array values");
   }
-  if (initialCorpus.length > MAX_INITIAL_CORPUS) {
+  const initialCorpusLength = initialCorpus.length;
+  if (!Number.isSafeInteger(initialCorpusLength) || initialCorpusLength < 0) {
+    throw new TypeError("initialCorpus must have a safe array length");
+  }
+  if (initialCorpusLength > MAX_INITIAL_CORPUS) {
     throw new RangeError(`initialCorpus exceeds ${MAX_INITIAL_CORPUS} entries`);
   }
   let totalBytes = 0;
   const snapshot: Uint8Array[] = [];
-  for (const input of initialCorpus) {
+  // Use the captured array membership by index instead of its overridable
+  // iterator. This keeps snapshot work within the validated entry bound.
+  for (let index = 0; index < initialCorpusLength; index++) {
+    const input = initialCorpus[index];
     if (!(input instanceof Uint8Array)) {
       throw new TypeError("initialCorpus entries must be Uint8Array values");
     }
-    if (input.length > MAX_INPUT_LENGTH) {
+    const inputLength = uint8ArrayLength(input);
+    if (inputLength > MAX_INPUT_LENGTH) {
       throw new RangeError(`initial corpus entry exceeds ${MAX_INPUT_LENGTH} bytes`);
     }
-    totalBytes += input.length;
+    totalBytes += inputLength;
     if (totalBytes > MAX_CORPUS_BYTES) {
       throw new RangeError(`initialCorpus exceeds ${MAX_CORPUS_BYTES} bytes`);
     }
@@ -607,9 +626,9 @@ function newPhaseStats(): FuzzPhaseStats {
   return { calls: 0, pass: 0, crash: 0, timeout: 0, oom: 0 };
 }
 
-function countOutcome(stats: FuzzPhaseStats, outcome: FuzzOutcome): void {
+function countOutcome(stats: FuzzPhaseStats, status: FuzzOutcome["status"]): void {
   stats.calls++;
-  switch (outcome.status) {
+  switch (status) {
     case "pass": stats.pass++; break;
     case "crash": stats.crash++; break;
     case "timeout": stats.timeout++; break;
@@ -722,8 +741,9 @@ export function fuzzTarget(
   for (const s of seeds) {
     const stepCov = new CoverageBitmap();
     const outcome = target(new Uint8Array(s), stepCov);
-    countOutcome(triage, outcome);
-    if (outcome.status === "pass") {
+    const status = outcome.status;
+    countOutcome(triage, status);
+    if (status === "pass") {
       const [hasNew, newCount] = cumulativeCoverage.admitBitmap(stepCov);
       if (hasNew || corpus.length === 0) {
         if (corpus.length < MAX_INITIAL_CORPUS && corpusBytes + s.length <= MAX_CORPUS_BYTES) {
@@ -733,8 +753,8 @@ export function fuzzTarget(
           corpusLimitDrops++;
         }
       }
-    } else if (outcome.status === "crash") {
-      recordCrash(outcome, s);
+    } else if (status === "crash") {
+      recordCrash(outcome as Extract<FuzzOutcome, { status: "crash" }>, s);
     }
   }
 
@@ -773,9 +793,10 @@ export function fuzzTarget(
 
       const stepCov = new CoverageBitmap();
       const outcome = target(new Uint8Array(candidate), stepCov);
-      countOutcome(mutation, outcome);
+      const status = outcome.status;
+      countOutcome(mutation, status);
 
-      if (outcome.status === "pass") {
+      if (status === "pass") {
         const [hasNew, newCount] = cumulativeCoverage.admitBitmap(stepCov);
         if (hasNew) {
           if (corpus.length < MAX_INITIAL_CORPUS && corpusBytes + candidate.length <= MAX_CORPUS_BYTES) {
@@ -785,8 +806,8 @@ export function fuzzTarget(
             corpusLimitDrops++;
           }
         }
-      } else if (outcome.status === "crash") {
-        recordCrash(outcome, candidate);
+      } else if (status === "crash") {
+        recordCrash(outcome as Extract<FuzzOutcome, { status: "crash" }>, candidate);
       }
     }
   }
@@ -794,17 +815,26 @@ export function fuzzTarget(
   function recordCrash(outcome: Extract<FuzzOutcome, { status: "crash" }>, input: Uint8Array): void {
     // Keep the existing signature exact for bounded details; oversized metadata
     // is accounted as unrecorded instead of silently changing its signature.
-    if (outcome.kind.length > MAX_CRASH_TEXT_LENGTH || outcome.frames.length > MAX_CRASH_FRAMES) {
+    const kind = outcome.kind;
+    const sourceFrames = outcome.frames;
+    if (typeof kind !== "string" || !Array.isArray(sourceFrames)) {
       unrecordedCrashOutcomes++;
       return;
     }
-    const kind = outcome.kind;
-    const frames = outcome.frames;
-    for (const frame of frames) {
-      if (frame.length > MAX_CRASH_TEXT_LENGTH) {
+    const frameCount = sourceFrames.length;
+    if (!Number.isSafeInteger(frameCount) || frameCount < 0 || frameCount > MAX_CRASH_FRAMES ||
+      kind.length > MAX_CRASH_TEXT_LENGTH) {
+      unrecordedCrashOutcomes++;
+      return;
+    }
+    const frames: string[] = [];
+    for (let index = 0; index < frameCount; index++) {
+      const frame = sourceFrames[index];
+      if (typeof frame !== "string" || frame.length > MAX_CRASH_TEXT_LENGTH) {
         unrecordedCrashOutcomes++;
         return;
       }
+      frames.push(frame);
     }
     const sig = crashSignature(kind, frames);
     const existing = crashBySignature.get(sig);

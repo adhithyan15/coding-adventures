@@ -136,11 +136,14 @@ safe integer. BigInt seeds retain `SplitMix64`'s existing modulo-2^64 seed
 semantics. Defaults remain 1,000 mutation calls, seed 42, 4,096 maximum
 mutation bytes, and base energy 10.
 
-The initial corpus is snapshotted as byte copies before any callback. It may
-contain at most 4,096 byte arrays and 16 MiB in aggregate, with no individual
-seed exceeding 1 MiB. A callback cannot extend initial triage by appending to
-the caller's corpus array, and mutation of a callback's input cannot rewrite a
-stored seed. If the caller supplies an empty corpus, preserve the historical
+The initial corpus length is captured once and membership is read by bounded
+numeric indices, not the caller's overridable array iterator. It may contain
+at most 4,096 byte arrays and 16 MiB in aggregate, with no individual seed
+exceeding 1 MiB as measured by the typed-array intrinsic length accessor (so an
+own `length` property cannot bypass the cap). Inputs are copied before any
+callback. A callback cannot extend initial triage by appending to the caller's
+corpus array, and mutation of a callback's input cannot rewrite a stored seed.
+If the caller supplies an empty corpus, preserve the historical
 one-zero-byte fallback seed and report `usedFallbackSeed: true`; that fallback
 can exercise the target but cannot produce a `clean` report.
 
@@ -154,7 +157,9 @@ scheduled after the budget is exhausted.
 
 Crash detail storage is bounded to 1,024 records and 32 MiB of saved crash
 inputs. Each retained signature also requires at most 64 frames, each at most
-256 UTF-16 code units, and a kind of at most 256 code units. Oversized crash
+256 UTF-16 code units, and a kind of at most 256 code units. Accepted frame
+strings are copied before retention so later callback mutation cannot alter a
+reported signature's details. Oversized crash
 metadata is counted but not hashed or retained, so a capped record does not
 silently change the existing signature. The phase ledgers count every
 returned crash even when its detail record cannot be retained;
@@ -187,7 +192,8 @@ zero mutation budget, no admitted mutation corpus, or any crash/timeout/OOM
 cannot be reported as a non-vacuous clean campaign. A thrown target exception
 still throws and returns no report.
 
-The callback's `CoverageBitmap` remains caller-supplied feedback. These counts
+The callback's returned status is read once and used for both ledger accounting
+and admission decisions. The callback's `CoverageBitmap` remains caller-supplied feedback. These counts
 describe returned outcomes and recorded callback edges only; they do not prove
 that every callback was process-isolated, that timeout or OOM was enforced by a
 watchdog, or that source/native branches were instrumented. `code/packages/typescript/fuzz`
@@ -215,29 +221,40 @@ feedback, not instrumented coverage. The fault-control campaign at seed
 report; its bounded witness reducer produced the all-zero eight-byte witness,
 which failed the injected callback and passed the healthy callback.
 
-Two `test-bootstrap` source mutants were recompiled in fresh Node processes and
-failed their intended assertions. Dropping the timeout counter used mutant
-source SHA-256 `f5515aa76f3e40679ff9425c812c420e443208856cf175bd8e968348ce9732a0`
-and loaded `dist/fuzz.js` SHA-256
-`7fea1eacb66088c0cf352fd4a4106dffd2c5bc2f147e5c8dfe0370dc1bc5eef3`; replacing
-the remaining-budget clamp with `remaining + 1` used mutant source SHA-256
-`0043ec671c0e44f758cdfa453be0f6577a34ec82db52dcec0fc16900be43c812` and
+Two `test-bootstrap` source mutants were recompiled with `npx tsc` and run in
+fresh Node processes against `tests/fuzz.test.ts` by importing its
+`../dist/fuzz.js`. The restored producer source SHA-256 was
+`037d9cdecb5879444fe37e0d1fe6ffefd10f810198061e3b079c840011050cfd` and the
+loaded artifact `code/packages/typescript/test-bootstrap/dist/fuzz.js` SHA-256
+was `37e166ebaeca434db070de61d203588228aabdca115a113137f6481ce5b29b90`.
+Removing the timeout increment used mutant source SHA-256
+`922ad45e5ac16883fd77ba00a3db9a3c5dc4c5a5260d5c00224c6781c8e6856c` and
 loaded artifact SHA-256
-`c15326a505baac0ee15700b9c8e3b2b7fb81c80f9a17dbb3572a5cff38d180cc`. After
-restoration, producer source SHA-256 was
-`9370b318b55fedb09551787ed6f7bb7280f73b7c1bdb92b367e10a1b03ed0109` and the
-recompiled artifact SHA-256 was
-`d04f21fee13f5bcdddf45612fb5488aecb6b34b235739a0d7300ddeeddccb715`.
-The source hashes identify temporary mutations; the migration table below
-pins the committed Git blobs. A separate bounded abstract model encodes the fixed nine-call vector
-with one-hot four-outcome variables and a `clean` predicate. Under Rust 1.100.0,
-`cdcl-sat` 0.3.2 found the model satisfiable with `clean = false`; forcing
-`clean = true` was UNSAT, and independent `drat-check` 0.1.0 accepted the
-8-byte certificate (2 lemmas, 0 RAT lemmas, empty clause at line 2) for the
-37-variable, 109-clause formula. This receipt checks only the finite encoded
-vector, not the TypeScript implementation or float behavior. Warrant binding,
-native source coverage, a process watchdog, and the separate standalone
-TypeScript fuzz package remain open evidence items.
+`13c2b5d6a60513a2c33ebbd175cf2a6840d26f106cbf40772036c7907a2c0485`; the
+`accounts every returned phase outcome...` assertion failed with timeout count
+0 instead of 1. Replacing the remaining-budget clamp with `remaining + 1`
+used mutant source SHA-256
+`3b7b356f0e34e70199482e4aafedc1ae3b8af74ddae9e7c584b565ca76178efa` and
+loaded artifact SHA-256
+`d9c861bf6b43909f32581dd42a2b5cf4298b2720e4217b0bfb9f31521209afb2`; the
+`clips an oversized energy schedule...` assertion failed at the progress
+invariant. Source was restored and recompiled to the baseline identities above;
+both intended assertions passed on the restored artifact. The source hashes
+identify temporary mutations; the migration table below pins committed Git
+blobs.
+
+The bounded SAT/DRAT reproducible fixture in
+`code/specs/assurance/af04c1-ledger-model/` encodes only the fixed nine-call
+vector and the implication `clean => all nine are pass`. It does not encode
+phase counter sums, energy, budget transitions, or progress. The recorded
+model is SAT with `clean=false`; forcing `clean=true` is UNSAT. Under Rust
+1.100.0, `cdcl-sat` 0.3.2 produced an 8-byte certificate that independent
+`drat-check` 0.1.0 accepted (2 lemmas, 0 RAT lemmas, empty clause at line 2).
+The fixture includes the exact DIMACS and DRAT bytes, a deterministic generator,
+Cargo.lock, dependency tree pins, and SHA-256 digests for replay. It remains a
+finite abstract consistency check, not a proof of the TypeScript implementation
+or float behavior. Warrant binding, native source coverage, a process watchdog,
+and the separate standalone TypeScript fuzz package remain open evidence items.
 
 The AF-04a inventory keeps `cb60dc9820fc069325130193118e75fdba9b96bc` as the
 historical source subject. `current_source_migrations` records the literal
