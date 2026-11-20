@@ -8,6 +8,7 @@ license = "MIT"
 [dependencies]
 coding_adventures_hkdf = { path = "../hkdf" }
 tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-certificate-request-message = { path = "../tls13-certificate-request-message" }
 tls13-encrypted-extensions-message = { path = "../tls13-encrypted-extensions-message" }
 tls13-extension-block = { path = "../tls13-extension-block" }
 tls13-extension-context-policy = { path = "../tls13-extension-context-policy" }
@@ -19,6 +20,7 @@ tls13-record = { path = "../tls13-record" }
 tls13-record-protection = { path = "../tls13-record-protection" }
 tls13-record-protection-state = { path = "../tls13-record-protection-state" }
 tls13-retry-handshake-traffic-secrets-binding = { path = "../tls13-retry-handshake-traffic-secrets-binding" }
+tls13-signature-scheme-list = { path = "../tls13-signature-scheme-list" }
 tls13-traffic-key-material = { path = "../tls13-traffic-key-material" }
 tls13-transcript = { path = "../tls13-transcript" }
 
