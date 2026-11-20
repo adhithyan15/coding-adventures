@@ -4024,6 +4024,26 @@ every pre-D43 verdict.
    are excluded, and Home and Tmpdir themselves never count as "inside `/tmp`".
    `/tmp/x` that the action created and removed is therefore stable, where before
    it was `unstable-path` (it was judged as a host path).
+
+   *What that means for D40.* `contained(p) = !tmpLinked && !tmpMoved &&
+   underTmp(p)` now holds for a path under `/tmp`, `/var/tmp` or `/run` exactly
+   as for one under Home or Tmpdir: the stability rules skip it while the action
+   has made no link and moved no directory (or foreign object) in the tmpfs, and
+   `tmpLinked` / `tmpMoved` taint the WHOLE action, scratch directories
+   included, the moment either happens. *Why it is sound.* D40's premises are
+   about the mount, not the name: each scratch directory is a fresh, empty tmpfs
+   that the plan mounts per step (`sandbox.ScratchDirs`, `KindTmpfs`), a
+   separate mount from the checkout, from Home, from Tmpdir and from the
+   read-only roots, so hard links and renames across them fail with `EXDEV`;
+   nothing is in it that the action did not put there; and a mount point is
+   `EBUSY` to rename or remove, so no ancestor of it can move (D40 point 5).
+   Those are the facts D40 used for Home and Tmpdir, so the argument (a path
+   under it reaches the action's own file or nothing, and `..` out of it is
+   exact while no directory moved) carries over unchanged. A rename ACROSS two
+   scratch directories, or between one and Home, fails with `EXDEV` as before;
+   the fuzzer model says so (`mountOf`).
+   The differential fuzzer covers this with bursts 19 to 21 (the stale cwd
+   against the scratch directories) and 22 to 27 (the `reshaped` taint, below).
 4. Two new whole-action refusals, both gated on `classifier.reshaped`, set by a
    SUCCESSFUL rename or exchange anywhere (checkout included) whose source is not
    a regular file the action created, or whose names could not be placed
@@ -4040,6 +4060,20 @@ every pre-D43 verdict.
    started from the renamed directory. It needs a cwd the trace never walked (a
    `chdir` is itself a judged lookup, which is why the fuzzer never reached it); a
    process that inherits such a cwd would.
+
+   *The fuzzer's reading of `reshaped`.* Bursts 22 to 27 of
+   `TestDifferentialSeeded` / `FuzzDifferential` generate a rename or
+   `RENAME_EXCHANGE` of an own directory, of a directory and of files the action
+   did not create, of own regular files (which must not taint), absent probes at
+   sandbox-absent paths before and after the move, and failed relative probes
+   through `..` from a renamed-away cwd. The model sets its own `reshaped` when
+   a DIRECTORY moved (the truth, read off its node kinds), and demands that a
+   record with no other reason then (a) has no allowed sealed absence and (b)
+   carries `unstable-path` if any failed relative probe walked, as text over the
+   final disk, to a missing component followed by `..`. The classifier is allowed
+   to taint MORE than the model does (it also taints on moving any object the
+   action did not create, since it cannot see the kind of an object it has no
+   history of); it is never allowed to taint less.
 
 *Why it is safe.*
 
@@ -4244,7 +4278,9 @@ caller, the `seen` loop, tests `contained` first, so a version of `stable` that
 also tested the flags would be dead code). `checkStability` runs once after
 every event has been classified, so both flags are whole-action facts when any
 `judge` runs; with either set, every verdict is today's. `exec-unreadable:under-tmp`
-is unchanged. `fresh` also refuses the recorder's derived state roots
+is unchanged. (D43 widened `underTmp` to the scratch directories `/tmp`,
+`/var/tmp` and `/run`, which are fresh per-step tmpfs mounts like Home and
+Tmpdir, so containment, and the two taints, apply to them too; see D43 point 3.) `fresh` also refuses the recorder's derived state roots
 (`~/.cargo/registry`, `~/.cargo/git`, `stateAnchors`), which are writable HOST
 binds passed as `traced.Config.HostBinds` (`record.DerivedStateRoots`); an
 absent probe of one is still allowed (they start empty), a present look is
