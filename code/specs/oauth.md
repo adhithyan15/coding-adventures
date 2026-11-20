@@ -6901,6 +6901,27 @@ repository-owned certificate, signature, trust, revocation, and transport
 compositions remain prerequisites, and concrete HTTPS and live-provider
 readiness remain unavailable.
 
+The authenticated ordered retry `CertificateVerify` proof can additionally be
+bound to one exact repository-owned RSA-PSS verification verdict. The
+composition requires the verifier's role to be `server`, its selected-
+transcript snapshot to equal the pending message's exact pre-message snapshot,
+its policy-authorized scheme to equal the scheme retained from the final
+ClientHello offer, and its complete decoded `CertificateVerify` message to
+equal the authenticated ordered message. Success returns non-copyable evidence
+retaining both complete proofs; callers cannot substitute a detached role,
+snapshot, algorithm identifier, signature, key verdict, or message body.
+
+This proof establishes repository-owned RSA-PSS authentication of the exact
+ordered retry server message and transcript snapshot only. The verifier's RSA
+key may still be caller supplied: this slice does not prove that it came from
+the preceding authenticated `Certificate` message, a reviewed server path, the
+requested DNS identity, or a reviewed trust root. It also does not authenticate
+Finished, enforce revocation, select later epochs, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. Those repository-owned
+certificate-to-key, path, hostname, trust, revocation, and transport
+compositions remain prerequisites, and concrete HTTPS and live-provider
+readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
