@@ -4,6 +4,10 @@ use coding_adventures_test_bootstrap::run::Options;
 use wx_fault2_harness::{Fault, V};
 use std::process::Command;
 
+// The generated evidence module deliberately includes generic helpers and
+// claim bodies that a single fixture may not exercise; keep generated-code
+// lints scoped here, as with the other Warrant fixture harnesses.
+#[allow(dead_code, unused_variables, unused_parens, unused_mut, clippy::all)]
 mod wx_fault2_harness {
     pub mod wx_fault2_subject {
         #[derive(Clone, Debug, PartialEq, Eq)]

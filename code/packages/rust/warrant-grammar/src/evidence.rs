@@ -452,6 +452,96 @@ pub(crate) fn ty_of_type<'a>(
     ty_of_type_in(t, env, v1, span, depth, &nodes)
 }
 
+/// Does the declared type `t`, resolved the way the generator resolves it, mention the record
+/// (or variant) named `target` anywhere inside it?
+///
+/// The resolution is the generator's own: names are looked up in the [`TyEnv`] that
+/// [`ty_of_type`] uses (`model Name = Type` aliases, records, variants), so `model State = Impl`
+/// makes `State` mention `Impl`, as do `Option<State>`, `Result<State, E>`, `(State, U8)` and a
+/// record with a `State` field.  It exists for gates that must agree with the generator by
+/// construction (VOS-039c, CC11) instead of re-reading type text with their own rules.
+///
+/// Fails closed: a name it cannot resolve, or an alias or record chain nested deeper than 64
+/// (the generator's own depth bound), counts as a mention.  A type already expanded adds
+/// nothing the first expansion did not, so a shared sub-type is walked once (no diamond blow-up); a cycle is a mention.
+pub fn type_mentions(file: &WarrantFile<'_>, t: &TypeExpr<'_>, target: &str) -> bool {
+    let env = TyEnv::new(file);
+    let mut seen = Seen::default();
+    mentions_in(&env, t, target, 0, &mut seen)
+}
+
+fn mentions_in<'a>(
+    env: &TyEnv<'a>,
+    t: &TypeExpr<'a>,
+    target: &str,
+    depth: usize,
+    seen: &mut Seen,
+) -> bool {
+    if depth > 64 {
+        return true;
+    }
+    match t {
+        TypeExpr::Bytes { .. } => false,
+        TypeExpr::List { inner, .. } | TypeExpr::Option { inner, .. } => {
+            mentions_in(env, inner, target, depth + 1, seen)
+        }
+        TypeExpr::Tuple { elems, .. } => elems
+            .iter()
+            .any(|e| mentions_in(env, e, target, depth + 1, seen)),
+        TypeExpr::Result {
+            ok_type, err_name, ..
+        } => *err_name == target || mentions_in(env, ok_type, target, depth + 1, seen),
+        TypeExpr::Named { name, .. } => {
+            if *name == target {
+                return true;
+            }
+            if matches!(*name, "Bytes" | "Bool" | "U8" | "U64" | "Nat")
+                || FixedTy::from_name(name).is_some()
+            {
+                return false;
+            }
+            if !(env.aliases.contains_key(name)
+                || env.records.contains_key(name)
+                || env.variants.contains_key(name))
+            {
+                return true;
+            }
+            // A name met again while its own expansion is still open is a cycle (the checker
+            // refuses an alias cycle, W0203): fail closed.  A name already fully expanded
+            // without a mention adds nothing, so it is not walked twice.
+            if seen.done.contains(*name) {
+                return false;
+            }
+            if !seen.open.insert((*name).to_string()) {
+                return true;
+            }
+            let found = if let Some(a) = env.aliases.get(name) {
+                mentions_in(env, a, target, depth + 1, seen)
+            } else if let Some(fs) = env.records.get(name) {
+                fs.iter()
+                    .any(|(_, ft)| mentions_in(env, ft, target, depth + 1, seen))
+            } else {
+                env.variants.get(name).is_some_and(|cs| {
+                    cs.iter().any(|(_, fs)| {
+                        fs.iter()
+                            .any(|(_, ft)| mentions_in(env, ft, target, depth + 1, seen))
+                    })
+                })
+            };
+            seen.open.remove(*name);
+            seen.done.insert((*name).to_string());
+            found
+        }
+    }
+}
+
+/// The names [`type_mentions`] has expanded: `open` are on the current path, `done` are finished.
+#[derive(Default)]
+struct Seen {
+    open: HashSet<String>,
+    done: HashSet<String>,
+}
+
 /// Most nodes a binder or result type may expand to.  Records and variants are
 /// inlined by value, so a diamond (`Li(a: L(i-1), b: L(i-1))`) is exponential in
 /// its depth although it is a few lines of source; the cap refuses it before any
@@ -1177,6 +1267,9 @@ const WXA_FAULTS: &[(&str, &str)] = &[
     ("field-flip", "FieldFlip"),
     // WX-FAULT2: mutate one directly observable status flag in a record.
     ("bool-field-flip", "BoolFieldFlip"),
+    // VOS-039c: `field-flip` aimed at the LAST numeric field, so the oracle
+    // register of an `-any` (the last field of `Impl`) can be corrupted.
+    ("field-flip-last", "FieldFlipLast"),
 ];
 
 /// Faults for an operation whose result is a byte string (a digest, a codec
@@ -2404,6 +2497,11 @@ fn composite_adapter<'a>(
             "field-zero" | "field-flip" => matches!(&core, Ty::Data { ctors, .. }
                 if ctors.len() == 1 && ctors[0].1.iter().any(is_numeric)),
             "bool-field-flip" => bool_field_flip_applies(&full),
+            // VOS-039c: the last numeric field is a different field from the
+            // first only when there are two, so a record with one numeric
+            // field is refused (it would duplicate `field-flip`).
+            "field-flip-last" => matches!(&core, Ty::Data { ctors, .. }
+                if ctors.len() == 1 && ctors[0].1.iter().filter(|t| is_numeric(t)).count() >= 2),
             "wrong-ctor" => matches!(&core, Ty::Data { ctors, .. } if ctors.len() >= 2),
             "ok-as-err" => {
                 is_result && matches!(&core, Ty::Tuple(_) | Ty::Data { .. }) && !cases.is_empty()
@@ -2574,6 +2672,7 @@ fn composite_adapter<'a>(
             "field-zero" => "fault_field_zero(v)".to_string(),
             "field-flip" => "fault_field_flip(v)".to_string(),
             "bool-field-flip" => "fault_bool_field_flip(v)".to_string(),
+            "field-flip-last" => "fault_field_flip_last(v)".to_string(),
             "off-by-one-consumed" => "fault_off_by_one_consumed(v)".to_string(),
             "wrong-ctor" => format!("fault_wrong_ctor(v, {})", core.rust()),
             "ok-as-err" => format!("fault_ok_as_err(v, \"{}\")", cases[0]),
@@ -4059,6 +4158,14 @@ pub fn generate_evidence_harness_with_tables(
             .collect();
         let _ = write!(adapters, "const HARNESS_BOOL_FIELD_FLIP_OPS: &[&str] = &[{}];\n\n", names.join(", "));
     }
+    // VOS-039c: `fault_field_flip_last` is likewise emitted only for a binding
+    // that names `field-flip-last`.  It has no `WARRANT_EVIDENCE_ATTACK`
+    // semantics of its own: a flip of the last field cannot cancel against an
+    // `init`/`alpha` pair the way a first-field flip can, because the oracle is
+    // read by no abstraction.
+    if used_faults.contains("field-flip-last") {
+        features.insert("lastflip");
+    }
     // WX-N: a v1 document with a fixed-width `Bytes<N>` anywhere labels that
     // domain `full` or `sample` instead of `set`.  Gated like the helpers above,
     // so no other harness changes by a byte (VER04j section 14.4).
@@ -4223,5 +4330,71 @@ mod scope_tests {
         assert!(scope_export_calls("f(1); f::<u8>(2)", "f").is_none(), "turbofish");
         assert!(scope_export_calls("f(1); let g = f;", "f").is_none(), "bare reference");
         assert!(scope_export_calls("f(1); pkg::f::<u8>(2)", "f").is_none(), "path turbofish");
+    }
+}
+
+#[cfg(test)]
+mod type_mentions_tests {
+    use super::{ty_of_type, type_mentions, Ty, TyEnv};
+    use crate::layout::{capture_layout, LayoutLimits};
+    use crate::parser::{parse_document, Declaration, ParserLimits};
+    use crate::source::{SourceDocument, SourceLimits};
+
+    /// Does the generator's resolved `Ty` contain the record named `n`?
+    fn ty_has(t: &Ty, n: &str) -> bool {
+        match t {
+            Ty::Data { name, ctors, .. } => {
+                name == n || ctors.iter().any(|(_, fs)| fs.iter().any(|f| ty_has(f, n)))
+            }
+            Ty::Tuple(es) => es.iter().any(|e| ty_has(e, n)),
+            Ty::Opt(i) | Ty::List(i) | Ty::Res(i, _, _) => ty_has(i, n),
+            _ => false,
+        }
+    }
+
+    const DOC: &str = "warrant t v1\n  record Impl(x: U8, c: U8)\n  record Other(x: U8)\n  error E = BAD\n  model State = Impl\n  model Deep = State\n  model Maybe = Option<State>\n  model Out = Result<Deep, E>\n  model Pair = (U8, Maybe)\n  model Count = U8\n  model Wide = List<Count>\n  record Holder(s: Maybe, n: U8)\n  model Cyc = Cyc\n  op f0(a: Impl, b: State, c: Deep, d: Maybe, e: Out, g: Pair, h: Holder) -> U8\n  op f1(a: Other, b: Count, c: Wide, d: Option<U8>, e: Bytes, g: (U8, Bool), h: Result<Count, E>) -> U8\n  op f2(a: Cyc, b: Nope) -> U8\n";
+
+    /// Every parameter type of `f0` and `f1`: the gate's answer is the generator's.
+    #[test]
+    fn agrees_with_the_generators_own_resolution_on_every_alias_shape() {
+        let doc = SourceDocument::admit(DOC.as_bytes(), SourceLimits::default()).unwrap();
+        let toks = capture_layout(&doc, LayoutLimits::default()).unwrap();
+        let file = parse_document(&toks, &doc, ParserLimits::default()).unwrap();
+        let env = TyEnv::new(&file);
+        let mut n = 0;
+        for d in &file.declarations {
+            let Declaration::Op(o) = d else { continue };
+            if o.name == "f2" {
+                continue;
+            }
+            for p in &o.params {
+                let generated = ty_of_type(&p.param_type, &env, true, p.span, 0).expect("resolves");
+                assert_eq!(
+                    type_mentions(&file, &p.param_type, "Impl"),
+                    ty_has(&generated, "Impl"),
+                    "{}.{}",
+                    o.name,
+                    p.name
+                );
+                n += 1;
+            }
+        }
+        assert_eq!(n, 14);
+    }
+
+    /// What the generator cannot resolve is a mention: an alias cycle, an unknown name.
+    #[test]
+    fn what_it_cannot_resolve_counts_as_a_mention() {
+        let doc = SourceDocument::admit(DOC.as_bytes(), SourceLimits::default()).unwrap();
+        let toks = capture_layout(&doc, LayoutLimits::default()).unwrap();
+        let file = parse_document(&toks, &doc, ParserLimits::default()).unwrap();
+        for d in &file.declarations {
+            let Declaration::Op(o) = d else { continue };
+            if o.name == "f2" {
+                for p in &o.params {
+                    assert!(type_mentions(&file, &p.param_type, "Impl"), "{}", p.name);
+                }
+            }
+        }
     }
 }

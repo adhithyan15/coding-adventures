@@ -13,3 +13,47 @@
       mem(dec(alpha_w(Impl(mask, t))), t) => dispatch_out(Impl(mask, t)) == Run(t))
   claim dispatch_covers_idle:
     forall mask: U8. dispatch_out(Impl(mask, 255u8)) == Idle
+  -- VOS-039c: insert and remove KEEP THE ORACLE and are INDEPENDENT of it (VOS10 section 9.3).  The safety claims
+  -- quantify over build(M), whose oracle is 0, and alpha drops the oracle, so a scheduler whose insert overwrote
+  -- `choice`, or whose answer depended on it, passed every claim above.  Each claim below states, for one operation
+  -- and every oracle c, three conjuncts: the image keeps the oracle (first, so the claim's subject is the `_img`
+  -- operation and it gets a negative control of its own, VOS02 4.4); the image's abstraction is the abstract step
+  -- taken from the abstraction of the state, whatever c is; and the answer is the abstract answer.  The thread id is
+  -- split three ways to stay inside the 400,000-case budget: _lo is the ids 0..3 (two Bool binders, 256 x 256 x 4
+  -- cases), _hi the ids 4..7, and _ids ranges every U8 id over four masks whose two Bool binders switch the bit
+  -- patterns 0xA5 and 0x5A on or off (0x00, 0xA5, 0x5A, 0xFF: every bit is set in one mask and clear in another).
+  -- Residual (VOS10 section 9.3): the ids 8..255 on the other 252 masks.  There is no `where` refinement, so the
+  -- generator's rejection sampler is not involved (VOS-D079).
+  claim insert_oracle_lo:
+    forall mask: U8, c: U8, t0: Bool, t1: Bool. (
+      insert_img(Impl(mask, c), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))).choice == c and
+      dec(alpha_w(insert_img(Impl(mask, c), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))))) == abs_insert(dec(alpha_w(Impl(mask, c))), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))).1 and
+      insert_out(Impl(mask, c), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))) == abs_insert(dec(alpha_w(Impl(mask, c))), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))).0)
+  claim insert_oracle_hi:
+    forall mask: U8, c: U8, t0: Bool, t1: Bool. (
+      insert_img(Impl(mask, c), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)).choice == c and
+      dec(alpha_w(insert_img(Impl(mask, c), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)))) == abs_insert(dec(alpha_w(Impl(mask, c))), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)).1 and
+      insert_out(Impl(mask, c), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)) == abs_insert(dec(alpha_w(Impl(mask, c))), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)).0)
+  claim insert_oracle_ids:
+    forall m0: Bool, m1: Bool, c: U8, t: U8. (
+      insert_img(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c), t).choice == c and
+      dec(alpha_w(insert_img(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c), t))) == abs_insert(dec(alpha_w(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c))), t).1 and
+      insert_out(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c), t) == abs_insert(dec(alpha_w(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c))), t).0)
+  claim remove_oracle_lo:
+    forall mask: U8, c: U8, t0: Bool, t1: Bool. (
+      remove_img(Impl(mask, c), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))).choice == c and
+      dec(alpha_w(remove_img(Impl(mask, c), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))))) == abs_remove(dec(alpha_w(Impl(mask, c))), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))).1 and
+      remove_out(Impl(mask, c), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))) == abs_remove(dec(alpha_w(Impl(mask, c))), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))).0)
+  claim remove_oracle_hi:
+    forall mask: U8, c: U8, t0: Bool, t1: Bool. (
+      remove_img(Impl(mask, c), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)).choice == c and
+      dec(alpha_w(remove_img(Impl(mask, c), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)))) == abs_remove(dec(alpha_w(Impl(mask, c))), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)).1 and
+      remove_out(Impl(mask, c), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)) == abs_remove(dec(alpha_w(Impl(mask, c))), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)).0)
+  claim remove_oracle_ids:
+    forall m0: Bool, m1: Bool, c: U8, t: U8. (
+      remove_img(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c), t).choice == c and
+      dec(alpha_w(remove_img(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c), t))) == abs_remove(dec(alpha_w(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c))), t).1 and
+      remove_out(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c), t) == abs_remove(dec(alpha_w(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c))), t).0)
+  -- build_with_oracle: the abstraction of an image is the ready set that built its mask, whatever the oracle.
+  claim alpha_build_with_oracle:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, c: U8. dec(alpha_w(Impl(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)).mask, c))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)

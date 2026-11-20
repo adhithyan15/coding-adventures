@@ -56,6 +56,7 @@ pub mod error;
 pub mod fsio;
 pub mod inputs;
 pub mod ops;
+pub mod oracle;
 pub mod publish;
 
 pub use build_gen::gen_build;

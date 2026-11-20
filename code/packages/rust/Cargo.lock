@@ -14853,6 +14853,7 @@ dependencies = [
  "tls13-cipher-suite-offer",
  "tls13-cipher-suite-policy",
  "tls13-client-hello-message",
+ "tls13-encrypted-extensions-message",
  "tls13-extension-block",
  "tls13-extension-context-policy",
  "tls13-finished",

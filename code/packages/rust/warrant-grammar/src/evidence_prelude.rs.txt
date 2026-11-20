@@ -768,6 +768,31 @@ fn fault_bool_field_flip(v: V) -> V {
     })
 }
 //@endif
+//@if lastflip
+/// Fault `field-flip-last` (VOS-039c): the lowest bit of the LAST numeric field
+/// of a record result is flipped.  It mirrors `fault_field_flip` with the search
+/// run from the back.  `field-zero` and `field-flip` touch the first numeric
+/// field, which for an `-any` image `Impl(mask, choice)` is the bitmap, so
+/// nothing could corrupt the oracle register `choice` and a claim that the
+/// operation keeps it (`insert_img(s, t).choice == s.choice`) had no fault that
+/// could ever fail it.  Like `field-flip` it is never inert (`x ^ 1 != x`).
+fn fault_field_flip_last(v: V) -> V {
+    map_payload(v, |x| match x {
+        V::Con(t, i, c, mut vs) => {
+            if let Some(slot) = vs.iter_mut().rev().find(|f| matches!(f, V::Int(_) | V::Fixed(..))) {
+                *slot = match &*slot {
+                    V::Int(n) => V::Int(n ^ 1),
+                    V::Fixed(f, n) => V::Fixed(*f, n ^ 1),
+                    other => other.clone(),
+                };
+            }
+            V::Con(t, i, c, vs)
+        }
+        other => other,
+    })
+}
+
+//@endif
 /// Fault `off-by-one-consumed`: the second component of a `(value, consumed)`
 /// pair is off by one, `+ 1` when even and `- 1` when odd, so both directions
 /// occur and a claim that pins `consumed` on every input catches the fault.

@@ -32,6 +32,14 @@ set WARRANT_EVIDENCE_FAULT=wrong-ctor&& set WARRANT_EVIDENCE_FILTER=/example/ora
 set WARRANT_EVIDENCE_FAULT=field-flip&& set WARRANT_EVIDENCE_ATTACK=init&& set WARRANT_EVIDENCE_FILTER=/exhaustive/safety_init&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
 set WARRANT_EVIDENCE_FAULT=field-flip&& set WARRANT_EVIDENCE_ATTACK=alpha_w&& set WARRANT_EVIDENCE_FILTER=/exhaustive/safety_init&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
 set WARRANT_EVIDENCE_FAULT=field-flip&& set WARRANT_EVIDENCE_ATTACK=alpha_w&& set WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_covers_run&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=field-flip-last&& set WARRANT_EVIDENCE_FILTER=/exhaustive/insert_oracle_lo&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=field-zero&& set WARRANT_EVIDENCE_FILTER=/exhaustive/insert_oracle_hi&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=wrong-ctor&& set WARRANT_EVIDENCE_FILTER=/exhaustive/insert_oracle_ids&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=field-flip-last&& set WARRANT_EVIDENCE_FILTER=/exhaustive/remove_oracle_lo&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=field-zero&& set WARRANT_EVIDENCE_FILTER=/exhaustive/remove_oracle_hi&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=wrong-ctor&& set WARRANT_EVIDENCE_FILTER=/exhaustive/remove_oracle_ids&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=field-zero&& set WARRANT_EVIDENCE_FILTER=/exhaustive/alpha_build_with_oracle&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=field-flip-last&& set WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_sound&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-any --features ghost --test warrant_evidence
 # The component kit's check, last: it reads the manifest the run above rewrote.
 cargo run -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check-component .
 # --- crate-specific (run, but never counted as evidence) ---
