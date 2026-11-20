@@ -968,4 +968,3 @@ warrant data_eval v1
     op_m_shape(Rect(1u8, 2u8)) == 3u8
   example e_arg_option:
     op_unwrap_binder(Some(8u8)) == 8u8
-

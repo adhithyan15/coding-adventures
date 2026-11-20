@@ -378,8 +378,7 @@ def main() -> str:
     for ex, body in EXAMPLES:
         w(f"  example {ex}:")
         w(f"    {body}")
-    w("")
-    return "\n".join(out) + "\n"
+    return "\n".join(out) + "\n"  # one final LF and no blank line after it (``git diff --check``)
 
 
 #: The declarations every refusal document starts from (the types of the fixture document, so a refused signature
