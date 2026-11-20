@@ -14876,6 +14876,7 @@ dependencies = [
  "tls13-traffic-key-material",
  "tls13-transcript",
  "tls13-x25519-key-share-binding",
+ "x509-certificate",
  "x509-rsa-public-key",
  "x509-subject-public-key-info",
 ]

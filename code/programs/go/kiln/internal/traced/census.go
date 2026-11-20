@@ -73,16 +73,20 @@ func kindCap(kind string) int {
 
 // censusNotes collects the notes of a pass that walks Go maps, so they can be
 // given to the census in sorted order (see checkStability).
-type censusNote struct{ kind, path string }
+type censusNote struct{ kind, path, op string }
 type censusNotes struct{ list []censusNote }
 
 // The buffer is bounded by what the pass walks: one note per unstable lookup, and
 // the lookup sets already hold every one of those in memory.
-func (n *censusNotes) add(c *Census, kind, path string) {
+func (n *censusNotes) add(c *Census, kind, path string) { n.addOp(c, kind, path, "") }
+
+// addOp is add for a note that also carries the op class of the look that
+// raised it ("" for none): flush hands it to Census.noteOp.
+func (n *censusNotes) addOp(c *Census, kind, path, op string) {
 	if c == nil {
 		return
 	}
-	n.list = append(n.list, censusNote{kind, path})
+	n.list = append(n.list, censusNote{kind, path, op})
 }
 
 // flush gives the buffered notes to the classifier's census, by kind then path
@@ -91,10 +95,10 @@ func (n *censusNotes) flush(c *classifier) {
 	if c.census == nil {
 		return
 	}
-	type red struct{ kind, path string }
+	type red struct{ kind, path, op string }
 	out := make([]red, len(n.list))
 	for i, e := range n.list {
-		out[i] = red{e.kind, c.redact(e.path)}
+		out[i] = red{e.kind, c.redact(e.path), e.op}
 	}
 	sort.Slice(out, func(i, j int) bool {
 		if out[i].kind != out[j].kind {
@@ -104,6 +108,9 @@ func (n *censusNotes) flush(c *classifier) {
 	})
 	for _, e := range out {
 		c.census.noteClean(e.kind, e.path)
+		if e.op != "" {
+			c.census.noteOp(e.kind, e.op)
+		}
 	}
 	n.list = nil
 }
@@ -172,6 +179,28 @@ func opKindOf(ev *trace.Event) string {
 	return "other"
 }
 
+// noteLookupOp remembers, for the census alone, the op class of the look that
+// first put abs into a lookup set (see classifier.lookupOps).
+func (c *classifier) noteLookupOp(abs string) {
+	if c.census == nil {
+		return
+	}
+	if c.lookupOps == nil {
+		c.lookupOps = map[string]string{}
+	}
+	if _, ok := c.lookupOps[abs]; !ok {
+		c.lookupOps[abs] = c.opClass()
+	}
+}
+
+// lookupOpOf is the class noteLookupOp kept for abs: "other" when none was.
+func (c *classifier) lookupOpOf(abs string) string {
+	if op, ok := c.lookupOps[abs]; ok {
+		return op
+	}
+	return "other"
+}
+
 // opClass is the class of the observation in progress.
 func (c *classifier) opClass() string {
 	switch {
@@ -211,8 +240,9 @@ type Census struct {
 	// pairs dropped because a bound was reached.
 	Total    int64
 	Overflow map[string]int64
-	// Ops counts, per kind, the occurrences by op class (OpClasses).  Only
-	// host-read is split so far.
+	// Ops counts, per kind, the occurrences by op class (OpClasses).  Split
+	// kinds: host-read, trace-incomplete:proc-path and every
+	// trace-incomplete:unstable-path:<sub>.
 	Ops map[string]map[string]int64
 }
 

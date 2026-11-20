@@ -1187,10 +1187,16 @@ under the kind `trace-incomplete:<reason>:<sub>` (unstable-path:
 `virtual-exe`, `virtual-interpreter`, `under-tmp`, `in-repo`, `host-disk`); the
 sub-code is a string literal at each site, never a slice of the input.
 (2) **op classes**: `census.json` has an additive `ops` map, `{kind: {class: n}}`
-(only `host-read` is split), whose classes are the closed list `listing`,
+(split kinds: `host-read`, `trace-incomplete:proc-path` and every
+`trace-incomplete:unstable-path:<sub>`), whose classes are the closed list `listing`,
 `absent-probe`, `open`, `stat`, `lookup` (a link crossed on the way), `exec`,
 `chdir`, `write`, `other`, chosen from the classifier's own state with
-precedence listing, then absent-probe, then the call's kind.
+precedence listing, then absent-probe, then the call's kind. `proc-path` and the
+unstable-path sub-codes raised while a call is observed take the call's class at
+that moment; the sub-codes raised by the stability pass after the walk take the
+class of the FIRST look that put the path into a lookup set (the classifier keeps
+it per path, only when a census is attached, and reads it only to tell the
+census); a path with none is `other`.
 (3) **Caps and order**: the sub-coded kinds hold 256 paths each, the nine path
 kinds 1024, so the caps of every kind the classifier can feed add up to at most
 `MaxCensusEntries` (9*1024 + 18*256 = 13824 <= 16384; tested) and the overall
@@ -1325,7 +1331,16 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   `unclean:<reason>`, `refused:<syscall>`, ...; `refused:<name>` keeps the name
   only when it is a member of the parser's closed refused class
   (`trace.SyscallClass`), else `refused:other`), `parse_refusals` (the same codes for the traces this
-  census's own parse refused), `record_failed` (the text of `record.failed`
+  census's own parse refused), `record_parse_reasons_by_language` and
+  `parse_refusals_by_language` (the same two tables as `{language: {code: n}}`,
+  with the language of the share-by-language section: a validated name, at most
+  64, then `other`), `parse_refusal_syscalls` (`{code: {syscall: n}}`, from the
+  census's cross-checked parse: the closed-table name of the call the refusal was
+  raised for, or `other` when it is tied to none, e.g. `unparsable-line`; it is
+  `trace.Error.Call`, set only to a `trace.SyscallClass` name and never part of an
+  error string or a record, and `refused:<name>` uses its own name),
+  `parse_refusal_syscalls_by_language` (`{language: {code: {syscall: n}}}`),
+  `record_failed` (the text of `record.failed`
   mapped to `timeout`, `traces-too-large`, `record-too-large`, `panic`,
   `classifier-failed`, `classifier-not-started`, `record-invalid`, `other`) and
   `sidecar` (`steps`, `truncated` by reason, `not_clean`, `unclean` by reason,
@@ -1417,8 +1432,11 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   skipped as too large. `TestParseCrossCheckedOnlyInCensus` keeps `Shape`, `LineShape`,
   `ParseCrossChecked` and `ParseCrossCheckedDetail` out of every production file
   but their definitions and `census_report.go`.
-- `reasons[].ops`: for `host-read`, the occurrences by op class (from the
-  `census.json` `ops`, validated against the closed list).
+- `reasons[].ops`: for `host-read`, `trace-incomplete:proc-path` and each
+  `trace-incomplete:unstable-path:<sub>`, the occurrences by op class (from the
+  `census.json` `ops`, validated against the closed list). The Markdown has
+  "Parse reasons by language" and "Parse refusals by system call" sections, every
+  name in a code span.
 - *Labels.* `kiln record census` runs with the RUNNER's real HOME and temp
   directory. The classifier labels the STEP's fresh HOME and TMPDIR `$HOME` and
   `$TMPDIR`, so the invoker's are labelled `$RUNNER_HOME` and `$RUNNER_TMP`

@@ -1084,7 +1084,13 @@ func joinCwd(cwd, p string) (string, bool) {
 func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 	c := rec.call
 	ent := lookup(c.name)
-	fail := func(r string) ([]Event, *Error) { return nil, incomplete(rec.line, r) }
+	fail := func(r string) ([]Event, *Error) {
+		e := incomplete(rec.line, r)
+		if SyscallClass(c.name) != "" {
+			e.Call = c.name // a closed-table name, census only (Error.Call)
+		}
+		return nil, e
+	}
 	if len(c.args) < ent.min || len(c.args) > ent.max {
 		return fail(reasonArity)
 	}
