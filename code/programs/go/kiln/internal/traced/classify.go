@@ -243,13 +243,19 @@ type classifier struct {
 	// content.  It is set per event.
 	xattrCall              bool
 	obsPresent, obsListing bool
-	// lookupOps is, for the census alone, the op class (opClass) of the FIRST
-	// look that put each path into a lookup set.  checkStability judges the
+	// lookupOps is, for the census alone, the op class (opClass) of the look
+	// that ENTERED each path into each lookup set (keyed set+NUL+path, see
+	// noteLookupOp), so an unstable path reports the call whose set failed.  checkStability judges the
 	// lookups after the walk, when opKind and the obs flags describe nothing,
 	// so the class has to be remembered at the time.  Nil without a Census;
 	// written by noteLookupOp only; read by checkStability only to tell the
 	// census, never to decide anything.
 	lookupOps map[string]string
+	// tmpLinked says the action created a symbolic link inside the fresh
+	// tmpfs (or renamed one into it).  It is a whole-action fact: it is only
+	// read after every event was classified (checkStability), and D40 turns
+	// the stability rules off for tmpfs paths while it is false.
+	tmpLinked bool
 	// incomplete is the negation of RawRecord.WritesComplete: set the moment
 	// something happens that could hide a write from Writes/TrackedWrites.
 	// Every setter says which trigger of KILN04 section 5.5 it is.
@@ -636,7 +642,7 @@ func (c *classifier) isCreated(abs string) bool {
 	for p := abs; p != ""; p = parentOf(p) {
 		if at, ok := c.created[p]; ok && at.before(c.start) {
 			if !c.noOwnSeen {
-				c.noteLookupOp(p)
+				c.noteLookupOp(setOwn, p)
 				c.lookupSet.own(p, c.start, c.cur)
 				if c.inWrite {
 					c.wr.own(p, c.start, c.cur)
@@ -821,7 +827,11 @@ func (c *classifier) nsChange(abs string, clean, opened bool) {
 // open-only rule: absent says the post-run disk shows it absent (relAbs), else
 // it is a file (relFinal).
 func (c *classifier) noteRel(abs string, absent bool) {
-	c.noteLookupOp(abs)
+	if absent {
+		c.noteLookupOp(setRelAbs, abs)
+	} else {
+		c.noteLookupOp(setRelFinal, abs)
+	}
 	c.lookupSet.rel(abs, absent, c.start, c.cur)
 	if c.inWrite {
 		c.wr.rel(abs, absent, c.start, c.cur)
@@ -870,7 +880,7 @@ func (c *classifier) openOnly(p string, sp span, absent bool) bool {
 
 // noteFinal records a followed final component that the disk shows present.
 func (c *classifier) noteFinal(abs string) {
-	c.noteLookupOp(abs)
+	c.noteLookupOp(setFinal, abs)
 	c.lookupSet.final(abs, c.start)
 	if c.inWrite {
 		c.wr.final(abs, c.start)
@@ -885,7 +895,11 @@ func (c *classifier) noteFinal(abs string) {
 // unstable when the last change to it before the lookup was a creation; a file
 // there is unstable if the action touched it at all.
 func (c *classifier) noteMissing(abs string, isFile bool) {
-	c.noteLookupOp(abs)
+	if isFile {
+		c.noteLookupOp(setFile, abs)
+	} else {
+		c.noteLookupOp(setAbsent, abs)
+	}
 	c.lookupSet.missing(abs, isFile, c.start, c.cur)
 	if c.inWrite {
 		c.wr.missing(abs, isFile, c.start, c.cur)
@@ -894,7 +908,7 @@ func (c *classifier) noteMissing(abs string, isFile bool) {
 
 // noteGone records a followed final name that the post-run disk shows absent.
 func (c *classifier) noteGone(abs string) {
-	c.noteLookupOp(abs)
+	c.noteLookupOp(setGone, abs)
 	c.lookupSet.goneAt(abs, c.start, c.callPresent)
 	if c.inWrite {
 		c.wr.goneAt(abs, c.start, c.callPresent)
@@ -925,7 +939,7 @@ func (c *classifier) markRemoved(abs string, unlink bool) {
 // start of the current call.  Only the earliest lookup matters: if the rule
 // holds for it, it holds for every later one.
 func (c *classifier) noteTraversal(abs string) {
-	c.noteLookupOp(abs)
+	c.noteLookupOp(setSeen, abs)
 	c.lookupSet.traversal(abs, c.start)
 	if c.inWrite {
 		c.wr.traversal(abs, c.start)
@@ -973,7 +987,9 @@ func (c *classifier) touchedFrom(abs string, from pos) bool {
 // can only say "reads-product" about what a trace reached by a stable path.
 func (c *classifier) stable(abs string, lookup pos) bool {
 	if c.underTmp(abs) {
-		return c.createdOnce(abs, lookup)
+		// KILN04 D40: with no symbolic link in the fresh tmpfs, a name there is
+		// the action's own file or nothing, so there is nothing to vouch for.
+		return !c.tmpLinked || c.createdOnce(abs, lookup)
 	}
 	if rel, ok := c.rel(abs); ok && rel != "" {
 		if c.cfg.Tree.Stat(rel).Kind != KindAbsent {
@@ -982,6 +998,25 @@ func (c *classifier) stable(abs string, lookup pos) bool {
 		return c.createdOnce(abs, lookup)
 	}
 	return !c.touchedAfter(abs, pos{}, true)
+}
+
+// contained says abs lies in the fresh tmpfs and the action never made a
+// symbolic link there (KILN04 D40).  A lookup can leave the tmpfs only through
+// a link inside it, and hard links and renames cannot cross the mount (EXDEV),
+// so such a path reaches only the action's own files or nothing: it is neither
+// an input nor a repository write, and the stability rules, whose job is to
+// vouch for the post-run disk, have nothing to vouch for.  This is why Go's
+// build cache, gcc's ccXXXXXX.o and clang's temporaries, which are re-created
+// without O_EXCL, unlinked, or renamed into place, no longer void a run.
+func (c *classifier) contained(abs string) bool {
+	return !c.tmpLinked && c.underTmp(abs)
+}
+
+// noteTmpLink records that a symbolic link now lives at abs, for D40.
+func (c *classifier) noteTmpLink(abs string) {
+	if c.underTmp(abs) || c.isTmpRoot(abs) {
+		c.tmpLinked = true
+	}
 }
 
 func (c *classifier) createdOnce(abs string, lookup pos) bool {
@@ -1020,7 +1055,7 @@ func (c *classifier) checkStability() {
 	var notes censusNotes
 	c.judge(&c.lookupSet, idx, func(p, sub string) {
 		c.reason(rUnstable)
-		notes.addOp(c.census, rUnstable+":"+sub, p, c.lookupOpOf(p))
+		notes.addOp(c.census, rUnstable+":"+sub, p, c.lookupOpOf(sub, p))
 	})
 	c.judge(&c.wr, idx, func(string, string) { c.incomplete = true })
 	for p, from := range c.execReads {
@@ -1044,11 +1079,17 @@ func (c *classifier) checkStability() {
 // ignores both arguments).
 func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path, sub string)) {
 	for p, at := range l.seen {
+		if c.contained(p) {
+			continue
+		}
 		if !c.stable(p, at) {
 			bad(p, "component-changed")
 		}
 	}
 	for p, sp := range l.seenAbsent {
+		if c.contained(p) {
+			continue
+		}
 		c.steps += 8
 		if c.steps > walkBudget {
 			c.budgetOut()
@@ -1068,6 +1109,9 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path
 		}
 	}
 	for p, at := range l.seenFinal {
+		if c.contained(p) {
+			continue
+		}
 		// A path the action never changed is what the disk says (an untracked
 		// leftover is then an untracked observation, for the merge job); one it
 		// changed must satisfy the creation rule.
@@ -1078,13 +1122,16 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path
 	// The followed finals of a successful stat or exec: the open-only rule,
 	// else the strict rules they would have met as ordinary lookups.
 	for p, sp := range l.relFinal {
+		if c.contained(p) {
+			continue
+		}
 		if len(c.mods[p]) > 0 && !c.openOnly(p, sp, false) && !c.createdOnce(p, sp.s) {
 			bad(p, "followed-final-changed")
 		}
 	}
 	for p, sp := range l.relAbs {
 		ms := c.mods[p]
-		if len(ms) == 0 || c.openOnly(p, sp, true) {
+		if c.contained(p) || len(ms) == 0 || c.openOnly(p, sp, true) {
 			continue
 		}
 		c.steps += 8
@@ -1108,6 +1155,9 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path
 	// completed after the earliest lookup began, may have taken a link or file
 	// the lookup went through (a pre-existing object the disk no longer shows).
 	for p, g := range l.gone {
+		if c.contained(p) {
+			continue
+		}
 		ms := c.mods[p]
 		firstMade := c.firstMade(ms)
 		if g.present && !firstMade.before(g.from) {
@@ -1118,11 +1168,17 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path
 		}
 	}
 	for p := range l.seenFile {
+		if c.contained(p) {
+			continue
+		}
 		if c.touchedAfter(p, pos{}, true) {
 			bad(p, "file-changed")
 		}
 	}
 	for p, sp := range l.ownSeen {
+		if c.contained(p) {
+			continue
+		}
 		// Anything that may have taken effect while such a call ran: a change
 		// to the path or an ancestor that completed after the call began and
 		// began before it ended.

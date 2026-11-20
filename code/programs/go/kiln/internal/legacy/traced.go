@@ -85,7 +85,13 @@ const TracedSemantics uint64 = 2
 // root, Home, Tmpdir or an ephemeral or absent-ok entry, and an absent probe
 // strictly inside the fresh Home or Tmpdir, are no longer `host-read`.  The
 // verdict for those actions changes, so every weak key changes.
-const RecorderVersion = 7
+//
+// Version 8: tmpfs containment (KILN04 D40).  While the action has made no
+// symbolic link inside the fresh Home or Tmpdir, the stability rules do not
+// apply to paths there (its own scratch files are re-created, unlinked and
+// renamed freely), so such actions are no longer `trace-incomplete:unstable-path`
+// nor writes-incomplete.  The verdict changes, so every weak key changes.
+const RecorderVersion = 8
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
