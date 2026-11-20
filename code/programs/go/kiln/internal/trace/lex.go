@@ -381,6 +381,23 @@ func parseFD(raw string) (fdRef, string) {
 	return f, ""
 }
 
+// AnonymousFD says a descriptor's -y text names a pipe, a socket or an
+// anonymous inode: an object with no place in any directory tree.  It is the one
+// definition both the trace model (a metadata write through such a descriptor
+// changes no file, KILN04 D41) and the classifier (internal/traced) use.  The
+// text is the lexer's ANNOTATED token body, which the kernel produced and strace
+// printed between '<' and '>': a quoted string argument is a different token
+// kind and can never reach here, so a path that merely contains "socket:[" (as
+// "/tmp/socket:[1]" does) does not start with the prefix and does not qualify.
+func AnonymousFD(ann string) bool {
+	for _, p := range []string{"pipe:[", "socket:[", "anon_inode:"} {
+		if strings.HasPrefix(ann, p) {
+			return true
+		}
+	}
+	return false
+}
+
 // fdPathText turns an annotation body into a usable path.  An annotation that
 // is not an absolute filesystem path (a socket, a pipe) is an error where a
 // directory is needed.

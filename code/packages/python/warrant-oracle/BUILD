@@ -2,6 +2,13 @@ uv venv --quiet --clear
 uv pip install -e ".[dev]" --quiet
 .venv/bin/python -m ruff check src tests
 .venv/bin/python -m pytest tests/ -v --tb=short
+# CV2-S5b (VER04r 11, R23): the committed v2 conformance kit.  make_conformance.py --check rebuilds the six v2-*.json
+# files from the case tables and the oracle (it derives the 2**24 suite, about a minute, once) and requires the
+# committed bytes and the v2 rows of index.json to be identical.  The v1 checker indexes and structurally checks the
+# same files without importing the oracle, and its own tests are run here too: none of the three ran in CI before.
+.venv/bin/python tests/fixtures/conformance-v2/make_conformance.py --check --fixture ../../../specs/fixtures/warrant-corpus-conformance-v1
+.venv/bin/python ../../../scripts/warrant_corpus_conformance.py --fixture ../../../specs/fixtures/warrant-corpus-conformance-v1
+.venv/bin/python -m unittest discover -s ../../../scripts/tests -p test_warrant_corpus_conformance.py
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v1 --spec ../../../specs/ct-compare.warrant --corpus ../../../specs/fixtures/ct-compare-warrant-v1/corpus.json
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/synth-v2/corpus --warrant tests/fixtures/synth-v2/synth.warrant --profile tests/fixtures/synth-v2/corpus.profile --expect-generator warrant-corpus-gen@0.6.0
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/accept-blind-v2/corpus --warrant tests/fixtures/accept-blind-v2/blind.warrant --profile tests/fixtures/accept-blind-v2/corpus.profile
@@ -47,6 +54,12 @@ uv pip install -e ".[dev]" --quiet
 # CV2-S10o-1: the synthetic off-by-one-consumed document (VER04r 8.2, D36) and its committed faults and
 # refusals dumps, the files the generator's slice S10o-2 must reproduce byte for byte.
 .venv/bin/python tests/fixtures/off-by-one-consumed-v1/make_off_by_one_consumed.py --check
+# CV2-S11a: the synthetic ir.data document (VER04r Appendix A.2: records, variants, Option, some / none / ctor /
+# field, match on every scrutinee with the data patterns, the intermediate use of unwrap_or) and its committed
+# dumps (lowering, refusals), the files the generator's slice S11b must reproduce byte for byte.  The directory is
+# new on purpose: the generator's tuple_parity.rs and fixed_parity.rs reproduce the older directories exactly.
+.venv/bin/python tests/fixtures/data-forms-v1/make_data_forms.py --check
+.venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/data-forms-v1/data_forms_v1.warrant --check tests/fixtures/data-forms-v1/data_forms_v1.oracle-lowering.json
 # CV2-S11f-1: the synthetic scalar-faults document (saturate-add, saturate-sub, shift-mask, scalar missing-error;
 # VER04r 8.2) and its committed faults and refusals dumps, the files the generator's slice S11f-2 must reproduce.
 .venv/bin/python tests/fixtures/scalar-faults-v1/make_scalar_faults.py --check

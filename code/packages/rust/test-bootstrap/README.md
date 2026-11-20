@@ -37,6 +37,17 @@ It is the first step of the [VER26](../../../specs/VER26-ct-compare-pilot.md)
 | `fuzz`    | Level 2 coverage-guided fuzz engine (VER06): mutators, 65,536-bit bitmap, power schedule, crash deduplication |
 | `bench`   | Level 5 microbenchmark harness (VER07): warmup/calibration, robust statistics, deterministic cost counters, budgets |
 
+## Rust source snapshots
+
+`manifest::source_tree_framing` provides the stable `warrant-src-v1` frame
+used to bind Rust evidence to the complete `src/**/*.rs` tree. Ordinary
+accepted trees retain the same sorted path/content framing. Reads now reject a
+symlinked or reparse-point source root, links inside the tree, more than 4,096
+Rust files or 8,192 total entries, more than 64 MiB of Rust source in total,
+files above the existing 8 MiB limit, or nesting deeper than 32 directories.
+These limits are applied while collecting files, before the frame is
+allocated, so consumers can hash and inspect one bounded snapshot.
+
 ## Usage
 
 A test binary is a plain `main` with Cargo's libtest turned off:

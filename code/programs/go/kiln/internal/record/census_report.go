@@ -199,7 +199,27 @@ type ActionCounts struct {
 	// ShardVoid says collect's header lists a void reason, so Emittable is 0
 	// whatever the records say (unknown without --records, then false).
 	ShardVoid bool `json:"shard_void"`
-	// StrictMergeVoidsShard: WritesUnknown > 0 or ShardVoid.
+	// Truncated counts the actions whose write set is KNOWN but whose execution
+	// was cut short, which the merge classes as unkTruncated (recmerge
+	// merge.go, `unknown`, last switch, and M-1): a believed record with a
+	// `failed` reason (the action's status is not built), a `daemon-left`
+	// reason, or fewer steps run than the plan lists (steps-missing).  It
+	// mirrors that function as far as the census's inputs allow: the census has
+	// the classified record and the plan, not the shard record's status, so
+	// `failed` stands for status != built and len(plan steps) for steps_total.
+	// An action already in WritesUnknown (a hard unknown) is not counted again.
+	// A strict merge voids the run for any of them; the relaxed one only loses
+	// that action.  Before the recipe prefix rule (KILN04 D36) a failed action
+	// that stopped mid-recipe was a hard unknown instead.
+	Truncated int `json:"truncated"`
+	// RelaxedWouldLose is the number of actions the relaxed merge would drop
+	// (relaxLost, merge.go voidStrict): Truncated.  It only applies when the
+	// relaxed merge does not void the run, see RelaxedMergeVoidsShard.
+	RelaxedWouldLose int `json:"relaxed_would_lose"`
+	// RelaxedMergeVoidsShard: WritesUnknown > 0 or ShardVoid.  A hard unknown
+	// voids the run in both verdicts.
+	RelaxedMergeVoidsShard bool `json:"relaxed_merge_voids_shard"`
+	// StrictMergeVoidsShard: WritesUnknown > 0, Truncated > 0 or ShardVoid.
 	StrictMergeVoidsShard bool `json:"strict_merge_voids_shard"`
 }
 
@@ -366,6 +386,9 @@ type LangSummary struct {
 	Gated         int `json:"gated"`
 	Unkeyed       int `json:"unkeyed"`
 	WritesUnknown int `json:"writes_unknown"`
+	// Truncated and RelaxedWouldLose are as ActionCounts', for this language.
+	Truncated        int `json:"truncated"`
+	RelaxedWouldLose int `json:"relaxed_would_lose"`
 	// The shares: of all actions, and of the actions whose build did not fail
 	// (0 when there are none).  RecordableShare is the existing Share over all.
 	RecordableShareOfBuiltOK float64 `json:"recordable_share_of_built_ok"`
@@ -422,7 +445,7 @@ type kindAcc struct {
 
 type langAcc struct {
 	actions, recordable, clean, builtOK, emittable, recordableBuilt int
-	gated, unkeyed, writesUnknown                                   int
+	gated, unkeyed, writesUnknown, truncated                        int
 }
 
 // parseSample is one accepted timed parse: the trace's size, the parse time and
@@ -592,6 +615,9 @@ type censusRun struct {
 	acc        *censusAcc
 	pre        *Pre
 	crossCheck CrossCheckFunc
+	// lang is the language of the action being walked (as collapsed by
+	// languageAcc), for the per-language breakdown of parse refusals.
+	lang string
 }
 
 // stepIndex parses "<n>.<ext>" with n canonical (no sign, no leading zero).
@@ -710,6 +736,9 @@ func (r *censusRun) action(hexName string) {
 			rec = nil
 		}
 	}
+	// The language comes first: the parse-reason breakdown is by language.
+	lang, la := r.languageAcc(name)
+	r.lang = lang
 	switch {
 	case rec != nil:
 		a.actions.WithRecord++
@@ -719,7 +748,7 @@ func (r *censusRun) action(hexName string) {
 		if rec.WritesComplete {
 			a.actions.RecordWritesComplete++
 		}
-		a.explainRecord(rec)
+		a.explainRecord(rec, lang)
 	case failed:
 		// A failure marker, counted on its own.
 	default:
@@ -751,25 +780,6 @@ func (r *censusRun) action(hexName string) {
 		a.addCensus(doc)
 	}
 
-	// The language.
-	lang := "other"
-	if name != "" {
-		lang = r.language(name)
-	}
-	la := a.langs[lang]
-	if la == nil {
-		if len(a.langs) >= maxCensusLanguages {
-			a.languagesCollapsed++
-			lang = "other"
-			if la = a.langs[lang]; la == nil {
-				la = &langAcc{}
-				a.langs[lang] = la
-			}
-		} else {
-			la = &langAcc{}
-			a.langs[lang] = la
-		}
-	}
 	la.actions++
 	if recordable {
 		la.recordable++
@@ -805,6 +815,9 @@ func (r *censusRun) action(hexName string) {
 	if rec == nil || !rec.WritesComplete {
 		a.actions.WritesUnknown++
 		la.writesUnknown++
+	} else if truncatedRec(rec, planned, inPlan) {
+		a.actions.Truncated++
+		la.truncated++
 	}
 	if mergeable && emittable(rec) {
 		a.actions.Emittable++
@@ -838,6 +851,31 @@ func (r *censusRun) action(hexName string) {
 		shown, _ := safeText(name, censusActionNameRunes, a.red)
 		a.actionBytes = append(a.actionBytes, namedBytes{name: shown, bytes: total})
 	}
+}
+
+// languageAcc resolves the action's language and returns it with its
+// accumulator, collapsing to "other" once maxCensusLanguages are held.
+func (r *censusRun) languageAcc(name string) (string, *langAcc) {
+	a := r.acc
+	lang := "other"
+	if name != "" {
+		lang = r.language(name)
+	}
+	la := a.langs[lang]
+	if la == nil {
+		if len(a.langs) >= maxCensusLanguages {
+			a.languagesCollapsed++
+			lang = "other"
+			if la = a.langs[lang]; la == nil {
+				la = &langAcc{}
+				a.langs[lang] = la
+			}
+		} else {
+			la = &langAcc{}
+			a.langs[lang] = la
+		}
+	}
+	return lang, la
 }
 
 // builtOK says the action's build did not fail: a believed record with no
@@ -880,6 +918,26 @@ func planVerdict(planned Action, inPlan bool) (gated, unkeyed, mergeable bool) {
 // emittable says the RECORD is emittable: parse ok, writes complete and not one
 // reason.  The caller adds the plan's side (no gate, a weak key), and summary
 // the shard's (collect's void list, once the header is read).
+// truncatedRec mirrors the last switch of recmerge's unknown() (merge.go): a
+// believed record whose write set is known but whose execution was cut short.
+// `failed` is the stand-in for "status is not built" (the classifier raises it
+// for any step that exited non-zero, was killed or has no exit line),
+// `daemon-left` is the same reason, and a plan with more steps than ran is the
+// merge's steps-missing.  Hard unknowns (writes_complete false, no record) are
+// the caller's, and are not truncated here.
+func truncatedRec(rec *ClassifiedRecord, planned Action, inPlan bool) bool {
+	if rec == nil || !rec.ParseOK || rec.Record == nil {
+		return false
+	}
+	for _, r := range rec.Record.Reasons {
+		switch reasonKindCode(r) {
+		case "failed", "daemon-left":
+			return true
+		}
+	}
+	return inPlan && rec.StepsRun < len(planned.Steps)
+}
+
 func emittable(rec *ClassifiedRecord) bool {
 	return rec != nil && rec.ParseOK && rec.WritesComplete && rec.Record != nil && len(rec.Record.Reasons) == 0
 }
@@ -1173,7 +1231,9 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 	}
 	if why != "" {
 		a.parseRefused++
-		a.explain.ParseRefusals[parseReasonCode(why)]++
+		code := parseReasonCode(why)
+		a.explain.ParseRefusals[code]++
+		a.explain.ParseRefusalsByLanguage.add(r.lang, code)
 	} else {
 		ms := elapsed.Seconds() * 1000
 		a.parses = append(a.parses, ms)
@@ -1236,6 +1296,14 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 		a.detail(fmt.Sprintf("%s step %d: mismatch: %s", hexName12(adir), j, m.Detail))
 	case perr != nil:
 		cc.Refused++
+		// Which call: the closed-table name the parse error carries (see
+		// refusalSyscall), by reason and language.  Census only.
+		var ce *trace.Error
+		errors.As(perr, &ce)
+		code := parseReasonCode(perr.Error())
+		sys := refusalSyscall(code, ce)
+		a.explain.ParseRefusalSyscalls.add(code, sys)
+		a.explain.ParseRefusalSyscallsByLanguage.add(r.lang, code, sys)
 		// Where the grammar stopped, as a redacted outline: the fixed code of the
 		// refusal says why, the outline says what the line looked like.
 		var te *trace.Error
@@ -1533,7 +1601,9 @@ func (a *censusAcc) summary(top int) *CensusSummary {
 	if gated {
 		s.Actions.Emittable = 0
 	}
-	s.Actions.StrictMergeVoidsShard = gated || s.Actions.WritesUnknown > 0
+	s.Actions.RelaxedWouldLose = s.Actions.Truncated
+	s.Actions.RelaxedMergeVoidsShard = gated || s.Actions.WritesUnknown > 0
+	s.Actions.StrictMergeVoidsShard = gated || s.Actions.WritesUnknown > 0 || s.Actions.Truncated > 0
 	ratio := func(n, d int) float64 {
 		if d == 0 {
 			return 0
@@ -1548,6 +1618,7 @@ func (a *censusAcc) summary(top int) *CensusSummary {
 		}
 		ls := LangSummary{Language: l, Actions: la.actions, Recordable: la.recordable, Clean: la.clean,
 			BuiltOK: la.builtOK, Emittable: emit, Gated: la.gated, Unkeyed: la.unkeyed, WritesUnknown: la.writesUnknown,
+			Truncated: la.truncated, RelaxedWouldLose: la.truncated,
 			Share:                    ratio(la.recordable, la.actions),
 			RecordableShareOfBuiltOK: ratio(la.recordableBuilt, la.builtOK),
 			EmittableShare:           ratio(emit, la.actions),
@@ -1592,7 +1663,7 @@ func (a *censusAcc) sidecarFacts(sc StepSidecar) {
 
 // explainRecord counts the path-free reasons of a believed record.json: the
 // kind of each classifier reason, and each parse reason's code, once per action.
-func (a *censusAcc) explainRecord(rec *ClassifiedRecord) {
+func (a *censusAcc) explainRecord(rec *ClassifiedRecord, lang string) {
 	seen := map[string]bool{}
 	if rec.Record != nil {
 		for _, r := range rec.Record.Reasons {
@@ -1607,6 +1678,7 @@ func (a *censusAcc) explainRecord(rec *ClassifiedRecord) {
 		if c := parseReasonCode(r); !seen[c] {
 			seen[c] = true
 			a.explain.RecordParseReasons[c]++
+			a.explain.RecordParseReasonsByLanguage.add(lang, c)
 		}
 	}
 }

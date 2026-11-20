@@ -46,6 +46,36 @@ func TestCensusOpsSumCapAndTrailingSlash(t *testing.T) {
 	}
 }
 
+// A failed action whose writes are complete (the recipe prefix rule, KILN04
+// D36) is TRUNCATED, not unknown: the strict merge still voids the shard (M-1),
+// the relaxed merge only loses the action, and writes_unknown stays 0.
+func TestCensusTruncatedActionsAndRelaxedLoss(t *testing.T) {
+	f := censusDirFix(t)
+	putRecord(t, f, actZ, func(r *ClassifiedRecord) { r.Record.Reasons = append(r.Record.Reasons, "failed") })
+	_, s, _, mdPath := runCensus(t, f)
+	a := s.Actions
+	if a.WritesUnknown != 0 || a.Truncated != 1 || a.RelaxedWouldLose != 1 || a.RelaxedMergeVoidsShard || !a.StrictMergeVoidsShard {
+		t.Errorf("actions %+v", a)
+	}
+	if l := s.Languages[0]; l.Truncated != 1 || l.RelaxedWouldLose != 1 || l.WritesUnknown != 0 {
+		t.Errorf("language %+v", l)
+	}
+	md, _ := os.ReadFile(mdPath)
+	if !strings.Contains(string(md), "relaxed merge would lose 1 action(s)") || !strings.Contains(string(md), "strict merge would void this shard: yes") {
+		t.Error("the Markdown lacks the truncated line")
+	}
+	// A hard unknown is not also counted as truncated.
+	f = censusDirFix(t)
+	putRecord(t, f, actZ, func(r *ClassifiedRecord) {
+		r.Record.Reasons = append(r.Record.Reasons, "failed")
+		r.Record.WritesComplete, r.WritesComplete = false, false
+	})
+	_, s, _, _ = runCensus(t, f)
+	if a := s.Actions; a.WritesUnknown != 1 || a.Truncated != 0 || !a.RelaxedMergeVoidsShard {
+		t.Errorf("actions %+v", a)
+	}
+}
+
 // writes_unknown and the strict-merge line.
 func TestCensusWritesUnknownAndStrictMerge(t *testing.T) {
 	f := censusDirFix(t)

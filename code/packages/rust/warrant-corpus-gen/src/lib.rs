@@ -30,8 +30,8 @@
 //! |---|---|---|
 //! | [`json`] | S3a | the VER04i 9.1 canonical writer (no `serde`) |
 //! | [`profile`] | S3a | the strict `corpus.profile` reader (VER04r 8.4) |
-//! | [`types`] | S3a | the small type language of `ir.core` and its unification rules |
-//! | [`ir`] | S3a | the 26 `ir.core` tags (Appendix A), `ir.fixed` nodes (S10b), the `ir.tuple` shapes (S10t-2) and their JSON form |
+//! | [`types`] | S3a | the small type language of the IR (S11b: `Option`, records and variants, the width in the type) and its unification rules |
+//! | [`ir`] | S3a | the 26 `ir.core` tags (Appendix A), `ir.fixed` nodes (S10b), the `ir.tuple` shapes (S10t-2), the four `ir.data` tags and ten patterns (S11b) and their JSON form |
 //! | [`patterns`] | S10t-2 | the six `match` patterns, the usefulness check and the corpus errors (`ir`) |
 //! | [`lower`] | S3a | syntax-directed lowering with the annotating typer; level refusals |
 //! | [`analysis`] | S3a | the pure-guard rule (4.4) and the v0 static arithmetic guard (3.3 rule 3) |
@@ -55,8 +55,11 @@
 //!
 //! The generator computes a digest for every suite it emits, so it cannot emit a suite it
 //! cannot evaluate.  A construct beyond what it evaluates (`ir.core`, `ir.tuple` and, since S10c-2,
-//! `ir.fixed`) refuses the **whole document**, naming the level (`ir.data`, `ir.seq`, or a feature
-//! such as `inout`), and nothing is written.  Every `match` over the grammar ends in an explicit refusal, never a skip.
+//! `ir.fixed`) refuses the **whole document**, naming the level or feature (`ir.list`, `ir.seq`, `fixed-cast`,
+//! `err-value`, `inout`, ...), and nothing is written.  Since S11b `ir.data` is **lowered, typed and
+//! costed** (it is no longer a lowering refusal) but still not evaluated: [`analyse`], and so [`generate`],
+//! refuses a document in which any unit needs it with `level ir.data`, until S11c-2 (VER04r 16.14 R37).
+//! Every `match` over the grammar ends in an explicit refusal, never a skip.
 //!
 //! ## An example
 //!
@@ -155,6 +158,7 @@ pub struct Analysis {
 /// error is attributed to the claim, model, operation or example it concerns.
 pub fn analyse(file: &WarrantFile<'_>, profile: &Profile) -> Result<Analysis, GenError> {
     let lowered = lower::lower_document_omitting(file, &profile.omit_examples)?;
+    refuse_data(&lowered)?;
     let limit = profile.max_ir_cost;
     let model_costs = ModelCosts::compute(&lowered.models, limit)?;
     let mut suite_costs = Vec::with_capacity(lowered.suites.len());
@@ -175,6 +179,31 @@ pub fn analyse(file: &WarrantFile<'_>, profile: &Profile) -> Result<Analysis, Ge
         model_costs,
         suite_costs,
     })
+}
+
+/// `ir.data` is lowered, typed and costed (slice S11b) but **not generated**: the evaluator, the stream
+/// encoder and the TFV writer have no form for an `Option`, a record or a variant before S11c-2, so a
+/// document that declares a record or a variant, or in which any unit needs the level, is refused whole,
+/// naming it (VER04r 16.14 R37, the S10a/S10b pattern).  The first such item is named: a declared type,
+/// then an operation, a model, a claim or an example.
+fn refuse_data(lowered: &Lowered) -> Result<(), GenError> {
+    let needs = |requires: &[&'static str]| requires.contains(&"ir.data");
+    let at = lowered
+        .types
+        .first()
+        .map(|t| t.name())
+        .or_else(|| lowered.ops.iter().find(|o| needs(&o.requires)).map(|o| o.name.as_str()))
+        .or_else(|| lowered.models.iter().find(|m| needs(&m.requires)).map(|m| m.name.as_str()))
+        .or_else(|| lowered.suites.iter().find(|s| needs(&s.requires)).map(|s| s.claim.as_str()))
+        .or_else(|| lowered.examples.iter().find(|x| needs(&x.requires)).map(|x| x.name.as_str()));
+    match at {
+        None => Ok(()),
+        Some(name) => Err(GenError::level(
+            Beyond::IrData,
+            name,
+            "ir.data is lowered, typed and costed but not generated yet (slice S11c-2)",
+        )),
+    }
 }
 
 /// The three kinds of file of a fixture that the generator owns.

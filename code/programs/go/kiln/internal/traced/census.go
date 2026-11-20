@@ -35,9 +35,9 @@ import (
 // The invariant (TestCensusKindCapsFitTheOverallBound): the per-kind caps of
 // every kind the classifier can feed add up to at most MaxCensusEntries, so the
 // overall bound never decides which kind loses.  The sub-coded kinds
-// (unstable-path:*, exec-unreadable:*: eighteen of them) hold 256 paths each,
+// (unstable-path:*, exec-unreadable:*: nineteen of them) hold 256 paths each,
 // the nine path kinds (the eight censusPrefixes plus proc-path) 1024:
-// 9*1024 + 18*256 = 13824 <= 16384.
+// 9*1024 + 19*256 = 14080 <= 16384.
 const (
 	MaxCensusPerKind = 1024
 	// MaxCensusPerSubKind is the cap of a sub-coded kind.
@@ -54,7 +54,7 @@ var censusSubCodes = map[string][]string{
 	"trace-incomplete:unstable-path": {
 		"component-changed", "absent-changed", "final-changed", "followed-final-changed",
 		"followed-absent-changed", "gone-but-found", "removed-before-made", "file-changed",
-		"own-overlap", "through-missing", "dotdot", "fd-path-differs",
+		"own-overlap", "through-missing", "dotdot", "fd-path-differs", "absent-before-made",
 	},
 	"trace-incomplete:exec-unreadable": {
 		"modified-after-exec", "virtual-exe", "virtual-interpreter", "under-tmp", "in-repo", "host-disk",
@@ -73,16 +73,20 @@ func kindCap(kind string) int {
 
 // censusNotes collects the notes of a pass that walks Go maps, so they can be
 // given to the census in sorted order (see checkStability).
-type censusNote struct{ kind, path string }
+type censusNote struct{ kind, path, op string }
 type censusNotes struct{ list []censusNote }
 
 // The buffer is bounded by what the pass walks: one note per unstable lookup, and
 // the lookup sets already hold every one of those in memory.
-func (n *censusNotes) add(c *Census, kind, path string) {
+func (n *censusNotes) add(c *Census, kind, path string) { n.addOp(c, kind, path, "") }
+
+// addOp is add for a note that also carries the op class of the look that
+// raised it ("" for none): flush hands it to Census.noteOp.
+func (n *censusNotes) addOp(c *Census, kind, path, op string) {
 	if c == nil {
 		return
 	}
-	n.list = append(n.list, censusNote{kind, path})
+	n.list = append(n.list, censusNote{kind, path, op})
 }
 
 // flush gives the buffered notes to the classifier's census, by kind then path
@@ -91,10 +95,10 @@ func (n *censusNotes) flush(c *classifier) {
 	if c.census == nil {
 		return
 	}
-	type red struct{ kind, path string }
+	type red struct{ kind, path, op string }
 	out := make([]red, len(n.list))
 	for i, e := range n.list {
-		out[i] = red{e.kind, c.redact(e.path)}
+		out[i] = red{e.kind, c.redact(e.path), e.op}
 	}
 	sort.Slice(out, func(i, j int) bool {
 		if out[i].kind != out[j].kind {
@@ -104,6 +108,9 @@ func (n *censusNotes) flush(c *classifier) {
 	})
 	for _, e := range out {
 		c.census.noteClean(e.kind, e.path)
+		if e.op != "" {
+			c.census.noteOp(e.kind, e.op)
+		}
 	}
 	n.list = nil
 }
@@ -172,6 +179,66 @@ func opKindOf(ev *trace.Event) string {
 	return "other"
 }
 
+// noteLookupOp remembers, for the census alone, the op class of the look that
+// ENTERED abs into the lookup set named by set (see classifier.lookupOps).  A
+// path can sit in several sets (it can be a traversed component in one call
+// and a followed final in another), each entered by a different call, and the
+// census must show the call whose set failed the rule.
+func (c *classifier) noteLookupOp(set, abs string) {
+	if c.census == nil {
+		return
+	}
+	if c.lookupOps == nil {
+		c.lookupOps = map[string]string{}
+	}
+	k := set + "\x00" + abs
+	if _, ok := c.lookupOps[k]; !ok {
+		c.lookupOps[k] = c.opClass()
+	}
+}
+
+// lookupOpOf is the class noteLookupOp kept for abs in the set that the
+// unstable-path sub-code names: "other" when none was.
+func (c *classifier) lookupOpOf(sub, abs string) string {
+	if op, ok := c.lookupOps[setOfSub(sub)+"\x00"+abs]; ok {
+		return op
+	}
+	return "other"
+}
+
+// The lookup sets, as noteLookupOp names them.
+const (
+	setSeen, setAbsent, setFile, setFinal = "seen", "absent", "file", "final"
+	setRelFinal, setRelAbs, setGone       = "relFinal", "relAbs", "gone"
+	setBefore                             = "before"
+	setOwn                                = "own"
+)
+
+// setOfSub is the lookup set whose rule the unstable-path sub-code names.
+func setOfSub(sub string) string {
+	switch sub {
+	case "component-changed":
+		return setSeen
+	case "absent-changed":
+		return setAbsent
+	case "final-changed":
+		return setFinal
+	case "followed-final-changed":
+		return setRelFinal
+	case "followed-absent-changed":
+		return setRelAbs
+	case "gone-but-found", "removed-before-made":
+		return setGone
+	case "file-changed":
+		return setFile
+	case "own-overlap":
+		return setOwn
+	case "absent-before-made":
+		return setBefore
+	}
+	return ""
+}
+
 // opClass is the class of the observation in progress.
 func (c *classifier) opClass() string {
 	switch {
@@ -211,8 +278,9 @@ type Census struct {
 	// pairs dropped because a bound was reached.
 	Total    int64
 	Overflow map[string]int64
-	// Ops counts, per kind, the occurrences by op class (OpClasses).  Only
-	// host-read is split so far.
+	// Ops counts, per kind, the occurrences by op class (OpClasses).  Split
+	// kinds: host-read, trace-incomplete:proc-path and every
+	// trace-incomplete:unstable-path:<sub>.
 	Ops map[string]map[string]int64
 }
 

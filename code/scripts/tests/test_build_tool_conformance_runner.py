@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 208)
+        self.assertEqual(summary["case_count"], 209)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -160,8 +160,8 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["conformance_status"], "not-run")
         self.assertEqual(summary["source_input_language_count"], 23)
         self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
-        self.assertEqual(summary["repository_source_boundary_count"], 25)
-        self.assertEqual(summary["repository_source_input_count"], 38)
+        self.assertEqual(summary["repository_source_boundary_count"], 27)
+        self.assertEqual(summary["repository_source_input_count"], 42)
         self.assertEqual(len(summary["repository_source_boundary_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
@@ -445,25 +445,25 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(
             summary,
             {
-                "boundary_count": 25,
-                "input_count": 38,
-                "scope_count": 514,
-                "authorization_count": 533,
+                "boundary_count": 27,
+                "input_count": 42,
+                "scope_count": 516,
+                "authorization_count": 537,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "1213aa54bfa4187639fd56ebd86a17a31f3d90aff919386f8abedc3aac854c46",
+            "411049c9f4c7d156aec9280209f36fb6d7dab3496580e751bc3841a32789ed6f",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
+        dart_hash_map = by_id["dart-hash-map-v1-corpus-input"]
         self.assertEqual(
-            by_id["dart-hash-map-v1-corpus-input"]["applies_to"]["exact_roots"],
+            dart_hash_map["applies_to"]["exact_roots"],
             ["code/packages/dart/hash-map"],
         )
         self.assertEqual(
-            by_id["dart-hash-map-v1-corpus-input"]["inputs"],
-            [{"path": "code/specs/fixtures/hash-map-v1/cases.json",
-              "role": "cross_package_exact"}],
+            dart_hash_map["inputs"],
+            [{"path": "code/specs/fixtures/hash-map-v1/cases.json", "role": "cross_package_exact"}],
         )
         game_input_frame_inputs = by_id[
             "repository-typescript-game-input-frame-corpus-inputs"
@@ -841,6 +841,18 @@ class CorpusTests(unittest.TestCase):
                 "REPOSITORY_SOURCE_ROLE_INVALID",
             )
         )
+        nearby_fixed_point_cargo_input = copy.deepcopy(canonical)
+        boundary_by_id(
+            nearby_fixed_point_cargo_input,
+            "repository-rust-fixed-point-q16-inputs",
+        )["inputs"][0]["path"] = ".cargo/config.toml.bak"
+        mutations.append(
+            (
+                "nearby-fixed-point-root-cargo-input",
+                nearby_fixed_point_cargo_input,
+                "REPOSITORY_SOURCE_ROLE_INVALID",
+            )
+        )
         nearby_game_clock_cargo_input = copy.deepcopy(canonical)
         boundary_by_id(
             nearby_game_clock_cargo_input, "repository-rust-game-clock-inputs"
@@ -1049,7 +1061,7 @@ class CorpusTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, expected_code)
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 485),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 487),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
@@ -1060,7 +1072,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "REPOSITORY_SOURCE_SCOPE_LIMIT")
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 487),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 489),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
@@ -3471,13 +3483,14 @@ class PureDomainValidationTests(unittest.TestCase):
         )
         boundary_digest = runner.repository_source_input_boundary_digest(boundary)
         case_names = [
-            "source-collection-repository-dart-hash-map.json",
             "source-collection-repository-cross-language-workspace.json",
+            "source-collection-repository-dart-hash-map.json",
             "source-collection-repository-direct-build-inputs.json",
             "source-collection-repository-link-boundaries.json",
             "source-collection-repository-python-workspace.json",
             "source-collection-repository-rust-boundary.json",
             "source-collection-repository-rust-game-clock-exact-inputs.json",
+            "source-collection-repository-rust-fixed-point-exact-inputs.json",
             "source-collection-repository-swift-hash-map.json",
             "source-collection-repository-starlark-load.json",
             "source-collection-repository-typescript-program-shared.json",
@@ -4312,10 +4325,8 @@ class PureDomainValidationTests(unittest.TestCase):
                 "CARGO_MANIFEST_TABLE_UNSUPPORTED",
             ),
             (
-                (
-                    "target.'cfg(unix)' = { dev-dependencies = { "
-                    "compiler = { path = '../compiler' } } }\n"
-                ),
+                "target.'cfg(unix)' = { dev-dependencies = { "
+                "compiler = { path = '../compiler' } } }\n",
                 "CARGO_MANIFEST_TABLE_UNSUPPORTED",
             ),
             (
@@ -5122,7 +5133,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 208)
+        self.assertEqual(summary["case_count"], 209)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

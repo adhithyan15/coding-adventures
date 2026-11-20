@@ -1198,12 +1198,12 @@
 91083ec9c4c2/memo300	ead0439496063a8dc13e762a06fd8601ec15e2aa123d7abe150e0c3aaa0b2904	ok nodes=6 tokens=7
 91083ec9c4c2/memo40	ead0439496063a8dc13e762a06fd8601ec15e2aa123d7abe150e0c3aaa0b2904	ok nodes=6 tokens=7
 91083ec9c4c2/tokens7	89bb735908eb3295f2409cdf8722969ae261dbf03a3e2c320316ccfa349cb291	err kind=5 "strace line: too many tokens: input has more tokens than the supported limit"
-918f520faae9/default	ac1f88ec03495672dedc21c1d7014076a91d504c56f53273b2a3532dcd095d8d	err kind=1 "strace line: bad ERR_LT"
-918f520faae9/depth5	ac1f88ec03495672dedc21c1d7014076a91d504c56f53273b2a3532dcd095d8d	err kind=1 "strace line: bad ERR_LT"
-918f520faae9/depth9	ac1f88ec03495672dedc21c1d7014076a91d504c56f53273b2a3532dcd095d8d	err kind=1 "strace line: bad ERR_LT"
-918f520faae9/memo300	ac1f88ec03495672dedc21c1d7014076a91d504c56f53273b2a3532dcd095d8d	err kind=1 "strace line: bad ERR_LT"
-918f520faae9/memo40	ac1f88ec03495672dedc21c1d7014076a91d504c56f53273b2a3532dcd095d8d	err kind=1 "strace line: bad ERR_LT"
-918f520faae9/tokens7	ac1f88ec03495672dedc21c1d7014076a91d504c56f53273b2a3532dcd095d8d	err kind=1 "strace line: bad ERR_LT"
+918f520faae9/default	d6a2e443551a004d0476da2228e5d115d60fbffa28c8e3b085ccef5fed95dc12	err kind=0 "strace line: syntax: Parse error at 1:27: Unexpected token: \"<unavailable>\""
+918f520faae9/depth5	d6a2e443551a004d0476da2228e5d115d60fbffa28c8e3b085ccef5fed95dc12	err kind=0 "strace line: syntax: Parse error at 1:27: Unexpected token: \"<unavailable>\""
+918f520faae9/depth9	d6a2e443551a004d0476da2228e5d115d60fbffa28c8e3b085ccef5fed95dc12	err kind=0 "strace line: syntax: Parse error at 1:27: Unexpected token: \"<unavailable>\""
+918f520faae9/memo300	d6a2e443551a004d0476da2228e5d115d60fbffa28c8e3b085ccef5fed95dc12	err kind=0 "strace line: syntax: Parse error at 1:27: Unexpected token: \"<unavailable>\""
+918f520faae9/memo40	d6a2e443551a004d0476da2228e5d115d60fbffa28c8e3b085ccef5fed95dc12	err kind=0 "strace line: syntax: Parse error at 1:27: Unexpected token: \"<unavailable>\""
+918f520faae9/tokens7	d6a2e443551a004d0476da2228e5d115d60fbffa28c8e3b085ccef5fed95dc12	err kind=0 "strace line: syntax: Parse error at 1:27: Unexpected token: \"<unavailable>\""
 920171d40c41/default	0b317e0f738712e99511dd5d2600bd7e70d80ad1a782997f581d44fb990ca66b	ok nodes=4 tokens=2
 920171d40c41/depth5	0b317e0f738712e99511dd5d2600bd7e70d80ad1a782997f581d44fb990ca66b	ok nodes=4 tokens=2
 920171d40c41/depth9	0b317e0f738712e99511dd5d2600bd7e70d80ad1a782997f581d44fb990ca66b	ok nodes=4 tokens=2
@@ -1228,12 +1228,12 @@
 94fc8759fbe5/memo300	6504b92ebb35a7e458cb97b0b16c5bc2f4829a19811b7ad1e80ff4ba335697ca	ok nodes=8 tokens=6
 94fc8759fbe5/memo40	6504b92ebb35a7e458cb97b0b16c5bc2f4829a19811b7ad1e80ff4ba335697ca	ok nodes=8 tokens=6
 94fc8759fbe5/tokens7	6504b92ebb35a7e458cb97b0b16c5bc2f4829a19811b7ad1e80ff4ba335697ca	ok nodes=8 tokens=6
-96fe0b45eacc/default	3d969fe05dcac6cd5da361a745cd3b25c4dba82111837bb9e3d874b46e402c62	err kind=0 "strace line: syntax: Parse error at 1:1: Expected WORD or ASSIGN or ANNOTATED or QUOTED or PUNCT or COMMA or LBRACKET or LBRACE or LPAREN or SYSCALL or FUNC or call_open_paren or group or RPAREN, got \"1  \""
+96fe0b45eacc/default	2da4d04669b946a1a96ed4ef56402b356398887debbc87df3de6bf958acc30d6	err kind=0 "strace line: syntax: Parse error at 1:1: Expected RPAREN, got \"1  \""
 96fe0b45eacc/depth5	6b3a4c28bae25a915fcac488446f69d4a500c633a7a14ddd8358a185f2fe07f9	err kind=5 "strace line: limit exceeded: Parse error at 1:24: input nests deeper than the supported limit (5)"
-96fe0b45eacc/depth9	3d969fe05dcac6cd5da361a745cd3b25c4dba82111837bb9e3d874b46e402c62	err kind=0 "strace line: syntax: Parse error at 1:1: Expected WORD or ASSIGN or ANNOTATED or QUOTED or PUNCT or COMMA or LBRACKET or LBRACE or LPAREN or SYSCALL or FUNC or call_open_paren or group or RPAREN, got \"1  \""
-96fe0b45eacc/memo300	3d969fe05dcac6cd5da361a745cd3b25c4dba82111837bb9e3d874b46e402c62	err kind=0 "strace line: syntax: Parse error at 1:1: Expected WORD or ASSIGN or ANNOTATED or QUOTED or PUNCT or COMMA or LBRACKET or LBRACE or LPAREN or SYSCALL or FUNC or call_open_paren or group or RPAREN, got \"1  \""
-96fe0b45eacc/memo40	3d969fe05dcac6cd5da361a745cd3b25c4dba82111837bb9e3d874b46e402c62	err kind=0 "strace line: syntax: Parse error at 1:1: Expected WORD or ASSIGN or ANNOTATED or QUOTED or PUNCT or COMMA or LBRACKET or LBRACE or LPAREN or SYSCALL or FUNC or call_open_paren or group or RPAREN, got \"1  \""
-96fe0b45eacc/tokens7	3d969fe05dcac6cd5da361a745cd3b25c4dba82111837bb9e3d874b46e402c62	err kind=0 "strace line: syntax: Parse error at 1:1: Expected WORD or ASSIGN or ANNOTATED or QUOTED or PUNCT or COMMA or LBRACKET or LBRACE or LPAREN or SYSCALL or FUNC or call_open_paren or group or RPAREN, got \"1  \""
+96fe0b45eacc/depth9	2da4d04669b946a1a96ed4ef56402b356398887debbc87df3de6bf958acc30d6	err kind=0 "strace line: syntax: Parse error at 1:1: Expected RPAREN, got \"1  \""
+96fe0b45eacc/memo300	2da4d04669b946a1a96ed4ef56402b356398887debbc87df3de6bf958acc30d6	err kind=0 "strace line: syntax: Parse error at 1:1: Expected RPAREN, got \"1  \""
+96fe0b45eacc/memo40	2da4d04669b946a1a96ed4ef56402b356398887debbc87df3de6bf958acc30d6	err kind=0 "strace line: syntax: Parse error at 1:1: Expected RPAREN, got \"1  \""
+96fe0b45eacc/tokens7	2da4d04669b946a1a96ed4ef56402b356398887debbc87df3de6bf958acc30d6	err kind=0 "strace line: syntax: Parse error at 1:1: Expected RPAREN, got \"1  \""
 97449f5c5cf0/default	72fdd4fd5892981daad12d6aad2b8256ec341690bb99e068a235c1f2f3eabfd8	ok nodes=5 tokens=11
 97449f5c5cf0/depth5	72fdd4fd5892981daad12d6aad2b8256ec341690bb99e068a235c1f2f3eabfd8	ok nodes=5 tokens=11
 97449f5c5cf0/depth9	72fdd4fd5892981daad12d6aad2b8256ec341690bb99e068a235c1f2f3eabfd8	ok nodes=5 tokens=11

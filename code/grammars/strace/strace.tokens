@@ -74,6 +74,14 @@ start_mode: line_start
 # parser's rule too and is caught by ANNOTATED, which starts at the word.
 UNFINISHED = "<unfinished ...>"
 
+# The result strace prints when it could not fetch the call's result because the
+# tracee was already gone: `= ? <unavailable>` (the dying-call rule, KILN04 D35).
+# It is a plain literal so it is never mistaken for the ERR_LT of a bare "<".  A
+# word glued to it ("0<unavailable>") is still an ANNOTATED token, which starts at
+# the word.  Whether the text around it is the ONE spelling that is accepted
+# (`= ? <unavailable>`, exactly) is the consumer's result parser's call.
+UNAVAILABLE = "<unavailable>"
+
 # A system call name glued to its "(": lower case, digits and underscore, 1..64
 # long (the old parser's validName).  Nested calls in arguments such as htons(80)
 # lex as SYSCALL too; the grammar accepts both there.

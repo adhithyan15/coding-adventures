@@ -1,0 +1,76 @@
+-- WX-FAULT2: one-layer Boolean record-result mutation fixture.
+warrant wx_fault2 v1
+  error StatusError = REJECTED
+
+  record Nested(enabled: Bool, code: U8)
+  record Status(ready: Bool, visible: Bool, nested: Nested, code: U8)
+
+  model status_model(ready: Bool, visible: Bool, nested: Nested, code: U8) -> Status = Status(ready, visible, nested, code)
+  model wrapped_model(accepted: Bool, ready: Bool, visible: Bool, nested: Nested, code: U8) -> Result<Status, StatusError> = if accepted then Ok(Status(ready, visible, nested, code)) else Err(StatusError.REJECTED)
+  model wrapped_ok_model(ready: Bool, visible: Bool, nested: Nested, code: U8) -> Result<Status, StatusError> = Ok(Status(ready, visible, nested, code))
+  model optional_model(present: Bool, ready: Bool, visible: Bool, nested: Nested, code: U8) -> Option<Status> = if present then Some(Status(ready, visible, nested, code)) else None
+  model optional_some_model(ready: Bool, visible: Bool, nested: Nested, code: U8) -> Option<Status> = Some(Status(ready, visible, nested, code))
+
+  op direct(ready: Bool, visible: Bool, nested: Nested, code: U8) -> Status
+  op wrapped(accepted: Bool, ready: Bool, visible: Bool, nested: Nested, code: U8) -> Result<Status, StatusError>
+  op optional(present: Bool, ready: Bool, visible: Bool, nested: Nested, code: U8) -> Option<Status>
+  op plain(ready: Bool, visible: Bool, nested: Nested, code: U8) -> Status
+  op numeric(ready: Bool, visible: Bool, nested: Nested, code: U8) -> Status
+  op both(ready: Bool, visible: Bool, nested: Nested, code: U8) -> Status
+
+  labels direct:
+    ready public
+    visible public
+    nested public
+    code public
+  labels wrapped:
+    visible public
+    accepted public
+    ready public
+    nested public
+    code public
+  labels optional:
+    present public
+    ready public
+    visible public
+    nested public
+    code public
+  labels plain:
+    ready public
+    visible public
+    nested public
+    code public
+  labels numeric:
+    ready public
+    visible public
+    nested public
+    code public
+  labels both:
+    ready public
+    visible public
+    nested public
+    code public
+
+  claim direct_status_matches:
+    forall ready: Bool, visible: Bool, nested: Nested, code: U8. direct(ready, visible, nested, code) == status_model(ready, visible, nested, code)
+
+  claim wrapped_status_matches:
+    forall ready: Bool, visible: Bool, accepted: Bool, nested: Nested, code: U8. wrapped(accepted, ready, visible, nested, code) == wrapped_model(accepted, ready, visible, nested, code)
+
+  claim wrapped_ok_status_matches:
+    forall ready: Bool, visible: Bool, nested: Nested, code: U8. wrapped(true, ready, visible, nested, code) == wrapped_ok_model(ready, visible, nested, code)
+
+  claim optional_status_matches:
+    forall present: Bool, ready: Bool, visible: Bool, nested: Nested, code: U8. optional(present, ready, visible, nested, code) == optional_model(present, ready, visible, nested, code)
+
+  claim optional_some_status_matches:
+    forall ready: Bool, visible: Bool, nested: Nested, code: U8. optional(true, ready, visible, nested, code) == optional_some_model(ready, visible, nested, code)
+
+  claim plain_status_matches:
+    forall ready: Bool, visible: Bool, nested: Nested, code: U8. plain(ready, visible, nested, code) == status_model(ready, visible, nested, code)
+
+  claim numeric_status_matches:
+    forall ready: Bool, visible: Bool, nested: Nested, code: U8. numeric(ready, visible, nested, code) == status_model(ready, visible, nested, code)
+
+  claim both_status_matches:
+    forall ready: Bool, visible: Bool, nested: Nested, code: U8. both(ready, visible, nested, code) == status_model(ready, visible, nested, code)

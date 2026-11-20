@@ -136,11 +136,16 @@ func renderMarkdown(s *CensusSummary) string {
 	w("- build did not fail (a believed record with no `failed` reason): %d\n- would emit as it stands, an UPPER BOUND (per action, before the merge: it cannot see reads-product or cross-action rules): %d (parse ok, writes complete, ZERO reasons in record.json, plan entry with no gate and a weak key, %s)\n", a.BuiltOK, a.Emittable, voidNote)
 	w("- gated by the plan (never emitted; the merge makes it a precondition): %d; unkeyed (no weak key): %d\n", a.Gated, a.Unkeyed)
 	w("- write set unknown (writes_complete false, or record.failed; a strict merge voids the run for any): %d\n", a.WritesUnknown)
+	w("- write set known but execution truncated (failed, daemon-left, steps missing; recmerge unkTruncated): %d; the relaxed merge would lose %d action(s)", a.Truncated, a.RelaxedWouldLose)
+	if a.RelaxedMergeVoidsShard {
+		w(", but a hard unknown or a void shard voids it in both verdicts")
+	}
+	w("\n")
 	yes := "no"
 	if a.StrictMergeVoidsShard {
 		yes = "yes"
 	}
-	w("- strict merge would void this shard: %s (writes unknown > 0, or the shard is void)\n", yes)
+	w("- strict merge would void this shard: %s (writes unknown > 0, truncated > 0, or the shard is void)\n", yes)
 	w("- census.json present and non-empty: %d\n- census.json present and empty, with a record whose parse succeeded (no reasons raised): %d\n", a.CensusNonEmpty, a.CensusClean)
 	w("- census.json EMPTY beside a failed parse half (the classifier never ran; not \"no host reads\"): %d\n", a.CensusEmptyParseFailed)
 	w("- census.json empty and no record: %d\n- census.json MISSING (a classify error; not \"no host reads\"): %d\n- census.json unreadable or invalid: %d\n\n", a.CensusEmptyNoRecord, a.CensusMissing, a.CensusInvalid)
@@ -168,6 +173,19 @@ func renderMarkdown(s *CensusSummary) string {
 		w("\n")
 	}
 	w("- sidecars: %d steps, %d not clean, %d exit 125, %d with a non-zero root status\n\n", ex.Sidecar.Steps, ex.Sidecar.NotClean, ex.Sidecar.Exit125, ex.Sidecar.RootNonZero)
+
+	// Parse refusals by language, and by the call they were raised for.  Every
+	// name is in a code span, in a list item (see "Share by language").
+	w("### Parse reasons by language\n\n")
+	renderByLanguage(&b, "parse reasons in record.json (actions)", ex.RecordParseReasonsByLanguage)
+	renderByLanguage(&b, "parse refusals seen by this census (traces)", ex.ParseRefusalsByLanguage)
+	w("### Parse refusals by system call\n\n")
+	w("Reason by the closed-table syscall the refusal was raised for (`other` when it is tied to no modelled call), from this census's cross-checked parse (traces).\n\n")
+	renderReasonSyscalls(&b, "all languages", ex.ParseRefusalSyscalls)
+	for _, l := range sortedMapKeys(ex.ParseRefusalSyscallsByLanguage) {
+		renderReasonSyscalls(&b, l, ex.ParseRefusalSyscallsByLanguage[l])
+	}
+	w("\n")
 
 	if len(s.Problems) > 0 {
 		w("## Problems\n\n")
@@ -314,6 +332,51 @@ func renderMarkdown(s *CensusSummary) string {
 	w("## Bounds\n\n- JSON at most %d bytes, Markdown at most %d bytes; lists in this rendering cut to %d per kind\n", bd.JSONMaxBytes, bd.MDMaxBytes, bd.TopPerKind)
 	w("- paths cut to %d characters: %d; paths dropped at the distinct-path cap: %d; prefixes dropped: %d; kinds collapsed: %d; languages collapsed: %d; actions skipped: %d; line shapes not kept: %d\n", maxCensusPathRunes, bd.PathsTruncated, bd.PathsDropped, bd.PrefixesDropped, bd.KindsCollapsed, bd.LanguagesCollapsed, bd.ActionsSkipped, bd.ShapesDropped)
 	return b.String()
+}
+
+// sortedMapKeys returns the keys of a map of anything, ascending.
+func sortedMapKeys[V any](m map[string]V) []string {
+	ks := make([]string, 0, len(m))
+	for k := range m {
+		ks = append(ks, k)
+	}
+	sort.Strings(ks)
+	return ks
+}
+
+// renderByLanguage writes one list item per language under a title:
+// "- title:" then "  - `lang`: `code` n; ...".
+func renderByLanguage(b *strings.Builder, title string, t CountTable) {
+	fmt.Fprintf(b, "- %s:", title)
+	if len(t) == 0 {
+		b.WriteString(" none")
+	}
+	b.WriteString("\n")
+	for _, l := range sortedMapKeys(t) {
+		fmt.Fprintf(b, "  - %s:", codeSpan(l))
+		for _, k := range sortedStrings(t[l]) {
+			fmt.Fprintf(b, " %s %d;", codeSpan(k), t[l][k])
+		}
+		b.WriteString("\n")
+	}
+	b.WriteString("\n")
+}
+
+// renderReasonSyscalls writes "- label:" and, under it, one item per reason
+// listing its syscalls.  A table with nothing in it says none.
+func renderReasonSyscalls(b *strings.Builder, label string, t CountTable) {
+	fmt.Fprintf(b, "- %s:", codeSpan(label))
+	if len(t) == 0 {
+		b.WriteString(" none")
+	}
+	b.WriteString("\n")
+	for _, code := range sortedMapKeys(t) {
+		fmt.Fprintf(b, "  - %s:", codeSpan(code))
+		for _, sys := range sortedStrings(t[code]) {
+			fmt.Fprintf(b, " %s %d;", codeSpan(sys), t[code][sys])
+		}
+		b.WriteString("\n")
+	}
 }
 
 // sortedStrings returns the keys of m, ascending.

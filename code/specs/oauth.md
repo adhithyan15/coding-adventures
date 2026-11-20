@@ -6876,6 +6876,90 @@ Those repository-owned certificate, signature, trust, revocation, and transport
 compositions remain prerequisites, and concrete HTTPS and live-provider
 readiness remain unavailable.
 
+The exact first entry of that authenticated ordered retry server `Certificate`
+proof can now be bound to one caller-supplied certificate decoded by the
+repository-owned X.509 primitive. The binding requires byte-for-byte equality
+between the entry's retained `certificate_data` vector and the decoded
+certificate's complete retained DER document. Success returns a non-copyable
+proof that retains both the complete ordered server-certificate proof and the
+exact decoded X.509 certificate; no detached, re-encoded, or merely equivalent
+certificate can cross this boundary.
+
+This proof establishes exact authenticated leaf-byte identity and
+repository-owned structural decoding evidence only. It does not yet bind that
+leaf to a reviewed path or requested destination, extract or authorize its
+public key, authenticate CertificateVerify or Finished, establish trust,
+verify a hostname, load a trust root, enforce revocation, select later epochs,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those repository-owned certificate-to-path, key, signature, hostname, trust,
+revocation, and transport compositions remain prerequisites, and concrete
+HTTPS and live-provider readiness remain unavailable.
+
+A stronger vertical composition can retain that authenticated retry leaf proof
+beside the complete HTTPS DNS destination, reviewed server path, and
+repository-owned `CertificateVerify` verdict only when both evidence graphs
+retain the same decoded leaf object. Byte equality alone is insufficient at
+this boundary: exact object identity prevents an independently decoded leaf
+from being substituted between the ordered record stream and the reviewed
+destination/path/signature graph. The admitted authentication evidence type is
+sealed by the repository, and the non-copyable result retains both complete
+inputs.
+
+This composition joins the authenticated Certificate bytes to the reviewed
+destination, path-derived RSA key, and server signature verdict, but it does
+not yet prove that the later ordered retry `CertificateVerify` callback used
+that same verdict, authenticate Finished, bind record epochs, enforce
+revocation freshness, perform I/O, authorize HTTP or OAuth transport, or open a
+network connection. Those ordered-transition, Finished, revocation, record,
+and transport compositions remain prerequisites, and concrete HTTPS and
+live-provider readiness remain unavailable.
+
+An authenticated ordered retry server `CertificateVerify` at the post-accept
+`ExpectFinished` position can now be decoded from the exact pending message and
+bound to the exact pre-message transcript snapshot. The helper decodes the
+final ClientHello's retained `signature_algorithms` extension under an explicit
+caller-owned scheme-count limit, requires the peer's exact wire identifier to
+occur in that offer, and then authorizes it through the caller's data-driven
+repository-owned signature-scheme policy. Success returns a non-copyable proof
+retaining the pending message, exact decoded `CertificateVerify`, exact offered
+scheme list, and policy-authorized RSA-PSS scheme. A detached transcript hash,
+ClientHello offer, message body, wire identifier, or algorithm policy cannot be
+substituted through this boundary.
+
+This proof establishes authenticated message provenance, exact pre-message
+transcript selection, `CertificateVerify` framing, final-offer membership, and
+data-driven algorithm authorization only. In particular, the framing grammar
+permits an empty signature vector, which later repository-owned cryptographic
+verification must reject. This slice does not derive or bind the reviewed leaf
+key, verify the signature, prove that the preceding certificate message and a
+reviewed path retain the same leaf, authenticate Finished, establish trust,
+verify a hostname, enforce revocation, select later epochs, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. Those
+repository-owned certificate, signature, trust, revocation, and transport
+compositions remain prerequisites, and concrete HTTPS and live-provider
+readiness remain unavailable.
+
+The authenticated ordered retry `CertificateVerify` proof can additionally be
+bound to one exact repository-owned RSA-PSS verification verdict. The
+composition requires the verifier's role to be `server`, its selected-
+transcript snapshot to equal the pending message's exact pre-message snapshot,
+its policy-authorized scheme to equal the scheme retained from the final
+ClientHello offer, and its complete decoded `CertificateVerify` message to
+equal the authenticated ordered message. Success returns non-copyable evidence
+retaining both complete proofs; callers cannot substitute a detached role,
+snapshot, algorithm identifier, signature, key verdict, or message body.
+
+This proof establishes repository-owned RSA-PSS authentication of the exact
+ordered retry server message and transcript snapshot only. The verifier's RSA
+key may still be caller supplied: this slice does not prove that it came from
+the preceding authenticated `Certificate` message, a reviewed server path, the
+requested DNS identity, or a reviewed trust root. It also does not authenticate
+Finished, enforce revocation, select later epochs, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. Those repository-owned
+certificate-to-key, path, hostname, trust, revocation, and transport
+compositions remain prerequisites, and concrete HTTPS and live-provider
+readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

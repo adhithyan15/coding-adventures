@@ -30,3 +30,10 @@ sources, so they record every constant-time and steps-bound obligation
 `not-live` with the front end's own message (and heap/depth rows `unchecked`)
 rather than a proof; each has a `lowering-blocker` test that fails the day the
 source becomes lowerable.
+
+`tests/fixed_point_proofs.rs` records the actual whole-file and per-export
+source-front-end attempts for the raw Q16.16 package. Its current custom record,
+`Result` returns, and module constant are refused, so all ten source-equivalence
+entries remain `not-live`; this is a refusal record, not a semantic proof. The
+fixed-point package build runs this target with `WARRANT_PROOF_OUT` to refresh its
+proof manifest.

@@ -19,6 +19,9 @@ use tls13_certificate_request_message::{
     decode_certificate_request, CertificateRequest, CertificateRequestError,
     CertificateRequestLimits,
 };
+use tls13_certificate_verify_input::CertificateVerifyRole;
+use tls13_certificate_verify_message::{CertificateVerifyMessage, MessageError};
+use tls13_certificate_verify_transcript_binding::VerifiedTranscriptBoundCertificateVerify;
 use tls13_cipher_suite_policy::{HkdfHash, SelectedCipherSuite};
 use tls13_encrypted_extensions_message::{
     decode_encrypted_extensions_message, EncryptedExtensionsMessage,
@@ -45,11 +48,15 @@ use tls13_signature_scheme_list::{
     SignatureSchemeListLimits, SIGNATURE_ALGORITHMS_CERT_EXTENSION_TYPE,
     SIGNATURE_ALGORITHMS_EXTENSION_TYPE,
 };
+use tls13_signature_scheme_policy::{
+    AuthorizedSignatureScheme, PolicyError as SignatureSchemePolicyError, SignatureSchemePolicy,
+};
 use tls13_traffic_key_material::{
     derive_traffic_key_material, TrafficKeyMaterial, TrafficKeyMaterialError,
     TrafficKeyMaterialStorage,
 };
 use tls13_transcript::{SelectedTls13Transcript, TranscriptError, TranscriptHash};
+use x509_certificate::X509Certificate;
 
 /// Sender whose retained handshake traffic secret supplies one key and IV.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1703,6 +1710,48 @@ impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'r
             certificate,
         })
     }
+
+    /// Decode and policy-bind this exact pending server `CertificateVerify`.
+    pub fn validate_server_certificate_verify(
+        &self,
+        signature_limits: SignatureSchemeListLimits,
+        signature_policy: SignatureSchemePolicy<'_>,
+    ) -> Result<
+        BoundRetryServerCertificateVerify<'_, 'message, 'retry_evidence>,
+        RetryServerCertificateVerifyValidationError,
+    > {
+        if self.message.handshake_type() != tls13_handshake::Tls13HandshakeType::CertificateVerify {
+            return Err(RetryServerCertificateVerifyValidationError::WrongMessageType);
+        }
+        if self.state != ServerFlightState::ExpectFinished {
+            return Err(RetryServerCertificateVerifyValidationError::WrongFlightState);
+        }
+        let message = CertificateVerifyMessage::decode(self.message.body())
+            .map_err(RetryServerCertificateVerifyValidationError::Structure)?;
+        let offered_signature_algorithms = self
+            .retry_evidence
+            .final_client_hello_extensions()
+            .find(ExtensionType::from_wire_value(
+                SIGNATURE_ALGORITHMS_EXTENSION_TYPE,
+            ))
+            .ok_or(RetryServerCertificateVerifyValidationError::MissingSignatureAlgorithms)
+            .and_then(|entry| {
+                decode_signature_scheme_list(entry.data(), signature_limits)
+                    .map_err(RetryServerCertificateVerifyValidationError::SignatureAlgorithms)
+            })?;
+        if !offered_signature_algorithms.contains(message.algorithm_wire_id()) {
+            return Err(RetryServerCertificateVerifyValidationError::UnofferedSignatureScheme);
+        }
+        let authorized_scheme = signature_policy
+            .select(message.algorithm_wire_id())
+            .map_err(RetryServerCertificateVerifyValidationError::Policy)?;
+        Ok(BoundRetryServerCertificateVerify {
+            pending: self,
+            message,
+            offered_signature_algorithms,
+            authorized_scheme,
+        })
+    }
 }
 
 impl fmt::Debug for PendingRetryServerTranscriptMessage<'_, '_> {
@@ -2002,6 +2051,435 @@ impl fmt::Debug for BoundRetryServerCertificate<'_, '_, '_> {
             .field("certificate", &"[REDACTED]")
             .finish()
     }
+}
+
+/// Stable payload-free failures while binding an authenticated retry server
+/// certificate entry to one repository-decoded X.509 certificate.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RetryServerCertificateLeafBindingError {
+    /// The decoded certificate does not retain the exact first entry bytes.
+    LeafCertificateMismatch,
+}
+
+impl fmt::Display for RetryServerCertificateLeafBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("TLS 1.3 retry server Certificate leaf and decoded X.509 certificate differ")
+    }
+}
+
+impl std::error::Error for RetryServerCertificateLeafBindingError {}
+
+/// Exact authenticated retry server-certificate proof bound to its decoded leaf.
+///
+/// This proof intentionally derives neither `Copy` nor `Clone`. It retains the
+/// complete ordered server-certificate proof beside the exact repository-owned
+/// X.509 decode whose complete DER bytes equal the first certificate entry.
+pub struct BoundRetryServerCertificateLeaf<
+    'binding,
+    'pending,
+    'message,
+    'retry_evidence,
+    'certificate,
+    'encoded,
+> {
+    server_certificate: &'binding BoundRetryServerCertificate<'pending, 'message, 'retry_evidence>,
+    leaf_certificate: &'certificate X509Certificate<'encoded>,
+}
+
+impl<'binding, 'pending, 'message, 'retry_evidence, 'certificate, 'encoded>
+    BoundRetryServerCertificateLeaf<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'certificate,
+        'encoded,
+    >
+{
+    /// Borrow the complete authenticated ordered server-certificate proof.
+    #[must_use]
+    pub const fn server_certificate(
+        &self,
+    ) -> &'binding BoundRetryServerCertificate<'pending, 'message, 'retry_evidence> {
+        self.server_certificate
+    }
+
+    /// Borrow the exact repository-decoded leaf certificate.
+    #[must_use]
+    pub const fn leaf_certificate(&self) -> &'certificate X509Certificate<'encoded> {
+        self.leaf_certificate
+    }
+}
+
+impl fmt::Debug for BoundRetryServerCertificateLeaf<'_, '_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryServerCertificateLeaf")
+            .field("server_certificate", &"[RETAINED]")
+            .field("leaf_certificate", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Bind the exact first authenticated retry Certificate entry to one exact
+/// repository-decoded X.509 certificate.
+pub fn bind_retry_server_certificate_leaf<
+    'binding,
+    'pending,
+    'message,
+    'retry_evidence,
+    'certificate,
+    'encoded,
+>(
+    server_certificate: &'binding BoundRetryServerCertificate<'pending, 'message, 'retry_evidence>,
+    leaf_certificate: &'certificate X509Certificate<'encoded>,
+) -> Result<
+    BoundRetryServerCertificateLeaf<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'certificate,
+        'encoded,
+    >,
+    RetryServerCertificateLeafBindingError,
+> {
+    let first_entry = server_certificate
+        .certificate()
+        .entries()
+        .next()
+        .ok_or(RetryServerCertificateLeafBindingError::LeafCertificateMismatch)?;
+    if first_entry.certificate_data() != leaf_certificate.encoded() {
+        return Err(RetryServerCertificateLeafBindingError::LeafCertificateMismatch);
+    }
+    Ok(BoundRetryServerCertificateLeaf {
+        server_certificate,
+        leaf_certificate,
+    })
+}
+
+/// Stable payload-free failures for exact retry server `CertificateVerify` validation.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RetryServerCertificateVerifyValidationError {
+    /// The pending ordered message was not `CertificateVerify`.
+    WrongMessageType,
+    /// The ordered flight was not immediately after server `CertificateVerify`.
+    WrongFlightState,
+    /// The exact authenticated body was structurally invalid.
+    Structure(MessageError),
+    /// The final ClientHello omitted its required `signature_algorithms` offer.
+    MissingSignatureAlgorithms,
+    /// The retained final offer was structurally invalid.
+    SignatureAlgorithms(SignatureSchemeListError),
+    /// The peer selected a scheme absent from the retained final offer.
+    UnofferedSignatureScheme,
+    /// The caller's data-driven repository policy rejected the selected scheme.
+    Policy(SignatureSchemePolicyError),
+}
+
+impl fmt::Display for RetryServerCertificateVerifyValidationError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::WrongMessageType => "TLS 1.3 retry message is not CertificateVerify",
+            Self::WrongFlightState => {
+                "TLS 1.3 retry CertificateVerify has the wrong ordered-flight state"
+            }
+            Self::Structure(_) => "TLS 1.3 retry CertificateVerify structure is invalid",
+            Self::MissingSignatureAlgorithms => {
+                "TLS 1.3 final ClientHello omitted signature_algorithms"
+            }
+            Self::SignatureAlgorithms(_) => {
+                "TLS 1.3 final ClientHello signature_algorithms is invalid"
+            }
+            Self::UnofferedSignatureScheme => {
+                "TLS 1.3 server CertificateVerify selected an unoffered signature scheme"
+            }
+            Self::Policy(_) => {
+                "TLS 1.3 server CertificateVerify signature scheme is not authorized"
+            }
+        })
+    }
+}
+
+impl std::error::Error for RetryServerCertificateVerifyValidationError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Structure(error) => Some(error),
+            Self::SignatureAlgorithms(error) => Some(error),
+            Self::Policy(error) => Some(error),
+            Self::WrongMessageType
+            | Self::WrongFlightState
+            | Self::MissingSignatureAlgorithms
+            | Self::UnofferedSignatureScheme => None,
+        }
+    }
+}
+
+/// Exact authenticated server `CertificateVerify` bound to offer and policy.
+///
+/// This proof intentionally derives neither `Copy` nor `Clone`. It retains the
+/// pending pre-message transcript snapshot, exact decoded message, exact final
+/// ClientHello offer, and policy-authorized scheme. Cryptographic verification
+/// remains a separate required boundary.
+pub struct BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence> {
+    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence>,
+    message: CertificateVerifyMessage<'message>,
+    offered_signature_algorithms: SignatureSchemeList<'retry_evidence>,
+    authorized_scheme: AuthorizedSignatureScheme,
+}
+
+impl<'pending, 'message, 'retry_evidence>
+    BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence>
+{
+    /// Borrow the exact pending ordered message and pre-message snapshot.
+    #[must_use]
+    pub const fn pending(
+        &self,
+    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+        self.pending
+    }
+
+    /// Borrow the exact structurally decoded `CertificateVerify` body.
+    #[must_use]
+    pub const fn message(&self) -> &CertificateVerifyMessage<'message> {
+        &self.message
+    }
+
+    /// Borrow the exact retained final ClientHello signature offer.
+    #[must_use]
+    pub const fn offered_signature_algorithms(&self) -> &SignatureSchemeList<'retry_evidence> {
+        &self.offered_signature_algorithms
+    }
+
+    /// Return the exact offered scheme authorized by repository policy.
+    #[must_use]
+    pub const fn authorized_scheme(&self) -> AuthorizedSignatureScheme {
+        self.authorized_scheme
+    }
+}
+
+impl fmt::Debug for BoundRetryServerCertificateVerify<'_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryServerCertificateVerify")
+            .field("pending", &"[RETAINED]")
+            .field("message", &"[REDACTED]")
+            .field("offered_signature_algorithms", &"[REDACTED]")
+            .field("authorized_scheme", &"[RETAINED]")
+            .finish()
+    }
+}
+
+/// Stable payload-free failures while binding ordered retry evidence to an
+/// exact repository-owned signature verdict.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RetryServerCertificateVerifySignatureBindingError {
+    /// The signature verdict authenticated the client role instead of server.
+    WrongEndpointRole,
+    /// The signature verdict used a different selected-transcript snapshot.
+    TranscriptSnapshotMismatch,
+    /// The signature verdict used a different policy-authorized scheme.
+    SignatureSchemeMismatch,
+    /// The signature verdict authenticated a different decoded message.
+    MessageMismatch,
+}
+
+impl fmt::Display for RetryServerCertificateVerifySignatureBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::WrongEndpointRole => {
+                "TLS 1.3 retry CertificateVerify signature verdict has the wrong endpoint role"
+            }
+            Self::TranscriptSnapshotMismatch => {
+                "TLS 1.3 retry CertificateVerify signature verdict has a different transcript snapshot"
+            }
+            Self::SignatureSchemeMismatch => {
+                "TLS 1.3 retry CertificateVerify signature verdict has a different authorized scheme"
+            }
+            Self::MessageMismatch => {
+                "TLS 1.3 retry CertificateVerify signature verdict has a different message"
+            }
+        })
+    }
+}
+
+impl std::error::Error for RetryServerCertificateVerifySignatureBindingError {}
+
+/// Exact ordered retry `CertificateVerify` retained with its RSA-PSS verdict.
+///
+/// This proof intentionally derives neither `Copy` nor `Clone`. It retains the
+/// complete offer- and policy-bound ordered-message proof beside the exact
+/// repository-owned selected-transcript signature verdict after role,
+/// transcript snapshot, authorized scheme, and decoded message equality all
+/// pass.
+pub struct VerifiedBoundRetryServerCertificateVerifySignature<
+    'binding,
+    'pending,
+    'message,
+    'retry_evidence,
+    'verification,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'verified_message,
+    'verified_body,
+    'key,
+> {
+    binding: &'binding BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence>,
+    verification: &'verification VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    >,
+}
+
+impl<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'verification,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    >
+    VerifiedBoundRetryServerCertificateVerifySignature<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'verification,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    >
+{
+    /// Borrow the exact authenticated ordered-message proof.
+    #[must_use]
+    pub const fn binding(
+        &self,
+    ) -> &'binding BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence> {
+        self.binding
+    }
+
+    /// Borrow the exact repository-owned RSA-PSS signature verdict.
+    #[must_use]
+    pub const fn verification(
+        &self,
+    ) -> &'verification VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    > {
+        self.verification
+    }
+}
+
+impl fmt::Debug
+    for VerifiedBoundRetryServerCertificateVerifySignature<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("VerifiedBoundRetryServerCertificateVerifySignature")
+    }
+}
+
+/// Bind one exact authenticated ordered retry `CertificateVerify` proof to
+/// one exact repository-owned selected-transcript RSA-PSS verdict.
+///
+/// Every comparison is public-data only. Failure returns no composed evidence
+/// and retains no peer payload in its stable error category.
+#[allow(clippy::too_many_arguments)]
+pub fn bind_retry_server_certificate_verify_signature<
+    'binding,
+    'pending,
+    'message,
+    'retry_evidence,
+    'verification,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'verified_message,
+    'verified_body,
+    'key,
+>(
+    binding: &'binding BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence>,
+    verification: &'verification VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    >,
+) -> Result<
+    VerifiedBoundRetryServerCertificateVerifySignature<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'verification,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'verified_message,
+        'verified_body,
+        'key,
+    >,
+    RetryServerCertificateVerifySignatureBindingError,
+> {
+    let hashed_input = verification.hashed_input();
+    let bound_input = hashed_input.bound_input();
+    if bound_input.input().role() != CertificateVerifyRole::Server {
+        return Err(RetryServerCertificateVerifySignatureBindingError::WrongEndpointRole);
+    }
+    if bound_input.snapshot() != binding.pending().transcript_snapshot() {
+        return Err(RetryServerCertificateVerifySignatureBindingError::TranscriptSnapshotMismatch);
+    }
+    if hashed_input.hashed_input().authorized_scheme() != binding.authorized_scheme() {
+        return Err(RetryServerCertificateVerifySignatureBindingError::SignatureSchemeMismatch);
+    }
+    if verification.verification().signature().message() != binding.message() {
+        return Err(RetryServerCertificateVerifySignatureBindingError::MessageMismatch);
+    }
+
+    Ok(VerifiedBoundRetryServerCertificateVerifySignature {
+        binding,
+        verification,
+    })
 }
 
 /// Fresh authenticated ordered server-flight state joined to its exact retry transcript.

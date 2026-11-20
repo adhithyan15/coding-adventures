@@ -41,15 +41,26 @@ responder revocation entry points each derive the leaf only through the
 destination already bound to their complete proof, then retain that exact
 proof and the signature verdict together.
 
+The package also seals the complete HTTPS destination, reviewed-path, and
+`CertificateVerify` result behind a marker trait and can join it to an
+authenticated retry-handshake `Certificate` leaf. The non-copyable result
+retains both complete evidence graphs only when they point to the exact same
+repository-decoded X.509 leaf object. Independently decoded certificates are
+rejected even when their DER bytes are equal, preventing a byte-equal leaf
+substitution between the authenticated record stream and the reviewed server
+authentication graph.
+
 This package does not itself verify an anchor self-signature or evaluate
 revocation; the specialized entry points accept only complete proofs produced
 by existing repository-owned boundaries. The revocation composition currently
 covers the direct, one-level nested, double-nested, recursive-responder, and
 alternative intermediate-status-responder no-check completions. It does not
 acquire or refresh revocation data, prove the preceding ordered handshake
-state, append the Finished handshake encoding, process records, perform I/O,
-establish Finished-key provenance, or make TLS, HTTPS, HTTP, OAuth transport,
-or live-provider access available.
+state beyond the retry `Certificate` proof retained by the bounded join, bind
+the later retry `CertificateVerify` callback, append the Finished handshake
+encoding, establish Finished-key provenance for that stream, bind record
+epochs, perform I/O, or make TLS, HTTPS, HTTP, OAuth transport, or live-provider
+access available.
 
 The end-to-end tests retain a public `www.apple.com` TLS 1.3 handshake capture
 from 2026-11-18 plus its 2026-11-11 leaf certificate. They reconstruct the

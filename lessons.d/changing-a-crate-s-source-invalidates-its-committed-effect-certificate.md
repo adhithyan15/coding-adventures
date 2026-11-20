@@ -27,3 +27,8 @@ Do differently: before pushing, list every changed crate
 (`git diff --name-only origin/main...HEAD -- code/packages/rust | cut -d/ -f4 | sort -u`)
 and run each one's BUILD file line by line, not just `cargo test`. Any crate
 with an `effect_certificate.json` needs `--verify-cert` to pass after the edit.
+
+PR #19711 repeated this exact failure in `ca-assurance-report`: `--check-module`
+passed, but `--verify-cert` found a stale `source_digest`, and the dependent
+`fixed-point` build was skipped. Regenerating with the analyzer changed only
+`source_digest`; the full crate BUILD then passed.

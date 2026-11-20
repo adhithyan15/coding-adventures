@@ -11,13 +11,81 @@ lists them with case counts and SHA-256.
 | `containment.json` | containment helper | `root` and `child` as text, with the `flavor`'s path rules |
 | `label-digest.json` | manifest digest | `manifest` object to its SHA-256 |
 
+Six more categories, the **v2 kit** (VER04r section 11, slice S5b), sit beside them in
+the same layout: `v2-value.json` (128 cases), `v2-arith.json` (129), `v2-ir.json` (248),
+`v2-domain.json` (162), `v2-chunk.json` (74) and `v2-fault.json` (41), 782 cases (S5b committed 734; S5e added 48). Every
+case carries `id`, `summary`, `requires` and `expect`; a lane runs a case exactly when it
+implements the levels in `requires`. `v2-binding` (S5d) is not here yet; the levels
+`ir.fixed`, `ir.tuple`, `ir.data` and `ir.list` add vectors in S10d and S11. A runner
+that does not know a `v2-*` category digest-checks its file and does not run it.
+
+| File | What a lane runs |
+|---|---|
+| `v2-value.json` | `type` (and `types`) text, `input_hex` through the strict reader, the section 2.3 decoder and the section 2.4 stream |
+| `v2-arith.json` | one node over `lit` operands, at the case's `type` |
+| `v2-ir.json` | an IR tree with `levels`, `env`, `models`, `ops` and `subjects` (the pure stand-in per subject op); value, `calls` or an error code |
+| `v2-domain.json` | a descriptor and a binder type, enumerated by `index` or `range` |
+| `v2-chunk.json` | a self-contained corpus, suite row and `chunk_file_hex`; the chunk's validation or its error |
+| `v2-fault.json` | a fault row instantiated over an op row, the args and the result |
+
+Where each mandatory vector is discharged (VER04r section 11, R17); "S5b" means `ir.core` kit data:
+
+| Mandatory vector | Discharged by |
+|---|---|
+| Arithmetic: the ten cases of section 3.4 | S5b `v2-arith` |
+| Values: signed, `Bytes<N>`, decimal text, an `Err` case not in `E`, the depth-17 type | S5b `v2-value` |
+| Values: tuple values (stream tag `64`) | S10d `v2-value` (`ir.tuple`) |
+| Values: nested `Option`, records, variants, an undeclared constructor | S11d `v2-value` (`ir.data`) |
+| IR: short-circuit, nested calls, unknown tag, undeclared level, impure guard | S5b `v2-ir` |
+| Domains: every `ir.core` leaf, `fx_edge`, the `result` composite | S5b `v2-domain` |
+| Domains: `tuple`, `nat_shift` | S10d `v2-domain` |
+| Domains: `variant`, `option` | S11d `v2-domain` |
+| Domains and values: lists, the length-2/length-3 boundary | the fixture PR of the reserved level `ir.list` |
+| Chunks: zero admitted, first/middle/last of a 2^24 suite, a boundary inside a discarded run | S5b `v2-chunk` |
+| Chunks: a v2-stream chunk with a tuple binder | S10d `v2-chunk` |
+| Chunks: alone equals sequential | S6a, S7a (each lane's test, over the S5b cases marked `also_sequential`) |
+| Negative: a wrong subject on a `reference` suite; a reordered enumeration | S6, S7 runner tests |
+| Negative: `first_admitted` off by one; `slim_chunks` omitting the first or last chunk | S5b `v2-chunk` |
+| Negative: `full` claimed after a slim run | S6, S7 (the lane's own `check`); S9 |
+| Negative: a shared discriminator; `err_any` on a two-case error type | S5d `v2-binding` |
+| Aliasing (four fixtures) | S6, S7 runner fixtures, per lane; `v2-binding` carries only the directive-level cases |
+| Bounds: the `Nat` overflow in both classes; the doubling `concat` | S5b `v2-ir`; "before allocation" is asserted by each lane's test (S6a, S7a) |
+| Bounds: a v0 fixed-width node over a subject result | existing generator and oracle tests (section 3.3 rule 3); not lane data |
+| Accounting | S6, S7 (the lane's own `check`); S9 |
+| Paths: claim fields (generation error) | existing generator and oracle tests |
+| Paths: a symbolic link or an undeclared file in `chunks/` | S6, S7 runner tests |
+| Static widths: an op with `width_params` in `v2-ir`, `v2-chunk` and `v2-fault`; the four refused width lists | S5e (VER04r 16.18 R70) |
+| Overflow class under an impure guard, with its pure-guard twin, and in a model body entered with a subject argument | S5e `v2-ir` (R71) |
+| `errs`: empty, 65 names, a duplicate, a bad name; a list that differs from the declared cases | S5e `v2-domain` and `v2-chunk` (R72) |
+| Bytes `lit`: one accepted, two refused | S5e `v2-ir` (R73) |
+| A fixed-width `take` or `drop` count | S5e `v2-ir` (R74) |
+| Binders: a ground suite with none (accepted); nine, and a product over `2^28` (refused) | S5e `v2-chunk` (R75) |
+| `level-missing` by a type; a model of a missing level that is not reached | S5e `v2-ir` (R69) |
+| The level of `match`; `len` on a list operand | S10d and S11d `v2-ir` (R76) |
+| A model chain of 65 that nothing calls | S5e `v2-ir` (R77) |
+
+The two generation-time refusals of section 3.4 stay pinned by the generator's and the oracle's own tests
+(`v2-arith/nat-bound-generation-error` and `v2-arith/v0-u8-wrap-guard` are their lane-observable forms, [D45]).
+
 Input bytes are lowercase hex, never JSON strings (a JSON string cannot carry
 invalid UTF-8, a lone surrogate or a BOM). `.gitattributes` (`* -text`) keeps
 every byte exact on Windows checkouts.
 
-Do not edit the JSON by hand. The case tables live in
-`code/scripts/warrant_corpus_conformance.py`, whose independent reference
-implementation derives every expected outcome:
+Do not edit the JSON by hand. The `v2-*.json` files come from the oracle: the case tables
+live in `code/packages/python/warrant-oracle/tests/fixtures/conformance-v2/`, and the oracle
+derives every outcome (`coding_adventures_warrant_oracle.conformance`). **Regeneration is two
+steps**, in this order:
+
+```text
+python3 code/packages/python/warrant-oracle/tests/fixtures/conformance-v2/make_conformance.py --write   # the v2-*.json files
+python3 code/scripts/warrant_corpus_conformance.py --write                                              # index.json
+```
+
+`make_conformance.py --check` requires the committed v2 bytes and the v2 rows of `index.json` to
+match its derivation. The v1 script indexes the `v2-*` files on disk (after the four v1 rows, in
+the order `v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk`, `v2-fault`, `v2-binding`),
+checks them structurally, and never imports the oracle or a lane. The four v1 category files
+come from that script's own case tables and independent reference implementation:
 
 ```text
 python3 code/scripts/warrant_corpus_conformance.py          # check
@@ -26,6 +94,7 @@ python3 code/scripts/warrant_corpus_conformance.py --write  # regenerate
 
 Cases are only ever added within `-v1`; changing an expectation means `-v2`.
 Containment includes the WD-100b cases (Windows reserved device names refused,
-win32 case folding ASCII-only; 141 cases, 461 in the fixture).
-Lanes: Python, TypeScript and Go run all four categories (Go: `conformance_test.go` in
+win32 case folding ASCII-only; 141 cases, 461 in the four v1 categories, 1243 with the v2 kit).
+Lanes: Python, TypeScript and Go run all four v1 categories and digest-check the `v2-*` rows (the runners
+read v2 in S6a and S7a) (Go: `conformance_test.go` in
 `code/packages/go/warrant-corpus`).

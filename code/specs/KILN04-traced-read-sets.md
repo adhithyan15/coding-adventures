@@ -521,7 +521,8 @@ version; until then the canned fixtures are hand-written.
 directory is the one current at its `<unfinished ...>` line. An unfinished
 call may end at the process's exit line only if it carries no path
 (`wait4`, `exit_group`); an unfinished path call that never resumes is
-`unresumed-call`, with one exception (the phantom `execve`, D33, below). Another shape is accepted: a thread killed at syscall
+`unresumed-call`, with two exceptions (the phantom `execve`, D33, and a task
+that died inside a call because its thread group was exiting, D35, both below). Another shape is accepted: a thread killed at syscall
 entry. When a fatal signal is already pending (a sibling's `exit_group`, a
 SIGKILL, an exec by another thread), strace cannot name the call and prints
 `???`, in exactly one of three spellings, each followed by that thread's exit
@@ -592,6 +593,77 @@ recorded. That binary never runs (the sibling was torn down before its image
 changed), and the owner's open of the path is recorded. We judge this
 acceptable: it needs a deliberate race inside one step, and the reviewers
 judged it theoretical.
+
+**A task that dies inside a call (D35).** When a thread group exits (Go's
+`exit_group`, a fatal signal), the kernel kills the group's other threads
+wherever they are, and every threaded runtime makes some of them die inside a
+system call. strace prints three shapes for that, and every real-build census
+run hit them (Go actions were unparsed before this rule):
+
+```
+2  tgkill(1, 1, SIGURG <unfinished ...>
+2  <... tgkill resumed>) = ? <unavailable>                          (1)
+
+2  clone(child_stack=0x7f..., flags=CLONE_VM|... <unfinished ...>
+2  <... clone resumed> <unfinished ...>) = ?                       (2)
+
+2  openat(AT_FDCWD</w>, 0x7f3a6c001230, O_RDONLY|O_CLOEXEC <unfinished ...>
+2  +++ exited with 0 +++                                           (3)
+```
+
+In (1) strace could not fetch the result because the tracee was already gone.
+In (2) it printed at `PTRACE_EVENT_EXIT` with the call still open, so the
+`<unfinished ...>` marker follows the resume. In (3) the task was killed out of
+its syscall-entry stop, so strace could no longer read its memory and the path
+prints as an address. In all three the call's result is unknown.
+
+*Syntax (the only part that differs between the readers; both accept
+identically).* The result `= ? <unavailable>` is a token of its own
+(`UNAVAILABLE`, `strace.tokens`, before `ERR_LT`) and the `tail` rule allows
+it; a resumed line may carry the marker (`RESUMED inner UNFINISHED RPAREN
+tail`). The grammar is looser than the rule, on purpose, as for every result:
+the shared result parser accepts exactly `= ? <unavailable>` (one space, nothing
+after it, no errno, no value), and exactly ` <unfinished ...>)` followed by
+`= ?` after a resume (no other argument text, no other result). The stricter-only
+row for "an `ERR` token in the text after the close" is NOT widened: the text
+`<unavailable>` simply is not an `ERR_LT` any more.
+
+*Policy (shared code, so the readers cannot drift).* Shapes (1) and (2) leave
+the pid with a *dying* call: its NEXT line must be its own exit
+(`+++ exited ...` or `+++ killed ...`); a signal line, a second resume or a new
+call is `interleaved-call` or `unmatched-resume`. Shape (3) is an unfinished
+call followed by the pid's exit. At that exit:
+
+| the call | verdict |
+|---|---|
+| ignored class (`tgkill`, `wait4`, ...) | dropped |
+| `fork`, `vfork` | dropped, and **no spawn is recorded**. A child that did start has a first line with no spawn record: `orphan-pid`, which fails closed. |
+| `clone` whose flags are readable and allowed: `flags=` is present, every token is a name strace prints (the closed set of `CLONE_*` and signal names), and none is `CLONE_UNTRACED` or `CLONE_NEW*` (the `analyzeClone` check) | dropped, no spawn recorded, as for `fork` |
+| a `clone` with any other flags (`CLONE_UNTRACED`, `CLONE_NEW*`, a hex leftover, an unknown token, no `flags=`); `clone3` (a refused name; a dying `clone3` at entry stays `unresumed-call`) | `unresumed-call`, as before |
+| everything else: a call that READS (a metadata call, a listing, an `open`, `openat`), a write, a network call, `chdir`, `fchdir`, `execve`, an unknown or refused name | `unresumed-call`, as before |
+
+Both readers share one table (`dyingPolicy`) and one exit handler
+(`exitInsideCall`), and pass 2 has no part in it.
+
+*Why a call that reads is not dropped.* The model infers what a step read only
+from the `open` and `stat` records: `read` is not traced. So dropping one removes
+an input from the read set, and the call's result is lost, not absent. A live
+sibling thread can use the descriptor or the buffer, a sibling's `fork` in the
+window copies it, a sibling's `exec` keeps the descriptor (no `CLOEXEC`), and a
+stat buffer lives in memory every thread shares. No guard short of "shares
+nothing with any live task" is sound, and that excludes every thread. (An
+earlier design dropped such a call when its thread group was ending; it was
+withdrawn for exactly this reason.) A dropped spawn records nothing, and a child
+it may have made cannot be traced without being refused. Writes, network calls
+and exec are not dropped because their effect, or their target (which the lost
+memory read hid), may have happened. `RecorderVersion` is 5 since this rule.
+
+Consequence: a Go (or any threaded) action whose worker is inside `openat` or
+`newfstatat` when the group exits is still `unresumed-call`. Only the other two
+shapes, which Go also produces, are accepted now. Follow-up idea, not built:
+record such a call as an OBSERVED READ with an unknown result (the path is lost,
+so the observation would have to be "something under the working directory may
+have been read"), which a later stage could judge.
 
 
 **Process model.**
@@ -689,6 +761,53 @@ first successful exec of a non-Kiln path is the step.**
   set and a void run (`unresumed`). It cannot be relaxed safely: a call killed
   at entry and a call killed while blocked print identically. It is strictly
   better than before D19, when every kill was `missing-exit`.
+
+**A failed action's traces are a prefix of the recipe (D36).** `CheckRecipe`
+used to demand one step trace per recipe line. A multi-step BUILD that fails
+before its last step leaves fewer traces than lines, and every such action was
+`trace-incomplete:recipe-mismatch` (W10): an unknown write set, so a run-void
+under the strict merge. In real-build census runs that was about 33 actions per
+shard, about half of all unknown write sets. Fewer traces are now accepted when
+ALL of these hold, and the verdict is then only `failed` (raised by
+`stepStatus`), with `writes_complete` left to the traces:
+
+1. every trace matches its recipe line, in order, exactly as before (a shell
+   `-c` argv whose line is byte-equal): the traces are a prefix of the recipe;
+2. every trace but the last has an exit line and exited 0;
+3. the last trace has an exit line, was not killed by a signal, and exited
+   non-zero.
+
+Everything else stays `trace-incomplete:recipe-mismatch`: more traces than
+lines; a prefix whose last step succeeded; a step that differs from its line; a
+reordered or gapped recipe; an earlier step that failed or was killed; and an
+EMPTY trace set beside a non-empty recipe (no step ran, so there is no failed
+step to excuse the missing ones; `Classify` refuses an empty set earlier anyway,
+and a step that never started is the executor's `failed to start step` case,
+which `collect` handles from the step counts).
+
+*Why it is safe.* (a) The build tool runs an action's steps in order and stops
+at the first that fails: `runCommands` in
+`build-tool/internal/executor/executor.go` (currently near line 474) loops over
+the step commands and returns the `failed` result (currently near line 531) on
+the first step error, and no later step of that action is started. So the writes of a failed action are exactly those of the traced steps;
+nothing runs after the failure. (b) A failed action emits no manifest, so the
+prefix rule never produces a cache entry. (c) A rewritten BUILD that drops
+trailing steps ends on a step that SUCCEEDED, which condition 3 rejects; to pass,
+a rewrite would have to end on a failing step, which is the honest failed case.
+(d) A step stopped for a reason the traces do not show (it could not be started,
+a descendant held the output pipe, a timeout or interrupt) either has exit 0 or
+no clean non-zero exit, and stays a mismatch. The exit status is the one
+`stepStatus` already reads (`Trace.StepExit`); no new source. `RecorderVersion`
+5 to 6, because the verdict for these actions changes.
+
+*What D36 does NOT change: the strict void.* Before this rule these actions were
+`trace-incomplete:recipe-mismatch`, which the merge treats as a HARD unknown
+(`unkHard`, recmerge `unknown()`): a run-void in BOTH the strict and the relaxed
+verdicts. After it they carry `failed`, which is `unkTruncated`: the strict
+verdict still voids the run (M-1: the build on main would have run the rest),
+and the relaxed one only loses that action (`voidStrict`, `relaxLost`). The
+change is hard-void to strict-only. It is correct that the strict void stays:
+D36 makes the write set known, it does not make a failed action a built one.
 
 **Addresses.** `socket` needs a symbolic `AF_*` domain, and `connect` and
 `bind` need a `sockaddr`; otherwise `sockaddr`. Only `sendto` may have a
@@ -1064,14 +1183,20 @@ under the kind `trace-incomplete:<reason>:<sub>` (unstable-path:
 `component-changed`, `absent-changed`, `final-changed`,
 `followed-final-changed`, `followed-absent-changed`, `gone-but-found`,
 `removed-before-made`, `file-changed`, `own-overlap`, `through-missing`,
-`dotdot`, `fd-path-differs`; exec-unreadable: `modified-after-exec`,
+`dotdot`, `fd-path-differs`, `absent-before-made`; exec-unreadable: `modified-after-exec`,
 `virtual-exe`, `virtual-interpreter`, `under-tmp`, `in-repo`, `host-disk`); the
 sub-code is a string literal at each site, never a slice of the input.
 (2) **op classes**: `census.json` has an additive `ops` map, `{kind: {class: n}}`
-(only `host-read` is split), whose classes are the closed list `listing`,
+(split kinds: `host-read`, `trace-incomplete:proc-path` and every
+`trace-incomplete:unstable-path:<sub>`), whose classes are the closed list `listing`,
 `absent-probe`, `open`, `stat`, `lookup` (a link crossed on the way), `exec`,
 `chdir`, `write`, `other`, chosen from the classifier's own state with
-precedence listing, then absent-probe, then the call's kind.
+precedence listing, then absent-probe, then the call's kind. `proc-path` and the
+unstable-path sub-codes raised while a call is observed take the call's class at
+that moment; the sub-codes raised by the stability pass after the walk take the
+class of the FIRST look that put the path into a lookup set (the classifier keeps
+it per path, only when a census is attached, and reads it only to tell the
+census); a path with none is `other`.
 (3) **Caps and order**: the sub-coded kinds hold 256 paths each, the nine path
 kinds 1024, so the caps of every kind the classifier can feed add up to at most
 `MaxCensusEntries` (9*1024 + 18*256 = 13824 <= 16384; tested) and the overall
@@ -1206,7 +1331,16 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   `unclean:<reason>`, `refused:<syscall>`, ...; `refused:<name>` keeps the name
   only when it is a member of the parser's closed refused class
   (`trace.SyscallClass`), else `refused:other`), `parse_refusals` (the same codes for the traces this
-  census's own parse refused), `record_failed` (the text of `record.failed`
+  census's own parse refused), `record_parse_reasons_by_language` and
+  `parse_refusals_by_language` (the same two tables as `{language: {code: n}}`,
+  with the language of the share-by-language section: a validated name, at most
+  64, then `other`), `parse_refusal_syscalls` (`{code: {syscall: n}}`, from the
+  census's cross-checked parse: the closed-table name of the call the refusal was
+  raised for, or `other` when it is tied to none, e.g. `unparsable-line`; it is
+  `trace.Error.Call`, set only to a `trace.SyscallClass` name and never part of an
+  error string or a record, and `refused:<name>` uses its own name),
+  `parse_refusal_syscalls_by_language` (`{language: {code: {syscall: n}}}`),
+  `record_failed` (the text of `record.failed`
   mapped to `timeout`, `traces-too-large`, `record-too-large`, `panic`,
   `classifier-failed`, `classifier-not-started`, `record-invalid`, `other`) and
   `sidecar` (`steps`, `truncated` by reason, `not_clean`, `unclean` by reason,
@@ -1254,8 +1388,19 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   `gated` and `unkeyed` count the actions whose plan entry has a gate or no weak
   key (overall and per language), `writes_unknown` the actions with a believed
   record whose `writes_complete` is false, plus `record.failed` and every action with no verdict at all, and
-  `actions.strict_merge_voids_shard` is true when `writes_unknown > 0` or the
-  shard is void (the Markdown line "strict merge would void this shard: yes/no").
+  `truncated` the actions with a KNOWN write set whose execution was cut short,
+  the merge's `unkTruncated` (a believed record with a `failed` or `daemon-left`
+  reason, or fewer steps run than the plan lists; mirrored from recmerge
+  `unknown()` as far as the census's inputs allow, and not counted again when
+  already in `writes_unknown`), `relaxed_would_lose` the actions the relaxed
+  merge would drop (equal to `truncated`), `relaxed_merge_voids_shard` true when
+  `writes_unknown > 0` or the shard is void (a hard unknown voids both
+  verdicts), and
+  `actions.strict_merge_voids_shard` is true when `writes_unknown > 0`,
+  `truncated > 0` or the shard is void (the Markdown line "strict merge would
+  void this shard: yes/no"). Since D36 a failed action with complete writes is
+  `truncated`, not `writes_unknown`. The three counts are additive JSON keys,
+  also per language.
   The shares
   `recordable_share_of_built_ok`, `emittable_share` and
   `emittable_share_of_built_ok` (a share over zero is 0). `actions` carries
@@ -1287,8 +1432,11 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   skipped as too large. `TestParseCrossCheckedOnlyInCensus` keeps `Shape`, `LineShape`,
   `ParseCrossChecked` and `ParseCrossCheckedDetail` out of every production file
   but their definitions and `census_report.go`.
-- `reasons[].ops`: for `host-read`, the occurrences by op class (from the
-  `census.json` `ops`, validated against the closed list).
+- `reasons[].ops`: for `host-read`, `trace-incomplete:proc-path` and each
+  `trace-incomplete:unstable-path:<sub>`, the occurrences by op class (from the
+  `census.json` `ops`, validated against the closed list). The Markdown has
+  "Parse reasons by language" and "Parse refusals by system call" sections, every
+  name in a code span.
 - *Labels.* `kiln record census` runs with the RUNNER's real HOME and temp
   directory. The classifier labels the STEP's fresh HOME and TMPDIR `$HOME` and
   `$TMPDIR`, so the invoker's are labelled `$RUNNER_HOME` and `$RUNNER_TMP`
@@ -2090,14 +2238,14 @@ has a random suffix and the parent directory is synced after the link.
    tree disagreed: `TreeError.Partial`) counts one more, because the paths it
    names are not the files that changed on disk.
 
-*A limitation, and a follow-up.* A failed action that stops mid-recipe has fewer
-traces than recipe lines, so the classifier's `CheckRecipe` says
-`trace-incomplete:recipe-mismatch` (W10) and its write set is unknown: the merge
-treats it as run-void in the relaxed report too, not as a truncated execution.
-The merge's `steps-missing` branch is reachable only for a failure on the last
-step. Fixing it is a classifier change (compare the traced prefix of the recipe
-when the build tool says the action failed), logged as a follow-up; `collect`
-reports what the classifier says.
+*A limitation, now narrowed (D36).* A failed action that stops mid-recipe has
+fewer traces than recipe lines. When the traces are a byte-exact prefix whose
+last step exited non-zero, the classifier raises only `failed` and the write set
+is whatever the traces say (section 4.5, D36); the merge's `failed` handling
+(M-1, truncated execution) applies. Any other shortfall (the last step
+succeeded, a step differs) is still `trace-incomplete:recipe-mismatch` (W10) and
+an unknown write set: the merge treats it as run-void in the relaxed report too.
+`collect` reports what the classifier says.
 
 **P13. Records are classified at action end, and recording is serial
 (2b-2b-i).** `traced.Classify` resolves paths against the disk, so a record
@@ -2838,6 +2986,7 @@ byte as an `ERR_*` token), so it can never panic on hostile input.
 | a call line with trailing spaces (reported ahead of any other fault the line has) | accepted, or refused for another reason | refused, `unparsable-line` | the lexer skips spaces, so the grammar cannot see a trailing one; refusing is the safe side | `TestStricterOnlyDivergences` (strace-parser) |
 | `+++ exited with +5 +++`, `-0` (a signed exit code) | accepted (`Atoi` takes a sign) | refused, `unparsable-line` | the exit code is digits only; no real strace prints a sign | `TestStricterOnlyDivergences` |
 | an `ERR_*` token in the text after a call's `)` (an unterminated quote, a bad `<`, a resume marker) | refused, `result` or `ambiguous-path` | refused, `unparsable-line` (or `ambiguous-path` for a bad annotation) | the lexer cannot know a quote is "in the result"; both refuse the whole trace | `TestStricterOnlyDivergences` |
+| `= ? <unavailable>` after a call, `<... NAME resumed> <unfinished ...>) = ?`, and an unfinished ignored-class call, `fork`, `vfork` or `clone` with allowed flags followed by the pid's exit (D35, the dying-call rule) | refused, `unresumed-call` or `result` | accepted, the call is dropped | none: the grammar has `UNAVAILABLE` and `RESUMED inner UNFINISHED RPAREN tail`, and the readers share `parseResult`, `dyingResumeTail`, `dyingPolicy` and `exitInsideCall`; the `ERR token` row above is not widened (`<unavailable>` is no `ERR_LT`). Both readers do the same, so this is not a divergence between them; the row records the grammar change | `TestDyingCallShapesAreAccepted`, `TestDyingCallRefused`, `TestDyingLineSeedsAgree` |
 | a `<... NAME resumed>` whose NAME has a character outside `[A-Za-z0-9_?]` | refused, `unmatched-resume` | refused, `unparsable-line` | NAME is lexed as a name; anything else is a bad marker | `TestRefusals` (`ERR_RESUME`) |
 | a split call whose glued text (prefix plus resumed half) is over the line byte limit, though each half is under it | accepted | refused, `size` | the grammar path reads the glued call as one line, so the limit applies to the call; a same-pid signal line between the halves does not break the glue, so the row applies across it too | `TestGluedCallOverTheByteLimit`, `TestGluedCallOverTheByteLimitAcrossSignal` |
 | `= 5 /* 9 in strace's PID NS */<x>` (an annotation, or a marker, after the pid-namespace note with no word before the `<`) | accepted | refused, `unparsable-line` (`ERR_LT`) | strace prints the annotation first; a bare `<` is an `ERR_LT` | `TestPR5Divergences` |
@@ -3403,7 +3552,7 @@ write-open counts, and so does a rewrite between two execs); otherwise
 **`/proc`.** The `ephemeral` list of `host-roots.json` (§5.3) is the one
 authoritative list. Its seed allows the ubiquitous entries: `/proc/self/{exe,maps,cgroup,mountinfo}`,
 `/proc/{meminfo,stat,cpuinfo,filesystems}`, `/sys/devices/system/cpu/**`,
-`/sys/fs/cgroup/**` and `/dev/fd/N`.
+`/sys/fs/cgroup/**`, `/dev/fd/N` and `/proc/self/fd` with `/proc/self/fd/N` (D37).
 
 `/proc/self/status` and `/proc/self/stat` reveal `TracerPid`, so a
 program could behave differently when traced. A read of either gives
@@ -3543,11 +3692,13 @@ Manifests never store out-of-repository paths. Instead,
      "fetchers": ["/opt/hostedtoolcache/rust/1.99.1/bin/cargo"]}
   ],
   "ephemeral": ["/dev/null", "/dev/urandom", "/dev/fd/*",
-                "/proc/self/exe", "/proc/self/maps", "/proc/self/cgroup",
-                "/proc/self/mountinfo", "/proc/meminfo", "/proc/stat",
+                "/proc/self/exe", "/proc/self/fd", "/proc/self/fd/*",
+                "/proc/self/maps", "/proc/self/cgroup", "/proc/self/mountinfo", "/proc/meminfo", "/proc/stat",
                 "/proc/cpuinfo", "/proc/filesystems",
                 "/sys/devices/system/cpu/**", "/sys/fs/cgroup/**"],
-  "absent-ok": ["$HOME/.config", "$HOME/.npmrc", "/selinux", "/sys/fs/selinux"]
+  "absent-ok": ["$HOME/.config", "$HOME/.npmrc", "/include", "/opt/rh", "/pyvenv.cfg",
+                "/selinux", "/sys/fs/selinux",
+                "/sys/kernel/mm/transparent_hugepage/hpage_pmd_size"]
 }
 ```
 
@@ -3624,6 +3775,356 @@ sandbox tests' policy fixtures derive their `ephemeral` and `absent-ok` lists
 from the real `code/kiln/legacy/host-roots.json` (they once carried their own
 short lists); and a change to `code/kiln/legacy/**` selects the job in
 `ci-gates.json`.
+
+**Decision D37: `/proc/self/fd` and four absent probes (first real-build
+censuses).** Every C/C++ action reads `/proc/self/fd/3` thousands of times
+(clang `readlink`s `/proc/self/fd/N` for each header it opens, after one
+`access("/proc/self/fd")` per process), and four absent probes were flagged
+`host-read`. The policy now has, and `kiln:recorder` needs no version bump
+(the change is in `policy:host-roots.json`, which is in `consumed` and so in
+the digest, as in D27):
+
+- `ephemeral` gains `/proc/self/fd` and `/proc/self/fd/*`: the same kernel
+  object as the `/dev/fd/*` entry already there. A single `*` matches one
+  component, and `X/**` is the only form that also covers `X`, so the directory
+  and its entries are two entries.
+- `absent-ok` gains the exact names `/sys/kernel/mm/transparent_hugepage/hpage_pmd_size`
+  (the Go runtime's probe, absent on these runners), `/pyvenv.cfg` (python),
+  `/opt/rh` and `/include` (compiler search paths). An `absent-ok` entry is
+  allowed only on a traced `ENOENT`. There is deliberately no
+  `transparent_hugepage/**`: `enabled` and `defrag` are tunable and change
+  runtime behaviour. None of the four is `ephemeral`.
+
+What the new entries do not cover (each pinned by `internal/traced/procfd_test.go`
+against the real policy file):
+
+- (a) An OPEN through `/proc/self/fd/N` or `/dev/fd/N` is classified by the
+  descriptor's own `-y` path, whatever the ephemeral list says
+  (`openVirtual`, `ops.go:226-233`): an open of a host file through it is a
+  `host-read` of that file. The list governs only metadata calls.
+- (b) A path that continues past the magic link (`/proc/self/fd/N/x`) is refused
+  as `proc-path` by `procMagicBeyond` (`host.go:150`), which `observeVirtual`
+  tests before `ephemeralMatch` (`host.go:120` against `host.go:124`).
+- (c) `/proc/<pid>/fd` and `/proc/<pid>/fd/N` for a numeric pid, and
+  `thread-self`, are not matched by the `self` entries and stay `proc-path`:
+  the pids in the trace are the tracer's.
+- (d) A PRESENT read of any of the four absent-ok names stays `host-read`
+  (`observeHost`, `host.go:208`: `absentOK` is consulted only when the path is
+  absent).
+
+**Decision D38: two `/proc` reads and `GOWORK=off` (second real-build
+census).** Two more `/proc` opens were flagged `trace-incomplete:proc-path`, and
+Go's upward `go.work` search probed `/go.work` and `/home/go.work`. As in D27 and
+D37 the change is policy-only, with no `kiln:recorder` bump (`host-roots.json`
+is in `consumed`; `env.json` is a keyed input):
+
+- `ephemeral` gains the exact names `/proc/sys/vm/overcommit_memory` (allocator
+  tuning, the same class as `/proc/meminfo`, already listed) and
+  `/proc/version_signature` (the kernel build identity; `uname(2)` is not traced
+  and gives a program the same information, so the file adds no exposure). There
+  is deliberately no `/proc/sys/**`: `swappiness`, `max_map_count` and the rest
+  stay `proc-path`, and `/proc/version` is not added.
+- `env.json` gains `GOWORK`. The census recording step runs `kiln record
+  prepare` with `GOWORK=off`, which flows into the sealed build-tool
+  environment. `GOWORK=off` stops the upward search that would otherwise read
+  `/go.work` and `/home/go.work` on the host. The repository tracks no `go.work`,
+  so build semantics are unchanged, and the value is part of the key.
+
+What the entries do not cover (pinned by `internal/traced/procsys_test.go`
+against the real policy file): a name beneath either file
+(`overcommit_memory/x`) and the sibling tunables stay `proc-path`; and a WRITE
+open of either file is never allowed by the list. A writing open of a virtual
+name that is not an fd link makes the write set unknown (W5, `ops.go`), so the
+record carries `trace-incomplete:writes-unknown` and `writes_complete` is false.
+
+**Decision D39: ancestor nodes and absence under the fresh tmpfs (real-build
+census, `host-read` in about 45 actions; `kiln:recorder` 6 to 7).** The census
+showed `host-read` raised mostly by `stat` of the ancestors of the sandbox's own
+directories (`/`, `/home`, `$HOME`, `$HOME/work`, the workspace parent, `/opt`,
+`/opt/hostedtoolcache`, `/opt/hostedtoolcache/go`, `/tmp`, `/dev`), which every
+path walk visits, and by absent probes under the step's fresh tmpfs `$HOME` and
+`TMPDIR` (`$HOME/.proverc`, `$HOME/go`, `$HOME/.cache/go-build`, test directories
+the action removed and probed again). Two rules, both in `observeHost`; this
+replaces the "other ancestors stay `host-read`" clause of §5.5(c).
+
+- **(a) Ancestor nodes.** A *present, non-listing* observation of a PROPER
+  ANCESTOR of an anchor is allowed. The anchors are the checkout `Root`, every
+  declared host root, `Home`, `Tmpdir`, and the literal prefix of every
+  `ephemeral` and `absent-ok` entry (for a pattern, the components before the
+  first one containing `*` or `?`: `/dev/fd/*` gives `/dev/fd`). `/` is an
+  ancestor. An anchor is not its own ancestor, and an ancestor that lies inside
+  a declared root is judged by that root's rule, not this one (`prepare` builds
+  the set by walking `parentOf` from each anchor).
+  *Why it is safe.* Every anchor is canonical (`Root` is checked to be a real
+  directory chain, §5.1; the others are declared paths), so each ancestor is a
+  real directory by construction. A `stat`, `access`, `readlink`, `chdir` or
+  `O_DIRECTORY` open learns only the node's type and metadata, which the model
+  already treats as a non-input. A LISTING (`getdents`) still gives `host-read`:
+  the sibling names are host state. An absent probe of a CHILD of an ancestor
+  (`/home/go.work`, `/go.work`) is not an ancestor and stays refused, as does a
+  present read of a sibling file of an ancestor; reads beneath an ancestor
+  follow the existing rules.
+- **(b) Absence under the fresh tmpfs.** An ABSENT probe of a path strictly
+  inside the fresh `Home` or `Tmpdir` is allowed. *Why it is safe.* The tmpfs is
+  empty when the step starts, so an absent name is a constant unless the action
+  made it, and the trace knows when it did (`isCreated`, tested before
+  `observeHost`; a name the action made, removed and probed again is the
+  action's own). `underTmp` already excludes everything that could persist:
+  `fresh` refuses the checkout and anything under it, every ancestor of the
+  checkout (hosted runners put it under `$HOME`), and every declared root and
+  ancestor of one. A PRESENT look at something the action did not make stays
+  `host-read` (the state-preloaded void, §5.3, covers a pre-populated tmpfs).
+  The `absent-ok` entries `$HOME/.config` and `$HOME/.npmrc` become redundant and
+  are left in place.
+
+**Hardening (review of D39).**
+
+1. *The node must be a directory.* Only the checkout's own chain is verified to
+   be real directories (§5.1, `prepare`). An ancestor of a declared root or a
+   literal prefix could on some host be a symlink (`readlink` shows its target)
+   or a regular file (an open and read shows its content). Rule (a) therefore
+   also requires the node to be a directory on the post-run disk
+   (`c.lookup(abs).kind == KindDir`); anything else falls through to the
+   existing rules and gives `host-read`.
+2. *No extended attributes.* `getxattr`, `lgetxattr`, `listxattr`,
+   `llistxattr` (the parser tables them as metadata calls, as `stat`) are
+   excluded from rule (a): an attribute value is content, not type or stat
+   metadata. `classifier.xattrCall` is set per event and read only here; the
+   census observer is unchanged. A walk to a path made by an xattr call
+   observes its ancestors under that call, so it is refused conservatively.
+3. *Rule (b) depends on the sandbox.* An absent probe under `Home` or `Tmpdir`
+   is a constant only because the sandbox mounts a fresh tmpfs on both in every
+   recording mode (`internal/sandbox/plan.go`; with a real home, the checkout's
+   parent chain is recreated inside the tmpfs). It also needs every host path
+   the sandbox binds beneath them to be a root traced declares (image, tool or
+   state), because `fresh` excludes declared roots; the one other kind, a state
+   root the recorder derives from an anchor, is verified empty
+   (`stateRootEmpty`). `internal/record/sandboxroots_test.go` pins that the
+   sandbox's read-only roots beneath `Home` and `Tmpdir` are a subset of the
+   declared roots; comments at `observeHost` and `plan.go` name each other.
+
+Rule (a) covers looks only, never write-class calls: a rename, rmdir, unlink,
+chmod or utimensat of an ancestor stays `host-read` (D40 premise 4).
+
+Not changed: a listing of any ancestor, a child probe of an ancestor, a present
+uncreated name under `$HOME`/`TMPDIR`, and the rules of each declared root
+(a tool root not keyed, an unpinned state root, an image root's ctime check).
+`kiln:recorder` was 7 here (D40 made it 8). The differential fuzzer's oracle (`model_test.go`) has the
+same two rules, so a record with no reason is still checked against the model.
+Tests: `internal/traced/ancestor_test.go`.
+
+**Decision D41: metadata writes through an anonymous descriptor (real-build
+census, `fd-path` on dotnet's `fchmod(<fd>, mode) = 0`; `kiln:recorder` 8 to 9).**
+`fchmod`, `fchown`, `fsetxattr` and `fremovexattr` name their object by the -y
+annotation of the descriptor (`roleFdPath`), and an annotation that is not an
+absolute path was refused as `fd-path`. A pipe, a socket or an anonymous inode
+has the annotation `pipe:[N]`, `socket:[N]` or `anon_inode:NAME`, so csharp
+actions were refused.
+
+*The rule.* When the descriptor's annotation starts with one of those three
+prefixes (the same list the classifier's `anonymousFD` uses, now
+`trace.AnonymousFD`), the call yields no event and no error, whatever its result.
+A bare number (no annotation), any other non-absolute annotation and AT_FDCWD
+stay `fd-path`. An absolute annotation is unchanged.
+
+*Why it is safe.* The mode, owner or extended attributes of a pipe, a socket or
+an anonymous inode live outside every directory tree, so no file an action can
+read by path changes. The annotation comes from the kernel (strace's -y) and is
+the lexer's ANNOTATED token; a quoted string is another token kind, so a path
+containing `socket:[` cannot fake it (and `/x/socket:[1]` starts with `/`). Pass 2
+is shared, so both trace readers change together and the cross-check stays equal.
+
+**Decision D42: absent before made, metadata writes by path, and ephemeral
+device nodes (real-build census, `unstable-path:final-changed` in 31 actions;
+`kiln:recorder` 9 to 10).** The paths were C and C++ build outputs
+(`code/packages/{c,cpp}/*/_build/{gcc,clang}-<name>-tests`, and `_build` itself
+on newer images). The linker or driver `stat`s its output, gets ENOENT, creates
+it with a plain `O_CREAT` open (or `mkdir` for `_build`), then stats, chmods and
+runs it. A successful stat never enters the followed-final set (it is relaxed,
+section 5.5); the only stat that does is one that FAILED while the post-run disk
+shows the name present, and the earliest lookup then predates the creation, so
+`createdOnce` fails. Separately, a shell `>/dev/null` is an `O_CREAT|O_TRUNC`
+open, which logged a namespace change for `/dev/null` and raised `final-changed`
+and `own-overlap` on it.
+
+*Rule 1, absent before made (`absentBeforeMade`, `classify.go`; sub-code
+`absent-before-made`).* A call that FAILED with ENOENT on its final name `p`,
+where the post-run disk shows `p` present, is stable when ALL hold:
+
+- `p` is untracked (not a repository-tracked file) and was never a
+  `link()`/`linkat()` source or destination;
+- `p`'s change log is not empty and EVERY entry STARTED after the latest such
+  lookup COMPLETED (the interval of the lookups is the earliest start to the
+  latest completion; a split call carries its `<unfinished ...>` line as its
+  start, so this uses the same interval machinery as `unsafe`, never line
+  numbers compared naively);
+- the first entry is a creation that proves the action made the name: a clean
+  creation (mkdir, symlink, `O_EXCL` open) or an `O_CREAT` open keyed by the
+  descriptor's -y path;
+- no removal of `p` completed before that creation (`removedBeforeMade`).
+
+Otherwise it is judged by `createdOnce`, which is today's rule, so a verdict
+that was stable stays stable. Only calls whose ENOENT speaks for ONE final name
+feed the rule: `rename`, `link` (two names) and `execve` (the missing name may
+be the interpreter) never do. `classifier.callErrno` carries the errno.
+
+*Why it is safe.*
+
+1. The ENOENT says nothing was at the name when it was looked up, and the
+   absence is still recorded as an absent observation (`absentObs`, for the merge
+   job) by `observeResult`, exactly as before.
+2. It cannot have been a dangling symlink that the creating open then wrote
+   through: an `O_CREAT` open that followed a link is keyed by its -y path, which
+   is the link's TARGET, not this name, so an entry logged at `p` proves `p` was
+   not a link when that open ran. A link that was removed and replaced is a
+   removal before the creation, or a first entry that is not a creation.
+3. Every change-log entry starts after the lookup completed, so nothing the
+   action did to the name can have taken effect while the lookup ran, and the
+   first entry proves the action made the name: before it the name was absent
+   (or, for a plain `O_CREAT`, a regular file that is now the action's own).
+4. Every directory and link the walk crossed is a traversed component and keeps
+   the strict rule (`stable`), so the ENOENT cannot have come from a missing
+   ancestor that was created later.
+5. The lookups of calls that can write are judged again on their own interval
+   (the `wr` set), so a failed `chmod`/`open` that could not be placed still
+   voids the write set (W8) when the rule fails.
+
+*Rule 2, metadata writes by path (F3).* A SUCCESSFUL `chmod`, `fchmodat`,
+`fchmodat2`, `chown`, `fchownat`, `utimensat`, `utimes`, `futimesat`, `utime` or
+`setxattr` that follows its final name sets `classifier.relax` exactly as a
+successful stat does, so its followed final goes through the open-only rule
+(section 5.5) instead of `createdOnce`. This is the linker's post-link chmod.
+Under the open-only conditions (every log entry an `O_CREAT` open keyed by its
+-y path, the first completed before the lookup began, at most one trailing
+unlink that started after the lookup, no hard link) the name is provably the
+regular file the action made, so the metadata write lands on it. The write
+itself is still recorded and still observes a file the action did not make
+(`writes-tracked`, untracked observation), and the no-follow forms (`lchown`,
+`lsetxattr`, `AT_SYMLINK_NOFOLLOW`) are unchanged.
+
+*Rule 3, ephemeral device nodes.* `openResolved` does not log a namespace change
+for an `O_CREAT` open of a path that is under `/dev/` AND matches the host's
+ephemeral list (`ephemeralDevice`, `ops.go`; `/dev/null`). Both tests are
+needed: the list says the name is no input, `/dev/` says it is a device node and
+not a file a build could have made. Such a name is never created, replaced or
+read as content, so nothing the stability rules guard can depend on it; the write
+is still recorded.
+
+Tests: `internal/traced/absent_before_made_test.go`; the fuzzer model has four
+new bursts (stat ENOENT then create, `mkdir -p`, post-link chmod, dangling link
+replaced), and with the timing condition disabled `TestDifferentialSeeded` fails.
+
+**Decision D40: tmpfs containment (real-build census, `unstable-path` in about
+43 actions, all writes-incomplete; `kiln:recorder` 7 to 8).** Every high-count
+path was the action's own scratch file inside the fresh tmpfs: Go's build cache
+(`$HOME/.cache/go-build/HH/<hash>-a`, `-d`, and its directories),
+`$TMPDIR/go-buildN/...`, gcc's `$TMPDIR/ccXXXXXX.{o,s,res}` and clang's
+`name-hash.o`. Such files are re-created without `O_EXCL`, created and then
+removed, or renamed into place, which breaks the "created exactly once" and
+open-only rules of §5.1 and §5.5 (sub-codes `final-changed`, `own-overlap`,
+`component-changed`, `absent-changed`, `followed-absent-changed`,
+`removed-before-made`) and, through W8, voids the write set.
+
+*The rule.* If the action made no symbolic link inside the fresh `Home` or
+`Tmpdir`, AND made no directory rename or foreign rename there, the stability
+rules do not apply to paths inside it. Two whole-action flags say otherwise:
+
+- `classifier.tmpLinked`, set wherever a link is recorded at (or carried by
+  `rename`, `RENAME_EXCHANGE` or `link` to) a path that is `underTmp` or a tmp
+  root (`noteTmpLink`, `ops.go`);
+- `classifier.tmpMoved`, set by a SUCCESSFUL `rename`, `renameat`, `renameat2`
+  or `RENAME_EXCHANGE` with an endpoint under the tmpfs whose source is a
+  directory, or an object the action did not create (`noteTmpMove`). Renaming a
+  regular file the action created, into place (Go's build cache, gcc, clang),
+  sets nothing; an exchange needs BOTH names to be such files.
+
+`classifier.contained(p) = !tmpLinked && !tmpMoved && underTmp(p)`; `judge`
+skips a contained path at the top of each of its eight loops (`seen`,
+`seenAbsent`, `seenFinal`, `relFinal`, `relAbs`, `gone`, `seenFile`, and
+`ownSeen`, which tests the looked-up path). `stable` is unchanged (its one
+caller, the `seen` loop, tests `contained` first, so a version of `stable` that
+also tested the flags would be dead code). `checkStability` runs once after
+every event has been classified, so both flags are whole-action facts when any
+`judge` runs; with either set, every verdict is today's. `exec-unreadable:under-tmp`
+is unchanged. `fresh` also refuses the recorder's derived state roots
+(`~/.cargo/registry`, `~/.cargo/git`, `stateAnchors`), which are writable HOST
+binds passed as `traced.Config.HostBinds` (`record.DerivedStateRoots`); an
+absent probe of one is still allowed (they start empty), a present look is
+`host-read`.
+
+*Why it is safe.*
+
+1. Under the fresh tmpfs the classifier never asks the disk (`lookup`,
+   `resolve.go`): a name there is something the action made (`links`, `dirs`,
+   `created`) or it is absent. `fresh` excludes the checkout and its ancestors,
+   every declared root and every `HostBinds` path, and their ancestors, so no
+   host bind beneath `$HOME` is in the set.
+2. A lookup can leave the tmpfs by two routes only: a symbolic link located
+   inside it, or a directory that was renamed so that a path resolved physically
+   (`..`, a process's cwd) no longer matches the trace's TEXT. The trace keeps
+   each cwd as a text expression that a directory rename never updates, while
+   the kernel resolves `..` against the real directory; a renamed and re-created
+   name makes the stale text point at a different directory, with no link
+   anywhere. (Example: `chdir $HOME/a/b; rename $HOME/a/b $HOME/b2;
+   mkdir $HOME/a/b; unlink ../work/repo/f` reaches the bound checkout
+   `$HOME/work/repo/f` while the text says the action's own `$HOME/a/work/repo/f`.)
+   Hard links and renames from outside cannot exist: the scratch tmpfs are
+   separate mounts (and the checkout and each state root are binds), so they fail
+   with `EXDEV` (the fuzzer model says so).
+3. So with no link and no directory or foreign rename there, every component of
+   a path under the tmpfs is a directory the action made in place (or the tmpfs
+   root), and a path reaches the action's own files or nothing: neither an input
+   nor a repository write. `..` out of it is exact because no component moved.
+   Renaming a regular file the action created cannot change what any path
+   component or cwd is. A directory or foreign rename sets `tmpMoved` and the old
+   rules (a renamed directory has two changes and fails `createdOnce`) apply to
+   the whole action. Tests: `internal/traced/tmpmoved_test.go`; the fuzzer's
+   burst 13 and its `unsound` flag check that a path resolved from a stale cwd is
+   never recorded without a reason.
+4. Nothing but the action's own files is reachable under `Tmpdir` or `Home`
+   inside the sandbox, with ONE exception, the checkout's ancestor chain under
+   `Home`. When the checkout lies under `Home` (hosted runners), the sandbox
+   makes the chain (`$HOME/work/x`) as plain, writable directories of Home's
+   tmpfs and binds the checkout on top; only the anchors of read-only roots
+   are sealed. If the action could move that chain (`mv ~/work ~/y`), the
+   checkout root would be reachable at a name the action "created", and a
+   listing of it would count as own output. It cannot be moved unobserved:
+   D39 rule (a) covers LOOKS only, so a rename, rmdir, unlink, chmod, utimensat
+   or any other write-class call whose path is an ancestor is `host-read` (and
+   writes-incomplete), exactly as before D39 (`observeHost`, `!c.inWrite`;
+   `internal/traced/ancestor_write_test.go`; the fuzzer model now names the
+   checkout's parent and checks it). The staging directory `$TMPDIR/.kiln-newroot`
+   (`internal/sandbox/plan.go`, `StageDirName`, `StageRoot`) is built on the
+   STAGING tmpfs mounted on the OLD root's `Tmpdir` (`KindStageTmpfs`,
+   `KindStageDir`, `KindRootTmpfs`, `plan.go` in `Plan`); the step's own
+   `Tmpdir` is a second, fresh tmpfs mounted inside the new root
+   (`KindTmpfs`), and `pivot` detaches the old root (`MNT_DETACH`,
+   `sandbox_linux_amd64.go` `pivot`). The stage directory is therefore not visible
+   from inside. The read-only roots beneath `$HOME` are bound at declared paths
+   (`homeRoRoots`), which `fresh` excludes; the anchor tmpfs that hold them are
+   read-only, and a `$HOME/.cargo`-style anchor's missing parents are directories
+   the sandbox, not the action, made (a present look there is an ancestor node
+   under D39 rule (a) or a declared root's own rule).
+
+5. *Assumption: the parents of `Home` and `Tmpdir` are immutable.* `noteTmpMove`
+   ignores a rename with no endpoint under `Home` or `Tmpdir`, which is sound
+   only because nothing the action can rename sits above them: the new root
+   tmpfs is remounted read-only before the pivot (`KindSeal`, `plan.go` in
+   `Plan`, after the `KindProc` step), so `/`, `/home`, `/tmp` and every other
+   directory of it cannot be renamed, created in or removed from, and each
+   mount point (`Home`, `Tmpdir`, the checkout bind, the state roots) is
+   `EBUSY` to rename or remove. A future sandbox layout that made an ancestor
+   of `Home` writable (a writable root, or a `Home` that is a plain directory
+   of a writable tmpfs) would reopen a stale-text path, because a rename of
+   that ancestor would taint nothing. Such a change must extend `noteTmpMove`
+   first.
+
+The census records, for an unstable path, the op class of the look that ENTERED
+the lookup set that failed the rule (`noteLookupOp(set, abs)`), not the first
+look of the path in any set; this is census-only and the record bytes are
+unchanged (`TestCensusDoesNotChangeTheRecord`). `kiln:recorder` is 8. The
+differential fuzzer's model treats any tmp lookup as own-or-absent while no link
+was made in the tmpfs. Tests: `internal/traced/tmpcontain_test.go`.
 
 **One explicit image label.** The record workflow and every job that consumes
 its records use one explicit `ubuntu-NN.04` label, never `ubuntu-latest`: the
@@ -3796,7 +4297,11 @@ precondition provably holds; anything else stays on the strict rule.
   sandbox's tmpfs mount point, the same node in every run. Listing it is
   allowed too: it is the fresh tmpfs, whose contents are the same in every
   run apart from the mounts the sandbox itself makes. Only the node: the
-  checkout's other ancestors and everything under `$HOME` stay `host-read`.
+  checkout's other ancestors and everything under `$HOME` stay `host-read`,
+  **except as D39 now allows**: a present, non-listing look at a proper
+  ancestor of an anchor, and an absent probe strictly inside the fresh `$HOME`
+  or `TMPDIR`. A listing of an ancestor, a child of an ancestor and a present
+  uncreated name under `$HOME` still give `host-read`.
 
 **Tests.** A differential fuzzer runs an in-memory filesystem model with the
 true results and `-y` paths and gives the final state as the post-run disk. It
@@ -4781,6 +5286,17 @@ scheduled and dispatched full build.
 ## 14. Residual risks
 
 These are known and named. They are measured rather than closed.
+
+- **A dying call that reads is refused, not dropped (D35).** A thread killed
+  inside `openat`, `newfstatat` or a listing when its group exits leaves an
+  `unresumed-call` refusal, so some threaded actions (Go's worker threads in a
+  file-system loop) stay unrecorded. Dropping the call would remove an input from
+  the read set: reads are inferred from the open and stat records alone, and a
+  live sibling thread, a sibling's `fork` in the window, a sibling's `exec` (the
+  descriptor survives without `CLOEXEC`) or a stat buffer in shared memory can
+  still use what the call returned. A dying `clone3` at entry stays
+  `unresumed-call` too. Recording such a call as an observed read with an unknown
+  result is the follow-up.
 
 - **The absent-ok child rule looks at the entry at classification time.** It
   checks the entry with `lstat` when the action ends, so an entry that existed

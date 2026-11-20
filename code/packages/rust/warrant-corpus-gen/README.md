@@ -22,6 +22,14 @@ slice S3). It reads a `.warrant` specification and will write the language-neutr
 > evaluated and emitted, and the generator reproduces the oracle's four `tuple-forms-v1` dumps byte
 > for byte (see "`ir.tuple` (S10t-2)").
 >
+> **S11b** (`ir.data`, generator half of the lowering): records, variants and `Option` are real types,
+> the four tags `some none ctor field` and the four data patterns `some none ctor bool` are lowered, typed
+> and costed, `match` works on any scrutinee, `requires` follow the tag, the pattern and the type
+> (R9, R29), and the generator reproduces the oracle's `data-forms-v1` lowering dump **byte for byte,
+> including the conditional `types` object**, and refuses its 121 documents with the generator code of
+> each row (see "`ir.data` (S11b)"). `generate` stays a **fail-closed stub** for a document that needs
+> `ir.data` until S11c-2.
+>
 > **S10c-2** (`ir.fixed`, generator half): the 35 built-ins are **evaluated**, the domains of D21,
 > D25 and D26 are described (`nat_shift`, the signed and the 16-bit `fx_edge`), the `ir.fixed` fault
 > templates are evaluable, and `generate` emits `ir.fixed` documents. The generator reproduces the
@@ -61,7 +69,7 @@ on it, so changing it rebuilds no shared crate (VER04r section 13, "Rule").
 | `json` | the VER04i 9.1 canonical writer: sorted keys, two-space indent, LF, `\uXXXX` escapes. No `serde`: a canonical form must not inherit a library's defaults |
 | `profile` | the strict reader of `corpus.profile` (VER04r 8.4): LF only, only an empty line is skipped, canonical decimals, `max_ir_cost` the only way to raise the cost bound, `accept_blind <op> <fault>` and `omit_example <id>` lines |
 | `types` | the small type language of `ir.core` (`Bool Int Nat U8..I64 Bytes Bytes<N> Result<T,E>`) and, since S10b, the IR-only `Option<T>` of the `ir.fixed` built-ins |
-| `patterns` | S10t-2: the six `match` patterns, the usefulness check, the corpus errors (code `ir`) |
+| `patterns` | S10t-2 and S11b: the ten `match` patterns (six of A.1, four data patterns of A.2), the usefulness check over `Result`, `Option`, `Bool`, tuples, records and variants, the corpus errors (code `ir`) |
 | `ir` | the 26 `ir.core` tags of VER04r Appendix A and their JSON form; S10b adds `Ir::Fixed`, the 35 `ir.fixed` built-ins of A.1 (evaluated since S10c-2, on the width `Ir::Fixed::at` records), and `ir::levels`, the tag part of `requires` (R9) |
 | `lower` | syntax-directed, unoptimised lowering with a small annotating typer; the level refusals; `census` |
 | `analysis` | the pure-guard rule (4.4) and the v0 static arithmetic guard (3.3 rule 3) |
@@ -269,39 +277,43 @@ seam, taking them as a parameter.
 VER04r generation rule, a cost bound, an over-budget product) and, independently, which of the 16.2
 descriptor items its binders touch that are still undecided (since S10c-2 only items 1/2, a list of
 byte strings). Over the **eleven adopters that bind `gen_evidence`** (profile `max_ir_cost 65536`, so
-no adopter is blocked by a cost it would simply declare), as of S10c-2:
+no adopter is blocked by a cost it would simply declare), as of S11b:
 
-| adopter | claims | emittable | first blockers |
+| adopter | claims | lower (`ok`) | first blockers |
 |---|---:|---:|---|
 | ct-compare | 9 | **9** | none |
 | gf256 | 38 | **38** | none (declares `max_ir_cost 32768`) |
 | x25519 | 8 | **8** | none |
-| logic-gates | 88 | 85 | `ir.data` 3 |
-| hash-functions | 56 | 29 | `ir.data` 21, `W0701` 6 |
+| logic-gates | 88 | **88** | none (S11b: `Option` is a real type; the document still has examples that need an `omit_example` line) |
+| hash-functions | 56 | 48 | `err-value` 2, `W0701` 6 (was `ir.data` 21: 19 lower, 2 use a bound error value, [D55]) |
 | lzw | 21 | **21** | none |
-| arithmetic | 63 | 8 | `ir.data` 55 |
+| arithmetic | 63 | **63** | none (S11b: records, the payload-free variant and a `match` on it lower; was `ir.data` 55) |
 | wasm-leb128 | 44 | **44** | none (was 42 claims, 40 emittable, `W0701` 2, before the VER04r D28 split) |
-| vos-sched-any | 15 | 0 | `ir.data` 15 (the three `any` and five safety claims, and the seven oracle-preservation claims of VOS-039c) |
-| vos-sched-fp-bitmap | 13 | 0 | `ir.data` 13 |
+| vos-sched-any | 15 | 5 | `W0701` 10 (what `ir.data` hid: a claim that calls no op, an impure guard) |
+| vos-sched-fp-bitmap | 13 | 11 | `W0701` 2 |
 | zeroize | 9 | 0 | `inout` 9 |
-| **total** | **364** | **242** | `ir.data` 107, `inout` 9, `W0701` 6 |
+| **total** | **364** | **335** | `W0701` 18, `inout` 9, `err-value` 2 |
 
-The table is pinned per adopter in `tests/census.rs`. History of the totals: before S10b `ir.data` 154,
+The table is pinned per adopter in `tests/census.rs` (the generator's `PINS` and the oracle's `ORACLE_PINS`).
+**Since S11b the census counts what lowers**: `ok` is no longer "`generate` can emit it", because `generate` still
+refuses `ir.data` (R37, until S11c-2); a test pins that arithmetic lowers whole and `generate` refuses it.
+History of the totals: before S10b `ir.data` 154,
 `ir.fixed` 101, `inout` 9, `W0701` 2; S10b `ir.data` 79, `ir.fixed` 99, `ir.tuple` 71, `W0701` 8 (89
 emittable); S10t-2 (`ir.tuple` lowers) `ir.data` 100, `ir.fixed` 130, `W0701` 8, `inout` 9, `16.2` 3 (105
 emittable); **S10c-2 evaluates `ir.fixed` and describes the signed and 16-bit `fx_edge` and `nat_shift`,
 so no claim is blocked on `ir.fixed` or `16.2` any more** (238 emittable); **the wasm-leb128 adopter
-splits its two `W0701` claims (VER04r D28: 42 to 44 claims)**, so 357 claims, 242 emittable, `W0701` 6.
+splits its two `W0701` claims (VER04r D28: 42 to 44 claims)**, so 357 claims, 242 emittable, `W0701` 6; **S11b
+lowers `ir.data`** (the name is never a lowering refusal again, R28): 364 claims, 335 lower.
 
-The generator's census now **equals the oracle's exactly** (oracle numbers from running its lowering:
-`ok`, `W0701` for a lowering refusal, `ir.data`) for ct-compare, gf256, **wasm-leb128** (44 `ok`), **hash-functions** (29 `ok`, 6 `W0701`, 21 `ir.data`), logic-gates, **lzw** (21) and
-**x25519** (8). Two differences remain, both generator-side refusals of a feature, never a level
-(`tests/census.rs`): **arithmetic** (10 claims call an op whose signature holds a record or variant
-type: the oracle counts the type in `requires` (R9) and lowers, 18 `ok`; the generator refuses at
-`ir.data` until S11, 8 `ok`) and **zeroize** (`inout` parameters and `ensures`: the oracle lowers all 9,
-the generator refuses 9 until a later slice). The six `W0701` of
-hash-functions (wasm-leb128 had two until D28 split them) are claims with a subject call under an impure guard (VER04r 4.4), refused at lowering
-in both tools.
+The generator's census now **equals the oracle's lowering census exactly** (oracle numbers from running its
+lowering: `ok`, `W0701` for a lowering refusal, the level or feature name for a refused suite) for **ten of the
+eleven adopters**, arithmetic and logic-gates included (VER04r 16.14 R60, [D53]: CV2-F10 and R13 (d)'s arithmetic
+difference are closed). The one difference left is a generator-side refusal of a feature, never a level
+(`tests/census.rs`): **zeroize** (`inout` parameters and `ensures`: the oracle lowers all 9, the generator refuses
+9 until a later slice). The oracle's *evaluation* census still counts a unit that lowered and needs `ir.data` under
+`ir.data` (arithmetic 8 `ok` and 55, logic-gates 85 and 3) until S11c-1 evaluates it. The `W0701` claims of
+hash-functions (6), vos-sched-any (10) and vos-sched-fp-bitmap (2) have a subject call under an impure guard or call no
+operation (VER04r 4.3, 4.4), refused at lowering in both tools.
 
 Only a **list of byte strings** (16.2 items 1 and 2) is still refused by the domain stage; no adopter
 binder is one, and no adopter binder was a `nat_count` (item 3). Of the decided items, item 4 (the
@@ -311,17 +323,58 @@ claims, both now emittable. Run the report with
 
 ## Fail closed
 
-A construct beyond `ir.core` refuses the **whole document**, naming the level:
+A construct no level of this tool implements refuses the **whole document**, naming the level or feature:
 
 ```text
-  level [ir.data] at `rc_model`: a record, variant, option or list needs ir.data
+  level [ir.list] at `m`: a list literal needs the reserved ir.list level
 ```
 
-`ir.fixed` (the integer built-ins), `ir.tuple` (tuple types and literals, projection, `match` on a
-`Result`), `ir.data` (records, variants, `Option` and `List` types, lists, `match` on anything
-else), `ir.seq` (reserved), and the features `inout`, `ensures`, `vectors`, `assume` rows. Nothing
-is skipped and nothing is written. `census` reports, per operation, model, claim and
-example, what would block it, without failing the document.
+`ir.list` (a list type, a list literal, `slice to_list to_bytes replicate`, R27, R28), `ir.seq` (`fold map all any
+count range`), the feature names `fixed-cast` (`fixed<N>(b)`) and `err-value` (an arm that uses the error value an
+`Err(e)` pattern bound, [D55]), and the features `inout`, `ensures`, `vectors`, `assume` rows. Nothing is skipped and
+nothing is written. `ir.fixed`, `ir.tuple` and, since S11b, `ir.data` are **lowered**; the name `ir.data` is the one
+refusal of `generate` and of the evaluator that remains until S11c-2 (R37): a document that declares a record or a
+variant, or in which any unit needs the level, is refused whole, naming the first such item.
+`census` reports, per operation, model, claim and example, what would block it, without failing the document.
+
+## `ir.data` (S11b)
+
+Records, variants (with and without payload) and `Option<T>` are real types; the four tags `["some", e]`,
+`["none", "T"]` (typed: the payload type the position expects), `["ctor", "Name", [e..]]` and `["field", e, i]`, and
+`match` on **any** scrutinee with the patterns `["some", p]`, `["none"]`, `["ctor", "Name", [p..]]` and
+`["bool", v]` (VER04r Appendix A.2, [D46] to [D48], R27 to R39) are lowered, typed and costed (`some`, `ctor` and `field`
+`1 +` their operands, `none` 1, `match` `1 +` the scrutinee `+` the worst arm). Written from the spec and compared byte for
+byte with the oracle's committed dumps:
+
+- **`requires`** by tag, by pattern and by type (R9, R29): an `Option`, a record or a variant anywhere in the type of a
+  binder, a parameter, a result or a sub-expression adds `ir.data`, except the static type of a producer node that is
+  directly the first operand of `unwrap_or` (the *intermediate use*, so no committed `requires` moves); a `match` is
+  `ir.tuple` on a `Result` and `ir.data` otherwise, and `ir.data` as well for a data pattern at any depth.
+- **Typing** (R39, R51, R52, [D60]): `Some(e)` is `Option<type(e)>`; an `Option` flows and unifies by its payload,
+  nothing lifts through a tuple, a record or a variant; **the width is part of the type**, so `Ok(concat(a, b"0102"))`
+  is a `Result<Bytes<3>,E>` (the S10t over-refusal R13 (c), turned round); a `None` is typed by the **expected type of
+  its position and by nothing else**.
+- **Refusal order** (R35, R53, R54): the declaration limits first (`limit`: 64 constructors, 8 fields, 64 error cases); a
+  reserved level or feature (`ir.list`, `ir.seq`, `fixed-cast`, `err-value`) beats a typing error of the same unit (the
+  checker's error is not the answer: `lower` reads the unit's source for the first reserved construct, as the oracle's
+  `_scan` does); an error never hides a refusal an earlier-declared unit holds; a document with refusals and no other
+  error is named by the refusal of the unit declared on the earliest line.
+- **Corpus errors** (code `ir`) over every scrutinee: fall-through, an unreachable arm (found first), the same bind twice,
+  a bind that shadows a binder, a parameter, `result` or an outer bind, and a bind named like a model, an operation, an
+  error type or a reserved built-in (the oracle's sentence for it since S11b).
+- **Projection errors** (`e.i` on a non-tuple, `e.name` on a non-record) are typing errors, no longer a level.
+
+`tests/data_parity.rs` lowers `data_forms_v1.warrant` and demands `oracle_view_v1` (with its conditional `types` object:
+records and variants only, keys sorted as canonical JSON sorts them) equal the committed
+`data_forms_v1.oracle-lowering.json`, and refuses each of the 121 documents of `data_forms_v1.oracle-refusals.json`
+with the generator code of its row: `level` 39 (22 `ir.list`, 10 `ir.seq`, 4 `fixed-cast`, 3 `err-value`), `ir` 28 with the
+oracle's sentence, `limit` 4, and 50 typing errors that are never a level and never a corpus error (the generator's
+checker or typer, R13 (a)). `tests/data_lowering.rs` states each rule once, small.
+
+The two off-by-one and scalar fault refusal dumps no longer have a lowering carve-out: an `Option` or a variant signature
+lowers, so the five rows that the lowering used to stop (`saturate-add/an-option-result`, `saturate-sub/an-option-result`,
+`missing-error/an-option-payload`, `missing-error/a-variant-payload`, `missing-error/an-option-result`) and the
+`off-by-one-consumed` `an-option-result` reach `instantiate` and carry the oracle's reason text with the code `fault`.
 
 ## `ir.tuple` (S10t-2)
 
@@ -330,14 +383,15 @@ a `Result` with the patterns `ok err err_any tuple bind wild` (VER04r A.1, D20, 
 typing, cost (`1 +` the scrutinee `+` the maximum over the arms), evaluation (exactly one arm), the
 `tuple` descriptor, stream tag `64`, TFV `L<n>` and JSON arrays. A `match` arm is a guard for call
 counting, wraps, D19 and v0 rule 3; a subject call in an arm under a subject scrutinee is `W0701`.
-`Err(e)` is `err_any` and an arm that uses `e` is `ir.data`; a `match` on a non-`Result` is `ir.data`.
+`Err(e)` is `err_any` and an arm that uses `e` is the feature `err-value` ([D55]); a `match` on a non-`Result` is `ir.data`
+(lowered since S11b).
 
 The corpus errors (a `match` that falls through, an unreachable arm, a duplicate or shadowing bind)
 are refused with the generator code `ir` (unreachable first, R12). The S2 checker raises the same
 rules (`W0301`, `W0203`); `lower` maps exactly those kinds to `ir`. `concat`, bytes literals and `if`
 over sized operands flow to `Bytes<N>` everywhere (A.1).
 
-Faults: `ok-as-err`, `drop-consumed`, `swap-components`, `off-by-one-consumed` [D36] (`requires` `ir.fixed` and `ir.tuple`), the tuple-payload `missing-error`, and the bare
+Faults: `ok-as-err`, `drop-consumed`, `swap-components`, `off-by-one-consumed` [D36] (`requires` `ir.fixed` and `ir.tuple`), `saturate-add`, `saturate-sub` and `shift-mask` [D51] (`ir.fixed`, S11f-2), `missing-error` for every scalar, `Bytes` or tuple payload [D50], and the bare
 and `Ok` forms of `flip-result-bit` / `drop-last-result-byte`, in the exact 8.2 JSON; a fault's
 `requires` is the sorted union of its template's levels and its op's types (R9). Fault evaluation is
 gated by `SHIPPED_GATE`, open to `ir.core`, `ir.fixed` and `ir.tuple` since the flip (S10c, 0.6.0); under a
@@ -353,10 +407,10 @@ with negative controls. `tests/tuple_forms.rs` pins the rules one at a time.
 
 Since slice S10b the lowerer reads the 35 built-ins of VER04r Appendix A.1 (`bit_and` ... `unwrap_or`):
 one `Ir::Fixed` node per call, operand types inferred as for `add`, a static type argument written as
-the canonical type name in position 1, `Option<T>` confined to the first operand of `unwrap_or`
-(anything else is `ir.data`, D23), `div`/`rem` on two `Nat` operands typed `Option<Int>` (R7), and the
-static width of a `from_be`/`from_le` operand read from the one pass that lowers it (a bytes literal, a
-`concat` of sized operands, an `if` of equal widths: the checker's rule). Every lowered unit records its
+the canonical type name in position 1, `Option<T>` a real type (S11b, [D48]; until then confined to the first operand of
+`unwrap_or`), `div`/`rem` on two `Nat` operands typed `Option<Int>` (R7), and the
+static width of a `from_be`/`from_le` operand part of its type (a bytes literal, a
+`concat` of sized operands, an `if` of equal widths: the checker's rule, R51). Every lowered unit records its
 `requires` (R9: the sorted union of its tags' levels and its callees' own `requires`, `ir.core` always
 present) and each new tag costs `1 +` its operands. A **v0** document refuses the built-in names (they
 are version scoped).
@@ -571,7 +625,8 @@ doctest and the integration tests:
 | `census` | the census over the eleven adopters, the oracle's census beside it, and the settled and open 16.2 items on synthetic documents |
 | `fixed_parity`, `fixed_lowering` | S10b: the lowering dump of `fixed-forms-v1`, the refusals, `requires` and cost of the built-ins |
 | `fixed_eval_parity` | S10c-2: the five dumps of `fixed-eval-v1` (lowering, evaluation, faults under both gates, values, domains) byte for byte, the shift-count rule, the demotions, negative controls |
-| `tuple_parity`, `tuple_forms` | S10t-2: the four dumps of `tuple-forms-v1`, the tuple forms one rule at a time |
+| `tuple_parity`, `tuple_forms` | S10t-2: the four dumps of `tuple-forms-v1`, the tuple forms one rule at a time; S11b: the width in the type (R51) |
+| `data_parity`, `data_lowering` | S11b: the lowering dump of `data-forms-v1` byte for byte (with its conditional `types` object), its 121 refused documents with the generator code of each row, `generate` fail-closed, negative controls; each `ir.data` rule once, small |
 | `limits` | the resolver, planner and total-work refusals; the evaluator at the real bounds (64 model frames) on a default test thread; pure subject-argument failures refused at generation |
 | `oracle_parity`, `lowering`, `fail_closed` | S3a: lowering parity, ct-compare against the v1 corpus, one test per refused construct, `generate` refusals |
 | `emission` | S3c: the eight control rows, the 18 digests re-derived from the emitted `corpus.json`, every digest re-derived from the chunk files, `cases.tfv` equal to v1, chunk files equal to the oracle's, the key set, `corpus.json` pinned by digest, brute-force witness check, seeded-wrong controls |

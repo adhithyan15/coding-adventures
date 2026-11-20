@@ -126,20 +126,52 @@ fn ct_compare_and_gf256_are_emittable_whole_and_touch_none_of_16_2() {
 }
 
 #[test]
-fn the_adopters_beyond_what_is_evaluated_are_refused_whole() {
+fn the_adopters_that_lower_whole_are_the_ones_the_census_calls_emittable() {
     for (name, doc) in adopters() {
         let d = doc.unwrap();
-        // S10c-2 evaluates `ir.fixed`, so x25519 is emittable whole too (the census does not run
-        // the evaluator: a document is "emittable" when every item lowers and fits its bounds).
-        // wasm-leb128 joined with its adopter PR: VER04r [D28] split its two `W0701` claims, so
-        // all 44 claims lower (the plan for that PR missed this pin; the test found it)
-        if ["ct-compare", "gf256", "x25519", "wasm-leb128"].contains(&name.as_str()) {
+        // The census does not run the evaluator: a document is "emittable" when every item lowers and
+        // fits its bounds.  S10c-2 evaluates `ir.fixed`, so x25519 is emittable whole; wasm-leb128 joined
+        // with its adopter PR (VER04r [D28] split its two `W0701` claims, so all 44 claims lower).  **S11b
+        // lowers `ir.data`**, so arithmetic lowers whole (all 63 claims) and logic-gates lowers all 88
+        // claims, which closes CV2-F10 (VER04r 16.14 [D53]; R60); `generate` still refuses both, naming
+        // `ir.data`, until S11c-2 (R37), which `ir_data_adopters_lower_and_generate_refuses_them` pins.
+        if ["ct-compare", "gf256", "x25519", "wasm-leb128", "arithmetic"].contains(&name.as_str()) {
             assert!(d.emittable(), "{name}");
             continue;
         }
-        // an adopter beyond ir.core, ir.tuple and ir.fixed is not emittable whole: fail closed
+        // any other adopter is not emittable whole: fail closed (a `W0701` claim, a feature, ...)
         assert!(!d.emittable(), "{name}");
     }
+    // logic-gates: every claim lowers; what keeps the document from being whole is its examples, whose shape
+    // an `omit_example` line of the corpus profile excuses (the adopter PR's, VER04r 8.4), never a level
+    let lg = census_of(
+        ADOPTERS.iter().find(|a| a.0 == "logic-gates").unwrap().1,
+        &ceiling(),
+    )
+    .unwrap();
+    assert!(lg.claims.iter().all(|c| c.blocked.is_none()));
+    assert!(!lg.other_blocks.is_empty());
+    assert!(lg
+        .other_blocks
+        .iter()
+        .all(|(_, _, e)| e.code == code::W0701 && !e.is_level()));
+}
+
+#[test]
+fn ir_data_adopters_lower_and_generate_refuses_them() {
+    // R37: S11b lowers, types and costs `ir.data` and keeps `generate` fail-closed.  Arithmetic is the
+    // adopter whose document lowers whole; logic-gates' lowers claim by claim (above) and is refused for
+    // its examples first.
+    let src = ADOPTERS.iter().find(|a| a.0 == "arithmetic").unwrap().1;
+    let e = with_file(src, |f| {
+        coding_adventures_warrant_corpus_gen::analyse(f, &ceiling()).unwrap_err()
+    });
+    assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.data")), "arithmetic: {e}");
+    // while a document that does not need the level is not refused by the guard
+    let src = ADOPTERS.iter().find(|a| a.0 == "ct-compare").unwrap().1;
+    with_file(src, |f| {
+        assert!(coding_adventures_warrant_corpus_gen::analyse(f, &ceiling()).is_ok())
+    });
 }
 
 // -- the pinned histograms (S10b) ---------------------------------------------------------------
@@ -159,40 +191,65 @@ fn the_adopters_beyond_what_is_evaluated_are_refused_whole() {
 /// wasm-leb128 into four `ok` ones**: 357 claims, `ir.data` 100, `inout` 9, `W0701` 6 and 242
 /// emittable.  **VOS-039c adds seven oracle-preservation claims to the `-any` contract block**: the
 /// `vos-sched-any` document is 15 claims, all `ir.data`, so 364 claims and `ir.data` 107.
+///
+/// **S11b lowers `ir.data`** (VER04r 16.14 [D46] to [D48]): the name `ir.data` is never a *lowering*
+/// refusal any more (R28), so the 107 claims divide as follows (every pin below that moved, and why):
+///
+/// | adopter | before | now | why |
+/// |---|---|---|---|
+/// | arithmetic | `ir.data` 55, `ok` 8 | `ok` 63 | records, the payload-free variant and one `match` on it lower (R60: all 63 suites lower) |
+/// | logic-gates | `ir.data` 3, `ok` 85 | `ok` 88 | `Option` is a real type; the three claims lower |
+/// | hash-functions | `ir.data` 21, `ok` 29, `W0701` 6 | `err-value` 2, `ok` 48, `W0701` 6 | 19 of the 21 lower; the two that use an error value bound by a pattern are the feature `err-value` ([D55], R28) |
+/// | vos-sched-any | `ir.data` 15 | `ok` 5, `W0701` 10 | what `ir.data` hid: ten claims break VER04r 4.3 or 4.4 (a claim that calls no op, an impure guard) |
+/// | vos-sched-fp-bitmap | `ir.data` 13 | `ok` 11, `W0701` 2 | the same two rules |
+///
+/// Totals: 364 claims, `ok` 335, `W0701` 18, `err-value` 2, `inout` 9.  Nothing is "emittable" in the sense of
+/// `generate` for the `ir.data` adopters (R37): the census counts what **lowers**.
 const PINS: [(&str, &[(&str, usize)]); 11] = [
-    ("arithmetic", &[("ir.data", 55), ("ok", 8)]),
+    ("arithmetic", &[("ok", 63)]),
     ("ct-compare", &[("ok", 9)]),
     ("gf256", &[("ok", 38)]),
     (
         "hash-functions",
-        &[("W0701", 6), ("ir.data", 21), ("ok", 29)],
+        &[("W0701", 6), ("err-value", 2), ("ok", 48)],
     ),
-    ("logic-gates", &[("ir.data", 3), ("ok", 85)]),
+    ("logic-gates", &[("ok", 88)]),
     ("lzw", &[("ok", 21)]),
-    ("vos-sched-any", &[("ir.data", 15)]),
-    ("vos-sched-fp-bitmap", &[("ir.data", 13)]),
+    ("vos-sched-any", &[("W0701", 10), ("ok", 5)]),
+    ("vos-sched-fp-bitmap", &[("W0701", 2), ("ok", 11)]),
     ("wasm-leb128", &[("ok", 44)]),
     ("x25519", &[("ok", 8)]),
     ("zeroize", &[("inout", 9)]),
 ];
 
-/// The oracle's census of the same documents as of S10c-1: its suites by `unsupported.level`, and
-/// a suite with no level but a lowering refusal (`LoweredSuite.refusal`, the impure guard and the
-/// claim-calls-no-op rule, VER04r 4.3, 4.4) by `W0701`; `ok` for none.  `ir.fixed` is evaluated, so
-/// no suite names it any more, and the six hash-functions claims that have an impure guard *and* a
-/// built-in now name the guard in both tools.  The numbers come from running the oracle's lowering
-/// (`warrant-oracle/tests/test_lower.py` `CENSUS` keys by level only, so it reads `ir.core 44` for
-/// wasm-leb128 (42 and 2 refused before [D28]: none now), and `ir.core 35` for hash-functions: 29 + 6).
-const ORACLE_PINS: [(&str, &[(&str, usize)]); 9] = [
+/// The oracle's census of the same documents, as of S11a: its **lowering** view, a suite named by the level
+/// or feature that refused it at lowering (`LoweredSuite.unsupported` while `lowered` is false:
+/// `err-value`), by `W0701` when it lowered with a lowering refusal (`LoweredSuite.refusal`, the impure
+/// guard and the claim-calls-no-op rule, VER04r 4.3, 4.4), and `ok` for a suite that lowered, whatever
+/// the evaluator then does with it.  (The oracle's *evaluation* view, which `emit.census` reports as
+/// `suites_by_level`, still counts a unit that lowered and needs `ir.data` under `ir.data` until S11c-1
+/// evaluates it, R37: arithmetic `ir.core` 8 and `ir.data` 55, logic-gates 85 and 3, hash-functions
+/// `ir.core` 35, `err-value` 2 and `ir.data` 19; that is the table of `warrant-oracle/tests/test_lower.py`.)
+///
+/// The numbers come from running the oracle's `lower_document` over the eleven specifications.  S10c-1:
+/// `ir.fixed` is evaluated, so no suite names it any more, and the six hash-functions claims that have
+/// an impure guard *and* a built-in name the guard in both tools.  **S11a/S11b:** arithmetic is 63 `ok` and
+/// logic-gates 88 (R60: from S11a the oracle's row is the generator's, *in the count of what lowers*; the
+/// difference R13 (d) recorded is closed, [D53]), hash-functions' 21 `ir.data` claims are 19 `ok` and 2
+/// `err-value` (R28), and the two vos-sched documents, which both tools used to count under `ir.data`,
+/// show their `W0701` claims.
+const ORACLE_PINS: [(&str, &[(&str, usize)]); 11] = [
     ("ct-compare", &[("ok", 9)]),
     ("gf256", &[("ok", 38)]),
     ("wasm-leb128", &[("ok", 44)]),
-    ("hash-functions", &[("ok", 29), ("W0701", 6), ("ir.data", 21)]),
-    ("logic-gates", &[("ok", 85), ("ir.data", 3)]),
+    ("hash-functions", &[("ok", 48), ("W0701", 6), ("err-value", 2)]),
+    ("logic-gates", &[("ok", 88)]),
     ("lzw", &[("ok", 21)]),
-    ("arithmetic", &[("ok", 18), ("ir.data", 45)]),
+    ("arithmetic", &[("ok", 63)]),
     ("x25519", &[("ok", 8)]),
     ("zeroize", &[("ok", 9)]),
+    ("vos-sched-any", &[("ok", 5), ("W0701", 10)]),
+    ("vos-sched-fp-bitmap", &[("ok", 11), ("W0701", 2)]),
 ];
 
 fn histogram(name: &str) -> std::collections::BTreeMap<String, usize> {
@@ -224,37 +281,39 @@ fn the_first_blocker_histogram_of_every_adopter_is_pinned() {
 
 #[test]
 fn the_generator_census_agrees_with_the_oracle_and_every_difference_has_a_named_cause() {
-    // Exactly equal for the seven documents whose every claim both tools lower or refuse for the
-    // same reason.  S10t-2 closed the tuple gap, CV2-F1 the guard-timing gap, S10c-2 the `ir.fixed`
-    // and descriptor gaps (wasm-leb128, hash-functions, lzw and x25519 joined the list).
+    // Exactly equal for the ten documents whose every claim both tools lower or refuse for the same
+    // reason.  S10t-2 closed the tuple gap, CV2-F1 the guard-timing gap, S10c-2 the `ir.fixed` and
+    // descriptor gaps (wasm-leb128, hash-functions, lzw and x25519 joined the list), and **S11b the
+    // `ir.data` gap** (arithmetic, logic-gates and the two vos-sched documents joined it): CV2-F10 and
+    // R13 (d)'s arithmetic difference are closed, both tools lower records, variants and `Option`.
     for name in [
+        "arithmetic",
         "ct-compare",
         "gf256",
         "hash-functions",
         "logic-gates",
         "lzw",
+        "vos-sched-any",
+        "vos-sched-fp-bitmap",
         "wasm-leb128",
         "x25519",
     ] {
         let oracle = ORACLE_PINS.iter().find(|p| p.0 == name).unwrap().1;
         assert_eq!(histogram(name), pin(oracle), "{name}");
     }
-    // The two that still differ, differ in one direction only: the generator never *lowers* a
+    // The one that still differs, differs in one direction only: the generator never *lowers* a
     // claim the oracle refuses.
     let ok = |h: &std::collections::BTreeMap<String, usize>| h.get("ok").copied().unwrap_or(0);
     for (name, oracle) in &ORACLE_PINS {
         let g = histogram(name);
         assert!(ok(&g) <= ok(&pin(oracle)), "{name}");
     }
-    // arithmetic: 10 claims call an op whose signature holds a record or variant type.  The oracle
-    // counts the type in `requires` (R9) and lowers; the generator refuses it at `ir.data` until
-    // S11.  So the oracle's 18 `ok` are 8 here and its 45 `ir.data` are 55.
-    let a = histogram("arithmetic");
-    assert_eq!((a["ir.data"], a["ok"]), (45 + 10, 18 - 10));
     // zeroize: `inout` parameters and `ensures` clauses are generator refusals (the oracle lowers
     // all 9 claims): a documented feature gap, not a level.
     let z = histogram("zeroize");
     assert_eq!((z["inout"], z.get("ok").copied().unwrap_or(0)), (9, 0));
+    // hash-functions: the two `err-value` claims are [D55]'s error value that a pattern binds and uses
+    assert_eq!(histogram("hash-functions")["err-value"], 2);
 }
 
 // -- the census logic on synthetic documents ------------------------------------------------
@@ -328,7 +387,7 @@ fn the_settled_16_2_items_are_described_and_only_the_list_of_byte_strings_is_rep
         "  claim i3p:\n    forall n: Nat, a: U8. op_inc(a) == inc(shl(a, (n)))\n",
     ));
     assert_eq!(d.claims[0].domain.as_ref().unwrap().1[0], "nat_shift");
-    // items 1/2: a list of byte strings (ir.data as well) is the one item still undecided
+    // items 1/2: a list of byte strings (`ir.list` as well, R27) is the one item still undecided
     let d = one(&v1_doc(
         "",
         "  claim i12:\n    forall l: List<Bytes<2>>. op_inc(1u8) == inc(1u8)\n",
@@ -340,7 +399,7 @@ fn the_settled_16_2_items_are_described_and_only_the_list_of_byte_strings_is_rep
         "  claim ln:\n    forall l: List<Nat>. op_inc(1u8) == inc(1u8)\n",
     ));
     assert!(d.claims[0].s162.is_empty());
-    assert_eq!(d.claims[0].reason_key(), "ir.data");
+    assert_eq!(d.claims[0].reason_key(), "ir.list");
     // a fine unsigned wide leaf and a v1 U64 are not on the list
     let d = one(&v1_doc(
         "",
@@ -429,9 +488,9 @@ fn the_report_groups_refused_items_and_lists_16_2_hits_by_claim() {
         "{r}"
     );
     assert!(r.contains("VER04r 16.2 item 1/2: 1 claims: synth/i12"), "{r}");
-    assert!(r.contains("i12: blocked level [ir.data]"), "{r}");
+    assert!(r.contains("i12: blocked level [ir.list]"), "{r}");
     assert!(r.contains("ok_one: ok; P=256 [u8_all]"), "{r}");
-    assert!(r.contains("claims by first blocker: ir.data 1, ok 1"), "{r}");
+    assert!(r.contains("claims by first blocker: ir.list 1, ok 1"), "{r}");
     // no hit: the report says so
     let clean = render(
         &[("ct".to_string(), census_of(CT_COMPARE, &Profile::default()))],

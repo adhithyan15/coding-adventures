@@ -1,0 +1,26 @@
+# GBL-020a1 canonical bindings for the real public package exports.
+package coding_adventures_fixed_point
+revision 0.1.0
+spec code/specs/fixed-point.warrant
+output code/packages/rust/fixed-point/tests/generated/warrant_evidence.rs
+seed 0x5146_3136_5f41_444d
+property_cases 4096
+fuzz_iterations 4096
+negctl_fuzz_iterations 256
+exhaustive_budget 1300000
+
+struct Q16 path=coding_adventures_fixed_point::Q16 fields=raw:i32
+struct SaturatingResult path=coding_adventures_fixed_point::SaturatingResult fields=value:Q16,overflowed:bool
+enum RoundingMode path=coding_adventures_fixed_point::RoundingMode ctors=TowardZero,Floor,Ceil,NearestEven
+enum Q16Error path=coding_adventures_fixed_point::Q16Error ctors=Overflow,DivisionByZero
+
+op q16_from_integer proofs_not_live=source-frontend-refuses-const-item-or-q16-custom-type export=from_integer errors=coding_adventures_fixed_point::Q16Error/Overflow=Overflow,DivisionByZero=DivisionByZero faults=missing-error
+op q16_checked_add proofs_not_live=source-frontend-refuses-const-item-or-q16-custom-type export=checked_add errors=coding_adventures_fixed_point::Q16Error/Overflow=Overflow,DivisionByZero=DivisionByZero faults=missing-error
+op q16_checked_sub proofs_not_live=source-frontend-refuses-const-item-or-q16-custom-type export=checked_sub errors=coding_adventures_fixed_point::Q16Error/Overflow=Overflow,DivisionByZero=DivisionByZero faults=missing-error
+op q16_saturating_add proofs_not_live=source-frontend-refuses-const-item-or-q16-custom-type export=saturating_add faults=bool-field-flip
+op q16_saturating_sub proofs_not_live=source-frontend-refuses-const-item-or-q16-custom-type export=saturating_sub faults=bool-field-flip
+op q16_checked_mul proofs_not_live=source-frontend-refuses-const-item-or-q16-custom-type export=checked_mul errors=coding_adventures_fixed_point::Q16Error/Overflow=Overflow,DivisionByZero=DivisionByZero faults=missing-error
+op q16_saturating_mul proofs_not_live=source-frontend-refuses-const-item-or-q16-custom-type export=saturating_mul faults=bool-field-flip
+op q16_checked_div proofs_not_live=source-frontend-refuses-const-item-or-q16-custom-type export=checked_div errors=coding_adventures_fixed_point::Q16Error/Overflow=Overflow,DivisionByZero=DivisionByZero faults=missing-error
+op q16_saturating_div proofs_not_live=source-frontend-refuses-const-item-or-q16-custom-type export=saturating_div errors=coding_adventures_fixed_point::Q16Error/Overflow=Overflow,DivisionByZero=DivisionByZero faults=bool-field-flip
+op q16_to_integer proofs_not_live=source-frontend-refuses-const-item-or-q16-custom-type export=to_integer faults=flip-result-bit

@@ -581,8 +581,10 @@ restriction above is what removes the accidental case. What remains is a
 deliberate two-step: a reviewed pull request (which propagates normally,
 because the wiring itself is a source change) makes behaviour depend on an
 allowed-type data file, and a later `A`/`M` edit of only that file is then
-local. Review of the first step is the control; no instance exists in the
-repository today.
+local. Review of the first step is the control. The fixed-point test-only
+reader described below is a separately registered exception: it reads
+metadata from a different package without making that package's ordinary
+dependents inherit the files.
 
 A further `-validate-build-files` check guards a toolchain declaration rather
 than metadata (`internal/validator/negctl_python.go`): every `BUILD*` file
@@ -609,6 +611,55 @@ the `CHANGELOG.d/` shards of `typescript/script-ductus` and
 `typescript/programs/language-ladder`, both of which depend on it. Before
 adding a cross-package read of one of these files from a dependent, take the
 file off the list.
+
+Two fixed-point verification consumers read data from another Rust package
+without a Cargo dependency edge. `rust/ca-assurance-report`'s fixed-point
+source-equivalence test constructs a sandbox by copying
+`rust/fixed-point/src/`, `rust/fixed-point/evidence/`, `Cargo.toml`,
+`effect_certificate.json`, `evidence.bindings`, and `assurance-profile.json`,
+then reads `code/specs/fixed-point.warrant`. `rust/warrant-ir`'s fixed-point
+proof integration test embeds that Warrant file, `rust/fixed-point/src/lib.rs`
+and `evidence.bindings`, frames the complete `rust/fixed-point/src/` source
+tree, and reads `rust/fixed-point/Cargo.toml` to validate the default library
+target and `package.autolib`. Both run through Cargo, so their exact external inputs also
+include the root and Rust-workspace Cargo target configs and the workspace
+manifest and lockfile. These are test-only input registrations; they do not
+create dependency edges from fixed-point to either verifier.
+
+Each repository input registration has an explicit kind: `file` or `tree`.
+A `file` registration MUST resolve to one regular file; a directory at that
+path is an error and MUST NOT be reinterpreted as a tree. A `tree` registration
+MUST resolve to a directory; a regular file at that path is an error. The
+registered kind is trusted metadata, never inferred from the current
+filesystem. Tree roots are the exact `src/` and `evidence/` directories named
+above; no ancestor, sibling, suffix, or package-wide directory is implied.
+
+A registered tree is recursive, not a snapshot of the filenames currently
+present. Before walking, hashing MUST validate the root and each ancestor from
+the repository root without following symlinks or reparse points, including
+when the tree is empty. Traversal MUST use bounded paged directory reads and
+charge each entry against its limit before retaining it. The cache key MUST
+include all regular files below the exact registered root, sorted by canonical
+repository-relative path and framed with a distinct tree domain, root path,
+file count, file path, file kind, byte length, and exact bytes. The `src/`
+scope is a conservative all-file superset of the Rust producer's `.rs` source
+tree; the evidence scope mirrors the sandbox's copied files.
+
+Each tree is bounded to depth 32, 100,000 total entries, 4,096 bytes per
+canonical path, 32 MiB of retained canonical paths, 8 MiB per file, and
+128 MiB of bytes actually read. A content reader MUST enforce the file and
+aggregate limits while streaming, as well as checking initial sizes. It MUST
+verify that each opened descriptor is the same file at the registered path
+before and after reading, with stable size and modification time, and compare
+a final bounded inventory with the initial file and directory identities.
+Same-name replacement, growth, addition, removal, a symlink or reparse point,
+a special file, or any unstable traversal MUST fail hashing closed. Adding,
+removing, or changing a file changes the digest. The filesystem tree is the
+source of the digest, so an untracked file inside a consumed tree participates
+whenever the consumer is hashed; unrelated untracked files outside the exact
+roots do not. In particular, the fixed-point package's own external input set
+remains its six exact Warrant, corpus and Cargo files; these additional tree
+inputs belong only to the two verifier consumers.
 
 A package whose **only** changes are package-local metadata is selected
 like a repository input consumer: it and its prerequisites, not its

@@ -86,6 +86,9 @@ type repositoryInputConsumer struct {
 	// leaves this nil; the export then lists no paths for it. A test pins
 	// every declared path to its predicate so the two cannot drift.
 	paths []string
+	// treePaths marks the subset of paths whose cache input kind is explicitly
+	// recursive tree. A file/directory substitution is rejected by the hasher.
+	treePaths []string
 	// globs declares inputs that are a pattern rather than a finite list
 	// (`**` any depth including none, `*` within one segment), for
 	// predicates such as the Mosaic walk. A test pins them to the predicate
@@ -218,12 +221,51 @@ var (
 		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
 	}
 
-	rngCorpusPaths            = []string{"code/specs/fixtures/rng-v1"}
-	fenwickTreeContractPaths  = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
-	dt17HashFunctionsPaths    = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
+	rngCorpusPaths           = []string{"code/specs/fixtures/rng-v1"}
+	fenwickTreeContractPaths = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths   = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
+	fixedPointInputPaths     = []string{
+		".cargo/config.toml",
+		"code/packages/rust/.cargo/config.toml",
+		"code/packages/rust/Cargo.lock",
+		"code/packages/rust/Cargo.toml",
+		"code/specs/fixed-point.warrant",
+		"code/specs/fixtures/fixed-point-q16-v1/cases.json",
+	}
+	// The verifier BUILD recipes explicitly register these tree roots; all
+	// other repository inputs remain file-only.
+	fixedPointSourceTreePaths = []string{
+		"code/packages/rust/fixed-point/src",
+	}
+	fixedPointEvidenceTreePaths = []string{
+		"code/packages/rust/fixed-point/evidence",
+	}
+	rustWorkspaceCargoInputs = []string{
+		".cargo/config.toml",
+		"code/packages/rust/.cargo/config.toml",
+		"code/packages/rust/Cargo.lock",
+		"code/packages/rust/Cargo.toml",
+	}
+	fixedPointBindingsInput      = "code/packages/rust/fixed-point/evidence.bindings"
+	fixedPointReporterFileInputs = append(append([]string{}, []string{
+		"code/packages/rust/fixed-point/Cargo.toml",
+		"code/packages/rust/fixed-point/effect_certificate.json",
+		fixedPointBindingsInput,
+		"code/packages/rust/fixed-point/assurance-profile.json",
+		"code/specs/fixed-point.warrant",
+	}...), rustWorkspaceCargoInputs...)
+	fixedPointWarrantIRFileInputs = append(append([]string{}, []string{
+		"code/packages/rust/fixed-point/Cargo.toml",
+		fixedPointBindingsInput,
+		"code/specs/fixed-point.warrant",
+	}...), rustWorkspaceCargoInputs...)
+	fixedPointReporterTreePaths  = append(append([]string{}, fixedPointSourceTreePaths...), fixedPointEvidenceTreePaths...)
+	fixedPointWarrantIRTreePaths = append([]string{}, fixedPointSourceTreePaths...)
+	fixedPointReporterInputs     = append(append([]string{}, fixedPointReporterFileInputs...), fixedPointReporterTreePaths...)
+	fixedPointWarrantIRInputs    = append(append([]string{}, fixedPointWarrantIRFileInputs...), fixedPointWarrantIRTreePaths...)
 	dt18HashMapPaths          = []string{"code/specs/DT18-hash-map.md", "code/specs/DT18-hash-map-dart-profile.md", "code/specs/fixtures/hash-map-v1"}
 	swiftHashMapFixtureInputs = []string{"code/specs/fixtures/hash-map-v1/cases.json"}
-	gameClockInputPaths       = []string{
+	gameClockInputPaths          = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
 		"code/packages/rust/Cargo.lock",
@@ -398,6 +440,19 @@ var (
 	// S10o-2 reproduces the dumps byte for byte, reading them from this directory; it lies in the
 	// oracle's package, so only the generator needs a row for it.
 	warrantOffByOneConsumedFixture = "code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1"
+	// warrantScalarFaultsFixture is the oracle's synthetic scalar-faults document, its profile and its
+	// committed faults and refusals dumps (CV2-S11f-1: saturate-add, saturate-sub, shift-mask and the
+	// scalar missing-error). The generator's tests/scalar_faults_parity.rs reproduces the dumps byte
+	// for byte (CV2-S11f-2), reading them from this directory; it lies in the oracle's package, so
+	// only the generator needs a row for it.
+	warrantScalarFaultsFixture = "code/packages/python/warrant-oracle/tests/fixtures/scalar-faults-v1"
+	// warrantDataFormsFixture is the oracle's synthetic ir.data document, its lowering dump and its refusals
+	// dump (CV2-S11a: records, variants, Option, the four tags and the data patterns). The generator's
+	// tests/data_parity.rs reproduces the lowering dump byte for byte, including its conditional `types`
+	// object, and refuses every document of the refusals dump with the generator code of its row
+	// (CV2-S11b), reading them from this directory; it lies in the oracle's package, so only the
+	// generator needs a row for it.
+	warrantDataFormsFixture = "code/packages/python/warrant-oracle/tests/fixtures/data-forms-v1"
 	// warrantCorpusGenPaths are the inputs of the generator's --check line and of its
 	// cross-package parity tests.
 	warrantCorpusGenPaths = append(warrantAdopterInputs(), []string{
@@ -407,9 +462,20 @@ var (
 		warrantTupleFormsFixture,
 		warrantFixedEvalFixture,
 		warrantOffByOneConsumedFixture,
+		warrantScalarFaultsFixture,
+		warrantDataFormsFixture,
 	}...)
 	// warrantOracleRowPaths adds each adopter's fixture directory to the oracle's exact files.
-	warrantOracleRowPaths = append(append([]string{}, warrantOraclePaths...), warrantAdopterFixtures()...)
+	// warrantOracleConformanceScripts are the v1 conformance checker and its tests. The oracle's BUILD
+	// runs both (VER04r 16.13 R23, S5b), beside make_conformance.py --check against the conformance
+	// fixture directory, so an edit to any of them or to the fixture selects the oracle in addition to
+	// the three lane runners the fixture already selects.
+	warrantOracleConformanceScripts = []string{
+		"code/scripts/warrant_corpus_conformance.py",
+		"code/scripts/tests/test_warrant_corpus_conformance.py",
+	}
+	warrantOracleRowPaths = append(append(append([]string{}, warrantOraclePaths...), warrantAdopterFixtures()...),
+		append([]string{warrantConformanceFixture}, warrantOracleConformanceScripts...)...)
 	// warrantAssurancePaths are the shared Warrant lane artifacts the
 	// assurance report validates directly (see isWarrantAssuranceInput).
 	// The Kiln graph export reads them, so they must list every path the
@@ -643,6 +709,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 		paths:    rngCorpusPaths,
+	},
+	{
+		name:     "rust/fixed-point",
+		language: "rust",
+		inputs:   "the GBL-020a1 Warrant model, v1 corpus, and exact Cargo workspace/build configuration",
+		matches:  isFixedPointInput,
+		paths:    fixedPointInputPaths,
 	},
 	{
 		name:     "rust/game-clock",
@@ -1111,11 +1184,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		globs:    []string{warrantDocumentGlob},
 	},
 	{
-		name:     "rust/ca-assurance-report",
-		language: "rust",
-		inputs:   "the Warrant lane spec, corpus, consumer registry, schema and TFV transport",
-		matches:  isWarrantAssuranceInput,
-		paths:    warrantAssurancePaths,
+		name:      "rust/ca-assurance-report",
+		language:  "rust",
+		inputs:    "the Warrant lane inputs plus fixed-point package evidence consumed by its assurance sandbox",
+		matches:   isFixedPointReporterInput,
+		paths:     append(append([]string{}, warrantAssurancePaths...), fixedPointReporterInputs...),
+		treePaths: fixedPointReporterTreePaths,
+	},
+	{
+		name:      "rust/warrant-ir",
+		language:  "rust",
+		inputs:    "the fixed-point Warrant model, source tree and evidence bindings read by its proof integration test",
+		matches:   isFixedPointWarrantIRInput,
+		paths:     fixedPointWarrantIRInputs,
+		treePaths: fixedPointWarrantIRTreePaths,
 	},
 	{
 		name:     "rust/arithmetic",
@@ -1169,14 +1251,14 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "python/warrant-oracle",
 		language: "python",
-		inputs:   "the adopter Warrant specs, the v1 ct-compare corpus, and each adopter's bindings and committed v2 fixture the oracle gates (warrantAdopters)",
+		inputs:   "the adopter Warrant specs, the v1 ct-compare corpus, each adopter's bindings and committed v2 fixture the oracle gates (warrantAdopters), and the conformance fixture with the v1 checker and its tests its BUILD runs (S5b)",
 		matches:  isWarrantOracleInput,
 		paths:    warrantOracleRowPaths,
 	},
 	{
 		name:     "rust/warrant-corpus-gen",
 		language: "rust",
-		inputs:   "each adopter's spec, bindings and committed v2 fixture its BUILD --check regenerates (VER04r 16.8, D32; warrantAdopters), and the oracle's accept-blind, fixed-forms, omit-example, tuple-forms, fixed-eval and off-by-one-consumed fixtures its tests reproduce",
+		inputs:   "each adopter's spec, bindings and committed v2 fixture its BUILD --check regenerates (VER04r 16.8, D32; warrantAdopters), and the oracle's accept-blind, fixed-forms, omit-example, tuple-forms, fixed-eval, off-by-one-consumed, scalar-faults and data-forms fixtures its tests reproduce",
 		matches:  isWarrantCorpusGenInput,
 		paths:    warrantCorpusGenPaths,
 	},
@@ -1269,6 +1351,41 @@ func isWarrantAssuranceInput(changed string) bool {
 	return false
 }
 
+func isRustWorkspaceCargoInput(changed string) bool {
+	for _, input := range rustWorkspaceCargoInputs {
+		if changed == input {
+			return true
+		}
+	}
+	return false
+}
+
+func isFixedPointPackageFile(changed string) bool {
+	return changed == "code/packages/rust/fixed-point/Cargo.toml" ||
+		changed == "code/packages/rust/fixed-point/effect_certificate.json" ||
+		changed == fixedPointBindingsInput ||
+		changed == "code/packages/rust/fixed-point/assurance-profile.json" ||
+		isUnderExactInputTree(changed, "code/packages/rust/fixed-point/src") ||
+		isUnderExactInputTree(changed, "code/packages/rust/fixed-point/evidence")
+}
+
+func isUnderExactInputTree(changed, root string) bool {
+	return changed == root || strings.HasPrefix(changed, root+"/")
+}
+
+func isFixedPointReporterInput(changed string) bool {
+	return isWarrantAssuranceInput(changed) || isFixedPointPackageFile(changed) ||
+		changed == "code/specs/fixed-point.warrant" || isRustWorkspaceCargoInput(changed)
+}
+
+func isFixedPointWarrantIRInput(changed string) bool {
+	return changed == "code/packages/rust/fixed-point/Cargo.toml" ||
+		changed == "code/specs/fixed-point.warrant" ||
+		changed == fixedPointBindingsInput ||
+		isUnderExactInputTree(changed, "code/packages/rust/fixed-point/src") ||
+		isRustWorkspaceCargoInput(changed)
+}
+
 // warrantAdopter is one row of warrantAdopters: the module, its Warrant spec, its committed
 // v2 fixture directory and the Rust evidence.bindings that fixture's profile is checked against.
 type warrantAdopter struct {
@@ -1308,15 +1425,22 @@ func warrantAdopterInputs() []string {
 
 // isWarrantOracleInput selects python/warrant-oracle when an adopter spec it
 // parses, the v1 corpus it gates, the Rust bindings its verify-v2 lines read, or
-// a file of a committed v2 fixture changes. Exact files, plus each fixture
-// directory by slash-delimited prefix (so ct-compare-warrant-v20 is not it).
+// a file of a committed v2 fixture changes, or (S5b) a file of the conformance
+// fixture, the v1 conformance checker or its test file. Exact files, plus each
+// fixture directory by slash-delimited prefix (so ct-compare-warrant-v20 and
+// warrant-corpus-conformance-v10 are not it).
 func isWarrantOracleInput(changed string) bool {
 	for _, path := range warrantOraclePaths {
 		if changed == path {
 			return true
 		}
 	}
-	return isWarrantCorpusV2Fixture(changed)
+	for _, path := range warrantOracleConformanceScripts {
+		if changed == path {
+			return true
+		}
+	}
+	return isWarrantCorpusV2Fixture(changed) || isWarrantConformanceInput(changed)
 }
 
 // isWarrantCorpusV2Fixture reports whether a changed path is a file of a
@@ -1352,7 +1476,9 @@ func isWarrantCorpusGenInput(changed string) bool {
 		strings.HasPrefix(changed, warrantOmitExampleFixture+"/") ||
 		strings.HasPrefix(changed, warrantTupleFormsFixture+"/") ||
 		strings.HasPrefix(changed, warrantFixedEvalFixture+"/") ||
-		strings.HasPrefix(changed, warrantOffByOneConsumedFixture+"/")
+		strings.HasPrefix(changed, warrantOffByOneConsumedFixture+"/") ||
+		strings.HasPrefix(changed, warrantScalarFaultsFixture+"/") ||
+		strings.HasPrefix(changed, warrantDataFormsFixture+"/")
 }
 
 // isWarrantPythonLaneCorpusInput selects the Python runner package when the
@@ -1692,6 +1818,17 @@ func isKilnToolchainPinInput(changed string) bool {
 //	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
 func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
+}
+
+// isFixedPointInput selects only the exact repository-owned inputs consumed by
+// the Rust fixed-point package. Nearby versions and lookalikes remain unselected.
+func isFixedPointInput(changed string) bool {
+	for _, input := range fixedPointInputPaths {
+		if changed == input {
+			return true
+		}
+	}
+	return false
 }
 
 // isGameClockInput selects the exact repository-owned files hashed for the

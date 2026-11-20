@@ -24,6 +24,10 @@ its native suite replays every neutral CI-gate fixture. Null change snapshots
 fail open, but invalid registries and over-budget matching fail without a
 partial result. Neither facade reads Git, registry files, or workflow state.
 
+## Fixed-point repository boundary fixture
+
+The F# facade consumes the neutral repository source-collection roster through the shared .NET hasher. That roster includes the exact `rust/fixed-point` Warrant, Q16.16 cases, root and Rust Cargo target configs, and workspace lockfile; Cargo workspace manifest selection uses the existing Rust-package ancestor rule. The fixed-point root Cargo-config exception is package-specific, and the fixture keeps nearby versions, backup paths, and untracked credentials out of the selected files.
+
 ## Why share the engine?
 
 The F# suite independently discovers and evaluates the checked eight graph
@@ -46,7 +50,7 @@ that `_Build`, `Blib`, `blib-example`, and `_build-example` remain source. This
 facade intentionally performs the same filesystem discovery as the CLI and adds
 no second implementation or authority.
 
-The source-hashing facades independently consume all 23 neutral source-
+The source-hashing facades independently consume all 25 neutral source-
 collection cases and all eight hashing/cache package-digest cases through F#,
 including both before/after consumers of one exact shared Rust manifest. They prove the
 complete typed language and repository-boundary projections, both canonical

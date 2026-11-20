@@ -22,12 +22,12 @@ It is **stdlib-only**, shares no code, data file or table with the generator, an
 **never reads the generator's IR as truth**: it parses the `.warrant` source and
 lowers it itself, then only *compares*.
 
-## What is here (slice S4, parts 1 and 2, S10a, S10t-1 and S10c-1)
+## What is here (slice S4, parts 1 and 2, S10a, S10t-1, S10c-1 and S11a)
 
 | Part | Module | Notes |
 |---|---|---|
 | reader | `lexer`, `parser`, `ast` | layout tokens, v0 + VER04j v1 + VER04k WX-G syntax, fail-closed, admission limits |
-| checker + lowering | `lower`, `levels`, `patterns`, `irtree` | typing, contextual literals, **unoptimised** syntax-directed IR, the 35 `ir.fixed` built-ins, tuples and `match` on a `Result` (`ir.tuple`), `requires` inference, named level errors |
+| checker + lowering | `lower`, `levels`, `patterns`, `irtree`, `typenames` | typing, contextual literals, **unoptimised** syntax-directed IR, the 35 `ir.fixed` built-ins, tuples and `match` on a `Result` (`ir.tuple`), records, variants, `Option` and `match` on any scrutinee (`ir.data`, lowered and costed, **not evaluated**), `requires` inference, named level and feature refusals |
 | evaluator | `ir_eval` | `ir.core`, `ir.tuple` and the 35 `ir.fixed` built-ins, the single wrapping rule (VER04 section 3), `MAX_IR_VALUE`, cost bound, call counting (a `match` arm is a guard) |
 | domains | `domains` | every descriptor of VER04r 5.1 (`fx_edge` [D21, D25], `nat_shift` [D26]), `size`/`nth`, budget demotion, the shift-count rule, the consumer-side descriptor check |
 | streams | `stream` | `warrant-stream-v1/v2` encoders, chunk and suite framing, FNV-1a slim selection |
@@ -42,12 +42,15 @@ arithmetic, x25519 (and the WX-G `inout`/`ensures` syntax of zeroize).
 
 The evaluator implements **`ir.core`, `ir.tuple` and `ir.fixed`** (VER04r section 4.1; `ir.tuple` since
 slice S10t-1 and `ir.fixed` since slice S10c-1, see below), so `derive`, `emit-v2` and `verify-v2` accept a
-document that needs any of the three. A construct the lowerer cannot lower, `ir.data` (records,
-variants, `match` on anything but a `Result`, `Option` anywhere but the intermediate use of
-`ir.fixed`) or the reserved `ir.seq`, is recorded with that level *named*; it is never skipped
+document that needs any of the three. **`ir.data`** (records, variants, `Option` as a real type, `match` on any
+scrutinee) is *lowered, typed and costed* since slice S11a but **not evaluated**: a unit that needs it is lowered
+completely and then refused at evaluation with `level ir.data` (slice S11c-1 opens that). What the oracle refuses at
+*lowering*, by name and never as `ir.data`, is what has no level it implements: the reserved `ir.list` (a list type
+anywhere, a list literal, `slice to_list to_bytes replicate`) and `ir.seq` (`fold map all any range count`), and the
+two feature names `err-value` (an `Err(e)` arm that uses `e`) and `fixed-cast` (`fixed<N>(b)`); none is ever skipped
 silently. The built-ins are still refused in a v0 document (VER04j 1.2: the names are version scoped).
 Census (the pins of `tests/test_lower.py::CENSUS`: suites whose evaluation is not blocked, `ir.core`, and
-the suites still blocked on `ir.data`):
+the suites blocked at evaluation; `check --spec` also prints `suites_refused_at_lowering`):
 
 | Adopter | suites | live (`ir.core`) | `ir.data` | before S10c-1 (core / fixed / data) |
 |---|---:|---:|---:|---|
@@ -58,10 +61,47 @@ the suites still blocked on `ir.data`):
 | lzw | 21 | 21 | 0 | 4 / 17 / 0 |
 | wasm-leb128 | 44 | 44 | 0 | 18 / 24 / 0 (42 claims; the two encoder bounds were split, VER04r D28) |
 | logic-gates | 88 | 85 | 3 | 28 / 57 / 3 |
-| hash-functions | 56 | 35 | 21 | 4 / 31 / 21 |
-| arithmetic | 63 | 18 | 45 | 7 / 11 / 45 |
+| hash-functions | 56 | 35 | 19 (+ 2 `err-value`) | 4 / 31 / 21 |
+| arithmetic | 63 | 8 | 55 | 7 / 11 / 45 |
 
-(Before S10t-1: wasm-leb128 10 / 8 / 24 tuple, logic-gates 28 / 55 / 2 tuple / 3, arithmetic 5 / 9 / 4 tuple / 45.)
+(Before S10t-1: wasm-leb128 10 / 8 / 24 tuple, logic-gates 28 / 55 / 2 tuple / 3, arithmetic 5 / 9 / 4 tuple / 45.
+S11a: **every suite of logic-gates and arithmetic now lowers whole**; arithmetic's 55 is the 45 that used to be refused at
+lowering plus the 10 that counted a record type in their `requires`, and hash-functions' 21 became 19 that lower (the claims that
+`match` on a bare tuple) and 2 refused as `err-value`.)
+
+### `ir.data`: lowering, typing, `requires` and cost, with evaluation still refusing (slice S11a)
+
+Records, variants (with and without a payload), `Option<T>` as a real type, the four tags of VER04r Appendix A.2 and
+`match` on **any** scrutinee are lowered by `lower.py`, typed and costed again by `ir_eval.Program(analyze_data=True)` (what
+`dump-lowering` uses) and counted in `requires`:
+
+| Source | IR | Cost |
+|---|---|---|
+| `Some(e)` | `["some", e]`, typed exactly `Option<type(e)>`, which flows to a wider `Option` by its payload (R39 (a), [D60], R51) | `1 +` the operand |
+| `None` | `["none", "T"]`, `T` the canonical type name the context fixes; no context is a `type` error (R39 (b)) | 1 |
+| `Name(e1, .., en)`, a bare payload-free `Name` | `["ctor", "Name", [e1, .., en]]` | `1 +` the operands |
+| `r.name` | `["field", r, i]` (the index, never the name); `e.i` on a non-tuple and `e.name` on a non-record are `type` errors (R39 (c)) | `1 +` the operand |
+| `match s with ..` | `["match", s, [[pat, arm], ..]]` with the patterns `some none ctor bool` beside the six of A.1 | `1 +` the scrutinee `+` the worst arm |
+
+* **`requires`** (R9 as extended): by tag, by pattern and by **type**. A `match` is `ir.tuple` when its scrutinee is a `Result`
+  and `ir.data` for any other type, and `ir.data` as well when a data pattern appears (so `Ok(true) -> ..` needs both). The type rule adds
+  `ir.data` for a record, a variant or an `Option` anywhere in a type, **except the intermediate use** of R29: a producer node
+  (`try checked_add checked_sub checked_mul div rem div_trunc rem_trunc at`) directly the first operand of `unwrap_or`
+  adds none, so `unwrap_or(checked_add(a, b), 0u8)` still requires `ir.fixed` only and **no `requires` of the seven committed corpora
+  moved** (their `verify-v2` lines pass unchanged).
+* **Patterns** are checked before any arm body, outside in, with the structure (unknown constructor, a type that does not fit, a wrong field
+  count) before the duplicate-bind and shadowing rules (R35 (3)); then the usefulness check (`patterns.py`, now over `Bool`, `Option`,
+  `Result`, variants, records and tuples), unreachable arms before fall-through. A name that is a declared constructor is a constructor
+  pattern, never a binder.
+* **Refusal order** (R35): the declaration limits of section 2.2 first (`limit`: 64 constructors, 8 fields per constructor, 32 per
+  record, 64 error cases), then a reserved level or feature before a type error of the same unit, then units in declaration order.
+* **Evaluation still refuses** (R37): a unit that lowered and needs `ir.data` carries the *evaluation* refusal `level ir.data`
+  (`LoweredModel.lowered` tells the two refusals apart; `emit-v2` reports the suite `not-live`), until slice S11c-1.
+* **The committed dumps** (`tests/fixtures/data-forms-v1/`, generated by `make_data_forms.py`, a new directory on purpose):
+  `data_forms_v1.oracle-lowering.json` (86 models, 94 suites, 11 examples, the corpus `types` rows) and
+  `data_forms_v1.oracle-refusals.json` (109 documents: every reserved level, the corpus limits, the typing rules and corpus errors of
+  Appendix A.2, and the refusal order). **They make Appendix A.2 stop being provisional**; slice S11b must reproduce them byte for byte.
+  The one row this slice moved in an existing dump is `tuple-forms-v1`'s `a-projection-of-a-non-tuple` (now a `type` error).
 
 ### `ir.tuple`: tuples and `match` on a `Result` (slice S10t-1)
 
@@ -363,11 +403,148 @@ admitted-case ordinal (`SuitePlan.check_admits`, `ir_eval.compile_admit_check`),
 subject-dependent argument the op's `admit` reads refused statically (VER04r 4.5 and 16.9).
 `tests/test_admit_calls.py` holds the same documents as the generator's `tests/admit_calls.rs`.
 
+## The v2 conformance kit (S5a, S5b, S5e)
+
+VER04r section 11 adds six categories to the shared fixture family `warrant-corpus-conformance-v1`:
+`v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk` and `v2-fault` (a seventh, `v2-binding`, is S5c's: see
+"The reference binding validator" below).
+The oracle **derives every expectation**: `src/coding_adventures_warrant_oracle/conformance.py` is the
+derivation module, and the hand-written case tables, the three small kit documents the chunk cases come from
+and `make_conformance.py` live in `tests/fixtures/conformance-v2/` (its README says how to add a case).
+
+| Category | The module derives it from |
+|---|---|
+| `v2-value` | the strict JSON reader of VER04i 9.1, the section 2.3 decoder (`decode_int_text` and the typed forms), the section 2.4 stream encoder |
+| `v2-arith` | one node of the typed IR evaluator over two `lit` operands |
+| `v2-ir` | the IR evaluator with each `subject_op` rewritten to a pure stand-in model for the value, and the pure call trace of section 4.4 on the unrewritten tree for `calls` |
+| `v2-domain` | a descriptor-JSON reader over `descriptor_size` and the leaf constructors, then `size()` and `nth()` |
+| `v2-chunk` | the chunk-file check of sections 5.5 and 14, then `SuitePlan.run_chunk` (one chunk, by unranking) |
+| `v2-fault` | the existing fault templates and the three wrappers of section 8.1 |
+
+A table row states a case's inputs and its **intent**; the oracle derives the outcome independently, and a row
+whose intent disagrees fails the build naming the case id. The oracle's own codes are mapped to the kit's closed
+vocabulary (section 16.13 R25) in `classify_ir_refusal`; each kit case triggers exactly one error.
+
+```bash
+python3 tests/fixtures/conformance-v2/make_conformance.py --write --fixture DIR   # the six v2-*.json files
+python3 tests/fixtures/conformance-v2/make_conformance.py --check --fixture DIR   # rebuild and compare bytes
+```
+
+`--fixture` defaults to the family directory `code/specs/fixtures/warrant-corpus-conformance-v1`; `--check` also
+requires an `index.json` that is present to hold one row per derived file and skips that check when there is none.
+Exit codes: 0 identical, 1 the bytes differ, 2 a table and its derivation disagree or any other error. The script
+never writes `index.json` (the family's v1 script does).
+
+S5b commits the six `v2-*.json` files (734 cases) and their rows of `index.json`. S5e's oracle PR (this package)
+adds 48 cases to the tables, 782 in all (`v2-ir` 248, `v2-domain` 162, `v2-chunk` 74, `v2-fault` 41, the other two
+unchanged), and the derivation changes they need (VER04r section 16.18 R69 to R77: a `width_params` op in the kit,
+`level-missing` and `requires` by what `ir` reaches, the `errs` rules, the chain depth of an uncalled model); the
+committed `v2-*.json` files and `index.json` (1,243 cases once regenerated) are the **fixture PR's**, which only adds
+cases, so until it lands `make_conformance.py --check` against the family directory reports the six files stale. **Regeneration is two steps**:
+`make_conformance.py --write` (the six files), then `python3 code/scripts/warrant_corpus_conformance.py --write`
+(`index.json`: the four v1 rows, then one row per `v2-*.json` on disk in the fixed order). `BUILD` runs
+`make_conformance.py --check --fixture ../../../specs/fixtures/warrant-corpus-conformance-v1` (a second derivation of
+the `2**24` suite, about a minute, that the pytest session fixture does not share), the v1 checker
+`code/scripts/warrant_corpus_conformance.py` (which indexes and structurally checks the `v2-*` files without importing
+the oracle or a lane) and its tests, so either tool alone catches a stale index. An edit to the fixture directory,
+the checker or its test selects this package (build-tool `isWarrantOracleInput`).
+
+`tests/test_conformance_mutants.py` is the mutant test of [D42]: sixteen named wrong evaluators (no wrap,
+saturation, a signed compare on the bit pattern, eager `and`, first-binder-fastest enumeration, a missing chunk
+index in the stream prefix, sequential `pre` rewrites ...), each of which must change the derived expectation of at
+least one case of each category it is named for. `tests/test_conformance_cross.py` re-derives slices of the kit by
+different algorithms (Python integers, `struct.pack`, a naive `itertools.product` enumerator, the cost model written
+out) and runs the v1 checker's strict reader and canonical writer over the v2 files.
+
+## The reference binding validator and `v2-binding` (S5c)
+
+`src/coding_adventures_warrant_oracle/bindings_v2.py` is the **reference binding validator** of VER04r section 7
+([D43]): it reads the bytes of an `evidence.bindings` file, the `types` and `ops` of the corpus it is validated
+against and a `host` object, and returns the **normalized** binding or one refusal, `BindingInvalid` with a `reason`.
+It is **lane-neutral** (it names no host language: what a lane alone knows arrives as four closed lists in `host`:
+`values`, the host representations allowed per Warrant value name; `exports`; `discriminators`; `immutable`), pure
+(no file, no lane import) and **closed**: the only refusals are the `reason` values below. It is used only to derive
+the kit; `verify-v2` does not call it.
+
+```python
+from coding_adventures_warrant_oracle import bindings_v2 as BV
+
+BV.validate_binding(binding_bytes, {"types": {...}, "ops": {...}}, host)   # the normalized dict, or BV.BindingRefused
+BV.violations(binding_bytes, corpus, host)                                  # every violation, in the order of the checks
+```
+
+`tests/fixtures/conformance-v2/cases_binding.py` is the hand-written `v2-binding` table (176 cases: 30 accepted, 146
+refused; every one `requires` `["ir.core"]`; the normalized form of an accepted case is written by hand and compared by
+equality, never by sub-object). A refused case is the valid base binding of its corpus with **one** line
+changed, and the build demands that the validator finds exactly one violation in it, so no case depends on which of two
+problems an implementation meets first. `make_conformance.py --write` writes `v2-binding.json` beside the six other files;
+`--check` holds it to the derivation as soon as the file or its index row exists, and reports it as *not committed yet*
+(S5d commits it) while neither does, so a family directory that holds the six S5b files stays green. The file is not
+written into `code/specs/fixtures` by S5c.
+
+### The `v2-binding` reason set
+
+The set is closed (VER04r section 16.13 R20, fixed by S5c). The checks run in this order, and the first violation is
+the one `validate_binding` raises: the bytes (`too-large`, `invalid-utf8`, `bom`, `cr`, `control-character`; one
+violation, then stop); the lines (`syntax`, `unknown-directive`, `duplicate-directive`, `bad-value`, and `op-key` or
+`type-shape` for a repeated or unknown key; every line is read and, if any is wrong, the model is not checked); then
+the model (required directives, levels, `values`, `type` lines, what the signatures need, the `op` lines in corpus
+order).
+
+| Reason | The refusal |
+|---|---|
+| `too-large` | more than 65,536 bytes (a binding is size-capped before it is parsed, section 14) |
+| `invalid-utf8` | the bytes are not UTF-8 |
+| `bom` | the text starts with a byte order mark |
+| `cr` | a carriage return anywhere: the file is LF-only |
+| `control-character` | any other C0 control character, or DEL (tabs included: the separator is one space) |
+| `syntax` | a line that is not `directive` plus single-space-separated printable tokens, or a token that is not of the shape its directive needs (`key=value`, a list, a name) |
+| `unknown-directive` | the first token is not a directive of section 7.1 |
+| `duplicate-directive` | a one-line directive twice, or two `op` lines for one op, or two `type` lines for one type |
+| `bad-value` | a directive argument that is not of its form (`depth`, `seed`, `source`, `lane`, `package`, `module`, a repeated level) |
+| `missing-directive` | one of `lane package module import source seed depth levels` is absent |
+| `level-unknown` | a `levels` entry that is no level of section 4.1 (reserved ones are known) |
+| `level-implication` | a level declared without a level it needs (the lattice of section 4.1) |
+| `values-name` | a `values` key that is not a Warrant value name, or is given twice |
+| `values-representation` | a `values` host name outside that Warrant name's closed list |
+| `values-missing` | a Warrant value name the corpus signatures need has no `values` entry |
+| `type-unknown` | a `type` line for a name that is no record or variant of the corpus |
+| `type-shape` | a `type` line whose `host`, `fields` or `ctors` is missing, extra, repeated or does not match the corpus declaration |
+| `type-missing` | a record or variant an op signature uses has no `type` line |
+| `op-unknown` | an `op` line for an op the corpus does not declare |
+| `op-missing` | a corpus op with no `op` line (the binding is **total**, VER04i section 5 rule 1) |
+| `op-key` | an `op` key that is unknown or given twice |
+| `export-missing` | an `op` line with no `export=` |
+| `export-unknown` | an `export=` or `type host=` name that is not in the host's export list |
+| `args` | `args=` of the wrong arity, or a representation not allowed for that parameter |
+| `ret` | `ret=` that is not a representation allowed for the result |
+| `width` | `width=` absent on an op with `width_params`, present on one without, or not `implicit` or `runtime` |
+| `errors-form` | more than one of `errors=`, `error=`, `err_any=` on one op |
+| `errors-missing` | an op whose result is a `Result` and which maps no error |
+| `errors-unexpected` | an op whose result is not a `Result` and which maps an error |
+| `errors-case` | a case that the op's error type does not declare, a case mapped twice, a malformed `CASE:discriminator` pair |
+| `errors-incomplete` | an `errors=` that leaves a declared case unmapped (VER04i section 5 rule 1) |
+| `discriminator-shared` | two cases of one op with the same discriminator (section 7.5) |
+| `discriminator-bare` | `Error`, `Exception` or `BaseException` as a class: a binding cannot swallow arbitrary failures (section 7.5) |
+| `discriminator-unknown` | a discriminator not in the host's closed list (a class that is not found) |
+| `err-any-multi` | `err_any=` on an error type with two or more cases (section 7.5) |
+| `panics-form` | `panics` as an `errors=` discriminator, or `error=` on an error type with two or more cases (`panics` is only for a single-case `error=`) |
+| `inout-param` | `inout=` that names a parameter that is not `inout` in the corpus, names one twice, is malformed, or leaves an `inout` parameter without a form |
+| `inout-form` | a form that is not one of `mutable growable cell returned`, a reserved record form, or a form that does not fit the parameter's type |
+| `fresh` | `fresh=` on an op that is not `fresh` in the corpus, a value other than `probe` or `immutable`, or `immutable` for a mutable representation |
+
+The level names and the lattice are those of VER04r section 4.1, reserved levels included: every level other than
+`ir.core` needs `ir.core`, `ir.data` needs `ir.tuple` and `ir.list` needs `ir.data`, each checked directly. The
+normalized shape (`lane`, `package`, `module`, `import`, `source`, `seed` as decimal text, `depth`, sorted `levels`,
+`values`, `types`, `ops`) is in the module docstring. A lane's own validator must agree with this one on every case of
+`v2-binding.json` (S6b and S7b).
+
 ## Not yet done
 
-* Evaluating `ir.data` (S11) and `inout`/`ensures` monitoring (S12): a document above `ir.fixed` and
-  `ir.tuple` is refused whole, naming the level. The fault-evaluation gate for `ir.fixed` and `ir.tuple`
-  is turned on at the atomic flip (S10c).
+* Evaluating `ir.data` (S11c-1; lowering, typing, `requires` and cost are done, S11a) and `inout`/`ensures`
+  monitoring (S12): a document that needs more than `ir.fixed` and `ir.tuple` is refused at evaluation, naming
+  the level, and the `ir.list`, `ir.seq`, `err-value` and `fixed-cast` constructs are refused at lowering. The
+  fault-evaluation gate for `ir.fixed` and `ir.tuple` is turned on at the atomic flip (S10c).
 * The oracle's `domain_label`/`depth` rows are emitted but not yet compared with a
   lane manifest.
 * The shape of `assumes` (VER04r 16.4 item 4); `verify-v2` expects `[]`.

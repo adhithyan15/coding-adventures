@@ -181,7 +181,7 @@ CENSUS = {
     "wasm-leb128": {"ir.core": 44},
     "logic-gates": {"ir.core": 85, "ir.data": 3},
     "lzw": {"ir.core": 21},
-    "arithmetic": {"ir.core": 18, "ir.data": 45},
+    "arithmetic": {"ir.core": 8, "ir.data": 55},
     "x25519": {"ir.core": 8},
 }
 
@@ -210,11 +210,17 @@ def test_unsupported_models_are_recorded_not_fatal():
 @pytest.mark.parametrize(
     "body,level",
     [
-        ("[a] == [a]", "ir.data"),
+        # S11a: lists are the reserved ``ir.list``; ``Option`` and ``match`` lower and need ``ir.data``
+        # (the unit is then refused only at *evaluation*, with the same level name)
+        ("[a] == [a]", "ir.list"),
         ("div(a, a) == div(a, a)", "ir.data"),
         ("match a with x -> true", "ir.data"),
         ("all(a, a)", "ir.seq"),
-        ("len([a]) == 1", "ir.data"),
+        ("range(a)", "ir.seq"),
+        ("len([a]) == 1", "ir.list"),
+        ("to_list(a)", "ir.list"),
+        ("replicate(a, 2)", "ir.list"),
+        ("fixed<4>(a)", "fixed-cast"),
     ],
 )
 def test_level_errors_name_the_level(body, level):
@@ -227,7 +233,7 @@ def test_suite_inherits_the_level_of_a_model_it_calls():
         "warrant p v1\n  op f(a: U8) -> U8\n  model g(a: U8) -> Bool = [a] == [a]\n"
         "  claim c:\n    forall a: U8. g(a) == (f(a) == a)\n"
     )
-    assert spec.suites[0].unsupported.level == "ir.data"
+    assert spec.suites[0].unsupported.level == "ir.list" and not spec.suites[0].lowered
 
 
 def test_a_suite_that_calls_an_ir_fixed_model_is_live_and_requires_ir_fixed():
@@ -253,7 +259,6 @@ def test_a_suite_that_calls_an_ir_fixed_model_is_live_and_requires_ir_fixed():
         "warrant p\n  op f(a: Bytes<5000>) -> Bool\n",
         "warrant p\n  op f(a: Result<Nat, Nat>) -> Bool\n",  # error type must be declared
         "warrant p\n  op f(a: Nat<1>) -> Bool\n",  # primitive with arguments
-        "warrant p\n  op f(a: List<Nat, Nat>) -> Bool\n",
         "warrant p\n  model A = Nat\n  model A = Bool\n",
         "warrant p\n  model A = Nat\n  op f(a: A<1>) -> Bool\n",
         "warrant p\n  error E = X\n  op f(a: E<1>) -> Bool\n",

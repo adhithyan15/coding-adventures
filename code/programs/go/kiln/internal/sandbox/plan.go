@@ -197,6 +197,11 @@ func Plan(c *Config) ([]Mount, error) {
 			Mount{Kind: KindTmpfs, Target: p, FSType: "tmpfs", Flags: MsNosuid | MsNodev, Data: tmpfsData(mode[p])},
 		)
 	}
+	// KILN04 D39 rule 1b (traced/host.go observeHost) treats an absent probe
+	// under HOME or TMPDIR as a constant because they are fresh tmpfs.  So
+	// every host path bound beneath them here must be a root traced knows of
+	// (RoRoots come from host-roots.json image and tool entries; derived state
+	// roots are verified empty): internal/record/sandboxroots_test.go pins it.
 	plan = append(plan, homeRoRoots(c)...)
 	plan = append(plan,
 		Mount{Kind: KindEnsureDir, Target: "/dev"},
