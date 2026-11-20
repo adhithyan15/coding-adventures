@@ -997,5 +997,3 @@ function smallWrap(ty: Ty): (x: number) => number {
 export function typeText(ty: Ty): string {
   return showType(ty, true);
 }
-
-
