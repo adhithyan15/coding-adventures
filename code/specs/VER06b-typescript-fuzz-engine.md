@@ -118,3 +118,98 @@ The TypeScript implementation is verified against:
 - Canonical `fuzz-v1` corpus (`code/specs/fixtures/fuzz-v1/cases.tfv` and `cases.json`).
 - 25 canonical test vectors covering all mutators, sequence determinism, coverage bitmap admission, crash deduplication, failure ID validation, and privacy TAP output.
 - Target campaign fuzzing tests ensuring novel coverage admission and crash recording.
+
+## 8. AF-04c1 bounded campaign accounting contract
+
+This section narrows the `fuzzTarget` contract in
+`@coding-adventures/test-bootstrap`. It makes returned callback outcomes and
+work budgets auditable; it does not add a process watchdog or infer native
+coverage from caller-recorded semantic edges.
+
+### 8.1 Inputs and limits
+
+`fuzzTarget` validates all options, the target callback, and the initial corpus
+before its first target call. Numeric options must be finite safe integers in
+these ranges: `maxIterations` is 0 through 100,000, `maxInputLen` is 0 through
+1,048,576 bytes, and `baseEnergy` is 0 through 65,536. A numeric seed must be a
+safe integer. BigInt seeds retain `SplitMix64`'s existing modulo-2^64 seed
+semantics. Defaults remain 1,000 mutation calls, seed 42, 4,096 maximum
+mutation bytes, and base energy 10.
+
+The initial corpus is snapshotted as byte copies before any callback. It may
+contain at most 4,096 byte arrays and 16 MiB in aggregate, with no individual
+seed exceeding 1 MiB. A callback cannot extend initial triage by appending to
+the caller's corpus array, and mutation of a callback's input cannot rewrite a
+stored seed. If the caller supplies an empty corpus, preserve the historical
+one-zero-byte fallback seed and report `usedFallbackSeed: true`; that fallback
+can exercise the target but cannot produce a `clean` report.
+
+The active corpus is bounded to 4,096 seeds and 16 MiB. A pass that discovers
+new edges but cannot fit in that budget increments `corpusLimitDrops`; its
+edges remain represented in the bounded 65,536-bit bitmap. Mutation energy
+is bounded by the configured safe `baseEnergy` domain and is clipped to the
+remaining mutation-call budget before a batch starts. Every nonempty scheduled
+batch therefore satisfies `1 <= batch <= remaining`, and no callback is
+scheduled after the budget is exhausted.
+
+Crash detail storage is bounded to 1,024 records and 32 MiB of saved crash
+inputs. The phase ledgers count every returned crash even when its detail
+record cannot be retained; `unrecordedCrashOutcomes` records that loss. For
+retained signatures, triage and mutation crashes share one deduplication map:
+repeat signatures increment `hits`, and a shorter same-signature input
+replaces the recorded input when it fits the detail budget. The crash outcome
+count remains the authoritative count if detail storage is capped.
+
+### 8.2 Per-phase returned outcome ledger
+
+Each completed target callback returns exactly one of `pass`, `crash`,
+`timeout`, or `oom`. `FuzzReport` exposes separate `triage` and `mutation`
+ledgers, each with `calls`, `pass`, `crash`, `timeout`, and `oom` counts. For
+each phase, `calls` equals the sum of the four outcome counts and equals the
+number of callbacks that returned in that phase. `iterations` keeps its legacy
+meaning: it equals `mutation.calls`; it does not include initial triage. A
+target exception is not converted to an outcome and propagates unchanged.
+
+Triage evaluates only the initial snapshot (or the explicitly reported
+fallback). Mutation candidates are admitted only after a `pass` with novel
+caller-recorded edges. A `crash` is deduplicated by the existing normalized
+signature in either phase. `timeout` and `oom` increment their phase counts,
+are not admitted, and are not silently reclassified as passes.
+
+`FuzzReport.clean` is true only when the caller supplied at least one initial
+seed, at least one mutation callback returned, all returned outcomes in both
+phases were `pass`, and no crash detail was omitted. Thus an empty corpus, a
+zero mutation budget, no admitted mutation corpus, or any crash/timeout/OOM
+cannot be reported as a non-vacuous clean campaign. A thrown target exception
+still throws and returns no report.
+
+The callback's `CoverageBitmap` remains caller-supplied feedback. These counts
+describe returned outcomes and recorded callback edges only; they do not prove
+that every callback was process-isolated, that timeout or OOM was enforced by a
+watchdog, or that source/native branches were instrumented. `code/packages/typescript/fuzz`
+contains a separate implementation and is outside this AF-04c1 change unless a
+separate source audit and test change explicitly includes it.
+
+### 8.3 Acceptance evidence
+
+Tests must include invalid-option and invalid-corpus controls that assert zero
+callbacks, a thrown-object identity control, a mutation callback that appends
+to the caller corpus, zero-budget and empty-corpus non-clean results, an
+independent tally over bounded generated traces, batch progress/cap checks,
+and phase outcomes that include pass/crash/timeout/OOM. A fixed trace with five
+triage outcomes (pass edge 7, crash S twice, timeout, OOM) and four mutation
+outcomes (pass edge 7, timeout, OOM, crash S) must report nine returned calls,
+four mutations, one admitted seed, one edge, three crash hits, two timeouts,
+two OOM outcomes, and `clean: false`.
+
+The DSP consumer must run its public checked-filter callback at its existing
+fixed seed and replay that same campaign. Its exact returned-callback,
+phase-ledger, corpus, edge, and crash results must be recorded; caller-created
+semantic edges must remain labeled manual. Source mutants must be recompiled
+from source, fail the intended assertion, and be checked against healthy
+replay. A bounded SAT model plus an independently replayed DRAT certificate may
+cover only the encoded finite ledger arithmetic if the existing solver/checker
+can produce the certificate; it cannot certify the TypeScript implementation
+or float behavior. Otherwise record that rung as unavailable. Warrant binding,
+native source coverage, a process watchdog, and the separate standalone
+TypeScript fuzz package remain open evidence items.
