@@ -147,6 +147,14 @@ func FuzzLineDiff(f *testing.F) {
 		"1  stat(\"a\\0b\", {}) = 0", "1  f(\xc2\xa0) = 0", "1  --- SIGCHLD {si_signo=SIGCHLD} ---",
 		"1  <... f resumed></x>) = 0", "1  wait4(-1,  <unfinished ...>",
 		"1  execve(\"/usr/bin/sh\", [\"sh\"], 0x1 /* 5 vars */ <unfinished ...>",
+		// The filter's own answers (clone3_enosys_test.go): tolerated, and
+		// the near misses that are not.
+		"1  clone3({flags=CLONE_VM|CLONE_VFORK|CLONE_CLEAR_SIGHAND, exit_signal=SIGCHLD, stack=0x7f0a4b1ff000, stack_size=0x9000}, 88) = -1 ENOSYS (Function not implemented)",
+		"1  clone3({flags=CLONE_VM|CLONE_THREAD, child_tid=0x1, parent_tid=0x1, exit_signal=0, stack=0x1, stack_size=0x1, tls=0x1} <unfinished ...>",
+		"1  <... clone3 resumed>, 88) = -1 ENOSYS (Function not implemented)",
+		"1  <... clone3 resumed>, 88) = -1 EPERM (Operation not permitted)", "1  clone3({flags=CLONE_VM}, 88) = ?",
+		"1  mount(0, 0) = -1 EPERM (Operation not permitted)", "1  mount(0, 0) = 0", "1  <... mount resumed>0) = -1 ENOENT (No such file or directory)",
+		"1  clone(child_stack=NULL, flags=CLONE_NEWUSER|SIGCHLD) = -1 EPERM (Operation not permitted)",
 	} {
 		f.Add(l)
 	}
@@ -185,6 +193,12 @@ func FuzzParseDiff(f *testing.F) {
 		"1  ???( <unfinished ...>\n1  <... ??? resumed>) = ?\n1  +++ exited with 0 +++\n",
 		"1  ???( <unfinished ...>\n1  --- SIGKILL {si_signo=SIGKILL} ---\n1  <... ??? resumed>) = ?\n",
 		"1  stat(\"a\\q\", 0x1) = 0\n", "[pid +1] stat(\"a\", 0x1) = 0\n",
+		"1  clone3({flags=CLONE_VM|CLONE_VFORK|CLONE_CLEAR_SIGHAND, exit_signal=SIGCHLD}, 88) = -1 ENOSYS (Function not implemented)\n1  +++ exited with 0 +++\n",
+		"1  clone3({flags=CLONE_VM|CLONE_VFORK, exit_signal=SIGCHLD} <unfinished ...>\n1  <... clone3 resumed>, 88) = -1 ENOSYS (Function not implemented)\n1  +++ exited with 0 +++\n",
+		"1  clone3({flags=CLONE_VM, exit_signal=SIGCHLD} <unfinished ...>\n1  +++ exited with 0 +++\n",
+		"1  mount(0,  <unfinished ...>\n1  <... mount resumed>0) = -1 EPERM (Operation not permitted)\n1  +++ exited with 0 +++\n",
+		"1  clone(child_stack=NULL, flags=CLONE_NEWNS|SIGCHLD) = -1 EPERM (Operation not permitted)\n1  +++ exited with 0 +++\n",
+		helperRootSetup + "11  clone3({flags=CLONE_VM}, 88) = -1 ENOSYS (Function not implemented)\n" + helperInitSetup + helperReExec + helperExec + helperEnd,
 	} {
 		f.Add(s)
 	}

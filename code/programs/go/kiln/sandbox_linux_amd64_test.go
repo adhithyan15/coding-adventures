@@ -64,6 +64,8 @@ func TestMain(m *testing.M) {
 			os.Exit(run(os.Args[1:], os.Stdout, os.Stderr))
 		case probeCommand:
 			os.Exit(probe(os.Stdout))
+		case clone3ProbeCommand:
+			os.Exit(clone3Probe(os.Stdout))
 		}
 	}
 	os.Exit(m.Run())

@@ -314,7 +314,7 @@ var (
 	// digest, so the pilot is selected by an explicit prefix too: the selection
 	// must not depend on the dependency resolver noticing the edge.
 	warrantGoRunnerPackage   = "code/packages/go/warrant-corpus"
-	warrantGoLaneCorpusPaths = warrantGoLaneInputs
+	warrantGoLaneCorpusPaths = append(append([]string{}, warrantGoLaneInputs...), warrantConformanceFixture)
 	warrantGoLanePilotPaths  = append(append([]string{}, warrantGoLaneInputs...), warrantGoRunnerPackage)
 	// warrantOraclePaths are the files the independent Warrant oracle
 	// (python/warrant-oracle, VER04r section 10) reads: every adopter
@@ -1198,7 +1198,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		name:     "go/warrant-corpus",
 		language: "go",
 		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
-		matches:  isWarrantGoLaneCorpusInput,
+		matches:  isWarrantGoRunnerInput,
 		paths:    warrantGoLaneCorpusPaths,
 	},
 	{
@@ -1378,6 +1378,12 @@ func isWarrantPythonRunnerInput(changed string) bool {
 // isWarrantTypeScriptRunnerInput is the TypeScript counterpart.
 func isWarrantTypeScriptRunnerInput(changed string) bool {
 	return isWarrantTypeScriptLaneCorpusInput(changed) || isWarrantConformanceInput(changed)
+}
+
+// isWarrantGoRunnerInput is the Go counterpart: go/warrant-corpus runs the
+// conformance fixture in its own tests too (VER04r R23).
+func isWarrantGoRunnerInput(changed string) bool {
+	return isWarrantGoLaneCorpusInput(changed) || isWarrantConformanceInput(changed)
 }
 
 // isWarrantPythonLanePilotInput selects python/ct-compare for the same files
