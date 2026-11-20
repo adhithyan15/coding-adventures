@@ -35,9 +35,9 @@ import (
 // The invariant (TestCensusKindCapsFitTheOverallBound): the per-kind caps of
 // every kind the classifier can feed add up to at most MaxCensusEntries, so the
 // overall bound never decides which kind loses.  The sub-coded kinds
-// (unstable-path:*, exec-unreadable:*: eighteen of them) hold 256 paths each,
+// (unstable-path:*, exec-unreadable:*: nineteen of them) hold 256 paths each,
 // the nine path kinds (the eight censusPrefixes plus proc-path) 1024:
-// 9*1024 + 18*256 = 13824 <= 16384.
+// 9*1024 + 19*256 = 14080 <= 16384.
 const (
 	MaxCensusPerKind = 1024
 	// MaxCensusPerSubKind is the cap of a sub-coded kind.
@@ -54,7 +54,7 @@ var censusSubCodes = map[string][]string{
 	"trace-incomplete:unstable-path": {
 		"component-changed", "absent-changed", "final-changed", "followed-final-changed",
 		"followed-absent-changed", "gone-but-found", "removed-before-made", "file-changed",
-		"own-overlap", "through-missing", "dotdot", "fd-path-differs",
+		"own-overlap", "through-missing", "dotdot", "fd-path-differs", "absent-before-made",
 	},
 	"trace-incomplete:exec-unreadable": {
 		"modified-after-exec", "virtual-exe", "virtual-interpreter", "under-tmp", "in-repo", "host-disk",
@@ -210,6 +210,7 @@ func (c *classifier) lookupOpOf(sub, abs string) string {
 const (
 	setSeen, setAbsent, setFile, setFinal = "seen", "absent", "file", "final"
 	setRelFinal, setRelAbs, setGone       = "relFinal", "relAbs", "gone"
+	setBefore                             = "before"
 	setOwn                                = "own"
 )
 
@@ -232,6 +233,8 @@ func setOfSub(sub string) string {
 		return setFile
 	case "own-overlap":
 		return setOwn
+	case "absent-before-made":
+		return setBefore
 	}
 	return ""
 }

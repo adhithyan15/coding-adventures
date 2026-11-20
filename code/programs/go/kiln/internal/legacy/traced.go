@@ -96,7 +96,13 @@ const TracedSemantics uint64 = 2
 // fchmod, fchown, fsetxattr and fremovexattr on a descriptor whose -y text is
 // pipe:[..], socket:[..] or anon_inode:.. are no longer `trace-incomplete:fd-path`;
 // they record nothing.  The accept set grows, so every weak key changes.
-const RecorderVersion = 9
+//
+// Version 10: absent-before-made (KILN04 D42).  A lookup that failed with ENOENT
+// on a name the action created afterwards, a metadata write by path (chmod,
+// chown, utimensat, setxattr) on a file the action made, and shell redirections
+// to /dev/null are no longer `trace-incomplete:unstable-path`.  The accept set
+// grows, so every weak key changes.
+const RecorderVersion = 10
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
