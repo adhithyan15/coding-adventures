@@ -214,7 +214,9 @@ func (c *classifier) underTmp(abs string) bool {
 		}
 	}
 	for _, d := range c.cfg.ScratchDirs {
-		if strings.HasPrefix(abs, d+"/") && c.fresh(abs) && !c.cfg.ancestors[abs] {
+		// Home and Tmpdir are mount points of their own, never "inside"
+		// /tmp for the rules of D39 and D40.
+		if strings.HasPrefix(abs, d+"/") && c.fresh(abs) && !c.cfg.ancestors[abs] && abs != c.cfg.Home && abs != c.cfg.Tmpdir {
 			return true
 		}
 	}

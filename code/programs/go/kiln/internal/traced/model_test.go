@@ -318,6 +318,47 @@ func (m *model) readOnlyHost(p string) bool {
 	return false
 }
 
+// erofs says a write at p fails: p is in a read-only declared root, or outside
+// everything the sandbox leaves writable.  The sandbox's new root is sealed
+// read-only (KILN04 D43), so above the mounts (and in the directories the plan
+// made only to reach them) nothing can be created, removed, renamed or changed.
+func (m *model) erofs(p string) bool {
+	return m.readOnlyHost(p) || !m.writable(p)
+}
+
+// modelScratch are the sandbox's fresh scratch tmpfs besides Home and Tmpdir.
+var modelScratch = []string{"/tmp", "/var/tmp", "/run"}
+
+// writable says p is the checkout, Home, Tmpdir or a scratch directory, or
+// inside one: the mounts the step may write to.
+func (m *model) writable(p string) bool {
+	for _, d := range append([]string{m.root, m.home, m.tmp}, modelScratch...) {
+		if p == d || strings.HasPrefix(p, d+"/") {
+			return true
+		}
+	}
+	return false
+}
+
+// sandboxHas is the model's reading of the D43 exists-set: what can be in the
+// sealed root.  Everything else is absent in every run.
+func (m *model) sandboxHas(p string) bool {
+	if p == "/" || m.writable(p) {
+		return true
+	}
+	for _, d := range []string{"/usr", "/etc", "/lib64", "/bin", "/dev", "/proc", "/sys"} {
+		if p == d || strings.HasPrefix(p, d+"/") {
+			return true
+		}
+	}
+	for _, a := range append([]string{m.root, m.home, m.tmp, "/usr", "/etc", "/lib64", "/bin"}, modelScratch...) {
+		if strings.HasPrefix(a, p+"/") {
+			return true
+		}
+	}
+	return false
+}
+
 func (m *model) underCwd(abs string) bool {
 	for _, pr := range m.procs {
 		if abs != "" && (pr.cwdPath == abs || strings.HasPrefix(pr.cwdPath, abs+"/")) {
@@ -408,7 +449,7 @@ func (m *model) doMkdirLike(pid int, sys, p, target string) []trace.Event {
 		errno = "ENOENT"
 	}
 	if errno == "ENOENT" && create && !(sys == "symlink" && strings.HasSuffix(p, "/")) {
-		if m.readOnlyHost(r.final) {
+		if m.erofs(r.final) {
 			errno = "EROFS"
 		} else {
 			errno = ""
@@ -442,7 +483,7 @@ func (m *model) doUnlink(pid int, sys, p string) []trace.Event {
 		switch {
 		case r.isDot || r.node == nil || r.parent == nil:
 			errno = "EINVAL"
-		case m.readOnlyHost(r.final):
+		case m.erofs(r.final):
 			errno = "EROFS"
 		case sys == "unlink" && r.node.kind == KindDir:
 			errno = "EISDIR"
@@ -478,7 +519,7 @@ func (m *model) doRenameLink(pid int, sys, a, b string, exchange bool) []trace.E
 		errno = "ENOENT"
 	case src.isDot || dst.isDot || src.node == nil || src.parent == nil:
 		errno = "EINVAL"
-	case m.readOnlyHost(src.final) || m.readOnlyHost(dst.final):
+	case m.erofs(src.final) || m.erofs(dst.final):
 		errno = "EROFS"
 	case m.mountOf(src.final) != m.mountOf(dst.final) && (m.mountOf(src.final) != "" || m.mountOf(dst.final) != ""):
 		// The sandbox's HOME and TMPDIR are separate tmpfs mounts, and so is the
@@ -585,12 +626,12 @@ func (m *model) doOpen(pid int, p string, mode int, content int) []trace.Event {
 		errno = "EEXIST"
 	case errno == "" && r.node.kind == KindDir && writes:
 		errno = "EISDIR"
-	case errno == "" && writes && m.readOnlyHost(final):
+	case errno == "" && writes && m.erofs(final):
 		errno = "EROFS"
 	case errno == "ENOENT" && r.stop == "" && create && strings.HasSuffix(p, "/"):
 		errno = "EISDIR"
 	case errno == "ENOENT" && r.stop == "" && create && !r.isDot:
-		if m.readOnlyHost(final) {
+		if m.erofs(final) {
 			errno = "EROFS"
 		} else {
 			errno = ""
@@ -637,7 +678,7 @@ func (m *model) doChmod(pid int, p string) []trace.Event {
 	switch {
 	case errno == "" && (r.node == nil || r.node.kind == KindLink):
 		errno = "EINVAL"
-	case errno == "" && m.readOnlyHost(r.final):
+	case errno == "" && m.erofs(r.final):
 		errno = "EROFS"
 	}
 	if errno == "" {
@@ -669,7 +710,7 @@ func (m *model) doMetaNoFollow(pid int, which int, p string, slash bool) []trace
 	switch {
 	case errno == "" && r.node == nil:
 		errno = "EINVAL"
-	case errno == "" && m.readOnlyHost(r.final):
+	case errno == "" && m.erofs(r.final):
 		errno = "EROFS"
 	}
 	if errno == "" {
@@ -686,7 +727,7 @@ func (m *model) doMetaNoFollow(pid int, which int, p string, slash bool) []trace
 func (m *model) doFdWrite(pid int, p string) []trace.Event {
 	pr := m.procs[pid]
 	r := m.resolve(p, pr.cwdPath, true)
-	if r.errno != "" || r.node == nil || r.node.kind == KindLink || m.readOnlyHost(r.final) {
+	if r.errno != "" || r.node == nil || r.node.kind == KindLink || m.erofs(r.final) {
 		return nil
 	}
 	m.look(r, false, false, false)
@@ -708,7 +749,7 @@ func (m *model) doBind(pid int, p string) []trace.Event {
 	case errno == "" && r.node == nil:
 		errno = "EINVAL"
 	case errno == "ENOENT" && create:
-		if m.readOnlyHost(r.final) {
+		if m.erofs(r.final) {
 			errno = "EROFS"
 		} else {
 			errno = ""
@@ -871,12 +912,17 @@ func newModel(root, home, tmp string) (*model, *memTree) {
 	delete(m.byPath(tmp).kids, ".keep")
 	m.mkpath(home+"/.keep", &mnode{kind: KindFile})
 	delete(m.byPath(home).kids, ".keep")
-	m.dirs = []string{root, root + "/code", root + "/code/p/a", root + "/code/p/b", tmp, home, "/etc"}
+	for _, d := range modelScratch {
+		m.mkpath(d+"/.keep", &mnode{kind: KindFile})
+		delete(m.byPath(d).kids, ".keep")
+	}
+	m.dirs = []string{root, root + "/code", root + "/code/p/a", root + "/code/p/b", tmp, home, "/etc", "/run", "/var/tmp"}
 	return m, tree
 }
 
 var modelNames = []string{"code", "p", "a", "b", "f1", "f2", "g", "lnk", "L", "M", "n", "x", "y", "..", ".", "scripts",
-	"s.sh", "go.work", "new", "left.txt", "leftdir", "leftlnk", "junk", "d1", "d2"}
+	"s.sh", "go.work", "new", "left.txt", "leftdir", "leftlnk", "junk", "d1", "d2",
+	"package.json", "run", "var", "tmp", "home", "w", "opt", "systemd"}
 
 // modelPath builds a path from bytes.
 func (m *model) path(data []byte, i *int) string {
@@ -892,7 +938,7 @@ func (m *model) path(data []byte, i *int) string {
 		return parentOf(m.root)
 	}
 	var prefix string
-	switch next() % 9 {
+	switch next() % 13 {
 	case 0, 1:
 		prefix = m.root + "/"
 	case 2:
@@ -905,6 +951,12 @@ func (m *model) path(data []byte, i *int) string {
 		prefix = "/usr/lib/"
 	case 6:
 		prefix = "/etc/"
+	case 9:
+		prefix = "/run/"
+	case 10:
+		prefix = "/var/tmp/"
+	case 11, 12:
+		prefix = "/" // the sealed root's top: nothing is there (D43)
 	}
 	n := int(next()%4) + 1
 	parts := make([]string, n)
@@ -980,6 +1032,14 @@ var bursts = [][]burstOp{
 	//   18  stat ENOENT of u.o; create t.o; rename t.o INTO u.o: the first entry
 	//       of u.o is a rename, not a creation, so the rule must refuse
 	{{12, "/u.o", false}, {8, "/t.o", false}, {2, "/t.o", false}, {12, "/u.o", false}},
+	// 19, 20: the stale cwd against the sealed root (KILN04 D43).  chdir into o,
+	// move o away (and maybe make it again), then probe names that the cwd TEXT
+	// resolves into the sealed root or a scratch directory but the kernel, from
+	// the moved directory, resolves elsewhere.
+	{{0, "/o", false}, {14, "/o", false}, {2, "/o", false}, {12, "~../../../../../package.json", false}, {12, "~../../../tmp/x", false}, {12, "~../../../../run/x", false}},
+	{{0, "/o", false}, {14, "/o", false}, {2, "/o", false}, {0, "/o", false}, {12, "~../../../../../package.json", false}, {12, "~../../x", false}},
+	// 21: scratch absences: probe, create, remove, probe again.
+	{{12, "/q", false}, {8, "/q", false}, {5, "/q", false}, {12, "/q", false}},
 }
 
 // perturbations are the operations a burst may be followed by, aimed at the
@@ -992,7 +1052,7 @@ var perturbations = []struct {
 
 func (m *model) burstBase(b byte) string {
 	return []string{m.root + "/code/p/a", m.root + "/code/p/a/d1", m.root, m.tmp, m.home, m.tmp + "/d1",
-		m.home + "/d1", "/usr/lib", parentOf(m.root), m.root + "/code/p/b"}[int(b)%10]
+		m.home + "/d1", "/usr/lib", parentOf(m.root), m.root + "/code/p/b", "/run", "/var/tmp", "/tmp"}[int(b)%13]
 }
 
 // runStep schedules, executes and serialises one BUILD step's operations.
@@ -1321,6 +1381,7 @@ func runDifferential(t *testing.T, data []byte) {
 		m, tree, steps := buildModel(data)
 		h := newHarness(t)
 		h.cfg.Root, h.cfg.Home, h.cfg.Tmpdir = m.root, m.home, m.tmp
+		h.cfg.ScratchDirs = modelScratch
 		h.cfg.Packages = NewPackageIndex([]string{"code/p/a", "code/p/b"})
 		h.cfg.Tree = tree
 		h.cfg.FS = modelFS{m}
@@ -1450,7 +1511,11 @@ func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
 			continue
 		}
 		if !in {
-			if tc.own || tc.create || tc.path == m.tmp || tc.path == m.home || m.readOnlyHost(tc.path) {
+			if tc.own || tc.create || tc.path == m.tmp || tc.path == m.home || m.isScratchDir(tc.path) || m.readOnlyHost(tc.path) {
+				continue
+			}
+			// KILN04 D43: an absent probe of a path the sealed root cannot hold.
+			if (tc.absent || m.byPath(tc.path) == nil) && !m.sandboxHas(tc.path) {
 				continue
 			}
 			// KILN04 D39: a present, non-listing look at a proper ancestor of
@@ -1511,7 +1576,7 @@ func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
 // getxattr family calls, so the xattr exclusion has no model counterpart; it is
 // covered by ancestor_test.go.
 func (m *model) properAncestor(p string) bool {
-	for _, a := range []string{m.root, m.home, m.tmp} {
+	for _, a := range append([]string{m.root, m.home, m.tmp}, modelScratch...) {
 		if p == "/" || strings.HasPrefix(a, p+"/") {
 			n := m.byPath(p)
 			return n != nil && n.kind == KindDir
@@ -1526,8 +1591,29 @@ func (m *model) freshAbsent(p string) bool {
 	if p == m.root || strings.HasPrefix(p, m.root+"/") || strings.HasPrefix(m.root, p+"/") {
 		return false
 	}
-	for _, d := range []string{m.home, m.tmp} {
-		if strings.HasPrefix(p, d+"/") {
+	for _, d := range append([]string{m.home, m.tmp}, modelScratch...) {
+		if strings.HasPrefix(p, d+"/") && !m.ancestorOfMount(p) {
+			return true
+		}
+	}
+	return false
+}
+
+// ancestorOfMount says p is a directory the plan makes only to mount Home or
+// Tmpdir beneath it: it exists in every run, so it is not fresh.
+func (m *model) ancestorOfMount(p string) bool {
+	for _, a := range []string{m.home, m.tmp} {
+		if strings.HasPrefix(a, p+"/") {
+			return true
+		}
+	}
+	return false
+}
+
+// isScratchDir says p is one of the scratch mount points: a node of the plan.
+func (m *model) isScratchDir(p string) bool {
+	for _, d := range modelScratch {
+		if p == d {
 			return true
 		}
 	}
@@ -1545,6 +1631,11 @@ func (m *model) mountOf(p string) string {
 		return "tmp"
 	case strings.HasPrefix(p, m.home+"/") || p == m.home:
 		return "home"
+	}
+	for _, d := range modelScratch {
+		if p == d || strings.HasPrefix(p, d+"/") {
+			return "scratch" + d
+		}
 	}
 	return ""
 }
