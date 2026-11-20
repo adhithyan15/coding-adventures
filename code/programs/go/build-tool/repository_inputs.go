@@ -404,6 +404,13 @@ var (
 	// for byte (CV2-S11f-2), reading them from this directory; it lies in the oracle's package, so
 	// only the generator needs a row for it.
 	warrantScalarFaultsFixture = "code/packages/python/warrant-oracle/tests/fixtures/scalar-faults-v1"
+	// warrantDataFormsFixture is the oracle's synthetic ir.data document, its lowering dump and its refusals
+	// dump (CV2-S11a: records, variants, Option, the four tags and the data patterns). The generator's
+	// tests/data_parity.rs reproduces the lowering dump byte for byte, including its conditional `types`
+	// object, and refuses every document of the refusals dump with the generator code of its row
+	// (CV2-S11b), reading them from this directory; it lies in the oracle's package, so only the
+	// generator needs a row for it.
+	warrantDataFormsFixture = "code/packages/python/warrant-oracle/tests/fixtures/data-forms-v1"
 	// warrantCorpusGenPaths are the inputs of the generator's --check line and of its
 	// cross-package parity tests.
 	warrantCorpusGenPaths = append(warrantAdopterInputs(), []string{
@@ -414,6 +421,7 @@ var (
 		warrantFixedEvalFixture,
 		warrantOffByOneConsumedFixture,
 		warrantScalarFaultsFixture,
+		warrantDataFormsFixture,
 	}...)
 	// warrantOracleRowPaths adds each adopter's fixture directory to the oracle's exact files.
 	// warrantOracleConformanceScripts are the v1 conformance checker and its tests. The oracle's BUILD
@@ -1192,7 +1200,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "rust/warrant-corpus-gen",
 		language: "rust",
-		inputs:   "each adopter's spec, bindings and committed v2 fixture its BUILD --check regenerates (VER04r 16.8, D32; warrantAdopters), and the oracle's accept-blind, fixed-forms, omit-example, tuple-forms, fixed-eval, off-by-one-consumed and scalar-faults fixtures its tests reproduce",
+		inputs:   "each adopter's spec, bindings and committed v2 fixture its BUILD --check regenerates (VER04r 16.8, D32; warrantAdopters), and the oracle's accept-blind, fixed-forms, omit-example, tuple-forms, fixed-eval, off-by-one-consumed, scalar-faults and data-forms fixtures its tests reproduce",
 		matches:  isWarrantCorpusGenInput,
 		paths:    warrantCorpusGenPaths,
 	},
@@ -1376,7 +1384,8 @@ func isWarrantCorpusGenInput(changed string) bool {
 		strings.HasPrefix(changed, warrantTupleFormsFixture+"/") ||
 		strings.HasPrefix(changed, warrantFixedEvalFixture+"/") ||
 		strings.HasPrefix(changed, warrantOffByOneConsumedFixture+"/") ||
-		strings.HasPrefix(changed, warrantScalarFaultsFixture+"/")
+		strings.HasPrefix(changed, warrantScalarFaultsFixture+"/") ||
+		strings.HasPrefix(changed, warrantDataFormsFixture+"/")
 }
 
 // isWarrantPythonLaneCorpusInput selects the Python runner package when the
