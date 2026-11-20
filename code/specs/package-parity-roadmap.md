@@ -21089,3 +21089,22 @@ a fresh inventory confirms the dependency state.
 
 No native Dart Warrant, SAT proof, Dart runtime conformance, or Dart slot credit
 is claimed. The umbrella remains pending for its other storage identities.
+
+## November 19, 2026: Dart DT18 hash-map implementation
+
+The Dart DT18 profile and owner split are merged in PR #19693. The shared
+conformance foundation merged separately in PR #19704 as
+`f16757fd0cec42ad96b36b7d0b16bc001ad2f969`; its Swift public consumer and
+fixture-routing results do not establish Dart behavior. Start the dedicated
+Dart implementation from exact main `6a114eb5a0df7431bd97162c4fc2169f8a50a6aa`.
+
+The implementation must keep the production library pure and run the frozen
+public contract through Dart VM and Node. Acceptance includes shared and
+Dart-only public cases, exhaustive persistent histories with every prior
+version rechecked, deterministic replayable generated histories, compiling
+source-fault controls, separate line and branch coverage above 95%, and real
+production-limit capacity/key tests. Add the Dart source-input/cache binding
+only with the actual discoverable package and both BUILD fronts, then regenerate
+and validate every affected projection and reader count. No Dart slot credit is
+granted before exact-head review and merge. No ready Dart Warrant binding or
+proof execution is claimed.
