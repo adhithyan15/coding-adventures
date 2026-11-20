@@ -1,0 +1,2909 @@
+{
+  "accepted_blind_faults": [],
+  "controls_gate_on": [
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_bool/missing-error",
+      "op": "me_bool",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_bool"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_bool"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_bool_zero/missing-error",
+      "op": "me_bool_zero",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_bool_zero"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_bool_zero"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_bytes_zero/missing-error",
+      "op": "me_bytes_zero",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_bytes_zero"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_bytes_zero"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_i32/missing-error",
+      "op": "me_i32",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_i32"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_i32"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_nat/missing-error",
+      "op": "me_nat",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_nat"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_nat"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_nat_zero/missing-error",
+      "op": "me_nat_zero",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_nat_zero"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_nat_zero"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_u16_zero/missing-error",
+      "op": "me_u16_zero",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_u16_zero"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_u16_zero"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_u8/missing-error",
+      "op": "me_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_u8"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i16/saturate-add",
+      "op": "sat_i16",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i16"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i16"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i16/saturate-sub",
+      "op": "sat_i16",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i16"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i16"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i32/saturate-add",
+      "op": "sat_i32",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i32"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i32"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i32/saturate-sub",
+      "op": "sat_i32",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i32"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i32"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i64/saturate-add",
+      "op": "sat_i64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i64/saturate-sub",
+      "op": "sat_i64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i8/saturate-add",
+      "op": "sat_i8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i8/saturate-sub",
+      "op": "sat_i8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u16/saturate-add",
+      "op": "sat_u16",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u16"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u16"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u16/saturate-sub",
+      "op": "sat_u16",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u16"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u16"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u32/saturate-add",
+      "op": "sat_u32",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u32"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u32"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u32/saturate-sub",
+      "op": "sat_u32",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u32"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u32"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u64/saturate-add",
+      "op": "sat_u64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u64/saturate-sub",
+      "op": "sat_u64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u8/saturate-add",
+      "op": "sat_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u8/saturate-sub",
+      "op": "sat_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_i64/saturate-add",
+      "op": "satr_i64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_i64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_i64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_i64/saturate-sub",
+      "op": "satr_i64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_i64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_i64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_i8/saturate-add",
+      "op": "satr_i8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_i8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_i8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_i8/saturate-sub",
+      "op": "satr_i8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_i8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_i8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_u64/saturate-add",
+      "op": "satr_u64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_u64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_u64/saturate-sub",
+      "op": "satr_u64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_u64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_u8/saturate-add",
+      "op": "satr_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_u8/saturate-sub",
+      "op": "satr_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_i16_by_u16/shift-mask",
+      "op": "sh_i16_by_u16",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_i16_by_u16"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_i16_by_u16"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_i64_by_i32/shift-mask",
+      "op": "sh_i64_by_i32",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_i64_by_i32"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_i64_by_i32"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_only/shift-mask",
+      "op": "sh_only",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_only"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_only"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_u32_by_u8/shift-mask",
+      "op": "sh_u32_by_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_u32_by_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_u32_by_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_u64_by_u64/shift-mask",
+      "op": "sh_u64_by_u64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_u64_by_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_u64_by_u64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_u8/shift-mask",
+      "op": "sh_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_u8_by_i8/shift-mask",
+      "op": "sh_u8_by_i8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_u8_by_i8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_u8_by_i8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "controls_shipped": [
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_bool/missing-error",
+      "op": "me_bool",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_bool"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_bool"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_bool_zero/missing-error",
+      "op": "me_bool_zero",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_bool_zero"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_bool_zero"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_bytes_zero/missing-error",
+      "op": "me_bytes_zero",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_bytes_zero"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_bytes_zero"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_i32/missing-error",
+      "op": "me_i32",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_i32"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_i32"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_nat/missing-error",
+      "op": "me_nat",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_nat"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_nat"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_nat_zero/missing-error",
+      "op": "me_nat_zero",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_nat_zero"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_nat_zero"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_u16_zero/missing-error",
+      "op": "me_u16_zero",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_u16_zero"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_u16_zero"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_u8/missing-error",
+      "op": "me_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_u8"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i16/saturate-add",
+      "op": "sat_i16",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i16"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i16",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i16/saturate-sub",
+      "op": "sat_i16",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i16"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i16",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i32/saturate-add",
+      "op": "sat_i32",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i32"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i32",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i32/saturate-sub",
+      "op": "sat_i32",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i32"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i32",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i64/saturate-add",
+      "op": "sat_i64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i64/saturate-sub",
+      "op": "sat_i64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i8/saturate-add",
+      "op": "sat_i8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_i8/saturate-sub",
+      "op": "sat_i8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_i8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_i8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u16/saturate-add",
+      "op": "sat_u16",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u16"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u16",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u16/saturate-sub",
+      "op": "sat_u16",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u16"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u16",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u32/saturate-add",
+      "op": "sat_u32",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u32"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u32",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u32/saturate-sub",
+      "op": "sat_u32",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u32"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u32",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u64/saturate-add",
+      "op": "sat_u64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u64/saturate-sub",
+      "op": "sat_u64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u8/saturate-add",
+      "op": "sat_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u8/saturate-sub",
+      "op": "sat_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_i64/saturate-add",
+      "op": "satr_i64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_i64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_i64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_i64/saturate-sub",
+      "op": "satr_i64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_i64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_i64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_i8/saturate-add",
+      "op": "satr_i8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_i8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_i8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_i8/saturate-sub",
+      "op": "satr_i8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_i8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_i8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_u64/saturate-add",
+      "op": "satr_u64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_u64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_u64/saturate-sub",
+      "op": "satr_u64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_u64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_u8/saturate-add",
+      "op": "satr_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-sub",
+      "id": "warrant/scalar_faults/negctl/exhaustive/satr_u8/saturate-sub",
+      "op": "satr_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_satr_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_satr_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_i16_by_u16/shift-mask",
+      "op": "sh_i16_by_u16",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_i16_by_u16"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_i16_by_u16",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_i64_by_i32/shift-mask",
+      "op": "sh_i64_by_i32",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_i64_by_i32"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_i64_by_i32",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_only/shift-mask",
+      "op": "sh_only",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_only"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_only",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_u32_by_u8/shift-mask",
+      "op": "sh_u32_by_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_u32_by_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_u32_by_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_u64_by_u64/shift-mask",
+      "op": "sh_u64_by_u64",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_u64_by_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_u64_by_u64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_u8/shift-mask",
+      "op": "sh_u8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "shift-mask",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sh_u8_by_i8/shift-mask",
+      "op": "sh_u8_by_i8",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sh_u8_by_i8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sh_u8_by_i8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "faults": [
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "f"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "me_bool",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            false
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "me_bool_zero",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": ""
+            }
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "me_bytes_zero",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "me_i32",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "n"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "me_nat",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "me_nat_zero",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "U16",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "me_u16_zero",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "me_u8",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_add",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "if",
+          [
+            "lt",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "I16",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "min_value",
+            "I16"
+          ],
+          [
+            "max_value",
+            "I16"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "sat_i16",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_sub",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "if",
+          [
+            "lt",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "I16",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "max_value",
+            "I16"
+          ],
+          [
+            "min_value",
+            "I16"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "sat_i16",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_add",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "if",
+          [
+            "lt",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "I32",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "min_value",
+            "I32"
+          ],
+          [
+            "max_value",
+            "I32"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "sat_i32",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_sub",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "if",
+          [
+            "lt",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "I32",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "max_value",
+            "I32"
+          ],
+          [
+            "min_value",
+            "I32"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "sat_i32",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_add",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "if",
+          [
+            "lt",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "I64",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "min_value",
+            "I64"
+          ],
+          [
+            "max_value",
+            "I64"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "sat_i64",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_sub",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "if",
+          [
+            "lt",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "I64",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "max_value",
+            "I64"
+          ],
+          [
+            "min_value",
+            "I64"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "sat_i64",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_add",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "if",
+          [
+            "lt",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "I8",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "min_value",
+            "I8"
+          ],
+          [
+            "max_value",
+            "I8"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "sat_i8",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_sub",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "if",
+          [
+            "lt",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "I8",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "max_value",
+            "I8"
+          ],
+          [
+            "min_value",
+            "I8"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "sat_i8",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_add",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "max_value",
+          "U16"
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "sat_u16",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_sub",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "min_value",
+          "U16"
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "sat_u16",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_add",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "max_value",
+          "U32"
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "sat_u32",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_sub",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "min_value",
+          "U32"
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "sat_u32",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_add",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "max_value",
+          "U64"
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "sat_u64",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_sub",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "min_value",
+          "U64"
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "sat_u64",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_add",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "max_value",
+          "U8"
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "sat_u8",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "unwrap_or",
+        [
+          "checked_sub",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "min_value",
+          "U8"
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "sat_u8",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "if",
+            [
+              "lt",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "I64",
+                  "value": "0"
+                }
+              ]
+            ],
+            [
+              "min_value",
+              "I64"
+            ],
+            [
+              "max_value",
+              "I64"
+            ]
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "satr_i64",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "if",
+            [
+              "lt",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "I64",
+                  "value": "0"
+                }
+              ]
+            ],
+            [
+              "max_value",
+              "I64"
+            ],
+            [
+              "min_value",
+              "I64"
+            ]
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "satr_i64",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "if",
+            [
+              "lt",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "I8",
+                  "value": "0"
+                }
+              ]
+            ],
+            [
+              "min_value",
+              "I8"
+            ],
+            [
+              "max_value",
+              "I8"
+            ]
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "satr_i8",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "if",
+            [
+              "lt",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "I8",
+                  "value": "0"
+                }
+              ]
+            ],
+            [
+              "max_value",
+              "I8"
+            ],
+            [
+              "min_value",
+              "I8"
+            ]
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "satr_i8",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "max_value",
+            "U64"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "satr_u64",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "min_value",
+            "U64"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "satr_u64",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "max_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "satr_u8",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "ok",
+        [
+          "unwrap_or",
+          [
+            "checked_sub",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            "min_value",
+            "U8"
+          ]
+        ]
+      ],
+      "fault": "saturate-sub",
+      "kind": "replace",
+      "op": "satr_u8",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "fault": "shift-mask",
+      "kind": "pre",
+      "op": "sh_i16_by_u16",
+      "requires": [
+        "ir.fixed"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "unwrap_or",
+            [
+              "rem",
+              [
+                "var",
+                "n"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U16",
+                  "value": "16"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "U16",
+                "value": "0"
+              }
+            ]
+          ],
+          "param": "n"
+        }
+      ]
+    },
+    {
+      "fault": "shift-mask",
+      "kind": "pre",
+      "op": "sh_i64_by_i32",
+      "requires": [
+        "ir.fixed"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "unwrap_or",
+            [
+              "rem_trunc",
+              [
+                "var",
+                "n"
+              ],
+              [
+                "lit",
+                {
+                  "type": "I32",
+                  "value": "64"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "I32",
+                "value": "0"
+              }
+            ]
+          ],
+          "param": "n"
+        }
+      ]
+    },
+    {
+      "fault": "shift-mask",
+      "kind": "pre",
+      "op": "sh_only",
+      "requires": [
+        "ir.fixed"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "unwrap_or",
+            [
+              "rem",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U16",
+                  "value": "16"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "U16",
+                "value": "0"
+              }
+            ]
+          ],
+          "param": "a"
+        }
+      ]
+    },
+    {
+      "fault": "shift-mask",
+      "kind": "pre",
+      "op": "sh_u32_by_u8",
+      "requires": [
+        "ir.fixed"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "unwrap_or",
+            [
+              "rem",
+              [
+                "var",
+                "n"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "32"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ],
+          "param": "n"
+        }
+      ]
+    },
+    {
+      "fault": "shift-mask",
+      "kind": "pre",
+      "op": "sh_u64_by_u64",
+      "requires": [
+        "ir.fixed"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "unwrap_or",
+            [
+              "rem",
+              [
+                "var",
+                "n"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U64",
+                  "value": "64"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "0"
+              }
+            ]
+          ],
+          "param": "n"
+        }
+      ]
+    },
+    {
+      "fault": "shift-mask",
+      "kind": "pre",
+      "op": "sh_u8",
+      "requires": [
+        "ir.fixed"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "unwrap_or",
+            [
+              "rem",
+              [
+                "var",
+                "n"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "8"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ],
+          "param": "n"
+        }
+      ]
+    },
+    {
+      "fault": "shift-mask",
+      "kind": "pre",
+      "op": "sh_u8_by_i8",
+      "requires": [
+        "ir.fixed"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "unwrap_or",
+            [
+              "rem_trunc",
+              [
+                "var",
+                "n"
+              ],
+              [
+                "lit",
+                {
+                  "type": "I8",
+                  "value": "8"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "I8",
+                "value": "0"
+              }
+            ]
+          ],
+          "param": "n"
+        }
+      ]
+    }
+  ],
+  "gate_on": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "gate_shipped": [
+    "ir.core"
+  ],
+  "levels_gate_on": [
+    "ir.core",
+    "ir.fixed"
+  ],
+  "levels_shipped": [
+    "ir.core",
+    "ir.fixed"
+  ],
+  "module": "scalar_faults",
+  "schema": "warrant-fault-parity-v1"
+}

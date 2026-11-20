@@ -1,0 +1,42 @@
+budget 16777216
+chunk_size 16384
+slim_stride auto
+fault sat_u8 saturate-add
+fault sat_u8 saturate-sub
+fault satr_u8 saturate-add
+fault satr_u8 saturate-sub
+fault sat_u16 saturate-add
+fault sat_u16 saturate-sub
+fault sat_u32 saturate-add
+fault sat_u32 saturate-sub
+fault sat_u64 saturate-add
+fault sat_u64 saturate-sub
+fault satr_u64 saturate-add
+fault satr_u64 saturate-sub
+fault sat_i8 saturate-add
+fault sat_i8 saturate-sub
+fault satr_i8 saturate-add
+fault satr_i8 saturate-sub
+fault sat_i16 saturate-add
+fault sat_i16 saturate-sub
+fault sat_i32 saturate-add
+fault sat_i32 saturate-sub
+fault sat_i64 saturate-add
+fault sat_i64 saturate-sub
+fault satr_i64 saturate-add
+fault satr_i64 saturate-sub
+fault sh_u8 shift-mask
+fault sh_u32_by_u8 shift-mask
+fault sh_i16_by_u16 shift-mask
+fault sh_u8_by_i8 shift-mask
+fault sh_i64_by_i32 shift-mask
+fault sh_u64_by_u64 shift-mask
+fault sh_only shift-mask
+fault me_u8 missing-error
+fault me_u16_zero missing-error
+fault me_i32 missing-error
+fault me_bool missing-error
+fault me_bool_zero missing-error
+fault me_nat missing-error
+fault me_nat_zero missing-error
+fault me_bytes_zero missing-error

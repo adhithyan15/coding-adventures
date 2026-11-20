@@ -1,0 +1,375 @@
+{
+  "faults": [
+    "saturate-add",
+    "saturate-sub",
+    "shift-mask",
+    "missing-error"
+  ],
+  "refusals": [
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs two leading parameters of one fixed-width type",
+      "name": "a-nat-first-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: Nat, b: U8) -> U8\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs two leading parameters of one fixed-width type",
+      "name": "a-nat-second-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: Nat) -> U8\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs two leading parameters of one fixed-width type",
+      "name": "two-nat-parameters-and-a-nat-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: Nat, b: Nat) -> Nat\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs two leading parameters of one fixed-width type",
+      "name": "two-different-widths",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U16) -> U8\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs two leading parameters of one fixed-width type",
+      "name": "two-different-signs",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: I8) -> U8\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs two leading parameters of one fixed-width type",
+      "name": "a-single-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> U8\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs two leading parameters of one fixed-width type",
+      "name": "no-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f() -> U8\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs two leading parameters of one fixed-width type",
+      "name": "two-bool-parameters",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: Bool, b: Bool) -> Bool\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs two leading parameters of one fixed-width type",
+      "name": "two-bytes-parameters",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: Bytes, b: Bytes) -> Bytes\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs a result of the parameters' type or a Result of it",
+      "name": "a-bool-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Bool\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs a result of the parameters' type or a Result of it",
+      "name": "a-nat-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Nat\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs a result of the parameters' type or a Result of it",
+      "name": "a-result-of-another-width",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> U16\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs a result of the parameters' type or a Result of it",
+      "name": "an-option-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Option<U8>\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs a result of the parameters' type or a Result of it",
+      "name": "a-bytes-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Bytes\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs a result of the parameters' type or a Result of it",
+      "name": "a-tuple-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> (U8,U8)\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs a result of the parameters' type or a Result of it",
+      "name": "a-result-of-a-bool",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Result<Bool,E>\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs a result of the parameters' type or a Result of it",
+      "name": "a-result-of-another-width-payload",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Result<U16,E>\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs a result of the parameters' type or a Result of it",
+      "name": "a-result-of-a-tuple",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Result<(U8,U8),E>\n"
+    },
+    {
+      "fault": "saturate-add",
+      "message": "fault: saturate-add needs a result of the parameters' type or a Result of it",
+      "name": "a-result-of-bytes",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Result<Bytes,E>\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs two leading parameters of one fixed-width type",
+      "name": "a-nat-first-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: Nat, b: U8) -> U8\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs two leading parameters of one fixed-width type",
+      "name": "a-nat-second-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: Nat) -> U8\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs two leading parameters of one fixed-width type",
+      "name": "two-nat-parameters-and-a-nat-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: Nat, b: Nat) -> Nat\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs two leading parameters of one fixed-width type",
+      "name": "two-different-widths",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U16) -> U8\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs two leading parameters of one fixed-width type",
+      "name": "two-different-signs",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: I8) -> U8\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs two leading parameters of one fixed-width type",
+      "name": "a-single-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> U8\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs two leading parameters of one fixed-width type",
+      "name": "no-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f() -> U8\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs two leading parameters of one fixed-width type",
+      "name": "two-bool-parameters",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: Bool, b: Bool) -> Bool\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs two leading parameters of one fixed-width type",
+      "name": "two-bytes-parameters",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: Bytes, b: Bytes) -> Bytes\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs a result of the parameters' type or a Result of it",
+      "name": "a-bool-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Bool\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs a result of the parameters' type or a Result of it",
+      "name": "a-nat-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Nat\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs a result of the parameters' type or a Result of it",
+      "name": "a-result-of-another-width",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> U16\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs a result of the parameters' type or a Result of it",
+      "name": "an-option-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Option<U8>\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs a result of the parameters' type or a Result of it",
+      "name": "a-bytes-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Bytes\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs a result of the parameters' type or a Result of it",
+      "name": "a-tuple-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> (U8,U8)\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs a result of the parameters' type or a Result of it",
+      "name": "a-result-of-a-bool",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Result<Bool,E>\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs a result of the parameters' type or a Result of it",
+      "name": "a-result-of-another-width-payload",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Result<U16,E>\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs a result of the parameters' type or a Result of it",
+      "name": "a-result-of-a-tuple",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Result<(U8,U8),E>\n"
+    },
+    {
+      "fault": "saturate-sub",
+      "message": "fault: saturate-sub needs a result of the parameters' type or a Result of it",
+      "name": "a-result-of-bytes",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, b: U8) -> Result<Bytes,E>\n"
+    },
+    {
+      "fault": "shift-mask",
+      "message": "fault: shift-mask needs a fixed-width first and last parameter",
+      "name": "a-nat-first-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: Nat, n: U8) -> U8\n"
+    },
+    {
+      "fault": "shift-mask",
+      "message": "fault: shift-mask needs a fixed-width first and last parameter",
+      "name": "a-nat-last-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, n: Nat) -> U8\n"
+    },
+    {
+      "fault": "shift-mask",
+      "message": "fault: shift-mask needs a fixed-width first and last parameter",
+      "name": "a-single-nat-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(n: Nat) -> U8\n"
+    },
+    {
+      "fault": "shift-mask",
+      "message": "fault: shift-mask needs a fixed-width first and last parameter",
+      "name": "a-bool-last-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, n: Bool) -> U8\n"
+    },
+    {
+      "fault": "shift-mask",
+      "message": "fault: shift-mask needs a fixed-width first and last parameter",
+      "name": "a-bool-first-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: Bool, n: U8) -> U8\n"
+    },
+    {
+      "fault": "shift-mask",
+      "message": "fault: shift-mask needs a fixed-width first and last parameter",
+      "name": "a-bytes-last-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8, n: Bytes) -> U8\n"
+    },
+    {
+      "fault": "shift-mask",
+      "message": "fault: shift-mask needs a fixed-width first and last parameter",
+      "name": "a-bytes-first-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: Bytes, n: U8) -> U8\n"
+    },
+    {
+      "fault": "shift-mask",
+      "message": "fault: shift-mask needs parameters",
+      "name": "no-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f() -> U8\n"
+    },
+    {
+      "fault": "missing-error",
+      "message": "fault: missing-error needs a Result result",
+      "name": "a-scalar-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> U8\n"
+    },
+    {
+      "fault": "missing-error",
+      "message": "fault: missing-error needs a Result result",
+      "name": "a-bool-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> Bool\n"
+    },
+    {
+      "fault": "missing-error",
+      "message": "fault: missing-error needs a Result result",
+      "name": "a-bytes-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> Bytes\n"
+    },
+    {
+      "fault": "missing-error",
+      "message": "fault: missing-error has no template for this payload type",
+      "name": "an-option-payload",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> Result<Option<U8>,E>\n"
+    },
+    {
+      "fault": "missing-error",
+      "message": "fault: missing-error needs a Result result",
+      "name": "an-option-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> Option<U8>\n"
+    },
+    {
+      "fault": "missing-error",
+      "message": "fault: a named width has no zero literal",
+      "name": "a-named-width-bytes-payload-with-no-bytes-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f<N: Nat>(a: U8) -> Result<Bytes<N>,E>\n"
+    }
+  ],
+  "schema": "warrant-faults-refusals-v1"
+}

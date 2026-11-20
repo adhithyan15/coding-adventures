@@ -54,6 +54,17 @@ when ``n`` is even and ``n - 1`` when it is odd.  Unlike the faults above, **VER
 (the dump follows the spec, R11), and it requires ``ir.fixed`` plus ``ir.tuple``.  Its committed faults
 dump lives in a fixture directory of its own (``tests/fixtures/off-by-one-consumed-v1``), which the
 generator's slice S10o-2 must reproduce byte for byte.
+
+``saturate-add``, ``saturate-sub``, ``shift-mask`` and the scalar ``missing-error`` (slice S11f-1)
+------------------------------------------------------------------------------------------------
+Three more scalar faults of VER04j (2.7, 3.7) and the scalar payloads of ``missing-error`` join the
+registry.  Their JSON is **normative in VER04r 8.2** (the blocks for the saturating pair, ``shift-mask``
+and ``missing-error``; the decisions on the first two are the ones named "saturate-add, saturate-sub and
+shift-mask join the v2 fault registry" and "missing-error is generalised to every payload" in 16.14), and the committed dump in
+``tests/fixtures/scalar-faults-v1`` is the file the generator's slice S11f-2 must reproduce byte for
+byte.  None needs ``ir.data``; the rows are live from this slice because the ``ir.fixed`` fault gate has been
+open since the S10c flip.  Each builder says, beside its code, why the form equals what the Rust harness
+does (``V1_FAULTS`` and ``scalar_adapter_v1`` in ``rust/warrant-grammar/src/evidence.rs``).
 """
 
 from __future__ import annotations
@@ -147,24 +158,41 @@ def _invert(op: OpSig, errors) -> tuple:
 
 
 def _missing_error(op: OpSig, errors) -> tuple:
-    """``if is_err(result) then Ok(<payload>) else result``.
+    """``if is_err(result) then Ok(<payload>) else result`` (VER04r 8.2, the one rule for every payload).
 
-    A ``Bytes`` payload is the first ``Bytes`` argument (section 8.2).  A **tuple** payload (R3,
-    ``ir.tuple``) is the tuple of ``ci``: for the ``i``-th component, the first parameter, in
-    parameter order, of exactly that type if one exists, else that type's zero.
+    * A ``Bytes`` payload (any ``Bytes<M>`` too) is the first ``Bytes`` argument, matched loosely (any
+      ``Bytes<M>``, the rule since S3c that the "top-level ``Bytes`` payload keeps its looser match"
+      decision of 16.14 preserves for byte parity); with **no** ``Bytes`` parameter it is the zero
+      ``Bytes`` literal (new in S11f-1: such an op was refused before).
+    * A **tuple** payload (R3, ``ir.tuple``) is the tuple of ``ci``: for the ``i``-th component, the first
+      parameter, in parameter order, of exactly that type if one exists, else that type's zero.
+    * A **scalar** payload (``Bool``, ``Nat`` or a fixed-width type, S11f-1) is a leaf: the first
+      parameter whose type is *exactly* the payload type, else the type's zero literal.
+
+    Cost (a check): ``4 + cost(P)``, 5 for a leaf.  The harness (``scalar_adapter_v1``) replaces an
+    ``Err`` with ``Ok`` of a value built from the arguments; the ``Ok`` form here is the portable
+    statement of it, and the difference from the harness (this takes a parameter where the harness
+    may build another value) is the one 16.14 records.
     """
-    if op.ret.head == "Result" and op.ret.args[0].head == "()":
+    if op.ret.head != "Result":
+        raise _fail("missing-error needs a Result result")
+    payload = op.ret.args[0]
+    if payload.head == "()":
         parts = []
-        for component in op.ret.args[0].args:
+        for component in payload.args:
             param = next((n for n, t in op.params if t == component), None)
             parts.append(_var(param) if param is not None else _zero(component))
         expr = ["if", ["is_err", _var("result")], ["ok", ["tuple", parts]], _var("result")]
         return "replace", [TUPLE_LEVEL], expr
-    if op.ret.head != "Result" or op.ret.args[0].head != "Bytes" or not _bytes_params(op):
-        raise _fail("missing-error needs a Result<Bytes, E> or Result<tuple, E> result and a Bytes parameter")
-    first = _bytes_params(op)[0]
-    expr = ["if", ["is_err", _var("result")], ["ok", _var(first)], _var("result")]
-    return "replace", [CORE], expr
+    if payload.head == "Bytes":
+        params = _bytes_params(op)
+        leaf = _var(params[0]) if params else _zero(payload)
+    elif payload.head == "Bool" or payload.head == "Nat" or payload.head in FIXED:
+        param = next((n for n, t in op.params if t == payload), None)
+        leaf = _var(param) if param is not None else _zero(payload)
+    else:
+        raise _fail("missing-error has no template for this payload type")
+    return "replace", [CORE], ["if", ["is_err", _var("result")], ["ok", leaf], _var("result")]
 
 
 def _swap_choice(op: OpSig, errors) -> tuple:
@@ -377,6 +405,86 @@ def _ok_as_err(op: OpSig, errors) -> tuple:
     return "post", [TUPLE_LEVEL], expr
 
 
+def _saturate(op: OpSig, name: str, adding: bool) -> tuple:
+    """``saturate-add`` / ``saturate-sub`` [saturating pair, VER04r 8.2]: the saturating sum or difference.
+
+    Applies to an op whose **first two** parameters share one fixed-width type ``T`` and whose result is
+    ``T`` or ``Result<T,E>`` (anything else, a ``Nat`` parameter, two widths, another result, is refused
+    with the code ``fault``).  Kind ``replace``.  With ``A``, ``B`` the two parameters::
+
+        unsigned add  unwrap_or(checked_add(A, B), max_value(T))
+        signed   add  unwrap_or(checked_add(A, B), if B < 0 then min_value(T) else max_value(T))
+        unsigned sub  unwrap_or(checked_sub(A, B), min_value(T))
+        signed   sub  unwrap_or(checked_sub(A, B), if B < 0 then max_value(T) else min_value(T))
+
+    Why it equals the harness: ``V1_FAULTS`` has ``Replace("p0.saturating_add(p1)")`` and
+    ``Replace("p0.saturating_sub(p1)")`` (``rust/warrant-grammar/src/evidence.rs``), and in
+    ``scalar_adapter_v1`` a ``Replace`` arm *replaces the call*: the export is never called, nothing can
+    panic and the adapter returns ``Ok`` of the value on every input.  Hence the ``["ok", V]`` wrapper
+    for a ``Result`` without any test of ``result``.  ``checked_*`` is ``Some`` exactly when the exact
+    value is in ``T``, so ``unwrap_or`` gives it back; on overflow only one bound is possible: an
+    unsigned sum passes ``MAX``, an unsigned difference ``0`` (= ``min_value``, kept rather than a ``0``
+    literal so the four rows differ only in tag and bound), a signed sum goes up iff ``B > 0``, a signed
+    difference up iff ``B < 0``.  ``B = 0`` never overflows, so the choice made for it is never used.
+    ``requires`` is the template's ``["ir.fixed"]`` (the union over its tags would add ``ir.core``).
+    Cost (a check): ``V`` is 5 unsigned and 9 signed; the ``Result`` form adds 1.
+    """
+    t = op.params[0][1] if len(op.params) >= 2 else None
+    if t is None or t.head not in FIXED or op.params[1][1] != t:
+        raise _fail(f"{name} needs two leading parameters of one fixed-width type")
+    if op.ret != t and not (op.ret.head == "Result" and op.ret.args[0] == t):
+        raise _fail(f"{name} needs a result of the parameters' type or a Result of it")
+    a, b = _var(op.params[0][0]), _var(op.params[1][0])
+    ty = t.head
+    signed = FIXED[ty][1]
+    mx, mn = ["max_value", ty], ["min_value", ty]
+    checked = ["checked_add" if adding else "checked_sub", a, b]
+    if not signed:
+        bound = mx if adding else mn
+    else:
+        neg = ["lt", b, _lit(ty, 0)]
+        bound = ["if", neg, mn, mx] if adding else ["if", neg, mx, mn]
+    v = ["unwrap_or", checked, bound]
+    return "replace", [FIXED_LEVEL], v if op.ret == t else ["ok", v]
+
+
+def _saturate_add(op: OpSig, errors) -> tuple:
+    return _saturate(op, "saturate-add", True)
+
+
+def _saturate_sub(op: OpSig, errors) -> tuple:
+    return _saturate(op, "saturate-sub", False)
+
+
+def _shift_mask(op: OpSig, errors) -> tuple:
+    """``shift-mask`` [VER04r 8.2]: the last parameter ``p`` becomes ``p mod w``, ``w`` the FIRST parameter's width.
+
+    Kind ``pre`` with the one rewrite ``{"param": p, "expr": X}``; ``X`` is
+    ``unwrap_or(rem(p, w), 0)`` for an unsigned last parameter and ``unwrap_or(rem_trunc(p, w), 0)`` for a
+    signed one, the literals in the last parameter's own type ``L``.  Needs a fixed-width first
+    parameter (the width) and a fixed-width last one; a ``Nat`` (the harness computes it as ``u32``, a
+    host type the corpus cannot see) or a non-integer is refused with the code ``fault``.
+
+    Why it equals the harness: ``V1_FAULTS`` has ``PreLast("p % {w}")`` (``evidence.rs``) and the
+    generated adapter line is ``let p0 = if fault == Fault::ShiftMask { let p = p0; p % 8 } else { p0 };``
+    (logic-gates' ``warrant_evidence.rs``): the last argument is rewritten before the call, in its own
+    integer type, with ``{w}`` the width of the *first* argument's type, and the real export is then
+    called.  Rust's ``%`` is the remainder on an unsigned type and the *truncating* remainder (sign of
+    the dividend) on a signed one: ``rem`` and ``rem_trunc``.  ``w`` is never 0 or -1 and always fits
+    ``L``, so the ``Option`` is never ``None`` and the default is never taken.  Template level
+    ``["ir.fixed"]``; cost (a check) 5.
+    """
+    if not op.params:
+        raise _fail("shift-mask needs parameters")
+    first, (last_name, last) = op.params[0][1], op.params[-1]
+    if first.head not in FIXED or last.head not in FIXED:
+        raise _fail("shift-mask needs a fixed-width first and last parameter")
+    width = FIXED[first.head][0]
+    rem = "rem_trunc" if FIXED[last.head][1] else "rem"
+    x = ["unwrap_or", [rem, _var(last_name), _lit(last.head, width)], _lit(last.head, 0)]
+    return "pre", [FIXED_LEVEL], [{"param": last_name, "expr": x}]
+
+
 REGISTRY = {
     "invert": _invert,
     "missing-error": _missing_error,
@@ -392,6 +500,9 @@ REGISTRY = {
     "drop-consumed": _drop_consumed,
     "swap-components": _swap_components,
     "off-by-one-consumed": _off_by_one_consumed,
+    "saturate-add": _saturate_add,
+    "saturate-sub": _saturate_sub,
+    "shift-mask": _shift_mask,
 }
 
 
