@@ -329,15 +329,18 @@ func TestGoWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 	}
 }
 
-// WD-100: the shared runner conformance fixture is read by every lane runner's
-// own tests, so an edit selects each runner package and nothing else; a
-// lookalike directory selects nothing, and a missing runner fails closed.
+// WD-100: the shared runner conformance fixture is read by the own tests of
+// every lane runner (Python, TypeScript and Go, R23), so an edit selects each
+// runner package and nothing else; a lookalike directory selects nothing, and a
+// missing runner fails closed.
 func TestWarrantConformanceFixtureSelectsEveryRunnerPackage(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "python/warrant-corpus", Language: "python"},
 		{Name: "python/ct-compare", Language: "python"},
 		{Name: "typescript/warrant-corpus", Language: "typescript"},
 		{Name: "typescript/ct-compare", Language: "typescript"},
+		{Name: "go/warrant-corpus", Language: "go"},
+		{Name: "go/ct-compare", Language: "go"},
 	}
 	for _, input := range []string{
 		"code/specs/fixtures/warrant-corpus-conformance-v1/json.json",
@@ -345,12 +348,15 @@ func TestWarrantConformanceFixtureSelectsEveryRunnerPackage(t *testing.T) {
 		"code/specs/fixtures/warrant-corpus-conformance-v1/.gitattributes",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
-		want := map[string]bool{"python/warrant-corpus": true, "typescript/warrant-corpus": true}
+		want := map[string]bool{"python/warrant-corpus": true, "typescript/warrant-corpus": true, "go/warrant-corpus": true}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s: got %v, err %v", input, got, err)
 		}
 		if _, err := repositoryInputConsumersForChange([]string{input}, packages[1:2], "python"); err == nil {
 			t.Fatalf("%s: a missing runner package must fail closed", input)
+		}
+		if _, err := repositoryInputConsumersForChange([]string{input}, packages[5:], "go"); err == nil {
+			t.Fatalf("%s: a missing Go runner package must fail closed", input)
 		}
 	}
 	for _, input := range []string{
