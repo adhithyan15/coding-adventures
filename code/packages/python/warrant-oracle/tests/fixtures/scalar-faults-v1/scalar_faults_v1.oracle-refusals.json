@@ -358,6 +358,13 @@
     },
     {
       "fault": "missing-error",
+      "message": "fault: missing-error has no template for this payload type",
+      "name": "a-variant-payload",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  variant K = P | Q\n  op f(a: U8) -> Result<K,E>\n"
+    },
+    {
+      "fault": "missing-error",
       "message": "fault: missing-error needs a Result result",
       "name": "an-option-result",
       "oracle_code": "generation",
@@ -371,5 +378,5 @@
       "source": "warrant refusals v1\n  error E = A | B\n  op f<N: Nat>(a: U8) -> Result<Bytes<N>,E>\n"
     }
   ],
-  "schema": "warrant-faults-refusals-v1"
+  "schema": "warrant-faults-refusals-v2"
 }

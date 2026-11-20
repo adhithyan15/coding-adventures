@@ -39,4 +39,6 @@ fault me_bool missing-error
 fault me_bool_zero missing-error
 fault me_nat missing-error
 fault me_nat_zero missing-error
+fault me_bytes4_zero missing-error
 fault me_bytes_zero missing-error
+fault sat_u8_tuple_param saturate-add

@@ -23,7 +23,7 @@ Four files are written beside this script (plus ``README.md`` and ``.gitattribut
 ``scalar_faults_v1.oracle-refusals.json``
     every signature each fault refuses, with the oracle's code and message.
 
-    python3 make_scalar_faults.py            # (re)write the files
+    python3 make_scalar_faults.py            # (re)write the files (--write is the same)
     python3 make_scalar_faults.py --check    # fail if any committed file differs
 """
 
@@ -75,8 +75,18 @@ OPS += [
     ("me_bool_zero", "a: U8", "Result<Bool,E>", "if a == 0u8 then Err(E.Bad) else Ok(true)", ["missing-error"]),
     ("me_nat", "a: Bool, n: Nat | n < 8", "Result<Nat,E>", "if a then Err(E.Bad) else Ok(n)", ["missing-error"]),
     ("me_nat_zero", "a: Bool", "Result<Nat,E>", "if a then Err(E.Bad) else Ok(1)", ["missing-error"]),
+    ("me_bytes4_zero", "a: U8", "Result<Bytes<4>,E>", "if a == 0u8 then Err(E.Bad) else Ok(b\"01010101\")", ["missing-error"]),
     ("me_bytes_zero", "a: U8", "Result<Bytes,E>", "if a == 0u8 then Err(E.Bad) else Ok(b\"01\")", ["missing-error"]),
+    # R9: a tuple parameter is a type that needs ir.tuple, so the row's `requires` is ir.fixed + ir.tuple
+    ("sat_u8_tuple_param", "a: U8, b: U8, p: (Bool,Bool)", "U8", "a", ["saturate-add"]),
 ]
+
+#: A second, restricted claim on an op, as ``off-by-one-consumed-v1`` does: ``me_u8`` also claims its ``Err`` region
+#: (``b == 0``, where the model answers ``Err(E.Bad)``), a claim whose stand-in expects ``Err`` and so *witnesses* the
+#: fault too; the control then has two required claims, not one.
+EXTRA_CLAIMS = {
+    "me_u8": [("err", "a: U8, b: U32 | b == 0u32", "me_u8(a, b) == Err(E.Bad)")],
+}
 
 
 def _param_names(params: str) -> list[str]:
@@ -126,6 +136,8 @@ def document() -> str:
     for name, params, *_ in OPS:
         args = ", ".join(_param_names(params))
         out += [f"  claim c_{name}:", f"    forall {params}. {name}({args}) == m_{name}({args})"]
+        for suffix, eparams, expr in EXTRA_CLAIMS.get(name, []):
+            out += [f"  claim c_{name}_{suffix}:", f"    forall {eparams}. {expr}"]
     out.append("")
     return "\n".join(out) + "\n"
 
@@ -171,6 +183,7 @@ MISSING_ERROR_REFUSALS = [
     ("a-bool-result", "op f(a: U8) -> Bool"),
     ("a-bytes-result", "op f(a: U8) -> Bytes"),
     ("an-option-payload", "op f(a: U8) -> Result<Option<U8>,E>"),
+    ("a-variant-payload", "variant K = P | Q\n  op f(a: U8) -> Result<K,E>"),
     ("an-option-result", "op f(a: U8) -> Option<U8>"),
     ("a-named-width-bytes-payload-with-no-bytes-parameter", "op f<N: Nat>(a: U8) -> Result<Bytes<N>,E>"),
 ]
@@ -184,7 +197,11 @@ CASES = [
 
 
 def refusals() -> dict:
-    """Every refused signature with the oracle's code and message (never echoing input)."""
+    """Every refused signature with the oracle's code and message (never echoing input).
+
+    Schema ``warrant-faults-refusals-v2``: ``{"schema", "faults": [names], "refusals": [row, ..]}`` where a row is
+    ``{"fault", "name", "oracle_code", "message", "source"}``.  (``-v1``, in ``off-by-one-consumed-v1``, has one
+    top-level ``fault`` string and no per-row ``fault``.)"""
     rows = []
     for fault, cases in CASES:
         for name, decl in cases:
@@ -199,7 +216,7 @@ def refusals() -> dict:
             else:
                 raise AssertionError(f"{fault}: {name} was not refused")
     return {
-        "schema": "warrant-faults-refusals-v1",
+        "schema": "warrant-faults-refusals-v2",
         "faults": [f for f, _ in CASES],
         "refusals": rows,
     }

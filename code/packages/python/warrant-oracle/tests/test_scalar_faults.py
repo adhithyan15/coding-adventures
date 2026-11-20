@@ -397,6 +397,7 @@ MISSING_ERROR_REFUSED = [
     "op f(a: U8) -> Bytes",
     "op f(a: U8) -> Option<U8>",
     "op f(a: U8) -> Result<Option<U8>,E>",  # ir.data: stays refused until the Option payload slice (S11c)
+    "variant K = P | Q\n  op f(a: U8) -> Result<K,E>",  # a variant payload has no zero and no parameter of its type
     "op f<N: Nat>(a: U8) -> Result<Bytes<N>,E>",  # a named width has no zero literal
 ]
 
@@ -424,13 +425,6 @@ def test_shift_mask_shapes_without_a_template_are_refused_with_the_fault_code(de
 @pytest.mark.parametrize("decl", MISSING_ERROR_REFUSED)
 def test_missing_error_shapes_without_a_template_are_refused_with_the_fault_code(decl):
     assert refused(decl, "missing-error").message.startswith("fault:")
-
-
-def test_a_variant_payload_has_no_missing_error_template():
-    s = lower_document(parse_source(b"warrant r v1\n  error E = A\n  variant K = P | Q\n  op f(a: U8) -> Result<K,E>\n"))
-    with pytest.raises(OracleError) as err:
-        fault_row(s.ops["f"], "missing-error", s.errors)
-    assert err.value.message.startswith("fault:")
 
 
 # -- logic-gates: the 21 saturating and shifting rows and the 22 missing-error rows -------------------------------
@@ -525,7 +519,7 @@ def test_the_committed_faults_dump_holds_every_row_live_with_witnesses():
     assert compact(rows["satr_u8", "saturate-add"]["expr"]) == (
         '["ok",["unwrap_or",["checked_add",["var","a"],["var","b"]],["max_value","U8"]]]'
     )
-    assert all(r["requires"] in (["ir.fixed"], ["ir.core"]) for r in rows.values())
+    assert all(r["requires"] in (["ir.fixed"], ["ir.core"], ["ir.fixed", "ir.tuple"]) for r in rows.values())
     for control in dump["controls_gate_on"]:
         assert control["required_claims"] and not control["blind_claims"], control["id"]
         assert all("deferred" not in w for w in control["slim_witness"])
@@ -533,6 +527,20 @@ def test_the_committed_faults_dump_holds_every_row_live_with_witnesses():
 
 def test_the_committed_refusals_dump_names_the_fault_code_for_every_row():
     dump = json.loads((FIXTURE / "scalar_faults_v1.oracle-refusals.json").read_text(encoding="utf-8"))
+    assert dump["schema"] == "warrant-faults-refusals-v2"
     assert dump["faults"] == ["saturate-add", "saturate-sub", "shift-mask", "missing-error"]
     assert len(dump["refusals"]) == 2 * len(SATURATE_REFUSED) + len(SHIFT_REFUSED) + len(MISSING_ERROR_REFUSED)
     assert all(r["oracle_code"] == "generation" and r["message"].startswith("fault:") for r in dump["refusals"])
+
+
+def test_the_committed_dump_pins_the_widened_shapes():
+    dump = json.loads((FIXTURE / "scalar_faults_v1.oracle-faults.json").read_text(encoding="utf-8"))
+    rows = {(f["op"], f["fault"]): f for f in dump["faults"]}
+    assert rows["me_bytes4_zero", "missing-error"]["expr"][2] == ["ok", ["lit", {"type": "Bytes", "value": "00000000"}]]
+    # R9: a tuple parameter adds ir.tuple to the row's requires
+    assert rows["sat_u8_tuple_param", "saturate-add"]["requires"] == ["ir.fixed", "ir.tuple"]
+    controls = {c["id"].split("/negctl/exhaustive/")[1]: c for c in dump["controls_gate_on"]}
+    assert len(controls["me_u8/missing-error"]["required_claims"]) == 2  # the Ok-side and the Err-side claim
+    assert len(dump["controls_gate_on"]) == 41
+    refusals = json.loads((FIXTURE / "scalar_faults_v1.oracle-refusals.json").read_text(encoding="utf-8"))
+    assert any(r["name"] == "a-variant-payload" for r in refusals["refusals"])

@@ -42,6 +42,25 @@
     {
       "blind_claims": [],
       "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_bytes4_zero/missing-error",
+      "op": "me_bytes4_zero",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_bytes4_zero"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_bytes4_zero"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
       "id": "warrant/scalar_faults/negctl/exhaustive/me_bytes_zero/missing-error",
       "op": "me_bytes_zero",
       "required_claims": [
@@ -140,7 +159,8 @@
       "id": "warrant/scalar_faults/negctl/exhaustive/me_u8/missing-error",
       "op": "me_u8",
       "required_claims": [
-        "warrant/scalar_faults/exhaustive/c_me_u8"
+        "warrant/scalar_faults/exhaustive/c_me_u8",
+        "warrant/scalar_faults/exhaustive/c_me_u8_err"
       ],
       "requires": [
         "ir.core"
@@ -149,6 +169,10 @@
         {
           "chunk": 0,
           "claim": "warrant/scalar_faults/exhaustive/c_me_u8"
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_u8_err"
         }
       ],
       "target_kind": "exhaustive"
@@ -453,6 +477,26 @@
         {
           "chunk": 0,
           "claim": "warrant/scalar_faults/exhaustive/c_sat_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u8_tuple_param/saturate-add",
+      "op": "sat_u8_tuple_param",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u8_tuple_param"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u8_tuple_param"
         }
       ],
       "target_kind": "exhaustive"
@@ -785,6 +829,25 @@
     {
       "blind_claims": [],
       "fault": "missing-error",
+      "id": "warrant/scalar_faults/negctl/exhaustive/me_bytes4_zero/missing-error",
+      "op": "me_bytes4_zero",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_me_bytes4_zero"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_bytes4_zero"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
       "id": "warrant/scalar_faults/negctl/exhaustive/me_bytes_zero/missing-error",
       "op": "me_bytes_zero",
       "required_claims": [
@@ -883,7 +946,8 @@
       "id": "warrant/scalar_faults/negctl/exhaustive/me_u8/missing-error",
       "op": "me_u8",
       "required_claims": [
-        "warrant/scalar_faults/exhaustive/c_me_u8"
+        "warrant/scalar_faults/exhaustive/c_me_u8",
+        "warrant/scalar_faults/exhaustive/c_me_u8_err"
       ],
       "requires": [
         "ir.core"
@@ -892,6 +956,10 @@
         {
           "chunk": 0,
           "claim": "warrant/scalar_faults/exhaustive/c_me_u8"
+        },
+        {
+          "chunk": 0,
+          "claim": "warrant/scalar_faults/exhaustive/c_me_u8_err"
         }
       ],
       "target_kind": "exhaustive"
@@ -1195,6 +1263,26 @@
       "slim_witness": [
         {
           "claim": "warrant/scalar_faults/exhaustive/c_sat_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "saturate-add",
+      "id": "warrant/scalar_faults/negctl/exhaustive/sat_u8_tuple_param/saturate-add",
+      "op": "sat_u8_tuple_param",
+      "required_claims": [
+        "warrant/scalar_faults/exhaustive/c_sat_u8_tuple_param"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/scalar_faults/exhaustive/c_sat_u8_tuple_param",
           "deferred": "ir.fixed"
         }
       ],
@@ -1541,6 +1629,38 @@
       "fault": "missing-error",
       "kind": "replace",
       "op": "me_bool_zero",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00000000"
+            }
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "me_bytes4_zero",
       "requires": [
         "ir.core"
       ]
@@ -2314,6 +2434,33 @@
     },
     {
       "expr": [
+        "unwrap_or",
+        [
+          "checked_add",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "max_value",
+          "U8"
+        ]
+      ],
+      "fault": "saturate-add",
+      "kind": "replace",
+      "op": "sat_u8_tuple_param",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
         "ok",
         [
           "unwrap_or",
@@ -2898,11 +3045,13 @@
   ],
   "levels_gate_on": [
     "ir.core",
-    "ir.fixed"
+    "ir.fixed",
+    "ir.tuple"
   ],
   "levels_shipped": [
     "ir.core",
-    "ir.fixed"
+    "ir.fixed",
+    "ir.tuple"
   ],
   "module": "scalar_faults",
   "schema": "warrant-fault-parity-v1"

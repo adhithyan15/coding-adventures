@@ -29,7 +29,9 @@ warrant scalar_faults v1
   model m_me_bool_zero(a: U8) -> Result<Bool,E> = if a == 0u8 then Err(E.Bad) else Ok(true)
   model m_me_nat(a: Bool, n: Nat) -> Result<Nat,E> = if a then Err(E.Bad) else Ok(n)
   model m_me_nat_zero(a: Bool) -> Result<Nat,E> = if a then Err(E.Bad) else Ok(1)
+  model m_me_bytes4_zero(a: U8) -> Result<Bytes<4>,E> = if a == 0u8 then Err(E.Bad) else Ok(b"01010101")
   model m_me_bytes_zero(a: U8) -> Result<Bytes,E> = if a == 0u8 then Err(E.Bad) else Ok(b"01")
+  model m_sat_u8_tuple_param(a: U8, b: U8, p: (Bool,Bool)) -> U8 = a
 
   op sat_u8(a: U8, b: U8) -> U8
   op satr_u8(a: U8, b: U8, c: Bool) -> Result<U8,E>
@@ -57,7 +59,9 @@ warrant scalar_faults v1
   op me_bool_zero(a: U8) -> Result<Bool,E>
   op me_nat(a: Bool, n: Nat | n < 8) -> Result<Nat,E>
   op me_nat_zero(a: Bool) -> Result<Nat,E>
+  op me_bytes4_zero(a: U8) -> Result<Bytes<4>,E>
   op me_bytes_zero(a: U8) -> Result<Bytes,E>
+  op sat_u8_tuple_param(a: U8, b: U8, p: (Bool,Bool)) -> U8
   assume platform:
     none
   assume environment:
@@ -140,8 +144,14 @@ warrant scalar_faults v1
     n secret
   labels me_nat_zero:
     a secret
+  labels me_bytes4_zero:
+    a secret
   labels me_bytes_zero:
     a secret
+  labels sat_u8_tuple_param:
+    a secret
+    b secret
+    p secret
   input sat_u8.a:
     hostile
     ensures no_panic, terminates
@@ -298,7 +308,19 @@ warrant scalar_faults v1
   input me_nat_zero.a:
     hostile
     ensures no_panic, terminates
+  input me_bytes4_zero.a:
+    hostile
+    ensures no_panic, terminates
   input me_bytes_zero.a:
+    hostile
+    ensures no_panic, terminates
+  input sat_u8_tuple_param.a:
+    hostile
+    ensures no_panic, terminates
+  input sat_u8_tuple_param.b:
+    hostile
+    ensures no_panic, terminates
+  input sat_u8_tuple_param.p:
     hostile
     ensures no_panic, terminates
   bound sat_u8:
@@ -405,7 +427,15 @@ warrant scalar_faults v1
     steps <= 64
     heap <= 0
     depth <= 8
+  bound me_bytes4_zero:
+    steps <= 64
+    heap <= 0
+    depth <= 8
   bound me_bytes_zero:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound sat_u8_tuple_param:
     steps <= 64
     heap <= 0
     depth <= 8
@@ -450,6 +480,8 @@ warrant scalar_faults v1
     forall a: U16. sh_only(a) == m_sh_only(a)
   claim c_me_u8:
     forall a: U8, b: U32. me_u8(a, b) == m_me_u8(a, b)
+  claim c_me_u8_err:
+    forall a: U8, b: U32 | b == 0u32. me_u8(a, b) == Err(E.Bad)
   claim c_me_u16_zero:
     forall a: U8. me_u16_zero(a) == m_me_u16_zero(a)
   claim c_me_i32:
@@ -462,6 +494,10 @@ warrant scalar_faults v1
     forall a: Bool, n: Nat | n < 8. me_nat(a, n) == m_me_nat(a, n)
   claim c_me_nat_zero:
     forall a: Bool. me_nat_zero(a) == m_me_nat_zero(a)
+  claim c_me_bytes4_zero:
+    forall a: U8. me_bytes4_zero(a) == m_me_bytes4_zero(a)
   claim c_me_bytes_zero:
     forall a: U8. me_bytes_zero(a) == m_me_bytes_zero(a)
+  claim c_sat_u8_tuple_param:
+    forall a: U8, b: U8, p: (Bool,Bool). sat_u8_tuple_param(a, b, p) == m_sat_u8_tuple_param(a, b, p)
 

@@ -15,13 +15,27 @@ of the first argument's type.
 
 | File | What it is |
 |---|---|
-| `make_scalar_faults.py` | writes (or `--check`s) the four files below; `BUILD` runs `--check` (about 13 s) |
-| `scalar_faults_v1.warrant` | generated synthetic document: `sat_<t>` for the eight fixed-width types, `satr_<t>` (a `Result` with a third, ignored parameter) for `U8`, `U64`, `I8`, `I64`, shift ops over each signedness and width combination, and the scalar `missing-error` shapes (a parameter of the exact type, the zero) |
+| `make_scalar_faults.py` | writes (or `--check`s) the four files below; `BUILD` runs `--check` (about 15 s) |
+| `scalar_faults_v1.warrant` | generated synthetic document: `sat_<t>` for the eight fixed-width types, `satr_<t>` (a `Result` with a third, ignored parameter) for `U8`, `U64`, `I8`, `I64`, shift ops over each signedness and width combination, the scalar `missing-error` shapes (a parameter of the exact type, the zero, a `Bytes<4>` zero literal), `me_u8`'s second claim on its `Err` region (so that control has two required claims), and `sat_u8_tuple_param`, whose tuple parameter adds `ir.tuple` to the row's `requires` (R9) |
 | `scalar_faults_v1.profile` | the `corpus.profile`: one `fault <op> <fault>` line per op and fault |
-| `scalar_faults_v1.oracle-faults.json` | `parity_dumps.faults_view`: every fault row and the controls under the explicit closed gate and the open gate |
-| `scalar_faults_v1.oracle-refusals.json` | every signature each fault refuses (`Nat` parameters, mixed widths or signs, other result types, a non-`Result` for `missing-error`, an `Option` payload, a named-width `Bytes` payload with nothing to take), each with the code `generation` and a message starting `fault:` |
+| `scalar_faults_v1.oracle-faults.json` | `parity_dumps.faults_view`: 41 fault rows and the 41 controls under the explicit closed gate and under the open gate (`controls_shipped` and `controls_gate_on`) |
+| `scalar_faults_v1.oracle-refusals.json` | every signature each fault refuses (`Nat` parameters, mixed widths or signs, other result types, a non-`Result` for `missing-error`, an `Option` payload, a variant payload, a named-width `Bytes` payload with nothing to take), each with the code `generation` and a message starting `fault:` |
 
 `.gitattributes` (`* -text`) keeps the bytes exact on every platform.
+
+## The refusals schema: `warrant-faults-refusals-v2`
+
+`off-by-one-consumed-v1` has one fault and its refusals dump (`warrant-faults-refusals-v1`) carries a top-level
+`fault` string, which the generator's `off_by_one_consumed_parity.rs` reads under that id. This directory has
+several faults, so the shape differs and the id is `-v2`:
+
+```json
+{"schema": "warrant-faults-refusals-v2",
+ "faults": ["saturate-add", "saturate-sub", "shift-mask", "missing-error"],
+ "refusals": [{"fault": "...", "name": "...", "oracle_code": "generation", "message": "fault: ...", "source": "..."}]}
+```
+
+A row has a `fault` key of its own; there is no top-level `fault`.
 
 ## Why a directory of its own
 

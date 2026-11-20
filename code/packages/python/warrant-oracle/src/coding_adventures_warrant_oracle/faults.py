@@ -59,8 +59,8 @@ generator's slice S10o-2 must reproduce byte for byte.
 ------------------------------------------------------------------------------------------------
 Three more scalar faults of VER04j (2.7, 3.7) and the scalar payloads of ``missing-error`` join the
 registry.  Their JSON is **normative in VER04r 8.2** (the blocks for the saturating pair, ``shift-mask``
-and ``missing-error``; the decisions on the first two are the ones named "saturate-add, saturate-sub and
-shift-mask join the v2 fault registry" and "missing-error is generalised to every payload" in 16.14), and the committed dump in
+and ``missing-error``; decisions [D50] (``missing-error`` for every payload) and [D51] (the three scalar
+faults join the registry), details R31 and R33, all in 16.14), and the committed dump in
 ``tests/fixtures/scalar-faults-v1`` is the file the generator's slice S11f-2 must reproduce byte for
 byte.  None needs ``ir.data``; the rows are live from this slice because the ``ir.fixed`` fault gate has been
 open since the S10c flip.  Each builder says, beside its code, why the form equals what the Rust harness
@@ -161,8 +161,7 @@ def _missing_error(op: OpSig, errors) -> tuple:
     """``if is_err(result) then Ok(<payload>) else result`` (VER04r 8.2, the one rule for every payload).
 
     * A ``Bytes`` payload (any ``Bytes<M>`` too) is the first ``Bytes`` argument, matched loosely (any
-      ``Bytes<M>``, the rule since S3c that the "top-level ``Bytes`` payload keeps its looser match"
-      decision of 16.14 preserves for byte parity); with **no** ``Bytes`` parameter it is the zero
+      ``Bytes<M>``, the rule since S3c that R31 (16.14) keeps for byte parity); with **no** ``Bytes`` parameter it is the zero
       ``Bytes`` literal (new in S11f-1: such an op was refused before).
     * A **tuple** payload (R3, ``ir.tuple``) is the tuple of ``ci``: for the ``i``-th component, the first
       parameter, in parameter order, of exactly that type if one exists, else that type's zero.
@@ -172,7 +171,7 @@ def _missing_error(op: OpSig, errors) -> tuple:
     Cost (a check): ``4 + cost(P)``, 5 for a leaf.  The harness (``scalar_adapter_v1``) replaces an
     ``Err`` with ``Ok`` of a value built from the arguments; the ``Ok`` form here is the portable
     statement of it, and the difference from the harness (this takes a parameter where the harness
-    may build another value) is the one 16.14 records.
+    may build another value) is the one [D50] records.
     """
     if op.ret.head != "Result":
         raise _fail("missing-error needs a Result result")
