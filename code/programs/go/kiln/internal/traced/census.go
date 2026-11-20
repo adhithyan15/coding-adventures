@@ -180,25 +180,60 @@ func opKindOf(ev *trace.Event) string {
 }
 
 // noteLookupOp remembers, for the census alone, the op class of the look that
-// first put abs into a lookup set (see classifier.lookupOps).
-func (c *classifier) noteLookupOp(abs string) {
+// ENTERED abs into the lookup set named by set (see classifier.lookupOps).  A
+// path can sit in several sets (it can be a traversed component in one call
+// and a followed final in another), each entered by a different call, and the
+// census must show the call whose set failed the rule.
+func (c *classifier) noteLookupOp(set, abs string) {
 	if c.census == nil {
 		return
 	}
 	if c.lookupOps == nil {
 		c.lookupOps = map[string]string{}
 	}
-	if _, ok := c.lookupOps[abs]; !ok {
-		c.lookupOps[abs] = c.opClass()
+	k := set + "\x00" + abs
+	if _, ok := c.lookupOps[k]; !ok {
+		c.lookupOps[k] = c.opClass()
 	}
 }
 
-// lookupOpOf is the class noteLookupOp kept for abs: "other" when none was.
-func (c *classifier) lookupOpOf(abs string) string {
-	if op, ok := c.lookupOps[abs]; ok {
+// lookupOpOf is the class noteLookupOp kept for abs in the set that the
+// unstable-path sub-code names: "other" when none was.
+func (c *classifier) lookupOpOf(sub, abs string) string {
+	if op, ok := c.lookupOps[setOfSub(sub)+"\x00"+abs]; ok {
 		return op
 	}
 	return "other"
+}
+
+// The lookup sets, as noteLookupOp names them.
+const (
+	setSeen, setAbsent, setFile, setFinal = "seen", "absent", "file", "final"
+	setRelFinal, setRelAbs, setGone       = "relFinal", "relAbs", "gone"
+	setOwn                                = "own"
+)
+
+// setOfSub is the lookup set whose rule the unstable-path sub-code names.
+func setOfSub(sub string) string {
+	switch sub {
+	case "component-changed":
+		return setSeen
+	case "absent-changed":
+		return setAbsent
+	case "final-changed":
+		return setFinal
+	case "followed-final-changed":
+		return setRelFinal
+	case "followed-absent-changed":
+		return setRelAbs
+	case "gone-but-found", "removed-before-made":
+		return setGone
+	case "file-changed":
+		return setFile
+	case "own-overlap":
+		return setOwn
+	}
+	return ""
 }
 
 // opClass is the class of the observation in progress.

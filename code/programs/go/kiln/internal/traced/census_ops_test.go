@@ -230,23 +230,33 @@ func TestCensusSplitsUnstablePathByOpClass(t *testing.T) {
 	}
 }
 
-// The remembered class exists only with a Census, keeps the FIRST look's class
-// for a path, and a path with none is "other".
+// The remembered class exists only with a Census, keeps the class of the look
+// that ENTERED a path into a set (a later look of the same set changes
+// nothing, another set keeps its own), and a path with none is "other".
 func TestCensusLookupOpsOnlyWithACensus(t *testing.T) {
 	c := &classifier{}
-	c.noteLookupOp("/p")
+	c.noteLookupOp(setSeen, "/p")
 	if c.lookupOps != nil {
 		t.Errorf("lookupOps filled without a Census: %v", c.lookupOps)
 	}
 	c.census = NewCensus()
 	c.obsPresent, c.opKind = true, "stat"
-	c.noteLookupOp("/p")
+	c.noteLookupOp(setSeen, "/p")
 	c.opKind = "open"
-	c.noteLookupOp("/p")
-	if got := c.lookupOpOf("/p"); got != "stat" {
-		t.Errorf("lookupOpOf(/p) = %q, want the first look's class stat", got)
+	c.noteLookupOp(setSeen, "/p")
+	c.noteLookupOp(setFinal, "/p")
+	if got := c.lookupOpOf("component-changed", "/p"); got != "stat" {
+		t.Errorf("seen set: %q, want the entering look's class stat", got)
 	}
-	if got := c.lookupOpOf("/nowhere"); got != "other" {
-		t.Errorf("lookupOpOf(unknown) = %q", got)
+	// The same path entered a different set by a different call: the census
+	// must show THAT call for a rule of that set, not the first look overall.
+	if got := c.lookupOpOf("final-changed", "/p"); got != "open" {
+		t.Errorf("final set: %q, want open (the look that entered the failing set)", got)
+	}
+	if got := c.lookupOpOf("component-changed", "/nowhere"); got != "other" {
+		t.Errorf("unknown path = %q", got)
+	}
+	if got := c.lookupOpOf("no-such-sub", "/p"); got != "other" {
+		t.Errorf("unknown sub-code = %q", got)
 	}
 }

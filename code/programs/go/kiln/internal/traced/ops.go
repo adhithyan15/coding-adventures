@@ -383,6 +383,7 @@ func (c *classifier) write(ev *trace.Event) {
 		c.writePath(tg.abs)
 		c.markCreated(tg.abs, true)
 		c.links[tg.abs] = ev.Target
+		c.noteTmpLink(tg.abs)
 	case "unlink", "unlinkat", "rmdir":
 		c.observeSelf(tg.abs, true)
 		c.writePath(tg.abs)
@@ -439,6 +440,7 @@ func (c *classifier) rename(ev *trace.Event) {
 	c.writePath(src.abs)
 	c.writePath(dst.abs)
 	srcLink, srcIsLink := c.links[src.abs]
+	c.noteTmpMove(src.abs, dst.abs, flagSet(ev.Flags)["RENAME_EXCHANGE"])
 	if flagSet(ev.Flags)["RENAME_EXCHANGE"] {
 		// Both names existed before and still do: neither is created.
 		c.observeSelf(dst.abs, true)
@@ -453,9 +455,11 @@ func (c *classifier) rename(ev *trace.Event) {
 		delete(c.links, dst.abs)
 		if dstIsLink {
 			c.links[src.abs] = dstLink
+			c.noteTmpLink(src.abs)
 		}
 		if srcIsLink {
 			c.links[dst.abs] = srcLink
+			c.noteTmpLink(dst.abs)
 		}
 		return
 	}
@@ -464,6 +468,7 @@ func (c *classifier) rename(ev *trace.Event) {
 	c.markCreated(dst.abs, false)
 	if srcIsLink {
 		c.links[dst.abs] = srcLink
+		c.noteTmpLink(dst.abs)
 	}
 	if srcDir {
 		c.dirs[dst.abs] = true
@@ -521,6 +526,7 @@ func (c *classifier) link(ev *trace.Event) {
 	c.markCreated(dst.abs, false)
 	if srcIsLink {
 		c.links[dst.abs] = srcLink
+		c.noteTmpLink(dst.abs)
 	}
 }
 

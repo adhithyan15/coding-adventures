@@ -180,6 +180,11 @@ func (c *classifier) fresh(abs string) bool {
 			return false
 		}
 	}
+	for _, p := range c.cfg.HostBinds {
+		if covers(p, abs) || strings.HasPrefix(p, abs+"/") {
+			return false
+		}
+	}
 	return true
 }
 

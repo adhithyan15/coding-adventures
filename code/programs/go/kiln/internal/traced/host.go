@@ -231,6 +231,16 @@ func (c *classifier) observeHost(abs string, present, listing bool) {
 		c.observeRoot(r, abs, present)
 		return
 	}
+	// A derived state root (Config.HostBinds) starts empty, like a declared one
+	// (the recorder verifies it, stateRootEmpty), so an absent probe is a
+	// constant; a present look at one is host state and falls through.
+	if !present {
+		for _, b := range c.cfg.HostBinds {
+			if covers(b, abs) {
+				return
+			}
+		}
+	}
 	// An ancestor of an anchor, looked at without listing it and without
 	// reading extended attributes, shows its type and stat metadata only.  It
 	// must really be a DIRECTORY on the disk: prepare verifies only the
@@ -241,11 +251,25 @@ func (c *classifier) observeHost(abs string, present, listing bool) {
 	// state, and also falls through.  A child of an ancestor (/home/go.work) is
 	// not an ancestor and is judged by the rules below.  An ancestor inside a
 	// declared root (nested anchors) was handled by the root's own rule above.
-	if present && !listing && !c.xattrCall && c.cfg.ancestors[abs] && c.lookup(abs).kind == KindDir {
+	//
+	// And it must be a LOOK.  A write-class call (rename, rmdir, unlink, chmod,
+	// utimensat, ...) CHANGES the node, and moving or removing an ancestor of
+	// the checkout would let the action rebuild the path to it unobserved
+	// (KILN04 D40: `mv ~/work ~/y`, then a listing of ~/y/x is "own output"), so
+	// a write falls through to host-read, as it did before D39.  Every KindWrite
+	// call and every opening that can write runs with inWrite set.  A write that
+	// FAILED (mkdir -p's EEXIST on each existing prefix) changed nothing: it is
+	// an observation of the path, never a write (ops.go), so it stays a look.
+	if present && !listing && (!c.inWrite || !c.callOK) && !c.xattrCall && c.cfg.ancestors[abs] && c.lookup(abs).kind == KindDir {
 		return
 	}
 	if !present && c.absentOK(abs) {
 		return
+	}
+	if c.inWrite && c.callOK && c.cfg.ancestors[abs] {
+		// A write to an ancestor may have moved the checkout's own path: nothing
+		// said about where later writes landed can be trusted.
+		c.incomplete = true
 	}
 	c.reason("host-read:" + c.redact(abs))
 }
