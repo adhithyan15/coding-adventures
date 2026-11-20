@@ -1,0 +1,4579 @@
+{
+  "budget": 1048576,
+  "cases_tfv": "tfv 1\nwarrant/data_eval/example/e_some R3 Kop S6f705f736f6d655f7538 Ka I7 Kexpect L1 I7\nwarrant/data_eval/example/e_none R3 Kop S6f705f6e6f6e655f7538 Ku T Kexpect L0\nwarrant/data_eval/example/e_nested R3 Kop S6f705f736f6d655f6e6573746564 Ka T Kexpect L1 L1 T\nwarrant/data_eval/example/e_some_none R3 Kop S6f705f736f6d655f6e6f6e65 Ku T Kexpect L1 L0\nwarrant/data_eval/example/e_pair R4 Kop S6f705f6f70745f70616972 Ka T Kn I4 Kexpect L1 L2 T I4\nwarrant/data_eval/example/e_point R4 Kop S6f705f6d6b5f706f696e74 Ka I1 Kb I2 Kexpect L2 I1 I2\nwarrant/data_eval/example/e_wrapped R5 Kop S6f705f6d6b5f77726170706564 Ka I1 Kb I2 Kt T Kexpect L2 L2 I1 I2 T\nwarrant/data_eval/example/e_slot R4 Kop S6f705f6d6b5f736c6f74 Ko L1 I9 Ka T Kexpect L2 L1 I9 L2 T I2\nwarrant/data_eval/example/e_wide R4 Kop S6f705f6d6b5f77696465 Kn I3 Kw I65535 Kexpect L2 I65535 I3\nwarrant/data_eval/example/e_circle R3 Kop S6f705f6d6b5f636972636c65 Kr I3 Kexpect L2 S436972636c65 L1 I3\nwarrant/data_eval/example/e_rect R4 Kop S6f705f6d6b5f72656374 Kw I3 Kh I4 Kexpect L2 S52656374 L2 I3 I4\nwarrant/data_eval/example/e_dot R3 Kop S6f705f6d6b5f646f74 Ku T Kexpect L2 S446f74 L0\nwarrant/data_eval/example/e_done R3 Kop S6f705f6d6b5f646f6e65 Kn I5 Kexpect L2 S446f6e65 L2 I5 L0\nwarrant/data_eval/example/e_opt_msg R3 Kop S6f705f6d6b5f6f70745f6d7367 Ko L1 I1 Kexpect L2 S4f7074 L1 L1 I1\nwarrant/data_eval/example/e_ok_record R4 Kop S6f705f6164646572 Ka X01 Kb X02 Kexpect M1 S6f6b L3 X01 I3 T\nwarrant/data_eval/example/e_err R4 Kop S6f705f6164646572 Ka X01 Kb X Kexpect M1 S657272 S426164\nwarrant/data_eval/example/e_ok_option R4 Kop S6f705f747269 Kdata I7 Kenable I1 Kexpect M1 S6f6b L1 I7\nwarrant/data_eval/example/e_ok_none R4 Kop S6f705f747269 Kdata I7 Kenable I0 Kexpect M1 S6f6b L0\nwarrant/data_eval/example/e_ok_tuple R3 Kop S6f705f7072 Kn I1 Kexpect M1 S6f6b L2 X01 F\nwarrant/data_eval/example/e_ok_holder R3 Kop S6f705f686f6c646572 Kn I3 Kexpect M1 S6f6b L2 X00ff L2 Xff T\nwarrant/data_eval/example/e_arg_record R3 Kop S6f705f7078 Kp L2 I4 I5 Kexpect I4\nwarrant/data_eval/example/e_arg_variant R3 Kop S6f705f6d5f7368617065 Ks L2 S52656374 L2 I1 I2 Kexpect I3\nwarrant/data_eval/example/e_arg_option R3 Kop S6f705f756e777261705f62696e646572 Ko L1 I8 Kexpect I8\n",
+  "chunk_size": 16384,
+  "document": "v1",
+  "examples": [
+    {
+      "args": [
+        "7"
+      ],
+      "expected": {
+        "some": "7"
+      },
+      "id": "warrant/data_eval/example/e_some",
+      "op": "op_some_u8",
+      "result_type": "Option<U8>"
+    },
+    {
+      "args": [
+        true
+      ],
+      "expected": {
+        "none": true
+      },
+      "id": "warrant/data_eval/example/e_none",
+      "op": "op_none_u8",
+      "result_type": "Option<U8>"
+    },
+    {
+      "args": [
+        true
+      ],
+      "expected": {
+        "some": {
+          "some": true
+        }
+      },
+      "id": "warrant/data_eval/example/e_nested",
+      "op": "op_some_nested",
+      "result_type": "Option<Option<Bool>>"
+    },
+    {
+      "args": [
+        true
+      ],
+      "expected": {
+        "some": {
+          "none": true
+        }
+      },
+      "id": "warrant/data_eval/example/e_some_none",
+      "op": "op_some_none",
+      "result_type": "Option<Option<Bool>>"
+    },
+    {
+      "args": [
+        true,
+        "4"
+      ],
+      "expected": {
+        "some": [
+          true,
+          "4"
+        ]
+      },
+      "id": "warrant/data_eval/example/e_pair",
+      "op": "op_opt_pair",
+      "result_type": "Option<(Bool,Nat)>"
+    },
+    {
+      "args": [
+        "1",
+        "2"
+      ],
+      "expected": [
+        "1",
+        "2"
+      ],
+      "id": "warrant/data_eval/example/e_point",
+      "op": "op_mk_point",
+      "result_type": "Point"
+    },
+    {
+      "args": [
+        "1",
+        "2",
+        true
+      ],
+      "expected": [
+        [
+          "1",
+          "2"
+        ],
+        true
+      ],
+      "id": "warrant/data_eval/example/e_wrapped",
+      "op": "op_mk_wrapped",
+      "result_type": "Wrapped"
+    },
+    {
+      "args": [
+        {
+          "some": "9"
+        },
+        true
+      ],
+      "expected": [
+        {
+          "some": "9"
+        },
+        [
+          true,
+          "2"
+        ]
+      ],
+      "id": "warrant/data_eval/example/e_slot",
+      "op": "op_mk_slot",
+      "result_type": "Slot"
+    },
+    {
+      "args": [
+        "3",
+        "65535"
+      ],
+      "expected": [
+        "65535",
+        "3"
+      ],
+      "id": "warrant/data_eval/example/e_wide",
+      "op": "op_mk_wide",
+      "result_type": "Wide"
+    },
+    {
+      "args": [
+        "3"
+      ],
+      "expected": {
+        "ctor": "Circle",
+        "fields": [
+          "3"
+        ]
+      },
+      "id": "warrant/data_eval/example/e_circle",
+      "op": "op_mk_circle",
+      "result_type": "Shape"
+    },
+    {
+      "args": [
+        "3",
+        "4"
+      ],
+      "expected": {
+        "ctor": "Rect",
+        "fields": [
+          "3",
+          "4"
+        ]
+      },
+      "id": "warrant/data_eval/example/e_rect",
+      "op": "op_mk_rect",
+      "result_type": "Shape"
+    },
+    {
+      "args": [
+        true
+      ],
+      "expected": {
+        "ctor": "Dot",
+        "fields": []
+      },
+      "id": "warrant/data_eval/example/e_dot",
+      "op": "op_mk_dot",
+      "result_type": "Shape"
+    },
+    {
+      "args": [
+        "5"
+      ],
+      "expected": {
+        "ctor": "Done",
+        "fields": [
+          "5",
+          {
+            "none": true
+          }
+        ]
+      },
+      "id": "warrant/data_eval/example/e_done",
+      "op": "op_mk_done",
+      "result_type": "Msg"
+    },
+    {
+      "args": [
+        {
+          "some": "1"
+        }
+      ],
+      "expected": {
+        "ctor": "Opt",
+        "fields": [
+          {
+            "some": "1"
+          }
+        ]
+      },
+      "id": "warrant/data_eval/example/e_opt_msg",
+      "op": "op_mk_opt_msg",
+      "result_type": "Msg"
+    },
+    {
+      "args": [
+        "01",
+        "02"
+      ],
+      "expected": {
+        "ok": [
+          "01",
+          "3",
+          true
+        ]
+      },
+      "id": "warrant/data_eval/example/e_ok_record",
+      "op": "op_adder",
+      "result_type": "Result<Sum,DataError>"
+    },
+    {
+      "args": [
+        "01",
+        ""
+      ],
+      "expected": {
+        "err": "Bad"
+      },
+      "id": "warrant/data_eval/example/e_err",
+      "op": "op_adder",
+      "result_type": "Result<Sum,DataError>"
+    },
+    {
+      "args": [
+        "7",
+        "1"
+      ],
+      "expected": {
+        "ok": {
+          "some": "7"
+        }
+      },
+      "id": "warrant/data_eval/example/e_ok_option",
+      "op": "op_tri",
+      "result_type": "Result<Option<U8>,DataError>"
+    },
+    {
+      "args": [
+        "7",
+        "0"
+      ],
+      "expected": {
+        "ok": {
+          "none": true
+        }
+      },
+      "id": "warrant/data_eval/example/e_ok_none",
+      "op": "op_tri",
+      "result_type": "Result<Option<U8>,DataError>"
+    },
+    {
+      "args": [
+        "1"
+      ],
+      "expected": {
+        "ok": [
+          "01",
+          false
+        ]
+      },
+      "id": "warrant/data_eval/example/e_ok_tuple",
+      "op": "op_pr",
+      "result_type": "Result<(Bytes,Bool),DataError>"
+    },
+    {
+      "args": [
+        "3"
+      ],
+      "expected": {
+        "ok": [
+          "00ff",
+          [
+            "ff",
+            true
+          ]
+        ]
+      },
+      "id": "warrant/data_eval/example/e_ok_holder",
+      "op": "op_holder",
+      "result_type": "Result<Holder,DataError>"
+    },
+    {
+      "args": [
+        [
+          "4",
+          "5"
+        ]
+      ],
+      "expected": "4",
+      "id": "warrant/data_eval/example/e_arg_record",
+      "op": "op_px",
+      "result_type": "U8"
+    },
+    {
+      "args": [
+        {
+          "ctor": "Rect",
+          "fields": [
+            "1",
+            "2"
+          ]
+        }
+      ],
+      "expected": "3",
+      "id": "warrant/data_eval/example/e_arg_variant",
+      "op": "op_m_shape",
+      "result_type": "U8"
+    },
+    {
+      "args": [
+        {
+          "some": "8"
+        }
+      ],
+      "expected": "8",
+      "id": "warrant/data_eval/example/e_arg_option",
+      "op": "op_unwrap_binder",
+      "result_type": "U8"
+    }
+  ],
+  "levels": [
+    "ir.core",
+    "ir.data",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "max_ir_cost": 2000,
+  "module": "data_eval",
+  "ops": {
+    "op_adder": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_adder_n": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_alu": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_dir_res": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_holder": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_inter_add": [
+      "ir.core"
+    ],
+    "op_m_bool": [
+      "ir.core"
+    ],
+    "op_m_dir_bind": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_m_inner": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_m_mode": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_m_msg": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_m_opt": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_m_opt_nested": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_m_opt_tuple": [
+      "ir.core",
+      "ir.data",
+      "ir.tuple"
+    ],
+    "op_m_opt_wild_arm": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_m_point": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_m_res_opt": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_m_res_rec": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_m_shape": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_m_slot": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_m_tuple_bool": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_m_wrapped": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_mk_circle": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_mk_done": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_mk_dot": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_mk_opt_msg": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_mk_point": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_mk_rect": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_mk_slot": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_mk_wide": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_mk_wrapped": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_none_u8": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_opt_bytes": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_opt_eq": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_opt_if": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_opt_is_none": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_opt_is_some_lit": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_opt_ne": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_opt_pair": [
+      "ir.core",
+      "ir.data",
+      "ir.tuple"
+    ],
+    "op_opt_widen_nat": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_pick": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_pr": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_prod_eq": [
+      "ir.core"
+    ],
+    "op_prod_try": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_px": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_rec_eq": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_rec_ne": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_rec_postfix": [
+      "ir.core"
+    ],
+    "op_slot_t0": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_some_nested": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_some_none": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_some_u8": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_tri": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_unwrap_binder": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_unwrap_nested": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_var_eq": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_var_eq_lit": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_var_ne": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_wide_w": [
+      "ir.core",
+      "ir.data"
+    ],
+    "op_wrapped_y": [
+      "ir.core",
+      "ir.data"
+    ]
+  },
+  "schema": "warrant-evaluation-parity-v1",
+  "suites": {
+    "c_adder": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "cases": 120409,
+      "chunk_lines": [
+        "0 16384 0 16384 25cc6d222ab68d28e2f15f97b99efbc5363d82a39e64b3e760e7e30bbda00ff2 3c013e91d0edd1ad954751816b9742ae28a2317a2c45688bb4af89ca979b76ca",
+        "1 16384 16384 16384 765d717b0457f51883b9cb18986df66bbffad6147e3b14516706d8d2776f98bc ade55040acc5114f73f6234bca8835185adb40ae1fd8b1da4c992d23ff0b0d1a",
+        "2 16384 32768 16384 4dae9114ff5842d130642a6c1082f945c0154653e288477febe72e443de427b2 549f736b05ef968adea221da991fce38a3a217ed3b80cd68571f8f3a2f875021",
+        "3 16384 49152 16384 2f6727427a475e85de3b7a39518c2055a018b919a58f8b3a6188c89f32a1d1f3 51d0920318bca845c96e6c80c2f228acb9b90e3ccbaac96e7ba76a129f603ad9",
+        "4 16384 65536 16384 262a549e9b6e91d2efa12cdb7aca6fbad2a6d741a863b09fc94b42d3db167e2b 663ed5c90a927f5b408082249f0bc1b68c8de4da26ebe70e83cbd555197b02ed",
+        "5 16384 81920 16384 2ad9e46b163492d1ecc4db6d256631082662124235924d34582f8b09b7e8fa82 fd46cf36d612ac75dc3d20c183334104c1effdbb281aa16a50107f693a4a0efe",
+        "6 16384 98304 16384 fe1a8fa473f840b8156b89151dc4aaa28fce94d1910534c83232b468fdcde154 c69e9adb2f6a7e9100d05fd91b38e48f9d24fcf2b6da797d9199c1f35e1a6570",
+        "7 5721 114688 5721 7dd8aaad9d47516e28a7b518f98726a4e616ab0636753bdf1137332dbbbd86bf 4c7486764584a25df88f891030d82d29e1320b279957b94ff27651a017ed5a87"
+      ],
+      "chunks": 8,
+      "claim": "c_adder",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 120409,
+      "expected_sha256": "7ec5cfb41e1662e19720ab9679c681c0924d0658b9b9c03d07b36b19a515251e",
+      "id": "warrant/data_eval/exhaustive/c_adder",
+      "inputs_sha256": "75e857044c000111532cca72a625211c7b9ddda76f2d5979760c89fdb48e9a88",
+      "ir_cost": 49,
+      "kind": "exhaustive",
+      "product": 120409,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Result<Sum,DataError>",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "slim_expected_sha256": "7ec5cfb41e1662e19720ab9679c681c0924d0658b9b9c03d07b36b19a515251e",
+      "slim_inputs_sha256": "75e857044c000111532cca72a625211c7b9ddda76f2d5979760c89fdb48e9a88",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_adder_computed": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "cases": 120409,
+      "chunk_lines": [
+        "0 16384 0 16384 a05c8ecc70ca71c37ea1c5e812f56e958465423fdf8b0e67e70f5a493a42fb77 51c03dee6b0d88e240ede018f4add5427f42a365903ae4d97b4331751d301510",
+        "1 16384 16384 16384 e43e62f4d765af8feb46684cc878a19439b7e059a44beab204ed88e39b4f94d5 1f18eabcc7c5831a5bdf22e914755879660ef451fbcfee5d16f9e831e2c395e3",
+        "2 16384 32768 16384 9f3309561389d425a50cbf1ddce4a0e98aff3d183692c5a3607032f977e364e3 4b71a5f650f99b440a96618fd751339434dc0d6086e894595b3f2c157bee7931",
+        "3 16384 49152 16384 a56770295d7eb1292d8d0cbb8416dc840ae55d2ab8e792f06725f07f583bb663 f18417a2f8ef6dfd072f397b519ff03badc6e6d25876a6d015470bd78699c6d5",
+        "4 16384 65536 16384 315cb3551fa5aef01f65cca707bdf462ae303f7cbdce31dd701aa9c366d1c725 f9c942d7c22db8a2fe926535eae30d4117a0a403401f54fc1ba4bf170c61342c",
+        "5 16384 81920 16384 766c9dde18ae5c822adea16b212970df7bf37a414d8701676f79b0573e014ce2 284cb9c9f53d9ec2afe1709c2276d42b19472a8bd6b25f8a24b4e13f3259db18",
+        "6 16384 98304 16384 4d127d1a234758532a0309df674d10ce7e42ebe2fdc00c4d0e48e503400dd6fb e5943a95fb0df535fad44a4f8e3a1396fb775d0c01743e9f0890216373d4c207",
+        "7 5721 114688 5721 81a33ce6adee2609aa0a6b726019713dcfe54425da33271e4ef8126880118925 9e459f3c3bf02f73dc8c22453cace5a57d2b8dd226b692ef3e4c542de59e69fe"
+      ],
+      "chunks": 8,
+      "claim": "c_adder_computed",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 120409,
+      "expected_sha256": "c786e6f1f41fc8fdfdd9310b7b3ee997bfa7cdb1a55fc6aab789c70da4f41c70",
+      "id": "warrant/data_eval/exhaustive/c_adder_computed",
+      "inputs_sha256": "efefab9036108affc0b09c65c04d4e8d2d8da31b13224c19c47a485fbe0536e0",
+      "ir_cost": 55,
+      "kind": "exhaustive",
+      "product": 120409,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Result<Sum,DataError>",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "slim_expected_sha256": "c786e6f1f41fc8fdfdd9310b7b3ee997bfa7cdb1a55fc6aab789c70da4f41c70",
+      "slim_inputs_sha256": "efefab9036108affc0b09c65c04d4e8d2d8da31b13224c19c47a485fbe0536e0",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_adder_err_only": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "cases": 50500,
+      "chunk_lines": [
+        "0 4533 0 4533 8ec358d3232ad5eca6118d76ca35ee4b84e1c992bcb697da526a7111d13a7a0e 0ae82db419c2ba956b2ec218d184b15f42bc79778711b71e97d82f351726c4f5",
+        "1 4277 4533 4277 4adba92d9fa389b3f4245e2f1d1a1ca1392277d2ed49d640fc0fa14d902f5bc6 5da233ac15b7cfde826d8439f703182d5df35a1b752db6b9ad7d0024140adac1",
+        "2 4277 8810 4277 5672d7966fa37d8ac8a1b9eea88eac0b9f4c096542fe94bdd50c12f7a0e9fe81 d5ac8588ae45d26637488c2faa13b2f088ecabeb1335eb6d4f7d39298cf5f19e",
+        "3 4320 13087 4320 8f04a3807468c83903148ae16dd78173180a02aed0c10ace367c3e178c1d7ef9 373c8c6818cd7e979593a4a1ce4c395446836b62d9b29986fcf46686afd52ac6",
+        "4 4325 17407 4325 359169dea967f32024b3fd43efea25949550c85086bd03a79368c1ac6456eedf 64079fd465b869f64b0a9a95051bb46f88a064063cb9d40bb67f86fbaddd7d7a",
+        "5 10139 21732 10139 fd6c6b40ceddfc38becd56b6d74f49f564573f788fc7621946d02ce7dd3b96de b89aef52f4e2ab69caa9e6cd37bf8c14fe9385f153a6ed6903c57d4d5009a1b5",
+        "6 13376 31871 13376 38f1c81fe8704c726473ecb5e37abdf6ebcf078ba7786566a3d8e9dd27428a9a f33d47130171f83b511d46176bb783e1e488685c1426f0b184c8f96fc0b26e8f",
+        "7 5253 45247 5253 1831ef36b7a9a686fb6142f6184bada713b9d2373d2e9046bc6ec5387b188383 05ba711f2f7928a3f44dea5494989fd044aebda2538fc2c241a665d394a43d72"
+      ],
+      "chunks": 8,
+      "claim": "c_adder_err_only",
+      "demoted": [],
+      "discarded": 69909,
+      "domain_label": "bounded-set",
+      "expected_calls": 50500,
+      "expected_sha256": "7d14bb12804a8eb981332b0a3696aa669a35d67591a5822eec5ab18543932324",
+      "id": "warrant/data_eval/exhaustive/c_adder_err_only",
+      "inputs_sha256": "5ac03346fe7184cb26bbdeda753c781cd053a728ceebf0a64699455cd684070f",
+      "ir_cost": 53,
+      "kind": "exhaustive",
+      "product": 120409,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Result<Sum,DataError>",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "slim_expected_sha256": "7d14bb12804a8eb981332b0a3696aa669a35d67591a5822eec5ab18543932324",
+      "slim_inputs_sha256": "5ac03346fe7184cb26bbdeda753c781cd053a728ceebf0a64699455cd684070f",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_adder_n": {
+      "binders": [
+        [
+          "n",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "cases": 88832,
+      "chunk_lines": [
+        "0 16384 0 16384 e47bf199ca48926f9fb71eab55a2a118c06832a7c648bcaa8e16b755747c463b 5c9c572b37281288c463942e66ccbaabe7b12edabf0aac501cfaf646c8de2790",
+        "1 16384 16384 16384 1f6541cc962d5a45697dfef9d7d7b3364c89c4aad8cd5972dfb8ffad2fc83f42 8c555f59486648aa044f8fa6ff7f760b74286ff0e889a59040b22655b4b8c4ac",
+        "2 16384 32768 16384 0e3ead8b6ca44436d1905e703935396e45cc126cdb042d77db01297d12dd046d 2e1d15cf92ed0bcf0e1dbb54087ece1f025cc6bd867b75af3b69de4eb903531e",
+        "3 16384 49152 16384 a0400e27fa4d957571d688a6eb3c24f054efb65d92c549f3a5415868cd7764dc 954ce49c62dd70ad215ffaa5b0a3b1abf9cb3ccdc34485df20120fc7d926e6d6",
+        "4 16384 65536 16384 501fc260a209c70ef2a21e88d7526d6f8dc0eb4e9940996c1a5e33e85204c6e6 2717b04ee9e61ebe32e78b71c12bc673a99dc2126d86363513c4479de555e301",
+        "5 6912 81920 6912 bb346ffaae0b549ad0acc69a78af7cd8d2127483a80b097ecc7a6f252cd2aea5 a990938dd2c49f9f9b2b8817fb1f59248c024d4f7f102d9ffcaad77945ec55ea"
+      ],
+      "chunks": 6,
+      "claim": "c_adder_n",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 88832,
+      "expected_sha256": "30adee38b5e8a781e0536aa4747cda5aedf7e7d6233f00807b8ad0fbcadeeaa3",
+      "id": "warrant/data_eval/exhaustive/c_adder_n",
+      "inputs_sha256": "1889ec9bf95596621f89e8ece369b1cbb97a94a73b0c20e6dfb8f94ca52a93d8",
+      "ir_cost": 35,
+      "kind": "exhaustive",
+      "product": 88832,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Result<Sum,DataError>",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "slim_expected_sha256": "30adee38b5e8a781e0536aa4747cda5aedf7e7d6233f00807b8ad0fbcadeeaa3",
+      "slim_inputs_sha256": "1889ec9bf95596621f89e8ece369b1cbb97a94a73b0c20e6dfb8f94ca52a93d8",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_alu": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ],
+        [
+          "m",
+          {
+            "domain": {
+              "ctors": [
+                [
+                  "Add",
+                  []
+                ],
+                [
+                  "Sub",
+                  []
+                ],
+                [
+                  "Neg",
+                  []
+                ]
+              ],
+              "d": "variant",
+              "size": 3
+            },
+            "type": "Mode"
+          }
+        ]
+      ],
+      "cases": 1041,
+      "chunk_lines": [
+        "0 1041 0 1041 b12382171272b0a086306b0ed1d4b8ecf1a3e34f40fb7ac82559929d05cba8c8 9e6362ccdf8db560fda2db9b58cf9db4bed157a9d771bbed095e7df7850cd174"
+      ],
+      "chunks": 1,
+      "claim": "c_alu",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 1041,
+      "expected_sha256": "384987f445d913fbca71f7cd09e77720b6082f530e9f33a18384a2b60e9cc3cc",
+      "id": "warrant/data_eval/exhaustive/c_alu",
+      "inputs_sha256": "db667bdd7c21fd42dd679a1ac31876064d8541f1aa9ef1581044aa80dd31dacf",
+      "ir_cost": 35,
+      "kind": "exhaustive",
+      "product": 1041,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Result<AluOut,DataError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "384987f445d913fbca71f7cd09e77720b6082f530e9f33a18384a2b60e9cc3cc",
+      "slim_inputs_sha256": "db667bdd7c21fd42dd679a1ac31876064d8541f1aa9ef1581044aa80dd31dacf",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_arm_calls": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ]
+      ],
+      "cases": 257,
+      "chunk_lines": [
+        "0 257 0 256 f539b21681fcb7cb07ad9491b8934a900bd5840a1b4224cd8cf9f5ac255878fb"
+      ],
+      "chunks": 1,
+      "claim": "c_arm_calls",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "id": "warrant/data_eval/exhaustive/c_arm_calls",
+      "inputs_sha256": "4b7b063968f1fc3016c0300e3cad31fa331c1f1e262505a7af932a3ac7f2433c",
+      "ir_cost": 9,
+      "kind": "exhaustive",
+      "product": 257,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "4b7b063968f1fc3016c0300e3cad31fa331c1f1e262505a7af932a3ac7f2433c",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "a12ff6d592135eb3f8d28828f7676fa8e46b1a0c27d68b86931036074c626d20",
+      "wraps": 0
+    },
+    "c_dir_res": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "d",
+          {
+            "domain": {
+              "ctors": [
+                [
+                  "Up",
+                  []
+                ],
+                [
+                  "Down",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ],
+                [
+                  "Both",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    },
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ]
+              ],
+              "d": "variant",
+              "size": 7
+            },
+            "type": "Dir"
+          }
+        ]
+      ],
+      "cases": 1792,
+      "chunk_lines": [
+        "0 1792 0 1792 cf628446e810aa743007f42d3b8941ec94c4cce48d7995572e07050e4d7282fa fc39dc8cf3a90890e92efadc4ffbae675e5e8122452e794f4e6a5c461d0fefc9"
+      ],
+      "chunks": 1,
+      "claim": "c_dir_res",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 1792,
+      "expected_sha256": "57149700475bb54dad7a232cdbee30bab7427a3016e6ac53eecd91e0ed4af1c6",
+      "id": "warrant/data_eval/exhaustive/c_dir_res",
+      "inputs_sha256": "9742f4e3e7ed23e4585a6df56978b3f68442ed8ad1ff44e2ffafab007f1bfb87",
+      "ir_cost": 23,
+      "kind": "exhaustive",
+      "product": 1792,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Result<Dir,DataError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "57149700475bb54dad7a232cdbee30bab7427a3016e6ac53eecd91e0ed4af1c6",
+      "slim_inputs_sha256": "9742f4e3e7ed23e4585a6df56978b3f68442ed8ad1ff44e2ffafab007f1bfb87",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_holder": {
+      "binders": [
+        [
+          "n",
+          {
+            "domain": {
+              "d": "nat_0_64",
+              "size": 65
+            },
+            "type": "Nat"
+          }
+        ]
+      ],
+      "cases": 65,
+      "chunk_lines": [
+        "0 65 0 65 993397dda88548025494114d3bab1d4e2675d2ff6a333ecd5c5f79efa354b859 551e1e18550426c7ab53e9ef7f7bebcc2aa287fa21da1457f3e3ca9c1e1b817a"
+      ],
+      "chunks": 1,
+      "claim": "c_holder",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 65,
+      "expected_sha256": "566da68c3c49536da90ee1db0d9ec3b0b89c555953bb81beb079d5e7f5ed87a2",
+      "id": "warrant/data_eval/exhaustive/c_holder",
+      "inputs_sha256": "72ae15b3f3a370a52189360b6314e88ef949594b530b345c40f63b1080136f21",
+      "ir_cost": 40,
+      "kind": "exhaustive",
+      "product": 65,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.tuple"
+      ],
+      "result_type": "Result<Holder,DataError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "566da68c3c49536da90ee1db0d9ec3b0b89c555953bb81beb079d5e7f5ed87a2",
+      "slim_inputs_sha256": "72ae15b3f3a370a52189360b6314e88ef949594b530b345c40f63b1080136f21",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_inline_ctor": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 65536,
+      "chunk_lines": [
+        "0 16384 0 16384 4fcdf08929915fd7d2976389213bd7317f6c40c02fec0b73a723e5112a94767d 68002fad228c53e7cfb593478677050ef5d305ef1cb12ca9cc137d5c18058299",
+        "1 16384 16384 16384 f9139a14920b49f69027e7f40ce3d76c30ee0df34ba6c3de2ffb6cda2a843a1e 7ac62cd74a0d9b71ef110b13e3fa1cd68bc88080e078bbd914f3569937a2e981",
+        "2 16384 32768 16384 844596b2368d166ed41f50397ab84a778e0cedfc26ecc958728498fe15368186 b8a29be7fa5e88327eac53c874cdb51f6c9379769e29da99245927957a75f5a3",
+        "3 16384 49152 16384 ecf1289d2f76784e662391e3ca26507db693e22a03bff0968d0c9305f6495ae2 207cc77cf686d5324d34db5a73daeb22ba2d1911948a323763513bd2b0270f0e"
+      ],
+      "chunks": 4,
+      "claim": "c_inline_ctor",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "363d8ca307717edb775d0c5a5193045bc9ca7017ff2016e2c766ac47a2a35522",
+      "id": "warrant/data_eval/exhaustive/c_inline_ctor",
+      "inputs_sha256": "45cf4afe556eaf03db0585adb44f3ebc5fb9a20d0f6a2cc7f687166ab2575017",
+      "ir_cost": 11,
+      "kind": "exhaustive",
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Point",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slim_expected_sha256": "363d8ca307717edb775d0c5a5193045bc9ca7017ff2016e2c766ac47a2a35522",
+      "slim_inputs_sha256": "45cf4afe556eaf03db0585adb44f3ebc5fb9a20d0f6a2cc7f687166ab2575017",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_inline_field": {
+      "binders": [
+        [
+          "p",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "u8_all",
+                  "size": 256
+                },
+                {
+                  "d": "u8_all",
+                  "size": 256
+                }
+              ],
+              "size": 65536
+            },
+            "type": "Point"
+          }
+        ]
+      ],
+      "cases": 65536,
+      "chunk_lines": [
+        "0 16384 0 16384 4eb5d7c11b7b5ddb6e0f8aeb7f69381b3dd6d45ab664ec2bd48f059061c743e3 66a029a1da14beddf27c7edcdb2dc1c8193e593152fc191067b194cc06fb1f2b",
+        "1 16384 16384 16384 1e09628b205e91401c4fabaad2fca08a48760cbe9a92c42cf2b546b246d63129 ff88592060cf9d255d5d835177c4254b4b08653b9697dcdbc4ef85463704df9f",
+        "2 16384 32768 16384 fd3f879544f591285317f5dc9a3bfce9c2396c24b510166d7c99232004bca260 ca22fedd7cc79ea1ae00fa1fdd9607ad10b686f9bc4ba9654eaa8a6243e23742",
+        "3 16384 49152 16384 254c3c0313eb891ed41e6bf22e2b6f9dd4501721eeb71232ea25b472286514e3 8a07075c7ad8ff13c0cf619a53dbfd92b1c0664320d6809677a279a989304902"
+      ],
+      "chunks": 4,
+      "claim": "c_inline_field",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "4332b64a2d723949ae7263810f2d04676e48fd772d0b2bfe00e5845debad6580",
+      "id": "warrant/data_eval/exhaustive/c_inline_field",
+      "inputs_sha256": "806bfb92b0d41553d76d9f3986601099ebb3573b819c6db4735405d41543876f",
+      "ir_cost": 8,
+      "kind": "exhaustive",
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slim_expected_sha256": "4332b64a2d723949ae7263810f2d04676e48fd772d0b2bfe00e5845debad6580",
+      "slim_inputs_sha256": "806bfb92b0d41553d76d9f3986601099ebb3573b819c6db4735405d41543876f",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_inline_match": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ]
+      ],
+      "cases": 257,
+      "chunk_lines": [
+        "0 257 0 257 feb0fc7b968f481e060e737dbe4941c8eb5ccafa71a0ff82e5d0ceeae24dc0f0 ba3897229a58f97b3d1eb9780228d4ecd11381fa6b32e2e9417b0168223733c6"
+      ],
+      "chunks": 1,
+      "claim": "c_inline_match",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 257,
+      "expected_sha256": "9762cb788f13638306d21ee264bbf41042047d2451ad78b0a6d15ffdbaa0294a",
+      "id": "warrant/data_eval/exhaustive/c_inline_match",
+      "inputs_sha256": "aab1ddda1e3dd957fc978980f42192bb2098fc6c6bb7c9404e87fc54d19e1999",
+      "ir_cost": 10,
+      "kind": "exhaustive",
+      "product": 257,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "9762cb788f13638306d21ee264bbf41042047d2451ad78b0a6d15ffdbaa0294a",
+      "slim_inputs_sha256": "aab1ddda1e3dd957fc978980f42192bb2098fc6c6bb7c9404e87fc54d19e1999",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "1d78c2051eb0347a3a968c1afe76972983b31ae9b7272bbb79923a9ca1523dff",
+      "v1_inputs_sha256": "a0d0f16a33df800fb2985a3c02921187e801008352296e494152594763c348c2",
+      "wraps": 0
+    },
+    "c_inter_add": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 65536,
+      "chunk_lines": [
+        "0 16384 0 16384 ace363b09fdd12698d9da170b344ab31eb4c8ffef5e0f17387e8618f182790cf 9caab0905aa19cc55400ab1c4a45623f185792d8fdd697df3ff2e16b401e1f2c",
+        "1 16384 16384 16384 75afd8e538df51e90de207b06c114cfb96ec8eb10476f17d4d11609e67386062 c5d36eb9bbd750ced0687b47935c09d5ade73704373ed17b8bafd37180314588",
+        "2 16384 32768 16384 c2dcccde60b54367eaaa072b2c11e7bcbe235be0578727ad05a3121871360b96 f899ced15f6944458eae9e687c904a361a490510056198a44e49f6ccbbef2b75",
+        "3 16384 49152 16384 a0b55b1d91e977ae5fab5eee308afb639229b75f861e7a30cda6f2880cabb7b4 d523598a4ef2354d4d21524783cea333fba68cb4c808f016dd55c88e55ba05bd"
+      ],
+      "chunks": 4,
+      "claim": "c_inter_add",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "c3ff5167b5421b6acecc798a329a3b5f38436f84b1ecc6901a9318712bcb0489",
+      "id": "warrant/data_eval/exhaustive/c_inter_add",
+      "inputs_sha256": "9ef36da1159798fceff8aadc634497427265d8c4869efa4092f981d63f930a1f",
+      "ir_cost": 21,
+      "kind": "exhaustive",
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slim_expected_sha256": "c3ff5167b5421b6acecc798a329a3b5f38436f84b1ecc6901a9318712bcb0489",
+      "slim_inputs_sha256": "9ef36da1159798fceff8aadc634497427265d8c4869efa4092f981d63f930a1f",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "f0ac26fd686f444206de54d23444984d2b80af411373c09938493f5d065597e9",
+      "v1_inputs_sha256": "f782dc4a475c03c96c5101f9181234615c1efba2d139f53e7c6972fbf7a4c51d",
+      "wraps": 0
+    },
+    "c_m_bool": {
+      "binders": [
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 2,
+      "chunk_lines": [
+        "0 2 0 2 c5e3bb304c8fceeff1b76f474114f4d1a7f17d6b1d3a8cbab4f48e31fcdaf68b 1ede1ad58c11600862fe2de2c2f45fb5553254441d4a93e071eaffc9ec8739c3"
+      ],
+      "chunks": 1,
+      "claim": "c_m_bool",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 2,
+      "expected_sha256": "65d578457577abcb09190cc070475afa6ec3c656f5a115ffc8b7da5afe594bfb",
+      "id": "warrant/data_eval/exhaustive/c_m_bool",
+      "inputs_sha256": "9442128eea27c48751c2ec1572503da241bd34b29f1b3e441f5ce224d70f7588",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 2,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "65d578457577abcb09190cc070475afa6ec3c656f5a115ffc8b7da5afe594bfb",
+      "slim_inputs_sha256": "9442128eea27c48751c2ec1572503da241bd34b29f1b3e441f5ce224d70f7588",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "9f2a8f486bb353b982fa36254e7c9e16b86c042fb41c2f43d4d6a06840675b50",
+      "v1_inputs_sha256": "165831b4860a05494b6b561acd33527f902d95345b0524efb4c2ed6cf67f42f0",
+      "wraps": 0
+    },
+    "c_m_dir_bind": {
+      "binders": [
+        [
+          "d",
+          {
+            "domain": {
+              "ctors": [
+                [
+                  "Up",
+                  []
+                ],
+                [
+                  "Down",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ],
+                [
+                  "Both",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    },
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ]
+              ],
+              "d": "variant",
+              "size": 7
+            },
+            "type": "Dir"
+          }
+        ]
+      ],
+      "cases": 7,
+      "chunk_lines": [
+        "0 7 0 7 9eeeea03d5564c068469b45c0b512123628c94d442daf5bdceed9232174af57c 9eeeea03d5564c068469b45c0b512123628c94d442daf5bdceed9232174af57c"
+      ],
+      "chunks": 1,
+      "claim": "c_m_dir_bind",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 7,
+      "expected_sha256": "17ec6eb8521884840d1d760e0cfc9a56b909f93c705dc9f7d72664167009f8ca",
+      "id": "warrant/data_eval/exhaustive/c_m_dir_bind",
+      "inputs_sha256": "17ec6eb8521884840d1d760e0cfc9a56b909f93c705dc9f7d72664167009f8ca",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 7,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Dir",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "17ec6eb8521884840d1d760e0cfc9a56b909f93c705dc9f7d72664167009f8ca",
+      "slim_inputs_sha256": "17ec6eb8521884840d1d760e0cfc9a56b909f93c705dc9f7d72664167009f8ca",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_inner": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 514,
+      "chunk_lines": [
+        "0 514 0 514 8b45cea9357d6fbb852cb44aaebc6f7df10ce8cfdcbcde2099bd14b3f7a2d9c9 70366189b33c5cb66cf46b72f3743a9153aace349ddf38c61379ad7085c4ecf4"
+      ],
+      "chunks": 1,
+      "claim": "c_m_inner",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 514,
+      "expected_sha256": "b215353e55a7775366aa6199f96e0cf7397732dbe1111088ca08fc6baaa8b413",
+      "id": "warrant/data_eval/exhaustive/c_m_inner",
+      "inputs_sha256": "3618cf8422d5730530616998fa47965a4503158f5f6193cd0ae9b7b6ee70cc3f",
+      "ir_cost": 21,
+      "kind": "exhaustive",
+      "product": 514,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "b215353e55a7775366aa6199f96e0cf7397732dbe1111088ca08fc6baaa8b413",
+      "slim_inputs_sha256": "3618cf8422d5730530616998fa47965a4503158f5f6193cd0ae9b7b6ee70cc3f",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "03079f96a08e6f8526b6ce91a627f750df645f94e8f5687d946b89b87a571f3c",
+      "v1_inputs_sha256": "8f936f7ec720fed953f6595b8ed5063b20a6e9641e4e7ede0301dd5bad25fd62",
+      "wraps": 0
+    },
+    "c_m_mode": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "ctors": [
+                [
+                  "Add",
+                  []
+                ],
+                [
+                  "Sub",
+                  []
+                ],
+                [
+                  "Neg",
+                  []
+                ]
+              ],
+              "d": "variant",
+              "size": 3
+            },
+            "type": "Mode"
+          }
+        ]
+      ],
+      "cases": 3,
+      "chunk_lines": [
+        "0 3 0 3 70f28e4b7406b8f7665851eba7d51269d13b970922fcabf37952c7abc1939433 c2740640f3d73b9d850c882241b487c99724b61d5a8909390671379103c8e438"
+      ],
+      "chunks": 1,
+      "claim": "c_m_mode",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 3,
+      "expected_sha256": "1e40b5b636925e09ca0ad98cd054b2910d15bbdb9bdb977da1bd3ce3973abc8e",
+      "id": "warrant/data_eval/exhaustive/c_m_mode",
+      "inputs_sha256": "da66251819d8ee37e697492662ce53a66085e17d453b6eaa382694005d3e1168",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 3,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "1e40b5b636925e09ca0ad98cd054b2910d15bbdb9bdb977da1bd3ce3973abc8e",
+      "slim_inputs_sha256": "da66251819d8ee37e697492662ce53a66085e17d453b6eaa382694005d3e1168",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_msg": {
+      "binders": [
+        [
+          "m",
+          {
+            "domain": {
+              "ctors": [
+                [
+                  "Short",
+                  []
+                ],
+                [
+                  "Done",
+                  [
+                    {
+                      "d": "nat_0_64",
+                      "size": 65
+                    },
+                    {
+                      "d": "option",
+                      "of": {
+                        "d": "fx_edge",
+                        "size": 281,
+                        "t": "U16"
+                      },
+                      "size": 282
+                    }
+                  ]
+                ],
+                [
+                  "Opt",
+                  [
+                    {
+                      "d": "option",
+                      "of": {
+                        "d": "u8_all",
+                        "size": 256
+                      },
+                      "size": 257
+                    }
+                  ]
+                ]
+              ],
+              "d": "variant",
+              "size": 18588
+            },
+            "type": "Msg"
+          }
+        ]
+      ],
+      "cases": 18588,
+      "chunk_lines": [
+        "0 16384 0 16384 4c87783f7968e5239170f8bace81d71ff43fa35e05aeb6a3629672241646c160 2e46c75d0e1c0d7994568131d7bb182924c57b6af07cd6aa3b75007031095028",
+        "1 2204 16384 2204 67d7fa6935a9a15d2c028a70bc17e6cb6db175922706366bdb082b3416b136c3 b9c6ae26a64da4dab649b81921da3d1d4e1b8046b43d53320fb6b2e709525b11"
+      ],
+      "chunks": 2,
+      "claim": "c_m_msg",
+      "demoted": [
+        "0.Done.1.some"
+      ],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 18588,
+      "expected_sha256": "fc48715c8a7721b4ecbc22da099f3316686067868a06e44b33945a21e52e0878",
+      "id": "warrant/data_eval/exhaustive/c_m_msg",
+      "inputs_sha256": "4ad356b7ea87ea702d6b4173658b6c29c8d54196437877d6961dc91dc1c96c54",
+      "ir_cost": 16,
+      "kind": "exhaustive",
+      "product": 18588,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.fixed"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0,
+        1
+      ],
+      "slim_expected_sha256": "fc48715c8a7721b4ecbc22da099f3316686067868a06e44b33945a21e52e0878",
+      "slim_inputs_sha256": "4ad356b7ea87ea702d6b4173658b6c29c8d54196437877d6961dc91dc1c96c54",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_opt": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ]
+      ],
+      "cases": 257,
+      "chunk_lines": [
+        "0 257 0 257 1cfa794eea3495ec1f8ce6d20cfed33e78117d87ac167515458a72ef70a2e47f a8af62c4521a4e0432c0d49608e55f79211c9797fc394d78bfdd2f16aa11fc04"
+      ],
+      "chunks": 1,
+      "claim": "c_m_opt",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 257,
+      "expected_sha256": "6275ac0038bb5b45ff018c991f3b6adaf9cc5181a4a6f3d522d3c28cbf45dc00",
+      "id": "warrant/data_eval/exhaustive/c_m_opt",
+      "inputs_sha256": "8197258e7df9c7f1610db2e74adac0735785ee0f242d8cd0a89a0108409d58c3",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 257,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "6275ac0038bb5b45ff018c991f3b6adaf9cc5181a4a6f3d522d3c28cbf45dc00",
+      "slim_inputs_sha256": "8197258e7df9c7f1610db2e74adac0735785ee0f242d8cd0a89a0108409d58c3",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "4933a054d8176537fdb7fc1978a274373f04608e85821e47868a5e6869f9f600",
+      "v1_inputs_sha256": "2a04826a5179153d403dc4145325ce137eddc613425bebdddecfc72a1e9a2950",
+      "wraps": 0
+    },
+    "c_m_opt_nested": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "option",
+                "of": {
+                  "d": "bool",
+                  "size": 2
+                },
+                "size": 3
+              },
+              "size": 4
+            },
+            "type": "Option<Option<Bool>>"
+          }
+        ]
+      ],
+      "cases": 4,
+      "chunk_lines": [
+        "0 4 0 4 e6e511319e9a8970b91c6e18f4adadf24c5e3e27e2dd35f2bece3524515fc36e 19de93b2b309248ea2359b96daad420b433dfe2ae366cc28a42d4e34e363842d"
+      ],
+      "chunks": 1,
+      "claim": "c_m_opt_nested",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "f36b6d8856a429b4ecdd50a8e85f417b2e9e5924d95479632f54a8ec9a741ae5",
+      "id": "warrant/data_eval/exhaustive/c_m_opt_nested",
+      "inputs_sha256": "d7d3881b5cc5aec7fb81a3774633e18aac00693faf0b674f7583c03bb51b7cb6",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 4,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "f36b6d8856a429b4ecdd50a8e85f417b2e9e5924d95479632f54a8ec9a741ae5",
+      "slim_inputs_sha256": "d7d3881b5cc5aec7fb81a3774633e18aac00693faf0b674f7583c03bb51b7cb6",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "8e7ac118cd2b32828cc0cc07e1966c6465f2fbde6082a9d5698c3c4d901386e5",
+      "v1_inputs_sha256": "ec552173bb88d860ab0e453b063b5fc3c7aadbd4ef3b83d32e593a2af60ed094",
+      "wraps": 0
+    },
+    "c_m_opt_tuple": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "bool",
+                    "size": 2
+                  },
+                  {
+                    "d": "nat_0_64",
+                    "size": 65
+                  }
+                ],
+                "size": 130
+              },
+              "size": 131
+            },
+            "type": "Option<(Bool,Nat)>"
+          }
+        ]
+      ],
+      "cases": 131,
+      "chunk_lines": [
+        "0 131 0 131 918e79f58c5f272054ebeaf2b59b719066dfd9d1be01d0e59dab02c730071147 7ec0e99e5e49570ea096836f0cb049256d5f9ee65e1dcfedfde411f1876a749d"
+      ],
+      "chunks": 1,
+      "claim": "c_m_opt_tuple",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 131,
+      "expected_sha256": "9262dfe28d232e087f40f5e21092182a931f4f972c44ab9c3f58651ff7db2db0",
+      "id": "warrant/data_eval/exhaustive/c_m_opt_tuple",
+      "inputs_sha256": "aeee85debcc3eb9cb43bb755aa1c8671d4c7160ba8df21962120a7bd8a89f574",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 131,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "9262dfe28d232e087f40f5e21092182a931f4f972c44ab9c3f58651ff7db2db0",
+      "slim_inputs_sha256": "aeee85debcc3eb9cb43bb755aa1c8671d4c7160ba8df21962120a7bd8a89f574",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_opt_wild_arm": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ]
+      ],
+      "cases": 257,
+      "chunk_lines": [
+        "0 257 0 257 ffc4f9774033551762def1dfa75fc9762368775aead2042087e1ba6cf3b7ee53 72631fc1caab36ac9f5637f17b370acfda1412bca21e28fc9ccd34ad965699c5"
+      ],
+      "chunks": 1,
+      "claim": "c_m_opt_wild_arm",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 257,
+      "expected_sha256": "1c761c6395fc5c797169e31d680acfff6b3e88d47056ecc57fcae7dd83d8d09d",
+      "id": "warrant/data_eval/exhaustive/c_m_opt_wild_arm",
+      "inputs_sha256": "e97431fca9fd50a75affb34ca50d7bb4deaf81eced9703023ea2dc081d170761",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 257,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "1c761c6395fc5c797169e31d680acfff6b3e88d47056ecc57fcae7dd83d8d09d",
+      "slim_inputs_sha256": "e97431fca9fd50a75affb34ca50d7bb4deaf81eced9703023ea2dc081d170761",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "849a228eb3717860a9c402c02b3ed32664e9ba6e37138526f4d2880a9bb2f19d",
+      "v1_inputs_sha256": "0bb431b2951546917b8a9f3da3cafbe8e83c6e1beca01da45966802705695151",
+      "wraps": 0
+    },
+    "c_m_point": {
+      "binders": [
+        [
+          "p",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "u8_all",
+                  "size": 256
+                },
+                {
+                  "d": "u8_all",
+                  "size": 256
+                }
+              ],
+              "size": 65536
+            },
+            "type": "Point"
+          }
+        ]
+      ],
+      "cases": 65536,
+      "chunk_lines": [
+        "0 16384 0 16384 05707e619b0ec62ee8a1b48288c16b2b96dbe5784301445e719cddcebf858789 3f5326d47e35110139a2269156eaad8d85d28debd3cb76c234012bb21ffc18b6",
+        "1 16384 16384 16384 6afc8bc33cfb52d248a98ec9c6ce1518402850943e76eb7204400fa3c56e57ff cdc781357c723dee4c620d2b5ef51b8a1b64e643d0064fee6c2f3b656bb485bd",
+        "2 16384 32768 16384 f5cd0c0d33948d548734728f5e71a9355f5823c384eeb4c09c82e49d6c01e4a7 2169dacbabaf81ed9d9510fd4b52c2adea884b6405f3950aabf6b39d40389641",
+        "3 16384 49152 16384 e51e3c8651c89653a942d02852c86d5b38bbdd14e2502674342785bf3a995291 0673c3693e1c1e69df4b412b1d13711d4e348746287179251c4a581916609843"
+      ],
+      "chunks": 4,
+      "claim": "c_m_point",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "ee86a5cd616810b8023bb72be65c2f758f93cc52636701a60d59f0a6047bc36d",
+      "id": "warrant/data_eval/exhaustive/c_m_point",
+      "inputs_sha256": "0668dba349ede16291b168161c261c22fd08aac37dc383c911764cbbbc87f359",
+      "ir_cost": 18,
+      "kind": "exhaustive",
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slim_expected_sha256": "ee86a5cd616810b8023bb72be65c2f758f93cc52636701a60d59f0a6047bc36d",
+      "slim_inputs_sha256": "0668dba349ede16291b168161c261c22fd08aac37dc383c911764cbbbc87f359",
+      "stream": "warrant-stream-v2",
+      "wraps": 32640
+    },
+    "c_m_res_opt": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse"
+              ],
+              "ok": {
+                "d": "option",
+                "of": {
+                  "d": "u8_all",
+                  "size": 256
+                },
+                "size": 257
+              },
+              "size": 259
+            },
+            "type": "Result<Option<U8>,DataError>"
+          }
+        ]
+      ],
+      "cases": 259,
+      "chunk_lines": [
+        "0 259 0 259 9672e00ea1468137011b019d356b67acc84deb4ec54038cd6cd9ce6134ab8d0f f819f231ef9217667357e18ba4d811b9c05ea9a16615006821b89434bf83efea"
+      ],
+      "chunks": 1,
+      "claim": "c_m_res_opt",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 259,
+      "expected_sha256": "f2f763cb11d641f8ed38c2220ac77aac8b74d539c1552fa71208d43c903b3f70",
+      "id": "warrant/data_eval/exhaustive/c_m_res_opt",
+      "inputs_sha256": "434bf79090f5e912cad24812b8d617c6608b684c6e7c10f6cb69017fd9556b9c",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 259,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "f2f763cb11d641f8ed38c2220ac77aac8b74d539c1552fa71208d43c903b3f70",
+      "slim_inputs_sha256": "434bf79090f5e912cad24812b8d617c6608b684c6e7c10f6cb69017fd9556b9c",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "2987f38ec479a9f24fa469bbf46379c7cfd13d094bcb989f3572946ac120a25b",
+      "v1_inputs_sha256": "bf49771e26497256e42da5b0df11a38c44bc36ad289c49843c1a685daf59d0d3",
+      "wraps": 0
+    },
+    "c_m_res_rec": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse"
+              ],
+              "ok": {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "u8_all",
+                    "size": 256
+                  },
+                  {
+                    "d": "u8_all",
+                    "size": 256
+                  }
+                ],
+                "size": 65536
+              },
+              "size": 65538
+            },
+            "type": "Result<Point,DataError>"
+          }
+        ]
+      ],
+      "cases": 65538,
+      "chunk_lines": [
+        "0 16384 0 16384 21858499291ce66ff090e1173d95f94c1498143de1d0d20969afb3b551115b69 d026d086fafeff92a463dceea94d1d382c7361149ca4c69e9a212c96c9628ae2",
+        "1 16384 16384 16384 115137efd973c799f3a5897302224f3321b4cde18170e714e61b15a35b353a84 f9302723df352b320f2c452d72c77838ee17ebc477c559c5bb32423696a2768e",
+        "2 16384 32768 16384 3d0591135338bcc2d5d885708c52cb74fc1b2cd00b587df4660b8cfb370a3096 868a4875b551457bbd3931fa79aa93aa269313cafe8bdc12aedaf6933374c6b6",
+        "3 16384 49152 16384 291cbcdcbe0212515f17ab516a54dfa8d0f9bea008cf48412fbc061343250eb5 f8f36be3bbc59dc9812f416b3432685efa4ace034585d93daddeea101b05b01b",
+        "4 2 65536 2 3e334ac684c47369ab99135e11a0412dee271d1e2813a68c6f9388868a1c23d6 af18a2be1fb376857e94a46677108b865a0b1c4a18d6cb90bf05a1927f81e2e1"
+      ],
+      "chunks": 5,
+      "claim": "c_m_res_rec",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65538,
+      "expected_sha256": "e7431f0bea121453253b364d02516cc40371f9940e8ad7c9fe92e7945adc5fed",
+      "id": "warrant/data_eval/exhaustive/c_m_res_rec",
+      "inputs_sha256": "99ac31d355c163f96dec68676d346960aa038bd700d8aaed36cea2ee93e03dae",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 65538,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.tuple"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "slim_expected_sha256": "e7431f0bea121453253b364d02516cc40371f9940e8ad7c9fe92e7945adc5fed",
+      "slim_inputs_sha256": "99ac31d355c163f96dec68676d346960aa038bd700d8aaed36cea2ee93e03dae",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_shape": {
+      "binders": [
+        [
+          "s",
+          {
+            "domain": {
+              "ctors": [
+                [
+                  "Circle",
+                  [
+                    {
+                      "d": "u8_all",
+                      "size": 256
+                    }
+                  ]
+                ],
+                [
+                  "Rect",
+                  [
+                    {
+                      "d": "u8_all",
+                      "size": 256
+                    },
+                    {
+                      "d": "u8_all",
+                      "size": 256
+                    }
+                  ]
+                ],
+                [
+                  "Dot",
+                  []
+                ]
+              ],
+              "d": "variant",
+              "size": 65793
+            },
+            "type": "Shape"
+          }
+        ]
+      ],
+      "cases": 65793,
+      "chunk_lines": [
+        "0 16384 0 16384 341c23478dff1a0588fa327d08d84c2cd5b86ae5ee8922844a9b35457703808d 0ee169680be34335fcf918e5f251e33c624900e3301d3c3823d10870eda89765",
+        "1 16384 16384 16384 47aa97d088a8c5cd902a057a1391b6073889c50f45bac5b88e6204c5d50172bf afbedaffdfed98bf4b95a6cd8b42a3ea6cb7f93e539c218b684edd68de8c45ad",
+        "2 16384 32768 16384 ac902d034eb8f21e6dbe8fc58fa10039b9a6274962f984cb5c7c7b969d699bca 2bcc7719db00d4766f85d4da48fca9dc8b019c9f6621941dc46df7b1c9e8ca77",
+        "3 16384 49152 16384 f91ca119cc9f4bea691128da411265133800c632e87c13ab0cee8d71f6c2487c 52bd78775a184b0b2e938fbdf9183a2ccdae35d46a816b60e2a6375cefc5da92",
+        "4 257 65536 257 89427c8d4606af1df4a73632e1e01fae9d1978788d564880c78d8b1908081a6a 84f74a73c5a21f98c467137f81de916825d9867bf740166c9cb50f7cf5c26526"
+      ],
+      "chunks": 5,
+      "claim": "c_m_shape",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65793,
+      "expected_sha256": "e66f90b8fb89b0cea3e21c14babeb73ddfa479d2138aae33ad69bdded76a00bd",
+      "id": "warrant/data_eval/exhaustive/c_m_shape",
+      "inputs_sha256": "d015d6057fd15a47c7f1da1c43bcc7b836a2cff5b9d70a9682e29fc5f0f4b9a9",
+      "ir_cost": 18,
+      "kind": "exhaustive",
+      "product": 65793,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "slim_expected_sha256": "e66f90b8fb89b0cea3e21c14babeb73ddfa479d2138aae33ad69bdded76a00bd",
+      "slim_inputs_sha256": "d015d6057fd15a47c7f1da1c43bcc7b836a2cff5b9d70a9682e29fc5f0f4b9a9",
+      "stream": "warrant-stream-v2",
+      "wraps": 32640
+    },
+    "c_m_slot": {
+      "binders": [
+        [
+          "s",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "option",
+                  "of": {
+                    "d": "u8_all",
+                    "size": 256
+                  },
+                  "size": 257
+                },
+                {
+                  "d": "tuple",
+                  "of": [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    },
+                    {
+                      "d": "nat_0_64",
+                      "size": 65
+                    }
+                  ],
+                  "size": 130
+                }
+              ],
+              "size": 33410
+            },
+            "type": "Slot"
+          }
+        ]
+      ],
+      "cases": 33410,
+      "chunk_lines": [
+        "0 16384 0 16384 862ca3ba63dc767cf8f2a1584d16b994523d80151f7c1a09d7f682b86905fac6 ed594b0d8a1414a67cdc601524ad493750f8dd2325251e9f28d892a88908206a",
+        "1 16384 16384 16384 0ad6604c95edf32717eb9d95c056366a1b7cc4b7a4a3c2009f9f72c9bdc2a6df bc9e9a9ed0dc311c016e64a3fa94d55b51d8d536062ec307655bcb9ede098d00",
+        "2 642 32768 642 4e8218ccf34e9c7ea63492336c5cc4baf243f67b32bae2652c21c9e6bd8487b9 353d0c1af547a4e0b7f77bf2e10a97501c8219343666b48d86e389eb7ee3b006"
+      ],
+      "chunks": 3,
+      "claim": "c_m_slot",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 33410,
+      "expected_sha256": "a06248ca9438bbebac7d551f52451b8a60adcaf20e3cce1f2a1cf28f4460e1a7",
+      "id": "warrant/data_eval/exhaustive/c_m_slot",
+      "inputs_sha256": "4dc8a1eb0fb72d4a0f756551b5cc711853bfb724c0bb93a7342da9f7762ce487",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 33410,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0,
+        1,
+        2
+      ],
+      "slim_expected_sha256": "a06248ca9438bbebac7d551f52451b8a60adcaf20e3cce1f2a1cf28f4460e1a7",
+      "slim_inputs_sha256": "4dc8a1eb0fb72d4a0f756551b5cc711853bfb724c0bb93a7342da9f7762ce487",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_tuple_bool": {
+      "binders": [
+        [
+          "t",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 4
+            },
+            "type": "(Bool,Bool)"
+          }
+        ]
+      ],
+      "cases": 4,
+      "chunk_lines": [
+        "0 4 0 4 3368b87db5f5719b8db8b37c01cfb0f76c7623d84b6c6d9b6b5cc211902ad177 67a778ccf2a4fee352fe02740af7bb589a7246b679d7678fce4f74fc2869eeb1"
+      ],
+      "chunks": 1,
+      "claim": "c_m_tuple_bool",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "f10878c2c0ccf0ed736cb3be4f84ffd6aacb1d91ccdd1f1d52a002aef4715bee",
+      "id": "warrant/data_eval/exhaustive/c_m_tuple_bool",
+      "inputs_sha256": "fcf20b0fcfe084d3f0deef1b1a81f044c6f0bc82ee066529197eee5b6c821f51",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 4,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "f10878c2c0ccf0ed736cb3be4f84ffd6aacb1d91ccdd1f1d52a002aef4715bee",
+      "slim_inputs_sha256": "fcf20b0fcfe084d3f0deef1b1a81f044c6f0bc82ee066529197eee5b6c821f51",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_wrapped": {
+      "binders": [
+        [
+          "w",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "tuple",
+                  "of": [
+                    {
+                      "d": "u8_all",
+                      "size": 256
+                    },
+                    {
+                      "d": "u8_all",
+                      "size": 256
+                    }
+                  ],
+                  "size": 65536
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 131072
+            },
+            "type": "Wrapped"
+          }
+        ]
+      ],
+      "cases": 131072,
+      "chunk_lines": [
+        "0 16384 0 16384 cb33be6ff2ba74a080fe2f315d3188435935eb3b9e0e0b0bd60800e473b91e99 6f9b3f24eade128954c815da21c7a734e510151a8c6d50bc7a19903ea97da5d4",
+        "1 16384 16384 16384 31e4e7856832b0be65b2335f7251144e9be459fcffd9ec142110bd854bc54858 658bcbe097b63d19a64290e83ee42b72227f4bb440600056ff313a4eb1f92103",
+        "2 16384 32768 16384 64bb0dabb50d36f57512457f791dd0f82d22f4436b574745064e256e16164db5 12179eb3a6530610421e4f5e13b82fe358a9d613a979342febfba9cbdb8aa64e",
+        "3 16384 49152 16384 669a02ffc087d629a85e002ec3d45145e220d97c4d9ff7adda70d01435acbdfd d24a953fcb151bcd90c02cd6dddb3029cea5270955b84118983429d4b93542fd",
+        "4 16384 65536 16384 f8eb63f4a5c735cffa052f22915d13ac022c7afe6742957e7a93ee0a392f8b6c c091c09ea8ab364dfd89dbe9d30fe73e03df7963a4b5f4c66058e85e70c16cc0",
+        "5 16384 81920 16384 8f5286d8e977199fc4bd49ace7d9ac7b445b27ceba407d0645d0e6c039db51b2 324205715c4362b7c83660178ff154d7960cf8635b630975f8d0d046caae88d6",
+        "6 16384 98304 16384 bad8611e3c12dc043579c54ef7f186a09a2c560599382d4b6ae9818fdb6f019e 626b77d8832fec40f4a5cf3a1e1d413e1decdd26000fe2c10ea920b149113832",
+        "7 16384 114688 16384 282ce728a30c8eb13e32438bbaff1663b5c189576a9e0857b7e8b0616011c0ec c1d6a91fa259e2de86c29a23eb68e6ffc1563f7d62845c96a8f1f959c7934dad"
+      ],
+      "chunks": 8,
+      "claim": "c_m_wrapped",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 131072,
+      "expected_sha256": "85a755c1bd4556d241402c3962c9bfef44646e674145deb244e45f5f49a13c7c",
+      "id": "warrant/data_eval/exhaustive/c_m_wrapped",
+      "inputs_sha256": "9e84ef510782d7ca961d42da09f3afef57e350c7390ead04e6220ee7562d7d2e",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 131072,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "slim_expected_sha256": "85a755c1bd4556d241402c3962c9bfef44646e674145deb244e45f5f49a13c7c",
+      "slim_inputs_sha256": "9e84ef510782d7ca961d42da09f3afef57e350c7390ead04e6220ee7562d7d2e",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_mk_circle": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 256,
+      "chunk_lines": [
+        "0 256 0 256 0832a2c2c3c3123bd70286916dbbd83b3713906d0277c598524e0e2b38cf217b f4bce882c99322053595796240d20da4ab63c3c84f597a031f14c5f3fdd90088"
+      ],
+      "chunks": 1,
+      "claim": "c_mk_circle",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "expected_sha256": "ea4facdda4f096ac3d578fc1777ed514019a189fa3997ab5b7738d32f5dd6e76",
+      "id": "warrant/data_eval/exhaustive/c_mk_circle",
+      "inputs_sha256": "0e44748c1e9c8c18a7740d3df0e7ad30bf16f28a3cffb3d69f1e4f0207c55ccf",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "product": 256,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Shape",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "ea4facdda4f096ac3d578fc1777ed514019a189fa3997ab5b7738d32f5dd6e76",
+      "slim_inputs_sha256": "0e44748c1e9c8c18a7740d3df0e7ad30bf16f28a3cffb3d69f1e4f0207c55ccf",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_mk_done": {
+      "binders": [
+        [
+          "n",
+          {
+            "domain": {
+              "d": "nat_0_64",
+              "size": 65
+            },
+            "type": "Nat"
+          }
+        ]
+      ],
+      "cases": 65,
+      "chunk_lines": [
+        "0 65 0 65 41c74267ca71559b5790cb723076a6aa0d405c6283693d391bfd9d7dc0024a0e 36e54b6fb613719fafb5844db5a3e91bdd79e9cd77d2b1b06ac388d5a8fd0625"
+      ],
+      "chunks": 1,
+      "claim": "c_mk_done",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 65,
+      "expected_sha256": "fcb068fef7db5577071b5c9c39ed49c2522c924c2a5c0f842bc7e05c24c4ca95",
+      "id": "warrant/data_eval/exhaustive/c_mk_done",
+      "inputs_sha256": "3df3b0c548aca607dae881798a2904d9397dc6fe4729d1cd6f3f235338f3b165",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 65,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Msg",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "fcb068fef7db5577071b5c9c39ed49c2522c924c2a5c0f842bc7e05c24c4ca95",
+      "slim_inputs_sha256": "3df3b0c548aca607dae881798a2904d9397dc6fe4729d1cd6f3f235338f3b165",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_mk_dot": {
+      "binders": [
+        [
+          "u",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 2,
+      "chunk_lines": [
+        "0 2 0 2 759018dcc9335f3898c6a084f9e94d75ee4b67f79326495a34dd70b726355125 ba9e05d2d963be1fb7679e5490b7e76059decfee1aca4fa2a6edb86764100306"
+      ],
+      "chunks": 1,
+      "claim": "c_mk_dot",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 2,
+      "expected_sha256": "aece4dc10b300aa8a2b63835ca096e3abdee649aaf57390f10cc59ba995a5eea",
+      "id": "warrant/data_eval/exhaustive/c_mk_dot",
+      "inputs_sha256": "f681f7c4e2bc3b8c5a1094b19ab8e60e01b14333b437668c8d9eae4c5a26e48a",
+      "ir_cost": 10,
+      "kind": "exhaustive",
+      "product": 2,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Shape",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "aece4dc10b300aa8a2b63835ca096e3abdee649aaf57390f10cc59ba995a5eea",
+      "slim_inputs_sha256": "f681f7c4e2bc3b8c5a1094b19ab8e60e01b14333b437668c8d9eae4c5a26e48a",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_mk_opt_msg": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ]
+      ],
+      "cases": 257,
+      "chunk_lines": [
+        "0 257 0 257 55704c28097ed84d8f8b59dcb82dfc3d9f162960564d9176ceeada1014e5c20c 3d6fd7ec80e04aa10ca198342a81b7d72b7f2ae41dd7716ac7fa93400ddc1bd9"
+      ],
+      "chunks": 1,
+      "claim": "c_mk_opt_msg",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 257,
+      "expected_sha256": "531968041d6757701e71fe8196562c390e9a7cd62cb96d86cd2d736d42c0d96e",
+      "id": "warrant/data_eval/exhaustive/c_mk_opt_msg",
+      "inputs_sha256": "7d26fc90c2fbb982192066a793eb628a130ba9d2865c24cc31ab1aca3e51f7ae",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "product": 257,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Msg",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "531968041d6757701e71fe8196562c390e9a7cd62cb96d86cd2d736d42c0d96e",
+      "slim_inputs_sha256": "7d26fc90c2fbb982192066a793eb628a130ba9d2865c24cc31ab1aca3e51f7ae",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_mk_point": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 65536,
+      "chunk_lines": [
+        "0 16384 0 16384 2b9ba27b99eab5ffce5302636a290cfcc40f2ed950c923ff78dabbc5c2dc7481 4be0d8e7839db853c85377c333faa1f91fda3456d048cdd0f8e155636b9911c3",
+        "1 16384 16384 16384 0bf3ce12aaf0455932c4d294f5decb771152ddb6fb5d43d6bb06df0ce6877ea0 f82b9f3facc5ad1dcd1027175d2a85487b4c0a3f1ef0995a9d6f06982cb93767",
+        "2 16384 32768 16384 63782b906ff2916aecebd11ec00dccd01f64bf685c5de68f8725e36c64a64037 c0cabb154005dfecff97c367b37e4edfa1528eef25ef293b11a7d13eb445806e",
+        "3 16384 49152 16384 3a6e985fead057b4cbea37c52bfbbda51aa4bcb67cce381e1421046c8220dc3f 806bc6c1b8476922dcff6a34ca203011f803e118dd213e5c8aa63dce9e5cc07f"
+      ],
+      "chunks": 4,
+      "claim": "c_mk_point",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "2a5f69cf93d733050d45a672a62f41d7e9c763fd60ef305321d80561b3516d0f",
+      "id": "warrant/data_eval/exhaustive/c_mk_point",
+      "inputs_sha256": "838e61906b825bfd805cfe3285fb99c422bc9273de3610a73a695e7ba36e4337",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Point",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slim_expected_sha256": "2a5f69cf93d733050d45a672a62f41d7e9c763fd60ef305321d80561b3516d0f",
+      "slim_inputs_sha256": "838e61906b825bfd805cfe3285fb99c422bc9273de3610a73a695e7ba36e4337",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_mk_rect": {
+      "binders": [
+        [
+          "w",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "h",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 65536,
+      "chunk_lines": [
+        "0 16384 0 16384 d433cc5001bece5cf70880a0e58b88d3e5e2f1e5db58d644cc6bc80baff00585 d2412247a1f1201b149be98fdda68fc72e05c3defe87f4f423e2d9bce5de9f93",
+        "1 16384 16384 16384 20f2846e29f184a6c1d02f609bb36a85c5a200329bfabee7a08d0c2f0b207811 7ff72d09f16367337c833d70b04e95105a5d27454df3868048e3588cfe739450",
+        "2 16384 32768 16384 a52e8f872372cbc69b593143355e5a80918a7c8df3a655cc9903da9be23dcdf4 f59f8533184ed65d5ef571acd14a5e5773b4d9a5de7f3f4db01efcaf3cbd578e",
+        "3 16384 49152 16384 76b6ce42e4bb049d5c65d98a170eb95f436773ce96437a8fe713beed1327037f 0a24fdbf4626a30d8b55a03874ebfa77cdcc3c2674e59d275345882abd9ad1e1"
+      ],
+      "chunks": 4,
+      "claim": "c_mk_rect",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "a94e7e56b8daede4f4a5b84f2679077cc55347689a55823e276325ebe9e451c7",
+      "id": "warrant/data_eval/exhaustive/c_mk_rect",
+      "inputs_sha256": "51f9fa3fcd76aa37e85bc53c5203a9678ccd155367bc85124f8168d033444c66",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Shape",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slim_expected_sha256": "a94e7e56b8daede4f4a5b84f2679077cc55347689a55823e276325ebe9e451c7",
+      "slim_inputs_sha256": "51f9fa3fcd76aa37e85bc53c5203a9678ccd155367bc85124f8168d033444c66",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_mk_slot": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ],
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 514,
+      "chunk_lines": [
+        "0 514 0 514 bde04c09802825cc1eb09689bf1138bc79c4d845cd6cd5a3982bdfe289a2df29 b2ea0fc8664809abe7046d624b9e0e53b636062d9559c872d27b817133fafcd1"
+      ],
+      "chunks": 1,
+      "claim": "c_mk_slot",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 514,
+      "expected_sha256": "8c510cb10873e18e75be5a1f5b95d5ea3e6b14af8abbc064e31c62264284d160",
+      "id": "warrant/data_eval/exhaustive/c_mk_slot",
+      "inputs_sha256": "9bf620b1ceae32a401ea7af4d9fa873fd0ab29dddbd6caf2254d953005531958",
+      "ir_cost": 21,
+      "kind": "exhaustive",
+      "product": 514,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.tuple"
+      ],
+      "result_type": "Slot",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "8c510cb10873e18e75be5a1f5b95d5ea3e6b14af8abbc064e31c62264284d160",
+      "slim_inputs_sha256": "9bf620b1ceae32a401ea7af4d9fa873fd0ab29dddbd6caf2254d953005531958",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_mk_wide": {
+      "binders": [
+        [
+          "n",
+          {
+            "domain": {
+              "d": "nat_0_64",
+              "size": 65
+            },
+            "type": "Nat"
+          }
+        ],
+        [
+          "w",
+          {
+            "domain": {
+              "d": "fx_edge",
+              "size": 281,
+              "t": "U16"
+            },
+            "type": "U16"
+          }
+        ]
+      ],
+      "cases": 18265,
+      "chunk_lines": [
+        "0 16384 0 16384 433ee43c62bf610294b2b9f53c22531c1dadec2d1edd8527424868a9c5cf98c5 59e3992e5a08062c62d68b61316cb0f25b6be69f3dc1a583268cf0d7f7a2594c",
+        "1 1881 16384 1881 7696cfc860c3ff4cec2365e797f2450dbe927045eab64be0305dc55bc49f0ab4 e34464fa55eb6d95ede5729a1bbf90bd0c1a370b4fbf2f63f677f10a1ad8b772"
+      ],
+      "chunks": 2,
+      "claim": "c_mk_wide",
+      "demoted": [
+        "1"
+      ],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 18265,
+      "expected_sha256": "ad93a5d300d128a34c6728ff77d04026eccf49f7a2c9ccceba338f856bcab14a",
+      "id": "warrant/data_eval/exhaustive/c_mk_wide",
+      "inputs_sha256": "0c7376d06b72613b6d5b7da66c9eec5fbca011a070c1fa33973506582a888404",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 18265,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Wide",
+      "slim_chunks": [
+        0,
+        1
+      ],
+      "slim_expected_sha256": "ad93a5d300d128a34c6728ff77d04026eccf49f7a2c9ccceba338f856bcab14a",
+      "slim_inputs_sha256": "0c7376d06b72613b6d5b7da66c9eec5fbca011a070c1fa33973506582a888404",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_mk_wrapped": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "t",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 131072,
+      "chunk_lines": [
+        "0 16384 0 16384 a44a6f4bf014b433140ddc6a31de0d4e122a99ab18d2f6f461a799a3eec94d10 205d480815621a840773a85e9ec347bc26bd4fd020acb940e440e3a88ff1f7c5",
+        "1 16384 16384 16384 266e3ebdaa44994c0691772816449ad7ddf8eb5e84f43e315e69597c0dc57ed4 bb54729cf1cd6027f1ac4374c63917bd306a0e51a1290144f18cfda67ce15f29",
+        "2 16384 32768 16384 4b44c141db0196631803b322b76cfa338ec5678f781ca942ba81950a4d037ee4 77de350d4908b13fbed5ebd88fa5f10cd2d372839bf2eb2be3a53590b06a7227",
+        "3 16384 49152 16384 57882094ee143a2e2764c53de8cf0f2e1d6c4f53907e1fd143bfb7c4addfd5f4 e858e4eb6e7bdac2c6e41ce6d15fed873dd1762d1cad126ccaac3144b52276c4",
+        "4 16384 65536 16384 65d7abd24fabf989d0deea33d1cc3b7042927f277d91359f17800335fe610314 81dd673c82ddb311bbee2c56fb2893b7c8dedf46374333a311190a54190500db",
+        "5 16384 81920 16384 cf51adecc3eaac5e306a7daff014993b3961f5ee5d3e1a52fc263dce59cfbace d1eeaf75ecfaaedd337a8c175bac2bb822b2b9cfd302199e02bbb47bc7de724c",
+        "6 16384 98304 16384 c4d8d87280b860d007bb67b17aabd561a0f0e9f0c65de97a0e3747809c273fe0 cc3d54f6ef9f3911439ea7db2139b766514e3a4289a0d5242d83c772cd11263c",
+        "7 16384 114688 16384 6acd01ae772fead385a3d1bb888e0d463f95eca358a57d17c68c5f02c948d7ba 206d006baf3b5cd3735cccc462481c0bb139b83f03a1d9457dc19faf6537b483"
+      ],
+      "chunks": 8,
+      "claim": "c_mk_wrapped",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 131072,
+      "expected_sha256": "250753c2516b8930b53ebcd5f14f4f45ea13384b473c030c1152c844d48070d3",
+      "id": "warrant/data_eval/exhaustive/c_mk_wrapped",
+      "inputs_sha256": "d99d01e6f5b0b929592969d91fd7c91929ddf2a8a217bd77414460325a594365",
+      "ir_cost": 24,
+      "kind": "exhaustive",
+      "product": 131072,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Wrapped",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "slim_expected_sha256": "250753c2516b8930b53ebcd5f14f4f45ea13384b473c030c1152c844d48070d3",
+      "slim_inputs_sha256": "d99d01e6f5b0b929592969d91fd7c91929ddf2a8a217bd77414460325a594365",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_none_u8": {
+      "binders": [
+        [
+          "u",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 2,
+      "chunk_lines": [
+        "0 2 0 2 cb835722c762554d01b00e0a66bf0b25fadad76cc0586a0ff79e47a4a05f7528 84394d862f5fc1810a57fe4e91aad2a92af614914824319e05e1766b689b5e7c"
+      ],
+      "chunks": 1,
+      "claim": "c_none_u8",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 2,
+      "expected_sha256": "fe2558102a33e1249195773570f7a93ca25bc28585393f579c36fe7895ecc7e8",
+      "id": "warrant/data_eval/exhaustive/c_none_u8",
+      "inputs_sha256": "ad6421770d6a4159eb09b2aa2a9bce9c3bc50753c322d04ebc6ddc2d761d9b46",
+      "ir_cost": 10,
+      "kind": "exhaustive",
+      "product": 2,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<U8>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "fe2558102a33e1249195773570f7a93ca25bc28585393f579c36fe7895ecc7e8",
+      "slim_inputs_sha256": "ad6421770d6a4159eb09b2aa2a9bce9c3bc50753c322d04ebc6ddc2d761d9b46",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "a0590e19dcf76d1bf3b346308fd58ac7e5e9e35235eff06254d093e1eacc29f4",
+      "v1_inputs_sha256": "08415920ee7f9abb242a02561b2098302d74f54915f8cccdfe8ab31809a91e2e",
+      "wraps": 0
+    },
+    "c_opt_bytes": {
+      "binders": [
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "cases": 347,
+      "chunk_lines": [
+        "0 347 0 347 104f3c680c7d5ba606a59c808db1846d7faf6416785ef168d015323e0b35e7a4 281749eba340c5b8d26368b406604b66197a56f65479e5f0158f608393806883"
+      ],
+      "chunks": 1,
+      "claim": "c_opt_bytes",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 347,
+      "expected_sha256": "2663c324edf7777b278f34987d450d5d50194dfb7265e8038ada6409a68f6783",
+      "id": "warrant/data_eval/exhaustive/c_opt_bytes",
+      "inputs_sha256": "741a747e172e4aa5cbc5c3c40227811661baacc746314fa8fa77c87e066fae0e",
+      "ir_cost": 22,
+      "kind": "exhaustive",
+      "product": 347,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<Bytes>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "2663c324edf7777b278f34987d450d5d50194dfb7265e8038ada6409a68f6783",
+      "slim_inputs_sha256": "741a747e172e4aa5cbc5c3c40227811661baacc746314fa8fa77c87e066fae0e",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "ba7f9944801e55ba31e19e609fc4d7ff9ad8cf8f2c0bc144974bae2b4b25baa5",
+      "v1_inputs_sha256": "378e845adca132309f42aa6d69261c3ac464c2fb233d2423de24fd593d3b2c05",
+      "wraps": 0
+    },
+    "c_opt_eq": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ]
+      ],
+      "cases": 66049,
+      "chunk_lines": [
+        "0 16384 0 16384 47a156226e445b03cdcd50562ce96fdc57ed0a4c200a47ee5f8f8547fa572365 3fcd999cdefdc02ac19a147aa9c8ccb84eab3b91b60a3d9ff4785292c652efda",
+        "1 16384 16384 16384 0014615ad54f0e87ee7561983de636d5732785ad0f69578f0a48c1a966537e3e 95bd61962814e8408fec3b12e640d268695fc38c66b53a16e4fe42822ae95610",
+        "2 16384 32768 16384 f8efc17c59ddc392706ff1d76ea0a1c38bd3ef4c2df03701430a10b070cf7375 ed104508ea195cb679e724d3ae09dfbd70f0aa6ea6e55010a19a48dc1c52e417",
+        "3 16384 49152 16384 5c0bfde6e165a0ba555ca3ce2709db5e23fe890beefc0a4d44a53f0b600b6ff5 bd72ed83e601ce9821724482f83489aaf5095ef4dd98ef4bbcf74c450d0a9fbe",
+        "4 513 65536 513 ba696504355f17053566634251a64d1d7191d0180d016e5b2401c098a6496821 ea25bb04877bd6e70232741b1e0235ef73cee664f43611911d47a5db3c45567c"
+      ],
+      "chunks": 5,
+      "claim": "c_opt_eq",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 66049,
+      "expected_sha256": "aa1921bae2ace22512ceb89a85041731fd2fdaa538a313ea90fd144bdb40f2cb",
+      "id": "warrant/data_eval/exhaustive/c_opt_eq",
+      "inputs_sha256": "f598aec89457b96c4d1e777cb4e50d9e9fd03da18605e5c8f326876d7a1f9bed",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 66049,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "slim_expected_sha256": "aa1921bae2ace22512ceb89a85041731fd2fdaa538a313ea90fd144bdb40f2cb",
+      "slim_inputs_sha256": "f598aec89457b96c4d1e777cb4e50d9e9fd03da18605e5c8f326876d7a1f9bed",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "74fa494445d7c0c36fdbe06eb295b13c26232f1affa0ac7bc495ec8f450fc181",
+      "v1_inputs_sha256": "7647a61d0770cc25bfbccca6573004e92999723c682b51fe8aecf777c553f6e4",
+      "wraps": 0
+    },
+    "c_opt_if": {
+      "binders": [
+        [
+          "c",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 512,
+      "chunk_lines": [
+        "0 512 0 512 bde1141f96cf2120e6e0aa499f2fe5f280a5e9e3a3f5e03da3c0310c0890690c bbc95752c858bc7fb2860a7df8be891f2b42d57b52a64d26fedce2cd21c6270c"
+      ],
+      "chunks": 1,
+      "claim": "c_opt_if",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 512,
+      "expected_sha256": "cb9076e97f293de8b96a6b2b81a360a3f68581143efb5cbe6f4fa470460d48ec",
+      "id": "warrant/data_eval/exhaustive/c_opt_if",
+      "inputs_sha256": "85f36ffed2c0317743bfdf683666d266cb84ab30d7129a3eedb8125ee65e7ad3",
+      "ir_cost": 19,
+      "kind": "exhaustive",
+      "product": 512,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<U8>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "cb9076e97f293de8b96a6b2b81a360a3f68581143efb5cbe6f4fa470460d48ec",
+      "slim_inputs_sha256": "85f36ffed2c0317743bfdf683666d266cb84ab30d7129a3eedb8125ee65e7ad3",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "49718f18c9a06fcb51761ad3913fa7283c833ecb7bc25a7513d923549b311947",
+      "v1_inputs_sha256": "1a3268755944e2b34d8e1216fa39da4b4cb3d5f5824334f5f5daddce845fa0a5",
+      "wraps": 0
+    },
+    "c_opt_is_none": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ]
+      ],
+      "cases": 257,
+      "chunk_lines": [
+        "0 257 0 257 2db88898118796a90e63d535acdffba976b79d2d1ae885e87b91720721d5c607 89ef1edae89cef3840d25be8f8eadda1a4b5d511dc246e65551db4a4793cd6b5"
+      ],
+      "chunks": 1,
+      "claim": "c_opt_is_none",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 257,
+      "expected_sha256": "60531bc275cfac96b450e6e3f286668ed152bc93aeb2301f18a2246da3ed2684",
+      "id": "warrant/data_eval/exhaustive/c_opt_is_none",
+      "inputs_sha256": "6dba55bf422d5e5cce67d82e4d24ab25b8e05dda22ab26ad9cbb4258f7e2bf9f",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 257,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "60531bc275cfac96b450e6e3f286668ed152bc93aeb2301f18a2246da3ed2684",
+      "slim_inputs_sha256": "6dba55bf422d5e5cce67d82e4d24ab25b8e05dda22ab26ad9cbb4258f7e2bf9f",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "28c529f05dba71008a20fe9909a0288f6b1938a8658dcb77766209a98b5c4a50",
+      "v1_inputs_sha256": "09d66c64da883f7223cc3a48203cefec54d273561e4aeafe0227677c3753bdfd",
+      "wraps": 0
+    },
+    "c_opt_is_some_lit": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ]
+      ],
+      "cases": 257,
+      "chunk_lines": [
+        "0 257 0 257 cbb214c1fcbe52a4635bb884b46358b248b7eddf0847118feba0ba8eb08d1a11 bc3fa3336c469fa55a3cedbf4d5447c736ea24b83e0c972f3c711842e75f790a"
+      ],
+      "chunks": 1,
+      "claim": "c_opt_is_some_lit",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 257,
+      "expected_sha256": "6fd36c65c213d85dd2f6c607f25238cee97a10cf288a4dbdb780af7c0ce0c232",
+      "id": "warrant/data_eval/exhaustive/c_opt_is_some_lit",
+      "inputs_sha256": "def1c0616a324504a0bee8d8bce25b814c6ceb1dcd1192005d37c52fbf990cbf",
+      "ir_cost": 16,
+      "kind": "exhaustive",
+      "product": 257,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "6fd36c65c213d85dd2f6c607f25238cee97a10cf288a4dbdb780af7c0ce0c232",
+      "slim_inputs_sha256": "def1c0616a324504a0bee8d8bce25b814c6ceb1dcd1192005d37c52fbf990cbf",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "3730ce9e683694fb5708f2531f8d4ad30a650a1b24d59162d597b291afe9cfc2",
+      "v1_inputs_sha256": "894049392d08773b7e8fe90bcaa76441eb3c10d4083fb8f6b833b4328e0acb8e",
+      "wraps": 0
+    },
+    "c_opt_ne": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "bool",
+                "size": 2
+              },
+              "size": 3
+            },
+            "type": "Option<Bool>"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "bool",
+                "size": 2
+              },
+              "size": 3
+            },
+            "type": "Option<Bool>"
+          }
+        ]
+      ],
+      "cases": 9,
+      "chunk_lines": [
+        "0 9 0 9 176186e163d1dff902b0a69fa1c6efa1586ee2819a956b98942282f830e242c0 0f0ca1d9f85a5650d421e12866a848343a55f1c686a6c552fb129a325821c448"
+      ],
+      "chunks": 1,
+      "claim": "c_opt_ne",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 9,
+      "expected_sha256": "2da423175860f04fb71e41eeb79ba2d4e0ad4907436889a4f029de9e7884bcc3",
+      "id": "warrant/data_eval/exhaustive/c_opt_ne",
+      "inputs_sha256": "6c1aa7150e0bd407d3189f1b768b5e24001803f116226b6ae8c6babfa2de585d",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 9,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "2da423175860f04fb71e41eeb79ba2d4e0ad4907436889a4f029de9e7884bcc3",
+      "slim_inputs_sha256": "6c1aa7150e0bd407d3189f1b768b5e24001803f116226b6ae8c6babfa2de585d",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "53056d3d19b09aa6bc5a9de0dbe608a3f3b74ce1a69d6e39d10ee2af78a34875",
+      "v1_inputs_sha256": "e939d51f2ee6fef31418e702b81178537a349e526ae7a088b6ad4b88bd31ee89",
+      "wraps": 0
+    },
+    "c_opt_pair": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "n",
+          {
+            "domain": {
+              "d": "nat_0_64",
+              "size": 65
+            },
+            "type": "Nat"
+          }
+        ]
+      ],
+      "cases": 130,
+      "chunk_lines": [
+        "0 130 0 130 655f2e4b5c1b0ab60620fe012b9f80a94f6a6510d7b71db1c797d1be015b54fb 157cb3e35fac4951faa69bea253c0e62672e909403814d1e6ebbef9f6ae47720"
+      ],
+      "chunks": 1,
+      "claim": "c_opt_pair",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 130,
+      "expected_sha256": "9ed0f66b280db55a914df01dda8bc61013ce7ff836d18fe3ccac502ae4e09986",
+      "id": "warrant/data_eval/exhaustive/c_opt_pair",
+      "inputs_sha256": "a80f1600fe33045d52e62749455358b1b51390b2ad8e25e64df9e35fcca1f48a",
+      "ir_cost": 19,
+      "kind": "exhaustive",
+      "product": 130,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.tuple"
+      ],
+      "result_type": "Option<(Bool,Nat)>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "9ed0f66b280db55a914df01dda8bc61013ce7ff836d18fe3ccac502ae4e09986",
+      "slim_inputs_sha256": "a80f1600fe33045d52e62749455358b1b51390b2ad8e25e64df9e35fcca1f48a",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_opt_widen_nat": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "nat_0_64",
+              "size": 65
+            },
+            "type": "Nat"
+          }
+        ]
+      ],
+      "cases": 65,
+      "chunk_lines": [
+        "0 65 0 65 461e30122755901bc4bfedd48427eb2f9ee061670a76a02bfe55dc219606ddb1 e8a481cb004640ae9094d3adb21fbbbd69affe1c2601524cf201bf2b9d16a916"
+      ],
+      "chunks": 1,
+      "claim": "c_opt_widen_nat",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 65,
+      "expected_sha256": "2b25a3019a68ba9a86ae3f873592fb5c0ee9ddf6c6ab3535a6a1324500775a1c",
+      "id": "warrant/data_eval/exhaustive/c_opt_widen_nat",
+      "inputs_sha256": "263aa762ed5d48b1bf6fff1fe5650836b2551f6c1e56838bdd942cd01185dc26",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "product": 65,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<Nat>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "2b25a3019a68ba9a86ae3f873592fb5c0ee9ddf6c6ab3535a6a1324500775a1c",
+      "slim_inputs_sha256": "263aa762ed5d48b1bf6fff1fe5650836b2551f6c1e56838bdd942cd01185dc26",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "1419a69f85d918bb017fc3ce2b5c32c3a192cb2b78994766cfa4314efaf35722",
+      "v1_inputs_sha256": "eedb871e50a29a3bc1a3a0bd16cbae49b062bb25db0fea6ea92cefe4d70b0d16",
+      "wraps": 0
+    },
+    "c_option_binder_compare": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ]
+      ],
+      "cases": 257,
+      "chunk_lines": [
+        "0 257 0 257 e1b7719e65df0b0cf9960c95c31dc805d4fe1bc1bc62dd2060c0de18c6ec4fa5 c27e98b83f0c7880562bcfe81a7cf07e4a48c98368b1f8a9672ec73013a25142"
+      ],
+      "chunks": 1,
+      "claim": "c_option_binder_compare",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 257,
+      "expected_sha256": "a5d307cf813f79700f9b98df839c4b5b12e97bd2cbb80acf7c70cc9d1b99382d",
+      "id": "warrant/data_eval/exhaustive/c_option_binder_compare",
+      "inputs_sha256": "475b89596d6666028bf1b15908a21d466bebda19640ec156b2a34272453150ad",
+      "ir_cost": 10,
+      "kind": "exhaustive",
+      "product": 257,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "a5d307cf813f79700f9b98df839c4b5b12e97bd2cbb80acf7c70cc9d1b99382d",
+      "slim_inputs_sha256": "475b89596d6666028bf1b15908a21d466bebda19640ec156b2a34272453150ad",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "ad17bf518cf534bf1b6b702a725d4bbd0edf48e042c105749f5ecc86a1bfd815",
+      "v1_inputs_sha256": "b82b7f8b3d4b327c8f6105c3d811c1b6a43cd96ab17e226843e52da9daaa2f90",
+      "wraps": 0
+    },
+    "c_pick": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ],
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 65792,
+      "chunk_lines": [
+        "0 16384 0 16384 4c3fa47a7af79f4de9f478c94696beff32e14175f9a953d8d1f7e3a3a9d5ec41 5ba83a6ad5707e2e01ca6e3a60371e7167077e980eed957c99f9159cbf05f361",
+        "1 16384 16384 16384 0dedfadaf00cbb2d733c1f806feec4b4bba195dc1cd39d175e221da4c12f2134 727ad93fa298be9c67201e079b376d33816324c808771cd6d6f4b9cfbe1740e5",
+        "2 16384 32768 16384 f291c0b63c9b4e634518d1d11bbb91c7497efca276add4d5f16c7a4d3d7f8998 5e81e875f00f1b82e3f90df5d3595296be9437865d4c854aa1cf83e3c2fd02e9",
+        "3 16384 49152 16384 5dea3f901005f2283a23e35918dcbd392bc1265a3004a2a196cac158513fc7f7 e9eea7acc640450062b75cd92eed3ec7f27f403aca3ca06b1dc08384955a9f23",
+        "4 256 65536 256 6fc959137e6f0964e4ae7aade4a9f9f4116db72008ec5021cd28d4c407e1b38a 488a08d373fe2a1fc20cefbfdaf8e2cccf6fd59c87ea178651459d82ffb63b0e"
+      ],
+      "chunks": 5,
+      "claim": "c_pick",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65792,
+      "expected_sha256": "8ecd8a5757b943fab5b337639e366e99e2b9fcffbd089ba63924efbb1ee08dc7",
+      "id": "warrant/data_eval/exhaustive/c_pick",
+      "inputs_sha256": "55fa98e3b1f4d47e032be03d0334f9707148e0578fc3cda4d9560a98b94eab3b",
+      "ir_cost": 23,
+      "kind": "exhaustive",
+      "product": 65792,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Result<Option<U8>,DataError>",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "slim_expected_sha256": "8ecd8a5757b943fab5b337639e366e99e2b9fcffbd089ba63924efbb1ee08dc7",
+      "slim_inputs_sha256": "55fa98e3b1f4d47e032be03d0334f9707148e0578fc3cda4d9560a98b94eab3b",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "6bc68ee10b9951f448900b9251a9a165464c12e999bb68119c5b6bb840a83e73",
+      "v1_inputs_sha256": "9c050a6e316e48cac27ee4d031fce3bf15f05c532eb56f0494b48688649013b5",
+      "wraps": 0
+    },
+    "c_pr": {
+      "binders": [
+        [
+          "n",
+          {
+            "domain": {
+              "d": "nat_0_64",
+              "size": 65
+            },
+            "type": "Nat"
+          }
+        ]
+      ],
+      "cases": 65,
+      "chunk_lines": [
+        "0 65 0 65 28a3e04ed281d0dae1673029b4434850dfc44a4a82537c217316e29316a8bed9 bf281bfdeac50b339360b47c5ab5b3f49ee70566843b205c5d7a376c11477875"
+      ],
+      "chunks": 1,
+      "claim": "c_pr",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 65,
+      "expected_sha256": "2cea9575a0bfd5e9290685a04f4b8bb5d1fe3fcd4326f883f1c4602c8f938f94",
+      "id": "warrant/data_eval/exhaustive/c_pr",
+      "inputs_sha256": "52f69b42ba41012627295ac6215de05315ebac414c82e5b28d375294fd3dfe9e",
+      "ir_cost": 32,
+      "kind": "exhaustive",
+      "product": 65,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bytes,Bool),DataError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "2cea9575a0bfd5e9290685a04f4b8bb5d1fe3fcd4326f883f1c4602c8f938f94",
+      "slim_inputs_sha256": "52f69b42ba41012627295ac6215de05315ebac414c82e5b28d375294fd3dfe9e",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_prod_eq": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 65536,
+      "chunk_lines": [
+        "0 16384 0 16384 16bfab454d0dfe707d9c67dbc39a152661c1b1ae7c353b31bab1d3c478c92402 c7537d282067c8ab743181d6209db3e96023c96c9c1602e162815b5688481317",
+        "1 16384 16384 16384 dc254325e013faacd447de73ca1bd89688a950cbdeb4b97a54d6acdb682a9e9f 8312114ad893a9d071e9b746159876517b2d690f43b65b39cdb308087f377a5b",
+        "2 16384 32768 16384 d7a47f9702a28b69431d5a083104de52e02369dc40a2f3c3f8b71eb6b797d068 6410461892cd665e763ffa483f5fb759a927d47e962c730628132d793ba061cd",
+        "3 16384 49152 16384 a5a6cd9640ebd24bbba36c78eb4afafdd0eb3c9d4d54909c1d85abc9c6e27c6b 1818d78a32d1dc540de0ebf512022b8abd94bb0f38dc1d388084cc75f5c766a8"
+      ],
+      "chunks": 4,
+      "claim": "c_prod_eq",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "09634555dffc1390e67e48d633ef80bd327dd813dbebf0cd3257747cde9e2b73",
+      "id": "warrant/data_eval/exhaustive/c_prod_eq",
+      "inputs_sha256": "e3454a528d1bfacb6083d117b0e00688be7df991dc6933dae8c999045027c9f2",
+      "ir_cost": 23,
+      "kind": "exhaustive",
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.fixed"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slim_expected_sha256": "09634555dffc1390e67e48d633ef80bd327dd813dbebf0cd3257747cde9e2b73",
+      "slim_inputs_sha256": "e3454a528d1bfacb6083d117b0e00688be7df991dc6933dae8c999045027c9f2",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "00391a537a27ecaa1555a0d8945405d84c3b42271bdfda5196e0c4dd6d6439cb",
+      "v1_inputs_sha256": "6d0dbb3b39812b1931c0141b6580c60f5f753fe05f1f517396066f69e91d7a7b",
+      "wraps": 0
+    },
+    "c_prod_try": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "nat_0_64",
+              "size": 65
+            },
+            "type": "Nat"
+          }
+        ]
+      ],
+      "cases": 65,
+      "chunk_lines": [
+        "0 65 0 65 feefc5a388dedb3b3db10e02423bfd0ea1cbc0a872ee31614daabbf0c7cca2a1 54a6a05a6530087d17d4b449f197e5725a1962138839f37728ccc5dd7cb70d5b"
+      ],
+      "chunks": 1,
+      "claim": "c_prod_try",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 65,
+      "expected_sha256": "9a3d6e81ee94421794baa7eebf6289f4299ea8656f25f4780f1413b9bc5fe925",
+      "id": "warrant/data_eval/exhaustive/c_prod_try",
+      "inputs_sha256": "bac51075dca38e124a4d80e9c7bb53c416390a6a62096f0859ec74a5aa0f3f4c",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "product": 65,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.fixed"
+      ],
+      "result_type": "Option<U8>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "9a3d6e81ee94421794baa7eebf6289f4299ea8656f25f4780f1413b9bc5fe925",
+      "slim_inputs_sha256": "bac51075dca38e124a4d80e9c7bb53c416390a6a62096f0859ec74a5aa0f3f4c",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "489721e655ad81f7864367058c2ac18d8fc7f3c1fe78390cef200d6ae7cf7805",
+      "v1_inputs_sha256": "e5dce5d00cf725b27ad5850a4c3ead0469186e39ca135e2395235df7a513b78f",
+      "wraps": 0
+    },
+    "c_px": {
+      "binders": [
+        [
+          "p",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "u8_all",
+                  "size": 256
+                },
+                {
+                  "d": "u8_all",
+                  "size": 256
+                }
+              ],
+              "size": 65536
+            },
+            "type": "Point"
+          }
+        ]
+      ],
+      "cases": 65536,
+      "chunk_lines": [
+        "0 16384 0 16384 93be04af4133850358affbb7b1d943e7c5f777a5bba18e59ce56e1945f802b76 cb8bae4c840e1f11133df8e78508af370e1a7f509e9a244bb6c060ceb6155dba",
+        "1 16384 16384 16384 3d17b9d4536a9c08f88c496bba25ac7a19e97c48adf20089479d66e9cf9666db 312bd0d18502c04cddbb01f774394804bedba5c9b44c3582436ec235131cbc86",
+        "2 16384 32768 16384 c098c72ff9b077213f3874019fb9fd8400af2e4e86eea377e11a058c3cac58ee 36bb8bb1550e4c63fe47db332a419d83dd01bb9c15863984fe1e880398b8a38e",
+        "3 16384 49152 16384 39a02b83ecdbaa9629de1961e880928a0adeef2222a867c7e8be2c15ff2cd8a2 316bf41e4d186c354eb13071bb5b05aa66ea1733f6c0f2d8db0215f24d6b9b79"
+      ],
+      "chunks": 4,
+      "claim": "c_px",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "d1207b03a44bdc884352bd2afecfddb4ded8d4e6f5306dcce07878d32ba3efaa",
+      "id": "warrant/data_eval/exhaustive/c_px",
+      "inputs_sha256": "7b20db0423b141530e386ba9efeefc13a72785ad440611364c27e754edbe3438",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slim_expected_sha256": "d1207b03a44bdc884352bd2afecfddb4ded8d4e6f5306dcce07878d32ba3efaa",
+      "slim_inputs_sha256": "7b20db0423b141530e386ba9efeefc13a72785ad440611364c27e754edbe3438",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_rec_eq": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "nat_0_64",
+                  "size": 65
+                }
+              ],
+              "size": 130
+            },
+            "type": "Tri"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "nat_0_64",
+                  "size": 65
+                }
+              ],
+              "size": 130
+            },
+            "type": "Tri"
+          }
+        ]
+      ],
+      "cases": 16900,
+      "chunk_lines": [
+        "0 16384 0 16384 c3f7ae26aeab5668ffecf5ef1c8ed344353b966ea8600d86ffe2a123ea68b53c 752cabe8a244503933d6dda3621f7a09d01cb04b454e02280c993bc65fbde16c",
+        "1 516 16384 516 08e8dafc61396adfb6980991795543bfff00185a6c9c9e34be626899e28898e1 5eece69ef9e99f0964d84997775388eed518aa48ec1d0a67b8576d213d13c1b3"
+      ],
+      "chunks": 2,
+      "claim": "c_rec_eq",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 16900,
+      "expected_sha256": "5b38455aa8e6286fd69fe8394a291b38f13cbbcbe6944cee36077f0dddedd93a",
+      "id": "warrant/data_eval/exhaustive/c_rec_eq",
+      "inputs_sha256": "144b82f6ab71c19538b1c7440ff615bada29ace6573325963355e85bc5fdf66c",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 16900,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0,
+        1
+      ],
+      "slim_expected_sha256": "5b38455aa8e6286fd69fe8394a291b38f13cbbcbe6944cee36077f0dddedd93a",
+      "slim_inputs_sha256": "144b82f6ab71c19538b1c7440ff615bada29ace6573325963355e85bc5fdf66c",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_rec_ne": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 4
+            },
+            "type": "Duo"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 4
+            },
+            "type": "Duo"
+          }
+        ]
+      ],
+      "cases": 16,
+      "chunk_lines": [
+        "0 16 0 16 7ad541678956799cf5d42a0fc1b31e4b8c6df68a952f4ccbd697f44f0ade94cd 632cf6f0d6922f96ecbc724c1d481f89276d0a60cbccf5f1a9e9675b6e757fe8"
+      ],
+      "chunks": 1,
+      "claim": "c_rec_ne",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 16,
+      "expected_sha256": "150e52dd7a80a828cb7d981cafd23ab58bf3a607d7240fcd760e675598acc957",
+      "id": "warrant/data_eval/exhaustive/c_rec_ne",
+      "inputs_sha256": "58f8492fc674dcdde33190afa5f6a5d40ead7494fa9901f4d8241f79e0a5b561",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 16,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "150e52dd7a80a828cb7d981cafd23ab58bf3a607d7240fcd760e675598acc957",
+      "slim_inputs_sha256": "58f8492fc674dcdde33190afa5f6a5d40ead7494fa9901f4d8241f79e0a5b561",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_rec_postfix": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 65536,
+      "chunk_lines": [
+        "0 16384 0 16384 2aacb6853a8b065047b8c30ff582fa518b10e4e0db353284fabd7eafaf167f6b 343fd2bb28da90639c8d45d612be332db4d8e2eb1218b56fdad2c8ca4c5bde75",
+        "1 16384 16384 16384 bb6caca4d569bd9611c9fb721dcb421ce08741c4f8924e99e28838fbe090b5de 0589a2124f636441e22934a5d8228022f61b79b30611c6f070f8931f8df36c3e",
+        "2 16384 32768 16384 1169255f1ee992a579426a3e237ccb306834e888658e8ef91dd27fc94c512a25 046af764ab318a9f9ea1321b1c0c940f652753fd8f2c985ae31d6865d516a259",
+        "3 16384 49152 16384 0dd42916140b23527e06f744e2d0e1e9421c88b69d00b8585086c10c02bc1c2e 12caf084af66b3365e4b9bdb5ccf20d98b2e9010c27a57085585336d188468e7"
+      ],
+      "chunks": 4,
+      "claim": "c_rec_postfix",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "acb5f94e402d48ab9d5a64b244c56489ed4fdc03419c4634cca5c88d58367763",
+      "id": "warrant/data_eval/exhaustive/c_rec_postfix",
+      "inputs_sha256": "d28ae7061182d7371bbc88ab3446fe08ea67626559c99a7aa2aa7dd660995b82",
+      "ir_cost": 25,
+      "kind": "exhaustive",
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slim_expected_sha256": "acb5f94e402d48ab9d5a64b244c56489ed4fdc03419c4634cca5c88d58367763",
+      "slim_inputs_sha256": "d28ae7061182d7371bbc88ab3446fe08ea67626559c99a7aa2aa7dd660995b82",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "d7ad9512e4cf4bc50d40ef2f023da538c73848f43eb21de619772b9c7b03cbde",
+      "v1_inputs_sha256": "6ce120eeb73339d61020110d8d43b2e45f6afda4d2d1cd5d0606c7fa9b9bcaa0",
+      "wraps": 0
+    },
+    "c_scrutinee_calls": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 256,
+      "chunk_lines": [
+        "0 256 0 256 cbe12492d19d93b965db98c7391102a92cd6496361a152866685d1430e52de7f"
+      ],
+      "chunks": 1,
+      "claim": "c_scrutinee_calls",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "id": "warrant/data_eval/exhaustive/c_scrutinee_calls",
+      "inputs_sha256": "10f8849090cddbeaedd7b4022708825ebf87a2b7a1b6e221718ffaa39796ac5e",
+      "ir_cost": 7,
+      "kind": "exhaustive",
+      "product": 256,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "10f8849090cddbeaedd7b4022708825ebf87a2b7a1b6e221718ffaa39796ac5e",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "19fa17e23bceb087c7b9b4488eb920b326197514bd10dfb05bbe04f388c36c8a",
+      "wraps": 0
+    },
+    "c_slot_t0": {
+      "binders": [
+        [
+          "s",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "option",
+                  "of": {
+                    "d": "u8_all",
+                    "size": 256
+                  },
+                  "size": 257
+                },
+                {
+                  "d": "tuple",
+                  "of": [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    },
+                    {
+                      "d": "nat_0_64",
+                      "size": 65
+                    }
+                  ],
+                  "size": 130
+                }
+              ],
+              "size": 33410
+            },
+            "type": "Slot"
+          }
+        ]
+      ],
+      "cases": 33410,
+      "chunk_lines": [
+        "0 16384 0 16384 68b5a2d39c5f03a097de7ca3ef4745bbf59a74126615dd0a3bab143a3d5712ed f1d1d0a85ad14e0471a6a7eae476bd56e7f6389f0c71b806f6d100b017266347",
+        "1 16384 16384 16384 e20485c355a312150f6b9c4db24dc80a9294e40c4bd7bd5f1f185ef72cdb8c11 2baee570d00c91427bdb39fa775fbc34224ed2a4793dbf234c6cd8afd0c43a2b",
+        "2 642 32768 642 489e72b15a7e7cd7344787a82dbe5de25459af43441fd4d6e3fc8ee4151ba225 e7c6b459602154c9654518ddcb6455cf715a3894c6b561dc8f4581a0cf3124a6"
+      ],
+      "chunks": 3,
+      "claim": "c_slot_t0",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 33410,
+      "expected_sha256": "398ad98b7f14e25e7ad66725059f2818906195d65c5f3559aaafb47ab11f9bc7",
+      "id": "warrant/data_eval/exhaustive/c_slot_t0",
+      "inputs_sha256": "75927094dcf11394819c83a5f46b34a0fb1c27533843af1948f922adf4dcd189",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 33410,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0,
+        1,
+        2
+      ],
+      "slim_expected_sha256": "398ad98b7f14e25e7ad66725059f2818906195d65c5f3559aaafb47ab11f9bc7",
+      "slim_inputs_sha256": "75927094dcf11394819c83a5f46b34a0fb1c27533843af1948f922adf4dcd189",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_some_nested": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 2,
+      "chunk_lines": [
+        "0 2 0 2 6ac781ed4ec55feaba3b22e0c279927981f8cf2432f30cc334e3fd7c76a4f1cc 0a6a052be4a83996cbd70c042aa3eba5fd5846b95eec421c8360bace465fa2c6"
+      ],
+      "chunks": 1,
+      "claim": "c_some_nested",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 2,
+      "expected_sha256": "0f3eed4a1ccaf4f9889ffc346c6aa9985e0cb7863c7bd876d27a53d3e44e51d9",
+      "id": "warrant/data_eval/exhaustive/c_some_nested",
+      "inputs_sha256": "00f5901dfdfacf7205deac839456815e0c18dfa4dc59a6deaa43aedea18e3422",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 2,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<Option<Bool>>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "0f3eed4a1ccaf4f9889ffc346c6aa9985e0cb7863c7bd876d27a53d3e44e51d9",
+      "slim_inputs_sha256": "00f5901dfdfacf7205deac839456815e0c18dfa4dc59a6deaa43aedea18e3422",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "07145036f0a111df664ce7759e13ee19fe6e235f7be87621bebbd4ec7017eaaf",
+      "v1_inputs_sha256": "49cf67ff1439d85b3e7587ee2d761cd2096f78a2e5138959e311e73dfd9e4fad",
+      "wraps": 0
+    },
+    "c_some_none": {
+      "binders": [
+        [
+          "u",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 2,
+      "chunk_lines": [
+        "0 2 0 2 d5fcddb708d37c0b8691e821a9184799ee0a0fc4d2783f23f54cc2ceb17ee716 80fa35e90d44791b4ff9db01c6a62a2c3167696aaf5cd9f99f7bfde141e1be40"
+      ],
+      "chunks": 1,
+      "claim": "c_some_none",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 2,
+      "expected_sha256": "41fb5d2b8ee921749231c4dc0976228b6c46acf1c1c63de6bfc028d6651cce02",
+      "id": "warrant/data_eval/exhaustive/c_some_none",
+      "inputs_sha256": "2433659e42fafc4457ea86c9e035ad84b56521df13d99c2ddd946964663e9ffc",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "product": 2,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<Option<Bool>>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "41fb5d2b8ee921749231c4dc0976228b6c46acf1c1c63de6bfc028d6651cce02",
+      "slim_inputs_sha256": "2433659e42fafc4457ea86c9e035ad84b56521df13d99c2ddd946964663e9ffc",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "969014abaaabdd3cdf4b6ca4126d54edf953502d2dfa9432c5af1e46906e7495",
+      "v1_inputs_sha256": "4833fe08f92ae2ca15c6ec83bb72ed6d85f55d58d8dc13198f730a93d601e6a7",
+      "wraps": 0
+    },
+    "c_some_u8": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 256,
+      "chunk_lines": [
+        "0 256 0 256 4f02a9d6089ea20fabfbd81477a57c4851f640528a5e3cc74d6cc957c3bbb950 2e9ea30956eb8f32d0837d683717a0280c0b042bff9c785759b7b02da411cff5"
+      ],
+      "chunks": 1,
+      "claim": "c_some_u8",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "expected_sha256": "cf3b5b7e4169ad34ff8a98731e400e74f88c947d358db1a1f3b6de52c83a680f",
+      "id": "warrant/data_eval/exhaustive/c_some_u8",
+      "inputs_sha256": "9d829fc9c56386295b5854a4809135277759bee4f4c8f3b27e75f0c5d7663aed",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "product": 256,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<U8>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "cf3b5b7e4169ad34ff8a98731e400e74f88c947d358db1a1f3b6de52c83a680f",
+      "slim_inputs_sha256": "9d829fc9c56386295b5854a4809135277759bee4f4c8f3b27e75f0c5d7663aed",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "df9bb31488e3a9f25b7b2067749e81781c9c668aac72c5d6d7829ede1e5ecd0b",
+      "v1_inputs_sha256": "1181ac644fccbe2cc8d7690c2b66b3d0897246a0bbe04248952a74959b831aec",
+      "wraps": 0
+    },
+    "c_tri": {
+      "binders": [
+        [
+          "data",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "enable",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 65536,
+      "chunk_lines": [
+        "0 16384 0 16384 7153742562d5040fd2bd3a342fa4b3b929f182845b1aee8d00624ace71a3629f 1a1751be8031b658b2ccf20307b69a6068e9ea7588b6f9168c0605c2cde3b854",
+        "1 16384 16384 16384 8eb0d3a81a0853d2f3202191b0e09bd08a53d27cb5b73f3f6affc050527a4ba6 8b025963370a54ed97340509d45ec540b7f1947fea9bfddb443085030a6f3924",
+        "2 16384 32768 16384 51c2ac2fd7fcf0b94f5fca7b94d07a1c3220459ab3a6f6f37659b1ebc8aa8174 16e75bbbbcff07221b8eec1ef586511ad7d5b4264d549c009c2f7b687d075bdb",
+        "3 16384 49152 16384 6dfd2a2ebbcc2493194c16d05251de8b38b55c74bc1ec671e785a9bfb92e3785 f350a0d93f2464615567724c73d74781856c31f6d132350cdd8792a3c607c574"
+      ],
+      "chunks": 4,
+      "claim": "c_tri",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "0a515702e2a763f54508891e770dda98264e34c45f2ff8f68c327fc3d7a61ff1",
+      "id": "warrant/data_eval/exhaustive/c_tri",
+      "inputs_sha256": "7a9159353ec74af9ecabe74496f00f11f24a93422724f55536646cc8ab18b3c4",
+      "ir_cost": 33,
+      "kind": "exhaustive",
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Result<Option<U8>,DataError>",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slim_expected_sha256": "0a515702e2a763f54508891e770dda98264e34c45f2ff8f68c327fc3d7a61ff1",
+      "slim_inputs_sha256": "7a9159353ec74af9ecabe74496f00f11f24a93422724f55536646cc8ab18b3c4",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "c6c210259996031bb2a5186e5422aa9ab222fe9000ff2ddd08c65b04db7cdad3",
+      "v1_inputs_sha256": "e33537be15106f181b51d986822b92a4a45a19320033b9e53119c74be1e74dcb",
+      "wraps": 0
+    },
+    "c_unwrap_binder": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 257
+            },
+            "type": "Option<U8>"
+          }
+        ]
+      ],
+      "cases": 257,
+      "chunk_lines": [
+        "0 257 0 257 7f991ed01817dbf183c24c072ed13d7fd9c04b4eb6e4c8013be8c0ed8036351a fca8fcaf134c63b224dd4dcc81d9d358cc22b101300aa6d2e9a361eed23f3883"
+      ],
+      "chunks": 1,
+      "claim": "c_unwrap_binder",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 257,
+      "expected_sha256": "3bba4fc34a29d17fad5028c8163a690442ec477545f032b3331750249c12e122",
+      "id": "warrant/data_eval/exhaustive/c_unwrap_binder",
+      "inputs_sha256": "4be0f32c770516dd88ac86c1f9c133ed41db05f68641de6fce9561d99a74b05f",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 257,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.fixed"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "3bba4fc34a29d17fad5028c8163a690442ec477545f032b3331750249c12e122",
+      "slim_inputs_sha256": "4be0f32c770516dd88ac86c1f9c133ed41db05f68641de6fce9561d99a74b05f",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "2484a1acd3fdb23a88c9113e818fc40b83aa0adc9689a88198b92a5a8c7aa92a",
+      "v1_inputs_sha256": "0dfae0d52fa0972a8f0f45f8c9cace36b292237dd0316762e2c50c07679d4927",
+      "wraps": 0
+    },
+    "c_unwrap_nested": {
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "option",
+              "of": {
+                "d": "option",
+                "of": {
+                  "d": "bool",
+                  "size": 2
+                },
+                "size": 3
+              },
+              "size": 4
+            },
+            "type": "Option<Option<Bool>>"
+          }
+        ]
+      ],
+      "cases": 4,
+      "chunk_lines": [
+        "0 4 0 4 5c3836683b4936452e48f761357ce1ec070a74e3e1fe6377771ebec1d355dd7d 251cc388dcf464e89b89356a2530006fd96272a092240fdce6b1fd120f091723"
+      ],
+      "chunks": 1,
+      "claim": "c_unwrap_nested",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "bac6847219c64f1661a21502f4dd8747fca240fb4911e4264781ba70968347a1",
+      "id": "warrant/data_eval/exhaustive/c_unwrap_nested",
+      "inputs_sha256": "3ba8c6fff96c25a52344b6246bff5bc9117b26d129cc12f0eefb83f467ebd922",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 4,
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.fixed"
+      ],
+      "result_type": "Option<Bool>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "bac6847219c64f1661a21502f4dd8747fca240fb4911e4264781ba70968347a1",
+      "slim_inputs_sha256": "3ba8c6fff96c25a52344b6246bff5bc9117b26d129cc12f0eefb83f467ebd922",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "e44b264df63ed05a0d79ffe99d91cbc3159d091545f5ddd4650ca6d631cfb34f",
+      "v1_inputs_sha256": "70fabbcc48a6d63be1b10ad1da326e79aff385204126de62f531324703276211",
+      "wraps": 0
+    },
+    "c_var_eq": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "ctors": [
+                [
+                  "Up",
+                  []
+                ],
+                [
+                  "Down",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ],
+                [
+                  "Both",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    },
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ]
+              ],
+              "d": "variant",
+              "size": 7
+            },
+            "type": "Dir"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "ctors": [
+                [
+                  "Up",
+                  []
+                ],
+                [
+                  "Down",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ],
+                [
+                  "Both",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    },
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ]
+              ],
+              "d": "variant",
+              "size": 7
+            },
+            "type": "Dir"
+          }
+        ]
+      ],
+      "cases": 49,
+      "chunk_lines": [
+        "0 49 0 49 ff865867d9b0a77d66b1dd11221f5a6b2497ddc2cca4018eed922c95a5b3148f 2c040104b444b0ec4049055fcd6255f645327ba5ae622aaa8c11cad1eed5cf08"
+      ],
+      "chunks": 1,
+      "claim": "c_var_eq",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 49,
+      "expected_sha256": "3366285e94a23b0a68ab804abfb2f0aa27ad92acc7641bbdbec3893074a20f1a",
+      "id": "warrant/data_eval/exhaustive/c_var_eq",
+      "inputs_sha256": "70e9b7959903d47c71cae878da49592b882b61b5abbd9e7986c6f7f5db36b068",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 49,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "3366285e94a23b0a68ab804abfb2f0aa27ad92acc7641bbdbec3893074a20f1a",
+      "slim_inputs_sha256": "70e9b7959903d47c71cae878da49592b882b61b5abbd9e7986c6f7f5db36b068",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_var_eq_lit": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "ctors": [
+                [
+                  "Up",
+                  []
+                ],
+                [
+                  "Down",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ],
+                [
+                  "Both",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    },
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ]
+              ],
+              "d": "variant",
+              "size": 7
+            },
+            "type": "Dir"
+          }
+        ]
+      ],
+      "cases": 7,
+      "chunk_lines": [
+        "0 7 0 7 1a486e403872b18b2c89066bac8904a9bd8a3a4031e70f7737e132a82d68019b 4077f1a2a788599a38cdec1422d85c4f51f57df9b92c73d15d03996d65190233"
+      ],
+      "chunks": 1,
+      "claim": "c_var_eq_lit",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 7,
+      "expected_sha256": "16cd8bed84357a176f8eaf094a15f6fce1f0ea2465444de53a31866d46889807",
+      "id": "warrant/data_eval/exhaustive/c_var_eq_lit",
+      "inputs_sha256": "9a29ffa2223d1496abd11d954bfb0a483ae0d41ccbeffe02f99d48a7ab989e71",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 7,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "16cd8bed84357a176f8eaf094a15f6fce1f0ea2465444de53a31866d46889807",
+      "slim_inputs_sha256": "9a29ffa2223d1496abd11d954bfb0a483ae0d41ccbeffe02f99d48a7ab989e71",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_var_ne": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "ctors": [
+                [
+                  "Up",
+                  []
+                ],
+                [
+                  "Down",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ],
+                [
+                  "Both",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    },
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ]
+              ],
+              "d": "variant",
+              "size": 7
+            },
+            "type": "Dir"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "ctors": [
+                [
+                  "Up",
+                  []
+                ],
+                [
+                  "Down",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ],
+                [
+                  "Both",
+                  [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    },
+                    {
+                      "d": "bool",
+                      "size": 2
+                    }
+                  ]
+                ]
+              ],
+              "d": "variant",
+              "size": 7
+            },
+            "type": "Dir"
+          }
+        ]
+      ],
+      "cases": 49,
+      "chunk_lines": [
+        "0 49 0 49 0a2a78170d844ba79206696f764e1f7285b05dff77333320f844d20e372c97a8 473bf8a28cd73a079e1241318d6cbbce70808c00b651c3733dfa9ac3a0d49b1e"
+      ],
+      "chunks": 1,
+      "claim": "c_var_ne",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 49,
+      "expected_sha256": "ccdb29dfe7469aa260fdb733521cd6e8f303d6b42bbb44bebdb428d2cdf82514",
+      "id": "warrant/data_eval/exhaustive/c_var_ne",
+      "inputs_sha256": "ffa32d6b2d7c147eaf8772e6790c8ea917ca228e8f05a71409591bb3e4c4b364",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 49,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "ccdb29dfe7469aa260fdb733521cd6e8f303d6b42bbb44bebdb428d2cdf82514",
+      "slim_inputs_sha256": "ffa32d6b2d7c147eaf8772e6790c8ea917ca228e8f05a71409591bb3e4c4b364",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_wide_w": {
+      "binders": [
+        [
+          "x",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "fx_edge",
+                  "size": 281,
+                  "t": "U16"
+                },
+                {
+                  "d": "nat_0_64",
+                  "size": 65
+                }
+              ],
+              "size": 18265
+            },
+            "type": "Wide"
+          }
+        ]
+      ],
+      "cases": 18265,
+      "chunk_lines": [
+        "0 16384 0 16384 14337e79e35cecd1e3a6c4e4922c0b554f430b62be1f8266c708662f70b54f7a b5a9e4e54f1eb071dde1c416f96c7ee387c033cfa1732044bb863bcc984b2dd1",
+        "1 1881 16384 1881 fbc67756d5fc6e09534ec7af62bc720ff593557886d2d600a298033481be0b8b 10c0390f944d959349c67bfbdeac243eace41b7ae2423ef2e6d01debd2df68c7"
+      ],
+      "chunks": 2,
+      "claim": "c_wide_w",
+      "demoted": [
+        "0.0"
+      ],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 18265,
+      "expected_sha256": "fd98b47794db4a9850feac188c06145e3898be485d9e531d4efc31ba2d05288a",
+      "id": "warrant/data_eval/exhaustive/c_wide_w",
+      "inputs_sha256": "ff038ec15d11c7d5fae48a5bf16e48e9186e8b5245f41047dabb18b825be393b",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "product": 18265,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "U16",
+      "slim_chunks": [
+        0,
+        1
+      ],
+      "slim_expected_sha256": "fd98b47794db4a9850feac188c06145e3898be485d9e531d4efc31ba2d05288a",
+      "slim_inputs_sha256": "ff038ec15d11c7d5fae48a5bf16e48e9186e8b5245f41047dabb18b825be393b",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_wrapped_y": {
+      "binders": [
+        [
+          "w",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "tuple",
+                  "of": [
+                    {
+                      "d": "u8_all",
+                      "size": 256
+                    },
+                    {
+                      "d": "u8_all",
+                      "size": 256
+                    }
+                  ],
+                  "size": 65536
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 131072
+            },
+            "type": "Wrapped"
+          }
+        ]
+      ],
+      "cases": 131072,
+      "chunk_lines": [
+        "0 16384 0 16384 3b27b121d47ec17914062b7411ee78267bb0b25686684713fda71e8baac55c5b 600b044259c86c9dadbfbb460ec429d6872f146abac4d49ffa1557e566d3ee7f",
+        "1 16384 16384 16384 1ef43dc0ab7583d1a019bd0b5131e675543e4b59403931a98d45c136d05f1c87 a87a342a19a85965bfddca853875dc1b7997af6457a2130d7deecd6884f317f9",
+        "2 16384 32768 16384 0a7ad11d12e272d55573be56b1be647fbc74e824f1c16bbd1486ecca9838ce77 98ec9844a4a910db49403a77776d1ca467660d87fae77739d8efcd64ceb0d85e",
+        "3 16384 49152 16384 2cb7c0e783dd9f1570b3f96535332ec843149fd2109d7e89ade3ef0f30ce13d6 70c2bf4e6e4f78dfa9d1ed029419d734a9528ecd17586e8c906a5c6786b7060a",
+        "4 16384 65536 16384 24274df6b5a9ce11290794cc719adc58421d12ba371c502785fa93957eb5238c 62c9b1802e8c2b228886e7063a2069c0448518edc1e900cbc63fbba92d09a0bc",
+        "5 16384 81920 16384 8221075f980b06ec31594a2573547000d316faef3e2a5226bf69ae2dc5c6e8b1 40e37af36e349aed3c8ad591c3610594b7eb25f54a80f2f1e828c15787396ff2",
+        "6 16384 98304 16384 cc95c29bc5c82b98ea1718ab29ff4c8099332bedca114472481481e94e60ff91 9ad87a33cd00c9479596b871642ecd829e90c7cc6e4045348a74677d2efaf892",
+        "7 16384 114688 16384 c7dc6d79a810dc43dc9ee907ced20a88d78b1d38318ef62fd4d9898bb74579b8 ff210dc06b366333f9aea7b2a22ecce32ba713f75de7d741193225370324a6c3"
+      ],
+      "chunks": 8,
+      "claim": "c_wrapped_y",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 131072,
+      "expected_sha256": "f189e72c07969e821aca1d1a3ff685d4100a4ffc71c3da4daca8f085b5d9b9c2",
+      "id": "warrant/data_eval/exhaustive/c_wrapped_y",
+      "inputs_sha256": "69e390ded0afe384f5d1404caf2913cd7bac545df9127bb0e0e2bcb97006fd20",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 131072,
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "slim_expected_sha256": "f189e72c07969e821aca1d1a3ff685d4100a4ffc71c3da4daca8f085b5d9b9c2",
+      "slim_inputs_sha256": "69e390ded0afe384f5d1404caf2913cd7bac545df9127bb0e0e2bcb97006fd20",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    }
+  }
+}

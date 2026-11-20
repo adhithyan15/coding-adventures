@@ -1,0 +1,396 @@
+{
+  "refusals": [
+    {
+      "fault": "field-zero",
+      "message": "fault: field-zero needs a record or Result<record, E> result",
+      "name": "field-zero/a-scalar-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> U8\n"
+    },
+    {
+      "fault": "field-zero",
+      "message": "fault: field-zero needs a record or Result<record, E> result",
+      "name": "field-zero/a-bytes-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> Bytes\n"
+    },
+    {
+      "fault": "field-zero",
+      "message": "fault: field-zero needs a record or Result<record, E> result",
+      "name": "field-zero/a-tuple-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> (U8,Nat)\n"
+    },
+    {
+      "fault": "field-zero",
+      "message": "fault: field-zero needs a record or Result<record, E> result",
+      "name": "field-zero/a-variant-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> Dir\n"
+    },
+    {
+      "fault": "field-zero",
+      "message": "fault: field-zero needs a record with a numeric field",
+      "name": "field-zero/a-record-with-no-numeric-field",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> NoNum\n"
+    },
+    {
+      "fault": "field-zero",
+      "message": "fault: field-zero needs a record with a numeric field",
+      "name": "field-zero/an-ok-record-with-no-numeric-field",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> Result<NoNum,E>\n"
+    },
+    {
+      "fault": "field-zero",
+      "message": "fault: field-zero needs a record or Result<record, E> result",
+      "name": "field-zero/an-option-of-a-record",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> Option<Point>\n"
+    },
+    {
+      "fault": "field-zero",
+      "message": "fault: field-zero needs a record or Result<record, E> result",
+      "name": "field-zero/a-result-of-a-scalar",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> Result<U8,E>\n"
+    },
+    {
+      "fault": "field-zero",
+      "message": "fault: field-zero needs a record or Result<record, E> result",
+      "name": "field-zero/a-result-of-a-variant",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> Result<Dir,E>\n"
+    },
+    {
+      "fault": "field-zero",
+      "message": "fault: field-zero needs a record or Result<record, E> result",
+      "name": "field-zero/a-result-of-an-option-of-a-record",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> Result<Option<Point>,E>\n"
+    },
+    {
+      "fault": "field-zero",
+      "message": "fault: an operation parameter is named ok_payload",
+      "name": "field-zero/a-parameter-named-ok-payload-in-the-ok-form",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(ok_payload: U8) -> Result<Point,E>\n"
+    },
+    {
+      "fault": "missing-error",
+      "message": "fault: a variant has no zero value",
+      "name": "missing-error/a-variant-with-no-parameter-of-its-type",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> Result<Dir,E>\n"
+    },
+    {
+      "fault": "missing-error",
+      "message": "fault: a variant has no zero value",
+      "name": "missing-error/a-record-field-that-is-a-variant-with-no-parameter",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> Result<WithDir,E>\n"
+    },
+    {
+      "fault": "missing-error",
+      "message": "fault: missing-error has no template for this payload type",
+      "name": "missing-error/a-result-payload-that-is-a-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> Result<Result<U8,E>,E>\n"
+    },
+    {
+      "fault": "missing-error",
+      "message": "fault: missing-error needs a Result result",
+      "name": "missing-error/a-non-result-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> Point\n"
+    },
+    {
+      "fault": "wrong-ctor",
+      "message": "fault: an unknown fault name",
+      "name": "wrong-ctor/is-not-in-the-registry",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  op f(a: U8) -> Result<Dir,E>\n"
+    }
+  ],
+  "schema": "warrant-data-faults-refusals-v1",
+  "typing": [
+    {
+      "accepted": true,
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "tuple",
+            [
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": ""
+                }
+              ],
+              [
+                "lit",
+                false
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "name": "r67/a-tuple-payload-with-a-plain-bytes-zero",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  record Pair2(p: (Bytes<2>,Bool))\n  op f(a: Nat) -> Result<(Bytes,Bool),E>\n",
+      "type": "Result<(Bytes,Bool),?>"
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "tuple",
+            [
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": "01"
+                }
+              ],
+              [
+                "lit",
+                false
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "message": "fault: the expression of a fault on `f` has no common type with the declared type",
+      "name": "r67/a-one-byte-literal-in-a-bytes-2-component",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  record Pair2(p: (Bytes<2>,Bool))\n  op f(a: Nat) -> Result<(Bytes<2>,Bool),E>\n"
+    },
+    {
+      "accepted": true,
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "tuple",
+            [
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": "0102"
+                }
+              ],
+              [
+                "lit",
+                false
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "name": "r67/a-two-byte-literal-in-a-bytes-2-component",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  record Pair2(p: (Bytes<2>,Bool))\n  op f(a: Nat) -> Result<(Bytes<2>,Bool),E>\n",
+      "type": "Result<(Bytes<2>,Bool),?>"
+    },
+    {
+      "accepted": true,
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "ctor",
+            "Holder",
+            [
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": ""
+                }
+              ],
+              [
+                "tuple",
+                [
+                  [
+                    "lit",
+                    {
+                      "type": "Bytes",
+                      "value": ""
+                    }
+                  ],
+                  [
+                    "lit",
+                    false
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "name": "r67/a-record-field-that-is-a-tuple-with-a-plain-bytes-zero",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  record Pair2(p: (Bytes<2>,Bool))\n  op f(a: Nat) -> Result<Holder,E>\n",
+      "type": "Result<Holder,?>"
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "ctor",
+            "Pair2",
+            [
+              [
+                "tuple",
+                [
+                  [
+                    "lit",
+                    {
+                      "type": "Bytes",
+                      "value": "01"
+                    }
+                  ],
+                  [
+                    "lit",
+                    false
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "message": "a ctor operand does not have its field's type",
+      "name": "r67/a-one-byte-literal-in-a-record-field-of-bytes-2",
+      "oracle_code": "ir",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  record Pair2(p: (Bytes<2>,Bool))\n  op f(a: Nat) -> Result<Pair2,E>\n"
+    },
+    {
+      "accepted": true,
+      "expr": [
+        "take",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "name": "r94/plain-bytes-against-a-declared-bytes-2",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  record Pair2(p: (Bytes<2>,Bool))\n  op f(a: Nat) -> Bytes<2>\n",
+      "type": "Bytes"
+    },
+    {
+      "expr": [
+        "lit",
+        true
+      ],
+      "message": "fault: the expression of a fault on `f` has no common type with the declared type",
+      "name": "r94/a-bool-against-a-declared-bytes-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  record Pair2(p: (Bytes<2>,Bool))\n  op f(a: Nat) -> Bytes\n"
+    },
+    {
+      "expr": [
+        "lit",
+        {
+          "type": "Bytes",
+          "value": "00"
+        }
+      ],
+      "message": "fault: the expression of a fault on `f` has no common type with the declared type",
+      "name": "r94/a-bytes-against-a-declared-u8-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  record Pair2(p: (Bytes<2>,Bool))\n  op f(a: Nat) -> U8\n"
+    },
+    {
+      "accepted": true,
+      "expr": [
+        "add",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "name": "r94/an-int-expression-against-a-declared-nat-result",
+      "source": "warrant refusals v1\n  error E = A | B\n  record Point(x: U8, y: U8)\n  record NoNum(a: Bool, b: Bytes<2>)\n  record Wide(w: U16, n: Nat)\n  record Holder(d: Bytes, pair: (Bytes,Bool))\n  record WithDir(a: U8, d: Dir)\n  variant Dir = Up | Down(f: Bool)\n  record Pair2(p: (Bytes<2>,Bool))\n  op f(a: Nat) -> Nat\n",
+      "type": "Int"
+    }
+  ]
+}

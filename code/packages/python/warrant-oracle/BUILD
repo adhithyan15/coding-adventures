@@ -63,5 +63,12 @@ uv pip install -e ".[dev]" --quiet
 # CV2-S11f-1: the synthetic scalar-faults document (saturate-add, saturate-sub, shift-mask, scalar missing-error;
 # VER04r 8.2) and its committed faults and refusals dumps, the files the generator's slice S11f-2 must reproduce.
 .venv/bin/python tests/fixtures/scalar-faults-v1/make_scalar_faults.py --check
+# CV2-S11c-1: the synthetic ir.data EVALUATION document (records, variants and Option evaluated over their domains, data
+# values in examples, field-zero and the record, Option and variant payloads of missing-error) and its committed dumps
+# (lowering, evaluation, faults under the gate before and after the one this slice opens, values, domains, refusals), the
+# files the generator's slice S11c-2 must reproduce byte for byte.  The directory is new on purpose: data-forms-v1 is what
+# the generator's S11b parity test reproduces.  --check re-derives the whole document (about 25 s).
+.venv/bin/python tests/fixtures/data-eval-v1/make_data_eval.py --check
+.venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/data-eval-v1/data_eval_v1.warrant --check tests/fixtures/data-eval-v1/data_eval_v1.oracle-lowering.json
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_lowering.py --check
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_enumeration.py --check
