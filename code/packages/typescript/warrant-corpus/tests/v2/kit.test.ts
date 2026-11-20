@@ -7,7 +7,7 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { KNOWN_CATEGORIES, jsonEqual, runKit } from "../../src/v2/kit.ts";
 import { KIT_DIR, kitWithExtraCategory, tamperedKit } from "./support.ts";
 
@@ -15,7 +15,11 @@ const index = JSON.parse(readFileSync(join(KIT_DIR, "index.json"), "utf8")) as {
 const indexed = (category: string): number => index.files.find((row) => row.category === category)?.cases ?? 0;
 
 describe("the committed kit", () => {
-  const report = runKit(KIT_DIR, { sequential: true });
+  // The sequential walk of the three 2^24-case chunk cases is the slow part (about 5 s locally; CI is several times slower).
+  let report = {} as ReturnType<typeof runKit>;
+  beforeAll(() => {
+    report = runKit(KIT_DIR, { sequential: true });
+  }, 600_000);
 
   it("passes every case of the six known categories: 0 failed, 0 skipped", () => {
     expect(report.failed).toBe(0);

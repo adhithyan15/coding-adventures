@@ -49,7 +49,7 @@ import { compileFault } from "./faults.ts";
 import { enumerateChunk, enumerateChunks, readChunkFile, readCorpusPart, loadSuite, checkSlimChunks } from "./chunks.ts";
 import { IMPLEMENTED_LEVELS } from "./levels.ts";
 import { type Param, Program, readOp, typeText } from "./ir.ts";
-import { EMPTY_TABLE, type Ty, checkNames, eraseNamedWidths, parseType, readTypeTable, showType } from "./types.ts";
+import { EMPTY_TABLE, type Ty, checkNames, eraseNamedWidths, parseType, readTypeTable } from "./types.ts";
 import { type Value, decodeJson, encodeJson, fromHex, streamBytes, toHex } from "./values.ts";
 
 type Json = unknown;
@@ -378,4 +378,3 @@ function runOne(category: string, c: Case, context: { sequential: boolean; level
   }
 }
 
-export { showType };

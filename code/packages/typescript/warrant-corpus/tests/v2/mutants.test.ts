@@ -120,9 +120,9 @@ const MUTANTS: readonly Mutant[] = [
     edits: [['if (info.chain > MAX_DEPTH) fail("depth"', 'if (info.chain > MAX_DEPTH + 1) fail("depth"']],
   },
   {
-    name: "static-widths-not-substituted", area: "ir", file: "ir.ts", kills: ["v2-ir"],
+    name: "static-widths-ignored", area: "ir", file: "ir.ts", kills: ["v2-ir"],
     rule: "a subject_op's static widths are substituted into the op's signature (R70)",
-    edits: [["const wanted = substituteWidths((op.params[i] as Param).ty, op.widthParams, widths);", "const wanted = eraseNamedWidths((op.params[i] as Param).ty);"]],
+    edits: [["const wanted = substituteWidths((op.params[i] as Param).ty, op.widthParams, widths);", "const wanted = substituteWidths((op.params[i] as Param).ty, op.widthParams, widths.map(() => 0));"]],
   },
   {
     name: "cost-takes-the-cheaper-branch", area: "ir", file: "ir.ts", kills: ["v2-ir"],

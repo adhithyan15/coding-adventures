@@ -85,6 +85,19 @@ describe("levels and the subject", () => {
     expect(code(() => compileFault(program(), row("post", { expr: call }, ["ir.core", "ir.fixed"]), two))).toBe("level-missing");
   });
 
+  it("gives a bare ok a common type with whatever stands opposite it (R97) and compares every branch (R98 a)", () => {
+    const fixed = op([["a", "Bytes"]], "Result<Bytes<32>,E>");
+    // a bare ok of plain Bytes against a declared Result<Bytes<32>,E>: a common type, not a flow
+    const missing = compileFault(program(), row("replace", { expr: ["if", ["is_err", ["var", "result"]], ["ok", ["var", "a"]], ["var", "result"]] }), fixed);
+    expect(missing.rewriteResult([Uint8Array.of(1)], { err: "BAD" })).toEqual({ ok: Uint8Array.of(1) });
+    // a branch whose payload has no common type with the declared one is refused, wherever the other branch is fine
+    const u8 = op([["a", "U8"]], "Result<U8,E>");
+    expect(code(() => compileFault(program(), row("post", { expr: ["if", ["is_err", ["var", "result"]], ["var", "result"], ["ok", ["lit", true]]] }), u8))).toBe("ill-typed");
+    expect(code(() => compileFault(program(), row("post", { expr: ["if", ["is_err", ["var", "result"]], ["ok", ["lit", true]], ["var", "result"]] }), u8))).toBe("ill-typed");
+    expect(code(() => compileFault(program(), row("post", { expr: ["if", ["is_err", ["var", "result"]], ["var", "result"], ["ok", U8(1)]] }), u8))).toBe("none");
+    expect(code(() => compileFault(program(), row("post", { expr: ["ok", U8(1)] }), op([["a", "U8"]], "Bool")))).toBe("ill-typed");
+  });
+
   it("applies to values of every host form", () => {
     const bytes = op([["a", "Bytes"]], "Result<Bytes,E>");
     const missing = compileFault(program(), row("replace", { expr: ["if", ["is_err", ["var", "result"]], ["ok", ["var", "a"]], ["var", "result"]] }), bytes);
