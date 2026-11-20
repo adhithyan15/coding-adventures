@@ -34,29 +34,23 @@ const (
 // unless body supplies them.
 func dyTrace(body string) string { return dyClone + body + dyExit2 + dyExit1 }
 
-// The three shapes, each as the exact text strace prints, with the group's
-// exit_group before and after the thread's exit.
+// The three shapes, each as the exact text strace prints, for the calls the
+// rule drops: an ignored-class call, and a spawn with allowed flags.
 func TestDyingCallShapesAreAccepted(t *testing.T) {
 	shapes := map[string]string{
 		"1 tgkill resumed unavailable": "2  tgkill(1, 1, SIGURG <unfinished ...>\n" +
 			dyGroupEnd + "2  <... tgkill resumed>) = ? <unavailable>\n",
 		"2 clone resumed unfinished": "2  clone(child_stack=0x7f0000002000, " + dyThread + " <unfinished ...>\n" +
 			dyGroupEnd + "2  <... clone resumed> <unfinished ...>) = ?\n",
-		"3 openat killed at entry": "2  openat(AT_FDCWD</work/repo>, 0x7f3a6c001230, O_RDONLY|O_CLOEXEC <unfinished ...>\n" +
-			dyGroupEnd,
-		"3 newfstatat killed at entry": "2  newfstatat(AT_FDCWD</work/repo>, 0x7f3a6c001230, <unfinished ...>\n" +
-			dyGroupEnd,
-		"3 open killed at entry":       "2  open(0x7f3a6c001230, O_RDONLY <unfinished ...>\n" + dyGroupEnd,
-		"3 getdents64 killed at entry": "2  getdents64(3</work/repo>, <unfinished ...>\n" + dyGroupEnd,
-		"3 readlink killed at entry":   "2  readlink(0x7f3a6c001230, <unfinished ...>\n" + dyGroupEnd,
-		"3 clone killed at entry":      "2  clone(child_stack=0x7f0000002000, " + dyThread + " <unfinished ...>\n" + dyGroupEnd,
-		"3 tgkill killed at entry":     "2  tgkill(1, 1, SIGURG <unfinished ...>\n" + dyGroupEnd,
+		"3 clone killed at entry":  "2  clone(child_stack=0x7f0000002000, " + dyThread + " <unfinished ...>\n" + dyGroupEnd,
+		"3 tgkill killed at entry": "2  tgkill(1, 1, SIGURG <unfinished ...>\n" + dyGroupEnd,
+		"3 fork killed at entry":   "2  fork( <unfinished ...>\n" + dyGroupEnd,
+		"3 vfork killed at entry":  "2  vfork( <unfinished ...>\n" + dyGroupEnd,
+		"2 fork resumed unfinished": "2  fork( <unfinished ...>\n" + dyGroupEnd +
+			"2  <... fork resumed> <unfinished ...>) = ?\n",
 		// A whole-line call whose result is unavailable.
-		"stat unavailable": "2  stat(0x7f3a6c001230, 0x7ffd1000) = ? <unavailable>\n" + dyGroupEnd,
 		"tgkill whole line": "2  tgkill(1, 1, SIGURG) = ? <unavailable>\n" +
 			dyGroupEnd,
-		"openat resumed unavailable": "2  openat(AT_FDCWD</work/repo>, 0x7f3a6c001230, O_RDONLY <unfinished ...>\n" +
-			dyGroupEnd + "2  <... openat resumed>) = ? <unavailable>\n",
 	}
 	for name, body := range shapes {
 		t.Run(name, func(t *testing.T) {
@@ -74,19 +68,6 @@ func TestDyingCallShapesAreAccepted(t *testing.T) {
 	}
 }
 
-// The thread's exit may be printed BEFORE the exit_group of the thread that
-// ended the group: strace reports each tracee as the kernel does.
-func TestDyingCallGroupExitMayComeLater(t *testing.T) {
-	text := dyClone + "2  openat(AT_FDCWD</w>, 0x7f3a6c001230, O_RDONLY <unfinished ...>\n" + dyExit2 + dyGroupEnd + dyExit1
-	mustParse(t, text)
-}
-
-// Evidence that the group ended: its leader was killed by a signal.
-func TestDyingCallLeaderKilledIsEvidence(t *testing.T) {
-	text := dyClone + "2  openat(AT_FDCWD</w>, 0x7f3a6c001230, O_RDONLY <unfinished ...>\n" + dyExit2 + "1  +++ killed by SIGSEGV +++\n"
-	mustParse(t, text)
-}
-
 // The rule does not depend on Options.HelperRoot.  In the helper layout the step
 // is the init child (pid 11) after its exec; a thread it makes is pid 55 in
 // strace's own namespace.
@@ -95,8 +76,7 @@ func TestDyingCallInTheStep(t *testing.T) {
 	const end = "11  exit_group(5) = ?\n55  +++ exited with 0 +++\n" + helperEnd
 	pre := helperRootSetup + helperInitSetup + helperReExec + helperExec + thread
 	for name, body := range map[string]string{
-		"openat at entry": "55  openat(AT_FDCWD</start>, 0x7f3a6c001230, O_RDONLY|O_CLOEXEC <unfinished ...>\n",
-		"tgkill resumed":  "55  tgkill(11, 11, SIGURG <unfinished ...>\n55  <... tgkill resumed>) = ? <unavailable>\n",
+		"tgkill resumed": "55  tgkill(11, 11, SIGURG <unfinished ...>\n55  <... tgkill resumed>) = ? <unavailable>\n",
 		"clone resumed": "55  clone(child_stack=0x7f0000002000, " + dyThread + " <unfinished ...>\n" +
 			"55  <... clone resumed> <unfinished ...>) = ?\n",
 	} {
@@ -112,13 +92,36 @@ func TestDyingCallInTheStep(t *testing.T) {
 			t.Fatalf("refused %s, want %s", e.Reason, reasonUnresumed)
 		}
 	})
-	t.Run("no exit_group is refused", func(t *testing.T) {
-		text := pre + "55  openat(AT_FDCWD</start>, 0x7f3a6c001230, O_RDONLY <unfinished ...>\n55  +++ exited with 0 +++\n" + helperEnd
-		e := refusal(t, text, true)
-		if e.Reason != reasonUnresumed {
-			t.Fatalf("refused %s, want %s", e.Reason, reasonUnresumed)
-		}
-	})
+	// A call that reads is refused even with the group ending: the model infers
+	// reads only from these records.
+	for name, body := range map[string]string{
+		"openat":     "55  openat(AT_FDCWD</start>, 0x7f3a6c001230, O_RDONLY|O_CLOEXEC <unfinished ...>\n",
+		"newfstatat": "55  newfstatat(AT_FDCWD</start>, 0x7f3a6c001230, <unfinished ...>\n",
+		"getdents64": "55  getdents64(3</start>, <unfinished ...>\n",
+	} {
+		t.Run("a read is refused: "+name, func(t *testing.T) {
+			e := refusal(t, pre+body+end, true)
+			if e.Reason != reasonUnresumed {
+				t.Fatalf("refused %s, want %s", e.Reason, reasonUnresumed)
+			}
+		})
+	}
+	// A dying clone with flags that are not readable and allowed is refused, in
+	// the helper layout as outside it.
+	for name, flags := range dyBadCloneFlags {
+		t.Run("clone "+name+" is refused", func(t *testing.T) {
+			body := "55  clone(" + flags + " <unfinished ...>\n55  <... clone resumed> <unfinished ...>) = ?\n"
+			e := refusal(t, pre+body+end, true)
+			if e.Reason != reasonUnresumed {
+				t.Fatalf("refused %s, want %s", e.Reason, reasonUnresumed)
+			}
+			body = "55  clone(" + flags + " <unfinished ...>\n"
+			e = refusal(t, pre+body+end, true)
+			if e.Reason != reasonUnresumed {
+				t.Fatalf("at entry: refused %s, want %s", e.Reason, reasonUnresumed)
+			}
+		})
+	}
 }
 
 func TestDyingCallRefused(t *testing.T) {
@@ -193,23 +196,32 @@ func TestDyingCallRefused(t *testing.T) {
 		{"openat a lower-case word", dyTrace(open("o_rdonly") + dyGroupEnd), reasonUnresumed, 2},
 		{"open no flags printed", dyTrace("2  open(0x7f3a6c001230, <unfinished ...>\n" + dyGroupEnd), reasonUnresumed, 2},
 
-		// No evidence that the group was ending.
-		{"read-only open, no exit_group", dyTrace(open("O_RDONLY")), reasonUnresumed, 2},
-		{"read-only stat, no exit_group", dyTrace("2  newfstatat(AT_FDCWD</w>, 0x1, <unfinished ...>\n"), reasonUnresumed, 2},
-		{"read-only open, exit_group of another group", "1  clone(child_stack=NULL, flags=SIGCHLD) = 3\n3  exit_group(0) = ?\n" +
-			dyClone + open("O_RDONLY") + dyExit2 + "3  +++ exited with 0 +++\n" + dyExit1, reasonUnresumed, 4},
-		{"read-only open, leader exits normally", dyTrace(open("O_RDONLY")), reasonUnresumed, 2},
-		{"read-only open, exit_group failed", dyTrace(open("O_RDONLY") + "1  exit_group(0 <unfinished ...>\n1  <... exit_group resumed>) = -1 EPERM (Operation not permitted)\n"), reasonUnresumed, 2},
-		{"read-only open, a thread exit is not a group exit", dyTrace(open("O_RDONLY") + "1  exit(0) = ?\n"), reasonUnresumed, 2},
-		{"unavailable stat, no exit_group", dyTrace("2  stat(0x1, 0x2) = ? <unavailable>\n"), reasonUnresumed, 2},
+		// A dying clone whose flags are not readable and allowed.
+		{"clone untraced at entry", dyTrace("2  clone(" + dyBadCloneFlags["CLONE_UNTRACED"] + " <unfinished ...>\n" + dyGroupEnd), reasonUnresumed, 2},
+		{"clone newns at entry", dyTrace("2  clone(" + dyBadCloneFlags["CLONE_NEWNS"] + " <unfinished ...>\n" + dyGroupEnd), reasonUnresumed, 2},
+		{"clone hex flag at entry", dyTrace("2  clone(" + dyBadCloneFlags["a hex flag"] + " <unfinished ...>\n" + dyGroupEnd), reasonUnresumed, 2},
+		{"clone no flags at entry", dyTrace("2  clone(" + dyBadCloneFlags["no flags="] + " <unfinished ...>\n" + dyGroupEnd), reasonUnresumed, 2},
+		{"clone unknown token at entry", dyTrace("2  clone(" + dyBadCloneFlags["an unknown token"] + " <unfinished ...>\n" + dyGroupEnd), reasonUnresumed, 2},
+		{"clone untraced resumed", dyTrace("2  clone(" + dyBadCloneFlags["CLONE_UNTRACED"] + " <unfinished ...>\n" + dyGroupEnd + "2  <... clone resumed> <unfinished ...>) = ?\n"), reasonUnresumed, 2},
+		{"clone newns resumed", dyTrace("2  clone(" + dyBadCloneFlags["CLONE_NEWNS"] + " <unfinished ...>\n" + dyGroupEnd + "2  <... clone resumed> <unfinished ...>) = ?\n"), reasonUnresumed, 2},
+		{"clone hex flag resumed", dyTrace("2  clone(" + dyBadCloneFlags["a hex flag"] + " <unfinished ...>\n" + dyGroupEnd + "2  <... clone resumed> <unfinished ...>) = ?\n"), reasonUnresumed, 2},
+		{"clone no flags resumed", dyTrace("2  clone(" + dyBadCloneFlags["no flags="] + " <unfinished ...>\n" + dyGroupEnd + "2  <... clone resumed> <unfinished ...>) = ?\n"), reasonUnresumed, 2},
+		{"clone untraced unavailable", dyTrace("2  clone(" + dyBadCloneFlags["CLONE_UNTRACED"] + ") = ? <unavailable>\n" + dyGroupEnd), reasonUnresumed, 2},
 
-		// A group led by a child that shares its parent's memory.
-		{"CLONE_VM leader, no exec", "1  clone(child_stack=NULL, flags=CLONE_VM|SIGCHLD) = 2\n" +
-			"2  clone(child_stack=0x7f0000001000, " + dyThread + ") = 3\n" +
-			"3  openat(AT_FDCWD</w>, 0x7f3a6c001230, O_RDONLY <unfinished ...>\n2  exit_group(0) = ?\n3  +++ exited with 0 +++\n2  +++ exited with 0 +++\n1  +++ exited with 0 +++\n", reasonUnresumed, 3},
-		{"vfork leader, no exec", "1  vfork() = 2\n" +
-			"2  clone(child_stack=0x7f0000001000, " + dyThread + ") = 3\n" +
-			"3  stat(0x7f3a6c001230, 0x1) = ? <unavailable>\n2  exit_group(0) = ?\n3  +++ exited with 0 +++\n2  +++ exited with 0 +++\n1  +++ exited with 0 +++\n", reasonUnresumed, 3},
+		// A call that READS is refused in every shape, whatever the group did.
+		{"openat at entry, group ending", dyTrace(open("O_RDONLY|O_CLOEXEC") + dyGroupEnd), reasonUnresumed, 2},
+		{"openat at entry, no exit_group", dyTrace(open("O_RDONLY")), reasonUnresumed, 2},
+		{"newfstatat at entry", dyTrace("2  newfstatat(AT_FDCWD</w>, 0x1, <unfinished ...>\n" + dyGroupEnd), reasonUnresumed, 2},
+		{"getdents64 at entry", dyTrace("2  getdents64(3</w>, <unfinished ...>\n" + dyGroupEnd), reasonUnresumed, 2},
+		{"stat at entry", dyTrace("2  stat(0x1, <unfinished ...>\n" + dyGroupEnd), reasonUnresumed, 2},
+		{"readlink at entry", dyTrace("2  readlink(0x1, <unfinished ...>\n" + dyGroupEnd), reasonUnresumed, 2},
+		{"open at entry", dyTrace("2  open(0x1, O_RDONLY <unfinished ...>\n" + dyGroupEnd), reasonUnresumed, 2},
+		{"openat resumed unavailable", dyTrace(open("O_RDONLY") + dyGroupEnd + "2  <... openat resumed>) = ? <unavailable>\n"), reasonUnresumed, 2},
+		{"newfstatat resumed unavailable", dyTrace("2  newfstatat(AT_FDCWD</w>, 0x1, <unfinished ...>\n" + dyGroupEnd + "2  <... newfstatat resumed>) = ? <unavailable>\n"), reasonUnparsable, 4},
+		{"getdents64 resumed unavailable", dyTrace("2  getdents64(3</w>, <unfinished ...>\n" + dyGroupEnd + "2  <... getdents64 resumed>) = ? <unavailable>\n"), reasonUnparsable, 4},
+		{"stat whole line unavailable", dyTrace("2  stat(0x1, 0x2) = ? <unavailable>\n" + dyGroupEnd), reasonUnresumed, 2},
+		{"leader killed, open at entry", dyClone + open("O_RDONLY") + dyExit2 + "1  +++ killed by SIGSEGV +++\n", reasonUnresumed, 2},
+		{"exit_group first, open at entry", dyClone + dyGroupEnd + open("O_RDONLY") + dyExit2 + dyExit1, reasonUnresumed, 3},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -219,19 +231,6 @@ func TestDyingCallRefused(t *testing.T) {
 			}
 		})
 	}
-}
-
-// A group led by a CLONE_VM child is fine once it execs, or when the dying
-// thread is not in a CLONE_VM group at all.
-func TestDyingCallCloneVMLeaderAfterExec(t *testing.T) {
-	text := "1  clone(child_stack=NULL, flags=CLONE_VM|SIGCHLD) = 2\n" +
-		"2  execve(\"/bin/true\", [\"true\"], 0x7ffd1000 /* 5 vars */) = 0\n" +
-		"2  clone(child_stack=0x7f0000001000, " + dyThread + ") = 3\n" +
-		"3  openat(AT_FDCWD</w>, 0x7f3a6c001230, O_RDONLY <unfinished ...>\n2  exit_group(0) = ?\n3  +++ exited with 0 +++\n2  +++ exited with 0 +++\n1  +++ exited with 0 +++\n"
-	mustParse(t, text)
-	// A plain fork child (no CLONE_VM) is not a sharer.
-	mustParse(t, "1  fork() = 2\n2  clone(child_stack=0x7f0000001000, "+dyThread+") = 3\n"+
-		"3  openat(AT_FDCWD</w>, 0x7f3a6c001230, O_RDONLY <unfinished ...>\n2  exit_group(0) = ?\n3  +++ exited with 0 +++\n2  +++ exited with 0 +++\n1  +++ exited with 0 +++\n")
 }
 
 // A dying clone records no spawn.  If a child did start, its first line has no
@@ -245,72 +244,57 @@ func TestDyingCloneChildIsAnOrphan(t *testing.T) {
 	}
 }
 
-func TestReadOnlyOpenFlags(t *testing.T) {
-	for flags, want := range map[string]bool{
-		"O_RDONLY":                        true,
-		"O_RDONLY|O_CLOEXEC":              true,
-		"O_RDONLY|O_DIRECTORY|O_NONBLOCK": true,
-		"O_RDONLY | O_CLOEXEC":            true,
-		"O_RDONLY|O_PATH":                 true,
-		"O_WRONLY":                        false,
-		"O_RDWR|O_CLOEXEC":                false,
-		"O_RDONLY|O_CREAT":                false,
-		"O_RDONLY|O_TRUNC":                false,
-		"O_RDONLY|O_APPEND":               false,
-		"O_RDONLY|O_TMPFILE":              false,
-		"O_CLOEXEC":                       false,
-		"":                                false,
-		"0":                               false,
-		"0x2":                             false,
-		"O_RDONLY|0x80000":                false,
-		"O_RDONLY|":                       false,
-		"O_":                              false,
-		"O_RDONLY|o_creat":                false,
-		"O_RDONLY|O_CLOEXEC|flags=":       false,
-	} {
-		if got := readOnlyOpenFlags(flags); got != want {
-			t.Errorf("readOnlyOpenFlags(%q) = %v, want %v", flags, got, want)
-		}
-	}
+// dyBadCloneFlags are clone arguments a dying clone must NOT be dropped for.
+var dyBadCloneFlags = map[string]string{
+	"CLONE_UNTRACED":   "child_stack=0x7f0000002000, flags=CLONE_VM|CLONE_UNTRACED|SIGCHLD",
+	"CLONE_NEWNS":      "child_stack=0x7f0000002000, flags=CLONE_NEWNS|SIGCHLD",
+	"a hex flag":       "child_stack=0x7f0000002000, flags=CLONE_VM|0x10000|SIGCHLD",
+	"no flags=":        "child_stack=0x7f0000002000, 0x3d0f00",
+	"an unknown token": "child_stack=0x7f0000002000, flags=CLONE_VM|CLONE_BOGUS|SIGCHLD",
 }
 
-// The policy table: which pending call is dropped, and whether the drop is
-// conditional on the group ending.
+// The policy table: which pending call is dropped.
 func TestDyingPolicyTable(t *testing.T) {
 	p := func(name string, args ...string) *pending { return &pending{name: name, args: args} }
+	ok := "flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM"
 	for _, c := range []struct {
-		p           *pending
-		drop, guard bool
+		p    *pending
+		drop bool
 	}{
-		{p("tgkill"), true, false},
-		{p("wait4"), true, false},
-		{p("exit_group"), true, false},
-		{p("clone"), true, false},
-		{p("fork"), true, false},
-		{p("vfork"), true, false},
-		{p("stat", "0x1"), true, true},
-		{p("newfstatat", "AT_FDCWD</w>", "0x1"), true, true},
-		{p("getdents64", "3</w>"), true, true},
-		{p("openat", "AT_FDCWD</w>", "0x1", "O_RDONLY"), true, true},
-		{p("open", "0x1", "O_RDONLY|O_CLOEXEC"), true, true},
-		{p("openat", "AT_FDCWD</w>", "0x1", "O_RDONLY", "0644"), true, true},
-		{p("openat", "AT_FDCWD</w>", "0x1", "O_WRONLY"), false, false},
-		{p("openat", "AT_FDCWD</w>", "0x1"), false, false},
-		{p("openat2", "AT_FDCWD</w>", "0x1", "{flags=O_RDONLY}", "24"), false, false},
-		{p("creat", "0x1", "0644"), false, false},
-		{p("unlink", "0x1"), false, false},
-		{p("chdir", "0x1"), false, false},
-		{p("fchdir", "3</w>"), false, false},
-		{p("execve", "0x1", "0x2", "0x3"), false, false},
-		{p("connect", "3<socket:[1]>", "0x1", "110"), false, false},
-		{p("clone3", "{flags=CLONE_VM}"), false, false},
-		{p("mount"), false, false},
-		{p("frobnicate"), false, false},
-		{p("???"), false, false},
+		{p("tgkill"), true},
+		{p("wait4"), true},
+		{p("exit_group"), true},
+		{p("fork"), true},
+		{p("vfork"), true},
+		{p("clone", "child_stack=0x1", ok), true},
+		{p("clone", "flags=SIGCHLD"), true},
+		{p("clone", "child_stack=0x1", "flags=CLONE_VM|CLONE_UNTRACED"), false},
+		{p("clone", "flags=CLONE_NEWNS|SIGCHLD"), false},
+		{p("clone", "flags=CLONE_NEWUSER"), false},
+		{p("clone", "flags=CLONE_VM|0x10000"), false},
+		{p("clone", "flags=CLONE_VM|CLONE_BOGUS"), false},
+		{p("clone", "child_stack=0x1"), false},
+		{p("clone"), false},
+		{p("stat", "0x1"), false},
+		{p("newfstatat", "AT_FDCWD</w>", "0x1"), false},
+		{p("getdents64", "3</w>"), false},
+		{p("openat", "AT_FDCWD</w>", "0x1", "O_RDONLY"), false},
+		{p("open", "0x1", "O_RDONLY|O_CLOEXEC"), false},
+		{p("openat", "AT_FDCWD</w>", "0x1", "O_WRONLY"), false},
+		{p("openat2", "AT_FDCWD</w>", "0x1", "{flags=O_RDONLY}", "24"), false},
+		{p("creat", "0x1", "0644"), false},
+		{p("unlink", "0x1"), false},
+		{p("chdir", "0x1"), false},
+		{p("fchdir", "3</w>"), false},
+		{p("execve", "0x1", "0x2", "0x3"), false},
+		{p("connect", "3<socket:[1]>", "0x1", "110"), false},
+		{p("clone3", "{flags=CLONE_VM}"), false},
+		{p("mount"), false},
+		{p("frobnicate"), false},
+		{p("???"), false},
 	} {
-		drop, guard := dyingPolicy(c.p)
-		if drop != c.drop || guard != c.guard {
-			t.Errorf("dyingPolicy(%s %v) = (%v, %v), want (%v, %v)", c.p.name, c.p.args, drop, guard, c.drop, c.guard)
+		if got := dyingPolicy(c.p); got != c.drop {
+			t.Errorf("dyingPolicy(%s %v) = %v, want %v", c.p.name, c.p.args, got, c.drop)
 		}
 	}
 }
@@ -350,6 +334,9 @@ var dyingLineSeeds = []string{
 }
 
 var dyingTraceSeeds = []string{
+	dyTrace("2  clone(" + dyBadCloneFlags["CLONE_UNTRACED"] + " <unfinished ...>\n" + dyGroupEnd + "2  <... clone resumed> <unfinished ...>) = ?\n"),
+	dyTrace("2  clone(" + dyBadCloneFlags["no flags="] + " <unfinished ...>\n" + dyGroupEnd),
+	dyTrace("2  clone(" + dyBadCloneFlags["CLONE_NEWNS"] + ") = ? <unavailable>\n" + dyGroupEnd),
 	dyTrace("2  tgkill(1, 1, SIGURG <unfinished ...>\n" + dyGroupEnd + "2  <... tgkill resumed>) = ? <unavailable>\n"),
 	dyTrace("2  clone(child_stack=0x7f0000002000, " + dyThread + " <unfinished ...>\n" + dyGroupEnd + "2  <... clone resumed> <unfinished ...>) = ?\n"),
 	dyTrace("2  openat(AT_FDCWD</w>, 0x7f3a6c001230, O_RDONLY|O_CLOEXEC <unfinished ...>\n" + dyGroupEnd),

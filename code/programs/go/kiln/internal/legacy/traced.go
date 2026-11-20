@@ -68,11 +68,11 @@ const TracedSemantics uint64 = 2
 // refused now parse, so every weak key changes.
 //
 // Version 5: the dying-call rule (KILN04 D35).  A task that dies inside a system
-// call when its thread group exits is tolerated in its three spellings
-// (`= ? <unavailable>`, `<... clone resumed> <unfinished ...>) = ?`, and an
+// call when its thread group exits is tolerated in two of its three spellings
+// (`= ? <unavailable>`, and `<... clone resumed> <unfinished ...>) = ?`, with an
 // unfinished call followed only by the task's exit) when the call is ignored,
-// a spawn, or read-only and the group was ending.  Traces that were refused now
-// parse, so every weak key changes.
+// fork, vfork, or a clone with readable and allowed flags.  A call that reads is
+// still refused.  Traces that were refused now parse, so every weak key changes.
 const RecorderVersion = 5
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved

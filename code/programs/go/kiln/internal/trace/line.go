@@ -128,21 +128,16 @@ import (
 // shared by both readers:
 //
 //   - an ignored-class call (tgkill) is dropped, as it always was;
-//   - a spawn (clone, fork, vfork) is dropped and no spawn is recorded.  If the
-//     child did start, its first line has no spawn record: orphan-pid, which
-//     fails closed;
-//   - a read-only call (a metadata call, a listing, an open whose VISIBLE flags
-//     include O_RDONLY and none of O_CREAT, O_TRUNC, O_WRONLY, O_RDWR, O_APPEND,
-//     O_TMPFILE) is dropped, but only for a thread group that was itself ending:
-//     the exit record carries the call's line (record.dropped) and pass 2 checks
-//     (model.dropDying, checkDying);
-//   - everything else (a write, a network call, chdir, fchdir, exec, an open whose
-//     flags cannot be read, an unknown or refused name) stays unresumed-call.
+//   - fork and vfork are dropped and no spawn is recorded.  A clone is dropped
+//     only when its flags are readable and allowed (flags= present, every token
+//     a known name, no CLONE_UNTRACED or CLONE_NEW*).  If the child did start,
+//     its first line has no spawn record: orphan-pid, which fails closed;
+//   - everything else stays unresumed-call: a write, a network call, chdir, exec,
+//     and every call that READS (stat, listing, open).  The model infers reads
+//     only from the open and stat records, so a dropped one would remove an input
+//     from the read set, and a live sibling thread (or a sibling's fork or exec)
+//     can still use the descriptor or the buffer.
 //
-// The read-only drop is sound because the task never returned from the call, so
-// nothing it would have read can reach any output, and because its group was
-// ending, so it cannot have gone on to use it.
-
 // Events are recorded in the order calls COMPLETE (when the return value is
 // known), which for a split call is the position of its "resumed" line.
 
@@ -273,11 +268,6 @@ type record struct {
 	// ghosts are the phantom execve lines (D33) that were accepted against this
 	// completed execve; pass 2 checks they share its thread group.
 	ghosts []ghost
-	// dropped, on an exit record, is the line of a read-only call (a metadata
-	// call, a listing, a read-only open) that the exit dropped because the
-	// task died inside it (the dying-call rule).  Pass 2 drops it only for a
-	// thread group that was itself dying (see model.checkDying); 0 means none.
-	dropped int
 }
 
 // ghost is a phantom "execve(" line accepted by ghostOwner: the pid that
@@ -398,116 +388,94 @@ func (st *lineState) clearPending(pid int) {
 // its owner and ends; a call the task died inside (D35) ends under
 // dyingPolicy; anything else is an unresumed call, refused at the call's own
 // line.
-//
-// It returns, besides the refusal, the line of a read-only call it dropped
-// under the dying-call rule, which the exit record carries to pass 2 (0 when it
-// dropped none): pass 2 keeps the drop only for a thread group that was itself
-// dying.
-func exitInsideCall(st *lineState, pid int, ex *Exit) (dropped int, e *Error) {
+func exitInsideCall(st *lineState, pid int, ex *Exit) *Error {
 	p := st.pend[pid]
 	if p == nil {
-		return 0, nil
+		return nil
 	}
 	if p.dying {
 		// strace already said the result is unknown because the task died: the
 		// policy alone decides, with no other way out.
-		drop, guard := dyingPolicy(p)
-		if !drop {
-			return 0, incomplete(p.line, reasonUnresumed)
+		if !dyingPolicy(p) {
+			return incomplete(p.line, reasonUnresumed)
 		}
 		st.clearPending(pid)
-		if guard {
-			return p.line, nil
-		}
-		return 0, nil
+		return nil
 	}
 	if lookup(p.name).class == classIgnored || p.dead {
 		st.clearPending(pid)
-		return 0, nil
+		return nil
 	}
 	if l := ghostOwner(st, pid, p, ex); l != nil {
 		l.ghosts = append(l.ghosts, ghost{pid, p.line})
 		st.clearPending(pid)
-		return 0, nil
+		return nil
 	}
 	// A task killed out of its syscall-ENTRY stop prints "<unfinished ...>" and
 	// then only its exit: the same dying-call rule applies (shape 3).
-	if drop, guard := dyingPolicy(p); drop {
+	if dyingPolicy(p) {
 		st.clearPending(pid)
-		if guard {
-			return p.line, nil
-		}
-		return 0, nil
+		return nil
 	}
-	return 0, incomplete(p.line, reasonUnresumed)
+	return incomplete(p.line, reasonUnresumed)
 }
 
-// dyingPolicy is the table of the dying-call rule (KILN04 D35): what a call may
-// be, when its task died inside it and its result is therefore unknown.  drop
-// says the call is discarded (it never ran, or its effect died with the task);
-// guard says the drop is conditional on pass 2 finding the task's thread group
-// dying too.
+// dyingPolicy is the table of the dying-call rule (KILN04 D35): whether the call
+// a task died inside, whose result is therefore unknown, may be discarded.
 //
-//	ignored class (tgkill, wait4, ...)          drop        no path, no effect
-//	spawn (clone, fork, vfork)                  drop        no spawn is recorded;
-//	                                                         a child that did start
-//	                                                         is an orphan-pid, which
-//	                                                         fails closed
-//	metadata, listing                           drop+guard  read-only
-//	open, openat whose VISIBLE flags are read-only
-//	                                            drop+guard
-//	everything else (write, network, chdir,     refuse      its effect, or its
-//	  exec, an open whose flags cannot be read,             flags, may be lost
-//	  an unknown or refused name)
-func dyingPolicy(p *pending) (drop, guard bool) {
+//	ignored class (tgkill, wait4, ...)      drop    no path, no effect
+//	fork, vfork                             drop    no spawn is recorded; a child
+//	                                                 that did start is an
+//	                                                 orphan-pid, which fails closed
+//	clone with readable, allowed flags      drop    as above.  flags= must be
+//	                                                 present, every token a known
+//	                                                 name, and none CLONE_UNTRACED
+//	                                                 or CLONE_NEW* (analyzeClone)
+//	everything else                         refuse  see below
+//
+// A call that READS (a stat, a listing, an open) is deliberately NOT dropped.
+// The model infers what a step read only from the open and stat records (read
+// is not traced), so dropping one removes an input from the read set.  Its
+// result is lost, not absent: a live sibling thread may use the descriptor or
+// the buffer, a sibling's fork in the window copies it, a sibling's exec keeps
+// the descriptor open without CLOEXEC.  No guard short of "shares nothing with
+// any live task" is sound, and that excludes every thread.  Writes, network
+// calls, chdir, exec and unknown or refused names stay refused for the same
+// reason.
+func dyingPolicy(p *pending) bool {
 	ent := lookup(p.name)
 	switch ent.class {
 	case classIgnored:
-		return true, false
+		return true
 	case classHandled:
 	default:
-		return false, false
+		return false
 	}
 	switch ent.role {
-	case roleFork, roleClone:
-		return true, false
+	case roleFork:
+		return true
+	case roleClone:
+		return cloneArgsAllowed(p.args)
 	}
-	switch ent.kind {
-	case KindMetadata, KindListing:
-		return true, true
-	case KindOpen:
-		// creat always writes; openat2 keeps its flags inside a struct.  Only
-		// open and openat have a flags argument we can read as text.
-		if ent.role == roleCreat || p.name == "openat2" || ent.flags < 1 || ent.flags > len(p.args) {
-			return false, false
-		}
-		if readOnlyOpenFlags(p.args[ent.flags-1]) {
-			return true, true
-		}
-	}
-	return false, false
+	return false
 }
 
-// readOnlyOpenFlags reports whether an open's flags argument, as strace printed
-// it, is one we can read and that cannot create, truncate or write: a "|" list
-// of O_ names that includes O_RDONLY and none of O_CREAT, O_TRUNC, O_WRONLY,
-// O_RDWR, O_APPEND, O_TMPFILE.  A hex leftover or any other word means a bit we
-// cannot name, so it is not readable and the call stays refused.
-func readOnlyOpenFlags(text string) bool {
-	rdonly := false
-	for _, f := range strings.Split(text, "|") {
-		f = strings.TrimSpace(f)
-		if !strings.HasPrefix(f, "O_") || len(f) == 2 || !isErrnoName(f) {
+// cloneArgsAllowed reports whether a clone's printed arguments are readable and
+// allowed: flags= is there (analyzeClone), every token is a name strace prints
+// (knownCloneToken), and none is CLONE_UNTRACED or CLONE_NEW* (analyzeClone's
+// own refusal).  A clone with any other flags may have escaped the tracer or the
+// sandbox's namespaces, so its child could be anything.
+func cloneArgsAllowed(args []string) bool {
+	flags, _, reason := analyzeClone(args)
+	if reason != "" {
+		return false
+	}
+	for _, tok := range strings.Split(flags, "|") {
+		if !knownCloneToken[strings.TrimSpace(tok)] {
 			return false
-		}
-		switch f {
-		case "O_CREAT", "O_TRUNC", "O_WRONLY", "O_RDWR", "O_APPEND", "O_TMPFILE":
-			return false
-		case "O_RDONLY":
-			rdonly = true
 		}
 	}
-	return rdonly
+	return true
 }
 
 // diedInCall records that the pid's call (name, its entry arguments) has an
@@ -959,11 +927,10 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		// A process killed or exiting inside a call that has no effect on paths
 		// is normal (wait4 interrupted by SIGKILL).  A path call that never
 		// returned is not: its result is unknown (but see D33).
-		dropped, e := exitInsideCall(st, pid, ex)
-		if e != nil {
+		if e := exitInsideCall(st, pid, ex); e != nil {
 			return nil, e
 		}
-		return &record{line: lineNo, pid: pid, exit: ex, dropped: dropped}, nil
+		return &record{line: lineNo, pid: pid, exit: ex}, nil
 	case strings.HasPrefix(body, "--- "):
 		if !strings.HasSuffix(body, " ---") || len(body) < 8 {
 			return nil, incomplete(lineNo, reasonUnparsable)

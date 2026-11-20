@@ -244,9 +244,6 @@ type spawn struct {
 	shareFS bool
 	flags   string
 	line    int // line of the parent's completed fork/clone
-	// vm: the child shares its parent's address space (CLONE_VM, or vfork).  The
-	// dying-call rule refuses a group led by such a child until it execs.
-	vm bool
 }
 
 // maxProcessDepth bounds the parent chain walked when a process is created.
@@ -313,19 +310,7 @@ type model struct {
 	exitCand  map[int]int
 	rawExits  map[int]bool
 	walkSteps int // thread-chain steps taken (a test watches this stays linear)
-	// The dying-call rule (D35), pass 2.  groupExits counts, per thread group
-	// (the leader's pid), the exit_group calls that began and did not return; a
-	// retracted one is taken back.  execedGroup: a thread of the group made a
-	// successful exec.  guards are the read-only calls dropped at an exit, each
-	// kept only if its group turns out to have been dying (checkDying).
-	groupExits  map[int]int
-	execedGroup map[int]bool
-	guards      []dyingGuard
 }
-
-// dyingGuard is a read-only call the dying-call rule dropped at a pid's exit:
-// the call's line and the thread group the pid belongs to.
-type dyingGuard struct{ group, line int }
 
 // Parse reads a strace trace from r.  initialCwd is the working directory of
 // the first process (absolute).  Zero fields of limits take DefaultLimits.
@@ -394,9 +379,6 @@ func newModel(lim Limits, opts Options, root int, initialCwd string) *model {
 		initMemo: map[int]bool{},
 		exitCand: map[int]int{},
 		rawExits: map[int]bool{},
-
-		groupExits:  map[int]int{},
-		execedGroup: map[int]bool{},
 	}
 }
 
@@ -415,11 +397,10 @@ func (m *model) buildSpawns(recs []record) *Error {
 		if c == nil {
 			continue
 		}
-		var share, vm bool
+		var share bool
 		var flags string
 		switch c.name {
 		case "fork", "vfork":
-			vm = c.name == "vfork"
 		case "clone", "clone3":
 			var r string
 			if c.name == "clone3" {
@@ -427,7 +408,6 @@ func (m *model) buildSpawns(recs []record) *Error {
 			} else {
 				flags, share, r = analyzeClone(c.args)
 			}
-			vm = hasFlag(flags, "CLONE_VM")
 			if r != "" && c.name == "clone" && filterAnswered("clone", c.ret) && cloneOnlyForbidden(c.args) {
 				// The filter's own EPERM for a clone with CLONE_UNTRACED or
 				// CLONE_NEW* (section 4.3 item 5): nothing was spawned.
@@ -460,7 +440,7 @@ func (m *model) buildSpawns(recs []record) *Error {
 		if _, dup := m.spawns[child]; dup || child == m.root || child == recs[i].pid {
 			return incomplete(recs[i].line, reasonPidReuse)
 		}
-		m.spawns[child] = spawn{parent: recs[i].pid, shareFS: share, flags: flags, line: recs[i].line, vm: vm}
+		m.spawns[child] = spawn{parent: recs[i].pid, shareFS: share, flags: flags, line: recs[i].line}
 		m.spawnList = append(m.spawnList, child)
 	}
 	for _, b := range bad {
@@ -854,9 +834,6 @@ func (m *model) apply(rec *record) *Error {
 		m.trace.Exits = append(m.trace.Exits, *rec.exit)
 		m.trace.ExitLines = append(m.trace.ExitLines, rec.line)
 		p.Exit = rec.exit // its own allocation: never aliases the slice above
-		if rec.dropped != 0 {
-			return m.dropDying(p, rec)
-		}
 		return nil
 	}
 	if p.exited {
@@ -871,18 +848,6 @@ func (m *model) apply(rec *record) *Error {
 			if m.threadGroupOf(g.pid) != owner {
 				return incomplete(g.line, reasonUnresumed)
 			}
-		}
-	}
-	if rec.exitCall && !rec.rawExit {
-		// The dying-call rule's evidence that this thread group is ending: an
-		// exit_group began and has not returned (a failed one is taken back).
-		g := m.threadGroupOf(p.Pid)
-		if rec.retract {
-			if m.groupExits[g] > 0 {
-				m.groupExits[g]--
-			}
-		} else {
-			m.groupExits[g]++
 		}
 	}
 	if rec.exitCall && rec.retract {
@@ -1053,52 +1018,10 @@ func (m *model) applyHelperRoot(p *proc, rec *record) *Error {
 	return nil
 }
 
-// dropDying is pass 2's half of the dying-call rule (D35) for a pid whose exit
-// dropped a read-only call it died inside (rec.dropped is that call's line).
-// The drop is sound only when the task died because its thread group was
-// ending.  Two conditions, both fail closed with unresumed-call at the call's
-// line:
-//
-//   - the group's leader was not spawned sharing its parent's address space
-//     (CLONE_VM, vfork) without an exec since: until the exec, strace failing
-//     to read the tracee's memory says nothing about the tracee dying;
-//   - the group made an exit_group, or its leader was killed.  Whether that is
-//     so is judged in finish, over the whole trace: strace reads each tracee's
-//     events as the kernel reports them, so a dying thread's exit line may come
-//     before the exit_group line of the thread that ended the group.
-func (m *model) dropDying(p *proc, rec *record) *Error {
-	g := m.threadGroupOf(p.Pid)
-	if sp, ok := m.spawns[g]; ok && sp.vm && !m.execedGroup[g] {
-		return incomplete(rec.dropped, reasonUnresumed)
-	}
-	m.guards = append(m.guards, dyingGuard{group: g, line: rec.dropped})
-	return nil
-}
-
-// checkDying settles the guards dropDying queued: a dropped call stays dropped
-// only when its thread group made an exit_group, or its leader was killed.
-func (m *model) checkDying() *Error {
-	for _, g := range m.guards {
-		if m.groupExits[g.group] > 0 {
-			continue
-		}
-		if lp := m.procs[g.group]; lp != nil && lp.Exit != nil && lp.Exit.Killed {
-			continue
-		}
-		return incomplete(g.line, reasonUnresumed)
-	}
-	return nil
-}
-
 // finish checks completeness: every pid that exists (seen, or returned by a
 // clone) has an exit line.  A spawned child with no lines at all is either
 // untraced or lost; both are fatal.
 func (m *model) finish() *Error {
-	// First: a dropped dying call without group evidence is the call's own
-	// unresumed-call, whatever else is also missing.
-	if e := m.checkDying(); e != nil {
-		return e
-	}
 	for _, child := range m.spawnList {
 		if _, e := m.get(child, 0); e != nil {
 			return e
@@ -1283,7 +1206,6 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 			ev.Argv = parseArgv(c.args[ai-1])
 		}
 		if ent.role == roleExec && c.ret.ok() {
-			m.execedGroup[m.threadGroupOf(p.Pid)] = true
 			p.LastExec = ev.Path
 			if ev.Path == "" {
 				p.LastExec = ev.DirfdPath

@@ -11,17 +11,21 @@ package main
 //	openat(AT_FDCWD</w>, 0x7f.., O_RDONLY|O_CLOEXEC <unfinished ...>   (then only the exit)
 //
 // Go's os.Exit is exit_group, so a Go program whose workers are inside file
-// system calls when main returns produces them.  This test runs such a program
-// under the recorder's own strace argv, many times so the race is hit often,
-// and requires that every trace parses with no refusal and with both readers
-// agreeing (a cross-check divergence is a failure, an allowed stricter-only one
-// too).
+// system calls when main returns produces them.  The workers here really do die
+// inside openat and newfstatat, and the rule REFUSES those (a call that reads is
+// never dropped: its result is lost, not absent), so this test must not insist
+// that the trace parses.  It runs such a program under the recorder's own strace
+// argv, many times so the race is hit often, and requires:
 //
-// Whether a given run shows a dying call is the kernel's timing, so the test
-// does NOT insist on one: it insists that the loop really ran (every child
-// exited through exit_group) and logs how many dying shapes it saw.  A run that
-// saw none is still a real Go trace through both readers; a run that sees a
-// shape the parser refuses fails, with the lines around it.
+//   - the loop ran: every child exited (iterations=20 ok=20) through exit_group;
+//   - the two readers agree on the whole trace, with no allowed stricter-only
+//     divergence;
+//   - the trace either parses, or is refused as unresumed-call on a call of the
+//     handled (path) class, and nothing else: any other refusal is a shape the
+//     parser does not know and fails the test with the lines around it.
+//
+// How many dying shapes a run shows is the kernel's timing, so it is logged, not
+// asserted.
 
 import (
 	"os"
@@ -124,10 +128,10 @@ func dyingUnresumed(raw []byte) int {
 }
 
 // TestSandboxStraceDyingThreads: a Go step whose workers are killed mid-call by
-// os.Exit, twenty times over, produces traces that parse with no refusal and no
-// disagreement between the two readers.
+// os.Exit, twenty times over, gives traces the two readers agree on, which parse
+// or are refused only as unresumed-call on a handled call.
 func TestSandboxStraceDyingThreads(t *testing.T) {
-	r := runStracedWith(t, "{pkg}/probe-bin "+dyingProbeCommand, func(f *sandboxFixture) {
+	r := runStracedOr(t, "{pkg}/probe-bin "+dyingProbeCommand, func(f *sandboxFixture) {
 		// The test binary lives under /tmp, which the step does not see: run a
 		// copy from inside the checkout.
 		exe, err := os.Executable()
@@ -141,9 +145,8 @@ func TestSandboxStraceDyingThreads(t *testing.T) {
 		if err := os.WriteFile(filepath.Join(f.pkg, "probe-bin"), b, 0o755); err != nil {
 			t.Fatal(err)
 		}
-	})
-	// runStracedWith already failed the test if the trace was refused.  The loop
-	// must really have run, or the parse above proved nothing.
+	}, func(e *trace.Error) bool { return e.Reason == "unresumed-call" })
+	// The loop must really have run, or nothing below proved anything.
 	want := "iterations=" + strconv.Itoa(dyingIterations) + " ok=" + strconv.Itoa(dyingIterations)
 	if !strings.Contains(r.stdout, want) {
 		t.Fatalf("the step's loop did not finish: %q, want %q (stderr %q)\n%s", r.stdout, want, r.stderr, r.tail(30))
@@ -155,12 +158,23 @@ func TestSandboxStraceDyingThreads(t *testing.T) {
 	if n := len(dyingExitGroup.FindAll(raw, -1)); n < dyingIterations {
 		t.Fatalf("%d exit_group lines in the trace, want at least %d (one per child):\n%s", n, dyingIterations, r.tail(30))
 	}
+	// A refusal that runStracedOr tolerated is unresumed-call; it must be on a
+	// call of the handled class (a stat, an open, a listing), at its own line.
+	if r.refusal != nil {
+		lines := strings.Split(string(raw), "\n")
+		if r.refusal.Line < 1 || r.refusal.Line > len(lines) {
+			t.Fatalf("the refusal %v names no line of the trace", r.refusal)
+		}
+		_, body, _ := strings.Cut(lines[r.refusal.Line-1], " ")
+		name, _, _ := strings.Cut(strings.TrimLeft(body, " "), "(")
+		if trace.SyscallClass(name) != "handled" {
+			t.Fatalf("unresumed-call on %q (class %q), not a handled call: %s", name, trace.SyscallClass(name), lines[r.refusal.Line-1])
+		}
+		t.Logf("refused as unresumed-call on %s at line %d (expected: the rule never drops a call that reads)", name, r.refusal.Line)
+	}
 	// Both readers agree on the whole trace (the production path is the grammar
 	// path alone; the old scanner is the oracle).
-	_, perr, mismatch, allowed := trace.ParseCrossChecked(strings.NewReader(string(raw)), r.f.pkg, trace.Options{HelperRoot: true, HelperExe: r.f.exe})
-	if perr != nil {
-		t.Fatalf("the cross-checked parse refused the trace: %v\n%s", perr, r.tail(30))
-	}
+	_, _, mismatch, allowed := trace.ParseCrossChecked(strings.NewReader(string(raw)), r.f.pkg, trace.Options{HelperRoot: true, HelperExe: r.f.exe})
 	if mismatch != nil {
 		t.Fatalf("the readers disagree: %v", mismatch)
 	}
