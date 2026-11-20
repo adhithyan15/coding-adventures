@@ -264,6 +264,41 @@ def _slim_with_extras(n):
     return tamper
 
 
+def _bool_binder(i):
+    return [f"b{i}", {"domain": {"d": "bool", "size": 2}, "type": "Bool"}]
+
+
+def nine_binders(p):
+    """Nine ``Bool`` binders (a suite has 0 to 8, R75): the row stays consistent, so the count is the one fault."""
+    p["suite"]["binders"] = [_bool_binder(i) for i in range(9)]
+    p["suite"]["product"] = 512
+    p["suite"]["chunks"] = 1
+    p["suite"]["slim_chunks"] = [0]
+    p["chunk"] = 0
+
+
+def product_over_2_28(p):
+    """Three ``u8_all`` binders and a ``nat_count`` of 17 values: 17 * 2^24 = 285,212,672 > 2^28 (R75)."""
+    u8 = {"domain": {"d": "u8_all", "size": 256}, "type": "U8"}
+    p["suite"]["binders"] = [["a", u8], ["b", u8], ["c", u8],
+                             ["n", {"domain": {"d": "nat_count", "k": 16, "size": 17}, "type": "Nat"}]]
+    p["suite"]["product"] = 17 * 2**24
+    p["suite"]["chunks"] = -(-17 * 2**24 // 65536)
+    p["suite"]["slim_chunks"] = [0, p["suite"]["chunks"] - 1]
+
+
+def errs_of(names):
+    """The ``errs`` of the ``result`` binder replaced by ``names`` (the size is kept when the count is) (R72)."""
+
+    def tamper(p):
+        domain = p["suite"]["binders"][0][1]["domain"]
+        domain["errs"] = list(names)
+        domain["size"] = domain["ok"]["size"] + len(names)
+        p["suite"]["product"] = domain["size"]
+
+    return tamper
+
+
 def build_rows(kits):
     """The ``v2-chunk`` rows; ``kits`` maps ``"kit"`` and ``"small"`` to the derived :class:`Kit` objects."""
     rows = []
@@ -297,6 +332,14 @@ def build_rows(kits):
     add("two-bytes-first-chunk", "two bytes_d1 binders: a full first chunk", "kit", "two_bytes", 0, ok(FULL, 0))
     add("two-bytes-short-last-chunk", "the last chunk of a product that is not a multiple of the chunk size", "kit",
         "two_bytes", 1, ok(120409 - FULL, FULL), also_sequential=True)
+
+    # -- R70: an op with width_params; R75: a ground suite has no binder and one chunk of one case ---------------------
+    add("width-params-first-chunk", "a suite whose subject_op carries the static width [1]: eq_fixed over Bytes<1>", "width",
+        "fixed1", 0, ok(1024, 0))
+    add("width-params-last-chunk", "the last of 64 chunks of a suite over an op with width_params", "width", "fixed1", 63,
+        ok(1024, 64512), also_sequential=True)
+    add("ground-suite-no-binder", "a claim without a forall has no binder: product 1, one chunk, one admitted case",
+        "width", "ground", 0, ok(1, 0), also_sequential=True)
 
     # -- a recorded chunk_size of 1024 is used, never the default ---------------------------------------------------
     add("grid-first-chunk-1024", "chunk_size 1024: 64 chunks of 1,024 cases", "small", "grid", 0, ok(1024, 0))
@@ -388,6 +431,15 @@ def build_rows(kits):
         ("wrong-product", "product is not the product of the descriptor sizes", product_plus_one),
         ("chunk-equals-m", "chunk >= m: the first chunk past the end", chunk_is(17)),
         ("chunk-far-past-m", "chunk far past m", chunk_is(4096)),
+        ("nine-binders", "a suite row with nine binders (at most 8, R75)", nine_binders),
     ):
         add(f"corpus-{slug}", summary, S, R, 3, {"error": "corpus"}, tamper)
+    add("corpus-product-over-2-28", "a suite row whose product is over 2^28 (R75)", "kit", "big", 0, {"error": "corpus"},
+        product_over_2_28)
+    add("corpus-errs-in-another-order", "the errs of a result binder reorder the declared cases (R72: equality includes order)",
+        "kit", "res", 0, {"error": "corpus"}, errs_of(["WORSE", "BAD"]))
+    add("corpus-errs-name-not-declared", "the errs of a result binder name a case the error type does not declare (R72)",
+        "kit", "res", 0, {"error": "corpus"}, errs_of(["BAD", "MISSING"]))
+    add("corpus-errs-fewer-than-declared", "the errs of a result binder omit a declared case (R72)", "kit", "res", 0,
+        {"error": "corpus"}, errs_of(["BAD"]))
     return rows

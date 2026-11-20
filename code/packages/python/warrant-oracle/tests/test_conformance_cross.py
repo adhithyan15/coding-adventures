@@ -333,7 +333,7 @@ def test_the_v2_chunk_expectations_are_the_chunk_file_lines(kit):
         if "error" in case["expect"]:
             continue
         claim = case["suite"]["claim"]
-        which = "small" if claim in ("grid", "gap", "ragged") else "kit"
+        which = "small" if claim in ("grid", "gap", "ragged") else "width" if claim in ("fixed1", "ground") else "kit"
         line = lines_of(kit.kits[which], claim)[case["chunk"]]
         want = {"cases": int(line[1]), "first_admitted": int(line[2]), "calls": int(line[3]), "inputs_sha256": line[4]}
         if len(line) > 5:

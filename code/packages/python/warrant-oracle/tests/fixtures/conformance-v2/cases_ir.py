@@ -607,3 +607,100 @@ case("overflow-concat-65537-below-subject", "a concat past the limit below a sub
      models={**doubling_concat(5), "keepb": model([("a", "Bytes")], var("a"))},
      order=[f"x{k}" for k in range(1, 6)] + ["keepb"], ops={"same": op([("a", "Bytes")], "Bytes")},
      subjects={"same": "keepb"})
+
+
+# ===============================================================================================
+# 11. S5e (VER04r section 16.18): static widths, the overflow class under a guard, bytes literals, a count,
+#     level-missing by reach and a chain nothing calls
+# ===============================================================================================
+
+# -- R70: an op with width_params ------------------------------------------------------------------------------
+def wop(params, ret, widths=("N",)):
+    return {"params": [list(p) for p in params], "ret": ret, "requires": CORE, "width_params": list(widths)}
+
+
+EQF = wop([("a", "Bytes<N>"), ("b", "Bytes<N>")], "Bool")  # eq_fixed<N>(a: Bytes<N>, b: Bytes<N>) -> Bool
+# The stand-in has the op's signature with plain Bytes in place of each named-width type (R70).
+SAME = model([("a", "Bytes"), ("b", "Bytes")], ["eq", var("a"), var("b")])
+EQ_ARGS = dict(env=[e("a", "Bytes<2>", "0a0b"), e("b", "Bytes<2>", "0a0b")], models={"same": SAME},
+               ops={"eq_fixed": EQF}, subjects={"eq_fixed": "same"})
+
+
+def eq_fixed(*tail):
+    return ["subject_op", "eq_fixed", [var("a"), var("b")], *tail]
+
+
+case("width-params-one-width", "a subject_op over an op with width_params carries one static width, [2]", eq_fixed([2]),
+     ok("Bool", True, 1), **EQ_ARGS)
+case("width-params-width-mismatch", "a static width of 3 does not accept Bytes<2> arguments", eq_fixed([3]),
+     err("ill-typed"), **EQ_ARGS)
+case("width-params-width-zero", "the width 0 is a width: Bytes<0> arguments", eq_fixed([0]), ok("Bool", True, 1),
+     env=[e("a", "Bytes<0>", ""), e("b", "Bytes<0>", "")], models={"same": SAME}, ops={"eq_fixed": EQF},
+     subjects={"eq_fixed": "same"})
+case("width-params-missing-width", "an op with width_params and a subject_op with no fourth element", eq_fixed(),
+     err("ill-typed"), **EQ_ARGS)
+case("width-params-extra-width", "two widths for one width_param", eq_fixed([2, 2]), err("ill-typed"), **EQ_ARGS)
+case("width-params-width-over-4096", "the width 4,097", eq_fixed([4097]), err("ill-typed"), **EQ_ARGS)
+case("width-params-empty-widths-for-an-op-with-one", "an empty widths list for an op that has one width_param",
+     eq_fixed([]), err("ill-typed"), **EQ_ARGS)
+case("width-params-widths-on-an-op-without", "a widths list on an op without width_params", ["subject_op", "bump", [var("a")], [2]],
+     err("ill-typed"), **SC)
+case("width-params-empty-widths-on-an-op-without", "an empty widths list on an op without width_params (the generator "
+     "never writes one)", ["subject_op", "bump", [var("a")], []], err("ill-typed"), **SC)
+
+# -- R71: the class of an overflow under an impure guard -----------------------------------------------------------
+OVI = ["eq", OVN, lit("Int", 0)]  # a pure Bool node that overflows whenever it runs
+IF_GUARD = ["if", S6, OVI, blit(False)]  # the branch is subject-independent: the generator's trace never reaches it
+AND_GUARD = ["and", S6, OVI]
+case("overflow-if-impure-guard-runs-case-class", "if subject(..) then <pure overflow> else false: the stand-in makes "
+     "the guarded node run, and the overflow is the case's", IF_GUARD, err("ir-overflow", "case"), **SC)
+case("overflow-if-impure-guard-skips-the-node", "the same tree with a stand-in whose answer takes the else branch: a value "
+     "and one call", IF_GUARD, ok("Bool", False, 1), env=[e("a", "U8", "0")], models={"inc": INC}, ops={"bump": BUMP},
+     subjects={"bump": "inc"})
+case("overflow-and-impure-guard-runs-case-class", "subject(..) and <pure overflow>: the right operand runs and the "
+     "overflow is the case's", AND_GUARD, err("ir-overflow", "case"), **SC)
+case("overflow-and-impure-guard-skips-the-node", "the same and with a false left operand: the overflow does not run",
+     AND_GUARD, ok("Bool", False, 1), env=[e("a", "U8", "0")], models={"inc": INC}, ops={"bump": BUMP},
+     subjects={"bump": "inc"})
+case("overflow-if-pure-guard-corpus-class", "the twin with a pure guard: the generator evaluates the taken branch, so "
+     "the overflow is the corpus's", ["if", A5, OVI, ["if", S6, blit(True), blit(False)]],
+     err("ir-overflow", "corpus"), **SC)
+BOOM = model([("a", "U8")], OVI)  # overflows whatever its argument is
+case("overflow-in-model-under-a-subject-argument-case-class", "a model body that overflows, called with a subject call "
+     "as an argument: the walk never evaluates the body, so the overflow is the case's", call("boom", S),
+     err("ir-overflow", "case"), env=[e("a", "U8", "5")], models={"inc": INC, "boom": BOOM}, ops={"bump": BUMP},
+     subjects={"bump": "inc"})
+case("overflow-in-model-with-a-pure-argument-corpus-class", "the same model called with a pure argument is the corpus's",
+     call("boom", var("a")), err("ir-overflow", "corpus"), env=[e("a", "U8", "5")], models={"boom": BOOM})
+
+# -- R73: a bytes literal --------------------------------------------------------------------------------------------
+BYTES2 = model([("a", "Bytes<2>")], ["eq", ["len", var("a")], lit("Nat", 2)])
+case("lit-bytes-into-a-fixed-width-parameter", "a literal of two bytes passed to a Bytes<2> parameter has the static "
+     "type Bytes<2>", call("two", lit("Bytes", "0a0b")), ok("Bool", True), models={"two": BYTES2})
+case("lit-bytes-too-short-for-a-fixed-width-parameter", "a literal of three bytes does not flow to Bytes<2>",
+     call("two", lit("Bytes", "0a0b0c")), err("ill-typed"), models={"two": BYTES2})
+case("lit-written-type-bytes-n", "a lit whose written type is Bytes<2> (the written type is always Bytes)",
+     ["lit", {"type": "Bytes<2>", "value": "0a0b"}], err("ill-typed"))
+case("lit-object-form-bool", "a Bool literal is the bare form: the object form with type Bool",
+     ["lit", {"type": "Bool", "value": True}], err("ill-typed"))
+
+# -- R74: the count of take and drop ----------------------------------------------------------------------------------
+case("ill-typed-take-count-fixed-width", "a fixed-width count: take(b, 1u8)", ["take", var("b"), lit("U8", 1)],
+     err("ill-typed"), env=U)
+case("ill-typed-drop-count-fixed-width", "a fixed-width count: drop(b, 1u8)", ["drop", var("b"), lit("U8", 1)],
+     err("ill-typed"), env=U)
+
+# -- R69: level-missing by what ir reaches ------------------------------------------------------------------------------
+case("level-missing-env-tuple-type", "an env entry of a tuple type at levels ir.core: the type is ir.tuple, the tag is not "
+     "needed", blit(True), err("level-missing"), env=[e("t", "(U8,U8)", ["1", "2"])])
+case("level-missing-env-list-type", "an env entry of type List<U8> at levels ir.core: the type is the reserved ir.list "
+     "(D63)", blit(True), err("level-missing"), env=[e("l", "List<U8>", ["1"])])
+case("level-missing-model-not-reached-is-a-value", "a model with an ir.fixed tag that ir does not call causes no "
+     "level-missing, and the case's requires is ir.core", blit(True), ok("Bool", True),
+     models={"fx": model([("a", "U8")], ["bit_not", var("a")])})
+
+# -- R77: the chain depth covers every model, called or not --------------------------------------------------------------
+case("depth-model-chain-65-uncalled", "a chain of 65 models that nothing calls: the depth of m65 is 65", blit(True),
+     err("depth"), models=chain(65), order=[f"m{k}" for k in range(1, 66)])
+case("depth-model-chain-64-uncalled-is-a-value", "a chain of 64 models that nothing calls is accepted", blit(True),
+     ok("Bool", True), models=chain(64), order=[f"m{k}" for k in range(1, 65)])
