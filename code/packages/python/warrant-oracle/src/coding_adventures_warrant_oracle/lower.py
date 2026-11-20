@@ -92,6 +92,21 @@ _FIXED_MESSAGE = "fixed-width built-ins need ir.fixed"
 _OPTION_MESSAGE = "Option is an IR-only intermediate (its only consumer is unwrap_or)"
 _LEVEL_SEQ = frozenset(["fold", "map", "all", "any", "count"])
 
+#: The names every document reserves (VER04 section 2; the checker's ``V0_BUILTINS``): the core
+#: types, the core built-ins and the four constructors.
+_RESERVED_V0 = frozenset(
+    [
+        "Bool", "Int", "Nat", "U8", "U64", "Bytes", "List", "Option", "Result",
+        "len", "at", "concat", "fixed", "div", "Some", "None", "Ok", "Err",
+    ]
+)  # fmt: skip
+#: The names a v1 document reserves on top (VER04j 1.2, VER04k 1.2): the fixed-width types, the
+#: ``ir.fixed`` built-ins, the ``ir.data`` and ``ir.seq`` sequence names, and ``take``/``drop``.
+#: Built from the tables above, so a built-in the lowerer learns is reserved with no second edit.
+_RESERVED_V1 = frozenset(
+    [*FIXED, *L.FIXED_TAGS, *_LEVEL_DATA, *_LEVEL_SEQ, "take", "drop"]
+) | _RESERVED_V0
+
 
 def is_fixed(ty: A.Ty) -> bool:
     return ty.head in FIXED
@@ -923,7 +938,9 @@ class _Lowerer:
         raise self.err("an unknown constructor in a pattern")
 
     def _reject_constructor_name(self, name: str) -> None:
-        if name in ("Some", "None") or _is_ctor(self.spec, name):
+        # A record's name is both its type and its one constructor (the checker keeps it in
+        # ``ctor_index``), so a bind spelling a record is refused like a variant constructor.
+        if name in ("Some", "None") or name in self.spec.records or _is_ctor(self.spec, name):
             raise self.level(L.DATA, "constructor patterns need ir.data")
         if name in ("Ok", "Err"):
             raise self.err("Ok and Err are constructors, not names")
@@ -932,6 +949,26 @@ class _Lowerer:
         """Declare a pattern binder: a duplicate or a shadowing name is a corpus error (A.1, R2)."""
         if name in seen:
             raise OracleError("corpus", "the same bind name twice in one pattern")
+        spec = self.spec
+        # A bind spelling a model, an operation, an error type or a reserved built-in is refused
+        # (CV2-F8; the checker's ``check_arm_binder``, W0203).  The checker reads a name in a body
+        # by what it is declared as, so a bind called ``take`` or ``rotl`` would let the two
+        # tools disagree about what the name refers to inside the arm: the checker types ``take(..)``
+        # as the built-in while an evaluator would call the bound value.  Refusing the bind keeps
+        # every name meaning one thing.  Constructors never reach here (see
+        # :meth:`_reject_constructor_name`).  Built-ins are version scoped: a v0 document may bind
+        # a name that only a v1 document reserves.
+        reserved = _RESERVED_V1 if spec.version == "v1" else _RESERVED_V0
+        if (
+            name in spec.model_names
+            or name in spec.ops
+            or name in spec.errors
+            or name in reserved
+        ):
+            raise OracleError(
+                "corpus",
+                "a bind name shadows a model, an operation, an error type or a reserved built-in",
+            )
         if name in self.scope or name == "result":
             raise OracleError(
                 "corpus", "a bind name shadows a binder, a parameter, result or an outer bind"
