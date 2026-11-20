@@ -1083,6 +1083,13 @@ Print these with every number, because each one limits what it supports:
     (15 solver groups and the three B1 groups, which are identical by design) have
     fewer than five distinct `instance_sha256`. Each group's line is its worst
     seed's own row, every cell from that one row.
+11. **B5 is a proxy for equivalence sweeping on compiled code, and `fuse` is
+    synthetic (planned, VOS-028c3; section 8.6.3).** `fuse = w` inserts runs of
+    accumulating `add`s that the reference right-nests; no compiler is known to
+    produce that divergence at that spacing. A green B5 shows that a sweeper of
+    this design can certify equivalence points at the stated spacing on this shape;
+    it does not show that real compiled code has such points. Only VOS-029b's
+    re-run on the real object can.
 
 ### 8.5 Current decision state
 
@@ -1217,6 +1224,157 @@ toys, VOS00 section 14.3 D4):
   one obligation per index and a cut between accesses, and keep a word from being
   updated twice in one obligation (the D2 and D3 cliff when k exceeds T).
 
+### 8.6 The re-plan (VOS-028c)
+
+**Status: specification, pre-registered before any run.** Section 8.5 left the
+decision at row 1 with a supported reading narrower than its name: a *cut-density*
+constraint. VOS-028c re-plans on that reading in three pull requests: VOS-028c1
+(this section and the backlog, docs only), VOS-028c2 (the probe's budgets, `merge
+--add` and hardening, no new experiment; section 9.12) and VOS-028c3 (the new
+experiments, one recorded run and the decision below). Everything marked *planned*
+is not built; the generated table of section 9.8 and the decision of section 8.5 are
+untouched by this section. **The decision rule below is fixed here, before any new
+row exists**: a change to a number, a knob or a row of the table after the results
+are seen is a change to this specification and a re-run, never a tuning.
+
+**What this section does not change.** The thresholds of 8.3 stay for every
+experiment already recorded. The `drat-check` limits are never raised (section 6.3).
+No row of the recorded file is edited by hand.
+
+#### 8.6.1 The route budget
+
+An obligation is **route-green** iff it is green under 8.3 **and** it needs at most
+**50,000 conflicts** (8.3 allows 100,000) **and** `check_work` is at most **2^31**
+(half of `DEFAULT_MAX_WORK`, 2^32). It is a stricter predicate than green, computed
+from the same recorded fields (`worst_step_conflicts` for a chain or split, else
+`conflicts`; `check_work`, which for a chain is the maximum over its obligations),
+never typed. The two bounds answer two different facts of the recorded file:
+
+* Conflicts are not monotone in checker work: a 457,844-conflict proof was accepted
+  and a proof of about 83,000 was the smallest rejected for work (section 8.5), so a
+  conflict bound alone does not keep a proof inside the checker. The work bound
+  stands beside it.
+* **Measured evidence for the bound** (`/usr/bin/python3` over
+  `data/vos30-capacity-results.json`, 1,625 rows, recomputed for this section): of the
+  **559** rows with a recorded `check_work` whose worst obligation is at most 50,000
+  conflicts (540 UNSAT certified rows and 19 checked `collapsed` rows), every one is
+  accepted by the default checker, and the largest `check_work` is **1,253,093,947**
+  (0.58 of 2^31). Every one of the 24 rows the checker rejected has a worst obligation
+  of at least 311,668 conflicts. Accepted rows whose *row-level* conflicts are
+  30,000 to 82,835 reach `check_work` 2,514,237,761, above 2^31: that is why the cap
+  is 50,000 conflicts and not 82,000. A bound of 2^31 is supported with a factor of
+  1.7 of margin over the largest accepted row at or below the conflict cap.
+  The 86 rows at or below 50,000 conflicts that ended `unknown` ended on the 120 s
+  wall (VOS-D095), not on a verdict; they are not evidence either way.
+
+The budget is a property of an *obligation*, so it is also a design rule: an
+obligation must not be able to exceed it by construction. That is the next item.
+
+#### 8.6.2 Cut density K
+
+The cliff of 8.5 is chain depth: an obligation that chains more than about two to four
+non-structurally-matched 32-bit operations exceeds the budget, and a cut after every
+instruction is green by a factor of 60 or more. Define the **cut density K** as the
+largest spacing in {1, 2, 4} instructions at which B3 in certified mode is route-green
+at every length (25 to 1,000) and every divergence (5%, 25%, 100%) of the recorded
+grid; K is 0 (undefined) if even spacing 1 is not. **K is the route invariant:** no
+obligation spans more than K instructions of unmatched arithmetic. The recorded
+grid jumps from spacing 1 to 8, so spacings 2 and 4 are *planned* (VOS-028c2 adds the
+knobs `every2` and `every4` to B3; VOS-028c3 records them). K is an output of the
+measurement, not a choice: a larger K is cheaper to certify (fewer obligations) but is
+only claimed where the rows say it is route-green.
+
+#### 8.6.3 The experiments (planned, VOS-028c3)
+
+All run with five seeds, in certified mode where a mode applies, judged by the
+route-green predicate. None changes a recorded row: new rows are added by `merge
+--add` (section 9.2, planned) and the identities of recorded rows stay byte-identical.
+
+* **B3 additions** (fixes K). `cut` gains `every2` and `every4` over the existing 6 x 3
+  grid (lengths 25 to 1,000, divergence 5%, 25%, 100%), both modes: 360 rows, none in
+  the quick tier.
+* **D5, memory as split plus cut plus touched word** (section 4.4; the combination 8.5
+  records as not measured at all). T in {4, 16, 64, 256} words, k in {1, 4, 16}
+  accesses, split in {`index`, `none`}: 24 knobs, 120 rows; the quick knob is T = 4,
+  k = 1. With `split = index`, one obligation per (index, access), T * k of them: the
+  index is concrete, the pre-state is equated on the touched word only, and the written
+  word is compared. With `split = none`, k obligations with a symbolic index. The
+  **frame** (every other word unchanged) is a separate structural obligation per
+  section 3.4: it is expected to be `collapsed` with reason `frame-untouched` or
+  `propagation-only` (section 4.5), is reported in its own metrics and is excluded
+  from the capacity count; if it needs conflicts it is an ordinary obligation. Its
+  negative control (G3) needs **two mutants, both SAT and both replayed**: a wrong
+  index or dropped store (which the touched-word obligation catches) and a stray extra
+  store to another word (which only the frame obligation catches). The row is ok only
+  if both are caught. T = 256 with k = 16 is 4,096 obligations, above the roughly 1,000
+  of the feasibility count of 8.3; the row reports it and the memory verdict below
+  counts obligations at their own number, it does not hide them.
+* **B5, equivalence sweeping, a research experiment** (the route's escape hatch of
+  VOS00 section 12 row 9). Instance length in {25 (quick), 200, 1,000}, divergence in
+  {25%, 100%}, `fuse` in {1, 2, 4, 8}: 24 knobs, 120 rows. B2's divergence is a
+  per-instruction alternative encoding, so every instruction's output word is already
+  an equivalence point and sweeping B2 would rediscover B3 `every1` (a tautology, not a
+  test). The `fuse` knob makes the points sparser: `fuse = w` inserts runs of w
+  accumulating `add`s that the reference right-nests, so equivalence points occur only
+  every w instructions. **`fuse = 1` is B2**, and its `instance_sha256` must equal B2's
+  (a cross-rule of `validate`). The sweep is deterministic: one AIG for both sides;
+  256 seeded simulation patterns (`Aig::simulate`) give candidate classes up to
+  complement, the representative is the lowest node; candidates are proved in
+  topological order, each lemma a fresh CNF over its cone with already-merged nodes
+  substituted, cut at an 8-level frontier whose nodes are shared free inputs. A SAT
+  answer at the frontier is *possibly spurious*: the depth doubles up to the full cone.
+  Only a full-cone SAT is a real counterexample, and it refines the classes. Each UNSAT
+  lemma is DRAT-checked under the default limits. Outputs that do not merge form one
+  final obligation. Metrics added to a row: lemmas, candidates, refuted, escalations.
+  **B5 is green iff every lemma and the final obligation are route-green and the total
+  is under 600 s.** Lemma counts above 1,000 per entry are reported and not gated;
+  this is stated in advance. G3: the mutated program through the same sweep must end
+  SAT, its model checked against the **original unswept** control CNF and replayed on
+  the simulator. Negative control: a sweeper that merges on simulation signature
+  without proof is shown wrong on a mutant that agrees on all 256 patterns.
+
+#### 8.6.4 The decision table
+
+Evaluated **worst first; the first row whose condition holds is the outcome**; the table
+is **total** (an experiment that is missing, a row that is not green, a guard failure
+and anything else unclassified is red, as in 8.3). Pre-registered:
+
+| Order | Outcome | Condition | Consequence |
+|---|---|---|---|
+| R1 | No lane | A1 or A2 (N = 8 to 64) or B3 `every1` at 200 instructions, 25% is not route-green | X2 plus the monitor is the ceiling; VOS-029a to c unfunded |
+| R2 | Owned-compile lane mandatory | Not R1, and B5 is not route-green at 200 instructions, 25%, `fuse` = 2 | Fund VOS-029a unchanged (uses no cuts). VOS-029b waits on a source-map cut provider |
+| R3 | Compiled lane, reduced | Not R1/R2, and B5 red at 1,000 instructions or at `fuse` = 4, or K = 1 | Fund VOS-029a and b, sweeping as cut source under stated length/density limits |
+| R4 | Compiled lane | Otherwise | Fund VOS-029a and b |
+
+A red B5 at `fuse` = 2 is a valid, expected-possible outcome (R2), not a failure of the
+experiment: it means compiled code needs cuts by construction (the owned-compile lane
+of VER13 section 4.3 item 1), and open question 6 of 11.1 becomes a backlog row.
+B5 may also be red from lemma CNF size alone; that is reported as measured and not
+tuned away (changing the frontier is a specification change and a re-run).
+
+**Memory is an orthogonal verdict**, not a row of the table: if D5 is route-green at
+T = 64 and T = 256 with k = 16, the `thread-table` X3 (VOS-029b, VOS-C02x) runs at its
+shipped T; otherwise it runs at **T at most 16 per obligation** (section 8.5's
+guidance stands).
+
+**What VOS-029a hinges on.** Only on A1 and A2 route-green at every N and B3 `every1`
+route-green at 200 instructions, 25% divergence: not R1. The recorded worst cases are
+547 conflicts (A1 and A2) and 1,654 conflicts (B3 `every1`), both far inside 50,000,
+so re-funding VOS-029a unchanged is *expected*; it stays provisional until a named
+reviewer has regenerated the full tier (section 8.5). VOS-029a uses no cuts, so B5, D5
+and K do not gate it; they gate VOS-029b and the memory shapes.
+
+**Two-safety no longer gates VOS-029a.** Section 3.6 already says VOS-029 delivers no
+two-safety on a real entry; C1 is dropped from the shapes required for funding and
+the code-against-code trace shapes are their own backlog row (VOS-D116), outside this
+re-plan.
+
+**Re-plan decision (VOS-028c):** pending (VOS-028c3)
+
+**Proxy.** Every shape above is synthetic code with a synthetic divergence (section
+8.4); B5 in addition measures a proxy for compiled-code equivalence points (`fuse`
+is a knob of the generator, not something a compiler does).
+
 ---
 
 ## 9. The probe (VOS-028b)
@@ -1323,6 +1481,16 @@ malformed command line or an unreadable input (a gate never confuses the two).
   generated document (VOS-D103): commit; `run --tier full --only E1 --out F`; `merge --base R
   --fresh F --experiment E1 --where fixture=vos-sched-fp-bitmap --ignore-outside --out R`;
   `table --write`; commit the results file (a second commit, so the tree that ran was clean).
+  **`merge --add` (planned, VOS-028c2).** The rule above that a merge never adds a row
+  cannot take a new experiment knob: the identities of the base and the fresh file
+  differ, and `check` requires every quick row of the plan to be present, so a plan
+  change and its rows must land in the same PR. `merge --add` accepts only fresh rows
+  whose identities `(experiment, knob, mode, seed)` are all **absent** from the base,
+  appends them, and records `"kind": "add"` in the `merges` entry (the key is omitted
+  for a refresh, so the existing entry keeps its bytes). It refuses any overlap with the
+  base, and every other refusal above applies unchanged. New rows are then recorded
+  as `run --tier full --only B3,B5,D5 --out F`, then `merge --add --base R --fresh F
+  --experiment B3 --ignore-outside --out R` (and B5, D5), then `table --write`.
 * `table` renders the markdown block of section 9.8 from the committed results
   file; `--check` fails if the VOS30 spec's generated block differs, and
   `--write` splices the block between the markers.
@@ -1454,6 +1622,14 @@ silent drop):
    read about every second even on a million-clause formula where 20,000
    conflicts would take minutes). A timeout is `result = "unknown"`, cap `wall`,
    with the conflicts used so far. A chain also stops between two obligations.
+   **Chain budget (planned, VOS-028c2; VOS-D095).** A split or chain (B3, D3, D4,
+   later B5 and D5) is one row, so the 120 s wall bounds the *sum* of its
+   obligations, although 8.3 allows a feasible entry about ten minutes in total.
+   Such a row gets a **600 s row budget** while each obligation keeps its 120 s; the
+   hard kill moves with it (600 s plus 30 s for the control stage plus 150 s of
+   slack). A chain already stops at its first obligation that is not UNSAT, which
+   bounds the larger budget. The row records the budget in a field `wall_s`, omitted
+   when it is 120, so rows that do not change stay byte-identical.
 3. **Whole-process-group kill.** The row runs as a child in its **own process
    group**; the parent kills the *group* on the wall timeout, covering **every
    stage**: instance generation and CNF writing, the solve, and `drat-check`, not
@@ -1535,6 +1711,14 @@ both are run and recorded:
 | `green` | boolean | computed by the tool from section 8.3, never typed |
 | `cap` | string | which limit ended the row: `none`, `conflicts`, `wall` or `rss` |
 | `note` | string | a refusal reason or an anomaly |
+| `wall_s` | integer, optional | the row budget in seconds when it is not 120 (planned, VOS-028c2; section 9.5) |
+
+**Planned additions (VOS-028c2), all optional so recorded rows keep their bytes:**
+`wall_s` on a row (above); in the `tool` object and in each `merges` entry a `trees`
+object of content-addressed **tree ids** (`git rev-parse HEAD:<path>`) of the probe
+and its four solver crates (section 9.12); in a merges entry `"kind": "add"` (section
+9.2); and in a B5 row's `metrics` the counts `lemmas`, `candidates`, `refuted` and
+`escalations`, compared by the re-run like every other metric.
 
 `dirty_tree`, `binary_sha256` and the regeneration banner are **self-reported by
 the tool**: nothing stops an edited tool or file from writing the values it
@@ -1579,6 +1763,9 @@ the quick tier uses the smallest value only.
 | **D2** | D1 with concrete offsets | same grid |
 | **D3** | D1 case-split on the index: T obligations, reported as **sum and max** | same grid |
 | **D4** | Both sides share the mux structure, with cut points after each access | same grid |
+| **B3 additions** (planned, VOS-028c3) | B3 with `cut` = `every2` and `every4`, both modes | the same 6 x 3 grid as B3; 360 rows, none quick; fixes the cut density K of 8.6.2 |
+| **B5** (planned, VOS-028c3) | *SAT sweeping with certified lemmas* on B2 with the `fuse` knob (8.6.3); a research experiment, judged by route-green | length 25 (quick), 200, 1,000, times divergence 25%, 100%, times `fuse` 1, 2, 4, 8; 24 knobs, 120 rows |
+| **D5** (planned, VOS-028c3) | *Memory as index split plus a cut per access plus touched-word comparison*, the frame a separate structural obligation (8.6.3) | T = 4, 16, 64, 256, k = 1, 4, 16, split = `index`, `none`; 24 knobs, 120 rows, quick T = 4, k = 1 |
 | **E1** | *Enumeration throughput* of the generated by-value harness: the real `vos-sched-fp-bitmap` at N = 8 (binder products 256 and 65,536) and the fixture `vos-probe-ready` (65,536 in the 8-`Bool` form and in the `Impl(mask: U8)` form, 262,144 for insert at N = 10, 393,216); **N = 11 must be refused (W0706)**. Run-only cases per second (the harness is compiled into the probe: compile time is the probe's build). G3 control: the same claim against a broken adapter, which the harness must report failing; the refusal row's control is the same document at N = 10, which must be accepted | as stated |
 | **E2** | *Enumeration memory*: `k` binders of `Bytes<W>` (W = 1, 8, 64, 256, 4096; k = 1 to 4): the generator's own accounting of cases and domain bytes (`domain::resolve_binders`), and for an accepted claim the materialised domains and the counted product; where the 64 MiB domain bound (VER04m E10) bites before 400,000 cases. G3 control: a binder wider than the 4096 cap must be refused (W0707) | as stated |
 | **F** | DRAT size and check time on every UNSAT row: pass under default limits, bytes per conflict, check/solve ratio | derived constants printed under the generated table (section 9.8), not a row of its own |
@@ -2126,9 +2313,75 @@ the rows. The definitions it fixes, where 8.3 left them to the implementation:
 
 The unit tests of `results.rs` carry a negative control for every clause.
 
+### 9.12 The re-plan's implementation and decision procedure (planned, VOS-028c2 and VOS-028c3)
+
+Nothing in this section is built; it is the plan that 8.6 is judged by. As each
+item lands, the PR that builds it replaces "planned" by the as-built decision, as
+9.10 and 9.11 did for VOS-028b.
+
+**VOS-028c2: the probe, no new experiment.** Version 0.2.0.
+
+* The 600 s chain budget and `wall_s` of 9.5 (VOS-D095); the knobs of B3, D3 and D4
+  that ended `unknown (timeout)` are re-recorded with it (`run --tier full --only
+  B3,D3,D4 --jobs 8`, then `merge --experiment B3 --ignore-outside`, repeated for D3
+  and D4, then `table --write`; the results file in a second commit, so the tree that
+  ran was clean). `decide` must still print row 1; if D3 at T = 8, k = 16 changes,
+  that is reported and the outcome of 8.5 is not edited.
+* `merge --add` of 9.2.
+* Hardening (VOS-D097). **(1) Provenance by tree id, not by ancestry.** The repository
+  squash-merges, so a recorded `repo` revision is generally not an ancestor of HEAD
+  (the results file's own `repo` revision `be35c919f51f` and its existing merge's
+  `567282add006` are not ancestors of this section's HEAD, although the four
+  per-crate revisions are). A rule "recorded revisions must be ancestors of HEAD"
+  would make `check` fail today. New runs and merges instead record `trees`, and
+  `check` prints a non-fatal `stale:` line when a recorded tree differs from the
+  working tree. Its teeth are a **sampled full-row re-run**: 16 full-tier rows chosen
+  by lowest SHA-256 of the row id, restricted to non-E rows whose recorded solve plus
+  check is under 2 s, re-run in process under a 20 s wall and compared by
+  `compare_rerun` (about 30 s on CI). **(2)** The kill checks the status of
+  `/bin/kill`, falls back to `child.kill()` and bounds the wait with a 5 s `try_wait`
+  loop. **(3)** OS limits without `unsafe`: the child is launched through
+  `/bin/sh -c 'ulimit -t N; exec "$@"'` as a CPU backstop plus a kill-on-drop guard;
+  the RSS poll stays and `RLIMIT_AS` is still not used (9.5 item 4). **(4)**
+  `validate` requires every row's `(experiment, mode, knob)` to be in the plan's
+  closed set for the experiment. **(5)** Child output is read through `take(1 MiB)`,
+  `--out` is written atomically, `--jobs` is clamped to 1..=64. Process-group, `sh`
+  and `ulimit` code is `cfg(unix)`: the Windows BUILD runs `check` in process only.
+* E1 rows are untouched (VOS-D103).
+
+**VOS-028c3: the experiments and the decision.** The experiments of 8.6.3, in
+`src/sweep.rs` and `tests/sweep.rs` with edits to `exp.rs`, `shapes.rs`, `prog.rs`,
+`results.rs` and `table.rs`.
+
+* `results.rs` gains `route_green` (8.6.1) and `decide_replan` (the table of 8.6.4),
+  with a negative control for every clause, as 9.11 requires of `decide`.
+* `table --check` also checks the sentence **`**Re-plan decision (VOS-028c):**`** of
+  8.6 against the rows, exactly as it checks 8.5's decision. The new label differs
+  from the 8.5 decision label on purpose: the reader of 8.5 scans from its heading to
+  the next level-two heading, a range that contains 8.6, and looks for its own label.
+* B5 and D5 are validated by guards G1 to G3 as every experiment is; the extra G3
+  conditions are in 8.6.3. B5's `fuse = 1` `instance_sha256` equals B2's.
+* Recording: a clean committed tree, `run --tier full --only B3,B5,D5 --jobs 8`, then
+  `merge --add` for each, `table --write`, `decide`; the results in a second commit.
+  CI gains about ten quick rows (seconds). If the PR is too large it splits into B3
+  cuts plus D5, and B5 plus the decision.
+* Then: 8.6's decision sentence is filled with the measured outcome, the README's
+  "What it found", the backlog (fund or re-plan VOS-029a and b; the budget of
+  VOS-040) and VOS00 section 10.2.
+
+**Decision procedure for 8.6.** `decide_replan` classifies the recorded rows by the
+table of 8.6.4 and prints the row, the condition that placed it and the memory
+verdict. A group is green iff at least one row is counted and every counted row is
+route-green; a missing group is red.
+
 ---
 
 ## 10. What VOS-029 must deliver
+
+**Status after VOS-028c1 (the re-plan is specified, not yet run): not funded.**
+VOS-029a's funding depends only on the not-R1 condition of section 8.6.4 and is
+expected to be re-funded unchanged; VOS-029b depends on B5 and K, and the memory
+shapes on D5 (section 8.6.4). The paragraph below is the status after VOS-028b.
 
 **Status after VOS-028b: not funded.** The probe's decision is row 1 of section 8.3
 (section 8.5), so VOS-029 is a *design for a re-plan*, not a work item: what
@@ -2208,7 +2461,9 @@ two-safety on a real entry (VOS-026 and after), and the owned-compile lane.
 5. **Equivalence sweeping.** VOS00 section 12 row 9 (arrays, incremental solving,
    k-induction, and the planned equivalence-sweeping work) would make the
    monolithic route cheaper. The probe's decision table keeps it as the
-   `Infeasible` row's escape hatch.
+   `Infeasible` row's escape hatch. **VOS-028c measures it as B5** (section 8.6.3,
+   planned, VOS-028c3), including the `fuse` knob that makes it a test and not a
+   tautology; the outcome is rows R2 to R4 of section 8.6.4.
 6. **The owned-compile lane.** If the decision is the third row, the lane with a
    source map (VER13 section 4.3 item 1) is the way to get cuts by construction.
    Its cost (a new back end) is outside this program's current plan.
