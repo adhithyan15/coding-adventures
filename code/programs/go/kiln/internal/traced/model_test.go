@@ -1380,7 +1380,10 @@ func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
 			if !tc.absent && !tc.list && m.properAncestor(tc.path) {
 				continue
 			}
-			if tc.absent && m.freshAbsent(tc.path) {
+			// (A stop the model recorded as present because the call's errno
+			// was ENOTDIR from its other operand is still absent on the model's
+			// disk: the fresh tmpfs holds only what the action made.)
+			if (tc.absent || m.byPath(tc.path) == nil) && m.freshAbsent(tc.path) {
 				continue
 			}
 			fail(tc, "outside the repository, but the record has no reason")
