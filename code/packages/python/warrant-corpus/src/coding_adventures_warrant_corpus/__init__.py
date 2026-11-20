@@ -14,6 +14,12 @@ Reading order for newcomers::
            -> runner -> manifest -> session -> cli
 
 It is standard-library only and has no dependency on any library it tests.
+
+The sub-package :mod:`.v2` is the first part of the *v2* runner (VER04r, slice
+S6a): the ``ir.core`` library -- value codec, arithmetic, IR evaluator, domains,
+chunks and fault wrappers -- and the harness that runs the v2 conformance kit.  It
+does not read a v2 corpus, binding or manifest yet (slice S6b), so everything above
+still reads ``warrant-corpus-v1`` only.
 """
 
 from __future__ import annotations
