@@ -53,9 +53,11 @@ fn decodes_borrowed_context_and_entries() {
     assert_eq!(entries[0].index(), 0);
     assert_eq!(entries[0].certificate_data(), [0x30, 0x01, 0x00]);
     assert!(entries[0].extensions().is_empty());
+    assert_eq!(entries[0].encoded_extensions(), [0, 0]);
     assert_eq!(entries[1].index(), 1);
     assert_eq!(entries[1].certificate_data(), [0x30, 0x00]);
     assert_eq!(entries[1].extensions(), [0, 1, 0, 0]);
+    assert_eq!(entries[1].encoded_extensions(), [0, 4, 0, 1, 0, 0]);
 }
 
 #[test]
