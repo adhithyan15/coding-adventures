@@ -42,11 +42,15 @@ func TestSandboxSealedRoot(t *testing.T) {
 		`for d in /run /var/tmp; do echo "scratch:$d:$(ls -A $d | wc -l)"; done`,
 		`for d in /run /tmp /var/tmp; do echo x > $d/own && echo "scratch-writable:$d"; done`,
 		// The name the action made is there; the one it did not make still is not.
-		`test -e /run/own && echo run-own-present; test -e /run/systemd && echo run-systemd-present`,
+		// (An if, not `test && echo`: the expected case is that /run/systemd is
+		// absent, and a false `test` as the last command would be the script's
+		// exit status.)
+		`if test -e /run/own; then echo run-own-present; fi`,
+		`if test -e /run/systemd; then echo run-systemd-present; fi`,
 	}, "; ")
 	r := f.sandboxRun(t, "pkg", "sh", "-c", script)
 	if r.code != 0 {
-		t.Fatalf("exit %d: %s", r.code, r.stderr)
+		t.Fatalf("exit %d: stderr %q\nstdout:\n%s", r.code, r.stderr, r.stdout)
 	}
 	out := r.stdout
 	for _, p := range []string{"/go.work", "/home/x", "/opt/rh", "/run/x", "/var/run", "/package.json", "/run/systemd/resolve/stub-resolv.conf", "/var/run/docker.sock", "/include", "/pyvenv.cfg"} {
