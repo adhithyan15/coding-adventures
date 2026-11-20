@@ -4005,6 +4005,19 @@ absent probe of one is still allowed (they start empty), a present look is
    the sandbox, not the action, made (a present look there is an ancestor node
    under D39 rule (a) or a declared root's own rule).
 
+5. *Assumption: the parents of `Home` and `Tmpdir` are immutable.* `noteTmpMove`
+   ignores a rename with no endpoint under `Home` or `Tmpdir`, which is sound
+   only because nothing the action can rename sits above them: the new root
+   tmpfs is remounted read-only before the pivot (`KindSeal`, `plan.go` in
+   `Plan`, after the `KindProc` step), so `/`, `/home`, `/tmp` and every other
+   directory of it cannot be renamed, created in or removed from, and each
+   mount point (`Home`, `Tmpdir`, the checkout bind, the state roots) is
+   `EBUSY` to rename or remove. A future sandbox layout that made an ancestor
+   of `Home` writable (a writable root, or a `Home` that is a plain directory
+   of a writable tmpfs) would reopen a stale-text path, because a rename of
+   that ancestor would taint nothing. Such a change must extend `noteTmpMove`
+   first.
+
 The census records, for an unstable path, the op class of the look that ENTERED
 the lookup set that failed the rule (`noteLookupOp(set, abs)`), not the first
 look of the path in any set; this is census-only and the record bytes are

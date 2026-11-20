@@ -103,16 +103,25 @@ func DerivedStateRoots(home string, roots *legacy.HostRoots) []string {
 	if roots == nil {
 		return nil
 	}
-	seen := map[string]bool{}
-	var out []string
+	var ro []string
 	for _, r := range roots.Roots {
 		if r.Kind != legacy.RootImage && r.Kind != legacy.RootTool {
 			continue
 		}
-		p, err := expandRoot(r.Path, home)
-		if err != nil {
-			continue
+		if p, err := expandRoot(r.Path, home); err == nil {
+			ro = append(ro, p)
 		}
+	}
+	return derivedFromRoots(home, ro)
+}
+
+// derivedFromRoots is the one derivation, shared with BuildSandboxConfig (which
+// passes the read-only roots it kept): for each root with an anchor beneath
+// home, the anchor's state roots from stateAnchors, sorted and de-duplicated.
+func derivedFromRoots(home string, ro []string) []string {
+	seen := map[string]bool{}
+	var out []string
+	for _, p := range ro {
 		anchor, beneath := sandbox.HomeAnchor(home, p)
 		if !beneath || anchor == p {
 			continue
@@ -197,7 +206,6 @@ func BuildSandboxConfig(in ConfigInput) (*sandbox.Config, error) {
 
 	// Keep the roots that exist, and apply the rules for those beneath home.
 	var kept []string
-	anchors := map[string]bool{}
 	for _, p := range ro {
 		st, err := lstat(p)
 		if err != nil {
@@ -216,7 +224,6 @@ func BuildSandboxConfig(in ConfigInput) (*sandbox.Config, error) {
 					return nil, fmt.Errorf("sandbox config: ro root %q would anchor (seal read-only) all of %q, which holds state the recorder does not declare; "+
 						"add the anchor to the recorder's table with its state roots, or list a direct child of home", printable(p), printable(anchor))
 				}
-				anchors[anchor] = true
 			}
 		}
 		kept = append(kept, p)
@@ -224,12 +231,7 @@ func BuildSandboxConfig(in ConfigInput) (*sandbox.Config, error) {
 
 	// State roots: what each used anchor's toolchain writes, then the declared
 	// `state` roots of host-roots.json.
-	var state []string
-	for a := range anchors {
-		for _, sub := range stateAnchors[a[len(in.Home)+1:]] {
-			state = append(state, path.Join(a, sub))
-		}
-	}
+	state := derivedFromRoots(in.Home, kept)
 	state = append(state, declared...)
 	sort.Strings(state)
 	state = dedupe(state)

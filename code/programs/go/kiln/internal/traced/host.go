@@ -257,14 +257,16 @@ func (c *classifier) observeHost(abs string, present, listing bool) {
 	// the checkout would let the action rebuild the path to it unobserved
 	// (KILN04 D40: `mv ~/work ~/y`, then a listing of ~/y/x is "own output"), so
 	// a write falls through to host-read, as it did before D39.  Every KindWrite
-	// call and every opening that can write runs with inWrite set.
-	if present && !listing && !c.inWrite && !c.xattrCall && c.cfg.ancestors[abs] && c.lookup(abs).kind == KindDir {
+	// call and every opening that can write runs with inWrite set.  A write that
+	// FAILED (mkdir -p's EEXIST on each existing prefix) changed nothing: it is
+	// an observation of the path, never a write (ops.go), so it stays a look.
+	if present && !listing && (!c.inWrite || !c.callOK) && !c.xattrCall && c.cfg.ancestors[abs] && c.lookup(abs).kind == KindDir {
 		return
 	}
 	if !present && c.absentOK(abs) {
 		return
 	}
-	if c.inWrite && c.cfg.ancestors[abs] {
+	if c.inWrite && c.callOK && c.cfg.ancestors[abs] {
 		// A write to an ancestor may have moved the checkout's own path: nothing
 		// said about where later writes landed can be trusted.
 		c.incomplete = true

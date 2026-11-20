@@ -53,6 +53,22 @@ func TestWriteClassCallsOnAnAncestorAreHostRead(t *testing.T) {
 	wantNoReasons(t, h.run(stat(work), lstat(work), openAbs(work), open(work, "O_RDONLY|O_DIRECTORY", work)))
 }
 
+// A write that FAILED changed nothing: `mkdir -p` calls mkdir on each existing
+// prefix and gets EEXIST.  That stays a look; a successful write does not.
+func TestFailedWriteOnAnAncestorIsALook(t *testing.T) {
+	const work = "/home/runner/work"
+	h := realHomeHarness(t)
+	wantNoReasons(t, h.run(fail(mkdir(work), "EEXIST"), fail(mkdir("/home/runner"), "EEXIST")))
+	// The negative: the same ancestor, successfully renamed, is host-read and
+	// the write set is no longer trustworthy.
+	h = realHomeHarness(t)
+	rec := h.run(rename(work, "/home/runner/y"))
+	if !hasHostRead(rec) {
+		t.Errorf("a successful rename of an ancestor: reasons %q, want host-read", rec.Reasons)
+	}
+	wantComplete(t, "successful rename of an ancestor", rec, false)
+}
+
 func TestMovingTheCheckoutChainThenListingIsRefused(t *testing.T) {
 	h := realHomeHarness(t)
 	rec := h.run(

@@ -36,6 +36,11 @@
   ancestors; an absent probe is still allowed.
 - `stable` is back to its original body: the `!c.tmpLinked ||` test was dead code
   (its only caller, the `seen` loop, tests `contained` first).
+- Round 2: a FAILED write-class call on an ancestor (`mkdir -p`'s EEXIST) stays a
+  look; only a successful write is `host-read` and writes-incomplete.
+  `record.DerivedStateRoots` and `BuildSandboxConfig` now share one derivation
+  (`derivedFromRoots`). Spec D40 premise 5 states that the parents of `Home` and
+  `Tmpdir` must be immutable. Lesson added in `lessons.d/`.
 - Spec: KILN04 D40 (premises 2 and 3 rewritten, premise 4 names the checkout's ancestor chain) and a D39 line.
 
 ### Added
