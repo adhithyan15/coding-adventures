@@ -53,11 +53,22 @@ describe("the harness", () => {
     const extra = report.categories.find((row) => row.category === "v2-binding-x");
     expect(extra).toMatchObject({ indexed: 3, run: 0, skipped: 3, passed: 0, failed: [], unrunnable: 3 });
     expect(report.failed).toBe(0);
-    // cases of an unknown category the runner implements the levels of are cases nothing ran: a manifest may not be written (S7b)
-    expect(report.unrunnable).toBe(3);
+    // cases of an unknown category the runner implements the levels of are cases nothing ran: a manifest may not be written (S7b).
+    // The committed kit has such a category of its own since S5d: `v2-binding` (176 `ir.core` cases), which this runner
+    // digest-checks and skips whole until S7b runs it.  So the extra category adds its 3 to whatever the rest already holds.
+    const binding = report.categories.find((row) => row.category === "v2-binding");
+    if (binding) {
+      expect(binding).toMatchObject({ run: 0, failed: [] });
+      expect(binding.skipped).toBe(binding.indexed);
+      expect(binding.unrunnable).toBe(binding.indexed);
+    }
+    const others = report.categories
+      .filter((row) => row.category !== "v2-binding-x")
+      .reduce((sum, row) => sum + row.unrunnable, 0);
+    expect(report.unrunnable).toBe(others + 3);
     const needsMore = runKit(kitWithExtraCategory("v2-binding-x", 2, ["ir.core", "ir.fixed"]), { sequential: false });
     expect(needsMore.categories.find((row) => row.category === "v2-binding-x")?.unrunnable).toBe(0);
-    expect(needsMore.unrunnable).toBe(0);
+    expect(needsMore.unrunnable).toBe(others);
   });
 
   it("skips a case whose requires names a level the runner lacks", () => {
