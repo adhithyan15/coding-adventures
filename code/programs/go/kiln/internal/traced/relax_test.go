@@ -294,9 +294,11 @@ func TestHomeItselfOnly(t *testing.T) {
 	}
 	h := mk()
 	wantNoReasons(t, h.run(stat("/home/runner")))
-	// Anything under it, and the checkout's ancestors, are host reads.
-	wantReason(t, mk().run(stat("/home/runner/work")), "host-read:$HOME/work")
-	wantReason(t, mk().run(fail(stat("/home/runner/.gitconfig"), "ENOENT")), "host-read:$HOME/.gitconfig")
+	// Since D39 a stat of the checkout's ancestor is allowed (a node's type and
+	// metadata), and so is an absent probe under the fresh $HOME; a listing of
+	// the ancestor and a present name under $HOME are still host reads.
+	wantNoReasons(t, mk().run(stat("/home/runner/work")))
+	wantNoReasons(t, mk().run(fail(stat("/home/runner/.gitconfig"), "ENOENT")))
 	wantReason(t, mk().run(getdents("/home/runner/work")), "host-read:$HOME/work")
 	wantReason(t, mk().run(openAbs("/home/runner/x")), "host-read:$HOME/x")
 	// A sibling that merely shares the prefix.

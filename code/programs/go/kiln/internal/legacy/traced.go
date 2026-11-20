@@ -79,7 +79,13 @@ const TracedSemantics uint64 = 2
 // exact prefix of the recipe and the last one exited non-zero, that is no longer
 // `trace-incomplete:recipe-mismatch`.  The verdict for those actions changes, so
 // every weak key changes.
-const RecorderVersion = 6
+//
+// Version 7: the ancestor-node and fresh-tmpfs-absence rules (KILN04 D39).  A
+// present, non-listing look at a proper ancestor of the checkout, a declared
+// root, Home, Tmpdir or an ephemeral or absent-ok entry, and an absent probe
+// strictly inside the fresh Home or Tmpdir, are no longer `host-read`.  The
+// verdict for those actions changes, so every weak key changes.
+const RecorderVersion = 7
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real

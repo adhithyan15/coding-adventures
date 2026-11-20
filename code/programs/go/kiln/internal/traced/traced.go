@@ -256,6 +256,11 @@ type prepared struct {
 	roots     []preparedRoot
 	ephemeral []string
 	absentOK  []string
+	// ancestors is every PROPER ancestor, "/" included, of every anchor: the
+	// checkout, each declared host root, Home, Tmpdir, and the literal prefix of
+	// each ephemeral and absent-ok entry (KILN04 D39).  An anchor is not its own
+	// ancestor.
+	ancestors map[string]bool
 }
 
 type preparedRoot struct {
@@ -299,7 +304,22 @@ func prepare(cfg Config) (*prepared, error) {
 			return nil, fmt.Errorf("traced: Home and Tmpdir must not be the checkout or inside it, got %q", d)
 		}
 	}
-	p := &prepared{Config: cfg}
+	p := &prepared{Config: cfg, ancestors: map[string]bool{}}
+	anchor := func(a string) {
+		for q := parentOf(a); ; q = parentOf(q) {
+			if q == "" {
+				p.ancestors["/"] = true
+				return
+			}
+			p.ancestors[q] = true
+		}
+	}
+	anchor(cfg.Root)
+	for _, d := range []string{cfg.Home, cfg.Tmpdir} {
+		if d != "" {
+			anchor(d)
+		}
+	}
 	if cfg.HostRoots == nil {
 		return p, nil
 	}
@@ -326,19 +346,40 @@ func prepare(cfg Config) (*prepared, error) {
 				}
 			}
 			p.roots = append(p.roots, preparedRoot{path: e, kind: r.Kind, tool: r.Tool, ecosystem: r.Ecosystem})
+			anchor(e)
 		}
 	}
 	for _, s := range cfg.HostRoots.Ephemeral {
 		if e, ok := expand(s); ok {
 			p.ephemeral = append(p.ephemeral, e)
+			anchor(literalPrefix(e))
 		}
 	}
 	for _, s := range cfg.HostRoots.AbsentOK {
 		if e, ok := expand(s); ok {
 			p.absentOK = append(p.absentOK, e)
+			anchor(literalPrefix(e))
 		}
 	}
 	return p, nil
+}
+
+// literalPrefix is the part of a host-roots pattern before its first wildcard
+// component: "/dev/fd/*" gives "/dev/fd", "/sys/devices/**" gives
+// "/sys/devices", and a name with no wildcard is its own prefix.  The ancestor
+// rule (KILN04 D39) anchors on it.
+func literalPrefix(pat string) string {
+	parts := strings.Split(pat, "/")
+	for i, seg := range parts {
+		if strings.ContainsAny(seg, "*?") {
+			parts = parts[:i]
+			break
+		}
+	}
+	if out := strings.Join(parts, "/"); out != "" {
+		return out
+	}
+	return "/"
 }
 
 // sortedKeys returns a set's members sorted bytewise.

@@ -235,7 +235,13 @@ type classifier struct {
 	// opKind, obsPresent and obsListing say what the call being observed IS, for
 	// the census alone (census.go, "op class"): the classifier's decisions never
 	// read them.  opKind is set per event, obsPresent and obsListing per observe.
-	opKind                 string
+	opKind string
+	// xattrCall says the call being classified reads extended attributes
+	// (getxattr, lgetxattr, listxattr, llistxattr and their f forms).  Unlike
+	// opKind this one IS read by a decision: the ancestor rule of KILN04 D39
+	// covers a node's type and stat metadata only, and an xattr value is
+	// content.  It is set per event.
+	xattrCall              bool
 	obsPresent, obsListing bool
 	// lookupOps is, for the census alone, the op class (opClass) of the FIRST
 	// look that put each path into a lookup set.  checkStability judges the
@@ -363,6 +369,7 @@ func (c *classifier) event(t *trace.Trace, ev *trace.Event) {
 	c.callOK = ev.Result.OK
 	c.callPresent = presence(ev.Result)
 	c.opKind = opKindOf(ev)
+	c.xattrCall = isXattrRead(ev.Syscall)
 	switch ev.Kind {
 	case trace.KindOpen:
 		c.open(ev)
@@ -658,7 +665,7 @@ func (c *classifier) observe(abs string, present, listing bool) {
 		if rel, ok := c.rel(abs); ok {
 			c.observeRepo(rel, present, listing)
 		} else {
-			c.observeHost(abs, present)
+			c.observeHost(abs, present, listing)
 		}
 	}
 }
