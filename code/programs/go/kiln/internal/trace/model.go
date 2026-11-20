@@ -1318,10 +1318,10 @@ func shortMknod(c *rawCall) bool {
 		case "S_IFREG", "S_IFIFO", "S_IFSOCK":
 			continue
 		}
-		if isOctalToken(tok) {
+		if isOctalToken(tok) && permBitsOnly(tok) {
 			continue
 		}
-		return true // S_IFCHR, S_IFBLK, or anything unrecognised
+		return true // S_IFCHR, S_IFBLK, a mode with file-type bits, or anything unrecognised
 	}
 	return false
 }
@@ -1338,6 +1338,15 @@ func isOctalToken(s string) bool {
 		}
 	}
 	return true
+}
+
+// permBitsOnly says an octal token carries permission bits alone (at most
+// 07777).  strace prints a mode's file type symbolically (S_IFCHR|0600), so an
+// octal literal with type bits (020600, a character device) is not strace's
+// own spelling of a non-device and must not pass for one.
+func permBitsOnly(s string) bool {
+	v, err := strconv.ParseUint(s, 8, 32)
+	return err == nil && v <= 0o7777
 }
 
 func (m *model) fillPath(ev *Event, ent entry, args []string) string {

@@ -137,6 +137,8 @@ func TestMknodShortForm(t *testing.T) {
 		`mknodat(AT_FDCWD, "a", S_IFCHR|0600) = 0`,
 		`mknodat(AT_FDCWD, "a", S_IFBLK|0600) = 0`,
 		`mknodat(AT_FDCWD, "a", 0x1234) = 0`, // an unreadable mode is not judged a non-device
+		`mknodat(AT_FDCWD, "a", 020600) = 0`, // octal with S_IFCHR bits: not strace's spelling of a non-device
+		`mknod("a", 060600) = 0`,             // octal with S_IFBLK bits
 		`mknod("a") = 0`,
 		`mknodat(AT_FDCWD, "a") = 0`,
 	} {
