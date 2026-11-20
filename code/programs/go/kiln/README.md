@@ -375,7 +375,8 @@ rec, err := traced.Classify(cfg, traced.Input{
   honours only when `HonourWritesComplete` is on (off by default).
   `RecorderVersion` became 2 when this field was added (see `internal/legacy/traced.go` for the current value).
 - `CheckRecipe(steps, lines)` compares each step's exec argv with the expected
-  `sh -c` lines.
+  `sh -c` lines. Fewer traces than lines are accepted only as a byte-exact prefix
+  whose last step exited non-zero (a failed action, KILN04 D36).
 
 The decisions are in KILN04 section 5.5. `FuzzClassify` checks the classifier
 never panics and always returns sorted, unique, clean output.
