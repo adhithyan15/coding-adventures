@@ -856,6 +856,12 @@ func (m *model) path(data []byte, i *int) string {
 		*i++
 		return b
 	}
+	// Now and then name the checkout's own parent directory exactly, so the
+	// model can rename, remove or chmod an ancestor of the checkout (KILN04 D39
+	// covers looks at an ancestor, never writes to one; D40's premise).
+	if b := next(); b%24 == 0 {
+		return parentOf(m.root)
+	}
 	var prefix string
 	switch next() % 9 {
 	case 0, 1:
@@ -1378,6 +1384,13 @@ func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
 			continue // a stat of ".git" itself is nothing, by design (section 5.2)
 		}
 		rel, in := strings.CutPrefix(tc.path, m.root+"/")
+		// KILN04 D39/D40: a write-class call that changed a proper ancestor of
+		// the checkout is host-read, so a record with no reason never has one.
+		// (The first such write is the one that counts: a name the action made
+		// itself is its own.)
+		if (tc.write || tc.wonly) && !tc.own && !tc.create && !m.own[tc.path] && m.isCheckoutAncestor(tc.path) {
+			fail(tc, "a write to an ancestor of the checkout, but the record has no reason")
+		}
 		if tc.wonly {
 			if in && !underAny(rec.Writes, rel) && !m.readOnlyHost(tc.path) {
 				fail(tc, "write not under a write root")
@@ -1482,6 +1495,12 @@ func (m *model) mountOf(p string) string {
 		return "home"
 	}
 	return ""
+}
+
+// isCheckoutAncestor says p is a proper ancestor of the checkout other than
+// "/" and Home itself (Home is the sandbox's mount point, never movable).
+func (m *model) isCheckoutAncestor(p string) bool {
+	return p != "/" && p != m.home && p != m.tmp && strings.HasPrefix(m.root, p+"/")
 }
 
 func covered(rec *RawRecord, rel string) bool {

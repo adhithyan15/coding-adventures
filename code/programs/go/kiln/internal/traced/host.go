@@ -241,11 +241,23 @@ func (c *classifier) observeHost(abs string, present, listing bool) {
 	// state, and also falls through.  A child of an ancestor (/home/go.work) is
 	// not an ancestor and is judged by the rules below.  An ancestor inside a
 	// declared root (nested anchors) was handled by the root's own rule above.
-	if present && !listing && !c.xattrCall && c.cfg.ancestors[abs] && c.lookup(abs).kind == KindDir {
+	//
+	// And it must be a LOOK.  A write-class call (rename, rmdir, unlink, chmod,
+	// utimensat, ...) CHANGES the node, and moving or removing an ancestor of
+	// the checkout would let the action rebuild the path to it unobserved
+	// (KILN04 D40: `mv ~/work ~/y`, then a listing of ~/y/x is "own output"), so
+	// a write falls through to host-read, as it did before D39.  Every KindWrite
+	// call and every opening that can write runs with inWrite set.
+	if present && !listing && !c.inWrite && !c.xattrCall && c.cfg.ancestors[abs] && c.lookup(abs).kind == KindDir {
 		return
 	}
 	if !present && c.absentOK(abs) {
 		return
+	}
+	if c.inWrite && c.cfg.ancestors[abs] {
+		// A write to an ancestor may have moved the checkout's own path: nothing
+		// said about where later writes landed can be trusted.
+		c.incomplete = true
 	}
 	c.reason("host-read:" + c.redact(abs))
 }

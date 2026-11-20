@@ -3903,6 +3903,9 @@ replaces the "other ancestors stay `host-read`" clause of §5.5(c).
    sandbox's read-only roots beneath `Home` and `Tmpdir` are a subset of the
    declared roots; comments at `observeHost` and `plan.go` name each other.
 
+Rule (a) covers looks only, never write-class calls: a rename, rmdir, unlink,
+chmod or utimensat of an ancestor stays `host-read` (D40 premise 4).
+
 Not changed: a listing of any ancestor, a child probe of an ancestor, a present
 uncreated name under `$HOME`/`TMPDIR`, and the rules of each declared root
 (a tool root not keyed, an unpinned state root, an image root's ctime check).
@@ -3949,7 +3952,18 @@ every event has been classified, so `tmpLinked` is a whole-action fact when any
    or nothing: neither an input nor a repository write. `..` out of it is exact,
    because no component is a link.
 4. Nothing but the action's own files is reachable under `Tmpdir` or `Home`
-   inside the sandbox. The staging directory `$TMPDIR/.kiln-newroot`
+   inside the sandbox, with ONE exception, the checkout's ancestor chain under
+   `Home`. When the checkout lies under `Home` (hosted runners), the sandbox
+   makes the chain (`$HOME/work/x`) as plain, writable directories of Home's
+   tmpfs and binds the checkout on top; only the anchors of read-only roots
+   are sealed. If the action could move that chain (`mv ~/work ~/y`), the
+   checkout root would be reachable at a name the action "created", and a
+   listing of it would count as own output. It cannot be moved unobserved:
+   D39 rule (a) covers LOOKS only, so a rename, rmdir, unlink, chmod, utimensat
+   or any other write-class call whose path is an ancestor is `host-read` (and
+   writes-incomplete), exactly as before D39 (`observeHost`, `!c.inWrite`;
+   `internal/traced/ancestor_write_test.go`; the fuzzer model now names the
+   checkout's parent and checks it). The staging directory `$TMPDIR/.kiln-newroot`
    (`internal/sandbox/plan.go`, `StageDirName`, `StageRoot`) is built on the
    STAGING tmpfs mounted on the OLD root's `Tmpdir` (`KindStageTmpfs`,
    `KindStageDir`, `KindRootTmpfs`, `plan.go` in `Plan`); the step's own

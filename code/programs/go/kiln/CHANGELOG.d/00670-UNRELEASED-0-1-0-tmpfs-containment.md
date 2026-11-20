@@ -18,11 +18,16 @@
 - Census only: an unstable path now carries the op class of the look that ENTERED
   the lookup set that failed the rule (`noteLookupOp(set, abs)`), not the first
   look of the path overall. The record bytes are unchanged.
-- Spec: KILN04 D40.
+- Review fix: D39 rule (a) (`observeHost`) now covers looks only. A write-class
+  call (rename, rmdir, unlink, chmod, utimensat, ...) on an ancestor is
+  `host-read` and writes-incomplete again. Without it, with the checkout under
+  `Home`, `mv ~/work ~/y` then a listing of `~/y/x` was an unrecorded read of the
+  checkout root once D40 skipped the tmpfs.
+- Spec: KILN04 D40 (premise 4 names the checkout's ancestor chain) and a D39 line.
 
 ### Added
 
 - `internal/traced/tmpcontain_test.go`; the differential fuzzer's model
-  (`model_test.go`) treats a tmp lookup as own-or-absent while no link was made
+  (`model_test.go`) can name and write the checkout's parent, and treats a tmp lookup as own-or-absent while no link was made
   there, and makes a rename or link between the checkout, `Home` and `Tmpdir`
   fail with `EXDEV`, as the separate mounts do.
