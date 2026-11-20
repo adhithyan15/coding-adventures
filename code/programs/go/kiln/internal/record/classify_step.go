@@ -647,7 +647,7 @@ func classifyInputs(d ClassifyDeps, pre *Pre, planned Action) (traced.Config, er
 	return traced.Config{
 		Root: facts.Root, Packages: traced.NewPackageIndex(rels),
 		Tree: NewDiskTree(tree, facts.Root), FS: d.DiskFS,
-		HostRoots: &roots, HostBinds: DerivedStateRoots(facts.Home, &roots), Pinned: pinned, Tools: tools,
+		HostRoots: &roots, HostBinds: DerivedStateRoots(facts.Home, &roots), ScratchDirs: SandboxScratchDirs(), Pinned: pinned, Tools: tools,
 		Home: facts.Home, Tmpdir: facts.Tmpdir, JobStart: time.Unix(pre.Binding.JobStart, 0).UTC(),
 	}, nil
 }

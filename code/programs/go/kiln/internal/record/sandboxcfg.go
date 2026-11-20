@@ -115,6 +115,13 @@ func DerivedStateRoots(home string, roots *legacy.HostRoots) []string {
 	return derivedFromRoots(home, ro)
 }
 
+// SandboxScratchDirs are the fresh scratch tmpfs the sandbox mounts besides Home
+// and Tmpdir, as traced.Config.ScratchDirs wants them (KILN04 D43).  It is
+// sandbox.ScratchDirs itself, copied: the classifier and the plan read the one
+// list, and sealedroot_test.go pins that every tmpfs the plan mounts is
+// accounted for.
+func SandboxScratchDirs() []string { return append([]string(nil), sandbox.ScratchDirs...) }
+
 // derivedFromRoots is the one derivation, shared with BuildSandboxConfig (which
 // passes the read-only roots it kept): for each root with an anchor beneath
 // home, the anchor's state roots from stateAnchors, sorted and de-duplicated.

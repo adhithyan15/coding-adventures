@@ -449,6 +449,9 @@ func (c *classifier) rename(ev *trace.Event) {
 	dst, ok2 := c.resolve(join(ev.Cwd, ev.Dirfd2Path, dstPath), false)
 	if !ok1 || !ok2 {
 		c.incomplete = true // W3: an endpoint that could not be placed
+		if ev.Result.OK {
+			c.reshaped = true // D43: something moved that nothing says what
+		}
 		// One name could not be placed (see resolve); a failed call still
 		// looked at the other.
 		if !ev.Result.OK {
@@ -482,6 +485,7 @@ func (c *classifier) rename(ev *trace.Event) {
 	c.writePath(dst.abs)
 	srcLink, srcIsLink := c.links[src.abs]
 	c.noteTmpMove(src.abs, dst.abs, flagSet(ev.Flags)["RENAME_EXCHANGE"])
+	c.noteMove(src.abs, dst.abs, flagSet(ev.Flags)["RENAME_EXCHANGE"])
 	if flagSet(ev.Flags)["RENAME_EXCHANGE"] {
 		// Both names existed before and still do: neither is created.
 		c.observeSelf(dst.abs, true)
