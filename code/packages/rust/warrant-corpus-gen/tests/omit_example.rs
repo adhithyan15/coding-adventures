@@ -489,10 +489,10 @@ fn any_other_check_failure_still_refuses() {
 
 #[test]
 fn an_omitted_example_is_still_lowered_so_a_level_refusal_refuses_the_document() {
-    // a list literal is `ir.data`, which this generator does not emit: the line does not excuse it
+    // a list literal is the reserved `ir.list`, which this generator does not lower: the line does not excuse it
     let e = refused(&ex("f", "len([1u8, 2u8]) == 2 and echo(b\"aa\") != echo(b\"bb\")"), &["f"], "v1");
     assert_eq!(e.code, code::LEVEL, "{e}");
-    assert_eq!(e.level, Some("ir.data"), "{e}");
+    assert_eq!(e.level, Some("ir.list"), "{e}");
 }
 
 #[test]

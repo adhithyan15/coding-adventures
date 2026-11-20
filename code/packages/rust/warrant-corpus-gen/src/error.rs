@@ -83,11 +83,21 @@ pub enum Beyond {
     /// still named here because a *consumer* that does not implement it must name it, and for
     /// the faults whose evaluation is gated (VER04r 16.10 R12).
     IrTuple,
-    /// `ir.data`: records, variants, `Option` anywhere but under `unwrap_or`, lists, `match` on
-    /// anything but a `Result`, constructor and record projection.
+    /// `ir.data`: records, variants, `Option`, the constructors, field access and `match` on any
+    /// scrutinee (VER04r 16.14 [D46], Appendix A.2).  **Lowered, typed and costed since S11b**, so it
+    /// is no longer a *lowering* refusal: the name stays for the refusal of `generate` and of the
+    /// evaluator, which keep it fail-closed until S11c (R37).
     IrData,
-    /// `ir.seq`: the reserved WX-D `fold`/`map`/`all`/`any`/`count` level.
+    /// `ir.seq`: the reserved WX-D `fold`/`map`/`all`/`any`/`count` and `range` level (R28).
     IrSeq,
+    /// `ir.list`: the reserved list level (VER04r 16.14 [D46], R27): a list type anywhere, a list
+    /// literal, and `slice to_list to_bytes replicate` (R28).  Refused whole, never counted.
+    IrList,
+    /// The feature name `fixed-cast`: `fixed<N>(b)` is outside every level (R28).
+    FixedCast,
+    /// The feature name `err-value`: an arm that *uses* the error value an `Err(e)` pattern bound
+    /// has no IR form and is outside every level ([D55], R28).
+    ErrValue,
     /// `ir.inout.records`: reserved record-shaped `inout` host forms.
     IrInoutRecords,
     /// WX-G `inout` parameters (slice S12).
@@ -108,6 +118,9 @@ impl Beyond {
             Beyond::IrTuple => "ir.tuple",
             Beyond::IrData => "ir.data",
             Beyond::IrSeq => "ir.seq",
+            Beyond::IrList => "ir.list",
+            Beyond::FixedCast => "fixed-cast",
+            Beyond::ErrValue => "err-value",
             Beyond::IrInoutRecords => "ir.inout.records",
             Beyond::Inout => "inout",
             Beyond::Ensures => "ensures",
@@ -230,6 +243,9 @@ mod tests {
             Beyond::IrTuple,
             Beyond::IrData,
             Beyond::IrSeq,
+            Beyond::IrList,
+            Beyond::FixedCast,
+            Beyond::ErrValue,
             Beyond::IrInoutRecords,
             Beyond::Inout,
             Beyond::Ensures,
@@ -246,6 +262,9 @@ mod tests {
                 "ir.tuple",
                 "ir.data",
                 "ir.seq",
+                "ir.list",
+                "fixed-cast",
+                "err-value",
                 "ir.inout.records",
                 "inout",
                 "ensures",

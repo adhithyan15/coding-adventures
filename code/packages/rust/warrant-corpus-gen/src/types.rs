@@ -11,11 +11,20 @@
 //!   Bytes  Bytes<4>  Bytes<N>           -- a literal width or a static width parameter
 //!   Result<T, ErrorName>
 //!   (T1,T2)  ((Bool,Nat),U8)            -- ir.tuple: 2 to 8 components, structural
+//!   Option<T>  Point  Shape             -- ir.data: Option, a record, a variant (S11b)
 //! ```
 //!
-//! Tuples `(T1,..,Tn)` (2 to 8 components) belong to `ir.tuple` (slice S10t-2); `List`, `Option`
-//! (except as the IR-only intermediate of D23), records and variants belong to `ir.data` and never
-//! reach a [`Ty`]: the lowering refuses them first, naming the level.
+//! Tuples `(T1,..,Tn)` (2 to 8 components) belong to `ir.tuple` (slice S10t-2); `Option<T>`, records
+//! and variants (a [`Ty::Named`]) belong to `ir.data` (slice S11b, VER04r 16.14 [D46] to [D48]).
+//! `List<T>` ([`Ty::List`]) is the *reserved* `ir.list`: it exists as a type only so that the
+//! lowering can see one and refuse it by name (R27); it never reaches a corpus.
+//!
+//! ## The width is part of the type (VER04r 16.16 R51, [D60])
+//!
+//! A bytes literal is `Bytes<len>`, a `concat` of two literal widths is `Bytes<sum>`, and an `if` or
+//! `match` whose branches agree keeps the width; `Some(e)` and `Ok(e)` wrap **that** type.  There is no
+//! "recorded width beside the type" any more (S10t kept one, copied from the oracle, and refused
+//! `Ok(concat(a, b"0102"))` for a `Result<Bytes<3>,E>`: R13(c), turned round by S11b).
 //!
 //! `Int` is the mathematical integer of VER04 section 3.  It exists only inside the IR
 //! (the type of `Nat - Nat`, of a bare literal outside a `Nat` context); VER04r 2.1 allows
@@ -51,11 +60,14 @@ pub enum Ty {
     Bytes(Option<Width>),
     /// `Result<T, E>`: the payload type and the *name* of the declared error type.
     Result(Box<Ty>, String),
-    /// `Option<T>`: an **IR-only intermediate** (VER04r 16.10 [D23], [R8]).  Nine `ir.fixed`
-    /// built-ins produce one and `unwrap_or` is its only consumer, as its first operand and
-    /// directly; the lowering refuses it everywhere else (level `ir.data`), so it never reaches
-    /// a signature, a binder or a stream.
+    /// `Option<T>`: a real type of `ir.data` (slice S11b, [D48]).  The one use that adds no `ir.data`
+    /// is the **intermediate use** of R29: a producer node directly under `unwrap_or`.
     Option(Box<Ty>),
+    /// A record or a variant, by its declared name (`ir.data`).  Nominal: two are equal exactly when
+    /// their names are; the fields live in the lowering's tables, never in the type.
+    Named(String),
+    /// `List<T>`: the reserved `ir.list`.  Only the lowering ever holds one, to refuse it (R27).
+    List(Box<Ty>),
     /// `(T1, .., Tn)`, `2 <= n <= 8` (`ir.tuple`, VER04r 4.1, [D20]): structural, so two tuple
     /// types are equal exactly when their components are.
     Tuple(Vec<Ty>),
@@ -82,6 +94,8 @@ impl Ty {
             Ty::Bytes(Some(Width::Param(p))) => format!("Bytes<{p}>"),
             Ty::Result(ok, err) => format!("Result<{},{err}>", ok.name()),
             Ty::Option(inner) => format!("Option<{}>", inner.name()),
+            Ty::List(inner) => format!("List<{}>", inner.name()),
+            Ty::Named(name) => name.clone(),
             Ty::Tuple(parts) => format!(
                 "({})",
                 parts.iter().map(Ty::name).collect::<Vec<_>>().join(",")
@@ -95,9 +109,45 @@ impl Ty {
     pub fn contains_tuple(&self) -> bool {
         match self {
             Ty::Tuple(_) => true,
-            Ty::Result(ok, _) | Ty::Option(ok) => ok.contains_tuple(),
+            Ty::Result(ok, _) | Ty::Option(ok) | Ty::List(ok) => ok.contains_tuple(),
             _ => false,
         }
+    }
+
+    /// Is this type, or a type inside it, a record, a variant or an `Option`?  The type half of R9
+    /// for `ir.data` (VER04r 16.14 R29, Appendix A.2): such a type adds `ir.data` wherever it is the
+    /// type of a binder, a parameter, a result or a sub-expression (the one exception, a producer
+    /// under `unwrap_or`, is the lowerer's).  It also looks inside a tuple (`(Option<U8>,Bool)`).
+    pub fn contains_data(&self) -> bool {
+        match self {
+            Ty::Option(_) | Ty::Named(_) => true,
+            Ty::Tuple(parts) => parts.iter().any(Ty::contains_data),
+            Ty::Result(ok, _) | Ty::List(ok) => ok.contains_data(),
+            _ => false,
+        }
+    }
+
+    /// Is this type, or a type inside it, a list (the reserved `ir.list`, R27)?
+    pub fn contains_list(&self) -> bool {
+        match self {
+            Ty::List(_) => true,
+            Ty::Tuple(parts) => parts.iter().any(Ty::contains_list),
+            Ty::Result(ok, _) | Ty::Option(ok) => ok.contains_list(),
+            _ => false,
+        }
+    }
+
+    /// The levels this type brings by itself, sorted: `ir.tuple` for a tuple, `ir.data` for an
+    /// `Option`, a record or a variant, anywhere inside it (R9, R29).
+    pub fn type_levels(&self) -> Vec<&'static str> {
+        let mut out = Vec::new();
+        if self.contains_data() {
+            out.push("ir.data");
+        }
+        if self.contains_tuple() {
+            out.push("ir.tuple");
+        }
+        out
     }
 
     /// The fixed-width type, if this is one.
@@ -123,15 +173,19 @@ impl Ty {
         matches!(self, Ty::Bytes(_))
     }
 
-    /// The common type of two operand types, or `None` (VER04 section 3).
+    /// The common type of two operand types, or `None`: the grammar checker's `common_type`
+    /// (VER04 section 3, VER04r 16.16 R51, [D60]).
     ///
     /// ```text
-    ///   Nat   with Int      -> Int          (Nat widens)
-    ///   Bytes<N> with Bytes<M> / Bytes -> Bytes   (the width is forgotten)
+    ///   Nat   with Int                 -> Int          (Nat widens)
+    ///   Bytes<N> with Bytes<M> / Bytes -> Bytes        (a differing or forgotten width is forgotten)
     ///   Result<A,E> with Result<B,E>   -> Result<unify(A,B),E>
-    ///   (A,..) with (B,..), same arity -> (unify(A,B),..)        (ir.tuple)
+    ///   Option<A> with Option<B>       -> Option<unify(A,B)>        (by the payload, as Result does)
     ///   anything else must be equal; nothing else is implicit
     /// ```
+    ///
+    /// A tuple, a record, a variant and a list never lift: they are equal or have no common type
+    /// (before S11b a tuple unified component by component, the oracle's CV2-F18 leniency, R61).
     pub fn unify(a: &Ty, b: &Ty) -> Option<Ty> {
         if a == b {
             return Some(a.clone());
@@ -142,18 +196,15 @@ impl Ty {
             (Ty::Result(x, e1), Ty::Result(y, e2)) if e1 == e2 => {
                 Ty::unify(x, y).map(|t| Ty::Result(Box::new(t), e1.clone()))
             }
-            (Ty::Tuple(xs), Ty::Tuple(ys)) if xs.len() == ys.len() => xs
-                .iter()
-                .zip(ys)
-                .map(|(x, y)| Ty::unify(x, y))
-                .collect::<Option<Vec<_>>>()
-                .map(Ty::Tuple),
+            (Ty::Option(x), Ty::Option(y)) => Ty::unify(x, y).map(|t| Ty::Option(Box::new(t))),
             _ => None,
         }
     }
 
-    /// Can a value of type `src` flow to a place of type `dst`?
-    /// (`Nat` to `Int`; `Bytes<N>` to `Bytes` or to `Bytes<N>` of the same width.)
+    /// Can a value of type `src` flow to a place of type `dst`?  The grammar checker's
+    /// `is_assignable_to` (R51): a type to itself; `Nat` to `Int`; `Bytes<N>` to `Bytes`; `Option<S>`
+    /// to `Option<T>` and `Result<S,E>` to `Result<T,E>` when `S` flows to `T`.  Nothing else: a
+    /// tuple, a record, a variant and a list are invariant, also under an `Option`.
     pub fn assignable(src: &Ty, dst: &Ty) -> bool {
         if src == dst {
             return true;
@@ -162,9 +213,7 @@ impl Ty {
             (Ty::Nat, Ty::Int) => true,
             (Ty::Bytes(_), Ty::Bytes(None)) => true,
             (Ty::Result(x, e1), Ty::Result(y, e2)) if e1 == e2 => Ty::assignable(x, y),
-            (Ty::Tuple(xs), Ty::Tuple(ys)) if xs.len() == ys.len() => {
-                xs.iter().zip(ys).all(|(x, y)| Ty::assignable(x, y))
-            }
+            (Ty::Option(x), Ty::Option(y)) => Ty::assignable(x, y),
             _ => false,
         }
     }
@@ -179,6 +228,8 @@ impl Ty {
                 .map(|(_, v)| Ty::bytes_n(*v))
                 .unwrap_or_else(|| self.clone()),
             Ty::Result(ok, e) => Ty::Result(Box::new(ok.substitute(statics)), e.clone()),
+            Ty::Option(inner) => Ty::Option(Box::new(inner.substitute(statics))),
+            Ty::List(inner) => Ty::List(Box::new(inner.substitute(statics))),
             Ty::Tuple(parts) => Ty::Tuple(parts.iter().map(|p| p.substitute(statics)).collect()),
             other => other.clone(),
         }
@@ -278,13 +329,14 @@ mod tests {
         assert!(Ty::Result(Box::new(pair.clone()), "E".into()).contains_tuple());
         assert!(!Ty::Result(Box::new(Ty::Bool), "E".into()).contains_tuple());
         assert!(!Ty::bytes_n(2).contains_tuple());
-        // unify is component by component, assignable too, and the arity must agree
+        // a tuple never lifts, in `unify` or in `assignable` (R51, R61): equal or nothing
         let wide = Ty::Tuple(vec![Ty::Bool, Ty::Int]);
-        assert_eq!(Ty::unify(&pair, &wide), Some(wide.clone()));
+        assert_eq!(Ty::unify(&pair, &wide), None);
+        assert_eq!(Ty::unify(&pair, &pair.clone()), Some(pair.clone()));
         assert_eq!(Ty::unify(&pair, &Ty::Tuple(vec![Ty::Bool])), None);
-        assert_eq!(Ty::unify(&pair, &Ty::Tuple(vec![Ty::Bool, Ty::Bool])), None);
-        assert!(Ty::assignable(&pair, &wide));
+        assert!(!Ty::assignable(&pair, &wide));
         assert!(!Ty::assignable(&wide, &pair));
+        assert!(Ty::assignable(&pair, &pair.clone()));
         let narrow = Ty::Tuple(vec![Ty::bytes_n(1)]);
         assert!(!Ty::assignable(&narrow, &Ty::Tuple(vec![Ty::BYTES, Ty::Bool])));
         // a tuple is never a Result, and substitute looks inside
@@ -307,5 +359,55 @@ mod tests {
             Ty::Result(Box::new(Ty::bytes_n(16)), "E".into())
         );
         assert_eq!(Ty::Nat.substitute(&[("N".into(), 1)]), Ty::Nat);
+    }
+
+    #[test]
+    fn option_lifts_by_its_payload_and_records_and_variants_are_nominal() {
+        let opt = |t: Ty| Ty::Option(Box::new(t));
+        // R51: an Option flows and unifies by its payload, as a Result does
+        assert!(Ty::assignable(&opt(Ty::Nat), &opt(Ty::Int)));
+        assert!(!Ty::assignable(&opt(Ty::Int), &opt(Ty::Nat)));
+        assert!(Ty::assignable(&opt(Ty::bytes_n(4)), &opt(Ty::BYTES)));
+        assert!(Ty::assignable(&opt(opt(Ty::Nat)), &opt(opt(Ty::Int))));
+        assert_eq!(Ty::unify(&opt(Ty::Nat), &opt(Ty::Int)), Some(opt(Ty::Int)));
+        assert_eq!(Ty::unify(&opt(Ty::Nat), &opt(Ty::Bool)), None);
+        // ... but nothing lifts through a tuple, also under an Option
+        let nn = Ty::Tuple(vec![Ty::Nat, Ty::Nat]);
+        let ii = Ty::Tuple(vec![Ty::Int, Ty::Int]);
+        assert!(!Ty::assignable(&opt(nn.clone()), &opt(ii.clone())));
+        assert_eq!(Ty::unify(&opt(nn), &opt(ii)), None);
+        // a record or variant is its name
+        let (p, q) = (Ty::Named("P".into()), Ty::Named("Q".into()));
+        assert_eq!(p.name(), "P");
+        assert!(Ty::assignable(&p, &p.clone()) && !Ty::assignable(&p, &q));
+        assert_eq!(Ty::unify(&p, &q), None);
+        // R9, the type half: ir.data for an Option, a record or a variant, anywhere inside
+        assert_eq!(opt(Ty::Bool).type_levels(), ["ir.data"]);
+        assert_eq!(p.type_levels(), ["ir.data"]);
+        assert_eq!(
+            Ty::Tuple(vec![opt(Ty::Bool), Ty::Bool]).type_levels(),
+            ["ir.data", "ir.tuple"]
+        );
+        assert_eq!(
+            Ty::Result(Box::new(opt(Ty::Bool)), "E".into()).type_levels(),
+            ["ir.data"]
+        );
+        assert!(Ty::Bool.type_levels().is_empty());
+        assert!(Ty::Result(Box::new(nn_test()), "E".into()).type_levels() == ["ir.tuple"]);
+        // a list is never counted (it is refused), only found
+        assert!(Ty::List(Box::new(Ty::Bool)).contains_list());
+        assert!(opt(Ty::List(Box::new(Ty::Bool))).contains_list());
+        assert!(!p.contains_list());
+        assert_eq!(Ty::List(Box::new(Ty::Nat)).name(), "List<Nat>");
+        assert_eq!(opt(Ty::bytes_n(2)).name(), "Option<Bytes<2>>");
+        assert_eq!(
+            opt(Ty::Bytes(Some(Width::Param("N".into()))))
+                .substitute(&[("N".into(), 8)]),
+            opt(Ty::bytes_n(8))
+        );
+    }
+
+    fn nn_test() -> Ty {
+        Ty::Tuple(vec![Ty::Nat, Ty::Nat])
     }
 }

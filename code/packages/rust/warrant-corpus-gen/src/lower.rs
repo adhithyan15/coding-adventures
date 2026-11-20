@@ -68,7 +68,7 @@
 //!               a body refused at a level): duplicate bind, shadowing bind, then, per match,
 //!               unreachable arms in arm order, then fall-through (R12); all of them `ir`
 //!   Err(e)      lowers to ["err_any"]: an error value has no IR form, so an arm that *uses* `e`
-//!               is refused at `ir.data`; `Err(_)` is the same node
+//!               is refused as the feature `err-value` ([D55]); `Err(_)` is the same node
 //!   arm typing  an arm that needs a context takes the first self-typed arm's type, as `if`
 //!               does; the arms must unify, else a `type` error (not a corpus error)
 //!   scrutinee   `match` is `ir.tuple` exactly when the scrutinee's static type is a `Result`
@@ -82,33 +82,57 @@
 //! kinds, and only those, to the generator code `ir`, naming the precise corpus error by
 //! re-lowering the document without the checker.
 //!
-//! ## Static widths flow to `Bytes<N>` everywhere (VER04r A.1, slice S10t)
+//! ## The width is part of the type (VER04r 16.16 R51, [D60]; slice S11b)
 //!
-//! A `concat` of two statically sized operands, a bytes literal and an `if` of equal widths are
-//! `Bytes<N>` to the checker.  This typer forgets the width in the *type* (it stays `Bytes`) and
-//! records it as the node is lowered; [`Lowerer::flows`] reads it back wherever a value flows to
-//! a `Bytes<N>`: a model body to its declared result, an `Ok` payload, an argument to its
-//! parameter, and the operand of `from_be`/`from_le`.  (Before S10t only the last did.)
+//! In the checker a width is part of the *type*: a bytes literal is `Bytes<len>`, a `concat` of two literal
+//! widths is `Bytes<sum>`, an `if` or `match` whose branches agree keeps it, and `Some(e)` and `Ok(e)`
+//! wrap **that** type.  This typer does the same ([`Ty::Bytes`] carries the width), so there is no
+//! "recorded width beside the type" any more (S10t kept one, copied from the oracle, which refused
+//! `Ok(concat(a, b"0102"))` for a `Result<Bytes<3>,E>`: R13(c), turned round here).  A value flows to a
+//! place through [`Ty::assignable`], everywhere: a model body, an argument, a `ctor` operand, the default
+//! of `unwrap_or`.  `Ok(e)` and `Some(e)` do **not** compare their payload with the expected type: it is
+//! only a hint, as in the checker, and the position the node sits in decides whether it flows.
 //!
-//! `Option<T>` is an IR-only intermediate (D23, R8): nine built-ins produce one and
-//! `unwrap_or` consumes it, as its first operand and directly; anywhere else it is refused with
-//! the level `ir.data` (it is [`Ty::Option`], and it never reaches a signature).
+//! ## `ir.data` (slice S11b): records, variants, `Option`, four tags, ten patterns
 //!
-//! A refused unit is named by the **first construct, in source order, that cannot be lowered**;
-//! it is named `ir.fixed` only when nothing else blocks it (a built-in lowers, so a later tuple
-//! or constructor in the same unit gives the unit that level, the oracle's rule).
-//!
-//! The refusals, by level:
+//! Appendix A.2, written from the spec and compared byte for byte with the oracle's committed dumps
+//! (`tests/data_parity.rs`, `data-forms-v1`):
 //!
 //! ```text
-//!   ir.fixed   a unit that lowers and uses a built-in of Appendix A.1 (see above)
-//!   ir.tuple   tuple types, the tuple literal, projection, `match` on a `Result`
-//!   ir.data    list literals, `match` on anything but a `Result`, constructors, `Option` and
-//!              `List` types, records, variants; Some None fixed slice to_list to_bytes
-//!              replicate range, and an `Option` that is not the first operand of `unwrap_or`
-//!   ir.seq     fold map all any count (reserved)
+//!   Some(e)  None  Name(e1,..)  Dot  r.x  match s with ..     ["some",e] ["none","T"] ["ctor",N,[..]] ["field",e,i]
+//!   a data pattern: some(p) none ctor(N, [p..]) bool(v)       any scrutinee, not only a Result
+//!   requires    by tag, by pattern and by TYPE (R9, R29): an Option, a record or a variant anywhere in the
+//!               type of a binder, a parameter, a result or a sub-expression adds `ir.data`, except the
+//!               static type of a producer node that is directly the first operand of `unwrap_or` (the
+//!               intermediate use: no committed `requires` moves)
+//!   None        is typed ONLY by the expected type of its position (R52), never from a sibling branch or arm
+//!   match       `ir.tuple` when the scrutinee is a `Result`, `ir.data` otherwise, and `ir.data` as well for a
+//!               data pattern at any depth; patterns are checked before any arm body, outside in: structure
+//!               first, then the duplicate-bind and shadowing rules
+//! ```
+//!
+//! `ir.data` is the one level still **fail-closed** where it is evaluated: [`crate::generate`] refuses a
+//! document in which any unit needs it (`level ir.data`, R37), as the evaluator does, until S11c-2.
+//!
+//! ## What stays refused, by name (R27, R28, [D55])
+//!
+//! ```text
+//!   ir.list     a list type anywhere, a list literal, a list operand of len concat take drop at, a call to
+//!               an op whose signature names a list, and slice to_list to_bytes replicate
+//!   ir.seq      fold map all any count range
+//!   fixed-cast  `fixed<N>(b)`: outside every level
+//!   err-value   an arm that USES the error value an `Err(e)` pattern bound ([D55]); `Err(_)` and an unused
+//!               `Err(e)` are `err_any`
 //!   inout / ensures / vectors / assume   WX-G, WX-E and assumption rows
 //! ```
+//!
+//! **Refusal order (R35, R53).**  The declaration limits of section 2.2 come first (`limit`); within one
+//! unit a level or feature refusal is named in preference to a typing error of the same unit (the
+//! checker's error is then not the answer: [`check_or_refuse`] reads the unit's source for the first
+//! reserved construct, as the oracle's `_scan` does); an error never hides a refusal an *earlier-declared*
+//! unit holds; and a document with refusals and no other error is named by the refusal of the unit declared
+//! on the **earliest line** ([`Partial::first_block`]).  A refused unit is named by the first construct, in
+//! source order, that cannot be lowered, and by `ir.fixed` only when nothing else blocks it.
 //!
 //! `exists`, a named static width at a call site, a subject call inside a model body, a
 //! subject call under an impure guard (VER04r 4.4) and, in a **v0** document, a
@@ -144,23 +168,31 @@ const MAX_TYPE_DEPTH: usize = 16;
 /// The longest `Bytes<N>` (VER04h section 3, `MAX_FIXED_WIDTH`).
 const MAX_FIXED_WIDTH: u64 = 4096;
 
-/// Constructors and sequence built-ins of `ir.data` (`unwrap_or` is `ir.fixed` since S10b).
-const LEVEL_DATA: [&str; 8] = [
-    "Some",
-    "None",
-    "fixed",
-    "slice",
-    "to_list",
-    "to_bytes",
-    "replicate",
-    "range",
+/// The source built-ins assigned to the reserved `ir.list` **by name**, whatever their operand
+/// (VER04r 16.14 R28): the WX-D1 sequence built-ins of VER04k.
+const LEVEL_LIST: [&str; 4] = ["slice", "to_list", "to_bytes", "replicate"];
+
+/// The source built-ins of the reserved `ir.seq` (section 4.1; `range` is named there, R28).
+const LEVEL_SEQ: [&str; 6] = ["fold", "map", "all", "any", "count", "range"];
+
+/// The one built-in outside every level (R28): `fixed<N>(b)`, refused with the feature name `fixed-cast`.
+const FIXED_CAST: &str = "fixed";
+
+/// The refusal message of a list type (R27), the oracle's sentence.
+const LIST_TYPE_MESSAGE: &str = "a list type needs the reserved ir.list level";
+
+/// The refusal message of an error value that is used (R28, [D55]), the oracle's sentence.
+const ERR_VALUE_MESSAGE: &str = "an error value bound by a pattern has no IR form";
+
+/// The names every document reserves (VER04 section 2; the checker's `V0_BUILTINS`).
+const RESERVED_V0: [&str; 18] = [
+    "Bool", "Int", "Nat", "U8", "U64", "Bytes", "List", "Option", "Result", "len", "at", "concat",
+    "fixed", "div", "Some", "None", "Ok", "Err",
 ];
 
-/// Why an `Option` is refused anywhere but under `unwrap_or` (D23).
-const OPTION_MESSAGE: &str = "Option is an IR-only intermediate (its only consumer is unwrap_or)";
-
-/// The reserved WX-D sequence level.
-const LEVEL_SEQ: [&str; 5] = ["fold", "map", "all", "any", "count"];
+/// The names a v1 document reserves on top (VER04j 1.2, VER04k 1.2): the six further fixed-width types, the
+/// `ir.fixed` built-ins, the list and sequence names, and `take`/`drop`.  A bind may not be one of them (CV2-F8).
+const RESERVED_V1_EXTRA: [&str; 6] = ["U16", "U32", "I8", "I16", "I32", "I64"];
 
 // ---------------------------------------------------------------------------
 // The lowered document
@@ -305,7 +337,39 @@ pub struct LoweredExample {
     pub requires: Vec<&'static str>,
 }
 
-/// A whole document lowered to `ir.core`.  Every item is within `ir.core`.
+/// A declared record or variant, as the corpus `types` row of VER04r section 2.2 writes it (S11b).
+///
+/// The field and constructor lists are in **declaration order**; the lowering dump sorts the rows by type
+/// name (canonical JSON), never the lists inside a row.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum LoweredType {
+    /// `record Name(f1: T1, ..)`: its fields.
+    Record {
+        /// The record's name.
+        name: String,
+        /// `(field name, type)` in declaration order.
+        fields: Vec<(String, Ty)>,
+    },
+    /// `variant Name = C1(..) | C2 | ..`: its constructors.
+    Variant {
+        /// The variant's name.
+        name: String,
+        /// `(constructor, field types)` in declaration order; a payload-free constructor has none.
+        ctors: Vec<(String, Vec<Ty>)>,
+    },
+}
+
+impl LoweredType {
+    /// The declared name.
+    pub fn name(&self) -> &str {
+        match self {
+            LoweredType::Record { name, .. } | LoweredType::Variant { name, .. } => name,
+        }
+    }
+}
+
+/// A whole document lowered.  Every item lowered: a unit that needs a reserved level, or any other
+/// refusal, makes [`lower_document`] an error instead.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Lowered {
     /// The module name (`ct_compare`).
@@ -314,6 +378,9 @@ pub struct Lowered {
     pub version: Version,
     /// Declared error types, in declaration order.
     pub errors: Vec<ErrorType>,
+    /// Declared records and variants, in declaration order (`ir.data`, S11b); empty for a document
+    /// that declares none.
+    pub types: Vec<LoweredType>,
     /// Operations, in declaration order.
     pub ops: Vec<LoweredOp>,
     /// Models in declaration order, which is also `model_order` (VER04r 4.2 rule 1).
@@ -359,12 +426,18 @@ pub struct Partial {
     module: String,
     version: Version,
     errors: Vec<ErrorType>,
-    /// Document-level blockers (`ensures`, `vectors`, records, variants, assumptions).
+    /// The records and variants, in declaration order (S11b).
+    types: Vec<LoweredType>,
+    /// Document-level blockers that are no unit of the oracle: `ensures`, `vectors`, assumptions.
+    /// They come first in [`Partial::first_block`], as before S11b.
     declarations: Vec<GenError>,
-    ops: Vec<(String, Slot<LoweredOp>)>,
-    models: Vec<(String, Slot<LoweredModel>)>,
-    suites: Vec<(String, Slot<LoweredSuite>)>,
-    examples: Vec<(String, Slot<LoweredExample>)>,
+    /// The record, variant and alias declarations that were refused (a list type in one, R35), with the
+    /// byte offset of the declaration: they are units like any other (R53).
+    type_decls: Vec<(String, usize, GenError)>,
+    ops: Vec<(String, usize, Slot<LoweredOp>)>,
+    models: Vec<(String, usize, Slot<LoweredModel>)>,
+    suites: Vec<(String, usize, Slot<LoweredSuite>)>,
+    examples: Vec<(String, usize, Slot<LoweredExample>)>,
 }
 
 /// What kind of item a [`CensusRow`] describes.
@@ -389,7 +462,7 @@ pub struct CensusRow {
     pub kind: ItemKind,
     /// Its name (empty for an anonymous declaration).
     pub name: String,
-    /// `None` if the item is within `ir.core`, else the refusal that blocks it
+    /// `None` if the item lowered, else the refusal that blocks it
     /// (`blocked.level` names the level for `code == "level"`).
     pub blocked: Option<GenError>,
 }
@@ -408,7 +481,9 @@ impl Partial {
         }
     }
 
-    /// The first refusal, in the order: declarations, operations, models, claims, examples.
+    /// The first refusal (VER04r 16.14 R35 (5), 16.16 R53): the document-level `ensures`, `vectors` and
+    /// `assume` blockers first, then the refusal of the unit declared at the **earliest position** in the
+    /// source, whatever its kind (type declaration, operation, model, claim or example).
     pub fn first_block(&self) -> Option<GenError> {
         self.blocks().into_iter().next()
     }
@@ -416,17 +491,27 @@ impl Partial {
     /// The refusals in the order of [`Partial::first_block`].
     fn blocks(&self) -> Vec<GenError> {
         let mut out: Vec<GenError> = self.declarations.clone();
-        fn push<T>(out: &mut Vec<GenError>, slots: &[(String, Slot<T>)]) {
-            out.extend(slots.iter().filter_map(|(_, s)| s.as_ref().err().cloned()));
+        let mut units: Vec<(usize, GenError)> = Vec::new();
+        units.extend(self.type_decls.iter().map(|(_, pos, e)| (*pos, e.clone())));
+        fn push<T>(out: &mut Vec<(usize, GenError)>, slots: &[(String, usize, Slot<T>)]) {
+            out.extend(
+                slots
+                    .iter()
+                    .filter_map(|(_, pos, s)| s.as_ref().err().map(|e| (*pos, e.clone()))),
+            );
         }
-        push(&mut out, &self.ops);
-        push(&mut out, &self.models);
-        push(&mut out, &self.suites);
-        push(&mut out, &self.examples);
+        push(&mut units, &self.ops);
+        push(&mut units, &self.models);
+        push(&mut units, &self.suites);
+        push(&mut units, &self.examples);
+        // A stable sort: two refusals at one position (none can happen) keep the kind order.
+        units.sort_by_key(|(pos, _)| *pos);
+        out.extend(units.into_iter().map(|(_, e)| e));
         out
     }
 
-    /// Every item with its refusal, in the same order as [`Partial::first_block`].
+    /// Every item with its refusal, in the order of [`Partial::first_block`]'s kinds: declarations,
+    /// then each kind in declaration order.
     pub fn census(&self) -> Vec<CensusRow> {
         let mut rows = Vec::new();
         for d in &self.declarations {
@@ -436,6 +521,13 @@ impl Partial {
                 blocked: Some(d.clone()),
             });
         }
+        for (name, _, e) in &self.type_decls {
+            rows.push(CensusRow {
+                kind: ItemKind::Declaration,
+                name: name.clone(),
+                blocked: Some(e.clone()),
+            });
+        }
         let mut push = |kind, name: &String, blocked: Option<GenError>| {
             rows.push(CensusRow {
                 kind,
@@ -443,16 +535,16 @@ impl Partial {
                 blocked,
             })
         };
-        for (n, s) in &self.ops {
+        for (n, _, s) in &self.ops {
             push(ItemKind::Op, n, s.as_ref().err().cloned());
         }
-        for (n, s) in &self.models {
+        for (n, _, s) in &self.models {
             push(ItemKind::Model, n, s.as_ref().err().cloned());
         }
-        for (n, s) in &self.suites {
+        for (n, _, s) in &self.suites {
             push(ItemKind::Claim, n, s.as_ref().err().cloned());
         }
-        for (n, s) in &self.examples {
+        for (n, _, s) in &self.examples {
             push(ItemKind::Example, n, s.as_ref().err().cloned());
         }
         rows
@@ -462,7 +554,7 @@ impl Partial {
     pub fn lowered_models(&self) -> Vec<LoweredModel> {
         self.models
             .iter()
-            .filter_map(|(_, s)| s.as_ref().ok().cloned())
+            .filter_map(|(_, _, s)| s.as_ref().ok().cloned())
             .collect()
     }
 
@@ -470,7 +562,7 @@ impl Partial {
     pub fn lowered_suites(&self) -> Vec<&LoweredSuite> {
         self.suites
             .iter()
-            .filter_map(|(_, s)| s.as_ref().ok())
+            .filter_map(|(_, _, s)| s.as_ref().ok())
             .collect()
     }
 
@@ -488,6 +580,7 @@ impl Partial {
             module: self.module,
             version: self.version,
             errors: self.errors,
+            types: self.types,
             ops: oks(self.ops),
             models: oks(self.models),
             suites: oks(self.suites),
@@ -497,20 +590,22 @@ impl Partial {
 }
 
 /// The lowered values of a list of slots that are all `Ok`.
-fn oks<T>(slots: Vec<(String, Slot<T>)>) -> Vec<T> {
-    slots.into_iter().filter_map(|(_, s)| s.ok()).collect()
+fn oks<T>(slots: Vec<(String, usize, Slot<T>)>) -> Vec<T> {
+    slots.into_iter().filter_map(|(_, _, s)| s.ok()).collect()
 }
 
-/// Lower a document to `ir.core`, refusing the whole document at the first construct
-/// beyond it.
+/// Lower a document, refusing the whole document at the first construct no level of this tool
+/// implements.
 ///
-/// The document is first run through the S2 checker; a checker error is returned as
-/// `code == "check"` (the checker's own diagnostic code in the message).
+/// The declaration limits of section 2.2 are checked first (`limit`, R35 (1)); the document is then
+/// run through the S2 checker, and a checker error is returned as `code == "check"` (the checker's own
+/// diagnostic code in the message) unless it is one the oracle names differently (a corpus error, or a
+/// reserved level or feature in the same unit: see [`check_or_refuse`]).
 ///
 /// # Errors
 ///
-/// See the module documentation.  The first refusal in the order declarations,
-/// operations, models, claims, examples is returned.
+/// See the module documentation.  The refusal of the unit declared at the earliest position (the
+/// document-level `ensures`, `vectors` and `assume` blockers first) is returned.
 pub fn lower_document(file: &WarrantFile<'_>) -> Result<Lowered, GenError> {
     lower_partial(file)?.into_lowered()
 }
@@ -530,6 +625,7 @@ pub fn lower_document_omitting(
     file: &WarrantFile<'_>,
     omit: &[String],
 ) -> Result<Lowered, GenError> {
+    check_limits(file)?;
     check_or_refuse(file, || {
         let mut lowerer = Lowerer::new(file);
         lowerer.omit_examples = omit.to_vec();
@@ -550,22 +646,69 @@ pub fn census(file: &WarrantFile<'_>) -> Result<Vec<CensusRow>, GenError> {
 /// Lower every item independently, keeping refusals per item.  Only a malformed document
 /// (checker error, type error, resource limit) is an `Err`.
 pub fn lower_partial(file: &WarrantFile<'_>) -> Result<Partial, GenError> {
+    check_limits(file)?;
     check_or_refuse(file, || lower_partial_unchecked(file))?;
     lower_partial_unchecked(file)
 }
+
+/// The declaration limits of section 2.2 rule 3, the corpus limits (VER04r 16.14 R34, R35 (1)), in
+/// declaration order, before the checker or any expression is looked at: an error type has 1 to 64 cases,
+/// a variant at most 64 constructors and a constructor at most 8 fields, a record at most 32 fields.
+/// (The parser admits 256 constructors and 32 fields; raising a limit is an erratum to section 2.2.)
+fn check_limits(file: &WarrantFile<'_>) -> Result<(), GenError> {
+    let limit = |at: &str, message: &str| Err(GenError::new(code::LIMIT, at, message));
+    for d in &file.declarations {
+        match d {
+            Declaration::Error(e) if e.variants.len() > 64 => {
+                return limit(e.name, "an error type has at most 64 cases")
+            }
+            Declaration::Record(r) if r.fields.len() > 32 => {
+                return limit(r.name, "a record has at most 32 fields")
+            }
+            Declaration::Variant(v) => {
+                if v.ctors.len() > 64 {
+                    return limit(v.name, "a variant has at most 64 constructors");
+                }
+                if v.ctors.iter().any(|c| c.fields.len() > 8) {
+                    return limit(v.name, "a constructor has at most 8 fields");
+                }
+            }
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
+/// Is `e` the refusal of a reserved level or feature (VER04r 16.14 R27, R28, R35 (2)): the four names that
+/// the generator's own typer names in preference to a typing error of the same unit?
+fn is_reserved_refusal(e: &GenError) -> bool {
+    e.code == code::LEVEL
+        && matches!(
+            e.level,
+            Some("ir.list" | "ir.seq" | "fixed-cast" | "err-value")
+        )
+}
+
 /// Run the S2 checker; a refusal is `code == "check"` (the checker's own diagnostic code in the
-/// message), **except** the three that are corpus errors of Appendix A.1 and so the generator code
-/// `ir` (VER04r 16.10 R2, R12): a `match` that falls through (`NonExhaustiveMatch`), an arm no
-/// value can reach (`RedundantArm`), and a pattern name that repeats or shadows another
-/// (`ShadowedBinding` raised at a match arm).  The checker enforces the same match rules as the
-/// oracle's `patterns.py`, so a corpus-error document is refused here before the lowerer sees it;
-/// to name *which* corpus error (and in the oracle's order: patterns before bodies), the document
-/// is lowered once more **without** the checker (`unchecked`) and that refusal is used when it is
-/// an `ir` one.
+/// message), **except** two families the oracle names differently.
+///
+/// 1. **A reserved level or feature** (`ir.list`, `ir.seq`, `fixed-cast`, `err-value`; R35 (2), R53).
+///    The oracle names it in preference to a typing error of the same unit, and so does this tool:
+///    the document is lowered once more **without** the checker (`unchecked`), whose typer reads the
+///    unit's source for the first reserved construct and holds the refusal of an earlier-declared unit
+///    over a later typing error, and that refusal is the answer.  (A call to an op from a model, or a
+///    `None` with no type, is a checker error; the construct that decides is a level.)
+/// 2. **The three corpus errors** of Appendix A.1 and so the generator code `ir` (VER04r 16.10 R2,
+///    R12): a `match` that falls through (`NonExhaustiveMatch`), an arm no value can reach
+///    (`RedundantArm`), and a pattern name that repeats or shadows another (`ShadowedBinding` raised at
+///    a match arm).  The checker enforces the same match rules as the oracle's `patterns.py`, so a
+///    corpus-error document is refused here before the lowerer sees it; to name *which* corpus error
+///    (and in the oracle's order: patterns before bodies, structure before the bind rules), the same
+///    `unchecked` lowering is used when it is an `ir` one.
 ///
 /// A name the checker refuses as a bind and the oracle accepts (a bind named like a model, an op,
-/// an error type, a variant constructor or a reserved built-in) is also `ir` here: the generator
-/// is stricter than the oracle there, and says so with the shadowing sentence.
+/// an error type, a variant constructor or a reserved built-in) is also `ir` here, and since S11b
+/// carries the oracle's own sentence for it ([`patterns::RESERVED_BIND`]).
 fn check_or_refuse(
     file: &WarrantFile<'_>,
     unchecked: impl FnOnce() -> Result<Partial, GenError>,
@@ -573,6 +716,16 @@ fn check_or_refuse(
     let Err(e) = check_warrant(file) else {
         return Ok(());
     };
+    let attempt = unchecked();
+    match &attempt {
+        Err(precise) if is_reserved_refusal(precise) => return Err(precise.clone()),
+        Ok(partial) => {
+            if let Some(block) = partial.first_block().filter(is_reserved_refusal) {
+                return Err(block);
+            }
+        }
+        Err(_) => {}
+    }
     let generic = match &e.kind {
         CheckerErrorKind::NonExhaustiveMatch => Some(patterns::FALLS_THROUGH),
         CheckerErrorKind::RedundantArm => Some(patterns::UNREACHABLE),
@@ -581,15 +734,22 @@ fn check_or_refuse(
         }
         _ => None,
     };
-    let Some(generic) = generic else {
-        return Err(GenError::new(
+    let check_error = || {
+        GenError::new(
             code::CHECK,
             "",
             format!("the document does not pass the checker ({})", e.code),
-        ));
+        )
     };
-    match unchecked() {
+    let Some(generic) = generic else {
+        return Err(check_error());
+    };
+    match attempt {
         Err(precise) if precise.code == code::IR => Err(precise),
+        // The checker's match error is a corpus error only if nothing earlier in the oracle's order is a
+        // typing error: a pattern that names no constructor is named before a duplicate bind (R35 (3)),
+        // and that is a `type` error, which this tool reports as its own typing refusal.
+        Err(precise) if precise.code == code::TYPE => Err(check_error()),
         _ => Err(GenError::new(code::IR, "", generic)),
     }
 }
@@ -694,7 +854,19 @@ struct Lowerer<'f, 'a> {
     file: &'f WarrantFile<'a>,
     module: String,
     errors: HashMap<String, Vec<String>>,
-    unsupported_types: HashSet<String>,
+    /// The names of the declared records and variants (`ir.data`): known before any type is resolved.
+    type_names: HashSet<String>,
+    /// The declared records, `name -> fields` (resolved; a refused declaration keeps what resolved).
+    records: HashMap<String, Vec<(String, Ty)>>,
+    /// The declared records and variants as the usefulness check and the constructors see them:
+    /// `type name -> ((constructor, (field type, ..)), ..)`.  A record has one constructor named like it.
+    adts: patterns::Adts,
+    /// A constructor name (a record's own name included) to the type that declares it and its index.
+    ctors: HashMap<String, (String, usize)>,
+    /// The refusals recorded so far, `(byte offset of the unit, refusal)`, for R35 (5) and R53: an
+    /// error of a unit never hides a refusal an earlier-declared unit holds (`in_order`).  Only the
+    /// level and feature refusals are held.
+    held: Vec<(usize, GenError)>,
     /// `model Word = Bytes<4>`: a type alias (a model with no parameters and no body).
     aliases: HashMap<String, TypeExpr<'a>>,
     op_sigs: HashMap<String, Slot<OpSig>>,
@@ -707,23 +879,33 @@ struct Lowerer<'f, 'a> {
     /// example body being lowered, so `classify` never re-types a side without its context
     /// (S3a review, known gap L6).
     top_eq_types: Option<(Ty, Ty)>,
-    /// Set by `unwrap_or` for exactly one `expr` call, its first operand: the one place an
-    /// `Option` may be the type of an expression (D23, R8).  Taken at the start of that call.
-    option_ok: bool,
-    /// Set by the branch that lowers a `Bytes` literal, a `concat` or an `if` of equal widths
-    /// just before it returns, and taken by [`Lowerer::expr`] into `last_width`.
-    width_out: Option<u64>,
-    /// The static width of the `Bytes` expression the most recent `expr` call lowered, if it
-    /// is one the checker types `Bytes<n>` although this typer forgets the width (a literal,
-    /// a `concat` of sized operands, an `if` of equal widths).  Read by `from_be`/`from_le`
-    /// immediately after the operand's `expr` call: one lowering pass, never a re-lowering.
-    last_width: Option<u64>,
+    /// Set by `unwrap_or` for exactly one `expr` call, its first operand: a producer node there is the
+    /// **intermediate use** of R29, whose `Option` type adds no `ir.data`.  Taken at the start of that
+    /// call.
+    intermediate: bool,
     /// The full ids of the examples an `omit_example` profile line names (VER04r 8.4).
     omit_examples: Vec<String>,
     /// The levels the *types* met by the unit being lowered bring (binder, parameter, result, the
-    /// type of every sub-expression): R9's type half, `ir.tuple` for a tuple.  Reset at the start
-    /// of every unit and added to its `requires` by [`Lowerer::levels_of`].
+    /// type of every sub-expression): R9's type half, `ir.tuple` for a tuple and `ir.data` for an
+    /// `Option`, a record or a variant.  Reset at the start of every unit and added to its `requires`
+    /// by [`Lowerer::levels_of`].
     type_levels: BTreeSet<&'static str>,
+}
+
+/// The names an `Err(e)` pattern, at any depth of `p`, binds to an error value ([D55]).
+fn err_binds<'e>(p: &Pattern<'e>, out: &mut HashSet<&'e str>) {
+    match p {
+        Pattern::Err(inner) => {
+            if let Some(name) = inner.as_binder() {
+                out.insert(name);
+            }
+            err_binds(inner, out);
+        }
+        Pattern::Ok(inner) | Pattern::Some(inner) => err_binds(inner, out),
+        Pattern::Tuple(items) => items.iter().for_each(|i| err_binds(i, out)),
+        Pattern::Ctor { args, .. } => args.iter().for_each(|i| err_binds(i, out)),
+        Pattern::None | Pattern::Wild | Pattern::Bool(_) => {}
+    }
 }
 
 /// Strip any number of parentheses: a group vanishes in the IR.
@@ -746,6 +928,15 @@ fn needs_context(e: &Expression<'_>) -> bool {
             args: Some(_),
             ..
         } if name.segments.len() == 1 && matches!(name.segments[0], "Ok" | "Err") => true,
+        // `Some(e)` has no type of its own when its payload has none (`Some(1)`); a bare `None` has none
+        // either but takes none from a sibling (R52), so it is not here.
+        Expression::Reference {
+            name,
+            args: Some(args),
+            ..
+        } if name.segments.len() == 1 && name.segments[0] == "Some" && args.len() == 1 => {
+            needs_context(&args[0])
+        }
         Expression::Unary {
             op: UnaryOp::Neg,
             operand,
@@ -776,7 +967,11 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             file,
             module: file.name.to_string(),
             errors: HashMap::new(),
-            unsupported_types: HashSet::new(),
+            type_names: HashSet::new(),
+            records: HashMap::new(),
+            adts: patterns::Adts::new(),
+            ctors: HashMap::new(),
+            held: Vec::new(),
             aliases: HashMap::new(),
             op_sigs: HashMap::new(),
             model_names: HashSet::new(),
@@ -785,9 +980,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             nest: 0,
             current_model: None,
             top_eq_types: None,
-            option_ok: false,
-            width_out: None,
-            last_width: None,
+            intermediate: false,
             omit_examples: Vec::new(),
             type_levels: BTreeSet::new(),
         }
@@ -798,7 +991,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
     fn run(&mut self) -> Result<Partial, GenError> {
         let mut errors = Vec::new();
         let mut declarations = Vec::new();
-        // Pass 1: names (error types, record and variant names, model names).
+        // Pass 1: names (error types, record and variant names with their constructors, aliases, models).
         for d in &self.file.declarations {
             match d {
                 Declaration::Error(e) => {
@@ -810,20 +1003,17 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     });
                 }
                 Declaration::Record(r) => {
-                    self.unsupported_types.insert(r.name.to_string());
-                    declarations.push(GenError::level(
-                        Beyond::IrData,
-                        r.name,
-                        "a record declaration needs ir.data",
-                    ));
+                    self.type_names.insert(r.name.to_string());
+                    // One namespace (VER04j 4.2): a record's one constructor is named like the record.
+                    self.ctors
+                        .insert(r.name.to_string(), (r.name.to_string(), 0));
                 }
                 Declaration::Variant(v) => {
-                    self.unsupported_types.insert(v.name.to_string());
-                    declarations.push(GenError::level(
-                        Beyond::IrData,
-                        v.name,
-                        "a variant declaration needs ir.data",
-                    ));
+                    self.type_names.insert(v.name.to_string());
+                    for (index, c) in v.ctors.iter().enumerate() {
+                        self.ctors
+                            .insert(c.name.to_string(), (v.name.to_string(), index));
+                    }
                 }
                 Declaration::Vectors(v) => declarations.push(GenError::level(
                     Beyond::Vectors,
@@ -872,15 +1062,82 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 | Declaration::Claim(_) => {}
             }
         }
+        // Pass 1b: the type declarations (records, variants, aliases), in declaration order.  Each is a
+        // unit (R35 (5), R53): a list type in one is refused at it, and a typing error in one yields to a
+        // refusal an earlier-declared unit holds.
+        let mut types: Vec<LoweredType> = Vec::new();
+        let mut type_decls: Vec<(String, usize, GenError)> = Vec::new();
+        for d in &self.file.declarations {
+            match d {
+                Declaration::Record(r) => {
+                    let pos = r.span.0;
+                    if let Some(refused) = r.fields.iter().find_map(|f| self.scan_type(&f.ty)) {
+                        let refused = refused.at(r.name);
+                        self.hold(pos, &refused);
+                        type_decls.push((r.name.to_string(), pos, refused));
+                        // What resolves is kept: a later `r.field` of a list type is a list operand (R57).
+                        let kept: Result<Vec<_>, GenError> = r
+                            .fields
+                            .iter()
+                            .map(|f| Ok((f.name.to_string(), self.resolve(&f.ty, &[], 0)?)))
+                            .collect();
+                        if let Ok(fields) = kept {
+                            self.register_record(r.name, &fields);
+                        }
+                        continue;
+                    }
+                    let fields = match self.declare_record(r.name, &r.fields) {
+                        Ok(f) => f,
+                        Err(e) => return Err(self.in_order(pos, e)),
+                    };
+                    types.push(LoweredType::Record {
+                        name: r.name.to_string(),
+                        fields,
+                    });
+                }
+                Declaration::Variant(v) => {
+                    let pos = v.span.0;
+                    let refused = v
+                        .ctors
+                        .iter()
+                        .flat_map(|c| c.fields.iter())
+                        .find_map(|f| self.scan_type(&f.ty));
+                    if let Some(refused) = refused {
+                        let refused = refused.at(v.name);
+                        self.hold(pos, &refused);
+                        type_decls.push((v.name.to_string(), pos, refused));
+                        continue;
+                    }
+                    let ctors = match self.declare_variant(v.name, &v.ctors) {
+                        Ok(c) => c,
+                        Err(e) => return Err(self.in_order(pos, e)),
+                    };
+                    types.push(LoweredType::Variant {
+                        name: v.name.to_string(),
+                        ctors,
+                    });
+                }
+                Declaration::Model(m) if m.body.is_none() && m.params.is_empty() => {
+                    if let Some(refused) = self.scan_type(&m.target_type) {
+                        let refused = refused.at(m.name);
+                        self.hold(m.span.0, &refused);
+                        type_decls.push((m.name.to_string(), m.span.0, refused));
+                    }
+                }
+                _ => {}
+            }
+        }
+        // Not a unit and yielding to nothing: a record or variant that contains itself (R53).
+        self.check_cycles()?;
         // Pass 2: operation signatures.
-        let mut ops: Vec<(String, Slot<LoweredOp>)> = Vec::new();
+        let mut ops: Vec<(String, usize, Slot<LoweredOp>)> = Vec::new();
         let mut op_decls: Vec<&OpDecl<'a>> = Vec::new();
         for d in &self.file.declarations {
             if let Declaration::Op(op) = d {
                 let slot = self.lower_op_signature(op);
                 let slot = match slot {
                     Err(e) if is_refusal(&e) => Err(e.at(op.name)),
-                    Err(e) => return Err(e.at(op.name)),
+                    Err(e) => return Err(self.in_order(op.span.0, e.at(op.name))),
                     Ok(v) => Ok(v),
                 };
                 match &slot {
@@ -895,41 +1152,57 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                         );
                     }
                     Err(e) => {
+                        self.hold(op.span.0, e);
                         self.op_sigs.insert(op.name.to_string(), Err(e.clone()));
                     }
                 }
-                ops.push((op.name.to_string(), slot));
+                ops.push((op.name.to_string(), op.span.0, slot));
                 op_decls.push(op);
             }
         }
         // Pass 3: models, in declaration order (a model sees only earlier models).
-        let mut models: Vec<(String, Slot<LoweredModel>)> = Vec::new();
+        let mut models: Vec<(String, usize, Slot<LoweredModel>)> = Vec::new();
         for d in &self.file.declarations {
             if let Declaration::Model(m) = d {
                 if self.aliases.contains_key(m.name) {
                     continue;
                 }
-                let slot = self.lower_model(m)?;
-                models.push((m.name.to_string(), slot));
+                let slot = match self.lower_model(m) {
+                    Ok(s) => s,
+                    Err(e) => return Err(self.in_order(m.span.0, e)),
+                };
+                if let Err(e) = &slot {
+                    self.hold(m.span.0, e);
+                }
+                models.push((m.name.to_string(), m.span.0, slot));
             }
         }
         // Pass 4: operation refinements (they may call models).
         for (i, decl) in op_decls.iter().enumerate() {
-            if let Ok(lop) = &ops[i].1 {
-                match self.lower_op_admit(decl, lop) {
+            if let Ok(lop) = &ops[i].2 {
+                let outcome = self.lower_op_admit(decl, lop).map_err(|e| {
+                    self.prefer(e, |s| {
+                        decl.params
+                            .iter()
+                            .filter_map(|p| p.refinement.as_ref())
+                            .find_map(|r| s.scan_expr(r, &HashSet::new()))
+                    })
+                });
+                match outcome {
                     Ok(admit) => {
                         let requires = self.levels_of(admit.iter());
-                        if let Ok(l) = &mut ops[i].1 {
+                        if let Ok(l) = &mut ops[i].2 {
                             l.admit = admit;
                             l.requires = requires;
                         }
                     }
                     Err(e) if is_refusal(&e) => {
                         let e = e.at(decl.name);
+                        self.hold(decl.span.0, &e);
                         self.op_sigs.insert(decl.name.to_string(), Err(e.clone()));
-                        ops[i].1 = Err(e);
+                        ops[i].2 = Err(e);
                     }
-                    Err(e) => return Err(e.at(decl.name)),
+                    Err(e) => return Err(self.in_order(decl.span.0, e.at(decl.name))),
                 }
             }
         }
@@ -939,20 +1212,32 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         for d in &self.file.declarations {
             match d {
                 Declaration::Claim(c) => {
-                    let slot = match self.lower_claim(c) {
+                    let lowered = self
+                        .lower_claim(c)
+                        .map_err(|e| self.prefer(e, |s| s.scan_expr(&c.body, &HashSet::new())));
+                    let slot = match lowered {
                         Ok(s) => Ok(s),
                         Err(e) if is_refusal(&e) => Err(e.at(c.name)),
-                        Err(e) => return Err(e.at(c.name)),
+                        Err(e) => return Err(self.in_order(c.span.0, e.at(c.name))),
                     };
-                    suites.push((c.name.to_string(), slot));
+                    if let Err(e) = &slot {
+                        self.hold(c.span.0, e);
+                    }
+                    suites.push((c.name.to_string(), c.span.0, slot));
                 }
                 Declaration::Example(x) => {
-                    let slot = match self.lower_example(x) {
+                    let lowered = self
+                        .lower_example(x)
+                        .map_err(|e| self.prefer(e, |s| s.scan_expr(&x.body, &HashSet::new())));
+                    let slot = match lowered {
                         Ok(s) => Ok(s),
                         Err(e) if is_refusal(&e) => Err(e.at(x.name)),
-                        Err(e) => return Err(e.at(x.name)),
+                        Err(e) => return Err(self.in_order(x.span.0, e.at(x.name))),
                     };
-                    examples.push((x.name.to_string(), slot));
+                    if let Err(e) = &slot {
+                        self.hold(x.span.0, e);
+                    }
+                    examples.push((x.name.to_string(), x.span.0, slot));
                 }
                 _ => {}
             }
@@ -961,7 +1246,9 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             module: self.module.clone(),
             version: self.file.version,
             errors,
+            types,
             declarations,
+            type_decls,
             ops,
             models,
             suites,
@@ -977,10 +1264,46 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         GenError::level(beyond, "", message)
     }
 
+    // -- refusal order (VER04r 16.14 R35, 16.16 R53, R54) --------------------------------------
+
+    /// Remember a level or feature refusal of the unit at byte offset `pos` (only those are held).
+    fn hold(&mut self, pos: usize, e: &GenError) {
+        if e.code == code::LEVEL {
+            self.held.push((pos, e.clone()));
+        }
+    }
+
+    /// An error a unit at `pos` raises, unless a unit declared **earlier** already holds a level or
+    /// feature refusal, which is named instead (R35 (5), R53; the oracle's `_in_order`).  A level or
+    /// feature refusal is never displaced.
+    fn in_order(&self, pos: usize, e: GenError) -> GenError {
+        if e.code == code::LEVEL {
+            return e;
+        }
+        self.held
+            .iter()
+            .filter(|(p, _)| *p < pos)
+            .min_by_key(|(p, _)| *p)
+            .map_or(e, |(_, held)| held.clone())
+    }
+
+    /// R35 (2): a level or feature refusal in a unit is named in preference to a **typing** error of
+    /// it, and of several the first in source order.  `scan` reads the unit's source (the oracle's
+    /// `_prefer_feature`); a corpus error, a limit or a `W0701` is not displaced (R54).
+    fn prefer(&self, e: GenError, scan: impl FnOnce(&Self) -> Option<GenError>) -> GenError {
+        if e.code == code::TYPE {
+            if let Some(found) = scan(self) {
+                return found;
+            }
+        }
+        e
+    }
+
     /// The `requires` of a lowered unit (VER04r 16.10 R9): [`ir::levels`] over `trees` (the tag
     /// half, reading each callee's own `requires` from the model table) united with the levels of
     /// the **types** the unit met ([`Lowerer::type_levels`], the type half: a tuple type adds
-    /// `ir.tuple` even where no tuple tag appears).  Sorted and duplicate-free, `ir.core` always.
+    /// `ir.tuple` and a record, variant or `Option` type adds `ir.data`, even where no tag appears).
+    /// Sorted and duplicate-free, `ir.core` always.
     fn levels_of<'t>(&self, trees: impl IntoIterator<Item = &'t Ir>) -> Vec<&'static str> {
         let mut found: BTreeSet<&'static str> = ir::levels(trees, &|name| {
             self.models
@@ -993,11 +1316,261 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         found.into_iter().collect()
     }
 
-    /// Record the levels a type brings (R9, the type half).
+    /// Record the levels a type brings (R9, the type half; R29).
     fn note_type(&mut self, ty: &Ty) {
-        if ty.contains_tuple() {
-            self.type_levels.insert("ir.tuple");
+        self.type_levels.extend(ty.type_levels());
+    }
+
+    /// A type of a signature or binder: a list is the reserved `ir.list` (R27), the rest is counted (R9).
+    fn check_type(&mut self, ty: &Ty) -> Result<(), GenError> {
+        if ty.contains_list() {
+            return Err(self.level(Beyond::IrList, LIST_TYPE_MESSAGE));
         }
+        self.note_type(ty);
+        Ok(())
+    }
+
+    /// A `List` operand of `len concat take drop at` is the reserved `ir.list`, never a typing error,
+    /// however the operand got its type (R57): a record field of a list type that is declared *later* is
+    /// still a list here.
+    fn no_list(&self, tys: &[&Ty]) -> Result<(), GenError> {
+        if tys.iter().any(|t| matches!(t, Ty::List(_))) {
+            return Err(self.level(Beyond::IrList, "a list operand needs the reserved ir.list level"));
+        }
+        Ok(())
+    }
+
+    // -- the pre-order scan that makes a reserved level win over a type error (R35 (2)) ---------
+
+    /// The first list type in a source type, or `None` (`TypeExpr` of a declaration or a signature).
+    fn scan_type(&self, t: &TypeExpr<'_>) -> Option<GenError> {
+        match t {
+            TypeExpr::List { .. } => Some(self.level(Beyond::IrList, LIST_TYPE_MESSAGE)),
+            TypeExpr::Option { inner, .. } => self.scan_type(inner),
+            TypeExpr::Result { ok_type, .. } => self.scan_type(ok_type),
+            TypeExpr::Tuple { elems, .. } => elems.iter().find_map(|e| self.scan_type(e)),
+            TypeExpr::Bytes { .. } | TypeExpr::Named { .. } => None,
+        }
+    }
+
+    /// The first reserved level or feature name in an operation's parameter and result types.
+    fn scan_signature(&self, op: &OpDecl<'_>) -> Option<GenError> {
+        op.params
+            .iter()
+            .find_map(|p| self.scan_type(&p.param_type))
+            .or_else(|| self.scan_type(&op.return_type))
+    }
+
+    /// The first reserved level or feature name in a model's parameters, result type and body.
+    fn scan_model(&self, m: &ModelDecl<'_>) -> Option<GenError> {
+        m.params
+            .iter()
+            .find_map(|p| {
+                self.scan_type(&p.param_type)
+                    .or_else(|| p.refinement.as_ref().and_then(|r| self.scan_expr(r, &HashSet::new())))
+            })
+            .or_else(|| self.scan_type(&m.target_type))
+            .or_else(|| m.body.as_ref().and_then(|b| self.scan_expr(b, &HashSet::new())))
+    }
+
+    /// The first reserved level or feature name in a source expression, in pre-order (left to right).
+    /// `errvars` are the names an enclosing `Err(e)` pattern bound: using one is the error value of [D55].
+    fn scan_expr<'e>(&self, e: &Expression<'e>, errvars: &HashSet<&'e str>) -> Option<GenError> {
+        match e {
+            Expression::Literal { .. } => None,
+            Expression::List { .. } => {
+                Some(self.level(Beyond::IrList, "a list literal needs the reserved ir.list level"))
+            }
+            Expression::Grouped { inner, .. } => self.scan_expr(inner, errvars),
+            Expression::Reference { name, args, .. } => {
+                let head = *name.segments.first()?;
+                if errvars.contains(head) {
+                    return Some(self.level(Beyond::ErrValue, ERR_VALUE_MESSAGE));
+                }
+                if args.is_none() {
+                    return None;
+                }
+                let user = self.op_sigs.contains_key(head)
+                    || self.model_names.contains(head)
+                    || self.ctors.contains_key(head);
+                if name.segments.len() == 1 && !user {
+                    if LEVEL_LIST.contains(&head) {
+                        return Some(self.level(
+                            Beyond::IrList,
+                            "a list built-in needs the reserved ir.list level",
+                        ));
+                    }
+                    if LEVEL_SEQ.contains(&head) {
+                        return Some(self.level(
+                            Beyond::IrSeq,
+                            "sequence built-ins need the reserved ir.seq level",
+                        ));
+                    }
+                    if head == FIXED_CAST {
+                        return Some(self.level(
+                            Beyond::FixedCast,
+                            "fixed<N>(b) has no IR form (outside every level)",
+                        ));
+                    }
+                }
+                args.iter()
+                    .flat_map(|a| a.iter())
+                    .find_map(|a| self.scan_expr(a, errvars))
+            }
+            Expression::Unary { operand, .. } => self.scan_expr(operand, errvars),
+            Expression::Binary { left, right, .. } => self
+                .scan_expr(left, errvars)
+                .or_else(|| self.scan_expr(right, errvars)),
+            Expression::Conditional {
+                condition,
+                then_branch,
+                else_branch,
+                ..
+            } => self
+                .scan_expr(condition, errvars)
+                .or_else(|| self.scan_expr(then_branch, errvars))
+                .or_else(|| self.scan_expr(else_branch, errvars)),
+            Expression::Tuple { elements, .. } => elements.iter().find_map(|x| self.scan_expr(x, errvars)),
+            Expression::Project { base, .. } => self.scan_expr(base, errvars),
+            Expression::Quantified { binders, body, .. } => binders
+                .iter()
+                .find_map(|b| {
+                    self.scan_type(&b.param_type).or_else(|| {
+                        b.refinement.as_ref().and_then(|r| self.scan_expr(r, errvars))
+                    })
+                })
+                .or_else(|| self.scan_expr(body, errvars)),
+            Expression::Match { target, arms, .. } => {
+                if let Some(found) = self.scan_expr(target, errvars) {
+                    return Some(found);
+                }
+                for arm in arms {
+                    let mut inner = errvars.clone();
+                    err_binds(&arm.pattern, &mut inner);
+                    if let Some(found) = self.scan_expr(&arm.body, &inner) {
+                        return Some(found);
+                    }
+                }
+                None
+            }
+        }
+    }
+
+    // -- type declarations ----------------------------------------------------------------------
+
+    fn register_record(&mut self, name: &str, fields: &[(String, Ty)]) {
+        self.records.insert(name.to_string(), fields.to_vec());
+        self.adts.insert(
+            name.to_string(),
+            vec![(
+                name.to_string(),
+                fields.iter().map(|(_, t)| t.clone()).collect(),
+            )],
+        );
+    }
+
+    /// Resolve a record's fields: distinct names, every type known.
+    fn declare_record(
+        &mut self,
+        name: &str,
+        fields: &[coding_adventures_warrant_grammar::parser::FieldDecl<'a>],
+    ) -> Result<Vec<(String, Ty)>, GenError> {
+        let mut seen = HashSet::new();
+        if !fields.iter().all(|f| seen.insert(f.name)) {
+            return Err(self.type_err("duplicate field name"));
+        }
+        let resolved = fields
+            .iter()
+            .map(|f| Ok((f.name.to_string(), self.resolve(&f.ty, &[], 0)?)))
+            .collect::<Result<Vec<_>, GenError>>()?;
+        self.register_record(name, &resolved);
+        Ok(resolved)
+    }
+
+    /// Resolve a variant's constructors: at least two (a one-constructor sum is a record), distinct field
+    /// names inside a constructor, every type known.
+    fn declare_variant(
+        &mut self,
+        name: &str,
+        ctors: &[coding_adventures_warrant_grammar::parser::CtorDecl<'a>],
+    ) -> Result<Vec<(String, Vec<Ty>)>, GenError> {
+        if ctors.len() < 2 {
+            return Err(self.type_err(
+                "a variant has at least two constructors (a one-constructor sum is a record)",
+            ));
+        }
+        let mut resolved = Vec::with_capacity(ctors.len());
+        for c in ctors {
+            let mut seen = HashSet::new();
+            if !c.fields.iter().all(|f| seen.insert(f.name)) {
+                return Err(self.type_err("duplicate field name"));
+            }
+            let tys = c
+                .fields
+                .iter()
+                .map(|f| self.resolve(&f.ty, &[], 0))
+                .collect::<Result<Vec<_>, _>>()?;
+            resolved.push((c.name.to_string(), tys));
+        }
+        self.adts.insert(name.to_string(), resolved.clone());
+        Ok(resolved)
+    }
+
+    /// A record or variant may not contain itself, directly or through any chain (section 2.2 rule 1).
+    fn check_cycles(&self) -> Result<(), GenError> {
+        fn mentions(ty: &Ty, adts: &patterns::Adts, out: &mut BTreeSet<String>) {
+            match ty {
+                Ty::Named(n) if adts.contains_key(n) => {
+                    out.insert(n.clone());
+                }
+                Ty::Result(inner, _) | Ty::Option(inner) | Ty::List(inner) => {
+                    mentions(inner, adts, out)
+                }
+                Ty::Tuple(parts) => parts.iter().for_each(|p| mentions(p, adts, out)),
+                _ => {}
+            }
+        }
+        let mut edges: HashMap<&str, BTreeSet<String>> = HashMap::new();
+        for (name, ctors) in &self.adts {
+            let mut out = BTreeSet::new();
+            for (_, fields) in ctors {
+                for f in fields {
+                    mentions(f, &self.adts, &mut out);
+                }
+            }
+            edges.insert(name.as_str(), out);
+        }
+        let mut roots: Vec<&str> = edges.keys().copied().collect();
+        roots.sort_unstable();
+        // 0 = unseen, 1 = on the path, 2 = done
+        let mut state: HashMap<&str, u8> = HashMap::new();
+        for root in roots {
+            if state.get(root).copied().unwrap_or(0) != 0 {
+                continue;
+            }
+            state.insert(root, 1);
+            let mut stack: Vec<(&str, std::collections::btree_set::Iter<'_, String>)> =
+                vec![(root, edges[root].iter())];
+            while let Some((node, it)) = stack.last_mut() {
+                let node = *node;
+                if let Some(next) = it.next() {
+                    match state.get(next.as_str()).copied().unwrap_or(0) {
+                        1 => {
+                            return Err(self.type_err("a record or variant contains itself"));
+                        }
+                        0 => {
+                            state.insert(next.as_str(), 1);
+                            stack.push((next.as_str(), edges[next.as_str()].iter()));
+                        }
+                        _ => {}
+                    }
+                } else {
+                    state.insert(node, 2);
+                    stack.pop();
+                }
+            }
+        }
+        Ok(())
     }
 
     // -- types -------------------------------------------------------------------
@@ -1041,8 +1614,14 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     .collect::<Result<Vec<_>, _>>()?;
                 Ok(Ty::Tuple(parts))
             }
-            TypeExpr::List { .. } => Err(self.level(Beyond::IrData, "List types need ir.data")),
-            TypeExpr::Option { .. } => Err(self.level(Beyond::IrData, OPTION_MESSAGE)),
+            // A list type is *resolved*, not refused here: the lowering has to see one to refuse it by
+            // name (`check_type`, `no_list`), and a record field of a list type must stay one (R57).
+            TypeExpr::List { inner, .. } => Ok(Ty::List(Box::new(
+                self.resolve(inner, statics, depth + 1)?,
+            ))),
+            TypeExpr::Option { inner, .. } => Ok(Ty::Option(Box::new(
+                self.resolve(inner, statics, depth + 1)?,
+            ))),
             TypeExpr::Result {
                 ok_type, err_name, ..
             } => {
@@ -1061,8 +1640,8 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                         self.resolve(target, statics, depth + 1)
                     } else if let Some(f) = FixedTy::from_name(other) {
                         Ok(Ty::Fixed(f))
-                    } else if self.unsupported_types.contains(other) {
-                        Err(self.level(Beyond::IrData, "record and variant types need ir.data"))
+                    } else if self.type_names.contains(other) {
+                        Ok(Ty::Named(other.to_string()))
                     } else if self.errors.contains_key(other) {
                         Err(self.type_err("an error type is not a value type"))
                     } else {
@@ -1076,15 +1655,24 @@ impl<'f, 'a> Lowerer<'f, 'a> {
     // -- operations --------------------------------------------------------------
 
     fn lower_op_signature(&mut self, op: &OpDecl<'a>) -> Result<LoweredOp, GenError> {
+        // R35 (2): a list type in the signature is the refusal, named before any typing error of it; a
+        // call to this op is then refused with the same level wherever it is declared (R57).
+        if let Some(refused) = self.scan_signature(op) {
+            return Err(refused);
+        }
         let statics: Vec<String> = op
             .static_params
             .iter()
             .map(|s| s.name.to_string())
             .collect();
         let mut params = Vec::new();
+        let mut seen = HashSet::new();
         for p in &op.params {
             if p.inout {
                 return Err(self.level(Beyond::Inout, "an `inout` parameter needs slice S12"));
+            }
+            if !seen.insert(p.name) {
+                return Err(self.type_err("duplicate parameter name"));
             }
             params.push((
                 p.name.to_string(),
@@ -1092,9 +1680,13 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             ));
         }
         let ret = self.resolve(&op.return_type, &statics, 0)?;
-        // R9, the type half: the signature alone may need `ir.tuple` (the admit, if any, is
-        // folded in by `lower_op_admit`).
-        let tuple = params.iter().any(|(_, t)| t.contains_tuple()) || ret.contains_tuple();
+        // R9, the type half: the signature alone may need `ir.tuple` and `ir.data` (the admit, if
+        // any, is folded in by `lower_op_admit`).
+        let mut levels: BTreeSet<&'static str> = ["ir.core"].into();
+        for (_, t) in &params {
+            levels.extend(t.type_levels());
+        }
+        levels.extend(ret.type_levels());
         Ok(LoweredOp {
             name: op.name.to_string(),
             statics,
@@ -1102,11 +1694,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             ret,
             fresh: op.is_fresh,
             admit: None,
-            requires: if tuple {
-                vec!["ir.core", "ir.tuple"]
-            } else {
-                vec!["ir.core"]
-            },
+            requires: levels.into_iter().collect(),
         })
     }
 
@@ -1116,9 +1704,9 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         self.scope = lop.params.iter().cloned().collect();
         self.type_levels.clear();
         for (_, t) in &lop.params {
-            self.note_type(t);
+            self.check_type(t)?;
         }
-        self.note_type(&lop.ret);
+        self.check_type(&lop.ret)?;
         let mut refinements = Vec::new();
         for p in &op.params {
             if let Some(r) = &p.refinement {
@@ -1148,7 +1736,9 @@ impl<'f, 'a> Lowerer<'f, 'a> {
     /// caller inherits it); a malformed model aborts.
     fn lower_model(&mut self, decl: &ModelDecl<'a>) -> Result<Slot<LoweredModel>, GenError> {
         self.current_model = Some(decl.name.to_string());
-        let result = self.lower_model_inner(decl);
+        let result = self
+            .lower_model_inner(decl)
+            .map_err(|e| self.prefer(e, |s| s.scan_model(decl)));
         self.current_model = None;
         match result {
             Ok(model) => {
@@ -1207,7 +1797,11 @@ impl<'f, 'a> Lowerer<'f, 'a> {
     fn lower_model_inner(&mut self, decl: &ModelDecl<'a>) -> Result<LoweredModel, GenError> {
         self.type_levels.clear();
         let mut params = Vec::new();
+        let mut seen = HashSet::new();
         for p in &decl.params {
+            if !seen.insert(p.name) {
+                return Err(self.type_err("duplicate parameter name"));
+            }
             if p.inout {
                 return Err(self.level(Beyond::Inout, "an `inout` parameter needs slice S12"));
             }
@@ -1215,18 +1809,21 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 return Err(self.type_err("a model parameter has no refinement"));
             }
             let ty = self.resolve(&p.param_type, &[], 0)?;
-            self.note_type(&ty);
             params.push((p.name.to_string(), ty));
         }
         let ret = self.resolve(&decl.target_type, &[], 0)?;
-        self.note_type(&ret);
+        // A list type of a parameter or the result is the reserved `ir.list` (R27); the rest is counted (R9).
+        for (_, ty) in &params {
+            self.check_type(ty)?;
+        }
+        self.check_type(&ret)?;
         let body = decl
             .body
             .as_ref()
             .ok_or_else(|| self.type_err("a model has no body"))?;
         self.scope = params.iter().cloned().collect();
         let (ir, ty) = self.expr(body, Some(&ret))?;
-        if !self.flows(&ty, &ret, self.last_width) {
+        if !Ty::assignable(&ty, &ret) {
             return Err(self.type_err("a model body does not have its declared type"));
         }
         if ir.has_subject() {
@@ -1329,7 +1926,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             return Err(self.type_err("a binder cannot be inout"));
         }
         let ty = self.resolve(&b.param_type, &[], 0)?;
-        self.note_type(&ty);
+        self.check_type(&ty)?;
         self.scope.insert(b.name.to_string(), ty.clone());
         binders.push((b.name.to_string(), ty));
         if let Some(r) = &b.refinement {
@@ -1416,11 +2013,16 @@ impl<'f, 'a> Lowerer<'f, 'a> {
 
     // -- expressions -----------------------------------------------------------------
 
-    /// Lower `e`; `expected` types bare literals and `Ok`/`Err`.
+    /// Lower `e`; `expected` types bare literals, `Ok`/`Err`, the payload of `Some` and a `None`.
+    ///
+    /// `expected` is the type the position asks for and is only ever handed **down** (R52): a model
+    /// body, an argument, the payload of `Some`/`Ok`, a component of a tuple, a branch of an `if` or an
+    /// arm of a `match`, the second operand of `unwrap_or`, the right operand of `==`.  A `None` is
+    /// typed by it and by nothing else.
     fn expr(&mut self, e: &Expression<'a>, expected: Option<&Ty>) -> Result<(Ir, Ty), GenError> {
         let e = strip(e);
         // Taken before any operand is lowered: it is for this node alone.
-        let option_ok = std::mem::take(&mut self.option_ok);
+        let intermediate = std::mem::take(&mut self.intermediate);
         self.nest += 1;
         let result = if self.nest > MAX_EXPR_DEPTH {
             Err(GenError::new(
@@ -1432,15 +2034,14 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             self.expr_inner(e, expected)
         };
         self.nest -= 1;
-        // Every operand's `expr` call took its own `width_out`, so what is left is this node's.
-        self.last_width = self.width_out.take();
         let (ir, ty) = result?;
-        // D23, R8: an `Option` is the type of an expression only as the first operand of
-        // `unwrap_or`; anywhere else it is `ir.data`.
-        if matches!(ty, Ty::Option(_)) && !option_ok {
-            return Err(self.level(Beyond::IrData, OPTION_MESSAGE));
+        // R29 (b), (d): the **intermediate use** is a node of one of the nine producers that is directly
+        // the first operand of an `unwrap_or`; its `Option` type adds no `ir.data`, so no `requires` that
+        // existed before the level moves.  Every other node's type is counted, an `Option` included.
+        let producer = matches!(&ir, Ir::Fixed { tag, .. } if OPTION_PRODUCERS.contains(tag));
+        if !(intermediate && matches!(ty, Ty::Option(_)) && producer) {
+            self.note_type(&ty);
         }
-        self.note_type(&ty);
         Ok((ir, ty))
     }
 
@@ -1450,20 +2051,14 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         expected: Option<&Ty>,
     ) -> Result<(Ir, Ty), GenError> {
         match e {
-            Expression::Literal { lit, .. } => {
-                let lowered = self.literal(lit, expected)?;
-                if let Literal::Bytes(hex) = lit {
-                    self.width_out = Some(hex.len() as u64 / 2);
-                }
-                Ok(lowered)
-            }
+            Expression::Literal { lit, .. } => self.literal(lit, expected),
             Expression::Reference {
                 name, widths, args, ..
             } => {
                 if args.is_some() || !widths.is_empty() {
                     self.call(&name.segments, widths, args.as_deref(), expected)
                 } else {
-                    self.name(&name.segments)
+                    self.name(&name.segments, expected)
                 }
             }
             Expression::Unary { op, operand, .. } => self.unary(*op, operand, expected),
@@ -1480,57 +2075,42 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 if c_ty != Ty::Bool {
                     return Err(self.type_err("an `if` condition must be Bool"));
                 }
-                // Each branch's static width is read right after its own `expr` call.
-                let ((t_ir, t_ty, wt), (o_ir, o_ty, wo)) =
+                // The branch that needs a context is typed second, from the other branch when nothing
+                // else gives it one; a `None` takes its type from the *context* alone, never from a
+                // sibling (R39 (b), R52: the checker types both branches against the same `expected`).
+                let ((t_ir, t_ty), (o_ir, o_ty)) =
                     if needs_context(then_branch) && !needs_context(else_branch) {
                         let o = self.expr(else_branch, expected)?;
-                        let wo = self.last_width;
-                        let hint = if expected.is_none() {
-                            Some(&o.1)
-                        } else {
-                            expected
-                        };
+                        let hint = if expected.is_none() { Some(&o.1) } else { expected };
                         let t = self.expr(then_branch, hint)?;
-                        let wt = self.last_width;
-                        ((t.0, t.1, wt), (o.0, o.1, wo))
+                        (t, o)
                     } else {
                         let t = self.expr(then_branch, expected)?;
-                        let wt = self.last_width;
-                        let hint = if expected.is_some() {
-                            expected
-                        } else {
-                            Some(&t.1)
-                        };
+                        let sibling = if needs_context(else_branch) { Some(&t.1) } else { None };
+                        let hint = if expected.is_some() { expected } else { sibling };
                         let o = self.expr(else_branch, hint)?;
-                        let wo = self.last_width;
-                        ((t.0, t.1, wt), (o.0, o.1, wo))
+                        (t, o)
                     };
                 let common = Ty::unify(&t_ty, &o_ty)
                     .ok_or_else(|| self.type_err("the branches of an `if` have no common type"))?;
-                // The checker's `common_type`: two branches of the same static width stay
-                // `Bytes<n>`; anything else forgets it.
-                let (wt, wo) = (static_width(&t_ty, wt), static_width(&o_ty, wo));
-                if wt.is_some() && wt == wo {
-                    self.width_out = wt;
-                }
                 Ok((
                     Ir::If(Box::new(c_ir), Box::new(t_ir), Box::new(o_ir)),
                     common,
                 ))
             }
-            Expression::List { .. } => Err(self.level(Beyond::IrData, "lists need ir.data")),
+            Expression::List { .. } => Err(self.level(
+                Beyond::IrList,
+                "a list literal needs the reserved ir.list level",
+            )),
             Expression::Tuple { elements, .. } => self.tuple_literal(elements, expected),
             Expression::Project { base, key, .. } => {
                 let (b_ir, b_ty) = self.expr(base, None)?;
-                match (&b_ty, key) {
-                    (Ty::Tuple(_), ProjKey::Index(i)) => {
+                match key {
+                    ProjKey::Index(i) => {
                         let text = i.to_string();
                         self.project(b_ir, b_ty, &[text.as_str()])
                     }
-                    (Ty::Tuple(_), ProjKey::Field(_)) => {
-                        Err(self.type_err("a tuple projection is a component index of a tuple"))
-                    }
-                    _ => Err(self.type_err("a projection needs a tuple")),
+                    ProjKey::Field(f) => self.project(b_ir, b_ty, &[f]),
                 }
             }
             Expression::Match { target, arms, .. } => self.match_expr(target, arms, expected),
@@ -1563,15 +2143,13 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             Literal::U8(v) => self.fixed_literal(FixedTy::U8, i128::from(*v)),
             Literal::U64(v) => self.fixed_literal(FixedTy::U64, i128::from(*v)),
             Literal::Fixed(t, v) => self.fixed_literal(*t, *v),
-            Literal::Bytes(hex) => {
-                let ty = match expected {
-                    Some(Ty::Bytes(Some(Width::Lit(n)))) if hex.len() as u64 / 2 == *n => {
-                        expected.cloned().unwrap_or(Ty::BYTES)
-                    }
-                    _ => Ty::BYTES,
-                };
-                Ok((Ir::Bytes((*hex).to_string()), ty))
-            }
+            // The *type* of a bytes literal is `Bytes<len>` whatever is expected (the checker's
+            // `typecheck_literal`, R51), so the width travels with the type through `Some`, `Ok`, `if` and
+            // `match`; the IR node keeps the written type `Bytes` (no `result_type` moves).
+            Literal::Bytes(hex) => Ok((
+                Ir::Bytes((*hex).to_string()),
+                Ty::bytes_n(hex.len() as u64 / 2),
+            )),
         }
     }
 
@@ -1599,31 +2177,109 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         }
     }
 
-    fn name(&mut self, segments: &[&str]) -> Result<(Ir, Ty), GenError> {
+    fn name(&mut self, segments: &[&str], expected: Option<&Ty>) -> Result<(Ir, Ty), GenError> {
         if segments.len() == 1 {
             let n = segments[0];
             if let Some(ty) = self.scope.get(n) {
                 return Ok((Ir::Var(n.to_string()), ty.clone()));
             }
-            if n == "None" || self.unsupported_types.contains(n) || self.is_ctor(n) {
-                return Err(self.level(Beyond::IrData, "constructors need ir.data"));
+            if n == "None" {
+                return self.none_literal(expected);
+            }
+            if self.ctors.contains_key(n) {
+                return self.constructor(n, None);
             }
             return Err(self.type_err("an unbound name"));
         }
         if let Some(head_ty) = self.scope.get(segments[0]).cloned() {
-            if matches!(head_ty, Ty::Tuple(_)) {
-                return self.project(Ir::Var(segments[0].to_string()), head_ty, &segments[1..]);
-            }
-            return Err(self.level(Beyond::IrData, "projection needs ir.data"));
+            return self.project(Ir::Var(segments[0].to_string()), head_ty, &segments[1..]);
         }
         Err(self.type_err("a qualified name is only valid inside Err(...)"))
     }
 
-    fn is_ctor(&self, name: &str) -> bool {
-        self.file.declarations.iter().any(|d| match d {
-            Declaration::Variant(v) => v.ctors.iter().any(|c| c.name == name),
-            _ => false,
-        })
+    // -- ir.data: Option, constructors and records (slice S11b, Appendix A.2) ----------------------
+
+    /// `None` -> `["none", "T"]` of type `Option<T>`, `T` the payload type the context fixes.
+    ///
+    /// A source `None` whose payload type its context does not fix (`None == None`, `match None with ..`,
+    /// the left operand of `==`) is a **type** error, never a guess (R39 (b), R52): the typed node has
+    /// nothing to write.  `T` is written as its canonical type name (section 2.1).
+    fn none_literal(&self, expected: Option<&Ty>) -> Result<(Ir, Ty), GenError> {
+        match expected {
+            Some(ty @ Ty::Option(payload)) => Ok((Ir::None((**payload).clone()), ty.clone())),
+            _ => Err(self.type_err("None needs an Option type from its context")),
+        }
+    }
+
+    /// `Some(e)` -> `["some", e]` of type exactly `Option<type(e)>` (R39 (a), R51).
+    ///
+    /// The payload is typed with the payload type of `expected` when that is an `Option`, so a bare
+    /// literal in `Some(1)` takes the type its context asks for.  The node's own type is the type of
+    /// its payload wrapped; it *flows* to a wider `Option` by the payload wherever an assignment is
+    /// checked ([`Ty::assignable`], [D60]).
+    fn some_literal(
+        &mut self,
+        args: &[Expression<'a>],
+        expected: Option<&Ty>,
+    ) -> Result<(Ir, Ty), GenError> {
+        let [arg] = args else {
+            return Err(self.type_err("wrong number of arguments"));
+        };
+        let inner = match expected {
+            Some(Ty::Option(payload)) => Some((**payload).clone()),
+            _ => None,
+        };
+        let (ir, ty) = self.expr(arg, inner.as_ref())?;
+        Ok((Ir::Some(Box::new(ir)), Ty::Option(Box::new(ty))))
+    }
+
+    /// `Name(e1, .., en)` and the bare name of a payload-free constructor -> `["ctor", "Name", [..]]`.
+    ///
+    /// `Name` is a record (whose one constructor is named like it) or a constructor of a variant; the node
+    /// has that type.  One operand per declared field, in order, each typed against its field and accepted
+    /// by [`Ty::assignable`] **per argument** (`Nat` to `Int`, `Bytes<N>` to `Bytes`, through an `Option` or
+    /// `Result` payload, and nothing through a tuple, record or variant).  A wrong operand count, a bare
+    /// name that has fields and parentheses on a payload-free constructor are type errors (the checker's
+    /// `ArityMismatch` and `NullaryWithParens`).
+    fn constructor(
+        &mut self,
+        name: &str,
+        args: Option<&[Expression<'a>]>,
+    ) -> Result<(Ir, Ty), GenError> {
+        let (type_name, index) = self
+            .ctors
+            .get(name)
+            .cloned()
+            .ok_or_else(|| self.type_err("an unknown constructor"))?;
+        let fields = self.adts[&type_name][index].1.clone();
+        let args: &[Expression<'a>] = match args {
+            None if !fields.is_empty() => {
+                return Err(self.type_err("a constructor with fields needs its arguments"))
+            }
+            None => &[],
+            Some(_) if fields.is_empty() => {
+                return Err(self.type_err("a payload-free constructor takes no parentheses"))
+            }
+            Some(args) => args,
+        };
+        if args.len() != fields.len() {
+            return Err(self.type_err("wrong number of constructor arguments"));
+        }
+        let mut operands = Vec::with_capacity(args.len());
+        for (arg, field_ty) in args.iter().zip(&fields) {
+            let (ir, ty) = self.expr(arg, Some(field_ty))?;
+            if !Ty::assignable(&ty, field_ty) {
+                return Err(self.type_err("a constructor argument does not match its field type"));
+            }
+            operands.push(ir);
+        }
+        Ok((
+            Ir::Ctor {
+                name: name.to_string(),
+                args: operands,
+            },
+            Ty::Named(type_name),
+        ))
     }
 
     fn unary(
@@ -1755,6 +2411,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             "len" => {
                 arity(1)?;
                 let (ir, ty) = self.expr(&args[0], None)?;
+                self.no_list(&[&ty])?;
                 if !ty.is_bytes() {
                     return Err(self.type_err("len needs a byte string"));
                 }
@@ -1763,17 +2420,13 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             "concat" => {
                 arity(2)?;
                 let (a, a_ty) = self.expr(&args[0], None)?;
-                let wa = self.last_width;
                 let (b, b_ty) = self.expr(&args[1], None)?;
-                let wb = self.last_width;
+                self.no_list(&[&a_ty, &b_ty])?;
                 if !a_ty.is_bytes() || !b_ty.is_bytes() {
                     return Err(self.type_err("concat needs byte strings"));
                 }
-                // The checker types a `concat` of two sized operands `Bytes<sum>`.
-                if let (Some(x), Some(y)) = (static_width(&a_ty, wa), static_width(&b_ty, wb)) {
-                    self.width_out = Some(x.saturating_add(y));
-                }
-                // Widths add: concat(Bytes<1>, Bytes<30>) is Bytes<31>.
+                // The checker types a `concat` of two operands of literal width `Bytes<sum>`; a plain
+                // operand, or one with a named static width, gives a plain `Bytes` (R51).
                 let ty = match (&a_ty, &b_ty) {
                     (Ty::Bytes(Some(Width::Lit(x))), Ty::Bytes(Some(Width::Lit(y)))) => {
                         Ty::bytes_n(x.saturating_add(*y))
@@ -1784,6 +2437,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             }
             "take" | "drop" if args.len() == 2 && widths.is_empty() => {
                 let (a, a_ty) = self.expr(&args[0], None)?;
+                self.no_list(&[&a_ty])?;
                 if !a_ty.is_bytes() {
                     return Err(self.type_err("take and drop need a byte string"));
                 }
@@ -1804,11 +2458,9 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     return Err(self.type_err("Ok needs a Result context"));
                 };
                 let (ir, ty) = self.expr(&args[0], Some(ok_ty))?;
-                if !self.flows(&ty, ok_ty, self.last_width) {
-                    return Err(
-                        self.type_err("an Ok payload does not have the Result's value type")
-                    );
-                }
+                // The expected payload type is only a hint, as for `Some` and in the checker (`checker.rs`
+                // types `Ok(e)` as `Result<type(e),E>` without comparing, R51): the position the node sits
+                // in (a model body, an argument, an `==`, an `if`) decides whether it flows.
                 Ok((Ir::Ok(Box::new(ir)), Ty::Result(Box::new(ty), err.clone())))
             }
             "Err" => {
@@ -1842,16 +2494,25 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 ))
             }
             n if ir::fixed_tag(n).is_some() => self.fixed_call(n, widths, Some(args)),
-            n if LEVEL_DATA.contains(&n) => {
-                Err(self.level(Beyond::IrData, "Option and list built-ins need ir.data"))
+            "Some" => self.some_literal(args, expected),
+            n if self.ctors.contains_key(n) => {
+                if !widths.is_empty() {
+                    return Err(self.type_err("a constructor takes no static arguments"));
+                }
+                self.constructor(n, Some(args))
             }
+            n if LEVEL_LIST.contains(&n) => Err(self.level(
+                Beyond::IrList,
+                "a list built-in needs the reserved ir.list level",
+            )),
             n if LEVEL_SEQ.contains(&n) => Err(self.level(
                 Beyond::IrSeq,
                 "sequence built-ins need the reserved ir.seq level",
             )),
-            n if self.unsupported_types.contains(n) || self.is_ctor(n) => {
-                Err(self.level(Beyond::IrData, "constructors need ir.data"))
-            }
+            n if n == FIXED_CAST => Err(self.level(
+                Beyond::FixedCast,
+                "fixed<N>(b) has no IR form (outside every level)",
+            )),
             _ => Err(self.type_err("an unknown callable")),
         }
     }
@@ -1887,32 +2548,58 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         Ok((Ir::Tuple(irs), Ty::Tuple(tys)))
     }
 
-    /// Chain `["project", e, i]` for each index in `parts` (`t.0.1`); `i` is a decimal component
-    /// index of the tuple type reached so far.
+    /// Chain `["project", e, i]` (a tuple) and `["field", e, i]` (a record) for each name in `parts`.
+    ///
+    /// `t.0.1` is two `project` nodes (`i` a canonical decimal component index of the tuple type reached so
+    /// far); `r.x` is one `field` node whose index is the position of `x` among the record's declared
+    /// fields (the name stays in `types`, Appendix A.2).  Projecting `e.i` on a value that is not a tuple,
+    /// or `e.name` on a value that is not a record (a variant is reached through `match`), is a **type**
+    /// error from S11b (VER04r 16.14 R39 (c)); it was the level `ir.data` before.
     fn project(&mut self, mut ir: Ir, mut ty: Ty, parts: &[&str]) -> Result<(Ir, Ty), GenError> {
         for part in parts {
-            let (Ty::Tuple(components), Some(index)) = (&ty, tuple_index(part)) else {
-                return Err(self.type_err("a tuple projection is a component index of a tuple"));
-            };
-            let Some(next) = components.get(index).cloned() else {
-                return Err(self.type_err("a tuple projection is a component index of a tuple"));
-            };
-            ir = Ir::Project(Box::new(ir), index);
-            ty = next;
+            match &ty {
+                Ty::Tuple(components) => {
+                    let Some(index) = tuple_index(part).filter(|i| *i < components.len()) else {
+                        return Err(
+                            self.type_err("a tuple projection is a component index of a tuple")
+                        );
+                    };
+                    let next = components[index].clone();
+                    ir = Ir::Project(Box::new(ir), index);
+                    ty = next;
+                }
+                Ty::Named(name) if self.records.contains_key(name) => {
+                    let fields = &self.records[name];
+                    let Some(index) = fields.iter().position(|(n, _)| n == part) else {
+                        return Err(self.type_err("a record has no field of that name"));
+                    };
+                    let next = fields[index].1.clone();
+                    ir = Ir::Field(Box::new(ir), index);
+                    ty = next;
+                }
+                _ => {
+                    return Err(
+                        self.type_err("a projection needs a tuple (e.i) or a record (e.name)")
+                    )
+                }
+            }
             self.note_type(&ty);
         }
         Ok((ir, ty))
     }
 
-    /// `match r with Ok(..) -> .. | Err(..) -> ..` on a `Result` (A.1; `ir.tuple`, D35).
+    /// `match s with p1 -> e1 | ..` on **any** scrutinee (Appendix A.1 and A.2).
     ///
-    /// `match` is `ir.tuple` exactly when its scrutinee is a `Result` and `ir.data` for any other
-    /// type (VER04r 4.1), so the scrutinee is typed first.  The patterns are lowered and the
-    /// corpus-error rules (a duplicate or shadowing `bind`, an unreachable arm, fall-through) are
-    /// decided *before* any arm body is lowered, so such a document is refused even if a body would
-    /// have been recorded as a level refusal.  Arm bodies are typed with the pattern's binders in
-    /// scope (an arm that needs a context takes the first self-typed arm's type, as `if` does);
-    /// the arms must have one type.
+    /// `match` is `ir.tuple` exactly when its scrutinee is a `Result` and `ir.data` for any other type, and
+    /// `ir.data` as well whenever one of its patterns is a data pattern (VER04r 4.1, [D35]; A.2): the
+    /// node carries which ([`Ir::Match::on_result`]) and [`ir::levels`] reads it.  The scrutinee is typed
+    /// first (with no expected type: R52), then **every pattern is checked before any arm body is
+    /// lowered** (R35 (3)), in arm order and, inside one pattern, outside in: the structure (an unknown
+    /// constructor, a constructor or literal that does not fit the scrutinee's type, a wrong field count)
+    /// and only then the duplicate-bind and shadowing rules ([`Lowerer::check_binds`]); then the arm set
+    /// (unreachable arms before fall-through, [`patterns::check_arms_with`]).  Arm bodies are typed with the
+    /// pattern's binders in scope (an arm that needs a context takes the first self-typed arm's type, as
+    /// `if` does; a `None` never takes one from a sibling, R52); the arms must have one type.
     fn match_expr(
         &mut self,
         target: &Expression<'a>,
@@ -1920,19 +2607,16 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         expected: Option<&Ty>,
     ) -> Result<(Ir, Ty), GenError> {
         let (s_ir, s_ty) = self.expr(target, None)?;
-        if !matches!(s_ty, Ty::Result(..)) {
-            return Err(self.level(Beyond::IrData, "match needs ir.data"));
-        }
         let mut pats: Vec<Pat> = Vec::with_capacity(arms.len());
         let mut bound: Vec<Vec<(String, Option<Ty>)>> = Vec::with_capacity(arms.len());
         for arm in arms {
             let mut binds = Vec::new();
-            let mut seen: Vec<String> = Vec::new();
-            pats.push(self.pattern(&arm.pattern, &s_ty, &mut binds, &mut seen, 1)?);
+            pats.push(self.pattern(&arm.pattern, &s_ty, &mut binds, 1)?);
+            self.check_binds(&binds)?;
             bound.push(binds);
         }
         let refs: Vec<&Pat> = pats.iter().collect();
-        patterns::check_arms(&refs, &s_ty, &self.errors)?;
+        patterns::check_arms_with(&refs, &s_ty, &self.errors, &self.adts)?;
         let mut bodies: Vec<Option<Ir>> = vec![None; arms.len()];
         let mut types: Vec<Option<Ty>> = vec![None; arms.len()];
         let mut hint: Option<Ty> = expected.cloned();
@@ -1950,18 +2634,21 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                         self.scope.insert(name.clone(), t.clone());
                     }
                     None if mentions(body, name) => {
-                        refused = Some(self.level(
-                            Beyond::IrData,
-                            "an error value bound by a pattern has no IR form",
-                        ));
+                        refused = Some(self.level(Beyond::ErrValue, ERR_VALUE_MESSAGE));
                         break;
                     }
                     None => {}
                 }
             }
+            // As in `if`: a sibling arm's type is a hint only for an arm that has none of its own.
+            let arm_hint = if expected.is_some() || needs_context(body) {
+                hint.clone()
+            } else {
+                None
+            };
             let lowered = match refused {
                 Some(e) => Err(e),
-                None => self.expr(body, hint.as_ref()),
+                None => self.expr(body, arm_hint.as_ref()),
             };
             self.scope = saved;
             let (ir, ty) = lowered?;
@@ -1991,24 +2678,30 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             Ir::Match {
                 scrutinee: Box::new(s_ir),
                 arms: arms_ir,
+                on_result: matches!(s_ty, Ty::Result(..)),
             },
             common,
         ))
     }
 
-    /// Lower one source pattern against the static type `ty` to its IR pattern (A.1).
+    /// Lower one source pattern against the static type `ty` to its IR pattern (A.1, A.2).
     ///
     /// `Ok(p)` is `["ok", p]`; `Err(E.CASE)` is `["err", "CASE"]`; `Err(_)` and `Err(e)` are
     /// `["err_any"]` (an error value has no IR form, so `e` may not be *used*; it is still
     /// declared, for the duplicate and shadowing rules); a tuple pattern is `["tuple", [..]]`; a
-    /// name is `["bind", name]` and `_` is `["wild"]`.  A literal pattern (`true`) is not one of
-    /// the six and is the level `ir.data`.
+    /// name is `["bind", name]` and `_` is `["wild"]`; `Some(p)` is `["some", p]`, `None` is `["none"]`,
+    /// `true`/`false` are `["bool", v]` and `Name(p1, ..)` is `["ctor", "Name", [..]]` for a record or
+    /// variant constructor (the bare name of a payload-free constructor is `["ctor", "Name", []]`).  A
+    /// name that is a declared constructor is *always* a constructor pattern, never a binder (VER04j
+    /// 4.3), so a bind "named like a constructor" cannot arise.
+    ///
+    /// This checks the **structure** only and collects `(name, type)` for every binder in `binds`; the
+    /// duplicate and shadowing rules run afterwards on the whole pattern ([`Lowerer::check_binds`]).
     fn pattern(
         &mut self,
         p: &Pattern<'a>,
         ty: &Ty,
         binds: &mut Vec<(String, Option<Ty>)>,
-        seen: &mut Vec<String>,
         depth: usize,
     ) -> Result<Pat, GenError> {
         if depth > MAX_PATTERN_DEPTH {
@@ -2020,11 +2713,26 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         }
         match p {
             Pattern::Wild => Ok(Pat::Wild),
-            Pattern::Bool(_) => Err(self.level(Beyond::IrData, "a literal pattern needs ir.data")),
-            Pattern::None | Pattern::Some(_) => Err(self.level(
-                Beyond::IrData,
-                "constructor patterns need ir.data",
-            )),
+            Pattern::Bool(v) => {
+                if *ty != Ty::Bool {
+                    return Err(self.type_err("a Bool pattern needs a Bool"));
+                }
+                Ok(Pat::Bool(*v))
+            }
+            Pattern::None => {
+                if !matches!(ty, Ty::Option(_)) {
+                    return Err(self.type_err("None needs an Option"));
+                }
+                Ok(Pat::None)
+            }
+            Pattern::Some(inner) => {
+                let Ty::Option(payload) = ty else {
+                    return Err(self.type_err("Some takes one pattern and needs an Option"));
+                };
+                Ok(Pat::Some(Box::new(
+                    self.pattern(inner, payload, binds, depth + 1)?,
+                )))
+            }
             Pattern::Tuple(items) => {
                 let Ty::Tuple(parts) = ty else {
                     return Err(self.type_err("a tuple pattern does not match the type of its value"));
@@ -2034,7 +2742,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 }
                 let mut out = Vec::with_capacity(items.len());
                 for (item, t) in items.iter().zip(parts) {
-                    out.push(self.pattern(item, t, binds, seen, depth + 1)?);
+                    out.push(self.pattern(item, t, binds, depth + 1)?);
                 }
                 Ok(Pat::Tuple(out))
             }
@@ -2042,7 +2750,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 let Ty::Result(ok_ty, _) = ty else {
                     return Err(self.type_err("Ok takes one pattern and needs a Result"));
                 };
-                Ok(Pat::Ok(Box::new(self.pattern(inner, ok_ty, binds, seen, depth + 1)?)))
+                Ok(Pat::Ok(Box::new(self.pattern(inner, ok_ty, binds, depth + 1)?)))
             }
             Pattern::Err(inner) => {
                 let Ty::Result(_, err_name) = ty else {
@@ -2052,9 +2760,13 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     return Ok(Pat::ErrAny);
                 }
                 if let Some(name) = inner.as_binder() {
-                    self.reject_constructor_name(name)?;
-                    self.declare(name, None, binds, seen)?;
-                    return Ok(Pat::ErrAny);
+                    if !self.ctors.contains_key(name) {
+                        if matches!(name, "Ok" | "Err") {
+                            return Err(self.type_err("Ok and Err are constructors, not names"));
+                        }
+                        binds.push((name.to_string(), None));
+                        return Ok(Pat::ErrAny);
+                    }
                 }
                 if let Pattern::Ctor { name, args } = &**inner {
                     if name.segments.len() == 2 && args.is_empty() {
@@ -2072,65 +2784,96 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 Err(self.type_err("an Err pattern is an error case, a name or _"))
             }
             Pattern::Ctor { name, args } => {
-                if let (Some(n), true) = (p.as_binder(), args.is_empty()) {
-                    self.reject_constructor_name(n)?;
-                    self.declare(n, Some(ty.clone()), binds, seen)?;
+                if let Some(n) = p.as_binder() {
+                    if self.ctors.contains_key(n) {
+                        return self.ctor_pattern(n, &[], ty, binds, depth);
+                    }
+                    if matches!(n, "Ok" | "Err") {
+                        return Err(self.type_err("Ok and Err are constructors, not names"));
+                    }
+                    binds.push((n.to_string(), Some(ty.clone())));
                     return Ok(Pat::Bind(n.to_string()));
                 }
-                if name.segments.len() == 1
-                    && (matches!(name.segments[0], "Some" | "None") || self.is_ctor(name.segments[0]))
-                {
-                    return Err(self.level(Beyond::IrData, "constructor patterns need ir.data"));
+                if name.segments.len() == 1 && self.ctors.contains_key(name.segments[0]) {
+                    return self.ctor_pattern(name.segments[0], args, ty, binds, depth);
                 }
                 Err(self.type_err("an unknown constructor in a pattern"))
             }
         }
     }
 
-    fn reject_constructor_name(&self, name: &str) -> Result<(), GenError> {
-        if matches!(name, "Some" | "None") || self.is_ctor(name) {
-            return Err(self.level(Beyond::IrData, "constructor patterns need ir.data"));
+    /// `Name(p1, .., pn)` against `ty`: the type must be the one that declares `Name` and `n` its field count.
+    fn ctor_pattern(
+        &mut self,
+        name: &str,
+        items: &[Pattern<'a>],
+        ty: &Ty,
+        binds: &mut Vec<(String, Option<Ty>)>,
+        depth: usize,
+    ) -> Result<Pat, GenError> {
+        let (type_name, index) = self.ctors[name].clone();
+        if !matches!(ty, Ty::Named(n) if *n == type_name) {
+            return Err(
+                self.type_err("a constructor pattern does not match the type of its value")
+            );
         }
-        if matches!(name, "Ok" | "Err") {
-            return Err(self.type_err("Ok and Err are constructors, not names"));
+        let fields = self.adts[&type_name][index].1.clone();
+        if items.len() != fields.len() {
+            return Err(self.type_err("a constructor pattern has the wrong number of fields"));
+        }
+        let mut out = Vec::with_capacity(items.len());
+        for (item, field_ty) in items.iter().zip(&fields) {
+            out.push(self.pattern(item, field_ty, binds, depth + 1)?);
+        }
+        Ok(Pat::Ctor(name.to_string(), out))
+    }
+
+    /// The binders of one pattern: a duplicate or a shadowing name is a corpus error (A.1, R2).
+    fn check_binds(&self, binds: &[(String, Option<Ty>)]) -> Result<(), GenError> {
+        let mut seen: Vec<&str> = Vec::new();
+        for (name, _) in binds {
+            self.declare(name, &mut seen)?;
         }
         Ok(())
     }
 
-    /// Declare a pattern binder: a duplicate or a shadowing name is a corpus error (A.1, R2).
-    fn declare(
-        &self,
-        name: &str,
-        ty: Option<Ty>,
-        binds: &mut Vec<(String, Option<Ty>)>,
-        seen: &mut Vec<String>,
-    ) -> Result<(), GenError> {
-        if seen.iter().any(|n| n == name) {
+    /// Check one pattern binder name: a duplicate or a shadowing name is a corpus error (A.1, R2).
+    ///
+    /// A bind spelling a model, an operation, an error type or a reserved built-in is refused (CV2-F8; the
+    /// checker's `check_arm_binder`, W0203): the checker reads a name in a body by what it is declared as, so
+    /// a bind called `take` or `rotl` would let the two tools disagree about what the name refers to inside
+    /// the arm.  Built-ins are version scoped: a v0 document may bind a name that only a v1 document
+    /// reserves.  A constructor never reaches here: a name that is a declared constructor is a constructor
+    /// pattern ([`Lowerer::pattern`]).
+    fn declare<'n>(&self, name: &'n str, seen: &mut Vec<&'n str>) -> Result<(), GenError> {
+        if seen.contains(&name) {
             return Err(GenError::new(code::IR, "", patterns::DUPLICATE_BIND));
+        }
+        if self.model_names.contains(name)
+            || self.op_sigs.contains_key(name)
+            || self.errors.contains_key(name)
+            || self.is_reserved_name(name)
+        {
+            return Err(GenError::new(code::IR, "", patterns::RESERVED_BIND));
         }
         if self.scope.contains_key(name) || name == "result" {
             return Err(GenError::new(code::IR, "", patterns::SHADOWING_BIND));
         }
-        seen.push(name.to_string());
-        binds.push((name.to_string(), ty));
+        seen.push(name);
         Ok(())
     }
 
-    /// Can the lowered expression of type `ty` flow to a place of type `want`?
-    ///
-    /// [`Ty::assignable`], plus the static-width rule of VER04r A.1: an expression whose *type*
-    /// forgot its width (a bytes literal, a `concat` of sized operands, an `if` of equal widths)
-    /// but whose recorded static width is `N` flows to `Bytes<N>`, as in the grammar checker.
-    /// `recorded` is [`Lowerer::last_width`], read **immediately** after the operand's `expr`
-    /// call (one lowering pass, never a re-lowering).
-    fn flows(&self, ty: &Ty, want: &Ty, recorded: Option<u64>) -> bool {
-        if Ty::assignable(ty, want) {
+    /// Is `name` a reserved built-in of the document's version (the checker's W0203 set)?
+    fn is_reserved_name(&self, name: &str) -> bool {
+        if RESERVED_V0.contains(&name) {
             return true;
         }
-        match (ty, want) {
-            (Ty::Bytes(_), Ty::Bytes(Some(Width::Lit(n)))) => static_width(ty, recorded) == Some(*n),
-            _ => false,
-        }
+        self.file.version == Version::V1
+            && (RESERVED_V1_EXTRA.contains(&name)
+                || ir::fixed_tag(name).is_some()
+                || LEVEL_LIST.contains(&name)
+                || LEVEL_SEQ.contains(&name)
+                || matches!(name, "take" | "drop"))
     }
 
     // -- the ir.fixed built-ins (Appendix A.1) ---------------------------------------------
@@ -2228,8 +2971,8 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 let t = static_ty.ok_or_else(|| GenError::internal("no static type"))?;
                 let want = t.bytes();
                 let (b_ir, b_ty) = self.expr(&args[0], Some(&Ty::bytes_n(want)))?;
-                // The operand's static width, from the one pass that just lowered it.
-                if static_width(&b_ty, self.last_width) != Some(want) {
+                // The width is part of the operand's type (R51): exactly the target's.
+                if b_ty != Ty::bytes_n(want) {
                     return Err(
                         self.type_err("from_be/from_le need Bytes of exactly the target's width")
                     );
@@ -2317,6 +3060,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             "at" => {
                 let (b_ir, b_ty) = self.expr(&args[0], None)?;
                 let (i_ir, i_ty) = self.expr(&args[1], Some(&Ty::Nat))?;
+                self.no_list(&[&b_ty])?;
                 if !b_ty.is_bytes() {
                     return Err(self.type_err("at needs Bytes"));
                 }
@@ -2325,21 +3069,15 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 }
                 Ok((fx(None, vec![b_ir, i_ir]), opt(Ty::Fixed(FixedTy::U8))))
             }
-            // `unwrap_or(o, d)`: the one consumer of an Option, as the first operand and directly.
+            // `unwrap_or(o, d)`: any `Option`-typed first operand (R29 (e)); the one that is directly a
+            // producer node is the intermediate use and adds no `ir.data` (`expr`).  The first operand has
+            // no expected type (R52), so a bare `None` there is a typing error.
             _ => {
-                self.option_ok = true;
+                self.intermediate = true;
                 let (o_ir, o_ty) = self.expr(&args[0], None)?;
                 let Ty::Option(inner) = o_ty else {
                     return Err(self.type_err("unwrap_or needs an Option"));
                 };
-                let from_a_built_in =
-                    matches!(&o_ir, Ir::Fixed { tag, .. } if OPTION_PRODUCERS.contains(tag));
-                if !from_a_built_in {
-                    return Err(self.level(
-                        Beyond::IrData,
-                        "an Option reaches unwrap_or only straight from a built-in",
-                    ));
-                }
                 let (d_ir, d_ty) = self.expr(&args[1], Some(&inner))?;
                 if !Ty::assignable(&d_ty, &inner) {
                     return Err(
@@ -2378,7 +3116,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         for (arg, (_, pty)) in args.iter().zip(params) {
             let want = pty.substitute(statics);
             let (ir, ty) = self.expr(arg, Some(&want))?;
-            if !self.flows(&ty, &want, self.last_width) {
+            if !Ty::assignable(&ty, &want) {
                 return Err(self.type_err("an argument does not match its parameter type"));
             }
             out.push(ir);
@@ -2433,6 +3171,11 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         args: Option<&[Expression<'a>]>,
     ) -> Result<(Ir, Ty), GenError> {
         let sig = slot?;
+        // R9: the op's whole signature is a use of its types, whatever the arguments are.
+        for (_, pty) in &sig.params {
+            self.check_type(pty)?;
+        }
+        self.check_type(&sig.ret)?;
         if widths.len() != sig.statics.len() {
             return Err(self.type_err("wrong number of static arguments"));
         }
@@ -2515,18 +3258,6 @@ fn mentions(root: &Expression<'_>, name: &str) -> bool {
         }
     }
     false
-}
-
-/// The static width of a lowered `Bytes` expression, or `None`: the width its type carries
-/// (`Bytes<4>`), else the one recorded as the node was lowered (`recorded`: a bytes literal, a
-/// `concat` of sized operands, an `if` of equal widths, the checker's `Literal::Bytes`, `concat`
-/// and `common_type` rule, VER04r A.1).  A `Bytes<N>` of a static *name* has none.
-fn static_width(ty: &Ty, recorded: Option<u64>) -> Option<u64> {
-    match ty {
-        Ty::Bytes(Some(Width::Lit(n))) => Some(*n),
-        Ty::Bytes(_) => recorded,
-        _ => None,
-    }
 }
 
 /// `r0 and r1 and r2` folded **left** into binary nodes (`and(and(r0,r1),r2)`); `None`
@@ -2748,9 +3479,14 @@ mod tests {
     }
 
     #[test]
-    fn a_projection_on_a_binder_needs_ir_data() {
-        let e = unchecked(&format!("{OP}  model m(a: U8) -> U8 = a.zz\n")).unwrap_err();
-        assert_eq!(e.level, Some("ir.data"));
+    fn a_projection_of_a_value_that_is_neither_a_tuple_nor_a_record_is_a_type_error() {
+        // VER04r 16.14 R39 (c): `e.i` on a non-tuple and `e.name` on a non-record were the level
+        // `ir.data` before S11b; they are typing errors now.
+        // (a v1 document: the tuple and record projections are v1 constructs)
+        let e = unchecked_fixed(&format!("{OP_V1}  model m(a: U8) -> U8 = a.zz\n")).unwrap_err();
+        assert_eq!((e.code, e.level), (code::TYPE, None), "{e}");
+        let e = unchecked_fixed(&format!("{OP_V1}  model m(a: U8) -> U8 = a.0\n")).unwrap_err();
+        assert_eq!(e.code, code::TYPE, "{e}");
     }
 
     /// The same document header as [`OP`] for a **v1** document (the built-ins are v1 only).
@@ -2889,21 +3625,27 @@ mod tests {
     }
 
     #[test]
-    fn an_option_that_is_not_the_first_operand_of_unwrap_or_is_ir_data() {
+    fn an_option_that_is_not_the_first_operand_of_unwrap_or_lowers_and_needs_ir_data() {
+        // VER04r 16.14 [D48], R29: an `Option` is a real type.  Every use of a producer but the
+        // **intermediate use** (the first operand of an `unwrap_or`, directly) brings `ir.data`, on top of
+        // the `ir.fixed` the built-in itself needs; before S11b each was refused at `ir.data`.
         for (what, model) in [
-            ("a model result", "model m(a: U8, b: U8) -> U8 = checked_add(a, b)"),
+            ("a model result", "model m(a: U8, b: U8) -> Option<U8> = checked_add(a, b)"),
             ("an operand of eq", "model m(a: U8, b: U8) -> Bool = checked_add(a, b) == checked_add(b, a)"),
-            ("the default", "model m(a: U8, b: U8) -> U8 = unwrap_or(div(a, b), checked_add(a, b))"),
+            ("the default", "model m(o: Option<Option<U8>>, a: U8, b: U8) -> Option<U8> = unwrap_or(o, checked_add(a, b))"),
             ("an if branch", "model m(a: U8, b: U8) -> U8 = unwrap_or(if true then checked_add(a, b) else checked_add(b, a), 0u8)"),
-            ("an argument", "model k(x: U8) -> U8 = x\n  model m(a: U8, b: U8) -> U8 = k(checked_add(a, b))"),
-            ("a try", "model m(a: Nat) -> U8 = to_nat(try<U8>(a))"),
+            ("an argument", "model k(x: Option<U8>) -> Bool = x == x\n  model m(a: U8, b: U8) -> Bool = k(checked_add(a, b))"),
+            ("a try", "model m(a: Nat) -> Option<U8> = try<U8>(a)"),
+            ("a binder", "model m(o: Option<U8>) -> U8 = unwrap_or(o, 0u8)"),
         ] {
-            let e = unchecked_fixed(&format!("{OP_V1}  {model}\n")).expect_err(what);
-            assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.data")), "{what}: {e}");
+            let l = unchecked_fixed(&format!("{OP_V1}  {model}\n")).unwrap_or_else(|e| panic!("{what}: {e}"));
+            let m = l.models.last().unwrap();
+            assert!(m.requires.contains(&"ir.data"), "{what}: {:?}", m.requires);
         }
-        // and the legal use lowers
+        // the intermediate use adds none (R29 (d)): `requires` is exactly what it was before the level
         let ok = "model m(a: U8, b: U8) -> U8 = unwrap_or(checked_add(a, b), 255u8)";
-        assert!(unchecked_fixed(&format!("{OP_V1}  {ok}\n")).is_ok());
+        let l = unchecked_fixed(&format!("{OP_V1}  {ok}\n")).unwrap();
+        assert_eq!(l.models[0].requires, ["ir.core", "ir.fixed"]);
     }
 
     #[test]
@@ -2947,4 +3689,211 @@ mod tests {
             );
         }
     }
+
+    // -- ir.data (slice S11b): the defensive refusals the checker rules out first ------------------------
+
+    /// The code of a document the **parser** refuses: the lowerer never sees it.
+    const PARSER_REFUSED: &str = "parser";
+
+    /// A v1 document with the standard declarations of these tests and `extra`, lowered without the checker.
+    /// A document the parser refuses is `Err` with the pseudo code [`PARSER_REFUSED`] (a refusal in a
+    /// layer before the one under test, never a lowering behaviour).
+    fn data(extra: &str) -> Result<Lowered, GenError> {
+        let src = format!(
+            "{OP_V1}  error E = X | Y\n  record Point(x: U8, y: U8)\n  variant Shape = Circle(r: U8) | Dot\n{extra}"
+        );
+        let doc = SourceDocument::admit(src.as_bytes(), SourceLimits::default()).unwrap();
+        let layout = capture_layout(&doc, LayoutLimits::default()).unwrap();
+        let Ok(file) = parse_document(&layout, &doc, ParserLimits::default()) else {
+            return Err(GenError::new(PARSER_REFUSED, "", "the parser refuses it"));
+        };
+        lower_partial_unchecked(&file)?.into_lowered()
+    }
+
+    #[test]
+    fn a_record_or_variant_that_contains_itself_is_a_type_error() {
+        for decls in [
+            "  record Loop(next: Loop)\n",
+            "  record A1(v: B1)\n  variant B1 = X(a: A1) | Y\n",
+            "  record Deep(o: Option<(U8,Deep)>)\n",
+            "  record R1(r: Result<R2,E>)\n  record R2(l: List<R1>)\n",
+        ] {
+            let e = data(decls).unwrap_err();
+            assert!(e.code == code::TYPE || e.is_level(), "{decls}: {e}");
+        }
+        let e = data("  record Loop(next: Loop)\n").unwrap_err();
+        assert_eq!((e.code, e.message.as_str()), (code::TYPE, "a record or variant contains itself"));
+        // a record that merely mentions another twice is not a cycle
+        assert!(data("  record Twice(a: Point, b: Point)\n  record Tw2(a: Twice, b: Twice)\n").is_ok());
+    }
+
+    #[test]
+    fn duplicate_names_and_short_variants_are_type_errors() {
+        for (what, decls) in [
+            ("a duplicate field", "  record Dup(a: U8, a: U8)\n"),
+            ("a duplicate field in a constructor", "  variant V2 = One(a: U8, a: U8) | Two\n"),
+            ("a variant of one constructor", "  variant Solo = Only(a: U8)\n"),
+            ("an unknown field type", "  record Bad(a: Zork)\n"),
+            ("a duplicate parameter", "  model m(a: U8, a: U8) -> U8 = a\n"),
+            ("a duplicate op parameter", "  op h(a: U8, a: U8) -> Bool\n"),
+        ] {
+            let e = data(decls).expect_err(what);
+            // (the parser refuses the first three itself: the lowerer's own rule is the second reader)
+            assert!(e.code == code::TYPE || e.code == PARSER_REFUSED, "{what}: {e}");
+        }
+    }
+
+    #[test]
+    fn constructor_expressions_refuse_the_shapes_the_checker_names() {
+        for (what, model) in [
+            ("a payload-free constructor with parentheses", "model m(a: U8) -> Shape = Dot()"),
+            ("a constructor with fields used bare", "model m(a: U8) -> Shape = Circle"),
+            ("too few arguments", "model m(a: U8) -> Point = Point(a)"),
+            ("too many arguments", "model m(a: U8) -> Shape = Circle(a, a)"),
+            ("an argument of the wrong type", "model m(a: U8) -> Point = Point(a, true)"),
+            ("a constructor with a static argument", "model m(a: U8) -> Shape = Circle<3>(a)"),
+            ("Some with two arguments", "model m(a: U8) -> Option<U8> = Some(a, a)"),
+            ("None with no context", "model m(a: U8) -> Bool = None == None"),
+            ("a field of a variant", "model m(s: Shape) -> U8 = s.r"),
+            ("a field that is not there", "model m(p: Point) -> U8 = p.z"),
+            ("an index of a record", "model m(p: Point) -> U8 = p.0"),
+            ("an ordering on a record", "model m(a: Point, b: Point) -> Bool = a < b"),
+        ] {
+            let e = data(&format!("  {model}\n")).expect_err(what);
+            assert_eq!(e.code, code::TYPE, "{what}: {e}");
+        }
+    }
+
+    #[test]
+    fn patterns_refuse_what_does_not_fit_their_scrutinee_and_the_arms_are_checked() {
+        for (what, model, sentence) in [
+            ("an unknown constructor", "model m(s: Shape) -> Bool = match s with Foo(x) -> true | _ -> false", None),
+            ("a constructor of another type", "model m(s: Shape) -> Bool = match s with Point(_, _) -> true | _ -> false", None),
+            ("a wrong field count", "model m(s: Shape) -> Bool = match s with Circle(a, b) -> true | _ -> false", None),
+            ("a bool pattern on a U8", "model m(a: U8) -> Bool = match a with true -> true | _ -> false", None),
+            ("Some on a Bool", "model m(a: Bool) -> Bool = match a with Some(x) -> x | _ -> false", None),
+            ("None on a Bool", "model m(a: Bool) -> Bool = match a with None -> true | _ -> false", None),
+            ("Ok on an Option", "model m(o: Option<U8>) -> Bool = match o with Ok(_) -> true | _ -> false", None),
+            ("Err on an Option", "model m(o: Option<U8>) -> Bool = match o with Err(_) -> true | _ -> false", None),
+            ("a tuple pattern on an Option", "model m(o: Option<U8>) -> Bool = match o with (a, b) -> true | _ -> false", None),
+            ("an Err of a constructor name", "model m(r: Result<Bool,E>) -> Bool = match r with Ok(x) -> x | Err(Dot) -> false", None),
+            ("an Err of the wrong shape", "model m(r: Result<Bool,E>) -> Bool = match r with Ok(x) -> x | Err(Some(_)) -> false", None),
+            ("an error case of another type", "error F = Z\n  model m(r: Result<Bool,E>) -> Bool = match r with Ok(x) -> x | Err(F.Z) -> false | Err(_) -> true", None),
+            (
+                "a duplicate bind",
+                "model m(s: Shape) -> Bool = match s with Circle(a) -> (match s with Circle(a) -> true | _ -> false) | _ -> false",
+                Some(patterns::SHADOWING_BIND),
+            ),
+            (
+                "a match with no common arm type",
+                "model m(s: Shape) -> Bool = match s with Circle(_) -> true | Dot -> 1",
+                None,
+            ),
+        ] {
+            let e = data(&format!("  {model}\n")).expect_err(what);
+            match sentence {
+                Some(s) => assert_eq!((e.code, e.message.as_str()), (code::IR, s), "{what}: {e}"),
+                None => assert!(e.code == code::TYPE, "{what}: {e}"),
+            }
+        }
+    }
+
+    #[test]
+    fn the_reserved_names_of_a_version_are_not_binds_and_a_v0_document_has_fewer() {
+        // a v1 document reserves the fixed-width types, the built-ins, the list and sequence names
+        for name in ["U16", "I32", "rotl", "widen", "unwrap_or", "slice", "range", "take", "drop", "len"] {
+            let model = format!("model m(o: Option<U8>) -> Bool = match o with Some({name}) -> true | None -> false");
+            let e = data(&format!("  {model}\n")).unwrap_err();
+            assert!(e.code == code::IR || e.code == code::TYPE, "{name}: {e}");
+        }
+        // model, op and error names are reserved binds too, the oracle's sentence
+        for name in ["f", "g", "E"] {
+            let model = format!("model m(o: Option<U8>) -> Bool = match o with Some({name}) -> true | None -> false");
+            let e = data(&format!("  {model}\n")).unwrap_err();
+            assert_eq!((e.code, e.message.as_str()), (code::IR, patterns::RESERVED_BIND), "{name}: {e}");
+        }
+        // an ordinary name binds
+        assert!(data("  model m(o: Option<U8>) -> Bool = match o with Some(v) -> true | None -> false\n").is_ok());
+    }
+
+    #[test]
+    fn the_reserved_scan_reads_every_shape_of_expression_and_an_error_value_by_name() {
+        // each document has a typing error (an unbound name) in the SAME unit AFTER a reserved construct
+        // hidden in a different shape of expression: the scan must see it (R35 (2))
+        for (what, model, level) in [
+            ("a list type in a binder", "model m(xs: List<U8>, a: U8) -> Bool = nowhere", "ir.list"),
+            ("a list literal in a tuple", "model m(a: U8) -> Bool = (nowhere, [a]).1", "ir.list"),
+            ("a call in a projection base", "model m(a: Nat) -> U8 = (nowhere, range(a)).1", "ir.seq"),
+            ("a call in an if branch", "model m(a: Nat) -> U8 = if nowhere then count(a) == 1 else 0u8", "ir.seq"),
+            ("a call in a unary", "model m(a: Nat) -> Bool = not (nowhere == all(a))", "ir.seq"),
+            ("a call in a match arm", "model m(a: Bytes) -> Bool = match nowhere with None -> fixed<2>(a) == None | _ -> true", "fixed-cast"),
+            ("a call as an argument", "model k(x: Bool) -> Bool = x\n  model m(a: Bytes) -> Bool = k(nowhere == to_list(a))", "ir.list"),
+            ("an error value in a later arm", "model m(r: Result<Bool,E>) -> Bool = match r with Ok(x) -> nowhere | Err(e) -> e == e", "err-value"),
+            ("an error value called", "model m(r: Result<Bool,E>) -> Bool = match r with Ok(x) -> nowhere | Err(e) -> e(true)", "err-value"),
+            ("an error value as a qualified head", "model m(r: Result<Bool,E>) -> Bool = match r with Ok(x) -> nowhere | Err(e) -> e.y == e", "err-value"),
+        ] {
+            let e = data(&format!("  {model}\n")).expect_err(what);
+            assert_eq!((e.code, e.level), (code::LEVEL, Some(level)), "{what}: {e}");
+        }
+        // a quantifier's binder type and refinement are scanned in a claim
+        let e = data("  claim c:\n    forall xs: List<U8>. f(b\"\", b\"\") == nowhere\n").unwrap_err();
+        assert_eq!(e.level, Some("ir.list"), "{e}");
+        let e = data("  claim c:\n    forall a: Bytes | range(1) == 1. f(a, a) == nowhere\n").unwrap_err();
+        assert_eq!(e.level, Some("ir.seq"), "{e}");
+        // an op refinement is a unit too
+        let e = data("  op h(a: Bytes | fold(1) == 1) -> Bool\n").unwrap_err();
+        assert_eq!(e.level, Some("ir.seq"), "{e}");
+        // a model parameter's refinement is a typing error that a reserved construct in it outranks
+        let e = data("  model m(a: Bytes | to_list(a) == a) -> Bool = true\n").unwrap_err();
+        assert_eq!(e.level, Some("ir.list"), "{e}");
+    }
+
+    #[test]
+    fn a_held_refusal_beats_a_later_unit_s_error_but_not_an_earlier_one() {
+        // the first unit holds `ir.list`; the second raises a typing error: the first is named
+        let e = data("  model a(x: U8) -> Bool = [x] == [x]\n  model b(x: U8) -> Bool = x\n").unwrap_err();
+        assert_eq!(e.level, Some("ir.list"), "{e}");
+        // the other way round the typing error is first
+        let e = data("  model b(x: U8) -> Bool = x\n  model a(x: U8) -> Bool = [x] == [x]\n").unwrap_err();
+        assert_eq!(e.code, code::TYPE, "{e}");
+        // a record's refused declaration holds for the models after it
+        let e = data("  record Bag(xs: List<U8>)\n  model b(x: U8) -> Bool = x\n").unwrap_err();
+        assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.list")), "{e}");
+        // ... and a variant's, an alias's, an op signature's
+        for decl in [
+            "  variant W = One(xs: List<U8>) | Two\n",
+            "  model Word = List<U8>\n",
+            "  op h(xs: List<U8>) -> Bool\n",
+        ] {
+            let e = data(&format!("{decl}  model b(x: U8) -> Bool = x\n")).unwrap_err();
+            assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.list")), "{decl}: {e}");
+        }
+    }
+
+    #[test]
+    fn the_declaration_limits_are_checked_in_declaration_order() {
+        let f = |src: &str| {
+            let doc = SourceDocument::admit(src.as_bytes(), SourceLimits::default()).unwrap();
+            let layout = capture_layout(&doc, LayoutLimits::default()).unwrap();
+            let file = parse_document(&layout, &doc, ParserLimits::default()).unwrap();
+            check_limits(&file)
+        };
+        let cases: Vec<String> = (0..65).map(|i| format!("Z{i}")).collect();
+        let e = f(&format!("warrant u v1\n  error Huge = {}\n", cases.join(" | "))).unwrap_err();
+        assert_eq!((e.code, e.at.as_str()), (code::LIMIT, "Huge"));
+        let ctors: Vec<String> = (0..65).map(|i| format!("C{i}")).collect();
+        let e = f(&format!("warrant u v1\n  variant Many = {}\n", ctors.join(" | "))).unwrap_err();
+        assert_eq!(e.message, "a variant has at most 64 constructors");
+        let e = f("warrant u v1\n  variant Wide = Fat(a0: U8, a1: U8, a2: U8, a3: U8, a4: U8, a5: U8, a6: U8, a7: U8, a8: U8) | Thin\n").unwrap_err();
+        assert_eq!(e.message, "a constructor has at most 8 fields");
+        assert!(f("warrant u v1\n  record Ok(a: U8)\n").is_ok());
+        // the first violation in declaration order is named
+        let e = f(&format!(
+            "warrant u v1\n  variant Wide = Fat(a0: U8, a1: U8, a2: U8, a3: U8, a4: U8, a5: U8, a6: U8, a7: U8, a8: U8) | Thin\n  error Huge = {}\n",
+            cases.join(" | ")
+        ))
+        .unwrap_err();
+        assert_eq!(e.at, "Wide");
+    }
 }
+

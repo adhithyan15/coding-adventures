@@ -187,7 +187,9 @@ fn cost(ir: &Ir, models: &ModelCosts, limit: u64) -> Result<u64, GenError> {
             bump(acc, worst, limit)
         }
         // `1 +` the scrutinee `+` the **maximum** over the arms (rule 6): exactly one arm runs.
-        Ir::Match { scrutinee, arms } => {
+        Ir::Match {
+            scrutinee, arms, ..
+        } => {
             acc = bump(acc, cost(scrutinee, models, limit)?, limit)?;
             let mut worst = 0;
             for (_, body) in arms {

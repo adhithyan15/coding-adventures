@@ -120,8 +120,11 @@ pub fn in_v1_set(ty: &Ty) -> bool {
         Ty::Fixed(t) => matches!(t, FixedTy::U8 | FixedTy::U64),
         Ty::Result(ok, _) => in_v1_set(ok),
         Ty::Tuple(_) => false,
-        // `Int` never appears in a value (VER04r 2.1), nor does the IR-only `Option` (D23).
-        Ty::Int | Ty::Option(_) => false,
+        // `Int` never appears in a value (VER04r 2.1).  `Option`, a record and a variant are values of
+        // `ir.data`, which no suite emits before S11c-2 (`Option<U8>` is in the v1 set of section 1.2
+        // and a record is not; the stream encoding of both is S11c-2's), and a list is the reserved
+        // `ir.list`.
+        Ty::Int | Ty::Option(_) | Ty::Named(_) | Ty::List(_) => false,
     }
 }
 
