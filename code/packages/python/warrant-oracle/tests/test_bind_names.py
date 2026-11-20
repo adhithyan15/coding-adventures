@@ -90,22 +90,42 @@ def test_an_ordinary_bind_name_still_lowers():
     assert m.ir[0] == "match"
 
 
-def _checker_names() -> set[str] | None:
+def _checker_names() -> tuple[set[str], set[str]] | None:
     src = Path(__file__).resolve().parents[3] / "rust/warrant-grammar/src/checker.rs"
     if not src.exists():
         return None
     text = src.read_text()
-    names: set[str] = set()
-    for const in ("V0_BUILTINS", "V1_TYPES", "V1_FUNCTIONS"):
+    def scan(const: str) -> set[str]:
         i = text.index(f"const {const}")
         j = text.index("];", i)
-        names |= set(re.findall(r'"(\w+)"', text[i:j]))
-    return names
+        return set(re.findall(r'"(\w+)"', text[i:j]))
+
+    v0 = scan("V0_BUILTINS")
+    return v0, v0 | scan("V1_TYPES") | scan("V1_FUNCTIONS")
 
 
 def test_the_reserved_set_equals_the_checkers():
     names = _checker_names()
     if names is None:
         pytest.skip("the Rust checker is not in this checkout")
+    v0, v1 = names
     # V0_BUILTINS' header is `[&str; 18]`, which has no quotes, so the scan sees only names.
-    assert names == set(LW._RESERVED_V1)
+    assert v0 == set(LW._RESERVED_V0)
+    assert v1 == set(LW._RESERVED_V1)
+
+
+@pytest.mark.parametrize("pattern", ["Ok(Point)", "Err(Point)"])
+def test_a_bind_named_like_a_record_is_refused(pattern):
+    text = (
+        "warrant t v1\n"
+        "  error E = A | B\n"
+        "  record Point(x: Nat)\n"
+        "  model m(r: Result<Bool,E>) -> Bool = match r with "
+        + pattern
+        + " -> true | "
+        + ("Err(_)" if pattern.startswith("Ok") else "Ok(_)")
+        + " -> false\n"
+    )
+    # A level refusal is recorded on the model, not raised.
+    m = lower_document(parse_source(text)).models["m"]
+    assert m.unsupported is not None and m.unsupported.code == "level"

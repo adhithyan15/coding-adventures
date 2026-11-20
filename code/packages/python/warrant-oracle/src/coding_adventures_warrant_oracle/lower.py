@@ -938,7 +938,9 @@ class _Lowerer:
         raise self.err("an unknown constructor in a pattern")
 
     def _reject_constructor_name(self, name: str) -> None:
-        if name in ("Some", "None") or _is_ctor(self.spec, name):
+        # A record's name is both its type and its one constructor (the checker keeps it in
+        # ``ctor_index``), so a bind spelling a record is refused like a variant constructor.
+        if name in ("Some", "None") or name in self.spec.records or _is_ctor(self.spec, name):
             raise self.level(L.DATA, "constructor patterns need ir.data")
         if name in ("Ok", "Err"):
             raise self.err("Ok and Err are constructors, not names")
@@ -950,7 +952,7 @@ class _Lowerer:
         spec = self.spec
         # A bind spelling a model, an operation, an error type or a reserved built-in is refused
         # (CV2-F8; the checker's ``check_arm_binder``, W0203).  The checker reads a name in a body
-        # by what it is declared as, so a bind called ``take`` or ``rotate`` would let the two
+        # by what it is declared as, so a bind called ``take`` or ``rotl`` would let the two
         # tools disagree about what the name refers to inside the arm: the checker types ``take(..)``
         # as the built-in while an evaluator would call the bound value.  Refusing the bind keeps
         # every name meaning one thing.  Constructors never reach here (see
