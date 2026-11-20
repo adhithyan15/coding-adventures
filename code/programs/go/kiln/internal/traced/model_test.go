@@ -1374,6 +1374,15 @@ func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
 			if tc.own || tc.create || tc.path == m.tmp || tc.path == m.home || m.readOnlyHost(tc.path) {
 				continue
 			}
+			// KILN04 D39: a present, non-listing look at a proper ancestor of
+			// the checkout, Home or Tmpdir, and an absent probe strictly inside
+			// the fresh Home or Tmpdir (never the checkout or its ancestors).
+			if !tc.absent && !tc.list && m.properAncestor(tc.path) {
+				continue
+			}
+			if tc.absent && m.freshAbsent(tc.path) {
+				continue
+			}
 			fail(tc, "outside the repository, but the record has no reason")
 		}
 		if tc.write && !underAny(rec.Writes, rel) {
@@ -1402,6 +1411,33 @@ func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
 			}
 		}
 	}
+}
+
+// properAncestor says p is a proper ancestor, "/" included, of the checkout,
+// Home or Tmpdir: the model's reading of D39 rule (a).  (The model declares no
+// other anchors; the host-root and ephemeral anchors are covered by
+// ancestor_test.go.)
+func (m *model) properAncestor(p string) bool {
+	for _, a := range []string{m.root, m.home, m.tmp} {
+		if p == "/" || strings.HasPrefix(a, p+"/") {
+			return true
+		}
+	}
+	return false
+}
+
+// freshAbsent says p is strictly inside Home or Tmpdir and is neither inside
+// the checkout nor an ancestor of it: the model's reading of D39 rule (b).
+func (m *model) freshAbsent(p string) bool {
+	if p == m.root || strings.HasPrefix(p, m.root+"/") || strings.HasPrefix(m.root, p+"/") {
+		return false
+	}
+	for _, d := range []string{m.home, m.tmp} {
+		if strings.HasPrefix(p, d+"/") {
+			return true
+		}
+	}
+	return false
 }
 
 func covered(rec *RawRecord, rel string) bool {
