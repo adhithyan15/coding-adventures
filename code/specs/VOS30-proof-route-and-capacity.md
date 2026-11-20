@@ -1021,6 +1021,14 @@ override an earlier (worse) one.
 | 2 | Feasible, reduced and mitigated | Not row 1, and any of: B3 green only with cuts at 8 instructions or fewer, or only up to about 200 instructions; D3 green only for T at most 16; B4 only n at most 4 | Fund VOS-029 with a required mitigation list (per-path splitting, cone-of-influence, cut points plus a composition checker, index case-splitting, concrete frame addresses, incremental solving with lemma logging); print reduced instance sizes on X3 labels; add an SH rule or lint keeping multi-term arithmetic out of class K code where there is no cut point |
 | 3 | Feasible as planned | Not rows 1 or 2, and all of: A1 and A2 green at N = 32 and 64; B3 green at 1000 instructions with worst step at most 10k conflicts and total at most 60 s; D2 and D3 green at T*k = 64*16; C1 green at 1000 | Fund VOS-029 with the compositional design; X3 instances *may* be the shipped sizes for bitmap components (to be confirmed on the compiled image) |
 
+**Note for the VOS-028c3 re-plan decision.** Row 1 above lists C1 at 200 as a funding
+condition. For the VOS-028c3 re-plan decision, **section 8.6.4 supersedes that
+condition**: VOS-029a delivers functional X3 only (section 3.6), with no two-safety
+claim, so a shape that measures two-safety cannot be what gates it. The recorded
+decision of 8.5 is not edited. The change of gate takes effect only with the named
+reviewer's sign-off, given together with the full-tier regeneration (section 9.12
+item (1)).
+
 **The table is total.** Any non-green result that no row names (a new result
 kind, a guard failure, an experiment missing from the results) **falls through to
 row 1**: unclassified is red, not green.
@@ -1248,7 +1256,13 @@ An obligation is **route-green** iff it is green under 8.3 **and** it needs at m
 (half of `DEFAULT_MAX_WORK`, 2^32). It is a stricter predicate than green, computed
 from the same recorded fields (`worst_step_conflicts` for a chain or split, else
 `conflicts`; `check_work`, which for a chain is the maximum over its obligations),
-never typed. The two bounds answer two different facts of the recorded file:
+never typed. **Pre-registration honesty.** These two constants (50,000 conflicts, 2^31 check work)
+were **derived from the recorded 1,625-row file before any VOS-028c run**, by the
+measurement below. They are **stricter than the existing 8.3 thresholds** (100,000
+conflicts, 2^32). They are now **frozen**: any change after a VOS-028c3 run is a
+specification change with a re-run and a decision-log entry, never a tuning.
+
+The two bounds answer two different facts of the recorded file:
 
 * Conflicts are not monotone in checker work: a 457,844-conflict proof was accepted
   and a proof of about 83,000 was the smallest rejected for work (section 8.5), so a
@@ -1367,7 +1381,13 @@ and K do not gate it; they gate VOS-029b and the memory shapes.
 **Two-safety no longer gates VOS-029a.** Section 3.6 already says VOS-029 delivers no
 two-safety on a real entry; C1 is dropped from the shapes required for funding and
 the code-against-code trace shapes are their own backlog row (VOS-D116), outside this
-re-plan.
+re-plan. Why this is safe: VOS-029a delivers functional X3 only (section 3.6), so
+dropping C1 from its gate weakens no claim it makes. Three rules keep it so. (1) **No
+VOS document may claim a two-safety or side-channel property of VOS-029 output** until
+VOS-D116 is done. (2) **VOS-D116 must be decided before any profile or theorem cites
+such a property.** (3) This change of gate (8.3 row 1 to 8.6.4) requires the **named
+reviewer's sign-off at the same time as the full-tier regeneration** of section 9.12
+item (1); until then the funding of VOS-029a stays provisional.
 
 **Re-plan decision (VOS-028c):** pending (VOS-028c3)
 
@@ -2328,25 +2348,59 @@ item lands, the PR that builds it replaces "planned" by the as-built decision, a
   ran was clean). `decide` must still print row 1; if D3 at T = 8, k = 16 changes,
   that is reported and the outcome of 8.5 is not edited.
 * `merge --add` of 9.2.
-* Hardening (VOS-D097). **(1) Provenance by tree id, not by ancestry.** The repository
-  squash-merges, so a recorded `repo` revision is generally not an ancestor of HEAD
-  (the results file's own `repo` revision `be35c919f51f` and its existing merge's
-  `567282add006` are not ancestors of this section's HEAD, although the four
-  per-crate revisions are). A rule "recorded revisions must be ancestors of HEAD"
-  would make `check` fail today. New runs and merges instead record `trees`, and
-  `check` prints a non-fatal `stale:` line when a recorded tree differs from the
-  working tree. Its teeth are a **sampled full-row re-run**: 16 full-tier rows chosen
-  by lowest SHA-256 of the row id, restricted to non-E rows whose recorded solve plus
-  check is under 2 s, re-run in process under a 20 s wall and compared by
-  `compare_rerun` (about 30 s on CI). **(2)** The kill checks the status of
+* Hardening (VOS-D097). **(1) Provenance by tree id, not by ancestry; graded MEDIUM.**
+  The repository squash-merges, so a recorded `repo` revision is generally not an
+  ancestor of HEAD (the results file's own `repo` revision `be35c919f51f` and its
+  existing merge's `567282add006` are not ancestors of this section's HEAD, although
+  the four per-crate revisions are). A rule "recorded revisions must be ancestors of
+  HEAD" would make `check` fail today. New runs and merges instead record `trees`
+  (content-addressed tree ids of the probe and its four solver crates).
+  * **CI `check`: a non-fatal `stale:` line plus a seeded spot check.** `check` prints
+    a `stale:` line when a recorded tree differs from the working tree. It stays
+    **non-fatal** on purpose: a fatal rule would couple every edit to a solver crate to
+    a regeneration of the results file, which is the VOS-D103 failure mode. Its teeth
+    are a **sampled full-row re-run** whose sample cannot be predicted from the repository
+    alone: the sample is seeded from the **SHA-256 of the results file's own bytes**
+    (its canonical serialisation), so **any edit to the file reshuffles which rows are
+    re-run**; rows are drawn from **all** full-tier non-E rows (no exclusion of slow
+    rows); they are taken in seeded order and re-run, each under the limits of item
+    (3), until a fixed **total CI time budget** is spent; a row whose recorded solve
+    plus check exceeds the per-row cap is **skipped, but counted and printed** (`skipped
+    over cap: n`), never silently dropped. Each re-run is compared by `compare_rerun`.
+  * **What the spot check proves.** Stated honestly: a single hand-edited row among
+    about 1,625 is caught with probability about `sample / population` per commit (for
+    16 to 30 rows, about 1% to 2%). The sample is a spot check that makes a wholesale
+    edit expensive; it is **not proof** of the file.
+  * **The real teeth: `check --full` and a release gate.** `check --full` (planned in
+    VOS-028c2) re-runs **every** full-tier row, no sampling, locally or nightly (about
+    2 h), each row under the limits of item (3). It **refuses when a recorded tree id
+    differs from the working tree** unless the rows are regenerated first, so it cannot
+    pass on a file that no longer describes the tree. The VOS-028c3 decision stays
+    **provisional** until a full re-run (`check --full` at the tree that ran) has
+    reproduced every full-tier row, and the named reviewer of section 8.5 has signed
+    that off. This is a release gate, not a CI step.
+  **(2)** The kill checks the status of
   `/bin/kill`, falls back to `child.kill()` and bounds the wait with a 5 s `try_wait`
-  loop. **(3)** OS limits without `unsafe`: the child is launched through
-  `/bin/sh -c 'ulimit -t N; exec "$@"'` as a CPU backstop plus a kill-on-drop guard;
-  the RSS poll stays and `RLIMIT_AS` is still not used (9.5 item 4). **(4)**
-  `validate` requires every row's `(experiment, mode, knob)` to be in the plan's
-  closed set for the experiment. **(5)** Child output is read through `take(1 MiB)`,
+  loop. **(3) OS limits without `unsafe`, and no shell injection.** The child is
+  launched through `/bin/sh` as a CPU backstop plus a kill-on-drop guard. The CPU
+  limit N is a **validated unsigned integer computed from the row budget constant**
+  (never read as text from the results file) and **formatted from a number**. The script
+  string is the **fixed literal** `ulimit -t "$1"; shift; exec "$@"`; N, the program
+  and its arguments are passed as **separate argv entries** (`sh -c <script> sh N
+  program args...`), never joined into the script. A **negative control** passes a
+  malicious knob and budget string (shell metacharacters such as `; touch x` and `$(...)`)
+  and asserts that no file is created and that the string reaches the program only as an
+  inert argument or is refused by `validate`. The RSS poll stays and `RLIMIT_AS` is
+  still not used (9.5 item 4). **(4) Knob magnitudes are capped.** `validate` requires
+  every row's `(experiment, mode, knob)` to be in the plan's closed set for the
+  experiment, and checks the knob **values**, not only the names: every row's knob must
+  **equal exactly** one of `knobs(exp)` (so a hand-edited length of 10^9 is refused,
+  not run). The sampled re-run of item (1) runs **each row in a child process with the
+  same resource limits as `run`** (CPU ulimit, RSS poll, kill), never in process.
+  **(5)** Child output is read through `take(1 MiB)`,
   `--out` is written atomically, `--jobs` is clamped to 1..=64. Process-group, `sh`
-  and `ulimit` code is `cfg(unix)`: the Windows BUILD runs `check` in process only.
+  and `ulimit` code is `cfg(unix)`: the Windows BUILD runs `check` in process only
+  (its `validate` still applies; the sampled re-run is skipped there and says so).
 * E1 rows are untouched (VOS-D103).
 
 **VOS-028c3: the experiments and the decision.** The experiments of 8.6.3, in
