@@ -1,6 +1,7 @@
 package traced
 
 import (
+	"path"
 	"sort"
 	"strings"
 )
@@ -90,6 +91,18 @@ func (c *classifier) sandboxHas(abs string) bool {
 			return true
 		}
 	}
+	// A declared root that is a symlink on the HOST (merged /usr: /bin ->
+	// usr/bin) sends the walk, which runs on the host's disk, to its target and
+	// through the target's ancestors.  Judging those as before keeps the rule's
+	// promise that a gap in the exists-set never changes a verdict: without
+	// this, /bin/sh walked to /usr/bin/sh, which a policy without /usr calls
+	// sandbox-absent, and an exec the kernel performed turned from a host-read
+	// into an unstable path.
+	for _, t := range c.declaredRootLinks() {
+		if covers(t, abs) || strings.HasPrefix(t, abs+"/") {
+			return true
+		}
+	}
 	for _, d := range []string{c.cfg.Home, c.cfg.Tmpdir} {
 		if d != "" && covers(d, abs) {
 			return true
@@ -113,6 +126,41 @@ func (c *classifier) sandboxHas(abs string) bool {
 		}
 	}
 	return false
+}
+
+// declaredRootLinks resolves, once, every declared root that is a symlink on
+// the host to the absolute path its chain ends at (at most 8 hops; an
+// unreadable or looping chain adds nothing, and the walk itself reports it).
+// It asks the FS directly and adds no reason: it only widens sandboxHas, which
+// is the direction that keeps the pre-D43 verdict.
+func (c *classifier) declaredRootLinks() []string {
+	if c.rootLinksDone {
+		return c.rootLinks
+	}
+	c.rootLinksDone = true
+	for i := range c.cfg.roots {
+		p := c.cfg.roots[i].path
+		linked := false
+		for hop := 0; hop < 8; hop++ {
+			info, err := c.cfg.FS.Lstat(p)
+			if err != nil || info.Kind != KindLink {
+				break
+			}
+			t, err := c.cfg.FS.Readlink(p)
+			if err != nil || t == "" {
+				linked = false
+				break
+			}
+			if !strings.HasPrefix(t, "/") {
+				t = path.Join(path.Dir(p), t)
+			}
+			p, linked = path.Clean(t), true
+		}
+		if linked && p != "/" {
+			c.rootLinks = append(c.rootLinks, p)
+		}
+	}
+	return c.rootLinks
 }
 
 // sandboxAbsent says the sealed root cannot contain abs: it is outside the

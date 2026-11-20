@@ -280,6 +280,11 @@ type classifier struct {
 	// component the post-run disk lacks with a ".." after it: where that call
 	// really looked is unknown if a cwd text went stale (settleReshaped).
 	dotdotAt string
+	// rootLinks are the host-side targets of the declared roots that are
+	// symlinks on the host (merged-/usr: /bin -> usr/bin), for sandboxHas;
+	// computed once (rootLinksDone).
+	rootLinks     []string
+	rootLinksDone bool
 	// incomplete is the negation of RawRecord.WritesComplete: set the moment
 	// something happens that could hide a write from Writes/TrackedWrites.
 	// Every setter says which trigger of KILN04 section 5.5 it is.

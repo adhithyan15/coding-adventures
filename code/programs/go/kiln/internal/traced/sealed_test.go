@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
 
@@ -326,6 +327,54 @@ func TestPrepareRefusesABadScratchDir(t *testing.T) {
 		h.cfg.ScratchDirs = []string{d}
 		if _, err := prepare(h.cfg); err == nil {
 			t.Errorf("scratch dir %q was accepted", d)
+		}
+	}
+}
+
+// A declared root that is a symlink on the host (merged /usr: /bin -> usr/bin)
+// with a policy that does not also declare its target.  The walk runs on the
+// host's disk, so /bin/sh lands on /usr/bin/sh.  The sealed root must judge
+// that path, and the target's ancestors, exactly as before D43: found on
+// Linux CI, where internal/record's fixture declares only /bin and /sbin and
+// an exec of sh turned from a host-read into trace-incomplete:unstable-path.
+func TestSealedRootFollowsASymlinkedDeclaredRoot(t *testing.T) {
+	merged := func(sealed bool) *harness {
+		h := newHarness(t)
+		if sealed {
+			h.cfg.ScratchDirs = scratchDirs
+		}
+		h.fs.link("/bin", "usr/bin")
+		var roots []legacy.HostRoot
+		for _, r := range h.cfg.HostRoots.Roots {
+			if r.Path != "/usr" {
+				roots = append(roots, r)
+			}
+		}
+		h.cfg.HostRoots.Roots = roots
+		return h
+	}
+	for name, ev := range map[string]trace.Event{
+		"exec": execve("/bin/sh", "sh"),
+		"stat": stat("/bin/sh"),
+		"open": openAbs("/bin/sh"),
+	} {
+		before := merged(false).run(ev)
+		after := merged(true).run(ev)
+		if strings.Join(before.Reasons, "|") != strings.Join(after.Reasons, "|") {
+			t.Errorf("%s: the sealed root changed the verdict: before %q, after %q", name, before.Reasons, after.Reasons)
+		}
+		for _, r := range after.Reasons {
+			if strings.HasPrefix(r, rUnstable) {
+				t.Errorf("%s: %q", name, after.Reasons)
+			}
+		}
+	}
+	// A path beside the target that no root reaches is still sandbox-absent.
+	h := merged(true)
+	h.fs.file("/usr/share/x")
+	for _, r := range h.run(fail(stat("/usr/share/x"), "ENOENT")).Reasons {
+		if strings.Contains(r, "/usr/share") {
+			t.Errorf("an absent probe beside the root's target asked the host: %q", r)
 		}
 	}
 }

@@ -40,3 +40,8 @@
   and `/run`, and has two stale-cwd bursts and one scratch-absence burst aimed
   at the sealed root.
 - Spec KILN04 decision D43, with the attack analysis.
+- The exists-set admits the host-side target, and the target's ancestors, of a
+  declared root that is a symlink on the host (merged `/usr`: `/bin -> usr/bin`),
+  so a policy that does not declare the target keeps its pre-D43 verdict
+  (`TestSealedRootFollowsASymlinkedDeclaredRoot`). The probe script of
+  `TestSandboxSealedRoot` no longer ends in a false `test`.

@@ -3958,6 +3958,15 @@ EXISTS only if it is
 - under `/dev`, `/proc` or `/sys` (the plan mounts `/dev` and `/proc`; `/sys` is
   admitted because the ephemeral list names it, and a policy's other literal
   ephemeral prefixes likewise).
+- the target, or a proper ancestor of the target, of a declared root that is a
+  SYMLINK on the host (merged `/usr`: `/bin -> usr/bin`), with up to 8 hops
+  resolved once from the host's FS. The classifier's walk runs on the host's
+  disk, so it follows that link even when the policy does not declare the
+  target. Without this clause, an exec of `/bin/sh` walked to `/usr/bin/sh`,
+  which a policy without `/usr` calls sandbox-absent, and it became
+  `unstable-path` where it had been a `host-read`. Linux CI caught this in
+  `internal/record`, whose fixture declares only `/bin` and `/sbin`; macOS, where
+  `/bin` is a real directory, did not.
 
 Everything else is SANDBOX-ABSENT (`sandboxHas`, `sandboxAbsent`). The set is a
 SUPERSET of what the plan mounts (it admits every declared root whether or not
