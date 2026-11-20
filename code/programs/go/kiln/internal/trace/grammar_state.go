@@ -82,10 +82,11 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
 		// See handleLine: a call cut off by the exit (shared rule, D18 and D33).
-		if e := exitInsideCall(st, pid, ex); e != nil {
+		dropped, e := exitInsideCall(st, pid, ex)
+		if e != nil {
 			return nil, e
 		}
-		return &record{line: lineNo, pid: pid, exit: ex}, nil
+		return &record{line: lineNo, pid: pid, exit: ex, dropped: dropped}, nil
 
 	case "signal_line":
 		if p := pend[pid]; p != nil {
@@ -128,13 +129,22 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 		// and read the whole call again, as one line.  Each half was already
 		// read on its own (the parse above), so no construct can span the seam:
 		// strace never splits a token (KILN04 section 4.9, table).
-		glued := p.prefix + text[bt.Column-1+len(bt.Value):]
+		after := text[bt.Column-1+len(bt.Value):]
+		if dyingResumeTail(after) {
+			// The task died inside the call: only its exit may follow (D35).
+			diedInCall(st, pid, p.line, p.name, p.prefix, p.args)
+			return nil, nil
+		}
+		glued := p.prefix + after
 		call, unfinished, _, r := parseCallG(glued, maxLine, st)
 		if r != "" {
 			return nil, incomplete(lineNo, r)
 		}
 		if unfinished {
 			return nil, incomplete(lineNo, reasonUnparsable)
+		}
+		if call.ret.unavailable {
+			return diedWithResult(st, pid, lineNo, p.line, call, true, st.helper)
 		}
 		if isExitName(call.name) && !call.ret.unknown {
 			// The call began (the marker was taken at its start line) but
@@ -159,7 +169,7 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 					return nil, e
 				}
 			}
-			st.setPending(pid, &pending{name: call.name, prefix: prefix, line: lineNo})
+			st.setPending(pid, &pending{name: call.name, prefix: prefix, line: lineNo, args: call.args})
 			if isExitName(call.name) {
 				return &record{line: lineNo, pid: pid, exitCall: true, rawExit: call.name == "exit"}, nil
 			}
@@ -169,6 +179,9 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 				return &record{line: lineNo, pid: pid, start: true}, nil
 			}
 			return nil, nil
+		}
+		if call.ret.unavailable {
+			return diedWithResult(st, pid, lineNo, lineNo, call, false, st.helper)
 		}
 		return finishCall(pid, lineNo, call, false, st.helper)
 	}
@@ -237,10 +250,10 @@ func callFromLP(line string, st *lineState, name lexer.Token) (call rawCall, unf
 	if len(args) > maxItems {
 		return call, false, "", reasonArity
 	}
+	call.args = args // for an interrupted call too: dyingPolicy reads an open's flags from them
 	if open {
 		return call, true, pre, ""
 	}
-	call.args = args
 	// The grammar's tail is free-form on purpose: the strict result parser
 	// decides what may follow the ")", for EVERY closed call.
 	ret, r := parseResult(lp.TextAfterClose())

@@ -66,7 +66,14 @@ const TracedSemantics uint64 = 2
 // ENOSYS, the others = -1 EPERM) is tolerated instead of refused, and a clone
 // with a forbidden flag that failed with EPERM likewise.  Traces that were
 // refused now parse, so every weak key changes.
-const RecorderVersion = 4
+//
+// Version 5: the dying-call rule (KILN04 D35).  A task that dies inside a system
+// call when its thread group exits is tolerated in its three spellings
+// (`= ? <unavailable>`, `<... clone resumed> <unfinished ...>) = ?`, and an
+// unfinished call followed only by the task's exit) when the call is ignored,
+// a spawn, or read-only and the group was ending.  Traces that were refused now
+// parse, so every weak key changes.
+const RecorderVersion = 5
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
