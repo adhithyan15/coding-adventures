@@ -19,6 +19,7 @@ use tls13_certificate_request_message::{
     decode_certificate_request, CertificateRequest, CertificateRequestError,
     CertificateRequestLimits,
 };
+use tls13_certificate_verify_message::{CertificateVerifyMessage, MessageError};
 use tls13_cipher_suite_policy::{HkdfHash, SelectedCipherSuite};
 use tls13_encrypted_extensions_message::{
     decode_encrypted_extensions_message, EncryptedExtensionsMessage,
@@ -44,6 +45,9 @@ use tls13_signature_scheme_list::{
     decode_signature_scheme_list, SignatureSchemeList, SignatureSchemeListError,
     SignatureSchemeListLimits, SIGNATURE_ALGORITHMS_CERT_EXTENSION_TYPE,
     SIGNATURE_ALGORITHMS_EXTENSION_TYPE,
+};
+use tls13_signature_scheme_policy::{
+    AuthorizedSignatureScheme, PolicyError as SignatureSchemePolicyError, SignatureSchemePolicy,
 };
 use tls13_traffic_key_material::{
     derive_traffic_key_material, TrafficKeyMaterial, TrafficKeyMaterialError,
@@ -1703,6 +1707,48 @@ impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'r
             certificate,
         })
     }
+
+    /// Decode and policy-bind this exact pending server `CertificateVerify`.
+    pub fn validate_server_certificate_verify(
+        &self,
+        signature_limits: SignatureSchemeListLimits,
+        signature_policy: SignatureSchemePolicy<'_>,
+    ) -> Result<
+        BoundRetryServerCertificateVerify<'_, 'message, 'retry_evidence>,
+        RetryServerCertificateVerifyValidationError,
+    > {
+        if self.message.handshake_type() != tls13_handshake::Tls13HandshakeType::CertificateVerify {
+            return Err(RetryServerCertificateVerifyValidationError::WrongMessageType);
+        }
+        if self.state != ServerFlightState::ExpectFinished {
+            return Err(RetryServerCertificateVerifyValidationError::WrongFlightState);
+        }
+        let message = CertificateVerifyMessage::decode(self.message.body())
+            .map_err(RetryServerCertificateVerifyValidationError::Structure)?;
+        let offered_signature_algorithms = self
+            .retry_evidence
+            .final_client_hello_extensions()
+            .find(ExtensionType::from_wire_value(
+                SIGNATURE_ALGORITHMS_EXTENSION_TYPE,
+            ))
+            .ok_or(RetryServerCertificateVerifyValidationError::MissingSignatureAlgorithms)
+            .and_then(|entry| {
+                decode_signature_scheme_list(entry.data(), signature_limits)
+                    .map_err(RetryServerCertificateVerifyValidationError::SignatureAlgorithms)
+            })?;
+        if !offered_signature_algorithms.contains(message.algorithm_wire_id()) {
+            return Err(RetryServerCertificateVerifyValidationError::UnofferedSignatureScheme);
+        }
+        let authorized_scheme = signature_policy
+            .select(message.algorithm_wire_id())
+            .map_err(RetryServerCertificateVerifyValidationError::Policy)?;
+        Ok(BoundRetryServerCertificateVerify {
+            pending: self,
+            message,
+            offered_signature_algorithms,
+            authorized_scheme,
+        })
+    }
 }
 
 impl fmt::Debug for PendingRetryServerTranscriptMessage<'_, '_> {
@@ -2000,6 +2046,118 @@ impl fmt::Debug for BoundRetryServerCertificate<'_, '_, '_> {
             .debug_struct("BoundRetryServerCertificate")
             .field("pending", &"[RETAINED]")
             .field("certificate", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Stable payload-free failures for exact retry server `CertificateVerify` validation.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RetryServerCertificateVerifyValidationError {
+    /// The pending ordered message was not `CertificateVerify`.
+    WrongMessageType,
+    /// The ordered flight was not immediately after server `CertificateVerify`.
+    WrongFlightState,
+    /// The exact authenticated body was structurally invalid.
+    Structure(MessageError),
+    /// The final ClientHello omitted its required `signature_algorithms` offer.
+    MissingSignatureAlgorithms,
+    /// The retained final offer was structurally invalid.
+    SignatureAlgorithms(SignatureSchemeListError),
+    /// The peer selected a scheme absent from the retained final offer.
+    UnofferedSignatureScheme,
+    /// The caller's data-driven repository policy rejected the selected scheme.
+    Policy(SignatureSchemePolicyError),
+}
+
+impl fmt::Display for RetryServerCertificateVerifyValidationError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::WrongMessageType => "TLS 1.3 retry message is not CertificateVerify",
+            Self::WrongFlightState => {
+                "TLS 1.3 retry CertificateVerify has the wrong ordered-flight state"
+            }
+            Self::Structure(_) => "TLS 1.3 retry CertificateVerify structure is invalid",
+            Self::MissingSignatureAlgorithms => {
+                "TLS 1.3 final ClientHello omitted signature_algorithms"
+            }
+            Self::SignatureAlgorithms(_) => {
+                "TLS 1.3 final ClientHello signature_algorithms is invalid"
+            }
+            Self::UnofferedSignatureScheme => {
+                "TLS 1.3 server CertificateVerify selected an unoffered signature scheme"
+            }
+            Self::Policy(_) => {
+                "TLS 1.3 server CertificateVerify signature scheme is not authorized"
+            }
+        })
+    }
+}
+
+impl std::error::Error for RetryServerCertificateVerifyValidationError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Structure(error) => Some(error),
+            Self::SignatureAlgorithms(error) => Some(error),
+            Self::Policy(error) => Some(error),
+            Self::WrongMessageType
+            | Self::WrongFlightState
+            | Self::MissingSignatureAlgorithms
+            | Self::UnofferedSignatureScheme => None,
+        }
+    }
+}
+
+/// Exact authenticated server `CertificateVerify` bound to offer and policy.
+///
+/// This proof intentionally derives neither `Copy` nor `Clone`. It retains the
+/// pending pre-message transcript snapshot, exact decoded message, exact final
+/// ClientHello offer, and policy-authorized scheme. Cryptographic verification
+/// remains a separate required boundary.
+pub struct BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence> {
+    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence>,
+    message: CertificateVerifyMessage<'message>,
+    offered_signature_algorithms: SignatureSchemeList<'retry_evidence>,
+    authorized_scheme: AuthorizedSignatureScheme,
+}
+
+impl<'pending, 'message, 'retry_evidence>
+    BoundRetryServerCertificateVerify<'pending, 'message, 'retry_evidence>
+{
+    /// Borrow the exact pending ordered message and pre-message snapshot.
+    #[must_use]
+    pub const fn pending(
+        &self,
+    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+        self.pending
+    }
+
+    /// Borrow the exact structurally decoded `CertificateVerify` body.
+    #[must_use]
+    pub const fn message(&self) -> &CertificateVerifyMessage<'message> {
+        &self.message
+    }
+
+    /// Borrow the exact retained final ClientHello signature offer.
+    #[must_use]
+    pub const fn offered_signature_algorithms(&self) -> &SignatureSchemeList<'retry_evidence> {
+        &self.offered_signature_algorithms
+    }
+
+    /// Return the exact offered scheme authorized by repository policy.
+    #[must_use]
+    pub const fn authorized_scheme(&self) -> AuthorizedSignatureScheme {
+        self.authorized_scheme
+    }
+}
+
+impl fmt::Debug for BoundRetryServerCertificateVerify<'_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryServerCertificateVerify")
+            .field("pending", &"[RETAINED]")
+            .field("message", &"[REDACTED]")
+            .field("offered_signature_algorithms", &"[REDACTED]")
+            .field("authorized_scheme", &"[RETAINED]")
             .finish()
     }
 }
