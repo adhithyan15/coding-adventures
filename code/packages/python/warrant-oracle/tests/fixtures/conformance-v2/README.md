@@ -62,6 +62,13 @@ case that needs another level belongs to S10d or S11 and fails the build here.
   build, and the kit has no `off-by-one` on a `Nat` result of `2^64-1` (R47).
 * **`ill-typed` by name (R41, R45).** An `err` whose case no error type in `types` declares, and a `subject_op` that
   names an op missing from `ops`, are `ill-typed`; every other `err` case passes `types` with the case declared.
+* **Schema violations are kit errors (R45 f).** A negative or non-integer `index`, `range` bound, `chunk`,
+  `chunk_size` or `slim_chunks` entry fails the build (exit 2) instead of becoming a vector; "an invalid
+  `chunk_size`" is a non-negative integer that is not a power of two in `2^10..=2^16`.
+* **Undetermined types (R41).** A derived `expect.type` with an undetermined component (the `?` of a bare `ok`'s error
+  type or a bare `err`'s payload) fails the build.
+* **`v2-chunk` validation and the slim digests (R46).** A lane checks neither slim digest nor the base set; the
+  tampers below re-seal them anyway so that a lane that does compare them is not what the case tests.
 * **`v2-chunk` tampers.** Each tamper re-seals what it does not mean to break (the file digest and, for a changed
   `slim_chunks`, the two slim digests), so a case triggers its one intended code.
 

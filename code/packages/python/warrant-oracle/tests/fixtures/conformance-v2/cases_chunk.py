@@ -210,6 +210,14 @@ def product_plus_one(p):
     p["suite"]["discarded"] += 1
 
 
+def row_chunks_plus_one(p):
+    p["suite"]["chunks"] += 1
+
+
+def row_discarded_plus_one(p):
+    p["suite"]["discarded"] += 1
+
+
 def chunk_is(value):
     def tamper(p):
         p["chunk"] = value
@@ -331,6 +339,8 @@ def build_rows(kits):
         ("chunks-sha256-wrong", "chunks_sha256 is not the digest of the file", chunks_sha256_flipped),
         ("row-cases-wrong", "the row's cases is not the sum of the lines", row_cases_plus_one),
         ("row-inputs-sha256-wrong", "the suite digest is not the framing of the chunk digests", row_inputs_sha256_flipped),
+        ("row-discarded-wrong", "the row's discarded is not the product minus the sum of the lines (R45 b)",
+         row_discarded_plus_one),
         ("row-expected-sha256-wrong", "the expected suite digest is not the framing of the chunk digests",
          row_expected_sha256_flipped),
     ):
@@ -367,6 +377,10 @@ def build_rows(kits):
         ("chunk-size-below-2-10", "chunk_size 512 is below 2^10", corpus_set("chunk_size", 512)),
         ("chunk-size-above-2-16", "chunk_size 131072 is above 2^16", corpus_set("chunk_size", 131072)),
         ("max-ir-cost-above-the-ceiling", "max_ir_cost 65537", corpus_set("max_ir_cost", 65537)),
+        ("max-ir-cost-below-the-floor", "max_ir_cost 1999 is below 2,000 in the corpus part (R45 e)",
+         corpus_set("max_ir_cost", 1999)),
+        ("chunks-not-ceil-of-product-over-chunk-size", "the row's chunks is not ceil(product / chunk_size) (R45 a)",
+         row_chunks_plus_one),
         ("row-unknown-key", "the suite row has an unknown key", row_add_key),
         ("row-missing-key", "the suite row lacks a key", row_drop("wraps")),
         ("row-missing-expected-sha256", "a reference suite row without expected_sha256", row_drop("expected_sha256")),

@@ -109,6 +109,7 @@ reject("bytes-n-short", "one byte short of Bytes<2>", q("ff"), "Bytes<2>", "valu
 reject("bytes-n-long", "one byte too long for Bytes<1>", q("ffff"), "Bytes<1>", "value")
 reject("bytes-n-0-long", "Bytes<0> refuses one byte", q("00"), "Bytes<0>", "value")
 reject("bytes-n-4096-short", "4,095 bytes for Bytes<4096>", q("01" * 4095), "Bytes<4096>", "value")
+reject("bytes-n-leading-zero-type", "a Bytes width is canonical decimal: Bytes<07> is a type error (R45 c)", q(""), "Bytes<07>", "type")
 reject("bytes-n-4097-type", "N over 4,096 is a type error, whatever the value", q(""), "Bytes<4097>", "type")
 reject("bytes-n-named-width", "a named width is not a value type", q(""), "Bytes<N>", "type")
 

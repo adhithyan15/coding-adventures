@@ -13,7 +13,7 @@ No version bump, no emitted byte changes, no committed file outside this package
   (`classify_ir_refusal`), the case envelope (`Row`, `finish_case`: id, summary, `requires`, `expect`), and the
   canonical writer and index rows (`build_files`). The module reads no file.
 - `tests/fixtures/conformance-v2/`: the hand-written case tables (`cases_value.py`, `cases_arith.py`, `cases_ir.py`,
-  `cases_domain.py`, `cases_chunk.py`, `cases_fault.py`; 730 cases in the six categories, every one with `requires`
+  `cases_domain.py`, `cases_chunk.py`, `cases_fault.py`; 734 cases in the six categories, every one with `requires`
   `["ir.core"]`), the two kit documents the `v2-chunk` cases come from (`kit.warrant` with a `2**24` suite and
   `kit-small.warrant` at `chunk_size 1024`, with their profiles, which declare no fault), and `make_conformance.py`
   (`--write` and `--check`, `--fixture DIR`; exit 0 identical, 1 differs, 2 a table and its derivation disagree).
@@ -47,3 +47,13 @@ No version bump, no emitted byte changes, no committed file outside this package
   slim tampers re-seal the slim digests and the 32-entry case is the base set plus extras; `corpus-wrong-product`
   also bumps `discarded`; `short` now refines `a != 255u8` so its calls (64,770) differ from its cases (65,280).
 - Removed `test_a_chunk_alone_equals_the_same_chunk_after_its_predecessors`, which compared a chunk with itself.
+
+### Changed (R41, R45; erratum S5a-0)
+
+- New vectors: `v2-chunk/corpus-chunks-not-ceil-of-product-over-chunk-size`, `corpus-max-ir-cost-below-the-floor`,
+  `chunk-file-row-discarded-wrong`; `v2-value/bytes-n-leading-zero-type` (`Bytes<07>`). The other R45 rows (`ill-typed`
+  for an undeclared `err` or a `subject_op` of a missing op, `ir-cost` for `max_ir_cost`) were added earlier.
+- R45 f: `schema_index` makes a negative or non-integer `index`, `range` bound, `chunk`, `chunk_size` or
+  `slim_chunks` entry a `KitError` (the build fails), where it was a `corpus`, `slim-chunks` or `index` outcome.
+- R41: the derivation refuses (`KitError`) a `v2-ir` case whose derived type has an undetermined component, by walking
+  the type (`_undetermined`) rather than searching its text.

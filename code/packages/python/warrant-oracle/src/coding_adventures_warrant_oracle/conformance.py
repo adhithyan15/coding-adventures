@@ -786,6 +786,11 @@ def compile_ir_case(case: dict) -> IrCase:
     return IrCase(prog, tenv, env, root, case["ir"], case["subjects"])
 
 
+def _undetermined(ty: A.Ty) -> bool:
+    """Does a static type hold the unknown ``?`` (a bare ``ok``'s error type, a bare ``err``'s payload)?"""
+    return ty.head == "?" or any(isinstance(a, A.Ty) and _undetermined(a) for a in ty.args)
+
+
 def derive_ir(case: dict) -> dict:
     """``{"type","value","calls"}`` or ``{"error": E}`` (with ``class`` for ``ir-overflow``), section 11.
 
@@ -832,8 +837,8 @@ def derive_ir(case: dict) -> dict:
                 if inner.code == "ir-overflow":
                     klass = "corpus"
         return {"error": "ir-overflow", "class": klass}
-    if "?" in str(built.root.ty):
-        raise KitError("the static type of the result has an unknown error type")
+    if _undetermined(built.root.ty):
+        raise KitError(f"R41: the static type {built.root.ty} of a kit case has an undetermined component")
     return {"type": str(built.root.ty), "value": value_to_json(value, built.root.ty), "calls": n_calls}
 
 
@@ -928,6 +933,13 @@ def desc_from_json(d: object, ty: A.Ty) -> D.Desc:
     return desc
 
 
+def schema_index(value: object, what: str) -> int:
+    """A case field that must be a non-negative JSON integer; anything else is a kit error (R45 f), no outcome."""
+    if type(value) is not int or value < 0:
+        raise KitError(f"{what} must be a non-negative JSON integer, not {value!r}")
+    return value
+
+
 def derive_domain(case: dict) -> dict:
     """``{"size": S, "values_hex": [..]}`` or ``descriptor`` / ``index`` (section 11).
 
@@ -935,6 +947,13 @@ def derive_domain(case: dict) -> dict:
     ``[lo, hi)`` (indices ``lo..hi-1``).  ``descriptor`` (every refusal of section 5.1) precedes
     ``index`` (``index >= size``, or a range with ``lo > hi`` or ``hi > size``).
     """
+    if "index" in case:  # a schema violation is a kit error, never an outcome (R45 f)
+        schema_index(case["index"], "index")
+    else:
+        if not isinstance(case["range"], list) or len(case["range"]) != 2:
+            raise KitError("range is a pair [lo, hi]")
+        for bound in case["range"]:
+            schema_index(bound, "a range bound")
     try:
         ty = parse_type(case["type"], None)
         desc = desc_from_json(case["descriptor"], ty)
@@ -944,11 +963,11 @@ def derive_domain(case: dict) -> dict:
     if "index" in case:
         i = case["index"]
         window = [i]
-        ok = type(i) is int and 0 <= i < size
+        ok = i < size
     else:
         lo, hi = case["range"]
-        window = list(range(lo, hi)) if type(lo) is int and type(hi) is int else []
-        ok = type(lo) is int and type(hi) is int and 0 <= lo <= hi <= size
+        window = list(range(lo, hi)) if lo <= hi <= size else []
+        ok = lo <= hi <= size
     if not ok:
         return {"error": "index"}
     encode = S.make_encoder(_encoder_spec({}), ty)
@@ -1020,8 +1039,8 @@ def check_corpus_and_row(corpus: object, row: object, chunk: object) -> tuple[in
     """
     if not isinstance(corpus, dict) or set(corpus) != CHUNK_CORPUS_KEYS:
         raise Refused("corpus", "the corpus part has the wrong keys")
-    size = corpus["chunk_size"]
-    if type(size) is not int or size & (size - 1) or not (1 << 10) <= size <= (1 << 16):
+    size = schema_index(corpus["chunk_size"], "chunk_size")
+    if size & (size - 1) or not (1 << 10) <= size <= (1 << 16):
         raise Refused("corpus", "chunk_size is a power of two in 2^10..2^16")
     cost = corpus["max_ir_cost"]
     if type(cost) is not int or not 2000 <= cost <= 65_536:
@@ -1039,7 +1058,7 @@ def check_corpus_and_row(corpus: object, row: object, chunk: object) -> tuple[in
     m = max(1, -(-product // size))
     if m > MAX_CHUNKS or row["chunks"] != m:
         raise Refused("corpus", "chunks is not ceil(product / chunk_size)")
-    if type(chunk) is not int or not 0 <= chunk < m:
+    if chunk >= m:
         raise Refused("corpus", "chunk >= m")
     return m, size
 
@@ -1047,9 +1066,10 @@ def check_corpus_and_row(corpus: object, row: object, chunk: object) -> tuple[in
 def check_slim_chunks(row: dict, m: int) -> None:
     """``slim-chunks``: not ascending and duplicate-free, an index ``>= m``, chunk 0 or ``m-1`` omitted, over 32."""
     slim = row["slim_chunks"]
+    for entry in slim if isinstance(slim, list) else []:
+        schema_index(entry, "a slim_chunks entry")  # negative or non-integer: a kit error (R45 f)
     if (
         not isinstance(slim, list)
-        or any(type(i) is not int for i in slim)
         or slim != sorted(set(slim))
         or len(slim) > MAX_SLIM_CHUNKS
         or not slim
@@ -1153,6 +1173,7 @@ def derive_chunk(case: dict, kit: Kit) -> dict:
     cannot compute it).  Here (b) is :meth:`.suites.SuitePlan.run_chunk`, which starts at product
     ordinal ``chunk * chunk_size`` and never touches an earlier chunk.
     """
+    schema_index(case["chunk"], "chunk")
     try:
         m, size = check_corpus_and_row(case["corpus"], case["suite"], case["chunk"])
         check_slim_chunks(case["suite"], m)

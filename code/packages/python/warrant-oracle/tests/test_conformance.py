@@ -486,6 +486,24 @@ def test_derive_ir_unknown_error_type_is_a_table_error():
         C.derive_ir(case)
 
 
+def test_derive_ir_undetermined_result_component_fails_the_build_r41():
+    """R41: a kit case never has a result type with an undetermined component (an unknown error type or payload)."""
+    for ir in (["ok", U8], ["err", "BAD"], ["if", ["lit", True], ["err", "BAD"], ["err", "WORSE"]]):
+        with pytest.raises(C.KitError, match="R41"):
+            C.derive_ir(ir_case(ir, types=ERR))
+    # an intermediate may be undetermined: is_err of a bare ok has the determined type Bool
+    assert C.derive_ir(ir_case(["is_err", ["ok", U8]]))["type"] == "Bool"
+
+
+def test_undetermined_looks_inside_every_argument():
+    q = A.Ty("?")
+    assert C._undetermined(q)
+    assert C._undetermined(A.Ty("Result", (A.Ty("U8"), q)))
+    assert C._undetermined(A.Ty("Result", (A.Ty("Option", (q,)), A.Ty("E"))))
+    assert not C._undetermined(A.Ty("Result", (A.Ty("U8"), A.Ty("E"))))
+    assert not C._undetermined(A.Ty("Bytes", (4,)))
+
+
 def test_derive_ir_level_error_of_the_oracle_is_level_missing():
     s = ["match", ["lit", {"type": "U8", "value": "1"}], [[["wild"], U8]]]
     case = ir_case(s, levels=["ir.core", "ir.tuple"])
@@ -611,9 +629,30 @@ def test_derive_domain_index_range_and_tuple_stream():
     assert out["values_hex"] == ["64" + "02000000" + "01" + "10" + (1).to_bytes(8, "little").hex()]
     assert C.derive_domain({"descriptor": tup, "type": "(Bool,U8)", "range": [3, 3]})["values_hex"] == []
     assert C.derive_domain({"descriptor": tup, "type": "(Bool,U8)", "range": [0, 513]}) == {"error": "index"}
-    assert C.derive_domain({"descriptor": tup, "type": "(Bool,U8)", "range": [1.5, 2]}) == {"error": "index"}
-    assert C.derive_domain({"descriptor": tup, "type": "(Bool,U8)", "index": True}) == {"error": "index"}
+    assert C.derive_domain({"descriptor": tup, "type": "(Bool,U8)", "index": 512}) == {"error": "index"}
     assert C.derive_domain({"descriptor": tup, "type": "Zzz", "index": 0}) == {"error": "descriptor"}
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        {"index": -1},
+        {"index": True},
+        {"index": 1.5},
+        {"index": "1"},
+        {"range": [1.5, 2]},
+        {"range": [-1, 2]},
+        {"range": [0, "2"]},
+        {"range": [0, True]},
+        {"range": [0]},
+        {"range": "01"},
+    ],
+)
+def test_a_schema_violation_in_a_domain_case_is_a_kit_error_not_an_outcome(field):
+    """R45 f: a negative or non-integer ``index`` or ``range`` bound is a broken row, never an ``index`` vector."""
+    case = {"descriptor": {"d": "bool", "size": 2}, "type": "Bool", **field}
+    with pytest.raises(C.KitError):
+        C.derive_domain(case)
 
 
 def test_descriptor_levels():
@@ -738,7 +777,8 @@ def test_check_corpus_and_row_each_refusal(small_kit):
     refuse(lambda c: c.__setitem__("corpus", []))
     refuse(lambda c: c["corpus"].pop("types"))
     refuse(lambda c: c["corpus"].__setitem__("chunk_size", 3000))
-    refuse(lambda c: c["corpus"].__setitem__("chunk_size", True))
+    refuse(lambda c: c["corpus"].__setitem__("chunk_size", 0))
+    refuse(lambda c: c["corpus"].__setitem__("max_ir_cost", 1999))
     refuse(lambda c: c["corpus"].__setitem__("max_ir_cost", 5))
     refuse(lambda c: c.__setitem__("suite", 7))
     refuse(lambda c: c["suite"].pop("cases"))
@@ -747,8 +787,6 @@ def test_check_corpus_and_row_each_refusal(small_kit):
     refuse(lambda c: c["suite"].__setitem__("product", 1))
     refuse(lambda c: c["suite"].__setitem__("chunks", 9))
     refuse(lambda c: c.__setitem__("chunk", 17))
-    refuse(lambda c: c.__setitem__("chunk", -1))
-    refuse(lambda c: c.__setitem__("chunk", False))
     refuse(lambda c: c["corpus"].__setitem__("chunk_size", 1024) or c["suite"].__setitem__("chunks", 5000))
 
 
@@ -763,7 +801,6 @@ def test_check_corpus_and_row_each_refusal(small_kit):
         ([0, 8, 4, 16], False),
         ([0, 17], False),
         ([], False),
-        ([0, "4", 16], False),
         ("0,16", False),
         (list(range(17)) * 2, False),
     ],
@@ -775,6 +812,32 @@ def test_check_slim_chunks(slim, ok):
         with pytest.raises(C.Refused) as exc:
             C.check_slim_chunks({"slim_chunks": slim}, 17)
         assert exc.value.code == "slim-chunks"
+
+
+@pytest.mark.parametrize("slim", [[0, -4, 16], [0, "4", 16], [0, 4.0, 16], [0, True, 16]])
+def test_a_slim_chunks_entry_that_is_not_a_non_negative_integer_is_a_kit_error(slim):
+    with pytest.raises(C.KitError):
+        C.check_slim_chunks({"slim_chunks": slim}, 17)
+
+
+def test_a_chunk_schema_violation_is_a_kit_error_not_an_outcome(small_kit):
+    """R45 f: a negative or non-integer ``chunk`` or ``chunk_size`` is a broken row, never a ``corpus`` vector."""
+    for field, bad in (("chunk", -1), ("chunk", False), ("chunk", "3"), ("chunk", 2.0)):
+        case = chunk_case(small_kit, "ragged", 3)
+        case[field] = bad
+        with pytest.raises(C.KitError):
+            C.derive_chunk(case, small_kit)
+    for bad in (-1024, True, 1024.0, "1024"):
+        case = chunk_case(small_kit, "ragged", 3)
+        case["corpus"]["chunk_size"] = bad
+        with pytest.raises(C.KitError):
+            C.derive_chunk(case, small_kit)
+    case = chunk_case(small_kit, "ragged", 3)
+    case["suite"]["slim_chunks"] = [0, -1, 16]
+    with pytest.raises(C.KitError):
+        C.derive_chunk(case, small_kit)
+    case["suite"]["slim_chunks"] = [0, 5000, 16]  # a plain slim-chunks outcome is not a schema violation
+    assert C.derive_chunk(case, small_kit) == {"error": "slim-chunks"}
 
 
 def test_check_slim_chunks_more_than_32_entries():
