@@ -159,7 +159,12 @@ func checkConformanceIndex(dir string) (rows int, err error) {
 		row := item.(map[string]any)
 		category, _ := row["category"].(string)
 		path, _ := row["path"].(string)
-		if path != filepath.Base(path) || path == "index.json" || path == "." || path == ".." {
+		// The category name is safe to splice into a file name: non-empty, no
+		// separators and no "..". Every row's path is then exactly <category>.json.
+		if category == "" || strings.ContainsAny(category, `/\`) || strings.Contains(category, "..") {
+			return fail("%q: unsafe category name", category)
+		}
+		if path != category+".json" {
 			return fail("%s: bad path", category)
 		}
 		body, data, err := read(path)
@@ -236,7 +241,9 @@ func scratchConformance(t *testing.T, extraRows []map[string]any, files map[stri
 	rows := document["files"].([]any)
 	for _, row := range extraRows {
 		rows = append(rows, row)
-		total += float64(row["cases"].(int))
+		if n, ok := row["cases"].(int); ok {
+			total += float64(n)
+		}
 	}
 	document["files"], document["total_cases"] = rows, total
 	out, err := json.MarshalIndent(document, "", "  ")
@@ -292,6 +299,12 @@ func TestConformanceIndexRefusesBadExtraRows(t *testing.T) {
 	}
 	badDigest["sha256"] = strings.Repeat("0", 64)
 	badCount["cases"] = 3
+	badPath, boolCount := map[string]any{}, map[string]any{}
+	for k, v := range good {
+		badPath[k], boolCount[k] = v, v
+	}
+	badPath["path"] = "v2-y.json"
+	boolCount["cases"] = true
 	value, valueData := extraConformanceFile(t, "v2-value", 1)
 	arith, arithData := extraConformanceFile(t, "v2-arith", 1)
 	tests := []struct {
@@ -303,6 +316,8 @@ func TestConformanceIndexRefusesBadExtraRows(t *testing.T) {
 		{"unknown non-v2 row", []map[string]any{other}, map[string][]byte{"extra.json": otherData}, "unknown category"},
 		{"v2 row with a wrong digest", []map[string]any{badDigest}, map[string][]byte{"v2-x.json": goodData}, "sha256"},
 		{"v2 row with a wrong case count", []map[string]any{badCount}, map[string][]byte{"v2-x.json": goodData}, "case count"},
+		{"v2 row whose path is not <category>.json", []map[string]any{badPath}, map[string][]byte{"v2-x.json": goodData, "v2-y.json": goodData}, "bad path"},
+		{"v2 row with a boolean case count", []map[string]any{boolCount}, map[string][]byte{"v2-x.json": goodData}, "case count"},
 		{"v2 row with a missing file", []map[string]any{good}, nil, "file missing"},
 		{"v2 rows out of order", []map[string]any{arith, value}, map[string][]byte{"v2-value.json": valueData, "v2-arith.json": arithData}, "out of order"},
 	}

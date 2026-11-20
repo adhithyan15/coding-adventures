@@ -329,9 +329,10 @@ func TestGoWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 	}
 }
 
-// WD-100: the shared runner conformance fixture is read by every lane runner (Python, TypeScript and Go, R23)'s
-// own tests, so an edit selects each runner package and nothing else; a
-// lookalike directory selects nothing, and a missing runner fails closed.
+// WD-100: the shared runner conformance fixture is read by the own tests of
+// every lane runner (Python, TypeScript and Go, R23), so an edit selects each
+// runner package and nothing else; a lookalike directory selects nothing, and a
+// missing runner fails closed.
 func TestWarrantConformanceFixtureSelectsEveryRunnerPackage(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "python/warrant-corpus", Language: "python"},

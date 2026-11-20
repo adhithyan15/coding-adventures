@@ -59,14 +59,17 @@ V2_ORDER = ("v2-value", "v2-arith", "v2-ir", "v2-domain", "v2-chunk", "v2-fault"
 def check_index(fixture: Path) -> int:
     """Validate ``fixture/index.json`` and return the number of rows run.
 
-    Raises ``AssertionError`` on any violation.  Reads only through this
-    lane's strict reader and never opens a file outside ``fixture``.
+    Raises ``AssertionError`` on any violation, a malformed row included.
+    Reads only through this lane's strict reader and never opens a file
+    outside ``fixture``.
     """
     document = parse_json((fixture / "index.json").read_bytes())
     assert isinstance(document, dict)
     assert document["schema"] == "warrant-corpus-conformance-v1"
     files = document["files"]
-    names = [row["category"] for row in files]
+    assert isinstance(files, list) and all(isinstance(row, dict) for row in files), "malformed files list"
+    names = [row.get("category") for row in files]
+    assert all(isinstance(name, str) for name in names), "malformed row: category is not a string"
     assert len(set(names)) == len(names), "duplicate category row"
     assert tuple(names[: len(CATEGORIES)]) == CATEGORIES, "v1 rows missing or out of order"
     extra = names[len(CATEGORIES) :]
@@ -76,16 +79,26 @@ def check_index(fixture: Path) -> int:
     assert known == sorted(known, key=V2_ORDER.index), "v2 rows out of order"
     total = 0
     for row in files:
-        path = row["path"]
-        assert path == Path(path).name and path != "index.json", f"{row['category']}: bad path"
+        category = row["category"]
+        # The category name is safe to splice into a file name: non-empty, no
+        # separators and no ``..`` (known v1 names and ``v2-`` names were
+        # checked above).  Every row's path is then exactly ``<category>.json``.
+        assert category and "/" not in category and "\\" not in category and ".." not in category, (
+            f"{category!r}: unsafe category name"
+        )
+        path = row.get("path")
+        assert path == category + ".json", f"{category}: bad path"
         file = fixture / path
         assert file.is_file(), f"{row['category']}: file missing"
         data = file.read_bytes()
         assert hashlib.sha256(data).hexdigest() == row["sha256"], f"{row['category']}: sha256 moved"
         body = parse_json(data)
-        assert isinstance(body, dict) and body["category"] == row["category"]
-        assert len(body["cases"]) == row["cases"], f"{row['category']}: case count moved"
+        assert isinstance(body, dict) and body.get("category") == category, f"{category}: wrong category in file"
+        assert type(row.get("cases")) is int, f"{category}: cases is not an integer"
+        assert isinstance(body.get("cases"), list), f"{category}: file cases is not a list"
+        assert len(body["cases"]) == row["cases"], f"{category}: case count moved"
         total += row["cases"]
+    assert type(document.get("total_cases")) is int, "total_cases is not an integer"
     assert document["total_cases"] == total, "total_cases is not the sum of the rows"
     return len(files)
 
@@ -279,3 +292,17 @@ def test_production_win32_helper_refuses_reserved_names_and_folds_ascii_only(mon
     for child in ("D:\\repo\\NUL", "D:\\repo\\con.txt", "D:\\repo\\AUX\\x", "D:\\repo\\a."):
         assert relative_inside("D:\\repo", child) is None
     assert relative_inside("D:\\\u212a", "D:\\k\\x") is None
+
+
+def test_index_rejects_a_row_whose_path_is_not_category_json(tmp_path: Path) -> None:
+    row, data = _extra_file("v2-x")
+    row["path"] = "v2-y.json"
+    with pytest.raises(AssertionError, match="bad path"):
+        check_index(_scratch_fixture(tmp_path, [row], {"v2-x.json": data, "v2-y.json": data}))
+
+
+def test_index_rejects_a_boolean_case_count(tmp_path: Path) -> None:
+    row, data = _extra_file("v2-x", count=1)
+    row["cases"] = True
+    with pytest.raises(AssertionError, match="not an integer"):
+        check_index(_scratch_fixture(tmp_path, [row], {"v2-x.json": data}))

@@ -11,7 +11,7 @@
 import { createHash } from "node:crypto";
 import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { basename, join, posix, win32 } from "node:path";
+import { join, posix, win32 } from "node:path";
 import { describe, expect, it } from "vitest";
 import { relativeInside } from "../src/containment.ts";
 import { CorpusError } from "../src/errors.ts";
@@ -43,13 +43,17 @@ const cases: Record<string, Case[]> = Object.fromEntries(
 // their present order, then the v2 rows, the known ones in the kit's order.
 const V2_ORDER = ["v2-value", "v2-arith", "v2-ir", "v2-domain", "v2-chunk", "v2-fault", "v2-binding"];
 
-/** Validate `dir/index.json`; throws on any violation, returns the row count. */
+/** Validate `dir/index.json`; throws an `Error` with a clear message on any violation, a malformed row included. */
 function checkIndex(dir: string): number {
   const read = (name: string): Uint8Array => new Uint8Array(readFileSync(join(dir, name)));
   const document = parseJson(read("index.json")) as Case;
   if (document["schema"] !== "warrant-corpus-conformance-v1") throw new Error("wrong index schema");
   const files = document["files"] as Case[];
+  if (!Array.isArray(files) || files.some((row) => typeof row !== "object" || row === null)) {
+    throw new Error("malformed files list");
+  }
   const names = files.map((row) => row["category"] as string);
+  if (names.some((name) => typeof name !== "string")) throw new Error("malformed row: category is not a string");
   if (new Set(names).size !== names.length) throw new Error("duplicate category row");
   if (JSON.stringify(names.slice(0, CATEGORIES.length)) !== JSON.stringify(CATEGORIES)) {
     throw new Error("v1 rows missing or out of order");
@@ -62,15 +66,23 @@ function checkIndex(dir: string): number {
   for (const row of files) {
     const category = row["category"] as string;
     const path = row["path"] as string;
-    if (path !== basename(path) || path === "index.json") throw new Error(`${category}: bad path`);
+    // The category name is safe to splice into a file name: non-empty, no
+    // separators and no `..` (known v1 names and `v2-` names were checked above).
+    if (category === "" || /[\\/]/.test(category) || category.includes("..")) {
+      throw new Error(`${JSON.stringify(category)}: unsafe category name`);
+    }
+    if (path !== `${category}.json`) throw new Error(`${category}: bad path`);
     if (!existsSync(join(dir, path))) throw new Error(`${category}: file missing`);
     const data = read(path);
     if (sha256(data) !== row["sha256"]) throw new Error(`${category}: sha256 moved`);
     const body = parseJson(data) as Case;
     if (body["category"] !== category) throw new Error(`${category}: wrong category in file`);
+    if (!Number.isInteger(row["cases"])) throw new Error(`${category}: cases is not an integer`);
+    if (!Array.isArray(body["cases"])) throw new Error(`${category}: file cases is not a list`);
     if ((body["cases"] as Case[]).length !== row["cases"]) throw new Error(`${category}: case count moved`);
     total += row["cases"] as number;
   }
+  if (!Number.isInteger(document["total_cases"])) throw new Error("total_cases is not an integer");
   if (document["total_cases"] !== total) throw new Error("total_cases is not the sum of the rows");
   return files.length;
 }
@@ -132,6 +144,18 @@ describe("fixture index", () => {
     const [row, data] = extraFile("v2-x");
     row["cases"] = 3;
     expect(() => withScratch([row], { "v2-x.json": data }, checkIndex)).toThrow(/case count/);
+  });
+
+  it("rejects a row whose path is not <category>.json", () => {
+    const [row, data] = extraFile("v2-x");
+    row["path"] = "v2-y.json";
+    expect(() => withScratch([row], { "v2-x.json": data, "v2-y.json": data }, checkIndex)).toThrow(/bad path/);
+  });
+
+  it("rejects a boolean case count", () => {
+    const [row, data] = extraFile("v2-x", 1);
+    row["cases"] = true;
+    expect(() => withScratch([row], { "v2-x.json": data }, checkIndex)).toThrow(/not an integer/);
   });
 
   it("rejects a v2 row with a missing file", () => {
