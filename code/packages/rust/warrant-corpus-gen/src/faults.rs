@@ -23,7 +23,9 @@
 //! `swap-components` and the tuple-payload `missing-error` are `ir.tuple` (they are written with
 //! `match` on a `Result` and the tuple literal, [D35]); `off-by-one-consumed` ([D36]; its `Nat` form
 //! uses `rem` and `unwrap_or`, its fixed-width form `bit_xor`) is `ir.fixed` plus `ir.tuple`; the `Ok` forms of `flip-result-bit` and
-//! `drop-last-result-byte` are `match` over the `Bytes` forms and so name two levels.  A fault
+//! `drop-last-result-byte` are `match` over the `Bytes` forms and so name two levels; `saturate-add`, `saturate-sub`
+//! and `shift-mask` ([D51], S11f-2) are `ir.fixed` (`checked_*`, `max_value`, `rem`, `unwrap_or`), and the scalar
+//! `missing-error` ([D50]) is `ir.core`.  A fault
 //! row's `requires` is the **sorted union of the template's own levels and the levels of the op's
 //! parameter and result types** (R9, S10t-1 review): a fault on an operation with a tuple
 //! parameter needs `ir.tuple` even where the template names no tuple tag.
@@ -180,7 +182,7 @@ impl Fault {
 }
 
 /// Every fault name of the registry (VER04r 8.2, the generic table).
-pub const KNOWN_FAULTS: [&str; 14] = [
+pub const KNOWN_FAULTS: [&str; 17] = [
     "invert",
     "missing-error",
     "swap-choice",
@@ -195,6 +197,9 @@ pub const KNOWN_FAULTS: [&str; 14] = [
     "drop-consumed",
     "swap-components",
     "off-by-one-consumed",
+    "saturate-add",
+    "saturate-sub",
+    "shift-mask",
 ];
 
 /// The name a `match` binds the payload of an `Ok` to in the `Ok` forms (VER04r 8.2); an op
@@ -430,9 +435,20 @@ pub fn instantiate_in(
                 vec![Level::Core],
             )
         }
+        // Harness citation (`V1_FAULTS` in warrant-grammar/src/evidence.rs): the Rust harness builds
+        // the `Ok` payload as `Ok(0)` / the first domain element; here it is the first parameter of
+        // that type ([D50]), a value difference accepted as in [D37].
+        // `missing-error` (VER04r 8.2, [D50]): `if is_err(result) then Ok(<payload>) else result`, one
+        // rule for every payload.  A tuple payload is the tuple of `ci` (R3); a `Bytes` payload is the
+        // first `Bytes` parameter, else the zero `Bytes` literal; a scalar payload (`Bool`, `Nat`,
+        // fixed-width, S11f-2) is the first parameter whose type is *exactly* the payload type, else
+        // the type's zero literal.  The order of refusals is the oracle's.
         "missing-error" => {
-            if let Ty::Result(ok, _) = &op.ret {
-                if let Ty::Tuple(components) = &**ok {
+            let Ty::Result(ok, _) = &op.ret else {
+                return Err(refuse(op, name, "missing-error needs a Result result"));
+            };
+            let (leaf, levels) = match &**ok {
+                Ty::Tuple(components) => {
                     // R3: the i-th component is the first parameter, in parameter order, of
                     // exactly that type, else that type's zero.
                     let mut parts = Vec::with_capacity(components.len());
@@ -442,33 +458,36 @@ pub fn instantiate_in(
                             None => zero(c, op, name)?,
                         });
                     }
-                    let expr = Ir::If(
-                        Box::new(Ir::IsErr(var(RESULT))),
-                        Box::new(Ir::Ok(Box::new(Ir::Tuple(parts)))),
-                        var(RESULT),
-                    );
-                    return finish(op, name, Kind::Replace(expr_of(expr)), vec![Level::Tuple]);
+                    (Ir::Tuple(parts), vec![Level::Tuple])
                 }
-            }
-            let payload_ok = matches!(&op.ret, Ty::Result(ok, _) if ok.is_bytes());
-            let first = bytes_params.first();
-            match (payload_ok, first) {
-                (true, Some(p)) => (
-                    Kind::Replace(Expr::Core(Ir::If(
-                        Box::new(Ir::IsErr(var(RESULT))),
-                        Box::new(Ir::Ok(var(p))),
-                        var(RESULT),
-                    ))),
+                t if t.is_bytes() => (
+                    match bytes_params.first() {
+                        Some(p) => Ir::Var((*p).to_string()),
+                        None => zero(t, op, name)?,
+                    },
+                    vec![Level::Core],
+                ),
+                t if matches!(t, Ty::Bool | Ty::Nat) || t.is_fixed() => (
+                    match op.params.iter().find(|(_, pt)| pt == t) {
+                        Some((n, _)) => Ir::Var(n.clone()),
+                        None => zero(t, op, name)?,
+                    },
                     vec![Level::Core],
                 ),
                 _ => {
                     return Err(refuse(
                         op,
                         name,
-                        "missing-error needs a Result<Bytes, E> or Result<tuple, E> result and a Bytes parameter",
+                        "missing-error has no template for this payload type",
                     ))
                 }
-            }
+            };
+            let expr = Ir::If(
+                Box::new(Ir::IsErr(var(RESULT))),
+                Box::new(Ir::Ok(Box::new(leaf))),
+                var(RESULT),
+            );
+            return finish(op, name, Kind::Replace(expr_of(expr)), levels);
         }
         "swap-choice" => {
             if !op.params.iter().any(|(n, t)| n == "choice" && *t == Ty::Bool) {
@@ -794,6 +813,106 @@ pub fn instantiate_in(
                 ],
             };
             (Kind::Post(expr_of(expr)), vec![Level::Tuple])
+        }
+        // `saturate-add` / `saturate-sub` (VER04r 8.2, [D51]; kind `replace`): the saturating sum or
+        // difference of the first two parameters, which share one fixed-width type `T`; the result is
+        // `T` or `Result<T,E>` (then wrapped in `Ok`).  Unsigned add: `unwrap_or(checked_add(A,B),
+        // max_value(T))`; unsigned sub: `.. min_value(T)`; signed add: `.. if B < 0 then min else max`;
+        // signed sub: `.. if B < 0 then max else min`.  Template level `ir.fixed`.
+        //
+        // Harness citation (`V1_FAULTS`, evidence.rs): `Replace("p0.saturating_add(p1)")` /
+        // `Replace("p0.saturating_sub(p1)")`.  Under `Replace` the exported function is never called,
+        // so the adapter returns Ok unconditionally, hence the `["ok", V]` wrapper for a Result.
+        "saturate-add" | "saturate-sub" => {
+            let adding = name == "saturate-add";
+            let t = match (op.params.first(), op.params.get(1)) {
+                (Some((_, a)), Some((_, b))) if a.is_fixed() && a == b => a.clone(),
+                _ => {
+                    return Err(refuse(
+                        op,
+                        name,
+                        &format!("{name} needs two leading parameters of one fixed-width type"),
+                    ))
+                }
+            };
+            let ok_result = matches!(&op.ret, Ty::Result(ok, _) if **ok == t);
+            if op.ret != t && !ok_result {
+                return Err(refuse(
+                    op,
+                    name,
+                    &format!("{name} needs a result of the parameters' type or a Result of it"),
+                ));
+            }
+            let fty = t.fixed().ok_or_else(|| GenError::internal("a fixed type"))?;
+            let a = Ir::Var(op.params[0].0.clone());
+            let b = Ir::Var(op.params[1].0.clone());
+            let bound = |tag: &str| -> Result<Ir, GenError> {
+                Ok(Ir::Fixed {
+                    tag: crate::ir::fixed_tag(tag)
+                        .ok_or_else(|| GenError::internal("a fixed-width bound tag"))?,
+                    ty: Some(fty),
+                    at: None,
+                    args: vec![],
+                })
+            };
+            let checked = Ir::Fixed {
+                tag: crate::ir::fixed_tag(if adding { "checked_add" } else { "checked_sub" })
+                    .ok_or_else(|| GenError::internal("a checked-arithmetic tag"))?,
+                ty: None,
+                at: Some(fty),
+                args: vec![a, b.clone()],
+            };
+            let default = if !fty.signed() {
+                bound(if adding { "max_value" } else { "min_value" })?
+            } else {
+                let neg = Ir::Cmp(
+                    Cmp::Lt,
+                    Box::new(b),
+                    Box::new(Ir::Int {
+                        ty: t.clone(),
+                        value: 0,
+                    }),
+                );
+                let (up, down) = (bound("max_value")?, bound("min_value")?);
+                let (then, other) = if adding { (down, up) } else { (up, down) };
+                Ir::If(Box::new(neg), Box::new(then), Box::new(other))
+            };
+            let v = fixed_node("unwrap_or", None, vec![checked, default]);
+            let expr = if ok_result { Ir::Ok(Box::new(v)) } else { v };
+            (Kind::Replace(expr_of(expr)), vec![Level::Fixed])
+        }
+        // `shift-mask` (VER04r 8.2, [D51]; kind `pre`): the last parameter `p` becomes `p mod w`, `w`
+        // the FIRST parameter's width, as `unwrap_or(rem(p, w), 0)` (`rem_trunc` for a signed last
+        // parameter), literals in the last parameter's own type.
+        //
+        // Harness citation (`V1_FAULTS`, evidence.rs): `PreLast("p % {w}")`.  Rust `%` truncates on
+        // signed types, hence `rem_trunc`; `w` is the width of the first argument's type.
+        "shift-mask" => {
+            let Some((_, first)) = op.params.first() else {
+                return Err(refuse(op, name, "shift-mask needs parameters"));
+            };
+            let (last_name, last) = &op.params[op.params.len() - 1];
+            let (Some(f), Some(l)) = (first.fixed(), last.fixed()) else {
+                return Err(refuse(
+                    op,
+                    name,
+                    "shift-mask needs a fixed-width first and last parameter",
+                ));
+            };
+            let lit = |v: i128| Ir::Int {
+                ty: last.clone(),
+                value: v,
+            };
+            let rem = if l.signed() {
+                fixed_node("rem_trunc", Some(l), vec![Ir::Var(last_name.clone()), lit(i128::from(f.bits()))])
+            } else {
+                fixed_node("rem", None, vec![Ir::Var(last_name.clone()), lit(i128::from(f.bits()))])
+            };
+            let x = fixed_node("unwrap_or", None, vec![rem, lit(0)]);
+            (
+                Kind::Pre(vec![(last_name.clone(), expr_of(x))]),
+                vec![Level::Fixed],
+            )
         }
         _ => {
             return Err(GenError::new(

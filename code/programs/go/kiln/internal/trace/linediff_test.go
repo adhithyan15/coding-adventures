@@ -158,6 +158,9 @@ func FuzzLineDiff(f *testing.F) {
 	} {
 		f.Add(l)
 	}
+	for _, l := range dyingLineSeeds {
+		f.Add(l)
+	}
 	f.Fuzz(func(t *testing.T, line string) {
 		if d, _ := lineVerdict(line); d != "" {
 			t.Fatalf("%s: %q", d, line)
@@ -185,6 +188,9 @@ func FuzzParseDiff(f *testing.F) {
 		f.Add(s)
 	}
 	for _, s := range signalSeeds {
+		f.Add(s)
+	}
+	for _, s := range dyingTraceSeeds {
 		f.Add(s)
 	}
 	for _, s := range []string{
