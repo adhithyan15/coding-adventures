@@ -204,7 +204,7 @@ def test_parse_type_int_only_when_allowed_and_open_mode_for_error_names():
 def test_type_levels():
     assert C.type_levels(C.parse_type("Result<Bool,E>", ERR), ERR) == set()
     assert C.type_levels(C.parse_type("(U8,Bool)", {})) == {"ir.tuple"}
-    assert C.type_levels(C.parse_type("List<U8>", {})) == {"ir.data"}
+    assert C.type_levels(C.parse_type("List<U8>", {})) == set()  # a list is refused whole, never counted (S11a)
     assert C.type_levels(C.parse_type("Option<U8>", {})) == {"ir.data"}
     assert C.type_levels(C.parse_type("Point", REC), REC) == {"ir.data"}
 
