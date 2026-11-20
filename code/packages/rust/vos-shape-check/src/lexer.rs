@@ -173,6 +173,7 @@ fn lex_err(line: usize, message: impl Into<String>) -> LexError {
 fn next_significant_is_bracket(c: &[char]) -> bool {
     let mut i = 0;
     while i < c.len() {
+        crate::steps::tick();
         if c[i].is_whitespace() {
             i += 1;
         } else if c[i] == '/' && c.get(i + 1) == Some(&'/') {
@@ -183,6 +184,7 @@ fn next_significant_is_bracket(c: &[char]) -> bool {
                 return false;
             }
             while i < c.len() && c[i] != '\n' {
+                crate::steps::tick();
                 i += 1;
             }
         } else if c[i] == '/' && c.get(i + 1) == Some(&'*') {
@@ -196,6 +198,7 @@ fn next_significant_is_bracket(c: &[char]) -> bool {
             let mut depth = 1usize;
             i += 2;
             while i < c.len() && depth > 0 {
+                crate::steps::tick();
                 if c[i] == '/' && c.get(i + 1) == Some(&'*') {
                     depth += 1;
                     i += 2;
@@ -225,6 +228,7 @@ pub fn strip_shebang(text: &str) -> String {
     let mut out = String::with_capacity(text.len());
     let mut in_first_line = true;
     for ch in text.chars() {
+        crate::steps::tick();
         if in_first_line && ch == '\n' {
             in_first_line = false;
         }
@@ -315,6 +319,7 @@ fn adapt(raw: &[RawToken]) -> Result<Vec<Mid>, (usize, String)> {
     let mut dropped = false;
     let mut i = 0;
     while i < raw.len() {
+        crate::steps::tick();
         let t = &raw[i];
         let name = t.type_name.as_deref();
         match name {
@@ -332,6 +337,7 @@ fn adapt(raw: &[RawToken]) -> Result<Vec<Mid>, (usize, String)> {
                 let mut j = i + 1;
                 let mut closed = false;
                 while j < raw.len() {
+                    crate::steps::tick();
                     match raw[j].type_name.as_deref() {
                         Some("BC_OPEN") => {
                             depth += 1;
@@ -389,6 +395,7 @@ fn merge_trailing_dot_floats(mid: Vec<Mid>) -> Vec<Mid> {
     let mut out: Vec<Mid> = Vec::with_capacity(mid.len());
     let mut skip_dot = false;
     for i in 0..mid.len() {
+        crate::steps::tick();
         if skip_dot {
             skip_dot = false;
             continue;
@@ -429,6 +436,7 @@ fn merge_trailing_dot_floats(mid: Vec<Mid>) -> Vec<Mid> {
 fn finish(mid: Vec<Mid>) -> Vec<Mid> {
     let mut out: Vec<Mid> = Vec::with_capacity(mid.len());
     for m in mid {
+        crate::steps::tick();
         if m.kind == Kind::Punct && !m.space {
             if let Some(p) = out.last_mut() {
                 if p.kind == Kind::Punct {
@@ -485,6 +493,7 @@ fn lex_batch(docs: &[&str], edition: Edition) -> Result<Vec<Vec<Token>>, BatchEr
     let mut sentinel_lines: Vec<usize> = Vec::new();
     let mut newlines = 0usize;
     for (k, d) in docs.iter().enumerate() {
+        crate::steps::tick();
         starts.push(1 + newlines);
         text.push_str(d);
         newlines += d.matches('\n').count();
@@ -516,6 +525,7 @@ fn lex_batch(docs: &[&str], edition: Edition) -> Result<Vec<Vec<Token>>, BatchEr
     // Split at the boundary identifiers and check them.
     let mut found: Vec<(usize, usize)> = Vec::new(); // (index in mid, line)
     for (i, m) in mid.iter().enumerate() {
+        crate::steps::tick();
         if m.kind == Kind::Ident && m.text == SENTINEL {
             found.push((i, m.line));
         }
@@ -533,6 +543,7 @@ fn lex_batch(docs: &[&str], edition: Edition) -> Result<Vec<Vec<Token>>, BatchEr
     let mut out = Vec::with_capacity(docs.len());
     let mut from = 0usize;
     for (k, &start) in starts.iter().enumerate() {
+        crate::steps::tick();
         let to = found.get(k).map_or(mid.len(), |&(i, _)| i);
         out.push(to_tokens(&mid[from..to], start - 1));
         from = to + 1;
@@ -545,6 +556,7 @@ pub fn lex_documents(docs: &[&str], edition: Edition) -> Vec<Result<Vec<Token>, 
     let mut results: Vec<Option<Result<Vec<Token>, LexError>>> = vec![None; docs.len()];
     let mut pending: Vec<(usize, String)> = Vec::new();
     for (i, d) in docs.iter().enumerate() {
+        crate::steps::tick();
         match prepare(d) {
             Ok(s) => pending.push((i, s)),
             Err(e) => results[i] = Some(Err(e)),
@@ -555,6 +567,7 @@ pub fn lex_documents(docs: &[&str], edition: Edition) -> Vec<Result<Vec<Token>, 
     // four attempts: a crate of many bad files costs a bounded time and its
     // remaining files are reported as not lexed (fail closed).
     const ATTEMPTS: usize = 4;
+    // bounded: ATTEMPTS is the constant 4 (each retry drops the refused documents)
     for attempt in 0..ATTEMPTS {
         if pending.is_empty() {
             break;
@@ -563,6 +576,7 @@ pub fn lex_documents(docs: &[&str], edition: Edition) -> Vec<Result<Vec<Token>, 
         match lex_batch(&texts, edition) {
             Ok(per_doc) => {
                 for ((i, _), toks) in pending.drain(..).zip(per_doc) {
+                    crate::steps::tick();
                     results[i] = Some(if toks.len() > MAX_TOKENS {
                         Err(lex_err(1, "token cap exceeded (262144 tokens in one file)"))
                     } else {
@@ -575,6 +589,7 @@ pub fn lex_documents(docs: &[&str], edition: Edition) -> Vec<Result<Vec<Token>, 
                 results[i] = Some(Err(e));
                 if attempt + 1 == ATTEMPTS {
                     for (i, _) in pending.drain(..) {
+                        crate::steps::tick();
                         results[i] = Some(Err(lex_err(
                             1,
                             "not lexed: another file in the batch was refused",
@@ -584,6 +599,7 @@ pub fn lex_documents(docs: &[&str], edition: Edition) -> Vec<Result<Vec<Token>, 
             }
             Err(BatchError::Boundary(m)) => {
                 for (i, _) in pending.drain(..) {
+                    crate::steps::tick();
                     results[i] = Some(Err(lex_err(1, m.clone())));
                 }
             }
@@ -607,6 +623,7 @@ pub fn pair_brackets(toks: &[Token]) -> Result<Vec<usize>, LexError> {
     let mut pair = vec![usize::MAX; toks.len()];
     let mut stack: Vec<usize> = Vec::new();
     for (i, t) in toks.iter().enumerate() {
+        crate::steps::tick();
         if t.kind != Kind::Punct {
             continue;
         }

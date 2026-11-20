@@ -142,6 +142,7 @@ impl Report {
             self.class_source.name()
         );
         for f in &self.findings {
+            crate::steps::tick();
             let _ = writeln!(s, "{} {}:{} {}", f.rule.id(), f.file, f.line, f.message);
         }
         if self.dropped > 0 {

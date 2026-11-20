@@ -1,6 +1,11 @@
 package traced
 
-import "sort"
+import (
+	"sort"
+	"strings"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
+)
 
 // The census observer (KILN04, "Census side file")
 // ================================================
@@ -26,10 +31,82 @@ import "sort"
 // kinds together are still bounded.  There are about ten kinds, so the overall
 // bound is a safety net well above kinds x per-kind: were it near the sum of
 // the per-kind caps, early kinds could fill it and starve a late one again.
+//
+// The invariant (TestCensusKindCapsFitTheOverallBound): the per-kind caps of
+// every kind the classifier can feed add up to at most MaxCensusEntries, so the
+// overall bound never decides which kind loses.  The sub-coded kinds
+// (unstable-path:*, exec-unreadable:*: eighteen of them) hold 256 paths each,
+// the nine path kinds (the eight censusPrefixes plus proc-path) 1024:
+// 9*1024 + 18*256 = 13824 <= 16384.
 const (
 	MaxCensusPerKind = 1024
-	MaxCensusEntries = 16384
+	// MaxCensusPerSubKind is the cap of a sub-coded kind.
+	MaxCensusPerSubKind = 256
+	MaxCensusEntries    = 16384
 )
+
+// censusSubKindPrefixes start the kinds that have sub-codes.
+var censusSubKindPrefixes = []string{"trace-incomplete:unstable-path:", "trace-incomplete:exec-unreadable:"}
+
+// censusSubCodes is every sub-code reasonSub / censusNotes can be given, per
+// reason (a fixed vocabulary: each is a string literal at its raise site).
+var censusSubCodes = map[string][]string{
+	"trace-incomplete:unstable-path": {
+		"component-changed", "absent-changed", "final-changed", "followed-final-changed",
+		"followed-absent-changed", "gone-but-found", "removed-before-made", "file-changed",
+		"own-overlap", "through-missing", "dotdot", "fd-path-differs",
+	},
+	"trace-incomplete:exec-unreadable": {
+		"modified-after-exec", "virtual-exe", "virtual-interpreter", "under-tmp", "in-repo", "host-disk",
+	},
+}
+
+// kindCap is the most distinct paths the census holds of kind.
+func kindCap(kind string) int {
+	for _, p := range censusSubKindPrefixes {
+		if strings.HasPrefix(kind, p) {
+			return MaxCensusPerSubKind
+		}
+	}
+	return MaxCensusPerKind
+}
+
+// censusNotes collects the notes of a pass that walks Go maps, so they can be
+// given to the census in sorted order (see checkStability).
+type censusNote struct{ kind, path string }
+type censusNotes struct{ list []censusNote }
+
+// The buffer is bounded by what the pass walks: one note per unstable lookup, and
+// the lookup sets already hold every one of those in memory.
+func (n *censusNotes) add(c *Census, kind, path string) {
+	if c == nil {
+		return
+	}
+	n.list = append(n.list, censusNote{kind, path})
+}
+
+// flush gives the buffered notes to the classifier's census, by kind then path
+// (the path as the classifier redacts it).
+func (n *censusNotes) flush(c *classifier) {
+	if c.census == nil {
+		return
+	}
+	type red struct{ kind, path string }
+	out := make([]red, len(n.list))
+	for i, e := range n.list {
+		out[i] = red{e.kind, c.redact(e.path)}
+	}
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].kind != out[j].kind {
+			return out[i].kind < out[j].kind
+		}
+		return out[i].path < out[j].path
+	})
+	for _, e := range out {
+		c.census.noteClean(e.kind, e.path)
+	}
+	n.list = nil
+}
 
 // CensusEntry is one distinct (kind, path) pair and how often it was raised.
 type CensusEntry struct {
@@ -40,6 +117,91 @@ type CensusEntry struct {
 
 type censusKey struct{ kind, path string }
 
+// Op classes (census only)
+// ------------------------
+//
+// `host-read` says an action looked at a host path; it does not say HOW.  The
+// answer matters for the fix: a stat of /usr/lib/x is a lookup the image could
+// vouch for, a read of it is content, a listing sees every sibling.  The
+// classifier knows the call it is judging, so it tells the observer, in a CLOSED
+// vocabulary (OpClasses): the class is chosen by the classifier's own state,
+// never copied from the trace.
+//
+//	listing        getdents: the call saw every name in a directory
+//	absent-probe   the look found nothing (ENOENT/ENOTDIR): a probe
+//	open           open/openat/creat that found something
+//	stat           a stat, access, readlink or other metadata call that found it
+//	lookup         a link crossed on the way to a path, not the call's own target
+//	exec           execve/execveat (and what the kernel loaded for it)
+//	chdir          chdir
+//	write          a call that can write
+//	other          anything else
+//
+// Precedence: listing, then absent-probe, then the call's own kind.  Nothing
+// reads these counts for a verdict: record.json is byte-identical with and
+// without a Census (TestCensusDoesNotChangeTheRecord).
+var OpClasses = []string{"listing", "absent-probe", "open", "stat", "lookup", "exec", "chdir", "write", "other"}
+
+// IsOpClass says s is a member of OpClasses.
+func IsOpClass(s string) bool {
+	for _, c := range OpClasses {
+		if s == c {
+			return true
+		}
+	}
+	return false
+}
+
+// opKindOf is the call's own kind for the op class, from the parser's table
+// kind (a fixed vocabulary).
+func opKindOf(ev *trace.Event) string {
+	switch ev.Kind {
+	case trace.KindOpen:
+		return "open"
+	case trace.KindMetadata:
+		return "stat"
+	case trace.KindListing:
+		return "listing"
+	case trace.KindDirectory:
+		return "chdir"
+	case trace.KindWrite:
+		return "write"
+	case trace.KindProcess:
+		return "exec"
+	}
+	return "other"
+}
+
+// opClass is the class of the observation in progress.
+func (c *classifier) opClass() string {
+	switch {
+	case c.obsListing:
+		return "listing"
+	case !c.obsPresent:
+		return "absent-probe"
+	case IsOpClass(c.opKind):
+		return c.opKind
+	}
+	return "other"
+}
+
+// noteOp counts one occurrence of kind raised by an observation of the given
+// class.  A class outside OpClasses is dropped, so the table stays bounded.
+func (c *Census) noteOp(kind, class string) {
+	if c == nil || !IsOpClass(class) {
+		return
+	}
+	if c.Ops == nil {
+		c.Ops = map[string]map[string]int64{}
+	}
+	m := c.Ops[kind]
+	if m == nil {
+		m = map[string]int64{}
+		c.Ops[kind] = m
+	}
+	m[class]++
+}
+
 // Census collects path-carrying reasons.  Use NewCensus.  It is not safe for
 // concurrent use (a classifier is serial).
 type Census struct {
@@ -49,6 +211,9 @@ type Census struct {
 	// pairs dropped because a bound was reached.
 	Total    int64
 	Overflow map[string]int64
+	// Ops counts, per kind, the occurrences by op class (OpClasses).  Only
+	// host-read is split so far.
+	Ops map[string]map[string]int64
 }
 
 // NewCensus returns an empty observer.
@@ -72,7 +237,7 @@ func (c *Census) Note(kind, path string) {
 func (c *Census) noteClean(kind, path string) {
 	k := censusKey{kind, path}
 	c.Total++
-	if _, ok := c.m[k]; !ok && (c.nKind[kind] >= MaxCensusPerKind || len(c.m) >= MaxCensusEntries) {
+	if _, ok := c.m[k]; !ok && (c.nKind[kind] >= kindCap(kind) || len(c.m) >= MaxCensusEntries) {
 		c.Overflow[kind]++
 		return
 	}

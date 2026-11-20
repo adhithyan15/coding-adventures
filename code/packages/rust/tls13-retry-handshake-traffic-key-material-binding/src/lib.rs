@@ -11,11 +11,15 @@
 use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk, HkdfPrkImportError};
 use core::cell::Cell;
 use core::fmt;
+use tls13_certificate_request_message::{
+    decode_certificate_request, CertificateRequest, CertificateRequestError,
+    CertificateRequestLimits,
+};
 use tls13_cipher_suite_policy::{HkdfHash, SelectedCipherSuite};
 use tls13_encrypted_extensions_message::{
     decode_encrypted_extensions_message, EncryptedExtensionsMessage,
 };
-use tls13_extension_block::{ExtensionBlockError, ExtensionBlockLimits};
+use tls13_extension_block::{ExtensionBlockError, ExtensionBlockLimits, ExtensionType};
 use tls13_extension_context_policy::{ExtensionContextPolicyError, ServerExtensionContext};
 use tls13_handshake::{Tls13HandshakeMessage, Tls13HandshakePolicy};
 use tls13_handshake_reassembly::{ReassemblyError, ReassemblyProgress, Tls13HandshakeReassembler};
@@ -29,6 +33,11 @@ use tls13_record_protection_state::{RecordProtectionState, RecordProtectionState
 use tls13_retry_handshake_traffic_secrets_binding::{
     BoundRetryHandshakeTrafficSecrets, BoundRetryServerFinishedKey,
     BoundRetryServerTranscriptContinuation, ExactRetryBaseSecrets,
+};
+use tls13_signature_scheme_list::{
+    decode_signature_scheme_list, SignatureSchemeList, SignatureSchemeListError,
+    SignatureSchemeListLimits, SIGNATURE_ALGORITHMS_CERT_EXTENSION_TYPE,
+    SIGNATURE_ALGORITHMS_EXTENSION_TYPE,
 };
 use tls13_traffic_key_material::{
     derive_traffic_key_material, TrafficKeyMaterial, TrafficKeyMaterialError,
@@ -1584,6 +1593,67 @@ impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'r
             encrypted_extensions,
         })
     }
+
+    /// Decode and policy-bind this exact pending main-handshake
+    /// `CertificateRequest` message.
+    pub fn validate_certificate_request(
+        &self,
+        limits: CertificateRequestLimits,
+        signature_limits: SignatureSchemeListLimits,
+    ) -> Result<
+        BoundRetryCertificateRequest<'_, 'message, 'retry_evidence>,
+        RetryCertificateRequestValidationError,
+    > {
+        if self.message.handshake_type() != tls13_handshake::Tls13HandshakeType::CertificateRequest
+        {
+            return Err(RetryCertificateRequestValidationError::WrongMessageType);
+        }
+        if self.state != ServerFlightState::ExpectCertificate {
+            return Err(RetryCertificateRequestValidationError::WrongFlightState);
+        }
+        if !self.client_authentication_requested {
+            return Err(RetryCertificateRequestValidationError::ClientAuthenticationNotRequested);
+        }
+        let certificate_request = decode_certificate_request(self.message.body(), limits)
+            .map_err(RetryCertificateRequestValidationError::Structure)?;
+        if !certificate_request.context().is_empty() {
+            return Err(RetryCertificateRequestValidationError::NonEmptyContext);
+        }
+        self.retry_evidence
+            .extension_context_policy()
+            .validate_server_message(
+                ServerExtensionContext::CertificateRequest,
+                certificate_request.extensions(),
+                self.retry_evidence.final_client_hello_extensions(),
+            )
+            .map_err(RetryCertificateRequestValidationError::Context)?;
+        let signature_algorithms = certificate_request
+            .extensions()
+            .find(ExtensionType::from_wire_value(
+                SIGNATURE_ALGORITHMS_EXTENSION_TYPE,
+            ))
+            .ok_or(RetryCertificateRequestValidationError::MissingSignatureAlgorithms)
+            .and_then(|entry| {
+                decode_signature_scheme_list(entry.data(), signature_limits)
+                    .map_err(RetryCertificateRequestValidationError::SignatureAlgorithms)
+            })?;
+        let signature_algorithms_cert = certificate_request
+            .extensions()
+            .find(ExtensionType::from_wire_value(
+                SIGNATURE_ALGORITHMS_CERT_EXTENSION_TYPE,
+            ))
+            .map(|entry| {
+                decode_signature_scheme_list(entry.data(), signature_limits)
+                    .map_err(RetryCertificateRequestValidationError::SignatureAlgorithmsCert)
+            })
+            .transpose()?;
+        Ok(BoundRetryCertificateRequest {
+            pending: self,
+            certificate_request,
+            signature_algorithms,
+            signature_algorithms_cert,
+        })
+    }
 }
 
 impl fmt::Debug for PendingRetryServerTranscriptMessage<'_, '_> {
@@ -1670,6 +1740,126 @@ impl fmt::Debug for BoundRetryEncryptedExtensions<'_, '_, '_> {
             .debug_struct("BoundRetryEncryptedExtensions")
             .field("pending", &"[RETAINED]")
             .field("encrypted_extensions", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Stable payload-free failures for exact retry `CertificateRequest` validation.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RetryCertificateRequestValidationError {
+    /// The pending ordered message was not `CertificateRequest`.
+    WrongMessageType,
+    /// The ordered flight was not immediately after `CertificateRequest`.
+    WrongFlightState,
+    /// The ordered flight did not record a client-authentication request.
+    ClientAuthenticationNotRequested,
+    /// The exact authenticated body was structurally invalid.
+    Structure(CertificateRequestError),
+    /// A main-handshake `CertificateRequest` carried a nonempty context.
+    NonEmptyContext,
+    /// Placement policy rejected one request extension.
+    Context(ExtensionContextPolicyError),
+    /// The required `signature_algorithms` extension was absent.
+    MissingSignatureAlgorithms,
+    /// The required `signature_algorithms` list was structurally invalid.
+    SignatureAlgorithms(SignatureSchemeListError),
+    /// The optional `signature_algorithms_cert` list was structurally invalid.
+    SignatureAlgorithmsCert(SignatureSchemeListError),
+}
+
+impl fmt::Display for RetryCertificateRequestValidationError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::WrongMessageType => "TLS 1.3 retry message is not CertificateRequest",
+            Self::WrongFlightState => {
+                "TLS 1.3 retry CertificateRequest has the wrong ordered-flight state"
+            }
+            Self::ClientAuthenticationNotRequested => {
+                "TLS 1.3 retry flight did not request client authentication"
+            }
+            Self::Structure(_) => "TLS 1.3 retry CertificateRequest structure is invalid",
+            Self::NonEmptyContext => {
+                "TLS 1.3 main-handshake CertificateRequest context is not empty"
+            }
+            Self::Context(_) => "TLS 1.3 retry CertificateRequest policy rejected an extension",
+            Self::MissingSignatureAlgorithms => {
+                "TLS 1.3 CertificateRequest omitted signature_algorithms"
+            }
+            Self::SignatureAlgorithms(_) => {
+                "TLS 1.3 CertificateRequest signature_algorithms is invalid"
+            }
+            Self::SignatureAlgorithmsCert(_) => {
+                "TLS 1.3 CertificateRequest signature_algorithms_cert is invalid"
+            }
+        })
+    }
+}
+
+impl std::error::Error for RetryCertificateRequestValidationError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Structure(error) => Some(error),
+            Self::Context(error) => Some(error),
+            Self::SignatureAlgorithms(error) | Self::SignatureAlgorithmsCert(error) => Some(error),
+            Self::WrongMessageType
+            | Self::WrongFlightState
+            | Self::ClientAuthenticationNotRequested
+            | Self::NonEmptyContext
+            | Self::MissingSignatureAlgorithms => None,
+        }
+    }
+}
+
+/// Exact authenticated main-handshake `CertificateRequest` bound to retry policy.
+///
+/// This proof intentionally derives neither `Copy` nor `Clone`. It retains the
+/// pending ordered message, exact decoded request, required handshake-signature
+/// list, and optional certificate-signature list.
+pub struct BoundRetryCertificateRequest<'pending, 'message, 'retry_evidence> {
+    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence>,
+    certificate_request: CertificateRequest<'message>,
+    signature_algorithms: SignatureSchemeList<'message>,
+    signature_algorithms_cert: Option<SignatureSchemeList<'message>>,
+}
+
+impl<'pending, 'message, 'retry_evidence>
+    BoundRetryCertificateRequest<'pending, 'message, 'retry_evidence>
+{
+    /// Borrow the exact pending ordered message and pre-message snapshot.
+    #[must_use]
+    pub const fn pending(
+        &self,
+    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+        self.pending
+    }
+
+    /// Borrow the exact structurally decoded and placement-authorized request.
+    #[must_use]
+    pub const fn certificate_request(&self) -> &CertificateRequest<'message> {
+        &self.certificate_request
+    }
+
+    /// Borrow the required exact handshake-signature scheme list.
+    #[must_use]
+    pub const fn signature_algorithms(&self) -> &SignatureSchemeList<'message> {
+        &self.signature_algorithms
+    }
+
+    /// Borrow the optional exact certificate-signature scheme list.
+    #[must_use]
+    pub const fn signature_algorithms_cert(&self) -> Option<&SignatureSchemeList<'message>> {
+        self.signature_algorithms_cert.as_ref()
+    }
+}
+
+impl fmt::Debug for BoundRetryCertificateRequest<'_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryCertificateRequest")
+            .field("pending", &"[RETAINED]")
+            .field("certificate_request", &"[REDACTED]")
+            .field("signature_algorithms", &"[REDACTED]")
+            .field("signature_algorithms_cert", &"[REDACTED]")
             .finish()
     }
 }

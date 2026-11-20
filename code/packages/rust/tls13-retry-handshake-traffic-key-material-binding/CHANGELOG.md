@@ -45,3 +45,7 @@
   caller-selected limits and bind its extension block to the retained final
   ClientHello offer and exact retry extension-context policy before the caller
   authorizes transcript advancement.
+- Decode an exact authenticated ordered main-handshake `CertificateRequest`,
+  require its empty context and `signature_algorithms` extension, apply the
+  retained request-context placement policy, and retain structurally decoded
+  handshake and optional certificate signature-scheme lists in the proof.

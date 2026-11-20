@@ -199,6 +199,7 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
         return bad(1, "escapes (a backslash) are not allowed in vos.toml");
     }
     for (n, raw) in text.lines().enumerate() {
+        crate::steps::tick();
         if raw.len() > VOS_TOML_MAX_LINE {
             return bad(n + 1, "line over 1,024 bytes");
         }
@@ -285,6 +286,7 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
             }
             ("evidence-features", Value::Array(items)) => {
                 for item in items {
+                    crate::steps::tick();
                     let Value::Str(name) = item else {
                         return bad(line, "evidence-features holds strings");
                     };
@@ -311,6 +313,7 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
                     return bad(line, "duplicate key");
                 }
                 for item in items {
+                    crate::steps::tick();
                     let Value::Str(name) = item else {
                         return bad(line, "obligations holds strings");
                     };
@@ -380,6 +383,7 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
     }
     let plain = |b: u8| b.is_ascii_alphanumeric() || b"_/.-".contains(&b);
     for (id, reason) in excuse_ids.into_iter().zip(excuse_reasons) {
+        crate::steps::tick();
         if id.is_empty() || id.len() > 128 || !id.bytes().all(plain) {
             return bad(
                 1,

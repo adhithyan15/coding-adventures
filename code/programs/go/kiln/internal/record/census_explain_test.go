@@ -44,6 +44,14 @@ func TestExplainCodesAreFixed(t *testing.T) {
 		"the root's exit line is not the sidecar's root_status": "root-status-mismatch",
 		"step 2: step 2: ::warning::x":                          "other",
 		"trace-incomplete:unparsable-line-but-evil":             "other",
+		"step 0: trace-incomplete:refused:ptrace":               "refused:ptrace",
+		"trace-incomplete:refused:clone3":                       "refused:clone3",
+		"trace-incomplete:refused:/etc/shadow":                  "refused:other",
+		"trace-incomplete:refused:openat":                       "refused:other", // handled, not refused
+		"trace-incomplete:refused:nosuchcall":                   "refused:other",
+		"trace-incomplete:refused:ptrace\n::error::x":           "refused:other",
+		"trace-incomplete:refused:ptrace more text":             "refused:ptrace",
+		"trace-incomplete:refused":                              "refused:other",
 	} {
 		if got := parseReasonCode(in); got != want {
 			t.Errorf("parseReasonCode(%q) = %q, want %q", in, got, want)

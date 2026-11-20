@@ -501,6 +501,28 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	vosImplementationRow("vos-sched-any"),
 	vosImplementationRow("vos-sched-rr"),
 	vosImplementationRow("vos-probe-ready"),
+	// CV2-F13: the non-VOS Rust crates whose BUILD runs `gen_evidence -- --check <crate>`.
+	// TestWarrantEvidenceRowsCoverEveryEvidenceCrate pins this list to the checkout.
+	warrantEvidenceRow("arithmetic"),
+	warrantEvidenceRow("ct-compare"),
+	warrantEvidenceRow("gf256"),
+	warrantEvidenceRow("hash-functions"),
+	warrantEvidenceRow("logic-gates"),
+	warrantEvidenceRow("lzw"),
+	warrantEvidenceRow("wasm-leb128"),
+	warrantEvidenceRow("x25519"),
+	warrantEvidenceRow("zeroize"),
+	{
+		// The coverage test above reads every crate's evidence.bindings and BUILD files, so a
+		// PR that adds an adopter (and with it an evidence.bindings) must run the build tool's
+		// tests; otherwise the missing row is found in some later unrelated PR.  BUILD edits
+		// are deliberately not a trigger: any Rust BUILD edit would select the build tool.
+		name:     "go/programs/build-tool",
+		language: "go",
+		inputs:   "the evidence.bindings of every Rust crate, which TestWarrantEvidenceRowsCoverEveryEvidenceCrate reads (CV2-F13)",
+		matches:  isRustEvidenceBindings,
+		globs:    []string{rustEvidenceBindingsGlob},
+	},
 	vosContractRow("vos-sched-contract"),
 	{
 		name:     "rust/programs/vos-capacity-probe",
@@ -1526,6 +1548,47 @@ func vosImplementationRow(crate string) repositoryInputConsumer {
 		inputs:   "its generated document " + doc + " and the VOS tools its BUILD runs outside Cargo (vos-link check-doc, vos-shape-check, the evidence generator, the capability analyzer)",
 		matches:  func(changed string) bool { return changed == doc || isVosToolInput(changed) },
 		paths:    append([]string{doc}, vosToolPaths...),
+	}
+}
+
+// rustEvidenceBindingsGlob is exactly isRustEvidenceBindings as a glob.
+const rustEvidenceBindingsGlob = "code/packages/rust/*/evidence.bindings"
+
+// isRustEvidenceBindings reports whether a changed path is `code/packages/rust/<dir>/evidence.bindings`:
+// one directory segment (no nesting, no `..`, no backslash), the exact file name.
+func isRustEvidenceBindings(changed string) bool {
+	parts := strings.Split(changed, "/")
+	return len(parts) == 5 &&
+		parts[0] == "code" && parts[1] == "packages" && parts[2] == "rust" &&
+		parts[3] != "" && parts[3] != "." && parts[3] != ".." && !strings.Contains(parts[3], `\`) &&
+		parts[4] == "evidence.bindings"
+}
+
+// warrantEvidenceInputsPrefix starts the inputs text of every warrantEvidenceRow row; the
+// coverage test recognises those rows by it.
+const warrantEvidenceInputsPrefix = "its Warrant spec "
+
+// warrantEvidenceRow is the row of one non-VOS Rust crate whose BUILD runs
+// `cargo run -p coding_adventures_warrant_grammar --example gen_evidence -- --check <crate>`
+// (CV2-F13).  The spec `code/specs/<crate>.warrant` lives outside the package, so without the
+// row a PR that edits only the spec (weakens a claim, say) selects the generator, the oracle
+// and the grammar crate but not the crate whose BUILD checks its committed evidence against
+// that spec: the check then runs first in some unrelated later PR.  The spec name is exactly the
+// crate name (VER04h).  The VOS crates (vosImplementationRow) already carry the same rule.
+// TestWarrantEvidenceRowsCoverEveryEvidenceCrate pins the rows to the BUILD and evidence.bindings
+// files of the checkout.
+//
+//	code/specs/lzw.warrant        → rust/lzw
+//	code/specs/lzw.warrant.draft  → nothing
+//	code/specs/lzw2.warrant       → nothing (a lookalike name)
+func warrantEvidenceRow(crate string) repositoryInputConsumer {
+	spec := "code/specs/" + crate + ".warrant"
+	return repositoryInputConsumer{
+		name:     "rust/" + crate,
+		language: "rust",
+		inputs:   warrantEvidenceInputsPrefix + spec + ", which its BUILD checks the committed evidence against (gen_evidence --check, CV2-F13)",
+		matches:  func(changed string) bool { return changed == spec },
+		paths:    []string{spec},
 	}
 }
 
