@@ -584,13 +584,19 @@ allowed-type data file, and a later `A`/`M` edit of only that file is then
 local. Review of the first step is the control; no instance exists in the
 repository today.
 
-A third `-validate-build-files` check guards a toolchain declaration rather
-than metadata (`internal/validator/negctl_python.go`): every `BUILD*` file in a
-discovered package that contains `warrant_negctl.py` (the shared
-negative-control checker; plain substring, comments included) must declare
-`# needs-toolchain: python` for the platform it serves. It moved here from a
-build-tool Go test, which a pull request touching only package BUILD files
-never selects.
+A further `-validate-build-files` check guards a toolchain declaration rather
+than metadata (`internal/validator/negctl_python.go`): every `BUILD*` file
+directly in a package directory discovered for any platform
+(`DiscoverPackagesAllPlatforms`, outside plan mode, so a directory whose only
+file is `BUILD_windows` is covered on a Linux runner) that contains
+`warrant_negctl.py` (the shared negative-control checker; plain substring,
+comments included) must declare `# needs-toolchain: python` for the platform it
+serves. A flagged file whose name is not a build-file name (`BUILD.bak`) is
+reported with rename-or-remove advice. Nested non-package BUILD files are not
+checked, since the build tool never runs them. Files that cannot be read are
+reported as findings (the check fails closed); only an absent package directory
+is skipped. It moved here from a build-tool Go test, which a pull request
+touching only package BUILD files never selects.
 
 Other packages do read some of these files, but none of them is a dependent
 of the file's owner, so dependency propagation never selected them:

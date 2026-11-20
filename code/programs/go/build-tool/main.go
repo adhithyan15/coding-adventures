@@ -1758,7 +1758,20 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		// declare Python (internal/validator/negctl_python.go). Package-local
 		// BUILD edits never select this program's own tests, so the rule is
 		// enforced here, on every pull request.
-		negctlErr := validator.ValidateNegctlUsersDeclarePython(knownPackages)
+		//
+		// CI's validation job runs on Linux, where host-only discovery misses
+		// a directory whose only BUILD file is BUILD_windows or BUILD_mac, so
+		// outside plan mode this check discovers every platform's packages.
+		negctlPackages := knownPackages
+		if !usedPlan {
+			allPackages, allErr := discovery.DiscoverPackagesAllPlatforms(codeRoot)
+			if allErr != nil {
+				fmt.Fprintf(os.Stderr, "negative-control checker validation: all-platform discovery failed: %v\n", allErr)
+				return 1
+			}
+			negctlPackages = allPackages
+		}
+		negctlErr := validator.ValidateNegctlUsersDeclarePython(repoRoot, negctlPackages)
 
 		if buildErr != nil {
 			fmt.Fprintln(os.Stderr, buildErr)

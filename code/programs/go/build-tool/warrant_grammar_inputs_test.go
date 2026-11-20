@@ -1,8 +1,10 @@
 package main
 
 import (
+	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
@@ -503,7 +505,27 @@ func TestEveryBuildFileUsingTheNegctlCheckerDeclaresPython(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := validator.ValidateNegctlUsersDeclarePython(packages); err != nil {
+	if err := validator.ValidateNegctlUsersDeclarePython(repoRoot, packages); err != nil {
 		t.Fatal(err)
+	}
+	// Non-vacuity: warrant-grammar's BUILD runs the checker's own tests, so
+	// when that package is in the checkout at least one discovered package
+	// uses the checker. (Sparse checkouts without it skip the assertion.)
+	if _, err := os.Stat(filepath.Join(repoRoot, "code", "packages", "rust", "warrant-grammar", "BUILD")); err == nil {
+		users := 0
+		for _, pkg := range packages {
+			entries, _ := os.ReadDir(pkg.Path)
+			for _, entry := range entries {
+				if !strings.HasPrefix(entry.Name(), "BUILD") {
+					continue
+				}
+				if data, err := os.ReadFile(filepath.Join(pkg.Path, entry.Name())); err == nil && strings.Contains(string(data), "warrant_negctl.py") {
+					users++
+				}
+			}
+		}
+		if users == 0 {
+			t.Fatal("no discovered package uses warrant_negctl.py although rust/warrant-grammar exists; the scan is broken")
+		}
 	}
 }

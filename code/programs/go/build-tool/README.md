@@ -773,11 +773,13 @@ The rule is narrow on purpose:
   unchanged. The edited BUILD is still checked by `-validate-build-files`,
   which runs over every package on every pull request.
 
-`-validate-build-files` also fails when a `BUILD*` file in any discovered
-package contains `warrant_negctl.py` (the shared negative-control checker,
+`-validate-build-files` also fails when a `BUILD*` file directly in a package
+directory discovered for any platform (so a `BUILD_windows`-only package is
+covered on Linux; nested non-package BUILD files are not checked, as the build
+tool never runs them) contains `warrant_negctl.py` (the shared negative-control checker,
 plain substring match, comments included) but does not declare
 `# needs-toolchain: python` for the platform it serves (`_windows` as
-Windows, `_mac` as macOS, anything else as Linux). CI installs Python only for
+Windows, `_mac` as macOS, anything else as Linux). Unreadable files are reported, not skipped. CI installs Python only for
 packages that declare it. The check lives in
 `internal/validator/negctl_python.go` because a pull request that touches only a
 package's BUILD never selects this program's tests.
