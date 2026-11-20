@@ -19,6 +19,8 @@ package record
 import (
 	"regexp"
 	"strings"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
 
 // ExplainSummary counts actions (or traces) by the fixed code of why they are
@@ -135,6 +137,9 @@ func parseReasonCode(s string) string {
 	}
 	rest := strings.TrimPrefix(s, "trace-incomplete:")
 	if c, ok := matchCode(rest, traceReasonCodes); ok {
+		if c == "refused" {
+			return refusedCode(rest)
+		}
 		return c
 	}
 	for _, p := range parsePhrases {
@@ -172,4 +177,28 @@ func failedCode(text string) string {
 		return "record-invalid"
 	}
 	return "other"
+}
+
+// refusedCode turns the parser's `refused:<syscall>` into `refused:<syscall>`
+// again, but only when <syscall> is a member of the parser's CLOSED syscall
+// table in its refused class (trace.SyscallClass; internal/trace/table.go).
+// The name is the one part of the reason an untrusted record.json could choose,
+// so it is never copied: it is looked up, and the table's own spelling is what
+// is returned.  Anything else (a name outside the table, a handled name, a
+// missing name, a name with a newline in it) is `refused:other`, which keeps
+// the number of distinct codes bounded by the table.
+func refusedCode(rest string) string {
+	name, ok := strings.CutPrefix(rest, "refused:")
+	if !ok {
+		return "refused:other"
+	}
+	// The reason may be followed by free text ("refused:ptrace some words"):
+	// the syscall name is what precedes the first ':' or ' '.
+	if i := strings.IndexAny(name, ": "); i >= 0 {
+		name = name[:i]
+	}
+	if trace.SyscallClass(name) == "refused" {
+		return "refused:" + name
+	}
+	return "refused:other"
 }

@@ -44,7 +44,7 @@ func (c *classifier) exec(ev *trace.Event) {
 	if tg.virtual {
 		// /proc/self/exe and friends: the real file is not the one the
 		// classifier would read.
-		c.reason(rExecUnreadable)
+		c.reasonSub(rExecUnreadable, "virtual-exe", tg.abs)
 		return
 	}
 	c.loadChain(tg.abs, ev.Cwd)
@@ -56,7 +56,7 @@ func (c *classifier) loadChain(abs, cwd string) {
 	for level := 0; ; level++ {
 		head, ok := c.readHead(abs)
 		if !ok {
-			c.reason(rExecUnreadable)
+			c.reasonSub(rExecUnreadable, c.headWhere(abs), abs)
 			return
 		}
 		switch {
@@ -76,7 +76,7 @@ func (c *classifier) loadChain(abs, cwd string) {
 			}
 			c.observe(tg.abs, true, false)
 			if tg.virtual {
-				c.reason(rExecUnreadable)
+				c.reasonSub(rExecUnreadable, "virtual-interpreter", tg.abs)
 				return
 			}
 			abs = tg.abs
@@ -124,6 +124,20 @@ func (c *classifier) readHead(abs string) ([]byte, bool) {
 	}
 	b, err := c.cfg.FS.ReadHead(abs, headLimit)
 	return b, err == nil
+}
+
+// headWhere says, for the census alone, where a program whose first bytes
+// could not be read lives: under the fresh $HOME or TMPDIR (readHead never asks
+// the post-run disk there, by design), inside the repository, or on the host.
+// A fixed word, never the path.
+func (c *classifier) headWhere(abs string) string {
+	if c.underTmp(abs) {
+		return "under-tmp"
+	}
+	if _, ok := c.rel(abs); ok {
+		return "in-repo"
+	}
+	return "host-disk"
 }
 
 // shebangInterpreter reads the interpreter path from a "#!" line the way the
