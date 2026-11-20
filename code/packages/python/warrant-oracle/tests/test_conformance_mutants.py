@@ -48,9 +48,13 @@ from coding_adventures_warrant_oracle.lower import FIXED
 
 def expectations(kit, category):
     """``{case id: derived expect}`` of a category, computed from the tables, with no intent check."""
-    return {
-        f"{category}/{row.slug}": C.derive_expect(category, row.fields, kit.kits) for row in kit.tables[category]
-    }
+    out = {}
+    for row in kit.tables[category]:
+        try:
+            out[f"{category}/{row.slug}"] = C.derive_expect(category, row.fields, kit.kits)
+        except C.KitError as exc:  # a mutant that makes the kit refuse to build the case is killed by it
+            out[f"{category}/{row.slug}"] = {"kit-error": str(exc)}
+    return out
 
 
 @pytest.fixture(scope="module")

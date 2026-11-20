@@ -84,7 +84,7 @@ warrant kit v1
   claim big:
     forall a: U8, b: U8, c: U8. f3(a, b, c) == m3(a, b, c)
   claim short:
-    forall a: U8 | a != 0u8, b: U8. if a > b then g(a) == g(b) else true
+    forall a: U8 | a != 255u8, b: U8. if a > b then g(a) == g(b) else true
   claim negs:
     forall a: I8. negate(a) == -a
   claim res:

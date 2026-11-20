@@ -137,16 +137,17 @@ reject("result-error-type-missing", "E is not in types", '{"ok":true}', "Result<
 reject("result-error-type-not-error", "E names a type that is not an error type", '{"ok":true}', "Result<Bool,U8>", "type", ERR)
 
 # -- depth of a type expression (section 2.2 rule 1) -----------------------------------------------
-# A leaf is depth 1 and every Result< adds one, so n wrappers are depth n+1.  The cases stay clear
-# of the single boundary where the counting convention could matter: 15 wrappers are depth 16 (or 15
-# when a leaf counts 0) and are accepted by both; 17 wrappers are refused by both.
+# A bare name is depth 0 (the generator's resolve counts the same way) and every Result< adds one, so n
+# wrappers are depth n: 15 and 16 wrappers are accepted, 17 refused.
 def nested(n: int) -> str:
     return "Result<" * n + "Bool" + ",E>" * n
 
 
+accept("type-depth-16-wrappers", "a type expression of 16 Result wrappers is exactly at the depth limit",
+       '{"ok":' * 16 + "true" + "}" * 16, nested(16), "50" * 16 + "01", ERR)
 accept("type-depth-15-wrappers", "a type expression of 15 Result wrappers is within depth 16",
        '{"ok":' * 15 + "true" + "}" * 15, nested(15), "50" * 15 + "01", ERR)
-reject("type-depth-17-wrappers", "a type expression of depth 17 or more is refused as a type",
+reject("type-depth-17-wrappers", "a type expression of 17 Result wrappers is refused as a type",
        "true", nested(17), "type", ERR)
 reject("type-depth-40-wrappers", "a much deeper type expression", "true", nested(40), "type", ERR)
 
@@ -184,4 +185,4 @@ reject("malformed-duplicate-key", "a duplicate object key", b'{"ok":true,"ok":fa
        "malformed-json", ERR)
 reject("malformed-duplicate-key-escaped", "a duplicate key after unescaping", b'{"ok":true,"\\u006fk":false}',
        "Result<Bool,E>", "malformed-json", ERR)
-reject("malformed-wins-over-type", "the reader runs before the type is read", b"[", "Int", "malformed-json")
+reject("malformed-wins-over-type", "a malformed document is malformed-json and nothing else", b"[", "Bool", "malformed-json")

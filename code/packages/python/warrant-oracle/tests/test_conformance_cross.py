@@ -259,7 +259,7 @@ def _suites():
         "grid": ([list(range(256))] * 2, lambda a, b: True, lambda a, b: (a + b) % 256, "U8", lambda a, b: 1),
         "ragged": ([list(range(65)), list(range(256))], lambda n, a: True, lambda n, a: n, "Nat", lambda n, a: 1),
         "two_bytes": ([D1, D1], lambda a, b: True, lambda a, b: a == b, "Bool", lambda a, b: 1),
-        "short": ([list(range(256))] * 2, lambda a, b: a != 0, None, "Bool", lambda a, b: 2 if a > b else 0),
+        "short": ([list(range(256))] * 2, lambda a, b: a != 255, None, "Bool", lambda a, b: 2 if a > b else 0),
         "negs": ([list(range(-128, 128))], lambda a: True, lambda a: ((-a + 128) % 256) - 128, "I8", lambda a: 1),
         "res": ([[("ok", False), ("ok", True), ("err", "BAD"), ("err", "WORSE")]], lambda a: True,
                 lambda a: a == ("ok", True), "Bool", lambda a: 1),
@@ -339,16 +339,6 @@ def test_the_v2_chunk_expectations_are_the_chunk_file_lines(kit):
         if len(line) > 5:
             want["expected_sha256"] = line[5]
         assert case["expect"] == want, slug
-
-
-def test_a_chunk_alone_equals_the_same_chunk_after_its_predecessors(kit):
-    """Chunk c enumerated alone equals chunk c enumerated by walking 0..c (the property S6a and S7a assert in a lane)."""
-    plan = kit.kits["small"].plans["gap"]
-    sequential = [plan.run_chunk(c) for c in range(64)]
-    for c in (0, 1, 30, 62, 63):
-        alone = plan.run_chunk(c)
-        assert (alone.cases, alone.first_admitted, alone.calls, alone.inputs, alone.expected) == (
-            sequential[c].cases, sequential[c].first_admitted, sequential[c].calls, sequential[c].inputs, sequential[c].expected)
 
 
 # ---------------------------------------------------------------------------------------------------

@@ -135,9 +135,16 @@ def nested(n):
     return d, ty
 
 
-d14, t14 = nested(14)
-dom("result-nested-14-accepted", "a tree of 15 levels is within the limit of 16", d14, t14, {"index": 15},
-    {"size": 16, "values_hex": ["51" + u32le(1) + b"X".hex()]})
+# The descriptor limit is "at most 16 levels deep" and a leaf alone is one level, so nested(n), n result
+# nodes over a leaf, is n+1 levels: nested(15) is exactly 16 levels and accepted; nested(16) (17 levels) and
+# nested(17) (18 levels) are refused.  (The type text of nested(16) is itself within the type depth of 16,
+# which counts a bare name as 0: it is the descriptor tree that is too deep.)
+d15, t15 = nested(15)
+dom("result-nested-15-accepted", "a tree of 16 levels is exactly at the limit", d15, t15, {"index": 16},
+    {"size": 17, "values_hex": ["51" + u32le(1) + b"X".hex()]})
+d16, t16 = nested(16)
+dom("result-nested-16-refused", "a tree of 17 levels is one past the limit of 16", d16, t16, {"index": 0},
+    {"error": "descriptor"})
 d17, t17 = nested(17)
 dom("result-nested-17-refused", "a tree of 18 levels is past the limit of 16", d17, t17, {"index": 0},
     {"error": "descriptor"})

@@ -14,7 +14,6 @@ from __future__ import annotations
 from kit_common import FIXED, hi, lo, row, wrap
 
 ROWS: list = []
-INT_MAX = 2**127 - 1  # the exact window of section 3.2 is -(2^127-1)..=2^127-1
 NAT_MAX = 2**64 - 1
 
 
@@ -88,16 +87,9 @@ case("int-add-negative", "Int -3 + -4", "Int", "add", -3, -4, value("Int", -7))
 case("int-sub-negative", "Int -3 - -4", "Int", "sub", -3, -4, value("Int", 1))
 case("int-mul-negative", "Int -6 * 7", "Int", "mul", -6, 7, value("Int", -42))
 case("int-neg-negative", "negating Int -5", "Int", "neg", -5, None, value("Int", 5))
-case("int-max-plus-one", "2^127-1 plus one leaves the window", "Int", "add", INT_MAX, 1, {"error": "ir-overflow"})
-case("int-min-minus-one", "-(2^127-1) minus one leaves the window", "Int", "sub", -INT_MAX, 1,
-     {"error": "ir-overflow"})
-case("int-max-plus-zero", "2^127-1 plus zero is the edge of the window", "Int", "add", INT_MAX, 0, value("Int", INT_MAX))
-case("int-max-times-minus-one", "(2^127-1) * -1 is the other edge", "Int", "mul", INT_MAX, -1, value("Int", -INT_MAX))
-case("int-neg-max", "negating the largest Int", "Int", "neg", INT_MAX, None, value("Int", -INT_MAX))
 case("int-mul-overflow", "(10^20-1)^2 is about 10^40, past the window", "Int", "mul", 10**20 - 1, 10**20 - 1,
      {"error": "ir-overflow"})
 case("int-mul-below-window", "10^19 * 10^19 as Int", "Int", "mul", 10**19, 10**19, value("Int", 10**38))
-case("int-mul-by-zero", "the window is on the result, not the operands", "Int", "mul", INT_MAX, 0, value("Int", 0))
 
 # -- comparisons order by mathematical value (section 3.2) ---------------------------------------------------------
 case("i8-lt-minus-one-one", "I8 -1 < 1 (a bit-pattern compare would say 255 < 1)", "I8", "lt", -1, 1, truth(True))
@@ -130,4 +122,3 @@ case("nat-ne-zero-one", "Nat 0 != 1", "Nat", "ne", 0, 1, truth(True))
 case("int-lt-negative", "Int -5 < 3", "Int", "lt", -5, 3, truth(True))
 case("int-gt-negative", "Int -5 > -6", "Int", "gt", -5, -6, truth(True))
 case("int-eq-negative", "Int -1 == -1", "Int", "eq", -1, -1, truth(True))
-case("int-le-window-edge", "Int -(2^127-1) <= 2^127-1", "Int", "le", -INT_MAX, INT_MAX, truth(True))

@@ -42,17 +42,28 @@ case that needs another level belongs to S10d or S11 and fails the build here.
 
 `kit.warrant` is the expensive part (about a minute, 256 chunks of the `big` suite); it is derived once per run.
 
-## Choices the spec leaves open (all conservative; see the SPEC-QUESTIONS of the S5a hand-off)
+## Choices the spec leaves open (see section 16.15 of VER04r)
 
-* **Type depth.** Section 2.2 says a type expression is at most 16 deep without saying whether a leaf is depth 0 or
-  1. The cases stay clear of the one ambiguous boundary: 15 nested `Result` wrappers are accepted and 17 refused,
-  whichever convention a lane uses. Descriptor trees are treated the same way (14 accepted, 17 refused).
+* **Type depth and descriptor depth (R40).** A type expression counts the constructors that enclose a name: a bare
+  name is depth 0, so 16 nested `Result` wrappers are accepted and 17 refused (`type-depth-16-wrappers`,
+  `type-depth-17-wrappers`). A descriptor tree counts nodes on a path, a leaf alone being one level: 16 levels
+  (`nested(15)`) are accepted, and `nested(16)` (17 levels, although its type text is within the type depth) and
+  `nested(17)` are refused as `descriptor`.
+* **`Int` literals ([D58]).** No `lit` carries more than 20 decimal digits, `Int` included. The edge of the `Int`
+  window, `2^127-1`, is reached by arithmetic in `v2-ir` from three literals (`2^63 * (2^64-1) + (2^63-1)`), so the
+  window-edge vectors and the `Nat` product overflow case (`nat-bound-generation-error`) stay.
 * **Static widths.** A `Bytes` literal has the static type `Bytes<len>` in the oracle (Appendix A.1 note). No
   `v2-ir` result type depends on it: byte results come from variables, and a `Result` result comes from an `if`
   whose other branch has a declared type, because a bare `ok` has an unknown error type.
 * **Nat arithmetic.** `Nat + Nat`, `Nat * Nat` and `Nat - Nat` have type `Int` (sections 3.2 and 8.2).
-* **`v2-fault` `requires`.** A fault row lists the levels beyond `ir.core` when it has any (`["ir.fixed"]` for
-  `xor-lsb`); the derivation checks that a row names every level its tags and types use.
+* **`v2-fault` `requires`.** A fault row's `requires` is its own levels united with `ir.core` (`["ir.core",
+  "ir.fixed"]` for `xor-lsb`); the derivation checks that a row names every level its tags and types use.
+* **Faults.** Every derived fault output is read back through the section 2.3 decoder: an out-of-range one fails the
+  build, and the kit has no `off-by-one` on a `Nat` result of `2^64-1` (R47).
+* **`ill-typed` by name (R41, R45).** An `err` whose case no error type in `types` declares, and a `subject_op` that
+  names an op missing from `ops`, are `ill-typed`; every other `err` case passes `types` with the case declared.
+* **`v2-chunk` tampers.** Each tamper re-seals what it does not mean to break (the file digest and, for a changed
+  `slim_chunks`, the two slim digests), so a case triggers its one intended code.
 
 ## Vectors deliberately left out because the spec does not decide them
 
@@ -60,5 +71,5 @@ The tables avoid a case whose expected code the text of section 11 leaves open, 
 might reasonably read otherwise: a negative `index` or `chunk`, a `chunk`, `chunk_size` or `slim_chunks` entry that is
 not an integer, a `chunks` count that disagrees with `ceil(product / chunk_size)` (`corpus` or `chunk-file`?), a
 `discarded` that disagrees with the chunk file, a `max_ir_cost` below 2,000 in the *corpus* part of a `v2-chunk` case,
-a `Bytes<07>` width, a `subject_op` of an op missing from `ops`, and a `level-missing` caused by a *type* (S5-0 says
+a `Bytes<07>` width, and a `level-missing` caused by a *type* (S5-0 says
 the S5b vectors use tags). A later PR that settles one of them may add the case.

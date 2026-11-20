@@ -21,6 +21,11 @@ CORE = ["ir.core"]
 ERR = {"E": {"kind": "error", "cases": ["BAD", "WORSE"]}}
 NAT_MAX = 2**64 - 1
 INT_MAX = 2**127 - 1
+# [D58] no ``lit`` carries more than 20 decimal digits, ``Int`` included, so the edge of the Int window is
+# reached by arithmetic: (2^63) * (2^64 - 1) + (2^63 - 1) = 2^127 - 1, from three literals of at most 20 digits.
+EDGE = ["add", ["mul", ["lit", {"type": "Int", "value": str(2**63)}], ["lit", {"type": "Int", "value": str(NAT_MAX)}]],
+        ["lit", {"type": "Int", "value": str(2**63 - 1)}]]
+NEG_EDGE = ["neg", EDGE]
 
 
 # -- IR builders -------------------------------------------------------------------------------------------
@@ -106,7 +111,6 @@ for t in ("U8", "U16", "U32", "U64", "I8", "I16", "I32", "I64"):
     case(f"lit-{t.lower()}-min", f"a {t} literal at the minimum", lit(t, lo(t)), ok(t, str(lo(t))))
 case("lit-nat", "a Nat literal at 2^64-1", lit("Nat", NAT_MAX), ok("Nat", str(NAT_MAX)))
 case("lit-int-negative", "an Int literal is the one place Int is written", lit("Int", -3), ok("Int", "-3"))
-case("lit-int-window-edge", "an Int literal at the edge of the window", lit("Int", INT_MAX), ok("Int", str(INT_MAX)))
 case("lit-signed-minimum-is-neg-of-lit", "the signed minimum is neg of a lit holding -2^(w-1), and neg wraps it to itself",
      ["neg", lit("I8", -128)], ok("I8", "-128"))
 case("lit-bytes-equal-var", "a Bytes literal is lowercase hex", ["eq", lit("Bytes", "0a0b"), var("b")],
@@ -170,15 +174,15 @@ case("ok-differs-in-payload", "Ok(5) is not Ok(6)", ["eq", ["ok", var("a")], var
 case("err-equals-err-variable", "err(CASE) names a case", ["eq", ["err", "BAD"], var("r")], ok("Bool", True),
      env=[e("r", "Result<U8,E>", {"err": "BAD"})], types=ERR)
 case("err-nominal-cases", "errors are nominal: BAD is not WORSE", ["eq", ["err", "BAD"], ["err", "WORSE"]],
-     ok("Bool", False))
+     ok("Bool", False), types=ERR)
 case("ok-is-not-err", "an Ok is never an Err", ["eq", ["ok", var("a")], ["err", "BAD"]], ok("Bool", False),
-     env=[e("a", "U8", "5")])
+     env=[e("a", "U8", "5")], types=ERR)
 case("is-err-on-err", "is_err of an Err", ["is_err", var("r")], ok("Bool", True),
      env=[e("r", "Result<U8,E>", {"err": "BAD"})], types=ERR)
 case("is-err-on-ok", "is_err of an Ok", ["is_err", var("r")], ok("Bool", False),
      env=[e("r", "Result<U8,E>", {"ok": "1"})], types=ERR)
-case("is-err-of-bare-ok", "is_err of a bare ok node", ["is_err", ["ok", blit(True)]], ok("Bool", False))
-case("is-err-of-bare-err", "is_err of a bare err node", ["is_err", ["err", "BAD"]], ok("Bool", True))
+case("is-err-of-bare-ok", "is_err of a bare ok node", ["is_err", ["ok", blit(True)]], ok("Bool", False), types=ERR)
+case("is-err-of-bare-err", "is_err of a bare err node", ["is_err", ["err", "BAD"]], ok("Bool", True), types=ERR)
 case("result-from-if-keeps-declared-type", "an if of a Result variable and an err takes the variable's type",
      ["if", ["eq", var("a"), lit("U8", 0)], ["err", "BAD"], var("r")],
      ok("Result<U8,E>", {"ok": "4"}), env=[e("a", "U8", "1"), e("r", "Result<U8,E>", {"ok": "4"})], types=ERR)
@@ -410,6 +414,12 @@ case("ill-typed-model-call-too-many-args", "a model call with too many arguments
      err("ill-typed"), env=U, models={"inc": INC})
 case("ill-typed-model-call-wrong-type", "a model call with an argument of the wrong type", call("inc", var("c")),
      err("ill-typed"), env=U, models={"inc": INC})
+case("ill-typed-subject-op-missing-from-ops", "a subject_op naming an op that ops does not declare (R45)",
+     sub_op("bump", var("a")), err("ill-typed"), env=U)
+case("ill-typed-err-case-undeclared", "an err whose case no error type in types declares (R41)",
+     ["is_err", ["err", "NOPE"]], err("ill-typed"), types=ERR)
+case("ill-typed-err-without-an-error-type", "an err when types declares no error type at all (R41)",
+     ["is_err", ["err", "BAD"]], err("ill-typed"))
 case("ill-typed-subject-wrong-arity", "a subject call with the wrong argument count", sub_op("bump", var("a"), var("a")),
      err("ill-typed"), env=U, models={"inc": INC}, ops={"bump": BUMP}, subjects={"bump": "inc"})
 case("ill-typed-subject-wrong-type", "a subject call with an argument of the wrong type", sub_op("bump", var("c")),
@@ -538,7 +548,7 @@ case("max-ir-cost-2001-accepted", "max_ir_cost just above the default", blit(Tru
 OVN = ["mul", lit("Nat", NAT_MAX), lit("Nat", NAT_MAX)]
 case("overflow-nat-product-corpus-class", "a Nat product leaving 2^127 in a subject-independent node is the corpus's",
      OVN, err("ir-overflow", "corpus"))
-case("overflow-int-sum-corpus-class", "an Int sum leaving the window", ["add", lit("Int", INT_MAX), lit("Int", 1)],
+case("overflow-int-sum-corpus-class", "an Int sum leaving the window", ["add", EDGE, lit("Int", 1)],
      err("ir-overflow", "corpus"))
 case("overflow-in-model-corpus-class", "an overflow inside a pure model is the corpus's too",
      call("sq", lit("Nat", NAT_MAX)), err("ir-overflow", "corpus"),
@@ -556,6 +566,24 @@ case("overflow-pure-sibling-of-subject-corpus-class", "a pure overflowing argume
 case("overflow-not-reached-below-subject", "a subject result that does not overflow gives a value",
      ["mul", sub_op("idn", var("n")), lit("Nat", 2)], ok("Int", "10", 1), env=[e("n", "Nat", "5")],
      models={"keep": model([("a", "Nat")], var("a"))}, ops={"idn": op([("a", "Nat")], "Nat")}, subjects={"idn": "keep"})
+
+
+# The edge of the Int window (section 3.2), built from literals of at most 20 digits ([D58]).
+case("int-window-edge-by-arithmetic", "2^63 * (2^64-1) + (2^63-1) reaches 2^127-1, the top of the window", EDGE,
+     ok("Int", str(INT_MAX)))
+case("int-window-edge-negated", "negating the top of the window gives the bottom, -(2^127-1)", NEG_EDGE,
+     ok("Int", str(-INT_MAX)))
+case("int-edge-plus-zero", "the edge plus zero stays at the edge", ["add", EDGE, lit("Int", 0)], ok("Int", str(INT_MAX)))
+case("int-edge-times-minus-one", "the edge times -1 is the other edge", ["mul", EDGE, lit("Int", -1)],
+     ok("Int", str(-INT_MAX)))
+case("int-edge-times-zero", "the window is on the result, not the operands", ["mul", EDGE, lit("Int", 0)],
+     ok("Int", "0"))
+case("int-edge-comparison", "-(2^127-1) <= 2^127-1", ["le", NEG_EDGE, EDGE], ok("Bool", True))
+case("int-min-minus-one-corpus-class", "-(2^127-1) minus one leaves the window", ["sub", NEG_EDGE, lit("Int", 1)],
+     err("ir-overflow", "corpus"))
+case("int-product-exactly-2-127", "2^63 * 2^64 is 2^127, one past the window", ["mul", lit("Int", 2**63), lit("Int", 2**64)],
+     err("ir-overflow", "corpus"))
+case("int-edge-neg-neg", "negating twice returns the edge", ["neg", NEG_EDGE], ok("Int", str(INT_MAX)))
 
 
 def doubling_concat(n):

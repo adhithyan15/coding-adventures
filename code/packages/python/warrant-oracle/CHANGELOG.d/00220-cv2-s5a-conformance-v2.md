@@ -13,7 +13,7 @@ No version bump, no emitted byte changes, no committed file outside this package
   (`classify_ir_refusal`), the case envelope (`Row`, `finish_case`: id, summary, `requires`, `expect`), and the
   canonical writer and index rows (`build_files`). The module reads no file.
 - `tests/fixtures/conformance-v2/`: the hand-written case tables (`cases_value.py`, `cases_arith.py`, `cases_ir.py`,
-  `cases_domain.py`, `cases_chunk.py`, `cases_fault.py`; 724 cases in the six categories, every one with `requires`
+  `cases_domain.py`, `cases_chunk.py`, `cases_fault.py`; 730 cases in the six categories, every one with `requires`
   `["ir.core"]`), the two kit documents the `v2-chunk` cases come from (`kit.warrant` with a `2**24` suite and
   `kit-small.warrant` at `chunk_size 1024`, with their profiles, which declare no fault), and `make_conformance.py`
   (`--write` and `--check`, `--fixture DIR`; exit 0 identical, 1 differs, 2 a table and its derivation disagree).
@@ -30,6 +30,20 @@ No version bump, no emitted byte changes, no committed file outside this package
 
 - Nothing is written to `code/specs/fixtures`; the generated files exist only in a scratch directory until S5b.
 - `BUILD` and `BUILD_windows` are unchanged (pytest already runs `tests/`); S5b adds `make_conformance.py --check`.
-- Open points found while building, recorded in the fixture README: the depth convention of a type expression and of
-  a descriptor tree is avoided at its single ambiguous boundary; the static width of a `Bytes` literal is kept out
-  of every result type; the second kit document exists because `chunk_size 1024` cannot hold a `2**24` suite.
+- The depth conventions are pinned (R40) and the other open points are recorded in the fixture README: the static
+  width of a `Bytes` literal is kept out of every result type; the second kit document exists because
+  `chunk_size 1024` cannot hold a `2**24` suite.
+
+### Changed (review fixes)
+
+- `parse_type` counts a bare name as depth 0 (16 wrappers accepted, 17 refused); cases `type-depth-16-wrappers` and
+  `result-nested-15-accepted` / `-16-refused` / `-17-refused` pin both depth conventions.
+- [D58]: no `Int` `lit` over 20 digits. Eight table cases removed (plus `int-mul-by-zero`); the window edge is reached
+  by arithmetic in `v2-ir` (`int-window-edge-by-arithmetic` and its neighbours).
+- `derive_fault` reads every derived output back through `decode_value` (a bad one is a `KitError`); `requires_of`
+  unions a fault's levels with `ir.core`; an undeclared `err` case is `ill-typed` (R41, `undeclared_err_case`) with
+  vectors for it and for a `subject_op` of an op missing from `ops` (R45).
+- Single-code cases: `malformed-wins-over-type` uses `Bool`; `["err", ...]` cases pass `types=ERR`; the `v2-chunk`
+  slim tampers re-seal the slim digests and the 32-entry case is the base set plus extras; `corpus-wrong-product`
+  also bumps `discarded`; `short` now refines `a != 255u8` so its calls (64,770) differ from its cases (65,280).
+- Removed `test_a_chunk_alone_equals_the_same_chunk_after_its_predecessors`, which compared a chunk with itself.

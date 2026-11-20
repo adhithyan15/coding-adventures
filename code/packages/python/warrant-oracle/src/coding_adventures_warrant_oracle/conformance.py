@@ -319,9 +319,9 @@ def parse_type(text: object, types: dict | None, *, allow_int: bool = False) -> 
     ``types`` is the section 2.2 table (a name must be in it); ``None`` is the *open* mode of
     ``v2-domain``, which has no ``types`` field, where only the error name of a ``Result`` is free.
     ``Int`` exists inside the IR only and is refused as a value type unless ``allow_int`` (an IR
-    ``lit``).  The depth of a type expression is at most 16 (section 2.2 rule 1): the outermost
-    constructor is level 1 and every ``(``, ``List<``, ``Option<`` or ``Result<`` below it is one level
-    deeper, so a leaf at level 17 is refused (15 nested ``Result`` wrappers around ``Bool`` are depth 16).
+    ``lit``).  The depth of a type expression is at most 16 (section 2.2 rule 1): a bare name is depth 0
+    (the generator's ``resolve`` counts the same way) and every ``(``, ``List<``, ``Option<`` or
+    ``Result<`` wrapper adds one, so 16 nested ``Result`` wrappers around ``Bool`` are accepted and 17 refused.
     """
     if not isinstance(text, str):
         raise Refused("type", "a type is text")
@@ -388,7 +388,7 @@ def parse_type(text: object, types: dict | None, *, allow_int: bool = False) -> 
             return A.Ty(head)
         raise Refused("type", "not a type of section 2.1, or not in types")
 
-    ty = one(1)
+    ty = one(0)
     if pos != len(text):
         raise Refused("type", "trailing text after a type")
     return ty
@@ -649,6 +649,20 @@ def static_refusal(case: dict) -> Refused | None:
     return None
 
 
+def undeclared_err_case(case: dict) -> Refused | None:
+    """``ill-typed`` for an ``err`` node whose case no error type in ``types`` declares (section 16.15 R41).
+
+    The oracle's own ``err`` compile types the node as ``Result<?,?>`` without looking at ``types``, so the
+    derivation layer makes the check: the case name must be in the ``cases`` of some ``error`` row.
+    """
+    declared = {c for row in case["types"].values() if row.get("kind") == "error" for c in row["cases"]}
+    for ir in [case["ir"], *(case["models"][n]["body"] for n in case["model_order"] if n in case["models"])]:
+        for node in _nodes(ir):
+            if node[0] == "err" and len(node) == 2 and isinstance(node[1], str) and node[1] not in declared:
+                return Refused("ill-typed", f"err({node[1]}) names a case no error type declares")
+    return None
+
+
 def classify_ir_refusal(exc: OracleError, levels: set[str]) -> Refused:
     """Map one oracle failure to the kit's static code (section 16.13 R25), or fail the build.
 
@@ -749,6 +763,9 @@ def calls_for(prog: E.Program, ir: object, tenv: dict) -> object:
 def compile_ir_case(case: dict) -> IrCase:
     """Decode, type and compile a ``v2-ir`` case, or raise :class:`Refused` with the kit's static code."""
     pre = static_refusal(case)
+    if pre is not None:
+        raise pre
+    pre = undeclared_err_case(case)
     if pre is not None:
         raise pre
     levels = set(case["levels"])
@@ -1246,11 +1263,24 @@ def derive_fault(case: dict) -> dict:
     decode_value(case["result"], op.ret, types)  # the call's result is always a value of the op's type
     if fault["kind"] == "pre":
         new = apply_pre(compiled, penv)
-        return {"args": [value_to_json(new.get(p, penv[p]), t) for p, t in op.params]}
+        args = [value_to_json(new.get(p, penv[p]), t) for p, t in op.params]
+        for (_, t), v in zip(op.params, args):
+            _check_derived(v, t, types)
+        return {"args": args}
     penv["result"] = decode_value(case["result"], op.ret, types)
     out = post_value(fault, compiled, penv)
     # Typed as the op's *declared* result: a ``Nat`` result stays a ``Nat`` after ``+ 1``.
-    return {"result": value_to_json(out, op.ret)}
+    result = value_to_json(out, op.ret)
+    _check_derived(result, op.ret, types)
+    return {"result": result}
+
+
+def _check_derived(raw: object, ty: A.Ty, types: dict) -> None:
+    """A derived value must read back as a value of its type (a fault whose output is out of range is a kit bug)."""
+    try:
+        decode_value(raw, ty, types)
+    except Refused as exc:
+        raise KitError(f"the derived value {raw!r} is not a value of its type: {exc}") from exc
 
 
 # ================================================================================================
@@ -1314,7 +1344,7 @@ def requires_of(category: str, fields: dict, expect: dict) -> list[str]:
     if category == "v2-fault":
         if expect.get("error") == "level-missing":
             return sorted(fields["levels"])
-        return sorted(fields["fault"]["requires"])
+        return sorted({*fields["fault"]["requires"], *CORE})
     return list(CORE)
 
 

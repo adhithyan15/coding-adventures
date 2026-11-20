@@ -181,10 +181,13 @@ def test_parse_type_refuses(text):
 
 
 def test_parse_type_depth_boundary_and_non_text():
-    assert C.parse_type("Result<" * 15 + "Bool" + ",E>" * 15, ERR)
+    # a bare name is depth 0: 16 wrappers are accepted, 17 refused
+    assert C.parse_type("Bool", {}).head == "Bool"
+    assert C.parse_type("Result<" * 16 + "Bool" + ",E>" * 16, ERR)
     with pytest.raises(C.Refused):
-        C.parse_type("Result<" * 16 + "Bool" + ",E>" * 16, ERR)
-    deep_tuple = "(" * 16 + "Bool,Bool" + ",Bool)" * 16
+        C.parse_type("Result<" * 17 + "Bool" + ",E>" * 17, ERR)
+    assert C.parse_type("(" * 16 + "Bool,Bool" + ",Bool)" * 16, {})
+    deep_tuple = "(" * 17 + "Bool,Bool" + ",Bool)" * 17
     with pytest.raises(C.Refused):
         C.parse_type(deep_tuple, {})
     with pytest.raises(C.Refused):

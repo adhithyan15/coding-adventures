@@ -31,6 +31,8 @@ import hashlib
 
 from kit_common import row
 
+from coding_adventures_warrant_oracle.suites import chunk_digest_framing
+
 FULL = 65536
 
 
@@ -203,7 +205,9 @@ def descriptor_size_wrong(p):
 
 
 def product_plus_one(p):
+    # discarded is bumped too (it is product - cases), so the product is the only thing that is wrong
     p["suite"]["product"] += 1
+    p["suite"]["discarded"] += 1
 
 
 def chunk_is(value):
@@ -213,15 +217,43 @@ def chunk_is(value):
     return tamper
 
 
+def _reseal_slim(p):
+    """Recompute the row's slim digests for its (tampered) ``slim_chunks``, so only the list itself is wrong.
+
+    Each is the framing of the per-chunk digests of the listed chunks, read from the chunk file; an index
+    past the end of the file has no digest and contributes none.
+    """
+    cols = [line.split(" ") for line in _lines(p)]
+    listed = [cols[i] for i in p["suite"]["slim_chunks"] if i < len(cols)]
+    p["suite"]["slim_inputs_sha256"] = chunk_digest_framing([bytes.fromhex(c[4]) for c in listed])
+    if "slim_expected_sha256" in p["suite"]:
+        p["suite"]["slim_expected_sha256"] = chunk_digest_framing([bytes.fromhex(c[5]) for c in listed])
+
+
 def slim(value):
     def tamper(p):
         p["suite"]["slim_chunks"] = value
+        _reseal_slim(p)
 
     return tamper
 
 
 def _slim_drop(p, fn):
     p["suite"]["slim_chunks"] = fn(list(p["suite"]["slim_chunks"]))
+    _reseal_slim(p)
+
+
+def _slim_with_extras(n):
+    """The base slim set plus extra chunks (the lowest not already in it) until it has ``n`` entries."""
+
+    def tamper(p):
+        chosen = set(p["suite"]["slim_chunks"])
+        extra = (i for i in range(len(_lines(p))) if i not in chosen)
+        while len(chosen) < n:
+            chosen.add(next(extra))
+        slim(sorted(chosen))(p)
+
+    return tamper
 
 
 def build_rows(kits):
@@ -251,7 +283,7 @@ def build_rows(kits):
         add(f"big-{slug}-chunk", f"the {what} chunk of a 2^24-ordinal suite, enumerated alone", "kit", "big", c,
             ok(FULL, c * FULL), also_sequential=True)
     add("short-predicate-chunk", "a predicate suite has no expected_sha256 and a calls count that is not cases", "kit",
-        "short", 0, ok(65280, 0, 65280))
+        "short", 0, ok(65280, 0, 64770))
     add("negs-signed-chunk", "a signed binder under the warrant-stream-v2 header", "kit", "negs", 0, ok(256, 0))
     add("res-result-binder-chunk", "a binder of type Result<Bool,E>: the result descriptor", "kit", "res", 0, ok(4, 0))
     add("two-bytes-first-chunk", "two bytes_d1 binders: a full first chunk", "kit", "two_bytes", 0, ok(FULL, 0))
@@ -323,9 +355,9 @@ def build_rows(kits):
     ):
         add(f"slim-chunks-{slug}", summary, S, R, 3, {"error": "slim-chunks"}, tamper)
     add("slim-chunks-more-than-32-entries", "a 256-chunk suite with 33 slim chunks", "kit", "big", 0,
-        {"error": "slim-chunks"}, slim([*range(32), 255]))
+        {"error": "slim-chunks"}, _slim_with_extras(33))
     add("slim-chunks-exactly-32-entries-is-valid", "32 slim chunks are allowed", "kit", "big", 0, ok(FULL, 0),
-        slim([*range(31), 255]))
+        _slim_with_extras(32))
 
     # -- corpus: corpus or suite is refused for another reason -----------------------------------------------------
     for slug, summary, tamper in (
