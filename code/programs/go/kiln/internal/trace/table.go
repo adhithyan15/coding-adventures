@@ -268,7 +268,7 @@ func classifyName(name string, line int) *Error {
 // result at all.  Those stay refused.  A call that never resumed is not
 // judged here: exitInsideCall reports it as an unresumed call.
 func filterAnswered(name string, ret result) bool {
-	if !ret.hasVal || ret.unknown || ret.value != -1 {
+	if !ret.hasVal || ret.unknown || ret.value != -1 || !ret.minusOne {
 		return false
 	}
 	if name == "clone3" {

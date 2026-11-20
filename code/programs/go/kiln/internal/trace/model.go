@@ -632,9 +632,33 @@ func analyzeClone(args []string) (flags string, shareFS bool, reason string) {
 	return "", false, reasonCloneFlags
 }
 
+// knownCloneToken is the closed set of names strace prints in a clone's flags=
+// argument: the Linux CLONE_* flags and the signal names an exit signal can be.
+// A token outside it (CLONE_BOGUS) is one we cannot vouch for, so a clone that
+// carries it stays clone-flags even when it failed with the filter's EPERM.
+var knownCloneToken = func() map[string]bool {
+	m := map[string]bool{}
+	for _, n := range []string{
+		"CLONE_VM", "CLONE_FS", "CLONE_FILES", "CLONE_SIGHAND", "CLONE_PIDFD", "CLONE_PTRACE",
+		"CLONE_VFORK", "CLONE_PARENT", "CLONE_THREAD", "CLONE_NEWNS", "CLONE_SYSVSEM",
+		"CLONE_SETTLS", "CLONE_PARENT_SETTID", "CLONE_CHILD_CLEARTID", "CLONE_DETACHED",
+		"CLONE_UNTRACED", "CLONE_CHILD_SETTID", "CLONE_NEWCGROUP", "CLONE_NEWUTS",
+		"CLONE_NEWIPC", "CLONE_NEWUSER", "CLONE_NEWPID", "CLONE_NEWNET", "CLONE_IO",
+		"CLONE_CLEAR_SIGHAND", "CLONE_INTO_CGROUP", "CLONE_NEWTIME",
+		"SIGHUP", "SIGINT", "SIGQUIT", "SIGILL", "SIGTRAP", "SIGABRT", "SIGBUS", "SIGFPE",
+		"SIGKILL", "SIGUSR1", "SIGSEGV", "SIGUSR2", "SIGPIPE", "SIGALRM", "SIGTERM",
+		"SIGSTKFLT", "SIGCHLD", "SIGCONT", "SIGSTOP", "SIGTSTP", "SIGTTIN", "SIGTTOU",
+		"SIGURG", "SIGXCPU", "SIGXFSZ", "SIGVTALRM", "SIGPROF", "SIGWINCH", "SIGIO",
+		"SIGPWR", "SIGSYS",
+	} {
+		m[n] = true
+	}
+	return m
+}()
+
 // cloneOnlyForbidden reports whether the only thing wrong with a clone's flags
-// is a forbidden one (CLONE_UNTRACED or CLONE_NEW*): every token is a name we
-// know.  Only then is a clone that failed with the filter's EPERM tolerated; a
+// is a forbidden one (CLONE_UNTRACED or CLONE_NEW*): every token is in
+// knownCloneToken.  Only then is a clone that failed with the filter's EPERM tolerated; a
 // flag we cannot name stays clone-flags whatever the result.
 func cloneOnlyForbidden(args []string) bool {
 	forbidden := false
@@ -645,7 +669,7 @@ func cloneOnlyForbidden(args []string) bool {
 		}
 		for _, tok := range strings.Split(v, "|") {
 			tok = strings.TrimSpace(tok)
-			if !(strings.HasPrefix(tok, "CLONE_") || strings.HasPrefix(tok, "SIG")) || !isErrnoName(tok) {
+			if !knownCloneToken[tok] {
 				return false
 			}
 			if tok == "CLONE_UNTRACED" || strings.HasPrefix(tok, "CLONE_NEW") {

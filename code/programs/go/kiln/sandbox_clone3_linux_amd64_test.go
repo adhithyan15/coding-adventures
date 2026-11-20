@@ -14,6 +14,7 @@ package main
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -65,19 +66,54 @@ func TestSandboxStraceClone3Enosys(t *testing.T) {
 		t.Errorf("the step's output lacks the ENOSYS: %q (stderr %q)", r.stdout, r.stderr)
 	}
 	// The call must be in the trace, or the parse above proved nothing.
-	raw, err := os.ReadFile(r.trf)
-	if err != nil {
-		t.Fatal(err)
-	}
-	re := regexp.MustCompile(`(?m)clone3\(.*(\) *= -1 ENOSYS|<unfinished \.\.\.>)`)
-	if !re.Match(raw) {
-		t.Fatalf("the trace has no failed clone3 line:\n%s", r.tail(40))
-	}
-	t.Logf("clone3 lines: %v", re.FindAllString(string(raw), 3))
+	requireFailedClone3(t, r)
 	// And it is a failure the parser tolerated, not a refusal it let by.
 	for _, e := range r.tr.Events {
 		if e.Syscall == "clone3" {
 			t.Errorf("a failed clone3 left an event: %+v", e)
 		}
 	}
+}
+
+var (
+	clone3Inline = regexp.MustCompile(`(?m)^\d+ +clone3\(.*\) *= -1 ENOSYS`)
+	clone3Open   = regexp.MustCompile(`(?m)^\d+ +clone3\(.*<unfinished \.\.\.>`)
+	clone3Resume = regexp.MustCompile(`(?m)^\d+ +<\.\.\. clone3 resumed>.*\) *= -1 ENOSYS`)
+)
+
+// requireFailedClone3 fails the test unless the raw trace holds a clone3 that
+// failed with ENOSYS: an inline line, or a split one whose "<unfinished ...>"
+// half is matched by a "<... clone3 resumed>" half carrying the ENOSYS.  A bare
+// unfinished half proves nothing about the filter's answer.
+func requireFailedClone3(t *testing.T, r *stracedRun) {
+	t.Helper()
+	raw, err := os.ReadFile(r.trf)
+	if err != nil {
+		t.Fatal(err)
+	}
+	inline, open, resumed := len(clone3Inline.FindAll(raw, -1)), len(clone3Open.FindAll(raw, -1)), len(clone3Resume.FindAll(raw, -1))
+	if open > 0 && resumed == 0 {
+		t.Fatalf("a split clone3 was opened but no resumed half ends in ENOSYS:\n%s", r.tail(40))
+	}
+	if inline+resumed == 0 {
+		t.Fatalf("the trace has no clone3 that failed with ENOSYS:\n%s", r.tail(40))
+	}
+	t.Logf("clone3 failed with ENOSYS: %d inline, %d split (%d opened)", inline, resumed, open)
+}
+
+// TestSandboxStraceGlibcThreadClone3 runs a real glibc thread creation as the
+// step: python3's threading calls pthread_create, which tries clone3 first, so
+// strace prints the split form the parser must tolerate, and the thread is then
+// made with clone.  python3 is on every runner image (in /usr, a read-only root
+// of the sandbox); where it is not, the test skips locally and FAILS under
+// KILN_REQUIRE_SANDBOX=1, so it cannot pass vacuously on CI.
+func TestSandboxStraceGlibcThreadClone3(t *testing.T) {
+	if _, err := exec.LookPath("python3"); err != nil {
+		skipOrFail(t, "python3 is not installed")
+	}
+	r := runStraced(t, "/usr/bin/python3 -S -E -c 'import threading; t=threading.Thread(target=lambda: None); t.start(); t.join(); print(\"threaded\")'")
+	if !strings.Contains(r.stdout, "threaded") {
+		t.Fatalf("the step did not create its thread: stdout %q stderr %q\n%s", r.stdout, r.stderr, r.tail(30))
+	}
+	requireFailedClone3(t, r)
 }

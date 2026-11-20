@@ -4125,7 +4125,7 @@ the field is still unknown. The classifier now computes the field
 the recorder copies it to the shard record's `writes_complete`. The switch
 stays off until the recorder (stage 4, PR 2b) turns it on, so PR 4 changes
 no merge outcome by itself. Because the record's semantics changed,
-`RecorderVersion` is now `2`: every weak key changes and manifests recorded by
+`RecorderVersion` became `2` here (it is higher now): every weak key changes and manifests recorded by
 the version-1 recorder are never looked up. The read-side reasons that `writes_complete: true` may
 excuse are the other `trace-incomplete` reasons (`exec-unreadable`, a
 read-only `unstable-path`, and so on). **A recipe mismatch is never
@@ -4588,7 +4588,7 @@ is what the code does.
    `tools` of the weak key and `HOME`. A variable whose name contains `:` is
    refused. The `kiln:` entries are keyed but never exported to the process.
    Every origin is `0`.
-9. **`kiln:recorder`** is the integer constant `RecorderVersion` (now `2`;
+9. **`kiln:recorder`** is the integer constant `RecorderVersion` (see `internal/legacy/traced.go` for the current value;
    `1` was the recorder before `writes_complete`, stage 4 PR 4) in
    `internal/legacy/traced.go`, to be bumped by hand with any change to §4 to
    §7. **`kiln:executor-args`** is each flag as one `-name=value` token,

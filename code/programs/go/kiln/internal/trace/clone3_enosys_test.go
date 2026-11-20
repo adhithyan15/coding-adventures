@@ -144,3 +144,23 @@ func TestCloneNamespaceFlagsRefusedByTheFilterAreTolerated(t *testing.T) {
 	// An EPERM for a clone with only harmless flags is not the filter's.
 	mustParse(t, wrap("clone(child_stack=NULL, flags=SIGCHLD)"+eperm))
 }
+
+func TestFiltersAnswerNeedsTheExactDecimalMinusOne(t *testing.T) {
+	// strace prints a failed call's value as "-1".  The same number spelled in
+	// hex or with a leading zero is not what the filter produces, so it is not
+	// tolerated (and both readers must agree on that).
+	for _, v := range []string{"0xffffffffffffffff", "-01", "-001"} {
+		wantReason(t, wrap("mount(0, 0) = "+v+" EPERM (Operation not permitted)"), "refused:mount")
+		wantReason(t, wrap("clone3("+spawnStruct+", 88) = "+v+" ENOSYS (Function not implemented)"), "refused:clone3")
+		wantReason(t, wrap("clone(child_stack=NULL, flags=CLONE_NEWUSER|SIGCHLD) = "+v+" EPERM (Operation not permitted)"), reasonCloneFlags)
+		step := helperRootSetup + helperInitSetup + helperReExec + helperExec
+		wantReasonOpts(t, step+"11  mount(0, 0) = "+v+" EPERM (Operation not permitted)\n"+helperEnd, helperOpts, "refused:mount")
+	}
+}
+
+func TestCloneOnlyForbiddenUsesAClosedFlagSet(t *testing.T) {
+	eperm := " = -1 EPERM (Operation not permitted)"
+	wantReason(t, wrap("clone(child_stack=NULL, flags=CLONE_NEWUSER|CLONE_BOGUS|SIGCHLD)"+eperm), reasonCloneFlags)
+	wantReason(t, wrap("clone(child_stack=NULL, flags=CLONE_NEWUSER|SIGBOGUS)"+eperm), reasonCloneFlags)
+	mustParse(t, wrap("clone(child_stack=NULL, flags=CLONE_NEWUSER|CLONE_VM|CLONE_THREAD|SIGCHLD)"+eperm))
+}

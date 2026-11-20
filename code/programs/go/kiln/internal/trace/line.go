@@ -142,6 +142,11 @@ type result struct {
 	ann     []byte // -y annotation on a returned descriptor
 	hasAnn  bool
 	unknown bool // "= ?"
+	// minusOne says the value was the exact decimal text "-1", as strace prints
+	// a failed call.  The hex spelling of the same number and "-01" are not
+	// what strace prints, so the sandbox filter's answer (filterAnswered)
+	// requires this, not just value == -1.
+	minusOne bool
 	// host is the pid in strace's own PID namespace, from the annotation
 	// `= 2 /* 5030 in strace's PID NS */` that --pidns-translation adds to a
 	// pid returned inside another PID namespace; hasHost says it was printed.
@@ -520,6 +525,7 @@ func parseResult(s string) (result, string) {
 			return r, reasonResult
 		}
 		r.value, r.hasVal = v, true
+		r.minusOne = s[:k] == "-1"
 		s = s[k:]
 		if h, rest, ok := parsePidnsNote(s); ok && v > 0 {
 			r.host, r.hasHost = h, true
