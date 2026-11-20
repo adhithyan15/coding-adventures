@@ -1,0 +1,11 @@
+[package]
+name = "af04c1-ledger-model"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+cdcl-sat = { path = "../../../packages/rust/cdcl-sat" }
+drat-check = { path = "../../../packages/rust/drat-check" }
+
+[workspace]

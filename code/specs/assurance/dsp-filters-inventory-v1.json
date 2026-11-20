@@ -2310,7 +2310,8 @@
       "pbt_path": "code/packages/typescript/test-bootstrap/src/pbt.ts",
       "pbt_blob_oid": "ed9190c3961393d3a75adb54fa3cd3a2b29d521c",
       "feedback": "target-supplied CoverageBitmap semantic feedback; not native instrumentation",
-      "outcome_accounting": "runner records pass/crash; declared timeout/OOM outcomes currently dropped from report; no watchdog is implied"
+      "outcome_accounting": "runner records pass/crash; declared timeout/OOM outcomes currently dropped from report; no watchdog is implied",
+      "current_outcome_accounting": "AF-04c1 current source: triage and mutation ledgers count every returned pass/crash/timeout/OOM; exceptions propagate; no timeout/OOM watchdog or native coverage is implied"
     },
     {
       "lane": "rust",
@@ -2498,6 +2499,41 @@
     "fixture_identities": [
       "biquad.process.impulse16",
       "sosfilt.impulse16.two_sections"
+    ]
+  },
+  "current_source_migrations": {
+    "historical_subject_commit": "cb60dc9820fc069325130193118e75fdba9b96bc",
+    "comparison_base_commit": "c79cf8564c91836c271be3c3846229631006c1f3",
+    "squash_merge_commit": null,
+    "entries": [
+      {
+        "path": "code/packages/typescript/dsp-filters/tests/checked-properties.test.ts",
+        "historical_blob_oid": "814be9be1251ff767859bfca847ad3da27968956",
+        "comparison_base_blob_oid": "814be9be1251ff767859bfca847ad3da27968956",
+        "reviewed_current_blob_oid": "987974f57dfd8f9a4bf841c342babf03916b2127",
+        "reason": "AF-04c1 public DSP campaign ledger assertions"
+      },
+      {
+        "path": "code/packages/typescript/test-bootstrap/src/fuzz.ts",
+        "historical_blob_oid": "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",
+        "comparison_base_blob_oid": "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",
+        "reviewed_current_blob_oid": "ad357c479f730d50702dd0cb5991e1d69a2dfcea",
+        "reason": "AF-04c1 TypeScript fuzz producer"
+      },
+      {
+        "path": "code/packages/typescript/test-bootstrap/tests/fuzz.test.ts",
+        "historical_blob_oid": "63d4b83469ea5d75556078af37de0f05bf0223b2",
+        "comparison_base_blob_oid": "63d4b83469ea5d75556078af37de0f05bf0223b2",
+        "reviewed_current_blob_oid": "1ae38bf583109c6cba312f037a5604e6db07f785",
+        "reason": "AF-04c1 bootstrap fuzz outcome and limit tests"
+      },
+      {
+        "path": "code/scripts/validate_dsp_filter_assurance_inventory.py",
+        "historical_blob_oid": null,
+        "comparison_base_blob_oid": "d209f13418af5fb17b582b7c78989dc5416a84f9",
+        "reviewed_current_blob_oid": "f67c4204076e0b8e7d6ea95dbe6e545e95faadc6",
+        "reason": "AF-04c1 committed-HEAD source-drift checker"
+      }
     ]
   }
 }
