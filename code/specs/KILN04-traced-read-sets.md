@@ -1517,27 +1517,74 @@ concurrency group that queues and never cancels, and a job timeout.
 - *Never uploaded.* The record directory, the traces, the sidecars,
   `records.jsonl` and the strace stderr files: they hold host paths and command
   lines (4.3). Only the sanitised summary leaves the runner.
-- *Limits: coverage.* This workflow records with a fresh `$HOME` and installs Go
-  only. Steps that need Rust, .NET, Haskell, Python, Ruby or node fail at "not
+- *Limits: coverage (`home: fresh`, the default).* This mode records with a
+  fresh `$HOME` and installs Go only. Steps that need Rust, .NET, Haskell, Python, Ruby or node fail at "not
   found" and are recorded as failed steps (`record_failed`,
   `sidecar.root_status_nonzero`). Go is about 298 of 5115 packages and 0.8% of
   build time; Rust alone is about 29%. So a clean census from this workflow is
   NOT evidence for the PR8 gate, and every shard's step summary says so in its
   first line (`coverage: fresh HOME, Go toolchain only; not the PR8 gate`).
-- *Follow-up (not this PR): the PR8 census.* PR8's clean census needs a run with
-  the toolchains installed (setup-python, Ruby and node pinned as in `ci.yml`,
-  and the rest) and the real-home layout: a `home: fresh|runner` input, `runner`
-  using the runner's own `$HOME`. Expect new `prepare` refusals in runner mode (a
-  state root that is not empty, an `ro_roots` entry overlapping the runner's
+- *`home: runner`: the PR8 census.* The `home` input (`fresh`, the default, or
+  `runner`; validated in shell like `shard_count`) selects the layout. `runner`:
+  - installs the toolchains the main build installs, with ci.yml's pins and
+    SHA-pinned actions, before the job start is stamped: Python 3.13.17 (uv
+    0.13.7, fontTools 4.68.0), Node 22.23.5 (npm 11.13.0), Rust 1.100.0 and
+    cargo-tarpaulin 0.37.2, GHC 9.4.8 / cabal 3.10.3.0, .NET SDK 9.0.319, Ruby
+    3.4.12 (bundler 4.0.24), and the apt packages the Rust and Haskell builds
+    need (via `code/scripts/ci/apt-install.sh`). A step verifies each toolchain
+    resolves under a declared tool root of `host-roots.json` and fails the job
+    otherwise;
+  - records with the runner's own `$HOME` (the checkout sits under it, as on a
+    hosted runner) instead of a fresh one. The workflow never removes it; before
+    each shard it empties only the state roots (`~/.cargo/registry`,
+    `~/.cargo/git`), which the toolchain installs and the previous shard's build
+    leave populated and which `prepare` would refuse as `state-preloaded`;
+  - uses a 180-minute start deadline (not 200), because setup now takes up to
+    about 30 minutes: 30 + 180 + 20 + 91 + 25 is about 346 minutes, inside 360;
+  - fails the job on a shard that is not clean (`census_not_clean.py --strict`,
+    below), and on a census that exited 0 but left no summary JSON.
+
+  - requires, per shard and straight after `prepare`, that every installed
+    tool probed ok INSIDE the sandbox: `ci/census_probes_ok.py` reads the sealed
+    `pre/probes.json` (`toolchains`: sorted `{tool, status[, detail]}`, status one
+    of ok, absent, refused, mismatch, timeout; the probes run in the recorder's
+    own sandbox, so they see its PATH, roots and pins) and fails the shard, before
+    the build, unless python3, ruby, go, node, cargo, rustc, dotnet and ghc are
+    all ok (uv, bundle and cabal are reported only). The file is parsed strictly:
+    a missing or malformed file fails. Without it a run in which every non-Go
+    step still failed "not found" inside the sandbox (a PATH or pin mismatch, a
+    root that is a host symlink) would pass `--strict` and the host-side check
+    and be the fresh-HOME census under a PR8 label. The summary line says "not
+    the PR8 gate unless every installed toolchain probed OK" until a shard's probe
+    line says every installed toolchain probed OK;
+  - pins the install locations that the actions would otherwise choose:
+    `GHCUP_INSTALL_BASE_PREFIX=$HOME` (the runner image keeps ghcup in
+    `/usr/local/.ghcup` behind a `~/.ghcup` link, and a symlinked root is refused;
+    haskell-actions/setup@6037f33 only prepends `~/.ghcup/bin`) and
+    `DOTNET_INSTALL_DIR=$HOME/.dotnet` (actions/setup-dotnet@0f4a354 defaults to
+    `/usr/share/dotnet` on Linux when writable, else `~/.dotnet`).
+
+  **A `runner` run that exits 0 is the PR8 gate**, with at least three shards
+  sampled on both images (ubuntu-24.04 and ubuntu-26.04). Installing before the
+  job stamp makes the apt packages under `/usr`, pip fonttools in the toolcache
+  Python, npm@11.13.0 in the Node root and cargo-tarpaulin in `~/.cargo/bin`
+  image or tool content. That is acceptable for a census, but they are inputs no
+  key names: stage-4 PR 3 (`kiln-record.yml`) must decide how to key them, or keep
+  them out of the record job, before it reuses this setup. Not installed, because
+  `host-roots.json` declares no tool root for them: Lua, Perl, Elixir/Erlang,
+  Dart/Flutter, Java/Kotlin, OCaml, Swift, Clang and Qt; their steps fail at
+  "not found" and are recorded as failed steps, not as unclean. Expect new
+  `prepare` refusals in runner mode (an `ro_roots` entry overlapping the runner's
   directories); they are the point of that run.
 - *"Clean" (for PR8).* A shard is clean only when its census exits 0 AND
   `skipped_too_large` is 0 AND `bounds.actions_skipped` is 0 AND the traces were
   not all refused by both readers (`cross_check.accepted` is above 0 when
   `traces` is). The workflow flags a shard that exits 0 but misses any of these
   as "not clean" in its summary (`ci/census_not_clean.py`, which reads the JSON,
-  never the Markdown), and does not fail the job for it; it prints a positive
-  "clean" line otherwise, so a missing line is never read as clean. A workflow
-  that gates PR8 must FAIL on "not clean", not only annotate it.
+  never the Markdown); it prints a positive "clean" line otherwise, so a missing
+  line is never read as clean. With `home: fresh` that only annotates. A workflow
+  that gates PR8 must FAIL on "not clean", so with `home: runner` the workflow
+  passes `--strict` and the checker exits 1 (also for an unreadable summary).
 - *Never partly green.* The job's status is the worst of every shard. A shard
   that was not started (the start deadline: no new shard starts more than 200
   minutes after the job start stamp), a failed

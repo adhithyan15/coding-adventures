@@ -10,6 +10,7 @@
 #![deny(unsafe_code)]
 
 pub mod cli;
+pub mod cost;
 pub mod cpu;
 pub mod enumx;
 pub mod exp;
@@ -22,4 +23,5 @@ pub mod runner;
 pub mod sem;
 pub mod shapes;
 pub mod solve;
+pub mod spot;
 pub mod table;

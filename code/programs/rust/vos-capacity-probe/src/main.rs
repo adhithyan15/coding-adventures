@@ -8,6 +8,7 @@
 //!   vos-capacity-probe decide [--results FILE]
 //!   vos-capacity-probe merge --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
 //!   vos-capacity-probe row --spec JSON --wall SECONDS      (the child process of `run`)
+//!   vos-capacity-probe structure --spec JSON               (the child of `check`'s structural rebuild)
 //! ```
 
 use std::process::ExitCode;

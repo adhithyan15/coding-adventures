@@ -52,18 +52,29 @@ Every row carries the guards of VOS30 section 9.4:
 * **G4** `(experiment, knob, seed)` fixes the DIMACS text bit for bit.
 
 And the limits of section 9.5: one child process per row in its own process group, a conflict cap
-with proof logging, a 120 s wall timeout, a 2 GiB resident-set cap polled every 50 ms, and the
-checker always run under `Limits::default()` (the probe never raises a limit).
+with proof logging, a 120 s wall timeout per obligation (a split or chain, B3, D3 and D4, gets a
+600 s row budget and records it as `wall_s`; VOS-D095), a 2 GiB resident-set cap polled every 50
+ms, and the checker always run under `Limits::default()` (the probe never raises a limit).
+
+Hardening (0.2.0, VOS-D097): the child is launched through `/bin/sh` with the fixed script
+`ulimit -t "$1" || exit 126; shift; exec "$@"` as a CPU backstop (a limit that cannot be set stops the row), every variable part (the limit, the program,
+the row's spec) a separate argv entry, so nothing from a results file reaches shell text; the
+kill checks `/bin/kill`'s status, retries it once, falls back to `Child::kill` and waits at most 5 s; child output
+is capped at 1 MiB; every file read is capped at 64 MiB; every write is atomic (temporary file in
+the same directory, `create_new`, `fsync`, rename; a symlink target is refused); `--jobs` is clamped to 1..=64; and `validate`
+holds every row's `(experiment, mode, knob)` to the plan's closed set, values included. The
+process-group, `sh` and `ulimit` code is unix-only; the Windows BUILD runs `check` in process
+and skips the sampled re-run, saying so.
 
 ## Usage
 
 ```text
 vos-capacity-probe list
 vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] --out results.json
-vos-capacity-probe check code/specs/data/vos30-capacity-results.json
+vos-capacity-probe check [--full] code/specs/data/vos30-capacity-results.json [--jobs N]
 vos-capacity-probe table [--check | --write]
 vos-capacity-probe decide
-vos-capacity-probe merge --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
+vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
 ```
 
 * `run --tier quick` is what BUILD runs: the smallest knob of every experiment, five seeds each,
@@ -71,10 +82,44 @@ vos-capacity-probe merge --base A.json --fresh B.json --experiment E1 [--where f
 * `run --tier full` is the recorded offline run (hours). Its output is committed only after a named
   reviewer has regenerated it on a stated host; `dirty_tree`, `binary_sha256` and the regeneration
   banner are **self-reported**, so that review is a process control.
-* `check` validates every row against the schema and the guards, then **re-runs every quick-tier row**
-  and compares the instance digest, the verdict, the control and the conflict count.
+* `check` validates every row against the schema and the guards (`tier` must be `quick` or `full`
+  and the plan's for the knob; every `(experiment, mode, knob)` in the plan's closed set) and
+  requires the file to hold exactly the rows of the plan: none missing, none extra, none twice, and
+  every group's `seeds` equal to the seeds present (`FULL_PLAN_EXEMPT` is the reviewed list of
+  rows allowed to be missing; it is empty). A file that fails any of that is refused **before
+  anything is re-run**. Otherwise it **re-runs every quick-tier row** and compares the instance
+  digest, the verdict, the control and the conflict count, prints a non-fatal `stale:` line for
+  every recorded tree id (`trees`: the probe and its four solver crates, `git rev-parse
+  HEAD:<path>`) that differs from the working tree, and runs a **seeded spot check**: full-tier
+  non-E rows whose knob group the **plan** classes cheap (`cost::CHEAP`; never the recorded times)
+  are drawn in an order seeded by the SHA-256 of the results file's own bytes, each re-run in a
+  child process under `run`'s limits and under what is left of a fixed 60 s budget (plus 15 s), until
+  the budget is spent; expensive groups are skipped but counted; a child that does not finish is
+  **not verified** and fails the check, as does verifying fewer than 16 rows (or having fewer than
+  16 eligible rows: the floor is a plain constant). A re-run compares every deterministic field
+  exactly (digests, size, entropy, verdict, control, conflict, propagation and proof counters,
+  `cap`, `note`, the metric key set and the non-timing metric values); it compares no times. **A
+  plain `check` re-solves only cheap-class rows**: the expensive ones, including groups
+  `decide` reads, are verified only by `check --full`; `check` prints `decision-critical groups
+  not re-solved by this run: N` (computed from what the run re-solved). It also **rebuilds, without solving, the instance of every full-tier row** it
+  can (decision rows first, under their own 150 s budget: every comparable, non-plan-heavy decision row must be rebuilt or the check fails naming it; then a seeded sample, 45 s budget, in child processes; the five D3
+  groups at T = 256 take about a minute each and are left to `--full`) and compares the instance
+  digest, `ands`, `vars`, `clauses`, `entropy_bits` and `declared_bits`, and requires a recorded
+  `collapsed` or `unsat` row to agree with the rebuilt instance's own collapse verdicts. The sample is
+  deterministic, so a determined editor can grind the file to fall outside it, and an edit of only
+  the timing or solver fields of an expensive row is not caught: this is **not proof**. `check`,
+  `table`, `decide` and `merge` refuse a file that is not in the tool's canonical form (duplicate
+  or unknown keys), and `validate` bounds every number.
+* `check --full` is the release gate: it **refuses** unless every recorded tree id equals the
+  working tree's (a file that records none cannot say which tree it describes), then re-runs
+  every full-tier row, no sampling, each in a child (about two hours), and also requires each
+  recorded solve time, check time and peak RSS to lie within a two-sided 4x band of the re-run
+  and the recorded `green` to equal `green` recomputed from the re-run's measurements (in-process
+  quick rows included), and the decision of the re-run rows to equal the recorded one.
 * `merge` refreshes a subset of the committed rows from a fresh `run` (VOS30 section 9.2): the
-  other rows stay byte-identical, a dirty fresh run or a changed row identity is refused. Use it
+  other rows stay byte-identical, a dirty fresh run or a changed row identity is refused.
+  `merge --add` instead appends fresh rows whose identities are all absent from the base (a plan
+  change that brings new knobs), records `"kind": "add"`, and refuses any overlap. Use `merge` 
   when `check` reports `instance_sha256 differs` on the E1 `vos-sched-fp-bitmap` rows after that
   crate's generated document changed (VOS-D103): commit, `run --tier full --only E1 --out F`,
   `merge --base R --fresh F --experiment E1 --where fixture=vos-sched-fp-bitmap --ignore-outside --out R`, then

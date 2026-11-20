@@ -361,6 +361,38 @@ pub fn segments_for(spec: &RowSpec) -> Result<Vec<Box<dyn Shape>>, String> {
 /// The seconds the control stage may take.
 pub const CONTROL_WALL: Duration = Duration::from_secs(30);
 
+/// The experiments whose row is a split or a chain of obligations (VOS30 section 9.5, VOS-D095).
+pub const CHAIN_EXPERIMENTS: [&str; 3] = ["B3", "D3", "D4"];
+
+/// The row budget of a chain row, seconds (VOS-D095): the 8.3 feasibility total is about ten
+/// minutes, so a chain's whole row gets 600 s while each obligation keeps [`OBLIGATION_WALL`].
+pub const CHAIN_WALL_S: u64 = 600;
+
+/// The wall timeout of one obligation, and of a non-chain row, seconds.
+pub const OBLIGATION_WALL_S: u64 = 120;
+
+/// The row budget of an experiment's rows, seconds: 600 for a chain, 120 for everything else.
+pub fn row_wall_s(exp: &str) -> u64 {
+    if CHAIN_EXPERIMENTS.contains(&exp) {
+        CHAIN_WALL_S
+    } else {
+        OBLIGATION_WALL_S
+    }
+}
+
+/// The `wall_s` field a row of `exp` records: the budget when it is not 120, else `None` (so a
+/// row that did not change keeps its recorded bytes).
+pub fn wall_field(exp: &str) -> Option<u64> {
+    let w = row_wall_s(exp);
+    (w != OBLIGATION_WALL_S).then_some(w)
+}
+
+/// The deadline of one obligation: it ends at the row's deadline or `obligation` after `now`,
+/// whichever is first, so a chain's budget never lets one obligation run longer than its own wall.
+pub fn obligation_deadline(row_deadline: Instant, now: Instant, obligation: Duration) -> Instant {
+    row_deadline.min(now + obligation)
+}
+
 /// Print a stage timing to stderr when `VOS_PROBE_TRACE` is set (a diagnostic for the tool's
 /// author: the file never depends on it).
 fn trace(stage: &str, t0: Instant) {
@@ -378,6 +410,7 @@ fn base_row(spec: &RowSpec) -> Row {
         spec.seeds,
     );
     r.tier = spec.tier.clone();
+    r.wall_s = wall_field(&spec.experiment);
     r
 }
 
@@ -399,6 +432,7 @@ pub fn run_row(spec: &RowSpec, wall: Duration, progress: &mut dyn FnMut(&Row)) -
         other => failed(spec, &format!("unknown experiment {other}")),
     };
     row.tier = spec.tier.clone();
+    row.wall_s = wall_field(&spec.experiment);
     row
 }
 
@@ -407,6 +441,17 @@ fn failed(spec: &RowSpec, why: &str) -> Row {
     r.result = "crashed".into();
     r.note = why.to_string();
     r
+}
+
+/// The note of a G2 entropy collapse.  One function, so the writer, the rebuild and
+/// `results::validate`'s parser cannot drift apart.
+pub fn g2_entropy_note(sensitive: u64, declared: u64) -> String {
+    format!("G2: {sensitive} of {declared} declared bits are sensitive")
+}
+
+/// The note of a G2 AND-count collapse (see [`g2_entropy_note`]).
+pub fn g2_ands_note(ands: u64, full: u64) -> String {
+    format!("G2: {ands} ANDs is under 25% of {full} at divergence 100%")
 }
 
 /// Fold a guard failure into the result word (G1, G2).  Returns the collapsed flag.
@@ -425,19 +470,13 @@ fn apply_guards(
     }
     if ent.below_half() {
         row.result = "collapsed".into();
-        row.note = format!(
-            "G2: {} of {} declared bits are sensitive",
-            ent.sensitive, ent.declared
-        );
+        row.note = g2_entropy_note(ent.sensitive as u64, ent.declared as u64);
         return true;
     }
     if let Some(full) = full_ands {
         if row.ands * 4 < full as u64 {
             row.result = "collapsed".into();
-            row.note = format!(
-                "G2: {} ANDs is under 25% of {} at divergence 100%",
-                row.ands, full
-            );
+            row.note = g2_ands_note(row.ands, full as u64);
             return true;
         }
     }
@@ -591,6 +630,109 @@ fn mono_row(
     row
 }
 
+/// The deterministic structure of a row's instance: everything a row records that depends only on
+/// `(experiment, knob, mode, seed)` and on the instance builders, never on the solver (VOS-028c2
+/// round 2, finding 1(b)).  [`structure_of`] builds the instance exactly as [`run_row`] does and
+/// stops before the solve, so a row too expensive to solve in `check` can still have its digest,
+/// size and entropy verified.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Structure {
+    /// SHA-256 of the DIMACS text (of every segment, for a chain).
+    pub instance_sha256: String,
+    /// AND nodes in the miter cone.
+    pub ands: u64,
+    /// CNF variables.
+    pub vars: u64,
+    /// CNF clauses.
+    pub clauses: u64,
+    /// Sensitive declared bits.
+    pub entropy_bits: u64,
+    /// Declared bits.
+    pub declared_bits: u64,
+    /// The G1 reason the REBUILT instance collapses for, when the instance alone decides it
+    /// (round 3, finding 1): `identical-structure`, `constant-fold`, or `propagation-only` for a
+    /// CNF of at most two clauses.  A `propagation-only` verdict that rests on the solver's
+    /// conflict count (zero conflicts on a larger CNF) is NOT structural and is not here.
+    pub collapse_reason: Option<String>,
+    /// The G2 note the rebuilt instance would carry when it collapses on entropy or on the AND
+    /// count (the exact text `apply_guards` writes), or empty.
+    pub collapse_note: String,
+}
+
+/// Build the instance of a non-enumeration row without solving it.  Mirrors `mono_row` (one
+/// instance) and `chain_row` (every segment, summed); a test pins that the two agree on rows of
+/// every shape.
+pub fn structure_of(spec: &RowSpec) -> Result<Structure, String> {
+    match spec.experiment.as_str() {
+        "A1" | "A2" | "B1" | "B2" | "B4" | "C1" | "C2" | "D1" | "D2" => {
+            let shape = shape_for(spec)?;
+            let inst = shape
+                .build(spec.seed, None)
+                .map_err(|e| format!("build: {e}"))?;
+            let (cnf, _ts) = inst.cnf();
+            let ent = entropy(&inst, spec.seed);
+            let ands = inst.cone_ands() as u64;
+            // The guards of `apply_guards`, in its order, without the solver's conflict count.
+            let mut collapse_reason = None;
+            let mut collapse_note = String::new();
+            if let Some(reason) = inst.structural_collapse_reason(cnf.clauses.len()) {
+                // The one caller of `verify_collapse_reason` (it used to guard nothing): the
+                // reason the rebuild derives must also hold by the allowed-when rules of 4.5.
+                inst.verify_collapse_reason(reason, cnf.clauses.len(), 0)?;
+                collapse_reason = Some(reason.to_string());
+            } else if ent.below_half() {
+                collapse_note = g2_entropy_note(ent.sensitive as u64, ent.declared as u64);
+            } else if let Some(full) = shape.full_divergence_ands(spec.seed) {
+                if ands * 4 < full as u64 {
+                    collapse_note = g2_ands_note(ands, full as u64);
+                }
+            }
+            Ok(Structure {
+                instance_sha256: dimacs_sha(&cnf).1,
+                ands,
+                vars: cnf.num_vars as u64,
+                clauses: cnf.clauses.len() as u64,
+                entropy_bits: ent.sensitive as u64,
+                declared_bits: ent.declared as u64,
+                collapse_reason,
+                collapse_note,
+            })
+        }
+        "B3" | "D3" | "D4" => {
+            let segs = segments_for(spec)?;
+            let mut hash = Sha256Hasher::new();
+            let mut s = Structure::default();
+            for (i, seg) in segs.iter().enumerate() {
+                let inst = seg
+                    .build(spec.seed, None)
+                    .map_err(|e| format!("build segment {i}: {e}"))?;
+                let (cnf, _ts) = inst.cnf();
+                hash.update(format!("c segment {i}\n").as_bytes());
+                hash.update(cdcl_sat::write_dimacs(&cnf).as_bytes());
+                let ands = inst.cone_ands() as u64;
+                s.ands += ands;
+                s.vars += cnf.num_vars as u64;
+                s.clauses += cnf.clauses.len() as u64;
+                if ands > 0 {
+                    let e = entropy(&inst, spec.seed);
+                    s.entropy_bits += e.sensitive as u64;
+                    s.declared_bits += e.declared as u64;
+                }
+            }
+            s.instance_sha256 = hash.hex_digest();
+            // `chain_row`'s two collapses, both functions of the totals: no live step at all, or
+            // fewer than half of the declared bits sensitive.
+            if s.ands == 0 {
+                s.collapse_reason = Some("identical-structure".to_string());
+            } else if s.declared_bits > 0 && s.entropy_bits * 2 < s.declared_bits {
+                s.collapse_note = g2_entropy_note(s.entropy_bits, s.declared_bits);
+            }
+            Ok(s)
+        }
+        other => Err(format!("{other} has no solver instance")),
+    }
+}
+
 /// Totals of a chain row.
 #[derive(Default)]
 struct Chain {
@@ -667,6 +809,11 @@ fn chain_row(
             row.ands = c.ands;
             progress(&row);
         }
+        let ob_deadline = obligation_deadline(
+            deadline,
+            Instant::now(),
+            Duration::from_secs(OBLIGATION_WALL_S),
+        );
         let (v, conflicts, props, ms, drat) = if incremental {
             let mut ts = Tseitin::new();
             for p in &inst.premises {
@@ -675,7 +822,7 @@ fn chain_row(
             let lit = ts.lit(&inst.aig, inst.miter, &mut solver);
             let t0 = Instant::now();
             let p0 = solver.stats().propagations;
-            let (v, conf) = solve_assuming(&mut solver, &[lit], deadline);
+            let (v, conf) = solve_assuming(&mut solver, &[lit], ob_deadline);
             (
                 v,
                 conf,
@@ -687,7 +834,7 @@ fn chain_row(
             let o = solve_cnf(
                 &cnf,
                 &SolveOpts {
-                    deadline,
+                    deadline: ob_deadline,
                     proof: true,
                     conflict_cap: None,
                 },
@@ -770,7 +917,7 @@ fn chain_row(
             row.collapsed_reason = Some("identical-structure".into());
         } else if c.decl > 0 && c.sens * 2 < c.decl {
             row.result = "collapsed".into();
-            row.note = format!("G2: {} of {} declared bits are sensitive", c.sens, c.decl);
+            row.note = g2_entropy_note(c.sens, c.decl);
         }
     }
     if matches!(row.result.as_str(), "unsat" | "collapsed" | "sat") {
