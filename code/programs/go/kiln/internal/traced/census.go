@@ -36,7 +36,8 @@ import (
 // every kind the classifier can feed add up to at most MaxCensusEntries, so the
 // overall bound never decides which kind loses.  The sub-coded kinds
 // (unstable-path:*, exec-unreadable:*: eighteen of them) hold 256 paths each,
-// the seven path kinds 1024: 7*1024 + 18*256 = 11776 <= 16384.
+// the nine path kinds (the eight censusPrefixes plus proc-path) 1024:
+// 9*1024 + 18*256 = 13824 <= 16384.
 const (
 	MaxCensusPerKind = 1024
 	// MaxCensusPerSubKind is the cap of a sub-coded kind.

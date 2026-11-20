@@ -64,6 +64,16 @@ func TestCensusWritesUnknownAndStrictMerge(t *testing.T) {
 	if s.Actions.WritesUnknown != 2 {
 		t.Errorf("writes_unknown %d, want 2", s.Actions.WritesUnknown)
 	}
+	// An action with NO verdict at all (no record.json, no record.failed) has an
+	// unknown write set too: the strict merge would void the shard for it.
+	f = censusDirFix(t)
+	if err := os.Remove(RecordFile(f.p.dir, actA)); err != nil {
+		t.Fatal(err)
+	}
+	_, s, _, _ = runCensus(t, f)
+	if s.Actions.NoVerdict != 1 || s.Actions.WritesUnknown != 1 || !s.Actions.StrictMergeVoidsShard || s.Languages[0].WritesUnknown != 1 {
+		t.Errorf("actions %+v", s.Actions)
+	}
 	// Nothing unknown and no void: the strict merge would not void the shard.
 	f = censusDirFix(t)
 	_, s, _, mdPath = runCensus(t, f)

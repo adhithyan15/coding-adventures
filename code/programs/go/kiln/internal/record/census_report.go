@@ -192,7 +192,7 @@ type ActionCounts struct {
 	// its record says.
 	Gated   int `json:"gated"`
 	Unkeyed int `json:"unkeyed"`
-	// WritesUnknown counts the actions whose write set is unknown: a believed
+	// WritesUnknown counts the actions whose write set is unknown: no believed record (record.failed, or no verdict at all), or a believed
 	// record with writes_complete false, plus record.failed.  A strict merge
 	// voids the run for any of them.
 	WritesUnknown int `json:"writes_unknown"`
@@ -800,7 +800,9 @@ func (r *censusRun) action(hexName string) {
 		a.actions.Unkeyed++
 		la.unkeyed++
 	}
-	if (rec != nil && !rec.WritesComplete) || failed {
+	// No believed record covers record.failed AND an action with no verdict at
+	// all: either way nothing says what it wrote.
+	if rec == nil || !rec.WritesComplete {
 		a.actions.WritesUnknown++
 		la.writesUnknown++
 	}
@@ -1225,6 +1227,7 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 		return size
 	}
 	cc := &a.cross
+	refusalOrigin, refusalLine := "", 0
 	cc.Traces++
 	cc.Bytes += size
 	switch {
@@ -1239,7 +1242,7 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 		if errors.As(perr, &te) && te.Line > 0 {
 			// te.Line is the error's own line: for an unresumed-call that is the
 			// call's START (the unfinished half), not where the input ended.
-			r.noteShape(adir, path, j, size, "refusal:"+parseReasonCode(perr.Error()), te.Line)
+			refusalOrigin, refusalLine = "refusal:"+parseReasonCode(perr.Error()), te.Line
 		}
 	default:
 		cc.Accepted++
@@ -1247,6 +1250,12 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 	if detail.Allowed > 0 {
 		cc.Allowed += detail.Allowed
 		r.noteAllowed(adir, path, j, size, detail)
+	}
+	// The refusal's outline comes AFTER the allowed divergences': when one line
+	// is both, the (trace, line) dedupe must leave it labelled allowed:<row>,
+	// which is the line the default flip needs, not refusal:<code>.
+	if refusalLine > 0 {
+		r.noteShape(adir, path, j, size, refusalOrigin, refusalLine)
 	}
 	return size
 }

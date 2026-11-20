@@ -19,14 +19,15 @@ import (
 // classifier can feed has a per-kind cap, and the caps add up to at most the
 // overall bound, so the overall bound never decides which kind loses.
 func TestCensusKindCapsFitTheOverallBound(t *testing.T) {
-	// host-read's two refinements are noted under the plain "host-read" kind
-	// (noteReason strips them), so only the seven path kinds count.
+	// noteReason files each censusPrefixes entry under its own kind (host-read
+	// and its two refinements included): eight kinds, plus proc-path.
 	distinct := map[string]bool{}
 	for _, p := range censusPrefixes {
 		distinct[strings.TrimSuffix(p, ":")] = true
 	}
-	delete(distinct, "host-read:setup-modified")
-	delete(distinct, "host-read:tool-not-keyed")
+	if len(distinct) != 8 {
+		t.Fatalf("%d censusPrefixes kinds, the cap arithmetic assumes 8", len(distinct))
+	}
 	distinct["trace-incomplete:proc-path"] = true
 	total := 0
 	for k := range distinct {

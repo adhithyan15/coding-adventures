@@ -180,6 +180,23 @@ func TestCensusShapesAreBounded(t *testing.T) {
 	}
 }
 
+// One line that is both an allowed divergence and a refusal keeps the allowed
+// label: the allowed outline is made first, so the (trace, line) dedupe never
+// leaves it under refusal:<code>.
+func TestCensusAllowedShapeWinsOverRefusalOnTheSameLine(t *testing.T) {
+	f := censusDirFix(t)
+	_, s, _, _ := runCensus(t, f, func(o *CensusRunOptions) {
+		o.CrossCheck = func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, trace.CrossCheckDetail) {
+			return nil, &trace.Error{Reason: "unparsable-line", Line: 1}, nil, trace.CrossCheckDetail{
+				Allowed: 1, Rows: map[string]int{"signed pid": 1}, Hits: []trace.AllowedHit{{Row: "signed pid", Line: 1}},
+			}
+		}
+	})
+	if len(s.Shapes) != 1 || s.Shapes[0].Origin != "allowed:signed pid" {
+		t.Errorf("shapes: %+v", s.Shapes)
+	}
+}
+
 // END TO END, hostile: a real trace full of secret-looking text, refused by the
 // real parser and cross-check.  The summary shows a redacted outline and not one
 // byte of the secrets, in JSON or Markdown.

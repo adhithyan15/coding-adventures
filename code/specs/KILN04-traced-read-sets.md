@@ -1063,9 +1063,9 @@ sub-code is a string literal at each site, never a slice of the input.
 `absent-probe`, `open`, `stat`, `lookup` (a link crossed on the way), `exec`,
 `chdir`, `write`, `other`, chosen from the classifier's own state with
 precedence listing, then absent-probe, then the call's kind.
-(3) **Caps and order**: the sub-coded kinds hold 256 paths each, the seven path
+(3) **Caps and order**: the sub-coded kinds hold 256 paths each, the nine path
 kinds 1024, so the caps of every kind the classifier can feed add up to at most
-`MaxCensusEntries` (7*1024 + 18*256 = 11776 <= 16384; tested) and the overall
+`MaxCensusEntries` (9*1024 + 18*256 = 13824 <= 16384; tested) and the overall
 bound never decides which kind loses. The stability pass walks Go maps, so its
 census notes are buffered and given sorted by kind and path: `census.json` is
 deterministic even at a cap (tested). Records are untouched.
@@ -1244,7 +1244,7 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   and before the merge, so it cannot see reads-product or any cross-action rule.
   `gated` and `unkeyed` count the actions whose plan entry has a gate or no weak
   key (overall and per language), `writes_unknown` the actions with a believed
-  record whose `writes_complete` is false plus `record.failed`, and
+  record whose `writes_complete` is false, plus `record.failed` and every action with no verdict at all, and
   `actions.strict_merge_voids_shard` is true when `writes_unknown > 0` or the
   shard is void (the Markdown line "strict merge would void this shard: yes/no").
   The shares
