@@ -122,6 +122,19 @@ impl Instance {
 
     /// Classify a trivially-refuted miter (G1).  `conflicts` is what the solver used.
     pub fn collapse_reason(&self, cnf_clauses: usize, conflicts: u64) -> Option<&'static str> {
+        if let Some(reason) = self.structural_collapse_reason(cnf_clauses) {
+            return Some(reason);
+        }
+        if conflicts == 0 {
+            return Some("propagation-only");
+        }
+        None
+    }
+
+    /// The part of [`Instance::collapse_reason`] that needs no solver: the instance alone (and
+    /// its clause count) decides it.  `check`'s structural rebuild uses it to hold a recorded
+    /// `collapsed` row to what the rebuilt instance says (round 3, finding 1).
+    pub fn structural_collapse_reason(&self, cnf_clauses: usize) -> Option<&'static str> {
         if self.pairs_equal() {
             return Some(if self.code_out.iter().all(|e| e.is_constant()) {
                 "constant-fold"
@@ -129,7 +142,7 @@ impl Instance {
                 "identical-structure"
             });
         }
-        if cnf_clauses <= 2 || conflicts == 0 {
+        if cnf_clauses <= 2 {
             return Some("propagation-only");
         }
         None

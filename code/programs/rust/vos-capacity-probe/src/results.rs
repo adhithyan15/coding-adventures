@@ -18,7 +18,7 @@
 //! that every quick-tier row reproduces from `(experiment, knob, seed)`, bit for bit in its digest
 //! and in its conflict count, and that every row obeys the guards.
 
-use crate::exp::{plan, run_row, RowSpec, Tier, EXPERIMENTS};
+use crate::exp::{knobs, plan, row_wall_s, run_row, RowSpec, Tier, CHAIN_EXPERIMENTS, EXPERIMENTS};
 use crate::row::{Control, Knob, Row};
 use crate::solve::{CONFLICT_SLICE, PROOF_CONFLICT_CAP};
 use coding_adventures_bounded_json::{parse, JsonNumber, JsonValue};
@@ -66,6 +66,11 @@ pub struct Meta {
     pub regeneration: Option<(String, String)>,
     /// The subset refreshes applied to the file by `merge` (VOS30 section 9.2), oldest first.
     pub merges: Vec<Merge>,
+    /// Content-addressed tree ids (`git rev-parse HEAD:<path>`) of the probe and its four solver
+    /// crates when the run was made (VOS-D097), empty for a file recorded before 0.2.0.  A tree
+    /// id, not a revision, because the repository squash-merges and a recorded revision is
+    /// generally not an ancestor of HEAD.
+    pub trees: Vec<(String, String)>,
 }
 
 /// One `merge`: which rows were refreshed, by which run.  The file's `tool`, `host` and
@@ -86,6 +91,37 @@ pub struct Merge {
     pub rows: Vec<String>,
     /// UTC time of the merge.
     pub at: String,
+    /// `Some("add")` for `merge --add` (VOS30 section 9.2), `None` for a refresh (the key is then
+    /// omitted, so an existing entry keeps its bytes).
+    pub kind: Option<String>,
+    /// The fresh run's tree ids (as [`Meta::trees`]); empty for an entry recorded before 0.2.0.
+    pub trees: Vec<(String, String)>,
+}
+
+/// The names a `trees` object must carry, in order: the probe and the four solver crates.
+pub const TREE_NAMES: [&str; 5] = [
+    "vos-capacity-probe",
+    "bit-blaster",
+    "cdcl-sat",
+    "drat-check",
+    "riscv-simulator",
+];
+
+fn trees_json(t: &[(String, String)]) -> JsonValue {
+    JsonValue::Object(t.iter().map(|(k, v)| (k.clone(), string(v))).collect())
+}
+
+fn trees_from(v: &JsonValue) -> Result<Vec<(String, String)>, String> {
+    match v {
+        JsonValue::Object(p) => p
+            .iter()
+            .map(|(k, x)| match x {
+                JsonValue::String(s) => Ok((k.clone(), s.clone())),
+                _ => Err("a tree id is not a string".to_string()),
+            })
+            .collect(),
+        _ => Err("trees is not an object".into()),
+    }
 }
 
 /// The text identity of a row, as used in `merges` and in messages.
@@ -139,17 +175,18 @@ impl Results {
     /// The JSON document.
     pub fn to_json(&self) -> JsonValue {
         let m = &self.meta;
+        let mut tool = vec![
+            ("name", string(&m.name)),
+            ("version", string(&m.version)),
+            ("binary_sha256", string(&m.binary_sha256)),
+            ("dirty_tree", JsonValue::Bool(m.dirty_tree)),
+        ];
+        if !m.trees.is_empty() {
+            tool.push(("trees", trees_json(&m.trees)));
+        }
         let mut top = vec![
             ("schema", int(SCHEMA)),
-            (
-                "tool",
-                obj(vec![
-                    ("name", string(&m.name)),
-                    ("version", string(&m.version)),
-                    ("binary_sha256", string(&m.binary_sha256)),
-                    ("dirty_tree", JsonValue::Bool(m.dirty_tree)),
-                ]),
-            ),
+            ("tool", obj(tool)),
             (
                 "host",
                 obj(vec![
@@ -201,7 +238,7 @@ impl Results {
                     m.merges
                         .iter()
                         .map(|g| {
-                            obj(vec![
+                            let mut e = vec![
                                 ("rev", string(&g.rev)),
                                 ("binary_sha256", string(&g.binary_sha256)),
                                 ("dirty_tree", JsonValue::Bool(g.dirty_tree)),
@@ -212,7 +249,14 @@ impl Results {
                                     JsonValue::Array(g.rows.iter().map(|x| string(x)).collect()),
                                 ),
                                 ("at", string(&g.at)),
-                            ])
+                            ];
+                            if let Some(k) = &g.kind {
+                                e.push(("kind", string(k)));
+                            }
+                            if !g.trees.is_empty() {
+                                e.push(("trees", trees_json(&g.trees)));
+                            }
+                            obj(e)
                         })
                         .collect(),
                 ),
@@ -253,6 +297,24 @@ impl Results {
         }
         out.push_str("}\n");
         out
+    }
+
+    /// Read a results file that must be in the tool's own **canonical form** (round 2, finding
+    /// 4): the text must equal `to_text` of what it parses to.  The JSON parser keeps the first of
+    /// two duplicate keys and the reader ignores unknown ones, so a file can say one thing to the
+    /// reader and another to a human or to a different parser; refusing every file the tool would
+    /// not itself have written closes that (the committed file round-trips exactly).
+    pub fn from_canonical_text(text: &str) -> Result<Results, String> {
+        let res = Results::from_text(text)?;
+        if res.to_text() != text {
+            return Err(
+                "the results file is not in canonical form: it differs from what the tool \
+                 writes for the same content (a duplicate or unknown key, a reordered or \
+                 re-spaced field, or a number written another way)"
+                    .into(),
+            );
+        }
+        Ok(res)
     }
 
     /// Read a results file.
@@ -322,6 +384,12 @@ impl Results {
                         where_: st(sub(g, "where")?)?,
                         rows: strs,
                         at: st(sub(g, "at")?)?,
+                        kind: sub(g, "kind").ok().map(st).transpose()?,
+                        trees: sub(g, "trees")
+                            .ok()
+                            .map(|t| trees_from(&t))
+                            .transpose()?
+                            .unwrap_or_default(),
                     })
                 })
                 .collect::<Result<Vec<_>, String>>()?,
@@ -346,6 +414,11 @@ impl Results {
                 revisions,
                 regeneration,
                 merges,
+                trees: sub(tool, "trees")
+                    .ok()
+                    .map(|t| trees_from(&t))
+                    .transpose()?
+                    .unwrap_or_default(),
             },
             rows,
         })
@@ -416,6 +489,99 @@ pub fn group_key(r: &Row) -> String {
     format!("{}|{}|{}", r.experiment, r.mode, r.knob.key())
 }
 
+/// The largest time a row may record, milliseconds (one hour).  The longest budget is a chain's
+/// 600 s; the solve and check times of a row sum obligations that all ended inside that budget,
+/// so an hour is far beyond anything a run can write and well inside what a hand edit can
+/// (round 2, finding 5: a negative or 1e300 time was accepted).
+pub const MAX_TIME_MS: f64 = 3_600_000.0;
+/// The largest conflict count a row may record (2^40): one obligation is capped at 100k
+/// conflicts to be green and at 120 s of solving to finish; no solver here does 10^12.
+pub const MAX_CONFLICTS: u64 = 1 << 40;
+/// The largest propagation count (2^50): a few hundred million per second for an hour.
+pub const MAX_PROPAGATIONS: u64 = 1 << 50;
+/// The largest AND, variable, clause, entropy or declared-bit count (2^36): the child's resident
+/// set is capped at 2 GiB, so a CNF cannot have more clauses than that, even summed over the 256
+/// obligations of the largest chain.
+pub const MAX_SIZE: u64 = 1 << 36;
+/// The largest DRAT size or checker work figure (2^40): the checker's own work limit is 2^32 per
+/// obligation and a proof is held in memory (2 GiB cap).
+pub const MAX_PROOF: u64 = 1 << 40;
+/// The largest obligation count of a row (2^16); the largest plan has 256.
+pub const MAX_STEPS: u64 = 1 << 16;
+/// The largest peak resident set a row may record, KiB (16 GiB): the cap is 2 GiB and a polled
+/// figure may overshoot it, but not by 8x.
+pub const MAX_RSS_KB: u64 = 16 * 1024 * 1024;
+/// The largest seed count per knob a row may record.
+pub const MAX_SEEDS: u32 = 1000;
+/// The largest value a metric may hold (10^18): counts and rates of enumeration rows.
+pub const MAX_METRIC: f64 = 1e18;
+
+/// The numeric sanity rules of one row (round 2, finding 5): times finite and in `0..=MAX_TIME_MS`,
+/// `check_ms` finite or absent, every counter under its stated bound, and the orderings that hold
+/// by construction (sensitive bits at most declared bits, the worst obligation's conflicts at most
+/// the total, a seed within the seed count).
+pub fn bounds_violations(id: &str, r: &Row) -> Vec<String> {
+    let mut v = Vec::new();
+    let mut time = |name: &str, x: f64| {
+        if !x.is_finite() || !(0.0..=MAX_TIME_MS).contains(&x) {
+            v.push(format!(
+                "{id}: {name} {x} is not a finite time in 0..={MAX_TIME_MS} ms"
+            ));
+        }
+    };
+    time("solve_ms", r.solve_ms);
+    time("worst_step_solve_ms", r.worst_step_solve_ms);
+    if let Some(c) = r.check_ms {
+        time("check_ms", c);
+    }
+    let mut count = |name: &str, x: u64, max: u64| {
+        if x > max {
+            v.push(format!("{id}: {name} {x} is over the bound {max}"));
+        }
+    };
+    count("conflicts", r.conflicts, MAX_CONFLICTS);
+    if let Some(w) = r.worst_step_conflicts {
+        count("worst_step_conflicts", w, MAX_CONFLICTS);
+    }
+    count("propagations", r.propagations, MAX_PROPAGATIONS);
+    for (name, x) in [
+        ("ands", r.ands),
+        ("vars", r.vars),
+        ("clauses", r.clauses),
+        ("entropy_bits", r.entropy_bits),
+        ("declared_bits", r.declared_bits),
+    ] {
+        count(name, x, MAX_SIZE);
+    }
+    count("drat_bytes", r.drat_bytes.unwrap_or(0), MAX_PROOF);
+    count("check_work", r.check_work.unwrap_or(0), MAX_PROOF);
+    count("steps", r.steps, MAX_STEPS);
+    count("peak_rss_kb", r.peak_rss_kb, MAX_RSS_KB);
+    count("seeds", u64::from(r.seeds), u64::from(MAX_SEEDS));
+    if r.entropy_bits > r.declared_bits {
+        v.push(format!(
+            "{id}: entropy_bits {} exceeds declared_bits {}",
+            r.entropy_bits, r.declared_bits
+        ));
+    }
+    if r.worst_step_conflicts.is_some_and(|w| w > r.conflicts) {
+        v.push(format!(
+            "{id}: worst_step_conflicts exceeds the total conflicts"
+        ));
+    }
+    if r.seed == 0 || r.seed > u64::from(r.seeds) {
+        v.push(format!("{id}: seed {} is not in 1..={}", r.seed, r.seeds));
+    }
+    for (k, x) in &r.metrics {
+        if !x.is_finite() || !(0.0..=MAX_METRIC).contains(x) {
+            v.push(format!(
+                "{id}: metric {k} {x} is not finite in 0..={MAX_METRIC}"
+            ));
+        }
+    }
+    v
+}
+
 /// The schema and guard rules of `check`, row by row and across rows.  Returns every violation.
 pub fn validate(res: &Results) -> Vec<String> {
     let mut v = Vec::new();
@@ -426,6 +592,7 @@ pub fn validate(res: &Results) -> Vec<String> {
         v.push("the file has no rows".to_string());
     }
     let ids: std::collections::BTreeSet<String> = res.rows.iter().map(row_text_id).collect();
+    v.extend(trees_violations("tool", &res.meta.trees));
     for (i, g) in res.meta.merges.iter().enumerate() {
         let at = format!("merges[{i}]");
         let hex = |x: &str, n: usize| x.len() == n && x.bytes().all(|b| b.is_ascii_hexdigit());
@@ -446,6 +613,10 @@ pub fn validate(res: &Results) -> Vec<String> {
         if g.rows.is_empty() {
             v.push(format!("{at}: lists no rows"));
         }
+        if g.kind.as_deref().is_some_and(|k| k != "add") {
+            v.push(format!("{at}: kind {:?} is not \"add\"", g.kind));
+        }
+        v.extend(trees_violations(&at, &g.trees));
         let mut once = std::collections::BTreeSet::new();
         for id in &g.rows {
             if !ids.contains(id) {
@@ -456,6 +627,8 @@ pub fn validate(res: &Results) -> Vec<String> {
             }
         }
     }
+    let planned = planned_identities();
+    let tiers = planned_tiers();
     let mut seeds: BTreeMap<String, (std::collections::BTreeSet<u64>, u32)> = BTreeMap::new();
     for r in &res.rows {
         let id = format!(
@@ -471,11 +644,47 @@ pub fn validate(res: &Results) -> Vec<String> {
                 r.result
             ));
         }
+        // VOS-D097 item 4: the knob VALUES are a closed set too.  A hand-edited length of 10^9
+        // is refused here, never run (a row that is re-run is built from its knob).
+        if EXPERIMENTS.contains(&r.experiment.as_str())
+            && !planned.contains(&(r.experiment.clone(), r.mode.clone(), r.knob.key()))
+        {
+            v.push(format!(
+                "{id}: the (mode, knob) is not one of the plan's knobs for {}",
+                r.experiment
+            ));
+        }
+        // VOS-D095: only a chain row records a budget, and it is the chain budget; a chain row
+        // recorded before the budget existed omits the field (120 s).
+        if let Some(w) = r.wall_s {
+            if !CHAIN_EXPERIMENTS.contains(&r.experiment.as_str()) || w != row_wall_s(&r.experiment)
+            {
+                v.push(format!(
+                    "{id}: wall_s {w} is not the row budget of {} (only a chain records one)",
+                    r.experiment
+                ));
+            }
+        }
+        // Finding H1: the tier is one of two closed values AND the one the plan gives this
+        // identity.  `check` trusts `tier` to choose what it re-runs in process.
+        if !["quick", "full"].contains(&r.tier.as_str()) {
+            v.push(format!("{id}: tier {:?} is not quick or full", r.tier));
+        } else if let Some(quick) = tiers.get(&(r.experiment.clone(), r.mode.clone(), r.knob.key()))
+        {
+            let want = if *quick { "quick" } else { "full" };
+            if r.tier != want {
+                v.push(format!(
+                    "{id}: tier is {:?} but the plan gives this knob the {want} tier",
+                    r.tier
+                ));
+            }
+        }
         if r.peak_rss_kb == 0 {
             v.push(format!(
                 "{id}: peak RSS is missing or 0 (an unparsed value is invalid)"
             ));
         }
+        v.extend(bounds_violations(&id, r));
         if r.green != green(r) {
             v.push(format!(
                 "{id}: green is {} but section 8.3 gives {}",
@@ -512,15 +721,7 @@ pub fn validate(res: &Results) -> Vec<String> {
             ));
         }
         if r.result == "collapsed" {
-            if let Some(reason) = &r.collapsed_reason {
-                if !crate::inst::COLLAPSE_REASONS.contains(&reason.as_str()) {
-                    v.push(format!(
-                        "{id}: collapsed_reason {reason:?} is not in the section 4.5 enum"
-                    ));
-                }
-            } else if r.note.is_empty() {
-                v.push(format!("{id}: a collapsed row without a reason or a note"));
-            }
+            v.extend(collapse_violations(&id, r));
         }
         if r.result == "unknown" && r.cap == "none" {
             v.push(format!(
@@ -547,7 +748,7 @@ pub fn validate(res: &Results) -> Vec<String> {
         e.1 = r.seeds;
     }
     for (k, (set, _)) in &seeds {
-        if (set.len() as u32) < MIN_SEEDS {
+        if u32::try_from(set.len()).unwrap_or(u32::MAX) < MIN_SEEDS {
             v.push(format!(
                 "{k}: {} distinct seeds (at least {MIN_SEEDS} per knob)",
                 set.len()
@@ -557,11 +758,61 @@ pub fn validate(res: &Results) -> Vec<String> {
     v
 }
 
+/// Every `(experiment, mode, knob key)` the plan has: the closed set `validate` holds rows to.
+pub fn planned_identities() -> std::collections::BTreeSet<(String, String, String)> {
+    let mut set = std::collections::BTreeSet::new();
+    for exp in EXPERIMENTS {
+        for k in knobs(exp) {
+            set.insert((exp.to_string(), k.mode.to_string(), k.knob.key()));
+        }
+    }
+    set
+}
+
+/// The tier the plan gives each `(experiment, mode, knob key)`: `true` for the quick tier.  A
+/// row's `tier` field must equal this (VOS-D097 review, finding H1): it decides whether the row
+/// is re-run in process by `check` and which sample population it falls in, so a relabelled row
+/// would escape or abuse both.
+pub fn planned_tiers() -> BTreeMap<(String, String, String), bool> {
+    let mut map = BTreeMap::new();
+    for exp in EXPERIMENTS {
+        for k in knobs(exp) {
+            map.insert((exp.to_string(), k.mode.to_string(), k.knob.key()), k.quick);
+        }
+    }
+    map
+}
+
+/// Is a recorded `trees` object well formed: empty (a file from before 0.2.0), or exactly the
+/// names of [`TREE_NAMES`], each a 40- or 64-digit hex object id?
+fn trees_violations(at: &str, t: &[(String, String)]) -> Vec<String> {
+    let mut v = Vec::new();
+    if t.is_empty() {
+        return v;
+    }
+    let names: Vec<&str> = t.iter().map(|(k, _)| k.as_str()).collect();
+    if names != TREE_NAMES {
+        v.push(format!("{at}: trees must name exactly {TREE_NAMES:?}"));
+    }
+    for (k, x) in t {
+        if !((x.len() == 40 || x.len() == 64) && x.bytes().all(|b| b.is_ascii_hexdigit())) {
+            v.push(format!("{at}: tree id of {k} is not a hex object id"));
+        }
+    }
+    v
+}
+
 /// The quick-tier rows of a results file, as the specs to re-run.
 pub fn quick_specs(res: &Results) -> Vec<(RowSpec, &Row)> {
+    // Finding M2: only a row the plan puts in the quick tier is ever re-run in process, so a
+    // hand-edited knob can never reach an instance builder.
+    let tiers = planned_tiers();
     res.rows
         .iter()
-        .filter(|r| r.tier == "quick")
+        .filter(|r| {
+            r.tier == "quick"
+                && tiers.get(&(r.experiment.clone(), r.mode.clone(), r.knob.key())) == Some(&true)
+        })
         .map(|r| {
             (
                 RowSpec {
@@ -578,15 +829,27 @@ pub fn quick_specs(res: &Results) -> Vec<(RowSpec, &Row)> {
         .collect()
 }
 
-/// Compare a re-run row with its recorded one: digests, verdict, control, conflict count.
+/// The metrics whose VALUES are timings or rates, so they differ on every run.  Every other
+/// metric is a count and is compared exactly (round 2, finding 2).  A nondeterministic metric
+/// must still be PRESENT on both sides: the key set is compared symmetrically.
+pub const NONDETERMINISTIC_METRICS: [&str; 2] = ["run_ms", "cases_per_s"];
+
+/// Compare a re-run row with its recorded one: **every deterministic field**, exactly.
+///
+/// Deterministic (compared): experiment, knob, mode, tier, seed, seeds, the three digests, the
+/// instance's size and entropy (`ands`, `vars`, `clauses`, `entropy_bits`, `declared_bits`), the
+/// verdict (`result`, `collapsed_reason`, `control`, `cap`, `pass_default_limits`), the solver's
+/// work (`conflicts`, `propagations`, `worst_step_conflicts`, `steps`), the proof (`drat_bytes`,
+/// `check_work`), whether a `check_ms` is present, the `note` and `wall_s`.  The solver and the
+/// checker are deterministic functions of the instance, so their counters and the proof's length
+/// are as reproducible as its digest (re-running a row twice gives them bit for bit).
+///
+/// Nondeterministic (not compared here): `solve_ms`, `worst_step_solve_ms`, `check_ms`,
+/// `peak_rss_kb` (compared in a two-sided band by [`compare_timing`] under `check --full`), `green`
+/// (a function of those, recomputed by `validate` and, under `--full`, from the re-run), and the
+/// values of the metrics in [`NONDETERMINISTIC_METRICS`].
 pub fn compare_rerun(rec: &Row, now: &Row) -> Vec<String> {
-    let id = format!(
-        "{} {} {} seed {}",
-        rec.experiment,
-        rec.knob.key(),
-        rec.mode,
-        rec.seed
-    );
+    let id = row_text_id(rec);
     let mut v = Vec::new();
     let mut diff = |name: &str, a: String, b: String| {
         if a != b {
@@ -595,81 +858,367 @@ pub fn compare_rerun(rec: &Row, now: &Row) -> Vec<String> {
             ));
         }
     };
+    let d = |x: &dyn std::fmt::Debug| format!("{x:?}");
+    diff("experiment", rec.experiment.clone(), now.experiment.clone());
+    diff("knob", rec.knob.key(), now.knob.key());
+    diff("mode", rec.mode.clone(), now.mode.clone());
+    diff("tier", rec.tier.clone(), now.tier.clone());
+    diff("seed", rec.seed.to_string(), now.seed.to_string());
+    diff("seeds", rec.seeds.to_string(), now.seeds.to_string());
     diff(
         "instance_sha256",
         rec.instance_sha256.clone(),
         now.instance_sha256.clone(),
     );
-    diff(
-        "drat_sha256",
-        format!("{:?}", rec.drat_sha256),
-        format!("{:?}", now.drat_sha256),
-    );
+    diff("drat_sha256", d(&rec.drat_sha256), d(&now.drat_sha256));
     diff(
         "control_instance_sha256",
         rec.control_instance_sha256.clone(),
         now.control_instance_sha256.clone(),
     );
+    diff("ands", rec.ands.to_string(), now.ands.to_string());
+    diff("vars", rec.vars.to_string(), now.vars.to_string());
+    diff("clauses", rec.clauses.to_string(), now.clauses.to_string());
+    diff(
+        "entropy_bits",
+        rec.entropy_bits.to_string(),
+        now.entropy_bits.to_string(),
+    );
+    diff(
+        "declared_bits",
+        rec.declared_bits.to_string(),
+        now.declared_bits.to_string(),
+    );
     diff("result", rec.result.clone(), now.result.clone());
     diff(
         "collapsed_reason",
-        format!("{:?}", rec.collapsed_reason),
-        format!("{:?}", now.collapsed_reason),
+        d(&rec.collapsed_reason),
+        d(&now.collapsed_reason),
     );
-    diff(
-        "control",
-        format!("{:?}", rec.control),
-        format!("{:?}", now.control),
-    );
+    diff("control", d(&rec.control), d(&now.control));
     diff(
         "conflicts",
         rec.conflicts.to_string(),
         now.conflicts.to_string(),
     );
     diff(
+        "propagations",
+        rec.propagations.to_string(),
+        now.propagations.to_string(),
+    );
+    diff(
         "worst_step_conflicts",
-        format!("{:?}", rec.worst_step_conflicts),
-        format!("{:?}", now.worst_step_conflicts),
+        d(&rec.worst_step_conflicts),
+        d(&now.worst_step_conflicts),
     );
     diff("steps", rec.steps.to_string(), now.steps.to_string());
-    diff("ands", rec.ands.to_string(), now.ands.to_string());
+    diff("drat_bytes", d(&rec.drat_bytes), d(&now.drat_bytes));
+    diff(
+        "check_ms present",
+        rec.check_ms.is_some().to_string(),
+        now.check_ms.is_some().to_string(),
+    );
+    diff("check_work", d(&rec.check_work), d(&now.check_work));
     diff(
         "pass_default_limits",
-        format!("{:?}", rec.pass_default_limits),
-        format!("{:?}", now.pass_default_limits),
+        d(&rec.pass_default_limits),
+        d(&now.pass_default_limits),
     );
+    diff("cap", rec.cap.clone(), now.cap.clone());
+    diff("note", rec.note.clone(), now.note.clone());
+    diff("wall_s", d(&rec.wall_s), d(&now.wall_s));
+    // Metrics: a symmetric key set (an extra or a missing key is a finding), exact values except
+    // for the timing metrics.
+    fn keys(r: &Row) -> Vec<&str> {
+        let mut k: Vec<&str> = r.metrics.iter().map(|(n, _)| n.as_str()).collect();
+        k.sort_unstable();
+        k
+    }
+    diff("metric keys", d(&keys(rec)), d(&keys(now)));
     for (name, val) in &rec.metrics {
-        // Counts are deterministic; rates and times are not.
-        if matches!(
-            name.as_str(),
-            "cases"
-                | "discarded"
-                | "binder_product"
-                | "control_binder_product"
-                | "domain_bytes"
-                | "enumerated"
-                | "values_held"
-                | "live_steps"
-                | "segments"
-        ) {
+        if NONDETERMINISTIC_METRICS.contains(&name.as_str()) {
+            continue;
+        }
+        if let Some(other) = now.metric(name) {
             diff(
                 &format!("metric {name}"),
                 val.to_string(),
-                now.metric(name).map(|x| x.to_string()).unwrap_or_default(),
+                other.to_string(),
             );
         }
     }
     v
 }
 
+/// The structural fields of a row that [`crate::exp::structure_of`] reproduces without solving:
+/// the digest of the instance and its size and entropy.  The `structure` child fills ONLY these
+/// (the rest of its row is a blank), so only these are compared.
+pub fn compare_structure(rec: &Row, now: &Row) -> Vec<String> {
+    let id = row_text_id(rec);
+    let mut v = Vec::new();
+    let mut diff = |name: &str, a: String, b: String| {
+        if a != b {
+            v.push(format!(
+                "{id}: {name} differs on structural rebuild (recorded {a}, now {b})"
+            ));
+        }
+    };
+    diff(
+        "instance_sha256",
+        rec.instance_sha256.clone(),
+        now.instance_sha256.clone(),
+    );
+    diff("ands", rec.ands.to_string(), now.ands.to_string());
+    diff("vars", rec.vars.to_string(), now.vars.to_string());
+    diff("clauses", rec.clauses.to_string(), now.clauses.to_string());
+    diff(
+        "entropy_bits",
+        rec.entropy_bits.to_string(),
+        now.entropy_bits.to_string(),
+    );
+    diff(
+        "declared_bits",
+        rec.declared_bits.to_string(),
+        now.declared_bits.to_string(),
+    );
+    v.extend(collapse_agreement(&id, rec, now));
+    v
+}
+
+/// The structural verdicts (round 3, finding 1).  The `structure` child reports `collapsed` (with
+/// the reason or the G2 note the solving path would write) when the rebuilt instance collapses by
+/// itself, and `unknown` ("built") otherwise.  A recorded `unsat` row must not collapse on
+/// rebuild, and a recorded `collapsed` row must say exactly what the rebuild says.  The one
+/// collapse a rebuild cannot see is `propagation-only` on a CNF of more than two clauses (zero
+/// conflicts is the solver's measurement); such a row is refused here and left to a re-solve
+/// (`check --full`, or the spot check when it samples the row), which is the honest statement of
+/// what a rebuild can verify.
+fn collapse_agreement(id: &str, rec: &Row, now: &Row) -> Vec<String> {
+    let mut v = Vec::new();
+    let now_collapsed = now.result == "collapsed";
+    let says = if now_collapsed {
+        now.collapsed_reason
+            .clone()
+            .unwrap_or_else(|| now.note.clone())
+    } else {
+        "no collapse".to_string()
+    };
+    match rec.result.as_str() {
+        "unsat" if now_collapsed => v.push(format!(
+            "{id}: recorded unsat, but the rebuilt instance collapses ({says}): a refuted row \
+             is not a collapse"
+        )),
+        "collapsed" => {
+            let agrees = match (&rec.collapsed_reason, now_collapsed) {
+                (Some(r), true) => now.collapsed_reason.as_ref() == Some(r),
+                (None, true) => {
+                    now.collapsed_reason.is_none() && rec.note.starts_with(now.note.as_str())
+                }
+                (_, false) => false,
+            };
+            if !agrees {
+                v.push(format!(
+                    "{id}: recorded collapsed ({}), but the rebuilt instance gives: {says} \
+                     (a collapse is verified structurally, or by a re-solve in `check --full`)",
+                    rec.collapsed_reason
+                        .clone()
+                        .unwrap_or_else(|| rec.note.clone())
+                ));
+            }
+        }
+        _ => {}
+    }
+    v
+}
+
+/// The ratio band of the timing comparison of `check --full` (finding M1): a recorded time or
+/// resident set must lie within `1/TIMING_BAND ..= TIMING_BAND` times the re-run's, in BOTH
+/// directions, plus an absolute slack.  A one-sided bound ("recorded at most k times the re-run")
+/// is no defence: an editor flips `green` by LOWERING a recorded time, and that passes it.
+pub const TIMING_BAND: f64 = 4.0;
+
+/// Absolute slack of the timing band, in milliseconds, for the solve and check times (so two
+/// sub-millisecond rows with a 10x ratio are not a finding).
+pub const TIMING_SLACK_MS: f64 = 50.0;
+
+/// Absolute slack of the timing band for the peak resident set, in KiB.
+pub const RSS_SLACK_KB: f64 = 8192.0;
+
+/// Is `recorded` within the two-sided band of `rerun`?
+pub fn within_band(recorded: f64, rerun: f64, slack: f64) -> bool {
+    recorded <= rerun * TIMING_BAND + slack && rerun <= recorded * TIMING_BAND + slack
+}
+
+/// What `check --full` additionally compares: the fields that **drive `green`** and that the
+/// CI spot check ignores (finding M1).  The recorded solve, worst-step solve, check time and peak
+/// RSS must each lie within the two-sided [`TIMING_BAND`] of the re-run, and `green` is
+/// RECOMPUTED from the re-run's own measurements and must equal the recorded one.  A row that
+/// ended `killed`, `oom` or `crashed` has no reproducible time and is compared on its result only.
+pub fn compare_timing(rec: &Row, now: &Row) -> Vec<String> {
+    let id = row_text_id(rec);
+    let mut v = Vec::new();
+    if matches!(rec.result.as_str(), "killed" | "oom" | "crashed") {
+        return v;
+    }
+    let mut band = |name: &str, a: f64, b: f64, slack: f64| {
+        if !within_band(a, b, slack) {
+            v.push(format!(
+                "{id}: {name} is outside the {TIMING_BAND}x band of the re-run (recorded {a:.1}, now {b:.1})"
+            ));
+        }
+    };
+    band("solve_ms", rec.solve_ms, now.solve_ms, TIMING_SLACK_MS);
+    band(
+        "worst_step_solve_ms",
+        rec.worst_step_solve_ms,
+        now.worst_step_solve_ms,
+        TIMING_SLACK_MS,
+    );
+    band(
+        "check_ms",
+        rec.check_ms.unwrap_or(0.0),
+        now.check_ms.unwrap_or(0.0),
+        TIMING_SLACK_MS,
+    );
+    band(
+        "peak_rss_kb",
+        rec.peak_rss_kb as f64,
+        now.peak_rss_kb as f64,
+        RSS_SLACK_KB,
+    );
+    let fresh = green(now);
+    if rec.green != fresh {
+        v.push(format!(
+            "{id}: green is {} but the re-run's own measurements give {fresh}",
+            rec.green
+        ));
+    }
+    v
+}
+
+/// What a `collapsed` row must record to be believable, by the rules of VOS30 section 4.5 and the
+/// guards of `exp::apply_guards` / `chain_row` (round 3, finding 1).  A `collapsed` row is
+/// excluded from every statistic, so a red `unsat` row relabelled `collapsed` used to turn a
+/// decision group green on a plain `check`.  Every rule here is a necessary condition of the
+/// genuine writer, checked against every collapsed row of the committed file:
+///
+/// * a reason needs `conflicts == 0 || clauses <= 2` (the two ways `collapse_reason` fires);
+/// * `identical-structure` and `constant-fold` need `ands == 0` (a pair of equal outputs has a
+///   constant miter and an empty cone); a chain row can collapse for no other reason (its
+///   `propagation-only` would need a solve the chain writer never classifies);
+/// * with no reason the note must be one of the two G2 notes, naming numbers the row's own
+///   fields reproduce: `entropy_bits * 2 < declared_bits`, or `ands * 4 < full` for the 25% rule.
+pub fn collapse_violations(id: &str, r: &Row) -> Vec<String> {
+    let mut v = Vec::new();
+    let chain = CHAIN_EXPERIMENTS.contains(&r.experiment.as_str());
+    if let Some(reason) = &r.collapsed_reason {
+        if !crate::inst::COLLAPSE_REASONS.contains(&reason.as_str()) {
+            v.push(format!(
+                "{id}: collapsed_reason {reason:?} is not in the section 4.5 enum"
+            ));
+            return v;
+        }
+        if r.conflicts != 0 && r.clauses > 2 {
+            v.push(format!(
+                "{id}: collapsed_reason {reason:?} needs conflicts == 0 or at most 2 clauses, \
+                 but the row records {} conflicts and {} clauses (a refuted row relabelled \
+                 collapsed)",
+                r.conflicts, r.clauses
+            ));
+        }
+        let pair_reason = matches!(reason.as_str(), "identical-structure" | "constant-fold");
+        if pair_reason && r.ands != 0 {
+            v.push(format!(
+                "{id}: collapsed_reason {reason:?} needs an empty miter cone (ands 0), but the \
+                 row records {} ANDs",
+                r.ands
+            ));
+        }
+        if chain && reason != "identical-structure" {
+            v.push(format!(
+                "{id}: a chain row collapses only as identical-structure, not {reason:?}"
+            ));
+        }
+        return v;
+    }
+    if r.note.is_empty() {
+        v.push(format!("{id}: a collapsed row without a reason or a note"));
+    } else if let Some((sens, decl)) = parse_g2_entropy(&r.note) {
+        if sens != r.entropy_bits || decl != r.declared_bits || sens * 2 >= decl {
+            v.push(format!(
+                "{id}: the G2 entropy note {:?} does not match the row's entropy_bits {} of \
+                 declared_bits {} (or they are not below half)",
+                r.note, r.entropy_bits, r.declared_bits
+            ));
+        }
+    } else if let Some((ands, full)) = parse_g2_ands(&r.note).filter(|_| !chain) {
+        if ands != r.ands || ands * 4 >= full {
+            v.push(format!(
+                "{id}: the G2 note {:?} does not match the row's {} ANDs (or they are not under \
+                 25%)",
+                r.note, r.ands
+            ));
+        }
+    } else {
+        v.push(format!(
+            "{id}: a collapsed row with no reason must carry a G2 note, not {:?}",
+            r.note
+        ));
+    }
+    v
+}
+
+fn two_numbers(note: &str, prefix: &str, mid: &str, suffix: &str) -> Option<(u64, u64)> {
+    let rest = note.strip_prefix(prefix)?;
+    let (a, rest) = rest.split_once(mid)?;
+    let b = rest.strip_suffix(suffix)?;
+    Some((a.parse().ok()?, b.parse().ok()?))
+}
+
+/// `(sensitive, declared)` of a G2 entropy note (the text of `exp::g2_entropy_note`, possibly
+/// followed by another sentence a later step appended).
+fn parse_g2_entropy(note: &str) -> Option<(u64, u64)> {
+    let rest = note.strip_prefix("G2: ")?;
+    let (a, rest) = rest.split_once(" of ")?;
+    let (b, _) = rest.split_once(" declared bits are sensitive")?;
+    Some((a.parse().ok()?, b.parse().ok()?))
+}
+
+/// `(ands, full)` of a G2 AND-count note (the text of `exp::g2_ands_note`).
+fn parse_g2_ands(note: &str) -> Option<(u64, u64)> {
+    two_numbers(
+        note,
+        "G2: ",
+        " ANDs is under 25% of ",
+        " at divergence 100%",
+    )
+}
+
 /// Re-run every quick-tier row in this process and compare (`jobs` threads).
 pub fn rerun(res: &Results, jobs: usize) -> Vec<String> {
+    rerun_collect(res, jobs, false).0
+}
+
+/// [`rerun`], and under `timing` (`check --full`, round 2 finding 2) also the timing-derived
+/// comparison of [`compare_timing`] on these in-process rows: they were never compared on time
+/// before, because only the full-tier children were.  An in-process row measures no resident set,
+/// so it borrows the recorded one (the band on it is vacuous and `green` is recomputed from the
+/// re-run's own times, counters and proof figures plus that recorded set).  Also returns the
+/// re-run rows by [`row_text_id`] (with `green` recomputed), for the decision comparison.
+pub fn rerun_collect(
+    res: &Results,
+    jobs: usize,
+    timing: bool,
+) -> (Vec<String>, BTreeMap<String, Row>) {
     let specs = quick_specs(res);
     if specs.is_empty() {
-        return vec!["the file has no quick-tier row to re-run".to_string()];
+        return (
+            vec!["the file has no quick-tier row to re-run".to_string()],
+            BTreeMap::new(),
+        );
     }
     let next = std::sync::atomic::AtomicUsize::new(0);
-    let out = std::sync::Mutex::new(Vec::new());
+    let out = std::sync::Mutex::new((Vec::new(), BTreeMap::new()));
     std::thread::scope(|s| {
         for _ in 0..jobs.max(1) {
             s.spawn(|| loop {
@@ -677,40 +1226,159 @@ pub fn rerun(res: &Results, jobs: usize) -> Vec<String> {
                 let Some((spec, rec)) = specs.get(i) else {
                     break;
                 };
-                let now = run_row(spec, Duration::from_secs(TIMEOUT_S), &mut |_| {});
-                let diffs = compare_rerun(rec, &now);
-                out.lock().unwrap_or_else(|e| e.into_inner()).extend(diffs);
+                let mut now = run_row(spec, Duration::from_secs(TIMEOUT_S), &mut |_| {});
+                let mut diffs = compare_rerun(rec, &now);
+                now.peak_rss_kb = rec.peak_rss_kb;
+                now.green = green(&now);
+                if timing {
+                    diffs.extend(compare_timing(rec, &now));
+                }
+                let mut g = out.lock().unwrap_or_else(|e| e.into_inner());
+                g.0.extend(diffs);
+                g.1.insert(row_text_id(rec), now);
             });
         }
     });
-    let mut v = out.into_inner().unwrap_or_else(|e| e.into_inner());
+    let (mut v, rows) = out.into_inner().unwrap_or_else(|e| e.into_inner());
     v.sort();
+    (v, rows)
+}
+
+/// The decision's `because` lines with the one nondeterministic figure removed: `describe` prints
+/// the worst solve time, which differs on every run, so a line is cut at that figure.
+fn because_stable(d: &Decision) -> Vec<String> {
+    d.because
+        .iter()
+        .map(|b| match b.find(", worst solve") {
+            Some(at) => b[..at].to_string(),
+            None => b.clone(),
+        })
+        .collect()
+}
+
+/// `check --full` (round 2, finding 3): the decision the RE-RUN rows give must equal the decision
+/// the recorded rows give, in its row number and its (time-stripped) `because` lines.  This covers
+/// every predicate `decide` reads, including those outside `green`, such as row 3's
+/// `solve_ms + check_ms <= 60 000`, which the band on single rows does not bound tightly enough.
+pub fn decision_differences(recorded: &[Row], rerun: &[Row]) -> Vec<String> {
+    let (a, b) = (decide(recorded), decide(rerun));
+    let mut v = Vec::new();
+    if a.row != b.row {
+        v.push(format!(
+            "the decision is row {} on the recorded rows but row {} on the re-run rows",
+            a.row, b.row
+        ));
+    } else if because_stable(&a) != because_stable(&b) {
+        v.push(format!(
+            "the decision's reasons differ: recorded {:?}, re-run {:?}",
+            because_stable(&a),
+            because_stable(&b)
+        ));
+    }
     v
 }
 
-/// Does the committed file contain exactly the quick-tier rows the current plan would run?
-/// (A knob added to the plan without regenerating the file is drift.)
-pub fn quick_plan_covered(res: &Results) -> Vec<String> {
+/// The identity of a row within the plan: experiment, mode, knob key, seed.
+type Identity = (String, String, String, u64);
+
+fn identity_text(i: &Identity) -> String {
+    format!("{} {} {} seed {}", i.0, i.2, i.1, i.3)
+}
+
+/// How a file differs from the rows a plan would run: the one routine behind
+/// [`quick_plan_covered`] and [`full_plan_covered`].  The quick tier is a subset of the file (its
+/// rows are those labelled `quick`); the full plan is all of it.  Each gap is one line, and the
+/// lines for a missing row all have the shape `the plan's {label} row ID is not in the results
+/// file`, which [`full_plan_missing`] relies on.
+fn plan_gaps(res: &Results, tier: Tier, label: &str) -> Vec<String> {
     let mut v = Vec::new();
-    for spec in plan(Tier::Quick, &[], MIN_SEEDS) {
-        let found = res.rows.iter().any(|r| {
-            r.experiment == spec.experiment
-                && r.knob == spec.knob
-                && r.mode == spec.mode
-                && r.seed == spec.seed
-                && r.tier == "quick"
-        });
-        if !found {
+    let expected: std::collections::BTreeSet<Identity> = plan(tier, &[], MIN_SEEDS)
+        .into_iter()
+        .map(|s| (s.experiment, s.mode, s.knob.key(), s.seed))
+        .collect();
+    let mut seen: std::collections::BTreeSet<Identity> = std::collections::BTreeSet::new();
+    let mut groups: BTreeMap<(String, String, String), (std::collections::BTreeSet<u64>, u32)> =
+        BTreeMap::new();
+    for r in &res.rows {
+        if tier == Tier::Quick && r.tier != "quick" {
+            continue;
+        }
+        let id: Identity = (r.experiment.clone(), r.mode.clone(), r.knob.key(), r.seed);
+        if !expected.contains(&id) {
             v.push(format!(
-                "the plan's quick row {} {} {} seed {} is not in the results file",
-                spec.experiment,
-                spec.knob.key(),
-                spec.mode,
-                spec.seed
+                "the {label} plan does not contain the file's row {}",
+                identity_text(&id)
+            ));
+        }
+        if !seen.insert(id.clone()) {
+            v.push(format!(
+                "the file has the {label} row {} more than once",
+                identity_text(&id)
+            ));
+        }
+        let g = groups
+            .entry((id.0.clone(), id.1.clone(), id.2.clone()))
+            .or_default();
+        g.0.insert(r.seed);
+        // The rows of a group must agree on how many seeds it has; the largest is compared.
+        g.1 = g.1.max(r.seeds);
+    }
+    for id in &expected {
+        if !seen.contains(id) {
+            v.push(format!(
+                "the plan's {label} row {} is not in the results file",
+                identity_text(id)
+            ));
+        }
+    }
+    for ((e, m, k), (set, seeds)) in &groups {
+        if u32::try_from(set.len()).unwrap_or(u32::MAX) != *seeds {
+            v.push(format!(
+                "{e} {k} {m}: rows record seeds = {seeds} but {} seeds are present",
+                set.len()
             ));
         }
     }
     v
+}
+
+/// Does the file contain exactly the quick-tier rows the current plan would run: none missing,
+/// none extra, none twice, and every group's `seeds` equal to the seeds present?  (A knob added to
+/// the plan without regenerating the file is drift.)
+pub fn quick_plan_covered(res: &Results) -> Vec<String> {
+    plan_gaps(res, Tier::Quick, "quick")
+}
+
+/// The full-plan rows the file lacks, as identity texts, before any exemption.
+pub fn full_plan_missing(res: &Results) -> Vec<String> {
+    plan_gaps(res, Tier::Full, "full")
+        .into_iter()
+        .filter_map(|g| {
+            g.strip_prefix("the plan's full row ")
+                .and_then(|x| x.strip_suffix(" is not in the results file"))
+                .map(str::to_string)
+        })
+        .collect()
+}
+
+/// The full-plan rows the committed file is *reviewed* not to contain, each with its reason
+/// (VOS30 section 9.12 lists them; a test pins this list to the exact set of missing rows, so a
+/// stale exemption and a newly missing row both fail).
+pub const FULL_PLAN_EXEMPT: &[(&str, &str)] = &[];
+
+/// Does the file contain exactly the rows of the full plan (which includes the quick knobs): no
+/// missing row beyond the reviewed [`FULL_PLAN_EXEMPT`] list, none extra, none twice, and every
+/// group's `seeds` equal to the seeds present?  Finding H2: without it a row, or a whole knob,
+/// can be deleted from the file and `check` still passes.
+pub fn full_plan_covered(res: &Results) -> Vec<String> {
+    plan_gaps(res, Tier::Full, "full")
+        .into_iter()
+        .filter(|g| {
+            !FULL_PLAN_EXEMPT
+                .iter()
+                .any(|(id, _)| *g == format!("the plan's full row {id} is not in the results file"))
+        })
+        .collect()
 }
 
 // ---------------------------------------------------------------------------------------
@@ -800,6 +1468,51 @@ fn b3<'a>(gs: &'a [Group<'a>], len: i64, cut: &str) -> Option<&'a Group<'a>> {
     find(gs, "B3", "certified", |k| {
         k.int("length") == len && (k.f("divergence") - 0.25).abs() < 1e-9 && k.s("cut") == cut
     })
+}
+
+/// Is this row in a group that [`decide`] reads?  (Round 2, finding 1.)  `check` re-solves only
+/// the plan's cheap rows, so which groups the decision rests on, and which of them are never
+/// re-solved by a plain `check`, must be visible: `check` prints that count.  The predicate
+/// mirrors the `find` calls of `decide`, one line per condition; a test pins that every group
+/// whose redness changes the decision on an all-green file satisfies it.
+pub fn decision_read(r: &Row) -> bool {
+    let k = &r.knob;
+    let d25 = (k.f("divergence") - 0.25).abs() < 1e-9;
+    match (r.experiment.as_str(), r.mode.as_str()) {
+        ("A1" | "A2", "monolithic") => matches!(k.int("n"), 32 | 64),
+        ("D3", "split") => k.int("k") == 16 && matches!(k.int("t"), 8 | 64 | 256),
+        ("D2", "monolithic") => k.int("t") == 64 && k.int("k") == 16,
+        ("B3", "certified") => {
+            d25 && matches!(
+                (k.int("length"), k.s("cut")),
+                (200, "every1") | (1000, "every1" | "every8" | "every32")
+            )
+        }
+        ("C1", "monolithic") => k.s("base") == "b" && d25 && matches!(k.int("length"), 200 | 1000),
+        ("B4", "monolithic") => k.s("shape") == "assoc" && (5..=7).contains(&k.int("n")),
+        _ => false,
+    }
+}
+
+/// The groups [`decide`] reads that THIS run did not re-solve: no row of the group is in the
+/// quick tier (re-run in process by every `check`) and none is in `resolved`, the sorted indexes
+/// of the rows the spot check re-ran in full to completion (round 3, finding 3).  The count
+/// follows what the run did, not the plan's classes, so a slow host that sampled fewer rows prints
+/// a larger number.  Their timing-derived and solver-derived fields are verified only by
+/// `check --full`.
+pub fn decision_groups_not_resolved(rows: &[Row], resolved: &[usize]) -> Vec<String> {
+    let mut all = std::collections::BTreeSet::new();
+    let mut solved = std::collections::BTreeSet::new();
+    for (i, r) in rows.iter().enumerate() {
+        if decision_read(r) {
+            let k = group_key(r);
+            if r.tier == "quick" || resolved.binary_search(&i).is_ok() {
+                solved.insert(k.clone());
+            }
+            all.insert(k);
+        }
+    }
+    all.difference(&solved).cloned().collect()
 }
 
 /// Section 8.3 applied to the rows, worst case first; any shape that is missing or not green

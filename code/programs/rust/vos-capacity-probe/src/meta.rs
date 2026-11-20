@@ -4,7 +4,7 @@
 //! tool that writes the file, so nothing technical stops an edited tool from writing another
 //! value.  That is why regeneration by a named person is a process control (VOS30 section 9.6).
 
-use crate::results::Meta;
+use crate::results::{Meta, TREE_NAMES};
 use coding_adventures_sha256::sha256_hex;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -43,6 +43,79 @@ fn run(cmd: &str, args: &[&str], dir: Option<&Path>) -> Option<String> {
 
 /// The crates whose revisions the file records (section 9.6).
 pub const REVISION_CRATES: [&str; 4] = ["bit-blaster", "cdcl-sat", "drat-check", "riscv-simulator"];
+
+/// The repository path of each tree [`TREE_NAMES`] names, in the same order: the probe and its
+/// four solver crates (VOS30 section 9.12).
+pub const TREE_PATHS: [&str; 5] = [
+    "code/programs/rust/vos-capacity-probe",
+    "code/packages/rust/bit-blaster",
+    "code/packages/rust/cdcl-sat",
+    "code/packages/rust/drat-check",
+    "code/packages/rust/riscv-simulator",
+];
+
+/// The content-addressed tree ids (`git rev-parse HEAD:<path>`) of the probe and its four solver
+/// crates; empty if git cannot say for any of them (a file without `trees` is then recorded, and
+/// `check --full` refuses it).
+pub fn head_trees() -> Vec<(String, String)> {
+    let root = repo_root();
+    let mut out = Vec::new();
+    for (name, path) in TREE_NAMES.iter().zip(TREE_PATHS) {
+        match run("git", &["rev-parse", &format!("HEAD:{path}")], Some(&root)) {
+            Some(id) if !id.is_empty() => out.push((name.to_string(), id)),
+            _ => return Vec::new(),
+        }
+    }
+    out
+}
+
+/// The tree ids of the WORKING tree: like [`head_trees`], but a path with an uncommitted change
+/// (or an untracked file) gets `+uncommitted` appended, so it equals no recorded id.
+pub fn working_trees() -> Vec<(String, String)> {
+    let root = repo_root();
+    let mut out = head_trees();
+    for ((_, id), path) in out.iter_mut().zip(TREE_PATHS) {
+        let dirty = run("git", &["status", "--porcelain", "--", path], Some(&root))
+            .is_none_or(|s| !s.is_empty());
+        if dirty {
+            id.push_str("+uncommitted");
+        }
+    }
+    out
+}
+
+/// The `stale:` lines for a recorded `trees` object against the working tree's: one per name
+/// whose recorded id differs.  A recorded object that is empty yields none (nothing is claimed),
+/// and an empty `current` (git cannot say) yields one line.
+pub fn stale_lines(
+    what: &str,
+    recorded: &[(String, String)],
+    current: &[(String, String)],
+) -> Vec<String> {
+    if recorded.is_empty() {
+        return Vec::new();
+    }
+    if current.is_empty() {
+        return vec![format!(
+            "stale: {what}: the working tree's ids cannot be read (is this a git checkout?)"
+        )];
+    }
+    recorded
+        .iter()
+        .filter_map(|(k, rec)| {
+            let now = current
+                .iter()
+                .find(|(n, _)| n == k)
+                .map(|(_, x)| x.as_str());
+            (now != Some(rec.as_str())).then(|| {
+                format!(
+                    "stale: {what}: {k} was recorded at tree {rec} but the working tree is {}",
+                    now.unwrap_or("absent")
+                )
+            })
+        })
+        .collect()
+}
 
 /// Gather the run metadata.
 pub fn gather(exe: &Path) -> Meta {
@@ -87,6 +160,7 @@ pub fn gather(exe: &Path) -> Meta {
         revisions,
         regeneration: None,
         merges: Vec::new(),
+        trees: head_trees(),
     }
 }
 
