@@ -89,3 +89,13 @@ S11c-1 opens it.
 - `lowering_dump.py`: the unreachable fallback branches are removed, the `types` comment is corrected (keys sorted, not declaration
   order); `ir_eval` caches the record names once.
 - `tests/test_conformance.py::test_type_levels` pinned `List` as `ir.data`, which S11a no longer counts (a list is refused whole).
+
+### Re-review fixes (S11a)
+
+- **`Ok(e)`'s expected type is a hint only (R51)**, as for `Some` and in the checker: the payload-flow check inside `Ok` is gone and
+  the position (model body, argument, `==` by common type, `if`) decides. `sim-discrete-arcade-logic.warrant` (5 suites, all
+  `ir.core`) now lowers; it was the one spec of the 54 that `check --spec` refused, and no other spec changed.
+- **Reserved names apply to every declared module name (R58)**: a model, op, error type or alias named like a built-in is a `type`
+  error too. The set is the checker's exactly (`V0_BUILTINS`, `V1_TYPES`, `V1_FUNCTIONS`: `_DECLARED_RESERVED_V1`); the bind rule
+  keeps the wider `_RESERVED_V1`, which also holds `take drop imin imax slice to_list to_bytes replicate fold map all any count range`
+  that the checker lets a document declare. `test_controls_v2.py` no longer names an op `fixed` or `bit`.

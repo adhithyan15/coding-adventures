@@ -330,7 +330,7 @@
     },
     {
       "generator_code": "",
-      "message": "a type or constructor is named like a reserved built-in",
+      "message": "a declared name is a reserved built-in",
       "name": "a-constructor-named-like-a-built-in",
       "oracle_code": "type",
       "oracle_level": "",
@@ -338,7 +338,7 @@
     },
     {
       "generator_code": "",
-      "message": "a type or constructor is named like a reserved built-in",
+      "message": "a declared name is a reserved built-in",
       "name": "a-record-named-like-a-built-in",
       "oracle_code": "type",
       "oracle_level": "",

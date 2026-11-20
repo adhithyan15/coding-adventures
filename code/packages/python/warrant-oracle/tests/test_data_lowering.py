@@ -929,7 +929,7 @@ def test_the_scan_finds_every_kind_of_reserved_construct_after_a_type_error():
 
 
 def test_a_user_declared_name_is_never_mistaken_for_a_reserved_built_in():
-    # a model called `count` or `slice` is the user's, in the scan and in the lowering alike
+    # a model called `count` or `slice` is the user's (the checker reserves neither), in the scan and in the lowering alike
     spec = lower(
         PRELUDE
         + "  model count(a: U8) -> U8 = a\n  model slice(a: U8) -> U8 = a\n"
@@ -993,7 +993,7 @@ def test_a_unit_before_a_refused_declaration_has_no_spurious_type_error_r57():
     assert err.code == "type"
 
 
-@pytest.mark.parametrize("name", ["Some", "None", "Ok", "Err", "Int", "len", "take", "rotl", "unwrap_or", "U16"])
+@pytest.mark.parametrize("name", ["Some", "None", "Ok", "Err", "Int", "len", "rotl", "unwrap_or", "U16"])
 def test_a_reserved_built_in_is_refused_as_a_declared_type_or_constructor_r58(name):
     for decl in (
         f"  variant W = {name} | Other\n",
@@ -1029,3 +1029,41 @@ def test_the_dump_raises_a_claims_own_lowering_refusal():
     with pytest.raises(OracleError) as err:
         view(text.encode())
     assert err.value.code == "generation" and "W0701" in err.value.message
+
+
+def test_every_declared_module_name_is_checked_against_the_reserved_built_ins_r58():
+    head = "warrant t v1\n"
+    for decl in (
+        "  model len(a: U8) -> U8 = a\n",
+        "  model rotl(a: U8) -> U8 = a\n",
+        "  op Some(a: U8) -> U8\n",
+        "  op rem(a: U8) -> U8\n",
+        "  error rotl = A | B\n",
+        "  error Int = A | B\n",
+        "  model Word = Bytes\n  model U16 = Bytes\n",
+        "  model U16 = Bytes\n",
+    ):
+        with pytest.raises(OracleError) as err:
+            lower(head + decl)
+        assert err.value.code == "type" and "reserved built-in" in err.value.message, decl
+    # the checker reserves exactly V0_BUILTINS, V1_TYPES and V1_FUNCTIONS: `take`, `count`, `slice` are free names
+    ok = lower(head + "  variant W = take | Other\n  model count(a: U8) -> U8 = a\n  op slice(a: U8) -> U8\n")
+    assert "take" in ok.ctors
+
+
+def test_ok_takes_its_expected_type_as_a_hint_only_like_some_r51():
+    # the position decides: a model body is checked against its declared type ...
+    assert ir_of("Ok(n)", "n: Nat", "Result<Int,E>") == ["ok", ["var", "n"]]
+    assert refused("Ok(n)", "n: Int", "Result<Nat,E>").code == "type"
+    assert refused('Ok(b"6162")', "u: Bool", "Result<Bytes<3>,E>").code == "type"
+    # ... and an equality in a claim decides by common type (the sim-discrete-arcade-logic shape): the model
+    # returns Int, the op Result<Nat,E>: Ok(Int) and Result<Nat,E> unify to Result<Int,E>
+    doc = (
+        PRELUDE
+        + "  op g(v: Nat) -> Result<Nat,E>\n  model h(v: Nat) -> Nat = v\n"
+        + "  claim c:\n    forall v: Nat. g(v) == (if v <= 9 then Ok(h(v)) else Err(E.A))\n"
+    )
+    suite = lower(doc).suites[0]
+    assert suite.unsupported is None and suite.body[0] == "eq"
+    wide = doc.replace("model h(v: Nat) -> Nat = v", "model h(v: Nat) -> Int = v")
+    assert lower(wide).suites[0].unsupported is None  # Ok(Int) vs Result<Nat,E>: the claim lowers, as in the spec

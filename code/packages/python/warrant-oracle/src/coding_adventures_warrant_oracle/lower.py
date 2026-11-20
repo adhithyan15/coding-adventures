@@ -404,25 +404,31 @@ def _check_limits(doc: A.Document) -> None:
                 raise OracleError("limit", "a constructor has at most 8 fields")
 
 
+#: The names a v1 document may **not declare** (the checker's ``is_reserved_builtin``: ``V0_BUILTINS``,
+#: ``V1_TYPES`` and ``V1_FUNCTIONS``, W0201).  :data:`_RESERVED_V1` is wider: it also holds the lowerer's own level
+#: names (``slice``, ``count``, ``fold`` ...), ``take``/``drop`` and ``imin``/``imax``, which the checker lets a
+#: document declare, so the declaration rule drops them to refuse exactly what the checker refuses (a bind keeps the
+#: wider set, CV2-F8).
+_DECLARED_RESERVED_V1 = _RESERVED_V1 - _LEVEL_LIST - _LEVEL_SEQ - frozenset(["take", "drop", "imin", "imax"])
+
+
 def _declare(spec: Spec) -> None:
     """First pass: names, uniqueness, type declarations and signatures (no bodies yet)."""
     seen: set[str] = set()
-    reserved = _RESERVED_V1 if spec.version == "v1" else _RESERVED_V0
+    reserved = _DECLARED_RESERVED_V1 if spec.version == "v1" else _RESERVED_V0
 
     def claim_name(name: str) -> None:
+        """Claim a module name: not a reserved built-in (the checker's ``W0201``), not declared before.
+
+        Every declared module name is checked (a model, an op, an error type, an alias, a record, a variant, a
+        constructor; VER04r 2.2, 16.16 R58), version scoped like the bind names (:meth:`_Lowerer._check_binds`):
+        a v0 document may name a model ``take``, which only a v1 document reserves.
+        """
+        if name in reserved:
+            raise OracleError("type", "a declared name is a reserved built-in")
         if name in seen:
             raise OracleError("type", "a name is declared twice")
         seen.add(name)
-
-    def claim_type_name(name: str) -> None:
-        """A record, a variant or a constructor may not be named like a built-in (the checker's ``W0201``).
-
-        Version scoped like the bind names (:meth:`_Lowerer._check_binds`): a v0 document may name a
-        constructor ``take``, which only a v1 document reserves.
-        """
-        if name in reserved:
-            raise OracleError("type", "a type or constructor is named like a reserved built-in")
-        claim_name(name)
 
     test_names: set[str] = set()
     for d in spec.doc.decls:
@@ -432,14 +438,14 @@ def _declare(spec: Spec) -> None:
                 raise OracleError("type", "duplicate error case")
             spec.errors[d.name] = d.cases
         elif isinstance(d, A.RecordDecl):
-            claim_type_name(d.name)
+            claim_name(d.name)
             spec.records[d.name] = d.fields  # resolved below, once every name is known
             spec.ctors[d.name] = (d.name, 0)
         elif isinstance(d, A.VariantDecl):
-            claim_type_name(d.name)
+            claim_name(d.name)
             spec.variants[d.name] = d.ctors
             for index, (ctor, _fields) in enumerate(d.ctors):
-                claim_type_name(ctor)  # constructors share the one namespace (VER04j 4.2)
+                claim_name(ctor)  # constructors share the one namespace (VER04j 4.2)
                 spec.ctors[ctor] = (d.name, index)
         elif isinstance(d, A.AliasDecl):
             claim_name(d.name)
@@ -1594,8 +1600,9 @@ class _Lowerer:
             if expected is None or expected.head != "Result":
                 raise self.err("Ok needs a Result context")
             ir, ty = self.expr(e.args[0], expected.args[0])
-            if not _assignable(ty, expected.args[0]):
-                raise self.err("an Ok payload does not have the Result's value type")
+            # The expected payload type is only a hint, as for ``Some`` and in the checker (``checker.rs``
+            # types ``Ok(e)`` as ``Result<type(e),E>`` without comparing, R51): the position the node sits in
+            # (a model body, an argument, an ``==``, an ``if``) decides whether it flows.
             return ["ok", ir], A.Ty("Result", (ty, expected.args[1]))
         if name == "Err":
             self.arity(e, 1)

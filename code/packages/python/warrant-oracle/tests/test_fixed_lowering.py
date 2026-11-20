@@ -337,10 +337,13 @@ def test_a_built_in_in_a_v0_document_keeps_its_old_refusal():
     assert m.ir is None and m.unsupported.level == "ir.fixed"
 
 
-def test_a_user_model_may_shadow_a_built_in_name():
-    spec = lower("warrant p v1\n  model rem(a: Nat) -> Nat = a\n  model m(a: Nat) -> Nat = rem(a)\n")
-    assert spec.models["m"].unsupported is None
-    assert spec.models["m"].ir == ["model_call", "rem", [["var", "a"]]]
+def test_a_user_model_may_not_be_named_like_a_built_in_but_may_be_named_like_a_lowerer_only_name():
+    # `rem` is a v1 built-in of the checker (W0201): a declaration of it is refused (R58); `imin` is not one
+    with pytest.raises(OracleError) as err:
+        lower("warrant p v1\n  model rem(a: Nat) -> Nat = a\n")
+    assert err.value.code == "type"
+    spec = lower("warrant p v1\n  model imin2(a: Nat) -> Nat = a\n  model m(a: Nat) -> Nat = imin2(a)\n")
+    assert spec.models["m"].ir == ["model_call", "imin2", [["var", "a"]]]
 
 
 # -- Option<T>: the intermediate use is ir.fixed, every other Option is ir.data (R29) -----------
