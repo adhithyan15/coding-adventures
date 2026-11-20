@@ -52,6 +52,10 @@
 - Decode an exact authenticated ordered main-handshake server `Certificate`,
   require its empty context and nonempty entry list, and validate every exact
   entry extension vector against retained placement and final-offer policy.
+- Bind the exact first authenticated server `Certificate` entry to one
+  repository-decoded X.509 certificate only when their complete retained DER
+  bytes match, while retaining both complete proofs without claiming path,
+  hostname, trust, revocation, or signature validation.
 - Decode an exact authenticated ordered server `CertificateVerify`, retain its
   pre-message transcript snapshot, require its scheme in the exact bounded
   final ClientHello offer, and authorize that scheme through caller-owned

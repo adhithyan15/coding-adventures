@@ -56,6 +56,7 @@ use tls13_traffic_key_material::{
     TrafficKeyMaterialStorage,
 };
 use tls13_transcript::{SelectedTls13Transcript, TranscriptError, TranscriptHash};
+use x509_certificate::X509Certificate;
 
 /// Sender whose retained handshake traffic secret supplies one key and IV.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -2050,6 +2051,112 @@ impl fmt::Debug for BoundRetryServerCertificate<'_, '_, '_> {
             .field("certificate", &"[REDACTED]")
             .finish()
     }
+}
+
+/// Stable payload-free failures while binding an authenticated retry server
+/// certificate entry to one repository-decoded X.509 certificate.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RetryServerCertificateLeafBindingError {
+    /// The decoded certificate does not retain the exact first entry bytes.
+    LeafCertificateMismatch,
+}
+
+impl fmt::Display for RetryServerCertificateLeafBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("TLS 1.3 retry server Certificate leaf and decoded X.509 certificate differ")
+    }
+}
+
+impl std::error::Error for RetryServerCertificateLeafBindingError {}
+
+/// Exact authenticated retry server-certificate proof bound to its decoded leaf.
+///
+/// This proof intentionally derives neither `Copy` nor `Clone`. It retains the
+/// complete ordered server-certificate proof beside the exact repository-owned
+/// X.509 decode whose complete DER bytes equal the first certificate entry.
+pub struct BoundRetryServerCertificateLeaf<
+    'binding,
+    'pending,
+    'message,
+    'retry_evidence,
+    'certificate,
+    'encoded,
+> {
+    server_certificate: &'binding BoundRetryServerCertificate<'pending, 'message, 'retry_evidence>,
+    leaf_certificate: &'certificate X509Certificate<'encoded>,
+}
+
+impl<'binding, 'pending, 'message, 'retry_evidence, 'certificate, 'encoded>
+    BoundRetryServerCertificateLeaf<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'certificate,
+        'encoded,
+    >
+{
+    /// Borrow the complete authenticated ordered server-certificate proof.
+    #[must_use]
+    pub const fn server_certificate(
+        &self,
+    ) -> &'binding BoundRetryServerCertificate<'pending, 'message, 'retry_evidence> {
+        self.server_certificate
+    }
+
+    /// Borrow the exact repository-decoded leaf certificate.
+    #[must_use]
+    pub const fn leaf_certificate(&self) -> &'certificate X509Certificate<'encoded> {
+        self.leaf_certificate
+    }
+}
+
+impl fmt::Debug for BoundRetryServerCertificateLeaf<'_, '_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryServerCertificateLeaf")
+            .field("server_certificate", &"[RETAINED]")
+            .field("leaf_certificate", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Bind the exact first authenticated retry Certificate entry to one exact
+/// repository-decoded X.509 certificate.
+pub fn bind_retry_server_certificate_leaf<
+    'binding,
+    'pending,
+    'message,
+    'retry_evidence,
+    'certificate,
+    'encoded,
+>(
+    server_certificate: &'binding BoundRetryServerCertificate<'pending, 'message, 'retry_evidence>,
+    leaf_certificate: &'certificate X509Certificate<'encoded>,
+) -> Result<
+    BoundRetryServerCertificateLeaf<
+        'binding,
+        'pending,
+        'message,
+        'retry_evidence,
+        'certificate,
+        'encoded,
+    >,
+    RetryServerCertificateLeafBindingError,
+> {
+    let first_entry = server_certificate
+        .certificate()
+        .entries()
+        .next()
+        .ok_or(RetryServerCertificateLeafBindingError::LeafCertificateMismatch)?;
+    if first_entry.certificate_data() != leaf_certificate.encoded() {
+        return Err(RetryServerCertificateLeafBindingError::LeafCertificateMismatch);
+    }
+    Ok(BoundRetryServerCertificateLeaf {
+        server_certificate,
+        leaf_certificate,
+    })
 }
 
 /// Stable payload-free failures for exact retry server `CertificateVerify` validation.

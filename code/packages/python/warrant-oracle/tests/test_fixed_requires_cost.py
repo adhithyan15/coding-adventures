@@ -180,7 +180,7 @@ def test_a_claim_calling_an_unlowerable_model_inherits_its_level():
         "warrant t v1\n  op f(a: U8) -> U8\n  model g(a: U8) -> Bool = [a] == [a]\n"
         "  claim c:\n    forall a: U8. g(a) == (f(a) == a)\n"
     )
-    assert spec.suites[0].unsupported.level == "ir.data"
+    assert spec.suites[0].unsupported.level == "ir.list"  # the reserved level (S11a)
 
 
 # -- the typed compiler: cost ---------------------------------------------------------------
@@ -411,7 +411,7 @@ def test_lowerer_and_typed_compiler_agree_on_every_lowered_unit_of_the_adopters(
     Appendix A.1: every model and claim the lowerer accepted type-checks in the compiler, and
     the compiler's result type is assignable to the declared one."""
     spec = lower(adopter_bytes(name) if name != "hash-functions" else _hash_functions())
-    prog = build_program(spec, analyze=True, max_cost=65_536)
+    prog = build_program(spec, analyze=True, analyze_data=True, max_cost=65_536)
     checked = 0
     for n, m in spec.models.items():
         if m.ir is None:
@@ -438,12 +438,12 @@ def test_remaining_ir_fixed_refusals_of_the_typed_compiler():
     with pytest.raises(OracleError) as err:  # div of two Bools: neither fixed nor Int/Nat
         compiled(["unwrap_or", ["div", ["lit", True], ["lit", True]], lit("Int", 0)])
     assert err.value.code == "ir"
-    with pytest.raises(OracleError) as err:  # at on a list is ir.data
+    with pytest.raises(OracleError) as err:  # a list is the reserved ir.list (R27)
         compiled(
             ["unwrap_or", ["at", V("xs"), lit("Nat", 0)], lit("U8", 0)],
             {"xs": A.Ty("List", (U8,))},
         )
-    assert err.value.code == "level" and err.value.level == "ir.data"
+    assert err.value.code == "level" and err.value.level == "ir.list"
 
 
 def test_an_op_refinement_must_be_bool_and_a_type_error_in_it_is_not_swallowed():

@@ -1,11 +1,11 @@
 """The shape of an IR tree: which parts of a node are sub-expressions (VER04r Appendix A, A.1).
 
 Almost every IR node is ``[tag, operand, operand, ..]`` and its sub-expressions are its list
-operands.  Four shapes are not, and a walker that treats them as if they were would **silently
+operands.  Five shapes are not, and a walker that treats them as if they were would **silently
 drop sub-expressions** (a subject call inside a tuple literal would not be counted):
 
-``["subject_op", name, [args..]]`` and ``["model_call", name, [args..]]``
-    the arguments are one list in position 2;
+``["subject_op", name, [args..]]``, ``["model_call", name, [args..]]`` and ``["ctor", Name, [args..]]``
+    the arguments are one list in position 2 (``ctor`` is the ``ir.data`` constructor, Appendix A.2);
 ``["tuple", [e1, .., en]]`` (``ir.tuple``)
     the operands are one list in position 1, so ``node[1]`` is a *list of nodes*, not a node;
 ``["match", scrutinee, [[pattern, arm], ..]]`` (``ir.tuple``, ``match`` on a ``Result``)
@@ -23,7 +23,7 @@ from __future__ import annotations
 from .errors import OracleError
 
 #: Nodes with no sub-expression.  ``max_value``/``min_value`` carry only a type name.
-_LEAVES = frozenset(["lit", "var", "err", "max_value", "min_value"])
+_LEAVES = frozenset(["lit", "var", "err", "max_value", "min_value", "none"])
 
 
 def is_node(value: object) -> bool:
@@ -48,7 +48,7 @@ def children(node: list) -> list:
     tag = node[0]
     if tag in _LEAVES:
         return []
-    if tag in ("subject_op", "model_call"):
+    if tag in ("subject_op", "model_call", "ctor"):
         return list(node[2])
     if tag == "tuple":
         return list(node[1])
@@ -81,7 +81,7 @@ def free_vars(ir: object) -> set[str]:
 
 
 def pattern_binds(pattern: object) -> list[str]:
-    """The names a pattern binds, in source order (``bind`` nodes, looking inside ``ok``/``tuple``)."""
+    """The names a pattern binds, in source order (``bind`` nodes, looking inside ``ok``/``tuple``/``some``/``ctor``)."""
     out: list[str] = []
     stack = [pattern]
     while stack:
@@ -90,8 +90,10 @@ def pattern_binds(pattern: object) -> list[str]:
             continue
         if p[0] == "bind" and len(p) == 2 and isinstance(p[1], str):
             out.append(p[1])
-        elif p[0] == "ok" and len(p) == 2:
+        elif p[0] in ("ok", "some") and len(p) == 2:
             stack.append(p[1])
         elif p[0] == "tuple" and len(p) == 2 and isinstance(p[1], list):
             stack.extend(reversed(p[1]))
+        elif p[0] == "ctor" and len(p) == 3 and isinstance(p[2], list):
+            stack.extend(reversed(p[2]))
     return out
