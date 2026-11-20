@@ -12,7 +12,7 @@ use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk, HkdfPrkImportError};
 use core::cell::Cell;
 use core::fmt;
 use tls13_certificate_message::{
-    decode_tls13_certificate_message, Tls13CertificateMessage, Tls13CertificateMessageError,
+    decode_tls13_certificate_message, Tls13CertificateMessage, Tls13CertificateMessageErrorKind,
     Tls13CertificateMessageLimits,
 };
 use tls13_certificate_request_message::{
@@ -1678,7 +1678,7 @@ impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'r
             return Err(RetryServerCertificateValidationError::WrongFlightState);
         }
         let certificate = decode_tls13_certificate_message(self.message.body(), limits)
-            .map_err(RetryServerCertificateValidationError::Structure)?;
+            .map_err(|error| RetryServerCertificateValidationError::Structure(error.kind()))?;
         if !certificate.request_context().is_empty() {
             return Err(RetryServerCertificateValidationError::NonEmptyContext);
         }
@@ -1921,7 +1921,7 @@ pub enum RetryServerCertificateValidationError {
     /// The ordered flight was not immediately after server `Certificate`.
     WrongFlightState,
     /// The exact authenticated body was structurally invalid.
-    Structure(Tls13CertificateMessageError),
+    Structure(Tls13CertificateMessageErrorKind),
     /// A main-handshake server `Certificate` carried a nonempty context.
     NonEmptyContext,
     /// The server supplied no certificate entries.
@@ -1955,11 +1955,11 @@ impl fmt::Display for RetryServerCertificateValidationError {
 impl std::error::Error for RetryServerCertificateValidationError {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
-            Self::Structure(error) => Some(error),
             Self::EntryExtensions(error) => Some(error),
             Self::EntryContext(error) => Some(error),
             Self::WrongMessageType
             | Self::WrongFlightState
+            | Self::Structure(_)
             | Self::NonEmptyContext
             | Self::EmptyCertificateList => None,
         }

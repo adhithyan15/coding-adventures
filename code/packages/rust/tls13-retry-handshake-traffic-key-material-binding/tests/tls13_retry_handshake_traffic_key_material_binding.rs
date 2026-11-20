@@ -1484,6 +1484,27 @@ fn validates_exact_nonempty_server_certificate_and_entry_extensions() {
                         true
                     }
                     Tls13HandshakeType::Certificate => {
+                        let redacted_structure_error = pending
+                            .validate_server_certificate(
+                                Tls13CertificateMessageLimits::new(15, 0, 32, 2, 16, 16),
+                                ExtensionBlockLimits::new(16, 4).unwrap(),
+                            )
+                            .unwrap_err();
+                        assert!(matches!(
+                            redacted_structure_error,
+                            RetryServerCertificateValidationError::Structure(
+                                tls13_certificate_message::Tls13CertificateMessageErrorKind::MessageTooLarge
+                            )
+                        ));
+                        assert_eq!(
+                            redacted_structure_error.to_string(),
+                            "TLS 1.3 retry server Certificate structure is invalid"
+                        );
+                        assert!(redacted_structure_error.source().is_none());
+                        let error_debug = format!("{redacted_structure_error:?}");
+                        assert!(!error_debug.contains("offset"));
+                        assert!(!error_debug.contains("at byte"));
+                        assert!(!error_debug.contains("48"));
                         let proof = pending
                             .validate_server_certificate(
                                 Tls13CertificateMessageLimits::new(64, 0, 32, 2, 16, 16),
