@@ -121,6 +121,15 @@ the pending pre-message transcript snapshot, decoded message, exact offer, and
 authorized RSA-PSS scheme. An empty signature remains structurally valid at
 this boundary and must fail later cryptographic verification.
 
+That exact ordered-message proof can now be joined to one repository-owned
+RSA-PSS verification verdict. The join requires the verifier's server role,
+selected-transcript snapshot, policy-authorized scheme, and complete decoded
+message to equal the values retained by the authenticated ordered proof.
+Success is non-cloneable evidence retaining both complete proofs. This binds
+signature verification to the exact ordered retry message, but it does not
+prove that the caller-supplied RSA key came from the preceding Certificate or
+from a reviewed path, hostname, trust root, or revocation decision.
+
 This package derives one direction's handshake key and IV, creates matching
 record state, protects exact retry-handshake records in caller-owned buffers,
 enforces the public no-PSK server-flight type order, joins fresh ordered state
@@ -129,12 +138,13 @@ transcript only after explicit caller authorization of authenticated ordered
 messages. It provides the bounded `EncryptedExtensions` structure and retained
 offer/context check and the bounded main-handshake `CertificateRequest` checks
 and server `Certificate` framing and entry-policy checks above, plus exact
-server `CertificateVerify` framing, offer membership, and algorithm policy; the
-authorization bit is otherwise not body validation. This package does not
-parse X.509, access credentials, sign, cryptographically authenticate
-CertificateVerify or Finished, bind a reviewed leaf key, validate certificate paths,
-establish trust, verify hostnames, enforce revocation, perform I/O, authorize
-HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
+server `CertificateVerify` framing, offer membership, algorithm policy, and
+repository-owned RSA-PSS authentication when the caller supplies matching
+public-key evidence; the authorization bit is otherwise not body validation.
+This package does not parse X.509, access credentials, sign, authenticate
+Finished, bind the verified key to the preceding Certificate or a reviewed
+leaf/path, establish trust, verify hostnames, enforce revocation, perform I/O,
+authorize HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
 
 ## Verification
 

@@ -14835,9 +14835,14 @@ name = "tls13-retry-handshake-traffic-key-material-binding"
 version = "0.1.0"
 dependencies = [
  "coding_adventures_hkdf",
+ "der-asn1",
+ "rsa-pss-sha256-signature",
+ "rsa-pss-sha384-signature",
  "tls13-certificate-message",
  "tls13-certificate-request-message",
+ "tls13-certificate-verify-input",
  "tls13-certificate-verify-message",
+ "tls13-certificate-verify-transcript-binding",
  "tls13-cipher-suite-offer",
  "tls13-cipher-suite-policy",
  "tls13-client-hello-message",
@@ -14859,6 +14864,7 @@ dependencies = [
  "tls13-retry-handshake-traffic-secrets-binding",
  "tls13-retry-key-schedule-binding",
  "tls13-retry-transcript-binding",
+ "tls13-rsa-pss-signature-routing",
  "tls13-server-hello-message",
  "tls13-server-hello-retry-selection",
  "tls13-server-hello-selection",
@@ -14870,6 +14876,8 @@ dependencies = [
  "tls13-traffic-key-material",
  "tls13-transcript",
  "tls13-x25519-key-share-binding",
+ "x509-rsa-public-key",
+ "x509-subject-public-key-info",
 ]
 
 [[package]]

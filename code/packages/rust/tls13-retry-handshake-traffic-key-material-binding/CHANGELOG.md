@@ -56,3 +56,7 @@
   pre-message transcript snapshot, require its scheme in the exact bounded
   final ClientHello offer, and authorize that scheme through caller-owned
   data-driven repository policy without claiming signature verification.
+- Bind that exact ordered proof to a repository-owned RSA-PSS verification
+  verdict only when server role, selected-transcript snapshot, authorized
+  scheme, and complete decoded message all match, while leaving the verified
+  public key unbound to the preceding Certificate and reviewed path.
