@@ -46,10 +46,10 @@ import { CorpusError } from "../errors.ts";
 import { parseJson, readBytes } from "../jsonio.ts";
 import { buildDomain } from "./domains.ts";
 import { compileFault } from "./faults.ts";
-import { enumerateChunk, enumerateChunks, readChunkFile, readCorpusPart, loadSuite, checkSlimChunks } from "./chunks.ts";
+import { enumerateChunk, enumerateChunks, readChunkFile, readCorpusPart, loadSuite } from "./chunks.ts";
 import { IMPLEMENTED_LEVELS } from "./levels.ts";
-import { type Param, Program, readOp, typeText } from "./ir.ts";
-import { EMPTY_TABLE, type Ty, checkNames, eraseNamedWidths, parseType, readTypeTable } from "./types.ts";
+import { type OpSig, type Param, Program, readOp, typeText } from "./ir.ts";
+import { EMPTY_TABLE, type Ty, checkNames, eraseNamedWidths, flows, isUndetermined, parseType, readTypeTable, sameType } from "./types.ts";
 import { type Value, decodeJson, encodeJson, fromHex, streamBytes, toHex } from "./values.ts";
 
 type Json = unknown;
@@ -183,6 +183,23 @@ function runArith(c: Case): Case {
   }
 }
 
+/**
+ * The stand-in of a reached op (R70, R100) must be a live model whose signature is the op's with each named width left
+ * unstated.  A case whose stand-in is missing or has another signature is a broken fixture: a harness error, never an outcome.
+ */
+function checkStandIn(program: Program, opName: string, subjects: Record<string, string>): void {
+  const op = program.ops.get(opName) as OpSig;
+  const name = Object.hasOwn(subjects, opName) ? subjects[opName] : undefined;
+  if (typeof name !== "string") throw new Error("a kit case has no stand-in for a reached op");
+  const sig = program.modelSignature(name);
+  if (sig === undefined) throw new Error("a kit case's stand-in is not a live model");
+  if (sig.params.length !== op.params.length) throw new Error("a stand-in takes another number of arguments than its op");
+  op.params.forEach((p, i) => {
+    if (!sameType((sig.params[i] as Param).ty, eraseNamedWidths(p.ty))) throw new Error("a stand-in parameter differs from its op's");
+  });
+  if (!flows(sig.ty, eraseNamedWidths(op.ret))) throw new Error("a stand-in result does not fit its op's result");
+}
+
 function runIr(c: Case): Case {
   const levels = new Set((c["levels"] as string[]).filter((level) => IMPLEMENTED_LEVELS.includes(level)));
   const subjects = (c["subjects"] ?? {}) as Record<string, string>;
@@ -199,6 +216,9 @@ function runIr(c: Case): Case {
     const env = c["env"] as [string, { type: string; value: unknown }][];
     const vars: Param[] = env.map(([name, entry]) => ({ name, ty: parseType(entry.type, { code: "ill-typed" }) }));
     const compiled = program.compileExpr(c["ir"], vars, (c["role"] as "body" | "admit" | "fault" | undefined) ?? "body");
+    // A kit case never has an undetermined result type (R41, R98 (b)): a row that derives one is a broken fixture, not a vector.
+    if (isUndetermined(compiled.ty)) throw new Error("a kit case has an undetermined result type");
+    for (const opName of compiled.ops) checkStandIn(program, opName, subjects);
     const values: Value[] = env.map(([, entry], i) => decodeJson(entry.value, (vars[i] as Param).ty, program.table));
     program.state.calls = 0;
     program.state.subject = (op, args) => program.callModel(subjects[op] as string, args);
@@ -239,17 +259,15 @@ function runChunk(c: Case, options: { sequential: boolean; levels: ReadonlySet<s
     const chunk = c["chunk"];
     if (typeof chunk !== "number" || !Number.isInteger(chunk) || chunk < 0) throw new Error("a kit case has a bad chunk index");
     if (chunk >= suite.chunks) throw new KitError("corpus", "chunk is not below m");
-    checkSlimChunks((c["suite"] as Record<string, unknown>)["slim_chunks"], suite.chunks);
     const file = fromHex(String(c["chunk_file_hex"]));
     if (file === undefined) throw new KitError("chunk-file", "the chunk file is not hex");
     const rows = readChunkFile(file, suite);
     const row = rows[chunk];
     if (row === undefined) throw new KitError("chunk-file", "no such line");
+    // Section 11 `v2-chunk` (b), (c): the lane recomputes `cases`, `calls` and the digests from its own enumeration and
+    // reports *those*; only `first_admitted` comes from the validated file.  A file that is consistent with its row but not
+    // with the enumeration is therefore no `chunk-file` refusal: it shows as values that differ from the case's `expect`.
     const alone = enumerateChunk(suite, chunk);
-    if (alone.cases !== row.cases || alone.calls !== row.calls || alone.inputs !== row.inputs || alone.expected !== row.expected) {
-      // The file is internally consistent but disagrees with the enumeration it describes.
-      throw new KitError("chunk-file", "the chunk file's row is not what the enumeration gives");
-    }
     if (c["also_sequential"] === true && options.sequential) {
       const walked = enumerateChunks(suite, 0, chunk).results;
       const last = walked[chunk];
@@ -263,12 +281,17 @@ function runChunk(c: Case, options: { sequential: boolean; levels: ReadonlySet<s
     if (alone.expected !== undefined) out["expected_sha256"] = alone.expected;
     return out;
   } catch (error) {
+    // R69 (e): a suite whose `requires` is inside the lane's levels but whose reach is not is wrong, and that is `corpus`.
+    // `level-missing` is no code of this category.
+    if (error instanceof KitError && error.code === "level-missing") return errorObject(new KitError("corpus", "a suite reaches a level its requires does not name"));
     return errorObject(error);
   }
 }
 
-function runFault(c: Case, levels: ReadonlySet<string>): Case {
+function runFault(c: Case, runnerLevels: ReadonlySet<string>): Case {
   try {
+    // The case's own `levels` field, cut down to what this runner implements (as `runIr` does): `[]` leaves nothing.
+    const levels = new Set((c["levels"] as string[]).filter((level) => runnerLevels.has(level)));
     const fault = c["fault"] as Record<string, unknown>;
     const program = new Program({ types: c["types"], ops: {}, models: {}, modelOrder: [], levels, structuralCode: "corpus" });
     const op = readOp(String(fault["op"]), c["op"]);
@@ -276,6 +299,7 @@ function runFault(c: Case, levels: ReadonlySet<string>): Case {
     // The wrapper has no call site and no widths: a named width is left unstated, so args and result decode as plain Bytes.
     const paramTypes = op.params.map((p) => eraseNamedWidths(p.ty));
     const retType = eraseNamedWidths(op.ret);
+    if (!Array.isArray(c["args"]) || c["args"].length !== paramTypes.length) throw new Error("a kit case has the wrong number of args for its op");
     const args = (c["args"] as unknown[]).map((raw, i) => decodeJson(raw, paramTypes[i] as Ty, program.table));
     if (compiled.kind === "pre") {
       const rewritten = compiled.rewriteArgs(args);
@@ -359,6 +383,14 @@ export function runKit(dir: string, options: KitOptions = {}): KitReport {
 
 function describe(actual: Case): string {
   return typeof actual["error"] === "string" ? `error ${actual["error"]}` : typeof actual["outcome"] === "string" ? String(actual["outcome"]) : "a value";
+}
+
+/**
+ * Run one case of `category` on its own and return its outcome object.  An outcome that is a refusal comes back as
+ * `{error}`; a broken case (a fixture that breaks its own schema: R41, R100) throws, as it is a harness error and no vector.
+ */
+export function runCase(category: string, c: Case, options: { sequential?: boolean; levels?: ReadonlySet<string> } = {}): Case {
+  return runOne(category, c, { sequential: options.sequential ?? false, levels: options.levels ?? new Set(IMPLEMENTED_LEVELS) });
 }
 
 function runOne(category: string, c: Case, context: { sequential: boolean; levels: ReadonlySet<string> }): Case {

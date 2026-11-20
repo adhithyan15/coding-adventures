@@ -38,11 +38,11 @@
  */
 
 import { createHash } from "node:crypto";
-import { lstatSync, readdirSync } from "node:fs";
-import { join } from "node:path";
-import { KitError } from "./errors.ts";
+import { lstatSync, readdirSync, realpathSync } from "node:fs";
+import { join, sep } from "node:path";
+import { KitError, type KitCode } from "./errors.ts";
 import { parseJson, readBytes } from "../jsonio.ts";
-import { MAX_CHUNK_FILE_BYTES, enumerateChunks, loadSuite, readChunkFile, readCorpusPart, type CorpusPart, type Suite } from "./chunks.ts";
+import { MAX_CHUNK_FILE_BYTES, asCorpusError, enumerateChunks, loadSuite, readChunkFile, readCorpusPart, type CorpusPart, type Suite } from "./chunks.ts";
 import { type CompiledFault, compileFault } from "./faults.ts";
 import { DEFINED_LEVELS, IMPLEMENTED_LEVELS } from "./levels.ts";
 import { readOp } from "./ir.ts";
@@ -76,6 +76,8 @@ export interface ControlRecord {
   readonly fault: string;
   readonly state: "ok" | "not-live";
   readonly level?: string;
+  /** The suites the control re-runs (its `required_claims`), counted by {@link checkWork}. */
+  readonly requiredClaims: readonly string[];
   readonly compiled?: CompiledFault;
 }
 
@@ -126,8 +128,34 @@ export function chunkFileName(claim: string): string {
   return name;
 }
 
-/** A file inside `dir`, opened only if it is a regular file (never a symbolic link). */
-function regularFile(path: string, limit: number): Uint8Array {
+/**
+ * The path `parts` below `dir`, after every component has been looked at with
+ * `lstat`: a component that is missing is `missing` (a clean refusal, never a
+ * raw `ENOENT`), a symbolic link is refused and not followed (section 14), and
+ * the resolved path must still lie inside the fixture directory.  `dir` itself
+ * is the caller's and may be reached through a link; only what is *below* it is
+ * the corpus's to control.
+ */
+function pathBelow(dir: string, parts: readonly string[], missing: KitCode): string {
+  let at = dir;
+  for (const part of parts) {
+    at = join(at, part);
+    let stat;
+    try {
+      stat = lstatSync(at);
+    } catch {
+      throw new KitError(missing, "a file or directory the corpus needs is missing");
+    }
+    if (stat.isSymbolicLink()) corrupt("a path component is a symbolic link");
+  }
+  const root = realpathSync(dir);
+  if (!realpathSync(at).startsWith(root + sep)) corrupt("a path resolves outside the fixture directory");
+  return at;
+}
+
+/** A file below `dir`, opened only if it is a regular file with no symbolic link on its way. */
+function regularFile(dir: string, parts: readonly string[], limit: number, missing: KitCode = "corpus"): Uint8Array {
+  const path = pathBelow(dir, parts, missing);
   if (!lstatSync(path).isFile()) corrupt("an opened file is a regular file");
   return readBytes(path, limit);
 }
@@ -144,7 +172,7 @@ function sha256(bytes: Uint8Array): string {
  */
 export function loadV2Corpus(dir: string, levels: readonly string[] = IMPLEMENTED_LEVELS): V2Corpus {
   const laneLevels = new Set(levels);
-  const bytes = regularFile(join(dir, "corpus.json"), MAX_CORPUS_JSON_BYTES);
+  const bytes = regularFile(dir, ["corpus.json"], MAX_CORPUS_JSON_BYTES);
   const raw = parseJson(bytes);
   if (!isRecord(raw)) corrupt("corpus.json is an object");
   const keys = Object.keys(raw);
@@ -157,7 +185,8 @@ export function loadV2Corpus(dir: string, levels: readonly string[] = IMPLEMENTE
     corrupt("levels names a level this document does not define");
   }
   if (typeof raw["module"] !== "string") corrupt("module is text");
-  if (raw["profile_sha256"] !== sha256(regularFile(join(dir, "corpus.profile"), 64 * 1024))) corrupt("profile_sha256 is stale");
+  if (Object.hasOwn(raw, "omitted_examples")) checkOmittedExamples(raw["omitted_examples"]);
+  if (raw["profile_sha256"] !== sha256(regularFile(dir, ["corpus.profile"], 64 * 1024))) corrupt("profile_sha256 is stale");
 
   const part = readCorpusPart(
     {
@@ -176,6 +205,7 @@ export function loadV2Corpus(dir: string, levels: readonly string[] = IMPLEMENTE
   if (!Array.isArray(suitesRaw)) corrupt("suites is a list");
   const seen = new Set<string>();
   const derived = new Set<string>();
+  const unionOfRequires = new Set<string>();
   const suites: SuiteRecord[] = [];
   for (const row of suitesRaw as unknown[]) {
     const id = isRecord(row) && typeof row["id"] === "string" ? row["id"] : corrupt("a suite row has an id");
@@ -189,11 +219,13 @@ export function loadV2Corpus(dir: string, levels: readonly string[] = IMPLEMENTE
     }
     const declared = (row as Record<string, unknown>)["requires"];
     const declaredMissing = Array.isArray(declared) ? [...declared].filter((level): level is string => typeof level === "string" && !laneLevels.has(level)).sort()[0] : undefined;
+    for (const level of Array.isArray(declared) ? declared : []) if (typeof level === "string") unionOfRequires.add(level);
     try {
       const suite = loadSuite(part, row);
       // R69 (e): a row whose `requires` is inside the lane's levels but whose reach is not is a corpus error; the opposite is not-live.
       suites.push(declaredMissing === undefined ? { id, state: "live", suite } : { id, state: "not-live", level: declaredMissing });
     } catch (error) {
+      if (error instanceof KitError && error.code === "slim-chunks") corrupt("a suite's slim_chunks is malformed");
       if (!(error instanceof KitError) || error.code !== "level-missing") throw error;
       if (declaredMissing === undefined) corrupt("a suite's requires disagrees with what it reaches");
       suites.push({ id, state: "not-live", level: declaredMissing });
@@ -206,35 +238,77 @@ export function loadV2Corpus(dir: string, levels: readonly string[] = IMPLEMENTE
   const controlsRaw = raw["controls"];
   if (!Array.isArray(faultsRaw) || !Array.isArray(controlsRaw)) corrupt("faults and controls are lists");
   const compiled = new Map<string, ControlRecord>();
+  const claimsOf = new Map<string, readonly string[]>();
+  for (const control of controlsRaw as unknown[]) {
+    if (!isRecord(control) || typeof control["id"] !== "string") corrupt("a control row has an id");
+    if (claimsOf.has(control["id"])) corrupt("a control id appears twice");
+    const claims = control["required_claims"];
+    if (!Array.isArray(claims) || claims.some((claim) => typeof claim !== "string")) corrupt("a control's required_claims is a list of suite ids");
+    claimsOf.set(control["id"], claims as string[]);
+    for (const level of Array.isArray(control["requires"]) ? (control["requires"] as unknown[]) : []) if (typeof level === "string") unionOfRequires.add(level);
+  }
   for (const fault of faultsRaw as unknown[]) {
     if (!isRecord(fault) || typeof fault["op"] !== "string" || typeof fault["fault"] !== "string") corrupt("a fault row names its op and fault");
     const op = part.program.ops.get(fault["op"]);
     if (op === undefined) corrupt("a fault names an op that is not in ops");
     const id = `warrant/${raw["module"]}/negctl/exhaustive/${fault["op"]}/${fault["fault"]}`;
+    if (compiled.has(id)) corrupt("a fault row appears twice");
+    for (const level of Array.isArray(fault["requires"]) ? (fault["requires"] as unknown[]) : []) if (typeof level === "string") unionOfRequires.add(level);
+    const requiredClaims = claimsOf.get(id) ?? [];
     try {
       const wrapper = compileFault(part.program, fault, op);
-      compiled.set(id, { id, op: fault["op"], fault: fault["fault"], state: "ok", compiled: wrapper });
+      compiled.set(id, { id, op: fault["op"], fault: fault["fault"], state: "ok", requiredClaims, compiled: wrapper });
     } catch (error) {
-      if (!(error instanceof KitError) || error.code !== "level-missing") throw error;
-      compiled.set(id, { id, op: fault["op"], fault: fault["fault"], state: "not-live", ...(error.level === undefined ? {} : { level: error.level }) });
+      // A fault row that does not compile is a corrupt corpus (`corpus`), whatever the kit's own vocabulary calls the reason; only a missing level is not-live.
+      const refusal = asCorpusError(error);
+      if (!(refusal instanceof KitError) || refusal.code !== "level-missing") throw refusal;
+      compiled.set(id, { id, op: fault["op"], fault: fault["fault"], state: "not-live", requiredClaims, ...(refusal.level === undefined ? {} : { level: refusal.level }) });
     }
   }
   for (const control of controlsRaw as unknown[]) {
-    if (!isRecord(control) || typeof control["id"] !== "string") corrupt("a control row has an id");
-    const found = compiled.get(control["id"]);
+    const found = compiled.get((control as Record<string, string>)["id"] as string);
     if (found === undefined) corrupt("a control has no fault row");
     controls.push(found);
   }
 
-  // `chunks/` may hold only the derived names (an extra file is a corpus error).
-  const dirEntries = readdirSync(join(dir, "chunks"));
-  for (const entry of dirEntries) {
+  // Section 1.4: `levels` is the union of every `requires`, no more and no less.
+  const levelSet = new Set(declaredLevels as string[]);
+  for (const op of part.program.ops.values()) for (const level of op.requires) unionOfRequires.add(level);
+  if (levelSet.size !== (declaredLevels as string[]).length || levelSet.size !== unionOfRequires.size || [...levelSet].some((level) => !unionOfRequires.has(level))) {
+    corrupt("levels is not the union of every requires");
+  }
+
+  // `chunks/` may hold only the derived names (an extra file is a corpus error); the directory itself may not be a link.
+  const chunksDir = pathBelow(dir, ["chunks"], "corpus");
+  if (!lstatSync(chunksDir).isDirectory()) corrupt("chunks is a directory");
+  for (const entry of readdirSync(chunksDir)) {
     if (!derived.has(entry.toLowerCase())) corrupt("an undeclared file in chunks/");
-    if (!lstatSync(join(dir, "chunks", entry)).isFile()) corrupt("a chunks/ entry is not a regular file");
+    if (!lstatSync(join(chunksDir, entry)).isFile()) corrupt("a chunks/ entry is not a regular file");
   }
 
   const notLive = suites.filter((s) => s.state === "not-live").length + controls.filter((c) => c.state === "not-live").length;
   return { dir, module: raw["module"] as string, levels: laneLevels, part, suites, controls, notLive };
+}
+
+/** The closed vocabulary of an omitted example's `reason` (section 1.4, [D34]). */
+const OMIT_REASONS = new Set(["value-over-limit", "not-op-eq-pure"]);
+
+/**
+ * The consumer's checks of the conditional `omitted_examples` key (section 1.4): a present key is never `[]`, its rows
+ * are `{id, reason}` with a reason of the closed set, sorted by `id` (bytes) and without a duplicate.
+ */
+function checkOmittedExamples(raw: unknown): void {
+  if (!Array.isArray(raw) || raw.length === 0) corrupt("omitted_examples is present only when it is not empty");
+  let previous: string | undefined;
+  for (const row of raw as unknown[]) {
+    if (!isRecord(row) || Object.keys(row).length !== 2 || typeof row["id"] !== "string" || typeof row["reason"] !== "string") {
+      corrupt("an omitted example is {id, reason}");
+    }
+    if (!OMIT_REASONS.has(row["reason"])) corrupt("an omitted example has an unknown reason");
+    // Sorted by id, bytes: ids are text, compared by their UTF-8 bytes.
+    if (previous !== undefined && Buffer.compare(Buffer.from(previous), Buffer.from(row["id"])) >= 0) corrupt("omitted_examples is sorted by id without a duplicate");
+    previous = row["id"];
+  }
 }
 
 /**
@@ -246,9 +320,12 @@ export function loadV2Corpus(dir: string, levels: readonly string[] = IMPLEMENTE
 export function runSuite(corpus: V2Corpus, record: SuiteRecord, depth: Depth = "full"): SuiteRun {
   const suite = record.suite;
   if (suite === undefined) throw new KitError("corpus", "a not-live suite is not run");
-  const file = regularFile(join(corpus.dir, "chunks", chunkFileName(suite.claim)), MAX_CHUNK_FILE_BYTES);
+  checkWork(corpus, depth);
+  const file = regularFile(corpus.dir, ["chunks", chunkFileName(suite.claim)], MAX_CHUNK_FILE_BYTES, "chunk-file");
   const rows = readChunkFile(file, suite);
   const wanted = depth === "full" ? rows.map((r) => r.index) : suite.slimChunks.slice();
+  // A run that ran nothing proves nothing: never report success over zero chunks.
+  if (wanted.length === 0) throw new KitError("corpus", "a run has no chunk to execute");
   let cases = 0;
   let calls = 0;
   const check = (actual: { cases: number; calls: number; inputs: string; expected: string | undefined }, index: number): void => {
@@ -303,21 +380,44 @@ export interface Work {
  * them.  Exceeding a bound is a corpus error, raised before any case runs.
  */
 export function checkWork(corpus: V2Corpus, depth: Depth): Work {
+  if (depth !== "full" && depth !== "slim") corrupt("depth is full or slim");
   let ordinals = 0;
   let irWork = 0;
+  const liveBy = new Map<string, Suite>();
+  // The product ordinals a suite's slim chunk set executes.  The set is validated again here: this meter must never add a
+  // value that is not a chunk of the suite, or one bad entry would turn the total into NaN and no limit could fire.
+  const slimOrdinals = (suite: Suite): number => {
+    let sum = 0;
+    for (const chunk of suite.slimChunks) {
+      if (!Number.isSafeInteger(chunk) || chunk < 0 || chunk >= suite.chunks) corrupt("a slim chunk is not a chunk of its suite");
+      sum += Math.min(suite.chunkSize, suite.product - chunk * suite.chunkSize);
+    }
+    return sum;
+  };
+  const add = (suite: Suite, count: number): void => {
+    ordinals += count;
+    irWork += suite.irCost * count;
+  };
   for (const record of corpus.suites) {
     const suite = record.suite;
     if (suite === undefined || record.state !== "live") continue;
-    let suiteOrdinals = suite.product;
-    if (depth === "slim") {
-      suiteOrdinals = 0;
-      for (const chunk of suite.slimChunks) suiteOrdinals += Math.min(suite.chunkSize, suite.product - chunk * suite.chunkSize);
+    liveBy.set(suite.id, suite);
+    add(suite, depth === "slim" ? slimOrdinals(suite) : suite.product);
+  }
+  // Section 14 counts negative-control re-runs in the slim total: a live control re-runs each suite it requires
+  // (its `required_claims`) over that suite's slim chunk set.  A full run runs no control, so adds none.
+  if (depth === "slim") {
+    for (const control of corpus.controls) {
+      if (control.state !== "ok") continue;
+      for (const claim of control.requiredClaims) {
+        const suite = liveBy.get(claim);
+        if (suite !== undefined) add(suite, slimOrdinals(suite));
+      }
     }
-    ordinals += suiteOrdinals;
-    irWork += suite.irCost * suiteOrdinals;
   }
   const [limit, irLimit] = depth === "slim" ? [MAX_TOTAL_WORK_SLIM, MAX_IR_WORK_SLIM] : [MAX_TOTAL_WORK_FULL, MAX_IR_WORK_FULL];
-  if (ordinals > limit) corrupt("the run exceeds the total work limit");
-  if (irWork > irLimit) corrupt("the run exceeds the total IR work limit");
+  // `!(x <= limit)` and not `x > limit`: a total that is NaN would pass the second and no limit could ever fire.
+  if (!(ordinals <= limit)) corrupt("the run exceeds the total work limit");
+  if (!(irWork <= irLimit)) corrupt("the run exceeds the total IR work limit");
   return { ordinals, irWork };
 }

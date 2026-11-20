@@ -35,7 +35,7 @@ export { enumerateChunk, enumerateChunks, framedDigest, loadSuite, readChunkFile
 export type { ChunkResult, ChunkRow, Suite } from "./chunks.ts";
 export { compileFault } from "./faults.ts";
 export type { CompiledFault } from "./faults.ts";
-export { chunkFileName, loadV2Corpus, runSuite } from "./corpus.ts";
-export type { ControlRecord, SuiteRecord, V2Corpus } from "./corpus.ts";
-export { KNOWN_CATEGORIES, runKit } from "./kit.ts";
+export { checkWork, chunkFileName, loadV2Corpus, runSuite } from "./corpus.ts";
+export type { ControlRecord, SuiteRecord, V2Corpus, Work } from "./corpus.ts";
+export { KNOWN_CATEGORIES, runCase, runKit } from "./kit.ts";
 export type { CategoryReport, KitReport } from "./kit.ts";

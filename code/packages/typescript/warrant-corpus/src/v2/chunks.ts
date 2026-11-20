@@ -74,6 +74,28 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/** Deep equality of two parsed JSON trees (objects by key set). */
+function sameJson(a: unknown, b: unknown): boolean {
+  if (a === b) return true;
+  if (Array.isArray(a)) return Array.isArray(b) && a.length === b.length && a.every((item, i) => sameJson(item, b[i]));
+  if (isRecord(a)) {
+    if (!isRecord(b)) return false;
+    const keys = Object.keys(a);
+    return keys.length === Object.keys(b).length && keys.every((key) => Object.hasOwn(b, key) && sameJson(a[key], b[key]));
+  }
+  return false;
+}
+
+/** Two binders may not share a name: the later would shadow the earlier in every expression. */
+function distinctBinderNames(rows: readonly unknown[]): void {
+  const seen = new Set<string>();
+  for (const row of rows) {
+    const name = (row as unknown[])[0] as string;
+    if (seen.has(name)) refuse("corpus", "a binder name appears twice");
+    seen.add(name);
+  }
+}
+
 function isCount(value: unknown): value is number {
   return typeof value === "number" && Number.isInteger(value) && value >= 0;
 }
@@ -126,9 +148,9 @@ export function readCorpusPart(raw: unknown, levels: ReadonlySet<string>): Corpu
   }
 }
 
-/** Map any refusal of the corpus parts to `corpus`, keeping `level-missing` (a lane records it `not-live`). */
+/** Map any refusal of the corpus parts to `corpus`, keeping `level-missing` (a lane records it `not-live`) and `slim-chunks` (the kit's own code for a bad `slim_chunks`). */
 export function asCorpusError(error: unknown): unknown {
-  if (error instanceof KitError && error.code !== "level-missing" && error.code !== "corpus") {
+  if (error instanceof KitError && error.code !== "level-missing" && error.code !== "corpus" && error.code !== "slim-chunks") {
     return new KitError("corpus", error.message.replace(/^[a-z-]+: /, ""));
   }
   return error;
@@ -280,23 +302,33 @@ function loadSuiteUnchecked(part: CorpusPart, raw: unknown): Suite {
     const ty = parseType(typeText, { code: "corpus" });
     checkNames(ty, program.table, "corpus");
     typeLevels(ty, levelsNeeded);
-    const missing = program.lacks(levelsNeeded);
-    if (missing !== undefined) throw new KitError("level-missing", "a binder type needs a level this lane lacks", { level: missing });
+    // A binder that needs a level this lane lacks is not built (its descriptor is of that level), but the names above
+    // were checked and the tag scan below still runs: reach scopes `level-missing` and nothing else ([D64], R69 (c)).
+    if (program.lacks(levelsNeeded) !== undefined) continue;
     const domain = buildDomain(spec["domain"], ty, program.table, true);
     product *= domain.size;
     if (product > MAX_SUITE_PRODUCT) refuse("corpus", "the product exceeds 2^28");
     binders.push({ name: entry[0], ty, typeText, domain, write: makeWriter(ty) });
   }
-  if (count("product") !== product) refuse("corpus", "product is not the product of the binder sizes");
-  const chunks = Math.ceil(product / chunkSize);
-  if (count("chunks") !== chunks || chunks > MAX_CHUNKS) refuse("corpus", "chunks is not ceil(product / chunk_size)");
+  distinctBinderNames(bindersRaw as unknown[]);
 
   const resultTypeText = text("result_type");
   const resultTy = parseType(resultTypeText, { code: "corpus" });
   checkNames(resultTy, program.table, "corpus");
   typeLevels(resultTy, levelsNeeded);
-  const missingResult = program.lacks(levelsNeeded);
-  if (missingResult !== undefined) throw new KitError("level-missing", "the result type needs a level this lane lacks", { level: missingResult });
+
+  // The checks that read tag names alone run over every expression the suite holds *before* `level-missing` is
+  // recorded: an unknown tag, a misplaced `subject_op`, a call out of `model_order` and a tree over 64 deep are corpus
+  // errors wherever they stand, in a not-live suite too (section 14; R69 (c) tier 2 and (d)).
+  const trees: [unknown, "admit" | "body" | "pure"][] = [[row["admit"], "admit"], [row["body"], "body"]];
+  if (reference) trees.push([oracleRecord["expected"], "pure"], [oracleRecord["subject"], "body"]);
+  for (const [tree, role] of trees) program.scanTags(tree, role);
+  const missing = program.lacks(levelsNeeded);
+  if (missing !== undefined) throw new KitError("level-missing", "the suite needs a level this lane lacks", { level: missing });
+
+  if (count("product") !== product) refuse("corpus", "product is not the product of the binder sizes");
+  const chunks = Math.ceil(product / chunkSize);
+  if (count("chunks") !== chunks || chunks > MAX_CHUNKS) refuse("corpus", "chunks is not ceil(product / chunk_size)");
 
   const vars: Param[] = binders.map((b) => ({ name: b.name, ty: b.ty }));
   const admit = program.compileExpr(row["admit"], vars, "admit");
@@ -309,8 +341,16 @@ function loadSuiteUnchecked(part: CorpusPart, raw: unknown): Suite {
     expected = program.compileExpr(oracleRecord["expected"], vars, "pure");
     if (!flows(expected.ty, resultTy)) refuse("corpus", "expected does not fit result_type");
     irCost += expected.cost;
-    // The subject side is a body expression too: it must compile, and it may call the subject.
-    program.compileExpr(oracleRecord["subject"], vars, "body");
+    // The subject side is a body expression too: it must compile, may call the subject, and has the result type (section 4.3).
+    const subject = program.compileExpr(oracleRecord["subject"], vars, "body");
+    if (!flows(subject.ty, resultTy)) refuse("corpus", "the oracle's subject does not fit result_type");
+    // Section 4.3: a `reference` suite is one whose body *is* `subject == expected`, in either order.
+    const sides = Array.isArray(row["body"]) && row["body"].length === 3 && row["body"][0] === "eq" ? [row["body"][1], row["body"][2]] : undefined;
+    const agrees =
+      sides !== undefined &&
+      ((sameJson(sides[0], oracleRecord["subject"]) && sameJson(sides[1], oracleRecord["expected"])) ||
+        (sameJson(sides[1], oracleRecord["subject"]) && sameJson(sides[0], oracleRecord["expected"])));
+    if (!agrees) refuse("corpus", "a reference suite's body is not its subject compared with its expected");
   } else if (resultTypeText !== "Bool") {
     refuse("corpus", "a predicate suite's result_type is Bool");
   }
@@ -319,7 +359,11 @@ function loadSuiteUnchecked(part: CorpusPart, raw: unknown): Suite {
   const v1 = [...binders.map((b) => b.ty), resultTy].every(inV1TypeSet);
   if ((stream === "warrant-stream-v1") !== v1) refuse("corpus", "stream does not match the v1 type set rule");
 
-  const slim = row["slim_chunks"];
+  // Section 14: `slim_chunks` is checked here, on the corpus path as well as the kit's, before anything runs.
+  checkSlimChunks(row["slim_chunks"], chunks);
+  const slimChunks = row["slim_chunks"] as number[];
+  const casesRow = count("cases");
+  if (casesRow === 0) refuse("corpus", "a suite admits at least one case");
   return {
     id,
     claim,
@@ -330,11 +374,11 @@ function loadSuiteUnchecked(part: CorpusPart, raw: unknown): Suite {
     product,
     chunkSize,
     chunks,
-    cases: count("cases"),
+    cases: casesRow,
     discarded: count("discarded"),
     expectedCalls: count("expected_calls"),
     irCost,
-    slimChunks: Array.isArray(slim) ? (slim as number[]) : [],
+    slimChunks,
     chunksSha256: digest("chunks_sha256"),
     inputsSha256: digest("inputs_sha256"),
     expectedSha256: reference ? digest("expected_sha256") : undefined,
