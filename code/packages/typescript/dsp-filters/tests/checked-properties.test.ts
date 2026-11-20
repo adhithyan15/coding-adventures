@@ -231,6 +231,12 @@ function reportKey(report: ReturnType<typeof fuzzTarget>): string {
     iterations: report.iterations,
     admittedSeeds: report.admittedSeeds,
     totalEdges: report.totalEdges,
+    triage: report.triage,
+    mutation: report.mutation,
+    usedFallbackSeed: report.usedFallbackSeed,
+    clean: report.clean,
+    corpusLimitDrops: report.corpusLimitDrops,
+    unrecordedCrashOutcomes: report.unrecordedCrashOutcomes,
     crashes: report.crashes.map((crash) => ({
       signature: crash.signature,
       hits: crash.hits,
@@ -406,6 +412,11 @@ describe("checked Biquad bounded VER05/VER06 evidence", () => {
     const first = fuzzTarget(initial, options, (input, coverage) => checkedOutcome(input, coverage));
     const replay = fuzzTarget(initial, options, (input, coverage) => checkedOutcome(input, coverage));
     assert.equal(first.iterations, 1024);
+    assert.equal(first.triage.calls, initial.length);
+    assert.equal(first.mutation.calls, 1024);
+    assert.equal(first.triage.calls, first.triage.pass + first.triage.crash + first.triage.timeout + first.triage.oom);
+    assert.equal(first.mutation.calls, first.mutation.pass + first.mutation.crash + first.mutation.timeout + first.mutation.oom);
+    assert.equal(first.clean, true);
     assert.equal(first.admittedSeeds, 196);
     assert.equal(first.totalEdges, 198);
     assert.equal(first.crashes.length, 0);
@@ -418,6 +429,10 @@ describe("checked Biquad bounded VER05/VER06 evidence", () => {
       (input, coverage) => checkedOutcome(input, coverage, true),
     );
     assert.equal(faultyRun.iterations, 0);
+    assert.equal(faultyRun.triage.calls, 1);
+    assert.equal(faultyRun.triage.crash, 1);
+    assert.equal(faultyRun.mutation.calls, 0);
+    assert.equal(faultyRun.clean, false);
     assert.equal(faultyRun.admittedSeeds, 0);
     assert.equal(faultyRun.totalEdges, 0);
     assert.equal(faultyRun.crashes.length, 1);

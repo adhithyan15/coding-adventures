@@ -387,6 +387,22 @@ export class CoverageBitmap {
     return [countNew > 0, countNew];
   }
 
+  /** Admit another bitmap directly without materializing a 65,536-edge trace. */
+  admitBitmap(other: CoverageBitmap): [boolean, number] {
+    let countNew = 0;
+    for (let i = 0; i < COVERAGE_BYTES; i++) {
+      const novel = other.bytes[i] & ~this.bytes[i] & 0xff;
+      if (novel === 0) continue;
+      this.bytes[i] |= novel;
+      let remaining = novel;
+      while (remaining > 0) {
+        countNew += remaining & 1;
+        remaining >>= 1;
+      }
+    }
+    return [countNew > 0, countNew];
+  }
+
   /**
    * Total number of distinct covered edges.
    */
@@ -504,10 +520,102 @@ export interface CrashRecord {
  * Summary report returned after a bounded fuzzing run.
  */
 export interface FuzzReport {
+  /** Mutation invocations only; retained for compatibility with existing callers. */
   iterations: number;
   admittedSeeds: number;
   totalEdges: number;
   crashes: CrashRecord[];
+  triage: FuzzPhaseStats;
+  mutation: FuzzPhaseStats;
+  /** True when the empty-corpus compatibility seed was used. Such a run is never clean. */
+  usedFallbackSeed: boolean;
+  /** True only when at least one mutation returned and every observed outcome passed. */
+  clean: boolean;
+  /** Passes with novel edges whose seeds could not fit the active-corpus limits. */
+  corpusLimitDrops: number;
+  /** Crash outcomes whose signature/detail was outside the bounded recorded-crash budget. */
+  unrecordedCrashOutcomes: number;
+}
+
+export interface FuzzPhaseStats {
+  calls: number;
+  pass: number;
+  crash: number;
+  timeout: number;
+  oom: number;
+}
+
+const MAX_CAMPAIGN_ITERATIONS = 100_000;
+const MAX_INPUT_LENGTH = 1_048_576;
+const MAX_INITIAL_CORPUS = 4_096;
+const MAX_CORPUS_BYTES = 16 * 1_048_576;
+const MAX_RECORDED_CRASHES = 1_024;
+const MAX_RECORDED_CRASH_BYTES = 32 * 1_048_576;
+const MAX_CRASH_FRAMES = 64;
+const MAX_CRASH_TEXT_LENGTH = 256;
+
+function validateFuzzOptions(initialCorpus: Uint8Array[], opts: FuzzOptions): {
+  maxIterations: number;
+  seed: bigint;
+  maxInputLen: number;
+  baseEnergy: number;
+  snapshot: Uint8Array[];
+} {
+  const maxIterations = opts.maxIterations ?? 1000;
+  const seedOption = opts.seed ?? 42;
+  const maxInputLen = opts.maxInputLen ?? 4096;
+  const baseEnergy = opts.baseEnergy ?? 10;
+  const boundedInteger = (name: string, value: number, min: number, max: number): void => {
+    if (!Number.isSafeInteger(value) || value < min || value > max) {
+      throw new RangeError(`${name} must be a safe integer in [${min}, ${max}]`);
+    }
+  };
+  boundedInteger("maxIterations", maxIterations, 0, MAX_CAMPAIGN_ITERATIONS);
+  boundedInteger("maxInputLen", maxInputLen, 0, MAX_INPUT_LENGTH);
+  boundedInteger("baseEnergy", baseEnergy, 0, 65_536);
+  if (typeof seedOption === "number" && !Number.isSafeInteger(seedOption)) {
+    throw new RangeError("numeric seed must be a safe integer");
+  }
+  if (typeof seedOption !== "number" && typeof seedOption !== "bigint") {
+    throw new TypeError("seed must be a bigint or safe integer");
+  }
+  if (!Array.isArray(initialCorpus)) {
+    throw new TypeError("initialCorpus must be an array of Uint8Array values");
+  }
+  if (initialCorpus.length > MAX_INITIAL_CORPUS) {
+    throw new RangeError(`initialCorpus exceeds ${MAX_INITIAL_CORPUS} entries`);
+  }
+  let totalBytes = 0;
+  const snapshot: Uint8Array[] = [];
+  for (const input of initialCorpus) {
+    if (!(input instanceof Uint8Array)) {
+      throw new TypeError("initialCorpus entries must be Uint8Array values");
+    }
+    if (input.length > MAX_INPUT_LENGTH) {
+      throw new RangeError(`initial corpus entry exceeds ${MAX_INPUT_LENGTH} bytes`);
+    }
+    totalBytes += input.length;
+    if (totalBytes > MAX_CORPUS_BYTES) {
+      throw new RangeError(`initialCorpus exceeds ${MAX_CORPUS_BYTES} bytes`);
+    }
+    snapshot.push(new Uint8Array(input));
+  }
+  return { maxIterations, seed: BigInt(seedOption), maxInputLen, baseEnergy, snapshot };
+}
+
+function newPhaseStats(): FuzzPhaseStats {
+  return { calls: 0, pass: 0, crash: 0, timeout: 0, oom: 0 };
+}
+
+function countOutcome(stats: FuzzPhaseStats, outcome: FuzzOutcome): void {
+  stats.calls++;
+  switch (outcome.status) {
+    case "pass": stats.pass++; break;
+    case "crash": stats.crash++; break;
+    case "timeout": stats.timeout++; break;
+    case "oom": stats.oom++; break;
+    default: throw new TypeError("target returned an unknown fuzz outcome");
+  }
 }
 
 /**
@@ -587,63 +695,65 @@ export function fuzzTarget(
   opts: FuzzOptions = {},
   target: (input: Uint8Array, cov: CoverageBitmap) => FuzzOutcome
 ): FuzzReport {
-  const maxIterations = opts.maxIterations ?? 1000;
-  const seed = BigInt(opts.seed ?? 42);
-  const maxInputLen = opts.maxInputLen ?? 4096;
-  const baseEnergy = opts.baseEnergy ?? 10;
+  if (typeof target !== "function") {
+    throw new TypeError("target must be a function");
+  }
+  // Validate and snapshot before invoking user code. In particular, callbacks may
+  // mutate the caller's corpus array, but cannot extend this campaign's triage set.
+  const validated = validateFuzzOptions(initialCorpus, opts);
+  const { maxIterations, seed, maxInputLen, baseEnergy, snapshot } = validated;
+  const usedFallbackSeed = snapshot.length === 0;
 
   const rng = new SplitMix64(seed);
   const cumulativeCoverage = new CoverageBitmap();
   const corpus: CorpusSeed[] = [];
   const crashes: CrashRecord[] = [];
+  const crashBySignature = new Map<string, CrashRecord>();
+  const triage = newPhaseStats();
+  const mutation = newPhaseStats();
+  let recordedCrashBytes = 0;
+  let corpusLimitDrops = 0;
+  let unrecordedCrashOutcomes = 0;
+  let corpusBytes = 0;
 
   // 1. Initial corpus triage
-  const seeds = initialCorpus.length === 0 ? [new Uint8Array(1)] : initialCorpus;
+  const seeds = usedFallbackSeed ? [new Uint8Array(1)] : snapshot;
 
   for (const s of seeds) {
     const stepCov = new CoverageBitmap();
-    const outcome = target(s, stepCov);
+    const outcome = target(new Uint8Array(s), stepCov);
+    countOutcome(triage, outcome);
     if (outcome.status === "pass") {
-      const trace: number[] = [];
-      for (let edge = 0; edge < COVERAGE_MAP_SIZE; edge++) {
-        if (stepCov.hasEdge(edge)) {
-          trace.push(edge);
+      const [hasNew, newCount] = cumulativeCoverage.admitBitmap(stepCov);
+      if (hasNew || corpus.length === 0) {
+        if (corpus.length < MAX_INITIAL_CORPUS && corpusBytes + s.length <= MAX_CORPUS_BYTES) {
+          corpus.push({ data: new Uint8Array(s), newEdges: newCount, generation: 0 });
+          corpusBytes += s.length;
+        } else {
+          corpusLimitDrops++;
         }
       }
-      const [hasNew, newCount] = cumulativeCoverage.admitTrace(trace);
-      if (hasNew || corpus.length === 0) {
-        corpus.push({
-          data: new Uint8Array(s),
-          newEdges: newCount,
-          generation: 0,
-        });
-      }
     } else if (outcome.status === "crash") {
-      const sig = crashSignature(outcome.kind, outcome.frames);
-      crashes.push({
-        signature: sig,
-        kind: outcome.kind,
-        frames: outcome.frames,
-        minimalInput: new Uint8Array(s),
-        hits: 1,
-      });
+      recordCrash(outcome, s);
     }
   }
 
   // 2. Fuzzing loop
-  let iterations = 0;
-  while (iterations < maxIterations && corpus.length > 0) {
+  while (mutation.calls < maxIterations && corpus.length > 0) {
     const seedIdx = rng.bounded(corpus.length);
     const chosenSeed = corpus[seedIdx];
     const totalCov = cumulativeCoverage.count();
-    const energy = calculateEnergy(baseEnergy, chosenSeed.data.length, chosenSeed.newEdges, totalCov);
+    const remaining = maxIterations - mutation.calls;
+    const energy = Math.min(
+      remaining,
+      calculateEnergy(baseEnergy, chosenSeed.data.length, chosenSeed.newEdges, totalCov),
+    );
+    // A nonempty corpus and positive remaining budget must always make progress.
+    if (!Number.isSafeInteger(energy) || energy < 1 || energy > remaining) {
+      throw new Error("fuzz mutation batch violated bounded progress");
+    }
 
     for (let e = 0; e < energy; e++) {
-      if (iterations >= maxIterations) {
-        break;
-      }
-      iterations++;
-
       const mutationSteps = 1 + rng.bounded(4);
       const subSeedVal = rng.nextU64();
       let candidate: Uint8Array = mutateSequence(chosenSeed.data, subSeedVal, mutationSteps);
@@ -662,48 +772,80 @@ export function fuzzTarget(
       }
 
       const stepCov = new CoverageBitmap();
-      const outcome = target(candidate, stepCov);
+      const outcome = target(new Uint8Array(candidate), stepCov);
+      countOutcome(mutation, outcome);
 
       if (outcome.status === "pass") {
-        const trace: number[] = [];
-        for (let edge = 0; edge < COVERAGE_MAP_SIZE; edge++) {
-          if (stepCov.hasEdge(edge)) {
-            trace.push(edge);
-          }
-        }
-        const [hasNew, newCount] = cumulativeCoverage.admitTrace(trace);
+        const [hasNew, newCount] = cumulativeCoverage.admitBitmap(stepCov);
         if (hasNew) {
-          corpus.push({
-            data: candidate,
-            newEdges: newCount,
-            generation: chosenSeed.generation + 1,
-          });
+          if (corpus.length < MAX_INITIAL_CORPUS && corpusBytes + candidate.length <= MAX_CORPUS_BYTES) {
+            corpus.push({ data: new Uint8Array(candidate), newEdges: newCount, generation: chosenSeed.generation + 1 });
+            corpusBytes += candidate.length;
+          } else {
+            corpusLimitDrops++;
+          }
         }
       } else if (outcome.status === "crash") {
-        const sig = crashSignature(outcome.kind, outcome.frames);
-        const existing = crashes.find((c) => c.signature === sig);
-        if (existing) {
-          existing.hits++;
-          if (candidate.length < existing.minimalInput.length) {
-            existing.minimalInput = candidate;
-          }
-        } else {
-          crashes.push({
-            signature: sig,
-            kind: outcome.kind,
-            frames: outcome.frames,
-            minimalInput: candidate,
-            hits: 1,
-          });
-        }
+        recordCrash(outcome, candidate);
       }
     }
   }
 
+  function recordCrash(outcome: Extract<FuzzOutcome, { status: "crash" }>, input: Uint8Array): void {
+    // Keep the existing signature exact for bounded details; oversized metadata
+    // is accounted as unrecorded instead of silently changing its signature.
+    if (outcome.kind.length > MAX_CRASH_TEXT_LENGTH || outcome.frames.length > MAX_CRASH_FRAMES) {
+      unrecordedCrashOutcomes++;
+      return;
+    }
+    const kind = outcome.kind;
+    const frames = outcome.frames;
+    for (const frame of frames) {
+      if (frame.length > MAX_CRASH_TEXT_LENGTH) {
+        unrecordedCrashOutcomes++;
+        return;
+      }
+    }
+    const sig = crashSignature(kind, frames);
+    const existing = crashBySignature.get(sig);
+    if (existing) {
+      existing.hits++;
+      if (input.length < existing.minimalInput.length) {
+        const nextBytes = recordedCrashBytes - existing.minimalInput.length + input.length;
+        if (nextBytes <= MAX_RECORDED_CRASH_BYTES) {
+          recordedCrashBytes = nextBytes;
+          existing.minimalInput = new Uint8Array(input);
+        }
+      }
+      return;
+    }
+    if (crashes.length >= MAX_RECORDED_CRASHES || recordedCrashBytes + input.length > MAX_RECORDED_CRASH_BYTES) {
+      unrecordedCrashOutcomes++;
+      return;
+    }
+    const record: CrashRecord = {
+      signature: sig,
+      kind,
+      frames,
+      minimalInput: new Uint8Array(input),
+      hits: 1,
+    };
+    recordedCrashBytes += input.length;
+    crashes.push(record);
+    crashBySignature.set(sig, record);
+  }
+
   return {
-    iterations,
+    iterations: mutation.calls,
     admittedSeeds: corpus.length,
     totalEdges: cumulativeCoverage.count(),
     crashes,
+    triage,
+    mutation,
+    usedFallbackSeed,
+    clean: !usedFallbackSeed && mutation.calls > 0 && triage.crash === 0 && triage.timeout === 0 && triage.oom === 0 &&
+      mutation.crash === 0 && mutation.timeout === 0 && mutation.oom === 0 && unrecordedCrashOutcomes === 0,
+    corpusLimitDrops,
+    unrecordedCrashOutcomes,
   };
 }

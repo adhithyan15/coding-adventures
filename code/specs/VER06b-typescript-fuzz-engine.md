@@ -128,8 +128,8 @@ coverage from caller-recorded semantic edges.
 
 ### 8.1 Inputs and limits
 
-`fuzzTarget` validates all options, the target callback, and the initial corpus
-before its first target call. Numeric options must be finite safe integers in
+`fuzzTarget` validates all options, that the target is callable, and the initial
+corpus before its first target call. Numeric options must be finite safe integers in
 these ranges: `maxIterations` is 0 through 100,000, `maxInputLen` is 0 through
 1,048,576 bytes, and `baseEnergy` is 0 through 65,536. A numeric seed must be a
 safe integer. BigInt seeds retain `SplitMix64`'s existing modulo-2^64 seed
@@ -153,12 +153,16 @@ batch therefore satisfies `1 <= batch <= remaining`, and no callback is
 scheduled after the budget is exhausted.
 
 Crash detail storage is bounded to 1,024 records and 32 MiB of saved crash
-inputs. The phase ledgers count every returned crash even when its detail
-record cannot be retained; `unrecordedCrashOutcomes` records that loss. For
-retained signatures, triage and mutation crashes share one deduplication map:
-repeat signatures increment `hits`, and a shorter same-signature input
-replaces the recorded input when it fits the detail budget. The crash outcome
-count remains the authoritative count if detail storage is capped.
+inputs. Each retained signature also requires at most 64 frames, each at most
+256 UTF-16 code units, and a kind of at most 256 code units. Oversized crash
+metadata is counted but not hashed or retained, so a capped record does not
+silently change the existing signature. The phase ledgers count every
+returned crash even when its detail record cannot be retained;
+`unrecordedCrashOutcomes` records that loss. For retained signatures, triage
+and mutation crashes share one deduplication map: repeat signatures increment
+`hits`, and a shorter same-signature input replaces the recorded input when it
+fits the detail budget. The crash outcome count remains authoritative if detail
+storage is capped.
 
 ### 8.2 Per-phase returned outcome ledger
 
@@ -207,9 +211,12 @@ fixed seed and replay that same campaign. Its exact returned-callback,
 phase-ledger, corpus, edge, and crash results must be recorded; caller-created
 semantic edges must remain labeled manual. Source mutants must be recompiled
 from source, fail the intended assertion, and be checked against healthy
-replay. A bounded SAT model plus an independently replayed DRAT certificate may
-cover only the encoded finite ledger arithmetic if the existing solver/checker
-can produce the certificate; it cannot certify the TypeScript implementation
-or float behavior. Otherwise record that rung as unavailable. Warrant binding,
+replay. A separate bounded abstract model encodes the fixed nine-call vector
+with one-hot four-outcome variables and a `clean` predicate. Under Rust 1.100.0,
+`cdcl-sat` 0.3.2 found the model satisfiable with `clean = false`; forcing
+`clean = true` was UNSAT, and independent `drat-check` 0.1.0 accepted the
+8-byte certificate (2 lemmas, 0 RAT lemmas, empty clause at line 2) for the
+37-variable, 109-clause formula. This receipt checks only the finite encoded
+vector, not the TypeScript implementation or float behavior. Warrant binding,
 native source coverage, a process watchdog, and the separate standalone
 TypeScript fuzz package remain open evidence items.
