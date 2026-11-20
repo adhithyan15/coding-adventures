@@ -6,6 +6,29 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Consuming reviewed-server-path `CertificateVerify`-to-Finished-key
+  transcript continuity with a fixed server signature role, exact path-derived
+  RSA key, retained proof graph, explicit detached Finished-key provenance,
+  and no returned state on failure.
+- Same-suite, server-role `VerifiedFinished` completion of the retained ordered
+  no-PSK server flight, preserving both cryptographic verdicts, the optional
+  client-authentication requirement, and stable pre-mutation failures.
+- Ordered no-PSK server-flight transition from `ExpectCertificateVerify` to
+  `ExpectFinished` that admits only the five sealed destination-bound complete-
+  revocation signature verdicts and retains the exact flight and proof.
+- Exact HTTPS DNS destination, alternative intermediate-status-responder
+  no-check complete fixed-path revocation, and TLS 1.3 server
+  `CertificateVerify` composition with sealed exact-leaf admission, retained
+  evidence, and role-first public-fixture tests.
+- Exact HTTPS DNS destination, recursive-responder no-check complete fixed-path
+  revocation, and TLS 1.3 server `CertificateVerify` composition with sealed
+  exact-leaf admission, retained evidence, and role-first public-fixture tests.
+- Exact HTTPS DNS destination, double-nested no-check complete fixed-path
+  revocation, and TLS 1.3 server `CertificateVerify` composition with sealed
+  exact-leaf admission, retained evidence, and role-first public-fixture tests.
+- Exact HTTPS DNS destination, nested no-check complete fixed-path revocation,
+  and TLS 1.3 server `CertificateVerify` composition with sealed exact-leaf
+  admission, non-copyable retained evidence, and public-fixture role coverage.
 - Exact HTTPS DNS destination, direct no-check complete fixed-path revocation,
   and TLS 1.3 server `CertificateVerify` composition with role-first leaf-key
   verification, non-copyable retained evidence, public-fixture success, and

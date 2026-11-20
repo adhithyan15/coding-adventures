@@ -21,7 +21,9 @@ moves it into fresh sequence-zero nonce state, marks that sender issued, and
 returns a non-cloneable wrapper that borrows the issuer. Callers can borrow or
 mutably borrow the state through that wrapper, but cannot detach it from the
 complete retry proof or create a second sequence-zero state for the same
-sender through this boundary.
+sender through this boundary. Finished-key and transcript-continuation proofs
+for the same secrets must be derived through the issuer's immutable proof
+accessor, preserving that single owner and its issuance state.
 
 The exact state wrapper can also seal or open one retry-handshake record through
 the repository-owned record dispatcher. Sealing fixes the authenticated inner
@@ -57,13 +59,48 @@ an earlier valid message followed by an invalid one, the earlier callback may
 already have run; caller-owned effects remain caller-audited and are not
 transactional.
 
+A fresh ordered owner can also be consumed together with the exact retry
+server transcript-continuation proof. The join requires pointer identity of
+the retained handshake-traffic-secret object, zero consumed records, no
+fragment or failure, the initial `ExpectEncryptedExtensions` position, exact
+suite equality across ordered state, transcript, and server Finished key, and
+the retained ServerHello snapshot. Success moves the ordered owner and
+reconstructed transcript into one non-cloneable wrapper while retaining the
+complete server Finished-key proof. Only immutable access is exposed.
+
+The joined owner can authenticate a ciphertext record, enforce each completed
+message's no-PSK ordering transition, and lend the exact message with its
+pre-message transcript snapshot to a synchronous non-retaining handler. A
+`true` result authorizes hashing that message's exact header-plus-body bytes;
+`false` rejects it without hashing it and permanently closes record
+processing. Success retains the exact ciphertext, authenticated record result,
+server Finished-key proof, post-record flight state, and post-record transcript
+snapshot in one non-cloneable result. Record, reassembly, ordering, rejection,
+transcript, and handler-unwind failures are terminal. Earlier callback effects
+are not transactional, and a transcript-capacity failure can occur after the
+handler authorizes the affected message.
+
+When that pending ordered message is `EncryptedExtensions`, the handler can
+decode its exact authenticated body under explicit structural limits and bind
+every extension to the retained retry policy and final ClientHello offer. The
+result is a non-cloneable proof retaining the pending pre-message transcript
+snapshot beside the exact decoded body. The underlying base-schedule evidence
+remains private to the pending value, so this body check cannot be redirected
+to a detached offer or policy. This helper validates only extension-block
+structure, message placement, allowed context, uniqueness, and offer matching;
+it does not interpret extension payload semantics.
+
 This package derives one direction's handshake key and IV, creates matching
 record state, protects exact retry-handshake records in caller-owned buffers,
-and enforces the public no-PSK server-flight type order. It does not interpret
-message bodies, advance the transcript, authenticate CertificateVerify or
-Finished, validate certificates, establish trust, verify hostnames, enforce
-revocation, perform I/O, authorize HTTP or OAuth, or provide TLS, HTTPS, or
-live-provider readiness.
+enforces the public no-PSK server-flight type order, joins fresh ordered state
+to exact retry transcript and Finished-key provenance, and advances that
+transcript only after explicit caller authorization of authenticated ordered
+messages. It provides the bounded `EncryptedExtensions` structure and retained
+offer/context check above; the authorization bit is otherwise not body
+validation. This package does not interpret extension payloads or other message
+bodies, authenticate CertificateVerify or Finished, validate certificates,
+establish trust, verify hostnames, enforce revocation, perform I/O, authorize
+HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
 
 ## Verification
 

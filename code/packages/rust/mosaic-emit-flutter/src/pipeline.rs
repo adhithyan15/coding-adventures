@@ -1065,7 +1065,20 @@ fn build_runtime_required_main_dart(
             "  void _reportEnvironment() {{\n",
             "    final host = _mosaicHost;\n",
             "    final environment = _environment;\n",
-            "    if (!mounted || !_hostReady || host == null || environment == null) {{\n",
+            "    if (!mounted) {{\n",
+            "      mosaicNativeDiagnostic('environment_report', 'unmounted');\n",
+            "      return;\n",
+            "    }}\n",
+            "    if (!_hostReady) {{\n",
+            "      mosaicNativeDiagnostic('environment_report', 'host_not_ready');\n",
+            "      return;\n",
+            "    }}\n",
+            "    if (host == null) {{\n",
+            "      mosaicNativeDiagnostic('environment_report', 'host_absent');\n",
+            "      return;\n",
+            "    }}\n",
+            "    if (environment == null) {{\n",
+            "      mosaicNativeDiagnostic('environment_report', 'environment_absent');\n",
             "      return;\n",
             "    }}\n",
             "    try {{\n",
@@ -1073,8 +1086,13 @@ fn build_runtime_required_main_dart(
             "      // was sent. An answer with props is shown like an event's; a\n",
             "      // failure is only logged. A resize is not something the user did,\n",
             "      // so it never replaces the screen with a startup failure.\n",
+            "      mosaicNativeDiagnostic('environment_report', 'dart_attempted');\n",
             "      final answer = host.reportEnvironment(environment);\n",
-            "      if (answer == null) return;\n",
+            "      if (answer == null) {{\n",
+            "        mosaicNativeDiagnostic('environment_report', 'returned_no_visible_change');\n",
+            "        return;\n",
+            "      }}\n",
+            "      mosaicNativeDiagnostic('environment_report', 'returned_visible_answer');\n",
             "      if (answer['props'] is Map) {{\n",
             "        _applyMosaicResponse(answer);\n",
             "        return;\n",
@@ -1084,6 +1102,7 @@ fn build_runtime_required_main_dart(
             "        debugPrint('host error: $error');\n",
             "      }}\n",
             "    }} on Object catch (error) {{\n",
+            "      mosaicNativeDiagnostic('environment_report', 'threw');\n",
             "      debugPrint('host error: Mosaic environment report failed: $error');\n",
             "    }}\n",
             "  }}\n\n",
@@ -1602,6 +1621,13 @@ fn host_value_for_slot(slot: &SlotDecl, slot_values: &HashMap<String, String>) -
 fn build_mosaic_host_dart(require_runtime: bool, has_layout_variants: bool) -> String {
     let mut out = String::from(BANNER_DART);
     out.push_str("import 'dart:async';\n\n");
+    if require_runtime {
+        // The strict sample shell includes opt-in diagnostic call sites even
+        // when emitted without the package builder's standard host. Keep that
+        // generated main analyzable; native package builds replace this inert
+        // placeholder with the real binding.
+        out.push_str("void mosaicNativeDiagnostic(String stage, String result) {}\n\n");
+    }
     out.push_str("class MosaicHost {\n");
     out.push_str("  const MosaicHost();\n\n");
     out.push_str("  static MosaicHost? load() => null;\n\n");
@@ -15842,14 +15868,25 @@ mod tests {
         assert_eq!(main.matches("builder: _observeEnvironment").count(), 1);
         // Nothing before the runtime is up and showing.
         assert!(main.contains(
-            "if (!mounted || !_hostReady || host == null || environment == null) {"
+            "if (!mounted) {\n      mosaicNativeDiagnostic('environment_report', 'unmounted');"
+        ));
+        assert!(main.contains(
+            "if (!_hostReady) {\n      mosaicNativeDiagnostic('environment_report', 'host_not_ready');"
+        ));
+        assert!(main.contains(
+            "if (host == null) {\n      mosaicNativeDiagnostic('environment_report', 'host_absent');"
+        ));
+        assert!(main.contains(
+            "if (environment == null) {\n      mosaicNativeDiagnostic('environment_report', 'environment_absent');"
         ));
         // An answer with props is shown like an event's; a failure is only
         // logged and never reaches the startup-failure screen.
         let body = &main[main.find("void _reportEnvironment() {").unwrap()..];
         let body = &body[..body.find("\n  }\n").unwrap()];
         assert!(body.contains("final answer = host.reportEnvironment(environment);"));
-        assert!(body.contains("if (answer == null) return;"));
+        assert!(body.contains(
+            "if (answer == null) {\n        mosaicNativeDiagnostic('environment_report', 'returned_no_visible_change');\n        return;\n      }"
+        ));
         assert!(body.contains("if (answer['props'] is Map) {\n        _applyMosaicResponse(answer);"));
         assert!(body.contains("debugPrint('host error: $error');"));
         assert!(body.contains("} on Object catch (error) {"));
@@ -15860,6 +15897,10 @@ mod tests {
         assert!(project
             .mosaic_host_dart
             .contains("  static Map<String, String> environmentReport(\n"));
+        assert!(main.contains("mosaicNativeDiagnostic('environment_report', 'dart_attempted');"));
+        assert!(project
+            .mosaic_host_dart
+            .contains("void mosaicNativeDiagnostic(String stage, String result) {}"));
         assert!(project.mosaic_host_dart.contains(
             "  Map<String, Object?>? reportEnvironment(Map<String, String> environment) => null;\n"
         ));

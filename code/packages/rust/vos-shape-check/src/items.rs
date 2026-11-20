@@ -12,6 +12,23 @@
 //! inside `HashMap<A, B>` must not split a field, so commas are counted only at
 //! angle-bracket depth 0 (the `>` of `->` is a separate merged token and does
 //! not count).
+//!
+//! ## Enum variants (VOS-039b-2a)
+//!
+//! SH19 (the command-type check) and CK10 (`vos-link check-contract`) need the
+//! *variants* of an `enum`.  They are read by the same token-tree scan, with the
+//! same bracket table, not by a second parser.  The body of an enum is a list of
+//! variants separated by commas at depth 0; each variant is, in order:
+//!
+//! ```text
+//!   #[attr]*   Name   ( T1, T2 )      a tuple variant   (fields named "0", "1", ..)
+//!   #[attr]*   Name   { a: T1, b: T2 } a named-field variant
+//!   #[attr]*   Name                    a unit variant
+//!   #[attr]*   Name   = <expr>         a unit variant with a discriminant
+//! ```
+//!
+//! A variant that does not fit one of these shapes is a [`Gap`] (reported as
+//! VT03, fail closed): the scan never silently drops a variant it could not read.
 
 use crate::lexer::{Kind, Token};
 use crate::syntax::{angle_close, scan_header, FileCtx, Header};
@@ -29,6 +46,21 @@ pub struct Field {
     pub line: u32,
 }
 
+/// A variant of an `enum` (VOS-039b-2a).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Variant {
+    /// The constructor name.
+    pub name: String,
+    /// Line of the name.
+    pub line: u32,
+    /// Written with braces (`V { a: u8 }`), as opposed to parentheses or nothing.
+    pub named: bool,
+    /// Its fields in order (a tuple variant's are named `0`, `1`, ..).
+    pub fields: Vec<Field>,
+    /// Carries `#[non_exhaustive]`.
+    pub non_exhaustive: bool,
+}
+
 /// A `struct`, `enum`, `union` or `type` item.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct TypeDef {
@@ -42,8 +74,19 @@ pub struct TypeDef {
     pub line: u32,
     /// Defined inside the ghost module.
     pub in_ghost: bool,
-    /// Named fields (empty for enums, tuple structs, aliases).
+    /// Fields of a struct or union, named or (for a tuple struct) by position;
+    /// empty for enums and aliases.
     pub fields: Vec<Field>,
+    /// The variants of an `enum`, in source order (empty for every other item).
+    pub variants: Vec<Variant>,
+    /// Written with a generic list (`struct S<T>`), whether or not it could be read.
+    pub generic: bool,
+    /// Carries `#[non_exhaustive]`.
+    pub non_exhaustive: bool,
+    /// A field or variant list had an entry the scan could not read, so
+    /// `fields` or `variants` is NOT the whole truth.  (For an enum this is also
+    /// a [`Gap`]; a struct is only judged by SH19, which fails closed on it.)
+    pub malformed: bool,
     /// Every identifier written in the item (for the interior-mutability
     /// closure of SH3).
     pub idents: Vec<String>,
@@ -60,10 +103,13 @@ fn join(toks: &[Token]) -> String {
     s
 }
 
-/// Parse `{ name: ty, ... }` between `open` and `close`.
-fn parse_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
+/// Parse `{ name: ty, ... }` between `open` and `close`, and say whether an
+/// entry was skipped because it was not a `name: type` pair (the fields returned
+/// are then incomplete).
+fn parse_fields_checked(f: &FileCtx, open: usize, close: usize) -> (Vec<Field>, bool) {
     let t = &f.toks;
     let mut out = Vec::new();
+    let mut skipped = false;
     let mut j = open + 1;
     while j < close {
         crate::steps::tick();
@@ -116,6 +162,7 @@ fn parse_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
         } else {
             // Not a named field (a tuple-like or malformed list): skip to the
             // next top-level comma so one oddity does not hide the rest.
+            skipped = true;
             while j < close && !t[j].is_punct(",") {
                 crate::steps::tick();
                 if matches!(t[j].text.as_str(), "(" | "[" | "{") && t[j].kind == Kind::Punct {
@@ -126,7 +173,7 @@ fn parse_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
             j += 1;
         }
     }
-    out
+    (out, skipped)
 }
 
 /// Most identifiers stored per item (bounds memory on adversarial input).
@@ -196,6 +243,96 @@ fn parse_tuple_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
     out
 }
 
+/// Is the attribute group `#[ .. ]` whose `[` is at `open` a `non_exhaustive`?
+/// Any identifier of that name inside it counts (`cfg_attr(.., non_exhaustive)`
+/// included): the safe direction for SH19.
+fn names_non_exhaustive(f: &FileCtx, open: usize) -> bool {
+    f.toks[open + 1..f.pair[open]]
+        .iter()
+        .any(|x| x.kind == Kind::Ident && x.text == "non_exhaustive")
+}
+
+/// The index just past the next top-level comma at or after `j` (or `close`):
+/// groups are skipped whole, so a comma inside `(..)` does not end the entry.
+fn skip_entry(f: &FileCtx, mut j: usize, close: usize) -> usize {
+    let t = &f.toks;
+    while j < close {
+        crate::steps::tick();
+        if t[j].kind == Kind::Punct {
+            match t[j].text.as_str() {
+                "(" | "[" | "{" => j = f.pair[j],
+                "," => return j + 1,
+                _ => {}
+            }
+        }
+        j += 1;
+    }
+    close
+}
+
+/// Read the variants of the enum body `{ .. }` from `open` to `close`.  Returns
+/// the variants and the `(line, what)` of every entry that could not be read.
+fn parse_variants(f: &FileCtx, open: usize, close: usize) -> (Vec<Variant>, Vec<(u32, String)>) {
+    let t = &f.toks;
+    let mut out = Vec::new();
+    let mut bad: Vec<(u32, String)> = Vec::new();
+    let mut j = open + 1;
+    while j < close {
+        crate::steps::tick();
+        let mut non_exhaustive = false;
+        while j < close && t[j].is_punct("#") && t.get(j + 1).is_some_and(|x| x.is_punct("[")) {
+            crate::steps::tick();
+            non_exhaustive |= names_non_exhaustive(f, j + 1);
+            j = f.pair[j + 1] + 1;
+        }
+        if j >= close {
+            break;
+        }
+        if t[j].kind != Kind::Ident {
+            bad.push((
+                t[j].line,
+                "a variant that does not start with a name".into(),
+            ));
+            j = skip_entry(f, j, close);
+            continue;
+        }
+        let name = t[j].text.clone();
+        let line = t[j].line;
+        j += 1;
+        let mut named = false;
+        let mut fields = Vec::new();
+        let mut malformed = false;
+        if j < close && t[j].is_punct("(") {
+            fields = parse_tuple_fields(f, j, f.pair[j]);
+            j = f.pair[j] + 1;
+        } else if j < close && t[j].is_punct("{") {
+            named = true;
+            (fields, malformed) = parse_fields_checked(f, j, f.pair[j]);
+            j = f.pair[j] + 1;
+        }
+        if malformed {
+            bad.push((line, format!("the fields of variant `{name}`")));
+        }
+        // An optional discriminant `= expr`, then the comma or the end.
+        if j < close && t[j].is_punct("=") {
+            j = skip_entry(f, j, close);
+        } else if j < close && t[j].is_punct(",") {
+            j += 1;
+        } else if j < close {
+            bad.push((line, format!("the tokens after variant `{name}`")));
+            j = skip_entry(f, j, close);
+        }
+        out.push(Variant {
+            name,
+            line,
+            named,
+            fields,
+            non_exhaustive,
+        });
+    }
+    (out, bad)
+}
+
 /// Collect every `struct`, `enum`, `union` and `type` of every file, and the
 /// [`Gap`]s where a header could not be read to its end.
 ///
@@ -224,6 +361,23 @@ pub fn collect_types(files: &[FileCtx]) -> (Vec<TypeDef>, Vec<Gap>) {
                 continue;
             }
             let Some(name_tok) = t.get(i + 1).filter(|x| x.kind == Kind::Ident) else {
+                // `enum` and `struct` are strict keywords, so one that is not
+                // followed by a name is a definition this scan cannot read
+                // (`enum $n { .. }` inside a macro body is the case that
+                // matters: it would define an enum the check never sees).  It is
+                // a gap (VT03), never a silent skip.  `union` and `type` are
+                // not strict, so they are a gap only before a `$`.
+                let strict = keyword == "enum" || keyword == "struct";
+                let after = t.get(i + 1);
+                if strict || after.is_some_and(|x| x.is_punct("$")) {
+                    gaps.push(Gap {
+                        file: fi,
+                        line: t[i].line,
+                        message: format!(
+                            "the name of this `{keyword}` could not be read (fail closed)"
+                        ),
+                    });
+                }
                 continue;
             };
             let mut gap = |line: u32, what: &str| {
@@ -238,7 +392,12 @@ pub fn collect_types(files: &[FileCtx]) -> (Vec<TypeDef>, Vec<Gap>) {
             };
             let mut k = i + 2;
             let mut readable = true;
-            if t.get(k).is_some_and(|x| x.is_punct("<")) {
+            let generic = t.get(k).is_some_and(|x| x.is_punct("<"));
+            let non_exhaustive = f
+                .attrs_before(i)
+                .iter()
+                .any(|a| names_non_exhaustive(f, a.open));
+            if generic {
                 match angle_close(t, &f.pair, k) {
                     Some(c) => k = c + 1,
                     None => {
@@ -248,6 +407,8 @@ pub fn collect_types(files: &[FileCtx]) -> (Vec<TypeDef>, Vec<Gap>) {
                 }
             }
             let mut fields = Vec::new();
+            let mut variants = Vec::new();
+            let mut malformed = !readable;
             let mut end = (i + 1).min(t.len() - 1);
             if readable {
                 if keyword != "enum"
@@ -256,10 +417,12 @@ pub fn collect_types(files: &[FileCtx]) -> (Vec<TypeDef>, Vec<Gap>) {
                 {
                     let close = f.pair[k];
                     fields = parse_tuple_fields(f, k, close);
+                    malformed |= fields.iter().any(|x| x.ty.is_empty());
                     end = match scan_header(t, &f.pair, close + 1) {
                         Header::End(e) => e,
                         Header::GaveUp(g) => {
                             gap(t[k].line, "the where clause");
+                            malformed = true;
                             g.saturating_sub(1).max(close)
                         }
                     };
@@ -267,13 +430,23 @@ pub fn collect_types(files: &[FileCtx]) -> (Vec<TypeDef>, Vec<Gap>) {
                     match scan_header(t, &f.pair, k) {
                         Header::End(b) if t[b].is_punct("{") => {
                             if keyword == "struct" || keyword == "union" {
-                                fields = parse_fields(f, b, f.pair[b]);
+                                let (fs, skipped) = parse_fields_checked(f, b, f.pair[b]);
+                                fields = fs;
+                                malformed |= skipped;
+                            } else if keyword == "enum" {
+                                let (vs, bad) = parse_variants(f, b, f.pair[b]);
+                                variants = vs;
+                                malformed |= !bad.is_empty();
+                                for (line, what) in bad {
+                                    gap(line, &format!("{what} (an enum body)"));
+                                }
                             }
                             end = f.pair[b];
                         }
                         Header::End(b) => end = b,
                         Header::GaveUp(g) => {
                             gap(t[i].line, "the header");
+                            malformed = true;
                             end = g.saturating_sub(1).max(i + 1);
                         }
                     }
@@ -297,6 +470,10 @@ pub fn collect_types(files: &[FileCtx]) -> (Vec<TypeDef>, Vec<Gap>) {
                 line: name_tok.line,
                 in_ghost: f.in_ghost(i),
                 fields,
+                variants,
+                generic,
+                non_exhaustive,
+                malformed,
                 idents,
             });
         }

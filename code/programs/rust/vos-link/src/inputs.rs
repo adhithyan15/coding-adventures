@@ -226,7 +226,11 @@ fn read_vos_toml(
 }
 
 /// Admit one part; a cap is a no-verdict, anything else a finding.
-fn admit(bytes: &[u8], file: &str, f: &mut Vec<Finding>) -> Result<Option<Part>, NoVerdict> {
+pub(crate) fn admit(
+    bytes: &[u8],
+    file: &str,
+    f: &mut Vec<Finding>,
+) -> Result<Option<Part>, NoVerdict> {
     match admit_part(bytes) {
         Ok(p) => Ok(Some(p)),
         Err(e) if e.is_cap() => Err(NoVerdict::new(format!("{file}: {e}"))),
@@ -235,6 +239,163 @@ fn admit(bytes: &[u8], file: &str, f: &mut Vec<Finding>) -> Result<Option<Part>,
             Ok(None)
         }
     }
+}
+
+/// The parts of a contract package every consumer of it needs: `load` (an implementation's
+/// document) and `check-contract` (the contract's own lemmas).
+#[derive(Clone, Debug)]
+pub struct ContractPackage {
+    /// `contract.vos`.
+    pub contract: Contract,
+    /// `warrant/contract.part`, if it exists and is admitted.
+    pub contract_part: Option<Part>,
+    /// The obligations part of every tier `contract.vos` declares.
+    pub tier_parts: Vec<(Tier, Part)>,
+    /// The claims of every tier's part.
+    pub tier_claims: Vec<(Tier, Vec<ClaimFact>)>,
+    /// `warrant/lemmas.part`, if it exists and is admitted (never embedded, VOS-D064).
+    pub lemmas_part: Option<Part>,
+}
+
+/// Judge the contract package `contract_pkg` (a directory of `code/packages/rust`): its
+/// `vos.toml` kind, `contract.vos`, the tier rows against the `obligations-*.part` files (both
+/// ways, GD03), and the admission of every part.  Pushes findings onto `f`; returns `None` when
+/// nothing more can be judged (the package or `contract.vos` is missing or unreadable).
+///
+/// Factored out of [`load`] by VOS-039b-1 so that `check-contract` reads a contract package the
+/// way `gen-doc` does and the two can never disagree about what a well-formed one is.
+pub(crate) fn load_contract_package(
+    layout: &Layout,
+    contract_pkg: &str,
+    f: &mut Vec<Finding>,
+) -> Result<Option<ContractPackage>, NoVerdict> {
+    let contract_dir = layout.package_dir(contract_pkg);
+    if !exists_plain_dir(&contract_dir)? {
+        f.push(Finding::new(
+            "GD05",
+            format!("vos.toml: contract package `{contract_pkg}` does not exist under code/packages/rust"),
+        ));
+        return Ok(None);
+    }
+    if let Some(cvt) = read_vos_toml(&contract_dir, "contract package: ", f)? {
+        if cvt.kind != Some(Kind::Contract) {
+            f.push(Finding::new(
+                "GD05",
+                format!(
+                    "contract package `{contract_pkg}`: vos.toml does not say kind = \"contract\""
+                ),
+            ));
+        }
+    }
+
+    let contract_bytes = read_regular_opt(&contract_dir.join("contract.vos"), CONTRACT_MAX_BYTES)?;
+    let contract = match contract_bytes {
+        None => {
+            f.push(Finding::new("GD02", "contract.vos: not found"));
+            None
+        }
+        Some(bytes) => match parse_contract(&bytes) {
+            Ok(c) => Some(c),
+            Err(e) if e.is_cap() => return Err(NoVerdict::new(e.to_string())),
+            Err(e) => {
+                f.push(Finding::new("GD02", e.to_string()));
+                None
+            }
+        },
+    };
+    let Some(contract) = contract else {
+        return Ok(None);
+    };
+    if contract.package != contract_pkg {
+        f.push(Finding::new(
+            "GD02",
+            format!(
+                "contract.vos names package `{}` but lives in `{contract_pkg}`",
+                contract.package
+            ),
+        ));
+    }
+
+    // --- the tier files agree with contract.vos (VOS-D049) ----------------------------
+    let warrant_dir = contract_dir.join("warrant");
+    let listing = list_names(&warrant_dir)?;
+    let mut tier_parts: Vec<(Tier, Part)> = Vec::new();
+    let mut tier_claims: Vec<(Tier, Vec<ClaimFact>)> = Vec::new();
+    for name in &listing {
+        let is_obligation = name.starts_with("obligations-") && name.ends_with(".part");
+        let declared = contract.tiers.iter().any(|t| *name == obligations_file(*t));
+        if is_obligation && !declared {
+            f.push(Finding::new(
+                "GD03",
+                format!(
+                    "{} exists but contract.vos has no matching `tier` row",
+                    esc(name)
+                ),
+            ));
+        }
+    }
+    let contract_part = match read_regular_opt(&warrant_dir.join("contract.part"), PART_MAX_BYTES)?
+    {
+        None => {
+            f.push(Finding::new("GD03", "warrant/contract.part: not found"));
+            None
+        }
+        Some(b) => admit(&b, "warrant/contract.part", f)?,
+    };
+    // `warrant/lemmas.part` (VOS02 2.1, VOS-D064) is the contract's model-level lemmas.  It is
+    // NEVER embedded: it is admitted with the same marker and character rules as every other
+    // part (so a forged marker in it is refused).  `gen-doc` does not need it; `check-contract`
+    // requires it (VOS-039b-1) and reads it from here.
+    let lemmas_part = match read_regular_opt(&warrant_dir.join("lemmas.part"), PART_MAX_BYTES)? {
+        Some(b) => admit(&b, "warrant/lemmas.part", f)?,
+        None => None,
+    };
+    for tier in &contract.tiers {
+        let file = obligations_file(*tier);
+        let Some(b) = read_regular_opt(&warrant_dir.join(&file), PART_MAX_BYTES)? else {
+            f.push(Finding::new(
+                "GD03",
+                format!(
+                    "contract.vos has `tier {}` but warrant/{file} does not exist",
+                    tier.name()
+                ),
+            ));
+            continue;
+        };
+        let Some(part) = admit(&b, &format!("warrant/{file}"), f)? else {
+            continue;
+        };
+        match claims_of_block(part.text()) {
+            Ok(claims) => tier_claims.push((*tier, claims)),
+            Err(e) => f.push(Finding::new("GD04", format!("warrant/{file}: {e}"))),
+        }
+        tier_parts.push((*tier, part));
+    }
+    // An obligation name is one claim: the same name in two tiers would make "carries"
+    // ambiguous (and is a duplicate declaration in any document that embeds both).
+    let mut seen = std::collections::BTreeMap::new();
+    for (tier, claims) in &tier_claims {
+        for c in claims {
+            if let Some(first) = seen.insert(c.name.clone(), *tier) {
+                f.push(Finding::new(
+                    "GD04",
+                    format!(
+                        "obligation `{}` is declared in tier {} and in tier {}",
+                        c.name,
+                        first.name(),
+                        tier.name()
+                    ),
+                ));
+            }
+        }
+    }
+    Ok(Some(ContractPackage {
+        contract,
+        contract_part,
+        tier_parts,
+        tier_claims,
+        lemmas_part,
+    }))
 }
 
 /// Load and judge the inputs for the implementation at `crate_arg`.
@@ -290,125 +451,17 @@ pub fn load(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Load, NoVerdict
         return Ok(Load::Findings(f));
     };
 
-    // --- the contract package --------------------------------------------------------
-    let contract_dir = layout.package_dir(&contract_pkg);
-    if !exists_plain_dir(&contract_dir)? {
-        f.push(Finding::new(
-            "GD05",
-            format!("vos.toml: contract package `{contract_pkg}` does not exist under code/packages/rust"),
-        ));
-        return Ok(Load::Findings(f));
-    }
-    if let Some(cvt) = read_vos_toml(&contract_dir, "contract package: ", &mut f)? {
-        if cvt.kind != Some(Kind::Contract) {
-            f.push(Finding::new(
-                "GD05",
-                format!(
-                    "contract package `{contract_pkg}`: vos.toml does not say kind = \"contract\""
-                ),
-            ));
-        }
-    }
-
-    let contract_bytes = read_regular_opt(&contract_dir.join("contract.vos"), CONTRACT_MAX_BYTES)?;
-    let contract = match contract_bytes {
-        None => {
-            f.push(Finding::new("GD02", "contract.vos: not found"));
-            None
-        }
-        Some(bytes) => match parse_contract(&bytes) {
-            Ok(c) => Some(c),
-            Err(e) if e.is_cap() => return Err(NoVerdict::new(e.to_string())),
-            Err(e) => {
-                f.push(Finding::new("GD02", e.to_string()));
-                None
-            }
-        },
-    };
-    let Some(contract) = contract else {
+    // --- the contract package (shared with `check-contract`, VOS-039b-1) ---------------
+    let Some(pkg) = load_contract_package(&layout, &contract_pkg, &mut f)? else {
         return Ok(Load::Findings(f));
     };
-    if contract.package != contract_pkg {
-        f.push(Finding::new(
-            "GD02",
-            format!(
-                "contract.vos names package `{}` but lives in `{contract_pkg}`",
-                contract.package
-            ),
-        ));
-    }
-
-    // --- the tier files agree with contract.vos (VOS-D049) ----------------------------
-    let warrant_dir = contract_dir.join("warrant");
-    let listing = list_names(&warrant_dir)?;
-    let mut tier_parts: Vec<(Tier, Part)> = Vec::new();
-    let mut tier_claims: Vec<(Tier, Vec<ClaimFact>)> = Vec::new();
-    for name in &listing {
-        let is_obligation = name.starts_with("obligations-") && name.ends_with(".part");
-        let declared = contract.tiers.iter().any(|t| *name == obligations_file(*t));
-        if is_obligation && !declared {
-            f.push(Finding::new(
-                "GD03",
-                format!(
-                    "{} exists but contract.vos has no matching `tier` row",
-                    esc(name)
-                ),
-            ));
-        }
-    }
-    let contract_part = match read_regular_opt(&warrant_dir.join("contract.part"), PART_MAX_BYTES)?
-    {
-        None => {
-            f.push(Finding::new("GD03", "warrant/contract.part: not found"));
-            None
-        }
-        Some(b) => admit(&b, "warrant/contract.part", &mut f)?,
-    };
-    // `warrant/lemmas.part` (VOS02 2.1, VOS-D064) is the contract's model-level lemmas.  It is
-    // OPTIONAL and NEVER embedded: it is admitted with the same marker and character rules as
-    // every other part (so a forged marker in it is refused), and nothing else reads it here.
-    if let Some(b) = read_regular_opt(&warrant_dir.join("lemmas.part"), PART_MAX_BYTES)? {
-        admit(&b, "warrant/lemmas.part", &mut f)?;
-    }
-    for tier in &contract.tiers {
-        let file = obligations_file(*tier);
-        let Some(b) = read_regular_opt(&warrant_dir.join(&file), PART_MAX_BYTES)? else {
-            f.push(Finding::new(
-                "GD03",
-                format!(
-                    "contract.vos has `tier {}` but warrant/{file} does not exist",
-                    tier.name()
-                ),
-            ));
-            continue;
-        };
-        let Some(part) = admit(&b, &format!("warrant/{file}"), &mut f)? else {
-            continue;
-        };
-        match claims_of_block(part.text()) {
-            Ok(claims) => tier_claims.push((*tier, claims)),
-            Err(e) => f.push(Finding::new("GD04", format!("warrant/{file}: {e}"))),
-        }
-        tier_parts.push((*tier, part));
-    }
-    // An obligation name is one claim: the same name in two tiers would make "carries"
-    // ambiguous (and is a duplicate declaration in any document that embeds both).
-    let mut seen = std::collections::BTreeMap::new();
-    for (tier, claims) in &tier_claims {
-        for c in claims {
-            if let Some(first) = seen.insert(c.name.clone(), *tier) {
-                f.push(Finding::new(
-                    "GD04",
-                    format!(
-                        "obligation `{}` is declared in tier {} and in tier {}",
-                        c.name,
-                        first.name(),
-                        tier.name()
-                    ),
-                ));
-            }
-        }
-    }
+    let ContractPackage {
+        contract,
+        contract_part,
+        tier_parts,
+        tier_claims,
+        lemmas_part: _,
+    } = pkg;
 
     // --- obligations: sorted, unique, defined (D-GD2) -----------------------------------
     let mut obligations: Vec<Tier> = Vec::new();

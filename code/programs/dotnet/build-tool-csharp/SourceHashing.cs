@@ -224,9 +224,9 @@ public static partial class Hasher
     private const ulong MaximumGlobMatchWork = 50_000_000;
 
     public const string LanguageSourceInputRegistryDigest =
-        "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1";
+        "4b695e89c165297a539091b9e74b60a3be0fd6b056c13fb36d66cdc696e7a1d2";
     public const string RepositorySourceInputBoundaryDigest =
-        "7014b769f48c4f55e056c7bbbcf4e14bc0e84c1e7ef6030472e0e7949d93f0c8";
+        "b8afd2020cf3cf50eb133eb95cac12bb4f568f5451fb624aa68544e6ff6add71";
 
     private static readonly JsonSerializerOptions RegistryJsonOptions = new()
     {
@@ -743,7 +743,7 @@ public static partial class Hasher
         var exactPaths = new HashSet<string>(StringComparer.Ordinal);
         foreach (var candidate in request.Candidates)
         {
-            ValidateCandidate(candidate, repositoryRelative: false, limits);
+            ValidateCandidate(candidate, repositoryRelative: false, allowRootCargoConfig: false, limits);
             RegisterPortableIdentity(candidate.Path, exactPaths, identities);
             if (candidate.Kind is "symlink" or "reparse_point")
             {
@@ -872,7 +872,11 @@ public static partial class Hasher
         ulong selectedBytes = 0;
         foreach (var candidate in request.Candidates)
         {
-            ValidateCandidate(candidate, repositoryRelative: true, limits);
+            ValidateCandidate(
+                candidate,
+                repositoryRelative: true,
+                allowRootCargoConfig: allowedPaths.Contains(".cargo/config.toml"),
+                limits);
             RegisterPortableIdentity(candidate.Path, exactPaths, identities);
             if (candidate.Kind != "file" || !candidate.Tracked || !allowedPaths.Contains(candidate.Path))
             {
@@ -973,6 +977,7 @@ public static partial class Hasher
     private static void ValidateCandidate(
         SourceCollectionCandidate candidate,
         bool repositoryRelative,
+        bool allowRootCargoConfig,
         SourceHashLimits limits)
     {
         ArgumentNullException.ThrowIfNull(candidate);
@@ -982,7 +987,9 @@ public static partial class Hasher
             throw new SourceHashException("SOURCE_HASH_CANDIDATE_INVALID");
         }
         ValidatePortablePath(candidate.Path);
-        if (repositoryRelative && !candidate.Path.StartsWith("code/", StringComparison.Ordinal))
+        if (repositoryRelative &&
+            !candidate.Path.StartsWith("code/", StringComparison.Ordinal) &&
+            !(allowRootCargoConfig && string.Equals(candidate.Path, ".cargo/config.toml", StringComparison.Ordinal)))
         {
             throw new SourceHashException("SOURCE_HASH_PATH_INVALID");
         }

@@ -1,0 +1,12 @@
+# build-tool: deps=rust/typescript-warrant-ir
+# needs-toolchain: rust
+# Leaf test tools are built before npm installs their local file dependencies.
+npm ci --prefix ../test-bootstrap --silent
+npm run build --prefix ../test-bootstrap
+npm ci --prefix ../fuzz --silent
+npm run build --prefix ../fuzz
+npm ci --silent
+npm run build
+node scripts/run-source-proof.mjs
+npm test
+npm run test:coverage

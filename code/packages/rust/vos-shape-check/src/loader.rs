@@ -1,7 +1,10 @@
-//! # The filesystem edge (binary only)
+//! # The filesystem edge
 //!
-//! The library is pure.  This module is the *only* code that touches the disk,
-//! and it follows VOS02 section 6.8:
+//! The checking core is pure (text in, [`crate::Report`] out).  This module is the
+//! *only* code that touches the disk, and it follows VOS02 section 6.8.  It is a
+//! library module (not private to the binary) since VOS-039b-2a, because
+//! `vos-link check-contract` reads a contract crate's `src/` with exactly the same
+//! hardened walk instead of writing a second, weaker one:
 //!
 //! * every path is `lstat`ed, never followed: a symlink anywhere under the
 //!   crate is refused;
@@ -29,10 +32,8 @@ use std::fs::{self, File, OpenOptions};
 use std::io::Read;
 use std::path::Path;
 
-use vos_shape_check::manifest::{CARGO_TOML_MAX_BYTES, VOS_TOML_MAX_BYTES};
-use vos_shape_check::{
-    CrateInput, SourceFile, MAX_SOURCE_BYTES, MAX_SOURCE_FILES, MAX_TOTAL_BYTES,
-};
+use crate::manifest::{CARGO_TOML_MAX_BYTES, VOS_TOML_MAX_BYTES};
+use crate::{CrateInput, SourceFile, MAX_SOURCE_BYTES, MAX_SOURCE_FILES, MAX_TOTAL_BYTES};
 
 /// Deepest directory nesting under `src/`.
 const MAX_DEPTH: usize = 16;
@@ -248,6 +249,27 @@ fn walk(
         }
     }
     Ok(())
+}
+
+/// Read only the `*.rs` files under `<dir>/src` (in a deterministic order), with every
+/// protection of [`load_crate`] but without requiring a `Cargo.toml`.
+///
+/// A crate with no `src/` directory has no sources: the result is empty, which the
+/// caller must judge (a contract crate with no `src` has no enums to compare).
+pub fn load_sources(dir: &Path) -> Result<Vec<SourceFile>, String> {
+    let meta = fs::symlink_metadata(dir).map_err(|e| format!("{}: {e}", dir.display()))?;
+    if meta.file_type().is_symlink() || !meta.is_dir() {
+        return Err(format!("{}: is not a plain directory", dir.display()));
+    }
+    let mut budget = Budget::default();
+    let mut sources = Vec::new();
+    let has_src = list_dir(dir, &mut budget)?
+        .iter()
+        .any(|e| e.file_name() == "src");
+    if has_src {
+        walk(&dir.join("src"), "src", 0, &mut budget, &mut sources)?;
+    }
+    Ok(sources)
 }
 
 /// Read the crate at `dir` into memory.

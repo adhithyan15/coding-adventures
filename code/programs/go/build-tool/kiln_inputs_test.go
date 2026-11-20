@@ -123,7 +123,7 @@ func TestEveryExternalConsumerExportsInputs(t *testing.T) {
 		sourceCollectionLocalFixtureConsumers, sourceCollectionRepositoryFixtureConsumers,
 		sourceCollectionSharedInputFixtureConsumers, graphDiffNativeFixtureConsumers,
 		starlarkOpcodeProviderConsumers, compilerIRCorpusConsumers, gfmCorpusConsumers,
-		bezier2dFlatteningConsumers, {{closureProvenanceConsumer, "rust"}},
+		bezier2dFlatteningConsumers, satSolverSharedCorpusConsumers, {{closureProvenanceConsumer, "rust"}},
 	} {
 		all = append(all, list...)
 	}

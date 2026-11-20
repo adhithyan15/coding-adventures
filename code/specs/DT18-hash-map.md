@@ -18,6 +18,11 @@ This spec implements a hash map from scratch in two collision strategies:
 **separate chaining** and **open addressing (linear probing)**. Understanding
 both prepares you to reason about performance trade-offs in production systems.
 
+The portable Dart package has a narrower, concrete contract in
+[DT18-hash-map-dart-profile.md](DT18-hash-map-dart-profile.md). That profile
+defines key encoding, hash selection, capacity limits, immutable operations,
+and the exact resize boundary for Dart.
+
 ## Layer Position
 
 ```
@@ -270,10 +275,12 @@ slot 6: [("fig", ...)]
 slot 7: [("cherry", ...)]
 ```
 
-Load factor hits 1.0 — trigger resize to capacity=16.
+At load factor 1.0 the table remains at capacity 8. Inserting a ninth distinct
+key grows the table to capacity 16. The diagram below shows the eight existing
+keys after rehashing and immediately before that ninth key is inserted.
 
 ```
-After resize to capacity=16 (re-hash all keys mod 16):
+After resize to capacity=16 (re-hash the eight existing keys mod 16):
   "apple"      → 13
   "banana"     → 2
   "cherry"     → 15
@@ -292,7 +299,9 @@ slot 11: [("elderberry", ...)]
 slot 13: [("apple", ...)]
 slot 15: [("cherry", ...)]
 
-Load factor = 8/16 = 0.5. All chains length 1. O(1) for all lookups.
+Load factor = 8/16 = 0.5. All chains length 1 for these eight entries. The
+ninth key is inserted after this rehash. No complexity guarantee follows from
+this one example.
 ```
 
 ## Representation

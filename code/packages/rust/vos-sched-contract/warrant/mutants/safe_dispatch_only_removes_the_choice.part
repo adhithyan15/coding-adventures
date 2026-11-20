@@ -1,0 +1,5 @@
+  -- Mutant of the lemma `safe_dispatch_only_removes_the_choice` (VOS04 5.6, `vos-link check-contract`): the model `after` of
+  -- contract.part with one deliberate fault, which the lemma must catch: dispatch removes every thread, not only the chosen one.
+  -- It replaces the model of the same name by span; the tool refuses the mutant if the lemma still holds.
+  model after(m: Ready, o: Pick) -> Ready = (
+    match o with Idle -> m | Run(t) -> empty())

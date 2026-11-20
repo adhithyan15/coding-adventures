@@ -10,19 +10,23 @@ https-reviewed-server-path-binding = { path = "../https-reviewed-server-path-bin
 tls13-certificate-verify-input = { path = "../tls13-certificate-verify-input" }
 tls13-certificate-verify-message = { path = "../tls13-certificate-verify-message" }
 tls13-certificate-verify-transcript-binding = { path = "../tls13-certificate-verify-transcript-binding" }
+tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-finished = { path = "../tls13-finished" }
+tls13-handshake = { path = "../tls13-handshake" }
+tls13-no-psk-server-flight = { path = "../tls13-no-psk-server-flight" }
 tls13-rsa-pss-certificate-verify = { path = "../tls13-rsa-pss-certificate-verify" }
 tls13-rsa-pss-signature-routing = { path = "../tls13-rsa-pss-signature-routing" }
+tls13-signature-scheme-policy = { path = "../tls13-signature-scheme-policy" }
+tls13-transcript = { path = "../tls13-transcript" }
 x509-certificate = { path = "../x509-certificate" }
 x509-rsa-public-key = { path = "../x509-rsa-public-key" }
 
 [dev-dependencies]
+coding_adventures_hkdf = { path = "../hkdf" }
 http1-request-host-authority = { path = "../http1-request-host-authority" }
 https-destination-name-binding = { path = "../https-destination-name-binding" }
 rsa-pss-sha256-signature = { path = "../rsa-pss-sha256-signature" }
 rsa-public-operation = { path = "../rsa-public-operation" }
-tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
-tls13-signature-scheme-policy = { path = "../tls13-signature-scheme-policy" }
-tls13-transcript = { path = "../tls13-transcript" }
 tls-server-identity = { path = "../tls-server-identity" }
 tls13-server-name = { path = "../tls13-server-name" }
 x509-certificate-path-construction = { path = "../x509-certificate-path-construction" }

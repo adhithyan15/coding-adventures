@@ -817,9 +817,9 @@ const languageSourceInputRegistryJSON = `
           "decision": "include",
           "scope": "subtree",
           "path_prefix": "tests",
-          "suffixes": [".apkg", ".csv", ".dat", ".js", ".json", ".mil", ".mll", ".msl", ".stdout", ".test", ".toml", ".txt", ".wast", ".xls", ".xlsx"],
+          "suffixes": [".apkg", ".csv", ".dat", ".js", ".json", ".mil", ".mll", ".msl", ".stdout", ".test", ".toml", ".ts", ".txt", ".wast", ".xls", ".xlsx"],
           "exact_basenames": ["echo_agent.py"],
-          "reason": "Tracked Rust tests consume reviewed archive, parser, compiler-diff, Mosaic, spreadsheet, subprocess, and WebAssembly fixtures below tests.",
+          "reason": "Tracked Rust tests consume reviewed archive, TypeScript proof source, parser, compiler-diff, Mosaic, spreadsheet, subprocess, and WebAssembly fixtures below tests.",
           "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
         }
       ]
@@ -1020,4 +1020,4 @@ const languageSourceInputRegistryJSON = `
 }
 `
 
-const languageSourceInputRegistryDigest = "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1"
+const languageSourceInputRegistryDigest = "4b695e89c165297a539091b9e74b60a3be0fd6b056c13fb36d66cdc696e7a1d2"

@@ -1070,6 +1070,257 @@ and `step` accept a regular file named `census.json`, and a stray
 do not count either as an orphan or an unexpected entry (any other name, or a
 non-regular `census.json`, is still one).
 
+**`kiln record census` (census PR C).** The census side files are read by a
+diagnostic subcommand, never during a recording:
+
+    kiln record census --dir <abs> --out <abs> [--md <abs>] [--records <abs>]
+
+It runs AFTER the build and after `collect`, on the record directory the
+shard left, and writes a bounded, sanitised summary. The manual census
+workflow (PR D) records a sample of the real build on each runner image, stores
+nothing, and publishes only this summary.
+
+*Inputs, per action* (`traces/<sha256(action)>/`; the action's name comes from
+its step sidecars and must hash to the directory's name): every step trace
+`N.trace` and its sidecar `N.json` (`kiln-record-step/2`: `started_at`,
+`ended_at`, `trace_bytes`, `root_status`); `census.json`; `record.json` or
+`record.failed`; and, when `--records` names collect's `records.jsonl`, its
+header line (`void`, the two unexplained counts) and the number of records.
+
+*Every input is untrusted.* A build step chose the file names a census holds,
+and a PR chose the build. Each file is opened without following a symlink and
+with `O_NONBLOCK` (a FIFO cannot hang it), must be a regular file, and is read
+under a size bound before it is decoded: `census.json` 512 KiB, a sidecar 1
+MiB, `record.json` 32 MiB, a trace at most the classify limit (1 GiB; a longer
+one is skipped and counted). Decoding is strict (`legacy.PolicyDecode`: no
+unknown key, no duplicate or case-variant key, no trailing data), the schema
+string and the embedded action are checked, kinds must match `[a-z0-9:_-]{1,96}`
+and counts must not be negative. A file that fails any of that is skipped and
+counted under a problem code; nothing panics and nothing is believed. A panic in
+one trace's parse is recovered and counted (`parse_panic`). When both `record.json`
+and `record.failed` exist, `record.failed` wins, as in `collect`. A `record.json`
+whose `binding_id` or `sealed_sha256` is not the verified `pre/`'s is counted
+(`record_binding_mismatch`) and ignored. The census takes the record directory's
+lock (the flock `step` and `collect` use) exclusively and without waiting, and
+refuses, exit 1, writing nothing, while a recording holds it; so it runs only
+where flock exists (not on Windows).
+
+*Per step trace.* (1) Bytes and lines are counted. (2) The wall time is
+`ended_at - started_at` from the sidecar; a wall that is not positive is dropped
+and counted (`walls_dropped`), never divided by. (3) ONE grammar-path parse is
+timed through `parseStep`, the very call the classify child makes (same
+`ClassifyLimits`, helper root, helper executable and package directory, all from
+the verified `pre/`), single shot, GC on, as in production; `trace.Measure*`,
+which toggle the GC, are not used. A `runtime.GC()` runs just before it,
+outside the timing, so the previous trace's garbage is not charged to this one.
+The report carries `parse_ms` and `parse_share` (parse over wall) of ACCEPTED
+parses only. (4) ONE cross-checked parse (`trace.ParseCrossChecked`) counts
+traces, accepted, mismatches and allowed stricter-only divergences. One trace is
+in memory at a time.
+
+*`ParseCrossChecked` is no longer a test instrument.* It never toggled the GC;
+what kept it out of production was its process-global allowed-divergence
+counter. It is now serialised by a mutex, so concurrent calls cannot charge one
+trace another's hits, and `TestMeasureIsNotUsedByProductionCode` no longer lists
+it. A second guard, `TestParseCrossCheckedOnlyInCensus`, is on the syntax tree
+(`go/parser`): it flags ANY reference to `ParseCrossChecked` (a call, a method
+value, an alias or dot import) outside its definition file and exactly one
+production file, `internal/record/census_report.go`, and the census receives it
+through `CensusOptions.CrossCheck`, not a package variable, because `kiln record census` is a
+diagnostic that must never run inside a recording (the record child's
+environment deliberately lacks `KILN_TRACE_DIFF`).
+
+*Schema `kiln-census-summary/1`* (JSON, `encoding/json`, at most 512 KiB; the
+optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
+`infrastructure_failure` (text or ""), `problems` (code to count), `actions`,
+`reasons`, `trace_sizes`, `timing`, `per_action`, `cross_check`, `languages`,
+`collect` (null without `--records`) and `bounds`.
+
+- `actions`: `total`, `with_record`, `record_parse_ok`, `record_writes_complete`,
+  `record_failed`, `no_verdict`, and the census states, each counted separately
+  and NONE of them read as "no host reads": `census_missing` (no `census.json`:
+  the classifier errored or crashed), `census_invalid`, `census_empty_parse_failed`
+  (an empty census beside a `record.json` whose `parse_ok` is false: the parse
+  half failed, the classifier never ran), `census_empty_no_record` and
+  `census_clean` (an empty census beside a believed record: the classifier ran
+  and raised nothing), `census_nonempty`.
+- `reasons`: per kind, `occurrences`, `overflow` (what the classifier shed),
+  `actions`, `distinct_paths`, `prefixes` (path prefixes of depth at most 4, with
+  distinct paths and occurrences) and `top_paths` (the 200 most frequent full
+  paths). Paths are sanitised (non-printable runes become `?`), redacted
+  (`$HOME`, `$TMPDIR`, the record directory and the workspace become `$HOME`,
+  `$TMPDIR`, `$RECORD_DIR`, `$WORKSPACE`; a prefix is replaced only at a
+  path-component boundary, preceded by the start, whitespace, a quote, `=`, `:`,
+  `,`, `(`, `[`, `<`, one of the shell metacharacters `;` `|` `&` `>` `{` `}`,
+  an `@` that itself follows a boundary (a response file, `--opt=@/tmp/x`), or a
+  one-letter `-X` flag, and followed by `/` or the end,
+  so `/tmp` leaves `/usr/lib/tmpfiles.d`, `/var/tmp` and `/usr/include/c++/tmp`
+  alone) and cut to 512 runes (`paths_truncated`). At most 100,000 distinct
+  (kind, path) pairs and 32 MiB of their text are kept; the rest are counted in
+  `bounds.paths_dropped`.
+- `explain`: why actions are not recordable, every key from a CLOSED list in the
+  source (a code is never a slice of the input; anything unmatched is `other`):
+  `record_reason_kinds` (the path-free kind of each classifier reason in
+  `record.json`, actions per kind: `failed`, `vcs-read`, `daemon-left`,
+  `trace-incomplete:unstable-path`, `trace-incomplete:recipe-mismatch`, ...),
+  `record_parse_reasons` (record.json's `parse_reasons` by code:
+  `unparsable-line`, `unresumed-call`, `size`, `sandbox-refused`,
+  `unclean:<reason>`, ...), `parse_refusals` (the same codes for the traces this
+  census's own parse refused), `record_failed` (the text of `record.failed`
+  mapped to `timeout`, `traces-too-large`, `record-too-large`, `panic`,
+  `classifier-failed`, `classifier-not-started`, `record-invalid`, `other`) and
+  `sidecar` (`steps`, `truncated` by reason, `not_clean`, `unclean` by reason,
+  `exit_125`, `root_status_nonzero`).
+- `host`: the image id, kernel, strace version line and shard index and count
+  from the verified `pre/`, and the first `model name` of `/proc/cpuinfo`, all
+  sanitised.
+- `trace_sizes`: `all` and `root_ok` (steps with `root_status` 0), each `n`,
+  `p50`, `p90`, `p99`, `max` (nearest rank) and `log2_buckets`.
+- `timing`: distributions of `step_wall_ms`, `parse_ms`, `parse_share`, and the
+  counts `share_over_10pct`, `parse_over_5s` (the two limbs of G2), `g2_failing`
+  (either) and `walls_dropped`; `parse_mb_per_s` (throughput distribution);
+  `by_size` (per log2 size bucket: n and the `parse_ms` and `parse_share`
+  distributions); `g2_at_p99` (the same two limbs over the traces at or above
+  the census p99 size, where G2 is defined); and `first_parse` (the first timed
+  parse alone, whatever its outcome (`accepted` says which), its lazy
+  initialisation included, which each classify child pays
+  again, so the per-action child cost can be added back). Report-only.
+- `per_action`: the total trace bytes of each action against the 2 GiB cap
+  (`DefaultMaxTraceTotal`): a distribution, how many reach 50%, 90% and 100% of
+  the cap, and the ten largest (sanitised names).
+- `cross_check`: `traces`, `bytes`, `accepted`, `mismatches`, `allowed`, `refused`,
+  `skipped_too_large` and `skipped_bytes` (a trace over 256 MiB is timed but not
+  cross-checked, because the cross-check buffers it whole and parses it twice; the
+  workflow should set `GOMEMLIMIT`) and at most 20 `details` (an action's digest prefix, step and the mismatch's
+  `Detail`, sanitised and cut; never the window of trace lines).
+- `languages`: per language (the plan's, else `code/packages/<lang>/`; at most
+  64, the rest `other`; shown as code spans in list items, so `www.x.example` and
+  `:emoji:` cannot autolink or render): `actions`, `recordable` (`record.json` believed and
+  `writes_complete`), `clean` (recordable with an empty census) and the share.
+
+*Bounds.* If the encoded JSON exceeds 512 KiB, the top lists are halved until it
+fits (`bounds.json_lists_cut`); the Markdown is rendered the same way and then
+cut at a line boundary (`bounds.md_truncated`). The summary holds no argv, no
+environment value and no trace line.
+
+*Markdown safety.* The output may be appended to `$GITHUB_STEP_SUMMARY`. Every
+path is written inside a code span whose delimiter is longer than any backtick
+run in the text; every other piece of text has `\` `` ` `` `|` `<` `>` `[` `]`
+`&` `*` `_` `#` `~` backslash-escaped; there is no table cell that holds
+attacker text (languages, kinds and every other name are code spans in list
+items); no raw control character occurs; and no line starts with `::`
+(every line starts with a fixed marker of ours).
+
+*Exit codes.* 0: the census ran and the cross-check found nothing. 4: a
+cross-check mismatch, any allowed divergence (strict: on a real trace there
+must be none) or any `parse_panic` (a trace that crashes a reader is
+soak-relevant; it wins over exit 1). 1: infrastructure failure (no traces, an unverifiable `pre/`, an
+output that could not be written). 2: usage. The summary is written in every
+case that got as far as reading the directory. Histograms and G2 are report-only
+and never change the status. The command refuses, writing nothing, when `--dir`
+is not a record directory (a real `pre/` and `traces/`), when a path is not
+absolute, when an output exists (outputs are created `O_EXCL`, mode 0600), or
+when an output would lie inside `--dir`: it never writes there.
+
+*The Markdown verdict.* The `Verdict` section states the cross-check status, and on
+the next line the count of traces SKIPPED as too large to cross-check
+(`skipped_too_large`, with their bytes), so an "ok" cannot be read as covering a
+trace that was only timed. The cross-check status is `FAILED` also when a
+`parse_panic` was counted (exit 4 says the same). The `Host` section carries the
+CPU model.
+
+**The census workflow (census PR D): `.github/workflows/kiln-census.yml`.**
+`workflow_dispatch` only; the scheduled weekly run is census PR E. One job,
+`census`, runs on `ubuntu-24.04` and `ubuntu-26.04` (the `kiln-sandbox` job's
+labels; `fail-fast: false`), `permissions: contents: read`, a `kiln-census`
+concurrency group that queues and never cancels, and a job timeout.
+
+- *Inputs.* `shard_count` (integer, 1 to 256, default 15, as `ci.yml`) and `shard_indices`
+  (1 to 3 comma-separated integers, each below the count, no repeats, default
+  `0`). They reach the shell only through `env:` and are validated there
+  (regular expressions, then arithmetic bounds) before anything runs; only the
+  normalised values are exported to later steps. The first step also refuses a
+  ref that is not the repository's default branch, because `prepare` would exit 3
+  on it (P2: trusted runs only).
+- *Recording.* Full checkout (no token kept), Go, the AppArmor userns sysctl
+  and strace (guarded: `command -v strace`, else `code/scripts/ci/apt-install.sh`;
+  the text `apt-get update` is forbidden in any workflow). `kiln` and the build
+  tool are built into `$RUNNER_TEMP/bin` with the Go caches in `$RUNNER_TEMP`
+  too (P3 wants the binaries outside the checkout; the only state roots are
+  `~/.cargo/registry` and `~/.cargo/git`, and only when `~/.cargo/bin` exists,
+  so the fresh `$HOME` makes them trivially empty). For each sampled shard, in order:
+  reset and clean the checkout, a fresh `$HOME` (state roots start empty), a fresh
+  record directory and `/tmp/kiln-tmp`; `kiln record prepare`; the traced build,
+  exactly the command of P1, launched under `env -i` with `pre/tools.json`'s
+  `build_tool_env` and wrapped in `::stop-commands::<random token>`;
+  `kiln record collect`; `kiln record census --dir <rec> --records
+  <rec>/records.jsonl --out census-<os>-shard<i>.json --md census-<os>-shard<i>.md`
+  with `GOMEMLIMIT=8GiB` (the cross-check buffers a trace of up to 256 MiB and
+  parses it twice; the hosted runner has 16 GiB). A failing BUILD step is census
+  data, not a job failure; a build cut off by the per-shard timeout (90 minutes),
+  a failed `prepare` or `collect` and any non-zero census exit are.
+- *Output.* Each Markdown summary is appended to `$GITHUB_STEP_SUMMARY`, and
+  `census-*.json` and `census-*.md` are uploaded as the artifact
+  `kiln-census-<os>` (30 days). The upload runs `if: always()`, and the job's
+  verdict is decided by the last step, so a census that exited 4 still publishes.
+- *Exit semantics.* The job fails when any census exits non-zero: 4 (a
+  cross-check mismatch, any allowed divergence or a `parse_panic`), 1
+  (infrastructure) or 2 (usage), or when `prepare` or `collect` fail or a build
+  times out.
+- *Never uploaded.* The record directory, the traces, the sidecars,
+  `records.jsonl` and the strace stderr files: they hold host paths and command
+  lines (4.3). Only the sanitised summary leaves the runner.
+- *Limits: coverage.* This workflow records with a fresh `$HOME` and installs Go
+  only. Steps that need Rust, .NET, Haskell, Python, Ruby or node fail at "not
+  found" and are recorded as failed steps (`record_failed`,
+  `sidecar.root_status_nonzero`). Go is about 298 of 5115 packages and 0.8% of
+  build time; Rust alone is about 29%. So a clean census from this workflow is
+  NOT evidence for the PR8 gate, and every shard's step summary says so in its
+  first line (`coverage: fresh HOME, Go toolchain only; not the PR8 gate`).
+- *Follow-up (not this PR): the PR8 census.* PR8's clean census needs a run with
+  the toolchains installed (setup-python, Ruby and node pinned as in `ci.yml`,
+  and the rest) and the real-home layout: a `home: fresh|runner` input, `runner`
+  using the runner's own `$HOME`. Expect new `prepare` refusals in runner mode (a
+  state root that is not empty, an `ro_roots` entry overlapping the runner's
+  directories); they are the point of that run.
+- *"Clean" (for PR8).* A shard is clean only when its census exits 0 AND
+  `skipped_too_large` is 0 AND `bounds.actions_skipped` is 0 AND the traces were
+  not all refused by both readers (`cross_check.accepted` is above 0 when
+  `traces` is). The workflow flags a shard that exits 0 but misses any of these
+  as "not clean" in its summary (`ci/census_not_clean.py`, which reads the JSON,
+  never the Markdown), and does not fail the job for it; it prints a positive
+  "clean" line otherwise, so a missing line is never read as clean. A workflow
+  that gates PR8 must FAIL on "not clean", not only annotate it.
+- *Never partly green.* The job's status is the worst of every shard. A shard
+  that was not started (the start deadline: no new shard starts more than 200
+  minutes after the job start stamp), a failed
+  `reset`/`clean` of the checkout, a failed `prepare` or `collect`, and a build
+  that timed out or was killed (timeout or OOM) each fail the job, and each
+  leaves a line in the summary. A failed `collect` still gets its census (it
+  needs only `pre/` and `traces/`), run without `--records`. The status file is
+  created as a failure before the loop, so a missing or unreadable one fails
+  the job. The job limit is 360 minutes (the hosted maximum), because the stamp
+  is taken after setup and the limit counts from the job's start: setup (at most
+  15) + the start deadline (200) + reset and prepare (at most 20; `VerifyTree` has
+  a 20 minute budget) + one shard's build (91) + collect, census and upload (at
+  most 25) is about 351 minutes. Three slow shards cannot all complete: the third
+  is skipped and the job fails, which is intended.
+- *Job start stamp.* The workflow stamps `JOB_START` after setup, which is more
+  permissive than section 5.3 ("the job's first step"). That is acceptable for
+  this census, which warns when apt installed strace. Stage-4 PR 3
+  (`kiln-record.yml`) must NOT copy it: it stamps first and fails if strace is
+  missing.
+- *Housekeeping.* `strace` is verified (or installed, with a `::warning::`)
+  BEFORE the job start is stamped, so an apt install cannot turn every action
+  into `host-read:setup-modified`. Every recorder command runs with `$RUNNER_TEMP`
+  as the working directory, never the checkout. Between shards the checkout is
+  restored with git run under the recorder's pinned configuration
+  (`core.fsmonitor=false`, `core.hooksPath=/dev/null`, `protocol.file.allow=never`,
+  as `source.ConfigEnv`). The sealed `pre/` (0444 files in 0555 directories) is
+  made writable before a record directory is removed. Each shard's summary is
+  appended only while the step summary stays under about 900 KiB (GitHub's limit
+  is 1 MiB); past that, the shard gets a pointer to the artifact.
+
 **P3. Binary placement (D15).** The Kiln binary (the running executable,
 resolved through symlinks) and the build-tool binary must be regular files
 whose path equals its own resolved path, and must lie outside every place a
@@ -2568,6 +2819,44 @@ code 0, an absolute path, the owner resuming `= 0`, and (pass 2) the same thread
 group; every miss is the old `unresumed-call`. The captured trace is a test,
 and both fuzzers seed it.
 
+**Cross-checking the traces the children wrote (D34).** The soak's coverage of
+real recordings was thin: `KILN_TRACE_DIFF=1` is set for the `go test` process,
+but the real parses happen in CHILD processes (`kiln record prepare`'s probes,
+`step`, the classify child, `collect`) whose environments are hand-built. The
+variable is deliberately NOT passed to them: `recordcmd.go` seals the environment
+into facts and keys, so a debugging switch could leak into sealed data. Instead
+the kiln-sandbox tests that run record children (step, collect, gates, survivor
+and the probe tests) register a `t.Cleanup` that reads back EVERY `*.trace` under
+the record directory (`probe/*.trace` and `record.StepFile(dir, action, i,
+"trace")`) and parses it in the test process with `trace.ParseCrossChecked`
+(`internal/trace`, a test instrument kept out of production code by
+`TestMeasureIsNotUsedByProductionCode`), using the Limits, helper-root setting,
+helper executable and working directory the child used (recovered from the sealed
+`pre/`). It returns a disagreement as a value instead of a panic. The test FAILS
+on any mismatch (a fail-open or a divergence outside the list) and on any ALLOWED
+stricter-only divergence: on a real trace the rule is that there are none. The
+cleanup runs after the children finish and before the temp dir is deleted, once
+per record directory, and only when the test process has `KILN_TRACE_DIFF=1`. It
+logs `PROBE: crosscheck traces=N accepted=K bytes=B mismatches=M allowed=A` (all
+counts, no text; with the D32 `Diagnose` report, bounded and sanitised, for any
+failing trace). `accepted` counts the traces the parse accepted: two readers
+that refuse every trace alike "agree", so a check whose parameters drifted (a
+wrong helper executable or working directory) would otherwise read
+`mismatches=0` while checking nothing. For traces under a VERIFIED `pre/` the
+test also compares its verdict with the child's: a probe run listed in the
+sealed `probes.json`, and every step trace of an action whose `record.json` says
+`parse_ok`, must be accepted here too, and a trace the verified `pre/` does not
+account for fails. The steps come from the directory listing, with no fixed
+range; a directory-walk error is a failure. The check is registered BEFORE
+`prepare` runs, so a probe trace that prepare refuses (the D32 incident) is
+still read back; without a verified `pre/` the helper is the test's own kiln
+binary. `ci/assert_sandbox_tests.py` requires, over the passing tests' lines,
+`traces >= 1` and `accepted >= 1` in total, and `mismatches=0 allowed=0` on
+every line, so the check cannot go vacuous. The parse reads a process-global
+allowed-divergence counter, so these tests must not use `t.Parallel`. The
+script's own tests (`code/scripts/tests/test_assert_kiln_sandbox_tests.py`) run
+in the kiln-sandbox job.
+
 **The default-flip gates (restated by PR 6).** The first draft gated the flip on
 "at least 8 MB/s and within 3x of the old parser". That gate is replaced: a ratio
 to the old scanner measures how fast the old scanner is, not whether the grammar
@@ -2773,7 +3062,13 @@ holding. Until then it is kept as the oracle.
 cross-check, not the throughput gate. A kiln-sandbox run counts toward the 200
 if its cross-checked tests ran under `KILN_TRACE_DIFF=1` with no mismatch and no
 divergence, **whatever G1 did** (a slow host failing the capability or absolute
-gate says nothing about whether the two readers agree). A job that died before
+gate says nothing about whether the two readers agree). The coverage
+of REAL recordings is the D34 line: each kiln-sandbox run's `PROBE: crosscheck`
+line (the children's recordings, both readers, no mismatch, no allowed
+divergence) counts toward it only with traces >= 1 AND accepted >= 1 in total; a
+run with `traces=0`, `accepted=0` or no line does not count. D34 coverage starts
+at the merge of the PR that added it: earlier kiln-sandbox runs do not count
+retroactively. A job that died before
 its tests ran (a runner fault, a setup failure) counts **neither way**: it is
 not a pass and it does not reset the count. Only a mismatch or a divergence
 resets the count. The resource limits (1 GiB and 8M events, and the caps above) may be

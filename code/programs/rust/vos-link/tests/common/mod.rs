@@ -59,11 +59,26 @@ impl Repo {
         for f in ["vos.toml", "contract.vos"] {
             fs::copy(real.join(f), dest.join(f)).unwrap();
         }
-        for entry in fs::read_dir(real.join("warrant")).unwrap() {
-            let entry = entry.unwrap();
-            fs::copy(entry.path(), dest.join("warrant").join(entry.file_name())).unwrap();
-        }
+        // The whole `warrant/` tree, recursively: it holds `mutants/` since VOS-039b-1.
+        copy_dir(&real.join("warrant"), &dest.join("warrant"));
+        // And `src/`, the Rust half of CK10 (the enums are compared with the Warrant variants).
+        copy_dir(&real.join("src"), &dest.join("src"));
         Repo { root }
+    }
+
+    /// An empty repository (no contract package at all), for the contract-check tests.
+    pub fn empty(label: &str) -> Repo {
+        let r = Repo::new(label);
+        fs::remove_dir_all(r.root.join("code/packages/rust/vos-sched-contract")).unwrap();
+        r
+    }
+
+    /// Copy the toy contract fixture `tests/fixtures/contracts/<name>` into the repository.
+    pub fn add_contract_fixture(&self, name: &str) {
+        copy_dir(
+            &here().join("tests/fixtures/contracts").join(name),
+            &self.root.join("code/packages/rust").join(name),
+        );
     }
 
     /// A repository with one fixture implementation.

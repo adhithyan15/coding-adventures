@@ -4,6 +4,39 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed (VOS-039c security review, round 2)
+
+- `Analysis::ops` judges "mentions `Impl`" on the RESOLVED type: `mentions_impl` (the literal name `Impl`) is gone, replaced by `coding_adventures_warrant_grammar::evidence::type_mentions`, the generator's own alias resolution, so `model State = Impl`, a chain of aliases, an alias of `Option<Impl>` or `Result<.., E>` and a record with such a field all count.  An unresolvable type counts as a state.  Tests in `tests/warrant.rs`: alias on both sides, one side, a chain, composites, a record field, and an alias of a non-state.
+
+### Added (VOS-039c security review)
+
+- `Analysis::ops` (`OpFact`: name, whether the return type mentions `Impl`, how many parameters do, whether an `inout` one does) and `Analysis::impl_last_field_type`, from the parsed tree.  `vos-link` CC11 derives the state-to-state operations and checks the oracle's type from them, not from the optional `ret=`/`args=` of the bindings.
+
+### Changed (VOS-039c)
+
+- `tests/warrant.rs`: the `any` block of the real scheduler contract has ten claims (was three) and the seven new obligations are pinned with their `claim_sha256` (computed by `tests/claim_sha256_reference.py`, the independent implementation, not by this crate).  No source change.
+
+### Added (VOS-039b-2b)
+
+- `warrant::bound_facts(text)`: the `op` names and every `bound` row (`op`, metric, bound) of a document, read
+  from the parsed tree.  A bound is `Some` only for an integer literal; anything else is `None`, so a caller
+  that compares it with a ceiling fails closed.  `BoundFact`, `BoundFacts`.  `vos-link check-component` CC09.
+- `publish = false` in `Cargo.toml` (VOS-D104).
+
+### Added (VOS-039b-1)
+
+- `warrant::declarations_of_block(block)`: the top-level declarations of a block (kind, name, byte span IN
+  THE BLOCK, whether a model has a body), by the Warrant parser.  `vos-link check-contract` replaces a model
+  of the contract block by a mutant's declaration by span; a block whose normalised text differs from its
+  bytes is refused, since a span would not index it.  `DeclKind`, `DeclFact`.
+- A test that `claim_calls` finds `cfg_N()` (a call with no arguments), which `check-contract`'s "each config
+  key is called by a lemma" rule rests on.
+
+### Added (VOS-039a)
+
+- `warrant::declared_names(text)`: the claim and example names of a document, parsed only.  `vos-link check-component` binds the evidence manifest and the sabotage plan to them.
+- `warrant::claim_calls(text, ops)`: which bound operations each claim's parsed body calls (an AST walk; a model body is not followed, VOS-D108).  `vos-link` requires every such claim to be attacked by a sabotage entry.
+
 ### Added (VOS-012b0, VOS-D061)
 
 - `Tier` gains a fifth member, `Representation`, sorted between `policy` and `safety` (VOS02 2.7):

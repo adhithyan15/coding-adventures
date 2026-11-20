@@ -3,13 +3,23 @@
 //! The path-only composition accepts selected-transcript hash evidence and the
 //! strongest accumulated reviewed RSA server-path proof. Stronger HTTPS entry
 //! points accept that path only through the existing exact DNS destination
-//! binding, with or without retained anchor self-signature evidence. A direct
-//! revocation entry point accepts the leaf only through the destination-bound
-//! complete fixed-path proof. All entry points authorize the server role,
-//! derive and validate the exact retained target certificate's RSA key, and
-//! delegate signature verification to repository-owned code. They do not
-//! establish ordered handshake state, Finished, records, TLS, HTTP, OAuth, or
-//! network readiness.
+//! binding, with or without retained anchor self-signature evidence. Direct,
+//! nested, double-nested, recursive-responder, and alternative intermediate-
+//! status-responder revocation entry points accept the leaf only through their
+//! exact destination-bound complete fixed-path proofs. All entry points
+//! authorize the server role, derive and validate the exact retained target
+//! certificate's RSA key, and delegate signature verification to repository-
+//! owned code. A stronger transition binds only the five complete revocation
+//! variants to the no-PSK server-flight position that expects
+//! `CertificateVerify`, then advances that state to expect `Finished`. A final
+//! bounded transition admits one server-role `Finished` verdict for the same
+//! selected suite and completes that exact flight. A separate consuming entry
+//! point derives the RSA key only through the complete reviewed path and proves
+//! exact transcript continuity from authenticated server `CertificateVerify`
+//! through a caller-supplied Finished key. It checks that key's role and suite
+//! but does not establish its key-schedule or traffic-secret provenance. It
+//! does not prove the preceding flight order, append the Finished encoding,
+//! authenticate records, or provide TLS, HTTP, OAuth, or network readiness.
 
 #![forbid(unsafe_code)]
 
@@ -18,17 +28,30 @@ use core::fmt;
 use der_asn1::Asn1Limits;
 use https_reviewed_server_path_binding::{
     BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation,
+    BoundHttpsDnsDestinationToReviewedDoubleNestedNoCheckCompleteFixedPathRevocation,
+    BoundHttpsDnsDestinationToReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocation,
+    BoundHttpsDnsDestinationToReviewedNestedNoCheckCompleteFixedPathRevocation,
+    BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation,
     BoundHttpsDnsDestinationToReviewedServerPath,
     BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature, ReviewedHttpsServerPath,
 };
 use tls13_certificate_verify_input::CertificateVerifyRole;
 use tls13_certificate_verify_message::CertificateVerifyMessage;
 use tls13_certificate_verify_transcript_binding::{
-    verify_transcript_bound_certificate_verify, HashedTranscriptBoundCertificateVerifyInput,
+    verify_and_advance_owned_certificate_verify_transcript,
+    verify_finished_after_owned_certificate_verify, verify_transcript_bound_certificate_verify,
+    CertificateVerifyFinishedContinuityErrorKind, CertificateVerifyTranscriptAdvanceErrorKind,
+    HashedTranscriptBoundCertificateVerifyInput, OwnedVerifiedCertificateVerifyFinishedContinuity,
     VerifiedTranscriptBoundCertificateVerify,
 };
+use tls13_cipher_suite_policy::SelectedCipherSuite;
+use tls13_finished::{FinishedKey, FinishedRole, VerifiedFinished};
+use tls13_handshake::Tls13HandshakeType;
+use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightError};
 use tls13_rsa_pss_certificate_verify::Tls13RsaPssCertificateVerifyErrorKind;
 use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
+use tls13_signature_scheme_policy::AuthorizedSignatureScheme;
+use tls13_transcript::SelectedTls13Transcript;
 use x509_certificate::X509Certificate;
 use x509_rsa_public_key::{
     validate_rsa_public_key, RsaPublicKeyErrorKind, RsaPublicKeyPolicy, ValidatedRsaPublicKey,
@@ -42,6 +65,46 @@ mod direct_revocation_evidence_sealed {
     }
 }
 
+mod nested_revocation_evidence_sealed {
+    use x509_certificate::X509Certificate;
+
+    pub trait Sealed<'encoded> {
+        fn server_certificate(&self) -> &X509Certificate<'encoded>;
+    }
+}
+
+mod double_nested_revocation_evidence_sealed {
+    use x509_certificate::X509Certificate;
+
+    pub trait Sealed<'encoded> {
+        fn server_certificate(&self) -> &X509Certificate<'encoded>;
+    }
+}
+
+mod recursive_revocation_evidence_sealed {
+    use x509_certificate::X509Certificate;
+
+    pub trait Sealed<'encoded> {
+        fn server_certificate(&self) -> &X509Certificate<'encoded>;
+    }
+}
+
+mod alternative_revocation_evidence_sealed {
+    use x509_certificate::X509Certificate;
+
+    pub trait Sealed<'encoded> {
+        fn server_certificate(&self) -> &X509Certificate<'encoded>;
+    }
+}
+
+mod complete_revocation_certificate_verify_sealed {
+    use tls13_cipher_suite_policy::SelectedCipherSuite;
+
+    pub trait Sealed {
+        fn selected_suite(&self) -> SelectedCipherSuite;
+    }
+}
+
 impl<'server_name, 'host, 'target, 'target_encoded, Proof, IntermediateRevocation>
     direct_revocation_evidence_sealed::Sealed<'target_encoded>
     for BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation<
@@ -51,6 +114,106 @@ impl<'server_name, 'host, 'target, 'target_encoded, Proof, IntermediateRevocatio
         'target_encoded,
         Proof,
         IntermediateRevocation,
+    >
+{
+    fn server_certificate(&self) -> &X509Certificate<'target_encoded> {
+        self.destination().certificate()
+    }
+}
+
+impl<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    > nested_revocation_evidence_sealed::Sealed<'target_encoded>
+    for BoundHttpsDnsDestinationToReviewedNestedNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    >
+{
+    fn server_certificate(&self) -> &X509Certificate<'target_encoded> {
+        self.destination().certificate()
+    }
+}
+
+impl<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+    > alternative_revocation_evidence_sealed::Sealed<'target_encoded>
+    for BoundHttpsDnsDestinationToReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+    >
+{
+    fn server_certificate(&self) -> &X509Certificate<'target_encoded> {
+        self.destination().certificate()
+    }
+}
+
+impl<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+    > recursive_revocation_evidence_sealed::Sealed<'target_encoded>
+    for BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+    >
+{
+    fn server_certificate(&self) -> &X509Certificate<'target_encoded> {
+        self.destination().certificate()
+    }
+}
+
+impl<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        OriginalResponderRevocation,
+        IntermediateRevocation,
+        AddedResponderRevocation,
+    > double_nested_revocation_evidence_sealed::Sealed<'target_encoded>
+    for BoundHttpsDnsDestinationToReviewedDoubleNestedNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        OriginalResponderRevocation,
+        IntermediateRevocation,
+        AddedResponderRevocation,
     >
 {
     fn server_certificate(&self) -> &X509Certificate<'target_encoded> {
@@ -103,6 +266,53 @@ impl fmt::Display for ReviewedServerPathCertificateVerifyError {
 }
 
 impl std::error::Error for ReviewedServerPathCertificateVerifyError {}
+
+/// Stable, payload-free failures from reviewed-path CertificateVerify-to-
+/// Finished continuity.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind {
+    /// The reviewed target's exact SubjectPublicKeyInfo failed RSA policy.
+    PublicKey(RsaPublicKeyErrorKind),
+    /// Exact CertificateVerify authentication or transcript advancement failed.
+    CertificateVerify(CertificateVerifyTranscriptAdvanceErrorKind),
+    /// Exact post-CertificateVerify Finished authentication failed.
+    Finished(CertificateVerifyFinishedContinuityErrorKind),
+}
+
+/// One redacted consuming reviewed-path continuity failure.
+#[derive(Clone, Copy, Eq, PartialEq)]
+pub struct ReviewedServerPathFinishedKeyTranscriptContinuityError {
+    kind: ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind,
+}
+
+impl ReviewedServerPathFinishedKeyTranscriptContinuityError {
+    /// Return the stable redacted failure category.
+    #[must_use]
+    pub const fn kind(self) -> ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Debug for ReviewedServerPathFinishedKeyTranscriptContinuityError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ReviewedServerPathFinishedKeyTranscriptContinuityError")
+            .field("kind", &self.kind)
+            .finish()
+    }
+}
+
+impl fmt::Display for ReviewedServerPathFinishedKeyTranscriptContinuityError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "reviewed server-path CertificateVerify-to-Finished-key transcript continuity error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for ReviewedServerPathFinishedKeyTranscriptContinuityError {}
 
 /// Non-copyable evidence retaining the complete reviewed path and exact
 /// selected-transcript server signature verdict.
@@ -261,6 +471,128 @@ impl fmt::Debug
     }
 }
 
+/// Non-copyable evidence retaining the complete reviewed path and exact
+/// consuming CertificateVerify-to-Finished-key transcript continuity graph.
+pub struct VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity<
+    'reviewed,
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'body,
+> {
+    reviewed_server_path: &'reviewed ReviewedHttpsServerPath<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    continuity: OwnedVerifiedCertificateVerifyFinishedContinuity<'body, 'target_encoded>,
+}
+
+impl<
+        'reviewed,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'body,
+    >
+    VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity<
+        'reviewed,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'body,
+    >
+{
+    /// Return the exact complete reviewed server-path proof.
+    #[must_use]
+    pub const fn reviewed_server_path(
+        &self,
+    ) -> &'reviewed ReviewedHttpsServerPath<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        self.reviewed_server_path
+    }
+
+    /// Return the exact consuming CertificateVerify-to-Finished proof.
+    #[must_use]
+    pub const fn continuity(
+        &self,
+    ) -> &OwnedVerifiedCertificateVerifyFinishedContinuity<'body, 'target_encoded> {
+        &self.continuity
+    }
+}
+
+impl fmt::Debug
+    for VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity")
+    }
+}
+
 /// Non-copyable evidence retaining the exact HTTPS DNS destination, complete
 /// direct no-check fixed-path revocation proof, and selected-transcript server
 /// signature verdict.
@@ -349,6 +681,374 @@ impl<Evidence: ?Sized> fmt::Debug
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str(
             "VerifiedHttpsDnsDestinationReviewedDirectNoCheckCompleteFixedPathRevocationCertificateVerify",
+        )
+    }
+}
+
+/// Non-copyable evidence retaining the exact HTTPS DNS destination, complete
+/// alternative intermediate-status-responder no-check fixed-path revocation
+/// proof, and selected-transcript server signature verdict.
+pub struct VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify<
+    'destination,
+    'target_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+    Evidence: ?Sized,
+> {
+    https_destination_complete_revocation: &'destination Evidence,
+    verification: VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        'target_encoded,
+    >,
+}
+
+impl<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence: ?Sized,
+    >
+    VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence,
+    >
+{
+    /// Return the exact destination and alternative complete revocation proof.
+    #[must_use]
+    pub const fn https_destination_complete_revocation(&self) -> &'destination Evidence {
+        self.https_destination_complete_revocation
+    }
+
+    /// Return the exact selected-transcript server signature verdict.
+    #[must_use]
+    pub const fn verification(
+        &self,
+    ) -> &VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        'target_encoded,
+    > {
+        &self.verification
+    }
+}
+
+impl<Evidence: ?Sized> fmt::Debug
+    for VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        Evidence,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify",
+        )
+    }
+}
+
+/// Non-copyable evidence retaining the exact HTTPS DNS destination, complete
+/// recursive-responder no-check fixed-path revocation proof, and selected-
+/// transcript server signature verdict.
+pub struct VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify<
+    'destination,
+    'target_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+    Evidence: ?Sized,
+> {
+    https_destination_complete_revocation: &'destination Evidence,
+    verification: VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        'target_encoded,
+    >,
+}
+
+impl<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence: ?Sized,
+    >
+    VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence,
+    >
+{
+    /// Return the exact destination and recursive complete revocation proof.
+    #[must_use]
+    pub const fn https_destination_complete_revocation(&self) -> &'destination Evidence {
+        self.https_destination_complete_revocation
+    }
+
+    /// Return the exact selected-transcript server signature verdict.
+    #[must_use]
+    pub const fn verification(
+        &self,
+    ) -> &VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        'target_encoded,
+    > {
+        &self.verification
+    }
+}
+
+impl<Evidence: ?Sized> fmt::Debug
+    for VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        Evidence,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify",
+        )
+    }
+}
+
+/// Non-copyable evidence retaining the exact HTTPS DNS destination, complete
+/// nested no-check fixed-path revocation proof, and selected-transcript server
+/// signature verdict.
+pub struct VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+    'destination,
+    'target_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+    Evidence: ?Sized,
+> {
+    https_destination_complete_revocation: &'destination Evidence,
+    verification: VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        'target_encoded,
+    >,
+}
+
+impl<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence: ?Sized,
+    >
+    VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence,
+    >
+{
+    /// Return the exact destination and nested complete revocation proof.
+    #[must_use]
+    pub const fn https_destination_complete_revocation(&self) -> &'destination Evidence {
+        self.https_destination_complete_revocation
+    }
+
+    /// Return the exact selected-transcript server signature verdict.
+    #[must_use]
+    pub const fn verification(
+        &self,
+    ) -> &VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        'target_encoded,
+    > {
+        &self.verification
+    }
+}
+
+impl<Evidence: ?Sized> fmt::Debug
+    for VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        Evidence,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify",
+        )
+    }
+}
+
+/// Non-copyable evidence retaining the exact HTTPS DNS destination, complete
+/// double-nested no-check fixed-path revocation proof, and selected-transcript
+/// server signature verdict.
+pub struct VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+    'destination,
+    'target_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+    Evidence: ?Sized,
+> {
+    https_destination_complete_revocation: &'destination Evidence,
+    verification: VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        'target_encoded,
+    >,
+}
+
+impl<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence: ?Sized,
+    >
+    VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence,
+    >
+{
+    /// Return the exact destination and double-nested complete revocation proof.
+    #[must_use]
+    pub const fn https_destination_complete_revocation(&self) -> &'destination Evidence {
+        self.https_destination_complete_revocation
+    }
+
+    /// Return the exact selected-transcript server signature verdict.
+    #[must_use]
+    pub const fn verification(
+        &self,
+    ) -> &VerifiedTranscriptBoundCertificateVerify<
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        'target_encoded,
+    > {
+        &self.verification
+    }
+}
+
+impl<Evidence: ?Sized> fmt::Debug
+    for VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        Evidence,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify",
         )
     }
 }
@@ -780,6 +1480,134 @@ impl fmt::Debug
     }
 }
 
+/// Verify exact server CertificateVerify-to-Finished-key transcript continuity
+/// with the target key derived only through the complete reviewed path.
+///
+/// The selected transcript is consumed. Every failure returns only a stable
+/// redacted category and no transcript or partial verification evidence.
+/// The caller-supplied Finished key is checked for server role and exact suite,
+/// but this boundary does not establish its key-schedule or traffic-secret
+/// provenance and does not retain that provenance in its result.
+#[allow(clippy::too_many_arguments)]
+pub fn verify_reviewed_server_path_certificate_verify_finished_key_transcript_continuity<
+    'reviewed,
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'body,
+    'key_policy,
+>(
+    reviewed_server_path: &'reviewed ReviewedHttpsServerPath<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    transcript: SelectedTls13Transcript,
+    authorized_scheme: AuthorizedSignatureScheme,
+    certificate_verify_body: &'body [u8],
+    rsa_key_policy: RsaPublicKeyPolicy<'key_policy>,
+    rsa_key_limits: Asn1Limits,
+    signed_input_output: &mut [u8],
+    handshake_output: &mut [u8],
+    data_block_scratch: &mut [u8],
+    signature_limits: Tls13RsaPssSignatureLimits,
+    finished_key: &FinishedKey<'_>,
+    peer_verify_data: &[u8],
+) -> Result<
+    VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity<
+        'reviewed,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'body,
+    >,
+    ReviewedServerPathFinishedKeyTranscriptContinuityError,
+> {
+    let certificate = reviewed_server_path
+        .subordinate_policy()
+        .target_policy()
+        .anchor_policy()
+        .target_signature_closure()
+        .server_policy()
+        .certificate();
+    let public_key = validate_rsa_public_key(
+        certificate.tbs_certificate().subject_public_key_info(),
+        rsa_key_policy,
+        rsa_key_limits,
+    )
+    .map_err(
+        |error| ReviewedServerPathFinishedKeyTranscriptContinuityError {
+            kind: ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind::PublicKey(
+                error.kind(),
+            ),
+        },
+    )?;
+    let certificate_verify = verify_and_advance_owned_certificate_verify_transcript(
+        transcript,
+        CertificateVerifyRole::Server,
+        authorized_scheme,
+        certificate_verify_body,
+        public_key,
+        signed_input_output,
+        handshake_output,
+        data_block_scratch,
+        signature_limits,
+    )
+    .map_err(
+        |error| ReviewedServerPathFinishedKeyTranscriptContinuityError {
+            kind: ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind::CertificateVerify(
+                error.kind(),
+            ),
+        },
+    )?;
+    let continuity = verify_finished_after_owned_certificate_verify(
+        certificate_verify,
+        finished_key,
+        peer_verify_data,
+    )
+    .map_err(
+        |error| ReviewedServerPathFinishedKeyTranscriptContinuityError {
+            kind: ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind::Finished(
+                error.kind(),
+            ),
+        },
+    )?;
+
+    Ok(
+        VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity {
+            reviewed_server_path,
+            continuity,
+        },
+    )
+}
+
 /// Verify one server `CertificateVerify` with the exact reviewed path target.
 #[allow(clippy::too_many_arguments)]
 pub fn verify_reviewed_server_path_certificate_verify<
@@ -1155,6 +1983,534 @@ where
     )
 }
 
+/// Verify one server `CertificateVerify` through the exact HTTPS DNS
+/// destination and complete nested no-check fixed-path revocation proof.
+#[allow(private_bounds)]
+#[allow(clippy::too_many_arguments)]
+pub fn verify_https_dns_destination_reviewed_nested_no_check_complete_fixed_path_revocation_certificate_verify<
+    'destination,
+    'target_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+    'key_policy,
+    Evidence,
+>(
+    https_destination_complete_revocation: &'destination Evidence,
+    hashed_input: &'hashed HashedTranscriptBoundCertificateVerifyInput<
+        'bound,
+        'transcript,
+        'output,
+    >,
+    message: &'message CertificateVerifyMessage<'body>,
+    rsa_key_policy: RsaPublicKeyPolicy<'key_policy>,
+    rsa_key_limits: Asn1Limits,
+    data_block_scratch: &mut [u8],
+    signature_limits: Tls13RsaPssSignatureLimits,
+) -> Result<
+    VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence,
+    >,
+    ReviewedServerPathCertificateVerifyError,
+>
+where
+    Evidence: ?Sized + nested_revocation_evidence_sealed::Sealed<'target_encoded>,
+{
+    require_server_role(hashed_input.bound_input().input().role())?;
+
+    let verification = verify_server_certificate_verify_after_role(
+        https_destination_complete_revocation.server_certificate(),
+        hashed_input,
+        message,
+        rsa_key_policy,
+        rsa_key_limits,
+        data_block_scratch,
+        signature_limits,
+    )?;
+
+    Ok(
+        VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify {
+            https_destination_complete_revocation,
+            verification,
+        },
+    )
+}
+
+/// Verify one server `CertificateVerify` through the exact HTTPS DNS
+/// destination and complete double-nested no-check fixed-path revocation proof.
+#[allow(private_bounds)]
+#[allow(clippy::too_many_arguments)]
+pub fn verify_https_dns_destination_reviewed_double_nested_no_check_complete_fixed_path_revocation_certificate_verify<
+    'destination,
+    'target_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+    'key_policy,
+    Evidence,
+>(
+    https_destination_complete_revocation: &'destination Evidence,
+    hashed_input: &'hashed HashedTranscriptBoundCertificateVerifyInput<
+        'bound,
+        'transcript,
+        'output,
+    >,
+    message: &'message CertificateVerifyMessage<'body>,
+    rsa_key_policy: RsaPublicKeyPolicy<'key_policy>,
+    rsa_key_limits: Asn1Limits,
+    data_block_scratch: &mut [u8],
+    signature_limits: Tls13RsaPssSignatureLimits,
+) -> Result<
+    VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence,
+    >,
+    ReviewedServerPathCertificateVerifyError,
+>
+where
+    Evidence: ?Sized + double_nested_revocation_evidence_sealed::Sealed<'target_encoded>,
+{
+    require_server_role(hashed_input.bound_input().input().role())?;
+
+    let verification = verify_server_certificate_verify_after_role(
+        https_destination_complete_revocation.server_certificate(),
+        hashed_input,
+        message,
+        rsa_key_policy,
+        rsa_key_limits,
+        data_block_scratch,
+        signature_limits,
+    )?;
+
+    Ok(
+        VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify {
+            https_destination_complete_revocation,
+            verification,
+        },
+    )
+}
+
+/// Verify one server `CertificateVerify` through the exact HTTPS DNS
+/// destination and complete recursive-responder no-check fixed-path revocation
+/// proof.
+#[allow(private_bounds)]
+#[allow(clippy::too_many_arguments)]
+pub fn verify_https_dns_destination_reviewed_recursive_responder_no_check_complete_fixed_path_revocation_certificate_verify<
+    'destination,
+    'target_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+    'key_policy,
+    Evidence,
+>(
+    https_destination_complete_revocation: &'destination Evidence,
+    hashed_input: &'hashed HashedTranscriptBoundCertificateVerifyInput<
+        'bound,
+        'transcript,
+        'output,
+    >,
+    message: &'message CertificateVerifyMessage<'body>,
+    rsa_key_policy: RsaPublicKeyPolicy<'key_policy>,
+    rsa_key_limits: Asn1Limits,
+    data_block_scratch: &mut [u8],
+    signature_limits: Tls13RsaPssSignatureLimits,
+) -> Result<
+    VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence,
+    >,
+    ReviewedServerPathCertificateVerifyError,
+>
+where
+    Evidence: ?Sized + recursive_revocation_evidence_sealed::Sealed<'target_encoded>,
+{
+    require_server_role(hashed_input.bound_input().input().role())?;
+
+    let verification = verify_server_certificate_verify_after_role(
+        https_destination_complete_revocation.server_certificate(),
+        hashed_input,
+        message,
+        rsa_key_policy,
+        rsa_key_limits,
+        data_block_scratch,
+        signature_limits,
+    )?;
+
+    Ok(
+        VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify {
+            https_destination_complete_revocation,
+            verification,
+        },
+    )
+}
+
+/// Verify one server `CertificateVerify` through the exact HTTPS DNS
+/// destination and complete alternative intermediate-status-responder
+/// no-check fixed-path revocation proof.
+#[allow(private_bounds)]
+#[allow(clippy::too_many_arguments)]
+pub fn verify_https_dns_destination_reviewed_intermediate_status_responder_revocation_responder_no_check_complete_fixed_path_revocation_certificate_verify<
+    'destination,
+    'target_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+    'key_policy,
+    Evidence,
+>(
+    https_destination_complete_revocation: &'destination Evidence,
+    hashed_input: &'hashed HashedTranscriptBoundCertificateVerifyInput<
+        'bound,
+        'transcript,
+        'output,
+    >,
+    message: &'message CertificateVerifyMessage<'body>,
+    rsa_key_policy: RsaPublicKeyPolicy<'key_policy>,
+    rsa_key_limits: Asn1Limits,
+    data_block_scratch: &mut [u8],
+    signature_limits: Tls13RsaPssSignatureLimits,
+) -> Result<
+    VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify<
+        'destination,
+        'target_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+        Evidence,
+    >,
+    ReviewedServerPathCertificateVerifyError,
+>
+where
+    Evidence: ?Sized + alternative_revocation_evidence_sealed::Sealed<'target_encoded>,
+{
+    require_server_role(hashed_input.bound_input().input().role())?;
+
+    let verification = verify_server_certificate_verify_after_role(
+        https_destination_complete_revocation.server_certificate(),
+        hashed_input,
+        message,
+        rsa_key_policy,
+        rsa_key_limits,
+        data_block_scratch,
+        signature_limits,
+    )?;
+
+    Ok(
+        VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify {
+            https_destination_complete_revocation,
+            verification,
+        },
+    )
+}
+
+macro_rules! impl_complete_revocation_certificate_verify_sealed {
+    ($verification:ident) => {
+        impl<
+                'destination,
+                'target_encoded,
+                'hashed,
+                'bound,
+                'transcript,
+                'output,
+                'message,
+                'body,
+                Evidence: ?Sized,
+            > complete_revocation_certificate_verify_sealed::Sealed
+            for $verification<
+                'destination,
+                'target_encoded,
+                'hashed,
+                'bound,
+                'transcript,
+                'output,
+                'message,
+                'body,
+                Evidence,
+            >
+        {
+            fn selected_suite(&self) -> SelectedCipherSuite {
+                self.verification()
+                    .hashed_input()
+                    .bound_input()
+                    .transcript()
+                    .selected_suite()
+            }
+        }
+    };
+}
+
+impl_complete_revocation_certificate_verify_sealed!(
+    VerifiedHttpsDnsDestinationReviewedDirectNoCheckCompleteFixedPathRevocationCertificateVerify
+);
+impl_complete_revocation_certificate_verify_sealed!(
+    VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify
+);
+impl_complete_revocation_certificate_verify_sealed!(
+    VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify
+);
+impl_complete_revocation_certificate_verify_sealed!(
+    VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify
+);
+impl_complete_revocation_certificate_verify_sealed!(
+    VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify
+);
+
+/// Non-copyable evidence that an exact complete-revocation server
+/// `CertificateVerify` verdict advanced the no-PSK server flight to Finished.
+pub struct OrderedNoPskServerFlightReviewedRevocationCertificateVerify<
+    'flight,
+    'verification,
+    Verification: ?Sized,
+> {
+    server_flight: &'flight mut NoPskServerFlight,
+    verification: &'verification Verification,
+}
+
+impl<'flight, 'verification, Verification: ?Sized>
+    OrderedNoPskServerFlightReviewedRevocationCertificateVerify<
+        'flight,
+        'verification,
+        Verification,
+    >
+{
+    /// Return the server flight now positioned to accept `Finished`.
+    #[must_use]
+    pub const fn server_flight(&self) -> &NoPskServerFlight {
+        self.server_flight
+    }
+
+    /// Return the exact complete-revocation `CertificateVerify` verdict.
+    #[must_use]
+    pub const fn verification(&self) -> &'verification Verification {
+        self.verification
+    }
+}
+
+impl<Verification: ?Sized> fmt::Debug
+    for OrderedNoPskServerFlightReviewedRevocationCertificateVerify<'_, '_, Verification>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("OrderedNoPskServerFlightReviewedRevocationCertificateVerify")
+    }
+}
+
+/// Advance an exact no-PSK server flight only with one of the five complete-
+/// revocation HTTPS destination-bound server `CertificateVerify` verdicts.
+///
+/// An unexpected state fails through the ordering policy before mutation. On
+/// success the non-copyable result retains both the mutable flight and the
+/// exact verification proof so a later Finished composition can consume the
+/// transition without detaching the authenticated certificate and revocation
+/// graph.
+#[allow(private_bounds)]
+pub fn advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify<
+    'flight,
+    'verification,
+    Verification: ?Sized + complete_revocation_certificate_verify_sealed::Sealed,
+>(
+    server_flight: &'flight mut NoPskServerFlight,
+    verification: &'verification Verification,
+) -> Result<
+    OrderedNoPskServerFlightReviewedRevocationCertificateVerify<
+        'flight,
+        'verification,
+        Verification,
+    >,
+    ServerFlightError,
+> {
+    server_flight.accept(Tls13HandshakeType::CertificateVerify)?;
+
+    Ok(
+        OrderedNoPskServerFlightReviewedRevocationCertificateVerify {
+            server_flight,
+            verification,
+        },
+    )
+}
+
+/// Stable, payload-free failures while completing the reviewed server flight.
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub enum ReviewedServerFinishedTransitionErrorKind {
+    /// The Finished verdict authenticated the client sender rather than server.
+    WrongEndpointRole,
+    /// The Finished verdict selected a different suite than CertificateVerify.
+    CipherSuiteMismatch,
+    /// The retained server flight did not accept Finished at its current state.
+    UnexpectedFlightState,
+}
+
+/// One reviewed server-Finished transition failure with no retained peer data.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ReviewedServerFinishedTransitionError {
+    kind: ReviewedServerFinishedTransitionErrorKind,
+}
+
+impl ReviewedServerFinishedTransitionError {
+    /// Return the stable failure category.
+    #[must_use]
+    pub const fn kind(self) -> ReviewedServerFinishedTransitionErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for ReviewedServerFinishedTransitionError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "reviewed TLS 1.3 server Finished transition error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for ReviewedServerFinishedTransitionError {}
+
+/// Non-copyable evidence that exact reviewed CertificateVerify and server
+/// Finished verdicts completed one no-PSK server flight under the same suite.
+pub struct CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished<
+    'flight,
+    'verification,
+    'finished,
+    Verification: ?Sized,
+> {
+    server_flight: &'flight mut NoPskServerFlight,
+    verification: &'verification Verification,
+    finished: &'finished VerifiedFinished,
+}
+
+impl<'verification, 'finished, Verification: ?Sized>
+    CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished<
+        '_,
+        'verification,
+        'finished,
+        Verification,
+    >
+{
+    /// Return the completed exact server flight.
+    #[must_use]
+    pub const fn server_flight(&self) -> &NoPskServerFlight {
+        self.server_flight
+    }
+
+    /// Return the exact complete-revocation CertificateVerify verdict.
+    #[must_use]
+    pub const fn verification(&self) -> &'verification Verification {
+        self.verification
+    }
+
+    /// Return the exact server Finished verdict.
+    #[must_use]
+    pub const fn finished(&self) -> &'finished VerifiedFinished {
+        self.finished
+    }
+}
+
+impl<Verification: ?Sized> fmt::Debug
+    for CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished<
+        '_,
+        '_,
+        '_,
+        Verification,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished")
+    }
+}
+
+/// Complete the exact retained no-PSK server flight only with a server-role
+/// Finished verdict for the same cipher suite as retained CertificateVerify.
+///
+/// Role and suite checks happen before the ordering policy is invoked. The
+/// result retains both cryptographic verdicts and the completed flight. This
+/// bounded transition does not establish that Finished's retained transcript
+/// hash follows the exact CertificateVerify message in one encoded stream.
+#[allow(private_bounds)]
+pub fn complete_no_psk_server_flight_after_reviewed_revocation_finished<
+    'flight,
+    'verification,
+    'finished,
+    Verification: ?Sized + complete_revocation_certificate_verify_sealed::Sealed,
+>(
+    ordered: OrderedNoPskServerFlightReviewedRevocationCertificateVerify<
+        'flight,
+        'verification,
+        Verification,
+    >,
+    finished: &'finished VerifiedFinished,
+) -> Result<
+    CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished<
+        'flight,
+        'verification,
+        'finished,
+        Verification,
+    >,
+    ReviewedServerFinishedTransitionError,
+> {
+    if finished.role() != FinishedRole::Server {
+        return Err(ReviewedServerFinishedTransitionError {
+            kind: ReviewedServerFinishedTransitionErrorKind::WrongEndpointRole,
+        });
+    }
+    if finished.selected_suite() != ordered.verification.selected_suite() {
+        return Err(ReviewedServerFinishedTransitionError {
+            kind: ReviewedServerFinishedTransitionErrorKind::CipherSuiteMismatch,
+        });
+    }
+    ordered
+        .server_flight
+        .accept(Tls13HandshakeType::Finished)
+        .map_err(|_| ReviewedServerFinishedTransitionError {
+            kind: ReviewedServerFinishedTransitionErrorKind::UnexpectedFlightState,
+        })?;
+
+    Ok(
+        CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished {
+            server_flight: ordered.server_flight,
+            verification: ordered.verification,
+            finished,
+        },
+    )
+}
+
 #[allow(clippy::too_many_arguments)]
 fn verify_server_certificate_verify_after_role<
     'certificate,
@@ -1234,12 +2590,29 @@ fn require_server_role(
 #[cfg(test)]
 mod tests {
     use super::{
-        direct_revocation_evidence_sealed, require_server_role, validate_leaf_public_key,
+        advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify,
+        alternative_revocation_evidence_sealed,
+        complete_no_psk_server_flight_after_reviewed_revocation_finished,
+        complete_revocation_certificate_verify_sealed, direct_revocation_evidence_sealed,
+        double_nested_revocation_evidence_sealed, nested_revocation_evidence_sealed,
+        recursive_revocation_evidence_sealed, require_server_role, validate_leaf_public_key,
         verify_https_dns_destination_reviewed_direct_no_check_complete_fixed_path_revocation_certificate_verify,
+        verify_https_dns_destination_reviewed_double_nested_no_check_complete_fixed_path_revocation_certificate_verify,
+        verify_https_dns_destination_reviewed_intermediate_status_responder_revocation_responder_no_check_complete_fixed_path_revocation_certificate_verify,
+        verify_https_dns_destination_reviewed_nested_no_check_complete_fixed_path_revocation_certificate_verify,
+        verify_https_dns_destination_reviewed_recursive_responder_no_check_complete_fixed_path_revocation_certificate_verify,
+        CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished,
+        OrderedNoPskServerFlightReviewedRevocationCertificateVerify,
+        ReviewedServerFinishedTransitionError, ReviewedServerFinishedTransitionErrorKind,
         ReviewedServerPathCertificateVerifyError, ReviewedServerPathCertificateVerifyErrorKind,
         VerifiedHttpsDnsDestinationReviewedDirectNoCheckCompleteFixedPathRevocationCertificateVerify,
+        VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify,
+        VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify,
+        VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify,
+        VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify,
         VerifiedReviewedServerPathCertificateVerify,
     };
+    use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk};
     use der_asn1::Asn1Limits;
     use rsa_pss_sha256_signature::RsaPssSha256SignatureLimits;
     use tls13_certificate_verify_input::{CertificateVerifyRole, MAXIMUM_INPUT_LENGTH};
@@ -1247,7 +2620,12 @@ mod tests {
     use tls13_certificate_verify_transcript_binding::{
         bind_certificate_verify_transcript, hash_transcript_bound_certificate_verify_input,
     };
-    use tls13_cipher_suite_policy::{CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry};
+    use tls13_cipher_suite_policy::{
+        CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry, SelectedCipherSuite,
+    };
+    use tls13_finished::{derive_finished_key, FinishedKeyStorage, FinishedRole, VerifiedFinished};
+    use tls13_handshake::Tls13HandshakeType;
+    use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightErrorKind, ServerFlightState};
     use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
     use tls13_signature_scheme_policy::{SignatureScheme, SignatureSchemePolicy};
     use tls13_transcript::{PendingTls13Transcript, TranscriptPolicy};
@@ -1277,6 +2655,66 @@ mod tests {
         }
     }
 
+    struct TestNestedRevocationEvidence<'certificate, 'encoded> {
+        certificate: &'certificate X509Certificate<'encoded>,
+    }
+
+    impl<'certificate, 'encoded> nested_revocation_evidence_sealed::Sealed<'encoded>
+        for TestNestedRevocationEvidence<'certificate, 'encoded>
+    {
+        fn server_certificate(&self) -> &X509Certificate<'encoded> {
+            self.certificate
+        }
+    }
+
+    struct TestDoubleNestedRevocationEvidence<'certificate, 'encoded> {
+        certificate: &'certificate X509Certificate<'encoded>,
+    }
+
+    impl<'certificate, 'encoded> double_nested_revocation_evidence_sealed::Sealed<'encoded>
+        for TestDoubleNestedRevocationEvidence<'certificate, 'encoded>
+    {
+        fn server_certificate(&self) -> &X509Certificate<'encoded> {
+            self.certificate
+        }
+    }
+
+    struct TestRecursiveRevocationEvidence<'certificate, 'encoded> {
+        certificate: &'certificate X509Certificate<'encoded>,
+    }
+
+    impl<'certificate, 'encoded> recursive_revocation_evidence_sealed::Sealed<'encoded>
+        for TestRecursiveRevocationEvidence<'certificate, 'encoded>
+    {
+        fn server_certificate(&self) -> &X509Certificate<'encoded> {
+            self.certificate
+        }
+    }
+
+    struct TestAlternativeRevocationEvidence<'certificate, 'encoded> {
+        certificate: &'certificate X509Certificate<'encoded>,
+    }
+
+    struct TestCompleteRevocationCertificateVerify {
+        selected_suite: SelectedCipherSuite,
+    }
+
+    impl complete_revocation_certificate_verify_sealed::Sealed
+        for TestCompleteRevocationCertificateVerify
+    {
+        fn selected_suite(&self) -> SelectedCipherSuite {
+            self.selected_suite
+        }
+    }
+
+    impl<'certificate, 'encoded> alternative_revocation_evidence_sealed::Sealed<'encoded>
+        for TestAlternativeRevocationEvidence<'certificate, 'encoded>
+    {
+        fn server_certificate(&self) -> &X509Certificate<'encoded> {
+            self.certificate
+        }
+    }
+
     fn fixture(hexadecimal: &str) -> Vec<u8> {
         let digits = hexadecimal
             .bytes()
@@ -1289,6 +2727,28 @@ mod tests {
             .iter()
             .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).unwrap(), 16).unwrap())
             .collect()
+    }
+
+    fn selected_suite(suite: CipherSuite) -> SelectedCipherSuite {
+        let entry = CipherSuitePolicyEntry::new(suite, 8_192).unwrap();
+        CipherSuitePolicy::new(&[entry])
+            .unwrap()
+            .select(suite.wire_id())
+            .unwrap()
+    }
+
+    fn verified_finished(
+        selected_suite: SelectedCipherSuite,
+        role: FinishedRole,
+    ) -> VerifiedFinished {
+        let prk = HkdfPrk::import_exact(FixedHkdfHash::Sha256, &[0x11; 32]).unwrap();
+        let mut storage = FinishedKeyStorage::new(selected_suite, role);
+        let key = derive_finished_key(&prk, &mut storage).unwrap();
+        let transcript_hash = [0x24; 32];
+        let mut verify_data = [0; 32];
+        key.write_verify_data(&transcript_hash, &mut verify_data)
+            .unwrap();
+        key.verify_peer(&transcript_hash, &verify_data).unwrap()
     }
 
     fn length(length: usize) -> Vec<u8> {
@@ -1439,6 +2899,70 @@ mod tests {
             "VerifiedHttpsDnsDestinationReviewedDirectNoCheckCompleteFixedPathRevocationCertificateVerify"
         ));
 
+        type NestedRevocationProof =
+            VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                u8,
+            >;
+        assert!(core::any::type_name::<NestedRevocationProof>().contains(
+            "VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify"
+        ));
+
+        type DoubleNestedRevocationProof =
+            VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify<
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                u8,
+            >;
+        assert!(core::any::type_name::<DoubleNestedRevocationProof>().contains(
+            "VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify"
+        ));
+
+        type RecursiveRevocationProof =
+            VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify<
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                u8,
+            >;
+        assert!(core::any::type_name::<RecursiveRevocationProof>().contains(
+            "VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify"
+        ));
+
+        type AlternativeRevocationProof =
+            VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify<
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                u8,
+            >;
+        assert!(core::any::type_name::<AlternativeRevocationProof>().contains(
+            "VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify"
+        ));
+
         fn assert_direct_evidence<'encoded, Evidence>()
         where
             Evidence: direct_revocation_evidence_sealed::Sealed<'encoded>,
@@ -1454,6 +2978,100 @@ mod tests {
                 u8,
             >;
         assert_direct_evidence::<'static, OfficialDirectEvidence>();
+
+        fn assert_nested_evidence<'encoded, Evidence>()
+        where
+            Evidence: nested_revocation_evidence_sealed::Sealed<'encoded>,
+        {
+        }
+        type OfficialNestedEvidence =
+            super::BoundHttpsDnsDestinationToReviewedNestedNoCheckCompleteFixedPathRevocation<
+                'static,
+                'static,
+                'static,
+                'static,
+                u8,
+                u8,
+                u8,
+            >;
+        assert_nested_evidence::<'static, OfficialNestedEvidence>();
+
+        fn assert_double_nested_evidence<'encoded, Evidence>()
+        where
+            Evidence: double_nested_revocation_evidence_sealed::Sealed<'encoded>,
+        {
+        }
+        type OfficialDoubleNestedEvidence =
+            super::BoundHttpsDnsDestinationToReviewedDoubleNestedNoCheckCompleteFixedPathRevocation<
+                'static,
+                'static,
+                'static,
+                'static,
+                u8,
+                u8,
+                u8,
+                u8,
+            >;
+        assert_double_nested_evidence::<'static, OfficialDoubleNestedEvidence>();
+
+        fn assert_recursive_evidence<'encoded, Evidence>()
+        where
+            Evidence: recursive_revocation_evidence_sealed::Sealed<'encoded>,
+        {
+        }
+        type OfficialRecursiveEvidence =
+            super::BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation<
+                'static,
+                'static,
+                'static,
+                'static,
+                u8,
+                u8,
+                u8,
+                u8,
+            >;
+        assert_recursive_evidence::<'static, OfficialRecursiveEvidence>();
+
+        fn assert_alternative_evidence<'encoded, Evidence>()
+        where
+            Evidence: alternative_revocation_evidence_sealed::Sealed<'encoded>,
+        {
+        }
+        type OfficialAlternativeEvidence =
+            super::BoundHttpsDnsDestinationToReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocation<
+                'static,
+                'static,
+                'static,
+                'static,
+                u8,
+                u8,
+                u8,
+            >;
+        assert_alternative_evidence::<'static, OfficialAlternativeEvidence>();
+
+        fn assert_ordered_transition_admission<Verification>()
+        where
+            Verification: complete_revocation_certificate_verify_sealed::Sealed,
+        {
+        }
+        assert_ordered_transition_admission::<RevocationProof>();
+        assert_ordered_transition_admission::<NestedRevocationProof>();
+        assert_ordered_transition_admission::<DoubleNestedRevocationProof>();
+        assert_ordered_transition_admission::<RecursiveRevocationProof>();
+        assert_ordered_transition_admission::<AlternativeRevocationProof>();
+
+        type OrderedProof =
+            OrderedNoPskServerFlightReviewedRevocationCertificateVerify<'static, 'static, u8>;
+        assert!(core::any::type_name::<OrderedProof>()
+            .contains("OrderedNoPskServerFlightReviewedRevocationCertificateVerify"));
+        type CompletedProof = CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished<
+            'static,
+            'static,
+            'static,
+            u8,
+        >;
+        assert!(core::any::type_name::<CompletedProof>()
+            .contains("CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished",));
     }
 
     fn exercise_direct_revocation_entry_point(role: CertificateVerifyRole, expect_success: bool) {
@@ -1549,6 +3167,387 @@ mod tests {
         }
     }
 
+    fn exercise_nested_revocation_entry_point(role: CertificateVerifyRole, expect_success: bool) {
+        let leaf_encoded = fixture(PUBLIC_LEAF_HEX);
+        let leaf = decode_x509_certificate(&leaf_encoded, Asn1Limits::default()).unwrap();
+        let evidence = TestNestedRevocationEvidence { certificate: &leaf };
+        let transcript_encoded = fixture(PUBLIC_TRANSCRIPT_HEX);
+        let suite_entry =
+            CipherSuitePolicyEntry::new(CipherSuite::TlsAes256GcmSha384, 8_192).unwrap();
+        let selected_suite = CipherSuitePolicy::new(&[suite_entry])
+            .unwrap()
+            .select(CipherSuite::TlsAes256GcmSha384.wire_id())
+            .unwrap();
+        let mut pending = PendingTls13Transcript::new(TranscriptPolicy::new(8_192).unwrap());
+        pending.update(&transcript_encoded).unwrap();
+        let transcript = pending.select(selected_suite);
+        let scheme = SignatureSchemePolicy::new(&[SignatureScheme::RsaPssRsaeSha256])
+            .unwrap()
+            .select(SignatureScheme::RsaPssRsaeSha256.wire_id())
+            .unwrap();
+        let signature = fixture(PUBLIC_SIGNATURE_HEX);
+        let mut output = [0xa5; MAXIMUM_INPUT_LENGTH + 7];
+        let mut scratch = [0xa5; 223];
+        let before_scratch = scratch;
+        let expected_input;
+        {
+            let bound = bind_certificate_verify_transcript(&transcript, role, &mut output).unwrap();
+            let hashed = hash_transcript_bound_certificate_verify_input(scheme, &bound);
+            let message = CertificateVerifyMessage::new(
+                SignatureScheme::RsaPssRsaeSha256.wire_id(),
+                &signature,
+            )
+            .unwrap();
+            expected_input = bound.input().as_bytes().to_vec();
+            let result = verify_https_dns_destination_reviewed_nested_no_check_complete_fixed_path_revocation_certificate_verify(
+                &evidence,
+                &hashed,
+                &message,
+                RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+                Asn1Limits::default(),
+                &mut scratch,
+                Tls13RsaPssSignatureLimits::Sha256(
+                    RsaPssSha256SignatureLimits::new(300, 300).unwrap(),
+                ),
+            );
+
+            if expect_success {
+                let verified = result.expect("captured server signature must verify");
+                let expected_key = validate_rsa_public_key(
+                    leaf.tbs_certificate().subject_public_key_info(),
+                    RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+                    Asn1Limits::default(),
+                )
+                .unwrap();
+                assert!(core::ptr::eq(
+                    verified.https_destination_complete_revocation(),
+                    &evidence,
+                ));
+                assert!(core::ptr::eq(
+                    verified.verification().hashed_input(),
+                    &hashed
+                ));
+                assert!(core::ptr::eq(
+                    verified.verification().verification().signature().message(),
+                    &message,
+                ));
+                assert_eq!(
+                    verified
+                        .verification()
+                        .verification()
+                        .signature()
+                        .public_key()
+                        .modulus(),
+                    expected_key.modulus(),
+                );
+                assert_eq!(
+                    format!("{verified:?}"),
+                    "VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify",
+                );
+            } else {
+                assert_eq!(
+                    result.unwrap_err().kind(),
+                    ReviewedServerPathCertificateVerifyErrorKind::WrongEndpointRole,
+                );
+            }
+        }
+        assert_eq!(&output[..expected_input.len()], expected_input);
+        assert!(output[expected_input.len()..]
+            .iter()
+            .all(|byte| *byte == 0xa5));
+        if !expect_success {
+            assert_eq!(scratch, before_scratch);
+        }
+    }
+
+    fn exercise_double_nested_revocation_entry_point(
+        role: CertificateVerifyRole,
+        expect_success: bool,
+    ) {
+        let leaf_encoded = fixture(PUBLIC_LEAF_HEX);
+        let leaf = decode_x509_certificate(&leaf_encoded, Asn1Limits::default()).unwrap();
+        let evidence = TestDoubleNestedRevocationEvidence { certificate: &leaf };
+        let transcript_encoded = fixture(PUBLIC_TRANSCRIPT_HEX);
+        let suite_entry =
+            CipherSuitePolicyEntry::new(CipherSuite::TlsAes256GcmSha384, 8_192).unwrap();
+        let selected_suite = CipherSuitePolicy::new(&[suite_entry])
+            .unwrap()
+            .select(CipherSuite::TlsAes256GcmSha384.wire_id())
+            .unwrap();
+        let mut pending = PendingTls13Transcript::new(TranscriptPolicy::new(8_192).unwrap());
+        pending.update(&transcript_encoded).unwrap();
+        let transcript = pending.select(selected_suite);
+        let scheme = SignatureSchemePolicy::new(&[SignatureScheme::RsaPssRsaeSha256])
+            .unwrap()
+            .select(SignatureScheme::RsaPssRsaeSha256.wire_id())
+            .unwrap();
+        let signature = fixture(PUBLIC_SIGNATURE_HEX);
+        let mut output = [0xa5; MAXIMUM_INPUT_LENGTH + 7];
+        let mut scratch = [0xa5; 223];
+        let before_scratch = scratch;
+        let expected_input;
+        {
+            let bound = bind_certificate_verify_transcript(&transcript, role, &mut output).unwrap();
+            let hashed = hash_transcript_bound_certificate_verify_input(scheme, &bound);
+            let message = CertificateVerifyMessage::new(
+                SignatureScheme::RsaPssRsaeSha256.wire_id(),
+                &signature,
+            )
+            .unwrap();
+            expected_input = bound.input().as_bytes().to_vec();
+            let result = verify_https_dns_destination_reviewed_double_nested_no_check_complete_fixed_path_revocation_certificate_verify(
+                &evidence,
+                &hashed,
+                &message,
+                RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+                Asn1Limits::default(),
+                &mut scratch,
+                Tls13RsaPssSignatureLimits::Sha256(
+                    RsaPssSha256SignatureLimits::new(300, 300).unwrap(),
+                ),
+            );
+
+            if expect_success {
+                let verified = result.expect("captured server signature must verify");
+                let expected_key = validate_rsa_public_key(
+                    leaf.tbs_certificate().subject_public_key_info(),
+                    RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+                    Asn1Limits::default(),
+                )
+                .unwrap();
+                assert!(core::ptr::eq(
+                    verified.https_destination_complete_revocation(),
+                    &evidence,
+                ));
+                assert!(core::ptr::eq(
+                    verified.verification().hashed_input(),
+                    &hashed,
+                ));
+                assert!(core::ptr::eq(
+                    verified.verification().verification().signature().message(),
+                    &message,
+                ));
+                assert_eq!(
+                    verified
+                        .verification()
+                        .verification()
+                        .signature()
+                        .public_key()
+                        .modulus(),
+                    expected_key.modulus(),
+                );
+                assert_eq!(
+                    format!("{verified:?}"),
+                    "VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify",
+                );
+            } else {
+                assert_eq!(
+                    result.unwrap_err().kind(),
+                    ReviewedServerPathCertificateVerifyErrorKind::WrongEndpointRole,
+                );
+            }
+        }
+        assert_eq!(&output[..expected_input.len()], expected_input);
+        assert!(output[expected_input.len()..]
+            .iter()
+            .all(|byte| *byte == 0xa5));
+        if !expect_success {
+            assert_eq!(scratch, before_scratch);
+        }
+    }
+
+    fn exercise_recursive_revocation_entry_point(
+        role: CertificateVerifyRole,
+        expect_success: bool,
+    ) {
+        let leaf_encoded = fixture(PUBLIC_LEAF_HEX);
+        let leaf = decode_x509_certificate(&leaf_encoded, Asn1Limits::default()).unwrap();
+        let evidence = TestRecursiveRevocationEvidence { certificate: &leaf };
+        let transcript_encoded = fixture(PUBLIC_TRANSCRIPT_HEX);
+        let suite_entry =
+            CipherSuitePolicyEntry::new(CipherSuite::TlsAes256GcmSha384, 8_192).unwrap();
+        let selected_suite = CipherSuitePolicy::new(&[suite_entry])
+            .unwrap()
+            .select(CipherSuite::TlsAes256GcmSha384.wire_id())
+            .unwrap();
+        let mut pending = PendingTls13Transcript::new(TranscriptPolicy::new(8_192).unwrap());
+        pending.update(&transcript_encoded).unwrap();
+        let transcript = pending.select(selected_suite);
+        let scheme = SignatureSchemePolicy::new(&[SignatureScheme::RsaPssRsaeSha256])
+            .unwrap()
+            .select(SignatureScheme::RsaPssRsaeSha256.wire_id())
+            .unwrap();
+        let signature = fixture(PUBLIC_SIGNATURE_HEX);
+        let mut output = [0xa5; MAXIMUM_INPUT_LENGTH + 7];
+        let mut scratch = [0xa5; 223];
+        let before_scratch = scratch;
+        let expected_input;
+        {
+            let bound = bind_certificate_verify_transcript(&transcript, role, &mut output).unwrap();
+            let hashed = hash_transcript_bound_certificate_verify_input(scheme, &bound);
+            let message = CertificateVerifyMessage::new(
+                SignatureScheme::RsaPssRsaeSha256.wire_id(),
+                &signature,
+            )
+            .unwrap();
+            expected_input = bound.input().as_bytes().to_vec();
+            let result = verify_https_dns_destination_reviewed_recursive_responder_no_check_complete_fixed_path_revocation_certificate_verify(
+                &evidence,
+                &hashed,
+                &message,
+                RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+                Asn1Limits::default(),
+                &mut scratch,
+                Tls13RsaPssSignatureLimits::Sha256(
+                    RsaPssSha256SignatureLimits::new(300, 300).unwrap(),
+                ),
+            );
+
+            if expect_success {
+                let verified = result.expect("captured server signature must verify");
+                let expected_key = validate_rsa_public_key(
+                    leaf.tbs_certificate().subject_public_key_info(),
+                    RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+                    Asn1Limits::default(),
+                )
+                .unwrap();
+                assert!(core::ptr::eq(
+                    verified.https_destination_complete_revocation(),
+                    &evidence,
+                ));
+                assert!(core::ptr::eq(
+                    verified.verification().hashed_input(),
+                    &hashed,
+                ));
+                assert!(core::ptr::eq(
+                    verified.verification().verification().signature().message(),
+                    &message,
+                ));
+                assert_eq!(
+                    verified
+                        .verification()
+                        .verification()
+                        .signature()
+                        .public_key()
+                        .modulus(),
+                    expected_key.modulus(),
+                );
+                assert_eq!(
+                    format!("{verified:?}"),
+                    "VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify",
+                );
+            } else {
+                assert_eq!(
+                    result.unwrap_err().kind(),
+                    ReviewedServerPathCertificateVerifyErrorKind::WrongEndpointRole,
+                );
+            }
+        }
+        assert_eq!(&output[..expected_input.len()], expected_input);
+        assert!(output[expected_input.len()..]
+            .iter()
+            .all(|byte| *byte == 0xa5));
+        if !expect_success {
+            assert_eq!(scratch, before_scratch);
+        }
+    }
+
+    fn exercise_alternative_revocation_entry_point(
+        role: CertificateVerifyRole,
+        expect_success: bool,
+    ) {
+        let leaf_encoded = fixture(PUBLIC_LEAF_HEX);
+        let leaf = decode_x509_certificate(&leaf_encoded, Asn1Limits::default()).unwrap();
+        let evidence = TestAlternativeRevocationEvidence { certificate: &leaf };
+        let transcript_encoded = fixture(PUBLIC_TRANSCRIPT_HEX);
+        let suite_entry =
+            CipherSuitePolicyEntry::new(CipherSuite::TlsAes256GcmSha384, 8_192).unwrap();
+        let selected_suite = CipherSuitePolicy::new(&[suite_entry])
+            .unwrap()
+            .select(CipherSuite::TlsAes256GcmSha384.wire_id())
+            .unwrap();
+        let mut pending = PendingTls13Transcript::new(TranscriptPolicy::new(8_192).unwrap());
+        pending.update(&transcript_encoded).unwrap();
+        let transcript = pending.select(selected_suite);
+        let scheme = SignatureSchemePolicy::new(&[SignatureScheme::RsaPssRsaeSha256])
+            .unwrap()
+            .select(SignatureScheme::RsaPssRsaeSha256.wire_id())
+            .unwrap();
+        let signature = fixture(PUBLIC_SIGNATURE_HEX);
+        let mut output = [0xa5; MAXIMUM_INPUT_LENGTH + 7];
+        let mut scratch = [0xa5; 223];
+        let before_scratch = scratch;
+        let expected_input;
+        {
+            let bound = bind_certificate_verify_transcript(&transcript, role, &mut output).unwrap();
+            let hashed = hash_transcript_bound_certificate_verify_input(scheme, &bound);
+            let message = CertificateVerifyMessage::new(
+                SignatureScheme::RsaPssRsaeSha256.wire_id(),
+                &signature,
+            )
+            .unwrap();
+            expected_input = bound.input().as_bytes().to_vec();
+            let result = verify_https_dns_destination_reviewed_intermediate_status_responder_revocation_responder_no_check_complete_fixed_path_revocation_certificate_verify(
+                &evidence,
+                &hashed,
+                &message,
+                RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+                Asn1Limits::default(),
+                &mut scratch,
+                Tls13RsaPssSignatureLimits::Sha256(
+                    RsaPssSha256SignatureLimits::new(300, 300).unwrap(),
+                ),
+            );
+
+            if expect_success {
+                let verified = result.expect("captured server signature must verify");
+                let expected_key = validate_rsa_public_key(
+                    leaf.tbs_certificate().subject_public_key_info(),
+                    RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+                    Asn1Limits::default(),
+                )
+                .unwrap();
+                assert!(core::ptr::eq(
+                    verified.https_destination_complete_revocation(),
+                    &evidence,
+                ));
+                assert!(core::ptr::eq(
+                    verified.verification().hashed_input(),
+                    &hashed,
+                ));
+                assert!(core::ptr::eq(
+                    verified.verification().verification().signature().message(),
+                    &message,
+                ));
+                assert_eq!(
+                    verified
+                        .verification()
+                        .verification()
+                        .signature()
+                        .public_key()
+                        .modulus(),
+                    expected_key.modulus(),
+                );
+                assert_eq!(
+                    format!("{verified:?}"),
+                    "VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify",
+                );
+            } else {
+                assert_eq!(
+                    result.unwrap_err().kind(),
+                    ReviewedServerPathCertificateVerifyErrorKind::WrongEndpointRole,
+                );
+            }
+        }
+        assert_eq!(&output[..expected_input.len()], expected_input);
+        assert!(output[expected_input.len()..]
+            .iter()
+            .all(|byte| *byte == 0xa5));
+        if !expect_success {
+            assert_eq!(scratch, before_scratch);
+        }
+    }
+
     #[test]
     fn direct_revocation_entry_point_retains_exact_evidence_and_signature() {
         exercise_direct_revocation_entry_point(CertificateVerifyRole::Server, true);
@@ -1557,6 +3556,218 @@ mod tests {
     #[test]
     fn direct_revocation_entry_point_rejects_client_before_scratch_mutation() {
         exercise_direct_revocation_entry_point(CertificateVerifyRole::Client, false);
+    }
+
+    #[test]
+    fn nested_revocation_entry_point_retains_exact_evidence_and_signature() {
+        exercise_nested_revocation_entry_point(CertificateVerifyRole::Server, true);
+    }
+
+    #[test]
+    fn nested_revocation_entry_point_rejects_client_before_scratch_mutation() {
+        exercise_nested_revocation_entry_point(CertificateVerifyRole::Client, false);
+    }
+
+    #[test]
+    fn double_nested_revocation_entry_point_retains_exact_evidence_and_signature() {
+        exercise_double_nested_revocation_entry_point(CertificateVerifyRole::Server, true);
+    }
+
+    #[test]
+    fn double_nested_revocation_entry_point_rejects_client_before_scratch_mutation() {
+        exercise_double_nested_revocation_entry_point(CertificateVerifyRole::Client, false);
+    }
+
+    #[test]
+    fn recursive_revocation_entry_point_retains_exact_evidence_and_signature() {
+        exercise_recursive_revocation_entry_point(CertificateVerifyRole::Server, true);
+    }
+
+    #[test]
+    fn recursive_revocation_entry_point_rejects_client_before_scratch_mutation() {
+        exercise_recursive_revocation_entry_point(CertificateVerifyRole::Client, false);
+    }
+
+    #[test]
+    fn alternative_revocation_entry_point_retains_exact_evidence_and_signature() {
+        exercise_alternative_revocation_entry_point(CertificateVerifyRole::Server, true);
+    }
+
+    #[test]
+    fn alternative_revocation_entry_point_rejects_client_before_scratch_mutation() {
+        exercise_alternative_revocation_entry_point(CertificateVerifyRole::Client, false);
+    }
+
+    #[test]
+    fn ordered_transition_retains_exact_verification_and_client_auth_requirement() {
+        let mut server_flight = NoPskServerFlight::new();
+        server_flight
+            .accept(Tls13HandshakeType::EncryptedExtensions)
+            .unwrap();
+        server_flight
+            .accept(Tls13HandshakeType::CertificateRequest)
+            .unwrap();
+        server_flight
+            .accept(Tls13HandshakeType::Certificate)
+            .unwrap();
+        let verification = TestCompleteRevocationCertificateVerify {
+            selected_suite: selected_suite(CipherSuite::TlsAes128GcmSha256),
+        };
+
+        {
+            let ordered =
+                advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify(
+                    &mut server_flight,
+                    &verification,
+                )
+                .unwrap();
+
+            assert_eq!(
+                ordered.server_flight().state(),
+                ServerFlightState::ExpectFinished
+            );
+            assert!(ordered.server_flight().client_authentication_requested());
+            assert!(core::ptr::eq(ordered.verification(), &verification));
+            assert_eq!(
+                format!("{ordered:?}"),
+                "OrderedNoPskServerFlightReviewedRevocationCertificateVerify",
+            );
+        }
+
+        assert_eq!(server_flight.state(), ServerFlightState::ExpectFinished);
+        assert!(server_flight.client_authentication_requested());
+    }
+
+    #[test]
+    fn ordered_transition_rejects_wrong_state_without_mutation() {
+        let mut server_flight = NoPskServerFlight::new();
+        let verification = TestCompleteRevocationCertificateVerify {
+            selected_suite: selected_suite(CipherSuite::TlsAes128GcmSha256),
+        };
+
+        let error = advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify(
+            &mut server_flight,
+            &verification,
+        )
+        .unwrap_err();
+
+        assert_eq!(error.kind(), ServerFlightErrorKind::UnexpectedMessage);
+        assert_eq!(
+            server_flight.state(),
+            ServerFlightState::ExpectEncryptedExtensions,
+        );
+        assert!(!server_flight.client_authentication_requested());
+    }
+
+    #[test]
+    fn finished_transition_completes_exact_flight_and_retains_both_verdicts() {
+        let suite = selected_suite(CipherSuite::TlsAes128GcmSha256);
+        let verification = TestCompleteRevocationCertificateVerify {
+            selected_suite: suite,
+        };
+        let finished = verified_finished(suite, FinishedRole::Server);
+        let mut server_flight = NoPskServerFlight::new();
+        server_flight
+            .accept(Tls13HandshakeType::EncryptedExtensions)
+            .unwrap();
+        server_flight
+            .accept(Tls13HandshakeType::CertificateRequest)
+            .unwrap();
+        server_flight
+            .accept(Tls13HandshakeType::Certificate)
+            .unwrap();
+        let ordered = advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify(
+            &mut server_flight,
+            &verification,
+        )
+        .unwrap();
+
+        {
+            let completed = complete_no_psk_server_flight_after_reviewed_revocation_finished(
+                ordered, &finished,
+            )
+            .unwrap();
+
+            assert_eq!(
+                completed.server_flight().state(),
+                ServerFlightState::Complete
+            );
+            assert!(completed.server_flight().client_authentication_requested());
+            assert!(core::ptr::eq(completed.verification(), &verification));
+            assert!(core::ptr::eq(completed.finished(), &finished));
+            assert_eq!(
+                format!("{completed:?}"),
+                "CompletedNoPskServerFlightReviewedRevocationCertificateVerifyFinished",
+            );
+        }
+
+        assert!(server_flight.is_complete());
+        assert!(server_flight.client_authentication_requested());
+    }
+
+    #[test]
+    fn finished_transition_rejects_client_role_without_flight_mutation() {
+        let suite = selected_suite(CipherSuite::TlsAes128GcmSha256);
+        let verification = TestCompleteRevocationCertificateVerify {
+            selected_suite: suite,
+        };
+        let finished = verified_finished(suite, FinishedRole::Client);
+        let mut server_flight = NoPskServerFlight::new();
+        server_flight
+            .accept(Tls13HandshakeType::EncryptedExtensions)
+            .unwrap();
+        server_flight
+            .accept(Tls13HandshakeType::Certificate)
+            .unwrap();
+        let ordered = advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify(
+            &mut server_flight,
+            &verification,
+        )
+        .unwrap();
+
+        let error =
+            complete_no_psk_server_flight_after_reviewed_revocation_finished(ordered, &finished)
+                .unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            ReviewedServerFinishedTransitionErrorKind::WrongEndpointRole,
+        );
+        assert_eq!(server_flight.state(), ServerFlightState::ExpectFinished);
+        assert!(!server_flight.client_authentication_requested());
+    }
+
+    #[test]
+    fn finished_transition_rejects_suite_substitution_without_flight_mutation() {
+        let certificate_verify_suite = selected_suite(CipherSuite::TlsAes128GcmSha256);
+        let finished_suite = selected_suite(CipherSuite::TlsChacha20Poly1305Sha256);
+        let verification = TestCompleteRevocationCertificateVerify {
+            selected_suite: certificate_verify_suite,
+        };
+        let finished = verified_finished(finished_suite, FinishedRole::Server);
+        let mut server_flight = NoPskServerFlight::new();
+        server_flight
+            .accept(Tls13HandshakeType::EncryptedExtensions)
+            .unwrap();
+        server_flight
+            .accept(Tls13HandshakeType::Certificate)
+            .unwrap();
+        let ordered = advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify(
+            &mut server_flight,
+            &verification,
+        )
+        .unwrap();
+
+        let error =
+            complete_no_psk_server_flight_after_reviewed_revocation_finished(ordered, &finished)
+                .unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            ReviewedServerFinishedTransitionErrorKind::CipherSuiteMismatch,
+        );
+        assert_eq!(server_flight.state(), ServerFlightState::ExpectFinished);
+        assert!(!server_flight.client_authentication_requested());
     }
 
     #[test]
@@ -1578,6 +3789,24 @@ mod tests {
         for secret in ["api.example.test", "transcript", "signature", "modulus"] {
             assert!(!display.contains(secret));
             assert!(!debug.contains(secret));
+        }
+
+        let finished_error = ReviewedServerFinishedTransitionError {
+            kind: ReviewedServerFinishedTransitionErrorKind::CipherSuiteMismatch,
+        };
+        let finished_display = finished_error.to_string();
+        let finished_debug = format!("{finished_error:?}");
+        assert_eq!(
+            finished_display,
+            "reviewed TLS 1.3 server Finished transition error CipherSuiteMismatch",
+        );
+        assert_eq!(
+            finished_debug,
+            "ReviewedServerFinishedTransitionError { kind: CipherSuiteMismatch }",
+        );
+        for secret in ["verify-data", "transcript", "signature", "suite 0x1301"] {
+            assert!(!finished_display.contains(secret));
+            assert!(!finished_debug.contains(secret));
         }
     }
 }

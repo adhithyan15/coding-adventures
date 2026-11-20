@@ -30,6 +30,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "coding_adventures_bounded_json"
+version = "0.1.0"
+
+[[package]]
 name = "coding_adventures_sha256"
 version = "0.1.0"
 dependencies = [
@@ -219,6 +223,10 @@ checksum = "a2c754d6c33795a1c324727428e5a7dedb5b06195f9890bdbcba760d3e246563"
 name = "vos-link"
 version = "0.1.0"
 dependencies = [
+ "coding_adventures_bounded_json",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "coding_adventures_warrant_grammar",
  "vos-manifest",
  "vos-sched-contract",
  "vos-shape-check",

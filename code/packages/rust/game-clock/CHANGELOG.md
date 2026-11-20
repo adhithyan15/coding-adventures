@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - A durable public-API consumer for all 23 `game-clock-v1` shared-corpus cases, including exact output/error comparison, failed mutable-advance state preservation, and conformance negative controls.
 - A Rust integration harness that checks the unguarded constructor Warrant model against `new_clock` over the full 648-case boundary matrix and seeded, stratified full-width property cases, with same-path fault controls.
+- An exact ordered `validate_state` Warrant model and claim, plus a native parser/typechecker/evaluator harness comparing complete results with the public API and independent `u128` oracle across finite branch, threshold, property, and fuzz cases. This is finite execution, not universal or Rust-source equivalence. Added a bounded SAT suite with checked compositional DRAT evidence and public replay controls; it does not claim one monolithic proof or source equivalence.
+- Exact selection and persisted-cache hashing for the six external validator inputs (Warrant, shared corpus, root and Rust Cargo configs, workspace manifest, and lockfile), with per-input same-length mutation/restore and filtered plan replay checks.
 
 ### Fixed
 - `code/specs/game-clock.warrant` was invalid Warrant (`->` implication in a claim); rewritten as `if .. then .. else true`. Document only.

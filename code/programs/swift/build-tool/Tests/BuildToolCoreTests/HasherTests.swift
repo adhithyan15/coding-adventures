@@ -292,7 +292,7 @@ struct HasherTests {
         #expect(Set(checked.languages.map(\.language)).count == 23)
         #expect(
             Hasher.languageSourceInputRegistryDigest
-                == "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1"
+                == "4b695e89c165297a539091b9e74b60a3be0fd6b056c13fb36d66cdc696e7a1d2"
         )
         #expect(
             try Hasher.canonicalLanguageSourceInputRegistryDigest(from: checkedData)
@@ -317,12 +317,12 @@ struct HasherTests {
         )
 
         #expect(checkedObject.isEqual(productionObject))
-        #expect(checked.boundaries.count == 19)
-        #expect(checked.boundaries.flatMap(\.inputs).count == 27)
-        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 25)
+        #expect(checked.boundaries.count == 24)
+        #expect(checked.boundaries.flatMap(\.inputs).count == 37)
+        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 31)
         #expect(
             Hasher.repositorySourceInputBoundaryDigest
-                == "7014b769f48c4f55e056c7bbbcf4e14bc0e84c1e7ef6030472e0e7949d93f0c8"
+                == "b8afd2020cf3cf50eb133eb95cac12bb4f568f5451fb624aa68544e6ff6add71"
         )
         #expect(
             try Hasher.canonicalRepositorySourceInputBoundaryDigest(from: checkedData)
@@ -340,9 +340,12 @@ struct HasherTests {
         "source-collection-repository-link-boundaries.json",
         "source-collection-repository-python-workspace.json",
         "source-collection-repository-rust-boundary.json",
+        "source-collection-repository-rust-game-clock-exact-inputs.json",
+        "source-collection-repository-swift-hash-map.json",
         "source-collection-repository-starlark-load.json",
         "source-collection-repository-typescript-program-shared.json",
         "source-collection-repository-typescript-shared.json",
+        "source-collection-repository-typescript-game-input-frame-proof-inputs.json",
         "source-collection-repository-visicalc-deno-cross-package.json",
     ])
     func consumesNeutralRepositoryBoundaryFixture(_ name: String) throws {

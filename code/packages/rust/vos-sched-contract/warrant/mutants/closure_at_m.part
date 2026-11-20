@@ -1,0 +1,4 @@
+  -- Mutant of the lemma `closure_at_m` (VOS04 5.6, `vos-link check-contract`): the model `inv` of
+  -- contract.part with one deliberate fault, which the lemma must catch: inv is not total: it rejects every state whose thread 0 is not ready, so closure is false at the first step.
+  -- It replaces the model of the same name by span; the tool refuses the mutant if the lemma still holds.
+  model inv(m: Ready) -> Bool = m.p0

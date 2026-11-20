@@ -16,7 +16,7 @@ per-interface contract specs (VOS10 and the `VOS1x` family that follows it).
 **Builds on:** [VOS01](VOS01-component-contract-model.md) (the component shape,
 tiers, `-any`, the budget), [VOS02](VOS02-interface-contracts-and-profile-linking.md)
 (generated per-implementation documents, kinds, profile manifests, SH16),
-[VOS03](VOS03-component-shape-checker.md) (SH1-SH18),
+[VOS03](VOS03-component-shape-checker.md) (SH1-SH19),
 [VOS10](VOS10-scheduler-contract.md) (the first contract),
 [VOS30](VOS30-proof-route-and-capacity.md) (the X3 route and the capacity
 numbers) and [EMU00](EMU00-emulator-framework.md) (the machine side).
@@ -413,9 +413,9 @@ crate that executes commands. Three requirements make "commands" safe:
    as a closed enum in its contract package. No variant carries a raw address,
    a CSR number or an MMIO offset; payloads are opaque ids, bounded indices and
    data bytes. A leaf therefore cannot even **construct** a request for an
-   arbitrary location. This is checked per implementation (PR-I line 2 in
-   section 5.2: the command-type check) and has a negative control: a mutant
-   leaf that emits a raw address must be rejected (VOS-D077).
+   arbitrary location. This is checked on the contract package, where the enums live (SH19, section 5.6; PR-I line 2
+   in section 5.2), and has negative controls: a contract enum that carries a raw address must be
+   rejected (VOS-D077, done in VOS-039b-2a).
 2. **Allowlist in the HAL.** The HAL (VOS21, VOS-025a) validates every command
    against a **static allowlist** built from the board map and the owning
    domain, before executing it. A command outside the allowlist is rejected,
@@ -620,9 +620,9 @@ An interface arrives as a sequence of PRs, each one package (rule 1).
 * `contract.vos`: tiers, configuration, ceilings;
 * `warrant/contract.part`, `lemmas.part` (admitted but **not embedded**,
   VOS-D064), `obligations-{safety,policy,canonical,any}.part`;
-* whole-domain **lemma evaluation with mutant controls** (today a per-contract
-  class H sibling, `vos-sched-contract-check`; VOS-D049 wants it generic,
-  hence VOS-039);
+* whole-domain **lemma evaluation with mutant controls**: generic, by
+  `vos-link check-contract` (section 5.6, VOS-039b-1), from `warrant/lemmas.part` and one
+  mutant part per lemma; the per-contract class H sibling is gone (VOS02 D-GD11);
 * the **case-count table** derived from the run (never typed in by hand);
 * the interface's row in section 2 filled in with the measured numbers.
 
@@ -633,7 +633,7 @@ explanation:
 | # | Evidence | BUILD line | Gate |
 |---|---|---|---|
 | 1 | Unit | `cargo test --lib --test behaviour` with and without `ghost`, plus `--doc` | Against a plain reference model written in the test, not copied from the implementation |
-| 2 | Shape | `vos-shape-check .` | SH1-SH18; `clippy::arithmetic_side_effects` denied; **command-type check** (rule 6: every command enum is closed and no variant payload can carry a raw address or CSR number), with a negative control that a mutant leaf emitting one is rejected (VOS-D077) |
+| 2 | Shape | `vos-shape-check .` | SH1-SH19; `clippy::arithmetic_side_effects` denied; **command-type check** (rule 6: every command enum is closed and no variant payload can carry a raw address or CSR number), built as **SH19** on the `contract` kind in VOS-039b-2a, with negative controls that a contract enum emitting one is rejected (VOS-D077, done; section 5.6) |
 | 3 | Capability | `ca-capability-analyzer --dir .` | An empty `required_capabilities.json` |
 | 4 | Document | `vos-link check-doc .` | The committed `.warrant` equals the regenerated one |
 | 5 | Harness drift | `gen_evidence --check <crate>` | The generated test harness equals the regenerated one |
@@ -733,9 +733,10 @@ copying it today produce known-bad output, and each has a row that closes it:
    fallback of VOS-038).
 4. **Coverage is measured once by hand and gates nothing** (VOS-D070). A
    component's line coverage is claimed in a README and nothing fails if it
-   drops.
-5. **The lemma check is a per-contract crate** (VOS-D049): every contract
-   would copy `vos-sched-contract-check`. VOS-039 makes it generic.
+   drops. **Closed by VOS-039a** (section 5.6, item G).
+5. **The lemma check was a per-contract crate** (VOS-D049): every contract would have
+   copied `vos-sched-contract-check`. **Closed by VOS-039b-1** (section 5.6, "Contract
+   crates"): `vos-link check-contract` is generic and the crate is deleted.
 6. **No mechanism evidences one implementation at two configurations**, a
    reduced X1 configuration and the shipped X2 configuration, because
    `contract.vos` pins one configuration (VOS-D068).
@@ -743,11 +744,22 @@ copying it today produce known-bad output, and each has a row that closes it:
 The component kit (VOS-039) is the answer to the whole list: after three real
 implementations exist, the kit extracts what they have in common into a
 `vos-link check-component` that verifies the file set, the BUILD lines and the
-build-tool row, so the template is **checked**, not remembered.
+build-tool row, so the template is **checked**, not remembered. VOS-039 is
+delivered in four slices: **039a** `gen-build`, `check-component` and the coverage gate
+(section 5.6, as built); **039b** the contract kit, split into **039b-1** (the generic
+contract check `check-contract`, the `contract` kind in `gen-build` and `check-component`,
+the retirement of `vos-sched-contract-check`, the `config` half of VOS-D055; section 5.6)
+and **039b-2**, itself split: **039b-2a** (the command-type check SH19, VOS-D077, and the
+Rust-enum/Warrant-variant correspondence CK10; section 5.6, as built) and **039b-2b** (`bound` rows
+against ceilings, CC09, with the dependency and attribute closure of a contract crate, CC10 and SH19 (h), VOS-D112, and
+the VOS-D104 sweep, `check-publish`; section 5.6, as built); **039c** (done) the oracle-preservation claims
+of every `-any` (VOS-D080) and the kit rule CC11 that requires the fault that attacks them (section 5.6, as built); **039d** the step-counter tick audit (VOS-D089); the migration of the VOS
+sabotage lines to `code/scripts/warrant_negctl.py` (VOS-D099, closing VOS-D088)
+moved into 039a, because the generated BUILD uses it.
 
 ### 5.5 What a reviewer checks in a component PR
 
-Until `check-component` exists, this is the list a reviewer applies by hand.
+`gen-build` and `check-component` (section 5.6) now produce and check the file-set, BUILD-line, guard, selection-row and coverage rows of this list; the rest a reviewer still applies by hand.
 Each item has a mechanical check or an artifact to look at, so a reviewer is
 reading evidence and not opinion:
 
@@ -768,6 +780,477 @@ reading evidence and not opinion:
 | Time-carrying contracts state an overflow rule | The contract text | Saturating or a horizon precondition (rule 7) |
 | Nothing claims more than it has | The README and the report | No "proved" before VOS-029; the implementation's report prints "no SAT evidence"; lemmas printed as "SAT-certified at N = ..." only, in the contract PR |
 | The selection row exists | `repository_inputs.go` | A tool edit selects the crate in a dry run |
+
+### 5.6 `vos-link gen-build` and `check-component`, as built (VOS-039a)
+
+```text
+vos-link gen-build        <crate-dir> [--root <repo-root>]   writes BUILD, BUILD_windows (and warrant/check_evidence.sh if declared)
+vos-link check-component  <crate-dir> [--root <repo-root>]   exit 0 pass, 1 findings, 2 no verdict
+```
+
+**Why the BUILD files are generated and compared, not linted (decision, from the
+security review of the first VOS-039a draft).** The first draft matched required
+fragments in the author's BUILD text. A match over author-controlled text can be
+satisfied by text that never runs, and the build tool runs **each non-comment BUILD
+line as its own `sh -c`** (it drops blank and `#` lines), so single-line tricks pass a
+lint: `echo cargo test -p C ...`; `true # cargo test ...`; `false && <line>`;
+`<line> || true`; a `uname` test whose `"Linux"` sits in a comment; a second
+`--fail-under 0`; `--exclude-files`; `echo warrant/check_evidence.sh`; the strings a
+script check looks for placed in the script's comments; an excuse matched by
+`contains` on a short or empty id; Windows `::` and `@rem` comments. That is the
+failure VOS-012b0 had already met (a lint over author-written text never
+converges). So the **canonical region of each BUILD file is generated**, exactly as
+the document is by `gen-doc`, and `check-component` requires **byte equality**, like
+`check-doc`. There is nothing left to bypass: the lines are not recognised, they are
+reproduced.
+
+**Scope (decision).** An **implementation crate**: kind `production`, `reference`
+or `any`, and, since VOS-039b-1, a **contract crate** (kind `contract`, below). Any other kind
+is a finding (`CC01`): fixtures and evidence-only check crates are not components. For them
+VOS-D082 (`publish = false`) is swept by `vos-link check-publish` (VOS-D104, 039b-2b); the one check crate
+that existed, `vos-sched-contract-check`, is deleted.
+
+**What `gen-build` reads.**
+
+| Input | Gives |
+|---|---|
+| `vos.toml` | `kind`, `evidence-features` (each `[a-z][a-z0-9_-]*` and on the central list `vos-shape-check` uses, `DEFAULT_EVIDENCE_FEATURES`: the value is pasted into BUILD, so it is validated), `coverage-floor` (an integer, at least 95), `excused-controls` (optional, below) |
+| `evidence.bindings` (read by the evidence generator's own reader) | the bound operations and their faults |
+| `code/specs/<crate>.warrant` (parsed, by `vos-manifest`) | the claim and example names |
+| `warrant/sabotage.plan` | which claim or example attacks which fault (below) |
+
+**The canonical region.** The file starts with a generated header, then these lines
+in this order (section 5.2), then the marker line
+`# --- crate-specific (run, but never counted as evidence) ---`. Every line is
+exactly one command; the crate name, features and floor are substituted.
+
+```text
+ 1  cargo test -p C --lib --test behaviour -- --nocapture
+ 1  cargo test -p C --features F --lib --test behaviour          (once per feature list; none if no evidence feature)
+ 1  cargo test -p C --doc
+ 2  cargo run -q -p vos-shape-check -- .
+ 3  cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+ 4  cargo run -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check-doc .
+ 5  cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check C
+6-8  rm -f evidence/test-manifest.json         (BUILD_windows: if exist evidence\test-manifest.json del /f /q evidence\test-manifest.json)
+     WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p C --features F --test warrant_evidence
+       (when `excused-controls` is declared: `sh warrant/check_evidence.sh`; BUILD_windows: `bash ...`)
+ 9  one line per plan entry:
+       WARRANT_EVIDENCE_FAULT=<fault> [WARRANT_EVIDENCE_ATTACK=<op>] WARRANT_EVIDENCE_FILTER=/<tier>/<name> \
+         python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p C --features F --test warrant_evidence
+       (BUILD_windows: `set X=..&& ... python ../../../scripts/warrant_negctl.py -- ...`)
+ G  if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p C --features F --lib --test behaviour --ignore-tests --engine llvm --include-files 'C/src/*' --fail-under <floor> --skip-clean; fi
+       (BUILD only: tarpaulin is a Linux gate; `if ...; fi` rather than `&&` so the line exits 0 elsewhere)
+ +  cargo run -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check-component .
+```
+
+Line 9 uses the repository's shared checker `code/scripts/warrant_negctl.py`
+(WD-HARN1c, the normative form of a sabotage line, VER04j item 53): it runs the
+command with no shell, and passes only on a non-zero exit, exactly one TAP plan, at
+least one non-TODO `not ok`, no `Bail out!` and in-order point numbers. This
+completes the BUILD half of VOS-D099 and closes VOS-D088. The header carries
+`# needs-toolchain: python`. Anything after the marker is the author's: it is run,
+and it can satisfy no requirement, because the requirement is the canonical region.
+
+**The sabotage plan** `warrant/sabotage.plan`: one entry per line,
+`<tier>/<name> <fault> [attack=<op>]`, `#` comments. `<tier>` is `exhaustive` (the
+name must be a claim of the document) or `example` (an example of the document);
+`<fault>` must be bound to some operation in `evidence.bindings`; `field-flip` takes
+`attack=<op>` (the record fault that cancels itself if two operations list it,
+VER04j 4.8) and nothing else does (`field-flip-last`, VOS-039c, takes none: nothing reads the register it corrupts, and CC11 below requires it of every state-producing operation of an `-any`); no entry repeats. **Completeness:** every fault of
+every bound operation has an entry, and every operation that lists `field-flip` has
+an `attack=` entry; and **every claim whose text calls a bound operation appears in at
+least one entry** (found by walking the claim's parsed expression, `vos_manifest::warrant::claim_calls`; calls through a `model` body are not followed, VOS-D108; the
+one exemption is a claim whose operations' faults are all excused, below). An author
+cannot attack one easy claim per fault and leave the rest untried. Counting controls per
+operation and tier is VOS-D105. Whether the named claim really catches the fault is the run's
+(the shared checker fails a control that does not). The plan cannot be derived from
+the document and bindings alone, because the claim-to-operation map is inside the
+Warrant expressions; deriving it is VOS-D108. The plan holds names, never command
+text, so it cannot carry a shell fragment.
+
+**The tolerance script.** A crate whose only claim over an operation cannot see a fault
+(rr's `init`, VOS-D098) declares `excused-controls = [{ id = "<manifest id>", reason = "VOS-Dnnn" }, ...]` in
+`vos.toml`: whole ids of the form `warrant/<module>/negctl/<tier>/<op>/<fault>`, never an
+empty list, never an empty id, and every excuse carries a `reason` that is a backlog row
+(`VOS-D` and three digits) which **must be the first cell of exactly one row of `code/specs/VOS-BACKLOG.md`
+whose status cell begins `open` or `queued`** (an allowlist: `resolved`, `withdrawn`,
+`done in ...` and the rest are closed): an excuse is traceable and expires when its row is closed (the control must then
+pass). `gen-build` writes `warrant/check_evidence.sh` from the list
+(it requires exit status 1, at least one `ok`, and exactly those ids failing).
+`check-component` requires the script byte-equal to the generated one, and refuses a
+script when nothing is declared.
+
+**What `check-component` checks.** A rule that cannot be applied (a symlink, a file
+over its cap) is *no verdict*, exit 2.
+
+| Code | Check | Fails when |
+|---|---|---|
+| `CC01` | The kind | `vos.toml` is missing, malformed, or names a kind that is not production, reference, any or contract |
+| `CC02` | The file set (section 5.1) | `BUILD`, `BUILD_windows`, `README.md`, `CHANGELOG.md` or `CHANGELOG.d/_meta.md`, `Cargo.toml`, `vos.toml`, `required_capabilities.json`, `warrant/impl.part`, `warrant/sabotage.plan`, `evidence.bindings`, `evidence/test-manifest.json`, `tests/generated/warrant_evidence.rs` or `code/specs/<crate>.warrant` is absent |
+| `CC03` | BUILD and BUILD_windows, lines 1 to 9 and G | the file does not begin with the generated canonical region, byte for byte (the finding names the first differing line, what is expected, what is found) |
+| `CC04` | The inputs of generation | `evidence.bindings` or the document does not parse; the plan is malformed, names an unknown claim, example, fault or operation, repeats, or leaves a bound fault or `field-flip` operation unattacked; the tolerance script differs from the generated one, or exists with nothing declared |
+| `CC05` | The build-tool row (line 11) | `repository_inputs.go` has no `vosImplementationRow("<crate>"),` line inside the `repositoryInputConsumers = []repositoryInputConsumer{` slice, after `//` and `/* */` comments and raw strings are removed (a Go parser is not a dependency of `vos-link`, so this is a narrow, documented scan; a row in a comment, a raw string or another slice does not count) |
+| `CC06` | VOS-D082 | kind `any` and `Cargo.toml` lacks `publish = false` in `[package]` |
+| `CC07` | The coverage declaration (VOS-D070) | `vos.toml` has no `coverage-floor`, or it is below 95. The BUILD line that enforces it is part of the canonical region (`CC03`) |
+| `CC08` | The evidence manifest | see below |
+| `CC09` | `bound` rows against the ceilings (VOS-039b-2b, VOS-D055) | see below |
+| `CC10` | The dependencies and build of a contract crate (VOS-D112), kind `contract` only | `Cargo.toml` has an entry in `[dependencies]`, `[build-dependencies]` or any `[target.*.dependencies]` table, a `build` key or a `build.rs`, a `[lib]` `proc-macro` that is not the literal `false`, a `[lib]` `crate-type` naming `proc-macro`, or a top-level `[patch]`, `[replace]` or `[workspace]` table |
+| `CC11` | Oracle preservation (VOS-039c, VOS-D080), kind `any` only | see below |
+
+**CC08, the manifest, bound to the document and the source.** `evidence/test-manifest.json`
+is read by the repository's `bounded-json`. It must have schema `warrant-test-evidence-v1`;
+its `spec_sha256` must equal the SHA-256 of `code/specs/<crate>.warrant` (the digest the
+generated harness embeds) and its `source_sha256` the digest of the crate's `src/` tree
+under the harness's own framing (`test-bootstrap`'s `source_tree_framing`), so a manifest
+of another document, older source or another crate is refused. The generated region also
+removes the manifest before the run (`rm -f`, or `if exist .. del` on cmd: both safe when
+the file is absent, so idempotent), so a suite that exits 0 without rewriting it leaves no
+file and fails `CC02` instead of passing on a stale one;
+the claim names of its `exhaustive`, `property` and `fuzz` entries must each **equal
+the document's claim set** (the manifest cannot drop a claim or invent one), and its
+`example` entries the document's examples; every `exhaustive` entry has `cases` > 0;
+every `property` entry `cases` at least the larger of the bindings' `property_cases`
+and **4096** (this section, line 7); every `fuzz` entry `iterations` at least the
+larger of the bindings' `fuzz_iterations` and **5000** (line 8); every non-control
+entry has verdict `pass`; each of the tiers `exhaustive`, `property` and `fuzz` has a
+`negctl` entry **with verdict `pass`** (a failing control counts for nothing); and the
+set of `negctl` ids that do not pass **equals** `excused-controls` (so a stale excuse
+fails as surely as an unexcused failure). The numbers 4096 and 5000 are constants of
+`vos-link` whose test reads this file and asserts that this section states them.
+
+**Not checked yet, each with a row.** The exact "controls equal operations times tiers"
+count of line 9 (VOS-D105); a parser's fuzz corpus and bounds (VOS-D106); the
+command-type check of line 2 on IMPLEMENTATION crates (a leaf has no command enum of its own; SH19 binds the contract crate, 039b-2a); deriving the sabotage plan (VOS-D108); line 10
+(SAT, n/a until VOS-029).
+
+**Item G, the coverage gate (VOS-D070).** `cargo tarpaulin`, which CI installs on
+Linux (pinned, `--locked`, with `llvm-tools`), on the LLVM engine, with
+`--include-files '<crate>/src/*'` (without it tarpaulin scores the whole workspace)
+and `--fail-under <floor>` where the floor is `vos.toml`'s `coverage-floor`
+(the repository standard of 95, never lower). The gate line is generated, so the
+floor and the line cannot disagree. A run that measures no line of the crate exits
+non-zero (checked by running tarpaulin with a pattern that matches nothing: `No
+coverage results collected`, exit 1).
+
+**Negative controls.** The fixture crate in `vos-link`'s tests is generated by
+`gen-build`, then broken one way at a time. Each bypass of the first draft is a test:
+`echo`-prefixed, `true #`-prefixed, `false &&`-prefixed and `|| true` lines, a
+`uname` test with `"Linux"` in a comment, a second `--fail-under 0`,
+`--exclude-files`, `echo warrant/check_evidence.sh`, the script's strings in comments,
+an empty or short excused id, and Windows `::`, `@rem`, `rem` lines; plus a missing
+file, a missing line, a plan that drops a fault, a manifest that drops a claim, a
+property count below 4096, a control that does not pass, a missing or lookalike
+build-tool row (comment, raw string, another slice), and a kind-`any` crate without
+`publish = false`. Each fails with its own code and text.
+
+### Contract crates: `check-contract`, and `check-component` for kind `contract` (VOS-039b-1)
+
+```text
+vos-link gen-contract    <contract-crate-dir> [--root <repo-root>]   writes warrant/lemmas.table
+vos-link check-contract  <contract-crate-dir> [--root <repo-root>]   exit 0 pass, 1 findings, 2 no verdict
+vos-link gen-build / check-component   accept a crate of kind `contract` (the branch below)
+```
+
+**The principle is the one of 5.6 above: generate the canonical artifact, compare it byte for
+byte, never lint author text.** `check-contract` does not read a list of controls the author
+wrote and trust it; it *runs* the contract's lemmas and mutants, and writes what happened into
+`warrant/lemmas.table`, which `gen-contract` writes and `check-contract` regenerates and
+compares byte for byte. The table is never parsed.
+
+**What it reads.** `vos.toml` (kind `contract`), `contract.vos`, `warrant/contract.part`,
+`warrant/lemmas.part` (now required for a contract crate), the `warrant/obligations-<tier>.part`
+files (their correspondence with the `tier` rows is the existing GD03, factored into a shared
+`load_contract`), `warrant/mutants/<lemma>.part` and `warrant/lemmas.table`.
+
+**Evaluation.** A document is assembled in memory: the header, one generated
+`model cfg_<KEY>() -> T = V<t>` per `config KEY V` row of `contract.vos` (T is the smallest of
+U8, U16, U32, U64 that holds V), `contract.part`, then `lemmas.part`. It is parsed and
+type-checked by `warrant-grammar` and each lemma is evaluated by the repository's ground
+`Evaluator` over every value of its binders (a complete type: `Bool` or `U8`). The odometer is
+the one the retired crate used, returning findings instead of panicking. Workers run on
+`WARRANT_STACK_BYTES` threads, at most 8, and results are collected by index, so the output is
+deterministic.
+
+**Mutants need no new file format.** `warrant/mutants/<lemma>.part` is an ordinary admitted part
+holding **exactly one** `model` declaration with a body. The tool parses it with the Warrant
+parser and replaces the model of the same name in `contract.part` **by the declaration's span**
+(no text search). A mutant is not gameable because: the file stems equal the lemma names, both
+ways; the mutated document must type-check; the named lemma must evaluate without error and
+**fail at least one case** (an evaluation error is a finding, never a kill); and the kill count
+is published in the generated table, so a reviewer sees it change.
+
+**Configuration, generated (the `config` half of VOS-D055).** For each `config` row the tool
+generates the `cfg_<KEY>` model above, and holds it to two rules. Each key is **called by at
+least one lemma** (found by walking the parsed claim body, as `claim_calls` does). And two
+tool-generated mutants, V-1 and V+1 (a side that does not fit T is skipped), must each falsify at
+least one lemma that calls the key; the author cannot write them. The scheduler contract carries
+`config_n_is_the_id_range: forall t: U8. pre_insert(empty(), t) == (t < cfg_N())`, so
+`contract.vos`'s `N 8` is tied to the Warrant `pre_insert` model: changing either alone fails.
+`lemmas.part` is not embedded in any implementation's document, so no document digest moves.
+What stays open: the literal `8` in an implementation's `n_is_eight` example against
+`contract.vos` (`bound` rows against ceilings are `check-component` CC09, 039b-2b).
+
+**`warrant/lemmas.table`** (generated):
+
+```text
+vos-lemmas 2
+contract-part <sha256 of contract.part>
+lemmas-part <sha256 of lemmas.part>
+config N 8
+variant <Name> = <C1> | <C2>(<T>, ..)
+lemma <name> product <n> admitted <n> mutant <model> mutant-part <sha256> failed <n>
+config-mutant N 7 kills <lemma>[,<lemma>]
+config-mutant N 9 kills <lemma>[,<lemma>]
+end
+```
+
+| Code | Check | Fails when |
+|---|---|---|
+| `CK01` | Inputs | the crate directory, `warrant/` or `warrant/mutants/` is a symlink; `vos.toml` kind is not `contract`; a part is not admitted; `contract.vos` does not parse; a required file is missing (tier/part correspondence is the shared GD03) |
+| `CK02` | Type check | `contract.part` + the cfg preamble + `lemmas.part` does not type-check; `lemmas.part` holds anything but claims, or no claim |
+| `CK03` | Budget and domain | a lemma is not a `forall`; a binder type is not `Bool` or `U8`; the product of the binder domains exceeds **400,000** (VOS04 5.4, VER04h 3); `lemmas.part` holds more than **64** lemmas; no case is admitted by the refinements |
+| `CK04` | The lemma holds | a lemma fails on some case (the first failing binder values are printed), or does not evaluate |
+| `CK05` | Mutant set | the stems of `warrant/mutants/*.part` are not exactly the lemma names |
+| `CK06` | Mutant form | a mutant part is not exactly one `model` with a body, names a model the contract does not declare, does not type-check, or its lemma does not evaluate on it |
+| `CK07` | Mutant kills | a lemma survives its mutant (zero failing cases) |
+| `CK08` | Config | a config key is called by no lemma, or a generated V-1 or V+1 mutant falsifies no lemma that calls it |
+| `CK09` | The table | `warrant/lemmas.table` is absent or differs from the regenerated bytes (the first differing line is printed) |
+| `CK10` | Enum/variant correspondence | a Rust `enum` of the crate has no Warrant `variant` of the same name, or the two generated lines differ (both lines are printed) |
+
+The budget is VER04h's X1 per-claim case budget of **400,000** (the `exhaustive_budget` of every
+`evidence.bindings`); it is a constant of `vos-link`, and a test of `vos-link` reads this section
+and asserts that it states the number.  A `lemmas.part` is limited to **64** lemmas (the limit of the
+mutants directory), so the work of a run is bounded; and when CK02, CK05 or CK06 findings exist, the
+check returns them without evaluating anything.
+
+**Enum/variant correspondence, CK10 (VOS-039b-2a).** The Rust `enum`s of the contract crate and the
+Warrant `variant`s of `contract.part` must say the same thing, so a renamed constructor, a changed
+payload or a reordered variant is caught at the contract and not only by a failing generated harness.
+The check follows the one principle of this section, **generate and compare**: it renders a line from
+each side with ONE function and compares the bytes.
+
+```text
+variant Pick = Idle | Run(U8)          <- rendered from the Rust enum  (src/**/*.rs)
+variant Pick = Idle | Run(U8)          <- rendered from the Warrant variant (warrant/contract.part)
+```
+
+The Rust side is `vos_shape_check::items::collect_types` over the crate's `src/**/*.rs` (the RS01
+lexer; no new lexer), the Warrant side the AST of `warrant-grammar`'s parser (`VariantDecl`).
+`variant <Name> = <C1> | <C2>(<T>, ..)`: constructors in source order separated by ` | `, a
+payload as the comma-and-space joined TYPES. The type map is `u8` to `U8`, `bool` to `Bool`,
+`[u8; N]` to `Bytes<N>`, a same-crate name to itself, and anything else to `?` and the type as written
+(a character no Warrant type has, so it never matches). Warrant names a constructor's fields freely, so a
+Rust TUPLE variant's field names are not compared: `Run(t: U8)` renders `Run(U8)` (the harness marshals
+by position). A Rust NAMED-field variant (`Put { slot: u8 }`) is different, its field names are part of
+the Rust type, so it renders `Put(slot: U8)` and the Warrant constructor of that name must spell the same
+names: the one rendering function is told by the Rust side which constructors are named. CK10 fires when
+a Rust enum has no Warrant variant of its name (a rename on either side leaves a Rust enum without a
+twin) or the lines differ. The direction is Rust to Warrant: a Warrant variant with no Rust enum is a
+model-only type and is allowed. A Rust type SH19 would reject cannot render (the Rust side prints it
+as written, which never equals a Warrant type), so SH19 and CK10 agree.
+
+The rendered lines are also published, in the same order as the Rust enums appear in the source,
+as `variant ...` rows after the `config` rows of `warrant/lemmas.table` (`vos-lemmas 2`), so a reviewer
+sees the correspondence in the generated artifact and CK09 byte-pins it. What this does NOT check:
+the evidence bindings' `enum ... ctors=` lines against the contract. The generated harness compiles
+against the contract's own enums (VOS10 section 12, fate table), so a mismatch fails the harness.
+
+**The command-type check, SH19 (VOS-D077, built in VOS-039b-2a).** `vos-shape-check`'s rule SH19
+(VOS03 section 4) is checked when `vos.toml` says `kind = "contract"`. The command set is derived,
+never listed by the author: **every `enum` in the crate**, `pub` or not. An enum fails when it
+carries `#[non_exhaustive]` (on the enum or a variant) or a generic list, or when a variant field is
+not one of exactly `u8`, `bool`, `[u8; <integer literal>]` or the bare name of a same-crate `struct`
+or `enum` that itself passes. So `usize`, `u16` and wider, `i*`, references, pointers, tuples,
+`Option<..>`, any `::` path, a `type` alias (not resolved, therefore rejected) and a const-named
+length are all findings. Negative controls, each asserted by code AND text: `Poke(usize)` and
+`Write { addr: u32 }` are rejected, `Pick::Run(u8)` and `Upd` pass; `#[non_exhaustive]`, `Cmd<T>`,
+`X(&'static u8)`, `X(core::num::NonZeroU8)`, `X(Addr)` with `type Addr = usize`, and a nested struct
+with a `usize` field are rejected; `[u8; 4]` and a nested passing enum pass; the same enum in a
+`kind = "production"` crate raises no SH19; the real `vos-sched-contract` passes.
+
+**The vocabulary of a contract crate is closed (security review of 039b-2a).** The four spellings are
+only safe if the four names mean what they look like, and a lexical check cannot resolve names. So
+SH19 refuses, as whole constructs, everything that can change a name's meaning: any `use` or
+`extern crate` (a contract crate imports nothing), any `mod` (one flat namespace), any macro
+definition or invocation, and any item named like a Rust primitive or a Warrant built-in type
+(`type u8 = u32;`, `struct u8`, `struct U8(u8)`). Attributes and doc comments stay; tests live in
+`tests/`. An `enum $n` that a macro body would write is a VT03 gap in every crate. Each bypass the
+review reproduced is a negative control in class K, P and H. The real `vos-sched-contract` uses none
+of these. CK10 compares only the NAME of a nested same-crate type; SH19 judges its contents (VOS-D111).
+
+**`bound` rows against ceilings, CC09 (VOS-039b-2b, the rest of VOS-D055).** VOS02 section 4.7 specifies a
+`realises=` field that would say which interface operation an `op` of the document realises. It is not
+built: `warrant-grammar`'s binding reader rejects an unknown `op` option (a change to a verification crate with
+a large fan-out), and an author-declared mapping is gameable (point `insert_img` at the loosest ceiling). So
+the mapping is DERIVED from the generated document `code/specs/<crate>.warrant`, parsed by `warrant-grammar`
+(never a text scan), and compared with the parsed `contract.vos`:
+
+```text
+ceil(X) = X                                  when contract.vos has a ceiling row for X
+        = X with ONE suffix `_out` or `_img`  when that is a ceiling operation   (VOS02 4.4's interim vocabulary)
+        = none                               otherwise: ghost-only (`alpha_w`, `cfg_n`), listed in a note
+```
+
+The suffix list is the constant `MAP_SUFFIXES` in `vos-link`; a test reads this section and asserts it. CC09
+fails when: (a) a `bound` row of a mapped operation has a metric the contract ceils and a bound that is not a
+plain integer literal (a non-literal is an unknown, which fails closed), or a value above the ceiling of the
+mapped operation and metric; (b) for kind `production` or `any`, a mapped operation has no `steps` row or no
+`heap` row (the two metrics every scheduler declares; a missing row is an unbounded operation); (c) a ceiling
+operation has no mapped operation at all (a contract operation nobody realises). `depth` is compared when
+present and otherwise reported as a note, "not evidenced" (VER04h 7.3 has no depth observer yet; requiring it
+would move every digest). Kind `reference` has rows that are optional and compared when present; a `reference`
+crate with no `bound` row passes. A `bound` row of an unmapped (ghost) operation is not compared and is listed
+in a note. Not checked: that the bound is the TRUE worst case (that is the evidence's step counter, VOS-D089),
+and the profile-side comparison against the LOCKED ceilings digest, which stays with `check-profile` (VOS02 NC9).
+Negative controls, each in a fixture crate: `steps <= 161` on `insert_img` only; `heap <= 1`; a deleted `heap`
+row; a deleted `bound remove_out` block (a ceiling operation with no operation); a non-literal bound; and the
+passing cases (a `reference` crate with no rows; an `alpha_w` row above every ceiling).
+
+**The sweep, `vos-link check-publish [--root R]` (VOS-D104, codes PB01, PB02 and PB03).** `check-component` judges
+implementation and contract crates; the evidence-only crates (a check program, a probe, the tooling itself)
+are nothing to it, and `publish = false` (VOS-D082) used to be applied by hand. The sweep is over the DIRECT
+children named `vos-*` of `code/packages/rust` and `code/programs/rust` that hold a `Cargo.toml` (no recursion:
+a fixture tree has no `Cargo.toml` of its own at that level). A crate's `vos.toml` is read with the shape
+checker's reader; kinds `production`, `reference` and `contract` are EXEMPT, with a note that the publish
+policy of a shipped crate is undecided and belongs to the release gate (that half of VOS-D104 stays open),
+but ONLY when the crate is also registered in `code/programs/go/build-tool/repository_inputs.go` by a
+`vosImplementationRow("<crate>")` or `vosContractRow("<crate>")` line inside `repositoryInputConsumers` (the
+scanner of CC05, so comments and raw strings do not count): the kind is the author's word, and a tooling crate
+must not escape PB01 with a one-line `vos.toml`. A kind claim without a row is PB03 (register it, so
+`check-component` runs in its BUILD, or set `publish = false`); a missing or unreadable row file, when a crate
+needs it, is no verdict. Every directory name printed in a message is escaped (`esc`), so a hostile name cannot
+forge a report line.
+Every other crate (kind `any`, no kind, no `vos.toml`) must say `publish = false` in `[package]` (read with the
+`toml_reader`, as CC06 does): PB01 when it is missing or not the literal `false`; PB02 when its `Cargo.toml` or
+`vos.toml` cannot be read as TOML. A symlinked crate directory is NO VERDICT (exit 2). The sweep runs as one
+identical line of `vos-link`'s BUILD and BUILD_windows, and a build-tool row selects `vos-link` when any
+`code/{packages,programs}/rust/vos-*/Cargo.toml` or `vos.toml` changes. It forced `publish = false` onto
+`vos-manifest`, `vos-probe-ready`, `vos-link` and `vos-capacity-probe`.
+
+**Oracle preservation of every `-any`, CC11 (VOS-039c, VOS-D080).** The safety claims quantify over `build(M)`, whose
+oracle is a constant, and `alpha` drops the oracle, so an `insert` that overwrote the oracle passed every generated
+claim of `vos-sched-any` (the hand-written behaviour test caught it). The contract now carries the claims, in
+`warrant/obligations-any.part` (VOS10 9.3): `insert_oracle_lo`, `_hi` and `_ids`, the three of `remove`, and
+`alpha_build_with_oracle`, so CD07 requires them of every `any` crate by `claim_sha256` and no implementation
+authors them. A claim only proves what its fault can fail, and no record fault reached the last field of `Impl`, so
+VER04j 4.8 gained `field-flip-last`. CC11 is the generic half, DERIVED from the parsed document, the contract's `any`
+claims and the bindings, never declared by the author, and it never reads claim text:
+
+```text
+  (a) the Impl field outside the cone of `build` (the oracle; `BuildShape::Constructor { in_cone }`, the walk
+      CD07 uses) is exactly ONE field, it is the LAST field of `Impl`, and its type is NUMERIC (a fixed-width
+      integer or `Nat`: the generator's own predicate for `field-flip-last`, the `FixedTy` table); anything
+      else, and any shape the walk cannot decide, fails closed
+  (b) every SUCCESSOR operation lists the fault `field-flip-last` in `faults=`; the successors are the `op`s of
+      the GENERATED DOCUMENT whose return type mentions `Impl` and that have a parameter that mentions `Impl`,
+      or an `inout` parameter that does (`insert_img`, `remove_img`, `dispatch_img`); "mentions" is judged on
+      the RESOLVED type, the generator's own resolution (`warrant-grammar` `evidence::type_mentions`, over the
+      `TyEnv` that `ty_of_type` uses), so `model State = Impl` (or a chain of aliases, an alias of
+      `Option<Impl>`, a record with such a field) is a state; the bindings are read only afterwards, for each
+      successor's faults
+  (c) for every successor operation `sabotage.plan` has an entry `exhaustive/<claim> field-flip-last` whose claim
+      is CONTRACT-OWNED (the document's claim has the name and `claim_sha256` of an obligation of the contract's
+      `any` tier, the identity CD05 and CD06 use; never the `tier=` attribute) and calls that operation and no
+      other successor (the existing `claim_calls`)
+```
+
+The successors come from the document because `ret=` and `args=` of an `op` line are optional: omitted, the
+generator falls back to the host type of the document's signature, so `op insert_img export=.. faults=field-zero`
+is still a state-to-state operation for the generator, and a rule that read the bindings' spelling would not see
+it (VOS-039c security review F1). "Mentions" includes `Option<Impl>`, `Result<Impl, E>`, tuples and lists, and is
+read through the document's type aliases by the generator's own resolution, not by CC11's own reading of the
+text (round-2 finding: `model State = Impl` with `op insert_img(s: State, ..) -> State` was invisible to a rule
+that matched the literal name `Impl`, so dropping `field-flip-last` passed; a gate that re-interprets author text
+with its own logic does not converge, so CC11 calls the function the generator's types come from). A type the
+resolution cannot resolve (an unknown name, an alias cycle, a chain deeper than 64) counts as a state, so a type
+the rule cannot classify counts as a state (the generator then refuses `field-flip-last` on a non-record
+result, which is a finding); a binding that names no `op` of the document is a finding (it cannot be
+classified); a document with no successor is a finding. A claim that the implementation adds itself and that
+calls one successor does not satisfy (c) (F3): the contract's preservation claims are the ones that must be
+attacked. The contract-owned test trusts the `contract =` package of `vos.toml`, which is author-declared: CD05,
+CD06 and CD07 (`check.rs`) judge the document against whichever package `vos.toml` names and the marker
+`contract-package=` is compared with the same key (CD01), so none of them catches a swapped contract; a well-formed
+fake contract package whose `any` tier lists the author's own claims would make `owned` include them (VOS-D114, tied
+to the registry with VOS-D030). The numeric-oracle clause is F2: a `Bool` or `Bytes` oracle leaves `field-flip-last` nothing to flip.
+
+The constant is `ORACLE_FAULT` in `vos-link` (`src/oracle.rs`); a test reads this section and asserts it. Whether
+the claim really FAILS under the fault is not decided by `check-component`: the generated BUILD runs the plan through
+`warrant_negctl.py`, and CC08 already requires every in-harness control to pass (the successors now have controls of
+their own, which closes the part of VOS-D080 that said `insert_img` and `remove_img` had none). A future contract
+whose `any` block lacks preservation claims cannot have a compliant `-any`, with no `contract.vos` format change.
+Deliberate limits: an oracle that is not the last field, or two oracle fields, is refused (a named-field fault is the
+extension, adjacent to VOS-D101); and there is no lexical rule over the implementation's source ("insert and remove
+never read the oracle", VOS10 11.2), because it is neither sufficient (a mutant that writes `choice: 0` never reads
+it) nor cheap (`..s` and `return s` read the field lexically in the honest code). Negative controls, each a fixture
+`-any` crate: a successor without the fault; an entry on a claim that calls no successor, and on an `example`; a claim
+that calls two successors; the oracle first, absent, doubled, or not numeric; a `build` that is not a constructor or is
+missing; the successor bound with `args=` and `ret=` omitted (each alone, and both), without the fault; a binding that
+names no `op` of the document; an `inout` state operation; a decoy claim of the implementation's own carrying the
+entry while the contract's claim has none; a document with no state-producing operation; a document the analysis
+refuses; and the production crate that is not subject.
+
+**The dependencies and attributes of a contract crate, CC10 and SH19 (h) (VOS-D112).** SH19 is a lexical check
+of the crate's own text: a path dependency could supply an attribute macro (`#[evil::rewrite]`) or a foreign
+derive (`#[derive(evil::Gen)]`) that rewrites a command enum after SH19 judged it. Two closures, each fail
+closed. (1) `check-component` CC10, kind `contract`: `Cargo.toml` has NO entry in `[dependencies]`,
+`[build-dependencies]` or a `[target.*.dependencies]` table (empty tables are fine; the real crate has an empty
+`[dependencies]` with a comment), no `build` key (`package.build`) and no `build.rs`, a `[lib]` `proc-macro`
+absent or `false`, no `[lib]` `crate-type` naming `proc-macro`, and no top-level `[patch]`, `[replace]` or
+`[workspace]` (each can redirect or inherit code, so CC10 stands alone and does not lean on SH15). `[dev-dependencies]` are allowed (they run in tests only, SH12 judges that allowlist; the
+real contract crate has none). (2) SH19 (h): in a contract crate every attribute, outer or inner, is one of a
+closed list: `derive` whose arguments are only the BARE names `Copy`, `Clone`, `Debug`, `PartialEq`, `Eq`,
+`PartialOrd`, `Ord`, `Hash`, `Default`; `repr` with arguments from `u8`, `C`, `transparent`; `no_std`,
+`forbid`, `deny`, `warn`, `allow` (lists of lint names), `doc` (`= "text"` or `(hidden)`), `must_use`, `inline`, `default`
+(the helper of `derive(Default)` on an enum, added to the memo's list for that reason); and `cfg` whose argument is exactly `test`.
+Any other attribute is a finding: every path attribute (`a::b`), `cfg_attr`, `path`, `macro_use`, `proc_macro*`,
+`test` and anything else. (`non_exhaustive` is its own finding, SH19 (a).) Doc comments stay.
+
+**Cost, measured.** `check-contract` on the real scheduler contract (10 lemmas, 10 mutants, 2
+config mutants; N = 8, 65,536 cases per lemma) takes about **10 s wall** (about 57 s of CPU, on 8 worker threads on a 14-core Apple-silicon host; measured twice: 9.84 s and 9.89 s) in a debug build, once, in
+the contract crate's generated BUILD. `vos-link`'s own tests use a toy contract fixture with
+two threads, so they stay fast (VOS02 D-GD11).
+
+**`check-component` on a contract crate.** `read_component_vos_toml` accepts kind `contract` and
+dispatches to a contract branch:
+
+* CC02, the file set: `BUILD`, `BUILD_windows`, `README.md`, `Cargo.toml`, `vos.toml`,
+  `required_capabilities.json`, `src/lib.rs`, `contract.vos`, `warrant/contract.part`,
+  `warrant/lemmas.part`, `warrant/lemmas.table`, a changelog, and `warrant/obligations-<tier>.part`
+  for each `tier` row of `contract.vos`.
+* CC03, BUILD and BUILD_windows are byte-equal to `canonical_contract_build(crate)` (the same
+  marker, the same trailer rule). The two files are identical, with no environment assignment and
+  no python line, so there is no shell syntax for Windows to disagree about:
+
+```text
+cargo test -p <c> --lib --tests -- --nocapture
+cargo test -p <c> --doc
+cargo run -q -p vos-shape-check -- .
+cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+cargo run -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check-contract .
+cargo run -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check-component .
+# --- crate-specific (run, but never counted as evidence) ---
+```
+
+* CC05, the build-tool row is `vosContractRow("<crate>"),` inside the same
+  `repositoryInputConsumers` slice (it selects the crate when a VOS tool or grammar changes; it
+  carries no `code/specs/<crate>.warrant`, a contract has no document).
+* CC04, CC06, CC07, CC08 do not apply: a contract has no evidence manifest, no `-any` rule and no
+  coverable code (VOS10 section 15).
+
+**Negative controls.** The toy fixture contract in `vos-link`'s tests is generated, then broken
+one way at a time: a failing lemma, a missing, extra, surviving, ill-typed and two-declaration
+mutant, an unused config key, a config-insensitive lemma (CK08), a stale table, an over-budget
+binder, a binder that is not a complete type, and the `echo` and `|| true` tricks of the first
+039a draft on a contract BUILD (rejected by byte inequality).
+
+**Command-type check (VOS-D077), designed here, built in 039b-2.** SH19 on every `pub enum` of a
+`kind = contract` crate, derived, no author list: no `#[non_exhaustive]`; every variant field is
+`u8`, `bool`, `[u8; LIT]` or a same-crate type that itself passes; `usize`, wider integers,
+pointers, references, generics and foreign paths are findings. Negative controls: fixture contracts
+with `Poke(usize)` and `Write { addr: u32 }` are rejected; `Pick::Run(u8)` passes. 039b-2 also
+takes the Rust-enum/Warrant-variant correspondence and `bound` rows against ceilings (which needs
+`evidence.bindings` to map `insert_out` and `insert_img` to `insert`).
 
 ---
 
@@ -792,7 +1275,7 @@ them.
 | 3 | VOS-D081 | Safety-tier `init` claim | The VOS-012a run showed nothing constrains `init` outside `canonical`; it changes every implementation's safety digests, so it lands before the second implementation of the contract (`rr`) |
 | 4 | VOS-012b | `vos-sched-rr` (representation mode) | The first representation-mode implementation (VOS-D061) and the first swap |
 | 5 | VOS-038 | Generator debts: D065 non-inert record fault, D063 heap observer, D025 array builder | Before mass production |
-| 6 | VOS-039 | Component kit: generic contract check (D049), `vos-link check-component`, coverage gate | After three real implementations exist |
+| 6 | VOS-039 | Component kit: 039a `vos-link check-component` and coverage gate (done), 039b-1 generic contract check (D049, done), 039b-2a command-type check (D077) and enum/variant correspondence (done), 039b-2b bounds (CC09), D104 sweep and D112 (done), 039c oracle preservation of every `-any` (D080, done), 039d sabotage lines to `warrant_negctl.py` (D099) | After three real implementations exist |
 | 7 | VOS-028b | Capacity probe (fixture: `vos-sched-fp-bitmap`) | Fixes the X1 sizes (VOS00 D4) and decides 029's funding |
 | 8 | VOS-040 | Host model-SAT lane on the `sched` contract, plus the Rust-lowering spike | Reuses the probe harness |
 | 9 | VOS-005 | `emu-core` | The emulator has been idle and everything bootable waits on it |

@@ -1579,7 +1579,21 @@ def _validate_repository_source_input_boundary(
             global_input_identities[identity] = path
 
             path_components = path.split("/")
-            if len(path_components) < 2 or path_components[0] != "code":
+            root_cargo_config_exception = (
+                input_origin == "repository"
+                and item["role"] == "cross_package_exact"
+                and exact_roots
+                in (
+                    ["code/packages/typescript/game-input-frame"],
+                    ["code/packages/rust/game-clock"],
+                )
+                and not descendant_roots
+                and path == ".cargo/config.toml"
+            )
+            if (
+                (len(path_components) < 2 or path_components[0] != "code")
+                and not root_cargo_config_exception
+            ):
                 raise ConformanceError(
                     "REPOSITORY_SOURCE_ROLE_INVALID",
                     f"repository source input is outside the canonical code tree: {path}",

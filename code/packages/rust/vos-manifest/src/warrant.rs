@@ -39,12 +39,13 @@ use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 
 use coding_adventures_warrant_grammar::checker::check_warrant;
+use coding_adventures_warrant_grammar::evidence::type_mentions;
 use coding_adventures_warrant_grammar::layout::{
     capture_layout, LayoutLimits, LayoutToken, LayoutTokenKind, TokenSpan,
 };
 use coding_adventures_warrant_grammar::parser::{
     parse_document, AssumptionsDecl, BinaryOp, Declaration, Expression, Literal, ModelDecl,
-    ParserLimits,
+    ParserLimits, TypeExpr,
 };
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
 
@@ -100,6 +101,26 @@ pub enum BuildShape {
     },
 }
 
+/// The signature of one `op` of a document, reduced to what "does it produce a state from a
+/// state?" needs (VOS-039c, CC11).  "Mentions" means the type, RESOLVED THROUGH THE DOCUMENT'S
+/// ALIASES by the evidence generator's own resolution
+/// ([`coding_adventures_warrant_grammar::evidence::type_mentions`]), is `Impl` or has `Impl`
+/// anywhere inside it (`model State = Impl`, `Option<Impl>`, `Result<Impl, E>`, `(Impl, U8)`,
+/// `List<Impl>`): a composite is never read as "not a state", and a type the resolution cannot
+/// resolve counts as one, because the safe direction for a gate is to treat what it cannot
+/// classify as a state.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct OpFact {
+    /// The operation's name.
+    pub name: String,
+    /// The return type mentions `Impl`.
+    pub returns_state: bool,
+    /// How many parameters have a type that mentions `Impl`.
+    pub state_params: usize,
+    /// A parameter that mentions `Impl` is `inout`: the operation mutates a state in place.
+    pub inout_state: bool,
+}
+
 /// What the Warrant tools found in a document that type-checked.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Analysis {
@@ -113,6 +134,13 @@ pub struct Analysis {
     pub impl_fields: Option<usize>,
     /// The shape of `model build`.
     pub build: BuildShape,
+    /// Every `op` of the document, in order (VOS-039c: CC11 derives the state-to-state
+    /// operations from these, not from the bindings, which are optional).
+    pub ops: Vec<OpFact>,
+    /// The type of the LAST field of `record Impl` when it is a plain named type (`U8`,
+    /// `Bool`, ...), `Some("")` when it is a composite (`Option<..>`, a tuple, ...), `None`
+    /// without an `Impl` record.
+    pub impl_last_field_type: Option<String>,
 }
 
 /// Where the Warrant tools refused.
@@ -283,6 +311,74 @@ pub fn claims_of_block(block: &str) -> Result<Vec<ClaimFact>, WarrantFailure> {
     })
 }
 
+/// What kind of declaration a block holds (for [`declarations_of_block`]).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum DeclKind {
+    /// `model NAME(...) -> T = body`.
+    Model,
+    /// `claim NAME: ...`.
+    Claim,
+    /// Anything else: `record`, `variant`, `op`, `bound`, `example`, `assume`, ...
+    Other,
+}
+
+/// One top-level declaration of a block: what it is, its name, and where it lies.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct DeclFact {
+    /// What kind.
+    pub kind: DeclKind,
+    /// The declared name (empty for [`DeclKind::Other`]).
+    pub name: String,
+    /// Byte offset of the declaration's start **in the block**.
+    pub start: usize,
+    /// Byte offset one past its end **in the block**.
+    pub end: usize,
+    /// A `model` with a body (a model without one is a bound operation's stand-in).
+    pub has_body: bool,
+}
+
+/// The top-level declarations of a block, with their byte spans **in the block**, by the
+/// Warrant parser (nothing is scanned).
+///
+/// `vos-link check-contract` replaces a model of the contract block by the declaration of a
+/// mutant part, **by span**: a text search for "the same line" could replace the wrong place
+/// or fail silently, a parsed span cannot.  The block is wrapped in a header and parsed only
+/// (it need not type-check alone).  A block whose normalised text differs from its bytes is
+/// refused, because then a span would not index the block; an admitted part is LF-only ASCII,
+/// so this never fires for one.
+pub fn declarations_of_block(block: &str) -> Result<Vec<DeclFact>, WarrantFailure> {
+    let header = "warrant vos_block v1\n";
+    let text = format!("{header}{block}");
+    with_parsed(&text, |file, _tokens, norm| {
+        if norm != text {
+            return Err(refuse(
+                WarrantStage::Parse,
+                &text,
+                "the block's normalised text differs from its bytes: its spans would not index it"
+                    .to_string(),
+                None,
+            ));
+        }
+        let mut out = Vec::new();
+        for d in &file.declarations {
+            let (start, end) = declaration_span(d);
+            let (kind, name, has_body) = match d {
+                Declaration::Model(m) => (DeclKind::Model, m.name.to_string(), m.body.is_some()),
+                Declaration::Claim(c) => (DeclKind::Claim, c.name.to_string(), false),
+                _ => (DeclKind::Other, String::new(), false),
+            };
+            out.push(DeclFact {
+                kind,
+                name,
+                start: start.saturating_sub(header.len()),
+                end: end.saturating_sub(header.len()),
+                has_body,
+            });
+        }
+        Ok(out)
+    })
+}
+
 fn declaration_span(d: &Declaration<'_>) -> (usize, usize) {
     match d {
         Declaration::Model(x) => x.span,
@@ -299,6 +395,170 @@ fn declaration_span(d: &Declaration<'_>) -> (usize, usize) {
         Declaration::Variant(x) => x.span,
         Declaration::Vectors(x) => x.span,
         Declaration::Ensures(x) => x.span,
+    }
+}
+
+/// The names a Warrant document declares: its `claim`s and its `example`s, in document
+/// order.  The document is **parsed only** (type-checking is `check-doc`'s); this is what
+/// `vos-link check-component` binds the evidence manifest and the sabotage plan to
+/// (VOS-039a), so the claim set comes from the generated document, never from a BUILD file.
+pub fn declared_names(text: &str) -> Result<(Vec<String>, Vec<String>), WarrantFailure> {
+    with_parsed(text, |file, _tokens, _norm| {
+        let mut claims = Vec::new();
+        let mut examples = Vec::new();
+        for d in &file.declarations {
+            match d {
+                Declaration::Claim(c) => claims.push(c.name.to_string()),
+                Declaration::Example(e) => examples.push(e.name.to_string()),
+                _ => {}
+            }
+        }
+        Ok((claims, examples))
+    })
+}
+
+/// One `metric <= bound` row of a `bound OP:` declaration.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BoundFact {
+    /// The operation the `bound` declaration names.
+    pub op: String,
+    /// The metric (`steps`, `heap`, `depth`, ...), as written.
+    pub metric: String,
+    /// The bound, **only when the expression is a plain integer literal**.  Anything else
+    /// (a name, a sum, a parenthesised number, a typed literal) is `None`: the tool cannot
+    /// know its value, and a caller that compares it with a ceiling must treat `None` as a
+    /// failure, never as zero (fail closed).
+    pub value: Option<u64>,
+}
+
+/// The operations and `bound` rows of a document (VOS-039b-2b, `check-component` CC09).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BoundFacts {
+    /// Every `op` declaration's name, in document order.
+    pub ops: Vec<String>,
+    /// Every row of every `bound` declaration, in document order.
+    pub rows: Vec<BoundFact>,
+}
+
+/// The `op` names and `bound` rows of a document, read from the **parsed** tree.
+///
+/// ```text
+///   op insert_img(s: Impl, t: U8) -> Impl       ops:  ["insert_img", ...]
+///   bound insert_img:                           rows: [("insert_img", "steps", Some(160)),
+///     steps <= 160                                     ("insert_img", "heap",  Some(0))]
+///     heap <= 0
+/// ```
+///
+/// The document is parsed only (type-checking is `check-doc`'s), as in [`declared_names`].
+/// A bound is `Some` only for an unsuffixed integer literal ([`Literal::Int`]) or a `u64`
+/// or `u8` literal; everything else is `None` (see [`BoundFact::value`]).
+pub fn bound_facts(text: &str) -> Result<BoundFacts, WarrantFailure> {
+    with_parsed(text, |file, _tokens, _norm| {
+        let mut out = BoundFacts {
+            ops: Vec::new(),
+            rows: Vec::new(),
+        };
+        for d in &file.declarations {
+            match d {
+                Declaration::Op(o) => out.ops.push(o.name.to_string()),
+                Declaration::Bound(b) => {
+                    for r in &b.rows {
+                        let value = match &r.bound {
+                            Expression::Literal {
+                                lit: Literal::Int(n) | Literal::U64(n),
+                                ..
+                            } => Some(*n),
+                            Expression::Literal {
+                                lit: Literal::U8(n),
+                                ..
+                            } => Some(u64::from(*n)),
+                            _ => None,
+                        };
+                        out.rows.push(BoundFact {
+                            op: b.name.to_string(),
+                            metric: r.name.to_string(),
+                            value,
+                        });
+                    }
+                }
+                _ => {}
+            }
+        }
+        Ok(out)
+    })
+}
+
+/// For each claim of a parsed document, which of `ops` its body calls, in the order first met.
+///
+/// The claim's **parsed expression** is walked (a text scan was bypassable: `--` inside a
+/// string literal cut the line and hid a call).  A call is a single-segment reference with an
+/// argument list whose name is in `ops`, anywhere in the body, comments and strings being
+/// invisible to a tree.  `vos-link` uses it to require that every claim that calls a bound
+/// operation is attacked by a sabotage control (VOS-039a review M3).  It does NOT follow a
+/// call into a `model` body, so M3 relies on models being operation-free (the document's
+/// type check refuses an operation call in a model today; the transitive closure is VOS-D108).
+pub fn claim_calls(
+    text: &str,
+    ops: &[String],
+) -> Result<Vec<(String, Vec<String>)>, WarrantFailure> {
+    with_parsed(text, |file, _tokens, _norm| {
+        let mut out = Vec::new();
+        for d in &file.declarations {
+            if let Declaration::Claim(c) = d {
+                let mut found = Vec::new();
+                calls_in(&c.body, ops, &mut found);
+                out.push((c.name.to_string(), found));
+            }
+        }
+        Ok(out)
+    })
+}
+
+/// Collect the members of `ops` called inside `e`.
+fn calls_in(e: &Expression<'_>, ops: &[String], out: &mut Vec<String>) {
+    match e {
+        Expression::Quantified { body, .. } => calls_in(body, ops, out),
+        Expression::Conditional {
+            condition,
+            then_branch,
+            else_branch,
+            ..
+        } => {
+            for x in [condition, then_branch, else_branch] {
+                calls_in(x, ops, out);
+            }
+        }
+        Expression::Match { target, arms, .. } => {
+            calls_in(target, ops, out);
+            for a in arms {
+                calls_in(&a.body, ops, out);
+            }
+        }
+        Expression::Binary { left, right, .. } => {
+            calls_in(left, ops, out);
+            calls_in(right, ops, out);
+        }
+        Expression::Unary { operand, .. } => calls_in(operand, ops, out),
+        Expression::Literal { .. } => {}
+        Expression::List { elements, .. } | Expression::Tuple { elements, .. } => {
+            for x in elements {
+                calls_in(x, ops, out);
+            }
+        }
+        Expression::Reference { name, args, .. } => {
+            if let Some(args) = args {
+                if let [one] = name.segments.as_slice() {
+                    if ops.iter().any(|o| o == one) && !out.iter().any(|o| o == one) {
+                        out.push((*one).to_string());
+                    }
+                }
+                for x in args {
+                    calls_in(x, ops, out);
+                }
+            }
+        }
+        Expression::Grouped { inner, .. } => calls_in(inner, ops, out),
+        Expression::Project { base, .. } => calls_in(base, ops, out),
     }
 }
 
@@ -329,6 +589,8 @@ pub fn analyze_document_with_budget(text: &str, budget: u64) -> Result<Analysis,
             bound_declarations: 0,
             impl_fields: None,
             build: BuildShape::Missing,
+            ops: Vec::new(),
+            impl_last_field_type: None,
         };
         for d in &file.declarations {
             match d {
@@ -352,7 +614,26 @@ pub fn analyze_document_with_budget(text: &str, budget: u64) -> Result<Analysis,
                     })
                 }
                 Declaration::Bound(_) => a.bound_declarations += 1,
-                Declaration::Record(r) if r.name == "Impl" => a.impl_fields = Some(r.fields.len()),
+                Declaration::Record(r) if r.name == "Impl" => {
+                    a.impl_fields = Some(r.fields.len());
+                    a.impl_last_field_type = r.fields.last().map(|f| match &f.ty {
+                        TypeExpr::Named { name, .. } => (*name).to_string(),
+                        _ => String::new(),
+                    });
+                }
+                Declaration::Op(o) => a.ops.push(OpFact {
+                    name: o.name.to_string(),
+                    returns_state: type_mentions(file, &o.return_type, "Impl"),
+                    state_params: o
+                        .params
+                        .iter()
+                        .filter(|p| type_mentions(file, &p.param_type, "Impl"))
+                        .count(),
+                    inout_state: o
+                        .params
+                        .iter()
+                        .any(|p| p.inout && type_mentions(file, &p.param_type, "Impl")),
+                }),
                 Declaration::Model(m) if m.name == "build" => {
                     a.build =
                         build_shape(&taint, m.params.first().map(|p| p.name), m.body.as_ref());

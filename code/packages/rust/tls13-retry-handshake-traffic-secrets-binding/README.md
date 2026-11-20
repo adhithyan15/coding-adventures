@@ -12,11 +12,33 @@ base-secret proof and a borrowed view into fixed wipe-on-drop traffic-secret
 storage. A sealed internal evidence boundary prevents detached message, suite,
 transcript-hash, or base-secret substitution.
 
-This package does not advance the transcript beyond ServerHello, derive
-traffic keys or IVs, authenticate CertificateVerify or Finished, protect
-records, validate certificates, establish trust, enforce revocation, perform
-I/O, authorize HTTP or OAuth, or provide TLS, HTTPS, or live-provider
-readiness.
+The same package can derive the server Finished key only from the server
+handshake traffic secret retained by that exact wrapper. Caller-owned Finished-
+key storage must select the same suite and the server sender role before any
+mutation. Success retains the complete retry traffic-secret proof beside a
+borrowed view into caller-owned wipe-on-drop Finished-key storage, preventing a
+detached traffic secret, suite, role, label, or key from being substituted.
+
+That server Finished-key proof can also reconstruct a fresh selected
+transcript state only from the exact retry messages and original transcript
+policy retained by its sealed base-schedule evidence. The reconstruction must
+reproduce the retained suite and ServerHello snapshot before success. The
+non-cloneable result retains the complete Finished-key proof beside the fresh
+state, without accepting a detached transcript, policy, message, suite, hash,
+or snapshot.
+
+The sealed exact base-schedule evidence also exposes its retained final
+ClientHello extension block and original extension-context policy only through
+the complete evidence object. Downstream ordered-record composition can
+therefore validate an authenticated `EncryptedExtensions` block against the
+same final offer and policy without accepting detached caller substitutes.
+
+This package does not itself validate `EncryptedExtensions` or advance the
+transcript beyond ServerHello, derive traffic keys or IVs, consume authenticated
+records, verify peer Finished data, authenticate or sequence later server-flight
+messages, validate certificates, establish trust, enforce revocation, protect
+records, perform I/O, authorize HTTP or OAuth, or provide TLS, HTTPS, or
+live-provider readiness.
 
 ## Verification
 

@@ -1,0 +1,5 @@
+  -- The toy contract's lemmas.  `cfg_N()` is generated from `config N 2` of contract.vos.
+  claim put_then_mem:
+    forall a: Bool, b: Bool, t: U8. (t < 2u8 => mem(put(Pair(a, b), t, true), t))
+  claim ins_range:
+    forall t: U8. pre_ins(t) == (t < cfg_N())

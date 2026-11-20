@@ -153,32 +153,35 @@ warrant vos_sched_any v1
     hostile
     ensures no_panic, terminates
 
-  -- Bounds.  `steps` rows are the contract ceilings (VOS10 section 7).  The `heap <= 0` row is
-  -- declared only for the two operations whose answer is a payload-free variant: the evidence
-  -- harness observes the WHOLE adapter call, including the `vec!` it allocates to build a
-  -- record or a payload-carrying variant as a Warrant value (64 bytes), so a `heap <= 0` row on
-  -- init, insert_img, remove_img, dispatch_out, dispatch_img or alpha_w is falsified by the
-  -- harness itself, not by the source (VOS-D063).  The source has no allocator at all (SH1).
+  -- Bounds.  `steps` rows are the contract ceilings (VOS10 section 7); `heap <= 0` is the contract's
+  -- heap ceiling on every operation (the source has no allocator at all, SH1).  The harness's heap
+  -- observer counts the export call only, not its own result marshalling (VOS-D063).
   bound init:
     steps <= 80
+    heap <= 0
   bound insert_out:
     steps <= 160
     heap <= 0
   bound insert_img:
     steps <= 160
+    heap <= 0
   bound remove_out:
     steps <= 160
     heap <= 0
   bound remove_img:
     steps <= 160
+    heap <= 0
   bound dispatch_out:
     steps <= 160
+    heap <= 0
   bound dispatch_img:
     steps <= 160
+    heap <= 0
   bound alpha_w:
     steps <= 160
+    heap <= 0
   -- vos02:impl-end
-  -- vos02:obligations-begin tier=any sha256=9067ea4f4c08fbbcac5be2fb9e5905f33dc800e8e98ca8a0700b0bc79fa839a9
+  -- vos02:obligations-begin tier=any sha256=1b6cdcd1670bbfb8656922fe0c7a662fac6ccd913c0aebfdd20b770624a63174
   -- The most-general scheduler (VOS01 section 3). Impl is Impl(mask: U8, choice: U8): a bitmap
   -- plus the oracle register that alpha drops. The oracle is a binder here, so these claims
   -- quantify over Impl directly and not over build(M) (VOS02 section 3.3).
@@ -194,6 +197,50 @@ warrant vos_sched_any v1
       mem(dec(alpha_w(Impl(mask, t))), t) => dispatch_out(Impl(mask, t)) == Run(t))
   claim dispatch_covers_idle:
     forall mask: U8. dispatch_out(Impl(mask, 255u8)) == Idle
+  -- VOS-039c: insert and remove KEEP THE ORACLE and are INDEPENDENT of it (VOS10 section 9.3).  The safety claims
+  -- quantify over build(M), whose oracle is 0, and alpha drops the oracle, so a scheduler whose insert overwrote
+  -- `choice`, or whose answer depended on it, passed every claim above.  Each claim below states, for one operation
+  -- and every oracle c, three conjuncts: the image keeps the oracle (first, so the claim's subject is the `_img`
+  -- operation and it gets a negative control of its own, VOS02 4.4); the image's abstraction is the abstract step
+  -- taken from the abstraction of the state, whatever c is; and the answer is the abstract answer.  The thread id is
+  -- split three ways to stay inside the 400,000-case budget: _lo is the ids 0..3 (two Bool binders, 256 x 256 x 4
+  -- cases), _hi the ids 4..7, and _ids ranges every U8 id over four masks whose two Bool binders switch the bit
+  -- patterns 0xA5 and 0x5A on or off (0x00, 0xA5, 0x5A, 0xFF: every bit is set in one mask and clear in another).
+  -- Residual (VOS10 section 9.3): the ids 8..255 on the other 252 masks.  There is no `where` refinement, so the
+  -- generator's rejection sampler is not involved (VOS-D079).
+  claim insert_oracle_lo:
+    forall mask: U8, c: U8, t0: Bool, t1: Bool. (
+      insert_img(Impl(mask, c), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))).choice == c and
+      dec(alpha_w(insert_img(Impl(mask, c), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))))) == abs_insert(dec(alpha_w(Impl(mask, c))), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))).1 and
+      insert_out(Impl(mask, c), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))) == abs_insert(dec(alpha_w(Impl(mask, c))), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))).0)
+  claim insert_oracle_hi:
+    forall mask: U8, c: U8, t0: Bool, t1: Bool. (
+      insert_img(Impl(mask, c), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)).choice == c and
+      dec(alpha_w(insert_img(Impl(mask, c), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)))) == abs_insert(dec(alpha_w(Impl(mask, c))), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)).1 and
+      insert_out(Impl(mask, c), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)) == abs_insert(dec(alpha_w(Impl(mask, c))), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)).0)
+  claim insert_oracle_ids:
+    forall m0: Bool, m1: Bool, c: U8, t: U8. (
+      insert_img(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c), t).choice == c and
+      dec(alpha_w(insert_img(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c), t))) == abs_insert(dec(alpha_w(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c))), t).1 and
+      insert_out(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c), t) == abs_insert(dec(alpha_w(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c))), t).0)
+  claim remove_oracle_lo:
+    forall mask: U8, c: U8, t0: Bool, t1: Bool. (
+      remove_img(Impl(mask, c), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))).choice == c and
+      dec(alpha_w(remove_img(Impl(mask, c), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))))) == abs_remove(dec(alpha_w(Impl(mask, c))), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))).1 and
+      remove_out(Impl(mask, c), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))) == abs_remove(dec(alpha_w(Impl(mask, c))), ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))).0)
+  claim remove_oracle_hi:
+    forall mask: U8, c: U8, t0: Bool, t1: Bool. (
+      remove_img(Impl(mask, c), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)).choice == c and
+      dec(alpha_w(remove_img(Impl(mask, c), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)))) == abs_remove(dec(alpha_w(Impl(mask, c))), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)).1 and
+      remove_out(Impl(mask, c), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)) == abs_remove(dec(alpha_w(Impl(mask, c))), (((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8)) + 4u8)).0)
+  claim remove_oracle_ids:
+    forall m0: Bool, m1: Bool, c: U8, t: U8. (
+      remove_img(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c), t).choice == c and
+      dec(alpha_w(remove_img(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c), t))) == abs_remove(dec(alpha_w(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c))), t).1 and
+      remove_out(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c), t) == abs_remove(dec(alpha_w(Impl(((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8)), c))), t).0)
+  -- build_with_oracle: the abstraction of an image is the ready set that built its mask, whatever the oracle.
+  claim alpha_build_with_oracle:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, c: U8. dec(alpha_w(Impl(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)).mask, c))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
   -- vos02:obligations-end
   -- vos02:obligations-begin tier=safety sha256=238c31381646b16001784c8533f8b2ed97e83256b48869d716816f01d435b16f
   -- insert and remove are deterministic in both tiers (shape A of VOS01 section 2.3).

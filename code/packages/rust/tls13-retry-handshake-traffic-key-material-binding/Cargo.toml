@@ -8,6 +8,9 @@ license = "MIT"
 [dependencies]
 coding_adventures_hkdf = { path = "../hkdf" }
 tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-encrypted-extensions-message = { path = "../tls13-encrypted-extensions-message" }
+tls13-extension-block = { path = "../tls13-extension-block" }
+tls13-extension-context-policy = { path = "../tls13-extension-context-policy" }
 tls13-handshake = { path = "../tls13-handshake" }
 tls13-handshake-reassembly = { path = "../tls13-handshake-reassembly" }
 tls13-inner-plaintext = { path = "../tls13-inner-plaintext" }
@@ -17,12 +20,12 @@ tls13-record-protection = { path = "../tls13-record-protection" }
 tls13-record-protection-state = { path = "../tls13-record-protection-state" }
 tls13-retry-handshake-traffic-secrets-binding = { path = "../tls13-retry-handshake-traffic-secrets-binding" }
 tls13-traffic-key-material = { path = "../tls13-traffic-key-material" }
+tls13-transcript = { path = "../tls13-transcript" }
 
 [dev-dependencies]
+tls13-finished = { path = "../tls13-finished" }
 tls13-cipher-suite-offer = { path = "../tls13-cipher-suite-offer" }
 tls13-client-hello-message = { path = "../tls13-client-hello-message" }
-tls13-extension-block = { path = "../tls13-extension-block" }
-tls13-extension-context-policy = { path = "../tls13-extension-context-policy" }
 tls13-handshake-traffic-secrets = { path = "../tls13-handshake-traffic-secrets" }
 tls13-key-schedule = { path = "../tls13-key-schedule" }
 tls13-key-share = { path = "../tls13-key-share" }
@@ -35,5 +38,4 @@ tls13-server-hello-selection = { path = "../tls13-server-hello-selection" }
 tls13-server-hello-version-selection = { path = "../tls13-server-hello-version-selection" }
 tls13-supported-groups = { path = "../tls13-supported-groups" }
 tls13-supported-versions = { path = "../tls13-supported-versions" }
-tls13-transcript = { path = "../tls13-transcript" }
 tls13-x25519-key-share-binding = { path = "../tls13-x25519-key-share-binding" }

@@ -2,6 +2,14 @@
 
 All notable changes to this package are documented here.
 
+## Unreleased
+
+- Replay the neutral DT18 v1 corpus through the public Swift map and hash APIs,
+  including directed ownership/error cases and both-strategy exhaustive
+  persistent-history streams.
+- Register the canonical shared corpus as an exact repository source input so
+  package fallback hashes change when its cases change.
+
 ## 0.1.0 — Initial release
 
 - Implement persistent separate-chaining and linear-probing hash maps.

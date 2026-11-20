@@ -8,8 +8,8 @@
 //!
 //! The reference model is the obvious scan written with a loop: from `ptr`, look at
 //! `ptr, ptr+1, ... ptr+7` modulo 8.  It is the same semantics as the op-free `rr_pick` /
-//! `rr_next` models of the contract-check round-robin witness
-//! (`vos-sched-contract-check/tests/fixtures/impl-rr-models.part`).
+//! `rr_next` models of this crate's `warrant/impl.part` (the model the retired
+//! `vos-sched-contract-check` once evaluated as a round-robin witness).
 
 use vos_sched_contract::{Pick, Sched, Upd};
 use vos_sched_rr::{RoundRobin, Rr};

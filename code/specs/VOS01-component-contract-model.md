@@ -600,7 +600,9 @@ shippable swap: it is allowed in model and evidence profiles and never in an
 One recipe for every interface. `-any` carries an **oracle register** in its
 state, sized to the output set (nine outputs need 4 bits, not 64). An operation
 whose safety tier fixes the output (`insert`, `remove`) behaves exactly as the
-model and **never reads the oracle** (a lexical rule of the shape check). The
+model and **keeps the oracle and does not depend on it**: this is not a lexical rule, it is evidenced by the `any` block
+(VOS10 section 9.3: the `insert_oracle_*` and `remove_oracle_*` claims, over every oracle value), with the kit rule CC11 requiring the
+fault that attacks them (VOS04 5.6). The
 oracle-write path (the harness setting `choice` before an entry) lives in the
 crate's `ghost` module, never in the production API; `choice` itself is a private
 field. A
@@ -1048,7 +1050,7 @@ section 3 (`remove_safe` is elided like its twin); the names are the fixed vocab
 With state, oracle and index all exhaustive, `insert_safe` would be
 `256 x 256 x 256 = 16,777,216` binder cases, 41.9 times the budget. So insert and
 remove are evidenced at oracle 0, the frame fact is a separate claim, and the
-independence of insert from the oracle is the lexical rule of section 3.2. The
+independence of insert from the oracle is evidenced by the `any` block (VOS10 section 9.3), not by a lexical rule. The
 budget forces a split and the split is written down.
 
 ### 5.6 The exhaustive case count at N = 8

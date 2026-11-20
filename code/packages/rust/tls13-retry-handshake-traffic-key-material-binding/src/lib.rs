@@ -12,6 +12,11 @@ use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk, HkdfPrkImportError};
 use core::cell::Cell;
 use core::fmt;
 use tls13_cipher_suite_policy::{HkdfHash, SelectedCipherSuite};
+use tls13_encrypted_extensions_message::{
+    decode_encrypted_extensions_message, EncryptedExtensionsMessage,
+};
+use tls13_extension_block::{ExtensionBlockError, ExtensionBlockLimits};
+use tls13_extension_context_policy::{ExtensionContextPolicyError, ServerExtensionContext};
 use tls13_handshake::{Tls13HandshakeMessage, Tls13HandshakePolicy};
 use tls13_handshake_reassembly::{ReassemblyError, ReassemblyProgress, Tls13HandshakeReassembler};
 use tls13_inner_plaintext::Tls13InnerPlaintextPolicy;
@@ -22,12 +27,14 @@ use tls13_record_protection::{
 };
 use tls13_record_protection_state::{RecordProtectionState, RecordProtectionStateError};
 use tls13_retry_handshake_traffic_secrets_binding::{
-    BoundRetryHandshakeTrafficSecrets, ExactRetryBaseSecrets,
+    BoundRetryHandshakeTrafficSecrets, BoundRetryServerFinishedKey,
+    BoundRetryServerTranscriptContinuation, ExactRetryBaseSecrets,
 };
 use tls13_traffic_key_material::{
     derive_traffic_key_material, TrafficKeyMaterial, TrafficKeyMaterialError,
     TrafficKeyMaterialStorage,
 };
+use tls13_transcript::{SelectedTls13Transcript, TranscriptError, TranscriptHash};
 
 /// Sender whose retained handshake traffic secret supplies one key and IV.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -175,6 +182,75 @@ pub enum RetryOrderedServerFlightError {
     Reassembly(RetryHandshakeRecordReassemblyError),
     /// The authenticated message type violated the no-PSK server-flight order.
     Ordering(ServerFlightError),
+}
+
+/// Stable payload-free failures while joining ordered flight and transcript provenance.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RetryOrderedServerFlightTranscriptBindingError {
+    /// The ordered owner already consumed, buffered, accepted, or failed input.
+    NonFreshOrderedFlight,
+    /// Ordered records and the Finished-key continuation retain different secrets.
+    TrafficSecretProofMismatch,
+    /// Ordered records, Finished key, and transcript selected different suites.
+    CipherSuiteMismatch,
+    /// The continuation no longer matches the shared proof's ServerHello snapshot.
+    SnapshotMismatch,
+}
+
+impl fmt::Display for RetryOrderedServerFlightTranscriptBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::NonFreshOrderedFlight => {
+                "TLS 1.3 ordered server-flight transcript binding received non-fresh state"
+            }
+            Self::TrafficSecretProofMismatch => {
+                "TLS 1.3 ordered server-flight and transcript retain different retry proofs"
+            }
+            Self::CipherSuiteMismatch => {
+                "TLS 1.3 ordered server-flight transcript components use different cipher suites"
+            }
+            Self::SnapshotMismatch => {
+                "TLS 1.3 ordered server-flight transcript does not match the retained snapshot"
+            }
+        })
+    }
+}
+
+impl std::error::Error for RetryOrderedServerFlightTranscriptBindingError {}
+
+/// Stable payload-free failures while advancing one authenticated ordered transcript.
+#[derive(Debug, Eq, PartialEq)]
+pub enum RetryOrderedServerTranscriptAdvanceError {
+    /// Authenticated record opening or bounded reassembly failed.
+    Reassembly(RetryHandshakeRecordReassemblyError),
+    /// The authenticated message type violated the no-PSK server-flight order.
+    Ordering(ServerFlightError),
+    /// The synchronous caller rejected the exact ordered message.
+    MessageRejected,
+    /// Repository-owned transcript advancement failed.
+    Transcript(TranscriptError),
+}
+
+impl fmt::Display for RetryOrderedServerTranscriptAdvanceError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::Reassembly(_) => "TLS 1.3 ordered transcript authenticated reassembly failed",
+            Self::Ordering(_) => "TLS 1.3 ordered transcript server-flight ordering failed",
+            Self::MessageRejected => "TLS 1.3 ordered transcript message was rejected",
+            Self::Transcript(_) => "TLS 1.3 ordered transcript advancement failed",
+        })
+    }
+}
+
+impl std::error::Error for RetryOrderedServerTranscriptAdvanceError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Reassembly(error) => Some(error),
+            Self::Ordering(error) => Some(error),
+            Self::Transcript(error) => Some(error),
+            Self::MessageRejected => None,
+        }
+    }
 }
 
 impl fmt::Display for RetryOrderedServerFlightError {
@@ -1436,6 +1512,622 @@ impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
                 &self.flight.client_authentication_requested(),
             )
             .field("failed", &self.reassembler.is_failed())
+            .finish()
+    }
+}
+
+/// One authenticated ordered message awaiting caller authorization to be hashed.
+///
+/// The snapshot is the exact transcript state immediately before this message.
+/// The borrowed message cannot escape the higher-ranked callback that receives
+/// this value. This value intentionally derives neither `Copy` nor `Clone`.
+pub struct PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+    message: Tls13HandshakeMessage<'message>,
+    retry_evidence: &'retry_evidence dyn ExactRetryBaseSecrets,
+    transcript_snapshot: TranscriptHash,
+    state: ServerFlightState,
+    client_authentication_requested: bool,
+}
+
+impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+    /// Borrow the exact authenticated, policy-ordered handshake message.
+    #[must_use]
+    pub const fn message(&self) -> &Tls13HandshakeMessage<'message> {
+        &self.message
+    }
+
+    /// Return the transcript snapshot immediately before this message.
+    #[must_use]
+    pub const fn transcript_snapshot(&self) -> TranscriptHash {
+        self.transcript_snapshot
+    }
+
+    /// Return the server-flight state after accepting this message's type.
+    #[must_use]
+    pub const fn state(&self) -> ServerFlightState {
+        self.state
+    }
+
+    /// Return whether this ordered prefix requests client authentication.
+    #[must_use]
+    pub const fn client_authentication_requested(&self) -> bool {
+        self.client_authentication_requested
+    }
+
+    /// Decode and policy-bind this exact pending `EncryptedExtensions` message.
+    pub fn validate_encrypted_extensions(
+        &self,
+        limits: ExtensionBlockLimits,
+    ) -> Result<
+        BoundRetryEncryptedExtensions<'_, 'message, 'retry_evidence>,
+        RetryEncryptedExtensionsValidationError,
+    > {
+        if self.message.handshake_type() != tls13_handshake::Tls13HandshakeType::EncryptedExtensions
+        {
+            return Err(RetryEncryptedExtensionsValidationError::WrongMessageType);
+        }
+        if self.state != ServerFlightState::ExpectCertificateRequestOrCertificate {
+            return Err(RetryEncryptedExtensionsValidationError::WrongFlightState);
+        }
+        let encrypted_extensions = decode_encrypted_extensions_message(self.message.body(), limits)
+            .map_err(RetryEncryptedExtensionsValidationError::Structure)?;
+        self.retry_evidence
+            .extension_context_policy()
+            .validate_server_message(
+                ServerExtensionContext::EncryptedExtensions,
+                encrypted_extensions.extensions(),
+                self.retry_evidence.final_client_hello_extensions(),
+            )
+            .map_err(RetryEncryptedExtensionsValidationError::Context)?;
+        Ok(BoundRetryEncryptedExtensions {
+            pending: self,
+            encrypted_extensions,
+        })
+    }
+}
+
+impl fmt::Debug for PendingRetryServerTranscriptMessage<'_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("PendingRetryServerTranscriptMessage")
+            .field("message", &"[REDACTED]")
+            .field("transcript_snapshot", &"[RETAINED]")
+            .field("state", &self.state)
+            .field(
+                "client_authentication_requested",
+                &self.client_authentication_requested,
+            )
+            .finish()
+    }
+}
+
+/// Stable payload-free failures for exact retry `EncryptedExtensions` validation.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RetryEncryptedExtensionsValidationError {
+    /// The pending ordered message was not `EncryptedExtensions`.
+    WrongMessageType,
+    /// The ordered flight was not immediately after `EncryptedExtensions`.
+    WrongFlightState,
+    /// The exact authenticated body was structurally invalid.
+    Structure(ExtensionBlockError),
+    /// Placement or final ClientHello offer policy rejected one extension.
+    Context(ExtensionContextPolicyError),
+}
+
+impl fmt::Display for RetryEncryptedExtensionsValidationError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::WrongMessageType => "TLS 1.3 retry message is not EncryptedExtensions",
+            Self::WrongFlightState => {
+                "TLS 1.3 retry EncryptedExtensions has the wrong ordered-flight state"
+            }
+            Self::Structure(_) => "TLS 1.3 retry EncryptedExtensions structure is invalid",
+            Self::Context(_) => "TLS 1.3 retry EncryptedExtensions policy rejected an extension",
+        })
+    }
+}
+
+impl std::error::Error for RetryEncryptedExtensionsValidationError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Structure(error) => Some(error),
+            Self::Context(error) => Some(error),
+            Self::WrongMessageType | Self::WrongFlightState => None,
+        }
+    }
+}
+
+/// Exact authenticated `EncryptedExtensions` bound to retry offer/context policy.
+///
+/// This proof intentionally derives neither `Copy` nor `Clone` and retains the
+/// pending ordered message beside the exact structural parse.
+pub struct BoundRetryEncryptedExtensions<'pending, 'message, 'retry_evidence> {
+    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence>,
+    encrypted_extensions: EncryptedExtensionsMessage<'message>,
+}
+
+impl<'pending, 'message, 'retry_evidence>
+    BoundRetryEncryptedExtensions<'pending, 'message, 'retry_evidence>
+{
+    /// Borrow the exact pending ordered message and pre-message snapshot.
+    #[must_use]
+    pub const fn pending(
+        &self,
+    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+        self.pending
+    }
+
+    /// Borrow the exact structurally decoded and policy-authorized body.
+    #[must_use]
+    pub const fn encrypted_extensions(&self) -> &EncryptedExtensionsMessage<'message> {
+        &self.encrypted_extensions
+    }
+}
+
+impl fmt::Debug for BoundRetryEncryptedExtensions<'_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryEncryptedExtensions")
+            .field("pending", &"[RETAINED]")
+            .field("encrypted_extensions", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Fresh authenticated ordered server-flight state joined to its exact retry transcript.
+///
+/// This value intentionally derives neither `Copy` nor `Clone`. It exposes no
+/// mutable transcript or record-state access; a later composition must consume
+/// this complete wrapper to advance either side without detaching provenance.
+pub struct BoundRetryOrderedServerFlightTranscript<
+    'continuation,
+    'finished_bound,
+    'key_storage,
+    'issuer,
+    'evidence,
+    'secret_storage,
+    'material,
+    'reassembly,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    ordered_flight: RetryOrderedServerFlight<
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'reassembly,
+        Evidence,
+    >,
+    server_finished_key: &'continuation BoundRetryServerFinishedKey<
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        Evidence,
+    >,
+    transcript: SelectedTls13Transcript,
+}
+
+impl<
+        'continuation,
+        'finished_bound,
+        'key_storage,
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'reassembly,
+        Evidence: ExactRetryBaseSecrets + ?Sized,
+    >
+    BoundRetryOrderedServerFlightTranscript<
+        'continuation,
+        'finished_bound,
+        'key_storage,
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'reassembly,
+        Evidence,
+    >
+{
+    /// Borrow the fresh authenticated ordered server-flight owner.
+    #[must_use]
+    pub const fn ordered_flight(
+        &self,
+    ) -> &RetryOrderedServerFlight<
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'reassembly,
+        Evidence,
+    > {
+        &self.ordered_flight
+    }
+
+    /// Borrow the exact retry-derived server Finished-key proof.
+    #[must_use]
+    pub const fn server_finished_key(
+        &self,
+    ) -> &BoundRetryServerFinishedKey<
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        Evidence,
+    > {
+        self.server_finished_key
+    }
+
+    /// Borrow the reconstructed exact retry transcript through ServerHello.
+    #[must_use]
+    pub const fn transcript(&self) -> &SelectedTls13Transcript {
+        &self.transcript
+    }
+
+    /// Return the suite selected by all three retained components.
+    #[must_use]
+    pub const fn selected_suite(&self) -> SelectedCipherSuite {
+        self.ordered_flight.selected_suite()
+    }
+
+    /// Authenticate one record, authorize ordered messages, and advance the transcript.
+    ///
+    /// Each callback receives the exact transcript snapshot from immediately
+    /// before its message. Returning `true` authorizes hashing that message's
+    /// exact header-plus-body encoding; returning `false` permanently closes
+    /// the record owner without hashing the rejected message. Record,
+    /// reassembly, ordering, transcript, and handler-unwind failures are also
+    /// terminal. Earlier callback effects are not transactional.
+    pub fn open_accept_and_advance<'owner, 'input, F>(
+        &'owner mut self,
+        ciphertext_policy: &Tls13CiphertextPolicy,
+        inner_policy: &Tls13InnerPlaintextPolicy,
+        input: &'input [u8],
+        opened_output: &mut [u8],
+        mut authorize_message: F,
+    ) -> Result<
+        AdvancedRetryServerTranscriptRecord<
+            'owner,
+            'continuation,
+            'finished_bound,
+            'key_storage,
+            'issuer,
+            'evidence,
+            'secret_storage,
+            'material,
+            'reassembly,
+            'input,
+            Evidence,
+        >,
+        RetryOrderedServerTranscriptAdvanceError,
+    >
+    where
+        F: for<'message> FnMut(PendingRetryServerTranscriptMessage<'message, 'evidence>) -> bool,
+    {
+        let retry_evidence = self
+            .server_finished_key
+            .handshake_traffic_secrets()
+            .evidence()
+            .as_exact_retry_base_secrets();
+        let Self {
+            ordered_flight,
+            server_finished_key,
+            transcript,
+        } = self;
+        let reassembler = &mut ordered_flight.reassembler;
+        let flight = &mut ordered_flight.flight;
+        let reassembled = match reassembler.open_and_reassemble_with(
+            ciphertext_policy,
+            inner_policy,
+            input,
+            opened_output,
+            |message| {
+                let state = flight
+                    .accept(message.handshake_type())
+                    .map_err(RetryOrderedServerTranscriptAdvanceError::Ordering)?;
+                let encoded = message.encoded();
+                let pending = PendingRetryServerTranscriptMessage {
+                    message,
+                    retry_evidence,
+                    transcript_snapshot: transcript.snapshot(),
+                    state,
+                    client_authentication_requested: flight.client_authentication_requested(),
+                };
+                if !authorize_message(pending) {
+                    return Err(RetryOrderedServerTranscriptAdvanceError::MessageRejected);
+                }
+                transcript
+                    .update(encoded)
+                    .map_err(RetryOrderedServerTranscriptAdvanceError::Transcript)
+            },
+        ) {
+            Ok(result) => result,
+            Err(ReassemblyHandlerError::Reassembly(error)) => {
+                return Err(RetryOrderedServerTranscriptAdvanceError::Reassembly(error));
+            }
+            Err(ReassemblyHandlerError::Handler(error)) => return Err(error),
+        };
+
+        Ok(AdvancedRetryServerTranscriptRecord {
+            reassembled,
+            server_finished_key: *server_finished_key,
+            transcript_snapshot: transcript.snapshot(),
+            state: flight.state(),
+            client_authentication_requested: flight.client_authentication_requested(),
+        })
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for BoundRetryOrderedServerFlightTranscript<'_, '_, '_, '_, '_, '_, '_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryOrderedServerFlightTranscript")
+            .field("ordered_flight", &"[RETAINED]")
+            .field("server_finished_key", &"[SECRET]")
+            .field("transcript", &"[RETAINED]")
+            .finish()
+    }
+}
+
+/// Join one fresh ordered server-flight owner to its exact retry continuation.
+///
+/// Freshness, exact traffic-secret object identity, suite equality, and the
+/// retained ServerHello snapshot are checked before either non-copyable input
+/// is exposed through the result. No detached transcript, key, record state,
+/// proof, suite, hash, or resumed flight position is accepted.
+pub fn bind_retry_ordered_server_flight_transcript<
+    'continuation,
+    'finished_bound,
+    'key_storage,
+    'issuer,
+    'evidence,
+    'secret_storage,
+    'material,
+    'reassembly,
+    Evidence,
+>(
+    ordered_flight: RetryOrderedServerFlight<
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'reassembly,
+        Evidence,
+    >,
+    continuation: BoundRetryServerTranscriptContinuation<
+        'continuation,
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        Evidence,
+    >,
+) -> Result<
+    BoundRetryOrderedServerFlightTranscript<
+        'continuation,
+        'finished_bound,
+        'key_storage,
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'reassembly,
+        Evidence,
+    >,
+    RetryOrderedServerFlightTranscriptBindingError,
+>
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    if ordered_flight.state() != ServerFlightState::ExpectEncryptedExtensions
+        || ordered_flight.records_used() != 0
+        || ordered_flight.message_in_progress()
+        || ordered_flight.is_failed()
+        || ordered_flight.client_authentication_requested()
+    {
+        return Err(RetryOrderedServerFlightTranscriptBindingError::NonFreshOrderedFlight);
+    }
+    if !core::ptr::eq(
+        ordered_flight.traffic_secrets(),
+        continuation
+            .server_finished_key()
+            .handshake_traffic_secrets(),
+    ) {
+        return Err(RetryOrderedServerFlightTranscriptBindingError::TrafficSecretProofMismatch);
+    }
+    let selected_suite = ordered_flight.selected_suite();
+    if continuation.transcript().selected_suite() != selected_suite
+        || continuation
+            .server_finished_key()
+            .finished_key()
+            .selected_suite()
+            != selected_suite
+    {
+        return Err(RetryOrderedServerFlightTranscriptBindingError::CipherSuiteMismatch);
+    }
+    if continuation.transcript().snapshot()
+        != ordered_flight
+            .traffic_secrets()
+            .evidence()
+            .transcript_hash()
+    {
+        return Err(RetryOrderedServerFlightTranscriptBindingError::SnapshotMismatch);
+    }
+
+    let (server_finished_key, transcript) = continuation.into_parts();
+    Ok(BoundRetryOrderedServerFlightTranscript {
+        ordered_flight,
+        server_finished_key,
+        transcript,
+    })
+}
+
+/// One authenticated ordered record committed to its exact retry transcript.
+///
+/// The retained reassembly result keeps the joined owner and exact ciphertext
+/// borrowed while the Finished-key proof and post-record transcript snapshot
+/// remain attached. This value intentionally derives neither `Copy` nor
+/// `Clone`.
+pub struct AdvancedRetryServerTranscriptRecord<
+    'owner,
+    'continuation,
+    'finished_bound,
+    'key_storage,
+    'issuer,
+    'evidence,
+    'secret_storage,
+    'material,
+    'reassembly,
+    'input,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    reassembled: ReassembledRetryHandshakeRecord<
+        'owner,
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'reassembly,
+        'input,
+        Evidence,
+    >,
+    server_finished_key: &'continuation BoundRetryServerFinishedKey<
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        Evidence,
+    >,
+    transcript_snapshot: TranscriptHash,
+    state: ServerFlightState,
+    client_authentication_requested: bool,
+}
+
+impl<
+        'owner,
+        'continuation,
+        'finished_bound,
+        'key_storage,
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'reassembly,
+        'input,
+        Evidence,
+    >
+    AdvancedRetryServerTranscriptRecord<
+        'owner,
+        'continuation,
+        'finished_bound,
+        'key_storage,
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'reassembly,
+        'input,
+        Evidence,
+    >
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    /// Borrow the complete exact-message retry traffic-secret proof.
+    #[must_use]
+    pub const fn traffic_secrets(
+        &self,
+    ) -> &'issuer BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence> {
+        self.reassembled.traffic_secrets()
+    }
+
+    /// Borrow the exact retry-derived server Finished-key proof.
+    #[must_use]
+    pub const fn server_finished_key(
+        &self,
+    ) -> &BoundRetryServerFinishedKey<
+        'finished_bound,
+        'key_storage,
+        'evidence,
+        'secret_storage,
+        Evidence,
+    > {
+        self.server_finished_key
+    }
+
+    /// Borrow the exact ciphertext record supplied to this operation.
+    #[must_use]
+    pub const fn input(&self) -> &'input [u8] {
+        self.reassembled.input()
+    }
+
+    /// Return the authenticated inner handshake-content length.
+    #[must_use]
+    pub const fn authenticated_content_length(&self) -> usize {
+        self.reassembled.authenticated_content_length()
+    }
+
+    /// Return how many ordered messages were authorized and hashed.
+    #[must_use]
+    pub const fn completed_messages(&self) -> usize {
+        self.reassembled.completed_messages()
+    }
+
+    /// Return whether the owner retained a final incomplete message.
+    #[must_use]
+    pub const fn message_in_progress(&self) -> bool {
+        self.reassembled.message_in_progress()
+    }
+
+    /// Return the sender-state record count after opening this input.
+    #[must_use]
+    pub const fn records_used(&self) -> u64 {
+        self.reassembled.records_used()
+    }
+
+    /// Return the server-flight state after this record.
+    #[must_use]
+    pub const fn state(&self) -> ServerFlightState {
+        self.state
+    }
+
+    /// Return whether the accepted prefix requested client authentication.
+    #[must_use]
+    pub const fn client_authentication_requested(&self) -> bool {
+        self.client_authentication_requested
+    }
+
+    /// Return the transcript snapshot after all authorized complete messages.
+    #[must_use]
+    pub const fn transcript_snapshot(&self) -> TranscriptHash {
+        self.transcript_snapshot
+    }
+
+    /// Return whether this record completed the public server-flight sequence.
+    #[must_use]
+    pub const fn is_complete(&self) -> bool {
+        matches!(self.state, ServerFlightState::Complete)
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for AdvancedRetryServerTranscriptRecord<'_, '_, '_, '_, '_, '_, '_, '_, '_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("AdvancedRetryServerTranscriptRecord")
+            .field("reassembled", &"[RETAINED]")
+            .field("input", &"[REDACTED]")
+            .field("server_finished_key", &"[SECRET]")
+            .field("transcript_snapshot", &"[RETAINED]")
+            .field("state", &self.state)
+            .field(
+                "client_authentication_requested",
+                &self.client_authentication_requested,
+            )
             .finish()
     }
 }

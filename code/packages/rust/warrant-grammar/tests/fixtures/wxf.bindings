@@ -1,0 +1,17 @@
+# VOS-D025 test fixture: how the in-test subject (`wxf_subject`) implements the operations of
+# wxf.warrant (a state of eight bytes built by a `fixed<8>(..)` model).
+package wxf_subject
+revision 0.0.0
+spec code/packages/rust/warrant-grammar/tests/fixtures/wxf.warrant
+output code/packages/rust/warrant-grammar/tests/generated/wxf_evidence.rs
+seed 0x5758_465f_4556_4944
+property_cases 1024
+fuzz_iterations 600
+negctl_fuzz_iterations 400
+exhaustive_budget 400000
+struct Cells path=wxf_subject::Cells fields=cells:bytes<8>
+struct Total path=wxf_subject::Total fields=n:u8
+enum Pick path=wxf_subject::Pick ctors=Idle,Run(0:u8)
+op tally export=tally args=Cells ret=Total faults=field-zero
+op lowest export=lowest args=Cells ret=Pick faults=wrong-ctor
+op highest export=highest args=Cells ret=Pick faults=wrong-ctor

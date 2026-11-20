@@ -735,3 +735,45 @@ for _ in range(10_000):
   indices first. The Fenwick tree operates on the compressed indices, giving
   O(n log n) algorithms for problems like "number of elements smaller than x
   seen so far."
+
+## Cross-language conformance
+
+The language-neutral observable contract and deterministic fixtures live in
+[`fixtures/fenwick-tree-v1/`](fixtures/fenwick-tree-v1/). Implementations must
+preserve exact signed integer results over the portable 2^53-1 absolute-sum
+bound, reject out-of-domain operations atomically, and agree on validation
+precedence. The fixture documentation includes a bounded exhaustive array-oracle
+domain and the distinction between signed sums and nonnegative `find_kth`
+frequencies. The fixture is a conformance oracle, not a runtime dependency.
+
+### Python portable integer mode
+
+The existing Python `FenwickTree` API accepts floating-point values. Preserve
+that behavior and its existing unbounded-integer behavior when the new
+keyword-only `portable_integer_domain` option is omitted or false:
+
+```python
+FenwickTree(n, *, portable_integer_domain=False)
+FenwickTree.from_list(values, *, portable_integer_domain=False)
+```
+
+When enabled, both entry points and all later updates enforce the DT06 v1
+integer domain. Values and deltas must be integers, not booleans. Each
+constructor value and update delta must lie within `[-(2^53-1), 2^53-1]`, and
+the sum of absolute current point values must not exceed `2^53-1`. Validate an
+update index before its delta and resulting-state bounds. Reject an oversized
+delta even when it would cancel an existing value into range. A rejected
+update leaves the tree unchanged.
+
+Use `ValueOutOfDomainError`, a `FenwickError` subtype, for invalid or
+out-of-domain values and deltas in this mode. Map shared fixture errors to
+Python exceptions as follows: `out_of_domain` to `ValueOutOfDomainError`,
+`index_out_of_range` to `IndexOutOfRangeError`, `empty` to `EmptyTreeError`,
+and `negative_size`, `invalid_range`, `nonpositive_target`, or `exceeds_total`
+to `FenwickError`.
+
+The Python package test suite must consume `fenwick-tree-v1/cases.json` through
+these public APIs, compare state and results to a flat-array oracle, and run
+the fixture's bounded exhaustive domain. Keep this consumer in the package's
+normal test discovery so the fixture validator is not mistaken for
+implementation coverage.

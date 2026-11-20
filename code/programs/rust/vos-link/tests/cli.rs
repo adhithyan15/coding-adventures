@@ -140,3 +140,63 @@ fn the_tests_that_read_the_contract_package_have_a_cargo_edge_to_it() {
     assert!(dev
         .contains("vos-sched-contract = { path = \"../../../packages/rust/vos-sched-contract\" }"));
 }
+
+// --- gen-contract and check-contract (VOS-039b-1) ---------------------------------------------
+
+const TOY: &str = "vos-fixture-contract";
+
+fn toy(label: &str) -> Repo {
+    let r = Repo::empty(label);
+    r.add_contract_fixture(TOY);
+    r
+}
+
+#[test]
+fn gen_contract_then_check_contract_exit_zero_and_print_the_report() {
+    let r = toy("cli-contract");
+    let dir = r.pkg(TOY).to_string_lossy().into_owned();
+    let g = run(&["gen-contract", &dir]);
+    assert_eq!(g.status.code(), Some(0), "{}{}", out(&g), err(&g));
+    let text = out(&g);
+    assert!(
+        text.contains("vos-link gen-contract: contract crate vos-fixture-contract"),
+        "{text}"
+    );
+    assert!(text.contains("wrote warrant/lemmas.table"), "{text}");
+    assert!(text.contains("result: PASS, 0 findings"), "{text}");
+    let c = run(&["check-contract", &dir, "--root", &r.root.to_string_lossy()]);
+    assert_eq!(c.status.code(), Some(0), "{}", out(&c));
+    let text = out(&c);
+    assert!(
+        text.contains(
+            "vos-link check-contract: contract crate vos-fixture-contract, 2 mutant parts"
+        ),
+        "{text}"
+    );
+    assert!(text.contains("note: check-contract:"), "{text}");
+}
+
+#[test]
+fn check_contract_findings_exit_one_and_a_usage_error_exits_two() {
+    let r = toy("cli-contract2");
+    let dir = r.pkg(TOY).to_string_lossy().into_owned();
+    // No table yet: CK09, exit 1.
+    let c = run(&["check-contract", &dir]);
+    assert_eq!(c.status.code(), Some(1), "{}", out(&c));
+    assert!(
+        out(&c).contains("CK09 warrant/lemmas.table: not found"),
+        "{}",
+        out(&c)
+    );
+    assert!(out(&c).contains("result: FAIL, 1 findings"), "{}", out(&c));
+    // A command nobody knows, and a missing directory: exit 2, no verdict.
+    let u = run(&["check-contracts", &dir]);
+    assert_eq!(u.status.code(), Some(2));
+    assert!(
+        err(&u).contains("gen-contract | check-contract"),
+        "{}",
+        err(&u)
+    );
+    let u = run(&["check-contract"]);
+    assert_eq!(u.status.code(), Some(2));
+}

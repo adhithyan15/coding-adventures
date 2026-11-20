@@ -21,12 +21,28 @@ verdict retaining both the complete outer proof and the lower signature proof.
 The stronger verdict therefore cannot be constructed from detached framing or
 hash evidence.
 
+A consuming form takes ownership of a selected transcript and exact borrowed
+`CertificateVerify` body. It decodes and authenticates that body against the
+pre-message snapshot before framing those same bytes as one complete handshake
+message in caller-owned storage and updating the transcript once. Non-copyable
+success evidence owns the advanced transcript and retains the before/after
+snapshots, exact body, role, scheme, validated key, and encoded length. Failure
+returns no transcript state for retry or reuse.
+
+A follow-up consuming transition requires the Finished key's sender role to
+match the retained CertificateVerify role and delegates exact-suite and
+verify-data authentication to `tls13-finished-transcript-binding`. Success
+retains both CertificateVerify snapshots and metadata together with the owned
+post-CertificateVerify transcript, internally captured Finished snapshot, and
+repository-owned Finished verdict. The two post-CertificateVerify snapshots
+must be exactly equal.
+
 This package does not decide whether the selected transcript contains the
-right ordered handshake messages or is at the right state. It does not
-authorize the caller-selected endpoint role, parse or validate a certificate,
-bind the validated key to a certificate or reviewed server path, check
-Finished, process records, perform I/O, or make TLS, HTTPS, OAuth transport, or
-live-provider access available.
+right preceding ordered handshake messages or is at the right state. It does
+not authorize the caller-selected endpoint role, parse or validate a
+certificate, bind the validated key to a certificate or reviewed server path,
+append the Finished handshake encoding, process records, perform I/O, or make
+TLS, HTTPS, OAuth transport, or live-provider access available.
 
 ```rust
 use tls13_certificate_verify_input::{CertificateVerifyRole, MAXIMUM_INPUT_LENGTH};

@@ -4,6 +4,65 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Added (VOS-D112)
+
+- **SH19 (h), a closed attribute list for `kind = "contract"` crates** (`command::attributes`).  Every attribute is
+  `derive` of the bare core traits `Copy Clone Debug PartialEq Eq PartialOrd Ord Hash Default`, `repr` of `u8`, `C`
+  or `transparent`, `no_std`, `forbid`, `deny`, `warn`, `allow`, `doc`, `must_use`, `inline`, `default` (the
+  helper of `derive(Default)`) or exactly `cfg(test)`; `non_exhaustive` passes this pass and is reported by the
+  closed-set rule.  Any path attribute (`#[evil::rewrite]`), a derive of a path (`derive(evil::Gen)`), `cfg_attr`,
+  `path`, `macro_use`, `proc_macro*`, `test` or an unknown name is an SH19 finding.  A whitelist over the spelling,
+  so a foreign macro cannot rewrite a command enum after SH19 judged it.  The dependency half is
+  `vos-link check-component` CC10.
+
+### Fixed (security review of VOS-039b-2a)
+
+- **SH19 gate bypass closed by a closed vocabulary** (`command::vocabulary`).  A contract crate may not contain a
+  `use` or `extern crate`, a `mod`, a macro definition or invocation, or an item (`struct`, `enum`, `union`,
+  `type`, `trait`, `fn`, `const`, `static`) named like a Rust primitive or a Warrant built-in type
+  (`RESERVED_TYPE_NAMES`, checked by a test against `warrant-grammar`'s list).  This refuses, as whole
+  constructs, `type u8 = u32;`, `struct u8`, a `use .. as` rename hiding a foreign type, a macro-written enum, and
+  the `struct U8(u8)` collision with CK10.  `Names::judge` also consults the item table before accepting `u8` or
+  `bool` (`Local::Shadowed`).  Attributes and doc comments are unaffected; the real `vos-sched-contract` and the
+  `pass-ready-contract` fixture still pass.
+- `items::collect_types`: an `enum` or `struct` keyword not followed by a name (and `union`/`type` before `$`) is a
+  gap (VT03, fail closed) for every crate, instead of a silent skip (`enum $n` in a macro body).
+- **Quadratic work removed** (`Names`, `command_rules`): the reverse-reference graph is over DISTINCT NAMES (one
+  node per name, deduplicated edges, a name fails if any item of that name fails), so n items named `X` and n
+  fields naming `X` cost linear work, not n times n.  Test: `sh19_same_named_items_do_not_make_the_judgement_quadratic`.
+- **Output injection**: type, variant, field and item names in SH19 messages are escaped (any non-printable-ASCII
+  character) and cut at 48 characters, so a string literal with a newline in a field type cannot forge a line.
+- Tests: a negative control for every reproduced bypass in class K, P and H, the `$` gap, `pub use`, a macro
+  invocation, the reserved-name list against the Warrant checker, and the control-character message.
+
+### Added (VOS-039b-2a, VOS-D077)
+
+- **SH19, the command-type check** (`src/command.rs`, VOS03 section 4), bound by **kind** (`kind = "contract"`),
+  not by class.  The command set is derived: every `enum` of the crate, `pub` or not.  An enum fails on
+  `#[non_exhaustive]` (enum or variant), a generic list, or a variant field whose type is not exactly `u8`,
+  `bool`, `[u8; <decimal literal>]` or the bare name of a same-crate struct or enum that itself passes.
+  `usize`, wider integers, references, pointers, tuples, `Option<..>`, paths, a `type` alias (rejected, never
+  resolved) and a const-named length are findings.  Nested types are judged by a work list over a reverse
+  reference graph (no recursion, linear, a cycle terminates).  `Rule::Sh19`, `command::ACCEPTED_TYPES`
+  (a test reads VOS03 and asserts it states them).
+- `items`: `TypeDef` gains `variants`, `generic`, `non_exhaustive`, `malformed`; new `Variant`; the enum body is read
+  by the existing token-tree scan (tuple, named-field, unit and discriminant variants).  An unreadable variant
+  is a `Gap` (VT03, fail closed).  `parse_fields` now reports a skipped entry instead of dropping it silently.
+- `loader` is a library module (it was private to the binary) with `load_sources`, so `vos-link` reuses the
+  hardened source walk for `check-contract`'s CK10 instead of writing a weaker one.
+- `publish = false` (an evidence-only tool, VOS-D104).
+- Tests: the `Poke(usize)` and `Write { addr: u32 }` controls (inline and as fixtures `fail-contract-poke`,
+  `fail-contract-addr`), every rejected spelling, alias, nested and cyclic cases, `Pick::Run(u8)` and `Upd`
+  passing, the same enum in a production crate silent, the real `vos-sched-contract` passing, linearity over
+  variants and structs, and a 20,000-deep chain.
+
+### Added (VOS-039a)
+
+- `vos.toml` key `excused-controls`: an array of inline tables `{ id = "<manifest id>", reason = "VOS-Dnnn" }` naming the negative controls a crate may fail (VOS-D065, VOS-D098).  Never empty, each id 1 to 128 plain bytes and distinct, at most 16; the reason is a backlog row, which `vos-link` requires to exist and be open, so an excuse expires with its row.  New `Excuse` and `is_backlog_ref`.
+- `vos.toml` key `coverage-floor`: an integer percent 0 to 100, read into `VosToml::coverage_floor`.  The reader only
+  bounds it (plain decimal digits; a sign, an underscore, a prefix, a fraction or a string is refused); the
+  floor is enforced by `vos-link check-component` and the BUILD coverage line (VOS04 section 5.6, VOS-D070).
+
 ### Fixed (VOS-D075, CI flake `item11_item_scanning_is_linear`)
 
 - The linearity tests (`item11`, `item12`, `l3`) no longer compare wall-clock growth

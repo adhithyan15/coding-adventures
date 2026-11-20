@@ -16,10 +16,8 @@
       "external-approval"
     ]
   },
-  "active_pr": 19107,
-  "active_prs": [
-    19107
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
     "observed_at": "2026-11-10T15:05:40Z",
     "pr_number": 19107,
@@ -314,7 +312,7 @@
       ],
       "branch": null,
       "pr_number": null,
-      "selection_blocked": true,
+      "selection_blocked": false,
       "notes": "Completion umbrella for the eleven independently reviewable existing-engine children. The post-#13388 dependency pass decomposed C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript before selecting implementation work; F# follows the C# shared engine while every child consumes the same merged inert corpus. Route later Dart, JVM, and promoted OCaml engines through the same contract rather than copying Go-only BUILD parsing."
     },
     {
@@ -3049,7 +3047,7 @@
     {
       "id": "build-tool-rust-cargo-trigger-crate-closure-snapshot-parity",
       "title": "Adopt pure Cargo trigger crate-closure snapshots in the Rust build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-neutral-cargo-manifest-trigger-snapshot-contract"
       ],
@@ -3069,7 +3067,9 @@
       "reconciled_main_revision": "b9528b15054c4686a73e15880a1c3548f1b00524",
       "publication_notes": "Draft PR #19107 was opened from the independently reviewed exact head after a normal first push. GitHub reports it mergeable against the exact reviewed base. The draft exists to obtain its durable PR identity; this lifecycle-only receipt requires independent delta review before readiness, and guarded auto-merge remains disabled until every exact-head hosted check is terminal acceptable and GitHub still reports the PR mergeable.",
       "validation_notes": "The authority-free Rust resolver accepts only caller-supplied immutable package, crate, redirect, and exact exemption snapshots. It performs byte-exact lexical reduction, deepest segment-trie ownership, nested and exempt-orphan traversal, transitive normal/build closure, stable cycle and 16-level depth refusal, compact package-ID bitset memoization, deterministic validation, and sorted unique self-free relations. Inclusive ceilings cover 4,096 packages, 16,384 crates and references, 4,096 exemptions, and 16,384 output relations; the 16,385th unique relation fails before string materialization. Full cargo test (271 tests), cargo check, clippy with warnings denied, rustfmt check, strict state parsing, and diff hygiene pass again after normally merging exact current main b9528b15054c4686a73e15880a1c3548f1b00524. The repo-wide assumption-catalogue validation, generator check, and 71-test suite also pass locally. Independent correctness, security, and adversarial reviews issued SHIP for the implementation and prior reconciled heads after relation, memory, owner-lookup, validation-order, and reduced drive-prefix findings were closed; fresh review of the current reconciled head remains required. The worktree remains clean and authority-empty.",
-      "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Implement the authority-free lexical package, nested-crate, orphan, patch, Cargo-config, and exemption-ledger snapshot resolver over already captured inputs, with a 16-level depth ceiling plus memoized cycle and diamond handling. Keep native reads, filesystem identity, symlink handling, process authority, package execution, and CLI integration outside this owner."
+      "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Implement the authority-free lexical package, nested-crate, orphan, patch, Cargo-config, and exemption-ledger snapshot resolver over already captured inputs, with a 16-level depth ceiling plus memoized cycle and diamond handling. Keep native reads, filesystem identity, symlink handling, process authority, package execution, and CLI integration outside this owner.",
+      "merged_at": "2026-11-10T20:18:59Z",
+      "merge_commit": "34369b699c6aa1567de71b347dd2383fa03c28f5"
     },
     {
       "id": "build-tool-rust-cargo-trigger-native-input-adapter",
@@ -8690,19 +8690,21 @@
     {
       "id": "dart-current-14-of-15-binary-search-tree",
       "title": "Port the DT07 binary search tree package to Dart",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "dart-scaffold-capability-schema",
         "binary-tree-dart-swift-lane-parity"
       ],
       "branch": null,
-      "pr_number": null,
+      "pr_number": 19347,
       "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Reconcile the cross-lane empty min/max, invalid-rank, comparator, and conceptual tree/binary-tree prerequisite differences before implementation.",
       "validation_plan": "dart-bst-prerequisite-validation-preparation.md: merged scaffold is available, existing pending two-lane DT03 parent still blocks BST; do not add scaffold approval as an implementation prerequisite or fabricate DT02/DT03 runtime imports from conceptual spec relations. No committed DT03/DT07 behavior corpus found; scaffold capability goldens prove only authority metadata. Existing owner covers specs-first comparator/duplicate/empty-error/persistence/even-array lower-vs-upper midpoint reconciliation, two reference lanes Python/Rust, independent sorted-set/version/structural oracle and meaningful literal Dart RED. Future actual Dart format/analyze/test/BUILD and measured library coverage required, no native execution here. DT03 optional per-lane partitions collision-clean but scope already owned, not registered; parent remains unfinished until both lanes delivered.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/dart-current-14-of-15-binary-search-tree"
       ],
-      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited.",
+      "merged_at": "2026-11-14T13:31:41Z",
+      "merge_commit": "d589d2874f56307b485f4ffe2425b3be5fac5523"
     },
     {
       "id": "fenwick-tree-language-neutral-fixtures-and-index-contract",
@@ -18987,11 +18989,38 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Three missing 11/15 slots, separate from existing Swift owner. DT17 correction must fix FNV-1a and Murmur3 vectors first. Preserve explicit 32/64-bit masks, little-endian behavior, and caller-supplied SipHash keys. Split by lane before implementation.",
+      "notes": "Historical inventory pin: three missing 11/15 slots. At fresh exact main b779d10a1601c203bc377ef74e448ac947906c66 the inventory reports 13/15 established DT17 lanes, with Java and Kotlin absent. Dart DT17 is delivered by child hash-functions-dart-lane-parity as PR #19687 at merge b779d10a1601c203bc377ef74e448ac947906c66. Java and Kotlin remain pending under this umbrella. Preserve explicit 32/64-bit masks, little-endian behavior, and caller-supplied SipHash keys. No Java or Kotlin lane conformance is inferred from structural presence.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/hash-functions-dart-java-kotlin-lane-parity"
       ],
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+    },
+    {
+      "id": "hash-functions-dart-lane-parity",
+      "title": "Implement and validate the Dart DT17 hash-functions profile",
+      "status": "merged",
+      "depends_on": [
+        "hash-functions-dt17-vector-and-documentation-correction"
+      ],
+      "branch": "codex/parity-dart-hash-functions-20261119",
+      "pr_number": 19687,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19687",
+      "selection_blocked": false,
+      "selection_revision": "4ca0030e43d41d0919a309e4607b2d4851129b0d",
+      "selection_notes": "Historical selection note: the 2026-11-19 audit at 4ca0030e43d41d0919a309e4607b2d4851129b0d reported twelve of fifteen established hash-functions lanes, with Dart, Java, and Kotlin absent. This child isolated Dart from the combined Dart/JVM owner. The later fresh audit and merge are recorded in the item notes and merge fields.",
+      "notes": "PR #19687 delivered the Dart DT17 package and merged through protected auto-merge at b779d10a1601c203bc377ef74e448ac947906c66. The exact PR head was cbc2982ee86762f0a6459145cebb96998578342e. Its required build and acceptance gates passed. The package keeps the portable hash surface and capability profile documented in the merged source.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/hash-functions-dart-lane-parity",
+        "code/specs/DT17b-hash-functions-dart-profile.md"
+      ],
+      "pr_opened_at": "2026-11-19T08:48:53Z",
+      "publication_head": "cbc2982ee86762f0a6459145cebb96998578342e",
+      "publication_notes": "The reviewed Dart DT17 scope was published as PR #19687 at the exact feature head cbc2982ee86762f0a6459145cebb96998578342e.",
+      "merged_head_revision": "cbc2982ee86762f0a6459145cebb96998578342e",
+      "merged_at": "2026-11-19T16:17:38Z",
+      "merge_revision": "b779d10a1601c203bc377ef74e448ac947906c66",
+      "merge_notes": "GitHub reports PR #19687 merged at 2026-11-19T16:17:38Z. All 40 checks reached acceptable terminal results, including both required gates. Protected auto-merge completed on the exact published head.",
+      "validation_notes": "The preserved final-CBC receipt records 36 passing Dart VM tests, 34 passing Node tests, 100% production line coverage (238/238), 100% branch coverage (92/92), and ten killed source mutants. Function coverage was not emitted. Local and hosted evidence is limited to the executed Dart package and recorded workflow checks."
     },
     {
       "id": "tree-dt02-language-neutral-conformance-and-existing-lane-reconciliation",
@@ -19053,14 +19082,82 @@
     },
     {
       "id": "dart-hash-foundation-and-eleven-storage-families",
-      "title": "Plan Dart hash foundation and eleven missing data/store identities",
+      "title": "Plan remaining Dart data/store identities",
       "status": "pending",
       "depends_on": [
-        "hash-functions-dt17-vector-and-documentation-correction"
+        "hash-functions-dt17-vector-and-documentation-correction",
+        "hash-functions-dart-lane-parity"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Dart and Swift each lack 11 identities including bloom-filter, hash-map/set, HyperLogLog, in-memory store/protocol/engine, radix-tree, RESP, skip-list, tree-set; Swift children already owned, Dart not. Dart hash-functions unlocks bloom/hash-map/HLL; hash-set needs hash-map, tree-set needs tree substrate, store engine needs several data structures. Split by DAG; exclude full server/AOF without applicability review."
+      "notes": "The Dart DT17 hash-functions prerequisite is merged. The Dart DT18 hash-map gap is split into hash-map-dart-lane-parity and remains missing while its profile, shared-fixture, implementation, VM/Node, coverage, and merge gates are pending. This umbrella retains the other missing Dart identities: bloom-filter, hash-set, HyperLogLog, in-memory store/protocol/engine, radix-tree, RESP, skip-list, and tree-set. Hash-set depends on the map child, tree-set needs its tree substrate, and the store engine needs several data structures. Keep the full server/AOF outside scope without applicability review."
+    },
+    {
+      "id": "hash-map-dt18-shared-conformance-foundation",
+      "title": "Add DT18 shared conformance and cache-input bindings",
+      "status": "pending",
+      "depends_on": [
+        "hash-functions-dt17-vector-and-documentation-correction",
+        "hash-functions-dart-lane-parity",
+        "swift-hash-map-lane-parity"
+      ],
+      "branch": "codex/dt18-map-conformance-foundation-20261119",
+      "pr_number": null,
+      "selection_blocked": false,
+      "selection_revision": "b779d10a1601c203bc377ef74e448ac947906c66",
+      "publication_readiness": "ready_for_pr",
+      "notes": "Phase 2 freezes a shared DT18 corpus with independent association-list and physical-layout models, compact lossless exhaustive-history streams, directed cases, and hash vectors. The real Swift public HashMap consumer and build-tool fixture routing pass on the Phase 2 source. This foundation contains no Dart production implementation and earns no Dart slot credit. Independent review and the publication PR must complete before selecting the Dart implementation owner.",
+      "profile_evidence": {
+        "pull_request": 19693,
+        "merge_revision": "eaa6fb8d547d63eff010739ad36aa25508046c34",
+        "profile_revision": "6c6224602972d91ee5f3683a13d4f4f106c9e585"
+      },
+      "fixture_gate": {
+        "status": "passed",
+        "fixture_path": "code/specs/fixtures/hash-map-v1/cases.json",
+        "fixture_bytes": 469237,
+        "fixture_sha256": "4b8e2ebaa80e50c0d680d1f1c7ef7f8eb96944a46356dc30db31be4e2daee86a",
+        "history_count_per_strategy": 66430,
+        "consumer": "actual Swift public API",
+        "production_dart_claim": false
+      }
+    },
+    {
+      "id": "hash-map-dart-lane-parity",
+      "title": "Implement and validate the Dart DT18 hash-map profile",
+      "status": "pending",
+      "depends_on": [
+        "hash-functions-dt17-vector-and-documentation-correction",
+        "hash-functions-dart-lane-parity",
+        "hash-map-dt18-shared-conformance-foundation"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "selection_revision": "b779d10a1601c203bc377ef74e448ac947906c66",
+      "selection_notes": "Fresh exact-main inventory at b779d10a1601c203bc377ef74e448ac947906c66 reports 5,164 structural package slots and DT18 hash-map coverage of 14/15 established lanes, with Dart the sole missing lane. The six open PRs had no map overlap. Select this dedicated leaf after Dart DT17 PR #19687 merged.",
+      "notes": "The DT18 profile and ownership split merged in PR #19693 as eaa6fb8d547d63eff010739ad36aa25508046c34. Its Phase 2 shared conformance foundation is tracked separately and must merge before Dart production work begins. The Dart package implementation, public API tests, VM/Node validation, and production-boundary checks remain outstanding. This owner still carries no Dart slot credit.",
+      "postmerge_preparation_evidence": [
+        "code/specs/DT18-hash-map-dart-profile.md"
+      ],
+      "profile_gate": {
+        "status": "merged",
+        "reviewed_profile_revision": "6c6224602972d91ee5f3683a13d4f4f106c9e585",
+        "publication_revision": "7d3e87ae46d2e4009c8c1d27c5d7b290ee6900ec",
+        "pull_request": "https://github.com/adhithyan15/coding-adventures/pull/19693",
+        "merge_revision": "eaa6fb8d547d63eff010739ad36aa25508046c34"
+      },
+      "fixture_gate": {
+        "status": "passed",
+        "foundation_owner": "hash-map-dt18-shared-conformance-foundation",
+        "fixture_path": "code/specs/fixtures/hash-map-v1/cases.json",
+        "fixture_bytes": 469237,
+        "fixture_sha256": "4b8e2ebaa80e50c0d680d1f1c7ef7f8eb96944a46356dc30db31be4e2daee86a",
+        "histories_per_strategy": 66430,
+        "consumer": "actual Swift public HashMap API",
+        "dart_conformance_claimed": false,
+        "production_implementation_authorized": false
+      }
     },
     {
       "id": "sql-csv-source-neutral-and-dart-swift-parity",

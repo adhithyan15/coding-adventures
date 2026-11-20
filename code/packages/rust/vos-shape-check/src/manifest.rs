@@ -148,7 +148,34 @@ pub struct VosToml {
     pub contract: Option<String>,
     /// The tiers `vos-link gen-doc` embeds, in file order, as written.
     pub obligations: Vec<String>,
+    /// The declared floor of line coverage, an integer percent 0 to 100 (VOS04 section 5.6,
+    /// VOS-D070).  This reader only bounds it; `vos-link check-component` requires it of an
+    /// implementation, holds it to the repository minimum and ties the BUILD gate to it.
+    pub coverage_floor: Option<u8>,
+    /// The manifest ids of the negative controls this crate is allowed to fail (VOS-D065,
+    /// VOS-D098), as written.  Never empty when present, each id 1 to 128 bytes of
+    /// `[A-Za-z0-9_/.-]`.  Matched as WHOLE ids by `vos-link check-component`.
+    pub excused_controls: Vec<Excuse>,
 }
+
+/// One excused negative control: the manifest id it may fail on, and the backlog row that
+/// says why (VOS-039a review M4).  An excuse without a row cannot be written, and
+/// `vos-link` refuses one whose row is missing or done, so an excuse expires with its row.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Excuse {
+    /// The whole manifest id.
+    pub id: String,
+    /// `VOS-D` and three digits.
+    pub reason: String,
+}
+
+/// Is `s` a backlog discovered-work reference, `VOS-D` and exactly three digits?
+pub fn is_backlog_ref(s: &str) -> bool {
+    s.len() == 8 && s.starts_with("VOS-D") && s[5..].bytes().all(|b| b.is_ascii_digit())
+}
+
+/// At most this many excused controls (each `{ id = "..", reason = "VOS-Dnnn" }`).
+pub const MAX_EXCUSED_CONTROLS: usize = 16;
 
 /// A `vos.toml` error: 1-based line and reason.
 pub type VosTomlError = (u32, String);
@@ -195,13 +222,38 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
         evidence_features: Vec::new(),
         contract: None,
         obligations: Vec::new(),
+        coverage_floor: None,
+        excused_controls: Vec::new(),
     };
+    let mut excuse_ids: Vec<String> = Vec::new();
+    let mut excuse_reasons: Vec<String> = Vec::new();
+    let mut excuse_tables = 0usize;
     for Entry { path, value, line } in entries {
         let line = line as usize;
+        // `excused-controls = [{ id = "..", reason = ".." }, ..]` flattens to one entry per
+        // key of each inline table; they are collected here and paired after the loop.
+        if let [k, b, f] = path.as_slice() {
+            if k == "excused-controls" && b == "[]" {
+                let Value::Str(v) = value else {
+                    return bad(line, "an excused control's id and reason are strings");
+                };
+                match f.as_str() {
+                    "id" => excuse_ids.push(v),
+                    "reason" => excuse_reasons.push(v),
+                    _ => {
+                        return bad(
+                            line,
+                            "an excused control has the keys `id` and `reason` only",
+                        )
+                    }
+                }
+                continue;
+            }
+        }
         let [key] = path.as_slice() else {
             return bad(
                 line,
-                "unknown key or table (allowed: class, kind, evidence-features, contract, obligations)",
+                "unknown key or table (allowed: class, kind, evidence-features, contract, obligations, coverage-floor, excused-controls)",
             );
         };
         match (key.as_str(), value) {
@@ -271,16 +323,79 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
                     out.obligations.push(name);
                 }
             }
-            ("class" | "kind" | "evidence-features" | "contract" | "obligations", _) => {
+            ("coverage-floor", Value::Other(v)) => {
+                if out.coverage_floor.is_some() {
+                    return bad(line, "duplicate key");
+                }
+                // An integer written as plain decimal digits: no sign, no underscore, no
+                // radix prefix, no fraction (those arrive as other text and are refused).
+                let floor = if !v.is_empty() && v.len() <= 3 && v.bytes().all(|b| b.is_ascii_digit()) {
+                    v.parse::<u8>().ok().filter(|n| *n <= 100)
+                } else {
+                    None
+                };
+                let Some(floor) = floor else {
+                    return bad(line, "coverage-floor is an integer from 0 to 100");
+                };
+                out.coverage_floor = Some(floor);
+            }
+            ("excused-controls", Value::Array(items)) => {
+                if excuse_tables != 0 {
+                    return bad(line, "duplicate key");
+                }
+                if items.is_empty() {
+                    return bad(line, "excused-controls is never empty (omit the key)");
+                }
+                if items.iter().any(|i| *i != Value::Table) {
+                    return bad(
+                        line,
+                        "excused-controls holds inline tables `{ id = \"..\", reason = \"VOS-Dnnn\" }`",
+                    );
+                }
+                excuse_tables = items.len();
+            }
+            (
+                "class" | "kind" | "evidence-features" | "contract" | "obligations"
+                | "coverage-floor" | "excused-controls",
+                _,
+            ) => {
                 return bad(line, "wrong type of value for this key")
             }
             _ => {
                 return bad(
                     line,
-                    "unknown key (allowed: class, kind, evidence-features, contract, obligations)",
+                    "unknown key (allowed: class, kind, evidence-features, contract, obligations, coverage-floor, excused-controls)",
                 )
             }
         }
+    }
+    if excuse_tables != excuse_ids.len() || excuse_tables != excuse_reasons.len() {
+        return bad(
+            1,
+            "every excused control has exactly one `id` and one `reason` (a backlog row, VOS-Dnnn)",
+        );
+    }
+    if excuse_tables > MAX_EXCUSED_CONTROLS {
+        return bad(1, "more than 16 excused controls");
+    }
+    let plain = |b: u8| b.is_ascii_alphanumeric() || b"_/.-".contains(&b);
+    for (id, reason) in excuse_ids.into_iter().zip(excuse_reasons) {
+        if id.is_empty() || id.len() > 128 || !id.bytes().all(plain) {
+            return bad(
+                1,
+                "an excused control id is 1 to 128 bytes of [A-Za-z0-9_/.-]",
+            );
+        }
+        if !is_backlog_ref(&reason) {
+            return bad(
+                1,
+                "an excused control's reason is a backlog row, `VOS-D` and three digits",
+            );
+        }
+        if out.excused_controls.iter().any(|e| e.id == id) {
+            return bad(1, "an excused control is listed twice");
+        }
+        out.excused_controls.push(Excuse { id, reason });
     }
     Ok(out)
 }

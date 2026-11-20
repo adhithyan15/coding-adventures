@@ -1,5 +1,6 @@
 use core::ptr;
 
+use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk};
 use der_asn1::{Asn1Decoder, Asn1Limits};
 use http1_request_host_authority::{
     validate_http1_request_host_authority, Http1RequestHostAuthorityLimits,
@@ -15,14 +16,20 @@ use tls13_certificate_verify_input::{CertificateVerifyRole, MAXIMUM_INPUT_LENGTH
 use tls13_certificate_verify_message::CertificateVerifyMessage;
 use tls13_certificate_verify_transcript_binding::{
     bind_certificate_verify_transcript, hash_transcript_bound_certificate_verify_input,
+    CertificateVerifyFinishedContinuityErrorKind,
 };
 use tls13_cipher_suite_policy::{
     CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry, SelectedCipherSuite,
 };
+use tls13_finished::{derive_finished_key, FinishedKeyStorage, FinishedRole};
+use tls13_handshake::{encode_tls13_handshake, Tls13HandshakePolicy, Tls13HandshakeType};
 use tls13_reviewed_server_path_certificate_verify::{
     verify_https_dns_destination_reviewed_server_path_anchor_self_signature_certificate_verify,
     verify_https_dns_destination_reviewed_server_path_certificate_verify,
-    verify_reviewed_server_path_certificate_verify, ReviewedServerPathCertificateVerifyErrorKind,
+    verify_reviewed_server_path_certificate_verify,
+    verify_reviewed_server_path_certificate_verify_finished_key_transcript_continuity,
+    ReviewedServerPathCertificateVerifyErrorKind,
+    ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind,
 };
 use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
 use tls13_server_name::TlsServerName;
@@ -444,6 +451,162 @@ fn public_composition_verifies_the_captured_signature_with_the_exact_reviewed_le
 #[test]
 fn public_composition_rejects_client_role_before_output_or_scratch_mutation() {
     exercise_public_composition(CertificateVerifyRole::Client, false);
+}
+
+fn certificate_verify_body(signature: &[u8]) -> Vec<u8> {
+    let message =
+        CertificateVerifyMessage::new(SignatureScheme::RsaPssRsaeSha256.wire_id(), signature)
+            .unwrap();
+    let mut body = vec![0; message.encoded_length()];
+    message.encode(&mut body).unwrap();
+    body
+}
+
+fn server_finished_verify_data(
+    transcript_encoded: &[u8],
+    certificate_verify_body: &[u8],
+    key: &tls13_finished::FinishedKey<'_>,
+) -> Vec<u8> {
+    let mut transcript = selected_transcript(transcript_encoded);
+    let policy = Tls13HandshakePolicy::new(
+        &[Tls13HandshakeType::CertificateVerify],
+        certificate_verify_body.len(),
+    )
+    .unwrap();
+    let mut encoding = vec![0; certificate_verify_body.len() + 4];
+    let encoded_length = encode_tls13_handshake(
+        &policy,
+        Tls13HandshakeType::CertificateVerify,
+        certificate_verify_body,
+        &mut encoding,
+    )
+    .unwrap();
+    transcript.update(&encoding[..encoded_length]).unwrap();
+    let snapshot = transcript.snapshot();
+    let mut verify_data = vec![0; snapshot.as_bytes().len()];
+    key.write_verify_data(snapshot.as_bytes(), &mut verify_data)
+        .unwrap();
+    verify_data
+}
+
+#[test]
+fn reviewed_path_finished_key_continuity_retains_path_key_and_exact_snapshot() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    reviewed_server_path!(reviewed_path, &leaf, &candidates);
+
+    let transcript_encoded = fixture(TRANSCRIPT_HEX);
+    let signature = fixture(SIGNATURE_HEX);
+    let certificate_verify_body = certificate_verify_body(&signature);
+    let prk = HkdfPrk::import_exact(FixedHkdfHash::Sha384, &[0x11; 48]).unwrap();
+    let mut finished_storage = FinishedKeyStorage::new(selected_suite(), FinishedRole::Server);
+    let finished_key = derive_finished_key(&prk, &mut finished_storage).unwrap();
+    let verify_data =
+        server_finished_verify_data(&transcript_encoded, &certificate_verify_body, &finished_key);
+    let mut signed_input = [0xa5; MAXIMUM_INPUT_LENGTH + 7];
+    let mut handshake_output = vec![0xa5; certificate_verify_body.len() + 8];
+    let mut scratch = [0xa5; 223];
+
+    let verified =
+        verify_reviewed_server_path_certificate_verify_finished_key_transcript_continuity(
+            &reviewed_path,
+            selected_transcript(&transcript_encoded),
+            authorized_scheme(),
+            &certificate_verify_body,
+            RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+            Asn1Limits::default(),
+            &mut signed_input,
+            &mut handshake_output,
+            &mut scratch,
+            Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+            &finished_key,
+            &verify_data,
+        )
+        .expect("reviewed leaf signature and exact following Finished must verify");
+
+    let expected_key = validate_rsa_public_key(
+        leaf.tbs_certificate().subject_public_key_info(),
+        RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+        Asn1Limits::default(),
+    )
+    .unwrap();
+    assert!(ptr::eq(verified.reviewed_server_path(), &reviewed_path));
+    assert_eq!(
+        verified.continuity().certificate_verify_body(),
+        certificate_verify_body,
+    );
+    assert_eq!(verified.continuity().role(), CertificateVerifyRole::Server);
+    assert_eq!(
+        verified.continuity().public_key().modulus(),
+        expected_key.modulus(),
+    );
+    assert_eq!(
+        verified.continuity().after_certificate_verify_snapshot(),
+        verified.continuity().finished().snapshot(),
+    );
+    assert_eq!(
+        verified.continuity().finished().transcript().snapshot(),
+        verified.continuity().finished().snapshot(),
+    );
+    assert_eq!(
+        format!("{verified:?}"),
+        "VerifiedReviewedServerPathCertificateVerifyFinishedKeyTranscriptContinuity",
+    );
+}
+
+#[test]
+fn reviewed_path_finished_key_continuity_rejects_invalid_verify_data_without_state() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    reviewed_server_path!(reviewed_path, &leaf, &candidates);
+
+    let transcript_encoded = fixture(TRANSCRIPT_HEX);
+    let signature = fixture(SIGNATURE_HEX);
+    let certificate_verify_body = certificate_verify_body(&signature);
+    let prk = HkdfPrk::import_exact(FixedHkdfHash::Sha384, &[0x11; 48]).unwrap();
+    let mut finished_storage = FinishedKeyStorage::new(selected_suite(), FinishedRole::Server);
+    let finished_key = derive_finished_key(&prk, &mut finished_storage).unwrap();
+    let mut verify_data =
+        server_finished_verify_data(&transcript_encoded, &certificate_verify_body, &finished_key);
+    verify_data[0] ^= 0x80;
+    let mut signed_input = [0xa5; MAXIMUM_INPUT_LENGTH + 7];
+    let mut handshake_output = vec![0xa5; certificate_verify_body.len() + 8];
+    let mut scratch = [0xa5; 223];
+
+    let error = verify_reviewed_server_path_certificate_verify_finished_key_transcript_continuity(
+        &reviewed_path,
+        selected_transcript(&transcript_encoded),
+        authorized_scheme(),
+        &certificate_verify_body,
+        RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+        Asn1Limits::default(),
+        &mut signed_input,
+        &mut handshake_output,
+        &mut scratch,
+        Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+        &finished_key,
+        &verify_data,
+    )
+    .expect_err("invalid Finished must consume and withhold transcript state");
+
+    assert!(matches!(
+        error.kind(),
+        ReviewedServerPathFinishedKeyTranscriptContinuityErrorKind::Finished(
+            CertificateVerifyFinishedContinuityErrorKind::Finished(_)
+        )
+    ));
+    let display = error.to_string();
+    let debug = format!("{error:?}");
+    for secret in ["www.apple.com", "signature", "modulus"] {
+        assert!(!display.contains(secret));
+        assert!(!debug.contains(secret));
+    }
 }
 
 fn exercise_https_destination_composition(role: CertificateVerifyRole, expect_success: bool) {

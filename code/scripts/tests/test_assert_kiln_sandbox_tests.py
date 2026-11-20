@@ -47,8 +47,11 @@ def probe_events(test: str, text: str, action: str = "pass") -> list[str]:
     ]
 
 
+CROSSCHECK = "    sandbox_x_test.go:9: PROBE: crosscheck traces=7 accepted=7 bytes=51650 mismatches=0 allowed=0"
+
+
 def with_gate(lines: list[str]) -> list[str]:
-    return lines + probe_events("TestSandboxTraceGateSynthetic", SYNTHETIC_PROBE)
+    return lines + probe_events("TestSandboxTraceGateSynthetic", SYNTHETIC_PROBE) + probe_events("TestSandboxRecordStep", CROSSCHECK)
 
 
 def all_pass() -> dict[str, str]:
@@ -382,6 +385,93 @@ class GateG1(unittest.TestCase):
             self.assertEqual(mod.main(["x", str(path)]), 1)
 
 
+def cc(traces: str = "7", accepted: str = "7", tail: str = "mismatches=0 allowed=0") -> str:
+    return f"    x_test.go:9: PROBE: crosscheck traces={traces} accepted={accepted} bytes=10 {tail}"
+
+
+class CrossCheckOfChildTraces(unittest.TestCase):
+    """D34: the in-test cross-check of the traces the record children wrote."""
+
+    def test_a_passing_line_with_accepted_traces_is_clean(self) -> None:
+        self.assertEqual(mod.crosscheck_problems(probe_events("TestA", cc())), [])
+
+    def test_no_line_is_a_problem(self) -> None:
+        problems = mod.crosscheck_problems(probe_events("TestA", "    x_test.go:1: other"))
+        self.assertEqual(len(problems), 1)
+        self.assertIn("no passing test", problems[0])
+
+    def test_zero_traces_everywhere_is_vacuous(self) -> None:
+        problems = mod.crosscheck_problems(probe_events("TestA", cc("0", "0")))
+        self.assertTrue(any("traces=0" in p for p in problems), problems)
+
+    def test_traces_all_refused_is_vacuous(self) -> None:
+        # Both readers refusing every trace alike is "agreement"; accepted=0 is
+        # what shows the check's parameters drifted.
+        problems = mod.crosscheck_problems(probe_events("TestA", cc("7", "0")))
+        self.assertTrue(any("ACCEPTED" in p for p in problems), problems)
+
+    def test_one_test_with_traces_is_enough(self) -> None:
+        lines = probe_events("TestA", cc("0", "0")) + probe_events("TestB", cc())
+        self.assertEqual(mod.crosscheck_problems(lines), [])
+
+    def test_accepted_is_summed_across_tests(self) -> None:
+        lines = probe_events("TestA", cc("3", "0")) + probe_events("TestB", cc("2", "1"))
+        self.assertEqual(mod.crosscheck_problems(lines), [])
+
+    def test_accepted_cannot_exceed_traces(self) -> None:
+        problems = mod.crosscheck_problems(probe_events("TestA", cc("1", "5")))
+        self.assertTrue(any("exceeds" in p for p in problems), problems)
+
+    def test_a_failing_test_does_not_count(self) -> None:
+        problems = mod.crosscheck_problems(probe_events("TestA", cc(), action="fail"))
+        self.assertIn("no passing test", problems[0])
+
+    def test_mismatch_or_allowed_fails(self) -> None:
+        for tail in ("mismatches=1 allowed=0", "mismatches=0 allowed=1"):
+            problems = mod.crosscheck_problems(probe_events("TestA", cc(tail=tail)))
+            self.assertTrue(any("must be 0" in p for p in problems), tail)
+
+    def test_missing_or_garbled_field_fails(self) -> None:
+        problems = mod.crosscheck_problems(probe_events("TestA", cc(tail="mismatches=0")))
+        self.assertTrue(any("allowed" in p for p in problems), problems)
+        problems = mod.crosscheck_problems(probe_events("TestA", cc(traces="-3")))
+        self.assertTrue(any("traces" in p for p in problems), problems)
+        line = "    x_test.go:9: PROBE: crosscheck traces=3 bytes=10 mismatches=0 allowed=0"
+        problems = mod.crosscheck_problems(probe_events("TestA", line))
+        self.assertTrue(any("accepted" in p for p in problems), problems)
+
+    def test_first_key_wins(self) -> None:
+        # A later accepted=99 cannot raise the real (first) count.
+        problems = mod.crosscheck_problems(probe_events("TestA", cc("7", "0", "mismatches=0 allowed=0 accepted=99")))
+        self.assertTrue(any("ACCEPTED" in p for p in problems), problems)
+
+    def test_the_anchor_rejects_forgeries(self) -> None:
+        forged = [
+            "  x_test.go:9: PROBE: crosscheck traces=5 accepted=5 bytes=1 mismatches=0 allowed=0",
+            "    x_test.go:9: note PROBE: crosscheck traces=5 accepted=5 bytes=1 mismatches=0 allowed=0",
+            "        PROBE: crosscheck traces=5 accepted=5 bytes=1 mismatches=0 allowed=0",
+        ]
+        lines = [json.dumps({"Action": "output", "Test": "TestA", "Output": f + "\n"}) for f in forged]
+        lines.append(json.dumps({"Action": "pass", "Test": "TestA"}))
+        self.assertIn("no passing test", mod.crosscheck_problems(lines)[0])
+
+    def test_a_long_line_split_by_test2json_cannot_forge_one(self) -> None:
+        first = "    x_test.go:9: " + "a" * 100
+        second = "    y_test.go:1: PROBE: crosscheck traces=5 accepted=5 bytes=1 mismatches=0 allowed=0\n"
+        lines = [json.dumps({"Action": "output", "Test": "TestA", "Output": o}) for o in (first, second)]
+        lines.append(json.dumps({"Action": "pass", "Test": "TestA"}))
+        self.assertIn("no passing test", mod.crosscheck_problems(lines)[0])
+
+    def test_main_reports_the_check(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "out.json"
+            path.write_text("\n".join(with_gate(stream(all_pass()))), encoding="utf-8")
+            self.assertEqual(mod.main(["x", str(path)]), 0)
+            without = stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", SYNTHETIC_PROBE)
+            path.write_text("\n".join(without), encoding="utf-8")
+            self.assertEqual(mod.main(["x", str(path)]), 1)
+
+
 class CiWiring(unittest.TestCase):
     def job(self) -> str:
         return CI.split("\n  kiln-sandbox:\n", 1)[1].split("\n  d18f-message-conformance:\n", 1)[0]
@@ -396,7 +486,11 @@ class CiWiring(unittest.TestCase):
         self.assertNotIn("ubuntu-latest", body)
         self.assertIn("sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0", body)
         self.assertNotRegex(body, r"if:.*apparmor")
+        # strace is preinstalled on both images: apt only as a fallback, never
+        # an unconditional `apt-get update` (mirror stalls fail the job).
+        self.assertIn("if command -v strace >/dev/null 2>&1; then", body)
         self.assertIn("bash code/scripts/ci/apt-install.sh strace", body)
+        self.assertIn("strace -V | head -1", body)
         self.assertIn("KILN_REQUIRE_SANDBOX: '1'", body)
         # D24: real traces are cross-checked between the old scanner and the grammar path.
         self.assertIn("KILN_TRACE_DIFF: '1'", body)
@@ -411,6 +505,11 @@ class CiWiring(unittest.TestCase):
         self.assertIn("set -euo pipefail", body)
         self.assertNotIn("continue-on-error", body)
         self.assertIn("persist-credentials: false", body)
+
+    def test_this_test_file_is_run_by_the_kiln_sandbox_job(self) -> None:
+        # D34: nothing discovered this file before; the job that uses the script
+        # now runs its tests (they need no sandbox, only python3).
+        self.assertIn("python3 -m unittest discover -s code/scripts/tests -p 'test_assert_kiln_sandbox_tests.py'", self.job())
 
     def test_scheduled_and_dispatched_full_builds_force_every_gate(self) -> None:
         # The job's `if:` is the registry flag; detect makes every flag true on a

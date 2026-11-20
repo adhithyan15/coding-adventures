@@ -452,6 +452,96 @@ pub(crate) fn ty_of_type<'a>(
     ty_of_type_in(t, env, v1, span, depth, &nodes)
 }
 
+/// Does the declared type `t`, resolved the way the generator resolves it, mention the record
+/// (or variant) named `target` anywhere inside it?
+///
+/// The resolution is the generator's own: names are looked up in the [`TyEnv`] that
+/// [`ty_of_type`] uses (`model Name = Type` aliases, records, variants), so `model State = Impl`
+/// makes `State` mention `Impl`, as do `Option<State>`, `Result<State, E>`, `(State, U8)` and a
+/// record with a `State` field.  It exists for gates that must agree with the generator by
+/// construction (VOS-039c, CC11) instead of re-reading type text with their own rules.
+///
+/// Fails closed: a name it cannot resolve, or an alias or record chain nested deeper than 64
+/// (the generator's own depth bound), counts as a mention.  A type already expanded adds
+/// nothing the first expansion did not, so a shared sub-type is walked once (no diamond blow-up); a cycle is a mention.
+pub fn type_mentions(file: &WarrantFile<'_>, t: &TypeExpr<'_>, target: &str) -> bool {
+    let env = TyEnv::new(file);
+    let mut seen = Seen::default();
+    mentions_in(&env, t, target, 0, &mut seen)
+}
+
+fn mentions_in<'a>(
+    env: &TyEnv<'a>,
+    t: &TypeExpr<'a>,
+    target: &str,
+    depth: usize,
+    seen: &mut Seen,
+) -> bool {
+    if depth > 64 {
+        return true;
+    }
+    match t {
+        TypeExpr::Bytes { .. } => false,
+        TypeExpr::List { inner, .. } | TypeExpr::Option { inner, .. } => {
+            mentions_in(env, inner, target, depth + 1, seen)
+        }
+        TypeExpr::Tuple { elems, .. } => elems
+            .iter()
+            .any(|e| mentions_in(env, e, target, depth + 1, seen)),
+        TypeExpr::Result {
+            ok_type, err_name, ..
+        } => *err_name == target || mentions_in(env, ok_type, target, depth + 1, seen),
+        TypeExpr::Named { name, .. } => {
+            if *name == target {
+                return true;
+            }
+            if matches!(*name, "Bytes" | "Bool" | "U8" | "U64" | "Nat")
+                || FixedTy::from_name(name).is_some()
+            {
+                return false;
+            }
+            if !(env.aliases.contains_key(name)
+                || env.records.contains_key(name)
+                || env.variants.contains_key(name))
+            {
+                return true;
+            }
+            // A name met again while its own expansion is still open is a cycle (the checker
+            // refuses an alias cycle, W0203): fail closed.  A name already fully expanded
+            // without a mention adds nothing, so it is not walked twice.
+            if seen.done.contains(*name) {
+                return false;
+            }
+            if !seen.open.insert((*name).to_string()) {
+                return true;
+            }
+            let found = if let Some(a) = env.aliases.get(name) {
+                mentions_in(env, a, target, depth + 1, seen)
+            } else if let Some(fs) = env.records.get(name) {
+                fs.iter()
+                    .any(|(_, ft)| mentions_in(env, ft, target, depth + 1, seen))
+            } else {
+                env.variants.get(name).is_some_and(|cs| {
+                    cs.iter().any(|(_, fs)| {
+                        fs.iter()
+                            .any(|(_, ft)| mentions_in(env, ft, target, depth + 1, seen))
+                    })
+                })
+            };
+            seen.open.remove(*name);
+            seen.done.insert((*name).to_string());
+            found
+        }
+    }
+}
+
+/// The names [`type_mentions`] has expanded: `open` are on the current path, `done` are finished.
+#[derive(Default)]
+struct Seen {
+    open: HashSet<String>,
+    done: HashSet<String>,
+}
+
 /// Most nodes a binder or result type may expand to.  Records and variants are
 /// inlined by value, so a diamond (`Li(a: L(i-1), b: L(i-1))`) is exponential in
 /// its depth although it is a few lines of source; the cap refuses it before any
@@ -880,7 +970,7 @@ fn emit_v1_call(
     let arity = match name {
         "max_value" | "min_value" => 0,
         "widen" | "wrap" | "try" | "to_int" | "to_nat" | "bit_not" | "popcount" | "clz" | "ctz"
-        | "be_bytes" | "le_bytes" | "from_be" | "from_le" | "Some" => 1,
+        | "be_bytes" | "le_bytes" | "from_be" | "from_le" | "Some" | "fixed" => 1,
         "checked_add" | "checked_sub" | "checked_mul" | "div" | "rem" | "div_trunc"
         | "rem_trunc" | "unwrap_or" | "imin" | "imax" | "bit_and" | "bit_or" | "bit_xor" | "shl" | "shr" | "sar"
         | "rotl" | "rotr" | "bit" => 2,
@@ -892,6 +982,14 @@ fn emit_v1_call(
     let t = || static_fixed(widths, span);
     Ok(Some(match name {
         "Some" => format!("V::Opt(Some(Box::new({})))", p[0]),
+        // VOS-D025: `fixed<N>(bytes)` is `Some(bytes)` of exactly N bytes, else `None`
+        // (the ground evaluator's rule; VER04 section 4).  N is a literal width: a
+        // symbolic one has no value in a generated model.
+        "fixed" => match widths {
+            [Width::Literal(n)] if *n <= MAX_FIXED_WIDTH => format!("V::fixed_n({n}usize, &{})", p[0]),
+            [Width::Literal(n)] => return Err(width_too_large(*n, span)),
+            _ => return Err(unsupported("`fixed` needs one literal width", span)),
+        },
         "max_value" => format!("V::max_value({})", t()?),
         "min_value" => format!("V::min_value({})", t()?),
         "widen" => format!("V::widen({}, &{})", t()?, p[0]),
@@ -1167,6 +1265,9 @@ const WXA_FAULTS: &[(&str, &str)] = &[
     ("off-by-one-consumed", "OffByOneConsumed"),
     // WX-SV2: `field-zero` that is never inert (the lowest bit flips).
     ("field-flip", "FieldFlip"),
+    // VOS-039c: `field-flip` aimed at the LAST numeric field, so the oracle
+    // register of an `-any` (the last field of `Impl`) can be corrupted.
+    ("field-flip-last", "FieldFlipLast"),
 ];
 
 /// Faults for an operation whose result is a byte string (a digest, a codec
@@ -2378,6 +2479,11 @@ fn composite_adapter<'a>(
             }
             "field-zero" | "field-flip" => matches!(&core, Ty::Data { ctors, .. }
                 if ctors.len() == 1 && ctors[0].1.iter().any(is_numeric)),
+            // VOS-039c: the last numeric field is a different field from the
+            // first only when there are two, so a record with one numeric
+            // field is refused (it would duplicate `field-flip`).
+            "field-flip-last" => matches!(&core, Ty::Data { ctors, .. }
+                if ctors.len() == 1 && ctors[0].1.iter().filter(|t| is_numeric(t)).count() >= 2),
             "wrong-ctor" => matches!(&core, Ty::Data { ctors, .. } if ctors.len() >= 2),
             "ok-as-err" => {
                 is_result && matches!(&core, Ty::Tuple(_) | Ty::Data { .. }) && !cases.is_empty()
@@ -2439,7 +2545,7 @@ fn composite_adapter<'a>(
         if faults.iter().any(|f| f == "limit-after-alloc") {
             let _ = writeln!(
                 s,
-                "    let hog = (fault == Fault::LimitAfterAlloc).then(|| vec![0u8; p{l} as usize]);"
+                "    let hog = (fault == Fault::LimitAfterAlloc).then(|| obs_scope(|| vec![0u8; p{l} as usize]));"
             );
         }
     }
@@ -2547,6 +2653,7 @@ fn composite_adapter<'a>(
             "swap-components" => "fault_swap_components(v)".to_string(),
             "field-zero" => "fault_field_zero(v)".to_string(),
             "field-flip" => "fault_field_flip(v)".to_string(),
+            "field-flip-last" => "fault_field_flip_last(v)".to_string(),
             "off-by-one-consumed" => "fault_off_by_one_consumed(v)".to_string(),
             "wrong-ctor" => format!("fault_wrong_ctor(v, {})", core.rust()),
             "ok-as-err" => format!("fault_ok_as_err(v, \"{}\")", cases[0]),
@@ -2663,6 +2770,103 @@ fn uses_composites<'a>(file: &WarrantFile<'a>, env: &TyEnv<'a>) -> bool {
 // ---------------------------------------------------------------------------
 // WX-H helpers
 // ---------------------------------------------------------------------------
+
+/// VOS-D063 (VER04j section 14.3 item 54): wrap every call of `export` in the
+/// adapter text `adapter` in `obs_call!(..)`, so the allocation window covers
+/// the export and the drop of its result and nothing else (not the marshalling
+/// of its arguments or of its result; see `ObsHold` in the prelude).
+///
+/// A call is the identifier `export` (with any `path::` before it) directly
+/// followed by `(`.  EVERY occurrence of the identifier outside a string literal
+/// must be such a call: a method call `.export(`, a turbofish `export::<T>(`, a
+/// bare reference or a call that cannot be wrapped would leave an unobserved
+/// export call, so the function returns `None` (generation fails).  `None` also
+/// when there is no call at all.  The identifier must not continue a longer one
+/// (`op_<n>`, `<export>_x`).
+///
+/// ```text
+///   let v: V = match vos_ghost_insert_out(p0, p1) { .. };
+///   let v: V = match obs_call!(vos_ghost_insert_out(p0, p1)) { .. };
+/// ```
+fn scope_export_calls(adapter: &str, export: &str) -> Option<String> {
+    let is_ident = |c: char| c.is_ascii_alphanumeric() || c == '_';
+    // Byte ranges of string literals (their text is not code).
+    let mut strings: Vec<(usize, usize)> = Vec::new();
+    let mut open: Option<usize> = None;
+    let mut escaped = false;
+    for (i, c) in adapter.char_indices() {
+        match open {
+            None if c == '"' => open = Some(i),
+            Some(from) if !escaped && c == '"' => {
+                strings.push((from, i));
+                open = None;
+            }
+            _ => {}
+        }
+        escaped = open.is_some() && !escaped && c == '\\';
+    }
+    let in_string = |at: usize| strings.iter().any(|&(a, b)| at > a && at < b);
+    let mut out = String::with_capacity(adapter.len() + 64);
+    let mut rest = 0; // bytes of `adapter` already copied into `out`
+    let mut from = 0; // where to look for the next occurrence
+    let mut calls = 0;
+    while let Some(off) = adapter[from..].find(export) {
+        let at = from + off;
+        let end = at + export.len();
+        from = end;
+        let before = adapter[..at].chars().next_back();
+        let after = adapter[end..].chars().next();
+        if before.is_some_and(is_ident) || after.is_some_and(is_ident) || in_string(at) {
+            continue; // part of a longer identifier, or text
+        }
+        // A method call, a turbofish or a bare reference: not wrappable.
+        if before == Some('.') || after != Some('(') {
+            return None;
+        }
+        // Include a `crate::path::` prefix in the wrapped expression.
+        let mut start = at;
+        while let Some(c) = adapter[..start].chars().next_back() {
+            if is_ident(c) || c == ':' {
+                start -= c.len_utf8();
+            } else {
+                break;
+            }
+        }
+        // The matching close parenthesis (the generated arguments contain no
+        // string or character literal with a parenthesis).
+        let mut depth = 0usize;
+        let mut close = None;
+        for (i, c) in adapter[end..].char_indices() {
+            match c {
+                '(' => depth += 1,
+                ')' => {
+                    depth -= 1;
+                    if depth == 0 {
+                        close = Some(end + i + 1);
+                        break;
+                    }
+                }
+                _ => {}
+            }
+        }
+        let close = close?;
+        if start < rest {
+            continue; // inside a call already wrapped
+        }
+        out.push_str(&adapter[rest..start]);
+        out.push_str("obs_call!(");
+        out.push_str(&adapter[start..close]);
+        out.push(')');
+        rest = close;
+        from = close;
+        calls += 1;
+    }
+    if calls == 0 {
+        return None;
+    }
+    out.push_str(&adapter[rest..]);
+    Some(out)
+}
 
 /// The limit parameter of an operation's `output` row: the one unsigned numeric
 /// parameter (`U16`, `U32`, `U64` or `Nat`) the bound mentions.  `Ok(None)` when
@@ -3697,6 +3901,16 @@ pub fn generate_evidence_harness_with_tables(
                     op.span,
                 ));
             }
+            // VOS-D063: only the export call is inside the allocation window.
+            let emitted = scope_export_calls(&emitted, &binding.export).ok_or_else(|| {
+                unsupported(
+                    format!(
+                        "the adapter of `{}` has no call of `{}` to observe",
+                        op.name, binding.export
+                    ),
+                    op.span,
+                )
+            })?;
             adapters.push_str(&emitted.replacen(&from, &to, 1));
             let n = op.name;
             let resolve = if shape.scoped() {
@@ -3895,6 +4109,9 @@ pub fn generate_evidence_harness_with_tables(
     if body.contains("V::concat(") {
         features.insert("concat");
     }
+    if body.contains("V::fixed_n(") {
+        features.insert("fixedn");
+    }
     if WXE_FAULTS.iter().any(|(n, _)| used_faults.contains(*n)) {
         features.insert("bytefaults");
     }
@@ -3905,6 +4122,14 @@ pub fn generate_evidence_harness_with_tables(
         // The operations `WARRANT_EVIDENCE_ATTACK` may name (validated by `check_attack`).
         let names: Vec<String> = shapes.keys().map(|k| format!("{k:?}")).collect();
         let _ = write!(adapters, "const HARNESS_OPS: &[&str] = &[{}];\n\n", names.join(", "));
+    }
+    // VOS-039c: `fault_field_flip_last` is likewise emitted only for a binding
+    // that names `field-flip-last`.  It has no `WARRANT_EVIDENCE_ATTACK`
+    // semantics of its own: a flip of the last field cannot cancel against an
+    // `init`/`alpha` pair the way a first-field flip can, because the oracle is
+    // read by no abstraction.
+    if used_faults.contains("field-flip-last") {
+        features.insert("lastflip");
     }
     // WX-N: a v1 document with a fixed-width `Bytes<N>` anywhere labels that
     // domain `full` or `sample` instead of `set`.  Gated like the helpers above,
@@ -3965,4 +4190,128 @@ pub fn generate_evidence_harness_with_tables(
     out.push_str(&neg_wrappers);
     out.push_str(&suite);
     Ok(out)
+}
+
+#[cfg(test)]
+mod scope_tests {
+    use super::scope_export_calls;
+
+    #[test]
+    fn wraps_the_call_and_nothing_around_it() {
+        let a = "fn op_f(a: u8) -> V {\n    let v: V = match f(p0, g(p1)) { Ok(r) => V::Bool(r) };\n}\n";
+        let w = scope_export_calls(a, "f").unwrap();
+        assert!(w.contains("match obs_call!(f(p0, g(p1))) {"), "{w}");
+        // `op_f(` is the adapter's own name, not a call.
+        assert!(w.starts_with("fn op_f("), "{w}");
+    }
+
+    #[test]
+    fn a_path_prefix_belongs_to_the_wrapped_expression() {
+        let w = scope_export_calls("x(pkg::sub::f(a))", "f").unwrap();
+        assert_eq!(w, "x(obs_call!(pkg::sub::f(a)))");
+    }
+
+    #[test]
+    fn every_call_is_wrapped_and_a_longer_identifier_is_not_a_call() {
+        let a = "match fault { A => f(1), _ => f(2) } f_other(3) of(4)";
+        let w = scope_export_calls(a, "f").unwrap();
+        assert_eq!(
+            w,
+            "match fault { A => obs_call!(f(1)), _ => obs_call!(f(2)) } f_other(3) of(4)"
+        );
+    }
+
+    #[test]
+    fn a_call_nested_in_a_wrapped_call_is_wrapped_once() {
+        let w = scope_export_calls("f(f(1))", "f").unwrap();
+        assert_eq!(w, "obs_call!(f(f(1)))");
+    }
+
+    #[test]
+    fn the_name_inside_a_string_literal_is_text_not_a_call() {
+        let w = scope_export_calls("fault_for(\"f\", x); f(1); panic!(\"f(2) \\\" f\")", "f").unwrap();
+        assert_eq!(w, "fault_for(\"f\", x); obs_call!(f(1)); panic!(\"f(2) \\\" f\")");
+    }
+
+    #[test]
+    fn no_call_and_an_unbalanced_call_are_refused() {
+        assert!(scope_export_calls("fn op_f() {}", "f").is_none());
+        assert!(scope_export_calls("let x = f;", "f").is_none());
+        assert!(scope_export_calls("f(1, 2", "f").is_none());
+    }
+
+    #[test]
+    fn one_unwrappable_occurrence_refuses_the_whole_adapter() {
+        // The first call could be wrapped; the others are an unobserved export call.
+        assert!(scope_export_calls("f(1); s.f(2)", "f").is_none(), "method call");
+        assert!(scope_export_calls("f(1); f::<u8>(2)", "f").is_none(), "turbofish");
+        assert!(scope_export_calls("f(1); let g = f;", "f").is_none(), "bare reference");
+        assert!(scope_export_calls("f(1); pkg::f::<u8>(2)", "f").is_none(), "path turbofish");
+    }
+}
+
+#[cfg(test)]
+mod type_mentions_tests {
+    use super::{ty_of_type, type_mentions, Ty, TyEnv};
+    use crate::layout::{capture_layout, LayoutLimits};
+    use crate::parser::{parse_document, Declaration, ParserLimits};
+    use crate::source::{SourceDocument, SourceLimits};
+
+    /// Does the generator's resolved `Ty` contain the record named `n`?
+    fn ty_has(t: &Ty, n: &str) -> bool {
+        match t {
+            Ty::Data { name, ctors, .. } => {
+                name == n || ctors.iter().any(|(_, fs)| fs.iter().any(|f| ty_has(f, n)))
+            }
+            Ty::Tuple(es) => es.iter().any(|e| ty_has(e, n)),
+            Ty::Opt(i) | Ty::List(i) | Ty::Res(i, _, _) => ty_has(i, n),
+            _ => false,
+        }
+    }
+
+    const DOC: &str = "warrant t v1\n  record Impl(x: U8, c: U8)\n  record Other(x: U8)\n  error E = BAD\n  model State = Impl\n  model Deep = State\n  model Maybe = Option<State>\n  model Out = Result<Deep, E>\n  model Pair = (U8, Maybe)\n  model Count = U8\n  model Wide = List<Count>\n  record Holder(s: Maybe, n: U8)\n  model Cyc = Cyc\n  op f0(a: Impl, b: State, c: Deep, d: Maybe, e: Out, g: Pair, h: Holder) -> U8\n  op f1(a: Other, b: Count, c: Wide, d: Option<U8>, e: Bytes, g: (U8, Bool), h: Result<Count, E>) -> U8\n  op f2(a: Cyc, b: Nope) -> U8\n";
+
+    /// Every parameter type of `f0` and `f1`: the gate's answer is the generator's.
+    #[test]
+    fn agrees_with_the_generators_own_resolution_on_every_alias_shape() {
+        let doc = SourceDocument::admit(DOC.as_bytes(), SourceLimits::default()).unwrap();
+        let toks = capture_layout(&doc, LayoutLimits::default()).unwrap();
+        let file = parse_document(&toks, &doc, ParserLimits::default()).unwrap();
+        let env = TyEnv::new(&file);
+        let mut n = 0;
+        for d in &file.declarations {
+            let Declaration::Op(o) = d else { continue };
+            if o.name == "f2" {
+                continue;
+            }
+            for p in &o.params {
+                let generated = ty_of_type(&p.param_type, &env, true, p.span, 0).expect("resolves");
+                assert_eq!(
+                    type_mentions(&file, &p.param_type, "Impl"),
+                    ty_has(&generated, "Impl"),
+                    "{}.{}",
+                    o.name,
+                    p.name
+                );
+                n += 1;
+            }
+        }
+        assert_eq!(n, 14);
+    }
+
+    /// What the generator cannot resolve is a mention: an alias cycle, an unknown name.
+    #[test]
+    fn what_it_cannot_resolve_counts_as_a_mention() {
+        let doc = SourceDocument::admit(DOC.as_bytes(), SourceLimits::default()).unwrap();
+        let toks = capture_layout(&doc, LayoutLimits::default()).unwrap();
+        let file = parse_document(&toks, &doc, ParserLimits::default()).unwrap();
+        for d in &file.declarations {
+            let Declaration::Op(o) = d else { continue };
+            if o.name == "f2" {
+                for p in &o.params {
+                    assert!(type_mentions(&file, &p.param_type, "Impl"), "{}", p.name);
+                }
+            }
+        }
+    }
 }

@@ -7,15 +7,13 @@
 //! Exit codes: 0 PASS, 1 FAIL (findings), 2 no verdict (usage error, or the
 //! filesystem could not be read safely).  The report goes to standard output,
 //! diagnostics for exit 2 to standard error.  The only I/O in the program is
-//! in [`loader`].
-
-mod loader;
+//! in [`vos_shape_check::loader`].
 
 use std::io::Write;
 use std::path::Path;
 use std::process::ExitCode;
 
-use vos_shape_check::{check_crate, Policy};
+use vos_shape_check::{check_crate, loader, Policy};
 
 const USAGE: &str = "usage: vos-shape-check <crate-dir> [--evidence-features a,b,c]\n\
   Checks one component crate against the VOS01/VOS02 shape rules (VOS03).\n\

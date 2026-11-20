@@ -4,6 +4,8 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
 )
 
 // VOS-033 / VOS-D058: the grammar files the VOS crates embed with include_str!
@@ -193,5 +195,94 @@ func TestVosToolPathsExist(t *testing.T) {
 		if _, err := os.Stat(filepath.Join("..", "..", "..", "..", p)); err != nil {
 			t.Errorf("vosToolPaths: %s: %v", p, err)
 		}
+	}
+}
+
+// The registered row of a contract crate (VOS-039b-1): present, selects the VOS tools and
+// grammars its BUILD runs outside Cargo, and nothing else (no document of its own, no lookalike).
+func TestVosContractRowSelectsTheVosTools(t *testing.T) {
+	var row *repositoryInputConsumer
+	for i := range repositoryInputConsumers {
+		if repositoryInputConsumers[i].name == "rust/vos-sched-contract" {
+			row = &repositoryInputConsumers[i]
+		}
+	}
+	if row == nil || row.language != "rust" || len(row.paths) == 0 {
+		t.Fatalf("no usable repository input row for rust/vos-sched-contract: %+v", row)
+	}
+	for path, want := range map[string]bool{
+		"code/programs/rust/vos-link/src/contract_check.rs": true,
+		"code/packages/rust/vos-manifest/src/warrant.rs":    true,
+		"code/packages/rust/vos-shape-check/src/a.rs":       true,
+		"code/packages/rust/warrant-grammar/src/a.rs":       true,
+		"code/specs/vos-sched-any.warrant":                  false,
+		"code/specs/vos-sched-contract.warrant":             false,
+		"code/packages/rust/vos-manifest-x/src/a.rs":        false,
+		"code/programs/rust/vos-linker/src/a.rs":            false,
+	} {
+		if got := row.matches(path); got != want {
+			t.Errorf("rust/vos-sched-contract matches(%q) = %v, want %v", path, got, want)
+		}
+	}
+}
+
+// VOS-D104: `vos-link check-publish` reads the Cargo.toml and vos.toml of every direct `vos-*` child
+// of the two Rust roots in the vos-link BUILD, so an edit to one must select vos-link.  The row
+// declares the files as globs; they must agree with the predicate, nested and lookalike paths
+// included.
+func TestVosPublishInputsSelectVosLinkAndGlobsAgree(t *testing.T) {
+	cases := []struct {
+		path string
+		want bool
+	}{
+		{"code/packages/rust/vos-manifest/Cargo.toml", true},
+		{"code/packages/rust/vos-manifest/vos.toml", true},
+		{"code/programs/rust/vos-capacity-probe/Cargo.toml", true},
+		{"code/programs/rust/vos-link/vos.toml", true},
+		{"code/packages/rust/vos-new-crate/Cargo.toml", true},
+		{"code/packages/rust/vos-/Cargo.toml", true},
+		{"code/packages/rust/vos-manifest/src/Cargo.toml", false},
+		{"code/packages/rust/vos-manifest/tests/fixtures/vos.toml", false},
+		{"code/packages/rust/vosx/Cargo.toml", false},
+		{"code/packages/rust/vos/Cargo.toml", false},
+		{"code/packages/rust/xvos-a/Cargo.toml", false},
+		{"code/packages/rust/vos-manifest/Cargo.lock", false},
+		{"code/packages/rust/vos-manifest/Cargo.toml.bak", false},
+		{"code/packages/python/vos-a/Cargo.toml", false},
+		{"code/programs/go/vos-a/vos.toml", false},
+		{"code/specs/vos-a/Cargo.toml", false},
+		{"code/packages/rust/Cargo.toml", false},
+		{"packages/rust/vos-a/Cargo.toml", false},
+		{"code\\packages\\rust\\vos-a\\Cargo.toml", false},
+	}
+	var row *repositoryInputConsumer
+	for i := range repositoryInputConsumers {
+		if repositoryInputConsumers[i].name == "rust/programs/vos-link" {
+			row = &repositoryInputConsumers[i]
+		}
+	}
+	if row == nil || len(row.globs) == 0 {
+		t.Fatalf("no vos-link row with globs: %+v", row)
+	}
+	for _, c := range cases {
+		if got := isVosPublishInput(c.path); got != c.want {
+			t.Errorf("isVosPublishInput(%q) = %v, want %v", c.path, got, c.want)
+		}
+		if got := row.matches(c.path); got != c.want {
+			t.Errorf("vos-link row matches(%q) = %v, want %v", c.path, got, c.want)
+		}
+		globHit := false
+		for _, g := range vosPublishGlobs {
+			if globmatch.MatchPath(g, c.path) {
+				globHit = true
+			}
+		}
+		if globHit != c.want {
+			t.Errorf("globs on %q = %v, want %v", c.path, globHit, c.want)
+		}
+	}
+	// The row keeps its grammar inputs.
+	if !row.matches("code/grammars/vos_contract/vos_contract.tokens") {
+		t.Error("the vos-link row lost its grammar inputs")
 	}
 }

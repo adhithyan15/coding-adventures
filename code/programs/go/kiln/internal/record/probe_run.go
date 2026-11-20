@@ -47,6 +47,10 @@ func probeLimits() trace.Limits {
 	return trace.Limits{MaxLineBytes: 1 << 20, MaxTotalBytes: ProbeTraceCap, MaxEvents: 1 << 20}
 }
 
+// ProbeParseLimits is probeLimits for a test that re-parses a probe trace the
+// way `prepare` did (D34: the sandbox tests' cross-check of child traces).
+func ProbeParseLimits() trace.Limits { return probeLimits() }
+
 // RunStructureProbes is the real Options.Structure.
 func RunStructureProbes(in ProbeInput) (ProbeReport, error) {
 	rep := ProbeReport{Schema: ProbesSchema, Action: in.Action, Shadowed: []string{}, Runs: []ProbeRunRecord{}, Toolchains: nil}

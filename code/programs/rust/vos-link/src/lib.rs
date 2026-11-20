@@ -8,6 +8,11 @@
 //! ```text
 //!   vos-link gen-doc   code/packages/rust/<impl>     writes code/specs/<impl>.warrant
 //!   vos-link check-doc code/packages/rust/<impl>     exit 1 on any drift or rule failure
+//!   vos-link gen-build code/packages/rust/<impl>     writes the canonical region of BUILD and BUILD_windows (VOS04 5.6)
+//!   vos-link check-component code/packages/rust/<impl>   file set, BUILD byte-equal to gen-build's, row, floor, manifest
+//!   vos-link gen-contract    code/packages/rust/<contract>   writes warrant/lemmas.table (VOS-039b-1)
+//!   vos-link check-contract  code/packages/rust/<contract>   lemmas, mutants, config mutants, the table, byte for byte
+//!   vos-link check-publish   [--root R]                      every evidence-only vos-* crate says publish = false (VOS-D104)
 //! ```
 //!
 //! ## The pipeline
@@ -41,11 +46,22 @@
 //! unreadable or oversized file, a path outside the repository or through a symlink, a
 //! usage error).  A rule that fails on bytes that *were* admitted is a finding.
 
+pub mod bounds;
+pub mod build_gen;
 pub mod check;
+pub mod component;
+pub mod contract_check;
+pub mod enums;
 pub mod error;
 pub mod fsio;
 pub mod inputs;
 pub mod ops;
+pub mod oracle;
+pub mod publish;
 
+pub use build_gen::gen_build;
+pub use component::check_component;
+pub use contract_check::{check_contract, gen_contract};
 pub use error::{Finding, NoVerdict};
 pub use ops::{check_doc, gen_doc, Outcome};
+pub use publish::check_publish;

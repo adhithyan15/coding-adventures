@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/repository-typescript-game-input-frame-proof-inputs",
+  "domain": "source_collection",
+  "summary": "The game-input-frame TypeScript consumer receives its exact six proof, corpus, and workspace configuration inputs.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "source_collection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "mode": "repository_boundary",
+      "language": "typescript",
+      "package_root": "code/packages/typescript/game-input-frame",
+      "boundary_sha256": "b8afd2020cf3cf50eb133eb95cac12bb4f568f5451fb624aa68544e6ff6add71",
+      "candidates": [
+        {
+          "path": ".cargo/config.toml",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "6c6c642d6c696e6b0a"
+        },
+        {
+          "path": "code/packages/rust/.cargo/config.toml",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "727573742d6c6c640a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.lock",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "76657273696f6e203d20340a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.toml",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "727573740a"
+        },
+        {
+          "path": "code/packages/typescript/.env",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "7365637265740a"
+        },
+        {
+          "path": "code/packages/typescript/tsconfig.base.json",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "736f757263650a"
+        },
+        {
+          "path": "code/packages/typescript/tsconfig.local.json",
+          "kind": "file",
+          "tracked": false,
+          "content_hex": "6c6f63616c0a"
+        },
+        {
+          "path": "code/specs/fixtures/game-input-frame-v1/cases.json",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "7b7d0a"
+        }
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/repository-typescript-game-input-frame-proof-inputs",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {
+      "files": [
+        {
+          "path": ".cargo/config.toml",
+          "digest": "75dbf66fbf8141ff048520ab7fdd8d780776b9301a52f7eeb8e2a64d87216977"
+        },
+        {
+          "path": "code/packages/rust/.cargo/config.toml",
+          "digest": "7601210b32a1f9e6df000200ccb541ff8ca8058a9a4bd52013500e92cc7a6077"
+        },
+        {
+          "path": "code/packages/rust/Cargo.lock",
+          "digest": "083791b01c1a67ae66aca99070c9ee48082d04307473d494376e6de7cf9a654a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.toml",
+          "digest": "87ee07307593493b96730dcbb36fd51e9fa4ba189696dad60758e89e6e7750bf"
+        },
+        {
+          "path": "code/packages/typescript/tsconfig.base.json",
+          "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"
+        },
+        {
+          "path": "code/specs/fixtures/game-input-frame-v1/cases.json",
+          "digest": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+        }
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

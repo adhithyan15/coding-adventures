@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased — DT17 v1 shared fixture
+
+- Add a test-only shared fixture consumer for the existing public hash APIs, with exhaustive parameterized polynomial coverage using a nondefault base. No runtime API or Warrant claim changes.
+- Keep the fixture test warning-clean on the repository's pinned Rust toolchain; odd-length hex remains rejected before fixed-size chunk decoding.
+
+## Unreleased — regenerated evidence harness (VOS-038c)
+
+- `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence`: the allocation observer counts the
+  export call only (VOS-D063, VER04j 14.3 item 54). No `heap` or `output` row changes; a recorded
+  `max_observed_heap` can only be lower, because the adapter's own copies are no longer charged.
+
 ## Unreleased — regenerated evidence harness (VOS-038b)
 
 - `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the observer timeout clamp (`WARRANT_OBS_TIMEOUT_SECS` at most 24 h, `checked_add` deadline; VER04j). No test, case count or recorded evidence manifest changes.

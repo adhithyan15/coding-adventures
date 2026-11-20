@@ -55,6 +55,54 @@ func init() {
 	}
 }
 
+// ParseCrossChecked is ParseOptions with the cross-check forced on, for a TEST
+// that wants to re-run, in its own process, the parse a child process did.
+//
+// Why it exists (D34).  The real recordings run in CHILD processes (`kiln
+// record prepare`, `step`, the classify child, `collect`), each with a
+// hand-built environment that deliberately lacks KILN_TRACE_DIFF: the
+// environment is sealed into facts and keys, so a debugging switch must never
+// ride into it.  Those parses are grammar-only.  The kiln-sandbox tests
+// therefore read every trace the children left behind and call this, so each
+// real trace is seen by both readers.
+//
+// It differs from ParseOptions in two ways.  A disagreement comes back as a
+// VALUE (the third result, a *CrossCheckMismatch) instead of a panic, so the
+// caller can count and report it; and it does not depend on the package's
+// crossCheck variable or the environment.  allowed is how many stricter-only
+// divergences (the spec's list, section 4.9) this one parse took: on a REAL
+// trace a caller must treat any as a failure.
+//
+// It is also the engine of `kiln record census` (a diagnostic command that is
+// never run during a recording).  It never touched the garbage collector (that
+// is what keeps trace.Measure out of production); what it shared was the
+// process-global allowed counter, so the whole call now holds crossCheckMu and
+// two calls can never charge one trace the other's hits.  A parse that runs
+// under KILN_TRACE_DIFF in another goroutine could still add to the counter, so
+// a caller that needs an exact count runs without that variable and one call at
+// a time, as the census does.  TestParseCrossCheckedOnlyInCensus keeps every
+// other production file from calling it.
+func ParseCrossChecked(r io.Reader, initialCwd string, opts Options) (tr *Trace, err error, mismatch *CrossCheckMismatch, allowed int) {
+	crossCheckMu.Lock()
+	defer crossCheckMu.Unlock()
+	before := AllowedDivergences()
+	defer func() {
+		if p := recover(); p != nil {
+			m, ok := p.(*CrossCheckMismatch)
+			if !ok {
+				panic(p)
+			}
+			tr, err, mismatch = nil, nil, m
+		}
+		allowed = AllowedDivergences() - before
+	}()
+	tr, err = parseCrossChecked(r, initialCwd, opts)
+	return
+}
+
+// crossCheckMu serialises ParseCrossChecked (see its comment).
+var crossCheckMu sync.Mutex
+
 // CrossCheckMismatch is what a failed cross-check panics with.
 type CrossCheckMismatch struct {
 	Detail string // what differs, without any path text

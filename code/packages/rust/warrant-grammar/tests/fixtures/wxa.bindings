@@ -19,7 +19,7 @@ op blob export=blob ret=Blob faults=field-zero
 op tok export=tok ret=Tok faults=wrong-ctor
 op bits export=bits ret=(list<bool>,usize) faults=drop-consumed
 op decode2 export=decode2 args=u8,u8 ret=(u64,usize) errors=wxa_subject::LebErr/Overlong=OVERLONG faults=off-by-one-consumed,drop-consumed,ok-as-err,missing-error
-op normalize export=normalize ret=Span faults=field-zero,field-flip
+op normalize export=normalize ret=Span faults=field-zero,field-flip,field-flip-last
 op classify export=classify ret=Shape faults=wrong-ctor
 op area export=area args=Shape ret=(bool,u64) faults=off-by-one-consumed
 op order export=order faults=swap-components

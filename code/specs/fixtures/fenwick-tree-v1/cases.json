@@ -1,0 +1,387 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "empty-tree",
+      "values": [],
+      "ops": [
+        {
+          "op": "prefix_sum",
+          "i": 0,
+          "result": 0
+        },
+        {
+          "op": "find_kth",
+          "k": 1,
+          "error": "empty"
+        }
+      ]
+    },
+    {
+      "name": "signed-prefixes",
+      "values": [
+        -3,
+        2,
+        -1,
+        7,
+        -4
+      ],
+      "ops": [
+        {
+          "op": "prefix_sum",
+          "i": 0,
+          "result": 0
+        },
+        {
+          "op": "prefix_sum",
+          "i": 3,
+          "result": -2
+        },
+        {
+          "op": "range_sum",
+          "l": 2,
+          "r": 4,
+          "result": 8
+        },
+        {
+          "op": "point_query",
+          "i": 1,
+          "result": -3
+        }
+      ]
+    },
+    {
+      "name": "non-power-of-two-propagation",
+      "values": [
+        1,
+        0,
+        2,
+        0,
+        3,
+        0,
+        4,
+        0,
+        5
+      ],
+      "ops": [
+        {
+          "op": "prefix_sum",
+          "i": 7,
+          "result": 10
+        },
+        {
+          "op": "prefix_sum",
+          "i": 8,
+          "result": 10
+        },
+        {
+          "op": "prefix_sum",
+          "i": 9,
+          "result": 15
+        },
+        {
+          "op": "update",
+          "i": 8,
+          "delta": 0,
+          "result": [
+            1,
+            0,
+            2,
+            0,
+            3,
+            0,
+            4,
+            0,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "name": "kth-zero-gaps",
+      "values": [
+        0,
+        2,
+        0,
+        3,
+        0
+      ],
+      "ops": [
+        {
+          "op": "find_kth",
+          "k": 1,
+          "result": 2
+        },
+        {
+          "op": "find_kth",
+          "k": 2,
+          "result": 2
+        },
+        {
+          "op": "find_kth",
+          "k": 3,
+          "result": 4
+        },
+        {
+          "op": "find_kth",
+          "k": 5,
+          "result": 4
+        },
+        {
+          "op": "find_kth",
+          "k": 6,
+          "error": "exceeds_total"
+        }
+      ]
+    },
+    {
+      "name": "all-zero-kth",
+      "values": [
+        0,
+        0,
+        0
+      ],
+      "ops": [
+        {
+          "op": "find_kth",
+          "k": 1,
+          "error": "exceeds_total"
+        }
+      ]
+    },
+    {
+      "name": "reversed-range-precedence",
+      "values": [
+        1,
+        2
+      ],
+      "ops": [
+        {
+          "op": "range_sum",
+          "l": 0,
+          "r": -1,
+          "error": "invalid_range"
+        }
+      ]
+    },
+    {
+      "name": "failed-update-preserves-state",
+      "values": [
+        2,
+        0,
+        3
+      ],
+      "ops": [
+        {
+          "op": "update",
+          "i": 0,
+          "delta": 1,
+          "error": "index_out_of_range",
+          "after": [
+            2,
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "name": "kth-error-order",
+      "values": [],
+      "ops": [
+        {
+          "op": "find_kth",
+          "k": 0,
+          "error": "empty"
+        }
+      ]
+    },
+    {
+      "name": "kth-nonpositive",
+      "values": [
+        1,
+        2
+      ],
+      "ops": [
+        {
+          "op": "find_kth",
+          "k": 0,
+          "error": "nonpositive_target"
+        }
+      ]
+    },
+    {
+      "name": "portable-bound-update-atomicity",
+      "values": [
+        9007199254740991
+      ],
+      "ops": [
+        {
+          "op": "update",
+          "i": 1,
+          "delta": 1,
+          "error": "out_of_domain",
+          "after": [
+            9007199254740991
+          ]
+        }
+      ]
+    },
+    {
+      "name": "kth-negative-update-restores-nonnegative",
+      "values": [
+        0,
+        2,
+        0,
+        3,
+        0
+      ],
+      "ops": [
+        {
+          "op": "update",
+          "i": 4,
+          "delta": -2,
+          "result": [
+            0,
+            2,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "op": "find_kth",
+          "k": 3,
+          "result": 4
+        }
+      ]
+    },
+    {
+      "name": "invalid-prefix-bounds",
+      "values": [
+        1,
+        2
+      ],
+      "ops": [
+        {
+          "op": "prefix_sum",
+          "i": -1,
+          "error": "index_out_of_range"
+        },
+        {
+          "op": "prefix_sum",
+          "i": 3,
+          "error": "index_out_of_range"
+        }
+      ]
+    },
+    {
+      "name": "invalid-point-bounds",
+      "values": [
+        1,
+        2
+      ],
+      "ops": [
+        {
+          "op": "point_query",
+          "i": 0,
+          "error": "index_out_of_range"
+        },
+        {
+          "op": "point_query",
+          "i": 3,
+          "error": "index_out_of_range"
+        }
+      ]
+    },
+    {
+      "name": "invalid-range-endpoint-bounds",
+      "values": [
+        1,
+        2
+      ],
+      "ops": [
+        {
+          "op": "range_sum",
+          "l": 0,
+          "r": 1,
+          "error": "index_out_of_range"
+        },
+        {
+          "op": "range_sum",
+          "l": 1,
+          "r": 3,
+          "error": "index_out_of_range"
+        }
+      ]
+    },
+    {
+      "name": "invalid-update-high-bound",
+      "values": [
+        1,
+        2
+      ],
+      "ops": [
+        {
+          "op": "update",
+          "i": 3,
+          "delta": 1,
+          "error": "index_out_of_range",
+          "after": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "name": "negative-constructor-size",
+      "constructor_error": "negative_size",
+      "values": [],
+      "ops": [],
+      "size": -1
+    },
+    {
+      "name": "constructor-out-of-domain",
+      "constructor_error": "out_of_domain",
+      "values": [
+        9007199254740992
+      ],
+      "ops": []
+    },
+    {
+      "name": "oversized-delta-cancellation-is-rejected",
+      "values": [
+        -9007199254740991
+      ],
+      "ops": [
+        {
+          "op": "update",
+          "i": 1,
+          "delta": 18014398509481981,
+          "error": "out_of_domain",
+          "after": [
+            -9007199254740991
+          ]
+        }
+      ]
+    },
+    {
+      "name": "update-index-validation-precedes-delta-domain",
+      "values": [
+        0
+      ],
+      "ops": [
+        {
+          "op": "update",
+          "i": 0,
+          "delta": 9007199254740992,
+          "error": "index_out_of_range",
+          "after": [
+            0
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 // apart from the honest subject (VER04j section 6.7, observer controls): only
 // the `heap` bound can.
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LzErr {
     OutputLimit,
     Corrupt,

@@ -148,30 +148,33 @@ warrant vos_sched_fp_bitmap v1
     hostile
     ensures no_panic, terminates
 
-  -- Bounds.  `steps` rows are the contract ceilings (VOS10 section 7).  The `heap <= 0` row is
-  -- declared only for the two operations whose answer is a payload-free variant: the evidence
-  -- harness observes the WHOLE adapter call, including the `vec!` it allocates to build a
-  -- record or a payload-carrying variant as a Warrant value (64 bytes), so a `heap <= 0` row on
-  -- init, insert_img, remove_img, dispatch_out, dispatch_img or alpha_w is falsified by the
-  -- harness itself, not by the source (VOS-D063).  The source has no allocator at all (SH1).
+  -- Bounds.  `steps` rows are the contract ceilings (VOS10 section 7); `heap <= 0` is the contract's
+  -- heap ceiling on every operation (the source has no allocator at all, SH1).  The harness's heap
+  -- observer counts the export call only, not its own result marshalling (VOS-D063).
   bound init:
     steps <= 80
+    heap <= 0
   bound insert_out:
     steps <= 160
     heap <= 0
   bound insert_img:
     steps <= 160
+    heap <= 0
   bound remove_out:
     steps <= 160
     heap <= 0
   bound remove_img:
     steps <= 160
+    heap <= 0
   bound dispatch_out:
     steps <= 160
+    heap <= 0
   bound dispatch_img:
     steps <= 160
+    heap <= 0
   bound alpha_w:
     steps <= 160
+    heap <= 0
   -- vos02:impl-end
   -- vos02:obligations-begin tier=canonical sha256=9ef4770d9fc575d97c38a8d3d02106dad5e5c62421f4233dee4721933ac5d138
   -- The reachable states are exactly the image of build (VOS02 R5). alpha(build(m)) == m is not

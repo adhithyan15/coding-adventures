@@ -1,0 +1,411 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.json",
+  "title": "DT18 Hash Map v1 Shared Fixture",
+  "type": "object",
+  "required": [
+    "schema",
+    "oracle",
+    "profile",
+    "limits",
+    "hash_configurations",
+    "key_cases",
+    "values",
+    "hash_answers",
+    "encoded_key_hashes",
+    "configuration_cases",
+    "operation_cases",
+    "from_entries_cases",
+    "merge_cases",
+    "ownership_cases",
+    "error_cases",
+    "dart_only_cases",
+    "dart_gate3_boundary_requirements",
+    "history_recipe",
+    "negative_controls"
+  ],
+  "properties": {
+    "schema": { "const": "dt18-hash-map-v1" },
+    "oracle": { "const": "dt18-association-list-v1" },
+    "profile": { "const": "code/specs/DT18-hash-map-dart-profile.md" },
+    "limits": {
+      "type": "object",
+      "required": ["maximum_capacity", "maximum_key_byte_count"],
+      "properties": {
+        "maximum_capacity": { "const": 1048576 },
+        "maximum_key_byte_count": { "const": 1048576 }
+      },
+      "additionalProperties": false
+    },
+    "hash_configurations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/hashConfiguration" }
+    },
+    "key_cases": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/keyCase" }
+    },
+    "values": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "value"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "value": { "type": ["integer", "null"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "hash_answers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/hashAnswer" }
+    },
+    "encoded_key_hashes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/encodedKeyHash" }
+    },
+    "configuration_cases": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/configurationCase" }
+    },
+    "operation_cases": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/operationCase" }
+    },
+    "from_entries_cases": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/fromEntriesCase" }
+    },
+    "merge_cases": { "type": "array", "items": { "$ref": "#/$defs/mergeCase" } },
+    "ownership_cases": { "type": "array", "items": { "$ref": "#/$defs/idRecord" } },
+    "error_cases": { "type": "array", "items": { "$ref": "#/$defs/idRecord" } },
+    "dart_only_cases": { "type": "array", "items": { "$ref": "#/$defs/idRecord" } },
+    "dart_gate3_boundary_requirements": { "type": "object" },
+    "history_recipe": { "$ref": "#/$defs/historyRecipe" },
+    "negative_controls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "source_hash_answer_id",
+          "expected_xor_mask",
+          "mutated_expected_hex",
+          "well_formed",
+          "required_stage"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "source_hash_answer_id": { "type": "string" },
+          "expected_xor_mask": { "type": "string", "pattern": "^[0-9a-f]+$" },
+          "mutated_expected_hex": { "$ref": "#/$defs/hashHex" },
+          "well_formed": { "const": true },
+          "required_stage": { "const": "actual-public-hash-comparator" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "hashConfiguration": {
+      "type": "object",
+      "required": ["id", "kind"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "enum": ["fnv1a32", "murmur3", "sipHash24"] },
+        "seed_hex": { "type": "string", "pattern": "^[0-9a-f]{8}$" },
+        "key_hex": { "type": "string", "pattern": "^([0-9a-f]{2}){16}$" },
+        "default_compatibility_key": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "keyCase": {
+      "type": "object",
+      "required": ["id", "kind", "payload_hex", "encoded_hex", "shared"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "enum": ["bytes", "string"] },
+        "payload_hex": { "type": "string", "pattern": "^([0-9a-f]{2})*$" },
+        "text": { "type": "string" },
+        "encoded_hex": { "type": "string", "pattern": "^([0-9a-f]{2})+$" },
+        "shared": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "hashHex": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{8}|[0-9a-f]{16})$"
+    },
+    "hashAnswer": {
+      "type": "object",
+      "required": ["id", "configuration_id", "data_hex", "expected_hex", "provenance"],
+      "properties": {
+        "id": { "type": "string" },
+        "configuration_id": { "type": "string" },
+        "data_hex": { "type": "string", "pattern": "^([0-9a-f]{2})*$" },
+        "expected_hex": { "$ref": "#/$defs/hashHex" },
+        "provenance": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "encodedKeyHash": {
+      "type": "object",
+      "required": ["id", "key_id", "configuration_id", "input_hex", "expected_hex", "provenance"],
+      "properties": {
+        "id": { "type": "string" },
+        "key_id": { "type": "string" },
+        "configuration_id": { "type": "string" },
+        "input_hex": { "type": "string", "pattern": "^([0-9a-f]{2})+$" },
+        "expected_hex": { "$ref": "#/$defs/hashHex" },
+        "provenance": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "historyRecipe": {
+      "type": "object",
+      "required": [
+        "key_ids",
+        "value_ids",
+        "operations",
+        "lengths",
+        "max_length",
+        "order",
+        "ordinal_formula",
+        "history_count",
+        "initial_capacity",
+        "hash_configuration_id",
+        "state_encoding",
+        "physical_order_table",
+        "capacity_alphabet",
+        "expected_semantic_streams",
+        "expected_physical_order_streams",
+        "expected_capacity_streams"
+      ],
+      "properties": {
+        "key_ids": { "const": ["k0", "k1", "k2"] },
+        "value_ids": { "const": ["v0", "v1"] },
+        "operations": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": { "$ref": "#/$defs/historyOperation" }
+        },
+        "lengths": { "const": [0, 1, 2, 3, 4, 5] },
+        "max_length": { "const": 5 },
+        "order": { "const": "length-then-lexicographic-operation-index" },
+        "ordinal_formula": {
+          "const": "sum(9^j for j < length) + base9_rank(operation_indices)"
+        },
+        "history_count": { "const": 66430 },
+        "initial_capacity": { "const": 4 },
+        "hash_configuration_id": { "type": "string" },
+        "state_encoding": { "$ref": "#/$defs/stateEncoding" },
+        "physical_order_table": {
+          "type": "array",
+          "minItems": 16,
+          "maxItems": 16,
+          "items": { "$ref": "#/$defs/physicalOrder" }
+        },
+        "capacity_alphabet": { "const": "0123456789abcdefghijklmnopqrstuvwxyz" },
+        "expected_semantic_streams": { "$ref": "#/$defs/semanticStreams" },
+        "expected_physical_order_streams": { "$ref": "#/$defs/physicalStreams" },
+        "expected_capacity_streams": { "$ref": "#/$defs/capacityStreams" }
+      },
+      "additionalProperties": false
+    },
+    "semanticStreams": {
+      "type": "object",
+      "required": ["separateChaining", "linearProbing"],
+      "properties": {
+        "separateChaining": { "type": "string", "pattern": "^[0-9a-q]{66430}$" },
+        "linearProbing": { "type": "string", "pattern": "^[0-9a-q]{66430}$" }
+      },
+      "additionalProperties": false
+    },
+    "physicalStreams": {
+      "type": "object",
+      "required": ["separateChaining", "linearProbing"],
+      "properties": {
+        "separateChaining": { "type": "string", "pattern": "^[0-9a-f]{66430}$" },
+        "linearProbing": { "type": "string", "pattern": "^[0-9a-f]{66430}$" }
+      },
+      "additionalProperties": false
+    },
+    "capacityStreams": {
+      "type": "object",
+      "required": ["separateChaining", "linearProbing"],
+      "properties": {
+        "separateChaining": { "type": "string", "pattern": "^[0-9a-z]{66430}$" },
+        "linearProbing": { "type": "string", "pattern": "^[0-9a-z]{66430}$" }
+      },
+      "additionalProperties": false
+    },
+    "operationCase": {
+      "type": "object",
+      "required": ["id", "configuration", "initial_state", "steps"],
+      "properties": {
+        "id": { "type": "string" },
+        "configuration": { "$ref": "#/$defs/mapConfiguration" },
+        "initial_state": { "$ref": "#/$defs/state" },
+        "steps": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/operationStep" } }
+      },
+      "additionalProperties": false
+    },
+    "mapConfiguration": {
+      "type": "object",
+      "required": ["capacity", "strategy", "hash_configuration_id"],
+      "properties": {
+        "capacity": { "type": "integer", "minimum": 1, "maximum": 1048576 },
+        "strategy": { "enum": ["separateChaining", "linearProbing"] },
+        "hash_configuration_id": { "type": "string" },
+        "hash_configuration_omitted": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "state": {
+      "type": "object",
+      "required": ["count", "capacity", "load_factor_ratio", "entries"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 0 },
+        "capacity": { "type": "integer", "minimum": 1, "maximum": 1048576 },
+        "load_factor_ratio": {
+          "type": "array",
+          "prefixItems": [{ "type": "integer", "minimum": 0 }, { "type": "integer", "minimum": 1 }],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "entries": { "type": "array", "items": { "$ref": "#/$defs/stateEntry" } }
+      },
+      "additionalProperties": false
+    },
+    "stateEntry": {
+      "type": "object",
+      "required": ["key_id", "value_id", "value"],
+      "properties": {
+        "key_id": { "type": "string" },
+        "value_id": { "type": "string" },
+        "value": { "type": ["integer", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "operationStep": {
+      "type": "object",
+      "required": ["op", "key_id", "expected"],
+      "properties": {
+        "op": { "enum": ["set", "remove", "get", "has"] },
+        "key_id": { "type": "string" },
+        "value_id": { "type": "string" },
+        "expected": {
+          "type": "object",
+          "required": ["error_id", "state"],
+          "properties": {
+            "error_id": { "type": ["string", "null"] },
+            "state": { "$ref": "#/$defs/state" },
+            "observation": { "type": "object" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "op": { "const": "set" } } },
+          "then": { "required": ["value_id"] }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "historyOperation": {
+      "type": "object",
+      "required": ["op", "key_id"],
+      "properties": {
+        "op": { "enum": ["set", "remove"] },
+        "key_id": { "enum": ["k0", "k1", "k2"] },
+        "value_id": { "enum": ["v0", "v1"] }
+      },
+      "additionalProperties": false
+    },
+    "stateEncoding": {
+      "type": "object",
+      "required": ["alphabet", "key_order", "digit_meanings", "formula"],
+      "properties": {
+        "alphabet": { "const": "0123456789abcdefghijklmnopq" },
+        "key_order": { "const": ["k0", "k1", "k2"] },
+        "digit_meanings": { "const": { "absent": 0, "v0": 1, "v1": 2 } },
+        "formula": { "const": "d0+3*d1+9*d2" }
+      },
+      "additionalProperties": false
+    },
+    "physicalOrder": {
+      "type": "object",
+      "required": ["id", "key_ids"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[0-9a-f]$" },
+        "key_ids": { "type": "array", "items": { "enum": ["k0", "k1", "k2"] }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    "configurationCase": {
+      "type": "object",
+      "required": ["id", "arguments", "expected"],
+      "properties": {
+        "id": { "type": "string" },
+        "arguments": { "type": "object" },
+        "expected": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "fromEntriesCase": {
+      "type": "object",
+      "required": ["id", "configuration", "source_entries", "expected_state"],
+      "properties": {
+        "id": { "type": "string" },
+        "configuration": { "$ref": "#/$defs/mapConfiguration" },
+        "source_entries": { "type": "array", "items": { "$ref": "#/$defs/sourceEntry" } },
+        "expected_state": { "$ref": "#/$defs/state" }
+      },
+      "additionalProperties": false
+    },
+    "sourceEntry": {
+      "type": "object",
+      "required": ["key_id", "value_id"],
+      "properties": { "key_id": { "type": "string" }, "value_id": { "type": "string" } },
+      "additionalProperties": false
+    },
+    "mergeCase": {
+      "type": "object",
+      "required": ["id", "left", "right", "expected_right_physical_order", "expected_result", "inputs_unchanged"],
+      "properties": {
+        "id": { "type": "string" },
+        "left": { "$ref": "#/$defs/mergeInput" },
+        "right": { "$ref": "#/$defs/mergeInput" },
+        "expected_right_physical_order": { "type": "array", "items": { "type": "string" } },
+        "expected_result": {
+          "type": "object",
+          "required": ["configuration", "state"],
+          "properties": { "configuration": { "$ref": "#/$defs/mapConfiguration" }, "state": { "$ref": "#/$defs/state" } },
+          "additionalProperties": false
+        },
+        "inputs_unchanged": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "mergeInput": {
+      "type": "object",
+      "required": ["configuration", "source_entries", "expected_state"],
+      "properties": {
+        "configuration": { "$ref": "#/$defs/mapConfiguration" },
+        "source_entries": { "type": "array", "items": { "$ref": "#/$defs/sourceEntry" } },
+        "expected_state": { "$ref": "#/$defs/state" }
+      },
+      "additionalProperties": false
+    },
+    "idRecord": {
+      "type": "object",
+      "required": ["id"],
+      "properties": { "id": { "type": "string" } },
+      "additionalProperties": true
+    }
+  }
+}

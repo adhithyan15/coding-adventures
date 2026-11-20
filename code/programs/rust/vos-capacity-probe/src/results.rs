@@ -18,7 +18,7 @@
 //! that every quick-tier row reproduces from `(experiment, knob, seed)`, bit for bit in its digest
 //! and in its conflict count, and that every row obeys the guards.
 
-use crate::exp::{plan, run_row, RowSpec, Tier};
+use crate::exp::{plan, run_row, RowSpec, Tier, EXPERIMENTS};
 use crate::row::{Control, Knob, Row};
 use crate::solve::{CONFLICT_SLICE, PROOF_CONFLICT_CAP};
 use coding_adventures_bounded_json::{parse, JsonNumber, JsonValue};
@@ -64,7 +64,43 @@ pub struct Meta {
     pub revisions: Vec<(String, String)>,
     /// Who regenerated the full tier on which host, if anyone.
     pub regeneration: Option<(String, String)>,
+    /// The subset refreshes applied to the file by `merge` (VOS30 section 9.2), oldest first.
+    pub merges: Vec<Merge>,
 }
+
+/// One `merge`: which rows were refreshed, by which run.  The file's `tool`, `host` and
+/// `revisions` stay the original provenance; a refreshed row's provenance is this record.
+#[derive(Clone, Debug, PartialEq)]
+pub struct Merge {
+    /// The fresh run's `repo` revision.
+    pub rev: String,
+    /// The fresh run's binary digest (self-reported).
+    pub binary_sha256: String,
+    /// The fresh run's `dirty_tree` (must be false in a committed file).
+    pub dirty_tree: bool,
+    /// The experiment refreshed.
+    pub experiment: String,
+    /// The `field=value` selector, or empty.
+    pub where_: String,
+    /// The ids ([`row_text_id`]) of the rows replaced.
+    pub rows: Vec<String>,
+    /// UTC time of the merge.
+    pub at: String,
+}
+
+/// The text identity of a row, as used in `merges` and in messages.
+pub fn row_text_id(r: &Row) -> String {
+    format!(
+        "{} {} {} seed {}",
+        r.experiment,
+        r.knob.key(),
+        r.mode,
+        r.seed
+    )
+}
+
+/// The size cap on a results file read by `merge`, bytes.
+pub const MAX_FILE_BYTES: u64 = 64 * 1024 * 1024;
 
 /// The results file.
 #[derive(Clone, Debug, PartialEq)]
@@ -103,7 +139,7 @@ impl Results {
     /// The JSON document.
     pub fn to_json(&self) -> JsonValue {
         let m = &self.meta;
-        obj(vec![
+        let mut top = vec![
             ("schema", int(SCHEMA)),
             (
                 "tool",
@@ -157,11 +193,36 @@ impl Results {
                     None => JsonValue::Null,
                 },
             ),
-            (
-                "rows",
-                JsonValue::Array(self.rows.iter().map(Row::to_json).collect()),
-            ),
-        ])
+        ];
+        if !m.merges.is_empty() {
+            top.push((
+                "merges",
+                JsonValue::Array(
+                    m.merges
+                        .iter()
+                        .map(|g| {
+                            obj(vec![
+                                ("rev", string(&g.rev)),
+                                ("binary_sha256", string(&g.binary_sha256)),
+                                ("dirty_tree", JsonValue::Bool(g.dirty_tree)),
+                                ("experiment", string(&g.experiment)),
+                                ("where", string(&g.where_)),
+                                (
+                                    "rows",
+                                    JsonValue::Array(g.rows.iter().map(|x| string(x)).collect()),
+                                ),
+                                ("at", string(&g.at)),
+                            ])
+                        })
+                        .collect(),
+                ),
+            ));
+        }
+        top.push((
+            "rows",
+            JsonValue::Array(self.rows.iter().map(Row::to_json).collect()),
+        ));
+        obj(top)
     }
 
     /// The file text: one row per line so a diff shows the rows that changed.
@@ -242,6 +303,30 @@ impl Results {
             JsonValue::Null => None,
             r => Some((st(sub(r, "reviewer")?)?, st(sub(r, "host")?)?)),
         };
+        let merges = match top.iter().find(|(n, _)| n == "merges") {
+            None => Vec::new(),
+            Some((_, JsonValue::Array(a))) => a
+                .iter()
+                .map(|g| {
+                    let strs = match sub(g, "rows")? {
+                        JsonValue::Array(x) => {
+                            x.into_iter().map(st).collect::<Result<Vec<_>, _>>()?
+                        }
+                        _ => return Err("merges rows is not an array".to_string()),
+                    };
+                    Ok(Merge {
+                        rev: st(sub(g, "rev")?)?,
+                        binary_sha256: st(sub(g, "binary_sha256")?)?,
+                        dirty_tree: strict_bool(sub(g, "dirty_tree")?)?,
+                        experiment: st(sub(g, "experiment")?)?,
+                        where_: st(sub(g, "where")?)?,
+                        rows: strs,
+                        at: st(sub(g, "at")?)?,
+                    })
+                })
+                .collect::<Result<Vec<_>, String>>()?,
+            Some(_) => return Err("merges is not an array".into()),
+        };
         let rows = match get("rows")? {
             JsonValue::Array(a) => a
                 .iter()
@@ -254,15 +339,24 @@ impl Results {
                 name: st(sub(tool, "name")?)?,
                 version: st(sub(tool, "version")?)?,
                 binary_sha256: st(sub(tool, "binary_sha256")?)?,
-                dirty_tree: matches!(sub(tool, "dirty_tree")?, JsonValue::Bool(true)),
+                dirty_tree: strict_bool(sub(tool, "dirty_tree")?)?,
                 triple: st(sub(host, "triple")?)?,
                 rustc: st(sub(host, "rustc")?)?,
                 os: st(sub(host, "os")?)?,
                 revisions,
                 regeneration,
+                merges,
             },
             rows,
         })
+    }
+}
+
+/// `dirty_tree` must be the JSON boolean: a string, a number or `null` is an error, never "clean".
+fn strict_bool(v: JsonValue) -> Result<bool, String> {
+    match v {
+        JsonValue::Bool(b) => Ok(b),
+        _ => Err("dirty_tree is not a JSON boolean".into()),
     }
 }
 
@@ -330,6 +424,37 @@ pub fn validate(res: &Results) -> Vec<String> {
     }
     if res.rows.is_empty() {
         v.push("the file has no rows".to_string());
+    }
+    let ids: std::collections::BTreeSet<String> = res.rows.iter().map(row_text_id).collect();
+    for (i, g) in res.meta.merges.iter().enumerate() {
+        let at = format!("merges[{i}]");
+        let hex = |x: &str, n: usize| x.len() == n && x.bytes().all(|b| b.is_ascii_hexdigit());
+        if !hex(&g.rev, 40) {
+            v.push(format!("{at}: rev is not a 40-hex revision"));
+        }
+        if !hex(&g.binary_sha256, 64) {
+            v.push(format!("{at}: binary_sha256 is not 64 hex digits"));
+        }
+        if g.dirty_tree {
+            v.push(format!(
+                "{at}: dirty_tree is true: a dirty-tree run may not be merged"
+            ));
+        }
+        if !EXPERIMENTS.contains(&g.experiment.as_str()) {
+            v.push(format!("{at}: unknown experiment {}", g.experiment));
+        }
+        if g.rows.is_empty() {
+            v.push(format!("{at}: lists no rows"));
+        }
+        let mut once = std::collections::BTreeSet::new();
+        for id in &g.rows {
+            if !ids.contains(id) {
+                v.push(format!("{at}: lists a row that is not in the file: {id}"));
+            }
+            if !once.insert(id) {
+                v.push(format!("{at}: lists a row twice: {id}"));
+            }
+        }
     }
     let mut seeds: BTreeMap<String, (std::collections::BTreeSet<u64>, u32)> = BTreeMap::new();
     for r in &res.rows {

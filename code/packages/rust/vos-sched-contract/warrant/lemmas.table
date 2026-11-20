@@ -1,0 +1,19 @@
+vos-lemmas 2
+contract-part fd4b88aaa4cab44c03947906aab0d8b97b996351111608de19446ef40b8f673b
+lemmas-part 5a87b7951c16058f840eb5c188d963a2952f9cb49f55323b95167c51d659f010
+config N 8
+variant Upd = Changed | Unchanged | OutOfRange
+variant Pick = Idle | Run(U8)
+lemma closure_at_m product 65536 admitted 65536 mutant inv mutant-part a7730efff61d4823c8f740bfa90fe50863d803f2d0d07dcfa80305c4b0fa12cb failed 65536
+lemma insert_outside_pre_changes_nothing product 65536 admitted 65536 mutant abs_insert mutant-part 06f63cbea9aec68c779911a7c6bc0408d0f9b063b5c7f6638d905bf89d70df4c failed 63488
+lemma remove_outside_pre_changes_nothing product 65536 admitted 65536 mutant abs_remove mutant-part 93de48f9f135a188f827c1402f2384a4fdf4d1153d10f8fba846b068e0b05bd5 failed 63488
+lemma insert_then_remove_restores product 65536 admitted 65536 mutant abs_insert mutant-part 8ed18f366ef0cc35fb8bb694c72a2ec95089a4c55ffc46e8a06deca50ef35d10 failed 448
+lemma top_is_the_maximum product 65536 admitted 65536 mutant top mutant-part 7bc86a47e6699d42a0f78d28f54b253dfb1340fc34e226e8215bcb762ec242f1 failed 512
+lemma safety_is_idle_or_a_member product 65536 admitted 65536 mutant valid_pick mutant-part 68e1cf9f9c67dc6bac5180582684fe799fe15458be88b041acea20ef0bca77a9 failed 1024
+lemma safe_dispatch_only_removes_the_choice product 65536 admitted 65536 mutant after mutant-part 008080ae7857c8814a74e5e412e24ca811bda3133ded7b906504e670cccf925a failed 1016
+lemma policy_implies_safety product 256 admitted 256 mutant valid_pick mutant-part 08940b092be1e4017bfabdd6bfe307423e796b707f34556a09021e3e46b8e88a failed 128
+lemma policy_admits_only_top product 65536 admitted 65536 mutant policy_dispatch mutant-part a2ecea28bb6e89265b0862eeda8fad1bf831cc8585fb2cf1563b5bc65298971b failed 255
+lemma config_n_is_the_id_range product 256 admitted 256 mutant pre_insert mutant-part 8e9567364072e195b523bcc1dac9f574b638ef916401c87899c03f481fee8d60 failed 1
+config-mutant N 7 kills config_n_is_the_id_range
+config-mutant N 9 kills config_n_is_the_id_range
+end

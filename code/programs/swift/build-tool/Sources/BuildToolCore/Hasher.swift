@@ -84,10 +84,10 @@ public enum Hasher {
     /// environment authority, and compared field-for-field in the test suite.
     static let languageSourceInputRegistry = LanguageSourceInputRegistryProjection.value
     static let languageSourceInputRegistryDigest =
-        "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1"
+        "4b695e89c165297a539091b9e74b60a3be0fd6b056c13fb36d66cdc696e7a1d2"
     static let repositorySourceInputBoundaryRegistry = RepositorySourceInputBoundaryProjection.value
     static let repositorySourceInputBoundaryDigest =
-        "7014b769f48c4f55e056c7bbbcf4e14bc0e84c1e7ef6030472e0e7949d93f0c8"
+        "b8afd2020cf3cf50eb133eb95cac12bb4f568f5451fb624aa68544e6ff6add71"
     static var repositoryBoundaryRegisteredPaths: [String] {
         repositorySourceInputBoundaryRegistry.registeredInputPaths
     }
