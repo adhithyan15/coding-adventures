@@ -3934,6 +3934,166 @@ the lexer's ANNOTATED token; a quoted string is another token kind, so a path
 containing `socket:[` cannot fake it (and `/x/socket:[1]` starts with `/`). Pass 2
 is shared, so both trace readers change together and the cross-check stays equal.
 
+**Decision D43: the sealed root (real-build census, the last `host-read`s were
+absent probes of places the sandbox does not contain; `kiln:recorder` 10 to 11).**
+The remaining census entries were `/run/systemd/resolve/stub-resolv.conf` (317
+times, node and npm's resolver, reached through `/etc/resolv.conf`), the
+`package.json`, `go.mod` and `go.work` ABOVE the checkout (`$RUNNER_HOME/package.json`,
+`$RUNNER_HOME/work/package.json`, `/home/package.json`, `/package.json`) and
+`/var/run` (op `lookup`: the classifier walked the HOST's symlink, which does not
+exist in the sandbox). The classifier asked the host's disk about places the step
+runs without: the step's root is a new, sealed tmpfs holding only what the plan
+mounts.
+
+*The rule (`sealed.go`, `traced.Config.ScratchDirs`).* Inside the sandbox a path
+EXISTS only if it is
+
+- under the checkout;
+- under a declared host root, or a `HostBinds` path;
+- `Home`, `Tmpdir` or a scratch directory (`sandbox.ScratchDirs`: `/tmp`,
+  `/var/tmp`, `/run`), or under one of them;
+- a PROPER ANCESTOR of any of those (a directory the plan creates only to mount
+  them: the classifier's `ancestors` set, D39, which now also anchors on the
+  scratch directories, so `/var` is one);
+- under `/dev`, `/proc` or `/sys` (the plan mounts `/dev` and `/proc`; `/sys` is
+  admitted because the ephemeral list names it, and a policy's other literal
+  ephemeral prefixes likewise).
+
+Everything else is SANDBOX-ABSENT (`sandboxHas`, `sandboxAbsent`). The set is a
+SUPERSET of what the plan mounts (it admits every declared root whether or not
+the host has it), so an error in it can only keep today's behaviour. It is active
+only when `ScratchDirs` is non-empty; the recorder passes
+`record.SandboxScratchDirs()`, a copy of `sandbox.ScratchDirs`, so the list the
+plan mounts and the list the classifier reads cannot drift. An empty list keeps
+every pre-D43 verdict.
+
+*What changes.*
+
+1. `lookup` returns ABSENT for a sandbox-absent path without asking the disk.
+   `/etc/resolv.conf` is a link to the host's `/run/systemd/resolve/stub-resolv.conf`
+   inside the image root; the walk follows it and finds nothing, as the kernel did.
+2. `observeHost` allows an ABSENT probe of a sandbox-absent path. It does not
+   allow a PRESENT one: a call that SUCCEEDED where the plan has nothing
+   contradicts the model, and falls through to `host-read:<path>` as before. For
+   a write-class call (`writePath` to `writeHost`) the same: a creation, removal,
+   rename or metadata change that succeeded at such a path is `host-read` too
+   (it cannot succeed on a read-only root, so the model is wrong).
+3. The scratch directories are fresh tmpfs exactly as Home and Tmpdir are:
+   `underTmp` and `isTmpRoot` cover them, so D39 rule 1b (an absent probe of a
+   name nobody made is a constant), D40 containment (`tmpLinked`, `tmpMoved`) and
+   the strict stability rule apply to them unchanged. The two directories the
+   plan makes only to mount Home or Tmpdir beneath `/tmp` (ancestor-chain nodes)
+   are excluded, and Home and Tmpdir themselves never count as "inside `/tmp`".
+   `/tmp/x` that the action created and removed is therefore stable, where before
+   it was `unstable-path` (it was judged as a host path).
+4. Two new whole-action refusals, both gated on `classifier.reshaped`, set by a
+   SUCCESSFUL rename or exchange anywhere (checkout included) whose source is not
+   a regular file the action created, or whose names could not be placed
+   (`noteMove`, `ops.go`; the same test as D40's `tmpMoved` but not limited to the
+   tmpfs): `settleReshaped` runs after `checkStability` and (a) turns every ABSENT
+   probe allowed by this decision, and every absent probe inside a scratch
+   directory allowed by D39 rule 1b, into the `host-read` it was before; (b)
+   raises `trace-incomplete:unstable-path` (sub-code `dotdot`) for a FAILED call
+   whose walk stopped at a component of its text path the post-run disk lacks,
+   with a `..` after it. (b) is a hole found while writing this decision and true
+   without `ScratchDirs`: a cwd directory renamed away and not re-created, then a
+   failed relative probe through `..` from the old text, was judged by its text
+   (`observe` of the stop, absent in the fresh tmpfs, no reason) while the kernel
+   started from the renamed directory. It needs a cwd the trace never walked (a
+   `chdir` is itself a judged lookup, which is why the fuzzer never reached it); a
+   process that inherits such a cwd would.
+
+*Why it is safe.*
+
+1. The new root is an EMPTY tmpfs (`plan.go:171`, `KindRootTmpfs`) onto which the
+   plan binds only the declared roots (ro), creates the scratch tmpfs, binds the
+   checkout and the state roots, and then SEALS it read-only
+   (`plan.go:224`, `KindSeal`, a `MS_REMOUNT|MS_RDONLY` of the new root's own
+   mount, applied by `sandbox_linux_amd64.go:411`) before the pivot (`plan.go:225`).
+   The step then holds no capability and every mount-changing call is refused by
+   the seccomp filter (`mount`, `umount2`, `pivot_root`, `mount_setattr`,
+   `move_mount`, `chroot`, `unshare`, `setns`: `bpf.go:74-83`; the capabilities,
+   `CapSysAdmin` among them, are dropped by `PrivSteps`, `privs.go:41`), so it
+   cannot remount the root writable. Nothing can be created in a directory of the
+   sealed root tmpfs, so `/package.json` or `/home/package.json` is absent in
+   every run of the plan, and the plan's inputs are the configuration the
+   classifier is given.
+2. A path outside the exists-set has every ancestor on the sealed root tmpfs: if
+   an ancestor lay under Home, Tmpdir, a scratch directory, the checkout or a root,
+   so would the path. The writable tmpfs are all in the exists-set. This includes
+   a checkout ancestor INSIDE a writable tmpfs (`$HOME/work` with Home an ancestor
+   of the checkout, `/tmp/w` with the checkout at `/tmp/w/x`): its non-ancestor
+   children are `underTmp` (made or absent, the trace says which) and are NOT
+   judged by this rule.
+3. Everything the plan mounts is in the exists-set. `internal/record/sealedroot_test.go`
+   builds the plan from the recorder's own configuration for four layouts and
+   requires `traced.SandboxHas` for every mount target and every directory on the
+   way to it (roots, tmpfs, binds, ensure-dirs, masks, `/dev`, `/proc`, the seal
+   dir), requires every tmpfs the plan mounts to be Home, Tmpdir, an anchor
+   beneath Home or a `ScratchDirs` entry, requires every `ScratchDirs` entry to
+   be mounted, and requires the host IPC paths, `/var/run`, `/package.json` and
+   `/go.work` to be outside the set. A source check pins that `classifyInputs`
+   sets the field. The real-sandbox test `TestSandboxSealedRoot` (required in
+   `ci/assert_sandbox_tests.py`, linux/amd64) shows ENOENT inside a real sandbox
+   for `/go.work`, `/home/x`, `/opt/rh`, `/run/x`, `/var/run`, `/package.json`, the
+   resolver stub and `/var/run/docker.sock`, `mkdir` and `touch` failing on the
+   sealed root, and `/run`, `/tmp` and `/var/tmp` writable and empty.
+
+*Attacks, and why each fails.*
+
+- (a) A stale text cwd after a directory rename, making a path look sandbox-absent
+  (or a fresh scratch name) while the kernel resolves `..` from the renamed
+  directory into the checkout. Three independent defences: the `chdir` into the
+  directory is itself a lookup judged by the stability rules, and a rename touches
+  it; every absent probe allowed here is remembered and refused at the end if the
+  action moved anything but a regular file it made (`reshaped`); and a failed call
+  that stopped at a component of the text the disk lacks, with a `..` after it, is
+  refused under the same condition (the `dotdot` refusal above). The rename of a
+  directory in the checkout, in Home, Tmpdir or a scratch directory, an exchange,
+  and a rename that could not be placed all set `reshaped`; renaming a regular file
+  the action created (Go's build cache, gcc) does not. Tests:
+  `TestSealedRootStaleCwdAfterADirectoryRename` (scratch text that reaches the
+  checkout physically, with and without re-creating the old directory; checkout
+  text; exchange and unplaced renames; a move refusing every allowed absence; the
+  cwd renamed away). The fuzzer's two new bursts drive the same shape, but every
+  case it reaches is also refused by the stability rules, so disabling `reshaped`
+  fails the unit tests and not the fuzzer: stated plainly, `reshaped` is a second
+  line, proven by the unit tests alone.
+- (b) A symlink the action made inside a writable root pointing at a
+  sandbox-absent path. The walk follows links (a link in Home, Tmpdir or a scratch
+  directory from the trace, in the checkout from the disk and tree), so what is
+  judged is the TARGET, and the target really is absent in the sandbox: the probe
+  is a constant. A call that SUCCEEDS through such a link contradicts the model
+  and keeps `host-read`/`through-missing`. A link in a scratch directory also sets
+  `tmpLinked` (D40), which disables containment for the whole action. Test:
+  `TestSealedRootSymlinkToAnAbsentPath` (links in Tmpdir, Home, the checkout and
+  `/tmp`; absolute and relative targets; failed and successful stat).
+- (c) `..` from a scratch directory. A scratch directory is a mount root whose
+  parent is `/` of the new root, and `parentOf("/tmp")` is `/` in the walk; from
+  Tmpdir under `/tmp` the parent is `/tmp`. Both land on nodes the plan makes.
+  `/proc/self/cwd/..` and friends never reach the rule (D28 refuses them first).
+  Test: `TestSealedRootScratchDirectories` (`/run/../package.json`,
+  `/tmp/kiln-1/../../package.json`).
+- (d) A sandbox-absent path whose ancestor is a writable tmpfs where the action
+  could create it. By point 2 above no sandbox-absent path lies under a writable
+  tmpfs: the writable ones are in the exists-set, so lookup consults the trace
+  (`created`, `links`, `dirs`) there, and a name the action made is its own, one
+  it made and removed is absent again (and stable under D40), and a PRESENT look
+  at a name nobody made is `host-read`. Tests:
+  `TestSealedRootScratchDirectories`, `TestSealedRootScratchHoldingTheCheckout`
+  (`/tmp/w/package.json` with the checkout at `/tmp/w/x`),
+  `TestSealedRootChecksOutAncestorsChildren` (`$HOME/work/package.json`).
+
+`GOWORK=off` (the BUILD policy), `/opt/rh`, `/include` and `/pyvenv.cfg` (the
+absent-ok list) are now redundant for the classifier; they stay, because they
+also keep the tools from looking for what is not there.
+
+Tests: `internal/traced/sealed_test.go`, `internal/record/sealedroot_test.go`,
+`sandbox_sealed_linux_amd64_test.go`; the fuzzer model now seals everything above
+the mounts (EROFS), seeds `/var/tmp` and `/run`, treats scratch directories as
+fresh tmpfs, and has two stale-cwd bursts and one scratch-absence burst aimed at
+the sealed root.
+
 **Decision D42: absent before made, metadata writes by path, and ephemeral
 device nodes (real-build census, `unstable-path:final-changed` in 31 actions;
 `kiln:recorder` 9 to 10).** The paths were C and C++ build outputs

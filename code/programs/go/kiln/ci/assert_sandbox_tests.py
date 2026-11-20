@@ -63,6 +63,7 @@ REQUIRED = (
     "TestSandboxStraceTraceSetNamesAreValid",
     "TestSandboxROBeneathHome",
     "TestSandboxROBeneathHomeRefusals",
+    "TestSandboxSealedRoot",
     "TestSandboxOutputDescriptors",
     "TestSandboxRecordStep",
     "TestSandboxRecordCollect",
