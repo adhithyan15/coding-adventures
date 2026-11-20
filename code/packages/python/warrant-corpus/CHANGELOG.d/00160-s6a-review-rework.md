@@ -32,5 +32,5 @@ The review of the v2 `ir.core` library (entry 00150) failed it; this is the rewo
   distinct names equal to the declared cases. **F13** argument arrays are walked positionally. **F14** the
   recursion guard wraps one IR evaluation and only when the nesting needs it, not the chunk loop. **R74/R75** a
   fixed-width `take`/`drop` count is `ill-typed`; a suite has 0 to 8 binders (a ground claim has one empty case).
-  **F16** README `STANDARD`. **F17** `coverage>=7.9` in the dev dependencies.
+  **F16** README `STANDARD`. **F17** the dev dependencies guarantee a coverage that knows the `sysmon` core: `pytest-cov>=7.1`, which requires `coverage>=7.10.6` (coverage itself is not on the approved Python dependency list, so it is not named directly).
 - `runner.src_sha256` moves again; the `python/ct-compare` v1 manifest is regenerated.
