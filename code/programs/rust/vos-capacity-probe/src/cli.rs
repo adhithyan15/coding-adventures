@@ -60,9 +60,33 @@ fn exe_of(args: &[String]) -> Result<PathBuf, Failure> {
     }
 }
 
+/// Read a text file, refusing one over [`results::MAX_FILE_BYTES`] (finding L1: `check`, `table`
+/// and `decide` read through this too, not only `merge`).  The size is checked on the open file
+/// and the read itself is capped, so a file that grows after the check cannot defeat it.
 fn read(path: &Path) -> Result<String, Failure> {
-    std::fs::read_to_string(path)
-        .map_err(|e| Failure::Usage(format!("cannot read {}: {e}", path.display())))
+    let cannot = |e: std::io::Error| Failure::Usage(format!("cannot read {}: {e}", path.display()));
+    let file = std::fs::File::open(path).map_err(cannot)?;
+    let len = file.metadata().map_err(cannot)?.len();
+    let over = || {
+        Failure::Usage(format!(
+            "{} is over the {} byte cap",
+            path.display(),
+            results::MAX_FILE_BYTES
+        ))
+    };
+    if len > results::MAX_FILE_BYTES {
+        return Err(over());
+    }
+    let mut text = String::new();
+    std::io::Read::read_to_string(
+        &mut std::io::Read::take(file, results::MAX_FILE_BYTES + 1),
+        &mut text,
+    )
+    .map_err(cannot)?;
+    if text.len() as u64 > results::MAX_FILE_BYTES {
+        return Err(over());
+    }
+    Ok(text)
 }
 
 /// Run the command named by `args`.
@@ -447,31 +471,85 @@ fn merge_with(
     Ok(merged)
 }
 
-/// Read a results file for `merge`, refusing one over [`results::MAX_FILE_BYTES`].
-fn read_capped(path: &Path) -> Result<String, Failure> {
-    let len = std::fs::metadata(path)
-        .map_err(|e| Failure::Usage(format!("cannot read {}: {e}", path.display())))?
-        .len();
-    if len > results::MAX_FILE_BYTES {
+/// Distinguishes the temporary files of one process.
+static TMP_COUNTER: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
+/// Write `text` to `path` atomically (finding L2): a temporary file in the SAME directory,
+/// opened `create_new` (it never follows a pre-planted file or link; mode 0600 on unix), named
+/// with the process id, a counter and the clock so it cannot be guessed, written, `fsync`ed and
+/// renamed over `path`, and the directory `fsync`ed.  A `path` that is a symlink is refused:
+/// the rename would replace the link, not write through it, and an `--out` that is a link is
+/// never what the caller meant.  The finished file keeps the mode of the file it replaces, or
+/// 0644.
+fn write_atomic(path: impl AsRef<Path>, text: &str) -> Result<(), Failure> {
+    let target = path.as_ref();
+    let fail =
+        |e: std::io::Error| Failure::Usage(format!("cannot write {}: {e}", target.display()));
+    if std::fs::symlink_metadata(target).is_ok_and(|m| m.file_type().is_symlink()) {
         return Err(Failure::Usage(format!(
-            "{} is {len} bytes, over the {} byte cap",
-            path.display(),
-            results::MAX_FILE_BYTES
+            "refusing to write {}: it is a symbolic link",
+            target.display()
         )));
     }
-    read(path)
-}
-
-/// Write `text` to a temporary file next to `path`, then rename it over `path`.
-fn write_atomic(path: &str, text: &str) -> Result<(), Failure> {
-    let target = Path::new(path);
-    let tmp = target.with_extension(format!("tmp{}", std::process::id()));
-    std::fs::write(&tmp, text)
-        .and_then(|_| std::fs::rename(&tmp, target))
-        .map_err(|e| {
-            let _ = std::fs::remove_file(&tmp);
-            Failure::Usage(format!("cannot write {path}: {e}"))
-        })
+    let dir = match target.parent() {
+        Some(d) if !d.as_os_str().is_empty() => d.to_path_buf(),
+        _ => PathBuf::from("."),
+    };
+    let name = target
+        .file_name()
+        .ok_or_else(|| Failure::Usage(format!("{} has no file name", target.display())))?
+        .to_string_lossy()
+        .into_owned();
+    #[cfg(unix)]
+    let mode = {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::metadata(target).map_or(0o644, |m| m.permissions().mode() & 0o7777)
+    };
+    for _ in 0..32 {
+        let n = TMP_COUNTER.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_or(0, |d| d.subsec_nanos());
+        let tmp = dir.join(format!(".{name}.{}.{n}.{nanos:x}.tmp", std::process::id()));
+        let mut open = std::fs::OpenOptions::new();
+        open.write(true).create_new(true);
+        #[cfg(unix)]
+        std::os::unix::fs::OpenOptionsExt::mode(&mut open, 0o600);
+        let mut file = match open.open(&tmp) {
+            Ok(f) => f,
+            Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
+            Err(e) => return Err(fail(e)),
+        };
+        let done = (|| {
+            file.write_all(text.as_bytes())?;
+            file.sync_all()?;
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                file.set_permissions(std::fs::Permissions::from_mode(mode))?;
+            }
+            drop(file);
+            std::fs::rename(&tmp, target)
+        })();
+        return match done {
+            Ok(()) => {
+                // Best effort: make the rename durable.
+                if let Ok(d) = std::fs::File::open(&dir) {
+                    let _ = d.sync_all();
+                }
+                Ok(())
+            }
+            Err(e) => {
+                let _ = std::fs::remove_file(&tmp);
+                Err(fail(e))
+            }
+        };
+    }
+    Err(Failure::Usage(format!(
+        "cannot write {}: no unused temporary file name in {}",
+        target.display(),
+        dir.display()
+    )))
 }
 
 /// `merge`: refresh a subset of the committed results through the tool, never by hand.
@@ -482,10 +560,8 @@ fn write_atomic(path: &str, text: &str) -> Result<(), Failure> {
 /// ```
 pub fn cmd_merge(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
     let need = |n: &str| flag(args, n).ok_or_else(|| Failure::Usage(format!("merge needs {n}")));
-    let base =
-        Results::from_text(&read_capped(Path::new(&need("--base")?))?).map_err(Failure::Usage)?;
-    let fresh =
-        Results::from_text(&read_capped(Path::new(&need("--fresh")?))?).map_err(Failure::Usage)?;
+    let base = Results::from_text(&read(Path::new(&need("--base")?))?).map_err(Failure::Usage)?;
+    let fresh = Results::from_text(&read(Path::new(&need("--fresh")?))?).map_err(Failure::Usage)?;
     let experiment = need("--experiment")?;
     if !EXPERIMENTS.contains(&experiment.as_str()) {
         return Err(Failure::Usage(format!("unknown experiment {experiment}")));
@@ -528,7 +604,7 @@ pub fn cmd_merge(args: &[String], out: &mut dyn Write) -> Result<(), Failure> {
 /// The positional arguments of a command: those that are neither a flag nor the value of a flag
 /// that takes one.
 fn positionals(args: &[String]) -> Vec<&String> {
-    const WITH_VALUE: [&str; 2] = ["--jobs", "--exe"];
+    const WITH_VALUE: [&str; 3] = ["--jobs", "--exe", "--spot-budget"];
     args.iter()
         .enumerate()
         .filter(|(i, a)| {
@@ -570,7 +646,19 @@ pub fn full_refusals(res: &Results, current: &[(String, String)]) -> Vec<String>
     v
 }
 
-/// `check [--full] FILE [--jobs N] [--exe PATH]`.
+/// `--spot-budget SECS`, the spot check's total time (default [`spot::SPOT_BUDGET`], at most
+/// 600 s).  A shorter one is for tests and local runs; the floor of verified rows still applies.
+fn spot_budget(args: &[String]) -> Duration {
+    flag(args, "--spot-budget")
+        .and_then(|s| s.parse::<u64>().ok())
+        .map_or(spot::SPOT_BUDGET, |n| Duration::from_secs(n.clamp(1, 600)))
+}
+
+/// `check [--full] FILE [--jobs N] [--exe PATH] [--spot-budget SECS]`.
+///
+/// The order matters (finding M2): everything that needs no instance is checked first, and a file
+/// that fails any of it returns at once, before a single row is re-run, in process or in a child.
+/// A hand-edited knob can therefore never reach an instance builder.
 pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Result<(), Failure> {
     let path = positionals(args)
         .first()
@@ -580,7 +668,7 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
     let w = |e: std::io::Error| Failure::Usage(e.to_string());
     let mut bad = results::validate(&res);
     bad.extend(results::quick_plan_covered(&res));
-    let quick = results::quick_specs(&res).len();
+    bad.extend(results::full_plan_covered(&res));
     let current = meta::working_trees();
     // Non-fatal: a fatal rule would couple every edit of a solver crate to a regeneration of the
     // results file (the VOS-D103 failure mode).  The teeth are the spot check and `--full`.
@@ -595,47 +683,43 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
     for line in &stale {
         writeln!(out, "{line}").map_err(w)?;
     }
-    let tail;
-    if has(args, "--full") {
-        let refusals = full_refusals(&res, &current);
-        if refusals.is_empty() && bad.is_empty() {
-            bad.extend(results::rerun(&res, jobs(args)));
-            let exe = exe_of(args)?;
-            let progress = |n: usize, total: usize| {
-                if n.is_multiple_of(25) || n == total {
-                    eprintln!("[full {n}/{total}]");
-                }
-            };
-            bad.extend(spot::full_rerun(&res, &exe, jobs(args), &progress));
-            tail = format!(
-                "{} rows; every full-tier row re-run in a child and reproduced",
-                res.rows.len()
-            );
-        } else {
-            bad.extend(refusals);
-            tail = String::new();
-        }
+    let full = has(args, "--full");
+    if full {
+        bad.extend(full_refusals(&res, &current));
+    }
+    let tail = if !bad.is_empty() {
+        // Nothing is re-run: the file is already refused.
+        String::new()
+    } else if full {
+        bad.extend(results::rerun(&res, jobs(args)));
+        let exe = exe_of(args)?;
+        let progress = |n: usize, total: usize| {
+            if n.is_multiple_of(25) || n == total {
+                eprintln!("[full {n}/{total}]");
+            }
+        };
+        bad.extend(spot::full_rerun(&res, &exe, jobs(args), &progress));
+        format!(
+            "{} rows; every full-tier row re-run in a child and reproduced, timings within the \
+             band",
+            res.rows.len()
+        )
     } else {
+        let quick = results::quick_specs(&res).len();
         bad.extend(results::rerun(&res, jobs(args)));
         // Only a file with something to sample needs an executable to sample with.
         let report = if spot::population(&res).is_empty() {
             spot::SpotReport::default()
         } else {
-            spot::spot_check(
-                &res,
-                &exe_of(args)?,
-                jobs(args),
-                spot::SPOT_BUDGET,
-                spot::SPOT_ROW_CAP_MS,
-            )
+            spot::spot_check(&res, &exe_of(args)?, jobs(args), spot_budget(args))
         };
         bad.extend(report.violations.iter().cloned());
         writeln!(out, "check: {}", report.line()).map_err(w)?;
-        tail = format!(
+        format!(
             "{} rows, {quick} quick-tier rows re-run and reproduced",
             res.rows.len()
-        );
-    }
+        )
+    };
     for b in &bad {
         let _ = writeln!(err, "check: {b}");
     }
@@ -683,7 +767,7 @@ pub fn cmd_table(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
     if has(args, "--write") {
         let new = table::splice(&spec, &block)
             .ok_or_else(|| Failure::Usage("the spec has no marker pair to write between".into()))?;
-        std::fs::write(&sp, new).map_err(|e| Failure::Usage(e.to_string()))?;
+        write_atomic(&sp, &new)?;
     } else {
         write!(out, "{block}").map_err(|e| Failure::Usage(e.to_string()))?;
     }

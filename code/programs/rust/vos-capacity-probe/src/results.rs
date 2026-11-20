@@ -517,6 +517,7 @@ pub fn validate(res: &Results) -> Vec<String> {
         }
     }
     let planned = planned_identities();
+    let tiers = planned_tiers();
     let mut seeds: BTreeMap<String, (std::collections::BTreeSet<u64>, u32)> = BTreeMap::new();
     for r in &res.rows {
         let id = format!(
@@ -550,6 +551,20 @@ pub fn validate(res: &Results) -> Vec<String> {
                 v.push(format!(
                     "{id}: wall_s {w} is not the row budget of {} (only a chain records one)",
                     r.experiment
+                ));
+            }
+        }
+        // Finding H1: the tier is one of two closed values AND the one the plan gives this
+        // identity.  `check` trusts `tier` to choose what it re-runs in process.
+        if !["quick", "full"].contains(&r.tier.as_str()) {
+            v.push(format!("{id}: tier {:?} is not quick or full", r.tier));
+        } else if let Some(quick) = tiers.get(&(r.experiment.clone(), r.mode.clone(), r.knob.key()))
+        {
+            let want = if *quick { "quick" } else { "full" };
+            if r.tier != want {
+                v.push(format!(
+                    "{id}: tier is {:?} but the plan gives this knob the {want} tier",
+                    r.tier
                 ));
             }
         }
@@ -650,6 +665,20 @@ pub fn planned_identities() -> std::collections::BTreeSet<(String, String, Strin
     set
 }
 
+/// The tier the plan gives each `(experiment, mode, knob key)`: `true` for the quick tier.  A
+/// row's `tier` field must equal this (VOS-D097 review, finding H1): it decides whether the row
+/// is re-run in process by `check` and which sample population it falls in, so a relabelled row
+/// would escape or abuse both.
+pub fn planned_tiers() -> BTreeMap<(String, String, String), bool> {
+    let mut map = BTreeMap::new();
+    for exp in EXPERIMENTS {
+        for k in knobs(exp) {
+            map.insert((exp.to_string(), k.mode.to_string(), k.knob.key()), k.quick);
+        }
+    }
+    map
+}
+
 /// Is a recorded `trees` object well formed: empty (a file from before 0.2.0), or exactly the
 /// names of [`TREE_NAMES`], each a 40- or 64-digit hex object id?
 fn trees_violations(at: &str, t: &[(String, String)]) -> Vec<String> {
@@ -671,9 +700,15 @@ fn trees_violations(at: &str, t: &[(String, String)]) -> Vec<String> {
 
 /// The quick-tier rows of a results file, as the specs to re-run.
 pub fn quick_specs(res: &Results) -> Vec<(RowSpec, &Row)> {
+    // Finding M2: only a row the plan puts in the quick tier is ever re-run in process, so a
+    // hand-edited knob can never reach an instance builder.
+    let tiers = planned_tiers();
     res.rows
         .iter()
-        .filter(|r| r.tier == "quick")
+        .filter(|r| {
+            r.tier == "quick"
+                && tiers.get(&(r.experiment.clone(), r.mode.clone(), r.knob.key())) == Some(&true)
+        })
         .map(|r| {
             (
                 RowSpec {
@@ -774,6 +809,71 @@ pub fn compare_rerun(rec: &Row, now: &Row) -> Vec<String> {
     v
 }
 
+/// The ratio band of the timing comparison of `check --full` (finding M1): a recorded time or
+/// resident set must lie within `1/TIMING_BAND ..= TIMING_BAND` times the re-run's, in BOTH
+/// directions, plus an absolute slack.  A one-sided bound ("recorded at most k times the re-run")
+/// is no defence: an editor flips `green` by LOWERING a recorded time, and that passes it.
+pub const TIMING_BAND: f64 = 4.0;
+
+/// Absolute slack of the timing band, in milliseconds, for the solve and check times (so two
+/// sub-millisecond rows with a 10x ratio are not a finding).
+pub const TIMING_SLACK_MS: f64 = 50.0;
+
+/// Absolute slack of the timing band for the peak resident set, in KiB.
+pub const RSS_SLACK_KB: f64 = 8192.0;
+
+/// Is `recorded` within the two-sided band of `rerun`?
+pub fn within_band(recorded: f64, rerun: f64, slack: f64) -> bool {
+    recorded <= rerun * TIMING_BAND + slack && rerun <= recorded * TIMING_BAND + slack
+}
+
+/// What `check --full` additionally compares: the fields that **drive `green`** and that the
+/// CI spot check ignores (finding M1).  The recorded solve, worst-step solve, check time and peak
+/// RSS must each lie within the two-sided [`TIMING_BAND`] of the re-run, and `green` is
+/// RECOMPUTED from the re-run's own measurements and must equal the recorded one.  A row that
+/// ended `killed`, `oom` or `crashed` has no reproducible time and is compared on its result only.
+pub fn compare_timing(rec: &Row, now: &Row) -> Vec<String> {
+    let id = row_text_id(rec);
+    let mut v = Vec::new();
+    if matches!(rec.result.as_str(), "killed" | "oom" | "crashed") {
+        return v;
+    }
+    let mut band = |name: &str, a: f64, b: f64, slack: f64| {
+        if !within_band(a, b, slack) {
+            v.push(format!(
+                "{id}: {name} is outside the {TIMING_BAND}x band of the re-run (recorded {a:.1}, now {b:.1})"
+            ));
+        }
+    };
+    band("solve_ms", rec.solve_ms, now.solve_ms, TIMING_SLACK_MS);
+    band(
+        "worst_step_solve_ms",
+        rec.worst_step_solve_ms,
+        now.worst_step_solve_ms,
+        TIMING_SLACK_MS,
+    );
+    band(
+        "check_ms",
+        rec.check_ms.unwrap_or(0.0),
+        now.check_ms.unwrap_or(0.0),
+        TIMING_SLACK_MS,
+    );
+    band(
+        "peak_rss_kb",
+        rec.peak_rss_kb as f64,
+        now.peak_rss_kb as f64,
+        RSS_SLACK_KB,
+    );
+    let fresh = green(now);
+    if rec.green != fresh {
+        v.push(format!(
+            "{id}: green is {} but the re-run's own measurements give {fresh}",
+            rec.green
+        ));
+    }
+    v
+}
+
 /// Re-run every quick-tier row in this process and compare (`jobs` threads).
 pub fn rerun(res: &Results, jobs: usize) -> Vec<String> {
     let specs = quick_specs(res);
@@ -800,29 +900,107 @@ pub fn rerun(res: &Results, jobs: usize) -> Vec<String> {
     v
 }
 
-/// Does the committed file contain exactly the quick-tier rows the current plan would run?
-/// (A knob added to the plan without regenerating the file is drift.)
-pub fn quick_plan_covered(res: &Results) -> Vec<String> {
+/// The identity of a row within the plan: experiment, mode, knob key, seed.
+type Identity = (String, String, String, u64);
+
+fn identity_text(i: &Identity) -> String {
+    format!("{} {} {} seed {}", i.0, i.2, i.1, i.3)
+}
+
+/// How a file differs from the rows a plan would run: the one routine behind
+/// [`quick_plan_covered`] and [`full_plan_covered`].  The quick tier is a subset of the file (its
+/// rows are those labelled `quick`); the full plan is all of it.  Each gap is one line, and the
+/// lines for a missing row all have the shape `the plan's {label} row ID is not in the results
+/// file`, which [`full_plan_missing`] relies on.
+fn plan_gaps(res: &Results, tier: Tier, label: &str) -> Vec<String> {
     let mut v = Vec::new();
-    for spec in plan(Tier::Quick, &[], MIN_SEEDS) {
-        let found = res.rows.iter().any(|r| {
-            r.experiment == spec.experiment
-                && r.knob == spec.knob
-                && r.mode == spec.mode
-                && r.seed == spec.seed
-                && r.tier == "quick"
-        });
-        if !found {
+    let expected: std::collections::BTreeSet<Identity> = plan(tier, &[], MIN_SEEDS)
+        .into_iter()
+        .map(|s| (s.experiment, s.mode, s.knob.key(), s.seed))
+        .collect();
+    let mut seen: std::collections::BTreeSet<Identity> = std::collections::BTreeSet::new();
+    let mut groups: BTreeMap<(String, String, String), (std::collections::BTreeSet<u64>, u32)> =
+        BTreeMap::new();
+    for r in &res.rows {
+        if tier == Tier::Quick && r.tier != "quick" {
+            continue;
+        }
+        let id: Identity = (r.experiment.clone(), r.mode.clone(), r.knob.key(), r.seed);
+        if !expected.contains(&id) {
             v.push(format!(
-                "the plan's quick row {} {} {} seed {} is not in the results file",
-                spec.experiment,
-                spec.knob.key(),
-                spec.mode,
-                spec.seed
+                "the {label} plan does not contain the file's row {}",
+                identity_text(&id)
+            ));
+        }
+        if !seen.insert(id.clone()) {
+            v.push(format!(
+                "the file has the {label} row {} more than once",
+                identity_text(&id)
+            ));
+        }
+        let g = groups
+            .entry((id.0.clone(), id.1.clone(), id.2.clone()))
+            .or_default();
+        g.0.insert(r.seed);
+        // The rows of a group must agree on how many seeds it has; the largest is compared.
+        g.1 = g.1.max(r.seeds);
+    }
+    for id in &expected {
+        if !seen.contains(id) {
+            v.push(format!(
+                "the plan's {label} row {} is not in the results file",
+                identity_text(id)
+            ));
+        }
+    }
+    for ((e, m, k), (set, seeds)) in &groups {
+        if set.len() as u32 != *seeds {
+            v.push(format!(
+                "{e} {k} {m}: rows record seeds = {seeds} but {} seeds are present",
+                set.len()
             ));
         }
     }
     v
+}
+
+/// Does the file contain exactly the quick-tier rows the current plan would run: none missing,
+/// none extra, none twice, and every group's `seeds` equal to the seeds present?  (A knob added to
+/// the plan without regenerating the file is drift.)
+pub fn quick_plan_covered(res: &Results) -> Vec<String> {
+    plan_gaps(res, Tier::Quick, "quick")
+}
+
+/// The full-plan rows the file lacks, as identity texts, before any exemption.
+pub fn full_plan_missing(res: &Results) -> Vec<String> {
+    plan_gaps(res, Tier::Full, "full")
+        .into_iter()
+        .filter_map(|g| {
+            g.strip_prefix("the plan's full row ")
+                .and_then(|x| x.strip_suffix(" is not in the results file"))
+                .map(str::to_string)
+        })
+        .collect()
+}
+
+/// The full-plan rows the committed file is *reviewed* not to contain, each with its reason
+/// (VOS30 section 9.12 lists them; a test pins this list to the exact set of missing rows, so a
+/// stale exemption and a newly missing row both fail).
+pub const FULL_PLAN_EXEMPT: &[(&str, &str)] = &[];
+
+/// Does the file contain exactly the rows of the full plan (which includes the quick knobs): no
+/// missing row beyond the reviewed [`FULL_PLAN_EXEMPT`] list, none extra, none twice, and every
+/// group's `seeds` equal to the seeds present?  Finding H2: without it a row, or a whole knob,
+/// can be deleted from the file and `check` still passes.
+pub fn full_plan_covered(res: &Results) -> Vec<String> {
+    plan_gaps(res, Tier::Full, "full")
+        .into_iter()
+        .filter(|g| {
+            !FULL_PLAN_EXEMPT
+                .iter()
+                .any(|(id, _)| *g == format!("the plan's full row {id} is not in the results file"))
+        })
+        .collect()
 }
 
 // ---------------------------------------------------------------------------------------

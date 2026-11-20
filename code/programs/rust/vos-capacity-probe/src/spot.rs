@@ -6,25 +6,35 @@
 //! more teeth (VOS30 section 9.12, "Hardening"):
 //!
 //! ```text
-//!   check          validate + quick re-run + a SPOT CHECK:
+//!   check          validate + plan coverage + quick re-run + a SPOT CHECK:
 //!                    population = every full-tier non-E row
+//!                    eligible   = those whose (experiment, mode, knob) the PLAN classes cheap
+//!                                 (`cost::CHEAP`; never the recorded times)
 //!                    seed       = SHA-256 of the results file's own canonical bytes
 //!                    order      = rows sorted by SHA-256(seed ":" row index)
-//!                    re-run the rows in that order, each in a CHILD PROCESS under `run`'s
-//!                    limits, until a fixed total time budget is spent; a row whose recorded
-//!                    solve + check exceeds the per-row cap is skipped but COUNTED
+//!                    re-run the eligible rows in that order, each in a CHILD PROCESS under
+//!                    `run`'s limits and under what is left of the budget, until a fixed total
+//!                    time budget is spent; an expensive row is skipped but COUNTED; fewer than
+//!                    the floor of verified rows fails the check
 //!   check --full   refuse unless the recorded tree ids equal the working tree's, then re-run
-//!                  EVERY full-tier row, no sampling, each in a child process
+//!                  EVERY full-tier row, no sampling, each in a child process, and compare the
+//!                  timing-derived fields too (`results::compare_timing`)
 //! ```
 //!
-//! ## What the sample proves, stated honestly
+//! ## What the sample proves, stated honestly (finding M3)
 //!
-//! Because the seed is the hash of the file, **any edit to the file reshuffles the sample**: an
-//! editor cannot pick which rows will be re-run by looking at the repository, and cannot tune an
-//! edit to dodge a sample it can predict.  But a single edited row among about 1,625 is caught
-//! with probability only about `sample / population` per commit (1 to 2 percent for 16 to 30
-//! rows).  The spot check makes a wholesale edit expensive; it is **not proof** of the file.
-//! The real teeth are `check --full` and the release gate that requires it (section 9.12).
+//! The seed is the hash of the file, so the sample is **deterministic**: CI must be reproducible.
+//! That has a price the first draft of this text understated.  An editor holds the file and this
+//! code, so the editor can compute the sample of any candidate edit and **grind** the file (change
+//! a byte somewhere harmless, such as a note) until the edited row falls outside the sample.
+//! "Any edit reshuffles the sample" is true and is no defence against someone who tries edits
+//! until one lands outside it.  What the spot check does catch is an **accidental** drift (a
+//! regenerated row at another tree, a fixture that changed) and a **lazy** edit that does not
+//! grind; for a single edited row among about 1,600 it catches only about `sample / population`
+//! of the unprepared attempts.  It is **not proof** of the file against a determined editor.
+//! The real teeth are `check --full` and the release gate that requires it (section 9.12), which
+//! re-run everything and also compare the timing-derived fields; the CI spot check verifies
+//! digests, verdicts, controls and conflict counts only.
 //!
 //! ## Why no row is re-run in process
 //!
@@ -33,8 +43,9 @@
 //! of `runner` (CPU `ulimit` backstop, 2 GiB resident-set poll, process-group kill), and a row
 //! whose `(experiment, mode, knob)` is not in the plan is refused without being run.
 
+use crate::cost::is_cheap;
 use crate::exp::RowSpec;
-use crate::results::{compare_rerun, planned_identities, row_text_id, Results};
+use crate::results::{compare_rerun, compare_timing, planned_identities, row_text_id, Results};
 use crate::row::Row;
 use crate::runner;
 use coding_adventures_sha256::sha256_hex;
@@ -46,9 +57,15 @@ use std::time::{Duration, Instant};
 /// The total time `check` spends on sampled full-row re-runs, so the CI cost is a fixed number.
 pub const SPOT_BUDGET: Duration = Duration::from_secs(60);
 
-/// A row whose recorded solve plus check time exceeds this is skipped by the spot check (counted
-/// and printed, never silently dropped), so one slow row cannot spend the whole budget.
-pub const SPOT_ROW_CAP_MS: f64 = 20_000.0;
+/// How far past the end of the budget a child that started inside it may run before it is
+/// killed: its hard limit is `min(hard_limit_for(row), remaining budget + SPOT_SLACK)` (finding
+/// M5).  A cheap-class row finishes in about a second; a child still running after this is not
+/// verified.
+pub const SPOT_SLACK: Duration = Duration::from_secs(15);
+
+/// The fewest rows a spot check must have verified (re-run to completion and compared), or all
+/// the eligible rows if there are fewer (finding M4): a check that re-ran nothing proves nothing.
+pub const SPOT_FLOOR: usize = 16;
 
 /// The indexes of the rows the spot check draws from: every full-tier row that is not an
 /// enumeration row (E1 and E2 are untouched by this hardening; VOS-D103).
@@ -77,10 +94,11 @@ pub fn sample_order(res: &Results) -> Vec<usize> {
     keyed.into_iter().map(|(_, i)| i).collect()
 }
 
-/// Is this row too slow (or too time-dependent) for the spot check?  A row killed or out of
-/// memory has no reproducible time; every other row costs its recorded solve plus check.
-pub fn over_cap(r: &Row, cap_ms: f64) -> bool {
-    matches!(r.result.as_str(), "killed" | "oom") || r.solve_ms + r.check_ms.unwrap_or(0.0) > cap_ms
+/// Is this row eligible for the spot check, by the plan alone?  (Finding M4: the class is
+/// `cost::CHEAP`, keyed by `(experiment, mode, knob)`; nothing the file records about the row's
+/// time or result is read.)
+pub fn eligible(r: &Row) -> bool {
+    is_cheap(&r.experiment, &r.mode, &r.knob.key())
 }
 
 /// What a spot check did.
@@ -90,8 +108,10 @@ pub struct SpotReport {
     pub population: usize,
     /// Rows re-run.
     pub rerun: usize,
-    /// Rows skipped because their recorded cost is over the cap (counted, never dropped).
-    pub skipped_over_cap: usize,
+    /// Rows the plan classes expensive (counted, never dropped).
+    pub skipped_expensive: usize,
+    /// Rows started that did not finish inside the budget: not verified (a failure).
+    pub unverified: usize,
     /// Rows of the seeded order not reached before the budget was spent.
     pub not_reached: usize,
     /// What differed on re-run.
@@ -106,8 +126,9 @@ impl SpotReport {
         match &self.skipped {
             Some(why) => format!("spot check: skipped ({why})"),
             None => format!(
-                "spot check: population {}, re-run {}, skipped over cap: {}, not reached: {}",
-                self.population, self.rerun, self.skipped_over_cap, self.not_reached
+                "spot check: population {}, re-run {}, skipped (plan cost class expensive): {}, \
+                 not reached: {}",
+                self.population, self.rerun, self.skipped_expensive, self.not_reached
             ),
         }
     }
@@ -126,11 +147,16 @@ fn spec_of(r: &Row) -> RowSpec {
 }
 
 /// Re-run one recorded row in a child process and compare.  A row that is not in the plan is
-/// refused and not run.
+/// refused and not run.  `bound` is the most the child may run (the spot check's remaining
+/// budget plus slack); `None` is the row's own hard limit.  A child the bound kills is **not
+/// verified**, which is a violation here, never a pass (finding M5).  `timing` adds the
+/// timing-derived comparison of `check --full` (finding M1).
 pub fn rerun_one(
     exe: &Path,
     rec: &Row,
     planned: &std::collections::BTreeSet<(String, String, String)>,
+    bound: Option<Duration>,
+    timing: bool,
 ) -> Vec<String> {
     let id = (rec.experiment.clone(), rec.mode.clone(), rec.knob.key());
     if !planned.contains(&id) {
@@ -139,18 +165,33 @@ pub fn rerun_one(
             row_text_id(rec)
         )];
     }
-    let now = runner::run_one(exe, &spec_of(rec));
-    compare_rerun(rec, &now)
+    let now = runner::run_one_bounded(exe, &spec_of(rec), bound);
+    if bound.is_some() && now.result == "killed" && rec.result != "killed" {
+        return vec![format!(
+            "{}: not verified: the re-run did not finish inside the spot-check budget",
+            row_text_id(rec)
+        )];
+    }
+    let mut v = compare_rerun(rec, &now);
+    if timing {
+        v.extend(compare_timing(rec, &now));
+    }
+    v
 }
 
-/// The sampled re-run: rows in seeded order, each in a child, until `budget` is spent.  Off unix
-/// there are no process limits and nothing is run (the report says so).
-pub fn spot_check(
+/// The sampled re-run with the standard slack.
+pub fn spot_check(res: &Results, exe: &Path, jobs: usize, budget: Duration) -> SpotReport {
+    spot_check_in(res, exe, jobs, budget, SPOT_SLACK)
+}
+
+/// The sampled re-run: eligible rows in seeded order, each in a child, until `budget` is spent.
+/// Off unix there are no process limits and nothing is run (the report says so).
+pub fn spot_check_in(
     res: &Results,
     exe: &Path,
     jobs: usize,
     budget: Duration,
-    cap_ms: f64,
+    slack: Duration,
 ) -> SpotReport {
     let order = sample_order(res);
     let mut report = SpotReport {
@@ -162,10 +203,12 @@ pub fn spot_check(
         return report;
     }
     let planned = planned_identities();
+    let eligible_rows = order.iter().filter(|&&i| eligible(&res.rows[i])).count();
     let start = Instant::now();
     let next = AtomicUsize::new(0);
     let examined = AtomicUsize::new(0);
-    let state = Mutex::new((0usize, 0usize, Vec::<String>::new()));
+    // (re-run, skipped as expensive, unverified, violations)
+    let state = Mutex::new((0usize, 0usize, 0usize, Vec::<String>::new()));
     std::thread::scope(|s| {
         for _ in 0..runner::clamp_jobs(jobs) {
             s.spawn(|| loop {
@@ -174,27 +217,57 @@ pub fn spot_check(
                     break;
                 };
                 let rec = &res.rows[row_index];
-                if over_cap(rec, cap_ms) {
+                let in_plan =
+                    planned.contains(&(rec.experiment.clone(), rec.mode.clone(), rec.knob.key()));
+                if !in_plan {
+                    // Never run, always reported (`rerun_one` refuses it): `check` has already
+                    // refused such a file, so this is defence in depth for a direct caller.
+                    examined.fetch_add(1, Ordering::SeqCst);
+                    let diffs = rerun_one(exe, rec, &planned, None, false);
+                    state
+                        .lock()
+                        .unwrap_or_else(|e| e.into_inner())
+                        .3
+                        .extend(diffs);
+                    continue;
+                }
+                if !eligible(rec) {
                     examined.fetch_add(1, Ordering::SeqCst);
                     state.lock().unwrap_or_else(|e| e.into_inner()).1 += 1;
                     continue;
                 }
-                if start.elapsed() >= budget {
+                let spent = start.elapsed();
+                if spent >= budget {
                     break;
                 }
                 examined.fetch_add(1, Ordering::SeqCst);
-                let diffs = rerun_one(exe, rec, &planned);
+                let bound = budget.saturating_sub(spent) + slack;
+                let diffs = rerun_one(exe, rec, &planned, Some(bound), false);
                 let mut g = state.lock().unwrap_or_else(|e| e.into_inner());
                 g.0 += 1;
-                g.2.extend(diffs);
+                g.2 += diffs
+                    .iter()
+                    .filter(|d| d.contains(": not verified"))
+                    .count();
+                g.3.extend(diffs);
             });
         }
     });
-    let (rerun, skipped, mut violations) = state.into_inner().unwrap_or_else(|e| e.into_inner());
-    violations.sort();
+    let (rerun, skipped, unverified, mut violations) =
+        state.into_inner().unwrap_or_else(|e| e.into_inner());
     report.rerun = rerun;
-    report.skipped_over_cap = skipped;
+    report.skipped_expensive = skipped;
+    report.unverified = unverified;
     report.not_reached = order.len().saturating_sub(examined.load(Ordering::SeqCst));
+    let floor = SPOT_FLOOR.min(eligible_rows);
+    let verified = rerun.saturating_sub(unverified);
+    if verified < floor {
+        violations.push(format!(
+            "spot check: only {verified} rows were verified, below the floor of {floor} \
+             (eligible rows: {eligible_rows})"
+        ));
+    }
+    violations.sort();
     report.violations = violations;
     report
 }
@@ -217,7 +290,7 @@ pub fn full_rerun(
             s.spawn(|| loop {
                 let i = next.fetch_add(1, Ordering::SeqCst);
                 let Some(rec) = rows.get(i) else { break };
-                let diffs = rerun_one(exe, rec, &planned);
+                let diffs = rerun_one(exe, rec, &planned, None, true);
                 out.lock().unwrap_or_else(|e| e.into_inner()).extend(diffs);
                 on_row(done.fetch_add(1, Ordering::SeqCst) + 1, rows.len());
             });

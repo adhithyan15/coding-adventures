@@ -162,6 +162,7 @@ mod unix_children {
     /// The whole quick tier once, then everything that reads a results file.
     #[test]
     fn quick_tier_check_table_and_decide() {
+        use vos_capacity_probe::results;
         let d = scratch("quick");
         let raw = d.join("raw.json");
         let (out, err, r) = run(&[
@@ -183,28 +184,46 @@ mod unix_children {
         let results = d.join("results.json");
         std::fs::write(&results, res.to_text()).unwrap();
 
-        // check: reproduces.
-        let (out, err, r) = run(&["check", results.to_str().unwrap(), "--jobs", "4"]);
-        assert!(r.is_ok(), "{err}");
-        assert!(out.contains("85 quick-tier rows re-run and reproduced"));
+        // `check` on a quick-only file: the file is not the full plan (finding H2), so it is
+        // refused at once with nothing but "missing full row" violations, and nothing is re-run.
+        let (_, err, r) = run(&["check", results.to_str().unwrap(), "--jobs", "4"]);
+        assert!(matches!(r, Err(Failure::Violations(n)) if n > 0), "{r:?}");
+        assert!(
+            err.lines()
+                .all(|l| l.contains("is not in the results file")),
+            "{err}"
+        );
 
-        // check: a tampered digest, a tampered conflict count and a dirty tree are each caught.
-        let tampered = |f: &dyn Fn(&mut Results)| -> String {
+        // The quick re-run itself (what `check` runs on a complete file) reproduces, and a
+        // tampered digest, a tampered conflict count, a dirty tree and a dropped group are each
+        // caught.
+        assert!(results::validate(&res).is_empty());
+        assert!(results::quick_plan_covered(&res).is_empty());
+        assert!(results::rerun(&res, 4).is_empty());
+        let caught = |f: &dyn Fn(&mut Results), rerun: bool| -> String {
             let mut x = res.clone();
             f(&mut x);
-            let p = d.join("tampered.json");
-            std::fs::write(&p, x.to_text()).unwrap();
-            let (_, err, r) = run(&["check", p.to_str().unwrap(), "--jobs", "4"]);
-            assert!(matches!(r, Err(Failure::Violations(n)) if n > 0), "{r:?}");
-            err
+            let mut v = results::validate(&x);
+            v.extend(results::quick_plan_covered(&x));
+            if rerun {
+                // Only a digest or a count needs the (slow) in-process re-run to be seen.
+                v.extend(results::rerun(&x, 4));
+            }
+            assert!(!v.is_empty());
+            v.join("\n")
         };
-        assert!(tampered(&|x| x.rows[0].instance_sha256 = "00".repeat(32))
-            .contains("instance_sha256 differs"));
-        assert!(tampered(&|x| x.rows[0].conflicts += 1).contains("conflicts differs"));
-        assert!(tampered(&|x| x.meta.dirty_tree = true).contains("dirty_tree"));
-        assert!(tampered(&|x| {
-            x.rows.retain(|r| r.experiment != "A2");
-        })
+        assert!(
+            caught(&|x| x.rows[0].instance_sha256 = "00".repeat(32), true)
+                .contains("instance_sha256 differs")
+        );
+        assert!(caught(&|x| x.rows[0].conflicts += 1, true).contains("conflicts differs"));
+        assert!(caught(&|x| x.meta.dirty_tree = true, false).contains("dirty_tree"));
+        assert!(caught(
+            &|x| {
+                x.rows.retain(|r| r.experiment != "A2");
+            },
+            false
+        )
         .contains("is not in the results file"));
 
         // table: prints a block; --write needs the markers; --check passes then fails on drift.

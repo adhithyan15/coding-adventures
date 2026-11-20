@@ -36,7 +36,13 @@ fn ok_control() -> Control {
 
 /// A green monolithic row of experiment `exp`.
 fn good(exp: &str, knob: Knob, mode: &str, seed: u64) -> Row {
-    let mut r = Row::new(exp, knob, mode, seed, 5);
+    let mut r = Row::new(exp, knob.clone(), mode, seed, 5);
+    // The tier is the plan's for the knob (finding H1).
+    let quick = vos_capacity_probe::results::planned_tiers()
+        .get(&(exp.to_string(), mode.to_string(), knob.key()))
+        .copied()
+        .unwrap_or(false);
+    r.tier = if quick { "quick" } else { "full" }.into();
     r.result = "unsat".into();
     r.instance_sha256 = "aa".repeat(32);
     r.drat_sha256 = Some("bb".repeat(32));
@@ -302,6 +308,8 @@ fn stale_lines_name_each_changed_tree_and_say_nothing_for_a_file_without_trees()
 #[test]
 fn trees_validate_and_round_trip_and_an_absent_object_keeps_the_bytes() {
     let mut f = committed();
+    // The committed merges carry trees of their own; this test is about the file's.
+    f.meta.merges.clear();
     f.meta.trees = bogus_trees('a');
     assert!(validate(&f).is_empty());
     let text = f.to_text();
@@ -339,6 +347,8 @@ fn check_full_refuses_a_file_that_does_not_describe_the_tree() {
     // A merges entry at another tree, or without any, refuses too.
     let mut f = committed();
     f.meta.trees = cur.clone();
+    // Keep only the first merges entry (the E1 refresh, which predates trees).
+    f.meta.merges.truncate(1);
     assert!(full_refusals(&f, &cur)
         .join("|")
         .contains("merges[0] records no tree ids"));
@@ -367,8 +377,8 @@ fn scratch(name: &str) -> PathBuf {
     d
 }
 
-/// The committed file's quick rows only (so `check` has no full row to sample), with the given
-/// recorded trees.
+/// The committed file's quick rows only, with the given recorded trees.  It is NOT a complete
+/// file: `check` refuses it for the missing full-plan rows (finding H2) before re-running anything.
 fn quick_only(trees: Vec<(String, String)>) -> Results {
     let mut f = committed();
     f.rows.retain(|r| r.tier == "quick");
@@ -377,22 +387,49 @@ fn quick_only(trees: Vec<(String, String)>) -> Results {
     f
 }
 
+fn check_args(p: &std::path::Path, extra: &[&str]) -> Vec<String> {
+    let mut a: Vec<String> = ["check", p.to_str().unwrap(), "--exe", EXE]
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
+    a.extend(extra.iter().map(|s| s.to_string()));
+    a
+}
+
 #[test]
 fn check_prints_a_non_fatal_stale_line_when_a_recorded_tree_differs() {
     let dir = scratch("stale");
     let p = dir.join("results.json");
-    std::fs::write(&p, quick_only(bogus_trees('a')).to_text()).unwrap();
+    // A complete file (the committed one) recorded at another tree: stale, and still ok.  The
+    // spot check has a short budget here; its floor of 16 verified rows still applies.
+    let mut f = committed();
+    f.meta.merges.clear();
+    f.meta.trees = bogus_trees('a');
+    std::fs::write(&p, f.to_text()).unwrap();
     let (mut o, mut e) = (Vec::new(), Vec::new());
-    let args: Vec<String> = ["check", p.to_str().unwrap(), "--jobs", "4", "--exe", EXE]
-        .iter()
-        .map(|s| s.to_string())
-        .collect();
-    let r = dispatch(&args, &mut o, &mut e);
+    let r = dispatch(
+        &check_args(&p, &["--jobs", "4", "--spot-budget", "15"]),
+        &mut o,
+        &mut e,
+    );
     let (o, e) = (String::from_utf8(o).unwrap(), String::from_utf8(e).unwrap());
     assert!(r.is_ok(), "stale is not fatal: {e}");
     assert!(o.contains("stale: tool: "), "{o}");
-    assert!(o.contains("spot check: population 0"), "{o}");
+    assert!(o.contains("spot check: population 1420"), "{o}");
     assert!(o.contains("check: ok"));
+    // The same recorded trees on a file with only its quick rows: the stale line still prints,
+    // and the file is refused for what it lacks, not for being stale.
+    std::fs::write(&p, quick_only(bogus_trees('a')).to_text()).unwrap();
+    let (mut o, mut e) = (Vec::new(), Vec::new());
+    let r = dispatch(&check_args(&p, &["--jobs", "4"]), &mut o, &mut e);
+    let (o, e) = (String::from_utf8(o).unwrap(), String::from_utf8(e).unwrap());
+    assert!(matches!(r, Err(Failure::Violations(_))), "{r:?}");
+    assert!(o.contains("stale: tool: "), "{o}");
+    assert!(e.contains("is not in the results file"), "{e}");
+    assert!(
+        !e.contains("stale"),
+        "stale itself is never a violation: {e}"
+    );
 }
 
 // ---- merge --add ---------------------------------------------------------------------------------
@@ -504,7 +541,8 @@ fn a_refresh_keeps_every_other_row_and_the_existing_merges_entry_byte_identical(
         .unwrap();
         // The old entry's own text, as it sits in the file.
         let start = base_text.find("\"merges\": [").unwrap() + "\"merges\": [".len();
-        let end = base_text[start..].find("}]").unwrap() + start + 1;
+        // The first entry ends where the second begins (entries share one line).
+        let end = base_text[start..].find("},{\"rev\"").unwrap() + start + 1;
         base_text[start..end].to_string()
     };
     // Refresh every B3 row with identical rows from a "fresh run" (a second merge entry appears).
@@ -513,8 +551,11 @@ fn a_refresh_keeps_every_other_row_and_the_existing_merges_entry_byte_identical(
     fresh.meta.trees = bogus_trees('e');
     let m = merge_results(&base, &fresh, "B3", None, true, AT, &yes).unwrap();
     let new_text = m.to_text();
-    assert_eq!(m.meta.merges.len(), 2);
-    assert!(m.meta.merges[1].kind.is_none(), "a refresh omits the key");
+    assert_eq!(m.meta.merges.len(), base.meta.merges.len() + 1);
+    assert!(
+        m.meta.merges.last().unwrap().kind.is_none(),
+        "a refresh omits the key"
+    );
     assert!(
         new_text.contains(&old_entry),
         "the existing merges entry keeps its bytes"
@@ -559,7 +600,7 @@ mod unix_children {
     use vos_capacity_probe::runner::{
         launch_command, run_child, run_one, CHILD_OUTPUT_CAP, ULIMIT_SCRIPT,
     };
-    use vos_capacity_probe::spot::{full_rerun, rerun_one, spot_check, SPOT_ROW_CAP_MS};
+    use vos_capacity_probe::spot::{full_rerun, rerun_one, spot_check};
 
     fn a1_16(seed: u64) -> Row {
         let mut r = committed()
@@ -582,16 +623,10 @@ mod unix_children {
     fn a_clean_sampled_full_row_reproduces_and_a_hand_edited_one_fails_check() {
         let rows: Vec<Row> = (1..=5).map(a1_16).collect();
         let f = small_file(rows);
-        let rep = spot_check(
-            &f,
-            std::path::Path::new(EXE),
-            4,
-            Duration::from_secs(120),
-            SPOT_ROW_CAP_MS,
-        );
+        let rep = spot_check(&f, std::path::Path::new(EXE), 4, Duration::from_secs(120));
         assert_eq!(rep.population, 5);
         assert_eq!(
-            (rep.rerun, rep.skipped_over_cap, rep.not_reached),
+            (rep.rerun, rep.skipped_expensive, rep.not_reached),
             (5, 0, 0),
             "{rep:?}"
         );
@@ -605,42 +640,100 @@ mod unix_children {
                 1 => g.rows[2].instance_sha256 = "00".repeat(32),
                 _ => g.rows[2].result = "unknown".into(),
             }
-            let rep = spot_check(
-                &g,
-                std::path::Path::new(EXE),
-                4,
-                Duration::from_secs(120),
-                SPOT_ROW_CAP_MS,
-            );
+            let rep = spot_check(&g, std::path::Path::new(EXE), 4, Duration::from_secs(120));
             assert!(!rep.violations.is_empty(), "edit {edit} slipped through");
         }
     }
 
     #[test]
-    fn a_spent_budget_stops_the_sample_and_slow_rows_are_skipped_but_counted() {
+    fn a_spent_budget_stops_the_sample_and_the_floor_makes_that_a_failure() {
         let f = small_file((1..=5).map(a1_16).collect());
-        let rep = spot_check(
+        let rep = spot_check(&f, std::path::Path::new(EXE), 2, Duration::ZERO);
+        assert_eq!((rep.rerun, rep.not_reached), (0, 5), "{rep:?}");
+        // Finding M4: a check that verified fewer than the floor (here all 5 eligible rows) fails.
+        assert!(
+            rep.violations
+                .iter()
+                .any(|v| v.contains("below the floor of 5")),
+            "{:?}",
+            rep.violations
+        );
+    }
+
+    /// Finding M4, both directions: the cost class is the PLAN's, so editing the recorded times
+    /// or result of a row can neither get a cheap row skipped nor make an expensive one run.
+    #[test]
+    fn the_cost_class_is_the_plans_and_recorded_times_and_results_are_never_read() {
+        let mut rows: Vec<Row> = (1..=5).map(a1_16).collect();
+        // A cheap row edited to look enormous and killed: it is still re-run (and caught).
+        rows[0].solve_ms = 1.0e9;
+        rows[0].result = "killed".into();
+        // An expensive row (D1 k=1 t=256 took minutes) edited to look instant: still skipped.
+        let mut hard = committed()
+            .rows
+            .into_iter()
+            .find(|r| r.experiment == "D1" && r.knob.int("t") == 256 && r.knob.int("k") == 1)
+            .unwrap();
+        hard.solve_ms = 0.0;
+        hard.check_ms = Some(0.0);
+        hard.result = "unsat".into();
+        rows.push(hard);
+        let f = small_file(rows);
+        let rep = spot_check(&f, std::path::Path::new(EXE), 4, Duration::from_secs(120));
+        assert_eq!(rep.skipped_expensive, 1, "{rep:?}");
+        assert_eq!(rep.rerun, 5, "{rep:?}");
+        assert!(
+            rep.violations.iter().any(|v| v.contains("result differs")),
+            "the edited cheap row was caught: {:?}",
+            rep.violations
+        );
+        assert!(rep
+            .line()
+            .contains("skipped (plan cost class expensive): 1"));
+    }
+
+    /// Finding M5: the hard limit of a sampled child is what is left of the budget plus the
+    /// slack, and a child the bound kills is NOT verified, which fails the check.
+    #[test]
+    fn a_sampled_child_that_outlives_the_budget_is_killed_and_not_counted_as_verified() {
+        // D1 k=4 t=4 takes about two seconds and is in the cheap class.
+        let rows: Vec<Row> = committed()
+            .rows
+            .into_iter()
+            .filter(|r| r.experiment == "D1" && r.knob.int("t") == 4 && r.knob.int("k") == 4)
+            .collect();
+        assert_eq!(rows.len(), 5);
+        let f = small_file(rows.clone());
+        let t0 = Instant::now();
+        let rep = vos_capacity_probe::spot::spot_check_in(
             &f,
             std::path::Path::new(EXE),
-            2,
+            5,
+            Duration::from_secs(1),
             Duration::ZERO,
-            SPOT_ROW_CAP_MS,
         );
-        assert_eq!((rep.rerun, rep.not_reached), (0, 5), "{rep:?}");
-        // A recorded cost over the cap, and a killed row, are skipped and counted.
-        let mut g = f.clone();
-        g.rows[0].solve_ms = SPOT_ROW_CAP_MS + 1.0;
-        g.rows[1].result = "killed".into();
-        let rep = spot_check(
-            &g,
+        assert!(t0.elapsed() < Duration::from_secs(30), "{:?}", t0.elapsed());
+        assert!(rep.unverified >= 1, "{rep:?}");
+        assert!(
+            rep.violations.iter().any(|v| v.contains("not verified")),
+            "{:?}",
+            rep.violations
+        );
+        assert!(
+            rep.violations.iter().any(|v| v.contains("below the floor")),
+            "an unverified row does not count toward the floor: {:?}",
+            rep.violations
+        );
+        // The single-row function says the same, with an explicit bound.
+        let planned = vos_capacity_probe::results::planned_identities();
+        let v = rerun_one(
             std::path::Path::new(EXE),
-            2,
-            Duration::from_secs(120),
-            SPOT_ROW_CAP_MS,
+            &rows[0],
+            &planned,
+            Some(Duration::from_millis(1)),
+            false,
         );
-        assert_eq!(rep.skipped_over_cap, 2, "{rep:?}");
-        assert_eq!(rep.rerun, 3);
-        assert!(rep.line().contains("skipped over cap: 2"));
+        assert!(v[0].contains("not verified"), "{v:?}");
     }
 
     #[test]
@@ -650,18 +743,16 @@ mod unix_children {
         r.knob = Knob::of(&[("n", Kv::I(1_000_000_000))]);
         let t0 = Instant::now();
         let planned = vos_capacity_probe::results::planned_identities();
-        let v = rerun_one(std::path::Path::new(EXE), &r, &planned);
+        let v = rerun_one(std::path::Path::new(EXE), &r, &planned, None, false);
         assert!(v[0].contains("not in the plan"), "{v:?}");
         assert!(t0.elapsed() < Duration::from_secs(5), "nothing was started");
         let f = small_file(vec![r]);
-        let rep = spot_check(
-            &f,
-            std::path::Path::new(EXE),
-            1,
-            Duration::from_secs(60),
-            SPOT_ROW_CAP_MS,
+        let rep = spot_check(&f, std::path::Path::new(EXE), 1, Duration::from_secs(60));
+        assert!(
+            rep.violations.iter().any(|v| v.contains("not in the plan")),
+            "{:?}",
+            rep.violations
         );
-        assert!(rep.violations[0].contains("not in the plan"));
         // validate refuses it too, so `check` never reaches the sample.
         assert!(validate(&f)
             .join("|")
@@ -710,7 +801,10 @@ mod unix_children {
 
     #[test]
     fn the_shell_text_is_the_fixed_literal_and_every_variable_part_is_a_separate_argv_entry() {
-        assert_eq!(ULIMIT_SCRIPT, "ulimit -t \"$1\"; shift; exec \"$@\"");
+        assert_eq!(
+            ULIMIT_SCRIPT,
+            "ulimit -t \"$1\" || exit 126; shift; exec \"$@\""
+        );
         for evil in EVIL {
             let spec = spec_with(evil, Knob::of(&[("n", Kv::S(evil.into()))]), evil);
             let cmd = launch_command(std::path::Path::new(EXE), &spec, 600);

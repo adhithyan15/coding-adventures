@@ -15,7 +15,13 @@ fn ok_control() -> Control {
 
 /// A green monolithic row.
 fn good(exp: &str, knob: Knob, mode: &str, seed: u64) -> Row {
-    let mut r = Row::new(exp, knob, mode, seed, 5);
+    let mut r = Row::new(exp, knob.clone(), mode, seed, 5);
+    // The tier is the plan's for the knob (finding H1); a knob the plan lacks stays `full`.
+    let quick = planned_tiers()
+        .get(&(exp.to_string(), mode.to_string(), knob.key()))
+        .copied()
+        .unwrap_or(false);
+    r.tier = if quick { "quick" } else { "full" }.into();
     r.result = "unsat".into();
     r.instance_sha256 = "aa".repeat(32);
     r.drat_sha256 = Some("bb".repeat(32));

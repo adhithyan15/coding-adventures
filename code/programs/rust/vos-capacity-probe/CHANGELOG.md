@@ -27,6 +27,21 @@ All notable changes to this package are documented here.
   included; child output is read through a 1 MiB cap; `--out` is written atomically; `--jobs` is
   clamped to 1..=64. All process code is `cfg(unix)`-safe; the Windows BUILD runs `check` in
   process and skips the sampled re-run, saying so.
+- **Security-review fixes (VOS-028c2; VOS30 9.12; tests in `tests/review_fixes.rs`).**
+  H1: `tier` must be `quick` or `full` and the plan's for the knob. H2: `full_plan_covered` and a
+  stricter `quick_plan_covered` (no missing, extra or duplicate row; `seeds` equals the seeds
+  present); the reviewed `FULL_PLAN_EXEMPT` list is empty. M1: `check --full` also compares
+  `solve_ms`, `worst_step_solve_ms`, `check_ms` and `peak_rss_kb` within a two-sided 4x band and
+  recomputes `green` from the re-run. M2: `check` returns before any re-run when validation or
+  coverage fails, and `quick_specs` admits only plan-quick rows. M3: the spec and docs no longer
+  claim the deterministic sample is unpredictable; `check --full` is the gate. M4: the spot
+  check's cost class is the plan's (`cost::CHEAP`), never the recorded times, and `check` fails if
+  fewer than 16 rows were verified. M5: a sampled child is killed at the remaining budget plus 15
+  s and counts as not verified. L1: `check`, `table` and `decide` read through the 64 MiB cap
+  (`merge` already did). L2: one atomic writer (same-directory `create_new` temporary, 0600,
+  `fsync`, rename; refuses a symlink target) for `run --out`, `merge --out` and `table --write`.
+  L3: the wrapper is `ulimit -t "$1" || exit 126; shift; exec "$@"`; the group kill is retried
+  once before `Child::kill`. New: `check --spot-budget SECS`.
 - Tests: `tests/hardening.rs` (negative controls for every clause above, on real child processes
   where the clause is about a process) and unit tests in `runner`, `row` and `cli`.
 

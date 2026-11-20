@@ -6,7 +6,7 @@
 //! ```text
 //!   parent                                    child (own process group)
 //!   ------                                    -------------------------
-//!   /bin/sh -c 'ulimit -t "$1"; shift; exec "$@"' sh N     (unix: the CPU backstop, below)
+//!   /bin/sh -c 'ulimit -t "$1" || exit 126; shift; exec "$@"' sh N   (unix: the CPU backstop)
 //!   /usr/bin/time -l  vos-capacity-probe row --spec <json> --wall 120
 //!        |                                        |  stdout: {"progress":row}  (after the build)
 //!        |  every 50 ms: resident set of the      |          {"row":row}       (the answer)
@@ -77,8 +77,11 @@ pub fn cpu_limit_s(wall_s: u64) -> u64 {
 }
 
 /// The one piece of shell text the probe ever runs: set the CPU limit from argument 1, drop it,
-/// and `exec` the rest.  Everything variable is an argument, not part of this string.
-pub const ULIMIT_SCRIPT: &str = "ulimit -t \"$1\"; shift; exec \"$@\"";
+/// and `exec` the rest.  Everything variable is an argument, not part of this string.  If the
+/// limit cannot be set (a shell that refuses it) the script exits 126 instead of running the row
+/// unbounded (finding L3 of the VOS-028c2 review): a backstop that silently does not apply is
+/// worse than none.
+pub const ULIMIT_SCRIPT: &str = "ulimit -t \"$1\" || exit 126; shift; exec \"$@\"";
 
 /// A [`RowSpec`] as the JSON a child receives.
 pub fn spec_to_json(s: &RowSpec) -> String {
@@ -342,7 +345,7 @@ impl Reap for std::process::Child {
 }
 
 /// Kill a child and wait for it for at most `limit`.  `group_kill` returns whether `/bin/kill`
-/// reported success; if not, the child is killed directly.  Returns whether the child was reaped:
+/// reported success; it is tried twice, and if both fail the child is killed directly.  Returns whether the child was reaped:
 /// `false` means it ignored the kill, and the caller moves on rather than hang.
 pub fn terminate(
     c: &mut dyn Reap,
@@ -350,7 +353,9 @@ pub fn terminate(
     limit: Duration,
     poll: Duration,
 ) -> bool {
-    if !group_kill() {
+    // `/bin/kill` can fail transiently (a signal race, a busy process table): retry it once
+    // before the direct kill, which reaches only the child and not its group (finding L3).
+    if !group_kill() && !group_kill() {
         c.kill_it();
     }
     let t0 = Instant::now();
@@ -518,8 +523,17 @@ pub fn clamp_jobs(jobs: usize) -> usize {
 
 /// Run one row as a child under its own budget (VOS-D095) and turn the outcome into a row.
 pub fn run_one(exe: &Path, spec: &RowSpec) -> Row {
+    run_one_bounded(exe, spec, None)
+}
+
+/// [`run_one`] with a tighter hard limit: the child is killed after `min(hard_limit_for(budget),
+/// bound)`.  The spot check passes what is left of its own budget (finding M5), so a child that
+/// would run for minutes cannot hold `check` for minutes.  A child killed by the bound ends as a
+/// `killed` row, exactly as one killed by its own hard limit.
+pub fn run_one_bounded(exe: &Path, spec: &RowSpec, bound: Option<Duration>) -> Row {
     let wall_s = row_wall_s(&spec.experiment);
-    match run_child(exe, spec, wall_s, RSS_CAP_KB, hard_limit_for(wall_s)) {
+    let hard = bound.map_or(hard_limit_for(wall_s), |b| b.min(hard_limit_for(wall_s)));
+    match run_child(exe, spec, wall_s, RSS_CAP_KB, hard) {
         Ok(ch) => finish_row(spec, &ch),
         Err(e) => {
             let mut r = Row::new(
@@ -760,6 +774,40 @@ mod tests {
             Duration::from_millis(5)
         ));
         assert!(o.dead);
+    }
+
+    /// Finding L3: a failed group kill is retried once before the direct kill.
+    #[test]
+    fn the_group_kill_is_retried_once_before_the_direct_kill_fallback() {
+        let mut calls = 0;
+        let mut c = Obedient { dead: false };
+        // Fails once, succeeds on the retry: the direct kill never runs (the stub only dies
+        // from it, so it is still alive and the wait gives up at the limit).
+        assert!(!terminate(
+            &mut c,
+            &mut || {
+                calls += 1;
+                calls == 2
+            },
+            Duration::from_millis(30),
+            Duration::from_millis(5)
+        ));
+        assert_eq!(calls, 2);
+        assert!(!c.dead, "no direct kill after a successful retry");
+        // Fails twice: exactly two attempts, then the direct kill.
+        let mut calls = 0;
+        let mut c = Obedient { dead: false };
+        assert!(terminate(
+            &mut c,
+            &mut || {
+                calls += 1;
+                false
+            },
+            REAP_LIMIT,
+            Duration::from_millis(5)
+        ));
+        assert_eq!(calls, 2);
+        assert!(c.dead);
     }
 
     #[cfg(unix)]

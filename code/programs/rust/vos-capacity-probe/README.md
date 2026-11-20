@@ -57,10 +57,11 @@ with proof logging, a 120 s wall timeout per obligation (a split or chain, B3, D
 ms, and the checker always run under `Limits::default()` (the probe never raises a limit).
 
 Hardening (0.2.0, VOS-D097): the child is launched through `/bin/sh` with the fixed script
-`ulimit -t "$1"; shift; exec "$@"` as a CPU backstop, every variable part (the limit, the program,
+`ulimit -t "$1" || exit 126; shift; exec "$@"` as a CPU backstop (a limit that cannot be set stops the row), every variable part (the limit, the program,
 the row's spec) a separate argv entry, so nothing from a results file reaches shell text; the
-kill checks `/bin/kill`'s status, falls back to `Child::kill` and waits at most 5 s; child output
-is capped at 1 MiB; `--out` is written atomically; `--jobs` is clamped to 1..=64; and `validate`
+kill checks `/bin/kill`'s status, retries it once, falls back to `Child::kill` and waits at most 5 s; child output
+is capped at 1 MiB; every file read is capped at 64 MiB; every write is atomic (temporary file in
+the same directory, `create_new`, `fsync`, rename; a symlink target is refused); `--jobs` is clamped to 1..=64; and `validate`
 holds every row's `(experiment, mode, knob)` to the plan's closed set, values included. The
 process-group, `sh` and `ulimit` code is unix-only; the Windows BUILD runs `check` in process
 and skips the sampled re-run, saying so.
@@ -81,18 +82,27 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
 * `run --tier full` is the recorded offline run (hours). Its output is committed only after a named
   reviewer has regenerated it on a stated host; `dirty_tree`, `binary_sha256` and the regeneration
   banner are **self-reported**, so that review is a process control.
-* `check` validates every row against the schema and the guards, then **re-runs every quick-tier row**
-  and compares the instance digest, the verdict, the control and the conflict count. It then
-  prints a non-fatal `stale:` line for every recorded tree id (`trees`: the probe and its four
-  solver crates, `git rev-parse HEAD:<path>`) that differs from the working tree, and runs a
-  **seeded spot check**: full-tier non-E rows are drawn in an order seeded by the SHA-256 of the
-  results file's own bytes (so any edit reshuffles the sample), each re-run in a child process
-  under `run`'s limits, until a fixed 60 s budget is spent; rows whose recorded cost is over 20 s
-  are skipped but counted (`skipped over cap: n`). This is a spot check, not proof: a single edited
-  row among about 1,600 is caught with probability about `sample / population`.
+* `check` validates every row against the schema and the guards (`tier` must be `quick` or `full`
+  and the plan's for the knob; every `(experiment, mode, knob)` in the plan's closed set) and
+  requires the file to hold exactly the rows of the plan: none missing, none extra, none twice, and
+  every group's `seeds` equal to the seeds present (`FULL_PLAN_EXEMPT` is the reviewed list of
+  rows allowed to be missing; it is empty). A file that fails any of that is refused **before
+  anything is re-run**. Otherwise it **re-runs every quick-tier row** and compares the instance
+  digest, the verdict, the control and the conflict count, prints a non-fatal `stale:` line for
+  every recorded tree id (`trees`: the probe and its four solver crates, `git rev-parse
+  HEAD:<path>`) that differs from the working tree, and runs a **seeded spot check**: full-tier
+  non-E rows whose knob group the **plan** classes cheap (`cost::CHEAP`; never the recorded times)
+  are drawn in an order seeded by the SHA-256 of the results file's own bytes, each re-run in a
+  child process under `run`'s limits and under what is left of a fixed 60 s budget (plus 15 s), until
+  the budget is spent; expensive groups are skipped but counted; a child that does not finish is
+  **not verified** and fails the check, as does verifying fewer than 16 rows. The sample is
+  deterministic, so a determined editor can grind the file to fall outside it: this is a spot check
+  of digests, verdicts, controls and conflict counts, **not proof**, and it compares no times.
 * `check --full` is the release gate: it **refuses** unless every recorded tree id equals the
   working tree's (a file that records none cannot say which tree it describes), then re-runs
-  every full-tier row, no sampling, each in a child (about two hours).
+  every full-tier row, no sampling, each in a child (about two hours), and also requires each
+  recorded solve time, check time and peak RSS to lie within a two-sided 4x band of the re-run
+  and the recorded `green` to equal `green` recomputed from the re-run's measurements.
 * `merge` refreshes a subset of the committed rows from a fresh `run` (VOS30 section 9.2): the
   other rows stay byte-identical, a dirty fresh run or a changed row identity is refused.
   `merge --add` instead appends fresh rows whose identities are all absent from the base (a plan

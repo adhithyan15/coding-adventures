@@ -10,6 +10,7 @@
 #![deny(unsafe_code)]
 
 pub mod cli;
+pub mod cost;
 pub mod cpu;
 pub mod enumx;
 pub mod exp;

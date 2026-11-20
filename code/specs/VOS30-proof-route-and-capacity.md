@@ -1481,7 +1481,7 @@ malformed command line or an unreadable input (a gate never confuses the two).
   validation also holds every row's `(experiment, mode, knob)` to the plan's closed
   set, values included; `check` prints a non-fatal `stale:` line per recorded tree id
   that differs from the working tree and the line `spot check: population P, re-run
-  R, skipped over cap: S, not reached: N`; **`check --full`** refuses unless every
+  R, skipped (plan cost class expensive): S, not reached: N`; **`check --full`** refuses unless every
   recorded tree id equals the working tree's (a file that records none refuses too)
   and then re-runs every full-tier row in a child process; `--exe` names the
   executable the children run (a test passes it).
@@ -2361,9 +2361,10 @@ As each item lands, the PR that builds it replaces "planned" by the as-built dec
 as 9.10 and 9.11 did for VOS-028b.
 
 **VOS-028c2: the probe, no new experiment (as built).** Version 0.2.0. The code is
-in `src/runner.rs` (items 2, 3, 5), `src/spot.rs` (item 1), `src/results.rs` (the
-knob set, `wall_s`, `trees`), `src/cli.rs` (`merge --add`, `check`, `--jobs`), and
-the negative controls are in `tests/hardening.rs`. The re-recording of B3, D3 and D4
+in `src/runner.rs` (items 2, 3, 5), `src/spot.rs` and `src/cost.rs` (item 1), `src/results.rs` (the
+knob set, `wall_s`, `trees`, tier and coverage rules, timing comparison), `src/cli.rs` (`merge --add`,
+`check`, `--jobs`, the capped reader and atomic writer), and the negative controls are in
+`tests/hardening.rs` and, for the findings of the security review below, `tests/review_fixes.rs`. The re-recording of B3, D3 and D4
 below is a separate step, run on the committed tree and merged in a second commit.
 
 * The 600 s chain budget and `wall_s` of 9.5 (VOS-D095); the knobs of B3, D3 and D4
@@ -2395,36 +2396,81 @@ below is a separate step, run on the committed tree and merged in a second commi
   the four per-crate revisions are). A rule "recorded revisions must be ancestors of
   HEAD" would make `check` fail today. New runs and merges instead record `trees`
   (content-addressed tree ids of the probe and its four solver crates).
-  * **CI `check`: a non-fatal `stale:` line plus a seeded spot check.** `check` prints
-    a `stale:` line when a recorded tree differs from the working tree. It stays
-    **non-fatal** on purpose: a fatal rule would couple every edit to a solver crate to
-    a regeneration of the results file, which is the VOS-D103 failure mode. Its teeth
-    are a **sampled full-row re-run** whose sample cannot be predicted from the repository
-    alone: the sample is seeded from the **SHA-256 of the results file's own bytes**
-    (its canonical serialisation), so **any edit to the file reshuffles which rows are
-    re-run**; rows are drawn from **all** full-tier non-E rows (no exclusion of slow
-    rows); they are taken in seeded order and re-run, each under the limits of item
-    (3), until a fixed **total CI time budget** is spent; a row whose recorded solve
-    plus check exceeds the per-row cap is **skipped, but counted and printed** (`skipped
-    over cap: n`), never silently dropped. Each re-run is compared by `compare_rerun`.
-  * **What the spot check proves.** Stated honestly: a single hand-edited row among
-    about 1,625 is caught with probability about `sample / population` per commit (for
-    16 to 30 rows, about 1% to 2%). The sample is a spot check that makes a wholesale
-    edit expensive; it is **not proof** of the file.
-  * **The real teeth: `check --full` and a release gate.** `check --full` (as built) re-runs **every** full-tier row, no sampling, locally or nightly (about
-    2 h), each row under the limits of item (3). It **refuses when a recorded tree id
-    differs from the working tree** unless the rows are regenerated first, so it cannot
-    pass on a file that no longer describes the tree. The VOS-028c3 decision stays
-    **provisional** until a full re-run (`check --full` at the tree that ran) has
-    reproduced every full-tier row, and the named reviewer of section 8.5 has signed
-    that off. This is a release gate, not a CI step.
+  * **CI `check`: a non-fatal `stale:` line, plan coverage, and a seeded spot check.**
+    `check` prints a `stale:` line when a recorded tree differs from the working tree. It
+    stays **non-fatal** on purpose: a fatal rule would couple every edit to a solver crate
+    to a regeneration of the results file, which is the VOS-D103 failure mode. Before it
+    re-runs anything, `check` applies every rule that needs no instance, and a file that
+    fails one is refused at once (finding M2; nothing is built from an unvalidated knob):
+    `validate`, `quick_plan_covered` and `full_plan_covered`.
+    * **Tier (finding H1).** `validate` requires `tier` to be `quick` or `full` and equal to
+      the tier the plan gives the row's `(experiment, mode, knob)`, so a relabelled row can
+      neither reach the in-process quick re-run nor leave the sample population.
+      `quick_specs` also admits only rows the plan puts in the quick tier.
+    * **Coverage (finding H2).** `full_plan_covered` requires the file to hold exactly the
+      rows of the full plan (`plan(Tier::Full)`, which includes the quick knobs): none
+      missing, none extra, no identity twice, and every group's recorded `seeds` equal to the
+      seeds present; `quick_plan_covered` applies the same rule to the quick tier. The
+      reviewed exemption list `results::FULL_PLAN_EXEMPT` is the full plan's rows the
+      committed file is allowed to lack, each with a reason, and a test pins it to the exact
+      set of missing rows. **`FULL_PLAN_EXEMPT` is empty**: the re-recorded file holds all
+      of the plan's rows (1,625).
+    * **The spot check.** Its sample is **seeded from the SHA-256 of the results file's own
+      bytes** (its canonical serialisation) and is **deterministic**: CI has to be
+      reproducible. Rows are drawn from the full-tier non-E rows that the **plan** classes
+      cheap (`cost::CHEAP`, keyed by `(experiment, mode, knob)`, derived from the committed
+      recording with `CHEAP_MAX_MS` = 3000, the slowest seed's solve plus check; finding M4:
+      nothing the file records about a row's time or result decides this, so editing those
+      fields cannot get a row skipped), taken in seeded order and re-run, each in a child
+      under the limits of item (3), until the total budget `SPOT_BUDGET` = 60 s is spent.
+      An expensive row is skipped, counted and printed (`skipped (plan cost class
+      expensive): n`). Each child's hard limit is the smaller of its row limit and the
+      remaining budget plus `SPOT_SLACK` = 15 s (finding M5); a child that does not finish
+      in that time is **not verified**, which is a `check` failure for a cheap-class row,
+      never a pass. `check` also fails if fewer than `SPOT_FLOOR` = 16 rows (or all the
+      eligible ones, if fewer) were verified. Each re-run is compared by `compare_rerun`:
+      digests, verdict, control, conflict counts and step counts; **the CI spot check does
+      not compare times or memory**.
+  * **What the spot check proves, honestly (finding M3).** The first draft claimed an
+    editor could not know in advance which rows would be re-run, because any edit reshuffles it.
+    That is false as a defence: the seed is deterministic, an editor holds both the file and
+    this code, and so can compute the sample of a candidate file and **grind** it (change a
+    byte somewhere harmless, such as a note) until the edited row falls outside the sample.
+    The spot check catches an **accidental** drift (a row regenerated at another tree) and a
+    **lazy** edit that does not grind. For a single edit among about 1,625 rows and a sample
+    of 16 to 90, an unprepared edit is caught with probability about `sample / population`.
+    It is **not proof** of the file against a determined editor.
+  * **The real teeth: `check --full` and a release gate.** `check --full` re-runs **every**
+    full-tier row, no sampling, locally or nightly (about 2 h), each row under the limits
+    of item (3). It **refuses when a recorded tree id differs from the working tree**
+    (and when the file records none: a file that predates tree ids is refused with that
+    message) unless the rows are regenerated first, so it cannot pass on a file that no
+    longer describes the tree. It also compares what drives `green` (finding M1): the
+    recorded `solve_ms`, `worst_step_solve_ms`, `check_ms` and `peak_rss_kb` must each lie
+    within a **two-sided** band of the re-run, `TIMING_BAND` = 4 (recorded at most 4 times
+    the re-run's plus slack, and the re-run's at most 4 times the recorded plus slack;
+    one-sided would let an editor lower a time to flip `green`), with absolute slack
+    `TIMING_SLACK_MS` = 50 (times) and `RSS_SLACK_KB` = 8192, and `green` is **recomputed
+    from the re-run's own measurements** and must equal the recorded one. A row that ended
+    `killed`, `oom` or `crashed` has no reproducible time and is compared on its result
+    only. So timing-derived verdicts are verified only by `check --full`, and `check --full` is
+    the release gate: the VOS-028c3 decision stays **provisional** until a full re-run (`check
+    --full` at the tree that ran) has reproduced every full-tier row and the named reviewer
+    of section 8.5 has signed that off. This is a release gate, not a CI step; on the
+    committed file today it **refuses**, with the tree-id message and not a crash: the file's
+    own provenance and its E1 refresh record no tree ids (they predate 0.2.0), and the
+    three D095 re-record merges record the probe tree of 0f69ee86, which is not the tree
+    `check --full` runs at once the hardening fixes are committed. It passes only after the
+    rows are regenerated at the tree that is being released.
   **(2)** The kill checks the status of
-  `/bin/kill`, falls back to `child.kill()` and bounds the wait with a 5 s `try_wait`
-  loop (`runner::terminate`, tested with a stub child that ignores the kill). **(3) OS limits without `unsafe`, and no shell injection.** The child is
+  `/bin/kill`, retries it once, falls back to `child.kill()` and bounds the wait with a
+  5 s `try_wait` loop (`runner::terminate`, tested with a stub child that ignores the kill). **(3) OS limits without `unsafe`, and no shell injection.** The child is
   launched through `/bin/sh` as a CPU backstop plus a kill-on-drop guard. The CPU
   limit N is a **validated unsigned integer computed from the row budget constant**
   (never read as text from the results file) and **formatted from a number**. The script
-  string is the **fixed literal** `ulimit -t "$1"; shift; exec "$@"`; N, the program
+  string is the **fixed literal** `ulimit -t "$1" || exit 126; shift; exec "$@"`
+  (a limit that cannot be set stops the row with status 126 instead of running it
+  unbounded; finding L3); N, the program
   and its arguments are passed as **separate argv entries** (`sh -c <script> sh N
   program args...`), never joined into the script. A **negative control** passes a
   malicious knob and budget string (shell metacharacters such as `; touch x` and `$(...)`)
@@ -2437,18 +2483,29 @@ below is a separate step, run on the committed tree and merged in a second commi
   not run). The sampled re-run of item (1) runs **each row in a child process with the
   same resource limits as `run`** (CPU ulimit, RSS poll, kill), never in process.
   **(5)** Child output is read through `take(1 MiB)`,
-  `--out` is written atomically, `--jobs` is clamped to 1..=64. Process-group, `sh`
+  `--jobs` is clamped to 1..=64. **Files (findings L1 and L2).** `check`, `table`, `decide`
+  and `merge` all read through one capped reader (refusing a file over 64 MiB, checked on
+  the open file and enforced on the read). Every write (`run --out`, `merge --out`,
+  `table --write`) goes through one atomic writer: a temporary file in the **same
+  directory**, opened `create_new` (never following a planted file or link; mode 0600),
+  named from the process id, a counter and the clock, written, `fsync`ed and renamed over
+  the target, with the directory `fsync`ed; a target that is a symbolic link is refused;
+  the result keeps the target's mode, or 0644. Process-group, `sh`
   and `ulimit` code is `cfg(unix)`: the Windows BUILD runs `check` in process only
   (its `validate` still applies; the sampled re-run is skipped there and says so).
 * E1 rows are untouched (VOS-D103).
 * **As built, the constants and the choices the text above left open.** The spot check's
-  total budget is **60 s** (`spot::SPOT_BUDGET`) and its per-row cap **20 s** of recorded
-  solve plus check (`SPOT_ROW_CAP_MS`); a row recorded `killed` or `oom` has no
-  reproducible time and counts as over the cap. The seed is the SHA-256 of
+  total budget is **60 s** (`spot::SPOT_BUDGET`; `check --spot-budget SECS` shortens it for
+  tests and local runs, up to 600 s, and the floor still applies), the slack of a child's
+  hard limit **15 s** (`SPOT_SLACK`) and the floor of verified rows **16** (`SPOT_FLOOR`).
+  The cost class is `cost::CHEAP`, 100 of the 284 full-tier non-E knob groups (500 of the
+  1,420 rows), those whose slowest seed took at most 3 s; a test fails until the table
+  agrees with the committed recording, so a re-record that moves a group changes the table
+  in the same commit. The seed is the SHA-256 of
   `Results::to_text()` (the canonical serialisation; the committed file is canonical, so
   it equals the SHA-256 of the file's bytes, which a test pins); the order sorts rows by
   SHA-256 of `seed:index`. The population excludes quick-tier rows (they are re-run in
-  process by `check`, as before) and E1 and E2. `skipped over cap` and `not reached`
+  process by `check`, as before) and E1 and E2. `skipped` and `not reached`
   count the rows of the seeded order up to where the budget ended. A sampled row whose
   `(experiment, mode, knob)` is not in the plan is refused and not run. The `stale:`
   comparison uses `git rev-parse HEAD:<path>`, with `+uncommitted` appended when
@@ -2458,7 +2515,8 @@ below is a separate step, run on the committed tree and merged in a second commi
   one; it re-runs the quick rows in process as well. N of the `ulimit` wrapper is the
   hard limit in whole seconds (`runner::cpu_limit_s`: 300 for a 120 s row, 780 for a
   600 s chain), and a `GroupGuard` kills the child's process group if the parent
-  unwinds. The sampled and full re-runs call `runner::run_one`, the function `run` uses.
+  unwinds. The sampled and full re-runs call `runner::run_one_bounded` (`run_one` with a
+  tighter hard limit), the function `run` uses.
 
 **VOS-028c3: the experiments and the decision.** The experiments of 8.6.3, in
 `src/sweep.rs` and `tests/sweep.rs` with edits to `exp.rs`, `shapes.rs`, `prog.rs`,
