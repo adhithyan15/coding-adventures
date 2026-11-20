@@ -1284,3 +1284,33 @@ func TestFixedPointInputConsumersSelectExactRustReaders(t *testing.T) {
 		}
 	}
 }
+
+func TestFixedPointBindingsSelectGoVerifierForAllLanguages(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/fixed-point", Language: "rust"},
+		{Name: "rust/ca-assurance-report", Language: "rust"},
+		{Name: "rust/warrant-ir", Language: "rust"},
+		{Name: "go/programs/build-tool", Language: "go"},
+	}
+	got, err := repositoryInputConsumersForChange(
+		[]string{"code/packages/rust/fixed-point/evidence.bindings"}, packages, "all",
+	)
+	want := map[string]bool{
+		"rust/ca-assurance-report": true,
+		"rust/warrant-ir":          true,
+		"go/programs/build-tool":   true,
+	}
+	if err != nil || !reflect.DeepEqual(got, want) {
+		t.Fatalf("all-language fixed-point bindings selection = %v, err %v; want %v", got, err, want)
+	}
+	gotRust, err := repositoryInputConsumersForChange(
+		[]string{"code/packages/rust/fixed-point/evidence.bindings"}, packages, "rust",
+	)
+	wantRust := map[string]bool{
+		"rust/ca-assurance-report": true,
+		"rust/warrant-ir":          true,
+	}
+	if err != nil || !reflect.DeepEqual(gotRust, wantRust) {
+		t.Fatalf("Rust-only fixed-point bindings selection = %v, err %v; want %v", gotRust, err, wantRust)
+	}
+}
