@@ -2,6 +2,7 @@ package main
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
@@ -33,8 +34,20 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		{Name: "rust/wasm-leb128", Language: "rust"},
 		{Name: "rust/test-bootstrap", Language: "rust"},
 		{Name: "rust/x25519", Language: "rust"},
+		{Name: "go/programs/build-tool", Language: "go"},
 	}
 	both := map[string]bool{"rust/warrant-corpus-gen": true, "python/warrant-oracle": true}
+	// The bindings also select the build tool, whose coverage test reads them (CV2-F13).
+	bothFor := func(changed string) map[string]bool {
+		want := map[string]bool{}
+		for name := range both {
+			want[name] = true
+		}
+		if strings.HasSuffix(changed, "/evidence.bindings") {
+			want["go/programs/build-tool"] = true
+		}
+		return want
+	}
 	// Every file of the fixture directory, and the bindings, select exactly the two.
 	for _, changed := range []string{
 		"code/specs/fixtures/ct-compare-warrant-v2/corpus.json",
@@ -46,7 +59,7 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		"code/packages/rust/ct-compare/evidence.bindings",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
-		if err != nil || !reflect.DeepEqual(got, both) {
+		if err != nil || !reflect.DeepEqual(got, bothFor(changed)) {
 			t.Fatalf("%s selected %v (err %v), want exactly the generator and the oracle", changed, got, err)
 		}
 		// A single-language run keeps only that language's consumer.
@@ -69,7 +82,7 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		"code/packages/rust/x25519/evidence.bindings",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
-		if err != nil || !reflect.DeepEqual(got, both) {
+		if err != nil || !reflect.DeepEqual(got, bothFor(changed)) {
 			t.Fatalf("%s selected %v (err %v), want exactly the generator and the oracle", changed, got, err)
 		}
 		if got, _ := repositoryInputConsumersForChange([]string{changed}, packages, "rust"); !reflect.DeepEqual(got, map[string]bool{"rust/warrant-corpus-gen": true}) {
@@ -92,7 +105,7 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		"code/packages/rust/lzw/evidence.bindings",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
-		if err != nil || !reflect.DeepEqual(got, both) {
+		if err != nil || !reflect.DeepEqual(got, bothFor(changed)) {
 			t.Fatalf("%s selected %v (err %v), want exactly the generator and the oracle", changed, got, err)
 		}
 		if got, _ := repositoryInputConsumersForChange([]string{changed}, packages, "rust"); !reflect.DeepEqual(got, map[string]bool{"rust/warrant-corpus-gen": true}) {
@@ -115,7 +128,7 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		"code/packages/rust/wasm-leb128/evidence.bindings",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
-		if err != nil || !reflect.DeepEqual(got, both) {
+		if err != nil || !reflect.DeepEqual(got, bothFor(changed)) {
 			t.Fatalf("%s selected %v (err %v), want exactly the generator and the oracle", changed, got, err)
 		}
 		if got, _ := repositoryInputConsumersForChange([]string{changed}, packages, "rust"); !reflect.DeepEqual(got, map[string]bool{"rust/warrant-corpus-gen": true}) {
