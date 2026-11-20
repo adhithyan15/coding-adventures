@@ -100,7 +100,7 @@ fn the_other_templates_instantiate_by_signature() {
         assert_eq!(xor.requires, [Level::Fixed]);
         assert!(json(&xor).contains(r#"["bit_xor",["var","result"],["lit",{"type":"U8","value":"1"}]]"#));
         // every name of the registry is reachable
-        assert_eq!(KNOWN_FAULTS.len(), 14);
+        assert_eq!(KNOWN_FAULTS.len(), 17);
     });
 }
 
@@ -109,7 +109,7 @@ fn a_template_the_signature_cannot_take_is_refused() {
     let eq = ct_op("eq");
     for (op, fault, why) in [
         (ct_op("select_bytes"), "invert", "Bool result"),
-        (eq.clone(), "missing-error", "Result<Bytes"),
+        (eq.clone(), "missing-error", "needs a Result result"),
         (eq.clone(), "swap-choice", "`choice`"),
         (eq.clone(), "off-by-one", "Nat or fixed"),
         (eq.clone(), "truncate-last", "Bytes result"),

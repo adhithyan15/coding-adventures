@@ -6876,6 +6876,31 @@ Those repository-owned certificate, signature, trust, revocation, and transport
 compositions remain prerequisites, and concrete HTTPS and live-provider
 readiness remain unavailable.
 
+An authenticated ordered retry server `CertificateVerify` at the post-accept
+`ExpectFinished` position can now be decoded from the exact pending message and
+bound to the exact pre-message transcript snapshot. The helper decodes the
+final ClientHello's retained `signature_algorithms` extension under an explicit
+caller-owned scheme-count limit, requires the peer's exact wire identifier to
+occur in that offer, and then authorizes it through the caller's data-driven
+repository-owned signature-scheme policy. Success returns a non-copyable proof
+retaining the pending message, exact decoded `CertificateVerify`, exact offered
+scheme list, and policy-authorized RSA-PSS scheme. A detached transcript hash,
+ClientHello offer, message body, wire identifier, or algorithm policy cannot be
+substituted through this boundary.
+
+This proof establishes authenticated message provenance, exact pre-message
+transcript selection, `CertificateVerify` framing, final-offer membership, and
+data-driven algorithm authorization only. In particular, the framing grammar
+permits an empty signature vector, which later repository-owned cryptographic
+verification must reject. This slice does not derive or bind the reviewed leaf
+key, verify the signature, prove that the preceding certificate message and a
+reviewed path retain the same leaf, authenticate Finished, establish trust,
+verify a hostname, enforce revocation, select later epochs, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. Those
+repository-owned certificate, signature, trust, revocation, and transport
+compositions remain prerequisites, and concrete HTTPS and live-provider
+readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

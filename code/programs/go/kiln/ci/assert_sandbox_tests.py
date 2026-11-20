@@ -69,6 +69,7 @@ REQUIRED = (
     "TestSandboxStraceSignals",
     "TestSandboxStraceClone3Enosys",
     "TestSandboxStraceGlibcThreadClone3",
+    "TestSandboxStraceDyingThreads",
     "TestSandboxRecordProbe",
     "TestSandboxRecordGates",
     "TestSandboxRecordSurvivor",

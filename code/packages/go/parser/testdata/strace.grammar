@@ -76,7 +76,14 @@ inner        = { WORD | ASSIGN | ANNOTATED | QUOTED | PUNCT | COMMA | group } ;
 # here it only has to be well-bracketed.  It may start with a comma, be empty,
 # or continue an argument.
 # ---------------------------------------------------------------------------
-resumed_line = RESUMED inner RPAREN tail ;
+#
+# A task that dies inside a clone (its thread group is exiting) is printed as
+# `<... clone resumed> <unfinished ...>) = ?`: strace reached PTRACE_EVENT_EXIT
+# with the call still open, so the marker appears AFTER the resume.  The second
+# alternative accepts that marker; the consumer pins the one exact spelling (the
+# marker alone, then `= ?`) and refuses any other text around it (KILN04 D35).
+resumed_line = RESUMED inner RPAREN tail
+             | RESUMED inner UNFINISHED RPAREN tail ;
 
 # ---------------------------------------------------------------------------
 # `+++ exited with N +++`, `+++ killed by SIGNAME [(core dumped)] +++`.  Each is
@@ -117,8 +124,11 @@ dead_resumed_line = DEAD_RESUMED ;
 # UNFINISHED either: a bare "<unfinished ...>" after the ")" can never be part
 # of a result (the old result parser refused it), so it is refused here.  A
 # marker glued to a word (`= 0<unfinished ...>`) is one ANNOTATED token and is
-# still accepted, as it was.
+# still accepted, as it was.  The one thing that may follow is UNAVAILABLE, the
+# `<unavailable>` strace prints when it could not fetch a result because the
+# tracee died (`= ? <unavailable>`); the consumer's result parser accepts exactly
+# that spelling and nothing else with it (KILN04 D35).
 # ---------------------------------------------------------------------------
-tail         = { WORD | ASSIGN | ANNOTATED | QUOTED | PUNCT | COMMA
+tail         = { WORD | ASSIGN | ANNOTATED | QUOTED | PUNCT | COMMA | UNAVAILABLE
                | LPAREN | RPAREN | LBRACKET | RBRACKET | LBRACE | RBRACE
                | SYSCALL | FUNC } ;

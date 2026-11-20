@@ -110,6 +110,8 @@ def test_registry_covers_the_names_of_section_8_2():
         "swap-components",
         # S10o-1 (VER04r 8.2, D36): the second component of a tuple, exchanged 2k <-> 2k+1
         "off-by-one-consumed",
+        # S11f-1 (VER04r 8.2): the scalar faults of the Rust harness
+        "saturate-add", "saturate-sub", "shift-mask",
     }
 
 

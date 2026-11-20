@@ -52,6 +52,31 @@ func TestShapePendingHalf(t *testing.T) {
 	}
 }
 
+// The dying-call result `<unavailable>` is a token of the closed list, so the
+// census shows it as UNAVAILABLE and not as TOKEN?; the interrupted resume shows
+// its marker after the resume.
+func TestShapeUnavailable(t *testing.T) {
+	const text = "2  tgkill(1, 1, SIGURG <unfinished ...>\n2  <... tgkill resumed>) = ? <unavailable>\n2  <... clone resumed> <unfinished ...>) = ?\n"
+	got := Shape(openString(text), 2)
+	if len(got) != 2 {
+		t.Fatalf("shapes = %+v", got)
+	}
+	want := "PID RESUMED:tgkill RPAREN PUNCT[=] PUNCT[?] UNAVAILABLE"
+	if got[1].Tokens != want {
+		t.Errorf("tokens = %q\nwant     %q", got[1].Tokens, want)
+	}
+	if strings.Contains(got[1].Tokens, "TOKEN?") {
+		t.Errorf("UNAVAILABLE is not on the closed list: %q", got[1].Tokens)
+	}
+	got = Shape(openString(text), 3)
+	if len(got) == 0 || strings.Contains(got[len(got)-1].Tokens, "TOKEN?") || !strings.Contains(got[len(got)-1].Tokens, "UNFINISHED") {
+		t.Errorf("shapes = %+v", got)
+	}
+	if shapeToken("UNAVAILABLE", "<unavailable>") != "UNAVAILABLE" {
+		t.Error("UNAVAILABLE is not printed")
+	}
+}
+
 // The line cap and the token cap.
 func TestShapeBounds(t *testing.T) {
 	line := "5  f(" + strings.Repeat("1,", 500) + ") = 0"
