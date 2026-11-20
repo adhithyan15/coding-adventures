@@ -1183,7 +1183,7 @@ under the kind `trace-incomplete:<reason>:<sub>` (unstable-path:
 `component-changed`, `absent-changed`, `final-changed`,
 `followed-final-changed`, `followed-absent-changed`, `gone-but-found`,
 `removed-before-made`, `file-changed`, `own-overlap`, `through-missing`,
-`dotdot`, `fd-path-differs`; exec-unreadable: `modified-after-exec`,
+`dotdot`, `fd-path-differs`, `absent-before-made`; exec-unreadable: `modified-after-exec`,
 `virtual-exe`, `virtual-interpreter`, `under-tmp`, `in-repo`, `host-disk`); the
 sub-code is a string literal at each site, never a slice of the input.
 (2) **op classes**: `census.json` has an additive `ops` map, `{kind: {class: n}}`
@@ -3933,6 +3933,86 @@ read by path changes. The annotation comes from the kernel (strace's -y) and is
 the lexer's ANNOTATED token; a quoted string is another token kind, so a path
 containing `socket:[` cannot fake it (and `/x/socket:[1]` starts with `/`). Pass 2
 is shared, so both trace readers change together and the cross-check stays equal.
+
+**Decision D42: absent before made, metadata writes by path, and ephemeral
+device nodes (real-build census, `unstable-path:final-changed` in 31 actions;
+`kiln:recorder` 9 to 10).** The paths were C and C++ build outputs
+(`code/packages/{c,cpp}/*/_build/{gcc,clang}-<name>-tests`, and `_build` itself
+on newer images). The linker or driver `stat`s its output, gets ENOENT, creates
+it with a plain `O_CREAT` open (or `mkdir` for `_build`), then stats, chmods and
+runs it. A successful stat never enters the followed-final set (it is relaxed,
+section 5.5); the only stat that does is one that FAILED while the post-run disk
+shows the name present, and the earliest lookup then predates the creation, so
+`createdOnce` fails. Separately, a shell `>/dev/null` is an `O_CREAT|O_TRUNC`
+open, which logged a namespace change for `/dev/null` and raised `final-changed`
+and `own-overlap` on it.
+
+*Rule 1, absent before made (`absentBeforeMade`, `classify.go`; sub-code
+`absent-before-made`).* A call that FAILED with ENOENT on its final name `p`,
+where the post-run disk shows `p` present, is stable when ALL hold:
+
+- `p` is untracked (not a repository-tracked file) and was never a
+  `link()`/`linkat()` source or destination;
+- `p`'s change log is not empty and EVERY entry STARTED after the latest such
+  lookup COMPLETED (the interval of the lookups is the earliest start to the
+  latest completion; a split call carries its `<unfinished ...>` line as its
+  start, so this uses the same interval machinery as `unsafe`, never line
+  numbers compared naively);
+- the first entry is a creation that proves the action made the name: a clean
+  creation (mkdir, symlink, `O_EXCL` open) or an `O_CREAT` open keyed by the
+  descriptor's -y path;
+- no removal of `p` completed before that creation (`removedBeforeMade`).
+
+Otherwise it is judged by `createdOnce`, which is today's rule, so a verdict
+that was stable stays stable. Only calls whose ENOENT speaks for ONE final name
+feed the rule: `rename`, `link` (two names) and `execve` (the missing name may
+be the interpreter) never do. `classifier.callErrno` carries the errno.
+
+*Why it is safe.*
+
+1. The ENOENT says nothing was at the name when it was looked up, and the
+   absence is still recorded as an absent observation (`absentObs`, for the merge
+   job) by `observeResult`, exactly as before.
+2. It cannot have been a dangling symlink that the creating open then wrote
+   through: an `O_CREAT` open that followed a link is keyed by its -y path, which
+   is the link's TARGET, not this name, so an entry logged at `p` proves `p` was
+   not a link when that open ran. A link that was removed and replaced is a
+   removal before the creation, or a first entry that is not a creation.
+3. Every change-log entry starts after the lookup completed, so nothing the
+   action did to the name can have taken effect while the lookup ran, and the
+   first entry proves the action made the name: before it the name was absent
+   (or, for a plain `O_CREAT`, a regular file that is now the action's own).
+4. Every directory and link the walk crossed is a traversed component and keeps
+   the strict rule (`stable`), so the ENOENT cannot have come from a missing
+   ancestor that was created later.
+5. The lookups of calls that can write are judged again on their own interval
+   (the `wr` set), so a failed `chmod`/`open` that could not be placed still
+   voids the write set (W8) when the rule fails.
+
+*Rule 2, metadata writes by path (F3).* A SUCCESSFUL `chmod`, `fchmodat`,
+`fchmodat2`, `chown`, `fchownat`, `utimensat`, `utimes`, `futimesat`, `utime` or
+`setxattr` that follows its final name sets `classifier.relax` exactly as a
+successful stat does, so its followed final goes through the open-only rule
+(section 5.5) instead of `createdOnce`. This is the linker's post-link chmod.
+Under the open-only conditions (every log entry an `O_CREAT` open keyed by its
+-y path, the first completed before the lookup began, at most one trailing
+unlink that started after the lookup, no hard link) the name is provably the
+regular file the action made, so the metadata write lands on it. The write
+itself is still recorded and still observes a file the action did not make
+(`writes-tracked`, untracked observation), and the no-follow forms (`lchown`,
+`lsetxattr`, `AT_SYMLINK_NOFOLLOW`) are unchanged.
+
+*Rule 3, ephemeral device nodes.* `openResolved` does not log a namespace change
+for an `O_CREAT` open of a path that is under `/dev/` AND matches the host's
+ephemeral list (`ephemeralDevice`, `ops.go`; `/dev/null`). Both tests are
+needed: the list says the name is no input, `/dev/` says it is a device node and
+not a file a build could have made. Such a name is never created, replaced or
+read as content, so nothing the stability rules guard can depend on it; the write
+is still recorded.
+
+Tests: `internal/traced/absent_before_made_test.go`; the fuzzer model has four
+new bursts (stat ENOENT then create, `mkdir -p`, post-link chmod, dangling link
+replaced), and with the timing condition disabled `TestDifferentialSeeded` fails.
 
 **Decision D40: tmpfs containment (real-build census, `unstable-path` in about
 43 actions, all writes-incomplete; `kiln:recorder` 7 to 8).** Every high-count

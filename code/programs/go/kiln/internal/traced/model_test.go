@@ -155,6 +155,12 @@ func (m *model) framesAt(path string) []frame {
 		if cur == nil {
 			break
 		}
+		if cur.kind != KindDir {
+			// The cwd text now names a file: the process's real cwd is a
+			// directory that was removed or moved away, like a stale cwd.
+			m.unsound = true
+			break
+		}
 		p += "/" + c
 		fr = append(fr, frame{cur, p})
 	}
@@ -962,6 +968,18 @@ var bursts = [][]burstOp{
 	// directory from the one the kernel's cwd is in.  A suffix that starts with
 	// "~" is a literal relative path, not joined to the base.
 	{{0, "/o", false}, {14, "/o", false}, {2, "/o", false}, {0, "/o", false}, {12, "~../u.o", false}, {12, "~../o/x", false}},
+	// 14..17: absent-before-made and metadata writes by path (KILN04 D42).
+	//   14  stat ENOENT; plain O_CREAT; stat; chmod            (the linker's output)
+	//   15  stat ENOENT of a directory; mkdir it; mkdir inside it   (mkdir -p)
+	//   16  create+truncate; chmod; stat; chmod                (a post-link chmod)
+	//   17  dangling link; stat through it; unlink; create; chmod
+	{{12, "/t.o", false}, {10, "/t.o", false}, {12, "/t.o", false}, {104, "/t.o", false}},
+	{{12, "/o", false}, {0, "/o", false}, {0, "/o/x", false}},
+	{{8, "/t.o", false}, {104, "/t.o", false}, {12, "/t.o", false}, {104, "/t.o", false}},
+	{{1, "/t.o", false}, {12, "/t.o", false}, {5, "/t.o", false}, {10, "/t.o", false}, {104, "/t.o", false}},
+	//   18  stat ENOENT of u.o; create t.o; rename t.o INTO u.o: the first entry
+	//       of u.o is a rename, not a creation, so the rule must refuse
+	{{12, "/u.o", false}, {8, "/t.o", false}, {2, "/t.o", false}, {12, "/u.o", false}},
 }
 
 // perturbations are the operations a burst may be followed by, aimed at the

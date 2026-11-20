@@ -429,6 +429,10 @@ func (c *classifier) resolve(full string, follow bool) (target, bool) {
 		case settled:
 		case c.relax && c.lookup(f).kind == KindFile:
 			c.noteRel(f, false)
+		case !c.callOK && c.callErrno == "ENOENT" && f == w.final:
+			// The call found nothing at this name and the disk shows it now:
+			// judged by the absent-before-made rule (D42).
+			c.noteBefore(f)
 		default:
 			c.noteFinal(f)
 		}

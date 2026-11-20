@@ -118,6 +118,11 @@ type lookupSet struct {
 	// the start of the earliest lookup and whether any call found something
 	// there (it succeeded, or failed with an errno that says so).  See judge.
 	gone map[string]goneLook
+	// before holds the followed final names of a call that FAILED with ENOENT
+	// while the post-run disk shows the name present (KILN04 D42): the call
+	// looked, found nothing, and the action made the name afterwards.  The span
+	// is the earliest start and the latest completion of such lookups.
+	before map[string]span
 }
 
 func newLookupSet() lookupSet {
@@ -125,6 +130,7 @@ func newLookupSet() lookupSet {
 		seen: map[string]pos{}, seenAbsent: map[string]span{}, ownSeen: map[string]span{},
 		seenFile: map[string]bool{}, seenFinal: map[string]pos{},
 		relFinal: map[string]span{}, relAbs: map[string]span{}, gone: map[string]goneLook{},
+		before: map[string]span{},
 	}
 }
 
@@ -177,6 +183,8 @@ func (l *lookupSet) goneAt(abs string, start pos, present bool) {
 	l.gone[abs] = g
 }
 
+func (l *lookupSet) lookedBefore(abs string, start, cur pos) { widen(l.before, abs, start, cur) }
+
 func (l *lookupSet) own(p string, start, cur pos) { widen(l.ownSeen, p, start, cur) }
 
 // classifier is the state of one action across all of its steps.
@@ -221,7 +229,8 @@ type classifier struct {
 	// second says whether a write may have landed somewhere else (W8).
 	lookupSet
 	wr lookupSet
-	// relax is set while a successful stat or exec target is resolved.
+	// relax is set while a successful stat, exec, or metadata write by path
+	// (chmod, chown, utimensat, setxattr: KILN04 D42) target is resolved.
 	relax bool
 	// execReads maps an untracked file whose head was read from the post-run
 	// disk (for a "#!" line or an ELF header) to the exec that read it.
@@ -274,6 +283,10 @@ type classifier struct {
 	cur     pos // completion of the current call
 	start   pos // start of the current call
 	callOK  bool
+	// callErrno is the errno of the call being classified ("" when it
+	// succeeded, and for calls whose ENOENT does not speak for one final name:
+	// a rename or link has two names, an exec may fail on its interpreter).
+	callErrno string
 	// callPresent says the call found something at its path (presence).
 	callPresent bool
 	// openRet is the -y path of the descriptor while the path of a successful
@@ -378,6 +391,10 @@ func (c *classifier) event(t *trace.Trace, ev *trace.Event) {
 		c.start = c.cur
 	}
 	c.callOK = ev.Result.OK
+	c.callErrno = ""
+	if ev.Kind != trace.KindProcess && !isPairCall(ev.Syscall) {
+		c.callErrno = ev.Result.Errno
+	}
 	c.callPresent = presence(ev.Result)
 	c.opKind = opKindOf(ev)
 	c.xattrCall = isXattrRead(ev.Syscall)
@@ -911,6 +928,57 @@ func (c *classifier) noteMissing(abs string, isFile bool) {
 	}
 }
 
+// noteBefore records a followed final name that a call looked up, found absent
+// (ENOENT) and that the post-run disk shows present, for the absent-before-made
+// rule (KILN04 D42).
+func (c *classifier) noteBefore(abs string) {
+	c.noteLookupOp(setBefore, abs)
+	c.lookupSet.lookedBefore(abs, c.start, c.cur)
+	if c.inWrite {
+		c.wr.lookedBefore(abs, c.start, c.cur)
+	}
+}
+
+// absentBeforeMade is the rule of KILN04 D42.  A call that failed with ENOENT
+// on the final name p, which the post-run disk shows present, saw p absent
+// when ALL of these hold:
+//
+//   - p is not tracked (a tracked file was there from the start, so an ENOENT
+//     about it was about something else) and never a hard-link end;
+//   - p's change log is not empty and EVERY entry STARTED after the latest such
+//     lookup COMPLETED (nothing the action did to p can have taken effect while
+//     the lookup ran);
+//   - the first entry is a creation that proves the action made the name: a
+//     clean creation (mkdir, symlink, O_EXCL) or an O_CREAT open keyed by the
+//     descriptor's -y path (an O_CREAT open through a link is keyed at the
+//     link's target, so an entry at p proves p was not a link when it ran);
+//   - no removal of p precedes that creation.
+//
+// Without the rule, the creating open (a plain O_CREAT, never "clean") fails
+// createdOnce and the whole action is refused: this is the linker that stats
+// its output, finds nothing, and then creates it.
+func (c *classifier) absentBeforeMade(p string, sp span) bool {
+	ms := c.mods[p]
+	if len(ms) == 0 || c.hard[p] {
+		return false
+	}
+	// Outside the repository there is nothing tracked to check: a name there
+	// has change-log entries only if the action itself made them, so it can only
+	// be one of the action's own writable roots.
+	if rel, ok := c.rel(p); ok && c.cfg.Tree.Stat(rel).Kind != KindAbsent {
+		return false
+	}
+	for _, m := range ms {
+		if !sp.e.before(m.start) {
+			return false
+		}
+	}
+	if !ms[0].clean && !ms[0].opened {
+		return false
+	}
+	return !removedBeforeMade(ms, c.firstMade(ms), sp.s)
+}
+
 // noteGone records a followed final name that the post-run disk shows absent.
 func (c *classifier) noteGone(abs string) {
 	c.noteLookupOp(setGone, abs)
@@ -1173,6 +1241,16 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path
 		}
 		if mi.unsafe(ms, sp.s, sp.e) {
 			bad(p, "followed-absent-changed")
+		}
+	}
+	// A followed final name whose lookup FAILED with ENOENT while the disk shows
+	// it present: the action made it afterwards (D42), or today's rule applies.
+	for p, sp := range l.before {
+		if c.contained(p) {
+			continue
+		}
+		if len(c.mods[p]) > 0 && !c.absentBeforeMade(p, sp) && !c.createdOnce(p, sp.s) {
+			bad(p, "absent-before-made")
 		}
 	}
 	// A followed final name that the post-run disk shows absent was removed, or
