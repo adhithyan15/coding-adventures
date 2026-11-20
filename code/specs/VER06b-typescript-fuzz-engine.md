@@ -220,3 +220,12 @@ with one-hot four-outcome variables and a `clean` predicate. Under Rust 1.100.0,
 vector, not the TypeScript implementation or float behavior. Warrant binding,
 native source coverage, a process watchdog, and the separate standalone
 TypeScript fuzz package remain open evidence items.
+
+The AF-04a inventory keeps `cb60dc9820fc069325130193118e75fdba9b96bc` as the
+historical source subject. `current_source_migrations` records the literal
+historical, comparison-base, and reviewed-current Git blob IDs for the changed
+TypeScript producer, both campaign tests, and the committed-HEAD drift
+checker. The checker verifies those current IDs and contains negative controls
+that perturb producer and checker identities. The squash-merge anchor remains
+pending until integration; it must be set to the actual squash commit after
+merge, with the migrated blobs checked against that commit.
