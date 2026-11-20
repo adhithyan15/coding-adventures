@@ -273,6 +273,10 @@ class Spec:
         #: units have no row to be recorded on, so :func:`lower_document` raises the earliest one *unless a
         #: unit declared before it recorded a refusal* (section 16.14 R35 (5)).
         self.declaration_refusals: list[tuple[int, OracleError]] = []
+        #: The operations whose *signature* is refused (a reserved level in a parameter or result type), by
+        #: name: they have no :class:`OpSig`, but a unit that calls one is refused with the same level, not
+        #: with ``unknown callable`` (R35 (2); a call is a use of the list-typed signature).
+        self.refused_ops: dict[str, OracleError] = {}
 
     @cached_property
     def adts(self) -> dict[str, tuple]:
@@ -403,11 +407,22 @@ def _check_limits(doc: A.Document) -> None:
 def _declare(spec: Spec) -> None:
     """First pass: names, uniqueness, type declarations and signatures (no bodies yet)."""
     seen: set[str] = set()
+    reserved = _RESERVED_V1 if spec.version == "v1" else _RESERVED_V0
 
     def claim_name(name: str) -> None:
         if name in seen:
             raise OracleError("type", "a name is declared twice")
         seen.add(name)
+
+    def claim_type_name(name: str) -> None:
+        """A record, a variant or a constructor may not be named like a built-in (the checker's ``W0201``).
+
+        Version scoped like the bind names (:meth:`_Lowerer._check_binds`): a v0 document may name a
+        constructor ``take``, which only a v1 document reserves.
+        """
+        if name in reserved:
+            raise OracleError("type", "a type or constructor is named like a reserved built-in")
+        claim_name(name)
 
     test_names: set[str] = set()
     for d in spec.doc.decls:
@@ -417,14 +432,14 @@ def _declare(spec: Spec) -> None:
                 raise OracleError("type", "duplicate error case")
             spec.errors[d.name] = d.cases
         elif isinstance(d, A.RecordDecl):
-            claim_name(d.name)
+            claim_type_name(d.name)
             spec.records[d.name] = d.fields  # resolved below, once every name is known
             spec.ctors[d.name] = (d.name, 0)
         elif isinstance(d, A.VariantDecl):
-            claim_name(d.name)
+            claim_type_name(d.name)
             spec.variants[d.name] = d.ctors
             for index, (ctor, _fields) in enumerate(d.ctors):
-                claim_name(ctor)  # constructors share the one namespace (VER04j 4.2)
+                claim_type_name(ctor)  # constructors share the one namespace (VER04j 4.2)
                 spec.ctors[ctor] = (d.name, index)
         elif isinstance(d, A.AliasDecl):
             claim_name(d.name)
@@ -444,32 +459,42 @@ def _declare(spec: Spec) -> None:
         if isinstance(d, (A.AliasDecl, A.RecordDecl, A.VariantDecl)):
             _in_order(spec, d.line, _declare_type, spec, d)
     _check_cycles(spec)
+    # Operation signatures, in declaration order, each a unit like a type declaration (R35 (5), section 16.16 R53):
+    # a typing error in one (a duplicate parameter, an unknown type name) yields to a level or feature refusal
+    # an earlier-declared unit holds.  The name pass and the recursion check above belong to no unit and
+    # yield to nothing.
     for d in spec.doc.decls:
         if isinstance(d, A.OpDecl):
-            params = []
-            refinements = []
-            pnames: set[str] = set()
-            low = _Lowerer(spec)
-            refused = low.scan_signature(d)
-            if refused is not None:
-                spec.declaration_refusals.append((d.line, refused))
-                continue
-            for p in d.params:
-                if p.name in pnames:
-                    raise OracleError("type", "duplicate parameter name")
-                pnames.add(p.name)
-                params.append((p.name, _resolve(spec, p.ty, set(d.statics))))
-                if p.refinement is not None:
-                    refinements.append((p.name, p.refinement))
-            spec.ops[d.name] = OpSig(
-                d.name,
-                d.statics,
-                params,
-                _resolve(spec, d.ret, set(d.statics)),
-                d.fresh,
-                refinements,
-                line=d.line,
-            )
+            _in_order(spec, d.line, _declare_op, spec, d)
+
+
+def _declare_op(spec: Spec, d: A.OpDecl) -> None:
+    """Resolve one operation's signature into :class:`OpSig`, or record the refusal its types bring."""
+    params = []
+    refinements = []
+    pnames: set[str] = set()
+    low = _Lowerer(spec)
+    refused = low.scan_signature(d)
+    if refused is not None:
+        spec.declaration_refusals.append((d.line, refused))
+        spec.refused_ops[d.name] = refused
+        return
+    for p in d.params:
+        if p.name in pnames:
+            raise OracleError("type", "duplicate parameter name")
+        pnames.add(p.name)
+        params.append((p.name, _resolve(spec, p.ty, set(d.statics))))
+        if p.refinement is not None:
+            refinements.append((p.name, p.refinement))
+    spec.ops[d.name] = OpSig(
+        d.name,
+        d.statics,
+        params,
+        _resolve(spec, d.ret, set(d.statics)),
+        d.fresh,
+        refinements,
+        line=d.line,
+    )
 
 
 def _declare_type(spec: Spec, d: A.AliasDecl | A.RecordDecl | A.VariantDecl) -> None:
@@ -579,10 +604,13 @@ def _resolve(spec: Spec, ty: A.Ty, statics: set[str] | None = None, depth: int =
 
 
 def _unify(a: A.Ty, b: A.Ty) -> A.Ty | None:
-    """The common type of two operand types, or ``None`` (VER04 section 3).
+    """The common type of two operand types, or ``None``: the grammar checker's ``Type::common_type``.
 
-    ``Nat`` widens to ``Int`` and ``Bytes<N>`` forgets its width to ``Bytes``;
-    nothing else is implicit.
+    ``Nat`` widens to ``Int`` and ``Bytes<N>`` forgets its width to ``Bytes``; two ``Result`` types of
+    one error type unify by their value type, and **two ``Option`` types unify by their payload** exactly
+    as ``Result`` does ([D60]: ``Option<Nat>`` and ``Option<Int>`` have the common type ``Option<Int>``).
+    Nothing else is implicit: a tuple, a record, a variant and a list never lift (they are equal or have
+    no common type).
     """
     if a == b:
         return a
@@ -590,27 +618,33 @@ def _unify(a: A.Ty, b: A.Ty) -> A.Ty | None:
         return INT
     if a.head == "Bytes" and b.head == "Bytes":
         return BYTES
+    if a.head == b.head == "Option":
+        inner = _unify(a.args[0], b.args[0])
+        return A.Ty("Option", (inner,)) if inner is not None else None
     if a.head == b.head == "Result" and a.args[1] == b.args[1]:
         inner = _unify(a.args[0], b.args[0])
         return A.Ty("Result", (inner, a.args[1])) if inner is not None else None
-    if a.head == b.head == "()" and len(a.args) == len(b.args):
-        parts = [_unify(x, y) for x, y in zip(a.args, b.args)]
-        return None if any(p is None for p in parts) else A.Ty("()", tuple(parts))
     return None
 
 
 def _assignable(src: A.Ty, dst: A.Ty) -> bool:
-    """Can a value of ``src`` flow to ``dst``?  (Nat to Int, Bytes<N> to Bytes.)"""
+    """Can a value of ``src`` flow to ``dst``?  The grammar checker's ``Type::is_assignable_to``, line for line.
+
+    ``Nat`` to ``Int``, ``Bytes<N>`` to ``Bytes``, and through the two payload-carrying built-ins:
+    ``Option<S>`` to ``Option<T>`` when ``S`` flows to ``T``, and ``Result<S,E>`` to ``Result<T,E>`` when
+    ``S`` flows to ``T`` ([D60]).  A tuple, a record, a variant and a list are equal or not assignable: no
+    component lifts (``(Nat,Nat)`` is not ``(Int,Int)``, as in the checker).
+    """
     if src == dst:
         return True
     if src.head == "Nat" and dst.head == "Int":
         return True
     if src.head == "Bytes" and dst.head == "Bytes":
         return not dst.args or src.args == dst.args
+    if src.head == dst.head == "Option":
+        return _assignable(src.args[0], dst.args[0])
     if src.head == dst.head == "Result" and src.args[1] == dst.args[1]:
         return _assignable(src.args[0], dst.args[0])
-    if src.head == dst.head == "()" and len(src.args) == len(dst.args):
-        return all(_assignable(x, y) for x, y in zip(src.args, dst.args))
     return False
 
 
@@ -620,8 +654,9 @@ def _needs_context(e) -> bool:
         return e.suffix is None
     if isinstance(e, A.Call) and len(e.name) == 1 and e.name[0] in ("Ok", "Err"):
         return True
-    if isinstance(e, A.Name) and e.parts == ("None",):
-        return True  # a typed none needs the type its context fixes (R39 (b))
+    # ``None`` is *not* here: it has no type of its own and takes none from a sibling either (R39 (b), as
+    # the grammar checker's ``typecheck_binary`` gives only the *right* operand the left one's type as its
+    # context).  A ``None`` whose own expected type is not an ``Option`` is a type error.
     if isinstance(e, A.Call) and e.name == ("Some",) and e.args is not None and len(e.args) == 1:
         return _needs_context(e.args[0])
     if isinstance(e, A.Unary) and e.op == "neg":
@@ -654,10 +689,6 @@ class _Lowerer:
         #: list, record or variant (section 4.1).  Added to its ``requires``.
         self._type_levels: set = set()
         self._data_names = frozenset([*spec.records, *spec.variants])
-        #: Static widths of ``Bytes`` expressions whose *type* forgot them (a literal, a
-        #: ``concat`` of such, an ``if`` of equal widths): ``id(ir) -> (ir, width)``.  The IR
-        #: node is kept so its id is never reused.  Filled in the single lowering pass.
-        self._widths: dict = {}
         #: Fixed-width ``add``/``sub``/``mul``/``neg`` nodes lowered so far, ``id(ir) -> ir`` (the
         #: node is kept so its id is never reused), and the models whose call closure holds one.
         #: Both feed the v0 guard, VER04r 3.3 rule 3 (:meth:`_v0_rule_3`).
@@ -805,7 +836,7 @@ class _Lowerer:
                 self.check_type(pty)
             self.check_type(ret)
             ir, ty = self.expr(decl.body, ret)
-            if not self._flows(ir, ty, ret):
+            if not _assignable(ty, ret):
                 raise self.err("a model body does not have its declared type")
             if _has_subject(ir):
                 # VER04r 4.2 rule 3, the generator's lowering refusal: a model is pure, so it
@@ -1075,18 +1106,11 @@ class _Lowerer:
         if isinstance(e, A.IntLit):
             return self.int_literal(e, expected)
         if isinstance(e, A.BytesLit):
-            ty = BYTES
-            if (
-                expected is not None
-                and expected.head == "Bytes"
-                and expected.args
-                and isinstance(expected.args[0], int)
-                and len(e.hex) // 2 == expected.args[0]
-            ):
-                ty = expected
+            # The *type* of a bytes literal is ``Bytes<len>`` (the checker's), so the width is carried by the
+            # type through ``Some``, ``Ok``, ``if`` and ``match`` (R51); the IR node keeps the written type
+            # ``Bytes`` (no ``result_type`` moves).
             node = ["lit", {"type": "Bytes", "value": e.hex}]
-            self._note_width(node, len(e.hex) // 2)
-            return node, ty
+            return node, A.Ty("Bytes", (len(e.hex) // 2,))
         if isinstance(e, A.Name):
             if len(e.parts) == 1:
                 name = e.parts[0]
@@ -1116,14 +1140,15 @@ class _Lowerer:
                 t_ir, t_ty = self.expr(e.then, o_ty if expected is None else expected)
             else:
                 t_ir, t_ty = self.expr(e.then, expected)
-                o_ir, o_ty = self.expr(e.other, expected if expected is not None else t_ty)
+                # The other branch takes the type of the first only if it has none of its own (a bare literal,
+                # ``Ok(..)``): a ``None`` takes its type from the *context* alone, never from a sibling
+                # (R39 (b); the checker types both branches against the same ``expected``).
+                sibling = t_ty if _needs_context(e.other) else None
+                o_ir, o_ty = self.expr(e.other, expected if expected is not None else sibling)
             common = _unify(t_ty, o_ty)
             if common is None:
                 raise self.err("the branches of an `if` have no common type")
             node = ["if", c_ir, t_ir, o_ir]
-            wt, wo = self._static_width(t_ir, t_ty), self._static_width(o_ir, o_ty)
-            if wt is not None and wt == wo:
-                self._note_width(node, wt)
             return node, common
         if isinstance(e, A.TupleLit):
             return self.tuple_literal(e, expected)
@@ -1203,9 +1228,10 @@ class _Lowerer:
         """``Some(e)`` -> ``["some", e]`` of type exactly ``Option<type(e)>`` (R39 (a)).
 
         The payload is typed with the payload type of ``expected`` when that is an ``Option``, so a bare
-        literal in ``Some(1)`` takes the type its context asks for; the result is *not* lifted to the
-        expected type (``Option<Bytes<4>>`` is not ``Option<Bytes>`` and ``Option<Nat>`` is not
-        ``Option<Int>``: ``Option`` is a composite for the no-lifting rule of VER04j 4.4).
+        literal in ``Some(1)`` takes the type its context asks for.  The node's own type is exactly
+        ``Option<type(e)>``; it *flows* to a wider ``Option`` by the payload (``Option<Bytes<4>>`` to
+        ``Option<Bytes>``, ``Option<Nat>`` to ``Option<Int>``) wherever an assignment is checked
+        (:func:`_assignable`; [D60], the grammar checker's ``Type::is_assignable_to``).
         """
         self.arity(e, 1)
         inner = expected.args[0] if expected is not None and expected.head == "Option" else None
@@ -1217,8 +1243,9 @@ class _Lowerer:
 
         ``Name`` is a record (whose one constructor is named like it) or a constructor of a variant; the
         node has that type.  One operand per declared field, in order, each typed against its field and
-        accepted by the grammar checker's per-argument assignability (``Nat`` to ``Int`` and ``Bytes<N>``
-        to ``Bytes``, nothing through a composite).  A wrong operand count, a bare name with fields and
+        accepted by the grammar checker's per-argument assignability (:func:`_assignable`: ``Nat`` to ``Int``,
+        ``Bytes<N>`` to ``Bytes``, through an ``Option`` or ``Result`` payload, and nothing through a tuple,
+        record or variant).  A wrong operand count, a bare name with fields and
         parentheses on a payload-free constructor are type errors (the checker's ``ArityMismatch`` and
         ``NullaryWithParens``).
         """
@@ -1235,7 +1262,7 @@ class _Lowerer:
         operands = []
         for arg, field_ty in zip(args, fields):
             ir, ty = self.expr(arg, field_ty)
-            if not self._flows(ir, ty, field_ty):
+            if not _assignable(ty, field_ty):
                 raise self.err("a constructor argument does not match its field type")
             operands.append(ir)
         return ["ctor", name, operands], A.Ty(type_name)
@@ -1280,7 +1307,9 @@ class _Lowerer:
                         raise self.level(
                             ERR_VALUE, "an error value bound by a pattern has no IR form"
                         )
-                bodies[i], types[i] = self.expr(body, hint)
+                # As in ``if``: a sibling arm's type is a hint only for an arm that has none of its own.
+                arm_hint = hint if expected is not None or _needs_context(body) else None
+                bodies[i], types[i] = self.expr(body, arm_hint)
             finally:
                 self.scope = saved
             if hint is None:
@@ -1512,6 +1541,12 @@ class _Lowerer:
         name = e.name[0]
         if name in spec.ops:
             return self.subject_call(spec.ops[name], e)
+        if name in spec.refused_ops:
+            # The signature names the reserved level (``ir.list``): a call to it needs that level too, whether
+            # the unit is declared before or after the operation (a unit before it has no earlier refusal to
+            # yield to, so without this it would get a spurious ``unknown callable`` type error).
+            refused = spec.refused_ops[name]
+            raise OracleError(refused.code, refused.message, level=refused.level)
         if name in spec.model_names:
             if name not in spec.models:
                 raise OracleError(
@@ -1523,32 +1558,31 @@ class _Lowerer:
         if name == "len":
             self.arity(e, 1)
             ir, ty = self.expr(e.args[0], None)
+            self.no_list(ty)
             if ty.head != "Bytes":
-                # ``len`` of a list is the reserved ir.list, but a list type is refused where it is
-                # declared, so no list-typed operand exists here (section 16.14 R27).
                 raise self.err("len needs Bytes")
             return ["len", ir], NAT
         if name == "concat":
             self.arity(e, 2)
             a_ir, a_ty = self.expr(e.args[0], None)
             b_ir, b_ty = self.expr(e.args[1], None)
+            self.no_list(a_ty, b_ty)
             if a_ty.head != "Bytes" or b_ty.head != "Bytes":
                 raise self.err("concat needs Bytes")
             node = ["concat", a_ir, b_ir]
-            wa, wb = self._static_width(a_ir, a_ty), self._static_width(b_ir, b_ty)
-            if wa is not None and wb is not None:
-                self._note_width(node, wa + wb)
             if (
                 a_ty.args
                 and b_ty.args
                 and isinstance(a_ty.args[0], int)
                 and isinstance(b_ty.args[0], int)
             ):
-                # Widths add: concat(Bytes<1>, Bytes<30>) is Bytes<31>.
+                # Widths add: concat(Bytes<1>, Bytes<30>) is Bytes<31>; a plain or named-static operand
+                # (``Bytes``, ``Bytes<N>``) gives a plain ``Bytes``, as in the checker.
                 return node, A.Ty("Bytes", (a_ty.args[0] + b_ty.args[0],))
             return node, BYTES
         if name in ("take", "drop") and e.args is not None and len(e.args) == 2:
             a_ir, a_ty = self.expr(e.args[0], None)
+            self.no_list(a_ty)
             if a_ty.head != "Bytes":
                 raise self.err("take and drop need Bytes")
             n_ir, n_ty = self.expr(e.args[1], NAT)
@@ -1560,7 +1594,7 @@ class _Lowerer:
             if expected is None or expected.head != "Result":
                 raise self.err("Ok needs a Result context")
             ir, ty = self.expr(e.args[0], expected.args[0])
-            if not self._flows(ir, ty, expected.args[0]):
+            if not _assignable(ty, expected.args[0]):
                 raise self.err("an Ok payload does not have the Result's value type")
             return ["ok", ir], A.Ty("Result", (ty, expected.args[1]))
         if name == "Err":
@@ -1641,7 +1675,7 @@ class _Lowerer:
         if name in ("from_be", "from_le"):
             width = FIXED[static][0] // 8
             b_ir, b_ty = self.expr(args[0], A.Ty("Bytes", (width,)))
-            if self._static_width(b_ir, b_ty) != width:
+            if b_ty.head != "Bytes" or b_ty.args != (width,):
                 raise self.err("from_be/from_le need Bytes of exactly the target's width")
             b_ty = A.Ty("Bytes", (width,))
             return [name, static, b_ir], A.Ty(static)
@@ -1696,6 +1730,7 @@ class _Lowerer:
         if name == "at":
             b_ir, b_ty = self.expr(args[0], None)
             i_ir, i_ty = self.expr(args[1], NAT)
+            self.no_list(b_ty)
             if b_ty.head != "Bytes":
                 raise self.err("at needs Bytes")
             if i_ty.head not in ("Nat", "Int"):
@@ -1712,41 +1747,6 @@ class _Lowerer:
             raise self.err("the default of unwrap_or does not have the Option's type")
         return [name, o_ir, d_ir], inner
 
-    def _flows(self, ir: object, ty: A.Ty, want: A.Ty) -> bool:
-        """Can the lowered expression ``ir`` of type ``ty`` flow to ``want``?
-
-        :func:`_assignable`, plus the static-width rule of VER04r A.1: an expression whose *type*
-        forgot its width (a bytes literal, a ``concat`` of sized operands, an ``if`` of equal widths)
-        but whose recorded static width is ``N`` flows to ``Bytes<N>``, as in the grammar checker.
-        A tuple or ``Result`` is checked component by component only where the types already agree
-        structurally; widths are looked up for a ``Bytes`` expression itself.
-        """
-        if _assignable(ty, want):
-            return True
-        if ty.head == want.head == "Bytes" and want.args and isinstance(want.args[0], int):
-            return self._static_width(ir, ty) == want.args[0]
-        return False
-
-    def _note_width(self, ir: object, width: int) -> None:
-        self._widths[id(ir)] = (ir, width)
-
-    def _static_width(self, ir: object, ty: A.Ty) -> int | None:
-        """The static width of a lowered ``Bytes`` expression, or ``None``.
-
-        The grammar checker types a bytes literal ``Bytes<len>``, a ``concat`` of two
-        statically sized operands ``Bytes<sum>`` and an ``if`` whose branches have the *same*
-        static width ``Bytes<n>`` (``common_type``); anything else that is not already
-        ``Bytes<N>`` is a plain ``Bytes``.  The source typer here forgets those widths (so no
-        ``result_type`` moves), so they are recorded as nodes are lowered, once, and read back
-        by ``from_be``/``from_le``, the one place a width is required.  VER04r A.1 names the rule.
-        """
-        if ty.head != "Bytes":
-            return None
-        if ty.args and isinstance(ty.args[0], int):
-            return ty.args[0]
-        hit = self._widths.get(id(ir))
-        return hit[1] if hit is not None else None
-
     def _operand_pair(self, args: tuple) -> tuple[object, A.Ty, object, A.Ty]:
         """Two operands of one operator: a bare literal takes the other side's type."""
         left, right = args
@@ -1757,6 +1757,17 @@ class _Lowerer:
             a_ir, a_ty = self.expr(left, None)
             b_ir, b_ty = self.expr(right, a_ty)
         return a_ir, a_ty, b_ir, b_ty
+
+    def no_list(self, *types: A.Ty) -> None:
+        """A ``List`` operand of ``len concat take drop at`` is the reserved ``ir.list`` (R27), never a ``type`` error.
+
+        A list type is refused where it is *declared*, but a unit may be lowered before the declaration it
+        depends on is (a record whose field is a ``List`` that comes later in the document): the operand
+        then still has its unresolved ``List`` type, and the unit is refused with the level, not with
+        ``len needs Bytes``.
+        """
+        if any(t.head == "List" for t in types):
+            raise self.level(L.LIST, "a list operand needs the reserved ir.list level")
 
     def arity(self, e: A.Call, n: int) -> None:
         if e.args is None or len(e.args) != n or e.statics:
@@ -1769,7 +1780,7 @@ class _Lowerer:
         for arg, (_, pty) in zip(e.args, params):
             want = _substitute(pty, statics)
             ir, ty = self.expr(arg, want)
-            if not self._flows(ir, ty, want):
+            if not _assignable(ty, want):
                 raise self.err("an argument does not match its parameter type")
             out.append(ir)
         return out

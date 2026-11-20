@@ -169,7 +169,7 @@ def test_the_types_rows_are_the_corpus_rows(lowering):
 
 def test_every_unit_lowered_and_the_level_of_each_follows_r29(lowering):
     # nothing is refused: every model, claim and example of the document is in the dump
-    assert len(lowering["models"]) == 86 and len(lowering["suites"]) == 94 and len(lowering["examples"]) == 11
+    assert len(lowering["models"]) == 95 and len(lowering["suites"]) == 103 and len(lowering["examples"]) == 11
     by_claim = {s["claim"]: tuple(s["requires"]) for s in lowering["suites"]}
     # the intermediate use of unwrap_or keeps ir.fixed only: no `requires` moved (R29 (f))
     for claim in ("c_inter_add", "c_inter_at", "c_inter_div_nat"):
@@ -185,9 +185,9 @@ def test_every_unit_lowered_and_the_level_of_each_follows_r29(lowering):
     assert by_claim["c_m_bool"] == ("ir.core", "ir.data")
     assert by_claim["c_mk_point"] == ("ir.core", "ir.data")
     assert Counter(by_claim.values()) == {
-        ("ir.core", "ir.data"): 73,
+        ("ir.core", "ir.data"): 81,
         ("ir.core", "ir.data", "ir.tuple"): 10,
-        ("ir.core", "ir.data", "ir.fixed"): 6,
+        ("ir.core", "ir.data", "ir.fixed"): 7,
         ("ir.core", "ir.fixed"): 3,
         ("ir.core", "ir.tuple"): 2,
     }
@@ -217,13 +217,13 @@ def test_the_ops_rows_carry_data_types_and_a_data_admit(lowering):
 
 
 def test_the_refusals_dump_has_every_group_and_each_row_is_what_the_oracle_says(refusals):
-    assert len(refusals) == 109
+    assert len(refusals) == 121
     assert Counter((r["oracle_code"], r["oracle_level"]) for r in refusals) == {
-        ("type", ""): 41,
+        ("type", ""): 50,
         ("corpus", ""): 28,
-        ("level", "ir.list"): 18,
+        ("level", "ir.list"): 22,
         ("level", "ir.seq"): 10,
-        ("limit", ""): 5,
+        ("limit", ""): 4,
         ("level", "fixed-cast"): 4,
         ("level", "err-value"): 3,
     }

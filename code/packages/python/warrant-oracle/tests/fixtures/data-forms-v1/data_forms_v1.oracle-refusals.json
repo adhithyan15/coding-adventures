@@ -66,6 +66,30 @@
     },
     {
       "generator_code": "level",
+      "message": "a list type needs the reserved ir.list level",
+      "name": "a-call-to-a-list-op-declared-later",
+      "oracle_code": "level",
+      "oracle_level": "ir.list",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(a: Bytes) -> Nat = len(h(a))\n  op h(a: Bytes) -> List<U8>\n"
+    },
+    {
+      "generator_code": "level",
+      "message": "a list type needs the reserved ir.list level",
+      "name": "a-call-to-a-list-op-declared-earlier",
+      "oracle_code": "level",
+      "oracle_level": "ir.list",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  op h(a: Bytes) -> List<U8>\n  model m(a: Bytes) -> Nat = len(h(a))\n"
+    },
+    {
+      "generator_code": "level",
+      "message": "a list operand needs the reserved ir.list level",
+      "name": "a-list-field-as-an-operand-before-its-record",
+      "oracle_code": "level",
+      "oracle_level": "ir.list",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(q: Q) -> Nat = len(q.xs)\n  record Q(xs: List<U8>)\n"
+    },
+    {
+      "generator_code": "level",
       "message": "a list literal needs the reserved ir.list level",
       "name": "a-list-literal",
       "oracle_code": "level",
@@ -186,14 +210,6 @@
     },
     {
       "generator_code": "limit",
-      "message": "a record has at most 32 fields",
-      "name": "a-record-of-33-fields",
-      "oracle_code": "limit",
-      "oracle_level": "",
-      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  record Big(f0: U8, f1: U8, f2: U8, f3: U8, f4: U8, f5: U8, f6: U8, f7: U8, f8: U8, f9: U8, f10: U8, f11: U8, f12: U8, f13: U8, f14: U8, f15: U8, f16: U8, f17: U8, f18: U8, f19: U8, f20: U8, f21: U8, f22: U8, f23: U8, f24: U8, f25: U8, f26: U8, f27: U8, f28: U8, f29: U8, f30: U8, f31: U8, f32: U8)\n"
-    },
-    {
-      "generator_code": "limit",
       "message": "a variant has at most 64 constructors",
       "name": "a-variant-of-65-constructors",
       "oracle_code": "limit",
@@ -242,19 +258,91 @@
     },
     {
       "generator_code": "",
-      "message": "a model body does not have its declared type",
-      "name": "a-some-is-not-lifted-to-a-wider-option",
+      "message": "None needs an Option type from its context",
+      "name": "a-none-as-the-left-operand-of-an-equality",
       "oracle_code": "type",
       "oracle_level": "",
-      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(d: Bytes<2>) -> Option<Bytes> = Some(d)\n"
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(o: Option<U8>) -> Bool = None == o\n"
+    },
+    {
+      "generator_code": "",
+      "message": "None needs an Option type from its context",
+      "name": "a-none-as-the-left-operand-of-an-inequality",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(o: Option<U8>) -> Bool = None != o\n"
+    },
+    {
+      "generator_code": "",
+      "message": "None needs an Option type from its context",
+      "name": "a-none-takes-no-type-from-the-other-branch",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(c: Bool, d: Bytes) -> U8 = unwrap_or(if c then at(d, 0) else None, 0u8)\n"
+    },
+    {
+      "generator_code": "",
+      "message": "None needs an Option type from its context",
+      "name": "a-none-takes-no-type-from-the-first-branch",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(c: Bool, d: Bytes) -> U8 = unwrap_or(if c then None else at(d, 0), 0u8)\n"
+    },
+    {
+      "generator_code": "",
+      "message": "None needs an Option type from its context",
+      "name": "a-none-takes-no-type-from-another-arm",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(b: Bool, d: Bytes) -> U8 = unwrap_or(match b with true -> None | false -> at(d, 0), 0u8)\n"
     },
     {
       "generator_code": "",
       "message": "a model body does not have its declared type",
-      "name": "an-option-nat-is-not-an-option-int",
+      "name": "an-option-int-is-not-an-option-nat",
       "oracle_code": "type",
       "oracle_level": "",
-      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(a: Nat) -> Option<Int> = Some(a)\n"
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(a: Int) -> Option<Nat> = Some(a)\n"
+    },
+    {
+      "generator_code": "",
+      "message": "a model body does not have its declared type",
+      "name": "an-option-bytes-is-not-an-option-bytes-2",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(d: Bytes) -> Option<Bytes<2>> = Some(d)\n"
+    },
+    {
+      "generator_code": "",
+      "message": "a model body does not have its declared type",
+      "name": "an-option-of-a-tuple-does-not-lift",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(a: Nat) -> Option<(Int,Int)> = Some((a, a))\n"
+    },
+    {
+      "generator_code": "",
+      "message": "a constructor argument does not match its field type",
+      "name": "a-tuple-constructor-argument-does-not-lift",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  record RT(p: (Int,Int))\n  model m(a: Nat) -> RT = RT((a, a))\n"
+    },
+    {
+      "generator_code": "",
+      "message": "a type or constructor is named like a reserved built-in",
+      "name": "a-constructor-named-like-a-built-in",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  variant W = Some | Other\n"
+    },
+    {
+      "generator_code": "",
+      "message": "a type or constructor is named like a reserved built-in",
+      "name": "a-record-named-like-a-built-in",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  record Int(a: U8)\n"
     },
     {
       "generator_code": "",
@@ -490,14 +578,6 @@
     },
     {
       "generator_code": "",
-      "message": "a variant has at least two constructors (a one-constructor sum is a record)",
-      "name": "a-variant-of-one-constructor",
-      "oracle_code": "type",
-      "oracle_level": "",
-      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  variant W = Only(a: U8)\n"
-    },
-    {
-      "generator_code": "",
       "message": "a record or variant contains itself",
       "name": "a-record-that-contains-itself",
       "oracle_code": "type",
@@ -706,11 +786,11 @@
     },
     {
       "generator_code": "limit",
-      "message": "a record has at most 32 fields",
+      "message": "a constructor has at most 8 fields",
       "name": "order-limit-before-a-level",
       "oracle_code": "limit",
       "oracle_level": "",
-      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(a: U8) -> Bool = [a] == [a]\n  record Big(f0: U8, f1: U8, f2: U8, f3: U8, f4: U8, f5: U8, f6: U8, f7: U8, f8: U8, f9: U8, f10: U8, f11: U8, f12: U8, f13: U8, f14: U8, f15: U8, f16: U8, f17: U8, f18: U8, f19: U8, f20: U8, f21: U8, f22: U8, f23: U8, f24: U8, f25: U8, f26: U8, f27: U8, f28: U8, f29: U8, f30: U8, f31: U8, f32: U8)\n"
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(a: U8) -> Bool = [a] == [a]\n  variant Wide = Fat(f0: U8, f1: U8, f2: U8, f3: U8, f4: U8, f5: U8, f6: U8, f7: U8, f8: U8) | Thin\n"
     },
     {
       "generator_code": "level",
@@ -839,6 +919,22 @@
       "oracle_code": "level",
       "oracle_level": "ir.list",
       "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  record Q(xs: List<U8>)\n  model m(a: Bytes) -> Bool = fixed<4>(a) == None\n"
+    },
+    {
+      "generator_code": "level",
+      "message": "a list type needs the reserved ir.list level",
+      "name": "order-an-op-signature-error-after-a-level",
+      "oracle_code": "level",
+      "oracle_level": "ir.list",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  record Q(xs: List<U8>)\n  op h(a: U8, a: U8) -> Bool\n"
+    },
+    {
+      "generator_code": "",
+      "message": "duplicate parameter name",
+      "name": "order-an-op-signature-error-before-a-level",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  record P(x: U8, y: Bool)\n  variant V = Circle(r: U8) | Rect(w: U8, h: U8) | Dot\n  variant K = Red | Green | Blue\n  op f(a: Bool) -> Result<Bool,E>\n  op g(a: Bool) -> Result<Bool,E>\n  op h(a: U8, a: U8) -> Bool\n  record Q(xs: List<U8>)\n"
     },
     {
       "generator_code": "level",

@@ -23,6 +23,15 @@ warrant data_forms v1
   model opt_bytes(d: Bytes) -> Option<Bytes> = if len(d) == 0 then None else Some(d)
   model opt_fixed_bytes(d: Bytes<2>) -> Option<Bytes<2>> = Some(d)
   model opt_pair(a: Bool) -> Option<(Bool,Nat)> = Some((a, 1))
+  model opt_widen_bytes(d: Bytes<2>) -> Option<Bytes> = Some(d)
+  model opt_widen_nat(a: Nat) -> Option<Int> = Some(a)
+  model opt_widen_param(o: Option<Nat>) -> Option<Int> = o
+  model opt_widen_nested(a: Nat) -> Option<Option<Int>> = Some(Some(a))
+  model opt_widen_if(c: Bool, a: Nat) -> Option<Int> = if c then Some(a) else None
+  model opt_widen_eq(a: Option<Nat>, b: Option<Int>) -> Bool = a == b
+  model opt_widen_unwrap(o: Option<Int>, n: Nat) -> Int = unwrap_or(o, n)
+  model opt_widen_ctor(d: Bytes<2>) -> Blob = Blob(d, 1)
+  model opt_literal_width(u: Bool) -> Option<Bytes<2>> = Some(b"0102")
   model opt_rec(a: U8, b: U8) -> Option<Point> = Some(Point(a, b))
   model res_opt(a: U8) -> Result<Option<U8>,DataError> = if a > 1u8 then Err(DataError.Bad) else Ok(if a == 1u8 then Some(a) else None)
   model res_none(u: Bool) -> Result<Option<U8>,DataError> = Ok(None)
@@ -36,7 +45,7 @@ warrant data_forms v1
   model inter_div_nat(a: Nat, b: Nat) -> Bool = unwrap_or(div(a, b), 0) == 3
   model prod_eq(a: U8, b: U8) -> Bool = checked_add(a, b) == Some(a)
   model prod_in_ok(a: U8, b: U8) -> Result<Option<U8>,DataError> = Ok(rem(a, b))
-  model prod_in_if(c: Bool, d: Bytes, i: Nat) -> U8 = unwrap_or(if c then at(d, i) else None, 0u8)
+  model prod_in_if(c: Bool, d: Bytes, i: Nat) -> U8 = unwrap_or(if c then at(d, i) else at(d, 0), 0u8)
   model prod_try(a: Nat) -> Option<U8> = try<U8>(a)
   model mk_point(a: U8, b: U8) -> Point = Point(a, b)
   model px(p: Point) -> U8 = p.x
@@ -111,6 +120,15 @@ warrant data_forms v1
   op op_opt_bytes(d: Bytes) -> Option<Bytes>
   op op_opt_fixed_bytes(d: Bytes<2>) -> Option<Bytes<2>>
   op op_opt_pair(a: Bool) -> Option<(Bool,Nat)>
+  op op_opt_widen_bytes(d: Bytes<2>) -> Option<Bytes>
+  op op_opt_widen_nat(a: Nat) -> Option<Int>
+  op op_opt_widen_param(o: Option<Nat>) -> Option<Int>
+  op op_opt_widen_nested(a: Nat) -> Option<Option<Int>>
+  op op_opt_widen_if(c: Bool, a: Nat) -> Option<Int>
+  op op_opt_widen_eq(a: Option<Nat>, b: Option<Int>) -> Bool
+  op op_opt_widen_unwrap(o: Option<Int>, n: Nat) -> Int
+  op op_opt_widen_ctor(d: Bytes<2>) -> Blob
+  op op_opt_literal_width(u: Bool) -> Option<Bytes<2>>
   op op_opt_rec(a: U8, b: U8) -> Option<Point>
   op op_res_opt(a: U8) -> Result<Option<U8>,DataError>
   op op_res_none(u: Bool) -> Result<Option<U8>,DataError>
@@ -216,6 +234,27 @@ warrant data_forms v1
     d secret
   labels op_opt_pair:
     a secret
+  labels op_opt_widen_bytes:
+    d secret
+  labels op_opt_widen_nat:
+    a secret
+  labels op_opt_widen_param:
+    o secret
+  labels op_opt_widen_nested:
+    a secret
+  labels op_opt_widen_if:
+    c secret
+    a secret
+  labels op_opt_widen_eq:
+    a secret
+    b secret
+  labels op_opt_widen_unwrap:
+    o secret
+    n secret
+  labels op_opt_widen_ctor:
+    d secret
+  labels op_opt_literal_width:
+    u secret
   labels op_opt_rec:
     a secret
     b secret
@@ -429,6 +468,42 @@ warrant data_forms v1
     hostile
     ensures no_panic, terminates
   input op_opt_pair.a:
+    hostile
+    ensures no_panic, terminates
+  input op_opt_widen_bytes.d:
+    hostile
+    ensures no_panic, terminates
+  input op_opt_widen_nat.a:
+    hostile
+    ensures no_panic, terminates
+  input op_opt_widen_param.o:
+    hostile
+    ensures no_panic, terminates
+  input op_opt_widen_nested.a:
+    hostile
+    ensures no_panic, terminates
+  input op_opt_widen_if.c:
+    hostile
+    ensures no_panic, terminates
+  input op_opt_widen_if.a:
+    hostile
+    ensures no_panic, terminates
+  input op_opt_widen_eq.a:
+    hostile
+    ensures no_panic, terminates
+  input op_opt_widen_eq.b:
+    hostile
+    ensures no_panic, terminates
+  input op_opt_widen_unwrap.o:
+    hostile
+    ensures no_panic, terminates
+  input op_opt_widen_unwrap.n:
+    hostile
+    ensures no_panic, terminates
+  input op_opt_widen_ctor.d:
+    hostile
+    ensures no_panic, terminates
+  input op_opt_literal_width.u:
     hostile
     ensures no_panic, terminates
   input op_opt_rec.a:
@@ -772,6 +847,42 @@ warrant data_forms v1
     steps <= 64
     heap <= 0
     depth <= 8
+  bound op_opt_widen_bytes:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_opt_widen_nat:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_opt_widen_param:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_opt_widen_nested:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_opt_widen_if:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_opt_widen_eq:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_opt_widen_unwrap:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_opt_widen_ctor:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_opt_literal_width:
+    steps <= 64
+    heap <= 0
+    depth <= 8
   bound op_opt_rec:
     steps <= 64
     heap <= 0
@@ -1104,6 +1215,24 @@ warrant data_forms v1
     forall d: Bytes<2>. op_opt_fixed_bytes(d) == opt_fixed_bytes(d)
   claim c_opt_pair:
     forall a: Bool. op_opt_pair(a) == opt_pair(a)
+  claim c_opt_widen_bytes:
+    forall d: Bytes<2>. op_opt_widen_bytes(d) == opt_widen_bytes(d)
+  claim c_opt_widen_nat:
+    forall a: Nat. op_opt_widen_nat(a) == opt_widen_nat(a)
+  claim c_opt_widen_param:
+    forall o: Option<Nat>. op_opt_widen_param(o) == opt_widen_param(o)
+  claim c_opt_widen_nested:
+    forall a: Nat. op_opt_widen_nested(a) == opt_widen_nested(a)
+  claim c_opt_widen_if:
+    forall c: Bool, a: Nat. op_opt_widen_if(c, a) == opt_widen_if(c, a)
+  claim c_opt_widen_eq:
+    forall a: Option<Nat>, b: Option<Int>. op_opt_widen_eq(a, b) == opt_widen_eq(a, b)
+  claim c_opt_widen_unwrap:
+    forall o: Option<Int>, n: Nat. op_opt_widen_unwrap(o, n) == opt_widen_unwrap(o, n)
+  claim c_opt_widen_ctor:
+    forall d: Bytes<2>. op_opt_widen_ctor(d) == opt_widen_ctor(d)
+  claim c_opt_literal_width:
+    forall u: Bool. op_opt_literal_width(u) == opt_literal_width(u)
   claim c_opt_rec:
     forall a: U8, b: U8. op_opt_rec(a, b) == opt_rec(a, b)
   claim c_res_opt:

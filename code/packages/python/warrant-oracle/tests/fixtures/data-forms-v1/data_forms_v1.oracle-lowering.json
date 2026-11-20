@@ -735,6 +735,15 @@
     "opt_bytes",
     "opt_fixed_bytes",
     "opt_pair",
+    "opt_widen_bytes",
+    "opt_widen_nat",
+    "opt_widen_param",
+    "opt_widen_nested",
+    "opt_widen_if",
+    "opt_widen_eq",
+    "opt_widen_unwrap",
+    "opt_widen_ctor",
+    "opt_literal_width",
     "opt_rec",
     "res_opt",
     "res_none",
@@ -3358,6 +3367,26 @@
       ],
       "ret": "Bool"
     },
+    "opt_literal_width": {
+      "body": [
+        "some",
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "0102"
+          }
+        ]
+      ],
+      "ir_cost": 2,
+      "params": [
+        [
+          "u",
+          "Bool"
+        ]
+      ],
+      "ret": "Option<Bytes<2>>"
+    },
     "opt_ne": {
       "body": [
         "ne",
@@ -3443,6 +3472,183 @@
       ],
       "ret": "Option<Point>"
     },
+    "opt_widen_bytes": {
+      "body": [
+        "some",
+        [
+          "var",
+          "d"
+        ]
+      ],
+      "ir_cost": 2,
+      "params": [
+        [
+          "d",
+          "Bytes<2>"
+        ]
+      ],
+      "ret": "Option<Bytes>"
+    },
+    "opt_widen_ctor": {
+      "body": [
+        "ctor",
+        "Blob",
+        [
+          [
+            "var",
+            "d"
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "d",
+          "Bytes<2>"
+        ]
+      ],
+      "ret": "Blob"
+    },
+    "opt_widen_eq": {
+      "body": [
+        "eq",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "b"
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "a",
+          "Option<Nat>"
+        ],
+        [
+          "b",
+          "Option<Int>"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "opt_widen_if": {
+      "body": [
+        "if",
+        [
+          "var",
+          "c"
+        ],
+        [
+          "some",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "none",
+          "Int"
+        ]
+      ],
+      "ir_cost": 4,
+      "params": [
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "ret": "Option<Int>"
+    },
+    "opt_widen_nat": {
+      "body": [
+        "some",
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "ir_cost": 2,
+      "params": [
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "ret": "Option<Int>"
+    },
+    "opt_widen_nested": {
+      "body": [
+        "some",
+        [
+          "some",
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "ret": "Option<Option<Int>>"
+    },
+    "opt_widen_param": {
+      "body": [
+        "var",
+        "o"
+      ],
+      "ir_cost": 1,
+      "params": [
+        [
+          "o",
+          "Option<Nat>"
+        ]
+      ],
+      "ret": "Option<Int>"
+    },
+    "opt_widen_unwrap": {
+      "body": [
+        "unwrap_or",
+        [
+          "var",
+          "o"
+        ],
+        [
+          "var",
+          "n"
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "o",
+          "Option<Int>"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "ret": "Int"
+    },
     "prod_eq": {
       "body": [
         "eq",
@@ -3499,8 +3705,18 @@
             ]
           ],
           [
-            "none",
-            "U8"
+            "at",
+            [
+              "var",
+              "d"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
           ]
         ],
         [
@@ -4859,6 +5075,19 @@
       ],
       "ret": "Bool"
     },
+    "op_opt_literal_width": {
+      "params": [
+        [
+          "u",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "ret": "Option<Bytes<2>>"
+    },
     "op_opt_ne": {
       "params": [
         [
@@ -4906,6 +5135,122 @@
         "ir.data"
       ],
       "ret": "Option<Point>"
+    },
+    "op_opt_widen_bytes": {
+      "params": [
+        [
+          "d",
+          "Bytes<2>"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "ret": "Option<Bytes>"
+    },
+    "op_opt_widen_ctor": {
+      "params": [
+        [
+          "d",
+          "Bytes<2>"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "ret": "Blob"
+    },
+    "op_opt_widen_eq": {
+      "params": [
+        [
+          "a",
+          "Option<Nat>"
+        ],
+        [
+          "b",
+          "Option<Int>"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "ret": "Bool"
+    },
+    "op_opt_widen_if": {
+      "params": [
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "ret": "Option<Int>"
+    },
+    "op_opt_widen_nat": {
+      "params": [
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "ret": "Option<Int>"
+    },
+    "op_opt_widen_nested": {
+      "params": [
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "ret": "Option<Option<Int>>"
+    },
+    "op_opt_widen_param": {
+      "params": [
+        [
+          "o",
+          "Option<Nat>"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "ret": "Option<Int>"
+    },
+    "op_opt_widen_unwrap": {
+      "params": [
+        [
+          "o",
+          "Option<Int>"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "ret": "Int"
     },
     "op_point_ok": {
       "admit": [
@@ -6089,6 +6434,670 @@
           [
             "var",
             "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "d",
+          "Bytes<2>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_opt_widen_bytes",
+          [
+            [
+              "var",
+              "d"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "opt_widen_bytes",
+          [
+            [
+              "var",
+              "d"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_opt_widen_bytes",
+      "expected": [
+        "model_call",
+        "opt_widen_bytes",
+        [
+          [
+            "var",
+            "d"
+          ]
+        ]
+      ],
+      "id": "warrant/data_forms/exhaustive/c_opt_widen_bytes",
+      "ir_cost": 12,
+      "kind": "reference",
+      "ops": [
+        "op_opt_widen_bytes"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<Bytes>",
+      "subject": [
+        "subject_op",
+        "op_opt_widen_bytes",
+        [
+          [
+            "var",
+            "d"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_opt_widen_nat",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "opt_widen_nat",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_opt_widen_nat",
+      "expected": [
+        "model_call",
+        "opt_widen_nat",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/data_forms/exhaustive/c_opt_widen_nat",
+      "ir_cost": 12,
+      "kind": "reference",
+      "ops": [
+        "op_opt_widen_nat"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<Int>",
+      "subject": [
+        "subject_op",
+        "op_opt_widen_nat",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "o",
+          "Option<Nat>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_opt_widen_param",
+          [
+            [
+              "var",
+              "o"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "opt_widen_param",
+          [
+            [
+              "var",
+              "o"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_opt_widen_param",
+      "expected": [
+        "model_call",
+        "opt_widen_param",
+        [
+          [
+            "var",
+            "o"
+          ]
+        ]
+      ],
+      "id": "warrant/data_forms/exhaustive/c_opt_widen_param",
+      "ir_cost": 10,
+      "kind": "reference",
+      "ops": [
+        "op_opt_widen_param"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<Int>",
+      "subject": [
+        "subject_op",
+        "op_opt_widen_param",
+        [
+          [
+            "var",
+            "o"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_opt_widen_nested",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "opt_widen_nested",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_opt_widen_nested",
+      "expected": [
+        "model_call",
+        "opt_widen_nested",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/data_forms/exhaustive/c_opt_widen_nested",
+      "ir_cost": 14,
+      "kind": "reference",
+      "ops": [
+        "op_opt_widen_nested"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<Option<Int>>",
+      "subject": [
+        "subject_op",
+        "op_opt_widen_nested",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_opt_widen_if",
+          [
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "opt_widen_if",
+          [
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_opt_widen_if",
+      "expected": [
+        "model_call",
+        "opt_widen_if",
+        [
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/data_forms/exhaustive/c_opt_widen_if",
+      "ir_cost": 19,
+      "kind": "reference",
+      "ops": [
+        "op_opt_widen_if"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<Int>",
+      "subject": [
+        "subject_op",
+        "op_opt_widen_if",
+        [
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Option<Nat>"
+        ],
+        [
+          "b",
+          "Option<Int>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_opt_widen_eq",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "opt_widen_eq",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_opt_widen_eq",
+      "expected": [
+        "model_call",
+        "opt_widen_eq",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/data_forms/exhaustive/c_opt_widen_eq",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "op_opt_widen_eq"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_opt_widen_eq",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "o",
+          "Option<Int>"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_opt_widen_unwrap",
+          [
+            [
+              "var",
+              "o"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "opt_widen_unwrap",
+          [
+            [
+              "var",
+              "o"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_opt_widen_unwrap",
+      "expected": [
+        "model_call",
+        "opt_widen_unwrap",
+        [
+          [
+            "var",
+            "o"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ],
+      "id": "warrant/data_forms/exhaustive/c_opt_widen_unwrap",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "op_opt_widen_unwrap"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data",
+        "ir.fixed"
+      ],
+      "result_type": "Int",
+      "subject": [
+        "subject_op",
+        "op_opt_widen_unwrap",
+        [
+          [
+            "var",
+            "o"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "d",
+          "Bytes<2>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_opt_widen_ctor",
+          [
+            [
+              "var",
+              "d"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "opt_widen_ctor",
+          [
+            [
+              "var",
+              "d"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_opt_widen_ctor",
+      "expected": [
+        "model_call",
+        "opt_widen_ctor",
+        [
+          [
+            "var",
+            "d"
+          ]
+        ]
+      ],
+      "id": "warrant/data_forms/exhaustive/c_opt_widen_ctor",
+      "ir_cost": 14,
+      "kind": "reference",
+      "ops": [
+        "op_opt_widen_ctor"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Blob",
+      "subject": [
+        "subject_op",
+        "op_opt_widen_ctor",
+        [
+          [
+            "var",
+            "d"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "u",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_opt_literal_width",
+          [
+            [
+              "var",
+              "u"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "opt_literal_width",
+          [
+            [
+              "var",
+              "u"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_opt_literal_width",
+      "expected": [
+        "model_call",
+        "opt_literal_width",
+        [
+          [
+            "var",
+            "u"
+          ]
+        ]
+      ],
+      "id": "warrant/data_forms/exhaustive/c_opt_literal_width",
+      "ir_cost": 12,
+      "kind": "reference",
+      "ops": [
+        "op_opt_literal_width"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.data"
+      ],
+      "result_type": "Option<Bytes<2>>",
+      "subject": [
+        "subject_op",
+        "op_opt_literal_width",
+        [
+          [
+            "var",
+            "u"
           ]
         ]
       ]

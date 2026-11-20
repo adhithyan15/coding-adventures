@@ -83,6 +83,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from functools import cached_property
 
 from . import ast as A
 from . import levels as L
@@ -116,20 +117,38 @@ _ARITH = {"add", "sub", "mul"}
 _UNKNOWN = A.Ty("?")
 
 
-def _assignable(src: A.Ty, dst: A.Ty) -> bool:
+def _assignable(src: A.Ty, dst: A.Ty, lift: bool = True) -> bool:
     """Assignability that tolerates the unknown error type of a bare ``ok``/``err``.
 
     An ``["ok", e]`` node has no way to know its error type (the IR carries
     only the case name), so its ``Result`` is ``Result<T, ?>``: compatible with
     any ``Result<T', E>`` whose payload type accepts ``T``.
+
+    Otherwise this is :func:`.lower._assignable`, the grammar checker's ``is_assignable_to`` ([D60]): ``Nat``
+    to ``Int``, ``Bytes<N>`` to ``Bytes``, through an ``Option`` or ``Result`` payload.  **A tuple component
+    never lifts** (``lift`` is off below a tuple, as in the checker): only the unknown error type is
+    tolerated there.
     """
+    if not lift:
+        if src == dst:
+            return True
+        if src.head == dst.head == "Option":
+            return _assignable(src.args[0], dst.args[0], False)
+        if src.head == dst.head == "Result":
+            payload = src.args[0] == _UNKNOWN or _assignable(src.args[0], dst.args[0], False)
+            return payload and (_UNKNOWN in (src.args[1], dst.args[1]) or src.args[1] == dst.args[1])
+        if src.head == dst.head == "()":
+            return len(src.args) == len(dst.args) and all(
+                _assignable(x, y, False) for x, y in zip(src.args, dst.args)
+            )
+        return False
     if src.head == dst.head == "Result":
         payload = src.args[0] == _UNKNOWN or _assignable(src.args[0], dst.args[0])
         return payload and (_UNKNOWN in (src.args[1], dst.args[1]) or src.args[1] == dst.args[1])
+    if src.head == dst.head == "Option":
+        return _assignable(src.args[0], dst.args[0])
     if src.head == dst.head == "()":
-        return len(src.args) == len(dst.args) and all(
-            _assignable(x, y) for x, y in zip(src.args, dst.args)
-        )
+        return _assignable(src, dst, False)
     return _strict_assignable(src, dst)
 
 
@@ -141,18 +160,37 @@ def _merge_result(a: A.Ty, b: A.Ty) -> A.Ty:
 def _common(a: A.Ty, b: A.Ty) -> A.Ty | None:
     """The common type of two branch or operand types, or ``None``.
 
-    ``Result`` types merge their unknowns (the lax rule ``if`` has always had); tuple types are
-    unified component by component (``Nat`` with ``Int``, ``Bytes<N>`` with ``Bytes``); everything
-    else is :func:`.lower._unify`.
+    ``Result`` types merge their unknowns (the lax rule ``if`` has always had); two ``Option`` types
+    unify by payload ([D60]); two tuple types unify only component by component *without* lifting (the
+    checker's ``common_type`` has no tuple rule: equal, or the unknown error type of a bare ``ok``/``err``
+    merged); everything else is :func:`.lower._unify`.
     """
     if a.head == "Result" and b.head == "Result":
         return _merge_result(a, b)
+    if a.head == b.head == "Option":
+        inner = _common(a.args[0], b.args[0])
+        return A.Ty("Option", (inner,)) if inner is not None else None
     if a.head == b.head == "()":
         if len(a.args) != len(b.args):
             return None
-        parts = [_common(x, y) for x, y in zip(a.args, b.args)]
+        parts = [_common_exact(x, y) for x, y in zip(a.args, b.args)]
         return None if any(p is None for p in parts) else A.Ty("()", tuple(parts))
     return _unify(a, b)
+
+
+def _common_exact(a: A.Ty, b: A.Ty) -> A.Ty | None:
+    """The common type of two tuple *components*: equal, or merged through the unknown error type; nothing lifts."""
+    if a == b:
+        return a
+    if a.head == b.head == "Result":
+        return _merge_result(a, b) if _assignable(a, b, False) or _assignable(b, a, False) else None
+    if a.head == b.head == "Option":
+        inner = _common_exact(a.args[0], b.args[0])
+        return A.Ty("Option", (inner,)) if inner is not None else None
+    if a.head == b.head == "()" and len(a.args) == len(b.args):
+        parts = [_common_exact(x, y) for x, y in zip(a.args, b.args)]
+        return None if any(p is None for p in parts) else A.Ty("()", tuple(parts))
+    return None
 
 
 @dataclass
@@ -919,20 +957,21 @@ class Program:
         if len(node) != 3 or type(node[2]) is not int or not isinstance(node[1], list):
             raise OracleError("ir", "a malformed field node")
         base = self._compile(node[1], tenv, allow_subject, depth + 1)
-        if base.ty.head not in self.types.adts or base.ty.head not in self._records():
+        if base.ty.head not in self.types.adts or base.ty.head not in self._record_names:
             raise OracleError("ir", "field needs a record")
         fields = self.types.adts[base.ty.head][0][1]
         if not 0 <= node[2] < len(fields):
             raise OracleError("ir", "a field index outside the record")
         return Compiled(fields[node[2]], _unevaluated, 1 + base.cost, base.subject)
 
-    def _records(self) -> set[str]:
-        """The record names: an ADT with exactly one constructor named like itself."""
-        return {
+    @cached_property
+    def _record_names(self) -> frozenset[str]:
+        """The record names: an ADT with exactly one constructor named like itself (computed once)."""
+        return frozenset(
             name
             for name, ctors in self.types.adts.items()
             if len(ctors) == 1 and ctors[0][0] == name
-        }
+        )
 
     def _declared_type(self, ty: A.Ty) -> None:
         """A type named in IR (a ``none``'s payload) must be allowed and declared: ``ir`` otherwise, a list is ``ir.list``."""

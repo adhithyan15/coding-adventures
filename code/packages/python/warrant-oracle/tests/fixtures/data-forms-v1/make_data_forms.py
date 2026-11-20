@@ -68,6 +68,16 @@ MODELS = [
     ("opt_bytes", "d: Bytes", "Option<Bytes>", "if len(d) == 0 then None else Some(d)"),
     ("opt_fixed_bytes", "d: Bytes<2>", "Option<Bytes<2>>", "Some(d)"),
     ("opt_pair", "a: Bool", "Option<(Bool,Nat)>", "Some((a, 1))"),
+    # -- Option flows by its payload like Result ([D60], VER04r 16.16 R51): Some(d) is Option<Bytes<2>> --------
+    ("opt_widen_bytes", "d: Bytes<2>", "Option<Bytes>", "Some(d)"),
+    ("opt_widen_nat", "a: Nat", "Option<Int>", "Some(a)"),
+    ("opt_widen_param", "o: Option<Nat>", "Option<Int>", "o"),
+    ("opt_widen_nested", "a: Nat", "Option<Option<Int>>", "Some(Some(a))"),
+    ("opt_widen_if", "c: Bool, a: Nat", "Option<Int>", "if c then Some(a) else None"),
+    ("opt_widen_eq", "a: Option<Nat>, b: Option<Int>", "Bool", "a == b"),
+    ("opt_widen_unwrap", "o: Option<Int>, n: Nat", "Int", "unwrap_or(o, n)"),
+    ("opt_widen_ctor", "d: Bytes<2>", "Blob", "Blob(d, 1)"),
+    ("opt_literal_width", "u: Bool", "Option<Bytes<2>>", 'Some(b"0102")'),
     ("opt_rec", "a: U8, b: U8", "Option<Point>", "Some(Point(a, b))"),
     (
         "res_opt",
@@ -88,7 +98,7 @@ MODELS = [
     ("inter_div_nat", "a: Nat, b: Nat", "Bool", "unwrap_or(div(a, b), 0) == 3"),
     ("prod_eq", "a: U8, b: U8", "Bool", "checked_add(a, b) == Some(a)"),
     ("prod_in_ok", "a: U8, b: U8", R, "Ok(rem(a, b))"),
-    ("prod_in_if", "c: Bool, d: Bytes, i: Nat", "U8", "unwrap_or(if c then at(d, i) else None, 0u8)"),
+    ("prod_in_if", "c: Bool, d: Bytes, i: Nat", "U8", "unwrap_or(if c then at(d, i) else at(d, 0), 0u8)"),
     ("prod_try", "a: Nat", "Option<U8>", "try<U8>(a)"),
     # -- records: construction, field, nesting, postfix field, structural equality -----------------------
     ("mk_point", "a: U8, b: U8", "Point", "Point(a, b)"),
@@ -338,6 +348,21 @@ LEVELS = [
     ("a-list-type-in-a-model", "  model m(xs: List<U8>) -> Bool = true\n", "ir.list"),
     ("a-list-type-in-a-result", "  model m(a: Bool) -> List<U8> = true\n", "ir.list"),
     ("a-list-type-in-a-binder", "  claim c:\n    forall xs: List<U8>. g(true) == g(true)\n", "ir.list"),
+    (
+        "a-call-to-a-list-op-declared-later",
+        "  model m(a: Bytes) -> Nat = len(h(a))\n  op h(a: Bytes) -> List<U8>\n",
+        "ir.list",
+    ),
+    (
+        "a-call-to-a-list-op-declared-earlier",
+        "  op h(a: Bytes) -> List<U8>\n  model m(a: Bytes) -> Nat = len(h(a))\n",
+        "ir.list",
+    ),
+    (
+        "a-list-field-as-an-operand-before-its-record",
+        "  model m(q: Q) -> Nat = len(q.xs)\n  record Q(xs: List<U8>)\n",
+        "ir.list",
+    ),
     ("a-list-literal", "  model m(a: U8) -> Bool = [a] == [a]\n", "ir.list"),
     ("slice", "  model m(a: Bytes) -> Bool = slice(a, 0, 1) == a\n", "ir.list"),
     ("to-list", "  model m(a: Bytes) -> Bool = to_list(a) == to_list(a)\n", "ir.list"),
@@ -367,13 +392,14 @@ LEVELS = [
     ),
 ]
 
-#: The corpus limits of section 2.2 (R34), refused whole with ``limit`` before any expression is lowered.
-_FIELDS_33 = ", ".join(f"f{i}: U8" for i in range(33))
+#: The corpus limits of section 2.2 (R34), refused whole with ``limit`` before any expression is lowered.  Only
+#: the limits a *source* document can reach are rows (R56): the grammar's parser allows a record or a constructor
+#: 32 fields and a variant 256 constructors, so a record of 33 fields (and a variant of one constructor) is a
+#: parse error, never a refusal of this dump.
 _CTORS_65 = " | ".join(f"C{i}" for i in range(65))
 _FIELDS_9 = ", ".join(f"f{i}: U8" for i in range(9))
 _CASES_65 = " | ".join(f"Z{i}" for i in range(65))
 LIMITS = [
-    ("a-record-of-33-fields", f"  record Big({_FIELDS_33})\n", "limit"),
     ("a-variant-of-65-constructors", f"  variant Many = {_CTORS_65}\n", "limit"),
     ("a-constructor-of-9-fields", f"  variant Wide = Fat({_FIELDS_9}) | Thin\n", "limit"),
     ("an-error-type-of-65-cases", f"  error Huge = {_CASES_65}\n", "limit"),
@@ -384,12 +410,37 @@ TYPES = [
     ("a-none-with-no-context", "  model m(a: Bool) -> Bool = None == None\n", "type"),
     ("a-none-as-a-scrutinee", "  model m(a: Bool) -> Bool = match None with None -> true | _ -> false\n", "type"),
     ("a-none-in-a-bool-context", "  model m(a: Bool) -> Bool = None\n", "type"),
+    ("a-none-as-the-left-operand-of-an-equality", "  model m(o: Option<U8>) -> Bool = None == o\n", "type"),
+    ("a-none-as-the-left-operand-of-an-inequality", "  model m(o: Option<U8>) -> Bool = None != o\n", "type"),
     (
-        "a-some-is-not-lifted-to-a-wider-option",
-        "  model m(d: Bytes<2>) -> Option<Bytes> = Some(d)\n",
+        "a-none-takes-no-type-from-the-other-branch",
+        "  model m(c: Bool, d: Bytes) -> U8 = unwrap_or(if c then at(d, 0) else None, 0u8)\n",
         "type",
     ),
-    ("an-option-nat-is-not-an-option-int", "  model m(a: Nat) -> Option<Int> = Some(a)\n", "type"),
+    (
+        "a-none-takes-no-type-from-the-first-branch",
+        "  model m(c: Bool, d: Bytes) -> U8 = unwrap_or(if c then None else at(d, 0), 0u8)\n",
+        "type",
+    ),
+    (
+        "a-none-takes-no-type-from-another-arm",
+        "  model m(b: Bool, d: Bytes) -> U8 = unwrap_or(match b with true -> None | false -> at(d, 0), 0u8)\n",
+        "type",
+    ),
+    ("an-option-int-is-not-an-option-nat", "  model m(a: Int) -> Option<Nat> = Some(a)\n", "type"),
+    ("an-option-bytes-is-not-an-option-bytes-2", "  model m(d: Bytes) -> Option<Bytes<2>> = Some(d)\n", "type"),
+    (
+        "an-option-of-a-tuple-does-not-lift",
+        "  model m(a: Nat) -> Option<(Int,Int)> = Some((a, a))\n",
+        "type",
+    ),
+    (
+        "a-tuple-constructor-argument-does-not-lift",
+        "  record RT(p: (Int,Int))\n  model m(a: Nat) -> RT = RT((a, a))\n",
+        "type",
+    ),
+    ("a-constructor-named-like-a-built-in", "  variant W = Some | Other\n", "type"),
+    ("a-record-named-like-a-built-in", "  record Int(a: U8)\n", "type"),
     ("a-projection-of-a-bool", "  model m(a: Bool) -> Bool = a.0\n", "type"),
     ("a-field-of-a-tuple", "  model m(t: (Bool,Bool)) -> Bool = t.x\n", "type"),
     ("a-field-of-a-variant", "  model m(s: V) -> U8 = s.r\n", "type"),
@@ -451,7 +502,6 @@ TYPES = [
         "type",
     ),
     ("a-constructor-named-like-a-record", "  variant W = P | Q\n", "type"),
-    ("a-variant-of-one-constructor", "  variant W = Only(a: U8)\n", "type"),
     ("a-record-that-contains-itself", "  record Loop(next: Loop)\n", "type"),
     ("a-record-cycle-through-a-variant", "  record A1(v: B1)\n  variant B1 = X(a: A1) | Y\n", "type"),
 ]
@@ -585,7 +635,7 @@ ORDER = [
     # (1) the declaration limits come first, before a level refusal that is declared earlier
     (
         "order-limit-before-a-level",
-        "  model m(a: U8) -> Bool = [a] == [a]\n" + f"  record Big({_FIELDS_33})\n",
+        "  model m(a: U8) -> Bool = [a] == [a]\n" + f"  variant Wide = Fat({_FIELDS_9}) | Thin\n",
         "limit",
     ),
     # (2) within one unit a level or feature is named in preference to a type error of the same unit ...
@@ -673,6 +723,16 @@ ORDER = [
         "order-a-type-declaration-before-a-later-model",
         "  record Q(xs: List<U8>)\n  model m(a: Bytes) -> Bool = fixed<4>(a) == None\n",
         "level:ir.list",
+    ),
+    (
+        "order-an-op-signature-error-after-a-level",
+        "  record Q(xs: List<U8>)\n  op h(a: U8, a: U8) -> Bool\n",
+        "level:ir.list",
+    ),
+    (
+        "order-an-op-signature-error-before-a-level",
+        "  op h(a: U8, a: U8) -> Bool\n  record Q(xs: List<U8>)\n",
+        "type",
     ),
     (
         "order-a-model-before-a-later-type-declaration",

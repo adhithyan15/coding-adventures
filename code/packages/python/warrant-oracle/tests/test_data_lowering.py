@@ -108,7 +108,6 @@ def test_a_none_takes_its_type_from_every_kind_of_context():
     assert ir_of("Ok(None)", ret="Result<Option<U8>,E>") == ["ok", ["none", "U8"]]
     assert ir_of("Slot(None, (true, 1))", ret="Slot")[2][0] == ["none", "U8"]
     assert ir_of("o == None", "o: Option<U8>")[2] == ["none", "U8"]
-    assert ir_of("None == o", "o: Option<U8>")[1] == ["none", "U8"]
     assert ir_of("Some(None)", ret="Option<Option<U8>>") == ["some", ["none", "U8"]]
     ctx = "  model g(o: Option<Bytes<2>>) -> Bool = true\n"
     assert lower(PRELUDE + ctx + "  model m(a: U8) -> Bool = g(None)\n").models["m"].ir == [
@@ -127,22 +126,90 @@ def test_a_some_literal_takes_its_type_from_the_context_and_a_none_does_not_gues
     assert refused("None").code == "type"
 
 
-def test_some_is_typed_exactly_and_option_does_not_lift_r39_a():
-    # `Some(d)` is Option<Bytes<2>>, which is not Option<Bytes>; Option<Nat> is not Option<Int>
-    e = refused("Some(d)", "d: Bytes<2>", "Option<Bytes>")
-    assert e.code == "type" and "declared type" in e.message
-    assert refused("Some(n)", "n: Nat", "Option<Int>").code == "type"
+def test_option_flows_and_unifies_by_its_payload_like_result_d60_r51():
+    # `Some(d)` is Option<Bytes<2>> and *flows* to Option<Bytes>; Option<Nat> flows to Option<Int>
+    assert ir_of("Some(d)", "d: Bytes<2>", "Option<Bytes>") == ["some", ["var", "d"]]
     assert ir_of("Some(d)", "d: Bytes<2>", "Option<Bytes<2>>") == ["some", ["var", "d"]]
-    # and an equality of the two is refused rather than lifted
-    assert refused("Some(d) == Some(e)", "d: Bytes<2>, e: Bytes").code == "type"
-    # a constructor argument is assignable per argument (Bytes<N> to Bytes), nothing through a composite
+    assert ir_of("Some(n)", "n: Nat", "Option<Int>") == ["some", ["var", "n"]]
+    assert ir_of("o", "o: Option<Nat>", "Option<Int>") == ["var", "o"]
+    assert ir_of("Some(Some(n))", "n: Nat", "Option<Option<Int>>")[0] == "some"  # recursively
+    # the converse never flows
+    assert refused("Some(n)", "n: Int", "Option<Nat>").code == "type"
+    assert refused("o", "o: Option<Bytes>", "Option<Bytes<2>>").code == "type"
+    # the operands of ==, the branches of an if and the arms of a match unify by payload
+    assert ir_of("a == b", "a: Option<Nat>, b: Option<Int>")[0] == "eq"
+    assert ir_of("Some(d) == Some(e)", "d: Bytes<2>, e: Bytes")[0] == "eq"
+    assert ir_of("if c then a else b", "c: Bool, a: Option<Nat>, b: Option<Int>", "Option<Int>")[0] == "if"
+    assert ir_of("match c with true -> a | false -> b", "c: Bool, a: Option<Nat>, b: Option<Int>", "Option<Int>")[0] == "match"
+    # the default of unwrap_or flows to the payload, and a payload that is not an Option does not
+    assert ir_of("unwrap_or(o, n)", "o: Option<Int>, n: Nat", "Int")[0] == "unwrap_or"
+    assert refused("o", "o: Option<(Nat,Nat)>", "Option<(Int,Int)>").code == "type"  # a tuple never lifts
+    # a constructor argument flows per argument: Bytes<N> to Bytes and through an Option, nothing through a tuple
     blob = "  record Blob(data: Bytes, n: Nat, o: Option<Bytes>)\n"
-    ok = lower(PRELUDE + blob + "  model m(d: Bytes<2>) -> Blob = Blob(d, 1, None)\n").models["m"]
+    ok = lower(PRELUDE + blob + "  model m(d: Bytes<2>) -> Blob = Blob(d, 1, Some(d))\n").models["m"]
     assert ok.ir[0] == "ctor"
-    bad = "  model m(d: Bytes<2>) -> Blob = Blob(d, 1, Some(d))\n"
+    rt = "  record RT(p: (Int,Int))\n"
     with pytest.raises(OracleError) as err:
-        lower(PRELUDE + blob + bad)
+        lower(PRELUDE + rt + "  model m(n: Nat) -> RT = RT((n, n))\n")
     assert err.value.code == "type"
+    assert ir_of("Ok(b\"6162\")", "u: Bool", "Result<Bytes<2>,E>")[0] == "ok"
+
+
+def test_the_width_is_carried_by_the_type_through_some_ok_if_and_match_r51():
+    """VER04r 16.16 R51: a bytes literal is ``Bytes<len>``; ``Some``/``Ok`` wrap it; the IR is unchanged."""
+    lit2 = ["lit", {"type": "Bytes", "value": "6162"}]  # the IR keeps the written type `Bytes`
+    assert ir_of('Some(b"6162")', "u: Bool", "Option<Bytes<2>>") == ["some", lit2]
+    assert ir_of('Some(b"6162")', "u: Bool", "Option<Bytes>") == ["some", lit2]
+    assert refused('Some(b"6162")', "u: Bool", "Option<Bytes<3>>").code == "type"
+    assert ir_of('Ok(b"6162")', "u: Bool", "Result<Bytes<2>,E>") == ["ok", lit2]
+    assert refused('Ok(b"6162")', "u: Bool", "Result<Bytes<3>,E>").code == "type"
+    # concat of two literal widths is Bytes<sum>; a plain operand gives Bytes
+    assert ir_of('Ok(concat(a, b"0102"))', "a: Bytes<1>", "Result<Bytes<3>,E>")[0] == "ok"
+    assert refused('Ok(concat(a, b"0102"))', "a: Bytes<1>", "Result<Bytes<4>,E>").code == "type"
+    assert refused('Ok(concat(a, b"0102"))', "a: Bytes", "Result<Bytes<3>,E>").code == "type"
+    assert ir_of('Some(concat(b"61", b"62"))', "u: Bool", "Option<Bytes<2>>")[0] == "some"
+    # take, drop give a plain Bytes
+    assert refused("Ok(take(a, 1))", "a: Bytes<1>", "Result<Bytes<1>,E>").code == "type"
+    assert ir_of("Ok(take(a, 1))", "a: Bytes<1>", "Result<Bytes,E>")[0] == "ok"
+    assert refused("Some(drop(a, 1))", "a: Bytes<2>", "Option<Bytes<1>>").code == "type"
+    # an if or a match keeps a width its branches share, and loses it otherwise
+    keep = 'Some(if c then b"6162" else b"6364")'
+    assert ir_of(keep, "c: Bool", "Option<Bytes<2>>")[0] == "some"
+    assert refused(keep, "c: Bool", "Option<Bytes<3>>").code == "type"
+    lose = 'Some(if c then b"6162" else b"616263")'
+    assert ir_of(lose, "c: Bool", "Option<Bytes>")[0] == "some"
+    assert refused(lose, "c: Bool", "Option<Bytes<2>>").code == "type"
+    arms = 'Some(match c with true -> b"6162" | false -> b"6364")'
+    assert ir_of(arms, "c: Bool", "Option<Bytes<2>>")[0] == "some"
+    assert refused('Some(match c with true -> b"6162" | false -> b"61")', "c: Bool", "Option<Bytes<2>>").code == "type"
+    # Option and Result are covariant in the width, a tuple is invariant
+    assert ir_of('Some(Some(b"6162"))', "u: Bool", "Option<Option<Bytes>>")[0] == "some"
+    assert refused('(b"6162", n)', "n: Nat", "(Bytes,Nat)").code == "type"
+    assert ir_of('(b"6162", n)', "n: Nat", "(Bytes<2>,Nat)")[0] == "tuple"
+    assert refused('Some((b"6162", n))', "n: Nat", "Option<(Bytes,Nat)>").code == "type"
+    # a plain Bytes does not flow to Bytes<N>
+    assert refused("Some(d)", "d: Bytes", "Option<Bytes<2>>").code == "type"
+    # a width the operand type carries makes an equality of Bytes<2> against Bytes legal (they unify to Bytes)
+    assert ir_of('d == b"6162"', "d: Bytes")[0] == "eq"
+
+
+def test_none_takes_its_type_from_its_expected_type_only_r52():
+    # right operand of == / != is typed from the left; the left operand has no expected type
+    assert ir_of("o == None", "o: Option<U8>")[2] == ["none", "U8"]
+    assert ir_of("o != None", "o: Option<U8>")[2] == ["none", "U8"]
+    for body in ("None == o", "None != o"):
+        e = refused(body, "o: Option<U8>")
+        assert e.code == "type" and "context" in e.message
+    # a branch or an arm never takes its type from its sibling
+    assert refused("unwrap_or(if c then at(d, 0) else None, 0u8)", "c: Bool, d: Bytes", "U8").code == "type"
+    assert refused("unwrap_or(if c then None else at(d, 0), 0u8)", "c: Bool, d: Bytes", "U8").code == "type"
+    assert refused("unwrap_or(match b with true -> None | false -> at(d, 0), 0u8)", "b: Bool, d: Bytes", "U8").code == "type"
+    assert refused("unwrap_or(match b with true -> at(d, 0) | false -> None, 0u8)", "b: Bool, d: Bytes", "U8").code == "type"
+    assert refused("unwrap_or(Some(None), None)", "u: Bool", "U8").code == "type"
+    # ... but they do from the expected type, which is the written one (under Option<Int>, Some(n) is lifted)
+    ir = ir_of("if c then Some(n) else None", "c: Bool, n: Nat", "Option<Int>")
+    assert ir[3] == ["none", "Int"]
+    assert ir_of("match b with true -> at(d, 0) | false -> None", "b: Bool, d: Bytes", "Option<U8>")[2][1][1] == ["none", "U8"]
 
 
 def test_projection_typing_r39_c():
@@ -192,7 +259,7 @@ def test_unwrap_or_takes_any_option_but_only_a_direct_producer_is_the_intermedia
         ("checked_add(a, b) == Some(a)", "a: U8, b: U8", "Bool", ("ir.core", "ir.data", "ir.fixed")),
         ("Ok(rem(a, b))", "a: U8, b: U8", "Result<Option<U8>,E>", ("ir.core", "ir.data", "ir.fixed")),
         (
-            "unwrap_or(if c then at(d, 0) else None, 0u8)",
+            "unwrap_or(if c then at(d, 0) else at(d, 1), 0u8)",
             "c: Bool, d: Bytes",
             "U8",
             ("ir.core", "ir.data", "ir.fixed"),
@@ -884,3 +951,81 @@ def test_the_model_error_of_a_unit_is_raised_when_no_earlier_unit_holds_a_refusa
     with pytest.raises(OracleError) as err:
         lower(PRELUDE + "  model a1(a: U8) -> Bool = a\n")
     assert err.value.code == "type" and "declared type" in err.value.message
+
+
+# -- review fixes of S11a (VER04r 16.16 R53, R57, R58) ------------------------------------------------------
+
+
+def _doc_refusal(text: str) -> OracleError:
+    """The refusal of a whole document: the error it raises, or the first one a unit recorded."""
+    try:
+        err = lowering_refusal(lower("warrant t v1\n  error E = A | B\n" + text))
+    except OracleError as exc:
+        return exc
+    assert err is not None, "not refused"
+    return err
+
+
+@pytest.mark.parametrize(
+    "unit",
+    [
+        "  model m(r: Q) -> Nat = len(r.xs)\n",
+        "  model m(r: Q) -> Bytes = concat(r.xs, r.xs)\n",
+        "  model m(r: Q) -> Bytes = take(r.xs, 1)\n",
+        "  model m(r: Q) -> Bytes = drop(r.xs, 1)\n",
+        "  model m(r: Q) -> Option<U8> = at(r.xs, 1)\n",
+        "  model m(a: Bytes) -> Nat = len(f(a))\n",
+        "  model m(a: Bytes) -> Bool = f(a) == f(a)\n",
+        "  model m(a: Bytes) -> Bytes = take(f(a), 1)\n",
+        "  model m(a: Bytes) -> Option<U8> = at(f(a), 1)\n",
+    ],
+)
+def test_a_list_operand_or_a_call_to_a_list_op_is_ir_list_before_or_after_its_declaration_r57(unit):
+    refused_decls = "  record Q(xs: List<U8>)\n  op f(a: Bytes) -> List<U8>\n"
+    for text in (unit + refused_decls, refused_decls + unit):
+        err = _doc_refusal(text)
+        assert (err.code, err.level) == ("level", "ir.list"), text
+
+
+def test_a_unit_before_a_refused_declaration_has_no_spurious_type_error_r57():
+    # the typing error of a unit that does not depend on the refused declaration stays a typing error
+    err = _doc_refusal("  model m(a: U8) -> Bool = a\n  op f(a: Bytes) -> List<U8>\n")
+    assert err.code == "type"
+
+
+@pytest.mark.parametrize("name", ["Some", "None", "Ok", "Err", "Int", "len", "take", "rotl", "unwrap_or", "U16"])
+def test_a_reserved_built_in_is_refused_as_a_declared_type_or_constructor_r58(name):
+    for decl in (
+        f"  variant W = {name} | Other\n",
+        f"  variant W = Other | {name}(a: U8)\n",
+        f"  variant {name} = A1 | B1\n",
+        f"  record {name}(a: U8)\n",
+    ):
+        err = _doc_refusal(decl)
+        assert err.code == "type" and "reserved built-in" in err.message, decl
+    assert lower("warrant t v1\n  variant W = Other | Fine\n").variants["W"]
+
+
+def test_an_op_signature_error_yields_to_an_earlier_level_refusal_r53():
+    earlier = "  record Q(xs: List<U8>)\n"
+    for sig in ("  op g(a: U8, a: U8) -> U8\n", "  op g(a: Nope) -> U8\n", "  op g(a: U8) -> Nope\n"):
+        err = _doc_refusal(earlier + sig)
+        assert (err.code, err.level) == ("level", "ir.list"), sig  # the earlier refusal is named
+        err = _doc_refusal(sig + earlier)
+        assert err.code == "type", sig  # declared first: its own typing error
+    # an earlier op signature that is refused holds the same place
+    err = _doc_refusal("  op h(xs: List<U8>) -> Bool\n  op g(a: U8, a: U8) -> U8\n")
+    assert (err.code, err.level) == ("level", "ir.list")
+    # the name pass and the recursion check yield to nothing
+    err = _doc_refusal("  record Q(xs: List<U8>)\n  record Loop(next: Loop)\n")
+    assert err.code == "type"
+    err = _doc_refusal("  record Q(xs: List<U8>)\n  record Q(a: U8)\n")
+    assert err.code == "type"
+
+
+def test_the_dump_raises_a_claims_own_lowering_refusal():
+    # a claim that calls no operation of the subject is W0701 (VER04r 4.3): the dump raises it, as the generator does
+    text = PRELUDE + "  claim c:\n    forall a: U8. a == a\n"
+    with pytest.raises(OracleError) as err:
+        view(text.encode())
+    assert err.value.code == "generation" and "W0701" in err.value.message

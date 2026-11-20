@@ -77,7 +77,7 @@ Records, variants (with and without a payload), `Option<T>` as a real type, the 
 
 | Source | IR | Cost |
 |---|---|---|
-| `Some(e)` | `["some", e]`, typed exactly `Option<type(e)>` (no lifting, R39 (a)) | `1 +` the operand |
+| `Some(e)` | `["some", e]`, typed exactly `Option<type(e)>`, which flows to a wider `Option` by its payload (R39 (a), [D60], R51) | `1 +` the operand |
 | `None` | `["none", "T"]`, `T` the canonical type name the context fixes; no context is a `type` error (R39 (b)) | 1 |
 | `Name(e1, .., en)`, a bare payload-free `Name` | `["ctor", "Name", [e1, .., en]]` | `1 +` the operands |
 | `r.name` | `["field", r, i]` (the index, never the name); `e.i` on a non-tuple and `e.name` on a non-record are `type` errors (R39 (c)) | `1 +` the operand |

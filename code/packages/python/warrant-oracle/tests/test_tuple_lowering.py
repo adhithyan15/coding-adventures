@@ -151,11 +151,22 @@ def test_tuple_equality_lowers_and_is_structural(op, tag):
     assert c.fn({"a": same, "b": other}) is (tag == "ne")
 
 
-def test_equality_unifies_nat_with_int_and_widths_per_component():
+def test_equality_of_tuples_is_invariant_in_every_component():
+    """A tuple never lifts a component (VER04r 16.16 R51, the checker's ``common_type`` has no tuple rule)."""
     assert model("a == (true, 3)", "a: (Bool,Nat)").unsupported is None
     ir = ["eq", ["tuple", [lit("Bytes", "0001"), lit("Nat", 1)]], var("t")]
     ir[1][1][0] = ["lit", {"type": "Bytes", "value": "0001"}]
-    assert typed(ir, {"t": A.Ty("()", (A.Ty("Bytes"), NAT))}).ty == BOOL
+    assert typed(ir, {"t": A.Ty("()", (A.Ty("Bytes", (2,)), NAT))}).ty == BOOL
+    # ... but Bytes<2> against Bytes, and Nat against Int, inside a tuple, are no longer unified
+    with pytest.raises(OracleError) as err:
+        typed(ir, {"t": A.Ty("()", (A.Ty("Bytes"), NAT))})
+    assert err.value.code == "ir"
+    with pytest.raises(OracleError) as err:
+        model("a == b", "a: (Bool,Nat), b: (Bool,Int)")
+    assert err.value.code == "type"
+    with pytest.raises(OracleError) as err:
+        model("a", "a: (Nat,Nat)", "(Int,Int)")
+    assert err.value.code == "type"
 
 
 def test_equality_of_tuples_of_different_shapes_is_a_type_error():
