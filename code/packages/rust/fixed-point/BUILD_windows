@@ -1,0 +1,12 @@
+# needs-toolchain: rust
+# build-tool: deps=rust/warrant-grammar rust/test-bootstrap rust/sha256 rust/cdcl-sat rust/drat-check rust/ca-capability-analyzer rust/warrant-ir rust/ca-assurance-report
+cargo run --locked -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check fixed-point
+cargo clippy --locked -p coding-adventures-fixed-point --all-targets -- -D warnings
+set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test --locked -q -p coding-adventures-fixed-point --test warrant_evidence
+set WARRANT_PROOF_OUT=../fixed-point/evidence&& cargo test --locked -q -p coding_adventures_warrant_ir --test fixed_point_proofs -- --nocapture
+cargo run --locked -q -p coding_adventures_ca_assurance_report -- --package-dir . --generate --profile fixed-point-arithmetic --profile-kind transform
+cargo run --locked -q -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified
+cargo test --locked -q -p coding-adventures-fixed-point -- --nocapture
+cargo test --locked -q -p coding-adventures-fixed-point --release -- --nocapture
+cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir . --check-module
+cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir . --verify-cert effect_certificate.json

@@ -177,10 +177,16 @@ op decode2 export=decode2 args=u8,u8 ret=(u64,usize) errors=subject::LebErr/Over
 op classify export=classify ret=Shape faults=wrong-ctor
 ```
 
-  The faults are `drop-consumed`, `swap-components`, `field-zero`, `wrong-ctor`,
-  `ok-as-err` and `off-by-one-consumed` (the LEB128 bug class: right value, wrong
-  bytes consumed). A value a host integer cannot hold is counted as
-  `unreachable_by_type` in the manifest, never narrowed. The checked-in pilot is
+  The faults are `drop-consumed`, `swap-components`, `field-zero`, `field-flip`,
+  `bool-field-flip`, `wrong-ctor`, `ok-as-err` and `off-by-one-consumed` (the
+  LEB128 bug class: right value, wrong bytes consumed). `bool-field-flip` is
+  opt-in for a declared record result with at least one direct `Bool` field; it
+  supports the record directly or behind one `Result` or `Option`, and flips the
+  first direct Boolean field while preserving all other fields. Variants, nested
+  wrappers and records with only nested Boolean fields are refused. The WX-FAULT2
+  fixture exercises its generated harness and aimed-attack checks. A value a
+  host integer cannot hold is counted as `unreachable_by_type` in the manifest,
+  never narrowed. The checked-in pilot is
   `tests/fixtures/wxa.warrant` with its bindings and generated harness
   (`tests/generated/wxa_evidence.rs`, `WARRANT_REGEN=1 cargo test -p
   coding_adventures_warrant_grammar --test wxa_regen` rewrites it);

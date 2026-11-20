@@ -3278,6 +3278,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "coding-adventures-fixed-point"
+version = "0.1.0"
+dependencies = [
+ "cdcl-sat",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "drat-check",
+ "num-bigint",
+ "num-traits",
+ "serde_json",
+]
+
+[[package]]
 name = "coding-adventures-flow-matic-lexer"
 version = "0.1.0"
 dependencies = [
@@ -4646,6 +4659,7 @@ dependencies = [
  "coding_adventures_sha256",
  "coding_adventures_test_bootstrap",
  "coding_adventures_warrant_grammar",
+ "coding_adventures_warrant_ir",
  "drat-check",
 ]
 
@@ -5401,6 +5415,7 @@ dependencies = [
  "coding_adventures_test_bootstrap",
  "coding_adventures_warrant_grammar",
  "drat-check",
+ "toml 0.8.23",
 ]
 
 [[package]]

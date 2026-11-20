@@ -1,0 +1,913 @@
+{
+  "evidence_seed": "5856422475038016589",
+  "module": "fixed_point_q16",
+  "schema": "warrant-test-evidence-v1",
+  "source_sha256": "3e35b4403db819ac386f2bc3962e09acd4b3279e0c34c91f430df4d281613908",
+  "spec": "code/specs/fixed-point.warrant",
+  "spec_sha256": "0d66d7019ecd2e63861c6d5ee7a19a68730f56b72d45b7b6da38825156a8519d",
+  "tests": [
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_from_integer_zero",
+      "kind": "example",
+      "op": "q16_from_integer",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_from_integer_exact",
+      "kind": "example",
+      "op": "q16_from_integer",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_from_integer_overflow",
+      "kind": "example",
+      "op": "q16_from_integer",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_checked_add_exact",
+      "kind": "example",
+      "op": "q16_checked_add",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_checked_add_overflow",
+      "kind": "example",
+      "op": "q16_checked_add",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_checked_sub_exact",
+      "kind": "example",
+      "op": "q16_checked_sub",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_checked_sub_overflow",
+      "kind": "example",
+      "op": "q16_checked_sub",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_saturating_add_overflow",
+      "kind": "example",
+      "op": "q16_saturating_add",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_saturating_add_in_range",
+      "kind": "example",
+      "op": "q16_saturating_add",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_saturating_sub_overflow",
+      "kind": "example",
+      "op": "q16_saturating_sub",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_checked_mul_one",
+      "kind": "example",
+      "op": "q16_checked_mul",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_checked_mul_rounding_overflow",
+      "kind": "example",
+      "op": "q16_checked_mul",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_saturating_mul_overflow_flag",
+      "kind": "example",
+      "op": "q16_saturating_mul",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_checked_div_zero",
+      "kind": "example",
+      "op": "q16_checked_div",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_saturating_div_zero",
+      "kind": "example",
+      "op": "q16_saturating_div",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_checked_div_in_range",
+      "kind": "example",
+      "op": "q16_checked_div",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_saturating_div_overflow",
+      "kind": "example",
+      "op": "q16_saturating_div",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_to_integer_floor_negative",
+      "kind": "example",
+      "op": "q16_to_integer",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/fixed_point_q16/example/q16_to_integer_nearest_even_tie",
+      "kind": "example",
+      "op": "q16_to_integer",
+      "verdict": "pass"
+    },
+    {
+      "cases": 559,
+      "claim": "q16_from_integer_matches_exact_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "value: I32 edge(559)",
+      "id": "warrant/fixed_point_q16/exhaustive/q16_from_integer_matches_exact_model",
+      "kind": "exhaustive",
+      "op": "q16_from_integer",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "q16_from_integer_matches_exact_model",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/fixed_point_q16/property/q16_from_integer_matches_exact_model",
+      "kind": "property",
+      "op": "q16_from_integer",
+      "seed": "15052415372550075652",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4104,
+      "claim": "q16_from_integer_matches_exact_model",
+      "id": "warrant/fixed_point_q16/fuzz/q16_from_integer_matches_exact_model",
+      "iterations": 4096,
+      "kind": "fuzz",
+      "op": "q16_from_integer",
+      "seed": "11995359415173485526",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 312481,
+      "claim": "q16_checked_add_matches_exact_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "a: record Q16(I32 edge(559)) size(559); b: record Q16(I32 edge(559)) size(559)",
+      "id": "warrant/fixed_point_q16/exhaustive/q16_checked_add_matches_exact_model",
+      "kind": "exhaustive",
+      "op": "q16_checked_add",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "q16_checked_add_matches_exact_model",
+      "discarded": 0,
+      "equal_cases": 1028,
+      "id": "warrant/fixed_point_q16/property/q16_checked_add_matches_exact_model",
+      "kind": "property",
+      "op": "q16_checked_add",
+      "seed": "9143115390387637160",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4104,
+      "claim": "q16_checked_add_matches_exact_model",
+      "id": "warrant/fixed_point_q16/fuzz/q16_checked_add_matches_exact_model",
+      "iterations": 4096,
+      "kind": "fuzz",
+      "op": "q16_checked_add",
+      "seed": "10375391395619870681",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 312481,
+      "claim": "q16_checked_sub_matches_exact_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "a: record Q16(I32 edge(559)) size(559); b: record Q16(I32 edge(559)) size(559)",
+      "id": "warrant/fixed_point_q16/exhaustive/q16_checked_sub_matches_exact_model",
+      "kind": "exhaustive",
+      "op": "q16_checked_sub",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "q16_checked_sub_matches_exact_model",
+      "discarded": 0,
+      "equal_cases": 1032,
+      "id": "warrant/fixed_point_q16/property/q16_checked_sub_matches_exact_model",
+      "kind": "property",
+      "op": "q16_checked_sub",
+      "seed": "4020033420147832629",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4104,
+      "claim": "q16_checked_sub_matches_exact_model",
+      "id": "warrant/fixed_point_q16/fuzz/q16_checked_sub_matches_exact_model",
+      "iterations": 4096,
+      "kind": "fuzz",
+      "op": "q16_checked_sub",
+      "seed": "12001601680925189558",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 312481,
+      "claim": "q16_saturating_add_matches_exact_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "a: record Q16(I32 edge(559)) size(559); b: record Q16(I32 edge(559)) size(559)",
+      "id": "warrant/fixed_point_q16/exhaustive/q16_saturating_add_matches_exact_model",
+      "kind": "exhaustive",
+      "op": "q16_saturating_add",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "q16_saturating_add_matches_exact_model",
+      "discarded": 0,
+      "equal_cases": 1036,
+      "id": "warrant/fixed_point_q16/property/q16_saturating_add_matches_exact_model",
+      "kind": "property",
+      "op": "q16_saturating_add",
+      "seed": "15797861869442879590",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4104,
+      "claim": "q16_saturating_add_matches_exact_model",
+      "id": "warrant/fixed_point_q16/fuzz/q16_saturating_add_matches_exact_model",
+      "iterations": 4096,
+      "kind": "fuzz",
+      "op": "q16_saturating_add",
+      "seed": "15654556287844873315",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 312481,
+      "claim": "q16_saturating_sub_matches_exact_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "a: record Q16(I32 edge(559)) size(559); b: record Q16(I32 edge(559)) size(559)",
+      "id": "warrant/fixed_point_q16/exhaustive/q16_saturating_sub_matches_exact_model",
+      "kind": "exhaustive",
+      "op": "q16_saturating_sub",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "q16_saturating_sub_matches_exact_model",
+      "discarded": 0,
+      "equal_cases": 1040,
+      "id": "warrant/fixed_point_q16/property/q16_saturating_sub_matches_exact_model",
+      "kind": "property",
+      "op": "q16_saturating_sub",
+      "seed": "8149500043257933074",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4104,
+      "claim": "q16_saturating_sub_matches_exact_model",
+      "id": "warrant/fixed_point_q16/fuzz/q16_saturating_sub_matches_exact_model",
+      "iterations": 4096,
+      "kind": "fuzz",
+      "op": "q16_saturating_sub",
+      "seed": "12951347864427059369",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 1249924,
+      "claim": "q16_checked_mul_matches_exact_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "a: record Q16(I32 edge(559)) size(559); b: record Q16(I32 edge(559)) size(559); mode: variant RoundingMode[4 ctors] size(4)",
+      "id": "warrant/fixed_point_q16/exhaustive/q16_checked_mul_matches_exact_model",
+      "kind": "exhaustive",
+      "op": "q16_checked_mul",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "q16_checked_mul_matches_exact_model",
+      "discarded": 0,
+      "equal_cases": 1068,
+      "id": "warrant/fixed_point_q16/property/q16_checked_mul_matches_exact_model",
+      "kind": "property",
+      "op": "q16_checked_mul",
+      "seed": "5182572688466449039",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4104,
+      "claim": "q16_checked_mul_matches_exact_model",
+      "id": "warrant/fixed_point_q16/fuzz/q16_checked_mul_matches_exact_model",
+      "iterations": 4096,
+      "kind": "fuzz",
+      "op": "q16_checked_mul",
+      "seed": "11069579177685432358",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 1249924,
+      "claim": "q16_saturating_mul_matches_exact_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "a: record Q16(I32 edge(559)) size(559); b: record Q16(I32 edge(559)) size(559); mode: variant RoundingMode[4 ctors] size(4)",
+      "id": "warrant/fixed_point_q16/exhaustive/q16_saturating_mul_matches_exact_model",
+      "kind": "exhaustive",
+      "op": "q16_saturating_mul",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "q16_saturating_mul_matches_exact_model",
+      "discarded": 0,
+      "equal_cases": 1036,
+      "id": "warrant/fixed_point_q16/property/q16_saturating_mul_matches_exact_model",
+      "kind": "property",
+      "op": "q16_saturating_mul",
+      "seed": "68156167564688309",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4104,
+      "claim": "q16_saturating_mul_matches_exact_model",
+      "id": "warrant/fixed_point_q16/fuzz/q16_saturating_mul_matches_exact_model",
+      "iterations": 4096,
+      "kind": "fuzz",
+      "op": "q16_saturating_mul",
+      "seed": "5425821101195043606",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 1249924,
+      "claim": "q16_checked_div_matches_exact_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "a: record Q16(I32 edge(559)) size(559); b: record Q16(I32 edge(559)) size(559); mode: variant RoundingMode[4 ctors] size(4)",
+      "id": "warrant/fixed_point_q16/exhaustive/q16_checked_div_matches_exact_model",
+      "kind": "exhaustive",
+      "op": "q16_checked_div",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "q16_checked_div_matches_exact_model",
+      "discarded": 0,
+      "equal_cases": 993,
+      "id": "warrant/fixed_point_q16/property/q16_checked_div_matches_exact_model",
+      "kind": "property",
+      "op": "q16_checked_div",
+      "seed": "18177417974512363327",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4104,
+      "claim": "q16_checked_div_matches_exact_model",
+      "id": "warrant/fixed_point_q16/fuzz/q16_checked_div_matches_exact_model",
+      "iterations": 4096,
+      "kind": "fuzz",
+      "op": "q16_checked_div",
+      "seed": "7906210547730425534",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 1249924,
+      "claim": "q16_saturating_div_matches_exact_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "a: record Q16(I32 edge(559)) size(559); b: record Q16(I32 edge(559)) size(559); mode: variant RoundingMode[4 ctors] size(4)",
+      "id": "warrant/fixed_point_q16/exhaustive/q16_saturating_div_matches_exact_model",
+      "kind": "exhaustive",
+      "op": "q16_saturating_div",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "q16_saturating_div_matches_exact_model",
+      "discarded": 0,
+      "equal_cases": 1027,
+      "id": "warrant/fixed_point_q16/property/q16_saturating_div_matches_exact_model",
+      "kind": "property",
+      "op": "q16_saturating_div",
+      "seed": "13290373127939297457",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4104,
+      "claim": "q16_saturating_div_matches_exact_model",
+      "id": "warrant/fixed_point_q16/fuzz/q16_saturating_div_matches_exact_model",
+      "iterations": 4096,
+      "kind": "fuzz",
+      "op": "q16_saturating_div",
+      "seed": "99189554145608579",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 2236,
+      "claim": "q16_to_integer_matches_exact_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "value: record Q16(I32 edge(559)) size(559); mode: variant RoundingMode[4 ctors] size(4)",
+      "id": "warrant/fixed_point_q16/exhaustive/q16_to_integer_matches_exact_model",
+      "kind": "exhaustive",
+      "op": "q16_to_integer",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "q16_to_integer_matches_exact_model",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/fixed_point_q16/property/q16_to_integer_matches_exact_model",
+      "kind": "property",
+      "op": "q16_to_integer",
+      "seed": "4787312770581057144",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4104,
+      "claim": "q16_to_integer_matches_exact_model",
+      "id": "warrant/fixed_point_q16/fuzz/q16_to_integer_matches_exact_model",
+      "iterations": 4096,
+      "kind": "fuzz",
+      "op": "q16_to_integer",
+      "seed": "10113628055407477207",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_add_overflow",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/example/q16_checked_add/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_add",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_add_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/exhaustive/q16_checked_add/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_add",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_add_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/property/q16_checked_add/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_add",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_add_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/fuzz/q16_checked_add/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_add",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_div_zero",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/example/q16_checked_div/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_div",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_div_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/exhaustive/q16_checked_div/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_div",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_div_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/property/q16_checked_div/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_div",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_div_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/fuzz/q16_checked_div/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_div",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_mul_rounding_overflow",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/example/q16_checked_mul/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_mul",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_mul_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/exhaustive/q16_checked_mul/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_mul",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_mul_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/property/q16_checked_mul/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_mul",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_mul_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/fuzz/q16_checked_mul/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_mul",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_sub_overflow",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/example/q16_checked_sub/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_sub",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_sub_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/exhaustive/q16_checked_sub/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_sub",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_sub_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/property/q16_checked_sub/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_sub",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_checked_sub_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/fuzz/q16_checked_sub/missing-error",
+      "kind": "negctl",
+      "op": "q16_checked_sub",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_from_integer_overflow",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/example/q16_from_integer/missing-error",
+      "kind": "negctl",
+      "op": "q16_from_integer",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_from_integer_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/exhaustive/q16_from_integer/missing-error",
+      "kind": "negctl",
+      "op": "q16_from_integer",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_from_integer_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/property/q16_from_integer/missing-error",
+      "kind": "negctl",
+      "op": "q16_from_integer",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_from_integer_matches_exact_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/fixed_point_q16/negctl/fuzz/q16_from_integer/missing-error",
+      "kind": "negctl",
+      "op": "q16_from_integer",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_add_overflow",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/example/q16_saturating_add/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_add",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_add_matches_exact_model",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/exhaustive/q16_saturating_add/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_add",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_add_matches_exact_model",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/property/q16_saturating_add/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_add",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_add_matches_exact_model",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/fuzz/q16_saturating_add/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_add",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_div_overflow",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/example/q16_saturating_div/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_div",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_div_matches_exact_model",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/exhaustive/q16_saturating_div/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_div",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_div_matches_exact_model",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/property/q16_saturating_div/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_div",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_div_matches_exact_model",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/fuzz/q16_saturating_div/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_div",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_mul_overflow_flag",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/example/q16_saturating_mul/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_mul",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_mul_matches_exact_model",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/exhaustive/q16_saturating_mul/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_mul",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_mul_matches_exact_model",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/property/q16_saturating_mul/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_mul",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_mul_matches_exact_model",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/fuzz/q16_saturating_mul/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_mul",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_sub_overflow",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/example/q16_saturating_sub/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_sub",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_sub_matches_exact_model",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/exhaustive/q16_saturating_sub/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_sub",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_sub_matches_exact_model",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/property/q16_saturating_sub/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_sub",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_saturating_sub_matches_exact_model",
+      "claim": "",
+      "fault": "bool-field-flip",
+      "id": "warrant/fixed_point_q16/negctl/fuzz/q16_saturating_sub/bool-field-flip",
+      "kind": "negctl",
+      "op": "q16_saturating_sub",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_to_integer_floor_negative",
+      "claim": "",
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_point_q16/negctl/example/q16_to_integer/flip-result-bit",
+      "kind": "negctl",
+      "op": "q16_to_integer",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_to_integer_matches_exact_model",
+      "claim": "",
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_point_q16/negctl/exhaustive/q16_to_integer/flip-result-bit",
+      "kind": "negctl",
+      "op": "q16_to_integer",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_to_integer_matches_exact_model",
+      "claim": "",
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_point_q16/negctl/property/q16_to_integer/flip-result-bit",
+      "kind": "negctl",
+      "op": "q16_to_integer",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "q16_to_integer_matches_exact_model",
+      "claim": "",
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_point_q16/negctl/fuzz/q16_to_integer/flip-result-bit",
+      "kind": "negctl",
+      "op": "q16_to_integer",
+      "target": "fuzz",
+      "verdict": "pass"
+    }
+  ],
+  "warrant_version": "v1"
+}

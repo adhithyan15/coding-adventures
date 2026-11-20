@@ -38,10 +38,19 @@ case that needs another level belongs to S10d or S11 and fails the build here.
 | `cases_domain.py` | `v2-domain`: descriptor JSON, binder type, `index` or `range`; every `ir.core` leaf |
 | `cases_chunk.py` | `v2-chunk`: `corpus`, `suite` row, `chunk_file_hex`, `chunk`; valid cases and one tamper per error |
 | `cases_fault.py` | `v2-fault`: a fault row instantiated by the oracle's templates (or written by hand), the op row, args and result |
+| `cases_binding.py` | `v2-binding` (S5c): `binding_hex` (the file's bytes), `corpus` (`types` and `ops`), `host` (four closed lists); derived by `bindings_v2.py`, the lane-neutral reference binding validator; every refused case changes one line of a valid base binding and triggers exactly one `reason` of the closed set listed in the package README |
 | `kit.warrant`, `kit.profile` | the `v2-chunk` suites at the default `chunk_size` (a `2**24` suite among them); the profile declares no fault |
 | `kit-small.warrant`, `kit-small.profile` | the suites at `chunk_size 1024` (a lane uses the recorded value); the profile declares no fault |
 
 `kit.warrant` is the expensive part (about a minute, 256 chunks of the `big` suite); it is derived once per run.
+
+## `v2-binding` (S5c): written always, checked once committed
+
+`--write` writes `v2-binding.json` (176 cases) beside the six files. S5c does not commit it (S5d does), so `--check`
+treats it as **pending** while the directory has neither the file nor a `v2-binding` row in `index.json`: it prints
+"not committed yet" and compares only the six files and their index rows, so the committed S5b family stays green. Once
+the file or its index row exists, it is held to the derivation like the others (a row without the file, a file that differs
+and a file without a row are exit 1). Regeneration stays two steps: `--write`, then `code/scripts/warrant_corpus_conformance.py --write`.
 
 ## Choices the spec leaves open (see section 16.15 of VER04r)
 

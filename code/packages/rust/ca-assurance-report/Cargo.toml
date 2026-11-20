@@ -16,6 +16,7 @@ path = "src/main.rs"
 coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
 coding_adventures_warrant_grammar = { path = "../warrant-grammar" }
+coding_adventures_warrant_ir = { path = "../warrant-ir" }
 drat-check = { path = "../drat-check" }
 
 [dev-dependencies]

@@ -406,7 +406,8 @@ subject-dependent argument the op's `admit` reads refused statically (VER04r 4.5
 ## The v2 conformance kit (S5a, S5b)
 
 VER04r section 11 adds six categories to the shared fixture family `warrant-corpus-conformance-v1`:
-`v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk` and `v2-fault` (a seventh, `v2-binding`, is S5c's).
+`v2-value`, `v2-arith`, `v2-ir`, `v2-domain`, `v2-chunk` and `v2-fault` (a seventh, `v2-binding`, is S5c's: see
+"The reference binding validator" below).
 The oracle **derives every expectation**: `src/coding_adventures_warrant_oracle/conformance.py` is the
 derivation module, and the hand-written case tables, the two small kit documents the chunk cases come from
 and `make_conformance.py` live in `tests/fixtures/conformance-v2/` (its README says how to add a case).
@@ -449,6 +450,89 @@ index in the stream prefix, sequential `pre` rewrites ...), each of which must c
 least one case of each category it is named for. `tests/test_conformance_cross.py` re-derives slices of the kit by
 different algorithms (Python integers, `struct.pack`, a naive `itertools.product` enumerator, the cost model written
 out) and runs the v1 checker's strict reader and canonical writer over the v2 files.
+
+## The reference binding validator and `v2-binding` (S5c)
+
+`src/coding_adventures_warrant_oracle/bindings_v2.py` is the **reference binding validator** of VER04r section 7
+([D43]): it reads the bytes of an `evidence.bindings` file, the `types` and `ops` of the corpus it is validated
+against and a `host` object, and returns the **normalized** binding or one refusal, `BindingInvalid` with a `reason`.
+It is **lane-neutral** (it names no host language: what a lane alone knows arrives as four closed lists in `host`:
+`values`, the host representations allowed per Warrant value name; `exports`; `discriminators`; `immutable`), pure
+(no file, no lane import) and **closed**: the only refusals are the `reason` values below. It is used only to derive
+the kit; `verify-v2` does not call it.
+
+```python
+from coding_adventures_warrant_oracle import bindings_v2 as BV
+
+BV.validate_binding(binding_bytes, {"types": {...}, "ops": {...}}, host)   # the normalized dict, or BV.BindingRefused
+BV.violations(binding_bytes, corpus, host)                                  # every violation, in the order of the checks
+```
+
+`tests/fixtures/conformance-v2/cases_binding.py` is the hand-written `v2-binding` table (176 cases: 30 accepted, 146
+refused; every one `requires` `["ir.core"]`; the normalized form of an accepted case is written by hand and compared by
+equality, never by sub-object). A refused case is the valid base binding of its corpus with **one** line
+changed, and the build demands that the validator finds exactly one violation in it, so no case depends on which of two
+problems an implementation meets first. `make_conformance.py --write` writes `v2-binding.json` beside the six other files;
+`--check` holds it to the derivation as soon as the file or its index row exists, and reports it as *not committed yet*
+(S5d commits it) while neither does, so a family directory that holds the six S5b files stays green. The file is not
+written into `code/specs/fixtures` by S5c.
+
+### The `v2-binding` reason set
+
+The set is closed (VER04r section 16.13 R20, fixed by S5c). The checks run in this order, and the first violation is
+the one `validate_binding` raises: the bytes (`too-large`, `invalid-utf8`, `bom`, `cr`, `control-character`; one
+violation, then stop); the lines (`syntax`, `unknown-directive`, `duplicate-directive`, `bad-value`, and `op-key` or
+`type-shape` for a repeated or unknown key; every line is read and, if any is wrong, the model is not checked); then
+the model (required directives, levels, `values`, `type` lines, what the signatures need, the `op` lines in corpus
+order).
+
+| Reason | The refusal |
+|---|---|
+| `too-large` | more than 65,536 bytes (a binding is size-capped before it is parsed, section 14) |
+| `invalid-utf8` | the bytes are not UTF-8 |
+| `bom` | the text starts with a byte order mark |
+| `cr` | a carriage return anywhere: the file is LF-only |
+| `control-character` | any other C0 control character, or DEL (tabs included: the separator is one space) |
+| `syntax` | a line that is not `directive` plus single-space-separated printable tokens, or a token that is not of the shape its directive needs (`key=value`, a list, a name) |
+| `unknown-directive` | the first token is not a directive of section 7.1 |
+| `duplicate-directive` | a one-line directive twice, or two `op` lines for one op, or two `type` lines for one type |
+| `bad-value` | a directive argument that is not of its form (`depth`, `seed`, `source`, `lane`, `package`, `module`, a repeated level) |
+| `missing-directive` | one of `lane package module import source seed depth levels` is absent |
+| `level-unknown` | a `levels` entry that is no level of section 4.1 (reserved ones are known) |
+| `level-implication` | a level declared without a level it needs (the lattice of section 4.1) |
+| `values-name` | a `values` key that is not a Warrant value name, or is given twice |
+| `values-representation` | a `values` host name outside that Warrant name's closed list |
+| `values-missing` | a Warrant value name the corpus signatures need has no `values` entry |
+| `type-unknown` | a `type` line for a name that is no record or variant of the corpus |
+| `type-shape` | a `type` line whose `host`, `fields` or `ctors` is missing, extra, repeated or does not match the corpus declaration |
+| `type-missing` | a record or variant an op signature uses has no `type` line |
+| `op-unknown` | an `op` line for an op the corpus does not declare |
+| `op-missing` | a corpus op with no `op` line (the binding is **total**, VER04i section 5 rule 1) |
+| `op-key` | an `op` key that is unknown or given twice |
+| `export-missing` | an `op` line with no `export=` |
+| `export-unknown` | an `export=` or `type host=` name that is not in the host's export list |
+| `args` | `args=` of the wrong arity, or a representation not allowed for that parameter |
+| `ret` | `ret=` that is not a representation allowed for the result |
+| `width` | `width=` absent on an op with `width_params`, present on one without, or not `implicit` or `runtime` |
+| `errors-form` | more than one of `errors=`, `error=`, `err_any=` on one op |
+| `errors-missing` | an op whose result is a `Result` and which maps no error |
+| `errors-unexpected` | an op whose result is not a `Result` and which maps an error |
+| `errors-case` | a case that the op's error type does not declare, a case mapped twice, a malformed `CASE:discriminator` pair |
+| `errors-incomplete` | an `errors=` that leaves a declared case unmapped (VER04i section 5 rule 1) |
+| `discriminator-shared` | two cases of one op with the same discriminator (section 7.5) |
+| `discriminator-bare` | `Error`, `Exception` or `BaseException` as a class: a binding cannot swallow arbitrary failures (section 7.5) |
+| `discriminator-unknown` | a discriminator not in the host's closed list (a class that is not found) |
+| `err-any-multi` | `err_any=` on an error type with two or more cases (section 7.5) |
+| `panics-form` | `panics` as an `errors=` discriminator, or `error=` on an error type with two or more cases (`panics` is only for a single-case `error=`) |
+| `inout-param` | `inout=` that names a parameter that is not `inout` in the corpus, names one twice, is malformed, or leaves an `inout` parameter without a form |
+| `inout-form` | a form that is not one of `mutable growable cell returned`, a reserved record form, or a form that does not fit the parameter's type |
+| `fresh` | `fresh=` on an op that is not `fresh` in the corpus, a value other than `probe` or `immutable`, or `immutable` for a mutable representation |
+
+The level names and the lattice are those of VER04r section 4.1, reserved levels included: every level other than
+`ir.core` needs `ir.core`, `ir.data` needs `ir.tuple` and `ir.list` needs `ir.data`, each checked directly. The
+normalized shape (`lane`, `package`, `module`, `import`, `source`, `seed` as decimal text, `depth`, sorted `levels`,
+`values`, `types`, `ops`) is in the module docstring. A lane's own validator must agree with this one on every case of
+`v2-binding.json` (S6b and S7b).
 
 ## Not yet done
 

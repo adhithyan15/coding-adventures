@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "fixed-point-arithmetic",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "No key material: the package accepts fixed-width integer values and rounding modes only; it takes and generates no keys."
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "Not cryptographic: the package implements signed fixed-point arithmetic only, with no cipher, hash or MAC."
+    },
+    "407": {
+      "applicability": "applicable",
+      "reason": "The package has no declared Warrant step bounds; CWE-400 and CWE-407 remain open until the reporter derives their missing-bound dispositions."
+    }
+  }
+}

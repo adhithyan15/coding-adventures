@@ -86,6 +86,9 @@ type repositoryInputConsumer struct {
 	// leaves this nil; the export then lists no paths for it. A test pins
 	// every declared path to its predicate so the two cannot drift.
 	paths []string
+	// treePaths marks the subset of paths whose cache input kind is explicitly
+	// recursive tree. A file/directory substitution is rejected by the hasher.
+	treePaths []string
 	// globs declares inputs that are a pattern rather than a finite list
 	// (`**` any depth including none, `*` within one segment), for
 	// predicates such as the Mosaic walk. A test pins them to the predicate
@@ -218,12 +221,51 @@ var (
 		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
 	}
 
-	rngCorpusPaths            = []string{"code/specs/fixtures/rng-v1"}
-	fenwickTreeContractPaths  = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
-	dt17HashFunctionsPaths    = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
+	rngCorpusPaths           = []string{"code/specs/fixtures/rng-v1"}
+	fenwickTreeContractPaths = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths   = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
+	fixedPointInputPaths     = []string{
+		".cargo/config.toml",
+		"code/packages/rust/.cargo/config.toml",
+		"code/packages/rust/Cargo.lock",
+		"code/packages/rust/Cargo.toml",
+		"code/specs/fixed-point.warrant",
+		"code/specs/fixtures/fixed-point-q16-v1/cases.json",
+	}
+	// The verifier BUILD recipes explicitly register these tree roots; all
+	// other repository inputs remain file-only.
+	fixedPointSourceTreePaths = []string{
+		"code/packages/rust/fixed-point/src",
+	}
+	fixedPointEvidenceTreePaths = []string{
+		"code/packages/rust/fixed-point/evidence",
+	}
+	rustWorkspaceCargoInputs = []string{
+		".cargo/config.toml",
+		"code/packages/rust/.cargo/config.toml",
+		"code/packages/rust/Cargo.lock",
+		"code/packages/rust/Cargo.toml",
+	}
+	fixedPointBindingsInput      = "code/packages/rust/fixed-point/evidence.bindings"
+	fixedPointReporterFileInputs = append(append([]string{}, []string{
+		"code/packages/rust/fixed-point/Cargo.toml",
+		"code/packages/rust/fixed-point/effect_certificate.json",
+		fixedPointBindingsInput,
+		"code/packages/rust/fixed-point/assurance-profile.json",
+		"code/specs/fixed-point.warrant",
+	}...), rustWorkspaceCargoInputs...)
+	fixedPointWarrantIRFileInputs = append(append([]string{}, []string{
+		"code/packages/rust/fixed-point/Cargo.toml",
+		fixedPointBindingsInput,
+		"code/specs/fixed-point.warrant",
+	}...), rustWorkspaceCargoInputs...)
+	fixedPointReporterTreePaths  = append(append([]string{}, fixedPointSourceTreePaths...), fixedPointEvidenceTreePaths...)
+	fixedPointWarrantIRTreePaths = append([]string{}, fixedPointSourceTreePaths...)
+	fixedPointReporterInputs     = append(append([]string{}, fixedPointReporterFileInputs...), fixedPointReporterTreePaths...)
+	fixedPointWarrantIRInputs    = append(append([]string{}, fixedPointWarrantIRFileInputs...), fixedPointWarrantIRTreePaths...)
 	dt18HashMapPaths          = []string{"code/specs/DT18-hash-map.md", "code/specs/DT18-hash-map-dart-profile.md", "code/specs/fixtures/hash-map-v1"}
 	swiftHashMapFixtureInputs = []string{"code/specs/fixtures/hash-map-v1/cases.json"}
-	gameClockInputPaths       = []string{
+	gameClockInputPaths          = []string{
 		".cargo/config.toml",
 		"code/packages/rust/.cargo/config.toml",
 		"code/packages/rust/Cargo.lock",
@@ -659,6 +701,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 		paths:    rngCorpusPaths,
+	},
+	{
+		name:     "rust/fixed-point",
+		language: "rust",
+		inputs:   "the GBL-020a1 Warrant model, v1 corpus, and exact Cargo workspace/build configuration",
+		matches:  isFixedPointInput,
+		paths:    fixedPointInputPaths,
 	},
 	{
 		name:     "rust/game-clock",
@@ -1127,11 +1176,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		globs:    []string{warrantDocumentGlob},
 	},
 	{
-		name:     "rust/ca-assurance-report",
-		language: "rust",
-		inputs:   "the Warrant lane spec, corpus, consumer registry, schema and TFV transport",
-		matches:  isWarrantAssuranceInput,
-		paths:    warrantAssurancePaths,
+		name:      "rust/ca-assurance-report",
+		language:  "rust",
+		inputs:    "the Warrant lane inputs plus fixed-point package evidence consumed by its assurance sandbox",
+		matches:   isFixedPointReporterInput,
+		paths:     append(append([]string{}, warrantAssurancePaths...), fixedPointReporterInputs...),
+		treePaths: fixedPointReporterTreePaths,
+	},
+	{
+		name:      "rust/warrant-ir",
+		language:  "rust",
+		inputs:    "the fixed-point Warrant model, source tree and evidence bindings read by its proof integration test",
+		matches:   isFixedPointWarrantIRInput,
+		paths:     fixedPointWarrantIRInputs,
+		treePaths: fixedPointWarrantIRTreePaths,
 	},
 	{
 		name:     "rust/arithmetic",
@@ -1283,6 +1341,41 @@ func isWarrantAssuranceInput(changed string) bool {
 		return true
 	}
 	return false
+}
+
+func isRustWorkspaceCargoInput(changed string) bool {
+	for _, input := range rustWorkspaceCargoInputs {
+		if changed == input {
+			return true
+		}
+	}
+	return false
+}
+
+func isFixedPointPackageFile(changed string) bool {
+	return changed == "code/packages/rust/fixed-point/Cargo.toml" ||
+		changed == "code/packages/rust/fixed-point/effect_certificate.json" ||
+		changed == fixedPointBindingsInput ||
+		changed == "code/packages/rust/fixed-point/assurance-profile.json" ||
+		isUnderExactInputTree(changed, "code/packages/rust/fixed-point/src") ||
+		isUnderExactInputTree(changed, "code/packages/rust/fixed-point/evidence")
+}
+
+func isUnderExactInputTree(changed, root string) bool {
+	return changed == root || strings.HasPrefix(changed, root+"/")
+}
+
+func isFixedPointReporterInput(changed string) bool {
+	return isWarrantAssuranceInput(changed) || isFixedPointPackageFile(changed) ||
+		changed == "code/specs/fixed-point.warrant" || isRustWorkspaceCargoInput(changed)
+}
+
+func isFixedPointWarrantIRInput(changed string) bool {
+	return changed == "code/packages/rust/fixed-point/Cargo.toml" ||
+		changed == "code/specs/fixed-point.warrant" ||
+		changed == fixedPointBindingsInput ||
+		isUnderExactInputTree(changed, "code/packages/rust/fixed-point/src") ||
+		isRustWorkspaceCargoInput(changed)
 }
 
 // warrantAdopter is one row of warrantAdopters: the module, its Warrant spec, its committed
@@ -1716,6 +1809,17 @@ func isKilnToolchainPinInput(changed string) bool {
 //	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
 func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
+}
+
+// isFixedPointInput selects only the exact repository-owned inputs consumed by
+// the Rust fixed-point package. Nearby versions and lookalikes remain unselected.
+func isFixedPointInput(changed string) bool {
+	for _, input := range fixedPointInputPaths {
+		if changed == input {
+			return true
+		}
+	}
+	return false
 }
 
 // isGameClockInput selects the exact repository-owned files hashed for the
