@@ -237,6 +237,13 @@ type classifier struct {
 	// read them.  opKind is set per event, obsPresent and obsListing per observe.
 	opKind                 string
 	obsPresent, obsListing bool
+	// lookupOps is, for the census alone, the op class (opClass) of the FIRST
+	// look that put each path into a lookup set.  checkStability judges the
+	// lookups after the walk, when opKind and the obs flags describe nothing,
+	// so the class has to be remembered at the time.  Nil without a Census;
+	// written by noteLookupOp only; read by checkStability only to tell the
+	// census, never to decide anything.
+	lookupOps map[string]string
 	// incomplete is the negation of RawRecord.WritesComplete: set the moment
 	// something happens that could hide a write from Writes/TrackedWrites.
 	// Every setter says which trigger of KILN04 section 5.5 it is.
@@ -301,6 +308,7 @@ func (c *classifier) reason(r string) {
 func (c *classifier) reasonAt(r, path string) {
 	if c.census != nil {
 		c.census.noteClean(r, c.redact(path))
+		c.census.noteOp(r, c.opClass()) // census only: what kind of look raised it
 	}
 	c.reason(r)
 }
@@ -313,6 +321,9 @@ func (c *classifier) reasonAt(r, path string) {
 func (c *classifier) reasonSub(r, sub, path string) {
 	if c.census != nil {
 		c.census.noteClean(r+":"+sub, c.redact(path))
+		if r == rUnstable {
+			c.census.noteOp(r+":"+sub, c.opClass()) // census only, as for reasonAt
+		}
 	}
 	c.reason(r)
 }
@@ -618,6 +629,7 @@ func (c *classifier) isCreated(abs string) bool {
 	for p := abs; p != ""; p = parentOf(p) {
 		if at, ok := c.created[p]; ok && at.before(c.start) {
 			if !c.noOwnSeen {
+				c.noteLookupOp(p)
 				c.lookupSet.own(p, c.start, c.cur)
 				if c.inWrite {
 					c.wr.own(p, c.start, c.cur)
@@ -802,6 +814,7 @@ func (c *classifier) nsChange(abs string, clean, opened bool) {
 // open-only rule: absent says the post-run disk shows it absent (relAbs), else
 // it is a file (relFinal).
 func (c *classifier) noteRel(abs string, absent bool) {
+	c.noteLookupOp(abs)
 	c.lookupSet.rel(abs, absent, c.start, c.cur)
 	if c.inWrite {
 		c.wr.rel(abs, absent, c.start, c.cur)
@@ -850,6 +863,7 @@ func (c *classifier) openOnly(p string, sp span, absent bool) bool {
 
 // noteFinal records a followed final component that the disk shows present.
 func (c *classifier) noteFinal(abs string) {
+	c.noteLookupOp(abs)
 	c.lookupSet.final(abs, c.start)
 	if c.inWrite {
 		c.wr.final(abs, c.start)
@@ -864,6 +878,7 @@ func (c *classifier) noteFinal(abs string) {
 // unstable when the last change to it before the lookup was a creation; a file
 // there is unstable if the action touched it at all.
 func (c *classifier) noteMissing(abs string, isFile bool) {
+	c.noteLookupOp(abs)
 	c.lookupSet.missing(abs, isFile, c.start, c.cur)
 	if c.inWrite {
 		c.wr.missing(abs, isFile, c.start, c.cur)
@@ -872,6 +887,7 @@ func (c *classifier) noteMissing(abs string, isFile bool) {
 
 // noteGone records a followed final name that the post-run disk shows absent.
 func (c *classifier) noteGone(abs string) {
+	c.noteLookupOp(abs)
 	c.lookupSet.goneAt(abs, c.start, c.callPresent)
 	if c.inWrite {
 		c.wr.goneAt(abs, c.start, c.callPresent)
@@ -902,6 +918,7 @@ func (c *classifier) markRemoved(abs string, unlink bool) {
 // start of the current call.  Only the earliest lookup matters: if the rule
 // holds for it, it holds for every later one.
 func (c *classifier) noteTraversal(abs string) {
+	c.noteLookupOp(abs)
 	c.lookupSet.traversal(abs, c.start)
 	if c.inWrite {
 		c.wr.traversal(abs, c.start)
@@ -996,7 +1013,7 @@ func (c *classifier) checkStability() {
 	var notes censusNotes
 	c.judge(&c.lookupSet, idx, func(p, sub string) {
 		c.reason(rUnstable)
-		notes.add(c.census, rUnstable+":"+sub, p)
+		notes.addOp(c.census, rUnstable+":"+sub, p, c.lookupOpOf(p))
 	})
 	c.judge(&c.wr, idx, func(string, string) { c.incomplete = true })
 	for p, from := range c.execReads {
