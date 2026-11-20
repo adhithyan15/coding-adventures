@@ -1754,6 +1754,11 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		// A BUILD front edited in place is package-local only if selection
 		// can see who runs it (internal/validator/build_front_invocations.go).
 		frontErr := validator.ValidateBuildFrontInvocations(repoRoot, knownPackages)
+		// BUILD files that run the shared negative-control checker must
+		// declare Python (internal/validator/negctl_python.go). Package-local
+		// BUILD edits never select this program's own tests, so the rule is
+		// enforced here, on every pull request.
+		negctlErr := validator.ValidateNegctlUsersDeclarePython(knownPackages)
 
 		if buildErr != nil {
 			fmt.Fprintln(os.Stderr, buildErr)
@@ -1773,7 +1778,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		if frontErr != nil {
 			fmt.Fprintln(os.Stderr, frontErr)
 		}
-		if buildErr != nil || orphanErr != nil || packageRootErr != nil || artifactErr != nil || metadataErr != nil || frontErr != nil {
+		if negctlErr != nil {
+			fmt.Fprintln(os.Stderr, negctlErr)
+		}
+		if buildErr != nil || orphanErr != nil || packageRootErr != nil || artifactErr != nil || metadataErr != nil || frontErr != nil || negctlErr != nil {
 			return 1
 		}
 
