@@ -615,6 +615,9 @@ type censusRun struct {
 	acc        *censusAcc
 	pre        *Pre
 	crossCheck CrossCheckFunc
+	// lang is the language of the action being walked (as collapsed by
+	// languageAcc), for the per-language breakdown of parse refusals.
+	lang string
 }
 
 // stepIndex parses "<n>.<ext>" with n canonical (no sign, no leading zero).
@@ -733,6 +736,9 @@ func (r *censusRun) action(hexName string) {
 			rec = nil
 		}
 	}
+	// The language comes first: the parse-reason breakdown is by language.
+	lang, la := r.languageAcc(name)
+	r.lang = lang
 	switch {
 	case rec != nil:
 		a.actions.WithRecord++
@@ -742,7 +748,7 @@ func (r *censusRun) action(hexName string) {
 		if rec.WritesComplete {
 			a.actions.RecordWritesComplete++
 		}
-		a.explainRecord(rec)
+		a.explainRecord(rec, lang)
 	case failed:
 		// A failure marker, counted on its own.
 	default:
@@ -774,25 +780,6 @@ func (r *censusRun) action(hexName string) {
 		a.addCensus(doc)
 	}
 
-	// The language.
-	lang := "other"
-	if name != "" {
-		lang = r.language(name)
-	}
-	la := a.langs[lang]
-	if la == nil {
-		if len(a.langs) >= maxCensusLanguages {
-			a.languagesCollapsed++
-			lang = "other"
-			if la = a.langs[lang]; la == nil {
-				la = &langAcc{}
-				a.langs[lang] = la
-			}
-		} else {
-			la = &langAcc{}
-			a.langs[lang] = la
-		}
-	}
 	la.actions++
 	if recordable {
 		la.recordable++
@@ -864,6 +851,31 @@ func (r *censusRun) action(hexName string) {
 		shown, _ := safeText(name, censusActionNameRunes, a.red)
 		a.actionBytes = append(a.actionBytes, namedBytes{name: shown, bytes: total})
 	}
+}
+
+// languageAcc resolves the action's language and returns it with its
+// accumulator, collapsing to "other" once maxCensusLanguages are held.
+func (r *censusRun) languageAcc(name string) (string, *langAcc) {
+	a := r.acc
+	lang := "other"
+	if name != "" {
+		lang = r.language(name)
+	}
+	la := a.langs[lang]
+	if la == nil {
+		if len(a.langs) >= maxCensusLanguages {
+			a.languagesCollapsed++
+			lang = "other"
+			if la = a.langs[lang]; la == nil {
+				la = &langAcc{}
+				a.langs[lang] = la
+			}
+		} else {
+			la = &langAcc{}
+			a.langs[lang] = la
+		}
+	}
+	return lang, la
 }
 
 // builtOK says the action's build did not fail: a believed record with no
@@ -1219,7 +1231,9 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 	}
 	if why != "" {
 		a.parseRefused++
-		a.explain.ParseRefusals[parseReasonCode(why)]++
+		code := parseReasonCode(why)
+		a.explain.ParseRefusals[code]++
+		a.explain.ParseRefusalsByLanguage.add(r.lang, code)
 	} else {
 		ms := elapsed.Seconds() * 1000
 		a.parses = append(a.parses, ms)
@@ -1282,6 +1296,14 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 		a.detail(fmt.Sprintf("%s step %d: mismatch: %s", hexName12(adir), j, m.Detail))
 	case perr != nil:
 		cc.Refused++
+		// Which call: the closed-table name the parse error carries (see
+		// refusalSyscall), by reason and language.  Census only.
+		var ce *trace.Error
+		errors.As(perr, &ce)
+		code := parseReasonCode(perr.Error())
+		sys := refusalSyscall(code, ce)
+		a.explain.ParseRefusalSyscalls.add(code, sys)
+		a.explain.ParseRefusalSyscallsByLanguage.add(r.lang, code, sys)
 		// Where the grammar stopped, as a redacted outline: the fixed code of the
 		// refusal says why, the outline says what the line looked like.
 		var te *trace.Error
@@ -1641,7 +1663,7 @@ func (a *censusAcc) sidecarFacts(sc StepSidecar) {
 
 // explainRecord counts the path-free reasons of a believed record.json: the
 // kind of each classifier reason, and each parse reason's code, once per action.
-func (a *censusAcc) explainRecord(rec *ClassifiedRecord) {
+func (a *censusAcc) explainRecord(rec *ClassifiedRecord, lang string) {
 	seen := map[string]bool{}
 	if rec.Record != nil {
 		for _, r := range rec.Record.Reasons {
@@ -1656,6 +1678,7 @@ func (a *censusAcc) explainRecord(rec *ClassifiedRecord) {
 		if c := parseReasonCode(r); !seen[c] {
 			seen[c] = true
 			a.explain.RecordParseReasons[c]++
+			a.explain.RecordParseReasonsByLanguage.add(lang, c)
 		}
 	}
 }
