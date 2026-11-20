@@ -388,11 +388,55 @@ for every rule, checked by hand for the review items, not by mutation testing.
       K, P and H, the `enum $n` of a macro body a VT03 gap), and a control character in a
       field type never reaches a message raw;
 - [ ] SH19 (h) (VOS-D112): a path attribute (`#[evil::rewrite]`), a foreign derive (`#[derive(evil::Gen)]`), a derive of a non-core trait, `cfg_attr`, `cfg(not(test))`, `path`, `macro_use`, `proc_macro_derive`, `test`, an unknown `repr` argument and an unknown attribute are each rejected in a contract crate; the real contract crate's attributes pass; the same attributes in a production crate raise no SH19;
+- [ ] the tick audit (section 7.1): `tests/tick_audit.rs` passes on the crate's own source and its negative
+      controls fail as stated (VOS-D089);
 - [ ] line coverage of the crate is above 95%;
 - [ ] the crate reads Rust and TOML only through the grammar-driven crates
       (`lexer`, `grammar-tools`, `parser`, the TOML lexer and parser), has no
       hand-written lexer or parser, and does not depend on
       `ca-capability-analyzer` (section 0).
+
+### 7.1 Tick audit (VOS-039d, closing VOS-D089)
+
+The linearity items above are asserted on a **deterministic step counter** (`src/steps.rs`, `tick()`), not on
+wall-clock time (a clock on a shared runner has a fixed lexer-building cost larger than the signal). The counter
+sees only the loops that call `tick()`; a scanner loop that forgot to tick could turn quadratic with every
+linearity test still green. The **tick audit** is the rule that closes that gap, and a test that enforces it on the
+checker's own source.
+
+**The rule.** Every `while`, `loop` and `for` loop in `src/**/*.rs`, outside `#[cfg(test)]` items, does exactly one
+of:
+
+1. calls `tick()` (bare or path-qualified: `crate::steps::tick()`) in its **own** body, once per iteration; a tick
+   inside a *nested* loop's body does not count for the outer loop (it counts the inner loop's iterations); or
+2. carries, on the line immediately above the loop keyword, the comment `// bounded: <reason>` with a non-empty
+   reason saying why its trip count is bounded by a constant or by one step of an already-ticked outer loop
+   (for example `// bounded: a fixed pair of editions`).
+
+Ticking is the default; `bounded:` is for loops whose bound is true by construction. A loop over a slice, a token
+range or any collection whose length follows the input is ticked, never marked.
+
+**How the audit finds loops.** `tests/tick_audit.rs` reads no Rust text of its own: it lexes the crate's sources
+with the RS01 grammar-driven lexer, indexes them with `FileCtx` (bracket pairs, the `#[cfg(test)]` mask), and works
+on tokens. `while` and `loop` are loops; `for` is a loop only if an `in` token precedes the body's `{` at bracket
+depth zero (so `impl X for Y {` and the bound `for<'a>` are not); the body is the first `{` after the keyword that
+is not inside a bracket pair; a tick is the token sequence `tick ( )` inside the body. The one piece of text read
+directly is the line above the loop keyword (the lexer discards comments, so the marker is not among the tokens).
+Negative controls feed the checker synthetic sources: an unticked `while`, `loop` and `for` fail; a tick (bare and
+`steps::`-qualified) passes; a `// bounded:` line with a reason passes, without a reason or two lines above fails;
+a tick in an inner loop does not excuse the outer one; `impl X for Y`, `for<'a>`, a loop in a string and a loop in
+a `#[cfg(test)]` item are not loops.
+
+**Result of the first audit.** 182 loops: 180 tick, 2 are `bounded:` (the retry of `lex_documents`, at most four
+attempts; the pair of editions in `check_crates`). The previously invisible paths now count: the lexer adapter
+and its comment scan, the shebang scan, `FileCtx::from_tokens`, the outer loop of `mask_cfg_test`, and the rule
+passes' outer loops. `tests/tick_audit.rs` also holds linearity tests (n, 4n, 16n) of lexing (plain tokens, many
+block comments, comments after `#!`) and of the `cfg(test)` mask (kept attributes, alternating dropped and kept
+items).
+
+**Not covered.** Iterator chains (`.iter().map(..).collect()`) and recursion hide work without a loop keyword;
+the audit does not see them. A chain over input-sized data in a scanner is a review matter. A tick in a loop
+is a convention the audit checks by presence, not that the tick stands for the loop's real unit of work.
 
 ---
 
@@ -409,4 +453,4 @@ VOS02 section 4.2 listing: `Image` and `AbsW` are not prefixed, `alpha` and
 VOS-D035 (`tests/`, `examples/`, `benches/` are unscanned yet run in the evidence
 build), VOS-D036 (round-1 security review: lexer, rule and loader bypasses, and
 the lessons recorded), VOS-D037 (a closed list of ghost exports needs VOS02
-section 4.4 to name them).
+section 4.4 to name them), VOS-D089 (the tick audit, section 7.1: closed in VOS-039d).

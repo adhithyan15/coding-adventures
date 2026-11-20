@@ -182,6 +182,7 @@ fn list_dir(dir: &Path, budget: &mut Budget) -> Result<Vec<fs::DirEntry>, String
     let shown = dir.display();
     let mut entries: Vec<fs::DirEntry> = Vec::new();
     for e in fs::read_dir(dir).map_err(|e| format!("{shown}: {e}"))? {
+        crate::steps::tick();
         entries.push(e.map_err(|e| format!("{shown}: {e}"))?);
         budget.entries += 1;
         if entries.len() > MAX_DIR_ENTRIES || budget.entries > MAX_TOTAL_ENTRIES {
@@ -191,6 +192,7 @@ fn list_dir(dir: &Path, budget: &mut Budget) -> Result<Vec<fs::DirEntry>, String
     entries.sort_by_key(fs::DirEntry::file_name);
     let mut folded: Vec<String> = Vec::with_capacity(entries.len());
     for e in &entries {
+        crate::steps::tick();
         let name = e.file_name().to_string_lossy().into_owned();
         let lower = name.to_ascii_lowercase();
         if lower.ends_with(".rs") && !name.ends_with(".rs") {
@@ -226,6 +228,7 @@ fn walk(
         ));
     }
     for e in list_dir(dir, budget)? {
+        crate::steps::tick();
         let name = e.file_name().to_string_lossy().into_owned();
         let path = e.path();
         let meta = fs::symlink_metadata(&path).map_err(|e| format!("{}: {e}", path.display()))?;

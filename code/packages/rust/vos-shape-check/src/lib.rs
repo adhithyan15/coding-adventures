@@ -178,6 +178,7 @@ fn prepare(input: &CrateInput, policy: &Policy) -> Prepared {
                 }
                 kind = v.kind;
                 for name in &v.evidence_features {
+                    crate::steps::tick();
                     if !policy.evidence_features.contains(name) {
                         early.push(Finding {
                             rule: Rule::Vt01,
@@ -249,6 +250,7 @@ fn prepare(input: &CrateInput, policy: &Policy) -> Prepared {
     }
     let mut docs = Vec::new();
     for i in order {
+        crate::steps::tick();
         let s = &input.sources[i];
         if s.text.len() > MAX_SOURCE_BYTES {
             input_finding(&mut early, &s.path, 1, "source file is over 1 MiB");
@@ -292,12 +294,15 @@ pub fn check_crates(inputs: &[CrateInput], policy: &Policy) -> Vec<Report> {
     let mut prepared: Vec<Prepared> = inputs.iter().map(|i| prepare(i, policy)).collect();
     // Lex every document of every crate, grouped by edition.
     let mut lexed: Vec<Vec<Lexed>> = prepared.iter().map(|p| vec![None; p.docs.len()]).collect();
+    // bounded: a fixed pair of editions (2021, 2024)
     for edition in [lexer::Edition::E2021, lexer::Edition::E2024] {
         let mut slots: Vec<(usize, usize)> = Vec::new();
         let mut texts: Vec<&str> = Vec::new();
         for (ci, p) in prepared.iter().enumerate() {
+            crate::steps::tick();
             if p.edition == edition {
                 for (di, &si) in p.docs.iter().enumerate() {
+                    crate::steps::tick();
                     slots.push((ci, di));
                     texts.push(inputs[ci].sources[si].text.as_str());
                 }
@@ -307,6 +312,7 @@ pub fn check_crates(inputs: &[CrateInput], policy: &Policy) -> Vec<Report> {
             continue;
         }
         for ((ci, di), r) in slots.into_iter().zip(lexer::lex_documents(&texts, edition)) {
+            crate::steps::tick();
             lexed[ci][di] = Some(r);
         }
     }
@@ -315,6 +321,7 @@ pub fn check_crates(inputs: &[CrateInput], policy: &Policy) -> Vec<Report> {
     // batch; so each crate that got such an error is lexed again ALONE (its own
     // lexer), and only it keeps the failure if the failure is really its own.
     for ci in 0..prepared.len() {
+        crate::steps::tick();
         let hit = lexed[ci].iter().any(|r| {
             matches!(r, Some(Err(e)) if e.message.starts_with("not lexed")
                 || e.message.starts_with("the file-boundary check failed"))
@@ -331,11 +338,13 @@ pub fn check_crates(inputs: &[CrateInput], policy: &Policy) -> Vec<Report> {
             .into_iter()
             .enumerate()
         {
+            crate::steps::tick();
             lexed[ci][di] = Some(r);
         }
     }
     let mut reports = Vec::with_capacity(inputs.len());
     for (ci, input) in inputs.iter().enumerate() {
+        crate::steps::tick();
         let p = std::mem::replace(
             &mut prepared[ci],
             Prepared {
@@ -370,6 +379,7 @@ fn analyse(input: &CrateInput, policy: &Policy, p: Prepared, results: Vec<Lexed>
     } = p;
     let mut files: Vec<FileCtx> = Vec::new();
     for (&si, r) in docs.iter().zip(results) {
+        crate::steps::tick();
         let path = &input.sources[si].path;
         let outcome = match r {
             Some(Ok(toks)) => FileCtx::from_tokens(path, toks),
@@ -418,11 +428,13 @@ fn analyse(input: &CrateInput, policy: &Policy, p: Prepared, results: Vec<Lexed>
         out: early,
     };
     for g in &gaps {
+        crate::steps::tick();
         let file = files[g.file].path.clone();
         cx.add(Rule::Vt03, &file, g.line, g.message.clone());
     }
     let all = cx.files;
     for f in all {
+        crate::steps::tick();
         rules::file_rules(&mut cx, f, &im);
         cargo_rules::attr_rules(&mut cx, f);
     }
@@ -430,6 +442,7 @@ fn analyse(input: &CrateInput, policy: &Policy, p: Prepared, results: Vec<Lexed>
         cargo_rules::root_rules(&mut cx, r);
     }
     for p in binaries {
+        crate::steps::tick();
         cx.add(
             Rule::Sh15,
             p,

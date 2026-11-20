@@ -51,6 +51,7 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/traced"
 )
 
 // DefaultCrossCheckMaxBytes is the largest trace the census cross-checks: the
@@ -70,26 +71,40 @@ const (
 	// CensusTopN is how many full paths (and prefixes) per kind the summary keeps.
 	CensusTopN = 200
 
-	maxCensusFailedBytes   = 64 << 10 // a record.failed is read at most this big
-	maxCensusRecordBytes   = 32 << 20 // a record.json is read at most this big
-	maxCensusEntries       = 65536    // entries in one census.json (the writer's own bound is 16384)
-	maxCensusKinds         = 128      // distinct kinds kept; the rest are "(other)"
-	maxCensusDistinct      = 100_000  // distinct (kind, path) pairs kept, over everything
-	maxCensusPathBytes     = 32 << 20 // total bytes of the distinct paths kept
-	maxCensusPrefixes      = 50_000   // distinct prefixes kept per kind
-	maxCensusLanguages     = 64       // distinct languages kept; the rest are "other"
-	maxCensusSteps         = 4096     // step files looked at per action
-	maxCensusActions       = 200_000  // action directories looked at
-	maxCensusPathRunes     = 512      // a path is cut to this many runes
-	maxCensusDetails       = 20       // cross-check details kept
-	maxCensusDetailRunes   = 200
-	maxCensusHeaderBytes   = 1 << 20 // collect's header line
-	maxCensusRecordsBytes  = 4 << 30 // how far the records file is read to count lines
-	censusPrefixDepth      = 4
-	maxCensusCPUInfo       = 256 << 10
-	censusLargestActions   = 10
-	censusActionNameRunes  = 200
-	censusRecordsReadChunk = 1 << 20
+	maxCensusFailedBytes = 64 << 10 // a record.failed is read at most this big
+	maxCensusRecordBytes = 32 << 20 // a record.json is read at most this big
+	maxCensusEntries     = 65536    // entries in one census.json (the writer's own bound is 16384)
+	maxCensusKinds       = 128      // distinct kinds kept; the rest are "(other)"
+	maxCensusDistinct    = 100_000  // distinct (kind, path) pairs kept, over everything
+	maxCensusPathBytes   = 32 << 20 // total bytes of the distinct paths kept
+	maxCensusPrefixes    = 50_000   // distinct prefixes kept per kind
+	maxCensusLanguages   = 64       // distinct languages kept; the rest are "other"
+	maxCensusSteps       = 4096     // step files looked at per action
+	maxCensusActions     = 200_000  // action directories looked at
+	maxCensusPathRunes   = 512      // a path is cut to this many runes
+	maxCensusDetails     = 20       // cross-check details kept
+	// Line outlines (trace.Shape) have TWO budgets, so a flood of one refusal
+	// (many traces refused as refused:clone3) cannot starve the allowed
+	// stricter-only divergences, whose lines are the ones the default flip needs:
+	// allowed:* outlines get 8 slots and 32 computations of their own; refusals 8
+	// slots, 32 computations in all and 2 per distinct refusal code.  A trace is
+	// streamed at most twice per computation; all computations together scan at
+	// most maxCensusShapeBytes (2x each trace's size is charged).
+	maxCensusOpsSum          = 1 << 40 // the sum of one census.json's op counts
+	maxCensusShapes          = 8
+	maxCensusShapeCallsAllow = 32
+	maxCensusShapeCallsRefus = 32
+	maxCensusShapeCallsCode  = 2
+	maxCensusShapeBytes      = 4 << 30
+	maxCensusAllowedRows     = 64 // distinct allowed-row names kept
+	maxCensusDetailRunes     = 200
+	maxCensusHeaderBytes     = 1 << 20 // collect's header line
+	maxCensusRecordsBytes    = 4 << 30 // how far the records file is read to count lines
+	censusPrefixDepth        = 4
+	maxCensusCPUInfo         = 256 << 10
+	censusLargestActions     = 10
+	censusActionNameRunes    = 200
+	censusRecordsReadChunk   = 1 << 20
 )
 
 // censusKindRE is what a kind must look like.  The writer's kinds are a fixed
@@ -122,6 +137,9 @@ type CensusSummary struct {
 	Languages             []LangSummary     `json:"languages"`
 	Collect               *CollectSummary   `json:"collect"`
 	Bounds                BoundsSummary     `json:"bounds"`
+	// Shapes are at most maxCensusShapes redacted line outlines of refusals
+	// and allowed divergences (see ShapeSummary).
+	Shapes []ShapeSummary `json:"shapes"`
 }
 
 // HostSummary says where the recording was made: from the verified binding and
@@ -152,18 +170,53 @@ type ActionCounts struct {
 	CensusEmptyNoRecord    int `json:"census_empty_no_record"`
 	CensusClean            int `json:"census_clean"`
 	CensusNonEmpty         int `json:"census_nonempty"`
+	// BuiltOK counts the actions whose build did not fail: a believed
+	// record.json with no `failed` reason (when the parse half failed and the
+	// record has no reasons, no started step exited non-zero).  An action with no
+	// believed record (record.failed, no verdict) is in neither this nor
+	// Emittable: nothing says its build was fine.
+	BuiltOK int `json:"built_ok"`
+	// Emittable counts the actions whose record would be emitted as it stands:
+	// a believed record with parse ok, writes complete, ZERO reasons, a plan
+	// entry with NO gate and a weak key (an unkeyed action has nothing to be
+	// emitted under; a gated one the merge turns into precondition:<gate>), and
+	// not in a void shard (ShardVoid).  It is an UPPER BOUND: it is per action
+	// and pre-merge, so it cannot see reads-product or any cross-action rule.
+	// It is stricter than RecordWritesComplete: an action can be recordable
+	// (parse ok, writes complete) and still carry a host-read reason, and
+	// neither "clean" nor "recordable" means "would emit".
+	Emittable int `json:"emittable"`
+	// Gated counts actions whose plan entry carries a gate (the merge never
+	// emits them); Unkeyed those whose plan entry has no weak key (a refusal
+	// instead).  Both are counted over every action with a plan entry, whatever
+	// its record says.
+	Gated   int `json:"gated"`
+	Unkeyed int `json:"unkeyed"`
+	// WritesUnknown counts the actions whose write set is unknown: no believed record (record.failed, or no verdict at all), or a believed
+	// record with writes_complete false, plus record.failed.  A strict merge
+	// voids the run for any of them.
+	WritesUnknown int `json:"writes_unknown"`
+	// ShardVoid says collect's header lists a void reason, so Emittable is 0
+	// whatever the records say (unknown without --records, then false).
+	ShardVoid bool `json:"shard_void"`
+	// StrictMergeVoidsShard: WritesUnknown > 0 or ShardVoid.
+	StrictMergeVoidsShard bool `json:"strict_merge_voids_shard"`
 }
 
 // KindSummary is the histogram of one reason kind.
 type KindSummary struct {
-	Kind          string      `json:"kind"`
-	Occurrences   int64       `json:"occurrences"`
-	Overflow      int64       `json:"overflow"`
-	Actions       int         `json:"actions"`
-	DistinctPaths int         `json:"distinct_paths"`
-	DroppedPaths  int64       `json:"dropped_paths"`
-	Prefixes      []PrefixRow `json:"prefixes"`
-	TopPaths      []PathRow   `json:"top_paths"`
+	// Ops, for host-read, counts the occurrences by the kind of look that raised
+	// them (traced.OpClasses: listing, absent-probe, open, stat, lookup, exec,
+	// ...).  Omitted for a kind that is not split.
+	Ops           map[string]int64 `json:"ops,omitempty"`
+	Kind          string           `json:"kind"`
+	Occurrences   int64            `json:"occurrences"`
+	Overflow      int64            `json:"overflow"`
+	Actions       int              `json:"actions"`
+	DistinctPaths int              `json:"distinct_paths"`
+	DroppedPaths  int64            `json:"dropped_paths"`
+	Prefixes      []PrefixRow      `json:"prefixes"`
+	TopPaths      []PathRow        `json:"top_paths"`
 }
 
 // PrefixRow is one path prefix of depth at most 4.
@@ -258,15 +311,46 @@ type ActionBytes struct {
 
 // CrossCheckSummary is the D34 line, from the census's own parses.
 type CrossCheckSummary struct {
-	Traces       int      `json:"traces"`
-	Bytes        int64    `json:"bytes"`
-	Accepted     int      `json:"accepted"`
-	Refused      int      `json:"refused"`
-	Skipped      int      `json:"skipped_too_large"`
-	SkippedBytes int64    `json:"skipped_bytes"`
-	Mismatches   int      `json:"mismatches"`
-	Allowed      int      `json:"allowed"`
-	Details      []string `json:"details"`
+	Traces       int   `json:"traces"`
+	Bytes        int64 `json:"bytes"`
+	Accepted     int   `json:"accepted"`
+	Refused      int   `json:"refused"`
+	Skipped      int   `json:"skipped_too_large"`
+	SkippedBytes int64 `json:"skipped_bytes"`
+	Mismatches   int   `json:"mismatches"`
+	Allowed      int   `json:"allowed"`
+	// AllowedRows is the histogram of Allowed by the NAME of the spec's
+	// stricter-only row that allowed each (a fixed program string of
+	// internal/trace/crosscheck.go, never trace text).
+	AllowedRows map[string]int `json:"allowed_rows"`
+	Details     []string       `json:"details"`
+}
+
+// ShapeSummary is the redacted outline of the line a refusal or an allowed
+// divergence stopped at, with how often the same outline recurred.  Every
+// token of the outline is a type name, a character class, a closed-table
+// syscall name or ASCII punctuation (trace.Shape); never a byte of a path, a
+// string or an annotation.
+type ShapeSummary struct {
+	// Origin is "refusal:<parse code>" (the fixed code of the refusal) or
+	// "allowed:<row>" (the stricter-only row's fixed name).
+	Origin string `json:"origin"`
+	Count  int    `json:"count"`
+	// Where is the first occurrence: the action's digest prefix, the step and
+	// the line.  It carries no text from any file.
+	Where string `json:"where"`
+	// Lines are the pid's pending `<unfinished ...>` half (when there is one)
+	// and then the line where the grammar stopped.
+	Lines []ShapeLine `json:"lines"`
+}
+
+// ShapeLine is one line of a ShapeSummary.
+type ShapeLine struct {
+	Role      string `json:"role"`
+	Line      int    `json:"line"`
+	Tokens    string `json:"tokens"`
+	Facts     string `json:"facts"`
+	Truncated bool   `json:"truncated"`
 }
 
 // LangSummary is one language's recordable share.
@@ -276,6 +360,17 @@ type LangSummary struct {
 	Recordable int     `json:"recordable"`
 	Clean      int     `json:"clean"`
 	Share      float64 `json:"recordable_share"`
+	// BuiltOK and Emittable are as ActionCounts', for this language.
+	BuiltOK       int `json:"built_ok"`
+	Emittable     int `json:"emittable"`
+	Gated         int `json:"gated"`
+	Unkeyed       int `json:"unkeyed"`
+	WritesUnknown int `json:"writes_unknown"`
+	// The shares: of all actions, and of the actions whose build did not fail
+	// (0 when there are none).  RecordableShare is the existing Share over all.
+	RecordableShareOfBuiltOK float64 `json:"recordable_share_of_built_ok"`
+	EmittableShare           float64 `json:"emittable_share"`
+	EmittableShareOfBuiltOK  float64 `json:"emittable_share_of_built_ok"`
 }
 
 // CollectSummary is what collect's records.jsonl header said.
@@ -302,6 +397,10 @@ type BoundsSummary struct {
 	KindsCollapsed     int   `json:"kinds_collapsed"`
 	LanguagesCollapsed int   `json:"languages_collapsed"`
 	ActionsSkipped     int   `json:"actions_skipped"`
+	// ShapesDropped counts the refusals and allowed divergences whose outline
+	// was not kept: more than maxCensusShapes distinct outlines, or more than
+	// maxCensusShapeCalls outline computations in this census.
+	ShapesDropped int `json:"shapes_dropped"`
 }
 
 // ---------------------------------------------------------------------------
@@ -314,13 +413,17 @@ type prefixAcc struct {
 }
 
 type kindAcc struct {
+	ops                            map[string]int64
 	occurrences, overflow, dropped int64
 	actions                        int
 	paths                          map[string]int64
 	prefixes                       map[string]*prefixAcc
 }
 
-type langAcc struct{ actions, recordable, clean int }
+type langAcc struct {
+	actions, recordable, clean, builtOK, emittable, recordableBuilt int
+	gated, unkeyed, writesUnknown                                   int
+}
 
 // parseSample is one accepted timed parse: the trace's size, the parse time and
 // its share of the step's wall (-1 when the wall was not positive).
@@ -367,10 +470,23 @@ type censusAcc struct {
 	langs       map[string]*langAcc
 	collect     *CollectSummary
 	infra       string
+
+	// Line shapes (trace.Shape): the distinct outlines kept, by key, the number
+	// of outline computations spent and the occurrences not kept.
+	shapes        []ShapeSummary
+	shapeIdx      map[string]int
+	shapeCalls    map[string]int  // computations by class ("allowed", "refusal")
+	shapeKept     map[string]int  // slots used by class
+	shapeCode     map[string]int  // computations by refusal origin
+	shapeSeen     map[string]bool // (trace path, line) already shaped
+	shapeBytes    int64           // bytes charged against maxCensusShapeBytes
+	shapesDropped int
 }
 
 func newCensusAcc(red *redactor) *censusAcc {
-	return &censusAcc{red: red, explain: newExplain(), problems: map[string]int{}, kinds: map[string]*kindAcc{}, langs: map[string]*langAcc{}}
+	return &censusAcc{red: red, explain: newExplain(), problems: map[string]int{}, kinds: map[string]*kindAcc{}, langs: map[string]*langAcc{},
+		cross: CrossCheckSummary{AllowedRows: map[string]int{}}, shapeIdx: map[string]int{},
+		shapeCalls: map[string]int{}, shapeKept: map[string]int{}, shapeCode: map[string]int{}, shapeSeen: map[string]bool{}}
 }
 
 // problem counts one problem under a fixed code.
@@ -387,7 +503,7 @@ type CensusOptions struct {
 	// Records, when set, is collect's records.jsonl: its header and its line
 	// count join the report.
 	Records string
-	// CrossCheck is the cross-checked parse; nil means trace.ParseCrossChecked.
+	// CrossCheck is the cross-checked parse; nil means trace.ParseCrossCheckedDetail.
 	// This file is the ONE production file that names it
 	// (TestParseCrossCheckedOnlyInCensus).
 	CrossCheck CrossCheckFunc
@@ -419,13 +535,20 @@ func collectCensus(o CensusOptions) (*censusAcc, error) {
 	if err := looksLikeRecordDir(o.Dir); err != nil {
 		return nil, err
 	}
-	red := newRedactor(append(append([]Redaction(nil), o.Redact...), Redaction{From: o.Dir, To: "$RECORD_DIR"}))
+	// The sealed facts first: they decide how the invoker's own directories are
+	// labelled (relabelRunner), and the redactor must exist before any text is
+	// made.
+	pre, err := VerifyPre(o.Dir)
+	stepHome, stepTmp := "", ""
+	if err == nil {
+		stepHome, stepTmp = sealedHomeTmp(pre)
+	}
+	red := newRedactor(append(relabelRunner(o.Redact, stepHome, stepTmp), Redaction{From: o.Dir, To: "$RECORD_DIR"}))
 	acc := newCensusAcc(red)
 	run := &censusRun{o: o, acc: acc, crossCheck: o.CrossCheck}
 	if run.crossCheck == nil {
-		run.crossCheck = trace.ParseCrossChecked
+		run.crossCheck = trace.ParseCrossCheckedDetail
 	}
-	pre, err := VerifyPre(o.Dir)
 	if err != nil {
 		text, _ := safeText(err.Error(), 300, red)
 		acc.problem("pre_unverified")
@@ -654,6 +777,39 @@ func (r *censusRun) action(hexName string) {
 			la.clean++
 		}
 	}
+	if builtOK(rec, scs) {
+		a.actions.BuiltOK++
+		la.builtOK++
+		if recordable {
+			la.recordableBuilt++
+		}
+	}
+	// The plan's verdict on the action: a gate, or no weak key, means the merge
+	// never emits it, however good its record.  No plan entry (no verified pre/,
+	// an action not in the plan) means we cannot say: not emittable.
+	planned, inPlan := Action{}, false
+	if r.pre != nil && name != "" {
+		planned, inPlan = r.pre.Action(name)
+	}
+	gated, unkeyed, mergeable := planVerdict(planned, inPlan)
+	if gated {
+		a.actions.Gated++
+		la.gated++
+	}
+	if unkeyed {
+		a.actions.Unkeyed++
+		la.unkeyed++
+	}
+	// No believed record covers record.failed AND an action with no verdict at
+	// all: either way nothing says what it wrote.
+	if rec == nil || !rec.WritesComplete {
+		a.actions.WritesUnknown++
+		la.writesUnknown++
+	}
+	if mergeable && emittable(rec) {
+		a.actions.Emittable++
+		la.emittable++
+	}
 
 	// The traces.
 	for j := range traces {
@@ -682,6 +838,50 @@ func (r *censusRun) action(hexName string) {
 		shown, _ := safeText(name, censusActionNameRunes, a.red)
 		a.actionBytes = append(a.actionBytes, namedBytes{name: shown, bytes: total})
 	}
+}
+
+// builtOK says the action's build did not fail: a believed record with no
+// `failed` reason.  A record whose parse half failed has no reasons at all (the
+// classifier never ran), so for it the sidecars decide: no started step exited
+// non-zero.  An action with no believed record is not built_ok: nothing says
+// its build was fine.
+func builtOK(rec *ClassifiedRecord, scs map[int]StepSidecar) bool {
+	if rec == nil {
+		return false
+	}
+	if rec.Record != nil {
+		for _, r := range rec.Record.Reasons {
+			if reasonKindCode(r) == "failed" {
+				return false
+			}
+		}
+		return true
+	}
+	for _, sc := range scs {
+		if sc.Started && sc.RootStatus != 0 {
+			return false
+		}
+	}
+	return true
+}
+
+// planVerdict reads the plan's side of "would the merge emit this action": a
+// gate (the merge turns it into precondition:<gate>) or no weak key (nothing to
+// emit under) means never.  mergeable is false when there is no plan entry, too:
+// nothing can be claimed for an action the verified pre/ does not know.
+func planVerdict(planned Action, inPlan bool) (gated, unkeyed, mergeable bool) {
+	if !inPlan {
+		return false, false, false
+	}
+	gated, unkeyed = planned.Gate != "", planned.Weak == ""
+	return gated, unkeyed, !gated && !unkeyed
+}
+
+// emittable says the RECORD is emittable: parse ok, writes complete and not one
+// reason.  The caller adds the plan's side (no gate, a weak key), and summary
+// the shard's (collect's void list, once the header is read).
+func emittable(rec *ClassifiedRecord) bool {
+	return rec != nil && rec.ParseOK && rec.WritesComplete && rec.Record != nil && len(rec.Record.Reasons) == 0
 }
 
 // language is the action's language: the plan's (verified pre/), else the one
@@ -746,6 +946,30 @@ func (r *censusRun) readCensus(adir, name string) (censusState, *CensusDoc) {
 			return censusInvalid, nil
 		}
 	}
+	if len(doc.Ops) > maxCensusKinds {
+		a.problem("census_bounds")
+		return censusInvalid, nil
+	}
+	// The counts are summed across up to maxCensusActions files into int64s, so
+	// one file's op counts are held to a sum no wrap-around can follow
+	// (2^40 each, 2^18 files: 2^58).
+	var opsSum int64
+	for k, m := range doc.Ops {
+		if !censusKindRE.MatchString(k) || len(m) > len(traced.OpClasses) {
+			a.problem("census_bad_entry")
+			return censusInvalid, nil
+		}
+		for class, n := range m {
+			if !traced.IsOpClass(class) || n < 0 || n > maxCensusOpsSum {
+				a.problem("census_bad_entry")
+				return censusInvalid, nil
+			}
+			if opsSum += n; opsSum > maxCensusOpsSum {
+				a.problem("census_bad_entry")
+				return censusInvalid, nil
+			}
+		}
+	}
 	if doc.Total == 0 && doc.OverflowTotal == 0 && len(doc.Entries) == 0 {
 		return censusEmpty, nil
 	}
@@ -773,6 +997,15 @@ func (a *censusAcc) kindFor(kind string) *kindAcc {
 // addCensus folds one valid census into the histograms.
 func (a *censusAcc) addCensus(doc *CensusDoc) {
 	seen := map[*kindAcc]bool{}
+	for kind, m := range doc.Ops {
+		k := a.kindFor(kind)
+		if k.ops == nil {
+			k.ops = map[string]int64{}
+		}
+		for class, n := range m {
+			k.ops[class] += n // class is from the closed list (readCensus checked)
+		}
+	}
 	for kind, n := range doc.Overflow {
 		k := a.kindFor(kind)
 		k.overflow += n
@@ -840,11 +1073,11 @@ func countLines(f io.Reader, limit int64) (int64, error) {
 	}
 }
 
-// CrossCheckFunc is the cross-checked parse (trace.ParseCrossChecked's shape).
+// CrossCheckFunc is the cross-checked parse (trace.ParseCrossCheckedDetail's shape).
 // CensusOptions.CrossCheck injects it, so a test can stand in a mismatch or an
 // allowed divergence, which no real trace is known to produce, without a
 // package-level variable.
-type CrossCheckFunc = func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, int)
+type CrossCheckFunc = func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, trace.CrossCheckDetail)
 
 // helperParseOptions are the options the classify child parses a step trace
 // with (parseHelperTrace builds them from the same function): helper-root mode,
@@ -985,15 +1218,16 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 	}
 	var perr error
 	var m *trace.CrossCheckMismatch
-	var allowed int
+	var detail trace.CrossCheckDetail
 	ok := a.guard(func() {
-		_, perr, m, allowed = r.crossCheck(cf, pkgDir, helperParseOptions(r.pre.Config.KilnExe, limits))
+		_, perr, m, detail = r.crossCheck(cf, pkgDir, helperParseOptions(r.pre.Config.KilnExe, limits))
 	})
 	cf.Close()
 	if !ok {
 		return size
 	}
 	cc := &a.cross
+	refusalOrigin, refusalLine := "", 0
 	cc.Traces++
 	cc.Bytes += size
 	switch {
@@ -1002,14 +1236,116 @@ func (r *censusRun) step(adir, name string, j int, sc StepSidecar) int64 {
 		a.detail(fmt.Sprintf("%s step %d: mismatch: %s", hexName12(adir), j, m.Detail))
 	case perr != nil:
 		cc.Refused++
+		// Where the grammar stopped, as a redacted outline: the fixed code of the
+		// refusal says why, the outline says what the line looked like.
+		var te *trace.Error
+		if errors.As(perr, &te) && te.Line > 0 {
+			// te.Line is the error's own line: for an unresumed-call that is the
+			// call's START (the unfinished half), not where the input ended.
+			refusalOrigin, refusalLine = "refusal:"+parseReasonCode(perr.Error()), te.Line
+		}
 	default:
 		cc.Accepted++
 	}
-	if allowed > 0 {
-		cc.Allowed += allowed
-		a.detail(fmt.Sprintf("%s step %d: %d allowed stricter-only divergence(s)", hexName12(adir), j, allowed))
+	if detail.Allowed > 0 {
+		cc.Allowed += detail.Allowed
+		r.noteAllowed(adir, path, j, size, detail)
+	}
+	// The refusal's outline comes AFTER the allowed divergences': when one line
+	// is both, the (trace, line) dedupe must leave it labelled allowed:<row>,
+	// which is the line the default flip needs, not refusal:<code>.
+	if refusalLine > 0 {
+		r.noteShape(adir, path, j, size, refusalOrigin, refusalLine)
 	}
 	return size
+}
+
+// noteAllowed reports one trace's allowed stricter-only divergences: the
+// histogram by row name, one detail per distinct row (its first line), and an
+// outline of the line of each hit.  The row names are fixed program strings
+// (trace.CrossCheckDetail); the cut and the cap below only bound what a
+// misbehaving injected CrossCheck could return.
+func (r *censusRun) noteAllowed(adir, path string, j int, size int64, d trace.CrossCheckDetail) {
+	a := r.acc
+	for row, n := range d.Rows {
+		name, _ := safeText(row, 120, a.red)
+		if _, known := a.cross.AllowedRows[name]; !known && len(a.cross.AllowedRows) >= maxCensusAllowedRows {
+			name = "(other)"
+		}
+		a.cross.AllowedRows[name] += n
+	}
+	seen := map[string]bool{}
+	for _, h := range d.Hits {
+		name, _ := safeText(h.Row, 120, a.red)
+		if !seen[name] {
+			seen[name] = true
+			a.detail(fmt.Sprintf("%s step %d: allowed stricter-only divergence, row: %s (%d here, first at line %d)", hexName12(adir), j, name, d.Rows[h.Row], h.Line))
+		}
+		r.noteShape(adir, path, j, size, "allowed:"+name, h.Line)
+	}
+}
+
+// noteShape computes the redacted outline of a line (trace.Shape) and folds it
+// into the census's few kept outlines.  The work is bounded three ways (see the
+// budgets at maxCensusShapes): by class (allowed:* and refusal:* never share a
+// budget), per refusal code, and in bytes scanned.  A (trace, line) already
+// shaped is not shaped again.  What was not kept is counted
+// (bounds.shapes_dropped).
+func (r *censusRun) noteShape(adir, path string, j int, size int64, origin string, line int) {
+	a := r.acc
+	if line <= 0 {
+		return
+	}
+	seenKey := path + "|" + strconv.Itoa(line)
+	if a.shapeSeen[seenKey] {
+		return
+	}
+	class, callCap := "refusal", maxCensusShapeCallsRefus
+	if strings.HasPrefix(origin, "allowed:") {
+		class, callCap = "allowed", maxCensusShapeCallsAllow
+	}
+	cost := 2 * size // at most two streaming passes
+	if a.shapeCalls[class] >= callCap || a.shapeBytes+cost > maxCensusShapeBytes ||
+		(class == "refusal" && a.shapeCode[origin] >= maxCensusShapeCallsCode) {
+		a.shapesDropped++
+		return
+	}
+	a.shapeSeen[seenKey] = true
+	a.shapeCalls[class]++
+	a.shapeCode[origin]++
+	a.shapeBytes += cost
+	var shapes []trace.LineShape
+	if !a.guard(func() {
+		shapes = trace.Shape(func() (io.ReadCloser, error) {
+			f, err := openNoFollow(path)
+			if err != nil {
+				return nil, err
+			}
+			return f, nil
+		}, line)
+	}) || len(shapes) == 0 {
+		return
+	}
+	key := origin
+	lines := make([]ShapeLine, 0, len(shapes))
+	for _, s := range shapes {
+		key += "\n" + s.Role + "\n" + s.Tokens + "\n" + s.Facts
+		lines = append(lines, ShapeLine{Role: s.Role, Line: s.Line, Tokens: s.Tokens, Facts: s.Facts, Truncated: s.Truncated})
+	}
+	if i, ok := a.shapeIdx[key]; ok {
+		a.shapes[i].Count++
+		return
+	}
+	if a.shapeKept[class] >= maxCensusShapes {
+		a.shapesDropped++
+		return
+	}
+	a.shapeKept[class]++
+	a.shapeIdx[key] = len(a.shapes)
+	a.shapes = append(a.shapes, ShapeSummary{
+		Origin: origin, Count: 1, Lines: lines,
+		Where: fmt.Sprintf("%s step %d line %d", hexName12(adir), j, line),
+	})
 }
 
 // hexName12 is the first 12 digits of the action directory's name: enough to
@@ -1111,7 +1447,7 @@ func (a *censusAcc) summary(top int) *CensusSummary {
 	sort.Strings(kinds)
 	for _, kind := range kinds {
 		k := a.kinds[kind]
-		ks := KindSummary{Kind: kind, Occurrences: k.occurrences, Overflow: k.overflow, Actions: k.actions,
+		ks := KindSummary{Ops: k.ops, Kind: kind, Occurrences: k.occurrences, Overflow: k.overflow, Actions: k.actions,
 			DistinctPaths: len(k.paths), DroppedPaths: k.dropped, Prefixes: []PrefixRow{}, TopPaths: []PathRow{}}
 		for p, n := range k.paths {
 			ks.TopPaths = append(ks.TopPaths, PathRow{Path: p, Count: n})
@@ -1181,23 +1517,50 @@ func (a *censusAcc) summary(top int) *CensusSummary {
 	if s.CrossCheck.Details == nil {
 		s.CrossCheck.Details = []string{}
 	}
+	s.CrossCheck.AllowedRows = map[string]int{}
+	for k, v := range a.cross.AllowedRows {
+		s.CrossCheck.AllowedRows[k] = v
+	}
 	names := make([]string, 0, len(a.langs))
 	for l := range a.langs {
 		names = append(names, l)
 	}
 	sort.Strings(names)
+	// A collect header that names a void reason voids the whole shard: nothing
+	// in it is emitted, whatever each record says.
+	gated := a.collect != nil && len(a.collect.Void) > 0
+	s.Actions.ShardVoid = gated
+	if gated {
+		s.Actions.Emittable = 0
+	}
+	s.Actions.StrictMergeVoidsShard = gated || s.Actions.WritesUnknown > 0
+	ratio := func(n, d int) float64 {
+		if d == 0 {
+			return 0
+		}
+		return round3(float64(n) / float64(d))
+	}
 	for _, l := range names {
 		la := a.langs[l]
-		ls := LangSummary{Language: l, Actions: la.actions, Recordable: la.recordable, Clean: la.clean}
-		if la.actions > 0 {
-			ls.Share = round3(float64(la.recordable) / float64(la.actions))
+		emit := la.emittable
+		if gated {
+			emit = 0
+		}
+		ls := LangSummary{Language: l, Actions: la.actions, Recordable: la.recordable, Clean: la.clean,
+			BuiltOK: la.builtOK, Emittable: emit, Gated: la.gated, Unkeyed: la.unkeyed, WritesUnknown: la.writesUnknown,
+			Share:                    ratio(la.recordable, la.actions),
+			RecordableShareOfBuiltOK: ratio(la.recordableBuilt, la.builtOK),
+			EmittableShare:           ratio(emit, la.actions),
+			EmittableShareOfBuiltOK:  ratio(emit, la.builtOK),
 		}
 		s.Languages = append(s.Languages, ls)
 	}
+	s.Shapes = append([]ShapeSummary{}, a.shapes...)
 	s.Bounds = BoundsSummary{
 		JSONMaxBytes: MaxSummaryJSONBytes, MDMaxBytes: MaxSummaryMDBytes, TopPerKind: top,
 		PathsTruncated: a.pathsTruncated, PathsDropped: a.pathsDropped, PrefixesDropped: a.prefixesDropped,
 		KindsCollapsed: a.kindsCollapsed, LanguagesCollapsed: a.languagesCollapsed, ActionsSkipped: a.skipped,
+		ShapesDropped: a.shapesDropped,
 	}
 	return s
 }
@@ -1311,6 +1674,47 @@ func (a *censusAcc) timingBySize(t *TimingSummary, p99 float64) {
 		g := groups[m]
 		t.BySize = append(t.BySize, SizeTiming{Min: m, N: len(g.ms), ParseMS: distOf(g.ms), ParseShare: distOf(g.share)})
 	}
+}
+
+// sealedHomeTmp are the HOME and TMPDIR the STEP ran with, from the sealed host
+// facts of pre/ (the classifier labels paths under them $HOME and $TMPDIR).  ""
+// when they cannot be read.
+func sealedHomeTmp(pre *Pre) (home, tmp string) {
+	data, err := pre.ReadSealed("host-facts.json")
+	if err != nil {
+		return "", ""
+	}
+	hf, err := recfmt.DecodeHostFacts(data)
+	if err != nil {
+		return "", ""
+	}
+	return hf.Home, hf.Tmpdir
+}
+
+// relabelRunner keeps `$HOME` and `$TMPDIR` meaning ONE thing in a report: the
+// step's.  The classifier labelled the step's fresh HOME `$HOME` and its TMPDIR
+// `$TMPDIR` in every path it wrote (traced redact), but `kiln record census`
+// runs with the RUNNER's real HOME and temporary directory and used to label
+// those the same way, so one string named two different directories.  A
+// redaction whose directory is the sealed step's own keeps its label (it is the
+// same directory); any other `$HOME` / `$TMPDIR` is the invoker's and becomes
+// `$RUNNER_HOME` / `$RUNNER_TMP`.  When the sealed facts are unknown (stepHome
+// and stepTmp are "") every one is the invoker's.  Other labels are untouched.
+func relabelRunner(in []Redaction, stepHome, stepTmp string) []Redaction {
+	out := make([]Redaction, len(in))
+	// A trailing slash is not a different directory (newRedactor drops it too).
+	stepHome, stepTmp = strings.TrimRight(stepHome, "/"), strings.TrimRight(stepTmp, "/")
+	for i, r := range in {
+		out[i] = r
+		from := strings.TrimRight(r.From, "/")
+		switch {
+		case r.To == "$HOME" && (stepHome == "" || from != stepHome):
+			out[i].To = "$RUNNER_HOME"
+		case r.To == "$TMPDIR" && (stepTmp == "" || from != stepTmp):
+			out[i].To = "$RUNNER_TMP"
+		}
+	}
+	return out
 }
 
 // hostFrom fills the host block from the verified pre/ (binding and host facts)

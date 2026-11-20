@@ -76,6 +76,9 @@ type CensusDoc struct {
 	OverflowTotal int64                `json:"overflow_total"`
 	Overflow      map[string]int64     `json:"overflow"`
 	Entries       []traced.CensusEntry `json:"entries"`
+	// Ops counts, per kind, the occurrences by op class (traced.OpClasses): what
+	// kind of look raised each host-read.  Additive: absent when empty.
+	Ops map[string]map[string]int64 `json:"ops,omitempty"`
 }
 
 // EncodeCensus renders c, shedding entries until the result is at most
@@ -88,6 +91,15 @@ func EncodeCensus(action string, c *traced.Census) ([]byte, error) {
 	for k, n := range c.Overflow {
 		if n > 0 {
 			doc.Overflow[k] = n
+		}
+	}
+	if len(c.Ops) > 0 {
+		doc.Ops = map[string]map[string]int64{}
+		for k, m := range c.Ops {
+			doc.Ops[k] = map[string]int64{}
+			for class, n := range m {
+				doc.Ops[k][class] = n
+			}
 		}
 	}
 	byKind := map[string][]traced.CensusEntry{}

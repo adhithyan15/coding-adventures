@@ -135,7 +135,7 @@ func TestCensusSkipsLargeCrossChecks(t *testing.T) {
 func TestCensusSurvivesAParsePanic(t *testing.T) {
 	f := censusDirFix(t)
 	res, s, _, _ := runCensus(t, f, func(o *CensusRunOptions) {
-		o.CrossCheck = func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, int) {
+		o.CrossCheck = func(io.Reader, string, trace.Options) (*trace.Trace, error, *trace.CrossCheckMismatch, trace.CrossCheckDetail) {
 			panic("boom")
 		}
 	})

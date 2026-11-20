@@ -95,6 +95,7 @@ pub struct TypeDef {
 fn join(toks: &[Token]) -> String {
     let mut s = String::new();
     for t in toks {
+        crate::steps::tick();
         if !s.is_empty() {
             s.push(' ');
         }
@@ -344,6 +345,7 @@ pub fn collect_types(files: &[FileCtx]) -> (Vec<TypeDef>, Vec<Gap>) {
     let mut out = Vec::new();
     let mut gaps = Vec::new();
     for (fi, f) in files.iter().enumerate() {
+        crate::steps::tick();
         let t = &f.toks;
         for i in 0..t.len() {
             crate::steps::tick();
@@ -438,6 +440,7 @@ pub fn collect_types(files: &[FileCtx]) -> (Vec<TypeDef>, Vec<Gap>) {
                                 variants = vs;
                                 malformed |= !bad.is_empty();
                                 for (line, what) in bad {
+                                    crate::steps::tick();
                                     gap(line, &format!("{what} (an enum body)"));
                                 }
                             }
