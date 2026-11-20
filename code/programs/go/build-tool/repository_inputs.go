@@ -1409,6 +1409,43 @@ func vosImplementationRow(crate string) repositoryInputConsumer {
 	}
 }
 
+// warrantEvidenceCrates are the non-VOS Rust crates (`code/packages/rust/<crate>`) whose BUILD
+// runs `gen_evidence --check <crate>` against `code/specs/<crate>.warrant` (CV2-F13).  The four
+// VOS crates carry the same rule through vosImplementationRow.
+// TestWarrantEvidenceRowsCoverEveryGenEvidenceBuild pins this list to the BUILD files.
+var warrantEvidenceCrates = []string{
+	"arithmetic", "ct-compare", "gf256", "hash-functions", "logic-gates",
+	"lzw", "wasm-leb128", "x25519", "zeroize",
+}
+
+func init() {
+	for _, crate := range warrantEvidenceCrates {
+		repositoryInputConsumers = append(repositoryInputConsumers, warrantEvidenceRow(crate))
+	}
+}
+
+// warrantEvidenceRow is the row of one non-VOS Rust crate whose BUILD runs
+// `cargo run -p coding_adventures_warrant_grammar --example gen_evidence -- --check <crate>`
+// (CV2-F13).  The spec `code/specs/<crate>.warrant` lives outside the package, so without the
+// row a PR that edits only the spec (weakens a claim, say) selects the generator, the oracle
+// and the grammar crate but not the crate whose BUILD checks its committed evidence against
+// that spec: the check then runs first in some unrelated later PR.  The spec name is exactly the
+// crate name (VER04h).  The VOS crates (vosImplementationRow) already carry the same rule.
+//
+//	code/specs/lzw.warrant        → rust/lzw
+//	code/specs/lzw.warrant.draft  → nothing
+//	code/specs/lzw2.warrant       → nothing (a lookalike name)
+func warrantEvidenceRow(crate string) repositoryInputConsumer {
+	spec := "code/specs/" + crate + ".warrant"
+	return repositoryInputConsumer{
+		name:     "rust/" + crate,
+		language: "rust",
+		inputs:   "its Warrant spec " + spec + ", which its BUILD checks the committed evidence against (gen_evidence --check, CV2-F13)",
+		matches:  func(changed string) bool { return changed == spec },
+		paths:    []string{spec},
+	}
+}
+
 // isVosCapacityProbeInput reports whether a changed path is one of the exact files the
 // capacity probe checks outside its Cargo edges (VOS-028b): no prefix, no lookalike.
 //

@@ -135,7 +135,7 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true, "rust/warrant-grammar": true}) {
 		t.Fatalf("rust-only GAME10 Warrant selection got %v, err %v", got, err)
 	}
-	if got, err := repositoryInputConsumersForChange([]string{"code/specs/wasm-leb128.warrant"}, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-grammar": true, "python/warrant-oracle": true, "rust/warrant-corpus-gen": true}) {
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/wasm-leb128.warrant"}, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/wasm-leb128": true, "rust/warrant-grammar": true, "python/warrant-oracle": true, "rust/warrant-corpus-gen": true}) {
 		t.Fatalf("other Warrant consumers selection got %v, err %v", got, err)
 	}
 	for path, want := range map[string]bool{

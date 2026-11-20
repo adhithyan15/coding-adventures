@@ -700,6 +700,22 @@ PR that rebuilds `warrant-grammar`. `*.warrant.draft` files are not documents
 and do not select it. Only that one package is selected, with its
 prerequisites, not the Warrant adopters.
 
+A third guard is the crate's **own spec**. Every Rust crate whose BUILD runs
+`gen_evidence -- --check <crate>` checks its committed evidence against
+`code/specs/<crate>.warrant`, a file outside the package. An edit to exactly
+that path (no lookalike, no `.warrant.draft`) selects `rust/<crate>`, in
+addition to whatever else the spec already selected (the grammar guard above,
+the corpus-v2 generator and oracle for the four adopters, the lane registry
+rows). Before this rule (CV2-F13) a spec-only edit selected the generator, the
+oracle and `rust/warrant-grammar` but not the crate itself, so the check first
+ran in some later unrelated PR. The crates are the `warrantEvidenceCrates`
+table (arithmetic, ct-compare, gf256, hash-functions, logic-gates, lzw,
+wasm-leb128, x25519, zeroize; each row is `warrantEvidenceRow`), plus the four
+VOS crates, which have carried the same rule through `vosImplementationRow`.
+`TestWarrantEvidenceCratesCoverEveryGenEvidenceBuild` scans the checked-out
+`code/packages/rust/*/BUILD*` files and fails when a crate runs the check
+without a table entry, so a new adopter cannot forget its row.
+
 ### Package-local files do not rebuild dependents
 
 Adding or editing a package's root `CHANGELOG.md`, a direct
