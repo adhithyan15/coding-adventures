@@ -446,7 +446,7 @@ def _split_result(text: str) -> tuple[str, str]:
         depth -= char == ">"
         if char == "," and depth == 0:
             return inner[:index], inner[index + 1 :]
-    raise TypeReject(type_text)
+    raise TypeReject(text)
 
 
 def _u32(number: int) -> bytes:
@@ -1300,6 +1300,8 @@ def v2_files(fixture: Path) -> tuple[dict[str, bytes], list[str]]:
         for path in sorted(fixture.glob("v2-*.json")):
             if path.stem not in V2_CATEGORIES:
                 problems.append(f"{path.name}: not a v2 category this script indexes")
+            elif not path.is_file():
+                problems.append(f"{path.name}: not a regular file")
             else:
                 found[path.name] = path.read_bytes()
     return {f"{c}.json": found[f"{c}.json"] for c in V2_CATEGORIES if f"{c}.json" in found}, problems
@@ -1346,6 +1348,10 @@ def build_files(fixture: Path | None = None) -> dict[str, str]:
     return files
 
 
+#: The keys every v2 case carries (VER04r section 11, [D41]).
+V2_CASE_KEYS = ("id", "summary", "requires", "expect")
+
+
 def structural_problems(files: dict[str, str], v2: dict[str, bytes] | None = None) -> list[str]:
     """Checks that do not depend on the case tables (ids, reasons, ASCII ...).
 
@@ -1373,15 +1379,29 @@ def structural_problems(files: dict[str, str], v2: dict[str, bytes] | None = Non
         if document.get("schema") != SCHEMA or f"{document.get('category')}.json" != name:
             problems.append(f"{name}: schema or category does not match the file")
             continue
-        for case in document["cases"]:
-            if case["id"] in seen:
-                problems.append(f"duplicate case id {case['id']}")
-            seen.add(case["id"])
-            if not case["id"].startswith(document["category"] + "/"):
-                problems.append(f"{case['id']}: id must start with its category")
-            reason = case.get("expect", {}).get("reason")
+        for position, case in enumerate(document["cases"]):
+            where = f"{name}: case {position}"
+            if not isinstance(case, dict):
+                problems.append(f"{where}: not an object")
+                continue
+            if str(document["category"]).startswith("v2-"):
+                problems += [f"{where}: missing key {key!r}" for key in V2_CASE_KEYS if key not in case]
+            case_id = case.get("id")
+            if not isinstance(case_id, str):
+                problems.append(f"{where}: id missing or not a string")
+                continue
+            if case_id in seen:
+                problems.append(f"duplicate case id {case_id}")
+            seen.add(case_id)
+            if not case_id.startswith(document["category"] + "/"):
+                problems.append(f"{case_id}: id must start with its category")
+            expect = case.get("expect", {})
+            if not isinstance(expect, dict):
+                problems.append(f"{case_id}: expect is not an object")
+                continue
+            reason = expect.get("reason")
             if document["category"] in V1_CATEGORIES and reason is not None and reason not in REASONS:
-                problems.append(f"{case['id']}: reason {reason!r} is not in the closed set")
+                problems.append(f"{case_id}: reason {reason!r} is not in the closed set")
     return problems
 
 

@@ -190,7 +190,10 @@ class V2Rows(unittest.TestCase):
 
     def test_the_reason_closed_set_is_scoped_to_the_v1_categories(self) -> None:
         def document(category: str) -> dict[str, bytes]:
-            case = '{"expect":{"error":"x","reason":"not-a-v1-reason"},"id":"' + category + '/a"}'
+            case = (
+                '{"expect":{"error":"x","reason":"not-a-v1-reason"},"id":"' + category
+                + '/a","requires":[],"summary":"s"}'
+            )
             text = (
                 '{"cases":[' + case + '],"category":"' + category
                 + '","schema":"warrant-corpus-conformance-v1"}\n'
@@ -202,6 +205,55 @@ class V2Rows(unittest.TestCase):
         problems = conf.structural_problems({}, document("json"))
         self.assertEqual(len(problems), 1)
         self.assertIn("closed set", problems[0])
+
+
+class ReviewFindingsS5b(unittest.TestCase):
+    """S5b review: N1 (a latent NameError), N2 (malformed v2 cases) and N3 (the v2 envelope)."""
+
+    def test_a_comma_less_result_is_a_type_reject_not_a_name_error(self) -> None:
+        for text in ("Result<U8>", "Result<", "Result<Bytes<4>>"):
+            with self.subTest(text=text), self.assertRaises(conf.TypeReject):
+                conf.decode_and_encode({}, text, {})
+
+    @staticmethod
+    def _problems(cases: list, category: str = "v2-arith") -> list[str]:
+        data = conf.canonical({"schema": conf.SCHEMA, "category": category, "cases": cases}).encode("utf-8")
+        return conf.structural_problems({}, {f"{category}.json": data})
+
+    @staticmethod
+    def _case(**changes: object) -> dict:
+        case = {"id": "v2-arith/x", "summary": "s", "requires": [], "expect": {}}
+        case.update(changes)
+        return case
+
+    def test_a_good_v2_case_has_no_problem(self) -> None:
+        self.assertEqual(self._problems([self._case()]), [])
+
+    def test_a_case_that_is_not_an_object_is_a_problem(self) -> None:
+        self.assertTrue(any("not an object" in p for p in self._problems([3])))
+
+    def test_a_missing_or_non_string_id_is_a_problem(self) -> None:
+        missing = self._case()
+        del missing["id"]
+        self.assertTrue(any("id missing" in p for p in self._problems([missing])))
+        self.assertTrue(any("id missing" in p for p in self._problems([self._case(id=7)])))
+
+    def test_a_non_object_expect_is_a_problem(self) -> None:
+        self.assertTrue(any("expect is not an object" in p for p in self._problems([self._case(expect=[])])))
+
+    def test_each_missing_envelope_key_is_a_problem(self) -> None:
+        for key in ("id", "summary", "requires", "expect"):
+            case = self._case()
+            del case[key]
+            with self.subTest(key=key):
+                self.assertTrue(any(f"missing key {key!r}" in p for p in self._problems([case])))
+
+    def test_a_v2_path_that_is_a_directory_is_a_problem(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "v2-arith.json").mkdir()
+            found, problems = conf.v2_files(Path(tmp))
+        self.assertEqual(found, {})
+        self.assertTrue(any("not a regular file" in p for p in problems))
 
 
 if __name__ == "__main__":
