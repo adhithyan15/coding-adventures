@@ -373,7 +373,7 @@ rec, err := traced.Classify(cfg, traced.Input{
   clear it. It is not in the record's JSON: the recorder copies it with
   `recfmt.CompleteOf` to the shard record's `writes_complete`, which the merge
   honours only when `HonourWritesComplete` is on (off by default).
-  `RecorderVersion` is 2 since this field exists.
+  `RecorderVersion` became 2 when this field was added (see `internal/legacy/traced.go` for the current value).
 - `CheckRecipe(steps, lines)` compares each step's exec argv with the expected
   `sh -c` lines.
 

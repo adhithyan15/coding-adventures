@@ -244,7 +244,7 @@ escaped:
 HASH_PACKAGE_FAILED: package="swift/example"
 ```
 
-The test suite consumes all 19 neutral source-collection cases listed in its
+The test suite consumes all 20 neutral source-collection cases listed in its
 native fixture matrix and the shared
 hashing-v1 missing-cache oracle, then independently covers binary bytes, CRLF,
 Unicode path ordering, same-content renames, empty packages, every established

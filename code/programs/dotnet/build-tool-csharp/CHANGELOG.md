@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - Dart DT18 hash-map input binding
+
+- Regenerate the immutable source-input projection with the exact Dart hash-map corpus grant and replay all 24 neutral source-collection cases through the production selector.
+
 ## Unreleased - source-input boundary sync (GAME10 TypeScript clock)
 
 - Added `code/packages/typescript/game-clock` to `typescript-workspace-configuration`.

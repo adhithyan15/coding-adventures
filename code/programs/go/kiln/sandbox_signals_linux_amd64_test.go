@@ -72,6 +72,14 @@ func (r *stracedRun) tail(n int) string {
 // refused one, each cut short, so the next fix needs no second CI run.
 func runStraced(t *testing.T, script string) *stracedRun {
 	t.Helper()
+	return runStracedWith(t, script, nil)
+}
+
+// runStracedWith is runStraced with a hook that prepares the fixture (put a
+// helper binary in the checkout, say) before the step runs.  "{pkg}" in the
+// script is the checkout directory the step starts in.
+func runStracedWith(t *testing.T, script string, setup func(f *sandboxFixture)) *stracedRun {
+	t.Helper()
 	straceBin, err := exec.LookPath("strace")
 	if err != nil {
 		skipOrFail(t, "strace is not installed")
@@ -101,7 +109,11 @@ func runStraced(t *testing.T, script string) *stracedRun {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if setup != nil {
+		setup(f)
+	}
 	script = strings.ReplaceAll(script, "{data}", data)
+	script = strings.ReplaceAll(script, "{pkg}", f.pkg)
 	// The step's descriptors 1 and 2 are pipes the harness owns (fds 3 and 4 of
 	// strace, as the `record step` supervisor does), so what the step prints
 	// (a shell's "Killed" / "Terminated" job notice, "yes: Broken pipe") is

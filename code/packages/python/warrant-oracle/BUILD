@@ -53,5 +53,8 @@ uv pip install -e ".[dev]" --quiet
 # new on purpose: the generator's tuple_parity.rs and fixed_parity.rs reproduce the older directories exactly.
 .venv/bin/python tests/fixtures/data-forms-v1/make_data_forms.py --check
 .venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/data-forms-v1/data_forms_v1.warrant --check tests/fixtures/data-forms-v1/data_forms_v1.oracle-lowering.json
+# CV2-S11f-1: the synthetic scalar-faults document (saturate-add, saturate-sub, shift-mask, scalar missing-error;
+# VER04r 8.2) and its committed faults and refusals dumps, the files the generator's slice S11f-2 must reproduce.
+.venv/bin/python tests/fixtures/scalar-faults-v1/make_scalar_faults.py --check
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_lowering.py --check
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_enumeration.py --check

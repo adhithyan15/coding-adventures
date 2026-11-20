@@ -4,10 +4,15 @@ Bounded, allocation-free decoding of one already-delimited RFC 8446 TLS 1.3
 `Certificate` handshake body.
 
 The decoder borrows the request context, complete X.509 certificate bytes, and
-per-entry extension blocks. Callers set ceilings for total bytes, context
-bytes, certificate-list bytes, entry count, certificate bytes, and extension
-bytes. Empty client certificate lists and non-empty post-handshake request
-contexts remain structural values for later handshake-state policy.
+both the exact length-prefixed and payload-only forms of per-entry extension
+blocks. Callers set ceilings for total bytes, context bytes, certificate-list
+bytes, entry count, certificate bytes, and extension bytes. Empty client
+certificate lists and non-empty post-handshake request contexts remain
+structural values for later handshake-state policy.
+
+Retaining the exact two-byte-length-prefixed extension vector lets a later
+repository-owned extension decoder validate the original authenticated bytes
+without reconstructing a prefix or accepting a detached block.
 
 ## Boundary
 

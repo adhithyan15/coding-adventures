@@ -61,7 +61,12 @@ const TracedSemantics uint64 = 2
 // Version 3: strace now prints every signal (-e signal=all, D19), so a process
 // killed by a signal has an exit line, and the daemon-left rule keys on the
 // init's exit_group call line.  Both change what a trace means.
-const RecorderVersion = 3
+//
+// Version 4: a refused-class call the sandbox filter answered (clone3 = -1
+// ENOSYS, the others = -1 EPERM) is tolerated instead of refused, and a clone
+// with a forbidden flag that failed with EPERM likewise.  Traces that were
+// refused now parse, so every weak key changes.
+const RecorderVersion = 4
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real

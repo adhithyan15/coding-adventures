@@ -103,8 +103,10 @@ func TestClone3PolicyIsUnchangedOutsideTheSetupWindows(t *testing.T) {
 	// a clone3 in a trace of the step means the filter failed).
 	step := helperRootSetup + helperInitSetup + helperReExec + helperExec
 	wantReasonOpts(t, step+clone3InlineNS(11, 30, realThreadFlags)+"30  +++ exited with 0 +++\n"+helperEnd, helperOpts, "refused:clone3")
-	// And without the helper option, any clone3 is refused.
-	_, err := parseAt(t, "/r", "1  clone3({flags=CLONE_VM"+realClone3Tail+", 88) = -1 ENOSYS (Function not implemented)\n1  +++ exited with 0 +++\n", Options{})
+	// And without the helper option, a clone3 that is not the filter's ENOSYS
+	// is refused (the filter's own answer is tolerated: see
+	// TestClone3FailedWithENOSYSIsTheFilter).
+	_, err := parseAt(t, "/r", "1  clone3({flags=CLONE_VM"+realClone3Tail+", 88) = -1 EPERM (Operation not permitted)\n1  +++ exited with 0 +++\n", Options{})
 	if err == nil || err.Error() != "trace-incomplete:refused:clone3" {
 		t.Fatalf("%v", err)
 	}

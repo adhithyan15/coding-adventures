@@ -211,11 +211,20 @@ func TestConformanceIndexMatchesTheFiles(t *testing.T) {
 	}
 }
 
-// scratchConformance copies the fixture to a temp dir, then appends extra index
-// rows and writes extra files.
+// scratchConformance copies the committed fixture to a temp dir, then appends
+// extra index rows and writes extra files.
 func scratchConformance(t *testing.T, extraRows []map[string]any, files map[string][]byte) string {
 	t.Helper()
-	src, dst := conformanceDir(t), t.TempDir()
+	return scratchConformanceFrom(t, conformanceDir(t), extraRows, files)
+}
+
+// scratchConformanceFrom is scratchConformance over any base fixture directory.
+// Any v2-* rows (and their files) the base index already holds are stripped
+// first, so the index tests do not depend on how many v2 rows are committed
+// ([D59]); only the rows a test adds are present beyond v1.
+func scratchConformanceFrom(t *testing.T, src string, extraRows []map[string]any, files map[string][]byte) string {
+	t.Helper()
+	dst := t.TempDir()
 	entries, err := os.ReadDir(src)
 	if err != nil {
 		t.Fatal(err)
@@ -238,7 +247,18 @@ func scratchConformance(t *testing.T, extraRows []map[string]any, files map[stri
 		t.Fatal(err)
 	}
 	total := document["total_cases"].(float64)
-	rows := document["files"].([]any)
+	var rows []any
+	for _, item := range document["files"].([]any) {
+		row := item.(map[string]any)
+		if strings.HasPrefix(row["category"].(string), "v2-") {
+			if err := os.Remove(filepath.Join(dst, row["path"].(string))); err != nil {
+				t.Fatal(err)
+			}
+			total -= row["cases"].(float64)
+			continue
+		}
+		rows = append(rows, item)
+	}
 	for _, row := range extraRows {
 		rows = append(rows, row)
 		if n, ok := row["cases"].(int); ok {
@@ -278,8 +298,12 @@ func extraConformanceFile(t *testing.T, category string, count int) (map[string]
 
 func TestConformanceIndexToleratesDigestCheckedV2Rows(t *testing.T) {
 	row, data := extraConformanceFile(t, "v2-x", 2)
+	base, err := checkConformanceIndex(scratchConformance(t, nil, nil))
+	if err != nil || base != len(conformanceCategories) {
+		t.Fatalf("base rows %d, err %v", base, err)
+	}
 	rows, err := checkConformanceIndex(scratchConformance(t, []map[string]any{row}, map[string][]byte{"v2-x.json": data}))
-	if err != nil || rows != len(conformanceCategories)+1 {
+	if err != nil || rows != base+1 {
 		t.Fatalf("rows %d, err %v", rows, err)
 	}
 	value, valueData := extraConformanceFile(t, "v2-value", 1)
@@ -339,8 +363,13 @@ func TestConformanceIndexRefusesAMissingV1Row(t *testing.T) {
 	if err := json.Unmarshal(raw, &document); err != nil {
 		t.Fatal(err)
 	}
-	rows := document["files"].([]any)
-	document["files"] = rows[:len(rows)-1]
+	var kept []any
+	for _, item := range document["files"].([]any) {
+		if item.(map[string]any)["category"] != conformanceCategories[len(conformanceCategories)-1] {
+			kept = append(kept, item)
+		}
+	}
+	document["files"] = kept
 	out, _ := json.Marshal(document)
 	if err := os.WriteFile(path, out, 0o644); err != nil {
 		t.Fatal(err)
@@ -504,4 +533,62 @@ func TestLexicalPathRefusesAnUnknownFlavor(t *testing.T) {
 		}
 	}()
 	relativeInside("/r", "/r/x", "amiga")
+}
+
+// S5-1b ([D59]): the index tests must not care how many v2 rows are committed.
+// This builds a fixture that already holds v2-value and v2-arith rows, as the
+// committed one will, and re-runs the row-adding and row-removing scenarios
+// against it as the base.
+func TestConformanceIndexRulesHoldWhenV2RowsAreAlreadyCommitted(t *testing.T) {
+	value, valueData := extraConformanceFile(t, "v2-value", 3)
+	arith, arithData := extraConformanceFile(t, "v2-arith", 5)
+	committed := scratchConformance(t, []map[string]any{value, arith}, map[string][]byte{"v2-value.json": valueData, "v2-arith.json": arithData})
+	if rows, err := checkConformanceIndex(committed); err != nil || rows != len(conformanceCategories)+2 {
+		t.Fatalf("simulated committed index: rows %d, err %v", rows, err)
+	}
+	scratch := func(rows []map[string]any, files map[string][]byte) string {
+		return scratchConformanceFrom(t, committed, rows, files)
+	}
+	// A new v2 row is accepted next to the (stripped) base.
+	x, xData := extraConformanceFile(t, "v2-x", 2)
+	if rows, err := checkConformanceIndex(scratch([]map[string]any{x}, map[string][]byte{"v2-x.json": xData})); err != nil || rows != len(conformanceCategories)+1 {
+		t.Fatalf("v2-x: rows %d, err %v", rows, err)
+	}
+	// Synthetic v2-value/v2-arith do not collide with the committed ones.
+	if _, err := checkConformanceIndex(scratch([]map[string]any{value, arith}, map[string][]byte{"v2-value.json": valueData, "v2-arith.json": arithData})); err != nil {
+		t.Fatalf("kit order refused: %v", err)
+	}
+	if _, err := checkConformanceIndex(scratch([]map[string]any{arith, value}, map[string][]byte{"v2-value.json": valueData, "v2-arith.json": arithData})); err == nil || !strings.Contains(err.Error(), "out of order") {
+		t.Fatalf("out of order: got %v", err)
+	}
+	// Refusals still fire.
+	other, otherData := extraConformanceFile(t, "extra", 2)
+	if _, err := checkConformanceIndex(scratch([]map[string]any{other}, map[string][]byte{"extra.json": otherData})); err == nil || !strings.Contains(err.Error(), "unknown category") {
+		t.Fatalf("unknown row: got %v", err)
+	}
+	if _, err := checkConformanceIndex(scratch([]map[string]any{x}, nil)); err == nil || !strings.Contains(err.Error(), "file missing") {
+		t.Fatalf("missing file: got %v", err)
+	}
+	// A missing v1 row, removed by name, is refused.
+	dir := scratch(nil, nil)
+	path := filepath.Join(dir, "index.json")
+	raw, _ := os.ReadFile(path)
+	var document map[string]any
+	if err := json.Unmarshal(raw, &document); err != nil {
+		t.Fatal(err)
+	}
+	var kept []any
+	for _, item := range document["files"].([]any) {
+		if item.(map[string]any)["category"] != "label-digest" {
+			kept = append(kept, item)
+		}
+	}
+	document["files"] = kept
+	out, _ := json.Marshal(document)
+	if err := os.WriteFile(path, out, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := checkConformanceIndex(dir); err == nil || !strings.Contains(err.Error(), "v1 rows") {
+		t.Fatalf("missing v1: got %v", err)
+	}
 }

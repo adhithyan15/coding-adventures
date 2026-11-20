@@ -27,9 +27,10 @@ var straceClasses = []string{"%file", "%process", "%network"}
 //   - the metadata writes through a descriptor (fchmod, fchown, fsetxattr,
 //     fremovexattr) and the watch calls are likewise not path calls;
 //   - then EVERY call the sandbox's filter refuses, and clone3.  A step that
-//     tries one must leave a line in the trace for the parser to refuse
-//     ("refused:<name>"), whatever class strace happens to put it in, so none is
-//     left to the classes.  The first twenty are KILN04 section 4.4's; the
+//     tries one must leave a line in the trace, whatever class strace happens
+//     to put it in, so none is left to the classes.  The parser reads the
+//     result: the filter's own answer (EPERM, or ENOSYS for clone3) is
+//     tolerated, anything else is "refused:<name>", because the filter failed.  The first twenty are KILN04 section 4.4's; the
 //     ten after them were added by the stage 3b review and are what an older
 //     version of this list left out.
 var straceNames = []string{
