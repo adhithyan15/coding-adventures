@@ -101,7 +101,18 @@ type model struct {
 	// refused (KILN04 D40).
 	staleCwd map[string]bool
 	unsound  bool
+	// reshaped is the model's own reading of KILN04 D43's whole-action taint:
+	// a rename or exchange SUCCEEDED and moved a directory.  It is read off
+	// the model's node kinds, which are the truth, not off the classifier's
+	// history of what the action created.
+	reshaped bool
+	// dotdotProbes are the failed relative stats the model issued, as the cwd
+	// text and the path: at the end the model walks them over the final disk
+	// to see which stopped at a missing component with a ".." after it.
+	dotdotProbes []dotdotProbe
 }
+
+type dotdotProbe struct{ cwd, p string }
 
 func (m *model) mkpath(abs string, n *mnode) {
 	parts := splitPath(abs)
@@ -386,6 +397,9 @@ func (m *model) doStat(pid int, p string, follow bool) []trace.Event {
 	pr := m.procs[pid]
 	r := m.resolve(p, pr.cwdPath, follow)
 	m.look(r, false, false, false)
+	if r.errno != "" && !strings.HasPrefix(p, "/") {
+		m.dotdotProbes = append(m.dotdotProbes, dotdotProbe{pr.cwdExpr, p})
+	}
 	sys := "stat"
 	if !follow {
 		sys = "lstat"
@@ -572,6 +586,15 @@ func (m *model) doRenameLink(pid int, sys, a, b string, exchange bool) []trace.E
 	if errno == "" {
 		m.add(touch{path: src.final, write: true, wonly: true})
 		m.add(touch{path: dst.final, write: true, wonly: true})
+		// D43: what can leave a cwd TEXT stale is moving a DIRECTORY (either
+		// end of an exchange).  The classifier cannot see kinds of objects it
+		// has no history of, so it also taints on moving anything the action
+		// did not create; that over-taint is safe and the model does not
+		// demand it (its own-file bookkeeping is coarser than the
+		// classifier's, so asking for it would fail on the model's own gaps).
+		if src.node.kind == KindDir || (exchange && dst.node.kind == KindDir) {
+			m.reshaped = true
+		}
 		if sys == "rename" && !exchange {
 			for _, q := range m.procs {
 				if q.cwdPath != "" && (q.cwdPath == src.final || strings.HasPrefix(q.cwdPath, src.final+"/")) {
@@ -1040,6 +1063,31 @@ var bursts = [][]burstOp{
 	{{0, "/o", false}, {14, "/o", false}, {2, "/o", false}, {0, "/o", false}, {12, "~../../../../../package.json", false}, {12, "~../../x", false}},
 	// 21: scratch absences: probe, create, remove, probe again.
 	{{12, "/q", false}, {8, "/q", false}, {5, "/q", false}, {12, "/q", false}},
+	// 22..27: the namespace-reshaping taint (KILN04 D43).  A "~/..." name is an
+	// absolute path the sealed root cannot hold (/package.json, /opt/x): its
+	// absence is a constant of the plan, UNLESS the action has moved something
+	// that could leave a cwd text stale, in which case the classifier refuses
+	// every such absence at the end, before or after the move.
+	//   22  an own DIRECTORY is renamed, absences probed before and after
+	{{12, "~/package.json", false}, {0, "/o", false}, {2, "/o", false}, {12, "~/package.json", false}, {12, "~/opt/x", false}},
+	//   23  a directory the action did NOT create is renamed (the model demands
+	//       the refusal: a directory moved)
+	{{12, "~/package.json", false}, {2, "/code/p/a/leftdir", true}, {12, "~/package.json", false}, {12, "~/opt/x", false}},
+	//   24  a file the action did not create is renamed (tracked or leftover).
+	//       The classifier taints (it cannot tell the kind of an object it has
+	//       no history of); the model does not demand it, since a regular file
+	//       never leaves a cwd stale.  The burst checks nothing UNSAFE happens.
+	{{12, "~/opt/x", false}, {2, "/code/p/b/g", true}, {12, "~/package.json", false}, {2, "/code/p/a/left.txt", true}},
+	//   25  two own directories are EXCHANGED (renameat2 RENAME_EXCHANGE)
+	{{0, "/o", false}, {0, "/u.o", false}, {12, "~/package.json", false}, {3, "/o", false}, {12, "~/var/x", false}},
+	//   26  an own REGULAR file is renamed, or two are exchanged: this must
+	//       not taint, so the absences stay constants (the model's sandboxHas
+	//       oracle accepts them with no reason)
+	{{12, "~/package.json", false}, {8, "/t.o", false}, {8, "/u.o", false}, {2, "/t.o", false}, {3, "/u.o", false}, {12, "~/opt/x", false}},
+	//   27  failed relative probes through ".." from a cwd that was renamed
+	//       away: "gone" is missing in the cwd TEXT and a ".." follows, so the
+	//       text says ENOENT while the kernel starts from the moved directory
+	{{0, "/o", false}, {14, "/o", false}, {12, "~gone/../x", false}, {2, "/o", false}, {0, "/o", false}, {12, "~gone/../x", false}, {12, "~../o/../x", false}, {12, "~../work/repo/nope", false}, {12, "~../../w/repo/nope", false}},
 }
 
 // perturbations are the operations a burst may be followed by, aimed at the
@@ -1414,14 +1462,75 @@ func runDifferential(t *testing.T, data []byte) {
 		if rec.WritesComplete {
 			checkWrites(t, m, rec)
 		}
+		// KILN04 D43: a FAILED relative call whose text walk stops at a missing
+		// component with a ".." after it speaks for the text only if the cwd
+		// text is where the kernel started.  When the action reshaped the
+		// namespace, the classifier must refuse it as an unplaced lookup
+		// (unstable-path), whatever else it said about the action.
+		if m.reshaped && m.hasDotdotStop() && !inSet(rec.Reasons, rUnstable) {
+			t.Fatalf("the action reshaped the namespace, but a failed probe through .. after a missing component was not refused as unstable-path\nreasons %q\nroot %s home %s tmp %s probes %q", rec.Reasons, m.root, m.home, m.tmp, m.dotdotProbes)
+		}
 		if len(rec.Reasons) > 0 {
 			return // a record with a reason is never trusted: always safe
+		}
+		// KILN04 D43, the other half: once the model says the action reshaped
+		// the namespace, an absent probe the sealed root would have allowed is
+		// NOT a constant (a stale cwd may have made it a look at a real
+		// directory), so a record that still has no reason lets it through.
+		if m.reshaped {
+			for _, tc := range m.touches {
+				if sealedAbsentProbe(m, tc) {
+					t.Fatalf("the action reshaped the namespace, but the absent probe of %s (sealed-root absence) left no reason\nroot %s home %s tmp %s", tc.path, m.root, m.home, m.tmp)
+				}
+			}
 		}
 		if m.unsound {
 			t.Fatalf("a path was resolved from a stale cwd (a directory renamed under it), but the record has no reason\nroot %s home %s tmp %s", m.root, m.home, m.tmp)
 		}
 		check(t, m, tree, rec)
 	}
+}
+
+// hasDotdotStop says one of the failed relative probes, walked as TEXT over the
+// model's final disk, reaches a missing component and then a "..".  A link on
+// the way gives up (the classifier's walk follows it, the model's lexical walk
+// does not), which only weakens the oracle.
+func (m *model) hasDotdotStop() bool {
+	for _, pr := range m.dotdotProbes {
+		cur, plain := m.top, true
+		var stack []*mnode
+		for _, name := range splitPath(pr.cwd + "/" + pr.p) {
+			switch {
+			case name == ".":
+			case name == "..":
+				if !plain {
+					return true
+				}
+				if len(stack) > 0 {
+					cur, stack = stack[len(stack)-1], stack[:len(stack)-1]
+				}
+			case !plain:
+			case cur.kind != KindDir || cur.kids[name] == nil:
+				plain = false
+			case cur.kids[name].kind == KindLink:
+				cur = nil
+			default:
+				stack, cur = append(stack, cur), cur.kids[name]
+			}
+			if cur == nil {
+				break
+			}
+		}
+	}
+	return false
+}
+
+// sealedAbsentProbe says tc is a look the classifier may only excuse because
+// the sealed root cannot hold the path (D43): an ENOENT for a path outside the
+// checkout and the sandbox's exists-set that the action did not make.
+func sealedAbsentProbe(m *model, tc touch) bool {
+	return tc.absent && !tc.own && !tc.create && !tc.write && !tc.wonly && !tc.list &&
+		tc.path != "" && !strings.HasPrefix(tc.path, m.root+"/") && !m.sandboxHas(tc.path)
 }
 
 // perturbTrace applies the whole-trace perturbation the byte b selects (most
