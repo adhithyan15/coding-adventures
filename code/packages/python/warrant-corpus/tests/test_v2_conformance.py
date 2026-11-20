@@ -1,9 +1,10 @@
 """Run the whole v2 conformance kit through this lane's own library (slice S6a).
 
-``code/specs/fixtures/warrant-corpus-conformance-v1`` holds 782 v2 cases at
-``ir.core`` (VER04r section 11).  This lane runs every case whose ``requires`` it
-implements and skips the rest; per category, **run plus skipped equals the index
-count**, and every case runs: 782 run, 0 failed.  The ``also_sequential`` chunk
+``code/specs/fixtures/warrant-corpus-conformance-v1`` holds 958 v2 cases at
+``ir.core`` (VER04r section 11): 782 in the six categories this lane runs, and the 176 of ``v2-binding`` (S5d),
+which it indexes and digest-checks but skips whole until S6b.  This lane runs every case whose ``requires`` it
+implements, in a category it knows, and skips the rest; per category, **run plus skipped equals the index
+count**, and every case of the six runs: 782 run, 0 failed.  The ``also_sequential`` chunk
 cases are walked sequentially too ("chunk ``c`` alone equals sequential").
 
 The harness itself is tested here (digests, accounting, skipping, failure
@@ -33,6 +34,9 @@ from coding_adventures_warrant_corpus.v2.kit import (
 
 FIXTURE = REPO_ROOT / "code" / "specs" / "fixtures" / "warrant-corpus-conformance-v1"
 V2 = ("v2-value", "v2-arith", "v2-ir", "v2-domain", "v2-chunk", "v2-fault")
+#: S5d commits ``v2-binding.json``: indexed and digest-checked, and skipped whole (S6b runs it).
+BINDING = "v2-binding"
+V2_INDEXED = (*V2, BINDING)
 
 
 @pytest.fixture(scope="module")
@@ -43,9 +47,12 @@ def full_report():
 
 def test_every_case_runs_and_passes(full_report):
     assert full_report.ok, full_report.lines()
-    assert list(full_report.categories) == list(V2)
+    assert list(full_report.categories) == list(V2_INDEXED)
     assert sum(c.run for c in full_report.categories.values()) == 782
-    assert all(not c.failed and not c.skipped for c in full_report.categories.values())
+    assert all(not c.failed and not c.skipped for c in (full_report.categories[n] for n in V2))
+    binding = full_report.categories[BINDING]
+    assert (binding.indexed, binding.run, len(binding.skipped), binding.failed) == (176, 0, 176, {})
+    assert binding.accounted and binding.ok
 
 
 @pytest.mark.parametrize("category", V2)
@@ -238,7 +245,7 @@ def test_a_malformed_index_is_refused(tmp_path):
 
 def test_v1_rows_are_counted_in_the_total_but_never_run_here():
     family = load_family(FIXTURE)
-    assert set(family.cases) == set(V2)
+    assert set(family.cases) == set(V2_INDEXED)
     assert family.index["total_cases"] == sum(r["cases"] for r in family.index["files"])
     assert set(RUNNERS) == set(V2)
 

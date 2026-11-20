@@ -17,12 +17,9 @@ that one check in a directory that has no ``index.json`` (S5a's scratch run).
 Exit codes (the oracle's convention, R19): ``0`` identical (or written), ``1`` the committed bytes differ,
 ``2`` a table and its derivation disagree, or any other error.
 
-**``v2-binding.json`` (S5c) is written always and checked once it is committed.**  S5c adds the validator and the
-table; S5d commits the file.  ``--check`` therefore treats ``v2-binding.json`` as *pending* when the directory has
-no such file **and** ``index.json`` (if there is one) has no ``v2-binding`` row: it is reported as not yet committed,
-and neither the file nor its index row is compared, so a directory that holds the six S5b files stays green.  As soon as
-the file or an index row exists it is held to the derivation like every other file (a row without the file, or a file
-that differs, is exit 1).  Nothing else of the check changes.
+**``v2-binding.json`` (S5c, committed by S5d) is checked like every other category.**  A missing file, a missing
+index row, or both together, is exit 1: the "not committed yet" branch that S5c left for the six-file directory is
+removed (VER04r section 16.19 R93), so removing the file and its row can never pass.
 
 The two kit documents are derived once per run: ``kit.warrant`` takes about a minute (it holds a ``2**24``
 suite, 256 chunks), ``kit-small.warrant`` a fraction of a second.
@@ -122,16 +119,7 @@ def check(directory: pathlib.Path) -> int:
             held = [r for r in json.loads(index.read_bytes())["files"] if str(r.get("category", "")).startswith("v2-")]
         except (ValueError, KeyError, TypeError):
             held = None
-    # v2-binding.json is pending (S5d commits it) while neither the file nor an index row exists.
-    # S5d MUST delete this branch (and the "pending" print below) in the commit that adds v2-binding.json:
-    # left in, removing both the file and its index row would stay green here and in the family checker.
-    pending = not (directory / BINDING_FILE).is_file() and not any(
-        isinstance(r, dict) and r.get("category") == BV.CATEGORY for r in held or []
-    )
-    if pending:
-        print(f"make_conformance: {BINDING_FILE} is not committed yet (S5d): not checked", file=sys.stderr)
-    else:
-        files, rows = {**files, BINDING_FILE: text}, [*rows, binding_row]
+    files, rows = {**files, BINDING_FILE: text}, [*rows, binding_row]
     for name, derived in files.items():
         path = directory / name
         if not path.is_file() or path.read_bytes() != derived.encode("ascii"):
