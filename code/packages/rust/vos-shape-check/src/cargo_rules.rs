@@ -52,10 +52,12 @@ const ATTR_BANS: &[(&str, Rule)] = &[
 /// attributes.  The contents of `cfg` attributes are SH18's business.
 pub fn attr_rules(cx: &mut Ctx<'_>, f: &FileCtx) {
     for a in &f.attrs {
+        crate::steps::tick();
         let body = f.attr_body(a);
         let Some(first) = body.first() else { continue };
         let line = first.line;
         for x in body {
+            crate::steps::tick();
             if x.kind != crate::lexer::Kind::Ident {
                 continue;
             }
@@ -91,6 +93,7 @@ pub fn root_rules(cx: &mut Ctx<'_>, root: &FileCtx) {
         && t.get(j + 1).is_some_and(|x| x.is_punct("!"))
         && t.get(j + 2).is_some_and(|x| x.is_punct("["))
     {
+        crate::steps::tick();
         crate_level.push(j);
         j = root.pair[j + 2] + 1;
     }
@@ -101,6 +104,7 @@ pub fn root_rules(cx: &mut Ctx<'_>, root: &FileCtx) {
         .iter()
         .filter(|a| a.inner && crate_level.contains(&a.start))
     {
+        crate::steps::tick();
         let body = root.attr_body(a);
         if body.len() == 1 && body[0].is_ident("no_std") {
             no_std = true;
@@ -150,6 +154,7 @@ pub fn manifest_rules(cx: &mut Ctx<'_>, c: &CargoFacts, root_entries: &[String])
     // Names are compared case-insensitively: on a case-insensitive filesystem
     // `Build.rs` is the build script Cargo runs.
     for e in root_entries {
+        crate::steps::tick();
         let lower = e.to_ascii_lowercase();
         if lower == "build.rs" {
             cx.add(
@@ -168,12 +173,15 @@ pub fn manifest_rules(cx: &mut Ctx<'_>, c: &CargoFacts, root_entries: &[String])
         }
     }
     for &l in &c.bin_targets {
+        crate::steps::tick();
         cx.add(Rule::Sh15, "Cargo.toml", l, "`[[bin]]` target; a component crate is a library (a binary is a second crate root the checks would not cover)");
     }
     for &l in &c.build_keys {
+        crate::steps::tick();
         cx.add(Rule::Sh15, "Cargo.toml", l, "`build` key (any value, `false` included); a build script runs code the lexer does not see");
     }
     for &l in &c.links_keys {
+        crate::steps::tick();
         cx.add(
             Rule::Sh15,
             "Cargo.toml",
@@ -182,6 +190,7 @@ pub fn manifest_rules(cx: &mut Ctx<'_>, c: &CargoFacts, root_entries: &[String])
         );
     }
     for (l, why) in &c.proc_macro {
+        crate::steps::tick();
         cx.add(
             Rule::Sh15,
             "Cargo.toml",
@@ -190,10 +199,12 @@ pub fn manifest_rules(cx: &mut Ctx<'_>, c: &CargoFacts, root_entries: &[String])
         );
     }
     for (l, why) in &c.bad_paths {
+        crate::steps::tick();
         cx.add(Rule::Sh15, "Cargo.toml", *l, why.clone());
     }
     // SH12: dependencies.
     for d in &c.deps {
+        crate::steps::tick();
         if d.table == "dev-dependencies" {
             // Dev-dependencies build only under `cargo test`, never into the
             // image, but they DO run in the evidence harness, so they are an
