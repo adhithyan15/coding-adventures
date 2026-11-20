@@ -206,12 +206,30 @@ outcomes (pass edge 7, timeout, OOM, crash S) must report nine returned calls,
 four mutations, one admitted seed, one edge, three crash hits, two timeouts,
 two OOM outcomes, and `clean: false`.
 
-The DSP consumer must run its public checked-filter callback at its existing
-fixed seed and replay that same campaign. Its exact returned-callback,
-phase-ledger, corpus, edge, and crash results must be recorded; caller-created
-semantic edges must remain labeled manual. Source mutants must be recompiled
-from source, fail the intended assertion, and be checked against healthy
-replay. A separate bounded abstract model encodes the fixed nine-call vector
+The DSP consumer ran its public checked-filter callback and replay at seed
+`0xAF02BF01`: eight triage calls and 1,024 mutation calls, all returned as
+passes; 196 seeds were admitted, 198 caller-created semantic edges were
+recorded, and no crashes were reported. These edges are manual semantic
+feedback, not instrumented coverage. The fault-control campaign at seed
+`0xAF02BF02` returned one triage crash, zero mutation calls, and a non-clean
+report; its bounded witness reducer produced the all-zero eight-byte witness,
+which failed the injected callback and passed the healthy callback.
+
+Two `test-bootstrap` source mutants were recompiled in fresh Node processes and
+failed their intended assertions. Dropping the timeout counter used mutant
+source SHA-256 `f5515aa76f3e40679ff9425c812c420e443208856cf175bd8e968348ce9732a0`
+and loaded `dist/fuzz.js` SHA-256
+`7fea1eacb66088c0cf352fd4a4106dffd2c5bc2f147e5c8dfe0370dc1bc5eef3`; replacing
+the remaining-budget clamp with `remaining + 1` used mutant source SHA-256
+`0043ec671c0e44f758cdfa453be0f6577a34ec82db52dcec0fc16900be43c812` and
+loaded artifact SHA-256
+`c15326a505baac0ee15700b9c8e3b2b7fb81c80f9a17dbb3572a5cff38d180cc`. After
+restoration, producer source SHA-256 was
+`9370b318b55fedb09551787ed6f7bb7280f73b7c1bdb92b367e10a1b03ed0109` and the
+recompiled artifact SHA-256 was
+`d04f21fee13f5bcdddf45612fb5488aecb6b34b235739a0d7300ddeeddccb715`.
+The source hashes identify temporary mutations; the migration table below
+pins the committed Git blobs. A separate bounded abstract model encodes the fixed nine-call vector
 with one-hot four-outcome variables and a `clean` predicate. Under Rust 1.100.0,
 `cdcl-sat` 0.3.2 found the model satisfiable with `clean = false`; forcing
 `clean = true` was UNSAT, and independent `drat-check` 0.1.0 accepted the
