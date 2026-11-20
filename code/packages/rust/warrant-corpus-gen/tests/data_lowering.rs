@@ -88,6 +88,54 @@ fn a_list_in_a_declaration_is_refused_at_the_declaration_and_names_ir_list() {
     }
 }
 
+/// A refused declaration (a list field, a field that does not resolve) is still known by name, so a
+/// constructor of it, a pattern over it or a claim about it is refused with the declaration's `ir.list`
+/// (the oracle's class and level) and never panics.
+#[test]
+fn a_use_of_a_list_refused_type_names_the_declarations_ir_list_and_never_panics() {
+    let w = "  variant W = One(xs: List<U8>) | Two\n";
+    let uses: [(&str, String); 9] = [
+        ("a comparison", format!("{w}  model m(a: Bool) -> Bool = Two == Two\n")),
+        ("a constructor result", format!("{w}  model m(a: U8) -> W = Two\n")),
+        ("a constructor with fields", format!("{w}  model m(a: U8) -> Bool = One(a) == Two\n")),
+        (
+            "a constructor pattern",
+            format!("{w}  model m(w: W) -> U8 = match w with One(_) -> 1 | Two -> 2\n"),
+        ),
+        ("a claim", format!("{w}  claim c:\n    forall a: Bytes. f(a, a) == (Two == Two)\n")),
+        ("the model first", format!("  model m(a: Bool) -> Bool = Two == Two\n{w}")),
+        (
+            "an option of a list",
+            "  variant W = One(xs: Option<List<U8>>) | Two\n  model m(a: Bool) -> Bool = Two == Two\n"
+                .to_string(),
+        ),
+        (
+            "a tuple with a list",
+            "  variant W = One(xs: (U8, List<U8>)) | Two\n  model m(a: Bool) -> Bool = Two == Two\n"
+                .to_string(),
+        ),
+        (
+            "a record whose field does not resolve",
+            "  record Q(xs: List<Zed>)\n  model m(a: Bool) -> Bool = Q(a) == Q(a)\n".to_string(),
+        ),
+    ];
+    for (what, extra) in uses {
+        let e = lower(&extra).unwrap_err();
+        assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.list")), "{what}: {e}");
+    }
+}
+
+/// Appendix A.2: a `match` has at most 256 arms, and over that is the tools' `limit`, not the front-end
+/// checker's `check` (the oracle's `a match has more than 256 arms`).
+#[test]
+fn a_match_of_more_than_256_arms_is_a_limit() {
+    for arms in [257, 300] {
+        let body = vec!["_ -> true"; arms].join(" | ");
+        let e = lower(&format!("  model m(a: Bool) -> Bool = match a with {body}\n")).unwrap_err();
+        assert_eq!(e.code, code::LIMIT, "{arms} arms: {e}");
+    }
+}
+
 #[test]
 fn the_corpus_limits_are_checked_before_anything_else() {
     // R34: 65 constructors and 9 fields are inside the language (256 and 32) and over the corpus limits;
@@ -365,6 +413,12 @@ fn the_bind_rules_are_corpus_errors_checked_after_the_structure_of_the_pattern()
         (
             "  model m(o: Option<U8>) -> Bool = match o with Some(result) -> true | None -> false\n",
             "a bind name shadows a binder, a parameter, result or an outer bind",
+        ),
+        // R54: a pattern's own corpus error is named before a reserved construct in an arm body of an
+        // earlier arm, though the checker's refusal of it is a different one (W0301)
+        (
+            "  model m(x: Shape) -> Bool = match x with Circle(r) -> range(1) == 1 | Rect(r, r) -> true | Dot -> false\n",
+            "the same bind name twice in one pattern",
         ),
         // the oracle's own sentence for a bind named like a model, an op, an error type or a built-in
         (

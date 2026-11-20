@@ -58,3 +58,24 @@ pass `--check --release` unchanged).
   `arithmetic.warrant` (vos-sched-any is now refused by the `W0701` rule of an example, which `ir.data` hid).
 - `BUILD` is unchanged (the new tests run under `cargo test`); the build tool selects this package for an edit to
   `python/warrant-oracle/tests/fixtures/data-forms-v1/` (a row in `repository_inputs.go`).
+
+## Review fixes
+
+- **B1, no panic on a list-refused declaration.** A variant refused for a list field (`One(xs: List<U8>) | Two`,
+  `Option<List<U8>>`, `(U8, List<U8>)`) was never registered, though pass 1 had registered its constructors, so a
+  constructor expression, a constructor pattern, a comparison or a claim over it indexed a missing entry and panicked
+  (`no entry found for key`, exit 101); a refused record whose fields do not resolve (`record Q(xs: List<Zed>)`) did the same
+  through the `unchecked()` attempt. The refused variant is now registered with whatever resolves (as the record already
+  was), and both indexes (`constructor`, `ctor_pattern`) go through `ctor_fields`, which returns the refusal the earliest
+  declared unit holds (the oracle's `ir.list`) or a typing error. New row `a_use_of_a_list_refused_type_names_...` in
+  `tests/data_lowering.rs`.
+- **N1.** The 50 typing rows of `tests/data_parity.rs` are pinned to `check` (they were only "not ir, level or limit").
+- **N2, R54.** `check_or_refuse` discarded an `ir` error of the lowering attempt unless the checker's own error was one of the
+  three match kinds, so `match v with Circle(r) -> range(1) == 1 | Rect(r, r) -> ...` was `check` (W0301 never reached: the
+  checker's arm-body typing error came first) where the oracle, which checks patterns before bodies, names the duplicate
+  bind (`corpus`). The attempt's `ir` error is now returned. No fixture or dump changed.
+- **N3.** The scan site of `fixed<N>(b)` carries the oracle's sentence `fixed<N>(b) has no IR form`; the level rows of
+  `tests/data_parity.rs` now compare the message too (all 39 equal).
+- **N4, predates S11b (S10t-2).** A `match` of more than 256 arms was `check` (the front-end checker's W0602) where the oracle
+  and Appendix A.2 say `limit`; the attempt's `limit` is now returned too. Test `a_match_of_more_than_256_arms_is_a_limit`.
+- **N5.** The comment in `tests/check_cli.rs` named vos-sched-any where the test uses `arithmetic.warrant`.

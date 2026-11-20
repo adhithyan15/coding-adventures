@@ -634,8 +634,8 @@ fn exit_status_table_success_drift_refusal_usage() {
     fs::write(&corpus, &good).unwrap();
     fs::remove_file(out.join("cases.tfv")).unwrap();
     assert_eq!(run_in(here, ok, &out, &["--check"]).0, 1, "a missing file is listed as drift");
-    // refusal: a level beyond what is evaluated (vos-sched-any: records and variants lower since S11b and
-    // `generate` refuses `ir.data` until S11c-2), write and --check
+    // refusal: a level beyond what is evaluated (arithmetic.warrant: its `ir.seq` constructs are
+    // reserved), write and --check
     let fixed = "code/specs/arithmetic.warrant";
     let o9 = d.join("o9");
     for extra in [&[][..], &["--check"][..]] {

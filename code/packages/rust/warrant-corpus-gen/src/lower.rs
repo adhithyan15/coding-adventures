@@ -742,7 +742,14 @@ fn check_or_refuse(
         )
     };
     let Some(generic) = generic else {
-        return Err(check_error());
+        // The checker's own error is another kind (here a typing error found before the pattern's
+        // own), but the oracle names a pattern's corpus error (R54) before anything of an arm body,
+        // and a match of more than 256 arms is its `limit` (Appendix A.2; the checker's W0602 is not):
+        // the lowering attempt, which follows the oracle's order, has named it.
+        return match attempt {
+            Err(precise) if precise.code == code::IR || precise.code == code::LIMIT => Err(precise),
+            _ => Err(check_error()),
+        };
     };
     match attempt {
         Err(precise) if precise.code == code::IR => Err(precise),
@@ -1106,6 +1113,23 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                         let refused = refused.at(v.name);
                         self.hold(pos, &refused);
                         type_decls.push((v.name.to_string(), pos, refused));
+                        // What resolves is kept, as for a record: a constructor of the refused
+                        // variant is then still known to the unchecked lowering.
+                        let kept: Result<Vec<_>, GenError> = v
+                            .ctors
+                            .iter()
+                            .map(|c| {
+                                let tys = c
+                                    .fields
+                                    .iter()
+                                    .map(|f| self.resolve(&f.ty, &[], 0))
+                                    .collect::<Result<Vec<_>, _>>()?;
+                                Ok((c.name.to_string(), tys))
+                            })
+                            .collect();
+                        if let Ok(ctors) = kept {
+                            self.adts.insert(v.name.to_string(), ctors);
+                        }
                         continue;
                     }
                     let ctors = match self.declare_variant(v.name, &v.ctors) {
@@ -1409,7 +1433,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     if head == FIXED_CAST {
                         return Some(self.level(
                             Beyond::FixedCast,
-                            "fixed<N>(b) has no IR form (outside every level)",
+                            "fixed<N>(b) has no IR form",
                         ));
                     }
                 }
@@ -1467,6 +1491,16 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 fields.iter().map(|(_, t)| t.clone()).collect(),
             )],
         );
+    }
+
+    /// The field types of constructor `index` of `type_name`.  A type whose declaration was refused
+    /// (a list field, an unresolvable field) may be absent: the refusal a unit declared earlier holds
+    /// is named then (the oracle's `ir.list`), else a typing error.
+    fn ctor_fields(&self, type_name: &str, index: usize) -> Result<Vec<Ty>, GenError> {
+        match self.adts.get(type_name).and_then(|c| c.get(index)) {
+            Some(c) => Ok(c.1.clone()),
+            None => Err(self.in_order(usize::MAX, self.type_err("a type that did not resolve"))),
+        }
     }
 
     /// Resolve a record's fields: distinct names, every type known.
@@ -2251,7 +2285,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             .get(name)
             .cloned()
             .ok_or_else(|| self.type_err("an unknown constructor"))?;
-        let fields = self.adts[&type_name][index].1.clone();
+        let fields = self.ctor_fields(&type_name, index)?;
         let args: &[Expression<'a>] = match args {
             None if !fields.is_empty() => {
                 return Err(self.type_err("a constructor with fields needs its arguments"))
@@ -2811,13 +2845,17 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         binds: &mut Vec<(String, Option<Ty>)>,
         depth: usize,
     ) -> Result<Pat, GenError> {
-        let (type_name, index) = self.ctors[name].clone();
+        let (type_name, index) = self
+            .ctors
+            .get(name)
+            .cloned()
+            .ok_or_else(|| self.type_err("an unknown constructor"))?;
         if !matches!(ty, Ty::Named(n) if *n == type_name) {
             return Err(
                 self.type_err("a constructor pattern does not match the type of its value")
             );
         }
-        let fields = self.adts[&type_name][index].1.clone();
+        let fields = self.ctor_fields(&type_name, index)?;
         if items.len() != fields.len() {
             return Err(self.type_err("a constructor pattern has the wrong number of fields"));
         }

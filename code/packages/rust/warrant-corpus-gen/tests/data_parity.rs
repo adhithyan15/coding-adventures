@@ -209,7 +209,9 @@ fn every_refused_document_has_the_generator_code_of_its_row_in_the_order_of_r35(
             "level" => {
                 level += 1;
                 assert_eq!(r.get("oracle_code").s(), "level", "{name}");
-                e.code == code::LEVEL && e.level == Some(leak(r.get("oracle_level").s()))
+                e.code == code::LEVEL
+                    && e.level == Some(leak(r.get("oracle_level").s()))
+                    && e.message == r.get("message").s()
             }
             // a corpus error: the same sentence as the oracle, in the oracle's order
             "ir" => {
@@ -223,12 +225,12 @@ fn every_refused_document_has_the_generator_code_of_its_row_in_the_order_of_r35(
                 assert_eq!(r.get("oracle_code").s(), "limit", "{name}");
                 e.code == code::LIMIT && e.message == r.get("message").s()
             }
-            // R13 (a): the generator's own typing error (its checker or its typer), never a level and
-            // never a corpus error, and never an acceptance
+            // R13 (a): the generator's own typing error (its checker or its typer), pinned to `check`: never a level,
+            // a corpus error or a limit, and never an acceptance
             "" => {
                 typing += 1;
                 assert_eq!(r.get("oracle_code").s(), "type", "{name}");
-                e.code != code::IR && e.code != code::LEVEL && e.code != code::LIMIT
+                e.code == code::CHECK
             }
             other => panic!("{name}: an unknown generator code {other}"),
         };
