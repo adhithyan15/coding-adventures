@@ -76,6 +76,23 @@ class NotCleanTests(unittest.TestCase):
         self.assertIn("unreadable (TypeError)", out)
         self.assertNotIn("cross_check", out.split("unreadable")[1])
 
+    def test_strict_exits_one_for_not_clean_and_unreadable_only(self):
+        import contextlib
+        import io
+
+        with tempfile.TemporaryDirectory() as d:
+            clean, dirty, bad = (pathlib.Path(d, n) for n in ("a.json", "b.json", "c.json"))
+            clean.write_text(json.dumps(summary()))
+            dirty.write_text(json.dumps(summary(skipped=1)))
+            bad.write_text("{not json")
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(mod.main(["x", str(clean), "0", "--strict"]), 0)
+                self.assertEqual(mod.main(["x", str(dirty), "0", "--strict"]), 1)
+                self.assertEqual(mod.main(["x", str(bad), "0", "--strict"]), 1)
+                self.assertEqual(mod.main(["x", str(pathlib.Path(d, "gone.json")), "0", "--strict"]), 1)
+                # Without --strict the same inputs still exit 0.
+                self.assertEqual(mod.main(["x", str(dirty), "0"]), 0)
+
 
 if __name__ == "__main__":
     unittest.main()

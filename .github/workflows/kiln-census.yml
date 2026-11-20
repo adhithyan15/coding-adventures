@@ -7,13 +7,22 @@ name: Kiln census
 # publishes ONLY the sanitised summary.  The scheduled weekly run is census PR
 # E and is deliberately not here.
 #
-# COVERAGE.  This run uses a fresh $HOME and installs Go only.  Steps that need
-# Rust, .NET, Haskell, Python, Ruby or node fail at "not found" and are recorded
-# as failed steps.  Go is a small share of the build (about 298 of 5115 packages,
-# 0.8% of build time; Rust alone is about 29%), so a clean census here is NOT the
-# PR8 gate.  Every shard's summary says so in its first line.  The follow-up
-# (KILN04, census workflow section) is a `home: fresh|runner` input plus the
-# toolchains pinned as in ci.yml.
+# COVERAGE.  The `home` input picks the layout.
+#
+#   home: fresh   (the default) a fresh $HOME per shard and Go installed only.
+#                 Steps that need Rust, .NET, Haskell, Python, Ruby or node fail
+#                 at "not found" and are recorded as failed steps.  Go is a small
+#                 share of the build (about 298 of 5115 packages, 0.8% of build
+#                 time; Rust alone is about 29%), so a clean census here is NOT
+#                 the PR8 gate.  Every shard's summary says so in its first line.
+#
+#   home: runner  the runner's real $HOME (the checkout lives under it, as on a
+#                 hosted runner) and the toolchains installed as ci.yml installs
+#                 them (the same pins and SHA-pinned actions) into the places
+#                 code/kiln/legacy/host-roots.json declares.  A `runner` run that
+#                 exits 0 IS the PR8 gate: it also fails on a shard that is "not
+#                 clean" (skipped_too_large, actions_skipped, every trace refused),
+#                 where `fresh` only annotates it.
 #
 # Trust.  `kiln record prepare` refuses (exit 3) unless the run is a trusted
 # GitHub run: the repository's default branch, event push, schedule or
@@ -39,6 +48,14 @@ on:
         required: true
         default: '0'
         type: string
+      home:
+        description: 'fresh: a fresh $HOME and Go only (not the PR8 gate). runner: the runner''s real $HOME and the ci.yml toolchains (exit 0 is the PR8 gate)'
+        required: true
+        default: 'fresh'
+        type: choice
+        options:
+          - fresh
+          - runner
 
 permissions:
   contents: read
@@ -63,7 +80,9 @@ jobs:
     # worst case is setup (<=15) + deadline 200 + reset and prepare (<=20) + build
     # 91 + collect, census and upload (<=25) = about 351 minutes, inside the
     # hosted maximum of 360.  Three slow shards cannot all complete: the third is
-    # skipped and the job fails, which is intended.
+    # skipped and the job fails, which is intended.  home: runner installs the
+    # toolchains in setup (<=30) and so uses a 180 minute deadline: 30 + 180 + 20
+    # + 91 + 25 = about 346 minutes.
     timeout-minutes: 360
     permissions:
       contents: read
@@ -81,12 +100,17 @@ jobs:
         env:
           IN_SHARD_COUNT: ${{ inputs.shard_count }}
           IN_SHARD_INDICES: ${{ inputs.shard_indices }}
+          IN_HOME: ${{ inputs.home }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
           echo "CENSUS_OUT=$RUNNER_TEMP/census-out" >> "$GITHUB_ENV"
           if [[ "$GITHUB_REF" != "refs/heads/$DEFAULT_BRANCH" ]]; then
             echo "::error::kiln record prepare only runs on a trusted run (the default branch); dispatch this workflow on $DEFAULT_BRANCH"
+            exit 1
+          fi
+          if [[ "$IN_HOME" != fresh && "$IN_HOME" != runner ]]; then
+            echo "::error::home must be fresh or runner"
             exit 1
           fi
           if ! [[ "$IN_SHARD_COUNT" =~ ^[0-9]{1,3}$ ]]; then
@@ -122,8 +146,9 @@ jobs:
           {
             echo "SHARD_COUNT=$count"
             echo "SHARD_INDICES=$joined"
+            echo "HOME_MODE=$IN_HOME"
           } >> "$GITHUB_ENV"
-          echo "sampling shards $joined of $count"
+          echo "sampling shards $joined of $count, home: $IN_HOME"
 
       # The whole repository, not the sparse lean checkout the other jobs use:
       # prepare plans every package and verifies the tracked tree against
@@ -158,6 +183,154 @@ jobs:
           fi
           strace -V | head -1
 
+      # ---- home: runner only -------------------------------------------------
+      # The toolchains the main build installs (ci.yml, job `build`), with the
+      # same versions and the same SHA-pinned actions, in ci.yml's order (Ruby
+      # last, so no later action puts the system Ruby ahead of it on PATH).  All
+      # of it runs BEFORE the job start is stamped: it modifies /usr (apt) and
+      # the toolchain roots, which would otherwise read as host-read:setup-modified.
+      # Only the languages host-roots.json declares a tool root for are installed
+      # (python, ruby, go, node, rust, dotnet, haskell); see KILN04, census
+      # workflow section, for what is left out.
+      - name: Set up Python
+        if: env.HOME_MODE == 'runner'
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13.17'
+          allow-prereleases: true
+
+      - name: Install uv
+        if: env.HOME_MODE == 'runner'
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.13.7"
+          # No cache restore or save: a census records, it does not need the speed.
+          enable-cache: false
+
+      - name: Set up Node.js
+        if: env.HOME_MODE == 'runner'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.23.5'
+
+      # npm 10.9.8 crashes resolving Vitest peer dependencies; ci.yml fixes npm at
+      # 11.13.0 on every build OS.
+      - name: Set up npm
+        if: env.HOME_MODE == 'runner'
+        run: npm install --global npm@11.13.0
+
+      # The exact Rust release named by `rust` in mise.toml (the same pin and
+      # components as ci.yml).  rustup installs under $HOME/.rustup and
+      # $HOME/.cargo, which host-roots.json declares.
+      - name: Set up Rust
+        if: env.HOME_MODE == 'runner'
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.100.0"
+          components: clippy,llvm-tools,rustfmt
+
+      # The Ubuntu-archive packages ci.yml installs for the Rust and Haskell
+      # builds: libcairo2-dev (native Paint VM), qpdf and poppler-utils (the PDF
+      # oracles), libudev-dev (HID).  binutils-gold only when absent (it was split
+      # out of binutils on 26.04, and GHC links with gold), as ci.yml does.
+      - name: Install native dependencies for the Rust and Haskell builds
+        if: env.HOME_MODE == 'runner'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          pkgs=(libcairo2-dev qpdf poppler-utils libudev-dev)
+          if ! command -v ld.gold >/dev/null 2>&1; then
+            pkgs+=(binutils-gold)
+          fi
+          bash code/scripts/ci/apt-install.sh "${pkgs[@]}"
+          qpdf --version | head -1
+          pdftoppm -v 2>&1 | head -1
+          ld.gold --version | head -n 1
+
+      # The font-subset oracle's Python library, installed into the toolchain's
+      # python3 (ci.yml pins fonttools==4.68.0 and FONTTOOLS_PYTHON).
+      - name: Install fontTools for the font-subset oracle
+        if: env.HOME_MODE == 'runner'
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check --quiet fonttools==4.68.0
+          python3 -c "import fontTools; print('fontTools', fontTools.version)"
+          echo "FONTTOOLS_PYTHON=$(command -v python3)" >> "$GITHUB_ENV"
+
+      # Pinned and --locked, exactly as ci.yml (version 0.37.2); built from source
+      # here, no cache.  The binary lands in $HOME/.cargo/bin, a declared root.
+      - name: Install cargo-tarpaulin
+        if: env.HOME_MODE == 'runner'
+        timeout-minutes: 20
+        run: |
+          cargo install cargo-tarpaulin --version 0.37.2 --locked --force
+          cargo tarpaulin --version
+
+      - name: Set up Haskell
+        if: env.HOME_MODE == 'runner'
+        uses: haskell-actions/setup@6037f33647c3f17758a2356c80fc4a53d7e0685d # v2.12.0
+        with:
+          ghc-version: '9.4.8'
+          cabal-version: '3.10.3.0'
+
+      # Cabal 3.10 can report a successful `cabal update` while deferring the
+      # package-index cache to the first solver query (ci.yml forces the read).
+      - name: Verify Haskell package index
+        if: env.HOME_MODE == 'runner'
+        run: |
+          cabal list --simple-output hspec | grep -Eq '^hspec [0-9]'
+
+      - name: Set up .NET
+        if: env.HOME_MODE == 'runner'
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          # An exact released SDK bypasses the failing aka.ms channel redirect.
+          dotnet-version: "9.0.319"
+
+      # Ruby last in multi-language jobs: later toolchain actions can prepend the
+      # runner's system Ruby and defeat setup-ruby's selection.
+      - name: Set up Ruby
+        if: env.HOME_MODE == 'runner'
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+        with:
+          ruby-version: '3.4.12'
+          bundler-cache: false
+
+      - name: Install bundler
+        if: env.HOME_MODE == 'runner'
+        run: gem install bundler --version 4.0.24
+
+      # Every toolchain must sit under a root host-roots.json declares: a root the
+      # sandbox does not bind read-only makes every step that needs it fail with
+      # "not found", which would pass for census data.  Fail here, loudly, instead.
+      - name: Verify the toolchains landed on declared host roots
+        if: env.HOME_MODE == 'runner'
+        run: |
+          set -euo pipefail
+          roots=$(python3 -c 'import json,sys; print("\n".join(r["path"] for r in json.load(open(sys.argv[1]))["roots"] if r.get("kind")=="tool"))' code/kiln/legacy/host-roots.json)
+          echo "declared tool roots:"; echo "$roots"
+          bad=0
+          check() {  # check NAME PATH: PATH must lie under a declared tool root
+            local name="$1" p="$2" r
+            p=$(realpath "$p")
+            while IFS= read -r r; do
+              r="${r/\$HOME/$HOME}"
+              if [[ "$p" == "$r" || "$p" == "$r"/* ]]; then echo "ok   $name: $p (root $r)"; return 0; fi
+            done <<< "$roots"
+            echo "::error::$name resolves to $p, which no declared tool root covers"
+            bad=1
+          }
+          check python3 "$(command -v python3)"
+          check ruby "$(command -v ruby)"
+          check go "$(command -v go)"
+          check node "$(command -v node)"
+          check cargo "$(command -v cargo)"
+          check rustc-sysroot "$(rustc --print sysroot)"
+          check dotnet "$(command -v dotnet)"
+          check ghc "$(command -v ghc)"
+          python3 --version; ruby --version; go version; node --version
+          rustc --version; dotnet --version; ghc --numeric-version
+          exit "$bad"
+
       # The recorder places both binaries outside the checkout, the step TMPDIR
       # and every state root (KILN04 P3), so they go under RUNNER_TEMP.  The Go
       # caches go there too, so no build output lands in $HOME.
@@ -181,7 +354,9 @@ jobs:
         run: echo "JOB_START=$(date +%s)" >> "$GITHUB_ENV"
 
       # One recording per sampled shard, each from a clean checkout, a fresh
-      # $HOME and a fresh record directory, then the census over that directory.
+      # record directory and (home: fresh) a fresh $HOME or (home: runner) the
+      # runner's real $HOME with empty state roots, then the census over that
+      # directory.
       # A failure does not stop the loop and does not stop the summary: its
       # status goes to a file and the job fails in the last step.  The build's
       # output is wrapped in ::stop-commands:: because a step prints through to
@@ -200,7 +375,9 @@ jobs:
           SHARD_BUILD_TIMEOUT: 90m
           # No new shard starts after this many seconds from JOB_START (see the
           # job's timeout-minutes for the arithmetic).  A shard not started is a
-          # failure, so a partial run is never green.
+          # failure, so a partial run is never green.  home: runner installs the
+          # toolchains first (setup up to about 30 minutes, not 15), so its
+          # deadline is 10800 seconds (180 minutes) in the script below.
           START_DEADLINE_SECS: '12000'
           MATRIX_OS: ${{ matrix.os }}
         run: |
@@ -222,8 +399,15 @@ jobs:
           bt="$RUNNER_TEMP/bin/build-tool"
           not_clean="$RUNNER_TEMP/bin/census_not_clean.py"  # copied before any build ran
           real_home="$HOME"
-          # A fixed name, so redacted text aggregates across shards.
-          shard_home="$real_home/.kiln-census-home"
+          # home: fresh uses a fixed-name fresh HOME, so redacted text aggregates
+          # across shards.  home: runner uses the runner's own HOME and never
+          # removes it.
+          if [[ "$HOME_MODE" == runner ]]; then
+            shard_home="$real_home"
+            START_DEADLINE_SECS=10800
+          else
+            shard_home="$real_home/.kiln-census-home"
+          fi
           mkdir -p "$CENSUS_OUT"
           status_file="$CENSUS_OUT/.status"
           : > "$status_file"
@@ -244,6 +428,21 @@ jobs:
             GIT_CONFIG_KEY_2=protocol.file.allow GIT_CONFIG_VALUE_2=never \
               git -C "$GITHUB_WORKSPACE" "$@"
           }
+          # The HOME for one shard.  fresh: an empty 0700 directory.  runner: the
+          # real HOME, whose state roots (~/.cargo/registry and ~/.cargo/git, the
+          # only ones; sandboxcfg.go stateAnchors) must start empty or prepare
+          # refuses with state-preloaded.  The toolchain installs and the previous
+          # shard's build leave them populated, so empty exactly those two.
+          prepare_home() {
+            if [[ "$HOME_MODE" == runner ]]; then
+              rmrec "$real_home/.cargo/registry"; rmrec "$real_home/.cargo/git"
+              return 0
+            fi
+            rmrec "$shard_home"
+            mkdir -m 0700 "$shard_home"
+          }
+          # Drop a fresh HOME.  Never the runner's real one.
+          drop_home() { if [[ "$HOME_MODE" != runner ]]; then rmrec "$shard_home"; fi; }
           # fail IDX MESSAGE: a status line, a summary line, a failing status.
           fail() {
             echo "shard $1: $2" >> "$status_file" || true
@@ -262,7 +461,11 @@ jobs:
             rec="$RUNNER_TEMP/kiln-record-$idx"
             tag="$MATRIX_OS-shard$idx"
             # The coverage banner is the first line of every shard's summary.
-            printf '**coverage: fresh HOME, Go toolchain only; not the PR8 gate** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+            if [[ "$HOME_MODE" == runner ]]; then
+              printf '**coverage: runner HOME, ci.yml toolchains; exit 0 with every shard clean is the PR8 gate** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+            else
+              printf '**coverage: fresh HOME, Go toolchain only; not the PR8 gate** (shard %s of %s, %s)\n\n' "$idx" "$SHARD_COUNT" "$MATRIX_OS" >> "$GITHUB_STEP_SUMMARY"
+            fi
 
             if (( $(date +%s) - JOB_START > START_DEADLINE_SECS )); then
               fail "$idx" "not started: past the start deadline, the job would run out of time"
@@ -278,8 +481,8 @@ jobs:
               fail "$idx" "could not restore a clean checkout (git clean failed)"
               continue
             fi
-            rmrec "$rec"; rmrec "$shard_home"; rm -rf /tmp/kiln-tmp
-            if ! mkdir -m 0700 "$shard_home"; then
+            rmrec "$rec"; rm -rf /tmp/kiln-tmp
+            if ! prepare_home; then
               fail "$idx" "could not create the shard's fresh HOME"
               continue
             fi
@@ -291,7 +494,7 @@ jobs:
                 --root "$GITHUB_WORKSPACE" --dir "$rec" --build-tool "$bt" \
                 --shard-index "$idx" --shard-count "$SHARD_COUNT" --job-start "$JOB_START"; then
               fail "$idx" "prepare failed"
-              rmrec "$shard_home"
+              drop_home
               continue
             fi
 
@@ -348,13 +551,27 @@ jobs:
             fi
             # Soft passes (an exit 0 that left part of the sample unchecked) are
             # read from the JSON, never from the Markdown.
+            # home: fresh only annotates a not-clean shard.  home: runner is the PR8
+            # gate, so there --strict makes the checker exit 1 for it (and for an
+            # unreadable summary), and a census that exited 0 yet left no JSON is
+            # not clean either: either one fails the job.
             if [[ -f "$CENSUS_OUT/census-$tag.json" ]]; then
-              python3 "$not_clean" "$CENSUS_OUT/census-$tag.json" "$idx" >> "$GITHUB_STEP_SUMMARY" \
-                || echo "- shard $idx: **not-clean check did not run**" >> "$GITHUB_STEP_SUMMARY"
+              if [[ "$HOME_MODE" == runner ]]; then
+                python3 "$not_clean" "$CENSUS_OUT/census-$tag.json" "$idx" --strict >> "$GITHUB_STEP_SUMMARY"
+                nc_rc=$?
+                if (( nc_rc != 0 )); then
+                  fail "$idx" "not clean (the PR8 gate needs skipped_too_large 0, actions_skipped 0 and not every trace refused)"
+                fi
+              else
+                python3 "$not_clean" "$CENSUS_OUT/census-$tag.json" "$idx" >> "$GITHUB_STEP_SUMMARY" \
+                  || echo "- shard $idx: **not-clean check did not run**" >> "$GITHUB_STEP_SUMMARY"
+              fi
+            elif [[ "$HOME_MODE" == runner ]]; then
+              fail "$idx" "not clean: the census left no summary JSON"
             fi
 
             # The record directory is never uploaded; drop it before the next.
-            rmrec "$rec"; rmrec "$shard_home"; rm -rf /tmp/kiln-tmp
+            rmrec "$rec"; drop_home; rm -rf /tmp/kiln-tmp
           done
           echo "$worst" > "$CENSUS_OUT/.worst"
           exit 0
