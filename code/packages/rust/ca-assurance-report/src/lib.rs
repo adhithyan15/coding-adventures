@@ -21,6 +21,7 @@ pub mod matrix;
 pub mod profile;
 pub mod registry;
 pub mod report;
+mod source_equivalence;
 
 pub use assumptions::{check_assumptions, AssumptionCheckError, AssumptionSummary};
 pub use catalogue::{CatalogueError, CatalogueSet};
@@ -88,13 +89,82 @@ pub fn generate_package_report(
     let rungs = evidence.rungs();
 
     // One exemption per unapproved-exemption row, copied from the row so the
-    // two lists cannot disagree.
+    // two lists cannot disagree. This is exposed crate-wide for the re-deriver
+    // to compare every field, including ids, kind and approval.
+    let exemptions = derive_exemptions(&weaknesses, &ctx, evidence, &claims)?;
+    // Derived, never typed in: the section 3.9 table applied to what the
+    // claims still assume.
+    let set = &evidence.catalogue;
+    let unverified: std::collections::BTreeSet<String> = weaknesses
+        .iter()
+        .flat_map(|w| w.evidence.iter())
+        .chain(claims.iter().flat_map(|c| c.evidence.iter()))
+        .chain(exemptions.iter().flat_map(|x| x.evidence.iter()))
+        .filter(|id| id.starts_with(evidence::UNVERIFIED_PREFIX))
+        .cloned()
+        .collect();
+    let report_assumptions = assumptions::derive_report_assumptions(set, package, &unverified)
+        .map_err(MatrixError::MissingEvidence)?;
+
+    Ok(AssuranceReport {
+        package: package.into(),
+        version: version.into(),
+        commit: commit_sha.into(),
+        profile: evidence.profile.name.clone(),
+        profile_sha256: evidence.profile.sha256.clone(),
+        catalogue: assumptions::catalogue_ref(set),
+        assumptions: report_assumptions,
+        closure: vec![package.into()],
+        capabilities: CapabilitiesSummary {
+            declared: evidence.cert.declared_effects.clone(),
+            analyzer: if evidence.cert.label == "proved" {
+                "pass"
+            } else {
+                "fail"
+            }
+            .into(),
+            certificate: evidence.cert.label.clone(),
+            new_since_last_release: vec![],
+        },
+        weaknesses,
+        claims,
+        rungs,
+        // Derived from the consumer registry and the lane loader only (VER04i
+        // 8.3): never from the Rust proof, effect or weakness evidence above.
+        lanes: evidence.lanes.clone(),
+        public_symbols_without_claims: vec![],
+        exemptions,
+        verdict: "report-only".into(),
+    })
+}
+
+pub(crate) fn derive_exemptions(
+    weaknesses: &[WeaknessRow],
+    ctx: &crate::matrix::PackageAuditContext,
+    evidence: &Evidence,
+    claims: &[ClaimEvidence],
+) -> Result<Vec<ComputedExemption>, MatrixError> {
     let exemptions: Vec<ComputedExemption> = weaknesses
         .iter()
         .filter(|w| w.status == WeaknessStatus::Exemption)
         .map(|w| {
             let not_applicable = w.evidence.iter().any(|e| e == evidence::NO_SECRET_OPERANDS_ATTESTATION);
-            let (id, kind) = if w.cwe == 208 && not_applicable {
+            let is_missing_step_bounds = !ctx.evidence.missing_step_bound_ops.is_empty()
+                && (w.cwe == 400
+                    || (w.cwe == 407
+                        && ctx.evidence.profile.row_applicability(407)
+                            == Some(crate::profile::RowApplicability::Applicable)));
+            let (id, kind) = if is_missing_step_bounds && w.cwe == 400 {
+                (
+                    "EXEMPT-CWE-400-MISSING-STEP-BOUNDS".to_string(),
+                    "missing-step-bounds",
+                )
+            } else if is_missing_step_bounds && w.cwe == 407 {
+                (
+                    "EXEMPT-CWE-407-MISSING-STEP-BOUNDS".to_string(),
+                    "missing-step-bounds",
+                )
+            } else if w.cwe == 208 && not_applicable {
                 (evidence::NOT_APPLICABLE_208_EXEMPTION.to_string(), "not-applicable")
             } else if w.cwe == 208 {
                 ("EXEMPT-CWE-208-GATE-LEVEL".to_string(), "weakness-floor")
@@ -119,45 +189,10 @@ pub fn generate_package_report(
     let set = &evidence.catalogue;
     let mut exemptions = exemptions;
     for x in &mut exemptions {
-        x.assumptions = assumptions::derive_exemption_assumptions(set, &x.id, &claims)
+        x.assumptions = assumptions::derive_exemption_assumptions(set, &x.id, claims)
             .map_err(MatrixError::MissingEvidence)?;
     }
-    let unverified: std::collections::BTreeSet<String> = weaknesses
-        .iter()
-        .flat_map(|w| w.evidence.iter())
-        .chain(claims.iter().flat_map(|c| c.evidence.iter()))
-        .chain(exemptions.iter().flat_map(|x| x.evidence.iter()))
-        .filter(|id| id.starts_with(evidence::UNVERIFIED_PREFIX))
-        .cloned()
-        .collect();
-    let report_assumptions = assumptions::derive_report_assumptions(set, package, &unverified)
-        .map_err(MatrixError::MissingEvidence)?;
-
-    Ok(AssuranceReport {
-        package: package.into(),
-        version: version.into(),
-        commit: commit_sha.into(),
-        profile: evidence.profile.name.clone(),
-        profile_sha256: evidence.profile.sha256.clone(),
-        catalogue: assumptions::catalogue_ref(set),
-        assumptions: report_assumptions,
-        closure: vec![package.into()],
-        capabilities: CapabilitiesSummary {
-            declared: evidence.cert.declared_effects.clone(),
-            analyzer: if evidence.cert.label == "proved" { "pass" } else { "fail" }.into(),
-            certificate: evidence.cert.label.clone(),
-            new_since_last_release: vec![],
-        },
-        weaknesses,
-        claims,
-        rungs,
-        // Derived from the consumer registry and the lane loader only (VER04i
-        // 8.3): never from the Rust proof, effect or weakness evidence above.
-        lanes: evidence.lanes.clone(),
-        public_symbols_without_claims: vec![],
-        exemptions,
-        verdict: "report-only".into(),
-    })
+    Ok(exemptions)
 }
 
 /// Re-derive the weakness matrix from the evidence and the bound audit profile
@@ -166,8 +201,8 @@ pub fn generate_package_report(
 /// [`verify_evidence`] checks structured facts (statuses, evidence ids, digests)
 /// and deliberately never the prose.  This closes the remaining gap: the report
 /// is rebuilt the way the generator built it, and every weakness row (`cwe`,
-/// `name`, `status`, `approved`, `reason`, `evidence`) and every exemption's
-/// rationale must be identical.  So edited reason text, a report generated under
+/// `name`, `status`, `approved`, `reason`, `evidence`) and every exemption field
+/// must be identical. So edited reason text or approval, a report generated under
 /// another profile, and a profile that declares more than the evidence allows
 /// (the rebuild itself is then refused by the matrix) are all rejected.
 ///
@@ -209,15 +244,13 @@ pub fn verify_rederivation(
             )));
         }
     }
-    for x in &report.exemptions {
-        if let Some(row) = rows.iter().find(|r| r.cwe == x.cwe) {
-            if x.rationale != row.reason {
-                return Err(E::EvidenceMismatch(format!(
-                    "exemption {} rationale differs from the re-derived CWE-{} reason",
-                    x.id, x.cwe
-                )));
-            }
-        }
+    let claims = derive_claims(evidence).map_err(|e| E::Load(e.0))?;
+    let expected_exemptions = derive_exemptions(&rows, &ctx, evidence, &claims)
+        .map_err(|e| E::EvidenceMismatch(format!("computed exemptions cannot be re-derived: {e}")))?;
+    if report.exemptions != expected_exemptions {
+        return Err(E::EvidenceMismatch(
+            "computed exemptions differ from the re-derivation (ids, kinds, approvals, evidence, assumptions or rationale)".into(),
+        ));
     }
     Ok(())
 }

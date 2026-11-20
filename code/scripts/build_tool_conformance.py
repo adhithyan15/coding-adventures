@@ -1585,6 +1585,7 @@ def _validate_repository_source_input_boundary(
                 and exact_roots
                 in (
                     ["code/packages/typescript/game-input-frame"],
+                    ["code/packages/rust/fixed-point"],
                     ["code/packages/rust/game-clock"],
                 )
                 and not descendant_roots

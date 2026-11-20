@@ -10,6 +10,7 @@ pub mod inline;
 pub mod interp;
 pub mod lower;
 pub mod rust_subset;
+pub mod source_equivalence;
 pub mod sym;
 pub mod trace;
 

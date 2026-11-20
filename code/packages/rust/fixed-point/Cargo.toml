@@ -1,0 +1,25 @@
+[package]
+name = "coding-adventures-fixed-point"
+version = "0.1.0"
+edition = "2021"
+description = "Portable deterministic fixed-point arithmetic"
+
+[dependencies]
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+serde_json = "1"
+num-bigint = "0.4"
+num-traits = "0.2"
+cdcl-sat = { path = "../cdcl-sat" }
+drat-check = { path = "../drat-check" }
+
+[[test]]
+name = "warrant_evidence"
+path = "tests/warrant_evidence.rs"
+harness = false
+
+[[test]]
+name = "sat_q16_add_sub"
+path = "tests/sat_q16_add_sub.rs"

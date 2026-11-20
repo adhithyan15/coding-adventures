@@ -1,0 +1,627 @@
+{
+  "assumptions": [
+    "att.analyzer.name-allowlist-regex-free",
+    "att.ast-audit.no-compression-routines",
+    "att.ast-audit.no-deserialization",
+    "att.ast-audit.no-legacy-ciphers",
+    "att.ast-audit.no-protocol-sinks",
+    "att.ast-call-graph.acyclic",
+    "att.language-type-system.no-prototype-pollution",
+    "att.type-signatures.unconstrained-slices",
+    "gov.approval.blocked",
+    "gov.catalogue.integrity"
+  ],
+  "capabilities": {
+    "analyzer": "pass",
+    "certificate": "proved",
+    "declared": [],
+    "new_since_last_release": []
+  },
+  "catalogue": {
+    "evidence_kinds_sha256": "80ddc39cd9f4f3baaa245cb7fc6bfca998a5e526595eba95dae8930db9f2a391",
+    "non_claims_sha256": "22043eebae7626d36efe42f54e222e9486c61fb79c682b6a74140ad93c166f26",
+    "path": "code/assumptions/catalogue-v1.json",
+    "schema": "ver13-assumption-catalogue-v1",
+    "sha256": "8ad3cf2766136114b6f64a7c3830db6abd6fcdc614c2808a8de19091bde77a7a"
+  },
+  "claims": [
+    {
+      "evidence": [
+        "warrant/fixed_point_q16/example/q16_from_integer_exact",
+        "warrant/fixed_point_q16/example/q16_from_integer_overflow",
+        "warrant/fixed_point_q16/example/q16_from_integer_zero",
+        "warrant/fixed_point_q16/exhaustive/q16_from_integer_matches_exact_model",
+        "warrant/fixed_point_q16/fuzz/q16_from_integer_matches_exact_model",
+        "warrant/fixed_point_q16/negctl/example/q16_from_integer/missing-error",
+        "warrant/fixed_point_q16/negctl/exhaustive/q16_from_integer/missing-error",
+        "warrant/fixed_point_q16/negctl/fuzz/q16_from_integer/missing-error",
+        "warrant/fixed_point_q16/negctl/property/q16_from_integer/missing-error",
+        "warrant/fixed_point_q16/property/q16_from_integer_matches_exact_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 559,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 4096,
+        "status": "pass"
+      },
+      "id": "from_integer_soundness",
+      "proof": null,
+      "property": {
+        "cases": 4096,
+        "status": "pass"
+      },
+      "symbol": "from_integer"
+    },
+    {
+      "evidence": [
+        "warrant/fixed_point_q16/example/q16_checked_add_exact",
+        "warrant/fixed_point_q16/example/q16_checked_add_overflow",
+        "warrant/fixed_point_q16/exhaustive/q16_checked_add_matches_exact_model",
+        "warrant/fixed_point_q16/fuzz/q16_checked_add_matches_exact_model",
+        "warrant/fixed_point_q16/negctl/example/q16_checked_add/missing-error",
+        "warrant/fixed_point_q16/negctl/exhaustive/q16_checked_add/missing-error",
+        "warrant/fixed_point_q16/negctl/fuzz/q16_checked_add/missing-error",
+        "warrant/fixed_point_q16/negctl/property/q16_checked_add/missing-error",
+        "warrant/fixed_point_q16/property/q16_checked_add_matches_exact_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 312481,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 4096,
+        "status": "pass"
+      },
+      "id": "checked_add_soundness",
+      "proof": null,
+      "property": {
+        "cases": 4096,
+        "status": "pass"
+      },
+      "symbol": "checked_add"
+    },
+    {
+      "evidence": [
+        "warrant/fixed_point_q16/example/q16_checked_sub_exact",
+        "warrant/fixed_point_q16/example/q16_checked_sub_overflow",
+        "warrant/fixed_point_q16/exhaustive/q16_checked_sub_matches_exact_model",
+        "warrant/fixed_point_q16/fuzz/q16_checked_sub_matches_exact_model",
+        "warrant/fixed_point_q16/negctl/example/q16_checked_sub/missing-error",
+        "warrant/fixed_point_q16/negctl/exhaustive/q16_checked_sub/missing-error",
+        "warrant/fixed_point_q16/negctl/fuzz/q16_checked_sub/missing-error",
+        "warrant/fixed_point_q16/negctl/property/q16_checked_sub/missing-error",
+        "warrant/fixed_point_q16/property/q16_checked_sub_matches_exact_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 312481,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 4096,
+        "status": "pass"
+      },
+      "id": "checked_sub_soundness",
+      "proof": null,
+      "property": {
+        "cases": 4096,
+        "status": "pass"
+      },
+      "symbol": "checked_sub"
+    },
+    {
+      "evidence": [
+        "warrant/fixed_point_q16/example/q16_saturating_add_in_range",
+        "warrant/fixed_point_q16/example/q16_saturating_add_overflow",
+        "warrant/fixed_point_q16/exhaustive/q16_saturating_add_matches_exact_model",
+        "warrant/fixed_point_q16/fuzz/q16_saturating_add_matches_exact_model",
+        "warrant/fixed_point_q16/negctl/example/q16_saturating_add/bool-field-flip",
+        "warrant/fixed_point_q16/negctl/exhaustive/q16_saturating_add/bool-field-flip",
+        "warrant/fixed_point_q16/negctl/fuzz/q16_saturating_add/bool-field-flip",
+        "warrant/fixed_point_q16/negctl/property/q16_saturating_add/bool-field-flip",
+        "warrant/fixed_point_q16/property/q16_saturating_add_matches_exact_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 312481,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 4096,
+        "status": "pass"
+      },
+      "id": "saturating_add_soundness",
+      "proof": null,
+      "property": {
+        "cases": 4096,
+        "status": "pass"
+      },
+      "symbol": "saturating_add"
+    },
+    {
+      "evidence": [
+        "warrant/fixed_point_q16/example/q16_saturating_sub_overflow",
+        "warrant/fixed_point_q16/exhaustive/q16_saturating_sub_matches_exact_model",
+        "warrant/fixed_point_q16/fuzz/q16_saturating_sub_matches_exact_model",
+        "warrant/fixed_point_q16/negctl/example/q16_saturating_sub/bool-field-flip",
+        "warrant/fixed_point_q16/negctl/exhaustive/q16_saturating_sub/bool-field-flip",
+        "warrant/fixed_point_q16/negctl/fuzz/q16_saturating_sub/bool-field-flip",
+        "warrant/fixed_point_q16/negctl/property/q16_saturating_sub/bool-field-flip",
+        "warrant/fixed_point_q16/property/q16_saturating_sub_matches_exact_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 312481,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 4096,
+        "status": "pass"
+      },
+      "id": "saturating_sub_soundness",
+      "proof": null,
+      "property": {
+        "cases": 4096,
+        "status": "pass"
+      },
+      "symbol": "saturating_sub"
+    },
+    {
+      "evidence": [
+        "warrant/fixed_point_q16/example/q16_checked_mul_one",
+        "warrant/fixed_point_q16/example/q16_checked_mul_rounding_overflow",
+        "warrant/fixed_point_q16/exhaustive/q16_checked_mul_matches_exact_model",
+        "warrant/fixed_point_q16/fuzz/q16_checked_mul_matches_exact_model",
+        "warrant/fixed_point_q16/negctl/example/q16_checked_mul/missing-error",
+        "warrant/fixed_point_q16/negctl/exhaustive/q16_checked_mul/missing-error",
+        "warrant/fixed_point_q16/negctl/fuzz/q16_checked_mul/missing-error",
+        "warrant/fixed_point_q16/negctl/property/q16_checked_mul/missing-error",
+        "warrant/fixed_point_q16/property/q16_checked_mul_matches_exact_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 1249924,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 4096,
+        "status": "pass"
+      },
+      "id": "checked_mul_soundness",
+      "proof": null,
+      "property": {
+        "cases": 4096,
+        "status": "pass"
+      },
+      "symbol": "checked_mul"
+    },
+    {
+      "evidence": [
+        "warrant/fixed_point_q16/example/q16_saturating_mul_overflow_flag",
+        "warrant/fixed_point_q16/exhaustive/q16_saturating_mul_matches_exact_model",
+        "warrant/fixed_point_q16/fuzz/q16_saturating_mul_matches_exact_model",
+        "warrant/fixed_point_q16/negctl/example/q16_saturating_mul/bool-field-flip",
+        "warrant/fixed_point_q16/negctl/exhaustive/q16_saturating_mul/bool-field-flip",
+        "warrant/fixed_point_q16/negctl/fuzz/q16_saturating_mul/bool-field-flip",
+        "warrant/fixed_point_q16/negctl/property/q16_saturating_mul/bool-field-flip",
+        "warrant/fixed_point_q16/property/q16_saturating_mul_matches_exact_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 1249924,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 4096,
+        "status": "pass"
+      },
+      "id": "saturating_mul_soundness",
+      "proof": null,
+      "property": {
+        "cases": 4096,
+        "status": "pass"
+      },
+      "symbol": "saturating_mul"
+    },
+    {
+      "evidence": [
+        "warrant/fixed_point_q16/example/q16_checked_div_in_range",
+        "warrant/fixed_point_q16/example/q16_checked_div_zero",
+        "warrant/fixed_point_q16/exhaustive/q16_checked_div_matches_exact_model",
+        "warrant/fixed_point_q16/fuzz/q16_checked_div_matches_exact_model",
+        "warrant/fixed_point_q16/negctl/example/q16_checked_div/missing-error",
+        "warrant/fixed_point_q16/negctl/exhaustive/q16_checked_div/missing-error",
+        "warrant/fixed_point_q16/negctl/fuzz/q16_checked_div/missing-error",
+        "warrant/fixed_point_q16/negctl/property/q16_checked_div/missing-error",
+        "warrant/fixed_point_q16/property/q16_checked_div_matches_exact_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 1249924,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 4096,
+        "status": "pass"
+      },
+      "id": "checked_div_soundness",
+      "proof": null,
+      "property": {
+        "cases": 4096,
+        "status": "pass"
+      },
+      "symbol": "checked_div"
+    },
+    {
+      "evidence": [
+        "warrant/fixed_point_q16/example/q16_saturating_div_overflow",
+        "warrant/fixed_point_q16/example/q16_saturating_div_zero",
+        "warrant/fixed_point_q16/exhaustive/q16_saturating_div_matches_exact_model",
+        "warrant/fixed_point_q16/fuzz/q16_saturating_div_matches_exact_model",
+        "warrant/fixed_point_q16/negctl/example/q16_saturating_div/bool-field-flip",
+        "warrant/fixed_point_q16/negctl/exhaustive/q16_saturating_div/bool-field-flip",
+        "warrant/fixed_point_q16/negctl/fuzz/q16_saturating_div/bool-field-flip",
+        "warrant/fixed_point_q16/negctl/property/q16_saturating_div/bool-field-flip",
+        "warrant/fixed_point_q16/property/q16_saturating_div_matches_exact_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 1249924,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 4096,
+        "status": "pass"
+      },
+      "id": "saturating_div_soundness",
+      "proof": null,
+      "property": {
+        "cases": 4096,
+        "status": "pass"
+      },
+      "symbol": "saturating_div"
+    },
+    {
+      "evidence": [
+        "warrant/fixed_point_q16/example/q16_to_integer_floor_negative",
+        "warrant/fixed_point_q16/example/q16_to_integer_nearest_even_tie",
+        "warrant/fixed_point_q16/exhaustive/q16_to_integer_matches_exact_model",
+        "warrant/fixed_point_q16/fuzz/q16_to_integer_matches_exact_model",
+        "warrant/fixed_point_q16/negctl/example/q16_to_integer/flip-result-bit",
+        "warrant/fixed_point_q16/negctl/exhaustive/q16_to_integer/flip-result-bit",
+        "warrant/fixed_point_q16/negctl/fuzz/q16_to_integer/flip-result-bit",
+        "warrant/fixed_point_q16/negctl/property/q16_to_integer/flip-result-bit",
+        "warrant/fixed_point_q16/property/q16_to_integer_matches_exact_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 2236,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 4096,
+        "status": "pass"
+      },
+      "id": "to_integer_soundness",
+      "proof": null,
+      "property": {
+        "cases": 4096,
+        "status": "pass"
+      },
+      "symbol": "to_integer"
+    }
+  ],
+  "closure": [
+    "rust/fixed-point"
+  ],
+  "commit": "HEAD",
+  "exemptions": [
+    {
+      "approved": false,
+      "assumptions": [],
+      "cwe": 400,
+      "evidence": [],
+      "id": "EXEMPT-CWE-400-MISSING-STEP-BOUNDS",
+      "kind": "missing-step-bounds",
+      "rationale": "computed exemption (unapproved; kind=missing-step-bounds; id=EXEMPT-CWE-400-MISSING-STEP-BOUNDS): no declared steps bounds for operations [q16_from_integer, q16_checked_add, q16_checked_sub, q16_saturating_add, q16_saturating_sub, q16_checked_mul, q16_saturating_mul, q16_checked_div, q16_saturating_div, q16_to_integer]"
+    },
+    {
+      "approved": false,
+      "assumptions": [],
+      "cwe": 407,
+      "evidence": [],
+      "id": "EXEMPT-CWE-407-MISSING-STEP-BOUNDS",
+      "kind": "missing-step-bounds",
+      "rationale": "computed exemption (unapproved; kind=missing-step-bounds; id=EXEMPT-CWE-407-MISSING-STEP-BOUNDS): no declared steps bounds for operations [q16_from_integer, q16_checked_add, q16_checked_sub, q16_saturating_add, q16_saturating_sub, q16_checked_mul, q16_saturating_mul, q16_checked_div, q16_saturating_div, q16_to_integer]"
+    }
+  ],
+  "lanes": [
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "go",
+      "package": "go/fixed-point",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "python",
+      "package": "python/fixed-point",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "typescript",
+      "package": "typescript/fixed-point",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    }
+  ],
+  "package": "rust/fixed-point",
+  "profile": "fixed-point-arithmetic",
+  "profile_sha256": "bd86079322b674bcbca87bbfc764db8d33d1c06a2cae70a5a00c7dc8cd8cb440",
+  "public_symbols_without_claims": [],
+  "rungs": {
+    "E0": "pass",
+    "E1": "pass",
+    "E2": "not-live",
+    "E3": "pass",
+    "E4": "pass",
+    "E5": "not-live"
+  },
+  "verdict": "report-only",
+  "version": "0.1.0",
+  "weaknesses": [
+    {
+      "cwe": 416,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Use After Free",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 787,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Out-of-bounds Write",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 125,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Out-of-bounds Read",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 415,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Double Free",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 476,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "NULL Pointer Dereference",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 190,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Integer Overflow to Buffer Boundary",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 78,
+      "evidence": [
+        "capability-audit::proc-empty"
+      ],
+      "name": "OS Command Injection",
+      "reason": "pure computation: package declares no proc capability; analyzer verified zero process or shell execution",
+      "status": "excluded"
+    },
+    {
+      "cwe": 89,
+      "evidence": [
+        "capability-audit::no-database-sinks"
+      ],
+      "name": "SQL Injection",
+      "reason": "pure computation: package contains no database interaction or SQL query construction",
+      "status": "excluded"
+    },
+    {
+      "cwe": 22,
+      "evidence": [
+        "capability-audit::fs-empty"
+      ],
+      "name": "Path Traversal",
+      "reason": "pure computation: package declares no fs capability; analyzer verified zero filesystem operations",
+      "status": "excluded"
+    },
+    {
+      "cwe": 79,
+      "evidence": [
+        "capability-audit::ui-empty"
+      ],
+      "name": "Cross-Site Scripting (XSS)",
+      "reason": "pure computation: package declares no ui capability and renders no HTML or DOM structures",
+      "status": "excluded"
+    },
+    {
+      "cwe": 94,
+      "evidence": [
+        "capability-audit::banned-constructs-clean"
+      ],
+      "name": "Code Injection / Eval",
+      "reason": "compiled Rust: language has no dynamic code evaluation or runtime eval primitives; analyzer verified no dynamic loading",
+      "status": "excluded"
+    },
+    {
+      "cwe": 116,
+      "evidence": [
+        "unverified::ast-audit::no-protocol-sinks"
+      ],
+      "name": "Improper Output Encoding",
+      "reason": "pure computation: package performs no serialized protocol formatting with unescaped control delimiters [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 117,
+      "evidence": [
+        "capability-audit::stdout-empty"
+      ],
+      "name": "Log Injection",
+      "reason": "pure computation: package declares no stdout or logging capabilities; analyzer verified zero log sinks",
+      "status": "excluded"
+    },
+    {
+      "approved": false,
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "reason": "computed exemption (unapproved; kind=missing-step-bounds; id=EXEMPT-CWE-400-MISSING-STEP-BOUNDS): no declared steps bounds for operations [q16_from_integer, q16_checked_add, q16_checked_sub, q16_saturating_add, q16_saturating_sub, q16_checked_mul, q16_saturating_mul, q16_checked_div, q16_saturating_div, q16_to_integer]",
+      "status": "exemption"
+    },
+    {
+      "cwe": 409,
+      "evidence": [
+        "unverified::ast-audit::no-compression-routines"
+      ],
+      "name": "Decompression Bomb",
+      "reason": "pure computation: package implements no decompression or archive decoding routines [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 674,
+      "evidence": [
+        "unverified::ast-call-graph::acyclic"
+      ],
+      "name": "Uncontrolled Recursion",
+      "reason": "iterative algorithms: package contains zero recursive function calls; call graph is strictly acyclic [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 1333,
+      "evidence": [
+        "unverified::analyzer::name-allowlist-regex-free"
+      ],
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "reason": "zero regular expressions: package contains no regular expression engines or pattern matching dependencies [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "approved": false,
+      "cwe": 407,
+      "name": "Inefficient Algorithmic Complexity",
+      "reason": "computed exemption (unapproved; kind=missing-step-bounds; id=EXEMPT-CWE-407-MISSING-STEP-BOUNDS): no declared steps bounds for operations [q16_from_integer, q16_checked_add, q16_checked_sub, q16_saturating_add, q16_saturating_sub, q16_checked_mul, q16_saturating_mul, q16_checked_div, q16_saturating_div, q16_to_integer]",
+      "status": "exemption"
+    },
+    {
+      "cwe": 208,
+      "evidence": [
+        "capability-audit::no-secret-inputs",
+        "warrant-spec::all-operands-public"
+      ],
+      "name": "Observable Timing Discrepancy",
+      "reason": "no secret inputs: package contains no secret operands or cryptographic comparison operations; timing variation reveals no sensitive data",
+      "status": "excluded"
+    },
+    {
+      "cwe": 330,
+      "evidence": [
+        "capability-audit::rand-empty"
+      ],
+      "name": "Use of Insufficiently Random Values",
+      "reason": "pure computation: package performs purely deterministic computation and declares no rand capability",
+      "status": "excluded"
+    },
+    {
+      "cwe": 327,
+      "evidence": [
+        "unverified::ast-audit::no-legacy-ciphers"
+      ],
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "reason": "Not cryptographic: the package implements signed fixed-point arithmetic only, with no cipher, hash or MAC. [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 326,
+      "evidence": [
+        "unverified::type-signatures::unconstrained-slices"
+      ],
+      "name": "Inadequate Encryption Strength",
+      "reason": "No key material: the package accepts fixed-width integer values and rounding modes only; it takes and generates no keys. [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 362,
+      "evidence": [
+        "capability-audit::thread-empty"
+      ],
+      "name": "Concurrent Execution Race Condition",
+      "reason": "pure computation: package declares no thread capability and uses zero multithreading or shared mutable state",
+      "status": "excluded"
+    },
+    {
+      "cwe": 367,
+      "evidence": [
+        "capability-audit::no-external-resources"
+      ],
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "reason": "pure computation: package interacts with no external filesystem or process state",
+      "status": "excluded"
+    },
+    {
+      "cwe": 502,
+      "evidence": [
+        "unverified::ast-audit::no-deserialization"
+      ],
+      "name": "Deserialization of Untrusted Data",
+      "reason": "pure computation: package contains no dynamic object deserialization, polymorphic factories, or reflection [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 1321,
+      "evidence": [
+        "unverified::language-type-system::no-prototype-pollution"
+      ],
+      "name": "Prototype Pollution",
+      "reason": "strongly typed language: Rust has no object prototypes or dynamic prototype inheritance chains [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    }
+  ]
+}

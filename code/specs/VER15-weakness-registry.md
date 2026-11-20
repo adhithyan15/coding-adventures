@@ -142,3 +142,44 @@ For any package $P$:
    - An exemption is `approved: false` until a cryptographic, hardware-token-backed signature is recorded per VER00 §9.1.
 5. **No Open Rows:**
    Any missing or unclassified row triggers immediate validation abort with exit code `2`.
+
+## 5. Missing Cost-Bound Coverage (VER-P048)
+
+An actual Warrant package with one or more operations lacking a declared `steps`
+bound has no basis for discharging CWE-400 or CWE-407. The report must still
+account for both rows without inventing a numeric bound or treating a frontend
+refusal, finite-domain proof, or source-equivalence disposition as cost evidence.
+
+### 5.1 Profile input
+
+The profile may use `applicability: "applicable"` for CWE-407, in addition to
+the existing `excluded` value. This is a statement that the class applies; it
+does not declare an exemption, a verdict, approval, or evidence. CWE-326,
+CWE-327, and CWE-409 continue to accept only their existing `excluded` values.
+An `applicable` CWE-407 row with no missing step bounds is invalid and fails
+closed. In particular, authors cannot use the profile to force an exemption
+when complete bounds exist.
+
+### 5.2 Derived rows
+
+For a nonempty Warrant module, the reporter derives the ordered set of
+operations without a declared `steps` bound from the parsed Warrant itself.
+If that set is nonempty, it emits mechanically computed, **unapproved**
+exemptions for both CWE-400 and CWE-407. Each row has `approved: false`, an
+empty evidence list, and the exact missing-operation list. The CWE-400 row uses
+id `EXEMPT-CWE-400-MISSING-STEP-BOUNDS`; the CWE-407 row uses
+`EXEMPT-CWE-407-MISSING-STEP-BOUNDS`. Both use the typed reason kind
+`missing-step-bounds`. Neither profile text nor a manifest-supplied exemption
+can choose these fields. This is not the unrelated unsafe-exception fallback.
+
+Missing-operation coverage is checked before any CWE-400 discharge rule. A
+passing bound for only some operations, including a passing zero-allocation
+proof, cannot discharge package-level CWE-400 while another operation has no
+declared step bound. When every operation is bounded, this fallback does not
+apply; the existing evidence rules determine the row. An empty Warrant module
+does not qualify for the fallback and fails closed.
+
+An existing CWE-407 `excluded` declaration with missing step bounds remains an
+invalid exclusion. An `applicable` declaration is required for the new derived
+exemption; no broad exception or automatic approval is introduced. Existing
+all-bounded exclusions and all other registry rows retain their current rules.

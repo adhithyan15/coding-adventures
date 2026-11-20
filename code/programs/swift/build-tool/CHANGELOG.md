@@ -2,7 +2,11 @@
 
 ## Unreleased - Dart DT18 hash-map input binding
 
-- Regenerate the production repository-input boundary from the canonical Dart hash-map exact-corpus grant. Replay the new Dart case through the public selector; the selected source-collection matrix now has 20 cases.
+- Replay the Dart hash-map repository-corpus case through the native selector and merged canonical corpus.
+
+## Unreleased - fixed-point source boundary
+
+- Added the exact `rust/fixed-point` Warrant and Q16.16 cases inputs, workspace lock authorization, and narrow root Cargo-config exception to the generated repository-boundary projection. The native source-collection suite now reads the fixed-point exact-input case.
 
 ## Unreleased - source-input boundary sync (GAME10 TypeScript clock)
 

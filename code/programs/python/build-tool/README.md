@@ -115,6 +115,10 @@ format migration. Both normal and plan-file execution compute all package
 digests before dependency digests, keeping fail-closed validation independent
 of lexical discovery order.
 
+## Fixed-point repository input selection
+
+The process-free diff selector consumes the canonical repository source boundary. It routes the fixed-point Warrant model and Q16.16 cases file to `rust/fixed-point`; the exact root and Rust-workspace Cargo configuration, manifest, and lockfile also select existing Rust Cargo consumers. The scope is package-specific, and nearby fixture versions, backups, and unregistered paths do not inherit the relation. Python's package source hasher remains package-local; this boundary is used for change selection, not as a claim that Python hashes Rust inputs.
+
 ## Usage
 
 ```bash

@@ -1,13 +1,17 @@
 # Changelog
 
-## Unreleased - Dart DT18 hash-map input binding
+## Unreleased - Dart HashMap source fixture
 
-- Replay the real Dart hash-map repository-corpus case through the shared production selector, increasing the complete source-collection matrix to 24 cases.
+- Add the Dart hash-map repository-boundary case to the shared .NET source-collection replay.
+
+## Unreleased - fixed-point source boundary fixture
+
+- Updated the F# facade neutral source-collection case roster to consume the new exact fixed-point repository-input fixture through the shared .NET engine.
 
 ## Unreleased
 
 - Expand the F# source-collection facade replay to include the Swift hash-map
-  consumer's DT18 repository-boundary fixture and the 23-case corpus count.
+  consumer's DT18 repository-boundary fixture and the 24-case corpus count.
 
 - Fix two F# conformance tests to pass string element types to xUnit array
   equality assertions, preserving ordered sequence comparison.

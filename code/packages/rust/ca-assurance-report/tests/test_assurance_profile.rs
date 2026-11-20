@@ -74,11 +74,36 @@ fn applicability_other_than_excluded_and_a_missing_row_are_refused() {
     let sb = Sandbox::new("prof-appl");
     let good = sb.read(PROFILE);
     let e = AuditProfile::from_bytes(good.replacen("\"excluded\"", "\"discharged\"", 1).as_bytes()).unwrap_err();
-    assert!(e.0.contains("only declare `excluded`"), "{}", e.0);
+    assert!(e.0.contains("not supported"), "{}", e.0);
     let no407 = good.replace("\"407\"", "\"4070\"");
     assert!(AuditProfile::from_bytes(no407.as_bytes()).is_err());
     let e = AuditProfile::from_bytes(good.replace("\"kind\": \"transform\"", "\"kind\": \"zip\"").as_bytes()).unwrap_err();
     assert!(e.0.contains("unknown kind"), "{}", e.0);
+}
+
+#[test]
+fn only_cwe_407_can_be_declared_applicable() {
+    let sb = Sandbox::new("prof-407-applicable");
+    let good = sb.read(PROFILE);
+    let changed = good.replacen(
+        "\"407\": {\n      \"applicability\": \"excluded\"",
+        "\"407\": {\n      \"applicability\": \"applicable\"",
+        1,
+    );
+    assert_ne!(changed, good);
+    let profile = AuditProfile::from_bytes(changed.as_bytes()).unwrap();
+    assert_eq!(
+        profile.row_applicability(407),
+        Some(coding_adventures_ca_assurance_report::profile::RowApplicability::Applicable)
+    );
+
+    let other_row = good.replacen(
+        "\"326\": {\n      \"applicability\": \"excluded\"",
+        "\"326\": {\n      \"applicability\": \"applicable\"",
+        1,
+    );
+    let error = AuditProfile::from_bytes(other_row.as_bytes()).unwrap_err();
+    assert!(error.0.contains("only for CWE-407"), "{}", error.0);
 }
 
 #[test]

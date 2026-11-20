@@ -1207,6 +1207,15 @@ func hashPackageWithRepositoryInputs(
 	repoRoot string,
 	fallback func(discovery.Package) (string, error),
 ) (string, error) {
+	switch pkg.Name {
+	case "rust/fixed-point":
+		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, fixedPointInputPaths)
+	case "rust/ca-assurance-report":
+		return hasher.HashPackageWithRepositoryInputsAndTrees(pkg, repoRoot,
+			append(append([]string{}, warrantAssurancePaths...), fixedPointReporterFileInputs...), fixedPointReporterTreePaths)
+	case "rust/warrant-ir":
+		return hasher.HashPackageWithRepositoryInputsAndTrees(pkg, repoRoot, fixedPointWarrantIRFileInputs, fixedPointWarrantIRTreePaths)
+	}
 	if inputs := repositoryInputsForPackage(pkg.Name); len(inputs) > 0 {
 		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, inputs)
 	}
