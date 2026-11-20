@@ -32,12 +32,12 @@ public sealed class HasherConformanceTests
         Assert.True(JsonElement.DeepEquals(checkedLanguage.RootElement, productionLanguage.RootElement));
         Assert.True(JsonElement.DeepEquals(checkedBoundary.RootElement, productionBoundary.RootElement));
         Assert.Equal(23, checkedLanguage.RootElement.GetProperty("languages").GetArrayLength());
-        Assert.Equal(24, checkedBoundary.RootElement.GetProperty("boundaries").GetArrayLength());
+        Assert.Equal(25, checkedBoundary.RootElement.GetProperty("boundaries").GetArrayLength());
         Assert.Equal(
             "4b695e89c165297a539091b9e74b60a3be0fd6b056c13fb36d66cdc696e7a1d2",
             Hasher.LanguageSourceInputRegistryDigest);
         Assert.Equal(
-            "b8afd2020cf3cf50eb133eb95cac12bb4f568f5451fb624aa68544e6ff6add71",
+            "1213aa54bfa4187639fd56ebd86a17a31f3d90aff919386f8abedc3aac854c46",
             Hasher.RepositorySourceInputBoundaryDigest);
         Assert.Equal(
             Hasher.LanguageSourceInputRegistryDigest,
@@ -57,7 +57,7 @@ public sealed class HasherConformanceTests
             .GetFiles(Path.Combine(FixtureDirectory, "cases"), "source-collection-*.json")
             .OrderBy(path => path, StringComparer.Ordinal)
             .ToArray();
-        Assert.Equal(23, fixturePaths.Length);
+        Assert.Equal(24, fixturePaths.Length);
 
         foreach (var fixturePath in fixturePaths)
         {

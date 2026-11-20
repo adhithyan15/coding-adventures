@@ -908,6 +908,9 @@ page-table walk is not within reach until arrays land. That is why the GPOS prof
 Solver capacity at kernel-entry size is unmeasured: an advisor calibration
 exists (VOS30 section 8.2, not reproducible from the repository) and backlog
 VOS-028b measures it with a committed probe; the answer may change phasing.
+The re-plan that follows VOS-028b's decision (route budget, cut density, sweeping and
+memory experiments, and the decision table that funds or withholds VOS-029) is
+pre-registered in VOS30 section 8.6.
 
 ### 10.3 The trusted base
 

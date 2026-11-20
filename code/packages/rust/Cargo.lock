@@ -14835,6 +14835,7 @@ name = "tls13-retry-handshake-traffic-key-material-binding"
 version = "0.1.0"
 dependencies = [
  "coding_adventures_hkdf",
+ "tls13-certificate-message",
  "tls13-certificate-request-message",
  "tls13-cipher-suite-offer",
  "tls13-cipher-suite-policy",

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - Dart DT18 hash-map input binding
+
+- Regenerate the production repository-input boundary from the canonical Dart hash-map exact-corpus grant. Replay the new Dart case through the public selector; the selected source-collection matrix now has 20 cases.
+
 ## Unreleased - source-input boundary sync (GAME10 TypeScript clock)
 
 - Added `code/packages/typescript/game-clock` to `typescript-workspace-configuration`.
