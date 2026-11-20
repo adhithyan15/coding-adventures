@@ -78,10 +78,12 @@ cargo run -p coding_adventures_warrant_grammar --example gen_evidence -- vos-sch
 cargo run -p coding_adventures_warrant_grammar --example gen_evidence -- --check vos-sched-any
 ```
 
-8 exhaustive claims, **262,914 cases** (the largest 65,536, 16.4% of the 400,000 budget): the
+15 exhaustive claims, **1,901,314 cases** (the largest 262,144, 65.5% of the 400,000 budget): the
 safety tier (`insert_safe`, `remove_safe`, `dispatch_safe`, `safety_alpha_build`, `safety_init`) and the any tier
-(`dispatch_sound`, `dispatch_covers_run`, `dispatch_covers_idle`), plus the same 8 as property and
-fuzz suites, 3 examples and 18 negative controls: 45 tests, all pass. `safety_init` (VOS-D081) has no negative control of its own: its subject is `alpha_w`, whose only fault, `field-zero`, is inert on the empty state (VOS-D065, WX-SV2); a mask-8 `init` is caught by it, by the behaviour tests, and by the lemma mutants of `vos-link check-contract` (VOS-039b-1; the retired `vos-sched-contract-check` had them first). A plain
+(`dispatch_sound`, `dispatch_covers_run`, `dispatch_covers_idle` and, since VOS-039c, the oracle-preservation claims
+`insert_oracle_lo`, `_hi`, `_ids`, `remove_oracle_lo`, `_hi`, `_ids` and `alpha_build_with_oracle`), plus the same 15
+as property and fuzz suites, 3 examples and 37 negative controls: 85 tests, all pass (a debug-build run of the suite
+takes about 160 s). `safety_init` (VOS-D081) has no negative control of its own: its subject is `alpha_w`, whose only fault, `field-zero`, is inert on the empty state (VOS-D065, WX-SV2); a mask-8 `init` is caught by it, by the behaviour tests, and by the lemma mutants of `vos-link check-contract` (VOS-039b-1; the retired `vos-sched-contract-check` had them first). A plain
 `cargo test --features ghost --test warrant_evidence` exits 0: no claim has `init` as its subject,
 so the known-inert `init` / `field-zero` controls of `vos-sched-fp-bitmap` (VOS-D065) do not arise
 and no tolerance script is needed.
@@ -89,9 +91,14 @@ and no tolerance script is needed.
 **Mutation sanity.** Source mutants run against the generated suites (not kept in BUILD): an
 oracle-ignoring dispatch fails `dispatch_covers_run` and `dispatch_covers_idle`; a dispatch that
 skips validation fails `dispatch_safe` and `dispatch_sound`; one that moves the oracle fails
-`dispatch_sound`. **Known gap (VOS-D080):** a mutant whose `insert` or `remove` overwrites the
-oracle passes the generated evidence, because the safety claims quantify over `build(M)` and
-`alpha` forgets the oracle; only the hand-written behaviour test catches it.
+`dispatch_sound`. **VOS-D080, closed (VOS-039c):** a mutant whose `insert` or `remove` overwrites the
+oracle (`choice: 0` in place of `..s` in the `Changed` arm) used to pass every generated test, because the safety
+claims quantify over `build(M)` and `alpha` forgets the oracle. The `insert_oracle_*` and `remove_oracle_*` claims of
+the contract state, for every oracle value, that the oracle survives and that the step and the answer do not depend
+on it; each of the two mutants now fails exactly the nine tests (exhaustive, property, fuzz) of the three claims of
+its operation. `insert_img`, `remove_img` and `dispatch_img` have negative controls of their own through the fault
+`field-flip-last`, which flips the oracle register. Residual: the thread ids 8 to 255 on the 252 masks other than
+0x00, 0xA5, 0x5A and 0xFF (VOS10 section 9.3).
 
 **The ceiling `heap 0` is evidenced on every bound operation** (VOS-D063): the harness's heap observer
 counts the export call only, so all eight bound operations carry a `heap <= 0` row.

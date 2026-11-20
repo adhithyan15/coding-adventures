@@ -24,13 +24,17 @@
 //! ```text
 //!   state = ( mask , choice )
 //!
-//!   insert(t)   mask | (1 << t)       choice untouched   (never reads the oracle)
-//!   remove(t)   mask & !(1 << t)      choice untouched   (never reads the oracle)
+//!   insert(t)   mask | (1 << t)       choice untouched   (independent of the oracle)
+//!   remove(t)   mask & !(1 << t)      choice untouched   (independent of the oracle)
 //!   dispatch    PROPOSE  the thread the oracle names:      t = choice
 //!               VALIDATE it:        t < 8 and bit t of mask is set
 //!               DEFAULT to Idle:    otherwise
 //!               and, when it ran thread t, clear bit t.    choice untouched
 //! ```
+//!
+//! That `insert` and `remove` keep the oracle and do not depend on it is not a promise of this
+//! comment: the contract's `insert_oracle_*` and `remove_oracle_*` claims (VOS10 section 9.3) state it
+//! for every oracle value, and the generated suite attacks it (the fault `field-flip-last`).
 //!
 //! Worked example, `mask = 0b0100_1000` (threads 6 and 3 ready):
 //!

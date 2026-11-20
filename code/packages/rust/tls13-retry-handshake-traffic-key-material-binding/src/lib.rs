@@ -12,6 +12,11 @@ use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk, HkdfPrkImportError};
 use core::cell::Cell;
 use core::fmt;
 use tls13_cipher_suite_policy::{HkdfHash, SelectedCipherSuite};
+use tls13_encrypted_extensions_message::{
+    decode_encrypted_extensions_message, EncryptedExtensionsMessage,
+};
+use tls13_extension_block::{ExtensionBlockError, ExtensionBlockLimits};
+use tls13_extension_context_policy::{ExtensionContextPolicyError, ServerExtensionContext};
 use tls13_handshake::{Tls13HandshakeMessage, Tls13HandshakePolicy};
 use tls13_handshake_reassembly::{ReassemblyError, ReassemblyProgress, Tls13HandshakeReassembler};
 use tls13_inner_plaintext::Tls13InnerPlaintextPolicy;
@@ -1516,14 +1521,15 @@ impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
 /// The snapshot is the exact transcript state immediately before this message.
 /// The borrowed message cannot escape the higher-ranked callback that receives
 /// this value. This value intentionally derives neither `Copy` nor `Clone`.
-pub struct PendingRetryServerTranscriptMessage<'message> {
+pub struct PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
     message: Tls13HandshakeMessage<'message>,
+    retry_evidence: &'retry_evidence dyn ExactRetryBaseSecrets,
     transcript_snapshot: TranscriptHash,
     state: ServerFlightState,
     client_authentication_requested: bool,
 }
 
-impl<'message> PendingRetryServerTranscriptMessage<'message> {
+impl<'message, 'retry_evidence> PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
     /// Borrow the exact authenticated, policy-ordered handshake message.
     #[must_use]
     pub const fn message(&self) -> &Tls13HandshakeMessage<'message> {
@@ -1547,9 +1553,40 @@ impl<'message> PendingRetryServerTranscriptMessage<'message> {
     pub const fn client_authentication_requested(&self) -> bool {
         self.client_authentication_requested
     }
+
+    /// Decode and policy-bind this exact pending `EncryptedExtensions` message.
+    pub fn validate_encrypted_extensions(
+        &self,
+        limits: ExtensionBlockLimits,
+    ) -> Result<
+        BoundRetryEncryptedExtensions<'_, 'message, 'retry_evidence>,
+        RetryEncryptedExtensionsValidationError,
+    > {
+        if self.message.handshake_type() != tls13_handshake::Tls13HandshakeType::EncryptedExtensions
+        {
+            return Err(RetryEncryptedExtensionsValidationError::WrongMessageType);
+        }
+        if self.state != ServerFlightState::ExpectCertificateRequestOrCertificate {
+            return Err(RetryEncryptedExtensionsValidationError::WrongFlightState);
+        }
+        let encrypted_extensions = decode_encrypted_extensions_message(self.message.body(), limits)
+            .map_err(RetryEncryptedExtensionsValidationError::Structure)?;
+        self.retry_evidence
+            .extension_context_policy()
+            .validate_server_message(
+                ServerExtensionContext::EncryptedExtensions,
+                encrypted_extensions.extensions(),
+                self.retry_evidence.final_client_hello_extensions(),
+            )
+            .map_err(RetryEncryptedExtensionsValidationError::Context)?;
+        Ok(BoundRetryEncryptedExtensions {
+            pending: self,
+            encrypted_extensions,
+        })
+    }
 }
 
-impl fmt::Debug for PendingRetryServerTranscriptMessage<'_> {
+impl fmt::Debug for PendingRetryServerTranscriptMessage<'_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
             .debug_struct("PendingRetryServerTranscriptMessage")
@@ -1560,6 +1597,79 @@ impl fmt::Debug for PendingRetryServerTranscriptMessage<'_> {
                 "client_authentication_requested",
                 &self.client_authentication_requested,
             )
+            .finish()
+    }
+}
+
+/// Stable payload-free failures for exact retry `EncryptedExtensions` validation.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RetryEncryptedExtensionsValidationError {
+    /// The pending ordered message was not `EncryptedExtensions`.
+    WrongMessageType,
+    /// The ordered flight was not immediately after `EncryptedExtensions`.
+    WrongFlightState,
+    /// The exact authenticated body was structurally invalid.
+    Structure(ExtensionBlockError),
+    /// Placement or final ClientHello offer policy rejected one extension.
+    Context(ExtensionContextPolicyError),
+}
+
+impl fmt::Display for RetryEncryptedExtensionsValidationError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::WrongMessageType => "TLS 1.3 retry message is not EncryptedExtensions",
+            Self::WrongFlightState => {
+                "TLS 1.3 retry EncryptedExtensions has the wrong ordered-flight state"
+            }
+            Self::Structure(_) => "TLS 1.3 retry EncryptedExtensions structure is invalid",
+            Self::Context(_) => "TLS 1.3 retry EncryptedExtensions policy rejected an extension",
+        })
+    }
+}
+
+impl std::error::Error for RetryEncryptedExtensionsValidationError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Structure(error) => Some(error),
+            Self::Context(error) => Some(error),
+            Self::WrongMessageType | Self::WrongFlightState => None,
+        }
+    }
+}
+
+/// Exact authenticated `EncryptedExtensions` bound to retry offer/context policy.
+///
+/// This proof intentionally derives neither `Copy` nor `Clone` and retains the
+/// pending ordered message beside the exact structural parse.
+pub struct BoundRetryEncryptedExtensions<'pending, 'message, 'retry_evidence> {
+    pending: &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence>,
+    encrypted_extensions: EncryptedExtensionsMessage<'message>,
+}
+
+impl<'pending, 'message, 'retry_evidence>
+    BoundRetryEncryptedExtensions<'pending, 'message, 'retry_evidence>
+{
+    /// Borrow the exact pending ordered message and pre-message snapshot.
+    #[must_use]
+    pub const fn pending(
+        &self,
+    ) -> &'pending PendingRetryServerTranscriptMessage<'message, 'retry_evidence> {
+        self.pending
+    }
+
+    /// Borrow the exact structurally decoded and policy-authorized body.
+    #[must_use]
+    pub const fn encrypted_extensions(&self) -> &EncryptedExtensionsMessage<'message> {
+        &self.encrypted_extensions
+    }
+}
+
+impl fmt::Debug for BoundRetryEncryptedExtensions<'_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryEncryptedExtensions")
+            .field("pending", &"[RETAINED]")
+            .field("encrypted_extensions", &"[REDACTED]")
             .finish()
     }
 }
@@ -1694,8 +1804,13 @@ impl<
         RetryOrderedServerTranscriptAdvanceError,
     >
     where
-        F: for<'message> FnMut(PendingRetryServerTranscriptMessage<'message>) -> bool,
+        F: for<'message> FnMut(PendingRetryServerTranscriptMessage<'message, 'evidence>) -> bool,
     {
+        let retry_evidence = self
+            .server_finished_key
+            .handshake_traffic_secrets()
+            .evidence()
+            .as_exact_retry_base_secrets();
         let Self {
             ordered_flight,
             server_finished_key,
@@ -1715,6 +1830,7 @@ impl<
                 let encoded = message.encoded();
                 let pending = PendingRetryServerTranscriptMessage {
                     message,
+                    retry_evidence,
                     transcript_snapshot: transcript.snapshot(),
                     state,
                     client_authentication_requested: flight.client_authentication_requested(),

@@ -4,6 +4,22 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed (VOS-039c security review, round 2)
+
+- **CC11 gate bypass through a type alias (high).**  The successors were judged by a `mentions_impl` in `vos-manifest` that matched only the literal name `Impl`, but Warrant has aliases (`model State = Impl`) that the checker and the evidence generator resolve, so `op insert_img(s: State, t: U8) -> State` was `Impl -> Impl` to the generator and invisible to CC11, and dropping `field-flip-last` passed.  `vos-manifest` now judges the resolved type with the generator's own resolution (`warrant-grammar` `evidence::type_mentions`), so CC11 agrees with the generator by construction; an unresolvable type or an alias cycle counts as a state (fail closed).  Test: `cc11_an_aliased_state_is_still_a_successor` (both sides, one side, an alias of an alias).  VOS04 5.6 records the INFO note that the `contract =` pin is author-declared and no CD rule ties it to a registry (VOS-D114).
+
+### Fixed (VOS-039c security review)
+
+- **CC11 gate bypass (F1, high).**  The successor operations were read from the bindings' host spelling (`ret=Impl`, an `Impl` in `args=`), but both are optional and the generator falls back to the document's signature, so `op insert_img export=.. faults=field-zero` was a real state-to-state operation that CC11 did not see (b and c were skipped).  The successors are now the `op`s of the generated document whose return type mentions `Impl` and that have an `Impl`-mentioning parameter (or an `inout` one); the bindings are read only for each successor's faults.  A binding that names no `op` of the document fails closed, as does an `Option<Impl>`/`Result`/tuple signature (treated as a state, which the generator then refuses `field-flip-last` on).  `successor_ops` now takes the document's `OpFact`s (new in `vos-manifest`).
+- **Numeric oracle (F2, low).**  CC11 (a) also requires the last field's type to be numeric (`is_numeric_type`: `Nat` or a `FixedTy`, the generator's own table); a `Bool` or `Bytes` oracle is a finding.
+- **Decoy claim (F3, low).**  The `field-flip-last` plan entry must be on a CONTRACT-OWNED claim (name and `claim_sha256` equal those of an obligation of the contract's `any` tier), not on an implementation-own claim that happens to call one successor.
+- Tests: the reviewer's reproduction (bare, `ret=` omitted, `args=` omitted), a binding with no `op`, an `inout` state operation, a `Bool` oracle, a decoy claim; unit tests of the new facts.  The `-any` fixture's contract now owns `c1`, and its other operations are projections.
+
+### Added (VOS-039c, VOS-D080)
+
+- **CC11**, oracle preservation of every `-any` (`src/oracle.rs`, run by `check-component` on kind `any` only).  DERIVED from the parsed document and the bindings, never declared, and it reads no claim text: (a) the `Impl` field outside the cone of `build` (the walk CD07 uses) is exactly one and is the LAST field, and a `build` the walk cannot decide fails closed; (b) every state-producing operation (bound with `ret=Impl` and an `Impl` among `args=`) lists the fault `field-flip-last`; (c) the sabotage plan has an `exhaustive/<claim> field-flip-last` entry on a claim that calls that operation and no other state-producing operation.  The constant is `ORACLE_FAULT`, asserted against VOS04 5.6 by a test.  A contract whose `any` block lacks preservation claims cannot have a compliant `-any`; no `contract.vos` format change.  `pub fn judge` is pure.
+- Tests: `tests/oracle.rs` (the pure judge: every undecided shape, an empty constructor, a flip fault that is not the oracle fault, the successor set of a bindings file, refused bindings and documents) and the CC11 controls of `tests/component.rs` (the `-any` fixture is now a valid Warrant document with the oracle last and a state-producing operation `f`; controls: a successor without the fault, an entry on a claim that calls no successor or on an example, a claim that calls two successors, the oracle first, absent or doubled, a `build` that is not a constructor or is missing, no state-producing operation, a refused document, and the production crate that is not subject).
+
 ### Added (VOS-039b-2b, VOS-D104, VOS-D055 bound half, VOS-D112)
 
 - **CC09**, `bound` rows against the ceilings of `contract.vos` (`src/bounds.rs`), run by `check-component` on

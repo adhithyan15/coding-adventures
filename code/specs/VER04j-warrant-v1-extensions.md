@@ -639,6 +639,7 @@ to an earlier constructor with minimal fields, then field-wise; `Option` toward
 | `swap-components` | homogeneous tuples | components exchanged |
 | `field-zero` | record results | first numeric field replaced by `0` |
 | `field-flip` | record results (applicable exactly where `field-zero` is) | lowest bit of the first numeric field flipped |
+| `field-flip-last` | a single-constructor record with at least TWO numeric fields | lowest bit of the LAST numeric field flipped |
 | `wrong-ctor` | variant results | constructor replaced by its predecessor |
 | `ok-as-err` | `Result` of a composite | success reported as the first error case |
 | `off-by-one-consumed` | `(value, consumed)` pairs | `consumed + 1` / `- 1` |
@@ -661,6 +662,21 @@ never `V::Nat`); `x ^ 1` is non-negative for a non-negative `x`, and a fault res
 range-checked against the declared `Nat` domain (`64 ^ 1 = 65` lies outside `0..=64` but
 is only compared, never converted back to the host). Bool, enum and bytes fields are not
 numeric: a record with none is W0701.
+
+**`field-flip-last` (VOS-039c).** `field-zero` and `field-flip` rewrite the FIRST numeric field. A record
+whose first numeric field is a bitmap and whose last is a register the abstraction drops (an `-any`
+scheduler state `Impl(mask, choice)`, VOS10 9.3) therefore had no fault that could ever corrupt the register,
+and a claim that an operation KEEPS the register (`insert_img(s, t).choice == s.choice`) had nothing that
+could fail it. `field-flip-last` replaces the last numeric field `x` by `x ^ 1`, by the same arithmetic and
+the same width rule as `field-flip`, so it is never inert. It is applicable only to a single-constructor
+record with at least two numeric fields (inside an `Ok` or a `Some`, as for every composite fault); a record
+with one numeric field is W0701, because the last field would be the first and the fault would only duplicate
+`field-flip`, and a variant or a record with none is W0701 as for the other record faults. It has no
+`WARRANT_EVIDENCE_ATTACK` semantics: that switch exists because a first-field flip of an `init` and of the
+`alpha` that reads it cancel, and nothing reads the register a flip of the last field corrupts. Gated as
+`field-flip` is, by its own prelude region (`lastflip`): `fault_field_flip_last` and `Fault::FieldFlipLast` are
+emitted only for a binding that lists `field-flip-last`, so a harness that does not (the other adopters, and a
+harness that lists `field-flip` alone) is byte for byte what it was.
 
 *Gating (no existing harness changes).* The generated function `fault_field_flip`
 and the `Fault::FieldFlip` variant are emitted only when some `evidence.bindings`
@@ -1397,7 +1413,8 @@ The numbering continues from the WX-B/WX-C items above.
     domain; `field-zero` needs a numeric field and `swap-components` a homogeneous
     pair or longer tuple, each checked at generation (W0701); `field-flip`
     (4.8, WX-SV2) has the same applicability as `field-zero` but flips the lowest bit
-    of the first numeric field, so a zero field is not inert; `ok-as-err` needs a
+    of the first numeric field, so a zero field is not inert; `field-flip-last` (4.8, VOS-039c) flips the
+    last numeric field of a record with at least two, so a register that is not the first field can be corrupted; `ok-as-err` needs a
     `Result` whose payload is composite.  A fault rewrites the composite *inside* an
     `Ok` or a `Some` (an `Option<(U8, U8)>` result can be attacked by
     `swap-components`), and `drop-consumed` and `off-by-one-consumed` need a numeric

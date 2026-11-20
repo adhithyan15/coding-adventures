@@ -19,3 +19,13 @@ example/oracle_names_the_thread wrong-ctor
 exhaustive/safety_init field-flip attack=init
 exhaustive/safety_init field-flip attack=alpha_w
 exhaustive/dispatch_covers_run field-flip attack=alpha_w
+# VOS-039c (CC11): the oracle-preservation claims.  `field-flip-last` flips the oracle register of the state an operation
+# returns, so each `insert_oracle_*` and `remove_oracle_*` claim, which states `.choice == c` first, must fail under it.
+exhaustive/insert_oracle_lo field-flip-last
+exhaustive/insert_oracle_hi field-zero
+exhaustive/insert_oracle_ids wrong-ctor
+exhaustive/remove_oracle_lo field-flip-last
+exhaustive/remove_oracle_hi field-zero
+exhaustive/remove_oracle_ids wrong-ctor
+exhaustive/alpha_build_with_oracle field-zero
+exhaustive/dispatch_sound field-flip-last

@@ -525,7 +525,7 @@ only, and every claim is *exhaustive* where the instance fits.
 | `policy` | `dispatch_policy` | A (deterministic) | fixed-priority implementations |
 | `canonical` | `canon_init`, `canon_insert_post`, `canon_insert_img`, `canon_remove_post`, `canon_remove_img`, `canon_dispatch_post`, `canon_dispatch_img` | shape C and closure | every `production` implementation that carries `canonical` |
 | `representation` | `rep_init`, `rep_alpha`, `insert_rep_lo`, `insert_rep_hi`, `remove_rep_lo`, `remove_rep_hi`, `dispatch_rep`, `dispatch_rep_post` | closure over the image of `rep` | every `production` implementation that carries `representation` instead of `canonical` |
-| `any` | `dispatch_sound`, `dispatch_covers_run`, `dispatch_covers_idle` | soundness and coverage | `kind = any` only |
+| `any` | `dispatch_sound`, `dispatch_covers_run`, `dispatch_covers_idle`, `insert_oracle_lo`, `insert_oracle_hi`, `insert_oracle_ids`, `remove_oracle_lo`, `remove_oracle_hi`, `remove_oracle_ids`, `alpha_build_with_oracle` | soundness, coverage and oracle preservation (VOS-039c) | `kind = any` only |
 
 **Safety** (`warrant/obligations-safety.part`):
 
@@ -680,11 +680,50 @@ couples it to the mask) is not closed under a real round-robin's steps and fails
 history values needs a contract revision. The history of the state *after* a step is checked only for
 membership in the image, not for rotation order: that is what an optional `<op>_det` claim is for.
 
+**Any** (`warrant/obligations-any.part`). `Impl` is `Impl(mask: U8, choice: U8)`: the oracle is a binder, so
+these claims quantify over `Impl` directly. `dispatch_sound` and the two coverage claims are the soundness and
+coverage of VOS01 section 3.3. **Oracle preservation (VOS-039c, VOS-D080)** is seven more, contract-owned so that CD07
+requires them of every `-any` by `claim_sha256` and no implementation writes them. The safety claims run from
+`build(M)`, whose oracle is 0, and `alpha` drops the oracle, so a scheduler whose `insert` overwrote `choice` passed
+every claim of the first draft (the hand-written behaviour test caught it). Per operation, the claim states for EVERY
+oracle `c`, with the oracle conjunct FIRST so that `insert_img` is the claim's subject (the generator picks the
+subject by the shallow search of `find_operation_in_expr`, VOS02 section 4.4) and gets a negative control of its own:
+
+```text
+  claim insert_oracle_lo:                       -- the same for _hi (TLO + 4u8) and for remove
+    forall mask: U8, c: U8, t0: Bool, t1: Bool. (
+      insert_img(Impl(mask, c), TLO).choice == c and                                         -- the oracle survives
+      dec(alpha_w(insert_img(Impl(mask, c), TLO))) == abs_insert(dec(alpha_w(Impl(mask, c))), TLO).1 and  -- the step, from alpha
+      insert_out(Impl(mask, c), TLO) == abs_insert(dec(alpha_w(Impl(mask, c))), TLO).0)      -- the answer
+  claim insert_oracle_ids:                      -- every U8 id, four masks
+    forall m0: Bool, m1: Bool, c: U8, t: U8. ( ... the same three conjuncts over Impl(M4, c), t ... )
+  claim alpha_build_with_oracle:                -- alpha is onto M whatever the oracle
+    forall b0: Bool, .., b7: Bool, c: U8. dec(alpha_w(Impl(build(ready_of(b0, .., b7)).mask, c))) == ready_of(b0, .., b7)
+```
+
+where `TLO = ((if t0 then 1u8 else 0u8) + (if t1 then 2u8 else 0u8))`, `THI = (TLO + 4u8)` and
+`M4 = ((if m0 then 165u8 else 0u8) + (if m1 then 90u8 else 0u8))` (the masks 0x00, 0xA5, 0x5A and 0xFF), written
+out in the part (a part holds claims only, so there is no model to name them). **Why the split.** Three `U8` binders
+are 16,777,216 cases (VOS-D080, the first design), 41.9 times the budget. `_lo` (ids 0 to 3) and `_hi` (ids 4 to 7)
+take every mask, every oracle and every id of `pre_insert` (`t < 8`): `256 x 256 x 4 = 262,144` each, so insert and
+remove are exhaustive over every state, oracle and in-range id. `_ids` takes every oracle and every `U8` id on four
+masks: `4 x 65,536 = 262,144`. `alpha_build_with_oracle` is `2^8 x 256 = 65,536`. No claim has a refinement, so the
+rejection sampler of the property suite is not involved (VOS-D079) and the acceptance floor is untouched.
+**Residual, stated:** the ids 8 to 255 on the 252 masks other than 0x00, 0xA5, 0x5A and 0xFF (the answer for an id
+outside `pre_insert` is `OutOfRange` and the state is returned unchanged, which the four masks and every oracle check,
+and `insert_safe` checks on every mask at oracle 0). The generator's `.mask` projection of a model call
+(`build(..).mask`) is accepted by the document's type check, so no fallback was needed. `.choice == c` is the claim a
+faulted `insert_img` fails: VER04j 4.8's `field-flip-last` (flip of the LAST numeric field, the oracle) is its control,
+and the kit rule CC11 (VOS04 5.6) requires the fault and the plan entries of every `-any`.
+
 ### 9.4 Claims that are not obligations
 
 An implementation may add claims of its own (printed `impl-own`, VOS02 section
-2.6): the any implementation adds `alpha_build_with_oracle` and
-`insert_keeps_the_oracle`, which are not obligations because they name its own state. A
+2.6). The two claims VOS01 section 5.5 listed as the any implementation's own,
+`alpha_build_with_oracle` and `insert_keeps_the_oracle`, are **not** impl-own: they are obligations of the
+`any` block (section 9.3), because the oracle is by rule the last field of `Impl` and the claims quantify over
+`Impl(mask, c)` directly, as `dispatch_sound` does; `insert_keeps_the_oracle` is the first conjunct of
+`insert_oracle_*` and `remove_oracle_*`. A
 round-robin scheduler may add `<op>_det` claims (section 5.3); they are `impl-own` and ungated, and `vos-link
 check-doc` prints no special line for them (the representation claims are the tier's, section 9.3).
 
@@ -730,16 +769,19 @@ counts the evaluation of section 12 measured, not typed by hand.
 | `dispatch_sound` | `mask: U8`, `c: U8` | 65,536 | 65,536 | 16.38 |
 | `dispatch_covers_run` | `mask: U8`, `t: U8` | 65,536 | 65,536 | 16.38 |
 | `dispatch_covers_idle` | `mask: U8` | 256 | 256 | 0.06 |
+| `insert_oracle_lo`, `insert_oracle_hi`, `remove_oracle_lo`, `remove_oracle_hi` (each) | `mask: U8`, `c: U8`, 2 Bool | 262,144 | 262,144 | 65.54 |
+| `insert_oracle_ids`, `remove_oracle_ids` (each) | 2 Bool, `c: U8`, `t: U8` | 262,144 | 262,144 | 65.54 |
+| `alpha_build_with_oracle` | 8 Bool, `c: U8` | 65,536 | 65,536 | 16.38 |
 
-**The largest single claim is 65,536 binder cases, 16.4 percent of the budget**,
-as in the toy. The obligation totals per implementation (enumerated cases):
+**The largest single claim is 262,144 binder cases, 65.5 percent of the budget**
+(the representation and the oracle-preservation claims; 65,536 and 16.4 percent before VOS-012b and VOS-039c). The obligation totals per implementation (enumerated cases):
 
 | Implementation | Carries | Enumerated cases |
 |---|---|---|
 | fixed-priority bitmap (`production`) | safety, policy, canonical | **394,500** (394,498 before `safety_init`, VOS-D081) |
 | lowest-first scan (safety, canonical) | safety, canonical | 131,586 + 262,658 = 394,244 |
 | round-robin (`representation`) | safety, representation | 131,586 + 1,245,186 = **1,376,772** (the representation block: `rep_init` 2, three claims of 65,536 and four of 262,144) |
-| `-any` | safety, any | **262,914** (262,912 before `safety_init`, VOS-D081; = the binder cases: no refinement; 199,424 before VOS-012a dropped the `t < 8` refinement of `dispatch_covers_run`, VOS-D079) |
+| `-any` | safety, any | **1,901,314** (safety 131,586 and the `any` block 1,769,728, the manifest's measured sum over 15 exhaustive claims; 262,914 before VOS-039c added the seven oracle-preservation claims; 262,912 before `safety_init`, VOS-D081; = the binder cases: no refinement; 199,424 before VOS-012a dropped the `t < 8` refinement of `dispatch_covers_run`, VOS-D079) |
 
 Where the budget ends for this contract:
 
@@ -749,6 +791,7 @@ Where the budget ends for this contract:
 | `insert` at `N = 11` | `2,048 x 256 = 524,288` | over: W0706 |
 | `dispatch` alone at `N = 18` / `N = 19` | `262,144` / `524,288` | inside / over |
 | `-any` `dispatch_sound` (state `U8`, oracle `U8`) | `65,536` | inside |
+| `-any` `insert` over state, oracle and id, all `U8` (VOS-D080's first design) | `16,777,216` | over, 41.9 times: W0706 (so `_lo`, `_hi` and `_ids` of section 9.3: `262,144` each) |
 | any claim at `N = 64` | `2^64` | not enumerable: X2 and X3 only |
 
 So the reduced instance is `N <= 10` for the operations with a full `U8` id and
@@ -787,7 +830,11 @@ is out of this contract's reach: plan on `T <= 8..16` per obligation there.
 * **`vos-sched-any`** (kind `any`, mode `none`): the bitmap plus an oracle register
   `choice` (`Impl(mask, choice)`), `dispatch` proposing, validating and
   defaulting to `Idle`; the oracle-write path only in the `ghost` module; `insert`
-  and `remove` never read the oracle (a lexical rule). Carries **safety and
+  and `remove` keep the oracle and do not depend on it. That is **evidenced, not a lexical rule**: the `any` block's
+  `insert_oracle_*` and `remove_oracle_*` claims (section 9.3, VOS-039c) state it for every oracle value, and the
+  lexical rule "insert and remove never read the oracle" that this item first proposed is dropped: it is not
+  sufficient (a mutant that writes `choice: 0` never reads the oracle and passes it) and not cheaply checkable (the
+  honest `..s` and `return s` read the field lexically; it needs field-sensitive dataflow). Carries **safety and
   any**, never policy or canonical. Its `-any` block is the `obligations-any.part`
   above.
 * **`vos-sched-rr`** (kind `production`, carries `representation` and `safety`): a rotating
@@ -808,7 +855,14 @@ is out of this contract's reach: plan on `T <= 8..16` per obligation there.
   is written only through the `ghost` module, and its generated document passes `check-doc`
   with the R6 `any` rules. Evidence: 7 exhaustive claims, 262,912 cases, 42 tests, all pass (8 claims, 262,914 cases, 45 tests since `safety_init`, VOS-D081), no
   known-inert control. `dispatch_covers_run` lost its `t < 8` refinement (section 9.3). The own
-  claims of section 9.4 are not written: see VOS-D080.
+  claims of section 9.4 were not written there (VOS-D080).
+* **As built (VOS-039c):** the seven oracle-preservation claims are in the `any` block (section 9.3), the generator
+  has the fault `field-flip-last` (VER04j 4.8), `insert_img`, `remove_img` and `dispatch_img` list it, the sabotage
+  plan has eight more entries, and `vos-link check-component` requires all of it (CC11, VOS04 5.6). Only
+  `vos-sched-any` regenerates (document, harness, manifest, BUILD files): 15 exhaustive claims, 1,901,314
+  cases, 85 tests, all pass, 37 negative controls (it was 18), the largest claim 262,144 cases. The documents of
+  `vos-sched-fp-bitmap` and `vos-sched-rr`, the capacity probe's digests (VOS-D103) and the other twelve adopters of
+  the generator do not move.
 * The two together are the replaceability exercise (VOS00 section 8): the policy
   claims, `vos-sched-fp-bitmap`'s evidence and the contract block are **not**
   regenerated.
@@ -869,6 +923,10 @@ fate of each part is the table after item 4 below)**:
    | `canon_insert_img`, `canon_remove_img`, `canon_dispatch_img` | see the `_img` rows above | |
    | `dispatch_sound`, safe part | `any` skips the validation step | `dispatch_safe`, `dispatch_sound` |
    | `dispatch_sound`, `.choice == c` | `any`'s `dispatch_img` moves the oracle | `dispatch_sound` only |
+   | `insert_oracle_*`, `.choice == c` | `insert_img` overwrites the oracle (`choice: 0` in the `Changed` arm); the harness fault `field-flip-last` on `insert_img` | `insert_oracle_lo`, `_hi`, `_ids` only |
+   | `remove_oracle_*`, `.choice == c` | the same for `remove_img` | `remove_oracle_lo`, `_hi`, `_ids` only |
+   | `insert_oracle_*`, `remove_oracle_*`, the step and the answer | `field-zero` on `insert_img` / `remove_img` (the `_hi` plan line); `wrong-ctor` on `insert_out` / `remove_out` (the `_ids` plan line) | the claim named, in the harness |
+   | `alpha_build_with_oracle` | `alpha_w` zeroed (`field-zero`) | `alpha_build_with_oracle` (and the safety claims that call `alpha_w`) |
    | `dispatch_covers_run` | `any` never proposes thread 3 | `dispatch_covers_run` only |
    | `dispatch_covers_idle` | `any` answers `Run(7)` for oracle 255 on a non-empty set | `dispatch_sound`, `dispatch_covers_idle` |
    | each of the nine lemmas | one mutation of the contract block per lemma | that lemma |
@@ -883,6 +941,14 @@ fate of each part is the table after item 4 below)**:
    | the Rust enums and the Warrant variants have the same constructors | restored, generic, as CK10 of `check-contract` (VOS-039b-2a): the Rust enum and the Warrant variant render to one line each and the bytes are compared, and the lines are rows of `warrant/lemmas.table`; a mismatched constructor also fails the generated harness, and `wrong-ctor` sabotage attacks the marshalling |
    | `pre_insert_is_exactly_the_ids_below_eight` | replaced by the config lemma `config_n_is_the_id_range` |
    | exact-set and per-conjunct controls; the oracle-at-zero-is-canonical evaluation | **lost** (sabotage is per claim): VOS-D109 |
+
+   **One-off source mutation, VOS-039c (run once, not committed).** In `vos-sched-any/src/lib.rs`, `choice: 0`
+   in place of `..s` in the `Changed` arm of `insert`, and then of `remove`, with the generated suite run unfiltered
+   (a `WARRANT_EVIDENCE_FILTER` needs a sabotage fault, so the filter form of the design could not be used). Each
+   mutant produced exactly nine `not ok`, the exhaustive, property and fuzz suites of the three claims of the
+   mutated operation (`insert_oracle_lo`, `_hi`, `_ids`; then `remove_oracle_lo`, `_hi`, `_ids`) and nothing else; every
+   other test passed. Before VOS-039c both mutants passed all 42 generated tests. The source was restored byte for
+   byte (checked with `cmp`).
 
    Three honest limits. (a) The `_post` claims are *implied* by their `_img` twins plus
    `safety_alpha_build`: no mutant can break a `_post` claim alone (an `img` equal to a

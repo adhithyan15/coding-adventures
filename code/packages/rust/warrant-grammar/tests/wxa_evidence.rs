@@ -189,6 +189,9 @@ mod harness {
     pub fn field_flip(v: V) -> V {
         fault_field_flip(v)
     }
+    pub fn field_flip_last(v: V) -> V {
+        fault_field_flip_last(v)
+    }
     pub fn drop_consumed(v: V) -> V {
         fault_drop_consumed(v)
     }
@@ -288,6 +291,7 @@ fn the_full_generated_suite_passes_and_every_fault_is_caught() {
         "swap-components",
         "field-zero",
         "field-flip",
+        "field-flip-last",
         "wrong-ctor",
         "ok-as-err",
         "off-by-one-consumed",
@@ -833,6 +837,22 @@ fn each_fault_rewrites_exactly_what_the_specification_says() {
     // A plain Int (the numeric tower) flips too, a negative one by two's complement.
     let neg = V::Con("R", 0, "R", vec![V::Int(-1)]);
     assert_eq!(harness::field_flip(neg), V::Con("R", 0, "R", vec![V::Int(-2)]));
+    // field-flip-last (VOS-039c): the LAST numeric field flips and the first is untouched,
+    // flipping twice restores the record, and a zero field is not inert.
+    let span = V::Con("Span", 0, "Span", vec![V::Bool(true), fx(4), fx(0)]);
+    assert_eq!(
+        harness::field_flip_last(span.clone()),
+        V::Con("Span", 0, "Span", vec![V::Bool(true), fx(4), fx(1)])
+    );
+    assert_eq!(harness::field_flip_last(harness::field_flip_last(span.clone())), span);
+    // A record whose only numeric field comes first is flipped there (the same field as `field-flip`).
+    let solo = V::Con("R", 0, "R", vec![V::Int(6), V::Bool(false)]);
+    assert_eq!(
+        harness::field_flip_last(solo),
+        V::Con("R", 0, "R", vec![V::Int(7), V::Bool(false)])
+    );
+    // A value that is not a record has nothing to flip.
+    assert_eq!(harness::field_flip_last(fx(3)), fx(3));
     // wrong-ctor: the previous constructor (the last for the first), with the
     // first element of each field's domain as fields.
     let rect = V::Con("Shape", 1, "Rect", vec![fx(8), fx(9)]);
@@ -1071,6 +1091,7 @@ fn the_generated_suite_notices_every_fault_it_names() {
         "swap-components",
         "field-zero",
         "field-flip",
+        "field-flip-last",
         "wrong-ctor",
         "ok-as-err",
         "off-by-one-consumed",

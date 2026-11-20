@@ -622,6 +622,29 @@ fn fault_field_flip(v: V) -> V {
     })
 }
 
+/// Fault `field-flip-last` (VOS-039c): the lowest bit of the LAST numeric field
+/// of a record result is flipped.  It mirrors `fault_field_flip` with the search
+/// run from the back.  `field-zero` and `field-flip` touch the first numeric
+/// field, which for an `-any` image `Impl(mask, choice)` is the bitmap, so
+/// nothing could corrupt the oracle register `choice` and a claim that the
+/// operation keeps it (`insert_img(s, t).choice == s.choice`) had no fault that
+/// could ever fail it.  Like `field-flip` it is never inert (`x ^ 1 != x`).
+fn fault_field_flip_last(v: V) -> V {
+    map_payload(v, |x| match x {
+        V::Con(t, i, c, mut vs) => {
+            if let Some(slot) = vs.iter_mut().rev().find(|f| matches!(f, V::Int(_) | V::Fixed(..))) {
+                *slot = match &*slot {
+                    V::Int(n) => V::Int(n ^ 1),
+                    V::Fixed(f, n) => V::Fixed(*f, n ^ 1),
+                    other => other.clone(),
+                };
+            }
+            V::Con(t, i, c, vs)
+        }
+        other => other,
+    })
+}
+
 /// Fault `off-by-one-consumed`: the second component of a `(value, consumed)`
 /// pair is off by one, `+ 1` when even and `- 1` when odd, so both directions
 /// occur and a claim that pins `consumed` on every input catches the fault.
@@ -686,6 +709,7 @@ pub enum Fault {
     OkAsErr,
     OffByOneConsumed,
     FieldFlip,
+    FieldFlipLast,
 }
 
 impl Fault {
@@ -700,6 +724,7 @@ impl Fault {
             Fault::OkAsErr => "ok-as-err",
             Fault::OffByOneConsumed => "off-by-one-consumed",
             Fault::FieldFlip => "field-flip",
+            Fault::FieldFlipLast => "field-flip-last",
         }
     }
     pub fn parse(text: &str) -> Option<Fault> {
@@ -713,6 +738,7 @@ impl Fault {
             Fault::OkAsErr,
             Fault::OffByOneConsumed,
             Fault::FieldFlip,
+            Fault::FieldFlipLast,
         ]
         .into_iter()
         .find(|f| f.name() == text)
@@ -3242,6 +3268,7 @@ fn op_normalize(_w: &[u64], args: &[V], fault: Fault) -> V {
     match fault {
         Fault::FieldZero => fault_field_zero(v),
         Fault::FieldFlip => fault_field_flip(v),
+        Fault::FieldFlipLast => fault_field_flip_last(v),
         _ => v,
     }
 }
@@ -4118,6 +4145,11 @@ pub fn build_suite(fault: Fault) -> Suite {
         let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
     });
+    reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "example".into(), ..Meta::new("warrant/wxa/negctl/example/normalize/field-flip-last", "negctl", "normalize", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_orders_the_pair", neg_ex_normalize_orders_the_pair), ("normalize_projects_a_field", neg_ex_normalize_projects_a_field)];
+        let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip-last")
+    });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxa/negctl/exhaustive/normalize/field-zero", "negctl", "normalize", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_exh_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_exh_normalize_len_is_the_gap)];
         let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
@@ -4127,6 +4159,11 @@ pub fn build_suite(fault: Fault) -> Suite {
         let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_exh_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_exh_normalize_len_is_the_gap)];
         let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
+    });
+    reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxa/negctl/exhaustive/normalize/field-flip-last", "negctl", "normalize", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_exh_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_exh_normalize_len_is_the_gap)];
+        let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip-last")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "property".into(), ..Meta::new("warrant/wxa/negctl/property/normalize/field-zero", "negctl", "normalize", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_prop_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_prop_normalize_len_is_the_gap)];
@@ -4138,6 +4175,11 @@ pub fn build_suite(fault: Fault) -> Suite {
         let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
     });
+    reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "property".into(), ..Meta::new("warrant/wxa/negctl/property/normalize/field-flip-last", "negctl", "normalize", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_prop_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_prop_normalize_len_is_the_gap)];
+        let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip-last")
+    });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "fuzz".into(), ..Meta::new("warrant/wxa/negctl/fuzz/normalize/field-zero", "negctl", "normalize", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_fuz_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_fuz_normalize_len_is_the_gap)];
         let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
@@ -4147,6 +4189,11 @@ pub fn build_suite(fault: Fault) -> Suite {
         let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_fuz_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_fuz_normalize_len_is_the_gap)];
         let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
+    });
+    reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "fuzz".into(), ..Meta::new("warrant/wxa/negctl/fuzz/normalize/field-flip-last", "negctl", "normalize", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_fuz_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_fuz_normalize_len_is_the_gap)];
+        let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip-last")
     });
     reg(&mut suite, Meta { fault: "swap-components".into(), target: "example".into(), ..Meta::new("warrant/wxa/negctl/example/order/swap-components", "negctl", "order", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("order_swaps", neg_ex_order_swaps)];

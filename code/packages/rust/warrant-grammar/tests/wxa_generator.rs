@@ -231,7 +231,7 @@ fn only_documents_that_use_composites_switch_the_prelude_on() {
 
 fn fault_doc(ret: &str) -> String {
     format!(
-        "warrant t v1\n  error E = X | Y\n  record Rec(a: U8, flag: Bool)\n  record NoNum(flag: Bool, other: Bool)\n  variant Vr = A | B(x: U8)\n  op h(a: U8) -> {ret}\n  claim c:\n    forall a: U8. h(a) == h(a)\n"
+        "warrant t v1\n  error E = X | Y\n  record Rec(a: U8, flag: Bool)\n  record NoNum(flag: Bool, other: Bool)\n  record Two(a: U8, b: U8)\n  variant Vr = A | B(x: U8)\n  op h(a: U8) -> {ret}\n  claim c:\n    forall a: U8. h(a) == h(a)\n"
     )
 }
 
@@ -243,6 +243,7 @@ fn attack(ret: &str, fault: &str, extra: &str) -> Result<String, (DiagnosticCode
         &[
             "struct Rec path=subject::Rec fields=a:u8,flag:bool",
             "struct NoNum path=subject::NoNum fields=flag:bool,other:bool",
+            "struct Two path=subject::Two fields=a:u8,b:u8",
             "enum Vr path=subject::Vr ctors=A,B(x:u8)",
             &line,
         ],
@@ -260,6 +261,8 @@ fn a_fault_must_apply_to_the_declared_result() {
         ("Rec", "field-zero", ""),
         ("Rec", "field-flip", ""),
         ("Result<Rec, E>", "field-flip", "error=X"),
+        ("Two", "field-flip-last", ""),
+        ("Result<Two, E>", "field-flip-last", "error=X"),
         ("Vr", "wrong-ctor", ""),
         ("Result<(U8, U8), E>", "ok-as-err", "error=X"),
         ("Result<Rec, E>", "ok-as-err", "error=Y"),
@@ -280,6 +283,10 @@ fn a_fault_must_apply_to_the_declared_result() {
         ("Vr", "field-zero", ""),                      // a variant is not a record
         ("NoNum", "field-flip", ""),                   // field-flip applies exactly where field-zero does
         ("Vr", "field-flip", ""),
+        // VOS-039c: field-flip-last needs TWO numeric fields, else it would only duplicate field-flip.
+        ("Rec", "field-flip-last", ""),                // one numeric field
+        ("NoNum", "field-flip-last", ""),              // none
+        ("Vr", "field-flip-last", ""),                 // a variant is not a record
         ("Rec", "wrong-ctor", ""),                     // one constructor
         ("(U8, U8)", "ok-as-err", ""),                 // not a Result
         ("Result<U8, E>", "ok-as-err", "error=X"),     // the payload is not composite
@@ -340,6 +347,25 @@ fn field_flip_is_emitted_only_for_a_binding_that_names_it() {
     // Naming both emits both, and the zero fault's arm is untouched.
     let both = attack("Rec", "field-zero,field-flip", "").unwrap();
     assert!(both.contains("Fault::FieldZero => fault_field_zero(v),"));
+    assert!(both.contains("Fault::FieldFlip => fault_field_flip(v),"));
+}
+
+#[test]
+fn field_flip_last_is_emitted_only_for_a_binding_that_names_it() {
+    // VOS-039c: the prelude region and the enum variant exist only on request.
+    let flip = attack("Two", "field-flip", "").unwrap();
+    assert!(!flip.contains("fault_field_flip_last") && !flip.contains("FieldFlipLast"));
+    assert!(!flip.contains("field-flip-last"));
+    let last = attack("Two", "field-flip-last", "").unwrap();
+    assert!(last.contains("fn fault_field_flip_last(v: V) -> V {"));
+    assert!(last.contains("Fault::FieldFlipLast => fault_field_flip_last(v),"));
+    assert!(last.contains("FieldFlipLast,") && last.contains("\"field-flip-last\""));
+    // It carries no per-operation sabotage switch: that belongs to `field-flip` alone.
+    assert!(!last.contains("WARRANT_EVIDENCE_ATTACK") && !last.contains("sabotage_op"));
+    // The two flips are independent regions: naming both emits both.
+    let both = attack("Two", "field-flip,field-flip-last", "").unwrap();
+    assert!(both.contains("fn fault_field_flip(v: V) -> V {"));
+    assert!(both.contains("fn fault_field_flip_last(v: V) -> V {"));
     assert!(both.contains("Fault::FieldFlip => fault_field_flip(v),"));
 }
 

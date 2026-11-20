@@ -41,3 +41,7 @@
   authenticated record result, ordered state, and Finished-key proof; reject
   unauthorized messages without hashing them and permanently close record
   processing on rejection, transcript failure, or handler unwind.
+- Decode an exact authenticated ordered `EncryptedExtensions` body under
+  caller-selected limits and bind its extension block to the retained final
+  ClientHello offer and exact retry extension-context policy before the caller
+  authorizes transcript advancement.
