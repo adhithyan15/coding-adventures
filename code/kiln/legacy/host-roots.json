@@ -74,6 +74,8 @@
     "/proc/meminfo",
     "/proc/self/cgroup",
     "/proc/self/exe",
+    "/proc/self/fd",
+    "/proc/self/fd/*",
     "/proc/self/maps",
     "/proc/self/mountinfo",
     "/proc/stat",
@@ -83,7 +85,11 @@
   "absent-ok": [
     "$HOME/.config",
     "$HOME/.npmrc",
+    "/include",
+    "/opt/rh",
+    "/pyvenv.cfg",
     "/selinux",
-    "/sys/fs/selinux"
+    "/sys/fs/selinux",
+    "/sys/kernel/mm/transparent_hugepage/hpage_pmd_size"
   ]
 }
