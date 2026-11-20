@@ -247,7 +247,8 @@ def test_the_fault_cases_use_the_oracles_own_templates(kit):
 def test_write_then_check_into_a_scratch_directory(kit, tmp_path):
     assert kit.mc.main(["--write", "--fixture", str(tmp_path / "out")]) == 0
     written = {p.name: p.read_bytes() for p in (tmp_path / "out").iterdir()}
-    assert written == {name: text.encode() for name, text in kit.files.items()}  # six files, no index.json
+    binding_text, _ = kit.mc.build_binding()  # S5c: the seventh file is written beside the six, still no index.json
+    assert written == {**{name: text.encode() for name, text in kit.files.items()}, "v2-binding.json": binding_text.encode()}
     assert kit.mc.main(["--check", "--fixture", str(tmp_path / "out")]) == 0
 
 
