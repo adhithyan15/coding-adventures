@@ -629,7 +629,7 @@ pub fn parse_sound_info(data: &[u8]) -> Result<(SoundInfo, usize), AudioBridgeEr
         }
 
         let mut prev_pos: Option<u32> = None;
-        for idx in 0..env_count {
+        for (idx, dst) in info.envelope_points.iter_mut().take(env_count).enumerate() {
             let base = offset + idx * 8;
             let pos44 =
                 u32::from_le_bytes([data[base], data[base + 1], data[base + 2], data[base + 3]]);
@@ -649,7 +649,7 @@ pub fn parse_sound_info(data: &[u8]) -> Result<(SoundInfo, usize), AudioBridgeEr
                 }
             }
             prev_pos = Some(pos44);
-            info.envelope_points[idx] = SoundEnvelopePoint {
+            *dst = SoundEnvelopePoint {
                 pos44,
                 left_level,
                 right_level,
