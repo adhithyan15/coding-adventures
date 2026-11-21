@@ -1,0 +1,486 @@
+{
+  "assumptions": [
+    "att.analyzer.name-allowlist-regex-free",
+    "att.ast-audit.no-compression-routines",
+    "att.ast-audit.no-deserialization",
+    "att.ast-audit.no-legacy-ciphers",
+    "att.ast-audit.no-protocol-sinks",
+    "att.ast-call-graph.acyclic",
+    "att.language-type-system.no-prototype-pollution",
+    "att.type-signatures.unconstrained-slices",
+    "att.warrant-ir.cost-semantics-linear",
+    "gov.approval.blocked",
+    "gov.catalogue.integrity",
+    "wir.cost.step-model"
+  ],
+  "capabilities": {
+    "analyzer": "pass",
+    "certificate": "proved",
+    "declared": [],
+    "new_since_last_release": []
+  },
+  "catalogue": {
+    "evidence_kinds_sha256": "80ddc39cd9f4f3baaa245cb7fc6bfca998a5e526595eba95dae8930db9f2a391",
+    "non_claims_sha256": "22043eebae7626d36efe42f54e222e9486c61fb79c682b6a74140ad93c166f26",
+    "path": "code/assumptions/catalogue-v1.json",
+    "schema": "ver13-assumption-catalogue-v1",
+    "sha256": "8ad3cf2766136114b6f64a7c3830db6abd6fcdc614c2808a8de19091bde77a7a"
+  },
+  "claims": [
+    {
+      "evidence": [
+        "warrant/audio_device_sink/example/mono_44100",
+        "warrant/audio_device_sink/example/validate_24bit_rejected",
+        "warrant/audio_device_sink/example/validate_max_rate_384000hz",
+        "warrant/audio_device_sink/example/validate_min_rate_1hz",
+        "warrant/audio_device_sink/example/validate_over_max_rate_rejected",
+        "warrant/audio_device_sink/example/validate_stereo_rejected",
+        "warrant/audio_device_sink/example/validate_zero_rate_rejected",
+        "warrant/audio_device_sink/exhaustive/validate_format_all_rates_mono_16",
+        "warrant/audio_device_sink/exhaustive/validate_format_ch_and_bits",
+        "warrant/audio_device_sink/exhaustive/validate_format_mono_16_all_channels",
+        "warrant/audio_device_sink/exhaustive/validate_format_mono_all_bit_depths",
+        "warrant/audio_device_sink/exhaustive/validate_format_rate_and_ch",
+        "warrant/audio_device_sink/exhaustive/validate_format_rejects_over_max_rate",
+        "warrant/audio_device_sink/fuzz/validate_format_all_rates_mono_16",
+        "warrant/audio_device_sink/fuzz/validate_format_ch_and_bits",
+        "warrant/audio_device_sink/fuzz/validate_format_mono_16_all_channels",
+        "warrant/audio_device_sink/fuzz/validate_format_mono_all_bit_depths",
+        "warrant/audio_device_sink/fuzz/validate_format_rate_and_ch",
+        "warrant/audio_device_sink/fuzz/validate_format_rejects_over_max_rate",
+        "warrant/audio_device_sink/negctl/example/validate_format/field-flip",
+        "warrant/audio_device_sink/negctl/example/validate_format/field-flip-last",
+        "warrant/audio_device_sink/negctl/example/validate_format/missing-error",
+        "warrant/audio_device_sink/negctl/example/validate_format/ok-as-err",
+        "warrant/audio_device_sink/negctl/exhaustive/validate_format/field-flip",
+        "warrant/audio_device_sink/negctl/exhaustive/validate_format/field-flip-last",
+        "warrant/audio_device_sink/negctl/exhaustive/validate_format/missing-error",
+        "warrant/audio_device_sink/negctl/exhaustive/validate_format/ok-as-err",
+        "warrant/audio_device_sink/negctl/fuzz/validate_format/field-flip",
+        "warrant/audio_device_sink/negctl/fuzz/validate_format/field-flip-last",
+        "warrant/audio_device_sink/negctl/fuzz/validate_format/missing-error",
+        "warrant/audio_device_sink/negctl/fuzz/validate_format/ok-as-err",
+        "warrant/audio_device_sink/negctl/property/validate_format/field-flip",
+        "warrant/audio_device_sink/negctl/property/validate_format/field-flip-last",
+        "warrant/audio_device_sink/negctl/property/validate_format/missing-error",
+        "warrant/audio_device_sink/negctl/property/validate_format/ok-as-err",
+        "warrant/audio_device_sink/property/validate_format_all_rates_mono_16",
+        "warrant/audio_device_sink/property/validate_format_ch_and_bits",
+        "warrant/audio_device_sink/property/validate_format_mono_16_all_channels",
+        "warrant/audio_device_sink/property/validate_format_mono_all_bit_depths",
+        "warrant/audio_device_sink/property/validate_format_rate_and_ch",
+        "warrant/audio_device_sink/property/validate_format_rejects_over_max_rate"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 298345,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 30000,
+        "status": "pass"
+      },
+      "id": "validate_format_soundness",
+      "proof": null,
+      "property": {
+        "cases": 24576,
+        "status": "pass"
+      },
+      "symbol": "validate_format"
+    },
+    {
+      "evidence": [
+        "warrant/audio_device_sink/example/frames_max_samples_accepted",
+        "warrant/audio_device_sink/example/frames_over_max_rejected",
+        "warrant/audio_device_sink/example/frames_stereo_rejected",
+        "warrant/audio_device_sink/example/mono_frames",
+        "warrant/audio_device_sink/exhaustive/frame_count_matches_model",
+        "warrant/audio_device_sink/exhaustive/frame_count_mono_all_channels",
+        "warrant/audio_device_sink/exhaustive/frame_count_rejects_oversized",
+        "warrant/audio_device_sink/fuzz/frame_count_matches_model",
+        "warrant/audio_device_sink/fuzz/frame_count_mono_all_channels",
+        "warrant/audio_device_sink/fuzz/frame_count_rejects_oversized",
+        "warrant/audio_device_sink/negctl/example/frame_count_checked/field-flip",
+        "warrant/audio_device_sink/negctl/example/frame_count_checked/missing-error",
+        "warrant/audio_device_sink/negctl/example/frame_count_checked/ok-as-err",
+        "warrant/audio_device_sink/negctl/exhaustive/frame_count_checked/field-flip",
+        "warrant/audio_device_sink/negctl/exhaustive/frame_count_checked/missing-error",
+        "warrant/audio_device_sink/negctl/exhaustive/frame_count_checked/ok-as-err",
+        "warrant/audio_device_sink/negctl/fuzz/frame_count_checked/field-flip",
+        "warrant/audio_device_sink/negctl/fuzz/frame_count_checked/missing-error",
+        "warrant/audio_device_sink/negctl/fuzz/frame_count_checked/ok-as-err",
+        "warrant/audio_device_sink/negctl/property/frame_count_checked/field-flip",
+        "warrant/audio_device_sink/negctl/property/frame_count_checked/missing-error",
+        "warrant/audio_device_sink/negctl/property/frame_count_checked/ok-as-err",
+        "warrant/audio_device_sink/property/frame_count_matches_model",
+        "warrant/audio_device_sink/property/frame_count_mono_all_channels",
+        "warrant/audio_device_sink/property/frame_count_rejects_oversized"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 171574,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 15000,
+        "status": "pass"
+      },
+      "id": "frame_count_checked_soundness",
+      "proof": null,
+      "property": {
+        "cases": 12288,
+        "status": "pass"
+      },
+      "symbol": "frame_count_checked"
+    },
+    {
+      "evidence": [
+        "warrant/audio_device_sink/example/byte_len_44100",
+        "warrant/audio_device_sink/example/byte_len_invalid_format_rejected",
+        "warrant/audio_device_sink/example/byte_len_max_1hz",
+        "warrant/audio_device_sink/example/byte_len_over_1hz_rejected",
+        "warrant/audio_device_sink/exhaustive/pcm_byte_len_1hz_all_bit_depths",
+        "warrant/audio_device_sink/exhaustive/pcm_byte_len_1hz_all_channels",
+        "warrant/audio_device_sink/exhaustive/pcm_byte_len_bounded_when_ok",
+        "warrant/audio_device_sink/exhaustive/pcm_byte_len_rates_matches_model",
+        "warrant/audio_device_sink/exhaustive/pcm_byte_len_valid_44100_matches_model",
+        "warrant/audio_device_sink/fuzz/pcm_byte_len_1hz_all_bit_depths",
+        "warrant/audio_device_sink/fuzz/pcm_byte_len_1hz_all_channels",
+        "warrant/audio_device_sink/fuzz/pcm_byte_len_bounded_when_ok",
+        "warrant/audio_device_sink/fuzz/pcm_byte_len_rates_matches_model",
+        "warrant/audio_device_sink/fuzz/pcm_byte_len_valid_44100_matches_model",
+        "warrant/audio_device_sink/negctl/example/checked_pcm_byte_len_u64/flip-result-bit",
+        "warrant/audio_device_sink/negctl/example/checked_pcm_byte_len_u64/missing-error",
+        "warrant/audio_device_sink/negctl/exhaustive/checked_pcm_byte_len_u64/flip-result-bit",
+        "warrant/audio_device_sink/negctl/exhaustive/checked_pcm_byte_len_u64/missing-error",
+        "warrant/audio_device_sink/negctl/fuzz/checked_pcm_byte_len_u64/flip-result-bit",
+        "warrant/audio_device_sink/negctl/fuzz/checked_pcm_byte_len_u64/missing-error",
+        "warrant/audio_device_sink/negctl/property/checked_pcm_byte_len_u64/flip-result-bit",
+        "warrant/audio_device_sink/negctl/property/checked_pcm_byte_len_u64/missing-error",
+        "warrant/audio_device_sink/property/pcm_byte_len_1hz_all_bit_depths",
+        "warrant/audio_device_sink/property/pcm_byte_len_1hz_all_channels",
+        "warrant/audio_device_sink/property/pcm_byte_len_bounded_when_ok",
+        "warrant/audio_device_sink/property/pcm_byte_len_rates_matches_model",
+        "warrant/audio_device_sink/property/pcm_byte_len_valid_44100_matches_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 367451,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 25000,
+        "status": "pass"
+      },
+      "id": "checked_pcm_byte_len_u64_soundness",
+      "proof": null,
+      "property": {
+        "cases": 20480,
+        "status": "pass"
+      },
+      "symbol": "checked_pcm_byte_len_u64"
+    }
+  ],
+  "closure": [
+    "rust/audio-device-sink"
+  ],
+  "commit": "HEAD",
+  "exemptions": [
+    {
+      "approved": false,
+      "assumptions": [],
+      "cwe": 400,
+      "evidence": [],
+      "id": "EXEMPT-CWE-400-NO-STEP-PROOF",
+      "kind": "no-live-proof",
+      "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (Rust-subset WIR front end refuses src/lib.rs (inner attribute `#![forbid(unsafe_code)]`, `pub mod capabilities;`, `String`/`f64`/`&'static str`/trait types); recorded not-live per evidence.bindings proofs_not_live=frontend-refuses-lib)"
+    }
+  ],
+  "lanes": [
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "go",
+      "package": "go/audio-device-sink",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "python",
+      "package": "python/audio-device-sink",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "typescript",
+      "package": "typescript/audio-device-sink",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    }
+  ],
+  "package": "rust/audio-device-sink",
+  "profile": "audio-device-sink",
+  "profile_sha256": "17464acee1844be5d1c18cfa35d16347e5eba365938ef19a73cc5c3a8cfb1a9b",
+  "public_symbols_without_claims": [],
+  "rungs": {
+    "E0": "pass",
+    "E1": "pass",
+    "E2": "not-live",
+    "E3": "pass",
+    "E4": "pass",
+    "E5": "not-live"
+  },
+  "verdict": "report-only",
+  "version": "0.1.0",
+  "weaknesses": [
+    {
+      "cwe": 416,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Use After Free",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 787,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Out-of-bounds Write",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 125,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Out-of-bounds Read",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 415,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Double Free",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 476,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "NULL Pointer Dereference",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 190,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Integer Overflow to Buffer Boundary",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 78,
+      "evidence": [
+        "capability-audit::proc-empty"
+      ],
+      "name": "OS Command Injection",
+      "reason": "pure computation: package declares no proc capability; analyzer verified zero process or shell execution",
+      "status": "excluded"
+    },
+    {
+      "cwe": 89,
+      "evidence": [
+        "capability-audit::no-database-sinks"
+      ],
+      "name": "SQL Injection",
+      "reason": "pure computation: package contains no database interaction or SQL query construction",
+      "status": "excluded"
+    },
+    {
+      "cwe": 22,
+      "evidence": [
+        "capability-audit::fs-empty"
+      ],
+      "name": "Path Traversal",
+      "reason": "pure computation: package declares no fs capability; analyzer verified zero filesystem operations",
+      "status": "excluded"
+    },
+    {
+      "cwe": 79,
+      "evidence": [
+        "capability-audit::ui-empty"
+      ],
+      "name": "Cross-Site Scripting (XSS)",
+      "reason": "pure computation: package declares no ui capability and renders no HTML or DOM structures",
+      "status": "excluded"
+    },
+    {
+      "cwe": 94,
+      "evidence": [
+        "capability-audit::banned-constructs-clean"
+      ],
+      "name": "Code Injection / Eval",
+      "reason": "compiled Rust: language has no dynamic code evaluation or runtime eval primitives; analyzer verified no dynamic loading",
+      "status": "excluded"
+    },
+    {
+      "cwe": 116,
+      "evidence": [
+        "unverified::ast-audit::no-protocol-sinks"
+      ],
+      "name": "Improper Output Encoding",
+      "reason": "pure computation: package performs no serialized protocol formatting with unescaped control delimiters [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 117,
+      "evidence": [
+        "capability-audit::stdout-empty"
+      ],
+      "name": "Log Injection",
+      "reason": "pure computation: package declares no stdout or logging capabilities; analyzer verified zero log sinks",
+      "status": "excluded"
+    },
+    {
+      "approved": false,
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "reason": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (Rust-subset WIR front end refuses src/lib.rs (inner attribute `#![forbid(unsafe_code)]`, `pub mod capabilities;`, `String`/`f64`/`&'static str`/trait types); recorded not-live per evidence.bindings proofs_not_live=frontend-refuses-lib)",
+      "status": "exemption"
+    },
+    {
+      "cwe": 409,
+      "evidence": [
+        "unverified::ast-audit::no-compression-routines"
+      ],
+      "name": "Decompression Bomb",
+      "reason": "pure computation: package implements no decompression or archive decoding routines [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 674,
+      "evidence": [
+        "unverified::ast-call-graph::acyclic"
+      ],
+      "name": "Uncontrolled Recursion",
+      "reason": "iterative algorithms: package contains zero recursive function calls; call graph is strictly acyclic [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 1333,
+      "evidence": [
+        "unverified::analyzer::name-allowlist-regex-free"
+      ],
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "reason": "zero regular expressions: package contains no regular expression engines or pattern matching dependencies [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 407,
+      "evidence": [
+        "unverified::warrant-ir::cost-semantics-linear"
+      ],
+      "name": "Inefficient Algorithmic Complexity",
+      "reason": "bounded work per call: format validation, frame counting, and PCM byte-length checks execute in O(1) constant time with checked integer arithmetic and zero input-dependent loops; validate_finite_samples and bound_error_message enforce pre-flight caps MAX_SAMPLES and MAX_ERROR_MESSAGE_BYTES [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 208,
+      "evidence": [
+        "capability-audit::no-secret-inputs",
+        "warrant-spec::all-operands-public"
+      ],
+      "name": "Observable Timing Discrepancy",
+      "reason": "no secret inputs: package contains no secret operands or cryptographic comparison operations; timing variation reveals no sensitive data",
+      "status": "excluded"
+    },
+    {
+      "cwe": 330,
+      "evidence": [
+        "capability-audit::rand-empty"
+      ],
+      "name": "Use of Insufficiently Random Values",
+      "reason": "pure computation: package performs purely deterministic computation and declares no rand capability",
+      "status": "excluded"
+    },
+    {
+      "cwe": 327,
+      "evidence": [
+        "unverified::ast-audit::no-legacy-ciphers"
+      ],
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "reason": "pure PCM sink contract: package implements PCM format validation and checked frame/byte accounting only, no cipher, hash or MAC [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 326,
+      "evidence": [
+        "unverified::type-signatures::unconstrained-slices"
+      ],
+      "name": "Inadequate Encryption Strength",
+      "reason": "no keys: the package takes and generates no key material; operands are PCM format metadata, sample counts, and byte lengths only [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 362,
+      "evidence": [
+        "capability-audit::thread-empty"
+      ],
+      "name": "Concurrent Execution Race Condition",
+      "reason": "pure computation: package declares no thread capability and uses zero multithreading or shared mutable state",
+      "status": "excluded"
+    },
+    {
+      "cwe": 367,
+      "evidence": [
+        "capability-audit::no-external-resources"
+      ],
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "reason": "pure computation: package interacts with no external filesystem or process state",
+      "status": "excluded"
+    },
+    {
+      "cwe": 502,
+      "evidence": [
+        "unverified::ast-audit::no-deserialization"
+      ],
+      "name": "Deserialization of Untrusted Data",
+      "reason": "pure computation: package contains no dynamic object deserialization, polymorphic factories, or reflection [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 1321,
+      "evidence": [
+        "unverified::language-type-system::no-prototype-pollution"
+      ],
+      "name": "Prototype Pollution",
+      "reason": "strongly typed language: Rust has no object prototypes or dynamic prototype inheritance chains [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    }
+  ]
+}
