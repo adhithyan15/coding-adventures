@@ -55,7 +55,9 @@ fn test_pbt_rfft_irfft_roundtrip_and_parseval_energy() {
         let time_energy: f64 = real_sig.iter().map(|&x| (x as f64) * (x as f64)).sum();
         let freq_energy: f64 = full
             .as_interleaved()
-            .chunks_exact(2)
+            .as_chunks::<2>()
+            .0
+            .iter()
             .map(|c| (c[0] as f64) * (c[0] as f64) + (c[1] as f64) * (c[1] as f64))
             .sum::<f64>()
             / (n as f64);
