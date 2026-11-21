@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "bsp-portal25d",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded 2D sector polygons, linedefs, BSP nodes, camera transforms, textures, and pixel/column buffers"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure graphics transform: package implements deterministic 2D BSP tree construction, 1D column occlusion portal traversal, and 2.5D sector rendering only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: BSP depth is capped at MAX_BSP_DEPTH (64), BSP nodes/segs are capped at MAX_BSP_NODES/MAX_BSP_SEGS (65536), sectors at MAX_SECTORS (4096), linedefs at MAX_LINEDEFS (16384), and framebuffer dimensions at MAX_FRAME_WIDTH x MAX_FRAME_HEIGHT"
+    }
+  }
+}
