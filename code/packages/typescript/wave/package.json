@@ -2,22 +2,31 @@
   "name": "wave",
   "version": "0.1.0",
   "description": "Simple harmonic wave model for electromagnetic wave fundamentals",
+  "type": "module",
   "main": "dist/wave.js",
   "types": "dist/wave.d.ts",
-  "scripts": {
-    "build": "tsc",
-    "test": "jest"
+  "exports": {
+    ".": {
+      "types": "./dist/wave.d.ts",
+      "import": "./dist/wave.js"
+    },
+    "./src/wave": {
+      "types": "./dist/wave.d.ts",
+      "import": "./dist/wave.js"
+    }
   },
+  "scripts": {
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=../** --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
   "dependencies": {
     "trig": "file:../trig"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "jest": "^29.0.0",
-    "ts-jest": "^29.0.0",
-    "@types/jest": "^29.0.0"
-  },
-  "overrides": {
-    "js-yaml": "^3.15.1"
+    "@coding-adventures/test-bootstrap": "file:../test-bootstrap",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0"
   }
 }

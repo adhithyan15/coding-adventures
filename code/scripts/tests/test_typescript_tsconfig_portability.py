@@ -466,8 +466,10 @@ console.log(prose, nested);
         # -4 shared_projects: note-frequency, audio-device-sink, pcm-audio, and
         # web-audio-sink migrated from tsconfig.base.json to standalone configs
         # (TS-W7-A; total_projects unchanged because they already had build scripts).
+        # -3 shared_projects: wave, analog-waveform, and discrete-waveform
+        # migrated from tsconfig.base.json to standalone configs (PHY-W8-E).
         self.assertEqual(summary.total_projects, 517)
-        self.assertEqual(summary.shared_projects, 306)
+        self.assertEqual(summary.shared_projects, 303)
         self.assertEqual(summary.inherited_root_dir, 135)
         self.assertEqual(summary.inherited_out_dir, 138)
         # forme-authoring-core, forme-authoring-editor,
@@ -484,8 +486,10 @@ console.log(prose, nested);
         # +1: music-analysis is an isolated standalone emitter.
         # +4: note-frequency, audio-device-sink, pcm-audio, and web-audio-sink
         # are isolated standalone emitters (TS-W7-A).
-        self.assertEqual(summary.standalone_emit_projects, 180)
-        self.assertEqual(summary.isolated_standalone_projects, 180)
+        # +3: wave, analog-waveform, and discrete-waveform are isolated
+        # standalone emitters (PHY-W8-E).
+        self.assertEqual(summary.standalone_emit_projects, 183)
+        self.assertEqual(summary.isolated_standalone_projects, 183)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node

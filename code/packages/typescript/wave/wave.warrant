@@ -1,0 +1,73 @@
+warrant wave
+  error WaveError = NON_FINITE | NEGATIVE_AMPLITUDE | NON_POSITIVE_FREQUENCY | ANGULAR_OVERFLOW | NON_FINITE_TIME
+
+  model valid_amplitude(amplitude: Int) -> Bool = amplitude >= 0
+  model valid_frequency(frequency: Int) -> Bool = frequency > 0
+
+  op validate_wave(amplitude: Int, frequency: Int, phase: Int) -> Result<Bool, WaveError>
+  op validate_time(time_is_finite: Bool) -> Result<Bool, WaveError>
+  op evaluate_bounded(amplitude: Nat, unit_scaled: Int) -> Int
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_wave:
+    amplitude public
+    frequency public
+    phase public
+  labels validate_time:
+    time_is_finite public
+  labels evaluate_bounded:
+    amplitude public
+    unit_scaled public
+
+  input validate_wave.amplitude:
+    hostile
+    rejects amplitude < 0 with WaveError.NEGATIVE_AMPLITUDE
+    ensures no_panic, terminates
+  input validate_wave.frequency:
+    hostile
+    rejects frequency <= 0 with WaveError.NON_POSITIVE_FREQUENCY
+    ensures no_panic, terminates
+  input validate_wave.phase:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_time.time_is_finite:
+    hostile
+    rejects not time_is_finite with WaveError.NON_FINITE_TIME
+    ensures no_panic, terminates
+
+  input evaluate_bounded.amplitude:
+    hostile
+    ensures no_panic, terminates
+  input evaluate_bounded.unit_scaled:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_wave:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_time:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound evaluate_bounded:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example valid_a440:
+    validate_wave(1, 440, 0) == Ok(true)
+  example reject_neg_amp:
+    validate_wave(0 - 1, 440, 0) == Err(WaveError.NEGATIVE_AMPLITUDE)
+  example reject_zero_freq:
+    validate_wave(1, 0, 0) == Err(WaveError.NON_POSITIVE_FREQUENCY)
+  example zero_amp_eval:
+    evaluate_bounded(0, 1000) == 0
+
+  claim zero_amplitude_stays_zero:
+    forall s: Int. evaluate_bounded(0, s) == 0
