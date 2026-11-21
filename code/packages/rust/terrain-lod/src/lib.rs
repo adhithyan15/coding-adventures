@@ -305,8 +305,20 @@ impl HeightfieldSpec {
         if !span.is_finite() {
             return Err(TerrainError::InvalidParameter);
         }
-        check_coord(origin_x + span)?;
-        check_coord(origin_z + span)?;
+        let end_x = origin_x + span;
+        let end_z = origin_z + span;
+        check_coord(end_x)?;
+        check_coord(end_z)?;
+
+        // Guard against f64 ULP collapse where origin +/- 0.5 * cell_size rounds back to origin/end.
+        let half_cell = 0.5 * cell_size;
+        if (origin_x + half_cell) <= origin_x
+            || (end_x - half_cell) >= end_x
+            || (origin_z + half_cell) <= origin_z
+            || (end_z - half_cell) >= end_z
+        {
+            return Err(TerrainError::InvalidParameter);
+        }
 
         let spec = Self {
             level,
@@ -773,6 +785,15 @@ impl<'a> HeightfieldMut<'a> {
         check_height(base_height + amplitude)?;
         check_height(base_height - amplitude)?;
 
+        // Bound peak octave frequency well below 2^50 / i64::MAX (CWE-190).
+        let mut peak_freq = base_frequency;
+        for _ in 1..octaves {
+            peak_freq *= lacunarity;
+            if !peak_freq.is_finite() || peak_freq > 1.0e9 {
+                return Err(TerrainError::InvalidParameter);
+            }
+        }
+
         let mut prng = Pcg32::new(seed);
         let mut lattice = [0.0_f64; 256];
         for entry in lattice.iter_mut() {
@@ -796,13 +817,15 @@ impl<'a> HeightfieldMut<'a> {
                     let sz = v_norm * freq;
                     let xi = floor_i64(sx);
                     let zi = floor_i64(sz);
-                    let tx = smoothstep(sx - (xi as f64));
-                    let tz = smoothstep(sz - (zi as f64));
+                    let tx = smoothstep((sx - (xi as f64)).clamp(0.0, 1.0));
+                    let tz = smoothstep((sz - (zi as f64)).clamp(0.0, 1.0));
 
+                    let xi1 = xi.wrapping_add(1);
+                    let zi1 = zi.wrapping_add(1);
                     let n00 = sample_lattice(&lattice, xi, zi, oct);
-                    let n10 = sample_lattice(&lattice, xi + 1, zi, oct);
-                    let n01 = sample_lattice(&lattice, xi, zi + 1, oct);
-                    let n11 = sample_lattice(&lattice, xi + 1, zi + 1, oct);
+                    let n10 = sample_lattice(&lattice, xi1, zi, oct);
+                    let n01 = sample_lattice(&lattice, xi, zi1, oct);
+                    let n11 = sample_lattice(&lattice, xi1, zi1, oct);
 
                     let nx0 = n00 + tx * (n10 - n00);
                     let nx1 = n01 + tx * (n11 - n01);
@@ -1448,8 +1471,10 @@ fn count_leaf_triangles(nodes: &[QuadNode], node: QuadNode, cells: u32) -> usize
 /// with zero heap allocation.
 ///
 /// Validates `params` and `scratch.scratch_capacity()` upfront before mutating
-/// `scratch`. Returns [`LodStats`] describing the resulting restricted tree and
-/// exact triangle/index counts required by [`emit_mesh_into`].
+/// `scratch`. If an internal refinement or budget error occurs (`BudgetExceeded`),
+/// `scratch` is cleanly invalidated (`node_count = 0`) so a partial/unrestricted
+/// tree can never be emitted. Returns [`LodStats`] describing the resulting
+/// restricted tree and exact triangle/index counts required by [`emit_mesh_into`].
 pub fn refine_into(
     heightfield: &Heightfield<'_>,
     params: &LodParams,
@@ -1469,6 +1494,22 @@ pub fn refine_into(
         return Err(TerrainError::CapacityExceeded);
     }
 
+    match refine_into_inner(heightfield, &validated_params, scratch) {
+        Ok(stats) => Ok(stats),
+        Err(err) => {
+            scratch.node_count = 0;
+            scratch.grid_level = 0;
+            scratch.cells = 0;
+            Err(err)
+        }
+    }
+}
+
+fn refine_into_inner(
+    heightfield: &Heightfield<'_>,
+    validated_params: &LodParams,
+    scratch: &mut TerrainScratch,
+) -> Result<LodStats, TerrainError> {
     let spec = heightfield.spec();
     let cells = spec.spec_cells();
     let effective_max_depth = validated_params.max_depth.min(spec.level);
@@ -1491,6 +1532,10 @@ pub fn refine_into(
     let mut cursor = 0usize;
     while cursor < scratch.node_count {
         let node = scratch.nodes[cursor];
+        if node.culled {
+            cursor += 1;
+            continue;
+        }
         let x0 = usize::from(node.x0);
         let z0 = usize::from(node.z0);
         let span = usize::from(node.span);

@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/terrain-lod",
-  "source_digest": "658cb36fc23098907eb110930b2fc5b07d32e2e58e5cad09ae8a233af6d3be37",
+  "source_digest": "6724ca14a8226ff6b79911a71af22d98f24ed9702c4ac43ff5a120fb57c6dac1",
   "manifest_digest": "da6f85e4b003583beec0e57964c8bc2b1f32349b0c51e66ddf93ececa8ccd3c8",
   "declared_effects": [],
   "entry_points": [

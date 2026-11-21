@@ -441,6 +441,54 @@ fn capacity_refusal_leaves_buffers_unchanged_and_cwe_guards() {
         tiny_runway.runway_validate(&spec),
         Err(TerrainError::InvalidRunway)
     );
+
+    // f64 ULP precision collapse guard in HeightfieldSpec::spec_new.
+    assert_eq!(
+        HeightfieldSpec::spec_new(1, 1e-6, 1.0e12 - 1.0, 0.0),
+        Err(TerrainError::InvalidParameter)
+    );
+
+    // CWE-190 peak frequency overflow guard in synthesize_fbm (must refuse without panic/mutation).
+    let mut fbm_guard_buf = vec![42.0; spec.spec_vertex_count().unwrap()];
+    {
+        let mut hfm = HeightfieldMut::from_heights_mut(spec, &mut fbm_guard_buf).unwrap();
+        assert_eq!(
+            hfm.synthesize_fbm(1, 0.0, 10.0, 1.0e6, 12, 0.5, 16.0),
+            Err(TerrainError::InvalidParameter)
+        );
+    }
+    assert!(fbm_guard_buf.iter().all(|&h| h == 42.0));
+
+    // Near-limit valid fBm must remain bounded within [base - amp, base + amp].
+    {
+        let mut hfm = HeightfieldMut::from_heights_mut(spec, &mut fbm_guard_buf).unwrap();
+        hfm.synthesize_fbm(7, 10.0, 10.0, 1.0e5, 5, 0.5, 8.0)
+            .unwrap();
+    }
+    assert!(fbm_guard_buf.iter().all(|&h| (0.0..=20.0).contains(&h)));
+
+    // Failed refine_into (BudgetExceeded) must cleanly invalidate scratch so emit_mesh_into refuses.
+    let tight_budget = LodParams::lod_params_new(
+        Vec3::new(-100.0, 30.0, -100.0),
+        0.01,
+        1.0,
+        4,
+        5, // too small for full refinement
+        65_536,
+        None,
+    )
+    .unwrap();
+    assert_eq!(
+        refine_into(&hf, &tight_budget, &mut scratch),
+        Err(TerrainError::BudgetExceeded)
+    );
+    assert_eq!(scratch.scratch_node_count(), 0);
+    let mut untouched = [0xABCD_u32; 16];
+    assert_eq!(
+        emit_mesh_into(&hf, &scratch, &mut untouched, 65_536),
+        Err(TerrainError::InvalidParameter)
+    );
+    assert!(untouched.iter().all(|&v| v == 0xABCD));
 }
 
 #[test]
