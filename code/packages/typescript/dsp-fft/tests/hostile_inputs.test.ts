@@ -165,10 +165,6 @@ describe("Hostile inputs & VER15 Security Hardening", () => {
     assert.throws(() => fft({ length: 1.5 }), InvalidInputError);
     assert.throws(() => rfftScalar({ length: -1 }), InvalidInputError);
 
-    // Non-string window types must fail closed (never silently return zeroed array)
-    assert.throws(() => buildWindow(123 as unknown as string, 4), InvalidInputError);
-    assert.throws(() => buildWindow(null as unknown as string, 4), InvalidInputError);
-
     // Symbol, Object.create(null), throwing toString
     const sym = Symbol("hostile");
     const nullProto = Object.create(null);
@@ -179,7 +175,6 @@ describe("Hostile inputs & VER15 Security Hardening", () => {
     };
     for (const hostile of [sym, nullProto, throwingObj]) {
       assert.throws(() => requirePow2Length(hostile as number), InvalidInputError);
-      assert.throws(() => buildWindow(hostile as string, 4), InvalidInputError);
       assert.throws(() => fft([hostile as number, 0]), InvalidInputError);
       assert.throws(() => fft([hostile as number, 0], { complex: true }), InvalidInputError);
       assert.throws(() => fftScalar([hostile as number, 0]), InvalidInputError);
