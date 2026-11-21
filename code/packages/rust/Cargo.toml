@@ -807,6 +807,7 @@ members = [
     "game-pong",
     "game-breakout",
     "game-monster-rpg",
+    "terrain-lod",
     "perl-bridge",
     "polynomial-c",
     "wasm-execution",

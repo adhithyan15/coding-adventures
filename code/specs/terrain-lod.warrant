@@ -1,0 +1,119 @@
+-- GAME42 -- Terrain LOD: deterministic heightfield synthesis, runway placement, and restricted quadtree LOD (Era 4).
+--
+-- Warrant document for terrain-lod (VER04j and VER04m: state=explicit).
+-- Formal verification contract for grid dimension bounds, integer overflow guards (CWE-190),
+-- quadtree node/triangle budgets (CWE-400/835), and caller buffer capacity guards (CWE-125/787).
+
+warrant terrain_lod v1
+  error TerrainError = NonFiniteInput | InvalidParameter | InvalidGridSize | OutOfBounds | InvalidRunway | CapacityExceeded | BudgetExceeded | MathError
+
+  model Unit = Bool
+
+  -- Grid level n in [1, 10] gives side = 2^n + 1 in [3, 1025] and vertex count <= 1_050_625.
+  model valid_grid_level(level: Nat) -> Bool = level >= 1 and level <= 10
+  -- Grid dimensions: side in [3, 1025] and len == side * side (fits in u32, CWE-190).
+  model valid_grid_dimensions(side: Nat, len: Nat) -> Bool = side >= 3 and side <= 1025 and len == side * side
+  -- Quadtree node and triangle budget caps (CWE-400 / CWE-835).
+  model valid_lod_budget(nodes: Nat, max_nodes: Nat, triangles: Nat, max_triangles: Nat) -> Bool = nodes >= 1 and max_nodes >= 1 and max_nodes <= 65536 and nodes <= max_nodes and max_triangles <= 262144 and triangles <= max_triangles
+  -- Caller-provided output index buffer capacity guard (CWE-787 / atomic refusal).
+  model valid_index_capacity(needed: Nat, available: Nat) -> Bool = needed <= available
+
+  op validate_grid_level(level: Nat) -> Result<Bool, TerrainError>
+  op validate_grid_dimensions(side: Nat, len: Nat) -> Result<Bool, TerrainError>
+  op validate_lod_budget(nodes: Nat, max_nodes: Nat, triangles: Nat, max_triangles: Nat) -> Result<Bool, TerrainError>
+  op validate_index_capacity(needed: Nat, available: Nat) -> Result<Bool, TerrainError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_grid_level:
+    level public
+  labels validate_grid_dimensions:
+    side public
+    len public
+  labels validate_lod_budget:
+    nodes public
+    max_nodes public
+    triangles public
+    max_triangles public
+  labels validate_index_capacity:
+    needed public
+    available public
+
+  input validate_grid_level.level:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_grid_dimensions.side:
+    hostile
+    ensures no_panic, terminates
+  input validate_grid_dimensions.len:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_lod_budget.nodes:
+    hostile
+    ensures no_panic, terminates
+  input validate_lod_budget.max_nodes:
+    hostile
+    ensures no_panic, terminates
+  input validate_lod_budget.triangles:
+    hostile
+    ensures no_panic, terminates
+  input validate_lod_budget.max_triangles:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_index_capacity.needed:
+    hostile
+    ensures no_panic, terminates
+  input validate_index_capacity.available:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_grid_level:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_grid_dimensions:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_lod_budget:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_index_capacity:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example level_valid:
+    validate_grid_level(6) == Ok(true)
+  example level_zero:
+    validate_grid_level(0) == Err(TerrainError.InvalidParameter)
+  example level_too_large:
+    validate_grid_level(11) == Err(TerrainError.InvalidParameter)
+  example dims_65x65:
+    validate_grid_dimensions(65, 4225) == Ok(true)
+  example dims_mismatch:
+    validate_grid_dimensions(65, 4224) == Err(TerrainError.InvalidGridSize)
+  example budget_ok:
+    validate_lod_budget(100, 4096, 150, 8192) == Ok(true)
+  example budget_over:
+    validate_lod_budget(5000, 4096, 150, 8192) == Err(TerrainError.BudgetExceeded)
+  example capacity_ok:
+    validate_index_capacity(300, 512) == Ok(true)
+  example capacity_over:
+    validate_index_capacity(600, 512) == Err(TerrainError.CapacityExceeded)
+
+  claim validate_grid_level_agrees:
+    forall level: Nat. validate_grid_level(level) == (if valid_grid_level(level) then Ok(true) else Err(TerrainError.InvalidParameter))
+  claim validate_grid_dimensions_agrees:
+    forall side: Nat, len: Nat. validate_grid_dimensions(side, len) == (if valid_grid_dimensions(side, len) then Ok(true) else Err(TerrainError.InvalidGridSize))
+  claim validate_lod_budget_agrees:
+    forall n: Nat, mn: Nat, t: Nat, mt: Nat. validate_lod_budget(n, mn, t, mt) == (if valid_lod_budget(n, mn, t, mt) then Ok(true) else Err(TerrainError.BudgetExceeded))
+  claim validate_index_capacity_agrees:
+    forall needed: Nat, available: Nat. validate_index_capacity(needed, available) == (if valid_index_capacity(needed, available) then Ok(true) else Err(TerrainError.CapacityExceeded))
