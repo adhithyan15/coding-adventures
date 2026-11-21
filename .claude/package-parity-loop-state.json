@@ -18691,7 +18691,8 @@
         "dart-swift-language-frontends-neutral-fixtures"
       ],
       "branch": "feat/dart-sql-frontend-vertical-parity",
-      "pr_number": null,
+      "pr_number": 19814,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19814",
       "notes": "Dart subtranche of SQL frontend vertical parity. Delivers coding_adventures_sql_lexer and coding_adventures_sql_parser with uppercase KEYWORD normalization, <> alias preservation, nesting depth defense, and shared neutral fixture conformance."
     },
     {
