@@ -718,10 +718,15 @@ impl CorpusRunner {
             let tag = tag_res?;
             if tag.header.kind == SwfTagKind::DoABC {
                 // Skip 4-byte flags + NUL-terminated name
-                let nul_pos = tag.data[4..].iter().position(|&b| b == 0).ok_or_else(|| {
+                let rest = tag.data.get(4..).ok_or_else(|| {
+                    CorpusError::UnexpectedCaseFailure("DoABC tag shorter than 4 bytes".to_string())
+                })?;
+                let nul_pos = rest.iter().position(|&b| b == 0).ok_or_else(|| {
                     CorpusError::UnexpectedCaseFailure("DoABC missing name NUL".to_string())
                 })?;
-                let abc_slice = &tag.data[4 + nul_pos + 1..];
+                let abc_slice = rest.get(nul_pos + 1..).ok_or_else(|| {
+                    CorpusError::UnexpectedCaseFailure("DoABC missing ABC body".to_string())
+                })?;
                 let module = lift_avm2(abc_slice, "corpus_05_avm2_oop")?;
                 let mut runner = AvmRunner::runner_new();
                 let val = runner.runner_execute(&module)?;
@@ -806,7 +811,12 @@ impl CorpusRunner {
                 }; 8];
                 let err = player
                     .player_step_with_clock(dt_ns, &mut ops, None)
-                    .unwrap_err();
+                    .err()
+                    .ok_or_else(|| {
+                        CorpusError::UnexpectedCaseFailure(
+                            "infinite AVM loop did not time out".to_string(),
+                        )
+                    })?;
                 let has_audit = player
                     .player_audit_events()
                     .iter()
@@ -850,7 +860,12 @@ impl CorpusRunner {
                 }; 8];
                 let err = player
                     .player_step_with_clock(dt_ns, &mut ops, None)
-                    .unwrap_err();
+                    .err()
+                    .ok_or_else(|| {
+                        CorpusError::UnexpectedCaseFailure(
+                            "deep sprite nesting did not fail".to_string(),
+                        )
+                    })?;
                 if matches!(
                     err,
                     PlayerHostError::DisplayList(DisplayListError::HierarchyDepthExceeded)
@@ -992,7 +1007,12 @@ impl CorpusRunner {
                 }; 8];
                 let err = player
                     .player_step_with_clock(dt_ns, &mut ops, None)
-                    .unwrap_err();
+                    .err()
+                    .ok_or_else(|| {
+                        CorpusError::UnexpectedCaseFailure(
+                            "prototype pollution was not blocked".to_string(),
+                        )
+                    })?;
                 let has_audit = player
                     .player_audit_events()
                     .iter()

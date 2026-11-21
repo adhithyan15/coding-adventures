@@ -161,6 +161,13 @@ impl SwfBitWriter {
 
     /// Writes an SWF bit-packed `MATRIX` record and byte-aligns.
     pub fn bit_writer_write_matrix(&mut self, m: &SwfMatrix) -> Result<(), CorpusError> {
+        if !m.scale_x.is_finite()
+            || !m.scale_y.is_finite()
+            || !m.rotate_skew_0.is_finite()
+            || !m.rotate_skew_1.is_finite()
+        {
+            return Err(CorpusError::IntegerOverflow);
+        }
         let has_scale = (m.scale_x - 1.0).abs() > 1e-6 || (m.scale_y - 1.0).abs() > 1e-6;
         self.bit_writer_write_ub(u32::from(has_scale), 1)?;
         if has_scale {

@@ -442,6 +442,14 @@ pub fn encode_place_object_tag(spec: &PlaceTagSpec) -> Result<Vec<u8>, CorpusErr
         payload.extend_from_slice(&r.to_le_bytes());
     }
     if let Some(ref name) = spec.name {
+        if name.as_bytes().contains(&0) {
+            return Err(CorpusError::UnexpectedCaseFailure(
+                "PlaceObject name must not contain NUL byte".to_string(),
+            ));
+        }
+        if name.len() > MAX_CORPUS_SWF_BYTES {
+            return Err(CorpusError::SwfSizeExceeded);
+        }
         payload.extend_from_slice(name.as_bytes());
         payload.push(0);
     }
@@ -482,7 +490,13 @@ pub fn encode_define_sprite_tag(
             "sprite_id must be >= 1".to_string(),
         ));
     }
-    let mut payload = Vec::with_capacity(4 + inner_tags.len());
+    let payload_len = 4usize
+        .checked_add(inner_tags.len())
+        .ok_or(CorpusError::IntegerOverflow)?;
+    if payload_len > MAX_CORPUS_SWF_BYTES {
+        return Err(CorpusError::SwfSizeExceeded);
+    }
+    let mut payload = Vec::with_capacity(payload_len);
     payload.extend_from_slice(&sprite_id.to_le_bytes());
     payload.extend_from_slice(&frame_count.to_le_bytes());
     payload.extend_from_slice(inner_tags);
@@ -499,8 +513,18 @@ pub fn encode_define_sound_pcm16_tag(
             "sound_id must be >= 1".to_string(),
         ));
     }
+    let pcm_bytes = samples
+        .len()
+        .checked_mul(2)
+        .ok_or(CorpusError::IntegerOverflow)?;
+    let payload_len = 7usize
+        .checked_add(pcm_bytes)
+        .ok_or(CorpusError::IntegerOverflow)?;
+    if payload_len > MAX_CORPUS_SWF_BYTES {
+        return Err(CorpusError::SwfSizeExceeded);
+    }
     let sample_count = u32::try_from(samples.len()).map_err(|_| CorpusError::IntegerOverflow)?;
-    let mut payload = Vec::with_capacity(7 + samples.len() * 2);
+    let mut payload = Vec::with_capacity(payload_len);
     payload.extend_from_slice(&sound_id.to_le_bytes());
     // Format=3 (UncompressedLe) | Rate=3 (44100 Hz) | Size=1 (16-bit) | Mono=0 -> 0x3E
     payload.push(0x3E);
@@ -555,7 +579,20 @@ pub fn encode_do_action_tag(actions: &[u8]) -> Result<Vec<u8>, CorpusError> {
 
 /// Encodes an AVM2 `DoABC` (Tag 82) payload with SWF9 flags (`1`) and NUL-terminated name.
 pub fn encode_do_abc_tag(name: &str, abc_bytes: &[u8]) -> Result<Vec<u8>, CorpusError> {
-    let mut payload = Vec::with_capacity(4 + name.len() + 1 + abc_bytes.len());
+    if name.as_bytes().contains(&0) {
+        return Err(CorpusError::UnexpectedCaseFailure(
+            "DoABC name must not contain NUL byte".to_string(),
+        ));
+    }
+    let payload_len = 4usize
+        .checked_add(name.len())
+        .and_then(|v| v.checked_add(1))
+        .and_then(|v| v.checked_add(abc_bytes.len()))
+        .ok_or(CorpusError::IntegerOverflow)?;
+    if payload_len > MAX_CORPUS_SWF_BYTES {
+        return Err(CorpusError::SwfSizeExceeded);
+    }
+    let mut payload = Vec::with_capacity(payload_len);
     payload.extend_from_slice(&1u32.to_le_bytes());
     payload.extend_from_slice(name.as_bytes());
     payload.push(0);

@@ -5,11 +5,12 @@
 use flash_display_list::DisplayListEvent;
 use flash_player_host::{FlashPlayer, FlashPlayerConfig, PatchSummary};
 use swf_conformance_corpus::{
-    encode_swf_tag, run_all_corpus_cases, run_corpus_case, validate_corpus_bit_width,
-    validate_corpus_digest_hex, validate_corpus_frame_count, validate_corpus_swf_bytes,
-    verify_corpus_digests, AdversarialCaseId, CorpusError, CorpusId, CorpusRunner, PlaceTagSpec,
-    SwfBitWriter, SwfBuilder, SwfCompression, MAX_BIT_WIDTH, MAX_CORPUS_FRAMES,
-    MAX_CORPUS_SWF_BYTES,
+    encode_define_sound_pcm16_tag, encode_define_sprite_tag, encode_do_abc_tag,
+    encode_place_object_tag, encode_swf_tag, run_all_corpus_cases, run_corpus_case,
+    validate_corpus_bit_width, validate_corpus_digest_hex, validate_corpus_frame_count,
+    validate_corpus_swf_bytes, verify_corpus_digests, AdversarialCaseId, CorpusError, CorpusId,
+    CorpusRunner, PlaceTagSpec, SwfBitWriter, SwfBuilder, SwfCompression, MAX_BIT_WIDTH,
+    MAX_CORPUS_FRAMES, MAX_CORPUS_SWF_BYTES,
 };
 use swf_container::{SwfColorTransform, SwfMatrix, SwfMovie};
 
@@ -264,6 +265,63 @@ fn test_adversarial_security_corpus_all_blocked() {
             outcome.blocked,
             "adversarial case {} was not blocked",
             outcome.slug
+        );
+    }
+}
+
+#[test]
+fn test_builder_oversized_inputs_nul_names_and_nan_matrix_rejected() {
+    // 1. Oversized inputs rejected before allocation (CWE-400 / CWE-190)
+    let big_bytes = vec![0u8; MAX_CORPUS_SWF_BYTES];
+    assert_eq!(
+        encode_define_sprite_tag(1, 1, &big_bytes),
+        Err(CorpusError::SwfSizeExceeded)
+    );
+    assert_eq!(
+        encode_do_abc_tag("main", &big_bytes),
+        Err(CorpusError::SwfSizeExceeded)
+    );
+    let big_samples = vec![0i16; (MAX_CORPUS_SWF_BYTES / 2) + 1];
+    assert_eq!(
+        encode_define_sound_pcm16_tag(1, &big_samples),
+        Err(CorpusError::SwfSizeExceeded)
+    );
+
+    // 2. Embedded NUL bytes rejected in NUL-terminated SWF string fields
+    assert!(matches!(
+        encode_do_abc_tag("bad\0name", &[0x10, 0x00, 0x2E, 0x00]),
+        Err(CorpusError::UnexpectedCaseFailure(_))
+    ));
+    let mut place_nul = PlaceTagSpec::place_new(1, 1);
+    place_nul.name = Some("bad\0instance".to_string());
+    assert!(matches!(
+        encode_place_object_tag(&place_nul),
+        Err(CorpusError::UnexpectedCaseFailure(_))
+    ));
+
+    // 3. NaN matrix fields rejected rather than silently encoded as identity (CWE-20)
+    for nan_matrix in [
+        SwfMatrix {
+            scale_x: f64::NAN,
+            ..SwfMatrix::default_matrix()
+        },
+        SwfMatrix {
+            scale_y: f64::NAN,
+            ..SwfMatrix::default_matrix()
+        },
+        SwfMatrix {
+            rotate_skew_0: f64::NAN,
+            ..SwfMatrix::default_matrix()
+        },
+        SwfMatrix {
+            rotate_skew_1: f64::NAN,
+            ..SwfMatrix::default_matrix()
+        },
+    ] {
+        let mut bw = SwfBitWriter::bit_writer_new();
+        assert_eq!(
+            bw.bit_writer_write_matrix(&nan_matrix),
+            Err(CorpusError::IntegerOverflow)
         );
     }
 }
