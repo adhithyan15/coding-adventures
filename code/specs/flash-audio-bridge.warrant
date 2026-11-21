@@ -1,0 +1,94 @@
+-- SWF06 -- Flash Audio Bridge: deterministic, zero-allocation SWF audio tag
+-- decoding (PCM, Flash ADPCM, MP3 frame extraction), event sound mixing, and
+-- frame-synced streaming playback.
+--
+-- Formal verification contract for bounded SWF audio validation primitives.
+
+warrant flash_audio_bridge v1
+  error AudioBridgeError = InvalidSoundId | UnsupportedSoundFormat | InvalidSoundRateCode | InvalidAdpcmBitWidth | InvalidAdpcmStepIndex | SampleCountExceeded | InvalidLoopCount | InvalidEnvelopeCount | InvalidEnvelopePoint | InvalidInOutPoints | InvalidClassName | UnexpectedEof | MalformedTagPayload | BufferTooSmall | InvalidMp3Frame | Mp3FrameLimitExceeded | SoundNotFound | SoundBankFull | VoiceLimitExceeded | StreamFormatMismatch | RingBufferOverrun | MixerFailure | ClockFailure | PcmExportFailure
+
+  model Unit = Bool
+
+  model valid_sound_rate_code(c: Nat) -> Bool = c <= 3
+  model valid_adpcm_bit_width(b: Nat) -> Bool = b >= 2 and b <= 5
+  model valid_sound_sample_count(s: Nat) -> Bool = s <= 8388608
+  model valid_envelope_point_count(n: Nat) -> Bool = n <= 16
+
+  op validate_sound_rate_code(c: Nat) -> Result<Bool, AudioBridgeError>
+  op validate_adpcm_bit_width(b: Nat) -> Result<Bool, AudioBridgeError>
+  op validate_sound_sample_count(s: Nat) -> Result<Bool, AudioBridgeError>
+  op validate_envelope_point_count(n: Nat) -> Result<Bool, AudioBridgeError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_sound_rate_code:
+    c public
+  labels validate_adpcm_bit_width:
+    b public
+  labels validate_sound_sample_count:
+    s public
+  labels validate_envelope_point_count:
+    n public
+
+  input validate_sound_rate_code.c:
+    hostile
+    ensures no_panic, terminates
+  input validate_adpcm_bit_width.b:
+    hostile
+    ensures no_panic, terminates
+  input validate_sound_sample_count.s:
+    hostile
+    ensures no_panic, terminates
+  input validate_envelope_point_count.n:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_sound_rate_code:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_adpcm_bit_width:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_sound_sample_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_envelope_point_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example rate_code_min:
+    validate_sound_rate_code(0) == Ok(true)
+  example rate_code_max:
+    validate_sound_rate_code(3) == Ok(true)
+  example rate_code_invalid:
+    validate_sound_rate_code(4) == Err(AudioBridgeError.InvalidSoundRateCode)
+  example adpcm_bits_min:
+    validate_adpcm_bit_width(2) == Ok(true)
+  example adpcm_bits_max:
+    validate_adpcm_bit_width(5) == Ok(true)
+  example adpcm_bits_invalid:
+    validate_adpcm_bit_width(6) == Err(AudioBridgeError.InvalidAdpcmBitWidth)
+  example sample_count_max:
+    validate_sound_sample_count(8388608) == Ok(true)
+  example sample_count_exceeded:
+    validate_sound_sample_count(8388609) == Err(AudioBridgeError.SampleCountExceeded)
+  example envelope_max:
+    validate_envelope_point_count(16) == Ok(true)
+  example envelope_exceeded:
+    validate_envelope_point_count(17) == Err(AudioBridgeError.InvalidEnvelopeCount)
+
+  claim validate_sound_rate_code_agrees:
+    forall c: Nat. validate_sound_rate_code(c) == (if valid_sound_rate_code(c) then Ok(true) else Err(AudioBridgeError.InvalidSoundRateCode))
+  claim validate_adpcm_bit_width_agrees:
+    forall b: Nat. validate_adpcm_bit_width(b) == (if valid_adpcm_bit_width(b) then Ok(true) else Err(AudioBridgeError.InvalidAdpcmBitWidth))
+  claim validate_sound_sample_count_agrees:
+    forall s: Nat. validate_sound_sample_count(s) == (if valid_sound_sample_count(s) then Ok(true) else Err(AudioBridgeError.SampleCountExceeded))
+  claim validate_envelope_point_count_agrees:
+    forall n: Nat. validate_envelope_point_count(n) == (if valid_envelope_point_count(n) then Ok(true) else Err(AudioBridgeError.InvalidEnvelopeCount))

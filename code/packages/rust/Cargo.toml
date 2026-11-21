@@ -718,6 +718,7 @@ members = [
     "swf-container",
     "swf-shape-to-paint",
     "flash-display-list",
+    "flash-audio-bridge",
     "avm-bytecode-lifter",
     "sprite-oam",
     "tilemap2d",
