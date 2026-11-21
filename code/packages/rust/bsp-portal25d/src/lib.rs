@@ -258,8 +258,14 @@ fn fnv1a_update_bytes(state: &mut u64, bytes: &[u8]) {
 
 #[inline]
 fn fnv1a_update_f64(state: &mut u64, v: f64) {
-    // Normalize -0.0 to +0.0 so digests are canonical across IEEE-754 signed zero.
-    let canonical = if v == 0.0 { 0.0 } else { v };
+    // Normalize -0.0 to +0.0 and NaN payloads so digests are canonical across platforms.
+    let canonical = if v.is_nan() {
+        f64::NAN
+    } else if v == 0.0 {
+        0.0
+    } else {
+        v
+    };
     fnv1a_update_bytes(state, &canonical.to_le_bytes());
 }
 
@@ -417,8 +423,15 @@ impl Aabb2 {
     /// Test whether `(px, py)` lies inside or on the boundary of this box.
     #[inline]
     pub fn aabb2_contains_point(&self, p: Vec2) -> Result<bool, BspError> {
+        let min_x = check_finite_coord(self.min_x)?;
+        let min_y = check_finite_coord(self.min_y)?;
+        let max_x = check_finite_coord(self.max_x)?;
+        let max_y = check_finite_coord(self.max_y)?;
+        if min_x > max_x || min_y > max_y {
+            return Err(BspError::ValueOutOfBounds);
+        }
         let p = Vec2::vec2_try_new(p.x, p.y)?;
-        Ok(p.x >= self.min_x && p.x <= self.max_x && p.y >= self.min_y && p.y <= self.max_y)
+        Ok(p.x >= min_x && p.x <= max_x && p.y >= min_y && p.y <= max_y)
     }
 
     /// Lift this 2D bounding box with `[min_z, max_z]` heights into a `math3d::Aabb3` (`GAME30` interop).
@@ -427,8 +440,14 @@ impl Aabb2 {
         let min_y = check_finite_coord(self.min_y)?;
         let max_x = check_finite_coord(self.max_x)?;
         let max_y = check_finite_coord(self.max_y)?;
+        if min_x > max_x || min_y > max_y {
+            return Err(BspError::ValueOutOfBounds);
+        }
         let min_z = check_finite_coord(min_z)?;
         let max_z = check_finite_coord(max_z)?;
+        if min_z > max_z {
+            return Err(BspError::ValueOutOfBounds);
+        }
         Aabb3::aabb3_from_min_max(
             Vec3::new(min_x, min_z, min_y),
             Vec3::new(max_x, max_z, max_y),
@@ -571,8 +590,11 @@ impl TextureRgba {
     /// Sample normalized UV coordinates `(u, v)` with wrap-around tiling (`CWE-190`-safe).
     #[inline]
     fn sample_uv(&self, u: f64, v: f64) -> Rgba8 {
-        let uf = u - u.floor();
-        let vf = v - v.floor();
+        if !u.is_finite() || !v.is_finite() {
+            return [0, 0, 0, 0];
+        }
+        let uf = (u - u.floor()).clamp(0.0, 1.0);
+        let vf = (v - v.floor()).clamp(0.0, 1.0);
         let w = self.width as usize;
         let h = self.height as usize;
         let tx = ((uf * w as f64) as usize).min(w.saturating_sub(1));
@@ -736,7 +758,9 @@ impl Linedef {
 
     /// World-space 2D length of this linedef.
     pub fn linedef_length(&self) -> Result<f64, BspError> {
-        let d = self.v1.vec2_sub(self.v0)?;
+        let v0 = Vec2::vec2_try_new(self.v0.x, self.v0.y)?;
+        let v1 = Vec2::vec2_try_new(self.v1.x, self.v1.y)?;
+        let d = v1.vec2_sub(v0)?;
         d.vec2_length()
     }
 
@@ -745,14 +769,16 @@ impl Linedef {
     /// Positive values lie on the **front** (right-hand) side; negative values
     /// lie on the **back** (left-hand) side.
     pub fn linedef_signed_distance(&self, point: Vec2) -> Result<f64, BspError> {
+        let v0 = Vec2::vec2_try_new(self.v0.x, self.v0.y)?;
+        let v1 = Vec2::vec2_try_new(self.v1.x, self.v1.y)?;
         let point = Vec2::vec2_try_new(point.x, point.y)?;
-        let dx = self.v1.x - self.v0.x;
-        let dy = self.v1.y - self.v0.y;
+        let dx = v1.x - v0.x;
+        let dy = v1.y - v0.y;
         let len = trig::sqrt(dx * dx + dy * dy);
         if !len.is_finite() || len <= EPSILON {
             return Err(BspError::DegenerateSegment);
         }
-        let sd = ((point.x - self.v0.x) * dy - (point.y - self.v0.y) * dx) / len;
+        let sd = ((point.x - v0.x) * dy - (point.y - v0.y) * dx) / len;
         if !sd.is_finite() {
             return Err(BspError::ValueOutOfBounds);
         }
@@ -1592,36 +1618,18 @@ impl Camera25D {
         Mat4::look_at(eye, target, Vec3::unit_y()).map_err(map_math3d_err)
     }
 
-    fn validate_for_render(&self) -> Result<(), BspError> {
-        let _ = check_finite_coord(self.pos_x)?;
-        let _ = check_finite_coord(self.pos_y)?;
-        let _ = check_finite_coord(self.pos_z)?;
-        let _ = check_finite_coord(self.dir_x)?;
-        let _ = check_finite_coord(self.dir_y)?;
-        let _ = check_finite_coord(self.right_x)?;
-        let _ = check_finite_coord(self.right_y)?;
-        if !self.fov_rad.is_finite() || !self.near_dist.is_finite() {
-            return Err(BspError::NonFiniteInput);
-        }
-        if self.fov_rad <= EPSILON || self.fov_rad >= trig::PI - EPSILON {
-            return Err(BspError::ValueOutOfBounds);
-        }
-        if !(MIN_PERP_DIST..=MAX_COORD).contains(&self.near_dist) {
-            return Err(BspError::ValueOutOfBounds);
-        }
-        let dir_len_sq = self.dir_x * self.dir_x + self.dir_y * self.dir_y;
-        let right_len_sq = self.right_x * self.right_x + self.right_y * self.right_y;
-        let det = self.dir_x * self.right_y - self.dir_y * self.right_x;
-        if !dir_len_sq.is_finite()
-            || !right_len_sq.is_finite()
-            || !det.is_finite()
-            || dir_len_sq <= EPSILON * EPSILON
-            || right_len_sq <= EPSILON * EPSILON
-            || det.abs() <= EPSILON
-        {
-            return Err(BspError::DegenerateCamera);
-        }
-        Ok(())
+    fn validate_for_render(&self) -> Result<Self, BspError> {
+        Self::camera_new(
+            self.pos_x,
+            self.pos_y,
+            self.pos_z,
+            self.dir_x,
+            self.dir_y,
+            self.right_x,
+            self.right_y,
+            self.fov_rad,
+            self.near_dist,
+        )
     }
 }
 
@@ -1789,8 +1797,8 @@ fn validate_render_inputs(
     textures: &[TextureRgba],
     scratch: &RenderScratch,
     framebuffer: &PixelContainer,
-) -> Result<(), BspError> {
-    cam.validate_for_render()?;
+) -> Result<(Camera25D, ProjectionParams), BspError> {
+    let norm_cam = cam.validate_for_render()?;
 
     if framebuffer.width == 0
         || framebuffer.height == 0
@@ -1807,10 +1815,35 @@ fn validate_render_inputs(
         return Err(BspError::InvalidFramebuffer);
     }
 
-    let fb_w = framebuffer.width as usize;
-    if scratch.y_top.len() < fb_w || scratch.y_bottom.len() < fb_w {
+    let fb_width = framebuffer.width as usize;
+    let fb_height = framebuffer.height as usize;
+
+    let half_fov = 0.5 * norm_cam.fov_rad;
+    let sin_half = trig::sin(half_fov);
+    let cos_half = trig::cos(half_fov);
+    if cos_half.abs() <= EPSILON || sin_half.abs() <= EPSILON {
+        return Err(BspError::DegenerateCamera);
+    }
+    let tan_half_fov = sin_half / cos_half;
+    let half_w = 0.5 * (fb_width as f64);
+    let focal = half_w / tan_half_fov;
+    if !focal.is_finite() || focal <= EPSILON {
+        return Err(BspError::DegenerateCamera);
+    }
+
+    let proj = ProjectionParams {
+        fb_width,
+        fb_height,
+        half_w,
+        horizon_y: 0.5 * (fb_height as f64),
+        focal,
+        tan_half_fov,
+        near_dist: norm_cam.near_dist,
+    };
+
+    if scratch.y_top.len() < fb_width || scratch.y_bottom.len() < fb_width {
         return Err(BspError::ScratchTooSmall {
-            required: fb_w,
+            required: fb_width,
             actual: scratch.y_top.len().min(scratch.y_bottom.len()),
         });
     }
@@ -1841,6 +1874,23 @@ fn validate_render_inputs(
     if bsp.nodes.is_empty() || bsp.nodes.len() > MAX_BSP_NODES || bsp.max_depth > MAX_BSP_DEPTH {
         return Err(BspError::BspLimitExceeded);
     }
+    for node in &bsp.nodes {
+        match node.kind {
+            BspNodeKind::Internal => {
+                if node.front_child >= bsp.nodes.len() || node.back_child >= bsp.nodes.len() {
+                    return Err(BspError::BspLimitExceeded);
+                }
+            }
+            BspNodeKind::Leaf => {
+                let Some(seg_end) = node.seg_start.checked_add(node.seg_count) else {
+                    return Err(BspError::BspLimitExceeded);
+                };
+                if seg_end > bsp.segs.len() {
+                    return Err(BspError::BspLimitExceeded);
+                }
+            }
+        }
+    }
 
     let tex_len = textures.len();
     for sector in &map.sectors {
@@ -1861,7 +1911,18 @@ fn validate_render_inputs(
         validate_surface_style(&ld.lower, tex_len)?;
     }
 
-    Ok(())
+    for seg in &bsp.segs {
+        if seg.front_sector >= map.sectors.len() || seg.linedef_index >= map.linedefs.len() {
+            return Err(BspError::InvalidLinedef);
+        }
+        if let Some(back) = seg.back_sector {
+            if back >= map.sectors.len() {
+                return Err(BspError::InvalidLinedef);
+            }
+        }
+    }
+
+    Ok((norm_cam, proj))
 }
 
 /// Conservative frustum & 1D column-occlusion test for a BSP node's 2D AABB.
@@ -2412,39 +2473,17 @@ pub fn render_frame_into(
     scratch: &mut RenderScratch,
     framebuffer: &mut PixelContainer,
 ) -> Result<RenderStats, BspError> {
-    validate_render_inputs(map, bsp, cam, textures, scratch, framebuffer)?;
+    let (norm_cam, proj) = validate_render_inputs(map, bsp, cam, textures, scratch, framebuffer)?;
+    let cam = &norm_cam;
 
-    let fb_width = framebuffer.width as usize;
-    let fb_height = framebuffer.height as usize;
+    let fb_width = proj.fb_width;
+    let fb_height = proj.fb_height;
 
     // Clear framebuffer with background color (zero allocation).
     let (chunks, _) = framebuffer.data.as_chunks_mut::<4>();
     for px in chunks {
         *px = config.background_color;
     }
-
-    let half_fov = 0.5 * cam.fov_rad;
-    let sin_half = trig::sin(half_fov);
-    let cos_half = trig::cos(half_fov);
-    if cos_half.abs() <= EPSILON || sin_half.abs() <= EPSILON {
-        return Err(BspError::DegenerateCamera);
-    }
-    let tan_half_fov = sin_half / cos_half;
-    let half_w = 0.5 * (fb_width as f64);
-    let focal = half_w / tan_half_fov;
-    if !focal.is_finite() || focal <= EPSILON {
-        return Err(BspError::DegenerateCamera);
-    }
-
-    let proj = ProjectionParams {
-        fb_width,
-        fb_height,
-        half_w,
-        horizon_y: 0.5 * (fb_height as f64),
-        focal,
-        tan_half_fov,
-        near_dist: cam.near_dist,
-    };
 
     // Reset pre-allocated scratch buffers in place without reallocating.
     let y_bot_init = (fb_height as i32) - 1;
@@ -2514,6 +2553,9 @@ pub fn render_frame_into(
                 if scratch.traverse_stack.len().saturating_add(2)
                     > scratch.traverse_stack.capacity()
                 {
+                    scratch.traverse_stack.clear();
+                    scratch.visible_sectors.clear();
+                    scratch.visible_subsectors.clear();
                     return Err(BspError::BspLimitExceeded);
                 }
                 let sd = line_signed_dist(node.partition_v0, node.partition_v1, cam_pos);
