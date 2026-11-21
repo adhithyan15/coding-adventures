@@ -4,7 +4,9 @@ import {
   EmptySignalError,
   InvalidInputError,
   KernelTooLargeError,
+  safeFormatValue,
   validateFloats,
+  validateSequence,
 } from "./errors.js";
 import {
   BoundaryMode,
@@ -22,13 +24,19 @@ export function extendIndex(
   n: number,
   mode: BoundaryMode
 ): number | null {
+  if (!Number.isSafeInteger(idx)) {
+    throw new InvalidInputError(`index must be a safe integer; got ${safeFormatValue(idx)}`);
+  }
+  if (!Number.isSafeInteger(n) || n <= 0) {
+    throw new InvalidInputError(`signal length n must be a positive safe integer; got ${safeFormatValue(n)}`);
+  }
   if (
     mode !== BoundaryMode.ZERO &&
     mode !== BoundaryMode.REPLICATE &&
     mode !== BoundaryMode.REFLECT &&
     mode !== BoundaryMode.WRAP
   ) {
-    throw new InvalidInputError(`unknown boundary mode: ${String(mode)}`);
+    throw new InvalidInputError(`unknown boundary mode: ${safeFormatValue(mode)}`);
   }
   if (idx >= 0 && idx < n) {
     return idx;
@@ -63,8 +71,18 @@ export function sample(
   idx: number,
   mode: BoundaryMode
 ): number {
-  const mapped = extendIndex(idx, signal.length, mode);
-  return mapped !== null ? Number(signal[mapped]) : 0.0;
+  const n = validateSequence(signal, "signal", MAX_SAMPLES, EmptySignalError);
+  const mapped = extendIndex(idx, n, mode);
+  if (mapped === null) {
+    return 0.0;
+  }
+  const val: unknown = signal[mapped];
+  if (typeof val !== "number" || !Number.isFinite(val)) {
+    throw new InvalidInputError(
+      `non-finite float in signal at index ${mapped}: ${safeFormatValue(val)}`
+    );
+  }
+  return val;
 }
 
 /**
@@ -78,25 +96,8 @@ export function conv1d(
   kernel: ArrayLike<number>,
   mode: BoundaryMode | string = BoundaryMode.ZERO
 ): Float64Array {
-  const n = signal.length;
-  const k = kernel.length;
-
-  if (n === 0) {
-    throw new EmptySignalError("signal must be non-empty");
-  }
-  if (k === 0) {
-    throw new EmptyKernelError("kernel must be non-empty");
-  }
-  if (n > MAX_SAMPLES) {
-    throw new InvalidInputError(
-      `signal length ${n} exceeds MAX_SAMPLES ${MAX_SAMPLES}`
-    );
-  }
-  if (k > MAX_KERNEL_LEN) {
-    throw new InvalidInputError(
-      `kernel length ${k} exceeds MAX_KERNEL_LEN ${MAX_KERNEL_LEN}`
-    );
-  }
+  const n = validateSequence(signal, "signal", MAX_SAMPLES, EmptySignalError);
+  const k = validateSequence(kernel, "kernel", MAX_KERNEL_LEN, EmptyKernelError);
 
   const bMode = parseBoundaryMode(mode);
   validateFloats(signal, "signal");
@@ -126,25 +127,8 @@ export function convolve(
   mode: ConvMode | string = ConvMode.FULL,
   boundary: BoundaryMode | string = BoundaryMode.ZERO
 ): Float64Array {
-  const n = signal.length;
-  const k = kernel.length;
-
-  if (n === 0) {
-    throw new EmptySignalError("signal must be non-empty");
-  }
-  if (k === 0) {
-    throw new EmptyKernelError("kernel must be non-empty");
-  }
-  if (n > MAX_SAMPLES) {
-    throw new InvalidInputError(
-      `signal length ${n} exceeds MAX_SAMPLES ${MAX_SAMPLES}`
-    );
-  }
-  if (k > MAX_KERNEL_LEN) {
-    throw new InvalidInputError(
-      `kernel length ${k} exceeds MAX_KERNEL_LEN ${MAX_KERNEL_LEN}`
-    );
-  }
+  const n = validateSequence(signal, "signal", MAX_SAMPLES, EmptySignalError);
+  const k = validateSequence(kernel, "kernel", MAX_KERNEL_LEN, EmptyKernelError);
 
   const cMode = parseConvMode(mode);
   const bMode = parseBoundaryMode(boundary);
@@ -202,23 +186,9 @@ export function correlate(
   kernel: ArrayLike<number>,
   mode: ConvMode | string = ConvMode.FULL
 ): Float64Array {
-  if (signal.length === 0) {
-    throw new EmptySignalError("signal must be non-empty");
-  }
-  if (kernel.length === 0) {
-    throw new EmptyKernelError("kernel must be non-empty");
-  }
-  if (signal.length > MAX_SAMPLES) {
-    throw new InvalidInputError(
-      `signal length ${signal.length} exceeds MAX_SAMPLES ${MAX_SAMPLES}`
-    );
-  }
-  if (kernel.length > MAX_KERNEL_LEN) {
-    throw new InvalidInputError(
-      `kernel length ${kernel.length} exceeds MAX_KERNEL_LEN ${MAX_KERNEL_LEN}`
-    );
-  }
-  const k = kernel.length;
+  validateSequence(signal, "signal", MAX_SAMPLES, EmptySignalError);
+  const k = validateSequence(kernel, "kernel", MAX_KERNEL_LEN, EmptyKernelError);
+  validateFloats(kernel, "kernel");
   const reversedKernel = new Float64Array(k);
   for (let i = 0; i < k; i++) {
     reversedKernel[i] = Number(kernel[k - 1 - i]);

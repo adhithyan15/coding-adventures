@@ -1,4 +1,4 @@
-import { InvalidInputError } from "./errors.js";
+import { InvalidInputError, safeFormatValue } from "./errors.js";
 
 /**
  * How to extend the signal outside [0, N) support.
@@ -28,12 +28,14 @@ export const Full = ConvMode.FULL;
 export const Same = ConvMode.SAME;
 export const Valid = ConvMode.VALID;
 
+const MAX_MODE_STR_LEN = 64;
+
 /**
  * Parse and normalize boundary mode from enum or case-insensitive string.
  */
 export function parseBoundaryMode(mode: BoundaryMode | string): BoundaryMode {
-  if (typeof mode !== "string") {
-    throw new InvalidInputError(`unsupported boundary mode: ${String(mode)}`);
+  if (typeof mode !== "string" || mode.length > MAX_MODE_STR_LEN) {
+    throw new InvalidInputError(`unsupported boundary mode: ${safeFormatValue(mode)}`);
   }
   const norm = mode.trim().toLowerCase();
   switch (norm) {
@@ -46,7 +48,7 @@ export function parseBoundaryMode(mode: BoundaryMode | string): BoundaryMode {
     case "wrap":
       return BoundaryMode.WRAP;
     default:
-      throw new InvalidInputError(`unsupported boundary mode: ${mode}`);
+      throw new InvalidInputError(`unsupported boundary mode: ${safeFormatValue(mode)}`);
   }
 }
 
@@ -54,8 +56,8 @@ export function parseBoundaryMode(mode: BoundaryMode | string): BoundaryMode {
  * Parse and normalize convolution mode from enum or case-insensitive string.
  */
 export function parseConvMode(mode: ConvMode | string): ConvMode {
-  if (typeof mode !== "string") {
-    throw new InvalidInputError(`unsupported conv mode: ${String(mode)}`);
+  if (typeof mode !== "string" || mode.length > MAX_MODE_STR_LEN) {
+    throw new InvalidInputError(`unsupported conv mode: ${safeFormatValue(mode)}`);
   }
   const norm = mode.trim().toLowerCase();
   switch (norm) {
@@ -66,6 +68,6 @@ export function parseConvMode(mode: ConvMode | string): ConvMode {
     case "valid":
       return ConvMode.VALID;
     default:
-      throw new InvalidInputError(`unsupported conv mode: ${mode}`);
+      throw new InvalidInputError(`unsupported conv mode: ${safeFormatValue(mode)}`);
   }
 }

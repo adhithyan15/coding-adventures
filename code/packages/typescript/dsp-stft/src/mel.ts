@@ -1,6 +1,6 @@
 import { dct, DctNorm, DctType } from "@coding-adventures/dsp-dct";
 import { MAX_FFT_LEN, MAX_MELS, MAX_SAMPLES } from "./constants.js";
-import { InvalidParamError } from "./errors.js";
+import { InvalidParamError, safeFormatValue } from "./errors.js";
 import { powerSpectrogram } from "./spectrogram.js";
 import { WindowType } from "./types.js";
 
@@ -11,6 +11,11 @@ const EPS = 1e-10;
  * mel(0) = 0, mel(700) ~ 781.
  */
 export function hzToMel(f: number): number {
+  if (typeof f !== "number" || !Number.isFinite(f) || f < 0.0) {
+    throw new InvalidParamError(
+      `frequency in Hz must be a non-negative finite number; got ${safeFormatValue(f)}`
+    );
+  }
   return 2595.0 * Math.log10(1.0 + f / 700.0);
 }
 
@@ -18,7 +23,16 @@ export function hzToMel(f: number): number {
  * Mel -> Hz (HTK convention). Inverse of hzToMel.
  */
 export function melToHz(m: number): number {
-  return 700.0 * (Math.pow(10.0, m / 2595.0) - 1.0);
+  if (typeof m !== "number" || !Number.isFinite(m) || m < 0.0) {
+    throw new InvalidParamError(
+      `mel value must be a non-negative finite number; got ${safeFormatValue(m)}`
+    );
+  }
+  const hz = 700.0 * (Math.pow(10.0, m / 2595.0) - 1.0);
+  if (!Number.isFinite(hz)) {
+    throw new InvalidParamError(`mel value ${m} overflows finite Hz`);
+  }
+  return hz;
 }
 
 /**
@@ -44,21 +58,28 @@ export function melFilterbank(
 
   const bins = Math.floor(nFft / 2) + 1;
   const totalLen = nMels * bins;
-  if (totalLen > MAX_SAMPLES) {
+  if (!Number.isSafeInteger(totalLen) || totalLen > MAX_SAMPLES) {
     return new Float64Array(0);
   }
 
   const fmin = 0.0;
   const fmax = sampleRate * 0.5; // Nyquist
+  const binPerHz = nFft / sampleRate;
+  if (fmax <= 0.0 || !Number.isFinite(fmax) || !Number.isFinite(binPerHz) || binPerHz <= 0.0) {
+    return new Float64Array(0);
+  }
   const melMin = hzToMel(fmin);
   const melMax = hzToMel(fmax);
   const step = (melMax - melMin) / (nMels + 1);
-  const binPerHz = nFft / sampleRate;
 
   const binPts = new Float64Array(nMels + 2);
   for (let i = 0; i < nMels + 2; i++) {
     const mel = melMin + step * i;
-    binPts[i] = melToHz(mel) * binPerHz;
+    const pt = melToHz(mel) * binPerHz;
+    if (!Number.isFinite(pt)) {
+      return new Float64Array(0);
+    }
+    binPts[i] = pt;
   }
 
   const filterbank = new Float64Array(totalLen);
@@ -109,16 +130,16 @@ export function melSpectrogram(
   window: WindowType | string = WindowType.HANN
 ): Float64Array {
   if (!Number.isSafeInteger(nMels) || nMels <= 0) {
-    throw new InvalidParamError(`nMels must be a positive integer; got ${nMels}`);
+    throw new InvalidParamError(`nMels must be a positive integer; got ${safeFormatValue(nMels)}`);
   }
   if (nMels > MAX_MELS) {
     throw new InvalidParamError(
       `nMels ${nMels} exceeds MAX_MELS ${MAX_MELS}`
     );
   }
-  if (!Number.isFinite(sampleRate) || sampleRate <= 0.0) {
+  if (typeof sampleRate !== "number" || !Number.isFinite(sampleRate) || sampleRate <= 0.0) {
     throw new InvalidParamError(
-      `sampleRate must be positive and finite; got ${sampleRate}`
+      `sampleRate must be positive and finite; got ${safeFormatValue(sampleRate)}`
     );
   }
 
@@ -132,7 +153,7 @@ export function melSpectrogram(
   }
 
   const outLen = numFrames * nMels;
-  if (outLen > MAX_SAMPLES) {
+  if (!Number.isSafeInteger(outLen) || outLen > MAX_SAMPLES) {
     throw new InvalidParamError("mel spectrogram output length exceeds MAX_SAMPLES");
   }
 
@@ -145,6 +166,11 @@ export function melSpectrogram(
       let acc = 0.0;
       for (let k = 0; k < bins; k++) {
         acc += fb[fbRowOffset + k] * power[pRowOffset + k];
+      }
+      if (!Number.isFinite(acc)) {
+        throw new InvalidParamError(
+          `mel spectrogram overflowed to non-finite value at frame ${t}, mel ${m}`
+        );
       }
       out[outRowOffset + m] = acc;
     }
@@ -171,7 +197,7 @@ export function mfcc(
   window: WindowType | string = WindowType.HANN
 ): Float64Array {
   if (!Number.isSafeInteger(nMfcc) || nMfcc <= 0) {
-    throw new InvalidParamError(`nMfcc must be a positive integer; got ${nMfcc}`);
+    throw new InvalidParamError(`nMfcc must be a positive integer; got ${safeFormatValue(nMfcc)}`);
   }
   if (nMfcc > nMels) {
     throw new InvalidParamError(
@@ -183,7 +209,7 @@ export function mfcc(
   const numFrames = mel.length / nMels;
 
   const totalMfccLen = numFrames * nMfcc;
-  if (totalMfccLen > MAX_SAMPLES) {
+  if (!Number.isSafeInteger(totalMfccLen) || totalMfccLen > MAX_SAMPLES) {
     throw new InvalidParamError("MFCC output length exceeds MAX_SAMPLES");
   }
 
@@ -195,7 +221,14 @@ export function mfcc(
     for (let m = 0; m < nMels; m++) {
       rowBuf[m] = Math.log(mel[inOffset + m] + EPS);
     }
-    const coeffs = dct(rowBuf, DctType.II, DctNorm.ORTHO);
+    let coeffs: Float64Array;
+    try {
+      coeffs = dct(rowBuf, DctType.II, DctNorm.ORTHO);
+    } catch (err) {
+      throw new InvalidParamError(
+        `DCT failed during MFCC frame ${t}: ${err instanceof Error ? err.message : safeFormatValue(err)}`
+      );
+    }
     const outOffset = t * nMfcc;
     for (let c = 0; c < nMfcc; c++) {
       out[outOffset + c] = coeffs[c];

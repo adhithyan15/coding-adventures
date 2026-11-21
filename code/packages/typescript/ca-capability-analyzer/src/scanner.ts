@@ -11,6 +11,7 @@ export const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024; // 2 MiB
 const IGNORED_DIRS = new Set([
   "node_modules",
   "dist",
+  "dist-test",
   ".git",
   "coverage",
   ".turbo",
@@ -25,6 +26,13 @@ export function discoverSourceFiles(
   rootDir: string,
   options: { includeTests?: boolean } = {}
 ): string[] {
+  if (typeof rootDir !== "string" || rootDir.length === 0 || rootDir.includes("\0")) {
+    throw new Error("Invalid root directory path");
+  }
+  if (options !== undefined && (typeof options !== "object" || options === null || Array.isArray(options))) {
+    throw new TypeError("options must be an object");
+  }
+
   const discovered: string[] = [];
 
   const MAX_DIRECTORY_DEPTH = 32;
@@ -43,6 +51,8 @@ export function discoverSourceFiles(
     } catch (err) {
       throw new Error(`Failed to read directory at ${currentDir}: ${String(err)}`);
     }
+
+    entries.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
 
     for (const entry of entries) {
       if (entry.isSymbolicLink()) {
@@ -69,8 +79,11 @@ export function discoverSourceFiles(
             }
           }
 
-          // Check file size limit
-          const stat = fs.statSync(fullPath);
+          // Check file size limit using lstatSync to reject symlinks (CWE-59 / CWE-367)
+          const stat = fs.lstatSync(fullPath);
+          if (stat.isSymbolicLink() || !stat.isFile()) {
+            continue;
+          }
           if (stat.size > MAX_FILE_SIZE_BYTES) {
             throw new Error(`File ${fullPath} exceeds maximum size limit of ${MAX_FILE_SIZE_BYTES} bytes`);
           }
@@ -95,6 +108,9 @@ export function discoverSourceFiles(
       throw new Error(`File ${rootDir} exceeds maximum size limit of ${MAX_FILE_SIZE_BYTES} bytes`);
     }
     return [rootDir];
+  }
+  if (!rootStat.isDirectory()) {
+    throw new Error(`Root path must be a regular file or directory: ${rootDir}`);
   }
 
   walk(rootDir);

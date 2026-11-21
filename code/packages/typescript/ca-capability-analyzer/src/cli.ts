@@ -10,6 +10,11 @@ import { formatReportText, formatReportJson } from "./report.js";
 export const VERSION = "0.1.0";
 
 export function runCli(argv: string[]): number {
+  if (!Array.isArray(argv)) {
+    console.error("Error: argv must be an array of strings");
+    return 2;
+  }
+
   let targetDir = ".";
   let strict = false;
   let jsonOutput = false;
@@ -18,6 +23,10 @@ export function runCli(argv: string[]): number {
 
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
+    if (typeof arg !== "string" || arg.includes("\0")) {
+      console.error("Error: invalid argument");
+      return 2;
+    }
     if (arg === "--help" || arg === "-h") {
       printHelp();
       return 0;
@@ -36,14 +45,23 @@ export function runCli(argv: string[]): number {
       includeTests = true;
     } else if (arg === "--dir") {
       i++;
-      if (i >= argv.length) {
-        console.error("Error: --dir requires an argument");
+      if (i >= argv.length || typeof argv[i] !== "string" || argv[i].includes("\0") || argv[i].length === 0) {
+        console.error("Error: --dir requires a valid non-empty path argument");
         return 2;
       }
       targetDir = argv[i];
     } else if (arg.startsWith("--dir=")) {
-      targetDir = arg.slice(6);
+      const val = arg.slice(6);
+      if (val.length === 0) {
+        console.error("Error: --dir requires a non-empty path argument");
+        return 2;
+      }
+      targetDir = val;
     } else if (!arg.startsWith("-")) {
+      if (arg.length === 0) {
+        console.error("Error: target directory path cannot be empty");
+        return 2;
+      }
       targetDir = arg;
     } else {
       console.error(`Error: unknown option '${arg}'`);

@@ -1,5 +1,5 @@
 import { MAX_KERNEL_LEN } from "./constants.js";
-import { InvalidInputError } from "./errors.js";
+import { InvalidInputError, safeFormatValue } from "./errors.js";
 
 /**
  * 1-D Gaussian blur kernel with standard deviation sigma and length size.
@@ -7,7 +7,7 @@ import { InvalidInputError } from "./errors.js";
  */
 export function gaussianBlurKernel(sigma: number, size: number): Float64Array {
   if (!Number.isSafeInteger(size) || size <= 0 || size % 2 === 0) {
-    throw new InvalidInputError(`size must be odd and > 0; got ${size}`);
+    throw new InvalidInputError(`size must be odd and > 0; got ${safeFormatValue(size)}`);
   }
   if (size > MAX_KERNEL_LEN) {
     throw new InvalidInputError(
@@ -16,7 +16,7 @@ export function gaussianBlurKernel(sigma: number, size: number): Float64Array {
   }
   if (!Number.isFinite(sigma) || sigma <= 0.0) {
     throw new InvalidInputError(
-      `sigma must be positive and finite; got ${sigma}`
+      `sigma must be positive and finite; got ${safeFormatValue(sigma)}`
     );
   }
 
@@ -57,7 +57,7 @@ export function gaussianBlurKernel(sigma: number, size: number): Float64Array {
  */
 export function boxBlurKernel(size: number): Float64Array {
   if (!Number.isSafeInteger(size) || size <= 0) {
-    throw new InvalidInputError(`size must be > 0; got ${size}`);
+    throw new InvalidInputError(`size must be > 0; got ${safeFormatValue(size)}`);
   }
   if (size > MAX_KERNEL_LEN) {
     throw new InvalidInputError(
@@ -107,12 +107,16 @@ export function laplacianKernel(): Float64Array {
  * 3x3 sharpen kernel: identity + scaled negative Laplacian.
  */
 export function sharpenKernel(amount: number = 1.0): Float64Array {
-  if (!Number.isFinite(amount)) {
-    throw new InvalidInputError(`amount must be finite; got ${amount}`);
+  if (typeof amount !== "number" || !Number.isFinite(amount)) {
+    throw new InvalidInputError(`amount must be finite; got ${safeFormatValue(amount)}`);
+  }
+  const center = 1.0 + 4.0 * amount;
+  if (!Number.isFinite(center)) {
+    throw new InvalidInputError(`amount ${amount} overflows center coefficient`);
   }
   return new Float64Array([
     0.0, -amount, 0.0,
-    -amount, 1.0 + 4.0 * amount, -amount,
+    -amount, center, -amount,
     0.0, -amount, 0.0,
   ]);
 }
