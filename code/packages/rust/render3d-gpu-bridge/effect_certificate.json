@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/render3d-gpu-bridge",
-  "source_digest": "4fd3e9e651906e08235f45e5fd9fe8ee31b73a05fe8c007dcaddd499fb31dd99",
+  "source_digest": "554161aab6c4968c798f2a5e944471df97c573b884efbe5da54fa0bba115b936",
   "manifest_digest": "7ac1e7b972267ec2b8d7e2f0d5884c078a0b0e3286eac94469238e9b375230e6",
   "declared_effects": [],
   "entry_points": [

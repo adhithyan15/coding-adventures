@@ -111,6 +111,8 @@ fn multi_draw_atomicity_preserves_buffers_byte_for_byte_on_second_draw_error() {
     nan_model.cols[3][0] = f64::NAN;
     let mut inf_normal = Mat3::mat3_identity();
     inf_normal.cols[1][1] = f64::INFINITY;
+    let huge_scale_model = Mat4::mat4_from_scale(Vec3::new(1.0e305, 1.0, 1.0)).expect("scale4");
+    let huge_normal = Mat3::mat3_from_scale(1.0e200, 1.0e200, 1.0e200).expect("scale3");
 
     let bad_draw_calls = [
         // 1. OOB mesh_index on draw #1
@@ -147,6 +149,16 @@ fn multi_draw_atomicity_preserves_buffers_byte_for_byte_on_second_draw_error() {
         // 7. Non-finite normal matrix on draw #1
         DrawCall {
             normal_matrix: inf_normal,
+            ..valid_dc0
+        },
+        // 8. Repro A: finite huge scale model matrix (1e305) on draw #1
+        DrawCall {
+            model: huge_scale_model,
+            ..valid_dc0
+        },
+        // 9. Repro B: finite huge diagonal normal matrix (1e200) on draw #1
+        DrawCall {
+            normal_matrix: huge_normal,
             ..valid_dc0
         },
     ];
@@ -246,6 +258,70 @@ fn multi_draw_atomicity_preserves_buffers_byte_for_byte_on_second_draw_error() {
         assert_eq!(fb.data, fb_orig.data);
         assert_eq!(zb64, zb64_orig);
     }
+
+    // Explicit Repro A with Vertex at (1e8, 0, 0) <= MAX_COORD (1e9) and draw #1 scale 1e305
+    let far_verts = [
+        Vertex::vertex_new(
+            Vec3::new(1.0e8, 0.0, 0.0),
+            Vec3::unit_z(),
+            [1.0, 1.0, 1.0],
+            0.0,
+            0.0,
+        ),
+        Vertex::vertex_new(
+            Vec3::new(1.0e8 + 1.0, 0.0, 0.0),
+            Vec3::unit_z(),
+            [1.0, 1.0, 1.0],
+            1.0,
+            0.0,
+        ),
+        Vertex::vertex_new(
+            Vec3::new(1.0e8, 1.0, 0.0),
+            Vec3::unit_z(),
+            [1.0, 1.0, 1.0],
+            0.0,
+            1.0,
+        ),
+    ];
+    let two_meshes = [
+        MeshSlice::mesh_slice_new(&verts, &indices).expect("mesh 0"),
+        MeshSlice::mesh_slice_new(&far_verts, &[0, 1, 2]).expect("mesh 1"),
+    ];
+    let repro_a_calls = [
+        valid_dc0,
+        DrawCall {
+            mesh_index: 1,
+            material_index: 0,
+            model: huge_scale_model,
+            normal_matrix: Mat3::mat3_identity(),
+            index_offset: 0,
+            index_count: 3,
+        },
+    ];
+    let repro_a_pass = RenderPass {
+        target,
+        camera,
+        light: LightRig::light_rig_default(),
+        meshes: &two_meshes,
+        materials: &materials[..1],
+        draw_calls: &repro_a_calls,
+    };
+    let mut fb = fb_orig.clone();
+    let mut zb64 = zb64_orig.clone();
+    let mut scratch =
+        RenderBridgeScratch::bridge_scratch_with_capacity(3, 16, 16).expect("scratch");
+    assert_eq!(
+        execute_render_pass_into(
+            &repro_a_pass,
+            BackendPreference::ForceSoftware,
+            &mut fb,
+            DepthBufferMut::F64(&mut zb64),
+            &mut scratch,
+        ),
+        Err(BridgeError::ValueOutOfBounds)
+    );
+    assert_eq!(fb.data, fb_orig.data);
+    assert_eq!(zb64, zb64_orig);
 }
 
 #[test]

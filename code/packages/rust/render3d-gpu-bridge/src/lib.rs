@@ -87,6 +87,13 @@ pub const MAX_VERTICES_PER_MESH: usize = raster3d_soft::MAX_VERTICES;
 /// Maximum coordinate / uniform scalar magnitude accepted on input (CWE-20 / CWE-190).
 pub const MAX_COORD: f64 = raster3d_soft::MAX_COORD;
 
+/// Maximum magnitude of any matrix entry in camera, model, MVP, or normal matrices (CWE-190).
+///
+/// With vertex positions/normals bounded by `MAX_COORD = 1e9`, capping matrix
+/// entries at `1e12` guarantees `mvp * v <= 4e21` and `||normal_matrix * n||^2 <= 2.7e43 << f64::MAX`,
+/// preventing overflow inside `raster3d_soft` after upfront pass validation.
+pub const MAX_MATRIX_ENTRY: f64 = 1.0e12;
+
 /// Serialized uniform payload size (in bytes) passed to `gpu-runtime` post-process shaders.
 pub const POSTPROCESS_UNIFORM_BYTES: usize = 12;
 
@@ -275,20 +282,26 @@ fn check_bounded_scalar(v: f64) -> Result<f64, BridgeError> {
 }
 
 #[inline]
-fn check_mat4_finite(m: &Mat4) -> Result<(), BridgeError> {
+fn check_mat4_bounded(m: &Mat4) -> Result<(), BridgeError> {
     for col in m.cols {
         for v in col {
             check_finite_scalar(v)?;
+            if v.abs() > MAX_MATRIX_ENTRY {
+                return Err(BridgeError::ValueOutOfBounds);
+            }
         }
     }
     Ok(())
 }
 
 #[inline]
-fn check_mat3_finite(m: &Mat3) -> Result<(), BridgeError> {
+fn check_mat3_bounded(m: &Mat3) -> Result<(), BridgeError> {
     for col in m.cols {
         for v in col {
             check_finite_scalar(v)?;
+            if v.abs() > MAX_MATRIX_ENTRY {
+                return Err(BridgeError::ValueOutOfBounds);
+            }
         }
     }
     Ok(())
@@ -904,8 +917,8 @@ impl CameraUniforms {
         projection: Mat4,
         camera_position: Vec3,
     ) -> Result<Self, BridgeError> {
-        check_mat4_finite(&view)?;
-        check_mat4_finite(&projection)?;
+        check_mat4_bounded(&view)?;
+        check_mat4_bounded(&projection)?;
         if !camera_position.vec3_is_finite() {
             return Err(BridgeError::NonFiniteInput);
         }
@@ -913,7 +926,7 @@ impl CameraUniforms {
         check_bounded_scalar(camera_position.y)?;
         check_bounded_scalar(camera_position.z)?;
         let view_projection = projection.mul(&view)?;
-        check_mat4_finite(&view_projection)?;
+        check_mat4_bounded(&view_projection)?;
         Ok(Self {
             view,
             projection,
@@ -932,9 +945,9 @@ impl CameraUniforms {
 
     /// Validate all matrix entries and `camera_position` for finiteness and consistency.
     pub fn camera_validate(&self) -> Result<(), BridgeError> {
-        check_mat4_finite(&self.view)?;
-        check_mat4_finite(&self.projection)?;
-        check_mat4_finite(&self.view_projection)?;
+        check_mat4_bounded(&self.view)?;
+        check_mat4_bounded(&self.projection)?;
+        check_mat4_bounded(&self.view_projection)?;
         if !self.camera_position.vec3_is_finite() {
             return Err(BridgeError::NonFiniteInput);
         }
@@ -947,7 +960,7 @@ impl CameraUniforms {
     /// Serialize `view_projection` and `model` into a deterministic 128-byte `f32` GPU uniform buffer.
     pub fn camera_to_uniform_bytes(&self, model: &Mat4) -> Result<CameraUniformBytes, BridgeError> {
         self.camera_validate()?;
-        check_mat4_finite(model)?;
+        check_mat4_bounded(model)?;
         let vp_f32 = self.view_projection.mat4_to_f32_flat()?;
         let model_f32 = model.mat4_to_f32_flat()?;
         let mut out = [0u8; CAMERA_UNIFORM_BYTES];
@@ -1101,10 +1114,10 @@ impl DrawCall {
         index_offset: usize,
         index_count: usize,
     ) -> Result<Self, BridgeError> {
-        check_mat4_finite(&model)?;
+        check_mat4_bounded(&model)?;
         let upper = model.upper_mat3()?;
         let normal_matrix = upper.mat3_invert()?.mat3_transpose()?;
-        check_mat3_finite(&normal_matrix)?;
+        check_mat3_bounded(&normal_matrix)?;
         if !index_count.is_multiple_of(3) || index_offset.checked_add(index_count).is_none() {
             return Err(BridgeError::InvalidIndexRange);
         }
@@ -1127,8 +1140,8 @@ impl DrawCall {
         index_offset: usize,
         index_count: usize,
     ) -> Result<Self, BridgeError> {
-        check_mat4_finite(&model)?;
-        check_mat3_finite(&normal_matrix)?;
+        check_mat4_bounded(&model)?;
+        check_mat3_bounded(&normal_matrix)?;
         if !index_count.is_multiple_of(3) || index_offset.checked_add(index_count).is_none() {
             return Err(BridgeError::InvalidIndexRange);
         }
@@ -1142,10 +1155,10 @@ impl DrawCall {
         })
     }
 
-    /// Validate matrix finiteness and index slice alignment of this draw call.
+    /// Validate matrix finiteness, magnitude bounds, and index slice alignment of this draw call.
     pub fn draw_call_validate(&self) -> Result<(), BridgeError> {
-        check_mat4_finite(&self.model)?;
-        check_mat3_finite(&self.normal_matrix)?;
+        check_mat4_bounded(&self.model)?;
+        check_mat3_bounded(&self.normal_matrix)?;
         if !self.index_count.is_multiple_of(3)
             || self.index_offset.checked_add(self.index_count).is_none()
         {
@@ -1200,7 +1213,7 @@ impl<'a> RenderPass<'a> {
             };
             validate_index_range(dc.index_offset, dc.index_count, mesh.indices.len())?;
             let mvp = self.camera.view_projection.mul(&dc.model)?;
-            check_mat4_finite(&mvp)?;
+            check_mat4_bounded(&mvp)?;
             let tris = dc.index_count / 3;
             total_triangles = total_triangles
                 .checked_add(tris)
@@ -1578,19 +1591,28 @@ pub fn execute_render_pass_with_runtime(
         }
         RenderBackendKind::GpuRuntimeCpu => {
             if let Some(rt) = runtime {
-                let resolved = rt
-                    .run_pixels(
-                        &BRIDGE_POSTPROCESS_SHADERS,
-                        "bridge_postprocess",
-                        &framebuffer.data,
-                        &uniforms,
+                if rt.backend() == GpuRuntimeBackendKind::Cpu {
+                    let resolved = rt
+                        .run_pixels(
+                            &BRIDGE_POSTPROCESS_SHADERS,
+                            "bridge_postprocess",
+                            &framebuffer.data,
+                            &uniforms,
+                            pixel_count,
+                        )
+                        .map_err(|_| BridgeError::GpuRuntimeFailure)?;
+                    if resolved.len() != framebuffer.data.len() {
+                        return Err(BridgeError::InvalidDimensions);
+                    }
+                    framebuffer.data.copy_from_slice(&resolved);
+                } else {
+                    apply_postprocess_zero_alloc(
+                        pass.target.post_process,
                         pixel_count,
-                    )
-                    .map_err(|_| BridgeError::GpuRuntimeFailure)?;
-                if resolved.len() != framebuffer.data.len() {
-                    return Err(BridgeError::InvalidDimensions);
+                        framebuffer,
+                        scratch,
+                    );
                 }
-                framebuffer.data.copy_from_slice(&resolved);
             } else {
                 apply_postprocess_zero_alloc(
                     pass.target.post_process,
