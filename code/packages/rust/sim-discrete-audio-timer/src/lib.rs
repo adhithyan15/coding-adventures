@@ -131,7 +131,9 @@ impl std::fmt::Display for TimerAudioError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::InvalidSampleRate { rate } => write!(f, "invalid sample rate: {rate} Hz"),
-            Self::ZeroResistance => write!(f, "555 timer timing resistance R1 + 2*R2 cannot be zero"),
+            Self::ZeroResistance => {
+                write!(f, "555 timer timing resistance R1 + 2*R2 cannot be zero")
+            }
             Self::ZeroCapacitance => write!(f, "555 timer timing capacitance cannot be zero"),
             Self::FrequencyTooHigh { freq, max } => {
                 write!(f, "frequency {freq} Hz exceeds Nyquist limit {max} Hz")
@@ -227,10 +229,7 @@ pub const fn calculate_555_frequency(
 /// Calculate 555 astable multivibrator duty cycle in Q16.16 from component resistances.
 ///
 /// Formula: $D = \frac{R_1 + R_2}{R_1 + 2 R_2}$.
-pub const fn calculate_555_duty_q16(
-    r1_ohms: u32,
-    r2_ohms: u32,
-) -> Result<u16, TimerAudioError> {
+pub const fn calculate_555_duty_q16(r1_ohms: u32, r2_ohms: u32) -> Result<u16, TimerAudioError> {
     let r_denom = (r1_ohms as u64).saturating_add(2 * (r2_ohms as u64));
     if r_denom == 0 {
         return Err(TimerAudioError::ZeroResistance);
@@ -314,29 +313,30 @@ pub const fn diode_clip_sample(sample: i32, threshold: i16) -> i16 {
 
 /// Shape audio sample using analog diode clipping simulation.
 pub fn diode_shape_sample(sample: i32, threshold: i16, mode: DiodeMode) -> i16 {
-    let th = threshold.unsigned_abs() as i32;
+    let s = i64::from(sample);
+    let th = i64::from(threshold.unsigned_abs());
     match mode {
         DiodeMode::HardClip => diode_clip_sample(sample, threshold),
         DiodeMode::Symmetrical => {
-            if sample > th {
-                let over = sample - th;
+            if s > th {
+                let over = s - th;
                 let compressed = th + (over * 16384) / 65536;
-                clamp_sample(compressed as i64)
-            } else if sample < -th {
-                let over = (-sample) - th;
+                clamp_sample(compressed)
+            } else if s < -th {
+                let over = (-s) - th;
                 let compressed = -th - (over * 16384) / 65536;
-                clamp_sample(compressed as i64)
+                clamp_sample(compressed)
             } else {
-                clamp_sample(sample as i64)
+                clamp_sample(s)
             }
         }
         DiodeMode::Asymmetrical => {
-            if sample > th {
-                let over = sample - th;
+            if s > th {
+                let over = s - th;
                 let compressed = th + (over * 16384) / 65536;
-                clamp_sample(compressed as i64)
+                clamp_sample(compressed)
             } else {
-                clamp_sample(sample as i64)
+                clamp_sample(s)
             }
         }
     }
@@ -379,10 +379,7 @@ impl Timer555Astable {
         let freq = calculate_555_frequency(r1_ohms, r2_ohms, c_picofarads)?;
         let nyquist = sample_rate_hz / 2;
         if freq > nyquist {
-            return Err(TimerAudioError::FrequencyTooHigh {
-                freq,
-                max: nyquist,
-            });
+            return Err(TimerAudioError::FrequencyTooHigh { freq, max: nyquist });
         }
         let duty = calculate_555_duty_q16(r1_ohms, r2_ohms)?;
         let phase_inc = (((freq as u64) << 32) / (sample_rate_hz as u64)) as u32;
@@ -437,11 +434,11 @@ impl Timer555Astable {
         self.phase_acc = self.phase_acc.wrapping_add(self.phase_inc);
 
         let base_sample = if self.output_high {
-            self.amplitude
+            i64::from(self.amplitude)
         } else {
-            -self.amplitude
+            -i64::from(self.amplitude)
         };
-        let scaled = ((base_sample as i64) * (self.gain_q16 as i64)) >> 16;
+        let scaled = (base_sample * i64::from(self.gain_q16)) >> 16;
         clamp_sample(scaled)
     }
 
@@ -499,10 +496,7 @@ impl Timer555Astable {
         let freq = calculate_555_frequency(r1_ohms, r2_ohms, c_picofarads)?;
         let nyquist = self.sample_rate_hz / 2;
         if freq > nyquist {
-            return Err(TimerAudioError::FrequencyTooHigh {
-                freq,
-                max: nyquist,
-            });
+            return Err(TimerAudioError::FrequencyTooHigh { freq, max: nyquist });
         }
         self.r1_ohms = r1_ohms;
         self.r2_ohms = r2_ohms;
@@ -581,10 +575,12 @@ impl DiscreteNoiseFilter {
             (self.lfsr15_state & 1) as i32
         };
 
-        let raw_noise = if raw_bit != 0 { 20_000i32 } else { -20_000i32 };
-        let diff = raw_noise - self.rc_state;
-        let delta = ((diff as i64) * (self.alpha_q16 as i64)) >> 16;
-        self.rc_state = (self.rc_state as i64 + delta).clamp(-32768, 32767) as i32;
+        let raw_noise = if raw_bit != 0 { 20_000i64 } else { -20_000i64 };
+        let diff = raw_noise - i64::from(self.rc_state);
+        let delta = ((i128::from(diff) * i128::from(self.alpha_q16)) >> 16)
+            .clamp(i128::from(i64::MIN), i128::from(i64::MAX)) as i64;
+        self.rc_state =
+            (i64::from(self.rc_state).saturating_add(delta)).clamp(-32768, 32767) as i32;
 
         let shaped = diode_shape_sample(self.rc_state, self.diode_threshold, self.diode_mode);
         let scaled = ((shaped as i64) * (self.gain_q16 as i64)) >> 16;
@@ -698,6 +694,9 @@ impl CoinMechDebounce {
     /// Simulates hardware SPDT coin switch with Normally-Open (`no_val`) and Normally-Closed (`nc_val`) contacts.
     /// Returns `true` on rising edge of latched credit.
     pub fn step_debounce_sr(&mut self, no_val: u8, nc_val: u8) -> bool {
+        if no_val > 1 || nc_val > 1 || self.sr_q > 1 || self.sr_q_bar > 1 {
+            return false;
+        }
         let prev_q = self.sr_q;
         let (new_q, new_q_bar) =
             logic_gates::sequential::sr_latch(no_val, nc_val, self.sr_q, self.sr_q_bar);
@@ -963,10 +962,11 @@ pub fn export_timer_to_pcm_audio(
     let mut buffer = vec![0i16; sample_count];
     render_timer_audio_into(timer, &mut buffer)?;
 
-    let format = pcm_audio::PcmFormat::mono_16bit(timer.sample_rate_hz as f64)
-        .map_err(|_| TimerAudioError::InvalidParameter {
+    let format = pcm_audio::PcmFormat::mono_16bit(timer.sample_rate_hz as f64).map_err(|_| {
+        TimerAudioError::InvalidParameter {
             reason: "invalid pcm format",
-        })?;
+        }
+    })?;
 
     pcm_audio::PcmAudio::from_i16(buffer, format, 0.0).map_err(|_| {
         TimerAudioError::InvalidParameter {
@@ -990,10 +990,11 @@ pub fn export_noise_to_pcm_audio(
     let mut buffer = vec![0i16; sample_count];
     render_noise_audio_into(filter, &mut buffer)?;
 
-    let format = pcm_audio::PcmFormat::mono_16bit(filter.sample_rate_hz as f64)
-        .map_err(|_| TimerAudioError::InvalidParameter {
+    let format = pcm_audio::PcmFormat::mono_16bit(filter.sample_rate_hz as f64).map_err(|_| {
+        TimerAudioError::InvalidParameter {
             reason: "invalid pcm format",
-        })?;
+        }
+    })?;
 
     pcm_audio::PcmAudio::from_i16(buffer, format, 0.0).map_err(|_| {
         TimerAudioError::InvalidParameter {
@@ -1017,10 +1018,11 @@ pub fn export_system_to_pcm_audio(
     let mut buffer = vec![0i16; sample_count];
     render_system_audio_into(system, &mut buffer)?;
 
-    let format = pcm_audio::PcmFormat::mono_16bit(system.sample_rate_hz as f64)
-        .map_err(|_| TimerAudioError::InvalidParameter {
+    let format = pcm_audio::PcmFormat::mono_16bit(system.sample_rate_hz as f64).map_err(|_| {
+        TimerAudioError::InvalidParameter {
             reason: "invalid pcm format",
-        })?;
+        }
+    })?;
 
     pcm_audio::PcmAudio::from_i16(buffer, format, 0.0).map_err(|_| {
         TimerAudioError::InvalidParameter {
