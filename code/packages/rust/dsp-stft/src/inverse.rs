@@ -74,6 +74,13 @@ pub fn istft(
             crate::MAX_SAMPLES
         )));
     }
+    if spectrogram.len() > crate::MAX_SAMPLES {
+        return Err(StftError::InvalidParam(format!(
+            "spectrogram length {} exceeds MAX_SAMPLES {}",
+            spectrogram.len(),
+            crate::MAX_SAMPLES
+        )));
+    }
 
     let bins = nf / 2 + 1;
     let frame_floats = bins.checked_mul(2).ok_or_else(|| {
@@ -138,6 +145,11 @@ pub fn istft(
     for n in 0..out_len {
         if norm[n] > 1e-10 {
             out[n] /= norm[n];
+        }
+        if !out[n].is_finite() {
+            return Err(StftError::InvalidSpectrogram(
+                "istft reconstruction overflowed to non-finite float".into(),
+            ));
         }
     }
     Ok(out)

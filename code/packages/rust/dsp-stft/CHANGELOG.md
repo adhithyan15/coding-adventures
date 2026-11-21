@@ -1,5 +1,17 @@
 # Changelog — dsp-stft
 
+## 0.5.1 — 2026-11-21
+
+### Security & VER15 Hardening (DSP-W8-B)
+
+- Added `BUILD_windows` matching `BUILD` for Windows parity (`audit_build_windows.py`).
+- Exposed and hardened `mel::hz_to_mel` and `mel::mel_to_hz` against negative, non-finite, and overflow-inducing inputs (CWE-20).
+- Guarded `mel_filterbank` against subnormal/tiny `sample_rate` (`fmax <= 0` or `bin_per_hz = n_fft / sample_rate` overflowing to `Inf` -> `0 * Inf = NaN`), returning an empty filterbank cleanly (CWE-20).
+- Checked `spectrogram` (`re*re + im*im`), `log_spectrogram`, `mel_spectrogram`, `mfcc`, `stft`, `istft`, and `stft_via_runtime` outputs for non-finite overflow (`Inf` / `NaN`) before returning (CWE-20).
+- Enforced `spectrogram.len() <= MAX_SAMPLES` in `istft` and `MAX_FRAMES` / `MAX_SAMPLES` bounds in `matrix::build_stft_graph_internal` (CWE-400 / CWE-190).
+- Normalized `mel.rs` / `lib.rs` `use` bindings so `ca-capability-analyzer-rs` resolves the package cleanly without alias-expansion cycles (`CAP003`).
+- Added standalone `tests/test_hostile_inputs.rs` and SplitMix64 `tests/test_pbt.rs` suites.
+
 ## 0.5.0 — 2026-11-15
 
 ### Security & Hardening (DSP-W4-A2)

@@ -278,14 +278,18 @@ pub fn dwt_1d(
     let mut current = signal.to_vec();
     let mut details_reversed: Vec<Vec<f32>> = Vec::with_capacity(levels as usize);
     for _ in 0..levels {
-        let (ca, cd) = filter_and_downsample(&current, &h, &g, boundary);
+        let (ca, cd) = filter_and_downsample(&current, &h, &g, boundary)?;
         details_reversed.push(cd);
         current = ca;
     }
 
     // Assemble: cA_J first, then details from coarsest (J) to finest (1).
-    let total_len: usize = current.len()
-        + details_reversed.iter().map(|d| d.len()).sum::<usize>();
+    let mut total_len = current.len();
+    for d in &details_reversed {
+        total_len = total_len
+            .checked_add(d.len())
+            .ok_or_else(|| WaveletError::InvalidParam("DWT output length overflow".into()))?;
+    }
     let mut out = Vec::with_capacity(total_len);
     out.extend_from_slice(&current);
     // details_reversed[0] = cD_1 (finest), [levels-1] = cD_J (coarsest).
@@ -357,8 +361,12 @@ pub fn idwt_1d(
     // level_lens[0] = original signal length, [1] = cA_1 length,
     // ..., [J] = cA_J length.
     let coarsest_ca_len = level_lens[levels as usize];
-    let expected_total: usize = coarsest_ca_len
-        + level_lens[1..=(levels as usize)].iter().sum::<usize>();
+    let mut expected_total = coarsest_ca_len;
+    for &len in &level_lens[1..=(levels as usize)] {
+        expected_total = expected_total
+            .checked_add(len)
+            .ok_or_else(|| WaveletError::InvalidParam("IDWT expected length overflow".into()))?;
+    }
     if coeffs.len() != expected_total {
         return Err(WaveletError::InvalidCoefficients(format!(
             "coeffs length {} does not match expected {} for \
@@ -395,7 +403,7 @@ pub fn idwt_1d(
         let target_len = level_lens[j - 1];
         current = synthesize_one_level(
             &current, cd, &h_ana, &g_ana, target_len, boundary,
-        );
+        )?;
     }
     debug_assert_eq!(offset, coeffs.len());
     debug_assert_eq!(current.len(), output_length as usize);
@@ -433,8 +441,12 @@ pub fn split_levels(
     check_levels(levels)?;
     let level_lens = forward_level_lengths(signal_len, levels);
     let coarsest_ca = level_lens[levels as usize];
-    let expected_total: usize =
-        coarsest_ca + level_lens[1..=(levels as usize)].iter().sum::<usize>();
+    let mut expected_total = coarsest_ca;
+    for &len in &level_lens[1..=(levels as usize)] {
+        expected_total = expected_total
+            .checked_add(len)
+            .ok_or_else(|| WaveletError::InvalidParam("split_levels expected length overflow".into()))?;
+    }
     if coeffs_len != expected_total {
         return Err(WaveletError::InvalidCoefficients(format!(
             "coeffs_len {} does not match expected {} for \
@@ -447,7 +459,9 @@ pub fn split_levels(
     let mut off = coarsest_ca;
     for j in (1..=levels as usize).rev() {
         offsets.push(off); // cD_j
-        off += level_lens[j];
+        off = off
+            .checked_add(level_lens[j])
+            .ok_or_else(|| WaveletError::InvalidParam("split_levels offset overflow".into()))?;
     }
     offsets.push(off); // total_len sentinel
     Ok(offsets)
@@ -549,9 +563,13 @@ pub fn cwt(
         )));
     }
     for &s in scales {
-        if !s.is_finite() || s <= 0.0 {
+        if !s.is_finite()
+            || s <= 0.0
+            || !(1.0 / s).is_finite()
+            || !(1.0 / s.sqrt()).is_finite()
+        {
             return Err(WaveletError::InvalidParam(
-                "scales must be positive and finite".into(),
+                "scales must be positive, finite, and have finite reciprocals".into(),
             ));
         }
     }
@@ -602,7 +620,12 @@ pub fn cwt(
                         re_acc += x * re_psi;
                         im_acc += x * im_psi;
                     }
-                    let mag = inv_sqrt_s * (re_acc * re_acc + im_acc * im_acc).sqrt();
+                    let mag = inv_sqrt_s * re_acc.hypot(im_acc);
+                    if !mag.is_finite() {
+                        return Err(WaveletError::InvalidParam(
+                            "CWT output overflowed to non-finite float".into(),
+                        ));
+                    }
                     out.push(mag);
                 }
             }
@@ -626,7 +649,13 @@ pub fn cwt(
                         let psi = c * (1.0 - t * t) * (-0.5 * t * t).exp();
                         acc += signal[k] * psi;
                     }
-                    out.push(inv_sqrt_s * acc);
+                    let val = inv_sqrt_s * acc;
+                    if !val.is_finite() {
+                        return Err(WaveletError::InvalidParam(
+                            "CWT output overflowed to non-finite float".into(),
+                        ));
+                    }
+                    out.push(val);
                 }
             }
         }
@@ -729,7 +758,7 @@ fn filter_and_downsample(
     h: &[f32],
     g: &[f32],
     boundary: WaveletBoundary,
-) -> (Vec<f32>, Vec<f32>) {
+) -> Result<(Vec<f32>, Vec<f32>), WaveletError> {
     let n = signal.len();
     let filter_len = h.len();
     // Output length per band: ⌈n / 2⌉ for odd-length input,
@@ -755,10 +784,15 @@ fn filter_and_downsample(
             acc_h += h[i] * sample;
             acc_g += g[i] * sample;
         }
+        if !acc_h.is_finite() || !acc_g.is_finite() {
+            return Err(WaveletError::InvalidParam(
+                "DWT filter output overflowed to non-finite float".into(),
+            ));
+        }
         ca.push(acc_h);
         cd.push(acc_g);
     }
-    (ca, cd)
+    Ok((ca, cd))
 }
 
 /// Generic one-step Mallat synthesis for any orthogonal wavelet
@@ -806,7 +840,7 @@ fn synthesize_one_level(
     g: &[f32],
     target_len: usize,
     boundary: WaveletBoundary,
-) -> Vec<f32> {
+) -> Result<Vec<f32>, WaveletError> {
     debug_assert_eq!(ca.len(), cd.len());
     debug_assert_eq!(h.len(), g.len());
     let filter_len = h.len();
@@ -826,9 +860,14 @@ fn synthesize_one_level(
                 acc += h[i] * ca_val + g[i] * cd_val;
             }
         }
+        if !acc.is_finite() {
+            return Err(WaveletError::InvalidCoefficients(
+                "IDWT synthesis output overflowed to non-finite float".into(),
+            ));
+        }
         *out_n = acc;
     }
-    out
+    Ok(out)
 }
 
 /// **Phase 1+2 closed-form Haar synthesis** — kept under a
@@ -1024,7 +1063,7 @@ fn check_levels(levels: u32) -> Result<(), WaveletError> {
     Ok(())
 }
 
-fn check_supported_wavelet(w: WaveletType) -> Result<(), WaveletError> {
+pub(crate) fn check_supported_wavelet(w: WaveletType) -> Result<(), WaveletError> {
     match w {
         WaveletType::Haar => Ok(()),
         WaveletType::Daubechies(_)
@@ -1053,7 +1092,7 @@ fn check_supported_boundary(b: WaveletBoundary) -> Result<(), WaveletError> {
     }
 }
 
-fn filter_length_for(w: WaveletType) -> usize {
+pub(crate) fn filter_length_for(w: WaveletType) -> usize {
     match w {
         WaveletType::Haar => 2,
         WaveletType::Daubechies(_)

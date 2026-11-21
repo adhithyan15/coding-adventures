@@ -155,7 +155,25 @@ pub fn stft_via_runtime(
     // checked arithmetic because the cap doesn't prevent intermediate
     // overflow).  Use checked_mul for defense in depth.
     let num_frames = 1 + (signal_length - n_fft) / hop_length;
+    if (num_frames as usize) > crate::MAX_FRAMES {
+        return Err(StftError::InvalidParam(format!(
+            "num_frames {} exceeds MAX_FRAMES {}",
+            num_frames,
+            crate::MAX_FRAMES
+        )));
+    }
     let bins = n_fft / 2 + 1;
+    let out_len = (num_frames as usize)
+        .checked_mul(bins as usize)
+        .and_then(|v| v.checked_mul(2))
+        .ok_or_else(|| StftError::InvalidParam("output length overflow".into()))?;
+    if out_len > crate::MAX_SAMPLES {
+        return Err(StftError::InvalidParam(format!(
+            "output length {} exceeds MAX_SAMPLES {}",
+            out_len,
+            crate::MAX_SAMPLES
+        )));
+    }
     let output_byte_count = (num_frames as usize)
         .checked_mul(bins as usize)
         .and_then(|v| v.checked_mul(2))
@@ -233,9 +251,22 @@ pub fn stft_via_runtime(
         }
     };
 
+    if bytes.len() != output_byte_count || !bytes.len().is_multiple_of(4) {
+        return Err(StftError::Fft(format!(
+            "executor download byte length {} != expected {} (or not 4-byte aligned)",
+            bytes.len(),
+            output_byte_count
+        )));
+    }
     let mut out: Vec<f32> = Vec::with_capacity(bytes.len() / 4);
     for chunk in bytes.as_chunks::<4>().0 {
-        out.push(f32::from_le_bytes(*chunk));
+        let v = f32::from_le_bytes(*chunk);
+        if !v.is_finite() {
+            return Err(StftError::Fft(
+                "matrix-IR STFT output overflowed to non-finite float".into(),
+            ));
+        }
+        out.push(v);
     }
     Ok(out)
 }
@@ -305,7 +336,25 @@ fn build_stft_graph_internal<'a>(
         )));
     }
     let num_frames = 1 + (signal_length - n_fft) / hop_length;
+    if (num_frames as usize) > crate::MAX_FRAMES {
+        return Err(StftError::InvalidParam(format!(
+            "num_frames {} exceeds MAX_FRAMES {}",
+            num_frames,
+            crate::MAX_FRAMES
+        )));
+    }
     let bins = n_fft / 2 + 1;
+    let out_len = (num_frames as usize)
+        .checked_mul(bins as usize)
+        .and_then(|v| v.checked_mul(2))
+        .ok_or_else(|| StftError::InvalidParam("output length overflow".into()))?;
+    if out_len > crate::MAX_SAMPLES {
+        return Err(StftError::InvalidParam(format!(
+            "output length {} exceeds MAX_SAMPLES {}",
+            out_len,
+            crate::MAX_SAMPLES
+        )));
+    }
 
     // ── DoS cap on graph size (defense in depth, from security review).
     //

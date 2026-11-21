@@ -54,7 +54,8 @@
 //! universal fallback and the standard for speaker ID, audio
 //! classification, and most lightweight audio ML.
 
-use crate::{spectrogram, StftError, WindowType};
+use crate::spectrogram::spectrogram;
+use crate::{StftError, WindowType};
 use dsp_dct::{dct, DctNorm, DctType};
 
 /// Small floor added inside `log()` so silent bins map to a
@@ -62,15 +63,47 @@ use dsp_dct::{dct, DctNorm, DctType};
 const EPS: f32 = 1e-10;
 
 /// Hz → mel, HTK convention.  `mel(0) = 0`, `mel(700) ≈ 781`.
+///
+/// Rejects negative or non-finite frequencies (CWE-20).
 #[inline]
-fn hz_to_mel(f: f32) -> f32 {
-    2595.0 * (1.0 + f / 700.0).log10()
+#[allow(clippy::neg_cmp_op_on_partial_ord)]
+pub fn hz_to_mel(f: f32) -> Result<f32, StftError> {
+    if !(f >= 0.0) || !f.is_finite() {
+        return Err(StftError::InvalidParam(format!(
+            "frequency must be finite and >= 0; got {}",
+            f
+        )));
+    }
+    let m = 2595.0 * (1.0 + f / 700.0).log10();
+    if !m.is_finite() {
+        return Err(StftError::InvalidParam(format!(
+            "hz_to_mel overflowed for frequency {}",
+            f
+        )));
+    }
+    Ok(m)
 }
 
 /// Mel → Hz, HTK convention.  Inverse of [`hz_to_mel`].
+///
+/// Rejects negative, non-finite, or overflow-inducing mel values (CWE-20).
 #[inline]
-fn mel_to_hz(m: f32) -> f32 {
-    700.0 * (10.0_f32.powf(m / 2595.0) - 1.0)
+#[allow(clippy::neg_cmp_op_on_partial_ord)]
+pub fn mel_to_hz(m: f32) -> Result<f32, StftError> {
+    if !(m >= 0.0) || !m.is_finite() {
+        return Err(StftError::InvalidParam(format!(
+            "mel value must be finite and >= 0; got {}",
+            m
+        )));
+    }
+    let hz = 700.0 * (10.0_f32.powf(m / 2595.0) - 1.0);
+    if !hz.is_finite() {
+        return Err(StftError::InvalidParam(format!(
+            "mel_to_hz overflowed for mel {}",
+            m
+        )));
+    }
+    Ok(hz)
 }
 
 /// Build an `[n_mels, n_fft / 2 + 1]` triangular mel filterbank.
@@ -130,16 +163,35 @@ pub fn mel_filterbank(
     // right = hz_pts[m+2]` — the three vertices of triangle m.
     let fmin = 0.0_f32;
     let fmax = sample_rate * 0.5; // Nyquist
-    let mel_min = hz_to_mel(fmin);
-    let mel_max = hz_to_mel(fmax);
-    let step = (mel_max - mel_min) / ((n_mels + 1) as f32);
+    if !(fmax > 0.0) || !fmax.is_finite() {
+        return Vec::new();
+    }
     let bin_per_hz = (n_fft as f32) / sample_rate;
-    let bin_pts: Vec<f32> = (0..n_mels + 2)
-        .map(|i| {
-            let mel = mel_min + step * (i as f32);
-            mel_to_hz(mel) * bin_per_hz
-        })
-        .collect();
+    if !bin_per_hz.is_finite() {
+        return Vec::new();
+    }
+    let Ok(mel_min) = hz_to_mel(fmin) else {
+        return Vec::new();
+    };
+    let Ok(mel_max) = hz_to_mel(fmax) else {
+        return Vec::new();
+    };
+    let step = (mel_max - mel_min) / ((n_mels + 1) as f32);
+    if !step.is_finite() {
+        return Vec::new();
+    }
+    let mut bin_pts = Vec::with_capacity(n_mels + 2);
+    for i in 0..n_mels + 2 {
+        let mel = mel_min + step * (i as f32);
+        let Ok(hz) = mel_to_hz(mel) else {
+            return Vec::new();
+        };
+        let pt = hz * bin_per_hz;
+        if !pt.is_finite() {
+            return Vec::new();
+        }
+        bin_pts.push(pt);
+    }
 
     let mut filterbank = vec![0.0_f32; total_len];
 
@@ -228,6 +280,15 @@ pub fn mel_spectrogram(
             "sample_rate must be positive and finite".into(),
         ));
     }
+    if n_fft == 0 {
+        return Err(StftError::InvalidParam("n_fft must be > 0".into()));
+    }
+    if (n_fft as usize) > crate::MAX_FFT_LEN {
+        return Err(StftError::InvalidParam(format!(
+            "n_fft {} exceeds MAX_FFT_LEN {}",
+            n_fft, crate::MAX_FFT_LEN
+        )));
+    }
     let bins = (n_fft as usize) / 2 + 1;
     let nm = n_mels as usize;
     let fb_len = nm.checked_mul(bins).ok_or_else(|| {
@@ -266,6 +327,11 @@ pub fn mel_spectrogram(
             let mut acc = 0.0_f32;
             for k in 0..bins {
                 acc += fb_row[k] * p_row[k];
+            }
+            if !acc.is_finite() {
+                return Err(StftError::InvalidParam(
+                    "mel spectrogram bin overflowed to non-finite float".into(),
+                ));
             }
             out[t * nm + m] = acc;
         }
@@ -314,8 +380,16 @@ pub fn mfcc(
     let num_frames = mel.len() / nm;
 
     // log compression — silent bins map to log(ε) ≈ -23, not -∞.
-    let log_mel: Vec<f32> =
-        mel.iter().map(|&v| (v + EPS).ln()).collect();
+    let mut log_mel = Vec::with_capacity(mel.len());
+    for &v in &mel {
+        let lm = (v + EPS).ln();
+        if !lm.is_finite() {
+            return Err(StftError::InvalidParam(
+                "log mel spectrogram bin became non-finite".into(),
+            ));
+        }
+        log_mel.push(lm);
+    }
 
     // DCT-II per frame, keep first n_mfcc coefficients.
     let total_mfcc_len = num_frames.checked_mul(nc).ok_or_else(|| {
@@ -333,6 +407,11 @@ pub fn mfcc(
         let coeffs = dct(row, DctType::II, DctNorm::Ortho)
             .map_err(|e| StftError::Fft(format!("{:?}", e)))?;
         debug_assert_eq!(coeffs.len(), nm);
+        if !coeffs[..nc].iter().all(|x| x.is_finite()) {
+            return Err(StftError::InvalidParam(
+                "MFCC output contains non-finite float".into(),
+            ));
+        }
         out.extend_from_slice(&coeffs[..nc]);
     }
     debug_assert_eq!(out.len(), num_frames * nc);

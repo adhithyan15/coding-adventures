@@ -57,13 +57,33 @@ pub fn conv2d(
             image_height, image_width
         )));
     }
-    if kernel_height == 0 || kernel_width == 0 {
+    if image.is_empty() {
+        return Err(ConvError::ImageSizeMismatch(
+            "image must be non-empty".into(),
+        ));
+    }
+    if kernel.is_empty() || kernel_height == 0 || kernel_width == 0 {
         return Err(ConvError::EmptyKernel);
     }
     let h = image_height as usize;
     let w = image_width as usize;
     let kh = kernel_height as usize;
     let kw = kernel_width as usize;
+
+    if image.len() > MAX_SAMPLES {
+        return Err(ConvError::InvalidInput(format!(
+            "image length {} exceeds MAX_SAMPLES {}",
+            image.len(),
+            MAX_SAMPLES
+        )));
+    }
+    if kernel.len() > MAX_KERNEL_LEN {
+        return Err(ConvError::InvalidInput(format!(
+            "kernel length {} exceeds MAX_KERNEL_LEN {}",
+            kernel.len(),
+            MAX_KERNEL_LEN
+        )));
+    }
 
     let expected_image_len = h.checked_mul(w).ok_or_else(|| {
         ConvError::ImageSizeMismatch(format!(
@@ -160,6 +180,11 @@ pub fn conv2d(
                     let ker_v = kernel[kr * kw + kc];
                     acc += img_v * ker_v;
                 }
+            }
+            if !acc.is_finite() {
+                return Err(ConvError::InvalidInput(
+                    "2-D convolution output overflowed to non-finite float".into(),
+                ));
             }
             out[r * w + c] = acc;
         }
