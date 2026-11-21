@@ -1,6 +1,4 @@
-## [Unreleased]
-
-### Security
+### Security — Fix ordered-list ReDoS in book.ts (#253)
 
 - Fixed CodeQL `js/polynomial-redos` alert (`#253`) in `src/book.ts` by
   replacing `/^(\d+)\.\s+(.*)$/.exec(line)` with an O(N) prefix match
