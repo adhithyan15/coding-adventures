@@ -12,12 +12,14 @@
     }
   },
   "scripts": {
-    "build": "tsc",
-    "test": "node --experimental-strip-types --test tests/index.test.ts"
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=../** --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js"
   },
   "license": "MIT",
   "author": "Adhithya Rajasekaran",
   "devDependencies": {
-    "typescript": "^5.4.0"
+    "@coding-adventures/test-bootstrap": "file:../test-bootstrap",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0"
   }
 }
