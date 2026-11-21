@@ -43,6 +43,11 @@ pub const GREEN_MAX_DRAT: u64 = 32 * 1024 * 1024;
 /// Peak resident memory, KiB (1 GiB).
 pub const GREEN_MAX_RSS_KB: u64 = 1024 * 1024;
 
+/// The route-budget conflict cap of VOS30 section 8.6.1 (frozen pre-registered constant).
+pub const ROUTE_MAX_CONFLICTS: u64 = 50_000;
+/// The route-budget checker-work cap of VOS30 section 8.6.1 (2^31, half of `DEFAULT_MAX_WORK`).
+pub const ROUTE_MAX_CHECK_WORK: u64 = 1 << 31;
+
 /// Everything the file records besides the rows.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Meta {
@@ -455,6 +460,21 @@ pub fn green(r: &Row) -> bool {
         && r.peak_rss_kb > 0
         && r.peak_rss_kb <= GREEN_MAX_RSS_KB
         && r.cap == "none"
+}
+
+/// The VOS30 section 8.6.1 route-green predicate: strictly tighter than [`green`], requiring at
+/// most [`ROUTE_MAX_CONFLICTS`] (50,000) conflicts per obligation and `check_work` at most
+/// [`ROUTE_MAX_CHECK_WORK`] (2^31) on certified/monolithic/split rows.
+pub fn route_green(r: &Row) -> bool {
+    if !green(r) {
+        return false;
+    }
+    if r.mode == "enum" {
+        return true;
+    }
+    let work_ok =
+        r.mode == "incremental" || r.check_work.is_some_and(|w| w <= ROUTE_MAX_CHECK_WORK);
+    r.worst_step_conflicts.unwrap_or(r.conflicts) <= ROUTE_MAX_CONFLICTS && work_ok
 }
 
 /// The reason a row is not green, in words (for the table).
@@ -1642,4 +1662,203 @@ pub fn decide(rows: &[Row]) -> Decision {
 /// A control record for a row that did not run its control.
 pub fn no_control() -> Control {
     Control::none("not run")
+}
+
+/// True iff `g` has at least one counted (non-collapsed) row and every counted row is
+/// [`route_green`] (VOS30 section 9.12).
+pub fn group_route_green(g: &Group<'_>) -> bool {
+    let c = g.counted();
+    !c.is_empty() && c.iter().all(|r| route_green(r))
+}
+
+fn is_route_green(g: Option<&Group<'_>>) -> bool {
+    g.is_some_and(group_route_green)
+}
+
+/// The cut density `K` of VOS30 section 8.6.2: the largest spacing in `{1, 2, 4}` instructions at
+/// which `B3` in `certified` mode is route-green at every length (`25..=1000`) and every
+/// divergence (`5%`, `25%`, `100%`) of the recorded grid; `0` if even `every1` is not.
+pub fn cut_density_k(rows: &[Row]) -> u8 {
+    let gs = groups(rows);
+    for (k, cut) in [(4u8, "every4"), (2u8, "every2"), (1u8, "every1")] {
+        let ok = [25i64, 50, 100, 200, 500, 1000].iter().all(|&len| {
+            [0.05f64, 0.25, 1.0].iter().all(|&div| {
+                is_route_green(find(&gs, "B3", "certified", |kb| {
+                    kb.int("length") == len
+                        && (kb.f("divergence") - div).abs() < 1e-9
+                        && kb.s("cut") == cut
+                }))
+            })
+        });
+        if ok {
+            return k;
+        }
+    }
+    0
+}
+
+/// The four outcome titles of the VOS30 section 8.6.4 re-plan decision table (R1 to R4).
+pub const REPLAN_TITLES: [&str; 4] = [
+    "No lane",
+    "Owned-compile lane mandatory",
+    "Compiled lane, reduced",
+    "Compiled lane",
+];
+
+/// The outcome of the VOS30 section 8.6.4 re-plan decision table, plus cut density `K` and the
+/// orthogonal memory verdict.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ReplanDecision {
+    /// 1..=4 corresponding to R1..=R4.
+    pub row: u8,
+    /// The outcome title ([`REPLAN_TITLES`]).
+    pub title: &'static str,
+    /// The conditions that placed the outcome here.
+    pub because: Vec<String>,
+    /// Cut density `K` in `{0, 1, 2, 4}` (section 8.6.2).
+    pub cut_density_k: u8,
+    /// True iff `D5` (`split = index`, `k = 16`) is route-green at `T = 64` and `T = 256`
+    /// (`thread-table` X3 runs at its shipped `T`); otherwise `T` at most 16 per obligation.
+    pub memory_shipped_t: bool,
+    /// Human-readable orthogonal memory verdict.
+    pub memory_verdict: String,
+}
+
+fn describe_route(g: Option<&Group<'_>>, name: &str) -> String {
+    match g {
+        None => format!("{name}: no rows"),
+        Some(g) => format!(
+            "{name}: {}; worst conflicts {}, worst check_work {}",
+            if group_route_green(g) {
+                "route-green"
+            } else {
+                "NOT route-green"
+            },
+            g.max(|r| r.worst_step_conflicts.unwrap_or(r.conflicts) as f64),
+            g.max(|r| r.check_work.unwrap_or(0) as f64)
+        ),
+    }
+}
+
+/// VOS30 section 8.6.4 applied to the rows, worst case first (`R1` to `R4`, total); missing or
+/// uncounted groups are red.
+pub fn decide_replan(rows: &[Row]) -> ReplanDecision {
+    let gs = groups(rows);
+    let k_cut = cut_density_k(rows);
+    let d5_idx = |t: i64| {
+        find(&gs, "D5", "certified", |kb| {
+            kb.int("t") == t && kb.int("k") == 16 && kb.s("split") == "index"
+        })
+    };
+    let d5_64 = d5_idx(64);
+    let d5_256 = d5_idx(256);
+    let memory_shipped_t = is_route_green(d5_64) && is_route_green(d5_256);
+    let memory_verdict = if memory_shipped_t {
+        "shipped T (D5 split=index route-green at T = 64 and T = 256, k = 16)".to_string()
+    } else {
+        format!(
+            "T at most 16 per obligation ({}; {})",
+            describe_route(d5_64, "D5 T = 64, k = 16, split = index"),
+            describe_route(d5_256, "D5 T = 256, k = 16, split = index")
+        )
+    };
+    let mut r1_red = Vec::new();
+    for exp in ["A1", "A2"] {
+        for n in [8i64, 16, 32, 64] {
+            let g = find(&gs, exp, "monolithic", |kb| kb.int("n") == n);
+            if !is_route_green(g) {
+                r1_red.push(describe_route(g, &format!("{exp} at N = {n}")));
+            }
+        }
+    }
+    let b3_200 = b3(&gs, 200, "every1");
+    if !is_route_green(b3_200) {
+        r1_red.push(describe_route(
+            b3_200,
+            "B3 certified, every1, 200 instructions, 25% divergence",
+        ));
+    }
+    if !r1_red.is_empty() {
+        return ReplanDecision {
+            row: 1,
+            title: REPLAN_TITLES[0],
+            because: r1_red,
+            cut_density_k: k_cut,
+            memory_shipped_t,
+            memory_verdict,
+        };
+    }
+    let b5 = |len: i64, div: f64, fuse: i64| {
+        find(&gs, "B5", "certified", |kb| {
+            kb.int("length") == len
+                && (kb.f("divergence") - div).abs() < 1e-9
+                && kb.int("fuse") == fuse
+        })
+    };
+    let b5_200_f2 = b5(200, 0.25, 2);
+    if !is_route_green(b5_200_f2) {
+        return ReplanDecision {
+            row: 2,
+            title: REPLAN_TITLES[1],
+            because: vec![describe_route(
+                b5_200_f2,
+                "B5 at 200 instructions, 25% divergence, fuse = 2",
+            )],
+            cut_density_k: k_cut,
+            memory_shipped_t,
+            memory_verdict,
+        };
+    }
+    let mut r3_reasons = Vec::new();
+    for div in [0.25f64, 1.0] {
+        for fuse in [1i64, 2, 4, 8] {
+            let g = b5(1000, div, fuse);
+            if !is_route_green(g) {
+                r3_reasons.push(describe_route(
+                    g,
+                    &format!(
+                        "B5 at 1,000 instructions, div = {}%, fuse = {fuse}",
+                        (div * 100.0).round() as i64
+                    ),
+                ));
+            }
+        }
+    }
+    for len in [25i64, 200] {
+        for div in [0.25f64, 1.0] {
+            let g = b5(len, div, 4);
+            if !is_route_green(g) {
+                r3_reasons.push(describe_route(
+                    g,
+                    &format!(
+                        "B5 at {len} instructions, div = {}%, fuse = 4",
+                        (div * 100.0).round() as i64
+                    ),
+                ));
+            }
+        }
+    }
+    if k_cut <= 1 {
+        r3_reasons.push(format!("cut density K = {k_cut} (at most 1)"));
+    }
+    if !r3_reasons.is_empty() {
+        return ReplanDecision {
+            row: 3,
+            title: REPLAN_TITLES[2],
+            because: r3_reasons,
+            cut_density_k: k_cut,
+            memory_shipped_t,
+            memory_verdict,
+        };
+    }
+    ReplanDecision {
+        row: 4,
+        title: REPLAN_TITLES[3],
+        because: vec![format!(
+            "A1/A2 (N = 8..64), B3 (K = {k_cut}), and B5 (1,000 instructions and fuse = 4) are route-green"
+        )],
+        cut_density_k: k_cut,
+        memory_shipped_t,
+        memory_verdict,
+    }
 }

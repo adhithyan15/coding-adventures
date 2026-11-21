@@ -1370,3 +1370,350 @@ impl Shape for D {
         (0..n.max(1)).collect()
     }
 }
+
+// ---------------------------------------------------------------------------------------
+// D5: memory as index split + cut per access + touched-word comparison + separate frame
+// ---------------------------------------------------------------------------------------
+
+/// How D5 decomposes one access `j` (VOS30 section 8.6.3).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum D5Mode {
+    /// `split = index`: concrete index `c` and access `j`, equating only the touched word.
+    Index {
+        /// Concrete base index in `0..T`.
+        c: u32,
+        /// Access index in `0..k`.
+        j: usize,
+    },
+    /// `split = none`: symbolic index `x1` and access `j`, equating all `T` words and comparing
+    /// the touched word.
+    Symbolic {
+        /// Access index in `0..k`.
+        j: usize,
+    },
+}
+
+fn table_addr(e: usize) -> u32 {
+    TABLE_BASE + 4 * e as u32
+}
+
+fn table_name(e: usize, suffix: &str) -> String {
+    format!("m{:x}{suffix}", table_addr(e))
+}
+
+/// Compute `((idx_lg + j) & (T - 1))` and its byte address `TABLE_BASE + 4 * w` in the AIG.
+fn symbolic_touched_word_addr(aig: &mut Aig, idx_lg: &BitVec, j: usize) -> (BitVec, BitVec) {
+    let lg = idx_lg.width();
+    let idx = bv::add(aig, idx_lg, &BitVec::constant(lg, j as u128));
+    let mut shifted = Vec::with_capacity(32);
+    shifted.push(Edge::FALSE);
+    shifted.push(Edge::FALSE);
+    shifted.extend(idx.bits.iter().copied());
+    shifted.resize(32, Edge::FALSE);
+    let addr = bv::add(aig, &BitVec { bits: shifted }, &konst(TABLE_BASE));
+    (idx, addr)
+}
+
+/// The touched-word functional obligation of experiment D5 (VOS30 section 8.6.3).
+///
+/// With `D5Mode::Index`, only the touched word `(c + j) mod T` is declared in the pre-state and
+/// compared; with `D5Mode::Symbolic`, the whole `T`-word table is declared and premised across
+/// the cut, and only the written word at `(x1 + j) mod T` is compared.
+pub struct D5Touched {
+    /// Table words (a power of two).
+    pub t: usize,
+    /// Accesses in the program.
+    pub k: usize,
+    /// Which decomposition.
+    pub mode: D5Mode,
+}
+
+impl D5Touched {
+    fn lg(&self) -> usize {
+        self.t.trailing_zeros() as usize
+    }
+    fn access(&self) -> usize {
+        match self.mode {
+            D5Mode::Index { j, .. } | D5Mode::Symbolic { j } => j,
+        }
+    }
+}
+
+impl Shape for D5Touched {
+    fn build(&self, seed: u64, mutation: Option<usize>) -> Result<Instance, String> {
+        let mut aig = Aig::new();
+        let mut pool = Pool::new();
+        let lg = self.lg();
+        let j = self.access();
+        let mut rng = Rng::new(seed, 0xD5);
+        let variant = (seed % 2) as u32;
+        let d_helper = D {
+            t: self.t,
+            k: self.k,
+            kind: DKind::Sym,
+        };
+        let mut code_ops = d_helper.code(j..j + 1);
+        if mutation.is_some() {
+            // Mutate the data `add` (op 5) to `sub` so the written word differs.
+            code_ops[5] = mutate_op(&code_ops[5]).ok_or("no mutation at data add")?;
+        }
+        let decoded = decode_all(&assemble(&code_ops))?;
+        let mut premises = Vec::new();
+        let (code_word, ref_word, concrete) = match self.mode {
+            D5Mode::Index { c, j } => {
+                let w = ((c as usize) + j) & (self.t - 1);
+                let addr = table_addr(w);
+                let mut specs = Vec::with_capacity(4);
+                for s in ["@c", "@r"] {
+                    specs.push((format!("x2{s}"), 32));
+                    specs.push((table_name(w, s), 32));
+                }
+                pool.declare_shuffled(&mut aig, &specs, &mut rng);
+                let mut cpu = Cpu::new("@c");
+                cpu.set_reg(1, konst(c));
+                cpu.run(&mut aig, &mut pool, &decoded, &[], &mut |_, _| false)?;
+                let code_w = cpu.read_word(&mut aig, &mut pool, &konst(addr))?;
+                let old_r = pool.word(&mut aig, &table_name(w, "@r"));
+                let v_r = pool.word(&mut aig, "x2@r");
+                let vj = bv::add(&mut aig, &v_r, &konst(j as u32 + 1));
+                let ref_w = sem::alternative(&mut aig, Bin::Add, variant, &old_r, &vj)
+                    .ok_or("add has alternatives")?;
+                let (x2c, x2r) = (pool.word(&mut aig, "x2@c"), pool.word(&mut aig, "x2@r"));
+                let (mc, mr) = (
+                    pool.word(&mut aig, &table_name(w, "@c")),
+                    pool.word(&mut aig, &table_name(w, "@r")),
+                );
+                premises.push(bv::eq(&mut aig, &x2c, &x2r));
+                premises.push(bv::eq(&mut aig, &mc, &mr));
+                (code_w, ref_w, Some(c))
+            }
+            D5Mode::Symbolic { j } => {
+                let mut specs = Vec::with_capacity(2 * (2 + self.t));
+                for s in ["@c", "@r"] {
+                    specs.push((format!("x1{s}"), lg));
+                    specs.push((format!("x2{s}"), 32));
+                    for e in 0..self.t {
+                        specs.push((table_name(e, s), 32));
+                    }
+                }
+                pool.declare_shuffled(&mut aig, &specs, &mut rng);
+                let mut cpu = Cpu::new("@c");
+                cpu.set_region(TABLE_BASE, self.t);
+                cpu.run(&mut aig, &mut pool, &decoded, &[], &mut |_, _| false)?;
+                let x1_c = pool.word(&mut aig, "x1@c");
+                let x1_c_lg = BitVec {
+                    bits: x1_c.bits[..lg].to_vec(),
+                };
+                let (_, addr_c) = symbolic_touched_word_addr(&mut aig, &x1_c_lg, j);
+                let code_w = cpu.read_word(&mut aig, &mut pool, &addr_c)?;
+                let i_ref = pool.word(&mut aig, "x1@r");
+                let v_ref = pool.word(&mut aig, "x2@r");
+                let mut rtbl: Vec<BitVec> = (0..self.t)
+                    .map(|e| pool.word(&mut aig, &table_name(e, "@r")))
+                    .collect();
+                d_helper.array_access(&mut aig, &mut rtbl, &i_ref, &v_ref, j, Some(variant), false);
+                let i_ref_lg = BitVec {
+                    bits: i_ref.bits[..lg].to_vec(),
+                };
+                let (idx_r, _) = symbolic_touched_word_addr(&mut aig, &i_ref_lg, j);
+                let ref_w = D::mux_tree(&mut aig, &rtbl, &idx_r);
+                let x1_r = pool.word(&mut aig, "x1@r");
+                let x2_c = pool.word(&mut aig, "x2@c");
+                let x2_r = pool.word(&mut aig, "x2@r");
+                premises.push(bv::eq(&mut aig, &x1_c, &x1_r));
+                premises.push(bv::eq(&mut aig, &x2_c, &x2_r));
+                for e in 0..self.t {
+                    let mc = pool.word(&mut aig, &table_name(e, "@c"));
+                    let mr = pool.word(&mut aig, &table_name(e, "@r"));
+                    premises.push(bv::eq(&mut aig, &mc, &mr));
+                }
+                (code_w, ref_w, None)
+            }
+        };
+        let miter = miter_of(&mut aig, &code_word.bits, &ref_word.bits);
+        let t = self.t;
+        let ops2 = code_ops;
+        let replay = Box::new(move |vals: &HashMap<String, u32>| -> Result<bool, String> {
+            let mem_c = mem_inputs(vals, "@c");
+            let i_c = concrete.unwrap_or_else(|| val(vals, "x1", "@c")) & (t as u32 - 1);
+            let sim = run_on_simulator(&ops2, &[(1, i_c), (2, val(vals, "x2", "@c"))], &mem_c)?;
+            let w_c = ((i_c as usize) + j) & (t - 1);
+            let got = sim.mem.read_word(table_addr(w_c) as usize);
+            let i_r = concrete.unwrap_or_else(|| val(vals, "x1", "@r")) & (t as u32 - 1);
+            let w_r = ((i_r as usize) + j) & (t - 1);
+            let old_r = vals.get(&table_name(w_r, "@r")).copied().unwrap_or(0);
+            let want = old_r.wrapping_add(val(vals, "x2", "@r").wrapping_add(j as u32 + 1));
+            Ok(got != want)
+        });
+        Ok(Instance {
+            aig,
+            miter,
+            premises,
+            declared: pool.declared,
+            code_out: code_word.bits,
+            ref_out: ref_word.bits,
+            replay,
+            live: None,
+        })
+    }
+
+    fn sites(&self, _seed: u64) -> Vec<usize> {
+        vec![0]
+    }
+}
+
+/// The separate structural frame obligation of experiment D5 (VOS30 section 3.4, 8.6.3):
+/// every word other than the touched word is unchanged.
+///
+/// With `D5Mode::Index`, `Cpu` writes only the concrete touched address, so every untouched word
+/// is literally the initial AIG input (`identical-structure`).  With `D5Mode::Symbolic`, each slot
+/// `e` is guarded by `e != touched` (`propagation-only` when solved in 0 conflicts, or an ordinary
+/// obligation otherwise).  `mutation = Some(_)` appends a stray `sw` to `(touched + 1) mod T`,
+/// which only the frame obligation catches.
+pub struct D5Frame {
+    /// Table words (a power of two).
+    pub t: usize,
+    /// Accesses in the program.
+    pub k: usize,
+    /// Which decomposition.
+    pub mode: D5Mode,
+}
+
+impl D5Frame {
+    fn lg(&self) -> usize {
+        self.t.trailing_zeros() as usize
+    }
+    fn access(&self) -> usize {
+        match self.mode {
+            D5Mode::Index { j, .. } | D5Mode::Symbolic { j } => j,
+        }
+    }
+}
+
+impl Shape for D5Frame {
+    fn build(&self, seed: u64, mutation: Option<usize>) -> Result<Instance, String> {
+        let mut aig = Aig::new();
+        let mut pool = Pool::new();
+        let lg = self.lg();
+        let j = self.access();
+        let mut rng = Rng::new(seed, 0xD5 ^ 0xF4);
+        let d_helper = D {
+            t: self.t,
+            k: self.k,
+            kind: DKind::Sym,
+        };
+        let mut code_ops = d_helper.code(j..j + 1);
+        let (code_out, ref_out, concrete) = match self.mode {
+            D5Mode::Index { c, j } => {
+                let w = ((c as usize) + j) & (self.t - 1);
+                let stray_w = (w + 1) & (self.t - 1);
+                if mutation.is_some() {
+                    code_ops.push(Op::Sw {
+                        rs: 4,
+                        base: 0,
+                        off: table_addr(stray_w) as i32,
+                    });
+                }
+                let mut specs = Vec::with_capacity(self.t + 1);
+                if mutation.is_some() {
+                    specs.push(("x2".to_string(), 32));
+                    specs.push((table_name(w, ""), 32));
+                }
+                for e in 0..self.t {
+                    if e != w {
+                        specs.push((table_name(e, ""), 32));
+                    }
+                }
+                pool.declare_shuffled(&mut aig, &specs, &mut rng);
+                let decoded = decode_all(&assemble(&code_ops))?;
+                let mut cpu = Cpu::new("");
+                cpu.set_reg(1, konst(c));
+                cpu.run(&mut aig, &mut pool, &decoded, &[], &mut |_, _| false)?;
+                let mut co = Vec::new();
+                let mut ro = Vec::new();
+                for e in 0..self.t {
+                    if e != w {
+                        let init = pool.word(&mut aig, &table_name(e, ""));
+                        let fin = cpu.read_word(&mut aig, &mut pool, &konst(table_addr(e)))?;
+                        co.extend(fin.bits);
+                        ro.extend(init.bits);
+                    }
+                }
+                (co, ro, Some(c))
+            }
+            D5Mode::Symbolic { j } => {
+                if mutation.is_some() {
+                    // Stray extra store to `(x1 + j + 1) mod T`.
+                    let a = |k, rd, rs1, rhs| Op::Alu { k, rd, rs1, rhs };
+                    code_ops.extend([
+                        a(Bin::Add, 6, 1, Rhs::Imm(j as i32 + 1)),
+                        a(Bin::And, 6, 6, Rhs::Imm(self.t as i32 - 1)),
+                        a(Bin::Sll, 6, 6, Rhs::Imm(2)),
+                        Op::Sw {
+                            rs: 4,
+                            base: 6,
+                            off: TABLE_BASE as i32,
+                        },
+                    ]);
+                }
+                let mut specs = Vec::with_capacity(2 + self.t);
+                specs.push(("x1".to_string(), lg));
+                specs.push(("x2".to_string(), 32));
+                for e in 0..self.t {
+                    specs.push((table_name(e, ""), 32));
+                }
+                pool.declare_shuffled(&mut aig, &specs, &mut rng);
+                let decoded = decode_all(&assemble(&code_ops))?;
+                let mut cpu = Cpu::new("");
+                cpu.set_region(TABLE_BASE, self.t);
+                cpu.run(&mut aig, &mut pool, &decoded, &[], &mut |_, _| false)?;
+                let x1 = pool.word(&mut aig, "x1");
+                let x1_lg = BitVec {
+                    bits: x1.bits[..lg].to_vec(),
+                };
+                let (idx, _) = symbolic_touched_word_addr(&mut aig, &x1_lg, j);
+                let mut co = Vec::new();
+                let mut ro = Vec::new();
+                for e in 0..self.t {
+                    let init = pool.word(&mut aig, &table_name(e, ""));
+                    let fin = cpu.read_word(&mut aig, &mut pool, &konst(table_addr(e)))?;
+                    let hit = bv::eq(&mut aig, &idx, &BitVec::constant(lg, e as u128));
+                    let guarded = bv::ite(&mut aig, hit, &init, &fin);
+                    co.extend(guarded.bits);
+                    ro.extend(init.bits);
+                }
+                (co, ro, None)
+            }
+        };
+        let miter = miter_of(&mut aig, &code_out, &ref_out);
+        let t = self.t;
+        let ops2 = code_ops;
+        let replay = Box::new(move |vals: &HashMap<String, u32>| -> Result<bool, String> {
+            let mem = mem_inputs(vals, "");
+            let i_c = concrete.unwrap_or_else(|| val(vals, "x1", "")) & (t as u32 - 1);
+            let sim = run_on_simulator(&ops2, &[(1, i_c), (2, val(vals, "x2", ""))], &mem)?;
+            let touched = ((i_c as usize) + j) & (t - 1);
+            Ok((0..t).any(|e| {
+                if e == touched {
+                    return false;
+                }
+                let init = vals.get(&table_name(e, "")).copied().unwrap_or(0);
+                sim.mem.read_word(table_addr(e) as usize) != init
+            }))
+        });
+        Ok(Instance {
+            aig,
+            miter,
+            premises: vec![],
+            declared: pool.declared,
+            code_out,
+            ref_out,
+            replay,
+            live: None,
+        })
+    }
+
+    fn sites(&self, _seed: u64) -> Vec<usize> {
+        vec![0]
+    }
+}
