@@ -200,11 +200,17 @@ fn test_anti_tunneling_pong_ball_differential() {
     // Discrete test at t = 1.0 (ball moved to x = 500)
     let ball_end = Circle::new(Point::new(500.0, 100.0), 4.0).unwrap();
     let discrete_hit = circle_vs_aabb(ball_end, paddle).expect("discrete check");
-    assert!(discrete_hit.is_none(), "discrete test misses high-speed ball");
+    assert!(
+        discrete_hit.is_none(),
+        "discrete test misses high-speed ball"
+    );
 
     // Continuous sweep query catches the ball mid-frame!
     let sweep_hit = sweep_circle_aabb(ball_start, velocity, paddle).expect("sweep query");
-    assert!(sweep_hit.is_some(), "continuous sweep must detect collision");
+    assert!(
+        sweep_hit.is_some(),
+        "continuous sweep must detect collision"
+    );
     let hit = sweep_hit.unwrap();
     // Impact with left slab: x = 200 - 4 = 196. toi = 196 / 500 = 0.392
     assert!((hit.toi - 0.392).abs() < 1e-6);
@@ -292,11 +298,12 @@ fn test_adversarial_cwe_190_and_cwe_20_bounds() {
         Circle::new(Point::new(0.0, 0.0), -1.0),
         Err(CollisionError::NegativeDimension)
     );
-    assert!(
-        Rect::new(0.0, 0.0, -10.0, 5.0).is_empty()
-    );
+    assert!(Rect::new(0.0, 0.0, -10.0, 5.0).is_empty());
     assert_eq!(
-        aabb_vs_aabb(Rect::new(0.0, 0.0, -5.0, 5.0), Rect::new(0.0, 0.0, 5.0, 5.0)),
+        aabb_vs_aabb(
+            Rect::new(0.0, 0.0, -5.0, 5.0),
+            Rect::new(0.0, 0.0, 5.0, 5.0)
+        ),
         Err(CollisionError::NegativeDimension)
     );
 

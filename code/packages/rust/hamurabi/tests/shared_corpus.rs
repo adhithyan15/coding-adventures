@@ -4,8 +4,8 @@
 //! convert that tree into a small typed fixture view instead of passing the
 //! `u64` RNG words through an `i64`/`f64` JSON value representation.
 
-use coding_adventures_json_parser::try_parse_json;
 use coding_adventures_bounded_json::{parse as parse_bounded_json, JsonValue as BoundedJson};
+use coding_adventures_json_parser::try_parse_json;
 use hamurabi::{
     format_report, new_game, step_year, validate_order, GameStatus, HamurabiError, HamurabiState,
     Rating, TurnOrder,
@@ -144,7 +144,10 @@ impl Json {
 /// Convert the JSON grammar tree while retaining integer lexemes exactly.
 fn json_value(node: &GrammarASTNode, at: &str) -> Result<Json, String> {
     if node.rule_name != "value" {
-        return Err(format!("{at}: expected JSON value node, got {}", node.rule_name));
+        return Err(format!(
+            "{at}: expected JSON value node, got {}",
+            node.rule_name
+        ));
     }
     let mut result = None;
     for child in &node.children {
@@ -183,7 +186,9 @@ fn decode_string_token(raw: &str, at: &str) -> Result<String, String> {
         .map_err(|error| format!("{at}: invalid JSON string token: {error}"))?
     {
         BoundedJson::String(value) => Ok(value),
-        _ => Err(format!("{at}: JSON string token did not decode as a string")),
+        _ => Err(format!(
+            "{at}: JSON string token did not decode as a string"
+        )),
     }
 }
 
@@ -234,7 +239,10 @@ fn json_array(node: &GrammarASTNode, at: &str) -> Result<Json, String> {
                 return Err(format!("{at}: unknown array child {}", other.rule_name));
             }
             ASTNodeOrToken::Token(token)
-                if matches!(token.type_, TokenType::LBracket | TokenType::RBracket | TokenType::Comma) => {}
+                if matches!(
+                    token.type_,
+                    TokenType::LBracket | TokenType::RBracket | TokenType::Comma
+                ) => {}
             ASTNodeOrToken::Token(token) => {
                 return Err(format!("{at}: unexpected array token {:?}", token.type_));
             }
@@ -272,12 +280,11 @@ struct CorpusCase {
 }
 
 fn read_order(value: &Json, at: &str) -> Result<TurnOrder, String> {
-    value.exact_keys(
-        &["acres_delta", "bushels_to_feed", "acres_to_plant"],
-        at,
-    )?;
+    value.exact_keys(&["acres_delta", "bushels_to_feed", "acres_to_plant"], at)?;
     Ok(TurnOrder {
-        acres_delta: value.field("acres_delta", at)?.i32(&format!("{at}.acres_delta"))?,
+        acres_delta: value
+            .field("acres_delta", at)?
+            .i32(&format!("{at}.acres_delta"))?,
         bushels_to_feed: value
             .field("bushels_to_feed", at)?
             .u32(&format!("{at}.bushels_to_feed"))?,
@@ -381,12 +388,25 @@ fn read_error(value: &Json, at: &str) -> Result<HamurabiError, String> {
 fn read_case(value: &Json, index: usize) -> Result<CorpusCase, String> {
     let at = format!("cases[{index}]");
     let object = value.object(&at)?;
-    let id = value.field("id", &at)?.string(&format!("{at}.id"))?.to_owned();
+    let id = value
+        .field("id", &at)?
+        .string(&format!("{at}.id"))?
+        .to_owned();
     let seed = value.field("seed", &at)?.u64(&format!("{at}.seed"))?;
-    let initial = read_state(value.field("initial_state", &at)?, &format!("{at}.initial_state"))?;
+    let initial = read_state(
+        value.field("initial_state", &at)?,
+        &format!("{at}.initial_state"),
+    )?;
     if let Some(expected_error) = object.get("expected_error") {
         value.exact_keys(
-            &["id", "description", "seed", "initial_state", "order", "expected_error"],
+            &[
+                "id",
+                "description",
+                "seed",
+                "initial_state",
+                "order",
+                "expected_error",
+            ],
             &at,
         )?;
         Ok(CorpusCase {
@@ -400,7 +420,10 @@ fn read_case(value: &Json, index: usize) -> Result<CorpusCase, String> {
             }),
         })
     } else if let Some(turns) = object.get("turns") {
-        value.exact_keys(&["id", "description", "seed", "initial_state", "turns"], &at)?;
+        value.exact_keys(
+            &["id", "description", "seed", "initial_state", "turns"],
+            &at,
+        )?;
         let mut parsed_turns = Vec::new();
         for (turn_index, turn) in turns.array(&format!("{at}.turns"))?.iter().enumerate() {
             let turn_at = format!("{at}.turns[{turn_index}]");
@@ -409,7 +432,9 @@ fn read_case(value: &Json, index: usize) -> Result<CorpusCase, String> {
                 &turn_at,
             )?;
             parsed_turns.push(TrajectoryTurn {
-                number: turn.field("turn", &turn_at)?.u8(&format!("{turn_at}.turn"))?,
+                number: turn
+                    .field("turn", &turn_at)?
+                    .u8(&format!("{turn_at}.turn"))?,
                 order: read_order(turn.field("order", &turn_at)?, &format!("{turn_at}.order"))?,
                 expected_state: read_state(
                     turn.field("expected_state", &turn_at)?,
@@ -436,15 +461,29 @@ fn read_case(value: &Json, index: usize) -> Result<CorpusCase, String> {
 fn parse_cases(source: &str) -> Result<Vec<CorpusCase>, String> {
     let document = parse_document(source)?;
     document.exact_keys(&["version", "suite", "cases"], "document")?;
-    if document.field("version", "document")?.u8("document.version")? != 1 {
+    if document
+        .field("version", "document")?
+        .u8("document.version")?
+        != 1
+    {
         return Err("document.version: unsupported corpus version".into());
     }
-    if document.field("suite", "document")?.string("document.suite")? != "hamurabi_deterministic_reign" {
+    if document
+        .field("suite", "document")?
+        .string("document.suite")?
+        != "hamurabi_deterministic_reign"
+    {
         return Err("document.suite: unexpected suite".into());
     }
-    let values = document.field("cases", "document")?.array("document.cases")?;
+    let values = document
+        .field("cases", "document")?
+        .array("document.cases")?;
     if values.len() != EXPECTED_IDS.len() {
-        return Err(format!("document.cases: expected {} cases, found {}", EXPECTED_IDS.len(), values.len()));
+        return Err(format!(
+            "document.cases: expected {} cases, found {}",
+            EXPECTED_IDS.len(),
+            values.len()
+        ));
     }
     let mut cases = Vec::with_capacity(values.len());
     let mut seen = BTreeSet::new();
@@ -459,7 +498,10 @@ fn parse_cases(source: &str) -> Result<Vec<CorpusCase>, String> {
         cases.push(case);
     }
     let expected: BTreeSet<_> = EXPECTED_IDS.iter().copied().collect();
-    let missing: Vec<_> = expected.difference(&seen.iter().map(String::as_str).collect()).copied().collect();
+    let missing: Vec<_> = expected
+        .difference(&seen.iter().map(String::as_str).collect())
+        .copied()
+        .collect();
     if !missing.is_empty() {
         return Err(format!("document.cases: missing case ids {missing:?}"));
     }
@@ -469,7 +511,11 @@ fn parse_cases(source: &str) -> Result<Vec<CorpusCase>, String> {
 trait Adapter {
     fn new_game(&self, seed: u64) -> HamurabiState;
     fn validate_order(&self, state: &HamurabiState, order: TurnOrder) -> Result<(), HamurabiError>;
-    fn step_year(&self, state: &HamurabiState, order: TurnOrder) -> Result<HamurabiState, HamurabiError>;
+    fn step_year(
+        &self,
+        state: &HamurabiState,
+        order: TurnOrder,
+    ) -> Result<HamurabiState, HamurabiError>;
     fn format_report(&self, state: &HamurabiState) -> String;
 }
 
@@ -482,7 +528,11 @@ impl Adapter for PublicApi {
     fn validate_order(&self, state: &HamurabiState, order: TurnOrder) -> Result<(), HamurabiError> {
         validate_order(state, &order)
     }
-    fn step_year(&self, state: &HamurabiState, order: TurnOrder) -> Result<HamurabiState, HamurabiError> {
+    fn step_year(
+        &self,
+        state: &HamurabiState,
+        order: TurnOrder,
+    ) -> Result<HamurabiState, HamurabiError> {
         step_year(state, &order)
     }
     fn format_report(&self, state: &HamurabiState) -> String {
@@ -496,10 +546,18 @@ impl Adapter for AlwaysError {
     fn new_game(&self, seed: u64) -> HamurabiState {
         new_game(seed)
     }
-    fn validate_order(&self, _state: &HamurabiState, _order: TurnOrder) -> Result<(), HamurabiError> {
+    fn validate_order(
+        &self,
+        _state: &HamurabiState,
+        _order: TurnOrder,
+    ) -> Result<(), HamurabiError> {
         Err(HamurabiError::GameAlreadyEnded)
     }
-    fn step_year(&self, _state: &HamurabiState, _order: TurnOrder) -> Result<HamurabiState, HamurabiError> {
+    fn step_year(
+        &self,
+        _state: &HamurabiState,
+        _order: TurnOrder,
+    ) -> Result<HamurabiState, HamurabiError> {
         Err(HamurabiError::GameAlreadyEnded)
     }
     fn format_report(&self, state: &HamurabiState) -> String {
@@ -511,7 +569,12 @@ fn state_matches(actual: &HamurabiState, expected: &HamurabiState, at: &str) -> 
     macro_rules! check {
         ($field:ident) => {
             if actual.$field != expected.$field {
-                return Err(format!("{at}.{}: actual {:?}, expected {:?}", stringify!($field), actual.$field, expected.$field));
+                return Err(format!(
+                    "{at}.{}: actual {:?}, expected {:?}",
+                    stringify!($field),
+                    actual.$field,
+                    expected.$field
+                ));
             }
         };
     }
@@ -547,7 +610,11 @@ fn run_corpus(source: &str, api: &dyn Adapter) -> Result<(), String> {
     for case in cases {
         let case_at = format!("case {}", case.id);
         if expected_fresh_starts.contains(&case.id.as_str()) {
-            state_matches(&api.new_game(case.seed), &case.initial, &format!("{case_at}.initial_state/new_game"))?;
+            state_matches(
+                &api.new_game(case.seed),
+                &case.initial,
+                &format!("{case_at}.initial_state/new_game"),
+            )?;
         }
         match (case.turns, case.refusal) {
             (Some(turns), None) => {
@@ -557,12 +624,17 @@ fn run_corpus(source: &str, api: &dyn Adapter) -> Result<(), String> {
                     if actual.year != turn.number {
                         return Err(format!("{at}: current state year is {}", actual.year));
                     }
-                    api.validate_order(&actual, turn.order)
-                        .map_err(|error| format!("{at}: validate_order unexpectedly returned {error:?}"))?;
-                    actual = api
-                        .step_year(&actual, turn.order)
-                        .map_err(|error| format!("{at}: step_year unexpectedly returned {error:?}"))?;
-                    state_matches(&actual, &turn.expected_state, &format!("{at}.expected_state"))?;
+                    api.validate_order(&actual, turn.order).map_err(|error| {
+                        format!("{at}: validate_order unexpectedly returned {error:?}")
+                    })?;
+                    actual = api.step_year(&actual, turn.order).map_err(|error| {
+                        format!("{at}: step_year unexpectedly returned {error:?}")
+                    })?;
+                    state_matches(
+                        &actual,
+                        &turn.expected_state,
+                        &format!("{at}.expected_state"),
+                    )?;
                     let report = api.format_report(&actual);
                     if report != turn.expected_report {
                         return Err(format!("{at}.expected_report: complete text differs (actual {report:?}, expected {:?})", turn.expected_report));
@@ -575,24 +647,37 @@ fn run_corpus(source: &str, api: &dyn Adapter) -> Result<(), String> {
                 errors.insert(format!("{:?}", refusal.expected));
                 let validation = api.validate_order(&case.initial, refusal.order);
                 if validation != Err(refusal.expected) {
-                    return Err(format!("{case_at}: validate_order returned {validation:?}, expected Err({:?})", refusal.expected));
+                    return Err(format!(
+                        "{case_at}: validate_order returned {validation:?}, expected Err({:?})",
+                        refusal.expected
+                    ));
                 }
                 let step = api.step_year(&case.initial, refusal.order);
                 if step != Err(refusal.expected) {
-                    return Err(format!("{case_at}: step_year returned {step:?}, expected Err({:?})", refusal.expected));
+                    return Err(format!(
+                        "{case_at}: step_year returned {step:?}, expected Err({:?})",
+                        refusal.expected
+                    ));
                 }
             }
             _ => return Err(format!("{case_at}: unknown or skipped operation")),
         }
     }
     if total_turns != 53 {
-        return Err(format!("corpus: expected 53 trajectory turns, observed {total_turns}"));
+        return Err(format!(
+            "corpus: expected 53 trajectory turns, observed {total_turns}"
+        ));
     }
     if refusal_count != 14 {
-        return Err(format!("corpus: expected 14 refusal cases, observed {refusal_count}"));
+        return Err(format!(
+            "corpus: expected 14 refusal cases, observed {refusal_count}"
+        ));
     }
     if errors.len() != 8 {
-        return Err(format!("corpus: expected all 8 refusal variants, observed {}: {errors:?}", errors.len()));
+        return Err(format!(
+            "corpus: expected all 8 refusal variants, observed {}: {errors:?}",
+            errors.len()
+        ));
     }
     Ok(())
 }
@@ -605,29 +690,64 @@ fn consumes_every_canonical_case_through_public_api() {
 #[test]
 fn same_harness_rejects_nonconforming_adapters_and_fixture_mutations() {
     let always_error = run_corpus(CORPUS, &AlwaysError).unwrap_err();
-    assert!(always_error.contains("full_10_year_charlemagne_win turn 1"), "{always_error}");
-    assert!(always_error.contains("validate_order unexpectedly returned"), "{always_error}");
+    assert!(
+        always_error.contains("full_10_year_charlemagne_win turn 1"),
+        "{always_error}"
+    );
+    assert!(
+        always_error.contains("validate_order unexpectedly returned"),
+        "{always_error}"
+    );
 
     let original_rng = "15877481753564384925";
     let changed_rng = "15877481753564384926";
     let altered_rng = CORPUS.replacen(original_rng, changed_rng, 1);
-    assert_ne!(altered_rng, CORPUS, "RNG mutation must hit the expected initial state's >2^53 word");
+    assert_ne!(
+        altered_rng, CORPUS,
+        "RNG mutation must hit the expected initial state's >2^53 word"
+    );
     let rng_error = run_corpus(&altered_rng, &PublicApi).unwrap_err();
-    assert!(rng_error.contains("full_10_year_charlemagne_win"), "{rng_error}");
-    assert!(rng_error.contains("initial_state/new_game.rng_state"), "{rng_error}");
+    assert!(
+        rng_error.contains("full_10_year_charlemagne_win"),
+        "{rng_error}"
+    );
+    assert!(
+        rng_error.contains("initial_state/new_game.rng_state"),
+        "{rng_error}"
+    );
 
     let report_line = "LAND IS TRADING AT 23 BUSHELS PER ACRE.\\n\"";
-    let altered_report = CORPUS.replacen(report_line, "LAND IS TRADING AT 23 BUSHELS PER ACRE.\"", 1);
-    assert_ne!(altered_report, CORPUS, "report mutation must remove the canonical final newline");
+    let altered_report =
+        CORPUS.replacen(report_line, "LAND IS TRADING AT 23 BUSHELS PER ACRE.\"", 1);
+    assert_ne!(
+        altered_report, CORPUS,
+        "report mutation must remove the canonical final newline"
+    );
     let report_error = run_corpus(&altered_report, &PublicApi).unwrap_err();
-    assert!(report_error.contains("full_10_year_charlemagne_win turn 1"), "{report_error}");
+    assert!(
+        report_error.contains("full_10_year_charlemagne_win turn 1"),
+        "{report_error}"
+    );
     assert!(report_error.contains("expected_report"), "{report_error}");
 
-    let altered_error = CORPUS.replacen("\"expected_error\": \"GameAlreadyEnded\"", "\"expected_error\": \"InvalidOrderBounds\"", 1);
-    assert_ne!(altered_error, CORPUS, "error mutation must alter a canonical refusal");
+    let altered_error = CORPUS.replacen(
+        "\"expected_error\": \"GameAlreadyEnded\"",
+        "\"expected_error\": \"InvalidOrderBounds\"",
+        1,
+    );
+    assert_ne!(
+        altered_error, CORPUS,
+        "error mutation must alter a canonical refusal"
+    );
     let error_mismatch = run_corpus(&altered_error, &PublicApi).unwrap_err();
-    assert!(error_mismatch.contains("refusal_game_already_ended_impeached"), "{error_mismatch}");
-    assert!(error_mismatch.contains("validate_order returned"), "{error_mismatch}");
+    assert!(
+        error_mismatch.contains("refusal_game_already_ended_impeached"),
+        "{error_mismatch}"
+    );
+    assert!(
+        error_mismatch.contains("validate_order returned"),
+        "{error_mismatch}"
+    );
 
     let missing_and_duplicate = CORPUS.replacen(
         "\"id\": \"refusal_boundary_one_acre_over_labor\"",
@@ -635,7 +755,10 @@ fn same_harness_rejects_nonconforming_adapters_and_fixture_mutations() {
         1,
     );
     let missing_error = parse_cases(&missing_and_duplicate).unwrap_err();
-    assert!(missing_error.contains("duplicate case id") || missing_error.contains("missing case ids"), "{missing_error}");
+    assert!(
+        missing_error.contains("duplicate case id") || missing_error.contains("missing case ids"),
+        "{missing_error}"
+    );
 }
 
 #[test]
@@ -677,13 +800,15 @@ fn unknown_or_missing_case_operation_fails_closed() {
     );
     // Unknown fields and operation tags cannot be silently ignored.
     let error = parse_cases(&skipped).unwrap_err();
-    assert!(error.contains("unknown") || error.contains("fields differ"), "{error}");
-
-    let no_operation = CORPUS.replacen(
-        ",\n      \"expected_error\": \"GameAlreadyEnded\"",
-        "",
-        1,
+    assert!(
+        error.contains("unknown") || error.contains("fields differ"),
+        "{error}"
     );
+
+    let no_operation = CORPUS.replacen(",\n      \"expected_error\": \"GameAlreadyEnded\"", "", 1);
     let error = parse_cases(&no_operation).unwrap_err();
-    assert!(error.contains("unknown or skipped case operation") || error.contains("fields differ"), "{error}");
+    assert!(
+        error.contains("unknown or skipped case operation") || error.contains("fields differ"),
+        "{error}"
+    );
 }
