@@ -1,0 +1,988 @@
+{
+  "evidence_seed": "4707744067139881294",
+  "module": "audio_device_sink",
+  "schema": "warrant-test-evidence-v1",
+  "source_sha256": "4e98a058b4ecb3ea73955966cfc7368207a6935959afe3f310f28fd81bbd0125",
+  "spec": "code/specs/audio-device-sink.warrant",
+  "spec_sha256": "d06d04a666a9b32af521d3e193cba570eb8ca8f9e7ccee17ec4be21d4be04023",
+  "tests": [
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/mono_44100",
+      "kind": "example",
+      "op": "validate_format",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/validate_min_rate_1hz",
+      "kind": "example",
+      "op": "validate_format",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/validate_max_rate_384000hz",
+      "kind": "example",
+      "op": "validate_format",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/validate_zero_rate_rejected",
+      "kind": "example",
+      "op": "validate_format",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/validate_over_max_rate_rejected",
+      "kind": "example",
+      "op": "validate_format",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/validate_stereo_rejected",
+      "kind": "example",
+      "op": "validate_format",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/validate_24bit_rejected",
+      "kind": "example",
+      "op": "validate_format",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/mono_frames",
+      "kind": "example",
+      "op": "frame_count_checked",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/frames_max_samples_accepted",
+      "kind": "example",
+      "op": "frame_count_checked",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/frames_over_max_rejected",
+      "kind": "example",
+      "op": "frame_count_checked",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/frames_stereo_rejected",
+      "kind": "example",
+      "op": "frame_count_checked",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/byte_len_44100",
+      "kind": "example",
+      "op": "checked_pcm_byte_len_u64",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/byte_len_max_1hz",
+      "kind": "example",
+      "op": "checked_pcm_byte_len_u64",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/byte_len_over_1hz_rejected",
+      "kind": "example",
+      "op": "checked_pcm_byte_len_u64",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/audio_device_sink/example/byte_len_invalid_format_rejected",
+      "kind": "example",
+      "op": "checked_pcm_byte_len_u64",
+      "verdict": "pass"
+    },
+    {
+      "cases": 313,
+      "claim": "validate_format_all_rates_mono_16",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "rate: U32 edge(313)",
+      "id": "warrant/audio_device_sink/exhaustive/validate_format_all_rates_mono_16",
+      "kind": "exhaustive",
+      "op": "validate_format",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "validate_format_all_rates_mono_16",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/validate_format_all_rates_mono_16",
+      "kind": "property",
+      "op": "validate_format",
+      "seed": "9139073396726787981",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "validate_format_all_rates_mono_16",
+      "id": "warrant/audio_device_sink/fuzz/validate_format_all_rates_mono_16",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "validate_format",
+      "seed": "6551881453989814496",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "validate_format_mono_16_all_channels",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "ch: U16 full(65536)",
+      "id": "warrant/audio_device_sink/exhaustive/validate_format_mono_16_all_channels",
+      "kind": "exhaustive",
+      "op": "validate_format",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "validate_format_mono_16_all_channels",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/validate_format_mono_16_all_channels",
+      "kind": "property",
+      "op": "validate_format",
+      "seed": "11398444627407315251",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "validate_format_mono_16_all_channels",
+      "id": "warrant/audio_device_sink/fuzz/validate_format_mono_16_all_channels",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "validate_format",
+      "seed": "1193305445321512035",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "validate_format_mono_all_bit_depths",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "bits: U16 full(65536)",
+      "id": "warrant/audio_device_sink/exhaustive/validate_format_mono_all_bit_depths",
+      "kind": "exhaustive",
+      "op": "validate_format",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "validate_format_mono_all_bit_depths",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/validate_format_mono_all_bit_depths",
+      "kind": "property",
+      "op": "validate_format",
+      "seed": "6590540607127667479",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "validate_format_mono_all_bit_depths",
+      "id": "warrant/audio_device_sink/fuzz/validate_format_mono_all_bit_depths",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "validate_format",
+      "seed": "2911063389876616418",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 78961,
+      "claim": "validate_format_ch_and_bits",
+      "demoted": [
+        "ch",
+        "bits"
+      ],
+      "discarded": 0,
+      "domain": "ch: U16 edge(281); bits: U16 edge(281)",
+      "id": "warrant/audio_device_sink/exhaustive/validate_format_ch_and_bits",
+      "kind": "exhaustive",
+      "op": "validate_format",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "validate_format_ch_and_bits",
+      "discarded": 0,
+      "equal_cases": 1017,
+      "id": "warrant/audio_device_sink/property/validate_format_ch_and_bits",
+      "kind": "property",
+      "op": "validate_format",
+      "seed": "3727527596731260104",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "validate_format_ch_and_bits",
+      "id": "warrant/audio_device_sink/fuzz/validate_format_ch_and_bits",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "validate_format",
+      "seed": "18088707478020546721",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 87953,
+      "claim": "validate_format_rate_and_ch",
+      "demoted": [
+        "ch"
+      ],
+      "discarded": 0,
+      "domain": "rate: U32 edge(313); ch: U16 edge(281)",
+      "id": "warrant/audio_device_sink/exhaustive/validate_format_rate_and_ch",
+      "kind": "exhaustive",
+      "op": "validate_format",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "validate_format_rate_and_ch",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/validate_format_rate_and_ch",
+      "kind": "property",
+      "op": "validate_format",
+      "seed": "8121965402879132807",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "validate_format_rate_and_ch",
+      "id": "warrant/audio_device_sink/fuzz/validate_format_rate_and_ch",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "validate_format",
+      "seed": "11523773812514553444",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 46,
+      "claim": "validate_format_rejects_over_max_rate",
+      "demoted": [],
+      "discarded": 267,
+      "domain": "r: U32 edge(313)",
+      "id": "warrant/audio_device_sink/exhaustive/validate_format_rejects_over_max_rate",
+      "kind": "exhaustive",
+      "op": "validate_format",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "validate_format_rejects_over_max_rate",
+      "discarded": 1089,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/validate_format_rejects_over_max_rate",
+      "kind": "property",
+      "op": "validate_format",
+      "seed": "5051891193219037577",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 3402,
+      "claim": "validate_format_rejects_over_max_rate",
+      "id": "warrant/audio_device_sink/fuzz/validate_format_rejects_over_max_rate",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "validate_format",
+      "seed": "11567531686478246487",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 105937,
+      "claim": "frame_count_matches_model",
+      "demoted": [
+        "ch"
+      ],
+      "discarded": 0,
+      "domain": "samples: U64 edge(377); ch: U16 edge(281)",
+      "id": "warrant/audio_device_sink/exhaustive/frame_count_matches_model",
+      "kind": "exhaustive",
+      "op": "frame_count_checked",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "frame_count_matches_model",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/frame_count_matches_model",
+      "kind": "property",
+      "op": "frame_count_checked",
+      "seed": "5848743064223096702",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "frame_count_matches_model",
+      "id": "warrant/audio_device_sink/fuzz/frame_count_matches_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "frame_count_checked",
+      "seed": "10751440031145150222",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "frame_count_mono_all_channels",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "ch: U16 full(65536)",
+      "id": "warrant/audio_device_sink/exhaustive/frame_count_mono_all_channels",
+      "kind": "exhaustive",
+      "op": "frame_count_checked",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "frame_count_mono_all_channels",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/frame_count_mono_all_channels",
+      "kind": "property",
+      "op": "frame_count_checked",
+      "seed": "10942790331821759992",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "frame_count_mono_all_channels",
+      "id": "warrant/audio_device_sink/fuzz/frame_count_mono_all_channels",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "frame_count_checked",
+      "seed": "18177424945048424484",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 101,
+      "claim": "frame_count_rejects_oversized",
+      "demoted": [],
+      "discarded": 276,
+      "domain": "samples: U64 edge(377)",
+      "id": "warrant/audio_device_sink/exhaustive/frame_count_rejects_oversized",
+      "kind": "exhaustive",
+      "op": "frame_count_checked",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "frame_count_rejects_oversized",
+      "discarded": 5092,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/frame_count_rejects_oversized",
+      "kind": "property",
+      "op": "frame_count_checked",
+      "seed": "7526430843051503376",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 2935,
+      "claim": "frame_count_rejects_oversized",
+      "id": "warrant/audio_device_sink/fuzz/frame_count_rejects_oversized",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "frame_count_checked",
+      "seed": "15768433902991006737",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 377,
+      "claim": "pcm_byte_len_valid_44100_matches_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "samples: U64 edge(377)",
+      "id": "warrant/audio_device_sink/exhaustive/pcm_byte_len_valid_44100_matches_model",
+      "kind": "exhaustive",
+      "op": "checked_pcm_byte_len_u64",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "pcm_byte_len_valid_44100_matches_model",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/pcm_byte_len_valid_44100_matches_model",
+      "kind": "property",
+      "op": "checked_pcm_byte_len_u64",
+      "seed": "4727313943066099001",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "pcm_byte_len_valid_44100_matches_model",
+      "id": "warrant/audio_device_sink/fuzz/pcm_byte_len_valid_44100_matches_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "checked_pcm_byte_len_u64",
+      "seed": "15128578483101036991",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 118001,
+      "claim": "pcm_byte_len_rates_matches_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "samples: U64 edge(377); rate: U32 edge(313)",
+      "id": "warrant/audio_device_sink/exhaustive/pcm_byte_len_rates_matches_model",
+      "kind": "exhaustive",
+      "op": "checked_pcm_byte_len_u64",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "pcm_byte_len_rates_matches_model",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/pcm_byte_len_rates_matches_model",
+      "kind": "property",
+      "op": "checked_pcm_byte_len_u64",
+      "seed": "1440888105519124717",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "pcm_byte_len_rates_matches_model",
+      "id": "warrant/audio_device_sink/fuzz/pcm_byte_len_rates_matches_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "checked_pcm_byte_len_u64",
+      "seed": "7571005066148325567",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "pcm_byte_len_1hz_all_channels",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "ch: U16 full(65536)",
+      "id": "warrant/audio_device_sink/exhaustive/pcm_byte_len_1hz_all_channels",
+      "kind": "exhaustive",
+      "op": "checked_pcm_byte_len_u64",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "pcm_byte_len_1hz_all_channels",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/pcm_byte_len_1hz_all_channels",
+      "kind": "property",
+      "op": "checked_pcm_byte_len_u64",
+      "seed": "6601351814734752740",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "pcm_byte_len_1hz_all_channels",
+      "id": "warrant/audio_device_sink/fuzz/pcm_byte_len_1hz_all_channels",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "checked_pcm_byte_len_u64",
+      "seed": "15139218805942938379",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "pcm_byte_len_1hz_all_bit_depths",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "bits: U16 full(65536)",
+      "id": "warrant/audio_device_sink/exhaustive/pcm_byte_len_1hz_all_bit_depths",
+      "kind": "exhaustive",
+      "op": "checked_pcm_byte_len_u64",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "pcm_byte_len_1hz_all_bit_depths",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/pcm_byte_len_1hz_all_bit_depths",
+      "kind": "property",
+      "op": "checked_pcm_byte_len_u64",
+      "seed": "15816890490954997509",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "pcm_byte_len_1hz_all_bit_depths",
+      "id": "warrant/audio_device_sink/fuzz/pcm_byte_len_1hz_all_bit_depths",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "checked_pcm_byte_len_u64",
+      "seed": "7495067360738483088",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 118001,
+      "claim": "pcm_byte_len_bounded_when_ok",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "samples: U64 edge(377); rate: U32 edge(313)",
+      "id": "warrant/audio_device_sink/exhaustive/pcm_byte_len_bounded_when_ok",
+      "kind": "exhaustive",
+      "op": "checked_pcm_byte_len_u64",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "pcm_byte_len_bounded_when_ok",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/audio_device_sink/property/pcm_byte_len_bounded_when_ok",
+      "kind": "property",
+      "op": "checked_pcm_byte_len_u64",
+      "seed": "10223947656006824440",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "pcm_byte_len_bounded_when_ok",
+      "id": "warrant/audio_device_sink/fuzz/pcm_byte_len_bounded_when_ok",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "checked_pcm_byte_len_u64",
+      "seed": "5981052866742705766",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "byte_len_44100",
+      "claim": "",
+      "fault": "flip-result-bit",
+      "id": "warrant/audio_device_sink/negctl/example/checked_pcm_byte_len_u64/flip-result-bit",
+      "kind": "negctl",
+      "op": "checked_pcm_byte_len_u64",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "byte_len_over_1hz_rejected",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/audio_device_sink/negctl/example/checked_pcm_byte_len_u64/missing-error",
+      "kind": "negctl",
+      "op": "checked_pcm_byte_len_u64",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "pcm_byte_len_valid_44100_matches_model",
+      "claim": "",
+      "fault": "flip-result-bit",
+      "id": "warrant/audio_device_sink/negctl/exhaustive/checked_pcm_byte_len_u64/flip-result-bit",
+      "kind": "negctl",
+      "op": "checked_pcm_byte_len_u64",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "pcm_byte_len_valid_44100_matches_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/audio_device_sink/negctl/exhaustive/checked_pcm_byte_len_u64/missing-error",
+      "kind": "negctl",
+      "op": "checked_pcm_byte_len_u64",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "pcm_byte_len_valid_44100_matches_model",
+      "claim": "",
+      "fault": "flip-result-bit",
+      "id": "warrant/audio_device_sink/negctl/property/checked_pcm_byte_len_u64/flip-result-bit",
+      "kind": "negctl",
+      "op": "checked_pcm_byte_len_u64",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "pcm_byte_len_valid_44100_matches_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/audio_device_sink/negctl/property/checked_pcm_byte_len_u64/missing-error",
+      "kind": "negctl",
+      "op": "checked_pcm_byte_len_u64",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "pcm_byte_len_valid_44100_matches_model",
+      "claim": "",
+      "fault": "flip-result-bit",
+      "id": "warrant/audio_device_sink/negctl/fuzz/checked_pcm_byte_len_u64/flip-result-bit",
+      "kind": "negctl",
+      "op": "checked_pcm_byte_len_u64",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "pcm_byte_len_valid_44100_matches_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/audio_device_sink/negctl/fuzz/checked_pcm_byte_len_u64/missing-error",
+      "kind": "negctl",
+      "op": "checked_pcm_byte_len_u64",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "mono_frames",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/audio_device_sink/negctl/example/frame_count_checked/field-flip",
+      "kind": "negctl",
+      "op": "frame_count_checked",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "mono_frames",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/audio_device_sink/negctl/example/frame_count_checked/ok-as-err",
+      "kind": "negctl",
+      "op": "frame_count_checked",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "frames_over_max_rejected",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/audio_device_sink/negctl/example/frame_count_checked/missing-error",
+      "kind": "negctl",
+      "op": "frame_count_checked",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "frame_count_matches_model",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/audio_device_sink/negctl/exhaustive/frame_count_checked/field-flip",
+      "kind": "negctl",
+      "op": "frame_count_checked",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "frame_count_matches_model",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/audio_device_sink/negctl/exhaustive/frame_count_checked/ok-as-err",
+      "kind": "negctl",
+      "op": "frame_count_checked",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "frame_count_matches_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/audio_device_sink/negctl/exhaustive/frame_count_checked/missing-error",
+      "kind": "negctl",
+      "op": "frame_count_checked",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "frame_count_matches_model",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/audio_device_sink/negctl/property/frame_count_checked/field-flip",
+      "kind": "negctl",
+      "op": "frame_count_checked",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "frame_count_matches_model",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/audio_device_sink/negctl/property/frame_count_checked/ok-as-err",
+      "kind": "negctl",
+      "op": "frame_count_checked",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "frame_count_matches_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/audio_device_sink/negctl/property/frame_count_checked/missing-error",
+      "kind": "negctl",
+      "op": "frame_count_checked",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "frame_count_matches_model",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/audio_device_sink/negctl/fuzz/frame_count_checked/field-flip",
+      "kind": "negctl",
+      "op": "frame_count_checked",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "frame_count_matches_model",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/audio_device_sink/negctl/fuzz/frame_count_checked/ok-as-err",
+      "kind": "negctl",
+      "op": "frame_count_checked",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "frame_count_matches_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/audio_device_sink/negctl/fuzz/frame_count_checked/missing-error",
+      "kind": "negctl",
+      "op": "frame_count_checked",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "mono_44100",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/audio_device_sink/negctl/example/validate_format/field-flip",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "mono_44100",
+      "claim": "",
+      "fault": "field-flip-last",
+      "id": "warrant/audio_device_sink/negctl/example/validate_format/field-flip-last",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "mono_44100",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/audio_device_sink/negctl/example/validate_format/ok-as-err",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_zero_rate_rejected",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/audio_device_sink/negctl/example/validate_format/missing-error",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_format_all_rates_mono_16",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/audio_device_sink/negctl/exhaustive/validate_format/field-flip",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_format_all_rates_mono_16",
+      "claim": "",
+      "fault": "field-flip-last",
+      "id": "warrant/audio_device_sink/negctl/exhaustive/validate_format/field-flip-last",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_format_all_rates_mono_16",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/audio_device_sink/negctl/exhaustive/validate_format/ok-as-err",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_format_all_rates_mono_16",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/audio_device_sink/negctl/exhaustive/validate_format/missing-error",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_format_all_rates_mono_16",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/audio_device_sink/negctl/property/validate_format/field-flip",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_format_all_rates_mono_16",
+      "claim": "",
+      "fault": "field-flip-last",
+      "id": "warrant/audio_device_sink/negctl/property/validate_format/field-flip-last",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_format_all_rates_mono_16",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/audio_device_sink/negctl/property/validate_format/ok-as-err",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_format_all_rates_mono_16",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/audio_device_sink/negctl/property/validate_format/missing-error",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_format_all_rates_mono_16",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/audio_device_sink/negctl/fuzz/validate_format/field-flip",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_format_all_rates_mono_16",
+      "claim": "",
+      "fault": "field-flip-last",
+      "id": "warrant/audio_device_sink/negctl/fuzz/validate_format/field-flip-last",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_format_all_rates_mono_16",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/audio_device_sink/negctl/fuzz/validate_format/ok-as-err",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "validate_format_all_rates_mono_16",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/audio_device_sink/negctl/fuzz/validate_format/missing-error",
+      "kind": "negctl",
+      "op": "validate_format",
+      "target": "fuzz",
+      "verdict": "pass"
+    }
+  ],
+  "warrant_version": "v1"
+}

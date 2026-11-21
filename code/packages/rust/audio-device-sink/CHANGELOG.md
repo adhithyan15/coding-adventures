@@ -2,6 +2,13 @@
 
 All notable changes to `audio-device-sink` will be documented in this file.
 
+## 0.3.0
+
+- Upgraded `code/specs/audio-device-sink.warrant` and local `audio-device-sink.warrant` to Warrant v1 with pure oracle models, examples, and claims for `validate_format`, `frame_count_checked`, and `checked_pcm_byte_len_u64` (VER04h).
+- Added `FrameCount`, `frame_count_checked`, and `checked_pcm_byte_len_u64` in `src/lib.rs` plus `evidence.bindings`, `tests/warrant_evidence.rs` (local pure-Rust SHA-256 shim keeping `Cargo.lock` untouched), and generated `tests/generated/warrant_evidence.rs` (`gen_evidence --check` + `warrant_negctl.py` negative controls).
+- Added VER23/VER24 `src/capabilities.rs` and `effect_certificate.json`, VER01/VER15 `assurance-profile.json`, `evidence/test-manifest.json`, `evidence/proof-manifest.json`, and `assurance_report.json` (`ca-assurance-report --check`).
+- Updated `BUILD` and `BUILD_windows` with clippy, release evidence, capability, `gen_evidence --check`, `warrant_negctl.py`, and `ca-assurance-report --check` gates.
+
 ## 0.2.0
 
 - Added `#![forbid(unsafe_code)]` to `src/lib.rs` and local `audio-device-sink.warrant`.

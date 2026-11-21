@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "audio-device-sink",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are PCM format metadata, sample counts, and byte lengths only"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure PCM sink contract: package implements PCM format validation and checked frame/byte accounting only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: format validation, frame counting, and PCM byte-length checks execute in O(1) constant time with checked integer arithmetic and zero input-dependent loops; validate_finite_samples and bound_error_message enforce pre-flight caps MAX_SAMPLES and MAX_ERROR_MESSAGE_BYTES"
+    }
+  }
+}

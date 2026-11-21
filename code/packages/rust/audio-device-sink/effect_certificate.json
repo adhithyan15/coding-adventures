@@ -1,0 +1,162 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/audio-device-sink",
+  "source_digest": "a6549a64dfab5fad1f968352f8554609a0cee853e799bc328a84544dd3cea4c7",
+  "manifest_digest": "cbfdc3e74eabef4a0631cf3099d038455b78527251a8cab05757b857ac93a27b",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "new",
+      "signature": "pub fn new( sample_rate_hz: u32, channel_count: u16, bit_depth: u16, ) -> Result<Self, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "validate",
+      "signature": "pub fn validate(self) -> Result<(), AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "sample_width_bytes",
+      "signature": "pub const fn sample_width_bytes(self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "frame_width_bytes",
+      "signature": "pub fn frame_width_bytes(self) -> Result<usize, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "max_samples",
+      "signature": "pub fn max_samples(self) -> Result<usize, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "validate_format",
+      "signature": "pub fn validate_format( sample_rate_hz: u32, channel_count: u16, bit_depth: u16, ) -> Result<PcmFormat, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "frame_count_checked",
+      "signature": "pub fn frame_count_checked( sample_count: u64, channel_count: u16, ) -> Result<FrameCount, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "checked_pcm_byte_len_u64",
+      "signature": "pub fn checked_pcm_byte_len_u64( sample_count: u64, format: PcmFormat, ) -> Result<u64, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "checked_frame_count",
+      "signature": "pub fn checked_frame_count( sample_count: usize, channel_count: u16, ) -> Result<usize, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "checked_pcm_byte_len",
+      "signature": "pub fn checked_pcm_byte_len( sample_count: usize, format: PcmFormat, ) -> Result<usize, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "validate_sample_rate_f64",
+      "signature": "pub fn validate_sample_rate_f64(sample_rate_hz: f64) -> Result<u32, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "validate_duration_seconds",
+      "signature": "pub fn validate_duration_seconds(duration_seconds: f64) -> Result<f64, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "checked_sample_count_for_duration",
+      "signature": "pub fn checked_sample_count_for_duration( format: PcmFormat, duration_seconds: f64, ) -> Result<usize, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "validate_finite_samples",
+      "signature": "pub fn validate_finite_samples(samples: &[f64]) -> Result<(), AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new(samples: Vec<i16>, format: PcmFormat) -> Result<Self, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "validate_sample_count",
+      "signature": "pub fn validate_sample_count( sample_count: usize, format: PcmFormat, ) -> Result<(), AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "samples",
+      "signature": "pub fn samples(&self) -> &[i16]",
+      "effects": []
+    },
+    {
+      "name": "format",
+      "signature": "pub const fn format(&self) -> PcmFormat",
+      "effects": []
+    },
+    {
+      "name": "sample_count",
+      "signature": "pub fn sample_count(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "frame_count",
+      "signature": "pub fn frame_count(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "byte_len",
+      "signature": "pub fn byte_len(&self) -> Result<usize, AudioSinkError>",
+      "effects": []
+    },
+    {
+      "name": "is_empty",
+      "signature": "pub fn is_empty(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "duration_seconds",
+      "signature": "pub fn duration_seconds(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "for_buffer",
+      "signature": "pub fn for_buffer(buffer: &PcmPlaybackBuffer, backend_name: &'static str) -> Self",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub const fn new(backend_name: &'static str) -> Self",
+      "effects": []
+    },
+    {
+      "name": "invalid_format",
+      "signature": "pub fn invalid_format(message: impl Into<String>) -> Self",
+      "effects": []
+    },
+    {
+      "name": "invalid_samples",
+      "signature": "pub fn invalid_samples(message: impl Into<String>) -> Self",
+      "effects": []
+    },
+    {
+      "name": "unsupported_platform",
+      "signature": "pub fn unsupported_platform(message: impl Into<String>) -> Self",
+      "effects": []
+    },
+    {
+      "name": "backend_unavailable",
+      "signature": "pub fn backend_unavailable(message: impl Into<String>) -> Self",
+      "effects": []
+    },
+    {
+      "name": "backend_failure",
+      "signature": "pub fn backend_failure(message: impl Into<String>) -> Self",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
