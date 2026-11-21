@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/game-monster-rpg",
-  "source_digest": "7fc119ea6862d3ad2d02080f3df1d4f5a8b1bd3379cd1eb7bbb926fbc5c8ba5f",
+  "source_digest": "c21eba0714ea430ef766cb3e1459f162b225dc103d9bbb99645e05356bf35d00",
   "manifest_digest": "7b698c5a1685c814be1b5f6a1add94722ccb06915fa42b06b0ef4abd27ef1b24",
   "declared_effects": [],
   "entry_points": [
