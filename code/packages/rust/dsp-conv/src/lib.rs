@@ -12,7 +12,8 @@ pub mod sep;
 pub mod two_d;
 pub use kernels::{
     box_blur_kernel, gaussian_blur_kernel, laplacian_kernel, sharpen_kernel,
-    sobel_x_kernel, sobel_y_kernel,
+    sobel_x_kernel, sobel_y_kernel, try_box_blur_kernel, try_gaussian_blur_kernel,
+    try_sharpen_kernel,
 };
 pub use sep::sep_conv2d;
 pub use two_d::conv2d;
@@ -103,6 +104,11 @@ pub fn conv1d(
             let src_index = (i as isize) + centre - (j as isize);
             let v = sample(signal, src_index, mode);
             acc += tap * v;
+        }
+        if !acc.is_finite() {
+            return Err(ConvError::InvalidInput(
+                "convolution output overflowed to non-finite float".into(),
+            ));
         }
         out.push(acc);
     }

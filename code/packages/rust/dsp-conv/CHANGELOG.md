@@ -1,5 +1,16 @@
 # Changelog — dsp-conv
 
+## 0.4.1 — 2026-11-21
+
+### Security & VER15 Hardening (DSP-W8-B)
+
+- Added `BUILD_windows` matching `BUILD` for Windows parity (`audit_build_windows.py`).
+- Hardened `gaussian_blur_kernel` / `try_gaussian_blur_kernel` against subnormal `sigma` underflow (`2 * sigma^2 <= 0`) and normalization overflow (CWE-20).
+- Hardened `sharpen_kernel` / `try_sharpen_kernel` against finite center-tap overflow (`1.0 + 4.0 * amount` -> `Inf`) (CWE-20 / CWE-190).
+- Added `try_gaussian_blur_kernel`, `try_box_blur_kernel`, and `try_sharpen_kernel` panic-free `Result<Vec<f32>, ConvError>` constructors.
+- Checked `conv1d` and `conv2d` accumulation outputs for non-finite overflow before returning, and ordered `MAX_SAMPLES` / `MAX_KERNEL_LEN` cap checks ahead of dimension-mismatch checks in `conv2d` / `sep_conv2d` (CWE-20 / CWE-400).
+- Added standalone `tests/test_hostile_inputs.rs` and SplitMix64 `tests/test_pbt.rs` suites.
+
 ## 0.4.0 — 2026-11-15
 
 ### Changed — Security Hardening and CWE Mitigations

@@ -1,5 +1,15 @@
 # Changelog — dsp-wavelets
 
+## 0.5.1 — 2026-11-21
+
+### Security & VER15 Hardening (DSP-W8-B)
+
+- Added `BUILD_windows` matching `BUILD` for Windows parity (`audit_build_windows.py`).
+- Guarded `cwt` against subnormal/tiny `scales` whose reciprocals overflow (`1.0 / s` or `1.0 / s.sqrt()` non-finite -> `0.0 * Inf = NaN`) and validated CWT outputs for finiteness (CWE-20).
+- Guarded `filter_and_downsample` (`dwt_1d`) and `synthesize_one_level` (`idwt_1d`) against finite-input overflow to `Inf`/`NaN` (CWE-20).
+- Added explicit `checked_add`/`checked_mul` and pre-scan `MAX_SAMPLES` checks across `dwt_1d`, `idwt_1d`, `dwt_2d`, `idwt_2d`, `dwt_2d_one_level`, and `idwt_2d_one_level` (CWE-190 / CWE-400).
+- Added standalone `tests/test_hostile_inputs.rs` and SplitMix64 `tests/test_pbt.rs` suites.
+
 ## 0.5.0 — 2026-11-15
 
 ### Security & Feature Hardening (DSP-W4-A2)
