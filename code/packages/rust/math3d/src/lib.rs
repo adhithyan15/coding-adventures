@@ -425,7 +425,8 @@ impl Vec3 {
     pub fn reflect(self, normal: Vec3) -> Result<Vec3, Math3dError> {
         let n = normal.normalize()?;
         let d = self.dot(n)?;
-        self.vec3_sub(n.vec3_scale(2.0 * d)?)
+        let scale = check_result_finite(2.0 * d)?;
+        self.vec3_sub(n.vec3_scale(scale)?)
     }
 }
 
@@ -1265,19 +1266,12 @@ impl Mat4 {
         })
     }
 
-    /// Right-handed perspective projection matrix mapping NDC `z` to `[-1, 1]` (OpenGL style).
-    ///
-    /// Enforces:
-    /// - all parameters finite,
-    /// - `fov_y_rad` strictly in `(0, pi)` with `tan(fov_y_rad / 2) > EPSILON`,
-    /// - `aspect > EPSILON`,
-    /// - `near > EPSILON` and `far > near + EPSILON`.
-    pub fn perspective(
+    fn validate_perspective_params(
         fov_y_rad: f64,
         aspect: f64,
         near: f64,
         far: f64,
-    ) -> Result<Self, Math3dError> {
+    ) -> Result<(f64, f64, f64), Math3dError> {
         check_finite(fov_y_rad)?;
         check_finite(aspect)?;
         check_finite(near)?;
@@ -1285,7 +1279,7 @@ impl Mat4 {
         if fov_y_rad <= 0.0
             || fov_y_rad >= trig::PI
             || aspect <= EPSILON
-            || near <= 0.0
+            || near <= EPSILON
             || far <= near
         {
             return Err(Math3dError::InvalidProjection);
@@ -1294,14 +1288,34 @@ impl Mat4 {
         if !half_tan.is_finite() || half_tan <= EPSILON {
             return Err(Math3dError::InvalidProjection);
         }
-        let depth = near - far;
+        let f = 1.0 / half_tan;
+        if !f.is_finite() || f <= EPSILON {
+            return Err(Math3dError::InvalidProjection);
+        }
+        let depth = check_result_finite(near - far)?;
         if depth.abs() <= EPSILON {
             return Err(Math3dError::InvalidProjection);
         }
-        let f = 1.0 / half_tan;
         let m00 = check_result_finite(f / aspect)?;
-        let m22 = check_result_finite((far + near) / depth)?;
-        let m23 = check_result_finite((2.0 * far * near) / depth)?;
+        Ok((f, m00, depth))
+    }
+
+    /// Right-handed perspective projection matrix mapping NDC `z` to `[-1, 1]` (OpenGL style).
+    ///
+    /// Enforces:
+    /// - all parameters finite,
+    /// - `fov_y_rad` strictly in `(0, pi)` with `tan(fov_y_rad / 2) > EPSILON` and `f > EPSILON`,
+    /// - `aspect > EPSILON`,
+    /// - `near > EPSILON` and `far > near + EPSILON`.
+    pub fn perspective(
+        fov_y_rad: f64,
+        aspect: f64,
+        near: f64,
+        far: f64,
+    ) -> Result<Self, Math3dError> {
+        let (f, m00, depth) = Self::validate_perspective_params(fov_y_rad, aspect, near, far)?;
+        let m22 = check_result_finite(check_result_finite(far + near)? / depth)?;
+        let m23 = check_result_finite(check_result_finite(2.0 * far * near)? / depth)?;
         Ok(Self {
             cols: [
                 [m00, 0.0, 0.0, 0.0],
@@ -1319,30 +1333,9 @@ impl Mat4 {
         near: f64,
         far: f64,
     ) -> Result<Self, Math3dError> {
-        check_finite(fov_y_rad)?;
-        check_finite(aspect)?;
-        check_finite(near)?;
-        check_finite(far)?;
-        if fov_y_rad <= 0.0
-            || fov_y_rad >= trig::PI
-            || aspect <= EPSILON
-            || near <= 0.0
-            || far <= near
-        {
-            return Err(Math3dError::InvalidProjection);
-        }
-        let half_tan = trig::tan(fov_y_rad * 0.5);
-        if !half_tan.is_finite() || half_tan <= EPSILON {
-            return Err(Math3dError::InvalidProjection);
-        }
-        let depth = near - far;
-        if depth.abs() <= EPSILON {
-            return Err(Math3dError::InvalidProjection);
-        }
-        let f = 1.0 / half_tan;
-        let m00 = check_result_finite(f / aspect)?;
+        let (f, m00, depth) = Self::validate_perspective_params(fov_y_rad, aspect, near, far)?;
         let m22 = check_result_finite(far / depth)?;
-        let m23 = check_result_finite((far * near) / depth)?;
+        let m23 = check_result_finite(check_result_finite(far * near)? / depth)?;
         Ok(Self {
             cols: [
                 [m00, 0.0, 0.0, 0.0],
@@ -1355,7 +1348,8 @@ impl Mat4 {
 
     /// Right-handed orthographic projection matrix mapping NDC `z` to `[-1, 1]`.
     ///
-    /// Enforces `right > left`, `top > bottom`, and `far > near` beyond [`EPSILON`].
+    /// Enforces `right > left`, `top > bottom`, and `far > near` beyond [`EPSILON`]
+    /// without floating-point overflow.
     pub fn orthographic(
         left: f64,
         right: f64,
@@ -1367,9 +1361,9 @@ impl Mat4 {
         for v in [left, right, bottom, top, near, far] {
             check_finite(v)?;
         }
-        let w = right - left;
-        let h = top - bottom;
-        let d = far - near;
+        let w = check_result_finite(right - left)?;
+        let h = check_result_finite(top - bottom)?;
+        let d = check_result_finite(far - near)?;
         if w <= EPSILON || h <= EPSILON || d <= EPSILON {
             return Err(Math3dError::InvalidProjection);
         }
@@ -1379,9 +1373,9 @@ impl Mat4 {
                 [0.0, check_result_finite(2.0 / h)?, 0.0, 0.0],
                 [0.0, 0.0, check_result_finite(-2.0 / d)?, 0.0],
                 [
-                    check_result_finite(-(right + left) / w)?,
-                    check_result_finite(-(top + bottom) / h)?,
-                    check_result_finite(-(far + near) / d)?,
+                    check_result_finite(-check_result_finite(right + left)? / w)?,
+                    check_result_finite(-check_result_finite(top + bottom)? / h)?,
+                    check_result_finite(-check_result_finite(far + near)? / d)?,
                     1.0,
                 ],
             ],
@@ -1729,9 +1723,8 @@ impl Plane {
     /// Signed distance from `point` to the plane: `normal.dot(point) + d`.
     #[inline]
     pub fn signed_distance(&self, point: Vec3) -> Result<f64, Math3dError> {
-        check_finite(self.d)?;
-        let unit = self.normal.normalize()?;
-        check_result_finite(unit.dot(point)? + self.d)
+        let norm = Plane::plane_from_normal_d(self.normal, self.d)?;
+        check_result_finite(norm.normal.dot(point)? + norm.d)
     }
 }
 

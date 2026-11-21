@@ -128,6 +128,19 @@ fn check_ray_aabb_zero_alloc(_ctx: &Ctx) -> Verdict {
     })
 }
 
+fn check_mat4_invert_zero_alloc(_ctx: &Ctx) -> Verdict {
+    let trs = Mat4::mat4_from_trs(
+        Vec3::new(3.0, -4.0, 5.0),
+        Quat::from_axis_angle(Vec3::new(1.0, 1.0, 0.0), 0.75).unwrap(),
+        Vec3::new(2.0, 1.5, 3.0),
+    )
+    .unwrap();
+    bench_zero_alloc("mat4_invert_zero_alloc", || {
+        let inv = black_box(trs).invert().expect("invert should succeed");
+        black_box(inv);
+    })
+}
+
 fn check_sabotage_allocation_detected(_ctx: &Ctx) -> Verdict {
     let harness = BenchmarkHarness::new(fast_bench_config(5));
     let budget = zero_budget();
@@ -214,6 +227,7 @@ fn main() {
         check_vec3_normalize_zero_alloc,
     );
     suite.add("bench/ray_aabb/zero_alloc", check_ray_aabb_zero_alloc);
+    suite.add("bench/mat4_invert/zero_alloc", check_mat4_invert_zero_alloc);
     suite.add(
         "bench/sabotage/allocation_detected",
         check_sabotage_allocation_detected,

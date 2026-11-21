@@ -259,10 +259,38 @@ fn mat4_perspective_orthographic_look_at_and_guards() {
         Mat4::perspective(f64::NAN, 1.0, 0.1, 10.0),
         Err(Math3dError::NonFiniteInput)
     );
+    assert_eq!(
+        Mat4::perspective(1.0, 1.0, 1e-300, 10.0),
+        Err(Math3dError::InvalidProjection)
+    );
+    assert_eq!(
+        Mat4::perspective(trig::PI - 1e-15, 1.0, 0.1, 10.0),
+        Err(Math3dError::InvalidProjection)
+    );
+    assert_eq!(
+        Mat4::perspective_zo(1.0, 1.0, 1e-300, 10.0),
+        Err(Math3dError::InvalidProjection)
+    );
+    assert_eq!(
+        Mat4::perspective_zo(trig::PI - 1e-15, 1.0, 0.1, 10.0),
+        Err(Math3dError::InvalidProjection)
+    );
 
     assert_eq!(
         Mat4::orthographic(5.0, 5.0, 0.0, 1.0, 0.1, 10.0),
         Err(Math3dError::InvalidProjection)
+    );
+    assert_eq!(
+        Mat4::orthographic(-1e308, 1e308, -1.0, 1.0, 0.1, 10.0),
+        Err(Math3dError::ValueOutOfBounds)
+    );
+    assert_eq!(
+        Mat4::orthographic(-1.0, 1.0, -1e308, 1e308, 0.1, 10.0),
+        Err(Math3dError::ValueOutOfBounds)
+    );
+    assert_eq!(
+        Mat4::orthographic(-1.0, 1.0, -1.0, 1.0, -1e308, 1e308),
+        Err(Math3dError::ValueOutOfBounds)
     );
     assert_eq!(
         Mat4::look_at(Vec3::zero(), Vec3::zero(), Vec3::unit_y()),
@@ -444,6 +472,26 @@ fn bounds_and_error_guards() {
     assert_eq!(
         Ray3::ray3_from_origin_dir(Vec3::zero(), Vec3::zero()),
         Err(Math3dError::ZeroLength)
+    );
+
+    // Unnormalized Plane signed_distance must scale d consistently with normal
+    let raw_plane = Plane {
+        normal: Vec3::new(0.0, 2.0, 0.0),
+        d: -10.0,
+    };
+    assert!(approx(
+        raw_plane.signed_distance(Vec3::new(0.0, 5.0, 0.0)).unwrap(),
+        0.0
+    ));
+    assert!(approx(
+        raw_plane.signed_distance(Vec3::new(0.0, 7.0, 0.0)).unwrap(),
+        2.0
+    ));
+
+    // Vec3::reflect overflow on 2.0 * d must yield ValueOutOfBounds
+    assert_eq!(
+        Vec3::new(0.0, 1e308, 0.0).reflect(Vec3::unit_y()),
+        Err(Math3dError::ValueOutOfBounds)
     );
 }
 
