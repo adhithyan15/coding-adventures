@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  calcNyquist,
   LcgPrng,
   MAX_DURATION_SECONDS,
   MAX_FREQ_HZ,
@@ -147,4 +148,53 @@ test("CWE-20: PRNG engines reject non-finite seeds and invalid types", () => {
   assert.throws(() => new LcgPrng(Number.POSITIVE_INFINITY), /finite/);
   // @ts-expect-error invalid seed type
   assert.throws(() => new LcgPrng("bad-seed"), /finite/);
+});
+
+test("VER15: rejects > MAX_SAFE_INTEGER (1e100), Symbol, Object.create(null), and DataView cleanly", () => {
+  // Number.isSafeInteger checks (rejects 1e100 without falling through to range or truncation)
+  assert.throws(() => new SampleBuffer({ length: 1e100 } as unknown as number[], 44_100), TypeError);
+  assert.throws(() => timeAtSample(1e100, 44_100), TypeError);
+  assert.throws(() => new OscillatorState().renderSamples(1e100), TypeError);
+  assert.equal(calcNyquist(1e100), null);
+  assert.equal(calcNyquist(Number.MAX_SAFE_INTEGER + 1), null);
+
+  const buf = new SampleBuffer([1.0, 2.0], 44_100);
+  assert.throws(() => buf.timeAt(1e100), TypeError);
+
+  // Symbol & Object.create(null) must not crash String() or Number()
+  const nullProto = Object.create(null);
+  const sym = Symbol("hostile");
+  const throwingObj = {
+    toString() {
+      throw new Error("boom toString");
+    },
+  };
+  for (const hostile of [nullProto, sym, throwingObj]) {
+    assert.throws(() => new SineOscillator(hostile as number), TypeError);
+    assert.throws(() => new LcgPrng(hostile as number), TypeError);
+    assert.throws(() => new OscillatorState({ waveform: hostile as never }), TypeError);
+    assert.throws(() => new OscillatorState({ waveform: "noise", noiseType: hostile as never }), RangeError);
+    assert.throws(() => new OscillatorState({ waveform: "noise", noiseType: "lcg", seed: hostile as never }), TypeError);
+    assert.throws(() => new SampleBuffer([hostile as number], 44_100), TypeError);
+  }
+
+  // ArrayBuffer.isView: DataView has no .length; BigInt64Array elements are bigints; oversized typed arrays hit pre-flight cap
+  const dv = new DataView(new ArrayBuffer(16));
+  assert.throws(() => new SampleBuffer(dv as unknown as Float64Array, 44_100), TypeError);
+  const bi = new BigInt64Array([1n, 2n]);
+  assert.throws(() => new SampleBuffer(bi as unknown as Float64Array, 44_100), TypeError);
+  const oversized = new Uint8Array(MAX_SAMPLES + 1);
+  assert.throws(() => new SampleBuffer(oversized as unknown as Float64Array, 44_100), /exceeds maximum allowable/);
+
+  // CWE-1321: prototype pollution attempt via JSON-parsed config must not pollute Object.prototype
+  const parsedConfig = JSON.parse('{"waveform":"sine","__proto__":{"pollutedOsc":true}}');
+  const osc = new OscillatorState(parsedConfig);
+  assert.equal(osc.waveform, "sine");
+  assert.equal(({} as { pollutedOsc?: boolean }).pollutedOsc, undefined);
+
+  // Non-object / null config must fail closed cleanly
+  assert.throws(() => new OscillatorState(null as never), TypeError);
+  assert.throws(() => new OscillatorState("bad-config" as never), TypeError);
+  assert.throws(() => synthesize(null as never, 0.1), TypeError);
+  assert.throws(() => synthesize("bad-config" as never, 0.1), TypeError);
 });

@@ -144,4 +144,57 @@ describe("Hostile inputs & VER15 Security Hardening", () => {
       return err instanceof InvalidInputError && err.message.includes("non-finite float");
     });
   });
+
+  it("VER15: rejects > MAX_SAFE_INTEGER (1e100), Symbol, Object.create(null), and DataView cleanly", () => {
+    // Number.isSafeInteger checks
+    assert.throws(() => dctIiViaFft([1, 2], 1e100, DctNorm.ORTHO), InvalidInputError);
+    assert.throws(() => dct2d([1], 1e100, 1), InvalidInputError);
+    assert.throws(() => dct2d([1], 1, 1e100), InvalidInputError);
+    assert.throws(() => dct({ length: -1 }), InvalidInputError);
+    assert.throws(() => dct({ length: 1.5 }), InvalidInputError);
+    assert.throws(() => dct2d({ length: -1 }, 1, 1), InvalidInputError);
+
+    // Symbol, Object.create(null), throwing toString must not crash String() or Number()
+    const sym = Symbol("hostile");
+    const nullProto = Object.create(null);
+    const throwingObj = {
+      toString() {
+        throw new Error("boom");
+      },
+    };
+    for (const hostile of [sym, nullProto, throwingObj]) {
+      assert.throws(() => parseType(hostile as DctType), InvalidInputError);
+      assert.throws(() => parseNorm(hostile as DctNorm), InvalidInputError);
+      assert.throws(() => parseDstType(hostile as DstType), InvalidInputError);
+      assert.throws(() => dctIiViaFft([1, 2], hostile as number, DctNorm.ORTHO), InvalidInputError);
+      assert.throws(() => dct([hostile as number, 1]), InvalidInputError);
+      assert.throws(() => idct([hostile as number, 1]), InvalidInputError);
+      assert.throws(() => dst([hostile as number, 1]), InvalidInputError);
+      assert.throws(() => idst([hostile as number, 1]), InvalidInputError);
+      assert.throws(() => dct2d([hostile as number], 1, 1), InvalidInputError);
+      assert.throws(() => dct({ length: hostile as number }), InvalidInputError);
+    }
+
+    // ArrayBuffer.isView: DataView, BigInt64Array, oversized typed array pre-flight check
+    const dv = new DataView(new ArrayBuffer(16));
+    assert.throws(() => dct(dv as unknown as Float64Array), InvalidInputError);
+    assert.throws(() => idct(dv as unknown as Float64Array), InvalidInputError);
+    assert.throws(() => dst(dv as unknown as Float64Array), InvalidInputError);
+    assert.throws(() => dct2d(dv as unknown as Float64Array, 1, 1), InvalidInputError);
+
+    const bi = new BigInt64Array([1n, 2n]);
+    assert.throws(() => dct(bi as unknown as Float64Array), InvalidInputError);
+    const oversized = new Uint8Array(MAX_DCT_LEN + 1);
+    assert.throws(() => dct(oversized as unknown as Float64Array), InvalidInputError);
+
+    // CWE-1321: prototype pollution resistance
+    JSON.parse('{"__proto__":{"pollutedDctHostile":true}}');
+    assert.equal(({} as { pollutedDctHostile?: boolean }).pollutedDctHostile, undefined);
+
+    // CWE-400: oversized enum strings must reject in O(1) before .trim().toLowerCase()
+    const hugeEnum = " ".repeat(50_000) + "ortho" + " ".repeat(50_000);
+    assert.throws(() => parseNorm(hugeEnum), InvalidInputError);
+    assert.throws(() => parseType(hugeEnum), InvalidInputError);
+    assert.throws(() => parseDstType(hugeEnum), InvalidInputError);
+  });
 });
