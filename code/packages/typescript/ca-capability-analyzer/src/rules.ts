@@ -108,6 +108,24 @@ export const FS_WRITE_METHODS = new Set([
   "truncateSync",
 ]);
 
+/**
+ * Short fs method names that also appear on non-fs objects (e.g. streams, buffers, timers).
+ * Require an fs-like receiver or fs import alias unless called as an unambiguous *Sync name.
+ */
+export const AMBIGUOUS_FS_METHODS = new Set([
+  "read",
+  "open",
+  "stat",
+  "lstat",
+  "access",
+  "watch",
+  "rm",
+  "chmod",
+  "chown",
+  "rename",
+  "truncate",
+]);
+
 export const NET_MODULES = new Set([
   "net",
   "node:net",
