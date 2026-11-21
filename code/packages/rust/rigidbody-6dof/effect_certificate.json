@@ -207,7 +207,7 @@
     },
     {
       "name": "step_with_force_fn_in_place",
-      "signature": "pub fn step_with_force_fn_in_place<F>( &mut self, mass: &MassProperties, dt: f64, integrator: IntegratorKind, mut force_fn: F, ) -> Result<(), RigidBodyError>",
+      "signature": "pub fn step_with_force_fn_in_place<F>( &mut self, mass: &MassProperties, dt: f64, integrator: IntegratorKind, mut force_fn: F, ) -> Result<(), RigidBodyError> where F: FnMut(&RigidBodyState) -> Result<(Vec3, Vec3), RigidBodyError>,",
       "effects": []
     },
     {
