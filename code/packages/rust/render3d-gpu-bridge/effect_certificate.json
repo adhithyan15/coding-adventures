@@ -1,0 +1,197 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/render3d-gpu-bridge",
+  "source_digest": "4fd3e9e651906e08235f45e5fd9fe8ee31b73a05fe8c007dcaddd499fb31dd99",
+  "manifest_digest": "7ac1e7b972267ec2b8d7e2f0d5884c078a0b0e3286eac94469238e9b375230e6",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_framebuffer_dim",
+      "signature": "pub fn validate_framebuffer_dim(n: u32) -> Result<bool, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "validate_draw_call_count",
+      "signature": "pub fn validate_draw_call_count(n: usize) -> Result<bool, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "validate_total_triangles",
+      "signature": "pub fn validate_total_triangles(n: usize) -> Result<bool, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "validate_handle_index",
+      "signature": "pub fn validate_handle_index(idx: usize, table_len: usize) -> Result<bool, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "validate_index_range",
+      "signature": "pub fn validate_index_range( offset: usize, index_count: usize, total_indices: usize, ) -> Result<bool, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "backend_is_hardware",
+      "signature": "pub const fn backend_is_hardware(self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "backend_name",
+      "signature": "pub const fn backend_name(self) -> &'static str",
+      "effects": []
+    },
+    {
+      "name": "backend_caps_for",
+      "signature": "pub const fn backend_caps_for(kind: RenderBackendKind) -> Self",
+      "effects": []
+    },
+    {
+      "name": "backend_caps_detect_safe",
+      "signature": "pub fn backend_caps_detect_safe(runtime: Option<&GpuRuntime>) -> BackendCapabilitySet",
+      "effects": []
+    },
+    {
+      "name": "cap_set_get",
+      "signature": "pub const fn cap_set_get(&self, kind: RenderBackendKind) -> BackendCapabilities",
+      "effects": []
+    },
+    {
+      "name": "bridge_postprocess_shaders",
+      "signature": "pub const fn bridge_postprocess_shaders() -> &'static Shaders",
+      "effects": []
+    },
+    {
+      "name": "bridge_depth_resolve_shaders",
+      "signature": "pub const fn bridge_depth_resolve_shaders() -> &'static Shaders",
+      "effects": []
+    },
+    {
+      "name": "target_spec_new",
+      "signature": "pub fn target_spec_new( width: u32, height: u32, clear_color: Rgba8, clear_depth: f64, ) -> Result<Self, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "target_spec_validate",
+      "signature": "pub fn target_spec_validate(&self) -> Result<(), BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "camera_from_view_proj",
+      "signature": "pub fn camera_from_view_proj( view: Mat4, projection: Mat4, camera_position: Vec3, ) -> Result<Self, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "camera_from_combined",
+      "signature": "pub fn camera_from_combined( view_projection: Mat4, camera_position: Vec3, ) -> Result<Self, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "camera_validate",
+      "signature": "pub fn camera_validate(&self) -> Result<(), BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "camera_to_uniform_bytes",
+      "signature": "pub fn camera_to_uniform_bytes(&self, model: &Mat4) -> Result<CameraUniformBytes, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "mesh_slice_new",
+      "signature": "pub fn mesh_slice_new(vertices: &'a [Vertex], indices: &'a [u32]) -> Result<Self, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "mesh_slice_validate",
+      "signature": "pub fn mesh_slice_validate(&self) -> Result<(), BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "material_new",
+      "signature": "pub const fn material_new(shading: ShadingMode) -> Self",
+      "effects": []
+    },
+    {
+      "name": "material_with_texture",
+      "signature": "pub const fn material_with_texture(shading: ShadingMode, texture: Texture<'a>) -> Self",
+      "effects": []
+    },
+    {
+      "name": "material_validate",
+      "signature": "pub fn material_validate(&self) -> Result<(), BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "draw_call_new",
+      "signature": "pub fn draw_call_new( mesh_index: usize, material_index: usize, model: Mat4, index_offset: usize, index_count: usize, ) -> Result<Self, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "draw_call_with_normal_matrix",
+      "signature": "pub fn draw_call_with_normal_matrix( mesh_index: usize, material_index: usize, model: Mat4, normal_matrix: Mat3, index_offset: usize, index_count: usize, ) -> Result<Self, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "draw_call_validate",
+      "signature": "pub fn draw_call_validate(&self) -> Result<(), BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "render_pass_validate",
+      "signature": "pub fn render_pass_validate(&self) -> Result<(), BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "bridge_scratch_new",
+      "signature": "pub fn bridge_scratch_new() -> Self",
+      "effects": []
+    },
+    {
+      "name": "bridge_scratch_with_capacity",
+      "signature": "pub fn bridge_scratch_with_capacity( vertex_capacity: usize, max_width: u32, max_height: u32, ) -> Result<Self, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "bridge_scratch_vertex_capacity",
+      "signature": "pub fn bridge_scratch_vertex_capacity(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "bridge_scratch_pixel_byte_capacity",
+      "signature": "pub fn bridge_scratch_pixel_byte_capacity(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "bridge_scratch_reset",
+      "signature": "pub fn bridge_scratch_reset(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "bridge_frame_digest_fnv1a",
+      "signature": "pub fn bridge_frame_digest_fnv1a(framebuffer: &PixelContainer) -> u64",
+      "effects": []
+    },
+    {
+      "name": "bridge_depth_digest_fnv1a",
+      "signature": "pub fn bridge_depth_digest_fnv1a(depth: &DepthBufferMut<'_>) -> u64",
+      "effects": []
+    },
+    {
+      "name": "execute_render_pass_into",
+      "signature": "pub fn execute_render_pass_into( pass: &RenderPass<'_>, preference: BackendPreference, framebuffer: &mut PixelContainer, mut depth: DepthBufferMut<'_>, scratch: &mut RenderBridgeScratch, ) -> Result<RenderExecutionReport, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "execute_render_pass_with_runtime",
+      "signature": "pub fn execute_render_pass_with_runtime( pass: &RenderPass<'_>, preference: BackendPreference, runtime: Option<&GpuRuntime>, framebuffer: &mut PixelContainer, mut depth: DepthBufferMut<'_>, scratch: &mut RenderBridgeScratch, ) -> Result<RenderExecutionReport, BridgeError>",
+      "effects": []
+    },
+    {
+      "name": "resolve_depth_to_rgba_with_runtime",
+      "signature": "pub fn resolve_depth_to_rgba_with_runtime( runtime: &GpuRuntime, width: u32, height: u32, depth_f32: &[f32], out_framebuffer: &mut PixelContainer, ) -> Result<(), BridgeError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

@@ -1,0 +1,134 @@
+-- GAME44 -- Render3D-GPU-Bridge: hardware 3D render bridge over gpu-runtime with
+-- bit-exact deterministic software fallback to raster3d-soft.
+--
+-- Warrant document for render3d-gpu-bridge (VER04j and VER04m: state=explicit).
+-- Formal verification contract for framebuffer bounds, render pass resource
+-- budgets, mesh/material handle indices, and draw-call index range guards.
+
+warrant render3d_gpu_bridge v1
+  error BridgeError = InvalidDimensions | BudgetExceeded | InvalidHandleIndex | InvalidIndexRange | RequestedBackendUnavailable
+
+  model Unit = Bool
+  variant RenderBackendKind = Software | GpuRuntimeCpu | GpuRuntimeMetal | GpuRuntimeCuda | Wgpu | Metal | Vulkan
+  variant BackendPreference = AutoHardwareWithSoftwareFallback | ForceSoftware | ForceGpuRuntimeCpu | RequireHardware
+  variant FallbackReason = NoFallback | NoHardwareRuntimeProvided | HardwareFeatureDisabled | HardwareDriverUnavailable | PostProcessParityFallback
+
+  record TargetDims(width: Nat, height: Nat)
+
+  -- Framebuffer dimensions are strictly positive and bounded to [1, 4096] (CWE-400).
+  model valid_framebuffer_dim(n: Nat) -> Bool = n >= 1 and n <= 4096
+  -- RenderPass draw call, mesh, and material counts are bounded to [0, 4096] (CWE-400).
+  model valid_draw_call_count(n: Nat) -> Bool = n <= 4096
+  -- Total triangles across a RenderPass are bounded to [0, 1_000_000] (CWE-400).
+  model valid_total_triangles(n: Nat) -> Bool = n <= 1000000
+  -- Mesh or material handle index must lie strictly below table length (CWE-125).
+  model valid_handle_index(idx: Nat, table_len: Nat) -> Bool = idx < table_len
+  -- DrawCall index slice must be a multiple of 3 and fit inside mesh indices (CWE-125 / CWE-190).
+  model valid_index_range(offset: Nat, index_count: Nat, total_indices: Nat) -> Bool = unwrap_or(rem(index_count, 3), 1) == 0 and offset + index_count <= total_indices
+
+  op validate_framebuffer_dim(n: Nat) -> Result<Bool, BridgeError>
+  op validate_draw_call_count(n: Nat) -> Result<Bool, BridgeError>
+  op validate_total_triangles(n: Nat) -> Result<Bool, BridgeError>
+  op validate_handle_index(idx: Nat, table_len: Nat) -> Result<Bool, BridgeError>
+  op validate_index_range(offset: Nat, index_count: Nat, total_indices: Nat) -> Result<Bool, BridgeError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_framebuffer_dim:
+    n public
+  labels validate_draw_call_count:
+    n public
+  labels validate_total_triangles:
+    n public
+  labels validate_handle_index:
+    idx public
+    table_len public
+  labels validate_index_range:
+    offset public
+    index_count public
+    total_indices public
+
+  input validate_framebuffer_dim.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_draw_call_count.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_total_triangles.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_handle_index.idx:
+    hostile
+    ensures no_panic, terminates
+  input validate_handle_index.table_len:
+    hostile
+    ensures no_panic, terminates
+  input validate_index_range.offset:
+    hostile
+    ensures no_panic, terminates
+  input validate_index_range.index_count:
+    hostile
+    ensures no_panic, terminates
+  input validate_index_range.total_indices:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_framebuffer_dim:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_draw_call_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_total_triangles:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_handle_index:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_index_range:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example fb_dim_min:
+    validate_framebuffer_dim(1) == Ok(true)
+  example fb_dim_max:
+    validate_framebuffer_dim(4096) == Ok(true)
+  example fb_dim_zero:
+    validate_framebuffer_dim(0) == Err(BridgeError.InvalidDimensions)
+  example draw_calls_max:
+    validate_draw_call_count(4096) == Ok(true)
+  example draw_calls_over:
+    validate_draw_call_count(4097) == Err(BridgeError.BudgetExceeded)
+  example tris_max:
+    validate_total_triangles(1000000) == Ok(true)
+  example tris_over:
+    validate_total_triangles(1000001) == Err(BridgeError.BudgetExceeded)
+  example handle_valid:
+    validate_handle_index(1, 2) == Ok(true)
+  example handle_oob:
+    validate_handle_index(2, 2) == Err(BridgeError.InvalidHandleIndex)
+  example range_valid:
+    validate_index_range(3, 6, 9) == Ok(true)
+  example range_bad_mod:
+    validate_index_range(0, 4, 9) == Err(BridgeError.InvalidIndexRange)
+  example range_oob:
+    validate_index_range(6, 6, 9) == Err(BridgeError.InvalidIndexRange)
+
+  claim validate_framebuffer_dim_agrees:
+    forall n: Nat. validate_framebuffer_dim(n) == (if valid_framebuffer_dim(n) then Ok(true) else Err(BridgeError.InvalidDimensions))
+  claim validate_draw_call_count_agrees:
+    forall n: Nat. validate_draw_call_count(n) == (if valid_draw_call_count(n) then Ok(true) else Err(BridgeError.BudgetExceeded))
+  claim validate_total_triangles_agrees:
+    forall n: Nat. validate_total_triangles(n) == (if valid_total_triangles(n) then Ok(true) else Err(BridgeError.BudgetExceeded))
+  claim validate_handle_index_agrees:
+    forall idx: Nat, table_len: Nat. validate_handle_index(idx, table_len) == (if valid_handle_index(idx, table_len) then Ok(true) else Err(BridgeError.InvalidHandleIndex))
+  claim validate_index_range_agrees:
+    forall off: Nat, cnt: Nat, total: Nat. validate_index_range(off, cnt, total) == (if valid_index_range(off, cnt, total) then Ok(true) else Err(BridgeError.InvalidIndexRange))

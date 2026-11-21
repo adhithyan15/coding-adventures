@@ -1,0 +1,39 @@
+[package]
+name = "render3d-gpu-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "GAME44: Hardware 3D render-bridge uniting gpu-runtime compute kernels, backend capability descriptors, and bit-exact deterministic CPU fallback to raster3d-soft"
+license = "MIT"
+
+[features]
+default = []
+metal = ["gpu-runtime/metal"]
+
+[dependencies]
+gpu-runtime = { path = "../gpu-runtime", default-features = false }
+raster3d-soft = { path = "../raster3d-soft" }
+math3d = { path = "../math3d" }
+pixel-container = { path = "../pixel-container" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "hostile_inputs"
+path = "tests/hostile_inputs.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false
