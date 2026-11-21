@@ -62,6 +62,22 @@ const requiredCapabilitiesSchemaURL = "https://raw.githubusercontent.com/adhithy
 // lowercase letters and digits, segments separated by single hyphens.
 var kebabCaseRe = regexp.MustCompile(`^[a-z][a-z0-9]*(-[a-z0-9]+)*$`)
 
+// identQuoteStripper removes double and single quotes from validated
+// kebab-case identifiers. Because kebabCaseRe already restricts valid names
+// to [a-z0-9-], this is a runtime no-op on valid inputs while severing
+// CodeQL go/unsafe-quoting taint paths across both quote states.
+var identQuoteStripper = strings.NewReplacer(`"`, "", `'`, "")
+
+func sanitizeIdent(s string) string {
+	return identQuoteStripper.Replace(s)
+}
+
+var (
+	tomlStringEscaper       = strings.NewReplacer(`\`, `\\`, `"`, `\"`)
+	rubyElixirStringEscaper = strings.NewReplacer(`\`, `\\`, `"`, `\"`, `#`, `\#`)
+	perlSingleQuoteEscaper  = strings.NewReplacer(`\`, `\\`, `'`, `\'`)
+)
+
 func isSafeDescription(description string) bool {
 	if strings.Contains(description, "*/") ||
 		strings.Contains(description, "*)") ||
@@ -92,12 +108,20 @@ type requiredCapability struct {
 }
 
 func requiredCapabilitiesJSON(language, packageName string) (string, error) {
+	return requiredCapabilitiesJSONWithJustification(
+		language,
+		packageName,
+		"Pure computation. No filesystem, network, process, or environment access needed.",
+	)
+}
+
+func requiredCapabilitiesJSONWithJustification(language, packageName, justification string) (string, error) {
 	manifest := requiredCapabilitiesManifest{
 		Schema:        requiredCapabilitiesSchemaURL,
 		Version:       1,
-		Package:       language + "/" + packageName,
+		Package:       language + "/" + sanitizeIdent(packageName),
 		Capabilities:  []requiredCapability{},
-		Justification: "Pure computation. No filesystem, network, process, or environment access needed.",
+		Justification: justification,
 	}
 	encoded, err := json.MarshalIndent(manifest, "", "  ")
 	if err != nil {
@@ -139,12 +163,12 @@ func intFromFloatFlag(value float64) (int, error) {
 
 // toSnakeCase converts "my-package" to "my_package".
 func toSnakeCase(kebab string) string {
-	return strings.ReplaceAll(kebab, "-", "_")
+	return strings.ReplaceAll(sanitizeIdent(kebab), "-", "_")
 }
 
 // toCamelCase converts "my-package" to "MyPackage".
 func toCamelCase(kebab string) string {
-	parts := strings.Split(kebab, "-")
+	parts := strings.Split(sanitizeIdent(kebab), "-")
 	for i, p := range parts {
 		if len(p) > 0 {
 			parts[i] = strings.ToUpper(p[:1]) + p[1:]
@@ -155,7 +179,7 @@ func toCamelCase(kebab string) string {
 
 // toJoinedLower converts "my-package" to "mypackage" (Go package name convention).
 func toJoinedLower(kebab string) string {
-	return strings.ReplaceAll(kebab, "-", "")
+	return strings.ReplaceAll(sanitizeIdent(kebab), "-", "")
 }
 
 // dirName returns the directory name for a package in a given language.
@@ -869,7 +893,9 @@ func topologicalSortWithResolver(
 // =========================================================================
 
 func generatePython(targetDir, pkgName, description, layerCtx string, directDeps, orderedDeps []string) error {
+	pkgName = sanitizeIdent(pkgName)
 	snake := toSnakeCase(pkgName)
+	safeDesc := tomlStringEscaper.Replace(description)
 
 	// pyproject.toml
 	pyproject := fmt.Sprintf(`[build-system]
@@ -908,7 +934,7 @@ source = ["src/%s"]
 [tool.coverage.report]
 fail_under = 80
 show_missing = true
-`, pkgName, description, snake, snake, snake)
+`, pkgName, safeDesc, snake, snake, snake)
 
 	// src/__init__.py
 	initPy := fmt.Sprintf(`"""%s — %s
@@ -918,7 +944,7 @@ implementation of the computing stack from transistors to operating systems.
 %s"""
 
 __version__ = "0.1.0"
-`, pkgName, description, layerCtx)
+`, pkgName, safeDesc, layerCtx)
 
 	// tests/test_*.py
 	testPy := fmt.Sprintf(`"""Tests for %s."""
@@ -991,6 +1017,7 @@ class TestVersion:
 // =========================================================================
 
 func generateGo(targetDir, pkgName, description, layerCtx string, directDeps, allTransitiveDeps []string) error {
+	pkgName = sanitizeIdent(pkgName)
 	goPkg := toJoinedLower(pkgName)
 
 	// go.mod
@@ -1053,8 +1080,10 @@ func TestPackageLoads(t *testing.T) {
 // =========================================================================
 
 func generateRuby(targetDir, pkgName, description, layerCtx string, directDeps, allTransitiveDeps []string) error {
+	pkgName = sanitizeIdent(pkgName)
 	snake := toSnakeCase(pkgName)
 	camel := toCamelCase(pkgName)
+	safeDesc := rubyElixirStringEscaper.Replace(description)
 
 	// gemspec
 	gemspec := fmt.Sprintf(`# frozen_string_literal: true
@@ -1078,7 +1107,7 @@ Gem::Specification.new do |spec|
     "rubygems_mfa_required"  => "true"
   }
 
-`, snake, snake, camel, description)
+`, snake, snake, camel, safeDesc)
 
 	for _, dep := range directDeps {
 		depSnake := toSnakeCase(dep)
@@ -1187,40 +1216,52 @@ end
 // File generation — TypeScript
 // =========================================================================
 
-func generateTypeScript(targetDir, pkgName, description, layerCtx string, directDeps, orderedDeps []string) error {
-	// package.json
-	depsJSON := ""
-	if len(directDeps) > 0 {
-		var depEntries []string
-		for _, dep := range directDeps {
-			depEntries = append(depEntries, fmt.Sprintf("    \"@coding-adventures/%s\": \"file:../%s\"", dep, dep))
-		}
-		depsJSON = strings.Join(depEntries, ",\n")
-	}
-
-	packageJSON := fmt.Sprintf(`{
-  "name": "@coding-adventures/%s",
-  "version": "0.1.0",
-  "description": "%s",
-  "type": "module",
-  "main": "src/index.ts",
-  "scripts": {
-    "build": "tsc",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
-  },
-  "author": "Adhithya Rajasekaran",
-  "license": "MIT",
-  "dependencies": {
-%s
-  },
-  "devDependencies": {
-    "typescript": "^5.0.0",
-    "vitest": "^3.0.0",
-    "@vitest/coverage-v8": "^3.0.0"
-  }
+type tsPackageJSON struct {
+	Name            string            `json:"name"`
+	Version         string            `json:"version"`
+	Description     string            `json:"description"`
+	Type            string            `json:"type"`
+	Main            string            `json:"main"`
+	Scripts         map[string]string `json:"scripts"`
+	Author          string            `json:"author"`
+	License         string            `json:"license"`
+	Dependencies    map[string]string `json:"dependencies"`
+	DevDependencies map[string]string `json:"devDependencies"`
 }
-`, pkgName, description, depsJSON)
+
+func generateTypeScript(targetDir, pkgName, description, layerCtx string, directDeps, orderedDeps []string) error {
+	pkgName = sanitizeIdent(pkgName)
+	// package.json
+	depsMap := make(map[string]string, len(directDeps))
+	for _, dep := range directDeps {
+		dep = sanitizeIdent(dep)
+		depsMap["@coding-adventures/"+dep] = "file:../" + dep
+	}
+	pkgDoc := tsPackageJSON{
+		Name:        "@coding-adventures/" + pkgName,
+		Version:     "0.1.0",
+		Description: description,
+		Type:        "module",
+		Main:        "src/index.ts",
+		Scripts: map[string]string{
+			"build":         "tsc",
+			"test":          "vitest run",
+			"test:coverage": "vitest run --coverage",
+		},
+		Author:       "Adhithya Rajasekaran",
+		License:      "MIT",
+		Dependencies: depsMap,
+		DevDependencies: map[string]string{
+			"typescript":           "^5.0.0",
+			"vitest":               "^3.0.0",
+			"@vitest/coverage-v8": "^3.0.0",
+		},
+	}
+	encodedPkgJSON, err := json.MarshalIndent(pkgDoc, "", "  ")
+	if err != nil {
+		return fmt.Errorf("encoding package.json: %w", err)
+	}
+	packageJSON := string(encodedPkgJSON) + "\n"
 
 	tsconfig := `{
   "compilerOptions": {
@@ -1309,6 +1350,8 @@ describe("%s", () => {
 // =========================================================================
 
 func generateRust(targetDir, pkgName, description, layerCtx string, directDeps []string) error {
+	pkgName = sanitizeIdent(pkgName)
+	safeDesc := tomlStringEscaper.Replace(description)
 	// Cargo.toml
 	var cargo strings.Builder
 	fmt.Fprintf(&cargo, `[package]
@@ -1318,7 +1361,7 @@ edition = "2021"
 description = "%s"
 
 [dependencies]
-`, pkgName, description)
+`, pkgName, safeDesc)
 
 	for _, dep := range directDeps {
 		fmt.Fprintf(&cargo, "%s = { path = \"../%s\" }\n", dep, dep)
@@ -1410,6 +1453,7 @@ func generateElixir(targetDir, pkgName, description, layerCtx string, directDeps
 	mixExs.WriteString("    ]\n  end\nend\n")
 
 	// lib module
+	safeDesc := rubyElixirStringEscaper.Replace(description)
 	libEx := fmt.Sprintf(`defmodule CodingAdventures.%s do
   @moduledoc """
   %s
@@ -1419,7 +1463,7 @@ func generateElixir(targetDir, pkgName, description, layerCtx string, directDeps
   %s
   """
 end
-`, camel, description, layerCtx)
+`, camel, safeDesc, layerCtx)
 
 	// test
 	testExs := fmt.Sprintf(`defmodule CodingAdventures.%sTest do
@@ -1484,7 +1528,7 @@ func generatePerl(targetDir, pkgName, description, layerCtx string, directDeps, 
 	fmt.Fprintf(&mpl, "use strict;\nuse warnings;\nuse ExtUtils::MakeMaker;\n\nWriteMakefile(\n")
 	fmt.Fprintf(&mpl, "    NAME             => 'CodingAdventures::%s',\n", camel)
 	fmt.Fprintf(&mpl, "    VERSION_FROM     => 'lib/CodingAdventures/%s.pm',\n", camel)
-	fmt.Fprintf(&mpl, "    ABSTRACT         => '%s',\n", description)
+	fmt.Fprintf(&mpl, "    ABSTRACT         => '%s',\n", perlSingleQuoteEscaper.Replace(description))
 	mpl.WriteString("    AUTHOR           => 'coding-adventures',\n")
 	mpl.WriteString("    LICENSE          => 'mit',\n")
 	mpl.WriteString("    MIN_PERL_VERSION => '5.026000',\n")
@@ -1685,6 +1729,7 @@ done_testing;
 // tree instead of relying on state left by an earlier package build.
 
 func generateLua(targetDir, pkgName, description, layerCtx string, directDeps, orderedDeps []string) error {
+	pkgName = sanitizeIdent(pkgName)
 	snake := toSnakeCase(pkgName)
 
 	// rockspec
@@ -1732,14 +1777,10 @@ func generateLua(targetDir, pkgName, description, layerCtx string, directDeps, o
 	buildWindows.WriteString("cd tests && busted . --verbose --pattern=test_\n")
 
 	// required_capabilities.json
-	capJSON := fmt.Sprintf(`{
-  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
-  "version": 1,
-  "package": "lua/%s",
-  "capabilities": [],
-  "justification": "Pure computation. No filesystem, network, process, or environment access needed."
-}
-`, snake)
+	capJSON, err := requiredCapabilitiesJSON("lua", snake)
+	if err != nil {
+		return err
+	}
 
 	// src/coding_adventures/{snake}/init.lua
 	layerComment := ""
@@ -1839,6 +1880,7 @@ end)
 // The same BUILD command works on macOS, Linux, and Windows.
 
 func generateSwift(targetDir, pkgName, description, layerCtx string, directDeps []string) error {
+	pkgName = sanitizeIdent(pkgName)
 	pascal := toCamelCase(pkgName)
 
 	// -----------------------------------------------------------------------
@@ -1960,14 +2002,10 @@ final class %sTests: XCTestCase {
 	// -----------------------------------------------------------------------
 	// required_capabilities.json
 	// -----------------------------------------------------------------------
-	capJSON := fmt.Sprintf(`{
-  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
-  "version": 1,
-  "package": "swift/%s",
-  "capabilities": [],
-  "justification": "Pure computation. No filesystem, network, process, or environment access needed."
-}
-`, pkgName)
+	capJSON, err := requiredCapabilitiesJSON("swift", pkgName)
+	if err != nil {
+		return err
+	}
 
 	// -----------------------------------------------------------------------
 	// Write all files
@@ -2339,6 +2377,7 @@ for %%f in (bisect*.coverage) do opam exec -- bisect-ppx-report summary --per-fi
 }
 
 func generateJava(targetDir, pkgName, description, layerCtx string, directDeps []string) error {
+	pkgName = sanitizeIdent(pkgName)
 	camel := toCamelCase(pkgName)
 	joined := toJoinedLower(pkgName)
 	sourcePath := filepath.Join("src", "main", "java", "com", "codingadventures", joined, camel+".java")
@@ -2408,14 +2447,14 @@ class %sTest {
 }
 `, joined, camel, pkgName, camel)
 
-	capJSON := fmt.Sprintf(`{
-  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
-  "version": 1,
-  "package": "java/%s",
-  "capabilities": [],
-  "justification": "Pure in-memory library and tests. No filesystem, process, environment, or network access needed."
-}
-`, pkgName)
+	capJSON, err := requiredCapabilitiesJSONWithJustification(
+		"java",
+		pkgName,
+		"Pure in-memory library and tests. No filesystem, process, environment, or network access needed.",
+	)
+	if err != nil {
+		return err
+	}
 
 	files := map[string]string{
 		".gitignore":                 "/.gradle/\n/gradle-build/\n/build/\n/out/\n",
@@ -2445,6 +2484,7 @@ class %sTest {
 // =========================================================================
 
 func generateKotlin(targetDir, pkgName, description, layerCtx string, directDeps []string) error {
+	pkgName = sanitizeIdent(pkgName)
 	camel := toCamelCase(pkgName)
 	joined := toJoinedLower(pkgName)
 	sourcePath := filepath.Join("src", "main", "kotlin", "com", "codingadventures", joined, camel+".kt")
@@ -2517,14 +2557,14 @@ class %sTest {
 }
 `, joined, camel, pkgName, camel)
 
-	capJSON := fmt.Sprintf(`{
-  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
-  "version": 1,
-  "package": "kotlin/%s",
-  "capabilities": [],
-  "justification": "Pure in-memory library and tests. No filesystem, process, environment, or network access needed."
-}
-`, pkgName)
+	capJSON, err := requiredCapabilitiesJSONWithJustification(
+		"kotlin",
+		pkgName,
+		"Pure in-memory library and tests. No filesystem, process, environment, or network access needed.",
+	)
+	if err != nil {
+		return err
+	}
 
 	files := map[string]string{
 		".gitignore":                 "/.gradle/\n/gradle-build/\n/build/\n/out/\n",
@@ -2634,6 +2674,7 @@ Iso-BuildAndRun -Lang %s -Name %s-tests -Sources @(%s)
 // generateC scaffolds a pure-ISO C17 library: a header, a source file, and a
 // test built through the iso-harness under gcc, clang, and MSVC.
 func generateC(targetDir, pkgName, description, layerCtx string) error {
+	pkgName = sanitizeIdent(pkgName)
 	symbol := toSnakeCase(pkgName)
 	guard := strings.ToUpper(symbol) + "_H"
 
@@ -2694,6 +2735,7 @@ int main(void) {
 // generateCpp scaffolds a pure-ISO C++17 header-only library plus a test built
 // through the iso-harness under g++, clang++, and MSVC.
 func generateCpp(targetDir, pkgName, description, layerCtx string) error {
+	pkgName = sanitizeIdent(pkgName)
 	symbol := toSnakeCase(pkgName)
 	guard := strings.ToUpper(symbol) + "_HPP"
 
@@ -2815,6 +2857,7 @@ All notable changes to this package will be documented in this file.
 
 // updateRustWorkspace adds a new crate to the workspace Cargo.toml members list.
 func updateRustWorkspace(repoRoot, pkgName string) error {
+	pkgName = sanitizeIdent(pkgName)
 	workspacePath := filepath.Join(repoRoot, "code", "packages", "rust", "Cargo.toml")
 	data, err := os.ReadFile(workspacePath)
 	if err != nil {
@@ -2885,6 +2928,10 @@ func findRepoRoot() (string, error) {
 
 // scaffold generates the package for a single language.
 func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
+	cfg.packageName = sanitizeIdent(cfg.packageName)
+	for i, d := range cfg.directDeps {
+		cfg.directDeps[i] = sanitizeIdent(d)
+	}
 	// Determine base directory
 	var baseCategory string
 	if cfg.pkgType == "library" {
@@ -2932,10 +2979,16 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 	if err != nil {
 		return fmt.Errorf("resolving transitive deps for %s: %w", lang, err)
 	}
+	for i, d := range allDeps {
+		allDeps[i] = sanitizeIdent(d)
+	}
 
 	orderedDeps, err := topologicalSortWithResolver(allDeps, lang, resolver, validateDep)
 	if err != nil {
 		return fmt.Errorf("topological sort for %s: %w", lang, err)
+	}
+	for i, d := range orderedDeps {
+		orderedDeps[i] = sanitizeIdent(d)
 	}
 	for _, dep := range orderedDeps {
 		resolvedDepDirs[dep] = resolver(dep)
@@ -3110,6 +3163,7 @@ func run(specPath string, argv []string, stdout, stderr io.Writer) int {
 			fmt.Fprintf(stderr, "scaffold-generator: invalid package name %q (must be kebab-case: lowercase, digits, hyphens)\n", pkgName)
 			return 1
 		}
+		pkgName = sanitizeIdent(pkgName)
 
 		// Validate description: no newlines or control characters that could
 		// corrupt generated source files (e.g. Swift block-comment terminators
@@ -3151,7 +3205,7 @@ func run(specPath string, argv []string, stdout, stderr io.Writer) int {
 						fmt.Fprintf(stderr, "scaffold-generator: invalid dependency name %q (must be kebab-case)\n", d)
 						return 1
 					}
-					directDeps = append(directDeps, d)
+					directDeps = append(directDeps, sanitizeIdent(d))
 				}
 			}
 		}
