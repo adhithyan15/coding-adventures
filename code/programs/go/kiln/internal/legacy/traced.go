@@ -117,7 +117,12 @@ const TracedSemantics uint64 = 2
 // only line is its exit is accepted when dropped dying spawns can account for
 // it; mknod/mknodat without a device argument (regular file, FIFO, socket) is
 // no longer `arity`.  The accept set grows, so every weak key changes.
-const RecorderVersion = 12
+//
+// Version 13: completed NULL-path statx failing with EFAULT (KILN04 D45).  A
+// completed statx with a literal NULL path, valid flags without AT_EMPTY_PATH,
+// and a -1 EFAULT result is dropped with no event (e.g. Rust std's statx probe).
+// The accept set grows, so every weak key changes.
+const RecorderVersion = 13
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
