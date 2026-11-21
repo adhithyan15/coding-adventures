@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/sim-teletype-asr33",
-  "source_digest": "1e5e054c5f8299c88cf229d68140a8344d274a39c2c9b602a6d4bc30ea9eb337",
+  "source_digest": "8cd718c93fac589f4979970d983286972ba9e98d1422d333573b1e309320f2c5",
   "manifest_digest": "9dac77413425c6749017a9ecf99ccd44c215504d8d6c198f8bb5235ad8adfc32",
   "declared_effects": [],
   "entry_points": [

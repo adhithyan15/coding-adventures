@@ -103,6 +103,9 @@ pub const PDP8_WORD_MASK: u16 = 0o7777;
 /// 12-bit PDP-8 Program Counter Mask.
 pub const PDP8_PC_MASK: u16 = 0o7777;
 
+/// Maximum allowable execution step budget for `run_sim_until_halt` and `run_gate_until_halt` (CWE-400 guard).
+pub const MAX_BRIDGE_RUN_STEPS: usize = 1_000_000;
+
 /// 8-bit Character Mask for Teletype I/O.
 pub const PDP8_CHAR_MASK: u16 = 0o377;
 
@@ -331,11 +334,7 @@ impl GateLevelIotDecoder {
         let mut new_ac = 0u16;
         for i in 0..12 {
             let ac_bit = ((ac >> i) & 1) as u8;
-            let kb_bit = if i < 8 {
-                (kb_buffer >> i) & 1
-            } else {
-                0
-            };
+            let kb_bit = if i < 8 { (kb_buffer >> i) & 1 } else { 0 };
 
             // Stage A: If KCC is asserted, AC is zeroed.
             let ac_after_kcc = mux2(ac_bit, 0, kcc);
@@ -492,7 +491,10 @@ impl Pdp8TeletypeBridge {
     }
 
     /// Advances the gate-level CPU by one instruction step and updates I/O state.
-    pub fn step_gate(&mut self, cpu: &mut pdp8_gatelevel::Pdp8GateLevel) -> Result<StepTrace, Pdp8Error> {
+    pub fn step_gate(
+        &mut self,
+        cpu: &mut pdp8_gatelevel::Pdp8GateLevel,
+    ) -> Result<StepTrace, Pdp8Error> {
         let trace = cpu.step()?;
 
         if let Some(iot) = trace.iot {
@@ -515,7 +517,14 @@ impl Pdp8TeletypeBridge {
     }
 
     /// Runs the CPU simulator until HLT or maximum steps.
-    pub fn run_sim_until_halt(&mut self, sim: &mut Pdp8Simulator, max_steps: usize) -> Result<usize, Pdp8Error> {
+    pub fn run_sim_until_halt(
+        &mut self,
+        sim: &mut Pdp8Simulator,
+        max_steps: usize,
+    ) -> Result<usize, Pdp8Error> {
+        if max_steps > MAX_BRIDGE_RUN_STEPS {
+            return Err(Pdp8Error::MaxStepsExceeded { max_steps });
+        }
         for step in 1..=max_steps {
             self.step_sim(sim)?;
             if sim.state().halted {
@@ -531,6 +540,9 @@ impl Pdp8TeletypeBridge {
         cpu: &mut pdp8_gatelevel::Pdp8GateLevel,
         max_steps: usize,
     ) -> Result<usize, Pdp8Error> {
+        if max_steps > MAX_BRIDGE_RUN_STEPS {
+            return Err(Pdp8Error::MaxStepsExceeded { max_steps });
+        }
         for step in 1..=max_steps {
             self.step_gate(cpu)?;
             if cpu.state().halted {
@@ -659,7 +671,10 @@ impl Pdp8TeletypeGateLevelBridge {
     }
 
     /// Advances the gate-level CPU by one instruction step and updates I/O state.
-    pub fn step_gate(&mut self, cpu: &mut pdp8_gatelevel::Pdp8GateLevel) -> Result<StepTrace, Pdp8Error> {
+    pub fn step_gate(
+        &mut self,
+        cpu: &mut pdp8_gatelevel::Pdp8GateLevel,
+    ) -> Result<StepTrace, Pdp8Error> {
         let trace = cpu.step()?;
 
         if let Some(iot) = trace.iot {
@@ -682,7 +697,14 @@ impl Pdp8TeletypeGateLevelBridge {
     }
 
     /// Runs the CPU simulator until HLT or maximum steps.
-    pub fn run_sim_until_halt(&mut self, sim: &mut Pdp8Simulator, max_steps: usize) -> Result<usize, Pdp8Error> {
+    pub fn run_sim_until_halt(
+        &mut self,
+        sim: &mut Pdp8Simulator,
+        max_steps: usize,
+    ) -> Result<usize, Pdp8Error> {
+        if max_steps > MAX_BRIDGE_RUN_STEPS {
+            return Err(Pdp8Error::MaxStepsExceeded { max_steps });
+        }
         for step in 1..=max_steps {
             self.step_sim(sim)?;
             if sim.state().halted {
@@ -698,6 +720,9 @@ impl Pdp8TeletypeGateLevelBridge {
         cpu: &mut pdp8_gatelevel::Pdp8GateLevel,
         max_steps: usize,
     ) -> Result<usize, Pdp8Error> {
+        if max_steps > MAX_BRIDGE_RUN_STEPS {
+            return Err(Pdp8Error::MaxStepsExceeded { max_steps });
+        }
         for step in 1..=max_steps {
             self.step_gate(cpu)?;
             if cpu.state().halted {
@@ -845,7 +870,10 @@ impl Ge225TeletypeBridge {
     }
 
     /// Encodes ASCII text into BCD codes and queues them into `ge225_simulator::Simulator`'s typewriter input.
-    pub fn feed_sim_typewriter(sim: &mut ge225_simulator::Simulator, text: &str) -> Result<(), String> {
+    pub fn feed_sim_typewriter(
+        sim: &mut ge225_simulator::Simulator,
+        text: &str,
+    ) -> Result<(), String> {
         let bcd_codes = str_to_ge225_bcd(text);
         let i32_codes: Vec<i32> = bcd_codes.iter().map(|&c| c as i32).collect();
         sim.queue_typewriter_input(&i32_codes)
@@ -889,25 +917,28 @@ impl Ge225TeletypeBridge {
 /// ```
 pub fn assemble_pdp8_teletype_printer_program(input_char_dest: u16) -> Vec<u16> {
     vec![
-        IOT_KSF,                                                                 // 0o0200: KSF
-        encode_memory_reference(Opcode::Jmp, false, true, 0o000),                // 0o0201: JMP 0o0200
-        IOT_KRB,                                                                 // 0o0202: KRB
+        IOT_KSF,                                                  // 0o0200: KSF
+        encode_memory_reference(Opcode::Jmp, false, true, 0o000), // 0o0201: JMP 0o0200
+        IOT_KRB,                                                  // 0o0202: KRB
         encode_memory_reference(Opcode::Dca, false, false, (input_char_dest & 0o177) as u8), // 0o0203: DCA dest
-        0o7200,                                                                  // 0o0204: CLA
-        encode_memory_reference(Opcode::Tad, true, false, 0o010),                // 0o0205: TAD I 0o0010
-        0o7450,                                                                  // 0o0206: SNA
-        HLT,                                                                     // 0o0207: HLT
-        IOT_TLS,                                                                 // 0o0210: TLS
-        IOT_TSF,                                                                 // 0o0211: TSF
-        encode_memory_reference(Opcode::Jmp, false, true, 0o011),                // 0o0212: JMP 0o0211
-        0o7200,                                                                  // 0o0213: CLA
-        encode_memory_reference(Opcode::Jmp, false, true, 0o005),                // 0o0214: JMP 0o0205
+        0o7200,                                                   // 0o0204: CLA
+        encode_memory_reference(Opcode::Tad, true, false, 0o010), // 0o0205: TAD I 0o0010
+        0o7450,                                                   // 0o0206: SNA
+        HLT,                                                      // 0o0207: HLT
+        IOT_TLS,                                                  // 0o0210: TLS
+        IOT_TSF,                                                  // 0o0211: TSF
+        encode_memory_reference(Opcode::Jmp, false, true, 0o011), // 0o0212: JMP 0o0211
+        0o7200,                                                   // 0o0213: CLA
+        encode_memory_reference(Opcode::Jmp, false, true, 0o005), // 0o0214: JMP 0o0205
     ]
 }
 
 /// Encodes an ASCII string as null-terminated 12-bit PDP-8 words.
 pub fn encode_ascii_for_pdp8(text: &str) -> Vec<u16> {
-    let mut words: Vec<u16> = text.bytes().map(|b| u16::from(b) & PDP8_CHAR_MASK).collect();
+    let mut words: Vec<u16> = text
+        .bytes()
+        .map(|b| u16::from(b) & PDP8_CHAR_MASK)
+        .collect();
     words.push(0); // Null terminator
     words
 }
