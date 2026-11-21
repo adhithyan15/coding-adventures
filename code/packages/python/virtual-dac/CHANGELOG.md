@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.2] - 2026-11-21
+
+### Added & Hardened
+
+- VER15 CWE/CVE security hardening (MUS-W8-C):
+  - CWE-20 / CWE-190: added O(1) `_safe_repr` error formatting; caught `OverflowError` on `float(...)` conversions (`10**400`, `Fraction(10**400, 3)`) into `ValueError`; guarded `ZeroOrderHoldDACSignal.value_at` against non-finite scaled sample index before `math.floor`.
+  - Added dedicated `tests/test_hostile_inputs.py` and `tests/test_pbt.py` (SplitMix64 via `coding_adventures_test_bootstrap`).
+
 ## [0.1.1] - 2026-11-15
 
 ### Added
