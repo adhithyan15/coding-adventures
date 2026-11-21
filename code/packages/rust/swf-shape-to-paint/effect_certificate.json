@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/swf-shape-to-paint",
-  "source_digest": "d08e2b25824aaae4efe3c2f03d3280a3e71ce7ae3d6402dd8a10681f78bab4fa",
+  "source_digest": "b6979318b5b6cb56564f92e7ba5f8a9774c26a68855e3732fb35be89adf6f2fc",
   "manifest_digest": "1f45445c9f0d401cdad9ad39810e5a29506e956626c9971934f45384f09fde90",
   "declared_effects": [],
   "entry_points": [
