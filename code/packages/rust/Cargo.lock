@@ -6734,6 +6734,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "flash-player-host"
+version = "0.1.0"
+dependencies = [
+ "actionscript-compiler",
+ "avm-bytecode-lifter",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "flash-audio-bridge",
+ "flash-display-list",
+ "game-clock",
+ "interpreter-ir",
+ "paint-instructions",
+ "paint-palette-blend",
+ "paint-vm-runtime",
+ "swf-container",
+ "swf-shape-to-paint",
+ "vm-core",
+ "window-core",
+]
+
+[[package]]
 name = "flate2"
 version = "1.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
