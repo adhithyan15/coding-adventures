@@ -9,7 +9,7 @@ warrant raster3d_soft v1
 
   model Unit = Bool
   variant ShadingMode = Flat | Gouraud | Phong | TexturedNearest | TexturedBilinear
-  variant CullMode = None | Back | Front
+  variant CullMode = CullNone | Back | Front
 
   record FramebufferDims(width: Nat, height: Nat)
 
