@@ -18661,7 +18661,8 @@
         "dart-swift-language-frontends-neutral-fixtures"
       ],
       "branch": "feat/dart-lattice-frontend-vertical-parity",
-      "pr_number": null,
+      "pr_number": 19817,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19817",
       "notes": "Dart subtranche of Lattice frontend vertical parity. Delivers coding_adventures_lattice_lexer and coding_adventures_lattice_parser with delimiter nesting depth defense, token ceiling, and shared neutral fixture conformance."
     },
     {
