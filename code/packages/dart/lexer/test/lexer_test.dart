@@ -1,4 +1,5 @@
 import 'package:coding_adventures_lexer/lexer.dart';
+import 'package:coding_adventures_lexer/src/messages.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -35,6 +36,34 @@ void main() {
     test('throws on unterminated strings and unexpected characters', () {
       expect(() => tokenize('"hello'), throwsA(isA<LexerError>()));
       expect(() => tokenize('@'), throwsA(isA<LexerError>()));
+    });
+
+    test('diagnostics are static and never echo caller source', () {
+      try {
+        tokenize('x @secret');
+        fail('Expected LexerError');
+      } on LexerError catch (e) {
+        expect(e.message, equals(messageUnexpectedCharacter));
+        expect(e.errorId, equals(errorIdLexicalError));
+        expect((e.line, e.column), equals((1, 3)));
+        expect(e.toString().contains('@'), isFalse);
+        expect(e.toString().contains('secret'), isFalse);
+      }
+
+      try {
+        tokenize('"unterminated secret');
+        fail('Expected LexerError');
+      } on LexerError catch (e) {
+        expect(e.message, equals(messageUnterminatedString));
+        expect(e.toString().contains('secret'), isFalse);
+      }
+
+      try {
+        tokenize(r'"dangling\');
+        fail('Expected LexerError');
+      } on LexerError catch (e) {
+        expect(e.message, equals(messageUnterminatedStringBackslash));
+      }
     });
   });
 
@@ -82,6 +111,23 @@ void main() {
       failing.process('other');
       expect(failing.currentState, 'error');
       expect(failing.process('digit'), 'error');
+    });
+  });
+
+  group('Token value semantics', () {
+    test('equality, hashCode and toString cover every field', () {
+      const a = Token(type: 'NAME', value: 'x', line: 1, column: 2, flags: 3);
+      const b = Token(type: 'NAME', value: 'x', line: 1, column: 2, flags: 3);
+      const c = Token(type: 'NAME', value: 'x', line: 1, column: 2);
+
+      expect(a, equals(b));
+      expect(a.hashCode, equals(b.hashCode));
+      expect(a, isNot(equals(c)));
+      expect(a == Object(), isFalse);
+      expect(
+        a.toString(),
+        equals('Token(type: NAME, value: x, line: 1, column: 2, flags: 3)'),
+      );
     });
   });
 }
