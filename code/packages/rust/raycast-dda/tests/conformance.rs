@@ -558,3 +558,75 @@ fn security_guards_cwe20_cwe125_cwe369_cwe400_cwe835() {
         Err(RaycastError::InvalidFramebuffer)
     );
 }
+
+#[test]
+fn regression_far_offscreen_sprite_no_overflow_and_odd_horizon_no_stale_pixels() {
+    // 1. Far-offscreen sprite with extreme transform_x / transform_y ratio must not
+    // overflow/panic in debug or wrap in release (CWE-190).
+    let open_map = GridMap::grid_new(16, 16, vec![0; 16 * 16]).unwrap();
+    let cam_narrow = Camera2D::camera_new(0.0, 0.0, 1.0, 0.0, 0.0, 1e-6).unwrap();
+    let sp_far_side = Sprite::sprite_new(1e-5, 1e6, 0).unwrap();
+    let tex = TextureRgba::texture_solid(16, 16, [200, 100, 50, 255]).unwrap();
+    let cfg = RenderConfig::render_config_default();
+    let mut scratch = SpriteScratch::scratch_with_capacity(4).unwrap();
+    let mut zbuf = vec![0.0; 256];
+    let mut fb = PixelContainer::new(256, 64);
+
+    let stats = render_frame_into(
+        &open_map,
+        &cam_narrow,
+        std::slice::from_ref(&tex),
+        &[sp_far_side],
+        &cfg,
+        &mut scratch,
+        &mut zbuf,
+        &mut fb,
+    )
+    .expect("far-offscreen sprite must not overflow");
+    assert_eq!(stats.columns_cast, 256);
+
+    // 2. Odd framebuffer height with textured floor on an open map must overwrite
+    // the center horizon row (y = 61 / 2 = 30) with zero stale sentinel pixels.
+    let mut fb_odd = PixelContainer::from_data(32, 61, [1, 2, 3, 255].repeat(32 * 61));
+    let mut zbuf_odd = vec![0.0; 32];
+    let floor_tex = TextureRgba::texture_solid(8, 8, [40, 120, 40, 255]).unwrap();
+    let ceil_tex = TextureRgba::texture_solid(8, 8, [40, 40, 120, 255]).unwrap();
+    let cfg_textured = RenderConfig::render_config_with_planes(
+        PlaneSurface::Textured { texture_index: 1 },
+        PlaneSurface::Textured { texture_index: 0 },
+        128,
+    );
+    let cam_open = Camera2D::camera_from_yaw_fov(8.5, 8.5, 0.0, trig::PI / 3.0).unwrap();
+    render_frame_into(
+        &open_map,
+        &cam_open,
+        &[floor_tex, ceil_tex],
+        &[],
+        &cfg_textured,
+        &mut scratch,
+        &mut zbuf_odd,
+        &mut fb_odd,
+    )
+    .unwrap();
+    for x in 0..32 {
+        assert_eq!(
+            fb_odd.pixel_at(x, 30),
+            (40, 120, 40, 255),
+            "center horizon row must not retain stale sentinel pixel at x={x}"
+        );
+    }
+
+    // 3. Mutated NaN camera fields map to NonFiniteInput in camera_forward_vec3 / camera_world_ray.
+    let mut bad_dir = cam_open;
+    bad_dir.dir_x = f64::NAN;
+    assert_eq!(
+        bad_dir.camera_forward_vec3(),
+        Err(RaycastError::NonFiniteInput)
+    );
+    let mut bad_pos = cam_open;
+    bad_pos.pos_y = f64::INFINITY;
+    assert_eq!(
+        bad_pos.camera_world_ray(),
+        Err(RaycastError::NonFiniteInput)
+    );
+}

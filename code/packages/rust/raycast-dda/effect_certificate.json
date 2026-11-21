@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/raycast-dda",
-  "source_digest": "0c3b3912bb16dfcc955e8f00a979e9b9961ed643bf370cc64684ee4541ecbd0d",
+  "source_digest": "8acc0e10257d59fc0031d1e04641925e21a69ca6dff205615293f98b5ccf037d",
   "manifest_digest": "abd8d597c4a45b5d8afcc06473c60618ab8d54ffa324112b1828ce8e3b70741b",
   "declared_effects": [],
   "entry_points": [

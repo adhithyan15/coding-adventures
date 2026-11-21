@@ -469,17 +469,23 @@ impl Camera2D {
 
     /// Convert the 2D forward direction into a normalized `math3d::Vec3` on the XZ ground plane `(dir_x, 0, dir_y)`.
     pub fn camera_forward_vec3(&self) -> Result<Vec3, RaycastError> {
-        let v = Vec3::try_vec3(self.dir_x, 0.0, self.dir_y)
-            .map_err(|_| RaycastError::ValueOutOfBounds)?;
+        let v = Vec3::try_vec3(self.dir_x, 0.0, self.dir_y).map_err(map_math3d_coord_err)?;
         v.normalize().map_err(|_| RaycastError::DegenerateCamera)
     }
 
     /// Build a `math3d::Ray3` on the XZ plane (`y = 0`) from the camera position and forward direction.
     pub fn camera_world_ray(&self) -> Result<Ray3, RaycastError> {
-        let origin = Vec3::try_vec3(self.pos_x, 0.0, self.pos_y)
-            .map_err(|_| RaycastError::ValueOutOfBounds)?;
+        let origin = Vec3::try_vec3(self.pos_x, 0.0, self.pos_y).map_err(map_math3d_coord_err)?;
         let dir = self.camera_forward_vec3()?;
         Ray3::ray3_from_origin_dir(origin, dir).map_err(|_| RaycastError::DegenerateCamera)
+    }
+}
+
+#[inline]
+fn map_math3d_coord_err(err: math3d::Math3dError) -> RaycastError {
+    match err {
+        math3d::Math3dError::NonFiniteInput => RaycastError::NonFiniteInput,
+        _ => RaycastError::ValueOutOfBounds,
     }
 }
 
@@ -1096,14 +1102,15 @@ fn cast_textured_plane_half(
 
     let (chunks, _) = pixels.as_chunks_mut::<4>();
     for y in y_start..y_end {
-        let p = if is_floor {
+        let raw_p = if is_floor {
             (y as f64 + 0.5) - half_h
         } else {
             half_h - (y as f64 + 0.5)
         };
-        if p.abs() < EPSILON {
-            continue;
-        }
+        // On odd framebuffer heights, `y = height / 2` sits directly on `half_h`
+        // (`raw_p == 0.0`). Clamping `p >= 0.5` rasterizes the horizon row
+        // deterministically instead of leaving stale pixels from prior frames.
+        let p = raw_p.max(0.5);
         let row_distance = pos_z / p;
         let step_x = row_distance * ray_span_x / w_f;
         let step_y = row_distance * ray_span_y / w_f;
@@ -1258,8 +1265,8 @@ fn render_billboard_sprites(
 
     let w_f = width as f64;
     let h_f = height as f64;
-    let w_isize = width as isize;
-    let h_isize = height as isize;
+    let w_i64 = i64::try_from(width).map_err(|_| RaycastError::ArithmeticOverflow)?;
+    let h_i64 = i64::try_from(height).map_err(|_| RaycastError::ArithmeticOverflow)?;
     let (chunks, _) = pixels.as_chunks_mut::<4>();
 
     let mut sprites_projected = 0usize;
@@ -1284,42 +1291,49 @@ fn render_billboard_sprites(
         }
         sprites_projected += 1;
 
-        let sprite_screen_x = ((w_f * 0.5) * (1.0 + transform_x / transform_y)).round() as isize;
-        let v_move_screen = ((sp.z_offset / transform_y) * h_f)
-            .clamp(-h_f * 16.0, h_f * 16.0)
-            .round() as isize;
-
-        let sprite_height = ((h_f / transform_y) * sp.scale_v)
-            .abs()
-            .min(h_f * 1024.0)
-            .round() as isize;
-        let sprite_width = ((h_f / transform_y) * sp.scale_u)
-            .abs()
-            .min(w_f * 1024.0)
-            .round() as isize;
-
+        let sprite_height_f = ((h_f / transform_y) * sp.scale_v).abs().min(h_f * 1024.0);
+        let sprite_width_f = ((h_f / transform_y) * sp.scale_u).abs().min(w_f * 1024.0);
+        let sprite_height = sprite_height_f.round() as i64;
+        let sprite_width = sprite_width_f.round() as i64;
         if sprite_height <= 0 || sprite_width <= 0 {
             continue;
         }
 
-        let raw_start_y = -sprite_height / 2 + h_isize / 2 + v_move_screen;
-        let raw_end_y = sprite_height / 2 + h_isize / 2 + v_move_screen;
+        // Reject far-offscreen sprites in `f64` before casting to integer so extreme
+        // `transform_x / transform_y` ratios cannot saturate/overflow `raw_start_x`.
+        let screen_x_f = (w_f * 0.5) * (1.0 + transform_x / transform_y);
+        let half_w_f = sprite_width_f * 0.5;
+        if !screen_x_f.is_finite() || screen_x_f + half_w_f < 0.0 || screen_x_f - half_w_f >= w_f {
+            continue;
+        }
+
+        let sprite_screen_x = screen_x_f.round() as i64;
+        let v_move_screen = ((sp.z_offset / transform_y) * h_f)
+            .clamp(-h_f * 16.0, h_f * 16.0)
+            .round() as i64;
+
+        let half_h_sprite = sprite_height / 2;
+        let half_w_sprite = sprite_width / 2;
+        let center_y = (h_i64 / 2).saturating_add(v_move_screen);
+
+        let raw_start_y = center_y.saturating_sub(half_h_sprite);
+        let raw_end_y = center_y.saturating_add(half_h_sprite);
         let draw_start_y = raw_start_y.max(0);
-        let draw_end_y = raw_end_y.min(h_isize - 1);
+        let draw_end_y = raw_end_y.min(h_i64 - 1);
         if draw_start_y > draw_end_y {
             continue;
         }
 
-        let raw_start_x = -sprite_width / 2 + sprite_screen_x;
-        let raw_end_x = sprite_width / 2 + sprite_screen_x;
+        let raw_start_x = sprite_screen_x.saturating_sub(half_w_sprite);
+        let raw_end_x = sprite_screen_x.saturating_add(half_w_sprite);
         let draw_start_x = raw_start_x.max(0);
-        let draw_end_x = raw_end_x.min(w_isize - 1);
+        let draw_end_x = raw_end_x.min(w_i64 - 1);
         if draw_start_x > draw_end_x {
             continue;
         }
 
-        let tex_w = tex.width as usize;
-        let tex_h = tex.height as usize;
+        let tex_w_i64 = i64::from(tex.width);
+        let tex_h_i64 = i64::from(tex.height);
 
         for stripe in draw_start_x..=draw_end_x {
             let sx = stripe as usize;
@@ -1330,14 +1344,14 @@ fn render_billboard_sprites(
                 continue;
             }
 
-            let tex_x = (((stripe - (-sprite_width / 2 + sprite_screen_x)) * (tex_w as isize))
+            let tex_x = ((stripe.saturating_sub(raw_start_x)).saturating_mul(tex_w_i64)
                 / sprite_width)
-                .clamp(0, tex_w as isize - 1) as usize;
+                .clamp(0, tex_w_i64 - 1) as usize;
 
             for y in draw_start_y..=draw_end_y {
-                let d = y - v_move_screen - h_isize / 2 + sprite_height / 2;
+                let d = y.saturating_sub(raw_start_y);
                 let tex_y =
-                    ((d * (tex_h as isize)) / sprite_height).clamp(0, tex_h as isize - 1) as usize;
+                    (d.saturating_mul(tex_h_i64) / sprite_height).clamp(0, tex_h_i64 - 1) as usize;
                 let src = tex.texture_sample(tex_x, tex_y);
                 if src[3] == 0 {
                     continue;
