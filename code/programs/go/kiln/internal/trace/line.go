@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"io"
+	"math"
 	"strconv"
 	"strings"
 
@@ -202,10 +203,14 @@ type result struct {
 // pid is the pid a spawn returned, in the namespace the trace's line prefixes
 // use: the translated host pid when there is one, else the printed value.
 func (r result) pid() int {
+	v := r.value
 	if r.hasHost {
-		return int(r.host)
+		v = r.host
 	}
-	return int(r.value)
+	if v < math.MinInt || v > math.MaxInt {
+		return 0
+	}
+	return int(v)
 }
 
 // parsePidnsNote reads ` /* N in strace's PID NS */` at the start of s (leading
@@ -727,7 +732,17 @@ func parseResult(s string) (result, string) {
 		if err != nil {
 			return r, reasonResult
 		}
-		r.value, r.hasVal = int64(v), true
+		if v > math.MaxInt64 {
+			if v == math.MaxUint64 {
+				// 0xffffffffffffffff is strace's 64-bit hex spelling of -1 (e.g. failed syscall).
+				// It is still rejected below unless accompanied by an errno, and minusOne stays false.
+				r.value, r.hasVal = -1, true
+			} else {
+				return r, reasonResult
+			}
+		} else {
+			r.value, r.hasVal = int64(v), true
+		}
 		s = s[k:]
 	default:
 		k := 0
