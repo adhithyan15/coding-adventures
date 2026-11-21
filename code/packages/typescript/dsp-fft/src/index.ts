@@ -5,7 +5,7 @@
  */
 
 export { bluesteinScalar, buildChirp } from "./bluestein.js";
-export { MAX_FFT_LEN, MAX_SAMPLES } from "./constants.js";
+export { MAX_FFT_LEN, MAX_KAISER_BETA, MAX_SAMPLES } from "./constants.js";
 export { Direction } from "./direction.js";
 export { FftError, InvalidInputError, NotPowerOfTwoError } from "./errors.js";
 export { fft, ifft, irfft, rfft, type FftOptions } from "./fft.js";

@@ -1,6 +1,11 @@
 import { MAX_DCT_LEN, MAX_SAMPLES } from "./constants.js";
 import { dct, idct } from "./dct.js";
-import { EmptyInputError, InvalidInputError } from "./errors.js";
+import {
+  EmptyInputError,
+  InvalidInputError,
+  readFiniteNumber,
+  validateArrayLikeLength,
+} from "./errors.js";
 import { DctNorm, DctType } from "./types.js";
 
 function validate2d(
@@ -8,13 +13,14 @@ function validate2d(
   height: number,
   width: number
 ): void {
-  if (image.length === 0) {
+  const imgLen = validateArrayLikeLength(image, "image");
+  if (imgLen === 0) {
     throw new EmptyInputError("input image must not be empty");
   }
-  if (!Number.isFinite(height) || !Number.isInteger(height) || height < 1) {
+  if (typeof height !== "number" || !Number.isSafeInteger(height) || height < 1) {
     throw new InvalidInputError("height must be a positive integer");
   }
-  if (!Number.isFinite(width) || !Number.isInteger(width) || width < 1) {
+  if (typeof width !== "number" || !Number.isSafeInteger(width) || width < 1) {
     throw new InvalidInputError("width must be a positive integer");
   }
   if (height > MAX_DCT_LEN) {
@@ -28,9 +34,9 @@ function validate2d(
     );
   }
   const total = height * width;
-  if (image.length !== total) {
+  if (imgLen !== total) {
     throw new InvalidInputError(
-      `image length ${image.length} does not match height * width (${height} * ${width} = ${total})`
+      `image length ${imgLen} does not match height * width (${height} * ${width} = ${total})`
     );
   }
   if (total > MAX_SAMPLES) {
@@ -39,10 +45,7 @@ function validate2d(
     );
   }
   for (let i = 0; i < total; i++) {
-    const val = Number(image[i]);
-    if (!Number.isFinite(val)) {
-      throw new InvalidInputError("image contains non-finite float (NaN or Inf)");
-    }
+    readFiniteNumber(image, i);
   }
 }
 
