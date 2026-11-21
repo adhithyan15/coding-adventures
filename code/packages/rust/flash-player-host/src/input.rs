@@ -5,7 +5,7 @@
 use flash_display_list::{DisplayListEvent, Stage};
 use window_core::{ElementState, Key, ModifiersState, NamedKey, PointerButton, WindowEvent};
 
-use crate::error::PlayerHostError;
+use crate::error::{PlayerHostError, MAX_STAGE_DIM_PX};
 
 /// Maximum simultaneously tracked pressed character keys (CWE-400 guard).
 pub const MAX_TRACKED_KEYS: usize = 32;
@@ -141,7 +141,7 @@ pub fn dispatch_window_event_to_stage(
 
     match event {
         WindowEvent::PointerMoved { x, y, .. } => {
-            if !x.is_finite() || !y.is_finite() {
+            if !x.is_finite() || !y.is_finite() || x.abs() > 1.0e9 || y.abs() > 1.0e9 {
                 return Err(PlayerHostError::NonFiniteCoordinate);
             }
             display_events = stage.stage_handle_mouse_move(*x, *y);
@@ -174,12 +174,16 @@ pub fn dispatch_window_event_to_stage(
             }
         }
         WindowEvent::Resized { logical_size, .. } => {
-            if !logical_size.width.is_finite() || !logical_size.height.is_finite() {
-                return Err(PlayerHostError::NonFiniteCoordinate);
+            if !logical_size.width.is_finite()
+                || !logical_size.height.is_finite()
+                || logical_size.width < 1.0
+                || logical_size.width > MAX_STAGE_DIM_PX as f64
+                || logical_size.height < 1.0
+                || logical_size.height > MAX_STAGE_DIM_PX as f64
+            {
+                return Err(PlayerHostError::InvalidStageDimension);
             }
-            if logical_size.width >= 1.0 && logical_size.height >= 1.0 {
-                stage.stage_set_dimensions(logical_size.width, logical_size.height);
-            }
+            stage.stage_set_dimensions(logical_size.width, logical_size.height);
             redraw_requested = true;
         }
         WindowEvent::RedrawRequested { .. } => {

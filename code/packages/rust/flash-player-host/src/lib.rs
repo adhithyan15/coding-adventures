@@ -32,6 +32,7 @@ pub mod security;
 pub use capabilities::PureCapabilities;
 pub use digest::{
     compute_pcm_digest_hex, compute_scene_digest, compute_scene_digest_hex, SceneDigest,
+    MAX_SCENE_DIGEST_DEPTH,
 };
 pub use error::{
     PlayerHostError, MAX_AUDIT_EVENTS, MAX_FRAME_SCRIPTS, MAX_HEADLESS_FRAMES, MAX_HOST_CHARACTERS,
@@ -47,7 +48,7 @@ pub use input::{
 };
 pub use player::{
     FlashHostSession, FlashPlayer, FlashPlayerConfig, NavigationRequest, PlayerTickSummary,
-    PlayerZeroAllocTick,
+    PlayerZeroAllocTick, MAX_CONTROL_TAGS,
 };
 pub use security::{
     evaluate_fscommand, is_fscommand_exec, sanitize_navigation_uri, trim_whitespace_and_control,

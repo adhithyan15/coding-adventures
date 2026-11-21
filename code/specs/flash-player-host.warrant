@@ -5,7 +5,7 @@
 -- Formal verification contract for bounded host configuration and safety gates.
 
 warrant flash_player_host v1
-  error PlayerHostError = SwfContainer | Shape | DisplayList | Audio | Lifter | ActionScript | Clock | Window | PaintRuntime | Blend | InvalidStepBudget | InvalidFrameRate | InvalidStageDimension | InvalidUri | BlockedUriScheme | BlockedFsCommand | CharacterLimitExceeded | FrameScriptLimitExceeded | ScriptTimeout | MalformedTag | NoMovieLoaded
+  error PlayerHostError = SwfContainer | Shape | DisplayList | Audio | Lifter | ActionScript | Clock | Window | PaintRuntime | Blend | InvalidStepBudget | InvalidFrameRate | InvalidStageDimension | InvalidUri | BlockedUriScheme | BlockedFsCommand | CharacterLimitExceeded | FrameScriptLimitExceeded | ScriptTimeout | MalformedTag | DigestMismatch | HeadlessFrameLimitExceeded | NonFiniteCoordinate
 
   model Unit = Bool
 

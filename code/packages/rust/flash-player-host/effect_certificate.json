@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/flash-player-host",
-  "source_digest": "6bad7bad460de21c4e8746b4036f72b9cce166b652f24bbc12ed468f1f98561a",
+  "source_digest": "0548be9c68cf59b1cc2afe6fb587c87d86c533567d0df6ff2fd484c065709844",
   "manifest_digest": "716d6f1c57523d748df5fdb1850f8fbd016fbe85ebd2b4caff187eea52bca4c6",
   "declared_effects": [],
   "entry_points": [

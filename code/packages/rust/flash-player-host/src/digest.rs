@@ -17,6 +17,9 @@ use paint_instructions::{
     StrokeJoin, TextAlign,
 };
 
+/// Maximum recursion depth when hashing nested `PaintGroup` / `PaintLayer` / `PaintClip` trees (CWE-674).
+pub const MAX_SCENE_DIGEST_DEPTH: usize = 128;
+
 /// 32-byte canonical SHA-256 scene digest wrapper (avoids raw `[u8; 32]` in `pub fn` signatures).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct SceneDigest {
@@ -298,7 +301,12 @@ fn hash_transform(h: &mut Sha256Hasher, t: &Option<[f64; 6]>) {
     }
 }
 
-fn hash_instruction(h: &mut Sha256Hasher, instr: &PaintInstruction) {
+fn hash_instruction(h: &mut Sha256Hasher, instr: &PaintInstruction, depth: usize) {
+    if depth >= MAX_SCENE_DIGEST_DEPTH {
+        hash_u8(h, 0xFE);
+        hash_u64(h, depth as u64);
+        return;
+    }
     match instr {
         PaintInstruction::Rect(PaintRect {
             base,
@@ -434,7 +442,7 @@ fn hash_instruction(h: &mut Sha256Hasher, instr: &PaintInstruction) {
             hash_opt_f64(h, *opacity);
             hash_u64(h, children.len() as u64);
             for child in children {
-                hash_instruction(h, child);
+                hash_instruction(h, child, depth + 1);
             }
         }
         PaintInstruction::Layer(PaintLayer {
@@ -462,7 +470,7 @@ fn hash_instruction(h: &mut Sha256Hasher, instr: &PaintInstruction) {
             hash_transform(h, transform);
             hash_u64(h, children.len() as u64);
             for child in children {
-                hash_instruction(h, child);
+                hash_instruction(h, child, depth + 1);
             }
         }
         PaintInstruction::Line(PaintLine {
@@ -516,7 +524,7 @@ fn hash_instruction(h: &mut Sha256Hasher, instr: &PaintInstruction) {
             }
             hash_u64(h, children.len() as u64);
             for child in children {
-                hash_instruction(h, child);
+                hash_instruction(h, child, depth + 1);
             }
         }
         PaintInstruction::Gradient(PaintGradient { base, kind, stops }) => {
@@ -587,7 +595,7 @@ pub fn compute_scene_digest(scene: &PaintScene) -> SceneDigest {
     hash_metadata(&mut hasher, &scene.metadata);
     hash_u64(&mut hasher, scene.instructions.len() as u64);
     for instr in &scene.instructions {
-        hash_instruction(&mut hasher, instr);
+        hash_instruction(&mut hasher, instr, 0);
     }
     SceneDigest {
         bytes: hasher.digest(),

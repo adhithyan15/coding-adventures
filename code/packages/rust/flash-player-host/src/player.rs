@@ -15,7 +15,7 @@
 use std::collections::BTreeMap;
 
 use actionscript_compiler::{compile_actionscript, AsDialect};
-use avm_bytecode_lifter::{lift_avm1, lift_avm2, AvmRunner, LifterError};
+use avm_bytecode_lifter::{lift_avm1, lift_avm2, AvmEnvironment, AvmRunner, LifterError};
 use flash_audio_bridge::{
     parse_define_sound, parse_sound_stream_block, parse_sound_stream_head, parse_swf_audio_tag,
     render_flash_audio_into, FlashAudioState, SoundInfo, StartSoundTag, SwfAudioTag,
@@ -37,6 +37,8 @@ use swf_container::{
     DEFAULT_MAX_UNCOMPRESSED_BYTES,
 };
 use swf_shape_to_paint::{parse_define_shape, ParsedShape};
+use vm_core::value::Value;
+use vm_core::VMCore;
 use window_core::{LogicalSize, WindowBackend, WindowBuilder, WindowEvent};
 
 use crate::digest::compute_scene_digest_hex;
@@ -52,6 +54,12 @@ use crate::security::{
 
 /// Maximum navigation requests retained in the sandboxed diagnostic queue (CWE-400).
 const MAX_NAVIGATION_LOG: usize = 256;
+
+/// Maximum cumulative control/display/audio tags permitted per SWF movie or sprite (CWE-400).
+pub const MAX_CONTROL_TAGS: usize = 65_536;
+
+/// Maximum length in bytes of a `DoABC` name header before the NUL terminator (CWE-400).
+const MAX_ABC_NAME_BYTES: usize = 1_024;
 
 /// Owned audio event queued on a timeline frame.
 #[derive(Debug, Clone)]
@@ -105,7 +113,7 @@ impl FlashPlayerConfig {
 
     /// Validates all configuration bounds prior to loading untrusted SWF payloads.
     pub fn cfg_validate(&self) -> Result<(), PlayerHostError> {
-        if self.max_vm_steps_per_frame > MAX_HOST_VM_STEPS {
+        if self.max_vm_steps_per_frame == 0 || self.max_vm_steps_per_frame > MAX_HOST_VM_STEPS {
             return Err(PlayerHostError::InvalidStepBudget);
         }
         if self.max_frame_steps_per_tick == 0
@@ -235,6 +243,7 @@ impl FlashPlayer {
         let mut current_frame = TimelineFrameData::default();
         let mut active_stream_format: Option<SwfSoundFormat> = None;
         let mut total_scripts: usize = 0;
+        let mut total_control_tags: usize = 0;
 
         for tag_res in movie.movie_tags() {
             let tag = tag_res?;
@@ -294,15 +303,22 @@ impl FlashPlayer {
                     audio.configure_sound_stream(head)?;
                 }
                 SwfTagKind::StartSound => {
+                    if total_control_tags >= MAX_CONTROL_TAGS {
+                        return Err(PlayerHostError::MalformedTag("control tag budget exceeded"));
+                    }
                     if let Some(SwfAudioTag::StartSound(ss)) =
                         parse_swf_audio_tag(&tag, active_stream_format)?
                     {
                         current_frame
                             .audio_events
                             .push(FrameAudioEvent::StartSound(ss));
+                        total_control_tags += 1;
                     }
                 }
                 SwfTagKind::Unknown(flash_audio_bridge::SWF_TAG_START_SOUND2) => {
+                    if total_control_tags >= MAX_CONTROL_TAGS {
+                        return Err(PlayerHostError::MalformedTag("control tag budget exceeded"));
+                    }
                     if let Some(SwfAudioTag::StartSound2(ss2)) =
                         parse_swf_audio_tag(&tag, active_stream_format)?
                     {
@@ -312,22 +328,31 @@ impl FlashPlayer {
                                 class_name: ss2.class_name.to_owned(),
                                 info: ss2.info,
                             });
+                        total_control_tags += 1;
                     }
                 }
                 SwfTagKind::SoundStreamBlock => {
+                    if total_control_tags >= MAX_CONTROL_TAGS {
+                        return Err(PlayerHostError::MalformedTag("control tag budget exceeded"));
+                    }
                     let fmt = active_stream_format.ok_or(PlayerHostError::Audio(
                         flash_audio_bridge::AudioBridgeError::StreamFormatMismatch,
                     ))?;
                     let _validated = parse_sound_stream_block(tag.data, fmt)?;
                     current_frame.stream_blocks.push(tag.data.to_vec());
+                    total_control_tags += 1;
                 }
                 SwfTagKind::PlaceObject
                 | SwfTagKind::PlaceObject2
                 | SwfTagKind::PlaceObject3
                 | SwfTagKind::RemoveObject
                 | SwfTagKind::RemoveObject2 => {
+                    if total_control_tags >= MAX_CONTROL_TAGS {
+                        return Err(PlayerHostError::MalformedTag("control tag budget exceeded"));
+                    }
                     let dl_tag = parse_display_list_tag(tag.header.kind.tag_code(), tag.data)?;
                     current_frame.display_ops.push(dl_tag);
+                    total_control_tags += 1;
                 }
                 SwfTagKind::DoAction => {
                     if total_scripts >= MAX_FRAME_SCRIPTS {
@@ -569,7 +594,11 @@ impl FlashPlayer {
         let frame = self.stage.root.clip_current_frame();
         let trimmed = trim_whitespace_and_control(raw_uri);
 
-        if trimmed.len() >= 10 && trimmed[..10].eq_ignore_ascii_case("fscommand:") {
+        if trimmed
+            .as_bytes()
+            .get(..10)
+            .is_some_and(|p| p.eq_ignore_ascii_case(b"fscommand:"))
+        {
             let cmd = &trimmed[10..];
             if matches!(
                 self.player_dispatch_fscommand(cmd, target),
@@ -780,8 +809,10 @@ impl FlashPlayer {
             }
             self.sync_runner_timeline_actions();
         } else {
-            let mut vm = vm_core::VMCore::new();
+            let mut vm = VMCore::new();
             vm.max_instructions = Some(self.config.max_vm_steps_per_frame as u64);
+            let env = self.avm_runner.runner_environment().clone();
+            register_avm_builtins_for_env(&mut vm, env);
             let mut mod_clone = module.clone();
             let entry = mod_clone
                 .entry_point
@@ -797,8 +828,19 @@ impl FlashPlayer {
                     );
                     return Err(PlayerHostError::ScriptTimeout);
                 }
+                if msg.contains("prototype pollution") {
+                    self.audit_log.log_record(
+                        frame,
+                        SecurityAuditKind::PrototypePollutionBlocked,
+                        &msg,
+                    );
+                    return Err(PlayerHostError::Lifter(
+                        LifterError::PrototypePollutionBlocked(msg),
+                    ));
+                }
                 return Err(PlayerHostError::Lifter(LifterError::ExecutionError(msg)));
             }
+            self.sync_runner_timeline_actions();
         }
 
         Ok(())
@@ -899,9 +941,15 @@ fn parse_define_sprite_clip(
         ));
     }
     let sprite_id = u16::from_le_bytes([data[0], data[1]]);
+    if sprite_id == 0 {
+        return Err(PlayerHostError::MalformedTag(
+            "DefineSprite reserved sprite_id 0",
+        ));
+    }
     let frame_count = u16::from_le_bytes([data[2], data[3]]);
     let mut clip = MovieClip::new((frame_count as u32).max(1));
     let empty_sprites = BTreeMap::new();
+    let mut sprite_control_tags: usize = 0;
 
     for nested_res in SwfTagIter::from_payload(&data[4..]) {
         let nested = nested_res?;
@@ -912,8 +960,14 @@ fn parse_define_sprite_clip(
             | SwfTagKind::PlaceObject3
             | SwfTagKind::RemoveObject
             | SwfTagKind::RemoveObject2 => {
+                if sprite_control_tags >= MAX_CONTROL_TAGS {
+                    return Err(PlayerHostError::MalformedTag(
+                        "sprite control tag budget exceeded",
+                    ));
+                }
                 let dl_tag = parse_display_list_tag(nested.header.kind.tag_code(), nested.data)?;
                 apply_display_tag_to_clip(&mut clip, &dl_tag, shapes, &empty_sprites)?;
+                sprite_control_tags += 1;
             }
             _ => {}
         }
@@ -933,11 +987,12 @@ fn extract_abc_payload(data: &[u8]) -> Result<&[u8], PlayerHostError> {
     }
     // Standard SWF9+ DoABC2 header: 4-byte flags + null-terminated UTF-8 name + ABC bytes.
     let rest = &data[4..];
-    let nul_pos = rest
+    let scan_window = &rest[..rest.len().min(MAX_ABC_NAME_BYTES)];
+    let nul_pos = scan_window
         .iter()
         .position(|&b| b == 0)
         .ok_or(PlayerHostError::MalformedTag(
-            "DoABC missing null-terminated name",
+            "DoABC missing or oversized null-terminated name",
         ))?;
     let abc = &rest[nul_pos + 1..];
     if abc.len() < 4 {
@@ -946,6 +1001,304 @@ fn extract_abc_payload(data: &[u8]) -> Result<&[u8], PlayerHostError> {
         ));
     }
     Ok(abc)
+}
+
+fn format_vm_avm_value(v: &Value) -> String {
+    match v {
+        Value::Str(bytes) => String::from_utf8_lossy(bytes).to_string(),
+        Value::Null => "null".to_string(),
+        Value::Int(n) => n.to_string(),
+        Value::Float(f) => {
+            if f.fract() == 0.0 && *f >= (i64::MIN as f64) && *f <= (i64::MAX as f64) {
+                format!("{}", *f as i64)
+            } else {
+                f.to_string()
+            }
+        }
+        Value::Bool(b) => b.to_string(),
+        other => other.to_string(),
+    }
+}
+
+/// Registers Flash AVM builtins against `env` on a custom-budget `VMCore`.
+fn register_avm_builtins_for_env(vm: &mut VMCore, env: AvmEnvironment) {
+    let builtins = vm.builtins_mut();
+
+    let env_tr = env.clone();
+    builtins.register("flash_trace", move |args| {
+        let s = args.first().map_or_else(String::new, format_vm_avm_value);
+        env_tr.env_append_output(&s);
+        Ok(Value::Null)
+    });
+
+    let env_tr2 = env.clone();
+    builtins.register("trace", move |args| {
+        let s = args.first().map_or_else(String::new, format_vm_avm_value);
+        env_tr2.env_append_output(&s);
+        Ok(Value::Null)
+    });
+
+    builtins.register("flash_null", |_| Ok(Value::Null));
+    builtins.register("flash_undefined", |_| Ok(Value::Null));
+
+    builtins.register("flash_add2", |args| {
+        if args.len() < 2 {
+            return Ok(Value::Int(0));
+        }
+        let a = &args[0];
+        let b = &args[1];
+        if let Value::Str(bytes_a) = a {
+            let sa = String::from_utf8_lossy(bytes_a);
+            let sb = format_vm_avm_value(b);
+            return Ok(Value::str(format!("{sa}{sb}")));
+        }
+        if let Value::Str(bytes_b) = b {
+            let sa = format_vm_avm_value(a);
+            let sb = String::from_utf8_lossy(bytes_b);
+            return Ok(Value::str(format!("{sa}{sb}")));
+        }
+        match (a, b) {
+            (Value::Float(fa), Value::Float(fb)) => Ok(Value::Float(fa + fb)),
+            (Value::Float(fa), Value::Int(ib)) => Ok(Value::Float(fa + (*ib as f64))),
+            (Value::Int(ia), Value::Float(fb)) => Ok(Value::Float((*ia as f64) + fb)),
+            (Value::Int(ia), Value::Int(ib)) => Ok(Value::Int(ia.wrapping_add(*ib))),
+            _ => Ok(Value::Int(0)),
+        }
+    });
+
+    builtins.register("flash_equals2", |args| {
+        if args.len() < 2 {
+            return Ok(Value::Bool(false));
+        }
+        let eq = match (&args[0], &args[1]) {
+            (Value::Int(a), Value::Int(b)) => a == b,
+            (Value::Float(a), Value::Float(b)) => a == b,
+            (Value::Int(a), Value::Float(b)) => (*a as f64) == *b,
+            (Value::Float(a), Value::Int(b)) => *a == (*b as f64),
+            (Value::Str(a), Value::Str(b)) => a == b,
+            (Value::Bool(a), Value::Bool(b)) => a == b,
+            (Value::Null, Value::Null) => true,
+            _ => false,
+        };
+        Ok(Value::Bool(eq))
+    });
+
+    builtins.register("flash_less2", |args| {
+        if args.len() < 2 {
+            return Ok(Value::Bool(false));
+        }
+        let lt = match (&args[0], &args[1]) {
+            (Value::Int(a), Value::Int(b)) => a < b,
+            (Value::Float(a), Value::Float(b)) => a < b,
+            (Value::Int(a), Value::Float(b)) => (*a as f64) < *b,
+            (Value::Float(a), Value::Int(b)) => *a < (*b as f64),
+            (Value::Str(a), Value::Str(b)) => a < b,
+            _ => false,
+        };
+        Ok(Value::Bool(lt))
+    });
+
+    let env_gvar = env.clone();
+    builtins.register("flash_get_variable", move |args| {
+        let name = args.first().map_or_else(String::new, format_vm_avm_value);
+        Ok(env_gvar.env_get_variable(&name))
+    });
+
+    let env_svar = env.clone();
+    builtins.register("flash_set_variable", move |args| {
+        if args.len() >= 2 {
+            let name = format_vm_avm_value(&args[0]);
+            let val = args[1].clone();
+            env_svar
+                .env_set_variable(&name, val)
+                .map_err(|e| vm_core::VMError::Custom(e.to_string()))?;
+        }
+        Ok(Value::Null)
+    });
+
+    let env_gmem = env.clone();
+    builtins.register("flash_get_member", move |args| {
+        if args.len() >= 2 {
+            let obj_id = args[0].as_i64().unwrap_or(0) as usize;
+            let prop = format_vm_avm_value(&args[1]);
+            Ok(env_gmem.env_get_member(obj_id, &prop))
+        } else {
+            Ok(Value::Null)
+        }
+    });
+
+    let env_smem = env.clone();
+    builtins.register("flash_set_member", move |args| {
+        if args.len() >= 3 {
+            let obj_id = args[0].as_i64().unwrap_or(0) as usize;
+            let prop = format_vm_avm_value(&args[1]);
+            let val = args[2].clone();
+            env_smem
+                .env_set_member(obj_id, &prop, val)
+                .map_err(|e| vm_core::VMError::Custom(e.to_string()))?;
+        }
+        Ok(Value::Null)
+    });
+
+    let env_nobj = env.clone();
+    builtins.register("flash_new_object", move |args| {
+        let ctor = args
+            .first()
+            .map_or_else(|| "Object".to_string(), format_vm_avm_value);
+        let id = env_nobj.env_new_object(&ctor);
+        Ok(Value::Int(id as i64))
+    });
+
+    let env_stop = env.clone();
+    builtins.register("flash_stop", move |_| {
+        env_stop.env_log_action("stop");
+        Ok(Value::Null)
+    });
+
+    let env_play = env.clone();
+    builtins.register("flash_play", move |_| {
+        env_play.env_log_action("play");
+        Ok(Value::Null)
+    });
+
+    let env_goto = env.clone();
+    builtins.register("flash_goto_frame", move |args| {
+        let f = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+        env_goto.env_log_action(&format!("gotoFrame({f})"));
+        Ok(Value::Null)
+    });
+
+    let env_cprop = env.clone();
+    builtins.register("flash_call_property", move |args| {
+        let method = args.first().map_or_else(String::new, format_vm_avm_value);
+        env_cprop.env_log_action(&format!("callProperty({method})"));
+        Ok(Value::Null)
+    });
+
+    let env_cpvoid = env.clone();
+    builtins.register("flash_call_propvoid", move |args| {
+        let method = args.first().map_or_else(String::new, format_vm_avm_value);
+        env_cpvoid.env_log_action(&format!("callPropVoid({method})"));
+        Ok(Value::Null)
+    });
+
+    builtins.register("flash_find_property", |args| {
+        let prop = args.first().map_or_else(String::new, format_vm_avm_value);
+        Ok(Value::str(prop))
+    });
+
+    builtins.register("flash_call_function", |args| {
+        let fname = args.first().map_or_else(String::new, format_vm_avm_value);
+        Ok(Value::str(fname))
+    });
+
+    builtins.register("flash_call_method", |args| {
+        let mname = args.get(1).map_or_else(String::new, format_vm_avm_value);
+        Ok(Value::str(mname))
+    });
+
+    builtins.register("flash_modulo", |args| {
+        if args.len() < 2 {
+            return Ok(Value::Int(0));
+        }
+        match (&args[0], &args[1]) {
+            (Value::Int(a), Value::Int(b)) => {
+                if *b == 0 {
+                    Ok(Value::Float(f64::NAN))
+                } else {
+                    Ok(Value::Int(a.wrapping_rem(*b)))
+                }
+            }
+            (Value::Float(a), Value::Float(b)) => Ok(Value::Float(a % b)),
+            (Value::Int(a), Value::Float(b)) => Ok(Value::Float((*a as f64) % b)),
+            (Value::Float(a), Value::Int(b)) => Ok(Value::Float(a % (*b as f64))),
+            _ => Ok(Value::Int(0)),
+        }
+    });
+
+    builtins.register("flash_negate", |args| match args.first() {
+        Some(Value::Int(n)) => Ok(Value::Int(n.wrapping_neg())),
+        Some(Value::Float(f)) => Ok(Value::Float(-*f)),
+        _ => Ok(Value::Int(0)),
+    });
+
+    builtins.register("flash_increment", |args| match args.first() {
+        Some(Value::Int(n)) => Ok(Value::Int(n.wrapping_add(1))),
+        Some(Value::Float(f)) => Ok(Value::Float(f + 1.0)),
+        _ => Ok(Value::Int(1)),
+    });
+
+    builtins.register("flash_decrement", |args| match args.first() {
+        Some(Value::Int(n)) => Ok(Value::Int(n.wrapping_sub(1))),
+        Some(Value::Float(f)) => Ok(Value::Float(f - 1.0)),
+        _ => Ok(Value::Int(-1)),
+    });
+
+    builtins.register("flash_not", |args| {
+        let is_truthy = match args.first() {
+            Some(Value::Bool(b)) => *b,
+            Some(Value::Int(n)) => *n != 0,
+            Some(Value::Float(f)) => *f != 0.0 && !f.is_nan(),
+            Some(Value::Str(s)) => !s.is_empty(),
+            Some(Value::Null) | None => false,
+            _ => true,
+        };
+        Ok(Value::Bool(!is_truthy))
+    });
+
+    builtins.register("flash_le2", |args| {
+        if args.len() < 2 {
+            return Ok(Value::Bool(false));
+        }
+        let le = match (&args[0], &args[1]) {
+            (Value::Int(a), Value::Int(b)) => a <= b,
+            (Value::Float(a), Value::Float(b)) => a <= b,
+            (Value::Int(a), Value::Float(b)) => (*a as f64) <= *b,
+            (Value::Float(a), Value::Int(b)) => *a <= (*b as f64),
+            (Value::Str(a), Value::Str(b)) => a <= b,
+            _ => false,
+        };
+        Ok(Value::Bool(le))
+    });
+
+    builtins.register("flash_gt2", |args| {
+        if args.len() < 2 {
+            return Ok(Value::Bool(false));
+        }
+        let gt = match (&args[0], &args[1]) {
+            (Value::Int(a), Value::Int(b)) => a > b,
+            (Value::Float(a), Value::Float(b)) => a > b,
+            (Value::Int(a), Value::Float(b)) => (*a as f64) > *b,
+            (Value::Float(a), Value::Int(b)) => *a > (*b as f64),
+            (Value::Str(a), Value::Str(b)) => a > b,
+            _ => false,
+        };
+        Ok(Value::Bool(gt))
+    });
+
+    builtins.register("flash_ge2", |args| {
+        if args.len() < 2 {
+            return Ok(Value::Bool(false));
+        }
+        let ge = match (&args[0], &args[1]) {
+            (Value::Int(a), Value::Int(b)) => a >= b,
+            (Value::Float(a), Value::Float(b)) => a >= b,
+            (Value::Int(a), Value::Float(b)) => (*a as f64) >= *b,
+            (Value::Float(a), Value::Int(b)) => *a >= (*b as f64),
+            (Value::Str(a), Value::Str(b)) => a >= b,
+            _ => false,
+        };
+        Ok(Value::Bool(ge))
+    });
+
+    let env_cprop_ctor = env;
+    builtins.register("flash_construct_property", move |args| {
+        let class_name = args
+            .first()
+            .map_or_else(|| "Object".to_string(), format_vm_avm_value);
+        let id = env_cprop_ctor.env_new_object(&class_name);
+        Ok(Value::Int(id as i64))
+    });
 }
 
 /// Windowed + `paint-vm-runtime` integrated host session over any `UI11` [`WindowBackend`].

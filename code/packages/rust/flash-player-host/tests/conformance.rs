@@ -810,6 +810,7 @@ fn test_cwe94_uri_scheme_sanitization() {
         "vbscript:msgbox(1)",
         "ftp://example.com/a",
         "//evil.example/spoof",
+        "/\\evil.example/spoof",
     ] {
         assert_eq!(
             sanitize_navigation_uri(bad),
@@ -818,9 +819,13 @@ fn test_cwe94_uri_scheme_sanitization() {
         );
     }
 
-    // Embedded control characters / invalid URIs
+    // Embedded control characters / backslashes / invalid URIs
     assert_eq!(
         sanitize_navigation_uri("java\tscript:alert(1)"),
+        Err(PlayerHostError::InvalidUri)
+    );
+    assert_eq!(
+        sanitize_navigation_uri("https://good.example\\@evil.example"),
         Err(PlayerHostError::InvalidUri)
     );
     assert_eq!(
@@ -832,7 +837,7 @@ fn test_cwe94_uri_scheme_sanitization() {
         Err(PlayerHostError::BlockedUriScheme)
     );
 
-    // Player navigateToURL audit recording
+    // Player navigateToURL audit recording + UTF-8 multi-byte boundary safety
     let swf = build_swf_fws(8, 24, 1, &encode_tag(0, &[]));
     let mut player =
         FlashPlayer::player_from_swf_bytes(&swf, FlashPlayerConfig::cfg_standard()).unwrap();
@@ -841,10 +846,14 @@ fn test_cwe94_uri_scheme_sanitization() {
         Ok("https://safe.example.org/play")
     );
     assert_eq!(
+        player.player_navigate_url("https://aé.example.com", "_blank"),
+        Ok("https://aé.example.com")
+    );
+    assert_eq!(
         player.player_navigate_url("javascript:evil()", "_self"),
         Err(PlayerHostError::BlockedUriScheme)
     );
-    assert_eq!(player.player_navigation_requests().len(), 1);
+    assert_eq!(player.player_navigation_requests().len(), 2);
     assert!(player
         .player_audit_events()
         .iter()
@@ -987,4 +996,107 @@ fn test_spiral_of_death_clock_clamp() {
         .unwrap();
     assert!(tick.steps_run <= 8);
     assert!(tick.spiral_of_death_clamped || tick.dropped_ns > 0);
+}
+
+#[test]
+fn test_cwe674_deeply_nested_scene_digest_bounded() {
+    use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintRect};
+
+    let mut current = PaintInstruction::Rect(PaintRect::filled(0.0, 0.0, 10.0, 10.0, "#ff0000"));
+    for _ in 0..256 {
+        current = PaintInstruction::Group(PaintGroup {
+            base: PaintBase::default(),
+            children: vec![current],
+            transform: None,
+            opacity: None,
+        });
+    }
+    let mut scene = PaintScene::new(100.0, 100.0);
+    scene.instructions.push(current);
+
+    let hex_a = compute_scene_digest_hex(&scene);
+    let hex_b = compute_scene_digest_hex(&scene);
+    assert_eq!(hex_a.len(), 64);
+    assert_eq!(hex_a, hex_b);
+}
+
+#[test]
+fn test_avm1_custom_step_budget_executes_builtins_and_timeline() {
+    let mut actions = Vec::new();
+    let msg = b"custom budget ok\0";
+    actions.push(0x96);
+    actions.extend_from_slice(&((1 + msg.len()) as u16).to_le_bytes());
+    actions.push(0x00);
+    actions.extend_from_slice(msg);
+    actions.push(0x26); // ActionTrace
+    actions.push(0x07); // ActionStop
+    actions.push(0x00); // ActionEnd
+
+    let mut body = Vec::new();
+    body.extend_from_slice(&encode_tag(12, &actions));
+    body.extend_from_slice(&encode_tag(1, &[]));
+    body.extend_from_slice(&encode_tag(1, &[]));
+    body.extend_from_slice(&encode_tag(0, &[]));
+
+    let swf = build_swf_fws(8, 24, 2, &body);
+    let mut cfg = FlashPlayerConfig::cfg_standard();
+    cfg.max_vm_steps_per_frame = 1_000;
+
+    let mut player = FlashPlayer::player_from_swf_bytes(&swf, cfg).unwrap();
+    let dt_ns = player.player_clock().fixed_dt_ns;
+    let mut ops = [PatchOp {
+        kind: PatchKind::Added,
+        old_index: 0,
+        new_index: 0,
+    }; 16];
+
+    let _ = player
+        .player_step_with_clock(dt_ns, &mut ops, None)
+        .unwrap();
+    assert!(player.player_trace_output().contains("custom budget ok"));
+    assert_eq!(
+        player.player_stage().root.clip_play_state(),
+        PlayState::Stop
+    );
+    assert_eq!(player.player_timeline_frame(), 1);
+}
+
+#[test]
+fn test_input_resize_and_sprite_id_zero_rejected() {
+    let swf = build_swf_fws(8, 24, 1, &encode_tag(0, &[]));
+    let mut player =
+        FlashPlayer::player_from_swf_bytes(&swf, FlashPlayerConfig::cfg_standard()).unwrap();
+
+    // Oversized Resized event rejected (CWE-20 / CWE-400)
+    let err_resize = player
+        .player_dispatch_window_event(&WindowEvent::Resized {
+            window_id: WindowId(1),
+            logical_size: LogicalSize::new(1e100, 1e100),
+            physical_size: window_core::PhysicalSize::new(100, 100),
+            scale_factor: 1.0,
+        })
+        .unwrap_err();
+    assert_eq!(err_resize, PlayerHostError::InvalidStageDimension);
+
+    // Out-of-range finite PointerMoved rejected
+    let err_ptr = player
+        .player_dispatch_window_event(&WindowEvent::PointerMoved {
+            window_id: WindowId(1),
+            x: 1.0e12,
+            y: 0.0,
+        })
+        .unwrap_err();
+    assert_eq!(err_ptr, PlayerHostError::NonFiniteCoordinate);
+
+    // DefineSprite with reserved sprite_id == 0 rejected
+    let mut sprite_payload = Vec::new();
+    sprite_payload.extend_from_slice(&0u16.to_le_bytes());
+    sprite_payload.extend_from_slice(&1u16.to_le_bytes());
+    sprite_payload.extend_from_slice(&encode_tag(0, &[]));
+    let mut body = encode_tag(39, &sprite_payload);
+    body.extend_from_slice(&encode_tag(0, &[]));
+    let bad_swf = build_swf_fws(8, 24, 1, &body);
+    let err_sprite =
+        FlashPlayer::player_from_swf_bytes(&bad_swf, FlashPlayerConfig::cfg_standard());
+    assert!(matches!(err_sprite, Err(PlayerHostError::MalformedTag(_))));
 }

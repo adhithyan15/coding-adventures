@@ -166,15 +166,16 @@ pub fn sanitize_navigation_uri(raw_uri: &str) -> Result<&str, PlayerHostError> {
         return Err(PlayerHostError::InvalidUri);
     }
 
+    if trimmed.starts_with('\\') || trimmed.starts_with("//") || trimmed.starts_with("/\\") {
+        return Err(PlayerHostError::BlockedUriScheme);
+    }
+
     // Reject embedded ASCII control characters (prevents `java\tscript:` / `java\nscript:` smuggling)
-    // and backslashes.
+    // and embedded backslashes (WHATWG authority spoofing).
     for b in trimmed.bytes() {
-        if b < 0x20 || b == 0x7F {
+        if b < 0x20 || b == 0x7F || b == b'\\' {
             return Err(PlayerHostError::InvalidUri);
         }
-    }
-    if trimmed.starts_with('\\') || trimmed.starts_with("//") {
-        return Err(PlayerHostError::BlockedUriScheme);
     }
 
     // Scan up to the first RFC 3986 delimiter among `:`, `/`, `?`, `#`.
