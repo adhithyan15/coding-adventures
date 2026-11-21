@@ -8,7 +8,7 @@ that file formats, DACs, and device sinks can understand.
 from __future__ import annotations
 
 import struct
-from collections.abc import Iterable
+from collections.abc import Iterable, Sized
 from dataclasses import dataclass
 from math import isfinite
 from numbers import Integral, Real
@@ -33,14 +33,38 @@ MAX_CHANNELS = 8
 MAX_WAV_BYTES = 67_108_864  # 64 MiB
 
 
+def _safe_repr(value: object) -> str:
+    """Bounded O(1) representation for error messages (CWE-190 / CWE-400)."""
+    if isinstance(value, bool):
+        return repr(value)
+    if isinstance(value, int):
+        if value < -1_000_000 or value > 1_000_000:
+            return "<out-of-range int>"
+        return str(value)
+    if isinstance(value, float):
+        return repr(value)
+    if isinstance(value, str):
+        if len(value) > 64:
+            return f"<str len={len(value)}>"
+        return repr(value)
+    return f"<{type(value).__name__}>"
+
+
 def _finite_float(name: str, value: Real) -> float:
     """Convert a finite real value to ``float`` and reject slippery inputs."""
     if isinstance(value, bool) or not isinstance(value, Real):
-        raise ValueError(f"{name} must be a finite real number, got {value!r}")
+        raise ValueError(
+            f"{name} must be a finite real number, got {_safe_repr(value)}"
+        )
 
-    converted = float(value)
+    try:
+        converted = float(value)
+    except OverflowError as exc:
+        raise ValueError(
+            f"{name} overflows float range: {_safe_repr(value)}"
+        ) from exc
     if not isfinite(converted):
-        raise ValueError(f"{name} must be finite, got {value!r}")
+        raise ValueError(f"{name} must be finite, got {_safe_repr(value)}")
 
     return converted
 
@@ -58,15 +82,17 @@ def _sample_rate(name: str, value: Real) -> float:
         raise ValueError(
             f"{name} {converted} exceeds MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
         )
+    if not isfinite(1.0 / converted):
+        raise ValueError(f"{name} subnormal {converted} has non-finite period")
     return converted
 
 
 def _non_negative_int(name: str, value: int) -> int:
     if isinstance(value, bool) or not isinstance(value, Integral):
-        raise ValueError(f"{name} must be an integer >= 0, got {value!r}")
+        raise ValueError(f"{name} must be an integer >= 0, got {_safe_repr(value)}")
     converted = int(value)
     if converted < 0:
-        raise ValueError(f"{name} must be >= 0, got {converted}")
+        raise ValueError(f"{name} must be >= 0, got {_safe_repr(converted)}")
     return converted
 
 
@@ -98,11 +124,18 @@ def _safe_round_sample(sample: Real) -> tuple[int, bool]:
     - Non-finite numbers (NaN, ±Inf) and booleans are rejected fail-closed.
     """
     if isinstance(sample, bool) or not isinstance(sample, Real):
-        raise ValueError(f"sample must be a finite real number, got {sample!r}")
+        raise ValueError(
+            f"sample must be a finite real number, got {_safe_repr(sample)}"
+        )
 
-    val = float(sample)
+    try:
+        val = float(sample)
+    except OverflowError as exc:
+        raise ValueError(
+            f"sample overflows float range: {_safe_repr(sample)}"
+        ) from exc
     if not isfinite(val):
-        raise ValueError(f"sample must be finite, got {sample!r}")
+        raise ValueError(f"sample must be finite, got {_safe_repr(sample)}")
 
     clipped = val < -1.0 or val > 1.0
     bounded = min(1.0, max(-1.0, val))
@@ -184,19 +217,36 @@ class PCMBuffer:
     clipped_sample_count: int = 0
 
     def __post_init__(self) -> None:
-        if len(self.samples) > MAX_SAMPLES:
+        if isinstance(self.samples, (str, bytes, bytearray)) or not isinstance(
+            self.samples, Iterable
+        ):
             raise ValueError(
-                f"sample count {len(self.samples)} exceeds MAX_SAMPLES={MAX_SAMPLES}"
+                f"samples must be an iterable of PCM integers, "
+                f"got {_safe_repr(self.samples)}"
             )
+        if isinstance(self.samples, Sized):
+            try:
+                declared_len = len(self.samples)
+            except OverflowError as exc:
+                raise ValueError(
+                    f"sample count exceeds MAX_SAMPLES={MAX_SAMPLES}"
+                ) from exc
+            if declared_len > MAX_SAMPLES:
+                raise ValueError(
+                    f"sample count {declared_len} exceeds MAX_SAMPLES={MAX_SAMPLES}"
+                )
 
         checked_samples: list[int] = []
         for index, sample in enumerate(self.samples):
+            if index >= MAX_SAMPLES:
+                raise ValueError(f"sample count exceeds MAX_SAMPLES={MAX_SAMPLES}")
             if isinstance(sample, bool) or not isinstance(sample, Integral):
                 raise ValueError(f"samples[{index}] must be a PCM integer")
             converted = int(sample)
             if converted < PCM16_MIN or converted > PCM16_MAX:
                 raise ValueError(
-                    f"samples[{index}] must fit signed 16-bit PCM, got {converted}"
+                    f"samples[{index}] must fit signed 16-bit PCM, "
+                    f"got {_safe_repr(converted)}"
                 )
             checked_samples.append(converted)
 
@@ -229,13 +279,17 @@ class PCMBuffer:
     def time_at(self, index: int) -> float:
         """Return the timestamp for a PCM sample index."""
         if isinstance(index, bool) or not isinstance(index, Integral):
-            raise ValueError(f"index must be an integer, got {index!r}")
+            raise ValueError(f"index must be an integer, got {_safe_repr(index)}")
         converted = int(index)
         if not 0 <= converted < self.sample_count():
             raise ValueError(
-                f"index must be in [0, {self.sample_count()}), got {converted}"
+                f"index must be in [0, {self.sample_count()}), "
+                f"got {_safe_repr(converted)}"
             )
-        return self.start_time_seconds + converted / self.pcm_format.sample_rate_hz
+        result = self.start_time_seconds + converted / self.pcm_format.sample_rate_hz
+        if not isfinite(result):
+            raise ValueError("computed sample time is non-finite")
+        return result
 
     def to_little_endian_bytes(self) -> bytes:
         """Pack signed 16-bit PCM integers as little-endian bytes."""
@@ -256,6 +310,9 @@ def encode_sample_buffer(
     """Quantize floating oscillator samples into signed 16-bit PCM."""
     if not isinstance(sample_buffer, SampleBuffer):
         raise ValueError("sample_buffer must be an oscillator.SampleBuffer")
+
+    if pcm_format is not None and not isinstance(pcm_format, PCMFormat):
+        raise ValueError("pcm_format must be a PCMFormat")
 
     if sample_buffer.sample_count() > MAX_SAMPLES:
         raise ValueError(
@@ -293,6 +350,25 @@ def samples_to_pcm_buffer(
     pcm_format: PCMFormat | None = None,
 ) -> PCMBuffer:
     """Convenience helper for demos that start with raw floating samples."""
+    if isinstance(samples, (str, bytes, bytearray)) or not isinstance(
+        samples, Iterable
+    ):
+        raise ValueError(
+            f"samples must be an iterable of real numbers, got {_safe_repr(samples)}"
+        )
+    if isinstance(samples, Sized):
+        try:
+            declared_len = len(samples)
+        except OverflowError as exc:
+            raise ValueError(
+                f"samples sequence length exceeds MAX_SAMPLES={MAX_SAMPLES}"
+            ) from exc
+        if declared_len > MAX_SAMPLES:
+            raise ValueError(
+                f"samples sequence length {declared_len} exceeds "
+                f"MAX_SAMPLES={MAX_SAMPLES}"
+            )
+
     rate = _sample_rate("sample_rate_hz", sample_rate_hz)
     start = _finite_float("start_time_seconds", start_time_seconds)
 
@@ -338,6 +414,15 @@ def validate_wav_header(wav_bytes: bytes) -> tuple[int, int, int, int, int]:
     riff_payload = int.from_bytes(wav_bytes[4:8], "little")
     if riff_payload < 36:
         raise ValueError(f"RIFF payload size too small: {riff_payload}")
+    riff_end = 8 + riff_payload
+    if riff_end > MAX_WAV_BYTES:
+        raise ValueError(
+            f"RIFF declared size {riff_end} exceeds MAX_WAV_BYTES={MAX_WAV_BYTES}"
+        )
+    if riff_end > total_len:
+        raise ValueError(
+            f"RIFF declared size {riff_end} exceeds buffer size {total_len}"
+        )
 
     offset = 12
     fmt_parsed = False
@@ -347,18 +432,20 @@ def validate_wav_header(wav_bytes: bytes) -> tuple[int, int, int, int, int]:
     data_offset = 0
     data_len = 0
 
-    while offset + 8 <= total_len:
+    while offset + 8 <= riff_end:
         chunk_id = bytes(wav_bytes[offset : offset + 4])
         chunk_size = int.from_bytes(wav_bytes[offset + 4 : offset + 8], "little")
         data_start = offset + 8
         data_end = data_start + chunk_size
 
-        if data_end > total_len:
+        if data_end > riff_end:
             raise ValueError(
                 f"chunk {chunk_id!r} declared size {chunk_size} exceeds buffer"
             )
 
         if chunk_id == b"fmt ":
+            if fmt_parsed:
+                raise ValueError("duplicate fmt chunk in WAV")
             if chunk_size < 16:
                 raise ValueError("fmt chunk size too small")
             audio_format = int.from_bytes(

@@ -28,6 +28,34 @@ from pcm_audio import (
 )
 
 OutputPath = str | PathLike[str]
+MAX_PATH_LENGTH = 4096
+_WINDOWS_RESERVED_DEVICES: frozenset[str] = frozenset(
+    {
+        "CON",
+        "PRN",
+        "AUX",
+        "NUL",
+        *(f"COM{i}" for i in range(1, 10)),
+        *(f"LPT{i}" for i in range(1, 10)),
+    }
+)
+
+
+def _safe_repr(value: object) -> str:
+    """Bounded O(1) representation for error messages (CWE-190 / CWE-400)."""
+    if isinstance(value, bool):
+        return repr(value)
+    if isinstance(value, int):
+        if value < -1_000_000 or value > 1_000_000:
+            return "<out-of-range int>"
+        return str(value)
+    if isinstance(value, float):
+        return repr(value)
+    if isinstance(value, str):
+        if len(value) > 64:
+            return f"<str len={len(value)}>"
+        return repr(value)
+    return f"<{type(value).__name__}>"
 
 
 def calc_total_wav_bytes(payload: int) -> int:
@@ -38,7 +66,9 @@ def calc_total_wav_bytes(payload: int) -> int:
     if isinstance(payload, bool) or not isinstance(payload, int):
         raise TypeError(f"payload must be an int, got {type(payload).__name__}")
     if payload < 0:
-        raise ValueError(f"payload must be non-negative, got {payload}")
+        raise ValueError(
+            f"payload must be non-negative, got {_safe_repr(payload)}"
+        )
     return 44 + payload
 
 
@@ -49,17 +79,25 @@ def check_wav_size_bounds(size: int) -> bool:
     return 44 <= size <= MAX_WAV_BYTES
 
 
-def _check_no_symlinks(target_path: Path) -> None:
-    """Verify that neither the target nor any parent directory is a symlink."""
-    if target_path.is_symlink():
-        raise ValueError(f"Path '{target_path}' is a symlink")
+def _is_symlink_or_junction(path: Path) -> bool:
+    if path.is_symlink():
+        return True
+    isjunction = getattr(os.path, "isjunction", None)
+    return bool(isjunction is not None and isjunction(path))
 
-    curr = target_path.parent
+
+def _check_no_symlinks(target_path: Path) -> None:
+    """Verify that neither target nor any ancestor is a symlink or junction."""
+    anchored = Path(os.path.abspath(target_path))
+    if _is_symlink_or_junction(anchored):
+        raise ValueError(f"Path '{target_path}' is a symlink or junction")
+
+    curr = anchored.parent
     visited: set[Path] = set()
     while curr != curr.parent and curr not in visited:
         visited.add(curr)
-        if curr.is_symlink():
-            raise ValueError(f"Path ancestor '{curr}' is a symlink")
+        if _is_symlink_or_junction(curr):
+            raise ValueError(f"Path ancestor '{curr}' is a symlink or junction")
         curr = curr.parent
 
 
@@ -86,15 +124,35 @@ def validate_wav_path(
     if isinstance(path, bool) or not isinstance(path, (str, PathLike)):
         raise TypeError(f"path must be a str or PathLike, got {type(path).__name__}")
 
-    str_path = str(path)
+    str_path = os.fspath(path)
+    if not isinstance(str_path, str):
+        raise TypeError(
+            f"path must resolve to str, got {type(str_path).__name__}"
+        )
+    if len(str_path) > MAX_PATH_LENGTH:
+        raise ValueError(
+            f"Path length {len(str_path)} exceeds MAX_PATH_LENGTH={MAX_PATH_LENGTH}"
+        )
     if "\0" in str_path:
         raise ValueError("Path must not contain null bytes")
     if not str_path.strip():
         raise ValueError("Path must not be empty")
 
-    p = Path(path)
+    p = Path(str_path)
     if ".." in p.parts:
-        raise ValueError(f"Path traversal ('..') detected in path: '{path}'")
+        raise ValueError(f"Path traversal ('..') detected in path: '{str_path}'")
+
+    non_drive_parts = p.parts[1:] if p.drive else p.parts
+    if ":" in p.name or any(":" in part for part in non_drive_parts):
+        raise ValueError(
+            f"NTFS alternate data stream (':') rejected in path: '{str_path}'"
+        )
+
+    stem_upper = p.name.split(".")[0].upper()
+    if stem_upper in _WINDOWS_RESERVED_DEVICES:
+        raise ValueError(
+            f"Windows reserved device name '{p.name}' rejected in path"
+        )
 
     if p.suffix.lower() not in (".wav", ".wave"):
         raise ValueError(f"Path must end in .wav or .wave, got '{p.suffix}'")
@@ -104,13 +162,22 @@ def validate_wav_path(
             raise TypeError(
                 f"base_dir must be a str or PathLike, got {type(base_dir).__name__}"
             )
-        str_base = str(base_dir)
+        str_base = os.fspath(base_dir)
+        if not isinstance(str_base, str):
+            raise TypeError(
+                f"base_dir must resolve to str, got {type(str_base).__name__}"
+            )
+        if len(str_base) > MAX_PATH_LENGTH:
+            raise ValueError(
+                f"base_dir length {len(str_base)} exceeds "
+                f"MAX_PATH_LENGTH={MAX_PATH_LENGTH}"
+            )
         if "\0" in str_base:
             raise ValueError("base_dir must not contain null bytes")
-        base_raw = Path(base_dir)
+        base_raw = Path(str_base)
         if ".." in base_raw.parts:
             raise ValueError(
-                f"Path traversal ('..') detected in base_dir: '{base_dir}'"
+                f"Path traversal ('..') detected in base_dir: '{str_base}'"
             )
         if not base_raw.exists():
             raise ValueError(f"base_dir '{base_dir}' does not exist")
@@ -154,43 +221,67 @@ def to_wav_bytes(pcm_buffer: PCMBuffer) -> bytes:
     sample_count = raw_count() if callable(raw_count) else raw_count
     if not isinstance(sample_count, int) or isinstance(sample_count, bool):
         sample_count = len(pcm_buffer.samples)
+    if sample_count < 0:
+        raise ValueError(
+            f"sample count {_safe_repr(sample_count)} must be non-negative"
+        )
+    sample_count = max(sample_count, len(pcm_buffer.samples))
     if sample_count > MAX_SAMPLES:
         raise ValueError(
-            f"sample count {sample_count} exceeds MAX_SAMPLES ({MAX_SAMPLES})"
+            f"sample count {_safe_repr(sample_count)} exceeds "
+            f"MAX_SAMPLES ({MAX_SAMPLES})"
         )
 
     channel_count = pcm_buffer.pcm_format.channel_count
+    if isinstance(channel_count, bool) or not isinstance(channel_count, int):
+        raise TypeError("channel_count must be an integer")
     if channel_count < 1 or channel_count > MAX_CHANNELS:
         raise ValueError(
-            f"channel count {channel_count} out of range [1, {MAX_CHANNELS}]"
+            f"channel count {_safe_repr(channel_count)} "
+            f"out of range [1, {MAX_CHANNELS}]"
         )
 
+    bit_depth = pcm_buffer.pcm_format.bit_depth
+    if isinstance(bit_depth, bool) or not isinstance(bit_depth, int):
+        raise TypeError("bit_depth must be an integer")
     sample_width = pcm_buffer.pcm_format.sample_width_bytes
+    if isinstance(sample_width, bool) or not isinstance(sample_width, int):
+        raise TypeError("sample_width_bytes must be an integer")
     if sample_width != 2:
         raise ValueError(
-            f"unsupported sample width {sample_width} bytes; "
+            f"unsupported sample width {_safe_repr(sample_width)} bytes; "
             "only 16-bit PCM (2 bytes) is supported"
         )
 
     sample_rate_hz = pcm_buffer.pcm_format.sample_rate_hz
     if isinstance(sample_rate_hz, bool) or not isinstance(sample_rate_hz, (int, float)):
         raise TypeError("sample_rate_hz must be numeric")
-    if math.isnan(sample_rate_hz) or math.isinf(sample_rate_hz):
+    try:
+        sr_float = float(sample_rate_hz)
+    except OverflowError as exc:
+        raise ValueError(
+            f"sample_rate_hz overflows float range: {_safe_repr(sample_rate_hz)}"
+        ) from exc
+    if math.isnan(sr_float) or math.isinf(sr_float):
         raise ValueError("sample_rate_hz must not be NaN or Inf")
-    if sample_rate_hz <= 0.0 or sample_rate_hz > MAX_SAMPLE_RATE_HZ:
+    if sr_float <= 0.0 or sr_float > MAX_SAMPLE_RATE_HZ:
         raise ValueError(
             f"sample_rate_hz must be between 1 and {MAX_SAMPLE_RATE_HZ}, "
-            f"got {sample_rate_hz}"
+            f"got {sr_float}"
         )
+    if not math.isfinite(1.0 / sr_float):
+        raise ValueError(f"sample_rate_hz subnormal {sr_float} has non-finite period")
 
     sample_rate = pcm_buffer.pcm_format.integer_sample_rate()
+    if isinstance(sample_rate, bool) or not isinstance(sample_rate, int):
+        raise TypeError("integer_sample_rate must return an integer")
     if sample_rate <= 0 or sample_rate > int(MAX_SAMPLE_RATE_HZ):
         raise ValueError(
             f"integer sample rate must be between 1 and {int(MAX_SAMPLE_RATE_HZ)}"
         )
 
     frames = sample_count // channel_count if channel_count > 0 else sample_count
-    duration = frames / sample_rate_hz
+    duration = frames / sr_float
     if duration > MAX_DURATION_SECONDS:
         raise ValueError(
             f"duration {duration:.3f}s exceeds "
