@@ -584,6 +584,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	// CV2-F13: the non-VOS Rust crates whose BUILD runs `gen_evidence -- --check <crate>`.
 	// TestWarrantEvidenceRowsCoverEveryEvidenceCrate pins this list to the checkout.
 	warrantEvidenceRow("arithmetic"),
+	warrantEvidenceRow("audio-device-sink"),
 	warrantEvidenceRow("ct-compare"),
 	warrantEvidenceRow("gf256"),
 	warrantEvidenceRow("hash-functions"),
