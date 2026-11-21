@@ -668,6 +668,9 @@ dependencies = [
 [[package]]
 name = "audio-device-sink"
 version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "audio-mixer-realtime"
