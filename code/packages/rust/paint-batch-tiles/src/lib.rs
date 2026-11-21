@@ -243,7 +243,10 @@ impl std::fmt::Display for PaintBatchError {
                 write!(f, "batch size {count} exceeds maximum allowed {max}")
             }
             Self::InvalidDimensions { width, height } => {
-                write!(f, "invalid scene dimensions: width={width}, height={height}")
+                write!(
+                    f,
+                    "invalid scene dimensions: width={width}, height={height}"
+                )
             }
             Self::InvalidTileDimensions { width, height } => {
                 write!(f, "invalid tile dimensions: width={width}, height={height}")
@@ -264,7 +267,10 @@ impl std::fmt::Display for PaintBatchError {
                 )
             }
             Self::MissingInstructionId => {
-                write!(f, "paint instruction is missing a required stable PaintBase.id")
+                write!(
+                    f,
+                    "paint instruction is missing a required stable PaintBase.id"
+                )
             }
             Self::DuplicateInstructionId(id) => {
                 write!(f, "duplicate instruction ID in scene: {id}")
@@ -334,6 +340,40 @@ pub fn diff_sprite_batches_into(
     // Check if both prev and next are sorted by id (fast O(N) path)
     let prev_sorted = prev.windows(2).all(|w| w[0].id <= w[1].id);
     let next_sorted = next.windows(2).all(|w| w[0].id <= w[1].id);
+
+    // Zero-allocation capacity pre-pass so out_ops remains untouched on BufferTooSmall.
+    let total_required = if prev_sorted && next_sorted {
+        let mut p = 0;
+        let mut q = 0;
+        let mut count = 0;
+        while p < prev.len() && q < next.len() {
+            if prev[p].id < next[q].id {
+                p += 1;
+            } else if prev[p].id > next[q].id {
+                q += 1;
+            } else {
+                p += 1;
+                q += 1;
+            }
+            count += 1;
+        }
+        count + (prev.len() - p) + (next.len() - q)
+    } else {
+        let mut count = prev.len();
+        for n_sprite in next {
+            if !prev.iter().any(|p| p.id == n_sprite.id) {
+                count += 1;
+            }
+        }
+        count
+    };
+
+    if total_required > out_ops.len() {
+        return Err(PaintBatchError::BufferTooSmall {
+            required: total_required,
+            provided: out_ops.len(),
+        });
+    }
 
     let mut written = 0;
 
@@ -505,6 +545,19 @@ pub fn diff_paint_scenes(
 ) -> Result<ScenePatch, PaintBatchError> {
     use std::collections::HashMap;
 
+    if prev.instructions.len() > MAX_BATCH_SPRITES {
+        return Err(PaintBatchError::BatchTooLarge {
+            count: prev.instructions.len(),
+            max: MAX_BATCH_SPRITES,
+        });
+    }
+    if next.instructions.len() > MAX_BATCH_SPRITES {
+        return Err(PaintBatchError::BatchTooLarge {
+            count: next.instructions.len(),
+            max: MAX_BATCH_SPRITES,
+        });
+    }
+
     let mut prev_map: HashMap<&str, &PaintInstruction> =
         HashMap::with_capacity(prev.instructions.len());
     for instr in &prev.instructions {
@@ -548,7 +601,10 @@ pub fn diff_paint_scenes(
     let mut removed_ids = Vec::new();
     for instr in &prev.instructions {
         let base = instruction_base(instr);
-        let id = base.id.as_deref().expect("already validated in prev_map");
+        let id = base
+            .id
+            .as_deref()
+            .ok_or(PaintBatchError::MissingInstructionId)?;
         if !next_map.contains_key(id) {
             removed_ids.push(id.to_string());
         }
@@ -715,6 +771,15 @@ pub fn lower_tile_batch_to_paint_scene(
 
     let mut instructions = Vec::with_capacity(sorted_cells.len());
     for cell in sorted_cells {
+        let x = cell.grid_col as f64 * tile_width;
+        let y = cell.grid_row as f64 * tile_height;
+        if !x.is_finite() || !y.is_finite() {
+            return Err(PaintBatchError::InvalidTileDimensions {
+                width: tile_width,
+                height: tile_height,
+            });
+        }
+
         let mut metadata = std::collections::HashMap::new();
         metadata.insert("tile_id".to_string(), cell.tile_id.to_string());
         metadata.insert("palette_id".to_string(), cell.palette_id.to_string());
@@ -735,8 +800,8 @@ pub fn lower_tile_batch_to_paint_scene(
                 id: Some(format!("tile:{}:{}", cell.grid_col, cell.grid_row)),
                 metadata: Some(metadata),
             },
-            x: cell.grid_col as f64 * tile_width,
-            y: cell.grid_row as f64 * tile_height,
+            x,
+            y,
             width: tile_width,
             height: tile_height,
             fill: Some(color_hex),

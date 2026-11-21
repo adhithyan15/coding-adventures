@@ -3,17 +3,23 @@
   "version": "0.1.0",
   "description": "Continuous-time waveform primitives for the electronics track",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "build": "tsc",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=../** --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js"
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "vitest": "^4.1.11",
-    "@vitest/coverage-v8": "^4.1.11"
+    "@coding-adventures/test-bootstrap": "file:../test-bootstrap",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0"
   }
 }

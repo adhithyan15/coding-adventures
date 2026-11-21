@@ -6,11 +6,17 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Migrate from Jest/ts-jest and shared `../tsconfig.base.json` to standalone
+  `tsconfig.json` / `tsconfig.test.json` with `node:test`,
+  `@coding-adventures/test-bootstrap`, and `--test-coverage-lines=95`.
+- Add VER15 CWE-20/190/400/1321 hardening (`requireFiniteNumber`, `validateState`,
+  `Object.freeze`, negative-zero normalization) and `wave.warrant`.
+- Add `tests/hostile_inputs.test.ts` and `tests/pbt.test.ts` (SplitMix64 + `fuzzTarget`).
 - Enforce finite parameters, angular-frequency overflow, and finite-time
   validation required by PHY01.
 - Reduce time and phase before local trig evaluation and cover exact-zero,
   maximum-finite, and minimum-subnormal boundaries.
-- Make both build entrypoints run the TypeScript compiler before Jest.
+- Make both build entrypoints run the TypeScript compiler before node:test.
 
 ## [0.1.0] - 2026-03-22
 

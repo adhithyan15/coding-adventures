@@ -127,8 +127,7 @@ fn test_zero_alloc_sprite_diff_sorted() {
         new_index: 0,
     }; 16];
 
-    let count = diff_sprite_batches_into(&prev, &next, &mut ops)
-        .expect("diff should succeed");
+    let count = diff_sprite_batches_into(&prev, &next, &mut ops).expect("diff should succeed");
 
     assert_eq!(count, 4);
 
@@ -187,8 +186,7 @@ fn test_zero_alloc_sprite_diff_unsorted() {
         new_index: 0,
     }; 16];
 
-    let count = diff_sprite_batches_into(&prev, &next, &mut ops)
-        .expect("diff should succeed");
+    let count = diff_sprite_batches_into(&prev, &next, &mut ops).expect("diff should succeed");
 
     assert_eq!(count, 3);
 
@@ -198,13 +196,21 @@ fn test_zero_alloc_sprite_diff_unsorted() {
     let mut has_added_4 = false;
 
     for op in &ops[..count] {
-        if op.id == 3 && op.kind == DeltaKind::Removed && op.old_index == 0 && op.new_index == NO_INDEX {
+        if op.id == 3
+            && op.kind == DeltaKind::Removed
+            && op.old_index == 0
+            && op.new_index == NO_INDEX
+        {
             has_removed_3 = true;
         }
         if op.id == 1 && op.kind == DeltaKind::Unchanged && op.old_index == 1 && op.new_index == 1 {
             has_unchanged_1 = true;
         }
-        if op.id == 4 && op.kind == DeltaKind::Added && op.old_index == NO_INDEX && op.new_index == 0 {
+        if op.id == 4
+            && op.kind == DeltaKind::Added
+            && op.old_index == NO_INDEX
+            && op.new_index == 0
+        {
             has_added_4 = true;
         }
     }
@@ -517,10 +523,7 @@ fn test_cwe_20_duplicate_ids() {
     );
 
     // Duplicate tile coordinates
-    let dup_cells = vec![
-        TileBatchCell::new(3, 4, 1),
-        TileBatchCell::new(3, 4, 2),
-    ];
+    let dup_cells = vec![TileBatchCell::new(3, 4, 1), TileBatchCell::new(3, 4, 2)];
     assert_eq!(
         lower_tile_batch_to_paint_scene(100.0, 100.0, 8.0, 8.0, "#fff", &dup_cells),
         Err(PaintBatchError::DuplicateTileId { col: 3, row: 4 })
@@ -566,7 +569,9 @@ fn test_cwe_20_duplicate_ids() {
 
     assert_eq!(
         diff_paint_scenes(&scene_a, &scene_b),
-        Err(PaintBatchError::DuplicateInstructionId("dup_id".to_string()))
+        Err(PaintBatchError::DuplicateInstructionId(
+            "dup_id".to_string()
+        ))
     );
 
     // Missing instruction ID

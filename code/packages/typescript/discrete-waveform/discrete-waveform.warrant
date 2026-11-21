@@ -1,0 +1,59 @@
+warrant discrete_waveform
+  error DiscreteWaveformError = EMPTY_SAMPLES | SAMPLE_COUNT_TOO_LARGE | INVALID_SAMPLE_RATE | OUT_OF_RANGE_INDEX | NON_FINITE
+
+  model valid_index(index: Int, length: Nat) -> Bool = index >= 0 and index < length
+
+  op validate_sample_count(count: Int) -> Result<Bool, DiscreteWaveformError>
+  op validate_sample_rate(rate_hz: Int) -> Result<Bool, DiscreteWaveformError>
+  op sample_at_index(index: Int, length: Nat) -> Result<Bool, DiscreteWaveformError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_sample_count:
+    count public
+  labels validate_sample_rate:
+    rate_hz public
+  labels sample_at_index:
+    index public
+    length public
+
+  input validate_sample_count.count:
+    hostile
+    rejects count <= 0 with DiscreteWaveformError.EMPTY_SAMPLES
+    ensures no_panic, terminates
+
+  input validate_sample_rate.rate_hz:
+    hostile
+    rejects rate_hz <= 0 with DiscreteWaveformError.INVALID_SAMPLE_RATE
+    ensures no_panic, terminates
+
+  input sample_at_index.index:
+    hostile
+    rejects index < 0 with DiscreteWaveformError.OUT_OF_RANGE_INDEX
+    ensures no_panic, terminates
+  input sample_at_index.length:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_sample_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_sample_rate:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound sample_at_index:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example count_ok:
+    validate_sample_count(4) == Ok(true)
+  example rate_ok:
+    validate_sample_rate(44100) == Ok(true)
+  example index_ok:
+    sample_at_index(0, 4) == Ok(true)

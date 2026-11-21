@@ -26,7 +26,9 @@ pub use collision2d::{
     SweepHit, MAX_COORD,
 };
 pub use game_clock::{advance_frame, ClockError, ClockStepResult, GameClockState};
-pub use paint_batch_tiles::{lower_sprites_to_paint_scene, PaintBatchError, PaintScene, SpriteQuad};
+pub use paint_batch_tiles::{
+    lower_sprites_to_paint_scene, PaintBatchError, PaintScene, SpriteQuad,
+};
 
 /// Type alias for [`SpriteQuad`] conforming to the engine sprite interface.
 pub type SpriteItem = SpriteQuad;
@@ -102,7 +104,9 @@ impl std::fmt::Display for PongError {
         match self {
             Self::InvalidConfig => write!(f, "invalid pong configuration parameters"),
             Self::NonFiniteState => write!(f, "pong state contains non-finite float (NaN or Inf)"),
-            Self::StateOutOfBounds => write!(f, "coordinates exceed allowable court or physical bounds"),
+            Self::StateOutOfBounds => {
+                write!(f, "coordinates exceed allowable court or physical bounds")
+            }
             Self::NegativeDimension => write!(f, "dimension or coordinate cannot be negative"),
             Self::Collision(e) => write!(f, "collision error: {e}"),
             Self::Clock(e) => write!(f, "game clock error: {e}"),
@@ -458,7 +462,10 @@ impl PongState {
 
     /// Resets ball to center court for the next serve countdown.
     pub fn reset_ball_serve(&mut self, towards_right: bool) {
-        self.ball_pos = Point::new(self.config.court_width * 0.5, self.config.court_height * 0.5);
+        self.ball_pos = Point::new(
+            self.config.court_width * 0.5,
+            self.config.court_height * 0.5,
+        );
         self.ball_vel = Point::new(0.0, 0.0);
         self.serve_countdown = self.config.serve_countdown_ticks;
         self.serve_towards_right = towards_right;
@@ -628,8 +635,8 @@ pub fn step_pong(
 
     // 4. Ball motion and continuous swept collision
     let disp = state.ball_vel.scale(dt);
-    let ball_circle = Circle::new(state.ball_pos, state.config.ball_radius)
-        .map_err(PongError::Collision)?;
+    let ball_circle =
+        Circle::new(state.ball_pos, state.config.ball_radius).map_err(PongError::Collision)?;
 
     let mut paddle_hit_side: Option<PaddleSide> = None;
     let mut wall_bounce_occurred = false;
@@ -637,8 +644,8 @@ pub fn step_pong(
 
     if state.ball_vel.x < 0.0 {
         let left_rect = state.left_paddle_rect();
-        if let Some(hit) = sweep_circle_aabb(ball_circle, disp, left_rect)
-            .map_err(PongError::Collision)?
+        if let Some(hit) =
+            sweep_circle_aabb(ball_circle, disp, left_rect).map_err(PongError::Collision)?
         {
             if hit.toi <= 1.0 {
                 paddle_hit_side = Some(PaddleSide::Left);
@@ -669,8 +676,8 @@ pub fn step_pong(
         }
     } else if state.ball_vel.x > 0.0 {
         let right_rect = state.right_paddle_rect();
-        if let Some(hit) = sweep_circle_aabb(ball_circle, disp, right_rect)
-            .map_err(PongError::Collision)?
+        if let Some(hit) =
+            sweep_circle_aabb(ball_circle, disp, right_rect).map_err(PongError::Collision)?
         {
             if hit.toi <= 1.0 {
                 paddle_hit_side = Some(PaddleSide::Right);
@@ -845,13 +852,13 @@ fn emit_digit_sprites(
 
     // Segment definitions (x, y, width, height)
     let segments: [(f64, f64, f64, f64); 7] = [
-        (x, y, w, t),                      // a: top
-        (x + w - t, y, t, half_h + t),     // b: top-right
+        (x, y, w, t),                           // a: top
+        (x + w - t, y, t, half_h + t),          // b: top-right
         (x + w - t, y + half_h, t, half_h + t), // c: bottom-right
-        (x, y + h - t, w, t),              // d: bottom
-        (x, y + half_h, t, half_h + t),    // e: bottom-left
-        (x, y, t, half_h + t),             // f: top-left
-        (x, y + half_h, w, t),             // g: middle
+        (x, y + h - t, w, t),                   // d: bottom
+        (x, y + half_h, t, half_h + t),         // e: bottom-left
+        (x, y, t, half_h + t),                  // f: top-left
+        (x, y + half_h, w, t),                  // g: middle
     ];
 
     for (seg_idx, &(sx, sy, sw, sh)) in segments.iter().enumerate() {
@@ -888,7 +895,8 @@ pub fn build_pong_sprites(state: &PongState, out: &mut [SpriteItem]) -> usize {
 
     // 2. Right paddle
     if written < out.len() {
-        let right_x = state.config.court_width - state.config.paddle_inset - state.config.paddle_width;
+        let right_x =
+            state.config.court_width - state.config.paddle_inset - state.config.paddle_width;
         out[written] = SpriteQuad::new(
             2,
             right_x,
@@ -1002,6 +1010,7 @@ pub fn build_pong_sprites(state: &PongState, out: &mut [SpriteItem]) -> usize {
 
 /// Lowers current Pong state into a universal [`PaintScene`] IR via [`paint_batch_tiles`].
 pub fn lower_pong_to_paint_scene(state: &PongState) -> Result<PaintScene, PongError> {
+    state.check_state_validity()?;
     let mut sprites = [SpriteQuad::new(0, 0.0, 0.0, 0.0, 0.0); MAX_PONG_SPRITES];
     let count = build_pong_sprites(state, &mut sprites);
     lower_sprites_to_paint_scene(

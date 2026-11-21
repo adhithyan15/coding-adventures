@@ -15,7 +15,7 @@
 //   y(t) = A · sin(2πft + φ)
 //
 // where:
-//   A = amplitude    — the maximum displacement from equilibrium
+//   A = amplitude    — the peak displacement from equilibrium
 //   f = frequency    — how many complete cycles occur per second (in Hz)
 //   t = time         — the moment at which we evaluate the wave
 //   φ = phase        — shifts the wave left or right along the time axis
@@ -36,40 +36,33 @@
 //
 // In this module we focus on the temporal behavior y(t), leaving spatial
 // propagation for a future wave-propagation package.
+//
+// VER15 Hardening:
+//   - CWE-20 (Improper Input Validation): Validates runtime types, finiteness,
+//     non-negative amplitude, positive frequency, and angular-frequency finiteness.
+//   - CWE-190 / CWE-400: Period/phase reduction prior to trig evaluation and
+//     amplitude-bounded clamping keep every finite input O(1) and finite.
+//   - CWE-1321: Instances are frozen via Object.freeze to prevent runtime
+//     property tampering or prototype pollution side effects.
 // ============================================================================
 
-import { PI, sin } from "trig/src/trig";
+import { PI, sin } from "trig/dist/trig.js";
+
+function requireFiniteNumber(label: string, value: unknown): number {
+  if (typeof value !== "number") {
+    throw new TypeError(`${label} must be a finite number`);
+  }
+  if (!Number.isFinite(value)) {
+    throw new RangeError(`${label} must be finite`);
+  }
+  return value;
+}
 
 // ============================================================================
 // Wave Class
 // ============================================================================
-//
-// The Wave class encapsulates the three parameters that fully define a
-// simple harmonic wave's temporal behavior:
-//
-//   1. amplitude  — how "tall" the wave is (must be non-negative)
-//   2. frequency  — how "fast" the wave oscillates (must be positive)
-//   3. phase      — where the wave starts in its cycle (defaults to 0)
-//
-// Example usage:
-//
-//   const wave = new Wave(1.0, 440.0);  // Concert A pitch
-//   const y = wave.evaluate(0.001);      // Value at t = 1ms
-//
-// The evaluate() method computes:
-//
-//   y(t) = amplitude · sin(2π · frequency · t + phase)
-//
-// This is the standard form of the harmonic wave equation.
-// ============================================================================
 
 export class Wave {
-  // --------------------------------------------------------------------------
-  // Properties
-  // --------------------------------------------------------------------------
-  // These are readonly because a wave's identity IS its parameters.
-  // To get a different wave, create a new Wave instance.
-
   /** Peak displacement from zero. Always non-negative. */
   readonly amplitude: number;
 
@@ -79,123 +72,83 @@ export class Wave {
   /** Initial phase offset in radians. Shifts the wave along the time axis. */
   readonly phase: number;
 
-  // --------------------------------------------------------------------------
-  // Constructor
-  // --------------------------------------------------------------------------
-  //
-  // Validates the physical constraints:
-  //   - Amplitude >= 0: A negative amplitude doesn't make physical sense.
-  //     An amplitude of 0 is valid — it represents a "flat" wave (no
-  //     oscillation), which is useful as a base case.
-  //   - Frequency > 0: A wave with zero frequency never oscillates, so
-  //     it's not really a wave. Negative frequencies are mathematically
-  //     equivalent to a phase shift of π, so we disallow them to keep
-  //     the model unambiguous.
-
   constructor(amplitude: number, frequency: number, phase: number = 0.0) {
-    if (!Number.isFinite(amplitude)) {
-      throw new Error("Amplitude must be finite");
-    }
-    if (amplitude < 0) {
-      throw new Error(
-        `Amplitude must be non-negative, got ${amplitude}. ` +
+    const amp = requireFiniteNumber("Amplitude", amplitude);
+    if (amp < 0) {
+      throw new RangeError(
+        `Amplitude must be non-negative, got ${amp}. ` +
           `A negative amplitude doesn't make physical sense — ` +
           `use a phase shift of π to invert the wave instead.`
       );
     }
 
-    if (!Number.isFinite(frequency) || frequency <= 0) {
-      throw new Error(
-        `Frequency must be positive, got ${frequency}. ` +
+    const freq = requireFiniteNumber("Frequency", frequency);
+    if (freq <= 0) {
+      throw new RangeError(
+        `Frequency must be positive, got ${freq}. ` +
           `A wave must oscillate — zero or negative frequency ` +
           `doesn't define a wave.`
       );
     }
 
-    if (!Number.isFinite(2.0 * PI * frequency)) {
-      throw new Error("Angular frequency must be finite");
+    if (!Number.isFinite(2.0 * PI * freq)) {
+      throw new RangeError("Angular frequency must be finite");
     }
 
-    if (!Number.isFinite(phase)) {
-      throw new Error("Phase must be finite");
-    }
+    const ph = requireFiniteNumber("Phase", phase);
 
-    this.amplitude = amplitude;
-    this.frequency = frequency;
-    this.phase = phase;
+    this.amplitude = amp === 0 ? 0.0 : amp;
+    this.frequency = freq;
+    this.phase = ph === 0 ? 0.0 : ph;
+    Object.freeze(this);
   }
 
-  // --------------------------------------------------------------------------
-  // period() — Time for One Complete Cycle
-  // --------------------------------------------------------------------------
-  //
-  // The period T is the reciprocal of frequency:
-  //
-  //   T = 1 / f
-  //
-  // A 1 Hz wave has a period of 1 second.
-  // A 440 Hz wave (concert A) has a period of about 2.27 milliseconds.
-  //
-  // The relationship is intuitive: if a wave completes 2 cycles per second
-  // (f = 2 Hz), then each cycle takes 0.5 seconds (T = 0.5).
+  private validateState(): void {
+    if (
+      typeof this.amplitude !== "number" ||
+      !Number.isFinite(this.amplitude) ||
+      this.amplitude < 0 ||
+      typeof this.frequency !== "number" ||
+      !Number.isFinite(this.frequency) ||
+      this.frequency <= 0 ||
+      !Number.isFinite(2.0 * PI * this.frequency) ||
+      typeof this.phase !== "number" ||
+      !Number.isFinite(this.phase)
+    ) {
+      throw new RangeError("Wave state must be finite and within physical domain");
+    }
+  }
 
+  /** Time for one complete cycle in seconds (`T = 1 / f`). */
   period(): number {
+    this.validateState();
     return 1.0 / this.frequency;
   }
 
-  // --------------------------------------------------------------------------
-  // angularFrequency() — Frequency in Radians per Second
-  // --------------------------------------------------------------------------
-  //
-  // Angular frequency ω converts from cycles-per-second to radians-per-second:
-  //
-  //   ω = 2π · f
-  //
-  // Why radians? Because the sine function naturally works in radians.
-  // One complete cycle = 2π radians = 360°.
-  //
-  // A 1 Hz wave has ω ≈ 6.283 rad/s (one full rotation per second).
-  // A 60 Hz wave (US power grid) has ω ≈ 376.99 rad/s.
-
+  /** Angular frequency in radians per second (`ω = 2π · f`). */
   angularFrequency(): number {
+    this.validateState();
     return 2.0 * PI * this.frequency;
   }
 
-  // --------------------------------------------------------------------------
-  // evaluate(t) — Compute the Wave's Value at Time t
-  // --------------------------------------------------------------------------
-  //
-  // This is the heart of the wave model. Given a time t (in seconds),
-  // it computes:
-  //
-  //   y(t) = A · sin(2πft + φ)
-  //
-  // Let's trace through an example:
-  //
-  //   Wave: A=1.0, f=1.0, φ=0.0
-  //   At t=0:    y = 1.0 · sin(0)      = 0.0     (wave starts at zero)
-  //   At t=0.25: y = 1.0 · sin(π/2)    = 1.0     (quarter cycle = peak)
-  //   At t=0.5:  y = 1.0 · sin(π)      = 0.0     (half cycle = zero again)
-  //   At t=0.75: y = 1.0 · sin(3π/2)   = -1.0    (three-quarter = trough)
-  //   At t=1.0:  y = 1.0 · sin(2π)     = 0.0     (full cycle = back to start)
-  //
-  // The phase φ shifts this pattern. With φ = π/2:
-  //   At t=0:    y = 1.0 · sin(π/2) = 1.0        (starts at peak!)
-
+  /** Evaluate the wave at time `t` in seconds. */
   evaluate(t: number): number {
-    if (!Number.isFinite(t)) {
-      throw new Error("Time must be finite");
-    }
+    this.validateState();
+    const time = requireFiniteNumber("Time", t);
     if (this.amplitude === 0.0) {
       return 0.0;
     }
 
     const twoPI = 2.0 * PI;
-    const period = this.period();
-    const reducedTime = Number.isFinite(period) ? t % period : t;
+    const period = 1.0 / this.frequency;
+    const reducedTime = Number.isFinite(period) ? time % period : time;
     const reducedPhase = this.phase % twoPI;
     const angle = twoPI * (this.frequency * reducedTime) + reducedPhase;
     const unit = Math.max(-1.0, Math.min(1.0, sin(angle)));
-    return this.amplitude * unit;
+    const result = this.amplitude * unit;
+    if (!Number.isFinite(result)) {
+      throw new RangeError("Evaluated wave value must be finite");
+    }
+    return result === 0 ? 0.0 : result;
   }
 }

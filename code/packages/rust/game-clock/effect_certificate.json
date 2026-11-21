@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/game-clock",
-  "source_digest": "a561710791889bf4cadc60e904d4666badd6823d016114d8fb58f9c8f569d15b",
+  "source_digest": "14310affd4f6a2ff291d50f19581ffbef0015069ee2cc25a6092656a4dd11823",
   "manifest_digest": "9009f7956229717f283f0b044e02aa1c0642e2af96363edd673dfdaf8c5ad9b1",
   "declared_effects": [],
   "entry_points": [
