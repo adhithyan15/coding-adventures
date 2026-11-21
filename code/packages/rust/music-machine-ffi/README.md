@@ -4,11 +4,11 @@
 
 ## Security Guarantees (Family-1 Memory Safety)
 
-- **CWE-476 (NULL Pointer Dereference)**: All pointer arguments are validated before dereferencing. Output pointers are initialized to zero/NULL. `mm_free_buffer(NULL, ...)` is guaranteed to be a safe no-op.
-- **CWE-125 / CWE-787 (Out-of-Bounds Read/Write)**: Slice construction is bounded strictly by `text_len` and capped against `MAX_SCORE_BYTES = 1,000,000`.
-- **CWE-190 (Integer Overflow)**: Checked arithmetic on buffer conversions and lengths.
-- **CWE-415 / CWE-416 (Double Free / Use-After-Free)**: Single-owner pointer lifecycle managed via `Box<[i16]>` (`Box::into_raw` and `Box::from_raw`).
-- **Unwind Safety**: Every exported C ABI function catches internal panics via `std::panic::catch_unwind`, preventing undefined behavior across foreign language boundaries.
+- **CWE-476 (NULL Pointer Dereference)**: All pointer arguments are validated for NULL, alignment, and pairwise distinctness before dereferencing. Output pointers are initialized to zero/NULL. `mm_free_buffer(NULL, ...)` is guaranteed to be a safe no-op.
+- **CWE-125 / CWE-787 (Out-of-Bounds Read/Write)**: Slice construction is bounded strictly by `len <= MAX_SCORE_BYTES = 1,000,000`, checks pointer wraparound, and rejects interior NUL bytes.
+- **CWE-190 / CWE-400 (Integer Overflow / Resource Exhaustion)**: Pre-flight checks on `sample_rate_hz` (`[1000, 192000]` when non-zero), `max_samples` (`<= MAX_SAMPLE_COUNT = 16,777,216`), and checked byte-size arithmetic before parsing or allocation.
+- **CWE-415 / CWE-416 (Double Free / Use-After-Free)**: Single-owner pointer lifecycle managed via `Box<[i16]>` (`Box::into_raw` and `Box::from_raw`) with volatile zero-on-free wiping in `mm_free_buffer`.
+- **Unwind Safety**: Every exported C ABI function wraps its entire body in `std::panic::catch_unwind`, preventing undefined behavior across foreign language boundaries.
 
 ## Exported Functions
 

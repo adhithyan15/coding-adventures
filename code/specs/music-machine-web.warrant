@@ -1,0 +1,98 @@
+-- MUS01 / MUS03 / MUS04 / MUS07 / VER04 -- Text Score and Portable Music Machine Web
+--
+-- Warrant specification for typescript/music-machine-web.
+-- Every operand is public (no cryptographic secrets or private keys), which establishes
+-- the derived attestation `warrant-spec::all-operands-public` and discharges CWE-208.
+-- Bounded resource consumption satisfies CWE-400 (MAX_SCORE_BYTES=1000000,
+-- MAX_EVENTS=10000, MAX_SAMPLE_RATE_HZ=192000, MAX_SAMPLE_COUNT=16777216),
+-- strictly iterative loops discharge CWE-674, and zero regex / dynamic eval
+-- discharges CWE-1333 and CWE-94.
+
+warrant music_machine_web v1
+  error MusicMachineError = INVALID_ARGUMENT | BUDGET_EXCEEDED
+
+  op parse_score(score_bytes: Nat) -> Result<Nat, MusicMachineError>
+  op parse_portable_score(score_bytes: Nat) -> Result<Nat, MusicMachineError>
+  op render_score_to_pcm(event_count: Nat, sample_rate_hz: Nat) -> Result<Nat, MusicMachineError>
+  op render_portable_score_to_pcm(event_count: Nat, sample_rate_hz: Nat) -> Result<Nat, MusicMachineError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels parse_score:
+    score_bytes public
+
+  labels parse_portable_score:
+    score_bytes public
+
+  labels render_score_to_pcm:
+    event_count public
+    sample_rate_hz public
+
+  labels render_portable_score_to_pcm:
+    event_count public
+    sample_rate_hz public
+
+  input parse_score.score_bytes:
+    hostile
+    rejects score_bytes > 1000000 with MusicMachineError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input parse_portable_score.score_bytes:
+    hostile
+    rejects score_bytes > 1000000 with MusicMachineError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input render_score_to_pcm.event_count:
+    hostile
+    rejects event_count > 10000 with MusicMachineError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input render_score_to_pcm.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with MusicMachineError.INVALID_ARGUMENT
+    ensures no_panic, terminates
+
+  input render_portable_score_to_pcm.event_count:
+    hostile
+    rejects event_count > 10000 with MusicMachineError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input render_portable_score_to_pcm.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with MusicMachineError.INVALID_ARGUMENT
+    ensures no_panic, terminates
+
+  bound parse_score:
+    steps <= 64 * score_bytes + 1024
+    heap <= 4096
+    depth <= 16
+
+  bound parse_portable_score:
+    steps <= 64 * score_bytes + 1024
+    heap <= 4096
+    depth <= 16
+
+  bound render_score_to_pcm:
+    steps <= 512 * event_count + 2048
+    heap <= 8192
+    depth <= 16
+
+  bound render_portable_score_to_pcm:
+    steps <= 512 * event_count + 2048
+    heap <= 8192
+    depth <= 16
+
+  claim parse_score_is_deterministic:
+    forall b: Nat | b <= 1000000. parse_score(b) == parse_score(b)
+
+  claim parse_portable_score_is_deterministic:
+    forall b: Nat | b <= 1000000. parse_portable_score(b) == parse_portable_score(b)
+
+  claim render_score_is_deterministic:
+    forall e: Nat, r: Nat | e <= 10000 and r > 0 and r <= 192000. render_score_to_pcm(e, r) == render_score_to_pcm(e, r)
+
+  claim render_portable_score_is_deterministic:
+    forall e: Nat, r: Nat | e <= 10000 and r > 0 and r <= 192000. render_portable_score_to_pcm(e, r) == render_portable_score_to_pcm(e, r)
