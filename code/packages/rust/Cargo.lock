@@ -11880,6 +11880,17 @@ name = "resp-protocol"
 version = "0.1.0"
 
 [[package]]
+name = "rigidbody-6dof"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "trig",
+]
+
+[[package]]
 name = "ring"
 version = "0.17.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"

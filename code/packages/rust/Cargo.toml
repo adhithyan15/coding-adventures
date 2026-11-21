@@ -761,6 +761,7 @@ members = [
     "point2d",
     "math3d",
     "raycast-dda",
+    "rigidbody-6dof",
     "polynomial",
     "protobuf",
     "fsrs",
