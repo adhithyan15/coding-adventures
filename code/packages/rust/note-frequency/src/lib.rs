@@ -21,6 +21,8 @@
 
 #![forbid(unsafe_code)]
 
+pub mod capabilities;
+
 /// Maximum accepted byte length for a note label (CWE-400 guard).
 pub const MAX_NOTE_STRING_LENGTH: usize = 32;
 
@@ -286,4 +288,73 @@ fn invalid_note_message(text: &str) -> String {
 fn is_canonical_octave(text: &str) -> bool {
     let digits = text.strip_prefix('-').unwrap_or(text);
     !digits.is_empty() && digits.bytes().all(|b| b.is_ascii_digit())
+}
+
+/// Structured pitch representation returned by [`parse_note_parts`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ParsedNote {
+    /// Chromatic pitch class index (`0..=11`, with `C = 0` and `A = 9`).
+    pub chromatic: u8,
+    /// Octave number in `[MIN_OCTAVE, MAX_OCTAVE]`.
+    pub octave: i32,
+}
+
+/// Parse an ASCII/UTF-8 byte slice as a note label and return its chromatic index and octave.
+pub fn parse_note_parts(raw: &[u8]) -> Result<ParsedNote, String> {
+    let text = std::str::from_utf8(raw)
+        .map_err(|_| "Invalid note: input is not valid UTF-8.".to_string())?;
+    let note = parse_note(text)?;
+    Ok(ParsedNote {
+        chromatic: note.chromatic_index() as u8,
+        octave: note.octave,
+    })
+}
+
+/// Signed semitone offset from `A4` returned by [`semitones_from_a4_parts`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SemitoneOffset {
+    /// Signed semitone distance relative to `A4` (`0` for `A4`, `12` for `A5`, `-9` for `C4`).
+    pub semitones: i32,
+}
+
+/// Compute the signed semitone offset from `A4` given raw ASCII letter/accidental bytes and octave.
+///
+/// `accidental` must be `0` (natural), `b'#'`, or `b'b'`.
+pub fn semitones_from_a4_parts(
+    letter: u8,
+    accidental: u8,
+    octave: i32,
+) -> Result<SemitoneOffset, String> {
+    if !letter.is_ascii() {
+        return Err("Unsupported note spelling: letter must be an ASCII byte.".to_string());
+    }
+    let letter_buf = [letter];
+    let letter_str = std::str::from_utf8(&letter_buf)
+        .map_err(|_| "Unsupported note spelling: letter must be UTF-8.".to_string())?;
+    let acc_str = match accidental {
+        0 => "",
+        b'#' => "#",
+        b'b' => "b",
+        other => {
+            return Err(format!(
+                "Unsupported accidental byte {other:#04x}; expected 0, '#' (0x23), or 'b' (0x62)."
+            ));
+        }
+    };
+    let semitones = Note::new(letter_str, acc_str, octave)?.checked_semitones_from_a4()?;
+    Ok(SemitoneOffset { semitones })
+}
+
+/// Parse a note label from UTF-8 bytes and return its equal-tempered frequency in millihertz.
+pub fn note_to_frequency_millihertz(raw: &[u8]) -> Result<u64, String> {
+    let text = std::str::from_utf8(raw)
+        .map_err(|_| "Invalid note: input is not valid UTF-8.".to_string())?;
+    let hz = note_to_frequency(text)?;
+    let scaled = (hz * 1000.0).round();
+    if !scaled.is_finite() || !(1.0..=1.0e18).contains(&scaled) {
+        return Err(format!(
+            "Frequency {hz} Hz out of millihertz u64 range [0.001, 1e15]."
+        ));
+    }
+    Ok(scaled as u64)
 }
