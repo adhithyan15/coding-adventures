@@ -283,7 +283,11 @@ function stringFromFrontmatter(
 
 /** Compose a portable route with its deployment base without URL resetting. */
 export function publicUrl(siteUrl: string, route: string): string {
-  const base = siteUrl.replace(/\/+$/, "");
+  let end = siteUrl.length;
+  while (end > 0 && siteUrl.charCodeAt(end - 1) === 47) {
+    end--;
+  }
+  const base = siteUrl.slice(0, end);
   const path = route.startsWith("/") ? route : `/${route}`;
   return `${base}${path}`;
 }
