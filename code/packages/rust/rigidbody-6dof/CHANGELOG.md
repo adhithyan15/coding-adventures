@@ -14,5 +14,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `IntegratorKind::VelocityVerlet` (2nd-order symplectic with exponential quaternion update) and `IntegratorKind::RK4` (4th-order Runge-Kutta with post-step renormalization).
 - Multi-point `Plane` ground contact solver (`GroundContactParams`, `ContactModel::Penalty` spring-damper + Coulomb friction, `ContactModel::Impulse` restitution + Coulomb friction) with bounded sub-stepping (`MAX_SUBSTEPS = 64`, `MAX_CONTACT_POINTS = 64`).
 - Security controls: `#![forbid(unsafe_code)]`, `#![deny(missing_docs)]`, zero ambient capabilities (`CAP001`), atomic state preservation on error/divergence, CWE-20/190/369/400/835 bounds.
-- Conformance suite (`tests/conformance.rs`), zero-allocation microbenchmarks (`tests/microbenchmarks.rs`), and runtime capability gate (`tests/runtime_capability.rs`).
+- Conformance suite (`tests/conformance.rs`), hostile-input CVE proof suite (`tests/hostile_inputs.rs`), zero-allocation microbenchmarks (`tests/microbenchmarks.rs`), and runtime capability gate (`tests/runtime_capability.rs`).
 - Formal verification artifacts: `code/specs/rigidbody-6dof.warrant`, `assurance-profile.json`, `assurance_report.json`, `effect_certificate.json`.
