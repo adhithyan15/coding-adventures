@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/raster3d-soft",
-  "source_digest": "3f89a568a59c87435b216479d67bd112bf71b908559fd11bc57509849e3c3fdd",
+  "source_digest": "c515408ac667723527d141fdcd2d17284ebb33863b97bd5b128af1035fe3d87c",
   "manifest_digest": "d47289d248447edb89bcb2e322b589dd391dcedf9d351738bd2c6a6f133256ec",
   "declared_effects": [],
   "entry_points": [

@@ -1199,7 +1199,11 @@ fn plane_signed_distance(p: ClipPlane, v: &Vec4) -> f64 {
 
 #[inline]
 fn lerp_clip_vertex(a: &ClipVertex, b: &ClipVertex, t: f64) -> ClipVertex {
-    let s = t.clamp(0.0, 1.0);
+    let s = if t.is_finite() {
+        t.clamp(0.0, 1.0)
+    } else {
+        0.5
+    };
     let u_s = 1.0 - s;
     ClipVertex {
         clip: Vec4::from_xyzw(
@@ -1243,10 +1247,15 @@ fn clip_polygon_against_plane(
 
         if curr_in != prev_in {
             let denom = prev_d - curr_d;
-            let t = if denom.abs() <= 1e-15 {
+            let t = if !denom.is_finite() || denom.abs() <= 1e-15 {
                 0.5
             } else {
-                prev_d / denom
+                let ratio = prev_d / denom;
+                if ratio.is_finite() {
+                    ratio
+                } else {
+                    0.5
+                }
             };
             if out_len < MAX_CLIP_VERTICES {
                 output[out_len] = lerp_clip_vertex(&prev, curr, t);
@@ -1466,6 +1475,12 @@ fn rasterize_screen_triangle(
             let b1 = e1 * inv_area;
             let b2 = e2 * inv_area;
 
+            let one_over_w = b0 * sv0.inv_w + b1 * sv1.inv_w + b2 * sv2.inv_w;
+            if !one_over_w.is_finite() || one_over_w <= 1e-12 {
+                continue;
+            }
+            let w_interp = 1.0 / one_over_w;
+
             let depth = (b0 * sv0.depth + b1 * sv1.depth + b2 * sv2.depth).clamp(0.0, 1.0);
             let pixel_idx = row_base.saturating_add(x as usize);
             if !zbuffer.test_and_maybe_write(
@@ -1477,12 +1492,6 @@ fn rasterize_screen_triangle(
             ) {
                 continue;
             }
-
-            let one_over_w = b0 * sv0.inv_w + b1 * sv1.inv_w + b2 * sv2.inv_w;
-            if !one_over_w.is_finite() || one_over_w <= 1e-12 {
-                continue;
-            }
-            let w_interp = 1.0 / one_over_w;
 
             let r = (b0 * sv0.r_over_w + b1 * sv1.r_over_w + b2 * sv2.r_over_w) * w_interp;
             let g = (b0 * sv0.g_over_w + b1 * sv1.g_over_w + b2 * sv2.g_over_w) * w_interp;
@@ -1811,12 +1820,10 @@ pub fn draw_indexed_mesh_into(
         validate_vertex_index(tri[2] as usize, vertices.len())?;
     }
 
-    if scratch.transformed.capacity() < vertices.len() {
-        scratch
-            .transformed
-            .reserve(vertices.len() - scratch.transformed.capacity());
-    }
     scratch.transformed.clear();
+    if scratch.transformed.capacity() < vertices.len() {
+        scratch.transformed.reserve(vertices.len());
+    }
 
     for v in vertices {
         scratch

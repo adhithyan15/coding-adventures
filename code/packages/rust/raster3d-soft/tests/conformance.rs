@@ -1037,3 +1037,84 @@ fn deterministic_1000_case_randomized_raster_suite() {
         assert!(stats.pixels_written <= 1024);
     }
 }
+
+#[test]
+fn scratch_growth_and_huge_w_clip_safety() {
+    let mut fb = PixelContainer::new(32, 32);
+    let mut zb = vec![1.0_f64; 32 * 32];
+    let mut scratch = RasterScratch::scratch_with_capacity(3).unwrap();
+
+    // First draw with 3 vertices populates scratch (len=3, cap>=3)
+    let cfg = RasterConfig::raster_config_new(Mat4::mat4_identity()).unwrap();
+    let tri = [
+        Vertex::vertex_new(
+            Vec3::new(-0.5, -0.5, 0.0),
+            Vec3::unit_z(),
+            [1.0, 1.0, 1.0],
+            0.0,
+            0.0,
+        ),
+        Vertex::vertex_new(
+            Vec3::new(0.5, -0.5, 0.0),
+            Vec3::unit_z(),
+            [1.0, 1.0, 1.0],
+            1.0,
+            0.0,
+        ),
+        Vertex::vertex_new(
+            Vec3::new(0.0, 0.5, 0.0),
+            Vec3::unit_z(),
+            [1.0, 1.0, 1.0],
+            0.5,
+            1.0,
+        ),
+    ];
+    draw_indexed_mesh_into(
+        &mut fb,
+        DepthBufferMut::F64(&mut zb),
+        &cfg,
+        None,
+        &tri,
+        &[0, 1, 2],
+        &mut scratch,
+    )
+    .unwrap();
+
+    // Second draw with 24-vertex cube must clear first and reserve >= 24
+    let (cube_v, cube_i) = make_unit_cube();
+    clear_depth_f64(&mut zb, 1.0).unwrap();
+    draw_indexed_mesh_into(
+        &mut fb,
+        DepthBufferMut::F64(&mut zb),
+        &cfg,
+        None,
+        &cube_v,
+        &cube_i,
+        &mut scratch,
+    )
+    .unwrap();
+    assert!(scratch.scratch_capacity() >= cube_v.len());
+
+    // Extreme homogeneous w / huge scale triggering Inf clip plane distance must not panic/NaN
+    let mut huge_mvp = Mat4::mat4_identity();
+    huge_mvp.cols[3][3] = 1.0e308;
+    let huge_cfg = RasterConfig::raster_config_new(huge_mvp).unwrap();
+    clear_depth_f64(&mut zb, 1.0).unwrap();
+    let v_behind = Vertex::vertex_new(
+        Vec3::new(0.0, 0.0, 10.0),
+        Vec3::unit_z(),
+        [1.0, 0.0, 0.0],
+        0.0,
+        0.0,
+    );
+    let _ = draw_triangle_into(
+        &mut fb,
+        DepthBufferMut::F64(&mut zb),
+        &huge_cfg,
+        None,
+        &tri[0],
+        &tri[1],
+        &v_behind,
+    )
+    .unwrap();
+}
