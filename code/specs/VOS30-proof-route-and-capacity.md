@@ -2664,30 +2664,32 @@ below is a separate step, run on the committed tree and merged in a second commi
   unwinds. The sampled and full re-runs call `runner::run_one_bounded` (`run_one` with a
   tighter hard limit), the function `run` uses.
 
-**VOS-028c3: the experiments and the decision.** The experiments of 8.6.3, in
+**VOS-028c3: the experiments and the decision (split into `c3a`, `c3b`, `c3c`).** The experiments of 8.6.3, in
 `src/sweep.rs` and `tests/sweep.rs` with edits to `exp.rs`, `shapes.rs`, `prog.rs`,
-`results.rs` and `table.rs`.
+`results.rs` and `table.rs`. Because `plan(Tier::Full)` and `vos30-capacity-results.json`
+must stay in sync (`FULL_PLAN_EXEMPT` stays empty) and full recording runs on Unix:
 
-* `results.rs` gains `route_green` (8.6.1) and `decide_replan` (the table of 8.6.4),
-  with a negative control for every clause, as 9.11 requires of `decide`.
-* `table --check` also checks the sentence **`**Re-plan decision (VOS-028c):**`** of
-  8.6 against the rows, exactly as it checks 8.5's decision. The new label differs
-  from the 8.5 decision label on purpose: the reader of 8.5 scans from its heading to
-  the next level-two heading, a range that contains 8.6, and looks for its own label.
+* **`VOS-028c3a` (this step):** B3 `every2`/`every4` support, D5 (touched-word obligations,
+  separate structural frame obligation, two-mutant G3), `route_green` (8.6.1), `cut_density_k`
+  (8.6.2) and `decide_replan` (8.6.4, including the orthogonal memory verdict), with a
+  negative control for every clause in `tests/results_logic.rs` and shape/G3 tests in
+  `tests/shapes.rs`; `plan(Tier::Full)` is not expanded yet.
+* **`VOS-028c3b` (planned):** B5 (`src/sweep.rs` and `tests/sweep.rs`), G3 unswept-control
+  replay and signature-merge negative control, and `B5 fuse = 1` `instance_sha256` parity
+  with B2; `plan(Tier::Full)` is not expanded yet.
+* **`VOS-028c3c` (planned):** Register B3 `every2`/`every4`, D5 and B5 in `plan(Tier::Full)`,
+  enable `table --check` for **`**Re-plan decision (VOS-028c):**`** of 8.6 (distinct from 8.5's
+  label because 8.5 scans up to the next level-two heading, a range that contains 8.6),
+  record on a clean committed tree on Unix (`run --tier full --only B3,B5,D5 --jobs 8`, then
+  `merge --add` for each, `table --write`, `decide`; the results in a second commit), and
+  fill 8.6's decision sentence, the README's "What it found", the backlog (fund or re-plan
+  VOS-029a and b; the budget of VOS-040) and VOS00 section 10.2.
 * B5 and D5 are validated by guards G1 to G3 as every experiment is; the extra G3
   conditions are in 8.6.3. B5's `fuse = 1` `instance_sha256` equals B2's.
-* Recording: a clean committed tree, `run --tier full --only B3,B5,D5 --jobs 8`, then
-  `merge --add` for each, `table --write`, `decide`; the results in a second commit.
-  CI gains about ten quick rows (seconds). If the PR is too large it splits into B3
-  cuts plus D5, and B5 plus the decision.
-* Then: 8.6's decision sentence is filled with the measured outcome, the README's
-  "What it found", the backlog (fund or re-plan VOS-029a and b; the budget of
-  VOS-040) and VOS00 section 10.2.
-
-**Decision procedure for 8.6.** `decide_replan` classifies the recorded rows by the
-table of 8.6.4 and prints the row, the condition that placed it and the memory
-verdict. A group is green iff at least one row is counted and every counted row is
-route-green; a missing group is red.
+* **Decision procedure for 8.6.** `decide_replan` classifies the recorded rows by the
+  table of 8.6.4 and returns the row, the condition that placed it and the memory
+  verdict. A group is green iff at least one row is counted and every counted row is
+  route-green; a missing group is red.
 
 ---
 
