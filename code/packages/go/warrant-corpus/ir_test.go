@@ -1,6 +1,8 @@
 package warrantcorpus
 
 import (
+	"fmt"
+	"math"
 	"strings"
 	"testing"
 )
@@ -215,6 +217,18 @@ func TestIRSubjectOp(t *testing.T) {
 		expr := expr
 		if code := laneCode(t, func() { c.compile(node(t, expr), scope) }); code != "unsupported-ir" {
 			t.Errorf("%s: code %q", name, code)
+		}
+	}
+	// Width exceeding maxSafeInt (and MaxInt on 32-bit) must be refused.
+	overSafe := fmt.Sprintf(`["subject_op","fixed",[["var","a"]],[%d]]`, int64(maxSafeInt)+1)
+	if code := laneCode(t, func() { c.compile(node(t, overSafe), scope) }); code != "unsupported-ir" {
+		t.Errorf("over maxSafeInt: code %q, want unsupported-ir", code)
+	}
+	maxInt := int64(math.MaxInt)
+	if maxInt < math.MaxInt64 {
+		overInt := fmt.Sprintf(`["subject_op","fixed",[["var","a"]],[%d]]`, maxInt+1)
+		if code := laneCode(t, func() { c.compile(node(t, overInt), scope) }); code != "unsupported-ir" {
+			t.Errorf("over MaxInt: code %q, want unsupported-ir", code)
 		}
 	}
 }
