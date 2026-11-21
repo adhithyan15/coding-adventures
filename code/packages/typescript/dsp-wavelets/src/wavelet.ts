@@ -1,5 +1,25 @@
-import { InvalidParamError } from "./errors.js";
+import { MAX_SAMPLES } from "./constants.js";
+import {
+  InvalidParamError,
+  safeFormatValue,
+  validateFloats,
+  validateSequence,
+} from "./errors.js";
 import { WaveletFamily } from "./types.js";
+
+const MAX_WAVELET_NAME_LEN = 64;
+
+const VALID_WAVELET_FAMILIES = new Set<WaveletFamily>([
+  WaveletFamily.HAAR,
+  WaveletFamily.DAUBECHIES,
+  WaveletFamily.SYMLETS,
+  WaveletFamily.COIFLETS,
+  WaveletFamily.BIORTHOGONAL,
+  WaveletFamily.MORLET,
+  WaveletFamily.RICKER,
+]);
+
+const DB_FILTER_TABLES = new Map<number, number[]>();
 
 export const FRAC_1_SQRT_2 = 1.0 / Math.SQRT2;
 export const SQRT_2 = Math.SQRT2;
@@ -94,10 +114,11 @@ export const BIOR2_2_REC_LO = [
  * Derive QMF analysis highpass g from lowpass h: g[i] = (-1)^i * h[L - 1 - i].
  */
 export function qmfHighpass(h: ArrayLike<number>): Float64Array {
-  const len = h.length;
+  const len = validateSequence(h, "h", MAX_SAMPLES, null, InvalidParamError);
+  validateFloats(h, "h", InvalidParamError);
   const out = new Float64Array(len);
   for (let i = 0; i < len; i++) {
-    const rev = Number(h[len - 1 - i]);
+    const rev = h[len - 1 - i];
     out[i] = i % 2 === 0 ? rev : -rev;
   }
   return out;
@@ -122,6 +143,36 @@ export class Wavelet {
     recLo?: ArrayLike<number>,
     recHi?: ArrayLike<number>
   ) {
+    if (typeof name !== "string" || name.length === 0 || name.length > MAX_WAVELET_NAME_LEN) {
+      throw new InvalidParamError(
+        `wavelet name must be a non-empty string of length <= ${MAX_WAVELET_NAME_LEN}; got ${safeFormatValue(name)}`
+      );
+    }
+    if (!VALID_WAVELET_FAMILIES.has(family)) {
+      throw new InvalidParamError(`unsupported wavelet family: ${safeFormatValue(family)}`);
+    }
+    const decLoLen = validateSequence(decLo, "decLo", MAX_SAMPLES, null, InvalidParamError);
+    validateFloats(decLo, "decLo", InvalidParamError);
+    const decHiLen = validateSequence(decHi, "decHi", MAX_SAMPLES, null, InvalidParamError);
+    validateFloats(decHi, "decHi", InvalidParamError);
+    const isDiscrete = family !== WaveletFamily.MORLET && family !== WaveletFamily.RICKER;
+    if (isDiscrete && (decLoLen === 0 || decHiLen === 0)) {
+      throw new InvalidParamError("discrete wavelet filter banks decLo and decHi must be non-empty");
+    }
+    if (recLo !== undefined) {
+      const recLoLen = validateSequence(recLo, "recLo", MAX_SAMPLES, null, InvalidParamError);
+      validateFloats(recLo, "recLo", InvalidParamError);
+      if (isDiscrete && recLoLen === 0) {
+        throw new InvalidParamError("discrete wavelet filter bank recLo must be non-empty");
+      }
+    }
+    if (recHi !== undefined) {
+      const recHiLen = validateSequence(recHi, "recHi", MAX_SAMPLES, null, InvalidParamError);
+      validateFloats(recHi, "recHi", InvalidParamError);
+      if (isDiscrete && recHiLen === 0) {
+        throw new InvalidParamError("discrete wavelet filter bank recHi must be non-empty");
+      }
+    }
     this.name = name;
     this.family = family;
     this.decLo = Float64Array.from(decLo);
@@ -141,16 +192,21 @@ export class Wavelet {
   }
 
   static db(n: number): Wavelet {
+    if (!Number.isSafeInteger(n)) {
+      throw new InvalidParamError(
+        `unsupported Daubechies order ${safeFormatValue(n)}; choose from [1, 2, 4, 6, 8]`
+      );
+    }
     if (n === 1) {
       return Wavelet.haar();
     }
-    const tables: Record<number, number[]> = {
-      2: DB2_DEC_LO,
-      4: DB4_DEC_LO,
-      6: DB6_DEC_LO,
-      8: DB8_DEC_LO,
-    };
-    const h = tables[n];
+    if (DB_FILTER_TABLES.size === 0) {
+      DB_FILTER_TABLES.set(2, DB2_DEC_LO);
+      DB_FILTER_TABLES.set(4, DB4_DEC_LO);
+      DB_FILTER_TABLES.set(6, DB6_DEC_LO);
+      DB_FILTER_TABLES.set(8, DB8_DEC_LO);
+    }
+    const h = DB_FILTER_TABLES.get(n);
     if (!h) {
       throw new InvalidParamError(
         `unsupported Daubechies order ${n}; choose from [1, 2, 4, 6, 8]`
@@ -170,7 +226,7 @@ export class Wavelet {
       return new Wavelet("sym4", WaveletFamily.SYMLETS, h, g);
     }
     throw new InvalidParamError(
-      `unsupported Symlet order ${n}; choose from [2, 4]`
+      `unsupported Symlet order ${safeFormatValue(n)}; choose from [2, 4]`
     );
   }
 
@@ -180,7 +236,7 @@ export class Wavelet {
       const g = qmfHighpass(h);
       return new Wavelet("coif1", WaveletFamily.COIFLETS, h, g);
     }
-    throw new InvalidParamError(`unsupported Coiflet order ${n}; choose from [1]`);
+    throw new InvalidParamError(`unsupported Coiflet order ${safeFormatValue(n)}; choose from [1]`);
   }
 
   static bior(decomp: number = 2, recon: number = 2): Wavelet {
@@ -192,7 +248,7 @@ export class Wavelet {
       return new Wavelet("bior2.2", WaveletFamily.BIORTHOGONAL, h, g, recH, recG);
     }
     throw new InvalidParamError(
-      `unsupported Biorthogonal pair (${decomp}, ${recon})`
+      `unsupported Biorthogonal pair (${safeFormatValue(decomp)}, ${safeFormatValue(recon)})`
     );
   }
 
@@ -232,7 +288,7 @@ export function requireOrthogonalWavelet(w: Wavelet, opName = "DWT"): void {
     w.family !== WaveletFamily.COIFLETS
   ) {
     throw new InvalidParamError(
-      `${opName} supports orthogonal wavelets only; got ${w.name}`
+      `${opName} supports orthogonal wavelets only; got ${safeFormatValue(w.name)}`
     );
   }
 }
@@ -246,7 +302,7 @@ export function parseWavelet(w: Wavelet | string): Wavelet {
   if (w instanceof Wavelet) {
     return w;
   }
-  if (typeof w === "string") {
+  if (typeof w === "string" && w.length <= MAX_WAVELET_NAME_LEN) {
     const s = w.trim().toLowerCase();
     if (s === "haar") {
       return Wavelet.haar();
@@ -279,5 +335,5 @@ export function parseWavelet(w: Wavelet | string): Wavelet {
       return Wavelet.ricker();
     }
   }
-  throw new InvalidParamError(`unsupported wavelet identifier: ${String(w)}`);
+  throw new InvalidParamError(`unsupported wavelet identifier: ${safeFormatValue(w)}`);
 }

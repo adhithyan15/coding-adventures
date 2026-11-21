@@ -1,13 +1,25 @@
 import 'package:coding_adventures_grammar_tools/grammar_tools.dart';
 
+import 'constants.dart';
+import 'messages.dart';
 import 'token.dart';
 import 'tokenizer.dart';
 
+/// A token definition compiled once for matching at arbitrary positions.
+///
+/// Literate why — linear-time matching (CWE-400): the previous implementation
+/// compiled `^(?:pattern)` and matched against `source.substring(position)`,
+/// copying the whole remaining input for every attempt at every position,
+/// which made lexing quadratic in source size. [RegExp.matchAsPrefix] anchors
+/// the match at `position` inside the original string with no copy, so each
+/// attempt costs only the length of what it matches. Patterns therefore see
+/// the real preceding text (lookbehind and `\b` now behave as written) and
+/// must not rely on `^` to mean "start of this token".
 class _CompiledPattern {
   _CompiledPattern({required this.definition, required this.caseSensitive})
       : regex = definition.isRegex
             ? RegExp(
-                '^(?:${definition.pattern})',
+                '(?:${definition.pattern})',
                 caseSensitive: caseSensitive,
                 unicode: true,
                 dotAll: true,
@@ -20,8 +32,7 @@ class _CompiledPattern {
 
   String? match(String source, int position) {
     if (definition.isRegex) {
-      final slice = source.substring(position);
-      final match = regex!.firstMatch(slice);
+      final match = regex!.matchAsPrefix(source, position);
       if (match == null) {
         return null;
       }
@@ -30,13 +41,13 @@ class _CompiledPattern {
     }
 
     final literal = definition.pattern;
+    if (caseSensitive) {
+      return source.startsWith(literal, position) ? literal : null;
+    }
     if (position + literal.length > source.length) {
       return null;
     }
     final candidate = source.substring(position, position + literal.length);
-    if (caseSensitive) {
-      return candidate == literal ? candidate : null;
-    }
     return candidate.toLowerCase() == literal.toLowerCase() ? candidate : null;
   }
 }
@@ -74,8 +85,13 @@ List<Token> grammarTokenize(String source, TokenGrammar grammar) {
 
   void advanceText(String text) {
     for (final codePoint in text.runes) {
-      position += 1;
-      if (codePoint == 0x0A) {
+      // `position` indexes UTF-16 code units (it is used with substring and
+      // regex offsets) while `column` counts code points, so an astral code
+      // point advances the former by two and the latter by one.
+      position += codePoint > maxBmpCodePoint
+          ? utf16UnitsPerAstralCodePoint
+          : utf16UnitsPerBmpCodePoint;
+      if (codePoint == lineFeedCodePoint) {
         line += 1;
         column = 1;
       } else {
@@ -131,11 +147,7 @@ List<Token> grammarTokenize(String source, TokenGrammar grammar) {
     }
 
     if (matchedDefinition == null || matchedText == null) {
-      throw LexerError(
-        'Unexpected character: "${source[position]}"',
-        line,
-        column,
-      );
+      throw LexerError(messageUnexpectedCharacter, line, column);
     }
 
     final startLine = line;
@@ -175,11 +187,7 @@ String _resolveTokenType(
 ) {
   final normalizedText = _normalizeValue(matchedText, caseSensitive);
   if (definition.name == 'NAME' && reservedSet.contains(normalizedText)) {
-    throw LexerError(
-      "Reserved keyword '$matchedText' cannot be used as an identifier",
-      line,
-      column,
-    );
+    throw LexerError(messageReservedKeyword, line, column);
   }
 
   if (definition.name == 'NAME' && keywordSet.contains(normalizedText)) {

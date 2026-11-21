@@ -84,7 +84,7 @@ impl AvmEnvironment {
             )));
         }
 
-        let mut store = self.object_store.lock().unwrap();
+        let mut store = self.object_store.lock().unwrap_or_else(|e| e.into_inner());
         if let Some(map) = store.get_mut(&obj_id) {
             if let Some(cls) = map.get("__class__") {
                 let cls_str = cls.to_string();
@@ -106,7 +106,7 @@ impl AvmEnvironment {
 
     /// Read object property member.
     pub fn env_get_member(&self, obj_id: usize, prop: &str) -> Value {
-        let store = self.object_store.lock().unwrap();
+        let store = self.object_store.lock().unwrap_or_else(|e| e.into_inner());
         if let Some(map) = store.get(&obj_id) {
             if let Some(val) = map.get(prop) {
                 return val.clone();
@@ -137,48 +137,63 @@ impl AvmEnvironment {
                 name
             )));
         }
-        let mut vars = self.variables.lock().unwrap();
+        let mut vars = self.variables.lock().unwrap_or_else(|e| e.into_inner());
         vars.insert(name.to_string(), val);
         Ok(())
     }
 
     /// Read a scoped variable.
     pub fn env_get_variable(&self, name: &str) -> Value {
-        let vars = self.variables.lock().unwrap();
+        let vars = self.variables.lock().unwrap_or_else(|e| e.into_inner());
         vars.get(name).cloned().unwrap_or(Value::Null)
     }
 
     /// Allocate a new object instance in the environment.
     pub fn env_new_object(&self, class_name: &str) -> usize {
-        let mut id_lock = self.next_object_id.lock().unwrap();
+        let mut id_lock = self
+            .next_object_id
+            .lock()
+            .unwrap_or_else(|e| e.into_inner());
         let id = *id_lock;
         *id_lock += 1;
 
         let mut map = HashMap::new();
         map.insert("__class__".to_string(), Value::str(class_name));
-        self.object_store.lock().unwrap().insert(id, map);
+        self.object_store
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .insert(id, map);
         id
     }
 
     /// Append a message to the trace output buffer.
     pub fn env_append_output(&self, msg: &str) {
-        let mut out = self.output.lock().unwrap();
+        let mut out = self.output.lock().unwrap_or_else(|e| e.into_inner());
         out.push_str(msg);
         out.push('\n');
     }
 
     /// Get captured trace output.
     pub fn env_get_output(&self) -> String {
-        self.output.lock().unwrap().clone()
+        self.output
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .clone()
     }
 
     /// Log a timeline action verb (e.g. "stop", "play", "gotoFrame(5)").
     pub fn env_log_action(&self, act: &str) {
-        self.action_log.lock().unwrap().push(act.to_string());
+        self.action_log
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .push(act.to_string());
     }
 
     /// Get logged timeline actions.
     pub fn env_get_action_log(&self) -> Vec<String> {
-        self.action_log.lock().unwrap().clone()
+        self.action_log
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .clone()
     }
 }

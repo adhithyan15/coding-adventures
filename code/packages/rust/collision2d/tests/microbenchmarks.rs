@@ -68,7 +68,10 @@ fn check_aabb_vs_aabb_zero_alloc(_ctx: &Ctx) -> Verdict {
     });
 
     if !zero_alloc_ok(&res) {
-        return Verdict::fail(FID_BENCH_FAIL, "aabb_vs_aabb exceeded zero allocation budget");
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "aabb_vs_aabb exceeded zero allocation budget",
+        );
     }
     Verdict::Pass
 }
@@ -91,7 +94,10 @@ fn check_circle_vs_aabb_zero_alloc(_ctx: &Ctx) -> Verdict {
     });
 
     if !zero_alloc_ok(&res) {
-        return Verdict::fail(FID_BENCH_FAIL, "circle_vs_aabb exceeded zero allocation budget");
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "circle_vs_aabb exceeded zero allocation budget",
+        );
     }
     Verdict::Pass
 }
@@ -114,7 +120,10 @@ fn check_obb_vs_obb_sat_zero_alloc(_ctx: &Ctx) -> Verdict {
     });
 
     if !zero_alloc_ok(&res) {
-        return Verdict::fail(FID_BENCH_FAIL, "obb_vs_obb_sat exceeded zero allocation budget");
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "obb_vs_obb_sat exceeded zero allocation budget",
+        );
     }
     Verdict::Pass
 }
@@ -138,7 +147,10 @@ fn check_sweep_circle_aabb_zero_alloc(_ctx: &Ctx) -> Verdict {
     });
 
     if !zero_alloc_ok(&res) {
-        return Verdict::fail(FID_BENCH_FAIL, "sweep_circle_aabb exceeded zero allocation budget");
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "sweep_circle_aabb exceeded zero allocation budget",
+        );
     }
     Verdict::Pass
 }

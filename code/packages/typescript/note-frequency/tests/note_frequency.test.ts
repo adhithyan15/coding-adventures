@@ -1,5 +1,6 @@
-import { describe, it, expect, assertProperty, Gen } from "../../test-bootstrap/dist/index.js";
-import { Note, noteToFrequency, parseNote } from "../dist/index.js";
+import assert from "node:assert/strict";
+import { describe, it, expect, assertProperty, Gen } from "@coding-adventures/test-bootstrap";
+import { Note, noteToFrequency, parseNote } from "../src/index.js";
 
 describe("parseNote core functionality", () => {
   it("parses a sharp note", () => {
@@ -83,14 +84,14 @@ describe("CWE-1321: Prototype Pollution & Object Key Hardening", () => {
 describe("CWE-400: Resource Consumption & Input Length Caps", () => {
   it("rejects oversized strings exceeding 32 characters", () => {
     const hugeInput = "A" + "4".repeat(100);
-    expect(() => parseNote(hugeInput)).toThrow(RangeError);
+    assert.throws(() => parseNote(hugeInput), RangeError);
   });
 
   it("rejects out-of-range octaves to prevent numeric overflow", () => {
-    expect(() => parseNote("A101")).toThrow(RangeError);
-    expect(() => parseNote("A-101")).toThrow(RangeError);
-    expect(() => new Note("A", "", 9999)).toThrow(RangeError);
-    expect(() => new Note("A", "", -9999)).toThrow(RangeError);
+    assert.throws(() => parseNote("A101"), RangeError);
+    assert.throws(() => parseNote("A-101"), RangeError);
+    assert.throws(() => new Note("A", "", 9999), RangeError);
+    assert.throws(() => new Note("A", "", -9999), RangeError);
   });
 });
 
@@ -98,13 +99,13 @@ describe("CWE-20: Improper Input Validation & Type Safety", () => {
   it("rejects non-string types for parseNote", () => {
     for (const bad of [null, undefined, 440, {}, [], true]) {
       // @ts-expect-error Testing runtime validation for hostile inputs
-      expect(() => parseNote(bad)).toThrow(TypeError);
+      assert.throws(() => parseNote(bad), TypeError);
     }
   });
 
   it("rejects non-finite and float octaves", () => {
     for (const badOctave of [NaN, Infinity, -Infinity, 4.5, -3.2]) {
-      expect(() => new Note("A", "", badOctave)).toThrow(RangeError);
+      assert.throws(() => new Note("A", "", badOctave), RangeError);
     }
   });
 });
@@ -134,7 +135,7 @@ describe("PBT & Invariant Testing (VER05a)", () => {
       const note = new Note(letter, "", oct);
       const freq = note.frequency();
       return Number.isFinite(freq) && freq > 0;
-    }, { numRuns: 100 });
+    }, { numTests: 100 });
   });
 
   it("executes hostile fuzzing inputs without uncaught exceptions", () => {
@@ -165,6 +166,6 @@ describe("PBT & Invariant Testing (VER05a)", () => {
         // Must fail closed with standard error types
         return err instanceof Error;
       }
-    }, { numRuns: 100 });
+    }, { numTests: 100 });
   });
 });

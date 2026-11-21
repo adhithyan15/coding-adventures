@@ -1,0 +1,120 @@
+-- GAME40 -- RigidBody 6-DOF: deterministic zero-allocation 6-DOF rigid-body dynamics integrator and ground contact model.
+--
+-- Warrant document for rigidbody-6dof (VER04j and VER04m: state=explicit).
+-- Formal verification contract for the mass/inertia positivity guards,
+-- time-step & substep bounds, contact parameter domains, and atomic error invariants.
+-- Note: Warrant v1 models integer-scaled domain invariants (`mass_micro`, `det_pico`,
+-- `dt_micro`, `restitution_milli`, `friction_milli`, `substeps`, `contact_count`)
+-- alongside the Rust `f64` API (native `F64` support in Warrant awaits `WX-FL1`).
+
+warrant rigidbody_6dof v1
+  error RigidBodyError = NonFiniteInput | InvalidMass | InvalidInertiaTensor | ZeroLengthNormal | InvalidTimeStep | SubstepLimitExceeded | TooManyContactPoints | InvalidContactParameter | NumericalDivergence | MathError
+
+  model Unit = Bool
+  variant IntegratorKind = VelocityVerlet | RK4
+
+  -- Mass >= 1 micro-kg (1e-6 kg) and <= 1e15 micro-kg (1e9 kg).
+  model valid_mass_micro(m: Int) -> Bool = m >= 1 and m <= 1000000000000000
+  -- Scale-normalized leading principal minors & determinant strictly > 1 pico-unit (1e-12).
+  model valid_inertia_minors(m1: Int, m2: Int, det: Int) -> Bool = m1 > 1 and m2 > 1 and det > 1
+  -- Time step dt in (0, 250_000] microseconds (dt in (0, 0.25] s).
+  model valid_dt_micro(dt: Int) -> Bool = dt >= 1 and dt <= 250000
+  -- Substeps in [1, 64] and contact probes in [0, 64] (CWE-400 / CWE-835).
+  model valid_substeps(n: Nat) -> Bool = n >= 1 and n <= 64
+  model valid_contact_count(n: Nat) -> Bool = n <= 64
+  model valid_step_bounds_pred(dt_micro: Int, substeps: Nat, contacts: Nat) -> Bool = valid_dt_micro(dt_micro) and valid_substeps(substeps) and valid_contact_count(contacts)
+  -- Restitution in [0, 1000] milli-units ([0.0, 1.0]) and friction >= 0.
+  model valid_contact_params(restitution_milli: Int, friction_milli: Int) -> Bool = restitution_milli >= 0 and restitution_milli <= 1000 and friction_milli >= 0
+
+  op validate_mass(mass_micro: Int) -> Result<Unit, RigidBodyError>
+  op validate_inertia(m1: Int, m2: Int, det: Int) -> Result<Unit, RigidBodyError>
+  op validate_step_bounds(dt_micro: Int, substeps: Nat, contacts: Nat) -> Result<Unit, RigidBodyError>
+  op validate_contact_coeffs(restitution_milli: Int, friction_milli: Int) -> Result<Unit, RigidBodyError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_mass:
+    mass_micro public
+  labels validate_inertia:
+    m1 public
+    m2 public
+    det public
+  labels validate_step_bounds:
+    dt_micro public
+    substeps public
+    contacts public
+  labels validate_contact_coeffs:
+    restitution_milli public
+    friction_milli public
+
+  input validate_mass.mass_micro:
+    hostile
+    ensures no_panic, terminates
+  input validate_inertia.m1:
+    hostile
+    ensures no_panic, terminates
+  input validate_inertia.m2:
+    hostile
+    ensures no_panic, terminates
+  input validate_inertia.det:
+    hostile
+    ensures no_panic, terminates
+  input validate_step_bounds.dt_micro:
+    hostile
+    ensures no_panic, terminates
+  input validate_step_bounds.substeps:
+    hostile
+    ensures no_panic, terminates
+  input validate_step_bounds.contacts:
+    hostile
+    ensures no_panic, terminates
+  input validate_contact_coeffs.restitution_milli:
+    hostile
+    ensures no_panic, terminates
+  input validate_contact_coeffs.friction_milli:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_mass:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+  bound validate_inertia:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+  bound validate_step_bounds:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_contact_coeffs:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+
+  example mass_valid:
+    validate_mass(1000000) == Ok(true)
+  example mass_zero:
+    validate_mass(0) == Err(RigidBodyError.InvalidMass)
+  example inertia_singular:
+    validate_inertia(2, 2, 1) == Err(RigidBodyError.InvalidInertiaTensor)
+  example inertia_valid:
+    validate_inertia(2, 2, 2) == Ok(true)
+  example step_valid:
+    validate_step_bounds(16667, 4, 8) == Ok(true)
+  example step_too_many_substeps:
+    validate_step_bounds(16667, 65, 4) == Err(RigidBodyError.SubstepLimitExceeded)
+  example contact_bad_restitution:
+    validate_contact_coeffs(1001, 500) == Err(RigidBodyError.InvalidContactParameter)
+
+  claim validate_mass_agrees:
+    forall m: Int. validate_mass(m) == (if valid_mass_micro(m) then Ok(true) else Err(RigidBodyError.InvalidMass))
+  claim validate_inertia_agrees:
+    forall m1: Int, m2: Int, d: Int. validate_inertia(m1, m2, d) == (if valid_inertia_minors(m1, m2, d) then Ok(true) else Err(RigidBodyError.InvalidInertiaTensor))
+  claim validate_step_bounds_agrees:
+    forall dt: Int, sub: Nat, c: Nat. match validate_step_bounds(dt, sub, c) with Ok(true) -> valid_step_bounds_pred(dt, sub, c) | Ok(false) -> false | Err(_) -> not valid_step_bounds_pred(dt, sub, c)
+  claim validate_contact_coeffs_agrees:
+    forall e: Int, mu: Int. validate_contact_coeffs(e, mu) == (if valid_contact_params(e, mu) then Ok(true) else Err(RigidBodyError.InvalidContactParameter))

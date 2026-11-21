@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/math3d",
-  "source_digest": "a5cb86c5afa8bdc96b4ed3e01183a33367cf203747b7a8cea9a480aa4e3d59e2",
+  "source_digest": "f0fe8fc522a12b514d16616a70dde2f0ff671f8bae4bb837b9de50e3fc279bba",
   "manifest_digest": "0b6f112b76952cfab8fb752c72d39df13a7b720f16e391caf48d14b7f6434fc1",
   "declared_effects": [],
   "entry_points": [

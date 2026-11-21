@@ -19,6 +19,10 @@ name = "conformance"
 path = "tests/conformance.rs"
 
 [[test]]
+name = "hostile_inputs"
+path = "tests/hostile_inputs.rs"
+
+[[test]]
 name = "microbenchmarks"
 path = "tests/microbenchmarks.rs"
 harness = false

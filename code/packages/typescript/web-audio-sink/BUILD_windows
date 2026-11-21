@@ -1,3 +1,5 @@
-npm ci --quiet
-npm run build --silent
-npm test --silent
+npm ci --prefix ../test-bootstrap --silent
+npm run build --prefix ../test-bootstrap
+npm ci --silent
+npm run build
+npm test

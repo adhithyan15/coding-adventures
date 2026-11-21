@@ -7,6 +7,7 @@ import {
   buildWindow,
   EmptySignalError,
   FftError,
+  hzToMel,
   InvalidParamError,
   InvalidSpectrogramError,
   istft,
@@ -17,9 +18,11 @@ import {
   MAX_SAMPLES,
   melFilterbank,
   melSpectrogram,
+  melToHz,
   mfcc,
   parseWindowType,
   powerSpectrogram,
+  safeFormatValue,
   SignalTooShortError,
   stft,
   StftError,
@@ -149,5 +152,67 @@ describe("Hostile inputs & VER15 Security Hardening (dsp-stft)", () => {
       assert.ok(!code.includes("Function("));
       assert.ok(!code.includes("RegExp"));
     }
+  });
+
+  it("rejects Symbol, Object.create(null), DataView, BigInt64Array, null inputs, and oversized enum strings (VER15)", () => {
+    const sym = Symbol("bad");
+    const nullProto = Object.create(null);
+
+    assert.equal(safeFormatValue(sym), "Symbol(bad)");
+    assert.equal(safeFormatValue(nullProto), "[object Object]");
+    assert.equal(safeFormatValue(null), "null");
+
+    assert.throws(() => parseWindowType(sym as any), InvalidParamError);
+    assert.throws(() => parseWindowType(nullProto as any), InvalidParamError);
+    assert.throws(() => parseWindowType(" ".repeat(65) + "hann"), InvalidParamError);
+
+    assert.throws(() => buildWindow(WindowType.HANN, sym as any), InvalidParamError);
+    assert.throws(() => buildWindow(WindowType.HANN, nullProto as any), InvalidParamError);
+    assert.throws(() => buildWindow(WindowType.HANN, Number.MAX_SAFE_INTEGER + 1), InvalidParamError);
+
+    assert.throws(() => stft([1, 2, 3, 4], sym as any, 2), InvalidParamError);
+    assert.throws(() => stft([1, 2, 3, 4], 4, nullProto as any), InvalidParamError);
+    assert.throws(() => stft([1, 2, 3, 4], 4, 2, " ".repeat(65) + "hann"), InvalidParamError);
+
+    assert.throws(() => istft([1, 0, 0, 0, 0, 0], sym as any, 2), InvalidParamError);
+    assert.throws(() => istft([1, 0, 0, 0, 0, 0], 4, nullProto as any), InvalidParamError);
+    assert.throws(() => istft([1, 0, 0, 0, 0, 0], 4, 2, WindowType.HANN, sym as any), InvalidParamError);
+
+    assert.throws(() => logSpectrogram([1, 2, 3, 4], 4, 2, WindowType.HANN, sym as any), InvalidParamError);
+    assert.throws(() => melSpectrogram([1, 2, 3, 4], 4, 2, sym as any, 16000), InvalidParamError);
+    assert.throws(() => melSpectrogram([1, 2, 3, 4], 4, 2, 4, nullProto as any), InvalidParamError);
+    assert.throws(() => mfcc([1, 2, 3, 4], 4, 2, 4, sym as any, 16000), InvalidParamError);
+
+    const dv = new DataView(new ArrayBuffer(16));
+    const bi = new BigInt64Array(4);
+    const bui = new BigUint64Array(4);
+
+    assert.throws(() => stft(dv as any, 4, 2), InvalidParamError);
+    assert.throws(() => stft(bi as any, 4, 2), InvalidParamError);
+    assert.throws(() => stft(bui as any, 4, 2), InvalidParamError);
+    assert.throws(() => stft(null as any, 4, 2), InvalidParamError);
+    assert.throws(() => stft({} as any, 4, 2), InvalidParamError);
+    assert.throws(() => stft([sym as any, 1, 2, 3], 4, 2), InvalidParamError);
+    assert.throws(() => stft([nullProto as any, 1, 2, 3], 4, 2), InvalidParamError);
+
+    assert.throws(() => istft(dv as any, 4, 2), InvalidParamError);
+    assert.throws(() => istft(bi as any, 4, 2), InvalidParamError);
+    assert.throws(() => istft(null as any, 4, 2), InvalidParamError);
+    assert.throws(() => istft([sym as any, 0, 0, 0, 0, 0], 4, 2), InvalidSpectrogramError);
+
+    // Findings 6, 7, 10 regressions
+    assert.throws(() => hzToMel(sym as any), InvalidParamError);
+    assert.throws(() => hzToMel(-1000), InvalidParamError);
+    assert.throws(() => hzToMel(NaN), InvalidParamError);
+    assert.throws(() => melToHz(sym as any), InvalidParamError);
+    assert.throws(() => melToHz(-1), InvalidParamError);
+    assert.throws(() => melToHz(1e6), InvalidParamError);
+    assert.equal(melFilterbank(4, 512, 1e-310).length, 0);
+    assert.throws(() => melSpectrogram([1, 2, 3, 4], 4, 2, 4, 1e-310), InvalidParamError);
+    assert.throws(() => powerSpectrogram([1e200, 1e200, 1e200, 1e200], 4, 2), InvalidParamError);
+    assert.throws(() => melSpectrogram([1e200, 1e200, 1e200, 1e200], 4, 2, 4, 16000), InvalidParamError);
+    assert.throws(() => mfcc([1e200, 1e200, 1e200, 1e200], 4, 2, 4, 2, 16000), (err) => err instanceof StftError && err instanceof InvalidParamError);
+    const nullCtorDv = Object.assign(new DataView(new ArrayBuffer(8)), { constructor: null });
+    assert.throws(() => stft(nullCtorDv as any, 4, 2), InvalidParamError);
   });
 });

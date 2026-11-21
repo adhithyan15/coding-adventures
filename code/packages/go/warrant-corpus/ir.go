@@ -2,6 +2,7 @@ package warrantcorpus
 
 import (
 	"bytes"
+	"math"
 	"math/bits"
 )
 
@@ -367,7 +368,10 @@ func (c *compiler) subjectOp(node []any, sub func(any) compiled) compiled {
 		widths, isWidthList := node[3].([]any)
 		need(isWidthList && len(widths) == 1, "unsupported-ir", "malformed static width")
 		n, isInt := widths[0].(int64)
-		need(isInt && n >= 0 && n <= maxSafeInt, "unsupported-ir", "malformed static width")
+		need(isInt && n >= 0 && n <= maxSafeInt && n <= math.MaxInt, "unsupported-ir", "malformed static width")
+		if n < 0 || n > math.MaxInt {
+			return nil
+		}
 		width, hasWidth = int(n), true
 	}
 	need((len(signature.WidthParams) > 0) == hasWidth, "unsupported-ir",

@@ -1,0 +1,222 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/aero-flight-model",
+  "source_digest": "358007ddbb0467901b11bba8353201e39b67dd975399e00fa7d402bb0b97820a",
+  "manifest_digest": "d10c223ebdc2bb5c72ce98ff2ddec629dcfbe525b526e3deb13eb48a074d3032",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "aero_det_exp",
+      "signature": "pub fn aero_det_exp(x: f64) -> f64",
+      "effects": []
+    },
+    {
+      "name": "aero_det_ln",
+      "signature": "pub fn aero_det_ln(x: f64) -> f64",
+      "effects": []
+    },
+    {
+      "name": "aero_det_pow",
+      "signature": "pub fn aero_det_pow(base: f64, exp: f64) -> f64",
+      "effects": []
+    },
+    {
+      "name": "aero_det_asin",
+      "signature": "pub fn aero_det_asin(x: f64) -> f64",
+      "effects": []
+    },
+    {
+      "name": "validate_altitude_bounds_m",
+      "signature": "pub const fn validate_altitude_bounds_m(alt_m: i64) -> Result<bool, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "validate_table_len",
+      "signature": "pub const fn validate_table_len(len: usize) -> Result<bool, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "validate_geometry_milli",
+      "signature": "pub const fn validate_geometry_milli( area_milli: i64, span_milli: i64, chord_milli: i64, ) -> Result<bool, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "check_airspeed_active_milli",
+      "signature": "pub const fn check_airspeed_active_milli(speed_milli: u64) -> bool",
+      "effects": []
+    },
+    {
+      "name": "isa_validate",
+      "signature": "pub fn isa_validate(&self) -> Result<(), AeroError>",
+      "effects": []
+    },
+    {
+      "name": "isa_atmosphere",
+      "signature": "pub fn isa_atmosphere(altitude_m: f64) -> Result<IsaSample, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "aero_table_new",
+      "signature": "pub fn aero_table_new(breakpoints: &[f64], values: &[f64]) -> Result<Self, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "aero_table_validate",
+      "signature": "pub fn aero_table_validate(&self) -> Result<(), AeroError>",
+      "effects": []
+    },
+    {
+      "name": "aero_table_len",
+      "signature": "pub const fn aero_table_len(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "aero_table_breakpoints",
+      "signature": "pub fn aero_table_breakpoints(&self) -> &[f64]",
+      "effects": []
+    },
+    {
+      "name": "aero_table_values",
+      "signature": "pub fn aero_table_values(&self) -> &[f64]",
+      "effects": []
+    },
+    {
+      "name": "aero_table_eval",
+      "signature": "pub fn aero_table_eval(&self, x: f64) -> Result<f64, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "compute_air_data",
+      "signature": "pub fn compute_air_data( velocity_world_mps: Vec3, wind_world_mps: Vec3, orientation: Quat, atmosphere: &IsaSample, ) -> Result<AirData, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "env_new",
+      "signature": "pub fn env_new( wind_world_mps: Vec3, gravity_m_s2: f64, ground_elevation_m: f64, ) -> Result<Self, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "env_isa_calm",
+      "signature": "pub const fn env_isa_calm() -> Self",
+      "effects": []
+    },
+    {
+      "name": "env_validate",
+      "signature": "pub fn env_validate(&self) -> Result<(), AeroError>",
+      "effects": []
+    },
+    {
+      "name": "controls_new",
+      "signature": "pub fn controls_new( elevator_rad: f64, aileron_rad: f64, rudder_rad: f64, throttle: f64, ) -> Result<Self, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "controls_neutral",
+      "signature": "pub const fn controls_neutral() -> Self",
+      "effects": []
+    },
+    {
+      "name": "controls_validate",
+      "signature": "pub fn controls_validate(&self) -> Result<(), AeroError>",
+      "effects": []
+    },
+    {
+      "name": "control_limits_new",
+      "signature": "pub fn control_limits_new( elevator_max_rad: f64, aileron_max_rad: f64, rudder_max_rad: f64, ) -> Result<Self, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "derivatives_validate",
+      "signature": "pub fn derivatives_validate(&self) -> Result<(), AeroError>",
+      "effects": []
+    },
+    {
+      "name": "aero_eval_digest_fnv1a",
+      "signature": "pub fn aero_eval_digest_fnv1a(&self) -> Result<u64, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "aircraft_new",
+      "signature": "pub fn aircraft_new( wing_area_m2: f64, wing_span_m: f64, mean_chord_m: f64, max_thrust_n: f64, cl_alpha: AeroTable, cm_alpha: AeroTable, cd_alpha: Option<AeroTable>, derivatives: AeroDerivatives, limits: ControlLimits, ) -> Result<Self, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "aircraft_validate",
+      "signature": "pub fn aircraft_validate(&self) -> Result<(), AeroError>",
+      "effects": []
+    },
+    {
+      "name": "aircraft_preset_trainer",
+      "signature": "pub fn aircraft_preset_trainer() -> Result<Self, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "aircraft_wing_area_m2",
+      "signature": "pub const fn aircraft_wing_area_m2(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "aircraft_wing_span_m",
+      "signature": "pub const fn aircraft_wing_span_m(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "aircraft_mean_chord_m",
+      "signature": "pub const fn aircraft_mean_chord_m(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "aircraft_max_thrust_n",
+      "signature": "pub const fn aircraft_max_thrust_n(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "aircraft_cl_table",
+      "signature": "pub const fn aircraft_cl_table(&self) -> &AeroTable",
+      "effects": []
+    },
+    {
+      "name": "aircraft_cm_table",
+      "signature": "pub const fn aircraft_cm_table(&self) -> &AeroTable",
+      "effects": []
+    },
+    {
+      "name": "aircraft_cd_table",
+      "signature": "pub const fn aircraft_cd_table(&self) -> Option<&AeroTable>",
+      "effects": []
+    },
+    {
+      "name": "aircraft_derivatives",
+      "signature": "pub const fn aircraft_derivatives(&self) -> &AeroDerivatives",
+      "effects": []
+    },
+    {
+      "name": "aircraft_control_limits",
+      "signature": "pub const fn aircraft_control_limits(&self) -> &ControlLimits",
+      "effects": []
+    },
+    {
+      "name": "aircraft_evaluate",
+      "signature": "pub fn aircraft_evaluate( &self, body: &RigidBodyState, mass: &MassProperties, env: &FlightEnvironment, controls: &ControlInputs, ) -> Result<AeroEvalOutput, AeroError>",
+      "effects": []
+    },
+    {
+      "name": "compute_world_wrench",
+      "signature": "pub fn compute_world_wrench( &self, body: &RigidBodyState, mass: &MassProperties, env: &FlightEnvironment, controls: &ControlInputs, ) -> Result<(Vec3, Vec3), AeroError>",
+      "effects": []
+    },
+    {
+      "name": "step_aircraft_in_place",
+      "signature": "pub fn step_aircraft_in_place( &self, body: &mut RigidBodyState, mass: &MassProperties, env: &FlightEnvironment, controls: &ControlInputs, dt: f64, integrator: IntegratorKind, ) -> Result<(), AeroError>",
+      "effects": []
+    },
+    {
+      "name": "aircraft_solve_level_trim",
+      "signature": "pub fn aircraft_solve_level_trim( &self, mass: &MassProperties, env: &FlightEnvironment, altitude_m: f64, airspeed_mps: f64, ) -> Result<(f64, ControlInputs), AeroError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

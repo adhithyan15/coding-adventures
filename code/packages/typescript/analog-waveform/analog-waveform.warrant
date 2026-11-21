@@ -1,0 +1,59 @@
+warrant analog_waveform
+  error WaveformError = NON_FINITE | NEGATIVE_AMPLITUDE | NON_POSITIVE_FREQUENCY | ANGULAR_OVERFLOW | NON_FINITE_TIME
+
+  model valid_amplitude(amplitude: Int) -> Bool = amplitude >= 0
+  model valid_frequency(frequency_hz: Int) -> Bool = frequency_hz > 0
+
+  op constant_sample(level: Int, time_is_finite: Bool) -> Result<Int, WaveformError>
+  op validate_sine(amplitude: Int, frequency_hz: Int, phase_radians: Int, offset: Int) -> Result<Bool, WaveformError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels constant_sample:
+    level public
+    time_is_finite public
+  labels validate_sine:
+    amplitude public
+    frequency_hz public
+    phase_radians public
+    offset public
+
+  input constant_sample.level:
+    hostile
+    ensures no_panic, terminates
+  input constant_sample.time_is_finite:
+    hostile
+    rejects not time_is_finite with WaveformError.NON_FINITE_TIME
+    ensures no_panic, terminates
+
+  input validate_sine.amplitude:
+    hostile
+    rejects amplitude < 0 with WaveformError.NEGATIVE_AMPLITUDE
+    ensures no_panic, terminates
+  input validate_sine.frequency_hz:
+    hostile
+    rejects frequency_hz <= 0 with WaveformError.NON_POSITIVE_FREQUENCY
+    ensures no_panic, terminates
+  input validate_sine.phase_radians:
+    hostile
+    ensures no_panic, terminates
+  input validate_sine.offset:
+    hostile
+    ensures no_panic, terminates
+
+  bound constant_sample:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_sine:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example constant_ok:
+    constant_sample(5, true) == Ok(5)
+  example sine_ok:
+    validate_sine(1, 440, 0, 0) == Ok(true)

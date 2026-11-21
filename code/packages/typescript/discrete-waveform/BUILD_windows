@@ -1,3 +1,7 @@
-cd ../analog-waveform && npm ci --silent
+npm ci --prefix ../test-bootstrap --silent
+npm run build --prefix ../test-bootstrap
+npm ci --prefix ../analog-waveform --silent
+npm run build --prefix ../analog-waveform
 npm ci --silent
-npx vitest run
+npm run build
+npm test

@@ -1,0 +1,110 @@
+-- GAME41 -- Aero Flight Model: deterministic zero-allocation ISA atmosphere,
+-- bounded coefficient polars, air data, and 6-DOF aerodynamic wrench evaluation.
+--
+-- Warrant document for aero-flight-model (VER04j and VER04m: state=explicit).
+-- Formal verification contract for ISA altitude bounds, polar table capacity
+-- & monotonicity invariants (CWE-125 / CWE-400), division-by-zero airspeed
+-- guards (CWE-369), and control-surface clamping bounds.
+
+warrant aero_flight_model v1
+  error AeroError = NonFiniteInput | AltitudeOutOfRange | InvalidTableLength | NonMonotonicBreakpoints | InvalidGeometryParameter | InvalidAeroParameter | NumericalDivergence | RigidBodyError | MathError
+
+  model Unit = Bool
+
+  -- ISA 1976 valid altitude envelope: [-500 m, +20_000 m].
+  model valid_altitude_m(alt_m: Int) -> Bool = alt_m >= -500 and alt_m <= 20000
+  -- Polar table point count in [2, 64] (CWE-400 / CWE-125).
+  model valid_table_len(table_len: Nat) -> Bool = table_len >= 2 and table_len <= 64
+  -- Scale-positive geometry bounds in milli-units (> 0, <= 1_000_000_000).
+  model valid_geometry_milli(area_milli: Int, span_milli: Int, chord_milli: Int) -> Bool = area_milli >= 1 and area_milli <= 1000000000 and span_milli >= 1 and span_milli <= 1000000000 and chord_milli >= 1 and chord_milli <= 1000000000
+  -- Airspeed guard in milli-m/s: V < 250 milli-m/s (0.25 m/s) zeros aero forces (CWE-369).
+  model aero_active_speed(speed_milli: Nat) -> Bool = speed_milli >= 250
+
+  op validate_altitude(alt_m: Int) -> Result<Unit, AeroError>
+  op validate_table_len(table_len: Nat) -> Result<Unit, AeroError>
+  op validate_geometry(area_milli: Int, span_milli: Int, chord_milli: Int) -> Result<Unit, AeroError>
+  op check_airspeed_active(speed_milli: Nat) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_altitude:
+    alt_m public
+  labels validate_table_len:
+    table_len public
+  labels validate_geometry:
+    area_milli public
+    span_milli public
+    chord_milli public
+  labels check_airspeed_active:
+    speed_milli public
+
+  input validate_altitude.alt_m:
+    hostile
+    ensures no_panic, terminates
+  input validate_table_len.table_len:
+    hostile
+    ensures no_panic, terminates
+  input validate_geometry.area_milli:
+    hostile
+    ensures no_panic, terminates
+  input validate_geometry.span_milli:
+    hostile
+    ensures no_panic, terminates
+  input validate_geometry.chord_milli:
+    hostile
+    ensures no_panic, terminates
+  input check_airspeed_active.speed_milli:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_altitude:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+  bound validate_table_len:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+  bound validate_geometry:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+  bound check_airspeed_active:
+    steps <= 16
+    heap <= 0
+    depth <= 2
+
+  example alt_sea_level:
+    validate_altitude(0) == Ok(true)
+  example alt_tropopause:
+    validate_altitude(11000) == Ok(true)
+  example alt_too_low:
+    validate_altitude(-501) == Err(AeroError.AltitudeOutOfRange)
+  example alt_too_high:
+    validate_altitude(20001) == Err(AeroError.AltitudeOutOfRange)
+  example table_valid:
+    validate_table_len(12) == Ok(true)
+  example table_too_small:
+    validate_table_len(1) == Err(AeroError.InvalidTableLength)
+  example table_too_large:
+    validate_table_len(65) == Err(AeroError.InvalidTableLength)
+  example geom_valid:
+    validate_geometry(16200, 11000, 1490) == Ok(true)
+  example geom_zero_area:
+    validate_geometry(0, 11000, 1490) == Err(AeroError.InvalidGeometryParameter)
+  example speed_below_min:
+    check_airspeed_active(249) == false
+  example speed_at_min:
+    check_airspeed_active(250) == true
+
+  claim validate_altitude_agrees:
+    forall h: Int. validate_altitude(h) == (if valid_altitude_m(h) then Ok(true) else Err(AeroError.AltitudeOutOfRange))
+  claim validate_table_len_agrees:
+    forall n: Nat. validate_table_len(n) == (if valid_table_len(n) then Ok(true) else Err(AeroError.InvalidTableLength))
+  claim validate_geometry_agrees:
+    forall s: Int, b: Int, c: Int. validate_geometry(s, b, c) == (if valid_geometry_milli(s, b, c) then Ok(true) else Err(AeroError.InvalidGeometryParameter))
+  claim check_airspeed_active_agrees:
+    forall v: Nat. check_airspeed_active(v) == aero_active_speed(v)

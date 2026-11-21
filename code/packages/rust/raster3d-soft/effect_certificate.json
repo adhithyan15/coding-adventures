@@ -1,0 +1,197 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/raster3d-soft",
+  "source_digest": "f663c3a2114e7d25ff3c885037c3a21ef3958e23f6947d64d4901baa8c06e740",
+  "manifest_digest": "d47289d248447edb89bcb2e322b589dd391dcedf9d351738bd2c6a6f133256ec",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_framebuffer_dim",
+      "signature": "pub fn validate_framebuffer_dim(n: u32) -> Result<bool, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "validate_texture_dim",
+      "signature": "pub fn validate_texture_dim(n: u32) -> Result<bool, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "validate_triangle_count",
+      "signature": "pub fn validate_triangle_count(n: usize) -> Result<bool, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "validate_vertex_index",
+      "signature": "pub fn validate_vertex_index(idx: usize, vertex_count: usize) -> Result<bool, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "validate_clip_w",
+      "signature": "pub fn validate_clip_w(w: f64) -> Result<bool, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "vertex_new",
+      "signature": "pub const fn vertex_new(position: Vec3, normal: Vec3, color: RgbColor, u: f64, v: f64) -> Self",
+      "effects": []
+    },
+    {
+      "name": "vertex_try_new",
+      "signature": "pub fn vertex_try_new( position: Vec3, normal: Vec3, color: RgbColor, u: f64, v: f64, ) -> Result<Self, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "vertex_validate",
+      "signature": "pub fn vertex_validate(&self) -> Result<(), RasterError>",
+      "effects": []
+    },
+    {
+      "name": "dir_light_new",
+      "signature": "pub fn dir_light_new( direction_to_light: Vec3, color: RgbColor, intensity: f64, ) -> Result<Self, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "dir_light_validate",
+      "signature": "pub fn dir_light_validate(&self) -> Result<Vec3, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "light_rig_new",
+      "signature": "pub fn light_rig_new( ambient_color: RgbColor, ambient_intensity: f64, directional: DirectionalLight, ) -> Result<Self, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "light_rig_default",
+      "signature": "pub fn light_rig_default() -> Self",
+      "effects": []
+    },
+    {
+      "name": "light_rig_unlit",
+      "signature": "pub const fn light_rig_unlit() -> Self",
+      "effects": []
+    },
+    {
+      "name": "light_rig_validate",
+      "signature": "pub fn light_rig_validate(&self) -> Result<Vec3, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "texture_from_rgba8",
+      "signature": "pub fn texture_from_rgba8( width: u32, height: u32, pixels: &'a [u8], ) -> Result<Self, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "texture_from_container",
+      "signature": "pub fn texture_from_container(container: &'a PixelContainer) -> Result<Self, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "texture_width",
+      "signature": "pub const fn texture_width(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "texture_height",
+      "signature": "pub const fn texture_height(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "texture_sample_nearest",
+      "signature": "pub fn texture_sample_nearest( &self, u: f64, v: f64, wrap: TextureWrap, ) -> Result<Rgba8, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "texture_sample_bilinear",
+      "signature": "pub fn texture_sample_bilinear( &self, u: f64, v: f64, wrap: TextureWrap, ) -> Result<SampledTexel, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "depth_mut_len",
+      "signature": "pub fn depth_mut_len(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "depth_mut_clear",
+      "signature": "pub fn depth_mut_clear(&mut self, clear_depth: f64) -> Result<(), RasterError>",
+      "effects": []
+    },
+    {
+      "name": "depth_mut_get",
+      "signature": "pub fn depth_mut_get(&self, idx: usize) -> Option<f64>",
+      "effects": []
+    },
+    {
+      "name": "raster_config_new",
+      "signature": "pub fn raster_config_new(mvp: Mat4) -> Result<Self, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "raster_config_validate",
+      "signature": "pub fn raster_config_validate(&self) -> Result<Vec3, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "scratch_new",
+      "signature": "pub fn scratch_new() -> Self",
+      "effects": []
+    },
+    {
+      "name": "scratch_with_capacity",
+      "signature": "pub fn scratch_with_capacity(vertex_capacity: usize) -> Result<Self, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "scratch_capacity",
+      "signature": "pub fn scratch_capacity(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "scratch_clear",
+      "signature": "pub fn scratch_clear(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "clear_framebuffer",
+      "signature": "pub fn clear_framebuffer(framebuffer: &mut PixelContainer, rgba: Rgba8) -> Result<(), RasterError>",
+      "effects": []
+    },
+    {
+      "name": "clear_depth_f64",
+      "signature": "pub fn clear_depth_f64(zbuffer: &mut [f64], depth: f64) -> Result<(), RasterError>",
+      "effects": []
+    },
+    {
+      "name": "clear_depth_f32",
+      "signature": "pub fn clear_depth_f32(zbuffer: &mut [f32], depth: f32) -> Result<(), RasterError>",
+      "effects": []
+    },
+    {
+      "name": "frame_digest_fnv1a",
+      "signature": "pub fn frame_digest_fnv1a(framebuffer: &PixelContainer) -> u64",
+      "effects": []
+    },
+    {
+      "name": "depth_digest_f64_fnv1a",
+      "signature": "pub fn depth_digest_f64_fnv1a(zbuffer: &[f64]) -> u64",
+      "effects": []
+    },
+    {
+      "name": "depth_digest_f32_fnv1a",
+      "signature": "pub fn depth_digest_f32_fnv1a(zbuffer: &[f32]) -> u64",
+      "effects": []
+    },
+    {
+      "name": "draw_triangle_into",
+      "signature": "pub fn draw_triangle_into( framebuffer: &mut PixelContainer, mut zbuffer: DepthBufferMut<'_>, config: &RasterConfig, texture: Option<&Texture<'_>>, v0: &Vertex, v1: &Vertex, v2: &Vertex, ) -> Result<RasterStats, RasterError>",
+      "effects": []
+    },
+    {
+      "name": "draw_indexed_mesh_into",
+      "signature": "pub fn draw_indexed_mesh_into( framebuffer: &mut PixelContainer, mut zbuffer: DepthBufferMut<'_>, config: &RasterConfig, texture: Option<&Texture<'_>>, vertices: &[Vertex], indices: &[u32], scratch: &mut RasterScratch, ) -> Result<RasterStats, RasterError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

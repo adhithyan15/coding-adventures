@@ -71,7 +71,11 @@ fn check_step_pong_zero_alloc(_ctx: &Ctx) -> Verdict {
     let alloc = AllocCounter::new();
 
     let res = harness.run_with_counter("step_pong_zero_alloc", &budget, &alloc, || {
-        let events = step_pong(black_box(&mut state), black_box(&input), black_box(&mut sfx));
+        let events = step_pong(
+            black_box(&mut state),
+            black_box(&input),
+            black_box(&mut sfx),
+        );
         black_box(events).expect("step_pong must succeed");
     });
 

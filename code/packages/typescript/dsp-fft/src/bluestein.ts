@@ -9,7 +9,7 @@ import { fftScalar, ifftScalar, validateBuffer } from "./radix2.js";
  * Returns interleaved Float64Array of length 2 * N.
  */
 export function buildChirp(n: number, sign: number): Float64Array {
-  if (!Number.isFinite(n) || !Number.isInteger(n) || n < 1) {
+  if (typeof n !== "number" || !Number.isSafeInteger(n) || n < 1) {
     throw new InvalidInputError("chirp length must be a positive integer");
   }
   if (n > MAX_FFT_LEN) {
@@ -17,7 +17,7 @@ export function buildChirp(n: number, sign: number): Float64Array {
       `chirp length ${n} exceeds MAX_FFT_LEN (${MAX_FFT_LEN})`
     );
   }
-  if (!Number.isFinite(sign)) {
+  if (typeof sign !== "number" || !Number.isFinite(sign)) {
     throw new InvalidInputError("chirp sign must be finite");
   }
   const twoN = 2 * n;

@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/collision2d",
-  "source_digest": "bfe01c822930e678bdfa97fa46c4f83f9fb04afe2683d124e69d182b0ef4b759",
+  "source_digest": "9b5f472cd999d23ff481d7fc12b12517ac9b1246357f1d310af74687e47d131d",
   "manifest_digest": "9ff99dca5c817bef6341264891cc2c48795ecf6eef409fe00cd4797c13752584",
   "declared_effects": [],
   "entry_points": [
@@ -32,7 +32,7 @@
     },
     {
       "name": "new",
-      "signature": "pub fn new(center: Point, half_extents: Point, rotation_rad: f64) -> Result<Self, CollisionError>",
+      "signature": "pub fn new( center: Point, half_extents: Point, rotation_rad: f64, ) -> Result<Self, CollisionError>",
       "effects": []
     },
     {
@@ -97,7 +97,7 @@
     },
     {
       "name": "circle_vs_aabb",
-      "signature": "pub fn circle_vs_aabb(circle: Circle, rect: Rect) -> Result<Option<ContactManifold>, CollisionError>",
+      "signature": "pub fn circle_vs_aabb( circle: Circle, rect: Rect, ) -> Result<Option<ContactManifold>, CollisionError>",
       "effects": []
     },
     {

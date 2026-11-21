@@ -11,7 +11,7 @@
   "runner": {
     "lane": "go",
     "name": "warrant-corpus",
-    "src_sha256": "1a638a52d464e63a168e459cbb5af06ffdc83b35f210ea862f76b314dbe657c9"
+    "src_sha256": "e42d4318903a86cc25a92d3234c8f5b25ad8092bfc58a4a81040fceb2beb18b0"
   },
   "schema": "warrant-lane-evidence-v1",
   "source_sha256": "47e4287fc198d801d7e73374bcdb83cd955d62eff839dee160c1ae9a57708b88",

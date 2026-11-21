@@ -102,17 +102,18 @@ fn check_gate_level_iot_decoder_zero_alloc(_ctx: &Ctx) -> Verdict {
     };
     let alloc = AllocCounter::new();
 
-    let res = harness.run_with_counter("gate_level_iot_decoder_zero_alloc", &budget, &alloc, || {
-        let r = GateLevelIotDecoder::decode(
-            black_box(PDP8_DEV_TPR),
-            black_box(PDP8_IOP1 | PDP8_IOP2 | PDP8_IOP4),
-            black_box(0o4321),
-            black_box(false),
-            black_box(true),
-            black_box(0x5A),
-        );
-        black_box(r);
-    });
+    let res =
+        harness.run_with_counter("gate_level_iot_decoder_zero_alloc", &budget, &alloc, || {
+            let r = GateLevelIotDecoder::decode(
+                black_box(PDP8_DEV_TPR),
+                black_box(PDP8_IOP1 | PDP8_IOP2 | PDP8_IOP4),
+                black_box(0o4321),
+                black_box(false),
+                black_box(true),
+                black_box(0x5A),
+            );
+            black_box(r);
+        });
 
     if !zero_alloc_ok(&res) {
         return Verdict::fail(
@@ -187,15 +188,11 @@ fn check_pdp8_bridge_handle_iot_zero_alloc(_ctx: &Ctx) -> Verdict {
     };
     let alloc = AllocCounter::new();
 
-    let res = harness.run_with_counter(
-        "pdp8_bridge_handle_iot_zero_alloc",
-        &budget,
-        &alloc,
-        || {
+    let res =
+        harness.run_with_counter("pdp8_bridge_handle_iot_zero_alloc", &budget, &alloc, || {
             let r = bridge.handle_iot(black_box(iot), black_box(0o0101));
             black_box(r);
-        },
-    );
+        });
 
     if !zero_alloc_ok(&res) {
         return Verdict::fail(

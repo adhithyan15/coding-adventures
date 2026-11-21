@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "raycast-dda",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded 2D grid cells, camera transforms, textures, and pixel/depth buffers"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure graphics transform: package implements deterministic 2.5D DDA raycasting, floor/ceiling plane casting, and billboard sprite rendering only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: DDA ray traversal is capped at width + height steps per column, frame dimensions are bounded by MAX_FRAME_WIDTH x MAX_FRAME_HEIGHT, and sprite counts are bounded by MAX_SPRITES"
+    }
+  }
+}
