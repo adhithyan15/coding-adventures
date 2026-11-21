@@ -1,0 +1,29 @@
+[package]
+name = "raster3d-soft"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic zero-allocation software 3D triangle rasterizer with homogeneous clipping, perspective-correct interpolation, Z-buffering, and lighting"
+license = "MIT"
+
+[dependencies]
+math3d = { path = "../math3d" }
+pixel-container = { path = "../pixel-container" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

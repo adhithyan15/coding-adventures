@@ -1,0 +1,119 @@
+-- GAME33 -- Raster3D-Soft: deterministic zero-allocation software 3D triangle rasterizer.
+--
+-- Warrant document for raster3d-soft (VER04j and VER04m: state=explicit).
+-- Formal verification contract for the framebuffer, texture, mesh, index, and
+-- near-plane clipping guards of raster3d-soft.
+
+warrant raster3d_soft v1
+  error RasterError = InvalidDimensions | MeshTooLarge | IndexOutOfBounds | NearClipRejected
+
+  model Unit = Bool
+  variant ShadingMode = Flat | Gouraud | Phong | TexturedNearest | TexturedBilinear
+  variant CullMode = None | Back | Front
+
+  record FramebufferDims(width: Nat, height: Nat)
+
+  -- Framebuffer and texture dimensions are strictly positive and bounded to [1, 4096] (CWE-400).
+  model valid_framebuffer_dim(n: Nat) -> Bool = n >= 1 and n <= 4096
+  model valid_texture_dim(n: Nat) -> Bool = n >= 1 and n <= 4096
+  -- Mesh triangle counts are bounded to [0, 1_000_000] (CWE-400).
+  model valid_triangle_count(n: Nat) -> Bool = n <= 1000000
+  -- Vertex index must lie strictly below vertex_count (CWE-125).
+  model valid_vertex_index(idx: Nat, vertex_count: Nat) -> Bool = idx < vertex_count
+  -- Homogeneous clip-space W (scaled by 1_000_000) must be strictly positive (>= 10 = 1e-5) for divide (CWE-369).
+  model valid_clip_w_micro(w_micro: Int) -> Bool = w_micro >= 10
+
+  op validate_framebuffer_dim(n: Nat) -> Result<Bool, RasterError>
+  op validate_texture_dim(n: Nat) -> Result<Bool, RasterError>
+  op validate_triangle_count(n: Nat) -> Result<Bool, RasterError>
+  op validate_vertex_index(idx: Nat, vertex_count: Nat) -> Result<Bool, RasterError>
+  op validate_clip_w_micro(w_micro: Int) -> Result<Bool, RasterError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_framebuffer_dim:
+    n public
+  labels validate_texture_dim:
+    n public
+  labels validate_triangle_count:
+    n public
+  labels validate_vertex_index:
+    idx public
+    vertex_count public
+  labels validate_clip_w_micro:
+    w_micro public
+
+  input validate_framebuffer_dim.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_texture_dim.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_triangle_count.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_vertex_index.idx:
+    hostile
+    ensures no_panic, terminates
+  input validate_vertex_index.vertex_count:
+    hostile
+    ensures no_panic, terminates
+  input validate_clip_w_micro.w_micro:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_framebuffer_dim:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_texture_dim:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_triangle_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_vertex_index:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_clip_w_micro:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example fb_dim_min:
+    validate_framebuffer_dim(1) == Ok(true)
+  example fb_dim_max:
+    validate_framebuffer_dim(4096) == Ok(true)
+  example fb_dim_zero:
+    validate_framebuffer_dim(0) == Err(RasterError.InvalidDimensions)
+  example tex_dim_zero:
+    validate_texture_dim(0) == Err(RasterError.InvalidDimensions)
+  example tri_count_max:
+    validate_triangle_count(1000000) == Ok(true)
+  example tri_count_over:
+    validate_triangle_count(1000001) == Err(RasterError.MeshTooLarge)
+  example index_valid:
+    validate_vertex_index(2, 3) == Ok(true)
+  example index_oob:
+    validate_vertex_index(3, 3) == Err(RasterError.IndexOutOfBounds)
+  example clip_w_valid:
+    validate_clip_w_micro(10) == Ok(true)
+  example clip_w_zero:
+    validate_clip_w_micro(0) == Err(RasterError.NearClipRejected)
+
+  claim validate_framebuffer_dim_agrees:
+    forall n: Nat. validate_framebuffer_dim(n) == (if valid_framebuffer_dim(n) then Ok(true) else Err(RasterError.InvalidDimensions))
+  claim validate_texture_dim_agrees:
+    forall n: Nat. validate_texture_dim(n) == (if valid_texture_dim(n) then Ok(true) else Err(RasterError.InvalidDimensions))
+  claim validate_triangle_count_agrees:
+    forall n: Nat. validate_triangle_count(n) == (if valid_triangle_count(n) then Ok(true) else Err(RasterError.MeshTooLarge))
+  claim validate_vertex_index_agrees:
+    forall idx: Nat, vc: Nat. validate_vertex_index(idx, vc) == (if valid_vertex_index(idx, vc) then Ok(true) else Err(RasterError.IndexOutOfBounds))
+  claim validate_clip_w_micro_agrees:
+    forall w: Int. validate_clip_w_micro(w) == (if valid_clip_w_micro(w) then Ok(true) else Err(RasterError.NearClipRejected))
