@@ -8,6 +8,7 @@ import type { OscillatorConfig, WaveformType } from "./types.js";
 import { Waveform } from "./types.js";
 import {
   fractionalPart,
+  safeFormatValue,
   sampleCountForDuration,
   validateDutyCycle,
   validateFinite,
@@ -35,6 +36,9 @@ export class OscillatorState {
   private readonly lcgPrng: LcgPrng | null;
 
   constructor(config: OscillatorConfig = {}) {
+    if (config === null || typeof config !== "object") {
+      throw new TypeError("config must be an object");
+    }
     const rawWaveform = config.waveform ?? Waveform.Sine;
     const waveStr = typeof rawWaveform === "string" ? rawWaveform.toLowerCase() : "";
 
@@ -48,7 +52,7 @@ export class OscillatorState {
         this.waveform = waveStr as WaveformType;
         break;
       default:
-        throw new TypeError(`invalid waveform '${String(rawWaveform)}'`);
+        throw new TypeError(`invalid waveform '${safeFormatValue(rawWaveform)}'`);
     }
 
     this.frequencyHz = validateFrequency("frequencyHz", config.frequencyHz ?? 440.0);
@@ -65,13 +69,20 @@ export class OscillatorState {
 
     if (noiseType !== "splitmix64" && noiseType !== "lcg") {
       throw new RangeError(
-        `noiseType must be 'splitmix64' or 'lcg', got '${String(noiseType)}'`,
+        `noiseType must be 'splitmix64' or 'lcg', got '${safeFormatValue(noiseType)}'`,
       );
     }
 
     if (noiseType === "lcg") {
-      const numSeed = typeof seed === "bigint" ? Number(BigInt.asUintN(32, seed)) : Number(seed);
-      this.lcgPrng = new LcgPrng(numSeed);
+      if (typeof seed === "bigint") {
+        this.lcgPrng = new LcgPrng(Number(BigInt.asUintN(32, seed)));
+      } else if (typeof seed === "number") {
+        this.lcgPrng = new LcgPrng(seed);
+      } else {
+        throw new TypeError(
+          `seed must be a finite number or bigint, got ${safeFormatValue(seed)}`,
+        );
+      }
       this.splitMixPrng = null;
     } else {
       this.splitMixPrng = new SplitMix64(seed);
@@ -148,6 +159,9 @@ export function synthesize(
   durationSeconds: number,
   startTimeSeconds = 0.0,
 ): SampleBuffer {
+  if (config === null || typeof config !== "object") {
+    throw new TypeError("config must be an object");
+  }
   const sampleRateHz = config.sampleRateHz ?? 44_100.0;
   const count = sampleCountForDuration(durationSeconds, sampleRateHz);
   const osc = new OscillatorState(config);

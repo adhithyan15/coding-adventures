@@ -1247,6 +1247,11 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		}
 		return evs, nil
 	default: // rolePath, roleCreat, roleChdir, roleExec, roleSymlink
+		if drop, r := statxNullEfault(c, ent); r != "" {
+			return fail(r)
+		} else if drop {
+			return nil, nil
+		}
 		if r := m.fillPath(&ev, ent, c.args); r != "" {
 			return fail(r)
 		}
@@ -1289,6 +1294,40 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		}
 	}
 	return []Event{ev}, nil
+}
+
+// statxNullEfault (KILN04 D45) checks whether a completed statx call is a
+// NULL-pathname probe that failed with EFAULT without AT_EMPTY_PATH (such as
+// Rust std's statx availability probe).
+//
+// In Linux (fs/stat.c: SYSCALL_DEFINE5(statx, ...) -> getname_uflags ->
+// getname_flags), the kernel copies the pathname pointer from user memory
+// before do_statx inspects dfd or looks up any file or descriptor.  A NULL
+// pointer fails with -EFAULT having observed nothing on the filesystem and
+// without writing to the statx buffer.
+//
+// Fail-closed guards:
+//   - dirfd must still parse cleanly through dirfdPath;
+//   - flags must decode cleanly through hasEmptyPath and MUST NOT carry
+//     AT_EMPTY_PATH (including numeric 0x1000 / 4096), keeping path-arg /
+//     flags refusals intact;
+//   - only completed calls with !ret.OK && ret.Errno == "EFAULT" qualify;
+//   - non-NULL addresses (e.g. 0x1) and dying calls stay refused.
+func statxNullEfault(c *rawCall, ent entry) (drop bool, reason string) {
+	if c.name != "statx" || c.ret.ok() || c.ret.errno != "EFAULT" || c.args[ent.pth-1] != "NULL" {
+		return false, ""
+	}
+	if _, _, r := dirfdPath(c.args[ent.dirfd-1]); r != "" {
+		return false, r
+	}
+	empty, r := hasEmptyPath(c.args[ent.flags-1])
+	if r != "" {
+		return false, r
+	}
+	if empty {
+		return false, reasonPathArg
+	}
+	return true, ""
 }
 
 // fillPath extracts dirfd, path, dirfd2, path2, flags and symlink target

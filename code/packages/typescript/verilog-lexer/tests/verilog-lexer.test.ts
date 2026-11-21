@@ -857,4 +857,25 @@ describe("edge cases", () => {
     const tokens = tokenizeVerilog("my_var$1");
     expect(tokens[0].type).toBe("NAME");
   });
+
+  it("handles `define with many trailing tabs in linear time and preserves macro semantics", () => {
+    const start = performance.now();
+    const evil = "`define\tA" + "\t".repeat(50_000);
+    const evilTokens = tokenizeVerilog(evil + "\n`A");
+    expect(performance.now() - start).toBeLessThan(1000);
+    expect(evilTokens[evilTokens.length - 1].type).toBe("EOF");
+
+    // Space before parameter list, unclosed '(' in body, and trimmed body
+    const source = [
+      "`define ADD (a, b)   ((a) + (b))  ",
+      "`define UNCLOSED (x + 1  ",
+      "wire w = `ADD(1, 2);",
+      "wire u = `UNCLOSED;",
+    ].join("\n");
+    const tokens = tokenizeVerilog(source);
+    const values = tokens.map((t) => t.value);
+    expect(values).toContain("1");
+    expect(values).toContain("2");
+    expect(values).toContain("x");
+  });
 });

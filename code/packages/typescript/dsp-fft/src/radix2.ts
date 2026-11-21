@@ -1,6 +1,12 @@
 import { MAX_FFT_LEN, MAX_SAMPLES } from "./constants.js";
 import { Direction } from "./direction.js";
-import { InvalidInputError, NotPowerOfTwoError } from "./errors.js";
+import {
+  InvalidInputError,
+  NotPowerOfTwoError,
+  readFiniteNumber,
+  safeFormatValue,
+  validateArrayLikeLength,
+} from "./errors.js";
 
 /**
  * Validate buffer finiteness, bounds, and even length pre-flight.
@@ -10,7 +16,7 @@ export function validateBuffer(
   data: Float64Array | ArrayLike<number>,
   name: string = "buffer"
 ): number {
-  const rawLen = data.length;
+  const rawLen = validateArrayLikeLength(data, name);
   if (rawLen === 0) {
     throw new InvalidInputError(`${name} length must be at least 1`);
   }
@@ -33,18 +39,22 @@ export function validateBuffer(
   }
 
   for (let i = 0; i < rawLen; i++) {
-    const val = Number(data[i]);
-    if (!Number.isFinite(val)) {
-      throw new InvalidInputError("input contains non-finite float (NaN or Inf)");
-    }
+    readFiniteNumber(data, i);
   }
 
   return n;
 }
 
 export function requirePow2Length(n: number): void {
-  if (!Number.isFinite(n) || !Number.isInteger(n) || n < 1) {
-    throw new InvalidInputError(`FFT length must be a positive integer; got ${n}`);
+  if (typeof n !== "number" || !Number.isSafeInteger(n) || n < 1) {
+    throw new InvalidInputError(
+      `FFT length must be a positive integer; got ${safeFormatValue(n)}`
+    );
+  }
+  if (n > MAX_FFT_LEN) {
+    throw new InvalidInputError(
+      `FFT length ${n} exceeds MAX_FFT_LEN (${MAX_FFT_LEN})`
+    );
   }
   if ((n & (n - 1)) !== 0) {
     throw new NotPowerOfTwoError(n);

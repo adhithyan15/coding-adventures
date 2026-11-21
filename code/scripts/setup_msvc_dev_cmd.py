@@ -17,11 +17,18 @@ import re
 import shutil
 import subprocess  # nosec B404 -- fixed local runner tools only
 import tempfile
-from collections.abc import Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from pathlib import Path
 
 PATH_LIKE_VARIABLES = frozenset({"PATH", "INCLUDE", "LIB", "LIBPATH"})
 ENVIRONMENT_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_()]*$")
+CLANG_VERSION_RE = re.compile(r"clang version (\d+)\.(\d+)(?:\.(\d+))?")
+STL_CLANG_MIN_RE = re.compile(r"expected Clang (\d+) or newer")
+VS_LLVM_VARS = {
+    "x64": ("llvmX64",),
+    "arm64": ("llvmArm64",),
+    "x86": ("llvmX86", "llvmX64"),
+}
 
 
 def parse_environment(lines: Iterable[str]) -> dict[str, str]:
@@ -175,6 +182,141 @@ def capture_developer_environment(
     return parse_environment(result.stdout.splitlines())
 
 
+def parse_clang_version(output: str) -> tuple[int, int, int] | None:
+    """Extract a ``(major, minor, patch)`` tuple from ``clang-cl --version``."""
+
+    match = CLANG_VERSION_RE.search(output)
+    if not match:
+        return None
+    major, minor, patch = match.groups()
+    return (int(major), int(minor), int(patch) if patch is not None else 0)
+
+
+def probe_clang_cl_version(executable: Path) -> tuple[int, int, int] | None:
+    """Run ``clang-cl --version`` on an existing candidate executable."""
+
+    result = subprocess.run(  # nosec B603 -- resolved local clang-cl executable
+        [str(executable), "--version"],
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding=locale.getpreferredencoding(False),
+        errors="replace",
+    )
+    if result.returncode != 0:
+        return None
+    return parse_clang_version(result.stdout or result.stderr)
+
+
+def _find_env_key(environment: Mapping[str, str], target: str) -> str | None:
+    target_cf = target.casefold()
+    for key in environment:
+        if key.casefold() == target_cf:
+            return key
+    return None
+
+
+def _default_has_clang_cl(directory: str) -> bool:
+    return (Path(directory) / "clang-cl.exe").is_file()
+
+
+def _default_probe_dir_clang_cl(directory: str) -> tuple[int, int, int] | None:
+    return probe_clang_cl_version(Path(directory) / "clang-cl.exe")
+
+
+def prefer_newest_clang_cl(
+    environment: Mapping[str, str],
+    architecture: str,
+    *,
+    has_clang_cl: Callable[[str], bool] = _default_has_clang_cl,
+    probe_version: Callable[[str], tuple[int, int, int] | None] = _default_probe_dir_clang_cl,
+) -> tuple[
+    dict[str, str],
+    list[tuple[str, tuple[int, int, int] | None]],
+    tuple[str, tuple[int, int, int]] | None,
+]:
+    """Promote the newest ``clang-cl.exe`` directory ahead of older ones on PATH.
+
+    GitHub Windows runners can ship a standalone ``C:\\Program Files\\LLVM\\bin``
+    earlier on PATH than Visual Studio's newer bundled LLVM toolchain
+    (``VC\\Tools\\Llvm\\x64\\bin``), causing MSVC STL ``STL1000`` version-mismatch
+    errors when compiling C++ with ``clang-cl``. Promoting the newest available
+    ``clang-cl`` directory ahead of the first ``clang-cl`` entry preserves MSVC
+    ``cl.exe`` / ``link.exe`` precedence at the front of PATH while selecting the
+    most recent compatible Clang driver.
+    """
+
+    updated = dict(environment)
+    path_key = _find_env_key(updated, "PATH")
+    if not path_key or not updated[path_key]:
+        return updated, [], None
+
+    entries = [e for e in updated[path_key].split(";") if e]
+    search_dirs: list[str] = list(entries)
+    seen = {e.casefold() for e in search_dirs}
+
+    for var_name in VS_LLVM_VARS.get(architecture, ()):
+        actual_key = _find_env_key(updated, var_name)
+        if actual_key and updated[actual_key]:
+            candidate = updated[actual_key]
+            if candidate.casefold() not in seen:
+                seen.add(candidate.casefold())
+                search_dirs.append(candidate)
+
+    candidates: list[tuple[str, tuple[int, int, int] | None]] = []
+    first_clang_path_index: int | None = None
+    for directory in search_dirs:
+        if not has_clang_cl(directory):
+            continue
+        version = probe_version(directory)
+        candidates.append((directory, version))
+        if first_clang_path_index is None:
+            dir_cf = directory.casefold()
+            for idx, entry in enumerate(entries):
+                if entry.casefold() == dir_cf:
+                    first_clang_path_index = idx
+                    break
+
+    versioned = [(d, v) for d, v in candidates if v is not None]
+    if not versioned:
+        return updated, candidates, None
+
+    best_dir, best_ver = versioned[0]
+    for directory, version in versioned[1:]:
+        if version > best_ver:
+            best_dir, best_ver = directory, version
+
+    first_dir = candidates[0][0]
+    if best_dir.casefold() != first_dir.casefold():
+        insert_at = first_clang_path_index if first_clang_path_index is not None else len(entries)
+        new_entries = entries[:insert_at] + [best_dir] + entries[insert_at:]
+        updated[path_key] = deduplicate_path_like(";".join(new_entries))
+
+    return updated, candidates, (best_dir, best_ver)
+
+
+def msvc_stl_min_clang_major(environment: Mapping[str, str]) -> int | None:
+    """Read the minimum Clang major version required by MSVC's ``yvals_core.h``."""
+
+    include_key = _find_env_key(environment, "INCLUDE")
+    if not include_key or not environment[include_key]:
+        return None
+    for directory in environment[include_key].split(";"):
+        if not directory:
+            continue
+        header = Path(directory) / "yvals_core.h"
+        if not header.is_file():
+            continue
+        try:
+            text = header.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        match = STL_CLANG_MIN_RE.search(text)
+        if match:
+            return int(match.group(1))
+    return None
+
+
 def require_msvc_tools(environment: Mapping[str, str]) -> tuple[Path, Path]:
     """Prove that the captured PATH resolves the compiler and MSVC linker."""
 
@@ -206,6 +348,8 @@ def main() -> int:
     before = dict(os.environ)
     vcvarsall = find_vcvarsall(Path(program_files))
     after = capture_developer_environment(vcvarsall, args.arch, comspec=Path(comspec))
+    after, clang_candidates, selected_clang = prefer_newest_clang_cl(after, args.arch)
+    stl_min_clang = msvc_stl_min_clang_major(after)
     compiler, linker = require_msvc_tools(after)
     changes = changed_environment(before, after)
     append_github_environment(Path(github_env), changes)
@@ -213,6 +357,19 @@ def main() -> int:
     print(f"Configured MSVC with {vcvarsall}")
     print(f"Compiler: {compiler}")
     print(f"Linker: {linker}")
+    for directory, version in clang_candidates:
+        ver_str = ".".join(map(str, version)) if version is not None else "unknown"
+        print(f"clang-cl candidate: {directory} ({ver_str})")
+    if selected_clang is not None:
+        sel_dir, sel_ver = selected_clang
+        print(f"Selected clang-cl: {sel_dir} ({'.'.join(map(str, sel_ver))})")
+        if stl_min_clang is not None and sel_ver[0] < stl_min_clang:
+            print(
+                f"WARNING: Selected clang-cl {sel_ver[0]} is older than MSVC STL "
+                f"minimum Clang {stl_min_clang}"
+            )
+    if stl_min_clang is not None:
+        print(f"MSVC STL minimum Clang major: {stl_min_clang}")
     print(f"Exported {len(changes)} changed environment variables")
     return 0
 

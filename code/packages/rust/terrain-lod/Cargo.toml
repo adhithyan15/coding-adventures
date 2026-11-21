@@ -1,0 +1,34 @@
+[package]
+name = "terrain-lod"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic zero-allocation heightfield synthesis, runway placement, and restricted quadtree terrain LOD mesh emission"
+license = "MIT"
+
+[dependencies]
+math3d = { path = "../math3d" }
+rng = { path = "../rng" }
+trig = { path = "../trig" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "hostile_inputs"
+path = "tests/hostile_inputs.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

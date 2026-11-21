@@ -4,6 +4,26 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Added (VOS-028c3a, VOS30 sections 8.6.1, 8.6.2, 8.6.3, 8.6.4 and 9.12; VOS-D117)
+
+- **B3 cut densities `every2` and `every4`.** `exp::b3_c3_knobs` and `exp::C3_CUTS` add the 72
+  `every2` / `every4` knobs (`segments_for` and `run_row` / `structure_of` handle them directly);
+  registration in `exp::knobs("B3")` stays deferred until `VOS-028c3c` records them on Unix so
+  `FULL_PLAN_EXEMPT` remains empty.
+- **Experiment D5 (`D5Touched`, `D5Frame`, `exp::d5_knobs`, `exp::d5_row`).** Memory as index
+  split (`split = index`, `T * k` concrete-index touched-word obligations) vs symbolic index
+  (`split = none`, `k` obligations), plus a separate structural frame obligation per access
+  (excluded from capacity counts when collapsed, folded in as an ordinary obligation if it needs
+  conflicts, reported in `frame_obligations` / `frame_collapsed` / `frame_conflicts` /
+  `frame_ands` metrics), and the two-mutant G3 control (touched-word data/index mutant + stray
+  extra store frame mutant); registration in `plan(Tier::Full)` stays deferred until `VOS-028c3c`.
+- **Re-plan budget & decision (`results::route_green`, `cut_density_k`, `decide_replan`).**
+  Implements the frozen route bounds (`ROUTE_MAX_CONFLICTS = 50,000`, `ROUTE_MAX_CHECK_WORK = 2^31`),
+  cut density `K` in `{0, 1, 2, 4}`, the R1 to R4 decision table and the orthogonal D5 memory
+  verdict, with negative controls for every clause in `tests/results_logic.rs`.
+- **Windows test fix (`VOS-D117`).** `tests/hardening.rs` now checks the Unix-only skip messages
+  under `#[cfg(not(unix))]` in `check_prints_a_non_fatal_stale_line_when_a_recorded_tree_differs`.
+
 ### Added (VOS-028c2, VOS30 sections 9.2, 9.5, 9.6 and 9.12; no new experiment)
 
 - **Chain budget (VOS-D095).** A split or chain (B3, D3, D4) is one row with a 600 s row budget;

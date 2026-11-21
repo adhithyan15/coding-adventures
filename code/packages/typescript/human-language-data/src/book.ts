@@ -1552,8 +1552,9 @@ function renderMarkdown(
     // printed "1. a left bowl -- a rounded scoop on the left. 2. a right spine
     // -- a vertical downstroke..." as one paragraph. No text assertion could see
     // it; only the compiled page shows it.
-    const ordered = /^(\d+)\.\s+(.*)$/.exec(line);
-    if (ordered) {
+    const orderedPrefix =
+      !line.includes("\n") && !line.includes("\r") ? /^\d+\.\s+/.exec(line) : null;
+    if (orderedPrefix) {
       flushParagraph();
       flushQuote();
       if (listOpen && listEnv !== "enumerate") closeList();
@@ -1564,7 +1565,7 @@ function renderMarkdown(
         listOpen = true;
       }
       flushListItem();
-      listItem = [ordered[2]];
+      listItem = [line.slice(orderedPrefix[0].length)];
       continue;
     }
     if (listOpen && /^\s+/.test(line)) {

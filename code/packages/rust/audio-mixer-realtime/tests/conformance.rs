@@ -13,8 +13,8 @@ use audio_mixer_realtime::{
     clamp_sample, export_to_pcm_audio, export_to_sink_buffer, mix_channels_into,
     scale_voice_sample, validate_sample_rate, MixerError, PcmRingBuffer, RealtimeMixerState,
     VoiceSlot, MAX_GAIN_Q16, MAX_MIXER_CHANNELS, MAX_PITCH_STEP_Q16, MAX_SAMPLE_RATE_HZ,
-    MIN_PITCH_STEP_Q16, MIN_SAMPLE_RATE_HZ, PAN_CENTER_Q16, PAN_LEFT_Q16, PAN_RIGHT_Q16,
-    PCM16_MAX, PCM16_MIN, UNITY_GAIN_Q16,
+    MIN_PITCH_STEP_Q16, MIN_SAMPLE_RATE_HZ, PAN_CENTER_Q16, PAN_LEFT_Q16, PAN_RIGHT_Q16, PCM16_MAX,
+    PCM16_MIN, UNITY_GAIN_Q16,
 };
 
 #[test]
@@ -393,7 +393,10 @@ fn test_pure_kernel_functions() {
         scale_voice_sample(1000, UNITY_GAIN_Q16, UNITY_GAIN_Q16),
         1000
     );
-    assert_eq!(scale_voice_sample(1000, UNITY_GAIN_Q16 / 2, UNITY_GAIN_Q16), 500);
+    assert_eq!(
+        scale_voice_sample(1000, UNITY_GAIN_Q16 / 2, UNITY_GAIN_Q16),
+        500
+    );
 }
 
 #[test]

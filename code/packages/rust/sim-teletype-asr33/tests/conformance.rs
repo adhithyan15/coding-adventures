@@ -157,7 +157,11 @@ fn test_exhaustive_256_byte_differential_equivalence() {
                 assert_eq!(func.platen_col(), 0);
             }
             0x20..=0x7E => {
-                assert_eq!(func.platen_col(), 1, "byte 0x{byte:02X} printed twice or not at all");
+                assert_eq!(
+                    func.platen_col(),
+                    1,
+                    "byte 0x{byte:02X} printed twice or not at all"
+                );
                 assert_eq!(func.platen_row(), 0);
                 let expected_ch = if (0x61..=0x7A).contains(&ascii) {
                     (ascii - 0x20) as char

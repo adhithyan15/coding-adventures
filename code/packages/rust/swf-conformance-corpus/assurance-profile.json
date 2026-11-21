@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "swf-conformance-corpus",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are synthetic SWF binaries, display scenes, audio PCM buffers, and public SHA-256 frame digests"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "no broken or risky cryptography: package uses FIPS 180-4 SHA-256 (coding_adventures_sha256 via flash-player-host) solely for deterministic PaintScene and PCM frame digest verification"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: synthetic SWF bytes capped at MAX_CORPUS_SWF_BYTES (16 MiB), timeline frames capped at MAX_CORPUS_FRAMES (1024), bit widths capped at MAX_BIT_WIDTH (31), and VM steps capped at MAX_HOST_VM_STEPS (2_000_000)"
+    }
+  }
+}

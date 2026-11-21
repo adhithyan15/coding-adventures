@@ -32,8 +32,14 @@ fn prepare() -> Exercise {
     Box::new(move || {
         let mut checks = Vec::new();
 
-        checks.push(check("validate sample rate", validate_sample_rate(44_100).is_ok()));
-        checks.push(check("validate frequency", validate_frequency(1000, 44_100).is_ok()));
+        checks.push(check(
+            "validate sample rate",
+            validate_sample_rate(44_100).is_ok(),
+        ));
+        checks.push(check(
+            "validate frequency",
+            validate_frequency(1000, 44_100).is_ok(),
+        ));
 
         let mut voice = SfxVoice::new(44_100).expect("voice new");
         checks.push(check("voice initialized", voice.sample_rate_hz == 44_100));

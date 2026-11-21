@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/sim-pdp8-ge225-io-bridge",
-  "source_digest": "60d8191375977d08a04d73188cc7ac79d5a812a4803141deb34355693abd1915",
+  "source_digest": "0e74c27525f2ea5edd830a903493d0087ace7ac36716d37fe7e5ec8d16d218fe",
   "manifest_digest": "2406a6a2aa62dba4950d597f4c7f65ffc062f7da38c0755f29b838d13905e72d",
   "declared_effects": [],
   "entry_points": [
@@ -62,12 +62,12 @@
     },
     {
       "name": "step_gate",
-      "signature": "pub fn step_gate(&mut self, cpu: &mut pdp8_gatelevel::Pdp8GateLevel) -> Result<StepTrace, Pdp8Error>",
+      "signature": "pub fn step_gate( &mut self, cpu: &mut pdp8_gatelevel::Pdp8GateLevel, ) -> Result<StepTrace, Pdp8Error>",
       "effects": []
     },
     {
       "name": "run_sim_until_halt",
-      "signature": "pub fn run_sim_until_halt(&mut self, sim: &mut Pdp8Simulator, max_steps: usize) -> Result<usize, Pdp8Error>",
+      "signature": "pub fn run_sim_until_halt( &mut self, sim: &mut Pdp8Simulator, max_steps: usize, ) -> Result<usize, Pdp8Error>",
       "effects": []
     },
     {
@@ -132,12 +132,12 @@
     },
     {
       "name": "step_gate",
-      "signature": "pub fn step_gate(&mut self, cpu: &mut pdp8_gatelevel::Pdp8GateLevel) -> Result<StepTrace, Pdp8Error>",
+      "signature": "pub fn step_gate( &mut self, cpu: &mut pdp8_gatelevel::Pdp8GateLevel, ) -> Result<StepTrace, Pdp8Error>",
       "effects": []
     },
     {
       "name": "run_sim_until_halt",
-      "signature": "pub fn run_sim_until_halt(&mut self, sim: &mut Pdp8Simulator, max_steps: usize) -> Result<usize, Pdp8Error>",
+      "signature": "pub fn run_sim_until_halt( &mut self, sim: &mut Pdp8Simulator, max_steps: usize, ) -> Result<usize, Pdp8Error>",
       "effects": []
     },
     {
@@ -177,7 +177,7 @@
     },
     {
       "name": "feed_sim_typewriter",
-      "signature": "pub fn feed_sim_typewriter(sim: &mut ge225_simulator::Simulator, text: &str) -> Result<(), String>",
+      "signature": "pub fn feed_sim_typewriter( sim: &mut ge225_simulator::Simulator, text: &str, ) -> Result<(), String>",
       "effects": []
     },
     {

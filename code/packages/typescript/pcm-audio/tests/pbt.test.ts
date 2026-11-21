@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { SplitMix64 } from "@coding-adventures/test-bootstrap";
 
 import {
   clampToPcm16,
@@ -15,8 +16,9 @@ import {
 } from "../src/index.js";
 
 test("PBT: clampToPcm16 bounded in [PCM16_MIN, PCM16_MAX]", () => {
-  // Check wide range of inputs
-  for (let v = -70_000; v <= 70_000; v += 137) {
+  const prng = new SplitMix64(0x1337_cafe_0001n);
+  for (let trial = 0; trial < 200; trial += 1) {
+    const v = prng.bounded(200_001) - 100_000;
     const clamped = clampToPcm16(v);
     assert.ok(clamped >= PCM16_MIN && clamped <= PCM16_MAX);
     if (v >= PCM16_MIN && v <= PCM16_MAX) {
@@ -30,7 +32,9 @@ test("PBT: clampToPcm16 bounded in [PCM16_MIN, PCM16_MAX]", () => {
 });
 
 test("PBT: computeWavFileSize and computeDataSize mathematical identities", () => {
-  for (let samples = 0; samples <= 10_000; samples += 250) {
+  const prng = new SplitMix64(0x2468_ace0_1357n);
+  for (let trial = 0; trial < 50; trial += 1) {
+    const samples = prng.bounded(50_001);
     const dataSize = computeDataSize(samples, 1, 2);
     assert.equal(dataSize, samples * 2);
     const fileSize = computeWavFileSize(dataSize);
@@ -39,8 +43,10 @@ test("PBT: computeWavFileSize and computeDataSize mathematical identities", () =
 });
 
 test("PBT: floatToPcm16 boundedness and clipping correctness", () => {
-  for (let i = -200; i <= 200; i += 1) {
-    const sample = i * 0.01;
+  const prng = new SplitMix64(0xdead_beef_9999n);
+  for (let trial = 0; trial < 200; trial += 1) {
+    const u = Number(prng.nextU64() >> 11n) * (1.0 / Number(1n << 53n));
+    const sample = (u * 4.0) - 2.0; // [-2.0, 2.0)
     const [pcm, clipped] = floatToPcm16(sample);
 
     assert.ok(pcm >= PCM16_MIN && pcm <= PCM16_MAX);
@@ -52,15 +58,16 @@ test("PBT: floatToPcm16 boundedness and clipping correctness", () => {
   }
 });
 
-test("PBT: WAV roundtrip idempotence across arbitrary sample lists", () => {
-  const testPatterns = [
-    [0],
-    [-32768, 32767],
-    [0, 100, -100, 200, -200, 300, -300],
-    Array.from({ length: 128 }, (_, i) => Math.trunc(Math.sin(i * 0.1) * 30000)),
-  ];
+test("PBT (SplitMix64): WAV roundtrip idempotence across generated sample lists", () => {
+  const prng = new SplitMix64(0xfeed_face_4242n);
+  const sampleSpan = PCM16_MAX - PCM16_MIN + 1;
 
-  for (const pattern of testPatterns) {
+  for (let trial = 0; trial < 25; trial += 1) {
+    const len = prng.bounded(256);
+    const pattern: number[] = [];
+    for (let i = 0; i < len; i += 1) {
+      pattern.push(PCM16_MIN + prng.bounded(sampleSpan));
+    }
     const orig = new PCMBuffer(pattern, new PCMFormat(48_000));
     const wavBytes = toWavBytes(orig);
     const recovered = fromWavBytes(wavBytes);

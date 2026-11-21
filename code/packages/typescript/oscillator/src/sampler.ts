@@ -5,6 +5,7 @@
 import { MAX_SAMPLES } from "./constants.js";
 import type { ContinuousSignal } from "./types.js";
 import {
+  safeFormatValue,
   sampleCountForDuration,
   timeAtSample,
   validateFinite,
@@ -23,7 +24,12 @@ export class SampleBuffer {
     sampleRateHz: number,
     startTimeSeconds = 0.0,
   ) {
-    if (!samples || typeof samples.length !== "number") {
+    if (
+      samples === null ||
+      typeof samples !== "object" ||
+      (ArrayBuffer.isView(samples) && samples instanceof DataView) ||
+      typeof (samples as { length?: unknown }).length !== "number"
+    ) {
       throw new TypeError("samples must be a Float64Array or array of numbers");
     }
     const len = validateSampleCount("samples.length", samples.length);
@@ -32,7 +38,9 @@ export class SampleBuffer {
     for (let i = 0; i < len; i += 1) {
       const s = samples[i];
       if (typeof s !== "number" || !Number.isFinite(s)) {
-        throw new TypeError(`samples[${String(i)}] must be a finite number, got ${String(s)}`);
+        throw new TypeError(
+          `samples[${String(i)}] must be a finite number, got ${safeFormatValue(s)}`,
+        );
       }
     }
 
@@ -108,7 +116,9 @@ export class UniformSampler {
       const t = timeAtSample(i, this.sampleRateHz, validStart);
       const val = signal.valueAt(t);
       if (!Number.isFinite(val)) {
-        throw new RangeError(`signal.valueAt(${String(t)}) returned non-finite value ${String(val)}`);
+        throw new RangeError(
+          `signal.valueAt(${String(t)}) returned non-finite value ${safeFormatValue(val)}`,
+        );
       }
       outputSamplesArray[i] = val;
     }
@@ -132,7 +142,9 @@ export class UniformSampler {
       const t = timeAtSample(i, this.sampleRateHz, validStart);
       const val = signal.valueAt(t);
       if (!Number.isFinite(val)) {
-        throw new RangeError(`signal.valueAt(${String(t)}) returned non-finite value ${String(val)}`);
+        throw new RangeError(
+          `signal.valueAt(${String(t)}) returned non-finite value ${safeFormatValue(val)}`,
+        );
       }
       yield val;
     }

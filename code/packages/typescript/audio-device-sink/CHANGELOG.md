@@ -2,13 +2,12 @@
 
 ## 0.2.0
 
-- Migrated test runner from Vitest to `@coding-adventures/test-bootstrap` (TF01).
-- Removed Vitest dependency and removed `vitest.config.ts`.
+- Migrated test runner from Vitest / `--experimental-strip-types` to standalone `tsconfig.json` + `tsconfig.test.json` + `node:test` + `@coding-adventures/test-bootstrap` with `--experimental-test-coverage --test-coverage-lines=95`.
+- Updated `BUILD`, `BUILD_windows`, `.gitignore`, and `package-lock.json` to mirror `oscillator` and build `@coding-adventures/test-bootstrap` first.
 - Hardened against CWE-1321 (Prototype Pollution): closed set validation for error kinds and rejection of prototype property keys.
-- Hardened against CWE-400 (Resource Consumption): added streaming length cap preventing memory exhaustion on unbounded iterables.
-- Hardened against CWE-20 (Improper Input Validation): added runtime type assertions and strict `Number.isFinite`/`Number.isInteger` guards.
-- Added property-based testing (PBT, VER05a) and sample normalization fuzz suites.
-- Added Warrant specification `code/specs/audio-device-sink.warrant`.
+- Hardened against CWE-400 (Resource Consumption): added pre-flight `Array`/`Int16Array` and streaming length caps plus bounded error/backendName strings.
+- Hardened against CWE-20 / CWE-190 (Improper Input Validation / Integer Overflow): enforced `Number.isSafeInteger` and capacity bounds across `PcmFormat`, `PcmPlaybackBuffer`, `validateFormat`, and `frameCount`.
+- Added local `audio-device-sink.warrant` synced with `code/specs/audio-device-sink.warrant`, plus `tests/hostile.test.ts` and `tests/pbt.test.ts` (SplitMix64).
 
 ## 0.1.0
 

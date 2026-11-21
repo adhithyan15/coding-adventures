@@ -25,6 +25,12 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="Path to Python package directory or single file (default: .)",
     )
     parser.add_argument(
+        "--dir",
+        dest="dir_path",
+        default=None,
+        help="Explicit directory of the Python package to analyze",
+    )
+    parser.add_argument(
         "--manifest",
         "-m",
         default=None,
@@ -46,9 +52,10 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 def main(argv: Sequence[str] | None = None) -> int:
     """CLI entrypoint."""
     args = parse_args(argv)
+    target = args.dir_path if args.dir_path is not None else args.target
     try:
         report = analyze_package(
-            args.target,
+            target,
             manifest_path=args.manifest,
             strict=args.strict,
         )

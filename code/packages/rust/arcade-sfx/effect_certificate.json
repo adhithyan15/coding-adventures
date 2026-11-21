@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/arcade-sfx",
-  "source_digest": "6128716cd63774614d42f8f92a59a611980abd94ad53e1e124733b520523233a",
+  "source_digest": "3a6c1e6061d2e9240928ddf24c775b5aa9f65785497d78699e515174d081acf0",
   "manifest_digest": "2541730e3ad447dd1d02c578e43027b7432a1b944050ee007202fb8fcfe9562e",
   "declared_effects": [],
   "entry_points": [

@@ -27,6 +27,8 @@ import {
   overlapAdd,
   parseBoundaryMode,
   parseConvMode,
+  safeFormatValue,
+  sample,
   sepConv2d,
   sharpenKernel,
 } from "../src/index.js";
@@ -259,5 +261,84 @@ describe("Hostile inputs & VER15 Security Hardening (dsp-conv)", () => {
       assert.ok(!code.includes("Function("));
       assert.ok(!code.includes("RegExp"));
     }
+  });
+
+  it("rejects Symbol, Object.create(null), DataView, BigInt64Array, null inputs, and oversized enum strings (VER15)", () => {
+    const sym = Symbol("bad");
+    const nullProto = Object.create(null);
+
+    assert.equal(safeFormatValue(sym), "Symbol(bad)");
+    assert.equal(safeFormatValue(nullProto), "[object Object]");
+    assert.equal(safeFormatValue(null), "null");
+
+    assert.throws(() => parseBoundaryMode(sym as any), InvalidInputError);
+    assert.throws(() => parseBoundaryMode(nullProto as any), InvalidInputError);
+    assert.throws(() => parseBoundaryMode(" ".repeat(65) + "zero"), InvalidInputError);
+    assert.throws(() => parseConvMode(sym as any), InvalidInputError);
+    assert.throws(() => parseConvMode(nullProto as any), InvalidInputError);
+    assert.throws(() => parseConvMode(" ".repeat(65) + "full"), InvalidInputError);
+
+    assert.throws(() => nextPow2(sym as any), InvalidInputError);
+    assert.throws(() => nextPow2(nullProto as any), InvalidInputError);
+    assert.throws(() => nextPow2(Number.MAX_SAFE_INTEGER + 1), InvalidInputError);
+
+    assert.throws(() => overlapAdd([1, 2], [1], sym as any), InvalidInputError);
+    assert.throws(() => overlapAdd([1, 2], [1], nullProto as any), InvalidInputError);
+    assert.throws(() => gaussianBlurKernel(sym as any, 3), InvalidInputError);
+    assert.throws(() => gaussianBlurKernel(1.0, nullProto as any), InvalidInputError);
+    assert.throws(() => boxBlurKernel(sym as any), InvalidInputError);
+    assert.throws(() => sharpenKernel(sym as any), InvalidInputError);
+    assert.throws(() => sharpenKernel(nullProto as any), InvalidInputError);
+
+    assert.throws(() => conv2d([1], [1], sym as any, 1, 1, 1), ImageSizeMismatchError);
+    assert.throws(() => sepConv2d([1], [1], [1], nullProto as any, 1), ImageSizeMismatchError);
+
+    assert.throws(() => extendIndex(NaN, 5, BoundaryMode.ZERO), InvalidInputError);
+    assert.throws(() => extendIndex(0, 0, BoundaryMode.ZERO), InvalidInputError);
+    assert.throws(() => extendIndex(0, 5, nullProto as any), InvalidInputError);
+    assert.throws(() => sample([sym as any], 0, BoundaryMode.ZERO), InvalidInputError);
+
+    const dv = new DataView(new ArrayBuffer(16));
+    const bi = new BigInt64Array(4);
+    const bui = new BigUint64Array(4);
+
+    assert.throws(() => conv1d(dv as any, [1]), InvalidInputError);
+    assert.throws(() => conv1d(bi as any, [1]), InvalidInputError);
+    assert.throws(() => conv1d([1], bui as any), InvalidInputError);
+    assert.throws(() => conv1d(null as any, [1]), InvalidInputError);
+    assert.throws(() => conv1d({} as any, [1]), InvalidInputError);
+    assert.throws(() => conv1d([sym as any], [1]), InvalidInputError);
+    assert.throws(() => conv1d([nullProto as any], [1]), InvalidInputError);
+    assert.throws(() => correlate([1], [sym as any]), InvalidInputError);
+    assert.throws(() => fftConvolve(dv as any, [1]), InvalidInputError);
+    assert.throws(() => overlapAdd(bi as any, [1]), InvalidInputError);
+    assert.throws(() => conv2d(dv as any, [1], 1, 1, 1, 1), InvalidInputError);
+    assert.throws(() => sepConv2d(bi as any, [1], [1], 1, 1), InvalidInputError);
+    assert.throws(() => convolve2d([[1], bi as any], [[1]]), ImageSizeMismatchError);
+    assert.throws(() => convolve2d([[1]], [[1], dv as any]), ImageSizeMismatchError);
+    assert.throws(() => convolve2d(dv as any, [[1]]), InvalidInputError);
+
+    // Findings 3, 4, 5, 10 regressions
+    assert.throws(() => sharpenKernel(5e307), InvalidInputError);
+    assert.throws(() => sharpenKernel(-5e307), InvalidInputError);
+    assert.throws(
+      () => convolve2d([[1, 2, 3], [4, 5, 6]], [[1]], "same", "zero", 2, 2, 1, 1),
+      ImageSizeMismatchError
+    );
+    assert.throws(
+      () => convolve2d([[1, 2]], [[1]], "same", "zero", 3, 2, 1, 1),
+      ImageSizeMismatchError
+    );
+    assert.throws(
+      () => convolve2d([[1, 2]], [[1, 2]], "same", "zero", 1, 2, 1, 1),
+      ImageSizeMismatchError
+    );
+    assert.throws(
+      () => convolve2d([[1, 2]], [[1, 2]], "same", "zero", 1, 2, 2, 2),
+      ImageSizeMismatchError
+    );
+    assert.throws(() => fftConvolve([1e308, 1e308], [10, 10]), (err) => err instanceof ConvError && err instanceof InvalidInputError);
+    const nullCtorDv = Object.assign(new DataView(new ArrayBuffer(8)), { constructor: null });
+    assert.throws(() => conv1d(nullCtorDv as any, [1]), InvalidInputError);
   });
 });

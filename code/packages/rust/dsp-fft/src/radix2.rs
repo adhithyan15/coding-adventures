@@ -108,7 +108,16 @@ pub fn build_fft_graph(n: u32, direction: Direction) -> Result<Graph, FftError> 
 /// windowed signal slice the same way before splicing in a
 /// radix-2 FFT subgraph.
 pub fn wrap_real_as_complex(b: &mut GraphBuilder, real_1d: &Tensor, n: u32) -> Tensor {
-    let zeros = b.constant(DType::F32, Shape::from(&[n, 1]), vec![0u8; n as usize * 4]);
+    assert!(
+        (n as usize) <= MAX_FFT_LEN,
+        "FFT length {} exceeds MAX_FFT_LEN ({})",
+        n,
+        MAX_FFT_LEN
+    );
+    let byte_len = (n as usize)
+        .checked_mul(4)
+        .expect("byte count overflow");
+    let zeros = b.constant(DType::F32, Shape::from(&[n, 1]), vec![0u8; byte_len]);
     let real_2d = b.reshape(real_1d, Shape::from(&[n, 1]));
     b.concat(&[&real_2d, &zeros], 1)
 }
@@ -183,7 +192,10 @@ pub fn add_radix2_fft_to_builder(
         let odd = b.slice(&x, 1, half, full, 1);
 
         // Twiddle factors for this stage: [half, 2] of [cos, sin].
-        let mut tw_bytes = Vec::with_capacity((half as usize) * 8);
+        let tw_cap = (half as usize)
+            .checked_mul(8)
+            .ok_or_else(|| FftError::InvalidInput("twiddle byte count overflow".into()))?;
+        let mut tw_bytes = Vec::with_capacity(tw_cap);
         for j in 0..half {
             let theta = sign * 2.0 * std::f32::consts::PI * (j as f32) / (full as f32);
             tw_bytes.extend_from_slice(&theta.cos().to_le_bytes());
@@ -248,7 +260,6 @@ pub fn build_fft_graph_with_input(
     signal: &[f32],
     direction: Direction,
 ) -> Result<(Graph, TensorId), FftError> {
-    let n = signal.len() as u32;
     if signal.len() > MAX_SAMPLES || signal.len() > MAX_FFT_LEN {
         return Err(FftError::InvalidInput(format!(
             "signal length {} exceeds bounds ({})",
@@ -261,13 +272,20 @@ pub fn build_fft_graph_with_input(
             "input contains non-finite float (NaN or Inf)".into(),
         ));
     }
+    let n = u32::try_from(signal.len()).map_err(|_| {
+        FftError::InvalidInput(format!("signal length {} exceeds u32::MAX", signal.len()))
+    })?;
     if n < 2 || !n.is_power_of_two() {
         return Err(FftError::NotPowerOfTwo(signal.len()));
     }
     let mut b = GraphBuilder::new();
 
     // ── Step 1: real → complex with the signal baked in as a Const.
-    let mut input_bytes = Vec::with_capacity(signal.len() * 4);
+    let byte_cap = signal
+        .len()
+        .checked_mul(4)
+        .ok_or_else(|| FftError::InvalidInput("input byte count overflow".into()))?;
+    let mut input_bytes = Vec::with_capacity(byte_cap);
     for &x in signal {
         input_bytes.extend_from_slice(&x.to_le_bytes());
     }
@@ -318,8 +336,11 @@ pub fn fft_via_runtime(
     use matrix_runtime::Runtime;
 
     let (graph, output_id) = build_fft_graph_with_input(signal, direction)?;
-    let n = signal.len() as u32;
-    let output_byte_count = (n as usize) * 2 * 4;
+    let output_byte_count = signal
+        .len()
+        .checked_mul(2)
+        .and_then(|x| x.checked_mul(4))
+        .ok_or_else(|| FftError::InvalidInput("output byte count overflow".into()))?;
 
     let runtime = Runtime::new(matrix_cpu::profile());
     let placed: ComputeGraph = runtime
@@ -385,10 +406,22 @@ pub fn fft_via_runtime(
     };
 
     // Reinterpret the bytes as a flat [re, im, re, im, ...] f32 vec.
+    if bytes.len() != output_byte_count || !bytes.len().is_multiple_of(4) {
+        return Err(FftError::InvalidInput(format!(
+            "runtime FFT buffer length {} does not match expected {}",
+            bytes.len(),
+            output_byte_count
+        )));
+    }
     let mut out: Vec<f32> = Vec::with_capacity(bytes.len() / 4);
     for chunk in bytes.as_chunks::<4>().0 {
-        let arr = *chunk;
-        out.push(f32::from_le_bytes(arr));
+        let val = f32::from_le_bytes(*chunk);
+        if !val.is_finite() {
+            return Err(FftError::InvalidInput(
+                "runtime FFT computation overflowed to non-finite float".into(),
+            ));
+        }
+        out.push(val);
     }
     Ok(out)
 }

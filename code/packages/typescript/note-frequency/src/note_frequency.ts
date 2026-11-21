@@ -5,18 +5,18 @@
  * frequencies in Hertz anchored at A4 = 440 Hz.
  *
  * Hardened against:
- * - CWE-1321 (Prototype Pollution): Uses Map for lookups, rejects prototype properties.
+ * - CWE-1321 (Prototype Pollution): Uses Map and Set for lookups, rejects prototype properties.
+ * - CWE-1333 (ReDoS): Uses a bounded linear-time ASCII scanner instead of regexes.
  * - CWE-400 (Uncontrolled Resource Consumption): Caps input length and octave ranges.
- * - CWE-20 (Improper Input Validation): Validates all types, bounds, and finite numbers.
+ * - CWE-20 / CWE-190 (Improper Input Validation / Integer Overflow): Validates all types,
+ *   safe integer bounds, and finite numbers.
  */
 
-const MAX_NOTE_STRING_LENGTH = 32;
-const MIN_OCTAVE = -100;
-const MAX_OCTAVE = 100;
+export const MAX_NOTE_STRING_LENGTH = 32;
+export const MIN_OCTAVE = -100;
+export const MAX_OCTAVE = 100;
 
 const BANNED_PROPERTIES = new Set(["__proto__", "constructor", "prototype", "toString", "valueOf"]);
-
-const NOTE_PATTERN = /^([A-Ga-g])([#b]?)(-?\d+)$/;
 
 const CHROMATIC_INDEX: ReadonlyMap<string, number> = new Map<string, number>([
   ["C", 0],
@@ -43,6 +43,13 @@ const REFERENCE_INDEX = 9; // CHROMATIC_INDEX.get("A")!
 const REFERENCE_FREQUENCY_HZ = 440.0;
 const SEMITONES_PER_OCTAVE = 12;
 
+function invalidNoteError(text: string): Error {
+  return new Error(
+    `Invalid note ${JSON.stringify(text)}. ` +
+      "Expected <letter><optional # or b><octave>, for example 'A4', 'C#5', or 'Db3'."
+  );
+}
+
 export class Note {
   readonly letter: string;
   readonly accidental: string;
@@ -55,8 +62,19 @@ export class Note {
     if (BANNED_PROPERTIES.has(letter) || BANNED_PROPERTIES.has(accidental)) {
       throw new Error(`Forbidden prototype property name in note: ${letter}${accidental}`);
     }
-    if (!Number.isFinite(octave) || !Number.isInteger(octave)) {
-      throw new RangeError(`Octave must be a finite integer, got ${octave}`);
+    if (letter.length > MAX_NOTE_STRING_LENGTH || accidental.length > MAX_NOTE_STRING_LENGTH) {
+      throw new RangeError(
+        `Note component lengths (${letter.length}, ${accidental.length}) exceed maximum ${MAX_NOTE_STRING_LENGTH}.`
+      );
+    }
+    if (letter.length !== 1 || accidental.length > 1) {
+      throw new Error(
+        `Unsupported note spelling ${JSON.stringify(letter + accidental)}. ` +
+          "Only natural notes plus single # or b accidentals are supported."
+      );
+    }
+    if (!Number.isSafeInteger(octave)) {
+      throw new RangeError(`Octave must be a safe finite integer, got ${octave}`);
     }
     if (octave < MIN_OCTAVE || octave > MAX_OCTAVE) {
       throw new RangeError(`Octave ${octave} out of range [${MIN_OCTAVE}, ${MAX_OCTAVE}]`);
@@ -93,8 +111,8 @@ export class Note {
     const octaveOffset = (this.octave - REFERENCE_OCTAVE) * SEMITONES_PER_OCTAVE;
     const pitchOffset = this.chromaticIndex() - REFERENCE_INDEX;
     const semitones = octaveOffset + pitchOffset;
-    if (!Number.isFinite(semitones)) {
-      throw new RangeError("Computed semitones is not a finite number");
+    if (!Number.isSafeInteger(semitones)) {
+      throw new RangeError("Computed semitones is not a safe integer");
     }
     return semitones;
   }
@@ -112,6 +130,14 @@ export class Note {
   }
 }
 
+/**
+ * Parse a note label with a bounded linear-time ASCII scanner (CWE-1333 / CWE-400).
+ *
+ * Accepted grammar:
+ *   <letter> ::= 'A'..'G' | 'a'..'g'
+ *   <accidental> ::= '' | '#' | 'b'
+ *   <octave> ::= ['-'] '0'..'9'+
+ */
 export function parseNote(text: string): Note {
   if (typeof text !== "string") {
     throw new TypeError(`Expected string input for note, got ${typeof text}`);
@@ -125,18 +151,55 @@ export function parseNote(text: string): Note {
     throw new Error(`Rejected prototype property name: ${text}`);
   }
 
-  const match = NOTE_PATTERN.exec(text);
-  if (match === null) {
-    throw new Error(
-      `Invalid note ${JSON.stringify(text)}. ` +
-        "Expected <letter><optional # or b><octave>, for example 'A4', 'C#5', or 'Db3'."
-    );
+  const firstCode = text.charCodeAt(0);
+  let letter: string;
+  if (firstCode >= 65 && firstCode <= 71) {
+    letter = text[0];
+  } else if (firstCode >= 97 && firstCode <= 103) {
+    letter = String.fromCharCode(firstCode - 32);
+  } else {
+    throw invalidNoteError(text);
   }
-  const [, letter, accidental, octaveText] = match;
-  const parsedOctave = Number.parseInt(octaveText, 10);
-  if (!Number.isFinite(parsedOctave)) {
-    throw new RangeError(`Parsed octave is not finite: ${octaveText}`);
+
+  let pos = 1;
+  let accidental = "";
+  if (pos < text.length) {
+    const accCode = text.charCodeAt(pos);
+    if (accCode === 35 || accCode === 98) {
+      accidental = text[pos];
+      pos += 1;
+    }
   }
+
+  if (pos >= text.length) {
+    throw invalidNoteError(text);
+  }
+
+  let negative = false;
+  if (text.charCodeAt(pos) === 45) {
+    negative = true;
+    pos += 1;
+  }
+
+  if (pos >= text.length) {
+    throw invalidNoteError(text);
+  }
+
+  let octaveAbs = 0;
+  for (let i = pos; i < text.length; i += 1) {
+    const digitCode = text.charCodeAt(i);
+    if (digitCode < 48 || digitCode > 57) {
+      throw invalidNoteError(text);
+    }
+    octaveAbs = octaveAbs * 10 + (digitCode - 48);
+    if (octaveAbs > MAX_OCTAVE) {
+      throw new RangeError(
+        `Octave in ${JSON.stringify(text)} out of range [${MIN_OCTAVE}, ${MAX_OCTAVE}]`
+      );
+    }
+  }
+
+  const parsedOctave = negative ? (octaveAbs === 0 ? 0 : -octaveAbs) : octaveAbs;
   return new Note(letter, accidental, parsedOctave);
 }
 

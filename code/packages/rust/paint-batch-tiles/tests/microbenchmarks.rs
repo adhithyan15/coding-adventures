@@ -84,11 +84,8 @@ fn check_diff_sprite_batches_into_sorted_zero_alloc(_ctx: &Ctx) -> Verdict {
         &budget,
         &alloc,
         || {
-            let r = diff_sprite_batches_into(
-                black_box(&prev),
-                black_box(&next),
-                black_box(&mut ops),
-            );
+            let r =
+                diff_sprite_batches_into(black_box(&prev), black_box(&next), black_box(&mut ops));
             black_box(r).expect("diff_sprite_batches_into should succeed");
         },
     );
@@ -134,11 +131,8 @@ fn check_diff_sprite_batches_into_unsorted_zero_alloc(_ctx: &Ctx) -> Verdict {
         &budget,
         &alloc,
         || {
-            let r = diff_sprite_batches_into(
-                black_box(&prev),
-                black_box(&next),
-                black_box(&mut ops),
-            );
+            let r =
+                diff_sprite_batches_into(black_box(&prev), black_box(&next), black_box(&mut ops));
             black_box(r).expect("diff_sprite_batches_into should succeed");
         },
     );

@@ -1137,16 +1137,18 @@ func asBool(value any) bool {
 	return v
 }
 
+const maxBenchmarkTrials = 1_000_000
+
 func ValidateManifest(m Manifest) error {
 	var problems []string
 	if strings.TrimSpace(m.Name) == "" {
 		problems = append(problems, "manifest name is required")
 	}
-	if m.Defaults.MeasurementTrials < 1 {
-		problems = append(problems, "defaults.measurement_trials must be at least 1")
+	if m.Defaults.MeasurementTrials < 1 || m.Defaults.MeasurementTrials > maxBenchmarkTrials {
+		problems = append(problems, fmt.Sprintf("defaults.measurement_trials must be between 1 and %d", maxBenchmarkTrials))
 	}
-	if m.Defaults.WarmupTrials < 0 {
-		problems = append(problems, "defaults.warmup_trials must be non-negative")
+	if m.Defaults.WarmupTrials < 0 || m.Defaults.WarmupTrials > maxBenchmarkTrials {
+		problems = append(problems, fmt.Sprintf("defaults.warmup_trials must be between 0 and %d", maxBenchmarkTrials))
 	}
 	if len(m.Subjects) == 0 {
 		problems = append(problems, "at least one subject is required")
@@ -1608,8 +1610,17 @@ func shellCommand(command string) *exec.Cmd {
 }
 
 func runCommandWorkload(subject PreparedSubject, workload Workload, defaults Defaults, samplesFile, trialsFile *os.File) ([]Trial, error) {
-	var trials []Trial
+	if defaults.WarmupTrials < 0 || defaults.WarmupTrials > maxBenchmarkTrials {
+		return nil, fmt.Errorf("warmup_trials %d out of range [0, %d]", defaults.WarmupTrials, maxBenchmarkTrials)
+	}
+	if defaults.MeasurementTrials < 1 || defaults.MeasurementTrials > maxBenchmarkTrials {
+		return nil, fmt.Errorf("measurement_trials %d out of range [1, %d]", defaults.MeasurementTrials, maxBenchmarkTrials)
+	}
 	total := defaults.WarmupTrials + defaults.MeasurementTrials
+	if total < 0 || total > 2*maxBenchmarkTrials {
+		return nil, fmt.Errorf("total trials %d out of range", total)
+	}
+	trials := make([]Trial, 0, total)
 	for i := 0; i < total; i++ {
 		phase := "measurement"
 		trialNumber := i - defaults.WarmupTrials + 1
@@ -1672,7 +1683,16 @@ func runTCPRESPWorkload(subject PreparedSubject, workload Workload, defaults Def
 	if err != nil && tcpWorkloadMode(workload) != respModeIdle {
 		return nil, fmt.Errorf("parse expected RESP frames for workload %s: %w", workload.Name, err)
 	}
+	if defaults.WarmupTrials < 0 || defaults.WarmupTrials > maxBenchmarkTrials {
+		return nil, fmt.Errorf("warmup_trials %d out of range [0, %d]", defaults.WarmupTrials, maxBenchmarkTrials)
+	}
+	if defaults.MeasurementTrials < 1 || defaults.MeasurementTrials > maxBenchmarkTrials {
+		return nil, fmt.Errorf("measurement_trials %d out of range [1, %d]", defaults.MeasurementTrials, maxBenchmarkTrials)
+	}
 	total := defaults.WarmupTrials + defaults.MeasurementTrials
+	if total < 0 || total > 2*maxBenchmarkTrials {
+		return nil, fmt.Errorf("total trials %d out of range", total)
+	}
 	trials := make([]Trial, 0, total)
 	for i := 0; i < total; i++ {
 		phase := "measurement"

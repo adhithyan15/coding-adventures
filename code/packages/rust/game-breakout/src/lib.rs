@@ -26,7 +26,9 @@ pub use collision2d::{
     SweepHit, MAX_COORD,
 };
 pub use game_clock::{advance_frame, ClockError, ClockStepResult, GameClockState};
-pub use paint_batch_tiles::{lower_sprites_to_paint_scene, PaintBatchError, PaintScene, SpriteQuad};
+pub use paint_batch_tiles::{
+    lower_sprites_to_paint_scene, PaintBatchError, PaintScene, SpriteQuad,
+};
 
 /// Type alias for [`SpriteQuad`] conforming to the engine sprite interface.
 pub type SpriteItem = SpriteQuad;
@@ -128,8 +130,12 @@ impl std::fmt::Display for BreakoutError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::InvalidConfig => write!(f, "invalid breakout configuration parameters"),
-            Self::NonFiniteState => write!(f, "breakout state contains non-finite float (NaN or Inf)"),
-            Self::StateOutOfBounds => write!(f, "coordinates exceed allowable arena or physical bounds"),
+            Self::NonFiniteState => {
+                write!(f, "breakout state contains non-finite float (NaN or Inf)")
+            }
+            Self::StateOutOfBounds => {
+                write!(f, "coordinates exceed allowable arena or physical bounds")
+            }
             Self::NegativeDimension => write!(f, "dimension or coordinate cannot be negative"),
             Self::Collision(e) => write!(f, "collision error: {e}"),
             Self::Clock(e) => write!(f, "game clock error: {e}"),
@@ -602,14 +608,14 @@ impl BreakoutState {
         for row in 0..self.config.brick_rows {
             // Colors: top 2 rows red, next 2 orange, next 2 green, bottom 2 yellow
             let color = match row {
-                0 => [220, 20, 60],  // Crimson
-                1 => [255, 69, 0],   // Red-Orange
-                2 => [255, 140, 0],  // Dark Orange
-                3 => [255, 165, 0],  // Orange
-                4 => [50, 205, 50],  // Lime Green
-                5 => [34, 139, 34],  // Forest Green
-                6 => [255, 215, 0],  // Gold
-                _ => [255, 255, 0],  // Yellow
+                0 => [220, 20, 60], // Crimson
+                1 => [255, 69, 0],  // Red-Orange
+                2 => [255, 140, 0], // Dark Orange
+                3 => [255, 165, 0], // Orange
+                4 => [50, 205, 50], // Lime Green
+                5 => [34, 139, 34], // Forest Green
+                6 => [255, 215, 0], // Gold
+                _ => [255, 255, 0], // Yellow
             };
 
             // Points: top rows 7, next 5, next 3, bottom 1
@@ -627,13 +633,8 @@ impl BreakoutState {
 
             for col in 0..self.config.brick_cols {
                 let idx = row * MAX_BRICK_COLS + col;
-                self.bricks[idx] = BrickSlot::new_brick(
-                    row as u8,
-                    col as u8,
-                    max_hits,
-                    points,
-                    color,
-                );
+                self.bricks[idx] =
+                    BrickSlot::new_brick(row as u8, col as u8, max_hits, points, color);
                 count += 1;
             }
         }
@@ -784,8 +785,8 @@ pub fn step_breakout(
     // Check paddle collision (only when moving downward)
     if state.ball_vel.y > 0.0 {
         let paddle_rect = state.paddle_bounding_rect();
-        if let Some(hit) = sweep_circle_aabb(ball_circle, disp, paddle_rect)
-            .map_err(BreakoutError::Collision)?
+        if let Some(hit) =
+            sweep_circle_aabb(ball_circle, disp, paddle_rect).map_err(BreakoutError::Collision)?
         {
             if hit.toi <= 1.0 {
                 earliest_hit = Some((hit, CollisionTarget::Paddle));
@@ -802,8 +803,7 @@ pub fn step_breakout(
                 if let Some(hit) = sweep_circle_aabb(ball_circle, disp, b_rect)
                     .map_err(BreakoutError::Collision)?
                 {
-                    if hit.toi <= 1.0
-                        && earliest_hit.as_ref().is_none_or(|(e, _)| hit.toi < e.toi)
+                    if hit.toi <= 1.0 && earliest_hit.as_ref().is_none_or(|(e, _)| hit.toi < e.toi)
                     {
                         earliest_hit = Some((hit, CollisionTarget::Brick(idx)));
                     }
@@ -878,8 +878,9 @@ pub fn step_breakout(
 
                 let rem_t = (1.0 - hit.toi).max(0.0);
                 let hit_pos = state.ball_pos.add(disp.scale(hit.toi));
-                state.ball_pos =
-                    hit_pos.add(normal.scale(0.01)).add(state.ball_vel.scale(rem_t * dt));
+                state.ball_pos = hit_pos
+                    .add(normal.scale(0.01))
+                    .add(state.ball_vel.scale(rem_t * dt));
             }
         }
     } else {
@@ -957,8 +958,9 @@ pub fn step_breakout_with_clock(
         last_frame_events.life_lost |= step_ev.life_lost;
         last_frame_events.level_cleared |= step_ev.level_cleared;
         last_frame_events.game_over |= step_ev.game_over;
-        last_frame_events.points_scored =
-            last_frame_events.points_scored.saturating_add(step_ev.points_scored);
+        last_frame_events.points_scored = last_frame_events
+            .points_scored
+            .saturating_add(step_ev.points_scored);
         last_frame_events.combo_count = step_ev.combo_count;
         steps_simulated += 1;
     }
@@ -1143,6 +1145,7 @@ pub fn build_breakout_sprites(state: &BreakoutState, out: &mut [SpriteItem]) -> 
 
 /// Lowers current Breakout state into a universal [`PaintScene`] IR via [`paint_batch_tiles`].
 pub fn lower_breakout_to_paint_scene(state: &BreakoutState) -> Result<PaintScene, BreakoutError> {
+    state.check_breakout_state_validity()?;
     let mut sprites = [SpriteQuad::new(0, 0.0, 0.0, 0.0, 0.0); MAX_BREAKOUT_SPRITES];
     let count = build_breakout_sprites(state, &mut sprites);
     lower_sprites_to_paint_scene(

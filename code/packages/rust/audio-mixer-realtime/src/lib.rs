@@ -664,10 +664,11 @@ pub fn export_to_pcm_audio(
             rate: sample_rate_hz,
         });
     }
-    let format = pcm_audio::PcmFormat::mono_16bit(sample_rate_hz as f64)
-        .map_err(|_| MixerError::InvalidParameter {
+    let format = pcm_audio::PcmFormat::mono_16bit(sample_rate_hz as f64).map_err(|_| {
+        MixerError::InvalidParameter {
             reason: "invalid pcm format",
-        })?;
+        }
+    })?;
     pcm_audio::PcmAudio::from_i16(samples.to_vec(), format, 0.0).map_err(|_| {
         MixerError::InvalidParameter {
             reason: "invalid pcm buffer",

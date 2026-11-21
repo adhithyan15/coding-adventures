@@ -111,7 +111,7 @@ fn bogus_trees(c: char) -> Vec<(String, String)> {
 #[test]
 fn a_chain_has_a_600_s_row_budget_and_every_other_row_keeps_120_s() {
     assert_eq!(OBLIGATION_WALL_S, TIMEOUT_S);
-    for e in ["B3", "D3", "D4"] {
+    for e in ["B3", "D3", "D4", "D5"] {
         assert_eq!(row_wall_s(e), 600, "{e}");
         assert_eq!(wall_field(e), Some(600), "{e}");
     }
@@ -431,8 +431,22 @@ fn check_prints_a_non_fatal_stale_line_when_a_recorded_tree_differs() {
         assert!(o.contains("check: ok"));
     }
     assert!(o.contains("stale: tool: "), "{o}");
-    assert!(o.contains("spot check: population 1420"), "{o}");
-    assert!(o.contains("structural rebuild: population"), "{o}");
+    #[cfg(unix)]
+    {
+        assert!(o.contains("spot check: population 1420"), "{o}");
+        assert!(o.contains("structural rebuild: population"), "{o}");
+    }
+    #[cfg(not(unix))]
+    {
+        assert!(
+            o.contains("spot check: skipped (the process limits are unix-only)"),
+            "{o}"
+        );
+        assert!(
+            o.contains("structural rebuild: skipped (the process limits are unix-only)"),
+            "{o}"
+        );
+    }
     assert!(
         o.contains("decision-critical groups not re-solved by this run: "),
         "{o}"

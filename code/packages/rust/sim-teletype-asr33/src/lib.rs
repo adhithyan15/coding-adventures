@@ -90,10 +90,10 @@ pub const SERIAL_SPACE: u8 = 0;
 /// `logic_gates::gates::xor_gate`, with the 8th terminal grounded to 0.
 pub fn parity_generator_7xor(b0: u8, b1: u8, b2: u8, b3: u8, b4: u8, b5: u8, b6: u8) -> u8 {
     // Stage 1: 4 XOR gates (pairwise over 8 inputs with input 7 = 0)
-    let g1 = xor_gate(b0, b1);
-    let g2 = xor_gate(b2, b3);
-    let g3 = xor_gate(b4, b5);
-    let g4 = xor_gate(b6, 0);
+    let g1 = xor_gate(b0 & 1, b1 & 1);
+    let g2 = xor_gate(b2 & 1, b3 & 1);
+    let g3 = xor_gate(b4 & 1, b5 & 1);
+    let g4 = xor_gate(b6 & 1, 0);
 
     // Stage 2: 2 XOR gates
     let g5 = xor_gate(g1, g2);
@@ -270,7 +270,7 @@ impl Asr33FrameState {
             }
             None
         } else {
-            self.rx_bits_received += 1;
+            self.rx_bits_received = self.rx_bits_received.saturating_add(1);
             if self.rx_bits_received <= 8 {
                 // Bits 1..=8: data bits b0..b6 (bits 1..7) + parity bit (bit 8)
                 let shift_pos = self.rx_bits_received - 1;
@@ -282,6 +282,7 @@ impl Asr33FrameState {
             } else {
                 // Stop bit 2 (bit 10) completes the frame
                 self.rx_active = false;
+                self.rx_bits_received = 0;
                 let assembled = (self.rx_shift_reg & 0xFF) as u8;
                 self.kb_buffer = assembled;
                 self.kb_flag = true;
@@ -399,21 +400,84 @@ impl Default for Asr33GateLevel {
 }
 
 impl Asr33GateLevel {
+    #[inline]
+    fn sanitize_ff(ff: &mut FlipFlopState) {
+        ff.master_q &= 1;
+        ff.master_q_bar &= 1;
+        ff.slave_q &= 1;
+        ff.slave_q_bar &= 1;
+    }
+
     /// Constructs a new gate-level ASR-33 simulator in idle state.
     pub fn new() -> Self {
         // Transmitter shift register initialized with Mark (all 1s)
         let tx_shift_ff = [
-            FlipFlopState { master_q: 1, master_q_bar: 0, slave_q: 1, slave_q_bar: 0 },
-            FlipFlopState { master_q: 1, master_q_bar: 0, slave_q: 1, slave_q_bar: 0 },
-            FlipFlopState { master_q: 1, master_q_bar: 0, slave_q: 1, slave_q_bar: 0 },
-            FlipFlopState { master_q: 1, master_q_bar: 0, slave_q: 1, slave_q_bar: 0 },
-            FlipFlopState { master_q: 1, master_q_bar: 0, slave_q: 1, slave_q_bar: 0 },
-            FlipFlopState { master_q: 1, master_q_bar: 0, slave_q: 1, slave_q_bar: 0 },
-            FlipFlopState { master_q: 1, master_q_bar: 0, slave_q: 1, slave_q_bar: 0 },
-            FlipFlopState { master_q: 1, master_q_bar: 0, slave_q: 1, slave_q_bar: 0 },
-            FlipFlopState { master_q: 1, master_q_bar: 0, slave_q: 1, slave_q_bar: 0 },
-            FlipFlopState { master_q: 1, master_q_bar: 0, slave_q: 1, slave_q_bar: 0 },
-            FlipFlopState { master_q: 1, master_q_bar: 0, slave_q: 1, slave_q_bar: 0 },
+            FlipFlopState {
+                master_q: 1,
+                master_q_bar: 0,
+                slave_q: 1,
+                slave_q_bar: 0,
+            },
+            FlipFlopState {
+                master_q: 1,
+                master_q_bar: 0,
+                slave_q: 1,
+                slave_q_bar: 0,
+            },
+            FlipFlopState {
+                master_q: 1,
+                master_q_bar: 0,
+                slave_q: 1,
+                slave_q_bar: 0,
+            },
+            FlipFlopState {
+                master_q: 1,
+                master_q_bar: 0,
+                slave_q: 1,
+                slave_q_bar: 0,
+            },
+            FlipFlopState {
+                master_q: 1,
+                master_q_bar: 0,
+                slave_q: 1,
+                slave_q_bar: 0,
+            },
+            FlipFlopState {
+                master_q: 1,
+                master_q_bar: 0,
+                slave_q: 1,
+                slave_q_bar: 0,
+            },
+            FlipFlopState {
+                master_q: 1,
+                master_q_bar: 0,
+                slave_q: 1,
+                slave_q_bar: 0,
+            },
+            FlipFlopState {
+                master_q: 1,
+                master_q_bar: 0,
+                slave_q: 1,
+                slave_q_bar: 0,
+            },
+            FlipFlopState {
+                master_q: 1,
+                master_q_bar: 0,
+                slave_q: 1,
+                slave_q_bar: 0,
+            },
+            FlipFlopState {
+                master_q: 1,
+                master_q_bar: 0,
+                slave_q: 1,
+                slave_q_bar: 0,
+            },
+            FlipFlopState {
+                master_q: 1,
+                master_q_bar: 0,
+                slave_q: 1,
+                slave_q_bar: 0,
+            },
         ];
 
         let krb_ff = std::array::from_fn(|_| FlipFlopState::default());
@@ -461,11 +525,13 @@ impl Asr33GateLevel {
         // Latch 8 bits into TTO flip-flops via clock edges
         let tto_bits = [b0, b1, b2, b3, b4, b5, b6, p];
         for i in 0..8 {
+            Self::sanitize_ff(&mut self.tto_ff[i]);
             d_flip_flop(tto_bits[i], 0, &mut self.tto_ff[i]);
             d_flip_flop(tto_bits[i], 1, &mut self.tto_ff[i]);
         }
 
         // Clear tp_flag_ff (teleprinter busy)
+        Self::sanitize_ff(&mut self.tp_flag_ff);
         d_flip_flop(0, 0, &mut self.tp_flag_ff);
         d_flip_flop(0, 1, &mut self.tp_flag_ff);
 
@@ -473,6 +539,7 @@ impl Asr33GateLevel {
         // [Start(0), b0, b1, b2, b3, b4, b5, b6, p, Stop1(1), Stop2(1)]
         let frame_bits = [0, b0, b1, b2, b3, b4, b5, b6, p, 1, 1];
         for i in 0..BITS_PER_FRAME {
+            Self::sanitize_ff(&mut self.tx_shift_ff[i]);
             d_flip_flop(frame_bits[i], 0, &mut self.tx_shift_ff[i]);
             d_flip_flop(frame_bits[i], 1, &mut self.tx_shift_ff[i]);
         }
@@ -484,6 +551,9 @@ impl Asr33GateLevel {
     /// Advances the TX shift register by one bit clock using `shift_register`.
     pub fn step_serial_bit(&mut self) -> u8 {
         if self.tx_bits_remaining > 0 {
+            for ff in &mut self.tx_shift_ff {
+                Self::sanitize_ff(ff);
+            }
             // Read bit 0 from stage 0
             let out_bit = self.tx_shift_ff[0].slave_q;
             self.tx_line = out_bit;
@@ -496,6 +566,7 @@ impl Asr33GateLevel {
 
             if self.tx_bits_remaining == 0 {
                 // Raise tp_flag_ff
+                Self::sanitize_ff(&mut self.tp_flag_ff);
                 d_flip_flop(1, 0, &mut self.tp_flag_ff);
                 d_flip_flop(1, 1, &mut self.tp_flag_ff);
                 self.tx_line = SERIAL_MARK;
@@ -504,6 +575,7 @@ impl Asr33GateLevel {
             out_bit
         } else {
             self.tx_line = SERIAL_MARK;
+            Self::sanitize_ff(&mut self.tp_flag_ff);
             d_flip_flop(1, 0, &mut self.tp_flag_ff);
             d_flip_flop(1, 1, &mut self.tp_flag_ff);
             SERIAL_MARK
@@ -520,15 +592,17 @@ impl Asr33GateLevel {
                 self.rx_active = true;
                 self.rx_bits_received = 0;
                 for ff in &mut self.rx_shift_ff {
+                    Self::sanitize_ff(ff);
                     d_flip_flop(0, 0, ff);
                     d_flip_flop(0, 1, ff);
                 }
             }
             None
         } else {
-            self.rx_bits_received += 1;
+            self.rx_bits_received = self.rx_bits_received.saturating_add(1);
             if self.rx_bits_received <= 8 {
                 let idx = (self.rx_bits_received - 1) as usize;
+                Self::sanitize_ff(&mut self.rx_shift_ff[idx]);
                 d_flip_flop(bit, 0, &mut self.rx_shift_ff[idx]);
                 d_flip_flop(bit, 1, &mut self.rx_shift_ff[idx]);
                 None
@@ -536,13 +610,17 @@ impl Asr33GateLevel {
                 None
             } else {
                 self.rx_active = false;
+                self.rx_bits_received = 0;
                 let mut assembled = 0u8;
                 for i in 0..8 {
+                    Self::sanitize_ff(&mut self.rx_shift_ff[i]);
+                    Self::sanitize_ff(&mut self.krb_ff[i]);
                     let b = self.rx_shift_ff[i].slave_q;
                     assembled |= (b & 1) << i;
                     d_flip_flop(b, 0, &mut self.krb_ff[i]);
                     d_flip_flop(b, 1, &mut self.krb_ff[i]);
                 }
+                Self::sanitize_ff(&mut self.kb_flag_ff);
                 d_flip_flop(1, 0, &mut self.kb_flag_ff);
                 d_flip_flop(1, 1, &mut self.kb_flag_ff);
                 Some(assembled)
@@ -564,10 +642,12 @@ impl Asr33GateLevel {
 
         let krb_bits = [b0, b1, b2, b3, b4, b5, b6, p];
         for i in 0..8 {
+            Self::sanitize_ff(&mut self.krb_ff[i]);
             d_flip_flop(krb_bits[i], 0, &mut self.krb_ff[i]);
             d_flip_flop(krb_bits[i], 1, &mut self.krb_ff[i]);
         }
 
+        Self::sanitize_ff(&mut self.kb_flag_ff);
         d_flip_flop(1, 0, &mut self.kb_flag_ff);
         d_flip_flop(1, 1, &mut self.kb_flag_ff);
     }
@@ -578,6 +658,7 @@ impl Asr33GateLevel {
         for i in 0..8 {
             val |= (self.krb_ff[i].slave_q & 1) << i;
         }
+        Self::sanitize_ff(&mut self.kb_flag_ff);
         d_flip_flop(0, 0, &mut self.kb_flag_ff);
         d_flip_flop(0, 1, &mut self.kb_flag_ff);
         val
@@ -585,6 +666,7 @@ impl Asr33GateLevel {
 
     /// Clears the teleprinter flag `tp_flag_ff`.
     pub fn tp_clear_flag(&mut self) {
+        Self::sanitize_ff(&mut self.tp_flag_ff);
         d_flip_flop(0, 0, &mut self.tp_flag_ff);
         d_flip_flop(0, 1, &mut self.tp_flag_ff);
     }
@@ -776,7 +858,11 @@ impl Asr33Functional {
                 let row_idx = (self.state.platen_row as usize) % MAX_PAPER_LINES;
                 let col = (self.state.platen_col.saturating_sub(1) as usize).min(PLATEN_WIDTH - 1);
                 self.paper[row_idx][col] = printed;
-                let new_len = self.state.platen_col.max(self.line_lengths[row_idx]).min(PLATEN_WIDTH as u8);
+                let new_len = self
+                    .state
+                    .platen_col
+                    .max(self.line_lengths[row_idx])
+                    .min(PLATEN_WIDTH as u8);
                 self.line_lengths[row_idx] = new_len;
             }
         }
@@ -784,7 +870,10 @@ impl Asr33Functional {
 
     /// Returns the accumulated text on the paper roll as a UTF-8 string.
     pub fn paper_roll_text(&self) -> String {
-        let start_row = self.state.platen_row.saturating_sub((MAX_PAPER_LINES as u32) - 1);
+        let start_row = self
+            .state
+            .platen_row
+            .saturating_sub((MAX_PAPER_LINES as u32) - 1);
         let total_lines = (self.state.platen_row - start_row) as usize + 1;
 
         let mut lines = Vec::with_capacity(total_lines);
@@ -801,7 +890,10 @@ impl Asr33Functional {
 
     /// Converts current paper roll state and print carriage position into a declarative [`PaintScene`].
     pub fn to_paint_scene(&self) -> PaintScene {
-        let start_row = self.state.platen_row.saturating_sub((MAX_PAPER_LINES as u32) - 1);
+        let start_row = self
+            .state
+            .platen_row
+            .saturating_sub((MAX_PAPER_LINES as u32) - 1);
         let total_lines = (self.state.platen_row - start_row) as usize + 1;
         let height = total_lines.max(1) as f64;
         let mut scene = PaintScene::new(PLATEN_WIDTH as f64, height);
@@ -829,13 +921,11 @@ impl Asr33Functional {
         // Render carriage print-head cursor as a filled 1x1 block
         let cursor_col = (self.state.platen_col.min(71)) as f64;
         let cursor_row = (self.state.platen_row - start_row) as f64;
-        scene.instructions.push(PaintInstruction::Rect(PaintRect::filled(
-            cursor_col,
-            cursor_row,
-            1.0,
-            1.0,
-            "#000000",
-        )));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                cursor_col, cursor_row, 1.0, 1.0, "#000000",
+            )));
 
         scene
     }

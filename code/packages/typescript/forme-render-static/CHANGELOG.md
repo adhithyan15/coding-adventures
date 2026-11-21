@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Security:** Fixed CodeQL `js/polynomial-redos` alert (`#235`) in `publicUrl` (`src/index.ts:286`) by replacing `siteUrl.replace(/\/+$/, "")` with an O(N) trailing `'/'` loop (`charCodeAt(end - 1) === 47`), and added `tests/public-url.test.ts`.
 - Projects fenced fallback as pre/code for used-style collection. HTML rendering delegates to the shared escaped renderer; full fence info is inert metadata.
 
 ## Unreleased

@@ -36,14 +36,20 @@ fn prepare() -> Exercise {
 
         // 1. Config validation
         let config = default_config();
-        checks.push(check("default_config valid", validate_config(&config).is_ok()));
+        checks.push(check(
+            "default_config valid",
+            validate_config(&config).is_ok(),
+        ));
 
         // 2. New game state
         let state_res = new_game(config, 0x1234_5678);
         checks.push(check("new_game initializes state", state_res.is_ok()));
 
         if let Ok(mut state) = state_res {
-            checks.push(check("validate_state initial", validate_state(&state).is_ok()));
+            checks.push(check(
+                "validate_state initial",
+                validate_state(&state).is_ok(),
+            ));
 
             // 3. Step breakout simulation
             let mut sfx_bank = SfxBank::<4>::empty(44_100).expect("valid sfx bank");
@@ -61,7 +67,10 @@ fn prepare() -> Exercise {
                     &input,
                     &mut sfx_bank,
                 );
-                checks.push(check("step_breakout_with_clock executes", clock_step_res.is_ok()));
+                checks.push(check(
+                    "step_breakout_with_clock executes",
+                    clock_step_res.is_ok(),
+                ));
             }
 
             // 5. Zero-alloc sprite emission
@@ -71,13 +80,19 @@ fn prepare() -> Exercise {
 
             // 6. PaintScene lowering
             let scene_res = lower_breakout_to_paint_scene(&state);
-            checks.push(check("lower_breakout_to_paint_scene generates scene", scene_res.is_ok()));
+            checks.push(check(
+                "lower_breakout_to_paint_scene generates scene",
+                scene_res.is_ok(),
+            ));
 
             // 7. Audio rendering helper
             let mut ring = PcmRingBuffer::<256>::empty();
             let mut scratch = [0i16; 64];
             let audio_res = render_breakout_audio_into(&mut sfx_bank, &mut ring, &mut scratch);
-            checks.push(check("render_breakout_audio_into executes", audio_res.is_ok()));
+            checks.push(check(
+                "render_breakout_audio_into executes",
+                audio_res.is_ok(),
+            ));
         }
 
         // 8. Deterministic PRNG

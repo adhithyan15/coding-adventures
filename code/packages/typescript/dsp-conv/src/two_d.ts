@@ -6,7 +6,9 @@ import {
   ImageSizeMismatchError,
   InvalidInputError,
   KernelTooLargeError,
+  safeFormatValue,
   validateFloats,
+  validateSequence,
 } from "./errors.js";
 import {
   BoundaryMode,
@@ -36,7 +38,7 @@ export function conv2d(
     imageWidth <= 0
   ) {
     throw new ImageSizeMismatchError(
-      `image dimensions must be positive safe integers; got ${imageHeight}x${imageWidth}`
+      `image dimensions must be positive safe integers; got ${safeFormatValue(imageHeight)}x${safeFormatValue(imageWidth)}`
     );
   }
   if (
@@ -48,32 +50,35 @@ export function conv2d(
     throw new EmptyKernelError("kernel dimensions must be positive safe integers");
   }
 
+  const imageLen = validateSequence(image, "image", Number.MAX_SAFE_INTEGER, null, InvalidInputError);
+  const kernelLen = validateSequence(kernel, "kernel", Number.MAX_SAFE_INTEGER, null, InvalidInputError);
+
   const h = imageHeight;
   const w = imageWidth;
   const kh = kernelHeight;
   const kw = kernelWidth;
 
   const expectedImageLen = h * w;
-  if (expectedImageLen > MAX_SAMPLES) {
+  if (!Number.isSafeInteger(expectedImageLen) || expectedImageLen > MAX_SAMPLES) {
     throw new InvalidInputError(
       `image size ${expectedImageLen} exceeds MAX_SAMPLES ${MAX_SAMPLES}`
     );
   }
-  if (image.length !== expectedImageLen) {
+  if (imageLen !== expectedImageLen) {
     throw new ImageSizeMismatchError(
-      `image length ${image.length} does not match ${h}x${w} = ${expectedImageLen}`
+      `image length ${imageLen} does not match ${h}x${w} = ${expectedImageLen}`
     );
   }
 
   const expectedKernelLen = kh * kw;
-  if (expectedKernelLen > MAX_KERNEL_LEN) {
+  if (!Number.isSafeInteger(expectedKernelLen) || expectedKernelLen > MAX_KERNEL_LEN) {
     throw new InvalidInputError(
       `kernel size ${expectedKernelLen} exceeds MAX_KERNEL_LEN ${MAX_KERNEL_LEN}`
     );
   }
-  if (kernel.length !== expectedKernelLen) {
+  if (kernelLen !== expectedKernelLen) {
     throw new ImageSizeMismatchError(
-      `kernel length ${kernel.length} does not match ${kh}x${kw} = ${expectedKernelLen}`
+      `kernel length ${kernelLen} does not match ${kh}x${kw} = ${expectedKernelLen}`
     );
   }
 
@@ -136,32 +141,24 @@ export function sepConv2d(
     imageWidth <= 0
   ) {
     throw new ImageSizeMismatchError(
-      `image dimensions must be positive safe integers; got ${imageHeight}x${imageWidth}`
+      `image dimensions must be positive safe integers; got ${safeFormatValue(imageHeight)}x${safeFormatValue(imageWidth)}`
     );
   }
-  if (horizontalKernel.length === 0 || verticalKernel.length === 0) {
-    throw new EmptyKernelError("separable kernels must be non-empty");
-  }
+  const imageLen = validateSequence(image, "image", Number.MAX_SAFE_INTEGER, null, InvalidInputError);
+  validateSequence(horizontalKernel, "horizontalKernel", MAX_KERNEL_LEN, EmptyKernelError, InvalidInputError);
+  validateSequence(verticalKernel, "verticalKernel", MAX_KERNEL_LEN, EmptyKernelError, InvalidInputError);
 
   const h = imageHeight;
   const w = imageWidth;
   const expectedImageLen = h * w;
-  if (expectedImageLen > MAX_SAMPLES) {
+  if (!Number.isSafeInteger(expectedImageLen) || expectedImageLen > MAX_SAMPLES) {
     throw new InvalidInputError(
       `image size ${expectedImageLen} exceeds MAX_SAMPLES ${MAX_SAMPLES}`
     );
   }
-  if (image.length !== expectedImageLen) {
+  if (imageLen !== expectedImageLen) {
     throw new ImageSizeMismatchError(
-      `image length ${image.length} does not match ${h}x${w} = ${expectedImageLen}`
-    );
-  }
-  if (
-    horizontalKernel.length > MAX_KERNEL_LEN ||
-    verticalKernel.length > MAX_KERNEL_LEN
-  ) {
-    throw new InvalidInputError(
-      `separable kernel length exceeds MAX_KERNEL_LEN ${MAX_KERNEL_LEN}`
+      `image length ${imageLen} does not match ${h}x${w} = ${expectedImageLen}`
     );
   }
 
@@ -213,17 +210,18 @@ export function convolve2d(
   kernelHeight?: number,
   kernelWidth?: number
 ): Float64Array | number[][] {
-  if (image.length === 0) {
-    throw new EmptySignalError("image must be non-empty");
-  }
-  if (kernel.length === 0) {
-    throw new EmptyKernelError("kernel must be non-empty");
-  }
+  const imageLen = validateSequence(image, "image", MAX_SAMPLES, EmptySignalError, InvalidInputError);
+  const kernelLen = validateSequence(kernel, "kernel", MAX_KERNEL_LEN, EmptyKernelError, InvalidInputError);
 
-  const firstImgItem = (image as any)[0];
+  const firstImgItem = (image as ArrayLike<unknown>)[0];
   const is2dNested =
     Array.isArray(firstImgItem) ||
-    (firstImgItem && typeof firstImgItem === "object" && "length" in firstImgItem);
+    (firstImgItem !== null &&
+      typeof firstImgItem === "object" &&
+      !(firstImgItem instanceof DataView) &&
+      !(firstImgItem instanceof BigInt64Array) &&
+      !(firstImgItem instanceof BigUint64Array) &&
+      typeof (firstImgItem as { length?: unknown }).length === "number");
 
   let h: number;
   let w: number;
@@ -236,14 +234,8 @@ export function convolve2d(
     h = imageHeight;
     w = imageWidth;
   } else if (is2dNested) {
-    h = image.length;
-    w = (firstImgItem as ArrayLike<number>).length;
-    for (let r = 0; r < h; r++) {
-      const row = (image as ArrayLike<number>[])[r];
-      if (!row || row.length !== w) {
-        throw new ImageSizeMismatchError("jagged 2-D image array");
-      }
-    }
+    h = imageLen;
+    w = validateSequence(firstImgItem, "image row", MAX_SAMPLES, ImageSizeMismatchError, ImageSizeMismatchError);
   } else {
     throw new ImageSizeMismatchError(
       "imageHeight and imageWidth required for flat 1-D image"
@@ -253,20 +245,41 @@ export function convolve2d(
   if (h <= 0 || w <= 0 || !Number.isSafeInteger(h) || !Number.isSafeInteger(w)) {
     throw new ImageSizeMismatchError("image dimensions must be positive safe integers");
   }
+  if (is2dNested) {
+    if (imageLen !== h) {
+      throw new ImageSizeMismatchError(
+        `nested image row count ${imageLen} != imageHeight (${h})`
+      );
+    }
+    for (let r = 0; r < h; r++) {
+      const row = (image as ArrayLike<unknown>)[r];
+      const rowLen = validateSequence(row, "image row", MAX_SAMPLES, ImageSizeMismatchError, ImageSizeMismatchError);
+      if (rowLen !== w) {
+        throw new ImageSizeMismatchError(
+          `jagged or mismatched 2-D image row ${r} length ${rowLen} != ${w}`
+        );
+      }
+    }
+  }
   const imgLen = h * w;
-  if (imgLen > MAX_SAMPLES) {
+  if (!Number.isSafeInteger(imgLen) || imgLen > MAX_SAMPLES) {
     throw new InvalidInputError("image size exceeds MAX_SAMPLES");
   }
-  if (!is2dNested && image.length !== imgLen) {
+  if (!is2dNested && imageLen !== imgLen) {
     throw new ImageSizeMismatchError(
-      `image length ${image.length} != imageHeight * imageWidth (${imgLen})`
+      `image length ${imageLen} != imageHeight * imageWidth (${imgLen})`
     );
   }
 
-  const firstKerItem = (kernel as any)[0];
+  const firstKerItem = (kernel as ArrayLike<unknown>)[0];
   const isKer2d =
     Array.isArray(firstKerItem) ||
-    (firstKerItem && typeof firstKerItem === "object" && "length" in firstKerItem);
+    (firstKerItem !== null &&
+      typeof firstKerItem === "object" &&
+      !(firstKerItem instanceof DataView) &&
+      !(firstKerItem instanceof BigInt64Array) &&
+      !(firstKerItem instanceof BigUint64Array) &&
+      typeof (firstKerItem as { length?: unknown }).length === "number");
 
   let kh: number;
   let kw: number;
@@ -279,14 +292,8 @@ export function convolve2d(
     kh = kernelHeight;
     kw = kernelWidth;
   } else if (isKer2d) {
-    kh = kernel.length;
-    kw = (firstKerItem as ArrayLike<number>).length;
-    for (let r = 0; r < kh; r++) {
-      const row = (kernel as ArrayLike<number>[])[r];
-      if (!row || row.length !== kw) {
-        throw new ImageSizeMismatchError("jagged 2-D kernel array");
-      }
-    }
+    kh = kernelLen;
+    kw = validateSequence(firstKerItem, "kernel row", MAX_KERNEL_LEN, ImageSizeMismatchError, ImageSizeMismatchError);
   } else {
     throw new ImageSizeMismatchError(
       "kernelHeight and kernelWidth required for flat 1-D kernel"
@@ -296,13 +303,29 @@ export function convolve2d(
   if (kh <= 0 || kw <= 0 || !Number.isSafeInteger(kh) || !Number.isSafeInteger(kw)) {
     throw new EmptyKernelError("kernel dimensions must be positive safe integers");
   }
+  if (isKer2d) {
+    if (kernelLen !== kh) {
+      throw new ImageSizeMismatchError(
+        `nested kernel row count ${kernelLen} != kernelHeight (${kh})`
+      );
+    }
+    for (let r = 0; r < kh; r++) {
+      const row = (kernel as ArrayLike<unknown>)[r];
+      const rowLen = validateSequence(row, "kernel row", MAX_KERNEL_LEN, ImageSizeMismatchError, ImageSizeMismatchError);
+      if (rowLen !== kw) {
+        throw new ImageSizeMismatchError(
+          `jagged or mismatched 2-D kernel row ${r} length ${rowLen} != ${kw}`
+        );
+      }
+    }
+  }
   const kerLen = kh * kw;
-  if (kerLen > MAX_KERNEL_LEN) {
+  if (!Number.isSafeInteger(kerLen) || kerLen > MAX_KERNEL_LEN) {
     throw new InvalidInputError("kernel size exceeds MAX_KERNEL_LEN");
   }
-  if (!isKer2d && kernel.length !== kerLen) {
+  if (!isKer2d && kernelLen !== kerLen) {
     throw new ImageSizeMismatchError(
-      `kernel length ${kernel.length} != kernelHeight * kernelWidth (${kerLen})`
+      `kernel length ${kernelLen} != kernelHeight * kernelWidth (${kerLen})`
     );
   }
 
@@ -329,7 +352,7 @@ export function convolve2d(
   }
 
   const outLen = outH * outW;
-  if (outLen > MAX_SAMPLES) {
+  if (!Number.isSafeInteger(outLen) || outLen > MAX_SAMPLES) {
     throw new InvalidInputError("output size exceeds MAX_SAMPLES");
   }
 
@@ -339,32 +362,34 @@ export function convolve2d(
     let idx = 0;
     for (let r = 0; r < h; r++) {
       const row = (image as ArrayLike<number>[])[r];
+      validateFloats(row, "image row");
       for (let c = 0; c < w; c++) {
-        flatImg[idx++] = Number(row[c]);
+        flatImg[idx++] = row[c];
       }
     }
   } else {
+    validateFloats(image as ArrayLike<number>, "image");
     for (let i = 0; i < imgLen; i++) {
-      flatImg[i] = Number((image as ArrayLike<number>)[i]);
+      flatImg[i] = (image as ArrayLike<number>)[i];
     }
   }
-  validateFloats(flatImg, "image");
 
   const flatKer = new Float64Array(kerLen);
   if (isKer2d) {
     let idx = 0;
     for (let r = 0; r < kh; r++) {
       const row = (kernel as ArrayLike<number>[])[r];
+      validateFloats(row, "kernel row");
       for (let c = 0; c < kw; c++) {
-        flatKer[idx++] = Number(row[c]);
+        flatKer[idx++] = row[c];
       }
     }
   } else {
+    validateFloats(kernel as ArrayLike<number>, "kernel");
     for (let i = 0; i < kerLen; i++) {
-      flatKer[i] = Number((kernel as ArrayLike<number>)[i]);
+      flatKer[i] = (kernel as ArrayLike<number>)[i];
     }
   }
-  validateFloats(flatKer, "kernel");
 
   let resultFlat: Float64Array;
   if (cMode === ConvMode.SAME) {

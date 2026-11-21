@@ -122,5 +122,63 @@ class GitHubEnvironmentFileTests(unittest.TestCase):
             )
 
 
+class ClangClSelectionTests(unittest.TestCase):
+    def test_parses_clang_version_output(self) -> None:
+        self.assertEqual(
+            (22, 1, 0),
+            msvc.parse_clang_version("clang version 22.1.0\nTarget: x86_64-pc-windows-msvc"),
+        )
+        self.assertEqual((21, 1, 0), msvc.parse_clang_version("clang version 21.1"))
+        self.assertIsNone(msvc.parse_clang_version("no version here"))
+
+    def test_promotes_newer_vs_clang_cl_ahead_of_older_standalone_llvm(self) -> None:
+        env = {
+            "Path": r"C:\VC\bin;C:\Program Files\LLVM\bin;C:\VS\VC\Tools\Llvm\x64\bin;C:\Windows",
+            "llvmX64": r"C:\VS\VC\Tools\Llvm\x64\bin",
+        }
+        versions = {
+            r"C:\Program Files\LLVM\bin": (21, 1, 8),
+            r"C:\VS\VC\Tools\Llvm\x64\bin": (22, 1, 0),
+        }
+        updated, candidates, selected = msvc.prefer_newest_clang_cl(
+            env,
+            "x64",
+            has_clang_cl=lambda d: d in versions,
+            probe_version=lambda d: versions.get(d),
+        )
+        self.assertEqual(
+            r"C:\VC\bin;C:\VS\VC\Tools\Llvm\x64\bin;C:\Program Files\LLVM\bin;C:\Windows",
+            updated["Path"],
+        )
+        self.assertEqual(2, len(candidates))
+        self.assertEqual((r"C:\VS\VC\Tools\Llvm\x64\bin", (22, 1, 0)), selected)
+
+    def test_keeps_path_unchanged_when_first_clang_cl_is_already_newest(self) -> None:
+        env = {
+            "Path": r"C:\VC\bin;C:\Program Files\LLVM\bin;C:\VS\VC\Tools\Llvm\x64\bin",
+        }
+        versions = {
+            r"C:\Program Files\LLVM\bin": (22, 1, 0),
+            r"C:\VS\VC\Tools\Llvm\x64\bin": (21, 1, 8),
+        }
+        updated, _, selected = msvc.prefer_newest_clang_cl(
+            env,
+            "x64",
+            has_clang_cl=lambda d: d in versions,
+            probe_version=lambda d: versions.get(d),
+        )
+        self.assertEqual(env["Path"], updated["Path"])
+        self.assertEqual((r"C:\Program Files\LLVM\bin", (22, 1, 0)), selected)
+
+    def test_reads_msvc_stl_min_clang_major_from_yvals_core(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            header = Path(directory) / "yvals_core.h"
+            header.write_text(
+                "#error STL1000: Unexpected compiler version, expected Clang 22 or newer.\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(22, msvc.msvc_stl_min_clang_major({"INCLUDE": directory}))
+
+
 if __name__ == "__main__":
     unittest.main()

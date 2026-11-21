@@ -11,6 +11,24 @@ use swf_container::{BitReader, SwfColorTransform, SwfMatrix};
 
 use crate::error::DisplayListError;
 
+/// Maximum byte length for null-terminated instance or class names (CWE-400 guard).
+const MAX_TAG_CSTRING_BYTES: usize = 4096;
+
+fn read_bounded_cstring(reader: &mut BitReader<'_>) -> Result<String, DisplayListError> {
+    let mut name_bytes = Vec::new();
+    loop {
+        let b = reader.read_ub(8)? as u8;
+        if b == 0 {
+            break;
+        }
+        if name_bytes.len() >= MAX_TAG_CSTRING_BYTES {
+            return Err(DisplayListError::CorruptedData);
+        }
+        name_bytes.push(b);
+    }
+    Ok(String::from_utf8_lossy(&name_bytes).to_string())
+}
+
 /// Parsed payload of a `PlaceObject`, `PlaceObject2`, or `PlaceObject3` tag.
 #[derive(Debug, Clone, PartialEq)]
 pub struct PlaceObjectRecord {
@@ -210,15 +228,7 @@ pub fn parse_place_object2(bytes: &[u8]) -> Result<PlaceObjectRecord, DisplayLis
     };
 
     let name = if has_name {
-        let mut name_bytes = Vec::new();
-        loop {
-            let b = reader.read_ub(8)? as u8;
-            if b == 0 {
-                break;
-            }
-            name_bytes.push(b);
-        }
-        Some(String::from_utf8_lossy(&name_bytes).to_string())
+        Some(read_bounded_cstring(&mut reader)?)
     } else {
         None
     };
@@ -276,15 +286,7 @@ pub fn parse_place_object3(bytes: &[u8]) -> Result<PlaceObjectRecord, DisplayLis
     let mut reader = BitReader::from_bits(&bytes[4..]);
 
     let _class_name = if has_class_name || (has_image && !has_character) {
-        let mut name_bytes = Vec::new();
-        loop {
-            let b = reader.read_ub(8)? as u8;
-            if b == 0 {
-                break;
-            }
-            name_bytes.push(b);
-        }
-        Some(String::from_utf8_lossy(&name_bytes).to_string())
+        Some(read_bounded_cstring(&mut reader)?)
     } else {
         None
     };
@@ -318,15 +320,7 @@ pub fn parse_place_object3(bytes: &[u8]) -> Result<PlaceObjectRecord, DisplayLis
     };
 
     let name = if has_name {
-        let mut name_bytes = Vec::new();
-        loop {
-            let b = reader.read_ub(8)? as u8;
-            if b == 0 {
-                break;
-            }
-            name_bytes.push(b);
-        }
-        Some(String::from_utf8_lossy(&name_bytes).to_string())
+        Some(read_bounded_cstring(&mut reader)?)
     } else {
         None
     };

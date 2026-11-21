@@ -55,7 +55,10 @@ fn test_raster_timing_validation_cwe20() {
 
     let mut overflow = RasterTiming::standard_ntsc();
     overflow.h_front_porch = u32::MAX;
-    assert!(matches!(overflow.validate_timing(), Err(CrtError::InvalidTiming(_))));
+    assert!(matches!(
+        overflow.validate_timing(),
+        Err(CrtError::InvalidTiming(_))
+    ));
 }
 
 #[test]
@@ -216,7 +219,10 @@ fn test_raster_beam_frame_completion_and_bounds_cwe125() {
     let mut empty_phosphor: [u16; 0] = [];
     assert!(matches!(
         crt.step_raster_beam(255, &mut empty_phosphor),
-        Err(CrtError::BufferTooSmall { required: 1, provided: 0 })
+        Err(CrtError::BufferTooSmall {
+            required: 1,
+            provided: 0
+        })
     ));
 
     let mut phosphor = [0u16; 4];
@@ -248,8 +254,8 @@ fn test_raster_lowering_to_pixel_buffer() {
         v_sync: 1,
         v_back_porch: 1,
     };
-    let crt = CrtRasterBeam::new_raster_beam(timing, PhosphorType::P4White)
-        .expect("crt should succeed");
+    let crt =
+        CrtRasterBeam::new_raster_beam(timing, PhosphorType::P4White).expect("crt should succeed");
 
     let phosphor = [65535u16, 32768u16, 0u16, 65535u16];
     let mut pixels = PixelContainer::new(2, 2);
@@ -280,8 +286,8 @@ fn test_raster_lowering_to_paint_scene() {
         v_sync: 1,
         v_back_porch: 1,
     };
-    let crt = CrtRasterBeam::new_raster_beam(timing, PhosphorType::P31Green)
-        .expect("crt should succeed");
+    let crt =
+        CrtRasterBeam::new_raster_beam(timing, PhosphorType::P31Green).expect("crt should succeed");
 
     let phosphor = [
         60000u16, 60000u16, 0u16, 0u16, // Line 0: 2 lit pixels
@@ -313,7 +319,10 @@ fn test_vector_beam_display_construction_and_validation() {
 
     let invalid_dim =
         VectorBeamDisplay::new_vector_display(0.0, 768.0, 50.0, PhosphorType::P31Green);
-    assert!(matches!(invalid_dim, Err(CrtError::InvalidDimensions { .. })));
+    assert!(matches!(
+        invalid_dim,
+        Err(CrtError::InvalidDimensions { .. })
+    ));
 
     let invalid_slew =
         VectorBeamDisplay::new_vector_display(1024.0, 768.0, -5.0, PhosphorType::P31Green);
