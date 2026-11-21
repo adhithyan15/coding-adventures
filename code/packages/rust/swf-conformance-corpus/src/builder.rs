@@ -619,11 +619,27 @@ impl Avm1ActionBuilder {
 
     /// Appends `ActionPush` (0x96) for a NUL-terminated UTF-8 string.
     pub fn avm1_push_str(&mut self, s: &str) -> Result<(), CorpusError> {
+        if s.as_bytes().contains(&0) {
+            return Err(CorpusError::UnexpectedCaseFailure(
+                "AVM1 push string must not contain NUL byte".to_string(),
+            ));
+        }
         let len = 1usize
             .checked_add(s.len())
             .and_then(|v| v.checked_add(1))
             .ok_or(CorpusError::IntegerOverflow)?;
         let len_u16 = u16::try_from(len).map_err(|_| CorpusError::IntegerOverflow)?;
+        let total_add = 3usize
+            .checked_add(len)
+            .ok_or(CorpusError::IntegerOverflow)?;
+        if self
+            .bytes
+            .len()
+            .checked_add(total_add)
+            .is_none_or(|t| t > MAX_CORPUS_SWF_BYTES)
+        {
+            return Err(CorpusError::SwfSizeExceeded);
+        }
         self.bytes.push(0x96);
         self.bytes.extend_from_slice(&len_u16.to_le_bytes());
         self.bytes.push(0x00); // string
@@ -677,6 +693,11 @@ impl Avm1ActionBuilder {
         params: &[&str],
         body: &[u8],
     ) -> Result<(), CorpusError> {
+        if name.as_bytes().contains(&0) || params.iter().any(|p| p.as_bytes().contains(&0)) {
+            return Err(CorpusError::UnexpectedCaseFailure(
+                "AVM1 function name and parameter names must not contain NUL byte".to_string(),
+            ));
+        }
         let mut header = Vec::new();
         header.extend_from_slice(name.as_bytes());
         header.push(0);
@@ -690,6 +711,18 @@ impl Avm1ActionBuilder {
         header.extend_from_slice(&body_len.to_le_bytes());
 
         let header_len = u16::try_from(header.len()).map_err(|_| CorpusError::IntegerOverflow)?;
+        let total_add = 3usize
+            .checked_add(header.len())
+            .and_then(|v| v.checked_add(body.len()))
+            .ok_or(CorpusError::IntegerOverflow)?;
+        if self
+            .bytes
+            .len()
+            .checked_add(total_add)
+            .is_none_or(|t| t > MAX_CORPUS_SWF_BYTES)
+        {
+            return Err(CorpusError::SwfSizeExceeded);
+        }
         self.bytes.push(0x9B);
         self.bytes.extend_from_slice(&header_len.to_le_bytes());
         self.bytes.extend_from_slice(&header);
@@ -706,6 +739,11 @@ impl Avm1ActionBuilder {
         params: &[(u8, &str)],
         body: &[u8],
     ) -> Result<(), CorpusError> {
+        if name.as_bytes().contains(&0) || params.iter().any(|(_, p)| p.as_bytes().contains(&0)) {
+            return Err(CorpusError::UnexpectedCaseFailure(
+                "AVM1 function2 name and parameter names must not contain NUL byte".to_string(),
+            ));
+        }
         let mut header = Vec::new();
         header.extend_from_slice(name.as_bytes());
         header.push(0);
@@ -722,6 +760,18 @@ impl Avm1ActionBuilder {
         header.extend_from_slice(&body_len.to_le_bytes());
 
         let header_len = u16::try_from(header.len()).map_err(|_| CorpusError::IntegerOverflow)?;
+        let total_add = 3usize
+            .checked_add(header.len())
+            .and_then(|v| v.checked_add(body.len()))
+            .ok_or(CorpusError::IntegerOverflow)?;
+        if self
+            .bytes
+            .len()
+            .checked_add(total_add)
+            .is_none_or(|t| t > MAX_CORPUS_SWF_BYTES)
+        {
+            return Err(CorpusError::SwfSizeExceeded);
+        }
         self.bytes.push(0x8E);
         self.bytes.extend_from_slice(&header_len.to_le_bytes());
         self.bytes.extend_from_slice(&header);

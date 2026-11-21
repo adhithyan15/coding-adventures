@@ -68,7 +68,13 @@ fn hash_u64(h: &mut Sha256Hasher, v: u64) {
 
 #[inline]
 fn hash_f64(h: &mut Sha256Hasher, v: f64) {
-    let norm = if v == 0.0 { 0.0 } else { v };
+    let norm = if v.is_nan() {
+        f64::NAN
+    } else if v == 0.0 {
+        0.0
+    } else {
+        v
+    };
     h.update(&norm.to_bits().to_le_bytes());
 }
 
