@@ -1,0 +1,227 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/rigidbody-6dof",
+  "source_digest": "90e510b9b9519852d6b18dcf7c0a6b7db426bcad2207e52d8a7e75a029310b14",
+  "manifest_digest": "f487874766371541b6cc50d362ce0b00b3ab33707b021cea6824352635ffc036",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "mass_props_from_tensor",
+      "signature": "pub fn mass_props_from_tensor(mass: f64, inertia_body: Mat3) -> Result<Self, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "mass_props_from_diagonal",
+      "signature": "pub fn mass_props_from_diagonal( mass: f64, ixx: f64, iyy: f64, izz: f64, ) -> Result<Self, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "mass_props_from_solid_box",
+      "signature": "pub fn mass_props_from_solid_box( mass: f64, half_extents: Vec3, ) -> Result<Self, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "mass_props_from_solid_sphere",
+      "signature": "pub fn mass_props_from_solid_sphere(mass: f64, radius: f64) -> Result<Self, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "mass_props_mass",
+      "signature": "pub const fn mass_props_mass(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "mass_props_inv_mass",
+      "signature": "pub const fn mass_props_inv_mass(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "mass_props_inertia_body",
+      "signature": "pub const fn mass_props_inertia_body(&self) -> Mat3",
+      "effects": []
+    },
+    {
+      "name": "mass_props_inv_inertia_body",
+      "signature": "pub const fn mass_props_inv_inertia_body(&self) -> Mat3",
+      "effects": []
+    },
+    {
+      "name": "mass_props_validate",
+      "signature": "pub fn mass_props_validate(&self) -> Result<(), RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "contact_params_penalty",
+      "signature": "pub fn contact_params_penalty( plane: Plane, stiffness: f64, damping: f64, friction: f64, substeps: usize, ) -> Result<Self, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "contact_params_impulse",
+      "signature": "pub fn contact_params_impulse( plane: Plane, restitution: f64, friction: f64, position_correction: f64, substeps: usize, ) -> Result<Self, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "contact_params_validate",
+      "signature": "pub fn contact_params_validate(&self) -> Result<Plane, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "contact_params_plane",
+      "signature": "pub const fn contact_params_plane(&self) -> Plane",
+      "effects": []
+    },
+    {
+      "name": "contact_params_model",
+      "signature": "pub const fn contact_params_model(&self) -> ContactModel",
+      "effects": []
+    },
+    {
+      "name": "contact_params_substeps",
+      "signature": "pub const fn contact_params_substeps(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "report_active_contacts",
+      "signature": "pub const fn report_active_contacts(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "report_max_penetration",
+      "signature": "pub const fn report_max_penetration(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "report_max_normal_force",
+      "signature": "pub const fn report_max_normal_force(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "body_new",
+      "signature": "pub fn body_new(position: Vec3, orientation: Quat) -> Result<Self, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "body_identity",
+      "signature": "pub const fn body_identity() -> Self",
+      "effects": []
+    },
+    {
+      "name": "body_validate",
+      "signature": "pub fn body_validate(&self) -> Result<(), RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "body_clear_accumulators",
+      "signature": "pub fn body_clear_accumulators(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "apply_world_force",
+      "signature": "pub fn apply_world_force(&mut self, force: Vec3) -> Result<(), RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "apply_body_force",
+      "signature": "pub fn apply_body_force(&mut self, body_force: Vec3) -> Result<(), RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "apply_world_torque",
+      "signature": "pub fn apply_world_torque(&mut self, torque: Vec3) -> Result<(), RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "apply_body_torque",
+      "signature": "pub fn apply_body_torque(&mut self, body_torque: Vec3) -> Result<(), RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "apply_force_at_world_point",
+      "signature": "pub fn apply_force_at_world_point( &mut self, force: Vec3, world_point: Vec3, ) -> Result<(), RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "apply_force_at_body_point",
+      "signature": "pub fn apply_force_at_body_point( &mut self, body_force: Vec3, body_point: Vec3, ) -> Result<(), RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "linear_velocity",
+      "signature": "pub fn linear_velocity(&self, mass: &MassProperties) -> Result<Vec3, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "world_inertia",
+      "signature": "pub fn world_inertia(&self, mass: &MassProperties) -> Result<Mat3, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "world_inv_inertia",
+      "signature": "pub fn world_inv_inertia(&self, mass: &MassProperties) -> Result<Mat3, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "angular_velocity_world",
+      "signature": "pub fn angular_velocity_world(&self, mass: &MassProperties) -> Result<Vec3, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "angular_velocity_body",
+      "signature": "pub fn angular_velocity_body(&self, mass: &MassProperties) -> Result<Vec3, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "translational_kinetic_energy",
+      "signature": "pub fn translational_kinetic_energy( &self, mass: &MassProperties, ) -> Result<f64, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "rotational_kinetic_energy",
+      "signature": "pub fn rotational_kinetic_energy(&self, mass: &MassProperties) -> Result<f64, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "kinetic_energy",
+      "signature": "pub fn kinetic_energy(&self, mass: &MassProperties) -> Result<f64, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "body_to_world_point",
+      "signature": "pub fn body_to_world_point(&self, body_point: Vec3) -> Result<Vec3, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "world_point_velocity",
+      "signature": "pub fn world_point_velocity( &self, mass: &MassProperties, world_point: Vec3, ) -> Result<Vec3, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "state_digest_fnv1a",
+      "signature": "pub fn state_digest_fnv1a(&self) -> Result<u64, RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "step_in_place",
+      "signature": "pub fn step_in_place( &mut self, mass: &MassProperties, dt: f64, integrator: IntegratorKind, ) -> Result<(), RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "step_with_force_fn_in_place",
+      "signature": "pub fn step_with_force_fn_in_place<F>( &mut self, mass: &MassProperties, dt: f64, integrator: IntegratorKind, mut force_fn: F, ) -> Result<(), RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "step_with_contacts_in_place",
+      "signature": "pub fn step_with_contacts_in_place( &mut self, mass: &MassProperties, dt: f64, integrator: IntegratorKind, contact: &GroundContactParams, body_probes: &[Vec3], ) -> Result<(), RigidBodyError>",
+      "effects": []
+    },
+    {
+      "name": "step_with_contacts_report_in_place",
+      "signature": "pub fn step_with_contacts_report_in_place( &mut self, mass: &MassProperties, dt: f64, integrator: IntegratorKind, contact: &GroundContactParams, body_probes: &[Vec3], ) -> Result<ContactStepReport, RigidBodyError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
