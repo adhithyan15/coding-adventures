@@ -764,6 +764,7 @@ members = [
     "rigidbody-6dof",
     "bsp-portal25d",
     "raster3d-soft",
+    "aero-flight-model",
     "polynomial",
     "protobuf",
     "fsrs",
