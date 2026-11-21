@@ -19367,7 +19367,8 @@
         "dart-swift-language-frontends-neutral-fixtures"
       ],
       "branch": "feat/dart-excel-frontend-vertical-parity",
-      "pr_number": null,
+      "pr_number": 19819,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19819",
       "notes": "Dart subtranche of Excel frontend vertical parity. Delivers coding_adventures_excel_lexer and coding_adventures_excel_parser with FUNCTION_NAME/TABLE_NAME promotion, COLUMN_REF/ROW_REF normalization, delimiter nesting depth defense (64, Excel's own limit), token ceiling, and shared neutral fixture conformance."
     },
     {
