@@ -86,6 +86,48 @@ fn mass_properties_constructors_and_inversion() {
             assert!(approx(prod.cols[c][r], ident.cols[c][r], 1e-12));
         }
     }
+
+    // Small physical rigid bodies (scale-relative PD check & normalized inversion)
+    let small_sphere = MassProperties::mass_props_from_solid_sphere(1.0, 0.01).unwrap();
+    let baseball = MassProperties::mass_props_from_solid_sphere(0.145, 0.037).unwrap();
+    let small_box =
+        MassProperties::mass_props_from_solid_box(0.2, Vec3::new(0.02, 0.02, 0.02)).unwrap();
+    for mp in [small_sphere, baseball, small_box] {
+        let p = mp
+            .mass_props_inertia_body()
+            .mat3_mul(&mp.mass_props_inv_inertia_body())
+            .unwrap();
+        for c in 0..3 {
+            for r in 0..3 {
+                assert!(approx(p.cols[c][r], ident.cols[c][r], 1e-10));
+            }
+        }
+    }
+
+    // Large aircraft-scale tensor with 1-ULP off-diagonal rounding difference
+    let aircraft = Mat3::mat3_from_cols([
+        [1.2e8, 0.0, 4.0e7],
+        [0.0, 2.5e8, 0.0],
+        [4.0e7 + 7.45e-9, 0.0, 3.1e8],
+    ])
+    .unwrap();
+    let aircraft_mp = MassProperties::mass_props_from_tensor(2.0e5, aircraft).unwrap();
+    let ap = aircraft_mp
+        .mass_props_inertia_body()
+        .mat3_mul(&aircraft_mp.mass_props_inv_inertia_body())
+        .unwrap();
+    for c in 0..3 {
+        for r in 0..3 {
+            assert!(approx(ap.cols[c][r], ident.cols[c][r], 1e-10));
+        }
+    }
+
+    // MAX_MASS body weight stays safely below MAX_COORD
+    let mut heavy = RigidBodyState::body_identity();
+    heavy
+        .apply_world_force(Vec3::new(0.0, -MAX_MASS * 9.81, 0.0))
+        .unwrap();
+    assert!(approx(heavy.force.y, -MAX_MASS * 9.81, 1.0));
 }
 
 // --- Analytic Free Fall ----------------------------------------------------

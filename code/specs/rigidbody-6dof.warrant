@@ -13,15 +13,16 @@ warrant rigidbody_6dof v1
   model Unit = Bool
   variant IntegratorKind = VelocityVerlet | RK4
 
-  -- Mass >= 1 micro-kg (1e-6 kg) and <= 1e18 micro-kg (1e12 kg).
-  model valid_mass_micro(m: Int) -> Bool = m >= 1 and m <= 1000000000000000000
-  -- Principal minors & determinant strictly positive above MIN_DET threshold.
-  model valid_inertia_minors(m1: Int, m2: Int, det: Int) -> Bool = m1 >= 1 and m2 >= 1 and det >= 1
+  -- Mass >= 1 micro-kg (1e-6 kg) and <= 1e15 micro-kg (1e9 kg).
+  model valid_mass_micro(m: Int) -> Bool = m >= 1 and m <= 1000000000000000
+  -- Scale-normalized leading principal minors & determinant strictly > 1 pico-unit (1e-12).
+  model valid_inertia_minors(m1: Int, m2: Int, det: Int) -> Bool = m1 > 1 and m2 > 1 and det > 1
   -- Time step dt in (0, 250_000] microseconds (dt in (0, 0.25] s).
   model valid_dt_micro(dt: Int) -> Bool = dt >= 1 and dt <= 250000
   -- Substeps in [1, 64] and contact probes in [0, 64] (CWE-400 / CWE-835).
   model valid_substeps(n: Nat) -> Bool = n >= 1 and n <= 64
   model valid_contact_count(n: Nat) -> Bool = n <= 64
+  model valid_step_bounds_pred(dt_micro: Int, substeps: Nat, contacts: Nat) -> Bool = valid_dt_micro(dt_micro) and valid_substeps(substeps) and valid_contact_count(contacts)
   -- Restitution in [0, 1000] milli-units ([0.0, 1.0]) and friction >= 0.
   model valid_contact_params(restitution_milli: Int, friction_milli: Int) -> Bool = restitution_milli >= 0 and restitution_milli <= 1000 and friction_milli >= 0
 
@@ -99,7 +100,9 @@ warrant rigidbody_6dof v1
   example mass_zero:
     validate_mass(0) == Err(RigidBodyError.InvalidMass)
   example inertia_singular:
-    validate_inertia(1, 1, 0) == Err(RigidBodyError.InvalidInertiaTensor)
+    validate_inertia(2, 2, 1) == Err(RigidBodyError.InvalidInertiaTensor)
+  example inertia_valid:
+    validate_inertia(2, 2, 2) == Ok(true)
   example step_valid:
     validate_step_bounds(16667, 4, 8) == Ok(true)
   example step_too_many_substeps:
@@ -111,5 +114,7 @@ warrant rigidbody_6dof v1
     forall m: Int. validate_mass(m) == (if valid_mass_micro(m) then Ok(true) else Err(RigidBodyError.InvalidMass))
   claim validate_inertia_agrees:
     forall m1: Int, m2: Int, d: Int. validate_inertia(m1, m2, d) == (if valid_inertia_minors(m1, m2, d) then Ok(true) else Err(RigidBodyError.InvalidInertiaTensor))
+  claim validate_step_bounds_agrees:
+    forall dt: Int, sub: Nat, c: Nat. match validate_step_bounds(dt, sub, c) with Ok(true) -> valid_step_bounds_pred(dt, sub, c) | Ok(false) -> false | Err(_) -> not valid_step_bounds_pred(dt, sub, c)
   claim validate_contact_coeffs_agrees:
     forall e: Int, mu: Int. validate_contact_coeffs(e, mu) == (if valid_contact_params(e, mu) then Ok(true) else Err(RigidBodyError.InvalidContactParameter))

@@ -62,13 +62,23 @@ pub const MAX_COORD: f64 = math3d::MAX_COORD;
 /// Minimum strictly positive rigid-body mass in kilograms (`1e-6`, CWE-369).
 pub const MIN_MASS: f64 = 1e-6;
 
-/// Maximum finite rigid-body mass in kilograms (`1e12`, CWE-20 / CWE-400).
-pub const MAX_MASS: f64 = 1.0e12;
+/// Maximum finite rigid-body mass in kilograms (`1e9`, CWE-20 / CWE-400).
+///
+/// Joint domain envelope with [`MAX_COORD`] (`1e12`): keeping `mass <= 1e9 kg`
+/// ensures typical gravitational/aerodynamic forces (`~10 * mass`) and
+/// rigid-body inertia tensor entries remain safely below [`MAX_COORD`].
+pub const MAX_MASS: f64 = 1.0e9;
 
-/// Minimum determinant of the 3x3 body inertia tensor (`1e-12`, CWE-369).
+/// Minimum scale-normalized determinant & leading principal minor threshold (`1e-12`, CWE-369).
+///
+/// Applied to the normalized inertia tensor `I / s` where `s = max(|I_ii|)`.
 pub const MIN_DET: f64 = 1e-12;
 
-/// Tolerance for checking symmetry of the 3x3 body inertia tensor (`|I_ij - I_ji|`).
+/// Minimum positive diagonal inertia scale `s = max(|I_ii|)` to prevent `1/s` overflow.
+pub const MIN_INERTIA_SCALE: f64 = 1e-18;
+
+/// Relative tolerance for checking symmetry of the 3x3 body inertia tensor
+/// (`|I_ij - I_ji| <= INERTIA_SYMMETRY_TOL * max(1, max(|I|))`).
 pub const INERTIA_SYMMETRY_TOL: f64 = 1e-9;
 
 /// Maximum single-step time interval in seconds (`0.25` s, CWE-20 / CWE-400).
@@ -310,14 +320,20 @@ impl MassProperties {
             }
         }
 
-        // Verify strict symmetry: columns in Mat3 are c[col][row].
+        // Verify scale-relative symmetry: columns in Mat3 are c[col][row].
+        let s_diag = c[0][0].abs().max(c[1][1].abs()).max(c[2][2].abs());
+        let s_off = c[0][1]
+            .abs()
+            .max(c[1][0].abs())
+            .max(c[0][2].abs())
+            .max(c[2][0].abs())
+            .max(c[1][2].abs())
+            .max(c[2][1].abs());
+        let sym_tol = INERTIA_SYMMETRY_TOL * 1.0_f64.max(s_diag).max(s_off);
         let diff_01 = (c[0][1] - c[1][0]).abs();
         let diff_02 = (c[0][2] - c[2][0]).abs();
         let diff_12 = (c[1][2] - c[2][1]).abs();
-        if diff_01 > INERTIA_SYMMETRY_TOL
-            || diff_02 > INERTIA_SYMMETRY_TOL
-            || diff_12 > INERTIA_SYMMETRY_TOL
-        {
+        if diff_01 > sym_tol || diff_02 > sym_tol || diff_12 > sym_tol {
             return Err(RigidBodyError::InvalidInertiaTensor);
         }
 
@@ -330,20 +346,55 @@ impl MassProperties {
         let i12 = 0.5 * (c[1][2] + c[2][1]);
         let sym = Mat3::mat3_from_cols([[i00, i01, i02], [i01, i11, i12], [i02, i12, i22]])?;
 
-        // Sylvester's criterion for symmetric positive-definiteness:
-        // 1st minor: i00 > 0
-        // 2nd minor: i00 * i11 - i01^2 > 0
-        // 3rd minor: det(I) > MIN_DET
-        let m1 = i00;
-        let m2 = i00 * i11 - i01 * i01;
-        let det = sym.mat3_determinant()?;
-        if !m2.is_finite() || !det.is_finite() || m1 <= EPSILON || m2 <= EPSILON || det <= MIN_DET {
+        // Scale-relative Sylvester's criterion on normalized tensor `I / s`,
+        // where `s = max(I_ii)`. Equivalent to:
+        //   m1 > MIN_DET * s, m2 > MIN_DET * s^2, det > MIN_DET * s^3
+        // without `s^3` overflow/underflow for small or large rigid bodies.
+        if i00 <= 0.0 || i11 <= 0.0 || i22 <= 0.0 {
+            return Err(RigidBodyError::InvalidInertiaTensor);
+        }
+        let s = i00.max(i11).max(i22);
+        if !s.is_finite() || s <= MIN_INERTIA_SCALE {
+            return Err(RigidBodyError::InvalidInertiaTensor);
+        }
+        let inv_s = 1.0 / s;
+        if !inv_s.is_finite() {
+            return Err(RigidBodyError::InvalidInertiaTensor);
+        }
+        let norm = Mat3::mat3_from_cols([
+            [i00 * inv_s, i01 * inv_s, i02 * inv_s],
+            [i01 * inv_s, i11 * inv_s, i12 * inv_s],
+            [i02 * inv_s, i12 * inv_s, i22 * inv_s],
+        ])?;
+        let nc = norm.cols;
+        let m1 = nc[0][0];
+        let m2 = nc[0][0] * nc[1][1] - nc[0][1] * nc[0][1];
+        let det = norm.mat3_determinant()?;
+        if !m2.is_finite() || !det.is_finite() || m1 <= MIN_DET || m2 <= MIN_DET || det <= MIN_DET {
             return Err(RigidBodyError::InvalidInertiaTensor);
         }
 
-        let inv_inertia_body = sym
+        let inv_norm = norm
             .mat3_invert()
             .map_err(|_| RigidBodyError::InvalidInertiaTensor)?;
+        let inv_inertia_body = Mat3::mat3_from_cols([
+            [
+                inv_norm.cols[0][0] * inv_s,
+                inv_norm.cols[0][1] * inv_s,
+                inv_norm.cols[0][2] * inv_s,
+            ],
+            [
+                inv_norm.cols[1][0] * inv_s,
+                inv_norm.cols[1][1] * inv_s,
+                inv_norm.cols[1][2] * inv_s,
+            ],
+            [
+                inv_norm.cols[2][0] * inv_s,
+                inv_norm.cols[2][1] * inv_s,
+                inv_norm.cols[2][2] * inv_s,
+            ],
+        ])
+        .map_err(|_| RigidBodyError::InvalidInertiaTensor)?;
         let inv_mass = 1.0 / mass;
         if !inv_mass.is_finite() {
             return Err(RigidBodyError::InvalidMass);

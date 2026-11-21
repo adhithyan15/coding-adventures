@@ -8,7 +8,7 @@ Part of the **Coding Adventures** polyglot monorepo historical game engine colle
 
 ## Overview
 
-1. **Mass & Inertia Validation (`MassProperties`):** Enforces positive finite `mass >= MIN_MASS`, strict 3x3 body inertia tensor symmetry (`|I_ij - I_ji| <= INERTIA_SYMMETRY_TOL`), positive-definiteness via Sylvester's leading principal minors (`det > MIN_DET`), and precomputes `inv_mass` and `inv_inertia_body`.
+1. **Mass & Inertia Validation (`MassProperties`):** Enforces positive finite `mass` in `[MIN_MASS, MAX_MASS]` (`1e-6`..`1e9` kg, sized within the joint `MAX_COORD = 1e12` force/momentum/inertia envelope), scale-relative 3x3 body inertia tensor symmetry (`|I_ij - I_ji| <= INERTIA_SYMMETRY_TOL * max(1, max(|I|))`), scale-relative positive-definiteness via normalized Sylvester's leading principal minors (`det(I / s) > MIN_DET`), and precomputes `inv_mass` and `inv_inertia_body`.
 2. **Dual 6-DOF Integrators (`IntegratorKind`):**
    - `VelocityVerlet`: 2nd-order symplectic Velocity-Verlet with midpoint world inertia tensor evaluation and exponential quaternion integration.
    - `RK4`: 4th-order Runge-Kutta over `(position, linear_momentum, orientation, angular_momentum)` with post-step quaternion renormalization.

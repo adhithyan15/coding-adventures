@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/rigidbody-6dof",
-  "source_digest": "90e510b9b9519852d6b18dcf7c0a6b7db426bcad2207e52d8a7e75a029310b14",
+  "source_digest": "f659ecd3125e814d7bfa08b2a3e6a2b1ca900dd169786b6d6aa1be680053959b",
   "manifest_digest": "f487874766371541b6cc50d362ce0b00b3ab33707b021cea6824352635ffc036",
   "declared_effects": [],
   "entry_points": [
