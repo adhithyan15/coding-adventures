@@ -163,20 +163,9 @@ export function verilogPreprocess(source: string): string {
      */
     if (trimmed.startsWith("`define")) {
       if (isActive) {
-        const defineMatch = trimmed.match(
-          /^`define\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:\(([^)]*)\))?\s*(.*?)\s*$/,
-        );
-        if (defineMatch) {
-          const name = defineMatch[1];
-          const paramsStr = defineMatch[2];
-          const body = defineMatch[3] ?? "";
-
-          const params =
-            paramsStr !== undefined
-              ? paramsStr.split(",").map((p) => p.trim())
-              : null;
-
-          macros.set(name, { params, body });
+        const parsed = parseDefineDirective(trimmed);
+        if (parsed) {
+          macros.set(parsed.name, { params: parsed.params, body: parsed.body });
         }
       }
       outputLines.push("");
@@ -540,6 +529,43 @@ function expandParameterizedMacro(
  * should appear in a parameter name. But if they do, this prevents
  * regex injection.
  */
+/**
+ * Parses a single-line `` `define `` directive in linear O(N) time without
+ * backtracking regexes.
+ */
+function parseDefineDirective(
+  trimmed: string,
+): { name: string; params: string[] | null; body: string } | null {
+  const headerMatch = trimmed.match(/^`define\s+([a-zA-Z_][a-zA-Z0-9_]*)/);
+  if (!headerMatch) {
+    return null;
+  }
+
+  const name = headerMatch[1];
+  const rest = trimmed.slice(headerMatch[0].length).trimStart();
+
+  let paramsStr: string | undefined;
+  let body: string;
+  if (rest.startsWith("(")) {
+    const closeIdx = rest.indexOf(")");
+    if (closeIdx !== -1) {
+      paramsStr = rest.slice(1, closeIdx);
+      body = rest.slice(closeIdx + 1).trim();
+    } else {
+      body = rest.trim();
+    }
+  } else {
+    body = rest.trim();
+  }
+
+  const params =
+    paramsStr !== undefined
+      ? paramsStr.split(",").map((p) => p.trim())
+      : null;
+
+  return { name, params, body };
+}
+
 function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
