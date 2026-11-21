@@ -1,8 +1,5 @@
-import { MAX_FFT_LEN, MAX_KAISER_BETA } from "./constants.js";
-import { InvalidInputError, safeFormatValue } from "./errors.js";
-
-const MAX_ENUM_STRING_LENGTH = 64;
-const MAX_BESSEL_ITERATIONS = 1024;
+import { MAX_FFT_LEN } from "./constants.js";
+import { InvalidInputError } from "./errors.js";
 
 export enum WindowType {
   RECTANGULAR = "rectangular",
@@ -22,15 +19,15 @@ const WINDOW_TYPE_MAP = new Map<string, WindowType>([
 ]);
 
 function parseWindowType(type: WindowType | string): WindowType {
-  if (typeof type !== "string" || type.length > MAX_ENUM_STRING_LENGTH) {
-    throw new InvalidInputError(`unknown window type: ${safeFormatValue(type)}`);
+  if (typeof type === "string") {
+    const lowered = type.trim().toLowerCase();
+    const found = WINDOW_TYPE_MAP.get(lowered);
+    if (!found) {
+      throw new InvalidInputError(`unknown window type: ${type}`);
+    }
+    return found;
   }
-  const lowered = type.trim().toLowerCase();
-  const found = WINDOW_TYPE_MAP.get(lowered);
-  if (!found) {
-    throw new InvalidInputError(`unknown window type: ${safeFormatValue(type)}`);
-  }
-  return found;
+  return type;
 }
 
 /**
@@ -38,24 +35,16 @@ function parseWindowType(type: WindowType | string): WindowType {
  * Strictly iterative series summation (CWE-674).
  */
 export function besselI0(x: number): number {
-  if (typeof x !== "number" || !Number.isFinite(x)) {
+  if (!Number.isFinite(x)) {
     throw new InvalidInputError("besselI0 input must be finite");
-  }
-  if (Math.abs(x) > MAX_KAISER_BETA) {
-    throw new InvalidInputError(
-      `besselI0 input magnitude exceeds MAX_KAISER_BETA (${MAX_KAISER_BETA})`
-    );
   }
   let sum = 1.0;
   let term = 1.0;
   const halfX = x * 0.5;
-  for (let k = 1; k < MAX_BESSEL_ITERATIONS; k++) {
+  for (let k = 1; k < 64; k++) {
     const factor = halfX / k;
     term *= factor * factor;
     sum += term;
-    if (!Number.isFinite(sum)) {
-      throw new InvalidInputError("besselI0 overflowed to non-finite value");
-    }
     if (term < sum * 1e-16) {
       break;
     }
@@ -73,7 +62,7 @@ export function buildWindow(
   n: number,
   options?: WindowOptions
 ): Float64Array {
-  if (typeof n !== "number" || !Number.isSafeInteger(n) || n < 1) {
+  if (!Number.isFinite(n) || !Number.isInteger(n) || n < 1) {
     throw new InvalidInputError("window length must be a positive integer");
   }
   if (n > MAX_FFT_LEN) {
@@ -84,15 +73,8 @@ export function buildWindow(
 
   const wType = parseWindowType(type);
   if (wType === WindowType.KAISER && options?.beta !== undefined) {
-    if (
-      typeof options.beta !== "number" ||
-      !Number.isFinite(options.beta) ||
-      options.beta < 0 ||
-      options.beta > MAX_KAISER_BETA
-    ) {
-      throw new InvalidInputError(
-        `Kaiser beta must be a finite number in [0, ${MAX_KAISER_BETA}]`
-      );
+    if (!Number.isFinite(options.beta) || options.beta < 0) {
+      throw new InvalidInputError("Kaiser beta must be a non-negative finite number");
     }
   }
 

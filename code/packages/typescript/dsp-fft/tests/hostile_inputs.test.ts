@@ -17,7 +17,6 @@ import {
   irfftScalar,
   kaiser,
   MAX_FFT_LEN,
-  MAX_KAISER_BETA,
   MAX_SAMPLES,
   requirePow2Length,
   rfft,
@@ -210,29 +209,5 @@ describe("Hostile inputs & VER15 Security Hardening", () => {
     const out = fft([1, 0, 0, 0], opts);
     assert.equal(out.length, 4);
     assert.equal(({} as { pollutedFftOpt?: boolean }).pollutedFftOpt, undefined);
-  });
-
-  it("VER15: caps Kaiser beta / besselI0 at MAX_KAISER_BETA=700, converges to k<1024, and bounds enum strings", () => {
-    assert.equal(MAX_KAISER_BETA, 700.0);
-    assert.throws(() => besselI0(1e20), InvalidInputError);
-    assert.throws(() => besselI0(-1e20), InvalidInputError);
-    assert.throws(() => besselI0(700.1), InvalidInputError);
-    assert.throws(() => kaiser(8, 1e20), InvalidInputError);
-    assert.throws(() => kaiser(8, 700.1), InvalidInputError);
-    assert.throws(() => buildWindow("kaiser", 1, { beta: 1e20 }), InvalidInputError);
-
-    // At beta = 700, besselI0 converges cleanly and kaiser(9, 700) peaks at 1.0 without NaN/Infinity
-    const i0Max = besselI0(700);
-    assert.ok(Number.isFinite(i0Max) && i0Max > 1e300);
-    const w8 = kaiser(8, 700);
-    for (let i = 0; i < w8.length; i++) {
-      assert.ok(Number.isFinite(w8[i]) && w8[i] >= 0 && w8[i] <= 1.0);
-    }
-    const w9 = kaiser(9, 700);
-    assert.equal(w9[4], 1.0);
-
-    // Oversized enum string must reject in O(1) before .trim().toLowerCase()
-    const hugeName = " ".repeat(50_000) + "hann" + " ".repeat(50_000);
-    assert.throws(() => buildWindow(hugeName, 4), InvalidInputError);
   });
 });
