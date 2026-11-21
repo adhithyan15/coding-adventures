@@ -1,5 +1,5 @@
-import { describe, it, expect } from "../../test-bootstrap/dist/index.js";
-import { analyzeSource } from "../dist/index.js";
+import { describe, it, expect } from "@coding-adventures/test-bootstrap";
+import { analyzeSource } from "../src/index.js";
 
 describe("Ambient Capability Detection", () => {
   it("detects fs:read from import and readFileSync", () => {
@@ -186,5 +186,24 @@ describe("VER15 CWE Weakness Detection", () => {
     `;
     const res = analyzeSource(code, "test.ts");
     expect(res.weaknesses.length).toBe(0);
+  });
+
+  it("detects namespace imports, FFI imports, Deno/Bun env, and catastrophic regex patterns", () => {
+    const code = `
+      import * as fsNs from "node:fs";
+      import ffi from "ffi-napi";
+      const d = Deno.env;
+      const b = Bun.env;
+      const r1 = new RegExp("(a+)+");
+      const r2 = /(a|a)+/;
+      const r3 = /.*.*/;
+      fsNs.readFileSync("x");
+    `;
+    const res = analyzeSource(code, "extra.ts");
+    const caps = res.capabilities.map((c) => c.capability);
+    expect(caps).toContain("fs:read");
+    expect(caps).toContain("ffi:unsafe");
+    expect(caps).toContain("env:read");
+    expect(res.weaknesses.filter((w) => w.cwe === "CWE-1333").length).toBe(3);
   });
 });

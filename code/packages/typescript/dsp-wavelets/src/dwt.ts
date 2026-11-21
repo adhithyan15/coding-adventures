@@ -4,8 +4,10 @@ import {
   EmptySignalError,
   InvalidCoefficientsError,
   InvalidParamError,
+  safeFormatValue,
   SignalTooShortError,
   validateFloats,
+  validateSequence,
 } from "./errors.js";
 import { WaveletBoundary } from "./types.js";
 import {
@@ -98,12 +100,7 @@ export function dwt(
   wavelet: Wavelet | string = "haar",
   boundary: WaveletBoundary | string = WaveletBoundary.SYMMETRIC
 ): [Float64Array, Float64Array] {
-  if (signal.length === 0) {
-    throw new EmptySignalError("signal must be non-empty");
-  }
-  if (signal.length > MAX_SAMPLES) {
-    throw new InvalidParamError(`signal length exceeds MAX_SAMPLES ${MAX_SAMPLES}`);
-  }
+  validateSequence(signal, "signal", MAX_SAMPLES, EmptySignalError, InvalidParamError);
   const b = parseWaveletBoundary(boundary);
   validateFloats(signal, "signal");
 
@@ -123,20 +120,16 @@ export function idwt(
   boundary: WaveletBoundary | string = WaveletBoundary.SYMMETRIC,
   targetLen?: number
 ): Float64Array {
-  if (ca.length === 0 || cd.length === 0) {
-    throw new EmptySignalError("cA and cD must be non-empty");
-  }
-  if (ca.length !== cd.length) {
+  const caLen = validateSequence(ca, "ca", MAX_SAMPLES, EmptySignalError, InvalidParamError);
+  const cdLen = validateSequence(cd, "cd", MAX_SAMPLES, EmptySignalError, InvalidParamError);
+  if (caLen !== cdLen) {
     throw new InvalidCoefficientsError("cA and cD must have equal lengths");
   }
-  if (ca.length > MAX_SAMPLES || cd.length > MAX_SAMPLES) {
-    throw new InvalidParamError(`subband length exceeds MAX_SAMPLES ${MAX_SAMPLES}`);
-  }
 
-  const tLen = targetLen !== undefined ? targetLen : 2 * ca.length;
+  const tLen = targetLen !== undefined ? targetLen : 2 * caLen;
   if (!Number.isSafeInteger(tLen) || tLen <= 0 || tLen > MAX_SAMPLES) {
     throw new InvalidParamError(
-      `targetLen exceeds MAX_SAMPLES ${MAX_SAMPLES} or is non-positive`
+      `targetLen exceeds MAX_SAMPLES ${MAX_SAMPLES} or is non-positive: ${safeFormatValue(tLen)}`
     );
   }
 
@@ -155,10 +148,10 @@ export function idwt(
  */
 export function forwardLevelLengths(initialLen: number, levels: number): number[] {
   if (!Number.isSafeInteger(initialLen) || initialLen <= 0 || initialLen > MAX_SAMPLES) {
-    throw new InvalidParamError(`initialLen must be positive and <= MAX_SAMPLES; got ${initialLen}`);
+    throw new InvalidParamError(`initialLen must be positive and <= MAX_SAMPLES; got ${safeFormatValue(initialLen)}`);
   }
   if (!Number.isSafeInteger(levels) || levels <= 0 || levels > MAX_WAVELET_LEVELS) {
-    throw new InvalidParamError(`levels must be > 0 and <= MAX_WAVELET_LEVELS; got ${levels}`);
+    throw new InvalidParamError(`levels must be > 0 and <= MAX_WAVELET_LEVELS; got ${safeFormatValue(levels)}`);
   }
   const lens = [initialLen];
   let curr = initialLen;
@@ -178,19 +171,14 @@ export function dwt1d(
   levels: number = 1,
   boundary: WaveletBoundary | string = WaveletBoundary.SYMMETRIC
 ): Float64Array {
-  if (signal.length === 0) {
-    throw new EmptySignalError("signal must be non-empty");
-  }
+  const n = validateSequence(signal, "signal", MAX_SAMPLES, EmptySignalError, InvalidParamError);
   if (!Number.isSafeInteger(levels) || levels <= 0) {
-    throw new InvalidParamError(`levels must be > 0; got ${levels}`);
+    throw new InvalidParamError(`levels must be > 0; got ${safeFormatValue(levels)}`);
   }
   if (levels > MAX_WAVELET_LEVELS) {
     throw new InvalidParamError(
       `levels ${levels} exceeds MAX_WAVELET_LEVELS ${MAX_WAVELET_LEVELS}`
     );
-  }
-  if (signal.length > MAX_SAMPLES) {
-    throw new InvalidParamError(`signal length exceeds MAX_SAMPLES ${MAX_SAMPLES}`);
   }
   const b = parseWaveletBoundary(boundary);
   validateFloats(signal, "signal");
@@ -198,9 +186,9 @@ export function dwt1d(
   const w = parseWavelet(wavelet);
   requireOrthogonalWavelet(w, "DWT");
 
-  if (signal.length < (1 << (levels - 1))) {
+  if (n < (1 << (levels - 1))) {
     throw new SignalTooShortError(
-      `signal length ${signal.length} too short for ${levels} levels`
+      `signal length ${n} too short for ${levels} levels`
     );
   }
 
@@ -241,17 +229,15 @@ export function idwt1d(
   boundary: WaveletBoundary | string = WaveletBoundary.SYMMETRIC,
   outputLength: number = 0
 ): Float64Array {
-  if (coeffs.length === 0) {
-    throw new EmptySignalError("coeffs must be non-empty");
-  }
+  const coeffsLen = validateSequence(coeffs, "coeffs", MAX_SAMPLES, EmptySignalError, InvalidParamError);
   if (!Number.isSafeInteger(outputLength) || outputLength <= 0) {
-    throw new InvalidParamError("outputLength must be a positive safe integer");
+    throw new InvalidParamError(`outputLength must be a positive safe integer; got ${safeFormatValue(outputLength)}`);
   }
-  if (outputLength > MAX_SAMPLES || coeffs.length > MAX_SAMPLES) {
+  if (outputLength > MAX_SAMPLES) {
     throw new InvalidParamError("length exceeds MAX_SAMPLES");
   }
   if (!Number.isSafeInteger(levels) || levels <= 0 || levels > MAX_WAVELET_LEVELS) {
-    throw new InvalidParamError(`invalid levels ${levels}`);
+    throw new InvalidParamError(`invalid levels ${safeFormatValue(levels)}`);
   }
   const b = parseWaveletBoundary(boundary);
   validateFloats(coeffs, "coeffs", InvalidCoefficientsError);
@@ -267,9 +253,9 @@ export function idwt1d(
     expectedTotal += levelLens[j];
   }
 
-  if (coeffs.length !== expectedTotal) {
+  if (coeffsLen !== expectedTotal) {
     throw new InvalidCoefficientsError(
-      `coeffs length ${coeffs.length} != expected ${expectedTotal} for outputLength=${outputLength}, levels=${levels}`
+      `coeffs length ${coeffsLen} != expected ${expectedTotal} for outputLength=${outputLength}, levels=${levels}`
     );
   }
 
@@ -303,9 +289,7 @@ export function dwt2d(
   levels: number = 1,
   boundary: WaveletBoundary | string = WaveletBoundary.PERIODIC
 ): Float64Array {
-  if (image.length === 0) {
-    throw new EmptySignalError("image must be non-empty");
-  }
+  const imageLen = validateSequence(image, "image", MAX_SAMPLES, EmptySignalError, InvalidParamError);
   if (
     !Number.isSafeInteger(nRows) ||
     !Number.isSafeInteger(nCols) ||
@@ -315,11 +299,11 @@ export function dwt2d(
     throw new InvalidParamError("image dimensions must be positive safe integers");
   }
   const totalPixels = nRows * nCols;
-  if (totalPixels > MAX_SAMPLES || image.length !== totalPixels) {
+  if (!Number.isSafeInteger(totalPixels) || totalPixels > MAX_SAMPLES || imageLen !== totalPixels) {
     throw new InvalidParamError("image size mismatch or exceeds MAX_SAMPLES");
   }
   if (!Number.isSafeInteger(levels) || levels <= 0 || levels > MAX_WAVELET_LEVELS) {
-    throw new InvalidParamError(`invalid levels ${levels}`);
+    throw new InvalidParamError(`invalid levels ${safeFormatValue(levels)}`);
   }
   const b = parseWaveletBoundary(boundary);
   validateFloats(image, "image");
@@ -419,9 +403,7 @@ export function idwt2d(
   levels: number = 1,
   boundary: WaveletBoundary | string = WaveletBoundary.PERIODIC
 ): Float64Array {
-  if (coeffs.length === 0) {
-    throw new EmptySignalError("coeffs must be non-empty");
-  }
+  const coeffsLen = validateSequence(coeffs, "coeffs", MAX_SAMPLES, EmptySignalError, InvalidParamError);
   if (
     !Number.isSafeInteger(nRows) ||
     !Number.isSafeInteger(nCols) ||
@@ -431,11 +413,11 @@ export function idwt2d(
     throw new InvalidParamError("image dimensions must be positive safe integers");
   }
   const totalPixels = nRows * nCols;
-  if (totalPixels > MAX_SAMPLES) {
+  if (!Number.isSafeInteger(totalPixels) || totalPixels > MAX_SAMPLES) {
     throw new InvalidParamError("image dimensions exceed MAX_SAMPLES");
   }
   if (!Number.isSafeInteger(levels) || levels <= 0 || levels > MAX_WAVELET_LEVELS) {
-    throw new InvalidParamError(`invalid levels ${levels}`);
+    throw new InvalidParamError(`invalid levels ${safeFormatValue(levels)}`);
   }
   const b = parseWaveletBoundary(boundary);
   validateFloats(coeffs, "coeffs", InvalidCoefficientsError);

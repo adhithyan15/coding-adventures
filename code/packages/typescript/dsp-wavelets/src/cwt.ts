@@ -2,7 +2,9 @@ import { MAX_SAMPLES, MAX_SCALES } from "./constants.js";
 import {
   EmptySignalError,
   InvalidParamError,
+  safeFormatValue,
   validateFloats,
+  validateSequence,
 } from "./errors.js";
 import { WaveletFamily } from "./types.js";
 import { parseWavelet, Wavelet } from "./wavelet.js";
@@ -17,33 +19,25 @@ export function cwt(
   scales: ArrayLike<number>,
   wavelet: Wavelet | string = "morlet"
 ): Float64Array {
-  if (signal.length === 0) {
-    throw new EmptySignalError("signal must be non-empty");
-  }
-  if (scales.length === 0) {
-    throw new InvalidParamError("scales must be non-empty");
-  }
-  if (signal.length > MAX_SAMPLES) {
-    throw new InvalidParamError(
-      `signal length exceeds MAX_SAMPLES ${MAX_SAMPLES}`
-    );
-  }
-  if (scales.length > MAX_SCALES) {
-    throw new InvalidParamError(
-      `scales length exceeds MAX_SCALES ${MAX_SCALES}`
-    );
-  }
+  const n = validateSequence(signal, "signal", MAX_SAMPLES, EmptySignalError, InvalidParamError);
+  const numScales = validateSequence(scales, "scales", MAX_SCALES, InvalidParamError, InvalidParamError);
 
-  const totalLen = scales.length * signal.length;
+  const totalLen = numScales * n;
   if (!Number.isSafeInteger(totalLen) || totalLen > MAX_SAMPLES) {
     throw new InvalidParamError("CWT output length exceeds MAX_SAMPLES");
   }
 
-  for (let idx = 0; idx < scales.length; idx++) {
-    const s = Number(scales[idx]);
-    if (!Number.isFinite(s) || s <= 0.0) {
+  for (let idx = 0; idx < numScales; idx++) {
+    const raw: unknown = scales[idx];
+    if (
+      typeof raw !== "number" ||
+      !Number.isFinite(raw) ||
+      raw <= 0.0 ||
+      !Number.isFinite(1.0 / raw) ||
+      !Number.isFinite(1.0 / Math.sqrt(raw))
+    ) {
       throw new InvalidParamError(
-        `scales must be positive and finite; got ${s} at index ${idx}`
+        `scales must be positive and have finite reciprocals; got ${safeFormatValue(raw)} at index ${idx}`
       );
     }
   }
@@ -53,11 +47,10 @@ export function cwt(
   const w = parseWavelet(wavelet);
   if (w.family !== WaveletFamily.MORLET && w.family !== WaveletFamily.RICKER) {
     throw new InvalidParamError(
-      `CWT supports Morlet and Ricker wavelets only; got ${w.name}`
+      `CWT supports Morlet and Ricker wavelets only; got ${safeFormatValue(w.name)}`
     );
   }
 
-  const n = signal.length;
   const piPowNegQuarter = Math.pow(Math.PI, -0.25);
   const out = new Float64Array(totalLen);
 

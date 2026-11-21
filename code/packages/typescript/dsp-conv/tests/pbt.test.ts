@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { SplitMix64 } from "@coding-adventures/test-bootstrap";
 import {
   ConvMode,
   conv1d,
@@ -8,25 +9,20 @@ import {
   overlapAdd,
 } from "../src/index.js";
 
-class SimpleRng {
-  private state: bigint;
-  constructor(seed: bigint = 123456789n) {
-    this.state = seed;
+function nextUnit(rng: SplitMix64): number {
+  return Number(rng.nextU64() >> 11n) / 9007199254740992.0;
+}
+
+function nextRange(rng: SplitMix64, min: number, max: number): number {
+  return min + (max - min) * nextUnit(rng);
+}
+
+function randomArray(rng: SplitMix64, len: number, min: number = -10, max: number = 10): Float64Array {
+  const arr = new Float64Array(len);
+  for (let i = 0; i < len; i++) {
+    arr[i] = nextRange(rng, min, max);
   }
-  next(): number {
-    this.state = (this.state * 6364136223846793005n + 1442695040888963407n) & 0xffffffffffffffffn;
-    return Number(this.state >> 32n) / 4294967296.0;
-  }
-  range(min: number, max: number): number {
-    return min + (max - min) * this.next();
-  }
-  array(len: number, min: number = -10, max: number = 10): Float64Array {
-    const arr = new Float64Array(len);
-    for (let i = 0; i < len; i++) {
-      arr[i] = this.range(min, max);
-    }
-    return arr;
-  }
+  return arr;
 }
 
 function assertMaxDiff(a: ArrayLike<number>, b: ArrayLike<number>, tol: number): void {
@@ -41,14 +37,14 @@ function assertMaxDiff(a: ArrayLike<number>, b: ArrayLike<number>, tol: number):
 }
 
 describe("Property-Based Testing (dsp-conv algebraic laws)", () => {
-  const rng = new SimpleRng(987654321n);
+  const rng = new SplitMix64(987654321n);
 
   it("Commutativity: convolve(a, b) == convolve(b, a)", () => {
     for (let iter = 0; iter < 15; iter++) {
-      const lenA = Math.floor(rng.range(3, 20));
-      const lenB = Math.floor(rng.range(3, 20));
-      const a = rng.array(lenA);
-      const b = rng.array(lenB);
+      const lenA = 3 + rng.bounded(17);
+      const lenB = 3 + rng.bounded(17);
+      const a = randomArray(rng, lenA);
+      const b = randomArray(rng, lenB);
 
       const ab = convolve(a, b, ConvMode.FULL);
       const ba = convolve(b, a, ConvMode.FULL);
@@ -58,11 +54,11 @@ describe("Property-Based Testing (dsp-conv algebraic laws)", () => {
 
   it("Linearity / Distributivity: convolve(a + b, c) == convolve(a, c) + convolve(b, c)", () => {
     for (let iter = 0; iter < 15; iter++) {
-      const len = Math.floor(rng.range(5, 18));
-      const lenC = Math.floor(rng.range(3, 10));
-      const a = rng.array(len);
-      const b = rng.array(len);
-      const c = rng.array(lenC);
+      const len = 5 + rng.bounded(13);
+      const lenC = 3 + rng.bounded(7);
+      const a = randomArray(rng, len);
+      const b = randomArray(rng, len);
+      const c = randomArray(rng, lenC);
 
       const aPlusB = new Float64Array(len);
       for (let i = 0; i < len; i++) aPlusB[i] = a[i] + b[i];
@@ -80,8 +76,8 @@ describe("Property-Based Testing (dsp-conv algebraic laws)", () => {
 
   it("Impulse Identity: convolve(signal, [1.0], SAME) == signal", () => {
     for (let iter = 0; iter < 15; iter++) {
-      const len = Math.floor(rng.range(4, 30));
-      const signal = rng.array(len);
+      const len = 4 + rng.bounded(26);
+      const signal = randomArray(rng, len);
       const out = conv1d(signal, [1.0]);
       assertMaxDiff(out, signal, 1e-12);
     }
@@ -89,10 +85,10 @@ describe("Property-Based Testing (dsp-conv algebraic laws)", () => {
 
   it("Cross-algorithm equivalence: direct == FFT == overlapAdd", () => {
     for (let iter = 0; iter < 10; iter++) {
-      const lenSig = Math.floor(rng.range(16, 64));
-      const lenKer = Math.floor(rng.range(4, 16));
-      const sig = rng.array(lenSig);
-      const ker = rng.array(lenKer);
+      const lenSig = 16 + rng.bounded(48);
+      const lenKer = 4 + rng.bounded(12);
+      const sig = randomArray(rng, lenSig);
+      const ker = randomArray(rng, lenKer);
 
       const direct = convolve(sig, ker, ConvMode.FULL);
       const fftRes = fftConvolve(sig, ker, ConvMode.FULL);

@@ -20,13 +20,15 @@
     }
   },
   "scripts": {
-    "build": "tsc",
-    "test": "node --experimental-strip-types --test tests/analyzer.test.ts tests/pbt.test.ts tests/hostile.test.ts tests/cli.test.ts"
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=../** --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js",
+    "test:coverage": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=../** --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js"
   },
   "dependencies": {
     "typescript": "^5.4.0"
   },
   "devDependencies": {
+    "@coding-adventures/test-bootstrap": "file:../test-bootstrap",
     "@types/node": "^22.20.1"
   }
 }
