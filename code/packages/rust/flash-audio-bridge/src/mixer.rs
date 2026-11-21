@@ -32,8 +32,16 @@ use crate::error::AudioBridgeError;
 use crate::tags::{
     DefineSoundTag, SoundEnvelopePoint, SoundInfo, SoundStreamBlockTag, SoundStreamHead,
     StartSound2Tag, StartSoundTag, SwfAudioChannels, SwfSampleWidth, SwfSoundFormat,
-    MAX_ENVELOPE_POINTS, MAX_LOOP_COUNT, MAX_SOUND_SAMPLES, MAX_TAG_PAYLOAD_BYTES,
+    MAX_CLASS_NAME_BYTES, MAX_ENVELOPE_POINTS, MAX_LOOP_COUNT, MAX_SOUND_SAMPLES,
+    MAX_TAG_PAYLOAD_BYTES,
 };
+
+fn validate_class_name(name: &str) -> Result<(), AudioBridgeError> {
+    if name.is_empty() || name.len() > MAX_CLASS_NAME_BYTES || name.as_bytes().contains(&0) {
+        return Err(AudioBridgeError::InvalidClassName);
+    }
+    Ok(())
+}
 
 /// Maximum number of `DefineSound` event assets cached in the sound bank (CWE-400).
 pub const MAX_EVENT_SOUNDS: usize = 32;
@@ -274,6 +282,9 @@ impl FlashAudioState {
         if sound_id == 0 {
             return Err(AudioBridgeError::InvalidSoundId);
         }
+        if let Some(name) = class_name {
+            validate_class_name(name)?;
+        }
         validate_sample_rate(sample_rate_hz).map_err(|_| AudioBridgeError::MixerFailure)?;
         let ch = channels.channel_count();
         if !samples.len().is_multiple_of(ch) {
@@ -450,6 +461,7 @@ impl FlashAudioState {
 
     /// Applies a `StartSound2` (Tag 89) command targeting an AS3 linkage class name (zero-alloc).
     pub fn apply_start_sound2(&mut self, tag: &StartSound2Tag<'_>) -> Result<(), AudioBridgeError> {
+        validate_class_name(tag.class_name)?;
         let bank_slot = self
             .find_bank_by_class(tag.class_name)
             .ok_or(AudioBridgeError::SoundNotFound { sound_id: 0 })?;
@@ -545,6 +557,12 @@ impl FlashAudioState {
                     });
                 }
 
+                // Pre-check total mono frame capacity before pushing any chunks into `stream_fifo`.
+                let mono_frames = block.audio_data.len() / frame_bytes;
+                if mono_frames > STREAM_FIFO_CAPACITY.saturating_sub(self.stream_fifo.len()) {
+                    return Err(AudioBridgeError::RingBufferOverrun);
+                }
+
                 let max_chunk_bytes = (STREAM_SCRATCH_SAMPLES / ch_count) * frame_bytes;
                 let mut offset = 0usize;
                 while offset < block.audio_data.len() {
@@ -592,6 +610,11 @@ impl FlashAudioState {
                         max: (STREAM_SCRATCH_SAMPLES / ch_count) as u32,
                     });
                 }
+                if (est_samples as usize)
+                    > STREAM_FIFO_CAPACITY.saturating_sub(self.stream_fifo.len())
+                {
+                    return Err(AudioBridgeError::RingBufferOverrun);
+                }
                 let scalar_written =
                     decode_adpcm_into(block.audio_data, props.channels, est_samples, &mut scratch)?;
                 if props.channels == SwfAudioChannels::Stereo {
@@ -628,18 +651,18 @@ impl FlashAudioState {
     ) -> Result<usize, AudioBridgeError> {
         let step = advance_frame(&self.clock, raw_frame_delta_ns)
             .map_err(|_| AudioBridgeError::ClockFailure)?;
-        self.clock = step.state;
 
         let added_q16 = (step.steps_to_run as u64)
             .checked_mul(self.samples_per_frame_q16)
             .ok_or(AudioBridgeError::ClockFailure)?;
-        self.frame_sample_accum_q16 = self
+        let next_accum = self
             .frame_sample_accum_q16
             .checked_add(added_q16)
             .ok_or(AudioBridgeError::ClockFailure)?;
 
-        let whole_samples = (self.frame_sample_accum_q16 >> 16) as usize;
-        self.frame_sample_accum_q16 &= 0xFFFF;
+        self.clock = step.state;
+        let whole_samples = (next_accum >> 16) as usize;
+        self.frame_sample_accum_q16 = next_accum & 0xFFFF;
         Ok(whole_samples)
     }
 
@@ -786,6 +809,9 @@ pub fn bridge_render_to_ring_buffer<const N: usize>(
 ) -> Result<usize, AudioBridgeError> {
     if frame_samples == 0 {
         return Ok(0);
+    }
+    if frame_samples > N.saturating_sub(ring.len()) {
+        return Err(AudioBridgeError::RingBufferOverrun);
     }
     let mut chunk = [0i16; 256];
     let mut remaining = frame_samples;

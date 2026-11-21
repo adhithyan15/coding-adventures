@@ -423,6 +423,14 @@ impl Camera2D {
 
     /// Return a new [`Camera2D`] rotated counter-clockwise by `delta_yaw_rad` radians via `PHY00` `trig`.
     pub fn camera_rotate(&self, delta_yaw_rad: f64) -> Result<Self, RaycastError> {
+        let _ = Self::camera_new(
+            self.pos_x,
+            self.pos_y,
+            self.dir_x,
+            self.dir_y,
+            self.plane_x,
+            self.plane_y,
+        )?;
         let delta = check_finite_bounded(delta_yaw_rad, math3d::MAX_ANGLE_RAD)?;
         let cos_a = trig::cos(delta);
         let sin_a = trig::sin(delta);
@@ -437,11 +445,24 @@ impl Camera2D {
 
     /// Translate the camera position by `(dx, dy)` after checking finite bounds.
     pub fn camera_move_by(&self, dx: f64, dy: f64) -> Result<Self, RaycastError> {
+        let _ = Self::camera_new(
+            self.pos_x,
+            self.pos_y,
+            self.dir_x,
+            self.dir_y,
+            self.plane_x,
+            self.plane_y,
+        )?;
         let dx = check_finite_coord(dx)?;
         let dy = check_finite_coord(dy)?;
+        let next_x = self.pos_x + dx;
+        let next_y = self.pos_y + dy;
+        if !next_x.is_finite() || !next_y.is_finite() {
+            return Err(RaycastError::ValueOutOfBounds);
+        }
         Self::camera_new(
-            self.pos_x + dx,
-            self.pos_y + dy,
+            next_x,
+            next_y,
             self.dir_x,
             self.dir_y,
             self.plane_x,
@@ -977,7 +998,9 @@ pub fn cast_dda_ray(
 // Frame Renderer (Floor/Ceiling, Walls, Z-Buffered Billboard Sprites)
 // ---------------------------------------------------------------------------
 
+#[allow(clippy::too_many_arguments)]
 fn validate_render_inputs(
+    grid: &GridMap,
     camera: &Camera2D,
     textures: &[TextureRgba],
     sprites: &[Sprite],
@@ -1028,6 +1051,24 @@ fn validate_render_inputs(
         camera.plane_x,
         camera.plane_y,
     )?;
+
+    // Validate all non-zero grid wall tile IDs upfront so mid-frame rendering never fails atomically.
+    for &tile in grid.grid_cells() {
+        if tile != 0 && usize::from(tile - 1) >= textures.len() {
+            return Err(RaycastError::InvalidMaterialId { id: tile });
+        }
+    }
+
+    // Pre-validate every column ray direction before mutating `zbuffer` or `framebuffer.data`.
+    let w_f = w_usize as f64;
+    for x in 0..w_usize {
+        let camera_x = 2.0 * (x as f64 + 0.5) / w_f - 1.0;
+        let ray_dir_x = check_finite_coord(camera.dir_x + camera.plane_x * camera_x)?;
+        let ray_dir_y = check_finite_coord(camera.dir_y + camera.plane_y * camera_x)?;
+        if ray_dir_x.abs() < EPSILON && ray_dir_y.abs() < EPSILON {
+            return Err(RaycastError::DegenerateRay);
+        }
+    }
 
     if let PlaneSurface::Textured { texture_index } = config.ceiling {
         if texture_index >= textures.len() {
@@ -1384,6 +1425,7 @@ pub fn render_frame_into(
     framebuffer: &mut PixelContainer,
 ) -> Result<RenderStats, RaycastError> {
     let (width, height) = validate_render_inputs(
+        grid,
         camera,
         textures,
         sprites,
