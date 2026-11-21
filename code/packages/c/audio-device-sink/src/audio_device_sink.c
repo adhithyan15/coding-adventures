@@ -3,16 +3,52 @@
  * =========================================================================
  *
  * See audio_device_sink.h. All validation logic mirrors the Rust crate; owned
- * samples are a malloc'd int16_t buffer; error messages are written into the
+ * samples are a calloc'd int16_t buffer; error messages are written into the
  * caller's optional buffer with snprintf.
+ *
+ * Hardened against VER15 CWEs (190, 400, 415, 416, 476) with zero <math.h>.
  */
 #include "audio_device_sink.h"
 
 #include <stdio.h>  /* snprintf */
-#include <stdlib.h> /* malloc, free */
+#include <stdlib.h> /* calloc, free */
 #include <string.h> /* memcpy, memset */
 
 const char *const ADS_VERSION = "0.1.0";
+
+/* ── Checked arithmetic & IEEE-754 helpers (CWE-190 / zero libm) ───────────*/
+
+static int checked_mul_size(size_t a, size_t b, size_t *out) {
+    if (out == NULL) return 0;
+    if (a != 0 && b > SIZE_MAX / a) return 0;
+    *out = a * b;
+    return 1;
+}
+
+static int checked_mul_u64(uint64_t a, uint64_t b, uint64_t *out) {
+    if (out == NULL) return 0;
+    if (a != 0 && b > UINT64_MAX / a) return 0;
+    *out = a * b;
+    return 1;
+}
+
+static int is_finite_double(double x) {
+    /* Pure IEEE-754: x == x rejects NaN; (x - x) == 0.0 rejects +/-Inf. */
+    return (x == x) && ((x - x) == 0.0);
+}
+
+/* Compute exact integer max sample count for a validated format. */
+static int max_samples_for_format(AdsPcmFormat format, uint64_t *out) {
+    uint64_t max_frames = 0;
+    if (!checked_mul_u64((uint64_t)format.sample_rate_hz,
+                         ADS_MAX_BLOCKING_DURATION_SECONDS_INT, &max_frames)) {
+        return 0;
+    }
+    if (!checked_mul_u64(max_frames, (uint64_t)format.channel_count, out)) {
+        return 0;
+    }
+    return 1;
+}
 
 const char *ads_status_label(AdsStatus status) {
     switch (status) {
@@ -29,14 +65,14 @@ const char *ads_status_label(AdsStatus status) {
 /* Write `text` into the optional caller buffer (safe if msg is NULL). */
 static void set_msg(char *msg, size_t cap, const char *text) {
     if (msg == NULL || cap == 0) return;
-    snprintf(msg, cap, "%s", text);
+    snprintf(msg, cap, "%s", text != NULL ? text : "");
 }
 
 /* ── PcmFormat ─────────────────────────────────────────────────────────────*/
 
 AdsStatus ads_pcm_format_validate(AdsPcmFormat format, char *msg,
                                   size_t msg_cap) {
-    if (format.sample_rate_hz == 0) {
+    if (format.sample_rate_hz < ADS_MIN_SAMPLE_RATE_HZ) {
         set_msg(msg, msg_cap, "sample_rate_hz must be greater than zero");
         return ADS_ERR_INVALID_FORMAT;
     }
@@ -48,7 +84,8 @@ AdsStatus ads_pcm_format_validate(AdsPcmFormat format, char *msg,
                      (unsigned long)format.sample_rate_hz);
         return ADS_ERR_INVALID_FORMAT;
     }
-    if (format.channel_count != ADS_SUPPORTED_CHANNEL_COUNT) {
+    if (format.channel_count != ADS_SUPPORTED_CHANNEL_COUNT ||
+        format.channel_count > ADS_MAX_CHANNELS) {
         if (msg != NULL && msg_cap > 0)
             snprintf(msg, msg_cap,
                      "only mono PCM is supported in V1, got %u channels",
@@ -70,6 +107,11 @@ AdsStatus ads_pcm_format_new(uint32_t sample_rate_hz, uint16_t channel_count,
                              size_t msg_cap) {
     AdsPcmFormat format;
     AdsStatus st;
+    if (out == NULL) {
+        set_msg(msg, msg_cap, "out format pointer must not be NULL");
+        return ADS_ERR_INVALID_FORMAT;
+    }
+    memset(out, 0, sizeof *out);
     format.sample_rate_hz = sample_rate_hz;
     format.channel_count = channel_count;
     format.bit_depth = bit_depth;
@@ -84,29 +126,25 @@ size_t ads_pcm_format_sample_width_bytes(AdsPcmFormat format) {
 
 /* ── PcmPlaybackBuffer ─────────────────────────────────────────────────────*/
 
-/* frame_count using an explicit format+count (used before a buffer exists). */
+/* frame_count using an explicit format+count; safe against div-by-zero. */
 static size_t frames_of(size_t sample_count, AdsPcmFormat format) {
-    /* channel_count is validated non-zero (mono) before this is reached. */
+    if (format.channel_count == 0) return 0;
     return sample_count / (size_t)format.channel_count;
 }
 
-AdsStatus ads_pcm_playback_buffer_new(const int16_t *samples, size_t n,
-                                      AdsPcmFormat format,
-                                      AdsPcmPlaybackBuffer *out, char *msg,
-                                      size_t msg_cap) {
-    AdsStatus st;
-    double max_samples;
-    int16_t *copy;
+static AdsStatus validate_sample_bounds(const int16_t *samples, size_t n,
+                                        AdsPcmFormat format, char *msg,
+                                        size_t msg_cap) {
+    uint64_t max_samples = 0;
+    size_t byte_len = 0;
 
-    memset(out, 0, sizeof *out);
+    if (n > 0 && samples == NULL) {
+        set_msg(msg, msg_cap,
+                "samples pointer must not be NULL when sample_count > 0");
+        return ADS_ERR_INVALID_SAMPLES;
+    }
 
-    st = ads_pcm_format_validate(format, msg, msg_cap);
-    if (st != ADS_OK) return st;
-
-    /* V1 size cap: sample_count must fit within the blocking-duration limit. */
-    max_samples =
-        (double)format.sample_rate_hz * ADS_MAX_BLOCKING_DURATION_SECONDS;
-    if ((double)n > max_samples) {
+    if (n > ADS_MAX_SAMPLES) {
         if (msg != NULL && msg_cap > 0)
             snprintf(msg, msg_cap,
                      "blocking playback is limited to %g seconds",
@@ -114,17 +152,57 @@ AdsStatus ads_pcm_playback_buffer_new(const int16_t *samples, size_t n,
         return ADS_ERR_INVALID_SAMPLES;
     }
 
+    if (!checked_mul_size(n, sizeof(int16_t), &byte_len)) {
+        set_msg(msg, msg_cap, "sample buffer byte size overflow");
+        return ADS_ERR_INVALID_SAMPLES;
+    }
+
+    if (!max_samples_for_format(format, &max_samples) ||
+        (uint64_t)n > max_samples) {
+        if (msg != NULL && msg_cap > 0)
+            snprintf(msg, msg_cap,
+                     "blocking playback is limited to %g seconds",
+                     (double)ADS_MAX_BLOCKING_DURATION_SECONDS);
+        return ADS_ERR_INVALID_SAMPLES;
+    }
+
+    (void)byte_len;
+    return ADS_OK;
+}
+
+AdsStatus ads_pcm_playback_buffer_new(const int16_t *samples, size_t n,
+                                      AdsPcmFormat format,
+                                      AdsPcmPlaybackBuffer *out, char *msg,
+                                      size_t msg_cap) {
+    AdsStatus st;
+    size_t byte_len = 0;
+    int16_t *copy = NULL;
+
+    if (out == NULL) {
+        set_msg(msg, msg_cap, "out buffer pointer must not be NULL");
+        return ADS_ERR_INVALID_SAMPLES;
+    }
+    memset(out, 0, sizeof *out);
+
+    st = ads_pcm_format_validate(format, msg, msg_cap);
+    if (st != ADS_OK) return st;
+
+    st = validate_sample_bounds(samples, n, format, msg, msg_cap);
+    if (st != ADS_OK) return st;
+
     if (n == 0) {
         copy = NULL; /* empty buffer owns nothing */
     } else {
-        /* calloc does the checked multiply for us — a guard against size_t
-         * overflow even though the duration cap already bounds `n`. */
+        if (!checked_mul_size(n, sizeof(int16_t), &byte_len)) {
+            set_msg(msg, msg_cap, "sample buffer byte size overflow");
+            return ADS_ERR_INVALID_SAMPLES;
+        }
         copy = (int16_t *)calloc(n, sizeof(int16_t));
         if (copy == NULL) {
             set_msg(msg, msg_cap, "out of memory");
             return ADS_ERR_BACKEND_FAILURE;
         }
-        memcpy(copy, samples, n * sizeof(int16_t));
+        memcpy(copy, samples, byte_len);
     }
 
     out->samples = copy;
@@ -134,28 +212,65 @@ AdsStatus ads_pcm_playback_buffer_new(const int16_t *samples, size_t n,
 }
 
 void ads_pcm_playback_buffer_free(AdsPcmPlaybackBuffer *buffer) {
+    size_t byte_len = 0;
     if (buffer == NULL) return;
-    free(buffer->samples);
+    if (buffer->samples != NULL) {
+        if (buffer->sample_count > 0 &&
+            buffer->sample_count <= ADS_MAX_SAMPLES &&
+            checked_mul_size(buffer->sample_count, sizeof(int16_t),
+                             &byte_len)) {
+            volatile unsigned char *vp =
+                (volatile unsigned char *)buffer->samples;
+            size_t i;
+            for (i = 0; i < byte_len; ++i) {
+                vp[i] = 0;
+            }
+        }
+        free(buffer->samples);
+    }
     memset(buffer, 0, sizeof *buffer);
 }
 
 size_t ads_pcm_playback_buffer_sample_count(
     const AdsPcmPlaybackBuffer *buffer) {
+    if (buffer == NULL) return 0;
+    if (buffer->sample_count > 0 && buffer->samples == NULL) return 0;
     return buffer->sample_count;
 }
 
 size_t ads_pcm_playback_buffer_frame_count(const AdsPcmPlaybackBuffer *buffer) {
+    if (buffer == NULL) return 0;
+    if (buffer->sample_count > 0 && buffer->samples == NULL) return 0;
     return frames_of(buffer->sample_count, buffer->format);
 }
 
 int ads_pcm_playback_buffer_is_empty(const AdsPcmPlaybackBuffer *buffer) {
-    return buffer->sample_count == 0;
+    return ads_pcm_playback_buffer_sample_count(buffer) == 0;
 }
 
 double ads_pcm_playback_buffer_duration_seconds(
     const AdsPcmPlaybackBuffer *buffer) {
-    return (double)ads_pcm_playback_buffer_frame_count(buffer) /
-           (double)buffer->format.sample_rate_hz;
+    size_t frames;
+    double duration;
+    if (buffer == NULL) return 0.0;
+    if (buffer->format.sample_rate_hz == 0 ||
+        buffer->format.channel_count == 0) {
+        return 0.0;
+    }
+    if (buffer->sample_count > 0 && buffer->samples == NULL) return 0.0;
+    frames = ads_pcm_playback_buffer_frame_count(buffer);
+    duration = (double)frames / (double)buffer->format.sample_rate_hz;
+    return is_finite_double(duration) ? duration : 0.0;
+}
+
+size_t ads_pcm_playback_buffer_byte_size(const AdsPcmPlaybackBuffer *buffer) {
+    size_t count;
+    size_t bytes = 0;
+    if (buffer == NULL) return 0;
+    count = ads_pcm_playback_buffer_sample_count(buffer);
+    if (count == 0 || count > ADS_MAX_SAMPLES) return 0;
+    if (!checked_mul_size(count, sizeof(int16_t), &bytes)) return 0;
+    return bytes;
 }
 
 /* ── PlaybackReport ────────────────────────────────────────────────────────*/
@@ -163,11 +278,17 @@ double ads_pcm_playback_buffer_duration_seconds(
 AdsPlaybackReport ads_playback_report_for_buffer(
     const AdsPcmPlaybackBuffer *buffer, const char *backend_name) {
     AdsPlaybackReport report;
+    const char *safe_name = (backend_name != NULL) ? backend_name : "";
+    memset(&report, 0, sizeof report);
+    if (buffer == NULL) {
+        report.backend_name = safe_name;
+        return report;
+    }
     report.frames_played = ads_pcm_playback_buffer_frame_count(buffer);
     report.sample_rate_hz = buffer->format.sample_rate_hz;
     report.channel_count = buffer->format.channel_count;
     report.duration_seconds = ads_pcm_playback_buffer_duration_seconds(buffer);
-    report.backend_name = backend_name;
+    report.backend_name = safe_name;
     return report;
 }
 
@@ -177,8 +298,29 @@ static AdsStatus noop_play_blocking(const AdsAudioSink *self,
                                     const AdsPcmPlaybackBuffer *buffer,
                                     AdsPlaybackReport *report, char *msg,
                                     size_t msg_cap) {
-    (void)msg;
-    (void)msg_cap;
+    AdsStatus st;
+    if (report != NULL) {
+        memset(report, 0, sizeof *report);
+    }
+    if (self == NULL) {
+        set_msg(msg, msg_cap, "audio sink must not be NULL");
+        return ADS_ERR_BACKEND_FAILURE;
+    }
+    if (report == NULL) {
+        set_msg(msg, msg_cap, "output report pointer must not be NULL");
+        return ADS_ERR_BACKEND_FAILURE;
+    }
+    if (buffer == NULL) {
+        set_msg(msg, msg_cap, "playback buffer must not be NULL");
+        return ADS_ERR_INVALID_SAMPLES;
+    }
+    st = ads_pcm_format_validate(buffer->format, msg, msg_cap);
+    if (st != ADS_OK) return st;
+
+    st = validate_sample_bounds(buffer->samples, buffer->sample_count,
+                                buffer->format, msg, msg_cap);
+    if (st != ADS_OK) return st;
+
     *report = ads_playback_report_for_buffer(buffer, self->backend_name);
     return ADS_OK;
 }
@@ -186,6 +328,6 @@ static AdsStatus noop_play_blocking(const AdsAudioSink *self,
 AdsAudioSink ads_noop_audio_sink(const char *backend_name) {
     AdsAudioSink sink;
     sink.play_blocking = noop_play_blocking;
-    sink.backend_name = backend_name;
+    sink.backend_name = (backend_name != NULL) ? backend_name : "";
     return sink;
 }
