@@ -1,0 +1,172 @@
+-- GAME34 -- Game-Labyrinth3D: deterministic zero-allocation 2.5D/3D first-person
+-- dungeon crawler with bounded tile grid, circle-vs-grid sliding collision,
+-- locked doors, pickups, patrolling/chasing entities, and dual renderers.
+--
+-- Warrant document for game-labyrinth3d (VER04j and VER04m: state=explicit).
+-- Formal verification contract for grid, framebuffer, entity, door, pickup,
+-- key ID, and player collision radius bounds (CWE-20 / CWE-125 / CWE-190 / CWE-400).
+
+warrant game_labyrinth3d v1
+  error LabyrinthError = NonFiniteInput | ValueOutOfBounds | InvalidGrid | InvalidPlayer | InvalidDoor | InvalidPickup | InvalidEntity | InvalidFramebuffer | ZBufferTooSmall | ScratchTooSmall | InvalidMaterialId | InvalidAssets | InvalidInput | ArithmeticOverflow
+
+  model Unit = Bool
+  variant GameStatus = Playing | Won | Lost
+  variant RenderMode = Raycast25D | Software3D
+  variant PickupKind = KeyPickup | HealthPickup | TreasurePickup
+  variant EntityBehavior = Patrol | Chase
+
+  record LabyrinthDims(width: Nat, height: Nat)
+
+  -- Bounded tile grid dimensions: 1 <= d <= 64 (CWE-400).
+  model valid_grid_dim(w: Nat, h: Nat) -> Bool = w >= 1 and w <= 64 and h >= 1 and h <= 64
+  -- Bounded framebuffer dimensions: 1 <= d <= 4096 (CWE-400).
+  model valid_frame_dim(w: Nat, h: Nat) -> Bool = w >= 1 and w <= 4096 and h >= 1 and h <= 4096
+  -- Bounded entity count: n <= 64 (CWE-400).
+  model valid_entity_count(n: Nat) -> Bool = n <= 64
+  -- Bounded door count: n <= 64 (CWE-400).
+  model valid_door_count(n: Nat) -> Bool = n <= 64
+  -- Bounded pickup count: n <= 128 (CWE-400).
+  model valid_pickup_count(n: Nat) -> Bool = n <= 128
+  -- Key slot bit index: k < 8 (CWE-125 / CWE-190).
+  model valid_key_id(k: Nat) -> Bool = k < 8
+  -- Player collision radius in micro-units: 50_000 (0.05) <= r <= 450_000 (0.45) (CWE-20).
+  model valid_player_radius_micro(r_micro: Nat) -> Bool = r_micro >= 50000 and r_micro <= 450000
+
+  op validate_grid_dim(w: Nat, h: Nat) -> Result<Bool, LabyrinthError>
+  op validate_frame_dim(w: Nat, h: Nat) -> Result<Bool, LabyrinthError>
+  op validate_entity_count(n: Nat) -> Result<Bool, LabyrinthError>
+  op validate_door_count(n: Nat) -> Result<Bool, LabyrinthError>
+  op validate_pickup_count(n: Nat) -> Result<Bool, LabyrinthError>
+  op validate_key_id(k: Nat) -> Result<Bool, LabyrinthError>
+  op validate_player_radius_micro(r_micro: Nat) -> Result<Bool, LabyrinthError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_grid_dim:
+    w public
+    h public
+  labels validate_frame_dim:
+    w public
+    h public
+  labels validate_entity_count:
+    n public
+  labels validate_door_count:
+    n public
+  labels validate_pickup_count:
+    n public
+  labels validate_key_id:
+    k public
+  labels validate_player_radius_micro:
+    r_micro public
+
+  input validate_grid_dim.w:
+    hostile
+    ensures no_panic, terminates
+  input validate_grid_dim.h:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_frame_dim.w:
+    hostile
+    ensures no_panic, terminates
+  input validate_frame_dim.h:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_entity_count.n:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_door_count.n:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_pickup_count.n:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_key_id.k:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_player_radius_micro.r_micro:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_grid_dim:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_frame_dim:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_entity_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_door_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_pickup_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_key_id:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_player_radius_micro:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example grid_valid:
+    validate_grid_dim(9, 9) == Ok(true)
+  example grid_zero:
+    validate_grid_dim(0, 9) == Err(LabyrinthError.InvalidGrid)
+  example grid_over:
+    validate_grid_dim(65, 9) == Err(LabyrinthError.InvalidGrid)
+  example frame_valid:
+    validate_frame_dim(320, 200) == Ok(true)
+  example frame_over:
+    validate_frame_dim(4097, 200) == Err(LabyrinthError.InvalidFramebuffer)
+  example entities_max:
+    validate_entity_count(64) == Ok(true)
+  example entities_over:
+    validate_entity_count(65) == Err(LabyrinthError.InvalidEntity)
+  example doors_max:
+    validate_door_count(64) == Ok(true)
+  example doors_over:
+    validate_door_count(65) == Err(LabyrinthError.InvalidDoor)
+  example pickups_max:
+    validate_pickup_count(128) == Ok(true)
+  example pickups_over:
+    validate_pickup_count(129) == Err(LabyrinthError.InvalidPickup)
+  example key_valid:
+    validate_key_id(7) == Ok(true)
+  example key_over:
+    validate_key_id(8) == Err(LabyrinthError.ValueOutOfBounds)
+  example radius_valid:
+    validate_player_radius_micro(250000) == Ok(true)
+  example radius_small:
+    validate_player_radius_micro(10000) == Err(LabyrinthError.InvalidPlayer)
+
+  claim validate_grid_dim_agrees:
+    forall w: Nat, h: Nat. validate_grid_dim(w, h) == (if valid_grid_dim(w, h) then Ok(true) else Err(LabyrinthError.InvalidGrid))
+  claim validate_frame_dim_agrees:
+    forall w: Nat, h: Nat. validate_frame_dim(w, h) == (if valid_frame_dim(w, h) then Ok(true) else Err(LabyrinthError.InvalidFramebuffer))
+  claim validate_entity_count_agrees:
+    forall n: Nat. validate_entity_count(n) == (if valid_entity_count(n) then Ok(true) else Err(LabyrinthError.InvalidEntity))
+  claim validate_door_count_agrees:
+    forall n: Nat. validate_door_count(n) == (if valid_door_count(n) then Ok(true) else Err(LabyrinthError.InvalidDoor))
+  claim validate_pickup_count_agrees:
+    forall n: Nat. validate_pickup_count(n) == (if valid_pickup_count(n) then Ok(true) else Err(LabyrinthError.InvalidPickup))
+  claim validate_key_id_agrees:
+    forall k: Nat. validate_key_id(k) == (if valid_key_id(k) then Ok(true) else Err(LabyrinthError.ValueOutOfBounds))
+  claim validate_player_radius_micro_agrees:
+    forall r: Nat. validate_player_radius_micro(r) == (if valid_player_radius_micro(r) then Ok(true) else Err(LabyrinthError.InvalidPlayer))
