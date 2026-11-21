@@ -124,6 +124,11 @@ pub fn fft_scalar(signal: &[f32]) -> Result<Vec<f32>, FftError> {
     let mut buf = signal.to_vec();
     bit_reversal_permute(&mut buf, n);
     butterflies(&mut buf, n, Direction::Forward);
+    if buf.iter().any(|&x| !x.is_finite()) {
+        return Err(FftError::InvalidInput(
+            "FFT computation overflowed to non-finite float".into(),
+        ));
+    }
     Ok(buf)
 }
 
@@ -166,6 +171,11 @@ pub fn ifft_scalar(spectrum: &[f32]) -> Result<Vec<f32>, FftError> {
     let inv_n = 1.0 / (n as f32);
     for x in buf.iter_mut() {
         *x *= inv_n;
+    }
+    if buf.iter().any(|&x| !x.is_finite()) {
+        return Err(FftError::InvalidInput(
+            "IFFT computation overflowed to non-finite float".into(),
+        ));
     }
     Ok(buf)
 }
@@ -254,7 +264,10 @@ pub fn fft(signal: &[f32], complex: bool) -> Result<ComplexTensor, FftError> {
         }
         if signal.len() < 2 {
             // Degenerate N < 2 case (single real sample).
-            let mut interleaved_real = Vec::with_capacity(signal.len() * 2);
+            let cap = signal.len().checked_mul(2).ok_or_else(|| {
+                FftError::InvalidInput("interleaved buffer length overflow".into())
+            })?;
+            let mut interleaved_real = Vec::with_capacity(cap);
             for &x in signal {
                 interleaved_real.push(x);
                 interleaved_real.push(0.0);
@@ -264,9 +277,13 @@ pub fn fft(signal: &[f32], complex: bool) -> Result<ComplexTensor, FftError> {
             // Real input, N ≥ 2 power-of-two: matrix-ir-lowered path.
             fft_via_runtime(signal, Direction::Forward)?
         } else {
-            // Real input, non-power-of-two N: wrap as interleaved
-            // complex with im = 0 then call Bluestein.
-            let mut interleaved_real = Vec::with_capacity(signal.len() * 2);
+            // Real input, non-power-of-two N: validate Bluestein convolution
+            // length before allocating the interleaved scratch buffer (CWE-400).
+            bluestein::check_bluestein_conv_len(signal.len())?;
+            let cap = signal.len().checked_mul(2).ok_or_else(|| {
+                FftError::InvalidInput("interleaved buffer length overflow".into())
+            })?;
+            let mut interleaved_real = Vec::with_capacity(cap);
             for &x in signal {
                 interleaved_real.push(x);
                 interleaved_real.push(0.0);
@@ -274,7 +291,7 @@ pub fn fft(signal: &[f32], complex: bool) -> Result<ComplexTensor, FftError> {
             bluestein_scalar(&interleaved_real, Direction::Forward)?
         }
     };
-    Ok(ComplexTensor::from_interleaved(interleaved).expect("fft output has even length"))
+    ComplexTensor::from_interleaved(interleaved).map_err(|e| FftError::InvalidInput(e.to_string()))
 }
 
 /// Compute the inverse 1-D FFT.  Input is the interleaved spectrum
@@ -310,7 +327,7 @@ pub fn ifft(spectrum: &ComplexTensor) -> Result<ComplexTensor, FftError> {
     } else {
         bluestein_scalar(interleaved, Direction::Inverse)?
     };
-    Ok(ComplexTensor::from_interleaved(result).expect("ifft output has even length"))
+    ComplexTensor::from_interleaved(result).map_err(|e| FftError::InvalidInput(e.to_string()))
 }
 
 // ─────────────────────────── Internals ───────────────────────────

@@ -1,5 +1,13 @@
 # Changelog — dsp-fft
 
+## Unreleased
+
+### Fixed & Hardened — VER15 Deep Audit
+
+- Eliminated `.expect(...)` panics in `fft`, `ifft`, and `rfft` when `ComplexTensor::from_interleaved` rejects arithmetic-overflowed non-finite floats; added output finiteness validation across `fft_scalar`, `ifft_scalar`, `bluestein_scalar`, `rfft_scalar`, `irfft_scalar`, `fft_via_runtime`, and `bluestein_via_runtime` (**CWE-20**).
+- Added pre-allocation `MAX_FFT_LEN` / `checked_mul` guards across `wrap_real_as_complex`, `radix2` twiddle/byte buffers, `bluestein` zero-pad/`floats_to_le_bytes`, and non-power-of-two `fft`, `rfft_scalar`, and `irfft_scalar` paths, plus `u32::try_from` length conversions (**CWE-190 / CWE-400**).
+- Added dedicated integration test suites `tests/test_hostile_inputs.rs` and `tests/test_pbt.rs` (driven by `coding_adventures_test_bootstrap::prng::SplitMix64`) covering non-finite/overflow/subnormal/oversized inputs, round-trips, Parseval's energy conservation, and radix-2 vs Bluestein vs runtime parity.
+
 ## 0.8.0 — 2026-11-15
 
 ### Changed — Security Hardening and CWE Mitigations
