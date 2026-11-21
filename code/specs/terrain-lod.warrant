@@ -12,14 +12,14 @@ warrant terrain_lod v1
   -- Grid level n in [1, 10] gives side = 2^n + 1 in [3, 1025] and vertex count <= 1_050_625.
   model valid_grid_level(level: Nat) -> Bool = level >= 1 and level <= 10
   -- Grid dimensions: side in [3, 1025] and len == side * side (fits in u32, CWE-190).
-  model valid_grid_dimensions(side: Nat, len: Nat) -> Bool = side >= 3 and side <= 1025 and len == side * side
+  model valid_grid_dimensions(side: Nat, grid_len: Nat) -> Bool = side >= 3 and side <= 1025 and grid_len == side * side
   -- Quadtree node and triangle budget caps (CWE-400 / CWE-835).
   model valid_lod_budget(nodes: Nat, max_nodes: Nat, triangles: Nat, max_triangles: Nat) -> Bool = nodes >= 1 and max_nodes >= 1 and max_nodes <= 65536 and nodes <= max_nodes and max_triangles <= 262144 and triangles <= max_triangles
   -- Caller-provided output index buffer capacity guard (CWE-787 / atomic refusal).
   model valid_index_capacity(needed: Nat, available: Nat) -> Bool = needed <= available
 
   op validate_grid_level(level: Nat) -> Result<Bool, TerrainError>
-  op validate_grid_dimensions(side: Nat, len: Nat) -> Result<Bool, TerrainError>
+  op validate_grid_dimensions(side: Nat, grid_len: Nat) -> Result<Bool, TerrainError>
   op validate_lod_budget(nodes: Nat, max_nodes: Nat, triangles: Nat, max_triangles: Nat) -> Result<Bool, TerrainError>
   op validate_index_capacity(needed: Nat, available: Nat) -> Result<Bool, TerrainError>
 
@@ -32,7 +32,7 @@ warrant terrain_lod v1
     level public
   labels validate_grid_dimensions:
     side public
-    len public
+    grid_len public
   labels validate_lod_budget:
     nodes public
     max_nodes public
@@ -49,7 +49,7 @@ warrant terrain_lod v1
   input validate_grid_dimensions.side:
     hostile
     ensures no_panic, terminates
-  input validate_grid_dimensions.len:
+  input validate_grid_dimensions.grid_len:
     hostile
     ensures no_panic, terminates
 
@@ -112,7 +112,7 @@ warrant terrain_lod v1
   claim validate_grid_level_agrees:
     forall level: Nat. validate_grid_level(level) == (if valid_grid_level(level) then Ok(true) else Err(TerrainError.InvalidParameter))
   claim validate_grid_dimensions_agrees:
-    forall side: Nat, len: Nat. validate_grid_dimensions(side, len) == (if valid_grid_dimensions(side, len) then Ok(true) else Err(TerrainError.InvalidGridSize))
+    forall side: Nat, grid_len: Nat. validate_grid_dimensions(side, grid_len) == (if valid_grid_dimensions(side, grid_len) then Ok(true) else Err(TerrainError.InvalidGridSize))
   claim validate_lod_budget_agrees:
     forall n: Nat, mn: Nat, t: Nat, mt: Nat. validate_lod_budget(n, mn, t, mt) == (if valid_lod_budget(n, mn, t, mt) then Ok(true) else Err(TerrainError.BudgetExceeded))
   claim validate_index_capacity_agrees:
