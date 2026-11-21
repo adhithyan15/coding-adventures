@@ -3947,6 +3947,9 @@ dependencies = [
 [[package]]
 name = "coding-adventures-note-frequency"
 version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "coding-adventures-oct-lexer"

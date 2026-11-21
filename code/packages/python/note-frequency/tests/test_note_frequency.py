@@ -65,7 +65,11 @@ class TestFrequencyMapping:
         assert note_to_frequency("C4") == pytest.approx(261.6255653005986, rel=1e-12)
 
     def test_sharp_and_flat_spellings_match_same_pitch(self) -> None:
-        assert note_to_frequency("C#4") == pytest.approx(note_to_frequency("Db4"), rel=1e-12)
+        assert note_to_frequency("C#4") == pytest.approx(
+            note_to_frequency("Db4"), rel=1e-12
+        )
 
     def test_note_to_frequency_wrapper(self) -> None:
-        assert note_to_frequency("Bb3") == pytest.approx(parse_note("Bb3").frequency(), rel=1e-12)
+        assert note_to_frequency("Bb3") == pytest.approx(
+            parse_note("Bb3").frequency(), rel=1e-12
+        )
