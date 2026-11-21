@@ -1,0 +1,925 @@
+{
+  "evidence_seed": "5783551289472600399",
+  "module": "pcm_audio",
+  "schema": "warrant-test-evidence-v1",
+  "source_sha256": "0f1227e9e0410c699c89fe90a05a6e8879cdba2a5de5a3e066c4992e7e03ae9c",
+  "spec": "code/specs/pcm-audio.warrant",
+  "spec_sha256": "a1a1e12af0f4ab4a56ab4a4d397bb346584b7a2c0b1fe57e891f2cc3d71cd0af",
+  "tests": [
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/clamp_zero",
+      "kind": "example",
+      "op": "clamp_to_pcm16",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/clamp_max",
+      "kind": "example",
+      "op": "clamp_to_pcm16",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/clamp_overflow",
+      "kind": "example",
+      "op": "clamp_to_pcm16",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/clamp_min",
+      "kind": "example",
+      "op": "clamp_to_pcm16",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/clamp_underflow",
+      "kind": "example",
+      "op": "clamp_to_pcm16",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/data_size_mono_16",
+      "kind": "example",
+      "op": "compute_data_size",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/data_size_stereo_32",
+      "kind": "example",
+      "op": "compute_data_size",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/data_size_zero_channels_rejected",
+      "kind": "example",
+      "op": "compute_data_size",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/data_size_over_max_channels_rejected",
+      "kind": "example",
+      "op": "compute_data_size",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/data_size_unsupported_bps_rejected",
+      "kind": "example",
+      "op": "compute_data_size",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/data_size_over_max_samples_rejected",
+      "kind": "example",
+      "op": "compute_data_size",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/data_size_over_max_wav_bytes_rejected",
+      "kind": "example",
+      "op": "compute_data_size",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/wav_file_size_empty",
+      "kind": "example",
+      "op": "compute_wav_file_size",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/wav_file_size_sample",
+      "kind": "example",
+      "op": "compute_wav_file_size",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/wav_file_size_max_accepted",
+      "kind": "example",
+      "op": "compute_wav_file_size",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/pcm_audio/example/wav_file_size_over_max_rejected",
+      "kind": "example",
+      "op": "compute_wav_file_size",
+      "verdict": "pass"
+    },
+    {
+      "cases": 623,
+      "claim": "clamp_pcm16_agrees",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "v: I64 edge(623)",
+      "id": "warrant/pcm_audio/exhaustive/clamp_pcm16_agrees",
+      "kind": "exhaustive",
+      "op": "clamp_to_pcm16",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "clamp_pcm16_agrees",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/pcm_audio/property/clamp_pcm16_agrees",
+      "kind": "property",
+      "op": "clamp_to_pcm16",
+      "seed": "641367106231622945",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "clamp_pcm16_agrees",
+      "id": "warrant/pcm_audio/fuzz/clamp_pcm16_agrees",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "clamp_to_pcm16",
+      "seed": "8603214323036991417",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 623,
+      "claim": "clamp_pcm16_within_i16_bounds",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "v: I64 edge(623)",
+      "id": "warrant/pcm_audio/exhaustive/clamp_pcm16_within_i16_bounds",
+      "kind": "exhaustive",
+      "op": "clamp_to_pcm16",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "clamp_pcm16_within_i16_bounds",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/pcm_audio/property/clamp_pcm16_within_i16_bounds",
+      "kind": "property",
+      "op": "clamp_to_pcm16",
+      "seed": "10441898095434884369",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "clamp_pcm16_within_i16_bounds",
+      "id": "warrant/pcm_audio/fuzz/clamp_pcm16_within_i16_bounds",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "clamp_to_pcm16",
+      "seed": "17175372703330771288",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 377,
+      "claim": "data_size_mono_16_matches_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "samples: U64 edge(377)",
+      "id": "warrant/pcm_audio/exhaustive/data_size_mono_16_matches_model",
+      "kind": "exhaustive",
+      "op": "compute_data_size",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "data_size_mono_16_matches_model",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/pcm_audio/property/data_size_mono_16_matches_model",
+      "kind": "property",
+      "op": "compute_data_size",
+      "seed": "13349789802149181297",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "data_size_mono_16_matches_model",
+      "id": "warrant/pcm_audio/fuzz/data_size_mono_16_matches_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "compute_data_size",
+      "seed": "14536699027226088692",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "data_size_all_channels_matches_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "ch: U16 full(65536)",
+      "id": "warrant/pcm_audio/exhaustive/data_size_all_channels_matches_model",
+      "kind": "exhaustive",
+      "op": "compute_data_size",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "data_size_all_channels_matches_model",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/pcm_audio/property/data_size_all_channels_matches_model",
+      "kind": "property",
+      "op": "compute_data_size",
+      "seed": "11527449468918455462",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "data_size_all_channels_matches_model",
+      "id": "warrant/pcm_audio/fuzz/data_size_all_channels_matches_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "compute_data_size",
+      "seed": "15559060937789133336",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "data_size_all_bps_matches_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "bps: U16 full(65536)",
+      "id": "warrant/pcm_audio/exhaustive/data_size_all_bps_matches_model",
+      "kind": "exhaustive",
+      "op": "compute_data_size",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "data_size_all_bps_matches_model",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/pcm_audio/property/data_size_all_bps_matches_model",
+      "kind": "property",
+      "op": "compute_data_size",
+      "seed": "15783327384386714197",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "data_size_all_bps_matches_model",
+      "id": "warrant/pcm_audio/fuzz/data_size_all_bps_matches_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "compute_data_size",
+      "seed": "882778090330160706",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 78961,
+      "claim": "data_size_ch_and_bps_matches_model",
+      "demoted": [
+        "ch",
+        "bps"
+      ],
+      "discarded": 0,
+      "domain": "ch: U16 edge(281); bps: U16 edge(281)",
+      "id": "warrant/pcm_audio/exhaustive/data_size_ch_and_bps_matches_model",
+      "kind": "exhaustive",
+      "op": "compute_data_size",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "data_size_ch_and_bps_matches_model",
+      "discarded": 0,
+      "equal_cases": 1043,
+      "id": "warrant/pcm_audio/property/data_size_ch_and_bps_matches_model",
+      "kind": "property",
+      "op": "compute_data_size",
+      "seed": "10020769592849977029",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "data_size_ch_and_bps_matches_model",
+      "id": "warrant/pcm_audio/fuzz/data_size_ch_and_bps_matches_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "compute_data_size",
+      "seed": "5963280721030234457",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 105937,
+      "claim": "data_size_samples_and_channels_16_matches_model",
+      "demoted": [
+        "ch"
+      ],
+      "discarded": 0,
+      "domain": "samples: U64 edge(377); ch: U16 edge(281)",
+      "id": "warrant/pcm_audio/exhaustive/data_size_samples_and_channels_16_matches_model",
+      "kind": "exhaustive",
+      "op": "compute_data_size",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "data_size_samples_and_channels_16_matches_model",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/pcm_audio/property/data_size_samples_and_channels_16_matches_model",
+      "kind": "property",
+      "op": "compute_data_size",
+      "seed": "5340404082472238453",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "data_size_samples_and_channels_16_matches_model",
+      "id": "warrant/pcm_audio/fuzz/data_size_samples_and_channels_16_matches_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "compute_data_size",
+      "seed": "2784378370377550654",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 105937,
+      "claim": "data_size_samples_and_channels_32_matches_model",
+      "demoted": [
+        "ch"
+      ],
+      "discarded": 0,
+      "domain": "samples: U64 edge(377); ch: U16 edge(281)",
+      "id": "warrant/pcm_audio/exhaustive/data_size_samples_and_channels_32_matches_model",
+      "kind": "exhaustive",
+      "op": "compute_data_size",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "data_size_samples_and_channels_32_matches_model",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/pcm_audio/property/data_size_samples_and_channels_32_matches_model",
+      "kind": "property",
+      "op": "compute_data_size",
+      "seed": "10198005006504606343",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "data_size_samples_and_channels_32_matches_model",
+      "id": "warrant/pcm_audio/fuzz/data_size_samples_and_channels_32_matches_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "compute_data_size",
+      "seed": "12216370837136958135",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 105937,
+      "claim": "data_size_samples_and_bps_mono_matches_model",
+      "demoted": [
+        "bps"
+      ],
+      "discarded": 0,
+      "domain": "samples: U64 edge(377); bps: U16 edge(281)",
+      "id": "warrant/pcm_audio/exhaustive/data_size_samples_and_bps_mono_matches_model",
+      "kind": "exhaustive",
+      "op": "compute_data_size",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "data_size_samples_and_bps_mono_matches_model",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/pcm_audio/property/data_size_samples_and_bps_mono_matches_model",
+      "kind": "property",
+      "op": "compute_data_size",
+      "seed": "12682602267535666096",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "data_size_samples_and_bps_mono_matches_model",
+      "id": "warrant/pcm_audio/fuzz/data_size_samples_and_bps_mono_matches_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "compute_data_size",
+      "seed": "2274912129740827777",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 105937,
+      "claim": "data_size_bounded_when_ok",
+      "demoted": [
+        "ch"
+      ],
+      "discarded": 0,
+      "domain": "samples: U64 edge(377); ch: U16 edge(281)",
+      "id": "warrant/pcm_audio/exhaustive/data_size_bounded_when_ok",
+      "kind": "exhaustive",
+      "op": "compute_data_size",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "data_size_bounded_when_ok",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/pcm_audio/property/data_size_bounded_when_ok",
+      "kind": "property",
+      "op": "compute_data_size",
+      "seed": "2766481793571675008",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "data_size_bounded_when_ok",
+      "id": "warrant/pcm_audio/fuzz/data_size_bounded_when_ok",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "compute_data_size",
+      "seed": "4055483457491800373",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 377,
+      "claim": "wav_file_size_matches_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "d: U64 edge(377)",
+      "id": "warrant/pcm_audio/exhaustive/wav_file_size_matches_model",
+      "kind": "exhaustive",
+      "op": "compute_wav_file_size",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "wav_file_size_matches_model",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/pcm_audio/property/wav_file_size_matches_model",
+      "kind": "property",
+      "op": "compute_wav_file_size",
+      "seed": "13913561745505010510",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "wav_file_size_matches_model",
+      "id": "warrant/pcm_audio/fuzz/wav_file_size_matches_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "compute_wav_file_size",
+      "seed": "15332169806803283326",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 103,
+      "claim": "wav_file_size_rejects_oversized",
+      "demoted": [],
+      "discarded": 274,
+      "domain": "d: U64 edge(377)",
+      "id": "warrant/pcm_audio/exhaustive/wav_file_size_rejects_oversized",
+      "kind": "exhaustive",
+      "op": "compute_wav_file_size",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "wav_file_size_rejects_oversized",
+      "discarded": 5056,
+      "equal_cases": 0,
+      "id": "warrant/pcm_audio/property/wav_file_size_rejects_oversized",
+      "kind": "property",
+      "op": "compute_wav_file_size",
+      "seed": "2494305801527486902",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 2873,
+      "claim": "wav_file_size_rejects_oversized",
+      "id": "warrant/pcm_audio/fuzz/wav_file_size_rejects_oversized",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "compute_wav_file_size",
+      "seed": "17987415671798729673",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 377,
+      "claim": "wav_file_size_bounded_when_ok",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "d: U64 edge(377)",
+      "id": "warrant/pcm_audio/exhaustive/wav_file_size_bounded_when_ok",
+      "kind": "exhaustive",
+      "op": "compute_wav_file_size",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "wav_file_size_bounded_when_ok",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/pcm_audio/property/wav_file_size_bounded_when_ok",
+      "kind": "property",
+      "op": "compute_wav_file_size",
+      "seed": "12266071009535496253",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "wav_file_size_bounded_when_ok",
+      "id": "warrant/pcm_audio/fuzz/wav_file_size_bounded_when_ok",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "compute_wav_file_size",
+      "seed": "8570686850354183859",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "clamp_max",
+      "claim": "",
+      "fault": "narrow-width",
+      "id": "warrant/pcm_audio/negctl/example/clamp_to_pcm16/narrow-width",
+      "kind": "negctl",
+      "op": "clamp_to_pcm16",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "clamp_zero",
+      "claim": "",
+      "fault": "sign-confuse",
+      "id": "warrant/pcm_audio/negctl/example/clamp_to_pcm16/sign-confuse",
+      "kind": "negctl",
+      "op": "clamp_to_pcm16",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "clamp_pcm16_agrees",
+      "claim": "",
+      "fault": "narrow-width",
+      "id": "warrant/pcm_audio/negctl/exhaustive/clamp_to_pcm16/narrow-width",
+      "kind": "negctl",
+      "op": "clamp_to_pcm16",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "clamp_pcm16_agrees",
+      "claim": "",
+      "fault": "sign-confuse",
+      "id": "warrant/pcm_audio/negctl/exhaustive/clamp_to_pcm16/sign-confuse",
+      "kind": "negctl",
+      "op": "clamp_to_pcm16",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "clamp_pcm16_agrees",
+      "claim": "",
+      "fault": "narrow-width",
+      "id": "warrant/pcm_audio/negctl/property/clamp_to_pcm16/narrow-width",
+      "kind": "negctl",
+      "op": "clamp_to_pcm16",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "clamp_pcm16_agrees",
+      "claim": "",
+      "fault": "sign-confuse",
+      "id": "warrant/pcm_audio/negctl/property/clamp_to_pcm16/sign-confuse",
+      "kind": "negctl",
+      "op": "clamp_to_pcm16",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "clamp_pcm16_agrees",
+      "claim": "",
+      "fault": "narrow-width",
+      "id": "warrant/pcm_audio/negctl/fuzz/clamp_to_pcm16/narrow-width",
+      "kind": "negctl",
+      "op": "clamp_to_pcm16",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "clamp_pcm16_agrees",
+      "claim": "",
+      "fault": "sign-confuse",
+      "id": "warrant/pcm_audio/negctl/fuzz/clamp_to_pcm16/sign-confuse",
+      "kind": "negctl",
+      "op": "clamp_to_pcm16",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "data_size_mono_16",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/pcm_audio/negctl/example/compute_data_size/field-flip",
+      "kind": "negctl",
+      "op": "compute_data_size",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "data_size_mono_16",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/pcm_audio/negctl/example/compute_data_size/ok-as-err",
+      "kind": "negctl",
+      "op": "compute_data_size",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "data_size_zero_channels_rejected",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/pcm_audio/negctl/example/compute_data_size/missing-error",
+      "kind": "negctl",
+      "op": "compute_data_size",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "data_size_mono_16_matches_model",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/pcm_audio/negctl/exhaustive/compute_data_size/field-flip",
+      "kind": "negctl",
+      "op": "compute_data_size",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "data_size_mono_16_matches_model",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/pcm_audio/negctl/exhaustive/compute_data_size/ok-as-err",
+      "kind": "negctl",
+      "op": "compute_data_size",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "data_size_mono_16_matches_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/pcm_audio/negctl/exhaustive/compute_data_size/missing-error",
+      "kind": "negctl",
+      "op": "compute_data_size",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "data_size_mono_16_matches_model",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/pcm_audio/negctl/property/compute_data_size/field-flip",
+      "kind": "negctl",
+      "op": "compute_data_size",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "data_size_mono_16_matches_model",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/pcm_audio/negctl/property/compute_data_size/ok-as-err",
+      "kind": "negctl",
+      "op": "compute_data_size",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "data_size_mono_16_matches_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/pcm_audio/negctl/property/compute_data_size/missing-error",
+      "kind": "negctl",
+      "op": "compute_data_size",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "data_size_mono_16_matches_model",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/pcm_audio/negctl/fuzz/compute_data_size/field-flip",
+      "kind": "negctl",
+      "op": "compute_data_size",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "data_size_mono_16_matches_model",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/pcm_audio/negctl/fuzz/compute_data_size/ok-as-err",
+      "kind": "negctl",
+      "op": "compute_data_size",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "data_size_mono_16_matches_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/pcm_audio/negctl/fuzz/compute_data_size/missing-error",
+      "kind": "negctl",
+      "op": "compute_data_size",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "wav_file_size_empty",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/pcm_audio/negctl/example/compute_wav_file_size/field-flip",
+      "kind": "negctl",
+      "op": "compute_wav_file_size",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "wav_file_size_empty",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/pcm_audio/negctl/example/compute_wav_file_size/ok-as-err",
+      "kind": "negctl",
+      "op": "compute_wav_file_size",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "wav_file_size_over_max_rejected",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/pcm_audio/negctl/example/compute_wav_file_size/missing-error",
+      "kind": "negctl",
+      "op": "compute_wav_file_size",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "wav_file_size_matches_model",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/pcm_audio/negctl/exhaustive/compute_wav_file_size/field-flip",
+      "kind": "negctl",
+      "op": "compute_wav_file_size",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "wav_file_size_matches_model",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/pcm_audio/negctl/exhaustive/compute_wav_file_size/ok-as-err",
+      "kind": "negctl",
+      "op": "compute_wav_file_size",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "wav_file_size_matches_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/pcm_audio/negctl/exhaustive/compute_wav_file_size/missing-error",
+      "kind": "negctl",
+      "op": "compute_wav_file_size",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "wav_file_size_matches_model",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/pcm_audio/negctl/property/compute_wav_file_size/field-flip",
+      "kind": "negctl",
+      "op": "compute_wav_file_size",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "wav_file_size_matches_model",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/pcm_audio/negctl/property/compute_wav_file_size/ok-as-err",
+      "kind": "negctl",
+      "op": "compute_wav_file_size",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "wav_file_size_matches_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/pcm_audio/negctl/property/compute_wav_file_size/missing-error",
+      "kind": "negctl",
+      "op": "compute_wav_file_size",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "wav_file_size_matches_model",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/pcm_audio/negctl/fuzz/compute_wav_file_size/field-flip",
+      "kind": "negctl",
+      "op": "compute_wav_file_size",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "wav_file_size_matches_model",
+      "claim": "",
+      "fault": "ok-as-err",
+      "id": "warrant/pcm_audio/negctl/fuzz/compute_wav_file_size/ok-as-err",
+      "kind": "negctl",
+      "op": "compute_wav_file_size",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "wav_file_size_matches_model",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/pcm_audio/negctl/fuzz/compute_wav_file_size/missing-error",
+      "kind": "negctl",
+      "op": "compute_wav_file_size",
+      "target": "fuzz",
+      "verdict": "pass"
+    }
+  ],
+  "warrant_version": "v1"
+}

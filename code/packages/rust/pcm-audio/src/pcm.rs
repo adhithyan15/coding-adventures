@@ -5,6 +5,12 @@ use crate::format::{
 };
 use oscillator::SampleBuffer;
 
+/// Clamp an arbitrary signed 64-bit integer sample into the signed 16-bit PCM range
+/// $[-32768, 32767]$ without wrap-around overflow (CWE-190).
+pub fn clamp_to_pcm16(v: i64) -> i16 {
+    v.clamp(PCM16_MIN as i64, PCM16_MAX as i64) as i16
+}
+
 /// Quantize a single normalized floating-point sample into a signed 16-bit PCM integer.
 ///
 /// Returns `Ok((i16_sample, was_clipped))`.
@@ -29,8 +35,7 @@ pub fn safe_round_sample(sample: f64) -> Result<(i16, bool), PcmError> {
     };
 
     // Clamping protects against float precision anomalies (CWE-190)
-    let clamped_int = (raw as i64).clamp(PCM16_MIN as i64, PCM16_MAX as i64) as i16;
-    Ok((clamped_int, clipped))
+    Ok((clamp_to_pcm16(raw as i64), clipped))
 }
 
 /// Quantize a 32-bit float sample into signed 16-bit PCM.
@@ -240,7 +245,11 @@ impl PcmAudio {
                 count: self.samples.len(),
             });
         }
-        Ok(self.start_time_seconds + (index as f64) / self.format.sample_rate_hz())
+        let timestamp = self.start_time_seconds + (index as f64) / self.format.sample_rate_hz();
+        if !timestamp.is_finite() {
+            return Err(PcmError::IntegerOverflow("sample timestamp"));
+        }
+        Ok(timestamp)
     }
 
     /// Immutably borrow the slice of signed 16-bit PCM integers.
