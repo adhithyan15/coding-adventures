@@ -35,14 +35,20 @@ fn prepare() -> Exercise {
 
         // 1. Config validation
         let config = default_config();
-        checks.push(check("default_config valid", validate_config(&config).is_ok()));
+        checks.push(check(
+            "default_config valid",
+            validate_config(&config).is_ok(),
+        ));
 
         // 2. New game state
         let state_res = new_game(config, 0x1234_5678);
         checks.push(check("new_game initializes state", state_res.is_ok()));
 
         if let Ok(mut state) = state_res {
-            checks.push(check("validate_state initial", validate_state(&state).is_ok()));
+            checks.push(check(
+                "validate_state initial",
+                validate_state(&state).is_ok(),
+            ));
 
             // 3. Step pong simulation
             let mut sfx_bank = SfxBank::<4>::empty(44_100).expect("valid sfx bank");
@@ -53,14 +59,12 @@ fn prepare() -> Exercise {
             // 4. Fixed timestep integration with clock
             let clock_cfg = game_clock::GameClockConfig::standard_60hz();
             if let Ok(mut clock) = game_clock::new_clock(clock_cfg) {
-                let clock_step_res = step_pong_with_clock(
-                    &mut clock,
-                    16_666_667,
-                    &mut state,
-                    &input,
-                    &mut sfx_bank,
-                );
-                checks.push(check("step_pong_with_clock executes", clock_step_res.is_ok()));
+                let clock_step_res =
+                    step_pong_with_clock(&mut clock, 16_666_667, &mut state, &input, &mut sfx_bank);
+                checks.push(check(
+                    "step_pong_with_clock executes",
+                    clock_step_res.is_ok(),
+                ));
             }
 
             // 5. Zero-alloc sprite emission
@@ -70,7 +74,10 @@ fn prepare() -> Exercise {
 
             // 6. PaintScene lowering
             let scene_res = lower_pong_to_paint_scene(&state);
-            checks.push(check("lower_pong_to_paint_scene generates scene", scene_res.is_ok()));
+            checks.push(check(
+                "lower_pong_to_paint_scene generates scene",
+                scene_res.is_ok(),
+            ));
 
             // 7. Audio rendering helper
             let mut ring = PcmRingBuffer::<256>::empty();

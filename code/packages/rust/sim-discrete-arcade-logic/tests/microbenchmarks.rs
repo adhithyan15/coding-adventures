@@ -24,7 +24,7 @@ use coding_adventures_test_bootstrap::run::{self, Ctx, Outcome, Suite};
 use coding_adventures_test_bootstrap::Verdict;
 use sim_discrete_arcade_logic::{
     ArcadeSyncGenerator, PaddlePotAdc, QuadLogicLevels, Ttl7400QuadNand, Ttl7402QuadNor,
-    Ttl7474DualDFlipFlop, Ttl7490DecadeCounter, Ttl7493BinaryCounter, Ttl74153DualMux4to1,
+    Ttl74153DualMux4to1, Ttl7474DualDFlipFlop, Ttl7490DecadeCounter, Ttl7493BinaryCounter,
     MASTER_CLOCK_HZ, PIXEL_CLOCK_HZ,
 };
 
@@ -139,7 +139,10 @@ fn check_7490_decade_zero_alloc(_ctx: &Ctx) -> Verdict {
     });
 
     if !zero_alloc_ok(&res) {
-        return Verdict::fail(FID_BENCH_FAIL, "7490 decade exceeded zero allocation budget");
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "7490 decade exceeded zero allocation budget",
+        );
     }
     Verdict::Pass
 }
@@ -161,7 +164,10 @@ fn check_7493_binary_zero_alloc(_ctx: &Ctx) -> Verdict {
     });
 
     if !zero_alloc_ok(&res) {
-        return Verdict::fail(FID_BENCH_FAIL, "7493 binary exceeded zero allocation budget");
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "7493 binary exceeded zero allocation budget",
+        );
     }
     Verdict::Pass
 }
@@ -217,7 +223,10 @@ fn check_arcade_sync_zero_alloc(_ctx: &Ctx) -> Verdict {
     });
 
     if !zero_alloc_ok(&res) {
-        return Verdict::fail(FID_BENCH_FAIL, "arcade sync exceeded zero allocation budget");
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "arcade sync exceeded zero allocation budget",
+        );
     }
     Verdict::Pass
 }
@@ -324,23 +333,11 @@ fn main() {
     suite.add("bench/7400_nand/zero_alloc", check_7400_nand_zero_alloc);
     suite.add("bench/7402_nor/zero_alloc", check_7402_nor_zero_alloc);
     suite.add("bench/7474_dff/zero_alloc", check_7474_dff_zero_alloc);
-    suite.add(
-        "bench/7490_decade/zero_alloc",
-        check_7490_decade_zero_alloc,
-    );
-    suite.add(
-        "bench/7493_binary/zero_alloc",
-        check_7493_binary_zero_alloc,
-    );
+    suite.add("bench/7490_decade/zero_alloc", check_7490_decade_zero_alloc);
+    suite.add("bench/7493_binary/zero_alloc", check_7493_binary_zero_alloc);
     suite.add("bench/74153_mux/zero_alloc", check_74153_mux_zero_alloc);
-    suite.add(
-        "bench/arcade_sync/zero_alloc",
-        check_arcade_sync_zero_alloc,
-    );
-    suite.add(
-        "bench/paddle_pot/zero_alloc",
-        check_paddle_pot_zero_alloc,
-    );
+    suite.add("bench/arcade_sync/zero_alloc", check_arcade_sync_zero_alloc);
+    suite.add("bench/paddle_pot/zero_alloc", check_paddle_pot_zero_alloc);
     suite.add(
         "bench/sabotage/allocation_detected",
         check_sabotage_allocation_detected,

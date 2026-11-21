@@ -33,7 +33,10 @@ fn prepare() -> Exercise {
     Box::new(move || {
         let mut checks = Vec::new();
 
-        checks.push(check("validate sample rate", validate_sample_rate(44_100).is_ok()));
+        checks.push(check(
+            "validate sample rate",
+            validate_sample_rate(44_100).is_ok(),
+        ));
         checks.push(check(
             "calculate frequency",
             calculate_555_frequency(1000, 10000, 100_000).is_ok(),
