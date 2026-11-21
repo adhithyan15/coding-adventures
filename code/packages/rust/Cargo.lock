@@ -9543,6 +9543,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "math3d"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "trig",
+]
+
+[[package]]
 name = "mathml"
 version = "0.8.0"
 dependencies = [
