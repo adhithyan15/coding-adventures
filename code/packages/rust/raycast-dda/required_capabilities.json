@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/raycast-dda",
+  "capabilities": [],
+  "justification": "Pure deterministic 2.5D grid DDA raycasting, floor/ceiling plane casting, and Z-buffered billboard sprite rendering into caller-provided buffers. No filesystem, network, process, or environment access."
+}

@@ -760,6 +760,7 @@ members = [
     "png",
     "point2d",
     "math3d",
+    "raycast-dda",
     "polynomial",
     "protobuf",
     "fsrs",
