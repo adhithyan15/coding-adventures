@@ -1,3 +1,4 @@
+import 'messages.dart';
 import 'token.dart';
 import 'tokenizer_dfa.dart';
 
@@ -7,15 +8,27 @@ class LexerConfig {
   final List<String> keywords;
 }
 
+/// Thrown when lexical analysis fails.
+///
+/// The [message] is always a static, payload-blind diagnostic: it never
+/// contains caller source text. Only [line] and [column] locate the failure.
 class LexerError implements Exception {
-  LexerError(this.message, this.line, this.column);
+  LexerError(
+    this.message,
+    this.line,
+    this.column, {
+    this.errorId = errorIdLexicalError,
+  });
 
   final String message;
   final int line;
   final int column;
 
+  /// Stable machine-readable identifier for the error.
+  final String errorId;
+
   @override
-  String toString() => 'Lexer error at $line:$column: $message';
+  String toString() => formatLexerError(message, line, column);
 }
 
 const Map<String, String> _simpleTokens = <String, String>{
@@ -117,7 +130,7 @@ List<Token> tokenize(String source, [LexerConfig? config]) {
     while (true) {
       final current = currentChar();
       if (current == null) {
-        throw LexerError('Unterminated string literal', startLine, startColumn);
+        throw LexerError(messageUnterminatedString, startLine, startColumn);
       }
       if (current == '"') {
         advance();
@@ -128,7 +141,7 @@ List<Token> tokenize(String source, [LexerConfig? config]) {
         final escaped = currentChar();
         if (escaped == null) {
           throw LexerError(
-            'Unterminated string literal (ends with backslash)',
+            messageUnterminatedStringBackslash,
             startLine,
             startColumn,
           );
@@ -207,11 +220,7 @@ List<Token> tokenize(String source, [LexerConfig? config]) {
     } else if (nextState == 'done') {
       break;
     } else if (nextState == 'error') {
-      throw LexerError(
-        'Unexpected character: ${_quote(char)}',
-        line,
-        column,
-      );
+      throw LexerError(messageUnexpectedCharacter, line, column);
     }
     dfa.reset();
   }
@@ -219,5 +228,3 @@ List<Token> tokenize(String source, [LexerConfig? config]) {
   tokens.add(Token(type: 'EOF', value: '', line: line, column: column));
   return List<Token>.unmodifiable(tokens);
 }
-
-String _quote(String? value) => value == null ? 'null' : '"$value"';
