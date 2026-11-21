@@ -1085,7 +1085,13 @@ pub fn frame_digest_fnv1a(framebuffer: &PixelContainer) -> u64 {
 pub fn depth_digest_f64_fnv1a(zbuffer: &[f64]) -> u64 {
     let mut h = FNV1A_OFFSET_BASIS;
     for &d in zbuffer {
-        let canonical = if d == 0.0 { 0.0_f64 } else { d };
+        let canonical = if d.is_nan() {
+            f64::NAN
+        } else if d == 0.0 {
+            0.0_f64
+        } else {
+            d
+        };
         for b in canonical.to_le_bytes() {
             h ^= u64::from(b);
             h = h.wrapping_mul(FNV1A_PRIME);
@@ -1098,7 +1104,13 @@ pub fn depth_digest_f64_fnv1a(zbuffer: &[f64]) -> u64 {
 pub fn depth_digest_f32_fnv1a(zbuffer: &[f32]) -> u64 {
     let mut h = FNV1A_OFFSET_BASIS;
     for &d in zbuffer {
-        let canonical = if d == 0.0 { 0.0_f32 } else { d };
+        let canonical = if d.is_nan() {
+            f32::NAN
+        } else if d == 0.0 {
+            0.0_f32
+        } else {
+            d
+        };
         for b in canonical.to_le_bytes() {
             h ^= u64::from(b);
             h = h.wrapping_mul(FNV1A_PRIME);
@@ -1567,6 +1579,39 @@ fn rasterize_screen_triangle(
     }
 }
 
+fn compute_flat_face_normal(
+    t0: &TransformedVertex,
+    t1: &TransformedVertex,
+    t2: &TransformedVertex,
+    normal_matrix: &Mat3,
+) -> Vec3 {
+    let avg_fallback = || -> Vec3 {
+        let sum = Vec3::new(
+            t0.world_normal.x + t1.world_normal.x + t2.world_normal.x,
+            t0.world_normal.y + t1.world_normal.y + t2.world_normal.y,
+            t0.world_normal.z + t1.world_normal.z + t2.world_normal.z,
+        );
+        normalize_or_zero(sum)
+            .unwrap_or_else(|_| normalize_or_zero(t0.world_normal).unwrap_or_else(|_| Vec3::zero()))
+    };
+    let Ok(e1) = t1.world_pos.vec3_sub(t0.world_pos) else {
+        return avg_fallback();
+    };
+    let Ok(e2) = t2.world_pos.vec3_sub(t0.world_pos) else {
+        return avg_fallback();
+    };
+    let Ok(cross) = e1.cross(e2) else {
+        return avg_fallback();
+    };
+    let Ok(unit_cross) = cross.normalize() else {
+        return avg_fallback();
+    };
+    let Ok(raw_face) = normal_matrix.mat3_mul_vec3(unit_cross) else {
+        return avg_fallback();
+    };
+    normalize_or_zero(raw_face).unwrap_or_else(|_| avg_fallback())
+}
+
 #[allow(clippy::too_many_arguments)]
 fn clip_and_rasterize_triangle(
     framebuffer: &mut PixelContainer,
@@ -1578,7 +1623,7 @@ fn clip_and_rasterize_triangle(
     t1: &TransformedVertex,
     t2: &TransformedVertex,
     stats: &mut RasterStats,
-) -> Result<(), RasterError> {
+) {
     stats.triangles_submitted += 1;
 
     let o0 = clip_outcode(&t0.clip, config.clip_space);
@@ -1588,23 +1633,12 @@ fn clip_and_rasterize_triangle(
     // Trivial reject if all 3 vertices lie outside the same frustum half-space.
     if (o0 & o1 & o2) != 0 {
         stats.triangles_clipped_out += 1;
-        return Ok(());
+        return;
     }
 
     let (c0, c1, c2) = match config.shading {
         ShadingMode::Flat => {
-            let e1 = t1.world_pos.vec3_sub(t0.world_pos)?;
-            let e2 = t2.world_pos.vec3_sub(t0.world_pos)?;
-            let raw_face = config.normal_matrix.mat3_mul_vec3(e1.cross(e2)?)?;
-            let face_normal = if raw_face.length_sq()? <= math3d::EPSILON * math3d::EPSILON {
-                let avg_n = t0
-                    .world_normal
-                    .vec3_add(t1.world_normal)?
-                    .vec3_add(t2.world_normal)?;
-                normalize_or_zero(avg_n)?
-            } else {
-                raw_face.normalize()?
-            };
+            let face_normal = compute_flat_face_normal(t0, t1, t2, &config.normal_matrix);
             let avg_color = [
                 (t0.base_color[0] + t1.base_color[0] + t2.base_color[0]) / 3.0,
                 (t0.base_color[1] + t1.base_color[1] + t2.base_color[1]) / 3.0,
@@ -1665,7 +1699,7 @@ fn clip_and_rasterize_triangle(
         } else {
             stats.triangles_clipped_out += 1;
         }
-        return Ok(());
+        return;
     }
 
     // Sutherland-Hodgman homogeneous 4D clipping across 7 half-spaces on the stack.
@@ -1698,7 +1732,7 @@ fn clip_and_rasterize_triangle(
         }
         if count < 3 {
             stats.triangles_clipped_out += 1;
-            return Ok(());
+            return;
         }
     }
 
@@ -1706,7 +1740,7 @@ fn clip_and_rasterize_triangle(
     let poly = &buf_b;
     let Some(sv0) = project_to_screen(&poly[0], width, height, config.clip_space) else {
         stats.triangles_clipped_out += 1;
-        return Ok(());
+        return;
     };
     for i in 1..(count - 1) {
         if let (Some(sv1), Some(sv2)) = (
@@ -1726,8 +1760,6 @@ fn clip_and_rasterize_triangle(
             );
         }
     }
-
-    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -1774,7 +1806,7 @@ pub fn draw_triangle_into(
         &t1,
         &t2,
         &mut stats,
-    )?;
+    );
     Ok(stats)
 }
 
@@ -1826,9 +1858,13 @@ pub fn draw_indexed_mesh_into(
     }
 
     for v in vertices {
-        scratch
-            .transformed
-            .push(transform_single_vertex(v, config, light_dir)?);
+        match transform_single_vertex(v, config, light_dir) {
+            Ok(tv) => scratch.transformed.push(tv),
+            Err(err) => {
+                scratch.transformed.clear();
+                return Err(err);
+            }
+        }
     }
 
     let mut stats = RasterStats::default();
@@ -1852,7 +1888,7 @@ pub fn draw_indexed_mesh_into(
             t1,
             t2,
             &mut stats,
-        )?;
+        );
     }
 
     Ok(stats)
