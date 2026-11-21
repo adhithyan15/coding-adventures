@@ -2737,6 +2737,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "cockpit-hud-paint"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "paint-instructions",
+ "paint-vm-runtime",
+ "rigidbody-6dof",
+ "trig",
+]
+
+[[package]]
 name = "codabar"
 version = "0.1.0"
 dependencies = [

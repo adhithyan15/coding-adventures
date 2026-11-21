@@ -1,0 +1,137 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/cockpit-hud-paint",
+  "source_digest": "bda2ed5c09382795105ffc650449f5e75b13edb387e3c706b6d9a1ef14c9fe36",
+  "manifest_digest": "ab7bd0abe9a1e6aad0989ddaac184c49711b980513b338dac1b8dc1f455424be",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "hud_config_default",
+      "signature": "pub fn hud_config_default(width: f64, height: f64) -> Result<Self, HudError>",
+      "effects": []
+    },
+    {
+      "name": "hud_config_validate",
+      "signature": "pub fn hud_config_validate(&self) -> Result<(), HudError>",
+      "effects": []
+    },
+    {
+      "name": "telemetry_level_flight",
+      "signature": "pub const fn telemetry_level_flight() -> Self",
+      "effects": []
+    },
+    {
+      "name": "telemetry_validate",
+      "signature": "pub fn telemetry_validate(&self) -> Result<(), HudError>",
+      "effects": []
+    },
+    {
+      "name": "telemetry_from_rigid_body",
+      "signature": "pub fn telemetry_from_rigid_body( body: &RigidBodyState, mass: &MassProperties, speed_of_sound_mps: f64, terrain_elevation_m: f64, ) -> Result<Self, HudError>",
+      "effects": []
+    },
+    {
+      "name": "annunciator_count",
+      "signature": "pub const fn annunciator_count(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "primitive_id",
+      "signature": "pub fn primitive_id(&self) -> &str",
+      "effects": []
+    },
+    {
+      "name": "primitive_label",
+      "signature": "pub fn primitive_label(&self) -> &str",
+      "effects": []
+    },
+    {
+      "name": "primitive_color",
+      "signature": "pub const fn primitive_color(&self) -> &'static str",
+      "effects": []
+    },
+    {
+      "name": "hud_scratch_new",
+      "signature": "pub fn hud_scratch_new() -> Self",
+      "effects": []
+    },
+    {
+      "name": "hud_scratch_with_capacity",
+      "signature": "pub fn hud_scratch_with_capacity(capacity: usize) -> Self",
+      "effects": []
+    },
+    {
+      "name": "hud_scratch_capacity",
+      "signature": "pub fn hud_scratch_capacity(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "hud_scratch_len",
+      "signature": "pub fn hud_scratch_len(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "hud_scratch_primitives",
+      "signature": "pub fn hud_scratch_primitives(&self) -> &[HudPrimitive]",
+      "effects": []
+    },
+    {
+      "name": "hud_scratch_summary",
+      "signature": "pub const fn hud_scratch_summary(&self) -> Option<HudFrameSummary>",
+      "effects": []
+    },
+    {
+      "name": "hud_scratch_clear",
+      "signature": "pub fn hud_scratch_clear(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "hud_scratch_digest_fnv1a",
+      "signature": "pub fn hud_scratch_digest_fnv1a(&self) -> Result<u64, HudError>",
+      "effects": []
+    },
+    {
+      "name": "hud_scratch_to_paint_scene",
+      "signature": "pub fn hud_scratch_to_paint_scene(&self, config: &HudConfig) -> Result<PaintScene, HudError>",
+      "effects": []
+    },
+    {
+      "name": "clip_line_liang_barsky",
+      "signature": "pub fn clip_line_liang_barsky( x1: f64, y1: f64, x2: f64, y2: f64, rect: HudRect, ) -> Option<(f64, f64, f64, f64)>",
+      "effects": []
+    },
+    {
+      "name": "build_hud_frame_into",
+      "signature": "pub fn build_hud_frame_into( telemetry: &FlightTelemetry, config: &HudConfig, scratch: &mut HudScratch, ) -> Result<HudFrameSummary, HudError>",
+      "effects": []
+    },
+    {
+      "name": "prepare_paint_scene",
+      "signature": "pub fn prepare_paint_scene(config: &HudConfig) -> Result<PaintScene, HudError>",
+      "effects": []
+    },
+    {
+      "name": "update_paint_scene_into",
+      "signature": "pub fn update_paint_scene_into( telemetry: &FlightTelemetry, config: &HudConfig, scene: &mut PaintScene, ) -> Result<HudFrameSummary, HudError>",
+      "effects": []
+    },
+    {
+      "name": "render_hud_scene",
+      "signature": "pub fn render_hud_scene( telemetry: &FlightTelemetry, config: &HudConfig, ) -> Result<PaintScene, HudError>",
+      "effects": []
+    },
+    {
+      "name": "verify_paint_scene_finite",
+      "signature": "pub fn verify_paint_scene_finite(scene: &PaintScene) -> Result<(), HudError>",
+      "effects": []
+    },
+    {
+      "name": "paint_scene_digest_fnv1a",
+      "signature": "pub fn paint_scene_digest_fnv1a(scene: &PaintScene) -> Result<u64, HudError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "cockpit-hud-paint",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded flight telemetry scalars, viewport dimensions, and 2D vector HUD primitives"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure HUD vector transform: package implements deterministic aviation PFD/HUD geometry, 2D Liang-Barsky/Sutherland-Hodgman clipping, and P2D00 PaintScene lowering only; FNV-1a digest is non-cryptographic frame telemetry"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: every frame render bounds primitives (<= MAX_PRIMITIVES = 4096), pitch ladder rungs (<= MAX_PITCH_RUNGS = 72), and tape ticks (<= MAX_TAPE_TICKS = 128) with fixed-capacity buffers and no unbounded loops"
+    }
+  }
+}
