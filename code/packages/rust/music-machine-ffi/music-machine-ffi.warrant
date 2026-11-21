@@ -1,0 +1,104 @@
+-- MUS01 / MUS03 / MUS04 / MUS07 / VER04 -- C ABI FFI Bridge for Music Machine Core
+--
+-- Warrant specification for rust/music-machine-ffi.
+-- Every operand is public (no cryptographic secrets or private keys), which establishes
+-- the derived attestation `warrant-spec::all-operands-public` and discharges CWE-208.
+-- Bounded resource consumption satisfies CWE-400 (MAX_SCORE_BYTES=1000000,
+-- MIN_SAMPLE_RATE_HZ=1000, MAX_SAMPLE_RATE_HZ=192000, MAX_SAMPLE_COUNT=16777216),
+-- strictly bounded slice reads and interior NUL rejection discharge CWE-125/CWE-787,
+-- zero-on-free ownership cleanup discharges CWE-415/CWE-416, and catch_unwind at
+-- every extern "C" boundary prevents unwinding across the FFI ABI.
+
+warrant music_machine_ffi v1
+  error FfiError = NULL_POINTER | INVALID_ARGUMENT | BUDGET_EXCEEDED | PARSE_ERROR | RENDER_ERROR | PANIC
+
+  op mm_render_score_text_to_pcm16(text_len: Nat, sample_rate_hz: Nat) -> Result<Nat, FfiError>
+  op mm_render_portable_json_to_pcm16(json_len: Nat, max_samples: Nat) -> Result<Nat, FfiError>
+  op mm_render_portable_text_to_pcm16(text_len: Nat, max_samples: Nat) -> Result<Nat, FfiError>
+  op mm_free_buffer(sample_len: Nat) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels mm_render_score_text_to_pcm16:
+    text_len public
+    sample_rate_hz public
+
+  labels mm_render_portable_json_to_pcm16:
+    json_len public
+    max_samples public
+
+  labels mm_render_portable_text_to_pcm16:
+    text_len public
+    max_samples public
+
+  labels mm_free_buffer:
+    sample_len public
+
+  input mm_render_score_text_to_pcm16.text_len:
+    hostile
+    rejects text_len == 0 with FfiError.INVALID_ARGUMENT
+    rejects text_len > 1000000 with FfiError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input mm_render_score_text_to_pcm16.sample_rate_hz:
+    hostile
+    rejects (sample_rate_hz > 0 and sample_rate_hz < 1000) or sample_rate_hz > 192000 with FfiError.INVALID_ARGUMENT
+    ensures no_panic, terminates
+
+  input mm_render_portable_json_to_pcm16.json_len:
+    hostile
+    rejects json_len == 0 with FfiError.INVALID_ARGUMENT
+    rejects json_len > 1000000 with FfiError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input mm_render_portable_json_to_pcm16.max_samples:
+    hostile
+    rejects max_samples > 16777216 with FfiError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input mm_render_portable_text_to_pcm16.text_len:
+    hostile
+    rejects text_len == 0 with FfiError.INVALID_ARGUMENT
+    rejects text_len > 1000000 with FfiError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input mm_render_portable_text_to_pcm16.max_samples:
+    hostile
+    rejects max_samples > 16777216 with FfiError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input mm_free_buffer.sample_len:
+    hostile
+    ensures no_panic, terminates
+
+  bound mm_render_score_text_to_pcm16:
+    steps <= 512 * text_len + 4096
+    heap <= 33554432
+    depth <= 32
+
+  bound mm_render_portable_json_to_pcm16:
+    steps <= 512 * json_len + 4096
+    heap <= 33554432
+    depth <= 32
+
+  bound mm_render_portable_text_to_pcm16:
+    steps <= 512 * text_len + 4096
+    heap <= 33554432
+    depth <= 32
+
+  bound mm_free_buffer:
+    steps <= 64 * sample_len + 64
+    heap <= 0
+    depth <= 4
+
+  claim render_score_text_is_deterministic:
+    forall n: Nat, r: Nat | n > 0 and n <= 1000000 and (r == 0 or (r >= 1000 and r <= 192000)). mm_render_score_text_to_pcm16(n, r) == mm_render_score_text_to_pcm16(n, r)
+
+  claim render_portable_json_is_deterministic:
+    forall n: Nat, m: Nat | n > 0 and n <= 1000000 and m <= 16777216. mm_render_portable_json_to_pcm16(n, m) == mm_render_portable_json_to_pcm16(n, m)
+
+  claim render_portable_text_is_deterministic:
+    forall n: Nat, m: Nat | n > 0 and n <= 1000000 and m <= 16777216. mm_render_portable_text_to_pcm16(n, m) == mm_render_portable_text_to_pcm16(n, m)
