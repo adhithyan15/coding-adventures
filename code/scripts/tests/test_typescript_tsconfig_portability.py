@@ -463,8 +463,11 @@ console.log(prose, nested);
         # +1: game-clock, the GAME10 TypeScript clock contract port.
         # +1: game-input-frame, a shared-config project with explicit src/dist
         # roots; Node APIs are confined to tests and do not enter shipped src.
+        # -4 shared_projects: note-frequency, audio-device-sink, pcm-audio, and
+        # web-audio-sink migrated from tsconfig.base.json to standalone configs
+        # (TS-W7-A; total_projects unchanged because they already had build scripts).
         self.assertEqual(summary.total_projects, 517)
-        self.assertEqual(summary.shared_projects, 310)
+        self.assertEqual(summary.shared_projects, 306)
         self.assertEqual(summary.inherited_root_dir, 135)
         self.assertEqual(summary.inherited_out_dir, 138)
         # forme-authoring-core, forme-authoring-editor,
@@ -479,8 +482,10 @@ console.log(prose, nested);
         # +1: lunar-lander is an isolated standalone emitter.
         # +2: music-machine-web and music-machine-node are isolated standalone emitters.
         # +1: music-analysis is an isolated standalone emitter.
-        self.assertEqual(summary.standalone_emit_projects, 176)
-        self.assertEqual(summary.isolated_standalone_projects, 176)
+        # +4: note-frequency, audio-device-sink, pcm-audio, and web-audio-sink
+        # are isolated standalone emitters (TS-W7-A).
+        self.assertEqual(summary.standalone_emit_projects, 180)
+        self.assertEqual(summary.isolated_standalone_projects, 180)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { SplitMix64 } from "@coding-adventures/test-bootstrap";
 
 import {
   clampToPcm16,
@@ -218,4 +219,56 @@ test("fromWavBytes rejects non-mono WAVs", () => {
   view.setUint32(40, 0, true);
 
   assert.throws(() => fromWavBytes(stereoWav), /only mono WAV files/);
+});
+
+test("CWE-20 / CWE-400: SplitMix64 fuzzed malformed WAV bytes fail closed without panics", () => {
+  const prng = new SplitMix64(0xbad_f00d_1111n);
+  for (let trial = 0; trial < 100; trial += 1) {
+    const len = prng.bounded(128);
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i += 1) {
+      bytes[i] = prng.bounded(256);
+    }
+    try {
+      const header = validateWavHeader(bytes);
+      assert.ok(header.channels >= 1 && header.channels <= MAX_CHANNELS);
+    } catch (err) {
+      assert.ok(err instanceof Error);
+    }
+  }
+});
+
+test("CWE-190 / CWE-20 / CWE-400: unsafe integer, Symbol, null-prototype, and pre-flight TypedArray bounds", () => {
+  const fmt = new PCMFormat(44_100);
+
+  // Unsafe integers (> MAX_SAFE_INTEGER) must fail closed
+  assert.throws(() => new PCMBuffer([0], fmt, 0, 1e100), TypeError);
+  assert.throws(() => computeDataSize(1e100, 1, 2), TypeError);
+  assert.throws(() => computeWavFileSize(1e100), TypeError);
+  assert.throws(() => new PCMBuffer([0, 1], fmt).timeAt(1e100), TypeError);
+
+  // Symbol and Object.create(null) must produce clean domain errors, not string-conversion TypeErrors
+  // @ts-expect-error testing Symbol sample
+  assert.throws(() => new PCMBuffer([Symbol("x")], fmt), RangeError);
+  assert.throws(() => new PCMBuffer([Object.create(null)], fmt), RangeError);
+  assert.throws(
+    () => clampToPcm16(Object.create(null)),
+    (err: unknown) => err instanceof TypeError && err.message.includes("finite number"),
+  );
+  assert.throws(
+    // @ts-expect-error testing Symbol value
+    () => clampToPcm16(Symbol("x")),
+    (err: unknown) => err instanceof TypeError && err.message.includes("finite number"),
+  );
+  assert.throws(
+    () => new PCMBuffer([0], fmt).timeAt(Object.create(null)),
+    (err: unknown) => err instanceof TypeError && err.message.includes("integer"),
+  );
+
+  // O(1) pre-flight TypedArray / Array length checks exceed MAX_SAMPLES without looping
+  assert.throws(() => new PCMBuffer(new Uint8Array(MAX_SAMPLES + 1), fmt), /MAX_SAMPLES/);
+  assert.throws(
+    () => encodeSampleBuffer({ samples: new Uint8Array(MAX_SAMPLES + 1), sampleRateHz: 44_100 }),
+    /MAX_SAMPLES/,
+  );
 });

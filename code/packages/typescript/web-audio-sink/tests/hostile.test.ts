@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { SplitMix64 } from "@coding-adventures/test-bootstrap";
 
 import {
   createAudioBufferFromPcm,
@@ -293,4 +294,50 @@ test("playPcmBuffer applies gain exactly once without double-attenuation", async
   assert.notEqual(createdChannelData, null);
   const sampleFloat = (createdChannelData as unknown as Float32Array)[0];
   assert.ok(Math.abs(sampleFloat - 1.0) < 1e-4);
+});
+
+test("CWE-20 / CWE-400: SplitMix64 hostile out-of-range PCM samples fail closed", () => {
+  const prng = new SplitMix64(0xface_b00c_7777n);
+  for (let trial = 0; trial < 50; trial += 1) {
+    const delta = 1 + prng.bounded(100_000);
+    const badSample = trial % 2 === 0 ? INT16_MAX + delta : INT16_MIN - delta;
+    assert.throws(() => pcmSamplesToFloat32([badSample]), RangeError);
+  }
+});
+
+test("CWE-190 / CWE-20: unsafe integers, non-mono frameCount, Symbol, and null-prototype inputs fail closed", () => {
+  assert.equal(validateFormat(1e100, 1, 16), false);
+  assert.equal(validateFormat(44_100, 1e100, 16), false);
+  assert.equal(validateFormat(44_100, 1, 1e100), false);
+
+  assert.throws(() => frameCount(100, 1e100), RangeError);
+  assert.throws(() => frameCount(1e100, 1), RangeError);
+  assert.throws(() => frameCount(100, 2), RangeError);
+
+  assert.throws(
+    () => validatePcmBuffer({ samples: [0], format: { sampleRateHz: 1e100 } }),
+    RangeError,
+  );
+  assert.throws(
+    () => validatePcmBuffer({ samples: [1e100], format: { sampleRateHz: 44_100 } }),
+    RangeError,
+  );
+  assert.throws(
+    // @ts-expect-error testing Symbol sample
+    () => validatePcmBuffer({ samples: [Symbol("x")], format: { sampleRateHz: 44_100 } }),
+    RangeError,
+  );
+  assert.throws(
+    () => validatePcmBuffer({ samples: [Object.create(null)], format: { sampleRateHz: 44_100 } }),
+    RangeError,
+  );
+  assert.throws(
+    // @ts-expect-error testing Symbol sample
+    () => pcmSamplesToFloat32([Symbol("x")]),
+    RangeError,
+  );
+  assert.throws(
+    () => pcmSamplesToFloat32([Object.create(null)]),
+    RangeError,
+  );
 });
