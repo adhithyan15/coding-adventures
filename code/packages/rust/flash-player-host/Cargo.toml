@@ -1,0 +1,40 @@
+[package]
+name = "flash-player-host"
+version = "0.1.0"
+edition = "2021"
+description = "Integrated Flash player application shell uniting SWF container, shapes, display list, AVM1/AVM2 bytecode, audio bridge, UI11 windowing, PaintVM runtime, and headless SHA-256 verification (SWF07)"
+license = "MIT"
+
+[dependencies]
+swf-container = { path = "../swf-container" }
+swf-shape-to-paint = { path = "../swf-shape-to-paint" }
+flash-display-list = { path = "../flash-display-list" }
+flash-audio-bridge = { path = "../flash-audio-bridge" }
+avm-bytecode-lifter = { path = "../avm-bytecode-lifter" }
+actionscript-compiler = { path = "../actionscript-compiler" }
+interpreter-ir = { path = "../interpreter-ir" }
+vm-core = { path = "../vm-core" }
+window-core = { path = "../window-core" }
+paint-vm-runtime = { path = "../paint-vm-runtime" }
+paint-instructions = { path = "../paint-instructions" }
+paint-palette-blend = { path = "../paint-palette-blend" }
+game-clock = { path = "../game-clock" }
+coding_adventures_sha256 = { path = "../sha256" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

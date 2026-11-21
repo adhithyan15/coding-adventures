@@ -720,6 +720,7 @@ members = [
     "flash-display-list",
     "flash-audio-bridge",
     "avm-bytecode-lifter",
+    "flash-player-host",
     "sprite-oam",
     "tilemap2d",
     "rpg-grid-world",

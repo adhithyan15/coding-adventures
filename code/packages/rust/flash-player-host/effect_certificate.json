@@ -1,0 +1,32 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/flash-player-host",
+  "source_digest": "6bad7bad460de21c4e8746b4036f72b9cce166b652f24bbc12ed468f1f98561a",
+  "manifest_digest": "716d6f1c57523d748df5fdb1850f8fbd016fbe85ebd2b4caff187eea52bca4c6",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_vm_step_budget",
+      "signature": "pub const fn validate_vm_step_budget(steps: usize) -> Result<bool, PlayerHostError>",
+      "effects": []
+    },
+    {
+      "name": "validate_frame_rate_hz",
+      "signature": "pub const fn validate_frame_rate_hz(fps: usize) -> Result<bool, PlayerHostError>",
+      "effects": []
+    },
+    {
+      "name": "validate_stage_dimension_px",
+      "signature": "pub const fn validate_stage_dimension_px(px: usize) -> Result<bool, PlayerHostError>",
+      "effects": []
+    },
+    {
+      "name": "validate_uri_length",
+      "signature": "pub const fn validate_uri_length(len: usize) -> Result<bool, PlayerHostError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
