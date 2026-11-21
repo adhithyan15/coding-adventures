@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1 - 2026-11-21
+
+### Hardened
+- VER15 CWE/CVE security hardening (MUS-W8-D):
+  - **CWE-20 / CWE-190**: Added O(1) `_safe_repr` error formatting across numeric, kit, voice, and sequence validation; caught `OverflowError` on `float(...)` (`10**400`, `Fraction(10**400, 3)`) into `ValueError`; rejected subnormal sample rates (`not isfinite(1.0 / rate)`) and overflowing voice component amplitude sums (`not isfinite(total)`); added strict `str`/`Mapping` checks on `PercussionVoiceProfile` / `DrumKitProfile` / `PercussionHitEvent`; added stage-field `isinstance` checks in `PercussionHitRender.__post_init__` and `PercussionSequenceRender.__post_init__`; turned missing `hit_id` in dict events from `KeyError` into `ValueError`.
+  - **CWE-400**: Hardened `PercussionVoiceProfile.modes`, `apply_hihat_choke`, and `render_percussion_sequence` against generators, infinite iterators, non-iterables (`str`/`bytes`/`Mapping`), and lying `__len__` (`OverflowError` or exceeding cap) before buffer allocation or materialization.
+  - Added dedicated `tests/test_hostile_inputs.py` and `tests/test_pbt.py` (`coding_adventures_test_bootstrap.prng.SplitMix64`) and `-p no:platformdirs` in `pyproject.toml`.
+
 ## 0.3.0 - 2026-11-16
 
 ### Changed
