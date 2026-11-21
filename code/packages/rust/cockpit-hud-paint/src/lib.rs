@@ -42,8 +42,8 @@ pub use capabilities::PureCapabilities;
 
 use math3d::{Math3dError, Vec3};
 use paint_instructions::{
-    PaintBase, PaintEllipse, PaintInstruction, PaintLine, PaintPath, PaintRect, PaintScene,
-    PaintText, PathCommand, TextAlign,
+    FilterEffect, GradientKind, PaintBase, PaintEllipse, PaintInstruction, PaintLine, PaintPath,
+    PaintRect, PaintScene, PaintText, PathCommand, TextAlign,
 };
 use rigidbody_6dof::{MassProperties, RigidBodyError, RigidBodyState};
 
@@ -97,6 +97,9 @@ pub const MAX_TAPE_TICKS: usize = 128;
 
 /// Default capacity of [`HudScratch`] primitive buffer.
 pub const DEFAULT_SCRATCH_CAPACITY: usize = 512;
+
+/// Maximum nesting depth allowed when validating or hashing a [`PaintScene`] (CWE-674).
+pub const MAX_SCENE_DEPTH: usize = 64;
 
 /// Numerical guard against near-zero divisors (CWE-369).
 pub const EPSILON: f64 = 1e-12;
@@ -444,6 +447,9 @@ impl FlightTelemetry {
         if speed_of_sound_mps <= EPSILON || speed_of_sound_mps > 2000.0 {
             return Err(HudError::ValueOutOfBounds);
         }
+        if !(MIN_ALTITUDE_MSL_M..=MAX_ALTITUDE_MSL_M).contains(&terrain_elevation_m) {
+            return Err(HudError::InvalidTelemetry);
+        }
 
         body.body_validate()?;
         mass.mass_props_validate()?;
@@ -505,7 +511,7 @@ impl FlightTelemetry {
         };
 
         let f_body = q_inv.rotate_vec3(body.force).map_err(HudError::from)?;
-        let g_load = f_body.y * mass.mass_props_inv_mass() / 9.80665;
+        let g_load = check_finite(f_body.y * mass.mass_props_inv_mass() / 9.80665)?;
 
         let altitude_msl_m = body.position.y;
         let agl = (altitude_msl_m - terrain_elevation_m).max(0.0);
@@ -758,10 +764,10 @@ impl HudScratch {
     /// Compute the deterministic canonical FNV-1a digest of the scratch contents.
     pub fn hud_scratch_digest_fnv1a(&self) -> Result<u64, HudError> {
         let mut hash = FNV1A_OFFSET;
-        fnv1a_u64(&mut hash, self.primitives.len() as u64);
         for prim in &self.primitives {
             hash_primitive(&mut hash, prim);
         }
+        fnv1a_u64(&mut hash, self.primitives.len() as u64);
         Ok(hash)
     }
 
@@ -1057,6 +1063,9 @@ pub fn clip_line_liang_barsky(
 
     let dx = x2 - x1;
     let dy = y2 - y1;
+    if !xmax.is_finite() || !ymax.is_finite() || !dx.is_finite() || !dy.is_finite() {
+        return None;
+    }
 
     let p = [-dx, dx, -dy, dy];
     let q = [x1 - xmin, xmax - x1, y1 - ymin, ymax - y1];
@@ -1067,12 +1076,18 @@ pub fn clip_line_liang_barsky(
     for i in 0..4 {
         let pi = p[i];
         let qi = q[i];
+        if !qi.is_finite() {
+            return None;
+        }
         if pi.abs() <= 0.0 {
             if qi < 0.0 {
                 return None;
             }
         } else {
             let t = qi / pi;
+            if !t.is_finite() {
+                return None;
+            }
             if pi < 0.0 {
                 if t > u1 {
                     return None;
@@ -1091,10 +1106,18 @@ pub fn clip_line_liang_barsky(
         }
     }
 
-    let cx1 = canonical_f64((x1 + u0 * dx).clamp(xmin, xmax));
-    let cy1 = canonical_f64((y1 + u0 * dy).clamp(ymin, ymax));
-    let cx2 = canonical_f64((x1 + u1 * dx).clamp(xmin, xmax));
-    let cy2 = canonical_f64((y1 + u1 * dy).clamp(ymin, ymax));
+    let raw_x1 = x1 + u0 * dx;
+    let raw_y1 = y1 + u0 * dy;
+    let raw_x2 = x1 + u1 * dx;
+    let raw_y2 = y1 + u1 * dy;
+    if !raw_x1.is_finite() || !raw_y1.is_finite() || !raw_x2.is_finite() || !raw_y2.is_finite() {
+        return None;
+    }
+
+    let cx1 = canonical_f64(raw_x1.clamp(xmin, xmax));
+    let cy1 = canonical_f64(raw_y1.clamp(ymin, ymax));
+    let cx2 = canonical_f64(raw_x2.clamp(xmin, xmax));
+    let cy2 = canonical_f64(raw_y2.clamp(ymin, ymax));
 
     Some((cx1, cy1, cx2, cy2))
 }
@@ -1882,12 +1905,15 @@ fn run_scratch_pipeline(
     // 10. AoA, G-load, and Annunciator Warnings.
     let ann = emit_top_bar_and_annunciators(t, cfg, &layout, stroke_primary, em);
 
+    let mut final_hash = em.hash;
+    fnv1a_u64(&mut final_hash, em.count as u64);
+
     HudFrameSummary {
         primitive_count: em.count,
         pitch_rungs_emitted: em.pitch_rungs,
         tape_ticks_emitted: em.tape_ticks,
         annunciators: ann,
-        frame_digest_fnv1a: em.hash,
+        frame_digest_fnv1a: final_hash,
     }
 }
 
@@ -2347,22 +2373,41 @@ fn emit_top_bar_and_annunciators(
     let gap = layout.adi_w * 0.02;
 
     let slots = [
-        (ann.stall, "hud.ann.stall", "STALL", COLOR_WARN_RED),
+        (
+            ann.stall,
+            "hud.ann.stall.box",
+            "hud.ann.stall.text",
+            "STALL",
+            COLOR_WARN_RED,
+        ),
         (
             ann.overspeed,
-            "hud.ann.overspeed",
+            "hud.ann.overspeed.box",
+            "hud.ann.overspeed.text",
             "OVERSPEED",
             COLOR_WARN_RED,
         ),
-        (ann.terrain, "hud.ann.terrain", "TERRAIN", COLOR_WARN_AMBER),
-        (ann.pull_up, "hud.ann.pullup", "PULL UP", COLOR_WARN_RED),
+        (
+            ann.terrain,
+            "hud.ann.terrain.box",
+            "hud.ann.terrain.text",
+            "TERRAIN",
+            COLOR_WARN_AMBER,
+        ),
+        (
+            ann.pull_up,
+            "hud.ann.pullup.box",
+            "hud.ann.pullup.text",
+            "PULL UP",
+            COLOR_WARN_RED,
+        ),
     ];
 
-    for (idx, &(active, id, label, color)) in slots.iter().enumerate() {
+    for (idx, &(active, box_id, text_id, label, color)) in slots.iter().enumerate() {
         if active {
             let sx = start_x + (idx as f64) * (slot_w + gap);
             em.emit(HudPrimitive::new(
-                id,
+                box_id,
                 "",
                 color,
                 HudPrimitiveKind::Rect {
@@ -2375,7 +2420,7 @@ fn emit_top_bar_and_annunciators(
                 },
             ));
             em.emit(HudPrimitive::new(
-                id,
+                text_id,
                 label,
                 COLOR_HUD_WHITE,
                 HudPrimitiveKind::Text {
@@ -2814,6 +2859,35 @@ fn check_opt_str_cap(s: &Option<String>, min_cap: usize) -> bool {
     }
 }
 
+fn expected_slot_matches(idx: usize, instr: &PaintInstruction) -> bool {
+    match idx {
+        SLOT_BG
+        | SLOT_ADI_FRAME
+        | SLOT_IAS_FRAME
+        | SLOT_IAS_BOX
+        | SLOT_ALT_FRAME
+        | SLOT_ALT_BOX
+        | SLOT_VSI_FRAME
+        | SLOT_HDG_FRAME
+        | SLOT_ANN_STALL_BOX
+        | SLOT_ANN_OVERSPEED_BOX
+        | SLOT_ANN_TERRAIN_BOX
+        | SLOT_ANN_PULLUP_BOX => {
+            matches!(instr, PaintInstruction::Rect(_))
+        }
+        SLOT_ADI_HORIZON | SLOT_VSI_BAR | SLOT_HDG_LUBBER => {
+            matches!(instr, PaintInstruction::Line(_))
+        }
+        SLOT_ADI_FPM_CIRCLE => matches!(instr, PaintInstruction::Ellipse(_)),
+        SLOT_ADI_SKY | SLOT_ADI_GROUND | SLOT_ADI_PITCH_POS | SLOT_ADI_PITCH_NEG
+        | SLOT_ADI_BANK_ARC | SLOT_ADI_BANK_PTR | SLOT_ADI_WATERMARK | SLOT_ADI_FPM_WINGS
+        | SLOT_IAS_TICKS | SLOT_ALT_TICKS | SLOT_HDG_TICKS => {
+            matches!(instr, PaintInstruction::Path(_))
+        }
+        _ => matches!(instr, PaintInstruction::Text(_)),
+    }
+}
+
 fn verify_scene_capacities(scene: &PaintScene) -> Result<(), HudError> {
     if scene.background.capacity() < STR_CAP_COLOR {
         return Err(HudError::BufferTooSmall);
@@ -2822,6 +2896,9 @@ fn verify_scene_capacities(scene: &PaintScene) -> Result<(), HudError> {
         return Err(HudError::BufferTooSmall);
     }
     for (idx, instr) in scene.instructions.iter().enumerate() {
+        if !expected_slot_matches(idx, instr) {
+            return Err(HudError::BufferTooSmall);
+        }
         let base_ok = match instr {
             PaintInstruction::Rect(r) => {
                 check_opt_str_cap(&r.base.id, STR_CAP_ID)
@@ -3943,96 +4020,148 @@ pub fn render_hud_scene(
 // PaintScene Validation & Deterministic Canonical Digest
 // ---------------------------------------------------------------------------
 
-/// Verify that every coordinate and scalar in a [`PaintScene`] is strictly finite.
+/// Verify that every coordinate and scalar in a [`PaintScene`] is strictly finite
+/// and nesting depth does not exceed [`MAX_SCENE_DEPTH`] (CWE-20 / CWE-674).
 pub fn verify_paint_scene_finite(scene: &PaintScene) -> Result<(), HudError> {
     check_finite(scene.width)?;
     check_finite(scene.height)?;
     for instr in &scene.instructions {
-        verify_instruction_finite(instr)?;
+        verify_instruction_finite(instr, 0)?;
     }
     Ok(())
 }
 
-fn verify_instruction_finite(instr: &PaintInstruction) -> Result<(), HudError> {
+fn check_opt_f64_finite(val: Option<f64>) -> Result<(), HudError> {
+    if let Some(v) = val {
+        check_finite(v)?;
+    }
+    Ok(())
+}
+
+fn check_opt_slice_finite(vals: &Option<Vec<f64>>) -> Result<(), HudError> {
+    if let Some(slice) = vals {
+        for &v in slice {
+            check_finite(v)?;
+        }
+    }
+    Ok(())
+}
+
+fn check_path_commands_finite(commands: &[PathCommand]) -> Result<(), HudError> {
+    for cmd in commands {
+        match *cmd {
+            PathCommand::MoveTo { x, y } | PathCommand::LineTo { x, y } => {
+                check_finite(x)?;
+                check_finite(y)?;
+            }
+            PathCommand::QuadTo { cx, cy, x, y } => {
+                check_finite(cx)?;
+                check_finite(cy)?;
+                check_finite(x)?;
+                check_finite(y)?;
+            }
+            PathCommand::CubicTo {
+                cx1,
+                cy1,
+                cx2,
+                cy2,
+                x,
+                y,
+            } => {
+                check_finite(cx1)?;
+                check_finite(cy1)?;
+                check_finite(cx2)?;
+                check_finite(cy2)?;
+                check_finite(x)?;
+                check_finite(y)?;
+            }
+            PathCommand::ArcTo {
+                rx,
+                ry,
+                x_rotation,
+                x,
+                y,
+                ..
+            } => {
+                check_finite(rx)?;
+                check_finite(ry)?;
+                check_finite(x_rotation)?;
+                check_finite(x)?;
+                check_finite(y)?;
+            }
+            PathCommand::Close => {}
+        }
+    }
+    Ok(())
+}
+
+fn check_filter_effect_finite(filter: &FilterEffect) -> Result<(), HudError> {
+    match filter {
+        FilterEffect::Blur { radius } => {
+            check_finite(*radius)?;
+        }
+        FilterEffect::DropShadow { dx, dy, blur, .. } => {
+            check_finite(*dx)?;
+            check_finite(*dy)?;
+            check_finite(*blur)?;
+        }
+        FilterEffect::ColorMatrix { matrix } => {
+            for &v in matrix {
+                check_finite(v)?;
+            }
+        }
+        FilterEffect::Brightness { amount }
+        | FilterEffect::Contrast { amount }
+        | FilterEffect::Saturate { amount }
+        | FilterEffect::Invert { amount }
+        | FilterEffect::Opacity { amount } => {
+            check_finite(*amount)?;
+        }
+        FilterEffect::HueRotate { angle } => {
+            check_finite(*angle)?;
+        }
+    }
+    Ok(())
+}
+
+fn verify_instruction_finite(instr: &PaintInstruction, depth: usize) -> Result<(), HudError> {
+    if depth > MAX_SCENE_DEPTH {
+        return Err(HudError::PrimitiveLimitExceeded);
+    }
     match instr {
         PaintInstruction::Rect(r) => {
             check_finite(r.x)?;
             check_finite(r.y)?;
             check_finite(r.width)?;
             check_finite(r.height)?;
-            if let Some(w) = r.stroke_width {
-                check_finite(w)?;
-            }
-            if let Some(cr) = r.corner_radius {
-                check_finite(cr)?;
-            }
+            check_opt_f64_finite(r.stroke_width)?;
+            check_opt_f64_finite(r.corner_radius)?;
+            check_opt_slice_finite(&r.stroke_dash)?;
+            check_opt_f64_finite(r.stroke_dash_offset)?;
         }
         PaintInstruction::Line(l) => {
             check_finite(l.x1)?;
             check_finite(l.y1)?;
             check_finite(l.x2)?;
             check_finite(l.y2)?;
-            if let Some(w) = l.stroke_width {
-                check_finite(w)?;
-            }
+            check_opt_f64_finite(l.stroke_width)?;
+            check_opt_slice_finite(&l.stroke_dash)?;
+            check_opt_f64_finite(l.stroke_dash_offset)?;
         }
         PaintInstruction::Ellipse(e) => {
             check_finite(e.cx)?;
             check_finite(e.cy)?;
             check_finite(e.rx)?;
             check_finite(e.ry)?;
-            if let Some(w) = e.stroke_width {
-                check_finite(w)?;
-            }
+            check_opt_f64_finite(e.stroke_width)?;
+            check_opt_slice_finite(&e.stroke_dash)?;
+            check_opt_f64_finite(e.stroke_dash_offset)?;
         }
         PaintInstruction::Path(p) => {
-            if let Some(w) = p.stroke_width {
-                check_finite(w)?;
-            }
-            for cmd in &p.commands {
-                match *cmd {
-                    PathCommand::MoveTo { x, y } | PathCommand::LineTo { x, y } => {
-                        check_finite(x)?;
-                        check_finite(y)?;
-                    }
-                    PathCommand::QuadTo { cx, cy, x, y } => {
-                        check_finite(cx)?;
-                        check_finite(cy)?;
-                        check_finite(x)?;
-                        check_finite(y)?;
-                    }
-                    PathCommand::CubicTo {
-                        cx1,
-                        cy1,
-                        cx2,
-                        cy2,
-                        x,
-                        y,
-                    } => {
-                        check_finite(cx1)?;
-                        check_finite(cy1)?;
-                        check_finite(cx2)?;
-                        check_finite(cy2)?;
-                        check_finite(x)?;
-                        check_finite(y)?;
-                    }
-                    PathCommand::ArcTo {
-                        rx,
-                        ry,
-                        x_rotation,
-                        x,
-                        y,
-                        ..
-                    } => {
-                        check_finite(rx)?;
-                        check_finite(ry)?;
-                        check_finite(x_rotation)?;
-                        check_finite(x)?;
-                        check_finite(y)?;
-                    }
-                    PathCommand::Close => {}
-                }
-            }
+            check_opt_f64_finite(p.stroke_width)?;
+            check_opt_slice_finite(&p.stroke_dash)?;
+            check_opt_f64_finite(p.stroke_dash_offset)?;
+            check_path_commands_finite(&p.commands)?;
         }
         PaintInstruction::Text(t) => {
             check_finite(t.x)?;
@@ -4044,18 +4173,38 @@ fn verify_instruction_finite(instr: &PaintInstruction) -> Result<(), HudError> {
             check_finite(c.y)?;
             check_finite(c.width)?;
             check_finite(c.height)?;
+            if let Some(cmds) = &c.path {
+                check_path_commands_finite(cmds)?;
+            }
             for child in &c.children {
-                verify_instruction_finite(child)?;
+                verify_instruction_finite(child, depth + 1)?;
             }
         }
         PaintInstruction::Group(g) => {
+            if let Some(t) = g.transform {
+                for v in t {
+                    check_finite(v)?;
+                }
+            }
+            check_opt_f64_finite(g.opacity)?;
             for child in &g.children {
-                verify_instruction_finite(child)?;
+                verify_instruction_finite(child, depth + 1)?;
             }
         }
         PaintInstruction::Layer(l) => {
+            if let Some(t) = l.transform {
+                for v in t {
+                    check_finite(v)?;
+                }
+            }
+            check_opt_f64_finite(l.opacity)?;
+            if let Some(filters) = &l.filters {
+                for f in filters {
+                    check_filter_effect_finite(f)?;
+                }
+            }
             for child in &l.children {
-                verify_instruction_finite(child)?;
+                verify_instruction_finite(child, depth + 1)?;
             }
         }
         PaintInstruction::GlyphRun(gr) => {
@@ -4065,13 +4214,39 @@ fn verify_instruction_finite(instr: &PaintInstruction) -> Result<(), HudError> {
                 check_finite(g.y)?;
             }
         }
-        PaintInstruction::Gradient(_) | PaintInstruction::Image(_) => {}
+        PaintInstruction::Gradient(grad) => {
+            match grad.kind {
+                GradientKind::Linear { x1, y1, x2, y2 } => {
+                    check_finite(x1)?;
+                    check_finite(y1)?;
+                    check_finite(x2)?;
+                    check_finite(y2)?;
+                }
+                GradientKind::Radial { cx, cy, r } => {
+                    check_finite(cx)?;
+                    check_finite(cy)?;
+                    check_finite(r)?;
+                }
+            }
+            for stop in &grad.stops {
+                check_finite(stop.offset)?;
+            }
+        }
+        PaintInstruction::Image(img) => {
+            check_finite(img.x)?;
+            check_finite(img.y)?;
+            check_finite(img.width)?;
+            check_finite(img.height)?;
+            check_opt_f64_finite(img.opacity)?;
+        }
     }
     Ok(())
 }
 
 /// Compute a deterministic 64-bit FNV-1a digest of a [`PaintScene`],
 /// canonicalizing `-0.0` to `+0.0` and any `NaN` to a single quiet NaN bit pattern.
+///
+/// Rejects scenes nested deeper than [`MAX_SCENE_DEPTH`] (CWE-674).
 pub fn paint_scene_digest_fnv1a(scene: &PaintScene) -> Result<u64, HudError> {
     let mut hash = FNV1A_OFFSET;
     fnv1a_f64(&mut hash, scene.width);
@@ -4085,7 +4260,7 @@ pub fn paint_scene_digest_fnv1a(scene: &PaintScene) -> Result<u64, HudError> {
     }
     fnv1a_u64(&mut hash, scene.instructions.len() as u64);
     for instr in &scene.instructions {
-        hash_paint_instruction(&mut hash, instr);
+        hash_paint_instruction(&mut hash, instr, 0)?;
     }
     Ok(hash)
 }
@@ -4100,7 +4275,14 @@ fn hash_opt_str(hash: &mut u64, s: &Option<String>) {
     }
 }
 
-fn hash_paint_instruction(hash: &mut u64, instr: &PaintInstruction) {
+fn hash_paint_instruction(
+    hash: &mut u64,
+    instr: &PaintInstruction,
+    depth: usize,
+) -> Result<(), HudError> {
+    if depth > MAX_SCENE_DEPTH {
+        return Err(HudError::PrimitiveLimitExceeded);
+    }
     match instr {
         PaintInstruction::Rect(r) => {
             fnv1a_u64(hash, 1);
@@ -4216,23 +4398,24 @@ fn hash_paint_instruction(hash: &mut u64, instr: &PaintInstruction) {
             fnv1a_f64(hash, c.width);
             fnv1a_f64(hash, c.height);
             for child in &c.children {
-                hash_paint_instruction(hash, child);
+                hash_paint_instruction(hash, child, depth + 1)?;
             }
         }
         PaintInstruction::Group(g) => {
             fnv1a_u64(hash, 7);
             for child in &g.children {
-                hash_paint_instruction(hash, child);
+                hash_paint_instruction(hash, child, depth + 1)?;
             }
         }
         PaintInstruction::Layer(l) => {
             fnv1a_u64(hash, 8);
             for child in &l.children {
-                hash_paint_instruction(hash, child);
+                hash_paint_instruction(hash, child, depth + 1)?;
             }
         }
         _ => {
             fnv1a_u64(hash, 9);
         }
     }
+    Ok(())
 }

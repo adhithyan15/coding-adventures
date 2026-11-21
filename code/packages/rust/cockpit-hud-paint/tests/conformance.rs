@@ -377,6 +377,10 @@ fn property_1000_valid_frames_deterministic_and_finite() {
         let s_scratch = build_hud_frame_into(&tel, &cfg, &mut scratch).unwrap();
         let s_scene = update_paint_scene_into(&tel, &cfg, &mut scene).unwrap();
         assert!(s_scratch.primitive_count <= cfg.max_primitives);
+        assert_eq!(
+            s_scratch.frame_digest_fnv1a,
+            scratch.hud_scratch_digest_fnv1a().unwrap()
+        );
         verify_paint_scene_finite(&scene).unwrap();
         assert_eq!(
             s_scene.frame_digest_fnv1a,
@@ -389,4 +393,36 @@ fn property_1000_valid_frames_deterministic_and_finite() {
         HudConfig::hud_config_default(63.0, 720.0),
         Err(HudError::InvalidViewport)
     );
+}
+
+#[test]
+fn scratch_ids_are_unique_and_digest_matches_summary() {
+    let cfg = HudConfig::hud_config_default(1280.0, 720.0).unwrap();
+    let mut tel = FlightTelemetry::telemetry_level_flight();
+    tel.stall_warning = true;
+    tel.overspeed_warning = true;
+    tel.terrain_warning = true;
+    tel.pull_up_warning = true;
+
+    let mut scratch = HudScratch::hud_scratch_new();
+    let summary = build_hud_frame_into(&tel, &cfg, &mut scratch).unwrap();
+    assert_eq!(
+        summary.frame_digest_fnv1a,
+        scratch.hud_scratch_digest_fnv1a().unwrap()
+    );
+
+    let scene = scratch.hud_scratch_to_paint_scene(&cfg).unwrap();
+    let mut seen = std::collections::BTreeSet::new();
+    for instr in &scene.instructions {
+        let id = match instr {
+            PaintInstruction::Rect(r) => r.base.id.as_ref(),
+            PaintInstruction::Line(l) => l.base.id.as_ref(),
+            PaintInstruction::Ellipse(e) => e.base.id.as_ref(),
+            PaintInstruction::Path(p) => p.base.id.as_ref(),
+            PaintInstruction::Text(t) => t.base.id.as_ref(),
+            _ => None,
+        }
+        .expect("every instruction must carry a PaintBase.id");
+        assert!(seen.insert(id.clone()), "duplicate PaintBase.id: {id}");
+    }
 }

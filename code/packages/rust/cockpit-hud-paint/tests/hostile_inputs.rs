@@ -14,12 +14,18 @@
 #![forbid(unsafe_code)]
 
 use cockpit_hud_paint::{
-    build_hud_frame_into, paint_scene_digest_fnv1a, prepare_paint_scene, render_hud_scene,
-    update_paint_scene_into, verify_paint_scene_finite, FlightTelemetry, HudConfig, HudError,
-    HudPrimitive, HudPrimitiveKind, HudScratch, MAX_ANGLE_RAD, MAX_PRIMITIVES, MAX_VIEWPORT_DIM,
-    MIN_VIEWPORT_DIM,
+    build_hud_frame_into, clip_line_liang_barsky, paint_scene_digest_fnv1a, prepare_paint_scene,
+    render_hud_scene, update_paint_scene_into, verify_paint_scene_finite, FlightTelemetry,
+    HudConfig, HudError, HudPrimitive, HudPrimitiveKind, HudRect, HudScratch, MAX_ANGLE_RAD,
+    MAX_PRIMITIVES, MAX_SCENE_DEPTH, MAX_VIEWPORT_DIM, MIN_VIEWPORT_DIM,
 };
-use paint_instructions::PaintScene;
+use math3d::{Quat, Vec3};
+use paint_instructions::{
+    FilterEffect, GradientKind, GradientStop, ImageSrc, PaintBase, PaintClip, PaintGradient,
+    PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintLine, PaintPath, PaintRect,
+    PaintScene, PathCommand, PixelContainer,
+};
+use rigidbody_6dof::{MassProperties, RigidBodyState};
 
 fn next_u64(state: &mut u64) -> u64 {
     let mut x = *state;
@@ -477,4 +483,167 @@ fn hostile_2000_case_fuzz_campaign() {
             verify_paint_scene_finite(&rendered).unwrap();
         }
     }
+}
+
+#[test]
+fn reviewer_regression_clip_overflow_scene_depth_finiteness_and_slot_mismatch() {
+    // 1. Liang-Barsky overflow (f64::MAX - (-f64::MAX) = Inf, Inf * 0.0 = NaN).
+    let unit = HudRect {
+        x: -1.0,
+        y: -1.0,
+        width: 2.0,
+        height: 2.0,
+    };
+    assert_eq!(
+        clip_line_liang_barsky(f64::MAX, 0.0, -f64::MAX, 0.0, unit),
+        None
+    );
+    assert_eq!(
+        clip_line_liang_barsky(
+            0.0,
+            0.0,
+            1.0,
+            1.0,
+            HudRect {
+                x: f64::MAX,
+                y: 0.0,
+                width: f64::MAX,
+                height: 10.0,
+            },
+        ),
+        None
+    );
+
+    // 2. CWE-674 nested scene depth cap in verify_paint_scene_finite & paint_scene_digest_fnv1a.
+    let mut nested = PaintInstruction::Rect(PaintRect::filled(0.0, 0.0, 1.0, 1.0, "#000"));
+    for _ in 0..=MAX_SCENE_DEPTH + 1 {
+        nested = PaintInstruction::Group(PaintGroup {
+            base: PaintBase::default(),
+            children: vec![nested],
+            transform: None,
+            opacity: None,
+        });
+    }
+    let mut deep_scene = PaintScene::new(100.0, 100.0);
+    deep_scene.instructions.push(nested);
+    assert_eq!(
+        verify_paint_scene_finite(&deep_scene),
+        Err(HudError::PrimitiveLimitExceeded)
+    );
+    assert_eq!(
+        paint_scene_digest_fnv1a(&deep_scene),
+        Err(HudError::PrimitiveLimitExceeded)
+    );
+
+    // 3. Incomplete finiteness checks on stroke_dash, stroke_dash_offset, Gradient, Image, Layer.
+    let bad_path = PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![PathCommand::MoveTo { x: 0.0, y: 0.0 }],
+        fill: None,
+        fill_rule: None,
+        stroke: Some("#fff".to_string()),
+        stroke_width: Some(1.0),
+        stroke_cap: None,
+        stroke_join: None,
+        stroke_dash: Some(vec![f64::NAN]),
+        stroke_dash_offset: Some(f64::INFINITY),
+    });
+    let mut s_bad = PaintScene::new(100.0, 100.0);
+    s_bad.instructions.push(bad_path);
+    assert_eq!(
+        verify_paint_scene_finite(&s_bad),
+        Err(HudError::NonFiniteInput)
+    );
+
+    let bad_grad = PaintInstruction::Gradient(PaintGradient {
+        base: PaintBase::default(),
+        kind: GradientKind::Linear {
+            x1: 0.0,
+            y1: 0.0,
+            x2: f64::INFINITY,
+            y2: 0.0,
+        },
+        stops: vec![GradientStop {
+            offset: 0.0,
+            color: "#000".to_string(),
+        }],
+    });
+    s_bad.instructions[0] = bad_grad;
+    assert_eq!(
+        verify_paint_scene_finite(&s_bad),
+        Err(HudError::NonFiniteInput)
+    );
+
+    let bad_img = PaintInstruction::Image(PaintImage {
+        base: PaintBase::default(),
+        x: 0.0,
+        y: 0.0,
+        width: 10.0,
+        height: 10.0,
+        src: ImageSrc::Pixels(PixelContainer::new(1, 1)),
+        opacity: Some(f64::NAN),
+    });
+    s_bad.instructions[0] = bad_img;
+    assert_eq!(
+        verify_paint_scene_finite(&s_bad),
+        Err(HudError::NonFiniteInput)
+    );
+
+    let bad_layer = PaintInstruction::Layer(PaintLayer {
+        base: PaintBase::default(),
+        children: vec![PaintInstruction::Clip(PaintClip {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 10.0,
+            height: 10.0,
+            path: None,
+            children: vec![],
+        })],
+        filters: Some(vec![FilterEffect::Blur { radius: f64::NAN }]),
+        blend_mode: None,
+        opacity: None,
+        transform: None,
+    });
+    s_bad.instructions[0] = bad_layer;
+    assert_eq!(
+        verify_paint_scene_finite(&s_bad),
+        Err(HudError::NonFiniteInput)
+    );
+
+    // 4. Swapped-variant slot in update_paint_scene_into must fail atomically with BufferTooSmall.
+    let cfg = HudConfig::hud_config_default(800.0, 600.0).unwrap();
+    let tel = FlightTelemetry::telemetry_level_flight();
+    let mut scene = prepare_paint_scene(&cfg).unwrap();
+    update_paint_scene_into(&tel, &cfg, &mut scene).unwrap();
+    scene.instructions[0] = PaintInstruction::Line(PaintLine {
+        base: PaintBase {
+            id: Some(String::with_capacity(64)),
+            metadata: None,
+        },
+        x1: 0.0,
+        y1: 0.0,
+        x2: 1.0,
+        y2: 1.0,
+        stroke: String::with_capacity(64),
+        stroke_width: Some(1.0),
+        stroke_cap: None,
+        stroke_dash: None,
+        stroke_dash_offset: None,
+    });
+    let snap = scene.clone();
+    assert_eq!(
+        update_paint_scene_into(&tel, &cfg, &mut scene),
+        Err(HudError::BufferTooSmall)
+    );
+    assert_eq!(scene, snap);
+
+    // 5. Extreme terrain_elevation_m rejected in telemetry_from_rigid_body.
+    let mass = MassProperties::mass_props_from_solid_box(500.0, Vec3::new(1.0, 0.5, 1.0)).unwrap();
+    let body =
+        RigidBodyState::body_new(Vec3::new(0.0, 1200.0, 0.0), Quat::quat_identity()).unwrap();
+    assert_eq!(
+        FlightTelemetry::telemetry_from_rigid_body(&body, &mass, 340.0, 1.0e9),
+        Err(HudError::InvalidTelemetry)
+    );
 }

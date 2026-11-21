@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/cockpit-hud-paint",
-  "source_digest": "bda2ed5c09382795105ffc650449f5e75b13edb387e3c706b6d9a1ef14c9fe36",
+  "source_digest": "6f153ba224d51549388ce0c48bfc169cd51a349ecf714eb349db87e69cc4507b",
   "manifest_digest": "ab7bd0abe9a1e6aad0989ddaac184c49711b980513b338dac1b8dc1f455424be",
   "declared_effects": [],
   "entry_points": [
