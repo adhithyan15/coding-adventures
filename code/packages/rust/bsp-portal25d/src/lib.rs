@@ -2501,9 +2501,7 @@ pub fn render_frame_into(
 
     scratch.frame_gen = scratch.frame_gen.wrapping_add(1);
     if scratch.frame_gen == 0 {
-        for g in &mut scratch.sector_gen {
-            *g = 0;
-        }
+        scratch.sector_gen.fill(0);
         scratch.frame_gen = 1;
     }
     let gen = scratch.frame_gen;

@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/bsp-portal25d",
-  "source_digest": "78e9962361b5c0daebe4fb3781de2b5bed2df2561337535e701ef6727322e1d5",
+  "source_digest": "936fd7e165649ea719e6ac10f9e8b77d5e696f0fcd2921a4c74acfbb1b1c3575",
   "manifest_digest": "ef13cafdfc66a1b171127482cccb2aa15f3681e12ca661689a530208b55e707a",
   "declared_effects": [],
   "entry_points": [
