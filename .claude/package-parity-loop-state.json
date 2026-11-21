@@ -18656,13 +18656,15 @@
     {
       "id": "dart-lattice-frontend-vertical-parity",
       "title": "Port Lattice lexer and parser vertical to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "dart-swift-language-frontends-neutral-fixtures"
       ],
       "branch": "feat/dart-lattice-frontend-vertical-parity",
       "pr_number": 19817,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19817",
+      "merged_at": "2026-11-21T22:23:32Z",
+      "merge_commit": "fef0fd902e6ea31b3acbbee05fcffb4ae4a5edf2",
       "notes": "Dart subtranche of Lattice frontend vertical parity. Delivers coding_adventures_lattice_lexer and coding_adventures_lattice_parser with delimiter nesting depth defense, token ceiling, and shared neutral fixture conformance."
     },
     {
@@ -19358,11 +19360,23 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-excel-frontend-vertical-parity",
+      "title": "Port Excel lexer and parser vertical to Dart",
+      "status": "pr-open",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-excel-frontend-vertical-parity",
+      "pr_number": null,
+      "notes": "Dart subtranche of Excel frontend vertical parity. Delivers coding_adventures_excel_lexer and coding_adventures_excel_parser with FUNCTION_NAME/TABLE_NAME promotion, COLUMN_REF/ROW_REF normalization, delimiter nesting depth defense (64, Excel's own limit), token ceiling, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-excel-frontend-vertical-parity",
       "title": "Port Excel lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-excel-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -19405,13 +19419,15 @@
     {
       "id": "dart-csharp-lexer-lane-parity",
       "title": "Port C# lexer to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "dart-swift-language-frontends-neutral-fixtures"
       ],
       "branch": "feat/dart-swift-csharp-lexer-lane-parity",
       "pr_number": 19811,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19811",
+      "merged_at": "2026-11-21T22:32:35Z",
+      "merge_commit": "0cf6aa50b6317d3fd69d476eaaac66c77b24c5cd",
       "notes": "Dart lane of C# lexer parity. Delivers coding_adventures_csharp_lexer covering C# 1.0 through 12.0 token specifications, surrogate validation, size bounds, and shared neutral fixture conformance."
     },
     {
