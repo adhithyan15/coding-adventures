@@ -3,14 +3,23 @@
   "version": "0.1.0",
   "description": "Convert musical note names like A4 and C#5 to equal-tempered frequencies in Hertz",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "build": "tsc",
-    "test": "node --experimental-strip-types --test tests/note_frequency.test.ts"
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=../** --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js"
   },
   "license": "MIT",
   "author": "Adhithya Rajasekaran",
   "devDependencies": {
-    "typescript": "^5.4.0"
+    "@coding-adventures/test-bootstrap": "file:../test-bootstrap",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0"
   }
 }
