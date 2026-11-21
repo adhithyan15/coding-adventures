@@ -1,0 +1,79 @@
+-- SWF08 -- SWF Conformance Corpus: synthetic clean-room .swf binary encoder,
+-- 6 mandatory conformance corpus cases with pinned canonical SHA-256 frame
+-- digests, and adversarial security corpus tests (CWE-409/400/125/1321/78/94).
+--
+-- Formal verification contract for bounded corpus encoder and digest verification.
+
+warrant swf_conformance_corpus v1
+  error CorpusError = PlayerHost | SwfContainer | Shape | DisplayList | Audio | Lifter | Compression | BitWidthExceeded | SwfSizeExceeded | FrameCountExceeded | InvalidDigestFormat | DigestMismatch | UnexpectedCaseFailure | IntegerOverflow
+
+  model Unit = Bool
+
+  model valid_corpus_swf_bytes(n: Nat) -> Bool = n >= 1 and n <= 16777216
+  model valid_corpus_frame_count(f: Nat) -> Bool = f >= 1 and f <= 1024
+  model valid_corpus_bit_width(b: Nat) -> Bool = b <= 31
+
+  op validate_corpus_swf_bytes(n: Nat) -> Result<Bool, CorpusError>
+  op validate_corpus_frame_count(f: Nat) -> Result<Bool, CorpusError>
+  op validate_corpus_bit_width(b: Nat) -> Result<Bool, CorpusError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_corpus_swf_bytes:
+    n public
+  labels validate_corpus_frame_count:
+    f public
+  labels validate_corpus_bit_width:
+    b public
+
+  input validate_corpus_swf_bytes.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_corpus_frame_count.f:
+    hostile
+    ensures no_panic, terminates
+  input validate_corpus_bit_width.b:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_corpus_swf_bytes:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_corpus_frame_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_corpus_bit_width:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example swf_bytes_min:
+    validate_corpus_swf_bytes(1) == Ok(true)
+  example swf_bytes_zero:
+    validate_corpus_swf_bytes(0) == Err(CorpusError.SwfSizeExceeded)
+  example swf_bytes_max:
+    validate_corpus_swf_bytes(16777216) == Ok(true)
+  example swf_bytes_exceeded:
+    validate_corpus_swf_bytes(16777217) == Err(CorpusError.SwfSizeExceeded)
+  example frame_count_valid:
+    validate_corpus_frame_count(6) == Ok(true)
+  example frame_count_zero:
+    validate_corpus_frame_count(0) == Err(CorpusError.FrameCountExceeded)
+  example frame_count_exceeded:
+    validate_corpus_frame_count(1025) == Err(CorpusError.FrameCountExceeded)
+  example bit_width_max:
+    validate_corpus_bit_width(31) == Ok(true)
+  example bit_width_exceeded:
+    validate_corpus_bit_width(32) == Err(CorpusError.BitWidthExceeded)
+
+  claim validate_corpus_swf_bytes_agrees:
+    forall n: Nat. validate_corpus_swf_bytes(n) == (if valid_corpus_swf_bytes(n) then Ok(true) else Err(CorpusError.SwfSizeExceeded))
+  claim validate_corpus_frame_count_agrees:
+    forall f: Nat. validate_corpus_frame_count(f) == (if valid_corpus_frame_count(f) then Ok(true) else Err(CorpusError.FrameCountExceeded))
+  claim validate_corpus_bit_width_agrees:
+    forall b: Nat. validate_corpus_bit_width(b) == (if valid_corpus_bit_width(b) then Ok(true) else Err(CorpusError.BitWidthExceeded))

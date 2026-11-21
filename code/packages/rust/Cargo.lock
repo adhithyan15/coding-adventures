@@ -14242,6 +14242,25 @@ name = "superh2-simulator"
 version = "0.1.0"
 
 [[package]]
+name = "swf-conformance-corpus"
+version = "0.1.0"
+dependencies = [
+ "avm-bytecode-lifter",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "deflate",
+ "flash-audio-bridge",
+ "flash-display-list",
+ "flash-player-host",
+ "paint-instructions",
+ "swf-container",
+ "swf-shape-to-paint",
+ "vm-core",
+ "window-core",
+]
+
+[[package]]
 name = "swf-container"
 version = "0.1.0"
 dependencies = [
