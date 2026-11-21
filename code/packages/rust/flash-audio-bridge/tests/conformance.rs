@@ -19,10 +19,11 @@ use flash_audio_bridge::{
     parse_define_sound, parse_mp3_frame_header, parse_sound_info, parse_sound_stream_block,
     parse_sound_stream_head, parse_start_sound, parse_start_sound2, parse_swf_audio_tag,
     render_flash_audio_into, validate_adpcm_bit_width, validate_envelope_point_count,
-    validate_sound_rate_code, validate_sound_sample_count, AudioBridgeError, FlashAudioState,
-    Mp3ChannelMode, Mp3FrameIter, MpegVersion, PcmRingBuffer, PureCapabilities, SwfAudioChannels,
-    SwfAudioTag, SwfSampleWidth, SwfSoundFormat, SwfSoundRate, MAX_ACTIVE_VOICES,
-    MAX_ENVELOPE_POINTS, MAX_LOOP_COUNT, MAX_SOUND_SAMPLES, SWF_TAG_START_SOUND2,
+    validate_sound_rate_code, validate_sound_sample_count, AudioBridgeError, DefineSoundTag,
+    FlashAudioState, Mp3ChannelMode, Mp3FrameIter, MpegVersion, PcmRingBuffer, PureCapabilities,
+    SoundInfo, StartSoundTag, SwfAudioChannels, SwfAudioTag, SwfSampleWidth, SwfSoundFormat,
+    SwfSoundProperties, SwfSoundRate, MAX_ACTIVE_VOICES, MAX_CLASS_NAME_BYTES, MAX_ENVELOPE_POINTS,
+    MAX_LOOP_COUNT, MAX_SOUND_SAMPLES, SWF_TAG_START_SOUND2, UNITY_GAIN_Q16,
 };
 use swf_container::{SwfTagIter, SwfTagKind};
 
@@ -831,4 +832,104 @@ fn test_envelope_in_out_points_sync_flags_and_all_rates() {
     assert_eq!(engine.active_voice_count(), 1);
     engine.apply_start_sound(&stop_tag).expect("apply SyncStop");
     assert_eq!(engine.active_voice_count(), 0);
+}
+
+#[test]
+fn test_hand_constructed_tags_and_defense_in_depth() {
+    // 1. Hand-constructed truncated DefineSoundTag returns Err(UnexpectedEof), never panics (CWE-125)
+    let truncated = DefineSoundTag {
+        sound_id: 1,
+        properties: SwfSoundProperties {
+            format: SwfSoundFormat::UncompressedLe,
+            rate: SwfSoundRate::Rate44100,
+            width: SwfSampleWidth::Bits16,
+            channels: SwfAudioChannels::Mono,
+        },
+        sample_count: 4,
+        payload: &[0x01, 0x02], // needs 8 bytes
+    };
+    let mut pcm_out = [0i16; 4];
+    assert_eq!(
+        decode_define_sound_into(&truncated, &mut pcm_out),
+        Err(AudioBridgeError::UnexpectedEof)
+    );
+
+    let truncated_8bit = DefineSoundTag {
+        sound_id: 2,
+        properties: SwfSoundProperties {
+            format: SwfSoundFormat::UncompressedNe,
+            rate: SwfSoundRate::Rate22050,
+            width: SwfSampleWidth::Bits8,
+            channels: SwfAudioChannels::Mono,
+        },
+        sample_count: 8,
+        payload: &[128, 129], // needs 8 bytes
+    };
+    assert_eq!(
+        decode_define_sound_into(&truncated_8bit, &mut pcm_out),
+        Err(AudioBridgeError::UnexpectedEof)
+    );
+
+    // 2. Hand-constructed sound_id == 0 rejected in decode_define_sound_into, register_define_sound, apply_start_sound
+    let zero_id_ds = DefineSoundTag {
+        sound_id: 0,
+        properties: SwfSoundProperties {
+            format: SwfSoundFormat::UncompressedLe,
+            rate: SwfSoundRate::Rate44100,
+            width: SwfSampleWidth::Bits16,
+            channels: SwfAudioChannels::Mono,
+        },
+        sample_count: 1,
+        payload: &[0, 0],
+    };
+    assert_eq!(
+        decode_define_sound_into(&zero_id_ds, &mut pcm_out),
+        Err(AudioBridgeError::InvalidSoundId)
+    );
+
+    let mut engine = FlashAudioState::create_engine(44_100, 24).expect("engine");
+    assert_eq!(engine.engine_output_sample_rate_hz(), 44_100);
+    assert_eq!(engine.engine_frame_rate_hz(), 24);
+    assert_eq!(engine.engine_master_gain_q16(), UNITY_GAIN_Q16);
+    assert_eq!(engine.engine_stream_gain_q16(), UNITY_GAIN_Q16);
+
+    assert_eq!(
+        engine.register_define_sound(&zero_id_ds),
+        Err(AudioBridgeError::InvalidSoundId)
+    );
+    assert_eq!(
+        engine.register_define_sound(&truncated),
+        Err(AudioBridgeError::UnexpectedEof)
+    );
+
+    let mut zero_ss_info = SoundInfo::default();
+    zero_ss_info.sync_stop = true;
+    let zero_ss = StartSoundTag {
+        sound_id: 0,
+        info: zero_ss_info,
+    };
+    assert_eq!(
+        engine.apply_start_sound(&zero_ss),
+        Err(AudioBridgeError::InvalidSoundId)
+    );
+
+    // 3. Bounded NUL scan in parse_start_sound2 on long NUL-less input
+    let long_no_nul = vec![b'A'; MAX_CLASS_NAME_BYTES + 64];
+    assert_eq!(
+        parse_start_sound2(&long_no_nul),
+        Err(AudioBridgeError::InvalidClassName)
+    );
+
+    // 4. Saturating diagnostic narrowing (CWE-190 / CWE-681)
+    assert_eq!(
+        validate_sound_rate_code(256),
+        Err(AudioBridgeError::InvalidSoundRateCode { code: u8::MAX })
+    );
+    assert_eq!(
+        validate_sound_sample_count((u32::MAX as usize) + 1),
+        Err(AudioBridgeError::SampleCountExceeded {
+            count: u32::MAX,
+            max: MAX_SOUND_SAMPLES
+        })
+    );
 }

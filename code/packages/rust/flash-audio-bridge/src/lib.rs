@@ -79,7 +79,12 @@ pub const fn validate_sound_rate_code(code: usize) -> Result<bool, AudioBridgeEr
     if code <= 3 {
         Ok(true)
     } else {
-        Err(AudioBridgeError::InvalidSoundRateCode { code: code as u8 })
+        let clamped = if code > u8::MAX as usize {
+            u8::MAX
+        } else {
+            code as u8
+        };
+        Err(AudioBridgeError::InvalidSoundRateCode { code: clamped })
     }
 }
 
@@ -99,8 +104,13 @@ pub const fn validate_sound_sample_count(samples: usize) -> Result<bool, AudioBr
     if samples <= MAX_SOUND_SAMPLES as usize {
         Ok(true)
     } else {
+        let clamped = if samples > u32::MAX as usize {
+            u32::MAX
+        } else {
+            samples as u32
+        };
         Err(AudioBridgeError::SampleCountExceeded {
-            count: samples as u32,
+            count: clamped,
             max: MAX_SOUND_SAMPLES,
         })
     }

@@ -664,6 +664,11 @@ pub fn parse_sound_info(data: &[u8]) -> Result<(SoundInfo, usize), AudioBridgeEr
 
 /// Parses a `StartSound` (Tag 15) payload.
 pub fn parse_start_sound(data: &[u8]) -> Result<StartSoundTag, AudioBridgeError> {
+    if data.len() > MAX_TAG_PAYLOAD_BYTES {
+        return Err(AudioBridgeError::MalformedTagPayload {
+            reason: "StartSound payload exceeds maximum tag size",
+        });
+    }
     if data.len() < 3 {
         return Err(AudioBridgeError::UnexpectedEof);
     }
@@ -677,7 +682,13 @@ pub fn parse_start_sound(data: &[u8]) -> Result<StartSoundTag, AudioBridgeError>
 
 /// Parses a `StartSound2` (Tag 89) payload (`SoundClassName` + `SOUNDINFO`).
 pub fn parse_start_sound2(data: &[u8]) -> Result<StartSound2Tag<'_>, AudioBridgeError> {
-    let nul_pos = data
+    if data.len() > MAX_TAG_PAYLOAD_BYTES {
+        return Err(AudioBridgeError::MalformedTagPayload {
+            reason: "StartSound2 payload exceeds maximum tag size",
+        });
+    }
+    let scan = &data[..data.len().min(MAX_CLASS_NAME_BYTES + 1)];
+    let nul_pos = scan
         .iter()
         .position(|&b| b == 0)
         .ok_or(AudioBridgeError::InvalidClassName)?;
@@ -695,6 +706,11 @@ pub fn parse_sound_stream_head(
     data: &[u8],
     is_v2: bool,
 ) -> Result<SoundStreamHead, AudioBridgeError> {
+    if data.len() > MAX_TAG_PAYLOAD_BYTES {
+        return Err(AudioBridgeError::MalformedTagPayload {
+            reason: "SoundStreamHead payload exceeds maximum tag size",
+        });
+    }
     if data.len() < 4 {
         return Err(AudioBridgeError::UnexpectedEof);
     }

@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/flash-audio-bridge",
-  "source_digest": "829e297da450b390c230eda338346f32f6c6c2ab04ef13b2bc394becf438606a",
+  "source_digest": "cca3521942a36840f38ed64c6dde1e65222699b7780b8c075ed61f9f31192d86",
   "manifest_digest": "19256a36b79d8d5e67e7d335f5954132632848797e2d96974aa9a8dca62b1570",
   "declared_effects": [],
   "entry_points": [

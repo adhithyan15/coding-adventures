@@ -32,7 +32,7 @@ use crate::error::AudioBridgeError;
 use crate::tags::{
     DefineSoundTag, SoundEnvelopePoint, SoundInfo, SoundStreamBlockTag, SoundStreamHead,
     StartSound2Tag, StartSoundTag, SwfAudioChannels, SwfSampleWidth, SwfSoundFormat,
-    MAX_ENVELOPE_POINTS, MAX_LOOP_COUNT, MAX_SOUND_SAMPLES,
+    MAX_ENVELOPE_POINTS, MAX_LOOP_COUNT, MAX_SOUND_SAMPLES, MAX_TAG_PAYLOAD_BYTES,
 };
 
 /// Maximum number of `DefineSound` event assets cached in the sound bank (CWE-400).
@@ -147,13 +147,13 @@ impl FlashVoice {
 #[derive(Debug, Clone)]
 pub struct FlashAudioState {
     /// Target output PCM sample rate in Hertz (`1..=192_000`).
-    pub output_sample_rate_hz: u32,
+    output_sample_rate_hz: u32,
     /// Visual timeline frame rate in Hertz.
-    pub frame_rate_hz: u32,
+    frame_rate_hz: u32,
     /// Master output gain in Q16.16 fixed point (`0..=MAX_GAIN_Q16`).
-    pub master_gain_q16: u32,
+    master_gain_q16: u32,
     /// Streaming track gain in Q16.16 fixed point (`0..=MAX_GAIN_Q16`).
-    pub stream_gain_q16: u32,
+    stream_gain_q16: u32,
     bank: [Option<EventSoundEntry>; MAX_EVENT_SOUNDS],
     voices: [FlashVoice; MAX_ACTIVE_VOICES],
     stream_fifo: PcmRingBuffer<STREAM_FIFO_CAPACITY>,
@@ -199,6 +199,30 @@ impl FlashAudioState {
         })
     }
 
+    /// Returns the configured output PCM sample rate in Hertz.
+    #[inline]
+    pub const fn engine_output_sample_rate_hz(&self) -> u32 {
+        self.output_sample_rate_hz
+    }
+
+    /// Returns the configured visual timeline frame rate in Hertz.
+    #[inline]
+    pub const fn engine_frame_rate_hz(&self) -> u32 {
+        self.frame_rate_hz
+    }
+
+    /// Returns the master output gain in Q16.16 fixed-point.
+    #[inline]
+    pub const fn engine_master_gain_q16(&self) -> u32 {
+        self.master_gain_q16
+    }
+
+    /// Returns the streaming track gain in Q16.16 fixed-point.
+    #[inline]
+    pub const fn engine_stream_gain_q16(&self) -> u32 {
+        self.stream_gain_q16
+    }
+
     /// Sets master output gain in Q16.16 fixed-point (clamped to `[0, MAX_GAIN_Q16]`).
     pub fn set_master_gain_q16(&mut self, gain_q16: u32) {
         self.master_gain_q16 = gain_q16.min(MAX_GAIN_Q16);
@@ -218,6 +242,9 @@ impl FlashAudioState {
         &mut self,
         tag: &DefineSoundTag<'_>,
     ) -> Result<usize, AudioBridgeError> {
+        if tag.sound_id == 0 {
+            return Err(AudioBridgeError::InvalidSoundId);
+        }
         let total_scalars = tag
             .properties
             .props_total_scalar_samples(tag.sample_count)?;
@@ -333,6 +360,19 @@ impl FlashAudioState {
             self.stop_voices_for_sound_id(sound_id);
             return Ok(());
         }
+        if info.loop_count == 0 || info.loop_count > MAX_LOOP_COUNT {
+            return Err(AudioBridgeError::InvalidLoopCount {
+                count: info.loop_count,
+            });
+        }
+        if let (Some(inp), Some(outp)) = (info.in_point, info.out_point) {
+            if inp >= outp {
+                return Err(AudioBridgeError::InvalidInOutPoints {
+                    in_point: inp,
+                    out_point: outp,
+                });
+            }
+        }
         if info.sync_no_multiple && self.is_sound_playing(sound_id) {
             return Ok(());
         }
@@ -346,12 +386,13 @@ impl FlashAudioState {
         let out_rate = self.output_sample_rate_hz as u64;
 
         // Convert 44.1 kHz in_point/out_point into source sample frame indices.
+        // Clamp to total_frames in u64 before narrowing to usize (32-bit safety, CWE-190).
         let start_frame = match info.in_point {
-            Some(p44) => (((p44 as u64) * src_rate) / 44_100) as usize,
+            Some(p44) => (((p44 as u64) * src_rate) / 44_100).min(total_frames as u64) as usize,
             None => 0,
         };
         let end_frame = match info.out_point {
-            Some(p44) => ((((p44 as u64) * src_rate) / 44_100) as usize).min(total_frames),
+            Some(p44) => (((p44 as u64) * src_rate) / 44_100).min(total_frames as u64) as usize,
             None => total_frames,
         };
         if start_frame >= end_frame {
@@ -392,6 +433,9 @@ impl FlashAudioState {
 
     /// Applies a `StartSound` (Tag 15) command with zero heap allocations.
     pub fn apply_start_sound(&mut self, tag: &StartSoundTag) -> Result<(), AudioBridgeError> {
+        if tag.sound_id == 0 {
+            return Err(AudioBridgeError::InvalidSoundId);
+        }
         if tag.info.sync_stop {
             self.stop_voices_for_sound_id(tag.sound_id);
             return Ok(());
@@ -472,6 +516,11 @@ impl FlashAudioState {
         &mut self,
         block: &SoundStreamBlockTag<'_>,
     ) -> Result<usize, AudioBridgeError> {
+        if block.audio_data.len() > MAX_TAG_PAYLOAD_BYTES {
+            return Err(AudioBridgeError::MalformedTagPayload {
+                reason: "SoundStreamBlock payload exceeds maximum tag size",
+            });
+        }
         let head = self
             .stream_head
             .ok_or(AudioBridgeError::StreamFormatMismatch)?;
@@ -633,7 +682,9 @@ fn estimate_adpcm_stream_samples(
     }
     let code_bits = total_bits - header_bits;
     let bits_per_frame = bits_per_sample * ch;
-    let max_in_payload = (1 + code_bits / bits_per_frame) as u32;
+    let max_in_payload = 1usize
+        .saturating_add(code_bits / bits_per_frame)
+        .min(u32::MAX as usize) as u32;
     if avg_hint > 0 {
         Ok(avg_hint.min(max_in_payload))
     } else {

@@ -314,26 +314,45 @@ pub fn decode_define_sound_into(
     tag: &DefineSoundTag<'_>,
     out: &mut [i16],
 ) -> Result<usize, AudioBridgeError> {
+    if tag.sound_id == 0 {
+        return Err(AudioBridgeError::InvalidSoundId);
+    }
     let props = tag.properties;
     match props.format {
         SwfSoundFormat::UncompressedNe => match props.width {
             SwfSampleWidth::Bits8 => {
                 let expected = props.props_expected_pcm_bytes(tag.sample_count)?;
-                decode_pcm8_into(&tag.payload[..expected], out)
+                let pcm_slice = tag
+                    .payload
+                    .get(..expected)
+                    .ok_or(AudioBridgeError::UnexpectedEof)?;
+                decode_pcm8_into(pcm_slice, out)
             }
             SwfSampleWidth::Bits16 => {
                 let expected = props.props_expected_pcm_bytes(tag.sample_count)?;
-                decode_pcm16_ne_into(&tag.payload[..expected], out)
+                let pcm_slice = tag
+                    .payload
+                    .get(..expected)
+                    .ok_or(AudioBridgeError::UnexpectedEof)?;
+                decode_pcm16_ne_into(pcm_slice, out)
             }
         },
         SwfSoundFormat::UncompressedLe => match props.width {
             SwfSampleWidth::Bits8 => {
                 let expected = props.props_expected_pcm_bytes(tag.sample_count)?;
-                decode_pcm8_into(&tag.payload[..expected], out)
+                let pcm_slice = tag
+                    .payload
+                    .get(..expected)
+                    .ok_or(AudioBridgeError::UnexpectedEof)?;
+                decode_pcm8_into(pcm_slice, out)
             }
             SwfSampleWidth::Bits16 => {
                 let expected = props.props_expected_pcm_bytes(tag.sample_count)?;
-                decode_pcm16_le_into(&tag.payload[..expected], out)
+                let pcm_slice = tag
+                    .payload
+                    .get(..expected)
+                    .ok_or(AudioBridgeError::UnexpectedEof)?;
+                decode_pcm16_le_into(pcm_slice, out)
             }
         },
         SwfSoundFormat::Adpcm => {
