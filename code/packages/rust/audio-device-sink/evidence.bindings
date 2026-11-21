@@ -1,0 +1,26 @@
+# Warrant binding manifest (VER04 section 6, VER04j section 4.6) for
+# code/specs/audio-device-sink.warrant.
+#
+# Each Warrant operation binds to a real public export of
+# `audio_device_sink` (`src/lib.rs`), mapping every `AudioSinkError` variant
+# to its corresponding Warrant `AudioError` case via `errors=`.
+#
+# proofs_not_live=frontend-refuses-lib: the Rust-subset WIR front end refuses
+# `src/lib.rs` (attributes, `String`, `f64`, `&'static str`, traits), so every
+# `steps-bound` obligation is recorded `not-live` (VER04h section 9, check 18).
+package audio_device_sink
+revision 0.2.0
+spec code/specs/audio-device-sink.warrant
+output code/packages/rust/audio-device-sink/tests/generated/warrant_evidence.rs
+seed 0x4155_4449_4f53_494e
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 400000
+
+struct PcmFormat path=audio_device_sink::PcmFormat fields=sample_rate_hz:u32,channel_count:u16,bit_depth:u16
+struct FrameCount path=audio_device_sink::FrameCount fields=frames:u64
+
+op validate_format export=validate_format errors=audio_device_sink::AudioSinkError/InvalidFormat=INVALID_FORMAT,InvalidSamples=INVALID_SAMPLES,BackendUnavailable=BACKEND_UNAVAILABLE,UnsupportedPlatform=INVALID_FORMAT,BackendFailure=BACKEND_UNAVAILABLE faults=field-flip,field-flip-last,ok-as-err,missing-error proofs_not_live=frontend-refuses-lib
+op frame_count_checked export=frame_count_checked errors=audio_device_sink::AudioSinkError/InvalidFormat=INVALID_FORMAT,InvalidSamples=INVALID_SAMPLES,BackendUnavailable=BACKEND_UNAVAILABLE,UnsupportedPlatform=INVALID_FORMAT,BackendFailure=BACKEND_UNAVAILABLE faults=field-flip,ok-as-err,missing-error proofs_not_live=frontend-refuses-lib
+op checked_pcm_byte_len_u64 export=checked_pcm_byte_len_u64 errors=audio_device_sink::AudioSinkError/InvalidFormat=INVALID_FORMAT,InvalidSamples=INVALID_SAMPLES,BackendUnavailable=BACKEND_UNAVAILABLE,UnsupportedPlatform=INVALID_FORMAT,BackendFailure=BACKEND_UNAVAILABLE faults=flip-result-bit,missing-error proofs_not_live=frontend-refuses-lib

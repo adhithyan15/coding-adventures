@@ -21,6 +21,8 @@
 
 #![forbid(unsafe_code)]
 
+pub mod capabilities;
+
 use std::error::Error;
 use std::fmt;
 
@@ -167,6 +169,57 @@ pub fn validate_format(
     bit_depth: u16,
 ) -> Result<PcmFormat, AudioSinkError> {
     PcmFormat::new(sample_rate_hz, channel_count, bit_depth)
+}
+
+/// Validated frame count returned by [`frame_count_checked`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FrameCount {
+    /// Number of PCM frames (`sample_count / channel_count`).
+    pub frames: u64,
+}
+
+/// Compute frame count from `u64` `sample_count` and `channel_count` with checked math.
+///
+/// Mirrors [`checked_frame_count`] over a `u64` boundary so oversized counts
+/// fail with [`AudioSinkError::InvalidSamples`] without platform truncation.
+pub fn frame_count_checked(
+    sample_count: u64,
+    channel_count: u16,
+) -> Result<FrameCount, AudioSinkError> {
+    if channel_count == 0
+        || channel_count > MAX_CHANNELS
+        || channel_count != SUPPORTED_CHANNEL_COUNT
+    {
+        return Err(AudioSinkError::invalid_format(format!(
+            "only mono PCM is supported in V1, got {channel_count} channels"
+        )));
+    }
+    let sample_count_usize = usize::try_from(sample_count).map_err(|_| {
+        AudioSinkError::invalid_samples(format!(
+            "sample_count {sample_count} exceeds MAX_SAMPLES={MAX_SAMPLES}"
+        ))
+    })?;
+    let frames = checked_frame_count(sample_count_usize, channel_count)?;
+    Ok(FrameCount {
+        frames: frames as u64,
+    })
+}
+
+/// Compute the byte size of `sample_count` (`u64`) samples under `format` with pre-flight caps.
+///
+/// Validates `format` first, then enforces `format.max_samples()` and [`MAX_PCM_BYTES`].
+pub fn checked_pcm_byte_len_u64(
+    sample_count: u64,
+    format: PcmFormat,
+) -> Result<u64, AudioSinkError> {
+    let _ = format.max_samples()?;
+    let sample_count_usize = usize::try_from(sample_count).map_err(|_| {
+        AudioSinkError::invalid_samples(format!(
+            "blocking playback is limited to {MAX_BLOCKING_DURATION_SECONDS} seconds"
+        ))
+    })?;
+    let bytes = checked_pcm_byte_len(sample_count_usize, format)?;
+    Ok(bytes as u64)
 }
 
 /// Compute frame count from `sample_count` and `channel_count` with checked math.
