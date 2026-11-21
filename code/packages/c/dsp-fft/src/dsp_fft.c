@@ -152,10 +152,9 @@ static int is_valid_dir(dsp_fft_direction_t dir) {
     return (dir == DSP_FFT_FORWARD) || (dir == DSP_FFT_INVERSE);
 }
 
-static int validate_interleaved_buf(const float *buf, size_t float_len,
-                                    int require_pow2, size_t *out_n,
-                                    dsp_fft_error_t *out_err) {
-    size_t i;
+static int validate_interleaved_bounds(const float *buf, size_t float_len,
+                                       int require_pow2, size_t *out_n,
+                                       dsp_fft_error_t *out_err) {
     size_t n;
     if (buf == NULL) {
         *out_err = DSP_FFT_ERR_INVALID_INPUT;
@@ -178,14 +177,63 @@ static int validate_interleaved_buf(const float *buf, size_t float_len,
         *out_err = DSP_FFT_ERR_NOT_POWER_OF_TWO;
         return 0;
     }
-    for (i = 0; i < float_len; ++i) {
-        if (!dsp_complex_is_finite(buf[i])) {
-            *out_err = DSP_FFT_ERR_INVALID_INPUT;
-            return 0;
-        }
-    }
     *out_n = n;
     *out_err = DSP_FFT_OK;
+    return 1;
+}
+
+static int validate_interleaved_buf(const float *buf, size_t float_len,
+                                    int require_pow2, size_t *out_n,
+                                    dsp_fft_error_t *out_err) {
+    if (!validate_interleaved_bounds(buf, float_len, require_pow2, out_n,
+                                     out_err)) {
+        return 0;
+    }
+    if (!all_finite_f(buf, float_len)) {
+        *out_err = DSP_FFT_ERR_INVALID_INPUT;
+        return 0;
+    }
+    return 1;
+}
+
+static int check_bluestein_bounds(size_t n, size_t *out_m, size_t *out_two_m) {
+    size_t two_n = 0u;
+    size_t conv_len = 0u;
+    size_t m = 1u;
+    size_t two_m = 0u;
+
+    if (n == 0u || n > DSP_FFT_MAX_LEN) {
+        return 0;
+    }
+    if (n == 1u) {
+        if (out_m != NULL) {
+            *out_m = 1u;
+        }
+        if (out_two_m != NULL) {
+            *out_two_m = 2u;
+        }
+        return 1;
+    }
+    if (!dsp_complex_checked_mul(n, 2u, &two_n) || two_n < 1u) {
+        return 0;
+    }
+    conv_len = two_n - 1u;
+    while (m < conv_len) {
+        if (m > DSP_FFT_MAX_LEN / 2u) {
+            return 0;
+        }
+        m <<= 1u;
+    }
+    if (m > DSP_FFT_MAX_LEN || !dsp_complex_checked_mul(m, 2u, &two_m) ||
+        two_m > DSP_FFT_MAX_SAMPLES) {
+        return 0;
+    }
+    if (out_m != NULL) {
+        *out_m = m;
+    }
+    if (out_two_m != NULL) {
+        *out_two_m = two_m;
+    }
     return 1;
 }
 
@@ -377,7 +425,6 @@ dsp_fft_error_t dsp_bluestein_scalar(const float *signal, size_t float_len,
                                      dsp_fft_direction_t dir,
                                      float **out, size_t *out_len) {
     size_t n = 0u;
-    size_t conv_len = 0u;
     size_t m = 1u;
     size_t two_n = 0u;
     size_t two_m = 0u;
@@ -404,8 +451,14 @@ dsp_fft_error_t dsp_bluestein_scalar(const float *signal, size_t float_len,
     if (!is_valid_dir(dir)) {
         return DSP_FFT_ERR_INVALID_INPUT;
     }
-    if (!validate_interleaved_buf(signal, float_len, 0, &n, &err)) {
+    if (!validate_interleaved_bounds(signal, float_len, 0, &n, &err)) {
         return err;
+    }
+    if (!check_bluestein_bounds(n, &m, &two_m)) {
+        return DSP_FFT_ERR_INVALID_INPUT;
+    }
+    if (!all_finite_f(signal, float_len)) {
+        return DSP_FFT_ERR_INVALID_INPUT;
     }
     if (n == 1u) {
         err = alloc_float_buf(2u, &res);
@@ -419,20 +472,7 @@ dsp_fft_error_t dsp_bluestein_scalar(const float *signal, size_t float_len,
         return DSP_FFT_OK;
     }
 
-    if (!dsp_complex_checked_mul(n, 2u, &two_n) || two_n < 1u) {
-        return DSP_FFT_ERR_INVALID_INPUT;
-    }
-    conv_len = two_n - 1u;
-    while (m < conv_len) {
-        if (m > DSP_FFT_MAX_LEN / 2u) {
-            return DSP_FFT_ERR_INVALID_INPUT;
-        }
-        m <<= 1u;
-    }
-    if (m > DSP_FFT_MAX_LEN || !dsp_complex_checked_mul(m, 2u, &two_m) ||
-        two_m > DSP_FFT_MAX_SAMPLES) {
-        return DSP_FFT_ERR_INVALID_INPUT;
-    }
+    two_n = float_len;
 
     sign = (dir == DSP_FFT_FORWARD) ? -1.0 : 1.0;
     err = build_chirp(n, sign, &chirp);
@@ -575,13 +615,19 @@ dsp_fft_error_t dsp_rfft_scalar(const float *signal, size_t signal_len,
         signal_len > DSP_FFT_MAX_SAMPLES) {
         return DSP_FFT_ERR_INVALID_INPUT;
     }
-    for (i = 0u; i < signal_len; ++i) {
-        if (!dsp_complex_is_finite(signal[i])) {
-            return DSP_FFT_ERR_INVALID_INPUT;
-        }
-    }
     if (!dsp_complex_checked_mul(signal_len, 2u, &two_n) ||
         two_n > DSP_FFT_MAX_SAMPLES) {
+        return DSP_FFT_ERR_INVALID_INPUT;
+    }
+    if (!dsp_fft_is_power_of_two(signal_len) &&
+        !check_bluestein_bounds(signal_len, NULL, NULL)) {
+        return DSP_FFT_ERR_INVALID_INPUT;
+    }
+    half_bins = signal_len / 2u + 1u;
+    if (!dsp_complex_checked_mul(half_bins, 2u, &out_floats)) {
+        return DSP_FFT_ERR_INVALID_INPUT;
+    }
+    if (!all_finite_f(signal, signal_len)) {
         return DSP_FFT_ERR_INVALID_INPUT;
     }
 
@@ -601,11 +647,6 @@ dsp_fft_error_t dsp_rfft_scalar(const float *signal, size_t signal_len,
         return err;
     }
 
-    half_bins = signal_len / 2u + 1u;
-    if (!dsp_complex_checked_mul(half_bins, 2u, &out_floats)) {
-        dsp_fft_free_buffer(full, full_len);
-        return DSP_FFT_ERR_INVALID_INPUT;
-    }
     err = alloc_float_buf(out_floats, &res);
     if (err != DSP_FFT_OK) {
         dsp_fft_free_buffer(full, full_len);
@@ -644,17 +685,19 @@ dsp_fft_error_t dsp_irfft_scalar(const float *half_spectrum, size_t float_len,
         float_len > DSP_FFT_MAX_SAMPLES || (float_len % 2u) != 0u) {
         return DSP_FFT_ERR_INVALID_INPUT;
     }
-    for (k = 0u; k < float_len; ++k) {
-        if (!dsp_complex_is_finite(half_spectrum[k])) {
-            return DSP_FFT_ERR_INVALID_INPUT;
-        }
-    }
     half_bins = float_len / 2u;
     expected_half_bins = n / 2u + 1u;
     if (half_bins != expected_half_bins) {
         return DSP_FFT_ERR_INVALID_INPUT;
     }
     if (!dsp_complex_checked_mul(n, 2u, &two_n) || two_n > DSP_FFT_MAX_SAMPLES) {
+        return DSP_FFT_ERR_INVALID_INPUT;
+    }
+    if (!dsp_fft_is_power_of_two(n) &&
+        !check_bluestein_bounds(n, NULL, NULL)) {
+        return DSP_FFT_ERR_INVALID_INPUT;
+    }
+    if (!all_finite_f(half_spectrum, float_len)) {
         return DSP_FFT_ERR_INVALID_INPUT;
     }
 
@@ -729,8 +772,15 @@ dsp_fft_error_t dsp_fft(const float *signal, size_t len, int is_complex,
 
     if (is_complex) {
         size_t n = 0u;
-        if (!validate_interleaved_buf(signal, len, 0, &n, &err)) {
+        if (!validate_interleaved_bounds(signal, len, 0, &n, &err)) {
             return err;
+        }
+        if (!dsp_fft_is_power_of_two(n) &&
+            !check_bluestein_bounds(n, NULL, NULL)) {
+            return DSP_FFT_ERR_INVALID_INPUT;
+        }
+        if (!all_finite_f(signal, len)) {
+            return DSP_FFT_ERR_INVALID_INPUT;
         }
         err = run_complex_fft_auto(signal, n, DSP_FFT_FORWARD, &buf, &buf_len);
         if (err != DSP_FFT_OK) {
@@ -743,13 +793,15 @@ dsp_fft_error_t dsp_fft(const float *signal, size_t len, int is_complex,
         if (len > DSP_FFT_MAX_LEN || len > DSP_FFT_MAX_SAMPLES) {
             return DSP_FFT_ERR_INVALID_INPUT;
         }
-        for (i = 0u; i < len; ++i) {
-            if (!dsp_complex_is_finite(signal[i])) {
-                return DSP_FFT_ERR_INVALID_INPUT;
-            }
-        }
         if (!dsp_complex_checked_mul(len, 2u, &two_n) ||
             two_n > DSP_FFT_MAX_SAMPLES) {
+            return DSP_FFT_ERR_INVALID_INPUT;
+        }
+        if (!dsp_fft_is_power_of_two(len) &&
+            !check_bluestein_bounds(len, NULL, NULL)) {
+            return DSP_FFT_ERR_INVALID_INPUT;
+        }
+        if (!all_finite_f(signal, len)) {
             return DSP_FFT_ERR_INVALID_INPUT;
         }
         err = alloc_float_buf(two_n, &interleaved);
@@ -777,7 +829,6 @@ dsp_fft_error_t dsp_ifft(const dsp_complex_tensor_t *spectrum,
                          dsp_complex_tensor_t *out) {
     size_t n;
     size_t float_len = 0u;
-    size_t i;
     const float *data;
     float *buf = NULL;
     size_t buf_len = 0u;
@@ -799,7 +850,9 @@ dsp_fft_error_t dsp_ifft(const dsp_complex_tensor_t *spectrum,
     }
     n = spectrum->len;
     if (!dsp_complex_checked_mul(n, 2u, &float_len) ||
-        float_len > DSP_FFT_MAX_SAMPLES) {
+        float_len > DSP_FFT_MAX_SAMPLES ||
+        (!dsp_fft_is_power_of_two(n) &&
+         !check_bluestein_bounds(n, NULL, NULL))) {
         if (out != spectrum) {
             out->data = NULL;
             out->len = 0u;
@@ -807,14 +860,12 @@ dsp_fft_error_t dsp_ifft(const dsp_complex_tensor_t *spectrum,
         return DSP_FFT_ERR_INVALID_INPUT;
     }
     data = spectrum->data;
-    for (i = 0u; i < float_len; ++i) {
-        if (!dsp_complex_is_finite(data[i])) {
-            if (out != spectrum) {
-                out->data = NULL;
-                out->len = 0u;
-            }
-            return DSP_FFT_ERR_INVALID_INPUT;
+    if (!all_finite_f(data, float_len)) {
+        if (out != spectrum) {
+            out->data = NULL;
+            out->len = 0u;
         }
+        return DSP_FFT_ERR_INVALID_INPUT;
     }
 
     err = run_complex_fft_auto(data, n, DSP_FFT_INVERSE, &buf, &buf_len);

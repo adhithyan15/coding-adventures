@@ -79,12 +79,19 @@ inline bool is_finite(float x) noexcept {
     return (x == x) && ((x - x) == 0.0f);
 }
 
-inline void require_all_finite(const std::vector<float>& buf) {
-    for (float x : buf) {
-        if (!is_finite(x)) {
+inline void require_all_finite(const float* buf, std::size_t count) {
+    if (buf == nullptr && count > 0u) {
+        fail(Error::InvalidInput);
+    }
+    for (std::size_t i = 0u; i < count; ++i) {
+        if (!is_finite(buf[i])) {
             fail(Error::InvalidInput);
         }
     }
+}
+
+inline void require_all_finite(const std::vector<float>& buf) {
+    require_all_finite(buf.data(), buf.size());
 }
 
 inline void require_valid_dir(Direction dir) {
@@ -110,8 +117,8 @@ inline bool checked_mul(std::size_t a, std::size_t b, std::size_t& out) noexcept
     return true;
 }
 
-inline std::size_t validate_interleaved(const float* buf, std::size_t float_len,
-                                        bool require_pow2) {
+inline std::size_t validate_interleaved_bounds(const float* buf, std::size_t float_len,
+                                               bool require_pow2) {
     if (buf == nullptr && float_len > 0u) {
         fail(Error::InvalidInput);
     }
@@ -128,12 +135,45 @@ inline std::size_t validate_interleaved(const float* buf, std::size_t float_len,
     if (require_pow2 && !is_power_of_two(n)) {
         fail(Error::NotPowerOfTwo);
     }
-    for (std::size_t i = 0u; i < float_len; ++i) {
-        if (!is_finite(buf[i])) {
+    return n;
+}
+
+inline std::size_t validate_interleaved(const float* buf, std::size_t float_len,
+                                        bool require_pow2) {
+    std::size_t n = validate_interleaved_bounds(buf, float_len, require_pow2);
+    require_all_finite(buf, float_len);
+    return n;
+}
+
+struct BluesteinBounds {
+    std::size_t m;
+    std::size_t two_m;
+};
+
+inline BluesteinBounds require_bluestein_bounds(std::size_t n) {
+    if (n == 0u || n > MAX_FFT_LEN) {
+        fail(Error::InvalidInput);
+    }
+    if (n == 1u) {
+        return {1u, 2u};
+    }
+    std::size_t two_n = 0u;
+    if (!checked_mul(n, 2u, two_n) || two_n < 1u) {
+        fail(Error::InvalidInput);
+    }
+    std::size_t conv_len = two_n - 1u;
+    std::size_t m = 1u;
+    while (m < conv_len) {
+        if (m > MAX_FFT_LEN / 2u) {
             fail(Error::InvalidInput);
         }
+        m <<= 1u;
     }
-    return n;
+    std::size_t two_m = 0u;
+    if (m > MAX_FFT_LEN || !checked_mul(m, 2u, two_m) || two_m > MAX_SAMPLES) {
+        fail(Error::InvalidInput);
+    }
+    return {m, two_m};
 }
 
 inline std::size_t bit_reverse(std::size_t x, unsigned int bits) noexcept {
@@ -244,27 +284,16 @@ inline std::vector<float> ifft_scalar(const std::vector<float>& spectrum) {
 inline std::vector<float> bluestein_scalar(const float* signal, std::size_t float_len,
                                            Direction dir) {
     detail::require_valid_dir(dir);
-    std::size_t n = detail::validate_interleaved(signal, float_len, false);
+    std::size_t n = detail::validate_interleaved_bounds(signal, float_len, false);
+    auto bounds = detail::require_bluestein_bounds(n);
+    detail::require_all_finite(signal, float_len);
     if (n == 1u) {
         return {signal[0], signal[1]};
     }
 
-    std::size_t two_n = 0u;
-    if (!detail::checked_mul(n, 2u, two_n) || two_n < 1u) {
-        detail::fail(Error::InvalidInput);
-    }
-    std::size_t conv_len = two_n - 1u;
-    std::size_t m = 1u;
-    while (m < conv_len) {
-        if (m > MAX_FFT_LEN / 2u) {
-            detail::fail(Error::InvalidInput);
-        }
-        m <<= 1u;
-    }
-    std::size_t two_m = 0u;
-    if (m > MAX_FFT_LEN || !detail::checked_mul(m, 2u, two_m) || two_m > MAX_SAMPLES) {
-        detail::fail(Error::InvalidInput);
-    }
+    std::size_t two_n = float_len;
+    std::size_t m = bounds.m;
+    std::size_t two_m = bounds.two_m;
 
     double sign = (dir == Direction::Forward) ? -1.0 : 1.0;
     std::vector<float> chirp = detail::build_chirp(n, sign);
@@ -346,15 +375,19 @@ inline std::vector<float> rfft_scalar(const float* signal, std::size_t signal_le
         signal_len > MAX_SAMPLES) {
         detail::fail(Error::InvalidInput);
     }
-    for (std::size_t i = 0u; i < signal_len; ++i) {
-        if (!detail::is_finite(signal[i])) {
-            detail::fail(Error::InvalidInput);
-        }
-    }
     std::size_t two_n = 0u;
     if (!detail::checked_mul(signal_len, 2u, two_n) || two_n > MAX_SAMPLES) {
         detail::fail(Error::InvalidInput);
     }
+    if (!is_power_of_two(signal_len)) {
+        (void)detail::require_bluestein_bounds(signal_len);
+    }
+    std::size_t half_bins = signal_len / 2u + 1u;
+    std::size_t out_floats = 0u;
+    if (!detail::checked_mul(half_bins, 2u, out_floats)) {
+        detail::fail(Error::InvalidInput);
+    }
+    detail::require_all_finite(signal, signal_len);
     std::vector<float> interleaved(two_n, 0.0f);
     for (std::size_t i = 0u; i < signal_len; ++i) {
         interleaved[2u * i] = signal[i];
@@ -362,11 +395,6 @@ inline std::vector<float> rfft_scalar(const float* signal, std::size_t signal_le
     }
     std::vector<float> full = detail::run_complex_auto(interleaved.data(), signal_len,
                                                        Direction::Forward);
-    std::size_t half_bins = signal_len / 2u + 1u;
-    std::size_t out_floats = 0u;
-    if (!detail::checked_mul(half_bins, 2u, out_floats)) {
-        detail::fail(Error::InvalidInput);
-    }
     return std::vector<float>(full.begin(),
                               full.begin() + static_cast<std::ptrdiff_t>(out_floats));
 }
@@ -382,11 +410,6 @@ inline std::vector<float> irfft_scalar(const float* half_spectrum, std::size_t f
         float_len > MAX_SAMPLES || (float_len % 2u) != 0u) {
         detail::fail(Error::InvalidInput);
     }
-    for (std::size_t i = 0u; i < float_len; ++i) {
-        if (!detail::is_finite(half_spectrum[i])) {
-            detail::fail(Error::InvalidInput);
-        }
-    }
     std::size_t half_bins = float_len / 2u;
     std::size_t expected_half_bins = n / 2u + 1u;
     if (half_bins != expected_half_bins) {
@@ -396,6 +419,10 @@ inline std::vector<float> irfft_scalar(const float* half_spectrum, std::size_t f
     if (!detail::checked_mul(n, 2u, two_n) || two_n > MAX_SAMPLES) {
         detail::fail(Error::InvalidInput);
     }
+    if (!is_power_of_two(n)) {
+        (void)detail::require_bluestein_bounds(n);
+    }
+    detail::require_all_finite(half_spectrum, float_len);
 
     std::vector<float> full(two_n, 0.0f);
     for (std::size_t i = 0u; i < float_len; ++i) {
@@ -428,22 +455,25 @@ inline ca::dsp_complex::ComplexTensor fft(const float* signal, std::size_t len,
         detail::fail(Error::InvalidInput);
     }
     if (is_complex) {
-        std::size_t n = detail::validate_interleaved(signal, len, false);
+        std::size_t n = detail::validate_interleaved_bounds(signal, len, false);
+        if (!is_power_of_two(n)) {
+            (void)detail::require_bluestein_bounds(n);
+        }
+        detail::require_all_finite(signal, len);
         std::vector<float> out = detail::run_complex_auto(signal, n, Direction::Forward);
         return detail::wrap_interleaved(std::move(out));
     }
     if (len > MAX_FFT_LEN || len > MAX_SAMPLES) {
         detail::fail(Error::InvalidInput);
     }
-    for (std::size_t i = 0u; i < len; ++i) {
-        if (!detail::is_finite(signal[i])) {
-            detail::fail(Error::InvalidInput);
-        }
-    }
     std::size_t two_n = 0u;
     if (!detail::checked_mul(len, 2u, two_n) || two_n > MAX_SAMPLES) {
         detail::fail(Error::InvalidInput);
     }
+    if (!is_power_of_two(len)) {
+        (void)detail::require_bluestein_bounds(len);
+    }
+    detail::require_all_finite(signal, len);
     std::vector<float> interleaved(two_n, 0.0f);
     for (std::size_t i = 0u; i < len; ++i) {
         interleaved[2u * i] = signal[i];
@@ -467,14 +497,15 @@ inline ca::dsp_complex::ComplexTensor fft(const ca::dsp_complex::ComplexTensor& 
 inline ca::dsp_complex::ComplexTensor ifft(const ca::dsp_complex::ComplexTensor& spectrum) {
     std::size_t n = spectrum.len();
     const auto& data = spectrum.as_interleaved();
-    if (n == 0u || n > MAX_FFT_LEN || data.size() > MAX_SAMPLES) {
+    std::size_t two_n = 0u;
+    if (n == 0u || n > MAX_FFT_LEN || !detail::checked_mul(n, 2u, two_n) ||
+        two_n > MAX_SAMPLES || data.size() != two_n) {
         detail::fail(Error::InvalidInput);
     }
-    for (float x : data) {
-        if (!detail::is_finite(x)) {
-            detail::fail(Error::InvalidInput);
-        }
+    if (!is_power_of_two(n)) {
+        (void)detail::require_bluestein_bounds(n);
     }
+    detail::require_all_finite(data);
     std::vector<float> out = detail::run_complex_auto(data.data(), n, Direction::Inverse);
     return detail::wrap_interleaved(std::move(out));
 }

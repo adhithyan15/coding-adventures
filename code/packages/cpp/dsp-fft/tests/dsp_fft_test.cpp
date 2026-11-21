@@ -204,6 +204,23 @@ void test_hostile_cwe_guards() {
         fft::bluestein_scalar(x, ((fft::MAX_FFT_LEN / 2u) + 1u) * 2u, fft::Direction::Forward);
     }));
     ISO_CHECK(throws(fft::Error::InvalidInput, [] {
+        float x[2] = {0.0f, 0.0f};
+        fft::fft(x, ((fft::MAX_FFT_LEN / 2u) + 1u) * 2u, true);
+    }));
+    ISO_CHECK(throws(fft::Error::InvalidInput, [] {
+        float x[2] = {0.0f, 0.0f};
+        fft::fft(x, (fft::MAX_FFT_LEN / 2u) + 1u, false);
+    }));
+    ISO_CHECK(throws(fft::Error::InvalidInput, [] {
+        float x[2] = {0.0f, 0.0f};
+        fft::rfft_scalar(x, (fft::MAX_FFT_LEN / 2u) + 1u);
+    }));
+    ISO_CHECK(throws(fft::Error::InvalidInput, [] {
+        float x[2] = {0.0f, 0.0f};
+        fft::irfft_scalar(x, (((fft::MAX_FFT_LEN / 2u) + 1u) / 2u + 1u) * 2u,
+                          static_cast<std::uint32_t>((fft::MAX_FFT_LEN / 2u) + 1u));
+    }));
+    ISO_CHECK(throws(fft::Error::InvalidInput, [] {
         fft::irfft_scalar({1.0f, 0.0f, 2.0f, 0.0f},
                           static_cast<std::uint32_t>(fft::MAX_FFT_LEN + 1u));
     }));

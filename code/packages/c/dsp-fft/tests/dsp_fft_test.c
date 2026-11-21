@@ -316,6 +316,15 @@ static void test_hostile_cwe_guards(void) {
     ISO_CHECK_EQ_INT(dsp_bluestein_scalar(valid4, ((DSP_FFT_MAX_LEN / 2u) + 1u) * 2u,
                                           DSP_FFT_FORWARD, &out, &olen),
                      DSP_FFT_ERR_INVALID_INPUT);
+    ISO_CHECK_EQ_INT(dsp_fft(valid4, ((DSP_FFT_MAX_LEN / 2u) + 1u) * 2u, 1, &t),
+                     DSP_FFT_ERR_INVALID_INPUT);
+    ISO_CHECK_EQ_INT(dsp_fft(valid4, (DSP_FFT_MAX_LEN / 2u) + 1u, 0, &t),
+                     DSP_FFT_ERR_INVALID_INPUT);
+    ISO_CHECK_EQ_INT(dsp_rfft_scalar(valid4, (DSP_FFT_MAX_LEN / 2u) + 1u, &out, &olen),
+                     DSP_FFT_ERR_INVALID_INPUT);
+    ISO_CHECK_EQ_INT(dsp_irfft_scalar(valid4, (((DSP_FFT_MAX_LEN / 2u) + 1u) / 2u + 1u) * 2u,
+                                      (uint32_t)((DSP_FFT_MAX_LEN / 2u) + 1u), &out, &olen),
+                     DSP_FFT_ERR_INVALID_INPUT);
     ISO_CHECK_EQ_INT(dsp_irfft_scalar(valid4, 4u, (uint32_t)(DSP_FFT_MAX_LEN + 1u), &out, &olen),
                      DSP_FFT_ERR_INVALID_INPUT);
     ISO_CHECK(dsp_fft_error_str(DSP_FFT_OK) != NULL);
