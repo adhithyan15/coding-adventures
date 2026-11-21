@@ -1,0 +1,32 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/flash-audio-bridge",
+  "source_digest": "282dbda331587138db83c3cf6b2eafd55804e26aebd213b8d8b4b5d05db58e32",
+  "manifest_digest": "19256a36b79d8d5e67e7d335f5954132632848797e2d96974aa9a8dca62b1570",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_sound_rate_code",
+      "signature": "pub const fn validate_sound_rate_code(code: usize) -> Result<bool, AudioBridgeError>",
+      "effects": []
+    },
+    {
+      "name": "validate_adpcm_bit_width",
+      "signature": "pub const fn validate_adpcm_bit_width(bits: usize) -> Result<bool, AudioBridgeError>",
+      "effects": []
+    },
+    {
+      "name": "validate_sound_sample_count",
+      "signature": "pub const fn validate_sound_sample_count(samples: usize) -> Result<bool, AudioBridgeError>",
+      "effects": []
+    },
+    {
+      "name": "validate_envelope_point_count",
+      "signature": "pub const fn validate_envelope_point_count(count: usize) -> Result<bool, AudioBridgeError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
