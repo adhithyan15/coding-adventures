@@ -19388,11 +19388,24 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-csharp-lexer-lane-parity",
+      "title": "Port C# lexer to Dart",
+      "status": "pr-open",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-swift-csharp-lexer-lane-parity",
+      "pr_number": 19811,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19811",
+      "notes": "Dart lane of C# lexer parity. Delivers coding_adventures_csharp_lexer covering C# 1.0 through 12.0 token specifications, surrogate validation, size bounds, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-csharp-lexer-lane-parity",
       "title": "Port the C# lexer to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-csharp-lexer-lane-parity"
       ],
       "branch": null,
       "pr_number": null,
