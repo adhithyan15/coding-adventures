@@ -14,14 +14,14 @@ warrant aero_flight_model v1
   -- ISA 1976 valid altitude envelope: [-500 m, +20_000 m].
   model valid_altitude_m(alt_m: Int) -> Bool = alt_m >= -500 and alt_m <= 20000
   -- Polar table point count in [2, 64] (CWE-400 / CWE-125).
-  model valid_table_len(len: Nat) -> Bool = len >= 2 and len <= 64
+  model valid_table_len(table_len: Nat) -> Bool = table_len >= 2 and table_len <= 64
   -- Scale-positive geometry bounds in milli-units (> 0, <= 1_000_000_000).
   model valid_geometry_milli(area_milli: Int, span_milli: Int, chord_milli: Int) -> Bool = area_milli >= 1 and area_milli <= 1000000000 and span_milli >= 1 and span_milli <= 1000000000 and chord_milli >= 1 and chord_milli <= 1000000000
   -- Airspeed guard in milli-m/s: V < 250 milli-m/s (0.25 m/s) zeros aero forces (CWE-369).
   model aero_active_speed(speed_milli: Nat) -> Bool = speed_milli >= 250
 
   op validate_altitude(alt_m: Int) -> Result<Unit, AeroError>
-  op validate_table_len(len: Nat) -> Result<Unit, AeroError>
+  op validate_table_len(table_len: Nat) -> Result<Unit, AeroError>
   op validate_geometry(area_milli: Int, span_milli: Int, chord_milli: Int) -> Result<Unit, AeroError>
   op check_airspeed_active(speed_milli: Nat) -> Bool
 
@@ -33,7 +33,7 @@ warrant aero_flight_model v1
   labels validate_altitude:
     alt_m public
   labels validate_table_len:
-    len public
+    table_len public
   labels validate_geometry:
     area_milli public
     span_milli public
@@ -44,7 +44,7 @@ warrant aero_flight_model v1
   input validate_altitude.alt_m:
     hostile
     ensures no_panic, terminates
-  input validate_table_len.len:
+  input validate_table_len.table_len:
     hostile
     ensures no_panic, terminates
   input validate_geometry.area_milli:
