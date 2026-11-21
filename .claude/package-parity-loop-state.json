@@ -18654,11 +18654,23 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-lattice-frontend-vertical-parity",
+      "title": "Port Lattice lexer and parser vertical to Dart",
+      "status": "pr-open",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-lattice-frontend-vertical-parity",
+      "pr_number": null,
+      "notes": "Dart subtranche of Lattice frontend vertical parity. Delivers coding_adventures_lattice_lexer and coding_adventures_lattice_parser with delimiter nesting depth defense, token ceiling, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-lattice-frontend-vertical-parity",
       "title": "Port Lattice lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-lattice-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -18686,13 +18698,15 @@
     {
       "id": "dart-sql-frontend-vertical-parity",
       "title": "Port SQL lexer and parser vertical to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "dart-swift-language-frontends-neutral-fixtures"
       ],
       "branch": "feat/dart-sql-frontend-vertical-parity",
       "pr_number": 19814,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19814",
+      "merged_at": "2026-11-21T21:41:14Z",
+      "merge_commit": "258469dfac0815b5b70e5e1f8446627dff4de0b8",
       "notes": "Dart subtranche of SQL frontend vertical parity. Delivers coding_adventures_sql_lexer and coding_adventures_sql_parser with uppercase KEYWORD normalization, <> alias preservation, nesting depth defense, and shared neutral fixture conformance."
     },
     {
