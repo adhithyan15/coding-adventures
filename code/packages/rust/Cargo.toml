@@ -721,6 +721,7 @@ members = [
     "flash-audio-bridge",
     "avm-bytecode-lifter",
     "flash-player-host",
+    "swf-conformance-corpus",
     "sprite-oam",
     "tilemap2d",
     "rpg-grid-world",
