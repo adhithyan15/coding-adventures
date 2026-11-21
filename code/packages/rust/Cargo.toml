@@ -762,6 +762,7 @@ members = [
     "math3d",
     "raycast-dda",
     "rigidbody-6dof",
+    "bsp-portal25d",
     "polynomial",
     "protobuf",
     "fsrs",

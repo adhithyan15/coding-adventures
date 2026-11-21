@@ -1,0 +1,115 @@
+-- GAME32 -- BspPortal25D: deterministic zero-allocation (steady-state) 2D sector BSP tree
+-- builder, front-to-back portal traversal with 1D column occlusion buffer, and 2.5D rendering.
+--
+-- Warrant document for bsp-portal25d (VER04j and VER04m: state=explicit).
+-- Formal verification contract for bounded BSP depth/node/sector counts, sector height ordering,
+-- framebuffer bounds, and near-zero perpendicular distance / determinant guards (CWE-20 / CWE-369 / CWE-400 / CWE-674).
+
+warrant bsp_portal25d v1
+  error BspError = NonFiniteInput | ValueOutOfBounds | DegenerateSegment | DegenerateCamera | InvalidSector | InvalidLinedef | InvalidTexture | InvalidFramebuffer | ScratchTooSmall | BspLimitExceeded | InvalidMaterialId | ArithmeticOverflow
+
+  model Unit = Bool
+  variant NodeKind = Internal | Leaf
+
+  record BspBudget(depth: Nat, nodes: Nat, segs: Nat)
+
+  -- Bounded BSP depth and node count guard: depth <= 64, nodes <= 65536 (CWE-400 / CWE-674).
+  model valid_bsp_budget(depth: Nat, nodes: Nat) -> Bool = depth <= 64 and nodes >= 1 and nodes <= 65536
+  -- Bounded sector height ordering guard: floor <= ceil (CWE-20).
+  model valid_sector_heights(floor_mm: Int, ceil_mm: Int) -> Bool = floor_mm <= ceil_mm
+  -- Bounded framebuffer dimension guard: 1 <= d <= 4096 (CWE-400).
+  model valid_frame_dim(w: Nat, h: Nat) -> Bool = w >= 1 and w <= 4096 and h >= 1 and h <= 4096
+  -- Non-zero perpendicular distance guard in micro-units (CWE-369 division-by-zero prevention).
+  model valid_perp_dist_micro(dist: Nat) -> Bool = dist >= 1
+
+  op validate_bsp_budget(depth: Nat, nodes: Nat) -> Result<Bool, BspError>
+  op validate_sector_heights(floor_mm: Int, ceil_mm: Int) -> Result<Bool, BspError>
+  op validate_frame_dim(w: Nat, h: Nat) -> Result<Bool, BspError>
+  op validate_perp_dist(dist: Nat) -> Result<Bool, BspError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_bsp_budget:
+    depth public
+    nodes public
+  labels validate_sector_heights:
+    floor_mm public
+    ceil_mm public
+  labels validate_frame_dim:
+    w public
+    h public
+  labels validate_perp_dist:
+    dist public
+
+  input validate_bsp_budget.depth:
+    hostile
+    ensures no_panic, terminates
+  input validate_bsp_budget.nodes:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_sector_heights.floor_mm:
+    hostile
+    ensures no_panic, terminates
+  input validate_sector_heights.ceil_mm:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_frame_dim.w:
+    hostile
+    ensures no_panic, terminates
+  input validate_frame_dim.h:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_perp_dist.dist:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_bsp_budget:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_sector_heights:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_frame_dim:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_perp_dist:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example bsp_valid:
+    validate_bsp_budget(12, 64) == Ok(true)
+  example bsp_depth_exceeded:
+    validate_bsp_budget(65, 64) == Err(BspError.BspLimitExceeded)
+  example bsp_zero_nodes:
+    validate_bsp_budget(0, 0) == Err(BspError.BspLimitExceeded)
+  example sector_valid:
+    validate_sector_heights(0, 4000) == Ok(true)
+  example sector_inverted:
+    validate_sector_heights(4000, 1000) == Err(BspError.InvalidSector)
+  example frame_valid:
+    validate_frame_dim(320, 200) == Ok(true)
+  example frame_too_large:
+    validate_frame_dim(4097, 200) == Err(BspError.InvalidFramebuffer)
+  example perp_zero:
+    validate_perp_dist(0) == Err(BspError.DegenerateCamera)
+  example perp_min:
+    validate_perp_dist(1) == Ok(true)
+
+  claim validate_bsp_budget_agrees:
+    forall d: Nat, n: Nat. validate_bsp_budget(d, n) == (if valid_bsp_budget(d, n) then Ok(true) else Err(BspError.BspLimitExceeded))
+  claim validate_sector_heights_agrees:
+    forall f: Int, c: Int. validate_sector_heights(f, c) == (if valid_sector_heights(f, c) then Ok(true) else Err(BspError.InvalidSector))
+  claim validate_frame_dim_agrees:
+    forall w: Nat, h: Nat. validate_frame_dim(w, h) == (if valid_frame_dim(w, h) then Ok(true) else Err(BspError.InvalidFramebuffer))
+  claim validate_perp_dist_agrees:
+    forall d: Nat. validate_perp_dist(d) == (if valid_perp_dist_micro(d) then Ok(true) else Err(BspError.DegenerateCamera))
