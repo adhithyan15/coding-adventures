@@ -8,15 +8,50 @@ linear-time string scanning.
 from __future__ import annotations
 
 import math
+from collections.abc import Iterable, Mapping, Sized
 from dataclasses import dataclass
 from numbers import Integral, Real
 
 from note_frequency import Note, parse_note
 
 MAX_SCORE_BYTES: int = 1_000_000
+MAX_LINE_COUNT: int = 100_000
 MAX_EVENTS: int = 10_000
 MAX_SAMPLE_RATE_HZ: float = 192_000.0
 MAX_SAMPLE_COUNT: int = 16_777_216
+
+
+def _safe_repr(value: object) -> str:
+    """Bounded O(1) representation for error messages (CWE-190 / CWE-400)."""
+    if isinstance(value, bool):
+        return repr(value)
+    if isinstance(value, int):
+        if value < -1_000_000 or value > 1_000_000:
+            return "<out-of-range int>"
+        return str(value)
+    if isinstance(value, float):
+        return repr(value)
+    if isinstance(value, str):
+        if len(value) > 64:
+            return f"<str len={len(value)}>"
+        return repr(value)
+    return f"<{type(value).__name__}>"
+
+
+def _finite_real(name: str, value: object) -> float:
+    if isinstance(value, bool) or not isinstance(value, Real):
+        raise ScoreParseError(
+            f"{name} must be a finite real number, got {_safe_repr(value)}"
+        )
+    try:
+        converted = float(value)
+    except OverflowError as exc:
+        raise ScoreParseError(
+            f"{name} overflows float range: {_safe_repr(value)}"
+        ) from exc
+    if not math.isfinite(converted):
+        raise ScoreParseError(f"{name} must be finite, got {_safe_repr(value)}")
+    return converted
 
 
 class ScoreParseError(ValueError):
@@ -31,11 +66,29 @@ class MusicalEvent:
     duration_beats: float
     velocity: float = 1.0
 
+    def __post_init__(self) -> None:
+        if self.note is not None and not isinstance(self.note, Note):
+            raise ScoreParseError("note must be a Note or None")
+        beats = _finite_real("duration_beats", self.duration_beats)
+        if beats <= 0.0:
+            raise ScoreParseError("duration_beats must be a positive finite number")
+        object.__setattr__(self, "duration_beats", beats)
+        vel = _finite_real("velocity", self.velocity)
+        if vel < 0.0 or vel > 1.0:
+            raise ScoreParseError("velocity must be within [0.0, 1.0]")
+        object.__setattr__(self, "velocity", vel)
+
     def duration_seconds(self, tempo_bpm: float) -> float:
         """Convert this event duration to seconds for the given tempo."""
-        if not math.isfinite(tempo_bpm) or tempo_bpm <= 0.0:
+        if isinstance(tempo_bpm, bool) or not isinstance(tempo_bpm, Real):
             raise ScoreParseError("tempo_bpm must be a positive finite number")
-        return 60.0 * self.duration_beats / tempo_bpm
+        try:
+            tempo = float(tempo_bpm)
+        except OverflowError as exc:
+            raise ScoreParseError("tempo_bpm overflows float range") from exc
+        if not math.isfinite(tempo) or tempo <= 0.0:
+            raise ScoreParseError("tempo_bpm must be a positive finite number")
+        return 60.0 * self.duration_beats / tempo
 
 
 @dataclass(frozen=True)
@@ -47,24 +100,57 @@ class Score:
     title: str | None = None
 
     def __post_init__(self) -> None:
+        if self.title is not None and not isinstance(self.title, str):
+            raise ScoreParseError("title must be a string or None")
         if isinstance(self.tempo_bpm, bool) or not isinstance(self.tempo_bpm, Real):
             raise ScoreParseError(
-                f"tempo_bpm must be a finite positive number, got {self.tempo_bpm!r}"
+                "tempo_bpm must be a finite positive number, "
+                f"got {_safe_repr(self.tempo_bpm)}"
             )
-        tempo = float(self.tempo_bpm)
+        try:
+            tempo = float(self.tempo_bpm)
+        except OverflowError as exc:
+            raise ScoreParseError(
+                f"tempo_bpm overflows float range: {_safe_repr(self.tempo_bpm)}"
+            ) from exc
         if not math.isfinite(tempo) or tempo <= 0.0:
             raise ScoreParseError(
                 f"tempo_bpm must be a positive finite number, got {tempo}"
             )
         object.__setattr__(self, "tempo_bpm", tempo)
-        object.__setattr__(self, "events", tuple(self.events))
+
+        if isinstance(self.events, (str, bytes, bytearray, Mapping)) or not isinstance(
+            self.events, Iterable
+        ):
+            raise ScoreParseError("events must be an iterable of MusicalEvent")
+        if isinstance(self.events, Sized):
+            try:
+                declared_len = len(self.events)
+            except OverflowError as exc:
+                raise ScoreParseError(
+                    f"event count exceeds MAX_EVENTS={MAX_EVENTS}"
+                ) from exc
+            if declared_len > MAX_EVENTS:
+                raise ScoreParseError(
+                    f"event count {declared_len} exceeds MAX_EVENTS={MAX_EVENTS}"
+                )
+        ev_list: list[MusicalEvent] = []
+        for idx, ev in enumerate(self.events):
+            if idx >= MAX_EVENTS:
+                raise ScoreParseError(f"event count exceeds MAX_EVENTS={MAX_EVENTS}")
+            if not isinstance(ev, MusicalEvent):
+                raise ScoreParseError(f"events[{idx}] must be a MusicalEvent")
+            ev_list.append(ev)
+        object.__setattr__(self, "events", tuple(ev_list))
 
 
 def _parse_duration(raw: str, *, line_no: int) -> float:
     try:
         value = float(raw)
     except (ValueError, TypeError) as exc:
-        raise ScoreParseError(f"line {line_no}: invalid duration '{raw}'") from exc
+        raise ScoreParseError(
+            f"line {line_no}: invalid duration {_safe_repr(raw)}"
+        ) from exc
 
     if not math.isfinite(value) or value <= 0.0:
         raise ScoreParseError(
@@ -80,7 +166,9 @@ def _parse_velocity(raw: str | None, *, line_no: int) -> float:
     try:
         value = float(raw)
     except (ValueError, TypeError) as exc:
-        raise ScoreParseError(f"line {line_no}: invalid velocity '{raw}'") from exc
+        raise ScoreParseError(
+            f"line {line_no}: invalid velocity {_safe_repr(raw)}"
+        ) from exc
 
     if not math.isfinite(value) or value < 0.0 or value > 1.0:
         raise ScoreParseError(f"line {line_no}: velocity must be within [0.0, 1.0]")
@@ -96,7 +184,9 @@ def _parse_directive(line: str, line_no: int) -> tuple[str, str] | None:
     key = key.strip().lower()
     value = value.strip()
     if not key or not value:
-        raise ScoreParseError(f"line {line_no}: malformed directive '{line}'")
+        raise ScoreParseError(
+            f"line {line_no}: malformed directive {_safe_repr(line)}"
+        )
 
     return key, value
 
@@ -111,18 +201,44 @@ def parse_score(
     if not isinstance(text, str):
         raise ScoreParseError("score text must be a string")
 
+    if isinstance(max_score_bytes, bool) or not isinstance(max_score_bytes, Integral):
+        raise ScoreParseError("max_score_bytes must be a non-negative integer")
+    byte_limit = int(max_score_bytes)
+    if byte_limit < 0 or byte_limit > MAX_SCORE_BYTES:
+        raise ScoreParseError(
+            f"max_score_bytes must be in [0, {MAX_SCORE_BYTES}]"
+        )
+
+    if isinstance(max_event_count, bool) or not isinstance(max_event_count, Integral):
+        raise ScoreParseError("max_event_count must be a non-negative integer")
+    event_limit = int(max_event_count)
+    if event_limit < 0 or event_limit > MAX_EVENTS:
+        raise ScoreParseError(f"max_event_count must be in [0, {MAX_EVENTS}]")
+
+    if len(text) > byte_limit:
+        raise ScoreParseError(
+            f"score text length {len(text)} exceeds max_score_bytes={byte_limit}"
+        )
+
     encoded_len = len(text.encode("utf-8"))
-    if encoded_len > max_score_bytes:
+    if encoded_len > byte_limit:
         raise ScoreParseError(
             f"score text length {encoded_len} bytes exceeds "
-            f"max_score_bytes={max_score_bytes}"
+            f"max_score_bytes={byte_limit}"
         )
+
+    if text.count("\n") >= MAX_LINE_COUNT:
+        raise ScoreParseError(f"line count exceeds MAX_LINE_COUNT={MAX_LINE_COUNT}")
 
     tempo_bpm = 120.0
     title: str | None = None
     events: list[MusicalEvent] = []
 
     for line_no, raw_line in enumerate(text.splitlines(), start=1):
+        if line_no > MAX_LINE_COUNT:
+            raise ScoreParseError(
+                f"line count exceeds MAX_LINE_COUNT={MAX_LINE_COUNT}"
+            )
         line = raw_line.strip()
         if not line or line.startswith("#"):
             continue
@@ -148,7 +264,9 @@ def parse_score(
                 title = value
                 continue
 
-            raise ScoreParseError(f"line {line_no}: unknown directive '{key}'")
+            raise ScoreParseError(
+                f"line {line_no}: unknown directive {_safe_repr(key)}"
+            )
 
         # Linear token splitting: replaces regex ^\s*(\S+)\s+(\S+)(?:\s+(\S+))?\s*$
         parts = line.split()
@@ -158,7 +276,9 @@ def parse_score(
         elif len(parts) == 3:
             token, duration_raw, velocity_raw = parts
         else:
-            raise ScoreParseError(f"line {line_no}: malformed event line '{raw_line}'")
+            raise ScoreParseError(
+                f"line {line_no}: malformed event line {_safe_repr(raw_line)}"
+            )
 
         if len(events) >= MAX_EVENTS:
             raise ScoreParseError(
@@ -177,9 +297,9 @@ def parse_score(
             except ValueError as exc:
                 raise ScoreParseError(f"line {line_no}: {exc}") from exc
 
-        if len(events) >= max_event_count:
+        if len(events) >= event_limit:
             raise ScoreParseError(
-                f"event count exceeds max_event_count={max_event_count}"
+                f"event count exceeds max_event_count={event_limit}"
             )
         events.append(
             MusicalEvent(
@@ -209,27 +329,41 @@ def render_score(
     if not isinstance(score, Score):
         raise ScoreParseError("score must be a Score instance")
 
+    if isinstance(max_sample_count, bool) or not isinstance(max_sample_count, Integral):
+        raise ScoreParseError("max_sample_count must be a positive integer")
+    sample_limit = int(max_sample_count)
+    if sample_limit <= 0 or sample_limit > MAX_SAMPLE_COUNT:
+        raise ScoreParseError(
+            f"max_sample_count must be in [1, {MAX_SAMPLE_COUNT}]"
+        )
+
     if isinstance(sample_rate_hz, bool) or not isinstance(
         sample_rate_hz, (Integral, Real)
     ):
         raise ScoreParseError("sample_rate_hz must be an integer")
-    if not math.isfinite(sample_rate_hz) or sample_rate_hz <= 0:
+    try:
+        sr_float = float(sample_rate_hz)
+    except OverflowError as exc:
+        raise ScoreParseError("sample_rate_hz overflows float range") from exc
+    if not math.isfinite(sr_float) or sr_float <= 0.0:
         raise ScoreParseError("sample_rate_hz must be greater than zero")
-    if sample_rate_hz > MAX_SAMPLE_RATE_HZ:
+    if sr_float > MAX_SAMPLE_RATE_HZ:
         raise ScoreParseError(
-            f"sample_rate_hz {sample_rate_hz} exceeds "
+            f"sample_rate_hz {sr_float} exceeds "
             f"MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
         )
 
-    rate = int(round(sample_rate_hz))
+    rate = int(round(sr_float))
+    if rate <= 0 or not math.isfinite(1.0 / rate):
+        raise ScoreParseError("sample_rate_hz must round to an integer >= 1")
     total_seconds = score_duration_seconds(score)
     if not math.isfinite(total_seconds) or not math.isfinite(total_seconds * rate):
         raise ScoreParseError("score duration produces non-finite sample count")
     expected_samples = int(math.ceil(total_seconds * rate))
-    if expected_samples > max_sample_count:
+    if expected_samples > sample_limit:
         raise ScoreParseError(
             f"rendered score would require {expected_samples} samples, "
-            f"exceeding max_sample_count={max_sample_count}"
+            f"exceeding max_sample_count={sample_limit}"
         )
 
     samples: list[float] = []
@@ -246,7 +380,7 @@ def render_score(
         if frame_count <= 0:
             continue
 
-        if len(samples) + frame_count > max_sample_count:
+        if len(samples) + frame_count > sample_limit:
             raise ScoreParseError("sample count exceeds max_sample_count")
 
         if event.note is None:
