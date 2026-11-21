@@ -4,7 +4,9 @@ import {
   EmptySignalError,
   InvalidCoefficientsError,
   InvalidParamError,
+  safeFormatValue,
   validateFloats,
+  validateSequence,
 } from "./errors.js";
 import { WaveletBoundary } from "./types.js";
 import {
@@ -29,21 +31,14 @@ export function swt(
   level = 1,
   boundary: WaveletBoundary | string = WaveletBoundary.PERIODIC
 ): Array<[Float64Array, Float64Array]> {
-  if (signal.length === 0) {
-    throw new EmptySignalError("signal must be non-empty");
-  }
+  const n = validateSequence(signal, "signal", MAX_SAMPLES, EmptySignalError, InvalidParamError);
   if (!Number.isSafeInteger(level) || level <= 0) {
-    throw new InvalidParamError(`level must be > 0; got ${level}`);
+    throw new InvalidParamError(`level must be > 0; got ${safeFormatValue(level)}`);
   }
   if (level > MAX_WAVELET_LEVELS) {
     throw new InvalidParamError(`level ${level} exceeds MAX_WAVELET_LEVELS`);
   }
-  if (signal.length > MAX_SAMPLES) {
-    throw new InvalidParamError("signal length exceeds MAX_SAMPLES");
-  }
   validateFloats(signal, "signal");
-
-  const n = signal.length;
   const w = parseWavelet(wavelet);
   requireOrthogonalSwt(w);
   const b = parseWaveletBoundary(boundary);
@@ -97,11 +92,13 @@ export function iswt(
   wavelet: Wavelet | string = "haar",
   boundary: WaveletBoundary | string = WaveletBoundary.PERIODIC
 ): Float64Array {
-  if (coeffs.length === 0) {
-    throw new EmptySignalError("coeffs must be non-empty");
-  }
-
-  const level = coeffs.length;
+  const level = validateSequence(
+    coeffs,
+    "coeffs",
+    Number.MAX_SAFE_INTEGER,
+    EmptySignalError,
+    InvalidCoefficientsError
+  );
   if (level > MAX_WAVELET_LEVELS) {
     throw new InvalidParamError(`level ${level} exceeds MAX_WAVELET_LEVELS`);
   }
@@ -110,21 +107,23 @@ export function iswt(
   requireOrthogonalSwt(w);
   const b = parseWaveletBoundary(boundary);
 
-  const [caTop] = coeffs[0];
-  const n = caTop.length;
-  if (n <= 0) {
-    throw new EmptySignalError("subbands must be non-empty");
+  const firstPair: unknown = coeffs[0];
+  if (!Array.isArray(firstPair) || firstPair.length !== 2) {
+    throw new InvalidCoefficientsError("each SWT entry must be a [cA, cD] pair");
   }
-  if (n > MAX_SAMPLES) {
-    throw new InvalidParamError(
-      `subband length ${n} exceeds MAX_SAMPLES ${MAX_SAMPLES}`
-    );
-  }
+  const caTop = firstPair[0];
+  const n = validateSequence(caTop, "cA_0", MAX_SAMPLES, EmptySignalError, InvalidParamError);
 
   // Validate all subbands shapes and finite floats BEFORE allocating rec
-  for (let jIdx = 0; jIdx < coeffs.length; jIdx++) {
-    const [caJ, cdJ] = coeffs[jIdx];
-    if (caJ.length !== n || cdJ.length !== n) {
+  for (let jIdx = 0; jIdx < level; jIdx++) {
+    const pair: unknown = coeffs[jIdx];
+    if (!Array.isArray(pair) || pair.length !== 2) {
+      throw new InvalidCoefficientsError("each SWT entry must be a [cA, cD] pair");
+    }
+    const [caJ, cdJ] = pair;
+    const caLen = validateSequence(caJ, `cA_${jIdx}`, MAX_SAMPLES, EmptySignalError, InvalidParamError);
+    const cdLen = validateSequence(cdJ, `cD_${jIdx}`, MAX_SAMPLES, EmptySignalError, InvalidParamError);
+    if (caLen !== n || cdLen !== n) {
       throw new InvalidCoefficientsError("all subbands must have length N");
     }
     validateFloats(caJ, `cA_${jIdx}`, InvalidCoefficientsError);

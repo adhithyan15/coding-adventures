@@ -22,11 +22,16 @@ import {
   MAX_WAVELET_LEVELS,
   parseWavelet,
   parseWaveletBoundary,
+  qmfHighpass,
+  safeFormatValue,
+  sampleWithBoundary,
   SignalTooShortError,
   swt,
   wavedec,
   Wavelet,
+  WaveletBoundary,
   WaveletError,
+  WaveletFamily,
   waverec,
 } from "../src/index.js";
 
@@ -226,5 +231,88 @@ describe("Hostile inputs & VER15 Security Hardening (dsp-wavelets)", () => {
       assert.ok(!code.includes("Function("));
       assert.ok(!code.includes("RegExp"));
     }
+  });
+
+  it("rejects Symbol, Object.create(null), DataView, BigInt64Array, null inputs, prototype keys, and oversized enum strings (VER15)", () => {
+    const sym = Symbol("bad");
+    const nullProto = Object.create(null);
+
+    assert.equal(safeFormatValue(sym), "Symbol(bad)");
+    assert.equal(safeFormatValue(nullProto), "[object Object]");
+    assert.equal(safeFormatValue(null), "null");
+
+    assert.throws(() => parseWaveletBoundary(sym as any), InvalidParamError);
+    assert.throws(() => parseWaveletBoundary(nullProto as any), InvalidParamError);
+    assert.throws(() => parseWaveletBoundary(" ".repeat(65) + "zero"), InvalidParamError);
+
+    assert.throws(() => parseWavelet(sym as any), InvalidParamError);
+    assert.throws(() => parseWavelet(nullProto as any), InvalidParamError);
+    assert.throws(() => parseWavelet(" ".repeat(65) + "haar"), InvalidParamError);
+
+    // Prototype keys and hostile values passed to Wavelet.db/sym/coif/bior
+    assert.throws(() => Wavelet.db("toString" as any), InvalidParamError);
+    assert.throws(() => Wavelet.db("__proto__" as any), InvalidParamError);
+    assert.throws(() => Wavelet.db(sym as any), InvalidParamError);
+    assert.throws(() => Wavelet.db(nullProto as any), InvalidParamError);
+    assert.throws(() => Wavelet.sym(sym as any), InvalidParamError);
+    assert.throws(() => Wavelet.coif(nullProto as any), InvalidParamError);
+    assert.throws(() => Wavelet.bior(sym as any, 2), InvalidParamError);
+
+    assert.throws(() => forwardLevelLengths(sym as any, 1), InvalidParamError);
+    assert.throws(() => forwardLevelLengths(16, nullProto as any), InvalidParamError);
+    assert.throws(() => dwt1d([1, 2], "haar", sym as any), InvalidParamError);
+    assert.throws(() => idwt1d([1, 2], "haar", nullProto as any, WaveletBoundary.ZERO, 2), InvalidParamError);
+    assert.throws(() => idwt([1], [1], "haar", WaveletBoundary.ZERO, sym as any), InvalidParamError);
+    assert.throws(() => dwt2d([1], 1, 1, "haar", sym as any), InvalidParamError);
+    assert.throws(() => idwt2d([1], 1, 1, "haar", nullProto as any), InvalidParamError);
+    assert.throws(() => wavedec([1, 2], "haar", WaveletBoundary.ZERO, sym as any), InvalidParamError);
+    assert.throws(() => swt([1, 2], "haar", sym as any), InvalidParamError);
+
+    const dv = new DataView(new ArrayBuffer(16));
+    const bi = new BigInt64Array(4);
+    const bui = new BigUint64Array(4);
+
+    assert.throws(() => sampleWithBoundary(dv as any, 0, WaveletBoundary.ZERO), InvalidParamError);
+    assert.throws(() => sampleWithBoundary([1, 2], NaN, WaveletBoundary.ZERO), InvalidParamError);
+    assert.throws(() => sampleWithBoundary([sym as any], 0, WaveletBoundary.ZERO), InvalidParamError);
+    assert.throws(() => qmfHighpass(bi as any), InvalidParamError);
+    assert.throws(() => new Wavelet("bad", WaveletFamily.HAAR, dv as any, [1]), InvalidParamError);
+    assert.throws(() => new Wavelet("bad", WaveletFamily.HAAR, [1], [1], bi as any, [1]), InvalidParamError);
+    assert.throws(() => new Wavelet("bad", WaveletFamily.HAAR, [1], [1], [1], bui as any), InvalidParamError);
+
+    assert.throws(() => dwt(dv as any), InvalidParamError);
+    assert.throws(() => dwt(bi as any), InvalidParamError);
+    assert.throws(() => dwt(null as any), InvalidParamError);
+    assert.throws(() => dwt([sym as any, 1]), InvalidParamError);
+    assert.throws(() => dwt([nullProto as any, 1]), InvalidParamError);
+    assert.throws(() => idwt(dv as any, [1]), InvalidParamError);
+    assert.throws(() => idwt([1], bi as any), InvalidParamError);
+    assert.throws(() => dwt1d(bui as any), InvalidParamError);
+    assert.throws(() => idwt1d(dv as any, "haar", 1, WaveletBoundary.ZERO, 2), InvalidParamError);
+    assert.throws(() => dwt2d(bi as any, 1, 1), InvalidParamError);
+    assert.throws(() => idwt2d(dv as any, 1, 1), InvalidParamError);
+    assert.throws(() => wavedec(dv as any), InvalidParamError);
+    assert.throws(() => waverec(null as any), InvalidCoefficientsError);
+    assert.throws(() => waverec([dv as any, [1]]), InvalidParamError);
+    assert.throws(() => swt(bi as any), InvalidParamError);
+    assert.throws(() => iswt(null as any), InvalidCoefficientsError);
+    assert.throws(() => iswt([null as any]), InvalidCoefficientsError);
+    assert.throws(() => iswt([[dv as any, [1]]]), InvalidParamError);
+    assert.throws(() => iswt([[[1], bi as any]]), InvalidParamError);
+    assert.throws(() => cwt(dv as any, [1]), InvalidParamError);
+    assert.throws(() => cwt([1], bi as any), InvalidParamError);
+    assert.throws(() => cwt([1], [sym as any]), InvalidParamError);
+
+    // Findings 8, 9, 10 regressions
+    assert.throws(() => cwt([1, 2, 3, 4], [5e-324], "morlet"), InvalidParamError);
+    assert.throws(() => cwt([1, 2, 3, 4], [5e-324], "ricker"), InvalidParamError);
+    assert.throws(() => new Wavelet(sym as any, WaveletFamily.MORLET, [], []), InvalidParamError);
+    assert.throws(() => new Wavelet("", WaveletFamily.MORLET, [], []), InvalidParamError);
+    assert.throws(() => new Wavelet("bad", "unknown_family" as any, [], []), InvalidParamError);
+    assert.throws(() => new Wavelet("bad", WaveletFamily.HAAR, [], []), InvalidParamError);
+    assert.throws(() => new Wavelet("bad", WaveletFamily.HAAR, [1], [1], [], [1]), InvalidParamError);
+    assert.throws(() => new Wavelet("bad", WaveletFamily.HAAR, [1], [1], [1], []), InvalidParamError);
+    const nullCtorDv = Object.assign(new DataView(new ArrayBuffer(8)), { constructor: null });
+    assert.throws(() => dwt(nullCtorDv as any), InvalidParamError);
   });
 });

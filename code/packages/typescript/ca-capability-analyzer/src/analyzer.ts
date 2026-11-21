@@ -26,12 +26,30 @@ import {
 import { loadManifest } from "./manifest.js";
 import { discoverSourceFiles } from "./scanner.js";
 
+export const MAX_SOURCE_BYTES = 10_485_760;
+
 export interface FileAnalysisResult {
   readonly capabilities: DetectedCapability[];
   readonly weaknesses: DetectedWeakness[];
 }
 
 export function analyzeSource(sourceText: string, filePath: string = "source.ts"): FileAnalysisResult {
+  if (typeof sourceText !== "string") {
+    throw new TypeError("sourceText must be a string");
+  }
+  if (typeof filePath !== "string" || filePath.length === 0 || filePath.includes("\0")) {
+    throw new TypeError("filePath must be a non-empty string without NUL bytes");
+  }
+  if (
+    sourceText.length > MAX_SOURCE_BYTES ||
+    (sourceText.length > Math.floor(MAX_SOURCE_BYTES / 3) &&
+      Buffer.byteLength(sourceText, "utf8") > MAX_SOURCE_BYTES)
+  ) {
+    throw new RangeError(
+      `sourceText exceeds maximum size of ${MAX_SOURCE_BYTES} bytes`
+    );
+  }
+
   let sourceFile: ts.SourceFile;
   try {
     sourceFile = ts.createSourceFile(
@@ -69,7 +87,8 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
     const match = /\/\/\s*nolint(?::([a-zA-Z0-9_-]+))?/.exec(line);
     if (match) {
       const lineNum = i + 1;
-      const tag = match[1]?.toLowerCase() ?? "all";
+      const rawTag = match[1];
+      const tag = rawTag && rawTag.length <= 64 ? rawTag.toLowerCase() : "all";
       if (!nolintLines.has(lineNum)) {
         nolintLines.set(lineNum, new Set());
       }
@@ -558,6 +577,12 @@ export function analyzePackage(
   packageDir: string,
   options: AnalysisOptions = {}
 ): AnalysisResult {
+  if (typeof packageDir !== "string" || packageDir.length === 0 || packageDir.includes("\0")) {
+    throw new Error("Invalid package directory path");
+  }
+  if (options !== undefined && (typeof options !== "object" || options === null || Array.isArray(options))) {
+    throw new TypeError("options must be an object");
+  }
   const manifest = loadManifest(packageDir);
   const files = discoverSourceFiles(packageDir, { includeTests: options.includeTests });
 

@@ -65,6 +65,67 @@ export class FftError extends StftError {
 }
 
 /**
+ * Safely format an arbitrary untrusted value for error messages without
+ * throwing on Symbol or Object.create(null) inputs (VER15).
+ */
+export function safeFormatValue(value: unknown): string {
+  if (typeof value === "symbol") {
+    return value.toString();
+  }
+  if (value === null || (typeof value !== "object" && typeof value !== "function")) {
+    return String(value);
+  }
+  try {
+    return String(value);
+  } catch {
+    try {
+      return Object.prototype.toString.call(value);
+    } catch {
+      return "[unformattable]";
+    }
+  }
+}
+
+/**
+ * Validate that an ArrayLike<number> input is a non-null numeric sequence
+ * (rejecting DataView, BigInt64Array, BigUint64Array, primitives, and oversized
+ * lengths before any allocation). Returns the validated length.
+ */
+export function validateSequence(
+  seq: unknown,
+  name: string,
+  maxLen: number,
+  EmptyErr: (new (msg: string) => StftError) | null = null,
+  InvalidErr: new (msg: string) => StftError = InvalidParamError
+): number {
+  if (seq === null || seq === undefined || typeof seq !== "object") {
+    throw new InvalidErr(`${name} must be an array-like object; got ${safeFormatValue(seq)}`);
+  }
+  if (seq instanceof DataView) {
+    throw new InvalidErr(`${name} must be a numeric ArrayLike, not DataView`);
+  }
+  if (seq instanceof BigInt64Array) {
+    throw new InvalidErr(`${name} must be a numeric ArrayLike, not BigInt64Array`);
+  }
+  if (seq instanceof BigUint64Array) {
+    throw new InvalidErr(`${name} must be a numeric ArrayLike, not BigUint64Array`);
+  }
+  const rawLen = (seq as { length?: unknown }).length;
+  if (typeof rawLen !== "number" || !Number.isSafeInteger(rawLen) || rawLen < 0) {
+    throw new InvalidErr(
+      `${name} length must be a non-negative safe integer; got ${safeFormatValue(rawLen)}`
+    );
+  }
+  if (rawLen === 0 && EmptyErr !== null) {
+    throw new EmptyErr(`${name} must be non-empty`);
+  }
+  if (rawLen > maxLen) {
+    throw new InvalidErr(`${name} length ${rawLen} exceeds maximum ${maxLen}`);
+  }
+  return rawLen;
+}
+
+/**
  * Validate that all items in seq are finite numbers (CWE-20).
  */
 export function validateFloats(
@@ -72,12 +133,12 @@ export function validateFloats(
   name: string,
   ExcType: new (msg: string) => StftError = InvalidParamError
 ): void {
-  const len = seq.length;
+  const len = validateSequence(seq, name, Number.MAX_SAFE_INTEGER, null, ExcType);
   for (let idx = 0; idx < len; idx++) {
-    const val = Number(seq[idx]);
-    if (!Number.isFinite(val)) {
+    const raw: unknown = seq[idx];
+    if (typeof raw !== "number" || !Number.isFinite(raw)) {
       throw new ExcType(
-        `non-finite float in ${name} at index ${idx}: ${val}`
+        `non-finite float in ${name} at index ${idx}: ${safeFormatValue(raw)}`
       );
     }
   }

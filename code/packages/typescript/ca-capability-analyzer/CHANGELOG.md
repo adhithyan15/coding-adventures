@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Wired `@coding-adventures/test-bootstrap` into `devDependencies` (`package.json`, `package-lock.json`, `BUILD`, `BUILD_windows`) and added `.gitignore` for `dist/`, `dist-test/`, `node_modules/`, `coverage/`.
+- Migrated tests from `--experimental-strip-types` to standalone `tsconfig.test.json` with `--experimental-test-coverage --test-coverage-lines=95`.
+- Added package-local `ca-capability-analyzer.warrant` matching `code/specs/ca-capability-analyzer.warrant`.
+- Wired `SplitMix64` from `@coding-adventures/test-bootstrap` into `tests/pbt.test.ts` and `tests/hostile.test.ts`.
+- Hardened input boundaries (CWE-20 / CWE-400 / CWE-1321): bounded `sourceText` to `10,485,760` bytes (`MAX_SOURCE_BYTES`), bounded regex pattern inspection length (`MAX_REGEX_PATTERN_LEN`), rejected `null`/non-object options, NUL-byte paths, symlinks/oversized/malformed `required_capabilities.json` manifests, and excluded `dist-test` in `scanner.ts`.
+
 ## 0.1.0
 
 - Initial implementation of the TypeScript static capability analyzer and VER15 CWE detector (VER-W0-C / VER08 / VER15).

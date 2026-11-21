@@ -1,5 +1,5 @@
 import { MAX_FFT_LEN } from "./constants.js";
-import { InvalidParamError } from "./errors.js";
+import { InvalidParamError, safeFormatValue } from "./errors.js";
 import { parseWindowType, WindowType } from "./types.js";
 
 /**
@@ -39,7 +39,7 @@ export function buildWindow(
   nFft: number
 ): Float64Array {
   if (!Number.isSafeInteger(nFft) || nFft <= 0) {
-    throw new InvalidParamError(`window length must be a positive integer; got ${nFft}`);
+    throw new InvalidParamError(`window length must be a positive integer; got ${safeFormatValue(nFft)}`);
   }
   if (nFft > MAX_FFT_LEN) {
     throw new InvalidParamError(

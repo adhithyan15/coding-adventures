@@ -138,23 +138,96 @@ export const PROCESS_METHODS = new Set([
 
 export const BANNED_PROTO_PROPERTIES = new Set(["__proto__", "prototype", "constructor"]);
 
+export const MAX_REGEX_PATTERN_LEN = 16_384;
+
+function isWordCharCode(code: number): boolean {
+  return (
+    (code >= 48 && code <= 57) || // 0-9
+    (code >= 65 && code <= 90) || // A-Z
+    code === 95 ||                // _
+    (code >= 97 && code <= 122)   // a-z
+  );
+}
+
 /**
- * Checks if a regex pattern exhibits catastrophic backtracking (ReDoS / CWE-1333).
+ * Checks if a regex pattern exhibits catastrophic backtracking (ReDoS / CWE-1333)
+ * using a linear-time O(N) single-pass scanner (zero backtracking regexes).
  */
 export function isCatastrophicRegex(pattern: string): boolean {
-  // Nested quantifiers like (a+)+, (a*)*, ([a-z]+)*, (.*)+
-  if (/\([^()]*[+*][^()]*\)[+*]/.test(pattern)) {
+  if (typeof pattern !== "string") {
+    throw new TypeError("pattern must be a string");
+  }
+  if (pattern.length > MAX_REGEX_PATTERN_LEN) {
     return true;
   }
-  // Repeated alternation like (a|a)+, (a|b+)+
-  if (/\([^()|]+(?:\|[^()|]+)+\)[+*]/.test(pattern)) {
-    if (/\(\w+\|\w+\)[+*]/.test(pattern) || /\(\w+\|[^\)]*[+*][^\)]*\)[+*]/.test(pattern)) {
-      return true;
+
+  let dotStarCount = 0;
+  let digitPlusCount = 0;
+  let groupStart = -1;
+  let hasInnerQuantifier = false;
+  let hasPipe = false;
+  let allWordBranches = true;
+  let currentBranchLen = 0;
+
+  for (let i = 0; i < pattern.length; i++) {
+    const ch = pattern.charCodeAt(i);
+    const next = i + 1 < pattern.length ? pattern.charCodeAt(i + 1) : -1;
+
+    // Count .* occurrences (46 = '.', 42 = '*')
+    if (ch === 46 && next === 42) {
+      dotStarCount++;
+      if (dotStarCount >= 2) return true;
+    }
+
+    // Count \d+ occurrences (92 = '\', 100 = 'd', 43 = '+')
+    if (
+      ch === 92 &&
+      i + 2 < pattern.length &&
+      pattern.charCodeAt(i + 1) === 100 &&
+      pattern.charCodeAt(i + 2) === 43
+    ) {
+      digitPlusCount++;
+      if (digitPlusCount >= 2) return true;
+    }
+
+    if (ch === 40) {
+      // '(' starts innermost candidate group
+      groupStart = i;
+      hasInnerQuantifier = false;
+      hasPipe = false;
+      allWordBranches = true;
+      currentBranchLen = 0;
+    } else if (ch === 41 && groupStart !== -1) {
+      // ')' closes group; check if followed by '+' (43) or '*' (42)
+      const groupNonEmpty = i > groupStart + 1;
+      const followedByQuantifier = next === 43 || next === 42;
+      if (groupNonEmpty && followedByQuantifier) {
+        if (hasInnerQuantifier) {
+          return true;
+        }
+        if (hasPipe && allWordBranches && currentBranchLen > 0) {
+          return true;
+        }
+      }
+      groupStart = -1;
+    } else if (groupStart !== -1) {
+      if (ch === 43 || ch === 42) {
+        hasInnerQuantifier = true;
+      }
+      if (ch === 124) {
+        // '|'
+        if (currentBranchLen === 0) {
+          allWordBranches = false;
+        }
+        hasPipe = true;
+        currentBranchLen = 0;
+      } else if (isWordCharCode(ch)) {
+        currentBranchLen++;
+      } else {
+        allWordBranches = false;
+      }
     }
   }
-  // Multiple overlapping wildcards with quantifiers: .*.* or \d+\d+
-  if (/\.\*.*\.\*/.test(pattern) || /\\d\+.*\\d\+/.test(pattern)) {
-    return true;
-  }
+
   return false;
 }
