@@ -185,11 +185,11 @@ describe("Property-Based Tests (SplitMix64) & Fuzzing for dsp-fft", () => {
         ];
         for (const hostile of hostileValues) {
           try {
-            buildWindow(hostile as string, 4);
-            return { status: "crash", kind: "AcceptedHostileWindow", frames: ["buildWindow"] };
+            fft(hostile as number[]);
+            return { status: "crash", kind: "AcceptedHostileFft", frames: ["fft"] };
           } catch (err) {
             if (!(err instanceof InvalidInputError)) {
-              return { status: "crash", kind: "UnexpectedError", frames: ["buildWindow"] };
+              return { status: "crash", kind: "UnexpectedError", frames: ["fft"] };
             }
           }
         }
