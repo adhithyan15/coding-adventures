@@ -10,9 +10,12 @@
  *
  * V1 scope (matching the Rust crate): mono, signed 16-bit PCM only.
  *
- * Rust's `Result<T, AudioSinkError>` (whose error carries a formatted message)
- * becomes a status code plus an optional caller-provided message buffer. Owned
- * samples (`Vec<i16>`) become a malloc'd `int16_t` buffer paired with a free.
+ * Hardened against VER15 CWEs:
+ * - CWE-190 / CWE-400: Checked sample/frame/byte arithmetic and pre-flight
+ *   sample-rate, channel, and sample-count caps before any allocation.
+ * - CWE-415 / CWE-416: Zero-on-free and idempotent cleanup in
+ *   ads_pcm_playback_buffer_free; safe behavior on freed/zeroed structs.
+ * - CWE-476: Defensive NULL-pointer checks across all public entry points.
  *
  * Pure ISO C17: no <math.h>, no compiler extensions.
  */
@@ -20,7 +23,7 @@
 #define AUDIO_DEVICE_SINK_H
 
 #include <stddef.h> /* size_t */
-#include <stdint.h> /* uint16_t, uint32_t, int16_t */
+#include <stdint.h> /* uint16_t, uint32_t, uint64_t, int16_t */
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,12 +35,19 @@ extern "C" {
 extern const char *const ADS_VERSION;
 /* V1 keeps buffers small enough that accidental calls don't block for hours. */
 #define ADS_MAX_BLOCKING_DURATION_SECONDS (10.0 * 60.0)
+/* Integer blocking-duration limit (seconds) for exact checked bounds. */
+#define ADS_MAX_BLOCKING_DURATION_SECONDS_INT ((uint64_t)600)
+/* Minimum valid sample rate (Hz). */
+#define ADS_MIN_SAMPLE_RATE_HZ ((uint32_t)1)
 /* Practical ceiling for high-resolution audio interfaces. */
 #define ADS_MAX_SAMPLE_RATE_HZ ((uint32_t)384000)
 /* Only signed 16-bit PCM is supported in the first slice. */
 #define ADS_SUPPORTED_BIT_DEPTH ((uint16_t)16)
 /* Only mono PCM is supported until interleaved channels arrive. */
 #define ADS_SUPPORTED_CHANNEL_COUNT ((uint16_t)1)
+#define ADS_MAX_CHANNELS ADS_SUPPORTED_CHANNEL_COUNT
+/* Pre-flight ceiling: 384,000 Hz * 600 s * 1 channel = 230,400,000 samples. */
+#define ADS_MAX_SAMPLES ((size_t)230400000UL)
 
 /* ── Status / errors ───────────────────────────────────────────────────────*/
 
@@ -70,7 +80,8 @@ typedef struct {
  * or an ADS_ERR_INVALID_FORMAT with a message. `msg` may be NULL. */
 AdsStatus ads_pcm_format_validate(AdsPcmFormat format, char *msg,
                                   size_t msg_cap);
-/* Construct and validate a PCM format, writing it to `*out` on success. */
+/* Construct and validate a PCM format, writing it to `*out` on success and
+ * zeroing `*out` on error. Returns ADS_ERR_INVALID_FORMAT if `out == NULL`. */
 AdsStatus ads_pcm_format_new(uint32_t sample_rate_hz, uint16_t channel_count,
                              uint16_t bit_depth, AdsPcmFormat *out, char *msg,
                              size_t msg_cap);
@@ -88,31 +99,37 @@ typedef struct {
 } AdsPcmPlaybackBuffer;
 
 /* Construct and validate an owned playback buffer. Copies `n` samples from
- * `samples` (may be NULL iff n == 0). Validates the format and the V1 size cap
- * (<= MAX_BLOCKING_DURATION_SECONDS of audio). Returns ADS_OK (and fills
- * `*out`) or an error. On error `*out` is left zeroed and nothing is allocated
- * (except an out-of-memory case, which frees before returning). */
+ * `samples` (may be NULL iff n == 0). Validates `out != NULL`, the format, and
+ * the V1 size cap (<= MAX_BLOCKING_DURATION_SECONDS of audio, <= ADS_MAX_SAMPLES)
+ * using overflow-checked integer arithmetic before allocating. Returns ADS_OK
+ * (and fills `*out`) or an error. On error `*out` (if non-NULL) is left zeroed
+ * and nothing is allocated. */
 AdsStatus ads_pcm_playback_buffer_new(const int16_t *samples, size_t n,
                                       AdsPcmFormat format,
                                       AdsPcmPlaybackBuffer *out, char *msg,
                                       size_t msg_cap);
-/* Release the owned sample buffer and zero the struct. */
+/* Zero-on-free: wipe owned sample bytes, release the buffer, and zero the
+ * struct. Safe on NULL and idempotent on repeated calls (CWE-415/416). */
 void ads_pcm_playback_buffer_free(AdsPcmPlaybackBuffer *buffer);
 
-/* Number of samples in the buffer. */
+/* Number of samples in the buffer (0 if NULL or unbacked). */
 size_t ads_pcm_playback_buffer_sample_count(const AdsPcmPlaybackBuffer *buffer);
-/* Number of frames (samples / channel_count). */
+/* Number of frames (samples / channel_count; 0 if NULL or invalid format). */
 size_t ads_pcm_playback_buffer_frame_count(const AdsPcmPlaybackBuffer *buffer);
-/* True when there is nothing to play. */
+/* True (1) when NULL or empty. */
 int ads_pcm_playback_buffer_is_empty(const AdsPcmPlaybackBuffer *buffer);
-/* Intended playback duration in seconds (frames / sample_rate_hz). */
+/* Intended playback duration in seconds (0.0 if NULL or invalid format;
+ * guaranteed finite). */
 double ads_pcm_playback_buffer_duration_seconds(
     const AdsPcmPlaybackBuffer *buffer);
+/* Checked byte size of the owned sample payload (0 if NULL, empty, or
+ * overflow). */
+size_t ads_pcm_playback_buffer_byte_size(const AdsPcmPlaybackBuffer *buffer);
 
 /* ── PlaybackReport ────────────────────────────────────────────────────────*/
 
 /* Result returned after a sink accepts or completes playback. `backend_name`
- * borrows a caller-owned static string. */
+ * borrows a caller-owned static string (never NULL in returned reports). */
 typedef struct {
     size_t frames_played;
     uint32_t sample_rate_hz;
@@ -121,7 +138,8 @@ typedef struct {
     const char *backend_name;
 } AdsPlaybackReport;
 
-/* Build a report mirroring one validated playback buffer. */
+/* Build a report mirroring one validated playback buffer (safe if `buffer` or
+ * `backend_name` is NULL). */
 AdsPlaybackReport ads_playback_report_for_buffer(
     const AdsPcmPlaybackBuffer *buffer, const char *backend_name);
 
@@ -140,7 +158,8 @@ struct AdsAudioSink {
 };
 
 /* A test/teaching sink that accepts buffers without touching a device: its
- * play_blocking just reports the buffer. */
+ * play_blocking validates pointers and buffer invariants and reports the
+ * buffer. `backend_name` may be NULL (normalized to ""). */
 AdsAudioSink ads_noop_audio_sink(const char *backend_name);
 
 #ifdef __cplusplus
