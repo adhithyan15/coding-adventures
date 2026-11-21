@@ -1,0 +1,83 @@
+{
+  "max_len": 0,
+  "module": "note_frequency",
+  "proofs": [
+    {
+      "certificates": [],
+      "function": "note_to_frequency_millihertz",
+      "id": "warrant/note_frequency/proof/note_to_frequency_millihertz/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "note_to_frequency_millihertz",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "note_to_frequency_millihertz",
+      "id": "warrant/note_frequency/proof/note_to_frequency_millihertz/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "Rust-subset WIR front end refuses src/lib.rs (inner attribute `#![forbid(unsafe_code)]`, `pub mod capabilities;`, `&str`/`String`/`f64` types); recorded not-live per evidence.bindings proofs_not_live=frontend-refuses-lib",
+      "op": "note_to_frequency_millihertz",
+      "runs": 0,
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "parse_note_parts",
+      "id": "warrant/note_frequency/proof/parse_note_parts/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "parse_note_parts",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "parse_note_parts",
+      "id": "warrant/note_frequency/proof/parse_note_parts/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "Rust-subset WIR front end refuses src/lib.rs (inner attribute `#![forbid(unsafe_code)]`, `pub mod capabilities;`, `&str`/`String`/`f64` types); recorded not-live per evidence.bindings proofs_not_live=frontend-refuses-lib",
+      "op": "parse_note_parts",
+      "runs": 0,
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "semitones_from_a4_parts",
+      "id": "warrant/note_frequency/proof/semitones_from_a4_parts/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "semitones_from_a4_parts",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "semitones_from_a4_parts",
+      "id": "warrant/note_frequency/proof/semitones_from_a4_parts/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "Rust-subset WIR front end refuses src/lib.rs (inner attribute `#![forbid(unsafe_code)]`, `pub mod capabilities;`, `&str`/`String`/`f64` types); recorded not-live per evidence.bindings proofs_not_live=frontend-refuses-lib",
+      "op": "semitones_from_a4_parts",
+      "runs": 0,
+      "verdict": "not-live"
+    }
+  ],
+  "schema": "warrant-proof-evidence-v1",
+  "source": "code/packages/rust/note-frequency/src/lib.rs",
+  "source_sha256": "dab8a676a157bc1d5425c9a4858bb90cb6f028224fe6f02fc44256a95e02142d",
+  "spec": "code/specs/note-frequency.warrant",
+  "spec_sha256": "a04ce273467c15fba7f38c62f26ec51777cf4c8c2c65801ccd7d0faa73d3b22d"
+}
