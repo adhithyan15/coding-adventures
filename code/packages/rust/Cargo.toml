@@ -757,6 +757,7 @@ members = [
     "image-point-ops",
     "png",
     "point2d",
+    "math3d",
     "polynomial",
     "protobuf",
     "fsrs",

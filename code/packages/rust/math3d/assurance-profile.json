@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "math3d",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded 3D geometric vectors, matrices, quaternions, planes, and bounding volumes"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure geometry transform: package implements deterministic 3D linear algebra, quaternion rotation, frustum culling, and ray intersection only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: every vector, matrix, quaternion, frustum, and ray operation runs in constant O(1) time with fixed-size stack types and no unbounded loops"
+    }
+  }
+}
