@@ -15828,8 +15828,8 @@
         "hash-functions-dart-lane-parity"
       ],
       "branch": "feat/dart-hyperloglog-bloom-filter-lane-parity",
-      "pr_number": null,
-      "pr_url": null,
+      "pr_number": 19837,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19837",
       "delivery_class": "portable",
       "notes": "Dart lane implementation of DT21 HyperLogLog cardinality estimation sketch with Standing Rule #20 diagnostics and 5-class security defenses. Completes hyperloglog to 15/15 full parity."
     },
@@ -15841,8 +15841,8 @@
         "hash-functions-dart-lane-parity"
       ],
       "branch": "feat/dart-hyperloglog-bloom-filter-lane-parity",
-      "pr_number": null,
-      "pr_url": null,
+      "pr_number": 19837,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19837",
       "delivery_class": "portable",
       "notes": "Dart lane implementation of DT22 Bloom filter with deterministic double hashing, Standing Rule #20 diagnostics, and 5-class security defenses. Completes bloom-filter to 15/15 full parity."
     },
