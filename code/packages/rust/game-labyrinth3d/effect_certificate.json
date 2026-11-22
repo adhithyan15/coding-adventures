@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/game-labyrinth3d",
-  "source_digest": "121fcba7b9dd9bc166987dc509f330df4f8658c62c016197bc8b656a489e9c0b",
+  "source_digest": "8ee9ba41af2aaf123002025ecf935df161b328b0ea8320ea6e0dc152fb90bdc0",
   "manifest_digest": "6afc26022ee7d06854f02667e960aa42c439f67ad4baf1988181497db3b153dd",
   "declared_effects": [],
   "entry_points": [

@@ -1862,14 +1862,14 @@ fn validate_render_targets(
     for p in &state.pickups {
         if !p.collected && p.texture_index >= tex_count {
             return Err(LabyrinthError::InvalidMaterialId {
-                id: u16::try_from(p.texture_index).map_or(u16::MAX, |v| v),
+                id: u16::try_from(p.texture_index).unwrap_or(u16::MAX),
             });
         }
     }
     for e in &state.entities {
         if e.alive && e.texture_index >= tex_count {
             return Err(LabyrinthError::InvalidMaterialId {
-                id: u16::try_from(e.texture_index).map_or(u16::MAX, |v| v),
+                id: u16::try_from(e.texture_index).unwrap_or(u16::MAX),
             });
         }
     }
