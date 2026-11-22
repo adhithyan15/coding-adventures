@@ -19329,11 +19329,24 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-typescript-frontend-vertical-parity",
+      "title": "Port TypeScript lexer and parser vertical to Dart",
+      "status": "pr-open",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-typescript-frontend-vertical-parity",
+      "pr_number": 19826,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19826",
+      "notes": "Dart subtranche of TypeScript frontend vertical parity. Delivers coding_adventures_typescript_lexer and coding_adventures_typescript_parser with seven embedded editions (typescript, ts1.0, ts2.0, ts3.0, ts4.0, ts5.0, ts5.8), combined nesting-depth defense (64) covering delimiters and prefix-operator chains, token ceiling, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-typescript-frontend-vertical-parity",
       "title": "Port TypeScript lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-typescript-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -19407,13 +19420,15 @@
     {
       "id": "dart-vhdl-frontend-vertical-parity",
       "title": "Port VHDL lexer and parser vertical to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "dart-swift-language-frontends-neutral-fixtures"
       ],
       "branch": "feat/dart-vhdl-frontend-vertical-parity",
       "pr_number": 19825,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19825",
+      "merged_at": "2026-11-22T00:22:01Z",
+      "merge_commit": "98809f53dbc1d6462b5916e755b41bb384e0a2f0",
       "notes": "Dart subtranche of VHDL frontend vertical parity. Delivers coding_adventures_vhdl_lexer and coding_adventures_vhdl_parser with five embedded editions (1987/1993/2002/2008/2019), case-folding keyword retyping, a combined nesting-depth defense (64) covering parentheses, block-opening keywords and prefix-operator chains, token ceiling, and shared neutral fixture conformance."
     },
     {
