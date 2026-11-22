@@ -11906,6 +11906,19 @@ name = "register-vm"
 version = "0.1.0"
 
 [[package]]
+name = "render3d-gpu-bridge"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "gpu-runtime",
+ "math3d",
+ "pixel-container",
+ "raster3d-soft",
+]
+
+[[package]]
 name = "renderdoc-sys"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

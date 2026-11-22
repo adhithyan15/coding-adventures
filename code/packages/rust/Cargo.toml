@@ -765,6 +765,7 @@ members = [
     "bsp-portal25d",
     "raster3d-soft",
     "aero-flight-model",
+    "render3d-gpu-bridge",
     "polynomial",
     "protobuf",
     "fsrs",
