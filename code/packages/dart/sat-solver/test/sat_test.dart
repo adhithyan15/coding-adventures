@@ -958,6 +958,26 @@ void main() {
       expect(() => s.solveWithAssumptions([-1]), throwsArgumentError);
     });
 
+    test('long clauses dedup in linear time, tautologies drop', () {
+      // Security regression: dedup must be set-backed, not a nested scan.
+      final s = Solver();
+      final lits = <int>[];
+      for (var i = 0; i < 5000; i++) {
+        lits.add(makeLit(s.newVar(), false));
+        lits.add(makeLit(0, false)); // duplicate first literal
+      }
+      final sw = Stopwatch()..start();
+      expect(s.addClause(lits), isTrue);
+      sw.stop();
+      expect(sw.elapsedMilliseconds < 5000, isTrue,
+          reason: 'clause load must be linear, not quadratic');
+      final t = Solver();
+      final a = makeLit(t.newVar(), false);
+      expect(t.nClauses(), 0);
+      expect(t.addClause([a, makeLit(1, false), negateLit(a)]), isTrue);
+      expect(t.nClauses(), 0, reason: 'tautology adds no clause');
+    });
+
     test('assumptions grow the variable store', () {
       final s = Solver();
       expect(s.solveWithAssumptions([makeLit(7, false)]), SolveResult.sat);

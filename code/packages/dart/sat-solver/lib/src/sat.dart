@@ -331,6 +331,7 @@ class Solver {
     }
 
     final normalized = <int>[];
+    final seenLits = <int>{};
     var seenTrue = false;
 
     for (final lit in lits) {
@@ -347,8 +348,10 @@ class Solver {
       if (val == LBool.false_) {
         continue;
       }
-      if (!normalized.contains(lit)) {
-        if (normalized.contains(negateLit(lit))) {
+      // Set-backed dedup: linear-time clause loading. A linear scan here
+      // would make one long hostile clause quadratic (security review).
+      if (seenLits.add(lit)) {
+        if (seenLits.contains(negateLit(lit))) {
           seenTrue = true;
           break;
         }
