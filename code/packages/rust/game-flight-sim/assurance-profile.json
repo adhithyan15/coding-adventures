@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "game-flight-sim",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded 6-DOF rigid-body flight state, aerodynamic controls, terrain heightfields, black-box FDR frames, and render/HUD scratch buffers"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure flight simulator transform: package executes deterministic 6-DOF flight physics, terrain-coupled ground contact, FDR frame encoding/replay, and 3D + HUD rendering, using FNV-1a solely as a non-cryptographic frame and state integrity digest with no cipher or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: fixed-step integration is bounded by game-clock max_frame_steps, FDR capacity is capped at MAX_BLACK_BOX_FRAMES (65536), terrain LOD and render target dimensions are strictly capped, and no unbounded loops exist"
+    }
+  }
+}

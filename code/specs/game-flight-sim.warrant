@@ -1,0 +1,142 @@
+-- GAME45 -- Game Flight Sim: pure Tier 1 deterministic 6-DOF flight simulator
+-- uniting rigidbody-6dof, aero-flight-model, terrain-lod, cockpit-hud-paint,
+-- render3d-gpu-bridge, game-clock, and explicit rng::Pcg32 with black-box
+-- flight data recording (FDR) and bit-exact replay verification.
+--
+-- Warrant document for game-flight-sim (VER04j and VER04m: state=explicit).
+-- Formal verification contract for FDR frame capacity, binary codec exact-length
+-- invariants (CWE-20 / CWE-125 / CWE-400 / CWE-502), timestep delta bounds,
+-- world altitude envelope, non-negative fuel bounds, and render target bounds.
+
+warrant game_flight_sim v1
+  error FlightSimError = NonFiniteInput | ValueOutOfBounds | InvalidClockDelta | InvalidDimensions | BufferTooSmall | BudgetExceeded | BlackBoxFull | BlackBoxCorrupt | ReplayMismatch | BackendUnavailable
+
+  model Unit = Bool
+  variant FlightPhase = OnRunway | TakeoffRoll | Airborne | Approach | Landed | Crashed
+  variant CameraMode = Cockpit | Chase
+
+  -- Black-box FDR frame count is bounded to [0, 65_536] (CWE-400).
+  model valid_fdr_frame_count(frame_count: Nat) -> Bool = frame_count <= 65536
+  -- Encoded FDR blob byte count must match 80-byte header + 152-byte frames + 8-byte checksum (CWE-125 / CWE-502).
+  model valid_fdr_blob_bytes(blob_bytes: Nat, frame_count: Nat) -> Bool = frame_count <= 65536 and blob_bytes == 88 + frame_count * 152
+  -- Frame delta in nanoseconds must be strictly positive and bounded to 1_000_000_000 ns (CWE-20 / CWE-400).
+  model valid_dt_ns(dt_ns: Nat) -> Bool = dt_ns >= 1 and dt_ns <= 1000000000
+  -- Aircraft world altitude MSL in meters must stay within ISA bounds [-500, 20_000] (CWE-20).
+  model valid_altitude_envelope_m(alt_m: Int) -> Bool = alt_m >= -500 and alt_m <= 20000
+  -- Fuel mass in milligrams is non-negative and capped at 100_000_000_000 mg (100_000 kg) (CWE-20).
+  model valid_fuel_mg(fuel_mg: Int) -> Bool = fuel_mg >= 0 and fuel_mg <= 100000000000
+  -- 3D render target dimensions are strictly positive and bounded to [1, 4096] (CWE-400).
+  model valid_render_dim(dim: Nat) -> Bool = dim >= 1 and dim <= 4096
+
+  op validate_fdr_frame_count(frame_count: Nat) -> Result<Unit, FlightSimError>
+  op validate_fdr_blob_bytes(blob_bytes: Nat, frame_count: Nat) -> Result<Unit, FlightSimError>
+  op validate_dt_ns(dt_ns: Nat) -> Result<Unit, FlightSimError>
+  op validate_altitude_envelope_m(alt_m: Int) -> Result<Unit, FlightSimError>
+  op validate_fuel_mg(fuel_mg: Int) -> Result<Unit, FlightSimError>
+  op validate_render_dim(dim: Nat) -> Result<Unit, FlightSimError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_fdr_frame_count:
+    frame_count public
+  labels validate_fdr_blob_bytes:
+    blob_bytes public
+    frame_count public
+  labels validate_dt_ns:
+    dt_ns public
+  labels validate_altitude_envelope_m:
+    alt_m public
+  labels validate_fuel_mg:
+    fuel_mg public
+  labels validate_render_dim:
+    dim public
+
+  input validate_fdr_frame_count.frame_count:
+    hostile
+    ensures no_panic, terminates
+  input validate_fdr_blob_bytes.blob_bytes:
+    hostile
+    ensures no_panic, terminates
+  input validate_fdr_blob_bytes.frame_count:
+    hostile
+    ensures no_panic, terminates
+  input validate_dt_ns.dt_ns:
+    hostile
+    ensures no_panic, terminates
+  input validate_altitude_envelope_m.alt_m:
+    hostile
+    ensures no_panic, terminates
+  input validate_fuel_mg.fuel_mg:
+    hostile
+    ensures no_panic, terminates
+  input validate_render_dim.dim:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_fdr_frame_count:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+  bound validate_fdr_blob_bytes:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_dt_ns:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+  bound validate_altitude_envelope_m:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+  bound validate_fuel_mg:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+  bound validate_render_dim:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+
+  example fdr_count_max:
+    validate_fdr_frame_count(65536) == Ok(true)
+  example fdr_count_over:
+    validate_fdr_frame_count(65537) == Err(FlightSimError.BlackBoxFull)
+  example fdr_blob_empty:
+    validate_fdr_blob_bytes(88, 0) == Ok(true)
+  example fdr_blob_two_frames:
+    validate_fdr_blob_bytes(392, 2) == Ok(true)
+  example fdr_blob_truncated:
+    validate_fdr_blob_bytes(391, 2) == Err(FlightSimError.BlackBoxCorrupt)
+  example dt_ns_60hz:
+    validate_dt_ns(16666667) == Ok(true)
+  example dt_ns_zero:
+    validate_dt_ns(0) == Err(FlightSimError.InvalidClockDelta)
+  example alt_valid:
+    validate_altitude_envelope_m(1500) == Ok(true)
+  example alt_over:
+    validate_altitude_envelope_m(20001) == Err(FlightSimError.ValueOutOfBounds)
+  example fuel_zero:
+    validate_fuel_mg(0) == Ok(true)
+  example fuel_negative:
+    validate_fuel_mg(-1) == Err(FlightSimError.ValueOutOfBounds)
+  example dim_valid:
+    validate_render_dim(32) == Ok(true)
+  example dim_zero:
+    validate_render_dim(0) == Err(FlightSimError.InvalidDimensions)
+
+  claim validate_fdr_frame_count_agrees:
+    forall n: Nat. validate_fdr_frame_count(n) == (if valid_fdr_frame_count(n) then Ok(true) else Err(FlightSimError.BlackBoxFull))
+  claim validate_fdr_blob_bytes_agrees:
+    forall b: Nat, n: Nat. validate_fdr_blob_bytes(b, n) == (if valid_fdr_blob_bytes(b, n) then Ok(true) else Err(FlightSimError.BlackBoxCorrupt))
+  claim validate_dt_ns_agrees:
+    forall dt: Nat. validate_dt_ns(dt) == (if valid_dt_ns(dt) then Ok(true) else Err(FlightSimError.InvalidClockDelta))
+  claim validate_altitude_envelope_agrees:
+    forall a: Int. validate_altitude_envelope_m(a) == (if valid_altitude_envelope_m(a) then Ok(true) else Err(FlightSimError.ValueOutOfBounds))
+  claim validate_fuel_mg_agrees:
+    forall f: Int. validate_fuel_mg(f) == (if valid_fuel_mg(f) then Ok(true) else Err(FlightSimError.ValueOutOfBounds))
+  claim validate_render_dim_agrees:
+    forall d: Nat. validate_render_dim(d) == (if valid_render_dim(d) then Ok(true) else Err(FlightSimError.InvalidDimensions))

@@ -1556,4 +1556,5 @@ members = [
   "tls13-certificate-verify-transcript-binding",
   "tls13-reviewed-server-path-certificate-verify",
   "cockpit-hud-paint",
+  "game-flight-sim",
 ]

@@ -7022,6 +7022,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "game-flight-sim"
+version = "0.1.0"
+dependencies = [
+ "aero-flight-model",
+ "capability-runtime-conformance",
+ "cockpit-hud-paint",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "game-clock",
+ "math3d",
+ "paint-instructions",
+ "pixel-container",
+ "render3d-gpu-bridge",
+ "rigidbody-6dof",
+ "rng",
+ "terrain-lod",
+ "trig",
+]
+
+[[package]]
 name = "game-input-frame"
 version = "0.1.0"
 dependencies = [
