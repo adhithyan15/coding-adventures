@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/game-flight-sim",
-  "source_digest": "7219a8914e32befb79afb85ef4d95bbd3d980859720eac417d97e1a99b386b4e",
+  "source_digest": "a721f6b0c9468091ff8ce78b2ae44350d46b4ef0b116794c9a8054e51960f3be",
   "manifest_digest": "84f80b2c9cae12b8d101f98095e90384aef5a4fbf342cee6d5c8b21d033d9f9b",
   "declared_effects": [],
   "entry_points": [

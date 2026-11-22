@@ -14,11 +14,11 @@
 
 use cockpit_hud_paint::{paint_scene_digest_fnv1a, prepare_paint_scene, HudConfig};
 use game_flight_sim::{
-    decode_black_box_from_bytes, decode_black_box_into, encode_black_box_into, render_frame_into,
-    replay_black_box_verify, sim_init_level_flight, sim_init_on_runway, state_digest_fnv1a,
-    step_in_place, BlackBoxRecorder, CameraMode, FlightInputFrame, FlightRenderScratch,
-    FlightSimConfig, FlightSimError, BLACK_BOX_HEADER_BYTES, BLACK_BOX_TRAILER_BYTES,
-    MAX_BLACK_BOX_FRAMES, MAX_STEP_DT_NS,
+    decode_black_box_from_bytes, decode_black_box_into, encode_black_box_into, is_point_on_runway,
+    render_frame_into, replay_black_box_verify, sim_init_level_flight, sim_init_on_runway,
+    state_digest_fnv1a, step, step_in_place, BlackBoxRecorder, CameraMode, FlightInputFrame,
+    FlightRenderScratch, FlightSimConfig, FlightSimError, BLACK_BOX_HEADER_BYTES,
+    BLACK_BOX_TRAILER_BYTES, MAX_BLACK_BOX_FRAMES, MAX_STEP_DT_NS,
 };
 use math3d::Vec3;
 use pixel_container::PixelContainer;
@@ -660,4 +660,163 @@ fn seeded_2000_case_hostile_fuzz_campaign_zero_panics() {
         }
         let _ = decode_black_box_from_bytes(&fuzz_blob[..len]);
     }
+}
+
+#[test]
+fn reviewer_findings_1_to_5_regressions() {
+    let (spec, heights, runway) = test_terrain();
+    let hf = Heightfield::from_heights(spec, &heights).expect("hf");
+    let cfg = FlightSimConfig::sim_config_default(45, 45);
+
+    // Finding 1: step_in_place must stay byte-for-byte atomic when post-step airspeed > 2000 m/s
+    let mut sim_hypersonic = sim_init_level_flight(cfg, 400.0, 60.0).expect("trim");
+    sim_hypersonic.body.linear_momentum =
+        Vec3::new(sim_hypersonic.mass.mass_props_mass() * 2500.0, 0.0, 0.0);
+    let pre_digest = state_digest_fnv1a(&sim_hypersonic).expect("pre digest");
+    let pre_tick = sim_hypersonic.tick;
+    let header = sim_hypersonic.sim_state_black_box_header().expect("hdr");
+    let mut rec = BlackBoxRecorder::recorder_with_capacity(header, 4).expect("rec");
+    let pre_rec_digest = rec.recorder_digest_fnv1a().expect("rec dig");
+
+    let res = step_in_place(
+        &mut sim_hypersonic,
+        &hf,
+        &runway,
+        &valid_input(cfg.fixed_dt_ns),
+        Some(&mut rec),
+    );
+    assert_eq!(res, Err(FlightSimError::ValueOutOfBounds));
+    assert_eq!(sim_hypersonic.tick, pre_tick);
+    assert_eq!(
+        state_digest_fnv1a(&sim_hypersonic).expect("post digest"),
+        pre_digest
+    );
+    assert_eq!(rec.recorder_len(), 0);
+    assert_eq!(rec.recorder_digest_fnv1a().expect("rdig"), pre_rec_digest);
+
+    // Finding 2A & 2B: render_frame_into must keep ALL of scratch, fb, depth, and paint_scene
+    // byte-for-byte unchanged on F32 clear_depth overflow AND max_triangles = 1 BudgetExceeded.
+    let sim = sim_init_level_flight(cfg, 400.0, 55.0).expect("trim");
+    let hud_cfg = HudConfig::hud_config_default(320.0, 240.0).expect("hud");
+    let lod_ok =
+        LodParams::lod_params_new(sim.body.position, 2.0, 32.0, 4, 256, 1024, None).expect("lod");
+    let mut fb = PixelContainer::new(32, 32);
+    fb.fill(0x11, 0x22, 0x33, 0x44);
+    let mut zb32 = vec![0.75_f32; 32 * 32];
+    let mut scratch = FlightRenderScratch::flight_scratch_with_capacity(
+        256,
+        hf.vertex_count(),
+        1024,
+        32,
+        32,
+        2048,
+    )
+    .expect("scratch");
+    let mut scene = prepare_paint_scene(&hud_cfg).expect("scene");
+
+    let fb_snap = fb.data.clone();
+    let zb32_snap: Vec<u32> = zb32.iter().map(|d| d.to_bits()).collect();
+    let hud_len_snap = scratch.hud_scratch.hud_scratch_len();
+    let node_cnt_snap = scratch.terrain_scratch.scratch_node_count();
+    let verts_snap = scratch.terrain_vertices.clone();
+    let idx_snap = scratch.terrain_indices.clone();
+    let scene_snap = paint_scene_digest_fnv1a(&scene).expect("scene dig");
+
+    // 2A: F32 clear_depth = 1.0e40 overflows f32
+    let target_f32_overflow = RenderTargetSpec {
+        width: 32,
+        height: 32,
+        clear_color: [0, 0, 0, 255],
+        clear_depth: 1.0e40,
+        clip_space: ClipSpace::OpenGl,
+        post_process: PostProcessMode::Identity,
+    };
+    let err_2a = render_frame_into(
+        &sim,
+        &hf,
+        &lod_ok,
+        &hud_cfg,
+        &target_f32_overflow,
+        BackendPreference::ForceSoftware,
+        CameraMode::Cockpit,
+        &mut fb,
+        DepthBufferMut::F32(&mut zb32),
+        &mut scratch,
+        Some(&mut scene),
+    );
+    assert_eq!(err_2a, Err(FlightSimError::ValueOutOfBounds));
+    assert_eq!(fb.data, fb_snap);
+    assert_eq!(
+        zb32.iter().map(|d| d.to_bits()).collect::<Vec<_>>(),
+        zb32_snap
+    );
+    assert_eq!(scratch.hud_scratch.hud_scratch_len(), hud_len_snap);
+    assert_eq!(scratch.terrain_scratch.scratch_node_count(), node_cnt_snap);
+    assert_eq!(scratch.terrain_vertices, verts_snap);
+    assert_eq!(scratch.terrain_indices, idx_snap);
+    assert_eq!(paint_scene_digest_fnv1a(&scene).expect("sdig"), scene_snap);
+
+    // 2B: max_triangles = 1 fails emit/refine budget atomically
+    let target_ok = RenderTargetSpec {
+        width: 32,
+        height: 32,
+        clear_color: [0, 0, 0, 255],
+        clear_depth: 1.0,
+        clip_space: ClipSpace::OpenGl,
+        post_process: PostProcessMode::Identity,
+    };
+    let lod_tiny =
+        LodParams::lod_params_new(sim.body.position, 2.0, 32.0, 4, 256, 1, None).expect("lod tiny");
+    let err_2b = render_frame_into(
+        &sim,
+        &hf,
+        &lod_tiny,
+        &hud_cfg,
+        &target_ok,
+        BackendPreference::ForceSoftware,
+        CameraMode::Cockpit,
+        &mut fb,
+        DepthBufferMut::F32(&mut zb32),
+        &mut scratch,
+        Some(&mut scene),
+    );
+    assert_eq!(err_2b, Err(FlightSimError::BudgetExceeded));
+    assert_eq!(fb.data, fb_snap);
+    assert_eq!(
+        zb32.iter().map(|d| d.to_bits()).collect::<Vec<_>>(),
+        zb32_snap
+    );
+    assert_eq!(scratch.hud_scratch.hud_scratch_len(), hud_len_snap);
+    assert_eq!(scratch.terrain_scratch.scratch_node_count(), node_cnt_snap);
+    assert_eq!(scratch.terrain_vertices, verts_snap);
+    assert_eq!(scratch.terrain_indices, idx_snap);
+    assert_eq!(paint_scene_digest_fnv1a(&scene).expect("sdig"), scene_snap);
+
+    // Finding 4: O(1) Clone & step with rng_steps near u64::MAX must never hang
+    let mut sim_max_rng = sim_init_on_runway(cfg, &runway).expect("init");
+    sim_max_rng.rng_steps = u64::MAX;
+    let cloned_max = sim_max_rng.clone();
+    assert_eq!(cloned_max.rng_steps, u64::MAX);
+    assert_eq!(
+        step(&sim_max_rng, &hf, &runway, &valid_input(cfg.fixed_dt_ns)).err(),
+        Some(FlightSimError::InvalidClockDelta)
+    );
+
+    // Finding 5: unbounded angle and coordinate overflow in is_point_on_runway & sim_init_on_runway
+    let mut bad_rwy_angle = runway;
+    bad_rwy_angle.heading_rad = 1.0e300;
+    assert_eq!(
+        is_point_on_runway(&bad_rwy_angle, 0.0, 0.0),
+        Err(FlightSimError::ValueOutOfBounds)
+    );
+    assert_eq!(
+        sim_init_on_runway(cfg, &bad_rwy_angle).err(),
+        Some(FlightSimError::ValueOutOfBounds)
+    );
+    let mut bad_rwy_pos = runway;
+    bad_rwy_pos.center_x = -f64::MAX;
+    assert_eq!(
+        is_point_on_runway(&bad_rwy_pos, f64::MAX, 0.0),
+        Err(FlightSimError::ValueOutOfBounds)
+    );
 }

@@ -52,6 +52,8 @@ const HUD_PATH_CAP_TICKS: usize = 512;
 pub struct FlightRenderScratch {
     /// Quadtree LOD refinement scratch (`GAME42`).
     pub terrain_scratch: TerrainScratch,
+    /// Pre-allocated staging quadtree scratch so `terrain_scratch` stays untouched on `Err`.
+    terrain_scratch_staging: TerrainScratch,
     /// Pre-allocated terrain vertex staging buffer.
     pub terrain_vertices: Vec<Vertex>,
     /// Pre-allocated terrain triangle index buffer (`u32`).
@@ -99,6 +101,7 @@ impl FlightRenderScratch {
             .ok_or(FlightSimError::BudgetExceeded)?;
 
         let terrain_scratch = TerrainScratch::scratch_with_capacity(max_nodes)?;
+        let terrain_scratch_staging = TerrainScratch::scratch_with_capacity(max_nodes)?;
         let default_vertex =
             Vertex::vertex_new(Vec3::zero(), Vec3::unit_y(), [0.3, 0.5, 0.3], 0.0, 0.0);
         let terrain_vertices = vec![default_vertex; max_vertices];
@@ -109,6 +112,7 @@ impl FlightRenderScratch {
 
         Ok(Self {
             terrain_scratch,
+            terrain_scratch_staging,
             terrain_vertices,
             terrain_indices,
             bridge_scratch,
@@ -402,8 +406,15 @@ pub fn render_frame_into(
     sim_state_validate(state)?;
     let spec = heightfield.spec();
     let _ = Heightfield::from_heights(spec, heightfield.heights())?;
+    let bridge_max_coord = render3d_gpu_bridge::MAX_COORD;
+    let span = spec.spec_world_span();
+    let _ = check_range(spec.origin_x, -bridge_max_coord, bridge_max_coord)?;
+    let _ = check_range(spec.origin_z, -bridge_max_coord, bridge_max_coord)?;
+    let _ = check_range(spec.origin_x + span, -bridge_max_coord, bridge_max_coord)?;
+    let _ = check_range(spec.origin_z + span, -bridge_max_coord, bridge_max_coord)?;
+    let h_cap = MAX_HEIGHT.min(bridge_max_coord);
     for &h in heightfield.heights() {
-        let _ = check_range(h, -MAX_HEIGHT, MAX_HEIGHT)?;
+        let _ = check_range(h, -h_cap, h_cap)?;
     }
 
     let validated_lod = LodParams::lod_params_new(
@@ -420,6 +431,10 @@ pub fn render_frame_into(
     target.target_spec_validate()?;
     let _ = validate_render_dim(target.width)?;
     let _ = validate_render_dim(target.height)?;
+
+    if matches!(depth, DepthBufferMut::F32(_)) && !(target.clear_depth as f32).is_finite() {
+        return Err(FlightSimError::ValueOutOfBounds);
+    }
 
     if matches!(backend_pref, BackendPreference::RequireHardware(_)) {
         return Err(FlightSimError::BackendUnavailable);
@@ -453,6 +468,7 @@ pub fn render_frame_into(
         .ok_or(FlightSimError::BudgetExceeded)?;
 
     if scratch.terrain_scratch.scratch_capacity() < validated_lod.max_nodes
+        || scratch.terrain_scratch_staging.scratch_capacity() < validated_lod.max_nodes
         || scratch.terrain_vertices.len() < v_count
         || scratch.terrain_indices.len() < max_idx_needed
         || scratch.bridge_scratch.bridge_scratch_vertex_capacity() < v_count
@@ -471,8 +487,21 @@ pub fn render_frame_into(
         validate_paint_scene_ready(scene)?;
     }
 
+    // Run LOD refinement into private staging scratch BEFORE mutating any public buffer.
+    let _lod_stats = refine_into(
+        heightfield,
+        &validated_lod,
+        &mut scratch.terrain_scratch_staging,
+    )?;
+
     // `build_hud_frame_into` runs a dry pass first, leaving `hud_scratch` untouched on Err.
     let hud_summary = build_hud_frame_into(&telemetry, hud_config, &mut scratch.hud_scratch)?;
+
+    // Commit LOD scratch now that all fallible pre-checks have passed.
+    std::mem::swap(
+        &mut scratch.terrain_scratch,
+        &mut scratch.terrain_scratch_staging,
+    );
 
     // 2. Populate terrain mesh vertices into pre-allocated scratch (0 allocs).
     let side = heightfield.grid_side();
@@ -493,8 +522,7 @@ pub fn render_frame_into(
         }
     }
 
-    // 3. Refine LOD & emit triangle indices into pre-allocated scratch (0 allocs).
-    let _lod_stats = refine_into(heightfield, &validated_lod, &mut scratch.terrain_scratch)?;
+    // 3. Emit triangle indices into pre-allocated scratch (0 allocs).
     let emitted_tris = emit_mesh_into(
         heightfield,
         &scratch.terrain_scratch,

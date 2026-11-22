@@ -81,8 +81,8 @@ pub use validate::{
 
 use render::compute_annunciators;
 use validate::{
-    canon_zero, check_finite, check_range, check_vec3_bounded, fnv1a_mix_bytes, fnv1a_mix_f64,
-    fnv1a_mix_u64, fnv1a_mix_vec3, validate_terrain_and_runway, FNV_OFFSET,
+    canon_zero, check_range, check_vec3_bounded, fnv1a_mix_bytes, fnv1a_mix_f64, fnv1a_mix_u64,
+    fnv1a_mix_vec3, validate_terrain_and_runway, FNV_OFFSET,
 };
 
 // ---------------------------------------------------------------------------
@@ -537,10 +537,8 @@ impl fmt::Debug for FlightSimState {
 
 impl Clone for FlightSimState {
     fn clone(&self) -> Self {
-        let mut rng = Pcg32::new(self.rng_seed);
-        for _ in 0..self.rng_steps {
-            let _ = rng.next_u64();
-        }
+        let mut rng = derive_step_rng(self.rng_seed, self.rng_steps.saturating_sub(1));
+        let _ = rng.next_u64();
         Self {
             body: self.body,
             mass: self.mass,
@@ -640,6 +638,12 @@ fn trainer_mass_properties() -> Result<MassProperties, FlightSimError> {
     )?)
 }
 
+fn derive_step_rng(rng_seed: u64, step_index: u64) -> Pcg32 {
+    let mut h = fnv1a_mix_u64(FNV_OFFSET, rng_seed);
+    h = fnv1a_mix_u64(h, step_index);
+    Pcg32::new(h)
+}
+
 fn draw_gust_from_rng(rng: &mut Pcg32, intensity_mps: f64) -> Vec3 {
     if intensity_mps <= 0.0 {
         let _ = rng.next_u64();
@@ -687,7 +691,7 @@ fn build_initial_state(
     )?;
     let clock = GameClockState::new(clock_cfg)?;
 
-    let mut rng = Pcg32::new(clean_cfg.rng_seed);
+    let mut rng = derive_step_rng(clean_cfg.rng_seed, 0);
     let last_gust_world_mps = draw_gust_from_rng(&mut rng, clean_cfg.gust_intensity_mps);
     let rng_steps = 1_u64;
 
@@ -752,7 +756,11 @@ pub fn sim_init_on_runway(
     let cz = check_range(runway.center_z, -MAX_WORLD_EXTENT_M, MAX_WORLD_EXTENT_M)?;
     let len = check_range(runway.length, 10.0, MAX_WORLD_EXTENT_M)?;
     let _ = check_range(runway.width, 1.0, MAX_WORLD_EXTENT_M)?;
-    let heading = check_finite(runway.heading_rad)?;
+    let heading = check_range(
+        runway.heading_rad,
+        -math3d::MAX_ANGLE_RAD,
+        math3d::MAX_ANGLE_RAD,
+    )?;
 
     let fwd_x = trig::cos(heading);
     let fwd_z = trig::sin(heading);
@@ -1303,46 +1311,69 @@ pub fn step_in_place(
         .ok_or(FlightSimError::InvalidClockDelta)?;
     let _ = isa_atmosphere(msl_m)?;
 
+    let mut next_rng = derive_step_rng(state.rng_seed, state.rng_steps);
+    let next_gust = draw_gust_from_rng(&mut next_rng, state.gust_intensity_mps);
+
+    let candidate = FlightSimState {
+        body: next_body,
+        mass: state.mass,
+        aircraft: state.aircraft,
+        env: state.env,
+        controls: next_controls,
+        ground_contact: state.ground_contact,
+        integrator: state.integrator,
+        clock: next_clock,
+        rng: next_rng,
+        rng_seed: state.rng_seed,
+        rng_steps: next_rng_steps,
+        gust_intensity_mps: state.gust_intensity_mps,
+        last_gust_world_mps: next_gust,
+        tick: next_tick,
+        sim_time_s: next_sim_time,
+        fuel_kg: next_fuel,
+        gear_down: clean_in.gear_down,
+        flaps_norm: clean_in.flaps,
+        brake_norm: clean_in.brake,
+        phase: next_phase,
+        last_isa: final_eval.atmosphere,
+        last_air_data: final_eval.air_data,
+        last_annunciators: annunciators,
+        last_agl_m: final_agl,
+        last_g_load: g_load,
+        last_vertical_speed_mps: final_vsi,
+        initial_mode: state.initial_mode,
+        initial_altitude_m: state.initial_altitude_m,
+        initial_airspeed_mps: state.initial_airspeed_mps,
+        initial_fuel_kg: state.initial_fuel_kg,
+        terrain_seed: state.terrain_seed,
+        aircraft_preset: state.aircraft_preset,
+    };
+
+    // Validate every post-step invariant & frame BEFORE touching `state` or `recorder`.
+    let digest = state_digest_fnv1a(&candidate)?;
+    let candidate_frame = BlackBoxFrame {
+        tick: next_tick,
+        input: clean_in,
+        phase: next_phase,
+        annunciators,
+        pitch_rad,
+        roll_rad,
+        heading_rad,
+        ias_mps,
+        msl_m,
+        agl_m: final_agl,
+        vsi_mps: final_vsi,
+        g_load,
+        fuel_kg: next_fuel,
+        state_digest_fnv1a: digest,
+    };
+    candidate_frame.frame_validate()?;
+
     // 4. Commit point (infallible from here onward).
-    state.body = next_body;
-    state.controls = next_controls;
-    state.clock = next_clock;
-    state.last_gust_world_mps = draw_gust_from_rng(&mut state.rng, state.gust_intensity_mps);
-    state.rng_steps = next_rng_steps;
-    state.tick = next_tick;
-    state.sim_time_s = next_sim_time;
-    state.fuel_kg = next_fuel;
-    state.gear_down = clean_in.gear_down;
-    state.flaps_norm = clean_in.flaps;
-    state.brake_norm = clean_in.brake;
-    state.phase = next_phase;
-    state.last_isa = final_eval.atmosphere;
-    state.last_air_data = final_eval.air_data;
-    state.last_annunciators = annunciators;
-    state.last_agl_m = final_agl;
-    state.last_g_load = g_load;
-    state.last_vertical_speed_mps = final_vsi;
-
-    let digest = state_digest_fnv1a(state)?;
-
     if let Some(rec) = recorder {
-        rec.push_frame(BlackBoxFrame {
-            tick: next_tick,
-            input: clean_in,
-            phase: next_phase,
-            annunciators,
-            pitch_rad,
-            roll_rad,
-            heading_rad,
-            ias_mps,
-            msl_m,
-            agl_m: final_agl,
-            vsi_mps: final_vsi,
-            g_load,
-            fuel_kg: next_fuel,
-            state_digest_fnv1a: digest,
-        })?;
+        rec.push_frame(candidate_frame)?;
     }
+    *state = candidate;
 
     Ok(StepReport {
         tick: next_tick,

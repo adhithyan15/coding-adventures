@@ -251,11 +251,15 @@ pub(crate) fn validate_terrain_and_runway(
 
 /// Return `true` if `(x, z)` lies within the paved rectangle of `runway`.
 pub fn is_point_on_runway(runway: &RunwaySpec, x: f64, z: f64) -> Result<bool, FlightSimError> {
-    let x = check_finite(x)?;
-    let z = check_finite(z)?;
-    let cx = check_finite(runway.center_x)?;
-    let cz = check_finite(runway.center_z)?;
-    let heading = check_finite(runway.heading_rad)?;
+    let x = check_range(x, -math3d::MAX_COORD, math3d::MAX_COORD)?;
+    let z = check_range(z, -math3d::MAX_COORD, math3d::MAX_COORD)?;
+    let cx = check_range(runway.center_x, -math3d::MAX_COORD, math3d::MAX_COORD)?;
+    let cz = check_range(runway.center_z, -math3d::MAX_COORD, math3d::MAX_COORD)?;
+    let heading = check_range(
+        runway.heading_rad,
+        -math3d::MAX_ANGLE_RAD,
+        math3d::MAX_ANGLE_RAD,
+    )?;
     let length = check_range(runway.length, 1.0, MAX_WORLD_EXTENT_M)?;
     let width = check_range(runway.width, 1.0, MAX_WORLD_EXTENT_M)?;
 
@@ -264,9 +268,11 @@ pub fn is_point_on_runway(runway: &RunwaySpec, x: f64, z: f64) -> Result<bool, F
     let right_x = -fwd_z;
     let right_z = fwd_x;
 
-    let dx = x - cx;
-    let dz = z - cz;
-    let along = (dx * fwd_x + dz * fwd_z).abs();
-    let across = (dx * right_x + dz * right_z).abs();
+    let dx = check_finite(x - cx).map_err(|_| FlightSimError::ValueOutOfBounds)?;
+    let dz = check_finite(z - cz).map_err(|_| FlightSimError::ValueOutOfBounds)?;
+    let along = check_finite((dx * fwd_x + dz * fwd_z).abs())
+        .map_err(|_| FlightSimError::ValueOutOfBounds)?;
+    let across = check_finite((dx * right_x + dz * right_z).abs())
+        .map_err(|_| FlightSimError::ValueOutOfBounds)?;
     Ok(along <= 0.5 * length && across <= 0.5 * width)
 }
