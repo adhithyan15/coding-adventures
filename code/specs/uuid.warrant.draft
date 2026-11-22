@@ -1,0 +1,186 @@
+-- UUID (RFC 4122 / RFC 9562) conformance contract: DRAFT.
+--
+-- Status: draft against VER04l (text, spec-only; WX-T1 unimplemented). It does
+-- not yet pass parse_document/check_warrant and carries no bindings, report or
+-- jail. Its job now is to prove the VER04l surface can state a real string
+-- package, and to record exactly where the language runs out.
+--
+-- What this draft states: parsing of all four string forms with the reference
+-- leniency (case-insensitive, whitespace-trimmed, hyphen positions ignored),
+-- formatting, parse/is_valid agreement, deterministic v3/v5 (shape,
+-- determinism, known answers), and v1/v4/v7 wire shape. Models stay
+-- straight-line (no WX-D fold/map yet): character predicates and nibble
+-- decoders only.
+--
+-- What it deliberately does NOT state (language gaps, not oversights):
+--   * case-insensitivity as a universal claim: needs map over chars(t) (WX-D);
+--     covered here by concrete example pairs instead.
+--   * hyphen positions / version nibbles by direct inspection: no indexing
+--     into Text or Bytes in T1 (VER04l 3.6); covered by round-trip claims,
+--     which imply positional correctness.
+--   * v1/v4/v7 value properties (uniqueness, monotonicity, distribution):
+--     needs an effects/randomness model that does not exist; shape claims only.
+--   * v3/v5 hash internals: pinned by known-answer examples (WX-E style), not
+--     by re-implementing MD5/SHA-1 as models.
+--   * bound rows: measured against the pilot crate when T1 lands, not invented.
+--   * faults/sabotage lines: generator-side (T1), at pilot time.
+--
+-- Lanes today: 15/15 established lanes carry uuid (rust, python,
+-- typescript, go, ruby, elixir, lua, perl, haskell, csharp, fsharp, swift,
+-- java, kotlin, dart). No lane binds yet; bindings are pilot work.
+--
+-- Domains (planned; nothing generated until T1):
+--   Bytes<16> round-trip      sample    16-byte vectors through format/parse
+--   hex alphabet (22, <=3)    bounded-set  11,154 texts: total parse/format claims
+--   mixed alphabet (34, <=3)  bounded-set  40,494 texts: agreement + no-panic
+warrant uuid v2
+
+  error UuidError = INVALID_UUID
+
+  -- Character predicates over scalar codes (straight-line; no WX-D needed).
+  model is_digit(c: Char) -> Bool =
+    code(c) >= 48u32 and code(c) <= 57u32
+  model is_lower_hex(c: Char) -> Bool =
+    code(c) >= 97u32 and code(c) <= 102u32
+  model is_upper_hex(c: Char) -> Bool =
+    code(c) >= 65u32 and code(c) <= 70u32
+  model is_hex_digit(c: Char) -> Bool =
+    is_digit(c) or is_lower_hex(c) or is_upper_hex(c)
+  model hex_val(c: Char) -> U32 =
+    if is_digit(c) then code(c) - 48u32
+    else if is_lower_hex(c) then code(c) - 87u32
+    else code(c) - 55u32
+
+  -- Operations bound per lane (Rust UUID, Dart Uuid, ...). Bytes<16> is the
+  -- interchange shape; bindings map it to/from each native UUID type.
+  op parse(s: Text) -> Result<Bytes<16>, UuidError>
+  op is_valid(s: Text) -> Bool
+  op format(b: Bytes<16>) -> Text
+  op format_hex(b: Bytes<16>) -> Text
+  op format_urn(b: Bytes<16>) -> Text
+  op v3(ns: Bytes<16>, name: Text) -> Bytes<16>
+  op v5(ns: Bytes<16>, name: Text) -> Bytes<16>
+  op v1() -> Bytes<16> fresh
+  op v4() -> Bytes<16> fresh
+  op v7() -> Bytes<16> fresh
+
+  labels parse:
+    s public
+  labels is_valid:
+    s public
+  labels format:
+    b public
+  labels format_hex:
+    b public
+  labels format_urn:
+    b public
+  labels v3:
+    ns public
+    name public
+  labels v5:
+    ns public
+    name public
+  -- No labels rows for the nullary v1/v4/v7 (no parameters); result
+  -- labelling, if the checker requires it, is set at pilot time.
+
+  -- Known answers (WX-E style tables). v5 widgets value verified against an
+  -- independent hashlib oracle; the old spec value matched no implementation.
+  example parse_standard:
+    parse(t"550e8400-e29b-41d4-a716-446655440000") ==
+      Ok(b"550e8400e29b41d4a716446655440000")
+  example parse_compact:
+    parse(t"550e8400e29b41d4a716446655440000") ==
+      Ok(b"550e8400e29b41d4a716446655440000")
+  example parse_braced:
+    parse(t"{550e8400-e29b-41d4-a716-446655440000}") ==
+      Ok(b"550e8400e29b41d4a716446655440000")
+  example parse_urn:
+    parse(t"urn:uuid:550e8400-e29b-41d4-a716-446655440000") ==
+      Ok(b"550e8400e29b41d4a716446655440000")
+  example parse_uppercase:
+    parse(t"550E8400-E29B-41D4-A716-446655440000") ==
+      Ok(b"550e8400e29b41d4a716446655440000")
+  example parse_whitespace:
+    parse(t"  550e8400-e29b-41d4-a716-446655440000\t") ==
+      Ok(b"550e8400e29b41d4a716446655440000")
+  example parse_misplaced_hyphens:
+    parse(t"5-50e8400-e29b-41d4-a716-446655440000") ==
+      Ok(b"550e8400e29b41d4a716446655440000")
+  example parse_trailing_hyphen:
+    parse(t"550e8400-e29b-41d4-a716-446655440000-") ==
+      Ok(b"550e8400e29b41d4a716446655440000")
+  example parse_nil:
+    parse(t"00000000-0000-0000-0000-000000000000") ==
+      Ok(b"00000000000000000000000000000000")
+  example parse_max:
+    parse(t"ffffffff-ffff-ffff-ffff-ffffffffffff") ==
+      Ok(b"ffffffffffffffffffffffffffffffff")
+  example parse_rejects_short:
+    parse(t"550e8400-e29b-41d4-a716") == Err(UuidError.INVALID_UUID)
+  example parse_rejects_long:
+    parse(t"550e8400-e29b-41d4-a716-4466554400001234") == Err(UuidError.INVALID_UUID)
+  example parse_rejects_nonhex:
+    parse(t"550e8400-e29b-41d4-a716-44665544GGGG") == Err(UuidError.INVALID_UUID)
+  example parse_rejects_empty:
+    parse(t"") == Err(UuidError.INVALID_UUID)
+  example parse_rejects_garbage:
+    parse(t"not-a-uuid") == Err(UuidError.INVALID_UUID)
+  example v3_dns_python_org:
+    v3(b"6ba7b8109dad11d180b400c04fd430c8", t"python.org") ==
+      b"6fa459eaee8a3ca4894edb77e160355e"
+  example v5_dns_python_org:
+    v5(b"6ba7b8109dad11d180b400c04fd430c8", t"python.org") ==
+      b"886313e13b8a53729b900c9aee199e5d"
+  example v5_url_widgets:
+    v5(b"6ba7b8119dad11d180b400c04fd430c8", t"http://www.widgets.com/") ==
+      b"b25d1f1533fc544b870edc86571013e3"
+  example v5_dns_unicode:
+    v5(b"6ba7b8109dad11d180b400c04fd430c8", t"\u{65E5}\u{672C}\u{8A9E}") ==
+      b"9786f370913c51ea845e7f3469bc5966"
+  example v5_empty_name_valid:
+    is_valid(format(v5(b"6ba7b8109dad11d180b400c04fd430c8", t""))) == true
+
+  -- Round trips: parse inverts format on every 16-byte value (sampled), and
+  -- every form agrees. These imply hyphen positions and nibble placement.
+  claim parse_inverts_format:
+    forall b: Bytes<16>. parse(format(b)) == Ok(b)
+  claim parse_inverts_format_hex:
+    forall b: Bytes<16>. parse(format_hex(b)) == Ok(b)
+  claim parse_inverts_format_urn:
+    forall b: Bytes<16>. parse(format_urn(b)) == Ok(b)
+  claim format_shape_36:
+    forall b: Bytes<16>.
+      len(chars(format(b))) == len(chars(t"00000000-0000-0000-0000-000000000000"))
+  claim format_hex_shape_32:
+    forall b: Bytes<16>.
+      len(chars(format_hex(b))) == len(chars(t"00000000000000000000000000000000"))
+
+  -- Agreement: the boolean entry point never disagrees with parse, over a
+  -- mixed alphabet (hex, punctuation, whitespace, controls). No-panic included:
+  -- every input either parses or errors, never anything else.
+  claim parse_is_valid_agree:
+    forall t: Text | within(t, t"0123456789abcdefABCDEF-{}:URNurn \t", 3).
+      match parse(t) with Ok(b) -> is_valid(t) | Err(e) -> not is_valid(t)
+
+  -- Deterministic generation: same inputs, same bytes, always.
+  claim v3_deterministic:
+    forall ns: Bytes<16>, n: Text | within(n, t"ab.-_~", 3).
+      v3(ns, n) == v3(ns, n)
+  claim v5_deterministic:
+    forall ns: Bytes<16>, n: Text | within(n, t"ab.-_~", 3).
+      v5(ns, n) == v5(ns, n)
+  example v3_v5_differ_on_rfc_input:
+    (v3(b"6ba7b8109dad11d180b400c04fd430c8", t"python.org") ==
+      v5(b"6ba7b8109dad11d180b400c04fd430c8", t"python.org")) == false
+
+  -- Random/time generation: wire shape only (36-char canonical form).
+  -- Uniqueness, monotonicity and distribution need an effects model.
+  claim v4_wire_shape:
+    len(chars(format(v4()))) ==
+      len(chars(t"00000000-0000-0000-0000-000000000000"))
+  claim v1_wire_shape:
+    len(chars(format(v1()))) ==
+      len(chars(t"00000000-0000-0000-0000-000000000000"))
+  claim v7_wire_shape:
+    len(chars(format(v7()))) ==
+      len(chars(t"00000000-0000-0000-0000-000000000000"))
