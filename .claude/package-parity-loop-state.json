@@ -19407,13 +19407,15 @@
     {
       "id": "dart-verilog-frontend-vertical-parity",
       "title": "Port Verilog lexer and parser vertical to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "dart-swift-language-frontends-neutral-fixtures"
       ],
       "branch": "feat/dart-verilog-frontend-vertical-parity",
       "pr_number": 19829,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19829",
+      "merged_at": "2026-11-22T01:17:50Z",
+      "merge_commit": "be574848e7b93bf29d03c171bb1e36dfb6d1c642",
       "notes": "Dart subtranche of Verilog frontend vertical parity. Delivers coding_adventures_verilog_lexer and coding_adventures_verilog_parser with pure in-memory line-preserving preprocessor without ambient filesystem authority, multi-edition grammar routing (1995, 2001, 2005), macro expansion bomb defense, delimiter and keyword-block nesting depth defense (64), token ceiling, and shared neutral fixture conformance."
     },
     {
@@ -24416,12 +24418,13 @@
     {
       "id": "starlark-compiler-lua-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in lua",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/starlark-compiler-lua-perl-opcode-provider-parity",
+      "pr_number": 19831,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19831",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -24436,12 +24439,13 @@
     {
       "id": "starlark-compiler-perl-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in perl",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/starlark-compiler-lua-perl-opcode-provider-parity",
+      "pr_number": 19831,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19831",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
