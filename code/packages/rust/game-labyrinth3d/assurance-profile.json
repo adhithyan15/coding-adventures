@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "game-labyrinth3d",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no cryptographic key material; key pickups are bounded 3-bit gameplay door-unlock flags"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure simulation and rendering transform: package implements deterministic dungeon state transitions, raycast-dda/raster3d-soft rendering, and non-cryptographic FNV-1a digests only, no cipher or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: grid dimensions, door/pickup/entity counts, simulation steps per frame, and framebuffer dimensions are strictly capped by MAX_GRID_DIM, MAX_DOORS, MAX_PICKUPS, MAX_ENTITIES, and MAX_FRAME_WIDTH/HEIGHT"
+    }
+  }
+}
