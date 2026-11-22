@@ -589,6 +589,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	warrantEvidenceRow("hash-functions"),
 	warrantEvidenceRow("logic-gates"),
 	warrantEvidenceRow("lzw"),
+	warrantEvidenceRow("note-frequency"),
 	warrantEvidenceRow("wasm-leb128"),
 	warrantEvidenceRow("x25519"),
 	warrantEvidenceRow("zeroize"),

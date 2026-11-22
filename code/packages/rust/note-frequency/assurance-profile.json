@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "note-frequency",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are note labels, chromatic pitch indices, octave numbers, and frequencies only"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure music pitch transform: package implements note label parsing and equal-tempered frequency mapping only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: note label parsing enforces MAX_NOTE_STRING_LENGTH = 32 before allocation and scans ASCII bytes in one linear pass; semitone and frequency computations execute in constant time with no input-dependent loops"
+    }
+  }
+}

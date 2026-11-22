@@ -1,0 +1,27 @@
+# Warrant binding manifest (VER04 section 6, VER04j section 4.6) for
+# code/specs/note-frequency.warrant.
+#
+# Each Warrant operation binds to a real public export of
+# `coding_adventures_note_frequency` (`src/lib.rs`), returning `Result<T, String>`
+# where every `Err(_)` normalizes to the single Warrant error `NoteError.INVALID_NOTE`
+# (`err_any=INVALID_NOTE`).
+#
+# proofs_not_live=frontend-refuses-lib: the Rust-subset WIR front end refuses
+# `src/lib.rs` (attributes, `String`, `f64`, `&str`, `struct Note`), so every
+# `steps-bound` obligation is recorded `not-live` (VER04h section 9, check 18).
+package coding_adventures_note_frequency
+revision 0.1.0
+spec code/specs/note-frequency.warrant
+output code/packages/rust/note-frequency/tests/generated/warrant_evidence.rs
+seed 0x4e4f_5445_4652_4551
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 400000
+
+struct ParsedNote path=coding_adventures_note_frequency::ParsedNote fields=chromatic:u8,octave:i32
+struct SemitoneOffset path=coding_adventures_note_frequency::SemitoneOffset fields=semitones:i32
+
+op parse_note_parts export=parse_note_parts err_any=INVALID_NOTE faults=field-flip,field-flip-last,ok-as-err,missing-error proofs_not_live=frontend-refuses-lib
+op semitones_from_a4_parts export=semitones_from_a4_parts err_any=INVALID_NOTE faults=field-flip,ok-as-err,missing-error proofs_not_live=frontend-refuses-lib
+op note_to_frequency_millihertz export=note_to_frequency_millihertz err_any=INVALID_NOTE faults=flip-result-bit,missing-error proofs_not_live=frontend-refuses-lib
