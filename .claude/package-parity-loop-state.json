@@ -18684,11 +18684,25 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-starlark-frontend-vertical-parity",
+      "title": "Port Starlark lexer and parser vertical to Dart",
+      "status": "pr-open",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-generic-lexer-indentation-mode-conformance"
+      ],
+      "branch": "feat/dart-starlark-frontend-vertical-parity",
+      "pr_number": null,
+      "pr_url": null,
+      "notes": "Dart subtranche of Starlark frontend vertical parity. Delivers coding_adventures_starlark_lexer and coding_adventures_starlark_parser with indentation mode, newline normalization, AST projection conforming to cases.json, and 5-class security defenses."
+    },
+    {
       "id": "dart-swift-starlark-frontend-vertical-parity",
       "title": "Port Starlark lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-starlark-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -18746,9 +18760,9 @@
     {
       "id": "dart-generic-lexer-indentation-mode-conformance",
       "title": "Implement Dart generic lexer indentation mode",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
+      "branch": "feat/dart-starlark-frontend-vertical-parity",
       "pr_number": null,
       "notes": "Dart grammar-tools parses mode: indentation and its cross-validator permits implicit NEWLINE/INDENT/DEDENT, but the generic lexer ignores grammar.mode and emits no INDENT/DEDENT. Add neutral vectors for nested blocks, blank/comment lines, bracket line joining, EOF dedents, tab and inconsistent-indent diagnostics, and exact token order, then test through Dart generic lexer and BUILD fronts. Dart Python/Starlark frontend ports depend on this substrate; Swift siblings do not. Python and TypeScript/Swift differ on no-terminal-newline order, so freeze the parser-consistent behavior before claiming cross-language conformance. No normalized owner-ID or open-PR file collision was found.",
       "postmerge_preparation_evidence": [

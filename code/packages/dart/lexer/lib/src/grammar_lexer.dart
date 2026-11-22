@@ -78,6 +78,18 @@ List<Token> grammarTokenize(String source, TokenGrammar grammar) {
       .map(_normalizeForLookup(effectiveCaseSensitive))
       .toSet();
 
+  if (grammar.mode == 'indentation') {
+    return _tokenizeIndentation(
+      source,
+      grammar,
+      compiledDefinitions,
+      compiledSkips,
+      keywordSet,
+      reservedSet,
+      effectiveCaseSensitive,
+    );
+  }
+
   final tokens = <Token>[];
   var position = 0;
   var line = 1;
@@ -169,6 +181,206 @@ List<Token> grammarTokenize(String source, TokenGrammar grammar) {
     tokens.add(
       Token(type: type, value: value, line: startLine, column: startColumn),
     );
+  }
+
+  tokens.add(Token(type: 'EOF', value: '', line: line, column: column));
+  return List<Token>.unmodifiable(tokens);
+}
+
+List<Token> _tokenizeIndentation(
+  String source,
+  TokenGrammar grammar,
+  List<_CompiledPattern> compiledDefinitions,
+  List<_CompiledPattern> compiledSkips,
+  Set<String> keywordSet,
+  Set<String> reservedSet,
+  bool effectiveCaseSensitive,
+) {
+  final tokens = <Token>[];
+  final indentStack = <int>[0];
+  var bracketDepth = 0;
+  var atLineStart = true;
+
+  var position = 0;
+  var line = 1;
+  var column = 1;
+
+  void advanceText(String text) {
+    for (final codePoint in text.runes) {
+      position += codePoint > maxBmpCodePoint
+          ? utf16UnitsPerAstralCodePoint
+          : utf16UnitsPerBmpCodePoint;
+      if (codePoint == lineFeedCodePoint) {
+        line += 1;
+        column = 1;
+      } else {
+        column += 1;
+      }
+    }
+  }
+
+  while (position < source.length) {
+    if (atLineStart && bracketDepth == 0) {
+      var indent = 0;
+      var hasTab = false;
+      var tabLine = line;
+      var tabCol = column;
+
+      while (position < source.length) {
+        final code = source.codeUnitAt(position);
+        if (code == spaceCodePoint) {
+          indent++;
+          advanceText(' ');
+        } else if (code == tabCodePoint) {
+          hasTab = true;
+          tabLine = line;
+          tabCol = column;
+          break;
+        } else {
+          break;
+        }
+      }
+
+      if (hasTab) {
+        throw LexerError(messageTabInIndentation, tabLine, tabCol);
+      }
+
+      if (position >= source.length) {
+        break;
+      }
+
+      if (source[position] == '\n') {
+        advanceText('\n');
+        atLineStart = true;
+        continue;
+      }
+
+      var commentOnly = false;
+      for (final pattern in compiledSkips) {
+        final text = pattern.match(source, position);
+        if (text != null) {
+          final nextPos = position + text.length;
+          if (nextPos >= source.length || source[nextPos] == '\n') {
+            advanceText(text);
+            if (position < source.length && source[position] == '\n') {
+              advanceText('\n');
+            }
+            atLineStart = true;
+            commentOnly = true;
+            break;
+          }
+        }
+      }
+
+      if (commentOnly) {
+        continue;
+      }
+
+      if (indent > indentStack.last) {
+        indentStack.add(indent);
+        tokens.add(Token(type: 'INDENT', value: '', line: line, column: 1));
+      } else if (indent < indentStack.last) {
+        while (indentStack.length > 1 && indentStack.last > indent) {
+          indentStack.removeLast();
+          tokens.add(Token(type: 'DEDENT', value: '', line: line, column: 1));
+        }
+        if (indentStack.last != indent) {
+          throw LexerError(messageInconsistentDedent, line, column);
+        }
+      }
+      atLineStart = false;
+    }
+
+    if (position >= source.length) {
+      break;
+    }
+
+    final char = source[position];
+    if (char == '\n') {
+      if (bracketDepth == 0) {
+        tokens.add(
+          Token(type: 'NEWLINE', value: r'\n', line: line, column: column),
+        );
+        advanceText('\n');
+        atLineStart = true;
+      } else {
+        advanceText('\n');
+      }
+      continue;
+    }
+
+    if (bracketDepth > 0) {
+      final code = source.codeUnitAt(position);
+      if (code == spaceCodePoint ||
+          code == tabCodePoint ||
+          code == carriageReturnCodePoint) {
+        advanceText(source[position]);
+        continue;
+      }
+    }
+
+    var skipped = false;
+    for (final pattern in compiledSkips) {
+      final text = pattern.match(source, position);
+      if (text == null) continue;
+      advanceText(text);
+      skipped = true;
+      break;
+    }
+    if (skipped) continue;
+
+    TokenDefinition? matchedDefinition;
+    String? matchedText;
+    for (final pattern in compiledDefinitions) {
+      final text = pattern.match(source, position);
+      if (text == null) continue;
+      matchedDefinition = pattern.definition;
+      matchedText = text;
+      break;
+    }
+
+    if (matchedDefinition == null || matchedText == null) {
+      throw LexerError(messageUnexpectedCharacter, line, column);
+    }
+
+    final startLine = line;
+    final startColumn = column;
+    advanceText(matchedText);
+
+    final type = _resolveTokenType(
+      matchedDefinition,
+      matchedText,
+      grammar,
+      keywordSet,
+      reservedSet,
+      effectiveCaseSensitive,
+      startLine,
+      startColumn,
+    );
+    final value = _resolveTokenValue(matchedText, type, grammar.escapeMode);
+
+    tokens.add(
+      Token(type: type, value: value, line: startLine, column: startColumn),
+    );
+
+    if (matchedText == '(' || matchedText == '[' || matchedText == '{') {
+      bracketDepth++;
+    } else if (matchedText == ')' || matchedText == ']' || matchedText == '}') {
+      if (bracketDepth > 0) {
+        bracketDepth--;
+      }
+    }
+  }
+
+  if (tokens.isNotEmpty && tokens.last.type != 'NEWLINE') {
+    tokens.add(
+      Token(type: 'NEWLINE', value: r'\n', line: line, column: column),
+    );
+  }
+
+  while (indentStack.length > 1) {
+    indentStack.removeLast();
+    tokens.add(Token(type: 'DEDENT', value: '', line: line, column: column));
   }
 
   tokens.add(Token(type: 'EOF', value: '', line: line, column: column));
