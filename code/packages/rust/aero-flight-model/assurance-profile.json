@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "aero-flight-model",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded atmospheric altitudes, air-data vectors, polar tables, and control deflections"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure physics transform: package implements deterministic ISA 1976 atmosphere, polar interpolation, and aerodynamic force/moment evaluation only; FNV-1a digest is non-cryptographic state telemetry"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: polar tables are capped at MAX_TABLE_POINTS = 64, trim search at MAX_TRIM_ITERS = 64, and all types are fixed-size stack values with no unbounded loops"
+    }
+  }
+}

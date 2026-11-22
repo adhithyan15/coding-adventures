@@ -15,4 +15,5 @@ dependencies:
     path: ../state-machine
 
 dev_dependencies:
+  coverage: ^1.15.0
   test: ^1.25.0

@@ -5,6 +5,13 @@ All notable changes to `raycast-dda` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+- Passed `grid: &GridMap` into `validate_render_inputs` to validate all non-zero wall `tile_id`s (`usize::from(tile - 1) < textures.len()`) and per-column ray directions upfront before mutating `zbuffer` or `framebuffer.data` (atomic `render_frame_into`, zero-alloc).
+- Validated `self` via `Camera2D::camera_new` in `camera_rotate` and `camera_move_by` and mapped finite `pos_x + dx` / `pos_y + dy` overflow to `RaycastError::ValueOutOfBounds`.
+- Added `tests/hostile_inputs.rs` (`#![forbid(unsafe_code)]`) covering `NaN`/`±Inf`/`-0.0`/subnormals/`±f64::MAX`/`> MAX_COORD`, byte-for-byte `framebuffer.data` + `zbuffer` + `SpriteScratch` preservation across all `Err` paths (including mid-wall `InvalidMaterialId`), grazing open-map rays, and a seeded 2,000-case hostile fuzz campaign.
+
 ## [0.1.0] - 2026-11-21
 
 ### Added

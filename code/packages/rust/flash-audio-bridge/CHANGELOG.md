@@ -5,6 +5,14 @@ All notable changes to `flash-audio-bridge` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+- Added a zero-allocation dry-run pass in `decode_adpcm_into` validating `code_size`, all packet headers (`step_index < 89`), and bit length before writing into `out` so mid-stream `Err` paths preserve `out` untouched.
+- Enforced upfront capacity checks in `push_stream_block` (`mono_frames <= STREAM_FIFO_CAPACITY.saturating_sub(self.stream_fifo.len())` and ADPCM `est_samples`) and `bridge_render_to_ring_buffer` (`frame_samples <= N.saturating_sub(ring.len())`) so `RingBufferOverrun` never leaves partial FIFO, voice, or telemetry mutations.
+- Made `advance_frame_clock` commit `self.clock` only after `checked_mul` and `checked_add` succeed, and validated `class_name` (non-empty, `<= MAX_CLASS_NAME_BYTES`, no NUL bytes) in `register_pcm_sound` and `apply_start_sound2`.
+- Added `tests/hostile_inputs.rs` (`#![forbid(unsafe_code)]`) covering multi-packet ADPCM corruption, odd-byte PCM16/stereo slices, MP3 header edge cases, atomic buffer/state preservation on `Err`, `u64::MAX` clock delta, and a seeded 1,500-case hostile fuzz campaign.
+
 ## [0.1.0] - 2026-11-21
 
 ### Added

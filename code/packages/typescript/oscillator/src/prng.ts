@@ -3,6 +3,8 @@
  * Completely decoupled from ambient randomness (no Math.random, zero external entropy).
  */
 
+import { safeFormatValue } from "./validation.js";
+
 const GOLDEN_GAMMA = 0x9e37_79b9_7f4a_7c15n;
 const SCRAMBLE_1 = 0xbf58_476d_1ce4_e5b9n;
 const SCRAMBLE_2 = 0x94d0_49bb_1331_11ebn;
@@ -53,7 +55,7 @@ export class LcgPrng {
 
   constructor(seed: number = 0) {
     if (typeof seed !== "number" || !Number.isFinite(seed)) {
-      throw new TypeError(`seed must be a finite number, got ${String(seed)}`);
+      throw new TypeError(`seed must be a finite number, got ${safeFormatValue(seed)}`);
     }
     this.state = Math.trunc(seed) >>> 0;
   }

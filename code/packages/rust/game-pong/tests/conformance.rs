@@ -119,7 +119,10 @@ fn test_swept_collision_anti_tunneling_against_paddles() {
     // Place ball just to the right of left paddle with a huge velocity heading left
     // displacement per frame = 600.0 * (1/60) = 10.0 units, easily sweeping through paddle thickness (16.0)
     let left_rect = state.left_paddle_rect();
-    state.ball_pos = Point::new(left_rect.x + left_rect.width + 5.0, left_rect.y + left_rect.height * 0.5);
+    state.ball_pos = Point::new(
+        left_rect.x + left_rect.width + 5.0,
+        left_rect.y + left_rect.height * 0.5,
+    );
     state.ball_vel = Point::new(-700.0, 0.0);
 
     let input = PongInput::idle_input();
@@ -129,7 +132,10 @@ fn test_swept_collision_anti_tunneling_against_paddles() {
     assert_eq!(events.paddle_hit, Some(PaddleSide::Left));
     assert_eq!(events.rally_count, 1);
     assert!(state.ball_vel.x > 0.0, "ball must reflect to the right");
-    assert!(state.ball_pos.x >= left_rect.x + left_rect.width, "ball must not tunnel behind paddle");
+    assert!(
+        state.ball_pos.x >= left_rect.x + left_rect.width,
+        "ball must not tunnel behind paddle"
+    );
 
     // Test Right Paddle Swept Collision:
     let right_rect = state.right_paddle_rect();
@@ -140,7 +146,10 @@ fn test_swept_collision_anti_tunneling_against_paddles() {
     assert_eq!(events_right.paddle_hit, Some(PaddleSide::Right));
     assert_eq!(events_right.rally_count, 2);
     assert!(state.ball_vel.x < 0.0, "ball must reflect to the left");
-    assert!(state.ball_pos.x <= right_rect.x, "ball must not tunnel behind paddle");
+    assert!(
+        state.ball_pos.x <= right_rect.x,
+        "ball must not tunnel behind paddle"
+    );
 }
 
 #[test]
@@ -153,10 +162,16 @@ fn test_deflection_angle_physics() {
     let left_rect = state.left_paddle_rect();
 
     // 1. Center hit: Y velocity should be zero
-    state.ball_pos = Point::new(left_rect.x + left_rect.width + 1.0, left_rect.y + left_rect.height * 0.5);
+    state.ball_pos = Point::new(
+        left_rect.x + left_rect.width + 1.0,
+        left_rect.y + left_rect.height * 0.5,
+    );
     state.ball_vel = Point::new(-400.0, 0.0);
     step_pong(&mut state, &PongInput::idle_input(), &mut sfx).expect("step");
-    assert!(state.ball_vel.y.abs() < 1e-6, "center hit should have near-zero Y velocity");
+    assert!(
+        state.ball_vel.y.abs() < 1e-6,
+        "center hit should have near-zero Y velocity"
+    );
 
     // 2. Upper hit: Y velocity should be negative (deflected upward)
     state.ball_pos = Point::new(left_rect.x + left_rect.width + 1.0, left_rect.y + 10.0);
@@ -165,7 +180,10 @@ fn test_deflection_angle_physics() {
     assert!(state.ball_vel.y < -10.0, "upper hit should deflect upward");
 
     // 3. Lower hit: Y velocity should be positive (deflected downward)
-    state.ball_pos = Point::new(left_rect.x + left_rect.width + 1.0, left_rect.y + left_rect.height - 10.0);
+    state.ball_pos = Point::new(
+        left_rect.x + left_rect.width + 1.0,
+        left_rect.y + left_rect.height - 10.0,
+    );
     state.ball_vel = Point::new(-400.0, 0.0);
     step_pong(&mut state, &PongInput::idle_input(), &mut sfx).expect("step");
     assert!(state.ball_vel.y > 10.0, "lower hit should deflect downward");
@@ -183,15 +201,24 @@ fn test_top_and_bottom_wall_bounces() {
     state.ball_vel = Point::new(100.0, -300.0);
     let top_events = step_pong(&mut state, &PongInput::idle_input(), &mut sfx).expect("step");
     assert!(top_events.wall_bounce, "wall bounce event must fire");
-    assert!(state.ball_vel.y > 0.0, "ball must reflect downward from top wall");
+    assert!(
+        state.ball_vel.y > 0.0,
+        "ball must reflect downward from top wall"
+    );
     assert!(state.ball_pos.y >= cfg.ball_radius);
 
     // Ball hitting bottom boundary
-    state.ball_pos = Point::new(cfg.court_width * 0.5, cfg.court_height - cfg.ball_radius - 1.0);
+    state.ball_pos = Point::new(
+        cfg.court_width * 0.5,
+        cfg.court_height - cfg.ball_radius - 1.0,
+    );
     state.ball_vel = Point::new(100.0, 300.0);
     let bot_events = step_pong(&mut state, &PongInput::idle_input(), &mut sfx).expect("step");
     assert!(bot_events.wall_bounce, "wall bounce event must fire");
-    assert!(state.ball_vel.y < 0.0, "ball must reflect upward from bottom wall");
+    assert!(
+        state.ball_vel.y < 0.0,
+        "ball must reflect upward from bottom wall"
+    );
     assert!(state.ball_pos.y <= cfg.court_height - cfg.ball_radius);
 }
 
@@ -281,13 +308,19 @@ fn test_ai_paddle_tracking_policy() {
     let ai_input = PongInput::ai_vs_ai();
     let prev_left_y = state.left_paddle_y;
     step_pong(&mut state, &ai_input, &mut sfx).expect("step");
-    assert!(state.left_paddle_y < prev_left_y, "AI paddle must track upward toward ball");
+    assert!(
+        state.left_paddle_y < prev_left_y,
+        "AI paddle must track upward toward ball"
+    );
 
     // Place ball low in court
     state.ball_pos = Point::new(cfg.court_width * 0.5, cfg.court_height - 50.0);
     let prev_right_y = state.right_paddle_y;
     step_pong(&mut state, &ai_input, &mut sfx).expect("step");
-    assert!(state.right_paddle_y > prev_right_y, "AI paddle must track downward toward ball");
+    assert!(
+        state.right_paddle_y > prev_right_y,
+        "AI paddle must track downward toward ball"
+    );
 }
 
 #[test]
@@ -308,8 +341,14 @@ fn test_fixed_timestep_clock_integration() {
     assert_eq!(clock.tick_count, 1);
 
     // Frame lag delta (~33.3ms) -> runs 2 steps
-    let res2 = step_pong_with_clock(&mut clock, DEFAULT_60HZ_DT_NS * 2, &mut state, &input, &mut sfx)
-        .expect("clock step");
+    let res2 = step_pong_with_clock(
+        &mut clock,
+        DEFAULT_60HZ_DT_NS * 2,
+        &mut state,
+        &input,
+        &mut sfx,
+    )
+    .expect("clock step");
     assert_eq!(res2.steps_simulated, 2);
     assert_eq!(clock.tick_count, 3);
 }
@@ -323,7 +362,10 @@ fn test_zero_alloc_sprite_emission_and_paint_scene() {
 
     let mut sprites = [SpriteItem::new(0, 0.0, 0.0, 0.0, 0.0); 128];
     let count = build_pong_sprites(&state, &mut sprites);
-    assert!(count > 10, "sprites must include net, paddles, ball, and score digits");
+    assert!(
+        count > 10,
+        "sprites must include net, paddles, ball, and score digits"
+    );
 
     // Verify all sprite IDs are unique
     for i in 0..count {
@@ -351,13 +393,17 @@ fn test_realtime_audio_streaming() {
     let mut scratch = [0i16; 64];
 
     // Trigger presets
-    sfx.trigger_bank_preset(SfxPreset::PongPaddleHit).expect("preset");
+    sfx.trigger_bank_preset(SfxPreset::PongPaddleHit)
+        .expect("preset");
     let written = render_pong_audio_into(&mut sfx, &mut ring, &mut scratch).expect("render");
     assert_eq!(written, 64);
     assert_eq!(ring.len(), 64);
 
     // Verify non-zero samples generated
-    assert!(scratch.iter().any(|&s| s != 0), "sound synthesis must produce audible samples");
+    assert!(
+        scratch.iter().any(|&s| s != 0),
+        "sound synthesis must produce audible samples"
+    );
 }
 
 #[test]

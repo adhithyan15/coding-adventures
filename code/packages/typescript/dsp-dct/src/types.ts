@@ -1,4 +1,6 @@
-import { InvalidInputError } from "./errors.js";
+import { InvalidInputError, safeFormatValue } from "./errors.js";
+
+const MAX_ENUM_STRING_LENGTH = 64;
 
 export enum DctType {
   I = 1,
@@ -31,10 +33,13 @@ export function parseNorm(norm?: DctNorm | string | number): DctNorm {
     if (norm === 1) return DctNorm.ORTHO;
   }
   if (typeof norm === "string") {
+    if (norm.length > MAX_ENUM_STRING_LENGTH) {
+      throw new InvalidInputError(`unknown DCT normalization: ${safeFormatValue(norm)}`);
+    }
     const found = NORM_MAP.get(norm.trim().toLowerCase());
     if (found !== undefined) return found;
   }
-  throw new InvalidInputError(`unknown DCT normalization: ${norm}`);
+  throw new InvalidInputError(`unknown DCT normalization: ${safeFormatValue(norm)}`);
 }
 
 const TYPE_MAP = new Map<string, DctType>([
@@ -53,11 +58,14 @@ export function parseType(dctType?: DctType | string | number): DctType {
     return DctType.II;
   }
   if (typeof dctType === "number") {
-    if (Number.isInteger(dctType) && dctType >= 1 && dctType <= 4) return dctType as DctType;
+    if (Number.isSafeInteger(dctType) && dctType >= 1 && dctType <= 4) return dctType as DctType;
   }
   if (typeof dctType === "string") {
+    if (dctType.length > MAX_ENUM_STRING_LENGTH) {
+      throw new InvalidInputError(`unknown DCT type: ${safeFormatValue(dctType)}`);
+    }
     const found = TYPE_MAP.get(dctType.trim().toLowerCase());
     if (found !== undefined) return found;
   }
-  throw new InvalidInputError(`unknown DCT type: ${dctType}`);
+  throw new InvalidInputError(`unknown DCT type: ${safeFormatValue(dctType)}`);
 }

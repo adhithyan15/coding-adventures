@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/paint-batch-tiles",
-  "source_digest": "cc03647cc79ec1baf3de9f22af639e4c0befad67e3eaa1d28a3b4f11a57bcfb2",
+  "source_digest": "dd6d91122a74f54d0d176b3a154fe380a3c597c78c38929e6511ec92114096ad",
   "manifest_digest": "be5d5e87b4777d7fefe389a1b2d09fbc513e966059234664844f1e50e8aede3a",
   "declared_effects": [],
   "entry_points": [

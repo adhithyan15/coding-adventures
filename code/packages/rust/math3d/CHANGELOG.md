@@ -5,6 +5,12 @@ All notable changes to `math3d` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+- Mapped finite row addition/subtraction overflow (`1e308`) in `plane_add_rows`/`plane_sub_rows` to `Math3dError::ValueOutOfBounds` via `check_result_finite`, and normalized hand-constructed `Frustum` planes via `Plane::plane_from_normal_d` in `Frustum::intersects_aabb`.
+- Added `tests/hostile_inputs.rs` (`#![forbid(unsafe_code)]`) covering non-canonical `NaN`, `±Inf`, `-0.0`, subnormals, `±f64::MAX`, degenerate hand-constructed primitives, near-singular matrices, antipodal quaternion interpolation, and a seeded 2,000-case hostile fuzz campaign.
+
 ## [0.1.0] - 2026-11-20
 
 ### Added

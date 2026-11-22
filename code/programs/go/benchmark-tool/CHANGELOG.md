@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Fix: bound benchmark trial counts before slice allocation (`go/allocation-size-overflow`,
+  alerts `#259`–`#260`).** Added `maxBenchmarkTrials` (`1_000_000`) bounds checks in
+  `ValidateManifest`, `runCommandWorkload`, and `runTCPRESPWorkload` before summing
+  `WarmupTrials + MeasurementTrials` and allocating the `[]Trial` slice.
+- Add `TestTrialCountBoundsPreventAllocationOverflow` in `main_test.go`.
 - **Fix: stopping a TCP service subject now stops everything it started.** A service
   command runs through a shell (`sh -c "go run server.go ..."`, `cmd /C ...`), and `Stop`
   killed only the shell, leaving the real server running as an orphan. On Windows the

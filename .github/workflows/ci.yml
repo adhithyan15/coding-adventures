@@ -4734,7 +4734,9 @@ jobs:
         if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
         shell: pwsh
         run: |
-          winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements --source winget
+          # Pin 6.4.2: Swift 6.4.3 fails Package.swift manifest compilation on windows-2025
+          # ("Missing or empty JSON output from manifest compilation").
+          winget install --id Swift.Toolchain --version 6.4.2 --exact --accept-package-agreements --accept-source-agreements --source winget
           $wingetExitCode = $LASTEXITCODE
 
           if ($wingetExitCode -ne 0) {

@@ -1041,8 +1041,12 @@ impl RpgGame {
                 c.hp = c.max_hp;
                 c.status = Status::None;
                 c.sleep_turns = 0;
-                for i in 0..c.move_count as usize {
-                    c.pp[i] = c.moves[i].max_pp;
+                for (pp, mv) in
+                    c.pp.iter_mut()
+                        .zip(c.moves.iter())
+                        .take(c.move_count as usize)
+                {
+                    *pp = mv.max_pp;
                 }
             }
         }

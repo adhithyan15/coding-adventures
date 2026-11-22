@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Wired `@coding-adventures/test-bootstrap` (`SplitMix64`, `checkProperty`, `fuzzTarget`) into `tests/pbt.test.ts`, `package.json`, `BUILD`, and `BUILD_windows`.
+- Added VER15 hostile regression tests for `Number.isSafeInteger` (`1e100`), `Symbol`/`Object.create(null)` error formatting, `ArrayBuffer.isView` (`DataView`, `BigInt64Array`, oversized typed arrays), and CWE-1321 prototype pollution resistance.
+- Added `coverage/` to `.gitignore`.
+
+### Fixed
+- Hardened `validation.ts`, `prng.ts`, `sampler.ts`, and `state.ts` with `Number.isSafeInteger`, `safeFormatValue` (preventing `String(Object.create(null))` / `Symbol` crashes), `DataView` / `ArrayBuffer.isView` guards, and `null`/non-object `config` guards in `OscillatorState` and `synthesize()`.
+
 ## 0.2.0 - 2026-11-16
 
 ### Changed

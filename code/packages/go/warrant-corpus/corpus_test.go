@@ -1,6 +1,7 @@
 package warrantcorpus
 
 import (
+	"math"
 	"os"
 	"path/filepath"
 	"sort"
@@ -290,4 +291,34 @@ func TestTFVCrossChecks(t *testing.T) {
 	// A spec edited after compilation is stale evidence.
 	f := newFixture(t, fixtureOptions{mini: true, spec: func(b []byte) []byte { return append(b, '\n') }})
 	wantCode(t, "stale-evidence", func() { loadCorpus(f.root, f.corpusDir) })
+}
+
+func TestCountAndExampleWidthBounds(t *testing.T) {
+	if got := count(int64(7), "cases"); got != 7 {
+		t.Fatalf("count(7) = %d, want 7", got)
+	}
+	if code := laneCode(t, func() { count(int64(-1), "cases") }); code != "schema" {
+		t.Fatalf("count(-1) code = %q, want schema", code)
+	}
+	maxInt := int64(math.MaxInt)
+	if maxInt < math.MaxInt64 {
+		over := maxInt + 1
+		if code := laneCode(t, func() { count(over, "cases") }); code != "schema" {
+			t.Fatalf("count(MaxInt+1) code = %q, want schema", code)
+		}
+		badExample := map[string]any{
+			"id":          "warrant/m/example/0",
+			"op":          "fixed",
+			"args":        []any{[]any{}},
+			"result_type": "Bool",
+			"width":       over,
+			"expected":    true,
+		}
+		ops := map[string]*OpSig{
+			"fixed": {Name: "fixed", Params: []Param{{"a", parseType("Bytes<N>")}}, Ret: parseType("Bool"), WidthParams: []string{"N"}},
+		}
+		if code := laneCode(t, func() { decodeExample(badExample, ops, nil, "m") }); code != "example" {
+			t.Fatalf("decodeExample(MaxInt+1) code = %q, want example", code)
+		}
+	}
 }

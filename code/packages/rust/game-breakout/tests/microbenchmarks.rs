@@ -71,12 +71,19 @@ fn check_step_breakout_zero_alloc(_ctx: &Ctx) -> Verdict {
     let alloc = AllocCounter::new();
 
     let res = harness.run_with_counter("step_breakout_zero_alloc", &budget, &alloc, || {
-        let events = step_breakout(black_box(&mut state), black_box(&input), black_box(&mut sfx));
+        let events = step_breakout(
+            black_box(&mut state),
+            black_box(&input),
+            black_box(&mut sfx),
+        );
         black_box(events).expect("step_breakout must succeed");
     });
 
     if !zero_alloc_ok(&res) {
-        return Verdict::fail(FID_BENCH_FAIL, "step_breakout exceeded zero allocation budget");
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "step_breakout exceeded zero allocation budget",
+        );
     }
 
     Verdict::Pass
@@ -95,15 +102,11 @@ fn check_build_breakout_sprites_zero_alloc(_ctx: &Ctx) -> Verdict {
     };
     let alloc = AllocCounter::new();
 
-    let res = harness.run_with_counter(
-        "build_breakout_sprites_zero_alloc",
-        &budget,
-        &alloc,
-        || {
+    let res =
+        harness.run_with_counter("build_breakout_sprites_zero_alloc", &budget, &alloc, || {
             let count = build_breakout_sprites(black_box(&state), black_box(&mut out_sprites));
             black_box(count);
-        },
-    );
+        });
 
     if !zero_alloc_ok(&res) {
         return Verdict::fail(
@@ -128,20 +131,15 @@ fn check_render_breakout_audio_zero_alloc(_ctx: &Ctx) -> Verdict {
     };
     let alloc = AllocCounter::new();
 
-    let res = harness.run_with_counter(
-        "render_breakout_audio_zero_alloc",
-        &budget,
-        &alloc,
-        || {
-            ring.clear();
-            let written = render_breakout_audio_into(
-                black_box(&mut sfx),
-                black_box(&mut ring),
-                black_box(&mut scratch),
-            );
-            black_box(written).expect("render_breakout_audio_into must succeed");
-        },
-    );
+    let res = harness.run_with_counter("render_breakout_audio_zero_alloc", &budget, &alloc, || {
+        ring.clear();
+        let written = render_breakout_audio_into(
+            black_box(&mut sfx),
+            black_box(&mut ring),
+            black_box(&mut scratch),
+        );
+        black_box(written).expect("render_breakout_audio_into must succeed");
+    });
 
     if !zero_alloc_ok(&res) {
         return Verdict::fail(

@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/flash-display-list",
-  "source_digest": "7e01723e28a4011ea40ae8411228b2056f1c5696e491f5477088bd19056b51be",
+  "source_digest": "1bea4fce687e44a6833406393019e207c585a2bbf692286a6db37bd53363b185",
   "manifest_digest": "f3f6b6f32488693184e2e2e5220e429eb7d598f3c6b6fc9797e652643ffc7c6a",
   "declared_effects": [],
   "entry_points": [

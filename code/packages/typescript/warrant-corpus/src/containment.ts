@@ -76,7 +76,12 @@ export function asciiFold(text: string): string {
 export function refusedComponent(name: string): boolean {
   if (name.includes(":") || name.endsWith(".") || name.endsWith(" ")) return true;
   const dot = name.indexOf(".");
-  const stem = (dot < 0 ? name : name.slice(0, dot)).replace(/ +$/, "");
+  const rawStem = dot < 0 ? name : name.slice(0, dot);
+  let end = rawStem.length;
+  while (end > 0 && rawStem.charCodeAt(end - 1) === 32) {
+    end--;
+  }
+  const stem = rawStem.slice(0, end);
   return RESERVED_NAMES.has(stem.replace(/[a-z]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 32)));
 }
 

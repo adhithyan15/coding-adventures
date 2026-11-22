@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased - Cross-stack Music/Audio/DSP capability audit (VER-W9-D)
+
+- [false positive, `dsp-filters`] Third-party capability crate root matching (`windows`, `rand`, `nix`, `hyper`, `smol`, `mio`, etc.) in `src/rules.rs` (`third_party_crate_capability`) now requires `segs.len() >= 2` in `classify_segments`, matching `SHORTHAND_HEADS` so local variables/fields like `let windows = [...]` are not falsely flagged as `ffi:call:*`. Bare `use <crate>;` and `use <crate>::*;` remain detected via `src/parser.rs`.
+- Added `tests/test_hostile_inputs.rs` and `tests/test_pbt.rs` (SplitMix64 PBT + cross-stack regression tests including real `rust/dsp-filters`).
+
 ## Unreleased - M4 timing budget
 
 - The M4 denial-of-service regression tests now allow 10 s per input (`M4_BUDGET`) instead of 2 s.

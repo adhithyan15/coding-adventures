@@ -102,11 +102,17 @@ fn test_state_initialization_and_validation() {
     // Corrupted non-finite state rejected (CWE-20)
     let mut bad_state = state;
     bad_state.ball_pos.x = f64::NAN;
-    assert_eq!(validate_state(&bad_state), Err(BreakoutError::NonFiniteState));
+    assert_eq!(
+        validate_state(&bad_state),
+        Err(BreakoutError::NonFiniteState)
+    );
 
     bad_state = state;
     bad_state.paddle_x = f64::INFINITY;
-    assert_eq!(validate_state(&bad_state), Err(BreakoutError::NonFiniteState));
+    assert_eq!(
+        validate_state(&bad_state),
+        Err(BreakoutError::NonFiniteState)
+    );
 }
 
 #[test]
@@ -148,10 +154,7 @@ fn test_ball_launch_and_flight() {
     // Paddle move should move attached ball too
     let input_right = BreakoutInput::move_paddle_right(false);
     step_breakout(&mut state, &input_right, &mut sfx).expect("step");
-    assert_eq!(
-        state.ball_pos.x,
-        state.paddle_x + cfg.paddle_width * 0.5
-    );
+    assert_eq!(state.ball_pos.x, state.paddle_x + cfg.paddle_width * 0.5);
 
     // Launch ball
     let input_launch = BreakoutInput::launch_only();
@@ -177,7 +180,10 @@ fn test_continuous_swept_paddle_deflection() {
     let paddle_rect = state.paddle_bounding_rect();
 
     // Position ball directly above paddle moving downward at high speed
-    state.ball_pos = Point::new(state.paddle_x + cfg.paddle_width * 0.5, paddle_rect.y - 15.0);
+    state.ball_pos = Point::new(
+        state.paddle_x + cfg.paddle_width * 0.5,
+        paddle_rect.y - 15.0,
+    );
     state.ball_vel = Point::new(0.0, 500.0);
     state.combo_counter = 5;
 
@@ -253,7 +259,10 @@ fn test_combo_counter_and_saturating_score() {
 
     // Hit a 1-hit brick in row 6
     let b_rect = game_breakout::brick_bounding_rect(&cfg, 6, 0);
-    state.ball_pos = Point::new(b_rect.x + b_rect.width * 0.5, b_rect.y + b_rect.height + 8.0);
+    state.ball_pos = Point::new(
+        b_rect.x + b_rect.width * 0.5,
+        b_rect.y + b_rect.height + 8.0,
+    );
     state.ball_vel = Point::new(0.0, -400.0);
 
     let input = BreakoutInput::idle_breakout_input();
@@ -273,21 +282,24 @@ fn test_wall_bounces() {
     // 1. Left wall bounce
     state.ball_pos = Point::new(5.0, 300.0);
     state.ball_vel = Point::new(-300.0, 0.0);
-    let ev_left = step_breakout(&mut state, &BreakoutInput::idle_breakout_input(), &mut sfx).expect("step");
+    let ev_left =
+        step_breakout(&mut state, &BreakoutInput::idle_breakout_input(), &mut sfx).expect("step");
     assert!(ev_left.wall_bounce);
     assert!(state.ball_vel.x > 0.0);
 
     // 2. Right wall bounce
     state.ball_pos = Point::new(cfg.arena_width - 5.0, 300.0);
     state.ball_vel = Point::new(300.0, 0.0);
-    let ev_right = step_breakout(&mut state, &BreakoutInput::idle_breakout_input(), &mut sfx).expect("step");
+    let ev_right =
+        step_breakout(&mut state, &BreakoutInput::idle_breakout_input(), &mut sfx).expect("step");
     assert!(ev_right.wall_bounce);
     assert!(state.ball_vel.x < 0.0);
 
     // 3. Top wall bounce
     state.ball_pos = Point::new(400.0, 5.0);
     state.ball_vel = Point::new(0.0, -300.0);
-    let ev_top = step_breakout(&mut state, &BreakoutInput::idle_breakout_input(), &mut sfx).expect("step");
+    let ev_top =
+        step_breakout(&mut state, &BreakoutInput::idle_breakout_input(), &mut sfx).expect("step");
     assert!(ev_top.wall_bounce);
     assert!(state.ball_vel.y > 0.0);
 }
@@ -305,7 +317,8 @@ fn test_gutter_loss_and_game_over() {
     state.ball_pos = Point::new(400.0, cfg.arena_height - 2.0);
     state.ball_vel = Point::new(0.0, 400.0);
 
-    let ev1 = step_breakout(&mut state, &BreakoutInput::idle_breakout_input(), &mut sfx).expect("step");
+    let ev1 =
+        step_breakout(&mut state, &BreakoutInput::idle_breakout_input(), &mut sfx).expect("step");
     assert!(ev1.life_lost);
     assert_eq!(state.lives, 2);
     assert!(state.ball_attached); // Reset to paddle
@@ -322,7 +335,8 @@ fn test_gutter_loss_and_game_over() {
     state.ball_attached = false;
     state.ball_pos = Point::new(400.0, cfg.arena_height - 2.0);
     state.ball_vel = Point::new(0.0, 400.0);
-    let ev_final = step_breakout(&mut state, &BreakoutInput::idle_breakout_input(), &mut sfx).expect("step");
+    let ev_final =
+        step_breakout(&mut state, &BreakoutInput::idle_breakout_input(), &mut sfx).expect("step");
     assert!(ev_final.life_lost);
     assert!(ev_final.game_over);
     assert_eq!(state.lives, 0);
@@ -347,10 +361,14 @@ fn test_level_clear_progression() {
 
     let b_rect = game_breakout::brick_bounding_rect(&cfg, 7, 0);
     state.ball_attached = false;
-    state.ball_pos = Point::new(b_rect.x + b_rect.width * 0.5, b_rect.y + b_rect.height + 8.0);
+    state.ball_pos = Point::new(
+        b_rect.x + b_rect.width * 0.5,
+        b_rect.y + b_rect.height + 8.0,
+    );
     state.ball_vel = Point::new(0.0, -400.0);
 
-    let events = step_breakout(&mut state, &BreakoutInput::idle_breakout_input(), &mut sfx).expect("step");
+    let events =
+        step_breakout(&mut state, &BreakoutInput::idle_breakout_input(), &mut sfx).expect("step");
     assert!(events.level_cleared);
     assert_eq!(state.level, 2);
     assert_eq!(state.active_bricks, cfg.brick_rows * cfg.brick_cols); // Respawed!
@@ -366,8 +384,9 @@ fn test_step_with_clock() {
     let mut clock = new_clock(clock_cfg).expect("clock");
 
     let input = BreakoutInput::move_paddle_right(false);
-    let res = step_breakout_with_clock(&mut clock, DEFAULT_60HZ_DT_NS, &mut state, &input, &mut sfx)
-        .expect("clock step");
+    let res =
+        step_breakout_with_clock(&mut clock, DEFAULT_60HZ_DT_NS, &mut state, &input, &mut sfx)
+            .expect("clock step");
 
     assert_eq!(res.steps_simulated, 1);
 }
@@ -393,7 +412,8 @@ fn test_audio_rendering() {
     let mut ring = PcmRingBuffer::<256>::empty();
     let mut scratch = [0i16; 64];
 
-    let written = render_breakout_audio_into(&mut sfx, &mut ring, &mut scratch).expect("audio render");
+    let written =
+        render_breakout_audio_into(&mut sfx, &mut ring, &mut scratch).expect("audio render");
     assert!(written > 0);
 }
 

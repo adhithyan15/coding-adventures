@@ -1,0 +1,197 @@
+-- DSP-DCT -- Discrete Cosine and Sine Transforms for the DSP layer
+--
+-- Warrant specification for c/dsp-dct (VER04h / DSP02).
+-- Covers memory safety, resource bounding (CWE-400), integer overflow prevention (CWE-190),
+-- strictly iterative execution (CWE-674), and all-operands-public guarantees.
+
+warrant dsp_dct v1
+  error DctError = INVALID_INPUT | EMPTY_INPUT | ALLOC
+
+  op dct(signal: Bytes, dct_type: Nat, norm: Nat) -> Result<Bytes, DctError>
+  op idct(coeffs: Bytes, dct_type: Nat, norm: Nat) -> Result<Bytes, DctError>
+  op dst(signal: Bytes, dst_type: Nat, norm: Nat) -> Result<Bytes, DctError>
+  op idst(coeffs: Bytes, dst_type: Nat, norm: Nat) -> Result<Bytes, DctError>
+  op dct_2d(image: Bytes, height: Nat, width: Nat, dct_type: Nat, norm: Nat) -> Result<Bytes, DctError>
+  op idct_2d(image: Bytes, height: Nat, width: Nat, dct_type: Nat, norm: Nat) -> Result<Bytes, DctError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- All operands are public spectral/signal data.
+  labels dct:
+    signal public
+    dct_type public
+    norm public
+  labels idct:
+    coeffs public
+    dct_type public
+    norm public
+  labels dst:
+    signal public
+    dst_type public
+    norm public
+  labels idst:
+    coeffs public
+    dst_type public
+    norm public
+  labels dct_2d:
+    image public
+    height public
+    width public
+    dct_type public
+    norm public
+  labels idct_2d:
+    image public
+    height public
+    width public
+    dct_type public
+    norm public
+
+  -- Bounded inputs: MAX_DCT_LEN = 1 << 20 (4,194,304 f32 bytes), MAX_SAMPLES = 1 << 24 (67,108,864 f32 bytes).
+  input dct.signal:
+    hostile
+    rejects len(signal) == 0 with DctError.EMPTY_INPUT
+    rejects len(signal) > 4194304 with DctError.INVALID_INPUT
+    ensures no_panic, terminates
+  input dct.dct_type:
+    hostile
+    ensures no_panic, terminates
+  input dct.norm:
+    hostile
+    ensures no_panic, terminates
+
+  input idct.coeffs:
+    hostile
+    rejects len(coeffs) == 0 with DctError.EMPTY_INPUT
+    rejects len(coeffs) > 4194304 with DctError.INVALID_INPUT
+    ensures no_panic, terminates
+  input idct.dct_type:
+    hostile
+    ensures no_panic, terminates
+  input idct.norm:
+    hostile
+    ensures no_panic, terminates
+
+  input dst.signal:
+    hostile
+    rejects len(signal) == 0 with DctError.EMPTY_INPUT
+    rejects len(signal) > 4194304 with DctError.INVALID_INPUT
+    ensures no_panic, terminates
+  input dst.dst_type:
+    hostile
+    ensures no_panic, terminates
+  input dst.norm:
+    hostile
+    ensures no_panic, terminates
+
+  input idst.coeffs:
+    hostile
+    rejects len(coeffs) == 0 with DctError.EMPTY_INPUT
+    rejects len(coeffs) > 4194304 with DctError.INVALID_INPUT
+    ensures no_panic, terminates
+  input idst.dst_type:
+    hostile
+    ensures no_panic, terminates
+  input idst.norm:
+    hostile
+    ensures no_panic, terminates
+
+  input dct_2d.image:
+    hostile
+    rejects len(image) == 0 and height > 0 and width > 0 with DctError.EMPTY_INPUT
+    rejects len(image) > 67108864 with DctError.INVALID_INPUT
+    ensures no_panic, terminates
+  input dct_2d.height:
+    hostile
+    rejects height == 0 with DctError.INVALID_INPUT
+    rejects height > 1048576 with DctError.INVALID_INPUT
+    ensures no_panic, terminates
+  input dct_2d.width:
+    hostile
+    rejects width == 0 with DctError.INVALID_INPUT
+    rejects width > 1048576 with DctError.INVALID_INPUT
+    ensures no_panic, terminates
+  input dct_2d.dct_type:
+    hostile
+    ensures no_panic, terminates
+  input dct_2d.norm:
+    hostile
+    ensures no_panic, terminates
+
+  input idct_2d.image:
+    hostile
+    rejects len(image) == 0 and height > 0 and width > 0 with DctError.EMPTY_INPUT
+    rejects len(image) > 67108864 with DctError.INVALID_INPUT
+    ensures no_panic, terminates
+  input idct_2d.height:
+    hostile
+    rejects height == 0 with DctError.INVALID_INPUT
+    rejects height > 1048576 with DctError.INVALID_INPUT
+    ensures no_panic, terminates
+  input idct_2d.width:
+    hostile
+    rejects width == 0 with DctError.INVALID_INPUT
+    rejects width > 1048576 with DctError.INVALID_INPUT
+    ensures no_panic, terminates
+  input idct_2d.dct_type:
+    hostile
+    ensures no_panic, terminates
+  input idct_2d.norm:
+    hostile
+    ensures no_panic, terminates
+
+  bound dct:
+    output <= len(signal)
+    steps <= 64 * len(signal) + 4096
+    heap <= 8 * len(signal) + 8192
+    depth <= 32
+
+  bound idct:
+    output <= len(coeffs)
+    steps <= 64 * len(coeffs) + 4096
+    heap <= 8 * len(coeffs) + 8192
+    depth <= 32
+
+  bound dst:
+    output <= len(signal)
+    steps <= 64 * len(signal) + 4096
+    heap <= 8 * len(signal) + 8192
+    depth <= 32
+
+  bound idst:
+    output <= len(coeffs)
+    steps <= 64 * len(coeffs) + 4096
+    heap <= 8 * len(coeffs) + 8192
+    depth <= 32
+
+  bound dct_2d:
+    output <= len(image)
+    steps <= 128 * len(image) + 8192
+    heap <= 8 * len(image) + 16384
+    depth <= 32
+
+  bound idct_2d:
+    output <= len(image)
+    steps <= 128 * len(image) + 8192
+    heap <= 8 * len(image) + 16384
+    depth <= 32
+
+  claim dct_rejects_empty:
+    forall t: Nat, n: Nat. dct(b"", t, n) == Err(DctError.EMPTY_INPUT)
+
+  claim idct_rejects_empty:
+    forall t: Nat, n: Nat. idct(b"", t, n) == Err(DctError.EMPTY_INPUT)
+
+  claim dst_rejects_empty:
+    forall t: Nat, n: Nat. dst(b"", t, n) == Err(DctError.EMPTY_INPUT)
+
+  claim idst_rejects_empty:
+    forall t: Nat, n: Nat. idst(b"", t, n) == Err(DctError.EMPTY_INPUT)
+
+  claim dct_2d_rejects_zero_height:
+    forall img: Bytes, w: Nat, t: Nat, n: Nat. dct_2d(img, 0, w, t, n) == Err(DctError.INVALID_INPUT)
+
+  claim dct_2d_rejects_zero_width:
+    forall img: Bytes, h: Nat, t: Nat, n: Nat. dct_2d(img, h, 0, t, n) == Err(DctError.INVALID_INPUT)

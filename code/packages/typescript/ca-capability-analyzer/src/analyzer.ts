@@ -18,6 +18,7 @@ import {
   CAPABILITY_RULES,
   FS_READ_METHODS,
   FS_WRITE_METHODS,
+  AMBIGUOUS_FS_METHODS,
   NET_MODULES,
   PROCESS_METHODS,
   BANNED_PROTO_PROPERTIES,
@@ -141,16 +142,285 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
   }
 
   // Track function scope stack to identify recursion without depth guards (CWE-674)
+  // and numeric variables for CWE-1321 array-index disambiguation.
   interface FunctionScope {
     name?: string;
+    isMethod?: boolean;
     params: string[];
     hasDepthGuard: boolean;
     selfCalls: ts.CallExpression[];
+    numericVars: Set<string>;
+    nonNumericVars: Set<string>;
+    preTaintedVars: Set<string>;
   }
-  const scopeStack: FunctionScope[] = [];
+
+  function isScopeBoundary(n: ts.Node): boolean {
+    return (
+      ts.isFunctionDeclaration(n) ||
+      ts.isFunctionExpression(n) ||
+      ts.isArrowFunction(n) ||
+      ts.isMethodDeclaration(n)
+    );
+  }
+
+  function collectBindingTargetNames(target: ts.Node, out: Set<string>): void {
+    const stack: ts.Node[] = [target];
+    let steps = 0;
+    while (stack.length > 0 && steps < 256) {
+      const cur = stack.pop()!;
+      steps++;
+      if (ts.isIdentifier(cur)) {
+        out.add(cur.text);
+      } else if (ts.isArrayBindingPattern(cur) || ts.isObjectBindingPattern(cur)) {
+        for (const elem of cur.elements) {
+          if (ts.isBindingElement(elem)) stack.push(elem.name);
+        }
+      } else if (ts.isArrayLiteralExpression(cur)) {
+        for (const elem of cur.elements) stack.push(elem);
+      } else if (ts.isObjectLiteralExpression(cur)) {
+        for (const prop of cur.properties) {
+          if (ts.isPropertyAssignment(prop)) stack.push(prop.initializer);
+          else if (ts.isShorthandPropertyAssignment(prop)) out.add(prop.name.text);
+          else if (ts.isSpreadAssignment(prop)) stack.push(prop.expression);
+        }
+      } else if (ts.isSpreadElement(cur) || ts.isOmittedExpression(cur) === false && ts.isParenthesizedExpression(cur)) {
+        stack.push(cur.expression);
+      }
+    }
+  }
+
+  function isTriviallyNumericExpr(expr: ts.Expression, depth: number = 0): boolean {
+    if (depth > 32) return false;
+    if (ts.isNumericLiteral(expr) || ts.isBigIntLiteral(expr)) return true;
+    if (ts.isParenthesizedExpression(expr)) return isTriviallyNumericExpr(expr.expression, depth + 1);
+    if (ts.isPrefixUnaryExpression(expr)) {
+      return expr.operator === ts.SyntaxKind.PlusToken || expr.operator === ts.SyntaxKind.MinusToken;
+    }
+    if (ts.isBinaryExpression(expr)) {
+      const op = expr.operatorToken.kind;
+      if (
+        op === ts.SyntaxKind.AsteriskToken ||
+        op === ts.SyntaxKind.SlashToken ||
+        op === ts.SyntaxKind.PercentToken ||
+        op === ts.SyntaxKind.MinusToken
+      ) {
+        return true;
+      }
+      if (op === ts.SyntaxKind.PlusToken) {
+        return isTriviallyNumericExpr(expr.left, depth + 1) && isTriviallyNumericExpr(expr.right, depth + 1);
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Pre-scan a scope body iteratively (bounded by MAX_AST_NODES) to find any
+   * identifier mutated via non-numeric assignments, compound `+=`, logical
+   * assignments, destructuring LHS, or `for..in`/`for..of` loops (including
+   * back-edges and closures over non-shadowed names).
+   */
+  function collectPreTaintedVars(scopeNode: ts.Node): Set<string> {
+    const tainted = new Set<string>();
+    const stack: { node: ts.Node; shadowed: Set<string> }[] = [];
+    ts.forEachChild(scopeNode, (child) => {
+      stack.push({ node: child, shadowed: new Set<string>() });
+    });
+    let visited = 0;
+    while (stack.length > 0 && visited < 50_000) {
+      const { node: cur, shadowed } = stack.pop()!;
+      visited++;
+      if (isScopeBoundary(cur)) {
+        const innerShadow = new Set<string>(shadowed);
+        const fn = cur as ts.FunctionLikeDeclaration;
+        for (const p of fn.parameters) {
+          collectBindingTargetNames(p.name, innerShadow);
+        }
+        ts.forEachChild(cur, (child) => {
+          stack.push({ node: child, shadowed: innerShadow });
+        });
+        continue;
+      }
+      if (ts.isVariableDeclaration(cur) && shadowed.size > 0) {
+        collectBindingTargetNames(cur.name, shadowed);
+      }
+      if (ts.isForInStatement(cur) || ts.isForOfStatement(cur)) {
+        const names = new Set<string>();
+        if (ts.isVariableDeclarationList(cur.initializer)) {
+          for (const decl of cur.initializer.declarations) {
+            collectBindingTargetNames(decl.name, names);
+          }
+        } else {
+          collectBindingTargetNames(cur.initializer, names);
+        }
+        for (const n of names) {
+          if (!shadowed.has(n)) tainted.add(n);
+        }
+      } else if (ts.isBinaryExpression(cur)) {
+        const op = cur.operatorToken.kind;
+        const isAssign =
+          op === ts.SyntaxKind.EqualsToken ||
+          op === ts.SyntaxKind.PlusEqualsToken ||
+          op === ts.SyntaxKind.BarBarEqualsToken ||
+          op === ts.SyntaxKind.QuestionQuestionEqualsToken ||
+          op === ts.SyntaxKind.AmpersandAmpersandEqualsToken;
+        if (isAssign) {
+          const lhsNames = new Set<string>();
+          collectBindingTargetNames(cur.left, lhsNames);
+          const safeDirectNumeric =
+            ts.isIdentifier(cur.left) &&
+            (op === ts.SyntaxKind.EqualsToken || op === ts.SyntaxKind.PlusEqualsToken) &&
+            isTriviallyNumericExpr(cur.right);
+          if (!safeDirectNumeric) {
+            for (const n of lhsNames) {
+              if (!shadowed.has(n)) tainted.add(n);
+            }
+          }
+        }
+      }
+      ts.forEachChild(cur, (child) => {
+        stack.push({ node: child, shadowed });
+      });
+    }
+    return tainted;
+  }
+
+  const scopeStack: FunctionScope[] = [
+    {
+      params: [],
+      hasDepthGuard: true,
+      selfCalls: [],
+      numericVars: new Set<string>(),
+      nonNumericVars: new Set<string>(),
+      preTaintedVars: collectPreTaintedVars(sourceFile),
+    },
+  ];
 
   // Track module imports in this file
   const importedModules = new Map<string, string>();
+
+  function isStaticStringExpr(expr: ts.Expression): expr is ts.StringLiteral | ts.NoSubstitutionTemplateLiteral {
+    return ts.isStringLiteral(expr) || ts.isNoSubstitutionTemplateLiteral(expr);
+  }
+
+  function isNumericTypeNode(typeNode: ts.TypeNode | undefined): "numeric" | "non-numeric" | "unknown" {
+    if (!typeNode) return "unknown";
+    if (
+      typeNode.kind === ts.SyntaxKind.NumberKeyword ||
+      typeNode.kind === ts.SyntaxKind.BigIntKeyword
+    ) {
+      return "numeric";
+    }
+    if (ts.isLiteralTypeNode(typeNode) && ts.isNumericLiteral(typeNode.literal)) {
+      return "numeric";
+    }
+    return "non-numeric";
+  }
+
+  function isNumericIdent(name: string): boolean {
+    for (let idx = scopeStack.length - 1; idx >= 0; idx--) {
+      const scope = scopeStack[idx];
+      if (scope.nonNumericVars.has(name) || scope.preTaintedVars.has(name)) return false;
+      if (scope.numericVars.has(name)) return true;
+    }
+    return false;
+  }
+
+  function isNumericExpression(expr: ts.Expression, depth: number = 0): boolean {
+    if (depth > 64) {
+      return false;
+    }
+    if (ts.isNumericLiteral(expr) || ts.isBigIntLiteral(expr)) {
+      return true;
+    }
+    if (ts.isParenthesizedExpression(expr)) {
+      return isNumericExpression(expr.expression, depth + 1);
+    }
+    if (ts.isPrefixUnaryExpression(expr)) {
+      return (
+        expr.operator === ts.SyntaxKind.PlusToken ||
+        expr.operator === ts.SyntaxKind.MinusToken ||
+        expr.operator === ts.SyntaxKind.TildeToken ||
+        expr.operator === ts.SyntaxKind.PlusPlusToken ||
+        expr.operator === ts.SyntaxKind.MinusMinusToken
+      );
+    }
+    if (ts.isPostfixUnaryExpression(expr)) {
+      return (
+        expr.operator === ts.SyntaxKind.PlusPlusToken ||
+        expr.operator === ts.SyntaxKind.MinusMinusToken
+      );
+    }
+    if (ts.isAsExpression(expr) || ts.isTypeAssertionExpression(expr)) {
+      const kind = isNumericTypeNode(expr.type);
+      return kind !== "non-numeric" && isNumericExpression(expr.expression, depth + 1);
+    }
+    if (ts.isBinaryExpression(expr)) {
+      const op = expr.operatorToken.kind;
+      if (
+        op === ts.SyntaxKind.AsteriskToken ||
+        op === ts.SyntaxKind.SlashToken ||
+        op === ts.SyntaxKind.PercentToken ||
+        op === ts.SyntaxKind.AsteriskAsteriskToken ||
+        op === ts.SyntaxKind.MinusToken ||
+        op === ts.SyntaxKind.LessThanLessThanToken ||
+        op === ts.SyntaxKind.GreaterThanGreaterThanToken ||
+        op === ts.SyntaxKind.GreaterThanGreaterThanGreaterThanToken ||
+        op === ts.SyntaxKind.AmpersandToken ||
+        op === ts.SyntaxKind.BarToken ||
+        op === ts.SyntaxKind.CaretToken
+      ) {
+        return true;
+      }
+      if (op === ts.SyntaxKind.PlusToken) {
+        return isNumericExpression(expr.left, depth + 1) && isNumericExpression(expr.right, depth + 1);
+      }
+      return false;
+    }
+    if (ts.isIdentifier(expr)) {
+      return isNumericIdent(expr.text);
+    }
+    if (ts.isPropertyAccessExpression(expr)) {
+      if (expr.name.text === "length") return true;
+      if (ts.isIdentifier(expr.expression) && expr.expression.text === "Math") return true;
+      return false;
+    }
+    if (ts.isCallExpression(expr)) {
+      const calleeText = expr.expression.getText(sourceFile);
+      return (
+        calleeText === "Number" ||
+        calleeText === "parseInt" ||
+        calleeText === "parseFloat" ||
+        calleeText.startsWith("Math.")
+      );
+    }
+    if (ts.isConditionalExpression(expr)) {
+      return isNumericExpression(expr.whenTrue, depth + 1) && isNumericExpression(expr.whenFalse, depth + 1);
+    }
+    return false;
+  }
+
+  function recordModuleCapability(modName: string, node: ts.Node, evidencePrefix: string): void {
+    if (modName === "fs" || modName === "node:fs" || modName.startsWith("node:fs/")) {
+      addCap("fs:read", node, `${evidencePrefix} '${modName}'`);
+    } else if (NET_MODULES.has(modName)) {
+      addCap("net:socket", node, `${evidencePrefix} '${modName}'`);
+    } else if (modName === "child_process" || modName === "node:child_process") {
+      addCap("process:spawn", node, `${evidencePrefix} '${modName}'`);
+    } else if (modName === "ffi-napi" || modName === "koffi" || modName === "bun:ffi" || modName === "node:ffi") {
+      addCap("ffi:unsafe", node, `${evidencePrefix} '${modName}'`);
+    }
+  }
+
+  function isFsReceiver(targetText: string): boolean {
+    return (
+      targetText === "fs" ||
+      targetText === "node:fs" ||
+      targetText === "promises" ||
+      targetText === "fs.promises" ||
+      targetText === "fsPromises" ||
+      (importedModules.get(targetText)?.includes("fs") ?? false)
+    );
+  }
 
   const MAX_AST_DEPTH = 512;
   const MAX_AST_NODES = 250_000;
@@ -209,7 +479,7 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
       );
       continue;
     }
-    // ── 1. Import Declarations ──────────────────────────────────────────────
+    // ── 1. Import Declarations & Variable/Assignment Type Tracking ─────────
     if (ts.isImportDeclaration(node)) {
       const moduleSpecifier = node.moduleSpecifier;
       if (ts.isStringLiteral(moduleSpecifier)) {
@@ -230,15 +500,85 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
             }
           }
         }
-        if (modName === "fs" || modName === "node:fs" || modName.startsWith("node:fs/")) {
-          // fs read is ambient baseline for fs imports
-          addCap("fs:read", node, `import from '${modName}'`);
-        } else if (NET_MODULES.has(modName)) {
-          addCap("net:socket", node, `import from '${modName}'`);
-        } else if (modName === "child_process" || modName === "node:child_process") {
-          addCap("process:spawn", node, `import from '${modName}'`);
-        } else if (modName === "ffi-napi" || modName === "koffi" || modName === "bun:ffi") {
-          addCap("ffi:unsafe", node, `import native FFI from '${modName}'`);
+        recordModuleCapability(modName, node, "import from");
+      }
+    }
+
+    if (ts.isVariableDeclaration(node)) {
+      const currentScope = scopeStack[scopeStack.length - 1];
+      if (ts.isIdentifier(node.name)) {
+        const varName = node.name.text;
+        const typeKind = isNumericTypeNode(node.type);
+        if (typeKind === "numeric") {
+          currentScope.nonNumericVars.delete(varName);
+          currentScope.numericVars.add(varName);
+        } else if (typeKind === "non-numeric") {
+          currentScope.numericVars.delete(varName);
+          currentScope.nonNumericVars.add(varName);
+        } else if (node.initializer) {
+          if (isNumericExpression(node.initializer)) {
+            currentScope.nonNumericVars.delete(varName);
+            currentScope.numericVars.add(varName);
+          } else {
+            currentScope.numericVars.delete(varName);
+            currentScope.nonNumericVars.add(varName);
+          }
+        } else {
+          currentScope.numericVars.delete(varName);
+          currentScope.nonNumericVars.add(varName);
+        }
+      }
+
+      // Track CommonJS require("...") and await/direct import("...") module bindings
+      let initExpr: ts.Expression | undefined = node.initializer;
+      while (initExpr && ts.isAwaitExpression(initExpr)) {
+        initExpr = initExpr.expression;
+      }
+      if (
+        initExpr &&
+        ts.isCallExpression(initExpr) &&
+        ((ts.isIdentifier(initExpr.expression) && initExpr.expression.text === "require") ||
+          initExpr.expression.kind === ts.SyntaxKind.ImportKeyword) &&
+        initExpr.arguments.length >= 1 &&
+        isStaticStringExpr(initExpr.arguments[0])
+      ) {
+        const modName = initExpr.arguments[0].text;
+        if (ts.isIdentifier(node.name)) {
+          importedModules.set(node.name.text, modName);
+        } else if (ts.isObjectBindingPattern(node.name)) {
+          for (const elem of node.name.elements) {
+            if (ts.isIdentifier(elem.name)) {
+              const propName = elem.propertyName && ts.isIdentifier(elem.propertyName)
+                ? elem.propertyName.text
+                : elem.name.text;
+              importedModules.set(elem.name.text, `${modName}:${propName}`);
+            }
+          }
+        }
+      }
+    }
+
+    if (ts.isBinaryExpression(node)) {
+      const op = node.operatorToken.kind;
+      if (
+        op === ts.SyntaxKind.EqualsToken ||
+        op === ts.SyntaxKind.PlusEqualsToken ||
+        op === ts.SyntaxKind.BarBarEqualsToken ||
+        op === ts.SyntaxKind.QuestionQuestionEqualsToken ||
+        op === ts.SyntaxKind.AmpersandAmpersandEqualsToken
+      ) {
+        const safeNumericAssign =
+          ts.isIdentifier(node.left) &&
+          (op === ts.SyntaxKind.EqualsToken || op === ts.SyntaxKind.PlusEqualsToken) &&
+          isNumericExpression(node.right);
+        if (!safeNumericAssign) {
+          const lhsNames = new Set<string>();
+          collectBindingTargetNames(node.left, lhsNames);
+          const currentScope = scopeStack[scopeStack.length - 1];
+          for (const n of lhsNames) {
+            currentScope.numericVars.delete(n);
+            currentScope.nonNumericVars.add(n);
+          }
         }
       }
     }
@@ -248,14 +588,55 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
       const expression = node.expression;
       const text = expression.getText(sourceFile);
 
-      // Check current function self-call for recursion
+      // Check current function/method self-call for recursion
       const currentScope = scopeStack[scopeStack.length - 1];
-      if (currentScope?.name && ts.isIdentifier(expression) && expression.text === currentScope.name) {
-        currentScope.selfCalls.push(node);
+      if (currentScope?.name) {
+        if (
+          !currentScope.isMethod &&
+          ts.isIdentifier(expression) &&
+          expression.text === currentScope.name
+        ) {
+          currentScope.selfCalls.push(node);
+        } else if (
+          currentScope.isMethod &&
+          ts.isPropertyAccessExpression(expression) &&
+          expression.expression.kind === ts.SyntaxKind.ThisKeyword &&
+          expression.name.text === currentScope.name
+        ) {
+          currentScope.selfCalls.push(node);
+        }
+      }
+
+      // CommonJS require(...) and dynamic import(...)
+      if (
+        (ts.isIdentifier(expression) && expression.text === "require") ||
+        expression.kind === ts.SyntaxKind.ImportKeyword
+      ) {
+        const firstArg = node.arguments[0];
+        if (firstArg && isStaticStringExpr(firstArg)) {
+          recordModuleCapability(
+            firstArg.text,
+            node,
+            expression.kind === ts.SyntaxKind.ImportKeyword ? "dynamic import" : "require"
+          );
+        } else if (firstArg) {
+          addWeakness(
+            "CWE-94",
+            "Code Injection (dynamic module load)",
+            node,
+            node.getText(sourceFile),
+            "Dynamic require() or import() with non-literal specifier allows arbitrary module execution"
+          );
+        }
       }
 
       // Code Injection (CWE-94)
-      if (text === "eval") {
+      if (
+        text === "eval" ||
+        text === "globalThis.eval" ||
+        text === "window.eval" ||
+        text === "global.eval"
+      ) {
         addWeakness(
           "CWE-94",
           "Code Injection (eval)",
@@ -283,9 +664,9 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
       // Direct identifier calls for fs functions (e.g. readFile, writeFile imported directly)
       if (ts.isIdentifier(expression)) {
         const fnName = expression.text;
-        if (FS_WRITE_METHODS.has(fnName)) {
+        if (FS_WRITE_METHODS.has(fnName) && (!AMBIGUOUS_FS_METHODS.has(fnName) || importedModules.get(fnName)?.includes("fs"))) {
           addCap("fs:write", node, node.getText(sourceFile));
-        } else if (FS_READ_METHODS.has(fnName) && fnName !== "open" && fnName !== "read") {
+        } else if (FS_READ_METHODS.has(fnName) && (!AMBIGUOUS_FS_METHODS.has(fnName) || importedModules.get(fnName)?.includes("fs"))) {
           addCap("fs:read", node, node.getText(sourceFile));
         } else if (
           fnName === "spawn" ||
@@ -299,7 +680,7 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
           addCap("process:spawn", node, node.getText(sourceFile));
           if (fnName === "exec" || fnName === "execSync") {
             const firstArg = node.arguments[0];
-            if (firstArg && !ts.isStringLiteral(firstArg)) {
+            if (firstArg && !isStaticStringExpr(firstArg)) {
               addWeakness(
                 "CWE-78",
                 "OS Command Injection",
@@ -347,7 +728,7 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
           // Check for command injection (CWE-78): exec/execSync/spawn with dynamic non-literal command
           if (methodName === "exec" || methodName === "execSync") {
             const firstArg = node.arguments[0];
-            if (firstArg && !ts.isStringLiteral(firstArg)) {
+            if (firstArg && !isStaticStringExpr(firstArg)) {
               addWeakness(
                 "CWE-78",
                 "OS Command Injection",
@@ -361,18 +742,11 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
 
         // Filesystem reads/writes on property access
         if (FS_WRITE_METHODS.has(methodName)) {
-          addCap("fs:write", node, node.getText(sourceFile));
+          if (!AMBIGUOUS_FS_METHODS.has(methodName) || isFsReceiver(targetText)) {
+            addCap("fs:write", node, node.getText(sourceFile));
+          }
         } else if (FS_READ_METHODS.has(methodName)) {
-          if (methodName === "read" || methodName === "open") {
-            if (
-              targetText === "fs" ||
-              targetText === "node:fs" ||
-              targetText === "promises" ||
-              importedModules.get(targetText)?.includes("fs")
-            ) {
-              addCap("fs:read", node, node.getText(sourceFile));
-            }
-          } else {
+          if (!AMBIGUOUS_FS_METHODS.has(methodName) || isFsReceiver(targetText)) {
             addCap("fs:read", node, node.getText(sourceFile));
           }
         }
@@ -389,7 +763,7 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
       const text = node.expression.getText(sourceFile);
 
       // CWE-94: new Function(...)
-      if (text === "Function") {
+      if (text === "Function" || text === "globalThis.Function" || text === "window.Function" || text === "global.Function") {
         addWeakness(
           "CWE-94",
           "Code Injection (Function constructor)",
@@ -402,7 +776,7 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
       // CWE-1333: new RegExp(...)
       if (text === "RegExp") {
         const firstArg = node.arguments?.[0];
-        if (firstArg && ts.isStringLiteral(firstArg)) {
+        if (firstArg && isStaticStringExpr(firstArg)) {
           if (isCatastrophicRegex(firstArg.text)) {
             addWeakness(
               "CWE-1333",
@@ -412,7 +786,7 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
               `RegExp pattern '${firstArg.text}' exhibits catastrophic backtracking`
             );
           }
-        } else if (firstArg && !ts.isStringLiteral(firstArg)) {
+        } else if (firstArg && !isStaticStringExpr(firstArg)) {
           // Dynamic RegExp from variable / expression
           addWeakness(
             "CWE-1333",
@@ -488,7 +862,7 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
       const targetText = node.expression.getText(sourceFile);
 
       // Direct bracket access with "__proto__", "constructor", "prototype"
-      if (ts.isStringLiteral(argExpr) && BANNED_PROTO_PROPERTIES.has(argExpr.text)) {
+      if (isStaticStringExpr(argExpr) && BANNED_PROTO_PROPERTIES.has(argExpr.text)) {
         addWeakness(
           "CWE-1321",
           "Prototype Pollution (bracket access)",
@@ -505,9 +879,9 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
         parent.left === node &&
         parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
       ) {
-        // If the key is dynamic (not string literal, not number literal)
-        if (!ts.isStringLiteral(argExpr) && !ts.isNumericLiteral(argExpr)) {
-          // If target is not a typed Array or Map
+        // If the key is dynamic (not static string literal, not provably numeric)
+        if (!isStaticStringExpr(argExpr) && !isNumericExpression(argExpr)) {
+          // If target is not a typed Array or Map literal name
           if (!targetText.endsWith("Array") && !targetText.endsWith("Map")) {
             addWeakness(
               "CWE-1321",
@@ -526,10 +900,14 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
     if (
       ts.isFunctionDeclaration(node) ||
       ts.isFunctionExpression(node) ||
-      ts.isArrowFunction(node)
+      ts.isArrowFunction(node) ||
+      ts.isMethodDeclaration(node)
     ) {
       let funcName: string | undefined;
-      if (ts.isFunctionDeclaration(node) && node.name) {
+      const isMethod = ts.isMethodDeclaration(node);
+      if (isMethod && ts.isIdentifier(node.name)) {
+        funcName = node.name.text;
+      } else if (ts.isFunctionDeclaration(node) && node.name) {
         funcName = node.name.text;
       } else if (
         ts.isVariableDeclaration(node.parent) &&
@@ -548,11 +926,28 @@ export function analyzeSource(sourceText: string, filePath: string = "source.ts"
           p.includes("step")
       );
 
+      const numericVars = new Set<string>();
+      const nonNumericVars = new Set<string>();
+      for (const param of node.parameters) {
+        if (ts.isIdentifier(param.name)) {
+          const typeKind = isNumericTypeNode(param.type);
+          if (typeKind === "numeric") {
+            numericVars.add(param.name.text);
+          } else {
+            nonNumericVars.add(param.name.text);
+          }
+        }
+      }
+
       scopeStack.push({
         name: funcName,
+        isMethod,
         params,
         hasDepthGuard,
         selfCalls: [],
+        numericVars,
+        nonNumericVars,
+        preTaintedVars: collectPreTaintedVars(node),
       });
       pushedScope = true;
     }

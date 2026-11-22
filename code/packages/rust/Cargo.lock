@@ -255,6 +255,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "320119579fcad9c21884f5c4861d16174d0e06250625266f50fe6898340abefa"
 
 [[package]]
+name = "aero-flight-model"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "rigidbody-6dof",
+ "trig",
+]
+
+[[package]]
 name = "aes"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1428,6 +1440,18 @@ name = "browser-navigation"
 version = "0.1.0"
 dependencies = [
  "url-parser",
+]
+
+[[package]]
+name = "bsp-portal25d"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "pixel-container",
+ "trig",
 ]
 
 [[package]]
@@ -2710,6 +2734,20 @@ dependencies = [
  "jit-core",
  "parser",
  "vm-core",
+]
+
+[[package]]
+name = "cockpit-hud-paint"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "paint-instructions",
+ "paint-vm-runtime",
+ "rigidbody-6dof",
+ "trig",
 ]
 
 [[package]]
@@ -11709,6 +11747,17 @@ name = "rans"
 version = "0.1.0"
 
 [[package]]
+name = "raster3d-soft"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "pixel-container",
+]
+
+[[package]]
 name = "raw-window-handle"
 version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -11857,6 +11906,19 @@ name = "register-vm"
 version = "0.1.0"
 
 [[package]]
+name = "render3d-gpu-bridge"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "gpu-runtime",
+ "math3d",
+ "pixel-container",
+ "raster3d-soft",
+]
+
+[[package]]
 name = "renderdoc-sys"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -11878,6 +11940,17 @@ dependencies = [
 [[package]]
 name = "resp-protocol"
 version = "0.1.0"
+
+[[package]]
+name = "rigidbody-6dof"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "trig",
+]
 
 [[package]]
 name = "ring"
@@ -14506,6 +14579,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "06794f8f6c5c898b3275aebefa6b8a1cb24cd2c6c79397ab15774837a0bc5755"
 dependencies = [
  "winapi-util",
+]
+
+[[package]]
+name = "terrain-lod"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "rng",
+ "trig",
 ]
 
 [[package]]
