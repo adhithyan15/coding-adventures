@@ -228,8 +228,7 @@ AvlNode<T> _rebalanceCow<T extends Comparable<dynamic>>(AvlNode<T> node) {
 AvlNode<T> _rotateLeftCow<T extends Comparable<dynamic>>(AvlNode<T> root) {
   final right = root._right;
   // Defensive: bf < -1 proves a right child exists, so this never fires.
-  // coverage:ignore-line
-  if (right == null) return root;
+  if (right == null) return root; // coverage:ignore-line
   final newRoot = right._shallowCopy();
   final demoted = root._shallowCopy();
   demoted._right = newRoot._left;
@@ -243,8 +242,7 @@ AvlNode<T> _rotateLeftCow<T extends Comparable<dynamic>>(AvlNode<T> root) {
 AvlNode<T> _rotateRightCow<T extends Comparable<dynamic>>(AvlNode<T> root) {
   final left = root._left;
   // Defensive: bf > 1 proves a left child exists, so this never fires.
-  // coverage:ignore-line
-  if (left == null) return root;
+  if (left == null) return root; // coverage:ignore-line
   final newRoot = left._shallowCopy();
   final demoted = root._shallowCopy();
   demoted._left = newRoot._right;
@@ -304,22 +302,37 @@ bool isValidAvlRoot<T extends Comparable<dynamic>>(AvlNode<T>? root) =>
 (int, int)? _validate<T extends Comparable<dynamic>>(
     AvlNode<T>? node, T? min, T? max) {
   if (node == null) return (-1, 0);
-  // The branches below are unreachable by construction (invalid trees are
-  // unconstructible outside this library); they exist to fail loudly on
-  // bugs, so they are excluded from coverage.
-  // coverage:ignore-start
-  if (min != null && node.value.compareTo(min) <= 0) return null;
-  if (max != null && node.value.compareTo(max) >= 0) return null;
-  final left = _validate(node.left, min, node.value);
-  if (left == null) return null;
-  final right = _validate(node.right, node.value, max);
-  if (right == null) return null;
-  final height = 1 + (left.$1 > right.$1 ? left.$1 : right.$1);
-  if (node.height != height || node.size != 1 + left.$2 + right.$2) {
+  // The failure returns below are unreachable by construction (invalid
+  // trees are unconstructible outside this library); they exist to fail
+  // loudly on bugs. Only the defensive returns are excluded — the live
+  // recursion and height computation stay inside measured coverage.
+  if (min != null && node.value.compareTo(min) <= 0) {
+    // coverage:ignore-line
     return null;
   }
-  if ((left.$1 - right.$1).abs() > 1) return null;
-  // coverage:ignore-end
+  if (max != null && node.value.compareTo(max) >= 0) {
+    // coverage:ignore-line
+    return null;
+  }
+  final left = _validate(node.left, min, node.value);
+  if (left == null) {
+    // coverage:ignore-line
+    return null;
+  }
+  final right = _validate(node.right, node.value, max);
+  if (right == null) {
+    // coverage:ignore-line
+    return null;
+  }
+  final height = 1 + (left.$1 > right.$1 ? left.$1 : right.$1);
+  if (node.height != height || // coverage:ignore-line
+      node.size != 1 + left.$2 + right.$2) {
+    return null;
+  }
+  if ((left.$1 - right.$1).abs() > 1) {
+    // coverage:ignore-line
+    return null;
+  }
   return (height, 1 + left.$2 + right.$2);
 }
 
@@ -412,11 +425,15 @@ bool _bstIsValid<T extends Comparable<dynamic>>(AvlNode<T>? root) =>
 bool _validateBst<T extends Comparable<dynamic>>(
     AvlNode<T>? node, T? min, T? max) {
   if (node == null) return true;
-  // Same unreachable-by-construction reasoning as above.
-  // coverage:ignore-start
-  if (min != null && node.value.compareTo(min) <= 0) return false;
-  if (max != null && node.value.compareTo(max) >= 0) return false;
-  // coverage:ignore-end
+  // Unreachable by construction (same reasoning as _validate above).
+  if (min != null && node.value.compareTo(min) <= 0) {
+    // coverage:ignore-line
+    return false;
+  }
+  if (max != null && node.value.compareTo(max) >= 0) {
+    // coverage:ignore-line
+    return false;
+  }
   return _validateBst(node.left, min, node.value) &&
       _validateBst(node.right, node.value, max);
 }
