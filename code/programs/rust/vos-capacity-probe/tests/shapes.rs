@@ -251,3 +251,110 @@ fn a_unit_test_of_the_mask_in_b4_widths_below_32_bits() {
     assert_eq!(inst.declared_bits(), 8);
     assert_eq!(inst.code_out.len(), 8);
 }
+
+#[test]
+fn d5_touched_and_frame_obligations_and_both_controls() {
+    for mode in [D5Mode::Index { c: 2, j: 0 }, D5Mode::Symbolic { j: 0 }] {
+        full(
+            &format!("D5Touched {mode:?}"),
+            &D5Touched { t: 4, k: 2, mode },
+        );
+        // Unmutated frame: identical-structure (Index) or UNSAT / propagation-only (Symbolic).
+        let frame = D5Frame { t: 4, k: 2, mode };
+        let inst = frame.build(1, None).unwrap();
+        if matches!(mode, D5Mode::Index { .. }) {
+            assert_eq!(inst.cone_ands(), 0);
+            let (cnf, _) = inst.cnf();
+            assert_eq!(
+                inst.collapse_reason(cnf.clauses.len(), 0),
+                Some("identical-structure")
+            );
+        } else {
+            unsat_with_proof(&inst);
+        }
+        // Stray extra store mutant: caught by the frame obligation, SAT and replayed.
+        control_replays(&frame, 1);
+    }
+}
+
+#[test]
+fn d5_and_b3_cuts_run_row_and_structure_agree() {
+    use vos_capacity_probe::exp::{b3_c3_knobs, d5_knobs, run_row, structure_of, RowSpec};
+    use vos_capacity_probe::results::compare_structure;
+    use vos_capacity_probe::row::{Knob, Kv};
+
+    assert_eq!(b3_c3_knobs().len(), 72);
+    assert!(b3_c3_knobs().iter().all(|k| !k.quick));
+    let d5k = d5_knobs();
+    assert_eq!(d5k.len(), 24);
+    assert_eq!(d5k.iter().filter(|k| k.quick).count(), 2);
+
+    for cut in ["every2", "every4"] {
+        for mode in ["certified", "incremental"] {
+            let spec = RowSpec {
+                experiment: "B3".into(),
+                knob: Knob::of(&[
+                    ("length", Kv::I(25)),
+                    ("divergence", Kv::F(0.25)),
+                    ("cut", Kv::S(cut.into())),
+                ]),
+                mode: mode.into(),
+                seed: 1,
+                seeds: 5,
+                tier: "full".into(),
+            };
+            let row = run_row(&spec, Duration::from_secs(60), &mut |_| {});
+            assert_eq!(row.result, "unsat", "{cut} {mode}: {:?}", row.note);
+            assert!(row.control.ok(), "{cut} {mode}: {:?}", row.control);
+            assert_eq!(row.wall_s, Some(600));
+            let s = structure_of(&spec).unwrap();
+            assert_eq!(row.instance_sha256, s.instance_sha256);
+            assert_eq!(row.ands, s.ands);
+        }
+    }
+
+    for (split, t, k) in [
+        ("index", 4, 1),
+        ("index", 16, 4),
+        ("none", 4, 1),
+        ("none", 16, 1),
+    ] {
+        let spec = RowSpec {
+            experiment: "D5".into(),
+            knob: Knob::of(&[
+                ("t", Kv::I(t)),
+                ("k", Kv::I(k)),
+                ("split", Kv::S(split.into())),
+            ]),
+            mode: "certified".into(),
+            seed: 1,
+            seeds: 5,
+            tier: if t == 4 && k == 1 { "quick" } else { "full" }.into(),
+        };
+        let row = run_row(&spec, Duration::from_secs(120), &mut |_| {});
+        assert_eq!(row.result, "unsat", "D5 {split} {t} {k}: {}", row.note);
+        assert!(row.control.ok(), "D5 {split} {t} {k}: {:?}", row.control);
+        assert_eq!(row.pass_default_limits, Some(true));
+        assert_eq!(row.wall_s, Some(600));
+        let touched_n = if split == "index" {
+            (t * k) as f64
+        } else {
+            k as f64
+        };
+        assert_eq!(row.metric("touched_obligations"), Some(touched_n));
+        assert_eq!(row.metric("frame_obligations"), Some(touched_n));
+        if split == "index" {
+            assert_eq!(row.metric("frame_collapsed"), Some(touched_n));
+            assert_eq!(row.metric("frame_conflicts"), Some(0.0));
+        }
+        let s = structure_of(&spec).unwrap();
+        let mut rebuilt = row.clone();
+        rebuilt.instance_sha256 = s.instance_sha256;
+        rebuilt.ands = s.ands;
+        rebuilt.vars = s.vars;
+        rebuilt.clauses = s.clauses;
+        rebuilt.entropy_bits = s.entropy_bits;
+        rebuilt.declared_bits = s.declared_bits;
+        assert!(compare_structure(&row, &rebuilt).is_empty());
+    }
+}

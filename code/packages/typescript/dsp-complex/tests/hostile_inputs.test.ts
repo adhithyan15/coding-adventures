@@ -127,4 +127,98 @@ describe("Hostile inputs & VER15 Security Hardening", () => {
     assert.throws(() => a1.equals(a2, NaN), InvalidInputError);
     assert.throws(() => a1.equals(a2, Infinity), InvalidInputError);
   });
+
+  it("VER15: rejects > MAX_SAFE_INTEGER (1e100), Symbol, Object.create(null), DataView, and invalid lengths cleanly", () => {
+    const c1 = new Complex(1, 2);
+    const c2 = new Complex(1, 2);
+    const a1 = ComplexArray.zeros(2);
+    const a2 = ComplexArray.zeros(2);
+
+    // Number.isSafeInteger checks
+    assert.throws(() => ComplexArray.zeros(1e100), InvalidInputError);
+    assert.throws(() => ComplexArray.zeros(Number.MAX_SAFE_INTEGER + 1), InvalidInputError);
+    assert.throws(() => a1.get(1e100), RangeError);
+    assert.throws(() => a1.get(1.5), RangeError);
+    assert.throws(() => a1.set(1e100, c1), RangeError);
+    assert.throws(() => new ComplexArray({ length: -2 }), InvalidInputError);
+    assert.throws(() => ComplexArray.fromReal({ length: 1.5 }), InvalidInputError);
+    assert.throws(() => ComplexArray.fromReal({ length: Number.NaN }), InvalidInputError);
+
+    // Symbol & Object.create(null) & throwing toString must not crash String() or Number()
+    const sym = Symbol("hostile");
+    const nullProto = Object.create(null);
+    const throwingObj = {
+      toString() {
+        throw new Error("boom");
+      },
+    };
+    for (const hostile of [sym, nullProto, throwingObj]) {
+      assert.throws(() => c1.equals(c2, hostile as number), InvalidInputError);
+      assert.throws(() => a1.equals(a2, hostile as number), InvalidInputError);
+      assert.throws(() => new Complex(hostile as number, 0), InvalidInputError);
+      assert.throws(() => c1.add(hostile as Complex), InvalidInputError);
+      assert.throws(() => c1.div(hostile as Complex), InvalidInputError);
+      assert.throws(() => new ComplexArray([hostile as number, 0]), InvalidInputError);
+      assert.throws(() => ComplexArray.fromReal([hostile as number]), InvalidInputError);
+      assert.throws(() => ComplexArray.fromRealImag([hostile as number], [0]), InvalidInputError);
+      assert.throws(() => new ComplexArray({ length: hostile as number }), InvalidInputError);
+      assert.throws(() => a1.get(hostile as number), RangeError);
+      assert.throws(() => a1.set(0, hostile as Complex), InvalidInputError);
+    }
+
+    // Null / invalid ComplexArray operands
+    assert.throws(() => c1.add(null as unknown as Complex), InvalidInputError);
+    assert.throws(() => a1.add(null as unknown as ComplexArray), InvalidInputError);
+    assert.equal(c1.equals(null as unknown as Complex), false);
+    assert.equal(a1.equals(null as unknown as ComplexArray), false);
+
+    // ArrayBuffer.isView: DataView has no .length; BigInt64Array elements are bigints; oversized typed arrays hit pre-flight cap
+    const dv = new DataView(new ArrayBuffer(16));
+    assert.throws(() => new ComplexArray(dv as unknown as Float64Array), InvalidInputError);
+    assert.throws(() => ComplexArray.fromReal(dv as unknown as Float64Array), InvalidInputError);
+    assert.throws(
+      () => ComplexArray.fromRealImag(dv as unknown as Float64Array, dv as unknown as Float64Array),
+      InvalidInputError
+    );
+    const bi = new BigInt64Array([1n, 2n]);
+    assert.throws(() => ComplexArray.fromReal(bi as unknown as Float64Array), InvalidInputError);
+    const oversized = new Uint8Array(MAX_SAMPLES + 1);
+    assert.throws(() => ComplexArray.fromReal(oversized as unknown as Float64Array), InvalidInputError);
+
+    // CWE-1321: prototype pollution resistance
+    const protoPayload = JSON.parse('{"re":1,"im":2,"__proto__":{"pollutedComplexArr":true}}');
+    a1.set(0, protoPayload);
+    assert.equal(a1.get(0).re, 1);
+    assert.equal(({} as { pollutedComplexArr?: boolean }).pollutedComplexArr, undefined);
+  });
+
+  it("VER15: Smith complex division avoids overflow to NaN and ComplexArray arithmetic enforces finiteness", () => {
+    // 1e200 / 1e200 must equal 1 + 0i without squaring overflow
+    const bigScalar = new Complex(1e200, 0);
+    assert.ok(bigScalar.div(bigScalar).equals(Complex.one(), 1e-12));
+    const bigImag = new Complex(0, 1e200);
+    assert.ok(bigImag.div(bigImag).equals(Complex.one(), 1e-12));
+    const bigDiag = new Complex(1e200, -1e200);
+    assert.ok(bigDiag.div(bigDiag).equals(Complex.one(), 1e-12));
+
+    const bigArr = ComplexArray.fromReal([1e200]);
+    const divRes = bigArr.div(bigArr);
+    assert.equal(divRes.get(0).re, 1);
+    assert.equal(divRes.get(0).im, 0);
+
+    const bigImagArr = ComplexArray.fromRealImag([0], [1e200]);
+    const divImagRes = bigImagArr.div(bigImagArr);
+    assert.equal(divImagRes.get(0).re, 1);
+    assert.equal(divImagRes.get(0).im, 0);
+
+    // Overflow in scale, add, sub, mul, div must fail closed with InvalidInputError (never NaN/Inf in _data)
+    const huge = ComplexArray.fromReal([1e308]);
+    const tiny = ComplexArray.fromReal([1e-10]);
+    assert.throws(() => huge.scale(10), InvalidInputError);
+    assert.throws(() => huge.add(huge), InvalidInputError);
+    assert.throws(() => huge.sub(huge.scale(-1)), InvalidInputError);
+    assert.throws(() => huge.mul(huge), InvalidInputError);
+    assert.throws(() => huge.div(tiny), InvalidInputError);
+    assert.throws(() => new Complex(1e308, 0).div(new Complex(1e-10, 0)), InvalidInputError);
+  });
 });

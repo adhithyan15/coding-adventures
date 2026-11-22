@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "render3d-gpu-bridge",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded 3D render targets, camera uniforms, mesh slices, materials, draw calls, Z-buffers, and RGBA8 pixel containers"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure graphics bridge transform: package validates 3D render passes, builds gpu-runtime compute shader descriptors, delegates deterministic rasterization to raster3d-soft, and computes non-cryptographic FNV-1a frame and depth digests only, with no cipher or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: framebuffer dimensions, draw-call count, mesh count, material count, vertex count per mesh, and total triangle count are strictly capped by MAX_FRAMEBUFFER_WIDTH/HEIGHT, MAX_DRAW_CALLS, MAX_MESHES, MAX_MATERIALS, MAX_VERTICES_PER_MESH, and MAX_TOTAL_TRIANGLES"
+    }
+  }
+}

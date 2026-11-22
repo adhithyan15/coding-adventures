@@ -1883,11 +1883,21 @@ fn mat4_row(m: &Mat4, r: usize) -> [f64; 4] {
 }
 
 fn plane_add_rows(a: [f64; 4], b: [f64; 4]) -> Result<Plane, Math3dError> {
-    Plane::plane_from_raw(a[0] + b[0], a[1] + b[1], a[2] + b[2], a[3] + b[3])
+    Plane::plane_from_raw(
+        check_result_finite(a[0] + b[0])?,
+        check_result_finite(a[1] + b[1])?,
+        check_result_finite(a[2] + b[2])?,
+        check_result_finite(a[3] + b[3])?,
+    )
 }
 
 fn plane_sub_rows(a: [f64; 4], b: [f64; 4]) -> Result<Plane, Math3dError> {
-    Plane::plane_from_raw(a[0] - b[0], a[1] - b[1], a[2] - b[2], a[3] - b[3])
+    Plane::plane_from_raw(
+        check_result_finite(a[0] - b[0])?,
+        check_result_finite(a[1] - b[1])?,
+        check_result_finite(a[2] - b[2])?,
+        check_result_finite(a[3] - b[3])?,
+    )
 }
 
 impl Frustum {
@@ -1981,14 +1991,8 @@ impl Frustum {
     #[inline]
     pub fn intersects_aabb(&self, aabb: &Aabb3) -> Result<bool, Math3dError> {
         aabb.validate_aabb()?;
-        for plane in &self.planes {
-            check_finite(plane.d)?;
-            if !plane.normal.vec3_is_finite() {
-                return Err(Math3dError::NonFiniteInput);
-            }
-            if plane.normal.length_sq()? <= EPSILON * EPSILON {
-                return Err(Math3dError::ZeroLength);
-            }
+        for raw_plane in &self.planes {
+            let plane = Plane::plane_from_normal_d(raw_plane.normal, raw_plane.d)?;
             let px = if plane.normal.x >= 0.0 {
                 aabb.max.x
             } else {

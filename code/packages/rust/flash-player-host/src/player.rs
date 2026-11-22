@@ -655,6 +655,34 @@ impl FlashPlayer {
         out_patches: &mut [PatchOp],
         out_audio_pcm: Option<&mut [i16]>,
     ) -> Result<PlayerTickSummary, PlayerHostError> {
+        let saved_clock = self.clock;
+        let saved_stage = self.stage.clone();
+        let saved_audio = self.audio.clone();
+        let saved_pending_initial_frame = self.pending_initial_frame;
+        let saved_stage_dirty = self.stage_dirty;
+        let saved_processed_action_log_len = self.processed_action_log_len;
+
+        match self.player_step_with_clock_inner(raw_delta_ns, out_patches, out_audio_pcm) {
+            Ok(summary) => Ok(summary),
+            Err(err) => {
+                // Roll back simulation state atomically while preserving `self.audit_log`.
+                self.clock = saved_clock;
+                self.stage = saved_stage;
+                self.audio = saved_audio;
+                self.pending_initial_frame = saved_pending_initial_frame;
+                self.stage_dirty = saved_stage_dirty;
+                self.processed_action_log_len = saved_processed_action_log_len;
+                Err(err)
+            }
+        }
+    }
+
+    fn player_step_with_clock_inner(
+        &mut self,
+        raw_delta_ns: u64,
+        out_patches: &mut [PatchOp],
+        out_audio_pcm: Option<&mut [i16]>,
+    ) -> Result<PlayerTickSummary, PlayerHostError> {
         let step_res = advance_frame(&self.clock, raw_delta_ns)?;
         self.clock = step_res.state;
 
@@ -702,16 +730,16 @@ impl FlashPlayer {
         out_patches: &mut [PatchOp],
         out_audio_pcm: &mut [i16],
     ) -> Result<PlayerZeroAllocTick, PlayerHostError> {
+        // Compute all fallible steps before mutating `self.clock` or `self.stage`.
         let clock_step = advance_frame(&self.clock, raw_delta_ns)?;
-        self.clock = clock_step.state;
+        let patch_summary = diff_paint_scene_into(prev_scene, next_scene, out_patches)?;
+        let _expected_samples = self.audio.advance_frame_clock(raw_delta_ns)?;
 
+        self.clock = clock_step.state;
         for _ in 0..clock_step.steps_to_run {
             self.stage.root.clip_step_timeline();
         }
-
-        let _expected_samples = self.audio.advance_frame_clock(raw_delta_ns)?;
         let audio_samples_rendered = render_flash_audio_into(&mut self.audio, out_audio_pcm)?;
-        let patch_summary = diff_paint_scene_into(prev_scene, next_scene, out_patches)?;
 
         Ok(PlayerZeroAllocTick {
             clock_step,
@@ -784,64 +812,38 @@ impl FlashPlayer {
 
     fn execute_iir_module_bounded(&mut self, module: &IIRModule) -> Result<(), PlayerHostError> {
         let frame = self.stage.root.clip_current_frame();
-        if self.config.max_vm_steps_per_frame == MAX_HOST_VM_STEPS {
-            match self.avm_runner.runner_execute(module) {
-                Ok(_) => {}
-                Err(LifterError::ScriptTimeout) => {
-                    self.audit_log.log_record(
-                        frame,
-                        SecurityAuditKind::ScriptTimeout,
-                        "frame script exceeded MAX_HOST_VM_STEPS",
-                    );
-                    return Err(PlayerHostError::ScriptTimeout);
-                }
-                Err(LifterError::PrototypePollutionBlocked(msg)) => {
-                    self.audit_log.log_record(
-                        frame,
-                        SecurityAuditKind::PrototypePollutionBlocked,
-                        &msg,
-                    );
-                    return Err(PlayerHostError::Lifter(
-                        LifterError::PrototypePollutionBlocked(msg),
-                    ));
-                }
-                Err(other) => return Err(PlayerHostError::Lifter(other)),
+        let mut vm = VMCore::new();
+        vm.max_instructions = Some(self.config.max_vm_steps_per_frame as u64);
+        let env = self.avm_runner.runner_environment().clone();
+        register_avm_builtins_for_env(&mut vm, env);
+        let mut mod_clone = module.clone();
+        let entry = mod_clone
+            .entry_point
+            .clone()
+            .unwrap_or_else(|| "main".to_string());
+        if let Err(err) = vm.execute(&mut mod_clone, &entry, &[]) {
+            let msg = format!("{err:?}");
+            if msg.contains("execution step limit") {
+                self.audit_log.log_record(
+                    frame,
+                    SecurityAuditKind::ScriptTimeout,
+                    "frame script exceeded VM step budget",
+                );
+                return Err(PlayerHostError::ScriptTimeout);
             }
-            self.sync_runner_timeline_actions();
-        } else {
-            let mut vm = VMCore::new();
-            vm.max_instructions = Some(self.config.max_vm_steps_per_frame as u64);
-            let env = self.avm_runner.runner_environment().clone();
-            register_avm_builtins_for_env(&mut vm, env);
-            let mut mod_clone = module.clone();
-            let entry = mod_clone
-                .entry_point
-                .clone()
-                .unwrap_or_else(|| "main".to_string());
-            if let Err(err) = vm.execute(&mut mod_clone, &entry, &[]) {
-                let msg = format!("{err:?}");
-                if msg.contains("execution step limit") {
-                    self.audit_log.log_record(
-                        frame,
-                        SecurityAuditKind::ScriptTimeout,
-                        "frame script exceeded custom VM step budget",
-                    );
-                    return Err(PlayerHostError::ScriptTimeout);
-                }
-                if msg.contains("prototype pollution") {
-                    self.audit_log.log_record(
-                        frame,
-                        SecurityAuditKind::PrototypePollutionBlocked,
-                        &msg,
-                    );
-                    return Err(PlayerHostError::Lifter(
-                        LifterError::PrototypePollutionBlocked(msg),
-                    ));
-                }
-                return Err(PlayerHostError::Lifter(LifterError::ExecutionError(msg)));
+            if msg.contains("prototype pollution") {
+                self.audit_log.log_record(
+                    frame,
+                    SecurityAuditKind::PrototypePollutionBlocked,
+                    &msg,
+                );
+                return Err(PlayerHostError::Lifter(
+                    LifterError::PrototypePollutionBlocked(msg),
+                ));
             }
-            self.sync_runner_timeline_actions();
+            return Err(PlayerHostError::Lifter(LifterError::ExecutionError(msg)));
         }
+        self.sync_runner_timeline_actions();
 
         Ok(())
     }
@@ -1147,6 +1149,68 @@ fn register_avm_builtins_for_env(vm: &mut VMCore, env: AvmEnvironment) {
             .map_or_else(|| "Object".to_string(), format_vm_avm_value);
         let id = env_nobj.env_new_object(&ctor);
         Ok(Value::Int(id as i64))
+    });
+
+    let env_narr = env.clone();
+    builtins.register("flash_new_array", move |args| {
+        let id = env_narr.env_new_object("ArrayInstance");
+        for (idx, val) in args.iter().enumerate() {
+            let _ = env_narr.env_set_member(id, &idx.to_string(), val.clone());
+        }
+        Ok(Value::Int(id as i64))
+    });
+
+    let env_gprop = env.clone();
+    builtins.register("flash_get_property", move |args| {
+        if args.len() >= 2 {
+            let obj_id = args[0].as_i64().unwrap_or(0) as usize;
+            let prop = format_vm_avm_value(&args[1]);
+            let lower = prop.to_ascii_lowercase();
+            if lower == "__proto__" || lower == "prototype" || lower == "constructor" {
+                return Err(vm_core::VMError::Custom(
+                    LifterError::PrototypePollutionBlocked(format!(
+                        "attempted access of forbidden prototype property: {prop}"
+                    ))
+                    .to_string(),
+                ));
+            }
+            Ok(env_gprop.env_get_member(obj_id, &prop))
+        } else {
+            Ok(Value::Null)
+        }
+    });
+
+    let env_sprop = env.clone();
+    builtins.register("flash_set_property", move |args| {
+        if args.len() >= 3 {
+            let obj_id = args[0].as_i64().unwrap_or(0) as usize;
+            let prop = format_vm_avm_value(&args[1]);
+            let val = args[2].clone();
+            env_sprop
+                .env_set_member(obj_id, &prop, val)
+                .map_err(|e| vm_core::VMError::Custom(e.to_string()))?;
+        }
+        Ok(Value::Null)
+    });
+
+    let env_imeth = env.clone();
+    builtins.register("flash_invoke_method", move |args| {
+        if args.len() >= 2 {
+            let obj_id = args[0].as_i64().unwrap_or(0) as usize;
+            let prop = format_vm_avm_value(&args[1]);
+            let lower = prop.to_ascii_lowercase();
+            if lower == "__proto__" || lower == "prototype" || lower == "constructor" {
+                return Err(vm_core::VMError::Custom(
+                    LifterError::PrototypePollutionBlocked(format!(
+                        "attempted invocation of forbidden prototype property: {prop}"
+                    ))
+                    .to_string(),
+                ));
+            }
+            Ok(env_imeth.env_get_member(obj_id, &prop))
+        } else {
+            Ok(Value::Null)
+        }
     });
 
     let env_stop = env.clone();

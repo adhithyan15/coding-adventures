@@ -134,7 +134,12 @@ fn check_voice_allocation_zero_alloc(_ctx: &Ctx) -> Verdict {
 
     let res = harness.run_with_counter("voice_allocation_zero_alloc", &budget, &alloc, || {
         let idx = state
-            .allocate_voice(black_box(42), black_box(10), black_box(UNITY_GAIN_Q16), false)
+            .allocate_voice(
+                black_box(42),
+                black_box(10),
+                black_box(UNITY_GAIN_Q16),
+                false,
+            )
             .expect("allocate");
         state.slots[idx].active = false;
         black_box(idx);

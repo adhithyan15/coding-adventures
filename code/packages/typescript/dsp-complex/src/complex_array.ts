@@ -1,9 +1,12 @@
-import { Complex } from "./complex.js";
+import { Complex, smithComplexDiv } from "./complex.js";
 import { MAX_SAMPLES } from "./constants.js";
 import {
   InvalidInputError,
   LengthMismatchError,
   OddInterleavedLengthError,
+  readFiniteNumber,
+  safeFormatValue,
+  validateArrayLikeLength,
 } from "./errors.js";
 
 /**
@@ -18,12 +21,16 @@ export class ComplexArray {
   private readonly _data: Float64Array;
 
   constructor(interleaved?: Float64Array | ArrayLike<number>) {
-    if (!interleaved || interleaved.length === 0) {
+    if (interleaved === undefined) {
       this._data = new Float64Array(0);
       return;
     }
 
-    const rawLen = interleaved.length;
+    const rawLen = validateArrayLikeLength(interleaved, "interleaved");
+    if (rawLen === 0) {
+      this._data = new Float64Array(0);
+      return;
+    }
     if (rawLen % 2 !== 0) {
       throw new OddInterleavedLengthError(rawLen);
     }
@@ -36,18 +43,14 @@ export class ComplexArray {
 
     const buf = new Float64Array(rawLen);
     for (let i = 0; i < rawLen; i++) {
-      const val = Number(interleaved[i]);
-      if (!Number.isFinite(val)) {
-        throw new InvalidInputError("input contains non-finite float (NaN or Inf)");
-      }
-      buf[i] = val;
+      buf[i] = readFiniteNumber(interleaved, i);
     }
 
     this._data = buf;
   }
 
   static fromReal(real: Float64Array | ArrayLike<number>): ComplexArray {
-    const n = real.length;
+    const n = validateArrayLikeLength(real, "real");
     if (n > MAX_SAMPLES) {
       throw new InvalidInputError(
         `real length ${n} exceeds MAX_SAMPLES (${MAX_SAMPLES})`
@@ -56,11 +59,7 @@ export class ComplexArray {
 
     const buf = new Float64Array(2 * n);
     for (let i = 0; i < n; i++) {
-      const val = Number(real[i]);
-      if (!Number.isFinite(val)) {
-        throw new InvalidInputError("input contains non-finite float (NaN or Inf)");
-      }
-      buf[2 * i] = val;
+      buf[2 * i] = readFiniteNumber(real, i);
       buf[2 * i + 1] = 0.0;
     }
 
@@ -73,10 +72,12 @@ export class ComplexArray {
     real: Float64Array | ArrayLike<number>,
     imag: Float64Array | ArrayLike<number>
   ): ComplexArray {
-    if (real.length !== imag.length) {
-      throw new LengthMismatchError(real.length, imag.length);
+    const nReal = validateArrayLikeLength(real, "real");
+    const nImag = validateArrayLikeLength(imag, "imag");
+    if (nReal !== nImag) {
+      throw new LengthMismatchError(nReal, nImag);
     }
-    const n = real.length;
+    const n = nReal;
     if (n > MAX_SAMPLES) {
       throw new InvalidInputError(
         `array length ${n} exceeds MAX_SAMPLES (${MAX_SAMPLES})`
@@ -85,13 +86,8 @@ export class ComplexArray {
 
     const buf = new Float64Array(2 * n);
     for (let i = 0; i < n; i++) {
-      const r = Number(real[i]);
-      const im = Number(imag[i]);
-      if (!Number.isFinite(r) || !Number.isFinite(im)) {
-        throw new InvalidInputError("input contains non-finite float (NaN or Inf)");
-      }
-      buf[2 * i] = r;
-      buf[2 * i + 1] = im;
+      buf[2 * i] = readFiniteNumber(real, i);
+      buf[2 * i + 1] = readFiniteNumber(imag, i);
     }
 
     const arr = Object.create(ComplexArray.prototype) as ComplexArray;
@@ -104,7 +100,7 @@ export class ComplexArray {
   }
 
   static zeros(length: number): ComplexArray {
-    if (!Number.isFinite(length) || !Number.isInteger(length) || length < 0) {
+    if (typeof length !== "number" || !Number.isSafeInteger(length) || length < 0) {
       throw new InvalidInputError("length must be a non-negative integer");
     }
     if (length > MAX_SAMPLES) {
@@ -131,27 +127,41 @@ export class ComplexArray {
   }
 
   get(index: number): Complex {
+    if (typeof index !== "number" || !Number.isSafeInteger(index)) {
+      throw new RangeError("ComplexArray index out of range");
+    }
     const n = this.length;
     let idx = index;
     if (idx < 0) {
       idx += n;
     }
-    if (idx < 0 || idx >= n || !Number.isInteger(idx)) {
+    if (idx < 0 || idx >= n) {
       throw new RangeError("ComplexArray index out of range");
     }
     return new Complex(this._data[2 * idx], this._data[2 * idx + 1]);
   }
 
   set(index: number, val: Complex | { re: number; im: number }): void {
+    if (typeof index !== "number" || !Number.isSafeInteger(index)) {
+      throw new RangeError("ComplexArray index out of range");
+    }
     const n = this.length;
     let idx = index;
     if (idx < 0) {
       idx += n;
     }
-    if (idx < 0 || idx >= n || !Number.isInteger(idx)) {
+    if (idx < 0 || idx >= n) {
       throw new RangeError("ComplexArray index out of range");
     }
-    if (!Number.isFinite(val.re) || !Number.isFinite(val.im)) {
+    if (
+      val === null ||
+      val === undefined ||
+      typeof val !== "object" ||
+      typeof val.re !== "number" ||
+      typeof val.im !== "number" ||
+      !Number.isFinite(val.re) ||
+      !Number.isFinite(val.im)
+    ) {
       throw new InvalidInputError("Complex value components must be finite numbers");
     }
     this._data[2 * idx] = val.re;
@@ -207,13 +217,17 @@ export class ComplexArray {
   }
 
   scale(factor: number): ComplexArray {
-    if (!Number.isFinite(factor)) {
+    if (typeof factor !== "number" || !Number.isFinite(factor)) {
       throw new InvalidInputError("Scale factor must be a finite number");
     }
     const len = this._data.length;
     const out = new Float64Array(len);
     for (let i = 0; i < len; i++) {
-      out[i] = this._data[i] * factor;
+      const val = this._data[i] * factor;
+      if (!Number.isFinite(val)) {
+        throw new InvalidInputError("ComplexArray scale overflowed to non-finite result");
+      }
+      out[i] = val;
     }
     const arr = Object.create(ComplexArray.prototype) as ComplexArray;
     (arr as unknown as { _data: Float64Array })._data = out;
@@ -221,6 +235,9 @@ export class ComplexArray {
   }
 
   add(other: ComplexArray): ComplexArray {
+    if (!(other instanceof ComplexArray)) {
+      throw new InvalidInputError("Operand must be a ComplexArray");
+    }
     if (this.length !== other.length) {
       throw new LengthMismatchError(this.length, other.length);
     }
@@ -228,7 +245,11 @@ export class ComplexArray {
     const out = new Float64Array(len);
     const otherData = other._data;
     for (let i = 0; i < len; i++) {
-      out[i] = this._data[i] + otherData[i];
+      const val = this._data[i] + otherData[i];
+      if (!Number.isFinite(val)) {
+        throw new InvalidInputError("ComplexArray add overflowed to non-finite result");
+      }
+      out[i] = val;
     }
     const arr = Object.create(ComplexArray.prototype) as ComplexArray;
     (arr as unknown as { _data: Float64Array })._data = out;
@@ -236,6 +257,9 @@ export class ComplexArray {
   }
 
   sub(other: ComplexArray): ComplexArray {
+    if (!(other instanceof ComplexArray)) {
+      throw new InvalidInputError("Operand must be a ComplexArray");
+    }
     if (this.length !== other.length) {
       throw new LengthMismatchError(this.length, other.length);
     }
@@ -243,7 +267,11 @@ export class ComplexArray {
     const out = new Float64Array(len);
     const otherData = other._data;
     for (let i = 0; i < len; i++) {
-      out[i] = this._data[i] - otherData[i];
+      const val = this._data[i] - otherData[i];
+      if (!Number.isFinite(val)) {
+        throw new InvalidInputError("ComplexArray sub overflowed to non-finite result");
+      }
+      out[i] = val;
     }
     const arr = Object.create(ComplexArray.prototype) as ComplexArray;
     (arr as unknown as { _data: Float64Array })._data = out;
@@ -251,6 +279,9 @@ export class ComplexArray {
   }
 
   mul(other: ComplexArray): ComplexArray {
+    if (!(other instanceof ComplexArray)) {
+      throw new InvalidInputError("Operand must be a ComplexArray");
+    }
     if (this.length !== other.length) {
       throw new LengthMismatchError(this.length, other.length);
     }
@@ -263,8 +294,13 @@ export class ComplexArray {
       const ai = a[2 * i + 1];
       const br = b[2 * i];
       const bi = b[2 * i + 1];
-      out[2 * i] = ar * br - ai * bi;
-      out[2 * i + 1] = ar * bi + ai * br;
+      const re = ar * br - ai * bi;
+      const im = ar * bi + ai * br;
+      if (!Number.isFinite(re) || !Number.isFinite(im)) {
+        throw new InvalidInputError("ComplexArray mul overflowed to non-finite result");
+      }
+      out[2 * i] = re;
+      out[2 * i + 1] = im;
     }
     const arr = Object.create(ComplexArray.prototype) as ComplexArray;
     (arr as unknown as { _data: Float64Array })._data = out;
@@ -272,6 +308,9 @@ export class ComplexArray {
   }
 
   div(other: ComplexArray): ComplexArray {
+    if (!(other instanceof ComplexArray)) {
+      throw new InvalidInputError("Operand must be a ComplexArray");
+    }
     if (this.length !== other.length) {
       throw new LengthMismatchError(this.length, other.length);
     }
@@ -280,16 +319,14 @@ export class ComplexArray {
     const a = this._data;
     const b = other._data;
     for (let i = 0; i < n; i++) {
-      const ar = a[2 * i];
-      const ai = a[2 * i + 1];
-      const br = b[2 * i];
-      const bi = b[2 * i + 1];
-      const denom = br * br + bi * bi;
-      if (denom === 0) {
-        throw new InvalidInputError("Division by zero in complex array element");
-      }
-      out[2 * i] = (ar * br + ai * bi) / denom;
-      out[2 * i + 1] = (ai * br - ar * bi) / denom;
+      const [re, im] = smithComplexDiv(
+        a[2 * i],
+        a[2 * i + 1],
+        b[2 * i],
+        b[2 * i + 1]
+      );
+      out[2 * i] = re;
+      out[2 * i + 1] = im;
     }
     const arr = Object.create(ComplexArray.prototype) as ComplexArray;
     (arr as unknown as { _data: Float64Array })._data = out;
@@ -317,10 +354,12 @@ export class ComplexArray {
   }
 
   equals(other: ComplexArray, eps: number = 1e-12): boolean {
-    if (!Number.isFinite(eps) || eps < 0) {
-      throw new InvalidInputError(`eps must be a non-negative finite number; got ${eps}`);
+    if (typeof eps !== "number" || !Number.isFinite(eps) || eps < 0) {
+      throw new InvalidInputError(
+        `eps must be a non-negative finite number; got ${safeFormatValue(eps)}`
+      );
     }
-    if (this.length !== other.length) {
+    if (!(other instanceof ComplexArray) || this.length !== other.length) {
       return false;
     }
     const len = this._data.length;

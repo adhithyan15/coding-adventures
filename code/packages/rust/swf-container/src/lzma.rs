@@ -213,6 +213,25 @@ impl LenCoder {
     }
 }
 
+#[inline]
+fn check_lzma_limits(
+    output_len: usize,
+    bytes_consumed: usize,
+    max_uncompressed_bytes: usize,
+    max_ratio: f64,
+) -> Result<(), SwfError> {
+    if output_len > max_uncompressed_bytes {
+        return Err(SwfError::OutputLimitExceeded);
+    }
+    if output_len > 1_048_576 {
+        let bytes_in = bytes_consumed.max(1);
+        if output_len as f64 / bytes_in as f64 > max_ratio {
+            return Err(SwfError::DecompressionBombDetected);
+        }
+    }
+    Ok(())
+}
+
 /// Decompresses an LZMA stream bounded by output caps and expansion ratio check.
 pub fn lzma_decompress_bounded(
     data: &[u8],
@@ -223,6 +242,13 @@ pub fn lzma_decompress_bounded(
 ) -> Result<Vec<u8>, SwfError> {
     if expected_len > max_uncompressed_bytes {
         return Err(SwfError::OutputLimitExceeded);
+    }
+    if config.lc > 8
+        || config.lp > 4
+        || config.pb > 4
+        || (config.lc as usize) + (config.lp as usize) > 12
+    {
+        return Err(SwfError::CorruptedData);
     }
 
     let mut range = RangeDecoder::new_range_decoder(data)?;
@@ -297,6 +323,12 @@ pub fn lzma_decompress_bounded(
             };
 
             output.push(lit);
+            check_lzma_limits(
+                output.len(),
+                range.bytes_consumed(),
+                max_uncompressed_bytes,
+                max_ratio,
+            )?;
             state = if state < 4 {
                 0
             } else if state < 10 {
@@ -313,15 +345,18 @@ pub fn lzma_decompress_bounded(
                     let rep0_long_idx = (state << 4) + pos_state;
                     if range.decode_bit(&mut is_rep0_long[rep0_long_idx])? == 0 {
                         state = if state < 7 { 9 } else { 11 };
-                        let b = *output
-                            .get(
-                                output
-                                    .len()
-                                    .checked_sub(1 + rep0)
-                                    .ok_or(SwfError::CorruptedData)?,
-                            )
+                        let idx = rep0
+                            .checked_add(1)
+                            .and_then(|d| output.len().checked_sub(d))
                             .ok_or(SwfError::CorruptedData)?;
+                        let b = *output.get(idx).ok_or(SwfError::CorruptedData)?;
                         output.push(b);
+                        check_lzma_limits(
+                            output.len(),
+                            range.bytes_consumed(),
+                            max_uncompressed_bytes,
+                            max_ratio,
+                        )?;
                         continue;
                     }
                 } else {
@@ -391,19 +426,22 @@ pub fn lzma_decompress_bounded(
                 let idx = output.len() - 1 - rep0;
                 let b = output[idx];
                 output.push(b);
+                check_lzma_limits(
+                    output.len(),
+                    range.bytes_consumed(),
+                    max_uncompressed_bytes,
+                    max_ratio,
+                )?;
             }
         }
 
         // Bomb defenses check
-        if output.len() > max_uncompressed_bytes {
-            return Err(SwfError::OutputLimitExceeded);
-        }
-        if output.len() > 1_048_576 {
-            let bytes_in = range.bytes_consumed().max(1);
-            if output.len() as f64 / bytes_in as f64 > max_ratio {
-                return Err(SwfError::DecompressionBombDetected);
-            }
-        }
+        check_lzma_limits(
+            output.len(),
+            range.bytes_consumed(),
+            max_uncompressed_bytes,
+            max_ratio,
+        )?;
     }
 
     Ok(output)

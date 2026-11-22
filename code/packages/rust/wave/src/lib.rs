@@ -60,6 +60,18 @@
 // We derive Debug (for printing), Clone (for copying), and PartialEq (for
 // comparison in tests).
 
+// VER15 Hardening:
+//   - `#![forbid(unsafe_code)]`: pure safe Rust, zero FFI.
+//   - CWE-20 (Improper Input Validation): non-finite parameters (`NaN`, `±Inf`),
+//     negative amplitude, non-positive frequency, angular-frequency overflow,
+//     and non-finite evaluation time are rejected fail-closed.
+//   - CWE-190 / CWE-400 / CWE-674: period/phase reduction before trig calls,
+//     amplitude-bounded clamping, O(1) strictly non-recursive evaluation, and
+//     non-panicking `try_*` entrypoints alongside panicking compatibility methods.
+
+#![forbid(unsafe_code)]
+#![warn(rust_2018_idioms)]
+
 /// A sinusoidal wave defined by amplitude, frequency, and phase.
 ///
 /// # Example
@@ -146,14 +158,17 @@ impl Wave {
             return Err("frequency must be positive");
         }
 
-        if frequency > f64::MAX / (2.0 * trig::PI) {
+        if frequency > f64::MAX / (2.0 * trig::PI) || !(2.0 * trig::PI * frequency).is_finite() {
             return Err("angular frequency must be finite");
         }
 
+        let norm_amp = if amplitude == 0.0 { 0.0 } else { amplitude };
+        let norm_phase = if phase == 0.0 { 0.0 } else { phase };
+
         Ok(Wave {
-            amplitude,
+            amplitude: norm_amp,
             frequency,
-            phase,
+            phase: norm_phase,
         })
     }
 
@@ -172,6 +187,13 @@ impl Wave {
     //   - Frequency: "how many cycles fit in one second?"
     //   - Period:    "how long does one cycle take?"
 
+    /// Checked version of [`Wave::period`] that returns `Err` instead of
+    /// panicking if public fields were mutated into an invalid state.
+    pub fn try_period(&self) -> Result<f64, &'static str> {
+        self.validate()?;
+        Ok(1.0 / self.frequency)
+    }
+
     /// The duration of one complete cycle, in seconds.
     ///
     /// # Formula
@@ -187,8 +209,7 @@ impl Wave {
     /// assert!((w.period() - 0.25).abs() < 1e-10);
     /// ```
     pub fn period(&self) -> f64 {
-        self.validate().expect("invalid wave state");
-        1.0 / self.frequency
+        self.try_period().expect("invalid wave state")
     }
 
     // ------------------------------------------------------------------------
@@ -203,6 +224,17 @@ impl Wave {
     // This is the coefficient of `t` inside the sine function.  When we
     // write sin(omega * t + phi), at t = T (one period), omega * T = 2*pi,
     // so sin wraps around exactly once.  That's the whole point.
+
+    /// Checked version of [`Wave::angular_frequency`] that returns `Err`
+    /// instead of panicking on invalid wave state or overflow.
+    pub fn try_angular_frequency(&self) -> Result<f64, &'static str> {
+        self.validate()?;
+        let omega = 2.0 * trig::PI * self.frequency;
+        if !omega.is_finite() {
+            return Err("angular frequency must be finite");
+        }
+        Ok(omega)
+    }
 
     /// The angular frequency in radians per second.
     ///
@@ -220,8 +252,7 @@ impl Wave {
     /// assert!((w.angular_frequency() - 2.0 * PI).abs() < 1e-10);
     /// ```
     pub fn angular_frequency(&self) -> f64 {
-        self.validate().expect("invalid wave state");
-        2.0 * trig::PI * self.frequency
+        self.try_angular_frequency().expect("invalid wave state")
     }
 
     // ------------------------------------------------------------------------
@@ -242,6 +273,32 @@ impl Wave {
     //   At t=0.5:   y = 3 * sin(2*pi)     = 0     (full cycle, back to start)
     //
     // The wave completes 2 full cycles every second (f=2), with peaks at ±3.
+
+    /// Non-panicking version of [`Wave::evaluate`].
+    ///
+    /// Validates wave state and `t.is_finite()` before performing period/phase
+    /// reduction and unit-clamped trigonometric evaluation.
+    pub fn try_evaluate(&self, t: f64) -> Result<f64, &'static str> {
+        self.validate()?;
+        if !t.is_finite() {
+            return Err("time must be finite");
+        }
+        if self.amplitude == 0.0 {
+            return Ok(0.0);
+        }
+
+        let two_pi = 2.0 * trig::PI;
+        let period = 1.0 / self.frequency;
+        let reduced_time = if period.is_infinite() { t } else { t % period };
+        let reduced_phase = self.phase % two_pi;
+        let theta = two_pi * (self.frequency * reduced_time) + reduced_phase;
+        let unit = trig::sin(theta).clamp(-1.0, 1.0);
+        let value = self.amplitude * unit;
+        if !value.is_finite() {
+            return Err("evaluated wave value must be finite");
+        }
+        Ok(if value == 0.0 { 0.0 } else { value })
+    }
 
     /// Evaluate the wave at time `t` (in seconds).
     ///
@@ -264,27 +321,17 @@ impl Wave {
     /// assert!((w.evaluate(0.25) - 1.0).abs() < 1e-10);
     /// ```
     pub fn evaluate(&self, t: f64) -> f64 {
-        self.validate().expect("invalid wave state");
-        assert!(t.is_finite(), "time must be finite");
-        if self.amplitude == 0.0 {
-            return 0.0;
-        }
-
-        let two_pi = 2.0 * trig::PI;
-        let period = 1.0 / self.frequency;
-        let reduced_time = if period.is_infinite() { t } else { t % period };
-        let reduced_phase = self.phase % two_pi;
-        let theta = two_pi * (self.frequency * reduced_time) + reduced_phase;
-        let unit = trig::sin(theta).clamp(-1.0, 1.0);
-        self.amplitude * unit
+        self.try_evaluate(t).expect("time must be finite")
     }
 
-    fn validate(&self) -> Result<(), &'static str> {
+    /// Validate that the wave's parameters satisfy all PHY01 constraints.
+    pub fn validate(&self) -> Result<(), &'static str> {
         if !self.amplitude.is_finite()
             || self.amplitude < 0.0
             || !self.frequency.is_finite()
             || self.frequency <= 0.0
             || self.frequency > f64::MAX / (2.0 * trig::PI)
+            || !(2.0 * trig::PI * self.frequency).is_finite()
             || !self.phase.is_finite()
         {
             return Err("invalid wave state");

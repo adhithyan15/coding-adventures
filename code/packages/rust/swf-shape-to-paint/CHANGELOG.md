@@ -5,6 +5,12 @@ All notable changes to `swf-shape-to-paint` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+- Enforced cumulative `MAX_STYLES` check (`existing_count.saturating_add(count) <= MAX_STYLES`) across repeated `state_new_styles` records in `read_style_count`, and used `checked_add` for style offset indexing (CWE-400).
+- Added `tests/hostile_inputs.rs` (`#![forbid(unsafe_code)]`) covering cumulative style-change bombs, `i32::MIN`/`MAX` twips overflow, truncated/corrupt `DefineShape` 1–4 payloads, and a 1,000-case fuzz campaign.
+
 ## [0.1.0] - 2026-11-16
 
 ### Added

@@ -301,7 +301,7 @@ impl AvmRunner {
         });
 
         builtins.register("flash_negate", |args| match args.first() {
-            Some(Value::Int(n)) => Ok(Value::Int(-*n)),
+            Some(Value::Int(n)) => Ok(Value::Int(n.wrapping_neg())),
             Some(Value::Float(f)) => Ok(Value::Float(-*f)),
             _ => Ok(Value::Int(0)),
         });

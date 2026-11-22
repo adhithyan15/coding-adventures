@@ -109,6 +109,9 @@ pub const UNITY_GAIN_Q16: u32 = 65_536;
 /// Maximum voice volume gain in Q16.16 ($4.0\times$ gain = 262,144).
 pub const MAX_GAIN_Q16: u32 = 262_144;
 
+/// Maximum allowable samples when exporting a patch to an owned `PcmAudio` container (CWE-400 guard).
+pub const MAX_EXPORT_SAMPLES: u32 = 8_388_608;
+
 /// Default non-zero seed for 15-bit LFSR pseudo-random noise generator.
 pub const DEFAULT_LFSR_SEED: u16 = 0x7FFF;
 
@@ -707,8 +710,18 @@ impl SfxVoice {
         ring: &mut audio_mixer_realtime::PcmRingBuffer<CAP>,
         scratch: &mut [i16],
     ) -> Result<usize, SfxError> {
+        validate_sample_rate(self.sample_rate_hz)?;
         if scratch.is_empty() {
             return Ok(0);
+        }
+        let available = CAP.saturating_sub(ring.len());
+        let to_render = if self.active {
+            (self.total_samples.saturating_sub(self.current_sample) as usize).min(scratch.len())
+        } else {
+            0
+        };
+        if to_render > available {
+            return Err(SfxError::MixerIntegrationError);
         }
         let rendered = render_sfx_into(self, scratch)?;
         if rendered > 0 {
@@ -805,8 +818,17 @@ impl<const N: usize> SfxBank<N> {
         ring: &mut audio_mixer_realtime::PcmRingBuffer<CAP>,
         scratch: &mut [i16],
     ) -> Result<usize, SfxError> {
+        validate_sample_rate(self.sample_rate_hz)?;
+        for voice in &self.voices {
+            if voice.active {
+                validate_sample_rate(voice.sample_rate_hz)?;
+            }
+        }
         if scratch.is_empty() {
             return Ok(0);
+        }
+        if scratch.len() > CAP.saturating_sub(ring.len()) {
+            return Err(SfxError::MixerIntegrationError);
         }
         let rendered = mix_bank_into(self, scratch)?;
         if rendered > 0 {
@@ -848,8 +870,7 @@ pub fn render_sfx_into(voice: &mut SfxVoice, out: &mut [i16]) -> Result<usize, S
             && voice.patch.start_freq_hz != voice.patch.end_freq_hz
         {
             if voice.current_sample < voice.patch.freq_sweep_samples {
-                let delta =
-                    (voice.patch.end_freq_hz as i64) - (voice.patch.start_freq_hz as i64);
+                let delta = (voice.patch.end_freq_hz as i64) - (voice.patch.start_freq_hz as i64);
                 let current_f = (voice.patch.start_freq_hz as i64)
                     + (delta * (voice.current_sample as i64))
                         / (voice.patch.freq_sweep_samples as i64);
@@ -909,7 +930,9 @@ pub fn render_sfx_into(voice: &mut SfxVoice, out: &mut [i16]) -> Result<usize, S
 
         // Compute ADSR envelope level
         let env_level = if voice.released_at_sample != u32::MAX {
-            let elapsed = voice.current_sample.saturating_sub(voice.released_at_sample);
+            let elapsed = voice
+                .current_sample
+                .saturating_sub(voice.released_at_sample);
             voice
                 .patch
                 .envelope
@@ -941,6 +964,12 @@ pub fn mix_bank_into<const N: usize>(
     bank: &mut SfxBank<N>,
     out: &mut [i16],
 ) -> Result<usize, SfxError> {
+    validate_sample_rate(bank.sample_rate_hz)?;
+    for voice in &bank.voices {
+        if voice.active {
+            validate_sample_rate(voice.sample_rate_hz)?;
+        }
+    }
     if out.is_empty() {
         return Ok(0);
     }
@@ -962,7 +991,7 @@ pub fn mix_bank_into<const N: usize>(
 
         // Apply bank master gain in Q16.16 using i128 to prevent overflow (CWE-190 guard)
         let master_scaled = ((acc as i128) * (bank.master_gain_q16 as i128)) >> 16;
-        *out_sample = clamp_sample(master_scaled as i64);
+        *out_sample = master_scaled.clamp(PCM16_MIN as i128, PCM16_MAX as i128) as i16;
     }
 
     Ok(out.len())
@@ -1049,22 +1078,27 @@ pub fn export_sfx_to_pcm_audio(
     sample_rate_hz: u32,
 ) -> Result<pcm_audio::PcmAudio, SfxError> {
     validate_sample_rate(sample_rate_hz)?;
-    let total_samples = patch.patch_total_samples() as usize;
+    let raw_total = patch.patch_total_samples();
+    if raw_total > MAX_EXPORT_SAMPLES {
+        return Err(SfxError::InvalidParameter {
+            reason: "patch duration exceeds maximum export sample limit",
+        });
+    }
+    let total_samples = raw_total as usize;
     let mut voice = SfxVoice::new(sample_rate_hz)?;
     voice.trigger_patch(*patch)?;
 
     let mut buffer = vec![0i16; total_samples];
     render_sfx_into(&mut voice, &mut buffer)?;
 
-    let format = pcm_audio::PcmFormat::mono_16bit(sample_rate_hz as f64)
-        .map_err(|_| SfxError::InvalidParameter {
-            reason: "invalid pcm format",
-        })?;
-
-    pcm_audio::PcmAudio::from_i16(buffer, format, 0.0).map_err(|_| {
+    let format = pcm_audio::PcmFormat::mono_16bit(sample_rate_hz as f64).map_err(|_| {
         SfxError::InvalidParameter {
-            reason: "failed to construct pcm container",
+            reason: "invalid pcm format",
         }
+    })?;
+
+    pcm_audio::PcmAudio::from_i16(buffer, format, 0.0).map_err(|_| SfxError::InvalidParameter {
+        reason: "failed to construct pcm container",
     })
 }
 

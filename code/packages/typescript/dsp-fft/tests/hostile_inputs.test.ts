@@ -5,6 +5,7 @@ import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 import { ComplexArray } from "@coding-adventures/dsp-complex";
 import {
+  besselI0,
   buildChirp,
   buildWindow,
   fft,
@@ -14,6 +15,7 @@ import {
   InvalidInputError,
   irfft,
   irfftScalar,
+  kaiser,
   MAX_FFT_LEN,
   MAX_SAMPLES,
   requirePow2Length,
@@ -149,5 +151,58 @@ describe("Hostile inputs & VER15 Security Hardening", () => {
     assert.throws(() => requirePow2Length(1.5), InvalidInputError);
     assert.throws(() => requirePow2Length(0), InvalidInputError);
     assert.throws(() => requirePow2Length(-4), InvalidInputError);
+  });
+
+  it("VER15: rejects > MAX_SAFE_INTEGER (1e100), 32-bit wrap (2^32+1), Symbol, Object.create(null), and DataView cleanly", () => {
+    // Number.isSafeInteger & 32-bit bitwise truncation guards
+    assert.throws(() => requirePow2Length(1e100), InvalidInputError);
+    assert.throws(() => requirePow2Length(Number.MAX_SAFE_INTEGER + 1), InvalidInputError);
+    assert.throws(() => requirePow2Length(4294967297), InvalidInputError); // 2^32 + 1
+    assert.throws(() => buildChirp(1e100, 1), InvalidInputError);
+    assert.throws(() => buildWindow("hann", 1e100), InvalidInputError);
+    assert.throws(() => irfftScalar([1, 0, 2, 0], 1e100), InvalidInputError);
+    assert.throws(() => fft({ length: -2 }, { complex: true }), InvalidInputError);
+    assert.throws(() => fft({ length: 1.5 }), InvalidInputError);
+    assert.throws(() => rfftScalar({ length: -1 }), InvalidInputError);
+
+    // Symbol, Object.create(null), throwing toString
+    const sym = Symbol("hostile");
+    const nullProto = Object.create(null);
+    const throwingObj = {
+      toString() {
+        throw new Error("boom");
+      },
+    };
+    for (const hostile of [sym, nullProto, throwingObj]) {
+      assert.throws(() => requirePow2Length(hostile as number), InvalidInputError);
+      assert.throws(() => fft([hostile as number, 0]), InvalidInputError);
+      assert.throws(() => fft([hostile as number, 0], { complex: true }), InvalidInputError);
+      assert.throws(() => fftScalar([hostile as number, 0]), InvalidInputError);
+      assert.throws(() => rfftScalar([hostile as number]), InvalidInputError);
+      assert.throws(() => irfftScalar([hostile as number, 0, 0, 0], 2), InvalidInputError);
+      assert.throws(() => fft({ length: hostile as number }), InvalidInputError);
+    }
+
+    // Null / invalid ComplexArray for ifft
+    assert.throws(() => ifft(null as unknown as ComplexArray), InvalidInputError);
+
+    // ArrayBuffer.isView: DataView, BigInt64Array, oversized typed array pre-flight check
+    const dv = new DataView(new ArrayBuffer(16));
+    assert.throws(() => fft(dv as unknown as Float64Array), InvalidInputError);
+    assert.throws(() => fft(dv as unknown as Float64Array, { complex: true }), InvalidInputError);
+    assert.throws(() => fftScalar(dv as unknown as Float64Array), InvalidInputError);
+    assert.throws(() => rfftScalar(dv as unknown as Float64Array), InvalidInputError);
+    assert.throws(() => irfftScalar(dv as unknown as Float64Array, 2), InvalidInputError);
+
+    const bi = new BigInt64Array([1n, 2n]);
+    assert.throws(() => fft(bi as unknown as Float64Array), InvalidInputError);
+    const oversized = new Uint8Array(MAX_FFT_LEN + 1);
+    assert.throws(() => rfftScalar(oversized as unknown as Float64Array), InvalidInputError);
+
+    // CWE-1321: prototype pollution resistance
+    const opts = JSON.parse('{"complex":false,"__proto__":{"pollutedFftOpt":true}}');
+    const out = fft([1, 0, 0, 0], opts);
+    assert.equal(out.length, 4);
+    assert.equal(({} as { pollutedFftOpt?: boolean }).pollutedFftOpt, undefined);
   });
 });

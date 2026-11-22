@@ -81,4 +81,12 @@ describe("WD-100b: reserved names and ASCII-only folding", () => {
     expect(relativeInside("D:\\\u212a", "D:\\k\\x", win32)).toBeNull();
     expect(relativeInside("/\u212a", "/k/x", posix)).toBeNull();
   });
+
+  it("handles many trailing spaces before a dot in linear time without stripping tabs", () => {
+    const start = performance.now();
+    expect(refusedComponent("CON" + " ".repeat(50_000) + ".txt")).toBe(true);
+    expect(refusedComponent("console" + " ".repeat(50_000) + ".txt")).toBe(false);
+    expect(refusedComponent("CON\t.txt")).toBe(false);
+    expect(performance.now() - start).toBeLessThan(1000);
+  });
 });

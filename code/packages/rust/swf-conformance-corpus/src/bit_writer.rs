@@ -64,14 +64,22 @@ impl SwfBitWriter {
         if bits == 0 {
             return Ok(());
         }
+        // Pre-validate byte capacity (including eventual byte alignment) before mutating `self`.
+        let total_bits = usize::from(self.used_bits) + usize::from(bits);
+        let needed_bytes = total_bits.div_ceil(8);
+        if self
+            .bytes
+            .len()
+            .checked_add(needed_bytes)
+            .is_none_or(|t| t > MAX_CORPUS_SWF_BYTES)
+        {
+            return Err(CorpusError::SwfSizeExceeded);
+        }
         for shift in (0..bits).rev() {
             let bit = ((value >> shift) & 1) as u8;
             self.cur_byte = (self.cur_byte << 1) | bit;
             self.used_bits += 1;
             if self.used_bits == 8 {
-                if self.bytes.len() >= MAX_CORPUS_SWF_BYTES {
-                    return Err(CorpusError::SwfSizeExceeded);
-                }
                 self.bytes.push(self.cur_byte);
                 self.cur_byte = 0;
                 self.used_bits = 0;
@@ -142,6 +150,24 @@ impl SwfBitWriter {
         Ok(())
     }
 
+    fn with_atomic_rollback<F>(&mut self, op: F) -> Result<(), CorpusError>
+    where
+        F: FnOnce(&mut Self) -> Result<(), CorpusError>,
+    {
+        let orig_len = self.bytes.len();
+        let orig_cur = self.cur_byte;
+        let orig_used = self.used_bits;
+        match op(self) {
+            Ok(()) => Ok(()),
+            Err(err) => {
+                self.bytes.truncate(orig_len);
+                self.cur_byte = orig_cur;
+                self.used_bits = orig_used;
+                Err(err)
+            }
+        }
+    }
+
     /// Writes an SWF bit-packed `RECT` in twips and byte-aligns.
     pub fn bit_writer_write_rect(
         &mut self,
@@ -151,12 +177,14 @@ impl SwfBitWriter {
         ymax: i32,
     ) -> Result<(), CorpusError> {
         let nbits = min_signed_bit_width(&[xmin, xmax, ymin, ymax])?;
-        self.bit_writer_write_ub(nbits as u32, 5)?;
-        self.bit_writer_write_sb(xmin, nbits)?;
-        self.bit_writer_write_sb(xmax, nbits)?;
-        self.bit_writer_write_sb(ymin, nbits)?;
-        self.bit_writer_write_sb(ymax, nbits)?;
-        self.bit_writer_align()
+        self.with_atomic_rollback(|w| {
+            w.bit_writer_write_ub(nbits as u32, 5)?;
+            w.bit_writer_write_sb(xmin, nbits)?;
+            w.bit_writer_write_sb(xmax, nbits)?;
+            w.bit_writer_write_sb(ymin, nbits)?;
+            w.bit_writer_write_sb(ymax, nbits)?;
+            w.bit_writer_align()
+        })
     }
 
     /// Writes an SWF bit-packed `MATRIX` record and byte-aligns.
@@ -168,55 +196,57 @@ impl SwfBitWriter {
         {
             return Err(CorpusError::IntegerOverflow);
         }
-        let has_scale = (m.scale_x - 1.0).abs() > 1e-6 || (m.scale_y - 1.0).abs() > 1e-6;
-        self.bit_writer_write_ub(u32::from(has_scale), 1)?;
-        if has_scale {
-            let sx = (m.scale_x * 65536.0).round();
-            let sy = (m.scale_y * 65536.0).round();
-            if !sx.is_finite()
-                || !sy.is_finite()
-                || sx < i32::MIN as f64
-                || sx > i32::MAX as f64
-                || sy < i32::MIN as f64
-                || sy > i32::MAX as f64
-            {
-                return Err(CorpusError::IntegerOverflow);
+        self.with_atomic_rollback(|w| {
+            let has_scale = (m.scale_x - 1.0).abs() > 1e-6 || (m.scale_y - 1.0).abs() > 1e-6;
+            w.bit_writer_write_ub(u32::from(has_scale), 1)?;
+            if has_scale {
+                let sx = (m.scale_x * 65536.0).round();
+                let sy = (m.scale_y * 65536.0).round();
+                if !sx.is_finite()
+                    || !sy.is_finite()
+                    || sx < i32::MIN as f64
+                    || sx > i32::MAX as f64
+                    || sy < i32::MIN as f64
+                    || sy > i32::MAX as f64
+                {
+                    return Err(CorpusError::IntegerOverflow);
+                }
+                let sx_i = sx as i32;
+                let sy_i = sy as i32;
+                let nbits = min_signed_bit_width(&[sx_i, sy_i])?;
+                w.bit_writer_write_ub(nbits as u32, 5)?;
+                w.bit_writer_write_sb(sx_i, nbits)?;
+                w.bit_writer_write_sb(sy_i, nbits)?;
             }
-            let sx_i = sx as i32;
-            let sy_i = sy as i32;
-            let nbits = min_signed_bit_width(&[sx_i, sy_i])?;
-            self.bit_writer_write_ub(nbits as u32, 5)?;
-            self.bit_writer_write_sb(sx_i, nbits)?;
-            self.bit_writer_write_sb(sy_i, nbits)?;
-        }
 
-        let has_rotate = m.rotate_skew_0.abs() > 1e-6 || m.rotate_skew_1.abs() > 1e-6;
-        self.bit_writer_write_ub(u32::from(has_rotate), 1)?;
-        if has_rotate {
-            let r0 = (m.rotate_skew_0 * 65536.0).round();
-            let r1 = (m.rotate_skew_1 * 65536.0).round();
-            if !r0.is_finite()
-                || !r1.is_finite()
-                || r0 < i32::MIN as f64
-                || r0 > i32::MAX as f64
-                || r1 < i32::MIN as f64
-                || r1 > i32::MAX as f64
-            {
-                return Err(CorpusError::IntegerOverflow);
+            let has_rotate = m.rotate_skew_0.abs() > 1e-6 || m.rotate_skew_1.abs() > 1e-6;
+            w.bit_writer_write_ub(u32::from(has_rotate), 1)?;
+            if has_rotate {
+                let r0 = (m.rotate_skew_0 * 65536.0).round();
+                let r1 = (m.rotate_skew_1 * 65536.0).round();
+                if !r0.is_finite()
+                    || !r1.is_finite()
+                    || r0 < i32::MIN as f64
+                    || r0 > i32::MAX as f64
+                    || r1 < i32::MIN as f64
+                    || r1 > i32::MAX as f64
+                {
+                    return Err(CorpusError::IntegerOverflow);
+                }
+                let r0_i = r0 as i32;
+                let r1_i = r1 as i32;
+                let nbits = min_signed_bit_width(&[r0_i, r1_i])?;
+                w.bit_writer_write_ub(nbits as u32, 5)?;
+                w.bit_writer_write_sb(r0_i, nbits)?;
+                w.bit_writer_write_sb(r1_i, nbits)?;
             }
-            let r0_i = r0 as i32;
-            let r1_i = r1 as i32;
-            let nbits = min_signed_bit_width(&[r0_i, r1_i])?;
-            self.bit_writer_write_ub(nbits as u32, 5)?;
-            self.bit_writer_write_sb(r0_i, nbits)?;
-            self.bit_writer_write_sb(r1_i, nbits)?;
-        }
 
-        let n_translate = min_signed_bit_width(&[m.translate_x, m.translate_y])?;
-        self.bit_writer_write_ub(n_translate as u32, 5)?;
-        self.bit_writer_write_sb(m.translate_x, n_translate)?;
-        self.bit_writer_write_sb(m.translate_y, n_translate)?;
-        self.bit_writer_align()
+            let n_translate = min_signed_bit_width(&[m.translate_x, m.translate_y])?;
+            w.bit_writer_write_ub(n_translate as u32, 5)?;
+            w.bit_writer_write_sb(m.translate_x, n_translate)?;
+            w.bit_writer_write_sb(m.translate_y, n_translate)?;
+            w.bit_writer_align()
+        })
     }
 
     /// Writes an SWF bit-packed `CXFORMWITHALPHA` record and byte-aligns.
@@ -242,22 +272,24 @@ impl SwfBitWriter {
             }
             b
         };
-        self.bit_writer_write_ub(u32::from(has_add), 1)?;
-        self.bit_writer_write_ub(u32::from(has_mult), 1)?;
-        self.bit_writer_write_ub(nbits as u32, 4)?;
-        if has_mult {
-            self.bit_writer_write_sb(cx.r_mult, nbits)?;
-            self.bit_writer_write_sb(cx.g_mult, nbits)?;
-            self.bit_writer_write_sb(cx.b_mult, nbits)?;
-            self.bit_writer_write_sb(cx.a_mult, nbits)?;
-        }
-        if has_add {
-            self.bit_writer_write_sb(cx.r_add, nbits)?;
-            self.bit_writer_write_sb(cx.g_add, nbits)?;
-            self.bit_writer_write_sb(cx.b_add, nbits)?;
-            self.bit_writer_write_sb(cx.a_add, nbits)?;
-        }
-        self.bit_writer_align()
+        self.with_atomic_rollback(|w| {
+            w.bit_writer_write_ub(u32::from(has_add), 1)?;
+            w.bit_writer_write_ub(u32::from(has_mult), 1)?;
+            w.bit_writer_write_ub(nbits as u32, 4)?;
+            if has_mult {
+                w.bit_writer_write_sb(cx.r_mult, nbits)?;
+                w.bit_writer_write_sb(cx.g_mult, nbits)?;
+                w.bit_writer_write_sb(cx.b_mult, nbits)?;
+                w.bit_writer_write_sb(cx.a_mult, nbits)?;
+            }
+            if has_add {
+                w.bit_writer_write_sb(cx.r_add, nbits)?;
+                w.bit_writer_write_sb(cx.g_add, nbits)?;
+                w.bit_writer_write_sb(cx.b_add, nbits)?;
+                w.bit_writer_write_sb(cx.a_add, nbits)?;
+            }
+            w.bit_writer_align()
+        })
     }
 
     /// Returns the total byte length if padded to the next byte boundary.

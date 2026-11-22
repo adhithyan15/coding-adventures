@@ -1,10 +1,16 @@
 import { bluesteinScalar, Direction, fftScalar, ifftScalar } from "@coding-adventures/dsp-fft";
 import { MAX_DCT_LEN, MAX_SAMPLES } from "./constants.js";
-import { EmptyInputError, InvalidInputError } from "./errors.js";
+import {
+  EmptyInputError,
+  InvalidInputError,
+  readFiniteNumber,
+  safeFormatValue,
+  validateArrayLikeLength,
+} from "./errors.js";
 import { DctNorm, DctType, parseNorm, parseType } from "./types.js";
 
 export function validateSignal(signal: Float64Array | ArrayLike<number>): number {
-  const n = signal.length;
+  const n = validateArrayLikeLength(signal, "signal");
   if (n === 0) {
     throw new EmptyInputError("input signal must not be empty");
   }
@@ -20,10 +26,7 @@ export function validateSignal(signal: Float64Array | ArrayLike<number>): number
   }
 
   for (let i = 0; i < n; i++) {
-    const val = Number(signal[i]);
-    if (!Number.isFinite(val)) {
-      throw new InvalidInputError("input contains non-finite float (NaN or Inf)");
-    }
+    readFiniteNumber(signal, i);
   }
   return n;
 }
@@ -33,8 +36,11 @@ export function validateDctInputs(
   n: number,
   minLen: number = 1
 ): void {
-  if (!Number.isFinite(n) || !Number.isInteger(n) || n < minLen) {
-    throw new InvalidInputError(`input length must be an integer >= ${minLen}; got ${n}`);
+  const sigLen = validateArrayLikeLength(signal, "signal");
+  if (typeof n !== "number" || !Number.isSafeInteger(n) || n < minLen) {
+    throw new InvalidInputError(
+      `input length must be an integer >= ${minLen}; got ${safeFormatValue(n)}`
+    );
   }
   if (n > MAX_DCT_LEN) {
     throw new InvalidInputError(`input length ${n} exceeds MAX_DCT_LEN (${MAX_DCT_LEN})`);
@@ -42,14 +48,11 @@ export function validateDctInputs(
   if (n > MAX_SAMPLES) {
     throw new InvalidInputError(`input length ${n} exceeds MAX_SAMPLES (${MAX_SAMPLES})`);
   }
-  if (signal.length < n) {
-    throw new InvalidInputError(`signal length ${signal.length} is less than specified n ${n}`);
+  if (sigLen < n) {
+    throw new InvalidInputError(`signal length ${sigLen} is less than specified n ${n}`);
   }
   for (let i = 0; i < n; i++) {
-    const val = Number(signal[i]);
-    if (!Number.isFinite(val)) {
-      throw new InvalidInputError("input contains non-finite float (NaN or Inf)");
-    }
+    readFiniteNumber(signal, i);
   }
 }
 

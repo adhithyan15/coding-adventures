@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - source-input boundary sync (standalone TypeScript packages)
+
+- Removed 7 standalone TypeScript packages (`analog-waveform`, `audio-device-sink`, `discrete-waveform`, `note-frequency`, `pcm-audio`, `wave`, `web-audio-sink`) from `typescript-workspace-configuration`, regenerated `RepositorySourceInputBoundary.swift`, and updated the pinned boundary digest to `43dcbadf...` (509 scopes, 530 authorizations). No behavior change in the tool.
+
 ## Unreleased - Dart DT18 hash-map input binding
 
 - Replay the Dart hash-map repository-corpus case through the native selector and merged canonical corpus.

@@ -15,9 +15,9 @@ use capability_runtime_conformance::{
 };
 use sim_discrete_arcade_logic::{
     bcd_step_op, binary_step_op, dff_step_op, mux_eval_op, nand_eval_op, nor_eval_op,
-    paddle_calc_clocks, sync_next_dot, ArcadeSyncGenerator, PaddlePotAdc,
-    QuadLogicLevels, Ttl7400QuadNand, Ttl7402QuadNor, Ttl7474DualDFlipFlop, Ttl7490DecadeCounter,
-    Ttl7493BinaryCounter, Ttl74153DualMux4to1, MASTER_CLOCK_HZ, PIXEL_CLOCK_HZ,
+    paddle_calc_clocks, sync_next_dot, ArcadeSyncGenerator, PaddlePotAdc, QuadLogicLevels,
+    Ttl7400QuadNand, Ttl7402QuadNor, Ttl74153DualMux4to1, Ttl7474DualDFlipFlop,
+    Ttl7490DecadeCounter, Ttl7493BinaryCounter, MASTER_CLOCK_HZ, PIXEL_CLOCK_HZ,
 };
 use std::path::PathBuf;
 
@@ -37,23 +37,23 @@ fn prepare() -> Exercise {
         // 7400 Quad NAND
         let nand = Ttl7400QuadNand::new_7400();
         let nand_res = nand.nand_eval_gate(0, 1, 1);
-        checks.push(check(
-            "Ttl7400QuadNand eval 1,1 is 0",
-            nand_res == Ok(0),
-        ));
+        checks.push(check("Ttl7400QuadNand eval 1,1 is 0", nand_res == Ok(0)));
         let quad_res = nand.nand_eval_quad(0, 0, 0, 1, 1, 0, 1, 1);
         checks.push(check(
             "Ttl7400QuadNand eval quad returns QuadLogicLevels",
-            quad_res == Ok(QuadLogicLevels { y0: 1, y1: 1, y2: 1, y3: 0 }),
+            quad_res
+                == Ok(QuadLogicLevels {
+                    y0: 1,
+                    y1: 1,
+                    y2: 1,
+                    y3: 0,
+                }),
         ));
 
         // 7402 Quad NOR
         let nor = Ttl7402QuadNor::new_7402();
         let nor_res = nor.nor_eval_gate(0, 0, 0);
-        checks.push(check(
-            "Ttl7402QuadNor eval 0,0 is 1",
-            nor_res == Ok(1),
-        ));
+        checks.push(check("Ttl7402QuadNor eval 0,0 is 1", nor_res == Ok(1)));
 
         // 7474 Dual D-FF
         let mut dff = Ttl7474DualDFlipFlop::new_7474();
@@ -100,20 +100,23 @@ fn prepare() -> Exercise {
         // PaddlePotAdc
         let mut adc = PaddlePotAdc::new_paddle_pot_adc(PIXEL_CLOCK_HZ, 100_000, 100_000).unwrap();
         let adc_state = adc.paddle_step_clock(0);
-        checks.push(check(
-            "PaddlePotAdc steps clock cleanly",
-            adc_state.is_ok(),
-        ));
+        checks.push(check("PaddlePotAdc steps clock cleanly", adc_state.is_ok()));
 
         // Freestanding operators
         checks.push(check("nand_eval_op", nand_eval_op(0, 0, 0) == Ok(1)));
         checks.push(check("nor_eval_op", nor_eval_op(0, 0, 0) == Ok(1)));
-        checks.push(check("mux_eval_op", mux_eval_op(0, 0, 0, 0, 1, 0, 0, 0) == Ok(1)));
+        checks.push(check(
+            "mux_eval_op",
+            mux_eval_op(0, 0, 0, 0, 1, 0, 0, 0) == Ok(1),
+        ));
         checks.push(check("dff_step_op", dff_step_op(1, 1, true, 1, 0) == Ok(1)));
         checks.push(check("bcd_step_op", bcd_step_op(0) == Ok(1)));
         checks.push(check("binary_step_op", binary_step_op(0) == Ok(1)));
         checks.push(check("sync_next_dot", sync_next_dot(0) == 1));
-        checks.push(check("paddle_calc_clocks", paddle_calc_clocks(0, PIXEL_CLOCK_HZ, 100_000, 100_000).is_ok()));
+        checks.push(check(
+            "paddle_calc_clocks",
+            paddle_calc_clocks(0, PIXEL_CLOCK_HZ, 100_000, 100_000).is_ok(),
+        ));
 
         checks
     })

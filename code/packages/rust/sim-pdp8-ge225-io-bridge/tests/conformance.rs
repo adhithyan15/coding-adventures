@@ -16,15 +16,14 @@
 
 #![deny(unsafe_code)]
 
-use pdp8_simulator::{IotEvent, Pdp8Simulator};
 use pdp8_gatelevel::Pdp8GateLevel;
+use pdp8_simulator::{IotEvent, Pdp8Simulator};
 use sim_pdp8_ge225_io_bridge::{
-    ascii_to_ge225_bcd, assemble_ge225_typewriter_program,
-    assemble_pdp8_teletype_printer_program, encode_ascii_for_pdp8, ge225_bcd_to_ascii,
-    ge225_bcd_to_str, new_pdp8_teletype_bridge, new_pdp8_teletype_gate_bridge,
-    pdp8_dispatch_iot_functional, str_to_ge225_bcd, GateLevelIotDecoder, Ge225TeletypeBridge,
-    Pdp8TeletypeBridge, Pdp8TeletypeGateLevelBridge, PDP8_DEV_KBD, PDP8_DEV_TPR,
-    PDP8_IOP1, PDP8_IOP2, PDP8_IOP4, PDP8_WORD_MASK,
+    ascii_to_ge225_bcd, assemble_ge225_typewriter_program, assemble_pdp8_teletype_printer_program,
+    encode_ascii_for_pdp8, ge225_bcd_to_ascii, ge225_bcd_to_str, new_pdp8_teletype_bridge,
+    new_pdp8_teletype_gate_bridge, pdp8_dispatch_iot_functional, str_to_ge225_bcd,
+    GateLevelIotDecoder, Ge225TeletypeBridge, Pdp8TeletypeBridge, Pdp8TeletypeGateLevelBridge,
+    PDP8_DEV_KBD, PDP8_DEV_TPR, PDP8_IOP1, PDP8_IOP2, PDP8_IOP4, PDP8_WORD_MASK,
 };
 use sim_teletype_asr33::Asr33Functional;
 
@@ -43,7 +42,13 @@ fn test_constructor_helpers() {
 fn test_pdp8_iot_keyboard_instructions() {
     let mut bridge = Pdp8TeletypeBridge::new();
     // Clear teleprinter flag first so IRQ line solely reflects keyboard state
-    bridge.handle_iot(IotEvent { device: PDP8_DEV_TPR, pulses: PDP8_IOP2 }, 0);
+    bridge.handle_iot(
+        IotEvent {
+            device: PDP8_DEV_TPR,
+            pulses: PDP8_IOP2,
+        },
+        0,
+    );
     assert!(!bridge.tp_flag());
 
     // 1. Initially kb_flag is false: KSF does not skip
@@ -311,7 +316,11 @@ fn test_end_to_end_pdp8_hamurabi_telemetry_differential_equivalence() {
     for (i, &word) in string_words.iter().enumerate() {
         sim.write_memory(STR_ORIGIN + i, word).unwrap();
     }
-    sim.write_memory(AUTO_INDEX, (STR_ORIGIN as u16).wrapping_sub(1) & PDP8_WORD_MASK).unwrap();
+    sim.write_memory(
+        AUTO_INDEX,
+        (STR_ORIGIN as u16).wrapping_sub(1) & PDP8_WORD_MASK,
+    )
+    .unwrap();
 
     let mut bridge_func = Pdp8TeletypeBridge::new();
     bridge_func.kbd_push_byte(b'3'); // Order digit '3'
@@ -330,7 +339,11 @@ fn test_end_to_end_pdp8_hamurabi_telemetry_differential_equivalence() {
     for (i, &word) in string_words.iter().enumerate() {
         cpu.write_memory(STR_ORIGIN + i, word).unwrap();
     }
-    cpu.write_memory(AUTO_INDEX, (STR_ORIGIN as u16).wrapping_sub(1) & PDP8_WORD_MASK).unwrap();
+    cpu.write_memory(
+        AUTO_INDEX,
+        (STR_ORIGIN as u16).wrapping_sub(1) & PDP8_WORD_MASK,
+    )
+    .unwrap();
 
     let mut bridge_gate = Pdp8TeletypeGateLevelBridge::new();
     bridge_gate.kbd_push_byte(b'3'); // Identical input digit
@@ -344,8 +357,15 @@ fn test_end_to_end_pdp8_hamurabi_telemetry_differential_equivalence() {
     }
 
     // --- Assert Complete Machine-State and Differential Equivalence ---
-    assert_eq!(steps_func, steps_gate, "step count to HLT must be identical");
-    assert_eq!(sim.state(), cpu.state(), "final Pdp8State at HLT must match 100%");
+    assert_eq!(
+        steps_func, steps_gate,
+        "step count to HLT must be identical"
+    );
+    assert_eq!(
+        sim.state(),
+        cpu.state(),
+        "final Pdp8State at HLT must match 100%"
+    );
 
     // Verify stored input digit in memory location 0o0020
     let stored_input = sim.read_memory(0o0020).unwrap();
@@ -383,7 +403,11 @@ fn test_end_to_end_pdp8_lunar_lander_telemetry_differential_equivalence() {
     for (i, &word) in string_words.iter().enumerate() {
         sim.write_memory(STR_ORIGIN + i, word).unwrap();
     }
-    sim.write_memory(AUTO_INDEX, (STR_ORIGIN as u16).wrapping_sub(1) & PDP8_WORD_MASK).unwrap();
+    sim.write_memory(
+        AUTO_INDEX,
+        (STR_ORIGIN as u16).wrapping_sub(1) & PDP8_WORD_MASK,
+    )
+    .unwrap();
 
     let mut bridge_func = Pdp8TeletypeBridge::new();
     bridge_func.kbd_push_byte(b'9');
@@ -401,7 +425,11 @@ fn test_end_to_end_pdp8_lunar_lander_telemetry_differential_equivalence() {
     for (i, &word) in string_words.iter().enumerate() {
         cpu.write_memory(STR_ORIGIN + i, word).unwrap();
     }
-    cpu.write_memory(AUTO_INDEX, (STR_ORIGIN as u16).wrapping_sub(1) & PDP8_WORD_MASK).unwrap();
+    cpu.write_memory(
+        AUTO_INDEX,
+        (STR_ORIGIN as u16).wrapping_sub(1) & PDP8_WORD_MASK,
+    )
+    .unwrap();
 
     let mut bridge_gate = Pdp8TeletypeGateLevelBridge::new();
     bridge_gate.kbd_push_byte(b'9');
@@ -425,7 +453,8 @@ fn test_adversarial_cwe190_integer_overflow_prevention() {
     let out = pdp8_dispatch_iot_functional(PDP8_DEV_KBD, PDP8_IOP4, u16::MAX, false, false, 0xFF);
     assert_eq!(out.new_ac, PDP8_WORD_MASK);
 
-    let gate_out = GateLevelIotDecoder::decode(PDP8_DEV_KBD, PDP8_IOP4, u16::MAX, false, false, 0xFF);
+    let gate_out =
+        GateLevelIotDecoder::decode(PDP8_DEV_KBD, PDP8_IOP4, u16::MAX, false, false, 0xFF);
     assert_eq!(gate_out.new_ac, PDP8_WORD_MASK);
 
     // 2. High pulses bits beyond 3-bit mask do not overflow or panic

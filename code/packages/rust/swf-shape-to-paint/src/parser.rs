@@ -108,7 +108,11 @@ fn read_rgba(reader: &mut BitReader<'_>) -> Result<ColorRgba, ShapeError> {
     Ok(ColorRgba::rgba(r, g, b, a))
 }
 
-fn read_style_count(reader: &mut BitReader<'_>, tag_code: u16) -> Result<usize, ShapeError> {
+fn read_style_count(
+    reader: &mut BitReader<'_>,
+    tag_code: u16,
+    existing_count: usize,
+) -> Result<usize, ShapeError> {
     let initial = read_ui8(reader)? as usize;
     let count = if initial == 0xFF && tag_code != 2 {
         read_ui16_le(reader)? as usize
@@ -116,6 +120,7 @@ fn read_style_count(reader: &mut BitReader<'_>, tag_code: u16) -> Result<usize, 
         initial
     };
     validate_style_count(count)?;
+    validate_style_count(existing_count.saturating_add(count))?;
     Ok(count)
 }
 
@@ -331,13 +336,13 @@ pub fn parse_define_shape(tag_code: u16, data: &[u8]) -> Result<ParsedShape, Sha
 
     // SHAPEWITHSTYLE
     let mut fill_styles = Vec::new();
-    let initial_fill_count = read_style_count(&mut reader, tag_code)?;
+    let initial_fill_count = read_style_count(&mut reader, tag_code, fill_styles.len())?;
     for _ in 0..initial_fill_count {
         fill_styles.push(parse_fill_style(&mut reader, tag_code)?);
     }
 
     let mut line_styles = Vec::new();
-    let initial_line_count = read_style_count(&mut reader, tag_code)?;
+    let initial_line_count = read_style_count(&mut reader, tag_code, line_styles.len())?;
     for _ in 0..initial_line_count {
         line_styles.push(parse_line_style(&mut reader, tag_code)?);
     }
@@ -389,7 +394,9 @@ pub fn parse_define_shape(tag_code: u16, data: &[u8]) -> Result<ParsedShape, Sha
             if state_fill_style0 {
                 let idx = reader.read_ub(num_fill_bits)?;
                 current_fill0 = if idx > 0 {
-                    (fill_offset as u32) + idx
+                    (fill_offset as u32)
+                        .checked_add(idx)
+                        .ok_or(ShapeError::ExcessiveStyles)?
                 } else {
                     0
                 };
@@ -398,7 +405,9 @@ pub fn parse_define_shape(tag_code: u16, data: &[u8]) -> Result<ParsedShape, Sha
             if state_fill_style1 {
                 let idx = reader.read_ub(num_fill_bits)?;
                 current_fill1 = if idx > 0 {
-                    (fill_offset as u32) + idx
+                    (fill_offset as u32)
+                        .checked_add(idx)
+                        .ok_or(ShapeError::ExcessiveStyles)?
                 } else {
                     0
                 };
@@ -407,7 +416,9 @@ pub fn parse_define_shape(tag_code: u16, data: &[u8]) -> Result<ParsedShape, Sha
             if state_line_style {
                 let idx = reader.read_ub(num_line_bits)?;
                 current_line = if idx > 0 {
-                    (line_offset as u32) + idx
+                    (line_offset as u32)
+                        .checked_add(idx)
+                        .ok_or(ShapeError::ExcessiveStyles)?
                 } else {
                     0
                 };
@@ -417,13 +428,13 @@ pub fn parse_define_shape(tag_code: u16, data: &[u8]) -> Result<ParsedShape, Sha
                 reader.align_to_byte();
 
                 fill_offset = fill_styles.len();
-                let new_fill_count = read_style_count(&mut reader, tag_code)?;
+                let new_fill_count = read_style_count(&mut reader, tag_code, fill_styles.len())?;
                 for _ in 0..new_fill_count {
                     fill_styles.push(parse_fill_style(&mut reader, tag_code)?);
                 }
 
                 line_offset = line_styles.len();
-                let new_line_count = read_style_count(&mut reader, tag_code)?;
+                let new_line_count = read_style_count(&mut reader, tag_code, line_styles.len())?;
                 for _ in 0..new_line_count {
                     line_styles.push(parse_line_style(&mut reader, tag_code)?);
                 }

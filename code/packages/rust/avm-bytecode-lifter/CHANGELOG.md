@@ -5,6 +5,12 @@ All notable changes to `avm-bytecode-lifter` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+- Replaced `.lock().unwrap()` with `.unwrap_or_else(|e| e.into_inner())` in `AvmEnvironment` and used `wrapping_neg()` for `i64::MIN` in `flash_negate` (CWE-190).
+- Added `tests/hostile_inputs.rs` (`#![forbid(unsafe_code)]`) covering CWE-1321 prototype guards, `i64::MIN` negation, malformed AVM1/AVM2 bytecode, and a 1,200-case AVM1+AVM2 fuzz campaign.
+
 ## [0.1.0] - 2026-11-16
 
 ### Added
