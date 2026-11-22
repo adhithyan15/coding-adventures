@@ -19331,13 +19331,15 @@
     {
       "id": "dart-typescript-frontend-vertical-parity",
       "title": "Port TypeScript lexer and parser vertical to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "dart-swift-language-frontends-neutral-fixtures"
       ],
       "branch": "feat/dart-typescript-frontend-vertical-parity",
       "pr_number": 19826,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19826",
+      "merged_at": "2026-11-22T00:35:01Z",
+      "merge_commit": "9ffdc60f2f7d417959787e08ddd9fc9c4e0534a6",
       "notes": "Dart subtranche of TypeScript frontend vertical parity. Delivers coding_adventures_typescript_lexer and coding_adventures_typescript_parser with seven embedded editions (typescript, ts1.0, ts2.0, ts3.0, ts4.0, ts5.0, ts5.8), combined nesting-depth defense (64) covering delimiters and prefix-operator chains, token ceiling, and shared neutral fixture conformance."
     },
     {
@@ -24162,11 +24164,11 @@
     {
       "id": "starlark-compiler-dart-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in dart",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
-      "branch": null,
+      "branch": "feat/starlark-compiler-dart-opcode-provider-parity",
       "pr_number": null,
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
