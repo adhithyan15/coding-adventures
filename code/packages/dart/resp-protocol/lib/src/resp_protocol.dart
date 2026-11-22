@@ -217,8 +217,12 @@ RespBulkString bulkString(Object? value) {
   throw ArgumentError('bulkString takes String, bytes, or null');
 }
 
-/// Builds an array value.
-RespArray array(List<RespValue>? value) => RespArray(value);
+/// Builds an array value, copying [value].
+///
+/// The copy keeps the documented immutability: later caller mutations
+/// cannot change `==`/`hashCode` under an existing object.
+RespArray array(List<RespValue>? value) =>
+    RespArray(value == null ? null : List.of(value));
 
 // ─── Encoding ───────────────────────────────────────────────────────────────
 //
@@ -286,11 +290,19 @@ Uint8List encodeArray(List<RespValue>? values) {
 // of the five type bytes opens an inline command (a bare line split on
 // whitespace), which is how `telnet` sessions speak to Redis.
 
+/// Maximum nested-array depth accepted by the decoder.
+///
+/// Each nesting level costs 4 input bytes, so uncapped recursion turns a
+/// small hostile frame into a stack overflow. Past this depth decoding
+/// throws [RespDecodeError] instead of crashing.
+const int maxNestedDepth = 128;
+
 /// Decodes one value from [input], or null when truncated.
 ///
 /// Throws [RespDecodeError] on malformed input.
-RespDecodeResult? decode(Object input) {
-  final buffer = _asBytes(input);
+RespDecodeResult? decode(Object input) => _decodeAt(_asBytes(input), 0);
+
+RespDecodeResult? _decodeAt(Uint8List buffer, int depth) {
   if (buffer.isEmpty) return null;
 
   switch (buffer[0]) {
@@ -303,7 +315,7 @@ RespDecodeResult? decode(Object input) {
     case 36: // $
       return _decodeBulkString(buffer);
     case 42: // *
-      return _decodeArray(buffer);
+      return _decodeArray(buffer, depth);
     default:
       return _decodeInlineCommand(buffer);
   }
@@ -373,7 +385,7 @@ RespDecodeResult? _decodeSimpleString(Uint8List buffer) {
   final line = _readLine(buffer, 1);
   if (line == null) return null;
   return RespDecodeResult(
-    simpleString(utf8.decode(line.line)),
+    simpleString(_lineText(line.line)),
     line.consumed,
   );
 }
@@ -382,7 +394,7 @@ RespDecodeResult? _decodeError(Uint8List buffer) {
   final line = _readLine(buffer, 1);
   if (line == null) return null;
   return RespDecodeResult(
-    errorValue(utf8.decode(line.line)),
+    errorValue(_lineText(line.line)),
     line.consumed,
   );
 }
@@ -419,7 +431,7 @@ int? _strictInt(String text) {
 RespDecodeResult? _decodeInteger(Uint8List buffer) {
   final line = _readLine(buffer, 1);
   if (line == null) return null;
-  final value = _strictInt(utf8.decode(line.line));
+  final value = _strictInt(_lineText(line.line));
   if (value == null) {
     throw const RespDecodeError('invalid RESP integer');
   }
@@ -429,7 +441,7 @@ RespDecodeResult? _decodeInteger(Uint8List buffer) {
 RespDecodeResult? _decodeBulkString(Uint8List buffer) {
   final line = _readLine(buffer, 1);
   if (line == null) return null;
-  final length = _strictInt(utf8.decode(line.line));
+  final length = _strictInt(_lineText(line.line));
   if (length == null) {
     throw const RespDecodeError('invalid RESP bulk string length');
   }
@@ -440,10 +452,14 @@ RespDecodeResult? _decodeBulkString(Uint8List buffer) {
     throw const RespDecodeError('bulk string length cannot be negative');
   }
 
+  // Overflow-safe bounds check: compare against the remaining bytes instead
+  // of summing a hostile length (a near-max length would wrap the sum
+  // negative and slip past a naive check into an out-of-range index).
   final bodyStart = line.consumed;
+  final remaining = buffer.length - bodyStart;
+  if (length > remaining - 2) return null;
   final bodyEnd = bodyStart + length;
   final tailEnd = bodyEnd + 2;
-  if (buffer.length < tailEnd) return null;
   if (buffer[bodyEnd] != 13 || buffer[bodyEnd + 1] != 10) {
     throw const RespDecodeError('missing trailing CRLF after bulk string body');
   }
@@ -453,10 +469,13 @@ RespDecodeResult? _decodeBulkString(Uint8List buffer) {
   );
 }
 
-RespDecodeResult? _decodeArray(Uint8List buffer) {
+RespDecodeResult? _decodeArray(Uint8List buffer, int depth) {
+  if (depth >= maxNestedDepth) {
+    throw const RespDecodeError('array nesting exceeds depth limit');
+  }
   final line = _readLine(buffer, 1);
   if (line == null) return null;
-  final count = _strictInt(utf8.decode(line.line));
+  final count = _strictInt(_lineText(line.line));
   if (count == null) {
     throw const RespDecodeError('invalid RESP array length');
   }
@@ -470,7 +489,8 @@ RespDecodeResult? _decodeArray(Uint8List buffer) {
   final values = <RespValue>[];
   var offset = line.consumed;
   for (var i = 0; i < count; i++) {
-    final result = decode(buffer.sublist(offset));
+    final result =
+        _decodeAt(Uint8List.fromList(buffer.sublist(offset)), depth + 1);
     if (result == null) return null;
     values.add(result.value);
     offset += result.consumed;
@@ -481,7 +501,7 @@ RespDecodeResult? _decodeArray(Uint8List buffer) {
 RespDecodeResult? _decodeInlineCommand(Uint8List buffer) {
   final line = _readLine(buffer, 0);
   if (line == null) return null;
-  final text = utf8.decode(line.line).trim();
+  final text = _lineText(line.line).trim();
   final tokens = text.isEmpty
       ? <RespValue>[]
       : text
@@ -490,6 +510,16 @@ RespDecodeResult? _decodeInlineCommand(Uint8List buffer) {
           .map(bulkString)
           .toList();
   return RespDecodeResult(array(tokens), line.consumed);
+}
+
+/// Decodes a protocol line as UTF-8, mapping malformed bytes to the
+/// documented decode error (never a bare [FormatException]).
+String _lineText(Uint8List line) {
+  try {
+    return utf8.decode(line);
+  } on FormatException {
+    throw const RespDecodeError('invalid UTF-8 in protocol line');
+  }
 }
 
 /// A CRLF-terminated line plus total bytes consumed.

@@ -35,6 +35,10 @@ while (decoder.hasMessage()) { handle(decoder.getMessage()); }
   whitespace and `+`.
 * Decoders copy payload bytes out: later input never aliases a value.
 * Malformation throws out of `feed` immediately, like the sibling lanes.
+* Hardening beyond the reference: overflow-safe bulk bounds (near-max
+  lengths truncate instead of indexing out of range), a 128-deep nesting
+  cap (deeper frames throw instead of overflowing the stack), UTF-8
+  failures mapped to `RespDecodeError`, and copy-on-construct arrays.
 * Zero dependencies. Pure computation: no clock, no I/O, no randomness.
 
 ## Tests

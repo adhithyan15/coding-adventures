@@ -272,6 +272,54 @@ void main() {
     });
   });
 
+  group('security regressions', () {
+    test('near-max bulk length truncates instead of throwing RangeError', () {
+      // The length would wrap a naive bounds sum negative; the decoder
+      // must see truncation (null), never an out-of-range index error.
+      expect(decode('\$9223372036854775807\r\n'), isNull);
+      expect(decode('\$999999999999999\r\n'), isNull);
+    });
+
+    test('excessive nesting throws RespDecodeError, not StackOverflowError',
+        () {
+      final deep = Uint8List.fromList(utf8.encode('${'*1\r\n' * 200}:1\r\n'));
+      expect(() => decode(deep), throwsA(isA<RespDecodeError>()));
+      // Well under the cap still decodes.
+      final shallow = Uint8List.fromList(utf8.encode('${'*1\r\n' * 10}:1\r\n'));
+      final back = decode(shallow)!;
+      var depth = 0;
+      RespValue current = back.value;
+      while (current is RespArray && current.value!.isNotEmpty) {
+        depth++;
+        current = current.value!.first;
+      }
+      expect(depth, 10);
+      expect(current, integer(1));
+    });
+
+    test('non-UTF8 line bytes throw RespDecodeError, not FormatException', () {
+      final cases = <Uint8List>[
+        Uint8List.fromList([0x2b, 0xff, 0xfe, 0x0d, 0x0a]), // +<ff><fe>
+        Uint8List.fromList([0x3a, 0xff, 0x0d, 0x0a]), // :<ff>
+        Uint8List.fromList([0x24, 0xff, 0x0d, 0x0a]), // $<ff>
+        Uint8List.fromList([0x2a, 0xff, 0x0d, 0x0a]), // *<ff>
+        Uint8List.fromList([0xff, 0x0d, 0x0a]), // inline <ff>
+      ];
+      for (final input in cases) {
+        expect(() => decode(input), throwsA(isA<RespDecodeError>()),
+            reason: 'input $input');
+      }
+    });
+
+    test('array construction copies the caller list', () {
+      final source = [integer(1)];
+      final value = array(source);
+      source.add(integer(2));
+      expect(value, array([integer(1)]));
+      expect((value.value as List).length, 1);
+    });
+  });
+
   group('seeded round-trip sweep', () {
     test('512 generated values survive encode/decode', () {
       final rng = Random(0xE59);
