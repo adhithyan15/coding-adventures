@@ -13,3 +13,8 @@ name = "audio_device_sink"
 
 [dev-dependencies]
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+
+[[test]]
+name = "warrant_evidence"
+path = "tests/warrant_evidence.rs"
+harness = false
