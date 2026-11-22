@@ -15821,6 +15821,32 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-hyperloglog-lane-parity",
+      "title": "Implement pure DT21 persistent HyperLogLog in Dart",
+      "status": "pr-open",
+      "depends_on": [
+        "hash-functions-dart-lane-parity"
+      ],
+      "branch": "feat/dart-hyperloglog-bloom-filter-lane-parity",
+      "pr_number": null,
+      "pr_url": null,
+      "delivery_class": "portable",
+      "notes": "Dart lane implementation of DT21 HyperLogLog cardinality estimation sketch with Standing Rule #20 diagnostics and 5-class security defenses. Completes hyperloglog to 15/15 full parity."
+    },
+    {
+      "id": "dart-bloom-filter-lane-parity",
+      "title": "Implement pure DT22 persistent Bloom filter in Dart",
+      "status": "pr-open",
+      "depends_on": [
+        "hash-functions-dart-lane-parity"
+      ],
+      "branch": "feat/dart-hyperloglog-bloom-filter-lane-parity",
+      "pr_number": null,
+      "pr_url": null,
+      "delivery_class": "portable",
+      "notes": "Dart lane implementation of DT22 Bloom filter with deterministic double hashing, Standing Rule #20 diagnostics, and 5-class security defenses. Completes bloom-filter to 15/15 full parity."
+    },
+    {
       "id": "ocaml-opam-archive-mirror-all-ci-paths",
       "title": "Apply the reviewed opam archive mirror to every OCaml CI path",
       "status": "pending",
@@ -18686,7 +18712,7 @@
     {
       "id": "dart-starlark-frontend-vertical-parity",
       "title": "Port Starlark lexer and parser vertical to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "dart-swift-language-frontends-neutral-fixtures",
         "dart-generic-lexer-indentation-mode-conformance"
@@ -18694,6 +18720,8 @@
       "branch": "feat/dart-starlark-frontend-vertical-parity",
       "pr_number": 19832,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19832",
+      "merged_at": "2026-11-22T01:40:00Z",
+      "merge_commit": "a7633d9e300",
       "notes": "Dart subtranche of Starlark frontend vertical parity. Delivers coding_adventures_starlark_lexer and coding_adventures_starlark_parser with indentation mode, newline normalization, AST projection conforming to cases.json, and 5-class security defenses."
     },
     {
@@ -19228,7 +19256,7 @@
     {
       "id": "dart-hash-set-lane-parity",
       "title": "Implement the pure Dart DT19 persistent hash set",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "hash-functions-dart-lane-parity",
         "hash-map-dart-lane-parity"
@@ -19236,6 +19264,8 @@
       "branch": "feat/dart-hash-set-lane-parity",
       "pr_number": 19836,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19836",
+      "merged_at": "2026-11-22T02:50:00Z",
+      "merge_commit": "8439987e739",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -24195,13 +24225,15 @@
     {
       "id": "starlark-compiler-csharp-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in csharp",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
       "branch": "feat/starlark-compiler-csharp-fsharp-opcode-provider-parity",
       "pr_number": 19835,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19835",
+      "merged_at": "2026-11-22T02:41:00Z",
+      "merge_commit": "a0dd8fb488b",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -24239,13 +24271,15 @@
     {
       "id": "starlark-compiler-fsharp-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in fsharp",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
       "branch": "feat/starlark-compiler-csharp-fsharp-opcode-provider-parity",
       "pr_number": 19835,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19835",
+      "merged_at": "2026-11-22T02:41:00Z",
+      "merge_commit": "a0dd8fb488b",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
