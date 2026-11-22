@@ -1,0 +1,130 @@
+{
+  "job": "kiln-traced-shadow",
+  "automation_id": "kiln-pr-loop",
+  "started": "2026-11-22",
+  "plan_ref": "code/specs/KILN00-kiln-build-system.md#15-migration",
+  "goal": "Move the Kiln program from M1 (shadow keys, no merge job) through the PR8 gate to M2/M3 (CI skips ledger hits behind a required check), one reviewable PR at a time.",
+  "policy": {
+    "maximum_active_prs": 1,
+    "merge_authority": "auto-merge-after-required-checks",
+    "reprioritize_after_every_merge": true,
+    "selection_rule": "Highest priority item that is (a) already specified by an accepted spec, (b) fully verifiable locally or in a pull-request CI run, and (c) fails closed if implemented wrong. Soundness-bearing code that cannot be validated before merge (anything `kiln record prepare` only accepts on a trusted default-branch run) is never selected first.",
+    "excluded_delivery_classes": [
+      "m3-skip-enablement",
+      "old-scanner-deletion",
+      "honour-writes-complete-switch"
+    ],
+    "excluded_scope_note": "The three excluded classes change what a cache hit MEANS (M3 skipping, deleting the cross-check oracle, and relaxing the unknown-write-set rule). Each needs the PR8 gate's evidence first and is the owner's call, not a loop item.",
+    "validation_gate": "go build ./... && go vet ./... && go test -short ./... in code/programs/go/kiln; workflow changes parse and change only CI; security review before every push (CLAUDE.md)."
+  },
+  "active_pr": {
+    "number": null,
+    "item": "K-01",
+    "branch": "kiln/census-weekly"
+  },
+  "items": [
+    {
+      "id": "K-01",
+      "priority": 1,
+      "status": "in-review",
+      "title": "Census PR E: schedule the weekly Kiln census in the PR8-gate configuration",
+      "why": "The PR8 gate (>=3 clean shards on both runner images, home: runner) is the only thing between the recorder and the scanner deletion, and today it needs a person to dispatch it. Without a schedule the repository produces no automatic evidence for it.",
+      "scope": ".github/workflows/kiln-census.yml schedule trigger + input fallbacks for a non-dispatch event; KILN04 4.8; CHANGELOG.d",
+      "depends_on": [],
+      "risk": "low: CI configuration and docs only, no build or recorder code",
+      "pr": null
+    },
+    {
+      "id": "K-02",
+      "priority": 1,
+      "status": "blocked",
+      "title": "Production recmerge.Keys: memoised weak/strong keys per distinct host facts",
+      "why": "recmerge.Merge takes a Keys interface that nothing implements ('memoised per distinct facts (PR 3)'). No shard can become a manifest until it exists.",
+      "scope": "code/programs/go/kiln/internal/legacy (or a new mergecmd package) + tests",
+      "depends_on": ["K-01"],
+      "risk": "medium: key bytes are soundness-critical; every path must fail closed on refusal"
+    },
+    {
+      "id": "K-03",
+      "priority": 1,
+      "status": "blocked",
+      "title": "stage-4 PR 3b: the `kiln record-merge` command and the kiln-record.yml / merge jobs",
+      "why": "The last executable gap between 'shards record' and 'the ledger has manifests'. Until it lands, stage 5a lookup has nothing to look up and all recorder work stays inert.",
+      "scope": "new CLI subcommand over internal/recfmt + internal/recmerge + internal/ledger; the CI jobs",
+      "depends_on": ["K-02"],
+      "risk": "high: a merge bug produces false hits; the CI half cannot be validated on a branch because prepare refuses an untrusted run"
+    },
+    {
+      "id": "K-04",
+      "priority": 2,
+      "status": "planned",
+      "title": "M0: pin the first ecosystem into code/kiln/legacy/pinned.json",
+      "why": "pinned.json is still {\"languages\": []}, so every package is class `unpinned` and nothing can ever be cacheable. The natural first lane is `wasm` (75 packages, small, each with a tracked Cargo.lock).",
+      "scope": "BUILD --locked per package (or a rule), pinned.json, a CI check that fails on a stale lockfile, KILN03 5",
+      "depends_on": [],
+      "risk": "medium: 75+ BUILD files; a stale lockfile turns the lane red at once, which is the point"
+    },
+    {
+      "id": "K-05",
+      "priority": 2,
+      "status": "planned",
+      "title": "KILN01: the BUILD/rule language grammar and expansion spec",
+      "why": "Referenced by KILN00 6, KILN02 (semantics version 1 is reserved for it) and KILN04, but the file does not exist. M4's rule files and the legacy-BUILD translator cannot be written without it, and 'specs first' means it lands before them.",
+      "scope": "code/specs/KILN01-*.md only",
+      "depends_on": [],
+      "risk": "low mechanically, but it decides design; expect owner review"
+    },
+    {
+      "id": "K-06",
+      "priority": 2,
+      "status": "planned",
+      "title": "Ledger snapshot rollback defence: a high-water mark that refuses an older snapshot (KILN00 18 Q9)",
+      "why": "An attacker who can restore an older ledger snapshot resurrects revoked passes. The open question names the candidate fix and has never been decided.",
+      "scope": "internal/ledger (store, merge), KILN00 10 and 18 Q9, tests",
+      "depends_on": [],
+      "risk": "low: the failure mode is refusing a merge, which is fail-closed"
+    },
+    {
+      "id": "K-07",
+      "priority": 3,
+      "status": "discovered",
+      "title": "Stale claim in the Kiln README: '`Ledger` and `Tools` ... are not built yet'",
+      "why": "The Ledger is built and documented 60 lines further down the same file. `Tools` provisioning (M5) is genuinely absent. The file is the implementation contract, so a contradiction in it is a real reading hazard.",
+      "scope": "code/programs/go/kiln/README.md line 44 (fold into another Kiln PR, not its own)",
+      "depends_on": [],
+      "risk": "none"
+    },
+    {
+      "id": "K-08",
+      "priority": 3,
+      "status": "discovered",
+      "title": "KILN04 14, residual risk 1: record a dying call that reads as an observed read with an unknown result (D35 follow-up)",
+      "why": "Named follow-up: threaded actions (Go worker threads in a filesystem loop) stay unrecorded because a thread killed inside openat/newfstatat leaves an unresumed-call refusal. Each one is recordable share lost toward the kill criterion.",
+      "scope": "internal/trace + internal/traced + a KILN04 decision",
+      "depends_on": [],
+      "risk": "high: it widens what counts as an observation, so it is soundness-bearing and needs the owner's review"
+    },
+    {
+      "id": "K-09",
+      "priority": 4,
+      "status": "blocked",
+      "title": "PR 7 (Phase B parser conversions) and PR 8 (delete the old scanner)",
+      "why": "PR 8 removes the cross-check oracle; KILN04 4.9 gates it on Phase B plus a 14-day / 200-kiln-sandbox-run soak with zero mismatches.",
+      "scope": "internal/trace and its grammar path",
+      "depends_on": ["K-01", "soak"],
+      "risk": "high: deleting the oracle is one-way",
+      "owner_only": true
+    }
+  ],
+  "log": [
+    {
+      "at": "2026-11-22",
+      "note": "Loop opened. Baseline verified on main eb7b54787d9: go build, go vet and go test -short ./... all clean in code/programs/go/kiln (13 packages). Specs on main: KILN00, 02, 03, 04 (KILN01 missing). Implementation: 367 Go files, ~96.5k lines, commands version/verify-vectors/legacy-plan/explain/record{prepare,step,classify-action,collect,census}/sandbox-exec. No `kiln record-merge` and no kiln-record CI job, so nothing currently writes a ledger entry."
+    },
+    {
+      "at": "2026-11-22",
+      "item": "K-01",
+      "note": "First implementation attempt used `${{ inputs.x || 'y' }}` for the schedule defaults. REJECTED in review: in an Actions expression the string \"0\" coerces to the number 0 and is falsy, so a dispatch with shard_indices=0 (the documented default) would silently have recorded shards 0,1,2. Replaced with an explicit `SCHEDULED == 'true'` guard and `${VAR:-default}` in the shell; verified all three paths locally (schedule -> 15/0,1,2/runner; dispatch -> 15/0/fresh unchanged; index>=count still refused)."
+    }
+  ]
+}
