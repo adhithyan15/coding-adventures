@@ -1,0 +1,27 @@
+# Warrant binding manifest (VER04 section 6, VER04j section 4.6) for
+# code/specs/pcm-audio.warrant.
+#
+# Each Warrant operation binds to a real public export of `pcm_audio`
+# (`src/lib.rs`), mapping every `PcmError` variant to its corresponding
+# Warrant `PcmError` case via `errors=`.
+#
+# proofs_not_live=frontend-refuses-lib: the Rust-subset WIR front end refuses
+# `src/lib.rs` (attributes, `pub mod` submodules, `f64`, `String`, `Vec`,
+# traits), so every `steps-bound` obligation is recorded `not-live` (VER04h
+# section 9, check 18).
+package pcm_audio
+revision 0.2.0
+spec code/specs/pcm-audio.warrant
+output code/packages/rust/pcm-audio/tests/generated/warrant_evidence.rs
+seed 0x5043_4d41_5544_494f
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 400000
+
+struct DataSize path=pcm_audio::DataSize fields=bytes:u64
+struct WavFileSize path=pcm_audio::WavFileSize fields=bytes:u64
+
+op clamp_to_pcm16 export=clamp_to_pcm16 faults=narrow-width,sign-confuse proofs_not_live=frontend-refuses-lib
+op compute_data_size export=compute_data_size errors=pcm_audio::PcmError/InvalidParameter=INVALID_PARAMETER,NonFiniteSample=INVALID_PARAMETER,NonFiniteNumber=INVALID_PARAMETER,NegativeNumber=INVALID_PARAMETER,IntegerSampleRateRequired=INVALID_PARAMETER,SampleRateTooHigh=INVALID_PARAMETER,DurationTooLong=INVALID_PARAMETER,SampleCountTooLarge=OVERSIZED_CHUNK,OversizedWav=OVERSIZED_CHUNK,MalformedWav=MALFORMED_WAV,UnsupportedFormat=MALFORMED_WAV,UnsupportedBitDepth=INVALID_PARAMETER,UnsupportedChannelCount=INVALID_PARAMETER,IndexOutOfBounds=INVALID_PARAMETER,IntegerOverflow=OVERSIZED_CHUNK faults=field-flip,ok-as-err,missing-error proofs_not_live=frontend-refuses-lib
+op compute_wav_file_size export=compute_wav_file_size errors=pcm_audio::PcmError/InvalidParameter=INVALID_PARAMETER,NonFiniteSample=INVALID_PARAMETER,NonFiniteNumber=INVALID_PARAMETER,NegativeNumber=INVALID_PARAMETER,IntegerSampleRateRequired=INVALID_PARAMETER,SampleRateTooHigh=INVALID_PARAMETER,DurationTooLong=INVALID_PARAMETER,SampleCountTooLarge=OVERSIZED_CHUNK,OversizedWav=OVERSIZED_CHUNK,MalformedWav=MALFORMED_WAV,UnsupportedFormat=MALFORMED_WAV,UnsupportedBitDepth=INVALID_PARAMETER,UnsupportedChannelCount=INVALID_PARAMETER,IndexOutOfBounds=INVALID_PARAMETER,IntegerOverflow=OVERSIZED_CHUNK faults=field-flip,ok-as-err,missing-error proofs_not_live=frontend-refuses-lib

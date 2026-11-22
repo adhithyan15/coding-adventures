@@ -591,6 +591,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	warrantEvidenceRow("logic-gates"),
 	warrantEvidenceRow("lzw"),
 	warrantEvidenceRow("note-frequency"),
+	warrantEvidenceRow("pcm-audio"),
 	warrantEvidenceRow("wasm-leb128"),
 	warrantEvidenceRow("x25519"),
 	warrantEvidenceRow("zeroize"),

@@ -1,0 +1,11 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/pcm-audio",
+  "source_digest": "da0ea4e1b233fdf9cf5178a2af44ddbb3505c2c05c984c97fddd8ad0c9af984c",
+  "manifest_digest": "3cd25f9decf4efd55b6159e2f5bfb2a8d3d81be3d017713e79ca1636ad448f1b",
+  "declared_effects": [],
+  "entry_points": [],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

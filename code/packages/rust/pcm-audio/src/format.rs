@@ -36,6 +36,12 @@ pub const MAX_CHANNELS: u16 = 8;
 /// Maximum allowable WAV file size in bytes (CWE-400 guard: 64 MiB).
 pub const MAX_WAV_BYTES: usize = 64 * 1024 * 1024;
 
+/// Canonical RIFF/WAVE header size in bytes (12-byte RIFF + 24-byte `fmt ` + 8-byte `data` header).
+pub const MIN_WAV_HEADER_SIZE: usize = 44;
+
+/// Maximum allowable PCM `data` chunk payload bytes in a canonical WAV file (`MAX_WAV_BYTES - 44`).
+pub const MAX_WAV_DATA_BYTES: usize = MAX_WAV_BYTES - MIN_WAV_HEADER_SIZE;
+
 /// Epsilon tolerance for detecting integer-valued sample rates.
 pub const INTEGER_TOLERANCE: f64 = 1e-9;
 
@@ -252,7 +258,7 @@ impl PcmFormat {
     /// Return an integer sample rate required for WAV file headers.
     pub fn integer_sample_rate(&self) -> Result<u32, PcmError> {
         let rounded = self.sample_rate_hz.round();
-        if (self.sample_rate_hz - rounded).abs() > INTEGER_TOLERANCE {
+        if rounded < 1.0 || (self.sample_rate_hz - rounded).abs() > INTEGER_TOLERANCE {
             return Err(PcmError::IntegerSampleRateRequired {
                 value: self.sample_rate_hz,
             });

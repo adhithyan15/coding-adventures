@@ -1,0 +1,83 @@
+{
+  "max_len": 0,
+  "module": "pcm_audio",
+  "proofs": [
+    {
+      "certificates": [],
+      "function": "clamp_to_pcm16",
+      "id": "warrant/pcm_audio/proof/clamp_to_pcm16/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "clamp_to_pcm16",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "clamp_to_pcm16",
+      "id": "warrant/pcm_audio/proof/clamp_to_pcm16/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "Rust-subset WIR front end refuses src/lib.rs (inner attribute `#![forbid(unsafe_code)]`, `pub mod` submodules, `f64`/`String`/`Vec`/trait types); recorded not-live per evidence.bindings proofs_not_live=frontend-refuses-lib",
+      "op": "clamp_to_pcm16",
+      "runs": 0,
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "compute_data_size",
+      "id": "warrant/pcm_audio/proof/compute_data_size/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "compute_data_size",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "compute_data_size",
+      "id": "warrant/pcm_audio/proof/compute_data_size/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "Rust-subset WIR front end refuses src/lib.rs (inner attribute `#![forbid(unsafe_code)]`, `pub mod` submodules, `f64`/`String`/`Vec`/trait types); recorded not-live per evidence.bindings proofs_not_live=frontend-refuses-lib",
+      "op": "compute_data_size",
+      "runs": 0,
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "compute_wav_file_size",
+      "id": "warrant/pcm_audio/proof/compute_wav_file_size/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "compute_wav_file_size",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "compute_wav_file_size",
+      "id": "warrant/pcm_audio/proof/compute_wav_file_size/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "Rust-subset WIR front end refuses src/lib.rs (inner attribute `#![forbid(unsafe_code)]`, `pub mod` submodules, `f64`/`String`/`Vec`/trait types); recorded not-live per evidence.bindings proofs_not_live=frontend-refuses-lib",
+      "op": "compute_wav_file_size",
+      "runs": 0,
+      "verdict": "not-live"
+    }
+  ],
+  "schema": "warrant-proof-evidence-v1",
+  "source": "code/packages/rust/pcm-audio/src/lib.rs",
+  "source_sha256": "0f1227e9e0410c699c89fe90a05a6e8879cdba2a5de5a3e066c4992e7e03ae9c",
+  "spec": "code/specs/pcm-audio.warrant",
+  "spec_sha256": "a1a1e12af0f4ab4a56ab4a4d397bb346584b7a2c0b1fe57e891f2cc3d71cd0af"
+}
