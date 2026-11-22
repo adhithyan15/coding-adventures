@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Fixed
+- Load clauses with set-backed duplicate/tautology detection (linear) instead
+  of a nested scan (quadratic on hostile long clauses, outside budget cover).
 - Preserve pending trail work when a propagation step budget is exhausted, and
   retain permanent root conflicts discovered through public propagation.
 - Clear stale failed-assumption cores after known-root contradictions and reject
