@@ -1,11 +1,27 @@
 name: Kiln census
 
-# A MANUAL real-build census of Kiln's recorder (KILN04, "kiln record census",
-# census PR D).  It records a SAMPLE of the repository's build shards for real
+# A real-build census of Kiln's recorder (KILN04, "kiln record census", census
+# PRs D and E).  It records a SAMPLE of the repository's build shards for real
 # (kiln record prepare, the traced build, kiln record collect) on each runner
 # image, runs `kiln record census` over what the recording left behind, and
-# publishes ONLY the sanitised summary.  The scheduled weekly run is census PR
-# E and is deliberately not here.
+# publishes ONLY the sanitised summary.
+#
+# TRIGGERS.  Two, and they want different configurations.
+#
+#   workflow_dispatch  a deliberate run.  The defaults below (15 shards, index
+#                      0, home: fresh) are what a person starts from; they can
+#                      ask for home: runner, which is the PR8 gate.
+#
+#   schedule           census PR E: 04:00 UTC every Monday, running the PR8
+#                      gate's OWN configuration -- home: runner, three sampled
+#                      shards (0,1,2) on both images -- so the gate's evidence
+#                      accrues without anyone dispatching it.  A runner census
+#                      that leaves a shard "not clean" exits non-zero, so this
+#                      scheduled run FAILS until the recorder is clean enough.
+#                      That red run IS the gate reporting "not yet": it is not
+#                      a broken workflow, and softening it to home: fresh (or
+#                      deleting the schedule to make the tab green) would remove
+#                      the only automatic PR8 evidence the repository produces.
 #
 # COVERAGE.  The `home` input picks the layout.
 #
@@ -36,6 +52,11 @@ name: Kiln census
 # sampled shard, nothing else.
 
 on:
+  # Monday 04:00 UTC.  ci.yml's full builds own 00/06/12/18 and the drift
+  # checks own 03:xx, so no weekly slot is free; this one starts clear of every
+  # other run and overlaps the 06:00 full build for at most two hours.
+  schedule:
+    - cron: '0 4 * * 1'
   workflow_dispatch:
     inputs:
       shard_count:
@@ -101,9 +122,24 @@ jobs:
           IN_SHARD_COUNT: ${{ inputs.shard_count }}
           IN_SHARD_INDICES: ${{ inputs.shard_indices }}
           IN_HOME: ${{ inputs.home }}
+          SCHEDULED: ${{ github.event_name == 'schedule' }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
+          # A `schedule` event carries no `inputs`, and a workflow_dispatch
+          # input's `default:` applies only to a dispatch, so the scheduled run
+          # supplies its own configuration here (census PR E): the PR8 gate's
+          # home: runner and three sampled shards.  Without this the weekly run
+          # failed validation below -- "shard_count must be an integer of at
+          # most three digits" -- before doing any work.  The defaulting is done
+          # in the shell, not with `${{ inputs.x || 'y' }}`: in an expression the
+          # STRING "0" coerces to the number 0 and is falsy, so the expression
+          # form would turn a dispatch of shard_indices=0 into 0,1,2.
+          if [[ "$SCHEDULED" == "true" ]]; then
+            IN_SHARD_COUNT="${IN_SHARD_COUNT:-15}"
+            IN_SHARD_INDICES="${IN_SHARD_INDICES:-0,1,2}"
+            IN_HOME="${IN_HOME:-runner}"
+          fi
           echo "CENSUS_OUT=$RUNNER_TEMP/census-out" >> "$GITHUB_ENV"
           if [[ "$GITHUB_REF" != "refs/heads/$DEFAULT_BRANCH" ]]; then
             echo "::error::kiln record prepare only runs on a trusted run (the default branch); dispatch this workflow on $DEFAULT_BRANCH"
