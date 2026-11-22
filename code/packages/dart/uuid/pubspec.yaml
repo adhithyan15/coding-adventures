@@ -1,0 +1,21 @@
+name: coding_adventures_uuid
+version: 0.1.0
+description: >
+  Universally Unique Identifiers (RFC 4122 / RFC 9562) in pure Dart: v1, v3,
+  v4, v5, and v7 generation, parsing, validation, formatting, comparison, and
+  namespace constants. Pure-Dart port of the uuid reference package.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_md5:
+    path: ../md5
+  coding_adventures_sha1:
+    path: ../sha1
+
+dev_dependencies:
+  coverage: ^1.15.0
+  test: ^1.25.0
