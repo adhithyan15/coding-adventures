@@ -19405,11 +19405,23 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-verilog-frontend-vertical-parity",
+      "title": "Port Verilog lexer and parser vertical to Dart",
+      "status": "pr-open",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-verilog-frontend-vertical-parity",
+      "pr_number": null,
+      "notes": "Dart subtranche of Verilog frontend vertical parity. Delivers coding_adventures_verilog_lexer and coding_adventures_verilog_parser with pure in-memory line-preserving preprocessor without ambient filesystem authority, multi-edition grammar routing (1995, 2001, 2005), macro expansion bomb defense, delimiter and keyword-block nesting depth defense (64), token ceiling, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-verilog-frontend-vertical-parity",
       "title": "Port Verilog lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-verilog-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -24164,13 +24176,15 @@
     {
       "id": "starlark-compiler-dart-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
       "branch": "feat/starlark-compiler-dart-opcode-provider-parity",
       "pr_number": 19827,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19827",
+      "merged_at": "2026-11-22T00:48:41Z",
+      "merge_commit": "f1862986f4bd680d4044ac88e7189d9b70d7d857",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
