@@ -19171,14 +19171,17 @@
     {
       "id": "hash-map-dart-lane-parity",
       "title": "Implement and validate the Dart DT18 hash-map profile",
-      "status": "implementation-in-progress",
+      "status": "merged",
       "depends_on": [
         "hash-functions-dt17-vector-and-documentation-correction",
         "hash-functions-dart-lane-parity",
         "hash-map-dt18-shared-conformance-foundation"
       ],
       "branch": "codex/parity-dart-hash-map-implementation-20261119",
-      "pr_number": null,
+      "pr_number": 19721,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19721",
+      "merged_at": "2026-11-20T02:12:12Z",
+      "merge_commit": "097a4b325213811122e2c6ec836fff7766736fba",
       "selection_blocked": false,
       "selection_revision": "6a114eb5a0df7431bd97162c4fc2169f8a50a6aa",
       "selection_notes": "Selected after foundation PR #19704 merged as f16757fd0cec42ad96b36b7d0b16bc001ad2f969 and post-merge validation completed. The dedicated clean worktree starts from exact main 6a114eb5a0df7431bd97162c4fc2169f8a50a6aa. The profile remains frozen in merged PR #19693. Implementation is now in progress; no Dart slot credit is granted until production, public VM/Node tests, coverage, mutation controls, BUILD integration, independent review, and merge all complete.",
@@ -19205,7 +19208,7 @@
         "production_implementation_authorized": true
       },
       "implementation_gate": {
-        "status": "in_progress",
+        "status": "merged",
         "base_revision": "6a114eb5a0df7431bd97162c4fc2169f8a50a6aa",
         "profile_revision": "6c6224602972d91ee5f3683a13d4f4f106c9e585",
         "foundation_pr": 19704,
@@ -19221,6 +19224,24 @@
           "BUILD and BUILD_windows"
         ]
       }
+    },
+    {
+      "id": "dart-hash-set-lane-parity",
+      "title": "Implement the pure Dart DT19 persistent hash set",
+      "status": "pr-open",
+      "depends_on": [
+        "hash-functions-dart-lane-parity",
+        "hash-map-dart-lane-parity"
+      ],
+      "branch": "feat/dart-hash-set-lane-parity",
+      "pr_number": 19836,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19836",
+      "delivery_class": "portable",
+      "discovered_at": "2026-10-12T17:07:01.729291-07:00",
+      "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
+      "notes": "Implement persistent DT19 HashSet in Dart wrapping HashMap<bool>, completing 15/15 cross-language parity for hash-set.",
+      "classification_notes": "Completes DT19 persistent hash set across all 15 established lanes.",
+      "validation_plan": "Port 10 DT19 conformance tests, 5-class security showcase, PRNG property tests, 10,000-iteration mutation fuzz loop, line coverage >= 95%, BUILD and BUILD_windows."
     },
     {
       "id": "sql-csv-source-neutral-and-dart-swift-parity",
