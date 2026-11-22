@@ -1,0 +1,83 @@
+{
+  "max_len": 0,
+  "module": "audio_device_sink",
+  "proofs": [
+    {
+      "certificates": [],
+      "function": "checked_pcm_byte_len_u64",
+      "id": "warrant/audio_device_sink/proof/checked_pcm_byte_len_u64/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "checked_pcm_byte_len_u64",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "checked_pcm_byte_len_u64",
+      "id": "warrant/audio_device_sink/proof/checked_pcm_byte_len_u64/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "Rust-subset WIR front end refuses src/lib.rs (inner attribute `#![forbid(unsafe_code)]`, `pub mod capabilities;`, `String`/`f64`/`&'static str`/trait types); recorded not-live per evidence.bindings proofs_not_live=frontend-refuses-lib",
+      "op": "checked_pcm_byte_len_u64",
+      "runs": 0,
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "frame_count_checked",
+      "id": "warrant/audio_device_sink/proof/frame_count_checked/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "frame_count_checked",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "frame_count_checked",
+      "id": "warrant/audio_device_sink/proof/frame_count_checked/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "Rust-subset WIR front end refuses src/lib.rs (inner attribute `#![forbid(unsafe_code)]`, `pub mod capabilities;`, `String`/`f64`/`&'static str`/trait types); recorded not-live per evidence.bindings proofs_not_live=frontend-refuses-lib",
+      "op": "frame_count_checked",
+      "runs": 0,
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "validate_format",
+      "id": "warrant/audio_device_sink/proof/validate_format/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "validate_format",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "validate_format",
+      "id": "warrant/audio_device_sink/proof/validate_format/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "Rust-subset WIR front end refuses src/lib.rs (inner attribute `#![forbid(unsafe_code)]`, `pub mod capabilities;`, `String`/`f64`/`&'static str`/trait types); recorded not-live per evidence.bindings proofs_not_live=frontend-refuses-lib",
+      "op": "validate_format",
+      "runs": 0,
+      "verdict": "not-live"
+    }
+  ],
+  "schema": "warrant-proof-evidence-v1",
+  "source": "code/packages/rust/audio-device-sink/src/lib.rs",
+  "source_sha256": "4e98a058b4ecb3ea73955966cfc7368207a6935959afe3f310f28fd81bbd0125",
+  "spec": "code/specs/audio-device-sink.warrant",
+  "spec_sha256": "d06d04a666a9b32af521d3e193cba570eb8ca8f9e7ccee17ec4be21d4be04023"
+}

@@ -1,0 +1,38 @@
+[package]
+name = "game-labyrinth3d"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic zero-allocation 2.5D/3D first-person dungeon crawler core with dual raycast-dda and raster3d-soft renderers"
+license = "MIT"
+
+[dependencies]
+game-clock = { path = "../game-clock" }
+math3d = { path = "../math3d" }
+pixel-container = { path = "../pixel-container" }
+raster3d-soft = { path = "../raster3d-soft" }
+raycast-dda = { path = "../raycast-dda" }
+rng = { path = "../rng" }
+trig = { path = "../trig" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "hostile_inputs"
+path = "tests/hostile_inputs.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

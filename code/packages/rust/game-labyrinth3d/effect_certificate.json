@@ -1,0 +1,272 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/game-labyrinth3d",
+  "source_digest": "8ee9ba41af2aaf123002025ecf935df161b328b0ea8320ea6e0dc152fb90bdc0",
+  "manifest_digest": "6afc26022ee7d06854f02667e960aa42c439f67ad4baf1988181497db3b153dd",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_grid_dim",
+      "signature": "pub fn validate_grid_dim(w: usize, h: usize) -> Result<bool, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "validate_frame_dim",
+      "signature": "pub fn validate_frame_dim(w: u32, h: u32) -> Result<bool, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "validate_entity_count",
+      "signature": "pub fn validate_entity_count(n: usize) -> Result<bool, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "validate_door_count",
+      "signature": "pub fn validate_door_count(n: usize) -> Result<bool, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "validate_pickup_count",
+      "signature": "pub fn validate_pickup_count(n: usize) -> Result<bool, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "validate_key_id",
+      "signature": "pub fn validate_key_id(k: u8) -> Result<bool, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "validate_player_radius_micro",
+      "signature": "pub fn validate_player_radius_micro(r_micro: u64) -> Result<bool, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "validate_player_radius",
+      "signature": "pub fn validate_player_radius(r: f64) -> Result<bool, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "tile_is_solid",
+      "signature": "pub const fn tile_is_solid(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "tile_wall_id",
+      "signature": "pub const fn tile_wall_id(&self) -> Option<u8>",
+      "effects": []
+    },
+    {
+      "name": "lgrid_new",
+      "signature": "pub fn lgrid_new( width: usize, height: usize, tiles: Vec<TileKind>, ) -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "lgrid_from_ascii",
+      "signature": "pub fn lgrid_from_ascii(rows: &[&str]) -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "lgrid_width",
+      "signature": "pub const fn lgrid_width(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "lgrid_height",
+      "signature": "pub const fn lgrid_height(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "lgrid_tiles",
+      "signature": "pub fn lgrid_tiles(&self) -> &[TileKind]",
+      "effects": []
+    },
+    {
+      "name": "lgrid_tile_at",
+      "signature": "pub fn lgrid_tile_at(&self, x: usize, y: usize) -> Option<TileKind>",
+      "effects": []
+    },
+    {
+      "name": "lgrid_validate",
+      "signature": "pub fn lgrid_validate(&self) -> Result<(), LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "door_new",
+      "signature": "pub fn door_new( x: usize, y: usize, required_key: Option<u8>, texture_id: u16, ) -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "door_validate",
+      "signature": "pub fn door_validate(&self, width: usize, height: usize) -> Result<(), LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "pickup_new",
+      "signature": "pub fn pickup_new( id: u16, x: f64, y: f64, kind: PickupKind, texture_index: usize, ) -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "pickup_validate",
+      "signature": "pub fn pickup_validate(&self, width: usize, height: usize) -> Result<(), LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "entity_new",
+      "signature": "pub fn entity_new( id: u16, x: f64, y: f64, yaw: f64, radius: f64, speed: f64, behavior: EntityBehavior, hp: u16, damage: u16, texture_index: usize, ) -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "entity_validate",
+      "signature": "pub fn entity_validate(&self, width: usize, height: usize) -> Result<(), LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "player_new",
+      "signature": "pub fn player_new( x: f64, y: f64, yaw: f64, radius: f64, move_speed: f64, turn_speed: f64, max_hp: u16, ) -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "player_validate",
+      "signature": "pub fn player_validate(&self, width: usize, height: usize) -> Result<(), LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "player_has_key",
+      "signature": "pub const fn player_has_key(&self, key_id: u8) -> bool",
+      "effects": []
+    },
+    {
+      "name": "lrng_new",
+      "signature": "pub const fn lrng_new(seed: u64) -> Self",
+      "effects": []
+    },
+    {
+      "name": "lrng_next_u32",
+      "signature": "pub fn lrng_next_u32(&mut self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "lrng_next_float",
+      "signature": "pub fn lrng_next_float(&mut self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "lrng_seed",
+      "signature": "pub const fn lrng_seed(&self) -> u64",
+      "effects": []
+    },
+    {
+      "name": "lrng_state_word",
+      "signature": "pub const fn lrng_state_word(&self) -> u64",
+      "effects": []
+    },
+    {
+      "name": "lrng_step_count",
+      "signature": "pub const fn lrng_step_count(&self) -> u64",
+      "effects": []
+    },
+    {
+      "name": "input_idle",
+      "signature": "pub const fn input_idle(dt_ns: u64) -> Self",
+      "effects": []
+    },
+    {
+      "name": "input_new",
+      "signature": "pub fn input_new( forward: f64, strafe: f64, turn: f64, interact: bool, dt_ns: u64, ) -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "input_validate",
+      "signature": "pub fn input_validate(&self) -> Result<(), LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "state_new",
+      "signature": "pub fn state_new( grid: LabyrinthGrid, player: PlayerState, doors: Vec<DoorState>, pickups: Vec<PickupItem>, entities: Vec<EntityState>, seed: u64, clock_config: GameClockConfig, ) -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "state_build_demo",
+      "signature": "pub fn state_build_demo(seed: u64) -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "state_validate",
+      "signature": "pub fn state_validate(&self) -> Result<(), LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "state_cell_blocked",
+      "signature": "pub fn state_cell_blocked(&self, tx: usize, ty: usize) -> bool",
+      "effects": []
+    },
+    {
+      "name": "assets_new",
+      "signature": "pub fn assets_new(textures: Vec<TextureRgba>, fov_rad: f64) -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "assets_default",
+      "signature": "pub fn assets_default() -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "assets_validate",
+      "signature": "pub fn assets_validate(&self) -> Result<(), LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "assets_texture_count",
+      "signature": "pub fn assets_texture_count(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "rscratch_new",
+      "signature": "pub fn rscratch_new() -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "rscratch_for_state",
+      "signature": "pub fn rscratch_for_state(state: &LabyrinthState) -> Result<Self, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "rscratch_vertex_capacity",
+      "signature": "pub fn rscratch_vertex_capacity(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "rscratch_sprite_capacity",
+      "signature": "pub fn rscratch_sprite_capacity(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "step_in_place",
+      "signature": "pub fn step_in_place( state: &mut LabyrinthState, input: LabyrinthInput, ) -> Result<StepOutcome, LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "step",
+      "signature": "pub fn step( state: &LabyrinthState, input: LabyrinthInput, ) -> Result<(LabyrinthState, StepOutcome), LabyrinthError>",
+      "effects": []
+    },
+    {
+      "name": "frame_digest_fnv1a",
+      "signature": "pub fn frame_digest_fnv1a(framebuffer: &PixelContainer) -> u64",
+      "effects": []
+    },
+    {
+      "name": "state_digest_fnv1a",
+      "signature": "pub fn state_digest_fnv1a(state: &LabyrinthState) -> u64",
+      "effects": []
+    },
+    {
+      "name": "render_frame_into",
+      "signature": "pub fn render_frame_into( state: &LabyrinthState, assets: &LabyrinthAssets, mode: RenderMode, scratch: &mut LabyrinthRenderScratch, zbuffer: &mut [f64], framebuffer: &mut PixelContainer, ) -> Result<RenderReport, LabyrinthError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
