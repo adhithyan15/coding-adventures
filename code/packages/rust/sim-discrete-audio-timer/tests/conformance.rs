@@ -21,8 +21,8 @@ use sim_discrete_audio_timer::{
     render_noise_audio_into, render_noise_to_ring_buffer, render_system_audio_into,
     render_timer_audio_into, render_timer_to_ring_buffer, scale_gain, validate_sample_rate,
     CoinMechDebounce, DiodeMode, DiscreteArcadeAudio, DiscreteNoiseFilter, Timer555Astable,
-    TimerAudioError, DEFAULT_LFSR15_SEED, DEFAULT_LFSR17_SEED,
-    DEFAULT_SAMPLE_RATE_HZ, MAX_SAMPLE_RATE_HZ, MIN_SAMPLE_RATE_HZ, PCM16_MAX, PCM16_MIN,
+    TimerAudioError, DEFAULT_LFSR15_SEED, DEFAULT_LFSR17_SEED, DEFAULT_SAMPLE_RATE_HZ,
+    MAX_SAMPLE_RATE_HZ, MIN_SAMPLE_RATE_HZ, PCM16_MAX, PCM16_MIN,
 };
 
 #[test]
@@ -41,14 +41,9 @@ fn test_cwe_369_sample_rate_validation() {
 
     // Constructing timer with invalid sample rate fails
     assert!(Timer555Astable::new_astable(1000, 10000, 100_000, 0).is_err());
-    assert!(DiscreteNoiseFilter::new_noise_filter(
-        true,
-        250,
-        0,
-        16384,
-        DiodeMode::Symmetrical
-    )
-    .is_err());
+    assert!(
+        DiscreteNoiseFilter::new_noise_filter(true, 250, 0, 16384, DiodeMode::Symmetrical).is_err()
+    );
     assert!(DiscreteArcadeAudio::new_arcade_audio(0).is_err());
 }
 
@@ -86,7 +81,9 @@ fn test_cwe_20_nyquist_frequency_limit() {
 
     // Ultra low resistance / capacitance leading to ultrasonic frequency
     let res = Timer555Astable::new_astable(10, 10, 10, sr);
-    assert!(matches!(res, Err(TimerAudioError::FrequencyTooHigh { freq, max }) if freq > nyquist && max == nyquist));
+    assert!(
+        matches!(res, Err(TimerAudioError::FrequencyTooHigh { freq, max }) if freq > nyquist && max == nyquist)
+    );
 }
 
 #[test]
@@ -311,8 +308,7 @@ fn test_ring_buffer_routing() {
     assert_eq!(ring.len(), 32);
 
     let mut noise = DiscreteNoiseFilter::explosion_filter(44_100).expect("noise");
-    let routed_noise =
-        render_noise_to_ring_buffer(&mut noise, &mut ring, 32).expect("route noise");
+    let routed_noise = render_noise_to_ring_buffer(&mut noise, &mut ring, 32).expect("route noise");
     assert_eq!(routed_noise, 32);
     assert_eq!(ring.len(), 64);
 
@@ -334,7 +330,10 @@ fn test_zero_alloc_buffer_rendering() {
 
     let mut system = DiscreteArcadeAudio::new_arcade_audio(44_100).expect("system");
     system.trigger_paddle_tone(100);
-    assert_eq!(render_system_audio_into(&mut system, &mut buf).unwrap(), 128);
+    assert_eq!(
+        render_system_audio_into(&mut system, &mut buf).unwrap(),
+        128
+    );
 }
 
 #[test]

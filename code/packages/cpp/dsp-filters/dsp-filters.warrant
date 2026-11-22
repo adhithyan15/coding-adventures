@@ -1,0 +1,232 @@
+-- DSP-FILTERS -- FIR, IIR, Biquad, SOS, and Butterworth filters for the DSP layer
+--
+-- Warrant specification for cpp/dsp-filters (VER04h / DSP03).
+-- Covers memory safety, resource bounding (CWE-400), integer overflow prevention (CWE-190),
+-- strictly iterative execution (CWE-674), and all-operands-public guarantees.
+
+warrant dsp_filters v1
+  error FilterError = EMPTY_SIGNAL | EMPTY_KERNEL | INVALID_COEFFICIENT
+
+  op fir(signal: Bytes, kernel: Bytes) -> Result<Bytes, FilterError>
+  op fir_fft(signal: Bytes, kernel: Bytes) -> Result<Bytes, FilterError>
+  op iir(signal: Bytes, b: Bytes, a: Bytes) -> Result<Bytes, FilterError>
+  op filtfilt(signal: Bytes, b: Bytes, a: Bytes) -> Result<Bytes, FilterError>
+  op sosfilt(sections: Bytes, signal: Bytes) -> Result<Bytes, FilterError>
+  op sosfiltfilt(sections: Bytes, signal: Bytes) -> Result<Bytes, FilterError>
+  op design_low_pass(cutoff_norm: Nat, num_taps: Nat, window: Nat) -> Result<Bytes, FilterError>
+  op design_high_pass(cutoff_norm: Nat, num_taps: Nat, window: Nat) -> Result<Bytes, FilterError>
+  op design_band_pass(low_norm: Nat, high_norm: Nat, num_taps: Nat, window: Nat) -> Result<Bytes, FilterError>
+  op design_band_stop(low_norm: Nat, high_norm: Nat, num_taps: Nat, window: Nat) -> Result<Bytes, FilterError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels fir:
+    signal public
+    kernel public
+  labels fir_fft:
+    signal public
+    kernel public
+  labels iir:
+    signal public
+    b public
+    a public
+  labels filtfilt:
+    signal public
+    b public
+    a public
+  labels sosfilt:
+    sections public
+    signal public
+  labels sosfiltfilt:
+    sections public
+    signal public
+  labels design_low_pass:
+    cutoff_norm public
+    num_taps public
+    window public
+  labels design_high_pass:
+    cutoff_norm public
+    num_taps public
+    window public
+  labels design_band_pass:
+    low_norm public
+    high_norm public
+    num_taps public
+    window public
+  labels design_band_stop:
+    low_norm public
+    high_norm public
+    num_taps public
+    window public
+
+  input fir.signal:
+    hostile
+    rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input fir.kernel:
+    hostile
+    rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL
+    ensures no_panic, terminates
+
+  input fir_fft.signal:
+    hostile
+    rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input fir_fft.kernel:
+    hostile
+    rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL
+    ensures no_panic, terminates
+
+  input iir.signal:
+    hostile
+    rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input iir.b:
+    hostile
+    rejects len(b) == 0 with FilterError.EMPTY_KERNEL
+    ensures no_panic, terminates
+  input iir.a:
+    hostile
+    rejects len(a) == 0 with FilterError.EMPTY_KERNEL
+    ensures no_panic, terminates
+
+  input filtfilt.signal:
+    hostile
+    rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input filtfilt.b:
+    hostile
+    rejects len(b) == 0 with FilterError.EMPTY_KERNEL
+    ensures no_panic, terminates
+  input filtfilt.a:
+    hostile
+    rejects len(a) == 0 with FilterError.EMPTY_KERNEL
+    ensures no_panic, terminates
+
+  input sosfilt.sections:
+    hostile
+    ensures no_panic, terminates
+  input sosfilt.signal:
+    hostile
+    rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+
+  input sosfiltfilt.sections:
+    hostile
+    ensures no_panic, terminates
+  input sosfiltfilt.signal:
+    hostile
+    rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+
+  input design_low_pass.cutoff_norm:
+    hostile
+    ensures no_panic, terminates
+  input design_low_pass.num_taps:
+    hostile
+    ensures no_panic, terminates
+  input design_low_pass.window:
+    hostile
+    ensures no_panic, terminates
+
+  input design_high_pass.cutoff_norm:
+    hostile
+    ensures no_panic, terminates
+  input design_high_pass.num_taps:
+    hostile
+    ensures no_panic, terminates
+  input design_high_pass.window:
+    hostile
+    ensures no_panic, terminates
+
+  input design_band_pass.low_norm:
+    hostile
+    ensures no_panic, terminates
+  input design_band_pass.high_norm:
+    hostile
+    ensures no_panic, terminates
+  input design_band_pass.num_taps:
+    hostile
+    ensures no_panic, terminates
+  input design_band_pass.window:
+    hostile
+    ensures no_panic, terminates
+
+  input design_band_stop.low_norm:
+    hostile
+    ensures no_panic, terminates
+  input design_band_stop.high_norm:
+    hostile
+    ensures no_panic, terminates
+  input design_band_stop.num_taps:
+    hostile
+    ensures no_panic, terminates
+  input design_band_stop.window:
+    hostile
+    ensures no_panic, terminates
+
+  bound fir:
+    output <= len(signal) + len(kernel)
+    depth <= 32
+
+  bound fir_fft:
+    output <= len(signal) + len(kernel)
+    depth <= 32
+
+  bound iir:
+    output <= len(signal)
+    depth <= 32
+
+  bound filtfilt:
+    output <= len(signal)
+    depth <= 32
+
+  bound sosfilt:
+    output <= len(signal)
+    depth <= 32
+
+  bound sosfiltfilt:
+    output <= len(signal)
+    depth <= 32
+
+  bound design_low_pass:
+    output <= 4 * num_taps
+    steps <= 64 * num_taps + 1024
+    heap <= 8 * num_taps + 1024
+    depth <= 16
+
+  bound design_high_pass:
+    output <= 4 * num_taps
+    steps <= 64 * num_taps + 1024
+    heap <= 8 * num_taps + 1024
+    depth <= 16
+
+  bound design_band_pass:
+    output <= 4 * num_taps
+    steps <= 64 * num_taps + 1024
+    heap <= 8 * num_taps + 1024
+    depth <= 16
+
+  bound design_band_stop:
+    output <= 4 * num_taps
+    steps <= 64 * num_taps + 1024
+    heap <= 8 * num_taps + 1024
+    depth <= 16
+
+  claim fir_rejects_empty_signal:
+    forall k: Bytes. fir(b"", k) == Err(FilterError.EMPTY_SIGNAL)
+
+  claim fir_fft_rejects_empty_signal:
+    forall k: Bytes. fir_fft(b"", k) == Err(FilterError.EMPTY_SIGNAL)
+
+  claim iir_rejects_empty_signal:
+    forall b: Bytes, a: Bytes. iir(b"", b, a) == Err(FilterError.EMPTY_SIGNAL)
+
+  claim sosfilt_rejects_empty_signal:
+    forall s: Bytes. sosfilt(s, b"") == Err(FilterError.EMPTY_SIGNAL)
+
+  claim sosfiltfilt_rejects_empty_signal:
+    forall s: Bytes. sosfiltfilt(s, b"") == Err(FilterError.EMPTY_SIGNAL)

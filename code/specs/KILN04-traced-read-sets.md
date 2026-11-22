@@ -3981,6 +3981,43 @@ the lexer's ANNOTATED token; a quoted string is another token kind, so a path
 containing `socket:[` cannot fake it (and `/x/socket:[1]` starts with `/`). Pass 2
 is shared, so both trace readers change together and the cross-check stays equal.
 
+**Decision D45: completed NULL-path `statx` failing with `EFAULT` (`home: runner` census run `44755244478`; `kiln:recorder` 12 to 13).**
+On the first `home: runner` census run, 100% of Rust actions (8/8 on both
+`ubuntu-24.04` and `ubuntu-26.04`) were refused with `path-arg` on Rust `std`'s
+`statx` availability probe:
+`statx(AT_FDCWD</...>, NULL, AT_STATX_SYNC_AS_STAT, STATX_ALL, ...) = -1 EFAULT (Bad address)`.
+
+*The rule (`internal/trace/model.go`).* A completed `statx` call whose `pathname`
+argument (arg 2) is printed literally as `NULL`, whose `flags` argument (arg 3)
+is valid (`hasEmptyPath` returns no error) and does **not** carry
+`AT_EMPTY_PATH` (by name or bit `0x1000` / `4096`), whose `dirfd` argument
+(arg 1) passes `dirfdPath`, and whose result is a failure with errno `EFAULT`
+(`!ret.OK && ret.Errno == "EFAULT"`), yields no event and no error.
+
+*What stays refused.*
+- `AT_EMPTY_PATH` (by name or bit `0x1000`, e.g. `0x1000` or `4096`) with a
+  `NULL` path stays `path-arg`, and an unrecognised `flags` token stays
+  `flags`.
+- Any other outcome on `statx(..., NULL, ...)`, including `= 0`, `= -1 ENOENT`,
+  or `= ?`, stays `path-arg` (or `result`).
+- Any non-`NULL` non-string path argument (such as `0x1` or `0x7ffd...`), even
+  when failing with `EFAULT`, stays `path-arg`.
+- An unannotated or invalid `dirfd` stays `fd-path` or `dirfd`.
+- Dying `statx` calls (`unresumed-call`, D35 / D44) stay unchanged (refused).
+
+*Soundness.* In Linux (`fs/stat.c`, `SYSCALL_DEFINE5(statx, ...)` ->
+`getname_uflags(filename, flags)` -> `getname_flags`), the kernel copies the
+user `filename` pointer with `strncpy_from_user` before `do_statx` inspects
+`dfd` or performs any path or file-descriptor lookup. A `NULL` pointer fails in
+`getname_flags` with `-EFAULT` having touched neither the filesystem nor any
+descriptor, and without writing to the `statx` buffer. Keeping `AT_EMPTY_PATH`
+refused ensures no descriptor-based probe can slip through (fail-closed even
+against non-standard kernels or crafted traces), and requiring completed
+`= -1 EFAULT` ensures the kernel actually rejected the pointer before lookup.
+Pass 2 (`model.call`) is shared by both trace readers, so the grammar path and
+the oracle scanner stay identical with zero cross-check divergences.
+`RecorderVersion` is bumped 12 to 13 because the accept set grows.
+
 **Decision D44: orphan exits, NULL-path dying calls, short mknod, and the
 unknown-number census code (census run 8; `kiln:recorder` 11 to 12).** Three
 refusals left in the census are explained by shapes that cannot hide a read,

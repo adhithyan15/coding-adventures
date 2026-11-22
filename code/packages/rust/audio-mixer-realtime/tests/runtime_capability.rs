@@ -10,9 +10,7 @@
 
 #![deny(unsafe_code)]
 
-use audio_mixer_realtime::{
-    mix_channels_into, PcmRingBuffer, RealtimeMixerState, UNITY_GAIN_Q16,
-};
+use audio_mixer_realtime::{mix_channels_into, PcmRingBuffer, RealtimeMixerState, UNITY_GAIN_Q16};
 use capability_runtime_conformance::{
     run_package_gate, Check, Exercise, GateConfig, PolicyOptions, Rings,
 };

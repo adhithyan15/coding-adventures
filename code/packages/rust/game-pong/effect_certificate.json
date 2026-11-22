@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/game-pong",
-  "source_digest": "6c280fa064525e6f3a54b2199ea258c9cba3fa3098520686a4c482ef6cc82112",
+  "source_digest": "54ad9524e5806606f7a9908fd0bb6eddc78e3aaa2c3ecd51ef7b236bc31086cf",
   "manifest_digest": "787ef0b21899d12074a7079bd774c3ef9f09e41162f6d6e2839c72c8dc72bad4",
   "declared_effects": [],
   "entry_points": [

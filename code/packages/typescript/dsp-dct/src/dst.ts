@@ -1,6 +1,8 @@
 import { validateDctInputs, validateSignal } from "./dct.js";
-import { InvalidInputError } from "./errors.js";
+import { InvalidInputError, safeFormatValue } from "./errors.js";
 import { DctNorm, parseNorm } from "./types.js";
+
+const MAX_ENUM_STRING_LENGTH = 64;
 
 export enum DstType {
   I = 1,
@@ -25,13 +27,16 @@ export function parseDstType(dstType?: DstType | string | number): DstType {
     return DstType.II;
   }
   if (typeof dstType === "number") {
-    if (Number.isInteger(dstType) && dstType >= 1 && dstType <= 4) return dstType as DstType;
+    if (Number.isSafeInteger(dstType) && dstType >= 1 && dstType <= 4) return dstType as DstType;
   }
   if (typeof dstType === "string") {
+    if (dstType.length > MAX_ENUM_STRING_LENGTH) {
+      throw new InvalidInputError(`unknown DST type: ${safeFormatValue(dstType)}`);
+    }
     const found = DST_TYPE_MAP.get(dstType.trim().toLowerCase());
     if (found !== undefined) return found;
   }
-  throw new InvalidInputError(`unknown DST type: ${dstType}`);
+  throw new InvalidInputError(`unknown DST type: ${safeFormatValue(dstType)}`);
 }
 
 export function dstI(

@@ -12,7 +12,7 @@
       "mode": "repository_boundary",
       "language": "typescript",
       "package_root": "code/packages/typescript/arithmetic",
-      "boundary_sha256": "411049c9f4c7d156aec9280209f36fb6d7dab3496580e751bc3841a32789ed6f",
+      "boundary_sha256": "43dcbadfc86dd1a7d010b7e57d1b9958793d5ae32547b2da8ccab7f6bc37dd64",
       "candidates": [
         {"path": "code/packages/rust/Cargo.toml", "kind": "file", "tracked": true, "content_hex": "727573740a"},
         {"path": "code/packages/typescript/.env", "kind": "file", "tracked": true, "content_hex": "7365637265740a"},

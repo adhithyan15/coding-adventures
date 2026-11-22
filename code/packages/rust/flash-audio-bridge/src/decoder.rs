@@ -229,8 +229,8 @@ pub fn decode_adpcm_into(
         });
     }
 
-    let mut reader = BitReader::from_bits(payload);
-    let code_size = reader
+    let mut dry_reader = BitReader::from_bits(payload);
+    let code_size = dry_reader
         .read_ub(2)
         .map_err(|_| AudioBridgeError::UnexpectedEof)? as usize;
     let bits_per_sample = code_size + 2;
@@ -239,6 +239,53 @@ pub fn decode_adpcm_into(
             bits: bits_per_sample,
         });
     }
+
+    // Zero-allocation dry-run pass validating all packet headers and remaining bit counts
+    // before mutating `out` so mid-stream errors leave `out` untouched.
+    let mut dry_decoded: u32 = 0;
+    while dry_decoded < sample_count_per_channel {
+        let packet_samples = (sample_count_per_channel - dry_decoded).min(ADPCM_SAMPLES_PER_BLOCK);
+
+        let _ = dry_reader
+            .read_sb(16)
+            .map_err(|_| AudioBridgeError::UnexpectedEof)?;
+        let idx_l = dry_reader
+            .read_ub(6)
+            .map_err(|_| AudioBridgeError::UnexpectedEof)? as usize;
+        if idx_l >= ADPCM_STEP_SIZE_TABLE.len() {
+            return Err(AudioBridgeError::InvalidAdpcmStepIndex { index: idx_l });
+        }
+
+        if channels == SwfAudioChannels::Stereo {
+            let _ = dry_reader
+                .read_sb(16)
+                .map_err(|_| AudioBridgeError::UnexpectedEof)?;
+            let idx_r = dry_reader
+                .read_ub(6)
+                .map_err(|_| AudioBridgeError::UnexpectedEof)? as usize;
+            if idx_r >= ADPCM_STEP_SIZE_TABLE.len() {
+                return Err(AudioBridgeError::InvalidAdpcmStepIndex { index: idx_r });
+            }
+        }
+
+        for _ in 1..packet_samples {
+            let _ = dry_reader
+                .read_ub(bits_per_sample)
+                .map_err(|_| AudioBridgeError::UnexpectedEof)?;
+            if channels == SwfAudioChannels::Stereo {
+                let _ = dry_reader
+                    .read_ub(bits_per_sample)
+                    .map_err(|_| AudioBridgeError::UnexpectedEof)?;
+            }
+        }
+
+        dry_decoded += packet_samples;
+    }
+
+    let mut reader = BitReader::from_bits(payload);
+    let _ = reader
+        .read_ub(2)
+        .map_err(|_| AudioBridgeError::UnexpectedEof)?;
 
     let mut decoded_per_ch: u32 = 0;
     let mut out_idx: usize = 0;

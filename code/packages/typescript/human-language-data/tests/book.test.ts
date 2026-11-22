@@ -234,6 +234,25 @@ A [repository note](../data/script.json) and an [external source](https://exampl
     expect(generated).toContain("\\markboth{Pronunciation}{Pronunciation}");
   });
 
+  it("handles ordered list lines with many tabs in linear time", () => {
+    const start = performance.now();
+    const evil = "0.\t" + "\t\t".repeat(25_000);
+    const generated = renderReferenceAppendix(
+      {
+        language: "test",
+        title: "ReDoS test",
+        shortTitle: "ReDoS",
+        runningHead: "ReDoS",
+        source: "test/ref.md",
+        output: "test/book/chapters/ref.tex",
+      },
+      `# Test\n\n${evil}\n1. First step\n`,
+    );
+    expect(performance.now() - start).toBeLessThan(1000);
+    expect(generated).toContain("\\begin{enumerate}");
+    expect(generated).toContain("\\item First step");
+  });
+
   it("gives the contents line and the running head their own strings when asked", () => {
     // Three jobs, three strings. A hand-set reference put a full title over the
     // page, a shorter one in the contents (a TOC entry has one line to fit in),

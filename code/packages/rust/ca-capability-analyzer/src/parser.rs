@@ -31,8 +31,9 @@
 use std::collections::{HashMap, HashSet};
 
 use crate::rules::{
-    classify_resolved, is_local_head, is_std_root, method_call_rule, Classification, FOREIGN_LINKAGE_ATTRS,
-    SHORTHAND_HEADS, UNKNOWN_TYPE_SEGMENT,
+    classify_resolved, is_local_head, is_std_root, method_call_rule,
+    third_party_crate_capability, Classification, FOREIGN_LINKAGE_ATTRS, SHORTHAND_HEADS,
+    UNKNOWN_TYPE_SEGMENT,
 };
 
 /// A detected capability access within a source file.
@@ -1395,6 +1396,7 @@ impl Resolver {
                 if let Some(h) = e.first() {
                     let relevant = is_std_root(h)
                         || SHORTHAND_HEADS.contains(&h.as_str())
+                        || third_party_crate_capability(h).is_some()
                         || !matches!(
                             classify_resolved(h, false),
                             Classification::AllowedPure
@@ -3247,6 +3249,11 @@ fn stage2_file(
                 "glob import of a whole standard crate (`use std::*`): every std module becomes nameable without `std`",
                 format!("{}::*", l.path.join("::")),
             );
+        }
+        if l.path.len() == 1 {
+            if let Some((cat, act)) = third_party_crate_capability(&l.path[0]) {
+                sink.detection(l.line, l.col, cat, act, l.path[0].clone());
+            }
         }
         sink.path(res, &l.path, false, l.line, l.col);
     }

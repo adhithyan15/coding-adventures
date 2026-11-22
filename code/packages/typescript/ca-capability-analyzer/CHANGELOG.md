@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Fixed & Hardened (VER-W9-D Cross-Stack Audit)
+- Eliminated `CWE-1321` Prototype Pollution false positives on numeric array and `TypedArray` bracket writes (`buf[i] = ...`, `buf[2 * k + 1] = ...`, `this._data[2 * idx] = ...`, `target[targetIndex] = ...`, `out[outIdx++] = ...`) across `dsp-*` and `music-machine-*` via scope-aware numeric variable/type tracking and bounded `isNumericExpression(..., depth)` evaluation while preserving detection for string/unknown/reassigned/`for-of` keys.
+- Added CommonJS `require(...)` and dynamic `import(...)` capability/CWE-94 detection, `globalThis`/`window`/`global` `eval`/`Function` checks, `MethodDeclaration` (`this.<method>()`) `CWE-674` recursion tracking, static template literal handling for `RegExp`/`exec`, and `fs`-receiver gating for `AMBIGUOUS_FS_METHODS` (`stat`, `lstat`, `access`, `watch`, `rm`, `rename`, `truncate`, `chmod`, `chown`).
+- Added cross-stack regression tests in `tests/analyzer.test.ts` (including `dsp-complex`, `dsp-filters`, and `music-machine-node` `--strict` checks).
+
 ### Added
 - Wired `@coding-adventures/test-bootstrap` into `devDependencies` (`package.json`, `package-lock.json`, `BUILD`, `BUILD_windows`) and added `.gitignore` for `dist/`, `dist-test/`, `node_modules/`, `coverage/`.
 - Migrated tests from `--experimental-strip-types` to standalone `tsconfig.test.json` with `--experimental-test-coverage --test-coverage-lines=95`.

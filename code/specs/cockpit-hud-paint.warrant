@@ -1,0 +1,125 @@
+-- GAME43 -- Cockpit HUD Paint: deterministic zero-allocation Primary Flight Display (PFD)
+-- and Heads-Up Display (HUD) vector overlay renderer lowering to P2D00 PaintInstructions.
+--
+-- Warrant document for cockpit-hud-paint (VER04j and VER04m: state=explicit).
+-- Formal verification contract for viewport bounds (64..=8192), telemetry domain guards,
+-- primitive/rung/tick resource caps, and scratch buffer capacity atomicity.
+-- Note: Warrant v1 models integer-scaled domain invariants (`width`, `height`,
+-- `ias_milli`, `alt_milli`, `agl_milli`, `max_prims`, `max_rungs`, `max_ticks`)
+-- alongside the Rust `f64` API (native `F64` support in Warrant awaits `WX-FL1`).
+
+warrant cockpit_hud_paint v1
+  error HudError = NonFiniteInput | InvalidViewport | InvalidTelemetry | AngleOutOfBounds | ValueOutOfBounds | BufferTooSmall | PrimitiveLimitExceeded | RigidBodyConversion
+
+  model Unit = Bool
+
+  -- Viewport bounds: 64..=8192 px along both axes (CWE-20 / CWE-400).
+  model valid_viewport(w: Int, h: Int) -> Bool = w >= 64 and w <= 8192 and h >= 64 and h <= 8192
+  -- Airspeed IAS >= 0 and <= 2000.0 m/s (2_000_000 milli-m/s), altitude MSL in [-1000, 100000] m, AGL in [0, 100000] m.
+  model valid_telemetry_pred(ias_milli: Int, alt_milli: Int, agl_milli: Int) -> Bool = ias_milli >= 0 and ias_milli <= 2000000 and alt_milli >= -1000000 and alt_milli <= 100000000 and agl_milli >= 0 and agl_milli <= 100000000
+  -- Resource bounds on emitted primitives, pitch ladder rungs, and tape ticks (CWE-400 / CWE-835).
+  model valid_caps_pred(max_prims: Nat, max_rungs: Nat, max_ticks: Nat) -> Bool = max_prims >= 64 and max_prims <= 4096 and max_rungs >= 1 and max_rungs <= 72 and max_ticks >= 4 and max_ticks <= 128
+  -- Scratch capacity guard for zero-alloc atomic updates (BufferTooSmall when needed > cap).
+  model valid_scratch_cap(needed: Nat, cap: Nat) -> Bool = needed <= cap
+
+  op validate_viewport(width: Int, height: Int) -> Result<Unit, HudError>
+  op validate_telemetry_bounds(ias_milli: Int, alt_milli: Int, agl_milli: Int) -> Result<Unit, HudError>
+  op validate_caps(max_prims: Nat, max_rungs: Nat, max_ticks: Nat) -> Result<Unit, HudError>
+  op check_scratch_capacity(needed: Nat, cap: Nat) -> Result<Unit, HudError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_viewport:
+    width public
+    height public
+  labels validate_telemetry_bounds:
+    ias_milli public
+    alt_milli public
+    agl_milli public
+  labels validate_caps:
+    max_prims public
+    max_rungs public
+    max_ticks public
+  labels check_scratch_capacity:
+    needed public
+    cap public
+
+  input validate_viewport.width:
+    hostile
+    ensures no_panic, terminates
+  input validate_viewport.height:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_telemetry_bounds.ias_milli:
+    hostile
+    ensures no_panic, terminates
+  input validate_telemetry_bounds.alt_milli:
+    hostile
+    ensures no_panic, terminates
+  input validate_telemetry_bounds.agl_milli:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_caps.max_prims:
+    hostile
+    ensures no_panic, terminates
+  input validate_caps.max_rungs:
+    hostile
+    ensures no_panic, terminates
+  input validate_caps.max_ticks:
+    hostile
+    ensures no_panic, terminates
+
+  input check_scratch_capacity.needed:
+    hostile
+    ensures no_panic, terminates
+  input check_scratch_capacity.cap:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_viewport:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+  bound validate_telemetry_bounds:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+  bound validate_caps:
+    steps <= 32
+    heap <= 0
+    depth <= 4
+  bound check_scratch_capacity:
+    steps <= 16
+    heap <= 0
+    depth <= 4
+
+  example viewport_valid:
+    validate_viewport(1280, 720) == Ok(true)
+  example viewport_zero:
+    validate_viewport(0, 720) == Err(HudError.InvalidViewport)
+  example viewport_too_large:
+    validate_viewport(8193, 720) == Err(HudError.InvalidViewport)
+  example telemetry_valid:
+    validate_telemetry_bounds(120000, 3000000, 1500000) == Ok(true)
+  example telemetry_neg_ias:
+    validate_telemetry_bounds(-1, 3000000, 1500000) == Err(HudError.InvalidTelemetry)
+  example caps_valid:
+    validate_caps(2048, 36, 64) == Ok(true)
+  example caps_excessive:
+    validate_caps(4097, 36, 64) == Err(HudError.PrimitiveLimitExceeded)
+  example scratch_small:
+    check_scratch_capacity(120, 64) == Err(HudError.BufferTooSmall)
+
+  claim validate_viewport_agrees:
+    forall w: Int, h: Int. validate_viewport(w, h) == (if valid_viewport(w, h) then Ok(true) else Err(HudError.InvalidViewport))
+  claim validate_telemetry_agrees:
+    forall ias: Int, alt: Int, agl: Int. validate_telemetry_bounds(ias, alt, agl) == (if valid_telemetry_pred(ias, alt, agl) then Ok(true) else Err(HudError.InvalidTelemetry))
+  claim validate_caps_agrees:
+    forall p: Nat, r: Nat, t: Nat. validate_caps(p, r, t) == (if valid_caps_pred(p, r, t) then Ok(true) else Err(HudError.PrimitiveLimitExceeded))
+  claim check_scratch_capacity_agrees:
+    forall n: Nat, c: Nat. check_scratch_capacity(n, c) == (if valid_scratch_cap(n, c) then Ok(true) else Err(HudError.BufferTooSmall))

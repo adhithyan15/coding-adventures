@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "raster3d-soft",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded 3D vertices, matrices, textures, Z-buffers, and RGBA8 pixel containers"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure graphics transform: package implements deterministic 3D vertex transformation, Sutherland-Hodgman frustum clipping, triangle rasterization, and non-cryptographic FNV-1a frame digests only, no cipher or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: vertex count, triangle count, framebuffer dimensions, and texture dimensions are capped by MAX_VERTICES, MAX_TRIANGLES, MAX_FRAMEBUFFER_WIDTH/HEIGHT, and MAX_TEXTURE_DIM, with stack-bounded clipping"
+    }
+  }
+}

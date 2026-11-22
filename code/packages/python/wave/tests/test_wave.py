@@ -2,8 +2,9 @@ import math
 import sys
 
 import pytest
-from coding_adventures_wave import Wave
 from trig import PI
+
+from coding_adventures_wave import Wave
 
 
 class TestWaveConstruction:
