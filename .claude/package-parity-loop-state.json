@@ -24159,11 +24159,11 @@
     {
       "id": "starlark-compiler-csharp-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in csharp",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
-      "branch": null,
+      "branch": "feat/starlark-compiler-csharp-fsharp-opcode-provider-parity",
       "pr_number": null,
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
@@ -24202,11 +24202,11 @@
     {
       "id": "starlark-compiler-fsharp-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in fsharp",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
-      "branch": null,
+      "branch": "feat/starlark-compiler-csharp-fsharp-opcode-provider-parity",
       "pr_number": null,
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
@@ -24418,13 +24418,15 @@
     {
       "id": "starlark-compiler-lua-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in lua",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
       "branch": "feat/starlark-compiler-lua-perl-opcode-provider-parity",
       "pr_number": 19831,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19831",
+      "merged_at": "2026-11-22T01:38:56Z",
+      "merge_commit": "e7c5da446c3b5d1c7370de599f3f41da5db65eaf",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -24439,13 +24441,15 @@
     {
       "id": "starlark-compiler-perl-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in perl",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
       "branch": "feat/starlark-compiler-lua-perl-opcode-provider-parity",
       "pr_number": 19831,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19831",
+      "merged_at": "2026-11-22T01:38:56Z",
+      "merge_commit": "e7c5da446c3b5d1c7370de599f3f41da5db65eaf",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
