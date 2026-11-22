@@ -1,0 +1,1057 @@
+{
+  "schema": "coding-adventures/fixed-point-q16-v1",
+  "scale": 65536,
+  "raw_min": -2147483648,
+  "raw_max": 2147483647,
+  "rounding_modes": [
+    "TowardZero",
+    "Floor",
+    "Ceil",
+    "NearestEven"
+  ],
+  "vector_count": 39,
+  "vectors": [
+    {
+      "id": "from-zero",
+      "operation": "from_integer",
+      "input": {
+        "integer": 0
+      },
+      "expected": {
+        "ok_raw": 0
+      }
+    },
+    {
+      "id": "from-positive-one",
+      "operation": "from_integer",
+      "input": {
+        "integer": 1
+      },
+      "expected": {
+        "ok_raw": 65536
+      }
+    },
+    {
+      "id": "from-negative-one",
+      "operation": "from_integer",
+      "input": {
+        "integer": -1
+      },
+      "expected": {
+        "ok_raw": -65536
+      }
+    },
+    {
+      "id": "from-max-integer",
+      "operation": "from_integer",
+      "input": {
+        "integer": 32767
+      },
+      "expected": {
+        "ok_raw": 2147418112
+      }
+    },
+    {
+      "id": "from-min-integer",
+      "operation": "from_integer",
+      "input": {
+        "integer": -32768
+      },
+      "expected": {
+        "ok_raw": -2147483648
+      }
+    },
+    {
+      "id": "from-first-overflow-positive",
+      "operation": "from_integer",
+      "input": {
+        "integer": 32768
+      },
+      "expected": {
+        "error": "Overflow"
+      }
+    },
+    {
+      "id": "from-first-overflow-negative",
+      "operation": "from_integer",
+      "input": {
+        "integer": -32769
+      },
+      "expected": {
+        "error": "Overflow"
+      }
+    },
+    {
+      "id": "to-zero",
+      "operation": "to_integer",
+      "input": {
+        "raw": 0
+      },
+      "expected_by_mode": {
+        "TowardZero": 0,
+        "Floor": 0,
+        "Ceil": 0,
+        "NearestEven": 0
+      }
+    },
+    {
+      "id": "to-small-positive",
+      "operation": "to_integer",
+      "input": {
+        "raw": 1
+      },
+      "expected_by_mode": {
+        "TowardZero": 0,
+        "Floor": 0,
+        "Ceil": 1,
+        "NearestEven": 0
+      }
+    },
+    {
+      "id": "to-small-negative",
+      "operation": "to_integer",
+      "input": {
+        "raw": -1
+      },
+      "expected_by_mode": {
+        "TowardZero": 0,
+        "Floor": -1,
+        "Ceil": 0,
+        "NearestEven": 0
+      }
+    },
+    {
+      "id": "to-positive-half",
+      "operation": "to_integer",
+      "input": {
+        "raw": 32768
+      },
+      "expected_by_mode": {
+        "TowardZero": 0,
+        "Floor": 0,
+        "Ceil": 1,
+        "NearestEven": 0
+      }
+    },
+    {
+      "id": "to-negative-half",
+      "operation": "to_integer",
+      "input": {
+        "raw": -32768
+      },
+      "expected_by_mode": {
+        "TowardZero": 0,
+        "Floor": -1,
+        "Ceil": 0,
+        "NearestEven": 0
+      }
+    },
+    {
+      "id": "to-positive-max",
+      "operation": "to_integer",
+      "input": {
+        "raw": 2147483647
+      },
+      "expected_by_mode": {
+        "TowardZero": 32767,
+        "Floor": 32767,
+        "Ceil": 32768,
+        "NearestEven": 32768
+      }
+    },
+    {
+      "id": "to-negative-min",
+      "operation": "to_integer",
+      "input": {
+        "raw": -2147483648
+      },
+      "expected_by_mode": {
+        "TowardZero": -32768,
+        "Floor": -32768,
+        "Ceil": -32768,
+        "NearestEven": -32768
+      }
+    },
+    {
+      "id": "add-zero",
+      "operation": "add",
+      "input": {
+        "a_raw": 0,
+        "b_raw": 0
+      },
+      "expected": {
+        "checked": {
+          "ok_raw": 0
+        },
+        "saturated": {
+          "raw": 0,
+          "overflowed": false
+        }
+      }
+    },
+    {
+      "id": "add-max-plus-one",
+      "operation": "add",
+      "input": {
+        "a_raw": 2147483647,
+        "b_raw": 1
+      },
+      "expected": {
+        "checked": {
+          "error": "Overflow"
+        },
+        "saturated": {
+          "raw": 2147483647,
+          "overflowed": true
+        }
+      }
+    },
+    {
+      "id": "add-min-minus-one",
+      "operation": "add",
+      "input": {
+        "a_raw": -2147483648,
+        "b_raw": -1
+      },
+      "expected": {
+        "checked": {
+          "error": "Overflow"
+        },
+        "saturated": {
+          "raw": -2147483648,
+          "overflowed": true
+        }
+      }
+    },
+    {
+      "id": "add-max-cancel",
+      "operation": "add",
+      "input": {
+        "a_raw": 2147483647,
+        "b_raw": -2147483646
+      },
+      "expected": {
+        "checked": {
+          "ok_raw": 1
+        },
+        "saturated": {
+          "raw": 1,
+          "overflowed": false
+        }
+      }
+    },
+    {
+      "id": "add-min-endpoint",
+      "operation": "add",
+      "input": {
+        "a_raw": -2147483648,
+        "b_raw": 0
+      },
+      "expected": {
+        "checked": {
+          "ok_raw": -2147483648
+        },
+        "saturated": {
+          "raw": -2147483648,
+          "overflowed": false
+        }
+      }
+    },
+    {
+      "id": "sub-zero",
+      "operation": "sub",
+      "input": {
+        "a_raw": 0,
+        "b_raw": 0
+      },
+      "expected": {
+        "checked": {
+          "ok_raw": 0
+        },
+        "saturated": {
+          "raw": 0,
+          "overflowed": false
+        }
+      }
+    },
+    {
+      "id": "sub-max-minus-negative-one",
+      "operation": "sub",
+      "input": {
+        "a_raw": 2147483647,
+        "b_raw": -1
+      },
+      "expected": {
+        "checked": {
+          "error": "Overflow"
+        },
+        "saturated": {
+          "raw": 2147483647,
+          "overflowed": true
+        }
+      }
+    },
+    {
+      "id": "sub-min-minus-one",
+      "operation": "sub",
+      "input": {
+        "a_raw": -2147483648,
+        "b_raw": 1
+      },
+      "expected": {
+        "checked": {
+          "error": "Overflow"
+        },
+        "saturated": {
+          "raw": -2147483648,
+          "overflowed": true
+        }
+      }
+    },
+    {
+      "id": "sub-endpoint",
+      "operation": "sub",
+      "input": {
+        "a_raw": 2147483647,
+        "b_raw": 0
+      },
+      "expected": {
+        "checked": {
+          "ok_raw": 2147483647
+        },
+        "saturated": {
+          "raw": 2147483647,
+          "overflowed": false
+        }
+      }
+    },
+    {
+      "id": "mul-exact-scale",
+      "operation": "mul",
+      "input": {
+        "a_raw": 65536,
+        "b_raw": 65536
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "ok_raw": 65536
+          },
+          "saturated": {
+            "raw": 65536,
+            "overflowed": false
+          }
+        },
+        "Floor": {
+          "checked": {
+            "ok_raw": 65536
+          },
+          "saturated": {
+            "raw": 65536,
+            "overflowed": false
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "ok_raw": 65536
+          },
+          "saturated": {
+            "raw": 65536,
+            "overflowed": false
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "ok_raw": 65536
+          },
+          "saturated": {
+            "raw": 65536,
+            "overflowed": false
+          }
+        }
+      }
+    },
+    {
+      "id": "mul-positive-half",
+      "operation": "mul",
+      "input": {
+        "a_raw": 65537,
+        "b_raw": 2147450880
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "ok_raw": 2147483647
+          },
+          "saturated": {
+            "raw": 2147483647,
+            "overflowed": false
+          }
+        },
+        "Floor": {
+          "checked": {
+            "ok_raw": 2147483647
+          },
+          "saturated": {
+            "raw": 2147483647,
+            "overflowed": false
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "error": "Overflow"
+          },
+          "saturated": {
+            "raw": 2147483647,
+            "overflowed": true
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "error": "Overflow"
+          },
+          "saturated": {
+            "raw": 2147483647,
+            "overflowed": true
+          }
+        }
+      }
+    },
+    {
+      "id": "mul-negative-half",
+      "operation": "mul",
+      "input": {
+        "a_raw": 82048,
+        "b_raw": -1715306752
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "ok_raw": -2147483648
+          },
+          "saturated": {
+            "raw": -2147483648,
+            "overflowed": false
+          }
+        },
+        "Floor": {
+          "checked": {
+            "error": "Overflow"
+          },
+          "saturated": {
+            "raw": -2147483648,
+            "overflowed": true
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "ok_raw": -2147483648
+          },
+          "saturated": {
+            "raw": -2147483648,
+            "overflowed": false
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "ok_raw": -2147483648
+          },
+          "saturated": {
+            "raw": -2147483648,
+            "overflowed": false
+          }
+        }
+      }
+    },
+    {
+      "id": "mul-post-round-boundary",
+      "operation": "mul",
+      "input": {
+        "a_raw": 1073353,
+        "b_raw": 131119481
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "ok_raw": 2147483647
+          },
+          "saturated": {
+            "raw": 2147483647,
+            "overflowed": false
+          }
+        },
+        "Floor": {
+          "checked": {
+            "ok_raw": 2147483647
+          },
+          "saturated": {
+            "raw": 2147483647,
+            "overflowed": false
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "error": "Overflow"
+          },
+          "saturated": {
+            "raw": 2147483647,
+            "overflowed": true
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "ok_raw": 2147483647
+          },
+          "saturated": {
+            "raw": 2147483647,
+            "overflowed": false
+          }
+        }
+      }
+    },
+    {
+      "id": "mul-negative-sign",
+      "operation": "mul",
+      "input": {
+        "a_raw": -65536,
+        "b_raw": 32768
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "ok_raw": -32768
+          },
+          "saturated": {
+            "raw": -32768,
+            "overflowed": false
+          }
+        },
+        "Floor": {
+          "checked": {
+            "ok_raw": -32768
+          },
+          "saturated": {
+            "raw": -32768,
+            "overflowed": false
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "ok_raw": -32768
+          },
+          "saturated": {
+            "raw": -32768,
+            "overflowed": false
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "ok_raw": -32768
+          },
+          "saturated": {
+            "raw": -32768,
+            "overflowed": false
+          }
+        }
+      }
+    },
+    {
+      "id": "mul-small",
+      "operation": "mul",
+      "input": {
+        "a_raw": 1,
+        "b_raw": 1
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "ok_raw": 0
+          },
+          "saturated": {
+            "raw": 0,
+            "overflowed": false
+          }
+        },
+        "Floor": {
+          "checked": {
+            "ok_raw": 0
+          },
+          "saturated": {
+            "raw": 0,
+            "overflowed": false
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "ok_raw": 1
+          },
+          "saturated": {
+            "raw": 1,
+            "overflowed": false
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "ok_raw": 0
+          },
+          "saturated": {
+            "raw": 0,
+            "overflowed": false
+          }
+        }
+      }
+    },
+    {
+      "id": "div-zero-positive",
+      "operation": "div",
+      "input": {
+        "a_raw": 65536,
+        "b_raw": 0
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "error": "DivisionByZero"
+          },
+          "saturated": {
+            "error": "DivisionByZero"
+          }
+        },
+        "Floor": {
+          "checked": {
+            "error": "DivisionByZero"
+          },
+          "saturated": {
+            "error": "DivisionByZero"
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "error": "DivisionByZero"
+          },
+          "saturated": {
+            "error": "DivisionByZero"
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "error": "DivisionByZero"
+          },
+          "saturated": {
+            "error": "DivisionByZero"
+          }
+        }
+      }
+    },
+    {
+      "id": "div-zero-negative",
+      "operation": "div",
+      "input": {
+        "a_raw": -65536,
+        "b_raw": 0
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "error": "DivisionByZero"
+          },
+          "saturated": {
+            "error": "DivisionByZero"
+          }
+        },
+        "Floor": {
+          "checked": {
+            "error": "DivisionByZero"
+          },
+          "saturated": {
+            "error": "DivisionByZero"
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "error": "DivisionByZero"
+          },
+          "saturated": {
+            "error": "DivisionByZero"
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "error": "DivisionByZero"
+          },
+          "saturated": {
+            "error": "DivisionByZero"
+          }
+        }
+      }
+    },
+    {
+      "id": "div-exact-one",
+      "operation": "div",
+      "input": {
+        "a_raw": 65536,
+        "b_raw": 65536
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "ok_raw": 65536
+          },
+          "saturated": {
+            "raw": 65536,
+            "overflowed": false
+          }
+        },
+        "Floor": {
+          "checked": {
+            "ok_raw": 65536
+          },
+          "saturated": {
+            "raw": 65536,
+            "overflowed": false
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "ok_raw": 65536
+          },
+          "saturated": {
+            "raw": 65536,
+            "overflowed": false
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "ok_raw": 65536
+          },
+          "saturated": {
+            "raw": 65536,
+            "overflowed": false
+          }
+        }
+      }
+    },
+    {
+      "id": "div-positive-half",
+      "operation": "div",
+      "input": {
+        "a_raw": 1,
+        "b_raw": 131072
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "ok_raw": 0
+          },
+          "saturated": {
+            "raw": 0,
+            "overflowed": false
+          }
+        },
+        "Floor": {
+          "checked": {
+            "ok_raw": 0
+          },
+          "saturated": {
+            "raw": 0,
+            "overflowed": false
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "ok_raw": 1
+          },
+          "saturated": {
+            "raw": 1,
+            "overflowed": false
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "ok_raw": 0
+          },
+          "saturated": {
+            "raw": 0,
+            "overflowed": false
+          }
+        }
+      }
+    },
+    {
+      "id": "div-negative-half",
+      "operation": "div",
+      "input": {
+        "a_raw": -1,
+        "b_raw": 131072
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "ok_raw": 0
+          },
+          "saturated": {
+            "raw": 0,
+            "overflowed": false
+          }
+        },
+        "Floor": {
+          "checked": {
+            "ok_raw": -1
+          },
+          "saturated": {
+            "raw": -1,
+            "overflowed": false
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "ok_raw": 0
+          },
+          "saturated": {
+            "raw": 0,
+            "overflowed": false
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "ok_raw": 0
+          },
+          "saturated": {
+            "raw": 0,
+            "overflowed": false
+          }
+        }
+      }
+    },
+    {
+      "id": "div-odd-tie",
+      "operation": "div",
+      "input": {
+        "a_raw": 3,
+        "b_raw": 131072
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "ok_raw": 1
+          },
+          "saturated": {
+            "raw": 1,
+            "overflowed": false
+          }
+        },
+        "Floor": {
+          "checked": {
+            "ok_raw": 1
+          },
+          "saturated": {
+            "raw": 1,
+            "overflowed": false
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "ok_raw": 2
+          },
+          "saturated": {
+            "raw": 2,
+            "overflowed": false
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "ok_raw": 2
+          },
+          "saturated": {
+            "raw": 2,
+            "overflowed": false
+          }
+        }
+      }
+    },
+    {
+      "id": "div-negative-denominator",
+      "operation": "div",
+      "input": {
+        "a_raw": 65536,
+        "b_raw": -131072
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "ok_raw": -32768
+          },
+          "saturated": {
+            "raw": -32768,
+            "overflowed": false
+          }
+        },
+        "Floor": {
+          "checked": {
+            "ok_raw": -32768
+          },
+          "saturated": {
+            "raw": -32768,
+            "overflowed": false
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "ok_raw": -32768
+          },
+          "saturated": {
+            "raw": -32768,
+            "overflowed": false
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "ok_raw": -32768
+          },
+          "saturated": {
+            "raw": -32768,
+            "overflowed": false
+          }
+        }
+      }
+    },
+    {
+      "id": "div-min-denominator",
+      "operation": "div",
+      "input": {
+        "a_raw": -2147483648,
+        "b_raw": -2147483648
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "ok_raw": 65536
+          },
+          "saturated": {
+            "raw": 65536,
+            "overflowed": false
+          }
+        },
+        "Floor": {
+          "checked": {
+            "ok_raw": 65536
+          },
+          "saturated": {
+            "raw": 65536,
+            "overflowed": false
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "ok_raw": 65536
+          },
+          "saturated": {
+            "raw": 65536,
+            "overflowed": false
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "ok_raw": 65536
+          },
+          "saturated": {
+            "raw": 65536,
+            "overflowed": false
+          }
+        }
+      }
+    },
+    {
+      "id": "div-overflow-positive",
+      "operation": "div",
+      "input": {
+        "a_raw": 2147483647,
+        "b_raw": 1
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "error": "Overflow"
+          },
+          "saturated": {
+            "raw": 2147483647,
+            "overflowed": true
+          }
+        },
+        "Floor": {
+          "checked": {
+            "error": "Overflow"
+          },
+          "saturated": {
+            "raw": 2147483647,
+            "overflowed": true
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "error": "Overflow"
+          },
+          "saturated": {
+            "raw": 2147483647,
+            "overflowed": true
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "error": "Overflow"
+          },
+          "saturated": {
+            "raw": 2147483647,
+            "overflowed": true
+          }
+        }
+      }
+    },
+    {
+      "id": "div-overflow-negative",
+      "operation": "div",
+      "input": {
+        "a_raw": -2147483648,
+        "b_raw": 1
+      },
+      "expected_by_mode": {
+        "TowardZero": {
+          "checked": {
+            "error": "Overflow"
+          },
+          "saturated": {
+            "raw": -2147483648,
+            "overflowed": true
+          }
+        },
+        "Floor": {
+          "checked": {
+            "error": "Overflow"
+          },
+          "saturated": {
+            "raw": -2147483648,
+            "overflowed": true
+          }
+        },
+        "Ceil": {
+          "checked": {
+            "error": "Overflow"
+          },
+          "saturated": {
+            "raw": -2147483648,
+            "overflowed": true
+          }
+        },
+        "NearestEven": {
+          "checked": {
+            "error": "Overflow"
+          },
+          "saturated": {
+            "raw": -2147483648,
+            "overflowed": true
+          }
+        }
+      }
+    }
+  ]
+}

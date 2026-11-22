@@ -4,7 +4,9 @@ import {
   FftError,
   InvalidParamError,
   InvalidSpectrogramError,
+  safeFormatValue,
   validateFloats,
+  validateSequence,
 } from "./errors.js";
 import { WindowType } from "./types.js";
 import { buildWindow } from "./windows.js";
@@ -21,22 +23,25 @@ export function istft(
   window: WindowType | string = WindowType.HANN,
   outputLength?: number
 ): Float64Array {
-  const specLen = spectrogram.length;
-  if (specLen === 0) {
-    throw new InvalidSpectrogramError("spectrogram is empty");
-  }
+  const specLen = validateSequence(
+    spectrogram,
+    "spectrogram",
+    MAX_SAMPLES,
+    InvalidSpectrogramError,
+    InvalidParamError
+  );
   if (!Number.isSafeInteger(nFft) || nFft <= 0) {
-    throw new InvalidParamError(`nFft must be a positive integer; got ${nFft}`);
+    throw new InvalidParamError(`nFft must be a positive integer; got ${safeFormatValue(nFft)}`);
   }
   if (!Number.isSafeInteger(hopLength) || hopLength <= 0) {
     throw new InvalidParamError(
-      `hopLength must be a positive integer; got ${hopLength}`
+      `hopLength must be a positive integer; got ${safeFormatValue(hopLength)}`
     );
   }
   if (outputLength !== undefined) {
     if (!Number.isSafeInteger(outputLength) || outputLength <= 0) {
       throw new InvalidParamError(
-        `outputLength must be a positive integer; got ${outputLength}`
+        `outputLength must be a positive integer; got ${safeFormatValue(outputLength)}`
       );
     }
     if (outputLength > MAX_SAMPLES) {
@@ -53,12 +58,6 @@ export function istft(
 
   const bins = Math.floor(nFft / 2) + 1;
   const frameFloats = bins * 2;
-
-  if (specLen > MAX_SAMPLES) {
-    throw new InvalidParamError(
-      `spectrogram length ${specLen} exceeds MAX_SAMPLES ${MAX_SAMPLES}`
-    );
-  }
 
   if (specLen % frameFloats !== 0) {
     throw new InvalidSpectrogramError(

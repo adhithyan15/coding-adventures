@@ -1,5 +1,16 @@
 # Changelog — dsp-filters
 
+## Unreleased
+
+### Added
+- Added checked f32 `Biquad` and one-shot `sosfilt` primitives with finite normalization/output/state checks and failure-atomic block processing.
+- Added checked public FIR design entry points for low-pass, high-pass, and band-pass using the existing `FilterError::InvalidCoefficient` variant; legacy wrappers retain their panic behavior and valid coefficient bits.
+
+### Corrected
+- Removed the false FIR round-trip claim and single-input FIR, FFT-FIR, and IIR work/heap rows contradicted by source loops or output allocation; retained unrefuted output, depth, and design obligations.
+- Removed shared byte-length caps and design `no_panic` claims until the Warrant model has lane-specific sample framing and typed error behavior. These declarations are not executable evidence.
+- Added public `fir` regression coverage for `[2] * [2] = [4]` and the one-tap identity.
+
 ## 0.4.0 — 2026-11-15
 
 ### Added — DSP03 Phase 3 (FIR via FFT) & Phase 5 additions (Band-Pass, Chebyshev-I)

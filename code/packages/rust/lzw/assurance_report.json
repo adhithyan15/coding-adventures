@@ -198,6 +198,38 @@
       "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/lib.rs:166:18: Unexpected byte: ''' (line: `struct BitReader<'a> {`); per export, compress: alone: parse refused (Expected Semi, found Lt); decompress: alone: parse refused (Unexpected byte: '?'))"
     }
   ],
+  "lanes": [
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "go",
+      "package": "go/lzw",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "python",
+      "package": "python/lzw",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "typescript",
+      "package": "typescript/lzw",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    }
+  ],
   "package": "rust/lzw",
   "profile": "lossless-compression",
   "profile_sha256": "bbf338224f61bd634921f33ad2a993e024eea85d4e018abea38128789b6aa92e",
@@ -354,7 +386,7 @@
         "warrant/lzw/property/decompress/output-bound"
       ],
       "name": "Decompression Bomb",
-      "reason": "discharged for bounded inputs: the Warrant document bounds the size of what compress, decompress returns (`output` row) and the live heap of the call (`heap` row); 18886 generated cases and iterations of the exhaustive, property and fuzz `output-bound` suites passed, and every observed instance ran under the allocation observer with a peak of at most 33554496 bytes (the bound at that instance: 70348824). The bound is checked on the enumerated and sampled inputs and the document's bomb examples, not proved for every input",
+      "reason": "discharged for bounded inputs: the Warrant document bounds the size of what compress, decompress returns (`output` row) and the live heap of the call (`heap` row); 18886 generated cases and iterations of the exhaustive, property and fuzz `output-bound` suites passed, and every observed instance ran under the allocation observer with a peak of at most 16810080 bytes (the bound at that instance: 70348824). The bound is checked on the enumerated and sampled inputs and the document's bomb examples, not proved for every input",
       "status": "discharged"
     },
     {

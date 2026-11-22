@@ -1,5 +1,263 @@
 # Changelog
 
+## Unreleased — opt-in Boolean record-result fault (WX-FAULT2)
+
+- Add the `bool-field-flip` evidence fault for a declared record result with a
+  direct `Bool` field, optionally behind one `Result` or `Option`. It flips only
+  the first direct Boolean field and preserves the rest of the record; unsupported
+  shapes fail closed. The opt-in helper and targeted-attack checks are emitted
+  only for adopters that bind the fault. The WX-FAULT2 fixture compiles and runs
+  direct, `Result`, `Option`, combined-fault and non-opted-operation controls.
+
+## Unreleased — `evidence::type_mentions` (VOS-039c, round 2)
+
+- New `pub fn evidence::type_mentions(file, type, target) -> bool`: does a declared type, resolved through the document's aliases, records and variants by the same table the generator's `ty_of_type` uses, mention the record named `target`?  It lets a gate (`vos-manifest`, for `vos-link` CC11) agree with the generator by construction instead of re-reading type text.  Fails closed: an unresolvable name, an alias cycle or a chain deeper than 64 counts as a mention.  A shared sub-type is expanded once.  Tests (`type_mentions_tests`) pin it against `ty_of_type` over alias, alias-of-alias, `Option`, `Result`, tuple, list and record-field shapes.  No generator output changes.
+
+## Unreleased — the `field-flip-last` fault (VOS-039c)
+
+- New record fault `field-flip-last` (VER04j 4.8): the lowest bit of the LAST numeric field of a record result is flipped (`fault_field_flip_last`, the mirror of `fault_field_flip` searching from the back; never inert).  Applicable only to a single-constructor record with at least two numeric fields, else W0701 (with one numeric field it would only duplicate `field-flip`; a variant, or a record with none, is refused as for the other record faults).  No `WARRANT_EVIDENCE_ATTACK` semantics.  Gated by its own prelude feature (`lastflip`): `fault_field_flip_last` and `Fault::FieldFlipLast` are emitted only for a binding that lists it, so every harness that does not is byte for byte what it was (the other twelve `gen_evidence` adopters and the fp-bitmap and round-robin crates did not regenerate).  Why: the record faults touch the first numeric field, which for an `-any` image `Impl(mask, choice)` is the bitmap, so nothing could corrupt the oracle register and a claim that an operation keeps it had no control that could fail it (VOS-D080).
+- Tests: `tests/wxa_generator.rs` (accepted on a record with two numeric fields, alone and inside a `Result`; W0701 on one numeric field, none and a variant; emitted only for a binding that names it, with no attack switch, and independently of `field-flip`), `tests/wxa_evidence.rs` (the function flips the last field and leaves the first, twice restores, a single numeric field is flipped where it is, a non-record is unchanged; the full generated suite catches the new fault on `normalize`), the WX-A fixture binds it and `tests/generated/wxa_evidence.rs` is regenerated.
+## Unreleased — observer counts the export only; `fixed<N>` in models (VOS-038c)
+
+- VOS-D063 (VER04j 6.3, 14.3 item 54): the allocation observer's window is closed when a job starts and is
+  opened by `obs_scope` around the call of the export (the generator wraps each call of the binding's
+  `export=` in the emitted adapter; no call found is W0701). The harness's own marshalling of a record or a
+  payload-carrying variant (64 bytes for `Run(u8)`) is no longer charged, so `heap <= 0` holds on every
+  operation of a source with no allocator. The `limit-after-alloc` hog is allocated inside a scope, so the
+  observer still flags it. Prelude `obs` region only: harnesses without a `heap` or `output` row are byte for
+  byte unchanged; `hash-functions`, `lzw`, `wasm-leb128` and the three `vos-sched-*` harnesses were regenerated.
+  Controls: `tests/wxo_observer.rs` (a record and a variant result pass `heap <= 0`; an export that allocates
+  a kilobyte fails it with `bound-heap-exceeded`), the existing `wxh_*` observer tests (now run their jobs
+  inside `obs_scope`) and unit tests of `scope_export_calls`.
+- Review of VOS-038c: every export call is wrapped as `obs_call!(..)` and generation fails if ANY occurrence of
+  the export name (method call, turbofish, bare reference) cannot be wrapped. `obs_call!` marshals a clone and
+  drops the original result inside a window, so an allocating `Drop` is charged to the subject; a result with drop
+  glue that is not `Clone` fails the instance loudly. wxo gains `held` (allocating Drop, caught) and `raw`
+  (uncloneable, refused). The observer's thread and lazy-static limits are stated in VER04j 14.3 item 54 (VOS-D102).
+- VOS-D025 first half (VER04j 14.3 item 55): `fixed<N>(bytes)` with a literal `N` is generated (`V::fixed_n`,
+  a new `fixedn` prelude region emitted only when a body uses it) instead of stopping at W0701. Fixture
+  `tests/fixtures/wxf.warrant` builds a `Bytes<8>` state with `fixed<8>(concat(..))`; its 256-state exhaustive,
+  property and fuzz suites and its negative controls pass (`tests/wxf_array.rs`). The second half of D025, a
+  claim that calls no operation, is unchanged (VOS-D005).
+
+## Unreleased — warrant_negctl.py bounds a hung command (VOS-038b Windows `rust/lzw` hang)
+
+- `code/scripts/warrant_negctl.py` kills the sabotaged command's whole process tree after
+  `WARRANT_NEGCTL_TIMEOUT_SECS` (default 1200 s, clamped to 86400 s; nan, inf, zero, negative and
+  non-numeric fall back to the default) and fails the control with the output captured so far,
+  which appears once. The same kill runs on SIGTERM or any abnormal exit of the checker, and the
+  Windows `taskkill` call has its own 30 s bound. Before this a hang printed nothing and cost the
+  build tool's 90-minute limit. TF01 section 6 updated; tests added to `test_warrant_negctl.py`.
+
+## Unreleased — CV2-S10c-2: a parenthesised shift count selects `NatCount`
+
+- `count_binders` (the `NatCount` refinement of VER04j 3.6) looks through `Expression::Grouped`:
+  `shl(x, (n))` selects `n` exactly as `shl(x, n)` does, as VER04r 5.1 and 16.10 R10 say
+  (parentheses do not matter: the corpus IR has no groups, and the oracle decides R10 on it). An
+  expression of the binder (`shl(x, (n + 1))`) still does not select. No adopter writes a
+  parenthesised count, so no checked-in evidence file changes.
+
+## Unreleased — bounded VER04p domain witness checks
+
+- `BUILD` and `BUILD_windows` run `code/scripts/tests/test_ver04p_domain_witnesses.py`.
+  The exact-rational diagnostic checks the documented integer ties, adjacent F32/F64
+  encodings, F64-to-F32 midpoint, post-rounding de-duplication, largest-finite ranges,
+  and subnormal one-tap ratio. It uses no host float and is not a Warrant native-float
+  or source/compiler proof. The build tool selects `rust/warrant-grammar` when the
+  VER04p document or diagnostic changes.
+
+## Unreleased — refinement sampler and observer timeout clamp (VOS-038b)
+
+- VOS-D079 (VER04h 4.1): a refined binder of low acceptance no longer reports `property-exhausted`.
+  The rejection draw is unchanged; when a case's 100 retries are all rejected and every binder is
+  exactly enumerable, the case is drawn uniformly from the admissible set (built once). Otherwise an
+  acceptance floor (1/8 over 2,048 probe draws, derived from C(1-a)^100 < 0.01 at C = 4,096 from a derived stream) refuses the claim on its first
+  draw with a clear message. Emitted from a new `refine` prelude region (a harness without a refined
+  binder is byte for byte unchanged); passing runs draw identical cases, so no manifest changes.
+  The floor runs in the harness, not the generator (VOS-D100).
+- VOS-D085 (VER04j): in the `obs` region, `WARRANT_OBS_TIMEOUT_SECS` is clamped to `OBS_MAX_RAISE_SECS`
+  (24 h) by `obs_raise_ms`, and the deadline is `obs_deadline` (`checked_add`, fail closed to an
+  already-past deadline), so a huge value neither panics nor disables the bound.
+- Tests: rescue, empty set, high acceptance, floor refusal, floor boundary and `exact_support` (`wx`),
+  the composite branch (`wxa`, whose fixture gains a vacuous refinement so the branch is compiled), the
+  clamp table, `Duration::MAX` and a child process with the maximal variable (`wxh_supervisor`).
+- Regenerated: adopters arithmetic, ct-compare, gf256, logic-gates, lzw, wasm-leb128 (refine);
+  hash-functions, lzw, wasm-leb128, vos-sched-any, -fp-bitmap, -rr (obs); fixtures `wx`, `wxa`, `wxh`.
+  vos-probe-ready, x25519 and zeroize are unchanged.
+
+## Unreleased — WX-SV2: the `field-flip` fault (VOS-038a)
+
+### Changed
+
+- **WD-HARN1c: negative controls run through the shared checker.** The sole sabotage line in
+  `BUILD` and `BUILD_windows` (the `--sabotage always-pass` self-corpus control) now call `code/scripts/warrant_negctl.py -- cargo test ...` instead of a
+  `grep`/`findstr` pipe. Every fault, filter and cargo argument is unchanged and in the same
+  order. The checker also requires a non-zero exit, exactly one TAP plan, test points numbered
+  `1..N` and no `Bail out!`, and prints the captured output when a control fails (the Windows
+  lines printed nothing). Each BUILD file declares `# needs-toolchain: python`. No source,
+  test or evidence change.
+
+- New composite-operation fault `field-flip` (VER04j 4.8): the lowest bit of the first
+  numeric field of a single-constructor record result is flipped (`Int` and fixed-width
+  alike). Applicable exactly where `field-zero` is (W0701 otherwise) and, unlike it, never
+  inert on a record, so a by-value `init() -> Impl` over a zero state has a negative control.
+- Emitted from a prelude region (`//@if fieldflip`) enabled only when some binding lists
+  `field-flip`; the `Fault` enum is already restricted to used faults. Every harness that
+  does not name it is byte for byte unchanged (checked with `gen_evidence --check` over all
+  13 Rust packages with an `evidence.bindings`).
+- The same region adds `WARRANT_EVIDENCE_ATTACK=<op>`: a sabotage run faults only that
+  operation, because flipping an `init` and the `alpha` that reads it cancels.
+- Tests: the applicability table, the gating (no `fault_field_flip`/`FieldFlip`/
+  `WARRANT_EVIDENCE_ATTACK` text without the binding), and, on the regenerated `wxa` fixture
+  (`normalize` now lists `field-flip`), the fault's behaviour and its negative control.
+- Regenerated: `tests/generated/wxa_evidence.rs` (opt-in), `vos-sched-fp-bitmap`, `-any`, `-rr`.
+
+## Unreleased — shared negative-control checker tests (WD-HARN1c)
+
+- BUILD and BUILD_windows run `code/scripts/tests/test_warrant_negctl.py`, the tests of the shared
+  sabotage checker `code/scripts/warrant_negctl.py` (stdlib Python; `python3` on Unix, `python` on
+  Windows). Both declare `# needs-toolchain: python`. The build tool lists the script and its tests
+  as repository inputs of this package, so editing either reruns them. No source, prelude or generated
+  file changes; the package's own sabotage line is unchanged (adopters migrate in later PRs).
+
+## Unreleased — WD-HARN1b harness follow-ups (LOW findings of the WD-HARN1 review)
+
+- Prelude, `obs` region only: `obs_bail_out` writes its stderr line with
+  `let _ = writeln!(std::io::stderr(), ..)` (`eprintln!` panics on a closed stderr
+  pipe, which would have unwound into the test instead of exiting 70); the
+  `OBS_CALL_TIMEOUT_MS` doc comment now says a timeout bails out the whole process
+  (it said "fails the instance"); the dead `latched = true` before `obs_bail_out`
+  in the timeout arm is gone (the process exits at once; the `Tripped` and `Refused`
+  arms keep theirs, which later instances read).
+- Regenerated: the five obs adopters' harnesses (hash-functions, lzw, wasm-leb128,
+  vos-sched-any, vos-sched-fp-bitmap) and the `wxh` fixture. No other adopter's
+  harness changes.
+- Sabotage lines of the obs adopters (BUILD, BUILD_linux, BUILD_windows) now pass
+  only if the run printed a `not ok ` line and no `Bail out!` line, so a hang after
+  an intended failure is no longer hidden by the pipe's last-command status.
+  Documented in VER04j section 14.2 item 53.
+
+## 0.8.0 — CV2-S2 public domain API, WD-HARN1 harness hardening, WX-FAULT1
+
+Three changes ship together in this release; the first is new public API, the other two
+were previously listed as Unreleased and are folded in unchanged.
+
+### VER04r CV2-S2 public resolved-domain enumerator and post-slot resolver
+
+Published API for the v2 corpus emitter (slice S3).  **No behaviour change**: every
+adopter's generated `warrant_evidence.rs` (arithmetic, ct-compare, gf256,
+hash-functions, logic-gates, lzw, vos-sched-any, vos-sched-fp-bitmap, wasm-leb128,
+x25519, zeroize) is byte-identical to the one the previous generator emits, and
+`regenerate --check` and `gen_corpus --check` are unchanged.
+
+- New `pub mod domain`: `Domain` (the generator's binder type `evidence::Ty`, now
+  `pub` and `#[non_exhaustive]`, with `domain_size`, `domain_bytes` and the new `nth(i)` / `iter()` that
+  unrank any VER04r 5.1 descriptor without materialising it); `unrank_product`,
+  `rank_product` and `ProductIter` (row-major, last binder fastest, start at any
+  product ordinal); `DomainEnv` and `resolve_binders` (aliases, records, variants,
+  `NatCount`, the VER04j 2.6 demotion, `W0706`/`W0707`); `resolve_post_slot_of` and
+  `op_post_slot` (the VER04k 4.2 slot over domains); re-exports of the checker's
+  `resolve_post_slot`/`slot_shape`/`PostSlot`/`SlotShape`, `corpus::inout_descriptor`
+  and the budget constants.
+- Internal, same code: the inline per-claim resolution in
+  `generate_evidence_harness_with_tables` is now `resolve_claim_tys` (shared with
+  `resolve_binders`), and `inout::slot_of` delegates to `resolve_post_slot_of`.
+  `evidence::Ty`, `TyEnv`, `product_size`, `claim_domain` and the `Ty` size methods
+  are `pub` or `pub(crate)`; `corpus.rs` and `gen_corpus` are untouched (frozen until
+  S13).
+- Documented divergences, not changed: the harness prelude enumerates byte strings
+  first-byte-fastest while VER04i 2.6 and the v1 corpus are lexicographic (the API
+  follows the spec); the generator's `NatCount` is 73 values where VER04r 5.1 says
+  `0..=K`; the generator's signed edge sets are sorted and include `-1..=-255` where
+  VER04r 5.1 says "same order".  S3 decides how the corpus names them.
+- `Ty::Res` now carries the error type name (`ErrName`, ignored by equality) and
+  `Ty::Data` the declaration's `record` flag, so `nth` produces evaluator-compatible
+  values (`x == E.CASE` and `match ... E.CASE` work on them). Neither changes the
+  generated output or any type comparison. `ResolvedBinders::sizes()` returns an
+  `Option`. `FxEdge` is documented for widths of 16 and up.
+- One deliberate exception to "no behaviour change": generator diagnostics that print a
+  composite `Ty` with `{:?}` now also show the new `record: ..` field and `ErrName(..)`.
+  No generated output and no test pins that text.
+- Correction to the first draft of these notes: the byte-string order difference is a
+  set difference for `List` of byte strings (the 16/4-value prefix differs); see the
+  module docs and VER04r 16.2.
+- Tests: `tests/domain_api.rs` (27, from outside the crate, against an independent
+  eager oracle, an evaluator round trip, and a recomputation of the checked-in v1
+  ct-compare `inputs_sha256` digests from `Domain` enumeration) and 8 doc examples.
+- Docs: README section, VER-BACKLOG CV2 row, VER04r section 16.2.
+
+### WD-HARN1 harness supervisor hardening (from the 2026-11-14 Windows `rust/lzw` hang)
+
+- Prelude, observer supervisor: every wait on the worker is a `Condvar::wait_timeout`
+  against one deadline of `OBS_CALL_TIMEOUT_MS` (120 s; `WARRANT_OBS_TIMEOUT_SECS` can
+  only raise it). An overrun or a lost worker is fatal for the process: TAP
+  `Bail out! observer-timeout: ...` on stdout, the same on stderr, exit status 70
+  (`OBS_TIMEOUT_EXIT`), no later TAP line, no manifest. It is deliberately not a failed
+  instance: a negative control counts any failure as a caught fault and a sabotage line
+  greps `^not ok `, so either would pass on a stall (review finding H1). `is_detected`
+  also refuses `observer-timeout` verdicts. A job that cannot be sent (worker gone) is
+  reported as lost, not as a heap trip.
+- Prelude, exit: abandoned workers (tripped or timed out) are never joined; the
+  invariant (a worker takes only its own reply slot, no lock the supervisor, TAP printer
+  or manifest writer needs) is written into the prelude comment and tested.
+- Prelude, poison: new `lock_or_recover`; no `lock().unwrap()` remains (META, STATS,
+  OBS_STATS, TABLE_STATS, SOURCE_SHA256, the reply slot). The allocator-side trip no
+  longer skips its write on a poisoned slot (which would have left the supervisor
+  waiting).
+- Regenerated: every adopter's `tests/generated/warrant_evidence.rs` (arithmetic,
+  ct-compare, gf256, hash-functions, logic-gates, lzw, wasm-leb128, x25519, zeroize) and
+  the six `warrant-grammar` fixtures. Only lzw, wasm-leb128 and the `wxh` fixture carry
+  the observer; the rest change only by `lock_or_recover`.
+- Tests: `tests/wxh_supervisor.rs` (new; runs the generated WX-H harness against a
+  subject that stalls and panics, with a 300 ms bound: in child processes it checks a
+  stall inside a negative control and inside the whole suite each bail out with status
+  70 and no `not ok`; in-process it checks the call times out, the shared locks stay
+  usable, and a poisoned lock and reply slot recover), two generator tests in `wxh_generator`, hook updates in `wxh_evidence`
+  and `wxh_caps`. New support subject `tests/support/wxh_subject_stalling.rs`.
+- Specification: VER04j 14.2 item 53 (and a pointer from item 33), VER-BACKLOG row.
+
+### WX-FAULT1 `flip-result-bit` for a fixed-width integer result
+
+- Generator: the composite adapter accepts `flip-result-bit` for a `Bytes -> U32/U64`
+  (any `Fx`/`FxEdge`, inside an `Ok` or `Some`) result, so a checksum or hash operation
+  has a negative control. `drop-last-result-byte` is still bytes only (W0701 otherwise).
+- Prelude: `fault_flip_result_bit` gains `V::Fixed(f, x) => V::Fixed(f, x ^ 1)` (width
+  kept, in range for signed and unsigned) in a new `fixedfault` region, emitted only when
+  such an operation is bound. Every existing adopter and the WX-N/WX-V fixtures regenerate
+  byte-identically (`gen_evidence --check` for all eight, `regenerate --check`).
+- Tests: three in `wxe_edges` (the control for `U32` and `U64`, the arm absent for a byte
+  result, the refusals that remain).
+- Specification: VER04j 14.1 item 46 and the VER-BACKLOG row.
+
+## 0.7.0 — WX-G `inout` parameters and `ensures` postconditions (VER04k section 4)
+
+- Language: `name: inout T` (contextual, op parameters only; `x: inout` alone is still
+  an alias; W0101 in a v0 document) and `ensures op:` blocks (W0101 in v0). New
+  `Parameter::inout` and `Declaration::Ensures`; `Parameter`'s `Debug` is unchanged
+  unless `inout` is set, so the pinned v0 hashes do not move.
+- Checker: W0713 for an inadmissible `inout` type, more than four, `fresh`, no
+  post-state slot (S1 to S4) or an `ensures` row that calls an operation or quantifies;
+  `ensures` of an unknown operation (W0401), a duplicate block (W0201), more than 32
+  rows (W0602), a parameter named `result` (W0203), a non-Bool row (W0301). New public
+  `resolve_post_slot`, `SlotShape`, `PostSlot`, `slot_shape`; no field is added to
+  `CheckedWarrantModule`.
+- Bindings: `inout=<param>:<form>` (`slice`, `vec`, `array`, `int:<ht>`, `bool`,
+  `struct:<Name>`; the VER04m forms parse and are refused W0704), and an `export=` Rust
+  path of at most 8 segments for an operation with `inout=`.
+- Generator: `Shape::Inout`; pre-state isolation; fully qualified call; read-back from the
+  same buffer; S1 to S4 result assembly (a panic is `Err` with no post-state); the faults
+  `stale-post`, `skip-last-write`, `drop-last-push`, `clobber-prefix`,
+  `cursor-off-by-one` (W0701 where they do not apply); `ensures` monitors on every call,
+  `<op>/post` suites, `monitored_calls`/`postcondition_rows` in the manifest, W0601 for an
+  example that contradicts its rows. Gated: no other harness changes by a byte (all seven
+  existing adopters regenerate identically).
+- `corpus::inout_descriptor` gives the `inout` and `post_slot` fields VER04k 4.9 asks the
+  v1 corpus to carry; the corpus compiler itself is still the v0 `ct_compare` profile.
+- New diagnostic W0713 (checker) and W0501 (generator, malformed or stray `inout=` entry).
+- Tests: `wxg_syntax`, `wxg_checker`, `wxg_slots`, `wxg_generator`, `wxg_evidence`,
+  `wxg_broken`, `wxg_regen`.
+- Specification: VER04k section 4.13 records the implementation notes.
+
 ## 0.6.0 — WX-N fixed-length byte arrays across the host boundary (VER04j 14.4)
 
 - The language already had `Bytes<N>`; the gap was the binding and generator.

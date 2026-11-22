@@ -34,7 +34,7 @@ package lexer
 //     group is "exclusive": only its own patterns apply, no default fallthrough.
 //
 // computeInheritingModes computes which groups are inheriting from the
-// transitions table so tryMatchTokenInGroup can handle the pattern merging.
+// transitions table so matchToken can handle the pattern merging.
 //
 // ## Integration points
 //
@@ -100,15 +100,26 @@ func computeInheritingModes(transitions []grammartools.ModeTransition) map[strin
 // This method is a no-op when the grammar has no transitions table (pre-F10
 // grammars are unaffected).
 func (l *GrammarLexer) applyTransitions(tok Token) {
-	if len(l.transitions) == 0 {
+	if len(l.c.transitions) == 0 {
 		return
 	}
 
 	// The active group is the top of the group stack.
 	active := l.groupStack[len(l.groupStack)-1]
 
-	for _, rule := range l.transitions {
-		// 1. Token-type guard: does the rule trigger on this token's type?
+	for index := range l.c.transitions {
+		// The transition table is immutable after compilation. Keep a pointer to
+		// the ordered entry so a ModeTransition's slice headers are not copied
+		// for every emitted token.
+		rule := &l.c.transitions[index]
+
+		// 1. In-mode guard: most rules in a multi-mode grammar do not apply in
+		// the current mode, so reject them before scanning their token list.
+		if rule.InMode != "" && rule.InMode != active {
+			continue
+		}
+
+		// 2. Token-type guard: does the rule trigger on this token's type?
 		typeMatched := false
 		for _, onType := range rule.OnTokens {
 			if onType == tok.TypeName {
@@ -117,12 +128,6 @@ func (l *GrammarLexer) applyTransitions(tok Token) {
 			}
 		}
 		if !typeMatched {
-			continue
-		}
-
-		// 2. In-mode guard: rule must be for the current active group
-		//    (or have no in-mode constraint).
-		if rule.InMode != "" && rule.InMode != active {
 			continue
 		}
 

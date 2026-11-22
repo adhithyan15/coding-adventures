@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+- Capped null-terminated instance and class `name_bytes` length (`MAX_TAG_CSTRING_BYTES = 4096`) via shared `read_bounded_cstring` in `tag_parse.rs` (CWE-400).
+- Added `tests/hostile_inputs.rs` (`#![forbid(unsafe_code)]`) covering `NaN`/`±Inf`/extremal transforms, hierarchy depth `> 64`, invalid depths/morph ratios, oversized C-strings, and a 1,000-case tag parse fuzz campaign.
+
 ## [0.1.0] - 2026-11-15
 
 ### Added

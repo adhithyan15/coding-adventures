@@ -39,7 +39,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 197-case bootstrap corpus covers every process-free v1 domain:
+The 209-case corpus covers every process-free v1 domain:
 
 - validated CI gate selection with exact package intersection, path and
   globstar matching, explicit false verdicts, deterministic output names,
@@ -92,9 +92,10 @@ The 197-case bootstrap corpus covers every process-free v1 domain:
   plus the `metadata_policy: "package_local"` variant in which a package's
   root changelog or `CHANGELOG.d/*.md` shard, capability manifest, effect
   certificate, assurance report or `evidence/` data (`.json`, `.cnf`,
-  `.drat`) selects that package and its prerequisites but none of its
-  dependents, while README, lookalikes, disallowed types and BUILD fronts
-  still propagate (`package-metadata-selection-*.json`);
+  `.drat`) or an exact root BUILD front selects that package and its
+  prerequisites but none of its dependents, while README, lookalikes,
+  disallowed types, nested or misspelled BUILD fronts and strict-glob BUILD
+  fronts still propagate (`package-metadata-selection-*.json`);
 - framed SHA-256 hashing over the caller-supplied, deduplicated union of local
   and repository-boundary inputs, plus hit, miss, and corrupt-cache recovery.
   Three adversarial dependency cases additionally pin reverse-ordered

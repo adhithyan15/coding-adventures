@@ -10,8 +10,8 @@ package record
 // file name:
 //
 //	pre/actions/9f2c...e1.json
-//	  {"schema":"kiln-record-action/2","action":"code/packages/go/parser",
-//	   "language":"go","weak":"3b1c...","refusal":"",
+//	  {"schema":"kiln-record-action/3","action":"code/packages/go/parser",
+//	   "language":"go","weak":"3b1c...","refusal":"","gate":"",
 //	   "steps":["go build ./...","go test ./... -cover"],"tools":["go","git"]}
 //
 // `kiln record step` (stage 4 PR 2b-2) loads it to know the step it is about to
@@ -25,6 +25,14 @@ package record
 // classifier as `traced.Config.Tools`, because a step that classifies cannot
 // build the `legacy.Traced` that would otherwise supply it.
 //
+// `gate` (schema /3, KILN04 13 item 5, stage 4 PR 2b-2c-3) is the reason the
+// package must not be recorded as a measurement: the never list, a KILN03 hard
+// reason or a toolchain probe that disagreed (Traced.Gate, the plan's own
+// computation). Empty when nothing gates it. A gated package still RUNS, and
+// its record carries the gate; the merge turns it into `precondition:<gate>`,
+// so it is never emitted. The text comes from the tree (a package name), so it
+// is printable and clipped to 200 bytes, like every reason a record carries.
+//
 // Exactly one of `weak` and `refusal` is set, as in a shard record line: a
 // package either has a key or says why it does not.
 
@@ -36,12 +44,18 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/traced"
 )
 
 // ActionSchema is the schema of an action file.
-const ActionSchema = "kiln-record-action/2"
+const ActionSchema = "kiln-record-action/3"
+
+// MaxGateBytes is the longest gate an action file may carry (a record's reason
+// fields allow 200).
+const MaxGateBytes = 200
 
 // Action is one package the shard runs.
 type Action struct {
@@ -50,6 +64,7 @@ type Action struct {
 	Language string   `json:"language"`
 	Weak     string   `json:"weak"`
 	Refusal  string   `json:"refusal"`
+	Gate     string   `json:"gate"`
 	Steps    []string `json:"steps"`
 	Tools    []string `json:"tools"`
 }
@@ -72,6 +87,9 @@ func (a *Action) validate() error {
 	}
 	if a.Weak != "" && !hexDigest(a.Weak) {
 		return fmt.Errorf("action %q: weak is not a SHA-256 in lowercase hex", printable(a.Action))
+	}
+	if len(a.Gate) > MaxGateBytes || !utf8.ValidString(a.Gate) || traced.Sanitize(a.Gate) != a.Gate {
+		return fmt.Errorf("action %q: gate is not printable text of at most %d bytes", printable(a.Action), MaxGateBytes)
 	}
 	if a.Steps == nil {
 		return fmt.Errorf("action %q: steps is null", printable(a.Action))
@@ -135,5 +153,18 @@ func DecodeAction(data []byte) (Action, error) {
 	if _, err := dec.Token(); err != io.EOF {
 		return Action{}, fmt.Errorf("action: unexpected data after the JSON value")
 	}
-	return a, a.validate()
+	if err := a.validate(); err != nil {
+		return Action{}, err
+	}
+	// A key that is missing decodes as its zero value (a gate of "" is the
+	// common case), so the bytes must be exactly what EncodeAction writes for
+	// what they say: every key present, in order.
+	again, err := EncodeAction(a)
+	if err != nil {
+		return Action{}, err
+	}
+	if !bytes.Equal(again, data) {
+		return Action{}, fmt.Errorf("action: not in the canonical form EncodeAction writes")
+	}
+	return a, nil
 }

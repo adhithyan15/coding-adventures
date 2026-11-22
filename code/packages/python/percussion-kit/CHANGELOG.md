@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.3.1 - 2026-11-21
+
+### Hardened
+- VER15 CWE/CVE security hardening (MUS-W8-D):
+  - **CWE-20 / CWE-190**: Added O(1) `_safe_repr` error formatting across numeric, kit, voice, and sequence validation; caught `OverflowError` on `float(...)` (`10**400`, `Fraction(10**400, 3)`) into `ValueError`; rejected subnormal sample rates (`not isfinite(1.0 / rate)`) and overflowing voice component amplitude sums (`not isfinite(total)`); added strict `str`/`Mapping` checks on `PercussionVoiceProfile` / `DrumKitProfile` / `PercussionHitEvent`; added stage-field `isinstance` checks in `PercussionHitRender.__post_init__` and `PercussionSequenceRender.__post_init__`; turned missing `hit_id` in dict events from `KeyError` into `ValueError`.
+  - **CWE-400**: Hardened `PercussionVoiceProfile.modes`, `apply_hihat_choke`, and `render_percussion_sequence` against generators, infinite iterators, non-iterables (`str`/`bytes`/`Mapping`), and lying `__len__` (`OverflowError` or exceeding cap) before buffer allocation or materialization.
+  - Added dedicated `tests/test_hostile_inputs.py` and `tests/test_pbt.py` (`coding_adventures_test_bootstrap.prng.SplitMix64`) and `-p no:platformdirs` in `pyproject.toml`.
+
+## 0.3.0 - 2026-11-16
+
+### Changed
+- A non-finite phase (e.g. `frequency * time` overflowing to inf) now yields NaN instead of raising `OverflowError` from `math.floor`, matching the Rust and TypeScript lanes. Finite inputs are bit-identical (the shared music-machine golden is unchanged).
+
+### Changed
+- **Fix (review of TRIG-CONV TC-2):** the pseudo-noise phase `(i + 1) * (seed * 0.1618 + 0.618)` is unbounded, and `trig.sin` is NaN beyond 2^29 radians (PHY00a 3.4.1), so the noise failed at sample 0 for seed 1e9, after about 43,000 samples for seed 12345 and at 29.6 s at 192 kHz for seed 89. The phase is now reduced to its fractional cycle (`phase - floor(phase)`, exact) before the `2*pi` multiply, identically in Python, Rust and TypeScript; the mode sines are reduced the same way. Noise samples change in the last bits. Tests at the failing seeds and counts, with the same expected values in all three lanes.
+
+### Fixed
+- `percussion-kit` Warrant document fixed: `| guard.` claims put on one line, invalid `total_samples` bound replaced by the existing claim, ops with `rejects` now return Result. Document only.
+
 ## 0.2.0
 
 - Completed `MUS07` §6 and §11 starter kit: added all 5 remaining starter voices

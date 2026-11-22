@@ -1,0 +1,204 @@
+-- GBL-020a1 exact-result models for the real raw Q16.16 API.
+warrant fixed_point_q16 v1
+  error Q16Error = Overflow | DivisionByZero
+
+  record Q16(raw: I32)
+  record SaturatingResult(value: Q16, overflowed: Bool)
+  variant RoundingMode = TowardZero | Floor | Ceil | NearestEven
+
+  model quotient(n: I64, d: I64) -> I64 = unwrap_or(div_trunc(n, d), 0i64)
+  model remainder(n: I64, d: I64) -> I64 = unwrap_or(rem_trunc(n, d), 0i64)
+  model rounded(n: I64, d: I64, mode: RoundingMode) -> I64 = if mode == TowardZero then quotient(n, d) else (if mode == Floor then (if remainder(n, d) < 0i64 then quotient(n, d) - 1i64 else quotient(n, d)) else (if mode == Ceil then (if remainder(n, d) > 0i64 then quotient(n, d) + 1i64 else quotient(n, d)) else (if 2i64 * (if remainder(n, d) < 0i64 then 0i64 - remainder(n, d) else remainder(n, d)) < d then quotient(n, d) else (if 2i64 * (if remainder(n, d) < 0i64 then 0i64 - remainder(n, d) else remainder(n, d)) > d then quotient(n, d) + (if n < 0i64 then 0i64 - 1i64 else 1i64) else (if remainder(quotient(n, d), 2i64) == 0i64 then quotient(n, d) else quotient(n, d) + (if n < 0i64 then 0i64 - 1i64 else 1i64))))))
+  model checked_raw(raw: I64) -> Result<Q16, Q16Error> = if try<I32>(raw) == None then Err(Q16Error.Overflow) else Ok(Q16(unwrap_or(try<I32>(raw), 0i32)))
+  model saturated_raw(raw: I64) -> SaturatingResult = SaturatingResult(Q16(if raw < widen<I64>(min_value<I32>()) then min_value<I32>() else (if raw > widen<I64>(max_value<I32>()) then max_value<I32>() else wrap<I32>(raw))), raw < widen<I64>(min_value<I32>()) or raw > widen<I64>(max_value<I32>()))
+
+  model q16_from_integer_model(value: I32) -> Result<Q16, Q16Error> = checked_raw(widen<I64>(value) * 65536i64)
+  model q16_checked_add_model(a: Q16, b: Q16) -> Result<Q16, Q16Error> = checked_raw(widen<I64>(a.raw) + widen<I64>(b.raw))
+  model q16_checked_sub_model(a: Q16, b: Q16) -> Result<Q16, Q16Error> = checked_raw(widen<I64>(a.raw) - widen<I64>(b.raw))
+  model q16_saturating_add_model(a: Q16, b: Q16) -> SaturatingResult = saturated_raw(widen<I64>(a.raw) + widen<I64>(b.raw))
+  model q16_saturating_sub_model(a: Q16, b: Q16) -> SaturatingResult = saturated_raw(widen<I64>(a.raw) - widen<I64>(b.raw))
+  model q16_checked_mul_model(a: Q16, b: Q16, mode: RoundingMode) -> Result<Q16, Q16Error> = checked_raw(rounded(widen<I64>(a.raw) * widen<I64>(b.raw), 65536i64, mode))
+  model q16_saturating_mul_model(a: Q16, b: Q16, mode: RoundingMode) -> SaturatingResult = saturated_raw(rounded(widen<I64>(a.raw) * widen<I64>(b.raw), 65536i64, mode))
+  model q16_checked_div_model(a: Q16, b: Q16, mode: RoundingMode) -> Result<Q16, Q16Error> = if b.raw == 0i32 then Err(Q16Error.DivisionByZero) else checked_raw(rounded(if b.raw < 0i32 then 0i64 - widen<I64>(a.raw) * 65536i64 else widen<I64>(a.raw) * 65536i64, if b.raw < 0i32 then 0i64 - widen<I64>(b.raw) else widen<I64>(b.raw), mode))
+  model q16_saturating_div_model(a: Q16, b: Q16, mode: RoundingMode) -> Result<SaturatingResult, Q16Error> = if b.raw == 0i32 then Err(Q16Error.DivisionByZero) else Ok(saturated_raw(rounded(if b.raw < 0i32 then 0i64 - widen<I64>(a.raw) * 65536i64 else widen<I64>(a.raw) * 65536i64, if b.raw < 0i32 then 0i64 - widen<I64>(b.raw) else widen<I64>(b.raw), mode)))
+  model q16_to_integer_model(value: Q16, mode: RoundingMode) -> I32 = wrap<I32>(rounded(widen<I64>(value.raw), 65536i64, mode))
+
+  op q16_from_integer(value: I32) -> Result<Q16, Q16Error>
+  op q16_checked_add(a: Q16, b: Q16) -> Result<Q16, Q16Error>
+  op q16_checked_sub(a: Q16, b: Q16) -> Result<Q16, Q16Error>
+  op q16_saturating_add(a: Q16, b: Q16) -> SaturatingResult
+  op q16_saturating_sub(a: Q16, b: Q16) -> SaturatingResult
+  op q16_checked_mul(a: Q16, b: Q16, mode: RoundingMode) -> Result<Q16, Q16Error>
+  op q16_saturating_mul(a: Q16, b: Q16, mode: RoundingMode) -> SaturatingResult
+  op q16_checked_div(a: Q16, b: Q16, mode: RoundingMode) -> Result<Q16, Q16Error>
+  op q16_saturating_div(a: Q16, b: Q16, mode: RoundingMode) -> Result<SaturatingResult, Q16Error>
+  op q16_to_integer(value: Q16, mode: RoundingMode) -> I32
+
+  labels q16_from_integer:
+    value public
+  labels q16_checked_add:
+    a public
+    b public
+  labels q16_checked_sub:
+    a public
+    b public
+  labels q16_saturating_add:
+    a public
+    b public
+  labels q16_saturating_sub:
+    a public
+    b public
+  labels q16_checked_mul:
+    a public
+    b public
+    mode public
+  labels q16_saturating_mul:
+    a public
+    b public
+    mode public
+  labels q16_checked_div:
+    a public
+    b public
+    mode public
+  labels q16_saturating_div:
+    a public
+    b public
+    mode public
+  labels q16_to_integer:
+    value public
+    mode public
+
+  input q16_from_integer.value:
+    hostile
+    ensures no_panic, terminates
+  input q16_checked_add.a:
+    hostile
+    ensures no_panic, terminates
+  input q16_checked_add.b:
+    hostile
+    ensures no_panic, terminates
+  input q16_checked_sub.a:
+    hostile
+    ensures no_panic, terminates
+  input q16_checked_sub.b:
+    hostile
+    ensures no_panic, terminates
+  input q16_saturating_add.a:
+    hostile
+    ensures no_panic, terminates
+  input q16_saturating_add.b:
+    hostile
+    ensures no_panic, terminates
+  input q16_saturating_sub.a:
+    hostile
+    ensures no_panic, terminates
+  input q16_saturating_sub.b:
+    hostile
+    ensures no_panic, terminates
+  input q16_checked_mul.a:
+    hostile
+    ensures no_panic, terminates
+  input q16_checked_mul.b:
+    hostile
+    ensures no_panic, terminates
+  input q16_checked_mul.mode:
+    hostile
+    ensures no_panic, terminates
+  input q16_saturating_mul.a:
+    hostile
+    ensures no_panic, terminates
+  input q16_saturating_mul.b:
+    hostile
+    ensures no_panic, terminates
+  input q16_saturating_mul.mode:
+    hostile
+    ensures no_panic, terminates
+  input q16_checked_div.a:
+    hostile
+    ensures no_panic, terminates
+  input q16_checked_div.b:
+    hostile
+    ensures no_panic, terminates
+  input q16_checked_div.mode:
+    hostile
+    ensures no_panic, terminates
+  input q16_saturating_div.a:
+    hostile
+    ensures no_panic, terminates
+  input q16_saturating_div.b:
+    hostile
+    ensures no_panic, terminates
+  input q16_saturating_div.mode:
+    hostile
+    ensures no_panic, terminates
+  input q16_to_integer.value:
+    hostile
+    ensures no_panic, terminates
+  input q16_to_integer.mode:
+    hostile
+    ensures no_panic, terminates
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  example q16_from_integer_zero:
+    q16_from_integer(0i32) == Ok(Q16(0i32))
+  example q16_from_integer_exact:
+    q16_from_integer(1i32) == Ok(Q16(65536i32))
+  example q16_from_integer_overflow:
+    q16_from_integer(32768i32) == Err(Q16Error.Overflow)
+  example q16_checked_add_exact:
+    q16_checked_add(Q16(65536i32), Q16(1i32)) == Ok(Q16(65537i32))
+  example q16_checked_add_overflow:
+    q16_checked_add(Q16(2147483647i32), Q16(1i32)) == Err(Q16Error.Overflow)
+  example q16_checked_sub_exact:
+    q16_checked_sub(Q16(65536i32), Q16(1i32)) == Ok(Q16(65535i32))
+  example q16_checked_sub_overflow:
+    q16_checked_sub(Q16(-2147483648i32), Q16(1i32)) == Err(Q16Error.Overflow)
+  example q16_saturating_add_overflow:
+    q16_saturating_add(Q16(2147483647i32), Q16(1i32)) == SaturatingResult(Q16(2147483647i32), true)
+  example q16_saturating_add_in_range:
+    q16_saturating_add(Q16(10i32), Q16(-3i32)) == SaturatingResult(Q16(7i32), false)
+  example q16_saturating_sub_overflow:
+    q16_saturating_sub(Q16(-2147483648i32), Q16(1i32)) == SaturatingResult(Q16(-2147483648i32), true)
+  example q16_checked_mul_one:
+    q16_checked_mul(Q16(65536i32), Q16(65536i32), NearestEven) == Ok(Q16(65536i32))
+  example q16_checked_mul_rounding_overflow:
+    q16_checked_mul(Q16(65537i32), Q16(2147450880i32), Ceil) == Err(Q16Error.Overflow)
+  example q16_saturating_mul_overflow_flag:
+    q16_saturating_mul(Q16(65537i32), Q16(2147450880i32), Ceil) == SaturatingResult(Q16(2147483647i32), true)
+  example q16_checked_div_zero:
+    q16_checked_div(Q16(1i32), Q16(0i32), TowardZero) == Err(Q16Error.DivisionByZero)
+  example q16_saturating_div_zero:
+    q16_saturating_div(Q16(1i32), Q16(0i32), NearestEven) == Err(Q16Error.DivisionByZero)
+  example q16_checked_div_in_range:
+    q16_checked_div(Q16(65536i32), Q16(131072i32), NearestEven) == Ok(Q16(32768i32))
+  example q16_saturating_div_overflow:
+    q16_saturating_div(Q16(2147483647i32), Q16(1i32), TowardZero) == Ok(SaturatingResult(Q16(2147483647i32), true))
+  example q16_to_integer_floor_negative:
+    q16_to_integer(Q16(-32768i32), Floor) == -1i32
+  example q16_to_integer_nearest_even_tie:
+    q16_to_integer(Q16(98304i32), NearestEven) == 2i32
+
+  claim q16_from_integer_matches_exact_model:
+    forall value: I32. q16_from_integer(value) == q16_from_integer_model(value)
+  claim q16_checked_add_matches_exact_model:
+    forall a: Q16, b: Q16. q16_checked_add(a, b) == q16_checked_add_model(a, b)
+  claim q16_checked_sub_matches_exact_model:
+    forall a: Q16, b: Q16. q16_checked_sub(a, b) == q16_checked_sub_model(a, b)
+  claim q16_saturating_add_matches_exact_model:
+    forall a: Q16, b: Q16. q16_saturating_add(a, b) == q16_saturating_add_model(a, b)
+  claim q16_saturating_sub_matches_exact_model:
+    forall a: Q16, b: Q16. q16_saturating_sub(a, b) == q16_saturating_sub_model(a, b)
+  claim q16_checked_mul_matches_exact_model:
+    forall a: Q16, b: Q16, mode: RoundingMode. q16_checked_mul(a, b, mode) == q16_checked_mul_model(a, b, mode)
+  claim q16_saturating_mul_matches_exact_model:
+    forall a: Q16, b: Q16, mode: RoundingMode. q16_saturating_mul(a, b, mode) == q16_saturating_mul_model(a, b, mode)
+  claim q16_checked_div_matches_exact_model:
+    forall a: Q16, b: Q16, mode: RoundingMode. q16_checked_div(a, b, mode) == q16_checked_div_model(a, b, mode)
+  claim q16_saturating_div_matches_exact_model:
+    forall a: Q16, b: Q16, mode: RoundingMode. q16_saturating_div(a, b, mode) == q16_saturating_div_model(a, b, mode)
+  claim q16_to_integer_matches_exact_model:
+    forall value: Q16, mode: RoundingMode. q16_to_integer(value, mode) == q16_to_integer_model(value, mode)

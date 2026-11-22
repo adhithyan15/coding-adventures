@@ -1,9 +1,10 @@
 package record
 
 import (
-	"encoding/json"
+	"bytes"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -193,6 +194,44 @@ func goodReport(cfg *sandbox.Config, shadowed []string) ProbeReport {
 	return rep
 }
 
+// TestProbeWallIsNeverSealed: a probe's wall time is an in-memory census fact
+// (ProbeRunRecord.Wall).  Two reports that differ ONLY in wall time must encode
+// to the same bytes, and the bytes must hold no trace of a duration, or
+// pre/probes.json would differ from run to run.
+func TestProbeWallIsNeverSealed(t *testing.T) {
+	cfg := probeCfg()
+	plain := goodReport(cfg, []string{"/usr/a"})
+	timed := goodReport(cfg, []string{"/usr/a"})
+	for i := range timed.Runs {
+		timed.Runs[i].Wall = time.Duration(123456789+i) * time.Nanosecond
+	}
+	a, err := EncodeProbes(plain)
+	if err != nil {
+		t.Fatal(err)
+	}
+	b, err := EncodeProbes(timed)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(a, b) {
+		t.Fatalf("a wall time reached the sealed bytes:\n%s\n%s", a, b)
+	}
+	for _, needle := range []string{"wall", "123456789", "elapsed", "duration"} {
+		if strings.Contains(string(b), needle) {
+			t.Errorf("sealed bytes mention %q: %s", needle, b)
+		}
+	}
+	back, err := DecodeProbes(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, r := range back.Runs {
+		if r.Wall != 0 {
+			t.Errorf("a decoded run carries a wall time: %v", r.Wall)
+		}
+	}
+}
+
 func TestProbesRoundTripAndStrictDecode(t *testing.T) {
 	cfg := probeCfg()
 	rep := goodReport(cfg, []string{"/usr/a"})
@@ -230,25 +269,38 @@ func TestCheckProbeReportRefuses(t *testing.T) {
 	acts := []string{"p"}
 	sh := []string{"/usr/a"}
 	cases := map[string]func(r *ProbeReport){
-		"schema":            func(r *ProbeReport) { r.Schema = "x" },
-		"toolchains":        func(r *ProbeReport) { r.Toolchains = []json.RawMessage{json.RawMessage(`1`)} },
-		"unknown action":    func(r *ProbeReport) { r.Action = "q" },
-		"bad action":        func(r *ProbeReport) { r.Action = "/abs" },
-		"empty action":      func(r *ProbeReport) { r.Action = "" },
-		"dropped probe":     func(r *ProbeReport) { r.Runs = append(r.Runs[:1], r.Runs[2:]...) },
-		"extra probe":       func(r *ProbeReport) { r.Runs = append(r.Runs, r.Runs[0]) },
-		"renamed":           func(r *ProbeReport) { r.Runs[0].Name = "walk" },
-		"other argv":        func(r *ProbeReport) { r.Runs[1].Argv = []string{"true"} },
-		"exit":              func(r *ProbeReport) { r.Runs[0].Exit = 1 },
-		"empty trace":       func(r *ProbeReport) { r.Runs[0].TraceBytes = 0 },
-		"huge trace":        func(r *ProbeReport) { r.Runs[0].TraceBytes = ProbeTraceCap + 1 },
-		"digest":            func(r *ProbeReport) { r.Runs[0].TraceSHA256 = "zz" },
-		"shadow not sorted": func(r *ProbeReport) { r.Shadowed = []string{"/usr/b", "/usr/a"} },
-		"shadow relative":   func(r *ProbeReport) { r.Shadowed = []string{"usr/a"} },
-		"shadow dash":       func(r *ProbeReport) { r.Shadowed = []string{"-x"} },
-		"shadow root":       func(r *ProbeReport) { r.Shadowed = []string{"/"} },
-		"shadow nested":     func(r *ProbeReport) { r.Shadowed = []string{"/usr/a", "/usr/a/b"} },
-		"shadow vs runs":    func(r *ProbeReport) { r.Shadowed = []string{"/usr/a", "/usr/b"} },
+		"schema":           func(r *ProbeReport) { r.Schema = "x" },
+		"toolchain status": func(r *ProbeReport) { r.Toolchains = []ToolchainProbe{{Tool: "sed", Status: "fine"}} },
+		"toolchain detail": func(r *ProbeReport) { r.Toolchains = []ToolchainProbe{{Tool: "sed", Status: "ok", Detail: "x"}} },
+		"toolchain order": func(r *ProbeReport) {
+			r.Toolchains = []ToolchainProbe{{Tool: "sh", Status: "ok"}, {Tool: "sed", Status: "ok"}}
+		},
+		"toolchain twice": func(r *ProbeReport) {
+			r.Toolchains = []ToolchainProbe{{Tool: "sed", Status: "ok"}, {Tool: "sed", Status: "ok"}}
+		},
+		"toolchain no name": func(r *ProbeReport) { r.Toolchains = []ToolchainProbe{{Tool: "", Status: "ok"}} },
+		"toolchain newline": func(r *ProbeReport) { r.Toolchains = []ToolchainProbe{{Tool: "a\nb", Status: "ok"}} },
+		"toolchain long detail": func(r *ProbeReport) {
+			r.Toolchains = []ToolchainProbe{{Tool: "sed", Status: "mismatch", Detail: strings.Repeat("d", MaxGateBytes+1)}}
+		},
+		"too many toolchains": func(r *ProbeReport) { r.Toolchains = make([]ToolchainProbe, MaxToolchainProbes+1) },
+		"unknown action":      func(r *ProbeReport) { r.Action = "q" },
+		"bad action":          func(r *ProbeReport) { r.Action = "/abs" },
+		"empty action":        func(r *ProbeReport) { r.Action = "" },
+		"dropped probe":       func(r *ProbeReport) { r.Runs = append(r.Runs[:1], r.Runs[2:]...) },
+		"extra probe":         func(r *ProbeReport) { r.Runs = append(r.Runs, r.Runs[0]) },
+		"renamed":             func(r *ProbeReport) { r.Runs[0].Name = "walk" },
+		"other argv":          func(r *ProbeReport) { r.Runs[1].Argv = []string{"true"} },
+		"exit":                func(r *ProbeReport) { r.Runs[0].Exit = 1 },
+		"empty trace":         func(r *ProbeReport) { r.Runs[0].TraceBytes = 0 },
+		"huge trace":          func(r *ProbeReport) { r.Runs[0].TraceBytes = ProbeTraceCap + 1 },
+		"digest":              func(r *ProbeReport) { r.Runs[0].TraceSHA256 = "zz" },
+		"shadow not sorted":   func(r *ProbeReport) { r.Shadowed = []string{"/usr/b", "/usr/a"} },
+		"shadow relative":     func(r *ProbeReport) { r.Shadowed = []string{"usr/a"} },
+		"shadow dash":         func(r *ProbeReport) { r.Shadowed = []string{"-x"} },
+		"shadow root":         func(r *ProbeReport) { r.Shadowed = []string{"/"} },
+		"shadow nested":       func(r *ProbeReport) { r.Shadowed = []string{"/usr/a", "/usr/a/b"} },
+		"shadow vs runs":      func(r *ProbeReport) { r.Shadowed = []string{"/usr/a", "/usr/b"} },
 		"too many": func(r *ProbeReport) {
 			r.Shadowed = nil
 			for i := 0; i <= MaxShadowed; i++ {
@@ -345,10 +397,16 @@ func TestShadowedMounts(t *testing.T) {
 		t.Fatal("more than the maximum")
 	}
 	mountPoints = func() map[string]bool { return map[string]bool{"/": true} }
-	os.WriteFile(filepath.Join(ro, "nope"), nil, 0o644)
-	cfg.RoRoots = []string{filepath.Join(ro, "nope", "x")} // lstat of a path beneath a file: ENOTDIR
-	if _, err := ShadowedMounts(cfg); err == nil {
-		t.Fatal("an unreadable ro root was ignored")
+	// A path beneath a regular file: Linux lstat says ENOTDIR (not "not exist"),
+	// so ShadowedMounts must refuse.  Windows reports ERROR_PATH_NOT_FOUND, which
+	// Go maps to ErrNotExist (an absent root, skipped by design); ShadowedMounts
+	// reads /proc/self/mountinfo, so it is Linux-only in production anyway.
+	if runtime.GOOS != "windows" {
+		os.WriteFile(filepath.Join(ro, "nope"), nil, 0o644)
+		cfg.RoRoots = []string{filepath.Join(ro, "nope", "x")}
+		if _, err := ShadowedMounts(cfg); err == nil {
+			t.Fatal("an unreadable ro root was ignored")
+		}
 	}
 }
 

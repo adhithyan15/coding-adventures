@@ -63,7 +63,10 @@ pub enum LogicError {
     /// Selected channel / gate index was out of bounds (CWE-20).
     InvalidChannel { channel: usize, max: usize },
     /// Parameter validation failure (CWE-20).
-    InvalidParameter { name: &'static str, reason: &'static str },
+    InvalidParameter {
+        name: &'static str,
+        reason: &'static str,
+    },
     /// Division by zero prevented (CWE-369).
     DivisionByZero { component: &'static str },
     /// Counter or accumulator reached an invalid state (CWE-190).
@@ -74,7 +77,10 @@ impl core::fmt::Display for LogicError {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
             Self::InvalidLogicLevel { pin, value } => {
-                write!(f, "invalid logic level on pin '{pin}': {value} (must be 0 or 1)")
+                write!(
+                    f,
+                    "invalid logic level on pin '{pin}': {value} (must be 0 or 1)"
+                )
             }
             Self::InvalidChannel { channel, max } => {
                 write!(f, "invalid channel index {channel} (max {max})")
@@ -419,16 +425,25 @@ impl Ttl7474DualDFlipFlop {
         clr_b: u8,
     ) -> Result<FlipFlopOutput, LogicError> {
         if clk > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "clk", value: clk });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "clk",
+                value: clk,
+            });
         }
         if d > 1 {
             return Err(LogicError::InvalidLogicLevel { pin: "d", value: d });
         }
         if pre_b > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "pre_b", value: pre_b });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "pre_b",
+                value: pre_b,
+            });
         }
         if clr_b > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "clr_b", value: clr_b });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "clr_b",
+                value: clr_b,
+            });
         }
 
         let st = self.channel_ref_mut(channel)?;
@@ -465,16 +480,25 @@ impl Ttl7474DualDFlipFlop {
         clr_b: u8,
     ) -> Result<FlipFlopOutput, LogicError> {
         if clk > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "clk", value: clk });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "clk",
+                value: clk,
+            });
         }
         if d > 1 {
             return Err(LogicError::InvalidLogicLevel { pin: "d", value: d });
         }
         if pre_b > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "pre_b", value: pre_b });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "pre_b",
+                value: pre_b,
+            });
         }
         if clr_b > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "clr_b", value: clr_b });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "clr_b",
+                value: clr_b,
+            });
         }
 
         let st = self.channel_ref_mut(channel)?;
@@ -498,14 +522,10 @@ impl Ttl7474DualDFlipFlop {
                 // If D=1: G4=0 -> G1=1 -> G2=0 -> Q=1, Q_bar=0
                 // If D=0: G4=1 -> G1=0 -> G2=1, G3=0 -> Q_bar=1, Q=0
                 let not_d = logic_gates::gates::not_gate(d);
-                let q_new = logic_gates::gates::nand_gate(
-                    pre_b,
-                    logic_gates::gates::nand_gate(d, clk),
-                );
-                let q_bar_new = logic_gates::gates::nand_gate(
-                    clr_b,
-                    logic_gates::gates::nand_gate(not_d, clk),
-                );
+                let q_new =
+                    logic_gates::gates::nand_gate(pre_b, logic_gates::gates::nand_gate(d, clk));
+                let q_bar_new =
+                    logic_gates::gates::nand_gate(clr_b, logic_gates::gates::nand_gate(not_d, clk));
                 st.q = if d == 1 { q_new } else { 0 };
                 st.q_bar = if d == 1 { 0 } else { q_bar_new };
             }
@@ -571,7 +591,10 @@ impl Ttl7490DecadeCounter {
     /// Clocks Section A (divide-by-2) on negative (falling) edge.
     pub fn decade_clock_a(&mut self, clk_a: u8) -> Result<u8, LogicError> {
         if clk_a > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "clk_a", value: clk_a });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "clk_a",
+                value: clk_a,
+            });
         }
         if self.last_clk_a == 1 && clk_a == 0 {
             // Falling edge toggles QA
@@ -584,7 +607,10 @@ impl Ttl7490DecadeCounter {
     /// Clocks Section B (divide-by-5) on negative (falling) edge.
     pub fn decade_clock_b(&mut self, clk_b: u8) -> Result<DecadeOutputs, LogicError> {
         if clk_b > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "clk_b", value: clk_b });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "clk_b",
+                value: clk_b,
+            });
         }
         if self.last_clk_b == 1 && clk_b == 0 {
             // Divide-by-5 state sequence: 000 -> 001 -> 010 -> 011 -> 100 -> 000
@@ -607,7 +633,10 @@ impl Ttl7490DecadeCounter {
     /// Clocks Section A via gate-level parity.
     pub fn decade_clock_a_gate_level(&mut self, clk_a: u8) -> Result<u8, LogicError> {
         if clk_a > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "clk_a", value: clk_a });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "clk_a",
+                value: clk_a,
+            });
         }
         if self.last_clk_a == 1 && clk_a == 0 {
             self.qa = logic_gates::gates::xor_gate(self.qa, 1);
@@ -619,7 +648,10 @@ impl Ttl7490DecadeCounter {
     /// Clocks Section B via gate-level JK flip-flop excitation equations.
     pub fn decade_clock_b_gate_level(&mut self, clk_b: u8) -> Result<DecadeOutputs, LogicError> {
         if clk_b > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "clk_b", value: clk_b });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "clk_b",
+                value: clk_b,
+            });
         }
         if self.last_clk_b == 1 && clk_b == 0 {
             let not_qd = logic_gates::gates::not_gate(self.qd);
@@ -660,7 +692,10 @@ impl Ttl7490DecadeCounter {
         r9_2: u8,
     ) -> Result<(), LogicError> {
         if r0_1 > 1 || r0_2 > 1 || r9_1 > 1 || r9_2 > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "reset", value: 2 });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "reset",
+                value: 2,
+            });
         }
         let set9 = logic_gates::gates::and_gate(r9_1, r9_2);
         let reset0 = logic_gates::gates::and_gate(r0_1, r0_2);
@@ -751,7 +786,10 @@ impl Ttl7493BinaryCounter {
     /// Clocks Section A (divide-by-2) on negative (falling) edge.
     pub fn binary_clock_a(&mut self, clk_a: u8) -> Result<u8, LogicError> {
         if clk_a > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "clk_a", value: clk_a });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "clk_a",
+                value: clk_a,
+            });
         }
         if self.last_clk_a == 1 && clk_a == 0 {
             self.qa = if self.qa == 0 { 1 } else { 0 };
@@ -763,7 +801,10 @@ impl Ttl7493BinaryCounter {
     /// Clocks Section B (divide-by-8 ripple) on negative (falling) edge.
     pub fn binary_clock_b(&mut self, clk_b: u8) -> Result<BinaryOutputs, LogicError> {
         if clk_b > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "clk_b", value: clk_b });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "clk_b",
+                value: clk_b,
+            });
         }
         if self.last_clk_b == 1 && clk_b == 0 {
             // Ripple counter: QB toggles on CLK_B falling edge
@@ -786,7 +827,10 @@ impl Ttl7493BinaryCounter {
     /// Clocks Section A via gate-level XOR toggle.
     pub fn binary_clock_a_gate_level(&mut self, clk_a: u8) -> Result<u8, LogicError> {
         if clk_a > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "clk_a", value: clk_a });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "clk_a",
+                value: clk_a,
+            });
         }
         if self.last_clk_a == 1 && clk_a == 0 {
             self.qa = logic_gates::gates::xor_gate(self.qa, 1);
@@ -798,7 +842,10 @@ impl Ttl7493BinaryCounter {
     /// Clocks Section B via gate-level ripple evaluation.
     pub fn binary_clock_b_gate_level(&mut self, clk_b: u8) -> Result<BinaryOutputs, LogicError> {
         if clk_b > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "clk_b", value: clk_b });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "clk_b",
+                value: clk_b,
+            });
         }
         if self.last_clk_b == 1 && clk_b == 0 {
             let old_qb = self.qb;
@@ -818,7 +865,10 @@ impl Ttl7493BinaryCounter {
     /// Resets all 4 bits to 0 when both R0_1 and R0_2 are high.
     pub fn binary_reset(&mut self, r0_1: u8, r0_2: u8) -> Result<(), LogicError> {
         if r0_1 > 1 || r0_2 > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "reset", value: 2 });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "reset",
+                value: 2,
+            });
         }
         if r0_1 == 1 && r0_2 == 1 {
             self.qa = 0;
@@ -897,10 +947,16 @@ impl Ttl74153DualMux4to1 {
         c3: u8,
     ) -> Result<u8, LogicError> {
         if section >= 2 {
-            return Err(LogicError::InvalidChannel { channel: section, max: 2 });
+            return Err(LogicError::InvalidChannel {
+                channel: section,
+                max: 2,
+            });
         }
         if s0 > 1 || s1 > 1 || strobe_b > 1 || c0 > 1 || c1 > 1 || c2 > 1 || c3 > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "mux_input", value: 2 });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "mux_input",
+                value: 2,
+            });
         }
         if strobe_b != 0 {
             return Ok(0);
@@ -928,10 +984,16 @@ impl Ttl74153DualMux4to1 {
         c3: u8,
     ) -> Result<u8, LogicError> {
         if section >= 2 {
-            return Err(LogicError::InvalidChannel { channel: section, max: 2 });
+            return Err(LogicError::InvalidChannel {
+                channel: section,
+                max: 2,
+            });
         }
         if s0 > 1 || s1 > 1 || strobe_b > 1 || c0 > 1 || c1 > 1 || c2 > 1 || c3 > 1 {
-            return Err(LogicError::InvalidLogicLevel { pin: "mux_input", value: 2 });
+            return Err(LogicError::InvalidLogicLevel {
+                pin: "mux_input",
+                value: 2,
+            });
         }
 
         let not_s0 = logic_gates::gates::not_gate(s0);
@@ -989,8 +1051,10 @@ impl Ttl74153DualMux4to1 {
         in2: QuadLogicLevels,
     ) -> Result<DualLogicLevels, LogicError> {
         Ok(DualLogicLevels {
-            y1: self.mux_eval_section_gate_level(0, s0, s1, str1, in1.y0, in1.y1, in1.y2, in1.y3)?,
-            y2: self.mux_eval_section_gate_level(1, s0, s1, str2, in2.y0, in2.y1, in2.y2, in2.y3)?,
+            y1: self
+                .mux_eval_section_gate_level(0, s0, s1, str1, in1.y0, in1.y1, in1.y2, in1.y3)?,
+            y2: self
+                .mux_eval_section_gate_level(1, s0, s1, str2, in2.y0, in2.y1, in2.y2, in2.y3)?,
         })
     }
 }
@@ -1021,7 +1085,9 @@ impl ArcadeSyncGenerator {
     /// Constructs a new sync generator with master clock frequency validation (CWE-369).
     pub fn new_arcade_sync(master_clock_hz: u64) -> Result<Self, LogicError> {
         if master_clock_hz == 0 {
-            return Err(LogicError::DivisionByZero { component: "master_clock_hz" });
+            return Err(LogicError::DivisionByZero {
+                component: "master_clock_hz",
+            });
         }
         Ok(Self {
             master_clock_hz,
@@ -1234,13 +1300,19 @@ impl PaddlePotAdc {
         max_pot_resistance_ohms: u64,
     ) -> Result<Self, LogicError> {
         if clock_hz == 0 {
-            return Err(LogicError::DivisionByZero { component: "clock_hz" });
+            return Err(LogicError::DivisionByZero {
+                component: "clock_hz",
+            });
         }
         if capacitance_pf == 0 {
-            return Err(LogicError::DivisionByZero { component: "capacitance_pf" });
+            return Err(LogicError::DivisionByZero {
+                component: "capacitance_pf",
+            });
         }
         if max_pot_resistance_ohms == 0 {
-            return Err(LogicError::DivisionByZero { component: "max_pot_resistance_ohms" });
+            return Err(LogicError::DivisionByZero {
+                component: "max_pot_resistance_ohms",
+            });
         }
         Ok(Self {
             clock_hz,
@@ -1373,7 +1445,10 @@ pub fn dff_step_op(
     prev_q: u8,
 ) -> Result<u8, LogicError> {
     if pre_b > 1 || clr_b > 1 || d > 1 || prev_q > 1 {
-        return Err(LogicError::InvalidLogicLevel { pin: "dff", value: 2 });
+        return Err(LogicError::InvalidLogicLevel {
+            pin: "dff",
+            value: 2,
+        });
     }
     if pre_b == 0 {
         Ok(1)
@@ -1405,7 +1480,11 @@ pub fn binary_step_op(current_val: u8) -> Result<u8, LogicError> {
             reason: "value exceeds 15",
         });
     }
-    Ok(if current_val >= 15 { 0 } else { current_val + 1 })
+    Ok(if current_val >= 15 {
+        0
+    } else {
+        current_val + 1
+    })
 }
 
 /// Advances raster dot coordinate (wrapping at 454, for Warrant contract).
@@ -1425,6 +1504,5 @@ pub fn paddle_calc_clocks(
     cap_pf: u64,
     max_r: u64,
 ) -> Result<u64, LogicError> {
-    PaddlePotAdc::new_paddle_pot_adc(clk_hz, cap_pf, max_r)?
-        .paddle_charge_duration_clocks(pot_norm)
+    PaddlePotAdc::new_paddle_pot_adc(clk_hz, cap_pf, max_r)?.paddle_charge_duration_clocks(pot_norm)
 }

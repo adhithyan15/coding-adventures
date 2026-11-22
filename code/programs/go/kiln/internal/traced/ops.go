@@ -88,6 +88,49 @@ func writeFollow(ev *trace.Event) bool {
 	return !flagSet(ev.Flags)["AT_SYMLINK_NOFOLLOW"]
 }
 
+// isPairCall says the syscall names TWO paths, so an ENOENT from it cannot be
+// attributed to either final name (rename, link and their at-forms).
+func isPairCall(sys string) bool {
+	switch sys {
+	case "rename", "renameat", "renameat2", "link", "linkat":
+		return true
+	}
+	return false
+}
+
+// metaWriteByPath says the call changes the mode, owner, times or extended
+// attributes of the file a PATH names, following a final symlink (chmod, chown,
+// utimensat, setxattr and their variants; the l* forms and AT_SYMLINK_NOFOLLOW
+// do not follow, and walk keeps their final name out of the followed set).
+// KILN04 D42: it is the linker's post-link chmod.
+func metaWriteByPath(sys string) bool {
+	switch sys {
+	case "chmod", "fchmodat", "fchmodat2", "chown", "fchownat",
+		"utimensat", "utimes", "futimesat", "utime", "setxattr":
+		return true
+	}
+	return false
+}
+
+// ephemeralDevice says abs is a device node the host declares ephemeral under
+// /dev (/dev/null, /dev/zero, /dev/tty): shell redirections open it with
+// O_CREAT|O_TRUNC, but it is never created, replaced or read as content, so no
+// namespace change is logged for it (KILN04 D42).  Only an EXACT, non-wildcard
+// ephemeral entry counts: /dev is a writable tmpfs, so a wildcard such as
+// "/dev/**" would also hide files the action creates there.  (/dev/fd/* is
+// virtual and never reaches this code.)
+func (c *classifier) ephemeralDevice(abs string) bool {
+	if !strings.HasPrefix(abs, "/dev/") {
+		return false
+	}
+	for _, pat := range c.cfg.ephemeral {
+		if pat == abs && !strings.ContainsAny(pat, "*?[") {
+			return true
+		}
+	}
+	return false
+}
+
 // open handles open, openat, openat2 and creat.
 //
 // The kernel's answer is the descriptor's -y annotation: the resolved path of
@@ -169,7 +212,7 @@ func (c *classifier) openCall(ev *trace.Event, f openFlags) {
 		_, a := c.rel(abs)
 		_, b := c.rel(ret)
 		if a || b {
-			c.reason(rUnstable)
+			c.reasonSub(rUnstable, "fd-path-differs", abs)
 		}
 		abs = ret
 	}
@@ -210,7 +253,7 @@ func (c *classifier) openResolved(abs string, f openFlags, creat, byRet bool) {
 		c.created[abs] = c.cur
 		delete(c.absent, abs)
 	}
-	if f.creat || creat {
+	if (f.creat || creat) && !c.ephemeralDevice(abs) {
 		// An O_CREAT open may have made the name: a namespace change.  Only
 		// with O_EXCL does the result prove it did.
 		c.nsChange(abs, f.creat && f.excl, byRet && !f.tmpfile && !f.nofollow && !f.path)
@@ -227,22 +270,76 @@ func (c *classifier) openVirtual(ev *trace.Event, tg target, f openFlags) {
 	if isFDLink(tg.abs) {
 		if strings.HasPrefix(ev.ReturnFDPath, "/") {
 			c.openResolved(ev.ReturnFDPath, f, false, false)
+		} else if !anonymousFD(ev.ReturnFDPath) {
+			c.reasonAt(rProc, tg.abs) // D28: no -y path says what the descriptor is
 		}
 		return
 	}
 	c.observe(tg.abs, true, false)
+	// D28: opening a magic link itself (cwd, root, exe, fd/N, ...) with no
+	// usable -y path leaves the object unknown, whatever the ephemeral list says.
+	if ret := ev.ReturnFDPath; !strings.HasPrefix(ret, "/") && !anonymousFD(ret) && procMagicFinal(tg.abs) {
+		c.reasonAt(rProc, tg.abs)
+	}
+	// D28: strace -y printed what the descriptor really is.  When that is not
+	// the /proc name the action wrote, the name led somewhere else (a magic
+	// link): classify the real file, and refuse a /proc answer that differs.
+	if ret := ev.ReturnFDPath; strings.HasPrefix(ret, "/") && !procSameFile(tg.abs, ret) {
+		if isVirtual(ret) {
+			c.reasonAt(rProc, ret)
+		} else {
+			c.openResolved(ret, f, false, false)
+		}
+	}
+}
+
+// procSameFile says the -y path ret is the same /proc file as the name abs:
+// either they are equal, or abs spelled the caller's pid as "self" (or its
+// thread as "thread-self") and ret spells it with numbers, which is how the
+// kernel reports a /proc file's own path.  /proc/mounts and /proc/net/... are
+// the kernel's other links into self (with self and thread-self these are all
+// the symlinks at the top of /proc), so they are read the same way.
+func procSameFile(abs, ret string) bool {
+	if abs == ret {
+		return true
+	}
+	rest, thread := "", false
+	switch {
+	case strings.HasPrefix(abs, "/proc/self/"):
+		rest = abs[len("/proc/self/"):]
+	case strings.HasPrefix(abs, "/proc/thread-self/"):
+		rest, thread = abs[len("/proc/thread-self/"):], true
+	case abs == "/proc/mounts":
+		rest = "mounts"
+	case strings.HasPrefix(abs, "/proc/net/"):
+		rest = abs[len("/proc/"):]
+	default:
+		return false
+	}
+	r, ok := strings.CutPrefix(ret, "/proc/")
+	if !ok {
+		return false
+	}
+	pid, r, ok := strings.Cut(r, "/")
+	if !ok || !isDigits(pid) {
+		return false
+	}
+	if thread {
+		// /proc/<pid>/task/<tid>/rest
+		r2, ok := strings.CutPrefix(r, "task/")
+		if !ok {
+			return false
+		}
+		tid, r3, ok := strings.Cut(r2, "/")
+		return ok && isDigits(tid) && r3 == rest
+	}
+	return r == rest
 }
 
 // anonymousFD says a descriptor's -y text names a pipe, socket or anonymous
-// inode: an object with no place in any directory.
-func anonymousFD(ret string) bool {
-	for _, p := range []string{"pipe:[", "socket:[", "anon_inode:"} {
-		if strings.HasPrefix(ret, p) {
-			return true
-		}
-	}
-	return false
-}
+// inode: an object with no place in any directory.  The definition lives in
+// the trace package (trace.AnonymousFD) so the trace model shares it.
+func anonymousFD(ret string) bool { return trace.AnonymousFD(ret) }
 
 // isFDLink matches /proc/self/fd/N and /dev/fd/N.
 func isFDLink(abs string) bool {
@@ -295,13 +392,17 @@ func (c *classifier) write(ev *trace.Event) {
 		e2.Path = stripSlashes(ev.Path)
 		ev = &e2
 	}
+	// A successful metadata write by path looks its final name up like a stat
+	// does, so the open-only rule may stand in for the post-run disk (D42).
+	c.relax = follow && ev.Result.OK && metaWriteByPath(ev.Syscall)
 	tg, ok := c.targetOf(ev, follow)
+	c.relax = false
 	if !ok {
 		c.incomplete = true // W1: a write call that could not be placed
 		return
 	}
 	if tg.virtual {
-		c.reason(rProc)
+		c.reasonAt(rProc, tg.abs)
 		c.incomplete = true // W5
 		return
 	}
@@ -323,6 +424,7 @@ func (c *classifier) write(ev *trace.Event) {
 		c.writePath(tg.abs)
 		c.markCreated(tg.abs, true)
 		c.links[tg.abs] = ev.Target
+		c.noteTmpLink(tg.abs)
 	case "unlink", "unlinkat", "rmdir":
 		c.observeSelf(tg.abs, true)
 		c.writePath(tg.abs)
@@ -347,6 +449,9 @@ func (c *classifier) rename(ev *trace.Event) {
 	dst, ok2 := c.resolve(join(ev.Cwd, ev.Dirfd2Path, dstPath), false)
 	if !ok1 || !ok2 {
 		c.incomplete = true // W3: an endpoint that could not be placed
+		if ev.Result.OK {
+			c.reshaped = true // D43: something moved that nothing says what
+		}
 		// One name could not be placed (see resolve); a failed call still
 		// looked at the other.
 		if !ev.Result.OK {
@@ -360,7 +465,11 @@ func (c *classifier) rename(ev *trace.Event) {
 		return
 	}
 	if src.virtual || dst.virtual {
-		c.reason(rProc)
+		virt := dst.abs
+		if src.virtual {
+			virt = src.abs
+		}
+		c.reasonAt(rProc, virt)
 		c.incomplete = true // W5
 		return
 	}
@@ -375,6 +484,8 @@ func (c *classifier) rename(ev *trace.Event) {
 	c.writePath(src.abs)
 	c.writePath(dst.abs)
 	srcLink, srcIsLink := c.links[src.abs]
+	c.noteTmpMove(src.abs, dst.abs, flagSet(ev.Flags)["RENAME_EXCHANGE"])
+	c.noteMove(src.abs, dst.abs, flagSet(ev.Flags)["RENAME_EXCHANGE"])
 	if flagSet(ev.Flags)["RENAME_EXCHANGE"] {
 		// Both names existed before and still do: neither is created.
 		c.observeSelf(dst.abs, true)
@@ -389,9 +500,11 @@ func (c *classifier) rename(ev *trace.Event) {
 		delete(c.links, dst.abs)
 		if dstIsLink {
 			c.links[src.abs] = dstLink
+			c.noteTmpLink(src.abs)
 		}
 		if srcIsLink {
 			c.links[dst.abs] = srcLink
+			c.noteTmpLink(dst.abs)
 		}
 		return
 	}
@@ -400,6 +513,7 @@ func (c *classifier) rename(ev *trace.Event) {
 	c.markCreated(dst.abs, false)
 	if srcIsLink {
 		c.links[dst.abs] = srcLink
+		c.noteTmpLink(dst.abs)
 	}
 	if srcDir {
 		c.dirs[dst.abs] = true
@@ -436,7 +550,11 @@ func (c *classifier) link(ev *trace.Event) {
 		return
 	}
 	if src.virtual || dst.virtual {
-		c.reason(rProc)
+		virt := dst.abs
+		if src.virtual {
+			virt = src.abs
+		}
+		c.reasonAt(rProc, virt)
 		c.incomplete = true // W5
 		return
 	}
@@ -453,6 +571,7 @@ func (c *classifier) link(ev *trace.Event) {
 	c.markCreated(dst.abs, false)
 	if srcIsLink {
 		c.links[dst.abs] = srcLink
+		c.noteTmpLink(dst.abs)
 	}
 }
 

@@ -19,6 +19,7 @@ pub mod binding;
 pub mod checker;
 pub mod codegen;
 pub mod corpus;
+pub mod domain;
 pub mod evidence;
 pub mod fixed;
 pub mod layout;

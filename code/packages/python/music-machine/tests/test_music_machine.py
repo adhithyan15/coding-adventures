@@ -1464,6 +1464,41 @@ def test_portable_score_json_roundtrip_and_rejections() -> None:
         PortableScore.from_dict({"format_version": "unsupported/v99"})
 
 
+def test_portable_score_json_rejects_duplicate_object_keys() -> None:
+    from pathlib import Path
+
+    fixture_dir = (
+        Path(__file__).resolve().parents[4]
+        / "specs"
+        / "fixtures"
+        / "music-machine"
+    )
+    json_text = (fixture_dir / "canonical_score.json").read_text(encoding="utf-8")
+    text_score = (fixture_dir / "canonical_score.txt").read_text(encoding="utf-8")
+
+    # Existing repeated names in different objects remain valid.
+    assert PortableScore.from_json(json_text) == parse_portable_score(text_score)
+
+    duplicate_outer = json_text.replace(
+        '"title": "Tier 0 Canonical Score"',
+        '"title": "Tier 0 Canonical Score", "title": "Tier 0 Canonical Score"',
+        1,
+    )
+    duplicate_nested = json_text.replace(
+        '"id": "lead"', '"id": "lead", "id": "lead"', 1
+    )
+    duplicate_escaped = json_text.replace(
+        '"title": "Tier 0 Canonical Score"',
+        '"title": "Tier 0 Canonical Score", "\\u0074itle": "Tier 0 Canonical Score"',
+        1,
+    )
+
+    for malformed in (duplicate_outer, duplicate_nested, duplicate_escaped):
+        with pytest.raises(ValueError) as error:
+            PortableScore.from_json(malformed)
+        assert str(error.value) == "duplicate JSON object member"
+
+
 def test_file_path_validation_and_cwe22(tmp_path: pytest.TempPathFactory) -> None:
     from pathlib import Path
 

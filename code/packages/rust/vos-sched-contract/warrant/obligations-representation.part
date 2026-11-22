@@ -1,0 +1,38 @@
+  -- The reachable states are exactly the image of rep (VOS02 2.7): init is in it, every step from it
+  -- lands back in it, and safety holds from every state of it.  The implementation supplies two models:
+  -- rep(m: Ready, h: U8) -> Impl, the state an abstract state and a history code name, and
+  -- hist(s: Impl) -> U8, the code of a state.  Nothing here names a field of Impl.  The history is a U8
+  -- code of which these claims use three bits (an implementation with more than eight history values
+  -- needs a contract revision).  The claims for insert and remove range over EVERY thread id t (a full
+  -- U8 binder, so the out-of-range ids 8..255 answer OutOfRange, leave the abstraction alone and stay
+  -- in the image, exactly as from build states); to fit the 400,000-case budget they are split by half
+  -- of the history, h in 0..3 (_lo) and 4..7 (_hi), built from two Bool binders.  dispatch has no
+  -- argument and is packed into one binder k (the low three bits are the history).
+  claim rep_init:
+    forall b: Bool. init() == rep(dec(alpha_w(init())), bit_and(hist(init()), 7u8))
+  claim rep_alpha:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. dec(alpha_w(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
+  claim insert_rep_lo:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, c0: Bool, c1: Bool, t: U8. (
+      insert_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).0 and
+      dec(alpha_w(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t))) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).1 and
+      rep(dec(alpha_w(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t))), bit_and(hist(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t)), 7u8)) == insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t))
+  claim insert_rep_hi:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, c0: Bool, c1: Bool, t: U8. (
+      insert_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).0 and
+      dec(alpha_w(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t))) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).1 and
+      rep(dec(alpha_w(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t))), bit_and(hist(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t)), 7u8)) == insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t))
+  claim remove_rep_lo:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, c0: Bool, c1: Bool, t: U8. (
+      remove_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).0 and
+      dec(alpha_w(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t))) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).1 and
+      rep(dec(alpha_w(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t))), bit_and(hist(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t)), 7u8)) == remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t))
+  claim remove_rep_hi:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, c0: Bool, c1: Bool, t: U8. (
+      remove_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).0 and
+      dec(alpha_w(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t))) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).1 and
+      rep(dec(alpha_w(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t))), bit_and(hist(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t)), 7u8)) == remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t))
+  claim dispatch_rep:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. safe_dispatch(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), dispatch_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8))), dec(alpha_w(dispatch_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8))))))
+  claim dispatch_rep_post:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. rep(dec(alpha_w(dispatch_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8))))), bit_and(hist(dispatch_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)))), 7u8)) == dispatch_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)))

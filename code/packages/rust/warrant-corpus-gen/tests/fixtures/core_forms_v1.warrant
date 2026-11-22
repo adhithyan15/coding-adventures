@@ -1,0 +1,120 @@
+warrant core_forms_v1 v1
+  -- ir.core constructs that need a v1 document: wide and signed integers, take and drop.
+  model w_u16(a: U16, b: U16) -> U16 = a * b + 1u16
+  model w_neg(a: I8) -> I8 = -a
+  model w_min(a: I8) -> I8 = if a == -128i8 then -128i8 else -a
+  model w_sub(a: I64, b: I64) -> I64 = a - b - 9223372036854775807i64
+  model w_hex(a: U32) -> U32 = a + 0xffu32 - 0x01u32
+  model w_take(a: Bytes, n: Nat) -> Bytes = concat(take(a, n), drop(a, n + 1))
+  model w_chain(a: Bytes) -> Bytes = drop(take(a, 4), 1)
+  op op_u16(a: U16, b: U16) -> U16
+  op op_i8(a: I8) -> I8
+  op op_i64(a: I64, b: I64) -> I64
+  op op_u32(a: U32) -> U32
+  op op_cut(a: Bytes, n: Nat) -> Bytes
+  op op_chain(a: Bytes) -> Bytes
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels op_u16:
+    a secret
+    b secret
+
+  labels op_i8:
+    a secret
+
+  labels op_i64:
+    a secret
+    b secret
+
+  labels op_u32:
+    a secret
+
+  labels op_cut:
+    a.contents secret
+    a.length public
+    n secret
+
+  labels op_chain:
+    a.contents secret
+    a.length public
+
+  input op_u16.a:
+    hostile
+    ensures no_panic, terminates
+  input op_u16.b:
+    hostile
+    ensures no_panic, terminates
+  input op_i8.a:
+    hostile
+    ensures no_panic, terminates
+  input op_i64.a:
+    hostile
+    ensures no_panic, terminates
+  input op_i64.b:
+    hostile
+    ensures no_panic, terminates
+  input op_u32.a:
+    hostile
+    ensures no_panic, terminates
+  input op_cut.a:
+    hostile
+    ensures no_panic, terminates
+  input op_cut.n:
+    hostile
+    ensures no_panic, terminates
+  input op_chain.a:
+    hostile
+    ensures no_panic, terminates
+
+  bound op_u16:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_i8:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_i64:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_u32:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_cut:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+  bound op_chain:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+
+  example x_u16:
+    op_u16(2u16, 3u16) == 7u16
+  example x_i8:
+    op_i8(-128i8) == -128i8
+  example x_cut:
+    op_cut(b"010203", 1) == b"0103"
+
+  claim c_u16:
+    forall a: U16, b: U16. op_u16(a, b) == w_u16(a, b)
+  claim c_i8:
+    forall a: I8. op_i8(a) == w_min(a)
+  claim c_i8_neg:
+    forall a: I8. op_i8(a) == w_neg(a)
+  claim c_i64:
+    forall a: I64, b: I64. op_i64(a, b) == w_sub(a, b)
+  claim c_u32:
+    forall a: U32. op_u32(a) == w_hex(a)
+  claim c_cut:
+    forall a: Bytes, n: Nat. op_cut(a, n) == w_take(a, n)
+  claim c_chain:
+    forall a: Bytes. op_chain(a) == w_chain(a)
+  claim c_wrap_over_subject:
+    forall a: U16. op_u16(a, a) + 1u16 == op_u16(a, 1u16)

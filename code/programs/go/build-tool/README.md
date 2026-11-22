@@ -94,6 +94,14 @@ The change detector uses NUL-delimited Git paths, preserving non-ASCII names
 without quote-path escaping before fixture classification.
 The [CI-gate registry](../../../specs/ci-gate-registry.md) pins this relation.
 
+## Rust fixed-point cache inputs
+
+The `rust/fixed-point` package adds an exact repository-input relation for its Q16.16 Warrant model and named cases. The same six paths are used for change selection and package hashing: the root and Rust-workspace Cargo target configs, the workspace `Cargo.toml` and `Cargo.lock`, `code/specs/fixed-point.warrant`, and `code/specs/fixtures/fixed-point-q16-v1/cases.json`. Shared Cargo metadata also selects the existing Rust game-clock consumer and the two test-only fixed-point verifier consumers, `rust/ca-assurance-report` and `rust/warrant-ir`.
+
+The report verifier reads the fixed-point `src/` and `evidence/` trees, package `Cargo.toml`, `effect_certificate.json`, `evidence.bindings`, `assurance-profile.json`, the Warrant spec, and the existing Warrant lane inputs. The WIR proof test reads the `src/` tree, `evidence.bindings`, Warrant spec, and package `Cargo.toml` to validate the default library target and `package.autolib`. Both hash the exact Rust workspace target configs, manifest and lockfile because their BUILD recipes invoke Cargo. These readers are registered as raw data inputs; they do not create Cargo graph edges back to fixed-point.
+
+An exact registered directory is recursively hashed with a tree-specific domain, sorted repository paths, file-kind markers, lengths and raw bytes. File and tree kinds come from the trusted registration; changing a registered root from one kind to the other fails closed. Additions, removals and same-length edits change persisted cache identity, including new untracked files inside a consumed tree; untracked files outside registered roots remain excluded. The traversal rejects linked ancestors, links and special files, reads directory entries in bounded pages, and enforces depth, entry, per-file and cumulative actual-byte limits. It checks opened-file and final-path identities so a replacement or mutation during hashing cannot be cached. The build-tool tests these consumers with isolated repository copies, cache hit/miss/restore probes, and Rust-filtered plan emit/replay.
+
 ## Portable source hashing
 
 Extension and declared-source collection share the language-neutral v1 rules.
@@ -257,7 +265,7 @@ On Windows, use the compiled `.exe`:
 | `-language` | all | Filter to any canonical discovery bucket, or `all` |
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
-| `-validate-build-files` | true | Validate BUILD dependency metadata, established-lane package-root coverage, crate coverage, and tracked artifacts |
+| `-validate-build-files` | true | Validate BUILD dependency metadata, established-lane package-root coverage, crate coverage, tracked artifacts, BUILD-front invocations, and negative-control checker users declaring Python |
 | `-ci-gates` | code/specs/data/ci-gates.json | CI gate registry used to decide which Actions jobs this change needs; empty disables gating |
 | `-shard-count` | 0 | Split an emitted plan (`-emit-plan`) into this many prerequisite-closed CI shards |
 | `-shard-weights` | (none) | Measured per-package seconds (`ci-package-durations-v1`); selects locality-aware sharding v2 (see below) |
@@ -266,7 +274,32 @@ On Windows, use the compiled `.exe`:
 | `-emit-kiln-graph` | (none) | Write the `kiln-legacy-graph/1` export (KILN03 section 2) to this path and exit: every package, all three OSes, implies `-force` and `-language all`. Go-only; the other ports do not implement it |
 | `-emit-kiln-steps` | (none) | Only with `-emit-kiln-graph`: also write the `kiln-legacy-steps/1` export (per package, the lines `executor.EffectiveStepLines` returns for this OS) from the same discovery pass; KILN04 section 4.8 |
 | `-exec-wrapper` | (none) | JSON array of strings: a prefix for every BUILD step, run as `wrapper... sh -c <line>`. The wrapper (not the BUILD) gets `KILN_ACTION`, `KILN_STEP`, `KILN_STEP_COUNT`. Incompatible with `-clippy` and `-prune-leaf-targets` |
+| `-command-timeout` | `90m` | Kill any single BUILD command that runs longer than this (Go duration such as `45m`; `0` disables; negative is an error). See [Command timeout](#command-timeout) |
 | `-emit-results` | (none) | After the run, write the `kiln-legacy-results/1` record (status and step counts per package) to this path |
+
+### Command timeout
+
+Every BUILD command runs under a timer (`-command-timeout`, default 90 minutes,
+`0` to disable). A command that outlives it has its whole process tree killed
+(a process group on Unix, `taskkill /T /F` on Windows), the wait for its output
+pipes is bounded so a leftover grandchild cannot hold the build, and the package
+FAILS with return code 124. The package's output ends with a line like:
+
+```
+rust/lzw: command 2 of 3 `cargo test` timed out after 1h30m0s (limit 1h30m0s); killed its process tree
+```
+
+All output buffered before the hang is printed as for any failure. The clock is
+per command (it restarts for each BUILD line), and there are no per-package
+overrides. The default exists because a single hung Windows command once idled a
+CI job for 4h47m, with no log of which command it was. Because each command runs in its own process group, Ctrl-C (SIGINT) and SIGTERM
+are caught by the tool and kill every running command's tree; the run then
+exits 130 and reports it was interrupted. A command that exits cleanly but
+leaves a background process holding its output fails, and that leftover group
+is killed. On Windows the tree kill needs `taskkill`; if it is missing from
+PATH the tool falls back to killing only the shell, so descendants may linger
+(the wait for their pipes is still bounded). See
+`code/specs/12-build-system.md`, "Per-Command Timeout".
 
 ### Kiln legacy graph export
 
@@ -437,7 +470,7 @@ flags (C# and F# share `dotnet`). A source-reference test guards map drift.
 
 The flat `source-collection-*.json` cases have three separate native reader
 sets. The seven package-local cases seed C#, F#, Elixir, Go, Haskell, Lua,
-Perl, Python, Ruby, Rust, Swift, and TypeScript. The nine `repository-` cases
+Perl, Python, Ruby, Rust, Swift, and TypeScript. The thirteen `repository-` cases
 seed only C#, F#, and Swift; the four `shared-input-` cases seed only C# and
 F#. C# and F# enumerate every checked case, while other fronts execute only
 their declared subfamilies or subsets. This exact relation schedules native
@@ -666,7 +699,41 @@ one-line layout edit. Selection uses raw Git paths (deletions count), honors
 It applies to Git-diff mode only; `-force` and the hash fallback already
 build everything they consider changed.
 
-### Package-local metadata does not rebuild dependents
+`rust/warrant-grammar` is a second guard of this kind. Its `v0_compat` test
+parses and checks every `.warrant` document in the repository, wherever it
+lives, so any changed path ending in `.warrant` (the glob `**/?*.warrant`, a
+bare `.warrant` excluded) selects it. A PR that adds an invalid document is
+therefore checked by the PR that adds it, instead of failing a later unrelated
+PR that rebuilds `warrant-grammar`. `*.warrant.draft` files are not documents
+and do not select it. That guard selects only `rust/warrant-grammar`, with
+its prerequisites; the Warrant adopters are selected by the per-crate rows
+below.
+
+A third guard is the crate's **own spec**. Every Rust crate whose BUILD runs
+`gen_evidence -- --check <crate>` checks its committed evidence against
+`code/specs/<crate>.warrant`, a file outside the package. An edit to exactly
+that path (no lookalike, no `.warrant.draft`) selects `rust/<crate>`, in
+addition to whatever else the spec already selected (the grammar guard above,
+the corpus-v2 generator and oracle for the four corpus-v2 adopters, the lane
+registry rows). Before this rule (CV2-F13) a spec-only edit selected at most
+those consumers but not the crate itself, so the check first ran in some later
+unrelated PR. The rows are nine inline `warrantEvidenceRow` entries in the
+repository-input table (arithmetic, ct-compare, gf256, hash-functions,
+logic-gates, lzw, wasm-leb128, x25519, zeroize), next to the four VOS crates,
+which carry the same rule through `vosImplementationRow`.
+
+`TestWarrantEvidenceRowsCoverEveryEvidenceCrate` keeps the rows complete. It
+reads `code/packages/rust/*/evidence.bindings` and `BUILD*`, and requires a row
+named `rust/<dir>` that matches `code/specs/<dir>.warrant` for every directory
+with a bindings file or a `gen_evidence ... --check` line (argument order does
+not matter); it also fails on a `warrantEvidenceRow` whose crate directory
+exists but is no longer an adopter. Because that test reads those files, a PR
+that adds an adopter must run it: the row `go/programs/build-tool` is selected
+by exactly `code/packages/rust/<dir>/evidence.bindings` (one path segment). BUILD
+edits are not a trigger, since that would select the build tool on every Rust
+BUILD change; every adopter adds a bindings file anyway.
+
+### Package-local files do not rebuild dependents
 
 Adding or editing a package's root `CHANGELOG.md`, a direct
 `CHANGELOG.d/*.md` shard, `required_capabilities.json`,
@@ -693,16 +760,71 @@ The rule is deliberately narrow:
   `path`/`build`, Rust `#[path]` or `include!` that executes a metadata-class
   location (`internal/validator/metadata_exec.go`).
 - Local and ordinary roots come from the same platform-filtered path list, so
-  a metadata change beside a `BUILD_windows` edit is local on Linux and macOS
-  and ordinary on Windows; the package is selected everywhere.
+  the package is selected everywhere. A metadata change beside a
+  `BUILD_windows` edit is local on every platform when that edit is an
+  in-place edit of a Rust package's front (below); otherwise the front is an
+  ordinary change on Windows only.
 - Strict-glob Starlark packages keep their declared-source semantics; any
   other change in the same package, fixture seeds, forced roots and
   repository-boundary consumers propagate; `-force` and the hash fallback are
   unchanged.
 
+**A package's own BUILD front.** An in-place edit (Git status `M`) of the
+`BUILD`, `BUILD_linux`, `BUILD_mac`, `BUILD_mac_and_linux` or `BUILD_windows`
+at the root of a Rust package is package-local too: the package and its
+prerequisites are rebuilt, its dependents are not. A dependent compiles a
+Rust prerequisite from source with its own `cargo` invocation and never runs
+or reads the prerequisite's BUILD, so nothing it builds can change. Moving
+the negative-control lines of eight Rust hub crates to a shared checker used
+to select 803 packages and time out the Windows job at 300 minutes; it now
+selects 35.
+
+The rule is narrow on purpose:
+
+- **Rust only.** In other ecosystems dependents consume what a
+  prerequisite's BUILD run leaves behind (`lua/lexer` needs the rocks its
+  prerequisites' BUILDs install; `typescript/bitset` reads
+  `../test-bootstrap/dist`, which that package's BUILD compiles). The gate is
+  a closed list in `internal/pkgmeta` with the evidence for each entry.
+- **Only `M`.** An added or deleted front changes which file a platform
+  selects, or whether the directory is a package there, and propagates.
+- **Only the front the platform selects**, at the package root, by exact
+  name. A nested `BUILD` or `BUILD.bak` is source.
+- **Shell BUILDs only.** A Starlark BUILD declares sources and dependencies
+  and always propagates.
+- **Not a BUILD another package runs.** If any BUILD names a BUILD front and
+  this package's directory on one line (`(cd ../x && sh BUILD)`), edits to
+  this package's fronts propagate. `-validate-build-files` refuses a BUILD
+  invocation that names no package directory, and any script that runs a
+  BUILD front.
+- **Not across the platform-unsupported protocol.** A package with
+  `BUILD_TOOL_UNSUPPORTED:` in any front, or a diff that adds or removes such
+  a line (one extra `git diff -G` call), propagates: marking and un-marking
+  change whether dependents run.
+- Any other change in the package, fixture seeds, forced roots and
+  repository input consumers propagate; `-force` and the hash fallback are
+  unchanged. The edited BUILD is still checked by `-validate-build-files`,
+  which runs over every package on every pull request.
+
+`-validate-build-files` also fails when a `BUILD*` file directly in a package
+directory discovered for any platform (so a `BUILD_windows`-only package is
+covered on Linux; nested non-package BUILD files are not checked, as the build
+tool never runs them) contains `warrant_negctl.py` (the shared negative-control checker,
+plain substring match, comments included) but does not declare
+`# needs-toolchain: python` for the platform it serves (`_windows` as
+Windows, `_mac` as macOS, anything else as Linux). Unreadable files are reported, not skipped. CI installs Python only for
+packages that declare it. The check lives in
+`internal/validator/negctl_python.go` because a pull request that touches only a
+package's BUILD never selects this program's tests.
+
+What this does not cover: a dependent that relies on a toolchain only its
+prerequisite's BUILD declares with `# needs-toolchain:` is not re-run when
+that declaration is removed. The scheduled full builds (every six hours on
+Linux, daily on macOS and Windows) are the backstop.
+
 The neutral `metadata_policy: "package_local"` diff-selection variant
-(`package-metadata-selection-*.json`) pins the path rules, and
-`internal/graphdiff` replays it.
+(`package-metadata-selection-*.json`) pins the path rules, including the root
+BUILD fronts, and `internal/graphdiff` replays it.
 
 ## Architecture
 
@@ -717,7 +839,7 @@ The tool is organized into seven internal packages, each responsible for one pha
 4. **cache** -- JSON-based build cache (read/write with atomic saves)
 5. **executor** -- Parallel execution with goroutines + semaphore
 6. **gitdiff** -- Git-based change detection for incremental builds
-   (with **pkgmeta**, which names the package-local metadata files whose
+   (with **pkgmeta**, which names the package-local files (metadata, BUILD fronts) whose
    changes do not reach dependents)
 7. **reporter** -- Terminal-friendly build report formatting
 

@@ -1,0 +1,32 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/swf-conformance-corpus",
+  "source_digest": "2fea5507812c6b9c9fbfc8d0ebd5f52951a28d3fe50954a7ea2dc08f7127fef7",
+  "manifest_digest": "da52f93cf4c1f8114f6e9be671ee9764301df2aa357c603e51e8c5792f43d2bb",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_corpus_swf_bytes",
+      "signature": "pub const fn validate_corpus_swf_bytes(len: usize) -> Result<bool, CorpusError>",
+      "effects": []
+    },
+    {
+      "name": "validate_corpus_frame_count",
+      "signature": "pub const fn validate_corpus_frame_count(frames: usize) -> Result<bool, CorpusError>",
+      "effects": []
+    },
+    {
+      "name": "validate_corpus_bit_width",
+      "signature": "pub const fn validate_corpus_bit_width(bits: usize) -> Result<bool, CorpusError>",
+      "effects": []
+    },
+    {
+      "name": "validate_corpus_digest_hex",
+      "signature": "pub const fn validate_corpus_digest_hex(bytes: &[u8]) -> Result<bool, CorpusError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/sim-discrete-audio-timer",
-  "source_digest": "06b68efc72c9a4c3bdf00360e4a4aa25c4b2fa6d77ee02c132e9361bfac7d89a",
+  "source_digest": "400c37f7a97aaf1dbaf723781695a3ec389c2f8cc356c8cc33c588a13d4326f7",
   "manifest_digest": "8772b8eaf54ccacc8cbb396e844c1b3dcc59d325f6b83ff1a52cd0f86cba4f85",
   "declared_effects": [],
   "entry_points": [
@@ -27,7 +27,7 @@
     },
     {
       "name": "calculate_555_duty_q16",
-      "signature": "pub const fn calculate_555_duty_q16( r1_ohms: u32, r2_ohms: u32, ) -> Result<u16, TimerAudioError>",
+      "signature": "pub const fn calculate_555_duty_q16(r1_ohms: u32, r2_ohms: u32) -> Result<u16, TimerAudioError>",
       "effects": []
     },
     {

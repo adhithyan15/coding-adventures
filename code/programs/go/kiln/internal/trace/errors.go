@@ -13,6 +13,19 @@ type Error struct {
 	Reason string // detail only, e.g. "unknown-syscall:foo"
 	Line   int
 	Err    error // underlying I/O error, if any
+	// Call is the NAME of the system call being modelled when the refusal was
+	// raised, only when it is a member of the closed syscall table
+	// (SyscallClass), else "".  It is for the census's "which call?" question
+	// (KILN04, census section): it is never part of Error(), of a reason or of
+	// anything a record holds, so a record is byte-identical with or without it.
+	Call string
+	// UnknownNumber is set only on the unresumed-call refusal of a call whose
+	// name is OUTSIDE the closed table (D44, census only).  It is one of two
+	// fixed codes, never the name: "unknown-number:yes" when the name is exactly
+	// strace's spelling of a syscall number it has no entry for
+	// (isUnknownNumberName), "unknown-number:no" otherwise.  Like Call it is not
+	// part of Error() or of any record.
+	UnknownNumber string
 }
 
 // Error returns "trace-incomplete:" followed by the reason.

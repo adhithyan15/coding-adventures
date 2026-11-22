@@ -1,0 +1,8 @@
+[package]
+name = "tls13-cookie"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS 1.3 cookie framing and retry echo evidence"
+license = "MIT"
+
+[dependencies]

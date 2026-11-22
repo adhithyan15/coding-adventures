@@ -1,0 +1,2707 @@
+{
+  "document": "v0",
+  "errors": {
+    "E": [
+      "BAD",
+      "WORSE"
+    ]
+  },
+  "examples": [
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "f",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          false
+        ]
+      ],
+      "expected": [
+        "lit",
+        false
+      ],
+      "name": "ex_false",
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "f",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": ""
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "pick",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "01"
+              }
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "00"
+          }
+        ]
+      ],
+      "name": "ex_ok",
+      "result_type": "Result<Bytes,E>",
+      "subject": [
+        "subject_op",
+        "pick",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "01"
+            }
+          ],
+          [
+            "lit",
+            true
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "pick",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "0102"
+              }
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ],
+        [
+          "err",
+          "BAD"
+        ]
+      ],
+      "expected": [
+        "err",
+        "BAD"
+      ],
+      "name": "ex_err",
+      "result_type": "Result<Bytes,E>",
+      "subject": [
+        "subject_op",
+        "pick",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "0102"
+            }
+          ],
+          [
+            "lit",
+            true
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "h",
+          [
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "5"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "3"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "3"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U64",
+          "value": "3"
+        }
+      ],
+      "name": "ex_u64",
+      "result_type": "U64",
+      "subject": [
+        "subject_op",
+        "h",
+        [
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "5"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "3"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "g",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "0102"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ],
+          [
+            2
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "0102"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "Bytes",
+          "value": "0102"
+        }
+      ],
+      "name": "ex_static",
+      "result_type": "Bytes<2>",
+      "subject": [
+        "subject_op",
+        "g",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "0102"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ],
+        [
+          2
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "e",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "2"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "Nat",
+          "value": "2"
+        }
+      ],
+      "name": "ex_nat",
+      "result_type": "Nat",
+      "subject": [
+        "subject_op",
+        "e",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ]
+        ]
+      ]
+    }
+  ],
+  "model_order": [
+    "m_not",
+    "m_logic",
+    "m_cmp",
+    "m_arith",
+    "m_neg",
+    "m_u8",
+    "m_len",
+    "m_cat",
+    "m_pick",
+    "m_call",
+    "m_lit",
+    "m_sign",
+    "m_wide",
+    "m_inc",
+    "m_twice",
+    "m_width",
+    "m_alias"
+  ],
+  "models": {
+    "m_alias": {
+      "body": [
+        "var",
+        "a"
+      ],
+      "ir_cost": 1,
+      "params": [
+        [
+          "a",
+          "Bytes<4>"
+        ]
+      ],
+      "ret": "Bytes<4>"
+    },
+    "m_arith": {
+      "body": [
+        "add",
+        [
+          "sub",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "mul",
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "2"
+            }
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "ir_cost": 7,
+      "params": [
+        [
+          "a",
+          "Nat"
+        ],
+        [
+          "b",
+          "Nat"
+        ]
+      ],
+      "ret": "Int"
+    },
+    "m_call": {
+      "body": [
+        "sub",
+        [
+          "model_call",
+          "m_arith",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_arith",
+          [
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 21,
+      "params": [
+        [
+          "a",
+          "Nat"
+        ],
+        [
+          "b",
+          "Nat"
+        ]
+      ],
+      "ret": "Int"
+    },
+    "m_cat": {
+      "body": [
+        "concat",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "concat",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00ff"
+            }
+          ]
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "ret": "Bytes"
+    },
+    "m_cmp": {
+      "body": [
+        "or",
+        [
+          "or",
+          [
+            "or",
+            [
+              "or",
+              [
+                "lt",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ],
+              [
+                "le",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ],
+            [
+              "gt",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ],
+          [
+            "ge",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "ne",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "ir_cost": 19,
+      "params": [
+        [
+          "a",
+          "Nat"
+        ],
+        [
+          "b",
+          "Nat"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "m_inc": {
+      "body": [
+        "add",
+        [
+          "var",
+          "x"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "m_len": {
+      "body": [
+        "add",
+        [
+          "len",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "ir_cost": 4,
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "ret": "Int"
+    },
+    "m_lit": {
+      "body": [
+        "eq",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "00ff"
+          }
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "m_logic": {
+      "body": [
+        "or",
+        [
+          "and",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "implies",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "not",
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 8,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "m_neg": {
+      "body": [
+        "sub",
+        [
+          "neg",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Int",
+            "value": "1"
+          }
+        ]
+      ],
+      "ir_cost": 4,
+      "params": [
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "ret": "Int"
+    },
+    "m_not": {
+      "body": [
+        "not",
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "ir_cost": 2,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "m_pick": {
+      "body": [
+        "if",
+        [
+          "var",
+          "c"
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "err",
+          "BAD"
+        ]
+      ],
+      "ir_cost": 4,
+      "params": [
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "ret": "Result<Bytes,E>"
+    },
+    "m_sign": {
+      "body": [
+        "if",
+        [
+          "gt",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Int",
+            "value": "1"
+          }
+        ],
+        [
+          "neg",
+          [
+            "lit",
+            {
+              "type": "Int",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "ir_cost": 6,
+      "params": [
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "ret": "Int"
+    },
+    "m_twice": {
+      "body": [
+        "model_call",
+        "m_inc",
+        [
+          [
+            "model_call",
+            "m_inc",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 9,
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "m_u8": {
+      "body": [
+        "if",
+        [
+          "ge",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ]
+        ],
+        [
+          "sub",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ]
+        ],
+        [
+          "add",
+          [
+            "mul",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "3"
+              }
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "ir_cost": 9,
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "m_wide": {
+      "body": [
+        "var",
+        "a"
+      ],
+      "ir_cost": 1,
+      "params": [
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "ret": "Int"
+    },
+    "m_width": {
+      "body": [
+        "concat",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "b"
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "a",
+          "Bytes<2>"
+        ],
+        [
+          "b",
+          "Bytes<3>"
+        ]
+      ],
+      "ret": "Bytes<5>"
+    }
+  },
+  "module": "core_forms_v0",
+  "ops": {
+    "cat": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "ret": "Bytes"
+    },
+    "e": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "ret": "Nat"
+    },
+    "f": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "g": {
+      "admit": [
+        "ge",
+        [
+          "var",
+          "k"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "Bytes<N>"
+        ],
+        [
+          "k",
+          "U8"
+        ]
+      ],
+      "ret": "Bytes<N>",
+      "width_params": [
+        "N"
+      ]
+    },
+    "h": {
+      "admit": [
+        "and",
+        [
+          "le",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "100"
+            }
+          ]
+        ],
+        [
+          "le",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "U64"
+        ],
+        [
+          "b",
+          "U64"
+        ]
+      ],
+      "ret": "U64"
+    },
+    "pick": {
+      "fresh": true,
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ],
+        [
+          "c",
+          "Bool"
+        ]
+      ],
+      "ret": "Result<Bytes,E>"
+    },
+    "u8op": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "word": {
+      "params": [
+        [
+          "a",
+          "Bytes<4>"
+        ],
+        [
+          "b",
+          "Bytes<4>"
+        ]
+      ],
+      "ret": "Bool"
+    }
+  },
+  "schema": "warrant-lowering-parity-v0",
+  "suites": [
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "f",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_lit",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "ref_left",
+      "expected": [
+        "model_call",
+        "m_lit",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/ref_left",
+      "ir_cost": 15,
+      "kind": "reference",
+      "ops": [
+        "f"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "f",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "model_call",
+          "m_lit",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "f",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "ref_right",
+      "expected": [
+        "model_call",
+        "m_lit",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/ref_right",
+      "ir_cost": 15,
+      "kind": "reference",
+      "ops": [
+        "f"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "f",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "and",
+        [
+          "and",
+          [
+            "le",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "100"
+              }
+            ]
+          ],
+          [
+            "le",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "le",
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U64"
+        ],
+        [
+          "b",
+          "U64"
+        ],
+        [
+          "c",
+          "U64"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "h",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "var",
+          "c"
+        ]
+      ],
+      "claim": "fold3",
+      "expected": [
+        "var",
+        "c"
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/fold3",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "h"
+      ],
+      "result_type": "U64",
+      "subject": [
+        "subject_op",
+        "h",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "f",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "f",
+          [
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "pred_two_calls",
+      "expected": [],
+      "id": "warrant/core_forms_v0/exhaustive/pred_two_calls",
+      "ir_cost": 8,
+      "kind": "predicate",
+      "ops": [
+        "f"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "body": [
+        "implies",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "a"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "eq",
+          [
+            "subject_op",
+            "f",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ],
+          [
+            "subject_op",
+            "f",
+            [
+              [
+                "var",
+                "b"
+              ],
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "pred_guard",
+      "expected": [],
+      "id": "warrant/core_forms_v0/exhaustive/pred_guard",
+      "ir_cost": 13,
+      "kind": "predicate",
+      "ops": [
+        "f"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "body": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "a"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "eq",
+          [
+            "subject_op",
+            "f",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ],
+          [
+            "subject_op",
+            "f",
+            [
+              [
+                "var",
+                "b"
+              ],
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ]
+        ],
+        [
+          "lit",
+          true
+        ]
+      ],
+      "claim": "pred_if",
+      "expected": [],
+      "id": "warrant/core_forms_v0/exhaustive/pred_if",
+      "ir_cost": 13,
+      "kind": "predicate",
+      "ops": [
+        "f"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "eq",
+        [
+          "len",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "len",
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ],
+        [
+          "c",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "pick",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_pick",
+          [
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "pick_ok",
+      "expected": [
+        "model_call",
+        "m_pick",
+        [
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/pick_ok",
+      "ir_cost": 24,
+      "kind": "reference",
+      "ops": [
+        "pick"
+      ],
+      "result_type": "Result<Bytes,E>",
+      "subject": [
+        "subject_op",
+        "pick",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "ge",
+        [
+          "var",
+          "k"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes<4>"
+        ],
+        [
+          "k",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "g",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "k"
+            ]
+          ],
+          [
+            4
+          ]
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "claim": "static_w",
+      "expected": [
+        "var",
+        "a"
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/static_w",
+      "ir_cost": 9,
+      "kind": "reference",
+      "ops": [
+        "g"
+      ],
+      "result_type": "Bytes<4>",
+      "subject": [
+        "subject_op",
+        "g",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "k"
+          ]
+        ],
+        [
+          4
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "e",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "add",
+          [
+            "len",
+            [
+              "var",
+              "a"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "claim": "nat_arith",
+      "expected": [
+        "add",
+        [
+          "len",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/nat_arith",
+      "ir_cost": 12,
+      "kind": "reference",
+      "ops": [
+        "e"
+      ],
+      "result_type": "Nat",
+      "subject": [
+        "subject_op",
+        "e",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "body": [
+        "and",
+        [
+          "and",
+          [
+            "eq",
+            [
+              "subject_op",
+              "e",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "m_len",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          [
+            "lt",
+            [
+              "model_call",
+              "m_neg",
+              [
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "1"
+                  }
+                ]
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Int",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "eq",
+          [
+            "model_call",
+            "m_sign",
+            [
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "2"
+                }
+              ]
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Int",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "claim": "nat_neg",
+      "expected": [],
+      "id": "warrant/core_forms_v0/exhaustive/nat_neg",
+      "ir_cost": 30,
+      "kind": "predicate",
+      "ops": [
+        "e"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "u8op",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_u8",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "u8_pure",
+      "expected": [
+        "model_call",
+        "m_u8",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/u8_pure",
+      "ir_cost": 29,
+      "kind": "reference",
+      "ops": [
+        "u8op"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "u8op",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "cat",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_cat",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "cat_model",
+      "expected": [
+        "model_call",
+        "m_cat",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/cat_model",
+      "ir_cost": 21,
+      "kind": "reference",
+      "ops": [
+        "cat"
+      ],
+      "result_type": "Bytes",
+      "subject": [
+        "subject_op",
+        "cat",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "body": [
+        "and",
+        [
+          "and",
+          [
+            "and",
+            [
+              "and",
+              [
+                "eq",
+                [
+                  "subject_op",
+                  "e",
+                  [
+                    [
+                      "var",
+                      "a"
+                    ]
+                  ]
+                ],
+                [
+                  "model_call",
+                  "m_len",
+                  [
+                    [
+                      "var",
+                      "a"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "eq",
+                [
+                  "model_call",
+                  "m_not",
+                  [
+                    [
+                      "lit",
+                      true
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  false
+                ]
+              ]
+            ],
+            [
+              "model_call",
+              "m_logic",
+              [
+                [
+                  "lit",
+                  true
+                ],
+                [
+                  "lit",
+                  false
+                ]
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "m_cmp",
+            [
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "2"
+                }
+              ]
+            ]
+          ]
+        ],
+        [
+          "eq",
+          [
+            "model_call",
+            "m_wide",
+            [
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "3"
+                }
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "m_call",
+            [
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "3"
+                }
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "2"
+                }
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "calls_models",
+      "expected": [],
+      "id": "warrant/core_forms_v0/exhaustive/calls_models",
+      "ir_cost": 81,
+      "kind": "predicate",
+      "ops": [
+        "e"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes<4>"
+        ],
+        [
+          "b",
+          "Bytes<4>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "word",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "eq",
+          [
+            "model_call",
+            "m_alias",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "m_alias",
+            [
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "alias_ref",
+      "expected": [
+        "eq",
+        [
+          "model_call",
+          "m_alias",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_alias",
+          [
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/alias_ref",
+      "ir_cost": 19,
+      "kind": "reference",
+      "ops": [
+        "word"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "word",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes<2>"
+        ],
+        [
+          "b",
+          "Bytes<3>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "cat",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_width",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "width_model",
+      "expected": [
+        "model_call",
+        "m_width",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/width_model",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "cat"
+      ],
+      "result_type": "Bytes",
+      "subject": [
+        "subject_op",
+        "cat",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Nat"
+        ]
+      ],
+      "body": [
+        "and",
+        [
+          "and",
+          [
+            "eq",
+            [
+              "subject_op",
+              "e",
+              [
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ],
+          [
+            "eq",
+            [
+              "if",
+              [
+                "lit",
+                true
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ],
+              [
+                "var",
+                "a"
+              ]
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "eq",
+          [
+            "if",
+            [
+              "lit",
+              true
+            ],
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "claim": "if_context",
+      "expected": [],
+      "id": "warrant/core_forms_v0/exhaustive/if_context",
+      "ir_cost": 17,
+      "kind": "predicate",
+      "ops": [
+        "e"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "u8op",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_twice",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "inc_pure",
+      "expected": [
+        "model_call",
+        "m_twice",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/inc_pure",
+      "ir_cost": 27,
+      "kind": "reference",
+      "ops": [
+        "u8op"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "u8op",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "f",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          true
+        ]
+      ],
+      "claim": "ground",
+      "expected": [
+        "lit",
+        true
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/ground",
+      "ir_cost": 7,
+      "kind": "reference",
+      "ops": [
+        "f"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "f",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ]
+        ]
+      ]
+    }
+  ]
+}

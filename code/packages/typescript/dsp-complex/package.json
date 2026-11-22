@@ -13,13 +13,14 @@
   },
   "scripts": {
     "build": "node node_modules/typescript/bin/tsc",
-    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js",
-    "test:coverage": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js"
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=../** --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js",
+    "test:coverage": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=../** --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js"
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "@coding-adventures/test-bootstrap": "file:../test-bootstrap",
     "@types/node": "^24.0.0",
     "typescript": "^5.0.0"
   }

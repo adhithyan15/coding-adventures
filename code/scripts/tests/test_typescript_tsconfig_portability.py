@@ -460,8 +460,16 @@ console.log(prose, nested);
         # +1: lunar-lander, the GAME02 isolated standalone simulation package.
         # +2: music-machine-web and music-machine-node (MUS-W3-C standalone packages).
         # +1: music-analysis (MUS-W5-B2 isolated standalone package).
-        self.assertEqual(summary.total_projects, 515)
-        self.assertEqual(summary.shared_projects, 308)
+        # +1: game-clock, the GAME10 TypeScript clock contract port.
+        # +1: game-input-frame, a shared-config project with explicit src/dist
+        # roots; Node APIs are confined to tests and do not enter shipped src.
+        # -4 shared_projects: note-frequency, audio-device-sink, pcm-audio, and
+        # web-audio-sink migrated from tsconfig.base.json to standalone configs
+        # (TS-W7-A; total_projects unchanged because they already had build scripts).
+        # -3 shared_projects: wave, analog-waveform, and discrete-waveform
+        # migrated from tsconfig.base.json to standalone configs (PHY-W8-E).
+        self.assertEqual(summary.total_projects, 517)
+        self.assertEqual(summary.shared_projects, 303)
         self.assertEqual(summary.inherited_root_dir, 135)
         self.assertEqual(summary.inherited_out_dir, 138)
         # forme-authoring-core, forme-authoring-editor,
@@ -476,8 +484,12 @@ console.log(prose, nested);
         # +1: lunar-lander is an isolated standalone emitter.
         # +2: music-machine-web and music-machine-node are isolated standalone emitters.
         # +1: music-analysis is an isolated standalone emitter.
-        self.assertEqual(summary.standalone_emit_projects, 176)
-        self.assertEqual(summary.isolated_standalone_projects, 176)
+        # +4: note-frequency, audio-device-sink, pcm-audio, and web-audio-sink
+        # are isolated standalone emitters (TS-W7-A).
+        # +3: wave, analog-waveform, and discrete-waveform are isolated
+        # standalone emitters (PHY-W8-E).
+        self.assertEqual(summary.standalone_emit_projects, 183)
+        self.assertEqual(summary.isolated_standalone_projects, 183)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -635,7 +647,9 @@ console.log(prose, nested);
         # +1: lunar-lander locks its standalone compiler and test toolchain.
         # +2: music-machine-web and music-machine-node lock their standalone compiler.
         # +1: music-analysis locks its standalone compiler.
-        self.assertEqual(summary.locked_compilers, 528)
+        # +1: game-clock locks its standalone compiler and test toolchain.
+        # +1: game-input-frame locks its shared compiler and test toolchain.
+        self.assertEqual(summary.locked_compilers, 530)
 
 
 if __name__ == "__main__":

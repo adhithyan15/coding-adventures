@@ -92,7 +92,13 @@ def main() -> int:
         if not stage(build_dir):
             print("no compiled extension artifact was found", file=sys.stderr)
             return 1
-        env = dict(os.environ, PYTHONPATH=str(build_dir))
+        existing_pp = os.environ.get("PYTHONPATH")
+        pythonpath = (
+            f"{build_dir}{os.pathsep}{existing_pp}"
+            if existing_pp
+            else str(build_dir)
+        )
+        env = dict(os.environ, PYTHONPATH=pythonpath)
         for command in (
             [sys.executable, "-m", "ruff", "check", "src", "tests", "scripts"],
             [sys.executable, "-m", "pytest", "tests", "-v"],

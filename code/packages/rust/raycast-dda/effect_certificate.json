@@ -1,0 +1,177 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/raycast-dda",
+  "source_digest": "8fcad4050933d843cb3bfa94211ca9448db06c3a0018a4e0242c28bfa5107843",
+  "manifest_digest": "abd8d597c4a45b5d8afcc06473c60618ab8d54ffa324112b1828ce8e3b70741b",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "grid_new",
+      "signature": "pub fn grid_new(width: usize, height: usize, cells: Vec<u16>) -> Result<Self, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "grid_width",
+      "signature": "pub fn grid_width(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "grid_height",
+      "signature": "pub fn grid_height(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "grid_cells",
+      "signature": "pub fn grid_cells(&self) -> &[u16]",
+      "effects": []
+    },
+    {
+      "name": "grid_cell_at",
+      "signature": "pub fn grid_cell_at(&self, x: usize, y: usize) -> Option<u16>",
+      "effects": []
+    },
+    {
+      "name": "grid_is_solid",
+      "signature": "pub fn grid_is_solid(&self, x: usize, y: usize) -> bool",
+      "effects": []
+    },
+    {
+      "name": "grid_set_cell",
+      "signature": "pub fn grid_set_cell(&mut self, x: usize, y: usize, value: u16) -> Result<(), RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "camera_new",
+      "signature": "pub fn camera_new( pos_x: f64, pos_y: f64, dir_x: f64, dir_y: f64, plane_x: f64, plane_y: f64, ) -> Result<Self, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "camera_from_yaw_fov",
+      "signature": "pub fn camera_from_yaw_fov( pos_x: f64, pos_y: f64, yaw_rad: f64, fov_rad: f64, ) -> Result<Self, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "camera_rotate",
+      "signature": "pub fn camera_rotate(&self, delta_yaw_rad: f64) -> Result<Self, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "camera_move_by",
+      "signature": "pub fn camera_move_by(&self, dx: f64, dy: f64) -> Result<Self, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "camera_pos",
+      "signature": "pub const fn camera_pos(&self) -> (f64, f64)",
+      "effects": []
+    },
+    {
+      "name": "camera_dir",
+      "signature": "pub const fn camera_dir(&self) -> (f64, f64)",
+      "effects": []
+    },
+    {
+      "name": "camera_plane",
+      "signature": "pub const fn camera_plane(&self) -> (f64, f64)",
+      "effects": []
+    },
+    {
+      "name": "camera_forward_vec3",
+      "signature": "pub fn camera_forward_vec3(&self) -> Result<Vec3, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "camera_world_ray",
+      "signature": "pub fn camera_world_ray(&self) -> Result<Ray3, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "texture_new",
+      "signature": "pub fn texture_new(width: u32, height: u32, pixels: Vec<u8>) -> Result<Self, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "texture_from_pixel_container",
+      "signature": "pub fn texture_from_pixel_container(container: &PixelContainer) -> Result<Self, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "texture_solid",
+      "signature": "pub fn texture_solid(width: u32, height: u32, color: Rgba8) -> Result<Self, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "texture_checkerboard",
+      "signature": "pub fn texture_checkerboard( width: u32, height: u32, cell_size: u32, color_a: Rgba8, color_b: Rgba8, ) -> Result<Self, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "texture_width",
+      "signature": "pub fn texture_width(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "texture_height",
+      "signature": "pub fn texture_height(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "texture_pixels",
+      "signature": "pub fn texture_pixels(&self) -> &[u8]",
+      "effects": []
+    },
+    {
+      "name": "texture_sample",
+      "signature": "pub fn texture_sample(&self, tx: usize, ty: usize) -> Rgba8",
+      "effects": []
+    },
+    {
+      "name": "sprite_new",
+      "signature": "pub fn sprite_new(x: f64, y: f64, texture_index: usize) -> Result<Self, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "sprite_with_scale",
+      "signature": "pub fn sprite_with_scale( x: f64, y: f64, texture_index: usize, scale_u: f64, scale_v: f64, z_offset: f64, ) -> Result<Self, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "scratch_with_capacity",
+      "signature": "pub fn scratch_with_capacity(capacity: usize) -> Result<Self, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "scratch_capacity",
+      "signature": "pub fn scratch_capacity(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "scratch_len",
+      "signature": "pub fn scratch_len(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "render_config_default",
+      "signature": "pub const fn render_config_default() -> Self",
+      "effects": []
+    },
+    {
+      "name": "render_config_with_planes",
+      "signature": "pub const fn render_config_with_planes( ceiling: PlaneSurface, floor: PlaneSurface, ns_wall_shade: u8, ) -> Self",
+      "effects": []
+    },
+    {
+      "name": "cast_dda_ray",
+      "signature": "pub fn cast_dda_ray( grid: &GridMap, origin_x: f64, origin_y: f64, ray_dir_x: f64, ray_dir_y: f64, ) -> Result<WallHit, RaycastError>",
+      "effects": []
+    },
+    {
+      "name": "render_frame_into",
+      "signature": "pub fn render_frame_into( grid: &GridMap, camera: &Camera2D, textures: &[TextureRgba], sprites: &[Sprite], config: &RenderConfig, scratch: &mut SpriteScratch, zbuffer: &mut [f64], framebuffer: &mut PixelContainer, ) -> Result<RenderStats, RaycastError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

@@ -1,0 +1,26 @@
+[package]
+name = "tls13-x25519-key-share-binding"
+version = "0.2.0"
+edition = "2021"
+description = "Exact TLS 1.3 retry-message, X25519 scalar, and ServerHello share binding"
+license = "MIT"
+
+[dependencies]
+coding_adventures_ct_compare = { path = "../ct-compare" }
+coding_adventures_x25519 = { path = "../x25519" }
+tls13-key-share = { path = "../tls13-key-share" }
+tls13-named-group-policy = { path = "../tls13-named-group-policy" }
+tls13-server-hello-retry-selection = { path = "../tls13-server-hello-retry-selection" }
+tls13-x25519-key-agreement = { path = "../tls13-x25519-key-agreement" }
+
+[dev-dependencies]
+tls13-cipher-suite-offer = { path = "../tls13-cipher-suite-offer" }
+tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-client-hello-message = { path = "../tls13-client-hello-message" }
+tls13-extension-block = { path = "../tls13-extension-block" }
+tls13-extension-context-policy = { path = "../tls13-extension-context-policy" }
+tls13-server-hello-message = { path = "../tls13-server-hello-message" }
+tls13-server-hello-selection = { path = "../tls13-server-hello-selection" }
+tls13-server-hello-version-selection = { path = "../tls13-server-hello-version-selection" }
+tls13-supported-groups = { path = "../tls13-supported-groups" }
+tls13-supported-versions = { path = "../tls13-supported-versions" }

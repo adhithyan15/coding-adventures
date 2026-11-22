@@ -1,5 +1,36 @@
 # Changelog
 
+## Unreleased - source-input boundary sync (standalone TypeScript packages)
+
+- Removed 7 standalone TypeScript packages (`analog-waveform`, `audio-device-sink`, `discrete-waveform`, `note-frequency`, `pcm-audio`, `wave`, `web-audio-sink`) from `typescript-workspace-configuration`, regenerated `SourceInputRegistries.Generated.cs`, and updated the pinned boundary digest to `43dcbadf...` (509 scopes, 530 authorizations). No behavior change in the tool.
+
+## Unreleased - Dart DT18 hash-map input binding
+
+- Regenerate the immutable source-input projection with the exact Dart hash-map corpus grant and replay the merged neutral source-collection corpus.
+
+## Unreleased - fixed-point source boundary
+
+- Added `rust/fixed-point` to the exact repository-source boundary for the Q16.16 Warrant and corpus, Rust Cargo target config, and workspace lockfile. Extended the root Cargo-config exception only for that exact package and added its source-collection fixture to the native test roster.
+
+## Unreleased - source-input boundary sync (GAME10 TypeScript clock)
+
+- Added `code/packages/typescript/game-clock` to `typescript-workspace-configuration`.
+  Regenerated the repository boundary projection and updated the pinned digest to
+  `7014b769...`; the boundary has 507 scopes and 521 authorizations (up from 506
+  and 520). No behavior change in the tool.
+
+## Unreleased - source-input boundary sync (rust vos-capacity-probe program)
+
+- `code/programs/rust/vos-capacity-probe` added to `rust-root-workspace-manifest-cross-consumers`: the new standalone cargo root runs cargo against the Rust workspace from its BUILD without being listed in the repository boundary. The checked repository source-input boundary added the root, the projection was regenerated, and the pinned boundary digest moved from `f20e5840...` to `7e148f79...`. The boundary has 506 scopes and 520 authorizations (were 505 and 519). No behaviour change in the tool.
+
+## Unreleased - source-input boundary sync (rust vos-link program)
+
+- `code/programs/rust/vos-link` added to `rust-root-workspace-manifest-cross-consumers`: the new standalone cargo root runs cargo against the Rust workspace from its BUILD without being listed in the repository boundary. The checked repository source-input boundary added the root, the projection was regenerated, and the pinned boundary digest moved from `2bfdfd58...` to `f20e5840...`. The boundary has 505 scopes and 519 authorizations (were 504 and 518). No behaviour change in the tool.
+
+## Unreleased - source-input boundary sync (ct-compare lanes)
+
+- `code/packages/go/ct-compare`, `code/packages/python/ct-compare`, and `code/packages/typescript/ct-compare` added to `rust-root-workspace-manifest-cross-consumers`: their BUILD files run cargo against the Rust workspace (WD-004b2) without syncing the repository boundary. The checked repository source-input boundary added all three roots, the projection was regenerated, and the pinned boundary digest moved from `16dddd56...` to `2bfdfd58...`. The boundary has 504 scopes and 518 authorizations (were 501 and 515). No behaviour change in the tool.
+
 ## Unreleased - source-input boundary sync (python music-analysis package)
 
 - `code/packages/python/music-analysis` added to `python-uv-workspace-manifest`: added to `code/packages/python/pyproject.toml` without syncing the repository boundary. The checked repository source-input boundary added the root, the projection was regenerated, and the pinned boundary digest moved from `82d192d0...` to `16dddd56...`. The boundary has 501 scopes and 515 authorizations (were 500 and 514). No behaviour change in the tool.

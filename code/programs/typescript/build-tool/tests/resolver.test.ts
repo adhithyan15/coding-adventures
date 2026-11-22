@@ -455,12 +455,14 @@ describe("resolveDependencies", () => {
     );
     const materialized = materializeSharedResolutionFixture(fixture);
     try {
-      const tsxCli = path.join(packageRoot, "node_modules", "tsx", "dist", "cli.mjs");
-      const entrypoint = path.join(packageRoot, "src", "index.ts");
+      expect(process.env.BUILD_TOOL_TEST_CLI_DIR).toBeDefined();
+      const entrypoint = path.join(
+        process.env.BUILD_TOOL_TEST_CLI_DIR!,
+        "index.js",
+      );
       const result = spawnSync(
         process.execPath,
         [
-          tsxCli,
           entrypoint,
           "--root",
           materialized.root,

@@ -1,0 +1,2 @@
+go test fuzz v1
+string("1 0(0)\"\n10 000000(0) =00<><unfinished ...>\n1 clone(0) =010/* 10 in strace's PID NS */<unfinished ...>\n")

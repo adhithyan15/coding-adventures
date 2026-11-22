@@ -52,8 +52,33 @@ file is never followed through a symlink; no negation, no basename shortcut, no 
 is ignored if it or any directory above it matches, so `build` ignores the
 whole tree and `**/*.log` ignores logs at any depth. `.git` is always skipped.
 
-It uses only the Go standard library and depends on no other package in this
-repository.
+It uses the Go standard library plus in-repo modules (wired with `replace`);
+it never depends on third-party modules. The in-repo modules are the shared
+grammar lexer and parser, which Kiln uses instead of hand-written scanners
+(KILN04 section 4.9). Those modules may themselves depend only on the standard
+library or other in-repo modules. A CI check (`TestNoThirdPartyDependencies`, in `deps_test.go`)
+enforces it: `go list -deps` filtered to non-standard, non-repo paths must be
+empty, every `require` names a repo module, and every `replace` target is a
+relative path inside the repo.
+
+The trace parser reads a strace line with the grammar path
+(`code/grammars/strace`, through `strace-lexer` and `strace-parser`): it is the
+production default (D24 PR 6). The old hand-written scanner is kept only as an
+oracle on probation, reachable through the cross-check and never as a production
+reader; there is no switch back to it (it is the lenient reader, so that would be
+a soundness downgrade; rollback is a revert). The package's tests run both on
+every `Parse` and fail on any disagreement the spec's table does not allow, and
+`KILN_TRACE_DIFF=1` does the same for real traces (the kiln-sandbox CI job sets
+it; a mismatch panics with a bounded, sanitised window of lines). The sandbox
+job (only: it sets `KILN_G1_GATE=1`; elsewhere the figures are logged, not
+enforced) also applies gate G1 (KILN04 section 4.9) in two parts: an absolute
+floor of 8 MB/s (best-of-7 grammar-path pass 1) on a real trace of 32 to 128 KB
+and on a fixed synthetic 64 KB slice (`synthetic-slice`), and, on that slice
+only, a host-normalised floor of 14 MB/s (the rate is rescaled by a frozen,
+parser-shaped reference kernel timed beside it, nominal rate 72 MB/s calibrated
+over 8 CI legs, so a slower runner is not read as a slower reader). Larger
+traces are logged for the census only. The old scanner is deleted in PR 8, after
+a soak.
 
 ## Usage
 
@@ -348,9 +373,10 @@ rec, err := traced.Classify(cfg, traced.Input{
   clear it. It is not in the record's JSON: the recorder copies it with
   `recfmt.CompleteOf` to the shard record's `writes_complete`, which the merge
   honours only when `HonourWritesComplete` is on (off by default).
-  `RecorderVersion` is 2 since this field exists.
+  `RecorderVersion` became 2 when this field was added (see `internal/legacy/traced.go` for the current value).
 - `CheckRecipe(steps, lines)` compares each step's exec argv with the expected
-  `sh -c` lines.
+  `sh -c` lines. Fewer traces than lines are accepted only as a byte-exact prefix
+  whose last step exited non-zero (a failed action, KILN04 D36).
 
 The decisions are in KILN04 section 5.5. `FuzzClassify` checks the classifier
 never panics and always returns sorted, unique, clean output.
@@ -543,8 +569,8 @@ GitHub run with an image id; every other failure is exit 1. In order, it:
    records their digests and the partition digest;
 4. writes `host-facts.json` and computes the weak key of every package the
    shard runs from them (the merge recomputes the same keys), one
-   `kiln-record-action/2` file per package (it also lists the tool names the
-   key pins, `tools`);
+   `kiln-record-action/3` file per package (it also lists the tool names the
+   key pins, `tools`, and the package's `gate`, see below);
 5. generates `sandbox.json` (state roots for `~/.cargo`, a closed anchor table,
    `.git` masked, no root overlapping the record directory or `RUNNER_TEMP`),
    scans every `ro_roots` entry for sockets and FIFOs, and runs the sandbox's
@@ -575,8 +601,18 @@ result is the sealed `pre/probes.json` (digest of every trace) and the traces
 themselves in `<dir>/probe/` (never sealed, never read by `collect`). Unit tests
 inject `Options.Structure`; the real run is the Linux test `TestSandboxRecordProbe`.
 
-`kiln record step` and `kiln record collect` are the next sections. Not done by
-`prepare`, by design: gates and toolchain probes (2b-2c).
+**Gates and the toolchain probes (stage 4 PR 2b-2c-3, decision P7).** Each action
+file carries a `gate`: the reason the package must not be recorded as a
+measurement (the never list, a KILN03 hard reason, a toolchain probe that
+disagreed). It is computed by `Traced.Gate`, which shares `gateFacts`/`gateFrom`
+with `kiln legacy-plan`, so the two cannot drift. A gated package still runs; its
+record carries the gate and the merge never emits it. The toolchain probes run
+INSIDE a sandbox (`internal/record/probe_toolchain.go`: plain `kiln sandbox-exec`,
+no strace, an empty checkout, no state roots, 60 s each and 10 minutes in all),
+never on the host, and their results are sealed in `pre/probes.json`. Unit tests
+inject `Options.ProbeRun`; the real run is the Linux test `TestSandboxRecordGates`.
+
+`kiln record step` and `kiln record collect` are the next sections.
 
 **The recorder's PATH and its git.** `git` is resolved once from `--git` (default
 `/usr/bin/git`) and every host-side Git call runs that file by absolute path;
@@ -730,7 +766,13 @@ decoded with `recfmt` before it is written, atomically, to `--out`. Before it re
 anything of `traces/`, `collect` creates `traces/.collected`; `kiln record step`
 refuses once that exists, so a directory is collected once and cannot grow after.
 A package whose recipe is empty (a comment-only BUILD, built 0 of 0) is vacuously
-complete, not unknown. Why a post-build check failed is printed as
+complete, not unknown. Two more header void tokens: `survivor` (a `/proc` scan right
+after the lock finds a process of the sandbox still alive after 10 s: it is in
+another mount namespace that mounts the checkout, or names the sealed
+`sandbox.json` in its command line, or is ours and cannot be read; every record
+is then an unknown write set) and `state-preloaded` (the first step of the shard,
+sequence number 0, found a state root non-empty and left `traces/.state-preloaded`;
+this voids the shard only). Why a post-build check failed is printed as
 `post-build problem:` lines (never written to the shard). Exit 1 and
 nothing written when `collect` cannot say what the build did (the directory is locked,
 `pre/` changed, the results are unreadable); a void shard is still written and the
@@ -741,7 +783,27 @@ write what a supervisor would have, then break one thing at a time (every refusa
 and void path; the shard is also fed to the merge); `TestSandboxRecordCollect`
 (the required `kiln-sandbox` job) runs `prepare`, every step, `collect` and the merge
 over five real actions (a clean hit, a failed step, a write the classifier cannot
-place, a step run twice, a tracked file changed after the build).
+place, a step run twice, a tracked file changed after the build);
+`TestSandboxRecordSurvivor` starts a sandbox of its own, outside `record step`,
+and requires `collect` to void the run.
+
+### `kiln record census` (census PR C, KILN04 section 4.8)
+
+```
+kiln record census --dir <abs> --out <abs> [--md <abs>] [--records <abs>]
+```
+
+A diagnostic, never run during a recording: after a sampled real build it reads
+the record directory back (step traces and sidecars, `census.json`,
+`record.json`/`record.failed`, and with `--records` collect's header) and writes
+a bounded, sanitised summary (`kiln-census-summary/1`, JSON at most 512 KiB, an
+optional Markdown rendering at most 256 KiB): the host-path reason histogram,
+trace-size and G2 timing distributions, per-action trace bytes against the cap,
+the cross-check counts and the recordable share per language. Every input is
+read as hostile and every path is quoted for Markdown. Exit 0 clean, 4 on a
+cross-check mismatch or allowed divergence, 1 on an infrastructure failure or a
+refusal (it never writes inside `--dir`), 2 on usage. Code:
+`internal/record/census_report.go`, `census_render.go`, `census_stats.go`.
 
 ## Lookup in the plan (`kiln legacy-plan --ledger`, KILN04 stage 5a)
 

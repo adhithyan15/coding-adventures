@@ -42,7 +42,20 @@ use coding_adventures_test_bootstrap::Verdict;
 use std::cell::Cell;
 use std::collections::BTreeMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
-use std::sync::Mutex;
+use std::sync::{Mutex, MutexGuard};
+
+/// Lock `m`, recovering the data if a panicking thread poisoned it (WD-HARN1).
+///
+/// Every lock in this harness guards plain bookkeeping (registered tests,
+/// per-test statistics, a reply slot) that is consistent after any single
+/// operation, and a panic is an expected event here: the subject under test is
+/// not trusted to be total, and a panicking instance is reported as a failed
+/// verdict.  `lock().unwrap()` would turn one such panic into a cascade of
+/// panics (or, in the observer's reply slot, a supervisor that never wakes), so
+/// the harness never unwraps a lock: it takes the guard out of the poison error.
+fn lock_or_recover<T>(m: &Mutex<T>) -> MutexGuard<'_, T> {
+    m.lock().unwrap_or_else(|e| e.into_inner())
+}
 
 /// Dynamic value of the Warrant pure profile (VER04e section 2.1 subset).
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -740,8 +753,10 @@ fn attacking<T>(op: &'static str, body: impl FnOnce() -> T) -> T {
 // WX-H: the allocation observer (VER04j sections 6.3 and 14.2 item 33).
 //
 // Every adapter call of an operation that has a `heap` or `output` bound runs
-// on a worker thread inside an *allocation window*.  A counting global
-// allocator charges every allocation made on a thread whose window is open.
+// on a worker thread; the *allocation window* is open around the call of the
+// export only (`obs_scope`, VOS-D063), never around the adapter's marshalling.
+// A counting global allocator charges every allocation made on a thread whose
+// window is open.
 //
 //   supervisor thread            worker thread (window open)
 //   -----------------            ---------------------------
@@ -761,6 +776,36 @@ fn attacking<T>(op: &'static str, body: impl FnOnce() -> T) -> T {
 // instances without running them (so a shrinker cannot abandon a worker per
 // candidate), and at most `OBS_MAX_ABANDONED` workers, holding at most
 // `OBS_MAX_HELD` bytes between them, are ever abandoned in one process.
+//
+// WD-HARN1 (the 2026-11-14 Windows `rust/lzw` hang): the supervisor never waits
+// without a bound, and nothing it does can wait on an abandoned worker.
+//
+//   * Every wait is a `Condvar::wait_timeout` against one deadline of
+//     `OBS_CALL_TIMEOUT_MS`.  A call that has not answered by then (a worker that
+//     spins without allocating, one that deadlocks inside the subject, one that
+//     died) is FATAL for the process, not a failed instance: the harness
+//     prints the TAP line `Bail out! observer-timeout: ...` (naming the
+//     operation and the test), writes the same line to stderr and exits with
+//     status `OBS_TIMEOUT_EXIT` (70; the runner itself uses 0, 1 and 2).  A
+//     failed instance would be wrong twice over: a negative control counts any
+//     failure as "the fault was caught" (so a stall inside one would be a silent
+//     pass), and a sabotage run that is only checked for a `not ok` line would
+//     pass because of the stall.  Bailing out first prints no `not ok`, writes
+//     no manifest and stops at once, so the abandoned (possibly spinning)
+//     worker cannot burn a core for the rest of the run either.
+//     `WARRANT_OBS_TIMEOUT_SECS` may raise the 120 s bound (a slower machine);
+//     a value below the default is ignored, so it cannot be used to make a
+//     run time out sooner.
+//   * An abandoned worker is never joined: its `JoinHandle` is dropped at spawn
+//     (the thread is detached), its job channel is dropped when it is
+//     abandoned, and the process leaves through `process::exit`, which does not
+//     wait for threads (the generated `main` and libtest alike).
+//   * A worker only ever takes its own reply slot, and only for a few
+//     instructions.  No lock the supervisor, the TAP printer or the manifest
+//     writer needs (META, STATS, OBS_STATS, TABLE_STATS, SOURCE_SHA256) is ever
+//     taken on a worker thread, so an abandoned worker cannot hold one.
+//   * Every lock is taken through `lock_or_recover`, so a panic never poisons
+//     the harness into a hang or a second panic.
 // ---------------------------------------------------------------------------
 
 use std::alloc::{GlobalAlloc, Layout, System};
@@ -768,7 +813,74 @@ use std::alloc::{GlobalAlloc, Layout, System};
 /// Workers that may be abandoned before observed calls are refused outright.
 const OBS_MAX_ABANDONED: usize = 64;
 /// Bytes the abandoned workers may hold between them (they are never freed).
+/// (It counts what each worker held when it tripped, so it under-counts what a
+/// worker had allocated before the window opened.)
 const OBS_MAX_HELD: u64 = 1 << 30;
+/// How long the supervisor waits for one observed call before it gives up on
+/// it (WD-HARN1).  A call that outlives this bound is not failed as one
+/// instance: the whole test process bails out (`obs_bail_out`, exit status
+/// `OBS_TIMEOUT_EXIT`), because a hung call has no sound way to be abandoned
+/// and the run must not go on as if it had a result.  Far above the slowest
+/// honest call (a 16 MiB decompression bomb under a debug build takes
+/// seconds) and far below any CI job limit: a hung call costs minutes, not
+/// hours.
+const OBS_CALL_TIMEOUT_MS: u64 = 120_000;
+/// The wait bound in force (a static so the supervisor's own tests can shorten it).
+static OBS_TIMEOUT_MS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(OBS_CALL_TIMEOUT_MS);
+/// Exit status of a process that bailed out because an observed call did not
+/// return (or its worker was lost).  Distinct from 0 (pass), 1 (failed tests)
+/// and 2 (usage), so no check of "the run failed" can mistake it for a result.
+const OBS_TIMEOUT_EXIT: i32 = 70;
+
+/// The most `WARRANT_OBS_TIMEOUT_SECS` may raise the bound to (24 h).  Without a
+/// ceiling a huge value overflowed `Instant + Duration` (a panic) and, short of
+/// that, made the bound effectively unbounded (VOS-D085).
+const OBS_MAX_RAISE_SECS: u64 = 86_400;
+
+/// The raise `WARRANT_OBS_TIMEOUT_SECS` asks for, in milliseconds: unset or
+/// unparsable is 0, anything above `OBS_MAX_RAISE_SECS` is clamped to it.
+fn obs_raise_ms(var: Option<&str>) -> u64 {
+    var.and_then(|v| v.trim().parse::<u64>().ok())
+        .map_or(0, |secs| secs.min(OBS_MAX_RAISE_SECS) * 1000)
+}
+
+/// The bound in force: the (test-shortenable) default, raised, never lowered,
+/// by `WARRANT_OBS_TIMEOUT_SECS` (at most `OBS_MAX_RAISE_SECS`).
+fn obs_timeout() -> std::time::Duration {
+    static RAISE_MS: std::sync::OnceLock<u64> = std::sync::OnceLock::new();
+    let raise = *RAISE_MS
+        .get_or_init(|| obs_raise_ms(std::env::var("WARRANT_OBS_TIMEOUT_SECS").ok().as_deref()));
+    let base = OBS_TIMEOUT_MS.load(std::sync::atomic::Ordering::SeqCst);
+    std::time::Duration::from_millis(base.max(raise))
+}
+
+/// The deadline of a wait of `timeout` from `now`.  An unrepresentable instant
+/// fails closed: the deadline is `now`, already past, so the wait times out and
+/// the run bails out instead of waiting without a bound or panicking.
+fn obs_deadline(now: std::time::Instant, timeout: std::time::Duration) -> std::time::Instant {
+    now.checked_add(timeout).unwrap_or(now)
+}
+
+thread_local! {
+    static OBS_TEST_ID: std::cell::RefCell<String> = const { std::cell::RefCell::new(String::new()) };
+}
+
+/// A supervisor wait failed: say so on TAP and on stderr, and leave at once.
+/// The runner's stdout lock is re-entrant, so this works from inside a test.
+fn obs_bail_out(why: &str) -> ! {
+    let id = OBS_TEST_ID.with(|t| t.borrow().clone());
+    let line = format!("Bail out! observer-timeout: {why} (test {id})");
+    use std::io::Write;
+    {
+        let mut out = std::io::stdout();
+        let _ = writeln!(out, "{line}");
+        let _ = out.flush();
+    }
+    // Not `eprintln!`: that panics when stderr is a closed pipe, and a panic
+    // here would unwind into the test instead of leaving.
+    let _ = writeln!(std::io::stderr(), "{line}");
+    std::process::exit(OBS_TIMEOUT_EXIT)
+}
 
 /// The panic payload an observed instance raises when the observer fails it
 /// (`bound-heap-exceeded`, `bound-negative`, `output-bound-exceeded`).
@@ -837,9 +949,9 @@ fn obs_release(n: u64) {
 /// Report the attempted peak to the supervisor and park this thread forever.
 fn obs_trip(w: &Window, attempted: u64, held: u64) -> ! {
     if let Some(slot) = w.slot.get() {
-        if let Ok(mut g) = slot.state.lock() {
-            *g = Some(ObsReply::Tripped(attempted, held));
-        }
+        // Poison-proof: a skipped write here would leave the supervisor waiting.
+        // `lock_or_recover` neither allocates nor unwinds, as the allocator needs.
+        *lock_or_recover(&slot.state) = Some(ObsReply::Tripped(attempted, held));
         slot.ready.notify_one();
     }
     loop {
@@ -875,6 +987,89 @@ unsafe impl GlobalAlloc for Observer {
 
 #[global_allocator]
 static OBSERVER: Observer = Observer;
+
+/// Closes the window again when an `obs_scope` ends, however it ends (a return
+/// or a panic unwinding through it).
+struct ObsScopeGuard(bool);
+
+impl Drop for ObsScopeGuard {
+    fn drop(&mut self) {
+        let _ = WIN.try_with(|w| w.active.set(self.0));
+    }
+}
+
+/// Run `f` with the allocation window OPEN: every allocation it makes is charged
+/// to the observed call, and nothing outside such a scope is (VOS-D063, VER04j
+/// 14.3 item 54).  The generator wraps exactly one expression of each observed
+/// adapter, the call of the export, so the `vec!` that marshals a record or a
+/// variant into a Warrant value is the harness's and is not counted.  On a
+/// thread that is not an observer worker (no reply slot) it only runs `f`.
+fn obs_scope<R>(f: impl FnOnce() -> R) -> R {
+    let was = WIN
+        .try_with(|w| {
+            if w.slot.get().is_some() {
+                w.active.replace(true)
+            } else {
+                w.active.get()
+            }
+        })
+        .unwrap_or(false);
+    let _restore = ObsScopeGuard(was);
+    f()
+}
+
+/// How the adapter gets a marshalling copy of the export's result while the
+/// original is dropped INSIDE a window (the result's `Drop` is the subject's
+/// code, so an allocation there is the subject's).  Marshalling stays outside
+/// the window (VOS-D063); only the drop of the original is observed.
+///
+/// `obs_call!` is a macro because the choice is made by autoref method
+/// resolution on the CONCRETE result type, which a generic function cannot do:
+///
+///   * `T: Clone`  -> `ObsViaClone`: marshal the clone, drop the original in a scope;
+///   * otherwise   -> `ObsViaMove`: marshal the original; if the type has drop glue
+///     its drop (outside any window) cannot be observed, so the instance FAILS
+///     loudly instead of passing silently.  A type with no drop glue (plain data)
+///     has nothing to observe and is passed through.
+pub struct ObsHold<T>(pub Option<T>);
+
+pub trait ObsViaClone<T> {
+    fn obs_split(&mut self) -> T;
+}
+
+impl<T: Clone> ObsViaClone<T> for ObsHold<T> {
+    fn obs_split(&mut self) -> T {
+        let r = self.0.take().expect("result present");
+        let copy = r.clone();
+        obs_scope(move || drop(r));
+        copy
+    }
+}
+
+pub trait ObsViaMove<T> {
+    fn obs_split(&mut self) -> T;
+}
+
+impl<T> ObsViaMove<T> for &mut ObsHold<T> {
+    fn obs_split(&mut self) -> T {
+        let r = self.0.take().expect("result present");
+        if std::mem::needs_drop::<T>() {
+            obs_fail(
+                "bound-heap-exceeded: the export's result type has drop glue and is not Clone, so its drop cannot be observed"
+                    .to_string(),
+            );
+        }
+        r
+    }
+}
+
+/// Call the export inside the window, then split its result (see `ObsHold`).
+macro_rules! obs_call {
+    ($call:expr) => {{
+        let mut hold = ObsHold(Some(obs_scope(|| $call)));
+        (&mut hold).obs_split()
+    }};
+}
 
 type ObsJob = Box<dyn FnOnce() + Send>;
 
@@ -917,10 +1112,16 @@ enum Exec {
     Tripped(u64),
     /// Too many workers (or bytes) are already abandoned: the call was not started.
     Refused,
+    /// The call did not answer within the wait timeout; its worker is abandoned.
+    TimedOut(std::time::Duration),
+    /// The worker thread is gone: the job could not be handed to it.
+    Lost,
 }
 
-/// Run `job` on the observer worker inside an allocation window.
+/// Run `job` on the observer worker inside an allocation window, waiting at most
+/// `OBS_CALL_TIMEOUT_MS` for the answer.
 fn obs_exec(job: impl FnOnce() -> V + Send + 'static) -> Exec {
+    let timeout = obs_timeout();
     if OBS_ABANDONED.load(std::sync::atomic::Ordering::SeqCst) >= OBS_MAX_ABANDONED
         || OBS_HELD.load(std::sync::atomic::Ordering::SeqCst) >= OBS_MAX_HELD
     {
@@ -930,25 +1131,48 @@ fn obs_exec(job: impl FnOnce() -> V + Send + 'static) -> Exec {
         let mut held = cell.borrow_mut();
         let worker = held.get_or_insert_with(obs_spawn);
         let slot = worker.slot;
-        *slot.state.lock().unwrap() = None;
+        *lock_or_recover(&slot.state) = None;
         let wrapped: ObsJob = Box::new(move || {
+            // The window starts CLOSED (VOS-D063): `obs_scope` opens it around
+            // the export call and around nothing else.
             WIN.with(|w| {
                 w.cur.set(0);
                 w.peak.set(0);
-                w.active.set(true);
+                w.active.set(false);
             });
             let r = catch_unwind(AssertUnwindSafe(job));
             let peak = WIN.with(|w| {
                 w.active.set(false);
                 w.peak.get()
             });
-            *slot.state.lock().unwrap() = Some(ObsReply::Done(r, peak));
+            *lock_or_recover(&slot.state) = Some(ObsReply::Done(r, peak));
             slot.ready.notify_one();
         });
-        worker.jobs.send(wrapped).expect("the observer worker is alive");
-        let mut g = slot.state.lock().unwrap();
+        if worker.jobs.send(wrapped).is_err() {
+            // The worker is gone (its thread ended): drop it and report it as
+            // lost (fatal for the run, see `obs_observe`), not as a heap trip.
+            *held = None;
+            return Exec::Lost;
+        }
+        // One deadline for the whole wait: a spurious wakeup does not extend it.
+        let deadline = obs_deadline(std::time::Instant::now(), timeout);
+        let mut g = lock_or_recover(&slot.state);
         while g.is_none() {
-            g = slot.ready.wait(g).unwrap();
+            let left = deadline.saturating_duration_since(std::time::Instant::now());
+            if left.is_zero() {
+                drop(g);
+                // Abandon the worker without joining it: dropping the worker drops
+                // its job channel, so it exits if it ever finishes, and nothing
+                // here waits for it.
+                *held = None;
+                OBS_ABANDONED.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                return Exec::TimedOut(timeout);
+            }
+            g = slot
+                .ready
+                .wait_timeout(g, left)
+                .unwrap_or_else(|e| e.into_inner())
+                .0;
         }
         let reply = g.take().expect("reply present");
         drop(g);
@@ -984,7 +1208,8 @@ thread_local! {
 
 static OBS_STATS: Mutex<BTreeMap<String, ObsAgg>> = Mutex::new(BTreeMap::new());
 
-fn obs_begin_test() {
+fn obs_begin_test(id: &str) {
+    OBS_TEST_ID.with(|t| *t.borrow_mut() = id.to_string());
     OBS_AGG.with(|a| *a.borrow_mut() = ObsAgg::default());
 }
 
@@ -1075,6 +1300,13 @@ fn obs_observe(op: &str, heap: Option<i128>, job: impl FnOnce() -> V + Send + 's
                 "bound-heap-exceeded: `{op}` not run, earlier calls in this process already exceeded the allocation cap"
             ))
         }
+        Exec::TimedOut(limit) => {
+            obs_bail_out(&format!(
+                "`{op}` did not return within {} seconds",
+                limit.as_secs_f64()
+            ))
+        }
+        Exec::Lost => obs_bail_out(&format!("the observer worker of `{op}` is gone")),
     }
 }
 
@@ -1988,6 +2220,106 @@ fn shrink_comp(tys: &[Ty], cand: Vec<V>, prop_raw: &dyn Fn(&Vec<V>) -> bool) -> 
     (cur, steps)
 }
 
+// ----- refinement starvation (VOS-D079, VER04h section 4.1) ----------------
+//
+// A refinement is applied by rejection: a case is redrawn up to 100 times.  A
+// refinement that admits few draws (`t < 8` over a byte admits 8 of 256, about
+// 3 percent) loses all 100 draws of some case with probability 0.97^100 = 4.7
+// percent, so 4,096 cases never all succeed and the suite failed with
+// `property-exhausted` while the exhaustive suite (which enumerates the
+// admissible values) passed.
+//
+//   * A claim whose every binder is *exactly enumerable* (its draw support IS
+//     its exhaustive domain) is rescued: when the 100 draws of one case are all
+//     rejected, the case is drawn uniformly from the admissible set instead.
+//     The ordinary rejection draw is untouched, so every case that used to be
+//     drawn is drawn identically.
+//   * Any other claim cannot be rescued (sampling the enumeration would narrow
+//     what the suite covers), so a refinement below `1/ACCEPT_FLOOR_DEN`
+//     acceptance is refused on the first draw with a clear message.  The floor
+//     is 1/8: see `ACCEPT_FLOOR_DEN` for the derivation.
+
+/// Draws measured by the acceptance probe.
+const ACCEPT_PROBE: u64 = 2048;
+/// The floor: fewer than one admitted draw in this many is refused.
+///
+/// Derivation.  A case draws at most R = 100 times, so it is lost with
+/// probability (1 - a)^R at acceptance a, and the suite fails if any of its C
+/// cases is lost: P(fail) ~ C * (1 - a)^R.  Requiring that below 0.01 with
+/// C = 4096 gives (1 - a)^100 < 2.4e-6, a > 12.0 percent, so the floor is 1/8
+/// (12.5 percent).  At the old 1/32 a claim at 4 percent (0.96^100 = 1.7 percent
+/// per case) passed the probe and then failed.  A document whose
+/// `property_cases` exceeds 4096 must re-derive the floor (the assertion below).
+const ACCEPT_FLOOR_DEN: u64 = 8;
+const _: () = assert!(PROPERTY_CASES <= 4096, "re-derive ACCEPT_FLOOR_DEN for this case count");
+
+/// True when the values `fresh` can draw for `ty` are exactly `domain(ty)`.
+fn exact_support(ty: Ty) -> bool {
+    match ty {
+        Ty::Bool => true,
+        Ty::Nat => true,
+        Ty::Fx(f) => f.bits() <= 16,
+        Ty::Tuple(cs) => cs.iter().all(|c| exact_support(*c)),
+        Ty::Data(_, ctors) => ctors.iter().all(|(_, fs)| fs.iter().all(|c| exact_support(*c))),
+        Ty::Opt(t) | Ty::Res(t, _) => exact_support(*t),
+        _ => false,
+    }
+}
+
+/// Every admitted environment of the Cartesian product of the binder domains,
+/// in the exhaustive suite's order.  Callers check `within_budget` first.
+fn admissible_set(tys: &[Ty], admit: Admit) -> Vec<Vec<V>> {
+    let domains: Vec<Vec<V>> = tys.iter().map(|t| domain(*t)).collect();
+    let mut out = Vec::new();
+    if domains.iter().any(|d| d.is_empty()) {
+        return out;
+    }
+    let mut idx = vec![0usize; domains.len()];
+    loop {
+        let env: Vec<V> = idx.iter().zip(&domains).map(|(i, d)| d[*i].clone()).collect();
+        if admit(&env) {
+            out.push(env);
+        }
+        let mut pos = idx.len();
+        loop {
+            if pos == 0 {
+                return out;
+            }
+            pos -= 1;
+            idx[pos] += 1;
+            if idx[pos] < domains[pos].len() {
+                break;
+            }
+            idx[pos] = 0;
+        }
+    }
+}
+
+/// The acceptance floor, as a pure function of the counts (`Err` is the message).
+fn acceptance_verdict(admitted: u64, probe: u64) -> Result<(), String> {
+    if admitted * ACCEPT_FLOOR_DEN < probe {
+        return Err(format!(
+            "refinement acceptance {admitted}/{probe} is below the floor 1/{ACCEPT_FLOOR_DEN} \
+             on a domain that cannot be enumerated (widen the refinement or narrow the binder types)"
+        ));
+    }
+    Ok(())
+}
+
+/// Measure the acceptance of `ACCEPT_PROBE` draws from a stream derived from
+/// `seed` (so the case stream of the suite is untouched).
+fn acceptance_probe(seed: u64, tys: &[Ty], admit: Admit) -> Result<(), String> {
+    let mut rng = SplitMix64::new(seed ^ 0xACCE_97F1_0042_0001);
+    let mut admitted = 0u64;
+    for _ in 0..ACCEPT_PROBE {
+        let mode = rng.bounded(8) as u8;
+        if admit(&build(tys, &mut RngSrc(&mut rng), mode)) {
+            admitted += 1;
+        }
+    }
+    acceptance_verdict(admitted, ACCEPT_PROBE)
+}
+
 /// L2 property suite over relation-biased generators.
 pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault) -> (Verdict, Stats) {
     let seed = SplitMix64::new(EVIDENCE_SEED ^ fnv1a64(tag.as_bytes())).next_u64();
@@ -2000,7 +2332,13 @@ pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault)
     let cases = Cell::new(0u64);
     let discarded = Cell::new(0u64);
     let equal = Cell::new(0u64);
+    let rescue = tys.iter().all(|t| exact_support(*t)) && within_budget(tys);
+    let pool: std::cell::RefCell<Option<Vec<Vec<V>>>> = std::cell::RefCell::new(None);
+    let probed = Cell::new(false);
     let gen = |rng: &mut SplitMix64| -> Result<Vec<V>, String> {
+        if !rescue && !probed.replace(true) {
+            acceptance_probe(seed, tys, admit)?;
+        }
         for _ in 0..100 {
             let mode = rng.bounded(8) as u8;
             let env = build(tys, &mut RngSrc(rng), mode);
@@ -2012,6 +2350,27 @@ pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault)
                 return Ok(env);
             }
             discarded.set(discarded.get() + 1);
+        }
+        if rescue {
+            let mut slot = pool.borrow_mut();
+            let set = slot.get_or_insert_with(|| {
+                let set = admissible_set(tys, admit);
+                // Rescued cases repeat members of a small set: say how small, so
+                // the case count is not read as that many distinct cases.
+                eprintln!(
+                    "# property {tag}: rescued by enumeration, {} distinct admissible case(s)",
+                    set.len()
+                );
+                set
+            });
+            if !set.is_empty() {
+                let env = set[rng.bounded(set.len() as u64) as usize].clone();
+                cases.set(cases.get() + 1);
+                if env.len() >= 2 && env[0] == env[1] {
+                    equal.set(equal.get() + 1);
+                }
+                return Ok(env);
+            }
         }
         Err(FID_EXHAUSTED.to_string())
     };
@@ -2157,20 +2516,23 @@ fn reg(
     }
     let id = meta.id.clone();
     let observed = meta.kind != "negctl";
-    META.lock().unwrap().push(meta);
+    lock_or_recover(&META).push(meta);
     suite.add(id.clone(), move |_ctx| {
-        obs_begin_test();
+        obs_begin_test(&id);
         let (verdict, stats, note) = body();
         let agg = obs_end_test();
         let verdict = if observed { obs_annotate(verdict, &agg.note) } else { verdict };
-        OBS_STATS.lock().unwrap().insert(id.clone(), agg);
-        STATS.lock().unwrap().insert(id.clone(), (stats, note));
+        lock_or_recover(&OBS_STATS).insert(id.clone(), agg);
+        lock_or_recover(&STATS).insert(id.clone(), (stats, note));
         verdict
     });
 }
 
 fn is_detected(v: &Verdict) -> bool {
     match v {
+        // An observer timeout is never a detection (it bails out before it can
+        // be reported; this is the second line of defence).
+        Verdict::Fail { message, .. } if message.contains("observer-timeout") => false,
         Verdict::Fail { failure_id, .. } => {
             coding_adventures_test_bootstrap::verdict::is_registered_failure_id(failure_id)
         }
@@ -2192,9 +2554,9 @@ fn write_manifest(outcomes: &[Outcome]) {
         eprintln!("refusing to write an evidence manifest from a sabotaged or filtered run");
         return;
     }
-    let metas = META.lock().unwrap().clone();
-    let stats = STATS.lock().unwrap().clone();
-    let obs_stats = OBS_STATS.lock().unwrap().clone();
+    let metas = lock_or_recover(&META).clone();
+    let stats = lock_or_recover(&STATS).clone();
+    let obs_stats = lock_or_recover(&OBS_STATS).clone();
     let mut tests: Vec<Json> = Vec::new();
     for m in metas {
         let verdict = outcomes
@@ -2260,7 +2622,7 @@ fn write_manifest(outcomes: &[Outcome]) {
         ("module", Json::str(MODULE)),
         ("spec", Json::str(SPEC_PATH)),
         ("spec_sha256", Json::str(SPEC_SHA256)),
-        ("source_sha256", Json::Str(SOURCE_SHA256.lock().unwrap().clone())),
+        ("source_sha256", Json::Str(lock_or_recover(&SOURCE_SHA256).clone())),
         ("evidence_seed", Json::Str(EVIDENCE_SEED.to_string())),
         ("tests", Json::Arr(tests)),
     ]);
@@ -2314,7 +2676,7 @@ pub fn require_tests(count: usize, filter: Option<&str>) -> Result<(), String> {
 /// same definition the proof and bench manifests and the checker use.
 pub fn run_main(src_dir: &std::path::Path) -> i32 {
     match manifest::source_tree_framing(src_dir) {
-        Ok(framed) => *SOURCE_SHA256.lock().unwrap() = sha256_hex(&framed),
+        Ok(framed) => *lock_or_recover(&SOURCE_SHA256) = sha256_hex(&framed),
         Err(e) => {
             eprintln!("cannot bind evidence to {}: {e}", src_dir.display());
             return 2;
@@ -2331,7 +2693,7 @@ pub fn run_main(src_dir: &std::path::Path) -> i32 {
         }
     };
     let suite = build_suite(fault);
-    let registered = META.lock().unwrap().len();
+    let registered = lock_or_recover(&META).len();
     if let Err(msg) = require_tests(registered, filter_var.as_deref()) {
         eprintln!("{msg}");
         return 2;
@@ -2731,8 +3093,8 @@ fn op_decompress_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let p0 = args[0].bytes();
     let p1 = host::<u32>(args[1].int());
     let p1 = match fault { Fault::IgnoreLimit => u32::MAX, Fault::OffByOneLimit => p1.saturating_add(1), _ => p1 };
-    let hog = (fault == Fault::LimitAfterAlloc).then(|| vec![0u8; p1 as usize]);
-    let v: V = match decompress(p0, p1) {
+    let hog = (fault == Fault::LimitAfterAlloc).then(|| obs_scope(|| vec![0u8; p1 as usize]));
+    let v: V = match obs_call!(decompress(p0, p1)) {
         Ok(r) => V::Ok(Box::new(V::Bytes((r).to_vec()))),
         Err(_) if fault == Fault::MissingError => V::Ok(Box::new(domain_take(Ty::Bytes, 1).remove(0))),
         Err(e) => match e {

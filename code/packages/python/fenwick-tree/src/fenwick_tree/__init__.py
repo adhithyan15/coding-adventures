@@ -6,6 +6,6 @@ Public surface:
     FenwickError  — base exception
 """
 
-from fenwick_tree.fenwick_tree import FenwickError, FenwickTree
+from fenwick_tree.fenwick_tree import FenwickError, FenwickTree, ValueOutOfDomainError
 
-__all__ = ["FenwickTree", "FenwickError"]
+__all__ = ["FenwickTree", "FenwickError", "ValueOutOfDomainError"]

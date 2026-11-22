@@ -47,6 +47,10 @@ func probeLimits() trace.Limits {
 	return trace.Limits{MaxLineBytes: 1 << 20, MaxTotalBytes: ProbeTraceCap, MaxEvents: 1 << 20}
 }
 
+// ProbeParseLimits is probeLimits for a test that re-parses a probe trace the
+// way `prepare` did (D34: the sandbox tests' cross-check of child traces).
+func ProbeParseLimits() trace.Limits { return probeLimits() }
+
 // RunStructureProbes is the real Options.Structure.
 func RunStructureProbes(in ProbeInput) (ProbeReport, error) {
 	rep := ProbeReport{Schema: ProbesSchema, Action: in.Action, Shadowed: []string{}, Runs: []ProbeRunRecord{}, Toolchains: nil}
@@ -129,14 +133,20 @@ func runProbe(in ProbeInput, probeDir string, spec ProbeSpec, deadline time.Dura
 	if !run.started || run.timedOut || run.signal != 0 || run.code != 0 || sink.reason != "" {
 		return ProbeRunRecord{}, diag(CheckProbeRun(spec, obs, nil))
 	}
-	tr, why := parseHelperTrace(tracePath, in.KilnExe, in.Cfg.PackageDir(in.Action), in.ConfigSHA256, run.code, false, probeLimits())
+	tr, why, line := parseHelperTrace(tracePath, in.KilnExe, in.Cfg.PackageDir(in.Action), in.ConfigSHA256, run.code, false, probeLimits())
 	if why != "" {
-		return ProbeRunRecord{}, diag(fmt.Errorf("probe %s: the trace does not parse: %s", spec.Name, why))
+		// " (line N)" tells a human which line of the (otherwise lost) trace was
+		// refused.  It is appended to the DISPLAY text only; why is unchanged.
+		at := ""
+		if line > 0 {
+			at = fmt.Sprintf(" (line %d)", line)
+		}
+		return ProbeRunRecord{}, diag(fmt.Errorf("probe %s: the trace does not parse: %s%s", spec.Name, why, at))
 	}
 	if err := CheckProbeRun(spec, obs, tr); err != nil {
 		return ProbeRunRecord{}, diag(err)
 	}
-	return ProbeRunRecord{Name: spec.Name, Argv: spec.Argv, Exit: run.code, TraceBytes: sink.n, TraceSHA256: hex.EncodeToString(sink.h.Sum(nil))}, nil
+	return ProbeRunRecord{Name: spec.Name, Argv: spec.Argv, Exit: run.code, TraceBytes: sink.n, TraceSHA256: hex.EncodeToString(sink.h.Sum(nil)), Wall: elapsed}, nil
 }
 
 // probesLeftNothing requires tmpdir to be empty and every state root to be

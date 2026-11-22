@@ -26,6 +26,10 @@ var sourceFixtureCases = []struct {
 }{
 	{"extension.json", []string{"csharp", "fsharp", "elixir", "go", "haskell", "lua", "perl", "python", "ruby", "rust", "swift", "typescript"}},
 	{"repository-rust-boundary.json", []string{"csharp", "fsharp", "swift"}},
+	{"repository-rust-game-clock-exact-inputs.json", []string{"csharp", "fsharp", "swift"}},
+	{"repository-rust-fixed-point-exact-inputs.json", []string{"csharp", "fsharp", "swift"}},
+	{"repository-swift-hash-map.json", []string{"csharp", "fsharp", "swift"}},
+	{"repository-typescript-game-input-frame-proof-inputs.json", []string{"csharp", "fsharp", "swift"}},
 	{"shared-input-conduit-before.json", []string{"csharp", "fsharp"}},
 }
 
@@ -280,7 +284,7 @@ func TestSourceCollectionFixtureCheckedCorpusAndNativeReaders(t *testing.T) {
 			counts["local"]++
 		}
 	}
-	if counts["local"] != 7 || counts["repository"] != 9 || counts["shared"] != 4 {
+	if counts["local"] != 7 || counts["repository"] != 14 || counts["shared"] != 4 {
 		t.Fatalf("checked source fixture subfamilies = %v", counts)
 	}
 

@@ -1,0 +1,119 @@
+-- GAME31 -- RaycastDDA: deterministic zero-allocation 2.5D orthogonal grid DDA raycaster,
+-- floor/ceiling plane caster, and Z-buffered depth-sorted billboard sprite renderer.
+--
+-- Warrant document for raycast-dda (VER04j and VER04m: state=explicit).
+-- Formal verification contract for bounded map/framebuffer dimensions, DDA step caps,
+-- and near-zero perpendicular distance guards (CWE-20 / CWE-369 / CWE-400).
+
+warrant raycast_dda v1
+  error RaycastError = NonFiniteInput | ValueOutOfBounds | DegenerateCamera | DegenerateRay | InvalidGrid | InvalidTexture | InvalidFramebuffer | ZBufferTooSmall | TooManySprites | ScratchTooSmall | InvalidMaterialId | ArithmeticOverflow
+
+  model Unit = Bool
+  variant WallSide = EastWest | NorthSouth
+
+  record DdaStepBudget(width: Nat, height: Nat, max_steps: Nat)
+
+  -- Bounded grid dimension guard: 1 <= d <= 1024 (CWE-400).
+  model valid_map_dim(w: Nat, h: Nat) -> Bool = w >= 1 and w <= 1024 and h >= 1 and h <= 1024
+  -- Bounded framebuffer dimension guard: 1 <= d <= 4096 (CWE-400).
+  model valid_frame_dim(w: Nat, h: Nat) -> Bool = w >= 1 and w <= 4096 and h >= 1 and h <= 4096
+  -- DDA step bound: steps <= width + height prevents infinite loops on open maps (CWE-400 / CWE-835).
+  model valid_dda_steps(steps: Nat, w: Nat, h: Nat) -> Bool = w >= 1 and w <= 1024 and h >= 1 and h <= 1024 and steps <= w + h
+  -- Non-zero perpendicular distance guard in micro-units (CWE-369 division-by-zero prevention).
+  model valid_perp_dist_micro(dist: Nat) -> Bool = dist >= 1
+
+  op validate_map_dim(w: Nat, h: Nat) -> Result<Bool, RaycastError>
+  op validate_frame_dim(w: Nat, h: Nat) -> Result<Bool, RaycastError>
+  op validate_dda_steps(steps: Nat, w: Nat, h: Nat) -> Result<Bool, RaycastError>
+  op validate_perp_dist(dist: Nat) -> Result<Bool, RaycastError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_map_dim:
+    w public
+    h public
+  labels validate_frame_dim:
+    w public
+    h public
+  labels validate_dda_steps:
+    steps public
+    w public
+    h public
+  labels validate_perp_dist:
+    dist public
+
+  input validate_map_dim.w:
+    hostile
+    ensures no_panic, terminates
+  input validate_map_dim.h:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_frame_dim.w:
+    hostile
+    ensures no_panic, terminates
+  input validate_frame_dim.h:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_dda_steps.steps:
+    hostile
+    ensures no_panic, terminates
+  input validate_dda_steps.w:
+    hostile
+    ensures no_panic, terminates
+  input validate_dda_steps.h:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_perp_dist.dist:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_map_dim:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_frame_dim:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_dda_steps:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_perp_dist:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example map_valid:
+    validate_map_dim(16, 16) == Ok(true)
+  example map_zero:
+    validate_map_dim(0, 16) == Err(RaycastError.InvalidGrid)
+  example map_too_large:
+    validate_map_dim(1025, 16) == Err(RaycastError.InvalidGrid)
+  example frame_valid:
+    validate_frame_dim(320, 200) == Ok(true)
+  example frame_too_large:
+    validate_frame_dim(4097, 200) == Err(RaycastError.InvalidFramebuffer)
+  example dda_within_cap:
+    validate_dda_steps(32, 16, 16) == Ok(true)
+  example dda_exceeds_cap:
+    validate_dda_steps(33, 16, 16) == Err(RaycastError.ValueOutOfBounds)
+  example perp_zero:
+    validate_perp_dist(0) == Err(RaycastError.DegenerateRay)
+  example perp_min:
+    validate_perp_dist(1) == Ok(true)
+
+  claim validate_map_dim_agrees:
+    forall w: Nat, h: Nat. validate_map_dim(w, h) == (if valid_map_dim(w, h) then Ok(true) else Err(RaycastError.InvalidGrid))
+  claim validate_frame_dim_agrees:
+    forall w: Nat, h: Nat. validate_frame_dim(w, h) == (if valid_frame_dim(w, h) then Ok(true) else Err(RaycastError.InvalidFramebuffer))
+  claim validate_dda_steps_agrees:
+    forall s: Nat, w: Nat, h: Nat. validate_dda_steps(s, w, h) == (if valid_dda_steps(s, w, h) then Ok(true) else Err(RaycastError.ValueOutOfBounds))
+  claim validate_perp_dist_agrees:
+    forall d: Nat. validate_perp_dist(d) == (if valid_perp_dist_micro(d) then Ok(true) else Err(RaycastError.DegenerateRay))

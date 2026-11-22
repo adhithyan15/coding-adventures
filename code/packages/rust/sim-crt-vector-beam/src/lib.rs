@@ -80,7 +80,10 @@ impl std::fmt::Display for CrtError {
             }
             Self::InvalidTiming(msg) => write!(f, "invalid CRT raster timing: {msg}"),
             Self::InvalidPhosphorDecay(decay) => {
-                write!(f, "invalid phosphor decay factor {decay} (must be in 1..=65536)")
+                write!(
+                    f,
+                    "invalid phosphor decay factor {decay} (must be in 1..=65536)"
+                )
             }
             Self::InvalidSlewRate(rate) => {
                 write!(f, "invalid vector amplifier slew rate {rate}")
@@ -128,9 +131,9 @@ impl PhosphorType {
     /// `65536` corresponds to unity (1.0, 100% retention / no decay), while lower values decay.
     pub const fn phosphor_decay_factor_q16(&self) -> u32 {
         match self {
-            Self::P4White => 32768,   // 50% persistence retention per frame
-            Self::P31Green => 45056,  // ~68.75% persistence retention per frame
-            Self::P1Green => 59904,   // ~91.4% persistence retention per frame (slow decay)
+            Self::P4White => 32768,  // 50% persistence retention per frame
+            Self::P31Green => 45056, // ~68.75% persistence retention per frame
+            Self::P1Green => 59904,  // ~91.4% persistence retention per frame (slow decay)
             Self::Custom { decay_q16, .. } => *decay_q16,
         }
     }
@@ -207,17 +210,23 @@ impl RasterTiming {
 
     /// Total horizontal scanline duration in dot clocks (visible + porches + sync).
     pub const fn total_raster_width(&self) -> u32 {
-        self.visible_width + self.h_front_porch + self.h_sync + self.h_back_porch
+        self.visible_width
+            .saturating_add(self.h_front_porch)
+            .saturating_add(self.h_sync)
+            .saturating_add(self.h_back_porch)
     }
 
     /// Total vertical frame duration in scanlines (visible + porches + sync).
     pub const fn total_raster_height(&self) -> u32 {
-        self.visible_height + self.v_front_porch + self.v_sync + self.v_back_porch
+        self.visible_height
+            .saturating_add(self.v_front_porch)
+            .saturating_add(self.v_sync)
+            .saturating_add(self.v_back_porch)
     }
 
     /// Total active visible pixel count (`visible_width * visible_height`).
     pub const fn total_raster_pixels(&self) -> usize {
-        (self.visible_width as usize) * (self.visible_height as usize)
+        (self.visible_width as usize).saturating_mul(self.visible_height as usize)
     }
 
     /// Validates timing parameters for non-zero bounds and overflow protection (CWE-20, CWE-190).
@@ -339,26 +348,38 @@ impl CrtRasterBeam {
         video_luma: u8,
         phosphor: &mut [u16],
     ) -> Result<BeamFlags, CrtError> {
+        self.timing.validate_timing()?;
+
         let is_visible_x = self.beam_x < self.timing.visible_width;
         let is_visible_y = self.beam_y < self.timing.visible_height;
         let visible = is_visible_x && is_visible_y;
 
-        let h_fp_end = self.timing.visible_width + self.timing.h_front_porch;
-        let h_sync_end = h_fp_end + self.timing.h_sync;
+        let h_fp_end = self
+            .timing
+            .visible_width
+            .saturating_add(self.timing.h_front_porch);
+        let h_sync_end = h_fp_end.saturating_add(self.timing.h_sync);
         let in_hblank = !is_visible_x;
         let in_hsync = self.beam_x >= h_fp_end && self.beam_x < h_sync_end;
 
-        let v_fp_end = self.timing.visible_height + self.timing.v_front_porch;
-        let v_sync_end = v_fp_end + self.timing.v_sync;
+        let v_fp_end = self
+            .timing
+            .visible_height
+            .saturating_add(self.timing.v_front_porch);
+        let v_sync_end = v_fp_end.saturating_add(self.timing.v_sync);
         let in_vblank = !is_visible_y;
         let in_vsync = self.beam_y >= v_fp_end && self.beam_y < v_sync_end;
 
         if visible {
-            let idx = (self.beam_y as usize) * (self.timing.visible_width as usize)
-                + (self.beam_x as usize);
+            let idx = (self.beam_y as usize)
+                .checked_mul(self.timing.visible_width as usize)
+                .and_then(|row| row.checked_add(self.beam_x as usize))
+                .ok_or_else(|| {
+                    CrtError::InvalidTiming("raster pixel index overflow".to_string())
+                })?;
             if idx >= phosphor.len() {
                 return Err(CrtError::BufferTooSmall {
-                    required: idx + 1,
+                    required: idx.saturating_add(1),
                     provided: phosphor.len(),
                 });
             }
@@ -369,11 +390,11 @@ impl CrtRasterBeam {
         let mut line_completed = false;
         let mut frame_completed = false;
 
-        self.beam_x += 1;
+        self.beam_x = self.beam_x.saturating_add(1);
         if self.beam_x >= self.timing.total_raster_width() {
             self.beam_x = 0;
             line_completed = true;
-            self.beam_y += 1;
+            self.beam_y = self.beam_y.saturating_add(1);
             if self.beam_y >= self.timing.total_raster_height() {
                 self.beam_y = 0;
                 frame_completed = true;
@@ -398,6 +419,8 @@ impl CrtRasterBeam {
         phosphor: &[u16],
         out_pixels: &mut PixelContainer,
     ) -> Result<(), CrtError> {
+        self.timing.validate_timing()?;
+        self.phosphor_type.validate_phosphor()?;
         let required = self.timing.total_raster_pixels();
         if phosphor.len() < required {
             return Err(CrtError::BufferTooSmall {
@@ -439,6 +462,8 @@ impl CrtRasterBeam {
         phosphor: &[u16],
         min_intensity_threshold: u16,
     ) -> Result<PaintScene, CrtError> {
+        self.timing.validate_timing()?;
+        self.phosphor_type.validate_phosphor()?;
         let required = self.timing.total_raster_pixels();
         if phosphor.len() < required {
             return Err(CrtError::BufferTooSmall {
@@ -536,10 +561,7 @@ impl CrtRasterBeam {
 }
 
 /// Applies exponential persistence decay across a caller-supplied phosphor buffer with zero heap allocation.
-pub fn decay_phosphor_buffer(
-    phosphor: &mut [u16],
-    decay_factor_q16: u32,
-) -> Result<(), CrtError> {
+pub fn decay_phosphor_buffer(phosphor: &mut [u16], decay_factor_q16: u32) -> Result<(), CrtError> {
     if decay_factor_q16 == 0 || decay_factor_q16 > 65536 {
         return Err(CrtError::InvalidPhosphorDecay(decay_factor_q16));
     }
@@ -725,6 +747,19 @@ impl VectorBeamDisplay {
         blanked: bool,
         intensity: u8,
     ) -> Result<VectorBeamPoint, CrtError> {
+        validate_slew_rate(self.max_slew_rate)?;
+        if !self.current_x.is_finite() || !self.current_y.is_finite() {
+            return Err(CrtError::NonFiniteCoordinate {
+                x: self.current_x,
+                y: self.current_y,
+            });
+        }
+        if self.current_x.abs() > 1.0e12 || self.current_y.abs() > 1.0e12 {
+            return Err(CrtError::CoordinateOutOfBounds {
+                x: self.current_x,
+                y: self.current_y,
+            });
+        }
         if !target_x.is_finite() || !target_y.is_finite() {
             return Err(CrtError::NonFiniteCoordinate {
                 x: target_x,
@@ -776,14 +811,28 @@ impl VectorBeamDisplay {
         buf_width: u32,
         buf_height: u32,
     ) -> Result<usize, CrtError> {
-        if !stroke.x0.is_finite()
-            || !stroke.y0.is_finite()
-            || !stroke.x1.is_finite()
-            || !stroke.y1.is_finite()
-        {
+        if !stroke.x0.is_finite() || !stroke.y0.is_finite() {
             return Err(CrtError::NonFiniteCoordinate {
                 x: stroke.x0,
                 y: stroke.y0,
+            });
+        }
+        if !stroke.x1.is_finite() || !stroke.y1.is_finite() {
+            return Err(CrtError::NonFiniteCoordinate {
+                x: stroke.x1,
+                y: stroke.y1,
+            });
+        }
+        if stroke.x0.abs() > 1.0e12 || stroke.y0.abs() > 1.0e12 {
+            return Err(CrtError::CoordinateOutOfBounds {
+                x: stroke.x0,
+                y: stroke.y0,
+            });
+        }
+        if stroke.x1.abs() > 1.0e12 || stroke.y1.abs() > 1.0e12 {
+            return Err(CrtError::CoordinateOutOfBounds {
+                x: stroke.x1,
+                y: stroke.y1,
             });
         }
         if buf_width == 0 || buf_height == 0 {
@@ -793,7 +842,12 @@ impl VectorBeamDisplay {
             });
         }
 
-        let total_pixels = (buf_width as usize) * (buf_height as usize);
+        let total_pixels = (buf_width as usize)
+            .checked_mul(buf_height as usize)
+            .ok_or(CrtError::InvalidDimensions {
+                width: buf_width,
+                height: buf_height,
+            })?;
         if phosphor.len() < total_pixels {
             return Err(CrtError::BufferTooSmall {
                 required: total_pixels,
@@ -801,7 +855,7 @@ impl VectorBeamDisplay {
             });
         }
 
-        // Commanded transit to start point
+        // Commanded transit to start point (only after all validation succeeds)
         self.current_x = stroke.x0;
         self.current_y = stroke.y0;
 
@@ -816,19 +870,6 @@ impl VectorBeamDisplay {
         self.z_blanked = false;
         self.current_intensity = stroke.intensity;
         let mut excited_count = 0;
-
-        if stroke.x0.abs() > 1.0e12 || stroke.y0.abs() > 1.0e12 {
-            return Err(CrtError::CoordinateOutOfBounds {
-                x: stroke.x0,
-                y: stroke.y0,
-            });
-        }
-        if stroke.x1.abs() > 1.0e12 || stroke.y1.abs() > 1.0e12 {
-            return Err(CrtError::CoordinateOutOfBounds {
-                x: stroke.x1,
-                y: stroke.y1,
-            });
-        }
 
         let dx = stroke.x1 - stroke.x0;
         let dy = stroke.y1 - stroke.y0;

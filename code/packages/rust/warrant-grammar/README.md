@@ -177,10 +177,16 @@ op decode2 export=decode2 args=u8,u8 ret=(u64,usize) errors=subject::LebErr/Over
 op classify export=classify ret=Shape faults=wrong-ctor
 ```
 
-  The faults are `drop-consumed`, `swap-components`, `field-zero`, `wrong-ctor`,
-  `ok-as-err` and `off-by-one-consumed` (the LEB128 bug class: right value, wrong
-  bytes consumed). A value a host integer cannot hold is counted as
-  `unreachable_by_type` in the manifest, never narrowed. The checked-in pilot is
+  The faults are `drop-consumed`, `swap-components`, `field-zero`, `field-flip`,
+  `bool-field-flip`, `wrong-ctor`, `ok-as-err` and `off-by-one-consumed` (the
+  LEB128 bug class: right value, wrong bytes consumed). `bool-field-flip` is
+  opt-in for a declared record result with at least one direct `Bool` field; it
+  supports the record directly or behind one `Result` or `Option`, and flips the
+  first direct Boolean field while preserving all other fields. Variants, nested
+  wrappers and records with only nested Boolean fields are refused. The WX-FAULT2
+  fixture exercises its generated harness and aimed-attack checks. A value a
+  host integer cannot hold is counted as `unreachable_by_type` in the manifest,
+  never narrowed. The checked-in pilot is
   `tests/fixtures/wxa.warrant` with its bindings and generated harness
   (`tests/generated/wxa_evidence.rs`, `WARRANT_REGEN=1 cargo test -p
   coding_adventures_warrant_grammar --test wxa_regen` rewrites it);
@@ -209,6 +215,55 @@ suite-level "exhaustive" totals include these sampled cases; the per-claim
 `domain` field is the authoritative label. Fixed arrays of integers
 (`[u32; 8]`) are not supported (backlog WD-015). The pilot is
 `code/specs/x25519.warrant`; the compiled fixture is `tests/fixtures/wxn.warrant`.
+
+## Warrant v1: `inout` parameters and `ensures` postconditions (VER04k WX-G)
+
+An operation may take a parameter by mutable reference. The document stays
+functional: the parameter's name denotes the **pre-state**, the operation's
+**result carries the post-state**, and an `ensures` block states a relation
+between them (`result` is the return value):
+
+```text
+op zeroize_bytes(buf: inout Bytes) -> Bytes
+ensures zeroize_bytes:
+  len(result) == len(buf)
+  result == zeros(len(buf))
+```
+
+The post-state slot is the first of S1 to S4 that matches the result type (`R = P1`;
+`Result<P1, E>`; a tuple whose last `k` components are the post-states; a `Result`
+of such a tuple), else **W0713**; so are an inadmissible `inout` type (an `Option`,
+a tuple), more than four `inout` parameters, `inout` on a `fresh` operation and an
+`ensures` row that calls an operation or quantifies. `inout` and the declaration-level
+`ensures` are **W0101** in a v0 document. `checker::resolve_post_slot` is the one
+slot resolver, tested against a brute-force enumerator.
+
+The binding names the host form of each mutable parameter and the export may be a
+Rust path (trait methods included):
+
+```text
+op zeroize_bytes   export=zeroize_bytes    inout=buf:slice    faults=stale-post,skip-last-write
+op zeroize_array32 export=Zeroize::zeroize inout=buf:array    faults=stale-post,skip-last-write
+op zeroize_u64     export=Zeroize::zeroize inout=x:int:u64    faults=stale-post,cursor-off-by-one
+op write_varint    export=varint::write ret=usize inout=out:vec faults=stale-post,drop-last-push
+```
+
+Forms: `slice` (`&mut [u8]`), `vec` (`&mut Vec<u8>` or `Vec<T>`), `array`
+(`&mut [u8; N]`), `int:<ht>`, `bool`, `struct:<Name>`; `returned`, `slice-of:struct:`,
+`vec-of:struct:` and `codec:` parse and are refused (W0704) until the stateful-objects
+slice (VER04m S1). The generated adapter **copies the pre-state** (the value the claims
+and rows use is never handed to the subject), calls the export by its fully qualified
+path, and **reads the post-state back from the same buffer**. Each call of an operation
+with an `ensures` block is monitored (`postcondition-violated: <op> row <i>`), and
+`<op>/post` suites enumerate the rows over the parameters' domains with their honest
+labels (`full`, `sample`, `set`, `edge`). Five faults (VER04k 4.8) make a broken
+mutation detectable; a fault that does not apply to the operation is W0701.
+
+Not emitted yet: WX-D1 forms (`take`, `replicate`, ...) in generated code (W0701), so a
+row states "all zero" with a hand-built model; the v1 corpus (the compiler is the v0
+`ct_compare` profile), for which `corpus::inout_descriptor` gives the `inout` and
+`post_slot` fields. The pilot is `code/specs/zeroize.warrant`; the compiled fixture is
+`tests/fixtures/wxg.warrant`.
 
 ## Warrant v1: output bounds (VER04j WX-H)
 
@@ -323,6 +378,39 @@ cargo run -p coding_adventures_warrant_grammar --example gen_corpus -- --check
 python3 ../../../scripts/warrant_corpus_oracle.py
 python3 -m unittest discover -s ../../../scripts/tests -p test_warrant_corpus_oracle.py
 ```
+## Resolved domains and the post-slot resolver (VER04r CV2-S2)
+
+`coding_adventures_warrant_grammar::domain` publishes what the evidence generator uses to turn a
+claim's binders into finite, ordered value sets, so a corpus emitter (the v2
+`warrant-corpus-gen`, slice S3) calls the same code instead of re-deriving it.
+Nothing about the generator's behaviour changed; the module is a public face.
+
+| Item | What it is |
+|---|---|
+| `Domain` | the resolved descriptor tree of one binder (VER04r 5.1), after budget demotion; `domain_size()` (checked: `None` = does not fit a `u64`, i.e. over budget), `domain_bytes()`, `nth(i)`, `iter()` |
+| `DomainEnv::new(&file)`, `domain_of_type` | the document's aliases, records, variants and error types |
+| `resolve_binders(env, binders, claim_body, budget, label, span)` | declared types, the shift-count `NatCount` refinement, the VER04j 2.6 demotion and the `W0706`/`W0707` checks; returns `ResolvedBinders { domains, demotions, product, bytes }` |
+| `unrank_product`, `rank_product`, `ProductIter::new(&domains, start)` | row-major products, **last binder fastest**, started at any product ordinal (the chunk jump of VER04r 5.4) |
+| `resolve_post_slot_of`, `op_post_slot` | the VER04k 4.2 post-state slot (S1 to S4) over domains; `resolve_post_slot`, `slot_shape`, `PostSlot`, `SlotShape`, `inout_descriptor` are re-exported |
+
+```rust
+use coding_adventures_warrant_grammar::domain::{Domain, ProductIter};
+
+let binders = [Domain::Bool, Domain::Opt(Box::new(Domain::Bool))];
+// Row-major: the last binder varies fastest, and a chunk can start anywhere.
+let from_ordinal_4: Vec<u64> = ProductIter::new(&binders, 4).unwrap().map(|c| c.ordinal).collect();
+assert_eq!(from_ordinal_4, [4, 5]);
+assert_eq!(binders[1].nth(0), Some(coding_adventures_warrant_grammar::codegen::EvalValue::Option(None)));
+```
+
+A binder's refinement filters the product and is not part of its domain; the
+emitter evaluates it. The module documentation records two places where the
+generator and VER04r 5.1 differ (the `NatCount` set and the signed edge sets) and
+the byte-string order the harness prelude and VER04i 2.6 disagree on (which
+also changes the case *set* of a `List` of byte strings).
+`corpus.rs` and `gen_corpus` (the v1 compiler) are unchanged and stay frozen
+until S13.
+
 ## Tests and regeneration
 
 From the Rust workspace:

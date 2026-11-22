@@ -29,6 +29,9 @@ pub type Obb = Obb2D;
 /// Maximum coordinate value for float geometric components (`±1.0e12`).
 pub const MAX_COORD: f64 = 1.0e12;
 
+/// Maximum rotation angle magnitude in radians (`1.0e6`), safely within `trig` reduction bounds.
+pub const MAX_ROTATION_RAD: f64 = 1.0e6;
+
 /// Maximum coordinate and dimension value for fixed-point integer structures.
 pub const MAX_FIXED_COORD: i64 = 1_000_000_000;
 
@@ -58,9 +61,13 @@ impl std::fmt::Display for CollisionError {
             Self::NonFiniteInput => write!(f, "geometry input is non-finite (NaN or Inf)"),
             Self::CoordinateOutOfBounds => write!(f, "coordinate exceeds allowable maximum bound"),
             Self::NegativeDimension => write!(f, "dimension or radius cannot be negative"),
-            Self::DegenerateDirection => write!(f, "ray or normal vector has zero or degenerate magnitude"),
+            Self::DegenerateDirection => {
+                write!(f, "ray or normal vector has zero or degenerate magnitude")
+            }
             Self::InvalidRestitution => write!(f, "restitution must be between 0.0 and 1.0"),
-            Self::FixedCoordinateOutOfBounds => write!(f, "fixed coordinate exceeds allowable integer bound"),
+            Self::FixedCoordinateOutOfBounds => {
+                write!(f, "fixed coordinate exceeds allowable integer bound")
+            }
         }
     }
 }
@@ -136,7 +143,11 @@ pub struct Obb2D {
 
 impl Obb2D {
     /// Construct and validate a 2D OBB.
-    pub fn new(center: Point, half_extents: Point, rotation_rad: f64) -> Result<Self, CollisionError> {
+    pub fn new(
+        center: Point,
+        half_extents: Point,
+        rotation_rad: f64,
+    ) -> Result<Self, CollisionError> {
         let obb = Self {
             center,
             half_extents,
@@ -153,7 +164,12 @@ impl Obb2D {
         if self.half_extents.x < 0.0 || self.half_extents.y < 0.0 {
             return Err(CollisionError::NegativeDimension);
         }
-        validate_coord(self.rotation_rad)?;
+        if !self.rotation_rad.is_finite() {
+            return Err(CollisionError::NonFiniteInput);
+        }
+        if self.rotation_rad.abs() > MAX_ROTATION_RAD {
+            return Err(CollisionError::CoordinateOutOfBounds);
+        }
         Ok(())
     }
 
@@ -191,7 +207,11 @@ pub struct Ray2D {
 impl Ray2D {
     /// Construct and validate a 2D ray.
     pub fn new(origin: Point, dir: Point, max_toi: f64) -> Result<Self, CollisionError> {
-        let r = Self { origin, dir, max_toi };
+        let r = Self {
+            origin,
+            dir,
+            max_toi,
+        };
         r.validate()?;
         Ok(r)
     }
@@ -250,17 +270,23 @@ pub struct FixedRectI64 {
 impl FixedRectI64 {
     /// Construct and validate a fixed-point rectangle.
     pub fn new(x: i64, y: i64, width: i64, height: i64) -> Result<Self, CollisionError> {
-        let r = Self { x, y, width, height };
+        let r = Self {
+            x,
+            y,
+            width,
+            height,
+        };
         r.validate()?;
         Ok(r)
     }
 
     /// Validate fixed rectangle boundaries.
     pub fn validate(&self) -> Result<(), CollisionError> {
-        if self.x.abs() > MAX_FIXED_COORD
-            || self.y.abs() > MAX_FIXED_COORD
-            || self.width.abs() > MAX_FIXED_COORD
-            || self.height.abs() > MAX_FIXED_COORD
+        let max = MAX_FIXED_COORD as u64;
+        if self.x.unsigned_abs() > max
+            || self.y.unsigned_abs() > max
+            || self.width.unsigned_abs() > max
+            || self.height.unsigned_abs() > max
             || self.width < 0
             || self.height < 0
         {
@@ -288,9 +314,10 @@ impl FixedCircleI64 {
 
     /// Validate fixed circle boundaries.
     pub fn validate(&self) -> Result<(), CollisionError> {
-        if self.cx.abs() > MAX_FIXED_COORD
-            || self.cy.abs() > MAX_FIXED_COORD
-            || self.radius.abs() > MAX_FIXED_COORD
+        let max = MAX_FIXED_COORD as u64;
+        if self.cx.unsigned_abs() > max
+            || self.cy.unsigned_abs() > max
+            || self.radius.unsigned_abs() > max
             || self.radius < 0
         {
             return Err(CollisionError::FixedCoordinateOutOfBounds);
@@ -399,7 +426,10 @@ pub fn circle_vs_circle(a: Circle, b: Circle) -> Result<Option<ContactManifold>,
 }
 
 /// Discrete collision test between a circle and an axis-aligned bounding box.
-pub fn circle_vs_aabb(circle: Circle, rect: Rect) -> Result<Option<ContactManifold>, CollisionError> {
+pub fn circle_vs_aabb(
+    circle: Circle,
+    rect: Rect,
+) -> Result<Option<ContactManifold>, CollisionError> {
     circle.validate()?;
     validate_rect(rect)?;
 
@@ -664,7 +694,12 @@ pub fn raycast_circle(ray: Ray2D, circle: Circle) -> Result<Option<SweepHit>, Co
     }
 
     let contact_point = ray.point_at(t);
-    let normal = contact_point.subtract(circle.center).normalize();
+    let delta = contact_point.subtract(circle.center);
+    let normal = if delta.magnitude_squared() <= 1e-24 {
+        ray.dir.normalize().negate()
+    } else {
+        delta.normalize()
+    };
 
     Ok(Some(SweepHit {
         toi: t,
@@ -708,8 +743,12 @@ pub fn sweep_aabb_aabb(
                 moving.center().x + velocity.x * hit.toi,
                 moving.center().y + velocity.y * hit.toi,
             );
-            let cp_x = moving_center_at_hit.x.clamp(target.x, target.x + target.width);
-            let cp_y = moving_center_at_hit.y.clamp(target.y, target.y + target.height);
+            let cp_x = moving_center_at_hit
+                .x
+                .clamp(target.x, target.x + target.width);
+            let cp_y = moving_center_at_hit
+                .y
+                .clamp(target.y, target.y + target.height);
             return Ok(Some(SweepHit {
                 toi: hit.toi,
                 normal: hit.normal,

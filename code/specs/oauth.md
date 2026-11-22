@@ -840,6 +840,356 @@ path, select trust roots, check time, names, or revocation, process TLS or HTTP,
 authorize OAuth transport, or perform any external effect. It is not evidence
 of certificate, HTTPS, or live-provider readiness.
 
+A bounded, data-driven `tls13-rsa-pss-signature-routing` prerequisite now
+routes one structurally decoded TLS 1.3 `CertificateVerify` signature to the
+fixed SHA-256, SHA-384, or SHA-512 RSASSA-PSS verifier. It requires a signature
+scheme already authorized by caller policy, the message body's exact matching
+wire identifier, a previously validated `rsaEncryption` public key, and an
+already-computed digest whose typed length matches the authorized scheme.
+Mismatched wire identifiers and digest profiles fail before RSA work or DB
+scratch mutation. Non-copyable success evidence retains the exact authorized
+scheme, message, public key, digest, and fixed-verifier evidence used.
+
+This routing evidence does not construct or hash the RFC 8446
+`CertificateVerify` signed input, prove which transcript produced the supplied
+digest, parse a certificate, bind a key to a validated server path, build or
+validate a path, verify a hostname, select trust roots, check time or
+revocation, sequence a handshake, process records, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. Those transcript,
+certificate, trust, revocation, handshake, and transport boundaries remain
+separate; concrete HTTPS and live-provider readiness remain unavailable.
+
+A bounded `tls13-rsa-pss-certificate-verify` composition now closes the
+caller-digest substitution gap for one RSA-PSS `CertificateVerify` operation.
+Its first stage consumes an already policy-authorized signature scheme and one
+exact framed RFC 8446 `CertificateVerify` signed input, hashes those exact
+bytes with the scheme-bound repository-owned SHA-256, SHA-384, or SHA-512
+primitive, and retains the authorization, input, and owned digest together in
+non-copyable evidence. Its second stage accepts only that evidence, the exact
+structurally decoded `CertificateVerify` message, a validated `rsaEncryption`
+public key, matching typed verifier limits, and caller-owned scratch, then
+delegates to the existing data-driven RSA-PSS routing verifier. Success retains
+both the exact hashed-input evidence and fixed-verifier routing evidence, so a
+different input, scheme, message, key, or digest cannot be substituted after
+verification. Diagnostics retain no signed-input, transcript-hash, signature,
+digest, key, limit, or scratch bytes.
+
+This composition does not prove which handshake transcript produced the hash
+embedded in the framed signed input, bind that transcript to a selected cipher
+suite or ordered handshake state, parse a certificate, bind the key to a
+validated server path, construct or validate a path, verify a hostname, select
+trust roots, check time or revocation, authenticate Finished, sequence a
+handshake, process or protect records, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Those transcript, certificate,
+trust, revocation, handshake, and transport boundaries remain separate;
+concrete HTTPS and live-provider readiness remain unavailable.
+
+A bounded `tls13-certificate-verify-transcript-binding` composition now closes
+the detached-transcript-hash and detached-transcript-algorithm gap for that
+operation. It accepts one immutable selected repository transcript state, one
+caller-selected CertificateVerify role, caller-owned output, and one already
+policy-authorized RSA-PSS scheme. The composition snapshots the transcript
+internally, maps only its suite-bound SHA-256 or SHA-384 algorithm to the exact
+framing metadata, constructs the role-specific RFC 8446 signed input, and then
+delegates hashing to `tls13-rsa-pss-certificate-verify`. Non-copyable evidence
+retains the selected transcript state, exact snapshot, role-bound framed input,
+authorized signature scheme, and owned scheme-bound digest together. The API
+accepts neither detached transcript bytes nor caller-selected transcript-hash
+metadata, and the retained immutable transcript borrow prevents that state from
+advancing while the evidence is live.
+
+This evidence does not prove that the caller fed the selected transcript the
+right ordered handshake messages or stopped at the required handshake state,
+authorize the caller-selected client or server role, bind a certificate or
+validated path key, authenticate Finished, sequence a handshake, process or
+protect records, perform I/O, authorize HTTP or OAuth transport, or open a
+network connection. Those ordered-state, role, certificate, trust, revocation,
+handshake, and transport boundaries remain separate; concrete HTTPS and
+live-provider readiness remain unavailable.
+
+A follow-up verification stage in that composition now accepts only the outer
+transcript-bound hash evidence, the exact decoded `CertificateVerify` message,
+one already validated RSA public key, matching typed verifier limits, and
+caller-owned scratch. It delegates to the existing repository-owned RSA-PSS
+certificate verifier and returns non-copyable success evidence retaining both
+the outer selected-transcript proof and the complete lower signature-verdict
+proof. Callers therefore cannot obtain this stronger verdict from detached
+framing or hash evidence, and the returned proof keeps the selected transcript,
+role-specific input, authorized scheme, message, key, and signature verdict in
+one lifetime-bound graph.
+
+The public key is still only algorithm- and strength-validated: this stage does
+not bind it to an authenticated certificate or reviewed server path. It also
+does not prove ordered handshake state, authorize the selected role, check
+Finished, sequence a handshake, process records, perform I/O, or authorize TLS,
+HTTP, OAuth transport, or live-provider access. Those state, role, certificate,
+trust, revocation, handshake, and transport boundaries remain separate;
+concrete HTTPS remains unavailable.
+
+A consuming form of the same composition now advances an owned selected
+transcript only after authenticating one exact decoded `CertificateVerify`
+body. It accepts the exact body bytes, decodes them internally, verifies their
+signature against the transcript snapshot captured before the message, frames
+those same body bytes as one complete `CertificateVerify` handshake message in
+caller-owned storage, and updates the owned transcript once with that complete
+encoding. Success returns non-copyable evidence retaining the owned advanced
+transcript, before and after snapshots, exact body, authorized scheme, role,
+validated RSA key, and encoded length. Every failure consumes the transcript
+and returns only a stable redacted category, so partially authenticated state
+cannot be retried or reused by the caller.
+
+This transition still accepts an algorithm- and strength-validated detached
+RSA key and a caller-selected role. It does not bind the key to a reviewed
+certificate path, prove the preceding server-flight order, authenticate or
+append Finished, establish trust, enforce revocation, protect records, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. Exact
+reviewed-path and Finished continuity remain later compositions; concrete
+HTTPS and live-provider readiness remain unavailable.
+
+A follow-up consuming transition now authenticates Finished directly from that
+owned post-`CertificateVerify` transcript. The Finished key's sender role must
+match the client/server role already retained by the authenticated
+`CertificateVerify` evidence, and the existing Finished transcript binding
+requires exact selected-suite equality before HMAC work. Success returns one
+non-copyable graph retaining the original exact body, role, authorized scheme,
+validated RSA key, pre- and post-`CertificateVerify` snapshots, owned selected
+transcript, internally captured Finished snapshot, and repository-owned
+Finished verdict. The Finished snapshot is required to equal the retained
+post-`CertificateVerify` snapshot. Every failure consumes the earlier evidence
+and returns no transcript state for retry or reuse.
+
+This proves continuity only between the detached-key `CertificateVerify`
+transition and the immediately following role- and suite-bound Finished check.
+It does not bind the RSA key to a reviewed certificate path, prove preceding
+server-flight order, append the Finished handshake encoding, establish trust,
+enforce revocation, protect records, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. It accesses no credential and causes
+no edit, signing operation, provider or trace event, storage, clock, network,
+or other external effect. Those compositions remain blockers; concrete HTTPS
+and live-provider readiness remain unavailable.
+
+A reviewed-path consuming entry point now closes the detached-certificate-key
+and caller-selected-`CertificateVerify`-role gaps for exact
+`CertificateVerify`-to-Finished-key transcript continuity. It accepts the
+strongest accumulated reviewed RSA server-path proof, takes ownership of one
+selected transcript, derives and validates the target certificate's
+SubjectPublicKeyInfo only through that retained path, and fixes the
+authenticated signature role to `Server`. It then uses the existing consuming
+transitions to authenticate the exact decoded body against the pre-message
+transcript, append that same body as one complete handshake encoding, and
+verify peer verify-data with one caller-supplied Finished key over the
+resulting post-message transcript. Non-copyable success evidence retains the
+complete reviewed path together with the exact body, authorized scheme,
+path-derived certificate key, before and after snapshots, owned transcript,
+Finished snapshot, and repository-owned Finished verdict. Every failure
+consumes the transcript and returns only a stable redacted category, so no
+partial state is returned for substitution or retry.
+
+The Finished key remains detached: role and selected-suite checks do not bind
+it to this handshake's ECDHE result, handshake traffic secret, or key-schedule
+evidence, and the result retains no such provenance. This bounded composition
+also does not prove the preceding server-flight order, append the Finished
+handshake encoding, verify the reviewed anchor's self-signature, select or
+enforce revocation, bind an HTTPS destination, protect records, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. It accesses
+no credential and causes no edit, signing operation, provider or trace event,
+storage, clock, network, or other external effect. Those key-schedule,
+ordered-state, anchor, revocation, destination, record, and transport
+compositions remain blockers; concrete HTTPS and live-provider readiness
+remain unavailable.
+
+A bounded `tls13-reviewed-server-path-certificate-verify` composition closes
+the detached-key and caller-selected-role gaps for one reviewed RSA server
+path. It accepts only the strongest accumulated reviewed server-path proof,
+outer transcript-bound hash evidence, the exact decoded `CertificateVerify`
+message, data-driven RSA key policy, matching typed verifier limits, and
+caller-owned scratch. Before RSA work or scratch mutation it requires the
+retained RFC 8446 input role to be `Server`. It then derives the target
+certificate exclusively through the retained reviewed path, validates that
+certificate's exact SubjectPublicKeyInfo under the supplied RSA key policy,
+and delegates verification with that derived key. Non-copyable success
+evidence retains both the complete reviewed path and the outer
+selected-transcript signature verdict, so a detached certificate, key, role,
+path, transcript, message, or signature cannot be substituted after success.
+
+This composition does not prove that the selected transcript contains the
+right ordered handshake messages or stopped at the required state, verify the
+reviewed anchor's self-signature, select a revocation outcome, authenticate
+Finished, sequence a handshake, process or protect records, perform I/O, or
+authorize TLS, HTTP, OAuth transport, or live-provider access. Those remaining
+anchor, revocation, state, Finished, record, and transport boundaries remain
+separate; concrete HTTPS remains unavailable.
+
+The same package now exposes a stronger exact-destination entry point. It
+accepts the reviewed server path only through the existing non-copyable HTTPS
+DNS destination binding, then delegates the same role-first exact-leaf
+`CertificateVerify` verification. Success retains the complete certificate
+SAN, TLS SNI, HTTP Host authority, reviewed path, selected transcript, decoded
+message, derived key, and signature verdict in one lifetime-bound graph. This
+closes substitution between a destination-proven leaf and the leaf used for
+handshake authentication.
+
+The stronger entry point still does not add anchor self-signature evidence,
+select or enforce revocation, prove ordered transcript state, authenticate
+Finished, protect records, perform TLS or HTTP I/O, authorize OAuth transport,
+or grant network authority. Those trust, revocation, state, record, and
+transport boundaries remain separate; concrete HTTPS and live-provider
+readiness remain unavailable.
+
+A still stronger entry point now accepts only the exact HTTPS DNS destination
+and reviewed server path already bound to the reviewed anchor's
+repository-owned self-signature proof. It performs the same role-first exact
+leaf `CertificateVerify` verification and retains the destination, complete
+reviewed path, reviewed root selection, anchor self-signature verdict,
+selected transcript, decoded message, derived key, and server signature
+verdict together. This closes substitution between the root whose
+self-signature was verified and the destination-bound path used for handshake
+authentication; the entry point itself neither loads trust roots nor repeats
+anchor verification.
+
+This composition still does not select or enforce revocation, prove ordered
+transcript state, authenticate Finished, protect records, perform TLS or HTTP
+I/O, authorize OAuth transport, or grant network authority. Those revocation,
+state, record, and transport boundaries remain separate; concrete HTTPS and
+live-provider readiness remain unavailable.
+
+An orthogonal direct-revocation entry point now accepts only the exact HTTPS
+DNS destination already bound to the complete direct no-check fixed-path
+revocation proof. After the same server-role gate, it derives the leaf through
+that destination, validates the exact SubjectPublicKeyInfo under caller policy,
+verifies the selected-transcript `CertificateVerify`, and retains the complete
+destination and revocation proof with the exact signature verdict. This closes
+substitution between the leaf covered by complete direct revocation evidence
+and the leaf key used for handshake authentication. The entry point does not
+repeat revocation evaluation or acquire, refresh, or load revocation data.
+
+The direct entry point does not admit the existing nested, double-nested,
+recursive, or alternative intermediate-status-responder completion topologies.
+It also does not prove ordered transcript state, authenticate Finished,
+protect records, perform TLS or HTTP I/O, authorize OAuth transport, or grant
+network authority. Those remaining revocation-topology, state, record, and
+transport boundaries remain separate; concrete HTTPS and live-provider
+readiness remain unavailable.
+
+A second revocation entry point now accepts only the exact HTTPS DNS
+destination already bound to the complete one-level nested no-check fixed-path
+revocation proof. Its private sealed admission has exactly one production
+implementation: the repository-owned nested destination/revocation boundary.
+After the same server-role gate it derives the leaf through that retained
+destination, validates the exact SubjectPublicKeyInfo under caller policy,
+verifies the selected-transcript `CertificateVerify`, and retains the complete
+nested proof with the exact signature verdict. This closes substitution
+between the server leaf covered by the nested completion and the key used for
+handshake authentication without repeating revocation evaluation.
+
+The nested entry point does not admit the existing double-nested, recursive,
+or alternative intermediate-status-responder completion topologies. It does
+not acquire or refresh status, prove ordered transcript state, authenticate
+Finished, protect records, perform TLS or HTTP I/O, authorize OAuth transport,
+or grant network authority. Those remaining revocation-topology, state,
+record, and transport boundaries remain separate; concrete HTTPS and live-
+provider readiness remain unavailable.
+
+A third revocation entry point now accepts only the exact HTTPS DNS destination
+already bound to the complete double-nested no-check fixed-path revocation
+proof. Its private sealed admission has exactly one production implementation:
+the repository-owned double-nested destination/revocation boundary. After the
+same server-role gate it derives the leaf through that retained destination,
+validates the exact SubjectPublicKeyInfo under caller policy, verifies the
+selected-transcript `CertificateVerify`, and retains the complete double-
+nested proof with the exact signature verdict. This closes substitution
+between the server leaf covered by the double-nested completion and the key
+used for handshake authentication without repeating revocation evaluation.
+
+The double-nested entry point does not admit the existing recursive or
+alternative intermediate-status-responder completion topologies. It does not
+acquire or refresh status, prove ordered transcript state, authenticate
+Finished, protect records, perform TLS or HTTP I/O, authorize OAuth transport,
+or grant network authority. Those remaining revocation-topology, state,
+record, and transport boundaries remain separate; concrete HTTPS and live-
+provider readiness remain unavailable.
+
+A fourth revocation entry point now accepts only the exact HTTPS DNS
+destination already bound to the complete recursive-responder no-check fixed-
+path revocation proof. Its private sealed admission has exactly one production
+implementation: the repository-owned recursive destination/revocation
+boundary. After the same server-role gate it derives the leaf through that
+retained destination, validates the exact SubjectPublicKeyInfo under caller
+policy, verifies the selected-transcript `CertificateVerify`, and retains the
+complete recursive proof with the exact signature verdict. This closes
+substitution between the server leaf covered by the recursive completion and
+the key used for handshake authentication without repeating revocation
+evaluation.
+
+The recursive entry point does not admit the existing alternative
+intermediate-status-responder completion topology. It does not acquire or
+refresh status, prove ordered transcript state, authenticate Finished, protect
+records, perform TLS or HTTP I/O, authorize OAuth transport, or grant network
+authority. Those remaining revocation-topology, state, record, and transport
+boundaries remain separate; concrete HTTPS and live-provider readiness remain
+unavailable.
+
+A fifth revocation entry point now accepts only the exact HTTPS DNS destination
+already bound to the complete alternative intermediate-status-responder
+revocation responder no-check fixed-path proof. Its private sealed admission
+has exactly one production implementation: the repository-owned alternative
+destination/revocation boundary. After the same server-role gate it derives
+the leaf through that retained destination, validates the exact
+SubjectPublicKeyInfo under caller policy, verifies the selected-transcript
+`CertificateVerify`, and retains the complete alternative proof with the exact
+signature verdict. This closes substitution between the server leaf covered
+by the alternative completion and the key used for handshake authentication
+without repeating revocation evaluation.
+
+This entry point completes the five existing destination-bound complete
+revocation topologies; it does not generalize path construction or revocation
+policy. It does not acquire or refresh status, prove ordered transcript state,
+authenticate Finished, protect records, perform TLS or HTTP I/O, authorize
+OAuth transport, or grant network authority. Those remaining path, state,
+record, and transport boundaries remain separate; concrete HTTPS and live-
+provider readiness remain unavailable.
+
+A bounded ordered-transition follow-up accepts only one of those five sealed
+destination-bound complete-revocation `CertificateVerify` verdict types and a
+no-PSK server flight already positioned at `ExpectCertificateVerify`. Success
+advances that exact flight to `ExpectFinished` and returns non-copyable evidence
+retaining a mutable borrow of the flight plus the exact signature verdict. A
+wrong position fails through the existing ordering policy without mutation,
+and an accepted `CertificateRequest` requirement remains attached to the
+flight.
+
+This transition does not remove the lower-level public message-type ordering
+API, link the flight's earlier accepted types to one encoded handshake stream,
+or prove that the retained verification transcript was advanced by those exact
+accepted messages. It does not authenticate Finished, enforce a later client-
+authentication response, protect records, perform I/O, authorize OAuth
+transport, or grant network authority. It accesses no credential and causes no
+editing, signing, provider or trace event, storage, clock, network, or other
+external effect. Ordered transcript composition, Finished authentication,
+record protection, and transport therefore remain separate blockers; concrete
+HTTPS and live-provider readiness remain unavailable.
+
+A bounded follow-up consumes that exact ordered `CertificateVerify` result
+together with one repository-owned `VerifiedFinished`. It requires the
+Finished sender role to be server and its selected cipher suite to equal the
+suite retained through the exact sealed `CertificateVerify` verdict before it
+mutates the flight. Success accepts `Finished`, completes that exact flight,
+preserves any accepted client-authentication requirement, and returns non-
+copyable evidence retaining the complete-revocation signature verdict and
+exact Finished verdict. Role or suite substitution fails before flight
+mutation with a stable payload-free category.
+
+This transition consumes an already-produced Finished verification result. It
+does not prove that the verdict's retained transcript hash was advanced from
+the exact retained `CertificateVerify` message or the earlier accepted message
+types in one encoded handshake stream. It does not enforce a later client-
+authentication response, bind record epochs, protect records, perform I/O,
+authorize OAuth transport, or grant network authority. It accesses no
+credential and causes no editing, signing, provider or trace event, storage,
+clock, network, or other external effect. Exact ordered transcript ownership,
+record protection, and transport remain separate blockers; concrete HTTPS and
+live-provider readiness remain unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks
@@ -848,6 +1198,22 @@ high bits, requires the complete zero padding and `0x01` delimiter, and
 recomputes `H = SHA-512(0x00^8 || mHash || salt)` before a full 64-byte
 comparison. Public size and scratch failures occur before scratch mutation;
 stable failures retain no message, digest, salt, padding, or offset bytes.
+
+A bounded `rsa-pss-sha512-signature` composition now verifies one exact public
+RSASSA-PSS signature for the fixed SHA-512, MGF1-SHA-512, 64-byte-salt
+profile. It accepts only a previously validated RSA public key, an exact
+modulus-width signature, an already-computed 64-byte message digest, exact
+caller-owned DB scratch, and caller-owned RSA and encoded-message ceilings. It
+derives `emBits = modBits - 1`, applies the repository-owned RSA public
+operation, and requires the complete fixed-profile EMSA-PSS verdict. Its
+borrowed non-copyable evidence binds the exact key, signature bytes, and
+message digest used.
+
+This signature evidence does not hash a message, parse RSA-PSS parameters or a
+certificate, choose an algorithm or issuer, establish certificate roles or a
+path, select trust roots, check time, names, or revocation, process TLS or HTTP,
+authorize OAuth transport, or perform any external effect. It is not evidence
+of certificate, HTTPS, or live-provider readiness.
 
 This encoded-message verdict does not parse RSA-PSS AlgorithmIdentifier
 parameters or a key, perform RSAVP1, bind the recovered bytes to a signature or
@@ -4387,9 +4753,40 @@ per-key record ceiling, own traffic keys, frame or protect records, process a
 handshake, validate certificates, establish trust, enforce revocation, perform
 I/O, authorize HTTP or OAuth transport, or open a network connection. The
 allocation-returning and table-indexing legacy AES APIs remain compatibility
-and educational surfaces rather than production TLS composition. Reviewed
-AES-GCM composition remains a prerequisite, and concrete HTTPS remains
-unavailable.
+and educational surfaces rather than production TLS composition. The reviewed
+AES-GCM composition below remains distinct from TLS record protection, and
+concrete HTTPS remains unavailable.
+
+A bounded fixed-memory AES-128-GCM composition is now shipped as the next
+independently reviewable record-protection prerequisite. It accepts only an
+exact 128-bit key, the RFC 5116 96-bit nonce profile, caller-borrowed associated
+data and plaintext or ciphertext, an exact 128-bit tag, and caller-owned output
+whose length must equal the input length. It builds
+`J0 = nonce || 0x00000001`, starts payload counter mode at `inc32(J0)`, rejects
+a request that could exhaust the 32-bit counter or GCM's encoded length domains
+before changing caller output, and composes only the repository-owned
+fixed-memory AES-128 block and GHASH boundaries. Encryption authenticates the
+exact produced ciphertext. Decryption recomputes and compares the complete tag
+with a compiler-checked fixed schedule before releasing any plaintext, so
+authentication failure leaves caller output unchanged. The hash subkey,
+counters, keystream block, GHASH result, encrypted `J0`, and recomputed tag
+remain in fixed wipe-on-drop storage; no secret-derived byte crosses the ABI
+return slot by value. Release-codegen checks reject allocator reachability,
+early-exit tag comparison, missing scrubs, or plaintext writes before
+authentication.
+
+This pure in-process cryptographic boundary performs no credential access,
+edit, signing operation, provider action, audit or trace emission, I/O, or
+external effect. It does not select a TLS cipher suite, derive or own a
+traffic key, reserve a record nonce, enforce a negotiated per-key record
+ceiling, frame or protect a TLS record, reset record state after a key update,
+process a handshake, validate certificates, establish trust, enforce
+revocation, authorize HTTP or OAuth transport, or open a network connection. A
+later TLS record composition must bind it to the selected
+`TLS_AES_128_GCM_SHA256` route and the existing record-protection state.
+Complete handshake state, the AES record route, stream I/O, certificate
+validation, revocation, and HTTP composition remain blockers; concrete HTTPS
+remains unavailable.
 
 A bounded `tls13-finished` prerequisite now composes the repository-owned
 fixed-memory HKDF and HMAC paths for RFC 8446 Finished verify-data. It derives
@@ -4420,6 +4817,48 @@ sequence handshake messages, authenticate certificates, establish trust,
 enforce revocation, invoke an AEAD, protect records, perform I/O, authorize
 HTTP or OAuth transport, or open a network connection. Concrete HTTPS remains
 unavailable.
+
+An allocation-free `tls13-finished-transcript-binding` prerequisite now closes
+the detached transcript-hash input at that Finished verifier. It accepts one
+immutable repository-owned selected transcript, one already-derived Finished
+key, and exact borrowed peer verify-data. Exact selected-suite equality is
+checked before snapshotting or HMAC work; then the transcript is snapshot only
+inside the composition and that snapshot alone is supplied to repository-owned
+Finished verification. Success returns non-copyable evidence retaining the
+exact transcript, suite-bound snapshot, and `VerifiedFinished` verdict
+together. The retained immutable transcript borrow prevents that state from
+advancing while the evidence is live. Stable failures retain no transcript,
+digest, verify-data, suite, role, length, or offset bytes. SHA-256 and SHA-384
+success paths and a same-hash different-suite substitution are covered.
+
+This binding does not prove which ordered handshake encodings entered the
+transcript, choose the correct client/server BaseKey or sender role, or connect
+the earlier `CertificateVerify` transcript to the later Finished transcript.
+It does not sequence the handshake, authenticate a certificate, establish
+trust, enforce revocation, bind a record epoch, protect records, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. It accesses
+no credential and causes no edit, signing operation, provider or trace event,
+storage, clock, network, or other external effect. Ordered transcript
+continuity, record protection, and transport remain separate blockers;
+concrete HTTPS and live-provider readiness remain unavailable.
+
+The same binding also provides a consuming Finished-verification form for a
+later handshake state machine. It takes ownership of the exact selected
+transcript before checking the suite and verify-data and returns non-copyable
+owned evidence retaining that transcript, its internally captured snapshot,
+and the repository-owned Finished verdict together. Failure returns only the
+same stable redacted error and does not return the transcript, so a failed
+Finished check cannot leave caller-accessible authenticated-handshake state
+available for retry or reuse. The borrowed form remains available when a
+caller needs an immutable proof without transferring transcript ownership.
+
+Ownership alone does not establish ordered transcript continuity. This form
+still does not authenticate or append `CertificateVerify`, prove which exact
+handshake encodings entered the transcript, sequence the server flight, bind a
+certificate path, establish trust, enforce revocation, protect records,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those compositions remain blockers; concrete HTTPS and live-provider
+readiness remain unavailable.
 
 The repository-owned `tls13-key-schedule` boundary now composes the no-PSK
 RFC 8446 section 7.1 base-secret transitions for a full ephemeral key exchange.
@@ -4520,6 +4959,30 @@ Complete transcript and handshake state, repository-owned AEAD composition,
 certificate-path validation, revocation policy, TLS transport, and HTTP
 composition remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-handshake-reassembly` prerequisite now retains one
+TLS 1.3 handshake message across already authenticated record-content
+fragments in caller-owned storage. Each push consumes only the input prefix
+needed by that message and reports the exact consumed count, so coalesced
+messages and a partial next message remain with the caller for ordered replay.
+The reassembler validates the four-byte header as soon as it is complete,
+applies the caller's existing handshake-type and body-length policy, rejects a
+declared message that cannot fit the supplied storage, and borrows the exact
+completed encoding through `tls13-handshake`. Incomplete pushes retain their
+bounded prefix; completed-message and failure diagnostics retain no copied
+wire bytes, declared lengths, or body contents.
+
+Supplying only plaintext content from a record whose authenticity and inner
+handshake content type were already accepted is solely a caller precondition.
+The raw-byte API cannot distinguish authenticated from unauthenticated input.
+This slice does not decode or authenticate records, classify an inner content
+type, retain a coalesced tail, sequence handshake phases, update a transcript,
+parse a handshake body, derive keys, invoke an AEAD, validate certificates,
+establish trust, check revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Full handshake state, record
+authentication and composition, certificate-path and identity validation,
+revocation policy, TLS transport, and HTTP composition remain blockers.
+Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-encrypted-extensions-message` prerequisite now owns
 the exact RFC 8446 section 4.3.1 `EncryptedExtensions` handshake body. It
 delegates the complete two-byte-length-prefixed extension vector to the
@@ -4541,16 +5004,18 @@ composition remain separate prerequisites, and concrete HTTPS remains
 unavailable.
 
 An allocation-free `tls13-client-hello-message` prerequisite now decodes one
-exact RFC 8446 section 4.1.2 TLS 1.3 `ClientHello` handshake body. It enforces
+exact RFC 9846 section 4.2.2 TLS 1.3 `ClientHello` handshake body. It enforces
 the `0x0303` legacy version, retains the exact 32-byte random and bounded
 zero-through-32-byte legacy session ID, requires a non-empty even-length
 cipher-suite vector under a caller-selected suite-count ceiling, requires the
 single null legacy compression method, and delegates the complete mandatory
 extension vector to `tls13-extension-block` under caller byte and entry
-limits. Success retains the exact borrowed body and all structural fields in a
-non-copyable value; unknown cipher-suite and extension identifiers remain data
-for later policy, and diagnostics omit random, session, suite, and extension
-bytes.
+limits. The extension-vector payload accepts RFC 9846's corrected seven-byte
+minimum, including an otherwise valid one-version `supported_versions` offer
+without an unrelated padding extension. Success retains the exact borrowed
+body and all structural fields in a non-copyable value; unknown cipher-suite
+and extension identifiers remain data for later policy, and diagnostics omit
+random, session, suite, and extension bytes.
 
 This message-body layer does not classify a first or retry ClientHello,
 generate entropy, authorize a session ID or cipher suite, require or interpret
@@ -4713,6 +5178,87 @@ revocation, perform HTTP, authorize OAuth transport, or open a network
 connection. Repository-owned TLS record-protection composition and state
 remain prerequisites, and concrete HTTPS remains unavailable.
 
+A bounded `tls13-chacha20-poly1305-record` composition now protects records
+only for the reviewed `TLS_CHACHA20_POLY1305_SHA256` route. It consumes the
+selected-suite-bound `tls13-record-protection-state`, rejects every other AEAD
+before reserving a sequence number, and binds the reserved 256-bit key and
+96-bit nonce directly to the repository-owned fixed-memory ChaCha20-Poly1305
+boundary. Sealing encodes
+one policy-authorized `TLSInnerPlaintext`, authenticates the exact
+five-byte `TLSCiphertext` header as associated data, appends the exact 16-byte
+tag, and wipes the exact caller-owned scratch prefix written after successful
+inner encoding on every subsequent return. Route and inner-encoding failures
+leave caller scratch unchanged. Opening validates one exact outer record before
+consuming a sequence, authenticates its exact retained header before releasing
+any cleartext, decodes only a policy-authorized inner content type, and returns
+a non-cloneable borrowed view whose drop path wipes the successfully opened
+caller-owned storage. Public framing, policy, and capacity failures occur
+before sequence consumption; an authentication failure consumes its reserved
+sequence and leaves caller output unchanged.
+
+This narrow composition does not enable either AES-GCM suite, derive traffic
+secrets, establish handshake epochs, process a transcript, authenticate
+`CertificateVerify` or `Finished`, validate certificates, construct or validate
+a path, check a hostname or revocation, perform key updates, read or write a
+stream, open a socket, authorize an HTTP or OAuth request, or provide a TLS
+connector. The caller must retain distinct read/write state and select the
+correct traffic epoch. Complete handshake state, the remaining record routes,
+stream I/O, certificate validation, revocation, and HTTP composition remain
+blockers; concrete HTTPS remains unavailable.
+
+A bounded `tls13-aes128-gcm-record` composition protects records only for the
+reviewed `TLS_AES_128_GCM_SHA256` route. It consumes selected-suite-bound
+`tls13-record-protection-state`, rejects AES-256-GCM and ChaCha20-Poly1305
+before reserving a sequence number, and binds the reserved 128-bit key and
+96-bit nonce directly to the repository-owned fixed-memory AES-128-GCM
+boundary. Sealing encodes one policy-authorized `TLSInnerPlaintext`,
+authenticates the exact five-byte `TLSCiphertext` header as associated data,
+appends the exact 16-byte tag, and wipes the exact caller-owned scratch prefix
+written after successful inner encoding on every subsequent return. Route and
+inner-encoding failures leave caller scratch unchanged. Opening validates one
+exact outer record before consuming a sequence, authenticates its exact
+retained header before releasing any cleartext, decodes only a
+policy-authorized inner content type, and returns a non-cloneable borrowed view
+whose drop path wipes the successfully opened caller-owned storage. Public
+framing, policy, and capacity failures occur before sequence consumption; an
+authentication failure consumes its reserved sequence and leaves caller output
+unchanged.
+
+This narrow composition does not enable AES-256-GCM or ChaCha20-Poly1305,
+derive traffic secrets, establish handshake epochs, process a transcript,
+authenticate `CertificateVerify` or `Finished`, validate certificates,
+construct or validate a path, check a hostname or revocation, perform key
+updates, read or write a stream, open a socket, authorize an HTTP or OAuth
+request, or provide a TLS connector. The caller must retain distinct
+read/write state and select the correct traffic epoch. Complete handshake
+state, the remaining record route, stream I/O, certificate validation,
+revocation, and HTTP composition remain blockers; concrete HTTPS remains
+unavailable.
+
+A bounded `tls13-record-protection` dispatcher now routes one record operation
+only from the exact cipher suite retained by `tls13-record-protection-state`.
+It admits the repository-owned `TLS_AES_128_GCM_SHA256` and
+`TLS_CHACHA20_POLY1305_SHA256` record compositions and accepts no detached
+algorithm choice, key, nonce, tag length, or suite identifier. The recognized
+but unimplemented `TLS_AES_256_GCM_SHA384` route fails before inner-plaintext
+encoding, outer-record decoding, caller-output mutation, or record-sequence
+consumption. Route-specific stable errors remain distinguishable without
+retaining peer, content, key, nonce, tag, or output bytes. Successful opening
+returns one non-cloneable algorithm-erased view whose methods expose only the
+authenticated content type, content, and padding length; dropping the view
+still wipes the exact successfully opened caller-owned prefix through the
+selected reviewed route.
+
+This dispatcher adds no AES-256-GCM primitive, detached or caller-selected
+algorithm fallback, traffic-secret derivation, epoch transition, handshake
+processing, certificate or path validation, hostname or revocation policy,
+stream I/O, TLS connector, HTTP authorization, OAuth transport, credential
+access or editing, signing, storage, provider action, audit event, trace
+emission, network access, or other external effect. Complete handshake state,
+certificate validation, revocation, repository-owned TLS transport, HTTP
+composition, and audited networking remain blockers; concrete HTTPS and
+live-provider readiness remain unavailable.
+
 An allocation-free `tls13-supported-versions` prerequisite now owns the exact
 RFC 8446 `supported_versions` extension data emitted and consumed by a future
 repository-owned TLS 1.3 client. A caller supplies a preference-ordered slice
@@ -4781,14 +5327,18 @@ complete body, extension-vector payload, and retained extension count. The
 decoder enforces the fixed TLS 1.3 legacy version `0x0303`, the zero legacy
 compression method, the zero-to-32-byte session-id echo, exact body
 consumption, and the structure's minimum extension-vector payload. It retains
-the exact random and unclassified cipher-suite identifier, then composes the
-repository-owned generic extension-block decoder so malformed lengths,
-trailing bytes, duplicate extension types, and resource exhaustion fail
-closed. Stable failures contain only a category and body-local offset, and
-diagnostics omit random, session-id, and extension bytes.
+the exact random and unclassified cipher-suite identifier, classifies the
+random as an ordinary `ServerHello` or the exact RFC 8446
+`HelloRetryRequest` sentinel, then composes the repository-owned generic
+extension-block decoder so malformed lengths, trailing bytes, duplicate
+extension types, and resource exhaustion fail closed. One-bit and every other
+non-exact random remain ordinary `ServerHello` values. Stable failures contain
+only a category and body-local offset, and diagnostics omit random,
+session-id, and extension bytes.
 
-This structural boundary does not classify the `HelloRetryRequest` random,
-interpret or authorize extension contents, require or validate
+This exact public-data classification does not itself apply the transcript's
+`message_hash` rewrite, sequence an ordinary or retry handshake, interpret or
+authorize extension contents, require or validate
 `supported_versions`, bind the session-id echo or cipher-suite selection to an
 original `ClientHello`, enforce the downgrade sentinel, send alerts, advance a
 handshake, derive keys, protect records, parse or validate certificates,
@@ -4798,6 +5348,111 @@ context-specific extension and selection policy, handshake state,
 repository-owned signature verification, certificate name/path validation,
 trust-root and revocation integration, TLS transport, and HTTP composition
 remain blockers. Concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-server-hello-selection` prerequisite binds one
+structurally decoded ordinary `ServerHello` or `HelloRetryRequest` to the
+exact decoded `ClientHello` and one supplied policy-bearing cipher-suite
+offer. Before accepting any server selection, the binder requires the offer's
+entry count, wire identifiers, and preference order to equal the cipher-suite
+vector retained by that exact `ClientHello`; detached, truncated, reordered,
+or otherwise substituted offer wire evidence fails closed. It then requires
+the server's legacy session-id echo to equal the exact client session ID and
+asks the retained offer and its data-driven cipher-suite policy to validate
+the server's selected wire identifier. Success moves both non-copyable decoded
+messages and the offer into one evidence value, retains the public ServerHello
+kind, and returns the repository-owned selected-suite descriptor that binds
+the record algorithm, HKDF hash, key lengths, and per-key record ceiling.
+Stable failures and diagnostics retain no session ID, offer, selection,
+random, handshake, or policy payloads.
+
+This selection binding does not parse either handshake body, interpret or
+authorize extensions, require or validate `supported_versions`, compare a
+post-retry `ServerHello` with the earlier `HelloRetryRequest`, apply the
+transcript `message_hash` rewrite, sequence a handshake, send alerts, derive
+keys, protect records, parse or validate certificates, establish trust,
+enforce revocation, perform I/O, authorize HTTP or OAuth transport, or open a
+network connection. Extension policy, retry-state and transcript composition,
+key schedule, certificate validation, TLS transport, and HTTP composition
+remain blockers. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
+An allocation-free `tls13-server-hello-version-selection` prerequisite now
+extends that retained selection evidence through extension-context and
+`supported_versions` policy. The binder first validates the exact decoded
+ClientHello extension block and the exact decoded ordinary ServerHello or
+HelloRetryRequest extension block against one caller-supplied, data-driven
+context policy. It then requires exactly one `supported_versions` extension in
+both retained messages. Before trusting a supplied `ClientVersionOffer`, it
+requires the offer's complete encoded ClientHello extension data, including
+the vector length, identifier order, and every identifier, to equal the
+extension data retained by that exact decoded ClientHello. Finally, it asks
+the retained offer to validate the server's exact extension data as a version
+the client offered and as exactly TLS 1.3. Success moves the non-copyable prior
+selection binding into a new evidence value and retains the policy, exact
+version offer, and selected TLS 1.3 descriptor. Stable failures and diagnostics
+retain no extension data, version identifiers, message bytes, or policy
+payloads.
+
+This version binding does not compare a HelloRetryRequest selection with a
+later ServerHello, require the retry to change the ClientHello, compare retry
+cipher suites, apply the transcript `message_hash` rewrite, interpret
+`key_share`, sequence a handshake, send alerts, derive keys, protect records,
+parse or validate certificates, establish trust, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. Retry
+state, transcript composition, key schedule, certificate validation, TLS
+transport, and HTTP composition remain blockers. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
+An allocation-free `tls13-server-hello-retry-selection` prerequisite now
+binds one retained HelloRetryRequest version-selection proof to one retained
+ordinary ServerHello version-selection proof. The binder requires the first
+message to be classified as HelloRetryRequest and the second as ServerHello,
+then compares the exact retained ClientHello random, legacy session ID,
+cipher-suite offer count and order, and supported-version offer count and
+order across the two proofs. It also requires the complete extension-context
+policy, policy-authorized cipher-suite descriptor, and selected TLS version to
+remain equal. Success moves both non-copyable proofs into one evidence value,
+so later handshake composition cannot replace either message, either
+ClientHello, either data-driven offer, or the extension rule table after
+continuity has been checked. Stable failures and diagnostics retain no random,
+session ID, offer, selection, extension, handshake, or policy payloads.
+
+This retry continuity binding does not compare the complete ClientHello pair
+or validate extension-specific permitted changes; require the retry to change
+the ClientHello; reject a second retry in connection state; interpret
+`cookie`, `key_share`, or `pre_shared_key`; apply the transcript
+`message_hash` rewrite; sequence a handshake; send alerts; derive keys;
+protect records; parse or validate certificates; establish trust; enforce
+revocation; perform I/O; authorize HTTP or OAuth transport; or open a network
+connection. ClientHello retry-transition policy, connection state, transcript
+composition, key schedule, certificate validation, TLS transport, and HTTP
+composition remain blockers. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
+An allocation-free `tls13-cookie` prerequisite now owns the RFC 9846 section
+4.3.2 `cookie` extension-data structure needed by a later ClientHello retry
+transition policy. Construction and decoding require the exact non-empty
+two-byte-length-prefixed value, enforce one caller-selected maximum before
+exposing borrowed cookie bytes, and reject trailing or truncated data.
+Encoding validates the complete wire length and caller-owned output capacity
+before changing output. A separate echo binder consumes one decoded
+HelloRetryRequest cookie and one decoded second-ClientHello cookie, requires
+their complete encoded extension data to be byte-for-byte equal, and retains
+both non-copyable values as evidence. Stable failures and diagnostics retain
+no cookie bytes, encoded extension data, lengths, mismatch positions, or
+output contents.
+
+This cookie boundary treats the cookie as opaque peer-supplied data. It does
+not locate or authorize extension type 44 in either message, generate a
+cookie, authenticate or decrypt server state carried by a cookie, compare any
+other ClientHello field, require a retry to make progress, reject a second
+retry, apply the transcript `message_hash` rewrite, sequence a handshake, send
+alerts, derive keys, protect records, parse or validate certificates,
+establish trust, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Complete ClientHello retry-transition
+policy, connection state, transcript composition, key schedule, certificate
+validation, TLS transport, and HTTP composition remain blockers. Concrete
+HTTPS and live-provider readiness remain unavailable.
 
 An allocation-free `tls13-alpn` prerequisite now owns the RFC 7301
 `application_layer_protocol_negotiation` extension data needed to bind a
@@ -5277,6 +5932,112 @@ revocation branches, repository-owned TLS/HTTP composition, audited network
 effects, and response policy remain separate blockers. Concrete HTTPS and
 live-provider readiness remain unavailable.
 
+The bounded OAuth boundary now also admits the exact HTTPS destination-bound
+double-nested no-check complete fixed-path revocation proof under its own
+sealed nominal branch. The double-nested completion must retain the same exact
+signed reviewed-server path-and-anchor-self-signature proof shape already held
+by the request/server binding. The composition reaches that original server
+proof only through both retained responder-revocation layers, derives both
+server-path identities from repository-owned evidence, and requires the same
+exact decoded leaf, target-nearest issuer, and reviewed-anchor objects,
+ASCII-case-insensitively equal SNI DNS names, and ASCII-case-insensitively equal
+Host DNS names with the same optional port. Both retained server paths must
+contain exactly one processed intermediate: the additional responder paths do
+not extend the target-plus-intermediate server chain whose status the
+double-nested completion establishes. Zero- or multi-intermediate server paths
+therefore fail closed. Success moves the complete request/signed-server binding
+and complete double-nested-revocation proof into one non-copyable result. A
+byte-equal independent leaf decode, alternate intermediate or reviewed root,
+different admitted SAN name, or different explicit port also fails closed.
+Stable failures and Debug output retain no provider, trace, request,
+credential, certificate, hostname, authority, path, key, signature, algorithm,
+constraint, revocation, status, or trust-root payloads.
+
+This double-nested-branch composition does not borrow or copy released request
+bytes, so it introduces no credential access and emits no provider or trace
+audit event. The release's existing audit gate remains mandatory for every
+later request-byte borrow. It performs no parsing, new validation,
+cryptography, credential editing, signing, storage, clock acquisition, status
+acquisition or refresh, I/O, network access, or other external effect. It does
+not generalize revocation or path construction, cover the recursive or
+alternative intermediate-status-responder complete branches, add trust-anchor
+semantics, complete RFC 5280 Name or path validation, build or run TLS or HTTP,
+authorize OAuth transport, or grant network authority. Those remaining
+revocation branches, repository-owned TLS/HTTP composition, audited network
+effects, and response policy remain separate blockers. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
+The bounded OAuth boundary now also admits the exact HTTPS destination-bound
+recursive-responder no-check complete fixed-path revocation proof under its
+own sealed nominal branch. The recursive completion must retain the same exact
+signed reviewed-server path-and-anchor-self-signature proof shape already held
+by the request/server binding. The composition traverses the retained
+recursive-responder no-check and authenticated responder-revocation layers
+back to that original server proof, derives both server-path identities only
+through repository-owned evidence, and requires the same exact decoded leaf,
+target-nearest issuer, and reviewed-anchor objects, ASCII-case-insensitively
+equal SNI DNS names, and ASCII-case-insensitively equal Host DNS names with the
+same optional port. Both retained server paths must contain exactly one
+processed intermediate. The recursive responder paths do not extend the
+target-plus-intermediate server chain whose status the branch-specific
+completion establishes, so zero- or multi-intermediate server paths fail
+closed. Success moves the complete request/signed-server binding and complete
+recursive-revocation proof into one non-copyable result. A byte-equal
+independent leaf decode, alternate intermediate or reviewed root, different
+admitted SAN name, or different explicit port also fails closed. Stable
+failures and Debug output retain no provider, trace, request, credential,
+certificate, hostname, authority, path, key, signature, algorithm, constraint,
+revocation, status, or trust-root payloads.
+
+This recursive-branch composition does not borrow or copy released request
+bytes, so it introduces no credential access and emits no provider or trace
+audit event. The release's existing audit gate remains mandatory for every
+later request-byte borrow. It performs no parsing, new validation,
+cryptography, credential editing, signing, storage, clock acquisition, status
+acquisition or refresh, I/O, network access, or other external effect. It does
+not generalize revocation or path construction, cover the alternative
+intermediate-status-responder complete branch, add trust-anchor semantics,
+complete RFC 5280 Name or path validation, build or run TLS or HTTP, authorize
+OAuth transport, or grant network authority. That remaining revocation branch,
+repository-owned TLS/HTTP composition, audited network effects, and response
+policy remain separate blockers. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
+The bounded OAuth boundary now also admits the exact HTTPS destination-bound
+alternative intermediate-status-responder revocation no-check complete fixed-
+path proof under its own sealed nominal branch. The alternative completion
+must retain the same exact signed reviewed-server path-and-anchor-self-
+signature proof shape already held by the request/server binding. The
+composition traverses the retained intermediate-status-responder revocation,
+responder no-check, and authenticated responder-revocation layers back to that
+original server proof, derives both server-path identities only through
+repository-owned evidence, and requires the same exact decoded leaf, target-
+nearest issuer, and reviewed-anchor objects, ASCII-case-insensitively equal SNI
+DNS names, and ASCII-case-insensitively equal Host DNS names with the same
+optional port. Both retained server paths must contain exactly one processed
+intermediate. The alternative responder paths do not extend the target-plus-
+intermediate server chain whose status the branch-specific completion
+establishes, so zero- or multi-intermediate server paths fail closed. Success
+moves the complete request/signed-server binding and complete alternative-
+revocation proof into one non-copyable result. A byte-equal independent leaf
+decode, alternate intermediate or reviewed root, different admitted SAN name,
+or different explicit port also fails closed. Stable failures and Debug output
+retain no provider, trace, request, credential, certificate, hostname,
+authority, path, key, signature, algorithm, constraint, revocation, status, or
+trust-root payloads.
+
+This alternative-branch composition does not borrow or copy released request
+bytes, so it introduces no credential access and emits no provider or trace
+audit event. The release's existing audit gate remains mandatory for every
+later request-byte borrow. It performs no parsing, new validation,
+cryptography, credential editing, signing, storage, clock acquisition, status
+acquisition or refresh, I/O, network access, or other external effect. It does
+not generalize revocation or path construction, add trust-anchor semantics,
+complete RFC 5280 Name or path validation, build or run TLS or HTTP, authorize
+OAuth transport, or grant network authority. Repository-owned TLS/HTTP
+composition, audited network effects, and response policy remain separate
+blockers. Concrete HTTPS and live-provider readiness remain unavailable.
+
 The existing bounded `x509-ocsp-reviewed-server-revocation-binding`
 prerequisite now also provides an ordered entry point that consumes fully
 routed authenticated OCSP target status together with the complete reviewed
@@ -5540,24 +6301,664 @@ Concrete HTTPS remains unavailable.
 An allocation-free `tls13-key-share` prerequisite now binds exact TLS 1.3
 `KeyShareEntry` values to the existing caller-selected named-group policy.
 Client construction validates each public key-exchange value against the
-selected group's immutable wire length, rejects an empty or duplicate group
-list, and encodes the complete two-byte-length-prefixed ClientHello extension
-data only after proving caller-owned output capacity. Decoding applies the same
-policy and fixed registry-sized entry ceiling before retaining borrowed public
-key-exchange bytes. ServerHello decoding accepts exactly one entry and fails
-closed unless its selected group appeared in the exact retained client offer.
-Stable failures retain no group identifiers, public-key bytes, lengths, or
-output contents.
+selected group's immutable wire length, rejects duplicate groups, and encodes
+the complete two-byte-length-prefixed ClientHello extension data only after
+proving caller-owned output capacity. Construction and decoding also admit the
+exact empty ClientHello vector required for an explicit HelloRetryRequest group
+selection round trip; every nonempty vector remains subject to the same policy
+and fixed registry-sized entry ceiling. Successful decoding retains the exact
+complete caller-borrowed ClientHello extension data, including its vector-
+length prefix, together with the borrowed public key-exchange entries. The
+complete input remains available through a read-only accessor so later
+message-context composition can compare it directly without re-encoding or
+allocation. ServerHello decoding accepts exactly one entry and fails closed
+unless its selected group appeared in the exact retained client offer. Stable
+failures retain no group identifiers, public-key bytes, lengths, or output
+contents.
 
-This public framing and selection evidence does not implement
-HelloRetryRequest, bind `supported_groups`, generate entropy or an ephemeral
-private key, invoke X25519 or P-256, validate a peer point beyond the selected
-group's exact wire length, reject a low-order key, derive or retain a shared
-secret, update a transcript, process a handshake, derive traffic secrets,
+The empty vector is syntax evidence only: this public framing and selection
+evidence does not implement or authorize HelloRetryRequest, bind
+`supported_groups`, require a retry to make progress, generate entropy or an
+ephemeral private key, invoke X25519 or P-256, validate a peer point beyond the
+selected group's exact wire length, reject a low-order key, derive or retain a
+shared secret, update a transcript, process a handshake, derive traffic
+secrets, protect records, validate certificates, establish trust, enforce
+revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
+connection. Reviewed retry-transition policy, key-agreement execution, and
+handshake-state composition remain prerequisites, and concrete HTTPS remains
+unavailable.
+
+An allocation-free `tls13-key-share-retry` prerequisite binds the public
+group transition requested by an RFC 9846 `HelloRetryRequest`. It accepts
+exactly two bytes of `key_share` extension data as the requested
+`selected_group`, authorizes that identifier through the caller's existing
+data-driven named-group policy, requires the group to occur in the exact
+retained first-ClientHello `supported_groups` list, and rejects a group that
+already occurred in the exact retained first-ClientHello key-share offer. A
+second binding step then requires the decoded second-ClientHello key-share
+vector to contain exactly one entry and requires that entry to use the retry-
+selected group. Success consumes and retains the supported-group list, both
+decoded ClientHello key-share vectors, the exact retry extension data, and the
+policy-authorized group descriptor as non-copyable transition evidence.
+An additional final-share binding step borrows that completed transition and
+decodes the exact ServerHello key-share extension data directly against the
+transition's retained second-ClientHello offer under the caller-supplied
+named-group policy boundary. Success returns non-copyable continuity evidence
+retaining both the borrowed retry transition and the decoded ServerHello
+share, so a
+caller cannot substitute an unrelated offer between retry validation and
+final server selection. The ServerHello decoder's exact single-entry framing,
+key-exchange-length policy, and offered-group requirement remain authoritative.
+Stable failures and diagnostics retain no group identifiers, extension data,
+public-key bytes, list positions, counts, or lengths.
+
+This group-transition evidence does not prove key material was freshly
+generated or prevent reuse across connections; generate or own entropy or an
+ephemeral private key; invoke X25519 or P-256; validate a peer point beyond
+the selected group's exact wire length; locate or authorize extension type 51
+in a handshake message; compare any other ClientHello field; apply a retry
+cookie, PSK binder update, early-data removal, or transcript `message_hash`
+rewrite; reject a second retry; sequence a handshake; send alerts; derive
+traffic secrets; protect records; validate certificates; establish trust;
+enforce revocation; perform I/O; authorize HTTP or OAuth transport; or open a
+network connection. Complete ClientHello retry-transition policy, connection
+state, transcript composition, key agreement, and the remaining TLS/HTTP stack
+remain separate prerequisites. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
+An allocation-free composition boundary in
+`tls13-server-hello-retry-selection` now attaches that retry key-share
+transition to the exact decoded messages already retained by one
+`BoundServerHelloRetrySelection`. After the retained extension-context policy
+has authorized both ClientHello/ServerHello pairs, the composer locates the
+first ClientHello `supported_groups` and `key_share`, the HelloRetryRequest
+`key_share`, and the second ClientHello `key_share` directly in those exact
+extension blocks. It decodes them under caller-selected resource ceilings and
+one retained data-driven named-group policy, then runs the repository-owned
+retry-transition binders. Success retains the complete retry-selection proof,
+the exact policy, and the non-copyable transition evidence. A final step
+locates the ordinary ServerHello `key_share` from the same retained proof and
+returns message-bound final-share evidence that cannot outlive that composed
+transition. Missing, malformed, disallowed, or inconsistent public inputs fail
+with stable diagnostics that retain no extension data, group identifiers,
+public-key bytes, counts, positions, or lengths.
+
+This composition proves only the origin and continuity of public key-share
+evidence across the four retained messages. It does not compare every other
+permitted ClientHello2 change; apply a retry cookie, PSK binder update, or
+early-data removal; require fresh private key material; invoke key agreement;
+apply the transcript `message_hash` rewrite; reject a second retry in
+connection state; sequence a handshake; derive traffic secrets; protect
+records; validate certificates; establish trust; enforce revocation; perform
+I/O; authorize HTTP or OAuth transport; or open a network connection. Complete
+retry-transition policy, connection state, transcript composition, key
+agreement, and the remaining TLS/HTTP stack remain separate prerequisites.
+Concrete HTTPS and live-provider readiness remain unavailable.
+
+A bounded `tls13-x25519-key-agreement` prerequisite now routes one key-
+agreement operation only from an exact `tls13-named-group-policy` selection.
+The selected group must bind the X25519 algorithm, standard 32-byte peer key-
+exchange length, and standard 32-byte shared-secret length before the caller-
+borrowed private scalar is read or the repository-owned X25519 primitive is
+invoked. Every other recognized group fails before the private scalar is read,
+before peer bytes are interpreted, and before a shared-secret owner exists.
+The X25519 route passes the exact peer key-exchange bytes to the repository-
+owned primitive, preserves its low-order all-zero rejection, validates the
+derived length through the same selected-group policy, and returns one non-
+cloneable shared-secret value borrowing caller-owned fixed storage. Dropping
+that value wipes the borrowed storage through the repository-owned zeroization
+primitive.
+Stable failures and Debug output retain no private-scalar, peer-key, shared-
+secret, group, algorithm, or length payloads.
+
+This pure execution boundary does not generate entropy or an ephemeral private
+key, own or wipe the caller's private scalar, construct or decode a key-share
+extension, prove that a private scalar corresponds to an offered ClientHello
+share, bind a ServerHello share to that offer, advance a transcript or
+handshake, derive traffic secrets, protect records, validate certificates,
+establish trust, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. The existing X25519 primitive's
+optimized-code behavior and internal temporary handling remain properties of
+that package rather than new claims of this composition. Exact key-share and
+handshake-state binding, the remaining TLS transport, and HTTP composition
+remain prerequisites; concrete HTTPS and live-provider readiness remain
+unavailable.
+
+An allocation-free `tls13-x25519-key-share-binding` prerequisite now composes
+the exact retained ClientHello offer and decoded ServerHello key share with the
+selected-group-bound X25519 execution boundary. The decoded server share must
+select X25519 before the caller-borrowed private scalar is read. The package
+derives that scalar's public key through the repository-owned X25519 primitive
+and compares it with the exact retained X25519 ClientHello public share through
+the repository-owned compiler-preserved full-scan fixed-length comparison. A
+mismatch fails before shared-secret derivation and leaves caller-owned output
+unchanged. A match passes the exact decoded ServerHello public share and exact
+selected-group evidence to the existing X25519 key-agreement boundary, which
+continues to reject low-order peer keys and wipe the borrowed shared-secret
+storage on drop. Stable failures and Debug output retain no private scalar,
+public key, shared secret, group, algorithm, length, or output payloads.
+
+This pure binding boundary does not generate entropy or an ephemeral private
+key, own or wipe the caller's private scalar, prove that the retained offer was
+transmitted in a ClientHello, bind the offer or ServerHello to a transcript,
+process a handshake, derive traffic secrets, protect records, validate
+certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. The fixed-length comparison
+inherits its repository package's compiler-observability guarantee and does
+not add hardware side-channel claims. The X25519 primitive's optimized-code
+behavior and internal temporary handling remain properties of that package.
+Handshake-state and transcript binding, the remaining TLS transport, and HTTP
+composition remain prerequisites; concrete HTTPS and live-provider readiness
+remain unavailable.
+
+The `tls13-x25519-key-share-binding` composition additionally accepts the
+message-bound final-share evidence returned by
+`tls13-server-hello-retry-selection`. That entry point obtains the decoded
+ServerHello share only through the retained CH1, HelloRetryRequest, CH2, and
+final-ServerHello proof, then applies the existing scalar-to-offer comparison
+and repository-owned X25519 execution without accepting detached key-share or
+policy input. Success returns a non-copyable wrapper borrowing the complete
+message proof and owning the existing wipe-on-drop shared-secret view, so
+later composition cannot separate the derived secret from the exact public
+handshake evidence that authorized it. Failures preserve the existing stable,
+payload-free categories and leave caller-owned output unchanged.
+
+This message-bound execution still does not generate entropy or an ephemeral
+private key, own or wipe the caller's private scalar, compare every permitted
+ClientHello2 change, apply a retry cookie or PSK binder update, bind the
+messages or secret to a transcript, apply the transcript `message_hash`
+rewrite, reject a second retry in connection state, process a handshake,
+derive traffic secrets, protect records, validate certificates, establish
+trust, enforce revocation, perform I/O, authorize HTTP or OAuth transport, or
+open a network connection. Handshake-state and transcript composition, the
+remaining TLS transport, and HTTP composition remain prerequisites; concrete
+HTTPS and live-provider readiness remain unavailable.
+
+An allocation-free `tls13-retry-transcript-binding` prerequisite now constructs
+one selected TLS 1.3 retry transcript only from the exact CH1,
+HelloRetryRequest, CH2, and final-ServerHello proof retained by
+`tls13-server-hello-retry-selection`. The composer frames each retained body
+with its canonical handshake type and three-byte length, hashes CH1 through
+both supported transcript algorithms, selects the policy-authorized cipher
+suite carried by the retained HelloRetryRequest proof, applies the existing
+one-shot synthetic `message_hash` rewrite, and then hashes the exact retained
+HelloRetryRequest, CH2, and final ServerHello encodings in order. Success
+returns a non-copyable wrapper borrowing that complete message proof and owning
+the selected transcript state, so later composition cannot substitute another
+message sequence or detached cipher-suite policy. Transcript-limit or hashing
+failures retain no message bytes, digest, length, suite, or policy payloads.
+
+This pure composition does not validate every permitted ClientHello2 change,
+apply a retry cookie or PSK binder update, reject a second retry in connection
+state, own handshake sequencing, combine the transcript with a key-agreement
+secret, derive handshake or traffic secrets, authenticate Finished, protect
+records, validate certificates, establish trust, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. The
+remaining TLS state, key-schedule, record, certificate, revocation, and HTTP
+composition remain prerequisites; concrete HTTPS and live-provider readiness
+remain unavailable.
+
+An allocation-free `tls13-retry-key-schedule-binding` prerequisite now joins
+the message-bound retry transcript and message-bound X25519 shared secret only
+when both borrow the same exact retained CH1, HelloRetryRequest, CH2, and final
+ServerHello selection proof. Before touching caller-owned base-secret storage,
+the composer also requires that storage's data-driven selected cipher suite
+equal the suite retained by the exact transcript. Only then does it pass the
+repository-owned 32-byte X25519 secret to the existing no-PSK base schedule.
+Success returns a non-copyable wrapper retaining both exact message-bound
+inputs and the Early, Handshake, and Master Secret view into caller-owned
+wipe-on-drop storage. Proof or
+suite substitution fails with stable payload-free categories before schedule
+derivation or storage mutation; downstream schedule failures retain the
+existing redacted categories and clearing behavior.
+
+This pure binding does not derive client or server handshake traffic secrets,
+consume the retained transcript hash in Derive-Secret, sequence any later
+handshake message, authenticate CertificateVerify or Finished, protect
+records, validate certificates, establish trust, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. Traffic-
+secret derivation, authenticated handshake progression, record protection,
+certificate/revocation policy, and HTTP composition remain prerequisites;
+concrete HTTPS and live-provider readiness remain unavailable.
+
+An allocation-free `tls13-handshake-traffic-secrets` prerequisite now derives
+the client and server handshake traffic secrets from the existing
+suite-selected `BaseSecrets` view and one repository-owned `TranscriptHash`.
+Caller-owned fixed storage must retain the exact same data-driven selected
+cipher suite as the base schedule, and the transcript snapshot's algorithm
+must equal that suite's HKDF hash. Only then does the primitive import the
+existing Handshake Secret into a fixed wipe-on-drop PRK, apply the fixed
+`"c hs traffic"` and `"s hs traffic"` labels, stage both Hash-length results in
+wipe-on-drop owners, and copy them into caller-owned wipe-on-drop storage only
+after both derivations succeed. Success returns a non-copyable borrowed view;
+stable failures retain no secret or transcript bytes.
+
+This primitive accepts an already-computed transcript snapshot and does not
+prove which messages produced it, own transcript sequencing, or attach its
+outputs to the exact retry proof. It also does not derive traffic keys or IVs,
+authenticate CertificateVerify or Finished, protect records, validate
+certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection.
+
+An allocation-free `tls13-retry-handshake-traffic-secrets-binding`
+prerequisite now accepts only the exact-message `BoundRetryBaseSecrets` proof
+and caller-owned handshake-traffic-secret storage. Before touching that
+storage, it requires the storage's data-driven selected cipher suite to equal
+the suite retained by the bound retry transcript. It then snapshots that exact
+CH1, HelloRetryRequest, CH2, and final ServerHello transcript and delegates the
+bound base secrets plus snapshot to the fixed-memory handshake traffic-secret
+primitive. Success returns a non-copyable wrapper that retains the complete
+message-bound base schedule beside the borrowed client and server secret view;
+no detached message, suite, transcript hash, or base secret is accepted.
+Suite substitution fails before output mutation, and downstream derivation
+failures retain the existing stable redacted categories and clearing behavior.
+
+This exact-message binding does not advance the transcript beyond ServerHello,
+derive traffic keys or IVs, authenticate CertificateVerify or Finished,
 protect records, validate certificates, establish trust, enforce revocation,
 perform I/O, authorize HTTP or OAuth transport, or open a network connection.
-Reviewed key-agreement execution and handshake-state composition remain
-prerequisites, and concrete HTTPS remains unavailable.
+Authenticated handshake progression, record protection, certificate and
+revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
+and live-provider readiness remain unavailable.
+
+The same exact-message binding now also derives the server Finished key only
+from its retained server handshake traffic secret. Caller-owned Finished-key
+storage must select the exact same data-driven cipher suite and the `Server`
+sender role before any output mutation. The composer then imports only the
+retained server secret under the suite-selected SHA-256 or SHA-384 policy and
+delegates the fixed `"finished"` label derivation to the repository-owned
+Finished boundary. Non-copyable success evidence retains the complete CH1,
+HelloRetryRequest, CH2, final ServerHello, base-schedule, and handshake-
+traffic-secret proof beside the borrowed key view into caller-owned wipe-on-
+drop storage. No detached traffic secret, suite, role, label, or key is
+accepted; stable failures retain no secret bytes.
+
+This provenance binding does not verify peer Finished data, advance the
+transcript beyond ServerHello, authenticate CertificateVerify, prove later
+handshake-message order, protect records, validate certificates, establish
+trust, enforce revocation, perform I/O, authorize HTTP or OAuth transport, or
+open a network connection. Authenticated handshake progression, certificate
+and revocation policy, record protection, and HTTP composition remain
+prerequisites; concrete HTTPS and live-provider readiness remain unavailable.
+
+The exact retry server Finished-key proof can now also reconstruct a fresh
+selected transcript state only from its retained CH1, HelloRetryRequest, CH2,
+and final ServerHello message graph and the original transcript policy retained
+by that graph. No caller-supplied transcript, policy, message, suite, hash, or
+snapshot is accepted. The reconstruction must reproduce both the retained
+selected suite and the exact ServerHello transcript snapshot before success.
+Non-copyable success evidence keeps the complete retry-derived server
+Finished-key provenance beside the reconstructed state, providing a bounded
+starting point for later authenticated server-flight transcript composition
+without detaching the key schedule from the retry messages that selected it.
+
+This reconstruction does not advance beyond ServerHello, authenticate or
+sequence EncryptedExtensions, Certificate, CertificateVerify, or Finished,
+consume authenticated records, validate certificates, establish trust,
+enforce revocation, protect records, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Authenticated ordered transcript
+advancement and all remaining TLS, certificate, revocation, HTTP, and audited
+transport composition remain prerequisites; concrete HTTPS and live-provider
+readiness remain unavailable.
+
+An allocation-free `tls13-retry-handshake-traffic-key-material-binding`
+prerequisite now accepts only the exact-message retry handshake-traffic-secret
+proof above, one explicit client-or-server sender role, and caller-owned
+traffic-key-material storage. Before touching that storage, it requires the
+storage's data-driven selected cipher suite to equal the suite retained by the
+bound traffic secrets. It selects only the retained sender secret, imports
+that exact hash-length value into a fixed wipe-on-drop PRK using the retained
+suite's hash, and delegates to the existing fixed-memory traffic-key and
+static-IV derivation. Success returns a non-copyable wrapper retaining the
+complete CH1, HelloRetryRequest, CH2, final ServerHello, base-schedule, and
+handshake-traffic-secret proof beside the sender role and borrowed key-material
+view. No detached traffic secret, suite, hash, key or IV length, label, or
+context is accepted. Suite substitution fails before output mutation;
+downstream failures retain stable redacted categories and the existing
+clearing and staging behavior.
+
+This exact-message binding derives one direction's handshake key and static IV
+per call. It does not advance the transcript, authenticate CertificateVerify
+or Finished, construct or reserve a record nonce, create record-protection
+state, invoke an AEAD, frame or protect records, process alerts, validate
+certificates, establish trust, verify a hostname, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection.
+Authenticated handshake progression, record-state composition, certificate and
+revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
+and live-provider readiness remain unavailable.
+
+The same allocation-free boundary now also consumes the complete exact-message
+retry handshake traffic-secret proof into a non-cloneable per-sender
+record-state issuer. One successful client issuance and one successful server
+issuance are permitted. A repeated issuance for the same sender fails before
+the caller-owned output storage is touched, so the same retained key and static
+IV cannot acquire a second sequence-zero state through this boundary. Failed
+derivation or state construction does not consume the sender's issuance, so a
+caller may retry with valid storage.
+
+Each successful issuance accepts only an explicit sender role and
+caller-owned traffic-key-material storage for the retained selected suite. It
+derives that retained sender's key and static IV, moves the resulting view into
+the existing repository-owned record-state primitive, starts the monotonic
+record sequence at zero, and marks the sender issued before returning. The
+non-copyable result borrows the single-use issuer, retains the explicit sender,
+and permits only borrowed access to the state. It accepts no detached key,
+static IV, nonce length, record ceiling, AEAD identifier, sequence number, or
+cipher suite, and it cannot detach the state from the exact CH1,
+HelloRetryRequest, CH2, final ServerHello, base-schedule, traffic-secret, and
+sender evidence.
+
+This exact-message state composition does not advance the handshake
+transcript, authenticate CertificateVerify or Finished, invoke an AEAD, frame
+or protect a record, process alerts, validate certificates, establish trust,
+verify a hostname, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Authenticated handshake progression,
+record protection, certificate and revocation policy, and HTTP composition
+remain prerequisites; concrete HTTPS and live-provider readiness remain
+unavailable.
+
+The exact retry record-state wrapper can now be borrowed by an allocation-free
+handshake-record binding that delegates only to the existing repository-owned,
+data-driven record-protection dispatcher. Sealing accepts one borrowed
+handshake message, explicit zero-padding length, the existing ciphertext and
+inner-plaintext policies, caller scratch, and caller output. It fixes the
+protected content type to `Handshake`, consumes the next nonce only under the
+existing dispatcher rules, and returns non-copyable evidence retaining the
+exact state wrapper, plaintext request, and sealed output prefix. Callers
+cannot substitute a detached key, IV, nonce, sequence, AEAD route, content
+type, or output prefix.
+
+Opening retains the exact ciphertext input and state wrapper beside the
+existing authentication-before-release output owner. An authenticated inner
+content type other than `Handshake` is rejected before any content view is
+returned; dropping that rejected opened owner clears the authenticated output
+prefix. Success returns non-copyable evidence exposing only the authenticated
+handshake content, padding length, sender role, selected suite, exact input,
+and retained retry proof. AEAD or policy failure preserves the existing
+redacted categories and nonce-consumption rules.
+
+This binding does not parse or sequence the authenticated handshake message,
+advance its transcript, authenticate CertificateVerify or Finished, process
+alerts, select epochs, perform key updates, validate certificates, establish
+trust, verify a hostname, enforce revocation, perform I/O, authorize HTTP or
+OAuth transport, or open a network connection. Authenticated handshake
+progression, certificate and revocation policy, and HTTP/TLS transport
+composition remain prerequisites; concrete HTTPS and live-provider readiness
+remain unavailable.
+
+The exact retry record boundary can now be consumed into an allocation-free
+authenticated handshake reassembler that owns both the single-use sender state
+and one existing bounded handshake reassembler over caller-owned storage. Each
+record is opened internally through the repository-owned dispatcher, must
+authenticate as inner content type `Handshake`, and is copied into the bounded
+reassembler only after authentication. The owner therefore preserves one
+monotonic sender sequence and cannot accept detached plaintext fragments or a
+second record state.
+
+One call drains the complete authenticated record content. It invokes a
+caller-supplied, non-retaining handler once for each complete policy-authorized
+handshake message, continues across coalesced messages, and retains an
+incomplete final message for the next authenticated record. Success returns
+non-copyable evidence retaining the exact ciphertext input and reassembly
+owner beside the completed-message count, authenticated content length,
+partial-message status, sender role, selected suite, and post-open record
+count. Record authentication, unexpected-content-type rejection, output
+clearing, reassembly bounds, initialized-storage clearing, and stable redacted
+failures remain those of the composed repository-owned primitives.
+Any record authentication, content-type, reassembly, or handler-unwind failure
+clears the buffered fragment and permanently poisons that owner. Later calls
+fail before record processing, so a rejected sequence position cannot splice
+non-contiguous authenticated records into one handshake message.
+
+This composition does not interpret a handshake body, enforce the no-PSK
+server-flight order, advance a transcript, bind handler behavior to later
+state, authenticate CertificateVerify or Finished, process alerts, select
+epochs, perform key updates, validate certificates, establish trust, verify a
+hostname, enforce revocation, perform I/O, authorize HTTP or OAuth transport,
+or open a network connection. Authenticated ordered handshake progression,
+certificate and revocation policy, and HTTP/TLS transport composition remain
+prerequisites; concrete HTTPS and live-provider readiness remain unavailable.
+
+The authenticated retry reassembly boundary can now be consumed into a
+server-only ordered-flight owner that composes the exact monotonic server
+record state with the existing `tls13-no-psk-server-flight` transition policy.
+Construction rejects client-sender state and any reassembler that already
+consumed or failed a record, then starts only at `ExpectEncryptedExtensions`;
+callers cannot inject a detached ordering state, carry a pre-composition
+fragment, or resume at a later position. For each complete policy-authorized message,
+the owner advances the public no-PSK server-flight type sequence before it
+lends the message to the caller's non-retaining handler. The handler receives
+an ordered wrapper retaining the exact authenticated message beside the
+post-accept state and client-authentication requirement, so it cannot mistake
+pre-transition bytes for ordered progression.
+
+Success returns non-copyable evidence retaining the exact ciphertext input,
+authenticated reassembly result, post-record server-flight state, and
+client-authentication requirement. An unexpected message type permanently
+poisons and clears the composed reassembly owner before returning a stable,
+payload-free ordering error; later records fail before authentication or
+handler invocation. Record, content-type, reassembly, and handler-unwind
+failures retain the same terminal behavior. A handler may already have acted
+on earlier valid messages in the same authenticated record before a later
+message fails ordering, so any such caller-owned effect remains caller-audited
+and is not transactional.
+
+This bounded composition enforces only the public no-PSK server-flight message
+type order over authenticated retry-handshake records. It does not interpret
+message bodies, advance a transcript, validate EncryptedExtensions, process a
+CertificateRequest, validate a certificate chain or hostname, authenticate
+CertificateVerify or Finished, establish trust, enforce revocation, select
+epochs, perform key updates, emit an alert, perform I/O, authorize HTTP or
+OAuth transport, or open a network connection. Body-specific processing,
+transcript and signature authentication, certificate and revocation policy,
+and HTTP/TLS transport composition remain prerequisites; concrete HTTPS and
+live-provider readiness remain unavailable.
+
+The fresh retry server transcript-continuation proof can now be consumed
+together with one fresh authenticated ordered server-flight owner only when
+both retain the same exact handshake-traffic-secret object. Construction also
+requires the ordered owner to remain at `ExpectEncryptedExtensions` with zero
+records consumed, no partial message, and no failure, and requires the
+continuation transcript, ordered record state, and retained server Finished
+key to select the same suite. The continuation snapshot must still equal the
+exact ServerHello snapshot retained by that shared retry proof. Success moves
+the complete ordered record owner and reconstructed transcript into one
+non-copyable wrapper while retaining the exact retry-derived server Finished-
+key proof; callers cannot substitute a detached transcript, Finished key,
+traffic-secret proof, record state, or resumed flight position.
+
+This provenance join does not open a record, advance the transcript, expose a
+mutable transcript, validate or authenticate a server-flight message, verify
+CertificateVerify or Finished, validate certificates, establish trust,
+enforce revocation, protect application data, perform I/O, authorize HTTP or
+OAuth transport, or open a network connection. Authenticated message capture,
+ordered transcript advancement, certificate and revocation policy, and all
+remaining TLS/HTTP/audited transport composition remain prerequisites;
+concrete HTTPS and live-provider readiness remain unavailable.
+
+The joined retry owner can now authenticate one ciphertext record, enforce the
+no-PSK server-flight transition for every completed message, and lend each
+exact header-plus-body encoding with the transcript snapshot from immediately
+before that message to one synchronous non-retaining handler. The handler must
+explicitly accept the message before the joined owner appends that exact
+encoding to its private transcript. This ordering lets later repository-owned
+CertificateVerify and Finished processing use the required pre-message
+snapshot without exposing mutable transcript state. Success returns
+non-copyable record evidence retaining the joined owner and exact ciphertext
+beside the post-record flight state, authenticated content length, completed
+message count, partial-message status, client-authentication requirement, and
+post-record transcript snapshot.
+
+Record, content-type, reassembly, ordering, handler-rejection, transcript, or
+handler-unwind failure clears buffered fragments and permanently closes the
+joined record owner before a later record can be processed. A handler may have
+accepted earlier messages in the same record before a later message fails, and
+transcript-capacity failure occurs only after the handler accepts the affected
+message, so caller-owned effects remain caller-audited and non-transactional.
+The handler acceptance bit is not body validation, signature verification, or
+Finished authentication. This boundary does not parse EncryptedExtensions,
+CertificateRequest, Certificate, CertificateVerify, or Finished bodies; build
+or validate a certificate path or hostname; enforce revocation; select later
+epochs; protect application data; perform I/O; authorize HTTP or OAuth
+transport; or open a network connection. Those repository-owned validation
+and transport compositions remain prerequisites, and concrete HTTPS and
+live-provider readiness remain unavailable.
+
+Each pending ordered retry message now also retains sealed access to the exact
+retry base-schedule evidence that supplied its traffic keys. For an
+`EncryptedExtensions` message at the post-accept
+`ExpectCertificateRequestOrCertificate` position, a repository-owned helper
+decodes the exact authenticated body under caller-selected structural limits,
+then applies the exact extension-context policy and final ClientHello extension
+offer retained by that same retry evidence. Success returns non-copyable proof
+retaining the pending message and structurally decoded, placement-authorized,
+offer-bound `EncryptedExtensions`; a different type or flight position,
+malformed body, unknown or forbidden extension placement, or unsolicited
+response fails with a stable payload-free category. This proof is suitable as
+the handler's reason to accept and hash that exact message without a detached
+ClientHello, policy, message body, or transcript snapshot.
+
+This validation proves only extension-vector structure, standard-table
+placement, and type-level offer binding. It does not semantically decode or
+negotiate any extension payload, select application protocols, parse later
+handshake bodies, authenticate CertificateVerify or Finished, validate
+certificates or hostnames, enforce revocation, select later epochs, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. Those
+repository-owned semantic, authentication, trust, revocation, and transport
+compositions remain prerequisites; concrete HTTPS and live-provider readiness
+remain unavailable.
+
+An authenticated ordered retry `CertificateRequest` at the post-accept
+`ExpectCertificate` position can now be decoded under explicit caller-selected
+context, extension, and signature-scheme count limits. The helper requires the
+ordered flight to have recorded a client-authentication request, requires the
+request context to be empty for this main-handshake boundary, applies the exact
+retained extension-context policy in the `CertificateRequest` context, requires
+the `signature_algorithms` extension, and structurally decodes its nonempty
+ordered scheme list. When `signature_algorithms_cert` is present, its list is
+decoded under the same count limit. Success returns a non-copyable proof that
+retains the exact pending message, decoded request, required handshake-signature
+list, and optional certificate-signature list; no detached context, extension
+block, algorithm list, policy, or transcript snapshot is accepted.
+
+This proof establishes only authenticated message provenance, main-handshake
+request-context emptiness, extension placement, required-list presence, and
+signature-list framing. It does not select a signature algorithm, decide
+whether client authentication is supported, access or choose credentials,
+sign, emit a client Certificate or CertificateVerify, authenticate the server,
+validate certificates or hostnames, enforce revocation, select later epochs,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those data-driven credential, signing, server-authentication, trust, revocation,
+and transport compositions remain prerequisites, and concrete HTTPS and
+live-provider readiness remain unavailable.
+
+An authenticated ordered retry server `Certificate` at the post-accept
+`ExpectCertificateVerify` position can now be decoded under explicit
+caller-selected message and per-entry extension limits. The main-handshake
+helper requires an empty request context and at least one certificate entry,
+then structurally decodes every entry's exact length-prefixed extension vector
+and applies the exact retained extension-context policy and final ClientHello
+offer in the server `Certificate` context. The certificate framing primitive
+therefore retains both each extension payload and its exact two-byte-length-
+prefixed vector so this composition accepts no reconstructed or detached
+extension block. Success returns a non-copyable proof retaining the pending
+message and exact decoded nonempty server certificate chain after all entry
+extensions pass placement, uniqueness, and offer binding.
+
+This proof establishes only authenticated message provenance, server-certificate
+framing, main-handshake empty context, nonempty chain presence, and per-entry
+extension structure and type-level policy. It does not parse X.509 certificate
+bytes, semantically decode certificate-entry extension payloads, construct or
+validate a certificate path, authenticate CertificateVerify or Finished,
+establish trust, verify a hostname, enforce revocation, select later epochs,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those repository-owned certificate, signature, trust, revocation, and transport
+compositions remain prerequisites, and concrete HTTPS and live-provider
+readiness remain unavailable.
+
+The exact first entry of that authenticated ordered retry server `Certificate`
+proof can now be bound to one caller-supplied certificate decoded by the
+repository-owned X.509 primitive. The binding requires byte-for-byte equality
+between the entry's retained `certificate_data` vector and the decoded
+certificate's complete retained DER document. Success returns a non-copyable
+proof that retains both the complete ordered server-certificate proof and the
+exact decoded X.509 certificate; no detached, re-encoded, or merely equivalent
+certificate can cross this boundary.
+
+This proof establishes exact authenticated leaf-byte identity and
+repository-owned structural decoding evidence only. It does not yet bind that
+leaf to a reviewed path or requested destination, extract or authorize its
+public key, authenticate CertificateVerify or Finished, establish trust,
+verify a hostname, load a trust root, enforce revocation, select later epochs,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those repository-owned certificate-to-path, key, signature, hostname, trust,
+revocation, and transport compositions remain prerequisites, and concrete
+HTTPS and live-provider readiness remain unavailable.
+
+A stronger vertical composition can retain that authenticated retry leaf proof
+beside the complete HTTPS DNS destination, reviewed server path, and
+repository-owned `CertificateVerify` verdict only when both evidence graphs
+retain the same decoded leaf object. Byte equality alone is insufficient at
+this boundary: exact object identity prevents an independently decoded leaf
+from being substituted between the ordered record stream and the reviewed
+destination/path/signature graph. The admitted authentication evidence type is
+sealed by the repository, and the non-copyable result retains both complete
+inputs.
+
+This composition joins the authenticated Certificate bytes to the reviewed
+destination, path-derived RSA key, and server signature verdict, but it does
+not yet prove that the later ordered retry `CertificateVerify` callback used
+that same verdict, authenticate Finished, bind record epochs, enforce
+revocation freshness, perform I/O, authorize HTTP or OAuth transport, or open a
+network connection. Those ordered-transition, Finished, revocation, record,
+and transport compositions remain prerequisites, and concrete HTTPS and
+live-provider readiness remain unavailable.
+
+An authenticated ordered retry server `CertificateVerify` at the post-accept
+`ExpectFinished` position can now be decoded from the exact pending message and
+bound to the exact pre-message transcript snapshot. The helper decodes the
+final ClientHello's retained `signature_algorithms` extension under an explicit
+caller-owned scheme-count limit, requires the peer's exact wire identifier to
+occur in that offer, and then authorizes it through the caller's data-driven
+repository-owned signature-scheme policy. Success returns a non-copyable proof
+retaining the pending message, exact decoded `CertificateVerify`, exact offered
+scheme list, and policy-authorized RSA-PSS scheme. A detached transcript hash,
+ClientHello offer, message body, wire identifier, or algorithm policy cannot be
+substituted through this boundary.
+
+This proof establishes authenticated message provenance, exact pre-message
+transcript selection, `CertificateVerify` framing, final-offer membership, and
+data-driven algorithm authorization only. In particular, the framing grammar
+permits an empty signature vector, which later repository-owned cryptographic
+verification must reject. This slice does not derive or bind the reviewed leaf
+key, verify the signature, prove that the preceding certificate message and a
+reviewed path retain the same leaf, authenticate Finished, establish trust,
+verify a hostname, enforce revocation, select later epochs, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. Those
+repository-owned certificate, signature, trust, revocation, and transport
+compositions remain prerequisites, and concrete HTTPS and live-provider
+readiness remain unavailable.
+
+The authenticated ordered retry `CertificateVerify` proof can additionally be
+bound to one exact repository-owned RSA-PSS verification verdict. The
+composition requires the verifier's role to be `server`, its selected-
+transcript snapshot to equal the pending message's exact pre-message snapshot,
+its policy-authorized scheme to equal the scheme retained from the final
+ClientHello offer, and its complete decoded `CertificateVerify` message to
+equal the authenticated ordered message. Success returns non-copyable evidence
+retaining both complete proofs; callers cannot substitute a detached role,
+snapshot, algorithm identifier, signature, key verdict, or message body.
+
+This proof establishes repository-owned RSA-PSS authentication of the exact
+ordered retry server message and transcript snapshot only. The verifier's RSA
+key may still be caller supplied: this slice does not prove that it came from
+the preceding authenticated `Certificate` message, a reviewed server path, the
+requested DNS identity, or a reviewed trust root. It also does not authenticate
+Finished, enforce revocation, select later epochs, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. Those repository-owned
+certificate-to-key, path, hostname, trust, revocation, and transport
+compositions remain prerequisites, and concrete HTTPS and live-provider
+readiness remain unavailable.
 
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length

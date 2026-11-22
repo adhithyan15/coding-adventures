@@ -19,6 +19,11 @@ warrant dsp_filters v1
   assume environment:
     none
 
+  -- These Float APIs use different sample precisions across language ports.
+  -- Bytes-to-sample framing and resource units are not defined. Surviving
+  -- bounds are obligations, not evidence, until each export has a checked
+  -- encoding and cost model.
+
   -- All operands are public signal / filter coefficients.
   labels fir:
     signal public
@@ -47,69 +52,63 @@ warrant dsp_filters v1
   input fir.signal:
     hostile
     rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL
-    rejects len(signal) > 67108864 with FilterError.INVALID_COEFFICIENT
     ensures no_panic, terminates
   input fir.kernel:
     hostile
     rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL
-    rejects len(kernel) > 4194304 with FilterError.INVALID_COEFFICIENT
     ensures no_panic, terminates
 
   input fir_fft.signal:
     hostile
     rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL
-    rejects len(signal) > 67108864 with FilterError.INVALID_COEFFICIENT
     ensures no_panic, terminates
   input fir_fft.kernel:
     hostile
     rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL
-    rejects len(kernel) > 4194304 with FilterError.INVALID_COEFFICIENT
     ensures no_panic, terminates
 
   input iir.signal:
     hostile
     rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL
-    rejects len(signal) > 67108864 with FilterError.INVALID_COEFFICIENT
     ensures no_panic, terminates
   input iir.b:
     hostile
     rejects len(b) == 0 with FilterError.EMPTY_KERNEL
-    rejects len(b) > 4194304 with FilterError.INVALID_COEFFICIENT
     ensures no_panic, terminates
   input iir.a:
     hostile
     rejects len(a) == 0 with FilterError.EMPTY_KERNEL
-    rejects len(a) > 4194304 with FilterError.INVALID_COEFFICIENT
     ensures no_panic, terminates
 
   input design_low_pass.cutoff_norm:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
   input design_low_pass.num_taps:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
   input design_low_pass.window:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
 
   input design_high_pass.cutoff_norm:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
   input design_high_pass.num_taps:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
 
   input design_band_pass.low_norm:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
   input design_band_pass.high_norm:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
   input design_band_pass.num_taps:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
 
   -- Declared bounds: linear in N for direct/IIR, O(N log N) for fir_fft.
+
   bound fir:
     output <= len(signal) + len(kernel)
     steps <= 32 * len(signal) * len(kernel) + 4096
@@ -124,6 +123,23 @@ warrant dsp_filters v1
 
   bound iir:
     output <= len(signal)
-    steps <= 16 * len(signal) * max(len(b), len(a)) + 4096
-    heap <= 4 * len(signal) + 4096
+    steps <= 16 * len(signal) * imax(len(b), len(a)) + 4096
     depth <= 32
+
+  bound design_low_pass:
+    output <= 4 * num_taps
+    steps <= 64 * num_taps + 1024
+    heap <= 4 * num_taps + 1024
+    depth <= 16
+
+  bound design_high_pass:
+    output <= 4 * num_taps
+    steps <= 64 * num_taps + 1024
+    heap <= 4 * num_taps + 1024
+    depth <= 16
+
+  bound design_band_pass:
+    output <= 4 * num_taps
+    steps <= 64 * num_taps + 1024
+    heap <= 4 * num_taps + 1024
+    depth <= 16

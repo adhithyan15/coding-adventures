@@ -1,13 +1,16 @@
 [project]
 name = "coding-adventures-oscillator"
-version = "0.1.0"
+version = "0.2.0"
 description = "Virtual continuous oscillators and uniform samplers"
 requires-python = ">=3.9"
-dependencies = ["coding-adventures-trig"]
+dependencies = ["coding-adventures-trig>=0.3.0"]
+
+[tool.uv.sources]
+coding-adventures-trig = { path = "../trig", editable = true }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=oscillator --cov-report=term-missing --cov-fail-under=95"
+addopts = "-p no:platformdirs --cov=oscillator --cov-report=term-missing --cov-fail-under=95"
 
 [tool.coverage.run]
 source = ["src/oscillator"]

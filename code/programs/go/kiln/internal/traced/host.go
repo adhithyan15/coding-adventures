@@ -74,9 +74,33 @@ func (c *classifier) ephemeralMatch(p string) bool {
 	return false
 }
 
+// absentOK says an ABSENT probe of p is allowed by the absent-ok list.
+//
+// An exact probe of an entry is judged by the traced syscall result (the caller
+// has already established it was absent).  A probe of a CHILD of an entry (say
+// /sys/fs/selinux/enforce) is allowed only if the entry itself is absent on the
+// classifier's disk: Lstat of it gives ENOENT or ENOTDIR.  Any other answer
+// (present, EACCES, ...) means the entry is a real directory whose contents are
+// undeclared input, so the probe is a host-read (KILN04 D27, section 5.3).
+// An entry inside the fresh $HOME or TMPDIR is absent by construction (the
+// sandbox's tmpfs), and the disk is never asked beneath them (section 5.1).
 func (c *classifier) absentOK(p string) bool {
 	for _, a := range c.cfg.absentOK {
-		if covers(a, p) {
+		if p == a {
+			return true
+		}
+		if !covers(a, p) {
+			continue
+		}
+		// This shortcut relies on the fresh-tmpfs model: $HOME and TMPDIR start
+		// empty in the sandbox, so an entry beneath them is absent unless the
+		// action itself created it (isCreated handles that) or the host
+		// pre-populated it (the state-preloaded void catches a real
+		// pre-existing entry before any step runs).
+		if c.underTmp(a) {
+			return true
+		}
+		if _, err := c.cfg.FS.Lstat(a); err != nil && isNotExist(err) {
 			return true
 		}
 	}
@@ -93,15 +117,98 @@ func (c *classifier) observeVirtual(p string) {
 	switch {
 	case p == "/proc/self/status" || p == "/proc/self/stat":
 		c.reason("trace-visible:" + sanitize(p))
+	case procMagicBeyond(p):
+		// A magic link with more path after it: the name says nothing of the
+		// object (D28), whatever the ephemeral list matches.
+		c.reasonAt(rProc, p)
 	case c.ephemeralMatch(p):
 	default:
-		c.reason(rProc)
+		c.reasonAt(rProc, p)
 	}
+}
+
+// procParts splits a /proc or /dev/fd name into the components after
+// /proc/<pid|self|thread-self>.  /dev/fd is a link to /proc/self/fd, so
+// /dev/fd/N/x is /proc/self/fd/N/x.  ok is false for any other name.
+func procParts(p string) (rest []string, ok bool) {
+	parts := splitPath(p)
+	if len(parts) >= 2 && parts[0] == "dev" && parts[1] == "fd" {
+		return append([]string{"fd"}, parts[2:]...), true
+	}
+	if len(parts) < 3 || parts[0] != "proc" {
+		return nil, false
+	}
+	return parts[2:], true
+}
+
+// procMagicBeyond says p passes THROUGH a /proc magic link: cwd, root, exe,
+// fd/N, map_files/X or ns/X is followed by a further component.  Such a path
+// names whatever the link points at, which the lexical text does not show
+// (D28).  A magic link as the FINAL component (/proc/self/exe) is a plain
+// name here and is judged by the ephemeral list.  The scan covers every
+// depth, so /proc/self/task/5/cwd/x and /proc/self/task/root/x both count.
+func procMagicBeyond(p string) bool {
+	rest, ok := procParts(p)
+	if !ok {
+		return false
+	}
+	for i, n := range rest {
+		switch n {
+		case "cwd", "root", "exe":
+			if i < len(rest)-1 {
+				return true
+			}
+		case "fd", "map_files", "ns":
+			if i < len(rest)-2 {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// procMagicFinal says p's last component IS a magic link: cwd, root, exe,
+// fd/N, map_files/X or ns/X.  Opening one gives a descriptor on the link's
+// target, so the open needs strace's -y path to say what that is (D28).
+func procMagicFinal(p string) bool {
+	rest, ok := procParts(p)
+	if !ok || len(rest) == 0 {
+		return false
+	}
+	switch rest[len(rest)-1] {
+	case "cwd", "root", "exe":
+		return true
+	}
+	if len(rest) >= 2 {
+		switch rest[len(rest)-2] {
+		case "fd", "map_files", "ns":
+			return true
+		}
+	}
+	return false
+}
+
+// isXattrRead says the syscall reads extended attributes by path or fd.  The
+// parser tables them as metadata calls (trace/table.go), so stat and getxattr
+// reach observeHost alike; the ancestor rule tells them apart here.
+func isXattrRead(sys string) bool {
+	switch sys {
+	case "getxattr", "lgetxattr", "fgetxattr", "listxattr", "llistxattr", "flistxattr", "getxattrat", "listxattrat":
+		return true
+	}
+	return false
 }
 
 // observeHost applies the host-root rules to an out-of-repository path the
 // action did not create.
-func (c *classifier) observeHost(abs string, present bool) {
+//
+// Two rules keep the sandbox's scaffolding from being an input (KILN04 D39).
+// A present, non-listing look at a PROPER ANCESTOR of an anchor (checkout,
+// declared root, Home, Tmpdir, the literal prefix of an ephemeral or absent-ok
+// entry) learns only that node's type and metadata.  And an absent probe
+// strictly inside the fresh Home or Tmpdir is a constant: the tmpfs starts
+// empty and the trace says when the action made a name.
+func (c *classifier) observeHost(abs string, present, listing bool) {
 	if c.ephemeralMatch(abs) {
 		return
 	}
@@ -112,12 +219,68 @@ func (c *classifier) observeHost(abs string, present bool) {
 		// every run.  Only the node: nothing under it (section 5.5).
 		return
 	}
+	// Rule 1b rests on the sandbox mounting a FRESH tmpfs on Home and Tmpdir in
+	// every recording mode (internal/sandbox/plan.go), and on every host path it
+	// binds beneath them being a declared root here (image, tool or state), or a
+	// state root the recorder derives and verifies empty.  Both are pinned by
+	// internal/record/sandboxroots_test.go.
+	if !present && c.underTmp(abs) {
+		if c.underScratch(abs) {
+			c.noteSealedProbe(abs) // D43: refused at the end if a directory moved
+		}
+		return
+	}
+	// D43: the sealed new root holds nothing the plan did not mount, so an
+	// absent probe of a path outside the plan, or of a name nobody made inside
+	// a scratch tmpfs, is a constant of the plan.  A probe that FOUND something
+	// there contradicts the plan and falls through to host-read below.
+	if !present && c.sealedOn() && !c.sandboxHas(abs) {
+		c.noteSealedProbe(abs)
+		return
+	}
 	if r := c.rootOf(abs); r != nil {
 		c.observeRoot(r, abs, present)
 		return
 	}
+	// A derived state root (Config.HostBinds) starts empty, like a declared one
+	// (the recorder verifies it, stateRootEmpty), so an absent probe is a
+	// constant; a present look at one is host state and falls through.
+	if !present {
+		for _, b := range c.cfg.HostBinds {
+			if covers(b, abs) {
+				return
+			}
+		}
+	}
+	// An ancestor of an anchor, looked at without listing it and without
+	// reading extended attributes, shows its type and stat metadata only.  It
+	// must really be a DIRECTORY on the disk: prepare verifies only the
+	// checkout's own chain, so an ancestor of a declared root or a literal
+	// prefix could on some host be a symlink (readlink would show its target)
+	// or a regular file (an open and read would show its content), and those
+	// fall through to host-read.  A listing shows sibling names, which are host
+	// state, and also falls through.  A child of an ancestor (/home/go.work) is
+	// not an ancestor and is judged by the rules below.  An ancestor inside a
+	// declared root (nested anchors) was handled by the root's own rule above.
+	//
+	// And it must be a LOOK.  A write-class call (rename, rmdir, unlink, chmod,
+	// utimensat, ...) CHANGES the node, and moving or removing an ancestor of
+	// the checkout would let the action rebuild the path to it unobserved
+	// (KILN04 D40: `mv ~/work ~/y`, then a listing of ~/y/x is "own output"), so
+	// a write falls through to host-read, as it did before D39.  Every KindWrite
+	// call and every opening that can write runs with inWrite set.  A write that
+	// FAILED (mkdir -p's EEXIST on each existing prefix) changed nothing: it is
+	// an observation of the path, never a write (ops.go), so it stays a look.
+	if present && !listing && (!c.inWrite || !c.callOK) && !c.xattrCall && c.cfg.ancestors[abs] && c.lookup(abs).kind == KindDir {
+		return
+	}
 	if !present && c.absentOK(abs) {
 		return
+	}
+	if c.inWrite && c.callOK && c.cfg.ancestors[abs] {
+		// A write to an ancestor may have moved the checkout's own path: nothing
+		// said about where later writes landed can be trusted.
+		c.incomplete = true
 	}
 	c.reason("host-read:" + c.redact(abs))
 }
@@ -167,6 +330,13 @@ func (c *classifier) observeRoot(r *preparedRoot, abs string, present bool) {
 // out-of-repository write is to the action's own scratch space or fails on the
 // read-only filesystem; neither is an input.
 func (c *classifier) writeHost(abs string) {
+	if c.sandboxAbsent(abs) {
+		// D43: a call succeeded at a place the sealed root does not contain
+		// (it is read-only above the mounts), so the model is wrong, and
+		// nothing it says can be trusted.
+		c.reason("host-read:" + c.redact(abs))
+		return
+	}
 	if r := c.rootOf(abs); r != nil && r.kind == legacy.RootState {
 		c.reason("state-write:" + c.redact(abs))
 	}

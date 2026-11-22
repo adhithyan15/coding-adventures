@@ -1,0 +1,108 @@
+warrant audio_device_sink
+  error AudioError = INVALID_FORMAT | INVALID_SAMPLES | UNSUPPORTED_PLATFORM | BACKEND_UNAVAILABLE | BACKEND_FAILURE
+
+  model valid_rate(rate: Nat) -> Bool = rate > 0 and rate <= 384000
+  model valid_sample_count(count: Nat, rate: Nat) -> Bool = count <= 230400000 and count <= rate * 600
+  model sample_byte_size(count: Nat) -> Nat = count * 2
+
+  op validate_format(sample_rate_hz: Nat, channels: Nat, bit_depth: Nat) -> Result<Bool, AudioError>
+  op validate_buffer(sample_count: Nat, sample_rate_hz: Nat, channels: Nat, bit_depth: Nat) -> Result<Bool, AudioError>
+  op frame_count(samples_len: Nat, channels: Nat) -> Nat
+  op buffer_byte_size(sample_count: Nat) -> Result<Nat, AudioError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_format:
+    sample_rate_hz public
+    channels public
+    bit_depth public
+
+  labels validate_buffer:
+    sample_count public
+    sample_rate_hz public
+    channels public
+    bit_depth public
+
+  labels frame_count:
+    samples_len public
+    channels public
+
+  labels buffer_byte_size:
+    sample_count public
+
+  input validate_format.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 with AudioError.INVALID_FORMAT
+    rejects sample_rate_hz > 384000 with AudioError.INVALID_FORMAT
+    ensures no_panic, terminates
+  input validate_format.channels:
+    hostile
+    rejects channels != 1 with AudioError.INVALID_FORMAT
+    ensures no_panic, terminates
+  input validate_format.bit_depth:
+    hostile
+    rejects bit_depth != 16 with AudioError.INVALID_FORMAT
+    ensures no_panic, terminates
+
+  input validate_buffer.sample_count:
+    hostile
+    rejects sample_count > 230400000 with AudioError.INVALID_SAMPLES
+    ensures no_panic, terminates
+  input validate_buffer.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 with AudioError.INVALID_FORMAT
+    rejects sample_rate_hz > 384000 with AudioError.INVALID_FORMAT
+    ensures no_panic, terminates
+  input validate_buffer.channels:
+    hostile
+    rejects channels != 1 with AudioError.INVALID_FORMAT
+    ensures no_panic, terminates
+  input validate_buffer.bit_depth:
+    hostile
+    rejects bit_depth != 16 with AudioError.INVALID_FORMAT
+    ensures no_panic, terminates
+
+  input frame_count.samples_len:
+    hostile
+    ensures no_panic, terminates
+  input frame_count.channels:
+    hostile
+    ensures no_panic, terminates
+
+  input buffer_byte_size.sample_count:
+    hostile
+    rejects sample_count > 230400000 with AudioError.INVALID_SAMPLES
+    ensures no_panic, terminates
+
+  bound validate_format:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_buffer:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound frame_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound buffer_byte_size:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example mono_44100:
+    validate_format(44100, 1, 16) == Ok(true)
+  example zero_rate_rejected:
+    validate_format(0, 1, 16) == Err(AudioError.INVALID_FORMAT)
+  example mono_frames:
+    frame_count(44100, 1) == 44100
+  example valid_buffer_1s:
+    validate_buffer(44100, 44100, 1, 16) == Ok(true)
+  example oversized_buffer_rejected:
+    validate_buffer(601, 1, 1, 16) == Err(AudioError.INVALID_SAMPLES)
+  example byte_size_4:
+    buffer_byte_size(4) == Ok(8)

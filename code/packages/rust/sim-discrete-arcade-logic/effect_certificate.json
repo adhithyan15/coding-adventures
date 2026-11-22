@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/sim-discrete-arcade-logic",
-  "source_digest": "efc9ff2dc41bc4f0f6766de67a01d47caa313bc497e980ba318f94cc4f610e78",
+  "source_digest": "91dd9e0f88dd3e3045cdd2569395fe01aa49a1f8b70ff81b832f77b4dbca04c7",
   "manifest_digest": "36274d6a28f303164848b507497fa557528eeef4ae722cda0d4da712152fec8a",
   "declared_effects": [],
   "entry_points": [

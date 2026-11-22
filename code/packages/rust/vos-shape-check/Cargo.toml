@@ -1,0 +1,24 @@
+[package]
+name = "vos-shape-check"
+version = "0.1.0"
+edition = "2021"
+description = "Lexical component shape checker for the verified-OS program (VOS-D002, VOS03): SH1-SH15, SH17-SH19 and the class tag"
+# An evidence-only tool of the verified-OS program, not a published package (VOS-D104).
+publish = false
+
+[lib]
+name = "vos_shape_check"
+path = "src/lib.rs"
+
+[[bin]]
+name = "vos-shape-check"
+path = "src/main.rs"
+
+[dependencies]
+# Rust and TOML are read with the repository's grammar-driven crates (RS01,
+# toml.tokens/.grammar), never a hand-written lexer or parser.
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-toml-lexer = { path = "../toml-lexer" }
+coding-adventures-toml-parser = { path = "../toml-parser" }

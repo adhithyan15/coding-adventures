@@ -1,0 +1,38 @@
+# tls13-aes128-gcm-record
+
+`tls13-aes128-gcm-record` is the allocation-free record-protection composition
+for the repository-owned TLS 1.3 AES-128-GCM route. It binds one
+selected-suite-owned key/nonce reservation to the exact five-byte
+`TLSCiphertext` header, the fixed-memory AES-128-GCM AEAD, and a
+caller-authorized `TLSInnerPlaintext` policy.
+
+Sealing validates public policy and capacity before consuming a sequence,
+encodes content plus its protected type and padding in caller scratch,
+authenticates the exact outer header, appends the 16-byte tag, and clears the
+exact scratch prefix written after successful inner encoding on every
+subsequent return. Route and inner-encoding failures occur before this crate
+changes caller scratch. Opening validates one exact outer record and output
+capacity before consuming a sequence. Authentication failure consumes that
+sequence but releases no plaintext and leaves output unchanged. Successful
+opening returns a non-cloneable borrowed view; dropping it clears the opened
+prefix of caller storage.
+
+Only `TLS_AES_128_GCM_SHA256` is admitted. AES-256-GCM and
+ChaCha20-Poly1305 selections fail before nonce reservation. Callers must own
+distinct read and write states and choose the correct handshake or application
+traffic epoch.
+
+This crate does not derive traffic secrets, run a handshake, authenticate
+`CertificateVerify` or `Finished`, validate certificates, paths, names, trust,
+or revocation, update keys, read a stream, open a socket, authorize HTTP or
+OAuth, provide a TLS connector, or make concrete HTTPS available.
+
+## Development
+
+From `code/packages/rust`:
+
+```bash
+cargo test -p tls13-aes128-gcm-record
+cargo clippy -p tls13-aes128-gcm-record --all-targets -- -D warnings
+RUSTDOCFLAGS="-D warnings" cargo doc -p tls13-aes128-gcm-record --no-deps
+```

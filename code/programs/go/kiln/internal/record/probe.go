@@ -58,7 +58,9 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"unicode/utf8"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
@@ -107,6 +109,13 @@ type ProbeRunRecord struct {
 	Exit        int      `json:"exit"`
 	TraceBytes  int64    `json:"trace_bytes"`
 	TraceSHA256 string   `json:"trace_sha256"`
+	// Wall is how long the probe's strace run took, kept IN MEMORY ONLY for the
+	// G2 census (KILN04 section 4.9: parse time over step wall time).  It is
+	// tagged json:"-" on purpose: a wall time differs on every run, so one in a
+	// sealed file would make pre/probes.json (and the digest that covers it)
+	// non-reproducible.  EncodeProbes never writes it and DecodeProbes always
+	// leaves it zero; TestProbeWallIsNeverSealed holds that line.
+	Wall time.Duration `json:"-"`
 }
 
 // ProbeReport is pre/probes.json.
@@ -118,9 +127,47 @@ type ProbeReport struct {
 	// Shadowed are the host mount points the shadow probe looked beneath.
 	Shadowed []string         `json:"shadowed"`
 	Runs     []ProbeRunRecord `json:"runs"`
-	// Toolchains is reserved for the toolchain probes (PR 3); it is empty here,
-	// and a decoder of this version refuses anything else.
-	Toolchains []json.RawMessage `json:"toolchains"`
+	// Toolchains are the results of the toolchain probes (probe_toolchain.go):
+	// one per probed tool, sorted by tool name, as Traced.Probes reports them.
+	// Empty for a shard with no action.
+	Toolchains []ToolchainProbe `json:"toolchains"`
+}
+
+// ToolchainProbe is one tool's probe result, sealed. Status is one of the
+// legacy.Probe* statuses; Detail is the normalised excerpt of a mismatch's
+// output and is empty for every other status.
+type ToolchainProbe struct {
+	Tool   string `json:"tool"`
+	Status string `json:"status"`
+	Detail string `json:"detail,omitempty"`
+}
+
+// MaxToolchainProbes bounds the list a report may carry (one per tool name of
+// toolchains.json; a bigger list is not a file this recorder wrote).
+const MaxToolchainProbes = 1024
+
+// checkToolchains requires the toolchain list to be strict: sorted by tool,
+// every tool a plain name, every status known, a detail only on a mismatch.
+func checkToolchains(list []ToolchainProbe) error {
+	if len(list) > MaxToolchainProbes {
+		return fmt.Errorf("probes: %d toolchain probes (at most %d)", len(list), MaxToolchainProbes)
+	}
+	for i, t := range list {
+		switch {
+		case t.Tool == "" || len(t.Tool) > 128 || printable(t.Tool) != t.Tool:
+			return fmt.Errorf("probes: toolchain probe %d: %q is not a plain tool name", i, printable(t.Tool))
+		case i > 0 && list[i-1].Tool >= t.Tool:
+			return fmt.Errorf("probes: toolchain probes are not strictly sorted at %q", printable(t.Tool))
+		case t.Status != legacy.ProbeOK && t.Status != legacy.ProbeAbsent && t.Status != legacy.ProbeRefused &&
+			t.Status != legacy.ProbeMismatch && t.Status != legacy.ProbeTimedOut:
+			return fmt.Errorf("probes: toolchain probe %q has status %q", printable(t.Tool), printable(t.Status))
+		case t.Detail != "" && t.Status != legacy.ProbeMismatch:
+			return fmt.Errorf("probes: toolchain probe %q has a detail but status %q", printable(t.Tool), t.Status)
+		case len(t.Detail) > MaxGateBytes || !utf8.ValidString(t.Detail) || traced.Sanitize(t.Detail) != t.Detail:
+			return fmt.Errorf("probes: toolchain probe %q: the detail is not printable text of at most %d bytes", printable(t.Tool), MaxGateBytes)
+		}
+	}
+	return nil
 }
 
 // ProbeInput is what the structure probe is given. The hook
@@ -327,8 +374,8 @@ func CheckProbeReport(cfg *sandbox.Config, rep ProbeReport, actions []string) er
 	if rep.Schema != ProbesSchema {
 		return fmt.Errorf("probes: schema %q", printable(rep.Schema))
 	}
-	if len(rep.Toolchains) != 0 {
-		return fmt.Errorf("probes: toolchains must be empty in this version")
+	if err := checkToolchains(rep.Toolchains); err != nil {
+		return err
 	}
 	if len(rep.Shadowed) > MaxShadowed {
 		return fmt.Errorf("probes: %d shadowed mount points (at most %d)", len(rep.Shadowed), MaxShadowed)
@@ -346,7 +393,7 @@ func CheckProbeReport(cfg *sandbox.Config, rep ProbeReport, actions []string) er
 		}
 	}
 	if rep.Action == "" {
-		if len(actions) != 0 || len(rep.Runs) != 0 || len(rep.Shadowed) != 0 {
+		if len(actions) != 0 || len(rep.Runs) != 0 || len(rep.Shadowed) != 0 || len(rep.Toolchains) != 0 {
 			return fmt.Errorf("probes: no action, but the shard runs %d and the report holds runs", len(actions))
 		}
 		return nil
@@ -393,7 +440,7 @@ func EncodeProbes(rep ProbeReport) ([]byte, error) {
 		rep.Runs = []ProbeRunRecord{}
 	}
 	if rep.Toolchains == nil {
-		rep.Toolchains = []json.RawMessage{}
+		rep.Toolchains = []ToolchainProbe{}
 	}
 	for i := range rep.Runs {
 		if rep.Runs[i].Argv == nil {

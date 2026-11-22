@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/repository-rust-fixed-point-exact-inputs",
+  "domain": "source_collection",
+  "summary": "The Rust fixed-point consumer collects only its six exact tracked Warrant, corpus, and Cargo inputs; lookalikes and an untracked credential are excluded.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "source_collection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "mode": "repository_boundary",
+      "language": "rust",
+      "package_root": "code/packages/rust/fixed-point",
+      "boundary_sha256": "43dcbadfc86dd1a7d010b7e57d1b9958793d5ae32547b2da8ccab7f6bc37dd64",
+      "candidates": [
+        {
+          "path": ".cargo/config.toml",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "5b7461726765742e7838365f36342d70632d77696e646f77732d6d7376635d0a6c696e6b6572203d2022727573742d6c6c64220a"
+        },
+        {
+          "path": "code/packages/rust/.cargo/config.toml",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "5b7461726765742e7838365f36342d70632d77696e646f77732d6d7376635d0a6c696e6b6572203d2022727573742d6c6c64220a"
+        },
+        {
+          "path": "code/packages/rust/.cargo/credentials.toml",
+          "kind": "file",
+          "tracked": false,
+          "content_hex": "746f6b656e203d20226e6f742d612d7265616c2d736563726574220a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.lock",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "76657273696f6e203d20340a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.lock.bak",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "6e6561726279206c6f636b0a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.toml",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "5b776f726b73706163655d0a7265736f6c766572203d202232220a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.toml.bak",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "6e6561726279206d616e69666573740a"
+        },
+        {
+          "path": "code/specs/fixed-point.warrant",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "6d6f64656c2066697865645f706f696e745f70726f62652829202d3e20426f6f6c203d20747275650a"
+        },
+        {
+          "path": "code/specs/fixed-point.warrant.bak",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "6e65617262792057617272616e740a"
+        },
+        {
+          "path": "code/specs/fixtures/fixed-point-q16-v1/cases.json",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "7b22736368656d61223a22636f64696e672d616476656e74757265732f66697865642d706f696e742d7131362d7631222c22766563746f7273223a5b5d7d0a"
+        },
+        {
+          "path": "code/specs/fixtures/fixed-point-q16-v10/cases.json",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "6e656172627920666978747572650a"
+        }
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/repository-rust-fixed-point-exact-inputs",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {
+      "files": [
+        {
+          "path": ".cargo/config.toml",
+          "digest": "81dad96badab5e1bfa86cf4961fd8236f03c5d0659621e6d3d4d7a0b62743e5a"
+        },
+        {
+          "path": "code/packages/rust/.cargo/config.toml",
+          "digest": "81dad96badab5e1bfa86cf4961fd8236f03c5d0659621e6d3d4d7a0b62743e5a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.lock",
+          "digest": "083791b01c1a67ae66aca99070c9ee48082d04307473d494376e6de7cf9a654a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.toml",
+          "digest": "e53acc6945f71e4686587412549ee8a82c8f7516026e3805828243f34ce1d072"
+        },
+        {
+          "path": "code/specs/fixed-point.warrant",
+          "digest": "5ad11ac703161eec2bd324f936dc1b7e4a0499d351a3b04c13e08f7a2f7a004f"
+        },
+        {
+          "path": "code/specs/fixtures/fixed-point-q16-v1/cases.json",
+          "digest": "91b921ecd9702a46865eeb8aaea88f880a4225369da054511e5eb264f5bc0438"
+        }
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

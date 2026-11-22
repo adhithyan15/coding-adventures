@@ -2,9 +2,10 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
+    globalSetup: ["./tests/setup-cli.mjs"],
     // Several suites start real processes: git (tests/gitdiff.test.ts builds
-    // a repository with about ten git calls) and the CLI itself through
-    // node + tsx (tests/resolver.test.ts gives that child a 30 s budget).
+    // a repository with about ten git calls) and the compiled CLI (the two
+    // fixture-bounded child processes retain their own 5 s limits).
     // On a hosted Windows runner each process start costs hundreds of
     // milliseconds, so those tests ran 5.2 s and failed vitest's 5 s default
     // with no assertion failing. The per-test limit matches the 30 s budget

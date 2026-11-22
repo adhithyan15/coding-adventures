@@ -3,7 +3,7 @@
     "bounded-set": 506572,
     "full": 65537
   },
-  "manifest_sha256": "86daba38fa6f88ab2a4dedd5d2d5143a365024f6225286a09f5bcaee603fdfc9",
+  "manifest_sha256": "0e649b4f26d6cbd1fb35726161a230abcb07cacb7dc18f65fb0aecf8c88b0181",
   "module": "ct_compare",
   "note": "Suite-level 'exhaustive' counts conflate full, bounded-set and sample domains until backlog LP-012 lands; use cases_by_label, not the manifest's exhaustive total, as the headline.",
   "package": "typescript/ct-compare",

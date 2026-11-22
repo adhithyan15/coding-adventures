@@ -1,0 +1,44 @@
+[package]
+name = "vos-manifest"
+version = "0.1.0"
+edition = "2021"
+description = "Pure parsers and document assembly for the verified-OS program (VOS-033, VOS02): contract.vos, .part admission, the generated-document marker skeleton and claim digests"
+# An evidence-only tooling library of the verified-OS program, not a published package (VOS-D104, checked by `vos-link check-publish`).
+publish = false
+
+[lib]
+name = "vos_manifest"
+path = "src/lib.rs"
+
+[dependencies]
+# Text formats are read with the repository's grammar-driven crates (the
+# `vos_contract` and `vos_document` pairs under code/grammars), never a
+# hand-written lexer or parser.
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+# Warrant text is parsed and type-checked only by the Warrant crate.
+coding_adventures_warrant_grammar = { path = "../warrant-grammar" }
+coding_adventures_sha256 = { path = "../sha256" }
+
+# A test-only edge (VOS-D058): the tests read the real contract package's files
+# (`include_bytes!` / copies), and the build tool selects a package's tests by its Cargo
+# dependency edges, so an edit to a `.part` or `contract.vos` must select them.
+[dev-dependencies]
+vos-sched-contract = { path = "../vos-sched-contract" }
+
+[[test]]
+name = "grammars"
+path = "tests/grammars.rs"
+
+[[test]]
+name = "contract"
+path = "tests/contract.rs"
+
+[[test]]
+name = "parts_and_documents"
+path = "tests/parts_and_documents.rs"
+
+[[test]]
+name = "warrant"
+path = "tests/warrant.rs"

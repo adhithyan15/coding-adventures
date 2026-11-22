@@ -5,7 +5,9 @@ import {
   EmptySignalError,
   InvalidInputError,
   KernelTooLargeError,
+  safeFormatValue,
   validateFloats,
+  validateSequence,
 } from "./errors.js";
 import { ConvMode, parseConvMode } from "./types.js";
 
@@ -14,7 +16,7 @@ import { ConvMode, parseConvMode } from "./types.js";
  */
 export function nextPow2(n: number): number {
   if (!Number.isSafeInteger(n)) {
-    throw new InvalidInputError(`n must be a safe integer; got ${n}`);
+    throw new InvalidInputError(`n must be a safe integer; got ${safeFormatValue(n)}`);
   }
   if (n <= 1) {
     return 1;
@@ -37,25 +39,8 @@ export function fftConvolve(
   kernel: ArrayLike<number>,
   mode: ConvMode | string = ConvMode.FULL
 ): Float64Array {
-  const n = signal.length;
-  const k = kernel.length;
-
-  if (n === 0) {
-    throw new EmptySignalError("signal must be non-empty");
-  }
-  if (k === 0) {
-    throw new EmptyKernelError("kernel must be non-empty");
-  }
-  if (n > MAX_SAMPLES) {
-    throw new InvalidInputError(
-      `signal length ${n} exceeds MAX_SAMPLES ${MAX_SAMPLES}`
-    );
-  }
-  if (k > MAX_KERNEL_LEN) {
-    throw new InvalidInputError(
-      `kernel length ${k} exceeds MAX_KERNEL_LEN ${MAX_KERNEL_LEN}`
-    );
-  }
+  const n = validateSequence(signal, "signal", MAX_SAMPLES, EmptySignalError);
+  const k = validateSequence(kernel, "kernel", MAX_KERNEL_LEN, EmptyKernelError);
 
   const cMode = parseConvMode(mode);
   validateFloats(signal, "signal");
@@ -91,8 +76,16 @@ export function fftConvolve(
     kerPadded[j] = Number(kernel[j]);
   }
 
-  const sigSpec = rfftScalar(sigPadded);
-  const kerSpec = rfftScalar(kerPadded);
+  let sigSpec: Float64Array;
+  let kerSpec: Float64Array;
+  try {
+    sigSpec = rfftScalar(sigPadded);
+    kerSpec = rfftScalar(kerPadded);
+  } catch (err) {
+    throw new InvalidInputError(
+      `FFT failed during fftConvolve: ${err instanceof Error ? err.message : safeFormatValue(err)}`
+    );
+  }
 
   const numBins = (fftLen >> 1) + 1;
   const prodSpec = new Float64Array(numBins * 2);
@@ -102,11 +95,25 @@ export function fftConvolve(
     const imS = sigSpec[2 * b + 1];
     const reK = kerSpec[2 * b];
     const imK = kerSpec[2 * b + 1];
-    prodSpec[2 * b] = reS * reK - imS * imK;
-    prodSpec[2 * b + 1] = reS * imK + imS * reK;
+    const re = reS * reK - imS * imK;
+    const im = reS * imK + imS * reK;
+    if (!Number.isFinite(re) || !Number.isFinite(im)) {
+      throw new InvalidInputError(
+        `FFT convolution product overflowed to non-finite value at bin ${b}`
+      );
+    }
+    prodSpec[2 * b] = re;
+    prodSpec[2 * b + 1] = im;
   }
 
-  const reconstructed = irfftScalar(prodSpec, fftLen);
+  let reconstructed: Float64Array;
+  try {
+    reconstructed = irfftScalar(prodSpec, fftLen);
+  } catch (err) {
+    throw new InvalidInputError(
+      `IFFT failed during fftConvolve: ${err instanceof Error ? err.message : safeFormatValue(err)}`
+    );
+  }
   const fullResult = reconstructed.slice(0, fullLen);
 
   if (cMode === ConvMode.FULL) {

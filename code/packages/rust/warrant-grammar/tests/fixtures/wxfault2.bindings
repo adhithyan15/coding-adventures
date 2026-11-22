@@ -1,0 +1,17 @@
+package wx_fault2_subject
+revision 0.0.0
+spec code/packages/rust/warrant-grammar/tests/fixtures/wxfault2.warrant
+output code/packages/rust/warrant-grammar/tests/generated/wxfault2_evidence.rs
+seed 0x57584641554c5432
+property_cases 64
+fuzz_iterations 32
+negctl_fuzz_iterations 32
+exhaustive_budget 3000000
+struct Nested path=wx_fault2_subject::Nested fields=enabled:bool,code:u8
+struct Status path=wx_fault2_subject::Status fields=ready:bool,visible:bool,nested:Nested,code:u8
+op direct export=direct args=bool,bool,Nested,u8 faults=bool-field-flip
+op wrapped export=wrapped args=bool,bool,bool,Nested,u8 ret=Status errors=wx_fault2_subject::StatusError/Rejected=REJECTED faults=bool-field-flip
+op optional export=optional args=bool,bool,bool,Nested,u8 ret=opt<Status> faults=bool-field-flip
+op plain export=plain args=bool,bool,Nested,u8 ret=Status faults=field-zero
+op numeric export=numeric args=bool,bool,Nested,u8 ret=Status faults=field-flip
+op both export=both args=bool,bool,Nested,u8 ret=Status faults=field-flip,bool-field-flip

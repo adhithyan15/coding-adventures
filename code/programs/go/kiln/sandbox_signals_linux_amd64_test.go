@@ -33,6 +33,7 @@ import (
 type stracedRun struct {
 	f       *sandboxFixture
 	tr      *trace.Trace
+	refusal *trace.Error  // set by runStracedOr when a tolerated refusal ended the parse
 	stdout  string        // what the step wrote to its descriptor 1 (logged, never an error)
 	stderr  string        // and to its descriptor 2
 	data    string        // the data file the script may read
@@ -72,6 +73,23 @@ func (r *stracedRun) tail(n int) string {
 // refused one, each cut short, so the next fix needs no second CI run.
 func runStraced(t *testing.T, script string) *stracedRun {
 	t.Helper()
+	return runStracedWith(t, script, nil)
+}
+
+// runStracedWith is runStraced with a hook that prepares the fixture (put a
+// helper binary in the checkout, say) before the step runs.  "{pkg}" in the
+// script is the checkout directory the step starts in.
+func runStracedWith(t *testing.T, script string, setup func(f *sandboxFixture)) *stracedRun {
+	t.Helper()
+	return runStracedOr(t, script, setup, nil)
+}
+
+// runStracedOr is runStracedWith that lets the caller accept some refusals of
+// the trace: when tolerate says yes to a refusal, the run is returned with
+// refusal set and tr nil, for the caller to judge.  Any other refusal fails the
+// test as before.
+func runStracedOr(t *testing.T, script string, setup func(f *sandboxFixture), tolerate func(*trace.Error) bool) *stracedRun {
+	t.Helper()
 	straceBin, err := exec.LookPath("strace")
 	if err != nil {
 		skipOrFail(t, "strace is not installed")
@@ -101,7 +119,11 @@ func runStraced(t *testing.T, script string) *stracedRun {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if setup != nil {
+		setup(f)
+	}
 	script = strings.ReplaceAll(script, "{data}", data)
+	script = strings.ReplaceAll(script, "{pkg}", f.pkg)
 	// The step's descriptors 1 and 2 are pipes the harness owns (fds 3 and 4 of
 	// strace, as the `record step` supervisor does), so what the step prints
 	// (a shell's "Killed" / "Terminated" job notice, "yes: Broken pipe") is
@@ -165,6 +187,7 @@ func runStraced(t *testing.T, script string) *stracedRun {
 		t.Fatal(err)
 	}
 	defer fh.Close()
+	probeTraceWall(t, "signals", r.trf, r.elapsed)
 	r.tr, err = trace.ParseOptions(fh, f.pkg, trace.Options{HelperRoot: true, HelperExe: f.exe})
 	if err != nil {
 		raw, _ := os.ReadFile(r.trf)
@@ -173,6 +196,10 @@ func runStraced(t *testing.T, script string) *stracedRun {
 		var te *trace.Error
 		if errors.As(err, &te) {
 			at = te.Line
+			if tolerate != nil && tolerate(te) {
+				r.tr, r.refusal = nil, te
+				return r
+			}
 		}
 		lo, hi := at-15, at+5
 		if lo < 0 {

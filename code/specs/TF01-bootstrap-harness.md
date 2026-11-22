@@ -266,9 +266,56 @@ Each lane's BUILD runs:
 2. the self-corpus in sabotage mode, whose output must contain at least one
    line starting with `not ok `.
 
-The second check is done **outside** the harness, with `grep` or `findstr` on
-its output. A harness that could not report failure would fail the BUILD
-there. The check never relies on the harness grading itself.
+The second check is done **outside** the harness, by the shared checker
+`code/scripts/warrant_negctl.py` (WD-HARN1c), which runs the sabotage command
+itself and reads the TAP it prints. A harness that could not report failure
+would fail the BUILD there. The check never relies on the harness grading
+itself.
+
+The checker's pass rule is the normative form. A negative control passes only
+if all of these hold:
+
+1. the command exits non-zero (never a particular value: `cargo test` reports
+   101 for any failing binary, `go run` reports 1, and the runner itself uses
+   1, 2 and 70);
+2. the output has exactly one TAP plan line `1..N`;
+3. at least one line starts with `not ok <number>` and is not a `# TODO` directive (a TODO failure is expected in TAP);
+4. no `Bail out!` appears anywhere in stdout or stderr (unanchored); and
+5. the test points (`ok <n>` / `not ok <n>` at column 0) are numbered exactly 1..N in order.
+
+The runner writes the plan before running any test, so a crash part-way
+through leaves a plan with too few points, and a harness that never started
+leaves none. A filtered run prints the plan of the filtered suite, which is
+what makes rule 5 usable. On failure the checker prints the captured output.
+The command is run without a shell and its output is held in memory, so the
+part of a BUILD line after the script name is the same on `sh` and `cmd`, and no
+temporary file can go stale. The environment prefix (`VAR=x` versus
+`set VAR=x&&`) and the interpreter (`python3` versus `python`) still differ.
+The checker bounds the command itself: after `WARRANT_NEGCTL_TIMEOUT_SECS`
+(default 1200, at most 86400) it kills the command's whole process tree (its own session on
+Unix, `taskkill /T` on Windows) and fails the control with the output printed so
+far, because the checker prints only when the command finishes and a silent hang
+otherwise costs the build tool's 90-minute per-command limit with no diagnosis
+(a Windows `rust/lzw` hang on PR #19613 left an empty log). The same kill runs if the checker itself is terminated (SIGTERM, Ctrl-C), since
+the command runs in its own session and would otherwise be orphaned. The build
+tool's per-command timeout remains the outer backstop. Adopters call it as
+
+```
+WARRANT_EVIDENCE_FAULT=F WARRANT_EVIDENCE_FILTER=T python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p P --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=F&& set WARRANT_EVIDENCE_FILTER=T&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p P --test warrant_evidence
+```
+
+(Unix `BUILD`/`BUILD_linux`, then `BUILD_windows`), and declare
+`# needs-toolchain: python`. Every VER-owned Rust adopter and `typescript/test-bootstrap`
+are on the checker. Lines of the older shapes (`| grep -q '^not ok '`,
+`| findstr /B /C:"not ok "`, the `awk` and `%TEMP%` forms) remain in exactly two
+places: `go/ct-compare` (its Go runner prints an unnumbered, plan-less TAP-like
+stream that the checker's plan and numbering rules would reject, so that lane
+stays on the old form until its runner is fixed) and the `vos-sched-*` packages,
+which are owned by
+the VOS workstream, which migrates its own lines with the recipe at the end of
+the script's docstring. The checker's own tests run from
+`rust/warrant-grammar`'s BUILD on every OS.
 
 ## 7. What L0 deliberately is not
 
@@ -406,7 +453,8 @@ over the self-corpus the set of `not ok` ids is **exactly** the set of
 (`splitmix64`, `fnv1a64`, `shuffle`, `sub_seed`, `tfv_reject`,
 `failure_id_valid`) still reports `ok`. The `l0_contracts` test checks this
 set equality against the corpus itself, and the BUILD checks it from outside
-with `grep`.
+with `grep` (the self-corpus lines predate the shared checker of section 6 and
+migrate with the other older shapes).
 
 ### 8.5 Randomness
 

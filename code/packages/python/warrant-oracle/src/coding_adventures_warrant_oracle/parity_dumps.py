@@ -1,0 +1,185 @@
+"""The committed *evaluation* and *fault* dumps of slice S10t-1 (VER04r section 13, 16.10 R11).
+
+S10a committed a **lowering dump** (``lowering_dump``) so that the generator's S10b could reproduce
+the oracle's lowering byte for byte.  Slice S10t-1 evaluates ``ir.tuple`` and instantiates the
+``ir.tuple`` fault templates, so it commits two more parity views of the synthetic document
+``tests/fixtures/tuple-forms-v1/tuple_forms_v1.warrant``, which slice S10t-2 (the Rust generator)
+must reproduce byte for byte:
+
+``warrant-evaluation-parity-v1`` (:func:`evaluation_view`)
+    what the oracle *evaluates*: per suite its levels (``requires``), binders with their resolved
+    domain descriptors, stream header, product, ``cases``, ``discarded``, ``expected_calls``,
+    ``wraps``, ``ir_cost``, every chunk line and every digest; the examples, the ``omitted_examples``
+    and ``cases.tfv`` (the TFV ``L<n>`` form of a tuple).  It is the parity view of
+    ``dump_oracle_enumeration.py`` extended with the tuple-specific rows.
+``warrant-fault-parity-v1`` (:func:`faults_view`)
+    the ``faults`` rows (the IR JSON of every template, **normative** for the composite faults
+    ``ok-as-err``, ``drop-consumed``, ``swap-components`` and the tuple-payload ``missing-error``,
+    section 16.10 R11) and the ``controls`` rows twice: ``controls_shipped``, with the fault-evaluation
+    gate as shipped (``ir.core`` only: a fault needing ``ir.tuple`` or ``ir.fixed`` has ``deferred``
+    witnesses), and ``controls_gate_on`` with ``ir.tuple`` evaluated (the witness search runs:
+    ``chunk`` witnesses; a fault that also needs ``ir.fixed`` stays ``deferred``).  The second view
+    is what the flip (S10c, [D29]) turns on; until then the generator reaches it only through a
+    library parameter used by its tests, exactly as the oracle's ``derive(..., implemented=...)``.
+
+Both are canonical JSON (:func:`.corpus_v2.canonical`) and carry no generator name or version.
+"""
+
+from __future__ import annotations
+
+from .corpus_v2 import canonical, chunk_file_name, derive
+
+EVALUATION_SCHEMA = "warrant-evaluation-parity-v1"
+FAULT_SCHEMA = "warrant-fault-parity-v1"
+#: The closed gate the dumps call "shipped": ``ir.core`` only.  An explicit literal, not
+#: ``faults.IMPLEMENTED``, so that opening the shipped gate (the atomic flip, [D29]) cannot move a
+#: committed dump.
+GATE_CLOSED = ("ir.core",)
+#: The gate of ``controls_gate_on`` of the ``ir.tuple`` fixture (slice S10t-1): ``ir.core`` and
+#: ``ir.tuple`` evaluated, ``ir.fixed`` not.
+GATE_ON = ("ir.core", "ir.tuple")
+#: The test-only **open** gate of slice S10c-1: every level this oracle evaluates.  The flip (S10c,
+#: [D29]) turns it on in the shipped path; until then only a library parameter reaches it.
+GATE_OPEN = ("ir.core", "ir.fixed", "ir.tuple")
+#: The gates of slice S11c-1 (``tests/fixtures/data-eval-v1``): the gate *before* it, where every ``ir.data`` fault
+#: is ``deferred`` (the generator's gate until its S11c-2), and the gate it opens, every level this oracle evaluates.
+#: Explicit literals, not ``faults.IMPLEMENTED``, so a later gate cannot move a committed dump.
+GATE_BEFORE_DATA = ("ir.core", "ir.fixed", "ir.tuple")
+GATE_DATA = ("ir.core", "ir.data", "ir.fixed", "ir.tuple")
+_GENERATOR = {"name": "parity-dump", "version": "0"}
+
+#: Suite-row keys of the evaluation view, in no particular order (the writer sorts).
+_SUITE_KEYS = (
+    "id",
+    "claim",
+    "kind",
+    "requires",
+    "binders",
+    "demoted",
+    "domain_label",
+    "stream",
+    "result_type",
+    "product",
+    "chunks",
+    "cases",
+    "discarded",
+    "expected_calls",
+    "wraps",
+    "ir_cost",
+    "slim_chunks",
+    "slim_inputs_sha256",
+    "slim_expected_sha256",
+    "inputs_sha256",
+    "expected_sha256",
+    "v1_inputs_sha256",
+    "v1_expected_sha256",
+)
+
+
+def shipped_derivation(spec_bytes: bytes, profile_raw: bytes, spec_ref: str):
+    """``derive`` under the explicit closed gate :data:`GATE_CLOSED`; both views start from it, so a
+    caller that writes both derives once (``derived=`` / ``shipped=``)."""
+    return derive(spec_bytes, profile_raw, spec_ref=spec_ref, generator=_GENERATOR, implemented=GATE_CLOSED)
+
+
+def evaluation_view(
+    spec_bytes: bytes,
+    profile_raw: bytes,
+    spec_ref: str = "tuple_forms_v1.warrant",
+    derived=None,
+) -> dict:
+    """The parity view of what the oracle evaluates (see the module docstring)."""
+    if derived is None:
+        derived = shipped_derivation(spec_bytes, profile_raw, spec_ref)
+    corpus = derived.corpus
+    suites = {}
+    for row in corpus["suites"]:
+        view = {key: row[key] for key in _SUITE_KEYS if key in row}
+        text = derived.chunk_files[chunk_file_name(row["claim"])].decode("ascii")
+        view["chunk_lines"] = text.splitlines()
+        suites[row["claim"]] = view
+    out = {
+        "schema": EVALUATION_SCHEMA,
+        "module": corpus["module"],
+        "document": corpus["document"],
+        "chunk_size": corpus["chunk_size"],
+        "budget": corpus["budget"],
+        "max_ir_cost": corpus["max_ir_cost"],
+        "levels": corpus["levels"],
+        "ops": {name: row["requires"] for name, row in corpus["ops"].items()},
+        "suites": suites,
+        "examples": corpus["examples"],
+        "cases_tfv": derived.tfv.decode("utf-8"),
+    }
+    if "omitted_examples" in corpus:
+        out["omitted_examples"] = corpus["omitted_examples"]
+    return out
+
+
+def faults_view(
+    spec_bytes: bytes,
+    profile_raw: bytes,
+    spec_ref: str = "tuple_forms_v1.warrant",
+    gate: str = "tuple",
+    shipped=None,
+) -> dict:
+    """The parity view of the fault rows and the controls under both gates (module docstring).
+
+    ``gate`` is ``"tuple"`` (the S10t-1 fixture: ``ir.tuple`` evaluated, ``ir.fixed`` not) or
+    ``"fixed"`` (the S10c-1 fixture: the open gate :data:`GATE_OPEN`, which also records both gates
+    as lists so that a reader sees what ``controls_shipped`` and ``controls_gate_on`` mean) or ``"data"`` (the
+    S11c-1 fixture: ``controls_shipped`` is the gate *before* the slice, :data:`GATE_BEFORE_DATA`, where an
+    ``ir.data`` fault is ``deferred``, and ``controls_gate_on`` the gate it opens, :data:`GATE_DATA`; both are listed).
+    """
+    gate_on = {"tuple": GATE_ON, "fixed": GATE_OPEN, "data": GATE_DATA}[gate]
+    if shipped is None:
+        if gate == "data":
+            shipped = derive(
+                spec_bytes, profile_raw, spec_ref=spec_ref, generator=_GENERATOR, implemented=GATE_BEFORE_DATA
+            )
+        else:
+            shipped = shipped_derivation(spec_bytes, profile_raw, spec_ref)
+    on = derive(
+        spec_bytes,
+        profile_raw,
+        spec_ref=spec_ref,
+        generator=_GENERATOR,
+        implemented=gate_on,
+    )
+    assert shipped.corpus["faults"] == on.corpus["faults"]  # the rows never depend on the gate
+    view = _faults_dict(shipped, on)
+    if gate in ("fixed", "data"):
+        view["gate_shipped"] = list(GATE_BEFORE_DATA if gate == "data" else GATE_CLOSED)
+        view["gate_on"] = list(gate_on)
+    return view
+
+
+def _faults_dict(shipped, on) -> dict:
+    return {
+        "schema": FAULT_SCHEMA,
+        "module": shipped.corpus["module"],
+        "faults": shipped.corpus["faults"],
+        "controls_shipped": shipped.corpus["controls"],
+        "controls_gate_on": on.corpus["controls"],
+        "accepted_blind_faults": shipped.corpus["accepted_blind_faults"],
+        "levels_shipped": shipped.corpus["levels"],
+        "levels_gate_on": on.corpus["levels"],
+    }
+
+
+def dump_evaluation(
+    spec_bytes: bytes, profile_raw: bytes, spec_ref: str = "tuple_forms_v1.warrant", derived=None
+) -> bytes:
+    """:func:`evaluation_view` in the canonical writer (what is committed)."""
+    return canonical(evaluation_view(spec_bytes, profile_raw, spec_ref, derived))
+
+
+def dump_faults(
+    spec_bytes: bytes,
+    profile_raw: bytes,
+    spec_ref: str = "tuple_forms_v1.warrant",
+    gate: str = "tuple",
+    shipped=None,
+) -> bytes:
+    """:func:`faults_view` in the canonical writer (what is committed)."""
+    return canonical(faults_view(spec_bytes, profile_raw, spec_ref, gate, shipped))

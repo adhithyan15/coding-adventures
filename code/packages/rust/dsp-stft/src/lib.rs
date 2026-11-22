@@ -168,6 +168,11 @@ pub fn stft(
         let spectrum = rfft_scalar(&windowed).map_err(fft_err)?;
         // spectrum is length 2 * bins (interleaved [re, im]).
         debug_assert_eq!(spectrum.len(), 2 * bins);
+        if !spectrum.iter().all(|x| x.is_finite()) {
+            return Err(StftError::Fft(
+                "per-frame FFT output overflowed to non-finite float".into(),
+            ));
+        }
         out.extend_from_slice(&spectrum);
     }
     debug_assert_eq!(out.len(), out_len);
@@ -183,7 +188,8 @@ pub(crate) fn build_window_bytes(
     n_fft: usize,
 ) -> Vec<u8> {
     let w = build_window(window, n_fft);
-    let mut bytes = Vec::with_capacity(n_fft * 4);
+    let byte_len = n_fft.saturating_mul(4);
+    let mut bytes = Vec::with_capacity(byte_len);
     for v in w {
         bytes.extend_from_slice(&v.to_le_bytes());
     }
@@ -492,9 +498,6 @@ mod tests {
 
     #[test]
     fn hostile_inputs_rejected() {
-        use crate::mel::{mel_filterbank, mel_spectrogram, mfcc};
-        use crate::spectrogram::{log_spectrogram, spectrogram};
-
         // NaN / Inf in signal
         assert!(stft(&[1.0, f32::NAN], 64, 32, WindowType::Hann).is_err());
         assert!(stft(&[1.0, f32::INFINITY], 64, 32, WindowType::Hann).is_err());

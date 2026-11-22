@@ -1,0 +1,235 @@
+-- DSP-CONV -- Convolution and Image Filters for the DSP layer
+--
+-- Warrant specification for c/dsp-conv (VER15 / DSP04).
+-- Covers memory safety, resource bounding (CWE-400), integer overflow prevention (CWE-190),
+-- strictly iterative execution (CWE-674), zero-on-free (CWE-415/416), and all-operands-public guarantees.
+
+warrant dsp_conv
+  error ConvError = EMPTY_SIGNAL | EMPTY_KERNEL | IMAGE_SIZE_MISMATCH | KERNEL_TOO_LARGE | INVALID_INPUT
+
+  op conv1d(signal: Bytes, kernel: Bytes, mode: Nat) -> Result<Bytes, ConvError>
+  op convolve(signal: Bytes, kernel: Bytes, conv_mode: Nat, boundary: Nat) -> Result<Bytes, ConvError>
+  op correlate(signal: Bytes, kernel: Bytes, conv_mode: Nat) -> Result<Bytes, ConvError>
+  op convolve_fft(signal: Bytes, kernel: Bytes, conv_mode: Nat) -> Result<Bytes, ConvError>
+  op overlap_add(signal: Bytes, kernel: Bytes, block_size: Nat, conv_mode: Nat) -> Result<Bytes, ConvError>
+  op conv2d(image: Bytes, kernel: Bytes, height: Nat, width: Nat, kh: Nat, kw: Nat, mode: Nat) -> Result<Bytes, ConvError>
+  op sep_conv2d(image: Bytes, h_kernel: Bytes, v_kernel: Bytes, height: Nat, width: Nat, mode: Nat) -> Result<Bytes, ConvError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- All operands are public signal / pixel data.
+  labels conv1d:
+    signal public
+    kernel public
+    mode public
+  labels convolve:
+    signal public
+    kernel public
+    conv_mode public
+    boundary public
+  labels correlate:
+    signal public
+    kernel public
+    conv_mode public
+  labels convolve_fft:
+    signal public
+    kernel public
+    conv_mode public
+  labels overlap_add:
+    signal public
+    kernel public
+    block_size public
+    conv_mode public
+  labels conv2d:
+    image public
+    kernel public
+    height public
+    width public
+    kh public
+    kw public
+    mode public
+  labels sep_conv2d:
+    image public
+    h_kernel public
+    v_kernel public
+    height public
+    width public
+    mode public
+
+  input conv1d.signal:
+    hostile
+    rejects len(signal) == 0 with ConvError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input conv1d.kernel:
+    hostile
+    rejects len(kernel) == 0 with ConvError.EMPTY_KERNEL
+    ensures no_panic, terminates
+  input conv1d.mode:
+    hostile
+    rejects mode > 3 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input convolve.signal:
+    hostile
+    rejects len(signal) == 0 with ConvError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input convolve.kernel:
+    hostile
+    rejects len(kernel) == 0 with ConvError.EMPTY_KERNEL
+    ensures no_panic, terminates
+  input convolve.conv_mode:
+    hostile
+    rejects conv_mode > 2 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+  input convolve.boundary:
+    hostile
+    rejects boundary > 3 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input correlate.signal:
+    hostile
+    rejects len(signal) == 0 with ConvError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input correlate.kernel:
+    hostile
+    rejects len(kernel) == 0 with ConvError.EMPTY_KERNEL
+    ensures no_panic, terminates
+  input correlate.conv_mode:
+    hostile
+    rejects conv_mode > 2 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input convolve_fft.signal:
+    hostile
+    rejects len(signal) == 0 with ConvError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input convolve_fft.kernel:
+    hostile
+    rejects len(kernel) == 0 with ConvError.EMPTY_KERNEL
+    ensures no_panic, terminates
+  input convolve_fft.conv_mode:
+    hostile
+    rejects conv_mode > 2 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input overlap_add.signal:
+    hostile
+    rejects len(signal) == 0 with ConvError.EMPTY_SIGNAL
+    ensures no_panic, terminates
+  input overlap_add.kernel:
+    hostile
+    rejects len(kernel) == 0 with ConvError.EMPTY_KERNEL
+    ensures no_panic, terminates
+  input overlap_add.block_size:
+    hostile
+    rejects block_size == 0 or block_size > 16777216 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+  input overlap_add.conv_mode:
+    hostile
+    rejects conv_mode > 2 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input conv2d.image:
+    hostile
+    rejects len(image) == 0 with ConvError.IMAGE_SIZE_MISMATCH
+    ensures no_panic, terminates
+  input conv2d.kernel:
+    hostile
+    rejects len(kernel) == 0 with ConvError.EMPTY_KERNEL
+    ensures no_panic, terminates
+  input conv2d.height:
+    hostile
+    rejects height == 0 with ConvError.IMAGE_SIZE_MISMATCH
+    ensures no_panic, terminates
+  input conv2d.width:
+    hostile
+    rejects width == 0 with ConvError.IMAGE_SIZE_MISMATCH
+    ensures no_panic, terminates
+  input conv2d.kh:
+    hostile
+    rejects kh == 0 with ConvError.EMPTY_KERNEL
+    ensures no_panic, terminates
+  input conv2d.kw:
+    hostile
+    rejects kw == 0 with ConvError.EMPTY_KERNEL
+    ensures no_panic, terminates
+  input conv2d.mode:
+    hostile
+    rejects mode > 3 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input sep_conv2d.image:
+    hostile
+    rejects len(image) == 0 with ConvError.IMAGE_SIZE_MISMATCH
+    ensures no_panic, terminates
+  input sep_conv2d.h_kernel:
+    hostile
+    rejects len(h_kernel) == 0 with ConvError.EMPTY_KERNEL
+    ensures no_panic, terminates
+  input sep_conv2d.v_kernel:
+    hostile
+    rejects len(v_kernel) == 0 with ConvError.EMPTY_KERNEL
+    ensures no_panic, terminates
+  input sep_conv2d.height:
+    hostile
+    rejects height == 0 with ConvError.IMAGE_SIZE_MISMATCH
+    ensures no_panic, terminates
+  input sep_conv2d.width:
+    hostile
+    rejects width == 0 with ConvError.IMAGE_SIZE_MISMATCH
+    ensures no_panic, terminates
+  input sep_conv2d.mode:
+    hostile
+    rejects mode > 3 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  bound conv1d:
+    output <= len(signal)
+    steps <= 32 * len(signal) * len(kernel) + 4096
+    heap <= 4 * len(signal) + 8192
+    depth <= 32
+
+  bound convolve:
+    output <= len(signal) + len(kernel)
+    steps <= 32 * (len(signal) + len(kernel)) * len(kernel) + 4096
+    heap <= 4 * (len(signal) + len(kernel)) + 8192
+    depth <= 32
+
+  bound correlate:
+    output <= len(signal) + len(kernel)
+    steps <= 32 * (len(signal) + len(kernel)) * len(kernel) + 4096
+    heap <= 4 * (len(signal) + len(kernel)) + 4 * len(kernel) + 8192
+    depth <= 32
+
+  bound convolve_fft:
+    output <= len(signal) + len(kernel)
+    steps <= 64 * (len(signal) + len(kernel)) * 20 + 4096
+    heap <= 68 * (len(signal) + len(kernel)) + 8192
+    depth <= 32
+
+  bound overlap_add:
+    output <= len(signal) + len(kernel)
+    steps <= 64 * (len(signal) + len(kernel)) * 20 + 4096
+    heap <= 64 * (block_size + len(kernel)) + 12 * (len(signal) + len(kernel)) + 65536
+    depth <= 32
+
+  bound conv2d:
+    output <= len(image)
+    steps <= 32 * len(image) * (kh * kw) + 4096
+    heap <= 4 * len(image) + 8192
+    depth <= 32
+
+  bound sep_conv2d:
+    output <= len(image)
+    steps <= 32 * len(image) * (len(h_kernel) + len(v_kernel)) + 4096
+    heap <= 8 * len(image) + 8192
+    depth <= 32
+
+  claim conv1d_same_length:
+    forall s: Bytes, k: Bytes. match conv1d(s, k, 0) with Ok(out) -> len(out) == len(s) | Err(_) -> true
+
+  claim convolve_deterministic:
+    forall s: Bytes, k: Bytes. convolve(s, k, 0, 0) == convolve(s, k, 0, 0)

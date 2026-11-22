@@ -107,6 +107,9 @@ describe("Marwadi task-shape inventories", () => {
   it("defines a gentle project-owned A2 envelope without inventing external authority", () => {
     const inventory = loadTaskShapeInventory("marwadi", "A2");
 
+    expect(inventory.sources.some((source) => source.id === "ca-marwadi-assessment" &&
+      source.url.endsWith("/marwadi/assessment-spec.md") &&
+      source.published === "2026-08-20" && source.accessed === "2026-10-02")).toBe(true);
     expect(inventory.target).toEqual({
       name: "Coding Adventures Marwadi A2 Assessment — project-defined equivalent",
       basis: "project-defined",

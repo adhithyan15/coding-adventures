@@ -534,17 +534,14 @@ describe("discoverPackages", () => {
     );
     const root = materializeSharedDiscoveryFixture(fixture);
     try {
-      const tsxCli = path.join(
-        packageRoot,
-        "node_modules",
-        "tsx",
-        "dist",
-        "cli.mjs",
+      expect(process.env.BUILD_TOOL_TEST_CLI_DIR).toBeDefined();
+      const entrypoint = path.join(
+        process.env.BUILD_TOOL_TEST_CLI_DIR!,
+        "index.js",
       );
-      const entrypoint = path.join(packageRoot, "src", "index.ts");
       const result = spawnSync(
         process.execPath,
-        [tsxCli, entrypoint, "--root", root, "--force", "--dry-run"],
+        [entrypoint, "--root", root, "--force", "--dry-run"],
         { encoding: "utf-8", timeout: fixture.limits.wall_time_ms },
       );
       const diagnostic = fixture.expected.diagnostics[0];

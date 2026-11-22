@@ -8,10 +8,11 @@
   "lane": "python",
   "module": "ct_compare",
   "package": "python/ct-compare",
+  "pycache_isolated": true,
   "runner": {
     "lane": "python",
     "name": "warrant-corpus",
-    "src_sha256": "bdfc812ade302595e58f589c3ef7c83ada15e7c9d064bd80da29f1806139a8f9"
+    "src_sha256": "2bbaa47737e51511b103f5d3f53509d612530cbec59dbd65a5d0bdfd213f39bf"
   },
   "schema": "warrant-lane-evidence-v1",
   "source_sha256": "fc6e539f6d9fe414175951ab5c12e3328ab3e94d2ae872d927854cf428b1fa2f",

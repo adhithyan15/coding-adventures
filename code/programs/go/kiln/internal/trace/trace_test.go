@@ -356,8 +356,16 @@ func TestClosedTable(t *testing.T) {
 		"fsmount", "fsconfig", "fspick", "open_tree", "move_mount", "mount_setattr", "pivot_root",
 		"chroot", "unshare", "setns", "ptrace", "process_vm_readv", "pidfd_getfd", "bpf", "clone3",
 	} {
-		wantReason(t, wrap(n+`(0) = -1 EPERM (Operation not permitted)`), "refused:"+n)
+		// The sandbox filter's own answer (EPERM; clone3's is ENOSYS) is
+		// tolerated; any other result is refused.
+		if n != "clone3" {
+			mustParse(t, wrap(n+`(0) = -1 EPERM (Operation not permitted)`))
+		}
+		wantReason(t, wrap(n+`(0) = 0`), "refused:"+n)
+		wantReason(t, wrap(n+`(0) = -1 ENOENT (No such file or directory)`), "refused:"+n)
 	}
+	wantReason(t, wrap(`clone3({flags=CLONE_VM, exit_signal=SIGCHLD}, 88) = -1 EPERM (Operation not permitted)`), "refused:clone3")
+	mustParse(t, wrap(`clone3({flags=CLONE_VM, exit_signal=SIGCHLD}, 88) = -1 ENOSYS (Function not implemented)`))
 	wantReason(t, wrap(`clone3({flags=CLONE_VM, exit_signal=SIGCHLD}, 88) = 2`), "refused:clone3")
 	// Ignored names parse but produce nothing.
 	tr := mustParse(t, wrap(`getcwd("/work", 4096) = 6`, `close(3</x>) = 0`, `dup2(3, 4) = 4`, `pipe2([3, 4], O_CLOEXEC) = 0`, `kill(5, SIGKILL) = 0`))
@@ -485,7 +493,7 @@ func TestOpenAndFdKinds(t *testing.T) {
 func TestCloneFlags(t *testing.T) {
 	bad := []string{
 		`clone(child_stack=NULL, flags=CLONE_UNTRACED|SIGCHLD) = 2`,
-		`clone(child_stack=NULL, flags=CLONE_VM|CLONE_UNTRACED|SIGCHLD) = -1 EPERM (Operation not permitted)`,
+		`clone(child_stack=NULL, flags=CLONE_VM|CLONE_UNTRACED|SIGCHLD) = -1 EACCES (Permission denied)`,
 		`clone(child_stack=NULL, flags=CLONE_NEWUSER|SIGCHLD) = 2`,
 		`clone(child_stack=NULL, flags=CLONE_NEWNS) = 2`,
 		`clone(child_stack=NULL, flags=CLONE_NEWPID|CLONE_NEWNET|CLONE_NEWCGROUP|CLONE_NEWIPC) = 2`,
@@ -496,6 +504,9 @@ func TestCloneFlags(t *testing.T) {
 	for _, line := range bad {
 		wantReason(t, "1  "+line+"\n1  +++ exited with 0 +++\n", reasonCloneFlags)
 	}
+	// The filter's own EPERM for a forbidden flag spawned nothing: tolerated
+	// (clone3_enosys_test.go has the rest).
+	mustParse(t, "1  clone(child_stack=NULL, flags=CLONE_VM|CLONE_UNTRACED|SIGCHLD) = -1 EPERM (Operation not permitted)\n1  +++ exited with 0 +++\n")
 	// A clone whose result is bad.
 	wantReason(t, "1  clone(child_stack=NULL, flags=SIGCHLD) = 0\n", reasonResult)
 }

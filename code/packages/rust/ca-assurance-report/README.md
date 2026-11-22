@@ -7,6 +7,8 @@ Assurance report generator and weakness registry evaluator for the verified ship
 - **Weakness Registry Evaluation:** Exhaustively evaluates package sources against `weakness-registry-v1.json` (24 CWE classes).
 - **Weakness Matrix Closure:** Validates that each row is closed as `excluded`, `discharged`, or `exemption`. Prohibits open rows.
 - **Computed Exemptions:** Automatically derives unapproved exemptions (e.g. CWE-208 timing gate-level floor) when proof floors are not reached.
+- **Refusal-only source-equivalence anchors (VER-P047):** A fully public operation with no declared `steps` bound may use an exact `source-equivalence` proof-manifest row only when the real Rust-subset/WIR frontend refuses its bound public export. The supported target is Cargo's default `src/lib.rs`; the checker parses bounded `Cargo.toml` bytes with the Rust `toml` crate and rejects custom library targets, disabled auto-discovery, conditional or unknown item attributes, and root macro invocations. Producer and checker hash and probe one bounded, symlink-free `src/**/*.rs` snapshot. `--check` replays that isolated export attempt against the current source/spec pins and reviewed `proofs_not_live` opt-in. The entry remains `not-live`, never supplies a proof block, cannot discharge a weakness, and cannot make E5 pass.
+- **Missing cost-bound coverage (VER-P048):** For an actual nonempty Warrant module with missing `steps` bounds, the profile may say CWE-407 `applicable`; the reporter derives unapproved, evidence-empty CWE-400 and CWE-407 exemptions with stable missing-bound ids and exact uncovered operations. Partial proof coverage cannot discharge CWE-400. Profile authors cannot declare or approve the exemptions, and source-equivalence or finite-domain proofs never count as cost bounds.
 - **CWE-208 for packages with no secret:** when the Warrant document labels every operand of every operation `public` and the proof manifest holds no constant-time obligation, CWE-208 is recorded as "not applicable: no secret operands" (`EXEMPT-CWE-208-NO-SECRET-OPERANDS`, backed by the derived attestation `warrant-spec::all-operands-public`) instead of an open row. Any secret label keeps the old fail-closed rows, and `--check` re-derives both facts from the spec and the proof manifest ([VER04h](../../../specs/VER04h-warrant-derived-evidence.md) section 9, item 20).
 - **Audit profiles are data (`assurance-profile.json`):** the wording of the static rows (CWE-326/327/407) and what kind of package this is (`transform` or `decompressor`) live in a file beside the package's `Cargo.toml`, not in this crate (VER04h section 9 item 22). A new adopter adds that file and edits no Rust here. The file is hash-bound into the report as `profile_sha256`; `--check` refuses a missing or edited file, an unknown key, a declared exclusion the evidence contradicts, and re-derives the weakness matrix (reason text included) from the evidence and the file. `--profile NAME` and `--profile-kind transform|decompressor` are optional pins that must equal the file's `name` and `kind` (a BUILD line pins the kind so the file's author cannot flip it and regenerate). The profile file is read through symlinks, which is acceptable because `profile_sha256` binds the content read. CWE-409 (decompression bomb) is excluded only for a `transform` profile whose document declares no `output` bound row; otherwise it is discharged from the document's `output`/`heap` rows and their generated `output-bound` suites, or the report is not generated.
 - **Rung Assessment:** Honors non-live rungs (e.g. E2 simulated host) by reporting them as `"not-live"`, never `"pass"`.
@@ -53,6 +55,57 @@ The catalogue directory is found by walking up from the package directory. Input
 are size-capped while reading (catalogue 1 MiB, evidence kinds 256 KiB,
 non-claims 64 KiB). Every rule has a falsification test in
 `tests/test_assumptions.rs`.
+
+## Lane artifact loader (WD-004b1) and lane rungs (WD-004b2)
+
+`lane_loader` is the safe loader for the per-lane evidence of VER04i section 8.2
+(`warrant-lane-evidence-v1` manifests, the consumer registry and the
+`domain-labels.json` sidecar). `lane_report` puts its result in the package
+report and the CLI (VER04i section 8.3). The legacy Rust loader that `--check`
+and `--generate` use for the Rust manifests is unchanged.
+
+```rust
+use coding_adventures_ca_assurance_report::lane_loader::load_lane;
+
+let lane = load_lane(repo_root, "python/ct-compare")?;
+print!("{}", lane.render_readiness());
+```
+
+What a successful `load_lane` means, and only this: every registered file opened
+as a bounded regular file inside the repository (symbolic links refused); the
+spec, corpus, TFV and binding file match the manifest's recorded SHA-256;
+the manifest joins the corpus (ids, counts, stream digests, controls); the labels
+sidecar is internally consistent and binds this manifest (the digest ignores
+`toolchain.version`, keeps `toolchain.name`); the runner is `warrant-corpus`;
+each BUILD file mentions the manifest and the sabotage step; and `source_sha256`
+and `runner.src_sha256` equal the digests recomputed from the source tree and the
+runner tree (per-lane rules, a link-refusing walk).
+
+What it does **not** establish, and prints every time: toolchain authenticity,
+that any build ran, and the sandbox. `release_ready` is always `false` (sandbox
+`absent`: no lane arms a runtime jail yet). Failures carry a code (`path`,
+`symlink`, `too-large`, `digest`, `join`, `labels`, `build-routing`,
+`source-tree`, `stale-source`, `stale-runner`, ...).
+
+### In the report
+
+A Rust package's `assurance_report.json` has a required `lanes` array: one rung
+per lane the consumer registry lists (`go`, `python`, `typescript`), `live` only
+when the loader passed every named check, `planned`, or `absent` (no registry row
+for `<lane>/<name>`, which is every package but `ct-compare` today). Lane rungs
+come from the registry and the loader only; they never read or change the Rust
+proof, effect or verdict evidence. `--check` re-derives them and fails with
+`LaneMismatch`, `LabelOverclaim` or `StaleEvidence`.
+
+### `--check-lane`
+
+```bash
+# Load a lane and print its readiness (exit 1 if an active lane fails to load)
+cargo run -p coding_adventures_ca_assurance_report -- --check-lane python/ct-compare --repo-root ../../../..
+
+# Also exit 1 when the lane is absent or only planned: what the lanes' BUILD files use
+cargo run -p coding_adventures_ca_assurance_report -- --check-lane python/ct-compare --repo-root ../../../.. --require-active
+```
 
 ## Usage
 

@@ -42,6 +42,7 @@ func TestRepositoryInputPredicatesAreCoveredByDeclaredInputs(t *testing.T) {
 		"code/grammars/warrant/a.grammar", "code/grammars/warrant/sub/b.grammar",
 		"code/specs/fixtures/warrant-syntax-v1/x", "code/specs/fixtures/warrant-vectors-synthetic-v1/y/z",
 		"code/scripts/warrant_syntax_corpus.py", "code/scripts/tests/test_warrant_syntax_corpus.py",
+		"code/scripts/warrant_negctl.py", "code/scripts/tests/test_warrant_negctl.py",
 		"code/specs/VER04-warrant-language.md", "code/specs/VER04a-warrant-source-admission.md",
 		"code/a.mil", "code/x/y/Z.mll", "code/x/mosaic-package.toml", "code/q/r/s/t.msl",
 	}
@@ -122,7 +123,7 @@ func TestEveryExternalConsumerExportsInputs(t *testing.T) {
 		sourceCollectionLocalFixtureConsumers, sourceCollectionRepositoryFixtureConsumers,
 		sourceCollectionSharedInputFixtureConsumers, graphDiffNativeFixtureConsumers,
 		starlarkOpcodeProviderConsumers, compilerIRCorpusConsumers, gfmCorpusConsumers,
-		bezier2dFlatteningConsumers, {{closureProvenanceConsumer, "rust"}},
+		bezier2dFlatteningConsumers, satSolverSharedCorpusConsumers, {{closureProvenanceConsumer, "rust"}},
 	} {
 		all = append(all, list...)
 	}

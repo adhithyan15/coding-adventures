@@ -1,0 +1,6 @@
+class = "K"
+kind = "any"
+contract = "vos-sched-contract"
+obligations = ["any", "safety"]
+evidence-features = ["ghost"]
+coverage-floor = 95

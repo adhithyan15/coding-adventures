@@ -2,6 +2,7 @@ package trace
 
 import (
 	"errors"
+	"math"
 	"os"
 	"strings"
 	"testing"
@@ -66,6 +67,10 @@ func TestParseResultShapes(t *testing.T) {
 		{"= 0", func(r result) bool { return r.ok() && r.value == 0 }},
 		{"   = 12", func(r result) bool { return r.ok() && r.value == 12 }},
 		{"= 0x7f0000001000", func(r result) bool { return r.ok() && r.value == 0x7f0000001000 }},
+		{"= 0x7fffffffffffffff", func(r result) bool { return r.ok() && r.value == math.MaxInt64 }},
+		{"= 0xffffffffffffffff EPERM (Operation not permitted)", func(r result) bool {
+			return !r.ok() && r.value == -1 && !r.minusOne && r.errno == "EPERM"
+		}},
 		{"= 0 (Timeout)", func(r result) bool { return r.ok() }},
 		{"= -1 EINTR (Interrupted system call)", func(r result) bool { return r.errno == "EINTR" && !r.ok() }},
 		{"= ? ERESTARTSYS (To be restarted if SA_RESTART is set)", func(r result) bool { return r.unknown && r.errno == "ERESTARTSYS" }},
@@ -78,10 +83,33 @@ func TestParseResultShapes(t *testing.T) {
 			t.Errorf("%q: %+v %q", c.in, r, reason)
 		}
 	}
-	for _, in := range []string{"", "0", "= ", "= 0x", "= 0xzz", "= 99999999999999999999", "= -", "= -1<x>", "= 0 x y", "= 0 (a", "= 0 (a(b))", "= 0 junk (x)", "= -3 ENOENT (x)", "= 0x1ffffffffffffffff"} {
+	for _, in := range []string{
+		"", "0", "= ", "= 0x", "= 0xzz", "= 99999999999999999999", "= -", "= -1<x>",
+		"= 0 x y", "= 0 (a", "= 0 (a(b))", "= 0 junk (x)", "= -3 ENOENT (x)",
+		"= 0x8000000000000000", "= 0xfffffffffffffffe", "= 0xffffffffffffffff", "= 0x1ffffffffffffffff",
+	} {
 		if _, reason := parseResult(in); reason == "" {
 			t.Errorf("%q accepted", in)
 		}
+	}
+}
+
+func TestResultPidBounds(t *testing.T) {
+	if got := (result{value: 42}).pid(); got != 42 {
+		t.Errorf("pid() = %d, want 42", got)
+	}
+	if got := (result{value: 2, host: 5030, hasHost: true}).pid(); got != 5030 {
+		t.Errorf("pid() with host = %d, want 5030", got)
+	}
+	if got := (result{value: math.MaxInt64}).pid(); math.MaxInt64 > math.MaxInt && got != 0 {
+		t.Errorf("pid(MaxInt64) on 32-bit = %d, want 0", got)
+	} else if math.MaxInt64 <= math.MaxInt && got != math.MaxInt {
+		t.Errorf("pid(MaxInt64) on 64-bit = %d, want %d", got, math.MaxInt)
+	}
+	if got := (result{value: math.MinInt64}).pid(); math.MinInt64 < math.MinInt && got != 0 {
+		t.Errorf("pid(MinInt64) on 32-bit = %d, want 0", got)
+	} else if math.MinInt64 >= math.MinInt && got != math.MinInt {
+		t.Errorf("pid(MinInt64) on 64-bit = %d, want %d", got, math.MinInt)
 	}
 }
 

@@ -408,12 +408,41 @@ func writeFileFrame(hash io.Writer, packageRoot, root, path string) error {
 	if _, err := hash.Write(pathBytes); err != nil {
 		return err
 	}
+	return writeStableContentFrame(hash, root, path)
+}
 
+func writeStableContentFrame(hash io.Writer, root, path string) error {
+	return writeStableContentFrameBounded(hash, root, path, nil, 0, nil, 0)
+}
+
+func writeStableContentFrameBounded(
+	hash io.Writer,
+	root, path string,
+	expected os.FileInfo,
+	maxFileBytes int64,
+	totalBytesRead *int64,
+	totalByteLimit int64,
+) error {
+	return writeStableContentFrameBoundedWithHook(hash, root, path, expected, maxFileBytes, totalBytesRead, totalByteLimit, nil)
+}
+
+// The hook is an internal test seam used to force path replacement or file
+// growth after opening the descriptor and before streaming its bytes.
+func writeStableContentFrameBoundedWithHook(
+	hash io.Writer,
+	root, path string,
+	expected os.FileInfo,
+	maxFileBytes int64,
+	totalBytesRead *int64,
+	totalByteLimit int64,
+	afterOpen func() error,
+) error {
 	if err := ensureUnlinkedComponents(root, path); err != nil {
 		return err
 	}
 	before, err := os.Lstat(path)
-	if err != nil || !before.Mode().IsRegular() || before.Mode()&os.ModeSymlink != 0 || hasWindowsReparsePoint(before) {
+	if err != nil || !before.Mode().IsRegular() || before.Mode()&os.ModeSymlink != 0 || hasWindowsReparsePoint(before) ||
+		(expected != nil && !sameFileSnapshot(expected, before)) {
 		return fmt.Errorf("source is not a stable regular file")
 	}
 	source, err := os.Open(path)
@@ -422,28 +451,71 @@ func writeFileFrame(hash io.Writer, packageRoot, root, path string) error {
 	}
 	defer source.Close()
 	opened, err := source.Stat()
-	if err != nil || !opened.Mode().IsRegular() || !os.SameFile(before, opened) {
+	if err != nil || !opened.Mode().IsRegular() || !sameFileSnapshot(before, opened) ||
+		(expected != nil && !sameFileSnapshot(expected, opened)) {
 		return fmt.Errorf("source changed before hashing")
 	}
+	if afterOpen != nil {
+		if err := afterOpen(); err != nil {
+			return err
+		}
+	}
 	contentLength := opened.Size()
-	if contentLength < 0 {
+	if contentLength < 0 || (maxFileBytes > 0 && contentLength > maxFileBytes) {
 		return fmt.Errorf("source length is invalid")
+	}
+	allowedBytes := int64(0)
+	limited := maxFileBytes > 0
+	if maxFileBytes > 0 {
+		allowedBytes = maxFileBytes
+	}
+	if totalBytesRead != nil {
+		remaining := totalByteLimit - *totalBytesRead
+		if remaining < 0 {
+			return fmt.Errorf("repository tree exceeds its byte limit")
+		}
+		if !limited || remaining < allowedBytes {
+			allowedBytes = remaining
+		}
+		limited = true
+	}
+	if limited && contentLength > allowedBytes {
+		return fmt.Errorf("repository tree exceeds its byte limit")
 	}
 	if err := binary.Write(hash, binary.BigEndian, uint64(contentLength)); err != nil {
 		return err
 	}
-	written, err := io.CopyBuffer(hash, source, make([]byte, 8192))
+	var reader io.Reader = source
+	if limited {
+		reader = io.LimitReader(source, allowedBytes+1)
+	}
+	written, err := io.CopyBuffer(hash, reader, make([]byte, 8192))
 	if err != nil {
 		return fmt.Errorf("source read failed")
 	}
 	after, err := source.Stat()
-	if err != nil || written != contentLength || after.Size() != opened.Size() || !after.ModTime().Equal(opened.ModTime()) {
+	pathAfter, pathErr := os.Lstat(path)
+	if err != nil || pathErr != nil || written != contentLength ||
+		!sameFileSnapshot(opened, after) || !sameFileSnapshot(opened, pathAfter) ||
+		(expected != nil && !sameFileSnapshot(expected, pathAfter)) {
 		return fmt.Errorf("source changed while hashing")
+	}
+	if totalBytesRead != nil {
+		*totalBytesRead += written
+		if *totalBytesRead > totalByteLimit {
+			return fmt.Errorf("repository tree exceeds its byte limit")
+		}
 	}
 	if err := ensureUnlinkedComponents(root, path); err != nil {
 		return err
 	}
 	return nil
+}
+
+func sameFileSnapshot(expected, actual os.FileInfo) bool {
+	return expected != nil && actual != nil && os.SameFile(expected, actual) &&
+		expected.Mode() == actual.Mode() && expected.Size() == actual.Size() &&
+		expected.ModTime().Equal(actual.ModTime())
 }
 
 // HashPackage computes a SHA256 hash representing all source files in
@@ -457,6 +529,24 @@ func writeFileFrame(hash io.Writer, packageRoot, root, path string) error {
 // If the package has no source files, we hash the empty string for
 // consistency — every package gets a hash, even empty ones.
 func HashPackage(pkg discovery.Package) (string, error) {
+	return HashPackageWithRepositoryInputs(pkg, "", nil)
+}
+
+// HashPackageWithRepositoryInputs hashes exact repository-relative regular
+// files. It never infers recursive tree inputs from the current file kind.
+func HashPackageWithRepositoryInputs(pkg discovery.Package, repoRoot string, repositoryInputs []string) (string, error) {
+	return HashPackageWithRepositoryInputsAndTrees(pkg, repoRoot, repositoryInputs, nil)
+}
+
+// HashPackageWithRepositoryInputsAndTrees adds separately registered file and
+// tree inputs. A path's kind comes from the caller's trusted registration, not
+// from a filesystem check that silently changes the registration's meaning.
+func HashPackageWithRepositoryInputsAndTrees(
+	pkg discovery.Package,
+	repoRoot string,
+	repositoryFiles []string,
+	repositoryTrees []string,
+) (string, error) {
 	var (
 		files []string
 		err   error
@@ -481,7 +571,324 @@ func HashPackage(pkg discovery.Package) (string, error) {
 			return "", fmt.Errorf("source input is not stable")
 		}
 	}
+	if len(repositoryFiles)+len(repositoryTrees) > 0 {
+		if repoRoot == "" {
+			return "", fmt.Errorf("repository input root is required")
+		}
+		seen := make(map[string]struct{}, len(repositoryFiles)+len(repositoryTrees))
+		for _, input := range repositoryFiles {
+			if err := validateRepositoryInputPath(input, seen); err != nil {
+				return "", err
+			}
+			repositoryPath := filepath.Join(repoRoot, filepath.FromSlash(input))
+			if err := ensureUnlinkedComponents(repoRoot, repositoryPath); err != nil {
+				return "", fmt.Errorf("repository file input is not stable")
+			}
+			if err := writeFileFrame(hash, packageRoot, repoRoot, repositoryPath); err != nil {
+				return "", fmt.Errorf("repository file input is not a stable regular file")
+			}
+		}
+		for _, input := range repositoryTrees {
+			if err := validateRepositoryInputPath(input, seen); err != nil {
+				return "", err
+			}
+		}
+		if err := hashRepositoryTreeInputs(hash, packageRoot, repoRoot, repositoryTrees, defaultRepositoryTreeLimits); err != nil {
+			return "", err
+		}
+	}
 	return hex.EncodeToString(hash.Sum(nil)), nil
+}
+
+// hashRepositoryTreeInputs applies the byte budget independently to each
+// registered tree and compares its bounded before/after inventory before moving
+// to the next tree.
+func hashRepositoryTreeInputs(hash io.Writer, packageRoot, repoRoot string, trees []string, limits repositoryTreeLimits) error {
+	for _, input := range trees {
+		snapshot, err := collectRepositoryTreeSnapshot(repoRoot, input, limits)
+		if err != nil {
+			return fmt.Errorf("repository tree input %q is not stable: %w", input, err)
+		}
+		var treeBytesRead int64
+		if err := writeRepositoryTreeFrame(hash, packageRoot, repoRoot, input, snapshot, &treeBytesRead, limits); err != nil {
+			return fmt.Errorf("repository tree input %q is not stable: %w", input, err)
+		}
+		after, err := collectRepositoryTreeSnapshot(repoRoot, input, limits)
+		if err != nil || !sameRepositoryTreeSnapshot(snapshot, after) {
+			return fmt.Errorf("repository tree changed while hashing")
+		}
+	}
+	return nil
+}
+
+const (
+	maxRepositoryTreeDepth     = 32
+	maxRepositoryTreeEntries   = 100_000
+	maxRepositoryTreeFileBytes = 8 * 1024 * 1024
+	maxRepositoryTreeTotal     = 128 * 1024 * 1024
+	maxRepositoryTreePathBytes = 4096
+	maxRepositoryTreePathTotal = 32 * 1024 * 1024
+	repositoryTreeReadPage     = 256
+)
+
+type repositoryTreeLimits struct {
+	maxDepth, maxEntries, maxPathBytes, maxPathTotal int
+	maxFileBytes, maxTotalBytes                      int64
+}
+
+var defaultRepositoryTreeLimits = repositoryTreeLimits{
+	maxDepth: maxRepositoryTreeDepth, maxEntries: maxRepositoryTreeEntries,
+	maxPathBytes: maxRepositoryTreePathBytes, maxPathTotal: maxRepositoryTreePathTotal,
+	maxFileBytes: maxRepositoryTreeFileBytes, maxTotalBytes: maxRepositoryTreeTotal,
+}
+
+type repositoryTreeEntry struct {
+	relativePath string
+	absolutePath string
+	directory    bool
+	info         os.FileInfo
+}
+
+type repositoryTreeSnapshot struct {
+	rootInfo os.FileInfo
+	entries  []repositoryTreeEntry
+}
+
+type repositoryTreeInventoryBudget struct {
+	entries, pathBytes int
+}
+
+func validateRepositoryInputPath(input string, seen map[string]struct{}) error {
+	if filepath.ToSlash(filepath.Clean(filepath.FromSlash(input))) != input || filepath.IsAbs(input) {
+		return fmt.Errorf("repository input path is invalid")
+	}
+	if err := validateRepositoryPath(input); err != nil {
+		return fmt.Errorf("repository input path is invalid")
+	}
+	if _, exists := seen[input]; exists {
+		return fmt.Errorf("repository input kind is ambiguous")
+	}
+	seen[input] = struct{}{}
+	return nil
+}
+
+// collectRepositoryTreeSnapshot uses bounded paged directory reads. It counts
+// each child before retaining it and records directory and file identities so
+// a final inventory can detect replacement, addition, removal, or mutation.
+func collectRepositoryTreeSnapshot(repoRoot, input string, limits repositoryTreeLimits) (repositoryTreeSnapshot, error) {
+	root := filepath.Join(repoRoot, filepath.FromSlash(input))
+	if err := ensureUnlinkedComponents(repoRoot, root); err != nil {
+		return repositoryTreeSnapshot{}, err
+	}
+	rootInfo, err := os.Lstat(root)
+	if err != nil || !rootInfo.IsDir() || rootInfo.Mode()&os.ModeSymlink != 0 || hasWindowsReparsePoint(rootInfo) {
+		return repositoryTreeSnapshot{}, fmt.Errorf("registered tree is not a directory")
+	}
+	if limits.maxEntries < 1 || limits.maxDepth < 0 || limits.maxPathBytes < 1 || limits.maxPathTotal < 1 {
+		return repositoryTreeSnapshot{}, fmt.Errorf("repository tree limits are invalid")
+	}
+	budget := repositoryTreeInventoryBudget{entries: 1, pathBytes: len(input)}
+	if budget.pathBytes > limits.maxPathBytes || budget.pathBytes > limits.maxPathTotal {
+		return repositoryTreeSnapshot{}, fmt.Errorf("repository tree path exceeds its limit")
+	}
+	snapshot := repositoryTreeSnapshot{rootInfo: rootInfo}
+	if err := inventoryRepositoryDirectory(repoRoot, root, input, 0, limits, &budget, &snapshot); err != nil {
+		return repositoryTreeSnapshot{}, err
+	}
+	sort.Slice(snapshot.entries, func(i, j int) bool {
+		return snapshot.entries[i].relativePath < snapshot.entries[j].relativePath
+	})
+	return snapshot, nil
+}
+
+func inventoryRepositoryDirectory(
+	repoRoot, dirPath, dirRelative string,
+	depth int,
+	limits repositoryTreeLimits,
+	budget *repositoryTreeInventoryBudget,
+	snapshot *repositoryTreeSnapshot,
+) error {
+	if depth > limits.maxDepth {
+		return fmt.Errorf("repository tree is nested too deeply")
+	}
+	if err := ensureUnlinkedComponents(repoRoot, dirPath); err != nil {
+		return err
+	}
+	before, err := os.Lstat(dirPath)
+	if err != nil || !before.IsDir() || before.Mode()&os.ModeSymlink != 0 || hasWindowsReparsePoint(before) {
+		return fmt.Errorf("repository tree directory is not stable")
+	}
+	dir, err := os.Open(dirPath)
+	if err != nil {
+		return err
+	}
+	opened, err := dir.Stat()
+	if err != nil || !sameFileSnapshot(before, opened) {
+		_ = dir.Close()
+		return fmt.Errorf("repository tree directory changed before reading")
+	}
+
+	children := make([]repositoryTreeEntry, 0)
+	for {
+		remaining := limits.maxEntries - budget.entries
+		page := repositoryTreeReadPage
+		if remaining < page {
+			page = remaining
+		}
+		if page < 1 {
+			page = 1 // one unretained sentinel detects an entry beyond the limit
+		}
+		batch, readErr := dir.ReadDir(page)
+		for _, entry := range batch {
+			if budget.entries >= limits.maxEntries {
+				_ = dir.Close()
+				return fmt.Errorf("repository tree has too many entries")
+			}
+			budget.entries++
+			name := entry.Name()
+			relative := name
+			if dirRelative != "" {
+				relative = dirRelative + "/" + name
+			}
+			absolute := filepath.Join(dirPath, name)
+			canonicalPath, err := portableRelativePath(repoRoot, absolute)
+			if err != nil {
+				_ = dir.Close()
+				return err
+			}
+			if err := validateRepositoryPath(canonicalPath); err != nil {
+				_ = dir.Close()
+				return err
+			}
+			pathBytes := len(canonicalPath)
+			if pathBytes > limits.maxPathBytes || budget.pathBytes > limits.maxPathTotal-pathBytes {
+				_ = dir.Close()
+				return fmt.Errorf("repository tree paths exceed their limit")
+			}
+			budget.pathBytes += pathBytes
+			if err := ensureUnlinkedComponents(repoRoot, absolute); err != nil {
+				_ = dir.Close()
+				return err
+			}
+			info, err := os.Lstat(absolute)
+			if err != nil || info.Mode()&os.ModeSymlink != 0 || hasWindowsReparsePoint(info) {
+				_ = dir.Close()
+				return fmt.Errorf("repository tree contains an unstable or linked entry")
+			}
+			child := repositoryTreeEntry{relativePath: relative, absolutePath: absolute, info: info}
+			switch {
+			case info.IsDir():
+				child.directory = true
+			case info.Mode().IsRegular():
+				if info.Size() < 0 || info.Size() > limits.maxFileBytes {
+					_ = dir.Close()
+					return fmt.Errorf("repository tree file exceeds its limit")
+				}
+			default:
+				_ = dir.Close()
+				return fmt.Errorf("repository tree contains a special file")
+			}
+			children = append(children, child)
+		}
+		if readErr != nil {
+			if readErr == io.EOF {
+				break
+			}
+			_ = dir.Close()
+			return readErr
+		}
+		if len(batch) == 0 {
+			break
+		}
+	}
+	fdAfter, fdErr := dir.Stat()
+	closeErr := dir.Close()
+	pathAfter, pathErr := os.Lstat(dirPath)
+	if fdErr != nil || closeErr != nil || pathErr != nil ||
+		!sameFileSnapshot(before, fdAfter) || !sameFileSnapshot(before, pathAfter) {
+		return fmt.Errorf("repository tree directory changed while reading")
+	}
+	if err := ensureUnlinkedComponents(repoRoot, dirPath); err != nil {
+		return err
+	}
+	sort.Slice(children, func(i, j int) bool {
+		return children[i].relativePath < children[j].relativePath
+	})
+	for _, child := range children {
+		snapshot.entries = append(snapshot.entries, child)
+		if child.directory {
+			if err := inventoryRepositoryDirectory(repoRoot, child.absolutePath, child.relativePath, depth+1, limits, budget, snapshot); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func sameRepositoryTreeSnapshot(before, after repositoryTreeSnapshot) bool {
+	if !sameFileSnapshot(before.rootInfo, after.rootInfo) || len(before.entries) != len(after.entries) {
+		return false
+	}
+	for i := range before.entries {
+		left, right := before.entries[i], after.entries[i]
+		if left.relativePath != right.relativePath || left.directory != right.directory ||
+			!sameFileSnapshot(left.info, right.info) {
+			return false
+		}
+	}
+	return true
+}
+
+// writeRepositoryTreeFrame uses a separate domain and an explicit file count,
+// so a tree cannot collide with a sequence of ordinary repository file inputs.
+func writeRepositoryTreeFrame(hash io.Writer, packageRoot, repoRoot, input string, snapshot repositoryTreeSnapshot, totalBytesRead *int64, limits repositoryTreeLimits) error {
+	if _, err := io.WriteString(hash, "coding-adventures/build-tool-repository-tree/v1\x00"); err != nil {
+		return err
+	}
+	treePath := packageRoot + "/" + input
+	if err := writeLengthPrefixed(hash, []byte(treePath)); err != nil {
+		return err
+	}
+	fileCount := 0
+	for _, entry := range snapshot.entries {
+		if !entry.directory {
+			fileCount++
+		}
+	}
+	if err := binary.Write(hash, binary.BigEndian, uint64(fileCount)); err != nil {
+		return err
+	}
+	for _, entry := range snapshot.entries {
+		if entry.directory {
+			continue
+		}
+		relative, err := portableRelativePath(repoRoot, entry.absolutePath)
+		if err != nil {
+			return err
+		}
+		repositoryPath := packageRoot + "/" + relative
+		if err := validateRepositoryPath(repositoryPath); err != nil {
+			return err
+		}
+		if err := writeLengthPrefixed(hash, []byte(repositoryPath)); err != nil {
+			return err
+		}
+		if _, err := hash.Write([]byte{1}); err != nil {
+			return err
+		}
+		if err := writeStableContentFrameBounded(hash, repoRoot, entry.absolutePath, entry.info, limits.maxFileBytes, totalBytesRead, limits.maxTotalBytes); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func writeLengthPrefixed(w io.Writer, data []byte) error {
+	if err := binary.Write(w, binary.BigEndian, uint64(len(data))); err != nil {
+		return err
+	}
+	_, err := w.Write(data)
+	return err
 }
 
 // HashDeps computes a SHA256 hash of all transitive dependency hashes.
@@ -507,10 +914,10 @@ func HashDeps(
 	packageName string,
 	graph *directedgraph.Graph,
 	packageHashes map[string]string,
-) string {
+) (string, error) {
 	if !graph.HasNode(packageName) {
 		h := sha256.Sum256([]byte(""))
-		return hex.EncodeToString(h[:])
+		return hex.EncodeToString(h[:]), nil
 	}
 
 	// Collect all transitive dependencies (packages this one depends on).
@@ -520,12 +927,15 @@ func HashDeps(
 
 	if len(transitiveDeps) == 0 {
 		h := sha256.Sum256([]byte(""))
-		return hex.EncodeToString(h[:])
+		return hex.EncodeToString(h[:]), nil
 	}
 
 	// Sort for determinism, concatenate hashes, hash again.
 	sorted := make([]string, 0, len(transitiveDeps))
 	for dep := range transitiveDeps {
+		if hash, ok := packageHashes[dep]; !ok || hash == "" {
+			return "", fmt.Errorf("dependency package hash is unavailable")
+		}
 		sorted = append(sorted, dep)
 	}
 	sort.Strings(sorted)
@@ -536,7 +946,7 @@ func HashDeps(
 	}
 
 	h := sha256.Sum256([]byte(combined.String()))
-	return hex.EncodeToString(h[:])
+	return hex.EncodeToString(h[:]), nil
 }
 
 // collectTransitivePredecessors walks backwards through the graph from

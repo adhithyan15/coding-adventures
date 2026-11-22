@@ -19,6 +19,7 @@ import (
 	"time"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/policyfix"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/source"
@@ -58,6 +59,10 @@ type prep struct {
 	// step and collect never start a sandbox, a strace or a sleeper.
 	probeIn []ProbeInput                          // what it was given, one per call
 	probeFn func(ProbeInput) (ProbeReport, error) // replaces the default report
+	// The toolchain probes are a fake too (Options.ProbeRun): nothing here
+	// starts a sandbox. The default says every tool prints its pin.
+	probeRuns  []legacy.ProbeRun                     // what it was asked, one per call
+	probeRunFn func(legacy.ProbeRun) ([]byte, error) // replaces the default answer
 }
 
 const fixtureToolchains = `{
@@ -118,11 +123,20 @@ func newPrepAt(t *testing.T, base string) *prep {
 	writeBytes(t, p.bt, []byte("build tool binary"), 0o755)
 	writeBytes(t, p.strace, []byte("strace"), 0o755)
 	p.gitBin, p.gitSum = realGit(t)
+	// Every probed tool has a binary on its root, outside the checkout: an
+	// absent probe binary is a gate (`probe-absent:`), and a fixture that wants no
+	// gate gives each probe one. The fake Options.ProbeRun answers for it.
+	probeBin := filepath.Join(p.base, "probebin")
+	for _, n := range []string{"cc", "xtool"} {
+		writeBytes(t, filepath.Join(probeBin, n), []byte("#!/bin/sh\n"), 0o755)
+	}
 	p.files = map[string]string{
-		"code/kiln/legacy/pinned.json":        `{"languages": []}`,
-		"code/kiln/legacy/never.json":         `{"packages": []}`,
-		"code/kiln/legacy/toolchains.json":    fixtureToolchains,
-		"code/kiln/legacy/env.json":           `{"names": ["FIXTURE_*", "LANG"]}`,
+		"code/kiln/legacy/pinned.json":     `{"languages": []}`,
+		"code/kiln/legacy/never.json":      `{"packages": []}`,
+		"code/kiln/legacy/toolchains.json": strings.NewReplacer("/opt/x/bin", probeBin, "/nonexistent/kiln-test-bin", probeBin).Replace(fixtureToolchains),
+		"code/kiln/legacy/env.json":        `{"names": ["FIXTURE_*", "LANG"]}`,
+		// The gate (Traced.Gate) reads the boundary file, as the plan does.
+		legacy.BoundaryPath:                   `{"schema_version": 1, "language_source_input_registry_sha256": "00", "boundaries": []}`,
 		"code/programs/go/build-tool/go.mod":  "module example.com/bt\n\ngo 1.26\n",
 		"code/programs/go/build-tool/main.go": "package main\n",
 		"code/packages/x/a/BUILD":             "echo a\n",
@@ -137,9 +151,40 @@ func newPrepAt(t *testing.T, base string) *prep {
 // commit writes host-roots.json and commits the repository.
 func (p *prep) commit() {
 	p.t.Helper()
-	roots := append([]string{`{"path": "/bin", "kind": "image"}`, `{"path": "/sbin", "kind": "image"}`}, p.roots...)
+	// The default roots, /bin and /sbin as image roots, unless the test gave its
+	// own entry for the same path: then the test's entry replaces the default
+	// (a fixture that must not depend on the host's file times declares them
+	// ephemeral; see censusDirFix).
+	given := map[string]bool{}
+	for _, r := range p.roots {
+		given[rootPath(r)] = true
+	}
+	var roots []string
+	for _, d := range []string{`{"path": "/bin", "kind": "image"}`, `{"path": "/sbin", "kind": "image"}`} {
+		if !given[rootPath(d)] {
+			roots = append(roots, d)
+		}
+	}
+	roots = append(roots, p.roots...)
 	sort.Slice(roots, func(a, b int) bool { return rootPath(roots[a]) < rootPath(roots[b]) })
-	p.files["code/kiln/legacy/host-roots.json"] = `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ["/dev/null"], "absent-ok": []}`
+	eph, absent := policyfix.Lists() // the real policy's lists (D27)
+	rawRoots := make([]json.RawMessage, len(roots))
+	for i, r := range roots {
+		rawRoots[i] = json.RawMessage(r)
+	}
+	hostRootsBytes, err := json.Marshal(struct {
+		Roots     []json.RawMessage `json:"roots"`
+		Ephemeral json.RawMessage   `json:"ephemeral"`
+		AbsentOK  json.RawMessage   `json:"absent-ok"`
+	}{
+		Roots:     rawRoots,
+		Ephemeral: json.RawMessage(eph),
+		AbsentOK:  json.RawMessage(absent),
+	})
+	if err != nil {
+		p.t.Fatal(err)
+	}
+	p.files["code/kiln/legacy/host-roots.json"] = string(hostRootsBytes)
 	var repo string
 	if p.repoDest != "" {
 		repo = newRepoAt(p.t, p.repoDest, p.files)
@@ -270,10 +315,25 @@ func (p *prep) options() Options {
 			}
 			return "strace -- version 6.8", nil
 		},
-		Kernel:    func() (string, error) { return "6.8.0-test", nil },
-		Structure: p.structure,
+		Kernel:         func() (string, error) { return "6.8.0-test", nil },
+		SelfStartTicks: func() (int64, error) { return 123456, nil },
+		Structure:      p.structure,
+		ProbeRun:       p.probeRun,
 	}
 }
+
+// probeRun is the fake Options.ProbeRun.
+func (p *prep) probeRun(r legacy.ProbeRun) ([]byte, error) {
+	p.probeRuns = append(p.probeRuns, r)
+	if p.probeRunFn != nil {
+		return p.probeRunFn(r)
+	}
+	return []byte(r.Argv0 + " version 1.2.3\n"), nil
+}
+
+// withProbeBin is the directory whose cc and xtool the fixture's toolchains
+// probe (newPrepAt makes it), where a test may add more.
+func (p *prep) withProbeBin(string) string { return filepath.Join(p.base, "probebin") }
 
 // structure is the fake Options.Structure: it records its input and reports
 // exactly the runs ProbeSpecs says a real probe would make, each "passing", so
@@ -392,7 +452,7 @@ func TestPrepareWritesTheSealedRecord(t *testing.T) {
 		KilnSHA256:          sumOf([]byte("kiln binary")), BuildToolSHA256: sumOf([]byte("build tool binary")),
 		StraceSHA256: sumOf([]byte("strace")), GitSHA256: p.gitSum,
 		Recorder: legacy.RecorderVersion, StraceVersion: "strace -- version 6.8", Kernel: "6.8.0-test",
-		JobStart: 1794000000, PreparedAt: "2026-11-13T02:03:04Z",
+		JobStart: 1794000000, PreparedAt: "2026-11-13T02:03:04Z", PreparedTicks: 123456,
 	}
 	part, err := ReadPartition(filepath.Join(res.PreDir, "build-plan.json"), 2)
 	if err != nil {
@@ -729,6 +789,15 @@ func TestPrepareRefusals(t *testing.T) {
 		"a kernel that cannot be read": {opts: func(p *prep, o *Options) {
 			o.Kernel = func() (string, error) { return "", errors.New("no /proc") }
 		}, want: "no /proc"},
+		"a start time that cannot be read": {opts: func(p *prep, o *Options) {
+			o.SelfStartTicks = func() (int64, error) { return 0, errors.New("no self stat here") }
+		}, want: "no self stat here"},
+		"a start time that says zero": {opts: func(p *prep, o *Options) {
+			o.SelfStartTicks = func() (int64, error) { return 0, nil }
+		}, want: "0 ticks"},
+		"a start time that is absurd": {opts: func(p *prep, o *Options) {
+			o.SelfStartTicks = func() (int64, error) { return recfmt.MaxClockTicks + 1, nil }
+		}, want: "ticks"},
 		"a plan package the graph does not know": {before: func(p *prep) {
 			plan = strings.Replace(fixturePlan, `"rel_path": "code/packages/x/z"`, `"rel_path": "code/packages/x/ghost"`, 1)
 		}, want: "graph export does not know"},
@@ -885,7 +954,7 @@ func TestPrepareWorksWithTheDefaultTmpdirOption(t *testing.T) {
 	// Options.Tmpdir defaults to legacy.RecordTmpdir, which a test must not
 	// create in the real /tmp: assert the default and stop before any write.
 	o := Options{Root: "/r", Dir: "/d", BuildTool: "/b", KilnExe: "/k", Strace: "/s", Git: "/g", ShardCount: 1}
-	if err := o.normalize(); err != nil || o.Tmpdir != legacy.RecordTmpdir || o.RunTool == nil || o.StraceVersion == nil || o.Kernel == nil || o.Now == nil || o.Getenv == nil {
+	if err := o.normalize(); err != nil || o.Tmpdir != legacy.RecordTmpdir || o.RunTool == nil || o.StraceVersion == nil || o.Kernel == nil || o.SelfStartTicks == nil || o.Now == nil || o.Getenv == nil {
 		t.Fatalf("%+v %v", o, err)
 	}
 }

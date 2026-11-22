@@ -10,7 +10,7 @@ It provides:
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping, Sized
 from dataclasses import dataclass
 from math import exp, floor, isfinite
 from numbers import Integral, Real
@@ -50,13 +50,37 @@ DEFAULT_MAX_SAMPLE_COUNT: int = 10_000_000
 # signal generation pipeline.
 
 
+def _safe_repr(value: object) -> str:
+    """Bounded O(1) representation for error messages (CWE-190 / CWE-400)."""
+    if isinstance(value, bool):
+        return repr(value)
+    if isinstance(value, int):
+        if value < -1_000_000 or value > 1_000_000:
+            return "<out-of-range int>"
+        return str(value)
+    if isinstance(value, float):
+        return repr(value)
+    if isinstance(value, str):
+        if len(value) > 64:
+            return f"<str len={len(value)}>"
+        return repr(value)
+    return f"<{type(value).__name__}>"
+
+
 def _finite_float(name: str, value: Real) -> float:
     """Convert a real number to float and reject non-finite values."""
     if isinstance(value, bool) or not isinstance(value, Real):
-        raise ValueError(f"{name} must be a finite real number, got {value!r}")
-    converted = float(value)
+        raise ValueError(
+            f"{name} must be a finite real number, got {_safe_repr(value)}"
+        )
+    try:
+        converted = float(value)
+    except OverflowError as exc:
+        raise ValueError(
+            f"{name} overflows float range: {_safe_repr(value)}"
+        ) from exc
     if not isfinite(converted):
-        raise ValueError(f"{name} must be finite, got {value!r}")
+        raise ValueError(f"{name} must be finite, got {_safe_repr(value)}")
     return converted
 
 
@@ -83,6 +107,8 @@ def _sample_rate(name: str, value: Real) -> float:
         raise ValueError(
             f"{name} {converted} exceeds MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
         )
+    if not isfinite(1.0 / converted):
+        raise ValueError(f"{name} subnormal {converted} has non-finite period")
     return converted
 
 
@@ -107,15 +133,18 @@ def _unit_float(name: str, value: Real) -> float:
 def _positive_int(name: str, value: int) -> int:
     """Convert an integral value to int and ensure it is > 0."""
     if isinstance(value, bool) or not isinstance(value, Integral):
-        raise ValueError(f"{name} must be an integer > 0, got {value!r}")
+        raise ValueError(f"{name} must be an integer > 0, got {_safe_repr(value)}")
     converted = int(value)
     if converted <= 0:
-        raise ValueError(f"{name} must be > 0, got {converted}")
+        raise ValueError(f"{name} must be > 0, got {_safe_repr(converted)}")
     return converted
 
 
 def _fractional_part(value: float) -> float:
     """Return the fractional part of a floating-point value: x - floor(x)."""
+    if not isfinite(value):
+        # NaN, like the Rust and TypeScript lanes (math.floor would raise).
+        return float("nan")
     return value - floor(value)
 
 
@@ -126,7 +155,12 @@ def _pseudo_noise(sample_index: int, seed: int) -> float:
     statistically uniform noise without allocating state or using external PRNGs.
     """
     phase = (sample_index + 1) * (seed * 0.161_803_398_874_989_5 + 0.618_033_988_75)
-    return 2.0 * _fractional_part(sin(TWO_PI * phase) * 43_758.545_312_3) - 1.0
+    # trig.sin is NaN beyond 2**29 radians (PHY00a 3.4.1) and this phase grows
+    # without bound (seed 1e9 is past it at sample 0).  The sine has period 1 in
+    # cycles, so keep only the fractional cycle first (PHY00a 7); the subtraction
+    # is exact in binary64.  Python, Rust and TypeScript do exactly this.
+    cycles = _fractional_part(phase)
+    return 2.0 * _fractional_part(sin(TWO_PI * cycles) * 43_758.545_312_3) - 1.0
 
 
 # =============================================================================
@@ -263,29 +297,43 @@ class PercussionVoiceProfile:
     choke_group: str | None = None
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "id", str(self.id))
-        if self.id == "":
-            raise ValueError("id must be non-empty")
-        object.__setattr__(self, "display_name", str(self.display_name))
-        if self.display_name == "":
-            raise ValueError("display_name must be non-empty")
-        object.__setattr__(self, "family", str(self.family))
-        if self.family == "":
-            raise ValueError("family must be non-empty")
+        if not isinstance(self.id, str) or self.id == "":
+            raise ValueError("id must be a non-empty string")
+        if not isinstance(self.display_name, str) or self.display_name == "":
+            raise ValueError("display_name must be a non-empty string")
+        if not isinstance(self.family, str) or self.family == "":
+            raise ValueError("family must be a non-empty string")
 
         gain = _unit_float("gain", self.gain)
         object.__setattr__(self, "gain", gain)
 
-        modes_tuple = tuple(self.modes)
-        if len(modes_tuple) > MAX_PERCUSSION_MODES:
-            raise ValueError(
-                f"modes count {len(modes_tuple)} exceeds "
-                f"MAX_PERCUSSION_MODES={MAX_PERCUSSION_MODES}"
-            )
-        object.__setattr__(self, "modes", modes_tuple)
+        if isinstance(self.modes, (str, bytes, bytearray)) or not isinstance(
+            self.modes, Iterable
+        ):
+            raise ValueError("modes must be an iterable of PercussionMode")
+        if isinstance(self.modes, Sized):
+            try:
+                declared_len = len(self.modes)
+            except OverflowError as exc:
+                raise ValueError(
+                    f"modes count exceeds MAX_PERCUSSION_MODES={MAX_PERCUSSION_MODES}"
+                ) from exc
+            if declared_len > MAX_PERCUSSION_MODES:
+                raise ValueError(
+                    f"modes count {declared_len} exceeds "
+                    f"MAX_PERCUSSION_MODES={MAX_PERCUSSION_MODES}"
+                )
+
+        mode_list: list[PercussionMode] = []
         for index, mode in enumerate(self.modes):
+            if index >= MAX_PERCUSSION_MODES:
+                raise ValueError(
+                    f"modes count exceeds MAX_PERCUSSION_MODES={MAX_PERCUSSION_MODES}"
+                )
             if not isinstance(mode, PercussionMode):
                 raise ValueError(f"modes[{index}] must be a PercussionMode")
+            mode_list.append(mode)
+        object.__setattr__(self, "modes", tuple(mode_list))
 
         if self.noise_profile is not None and not isinstance(
             self.noise_profile,
@@ -298,8 +346,16 @@ class PercussionVoiceProfile:
         click = _non_negative_float("click_amplitude", self.click_amplitude)
         object.__setattr__(self, "click_amplitude", click)
 
-        if self.choke_group is not None:
-            object.__setattr__(self, "choke_group", str(self.choke_group))
+        if self.choke_group is not None and not isinstance(self.choke_group, str):
+            raise ValueError("choke_group must be a string or None")
+
+        total = click + sum(mode.amplitude for mode in mode_list)
+        if self.noise_profile is not None:
+            total += self.noise_profile.amplitude
+        if not isfinite(total):
+            raise ValueError(
+                "voice component amplitude sum overflows finite float range"
+            )
 
     def amplitude_normalizer(self) -> float:
         """Compute the sum of peak component amplitudes for gain normalization."""
@@ -319,22 +375,25 @@ class DrumKitProfile:
     voices_by_hit_id: dict[str, PercussionVoiceProfile]
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "id", str(self.id))
-        if self.id == "":
-            raise ValueError("id must be non-empty")
-        object.__setattr__(self, "display_name", str(self.display_name))
-        if self.display_name == "":
-            raise ValueError("display_name must be non-empty")
+        if not isinstance(self.id, str) or self.id == "":
+            raise ValueError("id must be a non-empty string")
+        if not isinstance(self.display_name, str) or self.display_name == "":
+            raise ValueError("display_name must be a non-empty string")
+        if not isinstance(self.voices_by_hit_id, Mapping):
+            raise ValueError("voices_by_hit_id must be a mapping")
+        try:
+            kit_len = len(self.voices_by_hit_id)
+        except OverflowError as exc:
+            raise ValueError("voices_by_hit_id size exceeds allowed limit") from exc
+        if kit_len == 0:
+            raise ValueError("voices_by_hit_id must be non-empty")
         normalized: dict[str, PercussionVoiceProfile] = {}
         for hit_id, voice in self.voices_by_hit_id.items():
-            converted_hit = str(hit_id)
-            if converted_hit == "":
-                raise ValueError("hit ids must be non-empty")
+            if not isinstance(hit_id, str) or hit_id == "":
+                raise ValueError("hit ids must be non-empty strings")
             if not isinstance(voice, PercussionVoiceProfile):
                 raise ValueError("every kit voice must be a PercussionVoiceProfile")
-            normalized[converted_hit] = voice
-        if not normalized:
-            raise ValueError("voices_by_hit_id must be non-empty")
+            normalized[hit_id] = voice
         object.__setattr__(self, "voices_by_hit_id", normalized)
 
 
@@ -404,7 +463,10 @@ class PercussionSignal:
             raw += (
                 mode.amplitude
                 * exp(-time / mode.decay_seconds)
-                * sin(TWO_PI * (mode.frequency_hz * time + mode.phase_cycles))
+                * sin(
+                    TWO_PI
+                    * _fractional_part(mode.frequency_hz * time + mode.phase_cycles)
+                )
             )
 
         if self.voice.noise_profile is not None:
@@ -432,6 +494,18 @@ class PercussionHitRender:
     signal: PercussionSignal
     floating_samples: SampleBuffer
     pcm_buffer: PCMBuffer
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.hit_id, str) or self.hit_id == "":
+            raise ValueError("hit_id must be a non-empty string")
+        if not isinstance(self.voice, PercussionVoiceProfile):
+            raise ValueError("voice must be a PercussionVoiceProfile")
+        if not isinstance(self.signal, PercussionSignal):
+            raise ValueError("signal must be a PercussionSignal")
+        if not isinstance(self.floating_samples, SampleBuffer):
+            raise ValueError("floating_samples must be a SampleBuffer")
+        if not isinstance(self.pcm_buffer, PCMBuffer):
+            raise ValueError("pcm_buffer must be a PCMBuffer")
 
 
 @dataclass(frozen=True, init=False)
@@ -477,13 +551,13 @@ class PercussionHitEvent:
         vel = _unit_float("velocity", velocity)
         object.__setattr__(self, "velocity", vel)
 
-        tid = str(track_id)
-        if tid == "":
-            raise ValueError("track_id must be non-empty")
-        object.__setattr__(self, "track_id", tid)
+        if not isinstance(track_id, str) or track_id == "":
+            raise ValueError("track_id must be non-empty string")
+        object.__setattr__(self, "track_id", track_id)
 
-        var = str(variation) if variation is not None else None
-        object.__setattr__(self, "variation", var)
+        if variation is not None and not isinstance(variation, str):
+            raise ValueError("variation must be a string or None")
+        object.__setattr__(self, "variation", variation)
 
     @property
     def start_time_seconds(self) -> float:
@@ -498,6 +572,38 @@ class PercussionSequenceRender:
     events: tuple[PercussionHitEvent, ...]
     floating_samples: SampleBuffer
     pcm_buffer: PCMBuffer
+
+    def __post_init__(self) -> None:
+        if isinstance(self.events, (str, bytes, bytearray, Mapping)) or not isinstance(
+            self.events, Iterable
+        ):
+            raise ValueError("events must be an iterable of PercussionHitEvent")
+        if isinstance(self.events, Sized):
+            try:
+                declared_len = len(self.events)
+            except OverflowError as exc:
+                raise ValueError(
+                    f"event count exceeds MAX_SEQUENCE_EVENTS={MAX_SEQUENCE_EVENTS}"
+                ) from exc
+            if declared_len > MAX_SEQUENCE_EVENTS:
+                raise ValueError(
+                    f"event count {declared_len} exceeds "
+                    f"MAX_SEQUENCE_EVENTS={MAX_SEQUENCE_EVENTS}"
+                )
+        ev_list: list[PercussionHitEvent] = []
+        for index, ev in enumerate(self.events):
+            if index >= MAX_SEQUENCE_EVENTS:
+                raise ValueError(
+                    f"event count exceeds MAX_SEQUENCE_EVENTS={MAX_SEQUENCE_EVENTS}"
+                )
+            if not isinstance(ev, PercussionHitEvent):
+                raise ValueError(f"events[{index}] must be a PercussionHitEvent")
+            ev_list.append(ev)
+        object.__setattr__(self, "events", tuple(ev_list))
+        if not isinstance(self.floating_samples, SampleBuffer):
+            raise ValueError("floating_samples must be a SampleBuffer")
+        if not isinstance(self.pcm_buffer, PCMBuffer):
+            raise ValueError("pcm_buffer must be a PCMBuffer")
 
     @property
     def sample_rate_hz(self) -> float:
@@ -767,7 +873,7 @@ def get_drum_kit(kit: str | DrumKitProfile) -> DrumKitProfile:
     try:
         return _KITS[kit]
     except KeyError as exc:
-        raise ValueError(f"unknown drum kit {kit!r}") from exc
+        raise ValueError(f"unknown drum kit {_safe_repr(kit)}") from exc
 
 
 def get_percussion_voice(
@@ -782,7 +888,9 @@ def get_percussion_voice(
     try:
         return active_kit.voices_by_hit_id[hit_id]
     except KeyError as exc:
-        raise ValueError(f"unknown hit {hit_id!r} in kit {active_kit.id!r}") from exc
+        raise ValueError(
+            f"unknown hit {_safe_repr(hit_id)} in kit {_safe_repr(active_kit.id)}"
+        ) from exc
 
 
 def _validate_render_budget(
@@ -794,7 +902,8 @@ def _validate_render_budget(
     limit = _positive_int("max_sample_count", max_sample_count)
     if count > limit:
         raise ValueError(
-            f"render would create {count} samples, above max_sample_count={limit}"
+            f"render would create {_safe_repr(count)} samples, "
+            f"above max_sample_count={_safe_repr(limit)}"
         )
 
 
@@ -821,7 +930,7 @@ def render_percussion_hit(
     mode_limit = _positive_int("max_mode_count", max_mode_count)
     if mode_limit > MAX_PERCUSSION_MODES:
         raise ValueError(
-            f"max_mode_count {mode_limit} exceeds "
+            f"max_mode_count {_safe_repr(mode_limit)} exceeds "
             f"MAX_PERCUSSION_MODES={MAX_PERCUSSION_MODES}"
         )
     if len(voice.modes) > mode_limit:
@@ -840,7 +949,7 @@ def render_percussion_hit(
     sample_limit = _positive_int("max_sample_count", max_sample_count)
     if sample_limit > MAX_SAMPLE_COUNT:
         raise ValueError(
-            f"max_sample_count {sample_limit} exceeds "
+            f"max_sample_count {_safe_repr(sample_limit)} exceeds "
             f"MAX_SAMPLE_COUNT={MAX_SAMPLE_COUNT}"
         )
 
@@ -893,10 +1002,27 @@ def apply_hihat_choke(
         sample_rate_hz: Audio sample rate in Hertz.
         choke_ramp_seconds: Linear release ramp duration (default 15 ms).
     """
-    total_len = len(samples)
-    if total_len > MAX_SAMPLE_COUNT:
+    if isinstance(samples, (str, bytes, bytearray, Mapping)):
         raise ValueError(
-            f"samples length {total_len} exceeds MAX_SAMPLE_COUNT={MAX_SAMPLE_COUNT}"
+            f"samples must be an iterable of finite real numbers, "
+            f"got {_safe_repr(samples)}"
+        )
+    if isinstance(samples, Sized):
+        try:
+            declared_len = len(samples)
+        except OverflowError as exc:
+            raise ValueError(
+                f"samples length exceeds MAX_SAMPLE_COUNT={MAX_SAMPLE_COUNT}"
+            ) from exc
+        if declared_len > MAX_SAMPLE_COUNT:
+            raise ValueError(
+                f"samples length {declared_len} exceeds "
+                f"MAX_SAMPLE_COUNT={MAX_SAMPLE_COUNT}"
+            )
+    if not isinstance(samples, Iterable):
+        raise ValueError(
+            f"samples must be an iterable of finite real numbers, "
+            f"got {_safe_repr(samples)}"
         )
 
     hit_start = _non_negative_float("hit_start_seconds", hit_start_seconds)
@@ -909,7 +1035,14 @@ def apply_hihat_choke(
             f"MAX_HIT_DURATION_SECONDS={MAX_HIT_DURATION_SECONDS}"
         )
 
-    output = list(samples)
+    output: list[float] = []
+    for index, s in enumerate(samples):
+        if index >= MAX_SAMPLE_COUNT:
+            raise ValueError(
+                f"samples length exceeds MAX_SAMPLE_COUNT={MAX_SAMPLE_COUNT}"
+            )
+        output.append(_finite_float(f"samples[{index}]", s))  # type: ignore[arg-type]
+    total_len = len(output)
     if total_len == 0:
         return output
 
@@ -976,9 +1109,11 @@ def _normalize_event(event: object) -> PercussionHitEvent:
             )
         raise ValueError(
             "event tuple/list must contain at least (hit_id, start_seconds), "
-            f"got {event!r}"
+            f"got {_safe_repr(event)}"
         )
     if isinstance(event, dict):
+        if "hit_id" not in event:
+            raise ValueError("event dict missing required key 'hit_id'")
         st = event.get("start_seconds", event.get("start_time_seconds", 0.0))
         vel = event.get("velocity", event.get("amplitude", 1.0))
         return PercussionHitEvent(
@@ -1055,28 +1190,47 @@ def render_percussion_sequence(
     event_limit = _positive_int("max_sequence_events", max_sequence_events)
     if event_limit > MAX_SEQUENCE_EVENTS:
         raise ValueError(
-            f"max_sequence_events {event_limit} exceeds "
+            f"max_sequence_events {_safe_repr(event_limit)} exceeds "
             f"MAX_SEQUENCE_EVENTS={MAX_SEQUENCE_EVENTS}"
         )
     sample_limit = _positive_int("max_sample_count", max_sample_count)
     if sample_limit > MAX_SAMPLE_COUNT:
         raise ValueError(
-            f"max_sample_count {sample_limit} exceeds "
+            f"max_sample_count {_safe_repr(sample_limit)} exceeds "
             f"MAX_SAMPLE_COUNT={MAX_SAMPLE_COUNT}"
         )
     mode_limit = _positive_int("max_mode_count", max_mode_count)
     if mode_limit > MAX_PERCUSSION_MODES:
         raise ValueError(
-            f"max_mode_count {mode_limit} exceeds "
+            f"max_mode_count {_safe_repr(mode_limit)} exceeds "
             f"MAX_PERCUSSION_MODES={MAX_PERCUSSION_MODES}"
         )
 
     # 2. Normalize events and check sequence count
+    if isinstance(events, (str, bytes, bytearray, Mapping)) or not isinstance(
+        events, Iterable
+    ):
+        raise ValueError(
+            f"events must be an iterable of percussion events, got {_safe_repr(events)}"
+        )
+    if isinstance(events, Sized):
+        try:
+            declared_events = len(events)
+        except OverflowError as exc:
+            raise ValueError(
+                f"event count exceeds max_sequence_events={event_limit}"
+            ) from exc
+        if declared_events > event_limit:
+            raise ValueError(
+                f"event count {declared_events} exceeds "
+                f"max_sequence_events={event_limit}"
+            )
+
     normalized_events: list[PercussionHitEvent] = []
     for ev in events:
-        normalized_events.append(_normalize_event(ev))
-        if len(normalized_events) > event_limit:
+        if len(normalized_events) >= event_limit:
             raise ValueError(f"event count exceeds max_sequence_events={event_limit}")
+        normalized_events.append(_normalize_event(ev))
 
     pcm_format = PCMFormat(sample_rate_hz=sample_rate)
     if not normalized_events:
@@ -1102,7 +1256,7 @@ def render_percussion_sequence(
         voice = get_percussion_voice(ev.hit_id, kit=active_kit)
         if len(voice.modes) > mode_limit:
             raise ValueError(
-                f"voice {voice.id!r} has {len(voice.modes)} modes, "
+                f"voice {_safe_repr(voice.id)} has {len(voice.modes)} modes, "
                 f"above max_mode_count={mode_limit}"
             )
         event_voices.append(voice)

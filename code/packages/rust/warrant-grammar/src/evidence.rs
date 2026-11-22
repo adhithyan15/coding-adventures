@@ -32,19 +32,22 @@ use std::fmt::Write as _;
 use std::path::Path;
 
 use crate::binding::{
-    is_rust_identifier, validate_bindings, BindingManifest, HostShape, HostSpec, HostTy,
+    is_rust_identifier, is_rust_path, validate_bindings, BindingManifest, HostShape, HostSpec, HostTy,
+    InoutForm, MAX_EXPORT_SEGMENTS,
 };
-use crate::checker::CheckedWarrantModule;
+use crate::checker::{CheckedWarrantModule, PostSlot};
 use crate::codegen::{
     find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
 };
 use crate::fixed::{self, FixedTy};
 use crate::vectors::{self, LoadedTable, Shape as ColShape};
 use crate::parser::{
-    valid_table_path, BinaryOp, ClaimDecl, Declaration, Expression, Literal, OpDecl, Parameter, Pattern, ProjKey,
+    valid_table_path, BinaryOp, ClaimDecl, Declaration, EnsuresDecl, Expression, Literal, OpDecl, Parameter, Pattern, ProjKey,
     TypeExpr,
     UnaryOp, Version, WarrantFile, Width,
 };
+
+mod inout;
 
 /// The runtime prelude embedded verbatim in every generated harness.
 const PRELUDE: &str = include_str!("evidence_prelude.rs.txt");
@@ -137,12 +140,37 @@ fn span_of(e: &Expression<'_>) -> (usize, usize) {
 // Binder types and domain sizes
 // ---------------------------------------------------------------------------
 
+/// The name of the error type of a [`Ty::Res`] (`E` in `Result<T, E>`).
+///
+/// The generator never needs it (the harness prelude names only the cases), but
+/// an evaluator-compatible `Result` error value is keyed on it, so the public
+/// domain enumerator ([`crate::domain`]) must know it.  It is *ignored by
+/// equality* so that carrying it changes no slot match or type comparison the
+/// generator makes: two result types that differ only here still compare equal,
+/// exactly as before the field existed.
+///
+/// **Consequence:** `Domain::Res` values that differ only in error type name
+/// compare equal, so `Domain ==` must not be used as a cache key for *values*
+/// (two such domains enumerate different error values).
+#[derive(Clone, Debug, Eq)]
+pub struct ErrName(pub String);
+
+impl PartialEq for ErrName {
+    fn eq(&self, _other: &ErrName) -> bool {
+        true
+    }
+}
+
 /// Generator-side binder type (mirrors `Ty` in the prelude).
 ///
 /// The first nine variants are the scalar types of WX-B; the rest are the WX-A
 /// composites, built from component types (VER04j section 4.7).
+///
+/// Equality ignores the error type name inside `Res` (see [`ErrName`]), so `==`
+/// is a *type-shape* comparison, not a value-identity one.
 #[derive(Clone, Debug, PartialEq, Eq)]
-enum Ty {
+#[non_exhaustive]
+pub enum Ty {
     Bool,
     U8,
     U64,
@@ -163,11 +191,14 @@ enum Ty {
     Data {
         name: String,
         ctors: Vec<(String, Vec<Ty>)>,
+        /// Declared as a `record` (not a `variant`): the evaluator's
+        /// `EvalValue::Con.record`.  Read from the declaration.
+        record: bool,
     },
     /// WX-A: `Option<T>`.
     Opt(Box<Ty>),
     /// WX-A: `Result<T, E>` with the error cases of `E` in declaration order.
-    Res(Box<Ty>, Vec<String>),
+    Res(Box<Ty>, Vec<String>, ErrName),
     /// WX-A: `List<T>`.
     List(Box<Ty>),
 }
@@ -190,7 +221,7 @@ impl Ty {
                 let items: Vec<String> = cs.iter().map(Ty::rust).collect();
                 format!("Ty::Tuple(&[{}])", items.join(", "))
             }
-            Ty::Data { name, ctors } => {
+            Ty::Data { name, ctors, .. } => {
                 let items: Vec<String> = ctors
                     .iter()
                     .map(|(c, fs)| {
@@ -201,7 +232,7 @@ impl Ty {
                 format!("Ty::Data(\"{name}\", &[{}])", items.join(", "))
             }
             Ty::Opt(t) => format!("Ty::Opt(&{})", t.rust()),
-            Ty::Res(t, cases) => {
+            Ty::Res(t, cases, _) => {
                 let items: Vec<String> = cases.iter().map(|c| format!("\"{c}\"")).collect();
                 format!("Ty::Res(&{}, &[{}])", t.rust(), items.join(", "))
             }
@@ -224,7 +255,7 @@ impl Ty {
     /// Result<T, E>          |T| + #cases
     /// List<T>               1 + d + d^2 + e^3     d = min(16,|T|), e = min(4,|T|)
     /// ```
-    fn domain_size(&self) -> Option<u64> {
+    pub fn domain_size(&self) -> Option<u64> {
         match self {
             Ty::Bool => Some(2),
             Ty::U8 => Some(256),
@@ -248,7 +279,7 @@ impl Ty {
                 Some(total)
             }
             Ty::Opt(t) => t.domain_size()?.checked_add(1),
-            Ty::Res(t, cases) => t.domain_size()?.checked_add(cases.len() as u64),
+            Ty::Res(t, cases, _) => t.domain_size()?.checked_add(cases.len() as u64),
             Ty::List(t) => {
                 let n = t.domain_size()?;
                 let (d, e) = (n.min(16), n.min(4));
@@ -284,20 +315,20 @@ impl Ty {
                 node.checked_add(worst)
             }
             Ty::Opt(t) => node.checked_add(t.elem_cost()?),
-            Ty::Res(t, _) => node.checked_add(t.elem_cost()?.max(2 * node)),
+            Ty::Res(t, _, _) => node.checked_add(t.elem_cost()?.max(2 * node)),
             Ty::List(t) => node.checked_add(t.elem_cost()?.checked_mul(3)?),
             _ => Some(node),
         }
     }
 
     /// Upper bound on the bytes the enumerated domain occupies.
-    fn domain_bytes(&self) -> Option<u64> {
+    pub fn domain_bytes(&self) -> Option<u64> {
         self.domain_size()?.checked_mul(self.elem_cost()?)
     }
 }
 
 /// Size of the Cartesian product of component domains (`None` on overflow).
-fn product_size(cs: &[Ty]) -> Option<u64> {
+pub fn product_size(cs: &[Ty]) -> Option<u64> {
     let mut n = 1u64;
     for c in cs {
         n = n.checked_mul(c.domain_size()?)?;
@@ -307,7 +338,7 @@ fn product_size(cs: &[Ty]) -> Option<u64> {
 
 /// Cartesian-product size and total domain bytes of a binder list, or `None`
 /// when either overflows a `u64` or a width is over the cap.
-fn claim_domain(tys: &[Ty]) -> Option<(u64, u64)> {
+pub fn claim_domain(tys: &[Ty]) -> Option<(u64, u64)> {
     let mut product = 1u64;
     let mut bytes = 0u64;
     for t in tys {
@@ -324,7 +355,7 @@ type FieldTys<'a> = Vec<(&'a str, TypeExpr<'a>)>;
 /// turn a `TypeExpr` into a [`Ty`]: aliases, records, variants, error types
 /// and the constructor table.
 #[derive(Default)]
-struct TyEnv<'a> {
+pub(crate) struct TyEnv<'a> {
     aliases: HashMap<&'a str, TypeExpr<'a>>,
     records: HashMap<&'a str, FieldTys<'a>>,
     variants: HashMap<&'a str, Vec<(&'a str, FieldTys<'a>)>>,
@@ -336,7 +367,7 @@ struct TyEnv<'a> {
 }
 
 impl<'a> TyEnv<'a> {
-    fn new(file: &WarrantFile<'a>) -> TyEnv<'a> {
+    pub(crate) fn new(file: &WarrantFile<'a>) -> TyEnv<'a> {
         let mut env = TyEnv {
             aliases: HashMap::new(),
             records: HashMap::new(),
@@ -410,7 +441,7 @@ impl<'a> TyEnv<'a> {
 /// Resolve a declared type to the generator's [`Ty`] (aliases, records,
 /// variants and error types looked up in `env`).  Fixed-width names are `Fx`
 /// only in a v1 document.
-fn ty_of_type<'a>(
+pub(crate) fn ty_of_type<'a>(
     t: &TypeExpr<'a>,
     env: &TyEnv<'a>,
     v1: bool,
@@ -419,6 +450,96 @@ fn ty_of_type<'a>(
 ) -> Result<Ty, CodegenError> {
     let nodes = std::cell::Cell::new(0usize);
     ty_of_type_in(t, env, v1, span, depth, &nodes)
+}
+
+/// Does the declared type `t`, resolved the way the generator resolves it, mention the record
+/// (or variant) named `target` anywhere inside it?
+///
+/// The resolution is the generator's own: names are looked up in the [`TyEnv`] that
+/// [`ty_of_type`] uses (`model Name = Type` aliases, records, variants), so `model State = Impl`
+/// makes `State` mention `Impl`, as do `Option<State>`, `Result<State, E>`, `(State, U8)` and a
+/// record with a `State` field.  It exists for gates that must agree with the generator by
+/// construction (VOS-039c, CC11) instead of re-reading type text with their own rules.
+///
+/// Fails closed: a name it cannot resolve, or an alias or record chain nested deeper than 64
+/// (the generator's own depth bound), counts as a mention.  A type already expanded adds
+/// nothing the first expansion did not, so a shared sub-type is walked once (no diamond blow-up); a cycle is a mention.
+pub fn type_mentions(file: &WarrantFile<'_>, t: &TypeExpr<'_>, target: &str) -> bool {
+    let env = TyEnv::new(file);
+    let mut seen = Seen::default();
+    mentions_in(&env, t, target, 0, &mut seen)
+}
+
+fn mentions_in<'a>(
+    env: &TyEnv<'a>,
+    t: &TypeExpr<'a>,
+    target: &str,
+    depth: usize,
+    seen: &mut Seen,
+) -> bool {
+    if depth > 64 {
+        return true;
+    }
+    match t {
+        TypeExpr::Bytes { .. } => false,
+        TypeExpr::List { inner, .. } | TypeExpr::Option { inner, .. } => {
+            mentions_in(env, inner, target, depth + 1, seen)
+        }
+        TypeExpr::Tuple { elems, .. } => elems
+            .iter()
+            .any(|e| mentions_in(env, e, target, depth + 1, seen)),
+        TypeExpr::Result {
+            ok_type, err_name, ..
+        } => *err_name == target || mentions_in(env, ok_type, target, depth + 1, seen),
+        TypeExpr::Named { name, .. } => {
+            if *name == target {
+                return true;
+            }
+            if matches!(*name, "Bytes" | "Bool" | "U8" | "U64" | "Nat")
+                || FixedTy::from_name(name).is_some()
+            {
+                return false;
+            }
+            if !(env.aliases.contains_key(name)
+                || env.records.contains_key(name)
+                || env.variants.contains_key(name))
+            {
+                return true;
+            }
+            // A name met again while its own expansion is still open is a cycle (the checker
+            // refuses an alias cycle, W0203): fail closed.  A name already fully expanded
+            // without a mention adds nothing, so it is not walked twice.
+            if seen.done.contains(*name) {
+                return false;
+            }
+            if !seen.open.insert((*name).to_string()) {
+                return true;
+            }
+            let found = if let Some(a) = env.aliases.get(name) {
+                mentions_in(env, a, target, depth + 1, seen)
+            } else if let Some(fs) = env.records.get(name) {
+                fs.iter()
+                    .any(|(_, ft)| mentions_in(env, ft, target, depth + 1, seen))
+            } else {
+                env.variants.get(name).is_some_and(|cs| {
+                    cs.iter().any(|(_, fs)| {
+                        fs.iter()
+                            .any(|(_, ft)| mentions_in(env, ft, target, depth + 1, seen))
+                    })
+                })
+            };
+            seen.open.remove(*name);
+            seen.done.insert((*name).to_string());
+            found
+        }
+    }
+}
+
+/// The names [`type_mentions`] has expanded: `open` are on the current path, `done` are finished.
+#[derive(Default)]
+struct Seen {
+    open: HashSet<String>,
+    done: HashSet<String>,
 }
 
 /// Most nodes a binder or result type may expand to.  Records and variants are
@@ -482,6 +603,7 @@ fn ty_of_type_in<'a>(
                         return Ok(Ty::Data {
                             name: other.to_string(),
                             ctors: vec![(other.to_string(), fs?)],
+                            record: true,
                         });
                     }
                     if let Some(ctors) = env.variants.get(other) {
@@ -494,6 +616,7 @@ fn ty_of_type_in<'a>(
                         return Ok(Ty::Data {
                             name: other.to_string(),
                             ctors: out,
+                            record: false,
                         });
                     }
                     Err(unsupported(format!("binder type {other}"), span))
@@ -521,6 +644,7 @@ fn ty_of_type_in<'a>(
             Ok(Ty::Res(
                 Box::new(rec(ok_type)?),
                 cases.iter().map(|c| c.to_string()).collect(),
+                ErrName(err_name.to_string()),
             ))
         }
     }
@@ -846,7 +970,7 @@ fn emit_v1_call(
     let arity = match name {
         "max_value" | "min_value" => 0,
         "widen" | "wrap" | "try" | "to_int" | "to_nat" | "bit_not" | "popcount" | "clz" | "ctz"
-        | "be_bytes" | "le_bytes" | "from_be" | "from_le" | "Some" => 1,
+        | "be_bytes" | "le_bytes" | "from_be" | "from_le" | "Some" | "fixed" => 1,
         "checked_add" | "checked_sub" | "checked_mul" | "div" | "rem" | "div_trunc"
         | "rem_trunc" | "unwrap_or" | "imin" | "imax" | "bit_and" | "bit_or" | "bit_xor" | "shl" | "shr" | "sar"
         | "rotl" | "rotr" | "bit" => 2,
@@ -858,6 +982,14 @@ fn emit_v1_call(
     let t = || static_fixed(widths, span);
     Ok(Some(match name {
         "Some" => format!("V::Opt(Some(Box::new({})))", p[0]),
+        // VOS-D025: `fixed<N>(bytes)` is `Some(bytes)` of exactly N bytes, else `None`
+        // (the ground evaluator's rule; VER04 section 4).  N is a literal width: a
+        // symbolic one has no value in a generated model.
+        "fixed" => match widths {
+            [Width::Literal(n)] if *n <= MAX_FIXED_WIDTH => format!("V::fixed_n({n}usize, &{})", p[0]),
+            [Width::Literal(n)] => return Err(width_too_large(*n, span)),
+            _ => return Err(unsupported("`fixed` needs one literal width", span)),
+        },
         "max_value" => format!("V::max_value({})", t()?),
         "min_value" => format!("V::min_value({})", t()?),
         "widen" => format!("V::widen({}, &{})", t()?, p[0]),
@@ -901,9 +1033,15 @@ fn count_binders(e: &Expression<'_>, out: &mut HashSet<String>) {
                 if name.segments.len() == 1
                     && matches!(name.segments[0], "shl" | "shr" | "sar" | "rotl" | "rotr" | "bit")
                 {
+                    // Parentheses do not matter (VER04r 5.1, 16.10 R10): `shl(x, (n))` selects `n`
+                    // exactly as `shl(x, n)` does, because the corpus IR has no groups.
+                    let mut count = list.get(1);
+                    while let Some(Expression::Grouped { inner, .. }) = count {
+                        count = Some(&**inner);
+                    }
                     if let Some(Expression::Reference {
                         name: n, args: None, ..
-                    }) = list.get(1)
+                    }) = count
                     {
                         if n.segments.len() == 1 {
                             out.insert(n.segments[0].to_string());
@@ -990,7 +1128,7 @@ fn demote_first(ty: &mut Ty, path: &mut Vec<String>) -> bool {
                 hit
             })
         }
-        Ty::Opt(t) | Ty::List(t) | Ty::Res(t, _) => demote_first(t, path),
+        Ty::Opt(t) | Ty::List(t) | Ty::Res(t, _, _) => demote_first(t, path),
         _ => false,
     }
 }
@@ -1028,6 +1166,70 @@ fn demote_for_budget(tys: &mut [Ty], budget: u64) -> Vec<(usize, Vec<String>)> {
     demoted
 }
 
+/// Budget demotions: binder index and component path, in the order applied.
+pub(crate) type Demoted = Vec<(usize, Vec<String>)>;
+
+/// The resolved binder domains of one claim: the declared types, the
+/// `NatCount` refinement of a `Nat` that flows into a shift count, and the
+/// budget demotion of VER04j section 2.6, then the budget check (`W0706`).
+///
+/// This is the single definition both the harness generator (in
+/// `generate_evidence_harness_with_tables`) and the public
+/// [`crate::domain::resolve_binders`] call, so the descriptor *types* (and the
+/// demotions) a corpus emitter sees are by construction the generator's.  The
+/// *values* are not guaranteed identical: the harness prelude's enumeration
+/// order of byte strings differs from the spec's, which changes the first-16 /
+/// first-4 prefix a `List` of byte strings takes (see `crate::domain`).  It does
+/// no emission and has no side effect.  The returned list names the demotions
+/// in the order they were applied (binder index, component path).
+pub(crate) fn resolve_claim_tys<'a>(
+    binders: &[Parameter<'a>],
+    cbody: Option<&Expression<'a>>,
+    env: &TyEnv<'a>,
+    v1: bool,
+    budget: u64,
+    label: &str,
+    span: (usize, usize),
+) -> Result<(Vec<Ty>, Demoted), CodegenError> {
+    let mut tys: Vec<Ty> = binders
+        .iter()
+        .map(|b| ty_of(b, v1, env))
+        .collect::<Result<_, _>>()?;
+    let mut demoted: Vec<(usize, Vec<String>)> = Vec::new();
+    if v1 {
+        // A Nat that flows directly into a shift count gets the
+        // count-aware domain (VER04j section 3.6).
+        let mut counts = HashSet::new();
+        if let Some(cbody) = cbody {
+            count_binders(cbody, &mut counts);
+        }
+        for (t, b) in tys.iter_mut().zip(binders.iter()) {
+            if *t == Ty::Nat && counts.contains(b.name) {
+                *t = Ty::NatCount;
+            }
+        }
+        // The budget rule of section 2.6.
+        demoted = demote_for_budget(&mut tys, budget);
+    }
+    let (shown, over) = match claim_domain(&tys) {
+        Some((p, b)) => (
+            format!("{p} ({b} bytes)"),
+            p > budget || b > DOMAIN_BYTES_BUDGET,
+        ),
+        None => ("overflowing u64".to_string(), true),
+    };
+    if over {
+        return Err(CodegenError {
+            code: DiagnosticCode::W0706,
+            kind: CodegenErrorKind::UnsupportedTarget(format!(
+                "claim {label} exhaustive domain {shown} exceeds budget {budget} cases / {DOMAIN_BYTES_BUDGET} bytes"
+            )),
+            span,
+        });
+    }
+    Ok((tys, demoted))
+}
+
 // ---------------------------------------------------------------------------
 // Fault registry
 // ---------------------------------------------------------------------------
@@ -1061,6 +1263,13 @@ const WXA_FAULTS: &[(&str, &str)] = &[
     ("wrong-ctor", "WrongCtor"),
     ("ok-as-err", "OkAsErr"),
     ("off-by-one-consumed", "OffByOneConsumed"),
+    // WX-SV2: `field-zero` that is never inert (the lowest bit flips).
+    ("field-flip", "FieldFlip"),
+    // WX-FAULT2: mutate one directly observable status flag in a record.
+    ("bool-field-flip", "BoolFieldFlip"),
+    // VOS-039c: `field-flip` aimed at the LAST numeric field, so the oracle
+    // register of an `-any` (the last field of `Impl`) can be corrupted.
+    ("field-flip-last", "FieldFlipLast"),
 ];
 
 /// Faults for an operation whose result is a byte string (a digest, a codec
@@ -1079,6 +1288,31 @@ const WXH_FAULTS: &[(&str, &str)] = &[
     ("limit-after-alloc", "LimitAfterAlloc"),
     ("truncate-silently", "TruncateSilently"),
 ];
+
+/// The faults of VER04k section 4.8 (WX-G): rewrites of an `inout` adapter's
+/// read-back of the post-state.  They apply to the operation they are bound to only.
+const WXG_FAULTS: &[(&str, &str)] = &[
+    ("stale-post", "StalePost"),
+    ("skip-last-write", "SkipLastWrite"),
+    ("drop-last-push", "DropLastPush"),
+    ("clobber-prefix", "ClobberPrefix"),
+    ("cursor-off-by-one", "CursorOffByOne"),
+];
+
+/// WX-FAULT2 applies only to a declared record (never a variant) with a
+/// directly observable Bool field, optionally behind exactly one Result or
+/// Option. Resolve aliases before this predicate is called.
+fn bool_field_flip_applies(full: &Ty) -> bool {
+    let record_has_bool = |ty: &Ty| {
+        matches!(ty, Ty::Data { ctors, record: true, .. }
+            if ctors.len() == 1 && ctors[0].1.contains(&Ty::Bool))
+    };
+    match full {
+        Ty::Data { .. } => record_has_bool(full),
+        Ty::Res(payload, _, _) | Ty::Opt(payload) => record_has_bool(payload),
+        _ => false,
+    }
+}
 
 fn fault_variant(name: &str) -> Option<&'static str> {
     FAULTS
@@ -1105,6 +1339,12 @@ fn fault_variant(name: &str) -> Option<&'static str> {
         })
         .or_else(|| {
             WXE_FAULTS
+                .iter()
+                .find(|(n, _)| *n == name)
+                .map(|(_, v)| *v)
+        })
+        .or_else(|| {
+            WXG_FAULTS
                 .iter()
                 .find(|(n, _)| *n == name)
                 .map(|(_, v)| *v)
@@ -1166,6 +1406,7 @@ fn fault_block(used: &BTreeSet<String>) -> String {
         .chain(WXA_FAULTS.iter().copied())
         .chain(WXH_FAULTS.iter().copied())
         .chain(WXE_FAULTS.iter().copied())
+        .chain(WXG_FAULTS.iter().copied())
         .filter(|(n, _)| used.contains(*n))
         .collect();
     let mut s = String::new();
@@ -1242,6 +1483,9 @@ enum Shape {
     /// WX-A: a signature that mentions a tuple, record or variant, converted to
     /// and from the host through the bindings' `struct`/`enum`/`ret=` data.
     Composite,
+    /// WX-G: an operation with an `inout` parameter, called with a host `&mut`
+    /// and read back (VER04k section 4.6).
+    Inout,
 }
 
 impl Shape {
@@ -1250,7 +1494,7 @@ impl Shape {
     fn scoped(self) -> bool {
         matches!(
             self,
-            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite
+            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout
         )
     }
 }
@@ -1260,7 +1504,7 @@ impl Shape {
     /// the ones the operation's binding names (`negative_controls`).
     fn faults(self) -> &'static [(&'static str, &'static str)] {
         match self {
-            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite => &[],
+            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout => &[],
             Shape::BytesEq | Shape::FixedEq => {
                 &[("invert", "Fault::Invert"), ("ignore-last-byte", "Fault::IgnoreLastByte")]
             }
@@ -1274,6 +1518,9 @@ impl Shape {
 }
 
 fn shape_of<'a>(op: &OpDecl<'a>, v1: bool, env: &TyEnv<'a>) -> Result<Shape, CodegenError> {
+    if v1 && op.params.iter().any(|p| p.inout) {
+        return Ok(Shape::Inout);
+    }
     if v1
         && (op.params.iter().any(|p| env.has_composite(&p.param_type, 0))
             || env.has_composite(&op.return_type, 0))
@@ -1356,7 +1603,7 @@ fn adapter(
     let mut s = String::new();
     match shape {
         // Scalar operations are emitted by `scalar_adapter`/`scalar_adapter_v1`.
-        Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite => {}
+        Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout => {}
         Shape::BytesEq => {
             let _ = write!(
                 s,
@@ -1993,7 +2240,7 @@ fn to_host(
             }
             Ok(format!("({})", parts.join(", ")))
         }
-        (Ty::Data { name, ctors }, HostTy::Named(hn)) if hn == name => {
+        (Ty::Data { name, ctors, .. }, HostTy::Named(hn)) if hn == name => {
             let decl = hc
                 .spec
                 .types
@@ -2089,7 +2336,7 @@ fn from_host(t: &Ty, h: &HostTy, expr: &str, hc: &mut HostCx<'_>) -> Result<Stri
             }
             Ok(format!("{{ let {v} = {expr}; V::Tup(vec![{}]) }}", parts.join(", ")))
         }
-        (Ty::Data { name, ctors }, HostTy::Named(hn)) if hn == name => {
+        (Ty::Data { name, ctors, .. }, HostTy::Named(hn)) if hn == name => {
             let decl = hc
                 .spec
                 .types
@@ -2226,7 +2473,7 @@ fn composite_adapter<'a>(
     };
     let full = ty_of_type(&op.return_type, env, true, op.span, 0)?;
     let (payload, cases, is_result) = match &full {
-        Ty::Res(t, cases) => ((**t).clone(), cases.clone(), true),
+        Ty::Res(t, cases, _) => ((**t).clone(), cases.clone(), true),
         other => (other.clone(), Vec::new(), false),
     };
     let hret = match host.and_then(|h| h.ret.clone()) {
@@ -2247,8 +2494,14 @@ fn composite_adapter<'a>(
             "swap-components" => {
                 matches!(&core, Ty::Tuple(cs) if cs.len() >= 2 && cs.iter().all(|c| *c == cs[0]))
             }
-            "field-zero" => matches!(&core, Ty::Data { ctors, .. }
+            "field-zero" | "field-flip" => matches!(&core, Ty::Data { ctors, .. }
                 if ctors.len() == 1 && ctors[0].1.iter().any(is_numeric)),
+            "bool-field-flip" => bool_field_flip_applies(&full),
+            // VOS-039c: the last numeric field is a different field from the
+            // first only when there are two, so a record with one numeric
+            // field is refused (it would duplicate `field-flip`).
+            "field-flip-last" => matches!(&core, Ty::Data { ctors, .. }
+                if ctors.len() == 1 && ctors[0].1.iter().filter(|t| is_numeric(t)).count() >= 2),
             "wrong-ctor" => matches!(&core, Ty::Data { ctors, .. } if ctors.len() >= 2),
             "ok-as-err" => {
                 is_result && matches!(&core, Ty::Tuple(_) | Ty::Data { .. }) && !cases.is_empty()
@@ -2256,9 +2509,12 @@ fn composite_adapter<'a>(
             "missing-error" => is_result,
             // WX-H: the limit faults rewrite the one numeric parameter the
             // operation's `output` bound mentions.
-            "flip-result-bit" | "drop-last-result-byte" => {
-                matches!(&core, Ty::Bytes | Ty::BytesN(_))
+            // WX-FAULT1: `flip-result-bit` also applies to a fixed-width
+            // integer result (`Bytes -> U32`, a checksum or hash).
+            "flip-result-bit" => {
+                matches!(&core, Ty::Bytes | Ty::BytesN(_) | Ty::Fx(_) | Ty::FxEdge(_))
             }
+            "drop-last-result-byte" => matches!(&core, Ty::Bytes | Ty::BytesN(_)),
             "ignore-limit" | "off-by-one-limit" | "limit-after-alloc" => limit.is_some(),
             "truncate-silently" => {
                 limit.is_some()
@@ -2307,7 +2563,7 @@ fn composite_adapter<'a>(
         if faults.iter().any(|f| f == "limit-after-alloc") {
             let _ = writeln!(
                 s,
-                "    let hog = (fault == Fault::LimitAfterAlloc).then(|| vec![0u8; p{l} as usize]);"
+                "    let hog = (fault == Fault::LimitAfterAlloc).then(|| obs_scope(|| vec![0u8; p{l} as usize]));"
             );
         }
     }
@@ -2414,6 +2670,9 @@ fn composite_adapter<'a>(
             "drop-consumed" => "fault_drop_consumed(v)".to_string(),
             "swap-components" => "fault_swap_components(v)".to_string(),
             "field-zero" => "fault_field_zero(v)".to_string(),
+            "field-flip" => "fault_field_flip(v)".to_string(),
+            "bool-field-flip" => "fault_bool_field_flip(v)".to_string(),
+            "field-flip-last" => "fault_field_flip_last(v)".to_string(),
             "off-by-one-consumed" => "fault_off_by_one_consumed(v)".to_string(),
             "wrong-ctor" => format!("fault_wrong_ctor(v, {})", core.rust()),
             "ok-as-err" => format!("fault_ok_as_err(v, \"{}\")", cases[0]),
@@ -2428,6 +2687,25 @@ fn composite_adapter<'a>(
         let _ = write!(s, "    match fault {{\n{arms}        _ => v,\n    }}\n}}\n\n");
     }
     Ok(s)
+}
+
+/// WX-FAULT1: whether the composite result of `op`, inside any `Result` or
+/// `Option`, is a fixed-width integer.  Only then does the generated
+/// `fault_flip_result_bit` need its `V::Fixed` arm, so every other harness stays
+/// byte-identical.
+fn flips_fixed_result(op: &OpDecl<'_>, env: &TyEnv<'_>) -> bool {
+    let Ok(full) = ty_of_type(&op.return_type, env, true, op.span, 0) else {
+        return false;
+    };
+    let payload = match full {
+        Ty::Res(t, _, _) => *t,
+        other => other,
+    };
+    let core = match payload {
+        Ty::Opt(t) => *t,
+        other => other,
+    };
+    matches!(core, Ty::Fx(_) | Ty::FxEdge(_))
 }
 
 /// The declared error cases of the `Result` return type of an operation.
@@ -2512,6 +2790,103 @@ fn uses_composites<'a>(file: &WarrantFile<'a>, env: &TyEnv<'a>) -> bool {
 // WX-H helpers
 // ---------------------------------------------------------------------------
 
+/// VOS-D063 (VER04j section 14.3 item 54): wrap every call of `export` in the
+/// adapter text `adapter` in `obs_call!(..)`, so the allocation window covers
+/// the export and the drop of its result and nothing else (not the marshalling
+/// of its arguments or of its result; see `ObsHold` in the prelude).
+///
+/// A call is the identifier `export` (with any `path::` before it) directly
+/// followed by `(`.  EVERY occurrence of the identifier outside a string literal
+/// must be such a call: a method call `.export(`, a turbofish `export::<T>(`, a
+/// bare reference or a call that cannot be wrapped would leave an unobserved
+/// export call, so the function returns `None` (generation fails).  `None` also
+/// when there is no call at all.  The identifier must not continue a longer one
+/// (`op_<n>`, `<export>_x`).
+///
+/// ```text
+///   let v: V = match vos_ghost_insert_out(p0, p1) { .. };
+///   let v: V = match obs_call!(vos_ghost_insert_out(p0, p1)) { .. };
+/// ```
+fn scope_export_calls(adapter: &str, export: &str) -> Option<String> {
+    let is_ident = |c: char| c.is_ascii_alphanumeric() || c == '_';
+    // Byte ranges of string literals (their text is not code).
+    let mut strings: Vec<(usize, usize)> = Vec::new();
+    let mut open: Option<usize> = None;
+    let mut escaped = false;
+    for (i, c) in adapter.char_indices() {
+        match open {
+            None if c == '"' => open = Some(i),
+            Some(from) if !escaped && c == '"' => {
+                strings.push((from, i));
+                open = None;
+            }
+            _ => {}
+        }
+        escaped = open.is_some() && !escaped && c == '\\';
+    }
+    let in_string = |at: usize| strings.iter().any(|&(a, b)| at > a && at < b);
+    let mut out = String::with_capacity(adapter.len() + 64);
+    let mut rest = 0; // bytes of `adapter` already copied into `out`
+    let mut from = 0; // where to look for the next occurrence
+    let mut calls = 0;
+    while let Some(off) = adapter[from..].find(export) {
+        let at = from + off;
+        let end = at + export.len();
+        from = end;
+        let before = adapter[..at].chars().next_back();
+        let after = adapter[end..].chars().next();
+        if before.is_some_and(is_ident) || after.is_some_and(is_ident) || in_string(at) {
+            continue; // part of a longer identifier, or text
+        }
+        // A method call, a turbofish or a bare reference: not wrappable.
+        if before == Some('.') || after != Some('(') {
+            return None;
+        }
+        // Include a `crate::path::` prefix in the wrapped expression.
+        let mut start = at;
+        while let Some(c) = adapter[..start].chars().next_back() {
+            if is_ident(c) || c == ':' {
+                start -= c.len_utf8();
+            } else {
+                break;
+            }
+        }
+        // The matching close parenthesis (the generated arguments contain no
+        // string or character literal with a parenthesis).
+        let mut depth = 0usize;
+        let mut close = None;
+        for (i, c) in adapter[end..].char_indices() {
+            match c {
+                '(' => depth += 1,
+                ')' => {
+                    depth -= 1;
+                    if depth == 0 {
+                        close = Some(end + i + 1);
+                        break;
+                    }
+                }
+                _ => {}
+            }
+        }
+        let close = close?;
+        if start < rest {
+            continue; // inside a call already wrapped
+        }
+        out.push_str(&adapter[rest..start]);
+        out.push_str("obs_call!(");
+        out.push_str(&adapter[start..close]);
+        out.push(')');
+        rest = close;
+        from = close;
+        calls += 1;
+    }
+    if calls == 0 {
+        return None;
+    }
+    out.push_str(&adapter[rest..]);
+    Some(out)
+}
+
 /// The limit parameter of an operation's `output` row: the one unsigned numeric
 /// parameter (`U16`, `U32`, `U64` or `Nat`) the bound mentions.  `Ok(None)` when
 /// it mentions none or several, in which case the limit faults are refused.
@@ -2591,7 +2966,7 @@ fn shape_of_ty(t: &Ty) -> ColShape {
         Ty::Bytes => ColShape::Bytes,
         Ty::BytesN(n) => ColShape::BytesN(*n),
         Ty::Tuple(cs) => ColShape::Tuple(cs.iter().map(shape_of_ty).collect()),
-        Ty::Data { name, ctors } => {
+        Ty::Data { name, ctors, .. } => {
             // A record has one constructor (named like the type) and is its
             // field list; a variant has at least two.
             if ctors.len() == 1 && ctors[0].0 == *name {
@@ -2607,7 +2982,7 @@ fn shape_of_ty(t: &Ty) -> ColShape {
         }
         Ty::Opt(t) => ColShape::Opt(Box::new(shape_of_ty(t))),
         Ty::List(t) => ColShape::List(Box::new(shape_of_ty(t))),
-        Ty::Res(t, cases) => ColShape::Result(Box::new(shape_of_ty(t)), cases.clone()),
+        Ty::Res(t, cases, _) => ColShape::Result(Box::new(shape_of_ty(t)), cases.clone()),
     }
 }
 
@@ -2751,7 +3126,16 @@ pub fn generate_evidence_harness_with_tables(
         return Err(unsupported(format!("spec path {:?} cannot be embedded", options.spec_path), (0, 0)));
     }
     for (op, b) in &manifest.bindings {
-        if !is_rust_identifier(&b.export) {
+        // VER04k section 4.6: an operation with `inout=` may name a method or a
+        // function by a Rust path (at most 8 segments); every other export is an
+        // identifier, as it always was.
+        let has_inout = options.hosts.ops.get(op).is_some_and(|h| !h.inout.is_empty());
+        let export_ok = if has_inout {
+            is_rust_path(&b.export) && b.export.split("::").count() <= MAX_EXPORT_SEGMENTS
+        } else {
+            is_rust_identifier(&b.export)
+        };
+        if !export_ok {
             return Err(unsupported(
                 format!("export `{}` of operation `{op}` is not a Rust identifier", b.export),
                 (0, 0),
@@ -2853,11 +3237,15 @@ pub fn generate_evidence_harness_with_tables(
     let tables_need_comp = table_decls
         .iter()
         .any(|(_, _, tys)| tys.iter().any(|t| !plain_column(t)));
+    // WX-G: a document with an `ensures` block monitors its calls, and the panic
+    // containment that reports a violation is the composite machinery's.
+    let has_post = v1 && file.declarations.iter().any(|d| matches!(d, Declaration::Ensures(_)));
     let comp = v1
         && (tables_need_comp
+            || has_post
             || uses_composites(file, &env)
             || file.declarations.iter().any(|d| {
-                matches!(d, Declaration::Op(o) if matches!(shape_of(o, v1, &env), Ok(Shape::Composite)))
+                matches!(d, Declaration::Op(o) if matches!(shape_of(o, v1, &env), Ok(Shape::Composite | Shape::Inout)))
             }));
 
     // WX-H: the `heap` and `output` rows of each operation's `bound` (v1 only).
@@ -2917,6 +3305,9 @@ pub fn generate_evidence_harness_with_tables(
     if obs {
         features.insert("obs");
     }
+    if has_post {
+        features.insert("post");
+    }
     if !table_decls.is_empty() {
         features.insert("vec");
     }
@@ -2953,6 +3344,33 @@ pub fn generate_evidence_harness_with_tables(
         }
     }
 
+    // WX-G: one monitor per `ensures` block (VER04k section 4.7).
+    let mut ensures_of: BTreeMap<&str, &EnsuresDecl<'_>> = BTreeMap::new();
+    for d in &file.declarations {
+        if let Declaration::Ensures(e) = d {
+            let Some(o) = op_decls.iter().find(|o| o.name == e.op) else {
+                return Err(unsupported(format!("ensures of unknown operation `{}`", e.op), e.span));
+            };
+            if obs_ops.contains_key(e.op) {
+                return Err(unsupported(
+                    format!("operation `{}` has both an `ensures` block and an observed `bound`", e.op),
+                    o.span,
+                ));
+            }
+            body.push_str(&inout::post_monitor(
+                o, e, &models, &ops, &errors, &env.ctors, &mut widths,
+            )?);
+            ensures_of.insert(e.op, e);
+        }
+    }
+    // W0601: an example may not contradict the postcondition of its operation.
+    inout::check_examples_against_ensures(file, &ensures_of)?;
+    let mut post_rows: Vec<(String, usize)> = ensures_of
+        .iter()
+        .map(|(op, e)| (op.to_string(), e.rows.len()))
+        .collect();
+    post_rows.sort();
+
     // Examples.
     struct Ex {
         name: String,
@@ -2980,6 +3398,14 @@ pub fn generate_evidence_harness_with_tables(
                 let _ = write!(
                     body,
                     "#[allow(unused_variables)]\npub fn example_{}(fault: Fault) -> bool {{\n    match catch_unwind(AssertUnwindSafe(|| {}.truthy())) {{\n        Ok(v) => v,\n        Err(p) => obs_failed(p),\n    }}\n}}\n\n",
+                    ex.name,
+                    emit(&ex.body, &mut cx)?
+                );
+            } else if has_post {
+                // A call the monitor fails is a failed example, not a panic.
+                let _ = write!(
+                    body,
+                    "#[allow(unused_variables)]\npub fn example_{}(fault: Fault) -> bool {{\n    match catch_unwind(AssertUnwindSafe(|| {}.truthy())) {{\n        Ok(v) => v,\n        Err(p) if p.is::<PostViolation>() => post_failed(p),\n        Err(p) => std::panic::resume_unwind(p),\n    }}\n}}\n\n",
                     ex.name,
                     emit(&ex.body, &mut cx)?
                 );
@@ -3011,6 +3437,9 @@ pub fn generate_evidence_harness_with_tables(
     enum Job<'f, 'a> {
         Real(&'f ClaimDecl<'a>),
         OutputBound(&'f OpDecl<'a>),
+        /// WX-G: the synthesized `<op>/post` suites of an operation with an
+        /// `ensures` block (VER04k section 4.7).
+        Post(&'f OpDecl<'a>),
     }
     /// One claim to generate: a written one, or a synthesized `output-bound`.
     struct Work<'f, 'a> {
@@ -3030,6 +3459,11 @@ pub fn generate_evidence_harness_with_tables(
     for o in &op_decls {
         if obs_ops.get(o.name).is_some_and(|b| b.output.is_some()) {
             jobs.push(Job::OutputBound(o));
+        }
+    }
+    for o in &op_decls {
+        if ensures_of.contains_key(o.name) {
+            jobs.push(Job::Post(o));
         }
     }
     let mut claims: Vec<Cl> = Vec::new();
@@ -3067,6 +3501,14 @@ pub fn generate_evidence_harness_with_tables(
                     op: op.to_string(),
                 }
             }
+            Job::Post(o) => Work {
+                label: format!("{}/post", o.name),
+                ident: format!("{}_post", o.name),
+                binders: o.params.as_slice(),
+                cbody: None,
+                span: o.span,
+                op: o.name.to_string(),
+            },
             Job::OutputBound(o) => {
                 if !o.static_params.is_empty() {
                     return Err(unsupported(
@@ -3093,43 +3535,15 @@ pub fn generate_evidence_harness_with_tables(
                 span,
             ));
         }
-        let mut tys: Vec<Ty> = binders
-            .iter()
-            .map(|b| ty_of(b, v1, &env))
-            .collect::<Result<_, _>>()?;
-        let mut demoted: Vec<(usize, Vec<String>)> = Vec::new();
-        if v1 {
-            // A Nat that flows directly into a shift count gets the
-            // count-aware domain (VER04j section 3.6).
-            let mut counts = HashSet::new();
-            if let Some(cbody) = cbody {
-                count_binders(cbody, &mut counts);
-            }
-            for (t, b) in tys.iter_mut().zip(binders.iter()) {
-                if *t == Ty::Nat && counts.contains(b.name) {
-                    *t = Ty::NatCount;
-                }
-            }
-            // The budget rule of section 2.6.
-            demoted = demote_for_budget(&mut tys, options.exhaustive_budget);
-        }
-        let (shown, over) = match claim_domain(&tys) {
-            Some((p, b)) => (
-                format!("{p} ({b} bytes)"),
-                p > options.exhaustive_budget || b > DOMAIN_BYTES_BUDGET,
-            ),
-            None => ("overflowing u64".to_string(), true),
-        };
-        if over {
-            return Err(CodegenError {
-                code: DiagnosticCode::W0706,
-                kind: CodegenErrorKind::UnsupportedTarget(format!(
-                    "claim {label} exhaustive domain {shown} exceeds budget {} cases / {DOMAIN_BYTES_BUDGET} bytes",
-                    options.exhaustive_budget
-                )),
-                span,
-            });
-        }
+        let (tys, demoted) = resolve_claim_tys(
+            binders,
+            cbody,
+            &env,
+            v1,
+            options.exhaustive_budget,
+            &label,
+            span,
+        )?;
         if tys.contains(&Ty::U8) {
             features.insert("u8");
         }
@@ -3166,6 +3580,7 @@ pub fn generate_evidence_harness_with_tables(
         cx.allow_ops = false;
         for p in binders.iter() {
             if let Some(r) = &p.refinement {
+                features.insert("refine");
                 let _ = write!(admit, " && {}.truthy()", emit(r, &mut cx)?);
             }
         }
@@ -3176,6 +3591,11 @@ pub fn generate_evidence_harness_with_tables(
             // bound is evaluated first, for every instance, so a bound that is
             // negative on the admitted domain fails even where the operation
             // answers `Err`.
+            None if matches!(job, Job::Post(_)) => {
+                // WX-G: the monitor inside `op_<op>` is the whole property.
+                let args: Vec<String> = binders.iter().map(|p| format!("b_{}.clone()", p.name)).collect();
+                format!("V::Bool({{ op_{op}(&[], &[{}], fault); true }})", args.join(", "))
+            }
             None => {
                 let args: Vec<String> = binders.iter().map(|p| format!("b_{}.clone()", p.name)).collect();
                 format!(
@@ -3205,9 +3625,13 @@ pub fn generate_evidence_harness_with_tables(
         // WX-H: an instance the observer fails is a false claim, not a panic.
         let obs_arm = if obs {
             "        Err(p) if p.is::<ObsFailure>() => obs_failed(p),\n"
+        } else if has_post {
+            "        Err(p) if p.is::<PostViolation>() => post_failed(p),\n"
         } else {
             ""
         };
+        let monitored = if has_post { "    s.monitored = take_post_calls();\n" } else { "" };
+        let reset_monitored = if has_post { "    take_post_calls();\n" } else { "" };
         if comp {
             // A value a host integer cannot hold raises `Unreachable`: the case
             // is skipped and counted, never narrowed (VER04j section 4.6).
@@ -3217,9 +3641,9 @@ pub fn generate_evidence_harness_with_tables(
             );
             let _ = write!(
                 body,
-                "pub fn exh_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = exhaustive(CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n\
-                 pub fn prop_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = property(\"claim/{module}/{label}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n\
-                 pub fn fuz_{n}(fault: Fault, iterations: u64) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = fuzz_claim(\"fuzz/{module}/{label}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault, iterations);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n"
+                "pub fn exh_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n{reset_monitored}    let (v, mut s) = exhaustive(CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n{monitored}    (v, s)\n}}\n\n\
+                 pub fn prop_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n{reset_monitored}    let (v, mut s) = property(\"claim/{module}/{label}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n{monitored}    (v, s)\n}}\n\n\
+                 pub fn fuz_{n}(fault: Fault, iterations: u64) -> (Verdict, Stats) {{\n    take_unreach();\n{reset_monitored}    let (v, mut s) = fuzz_claim(\"fuzz/{module}/{label}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault, iterations);\n    s.unreachable = take_unreach();\n{monitored}    (v, s)\n}}\n\n"
             );
         } else {
             let holds_fn = if obs {
@@ -3375,8 +3799,44 @@ pub fn generate_evidence_harness_with_tables(
         }
         let empty = BTreeSet::new();
         let err_case = binding.error_normalization.as_ref().map(|n| n.error_case.as_str());
-        if shape == Shape::Composite {
+        // WX-G: the post-state faults need an `inout` parameter to rewrite.
+        if shape != Shape::Inout {
+            if let Some(f) = binding
+                .negative_controls
+                .iter()
+                .find(|f| WXG_FAULTS.iter().any(|(k, _)| k == f))
+            {
+                return Err(unsupported(
+                    format!("fault `{f}` of operation `{}` needs an operation with an inout parameter", op.name),
+                    op.span,
+                ));
+            }
+        }
+        if shape == Shape::Inout {
             features.insert("scoped");
+            adapters.push_str(&inout::inout_adapter(
+                op,
+                &env,
+                &binding.export,
+                err_case,
+                &binding.negative_controls,
+                options,
+            )?);
+            let mut list = Vec::new();
+            for f in &binding.negative_controls {
+                let variant = fault_variant(f).ok_or_else(|| {
+                    unsupported(format!("unknown fault `{f}` for `{}`", op.name), op.span)
+                })?;
+                list.push((f.clone(), format!("Fault::{variant}")));
+            }
+            op_faults.insert(op.name.to_string(), list);
+        } else if shape == Shape::Composite {
+            features.insert("scoped");
+            if binding.negative_controls.iter().any(|f| f == "flip-result-bit")
+                && flips_fixed_result(op, &env)
+            {
+                features.insert("fixedfault");
+            }
             adapters.push_str(&composite_adapter(
                 op,
                 &env,
@@ -3460,6 +3920,16 @@ pub fn generate_evidence_harness_with_tables(
                     op.span,
                 ));
             }
+            // VOS-D063: only the export call is inside the allocation window.
+            let emitted = scope_export_calls(&emitted, &binding.export).ok_or_else(|| {
+                unsupported(
+                    format!(
+                        "the adapter of `{}` has no call of `{}` to observe",
+                        op.name, binding.export
+                    ),
+                    op.span,
+                )
+            })?;
             adapters.push_str(&emitted.replacen(&from, &to, 1));
             let n = op.name;
             let resolve = if shape.scoped() {
@@ -3477,10 +3947,37 @@ pub fn generate_evidence_harness_with_tables(
                 "#[allow(unused_variables)]\nfn op_{n}(w: &[u64], args: &[V], fault: Fault) -> V {{\n{resolve}{heap}    let (w, a) = (w.to_vec(), args.to_vec());\n    obs_observe(\"{n}\", heap, move || op_{n}_raw(&w, &a, fault))\n}}\n\n"
             );
         }
+        if ensures_of.contains_key(op.name) {
+            // WX-G: every call of a monitored operation goes through the wrapper.
+            let emitted = adapters.split_off(adapters_before);
+            let from = format!("fn op_{}(", op.name);
+            let to = format!("fn op_{}_core(", op.name);
+            if !emitted.contains(&from) {
+                return Err(unsupported(
+                    format!("operation `{}` has no adapter to monitor", op.name),
+                    op.span,
+                ));
+            }
+            adapters.push_str(&emitted.replacen(&from, &to, 1));
+            adapters.push_str(&inout::post_wrapper(op.name));
+        }
         for (n, _) in &op_faults[op.name] {
             used_faults.insert(n.clone());
         }
         shapes.insert(op.name.to_string(), shape);
+    }
+
+    adapters.push_str(&inout::fault_helpers(&used_faults));
+    if has_post {
+        let rows: Vec<String> = post_rows
+            .iter()
+            .map(|(op, n)| format!("(\"{op}\", {n})"))
+            .collect();
+        let _ = write!(
+            adapters,
+            "/// The number of `ensures` rows of each monitored operation (VER04k section 4.7).\nconst POST_ROWS: &[(&str, u64)] = &[{}];\n\n",
+            rows.join(", ")
+        );
     }
 
     // Suite registration.
@@ -3631,8 +4128,43 @@ pub fn generate_evidence_harness_with_tables(
     if body.contains("V::concat(") {
         features.insert("concat");
     }
+    if body.contains("V::fixed_n(") {
+        features.insert("fixedn");
+    }
     if WXE_FAULTS.iter().any(|(n, _)| used_faults.contains(*n)) {
         features.insert("bytefaults");
+    }
+    // WX-SV2: `fault_field_flip` is emitted only for a binding that names it,
+    // so no harness written before the fault existed changes by a byte.
+    if used_faults.contains("field-flip") {
+        features.insert("fieldflip");
+        features.insert("fieldfliphelper");
+    }
+    if used_faults.contains("field-flip") || used_faults.contains("bool-field-flip") {
+        // `fieldflip` is the shared, existing targeted-sabotage infrastructure.
+        // Keep its rendered source unchanged for legacy adopters; the numeric
+        // helper itself is separately gated above.
+        features.insert("fieldflip");
+        // The operations `WARRANT_EVIDENCE_ATTACK` may name (validated by `check_attack`).
+        let names: Vec<String> = shapes.keys().map(|k| format!("{k:?}")).collect();
+        let _ = write!(adapters, "const HARNESS_OPS: &[&str] = &[{}];\n\n", names.join(", "));
+    }
+    if used_faults.contains("bool-field-flip") {
+        features.insert("boolfieldflip");
+        let names: Vec<String> = op_faults
+            .iter()
+            .filter(|(_, faults)| faults.iter().any(|(name, _)| name == "bool-field-flip"))
+            .map(|(name, _)| format!("{name:?}"))
+            .collect();
+        let _ = write!(adapters, "const HARNESS_BOOL_FIELD_FLIP_OPS: &[&str] = &[{}];\n\n", names.join(", "));
+    }
+    // VOS-039c: `fault_field_flip_last` is likewise emitted only for a binding
+    // that names `field-flip-last`.  It has no `WARRANT_EVIDENCE_ATTACK`
+    // semantics of its own: a flip of the last field cannot cancel against an
+    // `init`/`alpha` pair the way a first-field flip can, because the oracle is
+    // read by no abstraction.
+    if used_faults.contains("field-flip-last") {
+        features.insert("lastflip");
     }
     // WX-N: a v1 document with a fixed-width `Bytes<N>` anywhere labels that
     // domain `full` or `sample` instead of `set`.  Gated like the helpers above,
@@ -3650,7 +4182,7 @@ pub fn generate_evidence_harness_with_tables(
          // Source-SHA256: {sha}\n\
          // Target: Rust evidence harness (examples, bounded-exhaustive, property, fuzz, negative controls)\n\
          // Regenerate: cargo run -p coding_adventures_warrant_grammar --example gen_evidence\n\n\
-         use {krate}::*;\n\n\
+         {allow_glob}use {krate}::*;\n\n\
          pub const MODULE: &str = \"{module}\";\n\
          pub const SPEC_PATH: &str = \"{spec}\";\n\
          pub const SPEC_SHA256: &str = \"{sha}\";\n\
@@ -3665,6 +4197,13 @@ pub fn generate_evidence_harness_with_tables(
         spec = options.spec_path,
         sha = options.spec_sha256,
         krate = options.package_crate,
+        // An inout adapter calls its export by the fully qualified path (VER04k
+        // section 4.6), so the glob import may be unused.
+        allow_glob = if shapes.values().any(|s| *s == Shape::Inout) {
+            "#[allow(unused_imports)]\n"
+        } else {
+            ""
+        },
         seed = options.seed,
         pc = options.property_cases,
         fi = options.fuzz_iterations,
@@ -3686,4 +4225,176 @@ pub fn generate_evidence_harness_with_tables(
     out.push_str(&neg_wrappers);
     out.push_str(&suite);
     Ok(out)
+}
+
+#[cfg(test)]
+mod scope_tests {
+    use super::{bool_field_flip_applies, scope_export_calls, Ty};
+
+    fn record(fields: Vec<Ty>) -> Ty {
+        Ty::Data {
+            name: "Record".into(),
+            ctors: vec![("Record".into(), fields)],
+            record: true,
+        }
+    }
+
+    #[test]
+    fn bool_field_fault_shape_is_direct_record_with_at_most_one_wrapper() {
+        let direct = record(vec![Ty::U8, Ty::Bool, Ty::Data {
+            name: "Nested".into(),
+            ctors: vec![("Nested".into(), vec![Ty::Bool])],
+            record: true,
+        }]);
+        assert!(bool_field_flip_applies(&direct));
+        assert!(bool_field_flip_applies(&Ty::Res(
+            Box::new(direct.clone()),
+            vec!["ERR".into()],
+            super::ErrName("E".into()),
+        )));
+        assert!(bool_field_flip_applies(&Ty::Opt(Box::new(direct))));
+
+        let nested_only = record(vec![Ty::Data {
+            name: "Nested".into(),
+            ctors: vec![("Nested".into(), vec![Ty::Bool])],
+            record: true,
+        }]);
+        assert!(!bool_field_flip_applies(&nested_only));
+        assert!(!bool_field_flip_applies(&record(vec![Ty::U8])));
+        assert!(!bool_field_flip_applies(&Ty::Data {
+            name: "SingleVariant".into(),
+            ctors: vec![("Only".into(), vec![Ty::Bool])],
+            record: false,
+        }));
+        assert!(!bool_field_flip_applies(&Ty::Res(
+            Box::new(Ty::Opt(Box::new(record(vec![Ty::Bool])))),
+            vec!["ERR".into()],
+            super::ErrName("E".into()),
+        )));
+        assert!(!bool_field_flip_applies(&Ty::Opt(Box::new(Ty::Res(
+            Box::new(record(vec![Ty::Bool])),
+            vec!["ERR".into()],
+            super::ErrName("E".into()),
+        )))));
+        assert!(!bool_field_flip_applies(&Ty::Tuple(vec![Ty::Bool, Ty::U8])));
+    }
+
+    #[test]
+    fn wraps_the_call_and_nothing_around_it() {
+        let a = "fn op_f(a: u8) -> V {\n    let v: V = match f(p0, g(p1)) { Ok(r) => V::Bool(r) };\n}\n";
+        let w = scope_export_calls(a, "f").unwrap();
+        assert!(w.contains("match obs_call!(f(p0, g(p1))) {"), "{w}");
+        // `op_f(` is the adapter's own name, not a call.
+        assert!(w.starts_with("fn op_f("), "{w}");
+    }
+
+    #[test]
+    fn a_path_prefix_belongs_to_the_wrapped_expression() {
+        let w = scope_export_calls("x(pkg::sub::f(a))", "f").unwrap();
+        assert_eq!(w, "x(obs_call!(pkg::sub::f(a)))");
+    }
+
+    #[test]
+    fn every_call_is_wrapped_and_a_longer_identifier_is_not_a_call() {
+        let a = "match fault { A => f(1), _ => f(2) } f_other(3) of(4)";
+        let w = scope_export_calls(a, "f").unwrap();
+        assert_eq!(
+            w,
+            "match fault { A => obs_call!(f(1)), _ => obs_call!(f(2)) } f_other(3) of(4)"
+        );
+    }
+
+    #[test]
+    fn a_call_nested_in_a_wrapped_call_is_wrapped_once() {
+        let w = scope_export_calls("f(f(1))", "f").unwrap();
+        assert_eq!(w, "obs_call!(f(f(1)))");
+    }
+
+    #[test]
+    fn the_name_inside_a_string_literal_is_text_not_a_call() {
+        let w = scope_export_calls("fault_for(\"f\", x); f(1); panic!(\"f(2) \\\" f\")", "f").unwrap();
+        assert_eq!(w, "fault_for(\"f\", x); obs_call!(f(1)); panic!(\"f(2) \\\" f\")");
+    }
+
+    #[test]
+    fn no_call_and_an_unbalanced_call_are_refused() {
+        assert!(scope_export_calls("fn op_f() {}", "f").is_none());
+        assert!(scope_export_calls("let x = f;", "f").is_none());
+        assert!(scope_export_calls("f(1, 2", "f").is_none());
+    }
+
+    #[test]
+    fn one_unwrappable_occurrence_refuses_the_whole_adapter() {
+        // The first call could be wrapped; the others are an unobserved export call.
+        assert!(scope_export_calls("f(1); s.f(2)", "f").is_none(), "method call");
+        assert!(scope_export_calls("f(1); f::<u8>(2)", "f").is_none(), "turbofish");
+        assert!(scope_export_calls("f(1); let g = f;", "f").is_none(), "bare reference");
+        assert!(scope_export_calls("f(1); pkg::f::<u8>(2)", "f").is_none(), "path turbofish");
+    }
+}
+
+#[cfg(test)]
+mod type_mentions_tests {
+    use super::{ty_of_type, type_mentions, Ty, TyEnv};
+    use crate::layout::{capture_layout, LayoutLimits};
+    use crate::parser::{parse_document, Declaration, ParserLimits};
+    use crate::source::{SourceDocument, SourceLimits};
+
+    /// Does the generator's resolved `Ty` contain the record named `n`?
+    fn ty_has(t: &Ty, n: &str) -> bool {
+        match t {
+            Ty::Data { name, ctors, .. } => {
+                name == n || ctors.iter().any(|(_, fs)| fs.iter().any(|f| ty_has(f, n)))
+            }
+            Ty::Tuple(es) => es.iter().any(|e| ty_has(e, n)),
+            Ty::Opt(i) | Ty::List(i) | Ty::Res(i, _, _) => ty_has(i, n),
+            _ => false,
+        }
+    }
+
+    const DOC: &str = "warrant t v1\n  record Impl(x: U8, c: U8)\n  record Other(x: U8)\n  error E = BAD\n  model State = Impl\n  model Deep = State\n  model Maybe = Option<State>\n  model Out = Result<Deep, E>\n  model Pair = (U8, Maybe)\n  model Count = U8\n  model Wide = List<Count>\n  record Holder(s: Maybe, n: U8)\n  model Cyc = Cyc\n  op f0(a: Impl, b: State, c: Deep, d: Maybe, e: Out, g: Pair, h: Holder) -> U8\n  op f1(a: Other, b: Count, c: Wide, d: Option<U8>, e: Bytes, g: (U8, Bool), h: Result<Count, E>) -> U8\n  op f2(a: Cyc, b: Nope) -> U8\n";
+
+    /// Every parameter type of `f0` and `f1`: the gate's answer is the generator's.
+    #[test]
+    fn agrees_with_the_generators_own_resolution_on_every_alias_shape() {
+        let doc = SourceDocument::admit(DOC.as_bytes(), SourceLimits::default()).unwrap();
+        let toks = capture_layout(&doc, LayoutLimits::default()).unwrap();
+        let file = parse_document(&toks, &doc, ParserLimits::default()).unwrap();
+        let env = TyEnv::new(&file);
+        let mut n = 0;
+        for d in &file.declarations {
+            let Declaration::Op(o) = d else { continue };
+            if o.name == "f2" {
+                continue;
+            }
+            for p in &o.params {
+                let generated = ty_of_type(&p.param_type, &env, true, p.span, 0).expect("resolves");
+                assert_eq!(
+                    type_mentions(&file, &p.param_type, "Impl"),
+                    ty_has(&generated, "Impl"),
+                    "{}.{}",
+                    o.name,
+                    p.name
+                );
+                n += 1;
+            }
+        }
+        assert_eq!(n, 14);
+    }
+
+    /// What the generator cannot resolve is a mention: an alias cycle, an unknown name.
+    #[test]
+    fn what_it_cannot_resolve_counts_as_a_mention() {
+        let doc = SourceDocument::admit(DOC.as_bytes(), SourceLimits::default()).unwrap();
+        let toks = capture_layout(&doc, LayoutLimits::default()).unwrap();
+        let file = parse_document(&toks, &doc, ParserLimits::default()).unwrap();
+        for d in &file.declarations {
+            let Declaration::Op(o) = d else { continue };
+            if o.name == "f2" {
+                for p in &o.params {
+                    assert!(type_mentions(&file, &p.param_type, "Impl"), "{}", p.name);
+                }
+            }
+        }
+    }
 }

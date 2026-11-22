@@ -301,6 +301,7 @@ type model struct {
 	rootExeced bool         // helper mode: the root group has had its one exec
 	initExeced bool         // helper mode: the init child's first successful exec of the helper binary was kept
 	rootMemo   map[int]bool // inRootGroup answers, so each pid is walked once
+	groupMemo  map[int]int  // threadGroupOf answers (D33), likewise
 	initMemo   map[int]bool // inInitThreads answers
 	// exitCand: pid -> start line of its exit_group that has not returned, for
 	// init-group threads after the step's exec.  rawExits: start lines of
@@ -309,6 +310,9 @@ type model struct {
 	exitCand  map[int]int
 	rawExits  map[int]bool
 	walkSteps int // thread-chain steps taken (a test watches this stays linear)
+	// orphans are the pids whose only record is their exit and that the dropped
+	// dying spawns can account for (D44); nil when there are too many.
+	orphans map[int]bool
 }
 
 // Parse reads a strace trace from r.  initialCwd is the working directory of
@@ -319,7 +323,24 @@ func Parse(r io.Reader, initialCwd string, limits Limits) (*Trace, error) {
 }
 
 // ParseOptions is Parse with options.
+//
+// The grammar path reads the lines (D24 PR 6: it is the production default).
+// The hand-written scanner is kept only as an ORACLE on probation: when the
+// unexported crossCheck hook is set (by this package's tests, or by
+// KILN_TRACE_DIFF=1) it reads them too and the two answers are compared, but the
+// grammar path's answer is the one returned.  There is deliberately no switch
+// that makes the old scanner the answer: it is the lenient reader, so that
+// would be a soundness downgrade.  See crosscheck.go.
 func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) {
+	if crossCheck != nil {
+		return crossCheck(r, initialCwd, opts)
+	}
+	return parseWith(r, initialCwd, opts, true)
+}
+
+// parseWith is ParseOptions with the reader of lines chosen: the old scanner
+// (grammar false) or the grammar path (true).
+func parseWith(r io.Reader, initialCwd string, opts Options, grammar bool) (*Trace, error) {
 	lim := opts.Limits.withDefaults()
 	if opts.HelperRoot && (!strings.HasPrefix(opts.HelperExe, "/") || strings.IndexByte(opts.HelperExe, 0) >= 0) {
 		return nil, incomplete(0, reasonHelperConfig)
@@ -327,7 +348,7 @@ func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) 
 	if !strings.HasPrefix(initialCwd, "/") || strings.IndexByte(initialCwd, 0) >= 0 || len(initialCwd) > 4096 {
 		return nil, incomplete(0, reasonInitialCwd)
 	}
-	recs, root, e := readRecords(r, lim, opts.HelperRoot)
+	recs, root, e := readRecords(r, lim, opts.HelperRoot, grammar)
 	if e != nil {
 		return nil, e
 	}
@@ -338,6 +359,7 @@ func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) 
 	if e := m.buildSpawns(recs); e != nil {
 		return nil, e
 	}
+	m.findOrphans(recs)
 	for i := range recs {
 		if e := m.apply(&recs[i]); e != nil {
 			return nil, e
@@ -389,6 +411,11 @@ func (m *model) buildSpawns(recs []record) *Error {
 				flags, share, r = analyzeClone3(c.args)
 			} else {
 				flags, share, r = analyzeClone(c.args)
+			}
+			if r != "" && c.name == "clone" && filterAnswered("clone", c.ret) && cloneOnlyForbidden(c.args) {
+				// The filter's own EPERM for a clone with CLONE_UNTRACED or
+				// CLONE_NEW* (section 4.3 item 5): nothing was spawned.
+				r = ""
 			}
 			if r != "" {
 				// Judged below: the helper's own group may clone into new
@@ -609,6 +636,55 @@ func analyzeClone(args []string) (flags string, shareFS bool, reason string) {
 	return "", false, reasonCloneFlags
 }
 
+// knownCloneToken is the closed set of names strace prints in a clone's flags=
+// argument: the Linux CLONE_* flags and the signal names an exit signal can be.
+// A token outside it (CLONE_BOGUS) is one we cannot vouch for, so a clone that
+// carries it stays clone-flags even when it failed with the filter's EPERM.
+var knownCloneToken = func() map[string]bool {
+	m := map[string]bool{}
+	for _, n := range []string{
+		"CLONE_VM", "CLONE_FS", "CLONE_FILES", "CLONE_SIGHAND", "CLONE_PIDFD", "CLONE_PTRACE",
+		"CLONE_VFORK", "CLONE_PARENT", "CLONE_THREAD", "CLONE_NEWNS", "CLONE_SYSVSEM",
+		"CLONE_SETTLS", "CLONE_PARENT_SETTID", "CLONE_CHILD_CLEARTID", "CLONE_DETACHED",
+		"CLONE_UNTRACED", "CLONE_CHILD_SETTID", "CLONE_NEWCGROUP", "CLONE_NEWUTS",
+		"CLONE_NEWIPC", "CLONE_NEWUSER", "CLONE_NEWPID", "CLONE_NEWNET", "CLONE_IO",
+		"CLONE_CLEAR_SIGHAND", "CLONE_INTO_CGROUP", "CLONE_NEWTIME",
+		"SIGHUP", "SIGINT", "SIGQUIT", "SIGILL", "SIGTRAP", "SIGABRT", "SIGBUS", "SIGFPE",
+		"SIGKILL", "SIGUSR1", "SIGSEGV", "SIGUSR2", "SIGPIPE", "SIGALRM", "SIGTERM",
+		"SIGSTKFLT", "SIGCHLD", "SIGCONT", "SIGSTOP", "SIGTSTP", "SIGTTIN", "SIGTTOU",
+		"SIGURG", "SIGXCPU", "SIGXFSZ", "SIGVTALRM", "SIGPROF", "SIGWINCH", "SIGIO",
+		"SIGPWR", "SIGSYS",
+	} {
+		m[n] = true
+	}
+	return m
+}()
+
+// cloneOnlyForbidden reports whether the only thing wrong with a clone's flags
+// is a forbidden one (CLONE_UNTRACED or CLONE_NEW*): every token is in
+// knownCloneToken.  Only then is a clone that failed with the filter's EPERM tolerated; a
+// flag we cannot name stays clone-flags whatever the result.
+func cloneOnlyForbidden(args []string) bool {
+	forbidden := false
+	for _, a := range args {
+		v, ok := strings.CutPrefix(a, "flags=")
+		if !ok {
+			continue
+		}
+		for _, tok := range strings.Split(v, "|") {
+			tok = strings.TrimSpace(tok)
+			if !knownCloneToken[tok] {
+				return false
+			}
+			if tok == "CLONE_UNTRACED" || strings.HasPrefix(tok, "CLONE_NEW") {
+				forbidden = true
+			}
+		}
+		return forbidden
+	}
+	return false
+}
+
 // get returns the state of pid, creating it the first time it is seen.
 //
 // A child is normally created the moment its parent's fork/vfork/clone
@@ -705,7 +781,97 @@ func (m *model) isHelperExe(path string) bool {
 	return path == m.opts.HelperExe || path == "/proc/self/exe"
 }
 
+// threadGroupOf walks pid's spawns while they carry CLONE_THREAD and returns
+// the group leader (the first pid that is not a thread, or has no spawn
+// record).  Every answer is memoised for every pid on the walked chain and each
+// step is counted in walkSteps, like inRootGroup and inInitThreads, so a
+// hostile deep chain times many ghosts costs one walk, not 4096 lookups each.
+//
+// A chain deeper than maxProcessDepth stops at the pid reached and answers
+// -cur-1 (negative, so never a leader).  Two pids whose walks stop at the same
+// ancestor therefore compare EQUAL, and so do pids that share a memoised chain.
+// That is still sound for D33: a negative answer is only given along links that
+// are all CLONE_THREAD, so equal answers really are one thread group.  The
+// bound can only make two threads of one group compare UNEQUAL (a refusal),
+// never two groups equal.
+func (m *model) threadGroupOf(pid int) int {
+	if m.groupMemo == nil {
+		m.groupMemo = map[int]int{}
+	}
+	var path []int
+	res := 0
+	for cur, n := pid, 0; ; n++ {
+		if v, ok := m.groupMemo[cur]; ok {
+			res = v
+			break
+		}
+		m.walkSteps++
+		path = append(path, cur)
+		sp, ok := m.spawns[cur]
+		if !ok || !hasFlag(sp.flags, "CLONE_THREAD") {
+			res = cur
+			break
+		}
+		if n >= maxProcessDepth {
+			res = -cur - 1
+			break
+		}
+		cur = sp.parent
+	}
+	for _, p := range path {
+		m.groupMemo[p] = res
+	}
+	return res
+}
+
+// findOrphans (D44) finds the pids that appear only as an exit: the children of
+// a spawn whose return line died with its parent, so no spawn record names
+// them.  They are accepted only when the dropped dying spawns (record
+// .spawnDropped) are at least as many as the orphans; with more orphans than
+// spawns some orphan is unexplained and ALL of them keep refusing as orphan-pid.
+//
+// "Only record" means no call, start marker or exit_group marker: the lines
+// that leave no record are ignored-class calls, signals and filter-answered
+// refusals, none of which touches a path.  A pid with two records (even two
+// exits) is not an orphan.  Deferred (model.go get): matching each orphan to a
+// particular dropped spawn, and its clone flags for DaemonLeft; the orphan's
+// exit stays in Trace.Exits with no Procs entry, which DaemonLeft already
+// counts as a possible survivor (fail closed).
+func (m *model) findOrphans(recs []record) {
+	dropped := 0
+	count := map[int]int{}
+	for i := range recs {
+		if recs[i].spawnDropped {
+			dropped++
+		}
+		count[recs[i].pid]++
+	}
+	var orphans []int
+	for i := range recs {
+		pid := recs[i].pid
+		if recs[i].exit == nil || count[pid] != 1 || pid == m.root {
+			continue
+		}
+		if _, spawned := m.spawns[pid]; spawned {
+			continue
+		}
+		orphans = append(orphans, pid)
+	}
+	if len(orphans) == 0 || len(orphans) > dropped {
+		return
+	}
+	m.orphans = map[int]bool{}
+	for _, pid := range orphans {
+		m.orphans[pid] = true
+	}
+}
+
 func (m *model) apply(rec *record) *Error {
+	if rec.exit != nil && m.orphans[rec.pid] {
+		m.trace.Exits = append(m.trace.Exits, *rec.exit)
+		m.trace.ExitLines = append(m.trace.ExitLines, rec.line)
+		return nil
+	}
 	p, e := m.get(rec.pid, rec.line)
 	if e != nil {
 		return e
@@ -723,6 +889,17 @@ func (m *model) apply(rec *record) *Error {
 	}
 	if p.exited {
 		return incomplete(rec.line, reasonEventAfterExit)
+	}
+	// D33: a phantom execve line was accepted in pass 1 against this exec; it
+	// is sound only if its thread was torn down by this very exec, so it must
+	// be in the same thread group.  Otherwise refuse at the ghost's line.
+	if len(rec.ghosts) > 0 {
+		owner := m.threadGroupOf(rec.pid)
+		for _, g := range rec.ghosts {
+			if m.threadGroupOf(g.pid) != owner {
+				return incomplete(g.line, reasonUnresumed)
+			}
+		}
 	}
 	if rec.exitCall && rec.retract {
 		// A failed exit_group or exit whose start line was a candidate:
@@ -766,8 +943,14 @@ func (m *model) apply(rec *record) *Error {
 			p.cwd = &cwdCell{path: p.cwd.path, refs: 1}
 			return nil
 		}
-		// Classification was deferred in pass 1.
-		if e := classifyName(c.name, rec.line); e != nil {
+		// Classification was deferred in pass 1.  A refused name the sandbox
+		// filter answered (clone3 = -1 ENOSYS, mount = -1 EPERM) is the
+		// filter working, in the init window and in the step alike: no
+		// event, no error.  (finishCall already drops these; the check is
+		// kept here because this is the path a recording takes.)
+		if tolerated, e := classifyCall(c.name, c.ret, rec.line); tolerated {
+			return nil
+		} else if e != nil {
 			if inWindow {
 				if c.name == "clone3" && c.ret.ok() {
 					// A clone3 of the init's window is tolerated like clone
@@ -952,9 +1135,18 @@ func joinCwd(cwd, p string) (string, bool) {
 func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 	c := rec.call
 	ent := lookup(c.name)
-	fail := func(r string) ([]Event, *Error) { return nil, incomplete(rec.line, r) }
+	fail := func(r string) ([]Event, *Error) {
+		e := incomplete(rec.line, r)
+		if SyscallClass(c.name) != "" {
+			e.Call = c.name // a closed-table name, census only (Error.Call)
+		}
+		return nil, e
+	}
 	if len(c.args) < ent.min || len(c.args) > ent.max {
 		return fail(reasonArity)
+	}
+	if shortMknod(c) {
+		return fail(reasonArity) // a device node always prints its dev (D44)
 	}
 	if c.ret.unknown {
 		return fail(reasonResult)
@@ -990,6 +1182,13 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		if f.cwd || !f.hasAnn {
 			return fail(reasonFDPath)
 		}
+		// D41: fchmod, fchown, fsetxattr and fremovexattr on a pipe, socket or
+		// anonymous inode change an object that lives in no directory, so no file
+		// readable by path changes.  No event, whatever the result.  A bare number
+		// or any other non-absolute annotation still falls through to fd-path.
+		if ent.role == roleFdPath && AnonymousFD(string(f.ann)) {
+			return nil, nil
+		}
 		ev.Path, r = fdPathText(f.ann, true)
 		if r != "" {
 			return fail(r)
@@ -1004,6 +1203,9 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		// nothing to record beyond the result (the child pid)
 	case roleClone:
 		ev.Flags, _, r = analyzeClone(c.args)
+		if r != "" && filterAnswered("clone", c.ret) && cloneOnlyForbidden(c.args) {
+			r = "" // the filter's EPERM: nothing was spawned (see cloneOnlyForbidden)
+		}
 		if r != "" {
 			return fail(r)
 		}
@@ -1045,6 +1247,11 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		}
 		return evs, nil
 	default: // rolePath, roleCreat, roleChdir, roleExec, roleSymlink
+		if drop, r := statxNullEfault(c, ent); r != "" {
+			return fail(r)
+		} else if drop {
+			return nil, nil
+		}
 		if r := m.fillPath(&ev, ent, c.args); r != "" {
 			return fail(r)
 		}
@@ -1089,8 +1296,98 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 	return []Event{ev}, nil
 }
 
+// statxNullEfault (KILN04 D45) checks whether a completed statx call is a
+// NULL-pathname probe that failed with EFAULT without AT_EMPTY_PATH (such as
+// Rust std's statx availability probe).
+//
+// In Linux (fs/stat.c: SYSCALL_DEFINE5(statx, ...) -> getname_uflags ->
+// getname_flags), the kernel copies the pathname pointer from user memory
+// before do_statx inspects dfd or looks up any file or descriptor.  A NULL
+// pointer fails with -EFAULT having observed nothing on the filesystem and
+// without writing to the statx buffer.
+//
+// Fail-closed guards:
+//   - dirfd must still parse cleanly through dirfdPath;
+//   - flags must decode cleanly through hasEmptyPath and MUST NOT carry
+//     AT_EMPTY_PATH (including numeric 0x1000 / 4096), keeping path-arg /
+//     flags refusals intact;
+//   - only completed calls with !ret.OK && ret.Errno == "EFAULT" qualify;
+//   - non-NULL addresses (e.g. 0x1) and dying calls stay refused.
+func statxNullEfault(c *rawCall, ent entry) (drop bool, reason string) {
+	if c.name != "statx" || c.ret.ok() || c.ret.errno != "EFAULT" || c.args[ent.pth-1] != "NULL" {
+		return false, ""
+	}
+	if _, _, r := dirfdPath(c.args[ent.dirfd-1]); r != "" {
+		return false, r
+	}
+	empty, r := hasEmptyPath(c.args[ent.flags-1])
+	if r != "" {
+		return false, r
+	}
+	if empty {
+		return false, reasonPathArg
+	}
+	return true, ""
+}
+
 // fillPath extracts dirfd, path, dirfd2, path2, flags and symlink target
 // according to the table entry.
+// shortMknod reports a mknod/mknodat in its short form (no dev argument) whose
+// mode names a character or block device.  strace prints dev for exactly those
+// two file types, so such a line is not a call we understand.  The short form
+// of every other type (S_IFREG, S_IFIFO, S_IFSOCK, or a bare permission mask,
+// which is a regular file) is what strace prints.  A mode that is not
+// symbolic is judged by its tokens: an unrecognised token also refuses.
+func shortMknod(c *rawCall) bool {
+	var modeIdx int
+	switch c.name {
+	case "mknod":
+		modeIdx = 1
+	case "mknodat":
+		modeIdx = 2
+	default:
+		return false
+	}
+	if len(c.args) != modeIdx+1 {
+		return false // the long form, judged by the ordinary arity check
+	}
+	for _, tok := range strings.Split(c.args[modeIdx], "|") {
+		tok = strings.TrimSpace(tok)
+		switch tok {
+		case "S_IFREG", "S_IFIFO", "S_IFSOCK":
+			continue
+		}
+		if isOctalToken(tok) && permBitsOnly(tok) {
+			continue
+		}
+		return true // S_IFCHR, S_IFBLK, a mode with file-type bits, or anything unrecognised
+	}
+	return false
+}
+
+// isOctalToken reports a permission mask as strace prints it: a leading 0 and
+// octal digits ("0600", "0").
+func isOctalToken(s string) bool {
+	if s == "" || s[0] != '0' {
+		return false
+	}
+	for i := 1; i < len(s); i++ {
+		if s[i] < '0' || s[i] > '7' {
+			return false
+		}
+	}
+	return true
+}
+
+// permBitsOnly says an octal token carries permission bits alone (at most
+// 07777).  strace prints a mode's file type symbolically (S_IFCHR|0600), so an
+// octal literal with type bits (020600, a character device) is not strace's
+// own spelling of a non-device and must not pass for one.
+func permBitsOnly(s string) bool {
+	v, err := strconv.ParseUint(s, 8, 32)
+	return err == nil && v <= 0o7777
+}
+
 func (m *model) fillPath(ev *Event, ent entry, args []string) string {
 	var r string
 	if ent.dirfd > 0 {

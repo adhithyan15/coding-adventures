@@ -1,0 +1,49 @@
+warrant enum_forms_v0
+  -- A v0 document whose U8 arithmetic never wraps on an admitted case (VER04r 3.3 rule 2 passes).
+  model add8(a: U8, b: U8) -> U8 = a + b
+  model inc(x: U8) -> U8 = x + 1u8
+  model same(a: Bytes, b: Bytes) -> Bool = a == b
+  op op_add(a: U8, b: U8) -> U8
+  op op_eq(a: Bytes, b: Bytes) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels op_add:
+    a secret
+    b secret
+
+  labels op_eq:
+    a.contents secret
+    a.length public
+    b.contents secret
+    b.length public
+
+  input op_add.a:
+    hostile
+    ensures no_panic, terminates
+  input op_add.b:
+    hostile
+    ensures no_panic, terminates
+  input op_eq.a:
+    hostile
+    ensures no_panic, terminates
+  input op_eq.b:
+    hostile
+    ensures no_panic, terminates
+
+  bound op_add:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_eq:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+
+  claim small_add:
+    forall a: U8 | a < 100u8, b: U8 | b < 100u8. op_add(a, b) == add8(a, b)
+  claim bytes_eq:
+    forall a: Bytes<1>, b: Bytes<1>. op_eq(a, b) == same(a, b)

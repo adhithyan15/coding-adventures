@@ -50,8 +50,8 @@ use coding_adventures_warrant_grammar::parser::{
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
 
 use crate::assumptions::{
-    check_assumptions, derive_claim_assumptions, op_claim_kinds, remaining_by_layer, AssumptionCheckError,
-    BASELINE_RUNG, HOST_STACK,
+    check_assumptions, derive_claim_assumptions, op_claim_kinds, remaining_by_layer,
+    AssumptionCheckError, BASELINE_RUNG, HOST_STACK,
 };
 use crate::catalogue::CatalogueSet;
 use crate::json::JsonValue;
@@ -270,6 +270,10 @@ pub struct Evidence {
     pub package_id: String,
     /// The VER13 catalogue, evidence kinds and non-claims, with their digests.
     pub catalogue: CatalogueSet,
+    /// The lane rungs of this package (VER04i 8.3), derived from the consumer
+    /// registry and the lane loader.  Read by nothing that derives a Rust
+    /// claim, rung or verdict.
+    pub lanes: Vec<crate::lane_report::LaneRung>,
     /// SHA-256 (hex) of each manifest's bytes, by manifest name
     /// (`test`, `proof`, `bench`); AC-3 compares catalogue digests with it.
     pub manifest_sha256: BTreeMap<String, String>,
@@ -290,7 +294,10 @@ pub fn read_capped(path: &Path, cap: u64) -> Result<Vec<u8>, EvidenceError> {
         .read_to_end(&mut bytes)
         .map_err(|e| EvidenceError(format!("cannot read {}: {e}", path.display())))?;
     if bytes.len() as u64 > cap {
-        return err(format!("{} is larger than the {cap}-byte limit", path.display()));
+        return err(format!(
+            "{} is larger than the {cap}-byte limit",
+            path.display()
+        ));
     }
     Ok(bytes)
 }
@@ -304,7 +311,8 @@ fn parse(path: &Path) -> Result<JsonValue, EvidenceError> {
 fn parse_with_digest(path: &Path) -> Result<(JsonValue, String), EvidenceError> {
     let bytes = read_capped(path, MAX_MANIFEST_BYTES)?;
     let digest = sha256_hex(&bytes);
-    let text = String::from_utf8(bytes).map_err(|_| EvidenceError(format!("{} is not UTF-8", path.display())))?;
+    let text = String::from_utf8(bytes)
+        .map_err(|_| EvidenceError(format!("{} is not UTF-8", path.display())))?;
     let v = JsonValue::parse(&text)
         .map_err(|e| EvidenceError(format!("{} is not valid JSON: {e}", path.display())))?;
     Ok((v, digest))
@@ -318,7 +326,8 @@ fn record_pinned(
     out: &mut BTreeMap<String, BTreeMap<String, String>>,
 ) -> Result<(), EvidenceError> {
     if let Some(p) = entry.get("pinned") {
-        let tuple = crate::catalogue::parse_pinned_object(p, id, false).map_err(|e| EvidenceError(e.0))?;
+        let tuple =
+            crate::catalogue::parse_pinned_object(p, id, false).map_err(|e| EvidenceError(e.0))?;
         out.insert(id.to_string(), tuple);
     }
     Ok(())
@@ -334,7 +343,10 @@ fn req_text(v: &JsonValue, key: &str, what: &str) -> Result<String, EvidenceErro
 }
 
 fn text(v: &JsonValue, key: &str) -> String {
-    v.get(key).and_then(|x| x.as_str()).unwrap_or("").to_string()
+    v.get(key)
+        .and_then(|x| x.as_str())
+        .unwrap_or("")
+        .to_string()
 }
 
 /// Largest count a manifest may state: 2^53, the biggest integer a JSON
@@ -349,7 +361,9 @@ fn num(v: &JsonValue, key: &str) -> Result<u64, EvidenceError> {
         None => Ok(0),
         Some(x) => match x.as_i64().and_then(|n| u64::try_from(n).ok()) {
             Some(n) if n <= MAX_COUNT => Ok(n),
-            _ => err(format!("`{key}` must be an integer between 0 and {MAX_COUNT}")),
+            _ => err(format!(
+                "`{key}` must be an integer between 0 and {MAX_COUNT}"
+            )),
         },
     }
 }
@@ -414,7 +428,8 @@ fn load_spec(path: &Path) -> Result<SpecFacts, EvidenceError> {
                         matches!(x, Declaration::Bound(b) if b.name == o.name && b.rows.iter().any(|r| r.name == row))
                     })
                 };
-                let (has_output_bound, has_heap_bound) = (has_bound_row("output"), has_bound_row("heap"));
+                let (has_output_bound, has_heap_bound) =
+                    (has_bound_row("output"), has_bound_row("heap"));
                 let labelled = |param: &str| {
                     file.declarations.iter().any(|x| {
                         matches!(x, Declaration::Labels(l) if l.name == o.name
@@ -467,7 +482,11 @@ fn load_cert(path: &Path) -> Result<CertFacts, EvidenceError> {
     for e in list("declared_effects")? {
         match e.as_str() {
             Some(s) => declared_effects.push(s.to_string()),
-            None => return err(format!("{what}: `declared_effects` entries must be strings")),
+            None => {
+                return err(format!(
+                    "{what}: `declared_effects` entries must be strings"
+                ))
+            }
         }
     }
     let mut facts = CertFacts {
@@ -477,7 +496,9 @@ fn load_cert(path: &Path) -> Result<CertFacts, EvidenceError> {
     };
     for ex in list("banned_construct_exceptions")? {
         if ex.as_object().is_none() {
-            return err(format!("{what}: `banned_construct_exceptions` entries must be objects"));
+            return err(format!(
+                "{what}: `banned_construct_exceptions` entries must be objects"
+            ));
         }
         let construct = req_text(ex, "construct", what)?;
         let why = req_text(ex, "justification", what)?;
@@ -611,7 +632,8 @@ fn skip_quote(c: &[char], i: usize, byte: bool) -> Option<usize> {
 fn skip_escape(c: &[char], i: usize) -> Option<usize> {
     match c.get(i)? {
         '\'' | '"' | '\\' | 'n' | 'r' | 't' | '0' => Some(i + 1),
-        'x' => (c.get(i + 1)?.is_ascii_hexdigit() && c.get(i + 2)?.is_ascii_hexdigit()).then_some(i + 3),
+        'x' => (c.get(i + 1)?.is_ascii_hexdigit() && c.get(i + 2)?.is_ascii_hexdigit())
+            .then_some(i + 3),
         'u' => {
             if c.get(i + 1) != Some(&'{') {
                 return None;
@@ -652,7 +674,12 @@ fn skip_raw_string(c: &[char], mut i: usize, hashes: usize) -> Option<usize> {
 /// Every `src/**/*.rs` file (symlinks are not followed) whose code contains
 /// `unsafe`, as paths relative to `src`, sorted.
 pub fn scan_unsafe_sources(package_dir: &Path) -> Result<Vec<String>, EvidenceError> {
-    fn walk(dir: &Path, rel: &str, depth: usize, out: &mut Vec<String>) -> Result<(), EvidenceError> {
+    fn walk(
+        dir: &Path,
+        rel: &str,
+        depth: usize,
+        out: &mut Vec<String>,
+    ) -> Result<(), EvidenceError> {
         if depth > 32 {
             return err("src tree is nested too deeply");
         }
@@ -663,7 +690,11 @@ pub fn scan_unsafe_sources(package_dir: &Path) -> Result<Vec<String>, EvidenceEr
         for entry in entries {
             let name = entry.file_name().to_string_lossy().into_owned();
             let path = entry.path();
-            let rel_name = if rel.is_empty() { name.clone() } else { format!("{rel}/{name}") };
+            let rel_name = if rel.is_empty() {
+                name.clone()
+            } else {
+                format!("{rel}/{name}")
+            };
             let ty = entry
                 .file_type()
                 .map_err(|e| EvidenceError(format!("cannot stat {}: {e}", path.display())))?;
@@ -688,11 +719,15 @@ pub fn scan_unsafe_sources(package_dir: &Path) -> Result<Vec<String>, EvidenceEr
 fn check_spec_path(relative: &str) -> Result<(), EvidenceError> {
     use std::path::Component;
     if relative.is_empty() || relative.contains('\\') {
-        return err(format!("spec path {relative:?} is empty or contains a backslash"));
+        return err(format!(
+            "spec path {relative:?} is empty or contains a backslash"
+        ));
     }
     let p = Path::new(relative);
     if p.is_absolute() || !p.components().all(|c| matches!(c, Component::Normal(_))) {
-        return err(format!("spec path {relative:?} must be relative with no `..` components"));
+        return err(format!(
+            "spec path {relative:?} must be relative with no `..` components"
+        ));
     }
     Ok(())
 }
@@ -710,7 +745,10 @@ fn find_spec(package_dir: &Path, relative: &str) -> Result<PathBuf, EvidenceErro
             return Ok(candidate);
         }
     }
-    err(format!("spec {relative} not found above {}", package_dir.display()))
+    err(format!(
+        "spec {relative} not found above {}",
+        package_dir.display()
+    ))
 }
 
 /// The Warrant document a package's evidence must describe: `ct-compare` is
@@ -753,13 +791,22 @@ fn check_not_live_entries(package_dir: &Path, proofs: &[ProofEntry]) -> Result<(
     };
     for p in not_live {
         if !p.certificates.is_empty() {
-            return err(format!("{}: a `not-live` entry cannot cite certificates", p.id));
+            return err(format!(
+                "{}: a `not-live` entry cannot cite certificates",
+                p.id
+            ));
         }
         if p.label != "not-live" {
-            return err(format!("{}: a `not-live` entry must carry the label `not-live`, not {:?}", p.id, p.label));
+            return err(format!(
+                "{}: a `not-live` entry must carry the label `not-live`, not {:?}",
+                p.id, p.label
+            ));
         }
         if p.note.trim().is_empty() {
-            return err(format!("{}: a `not-live` entry must record the blocker in `note`", p.id));
+            return err(format!(
+                "{}: a `not-live` entry must record the blocker in `note`",
+                p.id
+            ));
         }
         if !declared.contains_key(&p.op) {
             return err(format!(
@@ -767,6 +814,134 @@ fn check_not_live_entries(package_dir: &Path, proofs: &[ProofEntry]) -> Result<(
                 p.id,
                 p.op,
                 path.display()
+            ));
+        }
+    }
+    Ok(())
+}
+
+/// Validate the VER-P047 refusal-only source anchor against the current source,
+/// spec and reviewed bindings. This proof kind is a report claim fallback only;
+/// it is deliberately excluded from cost and weakness calculations below.
+struct SourceProofSnapshot<'a> {
+    frame: &'a [u8],
+    cargo_manifest: &'a [u8],
+    proof_spec_sha256: &'a str,
+    proof_source_sha256: &'a str,
+    current_source_sha256: &'a str,
+}
+
+fn check_source_equivalence_entries(
+    package_dir: &Path,
+    spec: &SpecFacts,
+    proofs: &[ProofEntry],
+    snapshot: &SourceProofSnapshot<'_>,
+) -> Result<(), EvidenceError> {
+    let entries: Vec<&ProofEntry> = proofs
+        .iter()
+        .filter(|p| p.kind == "source-equivalence")
+        .collect();
+    if entries.is_empty() {
+        return Ok(());
+    }
+    if snapshot.proof_spec_sha256 != spec.sha256 {
+        return err("source-equivalence fallback is bound to a stale Warrant spec");
+    }
+    if snapshot.proof_source_sha256 != snapshot.current_source_sha256 {
+        return err("source-equivalence fallback is bound to a stale Rust source tree");
+    }
+
+    let binding_path = package_dir.join("evidence.bindings");
+    let binding_bytes = read_capped(&binding_path, MAX_MANIFEST_BYTES)?;
+    let binding_text = std::str::from_utf8(&binding_bytes)
+        .map_err(|_| EvidenceError(format!("{} is not UTF-8", binding_path.display())))?;
+    let bindings = parse_evidence_bindings(binding_text)
+        .map_err(|e| EvidenceError(format!("{}: {e}", binding_path.display())))?;
+
+    let mut seen_ops = BTreeSet::new();
+    for entry in entries {
+        let op = spec
+            .ops
+            .iter()
+            .find(|op| op.name == entry.op)
+            .ok_or_else(|| {
+                EvidenceError(format!(
+                    "{} names unknown Warrant operation `{}`",
+                    entry.id, entry.op
+                ))
+            })?;
+        if !seen_ops.insert(op.name.as_str()) {
+            return err(format!(
+                "operation `{}` has duplicate source-equivalence fallback entries",
+                op.name
+            ));
+        }
+        let want_id = format!("warrant/{}/source-equivalence/{}", spec.module, op.name);
+        if entry.id != want_id {
+            return err(format!(
+                "{}: source-equivalence fallback id must be `{want_id}`",
+                entry.id
+            ));
+        }
+        if entry.label != "not-live" || entry.verdict != "not-live" {
+            return err(format!(
+                "{}: source-equivalence fallback must be not-live",
+                entry.id
+            ));
+        }
+        if entry.max_len != 0
+            || !entry.certificates.is_empty()
+            || !entry.obligation_sha256.is_empty()
+        {
+            return err(format!(
+                "{}: refusal-only source-equivalence entry cannot carry bounds or proof material",
+                entry.id
+            ));
+        }
+        if !op.labelled_public || op.has_secret || op.has_steps_bound {
+            return err(format!(
+                "{}: fallback requires every parameter explicitly public, no secret labels and no steps bound",
+                entry.id
+            ));
+        }
+        if proofs
+            .iter()
+            .any(|p| p.op == op.name && (p.kind == "constant-time" || p.kind == "steps-bound"))
+        {
+            return err(format!(
+                "{}: source-equivalence fallback cannot replace or accompany a cost-proof anchor",
+                entry.id
+            ));
+        }
+        let binding = bindings
+            .manifest
+            .bindings
+            .get(op.name.as_str())
+            .ok_or_else(|| {
+                EvidenceError(format!("{}: operation has no evidence binding", entry.id))
+            })?;
+        if entry.function != binding.export {
+            return err(format!(
+                "{}: source-equivalence function `{}` does not match bound export `{}`",
+                entry.id, entry.function, binding.export
+            ));
+        }
+        if !bindings.proofs_not_live.contains_key(&op.name) {
+            return err(format!(
+                "{}: operation lacks a reviewed proofs_not_live opt-in",
+                entry.id
+            ));
+        }
+        let refusal = crate::source_equivalence::reproduce_refusal(
+            snapshot.frame,
+            snapshot.cargo_manifest,
+            &binding.export,
+        )?;
+        let want_note_prefix = format!("isolated export attempt: {refusal};");
+        if !entry.note.starts_with(&want_note_prefix) {
+            return err(format!(
+                "{}: source-equivalence note does not record the reproduced frontend refusal",
+                entry.id
             ));
         }
     }
@@ -783,7 +958,9 @@ fn claim_id(seen: &mut BTreeSet<String>, id: &str, what: &str) -> Result<(), Evi
         || id.starts_with(UNVERIFIED_PREFIX)
         || id.starts_with("runtime-memory-safety::")
     {
-        return err(format!("{what} id `{id}` collides with a reserved attestation id"));
+        return err(format!(
+            "{what} id `{id}` collides with a reserved attestation id"
+        ));
     }
     if !seen.insert(id.to_string()) {
         return err(format!("duplicate evidence id `{id}` ({what})"));
@@ -847,8 +1024,41 @@ impl Evidence {
             let id = req_text(p, "id", what)?;
             claim_id(&mut seen, &id, what)?;
             record_pinned(p, &id, &mut pinned)?;
+            let kind = req_text(p, "kind", what)?;
+            if kind == "source-equivalence" {
+                let allowed = [
+                    "id",
+                    "op",
+                    "function",
+                    "kind",
+                    "label",
+                    "verdict",
+                    "max_len",
+                    "certificates",
+                    "note",
+                ];
+                let object = p.as_object().ok_or_else(|| {
+                    EvidenceError(format!("{id}: source-equivalence entry must be an object"))
+                })?;
+                if let Some(key) = object.keys().find(|key| !allowed.contains(&key.as_str())) {
+                    return err(format!("{id}: unknown source-equivalence field `{key}`"));
+                }
+                if p.get("max_len").is_none() || num(p, "max_len")? != 0 {
+                    return err(format!("{id}: source-equivalence max_len must be zero"));
+                }
+                if !matches!(p.get("certificates").and_then(|v| v.as_array()), Some(certs) if certs.is_empty())
+                {
+                    return err(format!(
+                        "{id}: source-equivalence certificates must be an empty array"
+                    ));
+                }
+            }
             let mut certificates = Vec::new();
-            for c in p.get("certificates").and_then(|x| x.as_array()).unwrap_or(&[]) {
+            for c in p
+                .get("certificates")
+                .and_then(|x| x.as_array())
+                .unwrap_or(&[])
+            {
                 let kind = req_text(c, "kind", what)?;
                 if kind != TRIVIAL_CERT_KIND && kind != "miter" {
                     return err(format!("{id}: unknown certificate kind `{kind}`"));
@@ -862,7 +1072,7 @@ impl Evidence {
                 id,
                 op: text(p, "op"),
                 function: text(p, "function"),
-                kind: req_text(p, "kind", what)?,
+                kind,
                 label: text(p, "label"),
                 verdict: req_text(p, "verdict", what)?,
                 max_len: num(p, "max_len")?,
@@ -903,12 +1113,18 @@ impl Evidence {
         let proof_spec = req_text(&pv, "spec", "proof manifest")?;
         for (who, got) in [("test", &spec_rel), ("proof", &proof_spec)] {
             if *got != want_spec {
-                return err(format!("{who} manifest names spec {got:?}, expected {want_spec:?}"));
+                return err(format!(
+                    "{who} manifest names spec {got:?}, expected {want_spec:?}"
+                ));
             }
         }
         let spec_path = find_spec(package_dir, &want_spec)?;
         let spec = load_spec(&spec_path)?;
-        for (who, v) in [("test", Some(&tv)), ("proof", Some(&pv)), ("bench", bv.as_ref())] {
+        for (who, v) in [
+            ("test", Some(&tv)),
+            ("proof", Some(&pv)),
+            ("bench", bv.as_ref()),
+        ] {
             let Some(v) = v else { continue };
             let module = req_text(v, "module", &format!("{who} manifest"))?;
             if module != spec.module {
@@ -924,8 +1140,37 @@ impl Evidence {
         let cert = load_cert(&package_dir.join("effect_certificate.json"))?;
         // The binding covers every `src/**/*.rs` (audit N2), with the framing
         // the producers share via `test_bootstrap::manifest::frame_sources`.
-        let source_framed = coding_adventures_test_bootstrap::manifest::source_tree_framing(&package_dir.join("src"))
-            .map_err(|e| EvidenceError(format!("cannot bind evidence to {}/src: {e}", package_dir.display())))?;
+        let source_framed = coding_adventures_test_bootstrap::manifest::source_tree_framing(
+            &package_dir.join("src"),
+        )
+        .map_err(|e| {
+            EvidenceError(format!(
+                "cannot bind evidence to {}/src: {e}",
+                package_dir.display()
+            ))
+        })?;
+        let current_source_sha256 = sha256_hex(&source_framed);
+        let cargo_manifest = if proofs
+            .iter()
+            .any(|proof| proof.kind == "source-equivalence")
+        {
+            let cargo_path = package_dir.join("Cargo.toml");
+            read_capped(&cargo_path, MAX_MANIFEST_BYTES)?
+        } else {
+            Vec::new()
+        };
+        check_source_equivalence_entries(
+            package_dir,
+            &spec,
+            &proofs,
+            &SourceProofSnapshot {
+                frame: &source_framed,
+                cargo_manifest: &cargo_manifest,
+                proof_spec_sha256: &text(&pv, "spec_sha256"),
+                proof_source_sha256: &text(&pv, "source_sha256"),
+                current_source_sha256: &current_source_sha256,
+            },
+        )?;
         let unsafe_source_files = scan_unsafe_sources(package_dir)?;
         if !unsafe_source_files.is_empty() && cert.unsafe_exceptions.is_empty() {
             return err(format!(
@@ -941,7 +1186,12 @@ impl Evidence {
         let spec_root = spec_path
             .ancestors()
             .nth(want_spec.split('/').count())
-            .ok_or_else(|| EvidenceError(format!("spec {} has no repository root", spec_path.display())))?;
+            .ok_or_else(|| {
+                EvidenceError(format!(
+                    "spec {} has no repository root",
+                    spec_path.display()
+                ))
+            })?;
         let catalogue = CatalogueSet::load_for_package(spec_root, package_dir)
             .map_err(|e| EvidenceError(e.to_string()))?;
         let package_id = format!(
@@ -951,6 +1201,12 @@ impl Evidence {
                 .and_then(|s| s.strip_suffix(".warrant"))
                 .ok_or_else(|| EvidenceError("package directory has no usable name".into()))?
         );
+
+        // The lane rungs come from the registry above the package and the lane
+        // loader, never from this package's own manifests (VER04i 8.3).  An
+        // `active` lane that does not load fails the whole load.
+        let lanes = crate::lane_report::derive_lane_rungs(spec_root, &package_id)
+            .map_err(|e| EvidenceError(format!("lane evidence: {e}")))?;
 
         // The audit profile is the package's own file; a missing or malformed
         // one fails the load, so no report is ever produced under a guessed
@@ -978,11 +1234,12 @@ impl Evidence {
                 .unwrap_or_else(|| "not-live".to_string()),
             spec,
             cert,
-            source_sha256: sha256_hex(&source_framed),
+            source_sha256: current_source_sha256,
             profile,
             proofs_dir: dir.join("proofs"),
             package_id,
             catalogue,
+            lanes,
             manifest_sha256,
             pinned,
         })
@@ -996,7 +1253,10 @@ impl Evidence {
         if let Some(p) = self.proofs.iter().find(|p| p.id == id) {
             return Some(("proof", p.verdict.as_str()));
         }
-        self.bench.iter().find(|(b, _)| b == id).map(|(_, v)| ("bench", v.as_str()))
+        self.bench
+            .iter()
+            .find(|(b, _)| b == id)
+            .map(|(_, v)| ("bench", v.as_str()))
     }
 
     /// Every id a report may cite, with the verdict it carries.
@@ -1015,7 +1275,18 @@ impl Evidence {
             ids.insert(id, "pass".into());
         }
         if self.cert.label == "proved" {
-            for lang in ["rust", "typescript", "javascript", "python", "go", "java", "csharp", "swift", "c", "cpp"] {
+            for lang in [
+                "rust",
+                "typescript",
+                "javascript",
+                "python",
+                "go",
+                "java",
+                "csharp",
+                "swift",
+                "c",
+                "cpp",
+            ] {
                 ids.insert(format!("runtime-memory-safety::{lang}"), "pass".into());
             }
         }
@@ -1102,7 +1373,10 @@ impl Evidence {
         for op in self.spec.ops.iter().filter(|o| o.has_output_bound) {
             b.ops.push(op.name.clone());
             if !op.has_heap_bound {
-                b.unproven.push(format!("{}: no `heap` bound row beside the `output` row", op.name));
+                b.unproven.push(format!(
+                    "{}: no `heap` bound row beside the `output` row",
+                    op.name
+                ));
             }
             let claim = format!("{}/output-bound", op.name);
             for kind in OUTPUT_BOUND_SUITE_KINDS {
@@ -1112,14 +1386,19 @@ impl Evidence {
                     .filter(|t| t.kind == kind && t.op == op.name && t.claim == claim)
                     .collect();
                 match found.as_slice() {
-                    [] => b.unproven.push(format!("{}: no {kind} suite for {claim}", op.name)),
+                    [] => b
+                        .unproven
+                        .push(format!("{}: no {kind} suite for {claim}", op.name)),
                     entries => {
                         for t in entries {
                             // A suite that ran nothing proves nothing (CWE-409 review
                             // finding 2): `cases` counts exhaustive and property inputs,
                             // `iterations` the fuzz executions, so one of them must be >= 1.
                             if t.cases.saturating_add(t.iterations) == 0 {
-                                b.unproven.push(format!("{}: {} ran no cases (cases = 0, iterations = 0)", op.name, t.id));
+                                b.unproven.push(format!(
+                                    "{}: {} ran no cases (cases = 0, iterations = 0)",
+                                    op.name, t.id
+                                ));
                             }
                             // Every output-bound entry is *measured against* the heap row, so
                             // it must carry both numbers.  The loop below skips an entry
@@ -1130,14 +1409,19 @@ impl Evidence {
                                 ("bound_at_max", t.bound_at_max.is_some()),
                             ] {
                                 if !present {
-                                    b.unproven.push(format!("{}: {} is missing `{field}`", op.name, t.id));
+                                    b.unproven.push(format!(
+                                        "{}: {} is missing `{field}`",
+                                        op.name, t.id
+                                    ));
                                 }
                             }
                             if t.verdict != "pass" {
-                                b.unproven.push(format!("{}: {} is {}", op.name, t.id, t.verdict));
+                                b.unproven
+                                    .push(format!("{}: {} is {}", op.name, t.id, t.verdict));
                             } else {
                                 b.ids.push(t.id.clone());
-                                b.cases = b.cases.saturating_add(t.cases).saturating_add(t.iterations);
+                                b.cases =
+                                    b.cases.saturating_add(t.cases).saturating_add(t.iterations);
                             }
                         }
                     }
@@ -1152,7 +1436,10 @@ impl Evidence {
                 };
                 observed += 1;
                 if peak > bound {
-                    b.unproven.push(format!("{}: {} peaked at {peak} bytes over its {bound}-byte bound", op.name, t.id));
+                    b.unproven.push(format!(
+                        "{}: {} peaked at {peak} bytes over its {bound}-byte bound",
+                        op.name, t.id
+                    ));
                 }
                 if peak > b.max_observed_heap {
                     b.max_observed_heap = peak;
@@ -1160,7 +1447,10 @@ impl Evidence {
                 }
             }
             if op.has_heap_bound && observed == 0 {
-                b.unproven.push(format!("{}: no entry was observed against the `heap` row", op.name));
+                b.unproven.push(format!(
+                    "{}: no entry was observed against the `heap` row",
+                    op.name
+                ));
             }
         }
         b.ids.sort();
@@ -1168,7 +1458,9 @@ impl Evidence {
     }
 
     fn entries<'a>(&'a self, kind: &'a str, op: &'a str) -> impl Iterator<Item = &'a TestEntry> {
-        self.tests.iter().filter(move |t| t.kind == kind && t.op == op)
+        self.tests
+            .iter()
+            .filter(move |t| t.kind == kind && t.op == op)
     }
 
     fn all_pass_nonempty<'a>(entries: impl Iterator<Item = &'a TestEntry>) -> bool {
@@ -1177,9 +1469,12 @@ impl Evidence {
     }
 
     fn proof_obligations<'a>(&'a self, op: &'a str) -> impl Iterator<Item = &'a ProofEntry> {
-        self.proofs
-            .iter()
-            .filter(move |p| p.op == op && (p.kind == "constant-time" || p.kind == "steps-bound"))
+        self.proofs.iter().filter(move |p| {
+            p.op == op
+                && (p.kind == "constant-time"
+                    || p.kind == "steps-bound"
+                    || p.kind == "source-equivalence")
+        })
     }
 
     /// Package facts for the weakness matrix, every one read from a manifest.
@@ -1190,8 +1485,16 @@ impl Evidence {
         // discharge that the other operations' passing proofs would otherwise
         // support.  Only a proven entry (verdict `pass`, ranked label) is ever
         // *cited* as evidence.
-        let ct: Vec<&ProofEntry> = self.proofs.iter().filter(|p| p.kind == "constant-time").collect();
-        let steps: Vec<&ProofEntry> = self.proofs.iter().filter(|p| p.kind == "steps-bound").collect();
+        let ct: Vec<&ProofEntry> = self
+            .proofs
+            .iter()
+            .filter(|p| p.kind == "constant-time")
+            .collect();
+        let steps: Vec<&ProofEntry> = self
+            .proofs
+            .iter()
+            .filter(|p| p.kind == "steps-bound")
+            .collect();
         let proven = |p: &ProofEntry| p.verdict == "pass" && label_rank(&p.label).is_some();
         let ids_of = |v: &[&ProofEntry], keep: &dyn Fn(&ProofEntry) -> bool| -> Vec<String> {
             v.iter().filter(|p| keep(p)).map(|p| p.id.clone()).collect()
@@ -1207,7 +1510,11 @@ impl Evidence {
                 .collect()
         };
         let (ct_nl, steps_nl) = (not_live("constant-time"), not_live("steps-bound"));
-        let mut notes: Vec<&str> = ct_nl.iter().chain(steps_nl.iter()).map(|p| p.note.as_str()).collect();
+        let mut notes: Vec<&str> = ct_nl
+            .iter()
+            .chain(steps_nl.iter())
+            .map(|p| p.note.as_str())
+            .collect();
         notes.sort_unstable();
         notes.dedup();
         let proof_ok = |v: &[&ProofEntry]| !v.is_empty() && v.iter().all(|p| proven(p));
@@ -1235,13 +1542,24 @@ impl Evidence {
             // Bounds-checking is claimed for the lowered code only when every
             // obligation ran; one unproven operation leaves the row open.
             oob_ids: if ct_unproven.is_empty() && steps_unproven.is_empty() {
-                ct.iter().chain(steps.iter()).map(|p| p.id.clone()).collect()
+                ct.iter()
+                    .chain(steps.iter())
+                    .map(|p| p.id.clone())
+                    .collect()
             } else {
                 Vec::new()
             },
             oob_label: weakest(&ct),
             ct_unproven,
             step_unproven: steps_unproven,
+            missing_step_bound_ops: self
+                .spec
+                .ops
+                .iter()
+                .filter(|op| !op.has_steps_bound)
+                .map(|op| op.name.clone())
+                .collect(),
+            warrant_operation_count: self.spec.ops.len(),
             ct_not_live: ct_nl.iter().map(|p| p.id.clone()).collect(),
             step_not_live: steps_nl.iter().map(|p| p.id.clone()).collect(),
             not_live_note: notes.join(" | "),
@@ -1251,7 +1569,8 @@ impl Evidence {
                 Vec::new()
             },
             profile: self.profile.clone(),
-            all_ops_step_bounded: !self.spec.ops.is_empty() && self.spec.ops.iter().all(|o| o.has_steps_bound),
+            all_ops_step_bounded: !self.spec.ops.is_empty()
+                && self.spec.ops.iter().all(|o| o.has_steps_bound),
             decompression: self.decompression_bounds(),
         };
         let is_safe_rust = self.cert.label == "proved"
@@ -1291,8 +1610,12 @@ impl Evidence {
             has_wir_timing_proof: proof_ok(&ct),
             has_instruction_benchmarks: bench_ok,
             has_zero_alloc_proof: bench_ok,
-            has_pbt_coverage: Self::all_pass_nonempty(self.tests.iter().filter(|t| t.kind == "property")),
-            has_fuzz_coverage: Self::all_pass_nonempty(self.tests.iter().filter(|t| t.kind == "fuzz")),
+            has_pbt_coverage: Self::all_pass_nonempty(
+                self.tests.iter().filter(|t| t.kind == "property"),
+            ),
+            has_fuzz_coverage: Self::all_pass_nonempty(
+                self.tests.iter().filter(|t| t.kind == "fuzz"),
+            ),
             has_eval_analyzer_evidence: false,
             has_prototype_analyzer_evidence: false,
             evidence,
@@ -1312,7 +1635,9 @@ impl Evidence {
         let ops = self.claimed_ops();
         !ops.is_empty()
             && ops.iter().all(|op| {
-                kinds.iter().all(|k| Self::all_pass_nonempty(self.entries(k, op)))
+                kinds
+                    .iter()
+                    .all(|k| Self::all_pass_nonempty(self.entries(k, op)))
             })
     }
 
@@ -1323,15 +1648,18 @@ impl Evidence {
         !self.spec.ops.is_empty()
             && self.spec.ops.iter().all(|op| {
                 let v: Vec<&ProofEntry> = self.proof_obligations(&op.name).collect();
-                !v.is_empty() && v.iter().all(|p| p.verdict == "pass" && label_rank(&p.label).is_some())
+                !v.is_empty()
+                    && v.iter()
+                        .all(|p| p.verdict == "pass" && label_rank(&p.label).is_some())
             })
     }
 
     /// Rung statuses computed from which kinds of evidence exist and pass.
     pub fn rungs(&self) -> RungsSummary {
         let status = |ok: bool| if ok { "pass" } else { "fail" }.to_string();
-        let kind_ok =
-            |k: &[&str]| Self::all_pass_nonempty(self.tests.iter().filter(|t| k.contains(&t.kind.as_str())));
+        let kind_ok = |k: &[&str]| {
+            Self::all_pass_nonempty(self.tests.iter().filter(|t| k.contains(&t.kind.as_str())))
+        };
         // E5 is `pass` only when every operation of the document has at
         // least one obligation and every obligation passed with a ranked label
         // (the hardened `proofs_ok`).  An obligation recorded `not-live`
@@ -1345,7 +1673,11 @@ impl Evidence {
                 p.verdict == "not-live" || (p.verdict == "pass" && label_rank(&p.label).is_some())
             };
             let covered = !self.spec.ops.is_empty()
-                && self.spec.ops.iter().all(|op| self.proof_obligations(&op.name).next().is_some());
+                && self
+                    .spec
+                    .ops
+                    .iter()
+                    .all(|op| self.proof_obligations(&op.name).next().is_some());
             let all_fine = self
                 .spec
                 .ops
@@ -1421,7 +1753,11 @@ pub fn certificate_kind(ev: &Evidence, op: &str) -> &'static str {
         .proof_obligations(op)
         .flat_map(|p| p.certificates.iter())
         .any(|c| c.kind == TRIVIAL_CERT_KIND);
-    if trivial { TRIVIAL_MARK } else { MITER_MARK }
+    if trivial {
+        TRIVIAL_MARK
+    } else {
+        MITER_MARK
+    }
 }
 
 /// Derive one claim per Warrant operation from the manifests.
@@ -1430,14 +1766,20 @@ pub fn derive_claims(ev: &Evidence) -> Result<Vec<ClaimEvidence>, EvidenceError>
     for op in &ev.spec.ops {
         let obligations: Vec<&ProofEntry> = ev.proof_obligations(&op.name).collect();
         let Some(first) = obligations.first() else {
-            return err(format!("operation `{}` has no proof obligations in the manifest", op.name));
+            return err(format!(
+                "operation `{}` has no proof obligations in the manifest",
+                op.name
+            ));
         };
         let symbol = first.function.clone();
         // Checked: a hostile manifest must not wrap the totals (audit N3).
         let sum = |kind: &str, f: fn(&TestEntry) -> u64| -> Result<u64, EvidenceError> {
             ev.entries(kind, &op.name).try_fold(0u64, |acc, t| {
                 acc.checked_add(f(t)).ok_or_else(|| {
-                    EvidenceError(format!("{kind} counts for operation `{}` overflow", op.name))
+                    EvidenceError(format!(
+                        "{kind} counts for operation `{}` overflow",
+                        op.name
+                    ))
                 })
             })
         };
@@ -1457,14 +1799,20 @@ pub fn derive_claims(ev: &Evidence) -> Result<Vec<ClaimEvidence>, EvidenceError>
         // The strings the evidence layer has always emitted are kept as
         // *seeds*: each must resolve to a catalogue id or alias, so the
         // migration to catalogue ids cannot lose one of them.
-        let buffers = obligations.iter().any(|p| p.max_len > 0 && p.label != "proved");
+        let buffers = obligations
+            .iter()
+            .any(|p| p.max_len > 0 && p.label != "proved");
         let mut legacy = vec!["compiler.preserves_timing".to_string()];
         if buffers {
             legacy.push("memory.unaliased".to_string());
         }
         // Rows the prover does not discharge stay visible as assumptions
         // (`heap-bound:unchecked` is an alias of `wir.bound.heap-unchecked`).
-        for p in ev.proofs.iter().filter(|p| p.op == op.name && p.verdict == "unchecked") {
+        for p in ev
+            .proofs
+            .iter()
+            .filter(|p| p.op == op.name && p.verdict == "unchecked")
+        {
             legacy.push(format!("{}:unchecked", p.kind));
         }
         // Every obligation recorded `not-live` means no proof exists for this
@@ -1473,15 +1821,22 @@ pub fn derive_claims(ev: &Evidence) -> Result<Vec<ClaimEvidence>, EvidenceError>
         let proof = if obligations.iter().all(|p| p.verdict == "not-live") {
             None
         } else {
-            let certificate = certificate_digest(ev, &op.name)
-                .ok_or_else(|| EvidenceError(format!("operation `{}` has no certificates", op.name)))?;
+            let certificate = certificate_digest(ev, &op.name).ok_or_else(|| {
+                EvidenceError(format!("operation `{}` has no certificates", op.name))
+            })?;
             // Rule AC-4, applied by construction: every catalogue entry whose
             // `applies_to` matches this label, these claim kinds and this
             // package, closed over the catalogue edges.
             let kinds = op_claim_kinds(ev, &op.name);
-            let (assumptions, discharged) =
-                derive_claim_assumptions(&ev.catalogue, &ev.package_id, &proof_label, &kinds, &legacy, HOST_STACK)
-                    .map_err(|e| EvidenceError(format!("operation `{}`: {e}", op.name)))?;
+            let (assumptions, discharged) = derive_claim_assumptions(
+                &ev.catalogue,
+                &ev.package_id,
+                &proof_label,
+                &kinds,
+                &legacy,
+                HOST_STACK,
+            )
+            .map_err(|e| EvidenceError(format!("operation `{}`: {e}", op.name)))?;
             Some(ProofEvidence {
                 remaining_by_layer: remaining_by_layer(&ev.catalogue.catalogue, &assumptions),
                 label: proof_label,
@@ -1520,7 +1875,9 @@ pub fn derive_claims(ev: &Evidence) -> Result<Vec<ClaimEvidence>, EvidenceError>
             },
             exhaustive: Some(ExhaustiveEvidence {
                 cases: sum("exhaustive", |t| t.cases)?,
-                status: status(Evidence::all_pass_nonempty(ev.entries("exhaustive", &op.name))),
+                status: status(Evidence::all_pass_nonempty(
+                    ev.entries("exhaustive", &op.name),
+                )),
             }),
             fuzz: Some(FuzzEvidence {
                 iterations: sum("fuzz", |t| t.iterations)?,
@@ -1563,6 +1920,13 @@ pub enum EvidenceCheckError {
     TrivialCertificateUnmarked(String),
     /// A VER13 assumption rule (AC-1..AC-14) failed.
     Assumption(AssumptionCheckError),
+    /// The report's lanes differ from the registry's, or name another lane's
+    /// package (VER04i 9 check 17).
+    LaneMismatch(String),
+    /// The report claims more for a lane than the registry and the loader
+    /// support: a stronger rung, a release or sandbox claim, more cases under
+    /// a label (VER04i 9 check 24).
+    LabelOverclaim(String),
 }
 
 impl fmt::Display for EvidenceCheckError {
@@ -1577,7 +1941,11 @@ impl fmt::Display for EvidenceCheckError {
             Self::UnsafeContradiction(m) => ("unsafe claim contradicts declared exception", m),
             Self::Load(m) => ("cannot load evidence", m),
             Self::DuplicateId(m) => ("duplicate id", m),
-            Self::TrivialCertificateUnmarked(m) => ("trivial certificate presented as a full proof", m),
+            Self::TrivialCertificateUnmarked(m) => {
+                ("trivial certificate presented as a full proof", m)
+            }
+            Self::LaneMismatch(m) => ("lane mismatch", m),
+            Self::LabelOverclaim(m) => ("lane label overclaim", m),
             Self::Assumption(a) => return write!(f, "{a}"),
         };
         write!(f, "{name}: {m}")
@@ -1659,7 +2027,9 @@ pub fn verify_evidence(
         )));
     }
     if ev.proof_spec_sha256 != ev.spec.sha256 {
-        return Err(E::StaleEvidence("proof manifest was generated from a different spec".into()));
+        return Err(E::StaleEvidence(
+            "proof manifest was generated from a different spec".into(),
+        ));
     }
     if ev.proof_source_sha256 != ev.source_sha256 {
         return Err(E::StaleEvidence(
@@ -1691,12 +2061,19 @@ pub fn verify_evidence(
     //     obligation it proves.  (Negative controls and `unchecked` rows prove
     //     nothing and are exempt.)  Full recomputation of the binding from the
     //     source is follow-up WD-009 (VER04h section 10).
-    for p in ev.proofs.iter().filter(|p| p.kind == "constant-time" || p.kind == "steps-bound") {
+    for p in ev
+        .proofs
+        .iter()
+        .filter(|p| p.kind == "constant-time" || p.kind == "steps-bound")
+    {
         if p.verdict != "pass" {
             continue;
         }
         if p.certificates.is_empty() {
-            return Err(E::BadCertificate(format!("{}: verdict pass but no certificate is cited", p.id)));
+            return Err(E::BadCertificate(format!(
+                "{}: verdict pass but no certificate is cited",
+                p.id
+            )));
         }
         let h = &p.obligation_sha256;
         if h.len() != 64 || !h.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f')) {
@@ -1715,10 +2092,16 @@ pub fn verify_evidence(
             if !seen.insert(c.id.clone()) {
                 continue;
             }
-            let cnf = read_capped(&ev.proofs_dir.join(format!("{}.cnf", c.id)), MAX_CERTIFICATE_BYTES)
-                .map_err(|e| E::BadCertificate(format!("{}: cnf unreadable: {}", c.id, e.0)))?;
-            let drat = read_capped(&ev.proofs_dir.join(format!("{}.drat", c.id)), MAX_CERTIFICATE_BYTES)
-                .map_err(|e| E::BadCertificate(format!("{}: drat unreadable: {}", c.id, e.0)))?;
+            let cnf = read_capped(
+                &ev.proofs_dir.join(format!("{}.cnf", c.id)),
+                MAX_CERTIFICATE_BYTES,
+            )
+            .map_err(|e| E::BadCertificate(format!("{}: cnf unreadable: {}", c.id, e.0)))?;
+            let drat = read_capped(
+                &ev.proofs_dir.join(format!("{}.drat", c.id)),
+                MAX_CERTIFICATE_BYTES,
+            )
+            .map_err(|e| E::BadCertificate(format!("{}: drat unreadable: {}", c.id, e.0)))?;
             let mut bytes = cnf.clone();
             bytes.push(0);
             bytes.extend_from_slice(&drat);
@@ -1729,7 +2112,10 @@ pub fn verify_evidence(
                     sha256_hex(&bytes)
                 )));
             }
-            let (cnf_s, drat_s) = (String::from_utf8_lossy(&cnf), String::from_utf8_lossy(&drat));
+            let (cnf_s, drat_s) = (
+                String::from_utf8_lossy(&cnf),
+                String::from_utf8_lossy(&drat),
+            );
             drat_check::check(&cnf_s, &drat_s)
                 .map_err(|e| E::BadCertificate(format!("{}: DRAT checker rejected: {e}", c.id)))?;
         }
@@ -1740,7 +2126,9 @@ pub fn verify_evidence(
         for kind in ["exhaustive", "property", "fuzz"] {
             let id = format!("warrant/{}/{kind}/{name}", ev.spec.module);
             if !ev.tests.iter().any(|t| t.id == id) {
-                return Err(E::UncoveredClaim(format!("claim `{name}` (op {op}) has no {kind} entry")));
+                return Err(E::UncoveredClaim(format!(
+                    "claim `{name}` (op {op}) has no {kind} entry"
+                )));
             }
         }
     }
@@ -1753,15 +2141,26 @@ pub fn verify_evidence(
     for op in &ev.spec.ops {
         let has = |kind: &str| ev.proofs.iter().any(|p| p.op == op.name && p.kind == kind);
         if op.has_secret && !has("constant-time") {
-            return Err(E::UncoveredClaim(format!("op `{}` has secret labels but no constant-time proof", op.name)));
+            return Err(E::UncoveredClaim(format!(
+                "op `{}` has secret labels but no constant-time proof",
+                op.name
+            )));
         }
         if op.has_steps_bound && !has("steps-bound") {
-            return Err(E::UncoveredClaim(format!("op `{}` has a steps bound but no bound proof", op.name)));
+            return Err(E::UncoveredClaim(format!(
+                "op `{}` has a steps bound but no bound proof",
+                op.name
+            )));
         }
         if !report.claims.iter().any(|c| {
-            ev.proofs.iter().any(|p| p.op == op.name && p.function == c.symbol)
+            ev.proofs
+                .iter()
+                .any(|p| p.op == op.name && p.function == c.symbol)
         }) {
-            return Err(E::UncoveredClaim(format!("op `{}` has no claim in the report", op.name)));
+            return Err(E::UncoveredClaim(format!(
+                "op `{}` has no claim in the report",
+                op.name
+            )));
         }
     }
 
@@ -1838,12 +2237,18 @@ pub fn verify_evidence(
     let mut claim_ids = BTreeSet::new();
     for c in &report.claims {
         if !claim_ids.insert(c.id.as_str()) {
-            return Err(E::DuplicateId(format!("claim `{}` appears more than once", c.id)));
+            return Err(E::DuplicateId(format!(
+                "claim `{}` appears more than once",
+                c.id
+            )));
         }
     }
     for want in &derived {
         let Some(got) = report.claims.iter().find(|c| c.id == want.id) else {
-            return Err(E::UncoveredClaim(format!("report has no claim `{}`", want.id)));
+            return Err(E::UncoveredClaim(format!(
+                "report has no claim `{}`",
+                want.id
+            )));
         };
         if let (Some(wp), got_proof) = (&want.proof, got.proof.as_ref()) {
             if wp.certificate_kind == TRIVIAL_MARK
@@ -1858,16 +2263,36 @@ pub fn verify_evidence(
         let fields: Vec<(&str, String, String)> = vec![
             ("symbol", got.symbol.clone(), want.symbol.clone()),
             ("example status", got.example.clone(), want.example.clone()),
-            ("property cases", got.property.cases.to_string(), want.property.cases.to_string()),
-            ("property status", got.property.status.clone(), want.property.status.clone()),
+            (
+                "property cases",
+                got.property.cases.to_string(),
+                want.property.cases.to_string(),
+            ),
+            (
+                "property status",
+                got.property.status.clone(),
+                want.property.status.clone(),
+            ),
             (
                 "exhaustive",
                 format!("{:?}", got.exhaustive),
                 format!("{:?}", want.exhaustive),
             ),
-            ("fuzz", format!("{:?}", got.fuzz), format!("{:?}", want.fuzz)),
-            ("proof", format!("{:?}", got.proof), format!("{:?}", want.proof)),
-            ("evidence ids", format!("{:?}", got.evidence), format!("{:?}", want.evidence)),
+            (
+                "fuzz",
+                format!("{:?}", got.fuzz),
+                format!("{:?}", want.fuzz),
+            ),
+            (
+                "proof",
+                format!("{:?}", got.proof),
+                format!("{:?}", want.proof),
+            ),
+            (
+                "evidence ids",
+                format!("{:?}", got.evidence),
+                format!("{:?}", want.evidence),
+            ),
         ];
         for (what, g, w) in fields {
             if g != w {
@@ -1880,7 +2305,10 @@ pub fn verify_evidence(
     }
     for c in &report.claims {
         if !derived.iter().any(|d| d.id == c.id) {
-            return Err(E::UnknownEvidence(format!("claim `{}` is backed by no manifest entry", c.id)));
+            return Err(E::UnknownEvidence(format!(
+                "claim `{}` is backed by no manifest entry",
+                c.id
+            )));
         }
     }
     if report.claims.len() != derived.len() {
@@ -1907,7 +2335,10 @@ pub fn verify_evidence(
             continue;
         }
         for w in report.weaknesses.iter().filter(|w| w.cwe == cwe) {
-            let cites_proof = w.evidence.iter().any(|e| of_kind.iter().any(|p| p.id == *e));
+            let cites_proof = w
+                .evidence
+                .iter()
+                .any(|e| of_kind.iter().any(|p| p.id == *e));
             if w.status == WeaknessStatus::Discharged || cites_proof {
                 return Err(E::EvidenceMismatch(format!(
                     "CWE-{cwe} is {} on {kind} proofs, but {} obligation(s) are not proven ({})",
@@ -1927,21 +2358,37 @@ pub fn verify_evidence(
     // Anything else citing NO_SECRET_OPERANDS_ATTESTATION is rejected.
     let row208 = report.weaknesses.iter().find(|w| w.cwe == 208);
     let cites_attestation = row208.is_some_and(|w| {
-        w.evidence.iter().any(|e| e == NO_SECRET_OPERANDS_ATTESTATION)
+        w.evidence
+            .iter()
+            .any(|e| e == NO_SECRET_OPERANDS_ATTESTATION)
     });
-    let has_not_applicable = report.exemptions.iter().any(|x| x.id == NOT_APPLICABLE_208_EXEMPTION);
+    let has_not_applicable = report
+        .exemptions
+        .iter()
+        .any(|x| x.id == NOT_APPLICABLE_208_EXEMPTION);
     let is_excluded_208 = row208.is_some_and(|w| w.status == WeaknessStatus::Excluded);
 
     if is_excluded_208 {
         let Some(w) = row208 else { unreachable!() };
-        let has_public_attest = w.evidence.iter().any(|e| e == NO_SECRET_OPERANDS_ATTESTATION);
-        let has_no_secret_inputs = w.evidence.iter().any(|e| e == "capability-audit::no-secret-inputs");
+        let has_public_attest = w
+            .evidence
+            .iter()
+            .any(|e| e == NO_SECRET_OPERANDS_ATTESTATION);
+        let has_no_secret_inputs = w
+            .evidence
+            .iter()
+            .any(|e| e == "capability-audit::no-secret-inputs");
         if !has_public_attest || !has_no_secret_inputs {
             return Err(E::EvidenceMismatch(format!(
                 "a CWE-208 row marked Excluded must cite both {NO_SECRET_OPERANDS_ATTESTATION} and capability-audit::no-secret-inputs"
             )));
         }
-        let ct: Vec<&str> = ev.proofs.iter().filter(|p| p.kind == "constant-time").map(|p| p.id.as_str()).collect();
+        let ct: Vec<&str> = ev
+            .proofs
+            .iter()
+            .filter(|p| p.kind == "constant-time")
+            .map(|p| p.id.as_str())
+            .collect();
         let has_ct_claims = ev.spec.claims.iter().any(|(name, _)| {
             name.starts_with("ct_")
                 || name.contains("constant-time")
@@ -1964,8 +2411,12 @@ pub fn verify_evidence(
         )));
     }
     if has_not_applicable {
-        let ct: Vec<&str> =
-            ev.proofs.iter().filter(|p| p.kind == "constant-time").map(|p| p.id.as_str()).collect();
+        let ct: Vec<&str> = ev
+            .proofs
+            .iter()
+            .filter(|p| p.kind == "constant-time")
+            .map(|p| p.id.as_str())
+            .collect();
         if !ev.spec_all_operands_public() || !ct.is_empty() {
             return Err(E::EvidenceMismatch(format!(
                 "{NOT_APPLICABLE_208_EXEMPTION} needs every operand labelled public and no constant-time \
@@ -2049,6 +2500,16 @@ pub fn verify_evidence(
         )));
     }
 
+    // Lane rungs: re-derived from the registry and the lane artifacts, never
+    // from the Rust manifests above (VER04i 8.3).
+    use crate::lane_report::{compare_lane_rungs, LaneDiff};
+    match compare_lane_rungs(&report.lanes, &ev.lanes) {
+        Ok(()) => {}
+        Err(LaneDiff::Mismatch(m)) => return Err(E::LaneMismatch(m)),
+        Err(LaneDiff::Overclaim(m)) => return Err(E::LabelOverclaim(m)),
+        Err(LaneDiff::Stale(m)) => return Err(E::StaleEvidence(m)),
+    }
+
     Ok(unverified)
 }
 
@@ -2077,7 +2538,9 @@ pub fn package_version(cargo_toml: &str) -> Result<String, EvidenceError> {
         if !in_package {
             continue;
         }
-        let Some((key, value)) = line.split_once('=') else { continue };
+        let Some((key, value)) = line.split_once('=') else {
+            continue;
+        };
         let key = key.trim();
         if key == "version.workspace" {
             return err("Cargo.toml [package] inherits its version from the workspace".to_string());

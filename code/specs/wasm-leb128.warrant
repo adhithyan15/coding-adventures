@@ -352,14 +352,18 @@ warrant wasm_leb128 v1
     forall v: U64. encode_unsigned(v) == eu0(v)
   claim encode_unsigned_length_formula:
     forall v: U64. len(encode_unsigned(v)) == imax(1, unwrap_or(div(70 - clz(v), 7), 0))
+  claim encode_unsigned_at_least_one_byte:
+    forall v: U64. len(encode_unsigned(v)) >= 1
   claim encode_unsigned_at_most_ten_bytes:
-    forall v: U64. len(encode_unsigned(v)) >= 1 and len(encode_unsigned(v)) <= 10
+    forall v: U64. len(encode_unsigned(v)) <= 10
   claim encode_signed_matches_canonical_model:
     forall v: I64. encode_signed(v) == es0(v)
   claim encode_signed_length_formula:
     forall v: I64. len(encode_signed(v)) == slen(v)
+  claim encode_signed_at_least_one_byte:
+    forall v: I64. len(encode_signed(v)) >= 1
   claim encode_signed_at_most_ten_bytes:
-    forall v: I64. len(encode_signed(v)) >= 1 and len(encode_signed(v)) <= 10
+    forall v: I64. len(encode_signed(v)) <= 10
 
   -- decode_unsigned (64 bits).
   claim decode_unsigned_empty_input_rejected:

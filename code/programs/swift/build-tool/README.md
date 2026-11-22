@@ -156,6 +156,10 @@ Swift coverage enforce those boundaries. Source hashing applies its complete
 related registry separately because discovery-only directories are still
 eligible package source.
 
+## Fixed-point repository inputs
+
+The checked repository source boundary includes one exact `rust/fixed-point` scope for the Warrant model and Q16.16 cases, plus the already scoped root/Rust Cargo target configs and workspace lockfile. The production hasher includes those authorized tracked files in the package identity; the native source-collection fixture verifies the selected paths and excludes nearby versions, backups, and an untracked credentials candidate. The Rust workspace manifest remains covered by its existing Rust-package ancestor authorization.
+
 ## Portable source hashing
 
 Source collection has its own exact generated-output boundary: `.git`, `.hg`,
@@ -203,7 +207,7 @@ and an unmatched `[` is literal. Descending ranges and ambiguous `--`, `&&`,
 
 Package-tree traversal deliberately remains below the package root. A second
 generated, source-embedded projection consumes the complete checked repository-
-relative boundary registry: 19 reviewed boundaries, 25 exact inputs, and 23
+relative boundary registry: 27 reviewed boundaries, 42 exact inputs, and 33
 exact tracked paths. The engine verifies both pinned registry digests, maps only
 exact or strict-descendant consumers with exact exclusions, and reaches a
 generated-pruning exception by its registered path without unpruning or walking
@@ -244,7 +248,8 @@ escaped:
 HASH_PACKAGE_FAILED: package="swift/example"
 ```
 
-The test suite consumes all 13 neutral source-collection cases and the shared
+The test suite consumes all 21 neutral source-collection cases listed in its
+native fixture matrix and the shared
 hashing-v1 missing-cache oracle, then independently covers binary bytes, CRLF,
 Unicode path ordering, same-content renames, empty packages, every established
 language registry entry, declared root manifests, nested links, real Windows

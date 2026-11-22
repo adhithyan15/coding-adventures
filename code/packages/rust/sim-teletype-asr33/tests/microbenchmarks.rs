@@ -328,10 +328,7 @@ fn main() {
         check_step_serial_bit_zero_alloc,
     );
     suite.add("bench/tx_load/zero_alloc", check_tx_load_zero_alloc);
-    suite.add(
-        "bench/rx_feed_bit/zero_alloc",
-        check_rx_feed_bit_zero_alloc,
-    );
+    suite.add("bench/rx_feed_bit/zero_alloc", check_rx_feed_bit_zero_alloc);
     suite.add(
         "bench/kbd_push_byte/zero_alloc",
         check_kbd_push_byte_zero_alloc,

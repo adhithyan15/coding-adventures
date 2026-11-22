@@ -681,9 +681,17 @@ mod tests {
         assert!(xaml.contains(
             "                var revision = Revision(latestUpdate);\n                if (revision is null\n                    || revision != savedRevision\n                    || persistenceWarning is not null)\n                {\n                    PersistSnapshot();\n                    savedRevision = persistenceWarning is null ? revision : null;\n                }"
         ));
-        assert!(flutter.contains(
-            "    final revision = _revision(settled);\n    if (revision == null ||\n        revision != _savedRevision ||\n        _persistenceWarning != null) {\n      _persistSnapshot();\n      _savedRevision = _persistenceWarning == null ? revision : null;\n    }\n    latestUpdate = _withPersistenceWarning(settled);\n    return latestUpdate;"
-        ));
+        let flutter_revision = flutter.find("final revision = _revision(settled);").unwrap();
+        let flutter_save = flutter.find("_persistSnapshot();").unwrap();
+        let flutter_saved_revision = flutter
+            .find("_savedRevision = _persistenceWarning == null ? revision : null;")
+            .unwrap();
+        let flutter_return = flutter
+            .find("latestUpdate = _withPersistenceWarning(settled);")
+            .unwrap();
+        assert!(flutter_revision < flutter_save);
+        assert!(flutter_save < flutter_saved_revision);
+        assert!(flutter_saved_revision < flutter_return);
         assert!(compose.contains(
             "        val revision = (settled[\"revision\"] as? JsonPrimitive)?.longOrNull\n        if (revision == null || revision != savedRevision || persistenceWarning != null) {\n            persistSnapshot()\n            savedRevision = if (persistenceWarning == null) revision else null\n        }"
         ));
@@ -709,9 +717,9 @@ mod tests {
         assert!(xaml.contains(
             "return warningChanged ? Status(\"Mosaic runtime handled environmentChanged\") : null;"
         ));
-        assert!(flutter.contains(
-            "    return _revision(answer) == shownRevision &&\n            answer['persistenceWarning'] == shownWarning\n        ? null\n        : answer;"
-        ));
+        assert!(flutter.contains("final noVisibleChange ="));
+        assert!(flutter.contains("answer['persistenceWarning'] == shownWarning"));
+        assert!(flutter.contains("return noVisibleChange ? null : answer;"));
         // Swift's events and reports share one dispatch, so both skip alike.
         assert!(swift.contains("return try dispatchEvent(envelope[\"payload\"] ?? NSNull(), name: name)"));
         assert!(swift.contains("let response = try dispatchEvent(environment, name: \"environmentChanged\")"));
@@ -783,14 +791,14 @@ mod tests {
         let runtime_half = host
             .find("Map<String, Object?>? reportEnvironment(Map<String, String> environment) {\n    _ensureOpen();")
             .expect("runtime half");
-        let settling = host.find("    if (_settling > 0) return null;\n    final report").expect("settle backstop");
+        let settling = host.find("if (_settling > 0) {").expect("settle backstop");
         let taken = host
-            .find("if (_sameEnvironment(_lastReportedEnvironment, report)) return null;")
+            .find("if (_sameEnvironment(_lastReportedEnvironment, report)) {")
             .expect("hold back taken");
         let held_back = host
-            .find("if (_sameEnvironment(_lastRefusedEnvironment, report)) return null;")
+            .find("if (_sameEnvironment(_lastRefusedEnvironment, report)) {")
             .expect("hold back refused");
-        let sent = host.find("final answer = _dispatchEnvironment(report);").expect("send");
+        let sent = host.find("answer = _dispatchEnvironment(report);").expect("send");
         let remembered = host.find("_lastReportedEnvironment = report;").expect("remember");
         assert!(runtime_half < settling && settling < taken && taken < held_back);
         assert!(held_back < sent && sent < remembered);
@@ -800,8 +808,9 @@ mod tests {
         ));
         assert!(!host.contains("    } on Object {\n      _lastRefusedEnvironment = report;"));
         // An ignored report has nothing to show; a tripped guard does.
-        assert!(host.contains("if (answer['error'] != null) return answer;"));
-        assert!(host.contains("return _revision(answer) == shownRevision &&"));
+        assert!(host.contains("if (answer['error'] != null) {"));
+        assert!(host.contains("final noVisibleChange ="));
+        assert!(host.contains("_revision(answer) == shownRevision"));
         // The public half never throws: a failure is an `error` answer.
         assert!(host.contains("'error': 'Mosaic environment report failed: $error',"));
         // Props kept only at the revision already showing, on every dispatch
@@ -824,7 +833,8 @@ mod tests {
         assert!(host.contains("'pointer': touch ? 'coarse' : 'fine',"));
         assert!(host.contains("'hover': touch ? 'none' : 'hover',"));
         // The start context carries them too.
-        assert!(host.contains("          ...MosaicHost.initialEnvironment(),\n          'restoredSnapshot'"));
+        assert!(host.contains("...MosaicHost.initialEnvironment(),"));
+        assert!(host.contains("'restoredSnapshot': restoredSnapshot,"));
         // The binding still runs under the plain Dart VM (the conformance
         // harness has no Flutter engine), so the reducer imports no Flutter.
         assert!(!host.contains("package:flutter"));
@@ -1582,11 +1592,10 @@ mod tests {
         let source = flutter_runtime_binding_with_bundled_asset();
         assert!(source.contains("@Native<_CreateNative>(symbol: 'mosaic_app_create')"));
         assert!(source.contains("static const bool _hasBundledRuntime = true;"));
-        assert!(source.contains("if (_hasBundledRuntime) return _MosaicRuntime.bundled();"));
+        assert!(source.contains("if (_hasBundledRuntime) {"));
+        assert!(source.contains("return _MosaicRuntime.bundled();"));
         let environment = source.find("MOSAIC_APP_LIBRARY").unwrap();
-        let bundled = source
-            .find("if (_hasBundledRuntime) return _MosaicRuntime.bundled();")
-            .unwrap();
+        let bundled = source.find("if (_hasBundledRuntime) {").unwrap();
         assert!(
             environment < bundled,
             "the explicit development override wins"
@@ -2327,7 +2336,7 @@ mod tests {
                 disable: "_persistenceDisabled = true;",
                 guard: [
                     "void _persistSnapshot() {",
-                    "if (_persistenceDisabled) return;",
+                    "if (!_persistenceEnabled || _persistenceDisabled) {",
                 ],
                 retired: &[
                     "if (corrupt.existsSync()) corrupt.deleteSync();",

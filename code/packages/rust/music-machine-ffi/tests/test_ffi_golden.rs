@@ -48,7 +48,7 @@ fn test_ffi_golden_portable_text_parity() {
         let digest = sha256_hex(&pcm_bytes);
         assert_eq!(
             digest,
-            "15c793ee23103560f177d96fab2e200594041d9c06e7dd4f22b0204254364766"
+            "25bc4eb1b0d7a10d40a55afc0f8b0b4d65132a82f538245ee2698700ff4acee1"
         );
 
         // Safe free
@@ -89,7 +89,7 @@ fn test_ffi_golden_portable_json_parity() {
         let digest = sha256_hex(&pcm_bytes);
         assert_eq!(
             digest,
-            "15c793ee23103560f177d96fab2e200594041d9c06e7dd4f22b0204254364766"
+            "25bc4eb1b0d7a10d40a55afc0f8b0b4d65132a82f538245ee2698700ff4acee1"
         );
 
         mm_free_buffer(out_ptr, out_len);

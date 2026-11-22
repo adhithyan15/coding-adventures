@@ -12,6 +12,11 @@ warrant game_clock v1
 
   record GameClockState(tick_count: U64, frame_count: U64, elapsed_sim_ns: U64, elapsed_wall_ns: U64, accumulator_ns: U64, fixed_dt_ns: U64, max_frame_steps: U32, max_frame_delta_ns: U64, total_dropped_ns: U64, spiral_clamped_frames: U64)
 
+  -- Pure constructor model, independent of the subject operation. The ordered
+  -- branches preserve `GameClockConfig::validate` error precedence and the
+  -- successful constructor's zero counters and exact copied configuration.
+  model new_clock_model(c: GameClockConfig) -> Result<GameClockState, ClockError> = if c.fixed_dt_ns == 0u64 then Err(ClockError.ZeroFixedTimestep) else if c.fixed_dt_ns > 10000000000u64 then Err(ClockError.InvalidMaxFrameDelta) else if c.max_frame_steps == 0u32 or c.max_frame_steps > 1024u32 then Err(ClockError.InvalidMaxFrameSteps) else if c.max_frame_delta_ns < c.fixed_dt_ns or c.max_frame_delta_ns > 10000000000u64 then Err(ClockError.InvalidMaxFrameDelta) else Ok(GameClockState(0u64, 0u64, 0u64, 0u64, 0u64, c.fixed_dt_ns, c.max_frame_steps, c.max_frame_delta_ns, 0u64, 0u64))
+
   record ClockStepResult(state: GameClockState, steps_to_run: U32, alpha_milli: U32, alpha_q16: U32, spiral_of_death_clamped: Bool, dropped_ns: U64)
 
   op new_clock(config: GameClockConfig) -> Result<GameClockState, ClockError>
@@ -58,14 +63,25 @@ warrant game_clock v1
     steps <= 64
     heap <= 0
 
-  -- State Invariant (VER04m)
-  model state_inv(s: GameClockState) -> Bool = s.fixed_dt_ns > 0u64 and s.fixed_dt_ns <= 10000000000u64 and s.max_frame_steps > 0u32 and s.max_frame_steps <= 1024u32 and s.max_frame_delta_ns >= s.fixed_dt_ns and s.max_frame_delta_ns <= 10000000000u64 and s.accumulator_ns < s.fixed_dt_ns
+  -- Exact ordered public validator model. The final product relation is checked rather than
+  -- wrapped, matching Rust checked_mul and distinguishing TimestampOverflow from mismatch.
+  model validate_state_model(s: GameClockState) -> Result<Unit, ClockError> = if s.fixed_dt_ns == 0u64 then Err(ClockError.ZeroFixedTimestep) else if s.fixed_dt_ns > 10000000000u64 then Err(ClockError.CorruptedStateInvariant) else if s.max_frame_steps == 0u32 or s.max_frame_steps > 1024u32 then Err(ClockError.CorruptedStateInvariant) else if s.max_frame_delta_ns < s.fixed_dt_ns or s.max_frame_delta_ns > 10000000000u64 then Err(ClockError.CorruptedStateInvariant) else if s.accumulator_ns >= s.fixed_dt_ns then Err(ClockError.CorruptedStateInvariant) else match checked_mul(s.tick_count, s.fixed_dt_ns) with None -> Err(ClockError.TimestampOverflow) | Some(expected_sim_ns) -> if s.elapsed_sim_ns == expected_sim_ns then Ok(true) else Err(ClockError.CorruptedStateInvariant)
+
+  -- This predicate now denotes exact validator acceptance, not merely the configuration and
+  -- accumulator subset. `advance_frame` retains its separate error-tolerant postcondition claim.
+  model state_inv(s: GameClockState) -> Bool = match validate_state_model(s) with Ok(_) -> true | Err(_) -> false
 
   claim new_clock_satisfies_invariant:
     forall c: GameClockConfig. match new_clock(c) with Ok(s) -> state_inv(s) | Err(_) -> true
+
+  claim new_clock_matches_model:
+    forall c: GameClockConfig. new_clock(c) == new_clock_model(c)
+
+  claim validate_state_matches_model:
+    forall s: GameClockState. validate_state(s) == validate_state_model(s)
 
   claim advance_frame_bounds_steps:
     forall s: GameClockState, dt: U64. match advance_frame(s, dt) with Ok(r) -> r.steps_to_run <= s.max_frame_steps and state_inv(r.state) and r.alpha_milli < 1000u32 | Err(_) -> true
 
   claim advance_frame_preserves_invariant:
-    forall s: GameClockState, dt: U64. (state_inv(s) -> match advance_frame(s, dt) with Ok(r) -> state_inv(r.state) | Err(_) -> true)
+    forall s: GameClockState, dt: U64. if state_inv(s) then (match advance_frame(s, dt) with Ok(r) -> state_inv(r.state) | Err(_) -> true) else true

@@ -1,0 +1,7 @@
+[package]
+name = "vos-ready-linear"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+vos-ready-contract = { path = "../vos-ready-contract" }

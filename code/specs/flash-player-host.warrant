@@ -1,0 +1,90 @@
+-- SWF07 -- Flash Player Host: integrated Flash player application shell uniting
+-- container, shapes, display list, AVM1/AVM2 bytecode, audio bridge, UI11 windowing,
+-- PaintVM runtime, and headless SHA-256 verification.
+--
+-- Formal verification contract for bounded host configuration and safety gates.
+
+warrant flash_player_host v1
+  error PlayerHostError = SwfContainer | Shape | DisplayList | Audio | Lifter | ActionScript | Clock | Window | PaintRuntime | Blend | InvalidStepBudget | InvalidFrameRate | InvalidStageDimension | InvalidUri | BlockedUriScheme | BlockedFsCommand | CharacterLimitExceeded | FrameScriptLimitExceeded | ScriptTimeout | MalformedTag | DigestMismatch | HeadlessFrameLimitExceeded | NonFiniteCoordinate
+
+  model Unit = Bool
+
+  model valid_vm_step_budget(s: Nat) -> Bool = s <= 2000000
+  model valid_frame_rate_hz(fps: Nat) -> Bool = fps >= 1 and fps <= 1000
+  model valid_stage_dimension_px(px: Nat) -> Bool = px >= 1 and px <= 16384
+  model valid_uri_length(n: Nat) -> Bool = n >= 1 and n <= 2048
+
+  op validate_vm_step_budget(s: Nat) -> Result<Bool, PlayerHostError>
+  op validate_frame_rate_hz(fps: Nat) -> Result<Bool, PlayerHostError>
+  op validate_stage_dimension_px(px: Nat) -> Result<Bool, PlayerHostError>
+  op validate_uri_length(n: Nat) -> Result<Bool, PlayerHostError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_vm_step_budget:
+    s public
+  labels validate_frame_rate_hz:
+    fps public
+  labels validate_stage_dimension_px:
+    px public
+  labels validate_uri_length:
+    n public
+
+  input validate_vm_step_budget.s:
+    hostile
+    ensures no_panic, terminates
+  input validate_frame_rate_hz.fps:
+    hostile
+    ensures no_panic, terminates
+  input validate_stage_dimension_px.px:
+    hostile
+    ensures no_panic, terminates
+  input validate_uri_length.n:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_vm_step_budget:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_frame_rate_hz:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_stage_dimension_px:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_uri_length:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example vm_budget_max:
+    validate_vm_step_budget(2000000) == Ok(true)
+  example vm_budget_exceeded:
+    validate_vm_step_budget(2000001) == Err(PlayerHostError.InvalidStepBudget)
+  example fps_valid:
+    validate_frame_rate_hz(24) == Ok(true)
+  example fps_zero:
+    validate_frame_rate_hz(0) == Err(PlayerHostError.InvalidFrameRate)
+  example stage_dim_valid:
+    validate_stage_dimension_px(800) == Ok(true)
+  example stage_dim_zero:
+    validate_stage_dimension_px(0) == Err(PlayerHostError.InvalidStageDimension)
+  example uri_len_valid:
+    validate_uri_length(128) == Ok(true)
+  example uri_len_zero:
+    validate_uri_length(0) == Err(PlayerHostError.InvalidUri)
+
+  claim validate_vm_step_budget_agrees:
+    forall s: Nat. validate_vm_step_budget(s) == (if valid_vm_step_budget(s) then Ok(true) else Err(PlayerHostError.InvalidStepBudget))
+  claim validate_frame_rate_hz_agrees:
+    forall fps: Nat. validate_frame_rate_hz(fps) == (if valid_frame_rate_hz(fps) then Ok(true) else Err(PlayerHostError.InvalidFrameRate))
+  claim validate_stage_dimension_px_agrees:
+    forall px: Nat. validate_stage_dimension_px(px) == (if valid_stage_dimension_px(px) then Ok(true) else Err(PlayerHostError.InvalidStageDimension))
+  claim validate_uri_length_agrees:
+    forall n: Nat. validate_uri_length(n) == (if valid_uri_length(n) then Ok(true) else Err(PlayerHostError.InvalidUri))

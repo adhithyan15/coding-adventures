@@ -9,6 +9,13 @@ been run through the checker, and the case counts in them were computed by hand
 from the stated domains (each is re-derived in the text so a reviewer can redo it).
 Claims about what a crate does are "from reading": the source was read, not run.
 
+**Amendment (2026-11-16), owner decision, with [VER04n](VER04n-warrant-opaque-types.md):**
+opaque types are the immutable sibling of Mode P. VER04n section 17.2 gives the exact
+edits (sections 3.5, 4.4 E11, 6.1, 9.1 J2 and 14 O-8): a three-way table of transparent,
+hidden-mutable and hidden-immutable state, the rule that a type with a mutating method is
+never opaque, handle-typed constructor arguments in a `dispatch` driver, and the shared
+`observe` adapter code. No VER04m rule changes meaning.
+
 **Parent:** [VER04](VER04-warrant-language.md) (sections 3 to 8),
 [VER04h](VER04h-warrant-derived-evidence.md) (domains, budget, manifests, controls),
 [VER04i](VER04i-polyglot-warrant-evidence.md) (corpus, lanes),
@@ -487,7 +494,7 @@ manifest kind `state`:
 
 | Obligation | Applies to | What runs | Fails when | Its control |
 |---|---|---|---|---|
-| `codec-roundtrip` | `codec:` host forms; `n/a` otherwise (printed, V5) | `observe(build(s)) == s` over every distinct root state value the op's claims build, at most 4,096 (`sampled(4096 of N)` printed beyond) | the codec loses or invents state | a codec with one field forced to zero MUST fail |
+| `codec-roundtrip` | `codec:` host forms; `n/a` otherwise (printed, V5) | `observe(build(s)) == s` over every distinct root state value the op's claims build, at most 4,096 (`sample(4096 of N)` printed beyond) | the codec loses or invents state | a codec with one field forced to zero MUST fail |
 | `rebuild-equivalence` | `codec:` host forms; `n/a` otherwise | for 64 deterministic `(s, x1, x2)` drawn from the claims' cases: continue on the live object after `x1`, versus rebuild from the observed post-state and apply `x2`; compare results and observed states | the object has state the codec does not carry | a wrapper with a hidden call counter that alters the second result MUST fail |
 | `deterministic` | every `state=explicit` op | 16 fixed-seed `(s, x)` run on two separately built hosts | global or ambient state | the second run is given a different state and MUST then differ for at least one of the 16 |
 | `order-independence` | every `state=explicit` op | the first 256 cases of the op's suites run in two deterministic orders (seeded from the evidence seed) in one process | state shared between instances (statics, caches) | a wrapper with a process-wide counter mixed into the result MUST fail |
@@ -1139,10 +1146,10 @@ kinds). Until then the strength label and the printed reach class carry the info
 ### 8.1 Labels
 
 **L1.** (LP-012 kinds.) Every generated case is counted in exactly one kind, as backlog
-LP-012 requires: `full` (the claim's whole stated domain, every binder complete), `sampled`
+LP-012 requires: `full` (the claim's whole stated domain, every binder complete), `sample`
 (an `edge(N)` or seeded sample), `bounded-set` (a chosen finite set: `Bytes set(347)`, a trace
 domain, a family of states). A claim of mixed binders takes the weakest kind among its binders
-and its reach class (`sampled` below `bounded-set` below `full`); if LP-012's merged text
+and its reach class (`sample` below `bounded-set` below `full`); if LP-012's merged text
 orders them differently, that text governs this precedence and this document governs only the
 assignments of the table below. Only `full` may be shown as exhaustive.
 
@@ -1157,7 +1164,7 @@ and the kind says what was enumerated:
 | fixed nested composition from R1 or R2 states | `dff_edge_captures_data` (`steps=2`) | `full` | `exhaustive` |
 | step claim, reach R3 (a family) | `add_reg_all_operands`, `set_pixel_matches_model` | `bounded-set` | `exhaustive-sampled` |
 | step claim whose E15 obligations are missing, failed, or `not-live` | any | per binders and reach | at most `exhaustive-sampled` |
-| step claim over an `edge` or `Nat` binder | a `U64` operand | `sampled` | `exhaustive-sampled` |
+| step claim over an `edge` or `Nat` binder | a `U64` operand | `sample` | `exhaustive-sampled` |
 | step claim over the ordinary `D(Bytes)` domain | a container over `Bytes` | `bounded-set` | `exhaustive-sampled` |
 | trace claim over `within(cs, A, K)` | `refines_model_depth_5` | `bounded-set` | `exhaustive-sampled` |
 | trace claim over the default `D(List<T>)` | `[a, b]` over 16 members | `bounded-set` | `exhaustive-sampled` |

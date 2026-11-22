@@ -1,5 +1,31 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- **WD-HARN1c: negative controls run through the shared checker.** All 3 sabotage lines in
+  `BUILD` and `BUILD_windows` now call `code/scripts/warrant_negctl.py -- cargo test ...` instead of a
+  `grep`/`findstr` pipe. Every fault, filter and cargo argument is unchanged and in the same
+  order. The checker also requires a non-zero exit, exactly one TAP plan, test points numbered
+  `1..N` and no `Bail out!`, and prints the captured output when a control fails (the Windows
+  lines printed nothing). Each BUILD file declares `# needs-toolchain: python`. No source,
+  test or evidence change.
+
+## 0.1.1 — Warrant WX-G pilot evidence (VER04k section 4)
+
+- Added `code/specs/zeroize.warrant` and `evidence.bindings`: a generator-path pilot of
+  `inout` parameters and `ensures` postconditions against `zeroize_bytes` (`&mut [u8]`),
+  `<[u8; 32] as Zeroize>::zeroize`, `<u64 as Zeroize>::zeroize` and
+  `<Vec<u8> as Zeroize>::zeroize`: every byte becomes 0, the length is unchanged, the
+  result is idempotent (the `Vec` is emptied). Domains are labelled: `Bytes<0>` and
+  `Bytes<1>` full, `Bytes<2>` and `Bytes<32>` samples, `Bytes` a set of 347 plus random
+  buffers of up to 64 bytes, `U64` an edge set. Sabotage (`stale-post`, `skip-last-write`,
+  `cursor-off-by-one`) is caught.
+- New generated test target `warrant_evidence` (dev-dependencies `test-bootstrap` and
+  `sha256`); no library code changed. Not an adoption: no secret labels, report or jail,
+  and the evidence cannot see dead-store elimination of a never-read buffer (CWE-14).
+
 ## 0.1.0 — 2026-04-20
 
 - Initial release.

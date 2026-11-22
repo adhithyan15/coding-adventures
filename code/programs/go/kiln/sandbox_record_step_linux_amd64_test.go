@@ -70,6 +70,12 @@ func recStepGit(t *testing.T, gitBin, home, dir string, args ...string) string {
 	cmd.Env = []string{
 		"HOME=" + home, "PATH=/usr/bin:/bin", "GIT_CONFIG_NOSYSTEM=1",
 		"GIT_AUTHOR_NAME=t", "GIT_AUTHOR_EMAIL=t@example.com", "GIT_COMMITTER_NAME=t", "GIT_COMMITTER_EMAIL=t@example.com",
+		// No background maintenance or gc in a fixture repository (D29: it races
+		// with whatever later walks the tree; see quietGitEnv in internal/record).
+		"GIT_CONFIG_COUNT=3",
+		"GIT_CONFIG_KEY_0=maintenance.auto", "GIT_CONFIG_VALUE_0=false",
+		"GIT_CONFIG_KEY_1=gc.auto", "GIT_CONFIG_VALUE_1=0",
+		"GIT_CONFIG_KEY_2=gc.autoDetach", "GIT_CONFIG_VALUE_2=false",
 	}
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -78,7 +84,10 @@ func recStepGit(t *testing.T, gitBin, home, dir string, args ...string) string {
 	return strings.TrimSpace(string(out))
 }
 
-// recStepRun runs a command and returns its output and exit status.
+// recStepRun runs a command and returns its output and exit status.  When the
+// child exits non-zero because it refused a trace, it also logs trace.Diagnose's
+// report of that trace (trace_refusal_diag_test.go), since the trace dies with
+// the test's temp dir; the caller still reports the failure.
 func recStepRun(t *testing.T, cmd *exec.Cmd) (string, string, int) {
 	t.Helper()
 	var ob, eb bytes.Buffer
@@ -89,6 +98,7 @@ func recStepRun(t *testing.T, cmd *exec.Cmd) (string, string, int) {
 	case err == nil:
 		return ob.String(), eb.String(), 0
 	case errors.As(err, &ee):
+		logTraceRefusal(t, eb.String())
 		return ob.String(), eb.String(), ee.ExitCode()
 	}
 	t.Fatalf("%v", err)
@@ -246,6 +256,10 @@ exit 0
 		"GITHUB_EVENT_PATH=" + filepath.Join(aux, "event.json"), "ImageOS=ubuntu24", "ImageVersion=20260101.1",
 		"GITHUB_SHA=" + sha, "GITHUB_REPOSITORY=owner/repo", "GITHUB_RUN_ID=1", "GITHUB_RUN_ATTEMPT=1",
 	}
+	// D34: when the test ends, cross-check every trace the children wrote. It is
+	// registered BEFORE prepare runs (the temp dir already exists, so the check still
+	// runs before it is deleted), so a probe trace that prepare refuses is checked too.
+	crossCheckChildTraces(t, recDir, kiln)
 	prep := exec.Command(kiln, "record", "prepare", "--root", repo, "--dir", recDir, "--build-tool", filepath.Join(bin, "build-tool"),
 		"--shard-index", "0", "--shard-count", "1", "--job-start", fmt.Sprint(time.Now().Unix()),
 		"--strace", straceBin, "--git", gitBin)
@@ -304,6 +318,9 @@ exit 0
 		t.Fatal(err)
 	}
 	defer fh.Close()
+	// The step's wall time comes from its sidecar's started_at/ended_at, so the
+	// PROBE line carries step_wall_ms, parse_ms and parse_share (G2 census).
+	probeTraceWall(t, "record-step", tracePath, wallFromSidecar(sc0))
 	tr, err := trace.ParseOptions(fh, pkgDir, trace.Options{HelperRoot: true, HelperExe: kiln})
 	if err != nil {
 		raw, _ := os.ReadFile(tracePath)
@@ -448,6 +465,7 @@ exit 0
 		t.Fatal(err)
 	}
 	if !cr.ParseOK || cr.Record == nil {
+		logStepTraces(t, recDir, recStepAction) // D32: which line of which trace
 		t.Fatalf("the epilogue's parse half of G7 failed on real traces: %q", cr.ParseReasons)
 	}
 	if cr.StepsRun != len(lines) || !cr.StepNetNS || cr.BindingID != pre.BindingID {

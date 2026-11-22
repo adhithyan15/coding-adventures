@@ -581,8 +581,24 @@ restriction above is what removes the accidental case. What remains is a
 deliberate two-step: a reviewed pull request (which propagates normally,
 because the wiring itself is a source change) makes behaviour depend on an
 allowed-type data file, and a later `A`/`M` edit of only that file is then
-local. Review of the first step is the control; no instance exists in the
-repository today.
+local. Review of the first step is the control. The fixed-point test-only
+reader described below is a separately registered exception: it reads
+metadata from a different package without making that package's ordinary
+dependents inherit the files.
+
+A further `-validate-build-files` check guards a toolchain declaration rather
+than metadata (`internal/validator/negctl_python.go`): every `BUILD*` file
+directly in a package directory discovered for any platform
+(`DiscoverPackagesAllPlatforms`, outside plan mode, so a directory whose only
+file is `BUILD_windows` is covered on a Linux runner) that contains
+`warrant_negctl.py` (the shared negative-control checker; plain substring,
+comments included) must declare `# needs-toolchain: python` for the platform it
+serves. A flagged file whose name is not a build-file name (`BUILD.bak`) is
+reported with rename-or-remove advice. Nested non-package BUILD files are not
+checked, since the build tool never runs them. Files that cannot be read are
+reported as findings (the check fails closed); only an absent package directory
+is skipped. It moved here from a build-tool Go test, which a pull request
+touching only package BUILD files never selects.
 
 Other packages do read some of these files, but none of them is a dependent
 of the file's owner, so dependency propagation never selected them:
@@ -595,6 +611,55 @@ the `CHANGELOG.d/` shards of `typescript/script-ductus` and
 `typescript/programs/language-ladder`, both of which depend on it. Before
 adding a cross-package read of one of these files from a dependent, take the
 file off the list.
+
+Two fixed-point verification consumers read data from another Rust package
+without a Cargo dependency edge. `rust/ca-assurance-report`'s fixed-point
+source-equivalence test constructs a sandbox by copying
+`rust/fixed-point/src/`, `rust/fixed-point/evidence/`, `Cargo.toml`,
+`effect_certificate.json`, `evidence.bindings`, and `assurance-profile.json`,
+then reads `code/specs/fixed-point.warrant`. `rust/warrant-ir`'s fixed-point
+proof integration test embeds that Warrant file, `rust/fixed-point/src/lib.rs`
+and `evidence.bindings`, frames the complete `rust/fixed-point/src/` source
+tree, and reads `rust/fixed-point/Cargo.toml` to validate the default library
+target and `package.autolib`. Both run through Cargo, so their exact external inputs also
+include the root and Rust-workspace Cargo target configs and the workspace
+manifest and lockfile. These are test-only input registrations; they do not
+create dependency edges from fixed-point to either verifier.
+
+Each repository input registration has an explicit kind: `file` or `tree`.
+A `file` registration MUST resolve to one regular file; a directory at that
+path is an error and MUST NOT be reinterpreted as a tree. A `tree` registration
+MUST resolve to a directory; a regular file at that path is an error. The
+registered kind is trusted metadata, never inferred from the current
+filesystem. Tree roots are the exact `src/` and `evidence/` directories named
+above; no ancestor, sibling, suffix, or package-wide directory is implied.
+
+A registered tree is recursive, not a snapshot of the filenames currently
+present. Before walking, hashing MUST validate the root and each ancestor from
+the repository root without following symlinks or reparse points, including
+when the tree is empty. Traversal MUST use bounded paged directory reads and
+charge each entry against its limit before retaining it. The cache key MUST
+include all regular files below the exact registered root, sorted by canonical
+repository-relative path and framed with a distinct tree domain, root path,
+file count, file path, file kind, byte length, and exact bytes. The `src/`
+scope is a conservative all-file superset of the Rust producer's `.rs` source
+tree; the evidence scope mirrors the sandbox's copied files.
+
+Each tree is bounded to depth 32, 100,000 total entries, 4,096 bytes per
+canonical path, 32 MiB of retained canonical paths, 8 MiB per file, and
+128 MiB of bytes actually read. A content reader MUST enforce the file and
+aggregate limits while streaming, as well as checking initial sizes. It MUST
+verify that each opened descriptor is the same file at the registered path
+before and after reading, with stable size and modification time, and compare
+a final bounded inventory with the initial file and directory identities.
+Same-name replacement, growth, addition, removal, a symlink or reparse point,
+a special file, or any unstable traversal MUST fail hashing closed. Adding,
+removing, or changing a file changes the digest. The filesystem tree is the
+source of the digest, so an untracked file inside a consumed tree participates
+whenever the consumer is hashed; unrelated untracked files outside the exact
+roots do not. In particular, the fixed-point package's own external input set
+remains its six exact Warrant, corpus and Cargo files; these additional tree
+inputs belong only to the two verifier consumers.
 
 A package whose **only** changes are package-local metadata is selected
 like a repository input consumer: it and its prerequisites, not its
@@ -612,14 +677,67 @@ affected = closure + prerequisites
 ```
 
 Both sets are computed per platform from the same platform-filtered path
-list. A metadata change next to an edit of `BUILD_windows` therefore leaves
-the package local on Linux and macOS (where that front is filtered out) and
-makes it an ordinary root on Windows; the package is selected everywhere.
+list. A metadata change next to an edit of `BUILD_windows` is local on every
+platform when the front qualifies as a BUILD front below (a Rust shell package,
+status `M`); otherwise the front is an ordinary change on Windows (where it is
+the selected front) and filtered out elsewhere, and the package is selected
+everywhere.
+
+##### BUILD fronts
+
+An in-place edit of a package's own BUILD front is package-local too, under
+conditions much narrower than the metadata list. A changed path is a
+*package-local BUILD front* only when all of these hold:
+
+1. It is at the package root and its package-relative path is exactly one of
+   `BUILD`, `BUILD_linux`, `BUILD_mac`, `BUILD_mac_and_linux` or
+   `BUILD_windows` (case-sensitive, raw slash path; a backslash never matches).
+2. It is the front the platform selects (the existing platform filter drops
+   the others).
+3. Git status is exactly `M`. `A` can create the package on a platform or
+   shadow the generic `BUILD`; `D`, `T`, renames and unknown statuses likewise
+   change which file is selected, so they propagate.
+4. The package is a shell BUILD package. A Starlark BUILD declares `srcs` and
+   dependencies and always propagates.
+5. The package's language is in a closed gate that holds only `rust`
+   (`pkgmeta.BuildFrontLocalFor`).
+6. No veto applies: (V1) any front of the package contains
+   `BUILD_TOOL_UNSUPPORTED:` at HEAD, or the diff of a changed front adds or
+   removes such a line (`gitdiff.GetChangedFilesWithStatus` asks Git with
+   `-G` and reports those paths with the pseudo-status `!`); (V2) the front
+   cannot be read or is Starlark content; (V3) another package's BUILD names
+   this package's directory on a line that runs a BUILD front
+   (`(cd ../x && sh BUILD)`, `call BUILD_windows`).
+
+Evidence for the gate (mechanisms by which a dependent could observe a
+prerequisite's BUILD):
+
+| # | Mechanism | Handling |
+|---|---|---|
+| P1 | 11 packages execute other packages' BUILD files (`bash BUILD`, `sh BUILD`, `call BUILD_windows`) | V3, computed by scanning every BUILD front, never a list; `-validate-build-files` refuses an invocation naming no package directory and any script that runs a BUILD front |
+| P2 | Dependents consume state a prerequisite's BUILD run leaves behind (installed rocks, `dist/`, `node_modules`): `lua/lexer` relies on prerequisites having run `luarocks make --local`; `typescript/bitset` reads `../test-bootstrap/dist` | Language gate. Rust dependents (Rust, wasm and every cross-language wrapper) compile a Rust prerequisite from source in their own `cargo` invocation and read no BUILD output |
+| P3 | A dependent of a package whose BUILD is `BUILD_TOOL_UNSUPPORTED:` is reported unsupported and not run | V1 |
+| P4 | A new or deleted front changes which file a platform selects | status `M` only |
+| P5 | Starlark BUILDs declare `srcs` and `deps` | shell BUILDs only |
+
+To add a language to the gate: show that every kind of dependent of that
+language's packages builds the prerequisite from source in its own BUILD and
+reads nothing a prerequisite's BUILD run produces, list the sampled BUILDs, and
+add a row to the table above. `wasm` and `go` are the obvious candidates and
+are not yet admitted.
+
+Residual risks, accepted: a dependent that relies on a toolchain only its
+prerequisite declares with `# needs-toolchain:` is not re-run when that
+declaration is removed (the edited package itself is always selected, so its own
+declaration is honoured); and indirection in the directory name of a BUILD
+invocation (a variable or glob) that the validator's pattern does not match. The
+scheduled full builds are the backstop.
 
 The rule does not apply to:
 
 - strict-glob Starlark packages, which keep their declared-source semantics:
-  a declared `CHANGELOG.md` propagates, an undeclared one selects nothing;
+  a declared `CHANGELOG.md` propagates, an undeclared one selects nothing, and
+  their BUILD fronts always propagate;
 - packages seeded for an external fixture, forced packages, or a
   repository-boundary consumer of the file, which are ordinary changed
   packages;
@@ -662,6 +780,45 @@ Parallelism is bounded by a configurable job count (default: number of CPU cores
 
 If a package fails to build, all packages that transitively depend on it are marked "dep-skipped" and not executed. This avoids wasting time on builds that will definitely fail.
 
+### Per-Command Timeout
+
+A BUILD line that never returns must not be able to consume a whole CI job.
+In 2026 one `rust/lzw` line hung on Windows CI and the job sat idle for 4h47m
+until GitHub's 300-minute step limit killed it; because each package's output
+is buffered until the package finishes, the log never said which command hung.
+
+The Go build tool therefore bounds every BUILD command (each line the executor
+hands to `sh -c` / `cmd /C`) with a timeout:
+
+- **Flag:** `-command-timeout <duration>` (Go duration syntax, e.g. `90m`).
+  **Default `90m`.** `0` disables the timeout. Negative values are rejected.
+- **Why 90m:** the Linux build step is limited to 150 minutes and the Windows
+  step to 300. The slowest legitimate single package seen on CI takes about 19
+  minutes, so 90 minutes never kills real work, while a hang is cut off with at
+  least an hour of Linux budget (3.5 hours on Windows) left to print
+  diagnostics.
+- **Scope:** per command, not per package. The clock restarts for each line.
+- **Process tree:** on timeout the whole tree is killed, not just the shell
+  (Unix: the command runs in its own process group and `-pgid` is signalled;
+  Windows: `taskkill /T /F /PID`). After the kill, waiting for the output pipes
+  is itself bounded (a short `WaitDelay`), so a grandchild that escaped the
+  kill and still holds stdout open cannot block the build.
+- **Outcome:** the package is `failed` (never passed or skipped), with return
+  code 124 (the GNU `timeout` convention). Its stderr ends with a line
+  naming the package, the 1-based index and text of the command, the configured
+  limit and the elapsed time. All output buffered so far is printed exactly as
+  for any other failure, and dependants are dep-skipped as usual.
+- **Interrupt:** SIGINT/SIGTERM cancel all running commands the same way (exit
+  130, packages failed), since process groups no longer receive the terminal's
+  Ctrl-C. A clean exit that leaves a pipe-holding descendant fails and the
+  leftover group is killed.
+- **Not supported:** per-package overrides. BUILD files have no metadata
+  channel for execution settings today, so the limit is global.
+
+The timeout is **OPTIONAL for every implementation other than Go**. It is not
+part of the portable CLI grammar or any conformance fixture, and no other
+implementation is required to add the flag.
+
 ## CLI Interface
 
 The implementations intentionally share the same overall CLI shape, but they
@@ -684,6 +841,7 @@ Flags:
   -jobs <N>             Max parallel workers (default: CPU count)
   -language <lang>      Filter: implementation-dependent; Go supports python, ruby, go, rust, typescript, elixir, all
   -cache-file <path>    Path to cache file (default: .build-cache.json)
+  -command-timeout <d>  Go only: per-BUILD-command timeout (default 90m, 0 disables)
 ```
 
 The portable form uses `--root`, `--diff-base`, `--force`, `--dry-run`,

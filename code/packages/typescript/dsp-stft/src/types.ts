@@ -1,4 +1,4 @@
-import { InvalidParamError } from "./errors.js";
+import { InvalidParamError, safeFormatValue } from "./errors.js";
 
 /**
  * Analysis window function types.
@@ -15,12 +15,14 @@ export const Hamming = WindowType.HAMMING;
 export const Blackman = WindowType.BLACKMAN;
 export const Rectangular = WindowType.RECTANGULAR;
 
+const MAX_WINDOW_STR_LEN = 64;
+
 /**
  * Parse and normalize window type from enum or case-insensitive string.
  */
 export function parseWindowType(win: WindowType | string): WindowType {
-  if (typeof win !== "string") {
-    throw new InvalidParamError(`unsupported window type: ${String(win)}`);
+  if (typeof win !== "string" || win.length > MAX_WINDOW_STR_LEN) {
+    throw new InvalidParamError(`unsupported window type: ${safeFormatValue(win)}`);
   }
   const norm = win.trim().toLowerCase();
   switch (norm) {
@@ -36,6 +38,6 @@ export function parseWindowType(win: WindowType | string): WindowType {
     case "boxcar":
       return WindowType.RECTANGULAR;
     default:
-      throw new InvalidParamError(`unsupported window type: ${win}`);
+      throw new InvalidParamError(`unsupported window type: ${safeFormatValue(win)}`);
   }
 }

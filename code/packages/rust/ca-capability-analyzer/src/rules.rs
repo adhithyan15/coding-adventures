@@ -232,6 +232,22 @@ pub fn classify_resolved(path: &str, is_macro: bool) -> Classification {
 /// so it never collides with a real name.
 pub const UNKNOWN_TYPE_SEGMENT: &str = "<type chosen by a macro caller>";
 
+/// Well-known capability-bearing third-party crate roots (best effort, G-1).
+pub fn third_party_crate_capability(head: &str) -> Option<(&'static str, &'static str)> {
+    match head {
+        "libc" | "nix" | "winapi" | "windows" | "windows_sys" | "libloading" => {
+            Some(("ffi", "call"))
+        }
+        "rand" | "getrandom" | "fastrand" | "oorandom" | "rand_core" | "rand_chacha" => {
+            Some(("rand", "read"))
+        }
+        "tokio" | "mio" | "socket2" | "reqwest" | "hyper" | "ureq" | "async_std" | "smol" => {
+            Some(("net", "connect"))
+        }
+        _ => None,
+    }
+}
+
 /// Classify an already-split resolved path.
 pub fn classify_segments(segs: &[&str], is_macro: bool) -> Classification {
     if segs.is_empty() {
@@ -300,17 +316,14 @@ pub fn classify_segments(segs: &[&str], is_macro: bool) -> Classification {
     }
 
     // Well-known capability-bearing third-party crate roots (best effort, G-1).
-    match head {
-        "libc" | "nix" | "winapi" | "windows" | "windows_sys" | "libloading" => {
-            return cap("ffi", "call")
+    // Require `segs.len() >= 2` so local variables/fields named `windows`, `rand`,
+    // `hyper`, `nix`, `mio`, `smol`, etc. are not falsely flagged as crate calls
+    // (analogous to `SHORTHAND_HEADS` below). Bare `use <crate>;` / `use <crate>::*;`
+    // are handled in `parser.rs`.
+    if segs.len() >= 2 {
+        if let Some((cat, act)) = third_party_crate_capability(head) {
+            return cap(cat, act);
         }
-        "rand" | "getrandom" | "fastrand" | "oorandom" | "rand_core" | "rand_chacha" => {
-            return cap("rand", "read")
-        }
-        "tokio" | "mio" | "socket2" | "reqwest" | "hyper" | "ureq" | "async_std" | "smol" => {
-            return cap("net", "connect")
-        }
-        _ => {}
     }
 
     // Unresolved-head shorthand: `fs::read` with no `use std::fs` in sight.

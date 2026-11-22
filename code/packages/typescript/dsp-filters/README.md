@@ -7,6 +7,7 @@ Digital FIR and IIR filters and classical filter design helpers for the DSP laye
 - **Second-Order Sections (Biquad)**: Audio EQ Cookbook biquad filters (`lowpass`, `highpass`, `bandpass`, `notch`, `allpass`, `peak`) with Direct-Form II Transposed state processing.
 - **IIR Filtering**: Direct-Form II Transposed structure matching `scipy.signal.lfilter`, and `filtfilt` zero-phase forward-backward filtering.
 - **SOS Cascade**: Biquad cascade processing matching `scipy.signal.sosfilt`.
+- **Opt-in checked filtering**: `CheckedBiquad` and `checkedSosfilt` accept primitive finite numbers, normalize by direct division, and preserve filter state when a sample or complete block returns an error. Legacy `Biquad` and `sosfilt` behavior is unchanged.
 - **FIR Filtering**: Direct linear convolution (`fir`) and FFT-accelerated fast convolution (`firFft` / `fir_fft`).
 - **Filter Design**:
   - `firwin`: Windowed-sinc FIR design (lowpass, highpass, bandpass, bandstop) matching `scipy.signal.firwin`.

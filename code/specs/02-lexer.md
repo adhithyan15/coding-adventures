@@ -171,6 +171,38 @@ class LexError:
     character: str
 ```
 
+### Go: compiled, panic-free grammar lexer
+
+The Go package `code/packages/go/lexer` adds a reusable form of the
+grammar-driven lexer:
+
+```go
+func Compile(tg *grammartools.TokenGrammar) (*Compiled, error)
+func (c *Compiled) Tokenize(source string) ([]Token, error)
+
+type LexError struct{ Line, Column int; Message string }
+```
+
+Contract:
+
+- `Compile` compiles every pattern once and reports an invalid pattern as an
+  error (never a panic). A `*Compiled` is immutable and concurrency-safe.
+- `Tokenize` returns exactly the tokens (type, value, line, column, flags) that
+  `NewGrammarLexer(src, tg).Tokenize()` returns for every input that call
+  accepts, including skip patterns, keywords, groups, F10 transitions, `escapes`,
+  and the rule that a token whose name or alias contains `STRING` has its
+  surrounding quotes stripped. Where that call panics, `Tokenize` returns a
+  `*LexError` with the same message text and the 1-based line and byte column.
+  It never panics. A rule or skip pattern that matches the empty string is an
+  error (the old engine looped forever).
+- Rule order is semantic: first match wins. Optimisations (first-byte dispatch,
+  literal prefix matching, deterministic matchers for proven-equivalent
+  patterns) may only skip a rule that cannot match at the current byte.
+- `NewGrammarLexer` / `GrammarLexer.Tokenize` remain, built on the same engine,
+  and still panic on bad input for compatibility.
+
+The grammar's `errors:` section is not yet honoured by the Go port.
+
 ## Data Flow
 
 ```

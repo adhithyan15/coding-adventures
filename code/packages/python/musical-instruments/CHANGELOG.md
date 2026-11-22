@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.3.1 - 2026-11-21
+
+### Hardened
+- VER15 CWE/CVE security hardening (MUS-W8-D):
+  - **CWE-20 / CWE-190**: Added O(1) `_safe_repr` error formatting across numeric, note, seed, and instrument validation; caught `OverflowError` on `float(...)` (`10**400`, `Fraction(10**400, 3)`) and `VariationProfile` pitch-jitter exponentiation into `ValueError`; rejected subnormal sample rates (`not isfinite(1.0 / rate)`) and overflowing partial/jitter amplitude sums (`not isfinite(total)` / `amp_factor` / `p_factor`); added strict `str` checks on `InstrumentProfile` / `GMProgram` fields and full stage-field `isinstance` checks in `InstrumentNoteRender.__post_init__`.
+  - **CWE-400**: Hardened `InstrumentProfile.harmonic_profile` against generators, infinite iterators, and lying `__len__` (`OverflowError` or `> MAX_PARTIALS`) before tuple materialization.
+  - Added dedicated `tests/test_hostile_inputs.py` and `tests/test_pbt.py` (`coding_adventures_test_bootstrap.prng.SplitMix64`) and `-p no:platformdirs` in `pyproject.toml`.
+
+## 0.3.0 - 2026-11-16
+
+### Changed
+- A non-finite phase (e.g. `frequency * time` overflowing to inf) now yields NaN instead of raising `OverflowError` from `math.floor`, matching the Rust and TypeScript lanes. Finite inputs are bit-identical (the shared music-machine golden is unchanged).
+
+### Changed
+- Partial phases are reduced to [0, 1) cycles before `sin` (`phase - floor(phase)`, exact), because `trig.sin` is NaN beyond 2^29 radians (PHY00a 3.4.1, 7); identical in Python, Rust and TypeScript. Last-bit change in long notes.
+
+### Fixed
+- `musical-instruments` Warrant document fixed: `| guard.` claims put on one line, invalid `total_samples` bound replaced by the existing claim, ops with `rejects` now return Result. Document only. Note: the `instrument_signal_sample` bound `steps <= 64 * partial_count + 128` became `64 * 64 + 128` (`partial_count` is not that operation's parameter); this loosens it to the worst case and is sound because `MAX_PARTIALS = 64`.
+
 ## 0.2.0
 
 - Completed `MUS05` §5 and §7 deterministic humanization: wired seeded

@@ -167,7 +167,11 @@ pub fn write(path: &Path, doc: &Json) -> io::Result<()> {
     let bytes = doc.render();
     for attempt in 0..16u32 {
         let tmp = parent.join(format!(".{name}.{}.{attempt}.tmp", std::process::id()));
-        let mut file = match std::fs::OpenOptions::new().write(true).create_new(true).open(&tmp) {
+        let mut file = match std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&tmp)
+        {
             Ok(f) => f,
             Err(e) if e.kind() == io::ErrorKind::AlreadyExists => continue,
             Err(e) => return Err(e),
@@ -199,6 +203,23 @@ pub const MAX_SOURCE_FILE_BYTES: u64 = 8 * 1024 * 1024;
 
 /// Deepest `src` nesting the binding will walk.
 const MAX_SOURCE_DEPTH: usize = 32;
+const MAX_SOURCE_TREE_FILES: usize = 4096;
+const MAX_SOURCE_TREE_ENTRIES: usize = 8192;
+const MAX_SOURCE_TREE_BYTES: u64 = 64 * 1024 * 1024;
+
+fn is_source_symlink(metadata: &std::fs::Metadata) -> bool {
+    #[cfg(windows)]
+    {
+        use std::os::windows::fs::MetadataExt as _;
+        const FILE_ATTRIBUTE_REPARSE_POINT: u32 = 0x0400;
+        metadata.file_type().is_symlink()
+            || metadata.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT != 0
+    }
+    #[cfg(not(windows))]
+    {
+        metadata.file_type().is_symlink()
+    }
+}
 
 /// Read every `*.rs` file under `src_dir` as `(relative path, bytes)`, sorted
 /// by path. Paths are relative to `src_dir`, use `/` as separator, and are
@@ -212,12 +233,30 @@ pub fn read_source_tree(src_dir: &Path) -> io::Result<Vec<(String, Vec<u8>)>> {
     fn bad(msg: String) -> io::Error {
         io::Error::new(io::ErrorKind::InvalidData, msg)
     }
-    fn walk(dir: &Path, rel: &str, depth: usize, out: &mut Vec<(String, Vec<u8>)>) -> io::Result<()> {
+    let root = std::fs::symlink_metadata(src_dir)?;
+    if is_source_symlink(&root) || !root.is_dir() {
+        return Err(bad(format!(
+            "{} is not a regular non-symlink source directory",
+            src_dir.display()
+        )));
+    }
+    fn walk(
+        dir: &Path,
+        rel: &str,
+        depth: usize,
+        out: &mut Vec<(String, Vec<u8>)>,
+        entries_seen: &mut usize,
+        total_bytes: &mut u64,
+    ) -> io::Result<()> {
         if depth > MAX_SOURCE_DEPTH {
             return Err(bad(format!("{} is nested too deeply", dir.display())));
         }
         let mut entries = Vec::new();
         for entry in std::fs::read_dir(dir)? {
+            *entries_seen += 1;
+            if *entries_seen > MAX_SOURCE_TREE_ENTRIES {
+                return Err(bad("source tree exceeds the entry-count limit".into()));
+            }
             entries.push(entry?);
         }
         entries.sort_by_key(|e| e.file_name());
@@ -227,19 +266,34 @@ pub fn read_source_tree(src_dir: &Path) -> io::Result<Vec<(String, Vec<u8>)>> {
                 .into_string()
                 .map_err(|_| bad(format!("non-UTF-8 file name under {}", dir.display())))?;
             let path = entry.path();
-            let rel_name = if rel.is_empty() { name.clone() } else { format!("{rel}/{name}") };
-            let ty = entry.file_type()?;
-            if ty.is_symlink() {
+            let rel_name = if rel.is_empty() {
+                name.clone()
+            } else {
+                format!("{rel}/{name}")
+            };
+            let metadata = std::fs::symlink_metadata(&path)?;
+            let ty = metadata.file_type();
+            if is_source_symlink(&metadata) {
                 return Err(bad(format!("{} is a symlink", path.display())));
             } else if ty.is_dir() {
-                walk(&path, &rel_name, depth + 1, out)?;
+                walk(&path, &rel_name, depth + 1, out, entries_seen, total_bytes)?;
             } else if ty.is_file() && name.ends_with(".rs") {
+                if out.len() >= MAX_SOURCE_TREE_FILES {
+                    return Err(bad("source tree exceeds the Rust-file count limit".into()));
+                }
                 let mut bytes = Vec::new();
                 std::fs::File::open(&path)?
                     .take(MAX_SOURCE_FILE_BYTES + 1)
                     .read_to_end(&mut bytes)?;
                 if bytes.len() as u64 > MAX_SOURCE_FILE_BYTES {
-                    return Err(bad(format!("{} is larger than the {MAX_SOURCE_FILE_BYTES}-byte limit", path.display())));
+                    return Err(bad(format!(
+                        "{} is larger than the {MAX_SOURCE_FILE_BYTES}-byte limit",
+                        path.display()
+                    )));
+                }
+                *total_bytes = total_bytes.saturating_add(bytes.len() as u64);
+                if *total_bytes > MAX_SOURCE_TREE_BYTES {
+                    return Err(bad("source tree exceeds the aggregate byte limit".into()));
                 }
                 out.push((rel_name, bytes));
             }
@@ -247,7 +301,16 @@ pub fn read_source_tree(src_dir: &Path) -> io::Result<Vec<(String, Vec<u8>)>> {
         Ok(())
     }
     let mut out = Vec::new();
-    walk(src_dir, "", 0, &mut out)?;
+    let mut entries_seen = 0;
+    let mut total_bytes = 0;
+    walk(
+        src_dir,
+        "",
+        0,
+        &mut out,
+        &mut entries_seen,
+        &mut total_bytes,
+    )?;
     out.sort_by(|a, b| a.0.as_bytes().cmp(b.0.as_bytes()));
     Ok(out)
 }
@@ -324,7 +387,10 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("tb-manifest-{}", std::process::id()));
         let path = dir.join("nested/m.json");
         write(&path, &Json::obj([("k", Json::Num(1))])).unwrap();
-        assert_eq!(std::fs::read_to_string(&path).unwrap(), "{\n  \"k\": 1\n}\n");
+        assert_eq!(
+            std::fs::read_to_string(&path).unwrap(),
+            "{\n  \"k\": 1\n}\n"
+        );
         std::fs::remove_dir_all(&dir).unwrap();
     }
 
@@ -335,9 +401,19 @@ mod tests {
         let path = dir.join("m.json");
         write(&path, &Json::obj([("k", Json::Num(1))])).unwrap();
         write(&path, &Json::obj([("k", Json::Num(2))])).unwrap();
-        assert_eq!(std::fs::read_to_string(&path).unwrap(), "{\n  \"k\": 2\n}\n");
-        let names: Vec<_> = std::fs::read_dir(&dir).unwrap().map(|e| e.unwrap().file_name()).collect();
-        assert_eq!(names, vec![std::ffi::OsString::from("m.json")], "temp file must be renamed away");
+        assert_eq!(
+            std::fs::read_to_string(&path).unwrap(),
+            "{\n  \"k\": 2\n}\n"
+        );
+        let names: Vec<_> = std::fs::read_dir(&dir)
+            .unwrap()
+            .map(|e| e.unwrap().file_name())
+            .collect();
+        assert_eq!(
+            names,
+            vec![std::ffi::OsString::from("m.json")],
+            "temp file must be renamed away"
+        );
         std::fs::remove_dir_all(&dir).unwrap();
     }
 
@@ -384,13 +460,25 @@ mod tests {
 
     #[test]
     fn framing_is_unambiguous_and_order_independent() {
-        let a = vec![("a.rs".to_string(), b"xy".to_vec()), ("b.rs".to_string(), b"z".to_vec())];
-        let b = vec![("b.rs".to_string(), b"z".to_vec()), ("a.rs".to_string(), b"xy".to_vec())];
+        let a = vec![
+            ("a.rs".to_string(), b"xy".to_vec()),
+            ("b.rs".to_string(), b"z".to_vec()),
+        ];
+        let b = vec![
+            ("b.rs".to_string(), b"z".to_vec()),
+            ("a.rs".to_string(), b"xy".to_vec()),
+        ];
         assert_eq!(frame_sources(&a), frame_sources(&b));
         // Moving a byte across the path/content or file/file boundary changes the framing.
-        let c = vec![("a.rs".to_string(), b"x".to_vec()), ("yb.rs".to_string(), b"z".to_vec())];
+        let c = vec![
+            ("a.rs".to_string(), b"x".to_vec()),
+            ("yb.rs".to_string(), b"z".to_vec()),
+        ];
         assert_ne!(frame_sources(&a), frame_sources(&c));
-        let d = vec![("a.rsx".to_string(), b"y".to_vec()), ("b.rs".to_string(), b"z".to_vec())];
+        let d = vec![
+            ("a.rsx".to_string(), b"y".to_vec()),
+            ("b.rs".to_string(), b"z".to_vec()),
+        ];
         assert_ne!(frame_sources(&a), frame_sources(&d));
     }
 
@@ -417,6 +505,18 @@ mod tests {
         std::fs::write(d.join("lib.rs"), "a").unwrap();
         std::os::unix::fs::symlink(d.join("lib.rs"), d.join("alias.rs")).unwrap();
         assert!(read_source_tree(&d).is_err());
+        let _ = std::fs::remove_dir_all(&d);
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn source_tree_refuses_symlinked_root() {
+        let d = sbox("root-link-target");
+        std::fs::write(d.join("lib.rs"), "pub fn run() {}").unwrap();
+        let link = d.with_extension("link");
+        std::os::unix::fs::symlink(&d, &link).unwrap();
+        assert!(read_source_tree(&link).is_err());
+        let _ = std::fs::remove_file(&link);
         let _ = std::fs::remove_dir_all(&d);
     }
 }

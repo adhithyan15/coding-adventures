@@ -7,6 +7,20 @@ and this project adheres to semantic versioning.
 
 ## [Unreleased]
 
+### Fixed
+
+- **The cross-thread stop test no longer races the loop's start.** `event_loop_run` clears the
+  stop flag on entry, so a stop requested before `run` has started is erased and the loop spins
+  forever. The test's worker napped 5 ms and then stopped the loop, so a `run` that started later
+  than that (a busy CI machine) hung the test, the same race that hung the F# port's CI shard for
+  150 minutes. The counter source's `poll` now sets a flag under an `osp_mutex` and signals an
+  `osp_cond`; the worker waits for it before stopping the loop, so the stop cannot be lost. A
+  watchdog thread (about 30 s) turns any remaining hang into a failure with a clear message. Uses
+  only the existing `os-platform` thread, mutex and condition-variable API. Test-only; the library
+  is unchanged. Verified by injecting a 100 ms delay before `run`: the old test hangs (killed by a
+  timeout), the new one passes on Linux (gcc and clang) and on the Windows backends under Wine; 200
+  normal runs pass; a mutant that never sends the stop fails via the watchdog instead of hanging.
+
 ### Added
 
 - **Initial package — a pluggable, generic event loop** (CCPP02 port campaign,

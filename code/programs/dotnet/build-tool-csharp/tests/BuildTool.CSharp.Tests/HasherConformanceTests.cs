@@ -32,12 +32,12 @@ public sealed class HasherConformanceTests
         Assert.True(JsonElement.DeepEquals(checkedLanguage.RootElement, productionLanguage.RootElement));
         Assert.True(JsonElement.DeepEquals(checkedBoundary.RootElement, productionBoundary.RootElement));
         Assert.Equal(23, checkedLanguage.RootElement.GetProperty("languages").GetArrayLength());
-        Assert.Equal(19, checkedBoundary.RootElement.GetProperty("boundaries").GetArrayLength());
+        Assert.Equal(27, checkedBoundary.RootElement.GetProperty("boundaries").GetArrayLength());
         Assert.Equal(
-            "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1",
+            "4b695e89c165297a539091b9e74b60a3be0fd6b056c13fb36d66cdc696e7a1d2",
             Hasher.LanguageSourceInputRegistryDigest);
         Assert.Equal(
-            "16dddd565fd3c87ab64f30e69b2874008632d117f5f1c5bdd14d059bd4685a41",
+            "43dcbadfc86dd1a7d010b7e57d1b9958793d5ae32547b2da8ccab7f6bc37dd64",
             Hasher.RepositorySourceInputBoundaryDigest);
         Assert.Equal(
             Hasher.LanguageSourceInputRegistryDigest,
@@ -57,7 +57,7 @@ public sealed class HasherConformanceTests
             .GetFiles(Path.Combine(FixtureDirectory, "cases"), "source-collection-*.json")
             .OrderBy(path => path, StringComparer.Ordinal)
             .ToArray();
-        Assert.Equal(20, fixturePaths.Length);
+        Assert.Equal(25, fixturePaths.Length);
 
         foreach (var fixturePath in fixturePaths)
         {
@@ -95,6 +95,25 @@ public sealed class HasherConformanceTests
 
             Assert.Equal(expected, actual);
         }
+    }
+
+    [Fact]
+    public void RootCargoConfigurationExceptionDoesNotAuthorizeNearbyPaths()
+    {
+        var request = new SourceCollectionRequest(
+            "typescript",
+            "code/packages/typescript/game-input-frame",
+            "repository_boundary",
+            Hasher.RepositorySourceInputBoundaryDigest,
+            [],
+            [
+                new SourceCollectionCandidate(".cargo/config.toml", "file", true, [0x61]),
+                new SourceCollectionCandidate(".cargo/other.toml", "file", true, [0x62]),
+            ]);
+
+        var error = Assert.Throws<SourceHashException>(
+            () => Hasher.SelectSourceCandidates(request));
+        Assert.Equal("SOURCE_HASH_PATH_INVALID", error.Code);
     }
 
     [Fact]

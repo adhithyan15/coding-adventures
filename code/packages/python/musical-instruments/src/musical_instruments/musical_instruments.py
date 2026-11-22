@@ -17,8 +17,9 @@ in compliance with VER15.
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Sized
 from dataclasses import dataclass
-from math import isfinite
+from math import floor, isfinite
 from numbers import Integral, Real
 
 from note_frequency import Note, parse_note
@@ -58,13 +59,37 @@ NoteInput = Note | str
 # signal generation pipeline.
 
 
+def _safe_repr(value: object) -> str:
+    """Bounded O(1) representation for error messages (CWE-190 / CWE-400)."""
+    if isinstance(value, bool):
+        return repr(value)
+    if isinstance(value, int):
+        if value < -1_000_000 or value > 1_000_000:
+            return "<out-of-range int>"
+        return str(value)
+    if isinstance(value, float):
+        return repr(value)
+    if isinstance(value, str):
+        if len(value) > 64:
+            return f"<str len={len(value)}>"
+        return repr(value)
+    return f"<{type(value).__name__}>"
+
+
 def _finite_float(name: str, value: Real) -> float:
     """Convert a real number to float and reject non-finite values."""
     if isinstance(value, bool) or not isinstance(value, Real):
-        raise ValueError(f"{name} must be a finite real number, got {value!r}")
-    converted = float(value)
+        raise ValueError(
+            f"{name} must be a finite real number, got {_safe_repr(value)}"
+        )
+    try:
+        converted = float(value)
+    except OverflowError as exc:
+        raise ValueError(
+            f"{name} overflows float range: {_safe_repr(value)}"
+        ) from exc
     if not isfinite(converted):
-        raise ValueError(f"{name} must be finite, got {value!r}")
+        raise ValueError(f"{name} must be finite, got {_safe_repr(value)}")
     return converted
 
 
@@ -91,6 +116,8 @@ def _sample_rate(name: str, value: Real) -> float:
         raise ValueError(
             f"{name} {converted} exceeds MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
         )
+    if not isfinite(1.0 / converted):
+        raise ValueError(f"{name} subnormal {converted} has non-finite period")
     return converted
 
 
@@ -115,10 +142,10 @@ def _unit_float(name: str, value: Real) -> float:
 def _positive_int(name: str, value: int) -> int:
     """Convert an integral value to int and ensure it is > 0."""
     if isinstance(value, bool) or not isinstance(value, Integral):
-        raise ValueError(f"{name} must be an integer > 0, got {value!r}")
+        raise ValueError(f"{name} must be an integer > 0, got {_safe_repr(value)}")
     converted = int(value)
     if converted <= 0:
-        raise ValueError(f"{name} must be > 0, got {converted}")
+        raise ValueError(f"{name} must be > 0, got {_safe_repr(converted)}")
     return converted
 
 
@@ -128,7 +155,7 @@ def _parse_note_input(note: NoteInput) -> Note:
         return note
     if isinstance(note, str):
         return parse_note(note)
-    raise ValueError(f"note must be a note string or Note, got {note!r}")
+    raise ValueError(f"note must be a note string or Note, got {_safe_repr(note)}")
 
 
 # =============================================================================
@@ -151,7 +178,7 @@ class SplitMix64:
 
     def __init__(self, seed: int) -> None:
         if isinstance(seed, bool) or not isinstance(seed, Integral):
-            raise ValueError(f"seed must be an integer, got {seed!r}")
+            raise ValueError(f"seed must be an integer, got {_safe_repr(seed)}")
         self._state: int = int(seed) & 0xFFFF_FFFF_FFFF_FFFF
 
     def next_u64(self) -> int:
@@ -381,27 +408,46 @@ class InstrumentProfile:
     family: str = "custom"
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "id", str(self.id))
-        if self.id == "":
-            raise ValueError("id must be non-empty")
-        object.__setattr__(self, "display_name", str(self.display_name))
-        if self.display_name == "":
-            raise ValueError("display_name must be non-empty")
+        if not isinstance(self.id, str) or self.id == "":
+            raise ValueError("id must be a non-empty string")
+        if not isinstance(self.display_name, str) or self.display_name == "":
+            raise ValueError("display_name must be a non-empty string")
         if self.synthesis_kind not in SYNTHESIS_KINDS:
-            raise ValueError(f"unsupported synthesis_kind {self.synthesis_kind!r}")
+            raise ValueError(
+                f"unsupported synthesis_kind {_safe_repr(self.synthesis_kind)}"
+            )
         object.__setattr__(self, "gain", _unit_float("gain", self.gain))
 
-        partials = tuple(self.harmonic_profile)
-        if len(partials) > MAX_PARTIALS:
-            raise ValueError(
-                f"harmonic_profile partial count {len(partials)} exceeds "
-                f"MAX_PARTIALS={MAX_PARTIALS}"
-            )
-        object.__setattr__(self, "harmonic_profile", partials)
+        if isinstance(self.harmonic_profile, (str, bytes, bytearray)) or not isinstance(
+            self.harmonic_profile, Iterable
+        ):
+            raise ValueError("harmonic_profile must be an iterable of HarmonicPartial")
+        if isinstance(self.harmonic_profile, Sized):
+            try:
+                declared_len = len(self.harmonic_profile)
+            except OverflowError as exc:
+                raise ValueError(
+                    "harmonic_profile partial count exceeds "
+                    f"MAX_PARTIALS={MAX_PARTIALS}"
+                ) from exc
+            if declared_len > MAX_PARTIALS:
+                raise ValueError(
+                    f"harmonic_profile partial count {declared_len} exceeds "
+                    f"MAX_PARTIALS={MAX_PARTIALS}"
+                )
 
+        partial_list: list[HarmonicPartial] = []
         for index, partial in enumerate(self.harmonic_profile):
+            if index >= MAX_PARTIALS:
+                raise ValueError(
+                    "harmonic_profile partial count exceeds "
+                    f"MAX_PARTIALS={MAX_PARTIALS}"
+                )
             if not isinstance(partial, HarmonicPartial):
                 raise ValueError(f"harmonic_profile[{index}] must be a HarmonicPartial")
+            partial_list.append(partial)
+        object.__setattr__(self, "harmonic_profile", tuple(partial_list))
+
         if self.synthesis_kind != "silence" and not self.harmonic_profile:
             raise ValueError("non-silent instruments need at least one partial")
         if not isinstance(self.envelope_profile, ADSREnvelope):
@@ -413,7 +459,13 @@ class InstrumentProfile:
             if program > 128:
                 raise ValueError("gm_program must be in [1, 128]")
             object.__setattr__(self, "gm_program", program)
-        object.__setattr__(self, "family", str(self.family))
+        if not isinstance(self.family, str):
+            raise ValueError("family must be a string")
+        total = sum(partial.amplitude for partial in partial_list)
+        if not isfinite(total):
+            raise ValueError(
+                "harmonic_profile partial amplitude sum overflows finite float range"
+            )
 
     def amplitude_normalizer(self) -> float:
         """Sum of partial amplitudes for safe unity scaling before gain."""
@@ -440,9 +492,14 @@ class GMProgram:
         if program > 128:
             raise ValueError("program must be in [1, 128]")
         object.__setattr__(self, "program", program)
-        object.__setattr__(self, "name", str(self.name))
-        object.__setattr__(self, "family", str(self.family))
-        object.__setattr__(self, "instrument_id", str(self.instrument_id))
+        if not isinstance(self.name, str):
+            raise ValueError(f"name must be a string, got {_safe_repr(self.name)}")
+        if not isinstance(self.family, str):
+            raise ValueError(f"family must be a string, got {_safe_repr(self.family)}")
+        if not isinstance(self.instrument_id, str):
+            raise ValueError(
+                f"instrument_id must be a string, got {_safe_repr(self.instrument_id)}"
+            )
 
 
 # =============================================================================
@@ -496,12 +553,23 @@ class InstrumentSignal:
             # 1. Pitch jitter in cents: f' = f * 2^(cents / 1200)
             pitch_draw = rng.next_float_signed()
             delta_cents = pitch_draw * var.pitch_cents_jitter
-            ratio = 2.0 ** (delta_cents / 1200.0)
-            eff_fund = fund_hz * ratio
+            try:
+                ratio = 2.0 ** (delta_cents / 1200.0)
+                eff_fund = fund_hz * ratio
+            except OverflowError as exc:
+                raise ValueError(
+                    "pitch_cents_jitter overflows frequency range"
+                ) from exc
+            if not isfinite(eff_fund) or eff_fund <= 0.0:
+                raise ValueError(
+                    "effective fundamental frequency must be positive finite"
+                )
 
             # 2. Amplitude jitter
             amp_draw = rng.next_float_signed()
             amp_factor = 1.0 + amp_draw * var.amplitude_jitter
+            if not isfinite(amp_factor):
+                raise ValueError("amplitude_jitter overflows finite float range")
             eff_amp = max(0.0, min(1.0, self.amplitude * amp_factor))
 
             # 3. Attack jitter (ms to seconds)
@@ -524,6 +592,8 @@ class InstrumentSignal:
                 for p in self.instrument.harmonic_profile:
                     h_draw = rng.next_float_signed()
                     p_factor = 1.0 + h_draw * var.harmonic_jitter
+                    if not isfinite(p_factor):
+                        raise ValueError("harmonic_jitter overflows finite float range")
                     p_amp = max(0.0, p.amplitude * p_factor)
                     varied_partials.append(
                         HarmonicPartial(p.frequency_multiplier, p_amp, p.phase_cycles)
@@ -543,6 +613,10 @@ class InstrumentSignal:
         object.__setattr__(self, "effective_harmonic_profile", eff_partials)
 
         total = sum(p.amplitude for p in eff_partials)
+        if not isfinite(total):
+            raise ValueError(
+                "effective harmonic amplitude sum overflows finite float range"
+            )
         norm = total if total > 0.0 else 1.0
         object.__setattr__(self, "_normalizer", norm)
 
@@ -559,9 +633,16 @@ class InstrumentSignal:
             partial_hz = eff_fund * partial.frequency_multiplier
             if partial_hz >= nyquist_hz:
                 continue
-            raw += partial.amplitude * sin(
-                TWO_PI * (partial_hz * time + partial.phase_cycles)
+            # Reduce the phase to [0, 1) cycles before sin: trig.sin is NaN beyond
+            # 2**29 radians (PHY00a 3.4.1, 7).  The subtraction is exact.
+            phase_cycles = partial_hz * time + partial.phase_cycles
+            # A non-finite phase gives NaN (as in Rust and TypeScript), not an error.
+            cycles = (
+                phase_cycles - floor(phase_cycles)
+                if isfinite(phase_cycles)
+                else float("nan")
             )
+            raw += partial.amplitude * sin(TWO_PI * cycles)
 
         envelope = self.effective_envelope.value_at(
             time,
@@ -586,6 +667,23 @@ class InstrumentNoteRender:
     signal: InstrumentSignal
     floating_samples: SampleBuffer
     pcm_buffer: PCMBuffer
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.note, Note):
+            raise ValueError("note must be a Note")
+        object.__setattr__(
+            self,
+            "fundamental_hz",
+            _positive_float("fundamental_hz", self.fundamental_hz),
+        )
+        if not isinstance(self.instrument, InstrumentProfile):
+            raise ValueError("instrument must be an InstrumentProfile")
+        if not isinstance(self.signal, InstrumentSignal):
+            raise ValueError("signal must be an InstrumentSignal")
+        if not isinstance(self.floating_samples, SampleBuffer):
+            raise ValueError("floating_samples must be a SampleBuffer")
+        if not isinstance(self.pcm_buffer, PCMBuffer):
+            raise ValueError("pcm_buffer must be a PCMBuffer")
 
 
 def _partials(*values: tuple[float, float]) -> tuple[HarmonicPartial, ...]:
@@ -1014,7 +1112,7 @@ def get_instrument(instrument: str | InstrumentProfile) -> InstrumentProfile:
     try:
         return _PRESETS[instrument]
     except KeyError as exc:
-        raise ValueError(f"unknown instrument {instrument!r}") from exc
+        raise ValueError(f"unknown instrument {_safe_repr(instrument)}") from exc
 
 
 def get_gm_program(program: int) -> GMProgram:
@@ -1047,13 +1145,13 @@ def _validate_render_budget(
     sample_limit = _positive_int("max_sample_count", max_sample_count)
     if sample_limit > MAX_SAMPLE_COUNT:
         raise ValueError(
-            f"max_sample_count {sample_limit} exceeds "
+            f"max_sample_count {_safe_repr(sample_limit)} exceeds "
             f"MAX_SAMPLE_COUNT={MAX_SAMPLE_COUNT}"
         )
     count = _safe_round_sample(duration_seconds, sample_rate_hz)
     if count > sample_limit:
         raise ValueError(
-            f"render would create {count} samples, "
+            f"render would create {_safe_repr(count)} samples, "
             f"above max_sample_count={sample_limit}"
         )
 
@@ -1085,7 +1183,8 @@ def render_instrument_note(
     partial_limit = _positive_int("max_partial_count", max_partial_count)
     if partial_limit > MAX_PARTIALS:
         raise ValueError(
-            f"max_partial_count {partial_limit} exceeds MAX_PARTIALS={MAX_PARTIALS}"
+            f"max_partial_count {_safe_repr(partial_limit)} exceeds "
+            f"MAX_PARTIALS={MAX_PARTIALS}"
         )
     if len(profile.harmonic_profile) > partial_limit:
         raise ValueError(

@@ -1,5 +1,13 @@
 # Changelog — dsp-complex
 
+## Unreleased
+
+### Fixed & Hardened — VER15 Deep Audit
+
+- Replaced `(re*re + im*im).sqrt()` in `ComplexTensor::magnitude` with `re.hypot(im)` to prevent spurious `Inf` overflow on large finite magnitudes (e.g. `1e20`) and underflow on subnormal pairs (**CWE-20**).
+- Added explicit `checked_mul(2)` / `u32::try_from` bounds in buffer capacity and `matrix_shape` conversions (**CWE-190**).
+- Added dedicated integration test suites `tests/test_hostile_inputs.rs` and `tests/test_pbt.rs` (driven by `coding_adventures_test_bootstrap::prng::SplitMix64`) covering `NaN`/`±Inf`, subnormals, overflow-safe magnitude, `MAX_SAMPLES` cap enforcement, and polar/conjugation invariants.
+
 ## 0.2.0 — 2026-11-15
 
 ### Changed — Security Hardening and CWE Mitigations

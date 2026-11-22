@@ -1,0 +1,578 @@
+-- DT17 -- Hash functions: FNV-1a, DJB2, polynomial rolling, MurmurHash3, SipHash.
+--
+-- Wired (WX-P1a, WX-P1a2, DT17a): evidence.bindings binds all eight operations
+-- and the generated harness runs every claim below against the real crate.  The
+-- capability analyzer and the ca-assurance-report package report are wired
+-- (DT17a section 7), which the `bound` rows below and the move of the
+-- randomness-using analysis helpers to `hash-analysis` made possible.  Negative controls: `flip-result-bit` on each U32/U64 result
+-- (WX-FAULT1, including the hash inside the `Ok` of polynomial_rolling_with_params)
+-- and `missing-error` on the zero-modulus rejection.
+--
+-- Warrant document for rust/hash-functions (VER04h, VER04j section 14.4, WX-P1a).
+-- Every example and claim below is compiled into tests/generated/warrant_evidence.rs
+-- and executed against the real public exports of the
+-- `coding_adventures_hash_functions` crate.  The contract, and every reason for
+-- what is and is not covered, is in DT17a-hash-functions-warrant.md.
+--
+-- Covered (eight operations): fnv1a_32, fnv1a_64, djb2, polynomial_rolling,
+-- polynomial_rolling_with_params, murmur3_32, murmur3_32_with_seed, siphash_2_4.
+--
+-- The oracle.  Each model below is written from the published algorithm, never
+-- read back from the crate: FNV-1a from draft-eastlake-fnv, DJB2 from
+-- Bernstein's `hash * 33 + c`, MurmurHash3_x86_32 from the reference
+-- implementation, SipHash-2-4 from the paper.  The known-answer examples are the
+-- published vectors where one exists (FNV-1a "foobar", Murmur3 "Hello, world!"
+-- under seed 0x9747b28c, SipHash-2-4 lengths 0, 1 and 15 under the key
+-- 00 01 .. 0f); the others were computed with an independent Python
+-- implementation of the same algorithms, which reproduces every published value.
+--
+-- Wrapping.  FNV, DJB2, Murmur3 and SipHash are defined modulo 2^32 or 2^64.
+-- VER04 section 3 and VER04j section 2.5 give `U32` and `U64` `+` and `*` wrapping
+-- semantics (the generated model code uses `wrapping_add` and `wrapping_mul`),
+-- so a model that multiplies two `U32` values is the code's own arithmetic.  For
+-- FNV and DJB2 each step is ALSO written a second time with exact `Int`
+-- arithmetic and an explicit `rem` (`fnv32exact`, `fnv64exact`, `djb2exact`), and
+-- the two-byte claims pin the code to both, so the wrapping is checked against the
+-- mathematical definition and not only against another wrapping expression.
+--
+-- The model of a variable-length hash.  Warrant has no fold yet (WX-D2), so the
+-- claims state each hash two ways that together fix it on every input:
+--   * unrolled: for inputs of 0..3 bytes (FNV, DJB2) or the lengths that exercise
+--     every code path (block, tail, block plus tail) the output equals the step
+--     model applied to the bytes in order, from the published initial state;
+--   * inductive: the state of FNV-1a, DJB2 and the polynomial hash IS their
+--     output, so `hash(d ++ [x]) == step(hash(d), x)` for every `d` and `x` is the
+--     induction step; with the empty-input example it determines the function on
+--     every length.  The domain of `d` is a SAMPLE (the manifest labels it), so
+--     this is evidence for every length, not a proof of it.
+--
+-- Not covered, listed and not faked (also in DT17a):
+--   * hash_str_fnv1a_32 and hash_str_siphash take a `&str`: Warrant text is
+--     VER04l (WX-T) and is not available to the evidence generator;
+--   * avalanche_score and distribution_test are no longer in this crate: they
+--     moved to `hash-analysis` (WX-P1a2) because avalanche_score draws OS
+--     randomness.  They return `f64` and take a generic closure, so they would not
+--     be covered there either (floats are VER04p, WX-FL);
+--   * the `HashFunction` trait and the structs Fnv1a32, Fnv1a64, Djb2,
+--     PolynomialRolling, Murmur3_32 and SipHash24: trait objects and stateful
+--     values are not Warrant (WX-O); they only forward to the free functions
+--     covered here, and `output_bits` is the constant 32 or 64;
+--   * the constants (offsets, primes, defaults): not operations; the examples
+--     and models pin their values by use.
+warrant hash_functions v1
+  error PolyError = MODULUS_ZERO
+
+  -- ---- FNV-1a (draft-eastlake-fnv).  One step: XOR the byte in, then multiply by
+  -- the FNV prime.  The multiplication WRAPS (modulo 2^32 / 2^64): VER04 section 3
+  -- gives U32 and U64 arithmetic wrapping semantics, the same as Rust's
+  -- `wrapping_mul`, so `fnv32step` below is the code's own step, written as a
+  -- model.  `fnv32exact` states the same step with exact Int arithmetic and an
+  -- explicit reduction, so a claim against it pins the wrapping to the
+  -- mathematical definition and not merely to another wrapping expression.
+  model fnv32step(h: U32, x: U8) -> U32 = bit_xor(h, widen<U32>(x)) * 16777619u32
+  model fnv32exact(h: U32, x: U8) -> U32 = wrap<U32>(unwrap_or(rem(to_int(bit_xor(h, widen<U32>(x))) * 16777619, 4294967296), 0))
+  model fnv64step(h: U64, x: U8) -> U64 = bit_xor(h, widen<U64>(x)) * 1099511628211u64
+  model fnv64exact(h: U64, x: U8) -> U64 = wrap<U64>(unwrap_or(rem(to_int(bit_xor(h, widen<U64>(x))) * 1099511628211, (to_int(max_value<U64>()) + 1)), 0))
+
+  -- ---- DJB2 (Bernstein).  hash = hash * 33 + byte, wrapping modulo 2^64.  The
+  -- code writes `hash << 5` plus `hash` (wrapping_shl, wrapping_add); `djb2step`
+  -- is that shift-and-add and `djb2exact` is the Int definition.
+  model djb2step(h: U64, x: U8) -> U64 = shl(h, 5) + h + widen<U64>(x)
+  model djb2exact(h: U64, x: U8) -> U64 = wrap<U64>(unwrap_or(rem(to_int(h) * 33 + to_int(x), (to_int(max_value<U64>()) + 1)), 0))
+
+  -- ---- Polynomial rolling hash.  h = (h * base + byte) mod modulus, computed in
+  -- exact arithmetic (the code widens to u128).  Int arithmetic here is exact
+  -- (checked i128), so the claims keep `base` and `modulus` small enough that
+  -- `h * base` stays inside i128: the default modulus 2^61 - 1 with base 31, or
+  -- 32-bit parameters.  `modulus = 0` is rejected, never reduced.
+  model polystep(h: U64, x: U8, base: U64, m: U64) -> U64 = wrap<U64>(unwrap_or(rem(to_int(h) * to_int(base) + to_int(x), to_int(m)), 0))
+
+  -- ---- MurmurHash3 x86 32-bit (Austin Appleby), little-endian blocks.
+  -- mmk mixes a 32-bit word (c1, rotl 15, c2); mmround folds a full block into
+  -- the state; mmtail folds the 1..3 trailing bytes; mmfin XORs the length in and
+  -- applies the finalisation avalanche.  All multiplications and additions wrap
+  -- modulo 2^32.
+  model mmk(k: U32) -> U32 = rotl(k * 0xcc9e2d51u32, 15) * 0x1b873593u32
+  model mmround(h: U32, k: U32) -> U32 = rotl(bit_xor(h, mmk(k)), 13) * 5u32 + 0xe6546b64u32
+  model mmtail(h: U32, k: U32) -> U32 = bit_xor(h, mmk(k))
+  model mmmix1(h: U32) -> U32 = bit_xor(h, shr(h, 16)) * 0x85ebca6bu32
+  model mmmix2(h: U32) -> U32 = bit_xor(mmmix1(h), shr(mmmix1(h), 13)) * 0xc2b2ae35u32
+  model mmfmix(h: U32) -> U32 = bit_xor(mmmix2(h), shr(mmmix2(h), 16))
+  model mmfin(h: U32, n: U32) -> U32 = mmfmix(bit_xor(h, n))
+
+  -- ---- SipHash-2-4 (Aumasson and Bernstein).  The state is four U64 words.
+  -- sipa and sipb are the two halves of one SipRound, written as in the paper;
+  -- a round is sipb(sipa(s)).  sipabsorb folds one 64-bit message word
+  -- (v3 ^= m; two rounds; v0 ^= m) and sipfinal is v2 ^= 0xff, four rounds, then
+  -- the XOR of the four words.
+  model sipa(s: (U64, U64, U64, U64)) -> (U64, U64, U64, U64) = match s with (v0, v1, v2, v3) -> (rotl(v0 + v1, 32), bit_xor(rotl(v1, 13), v0 + v1), v2 + v3, bit_xor(rotl(v3, 16), v2 + v3))
+  model sipb(s: (U64, U64, U64, U64)) -> (U64, U64, U64, U64) = match s with (v0, v1, v2, v3) -> (v0 + v3, bit_xor(rotl(v1, 17), v2 + v1), rotl(v2 + v1, 32), bit_xor(rotl(v3, 21), v0 + v3))
+  model sipround(s: (U64, U64, U64, U64)) -> (U64, U64, U64, U64) = sipb(sipa(s))
+  model sipinit(k0: U64, k1: U64) -> (U64, U64, U64, U64) = (bit_xor(8317987319222330741u64, k0), bit_xor(7237128888997146477u64, k1), bit_xor(7816392313619706465u64, k0), bit_xor(8387220255154660723u64, k1))
+  model sipxor0(s: (U64, U64, U64, U64), m: U64) -> (U64, U64, U64, U64) = match s with (v0, v1, v2, v3) -> (bit_xor(v0, m), v1, v2, v3)
+  model sipxor3(s: (U64, U64, U64, U64), m: U64) -> (U64, U64, U64, U64) = match s with (v0, v1, v2, v3) -> (v0, v1, v2, bit_xor(v3, m))
+  model sipabsorb(s: (U64, U64, U64, U64), m: U64) -> (U64, U64, U64, U64) = sipxor0(sipround(sipround(sipxor3(s, m))), m)
+  model sipxor2(s: (U64, U64, U64, U64), m: U64) -> (U64, U64, U64, U64) = match s with (v0, v1, v2, v3) -> (v0, v1, bit_xor(v2, m), v3)
+  model sipout(s: (U64, U64, U64, U64)) -> U64 = match s with (v0, v1, v2, v3) -> bit_xor(bit_xor(v0, v1), bit_xor(v2, v3))
+  model sipfinal(s: (U64, U64, U64, U64)) -> U64 = sipout(sipround(sipround(sipround(sipround(sipxor2(s, 255u64))))))
+  -- The last word: the length modulo 256 in the top byte, the 0..7 trailing bytes
+  -- (little-endian, zero padded) below it.
+  model siplast(n: U64, tail8: Bytes<8>) -> U64 = bit_or(shl(n, 56), from_le<U64>(tail8))
+
+  op fnv1a_32(data: Bytes) -> U32
+  op fnv1a_64(data: Bytes) -> U64
+  op djb2(data: Bytes) -> U64
+  op polynomial_rolling(data: Bytes) -> U64
+  op polynomial_rolling_with_params(data: Bytes, base: U64, modulus: U64) -> Result<U64, PolyError>
+  op murmur3_32(data: Bytes) -> U32
+  op murmur3_32_with_seed(data: Bytes, seed: U32) -> U32
+  op siphash_2_4(data: Bytes, key: Bytes<16>) -> U64
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- Labels.  `data`, `base`, `modulus` and `seed` are public: the package hashes
+  -- public keys for hash tables.  The SipHash `key` is `secret`: its secrecy is
+  -- what makes hash flooding impractical, so the label states the real threat
+  -- model, and the package does not claim a constant-time proof (the report would
+  -- record CWE-208 applicable and unaddressed, as for gf256).  The tested key
+  -- values are fixed public vectors, which is why the examples can name them.
+  labels fnv1a_32:
+    data public
+  labels fnv1a_64:
+    data public
+  labels djb2:
+    data public
+  labels polynomial_rolling:
+    data public
+  labels polynomial_rolling_with_params:
+    data public
+    base public
+    modulus public
+  labels murmur3_32:
+    data public
+  labels murmur3_32_with_seed:
+    data public
+    seed public
+  labels siphash_2_4:
+    data public
+    key secret
+
+  input fnv1a_32.data:
+    hostile
+    ensures no_panic, terminates
+  input fnv1a_64.data:
+    hostile
+    ensures no_panic, terminates
+  input djb2.data:
+    hostile
+    ensures no_panic, terminates
+  input polynomial_rolling.data:
+    hostile
+    ensures no_panic, terminates
+  input murmur3_32.data:
+    hostile
+    ensures no_panic, terminates
+  input murmur3_32_with_seed.data:
+    hostile
+    ensures no_panic, terminates
+  input murmur3_32_with_seed.seed:
+    hostile
+    ensures no_panic, terminates
+  input siphash_2_4.data:
+    hostile
+    ensures no_panic, terminates
+  input siphash_2_4.key:
+    hostile
+    ensures no_panic, terminates
+  input polynomial_rolling_with_params.data:
+    hostile
+    ensures no_panic, terminates
+  input polynomial_rolling_with_params.base:
+    hostile
+    ensures no_panic, terminates
+  input polynomial_rolling_with_params.modulus:
+    hostile
+    rejects modulus == 0u64 with PolyError.MODULUS_ZERO
+    ensures no_panic, terminates
+    -- Caveat: `no_panic` here holds of the harness adapter, not of the crate.  The
+    -- real `polynomial_rolling_with_params` PANICS on `assert!(modulus > 0)`; the
+    -- generated adapter catches any panic and reports it as MODULUS_ZERO.
+
+  -- Declared bounds (WX-P1a2).  Every operation is one pass over `data`: a hash
+  -- returns a fixed-width integer (4 or 8 bytes, fixed by the result type, so
+  -- there is no `output` row: that metric bounds the size of a Bytes or List
+  -- result) and keeps its state in a few machine words.
+  --
+  -- `heap` rows: polynomial_rolling, murmur3_32, murmur3_32_with_seed and
+  -- siphash_2_4 carry `heap <= 4096`, a constant.  A `heap` row puts every
+  -- instance of the operation under the generated harness's allocation observer,
+  -- so it is checked live: nothing that grows with the input is allocated.  The
+  -- manifest records the peak the observer saw, and for these four pure hashes
+  -- that peak is exactly 0 bytes on every platform; 4096 leaves room without
+  -- allowing a buffer that scales with the input.
+  --
+  -- polynomial_rolling_with_params has NO heap row either, for a different reason
+  -- than the three below: the zero-modulus rejection path panics (the adapter
+  -- catches it), and what that path allocates is the std panic payload plus, on
+  -- Linux and macOS, the unwinder's exception object.  Observed: 80 bytes on
+  -- Linux, 16 on Windows (SEH has no such object; the unwinder is the likely
+  -- explanation, not something measured).  The manifest is committed and diffed
+  -- on Linux, macOS and Windows, so recording an exact peak would make it
+  -- platform-specific.  Its steps and depth rows remain.  (The crate itself
+  -- allocates nothing on its success paths: the 64 bytes a trial recorded there
+  -- were the evidence adapter's own V::Ok(Box::new(..)) result.)
+  --
+  -- fnv1a_32, fnv1a_64 and djb2 have NO heap row: their exhaustive suites have 2^24-case
+  -- claims (a three-byte domain), and the observer runs each call on a worker
+  -- thread at about 35 to 50 microseconds a call, so about 50 million observed
+  -- calls would add roughly half an hour to the harness (a trial with a heap row on
+  -- all eight operations had not finished in over 30 minutes).  Their "nothing
+  -- allocates" is therefore not evidenced by the harness; it is read off the
+  -- source (one loop over a slice with wrapping integer arithmetic).
+  --
+  -- The `steps` and `depth` rows are declarations: no step-bound prover run backs
+  -- them (the proof manifest records the steps obligations not-live), so the
+  -- report records CWE-400 as the usual unapproved exemption.  Work is at most one
+  -- round per input byte (SipHash and Murmur3 do less: one round per 8 or 4 bytes
+  -- plus a constant finalisation), so 64 * len + 4096 steps is a generous linear
+  -- envelope; the call is not recursive, so depth is a small constant.
+  bound fnv1a_32:
+    steps <= 64 * len(data) + 4096
+    depth <= 8
+  bound fnv1a_64:
+    steps <= 64 * len(data) + 4096
+    depth <= 8
+  bound djb2:
+    steps <= 64 * len(data) + 4096
+    depth <= 8
+  bound polynomial_rolling:
+    steps <= 64 * len(data) + 4096
+    heap <= 4096
+    depth <= 8
+  bound polynomial_rolling_with_params:
+    steps <= 64 * len(data) + 4096
+    depth <= 8
+  bound murmur3_32:
+    steps <= 64 * len(data) + 4096
+    heap <= 4096
+    depth <= 8
+  bound murmur3_32_with_seed:
+    steps <= 64 * len(data) + 4096
+    heap <= 4096
+    depth <= 8
+  bound siphash_2_4:
+    steps <= 64 * len(data) + 4096
+    heap <= 4096
+    depth <= 8
+
+  -- ---- known answers: FNV-1a 32 (draft-eastlake-fnv test vectors and the DT17 vectors)
+  example fnv1a_32_empty:
+    fnv1a_32(b"") == 2166136261u32
+  example fnv1a_32_a:
+    fnv1a_32(b"61") == 3826002220u32
+  example fnv1a_32_b:
+    fnv1a_32(b"62") == 3876335077u32
+  example fnv1a_32_c:
+    fnv1a_32(b"63") == 3859557458u32
+  example fnv1a_32_foobar:
+    fnv1a_32(b"666f6f626172") == 3214735720u32
+  example fnv1a_32_abc:
+    fnv1a_32(b"616263") == 440920331u32
+  example fnv1a_32_hello:
+    fnv1a_32(b"68656c6c6f") == 1335831723u32
+  -- FNV-1a 64
+  example fnv1a_64_empty:
+    fnv1a_64(b"") == 14695981039346656037u64
+  example fnv1a_64_a:
+    fnv1a_64(b"61") == 12638187200555641996u64
+  example fnv1a_64_b:
+    fnv1a_64(b"62") == 12638190499090526629u64
+  example fnv1a_64_c:
+    fnv1a_64(b"63") == 12638189399578898418u64
+  example fnv1a_64_foobar:
+    fnv1a_64(b"666f6f626172") == 9625390261332436968u64
+  example fnv1a_64_abc:
+    fnv1a_64(b"616263") == 16654208175385433931u64
+  example fnv1a_64_hello:
+    fnv1a_64(b"68656c6c6f") == 11831194018420276491u64
+  -- A long input: forty-three multiplications, every one of which wraps.
+  example fnv1a_32_fox:
+    fnv1a_32(b"54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67") == 76545936u32
+  example fnv1a_64_fox:
+    fnv1a_64(b"54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67") == 17580284887202820368u64
+  -- DJB2: 5381, then hash * 33 + byte.  'a' = 5381 * 33 + 97.  The fox string
+  -- overflows 64 bits, so the wrapping is exercised.
+  example djb2_empty:
+    djb2(b"") == 5381u64
+  example djb2_a:
+    djb2(b"61") == 177670u64
+  example djb2_abc:
+    djb2(b"616263") == 193485963u64
+  example djb2_hello:
+    djb2(b"68656c6c6f") == 210714636441u64
+  example djb2_foobar:
+    djb2(b"666f6f626172") == 6953516687550u64
+  example djb2_fox:
+    djb2(b"54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67") == 3950289020261251294u64
+  -- Polynomial rolling, base 31, modulus 2^61 - 1.  Short inputs never reduce;
+  -- the fox string does.
+  example polynomial_rolling_empty:
+    polynomial_rolling(b"") == 0u64
+  example polynomial_rolling_a:
+    polynomial_rolling(b"61") == 97u64
+  example polynomial_rolling_ab:
+    polynomial_rolling(b"6162") == 3105u64
+  example polynomial_rolling_abc:
+    polynomial_rolling(b"616263") == 96354u64
+  example polynomial_rolling_fox:
+    polynomial_rolling(b"54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67") == 1508044031921644550u64
+  example polynomial_params_abc_base_37_mod_1e9_7:
+    polynomial_rolling_with_params(b"616263", 37u64, 1000000007u64) == Ok(136518u64)
+  example polynomial_params_fox_small_modulus:
+    polynomial_rolling_with_params(b"54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67", 257u64, 65521u64) == Ok(420u64)
+  example polynomial_params_ab_max_base_and_modulus:
+    polynomial_rolling_with_params(b"6162", 18446744073709551615u64, 18446744073709551615u64) == Ok(98u64)
+  example polynomial_params_modulus_one_example:
+    polynomial_rolling_with_params(b"616263", 31u64, 1u64) == Ok(0u64)
+  example polynomial_params_zero_modulus_empty_data:
+    polynomial_rolling_with_params(b"", 31u64, 0u64) == Err(PolyError.MODULUS_ZERO)
+  example polynomial_params_zero_modulus_with_data:
+    polynomial_rolling_with_params(b"616263", 31u64, 0u64) == Err(PolyError.MODULUS_ZERO)
+  -- MurmurHash3 x86 32.  Seed 0x9747b28c is the reference test seed.
+  example murmur3_32_empty:
+    murmur3_32(b"") == 0u32
+  example murmur3_32_with_seed_empty:
+    murmur3_32_with_seed(b"", 0u32) == 0u32
+  example murmur3_32_with_seed_empty_seed_1:
+    murmur3_32_with_seed(b"", 1u32) == 1364076727u32
+  example murmur3_32_with_seed_empty_seed_max:
+    murmur3_32_with_seed(b"", 4294967295u32) == 2180083513u32
+  example murmur3_32_a:
+    murmur3_32(b"61") == 1009084850u32
+  example murmur3_32_with_seed_a:
+    murmur3_32_with_seed(b"61", 0u32) == 1009084850u32
+  example murmur3_32_abc:
+    murmur3_32(b"616263") == 3017643002u32
+  example murmur3_32_with_seed_abc:
+    murmur3_32_with_seed(b"616263", 0u32) == 3017643002u32
+  example murmur3_32_abcd:
+    murmur3_32(b"61626364") == 1139631978u32
+  example murmur3_32_with_seed_abcd:
+    murmur3_32_with_seed(b"61626364", 0u32) == 1139631978u32
+  example murmur3_32_hello:
+    murmur3_32(b"68656c6c6f") == 613153351u32
+  example murmur3_32_with_seed_hello:
+    murmur3_32_with_seed(b"68656c6c6f", 0u32) == 613153351u32
+  example murmur3_32_with_seed_hello_world_seed_9747b28c:
+    murmur3_32_with_seed(b"48656c6c6f2c20776f726c6421", 2538058380u32) == 612912314u32
+  example murmur3_32_with_seed_fox_seed_9747b28c:
+    murmur3_32_with_seed(b"54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67", 2538058380u32) == 799549133u32
+  example murmur3_32_fox:
+    murmur3_32(b"54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67") == 776992547u32
+  -- Five blocks (20 bytes 01 02 .. 14), unseeded and at the reference seed.
+  example murmur3_32_five_blocks:
+    murmur3_32(b"0102030405060708090a0b0c0d0e0f1011121314") == 2631643533u32
+  example murmur3_32_with_seed_five_blocks:
+    murmur3_32_with_seed(b"0102030405060708090a0b0c0d0e0f1011121314", 2538058380u32) == 937835026u32
+  example murmur3_32_with_seed_fox:
+    murmur3_32_with_seed(b"54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67", 0u32) == 776992547u32
+  -- SipHash-2-4, key 00 01 .. 0f, input 00 01 .. (n-1).  Lengths 0, 1 and 15 are
+  -- the published reference vectors; the others come from the independent model.
+  example siphash_2_4_len_0:
+    siphash_2_4(b"", b"000102030405060708090a0b0c0d0e0f") == 8246050544436514353u64
+  example siphash_2_4_len_1:
+    siphash_2_4(b"00", b"000102030405060708090a0b0c0d0e0f") == 8428550223375919101u64
+  example siphash_2_4_len_2:
+    siphash_2_4(b"0001", b"000102030405060708090a0b0c0d0e0f") == 967288799772626778u64
+  example siphash_2_4_len_3:
+    siphash_2_4(b"000102", b"000102030405060708090a0b0c0d0e0f") == 9612764727700323885u64
+  example siphash_2_4_len_4:
+    siphash_2_4(b"00010203", b"000102030405060708090a0b0c0d0e0f") == 14927063180398135223u64
+  example siphash_2_4_len_5:
+    siphash_2_4(b"0001020304", b"000102030405060708090a0b0c0d0e0f") == 1762690195596617357u64
+  example siphash_2_4_len_6:
+    siphash_2_4(b"000102030405", b"000102030405060708090a0b0c0d0e0f") == 14684345499771659214u64
+  example siphash_2_4_len_7:
+    siphash_2_4(b"00010203040506", b"000102030405060708090a0b0c0d0e0f") == 12322412585038238007u64
+  example siphash_2_4_len_8:
+    siphash_2_4(b"0001020304050607", b"000102030405060708090a0b0c0d0e0f") == 10661697595502699618u64
+  example siphash_2_4_len_9:
+    siphash_2_4(b"000102030405060708", b"000102030405060708090a0b0c0d0e0f") == 11385243752477615280u64
+  example siphash_2_4_len_10:
+    siphash_2_4(b"00010203040506070809", b"000102030405060708090a0b0c0d0e0f") == 8817410102741809651u64
+  example siphash_2_4_len_11:
+    siphash_2_4(b"000102030405060708090a", b"000102030405060708090a0b0c0d0e0f") == 17632488944357322151u64
+  example siphash_2_4_len_12:
+    siphash_2_4(b"000102030405060708090a0b", b"000102030405060708090a0b0c0d0e0f") == 8439340791604635131u64
+  example siphash_2_4_len_13:
+    siphash_2_4(b"000102030405060708090a0b0c", b"000102030405060708090a0b0c0d0e0f") == 1507111754042457488u64
+  example siphash_2_4_len_14:
+    siphash_2_4(b"000102030405060708090a0b0c0d", b"000102030405060708090a0b0c0d0e0f") == 17808300073767596782u64
+  example siphash_2_4_len_15:
+    siphash_2_4(b"000102030405060708090a0b0c0d0e", b"000102030405060708090a0b0c0d0e0f") == 11613035633349379557u64
+  example siphash_2_4_len_16:
+    siphash_2_4(b"000102030405060708090a0b0c0d0e0f", b"000102030405060708090a0b0c0d0e0f") == 4551675220716592091u64
+  -- Beyond one block: reference vectors for lengths 17, 24, 32 and 63 (message
+  -- 00 01 02 ..., key 00 01 .. 0f), computed by an independent implementation
+  -- that reproduces the published vectors at lengths 0, 1, 15 and 16.
+  example siphash_2_4_len_17:
+    siphash_2_4(b"000102030405060708090a0b0c0d0e0f10", b"000102030405060708090a0b0c0d0e0f") == 7609651759622801300u64
+  example siphash_2_4_len_24:
+    siphash_2_4(b"000102030405060708090a0b0c0d0e0f1011121314151617", b"000102030405060708090a0b0c0d0e0f") == 13307381289415454612u64
+  example siphash_2_4_len_32:
+    siphash_2_4(b"000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f", b"000102030405060708090a0b0c0d0e0f") == 8153574914611379406u64
+  example siphash_2_4_len_63:
+    siphash_2_4(b"000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e", b"000102030405060708090a0b0c0d0e0f") == 10775480364379293042u64
+  example siphash_2_4_zero_key_hello:
+    siphash_2_4(b"68656c6c6f", b"00000000000000000000000000000000") == 10142490492830962361u64
+
+  -- ================= FNV-1a =================
+  -- One byte, every byte (256 cases): both models.
+  claim fnv1a_32_one_byte_matches_both_models:
+    forall a: U8. fnv1a_32(be_bytes(a)) == fnv32step(2166136261u32, a) and fnv1a_32(be_bytes(a)) == fnv32exact(2166136261u32, a)
+  -- Two bytes, every pair (65,536 cases): the first multiplication has already
+  -- wrapped for some of these, the second wraps for almost all.
+  claim fnv1a_32_two_bytes_match_both_models:
+    forall a: U8, b: U8. fnv1a_32(concat(be_bytes(a), be_bytes(b))) == fnv32step(fnv32step(2166136261u32, a), b) and fnv1a_32(concat(be_bytes(a), be_bytes(b))) == fnv32exact(fnv32exact(2166136261u32, a), b)
+  claim fnv1a_32_three_bytes_match_the_model:
+    forall a: U8, b: U8, c: U8. fnv1a_32(concat(concat(be_bytes(a), be_bytes(b)), be_bytes(c))) == fnv32step(fnv32step(fnv32step(2166136261u32, a), b), c)
+  -- The induction step: appending one byte applies one step to the previous hash.
+  claim fnv1a_32_append_is_one_step:
+    forall d: Bytes, x: U8. fnv1a_32(concat(d, be_bytes(x))) == fnv32step(fnv1a_32(d), x)
+  claim fnv1a_64_one_byte_matches_both_models:
+    forall a: U8. fnv1a_64(be_bytes(a)) == fnv64step(14695981039346656037u64, a) and fnv1a_64(be_bytes(a)) == fnv64exact(14695981039346656037u64, a)
+  claim fnv1a_64_two_bytes_match_both_models:
+    forall a: U8, b: U8. fnv1a_64(concat(be_bytes(a), be_bytes(b))) == fnv64step(fnv64step(14695981039346656037u64, a), b) and fnv1a_64(concat(be_bytes(a), be_bytes(b))) == fnv64exact(fnv64exact(14695981039346656037u64, a), b)
+  claim fnv1a_64_three_bytes_match_the_model:
+    forall a: U8, b: U8, c: U8. fnv1a_64(concat(concat(be_bytes(a), be_bytes(b)), be_bytes(c))) == fnv64step(fnv64step(fnv64step(14695981039346656037u64, a), b), c)
+  claim fnv1a_64_append_is_one_step:
+    forall d: Bytes, x: U8. fnv1a_64(concat(d, be_bytes(x))) == fnv64step(fnv1a_64(d), x)
+
+  -- ================= DJB2 =================
+  claim djb2_one_byte_matches_both_models:
+    forall a: U8. djb2(be_bytes(a)) == djb2step(5381u64, a) and djb2(be_bytes(a)) == djb2exact(5381u64, a)
+  claim djb2_two_bytes_match_both_models:
+    forall a: U8, b: U8. djb2(concat(be_bytes(a), be_bytes(b))) == djb2step(djb2step(5381u64, a), b) and djb2(concat(be_bytes(a), be_bytes(b))) == djb2exact(djb2exact(5381u64, a), b)
+  claim djb2_three_bytes_match_the_model:
+    forall a: U8, b: U8, c: U8. djb2(concat(concat(be_bytes(a), be_bytes(b)), be_bytes(c))) == djb2step(djb2step(djb2step(5381u64, a), b), c)
+  claim djb2_append_is_one_step:
+    forall d: Bytes, x: U8. djb2(concat(d, be_bytes(x))) == djb2step(djb2(d), x)
+  -- hash * 33 == (hash << 5) + hash: the shift-and-add and the product agree for
+  -- every state, wrapped or not.
+  claim djb2_step_is_times_33:
+    forall d: Bytes, x: U8. djb2(concat(d, be_bytes(x))) == djb2(d) * 33u64 + widen<U64>(x)
+
+  -- ================= polynomial rolling =================
+  claim polynomial_rolling_one_byte_is_the_byte:
+    forall a: U8. polynomial_rolling(be_bytes(a)) == widen<U64>(a)
+  claim polynomial_rolling_two_bytes_are_base_31:
+    forall a: U8, b: U8. polynomial_rolling(concat(be_bytes(a), be_bytes(b))) == widen<U64>(a) * 31u64 + widen<U64>(b)
+  claim polynomial_rolling_append_is_one_step:
+    forall d: Bytes, x: U8. polynomial_rolling(concat(d, be_bytes(x))) == polystep(polynomial_rolling(d), x, 31u64, 2305843009213693951u64)
+  -- The default is the parameterised function at base 31 and modulus 2^61 - 1
+  -- (and the parameterised call is Ok, never Err, there).
+  claim polynomial_params_default_is_polynomial_rolling:
+    forall d: Bytes. polynomial_rolling_with_params(d, 31u64, 2305843009213693951u64) == Ok(polynomial_rolling(d))
+  -- Parameterised appends, for two fixed parameter sets (a small prime modulus
+  -- reduces after a few bytes; 2^32 - 5 and a large base reduce at once).
+  claim polynomial_params_append_is_one_step_small_modulus:
+    forall d: Bytes, x: U8. polynomial_rolling_with_params(concat(d, be_bytes(x)), 37u64, 1000000007u64) == (match polynomial_rolling_with_params(d, 37u64, 1000000007u64) with Ok(h) -> Ok(polystep(h, x, 37u64, 1000000007u64)) | Err(e) -> Err(e))
+  claim polynomial_params_append_is_one_step_large_base:
+    forall d: Bytes, x: U8. polynomial_rolling_with_params(concat(d, be_bytes(x)), 4294967291u64, 4294967291u64) == (match polynomial_rolling_with_params(d, 4294967291u64, 4294967291u64) with Ok(h) -> Ok(polystep(h, x, 4294967291u64, 4294967291u64)) | Err(e) -> Err(e))
+  -- Every 32-bit base and modulus (the modulus is mapped to 1..=2^32), on "abc":
+  -- ((97 * base + 98) * base + 99) mod modulus.
+  claim polynomial_params_abc_every_parameter_pair:
+    forall base: U32, m: U32. polynomial_rolling_with_params(b"616263", widen<U64>(base), widen<U64>(m) + 1u64) == Ok(polystep(polystep(polystep(0u64, 97u8, widen<U64>(base), widen<U64>(m) + 1u64), 98u8, widen<U64>(base), widen<U64>(m) + 1u64), 99u8, widen<U64>(base), widen<U64>(m) + 1u64))
+  -- A zero modulus is rejected for every input and every base.
+  claim polynomial_params_zero_modulus_is_rejected:
+    forall d: Bytes, base: U64. polynomial_rolling_with_params(d, base, 0u64) == Err(PolyError.MODULUS_ZERO)
+  claim polynomial_params_modulus_one_is_zero:
+    forall d: Bytes, base: U64. polynomial_rolling_with_params(d, base, 1u64) == Ok(0u64)
+
+  -- ================= MurmurHash3 x86 32 =================
+  -- The seed variant, by length.  Length 0: the seed is finalised alone.
+  claim murmur3_seed_len_0:
+    forall s: U32. murmur3_32_with_seed(b"", s) == mmfin(s, 0u32)
+  claim murmur3_seed_len_1:
+    forall s: U32, t: Bytes<1>. murmur3_32_with_seed(t, s) == mmfin(mmtail(s, from_le<U32>(concat(t, b"000000"))), 1u32)
+  claim murmur3_seed_len_2:
+    forall s: U32, t: Bytes<2>. murmur3_32_with_seed(t, s) == mmfin(mmtail(s, from_le<U32>(concat(t, b"0000"))), 2u32)
+  claim murmur3_seed_len_3:
+    forall s: U32, t: Bytes<3>. murmur3_32_with_seed(t, s) == mmfin(mmtail(s, from_le<U32>(concat(t, b"00"))), 3u32)
+  -- One block, over the U32 edge set for the seed and for the word (an edge
+  -- sample, 313 x 313 cases, not every value).
+  claim murmur3_seed_len_4:
+    forall s: U32, w: U32. murmur3_32_with_seed(le_bytes(w), s) == mmfin(mmround(s, w), 4u32)
+  -- Block plus tail, and two blocks, at the reference seed.
+  claim murmur3_seed_len_5:
+    forall m: Bytes<4>, t: Bytes<1>. murmur3_32_with_seed(concat(m, t), 2538058380u32) == mmfin(mmtail(mmround(2538058380u32, from_le<U32>(m)), from_le<U32>(concat(t, b"000000"))), 5u32)
+  claim murmur3_seed_len_6:
+    forall m: Bytes<4>, t: Bytes<2>. murmur3_32_with_seed(concat(m, t), 2538058380u32) == mmfin(mmtail(mmround(2538058380u32, from_le<U32>(m)), from_le<U32>(concat(t, b"0000"))), 6u32)
+  claim murmur3_seed_len_7:
+    forall m: Bytes<4>, t: Bytes<3>. murmur3_32_with_seed(concat(m, t), 2538058380u32) == mmfin(mmtail(mmround(2538058380u32, from_le<U32>(m)), from_le<U32>(concat(t, b"00"))), 7u32)
+  claim murmur3_seed_len_8:
+    forall m: Bytes<4>, n: Bytes<4>. murmur3_32_with_seed(concat(m, n), 2538058380u32) == mmfin(mmround(mmround(2538058380u32, from_le<U32>(m)), from_le<U32>(n)), 8u32)
+  -- Two blocks and a three-byte tail (11 bytes), the first block fixed.
+  claim murmur3_seed_len_11:
+    forall n: Bytes<4>, t: Bytes<3>. murmur3_32_with_seed(concat(concat(b"01020304", n), t), 1u32) == mmfin(mmtail(mmround(mmround(1u32, 67305985u32), from_le<U32>(n)), from_le<U32>(concat(t, b"00"))), 11u32)
+  -- The unseeded function is the seeded one at seed 0, and the
+  -- model pins it directly for short inputs (every byte, every pair of bytes, and
+  -- an edge sample of words).
+  claim murmur3_32_is_seed_zero:
+    forall d: Bytes. murmur3_32(d) == murmur3_32_with_seed(d, 0u32)
+  claim murmur3_32_one_byte_matches_the_model:
+    forall a: U8. murmur3_32(be_bytes(a)) == mmfin(mmtail(0u32, widen<U32>(a)), 1u32)
+  claim murmur3_32_two_bytes_match_the_model:
+    forall a: U8, b: U8. murmur3_32(concat(be_bytes(a), be_bytes(b))) == mmfin(mmtail(0u32, bit_or(widen<U32>(a), shl(widen<U32>(b), 8))), 2u32)
+  claim murmur3_32_one_word_matches_the_model:
+    forall w: U32. murmur3_32(le_bytes(w)) == mmfin(mmround(0u32, w), 4u32)
+  claim murmur3_32_two_words_match_the_model:
+    forall w: U32, v: U32. murmur3_32(concat(le_bytes(w), le_bytes(v))) == mmfin(mmround(mmround(0u32, w), v), 8u32)
+
+  -- ================= SipHash-2-4 =================
+  -- Under the reference key 00 01 .. 0f (k0 = 0x0706050403020100, k1 = 0x0f0e0d0c0b0a0908).
+  -- Tail only (0..7 bytes), one block plus a tail (8..15), and two blocks (16).
+  claim siphash_len_0:
+    forall t: Bytes<0>. siphash_2_4(t, b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), siplast(0u64, b"0000000000000000")))
+  claim siphash_len_1:
+    forall t: Bytes<1>. siphash_2_4(t, b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), siplast(1u64, concat(t, b"00000000000000"))))
+  claim siphash_len_2:
+    forall t: Bytes<2>. siphash_2_4(t, b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), siplast(2u64, concat(t, b"000000000000"))))
+  claim siphash_len_3:
+    forall t: Bytes<3>. siphash_2_4(t, b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), siplast(3u64, concat(t, b"0000000000"))))
+  claim siphash_len_4:
+    forall t: Bytes<4>. siphash_2_4(t, b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), siplast(4u64, concat(t, b"00000000"))))
+  claim siphash_len_5:
+    forall t: Bytes<5>. siphash_2_4(t, b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), siplast(5u64, concat(t, b"000000"))))
+  claim siphash_len_6:
+    forall t: Bytes<6>. siphash_2_4(t, b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), siplast(6u64, concat(t, b"0000"))))
+  claim siphash_len_7:
+    forall t: Bytes<7>. siphash_2_4(t, b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), siplast(7u64, concat(t, b"00"))))
+  claim siphash_len_8:
+    forall m: Bytes<8>. siphash_2_4(m, b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), from_le<U64>(m)), siplast(8u64, b"0000000000000000")))
+  claim siphash_len_9:
+    forall m: Bytes<8>, t: Bytes<1>. siphash_2_4(concat(m, t), b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), from_le<U64>(m)), siplast(9u64, concat(t, b"00000000000000"))))
+  claim siphash_len_10:
+    forall m: Bytes<8>, t: Bytes<2>. siphash_2_4(concat(m, t), b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), from_le<U64>(m)), siplast(10u64, concat(t, b"000000000000"))))
+  claim siphash_len_11:
+    forall m: Bytes<8>, t: Bytes<3>. siphash_2_4(concat(m, t), b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), from_le<U64>(m)), siplast(11u64, concat(t, b"0000000000"))))
+  claim siphash_len_12:
+    forall m: Bytes<8>, t: Bytes<4>. siphash_2_4(concat(m, t), b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), from_le<U64>(m)), siplast(12u64, concat(t, b"00000000"))))
+  claim siphash_len_13:
+    forall m: Bytes<8>, t: Bytes<5>. siphash_2_4(concat(m, t), b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), from_le<U64>(m)), siplast(13u64, concat(t, b"000000"))))
+  claim siphash_len_14:
+    forall m: Bytes<8>, t: Bytes<6>. siphash_2_4(concat(m, t), b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), from_le<U64>(m)), siplast(14u64, concat(t, b"0000"))))
+  claim siphash_len_15:
+    forall m: Bytes<8>, t: Bytes<7>. siphash_2_4(concat(m, t), b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), from_le<U64>(m)), siplast(15u64, concat(t, b"00"))))
+  claim siphash_len_16:
+    forall m: Bytes<8>, n: Bytes<8>. siphash_2_4(concat(m, n), b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipabsorb(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), from_le<U64>(m)), from_le<U64>(n)), siplast(16u64, b"0000000000000000")))
+  -- An edge sample of keys (the U64 edge set for each key half, 377 x 377 =
+  -- 142,129 keys, little-endian; not every key), on the empty input and on nine
+  -- bytes (one block and a one-byte tail).
+  claim siphash_every_key_empty_input:
+    forall k0: U64, k1: U64. siphash_2_4(b"", concat(le_bytes(k0), le_bytes(k1))) == sipfinal(sipabsorb(sipinit(k0, k1), siplast(0u64, b"0000000000000000")))
+  claim siphash_every_key_nine_bytes:
+    forall k0: U64, k1: U64. siphash_2_4(b"000102030405060708", concat(le_bytes(k0), le_bytes(k1))) == sipfinal(sipabsorb(sipabsorb(sipinit(k0, k1), 506097522914230528u64), siplast(9u64, b"0800000000000000")))

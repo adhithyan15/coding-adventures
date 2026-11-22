@@ -91,7 +91,28 @@ type model struct {
 	core            bool     // a process dumped core (L1)
 	sigpipe         bool     // a child was killed by SIGPIPE (M5)
 	noNetNS         bool     // the run has no fresh network namespace (W11)
+	// tmpLinked: a symbolic link was made (or moved) inside the fresh Home or
+	// Tmpdir.  KILN04 D40: until one is, a lookup there is own-or-absent.
+	tmpLinked bool
+	// staleCwd holds the cwd texts a rename left pointing at a directory that is
+	// no longer there (the kernel resolves ".." physically, the trace keeps
+	// text).  unsound says a path was resolved relative to one: nothing the
+	// model says about such a lookup is trustworthy, so the classifier must have
+	// refused (KILN04 D40).
+	staleCwd map[string]bool
+	unsound  bool
+	// reshaped is the model's own reading of KILN04 D43's whole-action taint:
+	// a rename or exchange SUCCEEDED and moved a directory.  It is read off
+	// the model's node kinds, which are the truth, not off the classifier's
+	// history of what the action created.
+	reshaped bool
+	// dotdotProbes are the failed relative stats the model issued, as the cwd
+	// text and the path: at the end the model walks them over the final disk
+	// to see which stopped at a missing component with a ".." after it.
+	dotdotProbes []dotdotProbe
 }
+
+type dotdotProbe struct{ cwd, p string }
 
 func (m *model) mkpath(abs string, n *mnode) {
 	parts := splitPath(abs)
@@ -145,6 +166,12 @@ func (m *model) framesAt(path string) []frame {
 		if cur == nil {
 			break
 		}
+		if cur.kind != KindDir {
+			// The cwd text now names a file: the process's real cwd is a
+			// directory that was removed or moved away, like a stale cwd.
+			m.unsound = true
+			break
+		}
 		p += "/" + c
 		fr = append(fr, frame{cur, p})
 	}
@@ -169,6 +196,9 @@ func (m *model) resolve(p, from string, follow bool) mres {
 	trailing := strings.HasSuffix(p, "/")
 	if trailing {
 		follow = true
+	}
+	if !strings.HasPrefix(p, "/") && m.staleCwd[from] {
+		m.unsound = true
 	}
 	var stack []frame
 	if strings.HasPrefix(p, "/") {
@@ -299,6 +329,47 @@ func (m *model) readOnlyHost(p string) bool {
 	return false
 }
 
+// erofs says a write at p fails: p is in a read-only declared root, or outside
+// everything the sandbox leaves writable.  The sandbox's new root is sealed
+// read-only (KILN04 D43), so above the mounts (and in the directories the plan
+// made only to reach them) nothing can be created, removed, renamed or changed.
+func (m *model) erofs(p string) bool {
+	return m.readOnlyHost(p) || !m.writable(p)
+}
+
+// modelScratch are the sandbox's fresh scratch tmpfs besides Home and Tmpdir.
+var modelScratch = []string{"/tmp", "/var/tmp", "/run"}
+
+// writable says p is the checkout, Home, Tmpdir or a scratch directory, or
+// inside one: the mounts the step may write to.
+func (m *model) writable(p string) bool {
+	for _, d := range append([]string{m.root, m.home, m.tmp}, modelScratch...) {
+		if p == d || strings.HasPrefix(p, d+"/") {
+			return true
+		}
+	}
+	return false
+}
+
+// sandboxHas is the model's reading of the D43 exists-set: what can be in the
+// sealed root.  Everything else is absent in every run.
+func (m *model) sandboxHas(p string) bool {
+	if p == "/" || m.writable(p) {
+		return true
+	}
+	for _, d := range []string{"/usr", "/etc", "/lib64", "/bin", "/dev", "/proc", "/sys"} {
+		if p == d || strings.HasPrefix(p, d+"/") {
+			return true
+		}
+	}
+	for _, a := range append([]string{m.root, m.home, m.tmp, "/usr", "/etc", "/lib64", "/bin"}, modelScratch...) {
+		if strings.HasPrefix(a, p+"/") {
+			return true
+		}
+	}
+	return false
+}
+
 func (m *model) underCwd(abs string) bool {
 	for _, pr := range m.procs {
 		if abs != "" && (pr.cwdPath == abs || strings.HasPrefix(pr.cwdPath, abs+"/")) {
@@ -326,6 +397,9 @@ func (m *model) doStat(pid int, p string, follow bool) []trace.Event {
 	pr := m.procs[pid]
 	r := m.resolve(p, pr.cwdPath, follow)
 	m.look(r, false, false, false)
+	if r.errno != "" && !strings.HasPrefix(p, "/") {
+		m.dotdotProbes = append(m.dotdotProbes, dotdotProbe{pr.cwdExpr, p})
+	}
 	sys := "stat"
 	if !follow {
 		sys = "lstat"
@@ -389,7 +463,7 @@ func (m *model) doMkdirLike(pid int, sys, p, target string) []trace.Event {
 		errno = "ENOENT"
 	}
 	if errno == "ENOENT" && create && !(sys == "symlink" && strings.HasSuffix(p, "/")) {
-		if m.readOnlyHost(r.final) {
+		if m.erofs(r.final) {
 			errno = "EROFS"
 		} else {
 			errno = ""
@@ -398,6 +472,9 @@ func (m *model) doMkdirLike(pid int, sys, p, target string) []trace.Event {
 				n = &mnode{kind: KindLink, target: target}
 			}
 			r.parent.kids[r.name] = n
+			if sys == "symlink" && m.freshAbsent(r.final) {
+				m.tmpLinked = true
+			}
 			m.add(touch{path: r.final, write: true, wonly: true})
 			m.own[r.final] = true
 		}
@@ -420,7 +497,7 @@ func (m *model) doUnlink(pid int, sys, p string) []trace.Event {
 		switch {
 		case r.isDot || r.node == nil || r.parent == nil:
 			errno = "EINVAL"
-		case m.readOnlyHost(r.final):
+		case m.erofs(r.final):
 			errno = "EROFS"
 		case sys == "unlink" && r.node.kind == KindDir:
 			errno = "EISDIR"
@@ -456,8 +533,13 @@ func (m *model) doRenameLink(pid int, sys, a, b string, exchange bool) []trace.E
 		errno = "ENOENT"
 	case src.isDot || dst.isDot || src.node == nil || src.parent == nil:
 		errno = "EINVAL"
-	case m.readOnlyHost(src.final) || m.readOnlyHost(dst.final):
+	case m.erofs(src.final) || m.erofs(dst.final):
 		errno = "EROFS"
+	case m.mountOf(src.final) != m.mountOf(dst.final) && (m.mountOf(src.final) != "" || m.mountOf(dst.final) != ""):
+		// The sandbox's HOME and TMPDIR are separate tmpfs mounts, and so is the
+		// bound checkout: a rename or link across them is EXDEV (KILN04 D40
+		// relies on it).  The model must not invent one that cannot happen.
+		errno = "EXDEV"
 	case exchange:
 		if dst.node == nil {
 			errno = "ENOENT"
@@ -471,7 +553,10 @@ func (m *model) doRenameLink(pid int, sys, a, b string, exchange bool) []trace.E
 		errno = "EEXIST"
 	case sys == "rename":
 		switch {
-		case m.underCwd(src.final):
+		case m.underCwd(src.final) && !(m.freshAbsent(src.final) && m.freshAbsent(dst.final)):
+			// A directory under a cwd is not renamed, except inside the fresh
+			// tmpfs: there the model lets it happen so it can check that the
+			// classifier refuses the stale cwd TEXT that results (KILN04 D40).
 			errno = "EBUSY"
 		case src.node.kind == KindDir && (dst.final == src.final || strings.HasPrefix(dst.final, src.final+"/")):
 			errno = "EINVAL"
@@ -501,6 +586,28 @@ func (m *model) doRenameLink(pid int, sys, a, b string, exchange bool) []trace.E
 	if errno == "" {
 		m.add(touch{path: src.final, write: true, wonly: true})
 		m.add(touch{path: dst.final, write: true, wonly: true})
+		// D43: what can leave a cwd TEXT stale is moving a DIRECTORY (either
+		// end of an exchange).  The classifier cannot see kinds of objects it
+		// has no history of, so it also taints on moving anything the action
+		// did not create; that over-taint is safe and the model does not
+		// demand it (its own-file bookkeeping is coarser than the
+		// classifier's, so asking for it would fail on the model's own gaps).
+		if src.node.kind == KindDir || (exchange && dst.node.kind == KindDir) {
+			m.reshaped = true
+		}
+		if sys == "rename" && !exchange {
+			for _, q := range m.procs {
+				if q.cwdPath != "" && (q.cwdPath == src.final || strings.HasPrefix(q.cwdPath, src.final+"/")) {
+					if m.staleCwd == nil {
+						m.staleCwd = map[string]bool{}
+					}
+					m.staleCwd[q.cwdPath] = true
+				}
+			}
+		}
+		if (src.node.kind == KindLink && m.freshAbsent(dst.final)) || (exchange && dst.node.kind == KindLink && m.freshAbsent(src.final)) {
+			m.tmpLinked = true
+		}
 		switch {
 		case exchange:
 			src.parent.kids[src.name], dst.parent.kids[dst.name] = dst.node, src.node
@@ -542,12 +649,12 @@ func (m *model) doOpen(pid int, p string, mode int, content int) []trace.Event {
 		errno = "EEXIST"
 	case errno == "" && r.node.kind == KindDir && writes:
 		errno = "EISDIR"
-	case errno == "" && writes && m.readOnlyHost(final):
+	case errno == "" && writes && m.erofs(final):
 		errno = "EROFS"
 	case errno == "ENOENT" && r.stop == "" && create && strings.HasSuffix(p, "/"):
 		errno = "EISDIR"
 	case errno == "ENOENT" && r.stop == "" && create && !r.isDot:
-		if m.readOnlyHost(final) {
+		if m.erofs(final) {
 			errno = "EROFS"
 		} else {
 			errno = ""
@@ -594,7 +701,7 @@ func (m *model) doChmod(pid int, p string) []trace.Event {
 	switch {
 	case errno == "" && (r.node == nil || r.node.kind == KindLink):
 		errno = "EINVAL"
-	case errno == "" && m.readOnlyHost(r.final):
+	case errno == "" && m.erofs(r.final):
 		errno = "EROFS"
 	}
 	if errno == "" {
@@ -626,7 +733,7 @@ func (m *model) doMetaNoFollow(pid int, which int, p string, slash bool) []trace
 	switch {
 	case errno == "" && r.node == nil:
 		errno = "EINVAL"
-	case errno == "" && m.readOnlyHost(r.final):
+	case errno == "" && m.erofs(r.final):
 		errno = "EROFS"
 	}
 	if errno == "" {
@@ -643,7 +750,7 @@ func (m *model) doMetaNoFollow(pid int, which int, p string, slash bool) []trace
 func (m *model) doFdWrite(pid int, p string) []trace.Event {
 	pr := m.procs[pid]
 	r := m.resolve(p, pr.cwdPath, true)
-	if r.errno != "" || r.node == nil || r.node.kind == KindLink || m.readOnlyHost(r.final) {
+	if r.errno != "" || r.node == nil || r.node.kind == KindLink || m.erofs(r.final) {
 		return nil
 	}
 	m.look(r, false, false, false)
@@ -665,7 +772,7 @@ func (m *model) doBind(pid int, p string) []trace.Event {
 	case errno == "" && r.node == nil:
 		errno = "EINVAL"
 	case errno == "ENOENT" && create:
-		if m.readOnlyHost(r.final) {
+		if m.erofs(r.final) {
 			errno = "EROFS"
 		} else {
 			errno = ""
@@ -828,12 +935,17 @@ func newModel(root, home, tmp string) (*model, *memTree) {
 	delete(m.byPath(tmp).kids, ".keep")
 	m.mkpath(home+"/.keep", &mnode{kind: KindFile})
 	delete(m.byPath(home).kids, ".keep")
-	m.dirs = []string{root, root + "/code", root + "/code/p/a", root + "/code/p/b", tmp, home, "/etc"}
+	for _, d := range modelScratch {
+		m.mkpath(d+"/.keep", &mnode{kind: KindFile})
+		delete(m.byPath(d).kids, ".keep")
+	}
+	m.dirs = []string{root, root + "/code", root + "/code/p/a", root + "/code/p/b", tmp, home, "/etc", "/run", "/var/tmp"}
 	return m, tree
 }
 
 var modelNames = []string{"code", "p", "a", "b", "f1", "f2", "g", "lnk", "L", "M", "n", "x", "y", "..", ".", "scripts",
-	"s.sh", "go.work", "new", "left.txt", "leftdir", "leftlnk", "junk", "d1", "d2"}
+	"s.sh", "go.work", "new", "left.txt", "leftdir", "leftlnk", "junk", "d1", "d2",
+	"package.json", "run", "var", "tmp", "home", "w", "opt", "systemd"}
 
 // modelPath builds a path from bytes.
 func (m *model) path(data []byte, i *int) string {
@@ -842,8 +954,14 @@ func (m *model) path(data []byte, i *int) string {
 		*i++
 		return b
 	}
+	// Now and then name the checkout's own parent directory exactly, so the
+	// model can rename, remove or chmod an ancestor of the checkout (KILN04 D39
+	// covers looks at an ancestor, never writes to one; D40's premise).
+	if b := next(); b%24 == 0 {
+		return parentOf(m.root)
+	}
 	var prefix string
-	switch next() % 9 {
+	switch next() % 13 {
 	case 0, 1:
 		prefix = m.root + "/"
 	case 2:
@@ -856,6 +974,12 @@ func (m *model) path(data []byte, i *int) string {
 		prefix = "/usr/lib/"
 	case 6:
 		prefix = "/etc/"
+	case 9:
+		prefix = "/run/"
+	case 10:
+		prefix = "/var/tmp/"
+	case 11, 12:
+		prefix = "/" // the sealed root's top: nothing is there (D43)
 	}
 	n := int(next()%4) + 1
 	parts := make([]string, n)
@@ -914,6 +1038,56 @@ var bursts = [][]burstOp{
 	{{100, "/t.o", false}, {12, "/t.o", false}, {5, "/t.o", false}},
 	{{100, "/code/p/a/leftlnk", true}, {12, "/code/p/a/leftlnk", true}, {5, "/code/p/a/leftlnk", true}},
 	{{101, "/code/p/a/leftlnk", true}, {12, "/code/p/a/leftlnk", true}, {5, "/code/p/a/leftlnk", true}},
+	// 13: the stale cwd (KILN04 D40).  mkdir o; chdir o; rename o away; mkdir o
+	// again; then a path relative to the cwd text, which now names a different
+	// directory from the one the kernel's cwd is in.  A suffix that starts with
+	// "~" is a literal relative path, not joined to the base.
+	{{0, "/o", false}, {14, "/o", false}, {2, "/o", false}, {0, "/o", false}, {12, "~../u.o", false}, {12, "~../o/x", false}},
+	// 14..17: absent-before-made and metadata writes by path (KILN04 D42).
+	//   14  stat ENOENT; plain O_CREAT; stat; chmod            (the linker's output)
+	//   15  stat ENOENT of a directory; mkdir it; mkdir inside it   (mkdir -p)
+	//   16  create+truncate; chmod; stat; chmod                (a post-link chmod)
+	//   17  dangling link; stat through it; unlink; create; chmod
+	{{12, "/t.o", false}, {10, "/t.o", false}, {12, "/t.o", false}, {104, "/t.o", false}},
+	{{12, "/o", false}, {0, "/o", false}, {0, "/o/x", false}},
+	{{8, "/t.o", false}, {104, "/t.o", false}, {12, "/t.o", false}, {104, "/t.o", false}},
+	{{1, "/t.o", false}, {12, "/t.o", false}, {5, "/t.o", false}, {10, "/t.o", false}, {104, "/t.o", false}},
+	//   18  stat ENOENT of u.o; create t.o; rename t.o INTO u.o: the first entry
+	//       of u.o is a rename, not a creation, so the rule must refuse
+	{{12, "/u.o", false}, {8, "/t.o", false}, {2, "/t.o", false}, {12, "/u.o", false}},
+	// 19, 20: the stale cwd against the sealed root (KILN04 D43).  chdir into o,
+	// move o away (and maybe make it again), then probe names that the cwd TEXT
+	// resolves into the sealed root or a scratch directory but the kernel, from
+	// the moved directory, resolves elsewhere.
+	{{0, "/o", false}, {14, "/o", false}, {2, "/o", false}, {12, "~../../../../../package.json", false}, {12, "~../../../tmp/x", false}, {12, "~../../../../run/x", false}},
+	{{0, "/o", false}, {14, "/o", false}, {2, "/o", false}, {0, "/o", false}, {12, "~../../../../../package.json", false}, {12, "~../../x", false}},
+	// 21: scratch absences: probe, create, remove, probe again.
+	{{12, "/q", false}, {8, "/q", false}, {5, "/q", false}, {12, "/q", false}},
+	// 22..27: the namespace-reshaping taint (KILN04 D43).  A "~/..." name is an
+	// absolute path the sealed root cannot hold (/package.json, /opt/x): its
+	// absence is a constant of the plan, UNLESS the action has moved something
+	// that could leave a cwd text stale, in which case the classifier refuses
+	// every such absence at the end, before or after the move.
+	//   22  an own DIRECTORY is renamed, absences probed before and after
+	{{12, "~/package.json", false}, {0, "/o", false}, {2, "/o", false}, {12, "~/package.json", false}, {12, "~/opt/x", false}},
+	//   23  a directory the action did NOT create is renamed (the model demands
+	//       the refusal: a directory moved)
+	{{12, "~/package.json", false}, {2, "/code/p/a/leftdir", true}, {12, "~/package.json", false}, {12, "~/opt/x", false}},
+	//   24  a file the action did not create is renamed (tracked or leftover).
+	//       The classifier taints (it cannot tell the kind of an object it has
+	//       no history of); the model does not demand it, since a regular file
+	//       never leaves a cwd stale.  The burst checks nothing UNSAFE happens.
+	{{12, "~/opt/x", false}, {2, "/code/p/b/g", true}, {12, "~/package.json", false}, {2, "/code/p/a/left.txt", true}},
+	//   25  two own directories are EXCHANGED (renameat2 RENAME_EXCHANGE)
+	{{0, "/o", false}, {0, "/u.o", false}, {12, "~/package.json", false}, {3, "/o", false}, {12, "~/var/x", false}},
+	//   26  an own REGULAR file is renamed, or two are exchanged: this must
+	//       not taint, so the absences stay constants (the model's sandboxHas
+	//       oracle accepts them with no reason)
+	{{12, "~/package.json", false}, {8, "/t.o", false}, {8, "/u.o", false}, {2, "/t.o", false}, {3, "/u.o", false}, {12, "~/opt/x", false}},
+	//   27  failed relative probes through ".." from a cwd that was renamed
+	//       away: "gone" is missing in the cwd TEXT and a ".." follows, so the
+	//       text says ENOENT while the kernel starts from the moved directory
+	{{0, "/o", false}, {14, "/o", false}, {12, "~gone/../x", false}, {2, "/o", false}, {0, "/o", false}, {12, "~gone/../x", false}, {12, "~../o/../x", false}, {12, "~../work/repo/nope", false}, {12, "~../../w/repo/nope", false}},
 }
 
 // perturbations are the operations a burst may be followed by, aimed at the
@@ -926,7 +1100,7 @@ var perturbations = []struct {
 
 func (m *model) burstBase(b byte) string {
 	return []string{m.root + "/code/p/a", m.root + "/code/p/a/d1", m.root, m.tmp, m.home, m.tmp + "/d1",
-		m.home + "/d1", "/usr/lib", parentOf(m.root), m.root + "/code/p/b"}[int(b)%10]
+		m.home + "/d1", "/usr/lib", parentOf(m.root), m.root + "/code/p/b", "/run", "/var/tmp", "/tmp"}[int(b)%13]
 }
 
 // runStep schedules, executes and serialises one BUILD step's operations.
@@ -1079,6 +1253,9 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		base := m.burstBase(byte(next()))
 		alt := base + "/u.o"
 		full := func(op burstOp) string {
+			if strings.HasPrefix(op.suffix, "~") {
+				return op.suffix[1:]
+			}
 			if op.inRoot {
 				return m.root + op.suffix
 			}
@@ -1252,6 +1429,7 @@ func runDifferential(t *testing.T, data []byte) {
 		m, tree, steps := buildModel(data)
 		h := newHarness(t)
 		h.cfg.Root, h.cfg.Home, h.cfg.Tmpdir = m.root, m.home, m.tmp
+		h.cfg.ScratchDirs = modelScratch
 		h.cfg.Packages = NewPackageIndex([]string{"code/p/a", "code/p/b"})
 		h.cfg.Tree = tree
 		h.cfg.FS = modelFS{m}
@@ -1262,7 +1440,8 @@ func runDifferential(t *testing.T, data []byte) {
 		// The last byte picks a whole-trace perturbation (W10).  Each must make
 		// WritesComplete false; the writes-complete oracle is then moot.
 		cut := perturbTrace(data[len(data)-1], steps, recipe)
-		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe, StepNetNS: !m.noNetNS})
+		census := NewCensus() // observer only: the record is byte-identical with it
+		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe, StepNetNS: !m.noNetNS, Census: census})
 		if err != nil {
 			// The action moved or removed the checkout's own directories: the
 			// post-run disk no longer shows a real Root, which is refused.
@@ -1284,11 +1463,90 @@ func runDifferential(t *testing.T, data []byte) {
 		if rec.WritesComplete {
 			checkWrites(t, m, rec)
 		}
+		// KILN04 D43: a FAILED relative call whose text walk stops at a missing
+		// component with a ".." after it speaks for the text only if the cwd
+		// text is where the kernel started.  When the action reshaped the
+		// namespace, the classifier must refuse it as an unplaced lookup
+		// (unstable-path) with the DOTDOT sub-code, which only the census
+		// shows: another unstable-path (component-changed, ...) must not stand
+		// in for it, or breaking the dotdot refusal would go unnoticed.
+		if m.reshaped && m.hasDotdotStop() && len(censusKinds(census)["trace-incomplete:unstable-path:dotdot"]) == 0 {
+			t.Fatalf("the action reshaped the namespace, but a failed probe through .. after a missing component was not refused as unstable-path:dotdot\nreasons %q census %v\nroot %s home %s tmp %s probes %q", rec.Reasons, censusKinds(census), m.root, m.home, m.tmp, m.dotdotProbes)
+		}
 		if len(rec.Reasons) > 0 {
 			return // a record with a reason is never trusted: always safe
 		}
+		// KILN04 D43, the other half: once the model says the action reshaped
+		// the namespace, an absent probe the sealed root would have allowed is
+		// NOT a constant (a stale cwd may have made it a look at a real
+		// directory), so a record that still has no reason lets it through.
+		if m.reshaped {
+			for _, tc := range m.touches {
+				if sealedAbsentProbe(m, tc) {
+					t.Fatalf("the action reshaped the namespace, but the absent probe of %s (sealed-root absence) left no reason\nroot %s home %s tmp %s", tc.path, m.root, m.home, m.tmp)
+				}
+			}
+		}
+		if m.unsound {
+			t.Fatalf("a path was resolved from a stale cwd (a directory renamed under it), but the record has no reason\nroot %s home %s tmp %s", m.root, m.home, m.tmp)
+		}
 		check(t, m, tree, rec)
 	}
+}
+
+// hasDotdotStop says one of the failed relative probes has, in its text, a
+// component that NEVER existed during the whole action (absent on the final
+// disk and never created, written or removed by any call) followed by a "..".
+// Whatever order the classifier replays the calls in, and whether or not a
+// renamed-away cwd directory was made again meanwhile, its walk goes plain at
+// that component and meets the "..": the refusal must be the dotdot one.  (A
+// component the action DID make and later moved is ambiguous, because the
+// classifier judges names inside a fresh tmpfs from the trace's history at the
+// time of the call: the unit test pins that case in a fixed order.)  A link on
+// the way gives up: the classifier follows it, this lexical walk does not.
+func (m *model) hasDotdotStop() bool {
+	touched := map[string]bool{}
+	for _, tc := range m.touches {
+		if tc.create || tc.write || tc.wonly {
+			touched[tc.path] = true
+		}
+	}
+	for _, pr := range m.dotdotProbes {
+		var path []string
+		sawNever := false
+		for _, name := range splitPath(pr.cwd + "/" + pr.p) {
+			switch name {
+			case ".":
+				continue
+			case "..":
+				if sawNever {
+					return true
+				}
+				if len(path) > 0 {
+					path = path[:len(path)-1]
+				}
+				continue
+			}
+			path = append(path, name)
+			full := "/" + strings.Join(path, "/")
+			if n := m.byPath(full); n != nil {
+				if n.kind == KindLink {
+					break
+				}
+			} else if !touched[full] {
+				sawNever = true
+			}
+		}
+	}
+	return false
+}
+
+// sealedAbsentProbe says tc is a look the classifier may only excuse because
+// the sealed root cannot hold the path (D43): an ENOENT for a path outside the
+// checkout and the sandbox's exists-set that the action did not make.
+func sealedAbsentProbe(m *model, tc touch) bool {
+	return tc.absent && !tc.own && !tc.create && !tc.write && !tc.wonly && !tc.list &&
+		tc.path != "" && !strings.HasPrefix(tc.path, m.root+"/") && !m.sandboxHas(tc.path)
 }
 
 // perturbTrace applies the whole-trace perturbation the byte b selects (most
@@ -1364,6 +1622,13 @@ func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
 			continue // a stat of ".git" itself is nothing, by design (section 5.2)
 		}
 		rel, in := strings.CutPrefix(tc.path, m.root+"/")
+		// KILN04 D39/D40: a write-class call that changed a proper ancestor of
+		// the checkout is host-read, so a record with no reason never has one.
+		// (The first such write is the one that counts: a name the action made
+		// itself is its own.)
+		if (tc.write || tc.wonly) && !tc.own && !tc.create && !m.own[tc.path] && m.isCheckoutAncestor(tc.path) {
+			fail(tc, "a write to an ancestor of the checkout, but the record has no reason")
+		}
 		if tc.wonly {
 			if in && !underAny(rec.Writes, rel) && !m.readOnlyHost(tc.path) {
 				fail(tc, "write not under a write root")
@@ -1371,7 +1636,29 @@ func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
 			continue
 		}
 		if !in {
-			if tc.own || tc.create || tc.path == m.tmp || tc.path == m.home || m.readOnlyHost(tc.path) {
+			if tc.own || tc.create || tc.path == m.tmp || tc.path == m.home || m.isScratchDir(tc.path) || m.readOnlyHost(tc.path) {
+				continue
+			}
+			// KILN04 D43: an absent probe of a path the sealed root cannot hold.
+			if (tc.absent || m.byPath(tc.path) == nil) && !m.sandboxHas(tc.path) {
+				continue
+			}
+			// KILN04 D39: a present, non-listing look at a proper ancestor of
+			// the checkout, Home or Tmpdir, and an absent probe strictly inside
+			// the fresh Home or Tmpdir (never the checkout or its ancestors).
+			if !tc.absent && !tc.list && m.properAncestor(tc.path) {
+				continue
+			}
+			// (A stop the model recorded as present because the call's errno
+			// was ENOTDIR from its other operand is still absent on the model's
+			// disk: the fresh tmpfs holds only what the action made.)
+			if (tc.absent || m.byPath(tc.path) == nil) && m.freshAbsent(tc.path) {
+				continue
+			}
+			// KILN04 D40: with no symbolic link made inside the fresh tmpfs, any
+			// look strictly inside it found the action's own file or nothing,
+			// whatever the model's disk says: it is not an input.
+			if !m.tmpLinked && m.freshAbsent(tc.path) {
 				continue
 			}
 			fail(tc, "outside the repository, but the record has no reason")
@@ -1402,6 +1689,86 @@ func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
 			}
 		}
 	}
+}
+
+// properAncestor says p is a proper ancestor, "/" included, of the checkout,
+// Home or Tmpdir: the model's reading of D39 rule (a).  (The model declares no
+// other anchors; the host-root and ephemeral anchors are covered by
+// ancestor_test.go.)
+//
+// The node must also be a directory on the model's disk (D39 hardening: a
+// symlink or file there is judged by the ordinary rules).  The model issues no
+// getxattr family calls, so the xattr exclusion has no model counterpart; it is
+// covered by ancestor_test.go.
+func (m *model) properAncestor(p string) bool {
+	for _, a := range append([]string{m.root, m.home, m.tmp}, modelScratch...) {
+		if p == "/" || strings.HasPrefix(a, p+"/") {
+			n := m.byPath(p)
+			return n != nil && n.kind == KindDir
+		}
+	}
+	return false
+}
+
+// freshAbsent says p is strictly inside Home or Tmpdir and is neither inside
+// the checkout nor an ancestor of it: the model's reading of D39 rule (b).
+func (m *model) freshAbsent(p string) bool {
+	if p == m.root || strings.HasPrefix(p, m.root+"/") || strings.HasPrefix(m.root, p+"/") {
+		return false
+	}
+	for _, d := range append([]string{m.home, m.tmp}, modelScratch...) {
+		if strings.HasPrefix(p, d+"/") && !m.ancestorOfMount(p) {
+			return true
+		}
+	}
+	return false
+}
+
+// ancestorOfMount says p is a directory the plan makes only to mount Home or
+// Tmpdir beneath it: it exists in every run, so it is not fresh.
+func (m *model) ancestorOfMount(p string) bool {
+	for _, a := range []string{m.home, m.tmp} {
+		if strings.HasPrefix(a, p+"/") {
+			return true
+		}
+	}
+	return false
+}
+
+// isScratchDir says p is one of the scratch mount points: a node of the plan.
+func (m *model) isScratchDir(p string) bool {
+	for _, d := range modelScratch {
+		if p == d {
+			return true
+		}
+	}
+	return false
+}
+
+// mountOf names the sandbox mount p lives on, when it is one of the three the
+// model distinguishes: "repo" (the bound checkout), "tmp" and "home" (the
+// scratch tmpfs).  "" is everything else (the read-only host).
+func (m *model) mountOf(p string) string {
+	switch {
+	case p == m.root || strings.HasPrefix(p, m.root+"/"):
+		return "repo"
+	case strings.HasPrefix(p, m.tmp+"/") || p == m.tmp:
+		return "tmp"
+	case strings.HasPrefix(p, m.home+"/") || p == m.home:
+		return "home"
+	}
+	for _, d := range modelScratch {
+		if p == d || strings.HasPrefix(p, d+"/") {
+			return "scratch" + d
+		}
+	}
+	return ""
+}
+
+// isCheckoutAncestor says p is a proper ancestor of the checkout other than
+// "/" and Home itself (Home is the sandbox's mount point, never movable).
+func (m *model) isCheckoutAncestor(p string) bool {
+	return p != "/" && p != m.home && p != m.tmp && strings.HasPrefix(m.root, p+"/")
 }
 
 func covered(rec *RawRecord, rel string) bool {

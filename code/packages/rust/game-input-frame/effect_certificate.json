@@ -1,0 +1,47 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/game-input-frame",
+  "source_digest": "9ca2283b4bbeca42cc3c75aca5e97b6eb6a61504ef212d0b43159d62de60a760",
+  "manifest_digest": "a64188d6b2a00ddbfba17a7db92afe6ee423c90fc007ed92dde43a3a10ef3d0d",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "new",
+      "signature": "pub const fn new(value: u32) -> Self",
+      "effects": []
+    },
+    {
+      "name": "get",
+      "signature": "pub const fn get(self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub const fn new(value: u8) -> Self",
+      "effects": []
+    },
+    {
+      "name": "get",
+      "signature": "pub const fn get(self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub const fn new(value: u8) -> Self",
+      "effects": []
+    },
+    {
+      "name": "get",
+      "signature": "pub const fn get(self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "reduce_frame",
+      "signature": "pub fn reduce_frame( previous: &InputState, tick: u64, changes: &[ActionChange], ) -> Result<ActionFrame, FrameError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

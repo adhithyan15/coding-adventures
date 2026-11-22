@@ -245,7 +245,14 @@ func (f *cfix) reset() {
 }
 
 func (f *cfix) opts() CollectOptions {
-	return CollectOptions{Root: f.p.root, Dir: f.p.dir, Results: f.rpath, Out: f.out, KilnExe: f.p.kiln}
+	// No survivors, looked for once and without waiting: the real scan reads the
+	// host's /proc and (on a machine that runs these tests under a sandbox) could
+	// see anything. The survivor tests replace it.
+	return CollectOptions{Root: f.p.root, Dir: f.p.dir, Results: f.rpath, Out: f.out, KilnExe: f.p.kiln,
+		Survivors: func(SurvivorQuery) ([]string, error) { return nil, nil }, SurvivorWait: -1,
+		// Collect starts after prepare, on the same boot (the real default reads
+		// /proc/self/stat, which a test host may not have).
+		SelfStartTicks: func() (int64, error) { return f.pre.Binding.PreparedTicks + 1000, nil }}
 }
 
 // collect runs Collect and requires success.

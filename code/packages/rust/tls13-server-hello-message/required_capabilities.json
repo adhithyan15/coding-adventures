@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/tls13-server-hello-message",
   "capabilities": [],
-  "justification": "Pure bounded decoding of caller-borrowed TLS 1.3 ServerHello bytes using one repository-owned syntax dependency. It performs no filesystem, network, DNS, process, environment, clock, entropy, cryptography, credential access, signing, certificate parsing, trust-root access, path validation, revocation, audit, or external effect."
+  "justification": "Pure bounded decoding and exact public-random classification of caller-borrowed TLS 1.3 ServerHello bytes using one repository-owned syntax dependency. It performs no filesystem, network, DNS, process, environment, clock, entropy, cryptography, credential access, signing, certificate parsing, trust-root access, path validation, revocation, audit, or external effect."
 }

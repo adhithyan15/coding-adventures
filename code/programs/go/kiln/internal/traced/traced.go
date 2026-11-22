@@ -119,6 +119,20 @@ type Config struct {
 	// HostRoots is the validated host-roots.json; nil means "no host root",
 	// so every out-of-repository read is a host-read.
 	HostRoots *legacy.HostRoots
+	// HostBinds are writable host paths the sandbox binds beneath Home that
+	// host-roots.json does not list (the recorder's derived state roots,
+	// ~/.cargo/registry and ~/.cargo/git).  They are not fresh tmpfs: fresh()
+	// refuses them and their ancestors, as it does a declared root (KILN04 D40).
+	HostBinds []string
+	// ScratchDirs are the fresh, empty tmpfs the sandbox mounts besides Home and
+	// Tmpdir (/tmp, /var/tmp, /run: sandbox.ScratchDirs).  A non-empty list says
+	// the action ran in the SEALED new root (KILN04 D43): the sandbox contains
+	// only the checkout, the declared host roots, HostBinds, Home, Tmpdir, these
+	// directories, the ancestors of all of those, and /dev, /proc and /sys, so
+	// every other path is absent by construction.  The recorder passes
+	// sandbox.ScratchDirs itself, so the two cannot drift; empty (the default)
+	// keeps the pre-D43 behaviour of asking the post-run disk.
+	ScratchDirs []string
 	// Pinned is the set of ecosystems in pinned.json.
 	Pinned map[string]bool
 	// Tools is the set of tool names in the weak key's tools section.
@@ -152,6 +166,9 @@ type Input struct {
 	// daemon, and keeps just the plain daemon: reason (the cross-action rule
 	// M13 covers it).
 	StepNetNS bool
+	// Census, when not nil, observes every path-carrying reason before the
+	// per-kind cap (census.go).  It never changes the result.
+	Census *Census
 }
 
 // RawRecord is the output (KILN04 section 7, item 1).  Every slice is sorted
@@ -233,6 +250,7 @@ func Classify(cfg Config, in Input) (*RawRecord, error) {
 	}
 	c := newClassifier(p)
 	c.netns = in.StepNetNS
+	c.census = in.Census
 	for _, t := range in.Traces {
 		c.runTrace(t)
 	}
@@ -243,6 +261,7 @@ func Classify(cfg Config, in Input) (*RawRecord, error) {
 		c.incomplete = true
 	}
 	c.checkStability()
+	c.settleReshaped()
 	return c.record(in.Package), nil
 }
 
@@ -252,6 +271,11 @@ type prepared struct {
 	roots     []preparedRoot
 	ephemeral []string
 	absentOK  []string
+	// ancestors is every PROPER ancestor, "/" included, of every anchor: the
+	// checkout, each declared host root, Home, Tmpdir, and the literal prefix of
+	// each ephemeral and absent-ok entry (KILN04 D39).  An anchor is not its own
+	// ancestor.
+	ancestors map[string]bool
 }
 
 type preparedRoot struct {
@@ -287,6 +311,11 @@ func prepare(cfg Config) (*prepared, error) {
 			return nil, fmt.Errorf("traced: %q is not a real directory (Root must be a resolved path)", p)
 		}
 	}
+	for _, d := range cfg.ScratchDirs {
+		if !strings.HasPrefix(d, "/") || d == "/" || path.Clean(d) != d {
+			return nil, fmt.Errorf("traced: a scratch directory must be an absolute, clean path other than /, got %q", d)
+		}
+	}
 	// The scrubbed HOME and TMPDIR are fresh tmpfs; the checkout is neither
 	// inside nor equal to them as a whole.  (It may lie beneath HOME, as on
 	// hosted runners; the fresh-tmpfs rule then excludes it, see classifier.fresh.)
@@ -295,7 +324,27 @@ func prepare(cfg Config) (*prepared, error) {
 			return nil, fmt.Errorf("traced: Home and Tmpdir must not be the checkout or inside it, got %q", d)
 		}
 	}
-	p := &prepared{Config: cfg}
+	p := &prepared{Config: cfg, ancestors: map[string]bool{}}
+	anchor := func(a string) {
+		for q := parentOf(a); ; q = parentOf(q) {
+			if q == "" {
+				p.ancestors["/"] = true
+				return
+			}
+			p.ancestors[q] = true
+		}
+	}
+	anchor(cfg.Root)
+	for _, d := range []string{cfg.Home, cfg.Tmpdir} {
+		if d != "" {
+			anchor(d)
+		}
+	}
+	// The directories the plan creates to mount a scratch tmpfs (/var for
+	// /var/tmp) are ancestor-chain nodes too (D43).
+	for _, d := range cfg.ScratchDirs {
+		anchor(d)
+	}
 	if cfg.HostRoots == nil {
 		return p, nil
 	}
@@ -322,19 +371,40 @@ func prepare(cfg Config) (*prepared, error) {
 				}
 			}
 			p.roots = append(p.roots, preparedRoot{path: e, kind: r.Kind, tool: r.Tool, ecosystem: r.Ecosystem})
+			anchor(e)
 		}
 	}
 	for _, s := range cfg.HostRoots.Ephemeral {
 		if e, ok := expand(s); ok {
 			p.ephemeral = append(p.ephemeral, e)
+			anchor(literalPrefix(e))
 		}
 	}
 	for _, s := range cfg.HostRoots.AbsentOK {
 		if e, ok := expand(s); ok {
 			p.absentOK = append(p.absentOK, e)
+			anchor(literalPrefix(e))
 		}
 	}
 	return p, nil
+}
+
+// literalPrefix is the part of a host-roots pattern before its first wildcard
+// component: "/dev/fd/*" gives "/dev/fd", "/sys/devices/**" gives
+// "/sys/devices", and a name with no wildcard is its own prefix.  The ancestor
+// rule (KILN04 D39) anchors on it.
+func literalPrefix(pat string) string {
+	parts := strings.Split(pat, "/")
+	for i, seg := range parts {
+		if strings.ContainsAny(seg, "*?") {
+			parts = parts[:i]
+			break
+		}
+	}
+	if out := strings.Join(parts, "/"); out != "" {
+		return out
+	}
+	return "/"
 }
 
 // sortedKeys returns a set's members sorted bytewise.

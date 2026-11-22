@@ -1,5 +1,27 @@
 # Changelog — coding-adventures-wave (Lua)
 
+## [0.2.0] - 2026-11-16
+
+### Fixed
+
+- `sine_wave` and `cosine_wave` reduce the phase to a fractional cycle
+  (`cycles - floor(cycles)`) and the phase offset with `math.fmod` before calling `trig`,
+  instead of passing `2*pi*f*t + phase` unreduced. `trig` 0.3.0 (TRIG-REF-1) returns NaN
+  beyond 2^29 radians, which the old angle reached after about 8.5e7 cycles (a 440 Hz
+  tone after roughly 53 hours of samples). The same fix TC-2 applied to the Python, Rust
+  and TypeScript music packages; the answer is also more accurate at every time.
+
+### Changed
+
+- Requires `coding-adventures-trig >= 0.3.0`; the rockspec is renamed
+  `coding-adventures-wave-0.2.0-1.rockspec`. Samples may differ from 0.1.0 in the last
+  bits (new `trig`).
+
+### Tests
+
+- Very large cycle counts (a 1e9 Hz tone sampled at 1 Hz, and a 1e10 rad phase offset)
+  stay finite and correct for `sine_wave` and `cosine_wave`.
+
 ## Unreleased
 
 ### Added

@@ -1,0 +1,121 @@
+{
+  "max_len": 0,
+  "module": "fixed_point_q16",
+  "proofs": [
+    {
+      "certificates": [],
+      "function": "checked_add",
+      "id": "warrant/fixed_point_q16/source-equivalence/q16_checked_add",
+      "kind": "source-equivalence",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "isolated export attempt: parse refused at 1:45: Expected LBrace, found Lt (line: `pub fn checked_add(a: Q16, b: Q16) -> Result<Q16, Q16Error> {`); whole-file probe: refused. No source-to-Warrant equivalence proof is claimed.",
+      "op": "q16_checked_add",
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "checked_div",
+      "id": "warrant/fixed_point_q16/source-equivalence/q16_checked_div",
+      "kind": "source-equivalence",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "isolated export attempt: parse refused at 1:65: Expected LBrace, found Lt (line: `pub fn checked_div(a: Q16, b: Q16, mode: RoundingMode) -> Result<Q16, Q16Error> {`); whole-file probe: refused. No source-to-Warrant equivalence proof is claimed.",
+      "op": "q16_checked_div",
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "checked_mul",
+      "id": "warrant/fixed_point_q16/source-equivalence/q16_checked_mul",
+      "kind": "source-equivalence",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "isolated export attempt: parse refused at 1:65: Expected LBrace, found Lt (line: `pub fn checked_mul(a: Q16, b: Q16, mode: RoundingMode) -> Result<Q16, Q16Error> {`); whole-file probe: refused. No source-to-Warrant equivalence proof is claimed.",
+      "op": "q16_checked_mul",
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "checked_sub",
+      "id": "warrant/fixed_point_q16/source-equivalence/q16_checked_sub",
+      "kind": "source-equivalence",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "isolated export attempt: parse refused at 1:45: Expected LBrace, found Lt (line: `pub fn checked_sub(a: Q16, b: Q16) -> Result<Q16, Q16Error> {`); whole-file probe: refused. No source-to-Warrant equivalence proof is claimed.",
+      "op": "q16_checked_sub",
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "from_integer",
+      "id": "warrant/fixed_point_q16/source-equivalence/q16_from_integer",
+      "kind": "source-equivalence",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "isolated export attempt: parse refused at 1:42: Expected LBrace, found Lt (line: `pub fn from_integer(value: i32) -> Result<Q16, Q16Error> {`); whole-file probe: refused. No source-to-Warrant equivalence proof is claimed.",
+      "op": "q16_from_integer",
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "saturating_add",
+      "id": "warrant/fixed_point_q16/source-equivalence/q16_saturating_add",
+      "kind": "source-equivalence",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "isolated export attempt: WIR lowering refused: Unsupported custom type in WIR lowering: Q16; whole-file probe: refused. No source-to-Warrant equivalence proof is claimed.",
+      "op": "q16_saturating_add",
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "saturating_div",
+      "id": "warrant/fixed_point_q16/source-equivalence/q16_saturating_div",
+      "kind": "source-equivalence",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "isolated export attempt: parse refused at 1:68: Expected LBrace, found Lt (line: `pub fn saturating_div(a: Q16, b: Q16, mode: RoundingMode) -> Result<SaturatingResult, Q16Error> {`); whole-file probe: refused. No source-to-Warrant equivalence proof is claimed.",
+      "op": "q16_saturating_div",
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "saturating_mul",
+      "id": "warrant/fixed_point_q16/source-equivalence/q16_saturating_mul",
+      "kind": "source-equivalence",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "isolated export attempt: WIR lowering refused: Unsupported custom type in WIR lowering: Q16; whole-file probe: refused. No source-to-Warrant equivalence proof is claimed.",
+      "op": "q16_saturating_mul",
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "saturating_sub",
+      "id": "warrant/fixed_point_q16/source-equivalence/q16_saturating_sub",
+      "kind": "source-equivalence",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "isolated export attempt: WIR lowering refused: Unsupported custom type in WIR lowering: Q16; whole-file probe: refused. No source-to-Warrant equivalence proof is claimed.",
+      "op": "q16_saturating_sub",
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "to_integer",
+      "id": "warrant/fixed_point_q16/source-equivalence/q16_to_integer",
+      "kind": "source-equivalence",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "isolated export attempt: WIR lowering refused: Unsupported custom type in WIR lowering: Q16; whole-file probe: refused. No source-to-Warrant equivalence proof is claimed.",
+      "op": "q16_to_integer",
+      "verdict": "not-live"
+    }
+  ],
+  "schema": "warrant-proof-evidence-v1",
+  "source": "code/packages/rust/fixed-point/src/lib.rs",
+  "source_sha256": "3e35b4403db819ac386f2bc3962e09acd4b3279e0c34c91f430df4d281613908",
+  "spec": "code/specs/fixed-point.warrant",
+  "spec_sha256": "0d66d7019ecd2e63861c6d5ee7a19a68730f56b72d45b7b6da38825156a8519d"
+}

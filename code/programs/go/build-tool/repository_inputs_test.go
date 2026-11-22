@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"sort"
+	"strings"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cigates"
@@ -95,6 +97,412 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
+func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/game-clock", Language: "rust"},
+		{Name: "rust/fixed-point", Language: "rust"},
+		{Name: "rust/ca-assurance-report", Language: "rust"},
+		{Name: "rust/warrant-ir", Language: "rust"},
+		{Name: "typescript/game-clock", Language: "typescript"},
+		{Name: "rust/warrant-grammar", Language: "rust"},
+		{Name: "rust/wasm-leb128", Language: "rust"},
+		// wasm-leb128 is a warrantAdopters row since its adopter PR (CV2 S10), so a change to its spec
+		// selects the generator too, and a consumer missing from discovery is a hard error
+		{Name: "rust/warrant-corpus-gen", Language: "rust"},
+		{Name: "python/warrant-oracle", Language: "python"},
+		{Name: "go/warrant-corpus", Language: "go"},
+		{Name: "go/build-tool", Language: "go"},
+	}
+	corpus := []string{"code/specs/fixtures/game-clock-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"rust/game-clock": true, "typescript/game-clock": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	if got, err := repositoryInputConsumersForChange(corpus, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true}) {
+		t.Fatalf("rust-only selection got %v, err %v", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange(corpus, packages, "typescript"); err != nil || !reflect.DeepEqual(got, map[string]bool{"typescript/game-clock": true}) {
+		t.Fatalf("typescript-only selection got %v, err %v", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange(corpus, packages, "go"); err != nil || len(got) != 0 {
+		t.Fatalf("go-only selection got %v, err %v", got, err)
+	}
+	warrantPath := []string{"code/specs/game-clock.warrant"}
+	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true, "rust/warrant-grammar": true}) {
+		t.Fatalf("GAME10 Warrant selection got %v, err %v", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "typescript"); err != nil || len(got) != 0 {
+		t.Fatalf("TypeScript must not be selected for the Warrant spec: got %v, err %v", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true, "rust/warrant-grammar": true}) {
+		t.Fatalf("rust-only GAME10 Warrant selection got %v, err %v", got, err)
+	}
+	for _, input := range gameClockInputPaths {
+		selected, err := repositoryInputConsumersForChange([]string{input}, packages, "rust")
+		if err != nil || !selected["rust/game-clock"] {
+			t.Fatalf("Rust-only input %s selected %v, err %v; want rust/game-clock", input, selected, err)
+		}
+	}
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/wasm-leb128.warrant"}, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/wasm-leb128": true, "rust/warrant-grammar": true, "python/warrant-oracle": true, "rust/warrant-corpus-gen": true}) {
+		t.Fatalf("other Warrant consumers selection got %v, err %v", got, err)
+	}
+	for path, want := range map[string]bool{
+		"code/specs/fixtures/game-clock-v1/cases.json":     true,
+		"code/specs/fixtures/game-clock-v10/cases.json":    false,
+		"code/specs/fixtures/game-clock-v1":                false,
+		"code/specs/fixtures/game-clock-v1-old/cases.json": false,
+		"code/specs/game-clock-v10.warrant":                false,
+		"code/specs/game-clock.warrant.bak":                false,
+		"code/specs/other-game-clock.warrant":              false,
+	} {
+		if got := isGameClockCorpusInput(path); got != want {
+			t.Errorf("isGameClockCorpusInput(%q) = %v, want %v", path, got, want)
+		}
+	}
+	for _, path := range gameClockInputPaths {
+		if !isGameClockInput(path) {
+			t.Errorf("Rust game-clock input %q was not selected", path)
+		}
+	}
+	if !sort.StringsAreSorted(gameClockInputPaths) {
+		t.Fatalf("Rust game-clock inputs are not sorted: %v", gameClockInputPaths)
+	}
+	for _, path := range []string{
+		".cargo/config.toml.bak",
+		"code/packages/rust/Cargo.toml.bak",
+		"code/packages/rust/game-clock/../../Cargo.lock",
+		"code/specs/fixtures/game-clock-v10/cases.json",
+		"code/specs/game-clock.warrant.bak",
+	} {
+		if isGameClockInput(path) {
+			t.Errorf("lookalike Rust game-clock path %q was selected", path)
+		}
+	}
+	if !isGameClockInput("code/specs/game-clock.warrant") || isGameClockCorpusInput("code/specs/game-clock.warrant") {
+		t.Fatal("the Warrant spec selects Rust only, not the TypeScript corpus consumer")
+	}
+}
+
+func TestGameInputFrameV1SelectsRustAndTypeScriptConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/game-input-frame", Language: "rust"},
+		{Name: "rust/game-clock", Language: "rust"},
+		{Name: "rust/fixed-point", Language: "rust"},
+		{Name: "rust/ca-assurance-report", Language: "rust"},
+		{Name: "rust/warrant-ir", Language: "rust"},
+		{Name: "typescript/game-input-frame", Language: "typescript"},
+	}
+	for _, changed := range typescriptGameInputFrameInputs {
+		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || !selected["typescript/game-input-frame"] {
+			t.Fatalf("%s selected %v, err %v; want TypeScript GAME frame", changed, selected, err)
+		}
+		tsSelected, err := repositoryInputConsumersForChange([]string{changed}, packages, "typescript")
+		if err != nil || !reflect.DeepEqual(tsSelected, map[string]bool{"typescript/game-input-frame": true}) {
+			t.Fatalf("typescript-only %s selected %v, err %v", changed, tsSelected, err)
+		}
+	}
+	if selected, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/game-input-frame-v1/schema.json"}, packages, "all"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"rust/game-input-frame": true}) {
+		t.Fatalf("schema-only selector = %v, err %v; want Rust-only frame consumer", selected, err)
+	}
+	for path, want := range map[string]bool{
+		"code/specs/fixtures/game-input-frame-v1/cases.json":       true,
+		"code/specs/fixtures/game-input-frame-v10/cases.json":      false,
+		"code/specs/fixtures/game-input-frame-v1-old/cases.json":   false,
+		"code/specs/fixtures/game-input-frame-v1":                  false,
+		"code/specs/fixtures/other-game-input-frame-v1/cases.json": false,
+		"code/specs/fixtures/game-input-frame-v1ish/cases.json":    false,
+	} {
+		if got := isGameInputFrameV1(path); got != want {
+			t.Errorf("isGameInputFrameV1(%q) = %v, want %v", path, got, want)
+		}
+	}
+	if !isTypeScriptGameInputFrameInput(".cargo/config.toml") ||
+		isTypeScriptGameInputFrameInput(".cargo/config.toml.bak") ||
+		isTypeScriptGameInputFrameInput("code/packages/rust/Cargo.toml.bak") ||
+		isTypeScriptGameInputFrameInput("code/specs/fixtures/game-input-frame-v10/cases.json") {
+		t.Fatal("TypeScript GAME proof-input predicate is not exact")
+	}
+}
+
+func TestTypeScriptGameInputFrameHashSelectorAndBoundaryShareExactInputs(t *testing.T) {
+	if !sort.StringsAreSorted(typescriptGameInputFrameInputs) {
+		t.Fatalf("TypeScript game-input-frame hash inputs are not byte-sorted: %v", typescriptGameInputFrameInputs)
+	}
+	selectorInputs := repositoryInputsByPackage()["typescript/game-input-frame"]
+	if selectorInputs == nil || !reflect.DeepEqual(selectorInputs.paths, typescriptGameInputFrameInputs) {
+		t.Fatalf("selector inputs = %#v, want shared sorted list %v", selectorInputs, typescriptGameInputFrameInputs)
+	}
+	boundaryPath := filepath.Join(toolchainFixtureRepoRoot(t), "code/specs/fixtures/build-tool-v1/repository-source-input-boundary.json")
+	data, err := os.ReadFile(boundaryPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var boundary struct {
+		Boundaries []struct {
+			AppliesTo struct {
+				ExactRoots []string `json:"exact_roots"`
+			} `json:"applies_to"`
+			Inputs []struct {
+				Path string `json:"path"`
+			} `json:"inputs"`
+		} `json:"boundaries"`
+	}
+	if err := json.Unmarshal(data, &boundary); err != nil {
+		t.Fatal(err)
+	}
+	boundaryInputs := make(map[string]bool)
+	const packageRoot = "code/packages/typescript/game-input-frame"
+	for _, row := range boundary.Boundaries {
+		if !containsString(row.AppliesTo.ExactRoots, packageRoot) {
+			continue
+		}
+		for _, input := range row.Inputs {
+			boundaryInputs[input.Path] = true
+		}
+	}
+	var sortedBoundaryInputs []string
+	for input := range boundaryInputs {
+		sortedBoundaryInputs = append(sortedBoundaryInputs, input)
+	}
+	sort.Strings(sortedBoundaryInputs)
+	if !reflect.DeepEqual(sortedBoundaryInputs, typescriptGameInputFrameInputs) {
+		t.Fatalf("exact-root boundary inputs = %v, want selector/hash inputs %v", sortedBoundaryInputs, typescriptGameInputFrameInputs)
+	}
+}
+
+func TestBiquadSosFixtureSelectsAllLanguageConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/dsp-filters", Language: "python"},
+		{Name: "rust/dsp-filters", Language: "rust"},
+		{Name: "typescript/dsp-filters", Language: "typescript"},
+	}
+	for _, changed := range []string{
+		"code/specs/fixtures/biquad-sos-v1/cases.json",
+		"code/specs/fixtures/biquad-sos-v1/README.md",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		want := map[string]bool{
+			"python/dsp-filters":     true,
+			"rust/dsp-filters":       true,
+			"typescript/dsp-filters": true,
+		}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s selected %v, err %v; want all consumers", changed, got, err)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{changed}, packages, "python"); err != nil || !reflect.DeepEqual(got, map[string]bool{"python/dsp-filters": true}) {
+			t.Fatalf("python-only selection got %v, err %v", got, err)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{changed}, packages, "typescript"); err != nil || !reflect.DeepEqual(got, map[string]bool{"typescript/dsp-filters": true}) {
+			t.Fatalf("typescript-only selection got %v, err %v", got, err)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{changed}, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/dsp-filters": true}) {
+			t.Fatalf("rust-only selection got %v, err %v", got, err)
+		}
+	}
+	for changed, shouldMatch := range map[string]bool{
+		"code/specs/fixtures/biquad-sos-v1/cases.json":     true,
+		"code/specs/fixtures/biquad-sos-v10/cases.json":    false,
+		"code/specs/fixtures/biquad-sos-v1-old/cases.json": false,
+		"code/specs/fixtures/biquad-sos-v1":                false,
+		`code\specs\fixtures\biquad-sos-v1\cases.json`:     false,
+	} {
+		if got := isBiquadSosFixture(changed); got != shouldMatch {
+			t.Errorf("isBiquadSosFixture(%q) = %v, want %v", changed, got, shouldMatch)
+		}
+		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if shouldMatch && len(selected) != 3 {
+			t.Errorf("expected all consumers for %q, got %v", changed, selected)
+		}
+		if !shouldMatch && len(selected) != 0 {
+			t.Errorf("lookalike %q selected consumers %v", changed, selected)
+		}
+	}
+	for _, missing := range []string{"python", "rust", "typescript"} {
+		available := make([]discovery.Package, 0, len(packages)-1)
+		for _, pkg := range packages {
+			if pkg.Language != missing {
+				available = append(available, pkg)
+			}
+		}
+		if _, err := repositoryInputConsumersForChange(
+			[]string{"code/specs/fixtures/biquad-sos-v1/cases.json"}, available, "all",
+		); err == nil {
+			t.Errorf("missing %s fixture consumer must fail closed", missing)
+		}
+	}
+}
+
+// TestBoundedJSONDevDependencySelectsRustDSPFilters pins the test-only Cargo
+// edge that makes bounded-json edits rerun the Rust Biquad/SOS consumer.
+func TestBoundedJSONDevDependencySelectsRustDSPFilters(t *testing.T) {
+	root := toolchainFixtureRepoRoot(t)
+	packages, err := discovery.DiscoverPackages(filepath.Join(root, "code"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	graph, triggers, err := resolver.ResolveWithTestTriggers(packages)
+	if err != nil {
+		t.Fatalf("the repository Cargo dependency graph must resolve: %v", err)
+	}
+	if _, err := graph.IndependentGroups(); err != nil {
+		t.Fatalf("the build graph must remain acyclic: %v", err)
+	}
+	changed := map[string]bool{"rust/bounded-json": true}
+	withoutTestTriggers := affectedForGraph(graph, changed, nil, false)
+	withTestTriggers := affectedForGraphWithTriggers(graph, triggers, changed, nil, false)
+	if withoutTestTriggers["rust/dsp-filters"] {
+		t.Fatal("dsp-filters must not be selected through a normal build edge from bounded-json")
+	}
+	if !withTestTriggers["rust/dsp-filters"] {
+		t.Fatal("a bounded-json edit must select dsp-filters through its Cargo dev-dependency")
+	}
+}
+
+func TestHamurabiCorpusSelectsRegisteredRustConsumer(t *testing.T) {
+	languages := []string{
+		"rust", "go", "python", "typescript", "csharp", "fsharp", "java", "kotlin", "dart",
+		"swift", "haskell", "c", "cpp", "ocaml", "ruby", "elixir", "lua", "perl",
+	}
+	packages := make([]discovery.Package, 0, len(languages))
+	wantAll := make(map[string]bool, len(languages))
+	for _, language := range languages {
+		name := language + "/hamurabi"
+		packages = append(packages, discovery.Package{Name: name, Language: language})
+		wantAll[name] = true
+	}
+	corpus := []string{"code/specs/fixtures/hamurabi-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(got, wantAll) {
+		t.Fatalf("all-lane selection got %v, want %v", got, wantAll)
+	}
+	for _, language := range languages {
+		packageName := language + "/hamurabi"
+		got, err := repositoryInputConsumersForChange(corpus, packages, language)
+		if err != nil || !reflect.DeepEqual(got, map[string]bool{packageName: true}) {
+			t.Fatalf("%s-only selection got %v, err %v", language, got, err)
+		}
+	}
+	for path, wantMatch := range map[string]bool{
+		"code/specs/fixtures/hamurabi-v1/cases.json":     true,
+		"code/specs/fixtures/hamurabi-v10/cases.json":    false,
+		"code/specs/fixtures/hamurabi-v1":                false,
+		"code/specs/fixtures/hamurabi-v1-old/cases.json": false,
+	} {
+		if got := isHamurabiCorpus(path); got != wantMatch {
+			t.Errorf("isHamurabiCorpus(%q) = %v, want %v", path, got, wantMatch)
+		}
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "rust"); err == nil {
+		t.Fatal("missing registered Rust Hamurabi consumer must fail closed")
+	}
+}
+
+func TestTrigReferenceCorpusSelectsConvertedPorts(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/trig", Language: "python"},
+		{Name: "rust/trig", Language: "rust"},
+		{Name: "typescript/trig", Language: "typescript"},
+		{Name: "c/trig", Language: "c"},
+		{Name: "cpp/trig", Language: "cpp"},
+		{Name: "ruby/trig", Language: "ruby"},
+		{Name: "haskell/trig", Language: "haskell"},
+		{Name: "java/trig", Language: "java"},
+		{Name: "kotlin/trig", Language: "kotlin"},
+		{Name: "swift/trig", Language: "swift"},
+		{Name: "csharp/trig", Language: "csharp"},
+		{Name: "fsharp/trig", Language: "fsharp"},
+		{Name: "lua/trig", Language: "lua"},
+		{Name: "perl/trig", Language: "perl"},
+		{Name: "elixir/trig", Language: "elixir"},
+		{Name: "go/trig", Language: "go"},
+		{Name: "dart/trig", Language: "dart"},
+		{Name: "python/rng", Language: "python"},
+	}
+	for _, changed := range []string{
+		"code/specs/fixtures/trig-reference-v1/edge.tsv",
+		"code/specs/fixtures/trig-reference-v1/manifest.json",
+		"code/specs/fixtures/trig-reference-v1/sweep-cw.tsv",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := map[string]bool{"python/trig": true, "rust/trig": true, "typescript/trig": true, "c/trig": true, "cpp/trig": true, "ruby/trig": true, "haskell/trig": true, "java/trig": true, "kotlin/trig": true, "swift/trig": true, "csharp/trig": true, "fsharp/trig": true, "lua/trig": true, "perl/trig": true, "elixir/trig": true, "go/trig": true, "dart/trig": true}; !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s selected %v, want %v", changed, got, want)
+		}
+	}
+	for _, lang := range []string{"python", "rust", "typescript", "c", "cpp", "ruby", "haskell", "java", "kotlin", "swift", "csharp", "fsharp", "lua", "perl", "elixir", "go", "dart"} {
+		want := lang + "/trig"
+		got, _ := repositoryInputConsumersForChange([]string{"code/specs/fixtures/trig-reference-v1/edge.tsv"}, packages, lang)
+		if !reflect.DeepEqual(got, map[string]bool{want: true}) {
+			t.Fatalf("%s-only run selected %v, want only %s", lang, got, want)
+		}
+	}
+	for path, want := range map[string]bool{
+		"code/specs/fixtures/trig-reference-v1/edge.tsv":  true,
+		"code/specs/fixtures/trig-reference-v10/edge.tsv": false,
+		"code/specs/fixtures/trig-reference-v1":           false,
+		"code/specs/fixtures/phy00-phy01-v1/cases/x.json": false,
+	} {
+		if isTrigReferenceCorpus(path) != want {
+			t.Errorf("isTrigReferenceCorpus(%q) != %v", path, want)
+		}
+	}
+	// The generator, its oracle, the cross-checks and the validator select python/trig
+	// too, because its BUILD runs the generator's --check; lookalikes select nothing.
+	for path, want := range map[string]bool{
+		"code/scripts/generate_trig_reference_fixture.py":         true,
+		"code/scripts/generate_trig_reference_dart_fixtures.py":   true,
+		"code/scripts/tests/test_trig_reference_dart_fixtures.py": true,
+		"code/scripts/trig_ref_exact.py":                          true,
+		"code/scripts/trig_ref_softfloat.py":                      true,
+		"code/scripts/tests/test_trig_reference_fixture.py":       true,
+		"code/scripts/trig_reference_xcheck/xcheck.c":             true,
+		"code/scripts/trig_reference_xcheck/search.c":             true,
+		"code/specs/fixtures/trig-reference-v1/manifest.json":     true,
+		"code/scripts/generate_trig_reference_fixture.py.bak":     false,
+		"code/scripts/trig_ref_exact.pyc":                         false,
+		"code/scripts/trig_reference_xcheck2/x.c":                 false,
+		"code/scripts/generate_other_fixture.py":                  false,
+	} {
+		if isTrigReferenceInput(path) != want {
+			t.Errorf("isTrigReferenceInput(%q) != %v", path, want)
+		}
+		got, err := repositoryInputConsumersForChange([]string{path}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		// The generator, oracle and cross-check select only python/trig, whose
+		// BUILD runs --check (the Dart generator and its test too); a corpus
+		// file selects every one of the seventeen converged ports.
+		wantCount := 0
+		if want {
+			wantCount = 1
+			if isTrigReferenceCorpus(path) {
+				wantCount = 17
+			}
+		}
+		if len(got) != wantCount || (want && !got["python/trig"]) {
+			t.Errorf("%s selected %v, want %d consumers including python/trig", path, got, wantCount)
+		}
+	}
+	// A converted port whose package is missing from discovery is a hard error,
+	// never a silent skip.
+	if _, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/trig-reference-v1/edge.tsv"}, nil, "all"); err == nil {
+		t.Fatal("missing consumer must be an error")
+	}
+}
+
 func TestCtCompareInputsSelectTheirConsumers(t *testing.T) {
 	corpusLanes := []string{"dart", "haskell", "lua", "ocaml", "perl", "swift"}
 	packages := []discovery.Package{
@@ -128,6 +536,17 @@ func TestCtCompareInputsSelectTheirConsumers(t *testing.T) {
 		}
 		if got, err := repositoryInputConsumersForChange([]string{tc.input}, packages, "go"); err != nil || len(got) != 0 {
 			t.Fatalf("single-language filtering: %v, %v", got, err)
+		}
+	}
+	for _, path := range []string{
+		"code/packages/rust/fixed-point/src.bak/lib.rs",
+		"code/packages/rust/fixed-point/src-v2/lib.rs",
+		"code/packages/rust/fixed-point/evidence.backup/proof.json",
+		"code/packages/rust/fixed-point/evidence.bindings.bak",
+		"code/packages/rust/fixed-point/../fixed-point/src/lib.rs",
+	} {
+		if isFixedPointReporterInput(path) || isFixedPointWarrantIRInput(path) {
+			t.Errorf("fixed-point verifier selector accepted lookalike %q", path)
 		}
 	}
 	// A single corpus lane is selectable on its own.
@@ -341,6 +760,340 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 	}
 }
 
+func TestFenwickContractSelectsDartAndPythonConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "dart/fenwick-tree", Language: "dart"},
+		{Name: "python/fenwick-tree", Language: "python"},
+	}
+	cases := map[string]bool{
+		"code/specs/DT06-fenwick-tree.md":                           true,
+		"code/specs/fixtures/fenwick-tree-v1/cases.json":            true,
+		"code/specs/fixtures/fenwick-tree-v1/schema.json":           true,
+		"code/specs/fixtures/fenwick-tree-v1/README.md":             true,
+		"code/specs/fixtures/fenwick-tree-v1/validate.py":           true,
+		"code/specs/DT06-fenwick-tree.md.bak":                       false,
+		"code/specs/fixtures/fenwick-tree-v10/cases.json":           false,
+		"code/specs/fixtures/fenwick-tree-v1x/cases.json":           false,
+		"code/specs/fixtures/fenwick-tree-v1":                       false,
+		"code/specs/fixtures/fenwick-tree-v1/cases.json.backup":     true,
+		"code/specs/DT06-fenwick-tree-extra.md":                     false,
+		"code/specs/fixtures/fenwick-tree-v1/../fenwick-tree-v10/x": false,
+	}
+	for path, want := range cases {
+		if got := isFenwickTreeContractInput(path); got != want {
+			t.Errorf("isFenwickTreeContractInput(%q) = %v, want %v", path, got, want)
+		}
+		selected, err := repositoryInputConsumersForChange([]string{path}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		wantSelected := map[string]bool{}
+		if want {
+			wantSelected["dart/fenwick-tree"] = true
+			wantSelected["python/fenwick-tree"] = true
+		}
+		if !reflect.DeepEqual(selected, wantSelected) {
+			t.Errorf("change %q selects %v, want %v", path, selected, wantSelected)
+		}
+	}
+
+	for language, want := range map[string]map[string]bool{
+		"dart":   {"dart/fenwick-tree": true},
+		"python": {"python/fenwick-tree": true},
+	} {
+		selected, err := repositoryInputConsumersForChange(
+			[]string{"code/specs/fixtures/fenwick-tree-v1/cases.json"}, packages, language,
+		)
+		if err != nil {
+			t.Fatalf("language %s: %v", language, err)
+		}
+		if !reflect.DeepEqual(selected, want) {
+			t.Errorf("language %s selects %v, want %v", language, selected, want)
+		}
+	}
+
+	missingPython := packages[:1]
+	if _, err := repositoryInputConsumersForChange(
+		[]string{"code/specs/fixtures/fenwick-tree-v1/cases.json"}, missingPython, "all",
+	); err == nil || !strings.Contains(err.Error(), `repository input consumer "python/fenwick-tree"`) {
+		t.Errorf("missing Python consumer error = %v", err)
+	}
+	if selected, err := repositoryInputConsumersForChange(
+		[]string{"code/specs/fixtures/fenwick-tree-v1/cases.json"}, missingPython, "dart",
+	); err != nil || !reflect.DeepEqual(selected, map[string]bool{"dart/fenwick-tree": true}) {
+		t.Errorf("Dart-only selection with Python absent = %v, %v", selected, err)
+	}
+}
+
+func TestHashFunctionsV1SelectsOnlyRustAndDartPublicConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/hash-functions", Language: "rust"},
+		{Name: "dart/hash-functions", Language: "dart"},
+		{Name: "rust/hash-analysis", Language: "rust"},
+		{Name: "dart/hash-analysis", Language: "dart"},
+		{Name: "python/hash-functions", Language: "python"},
+	}
+	accepted := []string{
+		"code/specs/DT17-hash-functions.md",
+		"code/specs/DT17b-hash-functions-dart-profile.md",
+		"code/specs/fixtures/hash-functions-v1/cases.json",
+		"code/specs/fixtures/hash-functions-v1/schema.json",
+		"code/specs/fixtures/hash-functions-v1/oracle.py",
+		"code/specs/fixtures/hash-functions-v1/generate.py",
+	}
+	for _, changed := range accepted {
+		if !isDt17HashFunctionsInput(changed) {
+			t.Errorf("isDt17HashFunctionsInput(%q) = false, want true", changed)
+		}
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := map[string]bool{"rust/hash-functions": true, "dart/hash-functions": true}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("consumers for %q = %v, want %v", changed, got, want)
+		}
+	}
+	for _, changed := range []string{
+		"code/specs/DT17-hash-functions.md.bak",
+		"code/specs/DT17b-hash-functions-dart-profile.md.extra",
+		"code/specs/DT17c-hash-functions.md",
+		"code/specs/fixtures/hash-functions-v10/cases.json",
+		"code/specs/fixtures/hash-functions-v1x/cases.json",
+		"code/specs/fixtures/hash-functions-v1",
+		"docs/code/specs/fixtures/hash-functions-v1/cases.json",
+		`code\specs\fixtures\hash-functions-v1\cases.json`,
+		"code/specs/fixtures/hash-functions-v1/../hash-functions-v10/cases.json",
+	} {
+		if isDt17HashFunctionsInput(changed) {
+			t.Errorf("isDt17HashFunctionsInput(%q) = true, want false", changed)
+		}
+	}
+	for language, want := range map[string]map[string]bool{
+		"rust": {"rust/hash-functions": true},
+		"dart": {"dart/hash-functions": true},
+	} {
+		got, err := repositoryInputConsumersForChange([]string{accepted[0]}, packages, language)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("%s selector returned %v, want %v", language, got, want)
+		}
+	}
+}
+
+func TestHashFunctionsV1GraphExportsExactRepositoryInputs(t *testing.T) {
+	root := t.TempDir()
+	packages := []discovery.Package{
+		{Name: "rust/hash-functions", Language: "rust", Path: filepath.Join(root, "code", "packages", "rust", "hash-functions")},
+		{Name: "dart/hash-functions", Language: "dart", Path: filepath.Join(root, "code", "packages", "dart", "hash-functions")},
+	}
+	for _, pkg := range packages {
+		if err := os.MkdirAll(pkg.Path, 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	graph, err := buildKilnLegacyGraph(packages, root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	dt17 := []string{
+		"code/specs/DT17-hash-functions.md",
+		"code/specs/DT17b-hash-functions-dart-profile.md",
+		"code/specs/fixtures/hash-functions-v1",
+	}
+	// The Rust crate also checks its committed evidence against its own Warrant spec
+	// (CV2-F13, warrantEvidenceRow); the Dart package does not read that spec.
+	wants := map[string][]string{
+		"rust/hash-functions": append(append([]string{}, dt17...), "code/specs/hash-functions.warrant"),
+		"dart/hash-functions": dt17,
+	}
+	for _, name := range []string{"rust/hash-functions", "dart/hash-functions"} {
+		want := wants[name]
+		var found *kilnLegacyPackage
+		for i := range graph.Packages {
+			if graph.Packages[i].Name == name {
+				found = &graph.Packages[i]
+				break
+			}
+		}
+		if found == nil {
+			t.Fatalf("graph omitted %s", name)
+		}
+		if !reflect.DeepEqual(found.RepoInputs, want) {
+			t.Errorf("%s repo_inputs = %v, want %v", name, found.RepoInputs, want)
+		}
+	}
+}
+
+func TestHashMapV1SelectsSwiftAndDartPublicConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "swift/hash-map", Language: "swift"},
+		{Name: "dart/hash-map", Language: "dart"},
+		{Name: "swift/hash-functions", Language: "swift"},
+	}
+	accepted := []string{
+		"code/specs/DT18-hash-map.md",
+		"code/specs/DT18-hash-map-dart-profile.md",
+		"code/specs/fixtures/hash-map-v1/cases.json",
+		"code/specs/fixtures/hash-map-v1/schema.json",
+		"code/specs/fixtures/hash-map-v1/oracle.py",
+	}
+	for _, changed := range accepted {
+		if !isDt18HashMapInput(changed) {
+			t.Errorf("isDt18HashMapInput(%q) = false, want true", changed)
+		}
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := map[string]bool{"swift/hash-map": true, "dart/hash-map": true}; !reflect.DeepEqual(got, want) {
+			t.Errorf("consumers for %q = %v, want %v", changed, got, want)
+		}
+	}
+	for _, changed := range []string{
+		"code/specs/DT18-hash-map.md.bak",
+		"code/specs/DT18-hash-map-dart-profile.md.extra",
+		"code/specs/DT18x-hash-map.md",
+		"code/specs/fixtures/hash-map-v10/cases.json",
+		"code/specs/fixtures/hash-map-v1x/cases.json",
+		"code/specs/fixtures/hash-map-v1",
+		"code/specs/fixtures/hash-map-v1/cases.json.backup",
+		"code/specs/fixtures/hash-map-v1/../hash-map-v10/cases.json",
+	} {
+		if changed == "code/specs/fixtures/hash-map-v1/cases.json.backup" {
+			if !isDt18HashMapInput(changed) {
+				t.Errorf("fixture-tree input %q was not selected", changed)
+			}
+			continue
+		}
+		if isDt18HashMapInput(changed) {
+			t.Errorf("isDt18HashMapInput(%q) = true, want false", changed)
+		}
+	}
+	for language, want := range map[string]map[string]bool{
+		"swift": {"swift/hash-map": true},
+		"dart":  {"dart/hash-map": true},
+	} {
+		got, err := repositoryInputConsumersForChange([]string{accepted[0]}, packages, language)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("%s selector returned %v, want %v", language, got, want)
+		}
+	}
+	if _, err := repositoryInputConsumersForChange([]string{accepted[2]}, packages[1:], "all"); err == nil || !strings.Contains(err.Error(), `repository input consumer "swift/hash-map"`) {
+		t.Errorf("missing Swift consumer error = %v", err)
+	}
+}
+
+func TestHashMapV1GraphExportsExactRepositoryInput(t *testing.T) {
+	root := t.TempDir()
+	pkg := discovery.Package{Name: "swift/hash-map", Language: "swift", Path: filepath.Join(root, "code", "packages", "swift", "hash-map")}
+	if err := os.MkdirAll(pkg.Path, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	graph, err := buildKilnLegacyGraph([]discovery.Package{pkg}, root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, node := range graph.Packages {
+		if node.Name != pkg.Name {
+			continue
+		}
+		want := []string{"code/specs/DT18-hash-map-dart-profile.md", "code/specs/DT18-hash-map.md", "code/specs/fixtures/hash-map-v1"}
+		if !reflect.DeepEqual(node.RepoInputs, want) {
+			t.Fatalf("repo_inputs = %v, want %v", node.RepoInputs, want)
+		}
+		return
+	}
+	t.Fatal("graph omitted swift/hash-map")
+}
+
+func TestDiscoveredSwiftHashMapExportsDT18RepositoryInputs(t *testing.T) {
+	root := findRepoRoot("")
+	packageRoot := filepath.Join(root, "code", "packages", "swift", "hash-map")
+	packages, err := discovery.DiscoverPackages(packageRoot)
+	if err != nil {
+		t.Fatalf("discover actual Swift hash-map package: %v", err)
+	}
+	if len(packages) != 1 || packages[0].Name != "swift/hash-map" {
+		t.Fatalf("discovered packages = %#v, want actual swift/hash-map package", packages)
+	}
+	graph, err := buildKilnLegacyGraph(packages, root)
+	if err != nil {
+		t.Fatalf("export actual Swift hash-map graph node: %v", err)
+	}
+	for _, node := range graph.Packages {
+		if node.Name != "swift/hash-map" {
+			continue
+		}
+		want := []string{"code/specs/DT18-hash-map-dart-profile.md", "code/specs/DT18-hash-map.md", "code/specs/fixtures/hash-map-v1"}
+		if !reflect.DeepEqual(node.RepoInputs, want) {
+			t.Fatalf("actual swift/hash-map repo_inputs = %v, want %v", node.RepoInputs, want)
+		}
+		return
+	}
+	t.Fatal("graph omitted discovered swift/hash-map package")
+}
+
+func TestDiscoveredDartHashMapExportsDT18RepositoryInputs(t *testing.T) {
+	root := findRepoRoot("")
+	packageRoot := filepath.Join(root, "code", "packages", "dart", "hash-map")
+	packages, err := discovery.DiscoverPackages(packageRoot)
+	if err != nil {
+		t.Fatalf("discover actual Dart hash-map package: %v", err)
+	}
+	if len(packages) != 1 || packages[0].Name != "dart/hash-map" {
+		t.Fatalf("discovered packages = %#v, want actual dart/hash-map package", packages)
+	}
+	graph, err := buildKilnLegacyGraph(packages, root)
+	if err != nil {
+		t.Fatalf("export actual Dart hash-map graph node: %v", err)
+	}
+	for _, node := range graph.Packages {
+		if node.Name != "dart/hash-map" {
+			continue
+		}
+		want := []string{"code/specs/DT18-hash-map-dart-profile.md", "code/specs/DT18-hash-map.md", "code/specs/fixtures/hash-map-v1"}
+		if !reflect.DeepEqual(node.RepoInputs, want) {
+			t.Fatalf("actual dart/hash-map repo_inputs = %v, want %v", node.RepoInputs, want)
+		}
+		return
+	}
+	t.Fatal("graph omitted discovered dart/hash-map package")
+}
+
+func TestVer04pDomainDiagnosticSelectsWarrantGrammar(t *testing.T) {
+	packages := []discovery.Package{{Name: "rust/warrant-grammar", Language: "rust"}}
+	cases := map[string]bool{
+		"code/specs/VER04p-warrant-floats.md":                true,
+		"code/scripts/ver04p_domain_witnesses.py":            true,
+		"code/scripts/tests/test_ver04p_domain_witnesses.py": true,
+		"code/specs/VER04p-warrant-floats.md.bak":            false,
+		"code/scripts/tests/test_other_domain_witnesses.py":  false,
+		"code/specs/AUDIO-WORKSTATION-BACKLOG.md":            false,
+	}
+	for path, want := range cases {
+		if got := isWarrantGrammarInput(path); got != want {
+			t.Errorf("isWarrantGrammarInput(%q) = %v, want %v", path, got, want)
+		}
+		got, err := repositoryInputConsumersForChange([]string{path}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		wantConsumers := map[string]bool{}
+		if want {
+			wantConsumers["rust/warrant-grammar"] = true
+		}
+		if !reflect.DeepEqual(got, wantConsumers) {
+			t.Errorf("change %q selects %v, want %v", path, got, wantConsumers)
+		}
+	}
+}
+
 // mosaicGuardWorld writes a miniature repository with the real dependency
 // shape: the guard crate depends on the manifest crate, the artifact builder
 // depends on the guard, and a Mosaic app depends on the toolkit through its
@@ -490,5 +1243,101 @@ func TestRepositoryInputConsumersPlan(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(root, "missing.json")); !os.IsNotExist(err) {
 		t.Fatal("a failed plan created its output file")
+	}
+}
+
+func TestFixedPointInputConsumersSelectExactRustReaders(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/fixed-point", Language: "rust"},
+		{Name: "rust/game-clock", Language: "rust"},
+		{Name: "rust/ca-assurance-report", Language: "rust"},
+		{Name: "rust/warrant-ir", Language: "rust"},
+		{Name: "rust/warrant-grammar", Language: "rust"},
+	}
+	for _, input := range fixedPointInputPaths {
+		selected, err := repositoryInputConsumersForChange([]string{input}, packages, "rust")
+		want := map[string]bool{"rust/fixed-point": true}
+		switch input {
+		case ".cargo/config.toml", "code/packages/rust/.cargo/config.toml", "code/packages/rust/Cargo.toml", "code/packages/rust/Cargo.lock":
+			want["rust/game-clock"] = true
+			want["rust/ca-assurance-report"] = true
+			want["rust/warrant-ir"] = true
+		case "code/specs/fixed-point.warrant":
+			want["rust/ca-assurance-report"] = true
+			want["rust/warrant-ir"] = true
+			want["rust/warrant-grammar"] = true
+		}
+		if err != nil || !reflect.DeepEqual(selected, want) {
+			t.Fatalf("Rust input %s selected %v, err %v; want %v", input, selected, err, want)
+		}
+	}
+	for _, consumerName := range []string{"rust/ca-assurance-report", "rust/warrant-ir"} {
+		var found bool
+		for _, consumer := range repositoryInputConsumers {
+			if consumer.name != consumerName {
+				continue
+			}
+			found = true
+			for _, treePath := range consumer.treePaths {
+				if !containsString(consumer.paths, treePath) || !consumer.matches(treePath+"/new-file.rs") {
+					t.Errorf("%s tree registration %q is not covered by its exact selector/export paths", consumerName, treePath)
+				}
+			}
+		}
+		if !found {
+			t.Errorf("missing fixed-point tree consumer %s", consumerName)
+		}
+	}
+	for _, tc := range []struct {
+		input string
+		want  map[string]bool
+	}{
+		{"code/packages/rust/fixed-point/src/lib.rs", map[string]bool{"rust/ca-assurance-report": true, "rust/warrant-ir": true}},
+		{"code/packages/rust/fixed-point/evidence/proof-manifest.json", map[string]bool{"rust/ca-assurance-report": true}},
+		{"code/packages/rust/fixed-point/evidence.bindings", map[string]bool{"rust/ca-assurance-report": true, "rust/warrant-ir": true}},
+		{"code/packages/rust/fixed-point/Cargo.toml", map[string]bool{"rust/ca-assurance-report": true, "rust/warrant-ir": true}},
+	} {
+		selected, err := repositoryInputConsumersForChange([]string{tc.input}, packages, "rust")
+		if err != nil || !reflect.DeepEqual(selected, tc.want) {
+			t.Fatalf("fixed-point verifier input %s selected %v, err %v; want %v", tc.input, selected, err, tc.want)
+		}
+	}
+	if !sort.StringsAreSorted(fixedPointInputPaths) {
+		t.Fatalf("fixed-point inputs are not byte-sorted: %v", fixedPointInputPaths)
+	}
+	for _, path := range []string{".cargo/config.toml.bak", "code/packages/rust/Cargo.lock.bak", "code/packages/rust/fixed-point/../../Cargo.toml", "code/specs/fixtures/fixed-point-q16-v10/cases.json", "code/specs/fixed-point.warrant.bak"} {
+		if isFixedPointInput(path) {
+			t.Errorf("fixed-point selector accepted lookalike %q", path)
+		}
+	}
+}
+
+func TestFixedPointBindingsSelectGoVerifierForAllLanguages(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/fixed-point", Language: "rust"},
+		{Name: "rust/ca-assurance-report", Language: "rust"},
+		{Name: "rust/warrant-ir", Language: "rust"},
+		{Name: "go/programs/build-tool", Language: "go"},
+	}
+	got, err := repositoryInputConsumersForChange(
+		[]string{"code/packages/rust/fixed-point/evidence.bindings"}, packages, "all",
+	)
+	want := map[string]bool{
+		"rust/ca-assurance-report": true,
+		"rust/warrant-ir":          true,
+		"go/programs/build-tool":   true,
+	}
+	if err != nil || !reflect.DeepEqual(got, want) {
+		t.Fatalf("all-language fixed-point bindings selection = %v, err %v; want %v", got, err, want)
+	}
+	gotRust, err := repositoryInputConsumersForChange(
+		[]string{"code/packages/rust/fixed-point/evidence.bindings"}, packages, "rust",
+	)
+	wantRust := map[string]bool{
+		"rust/ca-assurance-report": true,
+		"rust/warrant-ir":          true,
+	}
+	if err != nil || !reflect.DeepEqual(gotRust, wantRust) {
+		t.Fatalf("Rust-only fixed-point bindings selection = %v, err %v; want %v", gotRust, err, wantRust)
 	}
 }

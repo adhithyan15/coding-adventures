@@ -1,2 +1,5 @@
+npm ci --prefix ../test-bootstrap --silent
+npm run build --prefix ../test-bootstrap
 npm ci --silent
-npx vitest run
+npm run build
+npm test

@@ -4,7 +4,9 @@ import {
   EmptySignalError,
   InvalidInputError,
   KernelTooLargeError,
+  safeFormatValue,
   validateFloats,
+  validateSequence,
 } from "./errors.js";
 import { fftConvolve, nextPow2 } from "./fft_conv.js";
 import { ConvMode, parseConvMode } from "./types.js";
@@ -19,25 +21,8 @@ export function overlapAdd(
   blockSize?: number | null,
   mode: ConvMode | string = ConvMode.FULL
 ): Float64Array {
-  const n = signal.length;
-  const k = kernel.length;
-
-  if (n === 0) {
-    throw new EmptySignalError("signal must be non-empty");
-  }
-  if (k === 0) {
-    throw new EmptyKernelError("kernel must be non-empty");
-  }
-  if (n > MAX_SAMPLES) {
-    throw new InvalidInputError(
-      `signal length ${n} exceeds MAX_SAMPLES ${MAX_SAMPLES}`
-    );
-  }
-  if (k > MAX_KERNEL_LEN) {
-    throw new InvalidInputError(
-      `kernel length ${k} exceeds MAX_KERNEL_LEN ${MAX_KERNEL_LEN}`
-    );
-  }
+  const n = validateSequence(signal, "signal", MAX_SAMPLES, EmptySignalError);
+  const k = validateSequence(kernel, "kernel", MAX_KERNEL_LEN, EmptyKernelError);
 
   const cMode = parseConvMode(mode);
   validateFloats(signal, "signal");
@@ -55,7 +40,7 @@ export function overlapAdd(
   } else {
     if (!Number.isSafeInteger(blockSize) || blockSize <= 0) {
       throw new InvalidInputError(
-        `blockSize must be a positive integer; got ${blockSize}`
+        `blockSize must be a positive integer; got ${safeFormatValue(blockSize)}`
       );
     }
     if (blockSize > MAX_SAMPLES) {

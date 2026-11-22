@@ -2398,22 +2398,55 @@ fn flutter_main_with_phone_state_root(main_dart: &str) -> Result<String, BuildEr
     }
     let main_dart = main_dart.replacen(
         MATERIAL,
-        "import 'dart:io' show Platform;\nimport 'package:flutter/material.dart';\nimport 'package:path_provider/path_provider.dart';\n",
+        "import 'dart:io' show Platform;\nimport 'package:flutter/material.dart';\nimport 'package:flutter/services.dart' show MissingPluginException, PlatformException;\nimport 'package:path_provider/path_provider.dart';\n",
         1,
     );
     Ok(main_dart.replacen(
         MAIN,
         concat!(
+            "const bool _mosaicNativeDiagnostics = bool.fromEnvironment(\n",
+            "  'MOSAIC_NATIVE_DIAGNOSTICS',\n",
+            ");\n",
+            "String _mosaicSupportLookupFailure(Object error) {\n",
+            "  if (error is MissingPlatformDirectoryException) return 'missing_directory';\n",
+            "  if (error is MissingPluginException) return 'missing_plugin';\n",
+            "  if (error is PlatformException) return 'platform_exception';\n",
+            "  try {\n",
+            "    switch (error.runtimeType.toString()) {\n",
+            "      case 'DynamicLibraryLoadError': return 'jni_helper_load_type_name';\n",
+            "      case 'NoJvmInstanceError': return 'jni_no_vm_type_name';\n",
+            "      case 'JNullError': return 'jni_null_type_name';\n",
+            "      case 'JThrowable': return 'jni_throwable_type_name';\n",
+            "    }\n",
+            "  } catch (_) {\n",
+            "    return 'other';\n",
+            "  }\n",
+            "  return 'other';\n",
+            "}\n",
             "Future<void> main() async {\n",
+            "  if (_mosaicNativeDiagnostics) {\n",
+            "    final mainEntry = Stopwatch()..start();\n",
+            "    mosaicNativeDiagnostic('main', 'entered', mainEntry);\n",
+            "  }\n",
             "  // UI89 §7.4: on a phone, state lives in the app-support directory,\n",
             "  // which only the platform knows. Found before the host loads; if it\n",
             "  // cannot be, the host says state is not saved.\n",
             "  WidgetsFlutterBinding.ensureInitialized();\n",
             "  if (Platform.isAndroid || Platform.isIOS) {\n",
+            "    final supportLookup = _mosaicNativeDiagnostics ? (Stopwatch()..start()) : null;\n",
+            "    mosaicNativeDiagnostic('app_support_lookup', 'attempted', supportLookup);\n",
             "    try {\n",
-            "      mosaicStateRoot = (await getApplicationSupportDirectory()).path;\n",
-            "    } on Object {\n",
+            "      final supportDirectory = await getApplicationSupportDirectory();\n",
+            "      mosaicStateRoot = supportDirectory.path;\n",
+            "      mosaicNativeDiagnostic(\n",
+            "        'app_support_lookup',\n",
+            "        supportDirectory.path.isEmpty ? 'empty' : 'nonempty',\n",
+            "        supportLookup,\n",
+            "      );\n",
+            "    } on Object catch (error) {\n",
             "      mosaicStateRoot = null;\n",
+            "      final failure = _mosaicNativeDiagnostics ? _mosaicSupportLookupFailure(error) : 'threw';\n",
+            "      mosaicNativeDiagnostic('app_support_lookup', failure, supportLookup);\n",
             "    }\n",
             "  }\n",
             "  runApp(MosaicApp());\n",
@@ -16989,9 +17022,141 @@ layout NativeEvents {
         assert!(pubspec.contains("  path_provider: 2.1.6\n"), "{pubspec}");
         let main = fs::read_to_string(flutter.join("lib/main.dart")).unwrap();
         assert!(main.contains("import 'package:path_provider/path_provider.dart';\n"));
+        assert!(main.contains("import 'package:flutter/services.dart' show MissingPluginException, PlatformException;\n"));
+        assert!(main.contains("String _mosaicSupportLookupFailure(Object error) {\n"));
+        // Keep the producer's returned categories as data and require the
+        // paired host collector to admit each one. A classifier result that
+        // the host silently drops is not a useful diagnostic.
+        let support_failure_labels = [
+            "missing_directory",
+            "missing_plugin",
+            "platform_exception",
+            "jni_helper_load_type_name",
+            "jni_no_vm_type_name",
+            "jni_null_type_name",
+            "jni_throwable_type_name",
+            "other",
+        ];
+        for label in support_failure_labels {
+            assert!(
+                main.contains(&format!("return '{label}';")),
+                "{label}: {main}"
+            );
+        }
+        let classifier_start = main
+            .find("String _mosaicSupportLookupFailure(Object error)")
+            .unwrap();
+        let classifier_end = main.find("Future<void> main() async {").unwrap();
+        let classifier = &main[classifier_start..classifier_end];
+        assert!(!classifier.contains("error.toString()"));
+        assert!(!classifier.contains("PlatformException.code"));
+        // `main.dart` and the imported host are separate Dart libraries, so
+        // each file must read its own compile-time flag instead of reaching
+        // into the host's private namespace.
+        assert!(main.contains(
+            "const bool _mosaicNativeDiagnostics = bool.fromEnvironment(\n  'MOSAIC_NATIVE_DIAGNOSTICS',\n);"
+        ));
         assert!(main.contains("Future<void> main() async {\n"));
-        assert!(main.contains("      mosaicStateRoot = (await getApplicationSupportDirectory()).path;\n"));
-        assert!(main.find("getApplicationSupportDirectory").unwrap() < main.find("  runApp(MosaicApp());").unwrap());
+        assert!(main.contains("mosaicNativeDiagnostic('main', 'entered', mainEntry);\n"));
+        assert!(main.contains(
+            "mosaicNativeDiagnostic('app_support_lookup', 'attempted', supportLookup);\n"
+        ));
+        assert!(main
+            .contains("      final supportDirectory = await getApplicationSupportDirectory();\n"));
+        assert!(main.contains("      mosaicStateRoot = supportDirectory.path;\n"));
+        assert!(main.contains("        'app_support_lookup',\n"));
+        assert!(main.contains("        supportDirectory.path.isEmpty ? 'empty' : 'nonempty',\n"));
+        assert!(main.contains(
+            "    final supportLookup = _mosaicNativeDiagnostics ? (Stopwatch()..start()) : null;\n"
+        ));
+        assert!(main.contains(
+            "      final failure = _mosaicNativeDiagnostics ? _mosaicSupportLookupFailure(error) : 'threw';\n"
+        ));
+        assert!(main.contains("} on Object catch (error) {\n"));
+        assert!(
+            main.find("mosaicNativeDiagnostic('main', 'entered'")
+                .unwrap()
+                < main
+                    .find("WidgetsFlutterBinding.ensureInitialized();")
+                    .unwrap()
+        );
+        assert!(
+            main.find("mosaicNativeDiagnostic('app_support_lookup', 'attempted'")
+                .unwrap()
+                < main.find("await getApplicationSupportDirectory()").unwrap()
+        );
+        let host = fs::read_to_string(flutter.join("lib/mosaic_host.dart")).unwrap();
+        assert!(host.contains(
+            "const bool _mosaicNativeDiagnostics = bool.fromEnvironment(\n  'MOSAIC_NATIVE_DIAGNOSTICS',\n);"
+        ));
+        assert!(!host.contains("MOSAIC_NATIVE_DIAGNOSTICS=true"));
+        assert!(host
+            .contains("if (!_mosaicNativeDiagnostics || _mosaicNativeDiagnosticClipped) return;"));
+        assert!(host.contains("_mosaicNativeDiagnosticRecords.length >= 23"));
+        assert!(host.contains("'capture_clipped:record_limit'"));
+        assert!(host.contains("'main:entered'"));
+        assert!(host.contains("'app_support_lookup:attempted'"));
+        for label in support_failure_labels {
+            assert!(
+                host.contains(&format!("'app_support_lookup:{label}'")),
+                "host diagnostic vocabulary must admit classifier output {label}"
+            );
+        }
+        assert!(host.contains("void _writeMosaicNativeDiagnostic(String record)"));
+        assert!(host.contains("print(record);"));
+        assert!(host.contains("mosaicNativeDiagnostic('runtime_route', 'phone_bundled')"));
+        assert!(host.contains("mosaicNativeDiagnostic('runtime_route', 'phone_not_bundled')"));
+        assert!(!host.contains("phone_unavailable"));
+        assert!(host.contains("mosaicNativeDiagnostic('create_call', 'abi_returned', timer)"));
+        assert!(host
+            .contains("final timer = _mosaicNativeDiagnostics ? (Stopwatch()..start()) : null;"));
+        assert!(host.contains(
+            "final timer = _mosaicNativeDiagnostics && isEnvironmentEvent\n        ? (Stopwatch()..start())\n        : null;"
+        ));
+        assert!(host.contains(
+            "'environment_answer',\n        update['error'] == null ? 'decoded_success' : 'decoded_error',"
+        ));
+        assert!(host.contains("'environment_answer:native_status_rejected'"));
+        assert!(host.contains("'persistence_decision:skipped_already_saved'"));
+        assert!(host.contains("'snapshot_call:present'"));
+        assert!(host.contains("'state_replace:returned'"));
+        let dispatch_start = host
+            .find("final isEnvironmentEvent = name == _environmentChanged;")
+            .unwrap();
+        let dispatch = &host[dispatch_start..];
+        let attempted = dispatch
+            .find("mosaicNativeDiagnostic('environment_dispatch', 'dart_attempted', timer);")
+            .unwrap();
+        let call = dispatch
+            .find("final status = _dispatch(_app, input, output);")
+            .unwrap();
+        let returned = dispatch.find("'abi_returned',").unwrap();
+        let decoded = dispatch
+            .find("update = _requireMap(raw, 'event update');")
+            .unwrap();
+        assert!(attempted < call && call < returned && returned < decoded);
+        let persist_start = host.find("void _persistSnapshot() {").unwrap();
+        let persist = &host[persist_start..];
+        let disabled = persist
+            .find("mosaicNativeDiagnostic('persistence_decision', 'disabled');")
+            .unwrap();
+        let snapshot = persist.find("_snapshot(_app, output)").unwrap();
+        let directory = persist
+            .find("file.parent.createSync(recursive: true);")
+            .unwrap();
+        let write = persist
+            .find("temporary.writeAsStringSync(jsonEncode(value), flush: true);")
+            .unwrap();
+        let replace = persist
+            .find("_replaceAtomically(temporary, file);")
+            .unwrap();
+        assert!(
+            disabled < snapshot && snapshot < directory && directory < write && write < replace
+        );
+        assert!(
+            main.find("getApplicationSupportDirectory").unwrap()
+                < main.find("  runApp(MosaicApp());").unwrap()
+        );
         assert!(!main.contains("void main() {\n"));
 
         let readme = fs::read_to_string(flutter.join("README.md")).unwrap();

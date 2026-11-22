@@ -1,0 +1,31 @@
+[package]
+name = "tls13-retry-handshake-traffic-secrets-binding"
+version = "0.1.0"
+edition = "2021"
+description = "Exact-message TLS 1.3 retry traffic-secret, server Finished-key, and transcript-continuation binding"
+license = "MIT"
+
+[dependencies]
+coding_adventures_hkdf = { path = "../hkdf" }
+tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-extension-block = { path = "../tls13-extension-block" }
+tls13-extension-context-policy = { path = "../tls13-extension-context-policy" }
+tls13-finished = { path = "../tls13-finished" }
+tls13-handshake-traffic-secrets = { path = "../tls13-handshake-traffic-secrets" }
+tls13-key-schedule = { path = "../tls13-key-schedule" }
+tls13-retry-key-schedule-binding = { path = "../tls13-retry-key-schedule-binding" }
+tls13-retry-transcript-binding = { path = "../tls13-retry-transcript-binding" }
+tls13-transcript = { path = "../tls13-transcript" }
+
+[dev-dependencies]
+tls13-cipher-suite-offer = { path = "../tls13-cipher-suite-offer" }
+tls13-client-hello-message = { path = "../tls13-client-hello-message" }
+tls13-key-share = { path = "../tls13-key-share" }
+tls13-named-group-policy = { path = "../tls13-named-group-policy" }
+tls13-server-hello-message = { path = "../tls13-server-hello-message" }
+tls13-server-hello-retry-selection = { path = "../tls13-server-hello-retry-selection" }
+tls13-server-hello-selection = { path = "../tls13-server-hello-selection" }
+tls13-server-hello-version-selection = { path = "../tls13-server-hello-version-selection" }
+tls13-supported-groups = { path = "../tls13-supported-groups" }
+tls13-supported-versions = { path = "../tls13-supported-versions" }
+tls13-x25519-key-share-binding = { path = "../tls13-x25519-key-share-binding" }

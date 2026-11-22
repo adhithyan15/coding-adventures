@@ -167,16 +167,85 @@ impl AsParser {
     }
 
     fn parser_parse_statement_inner(&mut self) -> Result<Stmt, AsCompilerError> {
+        if let Some(stmt) = self.parser_try_parse_decl_stmt()? {
+            return Ok(stmt);
+        }
+
+        if let Some(stmt) = self.parser_try_parse_timeline_verb()? {
+            return Ok(stmt);
+        }
+
+        // Var / Const / Function declarations
+        if self.parser_match(&TokenKind::Var) {
+            return self.parser_parse_var_decl();
+        }
+        if self.dialect == AsDialect::As3 && self.parser_match(&TokenKind::Const) {
+            return self.parser_parse_const_decl();
+        }
+        if self.parser_check(&TokenKind::Function) {
+            let f = self.parser_parse_function_decl(false, Visibility::Public)?;
+            return Ok(Stmt::FunctionDecl(f));
+        }
+
+        // Block statement
+        if self.parser_check(&TokenKind::LBrace) {
+            let stmts = self.parser_parse_block()?;
+            return Ok(Stmt::Block(stmts));
+        }
+
+        // Control flow statements
+        if self.parser_match(&TokenKind::If) {
+            return self.parser_parse_if_stmt();
+        }
+        if self.parser_match(&TokenKind::While) {
+            return self.parser_parse_while_stmt();
+        }
+        if self.parser_match(&TokenKind::Do) {
+            return self.parser_parse_do_while_stmt();
+        }
+        if self.parser_match(&TokenKind::For) {
+            return self.parser_parse_for_stmt();
+        }
+        if self.parser_match(&TokenKind::Return) {
+            return self.parser_parse_return_stmt();
+        }
+        if self.parser_match(&TokenKind::Break) {
+            self.parser_match(&TokenKind::Semicolon);
+            return Ok(Stmt::Break);
+        }
+        if self.parser_match(&TokenKind::Continue) {
+            self.parser_match(&TokenKind::Semicolon);
+            return Ok(Stmt::Continue);
+        }
+
+        // Try / Catch / Finally & Throw (AS3)
+        if self.dialect == AsDialect::As3 && self.parser_match(&TokenKind::Try) {
+            return self.parser_parse_try_stmt();
+        }
+        if self.dialect == AsDialect::As3 && self.parser_match(&TokenKind::Throw) {
+            let expr = self.parser_parse_expression()?;
+            self.parser_match(&TokenKind::Semicolon);
+            return Ok(Stmt::Throw(expr));
+        }
+
+        // Expression statement
+        let expr = self.parser_parse_expression()?;
+        self.parser_match(&TokenKind::Semicolon);
+        Ok(Stmt::Expr(expr))
+    }
+
+    #[inline(never)]
+    fn parser_try_parse_decl_stmt(&mut self) -> Result<Option<Stmt>, AsCompilerError> {
         // AS3 Package
         if self.dialect == AsDialect::As3 && self.parser_check(&TokenKind::Package) {
-            return self.parser_parse_package_decl();
+            return self.parser_parse_package_decl().map(Some);
         }
 
         // AS3 Namespace
         if self.dialect == AsDialect::As3 && self.parser_match(&TokenKind::Namespace) {
             let name = self.parser_match_ident()?;
             self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::NamespaceDecl(name));
+            return Ok(Some(Stmt::NamespaceDecl(name)));
         }
 
         // Import (AS2/AS3)
@@ -193,12 +262,14 @@ impl AsParser {
                 }
             }
             self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::ImportDecl(path));
+            return Ok(Some(Stmt::ImportDecl(path)));
         }
 
         // Interface (AS2/AS3)
         if self.dialect != AsDialect::As1 && self.parser_check(&TokenKind::Interface) {
-            return self.parser_parse_interface_decl().map(Stmt::InterfaceDecl);
+            return self
+                .parser_parse_interface_decl()
+                .map(|iface| Some(Stmt::InterfaceDecl(iface)));
         }
 
         // Modifiers for Class / Function / Var in AS2 / AS3
@@ -239,48 +310,19 @@ impl AsParser {
 
             if self.parser_check(&TokenKind::Class) {
                 let cls = self.parser_parse_class_decl(visibility, is_final, is_dynamic)?;
-                return Ok(Stmt::ClassDecl(cls));
+                return Ok(Some(Stmt::ClassDecl(cls)));
             }
 
             if saw_modifier {
                 if self.parser_check(&TokenKind::Function) {
                     let func = self.parser_parse_function_decl(member_static, visibility)?;
-                    return Ok(Stmt::FunctionDecl(func));
+                    return Ok(Some(Stmt::FunctionDecl(func)));
                 }
                 if self.parser_match(&TokenKind::Var) {
-                    let name = self.parser_match_ident()?;
-                    let type_ann = if self.parser_match(&TokenKind::Colon) {
-                        Some(self.parser_parse_type_annotation()?)
-                    } else {
-                        None
-                    };
-                    let init = if self.parser_match(&TokenKind::Eq) {
-                        Some(self.parser_parse_expression()?)
-                    } else {
-                        None
-                    };
-                    self.parser_match(&TokenKind::Semicolon);
-                    return Ok(Stmt::VarDecl {
-                        name,
-                        type_ann,
-                        init,
-                    });
+                    return self.parser_parse_var_decl().map(Some);
                 }
                 if self.dialect == AsDialect::As3 && self.parser_match(&TokenKind::Const) {
-                    let name = self.parser_match_ident()?;
-                    let type_ann = if self.parser_match(&TokenKind::Colon) {
-                        Some(self.parser_parse_type_annotation()?)
-                    } else {
-                        None
-                    };
-                    self.parser_expect(&TokenKind::Eq)?;
-                    let init = self.parser_parse_expression()?;
-                    self.parser_match(&TokenKind::Semicolon);
-                    return Ok(Stmt::ConstDecl {
-                        name,
-                        type_ann,
-                        init,
-                    });
+                    return self.parser_parse_const_decl().map(Some);
                 }
             }
         }
@@ -288,292 +330,261 @@ impl AsParser {
         // Bare class declaration without modifier
         if self.dialect != AsDialect::As1 && self.parser_check(&TokenKind::Class) {
             let cls = self.parser_parse_class_decl(Visibility::Public, false, false)?;
-            return Ok(Stmt::ClassDecl(cls));
+            return Ok(Some(Stmt::ClassDecl(cls)));
         }
 
-        // Flash Timeline Verbs
+        Ok(None)
+    }
+
+    #[inline(never)]
+    fn parser_try_parse_timeline_verb(&mut self) -> Result<Option<Stmt>, AsCompilerError> {
         if self.parser_match(&TokenKind::Stop) {
             self.parser_expect(&TokenKind::LParen)?;
             self.parser_expect(&TokenKind::RParen)?;
             self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::Stop);
+            return Ok(Some(Stmt::Stop));
         }
         if self.parser_match(&TokenKind::Play) {
             self.parser_expect(&TokenKind::LParen)?;
             self.parser_expect(&TokenKind::RParen)?;
             self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::Play);
+            return Ok(Some(Stmt::Play));
         }
         if self.parser_match(&TokenKind::GotoAndPlay) {
             self.parser_expect(&TokenKind::LParen)?;
             let arg = self.parser_parse_expression()?;
             self.parser_expect(&TokenKind::RParen)?;
             self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::GotoAndPlay(arg));
+            return Ok(Some(Stmt::GotoAndPlay(arg)));
         }
         if self.parser_match(&TokenKind::GotoAndStop) {
             self.parser_expect(&TokenKind::LParen)?;
             let arg = self.parser_parse_expression()?;
             self.parser_expect(&TokenKind::RParen)?;
             self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::GotoAndStop(arg));
+            return Ok(Some(Stmt::GotoAndStop(arg)));
         }
         if self.parser_match(&TokenKind::TellTarget) {
             self.parser_expect(&TokenKind::LParen)?;
             let target = self.parser_parse_expression()?;
             self.parser_expect(&TokenKind::RParen)?;
             let body = self.parser_parse_block()?;
-            return Ok(Stmt::TellTarget { target, body });
+            return Ok(Some(Stmt::TellTarget { target, body }));
         }
         if self.parser_match(&TokenKind::Call) {
             self.parser_expect(&TokenKind::LParen)?;
             let arg = self.parser_parse_expression()?;
             self.parser_expect(&TokenKind::RParen)?;
             self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::CallAction(arg));
+            return Ok(Some(Stmt::CallAction(arg)));
         }
         if self.parser_match(&TokenKind::OnClipEvent) {
             self.parser_expect(&TokenKind::LParen)?;
             let event = self.parser_match_ident()?;
             self.parser_expect(&TokenKind::RParen)?;
             let body = self.parser_parse_block()?;
-            return Ok(Stmt::OnClipEvent { event, body });
+            return Ok(Some(Stmt::OnClipEvent { event, body }));
         }
         if self.parser_match(&TokenKind::Trace) {
             self.parser_expect(&TokenKind::LParen)?;
             let arg = self.parser_parse_expression()?;
             self.parser_expect(&TokenKind::RParen)?;
             self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::Trace(arg));
+            return Ok(Some(Stmt::Trace(arg)));
         }
+        Ok(None)
+    }
 
-        // Var declaration
-        if self.parser_match(&TokenKind::Var) {
-            let name = self.parser_match_ident()?;
-            let type_ann = if self.parser_match(&TokenKind::Colon) {
-                Some(self.parser_parse_type_annotation()?)
-            } else {
-                None
-            };
-            let init = if self.parser_match(&TokenKind::Eq) {
-                Some(self.parser_parse_expression()?)
-            } else {
-                None
-            };
-            self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::VarDecl {
-                name,
-                type_ann,
-                init,
-            });
-        }
+    #[inline(never)]
+    fn parser_parse_var_decl(&mut self) -> Result<Stmt, AsCompilerError> {
+        let name = self.parser_match_ident()?;
+        let type_ann = if self.parser_match(&TokenKind::Colon) {
+            Some(self.parser_parse_type_annotation()?)
+        } else {
+            None
+        };
+        let init = if self.parser_match(&TokenKind::Eq) {
+            Some(self.parser_parse_expression()?)
+        } else {
+            None
+        };
+        self.parser_match(&TokenKind::Semicolon);
+        Ok(Stmt::VarDecl {
+            name,
+            type_ann,
+            init,
+        })
+    }
 
-        // Const declaration (AS3)
-        if self.dialect == AsDialect::As3 && self.parser_match(&TokenKind::Const) {
-            let name = self.parser_match_ident()?;
-            let type_ann = if self.parser_match(&TokenKind::Colon) {
-                Some(self.parser_parse_type_annotation()?)
-            } else {
-                None
-            };
-            self.parser_expect(&TokenKind::Eq)?;
-            let init = self.parser_parse_expression()?;
-            self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::ConstDecl {
-                name,
-                type_ann,
-                init,
-            });
-        }
+    #[inline(never)]
+    fn parser_parse_const_decl(&mut self) -> Result<Stmt, AsCompilerError> {
+        let name = self.parser_match_ident()?;
+        let type_ann = if self.parser_match(&TokenKind::Colon) {
+            Some(self.parser_parse_type_annotation()?)
+        } else {
+            None
+        };
+        self.parser_expect(&TokenKind::Eq)?;
+        let init = self.parser_parse_expression()?;
+        self.parser_match(&TokenKind::Semicolon);
+        Ok(Stmt::ConstDecl {
+            name,
+            type_ann,
+            init,
+        })
+    }
 
-        // Function declaration
-        if self.parser_check(&TokenKind::Function) {
-            let f = self.parser_parse_function_decl(false, Visibility::Public)?;
-            return Ok(Stmt::FunctionDecl(f));
-        }
+    #[inline(never)]
+    fn parser_parse_if_stmt(&mut self) -> Result<Stmt, AsCompilerError> {
+        self.parser_expect(&TokenKind::LParen)?;
+        let cond = self.parser_parse_expression()?;
+        self.parser_expect(&TokenKind::RParen)?;
+        let then_branch = Box::new(self.parser_parse_statement()?);
+        let else_branch = if self.parser_match(&TokenKind::Else) {
+            Some(Box::new(self.parser_parse_statement()?))
+        } else {
+            None
+        };
+        Ok(Stmt::If {
+            cond,
+            then_branch,
+            else_branch,
+        })
+    }
 
-        // Block statement
-        if self.parser_check(&TokenKind::LBrace) {
-            let stmts = self.parser_parse_block()?;
-            return Ok(Stmt::Block(stmts));
-        }
+    #[inline(never)]
+    fn parser_parse_while_stmt(&mut self) -> Result<Stmt, AsCompilerError> {
+        self.parser_expect(&TokenKind::LParen)?;
+        let cond = self.parser_parse_expression()?;
+        self.parser_expect(&TokenKind::RParen)?;
+        let body = Box::new(self.parser_parse_statement()?);
+        Ok(Stmt::While { cond, body })
+    }
 
-        // If statement
-        if self.parser_match(&TokenKind::If) {
-            self.parser_expect(&TokenKind::LParen)?;
-            let cond = self.parser_parse_expression()?;
-            self.parser_expect(&TokenKind::RParen)?;
-            let then_branch = Box::new(self.parser_parse_statement()?);
-            let else_branch = if self.parser_match(&TokenKind::Else) {
-                Some(Box::new(self.parser_parse_statement()?))
-            } else {
-                None
-            };
-            return Ok(Stmt::If {
-                cond,
-                then_branch,
-                else_branch,
-            });
-        }
+    #[inline(never)]
+    fn parser_parse_do_while_stmt(&mut self) -> Result<Stmt, AsCompilerError> {
+        let body = Box::new(self.parser_parse_statement()?);
+        self.parser_expect(&TokenKind::While)?;
+        self.parser_expect(&TokenKind::LParen)?;
+        let cond = self.parser_parse_expression()?;
+        self.parser_expect(&TokenKind::RParen)?;
+        self.parser_match(&TokenKind::Semicolon);
+        Ok(Stmt::DoWhile { body, cond })
+    }
 
-        // While loop
-        if self.parser_match(&TokenKind::While) {
-            self.parser_expect(&TokenKind::LParen)?;
-            let cond = self.parser_parse_expression()?;
-            self.parser_expect(&TokenKind::RParen)?;
-            let body = Box::new(self.parser_parse_statement()?);
-            return Ok(Stmt::While { cond, body });
-        }
+    #[inline(never)]
+    fn parser_parse_for_stmt(&mut self) -> Result<Stmt, AsCompilerError> {
+        self.parser_expect(&TokenKind::LParen)?;
 
-        // Do-while loop
-        if self.parser_match(&TokenKind::Do) {
-            let body = Box::new(self.parser_parse_statement()?);
-            self.parser_expect(&TokenKind::While)?;
-            self.parser_expect(&TokenKind::LParen)?;
-            let cond = self.parser_parse_expression()?;
-            self.parser_expect(&TokenKind::RParen)?;
-            self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::DoWhile { body, cond });
-        }
-
-        // For loop
-        if self.parser_match(&TokenKind::For) {
-            self.parser_expect(&TokenKind::LParen)?;
-
-            // Check if it's for..in: for (var x in obj) or for (x in obj)
-            let is_var = self.parser_match(&TokenKind::Var);
-            if let TokenKind::Ident(var_name) = self.parser_peek() {
-                let var_name = var_name.clone();
-                // Peek ahead 1
-                if self.cursor + 1 < self.tokens.len()
-                    && self.tokens[self.cursor + 1].kind == TokenKind::In
-                {
-                    self.parser_advance(); // consume ident
-                    self.parser_advance(); // consume in
-                    let obj = self.parser_parse_expression()?;
-                    self.parser_expect(&TokenKind::RParen)?;
-                    let body = Box::new(self.parser_parse_statement()?);
-                    return Ok(Stmt::ForIn {
-                        var_name,
-                        obj,
-                        body,
-                    });
-                }
+        // Check if it's for..in: for (var x in obj) or for (x in obj)
+        let is_var = self.parser_match(&TokenKind::Var);
+        if let TokenKind::Ident(var_name) = self.parser_peek() {
+            let var_name = var_name.clone();
+            if self.cursor + 1 < self.tokens.len()
+                && self.tokens[self.cursor + 1].kind == TokenKind::In
+            {
+                self.parser_advance(); // consume ident
+                self.parser_advance(); // consume in
+                let obj = self.parser_parse_expression()?;
+                self.parser_expect(&TokenKind::RParen)?;
+                let body = Box::new(self.parser_parse_statement()?);
+                return Ok(Stmt::ForIn {
+                    var_name,
+                    obj,
+                    body,
+                });
             }
+        }
 
-            // Normal for loop
-            let init = if is_var {
-                let name = self.parser_match_ident()?;
-                let type_ann = if self.parser_match(&TokenKind::Colon) {
-                    Some(self.parser_parse_type_annotation()?)
-                } else {
-                    None
-                };
-                let init_expr = if self.parser_match(&TokenKind::Eq) {
-                    Some(self.parser_parse_expression()?)
-                } else {
-                    None
-                };
-                self.parser_expect(&TokenKind::Semicolon)?;
-                Some(Box::new(Stmt::VarDecl {
-                    name,
-                    type_ann,
-                    init: init_expr,
-                }))
-            } else if self.parser_match(&TokenKind::Semicolon) {
-                None
+        let init = if is_var {
+            let name = self.parser_match_ident()?;
+            let type_ann = if self.parser_match(&TokenKind::Colon) {
+                Some(self.parser_parse_type_annotation()?)
             } else {
-                let expr = self.parser_parse_expression()?;
-                self.parser_expect(&TokenKind::Semicolon)?;
-                Some(Box::new(Stmt::Expr(expr)))
+                None
             };
-
-            let cond = if self.parser_check(&TokenKind::Semicolon) {
-                None
-            } else {
+            let init_expr = if self.parser_match(&TokenKind::Eq) {
                 Some(self.parser_parse_expression()?)
+            } else {
+                None
             };
             self.parser_expect(&TokenKind::Semicolon)?;
+            Some(Box::new(Stmt::VarDecl {
+                name,
+                type_ann,
+                init: init_expr,
+            }))
+        } else if self.parser_match(&TokenKind::Semicolon) {
+            None
+        } else {
+            let expr = self.parser_parse_expression()?;
+            self.parser_expect(&TokenKind::Semicolon)?;
+            Some(Box::new(Stmt::Expr(expr)))
+        };
 
-            let step = if self.parser_check(&TokenKind::RParen) {
-                None
+        let cond = if self.parser_check(&TokenKind::Semicolon) {
+            None
+        } else {
+            Some(self.parser_parse_expression()?)
+        };
+        self.parser_expect(&TokenKind::Semicolon)?;
+
+        let step = if self.parser_check(&TokenKind::RParen) {
+            None
+        } else {
+            Some(self.parser_parse_expression()?)
+        };
+        self.parser_expect(&TokenKind::RParen)?;
+
+        let body = Box::new(self.parser_parse_statement()?);
+        Ok(Stmt::For {
+            init,
+            cond,
+            step,
+            body,
+        })
+    }
+
+    #[inline(never)]
+    fn parser_parse_return_stmt(&mut self) -> Result<Stmt, AsCompilerError> {
+        let expr = if self.parser_check(&TokenKind::Semicolon)
+            || self.parser_check(&TokenKind::RBrace)
+            || self.parser_is_at_end()
+        {
+            None
+        } else {
+            Some(self.parser_parse_expression()?)
+        };
+        self.parser_match(&TokenKind::Semicolon);
+        Ok(Stmt::Return(expr))
+    }
+
+    #[inline(never)]
+    fn parser_parse_try_stmt(&mut self) -> Result<Stmt, AsCompilerError> {
+        let try_block = self.parser_parse_block()?;
+        let mut catches = Vec::new();
+        while self.parser_match(&TokenKind::Catch) {
+            self.parser_expect(&TokenKind::LParen)?;
+            let param = self.parser_match_ident()?;
+            let param_type = if self.parser_match(&TokenKind::Colon) {
+                Some(self.parser_parse_type_annotation()?)
             } else {
-                Some(self.parser_parse_expression()?)
+                None
             };
             self.parser_expect(&TokenKind::RParen)?;
-
-            let body = Box::new(self.parser_parse_statement()?);
-            return Ok(Stmt::For {
-                init,
-                cond,
-                step,
-                body,
-            });
+            let body = self.parser_parse_block()?;
+            catches.push(CatchClause::catch_clause_new(param, param_type, body));
         }
-
-        // Return
-        if self.parser_match(&TokenKind::Return) {
-            let expr = if self.parser_check(&TokenKind::Semicolon)
-                || self.parser_check(&TokenKind::RBrace)
-                || self.parser_is_at_end()
-            {
-                None
-            } else {
-                Some(self.parser_parse_expression()?)
-            };
-            self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::Return(expr));
-        }
-
-        // Break & Continue
-        if self.parser_match(&TokenKind::Break) {
-            self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::Break);
-        }
-        if self.parser_match(&TokenKind::Continue) {
-            self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::Continue);
-        }
-
-        // Try / Catch / Finally (AS3)
-        if self.dialect == AsDialect::As3 && self.parser_match(&TokenKind::Try) {
-            let try_block = self.parser_parse_block()?;
-            let mut catches = Vec::new();
-            while self.parser_match(&TokenKind::Catch) {
-                self.parser_expect(&TokenKind::LParen)?;
-                let param = self.parser_match_ident()?;
-                let param_type = if self.parser_match(&TokenKind::Colon) {
-                    Some(self.parser_parse_type_annotation()?)
-                } else {
-                    None
-                };
-                self.parser_expect(&TokenKind::RParen)?;
-                let body = self.parser_parse_block()?;
-                catches.push(CatchClause::catch_clause_new(param, param_type, body));
-            }
-            let finally_block = if self.parser_match(&TokenKind::Finally) {
-                Some(self.parser_parse_block()?)
-            } else {
-                None
-            };
-            return Ok(Stmt::TryCatchFinally {
-                try_block,
-                catches,
-                finally_block,
-            });
-        }
-
-        // Throw (AS3)
-        if self.dialect == AsDialect::As3 && self.parser_match(&TokenKind::Throw) {
-            let expr = self.parser_parse_expression()?;
-            self.parser_match(&TokenKind::Semicolon);
-            return Ok(Stmt::Throw(expr));
-        }
-
-        // Expression statement
-        let expr = self.parser_parse_expression()?;
-        self.parser_match(&TokenKind::Semicolon);
-        Ok(Stmt::Expr(expr))
+        let finally_block = if self.parser_match(&TokenKind::Finally) {
+            Some(self.parser_parse_block()?)
+        } else {
+            None
+        };
+        Ok(Stmt::TryCatchFinally {
+            try_block,
+            catches,
+            finally_block,
+        })
     }
 
     fn parser_parse_block(&mut self) -> Result<Vec<Stmt>, AsCompilerError> {
@@ -1152,53 +1163,12 @@ impl AsParser {
 
         // Array literal: [ ... ]
         if self.parser_match(&TokenKind::LBracket) {
-            let mut items = Vec::new();
-            if !self.parser_check(&TokenKind::RBracket) {
-                loop {
-                    items.push(self.parser_parse_expression()?);
-                    if !self.parser_match(&TokenKind::Comma) {
-                        break;
-                    }
-                }
-            }
-            self.parser_expect(&TokenKind::RBracket)?;
-            return Ok(Expr::ArrayLit(items));
+            return self.parser_parse_array_lit();
         }
 
         // Object literal: { ... }
         if self.parser_match(&TokenKind::LBrace) {
-            let mut props = Vec::new();
-            if !self.parser_check(&TokenKind::RBrace) {
-                loop {
-                    let key = match self.parser_peek() {
-                        TokenKind::Ident(id) => {
-                            let s = id.clone();
-                            self.parser_advance();
-                            s
-                        }
-                        TokenKind::StringLiteral(s) => {
-                            let s = s.clone();
-                            self.parser_advance();
-                            s
-                        }
-                        other => {
-                            return Err(AsCompilerError::SyntaxError(format!(
-                                "expected object property name, found {:?} at line {}",
-                                other,
-                                self.parser_peek_token().span.line
-                            )));
-                        }
-                    };
-                    self.parser_expect(&TokenKind::Colon)?;
-                    let val = self.parser_parse_expression()?;
-                    props.push((key, val));
-                    if !self.parser_match(&TokenKind::Comma) {
-                        break;
-                    }
-                }
-            }
-            self.parser_expect(&TokenKind::RBrace)?;
-            return Ok(Expr::ObjectLit(props));
+            return self.parser_parse_object_lit();
         }
 
         // Identifier
@@ -1252,5 +1222,56 @@ impl AsParser {
             callee: Box::new(callee),
             args,
         })
+    }
+
+    #[inline(never)]
+    fn parser_parse_array_lit(&mut self) -> Result<Expr, AsCompilerError> {
+        let mut items = Vec::new();
+        if !self.parser_check(&TokenKind::RBracket) {
+            loop {
+                items.push(self.parser_parse_expression()?);
+                if !self.parser_match(&TokenKind::Comma) {
+                    break;
+                }
+            }
+        }
+        self.parser_expect(&TokenKind::RBracket)?;
+        Ok(Expr::ArrayLit(items))
+    }
+
+    #[inline(never)]
+    fn parser_parse_object_lit(&mut self) -> Result<Expr, AsCompilerError> {
+        let mut props = Vec::new();
+        if !self.parser_check(&TokenKind::RBrace) {
+            loop {
+                let key = match self.parser_peek() {
+                    TokenKind::Ident(id) => {
+                        let s = id.clone();
+                        self.parser_advance();
+                        s
+                    }
+                    TokenKind::StringLiteral(s) => {
+                        let s = s.clone();
+                        self.parser_advance();
+                        s
+                    }
+                    other => {
+                        return Err(AsCompilerError::SyntaxError(format!(
+                            "expected object property name, found {:?} at line {}",
+                            other,
+                            self.parser_peek_token().span.line
+                        )));
+                    }
+                };
+                self.parser_expect(&TokenKind::Colon)?;
+                let val = self.parser_parse_expression()?;
+                props.push((key, val));
+                if !self.parser_match(&TokenKind::Comma) {
+                    break;
+                }
+            }
+        }
+        self.parser_expect(&TokenKind::RBrace)?;
+        Ok(Expr::ObjectLit(props))
     }
 }

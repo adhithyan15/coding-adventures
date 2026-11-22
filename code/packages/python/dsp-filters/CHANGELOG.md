@@ -2,6 +2,22 @@
 
 All notable changes to `coding-adventures-dsp-filters` will be documented in this file.
 
+## Unreleased
+
+### Added
+- Added opt-in strict `CheckedBiquad` and `checked_sosfilt` APIs with finite direct normalization, state rollback on returned failures, and separate legacy-compatible entry points.
+- Added bounded test-bootstrap as a development dependency for checked numerical properties and mutations.
+- Added public Biquad/SOS characterization tests for reciprocal normalization overflow, output and hidden-delay overflow, partial state commit after invalid input, and SOS section-order behavior.
+- Aligned the AF-02 fixture test loader with decoded finite binary64 equality for version and chunk-length fields, including decimal/exponent spellings and malformed controls.
+- Added public FIR designer contract regressions for cutoff endpoints, tap-cap boundaries, and validation error precedence.
+- Added strict shared AF-02 Biquad/SOS fixture checks, including all 32,768 impulse chunk partitions, reset replay, 64 seeded partition-property samples, and 128 seeded malformed-fixture fuzz samples through public exports.
+
+### Corrected
+- Avoid reciprocal overflow during low-pass and band-pass FIR normalization when the finite nonzero normalization denominator has a nonfinite reciprocal; retain legacy multiplication when the reciprocal is finite.
+- Removed the false FIR round-trip claim and single-input resource rows that contradict full convolution or omit kernel work; retained unrefuted output and depth obligations.
+- Removed shared byte-length caps and design `no_panic` claims until the Warrant model has lane-specific sample framing and typed error behavior. These declarations are not executable evidence.
+- Added direct FIR regression coverage for `[2] * [2] = [4]` and the one-tap identity.
+
 ## [0.1.0] - 2026-11-15
 
 ### Added

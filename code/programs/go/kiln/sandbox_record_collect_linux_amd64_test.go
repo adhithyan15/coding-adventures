@@ -233,6 +233,11 @@ exit 0
 		"GITHUB_EVENT_PATH=" + filepath.Join(aux, "event.json"), "ImageOS=ubuntu24", "ImageVersion=20260101.1",
 		"GITHUB_SHA=" + sha, "GITHUB_REPOSITORY=owner/repo", "GITHUB_RUN_ID=1", "GITHUB_RUN_ATTEMPT=1",
 	}
+	logProcReadsOnFailure(t, recDir)
+	// D34: when the test ends, cross-check every trace the children wrote. It is
+	// registered BEFORE prepare runs (the temp dir already exists, so the check still
+	// runs before it is deleted), so a probe trace that prepare refuses is checked too.
+	crossCheckChildTraces(t, recDir, kiln)
 	prep := exec.Command(kiln, "record", "prepare", "--root", repo, "--dir", recDir, "--build-tool", filepath.Join(bin, "build-tool"),
 		"--shard-index", "0", "--shard-count", "1", "--job-start", fmt.Sprint(time.Now().Unix()),
 		"--strace", straceBin, "--git", gitBin)
@@ -325,6 +330,45 @@ exit 0
 		}
 	}
 
+	// Census PR C: `kiln record census` over this very recording (the diagnostic
+	// the manual census workflow runs after the build).  It re-parses every real
+	// step trace twice, once timed and once through both readers, and must find
+	// them in agreement (exit 0); its report is bounded and carries the counts the
+	// recording is known to have.  It never writes inside the record directory.
+	censusJSON, censusMD := filepath.Join(outDir, "census-summary.json"), filepath.Join(outDir, "census-summary.md")
+	cen := exec.Command(kiln, "record", "census", "--dir", recDir, "--out", censusJSON, "--md", censusMD, "--records", out)
+	cen.Dir, cen.Env = "/", []string{"PATH=/usr/bin:/bin", "HOME=" + home}
+	if cout, cerr, ccode := recStepRun(t, cen); ccode != 0 {
+		t.Errorf("record census: exit %d\nstdout: %s\nstderr: %s", ccode, cout, cerr)
+	}
+	if cdata, err := os.ReadFile(censusJSON); err != nil {
+		t.Errorf("no census summary: %v", err)
+	} else {
+		var cs record.CensusSummary
+		dec := json.NewDecoder(strings.NewReader(string(cdata)))
+		dec.DisallowUnknownFields()
+		if err := dec.Decode(&cs); err != nil {
+			t.Fatalf("the census summary does not decode: %v", err)
+		}
+		cc := cs.CrossCheck
+		if cs.Schema != record.CensusSummarySchema || cs.InfrastructureFailure != "" || len(cdata) > record.MaxSummaryJSONBytes {
+			t.Errorf("census summary: schema %q, infra %q, %d bytes", cs.Schema, cs.InfrastructureFailure, len(cdata))
+		}
+		// A, B, C, D and E each ran one step (F has none): five traces, none refused.
+		if cc.Traces < 5 || cc.Accepted < 5 || cc.Mismatches != 0 || cc.Allowed != 0 {
+			t.Errorf("census cross-check: %+v", cc)
+		}
+		if cs.Actions.Total < 5 || cs.Actions.WithRecord < 5 || cs.Timing.ParseMS.N < 5 || cs.TraceSizes.All.N < 5 || len(cs.Languages) == 0 {
+			t.Errorf("census counts: actions %+v, timing %+v, sizes %+v", cs.Actions, cs.Timing, cs.TraceSizes.All)
+		}
+		if c := cs.Collect; c == nil || c.Records != 6 || c.TrackedChangedUnexplained != 1 || len(c.Void) != 1 || c.Void[0] != "tracked-changed" {
+			t.Errorf("census collect section: %+v", cs.Collect)
+		}
+		if md, err := os.ReadFile(censusMD); err != nil || len(md) > record.MaxSummaryMDBytes || !strings.Contains(string(md), "cross-check: ok") {
+			t.Errorf("census Markdown: %d bytes, %v", len(md), err)
+		}
+	}
+
 	// The shard decodes with recfmt exactly as the merge reads it.
 	files4 := recfmt.ShardFiles{}
 	for _, f := range []struct {
@@ -363,6 +407,17 @@ exit 0
 		return recfmt.ShardRecord{}
 	}
 	complete := func(r recfmt.ShardRecord) bool { return r.Complete != nil && *r.Complete }
+
+	// D32: the actions expected to be known (A, B, C, E, F) have no unknown_writes
+	// reason.  If one has (a trace the epilogue could not parse is the usual
+	// cause), log what each of its step traces looks like to both readers before
+	// the assertions below fail, since the traces die with the temp dir.
+	for _, a := range []string{actA, actB, actC, actE, actF} {
+		if r := rec(a); r.Unknown != "" {
+			t.Logf("D32: %s has unknown writes %q; diagnosing its step traces", a, r.Unknown)
+			logStepTraces(t, recDir, a)
+		}
+	}
 
 	// A: a clean hit.
 	ra := rec(actA)

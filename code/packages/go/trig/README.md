@@ -23,18 +23,27 @@ PHY00 — a leaf package with no dependencies.
 
 ## What It Does
 
-This package implements `Sin`, `Cos`, `Radians`, and `Degrees` without relying on any math library. Every function is computed from scratch using the Maclaurin series expansion, with range reduction to ensure accuracy for all inputs.
+This package implements `Sin`, `Cos`, `Tan`, `Radians`, `Degrees`, `Sqrt`, `Atan` and
+`Atan2` without relying on Go's `math` library. It is the Go port of the shared
+reference algorithm TRIG-REF-1 (`code/specs/PHY00a-trig-convergence.md`): every
+language's `trig` returns the same bits, and the conformance vectors in
+`code/specs/fixtures/trig-reference-v1` check that bit for bit.
 
-The source code is written in literate programming style — reading it should teach you how trigonometric functions actually work under the hood.
+The source code is written in literate programming style: reading it should teach you how
+trigonometric functions work under the hood.
 
 ## API
 
-| Function       | Description                                      |
-|----------------|--------------------------------------------------|
-| `Sin(x)`       | Sine of x (radians) via 20-term Maclaurin series |
-| `Cos(x)`       | Cosine of x (radians) via 20-term Maclaurin series |
-| `Radians(deg)` | Convert degrees to radians                       |
-| `Degrees(rad)` | Convert radians to degrees                       |
+| Function       | Description                                                  |
+|----------------|--------------------------------------------------------------|
+| `Sin(x)`       | Sine of x (radians); NaN outside `\|x\| <= 2^29`            |
+| `Cos(x)`       | Cosine of x (radians); NaN outside `\|x\| <= 2^29`          |
+| `Tan(x)`       | `Sin/Cos`, with a `+-1e308` sentinel at the poles; no accuracy claim |
+| `Radians(deg)` | One multiply by `pi/180`                                     |
+| `Degrees(rad)` | One multiply by `180/pi`                                     |
+| `Sqrt(x)`      | Newton's method; panics for negative inputs                  |
+| `Atan(x)`      | Arctangent via Taylor series with range reduction            |
+| `Atan2(y, x)`  | Four-quadrant arctangent; NaN if an argument is NaN          |
 
 ### Constants
 
@@ -45,13 +54,24 @@ The source code is written in literate programming style — reading it should t
 
 ## How It Works
 
-1. **Range reduction**: Any input angle is normalized to [-pi, pi] by removing full 2*pi rotations. This ensures the Maclaurin series converges quickly.
+1. **Domain guard**: `|x| <= 2^29` or the result is NaN (one negated comparison that
+   also catches NaN and infinities). Below `2^-27` `Sin(x) = x` and `Cos(x) = 1`.
+2. **Range reduction (Cody-Waite)**: `k = round(x * 2/pi)` using the
+   `(t + 1.5*2^52) - 1.5*2^52` trick, then `r = x - k*pi/2` with `pi/2` stored as five
+   pieces, the first four short enough that `k * piece` is exact.
+3. **Quadrant**: `k & 3` selects `sin(r)`, `cos(r)`, `-sin(r)` or `-cos(r)`.
+4. **Horner kernels**: ten Maclaurin terms with stored coefficients `1/3!, 1/5!, ...`;
+   no division anywhere.
 
-2. **Maclaurin series**: Each term is computed iteratively from the previous term (avoiding large factorial/power computations):
-   - Sin: `term_n = term_{n-1} * (-x^2) / ((2n)(2n+1))`
-   - Cos: `term_n = term_{n-1} * (-x^2) / ((2n-1)(2n))`
+Accuracy against the correctly rounded value, on `|x| <= 2^29`: `Sin` and `Cos` within
+3 ulp (observed 2.4), `Radians` and `Degrees` within 1 ulp.
 
-3. **20 terms**: More than sufficient for double-precision (float64) accuracy.
+### No fused multiply-add
+
+Go may fuse `x*y + z` on arm64 and other targets and has no flag to stop it. Every such
+product is written `float64(x*y)` (an explicit conversion always rounds), which makes
+the results identical on every architecture. `BUILD` checks that the arm64 and
+`GOAMD64=v3` assembly contains no fused instructions. Do not remove the conversions.
 
 ## Usage
 

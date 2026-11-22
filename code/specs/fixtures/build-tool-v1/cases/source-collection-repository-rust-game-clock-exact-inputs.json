@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/repository-rust-game-clock-exact-inputs",
+  "domain": "source_collection",
+  "summary": "The Rust game-clock consumer collects only its six exact tracked Warrant, corpus, and Cargo inputs; nearby files and an untracked credential are excluded.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "source_collection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "mode": "repository_boundary",
+      "language": "rust",
+      "package_root": "code/packages/rust/game-clock",
+      "boundary_sha256": "43dcbadfc86dd1a7d010b7e57d1b9958793d5ae32547b2da8ccab7f6bc37dd64",
+      "candidates": [
+        {
+          "path": ".cargo/config.toml",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "5b7461726765742e7838365f36342d70632d77696e646f77732d6d7376635d0a6c696e6b6572203d2022727573742d6c6c64220a"
+        },
+        {
+          "path": "code/packages/rust/.cargo/config.toml",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "5b7461726765742e7838365f36342d70632d77696e646f77732d6d7376635d0a6c696e6b6572203d2022727573742d6c6c64220a"
+        },
+        {
+          "path": "code/packages/rust/.cargo/credentials.toml",
+          "kind": "file",
+          "tracked": false,
+          "content_hex": "746f6b656e203d20226e6f742d612d7265616c2d736563726574220a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.lock",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "76657273696f6e203d20340a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.lock.bak",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "6e6561726279206c6f636b0a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.toml",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "5b776f726b73706163655d0a7265736f6c766572203d202232220a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.toml.bak",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "6e6561726279206d616e69666573740a"
+        },
+        {
+          "path": "code/specs/fixtures/game-clock-v1/cases.json",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "7b2276657273696f6e223a312c227375697465223a2267616d655f636c6f636b5f706f727461626c655f7631222c226361736573223a5b5d7d0a"
+        },
+        {
+          "path": "code/specs/fixtures/game-clock-v10/cases.json",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "6e656172627920666978747572650a"
+        },
+        {
+          "path": "code/specs/game-clock.warrant",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "6d6f64656c20636c6f636b2829202d3e20426f6f6c203d20747275650a"
+        },
+        {
+          "path": "code/specs/game-clock.warrant.bak",
+          "kind": "file",
+          "tracked": true,
+          "content_hex": "6e65617262792057617272616e740a"
+        }
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/repository-rust-game-clock-exact-inputs",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {
+      "files": [
+        {
+          "path": ".cargo/config.toml",
+          "digest": "81dad96badab5e1bfa86cf4961fd8236f03c5d0659621e6d3d4d7a0b62743e5a"
+        },
+        {
+          "path": "code/packages/rust/.cargo/config.toml",
+          "digest": "81dad96badab5e1bfa86cf4961fd8236f03c5d0659621e6d3d4d7a0b62743e5a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.lock",
+          "digest": "083791b01c1a67ae66aca99070c9ee48082d04307473d494376e6de7cf9a654a"
+        },
+        {
+          "path": "code/packages/rust/Cargo.toml",
+          "digest": "e53acc6945f71e4686587412549ee8a82c8f7516026e3805828243f34ce1d072"
+        },
+        {
+          "path": "code/specs/fixtures/game-clock-v1/cases.json",
+          "digest": "92dbf0d5654624d8f221274b42c60e9453ccbfa9e1df20b563807c47d375e4b4"
+        },
+        {
+          "path": "code/specs/game-clock.warrant",
+          "digest": "f32eb11243f11a5c64ff3dcd7ac6408c5b60d23209e8e00239b6c2679b403a2a"
+        }
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

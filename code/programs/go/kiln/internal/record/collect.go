@@ -62,6 +62,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"time"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/source"
@@ -81,6 +82,22 @@ type CollectOptions struct {
 	VerifyTree func(g *source.Git, root, expectedCommit string) (Result, error)
 	Inventory  func(g *source.Git, root string) (recfmt.Inventory, error)
 	Fsck       func(g *source.Git) error
+	// Survivors lists the processes that outlived the build (collect_survivor.go;
+	// repoRoot is the checkout and cfgPath the sealed sandbox configuration); an
+	// error counts as a survivor. SurvivorWait is how long a dying tree is given
+	// (zero: DefaultSurvivorWait; negative: one look, no waiting) and Sleep and
+	// Now are the clock it uses, so a test never waits.
+	Survivors    func(SurvivorQuery) ([]string, error)
+	SurvivorWait time.Duration
+	// SurvivorScanTimeout bounds one scan (zero: DefaultSurvivorScanTimeout).
+	SurvivorScanTimeout time.Duration
+	Now                 func() time.Time
+	Sleep               func(time.Duration)
+	// SelfStartTicks reads this process's own start time (field 22 of
+	// /proc/self/stat, in ticks since boot); the default is ReadSelfStartTicks.
+	// Collect uses it only to check the sealed prepared_ticks is on this boot's
+	// clock (D26).
+	SelfStartTicks func() (int64, error)
 }
 
 // CollectResult says what a successful Collect wrote.
@@ -115,6 +132,15 @@ func (o *CollectOptions) defaults() {
 	}
 	if o.Fsck == nil {
 		o.Fsck = Fsck
+	}
+	if o.Survivors == nil {
+		o.Survivors = liveSurvivors
+	}
+	if o.Now == nil {
+		o.Now = time.Now
+	}
+	if o.Sleep == nil {
+		o.Sleep = time.Sleep
 	}
 }
 
@@ -163,6 +189,27 @@ func Collect(o CollectOptions) (*CollectResult, error) {
 	if pre.Config.RepoRoot != o.Root {
 		return nil, fmt.Errorf("--root %q is not the checkout the shard was prepared for (%q)", printable(o.Root), printable(pre.Config.RepoRoot))
 	}
+	// 2a. Nothing of the sandbox may still be running (D6, token `survivor`).
+	// "Started after prepare" is the sealed prepared_ticks (clock ticks since boot,
+	// the clock a process's starttime is in) less SurvivorSlackTicks. No wall-clock
+	// time is involved (D26); the decoder refuses a binding without a positive
+	// prepared_ticks, and a bound of zero or less would make every process count.
+	q := SurvivorQuery{RepoRoot: pre.Config.RepoRoot, Configs: []string{pre.ConfigPath, filepath.Join(o.Dir, "probe", "toolchains-sandbox.json")}}
+	q.SinceTicks = pre.Binding.PreparedTicks - SurvivorSlackTicks
+	// Sanity check, no schema field needed: collect starts after prepare, on the
+	// same boot, so our own start time is not less than the sealed one. If it is
+	// (a reboot between the two, or prepare and collect reading different clock
+	// sources, as a container with a virtualised /proc can), prepared_ticks says
+	// nothing about this boot: a bound of 0 counts every process (fail closed). If
+	// our own start cannot be read, the same.
+	selfStart := o.SelfStartTicks
+	if selfStart == nil {
+		selfStart = ReadSelfStartTicks
+	}
+	if mine, err := selfStart(); err != nil || mine < pre.Binding.PreparedTicks {
+		q.SinceTicks = 0
+	}
+	survivors := waitSurvivors(func() ([]string, error) { return o.Survivors(q) }, o.SurvivorWait, o.Now, o.Sleep, o.SurvivorScanTimeout)
 	kiln, err := ResolveBinary("the kiln binary", o.KilnExe)
 	if err != nil {
 		return nil, err
@@ -242,8 +289,18 @@ func Collect(o CollectOptions) (*CollectResult, error) {
 		recs = append(recs, ao.rec)
 	}
 
+	// 4a. A survivor may have written after anything was read: no action has a
+	// known write set, and the header says why (the run is void, M3).
+	if len(survivors) > 0 {
+		for i := range outs {
+			markUnknown(&outs[i].rec, "survivor")
+			recs[i] = outs[i].rec
+		}
+	}
+
 	// 5. After the build.
 	post := c.postBuild(o, g, recs)
+	c.noteVoids(&post, survivors)
 
 	// 6. The header and the file.
 	header := recfmt.ShardHeader{
@@ -350,7 +407,7 @@ func (c *collector) globalSeqCheck(outs []actionOut, overlap bool) string {
 		return fmt.Sprintf("serial-violated: the counter reached %d and %d sidecars hold a number", final, total)
 	}
 	// Only what the supervisors and `prepare` make is in traces/.
-	known := map[string]bool{".seq": true, ".serial": true, CollectedMarker: true}
+	known := map[string]bool{".seq": true, ".serial": true, CollectedMarker: true, StatePreloadedMarker: true}
 	for _, ao := range outs {
 		known[filepath.Base(StepDir(c.dir, ao.name))] = true
 	}

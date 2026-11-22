@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vos-link",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads the crate's vos.toml and warrant/impl.part, the contract package's vos.toml, contract.vos and warrant/*.part, and the document under code/specs, each bounded by a byte cap, regular files only, never following a symlink."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "gen-doc writes exactly one file, code/specs/<impl>.warrant, through a fresh temporary file in the same directory and a rename; it refuses a symlink or non-regular file at the target."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "*",
+      "justification": "Lists the entries of the contract package's warrant directory and the implementation's, at most 64 each, to compare the tier files with contract.vos."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "*",
+      "justification": "Removes only its own temporary file (.<impl>.warrant.vos-link.tmp) when a write fails."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads the command-line arguments and the working directory (canonicalised) to resolve the crate path."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Prints the report to standard output and a no-verdict reason to standard error."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "*",
+      "justification": "Reported by the analyzer for std::process::ExitCode, which only sets the exit status; the program spawns no process."
+    },
+    {
+      "category": "thread",
+      "action": "spawn",
+      "target": "*",
+      "justification": "Runs the Warrant analysis on one thread with a 256 MiB stack (backlog VOS-D057); the thread is joined before the result is used."
+    }
+  ],
+  "justification": "A document generator and checker: reads the files of one implementation and its contract package, writes one generated document. No network and no subprocess."
+}

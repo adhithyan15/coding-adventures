@@ -810,8 +810,10 @@ reading was taken; each item says which.
     exemption's derived list loses `memory.unaliased`") does not apply; the
     table governs. The unsafe-exception row covers every memory-safety class
     the matrix can emit (`125` and `787` as well as `416/415/476/190`).
-    `EXEMPT-CWE-400-NO-STEP-PROOF`, and a CWE-208 exemption on a package with
-    no live proof claim, record an absence of proof and derive the empty
+    `EXEMPT-CWE-400-NO-STEP-PROOF`,
+    `EXEMPT-CWE-400-MISSING-STEP-BOUNDS`, and
+    `EXEMPT-CWE-407-MISSING-STEP-BOUNDS`, and a CWE-208 exemption on a package
+    with no live proof claim, record an absence of proof and derive the empty
     list. `EXEMPT-CWE-208-NO-SECRET-OPERANDS` records that the class does not
     apply (no secret operand) and also derives the empty list. Any other
     exemption id has no rule and fails.

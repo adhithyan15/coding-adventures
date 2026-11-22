@@ -9,9 +9,9 @@
 warrant percussion_kit v1
   error PercussionError = INVALID_ARGUMENT | BUDGET_EXCEEDED
 
-  op render_percussion_hit(hit_id: Nat, duration_ms: Nat, sample_rate_hz: Nat) -> Nat
-  op render_percussion_sequence(event_count: Nat, sample_rate_hz: Nat) -> Nat
-  op apply_hihat_choke(sample_count: Nat, choke_sample: Nat, ramp_samples: Nat) -> Nat
+  op render_percussion_hit(hit_id: Nat, duration_ms: Nat, sample_rate_hz: Nat) -> Result<Nat, PercussionError>
+  op render_percussion_sequence(event_count: Nat, sample_rate_hz: Nat) -> Result<Nat, PercussionError>
+  op apply_hihat_choke(sample_count: Nat, choke_sample: Nat, ramp_samples: Nat) -> Result<Nat, PercussionError>
 
   assume platform:
     none
@@ -87,7 +87,8 @@ warrant percussion_kit v1
     steps <= 512 * event_count + 2048
     heap <= 8192
     depth <= 16
-    total_samples <= 16777216
+    -- total output samples <= 16777216 is not a bound metric (only steps, heap, depth and
+    -- collection-typed `output` are); the limit is asserted by the claim on this operation.
 
   bound apply_hihat_choke:
     steps <= 64 * ramp_samples + 256
@@ -97,17 +98,13 @@ warrant percussion_kit v1
   -- Determinism and budget claims: identical inputs produce identical synthesized PCM output
   -- and sequence sample count never exceeds MAX_SAMPLE_COUNT.
   claim hit_rendering_is_deterministic:
-    forall h: Nat, d: Nat, r: Nat | h < 15 and d <= 30000 and r > 0 and r <= 192000.
-      render_percussion_hit(h, d, r) == render_percussion_hit(h, d, r)
+    forall h: Nat, d: Nat, r: Nat | h < 15 and d <= 30000 and r > 0 and r <= 192000. render_percussion_hit(h, d, r) == render_percussion_hit(h, d, r)
 
   claim sequence_rendering_is_deterministic:
-    forall c: Nat, r: Nat | c <= 16384 and r > 0 and r <= 192000.
-      render_percussion_sequence(c, r) == render_percussion_sequence(c, r)
+    forall c: Nat, r: Nat | c <= 16384 and r > 0 and r <= 192000. render_percussion_sequence(c, r) == render_percussion_sequence(c, r)
 
   claim sequence_sample_budget_bounded:
-    forall c: Nat, r: Nat | c <= 16384 and r > 0 and r <= 192000.
-      render_percussion_sequence(c, r) <= 16777216
+    forall c: Nat, r: Nat | c <= 16384 and r > 0 and r <= 192000. match render_percussion_sequence(c, r) with Ok(total) -> total <= 16777216 | Err(_) -> true
 
   claim choke_is_deterministic:
-    forall s: Nat, c: Nat, r: Nat | s <= 16777216.
-      apply_hihat_choke(s, c, r) == apply_hihat_choke(s, c, r)
+    forall s: Nat, c: Nat, r: Nat | s <= 16777216. apply_hihat_choke(s, c, r) == apply_hihat_choke(s, c, r)

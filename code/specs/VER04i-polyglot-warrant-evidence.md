@@ -2,13 +2,20 @@
 
 **Parent:** [VER00 §7–§9](VER00-verified-shipping-program.md), [VER01](VER01-assurance-report.md), [VER04 §5–§8](VER04-warrant-language.md), [VER04e](VER04e-warrant-codegen.md), [VER04f](VER04f-claims-to-properties.md), [VER04g](VER04g-typescript-warrant-compiler.md), [VER04h](VER04h-warrant-derived-evidence.md), [TF00](TF00-portable-test-framework.md), [TF01](TF01-bootstrap-harness.md), [TF01a](TF01a-typescript-test-bootstrap.md), [VER26](VER26-ct-compare-pilot.md). Runtime capability conformance: VER08b (in flight on branch `worktree-agent-a9f1811c0377a9acf`; referenced by name, not yet on `main`).
 
-**Status:** WD-003 is merged: it implements Rust corpus generation and the independent Python validator for the ct-compare Warrant v0 profile. WD-004a is merged as PR #19236: it delivers the strict lane-manifest parser, planned consumer registry, and corpus structural validator. WD-101 delivers the first non-Rust lane runner and manifest (Python, `ct-compare`: §5.1, §6.2, §15); the consumer row stays `planned` until WD-004b1 can load a lane artifact, so no report consumes it yet. WD-004b report integration, other lanes, native suites, samples, and proofs are not delivered.
+**Status:** WD-003 is merged: it implements Rust corpus generation and the independent Python validator for the ct-compare Warrant v0 profile. WD-004a is merged as PR #19236: it delivers the strict lane-manifest parser, planned consumer registry, and corpus structural validator. WD-101 delivers the first non-Rust lane runner and manifest (Python, `ct-compare`: §5.1, §6.2, §15), WD-102 the TypeScript lane (§5.2) and WD-103 the Go lane (§5.3); the consumer row stays `planned` until WD-004b1 can load a lane artifact, so no report consumes it yet. WD-004b report integration, other lanes, native suites, samples, and proofs are not delivered.
 
 **Implementation queue and receipts:** the current WD-003/WD-004/WX queue,
 CI receipts, and subsequent discoveries are maintained in the
 [portable Warrant backlog shard](VER-BACKLOG.d/portable-warrant.md). This
 shard is authoritative for current implementation status; the design and
 historical rollout snapshots below remain part of this specification.
+
+**Corpus v2.** The closed profile `warrant-corpus-v2` (structural types, chunked
+digests with `slim`/`full` depth, predicate claims, data faults, `inout`/`ensures`,
+the independent oracle and the one wrapping arithmetic rule) is specified in
+[VER04r](VER04r-warrant-corpus-v2.md). It is a new profile beside this one: every
+section of this document describes `warrant-corpus-v1` and stays authoritative for it
+until VER04r slice S13 deletes v1.
 
 ## 0. Why this exists
 
@@ -305,6 +312,71 @@ core Perl; Lua and OCaml's stdlib `Digest` is MD5, so those two lanes carry a
 vetted 80-line SHA-256 in `warrant-corpus`, itself checked against NIST
 vectors in the lane's own tests).
 
+### 2.6.1 Allocation registry: stream tags and diagnostic codes
+
+Added 2026-11-16 (owner decision, VER30 decision 19). VER04l, VER04r and VER04p
+had each taken tags in `60` to `63` without sight of one another, and the draft
+VER04n had to check the rest by hand. This table is the **one place** that lists
+every allocation. A specification that needs a tag or a code **checks this
+registry first, takes the lowest free value, and adds its row in the same PR**;
+a collision found later is resolved in favour of the **earliest-merged**
+allocation, and the later specification renumbers. Reserved ranges are rows too.
+
+**Stream tags** (`warrant-stream-v1` and `warrant-stream-v2`; a lane decoder MUST
+reject a tag it does not know).
+
+| Tag | Meaning | Specification | Status |
+|---|---|---|---|
+| `00`, `01` | `Bool` false, true | VER04i 2.6 | merged |
+| `10` | `U8`..`U64`, `Nat` (8 bytes LE) | VER04i 2.6 | merged |
+| `11` | `I8`..`I64` (8 bytes, two's complement) | VER04r 2.4 | merged (spec only) |
+| `20` | `Bytes`, `Bytes<N>` | VER04i 2.6 | merged |
+| `30` | `List` | VER04i 2.6 | merged |
+| `40`, `41` | `Option` none, some | VER04i 2.6 | merged |
+| `50`, `51` | `Ok`, `Err` | VER04i 2.6 | merged |
+| `60` | `Text` | VER04l 7.2 | merged 2026-11-13 |
+| `61` | `Char` | VER04l 7.2 | merged 2026-11-13 |
+| `62` | `F32` | VER04p 10 | merged 2026-11-16 |
+| `63` | `F64` | VER04p 10 | merged 2026-11-16 |
+| `64` | tuple, record | VER04r 2.4 | renumbered 2026-11-16 (was `60`) |
+| `65` | variant | VER04r 2.4 | renumbered 2026-11-16 (was `62`) |
+| `66` | `Set` | VER04o 8.2 | spec only (2026-11-16) |
+| `67` | `Map` | VER04o 8.2 | spec only (2026-11-16) |
+| `68` to `79` | free; VER04s (recursive types) took none, so the next specification takes from `68` | none | free |
+| `80` | opaque recipe | VER04n 9.1 | merged 2026-11-16 |
+| `81` | opaque observation tuple | VER04n 9.1 | merged 2026-11-16 |
+| `82` to `8f` | reserved for VER04n | VER04n 9.1 | reserved |
+| `90` to `ff` | free | none | free |
+
+VER04s (recursive types) took **no** tag: a value of a recursive type is a variant
+(`65`) whose fields nest, and a second tag would give one value two encodings
+(VER04s 7.1). `68` is still the lowest free value (VER04o took `66` and `67`).
+
+**Diagnostic codes** (`W` codes of the Warrant checker and generator).
+
+| Codes | Meaning | Specification | Status |
+|---|---|---|---|
+| `W0001` to `W0602` (the v0 set, by hundreds: `W00` lexical and admission, `W01` syntax, `W02` names and types, `W03` operations, `W04` claims, `W05` domains, `W06` budgets) | the v0 set | VER04 and VER04a to VER04f | merged |
+| `W0701` to `W0705` | generation and binding | VER04e | merged |
+| `W0706`, `W0707` | exhaustive budget, derived-evidence generation | VER04h | merged |
+| `W0708` to `W0710` | v1 extensions | VER04j | merged |
+| `W0711` to `W0713` | wave 4 (WX-D, WX-F, WX-G) | VER04k | merged |
+| `W0714` to `W0729` | free | none | free |
+| `W0730` to `W0733` | stateful objects | VER04m | merged |
+| `W0734` to `W0749` | free | none | free |
+| `W0750` to `W0759` | opaque types (`W0750` to `W0753` assigned) | VER04n | merged; the block is reserved |
+| `W0760` to `W0769` | collections and generics (`W0760` to `W0765` assigned) | VER04o | spec only (2026-11-16); the block is reserved |
+| `W0770` to `W0779` | recursive types (`W0770` to `W0773` assigned) | VER04s | spec only (2026-11-16); the block is reserved |
+| `W0780` and up | free | none | free |
+
+On 2026-11-16 the registry was built by reading every specification under
+`code/specs` that allocates either kind. **Stream tags had three collisions**
+(`60` among VER04l and VER04r, `62` among VER04p and VER04r, and the unresolved
+choice between them), settled as above. **Diagnostic codes had none**: VER04l,
+VER04p and VER04r allocate no new code (they reuse `W0101`, `W0201`, `W0203`,
+`W0202`, `W0401`, `W0601`, `W0706`), and the blocks of VER04j, VER04k, VER04m and
+VER04n are disjoint.
+
 ### 2.7 Value encoding for Warrant types (TFV mapping)
 
 `cases.tfv` reuses TFV v1 unchanged (TF01 §2). Types map onto the value model
@@ -342,6 +414,18 @@ of a spec-declared width is a corpus error at *generation time*, so a lane never
 sees one). The corpus includes the 377-value `u64_edge` domain precisely so a
 lane that silently holds `U64` in a 63-bit or double type fails an exhaustive
 case, not a code review.
+
+**Erratum (VER04r section 3, 2026-11-16).** The wrapping rule above is stated for
+`U64` only, and three evaluators disagreed with it: the shipped runners refuse an
+overflow, the Python oracle used unbounded integers, and the Rust v0 harness
+evaluates `U8` as `Nat` (WD-013). The rule is: `+ - *` and unary `-` on **every**
+fixed-width type wrap modulo `2^w`; `Nat` and `Int` are exact and bounded by `2^127`
+at generation time. The only `warrant-corpus-v1` corpus, ct-compare, has no model
+arithmetic, so no case reaches the difference and the v1 runners are unchanged; for
+that reason no second adopter may be added to the v1 profile. The rule binds the v2
+profile, where VER04r section 3.3 also refuses a v0 *document* whose `U8` arithmetic
+wraps or could wrap on a subject result. WD-013 is not reopened: its v0 residual
+stays accepted until gf256 becomes a v1 document.
 
 ### 2.8 Regeneration and drift checks
 
@@ -686,6 +770,108 @@ package `typescript/warrant-corpus` (`@coding-adventures/warrant-corpus`, entry
 `src/bin.ts`); the manifest's `toolchain` is `{"name": "node", "version": ...}`
 and its `version` is, as for Python, diagnostic and ignored by `check`.
 
+### 5.3 The Go binding file -- WD-103 amendment
+
+The Go lane uses the same line-file grammar as §5.1 and §5.2 (`evidence.bindings`,
+data only, one directive per line). Go differs from the interpreted lanes in one
+structural way, and every other rule follows from it: **a Go program cannot
+import a package by name at run time.** The set of exports is fixed when the
+entry program is compiled, so the binding file names them and a small, compiled
+adapter table supplies them.
+
+```text
+lane go
+package go/ct-compare
+module ct_compare
+import github.com/adhithyan15/coding-adventures/code/packages/go/ct-compare
+source .
+seed 0x5741_5252_414e_5421
+values Bool=bool Bytes=[]byte Nat=uint64 U64=uint64
+op eq export=CTEq
+op eq_fixed export=CTEqFixed width=implicit
+op select_bytes export=CTSelectBytes errors=CT_SELECT_LENGTH_MISMATCH:ErrLengthMismatch
+op eq_u64 export=CTEqU64
+```
+
+| Directive | Go rule |
+|---|---|
+| `import` | The Go **import path** of the one package that holds every export. It is a path, never a file, because Go resolves packages by import path. The runner proves it is the code that runs by checking each export's compiled symbol (below) |
+| `source` | A package-relative directory (`.` is the package directory itself); §8.1 digests the `*.go` files beneath it. The entry program and its adapters therefore live inside the source root, so the digest covers the code that translates values and errors as well as the library |
+| `values` | The only accepted representations are `Bool=bool`, `Bytes=[]byte`, `U8=uint8`, `U64=uint64`, `Nat=uint64`. `U64` is a native `uint64`, parsed unsigned; `int`, `int64` and `float64` are refused (`BindingInvalid`) |
+| `errors=` | `<VARIANT>:<SentinelName>` where the name is `Err` followed by an identifier and resolves, in the compiled registry, to an `error` **value**. A returned error maps only when it is that value by identity (`err == sentinel`): a wrapped error, an equal-looking `errors.New`, a different sentinel and any panic that escapes the adapter are all `unexpected-error`. There is no class or message matching, so the weakness of §5.1 and §5.2 (a different failure of the same class passes) does not exist in this lane |
+
+**The registry.** The entry program (for `ct-compare`: `cmd/warrant-evidence`)
+passes the runner a table with, per export name, an `Impl` (the library function
+itself) and a `Call` adapter, plus the sentinel table. An adapter may translate
+values and errors and nothing else; it holds no computed answer, retry or
+fallback. For `ct-compare` it turns the Warrant `Bool` choice into the `int` bit
+that `CTSelectBytes` requires, and it turns the library's length-mismatch panic
+into `ErrLengthMismatch` (re-panicking any other panic, so an unmapped failure is
+`unexpected-error`). Because the adapter is code, not data, it is part of the
+reviewed and digested surface (§11 item 3 applies to it); the binding file stays
+data.
+
+**Provenance (`source-mismatch`).** The runner never calls `Impl`; it inspects
+it. `runtime.FuncForPC` must name exactly `<import>.<export>` (so a closure, a
+method or another package's function is refused) and the function's recorded
+source file must be an absolute path that lies under the `source` root after
+symlink resolution, with the cross-drive-safe containment check of §6.2. A build
+that strips paths (`-trimpath`) therefore cannot run the lane: the check fails
+closed rather than guess.
+
+Result typing is exact, using Go's own distinctions: `Bool` is a `bool`;
+`U64` and `Nat` a `uint64`; `U8` a `uint8`; `Bytes` is exactly `[]byte` (a named
+byte-slice type fails the type assertion); a `nil` interface is
+`type-mismatch`. `Bytes` is mutable, as in §5.2, so rule 4 is enforced by
+mutation rather than discharged by construction: every `Bytes` argument is the
+runner's own fresh copy, and for a `fresh` op the runner flips the returned bytes
+and requires every argument to be unchanged, then flips each argument and
+requires the result to be unchanged. Either direction changing is
+`type-mismatch`.
+
+Error handling needs no exceptions. An export returns `(value, error)` through
+its adapter; a `nil` error is `Ok(value)` for a `Result` op and the value itself
+otherwise. A panic that reaches the runner is `unexpected-error`, never swallowed
+and never mapped.
+
+**Strict JSON.** Go's `encoding/json` keeps the last of two equal keys and
+replaces invalid UTF-8 and lone surrogate escapes with U+FFFD, so the runner has
+its own reader. It rejects duplicate keys, invalid UTF-8 (no replacement), an
+unpaired or reversed surrogate escape, `NaN`, trailing data, nesting deeper than
+256 levels, fractions, exponents, `-0` and any integer whose magnitude exceeds
+2^53 - 1. `U64` values cross the corpus as tagged decimal text, parsed with
+`strconv.ParseUint`. Output is canonical: sorted keys, two-space indent, LF,
+ASCII-only escapes (lowercase `\u00xx`, surrogate pairs for astral characters) and
+a final newline, byte-identical to the Python and TypeScript lanes.
+
+**Containment.** The corpus directory, the binding file and the package
+directory must each lie strictly inside `--repo-root`. The check resolves
+symlinks, computes `filepath.Rel`, **treats its error as a refusal** (on Windows
+`Rel` fails across drives), refuses an absolute result, and refuses a result that
+is exactly `..` or starts with `..` plus a path separator; a directory named
+`..foo` is inside. A bare `strings.HasPrefix(rel, "..")` is never used.
+
+**Source digest (§8.1).** `*.go` files at any depth beneath the source root,
+excluding `*_test.go`, and skipping `vendor`, `testdata` and directories whose
+name starts with `.` or `_` (the directories the `go` tool itself ignores).
+`runner.src_sha256` is the same framing over the runner's own non-test `*.go`
+files, which the runner embeds at compile time (`go:embed`), so it digests the
+bytes that were actually compiled and does not depend on the working directory.
+
+**Sabotage.** `sabotage` re-executes the running binary (`os.Executable`) once
+per control with `WARRANT_EVIDENCE_FAULT=<fault>:<op>` and
+`WARRANT_EVIDENCE_FILTER=/exhaustive/`, so the entry program must be a program
+that runs the same command line (`cmd/warrant-evidence`). The commands,
+environment variables, exit statuses, failure ids and work bounds of §6.2, the
+fault registry of §4.2 and the manifest of §8 are identical to the other lanes;
+`toolchain` is `{"name": "go", "version": "<runtime version without the go prefix>"}`
+and its `version` is diagnostic and ignored by `check`. The label sidecar digest
+binds to the manifest's own `toolchain.name`.
+
+The runner is the package `go/warrant-corpus` (module
+`github.com/adhithyan15/coding-adventures/code/packages/go/warrant-corpus`),
+a library; the leaf package carries the entry program.
+
 ## 6. The L0 runner protocol (identical in every lane)
 
 ```text
@@ -819,6 +1005,7 @@ polyglot check needs:
   "toolchain": { "name": "python", "version": "3.12.4" },
   "evidence_seed": "<u64>",
   "faulted": false,
+  "pycache_isolated": true,   // Python lane only (section 8.1)
   "tests": [
     { "id": "warrant/ct_compare/example/eq_empty", "layer": "portable",
       "kind": "example", "op": "eq", "cases": 1, "verdict": "pass" },
@@ -870,9 +1057,10 @@ exact keys are `lane`, `package`, `module`, `package_root`, `binding`,
 path, runner entry, evidence-manifest path, build files, and
 `status: "planned"|"active"`. In this first profile, each `build_files` array
 contains one or two unique paths. Planned entries reserve identity and paths
-only; they cannot authorize a passing lane result. WD-004a registers
+only; they cannot authorize a passing lane result. WD-004a registered
 `python/ct-compare` as `planned`; no entry becomes active until its binding,
-runner, evidence manifest, and build routing exist.
+runner, evidence manifest, and build routing exist. WD-004b1 (section 8.2)
+flips the Python row and adds the TypeScript and Go rows, all `active`.
 
 Registry path values are lexically normalized, slash-separated,
 repository-relative paths with no empty, `.` or `..` component and no
@@ -928,7 +1116,8 @@ The digest is the same `warrant-src-v1` framing as Rust (VER04h §8):
 length-prefixed, sorted by path bytes, paths relative to the *source root*,
 symlink / non-UTF-8 / oversized / too-deep entries are errors. Only the
 *definition of which files* is lane-specific. It must cover every file that can
-change what the implementation does and nothing that changes only tests, so it
+change what the implementation does and nothing that changes only tests (the
+loader enforces this by refusing an uncovered file, section 8.2), so it
 is a **production-source** subset of the existing
 `build-tool-v1/language-source-input-registry.json` (which is a build-input
 registry that includes tests and build scripts; reuse its component
@@ -963,6 +1152,311 @@ roots; a package with a native tree and no declared native root fails
 and the `warrant-corpus` runner for each lane to call (`source-digest
 --lane python --root …`), so producers cannot drift from the checker.
 Lanes never re-implement the framing.
+
+### 8.2 The lane artifact loader and static readiness (WD-004b1)
+
+WD-004a parses bytes. WD-004b1 adds the first code that *opens* the lane
+artifacts: `ca-assurance-report`'s `lane_loader` module. WD-004b1 shipped it as
+a library; WD-004b2 puts its output in the package report and the CLI (section
+8.3). The legacy Rust loader (`warrant-test-evidence-v1`, `evidence.rs`) is
+untouched, and a legacy manifest is still never read as a lane manifest: the
+loader only reads packages that the consumer registry lists, and `rust/*` is not
+in the registry.
+
+**Artifact set.** For one registered package the loader reads, in this order:
+the registry (`<corpus>/consumers.json`), the spec, `corpus.json`, `cases.tfv`,
+the registry's `evidence_manifest`, the labels sidecar
+`<package_root>/evidence/domain-labels.json`, the registry's `binding` file and
+each `build_files` entry. Every read is bounded before it happens: registry,
+manifest and sidecar 16 MiB (`MAX_MANIFEST_BYTES`), spec 4 MiB, corpus and TFV
+32 MiB (the WD-004a caps), binding 1 MiB, a BUILD file 256 KiB. A file that
+grows between the size check and the read is still cut at the cap and refused.
+
+**Path safety.** The registry's paths are already lexically normalised
+(section 8). Opening adds three rules. (1) The path is joined to the supplied
+repository root and checked by the lexical containment rule of the lane runners
+(both paths absolute, `.`/`..` normalised, every component of the root a leading
+component of the child, whole components never string prefixes; the `win32`
+flavour is case-insensitive, accepts `/` and `\`, never calls two drives or UNC
+shares contained, and treats a device path `\\?\` or `\\.\` as never inside;
+a POSIX path that starts with exactly two slashes is never inside; the host's
+flavour is used in production, both are tested). (2) Every component beneath
+the root is examined with `symlink_metadata` and a symbolic link (or a Windows
+reparse point std reports as one) is refused: symlink safety is by refusal, not
+by resolving with `canonicalize`, which on Windows returns a `\\?\` device path
+that rule (1) would, correctly, never call inside. (3) The target must be a
+regular file. The repository root itself is trusted and may be reached through a
+symlink. A local attacker who can rewrite the worktree concurrently can still
+race the check; the loader defends against a hostile checkout, not a hostile
+co-tenant process.
+
+**Strict JSON.** The manifest, registry and sidecar are parsed by the WD-004a
+parser (UTF-8, canonical integers only, duplicate keys and excess depth
+rejected, closed key sets). The sidecar adds its own closed schema
+(`warrant-lane-domain-labels-v1`).
+
+**Raw digest checks (the whole list).** Each is a SHA-256 of the exact bytes
+read, compared with a recorded value:
+
+| Check | Compared |
+|---|---|
+| `spec_sha256` | spec file, and the corpus's recorded spec digest |
+| `corpus_sha256`, `cases_sha256` | `corpus.json`, `cases.tfv` |
+| `binding_sha256` | the registry's `binding` file, raw bytes |
+| labels binding | the sidecar's `manifest_sha256` against the digest below |
+
+*Labels digest.* The digest is the SHA-256 of the canonical rendering
+(object keys by code point, two-space indent, `: ` after a key, LF line
+endings with one final LF, every character outside U+0020..U+007E escaped as
+lowercase `\uXXXX`, integers in plain decimal) of the manifest with
+`toolchain.version` replaced by the empty string. `toolchain.name` is read from
+the manifest, never a literal, so a different name is a different digest and a
+different version is the same digest. The loader also re-derives every suite's
+label from its binder domain descriptors (`bool`, `u8_all`, `Bytes<0>`,
+`Bytes<1>` are `full`; `u64_edge`, `bytes_d1`, `nat_0_64` and `bytes_n(N>=2)`
+are `bounded-set`; a suite is as weak as its weakest binder) and requires the
+sidecar's suite ids, domains and case counts to equal the manifest's
+exhaustive rows and `cases_by_label` to be their sum. The report quotes
+`cases_by_label`, never the manifest's "exhaustive" total (LP-012).
+
+**Source digests (WD-004b2).** `source_sha256` and `runner.src_sha256` are
+recomputed from the files on disk and compared with the manifest; they are no
+longer only format-checked. The framing is the one `warrant-src-v1` of section
+8.1, called through `test_bootstrap::manifest::frame_sources`; the loader never
+re-implements it. The *source root* is the registry's `package_root` joined with
+the binding file's single `source` line (`.` is the package root itself); the
+*runner root* is fixed per lane, because the registry does not carry one:
+
+| Lane | Source files (any depth) | Directories skipped | Runner root | Runner files |
+|---|---|---|---|---|
+| `python` | `*.py`, `*.pyi`, `py.typed` | `__pycache__` | `code/packages/python/warrant-corpus/src/coding_adventures_warrant_corpus` | same rule, any depth |
+| `typescript` | `*.ts` except `*.test.ts` | `dist`, `node_modules` | `code/packages/typescript/warrant-corpus/src` | same rule, any depth |
+| `go` | `*.go` except `*_test.go` | `vendor`, `testdata`, names starting `.` or `_` | `code/packages/go/warrant-corpus` | same rule, top directory only (the runner embeds that directory's `*.go`) |
+
+These are the rules the three runners apply (sections 5.1 to 5.3, 8.1). A lane
+with no rule here cannot be loaded (`source-tree`).
+
+*The walk cannot be steered by the tree.* The root is reached by the path rules
+above (validated, lexically contained, every component below the repository root
+examined with `symlink_metadata`, final component a directory). Every entry of
+every directory the walk lists is then examined with `symlink_metadata`
+**before** its name is considered: a symbolic link or Windows reparse point is an
+error even where the lane's rule would skip it (a link named `notes.txt`, or
+`__pycache__`, fails, as it does in the runners). A skipped directory is not
+descended into, so what it holds is not examined, exactly as in the runners. A name must be UTF-8. A selected file's absolute path
+must pass the lexical containment rule in the host flavour, which on Windows
+also refuses reserved device names and trailing dots or spaces. Entries that are
+neither a regular file nor a directory (FIFOs, sockets, devices) are skipped
+without being opened, as the runners skip them; a skipped entry is never
+opened, so it cannot block the load. Depth is at most 32, one file at most
+8 MiB (the runners' limits), and the loader adds two of its own: at most 4096
+selected files and 64 MiB in total. Files are read with the same bounded
+`take(cap + 1)` read as every other artifact. Failure to walk is `source-tree`;
+a digest that differs from the manifest is `stale-source` (`source_sha256`) or
+`stale-runner` (`runner.src_sha256`).
+
+*Nothing in the root may escape the rule (fail closed).* The digest covers only
+the files the rule selects, so the walk also refuses a root that holds anything
+the rule does not cover. Any regular file that is neither selected nor in the
+ignore set is `uncovered-source`, naming the file. Extensions are matched
+exactly, so `EVIL.PY`, `lib.JS` and `Evil.GO` are uncovered, not digested (the
+runners would not digest them either); a `.so`, `.node`, `.s`, `.syso`, `.c` or
+`.json` file is uncovered. The ignore set is exactly this, names compared
+case-insensitively: `README`, `README.md`, `CHANGELOG.md`, `LICENSE`,
+`LICENSE.md`, `.DS_Store`, `.gitkeep`; TypeScript `*.test.ts`; Go `*_test.go` and,
+directly in the root only, `go.mod`, `BUILD`, `BUILD_windows`,
+`required_capabilities.json`, `evidence.bindings`, plus the root directories
+`evidence` and `CHANGELOG.d`. Three further rules close ways a directory can
+replace what the digest covers:
+
+* **Bytecode: the Python lane runs under a private cache, and says so.**
+  Python runs a cached `__pycache__/*.pyc` instead of its source. A hash-based
+  pyc (PEP 552 flags nonzero) is never revalidated and a timestamp pyc can be
+  forged to carry the source's mtime and size, so no inspection of a pyc is
+  sound, and refusing every pyc would make the result depend on whether any
+  Python ran in the checkout before the check. What is sound is never consulting
+  the tree's caches: with `sys.pycache_prefix` set, CPython reads and writes
+  bytecode only under that directory. So (1) the Python lane's entry script
+  (`tests/warrant_evidence.py`, `isolate_bytecode_cache`) creates a fresh private
+  directory (`mkdtemp`: under the temporary directory, owned by the user, mode
+  0700, empty), re-runs itself with `PYTHONPYCACHEPREFIX` and
+  `WARRANT_PYCACHE_PRIVATE` naming it, and removes it afterwards, all before
+  anything from the checkout is imported; sabotage children inherit it. The
+  entry first removes its own directory from `sys.path` (before any import that
+  is not built in or already loaded) and runs the child, and the runner's
+  sabotage children, with `python -P`, so no file beside the entry (a planted
+  `shutil.py`, `shutil.cpython-*.so`, `.abi3.so` or `.pyd`) or in the working
+  directory can be imported before isolation or instead of the standard
+  library. (2) The
+  runner's `run`, `check` and `sabotage` refuse to start with the named error
+  `pycache-isolation` unless `sys.pycache_prefix` is set to exactly that
+  directory, a plain directory under the temporary directory, owned by the user
+  and not group or world accessible. (3) The manifest records
+  `"pycache_isolated": true`. It is a Python-lane field: required, and only
+  `true`, in a Python manifest, and refused in any other lane's (`manifest`).
+  (4) Only a manifest that records it lets the loader ignore `__pycache__` in the
+  source and runner roots; any other lane's `__pycache__` is walked like every
+  directory (an empty one is fine, a file in it is uncovered). Freshness of the
+  directory is by construction (only the child ever receives its name), not by
+  inspecting its contents at the child's start, which the interpreter has
+  already written to. The order of earlier jobs in the same checkout therefore
+  cannot change the verdict.
+* **`vendor`, `node_modules` and `dist` are refused, not skipped.** A Go
+  `vendor/` or a TypeScript `node_modules/` or `dist/` directory anywhere in the
+  source or runner root is `uncovered-source`; none exists today.
+* **The Go module files are pinned, not digested.** `go.mod` sets which
+  directory the runner module is built from (`replace`), so it is checked exactly
+  (`go-mod`): the package's `go.mod` may hold only `module
+  github.com/adhithyan15/coding-adventures/<package_root>`, a `go <major.minor>`
+  line, `require <runner module> v0.0.0` and `replace <runner module> =>
+  ../warrant-corpus`; the runner's own `go.mod` only its `module` and `go` lines.
+  Any other directive, block form, module path or replace target fails. A `go.sum`
+  is not in the ignore set (it would mean external dependencies nothing covers),
+  and a `go.mod` anywhere but the root is uncovered.
+* **A Go workspace file is refused.** `go.work` and `go.work.sum` (any entry of
+  that name) in the package root, the runner root or any directory above either,
+  up to the repository root, fail with `go-mod`: a workspace `replace` overrides
+  the pinned `go.mod` files. The Go lane's BUILD lines also run `go` with
+  `GOWORK=off`.
+* **Sourceless bytecode is refused in a Python package.** Any `*.pyc` or `*.pyo`
+  under the package root outside a `__pycache__` directory (so `tests/` too) is
+  `uncovered-source`; the package-root `.venv`, recreated by every build, is not
+  scanned. The same scan covers the runner's own package
+  (`code/packages/python/warrant-corpus`, whole), because its `tests/` lies
+  outside the digested runner root.
+
+Directories the lane rule skips (Go `testdata` and names starting `.` or `_`)
+are not examined. These are the **residuals**, and they are printed with every
+readiness result and carried in the report's `unclaimed` list rather than left
+to prose: `go.mod go directive version` (the one value of `go.mod` that is only
+format-checked) and `contents of directories the Go tool ignores`.
+
+What this establishes: the manifest's two digests describe the trees as they are
+now, so editing a production source file or the runner without regenerating the
+manifest fails the load. What it does not: that the manifest was *produced* by
+running that source (build execution stays unclaimed), or that the toolchain is
+genuine. `toolchain.version` is never evidence.
+
+**Registry join.** A package is loadable only if the registry has exactly one
+row for it and that row is `active`. `status: "active"` now means exactly
+this: the binding, runner entry, evidence manifest and build files named by
+the row exist, open safely, and pass the checks of this section. It does not
+say the runner ran or the toolchain is genuine.
+`planned` rows (none today) still cannot authorize a lane result. The
+checked-in registry lists `go/ct-compare`, `python/ct-compare` and
+`typescript/ct-compare`, all `active`, `active_consumer_count` 3.
+
+**Static readiness checks (the whole list: ten).** A successful load carries the
+names of the checks that passed; any failure is an error, never a partial
+result.
+
+| Name | Check |
+|---|---|
+| `paths-contained` | every registered path opened under the rules above |
+| `registry-active` | exactly one `active` row for the package, manifest identity equal to it |
+| `corpus-digests` | spec, corpus and TFV raw digests |
+| `corpus-join` | the WD-004a join: ids, counts, stream digests, controls |
+| `binding-digest` | `binding_sha256` against the binding file |
+| `runner-identity` | `runner.name` is `warrant-corpus` and `runner.lane` is the lane |
+| `labels-bound` | sidecar identity, labels digest, descriptor labels, join |
+| `build-routing` | each build file is text that names `evidence/test-manifest.json` and `sabotage` |
+| `source-fresh` | `source_sha256` equals the recomputed digest of the source root, and the root holds nothing the rule leaves uncovered (with the Go module pins) |
+| `runner-source-fresh` | `runner.src_sha256` equals the recomputed digest of the runner root |
+
+`build-routing` is a text search. It shows the routing was written; it does not
+show the BUILD ran or passed. Readiness output always ends with the unclaimed
+list: toolchain authenticity, build execution, the sandbox and the two Go residuals of section 8.2 (five entries). The sandbox is `absent` (not armed, section 12) in every lane
+today, so `release_ready` is `false` and no readiness result can be read as
+release-ready. The loader makes no authenticity claim about the source, the
+build or the toolchain beyond the named checks above.
+
+### 8.3 Lane rungs in the package report, `--check-lane`, `--require-active` (WD-004b2)
+
+**Isolation.** The lane rungs are derived from the consumer registry and the lane
+loader of section 8.2 and from nothing else. They never read or write the Rust
+proof manifest, the effect certificate, the weakness matrix, the claims, the
+rungs E0 to E5 or the verdict of the report that carries them, and Rust
+evidence never feeds a lane: a Rust proof or effect attestation proves nothing
+about a Python, TypeScript or Go implementation, and a lane's `live` rung proves
+nothing about the Rust one. The verdict of a Rust package report is unchanged by
+its lane rungs.
+
+**The `lanes` field.** A Rust package's `assurance_report.json` carries a required
+top-level `lanes` array (a report without it is refused: stripping it would hide
+a lane). One entry per lane that the consumer registry lists, sorted by lane (for
+the checked-in registry: `go`, `python`, `typescript`). A package `rust/<name>`
+is matched with the registry row `<lane>/<name>`. Each entry has exactly these
+fields:
+
+| Field | Meaning |
+|---|---|
+| `lane` | the lane name |
+| `package` | `<lane>/<name>`, present even when absent (the package that would carry it) |
+| `rung` | `live`, `planned` or `absent` |
+| `checks` | the passed check names of section 8.2, in order, exactly the ten of the table when `live`; `[]` otherwise |
+| `cases_by_label` | the sidecar's per-label case counts when `live`; `{}` otherwise (the report quotes these, never the manifest's `exhaustive` total, LP-012) |
+| `unclaimed` | the unclaimed list of section 8.2 when `live`; `[]` otherwise |
+| `release_ready` | always `false` |
+| `sandbox` | always `absent` |
+
+`live` means the registry has an `active` row for `<lane>/<name>` and
+`load_lane` passed every named check; no other state is `live`. `planned` means
+the row exists and is `planned`. `absent` means the registry has no row for that
+package in that lane, which is the honest answer for every package but
+`ct-compare` today. An `active` row whose load fails is **not** a rung: the
+report cannot be generated and `--check` fails, with the loader's error code,
+because `active` is a promise that the lane loads. A registry file that does not
+exist at all means the lane universe is unknown and `lanes` is `[]`; a registry
+that exists but is unreadable, a link or malformed is an error.
+
+The sandbox rung is `absent` in every entry, live or not, and `release_ready`
+is `false`: no lane arms a runtime jail yet (section 12, CAP-RT-1xx), and
+no readiness result is release-ready without it. It is never reported as passing.
+The loader's own `sandbox` field (section 8.2) uses the same word.
+
+**Checking.** Two layers, both in `--check`. The offline shape check
+(`verify_assurance_report`) requires a sorted, unique lane list; `package` equal
+to `<lane>/<name>` of the report's package; a known `rung`; for `live` the ten
+check names in order, the unclaimed list of section 8.2 and known labels only; for
+every other rung empty `checks`, `cases_by_label` and `unclaimed`; and
+`release_ready` false and `sandbox` `absent` always. The re-derivation
+(`verify_evidence`) loads the lanes again from the repository and holds the report
+to them: a different lane set or package id is `LaneMismatch` (VER04i 9 check
+17), a stronger claim than the loader supports (a `live` rung for a lane that is
+`planned` or `absent`, `release_ready` true, a `sandbox` other than `absent`, more
+cases under a label than the sidecar says) is `LabelOverclaim` (check 24), and
+any other difference is `StaleEvidence` (regenerate). The source freshness of
+check 23 is the `source-fresh` and `runner-source-fresh` checks of section 8.2.
+
+**CLI.**
+
+```
+ca-assurance-report-rs --check-lane <lane>/<name> [--repo-root <DIR>] [--require-active]
+```
+
+`--repo-root` defaults to `.`. The command loads the lane with `load_lane` and
+prints `render_readiness`, preceded by the absolute `repo root:` it checked. Exit 0 when the lane loaded. When the registry has no
+row, or a `planned` row, for the package: without `--require-active` it prints
+`ABSENT` or `PLANNED` and the reason and exits 0 (an honest report, not a gate);
+with `--require-active` it exits 1. An `active` row that fails to load exits 1
+with the loader's code, with or without the flag. `--require-active` without
+`--check-lane` is a usage error (exit 2). The three lanes' `ct-compare` `BUILD`
+and `BUILD_windows` run it with `--require-active` as their last line, so a lane
+edit re-runs the loader check and a lane that stops loading fails its own build:
+
+```
+cargo run --quiet --manifest-path ../../rust/ca-assurance-report/Cargo.toml -- --check-lane <lane>/ct-compare --repo-root ../../../.. --require-active
+```
+
+**Still open after WD-004b2.** The check-to-open window of section 8.2 (a process
+that can rewrite the tree while a load runs can still race it; documented, not
+closed). Junction and reparse-point tests on a Windows runner (the code refuses
+reparse points; no Windows test exercises one). The sandbox (CAP-RT-1xx): every
+rung says `absent`. Authenticity of the source, build and toolchain, and build
+execution. A change to the loader itself does not re-run the lane `BUILD`s, and a
+lane edit does not re-run `rust/ct-compare`'s `--check`, so the committed
+`rust/ct-compare` report records the lane state at its last regeneration; the
+lane `BUILD`s are the gate for the lanes.
 
 ## 9. Report generation and fail-closed checking per lane
 
@@ -1007,7 +1501,9 @@ where they make sense; ids are never accepted from a different lane):
 23. **Source freshness.** `source_sha256` equals the recomputed
     `warrant-src-v1` digest of the lane source tree (§8.1); editing a source
     file without rerunning makes `--check` fail, as `src/capabilities.rs` does
-    for Rust.
+    for Rust. Implemented by WD-004b2 as the `source-fresh` and
+    `runner-source-fresh` readiness checks (§8.2); the report carries the result
+    as the lane rung (§8.3).
 24. **Labels are lane-honest.** In a lane whose proof layer is not live every
     `proof.label` is `unchecked`, property/fuzz are `not-run` until layer B's
     gates are green, and `--check` fails a report that states anything
@@ -1023,6 +1519,174 @@ where they make sense; ids are never accepted from a different lane):
 Each check has a falsification test in `tests/test_evidence_lane.rs` (copy a
 manifest, change one field, expect the named error), following VER04h's
 practice.
+
+### 9.1 The runner conformance fixture (`warrant-corpus-conformance-v1`) -- WD-100 amendment
+
+Every lane's `warrant-corpus` runner reads an untrusted corpus, writes a canonical
+manifest and refuses paths outside the repository. The first two lanes each
+re-discovered the same bugs in review: duplicate keys accepted, integers above 2^53
+rounded, unpaired surrogate escapes accepted, a `__proto__` key dropped, a Windows
+cross-drive path accepted (`path.relative` returns an *absolute* path), a toolchain
+name hard-coded into a digest, and canonical output that differed between runtimes.
+§9.1 pins those behaviours **once, as data**, so a lane proves them by running cases
+instead of by surviving review. The fixture is
+`code/specs/fixtures/warrant-corpus-conformance-v1/`; the independent stdlib-only
+checker is `code/scripts/warrant_corpus_conformance.py`.
+
+**Layout.** `index.json` lists the case files, their case counts and their SHA-256;
+each category is one JSON file of the shape
+`{"schema": "warrant-corpus-conformance-v1", "category": C, "cases": [...]}`. A
+`.gitattributes` with `* -text` keeps every byte exact on a Windows checkout (no
+CRLF conversion). Case ids are `<category>/<slug>`, unique across the fixture. Input
+*bytes* are never stored as JSON strings (a JSON string cannot hold invalid UTF-8, a
+lone surrogate or a BOM); they are lowercase hex in `input_hex`. A lane's test counts
+its cases per category and compares the counts with `index.json`, so a case added
+later cannot be silently skipped. A lane that cannot run a category (no path
+flavour, say) states so in its README; it never omits one silently.
+
+| Category | Case fields | The lane runs | Expected outcome |
+|---|---|---|---|
+| `json` | `input_hex` | its corpus reader on the bytes, then its canonical renderer on the result | `{"outcome":"accept","canonical_sha256":H[,"canonical":T]}` (`H` is the SHA-256 of the UTF-8 rendering; `T`, when present, is the rendering itself, present when it is at most 2,048 bytes) or `{"outcome":"reject","error":"malformed-json","reason":R}` |
+| `tagged` | `type`, `errors` (type name to variant names, optional), `input_hex` | reader, then the tagged-value decoder of §2.7, then the `warrant-stream-v1` encoder of §2.6 | `{"outcome":"accept","stream_hex":X}` or `{"outcome":"reject","error":"value"}` (or `"malformed-json"` when the bytes are not acceptable JSON) |
+| `containment` | `flavor` (`"posix"` or `"win32"`), `root`, `child` | the lane's own containment helper, using that flavour's path rules, on the two paths *as text* | `{"inside":B,"same":S}`: `S` means the child is the root itself (so `inside` is also true) |
+| `label-digest` | `manifest` (a JSON object), `sha256`, and optionally `same_as` or `differs_from` (another case id) | the lane's manifest digest function (§8, coverage labels) | the digest equals `sha256`; the `same_as` / `differs_from` relation holds between the two digests |
+
+`reason` is informational (the lane need not distinguish them) and comes from a
+closed set: `empty`, `syntax`, `literal`, `utf8`, `bom`, `trailing-data`,
+`control-char`, `bad-escape`, `duplicate-key`, `unpaired-surrogate`, `number-form`,
+`unsafe-integer`, `depth`. The *error class* is what a lane must match, and it is
+the lane's existing machine-readable code (`malformed-json`, `value`, and
+`unsupported-type` for a type outside the closed `warrant-corpus-v1` profile: in v1
+that includes `List<T>` and `Option<T>`, which §2.7 maps but no corpus uses, so a
+lane refuses them rather than half-supporting them). An integer of any length is
+read without a conversion that can itself fail (a 5,000-digit integer is
+`unsafe-integer`, never an uncaught exception).
+
+**Reader profile (what "strict JSON" means to every lane).**
+
+1. The input is UTF-8, decoded strictly: an overlong encoding, an encoded surrogate
+   (`ED A0..BF xx`), a code point above U+10FFFF, a stray continuation byte or a
+   truncated sequence is `malformed-json`. A leading BOM (U+FEFF, `EF BB BF`) is
+   rejected as data before the document (a BOM *inside* a string is just a
+   character).
+2. Whitespace is exactly space, tab, LF and CR. One value, then optional
+   whitespace, then end of input; anything else after the value (including a second
+   value or a NUL) is `trailing-data`. No comments, trailing commas, single quotes or
+   unquoted keys; `NaN`, `Infinity` and a literal with the wrong case are errors.
+3. A number is an **integer** in the safe range `-(2^53 - 1) ..= 2^53 - 1`.
+   A fraction, an exponent (even `1e2`), `-0`, a leading zero or `+`, and any value
+   outside the safe range are `malformed-json`; a lane must not round, wrap or
+   promote. (`U64`/`Nat` values are tagged decimal *text*, §2.7, and never use
+   this path.)
+4. A string contains no raw control character (`U+0000..U+001F`; DEL `U+007F` is
+   allowed raw). The escapes are exactly `\" \\ \/ \b \f \n \r \t \uXXXX`
+   (hex digits of either case). A `\u` high surrogate must be followed
+   *immediately* by a `\u` low surrogate (together they are one astral character);
+   any other surrogate escape, in a key or a value, is `malformed-json`.
+5. **Duplicate keys are an error, compared after unescaping**: `{"a":1,"a":2}`
+   is a duplicate. This holds at every depth.
+6. A document may contain at most **256 nested containers**; the 257th is
+   `malformed-json`. Scalars do not count.
+7. Every key is data. `__proto__`, `constructor`, `toString`, `hasOwnProperty` and
+   an integer-like key such as `"10"` survive parse and render unchanged; a lane
+   whose object type has special keys builds objects without them (a null-prototype
+   object, a `Map`).
+
+**Canonical writer profile.** The rendering of a value is: object keys sorted by
+**Unicode code point** (equivalently UTF-8 byte order; *not* UTF-16 code-unit order,
+which differs for U+E000..U+FFFF against astral keys, and *not* the insertion order
+a runtime may impose on integer-like keys); two-space indent; `,` then LF between
+members and `: ` after a key; an empty container is `[]` or `{}`; LF line endings and
+one final LF; integers in plain decimal; every character outside `U+0020..U+007E`
+escaped as `\uXXXX` with **lowercase** hex (so every control character, DEL U+007F included, is `\u007f`-style and never raw; the spec was silent on DEL before WD-100 and Python's `ensure_ascii` already escaped it; an astral
+character is a lowercase surrogate pair), and `"` and `\` escaped as `\"` and `\\`,
+and `\b \f \n \r \t` written in short form, `/` never escaped.
+
+**Containment profile.** A containment check is a security boundary and is
+**lexical**: both inputs are absolute, the lane normalises `.` and `..` (a `..` at the
+root stays at the root), and the verdict is "every component of `root` is a leading
+component of `child`". Two paths on different Windows drives, or UNC shares, have no
+common root: never inside, whatever the runtime's `relative()` returns (it returns an
+*absolute* path across drives, so "no leading `..`" is not proof of containment). A
+component named `..foo` is an ordinary name, so `/r/..foo` is inside `/r` while
+`/r/..` is not, and `/rr` is not inside `/r` (compare whole components, never string
+prefixes). `win32` compares case-insensitively, accepts `/` and `\` as separators and
+treats a device-namespace path (`\\?\` or `\\.\`) as never inside anything (and nothing is inside it);
+`posix` is case-sensitive and `\` is an ordinary character. Separators are
+normalised **before** any prefix rule (`\/?\D:\r`, `/\?/D:/r` and `\\?/D:\r` are
+device paths too), and `\\?\UNC\server\share` is a device path, not a UNC one.
+A POSIX path that begins with **exactly two** slashes (`//x`) is
+implementation-defined by POSIX, so the conservative rule applies: like a device
+path it is never inside anything and nothing is inside it; three or more leading
+slashes collapse to one, as POSIX says, and `//` inside a path is an ordinary
+separator. Production code applies the rules of the **host** flavour (`win32` on
+Windows, `posix` elsewhere) through the same helper the fixture drives: a helper
+whose default skips the device rule tests something production never calls. Symlinks are out of
+scope for the cases: resolving them (`realpath`) is the caller's job and must happen
+*before* this check; a lane that skips it must say so.
+
+**Two cross-lane path rules (implemented 2026-11-16, backlog `WD-100b`).** A review
+of the conformance kit found two places where the lanes disagreed with the Rust
+loader (PR #19492) or with each other. Both rules below are pinned in
+`warrant-corpus-conformance-v1` as 64 added containment cases (77 to 141; the
+fixture is 461 cases; no existing expectation changed) and are applied by the Python,
+TypeScript and Go lanes and by the Rust loader's `lexical_containment`; the checker's
+reference and its string-level second opinion derive them independently.
+
+1. **Windows reserved device names are refused.** A path component is *refused*
+   if any of these holds (security review of WD-100b widened the first draft, which
+   missed real device paths):
+   (a) it contains a colon (`CON:`, `CON:stream`, `nul::$DATA`, `file.txt:NUL`:
+   an alternate data stream or device suffix);
+   (b) it ends in a dot or a space (`name.`, `name `), because Windows silently
+   strips them and two spellings would name one file;
+   (c) its *stem* is reserved. The stem is the part before the **first** `.`, with
+   trailing spaces then removed (so `CON.txt`, `nul.tar.gz` and `CON .txt` are
+   reserved). The reserved set is `CON`, `PRN`, `AUX`, `NUL`, `COM1` to `COM9`,
+   `LPT1` to `LPT9`, `CONIN$`, `CONOUT$`, and the superscript forms `COM` or `LPT`
+   followed by U+00B9, U+00B2 or U+00B3 (Windows treats them as devices), compared
+   with ASCII case-insensitivity: only `A` to `Z` fold, so the superscripts match
+   exactly. `CLOCK$` (removed from current Windows) and fullwidth `ＣＯＮ` (not a
+   device: Windows does not fold it) stay ordinary names, as do `CONsole`, `COM10`
+   and `LPT0`.
+   A path containing a
+   refused component is **refused** by the lane's
+   artifact-path acceptance on **every host flavour** (an artifact written on Linux
+   must load on Windows) and, under `win32`, a containment query with such a
+   component in `child` answers `inside: false`. As implemented: the check
+   (win32 children only; a colon is ordinary in `posix`: `a.b:c` is inside)
+   runs on the **child's** components after `.` and `..` are normalised (so
+   `D:\repo\CON\..\x` is `D:\repo\x`), never on the anchor (drive or share)
+   and never on `root`; `posix` containment has no such rule (`/repo/NUL` is
+   inside `/repo`), because the refusal for a path that will be *written* is the
+   artifact-path acceptance's job. The three lanes expose the containment helper
+   only, so the every-host artifact-path acceptance is applied today by the Rust
+   registry-path validator (`validate_repo_path`); a lane that adds an artifact
+   loader must refuse the same names on every host.
+2. **`win32` case-insensitive comparison folds ASCII only.** Under `win32` two
+   components are equal if they are equal after mapping `A` to `Z` onto `a` to `z`
+   and **nothing else**: every non-ASCII code point is compared exactly, so
+   `ſ` (U+017F), the Kelvin sign (U+212A), `İ` (U+0130) and `Σ`/`σ`/`ς` never match an ASCII
+   letter or each other by case. This fails closed: a path that differs from the
+   root only by a non-ASCII case variant is **not inside** it. Go (`strings.EqualFold`
+   with its Unicode simple folding) and Python (`casefold`/`lower`) differ today
+   on exactly those characters, so the rule is a defined behaviour in place of two
+   different accidents. The comparison also covers the drive letter and the UNC
+   server and share. Node's `path.win32.relative` and the Rust `to_lowercase`
+   fold Unicode too, so all four implementations replaced their library
+   comparison with an explicit ASCII fold.
+
+**Label digest.** The `domain-labels.json` digest is the SHA-256 of the canonical
+rendering of the manifest with `toolchain.version` replaced by the empty string.
+`toolchain.name` stays in the digest, read from the manifest and never a literal
+(`"python"`, `"node"`): a different name is a different digest, a different version
+is the same digest.
+
+**Not in v1.** The TFV parser, the model IR evaluator and the deliberately wrong
+subject result of §2.5 are not in this fixture; each lane covers them with its
+falsification tests until a later category lands (case files are only *added* to
+`-v1`; changing an expectation means `-v2`). The Go lane (WD-103) merged before the
+fixture existed and now passes it.
 
 ## 10. Layer C: proofs per lane (not-live)
 
@@ -1116,8 +1780,8 @@ this is the expectation each lane's rollout row must meet):
 | haskell, ocaml, swift, dart | OS sandbox around the toolchain-produced binary / VM |
 
 Because VER08b is not on `main`, a lane's `release-ready` status in §13 is
-conditioned on it: before VER08b lands, `sandbox` is `not-armed` and the
-report says so; no lane can be `release-ready` with `sandbox: not-armed`.
+conditioned on it: before VER08b lands, `sandbox` is `absent` (not armed) and the
+report says so; no lane can be `release-ready` with `sandbox: absent`.
 
 ## 13. Rollout order and acceptance per lane
 
@@ -1275,8 +1939,77 @@ dependency graph.
   corpus is read by a strict JSON parser that rejects duplicate keys and any
   non-safe-integer number. (4) The failure-id set, work bounds, CLI and
   manifest of §6.2 and §8 are unchanged. (5) Still open: the
-  `warrant-corpus-conformance-v1` fixture; the registry row for
-  `typescript/ct-compare` (the checked-in registry lists only
-  `python/ct-compare`, and the TypeScript BUILD therefore validates the
-  manifest without `--registry`); the VER08b sandbox run (CAP-RT-1xx,
-  TypeScript/Node).
+  `warrant-corpus-conformance-v1` fixture; the VER08b sandbox run
+  (CAP-RT-1xx, TypeScript/Node). The registry row for `typescript/ct-compare`
+  and the BUILD `--registry` flag were open here and are done in WD-004b1.
+* **WD-100 (shared runner conformance fixture).** §9.1 pins the reader profile,
+  the canonical writer, the containment profile and the label digest, and the
+  fixture `warrant-corpus-conformance-v1` (with its independent checker) now
+  exists. It closes the "fixture does not exist" gaps of WD-101 item 7 and
+  WD-102 item 5. Spec changes it forced: the reader rejects every fraction and
+  exponent for all lanes, not only TypeScript; the nesting limit is 256
+  containers for all lanes (Python had none); canonical keys sort by code point
+  and DEL is escaped (the TypeScript renderer used UTF-16 order and left DEL raw);
+  Python now rejects unpaired surrogate escapes. The Go lane (WD-103, merged in
+  #19484) adopts the fixture in a follow-up: DEL as `\u007f`, a posix path with
+  exactly two leading slashes refused, and the 256-container nesting limit.
+* **WD-103 (Go lane) amendments.** (1) The Go binding is the same
+  `evidence.bindings` line file with Go representations (`Bool=bool`,
+  `Bytes=[]byte`, `U64=uint64`, `Nat=uint64`, `U8=uint8`), a Go import path as
+  `import` and a directory as `source` (§5.3). (2) Because Go cannot load a
+  package at run time, the entry program passes a compiled registry of adapters;
+  `Impl` is verified by symbol name and source file, so the binding still
+  describes the code that ran. (3) Errors map by sentinel **identity**, not by
+  class or message, which is stricter than §5.1 and §5.2; a panic that escapes
+  an adapter is `unexpected-error`. (4) Result checks are exact; a `fresh`
+  op is checked by mutating the result and each argument (§5.3). (5) The corpus
+  is read by a strict JSON reader that also rejects invalid UTF-8 and unpaired
+  surrogate escapes; the repository, corpus, binding and package paths are
+  contained with a cross-drive-safe check whose `Rel` error is a refusal. (6) The
+  failure-id set, work bounds, CLI and manifest of §6.2 and §8 are unchanged; the
+  Go lane's case count equals the other lanes' (572,109). (7) Still open: the
+  `warrant-corpus-conformance-v1` fixture; the VER08b sandbox run
+  (CAP-RT-1xx, Go: OS sandbox around the test binary). The registry row for
+  `go/ct-compare` and the BUILD `--registry` flag were open here and are done
+  in WD-004b1.
+* **WD-004b1 (lane loader) amendments.** (1) Section 8.2 is new: bounded,
+  contained, symlink-refusing reads of the registry, spec, corpus, TFV,
+  manifest, labels sidecar, binding file and build files; the raw digest list;
+  the labels digest (canonical rendering with `toolchain.version` blanked);
+  the named static readiness checks; the unclaimed list. (2) The registry
+  rows for `go/ct-compare`, `python/ct-compare` and `typescript/ct-compare` are
+  `active`, which means only what section 8.2 says. (3) `runner.src_sha256`
+  and `source_sha256` are format-checked and recorded but not recomputed:
+  the registry has no runner root and the per-lane source rules are
+  section 8.1's, so the freshness check (section 9, check 23) stays with
+  WD-004b2. (4) The Python, TypeScript and Go runners' own tests no longer
+  pin the checked-in registry to `planned` or to a single Python row; they
+  build the planned and unregistered cases from synthetic registries; the
+  TypeScript and Go BUILD lines now pass `--registry`. (5) Security-review
+  hardening: the sidecar is read with the manifest's strict integer-token
+  rules, its case sums are overflow-checked, and registry paths refuse Windows
+  reserved device names and trailing dots. (6) Still open: report and CLI
+  integration, absent rungs, the sandbox, the check-to-open race (documented in
+  section 8.2), BUILD lines passing `--require-active`, and junction or
+  reparse-point tests on a Windows runner (all WD-004b2).
+* **WD-004b2 (lane rungs, CLI) amendments.** (1) Section 8.2: `source_sha256`
+  and `runner.src_sha256` are recomputed (per-lane rules, a contained,
+  link-refusing walk with the loader's own file and byte bounds), so the readiness
+  list is ten checks (`source-fresh`, `runner-source-fresh` added) and the
+  unclaimed list is five (source freshness and the runner source digest are
+  removed; two Go residuals added). The walk refuses uncovered files, any
+  `vendor`, `node_modules` and `dist`, pins the Go `go.mod` files exactly,
+  refuses a `go.work` above the Go lane, and refuses stray `*.pyc` and `*.pyo`
+  in a Python package.
+  The Python lane runs under a private bytecode cache (`sys.pycache_prefix`) and
+  its manifest records `pycache_isolated: true`, the only lane-specific manifest
+  field; only then is `__pycache__` ignored. New load codes `source-tree`, `uncovered-source`,
+  `go-mod`, `stale-source`, `stale-runner`.
+  (2) Section 8.3 is new: the report's required `lanes` array (a rung per
+  registry lane: `live`, `planned`, `absent`; `release_ready` false and `sandbox`
+  `absent` always), `LaneMismatch` and `LabelOverclaim` report checks, isolation
+  from the Rust proof and effect evidence, and the `--check-lane` and
+  `--require-active` CLI. (3) Every Rust package's `assurance_report.json` gains
+  the `lanes` field; no other field changes. (4) Still open: the check-to-open
+  race, junction and reparse-point tests on a Windows runner, and the sandbox
+  (CAP-RT-1xx).

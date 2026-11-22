@@ -12,13 +12,33 @@ path = "src/lib.rs"
 [dependencies]
 
 [dev-dependencies]
+coding_adventures_bounded_json = { path = "../bounded-json" }
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
 coding_adventures_sha256 = { path = "../sha256" }
 capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+coding_adventures_warrant_grammar = { path = "../warrant-grammar" }
+cdcl-sat = { path = "../cdcl-sat" }
+drat-check = { path = "../drat-check" }
 
 [[test]]
 name = "conformance"
 path = "tests/conformance.rs"
+
+[[test]]
+name = "hostile_inputs"
+path = "tests/hostile_inputs.rs"
+
+[[test]]
+name = "warrant_constructor"
+path = "tests/warrant_constructor.rs"
+
+[[test]]
+name = "warrant_validate_state"
+path = "tests/warrant_validate_state.rs"
+
+[[test]]
+name = "validate_state_sat"
+path = "tests/validate_state_sat.rs"
 
 [[test]]
 name = "microbenchmarks"

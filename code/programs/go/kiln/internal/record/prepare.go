@@ -147,6 +147,12 @@ type Options struct {
 	Tmpdir string
 	// Now is the clock; it defaults to time.Now.
 	Now func() time.Time
+	// SelfStartTicks reads prepare's own start time: field 22 of
+	// /proc/self/stat, in clock ticks since boot. Prepare calls it FIRST, before
+	// it starts any process, and seals the value as binding.prepared_ticks; it
+	// is what S3's start-time gate uses (D26). Now is audit only. It defaults to
+	// ReadSelfStartTicks, and prepare refuses to run when it fails or says < 1.
+	SelfStartTicks func() (int64, error)
 
 	// The seams. Each defaults to the real thing.
 	RunTool       Runner
@@ -157,6 +163,11 @@ type Options struct {
 	// the real strace. The report it returns is checked (CheckProbeReport)
 	// before it is sealed, whoever produced it.
 	Structure func(ProbeInput) (ProbeReport, error)
+	// ProbeRun replaces the runner of the toolchain probes (probe_toolchain.go),
+	// which by default starts each one in a plain sandbox. It exists so unit
+	// tests never start a sandbox. Unset does NOT mean legacy's host runner: an
+	// unset ProbeRun selects the sandboxed one.
+	ProbeRun legacy.ProbeRunner
 }
 
 // PrepareResult is what a successful Prepare reports.
@@ -174,9 +185,26 @@ type PrepareResult struct {
 }
 
 // Prepare runs the whole of `kiln record prepare`.
+//
+// The start time it seals is that of THIS process. A long-lived caller (a test
+// binary, say) therefore gets an earlier epoch than a fresh `kiln record
+// prepare`, which only widens S3: more processes count as new (fail closed).
 func Prepare(o Options) (*PrepareResult, error) {
 	if err := o.normalize(); err != nil {
 		return nil, err
+	}
+	// The boot-relative start of this process, read before ANYTHING else. Prepare
+	// starts sandboxes itself (the structure probe, the toolchain probes with
+	// argv a PR can edit and timeouts up to minutes), and a process one of those
+	// leaves behind must count as new for S3 in collect. Our own start is
+	// earlier than every process we spawn, by construction, so no ordering of
+	// the steps below can put a probe's leftover before this value (D26).
+	preparedTicks, err := o.SelfStartTicks()
+	if err != nil {
+		return nil, fmt.Errorf("prepare: this process's start time cannot be read: %w", err)
+	}
+	if preparedTicks < 1 || preparedTicks > recfmt.MaxClockTicks {
+		return nil, fmt.Errorf("prepare: this process's start time says %d ticks", preparedTicks)
 	}
 	getenv := o.Getenv
 	repo, run, attempt, err := githubIdentity(getenv)
@@ -355,8 +383,18 @@ func Prepare(o Options) (*PrepareResult, error) {
 	if err != nil {
 		return nil, err
 	}
+	// The toolchain probes run in a sandbox (probe_toolchain.go). The runner is
+	// ALWAYS set: legacy's probe with a nil runner executes on this host, which
+	// would give a PR's tool roots the runner. The prober exists now but is not
+	// armed until the sandbox configuration is, and until then it refuses.
+	prober := newToolchainProber(o.Dir, kiln.Path, safe.String())
+	runProbe := o.ProbeRun
+	if runProbe == nil {
+		runProbe = prober.Run
+	}
 	traced, err := legacy.NewTraced(graph, legacy.Options{
 		Source: src, Host: facts, OS: "linux", Arch: arch, Environ: facts.Environ(),
+		Probe: &legacy.ProbeOptions{Root: o.Root, Home: home, Run: runProbe, Timeout: ProbeTimeout, Total: ProbeTotalTimeout},
 	}, o.Root, legacy.RecordExecutorArgs)
 	if err != nil {
 		return nil, err
@@ -532,6 +570,48 @@ func Prepare(o Options) (*PrepareResult, error) {
 	if probes.Action != probeIn.Action {
 		return nil, fmt.Errorf("structure probe: it ran for %q, not for the first action %q", printable(probes.Action), printable(probeIn.Action))
 	}
+	// The gates and the toolchain probes (P7). The probes run on the FIRST call
+	// of Gate, in a sandbox on the probes' own configuration (armed here, after
+	// the sandbox configuration and the structure probes), so no probe has run
+	// before this point. A probe that disagrees gates its packages; a probe the
+	// recorder could not run at all fails `prepare` (prober.Err).
+	if len(actions) > 0 {
+		if o.ProbeRun == nil {
+			if err := prober.Arm(cfg); err != nil {
+				return nil, err
+			}
+		}
+		for i := range actions {
+			g, err := traced.Gate(actions[i].Action)
+			if err != nil {
+				return nil, fmt.Errorf("gate of %q: %w", printable(actions[i].Action), err)
+			}
+			if err := prober.Err(); err != nil {
+				return nil, err
+			}
+			actions[i].Gate = reasonText(g)
+		}
+		results, err := traced.Probes()
+		if err != nil {
+			return nil, fmt.Errorf("toolchain probes: %w", err)
+		}
+		if err := prober.Err(); err != nil {
+			return nil, err
+		}
+		// The toolchain probes' argv comes from a file a PR can edit. They run in
+		// a tmpdir of their own, but nothing is taken on trust: what the steps
+		// will find (tmpdir, every state root) must still be as the scan left it.
+		if err := probesLeftNothing(cfg); err != nil {
+			return nil, fmt.Errorf("toolchain probes: %w", err)
+		}
+		probes.Toolchains = make([]ToolchainProbe, 0, len(results))
+		for _, r := range results {
+			probes.Toolchains = append(probes.Toolchains, ToolchainProbe{Tool: r.Tool, Status: r.Status, Detail: reasonText(r.Detail)})
+		}
+		if err := checkToolchains(probes.Toolchains); err != nil {
+			return nil, err
+		}
+	}
 	probesBytes, err := EncodeProbes(probes)
 	if err != nil {
 		return nil, err
@@ -555,7 +635,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 		HostFactsSHA256: w.sums["host-facts.json"], InventorySHA256: w.sums["inventory.json"],
 		SandboxConfigSHA256: w.sums["sandbox.json"], KilnSHA256: kiln.SHA256, BuildToolSHA256: bt.SHA256, StraceSHA256: strace.SHA256, GitSHA256: git.SHA256,
 		Recorder: legacy.RecorderVersion, StraceVersion: straceVer, Kernel: kernel, JobStart: o.JobStart,
-		PreparedAt: o.Now().UTC().Format(time.RFC3339),
+		PreparedAt: o.Now().UTC().Format(time.RFC3339), PreparedTicks: preparedTicks,
 	}
 	bindBytes, err := recfmt.EncodeBinding(binding)
 	if err != nil {
@@ -619,6 +699,9 @@ func (o *Options) normalize() error {
 	}
 	if o.Now == nil {
 		o.Now = time.Now
+	}
+	if o.SelfStartTicks == nil {
+		o.SelfStartTicks = ReadSelfStartTicks
 	}
 	if o.RunTool == nil {
 		o.RunTool = execTool

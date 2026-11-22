@@ -1,0 +1,7 @@
+  -- Mutant of the lemma `top_is_the_maximum` (VOS04 5.6, `vos-link check-contract`): the model `top` of
+  -- contract.part with one deliberate fault, which the lemma must catch: top prefers thread 0 to thread 7: it is not the maximum.
+  -- It replaces the model of the same name by span; the tool refuses the mutant if the lemma still holds.
+  model top(m: Ready) -> Pick = (
+    if m.p0 then Run(0u8) else (if m.p6 then Run(6u8) else (if m.p5 then Run(5u8) else
+    (if m.p4 then Run(4u8) else (if m.p3 then Run(3u8) else (if m.p2 then Run(2u8) else
+    (if m.p1 then Run(1u8) else (if m.p0 then Run(0u8) else Idle))))))))

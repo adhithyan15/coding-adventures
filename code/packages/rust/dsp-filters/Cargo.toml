@@ -9,4 +9,5 @@ license = "MIT"
 dsp-fft = { path = "../dsp-fft" }
 
 [dev-dependencies]
+coding_adventures_bounded_json = { path = "../bounded-json" }
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }

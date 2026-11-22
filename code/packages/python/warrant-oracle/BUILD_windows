@@ -1,0 +1,51 @@
+uv venv .venv --quiet --no-project --clear
+uv pip install --python .venv -e .[dev] --quiet
+.venv\Scripts\python -m ruff check src tests
+.venv\Scripts\python -m pytest tests/ -v --tb=short
+# CV2-S5b (VER04r 11, R23): the committed v2 conformance kit; see BUILD.
+.venv\Scripts\python tests\fixtures\conformance-v2\make_conformance.py --check --fixture ..\..\..\specs\fixtures\warrant-corpus-conformance-v1
+.venv\Scripts\python ..\..\..\scripts\warrant_corpus_conformance.py --fixture ..\..\..\specs\fixtures\warrant-corpus-conformance-v1
+.venv\Scripts\python -m unittest discover -s ..\..\..\scripts\tests -p test_warrant_corpus_conformance.py
+.venv\Scripts\python -m coding_adventures_warrant_oracle verify-v1 --spec ..\..\..\specs\ct-compare.warrant --corpus ..\..\..\specs\fixtures\ct-compare-warrant-v1\corpus.json
+.venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 tests\fixtures\synth-v2\corpus --warrant tests\fixtures\synth-v2\synth.warrant --profile tests\fixtures\synth-v2\corpus.profile --expect-generator warrant-corpus-gen@0.6.0
+.venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 tests\fixtures\accept-blind-v2\corpus --warrant tests\fixtures\accept-blind-v2\blind.warrant --profile tests\fixtures\accept-blind-v2\corpus.profile
+.venv\Scripts\python tests\fixtures\omit-example-v2\make_fixture.py --check
+.venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 tests\fixtures\omit-example-v2\corpus --warrant tests\fixtures\omit-example-v2\omit.warrant --profile tests\fixtures\omit-example-v2\corpus.profile --expect-generator warrant-corpus-gen@0.6.0
+# CV2-S3d: the committed ct-compare v2 fixture; --expect-generator pins the recorded generator
+# name and version ([D13]), --profile is the fixture's own corpus.profile ([D14]).
+.venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 ..\..\..\specs\fixtures\ct-compare-warrant-v2 --warrant ..\..\..\specs\ct-compare.warrant --profile ..\..\..\specs\fixtures\ct-compare-warrant-v2\corpus.profile --bindings ..\..\rust\ct-compare\evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
+# CV2 S10 adopter (x25519): the committed x25519 v2 fixture.
+.venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 ..\..\..\specs\fixtures\x25519-warrant-v2 --warrant ..\..\..\specs\x25519.warrant --profile ..\..\..\specs\fixtures\x25519-warrant-v2\corpus.profile --bindings ..\..\rust\x25519\evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
+# CV2 S10 adopter (lzw): the committed lzw v2 fixture.
+.venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 ..\..\..\specs\fixtures\lzw-warrant-v2 --warrant ..\..\..\specs\lzw.warrant --profile ..\..\..\specs\fixtures\lzw-warrant-v2\corpus.profile --bindings ..\..\rust\lzw\evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
+# CV2 S10 adopter (wasm-leb128): the committed wasm-leb128 v2 fixture (about 5 min, one line, not sharded).
+.venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 ..\..\..\specs\fixtures\wasm-leb128-warrant-v2 --warrant ..\..\..\specs\wasm-leb128.warrant --profile ..\..\..\specs\fixtures\wasm-leb128-warrant-v2\corpus.profile --bindings ..\..\rust\wasm-leb128\evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\ct-compare.warrant
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\gf256.warrant
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\wasm-leb128.warrant
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\logic-gates.warrant
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\lzw.warrant
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\arithmetic.warrant
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\x25519.warrant
+# CV2-S10a: the synthetic ir.fixed document and its committed lowering dump.
+.venv\Scripts\python tests\fixtures\fixed-forms-v1\make_fixed_forms.py --check
+.venv\Scripts\python -m coding_adventures_warrant_oracle dump-lowering --spec tests\fixtures\fixed-forms-v1\fixed_forms_v1.warrant --check tests\fixtures\fixed-forms-v1\fixed_forms_v1.oracle-lowering.json
+# CV2-S10t-1: the synthetic ir.tuple document and its committed dumps.
+.venv\Scripts\python tests\fixtures\tuple-forms-v1\make_tuple_forms.py --check
+.venv\Scripts\python -m coding_adventures_warrant_oracle dump-lowering --spec tests\fixtures\tuple-forms-v1\tuple_forms_v1.warrant --check tests\fixtures\tuple-forms-v1\tuple_forms_v1.oracle-lowering.json
+# CV2-S10c-1: the synthetic ir.fixed evaluation document and its committed dumps.
+.venv\Scripts\python tests\fixtures\fixed-eval-v1\make_fixed_eval.py --check
+.venv\Scripts\python -m coding_adventures_warrant_oracle dump-lowering --spec tests\fixtures\fixed-eval-v1\fixed_eval_v1.warrant --check tests\fixtures\fixed-eval-v1\fixed_eval_v1.oracle-lowering.json
+# CV2-S10o-1: the synthetic off-by-one-consumed document (VER04r 8.2, D36) and its committed faults and
+# refusals dumps, the files the generator's slice S10o-2 must reproduce byte for byte.
+.venv\Scripts\python tests\fixtures\off-by-one-consumed-v1\make_off_by_one_consumed.py --check
+# CV2-S11a: the synthetic ir.data document and its committed dumps (lowering, refusals).
+.venv\Scripts\python tests\fixtures\data-forms-v1\make_data_forms.py --check
+.venv\Scripts\python -m coding_adventures_warrant_oracle dump-lowering --spec tests\fixtures\data-forms-v1\data_forms_v1.warrant --check tests\fixtures\data-forms-v1\data_forms_v1.oracle-lowering.json
+# CV2-S11f-1: the synthetic scalar-faults document and its committed faults and refusals dumps.
+.venv\Scripts\python tests\fixtures\scalar-faults-v1\make_scalar_faults.py --check
+# CV2-S11c-1: the synthetic ir.data evaluation document and its committed dumps.
+.venv\Scripts\python tests\fixtures\data-eval-v1\make_data_eval.py --check
+.venv\Scripts\python -m coding_adventures_warrant_oracle dump-lowering --spec tests\fixtures\data-eval-v1\data_eval_v1.warrant --check tests\fixtures\data-eval-v1\data_eval_v1.oracle-lowering.json
+.venv\Scripts\python ..\..\rust\warrant-corpus-gen\tests\fixtures\dump_oracle_lowering.py --check
+.venv\Scripts\python ..\..\rust\warrant-corpus-gen\tests\fixtures\dump_oracle_enumeration.py --check

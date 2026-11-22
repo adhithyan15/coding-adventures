@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/warrant-corpus",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads the corpus directory, the package's evidence.bindings, the Warrant spec and the production source tree it digests; paths are supplied on the command line and must lie inside the repository root."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "*",
+      "justification": "Inspects files and directories (lstat, directory listing) to refuse symlinks and non-regular files and to walk the production source tree it digests."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "Writes the lane manifest and its domain-labels.json sidecar (evidence/test-manifest.json beside the package), and only for an unfaulted, unfiltered, fully passing run; the tests write scratch fixtures under their temporary directory."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "*",
+      "justification": "Tests remove scratch files they created in their own temporary directories."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "*",
+      "justification": "WARRANT_EVIDENCE_FAULT, WARRANT_EVIDENCE_FILTER and WARRANT_EVIDENCE_OUT select the sabotage and output behaviour of a run (VER04i 4.3)."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "*",
+      "justification": "The sabotage command re-executes the running binary once per negative control to prove that a faulted run exits non-zero and prints `not ok`."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Prints TAP-style `ok` and `not ok` lines."
+    }
+  ],
+  "justification": "Test-time evidence runner: it reads the corpus and binding, checks the one library its entry program compiles in, writes its manifest and runs one child process per control for sabotage. It opens no network connection."
+}

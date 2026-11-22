@@ -439,7 +439,17 @@ func (e *lkEnv) probeEnv(inside bool, output string) {
 	if err := os.WriteFile(filepath.Join(bindir, "xtool"), []byte("#!/bin/sh\n"), 0o755); err != nil {
 		e.t.Fatal(err)
 	}
-	e.f.write(ToolchainsPath, strings.Replace(baseToolchains, `"/opt/x/bin"`, `"`+filepath.ToSlash(bindir)+`"`, 1))
+	// cc (always included) must resolve too: an absent probe binary is a gate
+	// (`probe-absent:`), so a fixture that wants no gate gives every probe one.
+	ccdir := filepath.Join(e.t.TempDir(), "ccbin") // outside the checkout, whatever xtool does
+	if err := os.MkdirAll(ccdir, 0o755); err != nil {
+		e.t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(ccdir, "cc"), []byte("#!/bin/sh\n"), 0o755); err != nil {
+		e.t.Fatal(err)
+	}
+	tc := strings.Replace(baseToolchains, `"/opt/x/bin"`, `"`+filepath.ToSlash(bindir)+`"`, 1)
+	e.f.write(ToolchainsPath, strings.Replace(tc, `"/nonexistent/kiln-test-bin"`, `"`+filepath.ToSlash(ccdir)+`"`, 1))
 	e.mod = func(o *Options) {
 		o.Probe = &ProbeOptions{Root: root, Run: func(ProbeRun) ([]byte, error) { return []byte(output), nil }}
 	}

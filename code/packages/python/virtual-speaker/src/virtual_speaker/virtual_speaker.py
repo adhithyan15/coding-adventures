@@ -30,14 +30,38 @@ class AnalogSignal(Protocol):
         """Return the signal value at ``time_seconds``."""
 
 
+def _safe_repr(value: object) -> str:
+    """Bounded O(1) representation for error messages (CWE-190 / CWE-400)."""
+    if isinstance(value, bool):
+        return repr(value)
+    if isinstance(value, int):
+        if value < -1_000_000 or value > 1_000_000:
+            return "<out-of-range int>"
+        return str(value)
+    if isinstance(value, float):
+        return repr(value)
+    if isinstance(value, str):
+        if len(value) > 64:
+            return f"<str len={len(value)}>"
+        return repr(value)
+    return f"<{type(value).__name__}>"
+
+
 def _finite_float(name: str, value: Real) -> float:
     """Convert a finite real value to ``float`` and reject slippery inputs."""
     if isinstance(value, bool) or not isinstance(value, Real):
-        raise ValueError(f"{name} must be a finite real number, got {value!r}")
+        raise ValueError(
+            f"{name} must be a finite real number, got {_safe_repr(value)}"
+        )
 
-    converted = float(value)
+    try:
+        converted = float(value)
+    except OverflowError as exc:
+        raise ValueError(
+            f"{name} overflows float range: {_safe_repr(value)}"
+        ) from exc
     if not isfinite(converted):
-        raise ValueError(f"{name} must be finite, got {value!r}")
+        raise ValueError(f"{name} must be finite, got {_safe_repr(value)}")
 
     return converted
 

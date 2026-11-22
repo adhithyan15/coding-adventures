@@ -107,9 +107,14 @@ int main() {
     {
         std::vector<std::uint8_t> workbook(5000, 0xAB);
         std::vector<std::uint8_t> another(100, 0x01);
-        std::vector<std::uint8_t> mini(
-            reinterpret_cast<const std::uint8_t *>("hello mini-stream"),
-            reinterpret_cast<const std::uint8_t *>("hello mini-stream") + 17);
+        // One named array, so [first, last) are pointers into the SAME object.
+        // (Writing the literal twice relies on the compiler pooling identical
+        // string literals — GCC/Clang do, MSVC at /Od does not, and ISO does not
+        // promise it — which made `last - first` garbage and crashed MSVC.)
+        static const std::uint8_t kHello[] = {'h', 'e', 'l', 'l', 'o', ' ', 'm',
+                                              'i', 'n', 'i', '-', 's', 't', 'r',
+                                              'e', 'a', 'm'};
+        std::vector<std::uint8_t> mini(kHello, kHello + sizeof(kHello));
         auto cfb = cw::write_cfb(
             {{"Workbook", workbook}, {"SmallStream", mini}, {"Another", another}});
         ISO_CHECK(std::vector<std::uint8_t>(cfb.begin(), cfb.begin() + 8) == SIG);

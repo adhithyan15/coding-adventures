@@ -1,0 +1,17 @@
+[package]
+name = "tls13-rsa-pss-signature-routing"
+version = "0.1.0"
+edition = "2021"
+description = "Policy-bound TLS 1.3 RSA-PSS signature routing"
+
+[dependencies]
+rsa-pss-sha256-signature = { path = "../rsa-pss-sha256-signature" }
+rsa-pss-sha384-signature = { path = "../rsa-pss-sha384-signature" }
+rsa-pss-sha512-signature = { path = "../rsa-pss-sha512-signature" }
+tls13-certificate-verify-message = { path = "../tls13-certificate-verify-message" }
+tls13-signature-scheme-policy = { path = "../tls13-signature-scheme-policy" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-subject-public-key-info = { path = "../x509-subject-public-key-info" }

@@ -1,0 +1,2539 @@
+{
+  "schema_version": 1,
+  "inventory_id": "AF04A-DSP-FILTERS-API-ASSURANCE-v1",
+  "subject": {
+    "repository": "adhithyan15/coding-adventures",
+    "commit": "cb60dc9820fc069325130193118e75fdba9b96bc",
+    "tree": "134b3571f5833c29c567c93489f3f5c012fba35f",
+    "scope": "rust/python/typescript dsp-filters plus their Warrant and test-producer prerequisites"
+  },
+  "lanes": {
+    "rust": {
+      "package": "code/packages/rust/dsp-filters",
+      "precision": "IEEE-754 binary32 f32",
+      "root_exports": [
+        "Biquad",
+        "sosfilt",
+        "WindowType",
+        "design_low_pass",
+        "design_high_pass",
+        "design_band_pass",
+        "try_design_low_pass",
+        "try_design_high_pass",
+        "try_design_band_pass",
+        "butterworth_lowpass",
+        "chebyshev1_lowpass",
+        "iir",
+        "fir",
+        "fir_fft",
+        "MAX_SAMPLES",
+        "MAX_TAPS",
+        "MAX_ORDER",
+        "FilterError",
+        "design"
+      ],
+      "public_modules": [
+        "design",
+        "iir"
+      ],
+      "module_exports": {
+        "design": [
+          "WindowType",
+          "design_low_pass",
+          "try_design_low_pass",
+          "design_high_pass",
+          "try_design_high_pass",
+          "design_band_pass",
+          "try_design_band_pass",
+          "butterworth_lowpass",
+          "chebyshev1_lowpass"
+        ],
+        "iir": [
+          "iir"
+        ]
+      },
+      "private_module_reexports": {
+        "biquad": [
+          "Biquad",
+          "sosfilt"
+        ]
+      },
+      "members": {
+        "Biquad": {
+          "methods": [
+            "new",
+            "process_sample",
+            "process",
+            "reset"
+          ],
+          "public_fields": [],
+          "private_fields": [
+            "b0",
+            "b1",
+            "b2",
+            "a1",
+            "a2",
+            "z1",
+            "z2"
+          ],
+          "derives": [
+            "Clone",
+            "Debug"
+          ],
+          "trait_impls": []
+        },
+        "WindowType": {
+          "variants": [
+            "Rectangular",
+            "Hamming",
+            "Hann",
+            "Blackman"
+          ],
+          "derives": [
+            "Copy",
+            "Clone",
+            "Debug",
+            "PartialEq",
+            "Eq"
+          ],
+          "trait_impls": []
+        },
+        "FilterError": {
+          "variants": [
+            "EmptySignal",
+            "EmptyKernel",
+            "InvalidCoefficient(String)",
+            "Fft(String)"
+          ],
+          "derives": [
+            "Debug",
+            "Clone",
+            "PartialEq"
+          ],
+          "trait_impls": [
+            {
+              "trait": "fmt::Display",
+              "methods": [
+                "fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result"
+              ]
+            },
+            {
+              "trait": "std::error::Error",
+              "methods": []
+            },
+            {
+              "trait": "From<dsp_fft::FftError>",
+              "methods": [
+                "from(e: dsp_fft::FftError) -> Self"
+              ],
+              "behavior": "FilterError::Fft(e.to_string())"
+            }
+          ]
+        }
+      },
+      "parameter_and_behavior_notes": [
+        {
+          "operation": "fir/fir_fft",
+          "signature": "(signal: &[f32], kernel: &[f32]) -> Result<Vec<f32>, FilterError>",
+          "precision": "f32",
+          "state": "whole-buffer",
+          "caps": {
+            "signal_samples": 16777216,
+            "kernel_taps": 1048576,
+            "output_samples": 16777216
+          },
+          "errors": [
+            "EmptySignal",
+            "EmptyKernel",
+            "InvalidCoefficient",
+            "Fft"
+          ]
+        },
+        {
+          "operation": "iir",
+          "signature": "(signal: &[f32], b: &[f32], a: &[f32]) -> Result<Vec<f32>, FilterError>",
+          "precision": "f32",
+          "state": "one-shot zero initial delay; no persistent IIR object",
+          "caps": {
+            "signal_samples": 16777216,
+            "coefficient_vector_preflight": 1048576,
+            "polynomial_order": 1024,
+            "maximum_accepted_coefficient_vector_length": 1025
+          },
+          "normalization": "reciprocal multiplication by 1/a0",
+          "errors": [
+            "EmptySignal",
+            "EmptyKernel",
+            "InvalidCoefficient"
+          ]
+        },
+        {
+          "operation": "Biquad",
+          "signature": "Biquad::new([f32;6]); process_sample(&mut self,f32); process(&mut self,&[f32]); reset(&mut self)",
+          "precision": "f32",
+          "state": "persistent per instance; private delays; returned sample/block errors are failure-atomic",
+          "normalization": "five direct divisions by finite nonzero a0",
+          "caps": {
+            "process_samples": 16777216
+          },
+          "errors": [
+            "InvalidCoefficient"
+          ]
+        },
+        {
+          "operation": "sosfilt",
+          "signature": "(sections: &[[f32;6]], signal: &[f32]) -> Result<Vec<f32>, FilterError>",
+          "precision": "f32",
+          "state": "one-shot fresh section state per call",
+          "caps": {
+            "signal_samples": 16777216,
+            "sections": 1024
+          },
+          "empty_sections": "identity for nonempty input",
+          "errors": [
+            "EmptySignal",
+            "InvalidCoefficient"
+          ]
+        },
+        {
+          "operation": "design_low_pass/design_high_pass/design_band_pass",
+          "signature": "legacy Vec wrappers plus additive try_design_* Result variants",
+          "precision": "f32",
+          "caps": {
+            "designer_taps_max": 1048575,
+            "designer_taps_must_be_odd": true,
+            "cutoff_cycles_per_sample": [
+              0.0,
+              0.5
+            ]
+          },
+          "errors": [
+            "legacy wrappers panic on invalid arguments",
+            "try_design_* returns InvalidCoefficient"
+          ]
+        },
+        {
+          "operation": "butterworth_lowpass/chebyshev1_lowpass",
+          "signature": "(order: u32, cutoff/ripple: f32) -> (Vec<f32>, Vec<f32>)",
+          "precision": "f32",
+          "orders": [
+            1,
+            2
+          ],
+          "higher_order": "unsupported; no cascade designer"
+        }
+      ],
+      "source_blobs": {
+        "code/packages/rust/dsp-filters/src/lib.rs": "07f57967d98cede9a70540f3b153e2f9019c984b",
+        "code/packages/rust/dsp-filters/src/design.rs": "4df8f92648276a1071e5109fb9d720358f948b16",
+        "code/packages/rust/dsp-filters/src/iir.rs": "e7f64e72de9dfadc633cdcb02ec56fbebed051a1",
+        "code/packages/rust/dsp-filters/src/biquad.rs": "96c74b584965f66472fc0a099467adcfc0a7ff61",
+        "code/packages/rust/dsp-filters/Cargo.toml": "6a76960b1fff38d461544b4d794e0e1afcbc7584"
+      },
+      "test_sources": {
+        "code/packages/rust/dsp-filters/tests/biquad_sos.rs": "56675007a65110692428ef702a73e509bd59adce",
+        "code/packages/rust/dsp-filters/tests/public_design_api.rs": "064d531de1830587eb2d01fbc105feb6477ed5b9"
+      },
+      "export_targets": {
+        "Biquad": "crate::biquad::Biquad (private module reexport)",
+        "sosfilt": "crate::biquad::sosfilt (private module reexport)",
+        "WindowType": "crate::design::WindowType",
+        "design_low_pass": "crate::design::design_low_pass",
+        "design_high_pass": "crate::design::design_high_pass",
+        "design_band_pass": "crate::design::design_band_pass",
+        "try_design_low_pass": "crate::design::try_design_low_pass",
+        "try_design_high_pass": "crate::design::try_design_high_pass",
+        "try_design_band_pass": "crate::design::try_design_band_pass",
+        "butterworth_lowpass": "crate::design::butterworth_lowpass",
+        "chebyshev1_lowpass": "crate::design::chebyshev1_lowpass",
+        "iir": "crate::iir::iir",
+        "fir": "crate::fir",
+        "fir_fft": "crate::fir_fft",
+        "MAX_SAMPLES": "crate::MAX_SAMPLES",
+        "MAX_TAPS": "crate::MAX_TAPS",
+        "MAX_ORDER": "crate::MAX_ORDER",
+        "FilterError": "crate::FilterError",
+        "design": "crate::design public module"
+      },
+      "root_export_entries": [
+        {
+          "name": "Biquad",
+          "namespace": "type",
+          "kind": "struct"
+        },
+        {
+          "name": "sosfilt",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "WindowType",
+          "namespace": "type",
+          "kind": "enum"
+        },
+        {
+          "name": "design_low_pass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "design_high_pass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "design_band_pass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "try_design_low_pass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "try_design_high_pass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "try_design_band_pass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "butterworth_lowpass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "chebyshev1_lowpass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "iir",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "fir",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "fir_fft",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "MAX_SAMPLES",
+          "namespace": "value",
+          "kind": "constant"
+        },
+        {
+          "name": "MAX_TAPS",
+          "namespace": "value",
+          "kind": "constant"
+        },
+        {
+          "name": "MAX_ORDER",
+          "namespace": "value",
+          "kind": "constant"
+        },
+        {
+          "name": "FilterError",
+          "namespace": "type",
+          "kind": "enum"
+        },
+        {
+          "name": "design",
+          "namespace": "module_path",
+          "kind": "public_module"
+        },
+        {
+          "name": "iir",
+          "namespace": "module_path",
+          "kind": "public_module"
+        }
+      ],
+      "member_signatures": {
+        "Biquad::new": "(coefficients: [f32;6]) -> Result<Biquad, FilterError>",
+        "Biquad::process_sample": "(&mut self, input: f32) -> Result<f32, FilterError>",
+        "Biquad::process": "(&mut self, input: &[f32]) -> Result<Vec<f32>, FilterError>",
+        "Biquad::reset": "(&mut self) -> ()"
+      },
+      "operation_errors": {
+        "fir": [
+          "EmptySignal",
+          "EmptyKernel",
+          "InvalidCoefficient"
+        ],
+        "fir_fft": [
+          "EmptySignal",
+          "EmptyKernel",
+          "InvalidCoefficient",
+          "Fft"
+        ],
+        "iir": [
+          "EmptySignal",
+          "EmptyKernel",
+          "InvalidCoefficient"
+        ],
+        "Biquad": [
+          "InvalidCoefficient"
+        ],
+        "sosfilt": [
+          "EmptySignal",
+          "InvalidCoefficient"
+        ],
+        "legacy_design_*": [
+          "panic"
+        ],
+        "try_design_*": [
+          "InvalidCoefficient"
+        ],
+        "butterworth_lowpass": [
+          "panic"
+        ],
+        "chebyshev1_lowpass": [
+          "panic"
+        ]
+      },
+      "inline_unit_test_identities": {
+        "code/packages/rust/dsp-filters/src/lib.rs": [
+          "checked_designers_match_legacy_coefficient_bits",
+          "legacy_designers_match_prechecked_algebraic_bit_baselines",
+          "checked_designers_validate_before_tap_allocation",
+          "checked_designers_report_validation_order_and_error_text",
+          "checked_designers_match_legacy_for_seeded_valid_domain_samples",
+          "legacy_designers_preserve_panic_payload_type_and_message",
+          "fir_rejects_empty_signal",
+          "fir_rejects_empty_kernel",
+          "fir_multiplies_single_sample_coefficients",
+          "fir_output_length_equals_n_plus_k_minus_one",
+          "fir_identity_kernel_returns_signal",
+          "fir_fft_matches_fir_direct",
+          "hostile_non_finite_rejected",
+          "pbt_splitmix64_fir_direct_vs_fft"
+        ],
+        "code/packages/rust/dsp-filters/src/design.rs": [
+          "low_pass_sums_to_one",
+          "low_pass_kernel_is_symmetric",
+          "low_pass_passes_dc",
+          "low_pass_attenuates_high_frequency",
+          "single_tap_filter_designs_are_finite",
+          "high_pass_sums_to_zero",
+          "band_pass_attenuates_dc_and_high_freq",
+          "butterworth_order_1_dc_gain_is_one",
+          "butterworth_order_2_dc_gain_is_one",
+          "butterworth_order_1_step_response_asymptotes_to_one",
+          "butterworth_order_2_step_response_asymptotes_to_one",
+          "chebyshev1_order_1_dc_gain_is_one",
+          "chebyshev1_order_2_dc_gain_matches_ripple"
+        ],
+        "code/packages/rust/dsp-filters/src/iir.rs": [
+          "iir_rejects_empty_signal",
+          "iir_rejects_empty_b",
+          "iir_rejects_empty_a",
+          "iir_rejects_zero_a0",
+          "iir_rejects_nan_a0",
+          "iir_rejects_inf_a0",
+          "iir_rejects_non_finite_inputs",
+          "iir_identity_filter_passes_through",
+          "iir_pure_gain_scales_signal",
+          "iir_pure_gain_via_a0_normalisation",
+          "iir_single_pole_low_pass_step_response_asymptotes",
+          "iir_single_pole_low_pass_first_few_samples",
+          "iir_with_only_feedforward_matches_fir",
+          "iir_impulse_response_of_single_pole_is_geometric",
+          "iir_two_pole_dc_gain",
+          "iir_output_length_equals_input_length"
+        ],
+        "code/packages/rust/dsp-filters/src/biquad.rs": []
+      },
+      "test_identities_by_path": {
+        "code/packages/rust/dsp-filters/tests/biquad_sos.rs": [
+          "bounded_json_overflow_offsets_are_after_complete_plain_integer_tokens",
+          "wide_integer_adapter_repairs_only_complete_overflow_tokens",
+          "shared_fixture_runs_public_biquad_and_sos_exports",
+          "shared_fixture_schema_decodes_equivalent_numeric_spellings_and_rejects_mutations",
+          "checked_biquad_rejects_bad_coefficients_and_is_failure_atomic",
+          "checked_caps_and_fma_distinguishing_recurrence_are_pinned",
+          "ver05_exact_direct_form_dyadic_property_has_nonzero_budget",
+          "ver05_exact_two_feedback_dyadic_property_has_nonzero_budget",
+          "ver05_general_f32_block_error_property_preserves_entry_state",
+          "ver06_structured_raw_bit_fuzz_replays_and_exercises_minimization"
+        ],
+        "code/packages/rust/dsp-filters/tests/public_design_api.rs": [
+          "checked_and_legacy_designers_are_available_from_the_public_crate"
+        ]
+      },
+      "test_identity_status": "source_configured_not_run_by_this_inventory",
+      "function_signatures": {
+        "design_low_pass": "pub fn design_low_pass(cutoff_norm: f32, num_taps: u32, window: WindowType) -> Vec<f32>",
+        "try_design_low_pass": "pub fn try_design_low_pass( cutoff_norm: f32, num_taps: u32, window: WindowType, ) -> Result<Vec<f32>, crate::FilterError>",
+        "design_high_pass": "pub fn design_high_pass(cutoff_norm: f32, num_taps: u32, window: WindowType) -> Vec<f32>",
+        "try_design_high_pass": "pub fn try_design_high_pass( cutoff_norm: f32, num_taps: u32, window: WindowType, ) -> Result<Vec<f32>, crate::FilterError>",
+        "design_band_pass": "pub fn design_band_pass( low_cutoff_norm: f32, high_cutoff_norm: f32, num_taps: u32, window: WindowType, ) -> Vec<f32>",
+        "try_design_band_pass": "pub fn try_design_band_pass( low_cutoff_norm: f32, high_cutoff_norm: f32, num_taps: u32, window: WindowType, ) -> Result<Vec<f32>, crate::FilterError>",
+        "butterworth_lowpass": "pub fn butterworth_lowpass(order: u32, cutoff_norm: f32) -> (Vec<f32>, Vec<f32>)",
+        "chebyshev1_lowpass": "pub fn chebyshev1_lowpass(order: u32, ripple_db: f32, cutoff_norm: f32) -> (Vec<f32>, Vec<f32>)",
+        "sosfilt": "pub fn sosfilt(sections: &[[f32; 6]], signal: &[f32]) -> Result<Vec<f32>, FilterError>",
+        "iir": "pub fn iir( signal: &[f32], b: &[f32], a: &[f32], ) -> Result<Vec<f32>, FilterError>",
+        "fir": "pub fn fir(signal: &[f32], kernel: &[f32]) -> Result<Vec<f32>, FilterError>",
+        "fir_fft": "pub fn fir_fft(signal: &[f32], kernel: &[f32]) -> Result<Vec<f32>, FilterError>"
+      },
+      "constant_values": {
+        "MAX_SAMPLES": 16777216,
+        "MAX_TAPS": 1048576,
+        "MAX_ORDER": 1024
+      }
+    },
+    "python": {
+      "package": "code/packages/python/dsp-filters",
+      "precision": "IEEE-754 binary64 Python float",
+      "root_exports": [
+        "Biquad",
+        "sos_cascade",
+        "sosfilt",
+        "CheckedBiquad",
+        "checked_sosfilt",
+        "WindowType",
+        "design_low_pass",
+        "design_high_pass",
+        "design_band_pass",
+        "butterworth_lowpass",
+        "chebyshev1_lowpass",
+        "iir",
+        "fir",
+        "fir_fft",
+        "MAX_ORDER",
+        "MAX_SAMPLES",
+        "MAX_TAPS",
+        "FilterError",
+        "EmptySignalError",
+        "EmptyKernelError",
+        "InvalidCoefficientError"
+      ],
+      "members": {
+        "Biquad": {
+          "methods": [
+            "__init__",
+            "process_sample",
+            "process",
+            "reset",
+            "lowpass",
+            "highpass",
+            "bandpass",
+            "notch",
+            "allpass",
+            "peak"
+          ],
+          "public_fields": [
+            "b0",
+            "b1",
+            "b2",
+            "a1",
+            "a2",
+            "z1",
+            "z2"
+          ],
+          "legacy_prefix_commit": true
+        },
+        "CheckedBiquad": {
+          "methods": [
+            "__init__",
+            "process_sample",
+            "process",
+            "reset"
+          ],
+          "public_fields": [],
+          "failure_atomic_for_filter_owned_state": true,
+          "private_fields": [
+            "_coefficients",
+            "_z1",
+            "_z2"
+          ]
+        },
+        "WindowType": {
+          "variants": [
+            "RECTANGULAR",
+            "HAMMING",
+            "HANN",
+            "BLACKMAN"
+          ]
+        }
+      },
+      "module_only_symbols": [
+        "FftError is defined in fir.py, not in package __all__, and has no pinned raise site"
+      ],
+      "parameter_and_behavior_notes": [
+        {
+          "operation": "fir/fir_fft",
+          "signature": "(signal: Sequence[float], kernel: Sequence[float]) -> list[float]",
+          "precision": "binary64",
+          "caps": {
+            "signal_samples": 16777216,
+            "kernel_taps": 1048576,
+            "output_samples": 16777216,
+            "fft_length": 16777216
+          },
+          "errors": [
+            "EmptySignalError",
+            "EmptyKernelError",
+            "InvalidCoefficientError"
+          ]
+        },
+        {
+          "operation": "iir",
+          "signature": "(signal: Sequence[float], b: Sequence[float], a: Sequence[float]) -> list[float]",
+          "precision": "binary64",
+          "state": "one-shot zero initial delay; no persistent IIR object",
+          "caps": {
+            "signal_samples": 16777216,
+            "coefficient_vector_preflight": 1048576,
+            "polynomial_order": 1024,
+            "maximum_accepted_coefficient_vector_length": 1025
+          },
+          "normalization": "reciprocal multiplication by 1/a0",
+          "errors": [
+            "EmptySignalError",
+            "EmptyKernelError",
+            "InvalidCoefficientError"
+          ]
+        },
+        {
+          "operation": "Biquad",
+          "signature": "Biquad(b0,b1,b2,a0,a1,a2); process_sample(x); process(signal); reset()",
+          "precision": "binary64",
+          "state": "persistent, public writable coefficients and delay slots; legacy block processing commits samplewise",
+          "normalization": "reciprocal multiplication; raw finite and nonzero a0 checked but normalized values and outputs/delays are not finite-checked",
+          "errors": [
+            "InvalidCoefficientError",
+            "EmptySignalError"
+          ]
+        },
+        {
+          "operation": "sos_cascade/sosfilt",
+          "signature": "sos_cascade(signal,sos); sosfilt(sos,signal)",
+          "precision": "binary64",
+          "state": "one-shot fresh state per section/call",
+          "caps": {
+            "signal_samples": 16777216,
+            "sections": 1024,
+            "coefficient_count_per_section": 6
+          },
+          "empty_sections": "identity for nonempty input",
+          "errors": [
+            "EmptySignalError",
+            "InvalidCoefficientError"
+          ]
+        },
+        {
+          "operation": "CheckedBiquad/checked_sosfilt",
+          "signature": "checked constructors and functions return values or raise FilterError subclasses",
+          "precision": "binary64",
+          "state": "persistent Biquad; one-shot SOS; block operation uses candidate state and commits only on success",
+          "input_policy": "exact built-in int/float only, bool and subclasses excluded; accepted integers convert once to binary64",
+          "normalization": "direct division, rejects nonfinite normalized coefficients/output/delays",
+          "caps": {
+            "process_samples": 16777216,
+            "sos_sections": 1024,
+            "coefficient_count_per_section": 6
+          }
+        },
+        {
+          "operation": "design_low_pass/design_high_pass/design_band_pass",
+          "signature": "public low/high/band-pass designers; signatures use binary64 scalar inputs and list outputs",
+          "precision": "binary64",
+          "designer_taps": "positive odd, capped by MAX_TAPS=1048576",
+          "cutoff_cycles_per_sample": "lowpass [0,.5], bandpass 0<=low<high<=.5",
+          "window_names": [
+            "rectangular",
+            "hamming",
+            "hann",
+            "blackman"
+          ],
+          "window_string_policy": "strip then lowercase",
+          "designer_tap_domain": {
+            "positive_odd_taps_max": 1048575,
+            "low_high_cutoff": "[0,0.5]",
+            "band_cutoff": "0<=low<high<=0.5"
+          }
+        },
+        {
+          "operation": "butterworth_lowpass/chebyshev1_lowpass",
+          "signature": "two lowpass helper exports only",
+          "precision": "binary64",
+          "orders": [
+            1,
+            2
+          ],
+          "higher_order": "unsupported",
+          "errors": [
+            "InvalidCoefficientError"
+          ]
+        }
+      ],
+      "source_blobs": {
+        "code/packages/python/dsp-filters/src/dsp_filters/__init__.py": "972d6861522ab3fd8a42b6b6d4e361b2220fab08",
+        "code/packages/python/dsp-filters/src/dsp_filters/fir.py": "f30982c342511474871e6f54bc244cb722ae931e",
+        "code/packages/python/dsp-filters/src/dsp_filters/design.py": "7ecb658ae3a7fb609a97783e01f38c8f63ab1adf",
+        "code/packages/python/dsp-filters/src/dsp_filters/iir.py": "31fa957403315f39e66d5f74661dd61421237f94",
+        "code/packages/python/dsp-filters/src/dsp_filters/biquad.py": "62bbc9fa2f89236952c8d9e83aed75c1b72281ac",
+        "code/packages/python/dsp-filters/src/dsp_filters/checked_biquad.py": "075721a720faf7186cf1316f82b50c94f9ad4032",
+        "code/packages/python/dsp-filters/pyproject.toml": "6da77a063cf409bcac2195d28eb7e9a85a21d7de"
+      },
+      "test_sources": {
+        "code/packages/python/dsp-filters/tests/test_biquad_sos.py": "34a7e4260bf171d5fe060939129cc9b16cd231a5",
+        "code/packages/python/dsp-filters/tests/test_checked_biquad.py": "fa18da22b2cdc14cec2b07b608ce95b9e1eb0ed0",
+        "code/packages/python/dsp-filters/tests/test_checked_properties.py": "1da57c34cbda39c1f7fc18fe370849ff663a682e",
+        "code/packages/python/dsp-filters/tests/test_shared_conformance.py": "c50800453287466bec953c1e8b477ba90dd028f1",
+        "code/packages/python/dsp-filters/tests/test_design.py": "b89e33f5ec16ef9c923ee2c8ab5c5a46185e3335",
+        "code/packages/python/dsp-filters/tests/test_iir.py": "1dff75ac5978fdd8acaa72e0d1bf5b6c7937b754",
+        "code/packages/python/dsp-filters/tests/test_designer_normalization.py": "1483c4f76fcc8da59fd7ea14eea05c4a5b6d4a9b",
+        "code/packages/python/dsp-filters/tests/test_fir.py": "be5f91cffd1553fc1bf00b3ea7263e9d4d140732",
+        "code/packages/python/dsp-filters/tests/test_hostile_inputs.py": "5742ddaed68c84d36b44f427660b41f302c3137e",
+        "code/packages/python/dsp-filters/tests/test_pbt.py": "3371cb6dbbcb35bb8c02ad1a55a8efe23396e175"
+      },
+      "export_targets": {
+        "Biquad": "dsp_filters.biquad.Biquad",
+        "sos_cascade": "dsp_filters.biquad.sos_cascade",
+        "sosfilt": "dsp_filters.biquad.sosfilt",
+        "CheckedBiquad": "dsp_filters.checked_biquad.CheckedBiquad",
+        "checked_sosfilt": "dsp_filters.checked_biquad.checked_sosfilt",
+        "WindowType": "dsp_filters.design.WindowType",
+        "design_low_pass": "dsp_filters.design.design_low_pass",
+        "design_high_pass": "dsp_filters.design.design_high_pass",
+        "design_band_pass": "dsp_filters.design.design_band_pass",
+        "butterworth_lowpass": "dsp_filters.design.butterworth_lowpass",
+        "chebyshev1_lowpass": "dsp_filters.design.chebyshev1_lowpass",
+        "iir": "dsp_filters.iir.iir",
+        "fir": "dsp_filters.fir.fir",
+        "fir_fft": "dsp_filters.fir.fir_fft",
+        "MAX_ORDER": "dsp_filters.fir.MAX_ORDER",
+        "MAX_SAMPLES": "dsp_filters.fir.MAX_SAMPLES",
+        "MAX_TAPS": "dsp_filters.fir.MAX_TAPS",
+        "FilterError": "dsp_filters.fir.FilterError",
+        "EmptyKernelError": "dsp_filters.fir.EmptyKernelError",
+        "EmptySignalError": "dsp_filters.fir.EmptySignalError",
+        "InvalidCoefficientError": "dsp_filters.fir.InvalidCoefficientError"
+      },
+      "aliases": {
+        "sosfilt": {
+          "target": "sos_cascade",
+          "argument_adapter": "sos_cascade(signal, sos)",
+          "parameters": [
+            "sos",
+            "signal"
+          ]
+        }
+      },
+      "root_export_entries": [
+        {
+          "name": "Biquad",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "sos_cascade",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "sosfilt",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "CheckedBiquad",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "checked_sosfilt",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "WindowType",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "design_low_pass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "design_high_pass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "design_band_pass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "butterworth_lowpass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "chebyshev1_lowpass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "iir",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "fir",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "fir_fft",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "MAX_ORDER",
+          "namespace": "value",
+          "kind": "constant"
+        },
+        {
+          "name": "MAX_SAMPLES",
+          "namespace": "value",
+          "kind": "constant"
+        },
+        {
+          "name": "MAX_TAPS",
+          "namespace": "value",
+          "kind": "constant"
+        },
+        {
+          "name": "FilterError",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "EmptySignalError",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "EmptyKernelError",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "InvalidCoefficientError",
+          "namespace": "value_and_type",
+          "kind": "type"
+        }
+      ],
+      "member_signatures": {
+        "Biquad.__init__": "(self,b0:float,b1:float,b2:float,a0:float,a1:float,a2:float)->None",
+        "Biquad.process_sample": "(self,x:float)->float",
+        "Biquad.process": "(self,signal:Sequence[float])->list[float]",
+        "Biquad.reset": "(self)->None",
+        "Biquad.lowpass": "(cls,cutoff_norm:float,q:float=1/sqrt(2))->Biquad",
+        "Biquad.highpass": "(cls,cutoff_norm:float,q:float=1/sqrt(2))->Biquad",
+        "Biquad.bandpass": "(cls,center_norm:float,q:float=1)->Biquad",
+        "Biquad.notch": "(cls,center_norm:float,q:float=1)->Biquad",
+        "Biquad.allpass": "(cls,center_norm:float,q:float=1)->Biquad",
+        "Biquad.peak": "(cls,center_norm:float,gain_db:float,q:float=1)->Biquad",
+        "CheckedBiquad.__init__": "(self,b0:object,b1:object,b2:object,a0:object,a1:object,a2:object)->None",
+        "CheckedBiquad.process_sample": "(self,sample:object)->float",
+        "CheckedBiquad.process": "(self,signal:Sequence[object])->list[float]",
+        "CheckedBiquad.reset": "(self)->None"
+      },
+      "operation_errors": {
+        "fir": [
+          "EmptySignalError",
+          "EmptyKernelError",
+          "InvalidCoefficientError"
+        ],
+        "fir_fft": [
+          "EmptySignalError",
+          "EmptyKernelError",
+          "InvalidCoefficientError",
+          "underlying FFT exceptions propagate; FftError unused"
+        ],
+        "iir": [
+          "EmptySignalError",
+          "EmptyKernelError",
+          "InvalidCoefficientError"
+        ],
+        "Biquad": [
+          "InvalidCoefficientError",
+          "EmptySignalError"
+        ],
+        "legacy_sos": [
+          "EmptySignalError",
+          "InvalidCoefficientError"
+        ],
+        "CheckedBiquad": [
+          "EmptySignalError",
+          "InvalidCoefficientError",
+          "caller accessor exceptions propagate"
+        ],
+        "checked_sosfilt": [
+          "EmptySignalError",
+          "InvalidCoefficientError",
+          "caller accessor exceptions propagate"
+        ],
+        "design_*": [
+          "InvalidCoefficientError"
+        ],
+        "butterworth_lowpass": [
+          "InvalidCoefficientError"
+        ],
+        "chebyshev1_lowpass": [
+          "InvalidCoefficientError"
+        ]
+      },
+      "test_identities_by_path": {
+        "code/packages/python/dsp-filters/tests/test_biquad_sos.py": [
+          "test_biquad_factories",
+          "test_biquad_invalid_parameters",
+          "test_biquad_process_sample_matches_process",
+          "test_sos_cascade_and_sosfilt",
+          "test_sos_empty_cascade_is_identity",
+          "test_sos_invalid_section_length",
+          "test_legacy_biquad_tiny_reciprocal_normalization_is_nonfinite",
+          "test_legacy_biquad_output_and_hidden_delay_overflow",
+          "test_legacy_biquad_failed_block_commits_prefix_and_reset_replays",
+          "test_legacy_sos_final_and_intermediate_overflow_are_distinct"
+        ],
+        "code/packages/python/dsp-filters/tests/test_checked_biquad.py": [
+          "test_checked_direct_division_accepts_minimum_subnormal_identity",
+          "test_checked_inputs_are_strict_and_integer_rounding_is_documented",
+          "test_checked_sample_rejects_output_and_each_candidate_delay_overflow",
+          "test_checked_state_is_atomic_for_invalid_samples_accessors_and_overflow",
+          "test_checked_lengths_are_captured_once_and_caller_length_errors_propagate",
+          "test_checked_sos_is_one_shot_ordered_and_preserves_empty_identity_zero",
+          "test_checked_sos_validation_order_avoids_poison_accessors",
+          "test_normalized_coefficients_are_not_public_writable_attributes",
+          "test_checked_exact_sample_and_section_caps"
+        ],
+        "code/packages/python/dsp-filters/tests/test_checked_properties.py": [
+          "test_ver05_exact_direct_and_feedback_integer_oracles",
+          "test_seeded_raw_binary64_state_and_error_cases",
+          "test_ver06_seeded_mutation_fuzz_replays_and_detects_same_target_fault"
+        ],
+        "code/packages/python/dsp-filters/tests/test_shared_conformance.py": [
+          "test_shared_fixture_all_biquad_partitions_and_state_semantics",
+          "test_shared_fixture_checked_biquad_all_partitions_and_state_semantics",
+          "test_shared_fixture_sosfilt_is_one_shot_and_empty_behavior",
+          "test_fixture_comparison_treats_signed_zero_as_equal",
+          "test_seeded_partition_property_samples",
+          "test_seeded_fixture_schema_fuzz_cases",
+          "test_shared_fixture_loader_rejects_malformed_and_mutated_data"
+        ],
+        "code/packages/python/dsp-filters/tests/test_design.py": [
+          "test_design_low_pass_dc_gain_is_one",
+          "test_design_high_pass_symmetry",
+          "test_design_band_pass_all_windows",
+          "test_butterworth_lowpass",
+          "test_chebyshev1_lowpass",
+          "test_unknown_window_type",
+          "test_public_fir_design_domain_edges_and_validation_order",
+          "test_seeded_fir_designer_valid_domain_samples"
+        ],
+        "code/packages/python/dsp-filters/tests/test_iir.py": [
+          "test_iir_pure_gain",
+          "test_iir_exponential_decay",
+          "test_iir_non_unity_a0"
+        ],
+        "code/packages/python/dsp-filters/tests/test_designer_normalization.py": [
+          "test_reciprocal_overflow_uses_finite_normalized_coefficients",
+          "test_finite_reciprocal_path_preserves_legacy_result_bits",
+          "test_normalizer_zero_and_invalid_cutoff_behavior_is_unchanged",
+          "test_bounded_subnormal_corpus_is_finite",
+          "test_deterministic_raw_bit_boundary_property_cases",
+          "test_seeded_subnormal_fuzz"
+        ],
+        "code/packages/python/dsp-filters/tests/test_fir.py": [
+          "test_fir_impulse",
+          "test_fir_single_sample_convolution_is_not_a_round_trip",
+          "test_fir_fft_matches_direct_fir"
+        ],
+        "code/packages/python/dsp-filters/tests/test_hostile_inputs.py": [
+          "test_empty_inputs_rejected",
+          "test_cwe20_nan_and_inf_fail_closed",
+          "test_zero_a0_rejected_in_iir_and_biquad",
+          "test_invalid_design_parameters",
+          "test_cwe400_bounds_rejection",
+          "test_cwe1333_zero_regex_imports"
+        ],
+        "code/packages/python/dsp-filters/tests/test_pbt.py": [
+          "test_pbt_fir_commutativity",
+          "test_pbt_fir_fft_equivalence",
+          "test_pbt_fir_linearity",
+          "test_pbt_iir_linearity"
+        ]
+      },
+      "test_identity_status": "source_configured_not_run_by_this_inventory",
+      "function_signatures": {
+        "sos_cascade": "def sos_cascade(signal: Sequence[float], sos: Sequence[Sequence[float]]) -> list[float]",
+        "sosfilt": "def sosfilt(sos: Sequence[Sequence[float]], signal: Sequence[float]) -> list[float]",
+        "checked_sosfilt": "def checked_sosfilt(sections: _Sequence, signal: _Sequence) -> list[float]",
+        "design_low_pass": "def design_low_pass(cutoff_norm: float, num_taps: int, window: WindowType | str=WindowType.HAMMING) -> list[float]",
+        "design_high_pass": "def design_high_pass(cutoff_norm: float, num_taps: int, window: WindowType | str=WindowType.HAMMING) -> list[float]",
+        "design_band_pass": "def design_band_pass(low_cutoff_norm: float, high_cutoff_norm: float, num_taps: int, window: WindowType | str=WindowType.HAMMING) -> list[float]",
+        "butterworth_lowpass": "def butterworth_lowpass(order: int, cutoff_norm: float) -> tuple[list[float], list[float]]",
+        "chebyshev1_lowpass": "def chebyshev1_lowpass(order: int, ripple_db: float, cutoff_norm: float) -> tuple[list[float], list[float]]",
+        "iir": "def iir(signal: Sequence[float], b: Sequence[float], a: Sequence[float]) -> list[float]",
+        "fir": "def fir(signal: Sequence[float], kernel: Sequence[float]) -> list[float]",
+        "fir_fft": "def fir_fft(signal: Sequence[float], kernel: Sequence[float]) -> list[float]"
+      },
+      "constant_values": {
+        "MAX_SAMPLES": 16777216,
+        "MAX_TAPS": 1048576,
+        "MAX_ORDER": 1024
+      },
+      "error_types": {
+        "FilterError": {
+          "base": "ValueError",
+          "constructor": "inherited; package declares no __init__"
+        },
+        "EmptySignalError": {
+          "base": "FilterError",
+          "constructor": "inherited; package declares no __init__"
+        },
+        "EmptyKernelError": {
+          "base": "FilterError",
+          "constructor": "inherited; package declares no __init__"
+        },
+        "InvalidCoefficientError": {
+          "base": "FilterError",
+          "constructor": "inherited; package declares no __init__"
+        },
+        "FftError": {
+          "base": "FilterError",
+          "constructor": "inherited; package declares no __init__; not package-root exported"
+        }
+      }
+    },
+    "typescript": {
+      "package": "code/packages/typescript/dsp-filters",
+      "precision": "IEEE-754 binary64 JavaScript number",
+      "root_exports": [
+        "Biquad",
+        "sosfilt",
+        "sosCascade",
+        "sos_cascade",
+        "CheckedBiquad",
+        "checkedSosfilt",
+        "MAX_FILTER_TAPS",
+        "MAX_TAPS",
+        "MAX_ORDER",
+        "MAX_SIGNAL_LEN",
+        "MAX_SAMPLES",
+        "butterworthBandpass",
+        "butterworthHighpass",
+        "butterworthLowpass",
+        "chebyshev1Lowpass",
+        "designBandPass",
+        "designHighPass",
+        "designLowPass",
+        "firwin",
+        "FilterCoefficients",
+        "FirwinOptions",
+        "EmptyKernelError",
+        "EmptySignalError",
+        "FilterError",
+        "FftError",
+        "InvalidCoefficientError",
+        "fir",
+        "firFft",
+        "fir_fft",
+        "filtfilt",
+        "iir",
+        "lfilter"
+      ],
+      "members": {
+        "Biquad": {
+          "methods": [
+            "constructor",
+            "reset",
+            "processSample",
+            "process",
+            "lowpass",
+            "highpass",
+            "bandpass",
+            "notch",
+            "allpass",
+            "peak"
+          ],
+          "public_fields": [
+            "b0",
+            "b1",
+            "b2",
+            "a1",
+            "a2"
+          ],
+          "typescript_private_fields": [
+            "z1",
+            "z2"
+          ],
+          "runtime_privacy": "compile-time only; runtime ordinary properties",
+          "runtime_readonly_note": "readonly modifiers are compile-time only; fields remain mutable at runtime"
+        },
+        "CheckedBiquad": {
+          "methods": [
+            "constructor",
+            "processSample",
+            "process",
+            "reset"
+          ],
+          "public_fields": [],
+          "runtime_private_fields": [
+            "#coefficients",
+            "#z1",
+            "#z2"
+          ]
+        },
+        "FirwinOptions": {
+          "fields": {
+            "window": "string optional",
+            "passZero": "boolean optional"
+          }
+        },
+        "FilterCoefficients": {
+          "fields": {
+            "b": "Float64Array",
+            "a": "Float64Array"
+          }
+        }
+      },
+      "parameter_and_behavior_notes": [
+        {
+          "operation": "fir/firFft/fir_fft",
+          "signature": "(signal: Float64Array|ArrayLike<number>, kernel: Float64Array|ArrayLike<number>) -> Float64Array",
+          "precision": "binary64",
+          "caps": {
+            "signal_samples": 16777216,
+            "kernel_taps": 65536,
+            "output_samples": 16777216,
+            "fft_length": 16777216
+          },
+          "errors": [
+            "EmptySignalError",
+            "EmptyKernelError",
+            "InvalidCoefficientError"
+          ]
+        },
+        {
+          "operation": "lfilter/iir",
+          "signature": "lfilter(b,a,signal); iir(signal,b,a)",
+          "precision": "binary64",
+          "state": "one-shot zero initial delay; no persistent IIR object",
+          "caps": {
+            "signal_samples": 16777216,
+            "coefficient_vector_preflight": 65536,
+            "polynomial_order": 1024,
+            "maximum_accepted_coefficient_vector_length": 1025
+          },
+          "normalization": "reciprocal multiplication by 1/a0"
+        },
+        {
+          "operation": "filtfilt",
+          "signature": "filtfilt(b,a,signal)",
+          "precision": "binary64",
+          "state": "one-shot forward-backward filtering",
+          "caps": {
+            "signal_samples": 16777216,
+            "coefficient_vector_preflight": 65536,
+            "polynomial_order": 1024,
+            "padding": "3*max(coefficient lengths) when signal is longer than pad length; padded total <= 2^24"
+          }
+        },
+        {
+          "operation": "Biquad",
+          "signature": "constructor(b0,b1,b2,a0,a1,a2); processSample(x); process(signal); reset()",
+          "precision": "binary64",
+          "state": "persistent instance state; legacy process Number-coerces and commits each sample",
+          "normalization": "reciprocal multiplication",
+          "caps": {
+            "process_samples": 16777216
+          }
+        },
+        {
+          "operation": "sosfilt/sosCascade/sos_cascade",
+          "signature": "(sos, signal)",
+          "precision": "binary64",
+          "state": "one-shot fresh state per section/call",
+          "caps": {
+            "signal_samples": 16777216,
+            "sections": 1024,
+            "coefficient_count_per_section": 6
+          },
+          "empty_sections": "identity for nonempty input"
+        },
+        {
+          "operation": "CheckedBiquad/checkedSosfilt",
+          "signature": "strict binary64 checked stateful Biquad and one-shot SOS APIs",
+          "precision": "binary64",
+          "input_policy": "primitive finite number only; no coercion",
+          "normalization": "direct division",
+          "state": "block candidate state committed after full success",
+          "caps": {
+            "process_samples": 16777216,
+            "sos_sections": 1024,
+            "coefficient_count_per_section": 6
+          }
+        },
+        {
+          "operation": "designLowPass/designHighPass/designBandPass/firwin",
+          "signature": "design functions return Float64Array; IIR prototype functions return FilterCoefficients",
+          "precision": "binary64",
+          "cutoff_cycles_per_sample": "normalized, Nyquist 0.5",
+          "firwin": "returns Float64Array; scalar cutoff selects low/high by passZero; cutoff pair selects band-pass/band-stop",
+          "windows": [
+            "rectangular",
+            "hann",
+            "hanning",
+            "hamming",
+            "blackman",
+            "kaiser"
+          ],
+          "designer_tap_domain": {
+            "fir_design_taps": "positive odd integer <=65535",
+            "firwin_taps": "positive odd integer <=65535",
+            "low_high_cutoff": "[0,0.5]",
+            "band_cutoff": "0<=low<high<=0.5"
+          }
+        },
+        {
+          "operation": "butterworthLowpass/butterworthHighpass/butterworthBandpass/chebyshev1Lowpass",
+          "signature": "FilterCoefficients with Float64Array b/a",
+          "precision": "binary64",
+          "orders": [
+            1,
+            2
+          ],
+          "high_band_pass_helpers": "TypeScript-only",
+          "errors": [
+            "InvalidCoefficientError"
+          ]
+        }
+      ],
+      "source_blobs": {
+        "code/packages/typescript/dsp-filters/src/index.ts": "948ae5d917154641d50ea81347d8d8ea3a25c60f",
+        "code/packages/typescript/dsp-filters/src/constants.ts": "3dc69a25efef5bc79a54c0f14640c7a6496280bf",
+        "code/packages/typescript/dsp-filters/src/errors.ts": "747620a4ea11fef926bedb3480f31e73b06097ec",
+        "code/packages/typescript/dsp-filters/src/fir.ts": "b1abcd7f5c934caeab43ddf41cdc83dabdd68779",
+        "code/packages/typescript/dsp-filters/src/design.ts": "14f9a88c53d2f1c1577f021e29504cb06056acfd",
+        "code/packages/typescript/dsp-filters/src/iir.ts": "f8a9be2b8919cb10a05102aedc4696044b1a7e10",
+        "code/packages/typescript/dsp-filters/src/biquad.ts": "cb2fb497d74c74494b86da500e19c2401d778b24",
+        "code/packages/typescript/dsp-filters/src/checked-biquad.ts": "f4ed61cc856597df0e82885be5cb055cdb6f9e2f",
+        "code/packages/typescript/dsp-filters/package.json": "2eb26ed37da1e60489cf0ecd3d5f2b21d8a5d180",
+        "code/packages/typescript/dsp-fft/src/windows.ts": "50e41160e7258682c669b16607c09bfceb05ec17"
+      },
+      "test_sources": {
+        "code/packages/typescript/dsp-filters/tests/biquad.test.ts": "0008c7f2bc56ce7923d337d5edd990995b594a33",
+        "code/packages/typescript/dsp-filters/tests/checked-biquad.test.ts": "e892d926a81e6587d7bf325826e08174a96e59dd",
+        "code/packages/typescript/dsp-filters/tests/checked-properties.test.ts": "814be9be1251ff767859bfca847ad3da27968956",
+        "code/packages/typescript/dsp-filters/tests/shared_conformance.test.ts": "b5059ee275de5aae986e3ed23001e9732ec99525",
+        "code/packages/typescript/dsp-filters/tests/design.test.ts": "b598ce9a222d61c3c588cd49f6d44e5487673548",
+        "code/packages/typescript/dsp-filters/tests/iir.test.ts": "59c61972963259faa80fe4bbcb1218f8273fc6db",
+        "code/packages/typescript/dsp-filters/tests/fir.test.ts": "e76435e4d543baac1735f28adb20438fa9345dab",
+        "code/packages/typescript/dsp-filters/tests/hostile_inputs.test.ts": "a0ac69deaab59281709685a36b7406cd606ba567"
+      },
+      "export_targets": {
+        "Biquad": "./biquad.js:Biquad",
+        "sosfilt": "./biquad.js:sosfilt",
+        "sosCascade": "./biquad.js:sosCascade",
+        "sos_cascade": "./biquad.js:sos_cascade",
+        "CheckedBiquad": "./checked-biquad.js:CheckedBiquad",
+        "checkedSosfilt": "./checked-biquad.js:checkedSosfilt",
+        "MAX_FILTER_TAPS": "./constants.js:MAX_FILTER_TAPS",
+        "MAX_TAPS": "./constants.js:MAX_TAPS",
+        "MAX_ORDER": "./constants.js:MAX_ORDER",
+        "MAX_SIGNAL_LEN": "./constants.js:MAX_SIGNAL_LEN",
+        "MAX_SAMPLES": "./constants.js:MAX_SAMPLES",
+        "butterworthBandpass": "./design.js:butterworthBandpass",
+        "butterworthHighpass": "./design.js:butterworthHighpass",
+        "butterworthLowpass": "./design.js:butterworthLowpass",
+        "chebyshev1Lowpass": "./design.js:chebyshev1Lowpass",
+        "designBandPass": "./design.js:designBandPass",
+        "designHighPass": "./design.js:designHighPass",
+        "designLowPass": "./design.js:designLowPass",
+        "firwin": "./design.js:firwin",
+        "FilterCoefficients": "./design.js:FilterCoefficients",
+        "FirwinOptions": "./design.js:FirwinOptions",
+        "EmptyKernelError": "./errors.js:EmptyKernelError",
+        "EmptySignalError": "./errors.js:EmptySignalError",
+        "FilterError": "./errors.js:FilterError",
+        "FftError": "./errors.js:FftError",
+        "InvalidCoefficientError": "./errors.js:InvalidCoefficientError",
+        "fir": "./fir.js:fir",
+        "firFft": "./fir.js:firFft",
+        "fir_fft": "./fir.js:fir_fft",
+        "filtfilt": "./iir.js:filtfilt",
+        "iir": "./iir.js:iir",
+        "lfilter": "./iir.js:lfilter"
+      },
+      "aliases": {
+        "sosCascade": "sosfilt",
+        "sos_cascade": "sosfilt",
+        "fir_fft": "firFft"
+      },
+      "root_export_entries": [
+        {
+          "name": "Biquad",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "sosfilt",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "sosCascade",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "sos_cascade",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "CheckedBiquad",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "checkedSosfilt",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "MAX_FILTER_TAPS",
+          "namespace": "value",
+          "kind": "constant"
+        },
+        {
+          "name": "MAX_TAPS",
+          "namespace": "value",
+          "kind": "constant"
+        },
+        {
+          "name": "MAX_ORDER",
+          "namespace": "value",
+          "kind": "constant"
+        },
+        {
+          "name": "MAX_SIGNAL_LEN",
+          "namespace": "value",
+          "kind": "constant"
+        },
+        {
+          "name": "MAX_SAMPLES",
+          "namespace": "value",
+          "kind": "constant"
+        },
+        {
+          "name": "butterworthBandpass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "butterworthHighpass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "butterworthLowpass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "chebyshev1Lowpass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "designBandPass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "designHighPass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "designLowPass",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "firwin",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "FilterCoefficients",
+          "namespace": "type_only",
+          "kind": "interface"
+        },
+        {
+          "name": "FirwinOptions",
+          "namespace": "type_only",
+          "kind": "interface"
+        },
+        {
+          "name": "EmptyKernelError",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "EmptySignalError",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "FilterError",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "FftError",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "InvalidCoefficientError",
+          "namespace": "value_and_type",
+          "kind": "type"
+        },
+        {
+          "name": "fir",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "firFft",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "fir_fft",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "filtfilt",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "iir",
+          "namespace": "value",
+          "kind": "function"
+        },
+        {
+          "name": "lfilter",
+          "namespace": "value",
+          "kind": "function"
+        }
+      ],
+      "member_signatures": {
+        "Biquad.constructor": "(b0:number,b1:number,b2:number,a0:number,a1:number,a2:number)->Biquad",
+        "Biquad.reset": "()->void",
+        "Biquad.processSample": "(x:number)->number",
+        "Biquad.process": "(signal:Float64Array|ArrayLike<number>)->Float64Array",
+        "Biquad.lowpass": "(cutoffNorm:number,q:number=1/Math.SQRT2)->Biquad",
+        "Biquad.highpass": "(cutoffNorm:number,q:number=1/Math.SQRT2)->Biquad",
+        "Biquad.bandpass": "(centerNorm:number,q:number=1)->Biquad",
+        "Biquad.notch": "(centerNorm:number,q:number=1)->Biquad",
+        "Biquad.allpass": "(centerNorm:number,q:number=1)->Biquad",
+        "Biquad.peak": "(centerNorm:number,gainDb:number,q:number=1)->Biquad",
+        "CheckedBiquad.constructor": "(b0:unknown,b1:unknown,b2:unknown,a0:unknown,a1:unknown,a2:unknown)->CheckedBiquad",
+        "CheckedBiquad.processSample": "(sample:unknown)->number",
+        "CheckedBiquad.process": "(signal:ArrayLike<unknown>)->Float64Array",
+        "CheckedBiquad.reset": "()->void"
+      },
+      "operation_errors": {
+        "fir": [
+          "EmptySignalError",
+          "EmptyKernelError",
+          "InvalidCoefficientError"
+        ],
+        "firFft": [
+          "EmptySignalError",
+          "EmptyKernelError",
+          "InvalidCoefficientError",
+          "upstream FFT exceptions propagate"
+        ],
+        "lfilter/iir": [
+          "EmptySignalError",
+          "EmptyKernelError",
+          "InvalidCoefficientError"
+        ],
+        "filtfilt": [
+          "EmptySignalError",
+          "EmptyKernelError",
+          "InvalidCoefficientError"
+        ],
+        "Biquad": [
+          "EmptySignalError",
+          "InvalidCoefficientError"
+        ],
+        "sosfilt": [
+          "EmptySignalError",
+          "InvalidCoefficientError"
+        ],
+        "CheckedBiquad": [
+          "EmptySignalError",
+          "InvalidCoefficientError",
+          "indexed accessor exceptions propagate"
+        ],
+        "checkedSosfilt": [
+          "EmptySignalError",
+          "InvalidCoefficientError",
+          "indexed accessor exceptions propagate"
+        ],
+        "design*": [
+          "InvalidCoefficientError",
+          "upstream InvalidInputError for unsupported window names"
+        ]
+      },
+      "test_identities_by_path": {
+        "code/packages/typescript/dsp-filters/tests/biquad.test.ts": [
+          "processes DC through lowpass biquad with unit gain",
+          "processes highpass biquad with zero DC gain",
+          "processes bandpass biquad with zero DC gain",
+          "processes notch, allpass, and peak biquads",
+          "resets internal state",
+          "cascades multiple sections via sosfilt",
+          "characterizes reciprocal overflow in legacy tiny-coefficient normalization",
+          "characterizes legacy output overflow and a hidden non-finite delay",
+          "characterizes legacy failed-block prefix commit and reset replay",
+          "characterizes final-stage and intermediate SOS overflow"
+        ],
+        "code/packages/typescript/dsp-filters/tests/checked-biquad.test.ts": [
+          "uses direct division for the minimum-subnormal identity",
+          "accepts only finite primitive numbers and nonzero a0",
+          "rejects non-finite output and either candidate delay without committing",
+          "rolls block state back after late invalid values and throwing accessors",
+          "uses separately rounded binary64 steps and rolls back on overflow",
+          "is one-shot, order-sensitive, and preserves negative zero for empty SOS",
+          "validates signal before section access and row shape before coefficient access",
+          "rejects malformed lengths and indexed containers before traversal",
+          "rejects sparse arrays even when numeric values exist on their prototype",
+          "accepts the exact sample and SOS section limits"
+        ],
+        "code/packages/typescript/dsp-filters/tests/checked-properties.test.ts": [
+          "checks 512 exact integer FIR and feedback recurrence cases with domain-preserving shrinkers",
+          "checks fixed-seed raw binary64 state/error cases separately",
+          "runs structured raw-bit fuzz with manual semantic outcome feedback, replay, and fault minimization"
+        ],
+        "code/packages/typescript/dsp-filters/tests/shared_conformance.test.ts": [
+          "treats signed zero as equal under the fixture's numeric comparison",
+          "rejects malformed fixture records and an altered dyadic expected sample",
+          "checks whole, fixed chunks, sample calls, reset replay, and all 32,768 partitions",
+          "runs checked public APIs over the complete shared fixture domain",
+          "checks one-shot SOS, empty-section identity, and empty-input rejection",
+          "checks 64 seeded partition-property samples",
+          "rejects 128 seeded malformed-fixture fuzz mutations"
+        ],
+        "code/packages/typescript/dsp-filters/tests/design.test.ts": [
+          "enforces public FIR designer domains, lane windows, and error order",
+          "samples valid FIR designer inputs with fixed seeds",
+          "avoids reciprocal overflow for finite normalized coefficients",
+          "preserves finite-reciprocal result bits and existing edge behavior",
+          "enumerates the declared finite subnormal corpus",
+          "checks deterministic raw-bit cases around reciprocal overflow",
+          "runs bounded seeded raw-bit subnormal fuzz cases",
+          "designs lowpass FIR filter with unit DC gain and symmetry",
+          "designs lowpass FIR with various window types",
+          "designs highpass FIR with zero DC gain",
+          "designs bandpass FIR with peak gain at center frequency",
+          "designs FIR filters via firwin interface",
+          "designs Butterworth lowpass filters (order 1 and 2)",
+          "designs Butterworth highpass filters (order 1 and 2)",
+          "designs Butterworth bandpass filters (order 1 and 2)",
+          "designs Chebyshev Type I lowpass filters (order 1 and 2)",
+          "rejects invalid FIR design parameters"
+        ],
+        "code/packages/typescript/dsp-filters/tests/iir.test.ts": [
+          "computes 1st order IIR impulse response via lfilter",
+          "normalises by a[0] when a[0] != 1.0",
+          "acts as FIR filter when a = [1.0]",
+          "matches iir alias with lfilter",
+          "performs zero-phase forward-backward filtfilt with padding",
+          "performs zero-phase filtfilt with short signal (unpadded branch)",
+          "rejects invalid inputs in lfilter and filtfilt"
+        ],
+        "code/packages/typescript/dsp-filters/tests/fir.test.ts": [
+          "convolves one-sample operands and recognizes the one-tap identity",
+          "convolves impulse with kernel: delta * h == h",
+          "produces identical results between fir and firFft",
+          "handles long signals with firFft"
+        ],
+        "code/packages/typescript/dsp-filters/tests/hostile_inputs.test.ts": [
+          "rejects empty signals and empty kernels fail-closed (CWE-20)",
+          "rejects non-finite floats fail-closed (CWE-20)",
+          "enforces pre-flight bounds checks without allocating (CWE-400)",
+          "handles error types and unknown window names",
+          "rejects out-of-range biquad helper parameters fail-closed",
+          "verifies required_capabilities.json is pure empty []",
+          "verifies src has zero forbidden imports or calls (VER08a)",
+          "enforces fail-closed bounds and finiteness on filtfilt (CWE-400/CWE-20)"
+        ]
+      },
+      "test_identity_status": "source_configured_not_run_by_this_inventory",
+      "function_signatures": {
+        "sosfilt": "export function sosfilt( sos: (Float64Array | ArrayLike<number>)[], signal: Float64Array | ArrayLike<number> ): Float64Array",
+        "sosCascade": "export function sosfilt( sos: (Float64Array | ArrayLike<number>)[], signal: Float64Array | ArrayLike<number> ): Float64Array",
+        "sos_cascade": "export function sosfilt( sos: (Float64Array | ArrayLike<number>)[], signal: Float64Array | ArrayLike<number> ): Float64Array",
+        "checkedSosfilt": "export function checkedSosfilt( sections: IndexedValues, signal: IndexedValues, ): Float64Array",
+        "butterworthBandpass": "export function butterworthBandpass( order: number, lowCutoffNorm: number, highCutoffNorm: number ): FilterCoefficients",
+        "butterworthHighpass": "export function butterworthHighpass( order: number, cutoffNorm: number ): FilterCoefficients",
+        "butterworthLowpass": "export function butterworthLowpass( order: number, cutoffNorm: number ): FilterCoefficients",
+        "chebyshev1Lowpass": "export function chebyshev1Lowpass( order: number, rippleDb: number, cutoffNorm: number ): FilterCoefficients",
+        "designBandPass": "export function designBandPass( lowCutoffNorm: number, highCutoffNorm: number, numTaps: number, window: string = \"hamming\" ): Float64Array",
+        "designHighPass": "export function designHighPass( cutoffNorm: number, numTaps: number, window: string = \"hamming\" ): Float64Array",
+        "designLowPass": "export function designLowPass( cutoffNorm: number, numTaps: number, window: string = \"hamming\" ): Float64Array",
+        "firwin": "export function firwin( numTaps: number, cutoff: number | [number, number], options?: FirwinOptions ): Float64Array",
+        "fir": "export function fir( signal: Float64Array | ArrayLike<number>, kernel: Float64Array | ArrayLike<number> ): Float64Array",
+        "firFft": "export function firFft( signal: Float64Array | ArrayLike<number>, kernel: Float64Array | ArrayLike<number> ): Float64Array",
+        "fir_fft": "export function firFft( signal: Float64Array | ArrayLike<number>, kernel: Float64Array | ArrayLike<number> ): Float64Array",
+        "filtfilt": "export function filtfilt( b: Float64Array | ArrayLike<number>, a: Float64Array | ArrayLike<number>, signal: Float64Array | ArrayLike<number> ): Float64Array",
+        "iir": "export function iir( signal: Float64Array | ArrayLike<number>, b: Float64Array | ArrayLike<number>, a: Float64Array | ArrayLike<number> ): Float64Array",
+        "lfilter": "export function lfilter( b: Float64Array | ArrayLike<number>, a: Float64Array | ArrayLike<number>, signal: Float64Array | ArrayLike<number> ): Float64Array"
+      },
+      "constant_values": {
+        "MAX_FILTER_TAPS": 65536,
+        "MAX_TAPS": 65536,
+        "MAX_SIGNAL_LEN": 16777216,
+        "MAX_SAMPLES": 16777216,
+        "MAX_ORDER": 1024
+      },
+      "error_types": {
+        "FilterError": {
+          "base": "Error",
+          "constructor": "constructor(message: string); sets name=FilterError"
+        },
+        "EmptySignalError": {
+          "base": "FilterError",
+          "constructor": "constructor(message: string = \"filter signal must be non-empty\"); sets name=EmptySignalError"
+        },
+        "EmptyKernelError": {
+          "base": "FilterError",
+          "constructor": "constructor(message: string = \"filter kernel or coefficient list must be non-empty\"); sets name=EmptyKernelError"
+        },
+        "InvalidCoefficientError": {
+          "base": "FilterError",
+          "constructor": "constructor(message: string); sets name=InvalidCoefficientError"
+        },
+        "FftError": {
+          "base": "FilterError",
+          "constructor": "constructor(message: string); sets name=FftError"
+        }
+      }
+    }
+  },
+  "warrant_copies": [
+    {
+      "path": "code/specs/dsp-filters.warrant",
+      "blob_oid": "7fa47b906206d1aa40e6fc6d8a377df7bbf91d8c",
+      "lane": "canonical"
+    },
+    {
+      "path": "code/packages/rust/dsp-filters/dsp-filters.warrant",
+      "blob_oid": "7fa47b906206d1aa40e6fc6d8a377df7bbf91d8c",
+      "lane": "rust"
+    },
+    {
+      "path": "code/packages/python/dsp-filters/dsp-filters.warrant",
+      "blob_oid": "7fa47b906206d1aa40e6fc6d8a377df7bbf91d8c",
+      "lane": "python"
+    },
+    {
+      "path": "code/packages/typescript/dsp-filters/dsp-filters.warrant",
+      "blob_oid": "f35d913f60cb8f9926aebe215b9007c2aa918fec",
+      "lane": "typescript"
+    }
+  ],
+  "warrant_projection": {
+    "declared_operations": [
+      "fir",
+      "fir_fft",
+      "iir",
+      "design_low_pass",
+      "design_high_pass",
+      "design_band_pass"
+    ],
+    "all_arguments": "Bytes or Nat",
+    "functional_claims": 0,
+    "examples": 0,
+    "biquad_or_sos_operations": 0,
+    "resource_rows": {
+      "canonical_rust_python": "FIR/FFT/IIR output/depth rows and three designer output/steps/heap/depth rows remain obligations; no Bytes-to-float codec or validated cost framing",
+      "typescript": "FIR/FFT work+heap, IIR work only; high-pass/band-pass window hostile rows omitted; all are unresolved lane-specific obligations, not proven false or satisfied"
+    },
+    "operation_signatures_by_lane": {
+      "canonical": {
+        "fir": "signal: Bytes, kernel: Bytes) -> Result<Bytes, FilterError>",
+        "fir_fft": "signal: Bytes, kernel: Bytes) -> Result<Bytes, FilterError>",
+        "iir": "signal: Bytes, b: Bytes, a: Bytes) -> Result<Bytes, FilterError>",
+        "design_low_pass": "cutoff_norm: Nat, num_taps: Nat, window: Nat) -> Bytes",
+        "design_high_pass": "cutoff_norm: Nat, num_taps: Nat, window: Nat) -> Bytes",
+        "design_band_pass": "low_norm: Nat, high_norm: Nat, num_taps: Nat, window: Nat) -> Bytes"
+      },
+      "rust": {
+        "fir": "signal: Bytes, kernel: Bytes) -> Result<Bytes, FilterError>",
+        "fir_fft": "signal: Bytes, kernel: Bytes) -> Result<Bytes, FilterError>",
+        "iir": "signal: Bytes, b: Bytes, a: Bytes) -> Result<Bytes, FilterError>",
+        "design_low_pass": "cutoff_norm: Nat, num_taps: Nat, window: Nat) -> Bytes",
+        "design_high_pass": "cutoff_norm: Nat, num_taps: Nat, window: Nat) -> Bytes",
+        "design_band_pass": "low_norm: Nat, high_norm: Nat, num_taps: Nat, window: Nat) -> Bytes"
+      },
+      "python": {
+        "fir": "signal: Bytes, kernel: Bytes) -> Result<Bytes, FilterError>",
+        "fir_fft": "signal: Bytes, kernel: Bytes) -> Result<Bytes, FilterError>",
+        "iir": "signal: Bytes, b: Bytes, a: Bytes) -> Result<Bytes, FilterError>",
+        "design_low_pass": "cutoff_norm: Nat, num_taps: Nat, window: Nat) -> Bytes",
+        "design_high_pass": "cutoff_norm: Nat, num_taps: Nat, window: Nat) -> Bytes",
+        "design_band_pass": "low_norm: Nat, high_norm: Nat, num_taps: Nat, window: Nat) -> Bytes"
+      },
+      "typescript": {
+        "fir": "signal: Bytes, kernel: Bytes) -> Result<Bytes, FilterError>",
+        "fir_fft": "signal: Bytes, kernel: Bytes) -> Result<Bytes, FilterError>",
+        "iir": "signal: Bytes, b: Bytes, a: Bytes) -> Result<Bytes, FilterError>",
+        "design_low_pass": "cutoff_norm: Nat, num_taps: Nat, window: Nat) -> Bytes",
+        "design_high_pass": "cutoff_norm: Nat, num_taps: Nat, window: Nat) -> Bytes",
+        "design_band_pass": "low_norm: Nat, high_norm: Nat, num_taps: Nat, window: Nat) -> Bytes"
+      }
+    },
+    "input_rows_by_lane": {
+      "canonical": {
+        "fir.signal": [
+          "hostile",
+          "rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL",
+          "ensures no_panic, terminates"
+        ],
+        "fir.kernel": [
+          "hostile",
+          "rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "fir_fft.signal": [
+          "hostile",
+          "rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL",
+          "ensures no_panic, terminates"
+        ],
+        "fir_fft.kernel": [
+          "hostile",
+          "rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "iir.signal": [
+          "hostile",
+          "rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL",
+          "ensures no_panic, terminates"
+        ],
+        "iir.b": [
+          "hostile",
+          "rejects len(b) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "iir.a": [
+          "hostile",
+          "rejects len(a) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "design_low_pass.cutoff_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_low_pass.num_taps": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_low_pass.window": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_high_pass.cutoff_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_high_pass.num_taps": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_high_pass.window": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.low_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.high_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.num_taps": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.window": [
+          "hostile",
+          "ensures terminates"
+        ]
+      },
+      "rust": {
+        "fir.signal": [
+          "hostile",
+          "rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL",
+          "ensures no_panic, terminates"
+        ],
+        "fir.kernel": [
+          "hostile",
+          "rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "fir_fft.signal": [
+          "hostile",
+          "rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL",
+          "ensures no_panic, terminates"
+        ],
+        "fir_fft.kernel": [
+          "hostile",
+          "rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "iir.signal": [
+          "hostile",
+          "rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL",
+          "ensures no_panic, terminates"
+        ],
+        "iir.b": [
+          "hostile",
+          "rejects len(b) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "iir.a": [
+          "hostile",
+          "rejects len(a) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "design_low_pass.cutoff_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_low_pass.num_taps": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_low_pass.window": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_high_pass.cutoff_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_high_pass.num_taps": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_high_pass.window": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.low_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.high_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.num_taps": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.window": [
+          "hostile",
+          "ensures terminates"
+        ]
+      },
+      "python": {
+        "fir.signal": [
+          "hostile",
+          "rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL",
+          "ensures no_panic, terminates"
+        ],
+        "fir.kernel": [
+          "hostile",
+          "rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "fir_fft.signal": [
+          "hostile",
+          "rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL",
+          "ensures no_panic, terminates"
+        ],
+        "fir_fft.kernel": [
+          "hostile",
+          "rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "iir.signal": [
+          "hostile",
+          "rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL",
+          "ensures no_panic, terminates"
+        ],
+        "iir.b": [
+          "hostile",
+          "rejects len(b) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "iir.a": [
+          "hostile",
+          "rejects len(a) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "design_low_pass.cutoff_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_low_pass.num_taps": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_low_pass.window": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_high_pass.cutoff_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_high_pass.num_taps": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_high_pass.window": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.low_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.high_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.num_taps": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.window": [
+          "hostile",
+          "ensures terminates"
+        ]
+      },
+      "typescript": {
+        "fir.signal": [
+          "hostile",
+          "rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL",
+          "ensures no_panic, terminates"
+        ],
+        "fir.kernel": [
+          "hostile",
+          "rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "fir_fft.signal": [
+          "hostile",
+          "rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL",
+          "ensures no_panic, terminates"
+        ],
+        "fir_fft.kernel": [
+          "hostile",
+          "rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "iir.signal": [
+          "hostile",
+          "rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL",
+          "ensures no_panic, terminates"
+        ],
+        "iir.b": [
+          "hostile",
+          "rejects len(b) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "iir.a": [
+          "hostile",
+          "rejects len(a) == 0 with FilterError.EMPTY_KERNEL",
+          "ensures no_panic, terminates"
+        ],
+        "design_low_pass.cutoff_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_low_pass.num_taps": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_low_pass.window": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_high_pass.cutoff_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_high_pass.num_taps": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.low_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.high_norm": [
+          "hostile",
+          "ensures terminates"
+        ],
+        "design_band_pass.num_taps": [
+          "hostile",
+          "ensures terminates"
+        ]
+      }
+    },
+    "label_rows_by_lane": {
+      "canonical": {
+        "fir": [
+          "signal public",
+          "kernel public"
+        ],
+        "fir_fft": [
+          "signal public",
+          "kernel public"
+        ],
+        "iir": [
+          "signal public",
+          "b public",
+          "a public"
+        ],
+        "design_low_pass": [
+          "cutoff_norm public",
+          "num_taps public",
+          "window public"
+        ],
+        "design_high_pass": [
+          "cutoff_norm public",
+          "num_taps public",
+          "window public"
+        ],
+        "design_band_pass": [
+          "low_norm public",
+          "high_norm public",
+          "num_taps public",
+          "window public"
+        ]
+      },
+      "rust": {
+        "fir": [
+          "signal public",
+          "kernel public"
+        ],
+        "fir_fft": [
+          "signal public",
+          "kernel public"
+        ],
+        "iir": [
+          "signal public",
+          "b public",
+          "a public"
+        ],
+        "design_low_pass": [
+          "cutoff_norm public",
+          "num_taps public",
+          "window public"
+        ],
+        "design_high_pass": [
+          "cutoff_norm public",
+          "num_taps public",
+          "window public"
+        ],
+        "design_band_pass": [
+          "low_norm public",
+          "high_norm public",
+          "num_taps public",
+          "window public"
+        ]
+      },
+      "python": {
+        "fir": [
+          "signal public",
+          "kernel public"
+        ],
+        "fir_fft": [
+          "signal public",
+          "kernel public"
+        ],
+        "iir": [
+          "signal public",
+          "b public",
+          "a public"
+        ],
+        "design_low_pass": [
+          "cutoff_norm public",
+          "num_taps public",
+          "window public"
+        ],
+        "design_high_pass": [
+          "cutoff_norm public",
+          "num_taps public",
+          "window public"
+        ],
+        "design_band_pass": [
+          "low_norm public",
+          "high_norm public",
+          "num_taps public",
+          "window public"
+        ]
+      },
+      "typescript": {
+        "fir": [
+          "signal public",
+          "kernel public"
+        ],
+        "fir_fft": [
+          "signal public",
+          "kernel public"
+        ],
+        "iir": [
+          "signal public",
+          "b public",
+          "a public"
+        ],
+        "design_low_pass": [
+          "cutoff_norm public",
+          "num_taps public",
+          "window public"
+        ],
+        "design_high_pass": [
+          "cutoff_norm public",
+          "num_taps public",
+          "window public"
+        ],
+        "design_band_pass": [
+          "low_norm public",
+          "high_norm public",
+          "num_taps public",
+          "window public"
+        ]
+      }
+    },
+    "bound_rows_by_lane": {
+      "canonical": {
+        "fir": [
+          "output <= len(signal) + len(kernel)",
+          "depth <= 32"
+        ],
+        "fir_fft": [
+          "output <= len(signal) + len(kernel)",
+          "depth <= 32"
+        ],
+        "iir": [
+          "output <= len(signal)",
+          "depth <= 32"
+        ],
+        "design_low_pass": [
+          "output <= 4 * num_taps",
+          "steps <= 64 * num_taps + 1024",
+          "heap <= 4 * num_taps + 1024",
+          "depth <= 16"
+        ],
+        "design_high_pass": [
+          "output <= 4 * num_taps",
+          "steps <= 64 * num_taps + 1024",
+          "heap <= 4 * num_taps + 1024",
+          "depth <= 16"
+        ],
+        "design_band_pass": [
+          "output <= 4 * num_taps",
+          "steps <= 64 * num_taps + 1024",
+          "heap <= 4 * num_taps + 1024",
+          "depth <= 16"
+        ]
+      },
+      "rust": {
+        "fir": [
+          "output <= len(signal) + len(kernel)",
+          "depth <= 32"
+        ],
+        "fir_fft": [
+          "output <= len(signal) + len(kernel)",
+          "depth <= 32"
+        ],
+        "iir": [
+          "output <= len(signal)",
+          "depth <= 32"
+        ],
+        "design_low_pass": [
+          "output <= 4 * num_taps",
+          "steps <= 64 * num_taps + 1024",
+          "heap <= 4 * num_taps + 1024",
+          "depth <= 16"
+        ],
+        "design_high_pass": [
+          "output <= 4 * num_taps",
+          "steps <= 64 * num_taps + 1024",
+          "heap <= 4 * num_taps + 1024",
+          "depth <= 16"
+        ],
+        "design_band_pass": [
+          "output <= 4 * num_taps",
+          "steps <= 64 * num_taps + 1024",
+          "heap <= 4 * num_taps + 1024",
+          "depth <= 16"
+        ]
+      },
+      "python": {
+        "fir": [
+          "output <= len(signal) + len(kernel)",
+          "depth <= 32"
+        ],
+        "fir_fft": [
+          "output <= len(signal) + len(kernel)",
+          "depth <= 32"
+        ],
+        "iir": [
+          "output <= len(signal)",
+          "depth <= 32"
+        ],
+        "design_low_pass": [
+          "output <= 4 * num_taps",
+          "steps <= 64 * num_taps + 1024",
+          "heap <= 4 * num_taps + 1024",
+          "depth <= 16"
+        ],
+        "design_high_pass": [
+          "output <= 4 * num_taps",
+          "steps <= 64 * num_taps + 1024",
+          "heap <= 4 * num_taps + 1024",
+          "depth <= 16"
+        ],
+        "design_band_pass": [
+          "output <= 4 * num_taps",
+          "steps <= 64 * num_taps + 1024",
+          "heap <= 4 * num_taps + 1024",
+          "depth <= 16"
+        ]
+      },
+      "typescript": {
+        "fir": [
+          "output <= len(signal) + len(kernel)",
+          "steps <= 32 * len(signal) * len(kernel) + 4096",
+          "heap <= 4 * (len(signal) + len(kernel)) + 8192",
+          "depth <= 32"
+        ],
+        "fir_fft": [
+          "output <= len(signal) + len(kernel)",
+          "steps <= 64 * (len(signal) + len(kernel)) + 4096",
+          "heap <= 8 * (len(signal) + len(kernel)) + 16384",
+          "depth <= 32"
+        ],
+        "iir": [
+          "output <= len(signal)",
+          "steps <= 16 * len(signal) * imax(len(b), len(a)) + 4096",
+          "depth <= 32"
+        ],
+        "design_low_pass": [
+          "output <= 4 * num_taps",
+          "steps <= 64 * num_taps + 1024",
+          "heap <= 4 * num_taps + 1024",
+          "depth <= 16"
+        ],
+        "design_high_pass": [
+          "output <= 4 * num_taps",
+          "steps <= 64 * num_taps + 1024",
+          "heap <= 4 * num_taps + 1024",
+          "depth <= 16"
+        ],
+        "design_band_pass": [
+          "output <= 4 * num_taps",
+          "steps <= 64 * num_taps + 1024",
+          "heap <= 4 * num_taps + 1024",
+          "depth <= 16"
+        ]
+      }
+    }
+  },
+  "binding_and_report_tree_audit": {
+    "pinned_package_tree_walked": true,
+    "rust_evidence_bindings_path": "absent",
+    "generated_evidence_harness_path": "absent",
+    "assurance_report_path": "absent",
+    "native_refinement": "not_live",
+    "warrant_binding": "not_live",
+    "host_float_and_state_binding": "not_live",
+    "note": "Pinned-baseline and current committed HEAD package trees are enumerated separately. This is a Git-tree check, not a dirty-worktree artifact scan.",
+    "current_head_package_tree_walked": true
+  },
+  "producer_sources": [
+    {
+      "lane": "python",
+      "fuzz_path": "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/fuzz.py",
+      "fuzz_blob_oid": "bacba911ed01d142cb992138e6aaee1e22139f47",
+      "pbt_path": "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py",
+      "pbt_blob_oid": "3826621048575b8752d581e5e6074772029cda00",
+      "feedback": "seeded 1-in-10 corpus admission lottery, no execution-edge feedback",
+      "outcome_accounting": "exceptions recorded as crashes; callback return values ignored; no measured watchdog or native coverage"
+    },
+    {
+      "lane": "typescript",
+      "fuzz_path": "code/packages/typescript/test-bootstrap/src/fuzz.ts",
+      "fuzz_blob_oid": "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",
+      "pbt_path": "code/packages/typescript/test-bootstrap/src/pbt.ts",
+      "pbt_blob_oid": "ed9190c3961393d3a75adb54fa3cd3a2b29d521c",
+      "feedback": "target-supplied CoverageBitmap semantic feedback; not native instrumentation",
+      "outcome_accounting": "runner records pass/crash; declared timeout/OOM outcomes currently dropped from report; no watchdog is implied",
+      "current_outcome_accounting": "AF-04c1 current source: triage and mutation ledgers count every returned pass/crash/timeout/OOM; exceptions propagate; no timeout/OOM watchdog or native coverage is implied"
+    },
+    {
+      "lane": "rust",
+      "fuzz_path": "code/packages/rust/test-bootstrap/src/fuzz.rs",
+      "fuzz_blob_oid": "d1e92981d0d909e603bc50c4562d29cffc3f7d7c",
+      "pbt_path": "code/packages/rust/test-bootstrap/src/pbt.rs",
+      "pbt_blob_oid": "4c78da32f9602aa6f6d2263971a71a02c5a1f5de",
+      "feedback": "target-supplied CoverageBitmap semantic feedback; not native instrumentation",
+      "outcome_accounting": "fuzz reports callback-returned Timeout/Oom; PBT is separate and has no fuzz-outcome accounting"
+    }
+  ],
+  "evidence_records": [
+    {
+      "lane": "rust",
+      "operation": "Biquad/sosfilt",
+      "kind": "public_execution",
+      "status": "configured",
+      "test_path": "code/packages/rust/dsp-filters/tests/biquad_sos.rs",
+      "test_blob_oid": "56675007a65110692428ef702a73e509bd59adce",
+      "evidence_domain": "shared 16-sample exact dyadic fixture; fixed [3,1,12], samplewise, reset; 32768 contiguous partitions and 524288 Biquad outputs",
+      "notes": "configured test domain only; no run receipt supplied by this inventory",
+      "test_identities": [
+        "shared_fixture_runs_public_biquad_and_sos_exports",
+        "checked_biquad_rejects_bad_coefficients_and_is_failure_atomic",
+        "checked_caps_and_fma_distinguishing_recurrence_are_pinned"
+      ]
+    },
+    {
+      "lane": "rust",
+      "operation": "Biquad/SOS VER05 direct/feedback models",
+      "kind": "model",
+      "status": "configured",
+      "test_path": "code/packages/rust/dsp-filters/tests/biquad_sos.rs",
+      "test_blob_oid": "56675007a65110692428ef702a73e509bd59adce",
+      "evidence_domain": "VER05 512 direct cases seed AF030001; 512 two-feedback cases seed AF030002; 128 general f32 block cases seed AF030003",
+      "test_identities": [
+        "ver05_exact_direct_form_dyadic_property_has_nonzero_budget",
+        "ver05_exact_two_feedback_dyadic_property_has_nonzero_budget",
+        "ver05_general_f32_block_error_property_preserves_entry_state"
+      ]
+    },
+    {
+      "lane": "rust",
+      "operation": "Biquad/SOS structured fuzz",
+      "kind": "fuzz",
+      "status": "configured",
+      "test_path": "code/packages/rust/dsp-filters/tests/biquad_sos.rs",
+      "test_blob_oid": "56675007a65110692428ef702a73e509bd59adce",
+      "evidence_domain": "VER06 seed AF03F022, 1024 bounded iterations, five source-level initial seeds, max input 40 bytes; per-run admissions and manual outcome bins are historical reports, not asserted source classes; caller bitmap only",
+      "test_identities": [
+        "ver06_structured_raw_bit_fuzz_replays_and_exercises_minimization"
+      ]
+    },
+    {
+      "lane": "python",
+      "operation": "Biquad/SOS",
+      "kind": "public_execution",
+      "status": "configured",
+      "test_path": "code/packages/python/dsp-filters/tests/test_shared_conformance.py",
+      "test_blob_oid": "c50800453287466bec953c1e8b477ba90dd028f1",
+      "evidence_domain": "shared fixed fixture; 32768 contiguous partitions/524288 outputs; 64 seeded partition samples AF02B001; 128 schema mutations AF02B003",
+      "test_identities": [
+        "test_shared_fixture_all_biquad_partitions_and_state_semantics",
+        "test_shared_fixture_checked_biquad_all_partitions_and_state_semantics",
+        "test_shared_fixture_sosfilt_is_one_shot_and_empty_behavior",
+        "test_seeded_partition_property_samples",
+        "test_seeded_fixture_schema_fuzz_cases"
+      ]
+    },
+    {
+      "lane": "python",
+      "operation": "checked properties and source mutants",
+      "kind": "property_and_mutation",
+      "status": "configured",
+      "test_path": "code/packages/python/dsp-filters/tests/test_checked_properties.py",
+      "test_blob_oid": "1da57c34cbda39c1f7fc18fe370849ff663a682e",
+      "evidence_domain": "bounded integer FIR/feedback domains and seeded raw-float/mutation corpora; exact run evidence must pin seed and imported source SHA",
+      "test_identities": [
+        "test_ver05_exact_direct_and_feedback_integer_oracles",
+        "test_seeded_raw_binary64_state_and_error_cases",
+        "test_ver06_seeded_mutation_fuzz_replays_and_detects_same_target_fault"
+      ]
+    },
+    {
+      "lane": "typescript",
+      "operation": "Biquad/SOS",
+      "kind": "public_execution",
+      "status": "configured",
+      "test_path": "code/packages/typescript/dsp-filters/tests/shared_conformance.test.ts",
+      "test_blob_oid": "b5059ee275de5aae986e3ed23001e9732ec99525",
+      "evidence_domain": "shared fixed fixture; 32768 contiguous partitions/524288 outputs; 64 seeded partition samples AF02B101; 128 schema mutations AF02B103",
+      "test_identities": [
+        "checks whole, fixed chunks, sample calls, reset replay, and all 32,768 partitions",
+        "checks 64 seeded partition-property samples",
+        "rejects 128 seeded malformed-fixture fuzz mutations"
+      ]
+    },
+    {
+      "lane": "typescript",
+      "operation": "checked properties and source mutants",
+      "kind": "property_and_mutation",
+      "status": "configured",
+      "test_path": "code/packages/typescript/dsp-filters/tests/checked-properties.test.ts",
+      "test_blob_oid": "814be9be1251ff767859bfca847ad3da27968956",
+      "evidence_domain": "bounded integer FIR/feedback domains and seeded raw-float/mutation corpora; source recompiled before any mutation evidence",
+      "test_identities": [
+        "checks 512 exact integer FIR and feedback recurrence cases with domain-preserving shrinkers",
+        "runs structured raw-bit fuzz with manual semantic outcome feedback, replay, and fault minimization"
+      ]
+    }
+  ],
+  "evidence_rungs": [
+    {
+      "lane": "rust",
+      "operation": "Biquad/sosfilt",
+      "source": "present",
+      "public_execution": "configured_not_run",
+      "mathematical_model": "bounded_dyadic_oracles_configured",
+      "warrant_binding": "not_live",
+      "native_refinement": "not_live"
+    },
+    {
+      "lane": "python",
+      "operation": "Biquad/sosfilt",
+      "source": "present",
+      "public_execution": "configured_not_run",
+      "mathematical_model": "bounded_integer_oracles_configured",
+      "warrant_binding": "not_live",
+      "native_refinement": "not_live"
+    },
+    {
+      "lane": "typescript",
+      "operation": "Biquad/sosfilt",
+      "source": "present",
+      "public_execution": "configured_not_run",
+      "mathematical_model": "bounded_integer_oracles_configured",
+      "warrant_binding": "not_live",
+      "native_refinement": "not_live"
+    },
+    {
+      "lane": "rust",
+      "operation": "fir/fir_fft/iir/designers",
+      "source": "present",
+      "public_execution": "test_sources_present_run_not_pinned_here",
+      "mathematical_model": "partial_test_sources",
+      "warrant_binding": "not_live",
+      "native_refinement": "not_live"
+    },
+    {
+      "lane": "python",
+      "operation": "fir/fir_fft/iir/designers",
+      "source": "present",
+      "public_execution": "test_sources_present_run_not_pinned_here",
+      "mathematical_model": "partial_test_sources",
+      "warrant_binding": "not_live",
+      "native_refinement": "not_live"
+    },
+    {
+      "lane": "typescript",
+      "operation": "fir/fir_fft/iir/designers",
+      "source": "present",
+      "public_execution": "test_sources_present_run_not_pinned_here",
+      "mathematical_model": "partial_test_sources",
+      "warrant_binding": "not_live",
+      "native_refinement": "not_live"
+    }
+  ],
+  "provenance_policy": {
+    "evidence_key": [
+      "subject_commit",
+      "lane",
+      "operation",
+      "kind",
+      "domain"
+    ],
+    "configured_is_not_executed": true,
+    "coverage_guided_is_not_exhaustive": true,
+    "mutation_requires_baseline_mutant_restored_hash_and_loaded_artifact_identity": true,
+    "python_mutation_requires_cache_clear_and_bytecode_disabled": true,
+    "native_coverage_is_not_inferred_from_semantic_bitmap": true
+  },
+  "shared_fixture_subject": {
+    "path": "code/specs/fixtures/biquad-sos-v1/cases.json",
+    "blob_oid": "3265b027d1d8be75fbd7b3f616bba260f0db2e06",
+    "fixture_identities": [
+      "biquad.process.impulse16",
+      "sosfilt.impulse16.two_sections"
+    ]
+  },
+  "current_source_migrations": {
+    "historical_subject_commit": "cb60dc9820fc069325130193118e75fdba9b96bc",
+    "comparison_base_commit": "c79cf8564c91836c271be3c3846229631006c1f3",
+    "squash_merge_commit": null,
+    "entries": [
+      {
+        "path": "code/packages/typescript/dsp-filters/tests/checked-properties.test.ts",
+        "historical_blob_oid": "814be9be1251ff767859bfca847ad3da27968956",
+        "comparison_base_blob_oid": "814be9be1251ff767859bfca847ad3da27968956",
+        "reviewed_current_blob_oid": "987974f57dfd8f9a4bf841c342babf03916b2127",
+        "reason": "AF-04c1 public DSP campaign ledger assertions"
+      },
+      {
+        "path": "code/packages/typescript/test-bootstrap/src/fuzz.ts",
+        "historical_blob_oid": "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",
+        "comparison_base_blob_oid": "7b4577deb0bfb0ae4f19c148cac81b173b59c39a",
+        "reviewed_current_blob_oid": "ad357c479f730d50702dd0cb5991e1d69a2dfcea",
+        "reason": "AF-04c1 TypeScript fuzz producer"
+      },
+      {
+        "path": "code/packages/typescript/test-bootstrap/tests/fuzz.test.ts",
+        "historical_blob_oid": "63d4b83469ea5d75556078af37de0f05bf0223b2",
+        "comparison_base_blob_oid": "63d4b83469ea5d75556078af37de0f05bf0223b2",
+        "reviewed_current_blob_oid": "1ae38bf583109c6cba312f037a5604e6db07f785",
+        "reason": "AF-04c1 bootstrap fuzz outcome and limit tests"
+      },
+      {
+        "path": "code/scripts/validate_dsp_filter_assurance_inventory.py",
+        "historical_blob_oid": null,
+        "comparison_base_blob_oid": "d209f13418af5fb17b582b7c78989dc5416a84f9",
+        "reviewed_current_blob_oid": "f67c4204076e0b8e7d6ea95dbe6e545e95faadc6",
+        "reason": "AF-04c1 committed-HEAD source-drift checker"
+      }
+    ]
+  }
+}

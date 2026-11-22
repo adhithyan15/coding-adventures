@@ -155,6 +155,11 @@ pub struct AuditEvidence {
     /// here blocks the discharge of the rows that rest on that proof kind.
     pub ct_unproven: Vec<String>,
     pub step_unproven: Vec<String>,
+    /// Warrant operations that do not declare a `steps` bound. This is
+    /// derived from the parsed spec, independently of which proof rows exist.
+    pub missing_step_bound_ops: Vec<String>,
+    /// Number of operations in the parsed Warrant document.
+    pub warrant_operation_count: usize,
     /// Same for step-bound obligations.
     pub step_not_live: Vec<String>,
     /// The blocker text the manifest recorded for the not-live obligations.
@@ -311,6 +316,16 @@ pub fn build_weakness_matrix(
     registry: &WeaknessRegistry,
     ctx: &PackageAuditContext,
 ) -> Result<Vec<WeaknessRow>, MatrixError> {
+    if ctx.evidence.profile.row_applicability(407)
+        == Some(crate::profile::RowApplicability::Applicable)
+        && (ctx.evidence.missing_step_bound_ops.is_empty()
+            || ctx.evidence.warrant_operation_count == 0
+            || ctx.evidence.all_ops_step_bounded)
+    {
+        return Err(MatrixError::InvalidExclusion(
+            "CWE-407: `applicable` profile row requires a nonempty Warrant with missing step bounds".into(),
+        ));
+    }
     let mut rows = Vec::with_capacity(registry.classes.len());
 
     for class in &registry.classes {
@@ -427,7 +442,7 @@ fn declared_exclusion(ctx: &PackageAuditContext, cwe: u32) -> Result<String, Mat
         326 | 327 if ctx.declared_capabilities.iter().any(|c| c.starts_with("rand:")) => {
             Some("the package declares a `rand:` capability, so it can generate key material")
         }
-        407 if !ctx.evidence.all_ops_step_bounded => {
+    407 if !ctx.evidence.all_ops_step_bounded => {
             Some("the Warrant document has an operation with no `steps` bound row, so its work is not declared bounded")
         }
         _ => None,
@@ -439,6 +454,18 @@ fn declared_exclusion(ctx: &PackageAuditContext, cwe: u32) -> Result<String, Mat
         ))),
         None => Ok(reason.to_string()),
     }
+}
+
+fn missing_step_bounds_reason(cwe: u32, operations: &[String]) -> String {
+    let id = match cwe {
+        400 => "EXEMPT-CWE-400-MISSING-STEP-BOUNDS",
+        407 => "EXEMPT-CWE-407-MISSING-STEP-BOUNDS",
+        _ => unreachable!("only CWE-400 and CWE-407 use missing-step-bound dispositions"),
+    };
+    format!(
+        "computed exemption (unapproved; kind=missing-step-bounds; id={id}): no declared steps bounds for operations [{}]",
+        operations.join(", ")
+    )
 }
 
 fn evaluate_row(
@@ -727,7 +754,16 @@ fn evaluate_row(
 
         // Parsing / DoS
         400 => {
-            if ctx.has_zero_alloc_proof
+            if !ctx.evidence.missing_step_bound_ops.is_empty() {
+                Ok(WeaknessRow {
+                    cwe: 400,
+                    name: class.name.clone(),
+                    status: WeaknessStatus::Exemption,
+                    approved: Some(false),
+                    reason: missing_step_bounds_reason(400, &ctx.evidence.missing_step_bound_ops),
+                    evidence: vec![],
+                })
+            } else if ctx.has_zero_alloc_proof
                 && !ctx.evidence.step_bound_ids.is_empty()
                 && ctx.evidence.step_unproven.is_empty()
             {
@@ -785,6 +821,26 @@ fn evaluate_row(
             })
         }
         407 => {
+            if ctx.evidence.profile.row_applicability(407)
+                == Some(crate::profile::RowApplicability::Applicable)
+            {
+                if ctx.evidence.missing_step_bound_ops.is_empty()
+                    || ctx.evidence.warrant_operation_count == 0
+                    || ctx.evidence.all_ops_step_bounded
+                {
+                    return Err(MatrixError::InvalidExclusion(
+                        "CWE-407: `applicable` profile row requires a nonempty Warrant with missing step bounds".into(),
+                    ));
+                }
+                return Ok(WeaknessRow {
+                    cwe: 407,
+                    name: class.name.clone(),
+                    status: WeaknessStatus::Exemption,
+                    approved: Some(false),
+                    reason: missing_step_bounds_reason(407, &ctx.evidence.missing_step_bound_ops),
+                    evidence: vec![],
+                });
+            }
             Ok(WeaknessRow {
                 cwe: 407,
                 name: class.name.clone(),

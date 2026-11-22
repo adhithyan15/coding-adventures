@@ -1,0 +1,208 @@
+warrant core_forms_v0
+  -- Every ir.core construct a v0 document can write, for the oracle parity test.
+  error E = BAD | WORSE
+  model m_not(a: Bool) -> Bool = not a
+  model m_logic(a: Bool, b: Bool) -> Bool = (a and b) or (a => not b)
+  model m_cmp(a: Nat, b: Nat) -> Bool = a < b or a <= b or a > b or a >= b or a != b
+  model m_arith(a: Nat, b: Nat) -> Int = a - b + 2 * a
+  model m_neg(a: Nat) -> Int = -a - 1
+  model m_u8(a: U8, b: U8) -> U8 = if a >= 2u8 then a - 2u8 else b * 3u8 + 1u8
+  model m_len(a: Bytes) -> Int = len(a) + 1
+  model m_cat(a: Bytes, b: Bytes) -> Bytes = concat(a, concat(b, b"00ff"))
+  model m_pick(c: Bool, a: Bytes) -> Result<Bytes, E> = if c then Ok(a) else Err(E.BAD)
+  model m_call(a: Nat, b: Nat) -> Int = m_arith(a, b) - m_arith(b, a)
+  model m_lit(a: Bytes) -> Bool = a == b"00ff"
+  model m_sign(a: Nat) -> Int = if a > 0 then 1 else -1
+  model m_wide(a: Nat) -> Int = ((a))
+  model m_inc(x: U8) -> U8 = x + 1u8
+  model m_twice(x: U8) -> U8 = m_inc(m_inc(x))
+  model Word = Bytes<4>
+  model m_width(a: Bytes<2>, b: Bytes<3>) -> Bytes<5> = concat(a, b)
+  model m_alias(a: Word) -> Word = a
+  op f(a: Bytes, b: Bytes) -> Bool
+  op g<N: Nat>(a: Bytes<N>, k: U8 | k >= 1u8) -> Bytes<N>
+  op h(a: U64 | a <= 100u64, b: U64 | b <= a) -> U64
+  op pick(a: Bytes, b: Bytes, c: Bool) -> Result<Bytes, E> fresh
+  op e(a: Bytes) -> Nat
+  op u8op(a: U8, b: U8) -> U8
+  op cat(a: Bytes, b: Bytes) -> Bytes
+  op word(a: Word, b: Word) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels f:
+    a.contents secret
+    a.length public
+    b.contents secret
+    b.length public
+
+  labels g:
+    a.contents secret
+    a.length public
+    k secret
+
+  labels h:
+    a secret
+    b secret
+
+  labels pick:
+    a.contents secret
+    a.length public
+    b.contents secret
+    b.length public
+    c secret
+
+  labels e:
+    a.contents secret
+    a.length public
+
+  labels u8op:
+    a secret
+    b secret
+
+  labels cat:
+    a.contents secret
+    a.length public
+    b.contents secret
+    b.length public
+
+  labels word:
+    a.contents secret
+    a.length public
+    b.contents secret
+    b.length public
+
+  input f.a:
+    hostile
+    ensures no_panic, terminates
+  input f.b:
+    hostile
+    ensures no_panic, terminates
+  input g.a:
+    hostile
+    ensures no_panic, terminates
+  input g.k:
+    hostile
+    ensures no_panic, terminates
+  input h.a:
+    hostile
+    ensures no_panic, terminates
+  input h.b:
+    hostile
+    ensures no_panic, terminates
+  input pick.a:
+    hostile
+    ensures no_panic, terminates
+  input pick.b:
+    hostile
+    ensures no_panic, terminates
+  input pick.c:
+    hostile
+    ensures no_panic, terminates
+  input e.a:
+    hostile
+    ensures no_panic, terminates
+  input u8op.a:
+    hostile
+    ensures no_panic, terminates
+  input u8op.b:
+    hostile
+    ensures no_panic, terminates
+  input cat.a:
+    hostile
+    ensures no_panic, terminates
+  input cat.b:
+    hostile
+    ensures no_panic, terminates
+  input word.a:
+    hostile
+    ensures no_panic, terminates
+  input word.b:
+    hostile
+    ensures no_panic, terminates
+
+  bound f:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+  bound g:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+  bound h:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound pick:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+  bound e:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+  bound u8op:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound cat:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+  bound word:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+
+  example ex_false:
+    f(b"", b"00") == false
+  example ex_ok:
+    pick(b"00", b"01", true) == Ok(b"00")
+  example ex_err:
+    pick(b"00", b"0102", true) == Err(E.BAD)
+  example ex_u64:
+    h(5u64, 3u64) == 3u64
+  example ex_static:
+    g<2>(b"0102", 1u8) == b"0102"
+  example ex_nat:
+    e(b"00") == 2
+
+  claim ref_left:
+    forall a: Bytes, b: Bytes. f(a, b) == m_lit(a)
+  claim ref_right:
+    forall a: Bytes, b: Bytes. m_lit(a) == f(a, b)
+  claim fold3:
+    forall a: U64 | a <= 100u64, b: U64 | b <= a, c: U64 | c <= b. h(a, b) == c
+  claim pred_two_calls:
+    forall a: Bytes, b: Bytes. f(a, b) == f(b, a)
+  claim pred_guard:
+    forall a: Bytes, b: Bytes. len(a) > 0 => f(a, b) == f(b, a)
+  claim pred_if:
+    forall a: Bytes, b: Bytes. if len(a) > 0 then f(a, b) == f(b, a) else true
+  claim pick_ok:
+    forall a: Bytes, b: Bytes | len(a) == len(b), c: Bool. pick(a, b, c) == m_pick(c, a)
+  claim static_w:
+    forall a: Bytes<4>, k: U8 | k >= 1u8. g<4>(a, k) == a
+  claim nat_arith:
+    forall a: Bytes. e(a) == len(a) + 1
+  claim nat_neg:
+    forall a: Bytes. e(a) == m_len(a) and m_neg(1) < 0 and m_sign(2) == 1
+  claim u8_pure:
+    forall a: U8, b: U8. u8op(a, b) == m_u8(a, b)
+  claim cat_model:
+    forall a: Bytes, b: Bytes. cat(a, b) == m_cat(a, b)
+  claim calls_models:
+    forall a: Bytes. e(a) == m_len(a) and m_not(true) == false and m_logic(true, false) and m_cmp(1, 2) and m_wide(3) == m_call(3, 2)
+  claim alias_ref:
+    forall a: Word, b: Word. word(a, b) == (m_alias(a) == m_alias(b))
+  claim width_model:
+    forall a: Bytes<2>, b: Bytes<3>. cat(a, b) == m_width(a, b)
+  claim if_context:
+    forall a: Nat. e(b"00") == 1 and (if true then 1 else a) == a and (if true then a else 1) == a
+  claim inc_pure:
+    forall a: U8. u8op(a, a) == m_twice(a)
+  claim ground:
+    f(b"00", b"00") == true

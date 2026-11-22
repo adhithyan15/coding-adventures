@@ -4,16 +4,16 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-percussion-kit"
-version = "0.1.0"
+version = "0.3.0"
 description = "Deterministic naive unpitched percussion voices and drum kits"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 dependencies = [
-    "coding-adventures-oscillator>=0.1.0",
+    "coding-adventures-oscillator>=0.2.0",
     "coding-adventures-pcm-audio>=0.1.0",
-    "coding-adventures-trig>=0.1.0",
+    "coding-adventures-trig>=0.3.0",
 ]
 
 [project.optional-dependencies]
@@ -36,7 +36,7 @@ select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=percussion_kit --cov-report=term-missing --cov-fail-under=95"
+addopts = "-p no:platformdirs --cov=percussion_kit --cov-report=term-missing --cov-fail-under=95"
 
 [tool.coverage.run]
 source = ["src/percussion_kit"]

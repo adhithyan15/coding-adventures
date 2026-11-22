@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "rigidbody-6dof",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded 6-DOF rigid-body state vectors, inertia tensors, quaternions, and ground contact planes"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure physics transform: package implements deterministic 6-DOF Euler rigid-body dynamics, Velocity-Verlet/RK4 integration, and ground contact response only; FNV-1a digest is non-cryptographic state telemetry"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: every step bounds substeps (<= MAX_SUBSTEPS = 64) and contact probes (<= MAX_CONTACT_POINTS = 64) with fixed-size stack types and no unbounded loops"
+    }
+  }
+}

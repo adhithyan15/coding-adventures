@@ -1,0 +1,366 @@
+1  execve("/usr/bin/sh", ["sh", "-c", "make all"], 0x0 /* 1 vars */) = 0
+1  execve("/nope/cc", ["cc"], 0x0 /* 1 vars */) = -1 ENOENT (No such file or directory)
+1  execve("/usr/bin/cc", ["cc", "-c"], 0x0 /* 1 vars */) = 0
+1  +++ exited with 0 +++
+10  access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
+10  openat(AT_FDCWD</start>, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3</etc/ld.so.cache>
+10  openat(AT_FDCWD</start>, "/proc/self/maps", O_RDONLY|O_CLOEXEC) = 3</proc/10/maps>
+11  tgkill(10, 13, SIGURG)        = 0
+10  readlinkat(AT_FDCWD</start>, "/proc/self/exe", "/tmp/go-build207559618/b001/kiln.test", 128) = 37
+10  getcwd("/start", 4096) = 6
+10  newfstatat(AT_FDCWD</start>, "/tmp", {st_mode=S_IFDIR|S_ISVTX|0777, st_size=4096, ...}, AT_SYMLINK_NOFOLLOW) = 0
+10  clone3({flags=
+12  clone3({flags=
+10  <... clone3 resumed> => {parent_tid=[14]}, 88) = 14
+12  <... clone3 resumed> => {parent_tid=[15]}, 88) = 15
+12  +++ exited with 0 +++
+13  +++ exited with 0 +++
+14  +++ exited with 0 +++
+15  +++ exited with 0 +++
+20  futex(0x1, FUTEX_WAIT, 0, NULL) = 0
+20  +++ exited with 0 +++
+11  unshare(CLONE_FS) = 0
+11  chdir("/elsewhere") = 0
+11  chdir("/start") = 0
+21  +++ exited with 0 +++
+22  +++ exited with 0 +++
+30  +++ exited with 0 +++
+1  clone3({flags=CLONE_VM
+11  clone3(0x7ffd1234, 88) = 40
+11  clone3({exit_signal=0, flags=
+11  clone3({flags=
+11  clone3({flags=0x7d0f00, exit_signal=0}, 88) = 40
+11  clone3({flags=CLONE_NEWNS|CLONE_VM, exit_signal=0}, 88) = 40
+11  clone3({flags=CLONE_UNTRACED|CLONE_VM, exit_signal=0}, 88) = 40
+11  clone3({flags=, exit_signal=0}, 88) = 40
+40  +++ exited with 0 +++
+11  clone3({flags=CLONE_VM, exit_signal=0}, 88) = -1 ENOSYS (Function not implemented)
+12  stat("/z", 0x1) = 0
+100  clone(child_stack=NULL, flags=SIGCHLD) = 101
+100  chdir("/other") = 0
+101  openat(AT_FDCWD, "data.txt", O_RDONLY) = 3</repo/data.txt>
+101  +++ exited with 0 +++
+100  +++ exited with 0 +++
+100  clone(child_stack=NULL, flags=CLONE_FS|SIGCHLD) = 101
+1  clone(child_stack=NULL, flags=CLONE_VM|CLONE_FS|SIGCHLD) = 2
+2  chdir("/x") = 0
+1  fchdir(3</x>) = 0
+1  chdir("/x") = -1 ENOENT (No such file or directory)
+2  +++ exited with 0 +++
+1  chdir("/x") = 0
+1  chdir("/a") = 0
+1  openat(AT_FDCWD, "f", O_RDONLY <unfinished ...>
+1  <... openat resumed>)  = 3</a/f>
+1  chdir("/b") = 0
+1  stat("a", 0x1) = 0
+5  stat("a", 0x1) = 0
+1  fork() = 2
+2  +++ exited with %d +++
+1  stat("a", 0x1 <unfinished ...>
+1  <... stat resumed>) = 0
+1  +++ exited with 1
+1  fork() = 
+1  +++ exited with 9 +++
+01  stat("a", 0x1) = 0
+[pid 007] stat("a", 0x1) = 0
+10  +++ exited with 0 +++
+10  execve("
+10  unshare(CLONE_NEWUSER) = 0
+10  clone(child_stack=NULL, flags=CLONE_NEWPID|SIGCHLD) = 11
+11  unshare(CLONE_NEWNS) = 0
+11  mount("none", "/", NULL, MS_REC|MS_PRIVATE, NULL) = 0
+11  pivot_root(".", ".") = 0
+11  prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) = 0
+11  seccomp(SECCOMP_SET_MODE_FILTER, 0, 0x1) = 0
+11  execve("
+11  execve("/bin/sh", ["sh", "-c", "make"], 0x0 /* 1 vars */) = 0
+11  +++ exited with 5 +++
+10  wait4(11, [{WIFEXITED(s) && WEXITSTATUS(s) == 5}], 0, NULL) = 11
+11  mount("a", "b", NULL, 0, NULL) = 0
+11  openat(AT_FDCWD, "a", O_RDONLY) = 3</start/a>
+11  execve("/proc/self/exe", ["kiln"], 0x0) = 0
+10  fork() = 12
+10  
+10  stat("a", 0x1) = 0
+10  close(3) = 0
+10  execve("/bin/sh", ["sh"], 0x0) = 0
+10  execve("/bin/nope", ["x"], 0x0) = -1 ENOENT (No such file or directory)
+11  fork() = 2 /* 12 in strace's PID NS */
+11  clone(child_stack=NULL, flags=SIGCHLD) = 2 /* 12 in strace's PID NS */
+11  +++ exited with 1 +++
+10  +++ exited with 1 +++
+11  execve("/bin/sh", ["sh"], 0x0) = -1 ENOENT (No such file or directory)
+11  capset(0x1) = 0
+11  mount("a", "b", NULL, 0 <unfinished ...>
+11  <... mount resumed>, NULL) = 0
+11  openat(AT_FDCWD, "/proc/self/uid_map", O_WRONLY) = 3</proc/1/uid_map>
+11  execve("/usr/local/bin/sh", ["sh"], 0x0) = -1 ENOENT (No such file or directory)
+11  execve("/usr/bin/sh", ["sh"], 0x0) = -1 EACCES (Permission denied)
+11  chdir("/") = 0
+11  execve("sh", ["sh"], 0x0) = 0
+10  clone(child_stack=0x7f0000001000, flags=
+12  stat("/x", 0x1) = 0
+12  clone(child_stack=NULL, flags=CLONE_NEWPID|SIGCHLD) = 11
+12  stat("/y", 0x1) = 0
+12  fork() = 13
+11  clone(child_stack=0x7f0000001000, flags=
+13  stat("/z", 0x1) = 0
+13  mount("a", "b", NULL, 0, NULL) = 0
+13  stat("/late", 0x1) = 0
+13  stat("/ok", 0x1) = 0
+11  clone(child_stack=NULL, flags=CLONE_THREAD|CLONE_UNTRACED) = 13
+11  clone(child_stack=0x1, flags=
+12  futex(0x1, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+11  unshare(
+11  unshare(CLONE_FS) = -1 EPERM (Operation not permitted)
+11  unshare(0x20000) = 0
+11  
+10  clone(child_stack=0x1, flags=
+11  fork() = 2
+1  getcwd("/r", 4096) = 3
+11  wait4(-1, 0x1, 0, NULL) = 2
+11  execve("/proc/self/exe", ["kiln", "sandbox-init", "--sha256", "bb", "--", "sh"], 0x0 /* 1 vars */) = 0
+11  openat(
+11  socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, IPPROTO_IP) = 5<socket:[123]>
+11  mount("", "/", "", MS_REC|MS_PRIVATE, NULL) = 0
+11  mount("tmpfs", "/tmp/x", "tmpfs", MS_NOSUID|MS_NODEV, "mode=0755,uid=1000,gid=1000") = 0
+11  mkdir("/tmp/x/.kiln-newroot", 0755) = 0
+11  mkdir("/tmp/x/.kiln-newroot/usr", 0755) = -1 EEXIST (File exists)
+11  newfstatat(
+11  readlinkat(
+11  symlink("usr/bin", "/tmp/x/.kiln-newroot/bin") = 0
+11  symlink("/proc/self/fd", "/tmp/x/.kiln-newroot/dev/fd") = 0
+11  mount("tmpfs", "/proc/self/fd/6", "tmpfs", MS_RDONLY|MS_NOSUID|MS_NODEV|MS_NOEXEC, "mode=0555,size=4k,nr_inodes=2") = 0
+11  mount("/dev/null", "/proc/self/fd/6", NULL, MS_BIND, NULL) = 0
+11  mount("", "/tmp/x/.kiln-newroot", "", MS_RDONLY|MS_NOSUID|MS_NODEV|MS_REMOUNT, NULL) = 0
+11  chdir("/tmp/x/.kiln-newroot") = 0
+11  umount2(".", MNT_DETACH) = 0
+11  lstat("/run/docker.sock", 0x7ffd1) = -1 ENOENT (No such file or directory)
+11  newfstatat(AT_FDCWD</>, "/run/user", 0x7ffd1, AT_SYMLINK_NOFOLLOW) = -1 ENOENT (No such file or directory)
+11  openat(AT_FDCWD</>, "/dev/null", O_RDONLY|O_CLOEXEC) = 6</dev/null>
+11  dup3(6, 0, 0) = 0
+1  clone(child_stack=NULL, flags=
+10  clone(child_stack=0x7f0000002000, flags=
+10  exit_group(0 <unfinished ...>
+12  ???( <unfinished ...>
+10  <... exit_group resumed>)         = ?
+10  <... exit_group resumed>) = ?
+12  <... ??? resumed>) = ?
+12  <... ??? resumed>)
+12  ???()
+12  ???() = ?
+13  ???()  = ?
+13  ???( <unfinished ...>
+1  clone(child_stack=NULL, flags=SIGCHLD) = 3
+2  ???( <unfinished ...>
+3  openat(AT_FDCWD, "/x", O_RDONLY) = 4</x>
+2  <... ??? resumed>) = ?
+3  stat("/y", 0x1) = 0
+3  +++ exited with 0 +++
+2  <... ??? resumed>) = 0
+2  <... ??? resumed>) = 3</x>
+2  <... ??? resumed>) = -1 ENOENT (No such file or directory)
+2  <... ??? resumed>) = ? <unavailable>
+2  <... ??? resumed>0x1) = ?
+2  <... ??? resumed>)= ?
+2  stat("a", 0x1) = 0
+2  stat( <unfinished ...>
+2  --- SIGCHLD {si_signo=SIGCHLD} ---
+2  ???() = ?
+2  ???() = 0
+2  ???(0x1, 0x2) = ?
+2  ???(0x1 <unfinished ...>
+2  <... execve resumed>) = 0
+2  <... openat resumed>) = 0
+2 ???(
+2 <... execve resumed>) = 0
+2  +++ superseded by execve in pid 3 +++
+2  openat(AT_FDCWD, "/x", O_RDONLY <unfinished ...>
+2  ??(
+2  ????( <unfinished ...>
+2  ???  ( <unfinished ...>
+2  ???( <unfinished ...> x
+2  ???( <unfinished ...> 
+2  ???() = ? x
+2  syscall_0x1c8(0x1) = -1 ENOSYS (Function not implemented)
+12  close(3) = 0
+12  <... ??? resumed>) = 0
+2  <... ??? resumed>)    = ?
+2  ???()    = ?
+1  stat("a" <unfinished ...>
+1  stat("a\"b", 0x1) = 0
+1  openat(AT_FDCWD, "/x", O_RDONLY) = 3</x\<\>>
+1  stat("/x <unfinished ...>", 0x1) = 0
+1  stat( <unfinished ...>
+1  <... stat resumed>"a", 0x1) = 0
+1  clone(child_stack=NULL, flags=CLONE_UNTRACED) = 2
+1  connect(3, {sa_family=AF_UNIX, sun_path=@"x"}, 2) = 0
+1  +++ killed by SIGKILL +++
+100  execve("/usr/bin/sh", ["sh", "-c", "make"], 0x7ffd1c2e3a40 /* 41 vars */) = 0
+100  clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f0000000010) = 101
+101  mkdir("out", 0777) = 0
+101  +++ killed by SIGSEGV (core dumped) +++
+100  openat(AT_FDCWD</work/repo>, ".", O_RDWR|O_TMPFILE, 0600) = 3</work/repo/#1234 (deleted)>
+100  +++ superseded by execve in pid 101 +++
+100  mkdir("out", 0777) = ?
+100  lchown("dl/", 1000, 1000) = 0
+100  utimensat(AT_FDCWD</work/repo>, "dl/", NULL, AT_SYMLINK_NOFOLLOW) = 0
+100  openat(AT_FDCWD</work/repo>, "/dev/stderr", O_WRONLY|O_CREAT|O_TRUNC, 0666) = 3<pipe:[8123]>
+101  rename("a", "b" <unfinished ...>
+101  +++ killed by SIGKILL +++
+101  openat(AT_FDCWD</work/repo>, "o", O_WRONLY|O_CREAT, 0666 <unfinished ...>
+101  +++ killed by SIGTERM +++
+101  bind(3<socket:[9]>, {sa_family=AF_UNIX, sun_path="s"}, 110 <unfinished ...>
+101  fchmod(3</work/repo/x>, 0644 <unfinished ...>
+101  mkdir("o", 0777) = ?
+101  <... rename resumed>) = ?
+101  wait4(-1,  <unfinished ...>
+11  clone(child_stack=NULL, flags=CLONE_VM|CLONE_VFORK|SIGCHLD) = 2
+11  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_KILLED, si_pid=2, si_uid=1000, si_status=SIGTERM, si_utime=0, si_stime=0} ---
+12  --- stopped by SIGSTOP ---
+12  +++ killed by SIGTERM +++
+11  +++ killed by SIGSEGV (core dumped) +++
+11  +++ exited with 0 +++
+11  clone(child_stack=NULL, flags=SIGCHLD) = 2
+11  exit_group(0) = ?
+11  exit_group(0 <unfinished ...>
+11  <... exit_group resumed>) = ?
+12  exit_group(0) = ?
+12  clone(child_stack=NULL, flags=
+13  exit_group(0) = ?
+11  +++ killed by SIGKILL +++
+10  exit_group(0) = ?
+12  +++ killed by SIGPIPE +++
+11  exit_group(0) = 
+11  <... exit_group resumed>) = 
+12  exit_group(1 <unfinished ...>
+12  <... exit_group resumed>) = 
+12  exit_group(1) = 
+11  exit(0) = ?
+12  exit(0) = ?
+11  exit(0) = 
+11  exit(0 <unfinished ...>
+11  <... exit resumed>) = 
+11  <... exit resumed>) = ?
+2  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_KILLED, si_pid=3, si_uid=1000, si_status=SIGKILL, si_utime=0, si_stime=0} ---
+2  --- SIGKILL {si_signo=SIGKILL, si_code=SI_USER, si_pid=3, si_uid=1000} ---
+2  --- stopped by SIGSTOP ---
+11  <... exit resumed>) = -1 EPERM (Operation not permitted)
+12  <... exit_group resumed>) = -1 EPERM (Operation not permitted)
+11  exit_group(0) = -1 EPERM (Operation not permitted)
+11  <... exit_group resumed>) = -1 EPERM (Operation not permitted)
+1  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+1  --- stopped by SIGSTOP ---
+1  +++ killed by SIGTERM +++
+1  +++ killed by SIGSEGV (core dumped) +++
+1  clone(child_stack=NULL, flags=SIGCHLD) = 2
+1  openat(AT_FDCWD, "a", O_RDONLY <unfinished ...>
+2  stat("b", 0x1) = 0
+1  <... openat resumed>) = 3</r/a>
+1  
+202 exit: %+v
+203 exit: %+v
+1  fork( <unfinished ...>
+2  stat("x", 0x1) = 0
+1  <... fork resumed>) = 2
+0  stat("a", 0x1) = 0
+[pid x] stat("a", 0x1) = 0
+[pid 1 stat("a", 0x1) = 0
+1  stat("a", 0x1) = 0
+1  stat("a ", 0x1) = 0
+1  +++ exited with x +++
+1  +++ exited with 0
+1  +++ killed by sigkill +++
+1  +++ vanished +++
+1  --- SIGCHLD
+1  <... stat
+[pid 7] stat("a", 0x1) = 0
+[pid 7] +++ exited with 0 +++
+1  --- SIGSEGV {si_signo=SIGSEGV} ---
+1  <... stat resumed>)                   = 0
+2  stat("c", 0x1 <unfinished ...>
+2  +++ exited with 1 +++
+1  wait4(-1,  <unfinished ...>
+1  exit_group(0 <unfinished ...>
+1  <... open resumed>) = 0
+1  stat("b", 0x1) = 0
+1  <... stat resumed>, <unfinished ...>
+1  <... stat resumed>)  = junk
+9  stat("a", 0x1) = 0
+9  +++ exited with 0 +++
+1  fork() = 1
+2  fork() = 1
+2  fork() = 3
+3  fork() = 2
+1  fork() = 0
+1  fork() = ?
+1  frobnicate( <unfinished ...>
+1  clone(child_stack=NULL, flags=SIGCHLD) = 0
+1  stat("
+1  bogus(1) = 0
+100  openat(AT_FDCWD</work/repo>, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3</etc/ld.so.cache>
+100  newfstatat(AT_FDCWD</work/repo>, "go.mod", {st_mode=S_IFREG|0644, st_size=40, ...}, 0) = 0
+100  stat("missing.h", 0x7ffd1c2e3500) = -1 ENOENT (No such file or directory)
+100  chdir("pkg") = 0
+100  openat(AT_FDCWD</work/repo/pkg>, "src/main.c", O_RDONLY) = 4</work/repo/pkg/src/main.c>
+101  execve("/usr/bin/cc", ["cc", "-c", "src/main.c"], 0x7ffd1c2e3a40 /* 41 vars */) = 0
+100  wait4(-1,  <unfinished ...>
+101  openat(AT_FDCWD</work/repo/pkg>, "src/main.c", O_RDONLY) = 3</work/repo/pkg/src/main.c>
+101  getdents64(5</work/repo/pkg/src>, 0x55d0c8a0b2a0 /* 3 entries */, 32768) = 80
+101  openat(AT_FDCWD</work/repo/pkg>, "main.o", O_WRONLY|O_CREAT|O_TRUNC, 0666 <unfinished ...>
+101  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=102} ---
+101  <... openat resumed>)            = 6</work/repo/pkg/main.o>
+101  rename("main.o", "build.o") = 0
+101  mkdir("out", 0777)                      = -1 EEXIST (File exists)
+101  unlinkat(AT_FDCWD</work/repo/pkg>, "tmp", AT_REMOVEDIR) = 0
+101  symlink("main.o", "link.o") = 0
+101  readlink("link.o", "main.o", 4096) = 6
+101  utimensat(6</work/repo/pkg/main.o>, NULL, [{tv_sec=1, tv_nsec=0}, {tv_sec=1, tv_nsec=0}], 0) = 0
+101  linkat(AT_FDCWD</work/repo/pkg>, "a", 7</work/repo>, "b", 0) = 0
+100  <... wait4 resumed>[{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 101
+100  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=101, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+100  exit_group(0)                           = ?
+200  chdir("/work/a") = 0
+200  clone(child_stack=0x7f0000001000, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tid=[201], tls=0x7f0000001700, child_tidptr=0x7f0000001710 <unfinished ...>
+201  stat("t", {st_mode=S_IFREG|0644, st_size=1, ...}) = 0
+200  <... clone resumed>)                    = 201
+201  +++ exited with 0 +++
+200  chdir("../b") = 0
+200  stat("x", {st_mode=S_IFREG|0644, st_size=1, ...}) = 0
+200  fork()                                  = 202
+202  stat("z", 0x1) = -1 ENOENT (No such file or directory)
+202  chdir("deep") = 0
+202  fchdir(3</srv/data>) = 0
+202  stat("w", 0x1) = -1 ENOENT (No such file or directory)
+202  +++ killed by SIGKILL +++
+200  stat("v", 0x1) = -1 ENOENT (No such file or directory)
+200  vfork( <unfinished ...>
+203  stat("u", 0x1) = -1 ENOENT (No such file or directory)
+203  +++ exited with 3 +++
+200  <... vfork resumed>)                    = 203
+200  +++ exited with 0 +++
+400  socket(AF_INET, SOCK_STREAM|SOCK_CLOEXEC, IPPROTO_IP) = 3<socket:[1]>
+400  connect(3<socket:[1]>, {sa_family=AF_INET, sin_port=htons(443), sin_addr=inet_addr("93.184.216.34")}, 16) = -1 EINPROGRESS (Operation now in progress)
+400  socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP) = 4<socket:[2]>
+400  connect(4<socket:[2]>, {sa_family=AF_INET6, sin6_port=htons(80), sin6_flowinfo=htonl(0), inet_pton(AF_INET6, "2001:db8::1", &sin6_addr), sin6_scope_id=0}, 28) = 0
+400  socket(AF_UNIX, SOCK_STREAM, 0) = 5<socket:[3]>
+400  connect(5<socket:[3]>, {sa_family=AF_UNIX, sun_path="/run/daemon.sock"}, 110) = 0
+400  connect(5<socket:[3]>, {sa_family=AF_UNIX, sun_path=@"abstract name"}, 15) = 0
+400  bind(5<socket:[3]>, {sa_family=AF_UNIX, sun_path="/tmp/s"}, 10) = 0
+400  listen(5<socket:[3]>, 5) = 0
+400  sendto(3<socket:[1]>, "GET /", 5, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("8.8.8.8")}, 16) = 5
+400  sendto(3<socket:[1]>, "x", 1, 0, NULL, 0) = 1
+400  sendmsg(3<socket:[1]>, {msg_name={sa_family=AF_INET, sin_port=htons(9), sin_addr=inet_addr("1.2.3.4")}, msg_namelen=16, msg_iov=[{iov_base="msg_name={sa_family=AF_INET}", iov_len=28}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 28
+400  sendmmsg(3<socket:[1]>, [{msg_hdr={msg_name={sa_family=AF_INET, sin_port=htons(7), sin_addr=inet_addr("5.6.7.8")}, msg_namelen=16, msg_iov=[{iov_base="a", iov_len=1}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, msg_len=1}], 1, 0) = 1
+400  getsockname(3<socket:[1]>, {sa_family=AF_INET, sin_port=htons(1), sin_addr=inet_addr("0.0.0.0")}, [16]) = 0
+400  +++ exited with 0 +++
+300  openat(AT_FDCWD, "/tmp/a\"b", O_RDONLY) = 3</tmp/a\"b>
+300  openat(AT_FDCWD, "/tmp/lt<gt>", O_RDONLY) = 4</tmp/lt\<gt\>>
+300  stat("/tmp/p) = 5", 0x1) = -1 ENOENT (No such file or directory)
+300  stat("/tmp/sp ace", 0x1) = 0
+300  stat("/tmp/nl\nx\ttab\\back", 0x1) = 0
+300  stat("/tmp/\303\251\x41\101", 0x1) = 0
+300  stat("/tmp/+++ exited with 0 +++", 0x1) = 0
+300  stat("/tmp/<unfinished ...>", 0x1) = 0
+300  openat(3</tmp/dir with space>, "f", O_RDONLY) = 6</tmp/dir with space/f>
+300  +++ exited with 0 +++

@@ -4,8 +4,11 @@ import (
 	"bufio"
 	"errors"
 	"io"
+	"math"
 	"strconv"
 	"strings"
+
+	straceparser "github.com/adhithyan15/coding-adventures/code/packages/go/strace-parser"
 )
 
 // This file is pass 1: turn the byte stream into an ordered list of COMPLETED
@@ -71,6 +74,71 @@ import (
 // pid lives on (a non-leader exec while the leader sits at the stop) is refused
 // by its "superseded by execve" line and the mismatched resume.
 //
+// # A phantom execve (D33)
+//
+// The same race has a fourth spelling.  Thread T was at a syscall-entry stop
+// when another thread L's execve made de_thread kill it; strace still
+// dispatched T's stale stop, PTRACE_GET_SYSCALL_INFO returned op=NONE with only
+// its header written, and strace (which tests only op == EXIT) reused its
+// static entry buffer, still holding L's execve.  So it prints a byte-identical
+// line under T:
+//
+//	4288  execve("/usr/bin/sh", ["sh", "-c", "x"], 0x24e1 /* 5 vars */ <unfinished ...>
+//	4289  execve("/usr/bin/sh", ["sh", "-c", "x"], 0x24e1 /* 5 vars */ <unfinished ...>
+//	4289  +++ exited with 0 +++
+//	4288  <... execve resumed>) = 0
+//
+// exitInsideCall accepts the unfinished execve at T's exit, and drops it, only
+// when: it is execve (not execveat) with an absolute path; T's next line is
+// its own exit with code 0 (no signal line, not killed); another pid has an
+// EARLIER pending execve with the same text before "<unfinished ...>" (the
+// earliest wins); and that owner later resumes with "= 0" (withGhosts; a failed
+// owner refuses at the ghost's line, a never-resumed one at its own).  Pass 2 (model.apply)
+// also requires T and L in one thread group.  It is sound because L's
+// identical execve succeeded: T died before its image changed, and its only
+// possible effect is reading the path L's exec reads.
+//
+// # A task that dies inside a call (D35)
+//
+// When a thread group exits (Go's exit_group, a fatal signal), the kernel kills
+// the group's other threads wherever they are, and a task that dies inside a
+// system call is printed in three shapes.  Every threaded runtime makes them.
+//
+//	2  tgkill(1, 1, SIGURG <unfinished ...>
+//	2  <... tgkill resumed>) = ? <unavailable>              (shape 1)
+//
+//	2  clone(child_stack=0x7f.., flags=CLONE_VM|... <unfinished ...>
+//	2  <... clone resumed> <unfinished ...>) = ?            (shape 2)
+//
+//	2  openat(AT_FDCWD</w>, 0x7f3a6c001230, O_RDONLY|O_CLOEXEC <unfinished ...>
+//	2  +++ exited with 0 +++                                (shape 3)
+//
+// In shape 1 strace could not fetch the result because the tracee was gone; in
+// shape 2 it printed at PTRACE_EVENT_EXIT with the call still open; in shape 3
+// the task was killed out of its syscall-ENTRY stop, so strace could no longer
+// read its memory and the path is an address.  All three mean the call's result
+// is unknown.  Both readers accept exactly "= ? <unavailable>" (parseResult) and
+// exactly " <unfinished ...>)" then "= ?" after a resume (dyingResumeTail); the
+// grammar (strace.grammar) is looser, and these two functions pin the spelling,
+// as parseResult pins every result.
+//
+// The first two shapes leave the pid as a DYING call (pending.dying, built on
+// the dead machinery above): only its own exit line may follow, a signal line,
+// a second resume or a new call is refused.  Shape 3 is simply an unfinished call
+// at the pid's exit.  What the exit does to it is dyingPolicy, in one table
+// shared by both readers:
+//
+//   - an ignored-class call (tgkill) is dropped, as it always was;
+//   - fork and vfork are dropped and no spawn is recorded.  A clone is dropped
+//     only when its flags are readable and allowed (flags= present, every token
+//     a known name, no CLONE_UNTRACED or CLONE_NEW*).  If the child did start,
+//     its first line has no spawn record: orphan-pid, which fails closed;
+//   - everything else stays unresumed-call: a write, a network call, chdir, exec,
+//     and every call that READS (stat, listing, open).  The model infers reads
+//     only from the open and stat records, so a dropped one would remove an input
+//     from the read set, and a live sibling thread (or a sibling's fork or exec)
+//     can still use the descriptor or the buffer.
+//
 // Events are recorded in the order calls COMPLETE (when the return value is
 // known), which for a split call is the position of its "resumed" line.
 
@@ -116,6 +184,15 @@ type result struct {
 	ann     []byte // -y annotation on a returned descriptor
 	hasAnn  bool
 	unknown bool // "= ?"
+	// unavailable: the exact text "= ? <unavailable>".  strace could not fetch
+	// the call's result because the tracee was already gone (the dying-call
+	// rule, "A task that dies inside a call" in the file head).
+	unavailable bool
+	// minusOne says the value was the exact decimal text "-1", as strace prints
+	// a failed call.  The hex spelling of the same number and "-01" are not
+	// what strace prints, so the sandbox filter's answer (filterAnswered)
+	// requires this, not just value == -1.
+	minusOne bool
 	// host is the pid in strace's own PID namespace, from the annotation
 	// `= 2 /* 5030 in strace's PID NS */` that --pidns-translation adds to a
 	// pid returned inside another PID namespace; hasHost says it was printed.
@@ -126,10 +203,14 @@ type result struct {
 // pid is the pid a spawn returned, in the namespace the trace's line prefixes
 // use: the translated host pid when there is one, else the printed value.
 func (r result) pid() int {
+	v := r.value
 	if r.hasHost {
-		return int(r.host)
+		v = r.host
 	}
-	return int(r.value)
+	if v < math.MinInt || v > math.MaxInt {
+		return 0
+	}
+	return int(v)
 }
 
 // parsePidnsNote reads ` /* N in strace's PID NS */` at the start of s (leading
@@ -189,7 +270,18 @@ type record struct {
 	// a seccomp filter the step installed): the thread group is not dying, so
 	// the marker taken at the start line is withdrawn.
 	retract bool
+	// ghosts are the phantom execve lines (D33) that were accepted against this
+	// completed execve; pass 2 checks they share its thread group.
+	ghosts []ghost
+	// spawnDropped, on an exit record, says the dying call this exit ended was
+	// a fork, vfork or clone that dyingPolicy dropped (D44).  The model counts
+	// them to decide how many orphan exits it may accept.
+	spawnDropped bool
 }
+
+// ghost is a phantom "execve(" line accepted by ghostOwner: the pid that
+// printed it and the line it was printed on.
+type ghost struct{ pid, line int }
 
 // isExitName: the two calls that end a thread (exit) or a thread group
 // (exit_group), whose START lines the model keeps (Trace.InitExitLine).
@@ -198,12 +290,23 @@ func isExitName(n string) bool { return n == "exit_group" || n == "exit" }
 // lineState is what the line handler carries between lines.
 type lineState struct {
 	pend map[int]*pending
-	root int // pid of the first line
+	// execs indexes the pending execve calls (see setPending).
+	execs map[string]*execQueue
+	root  int // pid of the first line
 	// helper is HelperRoot: name classification (unknown, refused) is DEFERRED
 	// to pass 2, because whether a name is refused depends on which process
 	// made the call and whether it has exec'd, and that is only known once the
 	// whole spawn structure has been read.
 	helper bool
+	// maxLine is the byte limit of one line, for the grammar path (zero means
+	// the default).  The old path enforces it in readLine.
+	maxLine int
+	// lp and argbuf are the grammar path's reusable parse state (P2 PR 5): one
+	// LineParser per trace parse, owned by this lineState, never shared between
+	// goroutines (a lineState is per-trace, so neither is).  The zero values are
+	// ready.  A lineState is used by pointer and must not be copied.
+	lp     straceparser.LineParser
+	argbuf []string
 }
 
 type pending struct {
@@ -215,6 +318,298 @@ type pending struct {
 	// its exit line are acceptable next; the pending ends at the exit line.
 	dead    bool
 	resumed bool
+	// dying marks a call whose RESULT strace could not fetch because the task
+	// died inside it: "= ? <unavailable>", or the resume "<... NAME resumed>
+	// <unfinished ...>) = ?".  Like dead it accepts only the pid's own exit next
+	// (dead and resumed are set with it, so a signal, a second resume and a new
+	// call all refuse); unlike dead the call has a name, and the exit applies
+	// dyingPolicy to it.
+	dying bool
+	// args are the top-level arguments printed before "<unfinished ...>" (or of
+	// the whole dying call): what dyingPolicy reads the open flags from.
+	args []string
+	// sawSignal: a signal line from this pid arrived while the call was pending
+	// (the D33 phantom-exec rule needs the ghost's next line to be its exit).
+	sawSignal bool
+	// ghosts: phantom execve lines (D33) accepted against this pending execve.
+	ghosts []ghost
+}
+
+// setPending and clearPending are the only places a pending call is added or
+// removed, in all three readers.  Besides the pend map they keep st.execs, a
+// FIFO per text-before-"<unfinished ...>" of the pending execve calls, in line
+// order, so ghostOwner finds its owner without scanning the whole map (D33).
+// st.execs is derived state: it is not part of the reader-agreement comparison.
+//
+// The FIFO is lazy: removing a call from the middle costs nothing (the entry
+// just goes stale), and only the head is trimmed, so N same-text calls
+// resumed in any order cost O(N) in all, not O(N^2).  An entry is live only if
+// the pid's pending call is still that very call (same line), so a reused pid
+// cannot revive a stale entry.
+type execQueue struct {
+	ents []execEnt
+	head int
+}
+
+type execEnt struct{ pid, line int }
+
+func (st *lineState) execLive(e execEnt) bool {
+	p := st.pend[e.pid]
+	return p != nil && p.line == e.line && p.name == "execve"
+}
+
+func (st *lineState) setPending(pid int, p *pending) {
+	st.pend[pid] = p
+	if p.name == "execve" {
+		if st.execs == nil {
+			st.execs = map[string]*execQueue{}
+		}
+		q := st.execs[p.prefix]
+		if q == nil {
+			q = &execQueue{}
+			st.execs[p.prefix] = q
+		}
+		q.ents = append(q.ents, execEnt{pid, p.line})
+	}
+}
+
+func (st *lineState) clearPending(pid int) {
+	p := st.pend[pid]
+	if p == nil {
+		return
+	}
+	delete(st.pend, pid)
+	if p.name == "execve" {
+		if q := st.execs[p.prefix]; q != nil {
+			for q.head < len(q.ents) && !st.execLive(q.ents[q.head]) {
+				q.head++
+			}
+			if q.head == len(q.ents) {
+				delete(st.execs, p.prefix)
+			}
+		}
+	}
+}
+
+// exitInsideCall is what an exit line does to the exiting pid's pending call,
+// shared by all readers so they cannot drift.  An ignored-class call or a
+// killed-at-entry entry just ends (D18); a phantom execve (D33) is recorded on
+// its owner and ends; a call the task died inside (D35) ends under
+// dyingPolicy; anything else is an unresumed call, refused at the call's own
+// line.
+func exitInsideCall(st *lineState, pid int, ex *Exit) (spawnDropped bool, e *Error) {
+	p := st.pend[pid]
+	if p == nil {
+		return false, nil
+	}
+	if p.dying {
+		// strace already said the result is unknown because the task died: the
+		// policy alone decides, with no other way out.
+		if !dyingPolicy(p) {
+			return false, unresumedError(p)
+		}
+		st.clearPending(pid)
+		return isSpawnCall(p.name), nil
+	}
+	if lookup(p.name).class == classIgnored || p.dead {
+		st.clearPending(pid)
+		return false, nil
+	}
+	if l := ghostOwner(st, pid, p, ex); l != nil {
+		l.ghosts = append(l.ghosts, ghost{pid, p.line})
+		st.clearPending(pid)
+		return false, nil
+	}
+	// A task killed out of its syscall-ENTRY stop prints "<unfinished ...>" and
+	// then only its exit: the same dying-call rule applies (shape 3).
+	if dyingPolicy(p) {
+		st.clearPending(pid)
+		return isSpawnCall(p.name), nil
+	}
+	return false, unresumedError(p)
+}
+
+// isSpawnCall: a call dyingPolicy may have dropped that could have started a
+// child (fork, vfork, clone).  clone3 is refused-class and never dropped.
+func isSpawnCall(name string) bool {
+	ent := lookup(name)
+	return ent.class == classHandled && (ent.role == roleFork || ent.role == roleClone)
+}
+
+// unresumedError is the refusal of a call that never completed.  For a name
+// outside the closed table it also carries the census's unknown-number code
+// (D44); the name itself never leaves this function.
+func unresumedError(p *pending) *Error {
+	e := incomplete(p.line, reasonUnresumed)
+	if lookup(p.name).class == classUnknown {
+		e.UnknownNumber = "unknown-number:no"
+		if isUnknownNumberName(p.name) {
+			e.UnknownNumber = "unknown-number:yes"
+		}
+	}
+	return e
+}
+
+// isUnknownNumberName reports whether name is exactly how strace spells a
+// syscall number it has no table entry for.  Source: strace's src/syscall.c
+// (xsprintf(s->buf, "syscall_%#" PRI_klx, scno)): "syscall_" followed by the
+// number in C's "%#lx": lowercase hex with a 0x prefix and no leading zeros,
+// and plain "0" for zero.  At most 16 hex digits (64 bits).
+func isUnknownNumberName(name string) bool {
+	rest, ok := strings.CutPrefix(name, "syscall_")
+	if !ok {
+		return false
+	}
+	if rest == "0" {
+		return true
+	}
+	h, ok := strings.CutPrefix(rest, "0x")
+	if !ok || h == "" || len(h) > 16 || h[0] == '0' {
+		return false
+	}
+	for i := 0; i < len(h); i++ {
+		if c := h[i]; !((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')) {
+			return false
+		}
+	}
+	return true
+}
+
+// dyingPolicy is the table of the dying-call rule (KILN04 D35): whether the call
+// a task died inside, whose result is therefore unknown, may be discarded.
+//
+//	ignored class (tgkill, wait4, ...)      drop    no path, no effect
+//	fork, vfork                             drop    no spawn is recorded; a child
+//	                                                 that did start is an
+//	                                                 orphan-pid, which fails closed
+//	clone with readable, allowed flags      drop    as above.  flags= must be
+//	                                                 present, every token a known
+//	                                                 name, and none CLONE_UNTRACED
+//	                                                 or CLONE_NEW* (analyzeClone)
+//	everything else                         refuse  see below
+//
+// A call that READS (a stat, a listing, an open) is deliberately NOT dropped.
+// The model infers what a step read only from the open and stat records (read
+// is not traced), so dropping one removes an input from the read set.  Its
+// result is lost, not absent: a live sibling thread may use the descriptor or
+// the buffer, a sibling's fork in the window copies it, a sibling's exec keeps
+// the descriptor open without CLOEXEC.  No guard short of "shares nothing with
+// any live task" is sound, and that excludes every thread.  Writes, network
+// calls, chdir, exec and unknown or refused names stay refused for the same
+// reason.
+func dyingPolicy(p *pending) bool {
+	ent := lookup(p.name)
+	switch ent.class {
+	case classIgnored:
+		return true
+	case classHandled:
+		if nullPathDying(p) {
+			return true
+		}
+	default:
+		return false
+	}
+	switch ent.role {
+	case roleFork:
+		return true
+	case roleClone:
+		return cloneArgsAllowed(p.args)
+	}
+	return false
+}
+
+// nullPathDying (D44): a dying stat, lstat, access or readlink whose path
+// argument was printed as NULL.  The kernel copies the path in before it looks
+// anything up, so a NULL pointer fails with EFAULT having read nothing, and no
+// sibling can use a result that does not exist.  newfstatat and statx are NOT
+// here: with AT_EMPTY_PATH a NULL or "" path means "the descriptor itself".
+func nullPathDying(p *pending) bool {
+	switch p.name {
+	case "stat", "lstat", "access", "readlink":
+		return len(p.args) > 0 && p.args[0] == "NULL"
+	}
+	return false
+}
+
+// cloneArgsAllowed reports whether a clone's printed arguments are readable and
+// allowed: flags= is there (analyzeClone), every token is a name strace prints
+// (knownCloneToken), and none is CLONE_UNTRACED or CLONE_NEW* (analyzeClone's
+// own refusal).  A clone with any other flags may have escaped the tracer or the
+// sandbox's namespaces, so its child could be anything.
+func cloneArgsAllowed(args []string) bool {
+	flags, _, reason := analyzeClone(args)
+	if reason != "" {
+		return false
+	}
+	for _, tok := range strings.Split(flags, "|") {
+		if !knownCloneToken[strings.TrimSpace(tok)] {
+			return false
+		}
+	}
+	return true
+}
+
+// diedInCall records that the pid's call (name, its entry arguments) has an
+// unknown result because the task died inside it.  The pending call stays, as
+// a dying one: only the pid's own exit may follow.  startLine is where the call
+// began, which is where an unresumed refusal is reported.
+func diedInCall(st *lineState, pid, startLine int, name, prefix string, args []string) {
+	st.setPending(pid, &pending{name: name, prefix: prefix, line: startLine, dead: true, resumed: true, dying: true, args: args})
+}
+
+// dyingResumeTail is the text strace prints after "<... NAME resumed>" when the
+// task died inside a call that had printed "<unfinished ...>": exactly that
+// marker, the ")" and then "= ?" (the dying-call rule, shape 2).  It reports
+// whether after is that, and nothing else.
+func dyingResumeTail(after string) bool {
+	const marker = " <unfinished ...>)"
+	rest, ok := strings.CutPrefix(after, marker)
+	return ok && isUnknownResult(rest)
+}
+
+// ghostOwner finds the pending execve a phantom "execve(" line copies (D33), or
+// nil when the line is not a phantom.  Every condition is in the file head
+// ("A phantom execve").  st.execs queues the candidates (same text) in line
+// order, so the first live entry is the earliest: the answer is deterministic,
+// and it must also be EARLIER than the ghost's own line.
+func ghostOwner(st *lineState, pid int, p *pending, ex *Exit) *pending {
+	if p.name != "execve" || p.sawSignal || len(p.ghosts) != 0 || ex.Killed || ex.Code != 0 ||
+		!strings.HasPrefix(p.prefix, `execve("/`) {
+		return nil
+	}
+	// The head of the queue is the earliest live execve of this text (clearPending
+	// trims dead entries off the head).  If it is the ghost itself, nothing
+	// earlier exists; if an entry is stale anyway, skip it rather than trust it.
+	q := st.execs[p.prefix]
+	if q == nil {
+		return nil
+	}
+	for _, e := range q.ents[q.head:] {
+		if !st.execLive(e) {
+			continue
+		}
+		if e.pid == pid || e.line >= p.line {
+			return nil
+		}
+		return st.pend[e.pid]
+	}
+	return nil
+}
+
+// withGhosts finishes the owner's resumed execve (D33): a failed exec with
+// ghosts means the ghost line was not a copy of a successful call, so the first
+// ghost's line is refused; otherwise the ghosts ride on the record to pass 2.
+func withGhosts(p *pending, call rawCall, rec *record, e *Error) (*record, *Error) {
+	if len(p.ghosts) == 0 {
+		return rec, e
+	}
+	if e == nil && !call.ret.ok() {
+		return nil, incomplete(p.ghosts[0].line, reasonUnresumed)
+	}
+	if rec != nil {
+		rec.ghosts = p.ghosts
+	}
+	return rec, e
 }
 
 const (
@@ -266,6 +661,7 @@ func parseCall(s string) (call rawCall, unfinished bool, prefix string, reason s
 	if res.unfinished {
 		p := s[:res.end]
 		p = strings.TrimSuffix(p, " ")
+		call.args = res.items // what dyingPolicy reads an open's flags from
 		return call, true, p, ""
 	}
 	call.args = res.items
@@ -314,6 +710,13 @@ func parseResult(s string) (result, string) {
 	case strings.HasPrefix(s, "?"):
 		r.unknown = true
 		s = s[1:]
+		// "= ? <unavailable>", exactly: strace could not fetch the result (the
+		// dying-call rule).  One space, nothing after it, and nothing else may
+		// carry it (not an errno, not a value).
+		if s == " <unavailable>" {
+			r.unavailable = true
+			s = ""
+		}
 	case strings.HasPrefix(s, "0x"):
 		k := 2
 		for k < len(s) {
@@ -329,7 +732,17 @@ func parseResult(s string) (result, string) {
 		if err != nil {
 			return r, reasonResult
 		}
-		r.value, r.hasVal = int64(v), true
+		if v > math.MaxInt64 {
+			if v == math.MaxUint64 {
+				// 0xffffffffffffffff is strace's 64-bit hex spelling of -1 (e.g. failed syscall).
+				// It is still rejected below unless accompanied by an errno, and minusOne stays false.
+				r.value, r.hasVal = -1, true
+			} else {
+				return r, reasonResult
+			}
+		} else {
+			r.value, r.hasVal = int64(v), true
+		}
 		s = s[k:]
 	default:
 		k := 0
@@ -348,6 +761,7 @@ func parseResult(s string) (result, string) {
 			return r, reasonResult
 		}
 		r.value, r.hasVal = v, true
+		r.minusOne = s[:k] == "-1"
 		s = s[k:]
 		if h, rest, ok := parsePidnsNote(s); ok && v > 0 {
 			r.host, r.hasHost = h, true
@@ -464,10 +878,24 @@ func atoiPid(s string) (int, bool) {
 // readRecords is pass 1.  It also returns the pid of the first line, which is
 // the root of the process tree.  Every record (calls, start markers and exit
 // lines alike) counts against MaxEvents.
-func readRecords(r io.Reader, lim Limits, helper bool) ([]record, int, *Error) {
+func readRecords(r io.Reader, lim Limits, helper, grammar bool) ([]record, int, *Error) {
+	recs, root, e, _ := readRecordsAt(r, lim, helper, grammar)
+	return recs, root, e
+}
+
+// readRecordsAt is readRecords that also says where pass 1 stopped: the 1-based
+// number of the line being processed when it refused (the line AFTER the last
+// one for a refusal at the end of the input).  An Error's own Line can be an
+// earlier line (an unresumed call is reported at its start), so the
+// cross-check uses this to tell how far each reader got.
+func readRecordsAt(r io.Reader, lim Limits, helper, grammar bool) ([]record, int, *Error, int) {
 	br := bufio.NewReaderSize(r, 64<<10)
 	var recs []record
-	st := &lineState{pend: map[int]*pending{}, helper: helper}
+	st := &lineState{pend: map[int]*pending{}, helper: helper, maxLine: lim.MaxLineBytes}
+	handle := handleLine
+	if grammar {
+		handle = handleLineG
+	}
 	var total int64
 	lineNo := 0
 	for {
@@ -476,9 +904,9 @@ func readRecords(r io.Reader, lim Limits, helper bool) ([]record, int, *Error) {
 			var e *Error
 			if errors.As(err, &e) {
 				e.Line = lineNo + 1
-				return nil, 0, e
+				return nil, 0, e, lineNo + 1
 			}
-			return nil, 0, &Error{Reason: reasonRead, Line: lineNo + 1, Err: err}
+			return nil, 0, &Error{Reason: reasonRead, Line: lineNo + 1, Err: err}, lineNo + 1
 		}
 		if errors.Is(err, io.EOF) {
 			if line == "" {
@@ -486,12 +914,12 @@ func readRecords(r io.Reader, lim Limits, helper bool) ([]record, int, *Error) {
 			}
 			// The last line has no newline: strace was cut off (or the file
 			// was truncated) and the line may be a prefix of a different one.
-			return nil, 0, incomplete(lineNo+1, reasonUnparsable)
+			return nil, 0, incomplete(lineNo+1, reasonUnparsable), lineNo + 1
 		}
 		lineNo++
 		total += int64(len(line))
 		if total > lim.MaxTotalBytes {
-			return nil, 0, incomplete(lineNo, reasonSize)
+			return nil, 0, incomplete(lineNo, reasonSize), lineNo
 		}
 		text := strings.TrimSuffix(line, "\n")
 		if st.root == 0 {
@@ -499,14 +927,14 @@ func readRecords(r io.Reader, lim Limits, helper bool) ([]record, int, *Error) {
 				st.root = pid
 			}
 		}
-		rec, e := handleLine(text, lineNo, st)
+		rec, e := handle(text, lineNo, st)
 		if e != nil {
-			return nil, 0, e
+			return nil, 0, e, lineNo
 		}
 		if rec != nil {
 			recs = append(recs, *rec)
 			if len(recs) > lim.MaxEvents {
-				return nil, 0, incomplete(lineNo, reasonSize)
+				return nil, 0, incomplete(lineNo, reasonSize), lineNo
 			}
 		}
 	}
@@ -517,9 +945,9 @@ func readRecords(r io.Reader, lim Limits, helper bool) ([]record, int, *Error) {
 		}
 	}
 	if first != nil {
-		return nil, 0, incomplete(first.line, reasonUnresumed)
+		return nil, 0, incomplete(first.line, reasonUnresumed), lineNo + 1
 	}
-	return recs, st.root, nil
+	return recs, st.root, nil, lineNo + 1
 }
 
 // isWaitName: the ignored-class calls whose result is a pid.
@@ -577,22 +1005,23 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		if !ok {
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
-		if p := pend[pid]; p != nil {
-			// A process killed or exiting inside a call that has no effect on
-			// paths is normal (wait4 interrupted by SIGKILL).  A path call that
-			// never returned is not: its result is unknown.
-			if c := lookup(p.name); c.class != classIgnored && !p.dead {
-				return nil, incomplete(p.line, reasonUnresumed)
-			}
-			delete(pend, pid)
+		// A process killed or exiting inside a call that has no effect on paths
+		// is normal (wait4 interrupted by SIGKILL).  A path call that never
+		// returned is not: its result is unknown (but see D33).
+		dropped, e := exitInsideCall(st, pid, ex)
+		if e != nil {
+			return nil, e
 		}
-		return &record{line: lineNo, pid: pid, exit: ex}, nil
+		return &record{line: lineNo, pid: pid, exit: ex, spawnDropped: dropped}, nil
 	case strings.HasPrefix(body, "--- "):
 		if !strings.HasSuffix(body, " ---") || len(body) < 8 {
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
-		if p := pend[pid]; p != nil && p.dead {
-			return nil, incomplete(lineNo, reasonInterleaved)
+		if p := pend[pid]; p != nil {
+			if p.dead {
+				return nil, incomplete(lineNo, reasonInterleaved)
+			}
+			p.sawSignal = true
 		}
 		return nil, nil
 	case strings.HasPrefix(body, "<... "):
@@ -619,20 +1048,30 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 			p.resumed = true
 			return nil, nil
 		}
-		delete(pend, pid)
-		call, unfinished, _, r := parseCall(p.prefix + rest[k+len(" resumed>"):])
+		st.clearPending(pid)
+		after := rest[k+len(" resumed>"):]
+		if dyingResumeTail(after) {
+			// The task died inside the call: only its exit may follow (D35).
+			diedInCall(st, pid, p.line, p.name, p.prefix, p.args)
+			return nil, nil
+		}
+		call, unfinished, _, r := parseCall(p.prefix + after)
 		if r != "" {
 			return nil, incomplete(lineNo, r)
 		}
 		if unfinished {
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
+		if call.ret.unavailable {
+			return diedWithResult(st, pid, lineNo, p.line, call, true, st.helper)
+		}
 		if isExitName(call.name) && !call.ret.unknown {
 			// The call began (the marker was taken at its start line) but
 			// returned: it failed, and the group is not dying.
 			return &record{line: p.line, pid: pid, exitCall: true, rawExit: call.name == "exit", retract: true}, nil
 		}
-		return finishCall(pid, lineNo, call, true, st.helper)
+		rec, e := finishCall(pid, lineNo, call, true, st.helper)
+		return withGhosts(p, call, rec, e)
 	}
 	if body == deadOpen || (strings.HasPrefix(body, deadWhole) && isUnknownResult(body[len(deadWhole):])) {
 		// See "A thread killed at syscall entry" in the file head.  Something
@@ -640,7 +1079,7 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		if pend[pid] != nil {
 			return nil, incomplete(lineNo, reasonInterleaved)
 		}
-		pend[pid] = &pending{name: "???", line: lineNo, dead: true, resumed: body != deadOpen}
+		st.setPending(pid, &pending{name: "???", line: lineNo, dead: true, resumed: body != deadOpen})
 		return nil, nil
 	}
 	call, unfinished, prefix, r := parseCall(body)
@@ -651,12 +1090,13 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		return nil, incomplete(lineNo, reasonInterleaved)
 	}
 	if unfinished {
-		if !st.helper {
+		// A refused name is judged by its result, at the resumed half.
+		if !st.helper && lookup(call.name).class != classRefused {
 			if e := classifyName(call.name, lineNo); e != nil {
 				return nil, e
 			}
 		}
-		pend[pid] = &pending{name: call.name, prefix: prefix, line: lineNo}
+		st.setPending(pid, &pending{name: call.name, prefix: prefix, line: lineNo, args: call.args})
 		if isExitName(call.name) {
 			return &record{line: lineNo, pid: pid, exitCall: true, rawExit: call.name == "exit"}, nil
 		}
@@ -667,7 +1107,28 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		}
 		return nil, nil
 	}
+	if call.ret.unavailable {
+		return diedWithResult(st, pid, lineNo, lineNo, call, false, st.helper)
+	}
 	return finishCall(pid, lineNo, call, false, st.helper)
+}
+
+// diedWithResult handles a completed call whose result is "= ? <unavailable>":
+// strace could not fetch it because the task was already gone (the dying-call
+// rule, D35).  Nothing is recorded for the call (it has no result to judge).
+// The pid goes on as a dying call and only its own exit may follow.  An
+// ignored-class call still gets what finishCall would give it, which is the
+// start marker of a whole-line exit_group.
+func diedWithResult(st *lineState, pid, lineNo, startLine int, call rawCall, split, deferClass bool) (*record, *Error) {
+	var rec *record
+	if lookup(call.name).class == classIgnored {
+		var e *Error
+		if rec, e = finishCall(pid, lineNo, call, split, deferClass); e != nil {
+			return nil, e
+		}
+	}
+	diedInCall(st, pid, startLine, call.name, "", call.args)
+	return rec, nil
 }
 
 // finishCall checks the closed table and keeps the call unless it is ignored.
@@ -681,10 +1142,12 @@ func finishCall(pid, lineNo int, call rawCall, split, deferClass bool) (*record,
 	if call.ret.hasHost && !isSpawn(call.name) && !isWaitName(call.name) {
 		return nil, incomplete(lineNo, reasonResult)
 	}
-	if !deferClass {
-		if e := classifyName(call.name, lineNo); e != nil {
-			return nil, e
-		}
+	// A refused name the sandbox filter answered (clone3 = -1 ENOSYS, mount =
+	// -1 EPERM) is the filter working: drop it, in both modes.
+	if tolerated, e := classifyCall(call.name, call.ret, lineNo); tolerated {
+		return nil, nil
+	} else if e != nil && !deferClass {
+		return nil, e
 	}
 	if lookup(call.name).class == classIgnored {
 		if isExitName(call.name) && !split && call.ret.unknown {

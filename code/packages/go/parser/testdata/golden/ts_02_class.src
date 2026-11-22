@@ -1,0 +1,3 @@
+class P { get len(): number { return 1; } }
+class Q { async f(u: string): Promise<void> { await g(u); } }
+class R<T> { static c = 0; private readonly y: T; }

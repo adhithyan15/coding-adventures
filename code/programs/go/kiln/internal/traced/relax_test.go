@@ -265,12 +265,13 @@ func TestOpenOnlyAncestorsKeepTheStrictRule(t *testing.T) {
 
 func TestOpenOnlyDoesNotRelaxOtherCalls(t *testing.T) {
 	const f = "code/p/a/out.o"
-	// A failed open, an lstat-free chmod and a rename source all still need the
-	// creation rule: the relaxation is for a successful stat or exec only.
+	// A failed stat and a directory still need the creation rule.  (A
+	// successful chmod by path joined the stat in D42, see
+	// absent_before_made_test.go; it used to be refused here.)
 	h := quiet(t)
 	h.fs.file(abs(f))
 	rec := h.run(created(f, "O_WRONLY|O_CREAT|O_TRUNC"), write("chmod", f))
-	wantUnstable(t, "chmod", rec)
+	wantStable(t, "chmod", rec)
 	h = quiet(t)
 	h.fs.file(abs(f))
 	rec = h.run(created(f, "O_WRONLY|O_CREAT|O_TRUNC"), fail(stat(f), "EACCES"))
@@ -294,9 +295,11 @@ func TestHomeItselfOnly(t *testing.T) {
 	}
 	h := mk()
 	wantNoReasons(t, h.run(stat("/home/runner")))
-	// Anything under it, and the checkout's ancestors, are host reads.
-	wantReason(t, mk().run(stat("/home/runner/work")), "host-read:$HOME/work")
-	wantReason(t, mk().run(fail(stat("/home/runner/.gitconfig"), "ENOENT")), "host-read:$HOME/.gitconfig")
+	// Since D39 a stat of the checkout's ancestor is allowed (a node's type and
+	// metadata), and so is an absent probe under the fresh $HOME; a listing of
+	// the ancestor and a present name under $HOME are still host reads.
+	wantNoReasons(t, mk().run(stat("/home/runner/work")))
+	wantNoReasons(t, mk().run(fail(stat("/home/runner/.gitconfig"), "ENOENT")))
 	wantReason(t, mk().run(getdents("/home/runner/work")), "host-read:$HOME/work")
 	wantReason(t, mk().run(openAbs("/home/runner/x")), "host-read:$HOME/x")
 	// A sibling that merely shares the prefix.

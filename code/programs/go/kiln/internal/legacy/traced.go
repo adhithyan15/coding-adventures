@@ -39,6 +39,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"unicode"
 	"unicode/utf8"
 
@@ -60,7 +61,68 @@ const TracedSemantics uint64 = 2
 // Version 3: strace now prints every signal (-e signal=all, D19), so a process
 // killed by a signal has an exit line, and the daemon-left rule keys on the
 // init's exit_group call line.  Both change what a trace means.
-const RecorderVersion = 3
+//
+// Version 4: a refused-class call the sandbox filter answered (clone3 = -1
+// ENOSYS, the others = -1 EPERM) is tolerated instead of refused, and a clone
+// with a forbidden flag that failed with EPERM likewise.  Traces that were
+// refused now parse, so every weak key changes.
+//
+// Version 5: the dying-call rule (KILN04 D35).  A task that dies inside a system
+// call when its thread group exits is tolerated in two of its three spellings
+// (`= ? <unavailable>`, and `<... clone resumed> <unfinished ...>) = ?`, with an
+// unfinished call followed only by the task's exit) when the call is ignored,
+// fork, vfork, or a clone with readable and allowed flags.  A call that reads is
+// still refused.  Traces that were refused now parse, so every weak key changes.
+//
+// Version 6: the recipe prefix rule (KILN04 D36).  An action that failed before
+// its last step has fewer step traces than recipe lines; when they are a byte
+// exact prefix of the recipe and the last one exited non-zero, that is no longer
+// `trace-incomplete:recipe-mismatch`.  The verdict for those actions changes, so
+// every weak key changes.
+//
+// Version 7: the ancestor-node and fresh-tmpfs-absence rules (KILN04 D39).  A
+// present, non-listing look at a proper ancestor of the checkout, a declared
+// root, Home, Tmpdir or an ephemeral or absent-ok entry, and an absent probe
+// strictly inside the fresh Home or Tmpdir, are no longer `host-read`.  The
+// verdict for those actions changes, so every weak key changes.
+//
+// Version 8: tmpfs containment (KILN04 D40).  While the action has made no
+// symbolic link inside the fresh Home or Tmpdir, the stability rules do not
+// apply to paths there (its own scratch files are re-created, unlinked and
+// renamed freely), so such actions are no longer `trace-incomplete:unstable-path`
+// nor writes-incomplete.  The verdict changes, so every weak key changes.
+//
+// Version 9: descriptor metadata writes on anonymous objects (KILN04 D41).
+// fchmod, fchown, fsetxattr and fremovexattr on a descriptor whose -y text is
+// pipe:[..], socket:[..] or anon_inode:.. are no longer `trace-incomplete:fd-path`;
+// they record nothing.  The accept set grows, so every weak key changes.
+//
+// Version 10: absent-before-made (KILN04 D42).  A lookup that failed with ENOENT
+// on a name the action created afterwards, a metadata write by path (chmod,
+// chown, utimensat, setxattr) on a file the action made, and shell redirections
+// to /dev/null are no longer `trace-incomplete:unstable-path`.  The accept set
+// grows, so every weak key changes.
+//
+// Version 11: the sealed root (KILN04 D43).  An absent probe of a path the
+// sandbox's new root does not contain (/run/systemd/resolve/stub-resolv.conf,
+// the package.json above the checkout, /var/run) is no longer `host-read`, and
+// the scratch directories (/tmp, /var/tmp, /run) are fresh tmpfs like Home and
+// Tmpdir.  New refusals too: a call that SUCCEEDED where the plan has nothing,
+// and any absent probe allowed here or by D39 inside a scratch directory after
+// the action moved a directory.  The verdict changes both ways, so every weak
+// key changes.
+//
+// Version 12: more dying calls and orphans accepted (KILN04 D44).  A dying
+// stat, lstat, access or readlink with a NULL path is dropped; a pid whose
+// only line is its exit is accepted when dropped dying spawns can account for
+// it; mknod/mknodat without a device argument (regular file, FIFO, socket) is
+// no longer `arity`.  The accept set grows, so every weak key changes.
+//
+// Version 13: completed NULL-path statx failing with EFAULT (KILN04 D45).  A
+// completed statx with a literal NULL path, valid flags without AT_EMPTY_PATH,
+// and a -1 EFAULT result is dropped with no event (e.g. Rust std's statx probe).
+// The accept set grows, so every weak key changes.
+const RecorderVersion = 13
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
@@ -129,6 +191,9 @@ type Traced struct {
 	own   memo[[32]byte]
 	state memo[[32]byte]
 	gitD  memo[[32]byte]
+	// prep runs the preparation Gate needs (gate.go) once.
+	prep    sync.Once
+	prepErr error
 }
 
 // CanonicalExecutorArgs is the `kiln:executor-args` value: the executor's flags

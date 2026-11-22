@@ -34,10 +34,12 @@
 //! - `gcm_decrypt(ciphertext, key, iv, aad, tag) -> plaintext`
 //! - `ghash_multiply_fixed(x, h, output)`
 //! - `ghash_fixed(h, aad, ciphertext, output) -> Result<(), GhashError>`
+//! - `aes128_gcm_encrypt_fixed(plaintext, key, nonce, aad, ciphertext, tag)`
+//! - `aes128_gcm_decrypt_fixed(ciphertext, key, nonce, aad, tag, plaintext)`
 
 #![deny(unsafe_code)]
 
-use coding_adventures_aes::{decrypt_block, encrypt_block};
+use coding_adventures_aes::{aes128_encrypt_block_fixed, decrypt_block, encrypt_block};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt;
 
@@ -288,7 +290,7 @@ impl std::error::Error for GhashError {}
 ///     if bit i is set: Z ^= V
 ///     carry = LSB of V
 ///     V >>= 1
-///     if carry: V[0] ^= 0xE1
+///     if carry: `V[0] ^= 0xE1`
 ///
 /// This fixed-memory boundary always performs 128 rounds and uses masks rather
 /// than branches for both secret-derived decisions. Its product and working
@@ -351,8 +353,8 @@ fn ghash_absorb(h: &[u8; 16], data: &[u8], accumulator: &mut [u8; 16], block: &m
 /// Compute GHASH into caller-owned fixed storage.
 ///
 /// Processes AAD and ciphertext through GF(2^128) polynomial evaluation:
-///   Y[0] = 0^128
-///   Y[i] = (Y[i-1] XOR block[i]) * H
+///   `Y[0] = 0^128`
+///   `Y[i] = (Y[i-1] XOR block[i]) * H`
 ///
 /// Input sequence: AAD blocks (padded) || CT blocks (padded) || length block
 ///
@@ -372,6 +374,18 @@ pub fn ghash_fixed(
     let aad_bits = ghash_bit_length(aad.len())?;
     let ciphertext_bits = ghash_bit_length(ciphertext.len())?;
 
+    ghash_fixed_validated(h, aad, ciphertext, aad_bits, ciphertext_bits, output);
+    Ok(())
+}
+
+fn ghash_fixed_validated(
+    h: &[u8; 16],
+    aad: &[u8],
+    ciphertext: &[u8],
+    aad_bits: u64,
+    ciphertext_bits: u64,
+    output: &mut [u8; 16],
+) {
     let mut accumulator = Zeroizing::new([0u8; 16]);
     let mut block = Zeroizing::new([0u8; 16]);
     ghash_absorb(h, aad, &mut accumulator, &mut block);
@@ -385,6 +399,212 @@ pub fn ghash_fixed(
     }
     ghash_multiply_fixed(&block, h, &mut accumulator);
     output.copy_from_slice(&accumulator[..]);
+}
+
+/// Stable failures for the fixed-memory AES-128-GCM boundary.
+///
+/// These categories retain no key, nonce, plaintext, ciphertext, tag,
+/// associated-data, output, or observed-length values.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum FixedAes128GcmError {
+    /// Caller-owned output must have exactly the input length.
+    OutputLengthMismatch,
+    /// An input length cannot be represented by GCM's 64-bit bit-length field.
+    LengthOverflow,
+    /// The plaintext or ciphertext would exceed GCM's 32-bit counter domain.
+    CounterExhausted,
+    /// The supplied authentication tag did not match.
+    AuthenticationFailed,
+}
+
+impl fmt::Display for FixedAes128GcmError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::OutputLengthMismatch => {
+                formatter.write_str("AES-128-GCM output length must equal input length")
+            }
+            Self::LengthOverflow => {
+                formatter.write_str("AES-128-GCM input length exceeds the GCM encoding")
+            }
+            Self::CounterExhausted => {
+                formatter.write_str("AES-128-GCM request exceeds the 32-bit block counter")
+            }
+            Self::AuthenticationFailed => formatter.write_str("AES-128-GCM authentication failed"),
+        }
+    }
+}
+
+impl std::error::Error for FixedAes128GcmError {}
+
+const GCM_MAX_PAYLOAD_BLOCKS: u128 = u32::MAX as u128 - 1;
+
+fn validate_fixed_aes128_gcm_lengths(
+    input_length: usize,
+    output_length: usize,
+    aad_length: usize,
+) -> Result<(u64, u64), FixedAes128GcmError> {
+    if output_length != input_length {
+        return Err(FixedAes128GcmError::OutputLengthMismatch);
+    }
+
+    let aad_bits = ghash_bit_length(aad_length)
+        .map_err(|GhashError::InputTooLong| FixedAes128GcmError::LengthOverflow)?;
+    let input_bits = ghash_bit_length(input_length)
+        .map_err(|GhashError::InputTooLong| FixedAes128GcmError::LengthOverflow)?;
+    let payload_blocks = (input_length as u128).div_ceil(BLOCK_SIZE as u128);
+    if payload_blocks > GCM_MAX_PAYLOAD_BLOCKS {
+        return Err(FixedAes128GcmError::CounterExhausted);
+    }
+
+    Ok((aad_bits, input_bits))
+}
+
+fn aes128_gcm_ctr_xor_fixed(input: &[u8], key: &[u8; 16], nonce: &[u8; 12], output: &mut [u8]) {
+    let mut counter_block = Zeroizing::new([0u8; 16]);
+    counter_block[..12].copy_from_slice(nonce);
+    let mut keystream = Zeroizing::new([0u8; 16]);
+    let mut offset = 0;
+    let mut counter = 2u32;
+    while offset < input.len() {
+        counter_block[12..].copy_from_slice(&counter.to_be_bytes());
+        aes128_encrypt_block_fixed(&counter_block, key, &mut keystream);
+        let block_length = (input.len() - offset).min(BLOCK_SIZE);
+        for index in 0..block_length {
+            output[offset + index] = input[offset + index] ^ keystream[index];
+        }
+        offset += block_length;
+        if offset < input.len() {
+            counter = counter.wrapping_add(1);
+        }
+    }
+}
+
+fn aes128_gcm_tag_fixed(
+    key: &[u8; 16],
+    nonce: &[u8; 12],
+    hash_subkey: &[u8; 16],
+    aad: &[u8],
+    ciphertext: &[u8],
+    length_bits: (u64, u64),
+    output: &mut [u8; 16],
+) {
+    let mut ghash_result = Zeroizing::new([0u8; 16]);
+    ghash_fixed_validated(
+        hash_subkey,
+        aad,
+        ciphertext,
+        length_bits.0,
+        length_bits.1,
+        &mut ghash_result,
+    );
+
+    let mut j0 = Zeroizing::new([0u8; 16]);
+    j0[..12].copy_from_slice(nonce);
+    j0[15] = 1;
+    let mut encrypted_j0 = Zeroizing::new([0u8; 16]);
+    aes128_encrypt_block_fixed(&j0, key, &mut encrypted_j0);
+
+    for index in 0..16 {
+        output[index] = ghash_result[index] ^ encrypted_j0[index];
+    }
+}
+
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_aes128_gcm_tag_equal_ir_audit")]
+#[inline(never)]
+fn aes128_gcm_tags_equal_fixed(computed: &[u8; 16], supplied: &[u8; 16]) -> bool {
+    let mut difference = 0u8;
+    for index in 0..16 {
+        difference |= computed[index] ^ supplied[index];
+    }
+    difference == 0
+}
+
+/// Encrypt and authenticate with AES-128-GCM into exact caller-owned storage.
+///
+/// This allocation-free boundary accepts only the RFC 5116 96-bit nonce
+/// profile. It validates all public lengths and the complete payload counter
+/// range before changing either output, encrypts with `inc32(J0)` and above,
+/// and authenticates the exact produced ciphertext. Key-derived temporaries
+/// remain in wipe-on-drop fixed storage. The original key, nonce, plaintext,
+/// associated data, ciphertext, and tag remain caller-owned.
+///
+/// Callers must guarantee unique key/nonce pairs. This primitive does not
+/// reserve nonces, own traffic keys, enforce TLS record limits, frame records,
+/// or provide a TLS transport.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_aes128_gcm_encrypt_fixed_ir_audit")]
+pub fn aes128_gcm_encrypt_fixed(
+    plaintext: &[u8],
+    key: &[u8; 16],
+    nonce: &[u8; 12],
+    aad: &[u8],
+    ciphertext: &mut [u8],
+    tag: &mut [u8; 16],
+) -> Result<(), FixedAes128GcmError> {
+    let (aad_bits, plaintext_bits) =
+        validate_fixed_aes128_gcm_lengths(plaintext.len(), ciphertext.len(), aad.len())?;
+
+    let mut hash_subkey = Zeroizing::new([0u8; 16]);
+    aes128_encrypt_block_fixed(&[0u8; 16], key, &mut hash_subkey);
+    aes128_gcm_ctr_xor_fixed(plaintext, key, nonce, ciphertext);
+
+    let mut computed_tag = Zeroizing::new([0u8; 16]);
+    aes128_gcm_tag_fixed(
+        key,
+        nonce,
+        &hash_subkey,
+        aad,
+        ciphertext,
+        (aad_bits, plaintext_bits),
+        &mut computed_tag,
+    );
+    tag.copy_from_slice(&computed_tag[..]);
+    Ok(())
+}
+
+/// Authenticate and decrypt AES-128-GCM into exact caller-owned storage.
+///
+/// The complete tag is recomputed and compared with a fixed schedule before
+/// any plaintext is released. Authentication failure and every public
+/// preflight failure leave `plaintext` unchanged. The recomputed tag, hash
+/// subkey, GHASH state, counters, and AES scratch all have fixed wipe-on-drop
+/// ownership.
+///
+/// Callers must guarantee unique key/nonce pairs and must not treat this
+/// primitive as TLS record framing, nonce reservation, record-limit policy, or
+/// transport composition.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_aes128_gcm_decrypt_fixed_ir_audit")]
+pub fn aes128_gcm_decrypt_fixed(
+    ciphertext: &[u8],
+    key: &[u8; 16],
+    nonce: &[u8; 12],
+    aad: &[u8],
+    tag: &[u8; 16],
+    plaintext: &mut [u8],
+) -> Result<(), FixedAes128GcmError> {
+    let (aad_bits, ciphertext_bits) =
+        validate_fixed_aes128_gcm_lengths(ciphertext.len(), plaintext.len(), aad.len())?;
+
+    let mut hash_subkey = Zeroizing::new([0u8; 16]);
+    aes128_encrypt_block_fixed(&[0u8; 16], key, &mut hash_subkey);
+
+    let mut computed_tag = Zeroizing::new([0u8; 16]);
+    aes128_gcm_tag_fixed(
+        key,
+        nonce,
+        &hash_subkey,
+        aad,
+        ciphertext,
+        (aad_bits, ciphertext_bits),
+        &mut computed_tag,
+    );
+    if !aes128_gcm_tags_equal_fixed(&computed_tag, tag) {
+        return Err(FixedAes128GcmError::AuthenticationFailed);
+    }
+
+    aes128_gcm_ctr_xor_fixed(ciphertext, key, nonce, plaintext);
     Ok(())
 }
 
@@ -522,6 +742,10 @@ mod tests {
 
     fn array_16(bytes: Vec<u8>) -> [u8; 16] {
         bytes.try_into().expect("test vector must be 16 bytes")
+    }
+
+    fn array_12(bytes: Vec<u8>) -> [u8; 12] {
+        bytes.try_into().expect("test vector must be 12 bytes")
     }
 
     fn ghash_multiply_reference(x: &[u8; 16], h: &[u8; 16]) -> [u8; 16] {
@@ -790,6 +1014,171 @@ mod tests {
     #[test]
     fn test_ghash_rejects_unrepresentable_bit_length() {
         assert_eq!(ghash_bit_length(usize::MAX), Err(GhashError::InputTooLong));
+    }
+
+    #[test]
+    fn fixed_aes128_gcm_matches_nist_empty_vector() {
+        let key = [0u8; 16];
+        let nonce = [0u8; 12];
+        let mut ciphertext = [];
+        let mut tag = [0xa5; 16];
+        aes128_gcm_encrypt_fixed(&[], &key, &nonce, &[], &mut ciphertext, &mut tag).unwrap();
+        assert_eq!(to_hex(&tag), "58e2fccefa7e3061367f1d57a4e7455a");
+
+        let mut plaintext = [];
+        aes128_gcm_decrypt_fixed(&ciphertext, &key, &nonce, &[], &tag, &mut plaintext).unwrap();
+    }
+
+    #[test]
+    fn fixed_aes128_gcm_matches_nist_single_block_vector() {
+        let key = [0u8; 16];
+        let nonce = [0u8; 12];
+        let plaintext = [0u8; 16];
+        let mut ciphertext = [0xa5; 16];
+        let mut tag = [0xa5; 16];
+        aes128_gcm_encrypt_fixed(&plaintext, &key, &nonce, &[], &mut ciphertext, &mut tag).unwrap();
+        assert_eq!(to_hex(&ciphertext), "0388dace60b6a392f328c2b971b2fe78");
+        assert_eq!(to_hex(&tag), "ab6e47d42cec13bdf53a67b21257bddf");
+
+        let mut opened = [0xa5; 16];
+        aes128_gcm_decrypt_fixed(&ciphertext, &key, &nonce, &[], &tag, &mut opened).unwrap();
+        assert_eq!(opened, plaintext);
+    }
+
+    #[test]
+    fn fixed_aes128_gcm_matches_nist_aad_and_partial_block_vector() {
+        let key = array_16(from_hex("feffe9928665731c6d6a8f9467308308"));
+        let nonce = array_12(from_hex("cafebabefacedbaddecaf888"));
+        let aad = from_hex("feedfacedeadbeeffeedfacedeadbeefabaddad2");
+        let plaintext = from_hex(
+            "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a72\
+             1c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b39",
+        );
+        let expected_ciphertext = from_hex(
+            "42831ec2217774244b7221b784d0d49ce3aa212f2c02a4e035c17e2329aca12e\
+             21d514b25466931c7d8f6a5aac84aa051ba30b396a0aac973d58e091",
+        );
+        let mut ciphertext = vec![0xa5; plaintext.len()];
+        let mut tag = [0xa5; 16];
+        aes128_gcm_encrypt_fixed(&plaintext, &key, &nonce, &aad, &mut ciphertext, &mut tag)
+            .unwrap();
+        assert_eq!(ciphertext, expected_ciphertext);
+        assert_eq!(to_hex(&tag), "5bc94fbc3221a5db94fae95ae7121a47");
+
+        let mut opened = vec![0xa5; plaintext.len()];
+        aes128_gcm_decrypt_fixed(&ciphertext, &key, &nonce, &aad, &tag, &mut opened).unwrap();
+        assert_eq!(opened, plaintext);
+    }
+
+    #[test]
+    fn fixed_aes128_gcm_authenticates_before_releasing_plaintext() {
+        let key = [0x11; 16];
+        let nonce = [0x22; 12];
+        let plaintext = b"authenticated plaintext crosses block edges";
+        let aad = b"tls-ciphertext-header";
+        let mut ciphertext = vec![0u8; plaintext.len()];
+        let mut tag = [0u8; 16];
+        aes128_gcm_encrypt_fixed(plaintext, &key, &nonce, aad, &mut ciphertext, &mut tag).unwrap();
+
+        for mutation in 0..3 {
+            let mut changed_ciphertext = ciphertext.clone();
+            let mut changed_aad = aad.to_vec();
+            let mut changed_tag = tag;
+            match mutation {
+                0 => changed_ciphertext[0] ^= 1,
+                1 => changed_aad[0] ^= 1,
+                2 => changed_tag[15] ^= 1,
+                _ => unreachable!(),
+            }
+            let mut output = vec![0xa5; plaintext.len()];
+            assert_eq!(
+                aes128_gcm_decrypt_fixed(
+                    &changed_ciphertext,
+                    &key,
+                    &nonce,
+                    &changed_aad,
+                    &changed_tag,
+                    &mut output,
+                ),
+                Err(FixedAes128GcmError::AuthenticationFailed)
+            );
+            assert_eq!(output, vec![0xa5; plaintext.len()]);
+        }
+    }
+
+    #[test]
+    fn fixed_aes128_gcm_preflight_failures_leave_outputs_unchanged() {
+        let key = [0x11; 16];
+        let nonce = [0x22; 12];
+        let mut ciphertext = [0xa5; 2];
+        let mut tag = [0x5a; 16];
+        assert_eq!(
+            aes128_gcm_encrypt_fixed(b"three", &key, &nonce, b"aad", &mut ciphertext, &mut tag,),
+            Err(FixedAes128GcmError::OutputLengthMismatch)
+        );
+        assert_eq!(ciphertext, [0xa5; 2]);
+        assert_eq!(tag, [0x5a; 16]);
+
+        let mut plaintext = [0xa5; 2];
+        assert_eq!(
+            aes128_gcm_decrypt_fixed(b"three", &key, &nonce, b"aad", &[0u8; 16], &mut plaintext,),
+            Err(FixedAes128GcmError::OutputLengthMismatch)
+        );
+        assert_eq!(plaintext, [0xa5; 2]);
+    }
+
+    #[cfg(target_pointer_width = "64")]
+    #[test]
+    fn fixed_aes128_gcm_rejects_length_and_counter_exhaustion_before_work() {
+        assert_eq!(
+            validate_fixed_aes128_gcm_lengths(0, 0, usize::MAX),
+            Err(FixedAes128GcmError::LengthOverflow)
+        );
+        let maximum_payload_bytes = (GCM_MAX_PAYLOAD_BLOCKS * BLOCK_SIZE as u128) as usize;
+        assert!(
+            validate_fixed_aes128_gcm_lengths(maximum_payload_bytes, maximum_payload_bytes, 0,)
+                .is_ok()
+        );
+        assert_eq!(
+            validate_fixed_aes128_gcm_lengths(
+                maximum_payload_bytes + 1,
+                maximum_payload_bytes + 1,
+                0,
+            ),
+            Err(FixedAes128GcmError::CounterExhausted)
+        );
+    }
+
+    #[test]
+    fn fixed_aes128_gcm_roundtrips_block_edges() {
+        let key = [0x42; 16];
+        let nonce = [0x24; 12];
+        let input: Vec<u8> = (0..=255).map(|value| value as u8).collect();
+        for length in [0, 1, 15, 16, 17, 31, 32, 33, 127, 255] {
+            let plaintext = &input[..length];
+            let mut ciphertext = vec![0u8; length];
+            let mut tag = [0u8; 16];
+            aes128_gcm_encrypt_fixed(
+                plaintext,
+                &key,
+                &nonce,
+                b"associated-data",
+                &mut ciphertext,
+                &mut tag,
+            )
+            .unwrap();
+            let mut opened = vec![0xa5; length];
+            aes128_gcm_decrypt_fixed(
+                &ciphertext,
+                &key,
+                &nonce,
+                b"associated-data",
+                &tag,
+                &mut opened,
+            )
+            .unwrap();
+            assert_eq!(opened, plaintext);
+        }
     }
 
     #[test]

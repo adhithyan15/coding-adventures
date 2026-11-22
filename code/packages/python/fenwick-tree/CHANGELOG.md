@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Optional `portable_integer_domain` mode for DT06 v1 signed integer bounds.
+- `ValueOutOfDomainError` for strict-profile value and update rejections.
+- Shared fixture and exhaustive flat-array conformance tests.
+
 ## [0.1.0] — 2026-04-08
 
 ### Added

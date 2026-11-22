@@ -1,0 +1,2161 @@
+{
+  "accepted_blind_faults": [],
+  "assumes": [],
+  "budget": 16777216,
+  "chunk_size": 1024,
+  "controls": [
+    {
+      "blind_claims": [],
+      "fault": "off-by-one",
+      "id": "warrant/synth/negctl/exhaustive/add2/off-by-one",
+      "op": "add2",
+      "required_claims": [
+        "warrant/synth/exhaustive/add2_model",
+        "warrant/synth/exhaustive/add2_commutes"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 27,
+          "claim": "warrant/synth/exhaustive/add2_model"
+        },
+        {
+          "claim": "warrant/synth/exhaustive/add2_commutes",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one",
+      "id": "warrant/synth/negctl/exhaustive/bump/off-by-one",
+      "op": "bump",
+      "required_claims": [
+        "warrant/synth/exhaustive/bump_is_inc"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/bump_is_inc"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "xor-lsb",
+      "id": "warrant/synth/negctl/exhaustive/bump/xor-lsb",
+      "op": "bump",
+      "required_claims": [
+        "warrant/synth/exhaustive/bump_is_inc"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/bump_is_inc"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "ignore-last-byte",
+      "id": "warrant/synth/negctl/exhaustive/cmp/ignore-last-byte",
+      "op": "cmp",
+      "required_claims": [
+        "warrant/synth/exhaustive/cmp_agrees"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/cmp_agrees"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "invert",
+      "id": "warrant/synth/negctl/exhaustive/cmp/invert",
+      "op": "cmp",
+      "required_claims": [
+        "warrant/synth/exhaustive/cmp_agrees"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/cmp_agrees"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "invert",
+      "id": "warrant/synth/negctl/exhaustive/cmp_fixed/invert",
+      "op": "cmp_fixed",
+      "required_claims": [
+        "warrant/synth/exhaustive/cmp_fixed_agrees_w2"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/cmp_fixed_agrees_w2"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "truncate-last",
+      "id": "warrant/synth/negctl/exhaustive/echo/truncate-last",
+      "op": "echo",
+      "required_claims": [
+        "warrant/synth/exhaustive/echo_is_identity"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/echo_is_identity"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [
+        "warrant/synth/exhaustive/pick_equal_length"
+      ],
+      "fault": "missing-error",
+      "id": "warrant/synth/negctl/exhaustive/pick/missing-error",
+      "op": "pick",
+      "required_claims": [
+        "warrant/synth/exhaustive/pick_mismatch"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/pick_mismatch"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [
+        "warrant/synth/exhaustive/pick_mismatch"
+      ],
+      "fault": "swap-choice",
+      "id": "warrant/synth/negctl/exhaustive/pick/swap-choice",
+      "op": "pick",
+      "required_claims": [
+        "warrant/synth/exhaustive/pick_equal_length"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/pick_equal_length"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one",
+      "id": "warrant/synth/negctl/exhaustive/size_of/off-by-one",
+      "op": "size_of",
+      "required_claims": [
+        "warrant/synth/exhaustive/size_of_is_len"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/size_of_is_len"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one",
+      "id": "warrant/synth/negctl/exhaustive/wide/off-by-one",
+      "op": "wide",
+      "required_claims": [
+        "warrant/synth/exhaustive/wide_is_identity"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/wide_is_identity"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "xor-lsb",
+      "id": "warrant/synth/negctl/exhaustive/wide/xor-lsb",
+      "op": "wide",
+      "required_claims": [
+        "warrant/synth/exhaustive/wide_is_identity"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/wide_is_identity"
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "document": "v1",
+  "examples": [
+    {
+      "args": [
+        "255"
+      ],
+      "expected": "0",
+      "id": "warrant/synth/example/bump_wraps",
+      "op": "bump",
+      "result_type": "U8"
+    },
+    {
+      "args": [
+        "00",
+        "01"
+      ],
+      "expected": false,
+      "id": "warrant/synth/example/cmp_diff",
+      "op": "cmp",
+      "result_type": "Bool"
+    },
+    {
+      "args": [
+        "00",
+        "ff",
+        true
+      ],
+      "expected": {
+        "ok": "00"
+      },
+      "id": "warrant/synth/example/pick_ok",
+      "op": "pick",
+      "result_type": "Result<Bytes,E>"
+    },
+    {
+      "args": [
+        "00",
+        "",
+        false
+      ],
+      "expected": {
+        "err": "BAD"
+      },
+      "id": "warrant/synth/example/pick_err",
+      "op": "pick",
+      "result_type": "Result<Bytes,E>"
+    },
+    {
+      "args": [
+        "0001",
+        "0001"
+      ],
+      "expected": true,
+      "id": "warrant/synth/example/fixed_two",
+      "op": "cmp_fixed",
+      "result_type": "Bool",
+      "width": 2
+    },
+    {
+      "args": [
+        "0"
+      ],
+      "expected": "0",
+      "id": "warrant/synth/example/wide_zero",
+      "op": "wide",
+      "result_type": "U16"
+    }
+  ],
+  "fault_models": {},
+  "faults": [
+    {
+      "expr": [
+        "add",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "off-by-one",
+      "kind": "post",
+      "op": "add2",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "add",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "off-by-one",
+      "kind": "post",
+      "op": "bump",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "bit_xor",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "xor-lsb",
+      "kind": "post",
+      "op": "bump",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "fault": "ignore-last-byte",
+      "kind": "pre",
+      "op": "cmp",
+      "requires": [
+        "ir.core"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "if",
+            [
+              "gt",
+              [
+                "len",
+                [
+                  "var",
+                  "a"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "0"
+                }
+              ]
+            ],
+            [
+              "concat",
+              [
+                "take",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "sub",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "a"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "1"
+                    }
+                  ]
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": "00"
+                }
+              ]
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ],
+          "param": "a"
+        },
+        {
+          "expr": [
+            "if",
+            [
+              "gt",
+              [
+                "len",
+                [
+                  "var",
+                  "b"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "0"
+                }
+              ]
+            ],
+            [
+              "concat",
+              [
+                "take",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "sub",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "b"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "1"
+                    }
+                  ]
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": "00"
+                }
+              ]
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          "param": "b"
+        }
+      ]
+    },
+    {
+      "expr": [
+        "not",
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "invert",
+      "kind": "post",
+      "op": "cmp",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "not",
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "invert",
+      "kind": "post",
+      "op": "cmp_fixed",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "take",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "sub",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "truncate-last",
+      "kind": "post",
+      "op": "echo",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "pick",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "fault": "swap-choice",
+      "kind": "pre",
+      "op": "pick",
+      "requires": [
+        "ir.core"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "not",
+            [
+              "var",
+              "choice"
+            ]
+          ],
+          "param": "choice"
+        }
+      ]
+    },
+    {
+      "expr": [
+        "add",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "off-by-one",
+      "kind": "post",
+      "op": "size_of",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "add",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "off-by-one",
+      "kind": "post",
+      "op": "wide",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "bit_xor",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "xor-lsb",
+      "kind": "post",
+      "op": "wide",
+      "requires": [
+        "ir.fixed"
+      ]
+    }
+  ],
+  "generator": {
+    "name": "warrant-corpus-gen",
+    "version": "0.6.0"
+  },
+  "levels": [
+    "ir.core",
+    "ir.fixed"
+  ],
+  "max_ir_cost": 2000,
+  "model_order": [
+    "inc",
+    "addm",
+    "same"
+  ],
+  "models": {
+    "addm": {
+      "body": [
+        "add",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "b"
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ]
+    },
+    "inc": {
+      "body": [
+        "add",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "U8"
+        ]
+      ]
+    },
+    "same": {
+      "body": [
+        "eq",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "b"
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ]
+    }
+  },
+  "module": "synth",
+  "ops": {
+    "add2": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "U8"
+    },
+    "bump": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "U8"
+    },
+    "cmp": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bool"
+    },
+    "cmp_fixed": {
+      "params": [
+        [
+          "a",
+          "Bytes<N>"
+        ],
+        [
+          "b",
+          "Bytes<N>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bool",
+      "width_params": [
+        "N"
+      ]
+    },
+    "echo": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bytes"
+    },
+    "pick": {
+      "fresh": true,
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ],
+        [
+          "choice",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<Bytes,E>"
+    },
+    "size_of": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Nat"
+    },
+    "wide": {
+      "admit": [
+        "lt",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "60000"
+          }
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "U16"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "U16"
+    }
+  },
+  "profile": "warrant-corpus-v2",
+  "profile_sha256": "8d2507dd4d7740b04b0b222b95153595920098d340469454cbfedbd5021ec4fa",
+  "schema_version": 2,
+  "spec": "code/packages/python/warrant-oracle/tests/fixtures/synth-v2/synth.warrant",
+  "spec_sha256": "d6caacfe25ca15d8e558712d36a18a7e47f98d78768d22d967853cbea272e2dc",
+  "suites": [
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "bump",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "inc",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "cases": 256,
+      "chunks": 1,
+      "chunks_sha256": "96d2b8610e879a6435e1f0f688b0fd7850dd53f2e760a9242f18b12b3f874c7b",
+      "claim": "bump_is_inc",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "expected_sha256": "d8bf078b472ce128d73725a5bfe8810a9bef503311069803947fca87cfd9db45",
+      "id": "warrant/synth/exhaustive/bump_is_inc",
+      "inputs_sha256": "a0bd62ea07929fae866cd3d21dbf56c7833166b97e31d63672aecd626ee4b2b2",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "ops": [
+        "bump"
+      ],
+      "oracle": {
+        "expected": [
+          "model_call",
+          "inc",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "bump",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      },
+      "product": 256,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "d8bf078b472ce128d73725a5bfe8810a9bef503311069803947fca87cfd9db45",
+      "slim_inputs_sha256": "a0bd62ea07929fae866cd3d21dbf56c7833166b97e31d63672aecd626ee4b2b2",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "863aaa11233a9782a86b0b2381a240326d4fc3df0343ad4d8210815166a15639",
+      "v1_inputs_sha256": "7cdc5705ec60f9293bd0d86a9016fc4a7acfe0b9a73775c428b6405ba2aa47a9",
+      "wraps": 1
+    },
+    {
+      "admit": [
+        "ge",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "110"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "add2",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "addm",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "cases": 37376,
+      "chunks": 64,
+      "chunks_sha256": "04a52aeaff521d51c35431d220f9899d4481a56cf776a64a8c88e455d096a23e",
+      "claim": "add2_model",
+      "demoted": [],
+      "discarded": 28160,
+      "domain_label": "full",
+      "expected_calls": 37376,
+      "expected_sha256": "a520d2037d5c4bd7f663f440f57cddb81d55cbaa91121be86027c82012a970b2",
+      "id": "warrant/synth/exhaustive/add2_model",
+      "inputs_sha256": "b37dfc7e73522c0a6c860515e4f8a3d1a61e0b13eb8b6c7342937176109c6d96",
+      "ir_cost": 19,
+      "kind": "exhaustive",
+      "ops": [
+        "add2"
+      ],
+      "oracle": {
+        "expected": [
+          "model_call",
+          "addm",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "add2",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0,
+        5,
+        10,
+        15,
+        20,
+        25,
+        27,
+        30,
+        35,
+        40,
+        45,
+        50,
+        55,
+        60,
+        63
+      ],
+      "slim_expected_sha256": "f5701aa6d24188ff42047b952b163ecd8857c629832996f30195381c9fc824ea",
+      "slim_inputs_sha256": "a9604cf1c49b0f95d71daaeedc35b7a99e9877a1669cdebbb87a3ef33595da30",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "e6ae8b917fde6375ad0f9683152dd0ddc59a4fd291b5def054ddddd278e59e11",
+      "v1_inputs_sha256": "4b4028cdb4e686a72f0fbde39a0be841e279ecf3c06c947d2b371e8a037a3071",
+      "wraps": 26645
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "add2",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "add2",
+          [
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "cases": 65536,
+      "chunks": 64,
+      "chunks_sha256": "91d85a4b21948f1adc6c4dfec54914bb0362c465fcb1d1e8bc8697c046c1eee9",
+      "claim": "add2_commutes",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 131072,
+      "id": "warrant/synth/exhaustive/add2_commutes",
+      "inputs_sha256": "01ffd1e8c8c9c28df3b3adb466cf6df86f96e4c69b50b04f42c0a503c997d1a1",
+      "ir_cost": 8,
+      "kind": "exhaustive",
+      "ops": [
+        "add2"
+      ],
+      "oracle": {
+        "kind": "predicate"
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0,
+        1,
+        6,
+        11,
+        16,
+        21,
+        26,
+        31,
+        36,
+        40,
+        41,
+        46,
+        51,
+        56,
+        61,
+        63
+      ],
+      "slim_inputs_sha256": "7b671497a372c04670ced4fcb616c1e463b6519a3a2ecda75f9663b6bd6c9140",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "80f97bf82551dcb09d256dcdf5c62f76b111822ca1ad4e5f708992aff1df3a10",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "cmp",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "same",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "cases": 120409,
+      "chunks": 118,
+      "chunks_sha256": "73201a28c8e169a3a7e856c397035ec12d55b5b9bf25cf53efa775537d77294b",
+      "claim": "cmp_agrees",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 120409,
+      "expected_sha256": "626a12c08a3b67181cec9e1f3340ed0411ddfe2c26d1fbeb7e3f89d4b6586499",
+      "id": "warrant/synth/exhaustive/cmp_agrees",
+      "inputs_sha256": "df1e21ca4f2709338fb7aee02f4c5c327ad0f395920e1a60ffaa6cef7c8ea01a",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "ops": [
+        "cmp"
+      ],
+      "oracle": {
+        "expected": [
+          "model_call",
+          "same",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "cmp",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      },
+      "product": 120409,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0,
+        7,
+        16,
+        25,
+        34,
+        43,
+        52,
+        61,
+        70,
+        79,
+        88,
+        97,
+        106,
+        115,
+        117
+      ],
+      "slim_expected_sha256": "8ad32a88080a6ee845c930118f09151b4fa61ab4c4d25a8348454f062dabf2ad",
+      "slim_inputs_sha256": "4354b04e3424e4d1a38e53a03101745c3e09cc19e6bcc87de1c6c47920309054",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "2ff8578b1a3ac21c7b64f2dda7066dcb687efaa3c8f9ab78553b742901ba39b7",
+      "v1_inputs_sha256": "6ce6a53eca4e3fa01c542f27163efa8a942557b5f09a6f7751ca089a2820574c",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 2,
+              "size": 16
+            },
+            "type": "Bytes<2>"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 2,
+              "size": 16
+            },
+            "type": "Bytes<2>"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "cmp_fixed",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            2
+          ]
+        ],
+        [
+          "model_call",
+          "same",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "cases": 256,
+      "chunks": 1,
+      "chunks_sha256": "199f7155595a8b54524c0499d850de7ae8bf70b80d2de49bb04fe5a7e86e0926",
+      "claim": "cmp_fixed_agrees_w2",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 256,
+      "expected_sha256": "e4eeaaaf86e512c7dba9f83d0f9d1c0ff2b110fc8122218af5d71c3e5a4a0b34",
+      "id": "warrant/synth/exhaustive/cmp_fixed_agrees_w2",
+      "inputs_sha256": "c66cc09412e50b973b5068067356290395af44d26310d553a128b0a15e58f550",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "ops": [
+        "cmp_fixed"
+      ],
+      "oracle": {
+        "expected": [
+          "model_call",
+          "same",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "cmp_fixed",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            2
+          ]
+        ]
+      },
+      "product": 256,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "e4eeaaaf86e512c7dba9f83d0f9d1c0ff2b110fc8122218af5d71c3e5a4a0b34",
+      "slim_inputs_sha256": "c66cc09412e50b973b5068067356290395af44d26310d553a128b0a15e58f550",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "cf8bfab5572eb8d0a1f52067c4bafd8e5f031ed27427d06ddef47689825c311b",
+      "v1_inputs_sha256": "b39de818742834150b60077b4f9cd3b5df15b9797283b6a7926890320dc36bea",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "eq",
+        [
+          "len",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "len",
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ],
+        [
+          "choice",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "pick",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "choice"
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "if",
+            [
+              "var",
+              "choice"
+            ],
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "cases": 139818,
+      "chunks": 236,
+      "chunks_sha256": "66574079051b8d672ecc8e4019c86fa793ee9e73d953bc536f4fc19912c7120b",
+      "claim": "pick_equal_length",
+      "demoted": [],
+      "discarded": 101000,
+      "domain_label": "bounded-set",
+      "expected_calls": 139818,
+      "expected_sha256": "5c45ceb38019c1cc987df76dcb8459aee5627af2dc194db593df48aa3bb1c97c",
+      "id": "warrant/synth/exhaustive/pick_equal_length",
+      "inputs_sha256": "8035f40048253e5f9525e4f0301dafeab24cb53f8e6cd3bab9a5baf43f81acdf",
+      "ir_cost": 18,
+      "kind": "exhaustive",
+      "ops": [
+        "pick"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "if",
+            [
+              "var",
+              "choice"
+            ],
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "pick",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "choice"
+            ]
+          ]
+        ]
+      },
+      "product": 240818,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<Bytes,E>",
+      "slim_chunks": [
+        0,
+        12,
+        24,
+        36,
+        48,
+        60,
+        72,
+        84,
+        96,
+        108,
+        120,
+        132,
+        144,
+        156,
+        168,
+        180,
+        192,
+        204,
+        216,
+        228,
+        235
+      ],
+      "slim_expected_sha256": "3605e39f4915d697f7f2dc36e74da6c9363d1c4ac1048c9d16c76e796a49ef38",
+      "slim_inputs_sha256": "bead222a7b47ce68da0ffd972e7d721335773d423139a5b44d0de29f45b9dd89",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "e72c5e456a4c169bbbf18401e0837605870dde4ef50e7754ed4691a72e33ec81",
+      "v1_inputs_sha256": "4187b55a89f39ef8bbc4f14088421cb5a2f6c40589c32fc034ed059914aea29a",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "ne",
+        [
+          "len",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "len",
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ],
+        [
+          "choice",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "pick",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "choice"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "BAD"
+        ]
+      ],
+      "cases": 101000,
+      "chunks": 236,
+      "chunks_sha256": "8764821ea632b1880b1988d5efef617cf4f1795ad9b78e36d90037188267b343",
+      "claim": "pick_mismatch",
+      "demoted": [],
+      "discarded": 139818,
+      "domain_label": "bounded-set",
+      "expected_calls": 101000,
+      "expected_sha256": "4946ccdc223c05493816241d15eab4f650231c6e68181095c1a3bba9f6267fc4",
+      "id": "warrant/synth/exhaustive/pick_mismatch",
+      "inputs_sha256": "c1ec39113c1467f9cb31823b068270a613c70914d9f64cb29b4e906e42b46168",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "ops": [
+        "pick"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "BAD"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "pick",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "choice"
+            ]
+          ]
+        ]
+      },
+      "product": 240818,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<Bytes,E>",
+      "slim_chunks": [
+        0,
+        5,
+        17,
+        29,
+        41,
+        53,
+        65,
+        77,
+        89,
+        101,
+        113,
+        125,
+        137,
+        149,
+        161,
+        173,
+        185,
+        197,
+        209,
+        221,
+        233,
+        235
+      ],
+      "slim_expected_sha256": "44cf84ebf8e49ad283c113f74f6ab6f00e7d9a4f2af76310ff922f17612adaf4",
+      "slim_inputs_sha256": "7a190a97af549581287a8c28b9ecaa000931d148dc97707a5a78dc22efc9c9eb",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "c7f4220829ceeffef1b9c16743d92fcda2f07ca152023584f925e7b78986f06f",
+      "v1_inputs_sha256": "51dc2c873780ae33af407bf46bfe9da76eae156bcc7969193ea1abdbc44e83b6",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lt",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "60000"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "fx_full",
+              "size": 65536,
+              "t": "U16"
+            },
+            "type": "U16"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "wide",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "cases": 60000,
+      "chunks": 64,
+      "chunks_sha256": "53b8cf1d7116a2e76468423eaebb338824a85322096a374a3d12c5b65f7d968c",
+      "claim": "wide_is_identity",
+      "demoted": [],
+      "discarded": 5536,
+      "domain_label": "full",
+      "expected_calls": 60000,
+      "expected_sha256": "cec8cef71f2e383c5ba29f305812289f4798af2633090e9f156bf379f85ee031",
+      "id": "warrant/synth/exhaustive/wide_is_identity",
+      "inputs_sha256": "cec8cef71f2e383c5ba29f305812289f4798af2633090e9f156bf379f85ee031",
+      "ir_cost": 8,
+      "kind": "exhaustive",
+      "ops": [
+        "wide"
+      ],
+      "oracle": {
+        "expected": [
+          "var",
+          "a"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "wide",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "U16",
+      "slim_chunks": [
+        0,
+        3,
+        8,
+        13,
+        18,
+        23,
+        28,
+        33,
+        38,
+        43,
+        48,
+        53,
+        58,
+        63
+      ],
+      "slim_expected_sha256": "2409310b28337a302e15f4efee0d65a9c3fa6d51342f043475f9252f188818b0",
+      "slim_inputs_sha256": "2409310b28337a302e15f4efee0d65a9c3fa6d51342f043475f9252f188818b0",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "echo",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "cases": 347,
+      "chunks": 1,
+      "chunks_sha256": "ee4a3c9178c3b5ad51604813c7a56ed7ee90729498cae63acfd6a18679ea440b",
+      "claim": "echo_is_identity",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 347,
+      "expected_sha256": "ebcd05faa6d730ab9d4f490d741747bba75cba08e9af202888bb2b0bb9c798e0",
+      "id": "warrant/synth/exhaustive/echo_is_identity",
+      "inputs_sha256": "ebcd05faa6d730ab9d4f490d741747bba75cba08e9af202888bb2b0bb9c798e0",
+      "ir_cost": 6,
+      "kind": "exhaustive",
+      "ops": [
+        "echo"
+      ],
+      "oracle": {
+        "expected": [
+          "var",
+          "a"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "echo",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      },
+      "product": 347,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bytes",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "ebcd05faa6d730ab9d4f490d741747bba75cba08e9af202888bb2b0bb9c798e0",
+      "slim_inputs_sha256": "ebcd05faa6d730ab9d4f490d741747bba75cba08e9af202888bb2b0bb9c798e0",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "2fc1d5b1f3fe4559cb0aeb24358eafc37647130495f8e7a4d9b64809b7154b98",
+      "v1_inputs_sha256": "2fc1d5b1f3fe4559cb0aeb24358eafc37647130495f8e7a4d9b64809b7154b98",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "size_of",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "len",
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "cases": 347,
+      "chunks": 1,
+      "chunks_sha256": "47193d6d7fa4c0a5fed32286896e89a06a7c0222c90648318d3d02907d6e9532",
+      "claim": "size_of_is_len",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 347,
+      "expected_sha256": "fb0b23d0ee7b8808bfae1a16229a2a828ef1dcb4ae0208f416a07d97622d76f4",
+      "id": "warrant/synth/exhaustive/size_of_is_len",
+      "inputs_sha256": "733b0326927893ef850198183acd310b41b03c583a9d850a1606eec0358cbc4a",
+      "ir_cost": 8,
+      "kind": "exhaustive",
+      "ops": [
+        "size_of"
+      ],
+      "oracle": {
+        "expected": [
+          "len",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "size_of",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      },
+      "product": 347,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "fb0b23d0ee7b8808bfae1a16229a2a828ef1dcb4ae0208f416a07d97622d76f4",
+      "slim_inputs_sha256": "733b0326927893ef850198183acd310b41b03c583a9d850a1606eec0358cbc4a",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "d5e13ac6c95b2407ac0e9fa46332e70ae7a9a325f797a7eeadcc3ac158322f9e",
+      "v1_inputs_sha256": "3ca19bf6eae9241b5652bb9112a7740a901f15be0a59b8fcd13d1842effac25b",
+      "wraps": 0
+    }
+  ],
+  "types": {
+    "E": {
+      "cases": [
+        "BAD",
+        "WORSE"
+      ],
+      "kind": "error"
+    }
+  }
+}

@@ -1,0 +1,299 @@
+{
+  "cases": [
+    {
+      "id": "label-digest/python-base",
+      "manifest": {
+        "module": "ct_compare",
+        "package": "python/ct-compare",
+        "runner": {
+          "src_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "python",
+          "version": "3.13.1"
+        }
+      },
+      "sha256": "67870e81ecf8223f1ab04acaf895db47d5a15aa30c3c28d6fd2b75efa771840c",
+      "summary": "the reference manifest"
+    },
+    {
+      "id": "label-digest/python-other-version",
+      "manifest": {
+        "module": "ct_compare",
+        "package": "python/ct-compare",
+        "runner": {
+          "src_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "python",
+          "version": "3.12.0"
+        }
+      },
+      "same_as": "label-digest/python-base",
+      "sha256": "67870e81ecf8223f1ab04acaf895db47d5a15aa30c3c28d6fd2b75efa771840c",
+      "summary": "toolchain.version does not change the digest"
+    },
+    {
+      "id": "label-digest/python-empty-version",
+      "manifest": {
+        "module": "ct_compare",
+        "package": "python/ct-compare",
+        "runner": {
+          "src_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "python",
+          "version": ""
+        }
+      },
+      "same_as": "label-digest/python-base",
+      "sha256": "67870e81ecf8223f1ab04acaf895db47d5a15aa30c3c28d6fd2b75efa771840c",
+      "summary": "an empty toolchain.version is the same digest"
+    },
+    {
+      "differs_from": "label-digest/python-base",
+      "id": "label-digest/node-name",
+      "manifest": {
+        "module": "ct_compare",
+        "package": "python/ct-compare",
+        "runner": {
+          "src_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "node",
+          "version": "22.1.0"
+        }
+      },
+      "sha256": "2d745c2fb3dd0ae8a9d159aca18a57398b65e191de23d0022fb0699a45590535",
+      "summary": "toolchain.name IS part of the digest (never a literal)"
+    },
+    {
+      "id": "label-digest/node-name-other-version",
+      "manifest": {
+        "module": "ct_compare",
+        "package": "python/ct-compare",
+        "runner": {
+          "src_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "node",
+          "version": "20.0.0"
+        }
+      },
+      "same_as": "label-digest/node-name",
+      "sha256": "2d745c2fb3dd0ae8a9d159aca18a57398b65e191de23d0022fb0699a45590535",
+      "summary": "same name, another version, same digest"
+    },
+    {
+      "differs_from": "label-digest/python-base",
+      "id": "label-digest/name-case",
+      "manifest": {
+        "module": "ct_compare",
+        "package": "python/ct-compare",
+        "runner": {
+          "src_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "Python",
+          "version": "3.13.1"
+        }
+      },
+      "sha256": "e2cc7a5f3f0ba9dc63172a43c28061e96564b4b8e9bbb82d0d89aa1853b96ee2",
+      "summary": "toolchain.name compares exactly"
+    },
+    {
+      "differs_from": "label-digest/python-base",
+      "id": "label-digest/name-empty",
+      "manifest": {
+        "module": "ct_compare",
+        "package": "python/ct-compare",
+        "runner": {
+          "src_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "",
+          "version": "3.13.1"
+        }
+      },
+      "sha256": "00cf98ec30e9c53aaec826a1324a4a8a6b643e057f6d14e5187b167e60459d7e",
+      "summary": "an empty toolchain.name still counts"
+    },
+    {
+      "id": "label-digest/key-order",
+      "manifest": {
+        "module": "ct_compare",
+        "package": "python/ct-compare",
+        "runner": {
+          "src_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "python",
+          "version": "9"
+        }
+      },
+      "same_as": "label-digest/python-base",
+      "sha256": "67870e81ecf8223f1ab04acaf895db47d5a15aa30c3c28d6fd2b75efa771840c",
+      "summary": "key order in the input is irrelevant"
+    },
+    {
+      "differs_from": "label-digest/python-base",
+      "id": "label-digest/package-changes",
+      "manifest": {
+        "module": "ct_compare",
+        "package": "typescript/ct-compare",
+        "runner": {
+          "src_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "python",
+          "version": "3.13.1"
+        }
+      },
+      "sha256": "7b856380e19c2462030aa47930898574aef3c1e65806b6cfbdcc2267c179dd1e",
+      "summary": "another package is another digest"
+    },
+    {
+      "differs_from": "label-digest/python-base",
+      "id": "label-digest/runner-digest-changes",
+      "manifest": {
+        "module": "ct_compare",
+        "package": "python/ct-compare",
+        "runner": {
+          "src_sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "python",
+          "version": "3.13.1"
+        }
+      },
+      "sha256": "d4cc1e3066d94abbe3c0543f72cf51199725a072a58a099fb98723218d122981",
+      "summary": "another runner digest is another digest"
+    },
+    {
+      "differs_from": "label-digest/python-base",
+      "id": "label-digest/non-ascii",
+      "manifest": {
+        "module": "ct_compare",
+        "package": "python/caf\u00e9-\ud83d\ude00",
+        "runner": {
+          "src_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "python",
+          "version": "3.13.1"
+        }
+      },
+      "sha256": "995c3a4385ce4904c4f80741caf50d375f25ca0eb0d3e7f86bde206aa76e8fd1",
+      "summary": "non-ASCII text is rendered as lowercase \\u escapes before hashing"
+    },
+    {
+      "differs_from": "label-digest/python-base",
+      "id": "label-digest/special-keys",
+      "manifest": {
+        "extra": {
+          "10": 1,
+          "9": 2,
+          "__proto__": {
+            "x": 1
+          }
+        },
+        "module": "ct_compare",
+        "package": "python/ct-compare",
+        "runner": {
+          "src_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "python",
+          "version": "3.13.1"
+        }
+      },
+      "sha256": "09c18de6013eea5884e4788d6033e0d777e02d109e7764fa985aec417968d8dc",
+      "summary": "__proto__ and integer-like keys survive into the digest"
+    },
+    {
+      "differs_from": "label-digest/python-base",
+      "id": "label-digest/extra-field",
+      "manifest": {
+        "extra": 1,
+        "module": "ct_compare",
+        "package": "python/ct-compare",
+        "runner": {
+          "src_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "schema": "warrant-lane-evidence-v1",
+        "tests": {
+          "examples": 12,
+          "exhaustive": 9
+        },
+        "toolchain": {
+          "name": "python",
+          "version": "3.13.1"
+        }
+      },
+      "sha256": "df93fa6e33727fab6e6aee773eecd2c4b0ebee79cd504bf24acd95cbbd8859e4",
+      "summary": "an extra field changes the digest"
+    }
+  ],
+  "category": "label-digest",
+  "schema": "warrant-corpus-conformance-v1"
+}

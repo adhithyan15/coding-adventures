@@ -1,0 +1,98 @@
+{
+  "budget": 16777216,
+  "chunk_size": 65536,
+  "document": "v0",
+  "max_ir_cost": 2000,
+  "module": "enum_forms_v0",
+  "schema": "warrant-enumeration-parity-v0",
+  "suites": {
+    "bytes_eq": {
+      "binders": [
+        "Bytes<1>",
+        "Bytes<1>"
+      ],
+      "cases": 65536,
+      "chunk_lines": [
+        "0 65536 0 65536 fdd000f2e2534abe8bf27715e946debfec75d4ff4410eb8618f5aa7e3f99a43a f1659741996fd70f339c4de8a5727428baf2d2e09d35837cde4fa99739d40ef1"
+      ],
+      "chunk_size": 65536,
+      "chunks_total": 1,
+      "claim": "bytes_eq",
+      "demoted": [],
+      "descriptors": [
+        {
+          "d": "bytes_n",
+          "n": 1,
+          "size": 256
+        },
+        {
+          "d": "bytes_n",
+          "n": 1,
+          "size": 256
+        }
+      ],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "1fe2644e40eb3ca2c5061c28f312a70a4ab353cee8c771a478ebc68b31fd91f2",
+      "id": "warrant/enum_forms_v0/exhaustive/bytes_eq",
+      "inputs_sha256": "63bb55e30dcc1335ea5affcc6e502c498438b87f48247aaecc31dd1268b3ec73",
+      "ir_cost": 17,
+      "kind": "reference",
+      "product": 65536,
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "1fe2644e40eb3ca2c5061c28f312a70a4ab353cee8c771a478ebc68b31fd91f2",
+      "slim_inputs_sha256": "63bb55e30dcc1335ea5affcc6e502c498438b87f48247aaecc31dd1268b3ec73",
+      "stream_header": "warrant-stream-v1",
+      "v1_expected_sha256": "a79aed54860d6ddd90b0efa1d19639c9d5be9bb4f1e1cff9676222fed95b1599",
+      "v1_inputs_sha256": "474e5d28522642a02a212ed17e98bfc502b0f916d1857bf20dcde3eee4df94d3",
+      "wraps": 0
+    },
+    "small_add": {
+      "binders": [
+        "U8",
+        "U8"
+      ],
+      "cases": 10000,
+      "chunk_lines": [
+        "0 10000 0 10000 4981bca38a4ef682125d116c04cabecc13b5eb59ddf961bf3a752061a64d55a6 a78bfdee62d10b4a6738bce9b062c168c7fb3749cc43f5ded1d2fbaa1acfb0ea"
+      ],
+      "chunk_size": 65536,
+      "chunks_total": 1,
+      "claim": "small_add",
+      "demoted": [],
+      "descriptors": [
+        {
+          "d": "u8_all",
+          "size": 256
+        },
+        {
+          "d": "u8_all",
+          "size": 256
+        }
+      ],
+      "discarded": 55536,
+      "domain_label": "full",
+      "expected_calls": 10000,
+      "expected_sha256": "4c58d3aaea52d2e97788affaab13241ac3f8410157deed9a0841f80ac870072e",
+      "id": "warrant/enum_forms_v0/exhaustive/small_add",
+      "inputs_sha256": "436d7833896e9d8a51ed4b421653b366686749cc85f5efffdf7a2106b74bb272",
+      "ir_cost": 23,
+      "kind": "reference",
+      "product": 65536,
+      "result_type": "U8",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "4c58d3aaea52d2e97788affaab13241ac3f8410157deed9a0841f80ac870072e",
+      "slim_inputs_sha256": "436d7833896e9d8a51ed4b421653b366686749cc85f5efffdf7a2106b74bb272",
+      "stream_header": "warrant-stream-v1",
+      "v1_expected_sha256": "84f2ffdfac785be9bb3b82c7079758abd76b79688ac4c2da7aef3c22aa12f14e",
+      "v1_inputs_sha256": "bdc0ac6e21c328d09af03498b3ff4a7a1f2cee5b3e7fa742e2776848a3b10a2d",
+      "wraps": 0
+    }
+  }
+}

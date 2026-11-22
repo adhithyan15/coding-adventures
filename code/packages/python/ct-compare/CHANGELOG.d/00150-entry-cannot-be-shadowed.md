@@ -1,0 +1,4 @@
+## Unreleased
+
+- `tests/warrant_evidence.py` can no longer be shadowed by a file beside it (WD-004b3, VER04i 8.1). Run as a script it removed nothing from `sys.path`, so a planted `tests/shutil.py` (or `shutil.cpython-*.so`, `.abi3.so`, `.pyd`) was imported by the entry's own `import shutil` before any isolation existed. The entry now drops its directory from `sys.path` before its first non-built-in import (only when run as `__main__`) and re-runs the isolated child with `python -P`. New `tests/test_entry_shadowing.py` plants such modules beside a copy of the entry and asserts they never run, with a control showing a plain script does import them.
+- `evidence/test-manifest.json` and `evidence/domain-labels.json` regenerated: `runner.src_sha256` moved (the runner's sabotage children now run with `-P`). Nothing else changed.

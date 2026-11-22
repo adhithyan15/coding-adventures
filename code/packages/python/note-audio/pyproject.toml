@@ -44,7 +44,7 @@ select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=note_audio --cov-report=term-missing --cov-fail-under=95"
+addopts = "-p no:platformdirs --cov=note_audio --cov-report=term-missing --cov-fail-under=95"
 
 [tool.coverage.run]
 source = ["src/note_audio"]

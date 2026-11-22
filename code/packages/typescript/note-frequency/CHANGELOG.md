@@ -2,12 +2,13 @@
 
 ## 0.2.0
 
-- Migrated test runner from Vitest to `@coding-adventures/test-bootstrap` (TF01).
+- Migrated test runner from Vitest / `--experimental-strip-types` to standalone `tsconfig.json` + `tsconfig.test.json` + `node:test` + `@coding-adventures/test-bootstrap` with `--experimental-test-coverage --test-coverage-lines=95`.
+- Updated `BUILD`, `BUILD_windows`, `.gitignore`, and `package-lock.json` to mirror `oscillator` and build `@coding-adventures/test-bootstrap` first.
+- Hardened against CWE-1333 (ReDoS): replaced regex parsing with a bounded linear-time ASCII scanner.
 - Hardened against CWE-1321 (Prototype Pollution): switched from plain object mapping to `Map<string, number>` and explicitly rejected prototype properties (`__proto__`, `constructor`, `prototype`).
-- Hardened against CWE-400 (Resource Consumption): capped note input string length to 32 characters and bounded octave ranges.
-- Hardened against CWE-20 (Improper Input Validation): added runtime type assertions and `Number.isFinite`/`Number.isInteger` checks for all parameters and outputs.
-- Added property-based testing (PBT, VER05a) and hostile input fuzzing suites.
-- Added Warrant specification `code/specs/note-frequency.warrant`.
+- Hardened against CWE-400 (Resource Consumption): capped note input string length to `MAX_NOTE_STRING_LENGTH = 32` and bounded octave ranges `[-100, 100]`.
+- Hardened against CWE-20 / CWE-190 (Improper Input Validation / Integer Overflow): enforced `Number.isSafeInteger` for octaves/semitones and `Number.isFinite` for frequencies.
+- Added local `note-frequency.warrant` synced with `code/specs/note-frequency.warrant`, plus `tests/hostile.test.ts` and `tests/pbt.test.ts` (SplitMix64).
 
 ## 0.1.0
 

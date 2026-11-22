@@ -255,6 +255,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "320119579fcad9c21884f5c4861d16174d0e06250625266f50fe6898340abefa"
 
 [[package]]
+name = "aero-flight-model"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "rigidbody-6dof",
+ "trig",
+]
+
+[[package]]
 name = "aes"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -668,6 +680,9 @@ dependencies = [
 [[package]]
 name = "audio-device-sink"
 version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "audio-mixer-realtime"
@@ -689,6 +704,17 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 [[package]]
 name = "avl-tree"
 version = "0.1.0"
+
+[[package]]
+name = "avm-bytecode-lifter"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "interpreter-ir",
+ "vm-core",
+]
 
 [[package]]
 name = "avr-classic-simulator"
@@ -1414,6 +1440,18 @@ name = "browser-navigation"
 version = "0.1.0"
 dependencies = [
  "url-parser",
+]
+
+[[package]]
+name = "bsp-portal25d"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "pixel-container",
+ "trig",
 ]
 
 [[package]]
@@ -2699,6 +2737,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "cockpit-hud-paint"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "paint-instructions",
+ "paint-vm-runtime",
+ "rigidbody-6dof",
+ "trig",
+]
+
+[[package]]
 name = "codabar"
 version = "0.1.0"
 dependencies = [
@@ -3264,6 +3316,19 @@ dependencies = [
  "grammar-tools",
  "lexer",
  "parser",
+]
+
+[[package]]
+name = "coding-adventures-fixed-point"
+version = "0.1.0"
+dependencies = [
+ "cdcl-sat",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "drat-check",
+ "num-bigint",
+ "num-traits",
+ "serde_json",
 ]
 
 [[package]]
@@ -3923,6 +3988,9 @@ dependencies = [
 [[package]]
 name = "coding-adventures-note-frequency"
 version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "coding-adventures-oct-lexer"
@@ -4635,6 +4703,7 @@ dependencies = [
  "coding_adventures_sha256",
  "coding_adventures_test_bootstrap",
  "coding_adventures_warrant_grammar",
+ "coding_adventures_warrant_ir",
  "drat-check",
 ]
 
@@ -4731,10 +4800,21 @@ dependencies = [
 ]
 
 [[package]]
-name = "coding_adventures_hash_functions"
+name = "coding_adventures_hash_analysis"
 version = "0.1.0"
 dependencies = [
+ "coding_adventures_hash_functions",
  "getrandom 0.2.17",
+]
+
+[[package]]
+name = "coding_adventures_hash_functions"
+version = "0.2.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding-adventures-json-value",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
 ]
 
 [[package]]
@@ -5348,8 +5428,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "coding_adventures_warrant_grammar"
+name = "coding_adventures_warrant_corpus_gen"
 version = "0.6.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_warrant_corpus_gen",
+ "coding_adventures_warrant_grammar",
+]
+
+[[package]]
+name = "coding_adventures_warrant_grammar"
+version = "0.8.0"
 dependencies = [
  "coding_adventures_ct_compare",
  "coding_adventures_sha256",
@@ -5370,6 +5459,7 @@ dependencies = [
  "coding_adventures_test_bootstrap",
  "coding_adventures_warrant_grammar",
  "drat-check",
+ "toml 0.8.23",
 ]
 
 [[package]]
@@ -5393,7 +5483,11 @@ dependencies = [
 
 [[package]]
 name = "coding_adventures_zeroize"
-version = "0.1.0"
+version = "0.1.1"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "collision2d"
@@ -6359,6 +6453,7 @@ dependencies = [
 name = "dsp-filters"
 version = "0.4.0"
 dependencies = [
+ "coding_adventures_bounded_json",
  "coding_adventures_test_bootstrap",
  "dsp-fft",
 ]
@@ -6647,6 +6742,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1c66915cc5391097de7a2b0b972e8505aa33c0df401fd3a6811dbdb32881ba48"
 
 [[package]]
+name = "flash-audio-bridge"
+version = "0.1.0"
+dependencies = [
+ "audio-device-sink",
+ "audio-mixer-realtime",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "game-clock",
+ "pcm-audio",
+ "swf-container",
+]
+
+[[package]]
 name = "flash-display-list"
 version = "0.1.0"
 dependencies = [
@@ -6660,6 +6769,28 @@ dependencies = [
  "point2d",
  "swf-container",
  "swf-shape-to-paint",
+]
+
+[[package]]
+name = "flash-player-host"
+version = "0.1.0"
+dependencies = [
+ "actionscript-compiler",
+ "avm-bytecode-lifter",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "flash-audio-bridge",
+ "flash-display-list",
+ "game-clock",
+ "interpreter-ir",
+ "paint-instructions",
+ "paint-palette-blend",
+ "paint-vm-runtime",
+ "swf-container",
+ "swf-shape-to-paint",
+ "vm-core",
+ "window-core",
 ]
 
 [[package]]
@@ -6882,8 +7013,26 @@ name = "game-clock"
 version = "0.1.0"
 dependencies = [
  "capability-runtime-conformance",
+ "cdcl-sat",
+ "coding_adventures_bounded_json",
  "coding_adventures_sha256",
  "coding_adventures_test_bootstrap",
+ "coding_adventures_warrant_grammar",
+ "drat-check",
+]
+
+[[package]]
+name = "game-input-frame"
+version = "0.1.0"
+dependencies = [
+ "bit-blaster",
+ "capability-runtime-conformance",
+ "cdcl-sat",
+ "coding_adventures_bounded_json",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "coding_adventures_warrant_ir",
+ "drat-check",
 ]
 
 [[package]]
@@ -7253,8 +7402,12 @@ name = "hamurabi"
 version = "0.1.0"
 dependencies = [
  "capability-runtime-conformance",
+ "coding-adventures-json-parser",
+ "coding_adventures_bounded_json",
  "coding_adventures_sha256",
  "coding_adventures_test_bootstrap",
+ "lexer",
+ "parser",
  "rng",
 ]
 
@@ -9450,6 +9603,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "math3d"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "trig",
+]
+
+[[package]]
 name = "mathml"
 version = "0.8.0"
 dependencies = [
@@ -10242,11 +10405,12 @@ dependencies = [
 
 [[package]]
 name = "musical-instruments"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "coding_adventures_test_bootstrap",
  "oscillator",
  "pcm-audio",
+ "trig",
 ]
 
 [[package]]
@@ -10823,9 +10987,10 @@ dependencies = [
 
 [[package]]
 name = "oscillator"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "coding_adventures_test_bootstrap",
+ "trig",
 ]
 
 [[package]]
@@ -11180,7 +11345,7 @@ dependencies = [
 
 [[package]]
 name = "percussion-kit"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "coding_adventures_test_bootstrap",
  "oscillator",
@@ -11582,10 +11747,33 @@ name = "rans"
 version = "0.1.0"
 
 [[package]]
+name = "raster3d-soft"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "pixel-container",
+]
+
+[[package]]
 name = "raw-window-handle"
 version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "20675572f6f24e9e76ef639bc5552774ed45f1c30e2951e1e99c59888861c539"
+
+[[package]]
+name = "raycast-dda"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "pixel-container",
+ "trig",
+]
 
 [[package]]
 name = "rcgen"
@@ -11718,6 +11906,19 @@ name = "register-vm"
 version = "0.1.0"
 
 [[package]]
+name = "render3d-gpu-bridge"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "gpu-runtime",
+ "math3d",
+ "pixel-container",
+ "raster3d-soft",
+]
+
+[[package]]
 name = "renderdoc-sys"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -11739,6 +11940,17 @@ dependencies = [
 [[package]]
 name = "resp-protocol"
 version = "0.1.0"
+
+[[package]]
+name = "rigidbody-6dof"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "trig",
+]
 
 [[package]]
 name = "ring"
@@ -11942,6 +12154,18 @@ dependencies = [
  "coding_adventures_sha512",
  "rsa-pss-encoded-message-layout",
  "rsa-pss-mgf1-sha512",
+]
+
+[[package]]
+name = "rsa-pss-sha512-signature"
+version = "0.1.0"
+dependencies = [
+ "der-asn1",
+ "rsa-pss-encoded-message-layout",
+ "rsa-pss-sha512",
+ "rsa-public-operation",
+ "x509-rsa-public-key",
+ "x509-subject-public-key-info",
 ]
 
 [[package]]
@@ -14103,6 +14327,25 @@ name = "superh2-simulator"
 version = "0.1.0"
 
 [[package]]
+name = "swf-conformance-corpus"
+version = "0.1.0"
+dependencies = [
+ "avm-bytecode-lifter",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "deflate",
+ "flash-audio-bridge",
+ "flash-display-list",
+ "flash-player-host",
+ "paint-instructions",
+ "swf-container",
+ "swf-shape-to-paint",
+ "vm-core",
+ "window-core",
+]
+
+[[package]]
 name = "swf-container"
 version = "0.1.0"
 dependencies = [
@@ -14339,6 +14582,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "terrain-lod"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "math3d",
+ "rng",
+ "trig",
+]
+
+[[package]]
 name = "testbench-framework"
 version = "0.1.0"
 dependencies = [
@@ -14499,6 +14754,20 @@ name = "tls-server-identity"
 version = "0.1.0"
 
 [[package]]
+name = "tls13-aes128-gcm-record"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_aes_modes",
+ "coding_adventures_hkdf",
+ "coding_adventures_zeroize",
+ "tls13-cipher-suite-policy",
+ "tls13-inner-plaintext",
+ "tls13-record",
+ "tls13-record-protection-state",
+ "tls13-traffic-key-material",
+]
+
+[[package]]
 name = "tls13-alert-message"
 version = "0.1.0"
 
@@ -14526,6 +14795,46 @@ name = "tls13-certificate-verify-message"
 version = "0.1.0"
 
 [[package]]
+name = "tls13-certificate-verify-transcript-binding"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_hkdf",
+ "coding_adventures_sha256",
+ "coding_adventures_sha384",
+ "coding_adventures_sha512",
+ "der-asn1",
+ "rsa-pss-sha256-signature",
+ "rsa-pss-sha384-signature",
+ "rsa-pss-sha512-signature",
+ "tls13-certificate-verify-input",
+ "tls13-certificate-verify-message",
+ "tls13-cipher-suite-policy",
+ "tls13-finished",
+ "tls13-finished-transcript-binding",
+ "tls13-handshake",
+ "tls13-rsa-pss-certificate-verify",
+ "tls13-rsa-pss-signature-routing",
+ "tls13-signature-scheme-policy",
+ "tls13-transcript",
+ "x509-rsa-public-key",
+ "x509-subject-public-key-info",
+]
+
+[[package]]
+name = "tls13-chacha20-poly1305-record"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_chacha20_poly1305",
+ "coding_adventures_hkdf",
+ "coding_adventures_zeroize",
+ "tls13-cipher-suite-policy",
+ "tls13-inner-plaintext",
+ "tls13-record",
+ "tls13-record-protection-state",
+ "tls13-traffic-key-material",
+]
+
+[[package]]
 name = "tls13-cipher-suite-offer"
 version = "0.1.0"
 dependencies = [
@@ -14538,13 +14847,17 @@ version = "0.1.0"
 
 [[package]]
 name = "tls13-client-hello-message"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "tls13-extension-block",
 ]
 
 [[package]]
 name = "tls13-compatibility-change-cipher-spec"
+version = "0.1.0"
+
+[[package]]
+name = "tls13-cookie"
 version = "0.1.0"
 
 [[package]]
@@ -14577,8 +14890,37 @@ dependencies = [
 ]
 
 [[package]]
+name = "tls13-finished-transcript-binding"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_hkdf",
+ "tls13-cipher-suite-policy",
+ "tls13-finished",
+ "tls13-transcript",
+]
+
+[[package]]
 name = "tls13-handshake"
 version = "0.1.0"
+
+[[package]]
+name = "tls13-handshake-reassembly"
+version = "0.1.0"
+dependencies = [
+ "tls13-handshake",
+]
+
+[[package]]
+name = "tls13-handshake-traffic-secrets"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_hkdf",
+ "coding_adventures_zeroize",
+ "tls13-cipher-suite-policy",
+ "tls13-hkdf-label",
+ "tls13-key-schedule",
+ "tls13-transcript",
+]
 
 [[package]]
 name = "tls13-hkdf-label"
@@ -14606,7 +14948,7 @@ dependencies = [
 
 [[package]]
 name = "tls13-key-share"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "tls13-named-group-policy",
 ]
@@ -14614,6 +14956,15 @@ dependencies = [
 [[package]]
 name = "tls13-key-share-entry"
 version = "0.1.0"
+
+[[package]]
+name = "tls13-key-share-retry"
+version = "0.2.0"
+dependencies = [
+ "tls13-key-share",
+ "tls13-named-group-policy",
+ "tls13-supported-groups",
+]
 
 [[package]]
 name = "tls13-key-update-message"
@@ -14639,6 +14990,20 @@ name = "tls13-record-nonce"
 version = "0.1.0"
 
 [[package]]
+name = "tls13-record-protection"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_hkdf",
+ "tls13-aes128-gcm-record",
+ "tls13-chacha20-poly1305-record",
+ "tls13-cipher-suite-policy",
+ "tls13-inner-plaintext",
+ "tls13-record",
+ "tls13-record-protection-state",
+ "tls13-traffic-key-material",
+]
+
+[[package]]
 name = "tls13-record-protection-state"
 version = "0.1.0"
 dependencies = [
@@ -14649,10 +15014,271 @@ dependencies = [
 ]
 
 [[package]]
+name = "tls13-retry-handshake-traffic-key-material-binding"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_hkdf",
+ "der-asn1",
+ "rsa-pss-sha256-signature",
+ "rsa-pss-sha384-signature",
+ "tls13-certificate-message",
+ "tls13-certificate-request-message",
+ "tls13-certificate-verify-input",
+ "tls13-certificate-verify-message",
+ "tls13-certificate-verify-transcript-binding",
+ "tls13-cipher-suite-offer",
+ "tls13-cipher-suite-policy",
+ "tls13-client-hello-message",
+ "tls13-encrypted-extensions-message",
+ "tls13-extension-block",
+ "tls13-extension-context-policy",
+ "tls13-finished",
+ "tls13-handshake",
+ "tls13-handshake-reassembly",
+ "tls13-handshake-traffic-secrets",
+ "tls13-inner-plaintext",
+ "tls13-key-schedule",
+ "tls13-key-share",
+ "tls13-named-group-policy",
+ "tls13-no-psk-server-flight",
+ "tls13-record",
+ "tls13-record-protection",
+ "tls13-record-protection-state",
+ "tls13-retry-handshake-traffic-secrets-binding",
+ "tls13-retry-key-schedule-binding",
+ "tls13-retry-transcript-binding",
+ "tls13-rsa-pss-signature-routing",
+ "tls13-server-hello-message",
+ "tls13-server-hello-retry-selection",
+ "tls13-server-hello-selection",
+ "tls13-server-hello-version-selection",
+ "tls13-signature-scheme-list",
+ "tls13-signature-scheme-policy",
+ "tls13-supported-groups",
+ "tls13-supported-versions",
+ "tls13-traffic-key-material",
+ "tls13-transcript",
+ "tls13-x25519-key-share-binding",
+ "x509-certificate",
+ "x509-rsa-public-key",
+ "x509-subject-public-key-info",
+]
+
+[[package]]
+name = "tls13-retry-handshake-traffic-secrets-binding"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_hkdf",
+ "tls13-cipher-suite-offer",
+ "tls13-cipher-suite-policy",
+ "tls13-client-hello-message",
+ "tls13-extension-block",
+ "tls13-extension-context-policy",
+ "tls13-finished",
+ "tls13-handshake-traffic-secrets",
+ "tls13-key-schedule",
+ "tls13-key-share",
+ "tls13-named-group-policy",
+ "tls13-retry-key-schedule-binding",
+ "tls13-retry-transcript-binding",
+ "tls13-server-hello-message",
+ "tls13-server-hello-retry-selection",
+ "tls13-server-hello-selection",
+ "tls13-server-hello-version-selection",
+ "tls13-supported-groups",
+ "tls13-supported-versions",
+ "tls13-transcript",
+ "tls13-x25519-key-share-binding",
+]
+
+[[package]]
+name = "tls13-retry-key-schedule-binding"
+version = "0.1.0"
+dependencies = [
+ "tls13-cipher-suite-offer",
+ "tls13-cipher-suite-policy",
+ "tls13-client-hello-message",
+ "tls13-extension-block",
+ "tls13-extension-context-policy",
+ "tls13-key-schedule",
+ "tls13-key-share",
+ "tls13-named-group-policy",
+ "tls13-retry-transcript-binding",
+ "tls13-server-hello-message",
+ "tls13-server-hello-retry-selection",
+ "tls13-server-hello-selection",
+ "tls13-server-hello-version-selection",
+ "tls13-supported-groups",
+ "tls13-supported-versions",
+ "tls13-transcript",
+ "tls13-x25519-key-share-binding",
+]
+
+[[package]]
+name = "tls13-retry-transcript-binding"
+version = "0.1.0"
+dependencies = [
+ "tls13-cipher-suite-offer",
+ "tls13-cipher-suite-policy",
+ "tls13-client-hello-message",
+ "tls13-extension-block",
+ "tls13-extension-context-policy",
+ "tls13-server-hello-message",
+ "tls13-server-hello-retry-selection",
+ "tls13-server-hello-selection",
+ "tls13-server-hello-version-selection",
+ "tls13-supported-versions",
+ "tls13-transcript",
+]
+
+[[package]]
+name = "tls13-reviewed-server-path-certificate-verify"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_hkdf",
+ "der-asn1",
+ "http1-request-host-authority",
+ "https-destination-name-binding",
+ "https-reviewed-server-path-binding",
+ "rsa-pss-sha256-signature",
+ "rsa-public-operation",
+ "tls-server-identity",
+ "tls13-certificate-message",
+ "tls13-certificate-verify-input",
+ "tls13-certificate-verify-message",
+ "tls13-certificate-verify-transcript-binding",
+ "tls13-cipher-suite-offer",
+ "tls13-cipher-suite-policy",
+ "tls13-client-hello-message",
+ "tls13-extension-block",
+ "tls13-extension-context-policy",
+ "tls13-finished",
+ "tls13-handshake",
+ "tls13-handshake-traffic-secrets",
+ "tls13-inner-plaintext",
+ "tls13-key-schedule",
+ "tls13-key-share",
+ "tls13-named-group-policy",
+ "tls13-no-psk-server-flight",
+ "tls13-record",
+ "tls13-record-protection",
+ "tls13-record-protection-state",
+ "tls13-retry-handshake-traffic-key-material-binding",
+ "tls13-retry-handshake-traffic-secrets-binding",
+ "tls13-retry-key-schedule-binding",
+ "tls13-retry-transcript-binding",
+ "tls13-rsa-pss-certificate-verify",
+ "tls13-rsa-pss-signature-routing",
+ "tls13-server-hello-message",
+ "tls13-server-hello-retry-selection",
+ "tls13-server-hello-selection",
+ "tls13-server-hello-version-selection",
+ "tls13-server-name",
+ "tls13-signature-scheme-policy",
+ "tls13-supported-groups",
+ "tls13-supported-versions",
+ "tls13-traffic-key-material",
+ "tls13-transcript",
+ "tls13-x25519-key-share-binding",
+ "x509-certificate",
+ "x509-certificate-path-construction",
+ "x509-certificate-path-reviewed-anchor-binding",
+ "x509-certificate-policy",
+ "x509-intermediate-certificate-policy",
+ "x509-name-value-policy",
+ "x509-rsa-algorithm-policy",
+ "x509-rsa-constructed-path-signature-routing",
+ "x509-rsa-public-key",
+ "x509-rsa-reviewed-anchor-self-signature-binding",
+ "x509-rsa-reviewed-server-path-anchor-self-signature-binding",
+ "x509-rsa-signature-routing",
+ "x509-server-certificate-policy",
+ "x509-time",
+ "x509-webpki-root-anchor-selection",
+]
+
+[[package]]
+name = "tls13-rsa-pss-certificate-verify"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_sha384",
+ "coding_adventures_sha512",
+ "der-asn1",
+ "rsa-pss-sha256-signature",
+ "rsa-pss-sha384-signature",
+ "rsa-pss-sha512-signature",
+ "tls13-certificate-verify-input",
+ "tls13-certificate-verify-message",
+ "tls13-rsa-pss-signature-routing",
+ "tls13-signature-scheme-policy",
+ "x509-rsa-public-key",
+ "x509-subject-public-key-info",
+]
+
+[[package]]
+name = "tls13-rsa-pss-signature-routing"
+version = "0.1.0"
+dependencies = [
+ "der-asn1",
+ "rsa-pss-sha256-signature",
+ "rsa-pss-sha384-signature",
+ "rsa-pss-sha512-signature",
+ "tls13-certificate-verify-message",
+ "tls13-signature-scheme-policy",
+ "x509-rsa-public-key",
+ "x509-subject-public-key-info",
+]
+
+[[package]]
 name = "tls13-server-hello-message"
 version = "0.1.0"
 dependencies = [
  "tls13-extension-block",
+]
+
+[[package]]
+name = "tls13-server-hello-retry-selection"
+version = "0.2.0"
+dependencies = [
+ "tls13-cipher-suite-offer",
+ "tls13-cipher-suite-policy",
+ "tls13-client-hello-message",
+ "tls13-extension-block",
+ "tls13-extension-context-policy",
+ "tls13-key-share",
+ "tls13-key-share-retry",
+ "tls13-named-group-policy",
+ "tls13-server-hello-message",
+ "tls13-server-hello-selection",
+ "tls13-server-hello-version-selection",
+ "tls13-supported-groups",
+ "tls13-supported-versions",
+]
+
+[[package]]
+name = "tls13-server-hello-selection"
+version = "0.1.0"
+dependencies = [
+ "tls13-cipher-suite-offer",
+ "tls13-cipher-suite-policy",
+ "tls13-client-hello-message",
+ "tls13-extension-block",
+ "tls13-server-hello-message",
+]
+
+[[package]]
+name = "tls13-server-hello-version-selection"
+version = "0.1.0"
+dependencies = [
+ "tls13-cipher-suite-offer",
+ "tls13-cipher-suite-policy",
+ "tls13-client-hello-message",
+ "tls13-extension-block",
+ "tls13-extension-context-policy",
+ "tls13-server-hello-message",
+ "tls13-server-hello-selection",
+ "tls13-supported-versions",
 ]
 
 [[package]]
@@ -14701,6 +15327,37 @@ dependencies = [
  "coding_adventures_sha256",
  "coding_adventures_sha384",
  "tls13-cipher-suite-policy",
+]
+
+[[package]]
+name = "tls13-x25519-key-agreement"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_x25519",
+ "coding_adventures_zeroize",
+ "tls13-named-group-policy",
+]
+
+[[package]]
+name = "tls13-x25519-key-share-binding"
+version = "0.2.0"
+dependencies = [
+ "coding_adventures_ct_compare",
+ "coding_adventures_x25519",
+ "tls13-cipher-suite-offer",
+ "tls13-cipher-suite-policy",
+ "tls13-client-hello-message",
+ "tls13-extension-block",
+ "tls13-extension-context-policy",
+ "tls13-key-share",
+ "tls13-named-group-policy",
+ "tls13-server-hello-message",
+ "tls13-server-hello-retry-selection",
+ "tls13-server-hello-selection",
+ "tls13-server-hello-version-selection",
+ "tls13-supported-groups",
+ "tls13-supported-versions",
+ "tls13-x25519-key-agreement",
 ]
 
 [[package]]
@@ -14851,7 +15508,7 @@ version = "0.1.0"
 
 [[package]]
 name = "trig"
-version = "0.1.0"
+version = "0.3.0"
 
 [[package]]
 name = "tungstenite"
@@ -15146,6 +15803,21 @@ name = "typenum"
 version = "1.20.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20"
+
+[[package]]
+name = "typescript-warrant-ir"
+version = "0.1.0"
+dependencies = [
+ "bit-blaster",
+ "coding-adventures-typescript-lexer",
+ "coding-adventures-typescript-parser",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "coding_adventures_warrant_ir",
+ "lexer",
+ "parser",
+ "serde_json",
+]
 
 [[package]]
 name = "typing-spectrum"
@@ -15508,6 +16180,68 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "de437e2a6208b014ab52972a27e59b33fa2920d3e00fe05026167a1c509d19cc"
 dependencies = [
  "vcell",
+]
+
+[[package]]
+name = "vos-manifest"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_warrant_grammar",
+ "grammar-tools",
+ "lexer",
+ "parser",
+ "vos-sched-contract",
+]
+
+[[package]]
+name = "vos-probe-ready"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+]
+
+[[package]]
+name = "vos-sched-any"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "vos-sched-contract",
+]
+
+[[package]]
+name = "vos-sched-contract"
+version = "0.1.0"
+
+[[package]]
+name = "vos-sched-fp-bitmap"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "vos-sched-contract",
+]
+
+[[package]]
+name = "vos-sched-rr"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "vos-sched-contract",
+]
+
+[[package]]
+name = "vos-shape-check"
+version = "0.1.0"
+dependencies = [
+ "coding-adventures-toml-lexer",
+ "coding-adventures-toml-parser",
+ "grammar-tools",
+ "lexer",
+ "parser",
 ]
 
 [[package]]

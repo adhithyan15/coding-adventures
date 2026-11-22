@@ -41,7 +41,20 @@ use coding_adventures_test_bootstrap::Verdict;
 use std::cell::Cell;
 use std::collections::BTreeMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
-use std::sync::Mutex;
+use std::sync::{Mutex, MutexGuard};
+
+/// Lock `m`, recovering the data if a panicking thread poisoned it (WD-HARN1).
+///
+/// Every lock in this harness guards plain bookkeeping (registered tests,
+/// per-test statistics, a reply slot) that is consistent after any single
+/// operation, and a panic is an expected event here: the subject under test is
+/// not trusted to be total, and a panicking instance is reported as a failed
+/// verdict.  `lock().unwrap()` would turn one such panic into a cascade of
+/// panics (or, in the observer's reply slot, a supervisor that never wakes), so
+/// the harness never unwraps a lock: it takes the guard out of the poison error.
+fn lock_or_recover<T>(m: &Mutex<T>) -> MutexGuard<'_, T> {
+    m.lock().unwrap_or_else(|e| e.into_inner())
+}
 
 /// Dynamic value of the Warrant pure profile (VER04e section 2.1 subset).
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -1553,6 +1566,106 @@ fn shrink_comp(tys: &[Ty], cand: Vec<V>, prop_raw: &dyn Fn(&Vec<V>) -> bool) -> 
     (cur, steps)
 }
 
+// ----- refinement starvation (VOS-D079, VER04h section 4.1) ----------------
+//
+// A refinement is applied by rejection: a case is redrawn up to 100 times.  A
+// refinement that admits few draws (`t < 8` over a byte admits 8 of 256, about
+// 3 percent) loses all 100 draws of some case with probability 0.97^100 = 4.7
+// percent, so 4,096 cases never all succeed and the suite failed with
+// `property-exhausted` while the exhaustive suite (which enumerates the
+// admissible values) passed.
+//
+//   * A claim whose every binder is *exactly enumerable* (its draw support IS
+//     its exhaustive domain) is rescued: when the 100 draws of one case are all
+//     rejected, the case is drawn uniformly from the admissible set instead.
+//     The ordinary rejection draw is untouched, so every case that used to be
+//     drawn is drawn identically.
+//   * Any other claim cannot be rescued (sampling the enumeration would narrow
+//     what the suite covers), so a refinement below `1/ACCEPT_FLOOR_DEN`
+//     acceptance is refused on the first draw with a clear message.  The floor
+//     is 1/8: see `ACCEPT_FLOOR_DEN` for the derivation.
+
+/// Draws measured by the acceptance probe.
+const ACCEPT_PROBE: u64 = 2048;
+/// The floor: fewer than one admitted draw in this many is refused.
+///
+/// Derivation.  A case draws at most R = 100 times, so it is lost with
+/// probability (1 - a)^R at acceptance a, and the suite fails if any of its C
+/// cases is lost: P(fail) ~ C * (1 - a)^R.  Requiring that below 0.01 with
+/// C = 4096 gives (1 - a)^100 < 2.4e-6, a > 12.0 percent, so the floor is 1/8
+/// (12.5 percent).  At the old 1/32 a claim at 4 percent (0.96^100 = 1.7 percent
+/// per case) passed the probe and then failed.  A document whose
+/// `property_cases` exceeds 4096 must re-derive the floor (the assertion below).
+const ACCEPT_FLOOR_DEN: u64 = 8;
+const _: () = assert!(PROPERTY_CASES <= 4096, "re-derive ACCEPT_FLOOR_DEN for this case count");
+
+/// True when the values `fresh` can draw for `ty` are exactly `domain(ty)`.
+fn exact_support(ty: Ty) -> bool {
+    match ty {
+        Ty::Bool => true,
+        Ty::Nat => true,
+        Ty::Fx(f) => f.bits() <= 16,
+        Ty::Tuple(cs) => cs.iter().all(|c| exact_support(*c)),
+        Ty::Data(_, ctors) => ctors.iter().all(|(_, fs)| fs.iter().all(|c| exact_support(*c))),
+        Ty::Opt(t) | Ty::Res(t, _) => exact_support(*t),
+        _ => false,
+    }
+}
+
+/// Every admitted environment of the Cartesian product of the binder domains,
+/// in the exhaustive suite's order.  Callers check `within_budget` first.
+fn admissible_set(tys: &[Ty], admit: Admit) -> Vec<Vec<V>> {
+    let domains: Vec<Vec<V>> = tys.iter().map(|t| domain(*t)).collect();
+    let mut out = Vec::new();
+    if domains.iter().any(|d| d.is_empty()) {
+        return out;
+    }
+    let mut idx = vec![0usize; domains.len()];
+    loop {
+        let env: Vec<V> = idx.iter().zip(&domains).map(|(i, d)| d[*i].clone()).collect();
+        if admit(&env) {
+            out.push(env);
+        }
+        let mut pos = idx.len();
+        loop {
+            if pos == 0 {
+                return out;
+            }
+            pos -= 1;
+            idx[pos] += 1;
+            if idx[pos] < domains[pos].len() {
+                break;
+            }
+            idx[pos] = 0;
+        }
+    }
+}
+
+/// The acceptance floor, as a pure function of the counts (`Err` is the message).
+fn acceptance_verdict(admitted: u64, probe: u64) -> Result<(), String> {
+    if admitted * ACCEPT_FLOOR_DEN < probe {
+        return Err(format!(
+            "refinement acceptance {admitted}/{probe} is below the floor 1/{ACCEPT_FLOOR_DEN} \
+             on a domain that cannot be enumerated (widen the refinement or narrow the binder types)"
+        ));
+    }
+    Ok(())
+}
+
+/// Measure the acceptance of `ACCEPT_PROBE` draws from a stream derived from
+/// `seed` (so the case stream of the suite is untouched).
+fn acceptance_probe(seed: u64, tys: &[Ty], admit: Admit) -> Result<(), String> {
+    let mut rng = SplitMix64::new(seed ^ 0xACCE_97F1_0042_0001);
+    let mut admitted = 0u64;
+    for _ in 0..ACCEPT_PROBE {
+        let mode = rng.bounded(8) as u8;
+        if admit(&build(tys, &mut RngSrc(&mut rng), mode)) {
+            admitted += 1;
+        }
+    }
+    acceptance_verdict(admitted, ACCEPT_PROBE)
+}
+
 /// L2 property suite over relation-biased generators.
 pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault) -> (Verdict, Stats) {
     let seed = SplitMix64::new(EVIDENCE_SEED ^ fnv1a64(tag.as_bytes())).next_u64();
@@ -1565,7 +1678,13 @@ pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault)
     let cases = Cell::new(0u64);
     let discarded = Cell::new(0u64);
     let equal = Cell::new(0u64);
+    let rescue = tys.iter().all(|t| exact_support(*t)) && within_budget(tys);
+    let pool: std::cell::RefCell<Option<Vec<Vec<V>>>> = std::cell::RefCell::new(None);
+    let probed = Cell::new(false);
     let gen = |rng: &mut SplitMix64| -> Result<Vec<V>, String> {
+        if !rescue && !probed.replace(true) {
+            acceptance_probe(seed, tys, admit)?;
+        }
         for _ in 0..100 {
             let mode = rng.bounded(8) as u8;
             let env = build(tys, &mut RngSrc(rng), mode);
@@ -1577,6 +1696,27 @@ pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault)
                 return Ok(env);
             }
             discarded.set(discarded.get() + 1);
+        }
+        if rescue {
+            let mut slot = pool.borrow_mut();
+            let set = slot.get_or_insert_with(|| {
+                let set = admissible_set(tys, admit);
+                // Rescued cases repeat members of a small set: say how small, so
+                // the case count is not read as that many distinct cases.
+                eprintln!(
+                    "# property {tag}: rescued by enumeration, {} distinct admissible case(s)",
+                    set.len()
+                );
+                set
+            });
+            if !set.is_empty() {
+                let env = set[rng.bounded(set.len() as u64) as usize].clone();
+                cases.set(cases.get() + 1);
+                if env.len() >= 2 && env[0] == env[1] {
+                    equal.set(equal.get() + 1);
+                }
+                return Ok(env);
+            }
         }
         Err(FID_EXHAUSTED.to_string())
     };
@@ -1721,16 +1861,19 @@ fn reg(
         }
     }
     let id = meta.id.clone();
-    META.lock().unwrap().push(meta);
+    lock_or_recover(&META).push(meta);
     suite.add(id.clone(), move |_ctx| {
         let (verdict, stats, note) = body();
-        STATS.lock().unwrap().insert(id.clone(), (stats, note));
+        lock_or_recover(&STATS).insert(id.clone(), (stats, note));
         verdict
     });
 }
 
 fn is_detected(v: &Verdict) -> bool {
     match v {
+        // An observer timeout is never a detection (it bails out before it can
+        // be reported; this is the second line of defence).
+        Verdict::Fail { message, .. } if message.contains("observer-timeout") => false,
         Verdict::Fail { failure_id, .. } => {
             coding_adventures_test_bootstrap::verdict::is_registered_failure_id(failure_id)
         }
@@ -1752,8 +1895,8 @@ fn write_manifest(outcomes: &[Outcome]) {
         eprintln!("refusing to write an evidence manifest from a sabotaged or filtered run");
         return;
     }
-    let metas = META.lock().unwrap().clone();
-    let stats = STATS.lock().unwrap().clone();
+    let metas = lock_or_recover(&META).clone();
+    let stats = lock_or_recover(&STATS).clone();
     let mut tests: Vec<Json> = Vec::new();
     for m in metas {
         let verdict = outcomes
@@ -1809,7 +1952,7 @@ fn write_manifest(outcomes: &[Outcome]) {
         ("module", Json::str(MODULE)),
         ("spec", Json::str(SPEC_PATH)),
         ("spec_sha256", Json::str(SPEC_SHA256)),
-        ("source_sha256", Json::Str(SOURCE_SHA256.lock().unwrap().clone())),
+        ("source_sha256", Json::Str(lock_or_recover(&SOURCE_SHA256).clone())),
         ("evidence_seed", Json::Str(EVIDENCE_SEED.to_string())),
         ("tests", Json::Arr(tests)),
     ]);
@@ -1863,7 +2006,7 @@ pub fn require_tests(count: usize, filter: Option<&str>) -> Result<(), String> {
 /// same definition the proof and bench manifests and the checker use.
 pub fn run_main(src_dir: &std::path::Path) -> i32 {
     match manifest::source_tree_framing(src_dir) {
-        Ok(framed) => *SOURCE_SHA256.lock().unwrap() = sha256_hex(&framed),
+        Ok(framed) => *lock_or_recover(&SOURCE_SHA256) = sha256_hex(&framed),
         Err(e) => {
             eprintln!("cannot bind evidence to {}: {e}", src_dir.display());
             return 2;
@@ -1880,7 +2023,7 @@ pub fn run_main(src_dir: &std::path::Path) -> i32 {
         }
     };
     let suite = build_suite(fault);
-    let registered = META.lock().unwrap().len();
+    let registered = lock_or_recover(&META).len();
     if let Err(msg) = require_tests(registered, filter_var.as_deref()) {
         eprintln!("{msg}");
         return 2;

@@ -1,0 +1,11 @@
+vos-lemmas 2
+contract-part 728371612ee59969deacb9884ca0105315ae1d759c48bebb50faef0f5e55bdc8
+lemmas-part 7a18e96204cbc1cf60d2939b44f7caf32f13c7b2ab388e2c324043adc9ff28a8
+config N 2
+variant Cmd = Nop | Put(slot: U8, on: Bool) | Fill(Bytes<4>)
+variant Reply = Done | Got(Pair)
+lemma put_then_mem product 1024 admitted 1024 mutant put mutant-part c5d9757808f8fc3bbda6d5967621b2bbff1b8fb304353964ef914aea1976a460 failed 4
+lemma ins_range product 256 admitted 256 mutant pre_ins mutant-part b01eb730b62927ca5c8a31ad66888318c5375f317373b100a1238d6f6f2f8fa8 failed 1
+config-mutant N 1 kills ins_range
+config-mutant N 3 kills ins_range
+end

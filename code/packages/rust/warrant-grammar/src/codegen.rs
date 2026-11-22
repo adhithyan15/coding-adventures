@@ -27,6 +27,9 @@ pub enum DiagnosticCode {
     W0702,
     /// W0703: Evaluator resource exhaustion (depth > 64 or work > 1,000,000).
     W0703,
+    /// W0501: A malformed, missing or stray `inout=` entry of a binding (VER04k
+    /// section 4.13 item 2).
+    W0501,
     /// W0704: Missing or incompatible host binding for operation.
     W0704,
     /// W0705: Duplicate or conflicting test case identifier.
@@ -58,6 +61,7 @@ impl fmt::Display for DiagnosticCode {
             Self::W0701 => write!(f, "W0701"),
             Self::W0702 => write!(f, "W0702"),
             Self::W0703 => write!(f, "W0703"),
+            Self::W0501 => write!(f, "W0501"),
             Self::W0704 => write!(f, "W0704"),
             Self::W0705 => write!(f, "W0705"),
             Self::W0706 => write!(f, "W0706"),

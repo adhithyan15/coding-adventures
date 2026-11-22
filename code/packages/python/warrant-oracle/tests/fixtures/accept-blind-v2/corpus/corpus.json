@@ -1,0 +1,618 @@
+{
+  "accepted_blind_faults": [
+    "warrant/blindacc/negctl/exhaustive/eq_fixed/ignore-last-byte",
+    "warrant/blindacc/negctl/exhaustive/flag/swap-choice"
+  ],
+  "assumes": [],
+  "budget": 16777216,
+  "chunk_size": 65536,
+  "controls": [
+    {
+      "blind_claims": [
+        "warrant/blindacc/exhaustive/w0"
+      ],
+      "fault": "ignore-last-byte",
+      "id": "warrant/blindacc/negctl/exhaustive/eq_fixed/ignore-last-byte",
+      "op": "eq_fixed",
+      "required_claims": [],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "invert",
+      "id": "warrant/blindacc/negctl/exhaustive/eq_fixed/invert",
+      "op": "eq_fixed",
+      "required_claims": [
+        "warrant/blindacc/exhaustive/w0"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/blindacc/exhaustive/w0"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "invert",
+      "id": "warrant/blindacc/negctl/exhaustive/flag/invert",
+      "op": "flag",
+      "required_claims": [
+        "warrant/blindacc/exhaustive/flag_ignores_choice"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/blindacc/exhaustive/flag_ignores_choice"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [
+        "warrant/blindacc/exhaustive/flag_ignores_choice"
+      ],
+      "fault": "swap-choice",
+      "id": "warrant/blindacc/negctl/exhaustive/flag/swap-choice",
+      "op": "flag",
+      "required_claims": [],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "document": "v1",
+  "examples": [],
+  "fault_models": {},
+  "faults": [
+    {
+      "fault": "ignore-last-byte",
+      "kind": "pre",
+      "op": "eq_fixed",
+      "requires": [
+        "ir.core"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "if",
+            [
+              "gt",
+              [
+                "len",
+                [
+                  "var",
+                  "a"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "0"
+                }
+              ]
+            ],
+            [
+              "concat",
+              [
+                "take",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "sub",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "a"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "1"
+                    }
+                  ]
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": "00"
+                }
+              ]
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ],
+          "param": "a"
+        },
+        {
+          "expr": [
+            "if",
+            [
+              "gt",
+              [
+                "len",
+                [
+                  "var",
+                  "b"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "0"
+                }
+              ]
+            ],
+            [
+              "concat",
+              [
+                "take",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "sub",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "b"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "1"
+                    }
+                  ]
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": "00"
+                }
+              ]
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          "param": "b"
+        }
+      ]
+    },
+    {
+      "expr": [
+        "not",
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "invert",
+      "kind": "post",
+      "op": "eq_fixed",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "not",
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "invert",
+      "kind": "post",
+      "op": "flag",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "fault": "swap-choice",
+      "kind": "pre",
+      "op": "flag",
+      "requires": [
+        "ir.core"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "not",
+            [
+              "var",
+              "choice"
+            ]
+          ],
+          "param": "choice"
+        }
+      ]
+    }
+  ],
+  "generator": {
+    "name": "warrant-corpus-gen",
+    "version": "0.6.0"
+  },
+  "levels": [
+    "ir.core"
+  ],
+  "max_ir_cost": 2000,
+  "model_order": [
+    "same",
+    "keep"
+  ],
+  "models": {
+    "keep": {
+      "body": [
+        "eq",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "c",
+          "Bool"
+        ]
+      ]
+    },
+    "same": {
+      "body": [
+        "eq",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "b"
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ]
+    }
+  },
+  "module": "blindacc",
+  "ops": {
+    "eq_fixed": {
+      "params": [
+        [
+          "a",
+          "Bytes<N>"
+        ],
+        [
+          "b",
+          "Bytes<N>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bool",
+      "width_params": [
+        "N"
+      ]
+    },
+    "flag": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "choice",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bool"
+    }
+  },
+  "profile": "warrant-corpus-v2",
+  "profile_sha256": "0463b04e179dce38cc318c5d148dd543766822d7156a04b7c654f8cd931e4fbf",
+  "schema_version": 2,
+  "spec": "code/packages/python/warrant-oracle/tests/fixtures/accept-blind-v2/blind.warrant",
+  "spec_sha256": "4304a4d8cc5902d39db275a65f9de6c0c7106a53e3a0d83f92cc1efa25df323c",
+  "suites": [
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 0,
+              "size": 1
+            },
+            "type": "Bytes<0>"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 0,
+              "size": 1
+            },
+            "type": "Bytes<0>"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq_fixed",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            0
+          ]
+        ],
+        [
+          "model_call",
+          "same",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "cases": 1,
+      "chunks": 1,
+      "chunks_sha256": "d659539e69938bee58ac4c2cc5e4a627ebd6c48f7720deb1bfcaf5377de45228",
+      "claim": "w0",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 1,
+      "expected_sha256": "29e57762f5bcad8cc6e81279ad519a032836a273ad7bf7e8e3349bb5df64d432",
+      "id": "warrant/blindacc/exhaustive/w0",
+      "inputs_sha256": "ce8d4e56be4d30f556c72f45eafa4539b8ed50b259847b4e7024d359589f16dc",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "ops": [
+        "eq_fixed"
+      ],
+      "oracle": {
+        "expected": [
+          "model_call",
+          "same",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "eq_fixed",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            0
+          ]
+        ]
+      },
+      "product": 1,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "29e57762f5bcad8cc6e81279ad519a032836a273ad7bf7e8e3349bb5df64d432",
+      "slim_inputs_sha256": "ce8d4e56be4d30f556c72f45eafa4539b8ed50b259847b4e7024d359589f16dc",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "7b4ce203f563544597d78b7544d829db18abf8f454508a11fd05c82889c4583a",
+      "v1_inputs_sha256": "b71759ebe25a6c050b5d8028339935507fee686ce3038f44c35ef8a416c8ae3a",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ],
+        [
+          "c",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "flag",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "c"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "keep",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "c"
+            ]
+          ]
+        ]
+      ],
+      "cases": 694,
+      "chunks": 1,
+      "chunks_sha256": "fe6635be7edc371be01a9ce91203ca40356a7bf2d1ee083db76239a45a16e817",
+      "claim": "flag_ignores_choice",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 694,
+      "expected_sha256": "6a8f51aeea9a05061ba630afcf6a134890364e669ba8b5d4274101e8e7c5ed4f",
+      "id": "warrant/blindacc/exhaustive/flag_ignores_choice",
+      "inputs_sha256": "e085ae0cba801ad25dd31d4c34593073a23f551333060ac1b65788eeab5441ec",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "ops": [
+        "flag"
+      ],
+      "oracle": {
+        "expected": [
+          "model_call",
+          "keep",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "c"
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "flag",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "c"
+            ]
+          ]
+        ]
+      },
+      "product": 694,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "6a8f51aeea9a05061ba630afcf6a134890364e669ba8b5d4274101e8e7c5ed4f",
+      "slim_inputs_sha256": "e085ae0cba801ad25dd31d4c34593073a23f551333060ac1b65788eeab5441ec",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "63ab292c98d06284ed24527e5c7284228dc5aaf620e45449d4221db4e7f640f4",
+      "v1_inputs_sha256": "78c637da65984b204e03a229a76e12b05439444b22fbe2d9d035ab12c51f7ad4",
+      "wraps": 0
+    }
+  ],
+  "types": {}
+}

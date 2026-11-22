@@ -1,0 +1,50 @@
+-- PARKED DRAFT: this document is NOT valid Warrant today.
+--
+-- It uses F64, which Warrant does not implement yet (checker error W0202,
+-- UnboundType("F64")).  It is parked as a .draft so the repo-wide test in
+-- warrant-grammar (tests/v0_compat.rs, which globs *.warrant only) skips it.
+-- Parked until VER04p floats (backlog WX-FL1) land.  When they do, rename it
+-- back to paint-batch-tiles.warrant and make it parse and pass check_warrant.
+--
+-- P2D09 -- Paint Batch Tiles: Retained-mode 2D sprite and tile batch lowering and zero-allocation diffing.
+--
+-- Warrant document for paint-batch-tiles (VER04j and VER04m: state=explicit).
+-- Formal verification contract for pure graphics batch transformation.
+
+warrant paint_batch_tiles v1
+  error PaintBatchError = BatchTooLarge | InvalidDimensions | InvalidTileDimensions | InvalidCoordinates | DuplicateSpriteId | DuplicateTileId | BufferTooSmall | MissingInstructionId | DuplicateInstructionId
+
+  model Unit = Bool
+  variant DeltaKind = Added | Modified | Removed | Unchanged
+
+  record SpriteQuad(id: U32, x: F64, y: F64, width: F64, height: F64, z_priority: U8, h_flip: Bool, v_flip: Bool, color_r: U8, color_g: U8, color_b: U8, visible: Bool)
+  record TileBatchCell(grid_col: U16, grid_row: U16, tile_id: U16, palette_id: U8, h_flip: Bool, v_flip: Bool, color_r: U8, color_g: U8, color_b: U8)
+  record SpriteDeltaOp(kind: DeltaKind, id: U32, old_index: U16, new_index: U16)
+
+  op diff_sprite_batches(prev_count: U32, next_count: U32) -> Result<U32, PaintBatchError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels diff_sprite_batches:
+    prev_count public
+    next_count public
+
+  input diff_sprite_batches.prev_count:
+    hostile
+    ensures no_panic, terminates
+
+  input diff_sprite_batches.next_count:
+    hostile
+    ensures no_panic, terminates
+
+  bound diff_sprite_batches:
+    steps <= 4096
+    heap <= 0
+
+  model batch_inv(count: U32) -> Bool = count <= 4096u32
+
+  claim diff_sprite_batches_bounds_steps:
+    forall p: U32, n: U32. match diff_sprite_batches(p, n) with Ok(c) -> c <= p + n | Err(_) -> true

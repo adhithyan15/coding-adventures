@@ -1,11 +1,32 @@
 # Changelog
 
+## Unreleased — regenerated evidence harness (VOS-038c)
+
+- `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence`: the allocation observer counts the
+  export call only (VOS-D063, VER04j 14.3 item 54). No `heap` or `output` row changes; a recorded
+  `max_observed_heap` can only be lower, because the adapter's own copies are no longer charged.
+
+## Unreleased — regenerated evidence harness (VOS-038b)
+
+- `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the refinement sampler (a low-acceptance refinement over an enumerable domain is drawn from its admissible set; VER04h 4.1) and the observer timeout clamp (`WARRANT_OBS_TIMEOUT_SECS` at most 24 h, `checked_add` deadline; VER04j). No test, case count or recorded evidence manifest changes.
+
 ## [Unreleased]
 
 Warrant-derived evidence and a jailed runtime gate (LZ01, VER04h, VER08b), and two
 findings fixed on the way (SEC-002, SEC-002a, below). The wire format is unchanged:
 `compress` output is byte for byte what it was. (Cargo.toml stays at 0.1.0: this whole
 entry is unreleased and the version is bumped at release.)
+
+### Changed
+
+- **WD-HARN1c: negative controls run through the shared checker.** All 22 sabotage lines in
+  each of `BUILD`, `BUILD_linux` and `BUILD_windows` now call
+  `code/scripts/warrant_negctl.py -- cargo test ...` instead of an `awk` pipe (Unix) or a
+  `%TEMP%` capture plus `findstr` (Windows). Every fault, filter and cargo argument is
+  unchanged and in the same order. The checker also requires a non-zero exit, exactly one TAP
+  plan and test points numbered `1..N`, and prints the captured output when a control fails
+  (the Windows lines printed nothing). Each BUILD file declares `# needs-toolchain: python`.
+  No source, test or evidence change.
 
 ### Fixed
 

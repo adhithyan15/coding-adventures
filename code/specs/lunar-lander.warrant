@@ -57,19 +57,24 @@ warrant lunar_lander v1
     heap <= 0
 
   -- State Invariant (VER04m)
-  model state_inv(s: LanderState) -> Bool = s.dry_mass_lbs == 16500u32 and s.fuel_lbs <= 16500u32 and s.altitude_mft >= 0 and s.altitude_mft <= 200000000 and s.velocity_mft_s >= -10000000 and s.velocity_mft_s <= 10000000 and s.time_seconds <= 86400u32
+  model state_inv(s: LanderState) -> Bool = s.dry_mass_lbs == 16500u32 and s.fuel_lbs <= 16500u32 and s.altitude_mft >= 0i64 and s.altitude_mft <= 200000000i64 and s.velocity_mft_s >= -10000000i64 and s.velocity_mft_s <= 10000000i64 and s.time_seconds <= 86400u32
+
+  -- validate_burn also refuses (ArithmeticOverflow) a state whose altitude is not
+  -- strictly positive or that already carries an impact velocity, although state_inv
+  -- admits both; the burn-rate and duration claims below need these as preconditions.
+  model burnable_state(s: LanderState) -> Bool = s.altitude_mft > 0i64 and (match s.impact_velocity_mft_s with None -> true | _ -> false)
 
   -- Initial state model
-  model initial_state() -> LanderState = LanderState(0u32, 120000000, -3000000, 16500u32, 16500u32, InFlight, None)
+  model initial_state() -> LanderState = LanderState(0u32, 120000000i64, -3000000i64, 16500u32, 16500u32, InFlight, None)
 
   claim initial_flight_has_zero_time:
     new_flight().time_seconds == 0u32
 
   claim initial_flight_has_initial_altitude:
-    new_flight().altitude_mft == 120000000
+    new_flight().altitude_mft == 120000000i64
 
   claim initial_flight_has_initial_velocity:
-    new_flight().velocity_mft_s == -3000000
+    new_flight().velocity_mft_s == -3000000i64
 
   claim initial_flight_has_initial_fuel:
     new_flight().fuel_lbs == 16500u32
@@ -117,22 +122,22 @@ warrant lunar_lander v1
     forall s: LanderState, c: BurnCommand. (match s.status with Landed(Crater) -> step_burn(s, c) == Err(LanderError.FlightAlreadyEnded) | _ -> true)
 
   claim validate_refuses_excessive_burn_rate:
-    forall s: LanderState, c: BurnCommand. (s.status == FlightStatus.InFlight && state_inv(s) && c.burn_rate_lbs_s > 200u32) => validate_burn(s, c) == Err(LanderError.ExcessiveBurnRate)
+    forall s: LanderState, c: BurnCommand. if s.status == InFlight and state_inv(s) and burnable_state(s) and c.burn_rate_lbs_s > 200u32 then validate_burn(s, c) == Err(LanderError.ExcessiveBurnRate) else true
 
   claim step_refuses_excessive_burn_rate:
-    forall s: LanderState, c: BurnCommand. (s.status == FlightStatus.InFlight && state_inv(s) && c.burn_rate_lbs_s > 200u32) => step_burn(s, c) == Err(LanderError.ExcessiveBurnRate)
+    forall s: LanderState, c: BurnCommand. if s.status == InFlight and state_inv(s) and burnable_state(s) and c.burn_rate_lbs_s > 200u32 then step_burn(s, c) == Err(LanderError.ExcessiveBurnRate) else true
 
   claim validate_refuses_zero_duration:
-    forall s: LanderState, c: BurnCommand. (s.status == FlightStatus.InFlight && state_inv(s) && c.burn_rate_lbs_s <= 200u32 && c.duration_seconds == 0u32) => validate_burn(s, c) == Err(LanderError.InvalidDuration)
+    forall s: LanderState, c: BurnCommand. if s.status == InFlight and state_inv(s) and burnable_state(s) and c.burn_rate_lbs_s <= 200u32 and c.duration_seconds == 0u32 then validate_burn(s, c) == Err(LanderError.InvalidDuration) else true
 
   claim validate_refuses_excessive_duration:
-    forall s: LanderState, c: BurnCommand. (s.status == FlightStatus.InFlight && state_inv(s) && c.burn_rate_lbs_s <= 200u32 && c.duration_seconds > 10u32) => validate_burn(s, c) == Err(LanderError.InvalidDuration)
+    forall s: LanderState, c: BurnCommand. if s.status == InFlight and state_inv(s) and burnable_state(s) and c.burn_rate_lbs_s <= 200u32 and c.duration_seconds > 10u32 then validate_burn(s, c) == Err(LanderError.InvalidDuration) else true
 
   claim step_refuses_zero_duration:
-    forall s: LanderState, c: BurnCommand. (s.status == FlightStatus.InFlight && state_inv(s) && c.burn_rate_lbs_s <= 200u32 && c.duration_seconds == 0u32) => step_burn(s, c) == Err(LanderError.InvalidDuration)
+    forall s: LanderState, c: BurnCommand. if s.status == InFlight and state_inv(s) and burnable_state(s) and c.burn_rate_lbs_s <= 200u32 and c.duration_seconds == 0u32 then step_burn(s, c) == Err(LanderError.InvalidDuration) else true
 
   claim step_refuses_excessive_duration:
-    forall s: LanderState, c: BurnCommand. (s.status == FlightStatus.InFlight && state_inv(s) && c.burn_rate_lbs_s <= 200u32 && c.duration_seconds > 10u32) => step_burn(s, c) == Err(LanderError.InvalidDuration)
+    forall s: LanderState, c: BurnCommand. if s.status == InFlight and state_inv(s) and burnable_state(s) and c.burn_rate_lbs_s <= 200u32 and c.duration_seconds > 10u32 then step_burn(s, c) == Err(LanderError.InvalidDuration) else true
 
   claim step_burn_fuel_monotonicity:
     forall s: LanderState, c: BurnCommand. match step_burn(s, c) with Ok(s_next) -> s_next.fuel_lbs <= s.fuel_lbs | Err(_) -> true

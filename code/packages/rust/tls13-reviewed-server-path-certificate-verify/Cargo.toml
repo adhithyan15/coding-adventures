@@ -1,0 +1,69 @@
+[package]
+name = "tls13-reviewed-server-path-certificate-verify"
+version = "0.1.0"
+edition = "2021"
+description = "Bind TLS 1.3 server CertificateVerify verification to a reviewed RSA path leaf"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+https-reviewed-server-path-binding = { path = "../https-reviewed-server-path-binding" }
+tls13-certificate-verify-input = { path = "../tls13-certificate-verify-input" }
+tls13-certificate-verify-message = { path = "../tls13-certificate-verify-message" }
+tls13-certificate-verify-transcript-binding = { path = "../tls13-certificate-verify-transcript-binding" }
+tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-finished = { path = "../tls13-finished" }
+tls13-handshake = { path = "../tls13-handshake" }
+tls13-no-psk-server-flight = { path = "../tls13-no-psk-server-flight" }
+tls13-rsa-pss-certificate-verify = { path = "../tls13-rsa-pss-certificate-verify" }
+tls13-rsa-pss-signature-routing = { path = "../tls13-rsa-pss-signature-routing" }
+tls13-retry-handshake-traffic-key-material-binding = { path = "../tls13-retry-handshake-traffic-key-material-binding" }
+tls13-signature-scheme-policy = { path = "../tls13-signature-scheme-policy" }
+tls13-transcript = { path = "../tls13-transcript" }
+x509-certificate = { path = "../x509-certificate" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }
+
+[dev-dependencies]
+coding_adventures_hkdf = { path = "../hkdf" }
+http1-request-host-authority = { path = "../http1-request-host-authority" }
+https-destination-name-binding = { path = "../https-destination-name-binding" }
+rsa-pss-sha256-signature = { path = "../rsa-pss-sha256-signature" }
+rsa-public-operation = { path = "../rsa-public-operation" }
+tls-server-identity = { path = "../tls-server-identity" }
+tls13-certificate-message = { path = "../tls13-certificate-message" }
+tls13-cipher-suite-offer = { path = "../tls13-cipher-suite-offer" }
+tls13-client-hello-message = { path = "../tls13-client-hello-message" }
+tls13-extension-block = { path = "../tls13-extension-block" }
+tls13-extension-context-policy = { path = "../tls13-extension-context-policy" }
+tls13-handshake-traffic-secrets = { path = "../tls13-handshake-traffic-secrets" }
+tls13-inner-plaintext = { path = "../tls13-inner-plaintext" }
+tls13-key-schedule = { path = "../tls13-key-schedule" }
+tls13-key-share = { path = "../tls13-key-share" }
+tls13-named-group-policy = { path = "../tls13-named-group-policy" }
+tls13-record = { path = "../tls13-record" }
+tls13-record-protection = { path = "../tls13-record-protection" }
+tls13-record-protection-state = { path = "../tls13-record-protection-state" }
+tls13-retry-handshake-traffic-secrets-binding = { path = "../tls13-retry-handshake-traffic-secrets-binding" }
+tls13-retry-key-schedule-binding = { path = "../tls13-retry-key-schedule-binding" }
+tls13-retry-transcript-binding = { path = "../tls13-retry-transcript-binding" }
+tls13-server-hello-message = { path = "../tls13-server-hello-message" }
+tls13-server-hello-retry-selection = { path = "../tls13-server-hello-retry-selection" }
+tls13-server-hello-selection = { path = "../tls13-server-hello-selection" }
+tls13-server-hello-version-selection = { path = "../tls13-server-hello-version-selection" }
+tls13-server-name = { path = "../tls13-server-name" }
+tls13-supported-groups = { path = "../tls13-supported-groups" }
+tls13-supported-versions = { path = "../tls13-supported-versions" }
+tls13-traffic-key-material = { path = "../tls13-traffic-key-material" }
+tls13-x25519-key-share-binding = { path = "../tls13-x25519-key-share-binding" }
+x509-certificate-path-construction = { path = "../x509-certificate-path-construction" }
+x509-certificate-path-reviewed-anchor-binding = { path = "../x509-certificate-path-reviewed-anchor-binding" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-intermediate-certificate-policy = { path = "../x509-intermediate-certificate-policy" }
+x509-name-value-policy = { path = "../x509-name-value-policy" }
+x509-rsa-algorithm-policy = { path = "../x509-rsa-algorithm-policy" }
+x509-rsa-constructed-path-signature-routing = { path = "../x509-rsa-constructed-path-signature-routing" }
+x509-rsa-reviewed-anchor-self-signature-binding = { path = "../x509-rsa-reviewed-anchor-self-signature-binding" }
+x509-rsa-reviewed-server-path-anchor-self-signature-binding = { path = "../x509-rsa-reviewed-server-path-anchor-self-signature-binding" }
+x509-rsa-signature-routing = { path = "../x509-rsa-signature-routing" }
+x509-server-certificate-policy = { path = "../x509-server-certificate-policy" }
+x509-time = { path = "../x509-time" }
+x509-webpki-root-anchor-selection = { path = "../x509-webpki-root-anchor-selection" }

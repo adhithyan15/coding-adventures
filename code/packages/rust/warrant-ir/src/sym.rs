@@ -999,6 +999,25 @@ impl Prover {
     where
         F: FnOnce(&mut Aig, &[SymVal], &SymMemory) -> Result<SymVal, SymbolicError>,
     {
+        self.prove_equivalence_with_guard(func, args, initial_memory, Edge::TRUE, spec_builder)
+    }
+
+    /// Prove equivalence only for inputs satisfying `guard`.
+    ///
+    /// The guard is conjoined with every path's mismatch before Tseitin
+    /// conversion. This is useful for caller preconditions that are symbolic
+    /// inputs, while preserving the ordinary unguarded API above.
+    pub fn prove_equivalence_with_guard<F>(
+        &mut self,
+        func: &Function,
+        args: Vec<SymVal>,
+        initial_memory: SymMemory,
+        guard: Edge,
+        spec_builder: F,
+    ) -> VerificationVerdict
+    where
+        F: FnOnce(&mut Aig, &[SymVal], &SymMemory) -> Result<SymVal, SymbolicError>,
+    {
         let spec_res = match spec_builder(&mut self.executor.aig, &args, &initial_memory) {
             Ok(v) => v,
             Err(e) => return VerificationVerdict::Unknown(format!("Spec builder error: {}", e)),
@@ -1051,6 +1070,7 @@ impl Prover {
             let ne_edge = !eq_edge;
             let mut path_and_ne = outcome.path_condition.clone();
             path_and_ne.push(ne_edge);
+            path_and_ne.push(guard);
             let path_miter = self.executor.aig.and_all(&path_and_ne);
             miter_clauses.push(path_miter);
         }
@@ -1354,5 +1374,43 @@ mod tests {
         );
 
         assert!(matches!(verdict, VerificationVerdict::Falsified { .. }));
+    }
+
+    #[test]
+    fn guarded_equivalence_conjoins_precondition_before_sat() {
+        let mut prover = Prover::new();
+        let input = prover.executor.create_input_bits("input", 8);
+        let is_zero = bv::eq(&mut prover.executor.aig, &input, &BitVec::constant(8, 0));
+        let function = Function {
+            name: "constant_zero".to_string(),
+            params: vec![(VarId::from("input"), WirType::U8, Label::PUBLIC)],
+            return_type: WirType::U8,
+            blocks: vec![BasicBlock {
+                id: BlockId(0),
+                instructions: vec![],
+                terminator: WirTerminator::Return(Some(WirExpr::ConstInt {
+                    val: 0,
+                    ty: WirType::U8,
+                })),
+            }],
+            ranking_metric: None,
+        };
+
+        let guarded = prover.prove_equivalence_with_guard(
+            &function,
+            vec![SymVal::Bits(input.clone())],
+            SymMemory::new(),
+            is_zero,
+            |_aig, args, _memory| Ok(args[0].clone()),
+        );
+        assert_eq!(guarded, VerificationVerdict::Proved);
+
+        let unguarded = prover.prove_equivalence(
+            &function,
+            vec![SymVal::Bits(input)],
+            SymMemory::new(),
+            |_aig, args, _memory| Ok(args[0].clone()),
+        );
+        assert!(matches!(unguarded, VerificationVerdict::Falsified { .. }));
     }
 }

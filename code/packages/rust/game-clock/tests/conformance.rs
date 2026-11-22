@@ -104,7 +104,10 @@ fn test_sub_tick_rendering_interpolation_alpha() {
     // Advance by half a tick: 8_333_333 ns
     let half_tick = 8_333_333;
     let res1 = advance_frame(&state, half_tick).expect("first advance");
-    assert_eq!(res1.steps_to_run, 0, "half tick produces 0 simulation steps");
+    assert_eq!(
+        res1.steps_to_run, 0,
+        "half tick produces 0 simulation steps"
+    );
     assert_eq!(res1.state.accumulator_ns, half_tick);
     assert_eq!(res1.state.tick_count, 0);
     assert_eq!(res1.state.elapsed_sim_ns, 0);
@@ -217,7 +220,8 @@ fn test_cwe_400_spiral_of_death_massive_freeze() {
     // raw 100s capped to 250ms -> 99.75s delta dropped
     // 250ms has 15 steps: 8 run, 7 dropped -> 7 * 16_666_667 = 116_666_669 dropped
     let expected_delta_dropped = freeze_delta_ns - DEFAULT_MAX_FRAME_DELTA_NS;
-    let excess_steps = (DEFAULT_MAX_FRAME_DELTA_NS / DEFAULT_60HZ_DT_NS) - (DEFAULT_MAX_FRAME_STEPS as u64);
+    let excess_steps =
+        (DEFAULT_MAX_FRAME_DELTA_NS / DEFAULT_60HZ_DT_NS) - (DEFAULT_MAX_FRAME_STEPS as u64);
     let expected_spiral_dropped = excess_steps * DEFAULT_60HZ_DT_NS;
     let expected_total_dropped = expected_delta_dropped + expected_spiral_dropped;
     assert_eq!(res.dropped_ns, expected_total_dropped);

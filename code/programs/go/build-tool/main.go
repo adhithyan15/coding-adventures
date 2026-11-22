@@ -10,8 +10,8 @@
 //
 //  1. Find the repo root (walk up looking for .git)
 //  2. Discover packages (walk BUILD files under code/)
-//  3. Filter by language if requested
-//  4. Resolve dependencies (parse pyproject.toml, .gemspec, go.mod, Cargo.toml, package.json, mix.exs, pubspec.yaml)
+//  3. Resolve dependencies over the full discovered package set
+//  4. Filter packages for execution when a language is requested
 //  5. Hash all packages and their dependencies
 //  6. Load cache, determine what needs building
 //  7. If --dry-run, report what would build and exit
@@ -30,15 +30,18 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"runtime"
 	"sort"
 	"strings"
+	"syscall"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	progress "github.com/adhithyan15/coding-adventures/code/packages/go/progress-bar"
@@ -219,6 +222,7 @@ const (
 	gfmFencedBlockCorpusPath         = "code/specs/gfm-fenced-block-v1/cases.json"
 	gfmExtensionCorpusPath           = "code/specs/fixtures/gfm-extension-v1/cases.json"
 	bezier2dFlatteningCorpusPath     = "code/specs/fixtures/bezier2d-flattening-v1/cases.json"
+	satSolverSharedCorpusPath        = "code/specs/fixtures/sat-cnf-v1/cases.json"
 )
 
 var starlarkOpcodeProviderConsumers = []struct{ name, language string }{
@@ -237,6 +241,11 @@ var gfmCorpusConsumers = []struct{ name, language string }{
 var bezier2dFlatteningConsumers = []struct{ name, language string }{
 	{name: "csharp/bezier2d", language: "csharp"},
 	{name: "fsharp/bezier2d", language: "fsharp"},
+}
+
+var satSolverSharedCorpusConsumers = []struct{ name, language string }{
+	{name: "go/sat-solver", language: "go"},
+	{name: "typescript/sat-solver", language: "typescript"},
 }
 
 // These are the program fronts whose native tests read sharedDiscoveryFixturePath.
@@ -663,9 +672,11 @@ func selectPackageRoots(
 	}
 
 	// Only changes that can reach dependents are roots here. A package whose
-	// only changes are package-local metadata (README, changelog, capability
-	// manifest, assurance evidence) is selected separately and without its
-	// dependents; see package_metadata.go.
+	// only changes are package-local files (changelog, capability manifest,
+	// assurance evidence, an in-place edit of its own Rust BUILD front) is
+	// selected separately and without its dependents; see package_metadata.go
+	// and build_front_local.go. README.md is not package-local.
+	statuses = statuses.WithClearedFronts(clearedBuildFronts(filtered, statuses, packages, repoRoot))
 	changed, local = gitdiff.ClassifyChangedFiles(filtered, packages, repoRoot, statuses)
 	// External native-acceptance specifications need a producer root as well
 	// as a step gate. Otherwise CI enables the step without selecting its
@@ -756,6 +767,27 @@ func selectPackageRoots(
 			}
 			if !found {
 				return nil, nil, fmt.Errorf("G2D02 fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	// VER09b's shared stateful SAT corpus is consumed directly by both
+	// standalone packages. Seed the exact readers even for deletion/rename-old
+	// paths, before ordinary package-root matching returns.
+	if containsPath(changedFiles, satSolverSharedCorpusPath) {
+		for _, consumer := range satSolverSharedCorpusConsumers {
+			if language != "all" && language != consumer.language {
+				continue
+			}
+			found := false
+			for _, pkg := range packages {
+				if pkg.Name == consumer.name && pkg.Language == consumer.language {
+					found = true
+					break
+				}
+			}
+			if !found {
+				return nil, nil, fmt.Errorf("VER09b shared SAT corpus consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -1098,11 +1130,97 @@ func formatHashPackageError(packageName string) string {
 	return fmt.Sprintf("Error: HASH_PACKAGE_FAILED %q", packageName)
 }
 
+// hashPackagesAndDependencies first hashes every package, then hashes each
+// package's graph closure. Keeping these passes separate ensures a package
+// encountered early in repository order never observes an absent hash for a
+// dependency encountered later.
+func hashPackagesAndDependencies(
+	packages []discovery.Package,
+	graph *directedgraph.Graph,
+	hashPackage func(discovery.Package) (string, error),
+) (map[string]string, map[string]string, string, error) {
+	packageHashes := make(map[string]string, len(packages))
+	for _, pkg := range packages {
+		packageHash, err := hashPackage(pkg)
+		if err != nil {
+			return nil, nil, pkg.Name, err
+		}
+		packageHashes[pkg.Name] = packageHash
+	}
+
+	depsHashes := make(map[string]string, len(packages))
+	for _, pkg := range packages {
+		depsHash, err := hasher.HashDeps(pkg.Name, graph, packageHashes)
+		if err != nil {
+			return nil, nil, pkg.Name, err
+		}
+		depsHashes[pkg.Name] = depsHash
+	}
+	return packageHashes, depsHashes, "", nil
+}
+
+// cacheHashPackages hashes the execution packages and their transitive
+// providers, avoiding unrelated packages on filtered or sharded runs.
+func cacheHashPackages(execution, universe []discovery.Package, graph *directedgraph.Graph) ([]discovery.Package, error) {
+	selected := make(map[string]bool)
+	queue := make([]string, 0, len(execution))
+	for _, pkg := range execution {
+		if !selected[pkg.Name] {
+			selected[pkg.Name] = true
+			queue = append(queue, pkg.Name)
+		}
+	}
+	for len(queue) > 0 {
+		name := queue[0]
+		queue = queue[1:]
+		if graph == nil {
+			continue
+		}
+		predecessors, err := graph.Predecessors(name)
+		if err != nil {
+			return nil, err
+		}
+		for _, predecessor := range predecessors {
+			if !selected[predecessor] {
+				selected[predecessor] = true
+				queue = append(queue, predecessor)
+			}
+		}
+	}
+	packages := make([]discovery.Package, 0, len(selected))
+	for _, pkg := range universe {
+		if selected[pkg.Name] {
+			packages = append(packages, pkg)
+		}
+	}
+	return packages, nil
+}
+
 // shardWeights holds the measured per-package durations from -shard-weights,
 // or nil for sharding v1. It is process state set once by
 // runWithPackageHasher, like executor.PruneLeafCargoTargets, so that the
 // several places that compute shards all read the same choice.
 var shardWeights *plan.ShardWeights
+
+func hashPackageWithRepositoryInputs(
+	pkg discovery.Package,
+	repoRoot string,
+	fallback func(discovery.Package) (string, error),
+) (string, error) {
+	switch pkg.Name {
+	case "rust/fixed-point":
+		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, fixedPointInputPaths)
+	case "rust/ca-assurance-report":
+		return hasher.HashPackageWithRepositoryInputsAndTrees(pkg, repoRoot,
+			append(append([]string{}, warrantAssurancePaths...), fixedPointReporterFileInputs...), fixedPointReporterTreePaths)
+	case "rust/warrant-ir":
+		return hasher.HashPackageWithRepositoryInputsAndTrees(pkg, repoRoot, fixedPointWarrantIRFileInputs, fixedPointWarrantIRTreePaths)
+	}
+	if inputs := repositoryInputsForPackage(pkg.Name); len(inputs) > 0 {
+		return hasher.HashPackageWithRepositoryInputs(pkg, repoRoot, inputs)
+	}
+	return fallback(pkg)
+}
 
 func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) int {
 	// CLI flags — using Go's standard flag package.
@@ -1129,7 +1247,14 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	emitKilnSteps := flag.String("emit-kiln-steps", "", "With -emit-kiln-graph only: also write the kiln-legacy-steps/1 export (the lines executor.EffectiveStepLines returns for this OS, per package) to this path, from the same discovery pass")
 	emitResults := flag.String("emit-results", "", "After the run, write the kiln-legacy-results/1 record (status and step counts per package) to this path")
 
+	commandTimeout := flag.Duration("command-timeout", executor.DefaultCommandTimeout, "Kill any single BUILD command that runs longer than this (Go duration, e.g. 90m); 0 disables. The package fails and the message names the command")
+
 	flag.Parse()
+
+	if *commandTimeout < 0 {
+		fmt.Fprintf(os.Stderr, "Error: -command-timeout must not be negative (got %s); use 0 to disable.\n", *commandTimeout)
+		return 1
+	}
 
 	// -exec-wrapper and -emit-results (KILN04 section 4.3).
 	var execWrapper []string
@@ -1224,6 +1349,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return 1
 	}
+	basePackageHasher := hashPackage
+	hashPackage = func(pkg discovery.Package) (string, error) {
+		return hashPackageWithRepositoryInputs(pkg, repoRoot, basePackageHasher)
+	}
 
 	// The build starts from the code/ directory inside the repo root.
 	codeRoot := filepath.Join(repoRoot, "code")
@@ -1255,6 +1384,11 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	// detect job.
 
 	var packages []discovery.Package
+	// The complete platform-specific package set feeds dependency resolution,
+	// fallback cache hashes, and changed-root classification. Execution may
+	// narrow packages later (for example with -language typescript), but those
+	// filters must not erase providers from the persisted dependency hash.
+	var cachePackages []discovery.Package
 	// Every package on this platform, before any shard or language filter.
 	var knownPackages []discovery.Package
 	var graph *directedgraph.Graph
@@ -1324,6 +1458,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 				}
 			}
 			packages = packagesForPlatform(packages, runtime.GOOS)
+			cachePackages = append([]discovery.Package(nil), packages...)
 			// Before the shard and language filters narrow the list: BUILD
 			// validation resolves names against every package (X-7).
 			knownPackages = packages
@@ -1482,10 +1617,19 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 			fmt.Printf("Evaluated %d Starlark BUILD files\n", starlarkCount)
 		}
 
-		// Step 3: Filter by language if requested. Cargo path entries still
-		// resolve against every discovered package (triggerKnown), so a path
-		// into a filtered-out package is not mistaken for an unlisted crate.
+		// Keep the full discovered universe through dependency resolution and
+		// cache hashing. Execution filtering happens only after the graph has
+		// retained real cross-language providers.
 		triggerKnown = packages
+		cachePackages = append([]discovery.Package(nil), packages...)
+
+		// Step 4: Resolve dependencies.
+		graph, testTriggers, err = resolver.ResolveWithTestTriggersAgainst(packages, triggerKnown)
+		if err != nil {
+			message, exitCode := formatResolverError(err)
+			fmt.Fprintln(os.Stderr, message)
+			return exitCode
+		}
 		if *language != "all" {
 			var filtered []discovery.Package
 			for _, pkg := range packages {
@@ -1501,14 +1645,6 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		}
 
 		fmt.Printf("Discovered %d packages\n", len(packages))
-
-		// Step 4: Resolve dependencies.
-		graph, testTriggers, err = resolver.ResolveWithTestTriggersAgainst(packages, triggerKnown)
-		if err != nil {
-			message, exitCode := formatResolverError(err)
-			fmt.Fprintln(os.Stderr, message)
-			return exitCode
-		}
 
 		// Step 5: Git-diff change detection (default mode).
 		// Git is the source of truth — no cache file needed for primary workflow.
@@ -1556,10 +1692,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 					changedPkgs, localPkgs, selectionErr := selectPackageRoots(
 						changedFiles,
 						statuses,
-						packages,
+						cachePackages,
 						repoRoot,
 						runtime.GOOS,
-						*language,
+						"all",
 					)
 					if selectionErr != nil {
 						fmt.Fprintf(os.Stderr, "Error selecting native fixture consumers: %v\n", selectionErr)
@@ -1588,7 +1724,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 								strings.Join(sortedConsumerNames(inputConsumers), ", "))
 						}
 						if len(localPkgs) > 0 {
-							fmt.Printf("Git diff: %d packages changed only package-local metadata — selected without their dependents\n",
+							fmt.Printf("Git diff: %d packages changed only package-local files (metadata, BUILD fronts) — selected without their dependents\n",
 								len(localPkgs))
 						}
 						fmt.Printf("Git diff: %d packages changed, %d affected (including dependents and prerequisites)\n",
@@ -1624,6 +1760,27 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		// Package-local metadata is selected without its dependents, so it
 		// must never be executed (internal/validator/metadata_exec.go).
 		metadataErr := validator.ValidateNoExecutedMetadata(repoRoot)
+		// A BUILD front edited in place is package-local only if selection
+		// can see who runs it (internal/validator/build_front_invocations.go).
+		frontErr := validator.ValidateBuildFrontInvocations(repoRoot, knownPackages)
+		// BUILD files that run the shared negative-control checker must
+		// declare Python (internal/validator/negctl_python.go). Package-local
+		// BUILD edits never select this program's own tests, so the rule is
+		// enforced here, on every pull request.
+		//
+		// CI's validation job runs on Linux, where host-only discovery misses
+		// a directory whose only BUILD file is BUILD_windows or BUILD_mac, so
+		// outside plan mode this check discovers every platform's packages.
+		negctlPackages := knownPackages
+		if !usedPlan {
+			allPackages, allErr := discovery.DiscoverPackagesAllPlatforms(codeRoot)
+			if allErr != nil {
+				fmt.Fprintf(os.Stderr, "negative-control checker validation: all-platform discovery failed: %v\n", allErr)
+				return 1
+			}
+			negctlPackages = allPackages
+		}
+		negctlErr := validator.ValidateNegctlUsersDeclarePython(repoRoot, negctlPackages)
 
 		if buildErr != nil {
 			fmt.Fprintln(os.Stderr, buildErr)
@@ -1640,7 +1797,13 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		if metadataErr != nil {
 			fmt.Fprintln(os.Stderr, metadataErr)
 		}
-		if buildErr != nil || orphanErr != nil || packageRootErr != nil || artifactErr != nil || metadataErr != nil {
+		if frontErr != nil {
+			fmt.Fprintln(os.Stderr, frontErr)
+		}
+		if negctlErr != nil {
+			fmt.Fprintln(os.Stderr, negctlErr)
+		}
+		if buildErr != nil || orphanErr != nil || packageRootErr != nil || artifactErr != nil || metadataErr != nil || frontErr != nil || negctlErr != nil {
 			return 1
 		}
 
@@ -1668,7 +1831,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	if *emitPlan != "" {
 		return emitBuildPlanAgainst(
 			triggerKnown,
-			packages,
+			cachePackages,
 			graph,
 			affectedSet,
 			changedPackageRoots,
@@ -1692,17 +1855,15 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	}
 
 	// Step 6: Hash all packages (needed for cache fallback).
-	packageHashes := make(map[string]string)
-	depsHashes := make(map[string]string)
-
-	for _, pkg := range packages {
-		packageHash, err := hashPackage(pkg)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, formatHashPackageError(pkg.Name))
-			return 2
-		}
-		packageHashes[pkg.Name] = packageHash
-		depsHashes[pkg.Name] = hasher.HashDeps(pkg.Name, graph, packageHashes)
+	hashInputs, err := cacheHashPackages(packages, cachePackages, graph)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error resolving cache hash closure: %v\n", err)
+		return 2
+	}
+	packageHashes, depsHashes, failedHashPackage, err := hashPackagesAndDependencies(hashInputs, graph, hashPackage)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, formatHashPackageError(failedHashPackage))
+		return 2
 	}
 
 	// Step 7: Load cache (fallback if git diff didn't work).
@@ -1727,6 +1888,14 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	executor.PruneLeafCargoTargets = *pruneLeafTargets
 	executor.ExecWrapper = execWrapper
 	executor.ExecWrapperRepoRoot = repoRoot
+	executor.CommandTimeout = *commandTimeout
+	// BUILD commands run in their own process groups, so Ctrl-C no longer
+	// reaches them from the terminal. Turn SIGINT/SIGTERM into cancellation of
+	// the executor's root context, which kills every running command's group.
+	sigCtx, stopSignals := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stopSignals()
+	executor.RootContext = sigCtx
+	defer func() { executor.RootContext = nil }()
 	results := executor.ExecuteBuilds(
 		packages,
 		graph,
@@ -1760,6 +1929,12 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 			fmt.Fprintf(os.Stderr, "Error writing %s: %v\n", *emitResults, err)
 			return 1
 		}
+	}
+
+	// An interrupted run is never a success, whatever the results say.
+	if sigCtx.Err() != nil {
+		fmt.Fprintln(os.Stderr, "Interrupted: build stopped by signal; running commands were killed.")
+		return 130
 	}
 
 	// Step 11: Exit with code 1 if any builds failed.
@@ -1916,6 +2091,41 @@ func computeLanguagesNeeded(
 	return needed
 }
 
+// computePlanLanguagesNeeded separates the serialized provider universe from
+// the packages this invocation will execute after applying its language
+// filter. A filtered force plan still needs only the selected language's
+// toolchains and any explicit extra toolchains declared by those packages.
+func computePlanLanguagesNeeded(
+	packages []discovery.Package,
+	affectedSet map[string]bool,
+	force bool,
+	ciToolchains map[string]bool,
+	language string,
+) map[string]bool {
+	if language == "all" {
+		return computeLanguagesNeeded(packages, affectedSet, force, ciToolchains)
+	}
+	var executionPackages []discovery.Package
+	for _, pkg := range packages {
+		if pkg.Language == language {
+			executionPackages = append(executionPackages, pkg)
+		}
+	}
+	executionAffected := make(map[string]bool)
+	if force || affectedSet == nil {
+		for _, pkg := range executionPackages {
+			executionAffected[pkg.Name] = true
+		}
+	} else {
+		for _, pkg := range executionPackages {
+			if affectedSet[pkg.Name] {
+				executionAffected[pkg.Name] = true
+			}
+		}
+	}
+	return computeLanguagesNeeded(executionPackages, executionAffected, false, ciToolchains)
+}
+
 // emitBuildPlan serializes the build plan to a JSON file and optionally
 // outputs language detection flags. This is used by the CI detect job
 // to produce a plan artifact that build jobs can consume.
@@ -2032,11 +2242,12 @@ func emitBuildPlanAgainst(
 			DependencyEdges:  graphEdges(platformGraph),
 			AffectedPackages: affectedListFromSet(platformAffected),
 		}
-		for language, needed := range computeLanguagesNeeded(
+		for language, needed := range computePlanLanguagesNeeded(
 			platformPackages,
 			platformAffected,
 			force,
 			ciToolchains,
+			language,
 		) {
 			if needed {
 				platformLanguages[language] = true
@@ -2045,7 +2256,7 @@ func emitBuildPlanAgainst(
 	}
 
 	// Compute languages needed as the union across runner platforms.
-	languagesNeeded := computeLanguagesNeeded(packages, affectedSet, force, ciToolchains)
+	languagesNeeded := computePlanLanguagesNeeded(packages, affectedSet, force, ciToolchains, language)
 	for language := range platformLanguages {
 		languagesNeeded[language] = true
 	}

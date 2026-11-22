@@ -69,8 +69,10 @@ func TestEphemeralAndAbsentOK(t *testing.T) {
 	wantNoReasons(t, h.run(fail(stat("/home/runner/.npmrc"), "ENOENT"), fail(stat("/home/runner/.config/pip/pip.conf"), "ENOENT")))
 	rec = h.run(openAbs("/home/runner/.config/x"))
 	wantReason(t, rec, "host-read:$HOME/.config/x") // (and the fresh HOME cannot hold it: unstable)
-	// Other absent probes are host-reads too.
-	wantReason(t, h.run(fail(stat("/home/runner/.gitconfig"), "ENOENT")), "host-read:$HOME/.gitconfig")
+	// Other absent probes are host-reads too, except strictly inside the fresh
+	// HOME (D39 rule b: the tmpfs starts empty).
+	wantNoReasons(t, h.run(fail(stat("/home/runner/.gitconfig"), "ENOENT")))
+	wantReason(t, h.run(fail(stat("/home/go.work"), "ENOENT")), "host-read:/home/go.work")
 	wantReason(t, h.run(fail(stat("/var/nothing"), "ENOENT")), "host-read:/var/nothing")
 }
 

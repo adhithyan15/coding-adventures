@@ -1,0 +1,201 @@
+warrant enum_forms_v1 v1
+  -- Suites that exercise the S3b evaluator and enumeration: wraps, refinements on a prefix and on the last binder, pure guards, call counts, Result and Nat results, 16/32/64-bit binders.
+  error E = BAD
+  model add8(a: U8, b: U8) -> U8 = a + b
+  model sub8(a: U8, b: U8) -> U8 = a - b
+  model mul8(a: U8, b: U8) -> U8 = a * b
+  model neg8(a: I8) -> I8 = -a
+  model inc(x: U8) -> U8 = x + 1u8
+  model twice(x: U8) -> U8 = inc(inc(x))
+  model pick(c: Bool, a: Bytes) -> Result<Bytes, E> = if c then Ok(a) else Err(E.BAD)
+  model id64(a: U64) -> U64 = a
+  model id32(a: U32) -> U32 = a
+  model id16(a: U16) -> U16 = a
+  model len_of(a: Bytes) -> Nat = len(a)
+  op op_add(a: U8, b: U8) -> U8
+  op op_sub(a: U8, b: U8) -> U8
+  op op_mul(a: U8, b: U8) -> U8
+  op op_neg(a: I8) -> I8
+  op op_inc(x: U8) -> U8
+  op op_pick(c: Bool, a: Bytes) -> Result<Bytes, E>
+  op op_u64(a: U64) -> U64
+  op op_u32(a: U32) -> U32
+  op op_u16(a: U16) -> U16
+  op op_len(a: Bytes) -> Nat
+  op op_cat(a: Bytes, b: Bytes) -> Bytes
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels op_add:
+    a secret
+    b secret
+
+  labels op_sub:
+    a secret
+    b secret
+
+  labels op_mul:
+    a secret
+    b secret
+
+  labels op_neg:
+    a secret
+
+  labels op_inc:
+    x secret
+
+  labels op_pick:
+    c secret
+    a.contents secret
+    a.length public
+
+  labels op_u64:
+    a secret
+
+  labels op_u32:
+    a secret
+
+  labels op_u16:
+    a secret
+
+  labels op_len:
+    a.contents secret
+    a.length public
+
+  labels op_cat:
+    a.contents secret
+    a.length public
+    b.contents secret
+    b.length public
+
+  input op_add.a:
+    hostile
+    ensures no_panic, terminates
+  input op_add.b:
+    hostile
+    ensures no_panic, terminates
+  input op_sub.a:
+    hostile
+    ensures no_panic, terminates
+  input op_sub.b:
+    hostile
+    ensures no_panic, terminates
+  input op_mul.a:
+    hostile
+    ensures no_panic, terminates
+  input op_mul.b:
+    hostile
+    ensures no_panic, terminates
+  input op_neg.a:
+    hostile
+    ensures no_panic, terminates
+  input op_inc.x:
+    hostile
+    ensures no_panic, terminates
+  input op_pick.c:
+    hostile
+    ensures no_panic, terminates
+  input op_pick.a:
+    hostile
+    ensures no_panic, terminates
+  input op_u64.a:
+    hostile
+    ensures no_panic, terminates
+  input op_u32.a:
+    hostile
+    ensures no_panic, terminates
+  input op_u16.a:
+    hostile
+    ensures no_panic, terminates
+  input op_len.a:
+    hostile
+    ensures no_panic, terminates
+  input op_cat.a:
+    hostile
+    ensures no_panic, terminates
+  input op_cat.b:
+    hostile
+    ensures no_panic, terminates
+
+  bound op_add:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_sub:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_mul:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_neg:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_inc:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_pick:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+  bound op_u64:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_u32:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_u16:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_len:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+  bound op_cat:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+
+  claim add_wraps:
+    forall a: U8, b: U8. op_add(a, b) == add8(a, b)
+  claim sub_wraps:
+    forall a: U8, b: U8. op_sub(a, b) == sub8(a, b)
+  claim mul_wraps:
+    forall a: U8, b: U8. op_mul(a, b) == mul8(a, b)
+  claim neg_min:
+    forall a: I8. op_neg(a) == neg8(a)
+  claim refine_prefix:
+    forall a: U8 | a > 100u8, b: U8. op_add(a, b) == add8(a, b)
+  claim refine_last:
+    forall a: U8, b: U8 | a <= b. op_add(a, b) == add8(a, b)
+  claim refine_wraps_both:
+    forall a: U8, b: U8 | a + b < 100u8. op_add(a, b) == add8(a, b)
+  claim refine_wraps_prefix:
+    forall a: U8 | a + 1u8 > 0u8, b: U8. op_add(a, b) == add8(a, b)
+  claim guard_branch:
+    forall a: U8, b: U8. if b != 0u8 then op_add(a, b) == add8(a, b) else true
+  claim assoc_calls:
+    forall a: Bytes<2>, b: Bytes<2>, c: Bytes<2>. op_cat(op_cat(a, b), c) == op_cat(a, op_cat(b, c))
+  claim arg_wraps:
+    forall a: U8. op_inc(a + 1u8) == inc(a)
+  claim twice_wraps:
+    forall a: U8. op_inc(op_inc(a)) == twice(a)
+  claim result_claim:
+    forall c: Bool, a: Bytes. op_pick(c, a) == pick(c, a)
+  claim nat_len:
+    forall a: Bytes. op_len(a) == len_of(a)
+  claim u64_edge:
+    forall a: U64. op_u64(a) == id64(a)
+  claim u32_edge:
+    forall a: U32. op_u32(a) == id32(a)
+  claim u16_full:
+    forall a: U16. op_u16(a) == id16(a)

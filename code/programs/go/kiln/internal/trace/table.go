@@ -152,8 +152,12 @@ func buildTable() map[string]entry {
 	h("fchown", entry{kind: KindWrite, role: roleFdPath, min: 3, max: 3})
 	h("fsetxattr", entry{kind: KindWrite, role: roleFdPath, min: 5, max: 5})
 	h("fremovexattr", entry{kind: KindWrite, role: roleFdPath, min: 2, max: 2})
-	h("mknod", entry{kind: KindWrite, min: 3, max: 3, pth: 1})
-	h("mknodat", entry{kind: KindWrite, min: 4, max: 4, dirfd: 1, pth: 2})
+	// mknod/mknodat: strace prints the device number only for S_IFCHR and
+	// S_IFBLK (strace's mknod.c: decode_mknod switches on mode & S_IFMT).  For
+	// a regular file, FIFO or socket the call has one argument fewer, so the
+	// minimum is the short form; call() refuses a short device node (D44).
+	h("mknod", entry{kind: KindWrite, min: 2, max: 3, pth: 1})
+	h("mknodat", entry{kind: KindWrite, min: 3, max: 4, dirfd: 1, pth: 2})
 
 	// Process.
 	h("execve", entry{kind: KindProcess, role: roleExec, min: 3, max: 3, pth: 1})
@@ -192,8 +196,10 @@ func buildTable() map[string]entry {
 		// The sandbox filter also refuses these (KILN04 section 4.7).
 		"io_uring_enter", "io_uring_register", "process_vm_writev", "userfaultfd",
 		"kexec_load", "kexec_file_load", "perf_event_open", "add_key", "request_key", "keyctl",
-		// clone3's flags are not visible to the seccomp filter, so any clone3
-		// that reaches a trace is refused (§4.4).
+		// clone3's flags are not visible to the seccomp filter, so the filter
+		// answers it with ENOSYS and glibc falls back to clone.  A clone3 that
+		// reaches a trace is refused unless it failed with exactly that answer
+		// (filterAnswered, §4.4).
 		"clone3",
 	} {
 		t[n] = entry{class: classRefused}
@@ -252,4 +258,37 @@ func classifyName(name string, line int) *Error {
 		return incomplete(line, "refused:"+name)
 	}
 	return nil
+}
+
+// filterAnswered reports whether a call's result is the sandbox filter's own
+// answer to it (KILN04 section 4.3 item 5): the call was refused by the filter
+// and did nothing.
+//
+//   - clone3 is answered "-1 ENOSYS", so that glibc falls back to clone;
+//   - every other refused name is answered "-1 EPERM".
+//
+// Anything else is NOT the filter: a success, another errno (the kernel's own
+// verdict, so the filter did not run), "= ?" (the call never returned) or no
+// result at all.  Those stay refused.  A call that never resumed is not
+// judged here: exitInsideCall reports it as an unresumed call.
+func filterAnswered(name string, ret result) bool {
+	if !ret.hasVal || ret.unknown || ret.value != -1 || !ret.minusOne {
+		return false
+	}
+	if name == "clone3" {
+		return ret.errno == "ENOSYS"
+	}
+	return ret.errno == "EPERM"
+}
+
+// classifyCall judges a COMPLETED call against the closed table.  It returns
+// tolerated when the call is a refused-class name that the filter answered
+// (filterAnswered): the caller drops it, no event and no error.  Otherwise it
+// is classifyName's verdict: nil for a known name, an error for an unknown or
+// refused one.
+func classifyCall(name string, ret result, line int) (tolerated bool, e *Error) {
+	if lookup(name).class == classRefused && filterAnswered(name, ret) {
+		return true, nil
+	}
+	return false, classifyName(name, line)
 }

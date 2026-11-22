@@ -109,8 +109,27 @@ enum RepositorySourceInputBoundaryProjection {
     private static let embeddedJSON = #"""
         {
           "schema_version": 1,
-          "language_source_input_registry_sha256": "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1",
+          "language_source_input_registry_sha256": "4b695e89c165297a539091b9e74b60a3be0fd6b056c13fb36d66cdc696e7a1d2",
           "boundaries": [
+            {
+              "id": "dart-hash-map-v1-corpus-input",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/dart/hash-map"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/hash-map-v1/cases.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Dart hash-map BUILD snapshot generator reads the neutral DT18 v1 cases file outside its package root for VM and Node conformance tests.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
             {
               "id": "haskell-workspace-project",
               "input_origin": "haskell",
@@ -136,7 +155,10 @@ enum RepositorySourceInputBoundaryProjection {
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/haskell/cabal.project", "role": "shared_ancestor"}
+                {
+                  "path": "code/packages/haskell/cabal.project",
+                  "role": "shared_ancestor"
+                }
               ],
               "reason": "Only Haskell packages without a package-local cabal.project discover and consume the tracked workspace project above their package roots.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -157,7 +179,10 @@ enum RepositorySourceInputBoundaryProjection {
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/lua/.luacheckrc", "role": "shared_ancestor"}
+                {
+                  "path": "code/packages/lua/.luacheckrc",
+                  "role": "shared_ancestor"
+                }
               ],
               "reason": "Only the Lua package builds that invoke Luacheck discover and consume the tracked shared lint policy above their package roots.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -220,7 +245,10 @@ enum RepositorySourceInputBoundaryProjection {
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/python/pyproject.toml", "role": "shared_ancestor"}
+                {
+                  "path": "code/packages/python/pyproject.toml",
+                  "role": "shared_ancestor"
+                }
               ],
               "reason": "These exact uv-workspace members run a project-aware uv command and therefore discover the tracked workspace manifest above their package roots.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -229,14 +257,25 @@ enum RepositorySourceInputBoundaryProjection {
               "id": "repository-human-language-grammar-cell-inputs",
               "input_origin": "repository",
               "applies_to": {
-                "exact_roots": ["code/packages/typescript/human-language-data"],
+                "exact_roots": [
+                  "code/packages/typescript/human-language-data"
+                ],
                 "descendant_roots": [],
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/learning/human-languages/core/grammar-slots.json", "role": "cross_package_exact"},
-                {"path": "code/learning/human-languages/data/generate_grammar_cells.py", "role": "cross_package_exact"},
-                {"path": "code/learning/human-languages/spanish/grammar-cells.json", "role": "cross_package_exact"}
+                {
+                  "path": "code/learning/human-languages/core/grammar-slots.json",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/learning/human-languages/data/generate_grammar_cells.py",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/learning/human-languages/spanish/grammar-cells.json",
+                  "role": "cross_package_exact"
+                }
               ],
               "reason": "The TypeScript human-language-data build runs the checked-in grammar-cell verifier, which reads these two exact tracked curriculum data files.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -254,9 +293,89 @@ enum RepositorySourceInputBoundaryProjection {
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/specs/fixtures/neural-learning-v1/labs/00-weighted-neuron.json", "role": "cross_package_exact"}
+                {
+                  "path": "code/specs/fixtures/neural-learning-v1/labs/00-weighted-neuron.json",
+                  "role": "cross_package_exact"
+                }
               ],
               "reason": "The three neural fixture consumers read the same exact language-neutral lab fixture outside their program roots.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "repository-rust-fixed-point-q16-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/rust/fixed-point"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": ".cargo/config.toml",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/specs/fixed-point.warrant",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/specs/fixtures/fixed-point-q16-v1/cases.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Rust fixed-point package runs Cargo tests that discover the repository outer target configuration and consume the exact fixed-point Warrant model and v1 cases file.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "repository-rust-game-clock-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/rust/game-clock"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": ".cargo/config.toml",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/specs/fixtures/game-clock-v1/cases.json",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/specs/game-clock.warrant",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Rust game-clock package runs Cargo tests that discover the repository's outer target configuration and include the exact GAME10 Warrant model and v1 cases file.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "repository-typescript-game-input-frame-corpus-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/typescript/game-input-frame"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": ".cargo/config.toml",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/specs/fixtures/game-input-frame-v1/cases.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The TypeScript game-input-frame tests read the exact shared v1 cases file and invoke a locked Rust proof bridge whose root Cargo config is outside the canonical code tree; its inherited TypeScript base config is authorized by typescript-workspace-configuration.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
@@ -264,7 +383,9 @@ enum RepositorySourceInputBoundaryProjection {
               "input_origin": "rust",
               "applies_to": {
                 "exact_roots": [],
-                "descendant_roots": ["code/packages/rust"],
+                "descendant_roots": [
+                  "code/packages/rust"
+                ],
                 "excluded_roots": [
                   "code/packages/rust/erl-nif-bridge",
                   "code/packages/rust/lua-bridge",
@@ -276,21 +397,68 @@ enum RepositorySourceInputBoundaryProjection {
                 ]
               },
               "inputs": [
-                {"path": "code/packages/rust/.cargo/config.toml", "role": "generated_pruning_exception", "generated_component": ".cargo"}
+                {
+                  "path": "code/packages/rust/.cargo/config.toml",
+                  "role": "generated_pruning_exception",
+                  "generated_component": ".cargo"
+                }
               ],
               "reason": "Cargo invocations below the Rust package workspace discover this exact tracked target configuration even though .cargo is pruned as generated by the neutral collector.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "rust-fixed-point-cargo-lock",
+              "input_origin": "rust",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/rust/fixed-point"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/packages/rust/Cargo.lock",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The fixed-point package is a member of the Rust workspace and Cargo resolves its package-wide test commands from the tracked workspace lockfile.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "rust-game-clock-cargo-lock",
+              "input_origin": "rust",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/rust/game-clock"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/packages/rust/Cargo.lock",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The game-clock package is a member of the Rust workspace and Cargo resolves its package-wide test commands from the tracked workspace lockfile.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
               "id": "rust-required-capabilities-input",
               "input_origin": "rust",
               "applies_to": {
-                "exact_roots": ["code/packages/rust/required-capabilities-compiler"],
+                "exact_roots": [
+                  "code/packages/rust/required-capabilities-compiler"
+                ],
                 "descendant_roots": [],
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/rust/weather-agent-e2e/required_capabilities.json", "role": "cross_package_exact"}
+                {
+                  "path": "code/packages/rust/weather-agent-e2e/required_capabilities.json",
+                  "role": "cross_package_exact"
+                }
               ],
               "reason": "The required-capabilities compiler reads this exact tracked weather-agent contract outside its package root; a reverse dependency edge would create a package cycle.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -300,7 +468,9 @@ enum RepositorySourceInputBoundaryProjection {
               "input_origin": "rust",
               "applies_to": {
                 "exact_roots": [],
-                "descendant_roots": ["code/packages/rust"],
+                "descendant_roots": [
+                  "code/packages/rust"
+                ],
                 "excluded_roots": [
                   "code/packages/rust/erl-nif-bridge",
                   "code/packages/rust/lua-bridge",
@@ -312,7 +482,10 @@ enum RepositorySourceInputBoundaryProjection {
                 ]
               },
               "inputs": [
-                {"path": "code/packages/rust/Cargo.toml", "role": "shared_ancestor"}
+                {
+                  "path": "code/packages/rust/Cargo.toml",
+                  "role": "shared_ancestor"
+                }
               ],
               "reason": "Rust workspace members use the tracked root manifest; six echo-only BUILD fronts and the standalone os-kernel crate are explicitly excluded because they do not invoke Cargo.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -325,6 +498,7 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/csharp/bitset-native",
                   "code/packages/fsharp/bitset-native",
                   "code/packages/go/barcode-1d",
+                  "code/packages/go/ct-compare",
                   "code/packages/go/paint-codec-png-native",
                   "code/packages/go/paint-vm-metal-native",
                   "code/packages/go/silicon-rust-go",
@@ -336,6 +510,7 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/kotlin/conduit",
                   "code/packages/kotlin/md5-native",
                   "code/packages/kotlin/sha256-native",
+                  "code/packages/python/ct-compare",
                   "code/packages/swift/Barcode1D",
                   "code/packages/swift/IrcServerNative",
                   "code/packages/swift/PaintCodecPNGNative",
@@ -344,19 +519,52 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/swift/conduit",
                   "code/packages/swift/md5-native",
                   "code/packages/swift/sha256-native",
+                  "code/packages/typescript/ct-compare",
                   "code/packages/typescript/matrix-rust-napi",
                   "code/programs/java/conduit-hello",
                   "code/programs/mosaic/task-app/host/web",
                   "code/programs/rust/ircd",
+                  "code/programs/rust/vos-capacity-probe",
+                  "code/programs/rust/vos-link",
                   "code/programs/swift/conduit-hello"
                 ],
                 "descendant_roots": [],
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/rust/Cargo.toml", "role": "cross_package_exact"}
+                {
+                  "path": "code/packages/rust/Cargo.toml",
+                  "role": "cross_package_exact"
+                }
               ],
               "reason": "These exact cross-language builds invoke Cargo against the tracked Rust workspace manifest or one of its members outside their consumer roots.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "rust-typescript-game-input-frame-proof-workspace-inputs",
+              "input_origin": "rust",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/typescript/game-input-frame"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/packages/rust/.cargo/config.toml",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/packages/rust/Cargo.lock",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/packages/rust/Cargo.toml",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The TypeScript game-input-frame proof bridge invokes Cargo in the Rust workspace and consumes its exact workspace manifest, lockfile, and Rust target configuration.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
@@ -376,7 +584,10 @@ enum RepositorySourceInputBoundaryProjection {
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/rust/_windows_cargo.sh", "role": "shared_ancestor"}
+                {
+                  "path": "code/packages/rust/_windows_cargo.sh",
+                  "role": "shared_ancestor"
+                }
               ],
               "reason": "Only these Rust Windows package builds execute the tracked workspace Cargo launcher above their package roots.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -401,7 +612,10 @@ enum RepositorySourceInputBoundaryProjection {
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/starlark/library-rules/elixir_library.star", "role": "cross_package_exact"}
+                {
+                  "path": "code/packages/starlark/library-rules/elixir_library.star",
+                  "role": "cross_package_exact"
+                }
               ],
               "reason": "These exact Elixir BUILD fronts load the tracked shared Starlark library rule outside their package roots.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -428,7 +642,10 @@ enum RepositorySourceInputBoundaryProjection {
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/starlark/library-rules/go_library.star", "role": "cross_package_exact"}
+                {
+                  "path": "code/packages/starlark/library-rules/go_library.star",
+                  "role": "cross_package_exact"
+                }
               ],
               "reason": "These exact Go BUILD fronts load the tracked shared Starlark library rule outside their package roots.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -437,12 +654,17 @@ enum RepositorySourceInputBoundaryProjection {
               "id": "starlark-ruby-library-rule-consumer",
               "input_origin": "starlark",
               "applies_to": {
-                "exact_roots": ["code/packages/ruby/arithmetic"],
+                "exact_roots": [
+                  "code/packages/ruby/arithmetic"
+                ],
                 "descendant_roots": [],
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/starlark/library-rules/ruby_library.star", "role": "cross_package_exact"}
+                {
+                  "path": "code/packages/starlark/library-rules/ruby_library.star",
+                  "role": "cross_package_exact"
+                }
               ],
               "reason": "The Ruby arithmetic BUILD front loads the tracked shared Starlark library rule outside its package root.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -506,7 +728,10 @@ enum RepositorySourceInputBoundaryProjection {
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/starlark/library-rules/rust_library.star", "role": "cross_package_exact"}
+                {
+                  "path": "code/packages/starlark/library-rules/rust_library.star",
+                  "role": "cross_package_exact"
+                }
               ],
               "reason": "These exact Rust BUILD fronts load the tracked shared Starlark library rule outside their package roots.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -533,9 +758,31 @@ enum RepositorySourceInputBoundaryProjection {
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/starlark/library-rules/typescript_library.star", "role": "cross_package_exact"}
+                {
+                  "path": "code/packages/starlark/library-rules/typescript_library.star",
+                  "role": "cross_package_exact"
+                }
               ],
               "reason": "These exact TypeScript BUILD fronts load the tracked shared Starlark library rule outside their package roots.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "swift-hash-map-v1-corpus-input",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": [
+                  "code/packages/swift/hash-map"
+                ],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {
+                  "path": "code/specs/fixtures/hash-map-v1/cases.json",
+                  "role": "cross_package_exact"
+                }
+              ],
+              "reason": "The Swift hash-map package conformance test reads the neutral DT18 v1 cases file outside its package root.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             },
             {
@@ -550,7 +797,10 @@ enum RepositorySourceInputBoundaryProjection {
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/typescript/tsconfig.base.json", "role": "cross_package_exact"}
+                {
+                  "path": "code/packages/typescript/tsconfig.base.json",
+                  "role": "cross_package_exact"
+                }
               ],
               "reason": "These two TypeScript programs extend the exact package-workspace compiler configuration outside their program roots.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -559,12 +809,17 @@ enum RepositorySourceInputBoundaryProjection {
               "id": "typescript-visicalc-deno-cross-package-inputs",
               "input_origin": "typescript",
               "applies_to": {
-                "exact_roots": ["code/programs/typescript/visicalc-deno"],
+                "exact_roots": [
+                  "code/programs/typescript/visicalc-deno"
+                ],
                 "descendant_roots": [],
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/programs/typescript/visicalc-html/index.html", "role": "cross_package_exact"}
+                {
+                  "path": "code/programs/typescript/visicalc-html/index.html",
+                  "role": "cross_package_exact"
+                }
               ],
               "reason": "The Deno VisiCalc server text-imports this exact tracked sibling HTML input at compile time; its generated WASM-engine bundle is built, not committed, and is not a source input.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -577,13 +832,11 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/typescript/actor",
                   "code/packages/typescript/algol-lexer",
                   "code/packages/typescript/algol-parser",
-                  "code/packages/typescript/analog-waveform",
                   "code/packages/typescript/arithmetic",
                   "code/packages/typescript/arm-simulator",
                   "code/packages/typescript/asciidoc",
                   "code/packages/typescript/asciidoc-parser",
                   "code/packages/typescript/assembler",
-                  "code/packages/typescript/audio-device-sink",
                   "code/packages/typescript/avl-tree",
                   "code/packages/typescript/b-plus-tree",
                   "code/packages/typescript/b-tree",
@@ -630,7 +883,6 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/typescript/diagram-layout-graph",
                   "code/packages/typescript/diagram-to-paint",
                   "code/packages/typescript/directed-graph",
-                  "code/packages/typescript/discrete-waveform",
                   "code/packages/typescript/display",
                   "code/packages/typescript/document-ast",
                   "code/packages/typescript/document-ast-to-html",
@@ -715,6 +967,8 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/typescript/fp-arithmetic",
                   "code/packages/typescript/fpga",
                   "code/packages/typescript/fuzz",
+                  "code/packages/typescript/game-clock",
+                  "code/packages/typescript/game-input-frame",
                   "code/packages/typescript/garbage-collector",
                   "code/packages/typescript/gfm-parser",
                   "code/packages/typescript/gpu-core",
@@ -790,12 +1044,10 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/typescript/nib-parser",
                   "code/packages/typescript/nib-type-checker",
                   "code/packages/typescript/nib-wasm-compiler",
-                  "code/packages/typescript/note-frequency",
                   "code/packages/typescript/os-kernel",
                   "code/packages/typescript/parallel-execution-engine",
                   "code/packages/typescript/parser",
                   "code/packages/typescript/pbt",
-                  "code/packages/typescript/pcm-audio",
                   "code/packages/typescript/pipeline",
                   "code/packages/typescript/pipeline-visualizer",
                   "code/packages/typescript/power-supply",
@@ -873,15 +1125,16 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/typescript/warrant-compiler",
                   "code/packages/typescript/wasm-module-encoder",
                   "code/packages/typescript/wasm-simulator",
-                  "code/packages/typescript/wave",
-                  "code/packages/typescript/web-audio-sink",
                   "code/packages/typescript/xml-lexer"
                 ],
                 "descendant_roots": [],
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/packages/typescript/tsconfig.base.json", "role": "shared_ancestor"}
+                {
+                  "path": "code/packages/typescript/tsconfig.base.json",
+                  "role": "shared_ancestor"
+                }
               ],
               "reason": "Every TypeScript package extends the tracked base compiler configuration at its package-workspace root.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
@@ -890,18 +1143,42 @@ enum RepositorySourceInputBoundaryProjection {
               "id": "warrant-ct-compare-corpus-inputs",
               "input_origin": "repository",
               "applies_to": {
-                "exact_roots": ["code/packages/rust/ca-assurance-report", "code/packages/rust/warrant-grammar"],
+                "exact_roots": [
+                  "code/packages/rust/ca-assurance-report",
+                  "code/packages/rust/warrant-grammar"
+                ],
                 "descendant_roots": [],
                 "excluded_roots": []
               },
               "inputs": [
-                {"path": "code/scripts/tests/test_warrant_corpus_oracle.py", "role": "cross_package_exact"},
-                {"path": "code/scripts/warrant_corpus_oracle.py", "role": "cross_package_exact"},
-                {"path": "code/specs/ct-compare.warrant", "role": "cross_package_exact"},
-                {"path": "code/specs/fixtures/ct-compare-warrant-v1/cases.tfv", "role": "cross_package_exact"},
-                {"path": "code/specs/fixtures/ct-compare-warrant-v1/consumers.json", "role": "cross_package_exact"},
-                {"path": "code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json", "role": "cross_package_exact"},
-                {"path": "code/specs/fixtures/ct-compare-warrant-v1/corpus.json", "role": "cross_package_exact"}
+                {
+                  "path": "code/scripts/tests/test_warrant_corpus_oracle.py",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/scripts/warrant_corpus_oracle.py",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/specs/ct-compare.warrant",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
+                  "role": "cross_package_exact"
+                },
+                {
+                  "path": "code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+                  "role": "cross_package_exact"
+                }
               ],
               "reason": "The Warrant grammar and assurance report packages run corpus and generated-artifact checks that read the exact tracked Warrant spec, corpus, consumer registry and schema files.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"

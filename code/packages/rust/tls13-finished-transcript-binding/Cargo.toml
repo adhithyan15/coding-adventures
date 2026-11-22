@@ -1,0 +1,14 @@
+[package]
+name = "tls13-finished-transcript-binding"
+version = "0.1.0"
+edition = "2021"
+description = "Bind TLS 1.3 Finished verification to an exact selected transcript snapshot"
+license = "MIT"
+
+[dependencies]
+tls13-finished = { path = "../tls13-finished" }
+tls13-transcript = { path = "../tls13-transcript" }
+
+[dev-dependencies]
+coding_adventures_hkdf = { path = "../hkdf" }
+tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }

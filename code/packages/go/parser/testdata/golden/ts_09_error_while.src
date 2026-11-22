@@ -1,0 +1,2 @@
+let ok = 1;
+while (a < b) a = a + 1;

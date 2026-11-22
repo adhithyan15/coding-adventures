@@ -804,6 +804,11 @@ jobs:
 
       - name: Verify repo-wide metadata contracts
         run: |
+          # The inventory is pinned to cb60dc and the checker also verifies
+          # that committed audited inputs at HEAD still match that subject.
+          # Run this on the unconditional metadata path so inventory/checker
+          # edits cannot bypass the semantic controls.
+          python3 code/scripts/validate_dsp_filter_assurance_inventory.py --repo-root . --self-test
           # `lessons.d/` is one file per lesson so concurrent PRs cannot
           # conflict on it. `validate` is what keeps that true: it rejects a
           # duplicate title, a category absent from `_meta.md`, and a filename
@@ -957,6 +962,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_elixir_windows_build_fronts.py'
           python3 code/scripts/validate_elixir_windows_build_fronts.py --format json > /tmp/elixir-windows-build-fronts.json
           python3 -m unittest discover -s code/scripts/tests -p 'test_classical_cipher_fixtures.py'
+          python3 code/specs/fixtures/fenwick-tree-v1/validate.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_barcode_symbologies_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_barcode_layout_1d_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_scytale_fixture_consumers.py'
@@ -991,6 +997,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_swift_runtime_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_qt_runtime_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_flutter_runtime_ci_acceptance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_flutter_android_build_receipt.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_compose_runtime_ci_acceptance.py'
           # Pins ensure-flutter-android-ndk.sh: Flutter's pinned NDK is installed
           # verified and retried, never downloaded by Gradle mid-build.
@@ -1207,11 +1214,22 @@ jobs:
   # too (detect passes -force on them, which makes every registry flag true), so
   # a runner image, kernel or strace change is caught within hours, not at the
   # next Kiln change.
+  #
+  # It runs on BOTH ubuntu-24.04 and ubuntu-26.04 (D27). GitHub's
+  # ubuntu-latest moved to 26.04 (libselinux 3.9, whose tools probe
+  # /sys/fs/selinux at start-up), so a recorder that only passes on one image
+  # would break the day a workflow's label moves. The job id stays
+  # `kiln-sandbox`: ci-gate's `needs['kiln-sandbox'].result` is the aggregate
+  # of the legs, so one failing image fails the gate.
   kiln-sandbox:
-    name: Kiln sandbox (linux/amd64)
+    name: Kiln sandbox (linux/amd64, ${{ matrix.os }})
     needs: detect
     if: needs.detect.outputs.run_kiln_sandbox == 'true'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-26.04]
     timeout-minutes: 30
     permissions:
       contents: read
@@ -1241,19 +1259,52 @@ jobs:
 
       - name: Install strace for the real-strace sandbox test
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        # Both runner images ship strace, so only touch apt when it is missing:
+        # refreshing the apt index against a stalled mirror failed this required job
+        # with nothing Kiln-related wrong (2026-11-19, PR #19689).
         run: |
-          bash code/scripts/ci/apt-install.sh strace
+          if command -v strace >/dev/null 2>&1; then
+            echo "strace preinstalled: $(strace -V | head -1)"
+          else
+            bash code/scripts/ci/apt-install.sh strace
+          fi
+          strace -V | head -1
 
       - name: Run the sandbox tests (skips are failures)
         working-directory: code/programs/go/kiln
         env:
           KILN_REQUIRE_SANDBOX: '1'
+          # D24 (KILN04 section 4.9): every trace real strace produces here is
+          # parsed by BOTH the old scanner and the grammar path, and a
+          # disagreement fails the test with a bounded, sanitised window of the
+          # lines around it in the job log.  (No artifact is uploaded: the
+          # window is the only thing kept, and it stays in this job's log.)
+          KILN_TRACE_DIFF: '1'
+          # Gate G1 (grammar-path pass-1 throughput floor, KILN04 4.9) is enforced
+          # only in this dedicated job.  The general build job runs kiln's tests in
+          # parallel with many other packages, so a floor there measures the runner.
+          # assert_sandbox_tests.py requires a gated=1 synthetic-slice line, so a
+          # job without this variable fails.
+          KILN_G1_GATE: '1'
         shell: bash
         run: |
           set -euo pipefail
           strace --version | head -1
           uname -r
+          # The runner fleet varies ~1.75x in CPU speed and G1 normalises by a
+          # reference kernel (KILN04 4.9), so record which CPU this leg got.
+          grep -m1 'model name' /proc/cpuinfo || true
+          nproc
           go test -count=1 -run Sandbox -v -json . > "$RUNNER_TEMP/kiln-sandbox.json"
+
+      # The assertion script's own tests (the G1 gate, the D34 cross-check census
+      # and this job's wiring). No workflow discovered this file before D34.
+      - name: Test the sandbox assertion script
+        if: always()
+        shell: bash
+        run: |
+          python3 -m unittest discover -s code/scripts/tests -p 'test_assert_kiln_sandbox_tests.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_census_not_clean.py'
 
       # Runs even when the tests failed: the JSON stream is the only record of
       # which test failed and why, and this step prints it. It also fails the
@@ -3903,7 +3954,11 @@ jobs:
             mkdir -p "$phone_runtime"
             cp -R "$jni_libs" "$phone_runtime/android"
             echo "::group::$name (Flutter, Android)"
-            bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" "$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"
+            if [[ "$name" == trestle ]]; then
+              MOSAIC_NATIVE_DIAGNOSTICS=true bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" "$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"
+            else
+              bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" "$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"
+            fi
             echo "::endgroup::"
           done 3<<EOF
           code/programs/mosaic/task-app $RUNNER_TEMP/mosaic-trestle-jnilibs trestle
@@ -3919,6 +3974,7 @@ jobs:
         timeout-minutes: 65
         env:
           MOSAIC_FLUTTER_LANE: ${{ needs.detect.outputs.needs_mosaic_flutter_runtime }}
+          MOSAIC_NATIVE_DIAGNOSTICS_CAPTURE: '1'
         run: |
           set -euo pipefail
           # Let the runner's user open /dev/kvm (GitHub's documented recipe).
@@ -4302,7 +4358,7 @@ jobs:
           bundle config get mirror.https://rubygems.org
 
       - name: Set up Node.js
-        if: needs.detect.outputs.needs_typescript == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
+        if: needs.detect.outputs.needs_typescript == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_dart == 'true'
         uses: actions/setup-node@v7
         with:
           node-version: '22.23.5'
@@ -4539,8 +4595,15 @@ jobs:
       - name: Install strace for the cargo runtime capability gate
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        # strace ships on the runner image; only touch apt when it is missing
+        # (an apt index refresh stalled on a mirror and failed kiln-sandbox, 2026-11-19).
         run: |
-          bash code/scripts/ci/apt-install.sh strace
+          if command -v strace >/dev/null 2>&1; then
+            echo "strace preinstalled: $(strace -V | head -1)"
+          else
+            bash code/scripts/ci/apt-install.sh strace
+          fi
+          strace -V | head -1
 
       - name: Install Venture Qt acceptance dependencies
         if: (needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
@@ -4671,7 +4734,9 @@ jobs:
         if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
         shell: pwsh
         run: |
-          winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements --source winget
+          # Pin 6.4.2: Swift 6.4.3 fails Package.swift manifest compilation on windows-2025
+          # ("Missing or empty JSON output from manifest compilation").
+          winget install --id Swift.Toolchain --version 6.4.2 --exact --accept-package-agreements --accept-source-agreements --source winget
           $wingetExitCode = $LASTEXITCODE
 
           if ($wingetExitCode -ne 0) {

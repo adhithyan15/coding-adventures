@@ -1192,3 +1192,47 @@ func readSubjectMetadataForTest(t *testing.T, path string) SubjectMetadata {
 	}
 	return metadata
 }
+
+func TestTrialCountBoundsPreventAllocationOverflow(t *testing.T) {
+	// ValidateManifest rejects negative and huge trial counts.
+	for _, tc := range []struct {
+		name        string
+		warmup      int
+		measurement int
+	}{
+		{"negative warmup", -1, 1},
+		{"zero measurement", 0, 0},
+		{"huge warmup", maxBenchmarkTrials + 1, 1},
+		{"huge measurement", 0, maxBenchmarkTrials + 1},
+	} {
+		m := validTinyManifest()
+		m.Defaults.WarmupTrials = tc.warmup
+		m.Defaults.MeasurementTrials = tc.measurement
+		if err := ValidateManifest(m); err == nil {
+			t.Errorf("%s: ValidateManifest succeeded, want error", tc.name)
+		}
+	}
+
+	// runTCPRESPWorkload and runCommandWorkload reject negative/huge/overflowing
+	// trial counts before summing or allocating the trials slice.
+	subject := PreparedSubject{Subject: Subject{Name: "s"}}
+	workload := Workload{Name: "w", Expect: "+OK\r\n"}
+	huge := math.MaxInt/2 + 1
+	for _, tc := range []struct {
+		name     string
+		defaults Defaults
+	}{
+		{"negative warmup", Defaults{WarmupTrials: -1, MeasurementTrials: 1}},
+		{"zero measurement", Defaults{WarmupTrials: 0, MeasurementTrials: 0}},
+		{"huge warmup", Defaults{WarmupTrials: maxBenchmarkTrials + 1, MeasurementTrials: 1}},
+		{"huge measurement", Defaults{WarmupTrials: 0, MeasurementTrials: maxBenchmarkTrials + 1}},
+		{"sum overflow", Defaults{WarmupTrials: huge, MeasurementTrials: huge}},
+	} {
+		if _, err := runTCPRESPWorkload(subject, workload, tc.defaults, "", nil, nil); err == nil {
+			t.Errorf("runTCPRESPWorkload(%s): succeeded, want error", tc.name)
+		}
+		if _, err := runCommandWorkload(subject, workload, tc.defaults, nil, nil); err == nil {
+			t.Errorf("runCommandWorkload(%s): succeeded, want error", tc.name)
+		}
+	}
+}

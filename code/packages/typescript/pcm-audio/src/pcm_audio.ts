@@ -42,7 +42,7 @@ export interface WavHeaderInfo {
  */
 export function clampToPcm16(v: number): number {
   if (typeof v !== "number" || !Number.isFinite(v)) {
-    throw new TypeError(`value must be a finite number, got ${String(v)}`);
+    throw new TypeError(`value must be a finite number, got ${safeFormatValue(v)}`);
   }
   const intVal = Math.trunc(v);
   if (intVal > PCM16_MAX) {
@@ -171,8 +171,8 @@ export class PCMBuffer {
   }
 
   timeAt(index: number): number {
-    if (!Number.isInteger(index)) {
-      throw new TypeError(`index must be an integer, got ${String(index)}`);
+    if (typeof index !== "number" || !Number.isSafeInteger(index)) {
+      throw new TypeError(`index must be an integer, got ${safeFormatValue(index)}`);
     }
     if (index < 0 || index >= this.sampleCount()) {
       throw new RangeError(
@@ -225,6 +225,15 @@ export function encodeSampleBuffer(
     pcmFormat === undefined
       ? new PCMFormat(sampleBuffer.sampleRateHz)
       : pcmFormat;
+
+  if (
+    (Array.isArray(sampleBuffer.samples) || ArrayBuffer.isView(sampleBuffer.samples)) &&
+    "length" in sampleBuffer.samples &&
+    typeof sampleBuffer.samples.length === "number" &&
+    sampleBuffer.samples.length > MAX_SAMPLES
+  ) {
+    throw new RangeError(`sample count exceeds MAX_SAMPLES=${String(MAX_SAMPLES)}`);
+  }
 
   const pcmSamplesArray: number[] = [];
   let clippedSampleCount = 0;
@@ -533,14 +542,14 @@ function validateSampleRate(name: string, value: number): number {
 
 function finiteFloat(name: string, value: number): number {
   if (typeof value !== "number" || Number.isNaN(value) || !Number.isFinite(value)) {
-    throw new TypeError(`${name} must be a finite real number, got ${String(value)}`);
+    throw new TypeError(`${name} must be a finite real number, got ${safeFormatValue(value)}`);
   }
   return value;
 }
 
 function nonNegativeInt(name: string, value: number): number {
-  if (typeof value !== "number" || !Number.isInteger(value)) {
-    throw new TypeError(`${name} must be an integer >= 0, got ${String(value)}`);
+  if (typeof value !== "number" || !Number.isSafeInteger(value)) {
+    throw new TypeError(`${name} must be an integer >= 0, got ${safeFormatValue(value)}`);
   }
   if (value < 0) {
     throw new RangeError(`${name} must be >= 0, got ${String(value)}`);
@@ -574,14 +583,22 @@ function validateIntegerSamples(samples: Iterable<number>): number[] {
   if (!isIterable(samples)) {
     throw new TypeError("samples must be an iterable of integers");
   }
+  if (
+    (Array.isArray(samples) || ArrayBuffer.isView(samples)) &&
+    "length" in samples &&
+    typeof samples.length === "number" &&
+    samples.length > MAX_SAMPLES
+  ) {
+    throw new RangeError(`sample count exceeds MAX_SAMPLES=${String(MAX_SAMPLES)}`);
+  }
   const checkedArray: number[] = [];
   for (const sample of samples) {
     if (checkedArray.length >= MAX_SAMPLES) {
       throw new RangeError(`sample count exceeds MAX_SAMPLES=${String(MAX_SAMPLES)}`);
     }
-    if (typeof sample !== "number" || !Number.isInteger(sample) || sample < PCM16_MIN || sample > PCM16_MAX) {
+    if (typeof sample !== "number" || !Number.isSafeInteger(sample) || sample < PCM16_MIN || sample > PCM16_MAX) {
       throw new RangeError(
-        `PCM samples must be signed 16-bit integers in [${String(PCM16_MIN)}, ${String(PCM16_MAX)}], got ${String(
+        `PCM samples must be signed 16-bit integers in [${String(PCM16_MIN)}, ${String(PCM16_MAX)}], got ${safeFormatValue(
           sample,
         )}`,
       );
@@ -589,6 +606,20 @@ function validateIntegerSamples(samples: Iterable<number>): number[] {
     checkedArray.push(sample);
   }
   return checkedArray;
+}
+
+function safeFormatValue(value: unknown): string {
+  if (typeof value === "symbol") {
+    return value.toString().slice(0, 1024);
+  }
+  if (typeof value === "string") {
+    return value.slice(0, 1024);
+  }
+  try {
+    return String(value).slice(0, 1024);
+  } catch {
+    return Object.prototype.toString.call(value).slice(0, 1024);
+  }
 }
 
 function isIterable(value: unknown): value is Iterable<number> {

@@ -147,6 +147,10 @@ pub struct AssuranceReport {
     pub weaknesses: Vec<WeaknessRow>,
     pub claims: Vec<ClaimEvidence>,
     pub rungs: RungsSummary,
+    /// One rung per language lane the consumer registry lists (VER04i 8.3).
+    /// Isolated from every Rust-only field of the report, and never part of
+    /// the verdict.
+    pub lanes: Vec<crate::lane_report::LaneRung>,
     pub public_symbols_without_claims: Vec<String>,
     pub exemptions: Vec<ComputedExemption>,
     pub verdict: String,
@@ -324,6 +328,9 @@ impl AssuranceReport {
         r_map.insert("E4".into(), JsonValue::String(self.rungs.e4.clone()));
         r_map.insert("E5".into(), JsonValue::String(self.rungs.e5.clone()));
         map.insert("rungs".into(), JsonValue::Object(r_map));
+
+        // Lane rungs (WD-004b2): one per registered language lane.
+        map.insert("lanes".into(), crate::lane_report::lanes_to_json(&self.lanes));
 
         // Public symbols without claims
         let sym_arr = self
@@ -670,6 +677,14 @@ impl AssuranceReport {
             e5,
         };
 
+        // Required: a report without `lanes` predates WD-004b2, and stripping the
+        // field would hide a lane, so it is refused rather than read as `[]`.
+        let lanes = crate::lane_report::lanes_from_json(
+            obj.get("lanes")
+                .ok_or_else(|| ReportError::Validation("missing 'lanes' (VER04i section 8.3)".into()))?,
+        )
+        .map_err(|e| ReportError::Validation(format!("lanes: {e}")))?;
+
         let public_symbols_without_claims = obj
             .get("public_symbols_without_claims")
             .and_then(|v| v.as_array())
@@ -730,6 +745,7 @@ impl AssuranceReport {
             weaknesses,
             claims,
             rungs,
+            lanes,
             public_symbols_without_claims,
             exemptions,
             verdict,

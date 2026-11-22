@@ -1,9 +1,9 @@
 //! # Bounded TLS 1.3 key-share framing
 //!
 //! This crate validates and frames public TLS 1.3 `KeyShareEntry` values under
-//! the repository-owned named-group policy. Client shares are retained without
-//! allocation, and one ServerHello share must select a group from the exact
-//! retained client offer.
+//! the repository-owned named-group policy. Client shares and their exact
+//! complete extension data are retained without allocation, and one
+//! ServerHello share must select a group from the exact retained client offer.
 //!
 //! It performs no key agreement, entropy access, secret handling, transcript
 //! update, handshake processing, certificate validation, I/O, or networking.
@@ -98,7 +98,7 @@ pub enum KeyShareErrorKind {
     TruncatedClientVectorLength,
     /// The declared ClientHello vector length does not consume the exact input.
     ClientVectorLengthMismatch,
-    /// The reviewed client profile requires at least one key share.
+    /// Legacy category retained for source compatibility; it is no longer emitted.
     EmptyClientShareList,
     /// The caller or wire input exceeds the retained-entry ceiling.
     TooManyClientShares,
@@ -219,7 +219,10 @@ impl fmt::Debug for EncodedClientKeyShares<'_> {
     }
 }
 
-/// Encode a nonempty, duplicate-free ClientHello key-share list.
+/// Encode a duplicate-free ClientHello key-share list.
+///
+/// An empty list emits the exact `00 00` vector used to request a
+/// HelloRetryRequest group selection round trip.
 ///
 /// Complete list, wire-length, and output-capacity checks finish before output
 /// changes. Extra output capacity remains untouched.
@@ -266,13 +269,20 @@ pub fn encode_client_key_shares<'output>(
 /// Decoded ClientHello key shares bound to policy-selected groups.
 ///
 /// The value is deliberately neither `Copy` nor `Clone` and retains the exact
-/// public bytes supplied by the peer.
+/// complete extension data and public key-exchange bytes supplied by the peer.
 pub struct DecodedClientKeyShares<'input> {
+    extension_data: &'input [u8],
     entries: [Option<ClientKeyShareEntry<'input>>; MAX_KEY_SHARE_ENTRIES],
     entry_count: usize,
 }
 
-impl DecodedClientKeyShares<'_> {
+impl<'input> DecodedClientKeyShares<'input> {
+    /// Borrow the exact two-byte-length-prefixed ClientHello extension data.
+    #[must_use]
+    pub const fn extension_data(&self) -> &'input [u8] {
+        self.extension_data
+    }
+
     /// Return the number of retained entries.
     #[must_use]
     pub const fn len(&self) -> usize {
@@ -286,7 +296,7 @@ impl DecodedClientKeyShares<'_> {
     }
 
     /// Iterate over retained entries in wire order.
-    pub fn entries(&self) -> impl Iterator<Item = &ClientKeyShareEntry<'_>> {
+    pub fn entries(&self) -> impl Iterator<Item = &ClientKeyShareEntry<'input>> {
         self.entries[..self.entry_count]
             .iter()
             .map(|entry| entry.as_ref().expect("retained prefix is initialized"))
@@ -324,11 +334,8 @@ pub fn decode_client_key_shares<'input>(
             KeyShareErrorKind::ClientVectorLengthMismatch,
         ));
     }
-    if declared_length == 0 {
-        return Err(KeyShareError::new(KeyShareErrorKind::EmptyClientShareList));
-    }
-
     let mut decoded = DecodedClientKeyShares {
+        extension_data: input,
         entries: core::array::from_fn(|_| None),
         entry_count: 0,
     };
@@ -422,9 +429,6 @@ pub fn decode_server_key_share<'input, 'offer, 'client_input>(
 }
 
 fn validate_entry_collection(entries: &[ClientKeyShareEntry<'_>]) -> Result<(), KeyShareError> {
-    if entries.is_empty() {
-        return Err(KeyShareError::new(KeyShareErrorKind::EmptyClientShareList));
-    }
     if entries.len() > MAX_KEY_SHARE_ENTRIES {
         return Err(KeyShareError::new(KeyShareErrorKind::TooManyClientShares));
     }

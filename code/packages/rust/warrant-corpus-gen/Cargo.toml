@@ -1,0 +1,27 @@
+[package]
+name = "coding_adventures_warrant_corpus_gen"
+version = "0.6.0"
+edition = "2021"
+description = "Warrant corpus v2 emitter (VER04r slice S3): ir.core lowering, evaluator, enumeration, digests, fault IR and controls, corpus.json/chunk/cases.tfv emission and --check"
+license = "MIT"
+
+[dependencies]
+# The S2 public API (VER04r CV2-S2): the parsed and checked document, the fixed-width
+# arithmetic helpers and, from S3b, the resolved-domain enumerator.
+coding_adventures_warrant_grammar = { path = "../warrant-grammar" }
+# SHA-256: `profile_sha256` (the digest of corpus.profile, VER04r 1.4) and, from S3b, the
+# chunk, suite and v1 whole-suite digests (streaming `Sha256Hasher`).
+coding_adventures_sha256 = { path = "../sha256" }
+
+[[bin]]
+name = "warrant-corpus-gen"
+path = "src/bin/warrant-corpus-gen.rs"
+
+[features]
+# Seeded-wrong controls (a wrong evaluator, a reordered domain, a lowered work-stack bound).
+# They exist only so tests can prove the digests can fail; the crate's own integration tests
+# enable them through the dev-dependency below.
+test-hooks = []
+
+[dev-dependencies]
+coding_adventures_warrant_corpus_gen = { path = ".", features = ["test-hooks"] }

@@ -2,11 +2,48 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased — regenerated evidence harness (VOS-038c)
+
+- `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence`: the allocation observer counts the
+  export call only (VOS-D063, VER04j 14.3 item 54). No `heap` or `output` row changes; a recorded
+  `max_observed_heap` can only be lower, because the adapter's own copies are no longer charged.
+
+## Unreleased — regenerated evidence harness (VOS-038b)
+
+- `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the refinement sampler (a low-acceptance refinement over an enumerable domain is drawn from its admissible set; VER04h 4.1) and the observer timeout clamp (`WARRANT_OBS_TIMEOUT_SECS` at most 24 h, `checked_add` deadline; VER04j). No test, case count or recorded evidence manifest changes.
+
 ## [Unreleased] — Warrant-derived evidence (LEB01, VER04h)
 
 No change to the public API. One behaviour fix (SEC-006, below): the bounded
 decoders reject `max_bits > 64`. (Cargo.toml stays at 0.2.0: this whole entry is
 unreleased and the version is bumped at release.)
+
+### Changed
+
+- **VER04r D28: the two encoder bound claims are split (42 to 44 claims).** In
+  `code/specs/wasm-leb128.warrant`, `encode_unsigned_at_most_ten_bytes` and
+  `encode_signed_at_most_ten_bytes` (`len(f(v)) >= 1 and len(f(v)) <= 10`, a subject call under
+  an impure guard, which the warrant-corpus-v2 generator refuses as `W0701`) become, each, two
+  claims: the new `encode_unsigned_at_least_one_byte` / `encode_signed_at_least_one_byte`
+  (`len(f(v)) >= 1`, inserted immediately before) and the unchanged-name
+  `encode_unsigned_at_most_ten_bytes` / `encode_signed_at_most_ten_bytes` (now `len(f(v)) <= 10`).
+  The two halves state exactly what the conjunction stated. Regenerated with
+  `gen_evidence wasm-leb128`: `tests/generated/warrant_evidence.rs` (174 lines), the evidence
+  manifest (251 entries, was 245; 46,566,930 exhaustive cases, was 46,565,930), the proof manifest
+  (`spec_sha256` only) and `assurance_report.json` (`encode_*` exhaustive cases 1,131 to 1,508 and
+  1,869 to 2,492, fuzz iterations and property cases one suite more each). The 20 sabotage lines in
+  `BUILD*` are unchanged and pass: their filters name claims that are not renamed. No source, no
+  API, no `evidence.bindings` change. `README.md` points at the new v2 corpus fixture.
+
+
+- **WD-HARN1c: negative controls run through the shared checker.** All 20 sabotage lines in
+  each of `BUILD`, `BUILD_linux` and `BUILD_windows` now call
+  `code/scripts/warrant_negctl.py -- cargo test ...` instead of an `awk` pipe (Unix) or a
+  `%TEMP%` capture plus `findstr` (Windows). Every fault, filter and cargo argument is
+  unchanged and in the same order. The checker also requires a non-zero exit, exactly one TAP
+  plan and test points numbered `1..N`, and prints the captured output when a control fails
+  (the Windows lines printed nothing). Each BUILD file declares `# needs-toolchain: python`.
+  No source, test or evidence change.
 
 ### Fixed
 

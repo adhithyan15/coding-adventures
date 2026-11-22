@@ -1,0 +1,59 @@
+## Unreleased - CV2-S5a: the oracle derives the v2 conformance cases and kills a mutant list
+
+No version bump, no emitted byte changes, no committed file outside this package (S5b commits the fixture).
+
+### Added
+
+- `src/coding_adventures_warrant_oracle/conformance.py`, the derivation module of VER04r section 11 (R19, R25, R26):
+  the strict JSON reader of VER04i 9.1, the section 2.1 type text and the section 2.3 value decoder (built on
+  `decode_int_text` and the oracle's stream encoder), evaluation with pure stand-in models and the pure call trace
+  for `v2-ir`, a descriptor-JSON to `nth` reader (`desc_from_json`) for `v2-domain`, the chunk-file and
+  `slim_chunks` checks of sections 5.5 and 14 and single-chunk enumeration for `v2-chunk`, the three fault wrappers
+  over `faults.fault_row` for `v2-fault`, the mapping from the oracle's codes to the kit's closed vocabulary
+  (`classify_ir_refusal`), the case envelope (`Row`, `finish_case`: id, summary, `requires`, `expect`), and the
+  canonical writer and index rows (`build_files`). The module reads no file.
+- `tests/fixtures/conformance-v2/`: the hand-written case tables (`cases_value.py`, `cases_arith.py`, `cases_ir.py`,
+  `cases_domain.py`, `cases_chunk.py`, `cases_fault.py`; 734 cases in the six categories, every one with `requires`
+  `["ir.core"]`), the two kit documents the `v2-chunk` cases come from (`kit.warrant` with a `2**24` suite and
+  `kit-small.warrant` at `chunk_size 1024`, with their profiles, which declare no fault), and `make_conformance.py`
+  (`--write` and `--check`, `--fixture DIR`; exit 0 identical, 1 differs, 2 a table and its derivation disagree).
+  A table intent that disagrees with the oracle fails the build naming the case id.
+- `tests/test_conformance.py` (every function and branch of the module), `tests/test_conformance_tables.py` (the
+  ten slugs of section 3.4, every Appendix A tag, every `ir.core` leaf descriptor, every code of every closed error
+  set, the S5-0 erratum on `unknown-tag` vectors, the CLI exit codes), `tests/test_conformance_cross.py` (second
+  opinions: Python integers, `struct.pack`, a naive chunk enumerator, the formulas of section 5.1, the cost model,
+  and the v1 checker's reader and canonical writer) and `tests/test_conformance_mutants.py` (the mutant test of
+  [D42]: sixteen named wrong evaluators, each changing a case of each category it is named for).
+- `tests/conftest.py`: a session fixture `kit` that derives the whole kit once (about a minute).
+
+### Notes
+
+- Nothing is written to `code/specs/fixtures`; the generated files exist only in a scratch directory until S5b.
+- `BUILD` and `BUILD_windows` are unchanged (pytest already runs `tests/`); S5b adds `make_conformance.py --check`.
+- The depth conventions are pinned (R40) and the other open points are recorded in the fixture README: the static
+  width of a `Bytes` literal is kept out of every result type; the second kit document exists because
+  `chunk_size 1024` cannot hold a `2**24` suite.
+
+### Changed (review fixes)
+
+- `parse_type` counts a bare name as depth 0 (16 wrappers accepted, 17 refused); cases `type-depth-16-wrappers` and
+  `result-nested-15-accepted` / `-16-refused` / `-17-refused` pin both depth conventions.
+- [D58]: no `Int` `lit` over 20 digits. Eight table cases removed (plus `int-mul-by-zero`); the window edge is reached
+  by arithmetic in `v2-ir` (`int-window-edge-by-arithmetic` and its neighbours).
+- `derive_fault` reads every derived output back through `decode_value` (a bad one is a `KitError`); `requires_of`
+  unions a fault's levels with `ir.core`; an undeclared `err` case is `ill-typed` (R41, `undeclared_err_case`) with
+  vectors for it and for a `subject_op` of an op missing from `ops` (R45).
+- Single-code cases: `malformed-wins-over-type` uses `Bool`; `["err", ...]` cases pass `types=ERR`; the `v2-chunk`
+  slim tampers re-seal the slim digests and the 32-entry case is the base set plus extras; `corpus-wrong-product`
+  also bumps `discarded`; `short` now refines `a != 255u8` so its calls (64,770) differ from its cases (65,280).
+- Removed `test_a_chunk_alone_equals_the_same_chunk_after_its_predecessors`, which compared a chunk with itself.
+
+### Changed (R41, R45; erratum S5a-0)
+
+- New vectors: `v2-chunk/corpus-chunks-not-ceil-of-product-over-chunk-size`, `corpus-max-ir-cost-below-the-floor`,
+  `chunk-file-row-discarded-wrong`; `v2-value/bytes-n-leading-zero-type` (`Bytes<07>`). The other R45 rows (`ill-typed`
+  for an undeclared `err` or a `subject_op` of a missing op, `ir-cost` for `max_ir_cost`) were added earlier.
+- R45 f: `schema_index` makes a negative or non-integer `index`, `range` bound, `chunk`, `chunk_size` or
+  `slim_chunks` entry a `KitError` (the build fails), where it was a `corpus`, `slim-chunks` or `index` outcome.
+- R41: the derivation refuses (`KitError`) a `v2-ir` case whose derived type has an undetermined component, by walking
+  the type (`_undetermined`) rather than searching its text.
