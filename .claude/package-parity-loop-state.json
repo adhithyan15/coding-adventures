@@ -19336,7 +19336,8 @@
         "dart-swift-language-frontends-neutral-fixtures"
       ],
       "branch": "feat/dart-typescript-frontend-vertical-parity",
-      "pr_number": null,
+      "pr_number": 19826,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19826",
       "notes": "Dart subtranche of TypeScript frontend vertical parity. Delivers coding_adventures_typescript_lexer and coding_adventures_typescript_parser with seven embedded editions (typescript, ts1.0, ts2.0, ts3.0, ts4.0, ts5.0, ts5.8), combined nesting-depth defense (64) covering delimiters and prefix-operator chains, token ceiling, and shared neutral fixture conformance."
     },
     {
