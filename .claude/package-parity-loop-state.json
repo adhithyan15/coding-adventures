@@ -19362,13 +19362,15 @@
     {
       "id": "dart-excel-frontend-vertical-parity",
       "title": "Port Excel lexer and parser vertical to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "dart-swift-language-frontends-neutral-fixtures"
       ],
       "branch": "feat/dart-excel-frontend-vertical-parity",
       "pr_number": 19819,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19819",
+      "merged_at": "2026-11-21T22:47:38Z",
+      "merge_commit": "5fa878e0e879839b55032526da9b8f61287f19c3",
       "notes": "Dart subtranche of Excel frontend vertical parity. Delivers coding_adventures_excel_lexer and coding_adventures_excel_parser with FUNCTION_NAME/TABLE_NAME promotion, COLUMN_REF/ROW_REF normalization, delimiter nesting depth defense (64, Excel's own limit), token ceiling, and shared neutral fixture conformance."
     },
     {
@@ -19403,11 +19405,24 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "dart-vhdl-frontend-vertical-parity",
+      "title": "Port VHDL lexer and parser vertical to Dart",
+      "status": "pr-open",
+      "depends_on": [
+        "dart-swift-language-frontends-neutral-fixtures"
+      ],
+      "branch": "feat/dart-vhdl-frontend-vertical-parity",
+      "pr_number": 19825,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19825",
+      "notes": "Dart subtranche of VHDL frontend vertical parity. Delivers coding_adventures_vhdl_lexer and coding_adventures_vhdl_parser with five embedded editions (1987/1993/2002/2008/2019), case-folding keyword retyping, a combined nesting-depth defense (64) covering parentheses, block-opening keywords and prefix-operator chains, token ceiling, and shared neutral fixture conformance."
+    },
+    {
       "id": "dart-swift-vhdl-frontend-vertical-parity",
       "title": "Port VHDL lexer and parser verticals to Dart and Swift",
       "status": "pending",
       "depends_on": [
-        "dart-swift-language-frontends-neutral-fixtures"
+        "dart-swift-language-frontends-neutral-fixtures",
+        "dart-vhdl-frontend-vertical-parity"
       ],
       "branch": null,
       "pr_number": null,
