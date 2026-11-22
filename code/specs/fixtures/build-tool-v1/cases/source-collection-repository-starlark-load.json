@@ -12,7 +12,7 @@
       "mode": "repository_boundary",
       "language": "go",
       "package_root": "code/packages/go/arithmetic",
-      "boundary_sha256": "411049c9f4c7d156aec9280209f36fb6d7dab3496580e751bc3841a32789ed6f",
+      "boundary_sha256": "43dcbadfc86dd1a7d010b7e57d1b9958793d5ae32547b2da8ccab7f6bc37dd64",
       "candidates": [
         {"path": "code/packages/starlark/library-rules/go_library.star", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
         {"path": "code/packages/starlark/library-rules/rust_library.star", "kind": "file", "tracked": true, "content_hex": "6f746865720a"}
