@@ -682,6 +682,7 @@ Ruby          UUID::Error < StandardError
 Go            error (returned as second value)
 Rust          UuidError (enum with variants: InvalidFormat, InvalidLength)
 Elixir        {:error, :invalid_format} | {:error, :invalid_length}
+Dart          UuidError implements Exception (message carries the reason)
 ```
 
 Functions that can fail:
@@ -801,6 +802,30 @@ Functions that can fail:
 #                   nil_uuid/0, max_uuid/0
 # Errors returned as {:ok, uuid} | {:error, :invalid_format}
 # Namespace constants defined as module attributes.
+```
+
+### Dart
+
+```dart
+// lib/coding_adventures_uuid.dart  (package: coding_adventures_uuid)
+//
+// Uses:
+//   Random.secure()                       -- CSPRNG (dart:math)
+//   coding_adventures_md5.sumMd5()        -- MD5 for v3 (in-lane path dep)
+//   coding_adventures_sha1.sum1()         -- SHA-1 for v5 (in-lane path dep)
+//   DateTime.now().microsecondsSinceEpoch -- timestamps (microsecond
+//     granularity; v1 derives its 100ns count as microseconds * 10)
+//
+// Uuid is a class wrapping a 16-byte Uint8List. Static factories v1/v3/v4/v5/v7,
+// parse/isValid; instance getters version/variant/isNil/isMax/bytes; value
+// equality, Comparable ordering on raw bytes, and hashCode.
+// UuidError implements Exception; parse/fromBytes throw it.
+// Namespace constants are static final Uuid values (Uint8List has no const
+// constructor, so they cannot be compile-time consts).
+//
+// JavaScript note: millisecond/microsecond math stays in 64-bit int range on
+// the VM; compiled to JS, DateTime still returns exact ints within 2^53 and
+// all UUID timestamps are far below that bound.
 ```
 
 ---
