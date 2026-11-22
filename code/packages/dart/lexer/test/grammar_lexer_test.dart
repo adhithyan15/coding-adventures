@@ -268,4 +268,156 @@ FOO = /\\bfoo/
       expect(grammarTokenize(r'"a\"', grammar).first.value, equals(r'a\'));
     });
   });
+
+  group('grammarTokenize mode: indentation', () {
+    final indentationGrammar = parseTokenGrammar('''
+mode: indentation
+NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+INT = /[0-9]+/
+STRING = /"([^"\\\\\\n]|\\\\.)*"/
+LPAREN = "("
+RPAREN = ")"
+LBRACK = "["
+RBRACK = "]"
+LBRACE = "{"
+RBRACE = "}"
+COLON = ":"
+EQUALS = "="
+COMMA = ","
+skip:
+  COMMENT = /#[^\\n]*/
+  SPACE = /[ ]+/
+''');
+
+    test('tokenizes nested indentation blocks and multi-level dedents', () {
+      const source = '''
+def foo():
+    if 1:
+        x = 1
+y = 2
+''';
+      final tokens = grammarTokenize(source, indentationGrammar);
+      final types = tokens.map((t) => t.type).toList();
+      expect(types, [
+        'NAME', 'NAME', 'LPAREN', 'RPAREN', 'COLON', 'NEWLINE',
+        'INDENT', 'NAME', 'INT', 'COLON', 'NEWLINE',
+        'INDENT', 'NAME', 'EQUALS', 'INT', 'NEWLINE',
+        'DEDENT', 'DEDENT',
+        'NAME', 'EQUALS', 'INT', 'NEWLINE',
+        'EOF',
+      ]);
+    });
+
+    test('skips blank and comment-only lines without emitting indent/dedent', () {
+      const source = '''
+x = 1
+
+    # indented comment
+y = 2
+''';
+      final tokens = grammarTokenize(source, indentationGrammar);
+      final types = tokens.map((t) => t.type).toList();
+      expect(types, [
+        'NAME', 'EQUALS', 'INT', 'NEWLINE',
+        'NAME', 'EQUALS', 'INT', 'NEWLINE',
+        'EOF',
+      ]);
+    });
+
+    test('suppresses newlines and ignores indentation inside brackets', () {
+      const source = '''
+items = [
+    1,
+    2,
+]
+''';
+      final tokens = grammarTokenize(source, indentationGrammar);
+      final types = tokens.map((t) => t.type).toList();
+      expect(types, [
+        'NAME', 'EQUALS', 'LBRACK',
+        'INT', 'COMMA',
+        'INT', 'COMMA',
+        'RBRACK', 'NEWLINE',
+        'EOF',
+      ]);
+    });
+
+    test('flushes trailing NEWLINE and DEDENTs at EOF when trailing newline is missing', () {
+      const source = 'if 1:\n    x = 1';
+      final tokens = grammarTokenize(source, indentationGrammar);
+      final types = tokens.map((t) => t.type).toList();
+      expect(types, [
+        'NAME', 'INT', 'COLON', 'NEWLINE',
+        'INDENT', 'NAME', 'EQUALS', 'INT', 'NEWLINE',
+        'DEDENT', 'EOF',
+      ]);
+    });
+
+    test('handles empty input and whitespace-only input', () {
+      expect(grammarTokenize('', indentationGrammar).map((t) => t.type).toList(), ['EOF']);
+      expect(grammarTokenize('   \n  \n', indentationGrammar).map((t) => t.type).toList(), ['EOF']);
+      expect(grammarTokenize('# comment\n', indentationGrammar).map((t) => t.type).toList(), ['EOF']);
+    });
+
+    test('rejects tab character in leading indentation', () {
+      const source = '\tx = 1\n';
+      expect(
+        () => grammarTokenize(source, indentationGrammar),
+        throwsA(
+          isA<LexerError>().having(
+            (e) => e.message,
+            'message',
+            contains(messageTabInIndentation),
+          ),
+        ),
+      );
+    });
+
+    test('rejects inconsistent dedent', () {
+      const source = '''
+if 1:
+    x = 1
+  y = 2
+''';
+      expect(
+        () => grammarTokenize(source, indentationGrammar),
+        throwsA(
+          isA<LexerError>().having(
+            (e) => e.message,
+            'message',
+            contains(messageInconsistentDedent),
+          ),
+        ),
+      );
+    });
+
+    test('does not treat bracket characters inside string literals as delimiters', () {
+      const source = '''
+x = "("
+y = 1
+''';
+      final tokens = grammarTokenize(source, indentationGrammar);
+      final types = tokens.map((t) => t.type).toList();
+      expect(types, [
+        'NAME', 'EQUALS', 'STRING', 'NEWLINE',
+        'NAME', 'EQUALS', 'INT', 'NEWLINE',
+        'EOF',
+      ]);
+      expect(tokens[2].value, '(');
+    });
+
+    test('rejects unexpected character in indentation mode', () {
+      const source = '?';
+      expect(
+        () => grammarTokenize(source, indentationGrammar),
+        throwsA(
+          isA<LexerError>().having(
+            (e) => e.message,
+            'message',
+            contains(messageUnexpectedCharacter),
+          ),
+        ),
+      );
+    });
+  });
 }

@@ -23,6 +23,13 @@ const String messageUnterminatedString = 'Unterminated string literal.';
 const String messageUnterminatedStringBackslash =
     'Unterminated string literal (ends with backslash).';
 
+/// Message thrown when a tab character is used in indentation.
+const String messageTabInIndentation =
+    'Tab character in indentation (use spaces only).';
+
+/// Message thrown when dedentation does not match any outer indentation level.
+const String messageInconsistentDedent = 'Inconsistent dedent.';
+
 /// Formats a lexer error with its 1-based line and column and static message.
 String formatLexerError(String message, int line, int column) =>
     'Lexer error at $line:$column: $message';
