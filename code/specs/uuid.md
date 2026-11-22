@@ -864,7 +864,7 @@ and there is a shared set of cross-version and round-trip tests.
 19. **Version is 5**: `v5(...).version == 5`
 20. **Variant is rfc4122**: `v5(...).variant == "rfc4122"`
 21. **RFC test vector (DNS + "python.org")**: `v5(NAMESPACE_DNS, "python.org") == UUID("886313e1-3b8a-5372-9b90-0c9aee199e5d")`
-22. **RFC test vector (URL + "http://www.widgets.com/")**: `v5(NAMESPACE_URL, "http://www.widgets.com/") == UUID("21f7f8de-8051-5b89-8680-0195ef798b6a")`
+22. **Test vector (URL + "http://www.widgets.com/")**: `v5(NAMESPACE_URL, "http://www.widgets.com/") == UUID("b25d1f15-33fc-544b-870e-dc86571013e3")` (verified against Python hashlib SHA-1; the previously listed `21f7f8de-...` value was incorrect and matched no lane)
 23. **Empty name**: `v5(NAMESPACE_DNS, "")` returns a valid UUID (not error)
 24. **Unicode name**: `v5(NAMESPACE_DNS, "日本語")` works (UTF-8 encoded)
 
