@@ -69,8 +69,11 @@ dart pub get
 dart test
 ```
 
-The suite mirrors the reference tests, pins the RFC v3/v5 vectors plus an
-independently-oracled Unicode vector, round-trips deterministic byte patterns
-through every string form, and runs negative controls (tampered vectors,
-avalanche checks, and a hostile parse battery where `parse` and `isValid`
-must agree). Coverage gate: 95% branch and function.
+The suite replays all 378 rows of the shared uuid-v1 corpus
+(`code/specs/fixtures/uuid-v1/cases.json`, read relative to the package
+directory with `dart:io`, so the tests run on the VM), mirrors the reference
+lane's unit tests, pins the RFC v3/v5 vectors plus an independently-oracled
+Unicode vector, sweeps seeded hostile-shaped inputs deterministically, and runs
+negative controls (tampered vectors, avalanche checks, and hostile parse
+batteries where `parse` and `isValid` must agree). Coverage gate: 95% branch
+and function.
