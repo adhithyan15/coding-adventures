@@ -19219,7 +19219,8 @@
         "hash-map-dart-lane-parity"
       ],
       "branch": "feat/dart-hash-set-lane-parity",
-      "pr_number": null,
+      "pr_number": 19836,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19836",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
