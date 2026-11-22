@@ -1476,15 +1476,26 @@ trace that was only timed. The cross-check status is `FAILED` also when a
 `parse_panic` was counted (exit 4 says the same). The `Host` section carries the
 CPU model.
 
-**The census workflow (census PR D): `.github/workflows/kiln-census.yml`.**
-`workflow_dispatch` only; the scheduled weekly run is census PR E. One job,
-`census`, runs on `ubuntu-24.04` and `ubuntu-26.04` (the `kiln-sandbox` job's
-labels; `fail-fast: false`), `permissions: contents: read`, a `kiln-census`
-concurrency group that queues and never cancels, and a job timeout.
+**The census workflow (census PRs D and E): `.github/workflows/kiln-census.yml`.**
+One job, `census`, runs on `ubuntu-24.04` and `ubuntu-26.04` (the
+`kiln-sandbox` job's labels; `fail-fast: false`), `permissions: contents:
+read`, a `kiln-census` concurrency group that queues and never cancels, and a
+job timeout.
 
+- *Triggers (census PR E).* `workflow_dispatch` for a deliberate run, and
+  `schedule` at 04:00 UTC every Monday for the weekly one. A `schedule` event
+  carries no `inputs` and the `default:` of a dispatch input applies only to a
+  dispatch, so the first step falls back to the **scheduled** configuration: 15
+  shards, indices `0,1,2`, `home: runner` — the PR8 gate's own configuration on
+  both images. The dispatch defaults stay `15`, `0` and `fresh`, because they
+  are what a person dispatching by hand starts from. A weekly run is therefore
+  expected to be red until the recorder is clean: a failing `runner` census is
+  the PR8 gate saying "not yet", not a broken workflow, and it is not a
+  required check on any pull request.
 - *Inputs.* `shard_count` (integer, 1 to 256, default 15, as `ci.yml`) and `shard_indices`
   (1 to 3 comma-separated integers, each below the count, no repeats, default
-  `0`). They reach the shell only through `env:` and are validated there
+  `0` on a dispatch and `0,1,2` on the schedule). They reach the shell only
+  through `env:` and are validated there
   (regular expressions, then arithmetic bounds) before anything runs; only the
   normalised values are exported to later steps. The first step also refuses a
   ref that is not the repository's default branch, because `prepare` would exit 3
