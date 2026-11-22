@@ -19412,7 +19412,8 @@
         "dart-swift-language-frontends-neutral-fixtures"
       ],
       "branch": "feat/dart-verilog-frontend-vertical-parity",
-      "pr_number": null,
+      "pr_number": 19829,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19829",
       "notes": "Dart subtranche of Verilog frontend vertical parity. Delivers coding_adventures_verilog_lexer and coding_adventures_verilog_parser with pure in-memory line-preserving preprocessor without ambient filesystem authority, multi-edition grammar routing (1995, 2001, 2005), macro expansion bomb defense, delimiter and keyword-block nesting depth defense (64), token ceiling, and shared neutral fixture conformance."
     },
     {
