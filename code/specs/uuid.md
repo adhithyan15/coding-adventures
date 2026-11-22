@@ -835,6 +835,13 @@ Functions that can fail:
 All tests target **95%+ line coverage**. Each version has unit tests,
 and there is a shared set of cross-version and round-trip tests.
 
+The neutral conformance corpus lives in
+[`fixtures/uuid-v1/`](fixtures/uuid-v1/README.md): an independent Python
+oracle plus a deterministic generator produce `cases.json` (namespaces, known
+answers, parse cases, invalid inputs, 128 v3 + 128 v5 vectors, byte patterns).
+Every lane replays it through its public API per the fixture README's consumer
+contract; time-based v1/v7 and random v4 stay native tests.
+
 ### Unit Tests: v4()
 
 1. **Returns a UUID**: `v4()` returns a UUID object (not nil, not error)
