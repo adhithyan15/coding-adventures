@@ -13,9 +13,21 @@ def greet(name):
       final tokens = tokenizeStarlark(code);
       final types = tokens.map((t) => t.type).toList();
       expect(types, [
-        'KEYWORD', 'NAME', 'LPAREN', 'NAME', 'RPAREN', 'COLON', 'NEWLINE',
-        'INDENT', 'KEYWORD', 'STRING', 'PLUS', 'NAME', 'NEWLINE',
-        'DEDENT', 'EOF',
+        'KEYWORD',
+        'NAME',
+        'LPAREN',
+        'NAME',
+        'RPAREN',
+        'COLON',
+        'NEWLINE',
+        'INDENT',
+        'KEYWORD',
+        'STRING',
+        'PLUS',
+        'NAME',
+        'NEWLINE',
+        'DEDENT',
+        'EOF',
       ]);
     });
 
@@ -117,7 +129,8 @@ def greet(name):
       );
 
       // Valid surrogate pair succeeds
-      final validPair = 'x = "${String.fromCharCode(0xD83D)}${String.fromCharCode(0xDE00)}"\n';
+      final validPair =
+          'x = "${String.fromCharCode(0xD83D)}${String.fromCharCode(0xDE00)}"\n';
       final tokens = tokenizeStarlark(validPair);
       expect(tokens.first.type, equals('NAME'));
     });
@@ -201,8 +214,34 @@ if True:
       ];
 
       const mutations = [
-        ' ', '\t', '\n', '\r', '#', '"', "'", '\\', '(', ')', '[', ']', '{', '}',
-        ':', ',', '=', '+', '-', '*', '/', '%', '!', '?', '@', '\$', '0', '9',
+        ' ',
+        '\t',
+        '\n',
+        '\r',
+        '#',
+        '"',
+        "'",
+        '\\',
+        '(',
+        ')',
+        '[',
+        ']',
+        '{',
+        '}',
+        ':',
+        ',',
+        '=',
+        '+',
+        '-',
+        '*',
+        '/',
+        '%',
+        '!',
+        '?',
+        '@',
+        '\$',
+        '0',
+        '9',
       ];
 
       for (var i = 0; i < 10000; i++) {

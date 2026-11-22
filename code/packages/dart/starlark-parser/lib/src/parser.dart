@@ -29,7 +29,11 @@ ParserGrammar loadStarlarkParserGrammar({String? version}) {
 bool _isOpeningDelimiter(Token token) {
   if (token.type == 'STRING' || token.type == 'COMMENT') return false;
   return switch (token.type) {
-    tokenTypeLParen || tokenTypeLBracket || tokenTypeLBrace || tokenTypeIndent => true,
+    tokenTypeLParen ||
+    tokenTypeLBracket ||
+    tokenTypeLBrace ||
+    tokenTypeIndent =>
+      true,
     _ => switch (token.value) {
         '(' || '[' || '{' => true,
         _ => false,
@@ -40,7 +44,11 @@ bool _isOpeningDelimiter(Token token) {
 bool _isClosingDelimiter(Token token) {
   if (token.type == 'STRING' || token.type == 'COMMENT') return false;
   return switch (token.type) {
-    tokenTypeRParen || tokenTypeRBracket || tokenTypeRBrace || tokenTypeDedent => true,
+    tokenTypeRParen ||
+    tokenTypeRBracket ||
+    tokenTypeRBrace ||
+    tokenTypeDedent =>
+      true,
     _ => switch (token.value) {
         ')' || ']' || '}' => true,
         _ => false,

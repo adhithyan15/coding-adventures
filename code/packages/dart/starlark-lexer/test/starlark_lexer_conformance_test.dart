@@ -69,7 +69,8 @@ void main() {
       final expectedHash = starlarkTokensSpec['sha256'] as String;
       expect(
         expectedHash,
-        equals('7b0f726b893d4152bd5b57b492d8bfe2371633bbf52885f5a273fc2d600c89a9'),
+        equals(
+            '7b0f726b893d4152bd5b57b492d8bfe2371633bbf52885f5a273fc2d600c89a9'),
       );
 
       final tokenFile = File('../../../grammars/starlark/starlark.tokens');

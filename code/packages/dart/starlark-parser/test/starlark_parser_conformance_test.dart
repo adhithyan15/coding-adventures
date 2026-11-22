@@ -117,7 +117,8 @@ void main() {
       final expectedSha = entry['sha256'] as String;
       expect(
         expectedSha,
-        equals('415005e733a195126779f749defccce57fe6b606fa75dd4e566187ca53345127'),
+        equals(
+            '415005e733a195126779f749defccce57fe6b606fa75dd4e566187ca53345127'),
       );
 
       final grammarFile = File('../../../grammars/starlark/starlark.grammar');

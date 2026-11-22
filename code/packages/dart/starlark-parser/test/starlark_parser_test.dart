@@ -28,15 +28,21 @@ def add(a, b):
       expect(ast.ruleName, equals('file'));
     });
 
-    test('parses statements with string literals containing delimiter characters', () {
+    test(
+        'parses statements with string literals containing delimiter characters',
+        () {
       const code = 'x = "("\ny = 1\n';
       final ast = parseStarlark(code);
       expect(ast.ruleName, equals('file'));
-      final statements = ast.children.whereType<ASTNode>().where((c) => c.ruleName == 'statement').toList();
+      final statements = ast.children
+          .whereType<ASTNode>()
+          .where((c) => c.ruleName == 'statement')
+          .toList();
       expect(statements.length, equals(2));
     });
 
-    test('StarlarkParser constructors and factory helpers work identically', () {
+    test('StarlarkParser constructors and factory helpers work identically',
+        () {
       const code = 'y = 42\n';
       final parser1 = StarlarkParser(code);
       final ast1 = parser1.parse();
@@ -76,7 +82,8 @@ def add(a, b):
       );
     });
 
-    test('syntax error throws typed StarlarkParseException with coordinates', () {
+    test('syntax error throws typed StarlarkParseException with coordinates',
+        () {
       const badCode = 'def (:\n';
       expect(
         () => parseStarlark(badCode),
@@ -105,7 +112,8 @@ def add(a, b):
 
     test('Class 2: Recursive Descent Stack Overflow Defense', () {
       // Nested parentheses > 64
-      final nestedParens = '${"(" * (maxNestingDepth + 1)}1${")" * (maxNestingDepth + 1)}\n';
+      final nestedParens =
+          '${"(" * (maxNestingDepth + 1)}1${")" * (maxNestingDepth + 1)}\n';
       expect(
         () => parseStarlark(nestedParens),
         throwsA(
@@ -118,7 +126,8 @@ def add(a, b):
       );
 
       // Nested brackets > 64
-      final nestedBrackets = '${"[" * (maxNestingDepth + 1)}1${"]" * (maxNestingDepth + 1)}\n';
+      final nestedBrackets =
+          '${"[" * (maxNestingDepth + 1)}1${"]" * (maxNestingDepth + 1)}\n';
       expect(
         () => parseStarlark(nestedBrackets),
         throwsA(
@@ -233,8 +242,28 @@ if True:
       ];
 
       const mutations = [
-        ' ', '\t', '\n', ':', '=', '+', '-', '*', '/', '%', '(', ')', '[', ']',
-        '!', '?', '@', '#', '0', '1', 'a', 'z',
+        ' ',
+        '\t',
+        '\n',
+        ':',
+        '=',
+        '+',
+        '-',
+        '*',
+        '/',
+        '%',
+        '(',
+        ')',
+        '[',
+        ']',
+        '!',
+        '?',
+        '@',
+        '#',
+        '0',
+        '1',
+        'a',
+        'z',
       ];
 
       for (var i = 0; i < 10000; i++) {
