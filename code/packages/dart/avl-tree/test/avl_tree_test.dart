@@ -203,38 +203,71 @@ void main() {
       expect(tree.successor('fig'), 'pear');
     });
 
-    test('free functions operate on nodes', () {
-      final root = avlInsert(avlInsert(avlInsert(null, 2), 1), 3);
+    test('node strings render values', () {
+      expect(AvlNode(1).toString(), 'AvlNode(1)');
+    });
+
+    test('read-only free functions inspect nodes', () {
+      final tree = AvlTree<int>.empty().insert(2).insert(1).insert(3);
+      final root = tree.root()!;
       expect(avlSearch(root, 2)?.value, 2);
       expect(avlSearch(root, 9), isNull);
+      expect(avlSearch(null, 2), isNull);
       expect(avlHeight(root), 1);
       expect(avlSize(root), 3);
-      expect(balanceFactorOf(root!), 0);
+      expect(balanceFactorOf(root), 0);
       expect(isValidAvlRoot(root), isTrue);
       expect(avlHeight(null), -1);
       expect(avlSize(null), 0);
       expect(isValidAvlRoot(null), isTrue);
-      final smaller = avlDelete(root, 2)!;
-      expect(avlSize(smaller), 2);
-      // Rotations without the needed child are no-ops.
-      final leaf = AvlNode(1);
-      expect(identical(rotateLeft(leaf), leaf), isTrue);
-      expect(identical(rotateRight(leaf), leaf), isTrue);
     });
 
-    test('rotations rebalance directly', () {
-      // Right-heavy chain 1-2-3: left rotation lifts 2.
-      final chain = AvlNode(1)..right = (AvlNode(2)..right = AvlNode(3));
-      final balanced = rotateLeft(chain);
-      expect(balanced.value, 2);
-      // Left-heavy chain 3-2-1: right rotation lifts 2.
-      final chain2 = AvlNode(3)..left = (AvlNode(2)..left = AvlNode(1));
-      expect(rotateRight(chain2).value, 2);
-      // rebalance passes through balanced nodes.
-      final even = AvlNode(2)
-        ..left = AvlNode(1)
-        ..right = AvlNode(3);
-      expect(identical(rebalance(even), even), isTrue);
+    test('rotations are pinned through inserts with exact roots', () {
+      // Nodes are externally immutable, so rotation behavior is pinned
+      // through the sequences that force each shape — not by hand-linking.
+      expect(
+          AvlTree<int>.empty().insert(1).insert(2).insert(3).root()?.value, 2);
+      expect(
+          AvlTree<int>.empty().insert(3).insert(2).insert(1).root()?.value, 2);
+      expect(
+          AvlTree<int>.empty().insert(1).insert(3).insert(2).root()?.value, 2);
+      expect(
+          AvlTree<int>.empty().insert(3).insert(1).insert(2).root()?.value, 2);
+    });
+
+    test('kept versions stay valid across hundreds of updates', () {
+      // Path copying shares subtrees between versions; every kept version
+      // must stay independently valid and correctly ordered to the end.
+      final rng = Random(0xBE57);
+      var tree = AvlTree<int>.empty();
+      final kept = <AvlTree<int>>[tree];
+      final keptOracles = <List<int>>[[]];
+      final oracle = <int>[];
+      for (var step = 0; step < 400; step++) {
+        final value = rng.nextInt(100);
+        if (rng.nextBool()) {
+          tree = tree.insert(value);
+          if (!oracle.contains(value)) {
+            oracle.add(value);
+            oracle.sort();
+          }
+        } else {
+          tree = tree.delete(value);
+          oracle.remove(value);
+        }
+        if (step % 20 == 0) {
+          kept.add(tree);
+          keptOracles.add([...oracle]);
+        }
+      }
+      expect(kept.length, keptOracles.length);
+      for (var i = 0; i < kept.length; i++) {
+        expect(kept[i].toSortedArray(), keptOracles[i],
+            reason: 'kept version $i order');
+        expect(kept[i].isValidAvl(), isTrue,
+            reason: 'kept version $i validity');
+        expect(kept[i].size(), keptOracles[i].length);
+      }
     });
   });
 }

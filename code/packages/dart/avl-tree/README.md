@@ -27,9 +27,14 @@ tree.isValidBst(); tree.isValidAvl();
 tree.balanceFactor(tree.root()!);  // in [-1, 1] when valid
 ```
 
-* Free functions (`avlSearch`, `avlInsert`, `avlDelete`, `rotateLeft`,
-  `rotateRight`, `rebalance`, `avlHeight`, `avlSize`, `isValidAvlRoot`)
-  mirror the reference lanes; they take ownership of the nodes passed in.
+* Updates are immutable with path copying: only nodes on the update path
+  are cloned, so each op costs O(log n) garbage instead of O(n), and old
+  versions stay valid forever.
+* Read-only free functions (`avlSearch`, `avlHeight`, `avlSize`,
+  `balanceFactorOf`, `isValidAvlRoot`) mirror the reference lanes. Unlike
+  the reference, this lane exposes no mutating free functions: Dart has no
+  borrow checker, so ownership-taking node surgery could corrupt a live
+  tree. All mutation flows through the `AvlTree` methods.
 * `rank` is 0-based (count of strictly smaller values); `kthSmallest` is
   1-based; both match the reference lanes exactly.
 * Zero dependencies. Pure computation: no clock, no I/O, no randomness.

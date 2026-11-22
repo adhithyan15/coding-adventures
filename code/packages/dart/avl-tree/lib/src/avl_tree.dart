@@ -25,28 +25,45 @@ library avl_tree;
 ///
 /// `height` counts edges on the longest downward path (leaf = 0); `size`
 /// counts the whole subtree including this node.
+///
+/// Fields are private with read-only getters: external holders of a node
+/// (via [AvlTree.root] or [AvlTree.search]) can inspect but never mutate,
+/// which is what makes the immutable tree API sound. Only this library
+/// links or rebalances nodes.
 class AvlNode<T> {
-  /// Stored value.
-  T value;
-
-  /// Left subtree (smaller values).
-  AvlNode<T>? left;
-
-  /// Right subtree (larger values).
-  AvlNode<T>? right;
-
-  /// Cached height (leaf = 0).
-  int height;
-
-  /// Cached subtree size.
-  int size;
+  T _value;
+  AvlNode<T>? _left;
+  AvlNode<T>? _right;
+  int _height;
+  int _size;
 
   /// Creates a leaf node holding [value].
-  AvlNode(this.value)
-      : left = null,
-        right = null,
-        height = 0,
-        size = 1;
+  AvlNode(this._value)
+      : _left = null,
+        _right = null,
+        _height = 0,
+        _size = 1;
+
+  AvlNode._with(this._value, this._left, this._right, this._height, this._size);
+
+  /// Stored value.
+  T get value => _value;
+
+  /// Left subtree (smaller values).
+  AvlNode<T>? get left => _left;
+
+  /// Right subtree (larger values).
+  AvlNode<T>? get right => _right;
+
+  /// Cached height (leaf = 0).
+  int get height => _height;
+
+  /// Cached subtree size.
+  int get size => _size;
+
+  /// Shallow copy sharing both child subtrees (path-copying primitive).
+  AvlNode<T> _shallowCopy() =>
+      AvlNode<T>._with(_value, _left, _right, _height, _size);
 
   @override
   String toString() => 'AvlNode($value)';
@@ -66,14 +83,15 @@ class AvlTree<T extends Comparable<dynamic>> {
 
   /// Returns a tree with [value] inserted (no-op if already present).
   ///
-  /// The receiver is never modified: the spine is cloned first, so every
+  /// The receiver is never modified: only nodes on the update path are
+  /// cloned (path copying), unchanged subtrees are shared, and every
   /// intermediate version stays usable.
-  AvlTree<T> insert(T value) => AvlTree._(avlInsert(_clone(_root), value));
+  AvlTree<T> insert(T value) => AvlTree._(_insertCow(_root, value));
 
   /// Returns a tree with [value] removed (no-op if absent).
   ///
-  /// Like [insert], the receiver is preserved via cloning.
-  AvlTree<T> delete(T value) => AvlTree._(avlDelete(_clone(_root), value));
+  /// Like [insert], the receiver is preserved via path copying.
+  AvlTree<T> delete(T value) => AvlTree._(_deleteCow(_root, value));
 
   /// Finds the node holding [value], or null.
   AvlNode<T>? search(T value) => avlSearch(_root, value);
@@ -125,14 +143,115 @@ class AvlTree<T extends Comparable<dynamic>> {
 
 // ─── Search, Insert, Delete ─────────────────────────────────────────────────
 
-/// Deep-copies [node] with exact metadata (backs the immutable API).
-AvlNode<T>? _clone<T extends Comparable<dynamic>>(AvlNode<T>? node) {
+/// Path-copying insert: clones only nodes on the update path.
+///
+/// Unchanged subtrees are shared with the old version, which is safe because
+/// nodes are externally immutable — no holder can mutate a shared subtree.
+/// Total garbage per insert is O(log n), not O(n).
+AvlNode<T>? _insertCow<T extends Comparable<dynamic>>(
+    AvlNode<T>? node, T value) {
+  if (node == null) return AvlNode(value);
+  final copy = node._shallowCopy();
+  final cmp = value.compareTo(copy._value);
+  if (cmp < 0) {
+    copy._left = _insertCow(node._left, value);
+  } else if (cmp > 0) {
+    copy._right = _insertCow(node._right, value);
+  } else {
+    return node;
+  }
+  _updateMetadata(copy);
+  return _rebalanceCow(copy);
+}
+
+/// Path-copying delete: clones only nodes on the update path.
+AvlNode<T>? _deleteCow<T extends Comparable<dynamic>>(
+    AvlNode<T>? node, T value) {
   if (node == null) return null;
-  return AvlNode(node.value)
-    ..left = _clone(node.left)
-    ..right = _clone(node.right)
-    ..height = node.height
-    ..size = node.size;
+  final copy = node._shallowCopy();
+  final cmp = value.compareTo(copy._value);
+  if (cmp < 0) {
+    copy._left = _deleteCow(node._left, value);
+  } else if (cmp > 0) {
+    copy._right = _deleteCow(node._right, value);
+  } else {
+    if (copy._left == null) return copy._right;
+    if (copy._right == null) return copy._left;
+    final extracted = _extractMinCow(copy._right!);
+    copy._value = extracted.minValue;
+    copy._right = extracted.rest;
+  }
+  _updateMetadata(copy);
+  return _rebalanceCow(copy);
+}
+
+/// Path-copying minimum extraction for [_deleteCow].
+({AvlNode<T>? rest, T minValue}) _extractMinCow<T extends Comparable<dynamic>>(
+    AvlNode<T> node) {
+  if (node._left == null) {
+    return (rest: node._right, minValue: node._value);
+  }
+  final copy = node._shallowCopy();
+  final extracted = _extractMinCow(node._left!);
+  copy._left = extracted.rest;
+  _updateMetadata(copy);
+  return (rest: _rebalanceCow(copy), minValue: extracted.minValue);
+}
+
+/// Rebalance over an exclusively-owned [node] (fresh path copy).
+///
+/// Zig-zag rotations take possibly-shared children and clone everything
+/// they write, so shared subtrees are only ever read, never relinked.
+AvlNode<T> _rebalanceCow<T extends Comparable<dynamic>>(AvlNode<T> node) {
+  final bf = balanceFactorOf(node);
+  if (bf > 1) {
+    final left = node._left;
+    if (left != null && balanceFactorOf(left) < 0) {
+      node._left = _rotateLeftCow(left);
+    }
+    return _rotateRightCow(node);
+  }
+  if (bf < -1) {
+    final right = node._right;
+    if (right != null && balanceFactorOf(right) > 0) {
+      node._right = _rotateRightCow(right);
+    }
+    return _rotateLeftCow(node);
+  }
+  return node;
+}
+
+/// Left rotation cloning everything it writes.
+///
+/// Safe on shared input: both participants are shallow-copied first, so the
+/// old version's nodes are only read, never linked or re-metadata'd.
+AvlNode<T> _rotateLeftCow<T extends Comparable<dynamic>>(AvlNode<T> root) {
+  final right = root._right;
+  // Defensive: bf < -1 proves a right child exists, so this never fires.
+  // coverage:ignore-line
+  if (right == null) return root;
+  final newRoot = right._shallowCopy();
+  final demoted = root._shallowCopy();
+  demoted._right = newRoot._left;
+  _updateMetadata(demoted);
+  newRoot._left = demoted;
+  _updateMetadata(newRoot);
+  return newRoot;
+}
+
+/// Right rotation cloning everything it writes (mirror of [_rotateLeftCow]).
+AvlNode<T> _rotateRightCow<T extends Comparable<dynamic>>(AvlNode<T> root) {
+  final left = root._left;
+  // Defensive: bf > 1 proves a left child exists, so this never fires.
+  // coverage:ignore-line
+  if (left == null) return root;
+  final newRoot = left._shallowCopy();
+  final demoted = root._shallowCopy();
+  demoted._left = newRoot._right;
+  _updateMetadata(demoted);
+  newRoot._right = demoted;
+  _updateMetadata(newRoot);
+  return newRoot;
 }
 
 /// Iterative BST search for [value] under [root].
@@ -152,103 +271,18 @@ AvlNode<T>? avlSearch<T extends Comparable<dynamic>>(
   return null;
 }
 
-/// Inserts [value], rebalancing on the way up. Duplicates are no-ops.
-///
-/// Takes ownership of [root] (mutates in place); callers clone first when
-/// they must preserve the old version.
-AvlNode<T>? avlInsert<T extends Comparable<dynamic>>(
-    AvlNode<T>? root, T value) {
-  if (root == null) return AvlNode(value);
-  final cmp = value.compareTo(root.value);
-  if (cmp < 0) {
-    root.left = avlInsert(root.left, value);
-  } else if (cmp > 0) {
-    root.right = avlInsert(root.right, value);
-  } else {
-    return root;
-  }
-  _updateMetadata(root);
-  return rebalance(root);
-}
-
-/// Deletes [value], rebalancing on the way up. Missing values are no-ops.
-///
-/// Two-child deletion swaps in the in-order successor (right-subtree
-/// minimum), like the reference lanes.
-AvlNode<T>? avlDelete<T extends Comparable<dynamic>>(
-    AvlNode<T>? root, T value) {
-  final node = root;
-  if (node == null) return null;
-
-  final cmp = value.compareTo(node.value);
-  if (cmp < 0) {
-    node.left = avlDelete(node.left, value);
-  } else if (cmp > 0) {
-    node.right = avlDelete(node.right, value);
-  } else {
-    final left = node.left;
-    final right = node.right;
-    if (left == null && right == null) return null;
-    if (left != null && right == null) return left;
-    if (left == null && right != null) return right;
-    final extracted = _extractMin(right!);
-    node.value = extracted.minValue;
-    node.left = left;
-    node.right = extracted.rest;
-  }
-
-  _updateMetadata(node);
-  return rebalance(node);
-}
-
 // ─── Rotations & Rebalancing ────────────────────────────────────────────────
 //
 // A left rotation lifts the right child into place (fixing right-heavy
 // nodes); a right rotation mirrors it. Zig-zag cases first rotate the heavy
 // child the other way. Metadata refreshes bottom-up: the demoted node first,
 // then the promoted one.
-
-/// Left rotation around [root] (no-op without a right child).
-AvlNode<T> rotateLeft<T extends Comparable<dynamic>>(AvlNode<T> root) {
-  final newRoot = root.right;
-  if (newRoot == null) return root;
-  root.right = newRoot.left;
-  _updateMetadata(root);
-  newRoot.left = root;
-  _updateMetadata(newRoot);
-  return newRoot;
-}
-
-/// Right rotation around [root] (no-op without a left child).
-AvlNode<T> rotateRight<T extends Comparable<dynamic>>(AvlNode<T> root) {
-  final newRoot = root.left;
-  if (newRoot == null) return root;
-  root.left = newRoot.right;
-  _updateMetadata(root);
-  newRoot.right = root;
-  _updateMetadata(newRoot);
-  return newRoot;
-}
-
-/// Restores the AVL invariant at [node] (single or double rotation).
-AvlNode<T> rebalance<T extends Comparable<dynamic>>(AvlNode<T> node) {
-  final bf = balanceFactorOf(node);
-  if (bf > 1) {
-    final left = node.left;
-    if (left != null && balanceFactorOf(left) < 0) {
-      node.left = rotateLeft(left);
-    }
-    return rotateRight(node);
-  }
-  if (bf < -1) {
-    final right = node.right;
-    if (right != null && balanceFactorOf(right) > 0) {
-      node.right = rotateRight(right);
-    }
-    return rotateLeft(node);
-  }
-  return node;
-}
+//
+// NOTE: unlike the reference lanes, this library exposes no mutating free
+// functions (insert/delete/rotate/rebalance over bare nodes). Those would
+// take ownership of nodes the caller might share with a live tree —
+// corrupting it, since Dart has no borrow checker. All mutation flows
+// through the path-copying [AvlTree] methods above.
 
 /// Left height minus right height for [node].
 int balanceFactorOf<T extends Comparable<dynamic>>(AvlNode<T> node) =>
@@ -270,6 +304,10 @@ bool isValidAvlRoot<T extends Comparable<dynamic>>(AvlNode<T>? root) =>
 (int, int)? _validate<T extends Comparable<dynamic>>(
     AvlNode<T>? node, T? min, T? max) {
   if (node == null) return (-1, 0);
+  // The branches below are unreachable by construction (invalid trees are
+  // unconstructible outside this library); they exist to fail loudly on
+  // bugs, so they are excluded from coverage.
+  // coverage:ignore-start
   if (min != null && node.value.compareTo(min) <= 0) return null;
   if (max != null && node.value.compareTo(max) >= 0) return null;
   final left = _validate(node.left, min, node.value);
@@ -281,27 +319,15 @@ bool isValidAvlRoot<T extends Comparable<dynamic>>(AvlNode<T>? root) =>
     return null;
   }
   if ((left.$1 - right.$1).abs() > 1) return null;
+  // coverage:ignore-end
   return (height, 1 + left.$2 + right.$2);
 }
 
 void _updateMetadata<T extends Comparable<dynamic>>(AvlNode<T> node) {
   final leftH = avlHeight(node.left);
   final rightH = avlHeight(node.right);
-  node.height = 1 + (leftH > rightH ? leftH : rightH);
-  node.size = 1 + avlSize(node.left) + avlSize(node.right);
-}
-
-/// Removes and returns the minimum: `(remainingTree, minValue)`.
-({AvlNode<T>? rest, T minValue}) _extractMin<T extends Comparable<dynamic>>(
-    AvlNode<T> node) {
-  final left = node.left;
-  if (left == null) {
-    return (rest: node.right, minValue: node.value);
-  }
-  final extracted = _extractMin(left);
-  node.left = extracted.rest;
-  _updateMetadata(node);
-  return (rest: rebalance(node), minValue: extracted.minValue);
+  node._height = 1 + (leftH > rightH ? leftH : rightH);
+  node._size = 1 + avlSize(node.left) + avlSize(node.right);
 }
 
 // ─── Queries ────────────────────────────────────────────────────────────────
@@ -386,8 +412,11 @@ bool _bstIsValid<T extends Comparable<dynamic>>(AvlNode<T>? root) =>
 bool _validateBst<T extends Comparable<dynamic>>(
     AvlNode<T>? node, T? min, T? max) {
   if (node == null) return true;
+  // Same unreachable-by-construction reasoning as above.
+  // coverage:ignore-start
   if (min != null && node.value.compareTo(min) <= 0) return false;
   if (max != null && node.value.compareTo(max) >= 0) return false;
+  // coverage:ignore-end
   return _validateBst(node.left, min, node.value) &&
       _validateBst(node.right, node.value, max);
 }
