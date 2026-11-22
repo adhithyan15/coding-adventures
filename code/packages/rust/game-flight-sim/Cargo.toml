@@ -1,0 +1,45 @@
+[package]
+name = "game-flight-sim"
+version = "0.1.0"
+edition = "2021"
+description = "GAME45: Pure Tier 1 deterministic 6-DOF flight simulator with terrain-coupled ground contact, black-box FDR replay, and zero-alloc 3D + HUD rendering"
+license = "MIT"
+
+[features]
+default = []
+
+[dependencies]
+rigidbody-6dof = { path = "../rigidbody-6dof" }
+aero-flight-model = { path = "../aero-flight-model" }
+terrain-lod = { path = "../terrain-lod" }
+cockpit-hud-paint = { path = "../cockpit-hud-paint" }
+render3d-gpu-bridge = { path = "../render3d-gpu-bridge", default-features = false }
+math3d = { path = "../math3d" }
+trig = { path = "../trig" }
+pixel-container = { path = "../pixel-container" }
+paint-instructions = { path = "../paint-instructions" }
+game-clock = { path = "../game-clock" }
+rng = { path = "../rng" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "hostile_inputs"
+path = "tests/hostile_inputs.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

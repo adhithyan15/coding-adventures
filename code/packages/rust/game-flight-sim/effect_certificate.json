@@ -1,0 +1,107 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/game-flight-sim",
+  "source_digest": "7219a8914e32befb79afb85ef4d95bbd3d980859720eac417d97e1a99b386b4e",
+  "manifest_digest": "84f80b2c9cae12b8d101f98095e90384aef5a4fbf342cee6d5c8b21d033d9f9b",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "phase_to_u8",
+      "signature": "pub const fn phase_to_u8(self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "phase_from_u8",
+      "signature": "pub const fn phase_from_u8(tag: u8) -> Result<Self, FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "initial_mode_to_u8",
+      "signature": "pub const fn initial_mode_to_u8(self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "initial_mode_from_u8",
+      "signature": "pub const fn initial_mode_from_u8(tag: u8) -> Result<Self, FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "preset_to_u8",
+      "signature": "pub const fn preset_to_u8(self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "preset_from_u8",
+      "signature": "pub const fn preset_from_u8(tag: u8) -> Result<Self, FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "input_validate",
+      "signature": "pub fn input_validate(&self) -> Result<(), FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "sim_config_default",
+      "signature": "pub const fn sim_config_default(rng_seed: u64, terrain_seed: u64) -> Self",
+      "effects": []
+    },
+    {
+      "name": "sim_config_validate",
+      "signature": "pub fn sim_config_validate(&self) -> Result<(), FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "sim_state_validate",
+      "signature": "pub fn sim_state_validate(&self) -> Result<(), FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "sim_state_digest_fnv1a",
+      "signature": "pub fn sim_state_digest_fnv1a(&self) -> Result<u64, FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "sim_state_black_box_header",
+      "signature": "pub fn sim_state_black_box_header(&self) -> Result<BlackBoxHeader, FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "sim_init_on_runway",
+      "signature": "pub fn sim_init_on_runway( config: FlightSimConfig, runway: &RunwaySpec, ) -> Result<FlightSimState, FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "sim_init_level_flight",
+      "signature": "pub fn sim_init_level_flight( config: FlightSimConfig, altitude_m: f64, airspeed_mps: f64, ) -> Result<FlightSimState, FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "sim_init_from_black_box_header",
+      "signature": "pub fn sim_init_from_black_box_header( header: &BlackBoxHeader, runway: &RunwaySpec, ) -> Result<FlightSimState, FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "sim_state_validate",
+      "signature": "pub fn sim_state_validate(state: &FlightSimState) -> Result<(), FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "state_digest_fnv1a",
+      "signature": "pub fn state_digest_fnv1a(state: &FlightSimState) -> Result<u64, FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "step_in_place",
+      "signature": "pub fn step_in_place( state: &mut FlightSimState, heightfield: &Heightfield<'_>, runway: &RunwaySpec, input: &FlightInputFrame, recorder: Option<&mut BlackBoxRecorder>, ) -> Result<StepReport, FlightSimError>",
+      "effects": []
+    },
+    {
+      "name": "step",
+      "signature": "pub fn step( state: &FlightSimState, heightfield: &Heightfield<'_>, runway: &RunwaySpec, input: &FlightInputFrame, ) -> Result<(FlightSimState, StepReport), FlightSimError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
