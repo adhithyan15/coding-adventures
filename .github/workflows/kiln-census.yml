@@ -201,7 +201,7 @@ jobs:
 
       - name: Install uv
         if: env.HOME_MODE == 'runner'
-        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
         with:
           version: "0.13.7"
           # No cache restore or save: a census records, it does not need the speed.
@@ -315,7 +315,7 @@ jobs:
       # runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
         if: env.HOME_MODE == 'runner'
-        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+        uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
         with:
           ruby-version: '3.4.12'
           bundler-cache: false
