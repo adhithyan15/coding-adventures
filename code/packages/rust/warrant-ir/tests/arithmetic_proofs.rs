@@ -222,7 +222,10 @@ fn main() {
     let probes: Vec<String> = rows
         .keys()
         .map(|op| {
-            let function = &bindings.manifest.bindings[op].export;
+            let function = bindings.manifest.bindings[op]
+                .export
+                .as_deref()
+                .expect("proof diagnostics need an export; driver ops unsupported");
             format!("{function}: {}", probe(function))
         })
         .collect();
@@ -232,7 +235,11 @@ fn main() {
             .manifest
             .bindings
             .get(op)
-            .map(|b| b.export.clone())
+            .map(|b| {
+                b.export.clone().expect(
+                    "proof diagnostics need an export; driver ops unsupported",
+                )
+            })
             .expect("every op is bound");
         let status = if blocker.is_err() { "not-live" } else { "not-run" };
         if *has_secret {

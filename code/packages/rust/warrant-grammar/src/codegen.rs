@@ -2574,7 +2574,24 @@ fn generate_claim_helper(
     file: &WarrantFile<'_>,
 ) -> Result<String, CodegenError> {
     let op_binding = &manifest.bindings[&claim.op_name];
-    let op_export = &op_binding.export;
+    // WX-F slice 1 parses driver records but does not generate from them.
+    // A hand-built both-Some manifest must refuse like a parsed driver-only
+    // one; silently ignoring the record would emit the wrong adapter.
+    // (Defense in depth: the only caller passes an empty claim list today,
+    // so this arm is currently unreached; it guards future wiring.)
+    let op_export = match (&op_binding.export, &op_binding.driver) {
+        (Some(e), None) => e.as_str(),
+        _ => {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0704,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "operation `{}` uses a WX-F driver; generation lands in a later slice",
+                    claim.op_name
+                )),
+                span: (0, 0),
+            })
+        }
+    };
 
     for binder in &claim.binders {
         if !is_bytes_type(&binder.param_type)
@@ -3066,26 +3083,42 @@ pub fn compile_rust_l0_harness(
         }
     }
 
+    // WX-F slice 1: a driver record on any resolved op refuses loudly.
+    // Without this, a parsed driver-only op would silently fall back to the
+    // default export while dropping its record (or a both-Some manifest
+    // would emit the export and ignore the record).
+    for op_name in ["eq", "eq_fixed", "select_bytes", "eq_u64"] {
+        if manifest.bindings.get(op_name).is_some_and(|b| b.driver.is_some()) {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0704,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "operation `{op_name}` uses a WX-F driver; generation lands in a later slice"
+                )),
+                span: (0, 0),
+            });
+        }
+    }
+
     // Resolve dynamic public exports from manifest
     let eq_export = manifest
         .bindings
         .get("eq")
-        .map(|b| b.export.as_str())
+        .and_then(|b| b.export.as_deref())
         .unwrap_or("ct_eq");
     let eq_fixed_export = manifest
         .bindings
         .get("eq_fixed")
-        .map(|b| b.export.as_str())
+        .and_then(|b| b.export.as_deref())
         .unwrap_or("ct_eq_fixed");
     let select_export = manifest
         .bindings
         .get("select_bytes")
-        .map(|b| b.export.as_str())
+        .and_then(|b| b.export.as_deref())
         .unwrap_or("ct_select_bytes");
     let eq_u64_export = manifest
         .bindings
         .get("eq_u64")
-        .map(|b| b.export.as_str())
+        .and_then(|b| b.export.as_deref())
         .unwrap_or("ct_eq_u64");
 
     let select_error_case = manifest

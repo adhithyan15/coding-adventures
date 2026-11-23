@@ -6,6 +6,7 @@ use std::collections::BTreeMap;
 
 use coding_adventures_sha256::sha256_hex;
 use coding_adventures_warrant_grammar::binding::{BindingManifest, ErrorNormalization, OpBinding};
+use coding_adventures_warrant_grammar::driver::parse_driver_record;
 use coding_adventures_warrant_grammar::checker::check_warrant;
 use coding_adventures_warrant_grammar::codegen::{CodegenErrorKind, DiagnosticCode};
 use coding_adventures_warrant_grammar::evidence::{
@@ -36,7 +37,8 @@ fn with_parsed<R>(src: &str, f: impl FnOnce(&WarrantFile) -> R) -> R {
 
 fn bind(export: &str, widths: &[&str], fresh: bool, norm: Option<&str>) -> OpBinding {
     OpBinding {
-        export: export.into(),
+        export: Some(export.into()),
+        driver: None,
         static_params: widths.iter().map(|s| s.to_string()).collect(),
         fresh,
         error_normalization: norm.map(|c| ErrorNormalization {
@@ -353,4 +355,21 @@ fn filter_without_fault_is_an_error_and_an_empty_filter_match_fails() {
     assert!(require_tests(0, Some("/no-such-suite/")).is_err());
     assert!(require_tests(3, Some("/exhaustive/")).is_ok());
     assert!(require_tests(0, None).is_ok(), "an unfiltered empty suite is the generator's concern");
+}
+
+#[test]
+fn hand_built_driver_manifest_refuses_with_w0704() {
+    // WX-F slice 1: the parser cannot produce export+driver together, but a
+    // hand-built manifest can; generation must refuse it loudly (W0704),
+    // never emit calls to the export while ignoring the record.
+    let record = parse_driver_record(
+        &["state=s::T", "new=new()", "drive=x", "step=s(mut)", "result=finish"],
+    )
+    .expect("valid record");
+    let mut bindings = ct_bindings();
+    let op = bindings.bindings.get_mut("eq").unwrap();
+    op.driver = Some(record);
+    let (code, msg) = generate_src(SPEC, &bindings).unwrap_err();
+    assert_eq!(code, DiagnosticCode::W0704);
+    assert!(msg.contains("WX-F driver"), "{msg}");
 }

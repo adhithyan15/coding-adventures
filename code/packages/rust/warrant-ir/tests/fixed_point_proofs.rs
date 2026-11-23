@@ -93,7 +93,13 @@ fn main() {
                 .bindings
                 .get(op.name)
                 .expect("each Warrant op has a binding");
-            ops.insert(op.name.to_string(), binding.export.clone());
+            ops.insert(
+                op.name.to_string(),
+                binding
+                    .export
+                    .clone()
+                    .expect("proof diagnostics need an export; driver ops unsupported"),
+            );
         }
     }
     assert_eq!(

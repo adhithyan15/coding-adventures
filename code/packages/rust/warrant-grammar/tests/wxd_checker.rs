@@ -852,7 +852,8 @@ mod generation {
         b.insert(
             "f".to_string(),
             OpBinding {
-                export: "f".into(),
+                export: Some("f".into()),
+                driver: None,
                 static_params: Vec::new(),
                 fresh: false,
                 error_normalization: None,

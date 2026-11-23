@@ -21,7 +21,8 @@ const GENERATED: &str = "tests/generated/wx_evidence.rs";
 
 fn op(export: &str, error: Option<&str>, faults: &[&str]) -> OpBinding {
     OpBinding {
-        export: export.into(),
+        export: Some(export.into()),
+        driver: None,
         static_params: Vec::new(),
         fresh: false,
         error_normalization: error.map(|c| ErrorNormalization {

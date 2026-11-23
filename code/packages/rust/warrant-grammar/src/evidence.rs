@@ -3126,18 +3126,36 @@ pub fn generate_evidence_harness_with_tables(
         return Err(unsupported(format!("spec path {:?} cannot be embedded", options.spec_path), (0, 0)));
     }
     for (op, b) in &manifest.bindings {
+        // WX-F slice 1: driver records parse and schema-validate, but no
+        // generator consumes them yet. Refuse loudly instead of emitting
+        // calls to a missing export.
+        if b.driver.is_some() {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0704,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "operation `{op}` uses a WX-F driver; generation lands in a later slice"
+                )),
+                span: (0, 0),
+            });
+        }
+        let export = b.export.as_deref().ok_or_else(|| {
+            unsupported(
+                format!("operation `{op}` has neither export= nor driver"),
+                (0, 0),
+            )
+        })?;
         // VER04k section 4.6: an operation with `inout=` may name a method or a
         // function by a Rust path (at most 8 segments); every other export is an
         // identifier, as it always was.
         let has_inout = options.hosts.ops.get(op).is_some_and(|h| !h.inout.is_empty());
         let export_ok = if has_inout {
-            is_rust_path(&b.export) && b.export.split("::").count() <= MAX_EXPORT_SEGMENTS
+            is_rust_path(export) && export.split("::").count() <= MAX_EXPORT_SEGMENTS
         } else {
-            is_rust_identifier(&b.export)
+            is_rust_identifier(export)
         };
         if !export_ok {
             return Err(unsupported(
-                format!("export `{}` of operation `{op}` is not a Rust identifier", b.export),
+                format!("export `{export}` of operation `{op}` is not a Rust identifier"),
                 (0, 0),
             ));
         }
@@ -3781,6 +3799,23 @@ pub fn generate_evidence_harness_with_tables(
     let mut adapters = String::new();
     for op in &op_decls {
         let binding = &manifest.bindings[op.name];
+        // WX-F slice 1: driver records parse but no adapter consumes them.
+        // (The harness entry gate rejects these first; this is defense in
+        // depth for direct callers of adapter generation, including a
+        // hand-built manifest with both fields set.)
+        let export = match (&binding.export, &binding.driver) {
+            (Some(e), None) => e.as_str(),
+            _ => {
+                return Err(CodegenError {
+                    code: DiagnosticCode::W0704,
+                    kind: CodegenErrorKind::UnsupportedTarget(format!(
+                        "operation `{}` uses a WX-F driver; generation lands in a later slice",
+                        op.name
+                    )),
+                    span: op.span,
+                })
+            }
+        };
         let shape = shape_of(op, v1, &env)?;
         let adapters_before = adapters.len();
         // WX-H: the numeric parameter an `output` row mentions is the limit the
@@ -3817,7 +3852,7 @@ pub fn generate_evidence_harness_with_tables(
             adapters.push_str(&inout::inout_adapter(
                 op,
                 &env,
-                &binding.export,
+                export,
                 err_case,
                 &binding.negative_controls,
                 options,
@@ -3840,7 +3875,7 @@ pub fn generate_evidence_harness_with_tables(
             adapters.push_str(&composite_adapter(
                 op,
                 &env,
-                &binding.export,
+                export,
                 err_case,
                 &binding.negative_controls,
                 options,
@@ -3859,7 +3894,7 @@ pub fn generate_evidence_harness_with_tables(
             adapters.push_str(&scalar_adapter_v1(
                 op,
                 ret,
-                &binding.export,
+                export,
                 err_case,
                 &binding.negative_controls,
                 options,
@@ -3877,7 +3912,7 @@ pub fn generate_evidence_harness_with_tables(
             adapters.push_str(&scalar_adapter(
                 op,
                 fallible,
-                &binding.export,
+                export,
                 err_case,
                 &binding.negative_controls,
                 options,
@@ -3894,7 +3929,7 @@ pub fn generate_evidence_harness_with_tables(
             adapters.push_str(&adapter(
                 op,
                 shape,
-                &binding.export,
+                export,
                 err_case,
                 widths.get(op.name).unwrap_or(&empty),
             )?);
@@ -3921,11 +3956,11 @@ pub fn generate_evidence_harness_with_tables(
                 ));
             }
             // VOS-D063: only the export call is inside the allocation window.
-            let emitted = scope_export_calls(&emitted, &binding.export).ok_or_else(|| {
+            let emitted = scope_export_calls(&emitted, export).ok_or_else(|| {
                 unsupported(
                     format!(
                         "the adapter of `{}` has no call of `{}` to observe",
-                        op.name, binding.export
+                        op.name, export
                     ),
                     op.span,
                 )
