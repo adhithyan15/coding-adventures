@@ -3117,10 +3117,16 @@ pub fn compile_rust_evidence_harness_with_tables(
                 DiagnosticCode::W0601,
                 CodegenErrorKind::DriverFaultSet(detail),
             ),
-            _ => (
-                DiagnosticCode::W0704,
-                CodegenErrorKind::MissingBinding(detail),
-            ),
+            unexpected => {
+                debug_assert!(
+                    false,
+                    "driver check emitted unexpected code {unexpected:?}; update this mapping"
+                );
+                (
+                    DiagnosticCode::W0704,
+                    CodegenErrorKind::MissingBinding(detail),
+                )
+            }
         };
         CodegenError {
             code,

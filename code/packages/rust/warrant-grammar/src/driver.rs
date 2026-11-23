@@ -21,6 +21,7 @@ use crate::binding::{
     HostErrors, HostTy, HostType, MAX_EXPORT_SEGMENTS,
 };
 use crate::checker::{CheckerError, CheckerErrorKind, DiagnosticCode};
+use crate::codegen::{CodegenLimits, EvalValue, Evaluator};
 use crate::evidence::{ty_of_type, Ty, TyEnv};
 use crate::fixed::FixedTy;
 use crate::parser::{Declaration, Expression, Literal, OpDecl, TypeExpr, Version, WarrantFile};
@@ -1135,14 +1136,49 @@ fn maybe_nonempty(e: &Expression<'_>, t: &Ty) -> bool {
     }
 }
 
-/// Whether a driven argument can drive a two-element exercise (VER04k 3.5):
-/// true unless the expression is PROVABLY too small. Anything opaque (a
-/// call, a branch, an unresolvable name) counts as exercisable: a missed
-/// vacuity is caught later by the runtime controls, while a false positive
-/// would block a legitimate document statically.
-fn drives_big(arg: &Expression<'_>, driven: &Ty) -> bool {
+/// Whether a ground value drives a two-element exercise. A value of the
+/// wrong shape is a mistyped argument the checker already refused; never
+/// pile a W0601 onto it.
+fn value_drives_big(v: &EvalValue, driven: &Ty) -> bool {
+    match (driven, v) {
+        (Ty::List(t), EvalValue::List(es)) => {
+            es.len() >= 2 && es.iter().filter(|e| value_nonempty(e, t)).count() >= 2
+        }
+        (Ty::Bytes | Ty::BytesN(_), EvalValue::Bytes(b)) => b.len() >= 2,
+        (Ty::Nat | Ty::NatCount, EvalValue::Nat(n)) => *n >= 2,
+        (Ty::Nat | Ty::NatCount, EvalValue::Int(n)) => *n >= 2,
+        (Ty::Nat | Ty::NatCount, EvalValue::U8(n)) => *n >= 2,
+        (Ty::Nat | Ty::NatCount, EvalValue::U64(n)) => *n >= 2,
+        (Ty::Nat | Ty::NatCount, EvalValue::Fixed(_, n)) => *n >= 2,
+        _ => true,
+    }
+}
+
+/// Whether a ground element value of element type `t` is non-empty.
+fn value_nonempty(v: &EvalValue, t: &Ty) -> bool {
+    match (t, v) {
+        (Ty::Bytes | Ty::BytesN(_), EvalValue::Bytes(b)) => !b.is_empty(),
+        (Ty::List(_), EvalValue::List(es)) => !es.is_empty(),
+        _ => true,
+    }
+}
+
+/// Whether a driven argument can drive a two-element exercise (VER04k 3.5).
+/// Ground arguments (literals, literal arithmetic, `len` of literals,
+/// nullary models over literals) are measured EXACTLY through the ground
+/// evaluator, so `fill(5 - 5)` and `fill(z())` with `z() = 0` are caught.
+/// Binder-dependent arguments fall back to the structural rules below, true
+/// unless PROVABLY too small: a model over binders may still drive big
+/// (VER04k 3.7's own claims do), so opacity counts as exercisable and the
+/// runtime coverage control (evaluation slice) is the backstop for
+/// semantically-small-but-syntactically-opaque drives.
+fn drives_big(arg: &Expression<'_>, driven: &Ty, file: &WarrantFile<'_>) -> bool {
+    let mut evaluator = Evaluator::new(file, CodegenLimits::default());
+    if let Ok(value) = evaluator.eval(arg, &std::collections::HashMap::new()) {
+        return value_drives_big(&value, driven);
+    }
     match arg {
-        Expression::Grouped { inner, .. } => drives_big(inner, driven),
+        Expression::Grouped { inner, .. } => drives_big(inner, driven, file),
         Expression::List { elements, .. } => match driven {
             Ty::List(t) => {
                 elements.len() >= 2
@@ -1170,8 +1206,8 @@ fn drives_big(arg: &Expression<'_>, driven: &Ty) -> bool {
             then_branch,
             else_branch,
             ..
-        } => drives_big(then_branch, driven) || drives_big(else_branch, driven),
-        Expression::Match { arms, .. } => arms.iter().any(|a| drives_big(&a.body, driven)),
+        } => drives_big(then_branch, driven, file) || drives_big(else_branch, driven, file),
+        Expression::Match { arms, .. } => arms.iter().any(|a| drives_big(&a.body, driven, file)),
         // Binary, unary, tuple, projection: opaque or mistyped; the checker
         // owns mistyped, opacity counts as exercisable.
         _ => true,
@@ -1186,6 +1222,7 @@ fn call_drives_big(
     op: &str,
     drive_index: usize,
     driven_ty: &Ty,
+    file: &WarrantFile<'_>,
 ) -> bool {
     match e {
         Expression::Reference { name, args, .. } => {
@@ -1194,42 +1231,42 @@ fn call_drives_big(
             };
             if name.segments.as_slice() == [op] {
                 if let Some(arg) = args.get(drive_index) {
-                    if drives_big(arg, driven_ty) {
+                    if drives_big(arg, driven_ty, file) {
                         return true;
                     }
                 }
             }
             // Not a big-driving call to this op; nested calls may still be.
             args.iter()
-                .any(|a| call_drives_big(a, op, drive_index, driven_ty))
+                .any(|a| call_drives_big(a, op, drive_index, driven_ty, file))
         }
-        Expression::Grouped { inner, .. } => call_drives_big(inner, op, drive_index, driven_ty),
+        Expression::Grouped { inner, .. } => call_drives_big(inner, op, drive_index, driven_ty, file),
         Expression::Binary { left, right, .. } => {
-            call_drives_big(left, op, drive_index, driven_ty)
-                || call_drives_big(right, op, drive_index, driven_ty)
+            call_drives_big(left, op, drive_index, driven_ty, file)
+                || call_drives_big(right, op, drive_index, driven_ty, file)
         }
-        Expression::Unary { operand, .. } => call_drives_big(operand, op, drive_index, driven_ty),
+        Expression::Unary { operand, .. } => call_drives_big(operand, op, drive_index, driven_ty, file),
         Expression::Conditional {
             condition,
             then_branch,
             else_branch,
             ..
         } => {
-            call_drives_big(condition, op, drive_index, driven_ty)
-                || call_drives_big(then_branch, op, drive_index, driven_ty)
-                || call_drives_big(else_branch, op, drive_index, driven_ty)
+            call_drives_big(condition, op, drive_index, driven_ty, file)
+                || call_drives_big(then_branch, op, drive_index, driven_ty, file)
+                || call_drives_big(else_branch, op, drive_index, driven_ty, file)
         }
         Expression::Match { target, arms, .. } => {
-            call_drives_big(target, op, drive_index, driven_ty)
+            call_drives_big(target, op, drive_index, driven_ty, file)
                 || arms
                     .iter()
-                    .any(|a| call_drives_big(&a.body, op, drive_index, driven_ty))
+                    .any(|a| call_drives_big(&a.body, op, drive_index, driven_ty, file))
         }
-        Expression::Quantified { body, .. } => call_drives_big(body, op, drive_index, driven_ty),
+        Expression::Quantified { body, .. } => call_drives_big(body, op, drive_index, driven_ty, file),
         Expression::List { elements, .. } | Expression::Tuple { elements, .. } => elements
             .iter()
-            .any(|a| call_drives_big(a, op, drive_index, driven_ty)),
-        Expression::Project { base, .. } => call_drives_big(base, op, drive_index, driven_ty),
+            .any(|a| call_drives_big(a, op, drive_index, driven_ty, file)),
+        Expression::Project { base, .. } => call_drives_big(base, op, drive_index, driven_ty, file),
         Expression::Literal { .. } => false,
     }
 }
@@ -1256,7 +1293,7 @@ fn check_driver_exercised(
             Declaration::Example(e) => &e.body,
             _ => return false,
         };
-        call_drives_big(body, op.name, drive_index, driven_ty)
+        call_drives_big(body, op.name, drive_index, driven_ty, file)
     });
     if exercised {
         Ok(())

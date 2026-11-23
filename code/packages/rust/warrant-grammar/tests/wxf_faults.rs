@@ -327,6 +327,50 @@ fn match_arm_call_exercises() {
     ok(spec, &op_sha1(FINISH5), DRIVER_SHA1);
 }
 
+// --- Ground evaluation: literal shapes are measured exactly ---
+
+const DRIVER_FILL: &str = "driver fill state=subject::Fill new=new() drive=n step=tick(mut) finish=out(ref)->bytes result=finish";
+
+fn op_fill() -> String {
+    format!("op fill driver faults={NAT4}")
+}
+
+#[test]
+fn literal_condition_is_folded() {
+    let spec = "warrant t v1\n  op fill(n: Nat) -> Bytes\n  labels fill:\n    n public\n  example e:\n    fill(if true then 0 else 9) == fill(if true then 0 else 9)\n";
+    bad(spec, &op_fill(), DRIVER_FILL, "W0601", "not exercised");
+}
+
+#[test]
+fn literal_condition_big_exercises() {
+    let spec = "warrant t v1\n  op fill(n: Nat) -> Bytes\n  labels fill:\n    n public\n  example e:\n    fill(if true then 9 else 0) == fill(if true then 9 else 0)\n";
+    ok(spec, &op_fill(), DRIVER_FILL);
+}
+
+#[test]
+fn nullary_model_with_small_body_does_not_exercise() {
+    let spec = "warrant t v1\n  model z() -> Nat = 0\n  op fill(n: Nat) -> Bytes\n  labels fill:\n    n public\n  example e:\n    fill(z()) == fill(z())\n";
+    bad(spec, &op_fill(), DRIVER_FILL, "W0601", "not exercised");
+}
+
+#[test]
+fn nullary_model_returning_empty_list_does_not_exercise() {
+    let spec = "warrant t v1\n  model e() -> List<Bytes> = []\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks public\n  example x:\n    digest_chunks(e()) == digest_chunks(e())\n";
+    bad(spec, &op_sha1(FINISH5), DRIVER_SHA1, "W0601", "not exercised");
+}
+
+#[test]
+fn len_of_short_literal_does_not_exercise() {
+    let spec = "warrant t v1\n  op fill(n: Nat) -> Bytes\n  labels fill:\n    n public\n  example e:\n    fill(len(b\"00\")) == fill(len(b\"00\"))\n";
+    bad(spec, &op_fill(), DRIVER_FILL, "W0601", "not exercised");
+}
+
+#[test]
+fn len_of_long_literal_exercises() {
+    let spec = "warrant t v1\n  op fill(n: Nat) -> Bytes\n  labels fill:\n    n public\n  example e:\n    fill(len(b\"0011\")) == fill(len(b\"0011\"))\n";
+    ok(spec, &op_fill(), DRIVER_FILL);
+}
+
 // --- End to end: fault codes survive the evidence boundary ---
 
 fn options() -> EvidenceOptions {
