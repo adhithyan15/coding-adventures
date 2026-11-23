@@ -1092,10 +1092,19 @@ Print these with every number, because each one limits what it supports:
     fewer than five distinct `instance_sha256`. Each group's line is its worst
     seed's own row, every cell from that one row.
 11. **B5 is a proxy for equivalence sweeping on compiled code, and `fuse` is
-    synthetic (planned, VOS-028c3; section 8.6.3).** `fuse = w` inserts runs of
-    accumulating `add`s that the reference right-nests; no compiler is known to
-    produce that divergence at that spacing. A green B5 shows that a sweeper of
-    this design can certify equivalence points at the stated spacing on this shape;
+    synthetic (planned, VOS-028c3; section 8.6.3).** `fuse = w` starts from B2's
+    program P (`gen_b` at the same length, divergence and seed) and turns every
+    accumulating register-register `add a, a, b` into a run of w adds into `a`: the
+    original followed by w - 1 adds `a += c_j`, each `c_j` an accumulator other than
+    `a` drawn from a separate seeded stream, so P's own stream is untouched; the result
+    is truncated to the instance length. The run's first add keeps P's alternative
+    encoding; the reference computes the run right-nested, `a + (b + (c_2 + ... +
+    c_w))`, so the run's intermediate values have no counterpart and equivalence points
+    are at most w instructions apart (exactly w across each run; instructions outside
+    runs stay per-instruction points). With `fuse = 1` there are no runs and the
+    program, its alternative encodings and the instance are B2's (byte-identical
+    DIMACS). No compiler is known to produce that divergence at that spacing. A
+    green B5 shows that a sweeper of this design can certify equivalence points at the stated spacing on this shape;
     it does not show that real compiled code has such points. Only VOS-029b's
     re-run on the real object can.
 
@@ -1325,14 +1334,24 @@ route-green predicate. None changes a recorded row: new rows are added by `merge
   counts obligations at their own number, it does not hide them.
 * **B5, equivalence sweeping, a research experiment** (the route's escape hatch of
   VOS00 section 12 row 9). Instance length in {25 (quick), 200, 1,000}, divergence in
-  {25%, 100%}, `fuse` in {1, 2, 4, 8}: 24 knobs, 120 rows. B2's divergence is a
+  {25%, 100%}, `fuse` in {1, 2, 4, 8}: 24 knobs, 120 rows; the quick knobs are length
+  25 at `fuse = 1` (both divergences), the smallest, since the quick tier fails on an
+  `unknown` row (VOS-D118). B2's divergence is a
   per-instruction alternative encoding, so every instruction's output word is already
   an equivalence point and sweeping B2 would rediscover B3 `every1` (a tautology, not a
-  test). The `fuse` knob makes the points sparser: `fuse = w` inserts runs of w
-  accumulating `add`s that the reference right-nests, so equivalence points occur only
-  every w instructions. **`fuse = 1` is B2**, and its `instance_sha256` must equal B2's
-  (a cross-rule of `validate`). The sweep is deterministic: one AIG for both sides;
-  256 seeded simulation patterns (`Aig::simulate`) give candidate classes up to
+  test). The `fuse` knob makes the points sparser. `fuse = w` starts from B2's program P
+  (`gen_b` at the same length, divergence and seed) and turns every accumulating
+  register-register `add a, a, b` into a run of w adds into `a`: the original followed by
+  w - 1 adds `a += c_j`, each `c_j` an accumulator other than `a` drawn from a separate
+  seeded stream, so P's own stream is untouched; the result is truncated to the instance
+  length. The run's first add keeps P's alternative encoding; the reference computes the
+  run right-nested, `a + (b + (c_2 + ... + c_w))`, so the run's intermediate values have
+  no counterpart and equivalence points are at most w instructions apart (exactly w
+  across each run; instructions outside runs stay per-instruction points). With
+  `fuse = 1` there are no runs and the program, its alternative encodings and the
+  instance are B2's (byte-identical DIMACS). **`fuse = 1` is B2**, and its
+  `instance_sha256` must equal B2's (a cross-rule of `validate`). The sweep is
+  deterministic: one AIG for both sides; 256 seeded simulation patterns (`Aig::simulate`) give candidate classes up to
   complement, the representative is the lowest node; candidates are proved in
   topological order, each lemma a fresh CNF over its cone with already-merged nodes
   substituted, cut at an 8-level frontier whose nodes are shared free inputs. A SAT
@@ -2669,12 +2688,12 @@ below is a separate step, run on the committed tree and merged in a second commi
 `results.rs` and `table.rs`. Because `plan(Tier::Full)` and `vos30-capacity-results.json`
 must stay in sync (`FULL_PLAN_EXEMPT` stays empty) and full recording runs on Unix:
 
-* **`VOS-028c3a` (this step):** B3 `every2`/`every4` support, D5 (touched-word obligations,
+* **`VOS-028c3a` (done, #19795):** B3 `every2`/`every4` support, D5 (touched-word obligations,
   separate structural frame obligation, two-mutant G3), `route_green` (8.6.1), `cut_density_k`
   (8.6.2) and `decide_replan` (8.6.4, including the orthogonal memory verdict), with a
   negative control for every clause in `tests/results_logic.rs` and shape/G3 tests in
   `tests/shapes.rs`; `plan(Tier::Full)` is not expanded yet.
-* **`VOS-028c3b` (planned):** B5 (`src/sweep.rs` and `tests/sweep.rs`), G3 unswept-control
+* **`VOS-028c3b` (this step):** B5 (`src/sweep.rs` and `tests/sweep.rs`), G3 unswept-control
   replay and signature-merge negative control, and `B5 fuse = 1` `instance_sha256` parity
   with B2; `plan(Tier::Full)` is not expanded yet.
 * **`VOS-028c3c` (planned):** Register B3 `every2`/`every4`, D5 and B5 in `plan(Tier::Full)`,
