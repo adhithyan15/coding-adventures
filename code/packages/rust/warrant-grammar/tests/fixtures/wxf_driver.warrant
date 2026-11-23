@@ -1,0 +1,6 @@
+warrant wxf_driver v1
+  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>
+  labels digest_chunks:
+    chunks public
+  claim c:
+    forall chunks: List<Bytes>. digest_chunks(chunks) == digest_chunks(chunks)

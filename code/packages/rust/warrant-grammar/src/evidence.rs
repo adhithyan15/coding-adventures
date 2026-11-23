@@ -3958,6 +3958,14 @@ pub fn generate_evidence_harness_with_tables(
             let record = binding.driver.as_ref().expect("driver shape has a record");
             features.insert("scoped");
             features.insert("driver");
+            let mut list = Vec::new();
+            for f in &binding.negative_controls {
+                let variant = fault_variant(f).ok_or_else(|| {
+                    unsupported(format!("unknown fault `{f}` for `{}`", op.name), op.span)
+                })?;
+                list.push((f.clone(), format!("Fault::{variant}")));
+            }
+            op_faults.insert(op.name.to_string(), list);
             adapters.push_str(&driver_gen::driver_adapter(
                 op,
                 &env,
@@ -3967,14 +3975,6 @@ pub fn generate_evidence_harness_with_tables(
                 options,
                 obs_ops.contains_key(op.name),
             )?);
-            let mut list = Vec::new();
-            for f in &binding.negative_controls {
-                let variant = fault_variant(f).ok_or_else(|| {
-                    unsupported(format!("unknown fault `{f}` for `{}`", op.name), op.span)
-                })?;
-                list.push((f.clone(), format!("Fault::{variant}")));
-            }
-            op_faults.insert(op.name.to_string(), list);
         } else if shape == Shape::Inout {
             features.insert("scoped");
             adapters.push_str(&inout::inout_adapter(
@@ -4196,6 +4196,50 @@ pub fn generate_evidence_harness_with_tables(
             op = t.op,
             n = t.name,
         );
+    }
+    // WX-F driver obligations (VER04k 3.5), one test per obligation.
+    for op in &op_decls {
+        let Some(record) = manifest
+            .bindings
+            .get(op.name)
+            .and_then(|b| b.driver.as_ref())
+        else {
+            continue;
+        };
+        let binding = &manifest.bindings[op.name];
+        let (fns, obs) = driver_gen::obligation_fns(
+            op,
+            &env,
+            record,
+            &binding.negative_controls,
+            options,
+        )?;
+        adapters.push_str(&fns);
+        let _ = writeln!(
+            suite,
+            "    driver_note_obligations(\"{}\", &[{}]);",
+            op.name,
+            obs.iter()
+                .map(|o| format!("\"{o}\""))
+                .collect::<Vec<_>>()
+                .join(", ")
+        );
+        for ob in &obs {
+            let note = if *ob == "shape" {
+                "\"signatures pinned at compile time\".into()"
+            } else {
+                "String::new()"
+            };
+            let _ = write!(
+                suite,
+                "    reg(&mut suite, Meta::new(\"{}\", \"driver\", \"{}\", \"\"), move || {{\n        let (v, s) = obl_{}_{}(fault);\n        (v, s, {})\n    }});\n",
+                id("driver", &format!("{}/{}", op.name, ob)),
+                op.name,
+                op.name,
+                ob.replace('-', "_"),
+                note,
+            );
+        }
     }
     // Negative controls, per (suite kind, op, fault).
     let mut neg_wrappers = String::new();
