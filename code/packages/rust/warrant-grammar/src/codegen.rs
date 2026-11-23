@@ -3083,6 +3083,22 @@ pub fn compile_rust_l0_harness(
         }
     }
 
+    // WX-F slice 1: a driver record on any resolved op refuses loudly.
+    // Without this, a parsed driver-only op would silently fall back to the
+    // default export while dropping its record (or a both-Some manifest
+    // would emit the export and ignore the record).
+    for op_name in ["eq", "eq_fixed", "select_bytes", "eq_u64"] {
+        if manifest.bindings.get(op_name).is_some_and(|b| b.driver.is_some()) {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0704,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "operation `{op_name}` uses a WX-F driver; generation lands in a later slice"
+                )),
+                span: (0, 0),
+            });
+        }
+    }
+
     // Resolve dynamic public exports from manifest
     let eq_export = manifest
         .bindings
