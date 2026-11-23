@@ -38,7 +38,7 @@
     {
       "id": "K-02",
       "priority": 1,
-      "status": "in-review",
+      "status": "merged",
       "title": "Production recmerge.Keys: memoised weak/strong keys per distinct host facts",
       "why": "recmerge.Merge takes a Keys interface that nothing implements ('memoised per distinct facts (PR 3)'). No shard can become a manifest until it exists.",
       "scope": "code/programs/go/kiln/internal/legacy (or a new mergecmd package) + tests",
@@ -51,7 +51,7 @@
     {
       "id": "K-03",
       "priority": 1,
-      "status": "in-review",
+      "status": "merged",
       "title": "stage-4 PR 3a: `kiln record-merge` + production recmerge.Keys",
       "why": "The last executable gap between 'shards record' and 'the ledger has manifests'. Until it lands, stage 5a lookup has nothing to look up and all recorder work stays inert.",
       "scope": "new CLI subcommand over internal/recfmt + internal/recmerge + internal/ledger; the CI jobs",
@@ -59,7 +59,8 @@
         "K-02"
       ],
       "risk": "high: a merge bug produces false hits; the CI half cannot be validated on a branch because prepare refuses an untrusted run",
-      "note": "Both landed in one PR because the Keys alone would be dead code. The remaining half of K-03 -- the `kiln-record.yml` / merge CI jobs -- is K-12."
+      "note": "Both landed in one PR because the Keys alone would be dead code. The remaining half of K-03 -- the `kiln-record.yml` / merge CI jobs -- is K-12.",
+      "pr": 19852
     },
     {
       "id": "K-04",
@@ -162,7 +163,7 @@
     {
       "id": "K-13",
       "priority": 1,
-      "status": "discovered",
+      "status": "in-review",
       "title": "An end-to-end emit test for the merge job",
       "why": "The merge's void and refusal paths are tested; an EMIT test needs a real `prepare` shard (trusted linux/amd64). It belongs with PR 3b and is the last unproven link between 'shards record' and 'the ledger has manifests'.",
       "scope": "a Linux-only test beside TestSandboxRecordCollect, plus the same in CI's kiln-sandbox job",
