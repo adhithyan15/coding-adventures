@@ -1,1 +1,1 @@
-cargo test -p ir-to-intel-8008-compiler
+cargo test --locked -p ir-to-intel-8008-compiler

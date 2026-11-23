@@ -1,1 +1,1 @@
-cargo test -p smart-home-reolink-pairing-service -- --nocapture
+cargo test --locked -p smart-home-reolink-pairing-service -- --nocapture

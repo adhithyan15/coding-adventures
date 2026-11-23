@@ -1,1 +1,1 @@
-cargo test -p engram-anki-package -- --nocapture
+cargo test --locked -p engram-anki-package -- --nocapture

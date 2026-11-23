@@ -1,1 +1,1 @@
-cargo test -p smart-home-lifx-lan-integration -- --nocapture
+cargo test --locked -p smart-home-lifx-lan-integration -- --nocapture

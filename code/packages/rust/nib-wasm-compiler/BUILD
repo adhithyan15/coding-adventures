@@ -1,1 +1,1 @@
-cargo test -p nib-wasm-compiler
+cargo test --locked -p nib-wasm-compiler

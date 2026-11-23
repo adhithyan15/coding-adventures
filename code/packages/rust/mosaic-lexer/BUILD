@@ -1,1 +1,1 @@
-cargo test -p mosaic-lexer -- --nocapture
+cargo test --locked -p mosaic-lexer -- --nocapture

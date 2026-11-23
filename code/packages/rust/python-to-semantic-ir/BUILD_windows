@@ -1,1 +1,1 @@
-cargo test -p python-to-semantic-ir -- --nocapture
+cargo test --locked -p python-to-semantic-ir -- --nocapture

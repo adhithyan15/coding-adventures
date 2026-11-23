@@ -85,4 +85,4 @@
 #
 # Listing targets explicitly rather than running the whole crate is what makes
 # the exclusions visible. A bare `cargo test -p twig-aot` would hide them.
-cargo test -p twig-aot --lib --test e4d_str_helpers --test gc_param_roots --test gc_global_and_buffer_roots --test linux_x86_64_smoke --test windows_x86_64_smoke
+cargo test --locked -p twig-aot --lib --test e4d_str_helpers --test gc_param_roots --test gc_global_and_buffer_roots --test linux_x86_64_smoke --test windows_x86_64_smoke

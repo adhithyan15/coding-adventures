@@ -1,1 +1,1 @@
-cargo test -p adj-lang-cli
+cargo test --locked -p adj-lang-cli

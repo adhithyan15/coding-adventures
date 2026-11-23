@@ -1,1 +1,1 @@
-cargo test -p smart-home-airgradient-local-integration -- --nocapture
+cargo test --locked -p smart-home-airgradient-local-integration -- --nocapture

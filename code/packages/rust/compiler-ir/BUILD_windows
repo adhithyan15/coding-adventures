@@ -1,1 +1,1 @@
-cargo test -p compiler-ir
+cargo test --locked -p compiler-ir

@@ -1,1 +1,1 @@
-cargo test -p hue-core -- --nocapture
+cargo test --locked -p hue-core -- --nocapture

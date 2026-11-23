@@ -1,1 +1,1 @@
-cargo test -p tcp-reactor -- --nocapture
+cargo test --locked -p tcp-reactor -- --nocapture

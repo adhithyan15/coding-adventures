@@ -1,1 +1,1 @@
-cargo test -p lsm-tree -- --nocapture
+cargo test --locked -p lsm-tree -- --nocapture

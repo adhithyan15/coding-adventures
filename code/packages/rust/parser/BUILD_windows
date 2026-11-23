@@ -1,1 +1,1 @@
-cargo test -p parser -- --nocapture
+cargo test --locked -p parser -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p board-vm-bluetooth -- --nocapture
+cargo test --locked -p board-vm-bluetooth -- --nocapture

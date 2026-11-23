@@ -1,1 +1,1 @@
-cargo test -p riscv-encoder
+cargo test --locked -p riscv-encoder

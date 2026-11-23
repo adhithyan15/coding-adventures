@@ -1,1 +1,1 @@
-cargo test -p smart-home-blue-iris-integration
+cargo test --locked -p smart-home-blue-iris-integration

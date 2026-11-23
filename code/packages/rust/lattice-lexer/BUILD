@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-lattice-lexer -- --nocapture
+cargo test --locked -p coding-adventures-lattice-lexer -- --nocapture

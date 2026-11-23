@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-mips-r2000-gatelevel
+cargo test --locked -p coding-adventures-mips-r2000-gatelevel

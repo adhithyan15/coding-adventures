@@ -1,1 +1,1 @@
-cargo test -p https-reviewed-server-path-binding -- --nocapture
+cargo test --locked -p https-reviewed-server-path-binding -- --nocapture

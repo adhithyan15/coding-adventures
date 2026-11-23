@@ -1,1 +1,1 @@
-cargo test -p paint-codec-png -- --nocapture
+cargo test --locked -p paint-codec-png -- --nocapture

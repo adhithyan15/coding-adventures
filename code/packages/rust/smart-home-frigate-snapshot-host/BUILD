@@ -1,1 +1,1 @@
-cargo test -p smart-home-frigate-snapshot-host -- --nocapture
+cargo test --locked -p smart-home-frigate-snapshot-host -- --nocapture

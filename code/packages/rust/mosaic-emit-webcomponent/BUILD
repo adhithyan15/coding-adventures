@@ -1,1 +1,1 @@
-cargo test -p mosaic-emit-webcomponent -- --nocapture
+cargo test --locked -p mosaic-emit-webcomponent -- --nocapture

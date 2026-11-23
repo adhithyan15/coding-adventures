@@ -1,2 +1,2 @@
 # needs-toolchain: python
-cargo test -p java-to-semantic-ir -- --nocapture
+cargo test --locked -p java-to-semantic-ir -- --nocapture

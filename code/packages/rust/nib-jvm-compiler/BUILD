@@ -1,1 +1,1 @@
-cargo test -p nib-jvm-compiler
+cargo test --locked -p nib-jvm-compiler

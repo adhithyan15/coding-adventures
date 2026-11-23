@@ -1,1 +1,1 @@
-cargo test -p state-machine-markup-json-deserializer -- --nocapture
+cargo test --locked -p state-machine-markup-json-deserializer -- --nocapture

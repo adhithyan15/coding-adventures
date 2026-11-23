@@ -55,11 +55,11 @@
 # formals (VM-D005: x86_64-backend had no stack-passed arguments), and the JVM
 # raised `VerifyError: Stack size too large` on captured 3-D/4-D real arrays
 # (#12032: iir-to-jvm-class-file declared a fixed max_stack).
-cargo test -p lang-aot --lib --test cargo_archive_path --test array_ref_tracing --test beam_array_len --test beam_cons --test beam_emit --test beam_predicates --test beam_symbols_lambda --test cil_cons --test cil_emit --test cil_lambda --test cil_predicates --test cil_symbols --test clr_long_branches --test clr_real_cons --test clr_real_lambda --test clr_real_macsyma --test clr_real_predicates --test clr_real_scalar --test clr_real_symbols --test clr_source_typed --test clr_strict_flow --test clr_typed_scalars --test conformance --test e6d2b_dynamic_arith --test end_to_end_smoke --test e6d6_llvm_records --test e6d6b_union_match_tagged --test e6d7a_wasm_closures --test historical_round_trip --test jit_mccarthy --test jvm_cons --test jvm_emit --test jvm_lambda --test jvm_predicates --test jvm_symbols --test llvm_cond --test llvm_cons --test llvm_gc_completion --test llvm_gc_write_barrier --test llvm_lambda --test llvm_predicates --test llvm_scalar --test llvm_symbols --test macos_native_lisp --test macsyma_conformance --test metacircular --test vm_gc_reclamation --test wasm_emit --test wasm_memory_growth --test op_conformance
-cargo test -p lang-aot --test lang_matrix t7_differential_random_basic_
-cargo test -p lang-aot --test lang_matrix portable_text_stdout_
-cargo test -p lang-aot --test lang_matrix matrix_every_proven_cell_agrees -- --exact --nocapture
-cargo test -p lang-aot --test lang_matrix proven_columns_do_not_silently_skip -- --exact
+cargo test --locked -p lang-aot --lib --test cargo_archive_path --test array_ref_tracing --test beam_array_len --test beam_cons --test beam_emit --test beam_predicates --test beam_symbols_lambda --test cil_cons --test cil_emit --test cil_lambda --test cil_predicates --test cil_symbols --test clr_long_branches --test clr_real_cons --test clr_real_lambda --test clr_real_macsyma --test clr_real_predicates --test clr_real_scalar --test clr_real_symbols --test clr_source_typed --test clr_strict_flow --test clr_typed_scalars --test conformance --test e6d2b_dynamic_arith --test end_to_end_smoke --test e6d6_llvm_records --test e6d6b_union_match_tagged --test e6d7a_wasm_closures --test historical_round_trip --test jit_mccarthy --test jvm_cons --test jvm_emit --test jvm_lambda --test jvm_predicates --test jvm_symbols --test llvm_cond --test llvm_cons --test llvm_gc_completion --test llvm_gc_write_barrier --test llvm_lambda --test llvm_predicates --test llvm_scalar --test llvm_symbols --test macos_native_lisp --test macsyma_conformance --test metacircular --test vm_gc_reclamation --test wasm_emit --test wasm_memory_growth --test op_conformance
+cargo test --locked -p lang-aot --test lang_matrix t7_differential_random_basic_
+cargo test --locked -p lang-aot --test lang_matrix portable_text_stdout_
+cargo test --locked -p lang-aot --test lang_matrix matrix_every_proven_cell_agrees -- --exact --nocapture
+cargo test --locked -p lang-aot --test lang_matrix proven_columns_do_not_silently_skip -- --exact
 # PREP01 slice 1's acceptance criterion. The line above already RUNS the nine
 # MacroOct rows on every backend whose toolchain is present, but running them
 # only proves the selected program behaves; these two prove it is the SAME
@@ -67,27 +67,27 @@ cargo test -p lang-aot --test lang_matrix proven_columns_do_not_silently_skip --
 # slice exists to make. A filter rather than a new test target, so the oracle
 # cannot drift from the rows it checks — it reads `PROGRAMS` directly and fails
 # if any MacroOct row lacks a hand-expanded twin.
-cargo test -p lang-aot --test lang_matrix macrooct -- --nocapture
+cargo test --locked -p lang-aot --test lang_matrix macrooct -- --nocapture
 # The pinned corpus counts. Also filtered in rather than left to the unfiltered
 # target, which is excluded above — so before this line the declaration in
 # LANG-VM-FEATURE-COVERAGE.md and the corpus could diverge in CI without
 # anything noticing, which is exactly the failure the test was written to stop.
-cargo test -p lang-aot --test lang_matrix feature_coverage_doc_counts_match_programs_source -- --exact
+cargo test --locked -p lang-aot --test lang_matrix feature_coverage_doc_counts_match_programs_source -- --exact
 # LANG84 phase 5a (= LANG83 PR2): Ruby on every backend. The Ruby rows
 # also run in the full-corpus aggregate above; these name the Ruby-specific
 # claims so a Ruby regression is reported as one. The oracle compares every
 # expectation with a host ruby 3.3 (skips without one); the corpus test ties
 # each row to code/grammars/ruby/corpus/rb-int-puts; the LANG83 check runs
 # `check_module_for` on all nine backends, CLR, BEAM and AArch64 included.
-cargo test -p lang-aot --test lang_matrix ruby_rows_run_on_every_available_backend -- --exact
-cargo test -p lang-aot --test lang_matrix ruby_rows_are_rb_int_puts_corpus_cases -- --exact
-cargo test -p lang-aot --test lang_matrix ruby_rows_agree_with_the_host_ruby_oracle -- --exact
-cargo test -p lang-aot --test lang_matrix ruby_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
+cargo test --locked -p lang-aot --test lang_matrix ruby_rows_run_on_every_available_backend -- --exact
+cargo test --locked -p lang-aot --test lang_matrix ruby_rows_are_rb_int_puts_corpus_cases -- --exact
+cargo test --locked -p lang-aot --test lang_matrix ruby_rows_agree_with_the_host_ruby_oracle -- --exact
+cargo test --locked -p lang-aot --test lang_matrix ruby_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
 # LANG84 phase 5b slice 2: the Ruby rows (now 28: the corpus on the default 3.3.6
 # and on 3.3.5, the IIR-identity class representative) are exactly the release
 # sweep's boundary set in code/grammars/ruby/release_classes.csv.
-cargo test -p lang-aot --test lang_matrix ruby_rows_run_their_corpus_case -- --exact
-cargo test -p lang-aot --test lang_matrix trap_kinds_are_read_from_every_columns_stderr -- --exact
+cargo test --locked -p lang-aot --test lang_matrix ruby_rows_run_their_corpus_case -- --exact
+cargo test --locked -p lang-aot --test lang_matrix trap_kinds_are_read_from_every_columns_stderr -- --exact
 #
 # VM-065 AUDIT (2026-09-21): `lang_matrix` is run BY NAME FILTER here, because
 # the unfiltered target is red (above). A filter is not a file: a test living
@@ -114,16 +114,16 @@ cargo test -p lang-aot --test lang_matrix trap_kinds_are_read_from_every_columns
 # When adding a test to lang_matrix.rs, add a filter for it here in the SAME
 # commit, and prefer `-- --exact` so a later rename fails loudly instead of
 # silently matching nothing.
-cargo test -p lang-aot --test lang_matrix t7_differential_random_u8_expressions_agree -- --exact
-cargo test -p lang-aot --test lang_matrix twig_beam_match_union -- --exact
-cargo test -p lang-aot --test lang_matrix twig_beam_string_ops -- --exact
-cargo test -p lang-aot --test lang_matrix twig_beam_dynamic_arith_list_ops_and_closures -- --exact
-cargo test -p lang-aot --test lang_matrix every_backend_name_round_trips_through_the_single_cell_env_var -- --exact
-cargo test -p lang-aot --test lang_matrix algol_out_of_range_entier_traps_on_every_available_standard_backend -- --exact
+cargo test --locked -p lang-aot --test lang_matrix t7_differential_random_u8_expressions_agree -- --exact
+cargo test --locked -p lang-aot --test lang_matrix twig_beam_match_union -- --exact
+cargo test --locked -p lang-aot --test lang_matrix twig_beam_string_ops -- --exact
+cargo test --locked -p lang-aot --test lang_matrix twig_beam_dynamic_arith_list_ops_and_closures -- --exact
+cargo test --locked -p lang-aot --test lang_matrix every_backend_name_round_trips_through_the_single_cell_env_var -- --exact
+cargo test --locked -p lang-aot --test lang_matrix algol_out_of_range_entier_traps_on_every_available_standard_backend -- --exact
 # LANG83 ordered output stream: one ALGOL program mixing `print_i64` and
 # `print_str` must produce one ordered stream on every available column (WASM/VM/
 # JIT used to drop the integers whenever any byte output existed).
-cargo test -p lang-aot --test lang_matrix mixed_print_i64_and_print_str_output_is_one_ordered_stream_on_every_available_backend -- --exact
+cargo test --locked -p lang-aot --test lang_matrix mixed_print_i64_and_print_str_output_is_one_ordered_stream_on_every_available_backend -- --exact
 # LANG84 phases 4a and 4c: Perl on every backend. The 33 Perl rows (the
 # pl-int-print corpus on the three release-class representatives) also run in
 # the full-corpus aggregate above; these name the Perl-specific claims so a Perl
@@ -131,10 +131,10 @@ cargo test -p lang-aot --test lang_matrix mixed_print_i64_and_print_str_output_i
 # with a host `perl` (skips without one); the LANG83 check runs
 # `check_module_for` on all nine backends, CLR and BEAM included; the corpus
 # test ties every row to its corpus case and to the release sweep's boundary set.
-cargo test -p lang-aot --test lang_matrix perl_rows_run_on_every_available_backend -- --exact
-cargo test -p lang-aot --test lang_matrix perl_rows_agree_with_the_host_perl_oracle -- --exact
-cargo test -p lang-aot --test lang_matrix perl_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
-cargo test -p lang-aot --test lang_matrix perl_rows_run_their_corpus_case -- --exact
+cargo test --locked -p lang-aot --test lang_matrix perl_rows_run_on_every_available_backend -- --exact
+cargo test --locked -p lang-aot --test lang_matrix perl_rows_agree_with_the_host_perl_oracle -- --exact
+cargo test --locked -p lang-aot --test lang_matrix perl_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
+cargo test --locked -p lang-aot --test lang_matrix perl_rows_run_their_corpus_case -- --exact
 # LANG84 phase 7a: Python's py-int-print on every backend. The Python rows
 # also run in the full-corpus aggregate above; these name the
 # Python-specific claims so a Python regression is reported as one. The oracle
@@ -143,10 +143,10 @@ cargo test -p lang-aot --test lang_matrix perl_rows_run_their_corpus_case -- --e
 # directions; the LANG83 check runs `check_module_for` on all nine backends,
 # CLR, BEAM and AArch64 included. The StdoutThenTrap trap-kind reader is pinned
 # by the last line (shared with LANG84 phase 5a, which lists it too).
-cargo test -p lang-aot --test lang_matrix python_rows_run_on_every_available_backend -- --exact
-cargo test -p lang-aot --test lang_matrix python_rows_are_py_int_print_corpus_cases -- --exact
-cargo test -p lang-aot --test lang_matrix python_rows_agree_with_the_host_python_oracle -- --exact
-cargo test -p lang-aot --test lang_matrix python_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
+cargo test --locked -p lang-aot --test lang_matrix python_rows_run_on_every_available_backend -- --exact
+cargo test --locked -p lang-aot --test lang_matrix python_rows_are_py_int_print_corpus_cases -- --exact
+cargo test --locked -p lang-aot --test lang_matrix python_rows_agree_with_the_host_python_oracle -- --exact
+cargo test --locked -p lang-aot --test lang_matrix python_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
 # LANG84 phase 7b slice 2: the Python rows (now 53: the corpus on the default
 # 3.13.16 and on the class representatives 3.0a1 and 3.12.3) are exactly the
 # release sweep's boundary set in code/grammars/python/release_classes.csv.
@@ -154,7 +154,7 @@ cargo test -p lang-aot --test lang_matrix python_rows_pass_the_lang83_check_on_a
 # statement and classic `/`) on 2.2, its one class's representative: the same
 # five tests cover them (run, LANG83 check, boundary set per subset; the
 # corpus and host-python3 oracle tests read the py-int-print rows only).
-cargo test -p lang-aot --test lang_matrix python_rows_run_their_corpus_case -- --exact
+cargo test --locked -p lang-aot --test lang_matrix python_rows_run_their_corpus_case -- --exact
 # LANG84 phase 6e: JavaScript's es-number-log on every backend. The 38 rows
 # (the corpus on es2016, es2021 and the default es2020) also run in the
 # full-corpus aggregate above; these name the JavaScript-specific claims. The
@@ -163,10 +163,10 @@ cargo test -p lang-aot --test lang_matrix python_rows_run_their_corpus_case -- -
 # which rows BEAM refuses at compile time (the IEEE `f64_*` arithmetic); the JIT
 # test compiles `main` and runs it compiled (no interpreter fallback); the trap test
 # checks `Trap.Unbound` (JavaScript's ReferenceError) after output on every column.
-cargo test -p lang-aot --test lang_matrix javascript_rows_run_on_every_available_backend -- --exact
-cargo test -p lang-aot --test lang_matrix javascript_rows_agree_with_the_host_node_oracle -- --exact
-cargo test -p lang-aot --test lang_matrix javascript_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
-cargo test -p lang-aot --test lang_matrix javascript_rows_compile_and_run_on_the_jit_without_its_interpreter_fallback -- --exact
-cargo test -p lang-aot --test lang_matrix javascript_reference_errors_trap_after_output_on_every_available_backend -- --exact
-cargo test -p lang-aot --test lang_matrix javascript_rows_run_their_corpus_case -- --exact
-cargo test -p lang-aot --test lang_matrix trap_kinds_are_read_from_every_columns_stderr -- --exact
+cargo test --locked -p lang-aot --test lang_matrix javascript_rows_run_on_every_available_backend -- --exact
+cargo test --locked -p lang-aot --test lang_matrix javascript_rows_agree_with_the_host_node_oracle -- --exact
+cargo test --locked -p lang-aot --test lang_matrix javascript_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
+cargo test --locked -p lang-aot --test lang_matrix javascript_rows_compile_and_run_on_the_jit_without_its_interpreter_fallback -- --exact
+cargo test --locked -p lang-aot --test lang_matrix javascript_reference_errors_trap_after_output_on_every_available_backend -- --exact
+cargo test --locked -p lang-aot --test lang_matrix javascript_rows_run_their_corpus_case -- --exact
+cargo test --locked -p lang-aot --test lang_matrix trap_kinds_are_read_from_every_columns_stderr -- --exact

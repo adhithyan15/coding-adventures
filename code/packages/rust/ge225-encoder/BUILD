@@ -1,1 +1,1 @@
-cargo test -p ge225-encoder
+cargo test --locked -p ge225-encoder

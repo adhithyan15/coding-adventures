@@ -1,2 +1,2 @@
-cargo build -p python-iir-compiler
-cargo test -p python-iir-compiler
+cargo build --locked -p python-iir-compiler
+cargo test --locked -p python-iir-compiler

@@ -1,1 +1,1 @@
-cargo test -p tls13-hkdf-label -- --nocapture
+cargo test --locked -p tls13-hkdf-label -- --nocapture

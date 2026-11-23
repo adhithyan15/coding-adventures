@@ -1,1 +1,1 @@
-cargo test -p silicon-rust-napi -- --nocapture
+cargo test --locked -p silicon-rust-napi -- --nocapture

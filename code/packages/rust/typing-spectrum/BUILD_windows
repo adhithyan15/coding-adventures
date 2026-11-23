@@ -1,2 +1,2 @@
-cargo build -p typing-spectrum
-cargo test -p typing-spectrum
+cargo build --locked -p typing-spectrum
+cargo test --locked -p typing-spectrum

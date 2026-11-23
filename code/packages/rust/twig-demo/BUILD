@@ -1,1 +1,1 @@
-cargo test -p twig-demo -- --nocapture
+cargo test --locked -p twig-demo -- --nocapture

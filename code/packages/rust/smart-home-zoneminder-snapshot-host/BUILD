@@ -1,1 +1,1 @@
-cargo test -p smart-home-zoneminder-snapshot-host -- --nocapture
+cargo test --locked -p smart-home-zoneminder-snapshot-host -- --nocapture

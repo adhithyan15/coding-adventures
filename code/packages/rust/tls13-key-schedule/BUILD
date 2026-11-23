@@ -1,1 +1,1 @@
-cargo test -p tls13-key-schedule -- --nocapture
+cargo test --locked -p tls13-key-schedule -- --nocapture

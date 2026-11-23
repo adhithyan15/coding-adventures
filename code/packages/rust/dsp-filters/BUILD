@@ -1,1 +1,1 @@
-cargo test -p dsp-filters -- --nocapture
+cargo test --locked -p dsp-filters -- --nocapture

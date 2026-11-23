@@ -1,1 +1,1 @@
-cargo test -p hdl-elaboration -- --nocapture
+cargo test --locked -p hdl-elaboration -- --nocapture

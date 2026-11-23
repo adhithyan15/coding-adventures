@@ -1,1 +1,1 @@
-cargo test -p tcp-runtime -- --nocapture
+cargo test --locked -p tcp-runtime -- --nocapture

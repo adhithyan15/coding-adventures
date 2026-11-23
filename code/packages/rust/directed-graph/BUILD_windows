@@ -1,1 +1,1 @@
-cargo test -p directed-graph -- --nocapture
+cargo test --locked -p directed-graph -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-axiom-repl -- --nocapture
+cargo test --locked -p coding-adventures-axiom-repl -- --nocapture

@@ -1,6 +1,6 @@
 # `cargo test` runs BOTH targets -- the lib unit tests and the `command_provider`
 # integration test -- so nothing below reduces what is actually exercised.
-cargo test -p chief-of-staff-hardware-key-approval -- --nocapture
+cargo test --locked -p chief-of-staff-hardware-key-approval -- --nocapture
 
 # Coverage runs on tarpaulin's LLVM engine, NOT its default ptrace engine.
 #

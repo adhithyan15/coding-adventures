@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-verilog-lexer -- --nocapture
+cargo test --locked -p coding-adventures-verilog-lexer -- --nocapture

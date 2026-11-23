@@ -1,1 +1,1 @@
-cargo test -p intel8080-backend
+cargo test --locked -p intel8080-backend

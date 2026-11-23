@@ -1,1 +1,1 @@
-cargo test -p riscv-simulator -- --nocapture
+cargo test --locked -p riscv-simulator -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p starlark-interpreter -- --nocapture
+cargo test --locked -p starlark-interpreter -- --nocapture

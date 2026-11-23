@@ -1,1 +1,1 @@
-cargo test -p wasm-conformance -- --nocapture
+cargo test --locked -p wasm-conformance -- --nocapture

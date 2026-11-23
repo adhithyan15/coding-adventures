@@ -1,1 +1,1 @@
-cargo test -p macsyma-to-semantic-ir -- --nocapture
+cargo test --locked -p macsyma-to-semantic-ir -- --nocapture

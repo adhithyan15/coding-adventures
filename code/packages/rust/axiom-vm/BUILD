@@ -1,1 +1,1 @@
-cargo test -p axiom-vm
+cargo test --locked -p axiom-vm

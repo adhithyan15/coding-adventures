@@ -1,2 +1,2 @@
-cargo build -p vm-runtime
-cargo test -p vm-runtime
+cargo build --locked -p vm-runtime
+cargo test --locked -p vm-runtime

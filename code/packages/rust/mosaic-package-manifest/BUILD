@@ -1,1 +1,1 @@
-cargo test -p mosaic-package-manifest -- --nocapture
+cargo test --locked -p mosaic-package-manifest -- --nocapture

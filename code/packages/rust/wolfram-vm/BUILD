@@ -1,1 +1,1 @@
-cargo test -p wolfram-vm
+cargo test --locked -p wolfram-vm

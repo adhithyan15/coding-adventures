@@ -10,5 +10,5 @@ export CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=rust-lld
 
 cd "$WORKSPACE"
 
-cargo build --package coding-adventures-sql-optimizer
-cargo test  --package coding-adventures-sql-optimizer
+cargo build --locked --package coding-adventures-sql-optimizer
+cargo test --locked  --package coding-adventures-sql-optimizer

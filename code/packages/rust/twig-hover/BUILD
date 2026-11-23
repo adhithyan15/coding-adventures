@@ -1,1 +1,1 @@
-cargo test -p twig-hover -- --nocapture
+cargo test --locked -p twig-hover -- --nocapture

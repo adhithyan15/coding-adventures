@@ -1,1 +1,1 @@
-cargo test --package microwatt-powerisa-simulator
+cargo test --locked --package microwatt-powerisa-simulator

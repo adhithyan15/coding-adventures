@@ -1,1 +1,1 @@
-cargo test -p prolog-lexer -- --nocapture
+cargo test --locked -p prolog-lexer -- --nocapture

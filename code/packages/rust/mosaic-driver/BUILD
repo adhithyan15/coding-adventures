@@ -1,1 +1,1 @@
-cargo test -p mosaic-driver -- --nocapture
+cargo test --locked -p mosaic-driver -- --nocapture

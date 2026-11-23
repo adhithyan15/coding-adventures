@@ -1,1 +1,1 @@
-cargo test -p hazard-detection -- --nocapture
+cargo test --locked -p hazard-detection -- --nocapture

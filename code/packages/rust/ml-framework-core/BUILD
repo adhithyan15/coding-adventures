@@ -1,1 +1,1 @@
-cargo test -p ml-framework-core -- --nocapture
+cargo test --locked -p ml-framework-core -- --nocapture

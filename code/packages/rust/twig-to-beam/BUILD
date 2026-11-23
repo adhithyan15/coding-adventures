@@ -1,1 +1,1 @@
-cargo test -p twig-to-beam
+cargo test --locked -p twig-to-beam

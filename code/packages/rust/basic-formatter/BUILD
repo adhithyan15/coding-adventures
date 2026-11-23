@@ -1,1 +1,1 @@
-cargo test -p basic-formatter -- --nocapture
+cargo test --locked -p basic-formatter -- --nocapture

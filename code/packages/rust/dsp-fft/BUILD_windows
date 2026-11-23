@@ -1,1 +1,1 @@
-cargo test -p dsp-fft
+cargo test --locked -p dsp-fft

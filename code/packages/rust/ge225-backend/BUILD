@@ -1,1 +1,1 @@
-cargo test -p ge225-backend
+cargo test --locked -p ge225-backend

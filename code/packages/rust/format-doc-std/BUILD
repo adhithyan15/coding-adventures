@@ -1,1 +1,1 @@
-cargo test -p format-doc-std -- --nocapture
+cargo test --locked -p format-doc-std -- --nocapture

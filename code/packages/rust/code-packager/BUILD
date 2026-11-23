@@ -1,2 +1,2 @@
-cargo build -p code-packager
-cargo test -p code-packager
+cargo build --locked -p code-packager
+cargo test --locked -p code-packager

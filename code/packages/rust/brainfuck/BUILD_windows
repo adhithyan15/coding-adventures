@@ -1,1 +1,1 @@
-cargo test -p brainfuck
+cargo test --locked -p brainfuck

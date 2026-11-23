@@ -1,2 +1,2 @@
-cargo test --manifest-path Cargo.toml
-cargo build --manifest-path Cargo.toml
+cargo test --locked --manifest-path Cargo.toml
+cargo build --locked --manifest-path Cargo.toml

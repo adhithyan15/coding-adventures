@@ -1,1 +1,1 @@
-cargo test -p wasm-runtime -- --nocapture
+cargo test --locked -p wasm-runtime -- --nocapture

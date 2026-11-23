@@ -1,1 +1,1 @@
-cargo test -p javascript-to-semantic-ir -- --nocapture
+cargo test --locked -p javascript-to-semantic-ir -- --nocapture

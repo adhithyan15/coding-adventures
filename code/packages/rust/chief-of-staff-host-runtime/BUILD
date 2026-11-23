@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-host-runtime -- --nocapture
+cargo test --locked -p chief-of-staff-host-runtime -- --nocapture

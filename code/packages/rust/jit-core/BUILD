@@ -1,2 +1,2 @@
-cargo build -p jit-core
-cargo test -p jit-core
+cargo build --locked -p jit-core
+cargo test --locked -p jit-core

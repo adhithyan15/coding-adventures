@@ -1,1 +1,1 @@
-cargo test -p smart-home-sonos-upnp-integration -- --nocapture
+cargo test --locked -p smart-home-sonos-upnp-integration -- --nocapture

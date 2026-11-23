@@ -1,1 +1,1 @@
-cargo test -p derive-vm
+cargo test --locked -p derive-vm

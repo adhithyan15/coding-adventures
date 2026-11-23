@@ -1,1 +1,1 @@
-cargo test -p maple-vm
+cargo test --locked -p maple-vm

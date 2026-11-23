@@ -1,1 +1,1 @@
-cargo test -p smart-home-shelly-integration -- --nocapture
+cargo test --locked -p smart-home-shelly-integration -- --nocapture

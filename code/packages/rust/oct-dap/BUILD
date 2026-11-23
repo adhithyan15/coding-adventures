@@ -1,1 +1,1 @@
-cargo test -p oct-dap -- --nocapture
+cargo test --locked -p oct-dap -- --nocapture

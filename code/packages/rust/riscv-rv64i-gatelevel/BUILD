@@ -1,1 +1,1 @@
-cargo test -p riscv-rv64i-gatelevel -- --nocapture
+cargo test --locked -p riscv-rv64i-gatelevel -- --nocapture

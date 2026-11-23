@@ -1,1 +1,1 @@
-cargo test -p nib-semantic-tokens -- --nocapture
+cargo test --locked -p nib-semantic-tokens -- --nocapture

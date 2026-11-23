@@ -1,1 +1,1 @@
-cargo test -p irc-net-reactor -- --nocapture
+cargo test --locked -p irc-net-reactor -- --nocapture

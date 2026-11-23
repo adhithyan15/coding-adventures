@@ -1,1 +1,1 @@
-cargo test -p macsyma-iir-compiler
+cargo test --locked -p macsyma-iir-compiler

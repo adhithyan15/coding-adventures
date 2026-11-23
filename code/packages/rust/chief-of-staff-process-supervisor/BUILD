@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-process-supervisor -- --nocapture
+cargo test --locked -p chief-of-staff-process-supervisor -- --nocapture

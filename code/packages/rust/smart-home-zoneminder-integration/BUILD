@@ -1,1 +1,1 @@
-cargo test -p smart-home-zoneminder-integration
+cargo test --locked -p smart-home-zoneminder-integration

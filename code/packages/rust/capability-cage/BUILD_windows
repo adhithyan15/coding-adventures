@@ -1,1 +1,1 @@
-cargo test -p capability-cage
+cargo test --locked -p capability-cage

@@ -1,1 +1,1 @@
-cargo test -p blas-library -- --nocapture
+cargo test --locked -p blas-library -- --nocapture

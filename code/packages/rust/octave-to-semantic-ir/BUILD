@@ -1,1 +1,1 @@
-cargo test -p octave-to-semantic-ir -- --nocapture
+cargo test --locked -p octave-to-semantic-ir -- --nocapture

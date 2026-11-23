@@ -1,1 +1,1 @@
-cargo test -p armv7-gatelevel -- --nocapture
+cargo test --locked -p armv7-gatelevel -- --nocapture

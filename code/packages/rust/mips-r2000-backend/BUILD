@@ -1,1 +1,1 @@
-cargo test -p mips-r2000-backend
+cargo test --locked -p mips-r2000-backend

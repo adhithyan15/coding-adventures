@@ -1,1 +1,1 @@
-cargo test -p twig-to-semantic-ir -- --nocapture
+cargo test --locked -p twig-to-semantic-ir -- --nocapture

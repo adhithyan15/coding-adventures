@@ -1,2 +1,2 @@
-cargo build -p coding-adventures-macronib-lexer
-cargo test -p coding-adventures-macronib-lexer
+cargo build --locked -p coding-adventures-macronib-lexer
+cargo test --locked -p coding-adventures-macronib-lexer

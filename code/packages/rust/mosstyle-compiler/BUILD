@@ -1,1 +1,1 @@
-cargo test -p mosstyle-compiler -- --nocapture
+cargo test --locked -p mosstyle-compiler -- --nocapture

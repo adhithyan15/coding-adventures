@@ -1,1 +1,1 @@
-cargo test -p intel8086-encoder -- --nocapture
+cargo test --locked -p intel8086-encoder -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p wasm-execution -- --nocapture
+cargo test --locked -p wasm-execution -- --nocapture

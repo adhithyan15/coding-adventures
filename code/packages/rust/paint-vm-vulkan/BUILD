@@ -1,1 +1,1 @@
-cargo test -p paint-vm-vulkan -- --nocapture
+cargo test --locked -p paint-vm-vulkan -- --nocapture

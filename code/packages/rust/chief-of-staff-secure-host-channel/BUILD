@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-secure-host-channel -- --nocapture
+cargo test --locked -p chief-of-staff-secure-host-channel -- --nocapture

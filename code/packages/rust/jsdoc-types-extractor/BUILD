@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-jsdoc-types-extractor -- --nocapture
+cargo test --locked -p coding-adventures-jsdoc-types-extractor -- --nocapture

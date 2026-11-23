@@ -1,1 +1,1 @@
-cargo test -p tls13-server-hello-version-selection -- --nocapture
+cargo test --locked -p tls13-server-hello-version-selection -- --nocapture

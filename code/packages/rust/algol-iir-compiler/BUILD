@@ -1,2 +1,2 @@
-cargo build -p algol-iir-compiler
-cargo test -p algol-iir-compiler
+cargo build --locked -p algol-iir-compiler
+cargo test --locked -p algol-iir-compiler

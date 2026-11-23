@@ -1,1 +1,1 @@
-cargo test -p macsyma-vm
+cargo test --locked -p macsyma-vm

@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-maple-runtime -- --nocapture
+cargo test --locked -p coding-adventures-maple-runtime -- --nocapture

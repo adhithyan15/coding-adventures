@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-maxima-runtime -- --nocapture
+cargo test --locked -p coding-adventures-maxima-runtime -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-javascript-ast -- --nocapture
+cargo test --locked -p coding-adventures-javascript-ast -- --nocapture

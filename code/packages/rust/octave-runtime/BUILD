@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-octave-runtime -- --nocapture
+cargo test --locked -p coding-adventures-octave-runtime -- --nocapture

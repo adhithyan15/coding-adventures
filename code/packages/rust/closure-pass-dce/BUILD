@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-closure-pass-dce -- --nocapture
+cargo test --locked -p coding-adventures-closure-pass-dce -- --nocapture

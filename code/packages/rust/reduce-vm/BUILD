@@ -1,1 +1,1 @@
-cargo test -p reduce-vm
+cargo test --locked -p reduce-vm

@@ -7,5 +7,5 @@
 # `cargo test`, for the same reason: it is PREP01 slice 1's acceptance
 # criterion, and a suite that compiles but never runs is worse than no suite,
 # because it reads as coverage.
-cargo build -p coding-adventures-macrooct-iir-compiler
-cargo test -p coding-adventures-macrooct-iir-compiler --lib --test iir_identity --test prelex_budget
+cargo build --locked -p coding-adventures-macrooct-iir-compiler
+cargo test --locked -p coding-adventures-macrooct-iir-compiler --lib --test iir_identity --test prelex_budget

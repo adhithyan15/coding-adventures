@@ -1,1 +1,1 @@
-cargo test -p barcode-1d -- --nocapture
+cargo test --locked -p barcode-1d -- --nocapture

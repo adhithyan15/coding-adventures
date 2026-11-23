@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-xlsx-writer -- --nocapture
+cargo test --locked -p coding-adventures-xlsx-writer -- --nocapture

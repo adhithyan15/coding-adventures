@@ -1,1 +1,1 @@
-cargo test -p brainfuck-wasm-compiler
+cargo test --locked -p brainfuck-wasm-compiler

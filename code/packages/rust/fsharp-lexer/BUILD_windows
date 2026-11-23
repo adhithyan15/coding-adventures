@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-fsharp-lexer -- --nocapture
+cargo test --locked -p coding-adventures-fsharp-lexer -- --nocapture

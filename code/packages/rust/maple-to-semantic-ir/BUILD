@@ -1,1 +1,1 @@
-cargo test -p maple-to-semantic-ir -- --nocapture
+cargo test --locked -p maple-to-semantic-ir -- --nocapture

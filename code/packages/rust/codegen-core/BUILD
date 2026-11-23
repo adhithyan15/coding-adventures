@@ -1,2 +1,2 @@
-cargo build -p codegen-core
-cargo test -p codegen-core
+cargo build --locked -p codegen-core
+cargo test --locked -p codegen-core

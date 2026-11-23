@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-q-runtime -- --nocapture
+cargo test --locked -p coding-adventures-q-runtime -- --nocapture

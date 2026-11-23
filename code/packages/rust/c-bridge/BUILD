@@ -1,1 +1,1 @@
-cargo test -p c-bridge -- --nocapture
+cargo test --locked -p c-bridge -- --nocapture

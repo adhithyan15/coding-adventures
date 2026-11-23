@@ -335,6 +335,17 @@ all and gained one here), and every `cargo` line in their `BUILD` and
 manifest fails the build instead of silently re-resolving and downloading
 different third-party code.
 
+**`rust` landed second (2026-11-22).** Every `cargo` invocation in
+`code/packages/rust/*/BUILD` and `BUILD_windows` (3,566 lines across 2,134
+files) now passes `--locked`, as do the 49 packages that go through
+`code/packages/starlark/library-rules/rust_library.star`. The workspace
+`Cargo.lock` is committed and current, `os-kernel`'s own lockfile (it is
+excluded from the workspace and builds for a different target) is current, and
+the two external manifests a BUILD runs (`programs/rust/vos-link`) are current
+too. `tarpaulin` and `fmt` are deliberately left unlocked: they measure and
+format rather than resolve a build, and the same packages' `test` and `build`
+lines already fail on a stale lockfile.
+
 **Pinning is per closure, not per package.** The class of a package is decided
 by every language in its closure, so a `wasm` crate — each of which depends on
 a `code/packages/rust/*` crate — still reports `unpinned:rust`. `rust` is
@@ -344,6 +355,15 @@ and is the next language to pin; until it is, no `wasm` package leaves the
 KILN04 manifest exists (`classify` in `internal/legacy/plan.go`), so a pinning
 PR's observable effect today is the `unpinned:<language>` reason and the
 disagreement denominator, exactly as section 7.1 asks.
+
+Measured on the real graph (5,779 packages) after pinning `rust`: 1,698
+packages changed and the ONLY difference in every one is that `unpinned:rust`
+is gone. 1,636 of them move from class `unpinned` to class `uncacheable`
+because `classify` has nowhere else to put "pinned, no trace yet" while
+`cacheable` is unreachable; that is the documented fall-through, but the
+bucket's name then says something untrue about them. Naming it honestly is a
+schema change (the plan's class vocabulary is `cacheable|unpinned|uncacheable`)
+and is left as an open item rather than smuggled into an M0 PR.
 
 M2 records shadow passes for `unpinned` packages in a separate scope and
 reports hit and disagreement rates per class: the unpinned disagreement rate

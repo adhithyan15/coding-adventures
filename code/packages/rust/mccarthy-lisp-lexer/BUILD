@@ -1,1 +1,1 @@
-cargo test -p mccarthy-lisp-lexer
+cargo test --locked -p mccarthy-lisp-lexer

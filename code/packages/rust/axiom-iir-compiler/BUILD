@@ -1,1 +1,1 @@
-cargo test -p axiom-iir-compiler
+cargo test --locked -p axiom-iir-compiler

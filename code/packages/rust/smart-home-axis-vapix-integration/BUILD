@@ -1,1 +1,1 @@
-cargo test -p smart-home-axis-vapix-integration
+cargo test --locked -p smart-home-axis-vapix-integration

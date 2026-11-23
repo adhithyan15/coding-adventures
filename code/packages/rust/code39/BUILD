@@ -1,1 +1,1 @@
-cargo test -p code39 -- --nocapture
+cargo test --locked -p code39 -- --nocapture

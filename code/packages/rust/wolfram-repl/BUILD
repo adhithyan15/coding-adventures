@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-wolfram-repl -- --nocapture
+cargo test --locked -p coding-adventures-wolfram-repl -- --nocapture

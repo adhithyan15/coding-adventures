@@ -1,1 +1,1 @@
-cargo test -p oct-formatter -- --nocapture
+cargo test --locked -p oct-formatter -- --nocapture

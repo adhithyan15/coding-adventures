@@ -1,1 +1,1 @@
-cargo test -p ir-to-beam
+cargo test --locked -p ir-to-beam

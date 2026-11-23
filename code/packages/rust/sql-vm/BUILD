@@ -15,9 +15,9 @@ export CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=rust-lld
 cd "$WORKSPACE"
 
 echo "[sql-vm] Building package..."
-cargo build --package coding-adventures-sql-vm
+cargo build --locked --package coding-adventures-sql-vm
 echo "[sql-vm] Build complete."
 
 echo "[sql-vm] Running tests..."
-cargo test --package coding-adventures-sql-vm
+cargo test --locked --package coding-adventures-sql-vm
 echo "[sql-vm] Tests complete."

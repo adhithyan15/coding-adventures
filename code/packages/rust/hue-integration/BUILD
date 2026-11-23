@@ -1,1 +1,1 @@
-cargo test -p hue-integration -- --nocapture
+cargo test --locked -p hue-integration -- --nocapture

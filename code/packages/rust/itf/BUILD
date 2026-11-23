@@ -1,1 +1,1 @@
-cargo test -p itf -- --nocapture
+cargo test --locked -p itf -- --nocapture

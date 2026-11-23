@@ -1,1 +1,1 @@
-cargo test -p smart-home-synology-surveillance-integration
+cargo test --locked -p smart-home-synology-surveillance-integration

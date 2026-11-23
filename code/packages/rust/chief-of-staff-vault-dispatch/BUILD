@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-vault-dispatch -- --nocapture
+cargo test --locked -p chief-of-staff-vault-dispatch -- --nocapture

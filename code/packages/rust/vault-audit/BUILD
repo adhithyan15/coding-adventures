@@ -1,1 +1,1 @@
-cargo test -p coding_adventures_vault_audit -- --nocapture
+cargo test --locked -p coding_adventures_vault_audit -- --nocapture

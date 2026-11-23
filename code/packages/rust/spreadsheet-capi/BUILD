@@ -1,1 +1,1 @@
-cargo test -p spreadsheet-capi -- --nocapture
+cargo test --locked -p spreadsheet-capi -- --nocapture

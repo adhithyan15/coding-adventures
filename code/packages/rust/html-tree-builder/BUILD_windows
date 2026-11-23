@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-html-tree-builder -- --nocapture
+cargo test --locked -p coding-adventures-html-tree-builder -- --nocapture

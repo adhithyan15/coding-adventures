@@ -1,1 +1,1 @@
-cargo test -p nib-compiler -- --nocapture
+cargo test --locked -p nib-compiler -- --nocapture

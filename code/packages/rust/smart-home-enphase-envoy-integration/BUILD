@@ -1,3 +1,3 @@
 #!/bin/sh
 set -eu
-cargo test -p smart-home-enphase-envoy-integration
+cargo test --locked -p smart-home-enphase-envoy-integration

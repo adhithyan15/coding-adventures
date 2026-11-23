@@ -1,1 +1,1 @@
-cargo test -p qr-code -- --nocapture
+cargo test --locked -p qr-code -- --nocapture

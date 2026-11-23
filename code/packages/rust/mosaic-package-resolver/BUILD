@@ -1,1 +1,1 @@
-cargo test -p mosaic-package-resolver -- --nocapture
+cargo test --locked -p mosaic-package-resolver -- --nocapture

@@ -1,2 +1,2 @@
-cargo build -p debug-sidecar
-cargo test -p debug-sidecar
+cargo build --locked -p debug-sidecar
+cargo test --locked -p debug-sidecar

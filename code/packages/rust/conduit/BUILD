@@ -1,1 +1,1 @@
-cargo test -p conduit -- --nocapture
+cargo test --locked -p conduit -- --nocapture

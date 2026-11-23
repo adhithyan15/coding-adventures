@@ -1,1 +1,1 @@
-cargo test -p memory-store -- --nocapture
+cargo test --locked -p memory-store -- --nocapture

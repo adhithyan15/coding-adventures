@@ -1,1 +1,1 @@
-cargo test -p z80-backend
+cargo test --locked -p z80-backend

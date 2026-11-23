@@ -1,1 +1,1 @@
-cargo test -p mosaic-emit-react -- --nocapture
+cargo test --locked -p mosaic-emit-react -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p twig-formatter -- --nocapture
+cargo test --locked -p twig-formatter -- --nocapture

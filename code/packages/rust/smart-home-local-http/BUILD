@@ -1,1 +1,1 @@
-cargo test -p smart-home-local-http -- --nocapture
+cargo test --locked -p smart-home-local-http -- --nocapture

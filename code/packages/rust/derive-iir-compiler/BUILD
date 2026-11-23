@@ -1,1 +1,1 @@
-cargo test -p derive-iir-compiler
+cargo test --locked -p derive-iir-compiler

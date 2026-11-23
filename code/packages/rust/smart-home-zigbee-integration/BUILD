@@ -1,1 +1,1 @@
-cargo test -p smart-home-zigbee-integration -- --nocapture
+cargo test --locked -p smart-home-zigbee-integration -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p z80-simulator -- --nocapture
+cargo test --locked -p z80-simulator -- --nocapture

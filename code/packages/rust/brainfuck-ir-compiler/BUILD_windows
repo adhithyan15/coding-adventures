@@ -1,1 +1,1 @@
-cargo test -p brainfuck-ir-compiler
+cargo test --locked -p brainfuck-ir-compiler

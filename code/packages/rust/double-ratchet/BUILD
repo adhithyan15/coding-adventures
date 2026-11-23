@@ -1,1 +1,1 @@
-cargo test -p coding_adventures_double_ratchet -- --nocapture
+cargo test --locked -p coding_adventures_double_ratchet -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p mosaic-emit-paint -- --nocapture
+cargo test --locked -p mosaic-emit-paint -- --nocapture

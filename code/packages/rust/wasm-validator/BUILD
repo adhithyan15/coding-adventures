@@ -1,1 +1,1 @@
-cargo test -p wasm-validator -- --nocapture
+cargo test --locked -p wasm-validator -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p smart-home-camera-media -- --nocapture
+cargo test --locked -p smart-home-camera-media -- --nocapture

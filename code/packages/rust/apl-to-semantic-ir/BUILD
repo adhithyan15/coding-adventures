@@ -1,1 +1,1 @@
-cargo test -p apl-to-semantic-ir -- --nocapture
+cargo test --locked -p apl-to-semantic-ir -- --nocapture

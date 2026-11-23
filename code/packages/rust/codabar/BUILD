@@ -1,1 +1,1 @@
-cargo test -p codabar -- --nocapture
+cargo test --locked -p codabar -- --nocapture

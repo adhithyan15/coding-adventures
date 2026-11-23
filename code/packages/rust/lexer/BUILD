@@ -1,1 +1,1 @@
-cargo test -p lexer -- --nocapture
+cargo test --locked -p lexer -- --nocapture

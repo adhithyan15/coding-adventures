@@ -1,1 +1,1 @@
-cargo test -p ir-to-jvm-class-file
+cargo test --locked -p ir-to-jvm-class-file

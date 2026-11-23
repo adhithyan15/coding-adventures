@@ -1,1 +1,1 @@
-cargo test -p oct-type-checker -- --nocapture
+cargo test --locked -p oct-type-checker -- --nocapture

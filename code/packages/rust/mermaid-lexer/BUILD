@@ -1,1 +1,1 @@
-cargo test -p mermaid-lexer -- --nocapture
+cargo test --locked -p mermaid-lexer -- --nocapture

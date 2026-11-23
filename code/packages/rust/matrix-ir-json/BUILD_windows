@@ -1,1 +1,1 @@
-cargo test -p matrix-ir-json -- --nocapture
+cargo test --locked -p matrix-ir-json -- --nocapture

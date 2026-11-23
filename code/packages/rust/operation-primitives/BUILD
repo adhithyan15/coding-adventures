@@ -1,1 +1,1 @@
-cargo test -p operation-primitives -- --nocapture
+cargo test --locked -p operation-primitives -- --nocapture

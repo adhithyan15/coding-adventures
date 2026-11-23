@@ -1,1 +1,1 @@
-cargo test -p os-kernel-simulator -- --nocapture
+cargo test --locked -p os-kernel-simulator -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p storage-local-folder -- --nocapture
+cargo test --locked -p storage-local-folder -- --nocapture

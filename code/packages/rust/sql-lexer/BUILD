@@ -1,1 +1,1 @@
-cargo test --package coding-adventures-sql-lexer
+cargo test --locked --package coding-adventures-sql-lexer

@@ -1,1 +1,1 @@
-cargo test -p weather-agent-e2e -- --nocapture
+cargo test --locked -p weather-agent-e2e -- --nocapture

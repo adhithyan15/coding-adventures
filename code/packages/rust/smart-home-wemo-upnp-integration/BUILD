@@ -1,1 +1,1 @@
-cargo test -p smart-home-wemo-upnp-integration -- --nocapture
+cargo test --locked -p smart-home-wemo-upnp-integration -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-css-lexer -- --nocapture
+cargo test --locked -p coding-adventures-css-lexer -- --nocapture

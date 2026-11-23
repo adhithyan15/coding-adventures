@@ -1,1 +1,1 @@
-cargo test -p vendor-api-simulators -- --nocapture
+cargo test --locked -p vendor-api-simulators -- --nocapture

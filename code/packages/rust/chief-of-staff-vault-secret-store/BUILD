@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-vault-secret-store -- --nocapture
+cargo test --locked -p chief-of-staff-vault-secret-store -- --nocapture

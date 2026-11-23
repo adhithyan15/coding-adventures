@@ -1,1 +1,1 @@
-cargo test -p iir-to-cil-bytecode
+cargo test --locked -p iir-to-cil-bytecode

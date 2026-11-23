@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-xml-lexer -- --nocapture
+cargo test --locked -p coding-adventures-xml-lexer -- --nocapture

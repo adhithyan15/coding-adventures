@@ -1,1 +1,1 @@
-cargo test -p smart-home-axis-snapshot-host -- --nocapture
+cargo test --locked -p smart-home-axis-snapshot-host -- --nocapture

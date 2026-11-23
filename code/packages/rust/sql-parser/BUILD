@@ -1,1 +1,1 @@
-cargo test --package coding-adventures-sql-parser
+cargo test --locked --package coding-adventures-sql-parser

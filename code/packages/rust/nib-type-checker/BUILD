@@ -1,1 +1,1 @@
-cargo test -p nib-type-checker -- --nocapture
+cargo test --locked -p nib-type-checker -- --nocapture

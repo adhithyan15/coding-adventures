@@ -1,1 +1,1 @@
-cargo test -p state-machine-source-compiler -- --nocapture
+cargo test --locked -p state-machine-source-compiler -- --nocapture

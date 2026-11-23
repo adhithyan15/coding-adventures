@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-flow-matic-parser -- --nocapture
+cargo test --locked -p coding-adventures-flow-matic-parser -- --nocapture

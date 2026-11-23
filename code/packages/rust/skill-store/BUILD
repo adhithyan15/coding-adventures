@@ -1,1 +1,1 @@
-cargo test -p skill-store -- --nocapture
+cargo test --locked -p skill-store -- --nocapture

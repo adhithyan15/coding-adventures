@@ -1,1 +1,1 @@
-cargo test -p board-vm-tcp -- --nocapture
+cargo test --locked -p board-vm-tcp -- --nocapture

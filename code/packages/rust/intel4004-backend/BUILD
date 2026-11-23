@@ -1,1 +1,1 @@
-cargo test -p intel4004-backend
+cargo test --locked -p intel4004-backend

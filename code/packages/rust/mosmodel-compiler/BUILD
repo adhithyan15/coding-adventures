@@ -1,1 +1,1 @@
-cargo test -p mosmodel-compiler -- --nocapture
+cargo test --locked -p mosmodel-compiler -- --nocapture

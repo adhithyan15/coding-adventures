@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-smart-home-tools -- --nocapture
+cargo test --locked -p chief-of-staff-smart-home-tools -- --nocapture

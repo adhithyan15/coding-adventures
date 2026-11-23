@@ -1,1 +1,1 @@
-cargo test -p twig-type-checker -- --nocapture
+cargo test --locked -p twig-type-checker -- --nocapture

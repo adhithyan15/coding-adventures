@@ -1,1 +1,1 @@
-cargo test -p https-destination-name-binding -- --nocapture
+cargo test --locked -p https-destination-name-binding -- --nocapture

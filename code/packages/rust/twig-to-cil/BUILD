@@ -1,1 +1,1 @@
-cargo test -p twig-to-cil
+cargo test --locked -p twig-to-cil

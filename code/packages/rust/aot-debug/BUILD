@@ -1,1 +1,1 @@
-cargo test -p aot-debug
+cargo test --locked -p aot-debug

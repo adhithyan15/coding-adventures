@@ -1,1 +1,1 @@
-cargo test -p smart-home-tasmota-local-integration -- --nocapture
+cargo test --locked -p smart-home-tasmota-local-integration -- --nocapture

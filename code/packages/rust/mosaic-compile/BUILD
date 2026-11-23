@@ -1,1 +1,1 @@
-cargo build -p mosaic-compile
+cargo build --locked -p mosaic-compile

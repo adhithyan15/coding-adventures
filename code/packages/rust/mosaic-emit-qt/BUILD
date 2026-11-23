@@ -1,1 +1,1 @@
-cargo test -p mosaic-emit-qt -- --nocapture
+cargo test --locked -p mosaic-emit-qt -- --nocapture

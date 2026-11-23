@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-tool-api -- --nocapture
+cargo test --locked -p chief-of-staff-tool-api -- --nocapture

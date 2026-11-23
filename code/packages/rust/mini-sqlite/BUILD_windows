@@ -2,4 +2,4 @@
 # directory, so the POSIX `BUILD` (`set -e`, `export VAR=...`) cannot run
 # here: cmd has no `export`. One cargo command per line; a failing line
 # already fails the build.
-cargo test --package coding-adventures-mini-sqlite
+cargo test --locked --package coding-adventures-mini-sqlite

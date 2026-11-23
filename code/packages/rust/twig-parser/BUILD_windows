@@ -1,1 +1,1 @@
-cargo test -p twig-parser -- --nocapture
+cargo test --locked -p twig-parser -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p tls13-traffic-secret-update -- --nocapture
+cargo test --locked -p tls13-traffic-secret-update -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p twig-to-jvm
+cargo test --locked -p twig-to-jvm

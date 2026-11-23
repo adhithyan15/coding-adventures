@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-spreadsheetml -- --nocapture
+cargo test --locked -p coding-adventures-spreadsheetml -- --nocapture

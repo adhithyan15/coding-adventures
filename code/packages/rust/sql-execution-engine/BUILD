@@ -1,1 +1,1 @@
-cargo test --package coding-adventures-sql-execution-engine
+cargo test --locked --package coding-adventures-sql-execution-engine

@@ -1,1 +1,1 @@
-cargo test -p moslayout-compiler -- --nocapture
+cargo test --locked -p moslayout-compiler -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p mips-r2000-simulator -- --nocapture
+cargo test --locked -p mips-r2000-simulator -- --nocapture

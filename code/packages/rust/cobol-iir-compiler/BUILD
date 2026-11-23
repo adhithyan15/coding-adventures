@@ -1,2 +1,2 @@
-cargo build -p cobol-iir-compiler
-cargo test -p cobol-iir-compiler
+cargo build --locked -p cobol-iir-compiler
+cargo test --locked -p cobol-iir-compiler

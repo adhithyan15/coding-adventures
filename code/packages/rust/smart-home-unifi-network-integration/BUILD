@@ -1,1 +1,1 @@
-cargo test -p smart-home-unifi-network-integration
+cargo test --locked -p smart-home-unifi-network-integration

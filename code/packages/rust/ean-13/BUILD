@@ -1,1 +1,1 @@
-cargo test -p ean-13 -- --nocapture
+cargo test --locked -p ean-13 -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p paint-vm-opengl -- --nocapture
+cargo test --locked -p paint-vm-opengl -- --nocapture

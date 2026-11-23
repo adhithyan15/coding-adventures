@@ -1,1 +1,1 @@
-cargo test --package coding-adventures-powerpc601-gatelevel
+cargo test --locked --package coding-adventures-powerpc601-gatelevel

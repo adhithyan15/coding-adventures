@@ -1,1 +1,1 @@
-cargo test -p twig-lexer -- --nocapture
+cargo test --locked -p twig-lexer -- --nocapture

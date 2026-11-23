@@ -1,1 +1,1 @@
-cargo test -p hue-client -- --nocapture
+cargo test --locked -p hue-client -- --nocapture

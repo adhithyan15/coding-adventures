@@ -1,1 +1,1 @@
-cargo build --release && cargo test -- --nocapture
+cargo build --locked --release && cargo test --locked -- --nocapture

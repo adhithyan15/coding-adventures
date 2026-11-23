@@ -1,1 +1,1 @@
-cargo test -p iir-to-wasm
+cargo test --locked -p iir-to-wasm

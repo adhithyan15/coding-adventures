@@ -1,1 +1,1 @@
-cargo test -p capability-os-sandbox -- --nocapture
+cargo test --locked -p capability-os-sandbox -- --nocapture

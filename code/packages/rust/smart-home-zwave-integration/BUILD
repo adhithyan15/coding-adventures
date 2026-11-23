@@ -1,1 +1,1 @@
-cargo test -p smart-home-zwave-integration -- --nocapture
+cargo test --locked -p smart-home-zwave-integration -- --nocapture

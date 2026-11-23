@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-daemon -- --nocapture && cargo clippy -p chief-of-staff-daemon --all-targets -- -D warnings
+cargo test --locked -p chief-of-staff-daemon -- --nocapture && cargo clippy --locked -p chief-of-staff-daemon --all-targets -- -D warnings

@@ -1,1 +1,1 @@
-cargo test -p stream-reactor -- --nocapture
+cargo test --locked -p stream-reactor -- --nocapture

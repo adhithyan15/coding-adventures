@@ -1,1 +1,1 @@
-cargo test -p starlark-compiler -- --nocapture
+cargo test --locked -p starlark-compiler -- --nocapture

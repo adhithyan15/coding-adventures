@@ -1,1 +1,1 @@
-cargo test -p micro-qr -- --nocapture
+cargo test --locked -p micro-qr -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p smart-home-nut-ups-integration -- --nocapture
+cargo test --locked -p smart-home-nut-ups-integration -- --nocapture

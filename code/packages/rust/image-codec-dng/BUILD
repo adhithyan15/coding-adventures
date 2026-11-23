@@ -1,1 +1,1 @@
-cargo test -p image-codec-dng -- --nocapture
+cargo test --locked -p image-codec-dng -- --nocapture

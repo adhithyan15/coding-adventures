@@ -1,1 +1,1 @@
-cargo test -p dsp-stft -- --nocapture
+cargo test --locked -p dsp-stft -- --nocapture

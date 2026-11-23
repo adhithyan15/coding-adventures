@@ -1,1 +1,1 @@
-cargo test -p sparc-v8-backend
+cargo test --locked -p sparc-v8-backend

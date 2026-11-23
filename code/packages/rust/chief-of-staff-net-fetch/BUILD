@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-net-fetch -- --nocapture
+cargo test --locked -p chief-of-staff-net-fetch -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p wolfram-iir-compiler
+cargo test --locked -p wolfram-iir-compiler

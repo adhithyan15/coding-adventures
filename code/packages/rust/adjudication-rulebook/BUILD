@@ -1,1 +1,1 @@
-cargo test -p adjudication-rulebook -- --nocapture
+cargo test --locked -p adjudication-rulebook -- --nocapture

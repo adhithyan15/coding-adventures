@@ -1,1 +1,1 @@
-cargo test -p smart-home-homekit-discovery-integration -- --nocapture
+cargo test --locked -p smart-home-homekit-discovery-integration -- --nocapture

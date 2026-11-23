@@ -1,1 +1,1 @@
-cargo test -p twig-semantic-tokens -- --nocapture
+cargo test --locked -p twig-semantic-tokens -- --nocapture

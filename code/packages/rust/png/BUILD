@@ -1,1 +1,1 @@
-cargo test -p png -- --nocapture
+cargo test --locked -p png -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p aarch64-backend -- --nocapture
+cargo test --locked -p aarch64-backend -- --nocapture

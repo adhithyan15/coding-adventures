@@ -1,1 +1,1 @@
-cargo test -p embeddable-tcp-server -- --nocapture
+cargo test --locked -p embeddable-tcp-server -- --nocapture

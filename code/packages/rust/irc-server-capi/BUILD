@@ -1,1 +1,1 @@
-cargo test --lib && cargo build --release
+cargo test --locked --lib && cargo build --locked --release

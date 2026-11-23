@@ -1,15 +1,15 @@
 # needs-toolchain: python
 # WD-HARN1c: runs the shared negative-control checker's tests on Windows, where the old findstr
 # bail-out branch had never executed.
-cargo test -p coding_adventures_warrant_grammar
-cargo clippy -p coding_adventures_warrant_grammar --all-targets -- -D warnings
-cargo run -q -p coding_adventures_warrant_grammar --example regenerate -- --check
-python ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_warrant_grammar --test self_corpus -- --sabotage always-pass
+cargo test --locked -p coding_adventures_warrant_grammar
+cargo clippy --locked -p coding_adventures_warrant_grammar --all-targets -- -D warnings
+cargo run --locked -q -p coding_adventures_warrant_grammar --example regenerate -- --check
+python ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p coding_adventures_warrant_grammar --test self_corpus -- --sabotage always-pass
 python ../../../scripts/warrant_syntax_corpus.py
 python -m unittest discover -s ../../../scripts/tests -p test_warrant_syntax_corpus.py
 python ../../../scripts/warrant_corpus_oracle.py
 python -m unittest discover -s ../../../scripts/tests -p test_warrant_corpus_oracle.py
 python -m unittest discover -s ../../../scripts/tests -p test_warrant_negctl.py
 python -m unittest discover -s ../../../scripts/tests -p test_ver04p_domain_witnesses.py
-cargo run -q -p coding_adventures_warrant_grammar --example gen_corpus -- --check
+cargo run --locked -q -p coding_adventures_warrant_grammar --example gen_corpus -- --check
 python ../../../specs/fixtures/warrant-vectors-synthetic-v1/generate.py --check

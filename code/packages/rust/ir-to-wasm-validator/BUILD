@@ -1,1 +1,1 @@
-cargo test -p ir-to-wasm-validator
+cargo test --locked -p ir-to-wasm-validator

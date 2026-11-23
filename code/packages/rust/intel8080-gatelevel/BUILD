@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-intel8080-gatelevel
+cargo test --locked -p coding-adventures-intel8080-gatelevel

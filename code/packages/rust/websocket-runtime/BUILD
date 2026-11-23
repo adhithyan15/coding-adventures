@@ -1,1 +1,1 @@
-cargo test -p websocket-runtime -- --nocapture
+cargo test --locked -p websocket-runtime -- --nocapture

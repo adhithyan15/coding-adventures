@@ -1,1 +1,1 @@
-cargo test -p mos6502-simulator -- --nocapture
+cargo test --locked -p mos6502-simulator -- --nocapture

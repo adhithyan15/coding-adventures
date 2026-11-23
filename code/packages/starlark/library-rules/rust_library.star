@@ -106,7 +106,7 @@ def rust_library(name, srcs = [], deps = []):
         "srcs": srcs,
         "deps": deps,
         "commands": [
-            {"type": "cmd", "program": "cargo", "args": ["build"]},
-            {"type": "cmd", "program": "cargo", "args": ["test"]},
+            {"type": "cmd", "program": "cargo", "args": ["build", "--locked"]},
+            {"type": "cmd", "program": "cargo", "args": ["test", "--locked"]},
         ],
     }

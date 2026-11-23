@@ -1,1 +1,1 @@
-cargo test -p mosaic-emit-xaml -- --nocapture
+cargo test --locked -p mosaic-emit-xaml -- --nocapture

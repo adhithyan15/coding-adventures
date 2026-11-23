@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-daemon-authority-provisioning -- --nocapture
+cargo test --locked -p chief-of-staff-daemon-authority-provisioning -- --nocapture

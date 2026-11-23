@@ -1,1 +1,1 @@
-cargo test -p avl-tree -- --nocapture
+cargo test --locked -p avl-tree -- --nocapture

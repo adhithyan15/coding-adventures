@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-nib-parser -- --nocapture
+cargo test --locked -p coding-adventures-nib-parser -- --nocapture

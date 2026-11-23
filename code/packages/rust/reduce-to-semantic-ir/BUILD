@@ -1,1 +1,1 @@
-cargo test -p reduce-to-semantic-ir -- --nocapture
+cargo test --locked -p reduce-to-semantic-ir -- --nocapture

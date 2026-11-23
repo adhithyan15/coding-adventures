@@ -1,1 +1,1 @@
-cargo test -p paint-vm-mesa -- --nocapture
+cargo test --locked -p paint-vm-mesa -- --nocapture

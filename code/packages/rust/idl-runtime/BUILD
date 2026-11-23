@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-idl-runtime -- --nocapture
+cargo test --locked -p coding-adventures-idl-runtime -- --nocapture

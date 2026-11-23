@@ -1,1 +1,1 @@
-cargo test -p mosaic-parser -- --nocapture
+cargo test --locked -p mosaic-parser -- --nocapture

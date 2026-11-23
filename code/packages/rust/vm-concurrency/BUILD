@@ -1,1 +1,1 @@
-cargo test -p vm-concurrency
+cargo test --locked -p vm-concurrency

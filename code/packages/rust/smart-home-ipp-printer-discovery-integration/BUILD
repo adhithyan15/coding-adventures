@@ -1,1 +1,1 @@
-cargo test -p smart-home-ipp-printer-discovery-integration -- --nocapture
+cargo test --locked -p smart-home-ipp-printer-discovery-integration -- --nocapture

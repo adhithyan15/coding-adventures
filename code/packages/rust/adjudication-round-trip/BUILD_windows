@@ -1,1 +1,1 @@
-cargo test -p adjudication-round-trip -- --nocapture
+cargo test --locked -p adjudication-round-trip -- --nocapture

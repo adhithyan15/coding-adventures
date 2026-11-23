@@ -1,5 +1,5 @@
-cargo test -q -p coding_adventures_warrant_corpus_gen
-cargo clippy -p coding_adventures_warrant_corpus_gen --all-targets -- -D warnings
+cargo test --locked -q -p coding_adventures_warrant_corpus_gen
+cargo clippy --locked -p coding_adventures_warrant_corpus_gen --all-targets -- -D warnings
 # The tests include the two oracle parity checks: tests/oracle_parity.rs (ir.core, against this
 # crate's own committed dumps) and, since CV2-S10b, tests/fixed_parity.rs, which lowers the
 # oracle's fixed_forms_v1.warrant and reproduces its committed fixed_forms_v1.oracle-lowering.json
@@ -7,7 +7,7 @@ cargo clippy -p coding_adventures_warrant_corpus_gen --all-targets -- -D warning
 # read from there (an edit to either selects this package: repository_inputs.go).
 # The crate's only OS access is in fsio.rs, cli.rs and the bin (required_capabilities.json
 # declares it); the analyzer checks the source against that manifest.
-cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir .
 # The Unix BUILD also runs a shell gate (mktemp, sed, grep, a sabotaged --check). The build tool
 # runs each BUILD_windows line as `cmd /C <line>`, where none of that exists, so the same gate
 # runs here as a cargo test: tests/check_cli.rs `the_binary_writes_checks_and_fails_on_drift`
@@ -18,12 +18,12 @@ cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
 # version bump fails here until the fixture is regenerated and reviewed (VER04r 16.8 [D13]; the
 # oracle's accept-blind-v2 fixture and --expect-generator pin change with it); the
 # profile named is the fixture's own, so an edit to it fails through profile_sha256 ([D14]).
-cd ..\..\..\.. && cargo run -q --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/ct-compare.warrant --profile code/specs/fixtures/ct-compare-warrant-v2/corpus.profile --bindings code/packages/rust/ct-compare/evidence.bindings --out code/specs/fixtures/ct-compare-warrant-v2
+cd ..\..\..\.. && cargo run --locked -q --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/ct-compare.warrant --profile code/specs/fixtures/ct-compare-warrant-v2/corpus.profile --bindings code/packages/rust/ct-compare/evidence.bindings --out code/specs/fixtures/ct-compare-warrant-v2
 # CV2 S10 adopter (x25519): the same line for the committed x25519 v2 fixture.
-cd ..\..\..\.. && cargo run -q --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/x25519.warrant --profile code/specs/fixtures/x25519-warrant-v2/corpus.profile --bindings code/packages/rust/x25519/evidence.bindings --out code/specs/fixtures/x25519-warrant-v2
+cd ..\..\..\.. && cargo run --locked -q --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/x25519.warrant --profile code/specs/fixtures/x25519-warrant-v2/corpus.profile --bindings code/packages/rust/x25519/evidence.bindings --out code/specs/fixtures/x25519-warrant-v2
 # CV2 S10 adopter (lzw): the same line for the committed lzw v2 fixture, with `--release` (about 25 s; in debug
 # about 3 min, because the corpus has 17.5 M cases).
-cd ..\..\..\.. && cargo run -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/lzw.warrant --profile code/specs/fixtures/lzw-warrant-v2/corpus.profile --bindings code/packages/rust/lzw/evidence.bindings --out code/specs/fixtures/lzw-warrant-v2
+cd ..\..\..\.. && cargo run --locked -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/lzw.warrant --profile code/specs/fixtures/lzw-warrant-v2/corpus.profile --bindings code/packages/rust/lzw/evidence.bindings --out code/specs/fixtures/lzw-warrant-v2
 # CV2 S10 adopter (wasm-leb128): the same line for the committed wasm-leb128 v2 fixture, with `--release`
 # (2 min 11 s; in debug about 20 min, because the corpus has 46.6 M cases).
-cd ..\..\..\.. && cargo run -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/wasm-leb128.warrant --profile code/specs/fixtures/wasm-leb128-warrant-v2/corpus.profile --bindings code/packages/rust/wasm-leb128/evidence.bindings --out code/specs/fixtures/wasm-leb128-warrant-v2
+cd ..\..\..\.. && cargo run --locked -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/wasm-leb128.warrant --profile code/specs/fixtures/wasm-leb128-warrant-v2/corpus.profile --bindings code/packages/rust/wasm-leb128/evidence.bindings --out code/specs/fixtures/wasm-leb128-warrant-v2

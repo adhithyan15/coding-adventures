@@ -1,1 +1,1 @@
-cargo test -p sir-bench -- --nocapture
+cargo test --locked -p sir-bench -- --nocapture

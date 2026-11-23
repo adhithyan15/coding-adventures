@@ -1,1 +1,1 @@
-cargo test -p smart-home-runtime-store -- --nocapture
+cargo test --locked -p smart-home-runtime-store -- --nocapture

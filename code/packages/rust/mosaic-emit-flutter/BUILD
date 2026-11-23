@@ -1,1 +1,1 @@
-cargo test -p mosaic-emit-flutter -- --nocapture
+cargo test --locked -p mosaic-emit-flutter -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p intel8086-simulator -- --nocapture
+cargo test --locked -p intel8086-simulator -- --nocapture

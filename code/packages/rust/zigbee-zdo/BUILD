@@ -1,1 +1,1 @@
-cargo test -p zigbee-zdo -- --nocapture
+cargo test --locked -p zigbee-zdo -- --nocapture

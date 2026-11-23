@@ -1,1 +1,1 @@
-cargo test -p cfb-writer -- --nocapture
+cargo test --locked -p cfb-writer -- --nocapture

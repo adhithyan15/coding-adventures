@@ -1,1 +1,1 @@
-cargo test -p mosaic-vm -- --nocapture
+cargo test --locked -p mosaic-vm -- --nocapture

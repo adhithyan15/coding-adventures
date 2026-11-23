@@ -1,2 +1,2 @@
-cargo build -p dartmouth-basic-iir-compiler
-cargo test -p dartmouth-basic-iir-compiler
+cargo build --locked -p dartmouth-basic-iir-compiler
+cargo test --locked -p dartmouth-basic-iir-compiler

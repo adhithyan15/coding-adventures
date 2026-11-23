@@ -1,1 +1,1 @@
-cargo test -p tls13-finished -- --nocapture
+cargo test --locked -p tls13-finished -- --nocapture

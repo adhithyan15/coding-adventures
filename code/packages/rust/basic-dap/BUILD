@@ -1,1 +1,1 @@
-cargo test -p basic-dap -- --nocapture
+cargo test --locked -p basic-dap -- --nocapture

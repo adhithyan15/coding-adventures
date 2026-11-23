@@ -1,1 +1,1 @@
-cargo test -p iir-codegen-adapters
+cargo test --locked -p iir-codegen-adapters

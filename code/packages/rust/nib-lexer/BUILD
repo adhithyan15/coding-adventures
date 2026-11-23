@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-nib-lexer -- --nocapture
+cargo test --locked -p coding-adventures-nib-lexer -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-channel-crypto -- --nocapture
+cargo test --locked -p chief-of-staff-channel-crypto -- --nocapture

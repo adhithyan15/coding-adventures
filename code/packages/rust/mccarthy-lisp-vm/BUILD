@@ -1,1 +1,1 @@
-cargo test -p mccarthy-lisp-vm
+cargo test --locked -p mccarthy-lisp-vm

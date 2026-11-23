@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-j-repl -- --nocapture
+cargo test --locked -p coding-adventures-j-repl -- --nocapture

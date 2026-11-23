@@ -1,1 +1,1 @@
-cargo test -p lang-refinement-protocol -- --nocapture
+cargo test --locked -p lang-refinement-protocol -- --nocapture

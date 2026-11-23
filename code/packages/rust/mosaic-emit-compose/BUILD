@@ -1,1 +1,1 @@
-cargo test -p mosaic-emit-compose
+cargo test --locked -p mosaic-emit-compose

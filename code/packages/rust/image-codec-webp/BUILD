@@ -1,1 +1,1 @@
-cargo test -p image-codec-webp -- --nocapture
+cargo test --locked -p image-codec-webp -- --nocapture

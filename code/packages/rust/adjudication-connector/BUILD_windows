@@ -1,1 +1,1 @@
-cargo test -p adjudication-connector -- --nocapture
+cargo test --locked -p adjudication-connector -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p oct-iir-compiler -- --nocapture
+cargo test --locked -p oct-iir-compiler -- --nocapture

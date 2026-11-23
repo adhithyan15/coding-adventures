@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-typescript-parser -- --nocapture
+cargo test --locked -p coding-adventures-typescript-parser -- --nocapture

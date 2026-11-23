@@ -1,1 +1,1 @@
-cargo test -p mccarthy-lisp-iir-compiler
+cargo test --locked -p mccarthy-lisp-iir-compiler

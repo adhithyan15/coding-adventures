@@ -1,1 +1,1 @@
-cargo test -p smart-home-discovery-service -- --nocapture
+cargo test --locked -p smart-home-discovery-service -- --nocapture

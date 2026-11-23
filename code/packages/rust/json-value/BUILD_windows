@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-json-value -- --nocapture
+cargo test --locked -p coding-adventures-json-value -- --nocapture

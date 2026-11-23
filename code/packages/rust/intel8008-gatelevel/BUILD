@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-intel8008-gatelevel
+cargo test --locked -p coding-adventures-intel8008-gatelevel

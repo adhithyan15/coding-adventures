@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-presentationml -- --nocapture
+cargo test --locked -p coding-adventures-presentationml -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p paint-vm-opencl -- --nocapture
+cargo test --locked -p paint-vm-opencl -- --nocapture

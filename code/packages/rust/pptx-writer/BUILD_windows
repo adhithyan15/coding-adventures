@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-pptx-writer -- --nocapture
+cargo test --locked -p coding-adventures-pptx-writer -- --nocapture

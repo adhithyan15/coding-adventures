@@ -1,1 +1,1 @@
-cargo test -p nib-lsp-bridge -- --nocapture
+cargo test --locked -p nib-lsp-bridge -- --nocapture

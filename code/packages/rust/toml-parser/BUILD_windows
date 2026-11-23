@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-toml-parser -- --nocapture
+cargo test --locked -p coding-adventures-toml-parser -- --nocapture

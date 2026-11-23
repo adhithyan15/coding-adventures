@@ -1,1 +1,1 @@
-cargo test -p mosaic-emit-swiftui -- --nocapture
+cargo test --locked -p mosaic-emit-swiftui -- --nocapture

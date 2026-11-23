@@ -1,1 +1,1 @@
-cargo test -p nib-formatter -- --nocapture
+cargo test --locked -p nib-formatter -- --nocapture

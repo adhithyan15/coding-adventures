@@ -1,1 +1,1 @@
-cargo test -p context-store -- --nocapture
+cargo test --locked -p context-store -- --nocapture

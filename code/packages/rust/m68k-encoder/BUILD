@@ -1,1 +1,1 @@
-cargo test -p m68k-encoder -- --nocapture
+cargo test --locked -p m68k-encoder -- --nocapture

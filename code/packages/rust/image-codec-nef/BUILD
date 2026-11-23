@@ -1,1 +1,1 @@
-cargo test -p image-codec-nef -- --nocapture
+cargo test --locked -p image-codec-nef -- --nocapture

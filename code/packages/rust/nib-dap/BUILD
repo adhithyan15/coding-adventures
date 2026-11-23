@@ -1,1 +1,1 @@
-cargo test -p nib-dap -- --nocapture
+cargo test --locked -p nib-dap -- --nocapture

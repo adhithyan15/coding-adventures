@@ -1,1 +1,1 @@
-cargo test -p smart-home-frigate-integration
+cargo test --locked -p smart-home-frigate-integration

@@ -1,1 +1,1 @@
-cargo test -p oct-lsp-bridge -- --nocapture
+cargo test --locked -p oct-lsp-bridge -- --nocapture

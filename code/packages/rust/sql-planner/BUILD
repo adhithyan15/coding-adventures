@@ -11,5 +11,5 @@ export CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=rust-lld
 cd "$WORKSPACE"
 
 # Build and test only this package.
-cargo build --package coding-adventures-sql-planner
-cargo test  --package coding-adventures-sql-planner
+cargo build --locked --package coding-adventures-sql-planner
+cargo test --locked  --package coding-adventures-sql-planner

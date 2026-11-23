@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-macsyma-lexer -- --nocapture
+cargo test --locked -p coding-adventures-macsyma-lexer -- --nocapture

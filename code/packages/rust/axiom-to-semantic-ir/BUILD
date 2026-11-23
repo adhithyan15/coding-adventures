@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-axiom-to-semantic-ir -- --nocapture
+cargo test --locked -p coding-adventures-axiom-to-semantic-ir -- --nocapture

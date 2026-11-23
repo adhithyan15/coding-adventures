@@ -1,1 +1,1 @@
-cargo test -p smart-home-home-assistant-migration --all-targets -- --nocapture
+cargo test --locked -p smart-home-home-assistant-migration --all-targets -- --nocapture

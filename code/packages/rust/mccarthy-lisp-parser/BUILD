@@ -1,1 +1,1 @@
-cargo test -p mccarthy-lisp-parser
+cargo test --locked -p mccarthy-lisp-parser

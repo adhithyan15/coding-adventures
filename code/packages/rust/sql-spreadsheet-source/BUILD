@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-sql-spreadsheet-source -- --nocapture
+cargo test --locked -p coding-adventures-sql-spreadsheet-source -- --nocapture

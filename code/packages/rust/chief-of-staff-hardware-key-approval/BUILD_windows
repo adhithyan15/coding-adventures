@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-hardware-key-approval -- --nocapture
+cargo test --locked -p chief-of-staff-hardware-key-approval -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p paint-vm-wgpu -- --nocapture
+cargo test --locked -p paint-vm-wgpu -- --nocapture

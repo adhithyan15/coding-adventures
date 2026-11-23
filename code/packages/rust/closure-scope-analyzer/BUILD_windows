@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-closure-scope-analyzer -- --nocapture
+cargo test --locked -p coding-adventures-closure-scope-analyzer -- --nocapture

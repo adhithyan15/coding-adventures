@@ -1,1 +1,1 @@
-cargo test -p adjudication-clarification -- --nocapture
+cargo test --locked -p adjudication-clarification -- --nocapture

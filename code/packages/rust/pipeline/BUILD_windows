@@ -1,1 +1,1 @@
-cargo test -p pipeline -- --nocapture
+cargo test --locked -p pipeline -- --nocapture

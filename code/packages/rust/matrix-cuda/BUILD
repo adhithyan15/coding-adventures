@@ -1,1 +1,1 @@
-cargo test -p matrix-cuda
+cargo test --locked -p matrix-cuda

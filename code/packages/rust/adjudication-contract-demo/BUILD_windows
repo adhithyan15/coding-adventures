@@ -1,1 +1,1 @@
-cargo test -p adjudication-contract-demo -- --nocapture
+cargo test --locked -p adjudication-contract-demo -- --nocapture

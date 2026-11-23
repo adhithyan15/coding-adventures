@@ -1,1 +1,1 @@
-cargo test -p markdown-docx -- --nocapture
+cargo test --locked -p markdown-docx -- --nocapture

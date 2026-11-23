@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-apl-parser -- --nocapture
+cargo test --locked -p coding-adventures-apl-parser -- --nocapture

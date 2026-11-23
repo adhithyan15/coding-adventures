@@ -1,1 +1,1 @@
-cargo test -p maple-iir-compiler
+cargo test --locked -p maple-iir-compiler

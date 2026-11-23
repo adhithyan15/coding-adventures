@@ -1,2 +1,2 @@
-cargo build -p coding-adventures-oct-parser
-cargo test -p coding-adventures-oct-parser
+cargo build --locked -p coding-adventures-oct-parser
+cargo test --locked -p coding-adventures-oct-parser

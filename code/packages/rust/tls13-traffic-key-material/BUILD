@@ -1,1 +1,1 @@
-cargo test -p tls13-traffic-key-material -- --nocapture
+cargo test --locked -p tls13-traffic-key-material -- --nocapture

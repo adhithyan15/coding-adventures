@@ -1,1 +1,1 @@
-cargo test -p maxima-to-semantic-ir -- --nocapture
+cargo test --locked -p maxima-to-semantic-ir -- --nocapture

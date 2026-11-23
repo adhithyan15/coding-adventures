@@ -1,1 +1,1 @@
-cargo test -p upnp-av-protocol -- --nocapture
+cargo test --locked -p upnp-av-protocol -- --nocapture

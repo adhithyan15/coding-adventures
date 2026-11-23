@@ -1,1 +1,1 @@
-cargo test -p brainfuck-clr-compiler -- --nocapture
+cargo test --locked -p brainfuck-clr-compiler -- --nocapture

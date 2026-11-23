@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-closure-pass-inline-variables -- --nocapture
+cargo test --locked -p coding-adventures-closure-pass-inline-variables -- --nocapture

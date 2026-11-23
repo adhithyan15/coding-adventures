@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-excel-lexer -- --nocapture
+cargo test --locked -p coding-adventures-excel-lexer -- --nocapture

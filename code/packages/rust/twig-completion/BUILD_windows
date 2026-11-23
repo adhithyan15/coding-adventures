@@ -1,1 +1,1 @@
-cargo test -p twig-completion -- --nocapture
+cargo test --locked -p twig-completion -- --nocapture

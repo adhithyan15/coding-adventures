@@ -1,1 +1,1 @@
-cargo test -p compute-runtime -- --nocapture
+cargo test --locked -p compute-runtime -- --nocapture

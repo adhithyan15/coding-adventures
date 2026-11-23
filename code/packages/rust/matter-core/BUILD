@@ -1,1 +1,1 @@
-cargo test -p matter-core -- --nocapture
+cargo test --locked -p matter-core -- --nocapture

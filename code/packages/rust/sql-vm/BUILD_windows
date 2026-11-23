@@ -9,5 +9,5 @@
 # The build tool runs each line as its own `cmd /C` from this package's
 # directory, so PowerShell (`$env:X = ...`, `Set-Location`, `if (-not $?)`)
 # does not work here. A failing line already fails the build.
-cargo build --package coding-adventures-sql-vm
-cargo test --package coding-adventures-sql-vm
+cargo build --locked --package coding-adventures-sql-vm
+cargo test --locked --package coding-adventures-sql-vm

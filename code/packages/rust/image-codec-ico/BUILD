@@ -1,1 +1,1 @@
-cargo test -p image-codec-ico -- --nocapture
+cargo test --locked -p image-codec-ico -- --nocapture

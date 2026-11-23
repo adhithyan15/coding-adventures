@@ -1,2 +1,2 @@
-cargo build -p flow-matic-iir-compiler
-cargo test -p flow-matic-iir-compiler
+cargo build --locked -p flow-matic-iir-compiler
+cargo test --locked -p flow-matic-iir-compiler

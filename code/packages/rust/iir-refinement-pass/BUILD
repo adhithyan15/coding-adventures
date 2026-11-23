@@ -1,1 +1,1 @@
-cargo test -p iir-refinement-pass -- --nocapture
+cargo test --locked -p iir-refinement-pass -- --nocapture

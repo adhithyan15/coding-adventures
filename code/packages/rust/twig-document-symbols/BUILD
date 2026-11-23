@@ -1,1 +1,1 @@
-cargo test -p twig-document-symbols -- --nocapture
+cargo test --locked -p twig-document-symbols -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p ibm704-backend
+cargo test --locked -p ibm704-backend

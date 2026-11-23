@@ -1,1 +1,1 @@
-cargo test -p tape-out -- --nocapture
+cargo test --locked -p tape-out -- --nocapture

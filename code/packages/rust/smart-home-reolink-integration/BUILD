@@ -1,1 +1,1 @@
-cargo test -p smart-home-reolink-integration -- --nocapture
+cargo test --locked -p smart-home-reolink-integration -- --nocapture

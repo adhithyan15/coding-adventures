@@ -1,1 +1,1 @@
-cargo build -p matrix-rust-ruby-native --release
+cargo build --locked -p matrix-rust-ruby-native --release

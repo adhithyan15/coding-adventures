@@ -1,1 +1,1 @@
-cargo test -p llm-cache -- --nocapture
+cargo test --locked -p llm-cache -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p data-matrix -- --nocapture
+cargo test --locked -p data-matrix -- --nocapture

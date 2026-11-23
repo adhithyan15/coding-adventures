@@ -1,1 +1,1 @@
-cargo test -p adjudication-tsa-demo -- --nocapture
+cargo test --locked -p adjudication-tsa-demo -- --nocapture

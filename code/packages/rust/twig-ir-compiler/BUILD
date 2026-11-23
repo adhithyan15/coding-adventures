@@ -1,1 +1,1 @@
-cargo test -p twig-ir-compiler -- --nocapture
+cargo test --locked -p twig-ir-compiler -- --nocapture

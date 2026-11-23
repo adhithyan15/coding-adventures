@@ -1,1 +1,1 @@
-cargo test -p basic-semantic-tokens -- --nocapture
+cargo test --locked -p basic-semantic-tokens -- --nocapture

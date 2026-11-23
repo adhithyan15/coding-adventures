@@ -1,1 +1,1 @@
-cargo test -p image-codec-orf -- --nocapture
+cargo test --locked -p image-codec-orf -- --nocapture

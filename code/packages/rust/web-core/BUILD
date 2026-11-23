@@ -1,1 +1,1 @@
-cargo test -p web-core -- --nocapture
+cargo test --locked -p web-core -- --nocapture

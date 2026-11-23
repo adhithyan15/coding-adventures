@@ -1,1 +1,1 @@
-cargo test -p spreadsheet-core-wasm -- --nocapture
+cargo test --locked -p spreadsheet-core-wasm -- --nocapture

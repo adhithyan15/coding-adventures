@@ -1,1 +1,1 @@
-cargo test -p visicalc-mosaic-app -- --nocapture
+cargo test --locked -p visicalc-mosaic-app -- --nocapture

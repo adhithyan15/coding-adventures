@@ -1,1 +1,1 @@
-cargo test -p wolfram-to-semantic-ir -- --nocapture
+cargo test --locked -p wolfram-to-semantic-ir -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p nib-clr-compiler -- --nocapture
+cargo test --locked -p nib-clr-compiler -- --nocapture

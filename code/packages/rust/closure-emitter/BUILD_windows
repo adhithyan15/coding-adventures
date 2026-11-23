@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-closure-emitter -- --nocapture
+cargo test --locked -p coding-adventures-closure-emitter -- --nocapture

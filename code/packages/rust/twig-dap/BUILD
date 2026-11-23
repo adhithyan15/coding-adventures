@@ -1,1 +1,1 @@
-cargo test -p twig-dap -- --nocapture
+cargo test --locked -p twig-dap -- --nocapture

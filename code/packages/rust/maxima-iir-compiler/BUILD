@@ -1,1 +1,1 @@
-cargo test -p maxima-iir-compiler
+cargo test --locked -p maxima-iir-compiler

@@ -1,1 +1,1 @@
-cargo test -p mos6502-backend -- --nocapture
+cargo test --locked -p mos6502-backend -- --nocapture

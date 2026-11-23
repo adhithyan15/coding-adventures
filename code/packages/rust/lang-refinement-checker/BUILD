@@ -1,1 +1,1 @@
-cargo test -p lang-refinement-checker -- --nocapture
+cargo test --locked -p lang-refinement-checker -- --nocapture

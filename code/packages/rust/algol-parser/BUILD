@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-algol-parser -- --nocapture
+cargo test --locked -p coding-adventures-algol-parser -- --nocapture

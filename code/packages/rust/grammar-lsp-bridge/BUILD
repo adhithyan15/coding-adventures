@@ -1,1 +1,1 @@
-cargo test -p grammar-lsp-bridge -- --nocapture
+cargo test --locked -p grammar-lsp-bridge -- --nocapture

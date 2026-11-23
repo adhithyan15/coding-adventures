@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-haskell-parser -- --nocapture
+cargo test --locked -p coding-adventures-haskell-parser -- --nocapture

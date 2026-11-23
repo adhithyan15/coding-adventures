@@ -1,1 +1,1 @@
-cargo test -p reduce-iir-compiler
+cargo test --locked -p reduce-iir-compiler

@@ -1,5 +1,5 @@
 # The build tool runs each line as its own `cmd /C` from this package's
 # directory, so batch-file constructs (`pushd %~dp0`, `if errorlevel`) do not
 # work here: `%~dp0` only expands inside a .bat file.
-cargo build --package coding-adventures-sql-planner
-cargo test --package coding-adventures-sql-planner
+cargo build --locked --package coding-adventures-sql-planner
+cargo test --locked --package coding-adventures-sql-planner

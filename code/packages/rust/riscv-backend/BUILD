@@ -1,1 +1,1 @@
-cargo test -p riscv-backend
+cargo test --locked -p riscv-backend

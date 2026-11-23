@@ -1,1 +1,1 @@
-cargo test -p mermaid-parser -- --nocapture
+cargo test --locked -p mermaid-parser -- --nocapture

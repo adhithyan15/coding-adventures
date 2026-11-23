@@ -1,1 +1,1 @@
-cargo test -p dsp-dct -- --nocapture
+cargo test --locked -p dsp-dct -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-idl-to-semantic-ir -- --nocapture
+cargo test --locked -p coding-adventures-idl-to-semantic-ir -- --nocapture

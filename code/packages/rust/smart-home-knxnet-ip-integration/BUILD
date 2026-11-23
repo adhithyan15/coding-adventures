@@ -1,1 +1,1 @@
-cargo test -p smart-home-knxnet-ip-integration -- --nocapture
+cargo test --locked -p smart-home-knxnet-ip-integration -- --nocapture

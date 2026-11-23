@@ -1,1 +1,1 @@
-cargo test -p twig-to-wasm
+cargo test --locked -p twig-to-wasm

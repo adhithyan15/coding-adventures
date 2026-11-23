@@ -1,1 +1,1 @@
-cargo test -p matrix-cpu -- --nocapture
+cargo test --locked -p matrix-cpu -- --nocapture

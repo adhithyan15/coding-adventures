@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-cobol-runtime -- --nocapture
+cargo test --locked -p coding-adventures-cobol-runtime -- --nocapture

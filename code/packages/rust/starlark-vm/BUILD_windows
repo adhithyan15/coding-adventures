@@ -1,1 +1,1 @@
-cargo test -p starlark-vm -- --nocapture
+cargo test --locked -p starlark-vm -- --nocapture

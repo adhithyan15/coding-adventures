@@ -1,1 +1,1 @@
-cargo test -p rom-bios
+cargo test --locked -p rom-bios

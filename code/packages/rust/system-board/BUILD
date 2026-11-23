@@ -1,1 +1,1 @@
-cargo test -p system-board -- --nocapture
+cargo test --locked -p system-board -- --nocapture

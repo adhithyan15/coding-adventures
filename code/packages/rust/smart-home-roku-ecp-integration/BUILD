@@ -1,1 +1,1 @@
-cargo test -p smart-home-roku-ecp-integration -- --nocapture
+cargo test --locked -p smart-home-roku-ecp-integration -- --nocapture

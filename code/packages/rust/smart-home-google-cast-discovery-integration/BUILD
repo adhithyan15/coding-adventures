@@ -1,1 +1,1 @@
-cargo test -p smart-home-google-cast-discovery-integration -- --nocapture
+cargo test --locked -p smart-home-google-cast-discovery-integration -- --nocapture

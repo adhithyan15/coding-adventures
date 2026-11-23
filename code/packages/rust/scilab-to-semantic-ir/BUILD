@@ -1,1 +1,1 @@
-cargo test -p scilab-to-semantic-ir -- --nocapture
+cargo test --locked -p scilab-to-semantic-ir -- --nocapture

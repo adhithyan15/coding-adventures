@@ -1,1 +1,1 @@
-cargo test -p mosaic-emit-html -- --nocapture
+cargo test --locked -p mosaic-emit-html -- --nocapture

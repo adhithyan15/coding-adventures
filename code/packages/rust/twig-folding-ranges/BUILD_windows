@@ -1,1 +1,1 @@
-cargo test -p twig-folding-ranges -- --nocapture
+cargo test --locked -p twig-folding-ranges -- --nocapture

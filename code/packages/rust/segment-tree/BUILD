@@ -1,1 +1,1 @@
-cargo test -p segment-tree -- --nocapture
+cargo test --locked -p segment-tree -- --nocapture

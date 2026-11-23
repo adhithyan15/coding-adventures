@@ -1,1 +1,1 @@
-cargo test -p diagram-to-paint -- --nocapture
+cargo test --locked -p diagram-to-paint -- --nocapture

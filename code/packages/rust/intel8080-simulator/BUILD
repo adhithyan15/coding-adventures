@@ -1,1 +1,1 @@
-cargo test -p intel8080-simulator -- --nocapture
+cargo test --locked -p intel8080-simulator -- --nocapture

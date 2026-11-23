@@ -1,1 +1,1 @@
-cargo test -p wasm-wast-parser -- --nocapture
+cargo test --locked -p wasm-wast-parser -- --nocapture

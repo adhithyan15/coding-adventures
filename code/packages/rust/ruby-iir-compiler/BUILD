@@ -1,2 +1,2 @@
-cargo build -p ruby-iir-compiler
-cargo test -p ruby-iir-compiler
+cargo build --locked -p ruby-iir-compiler
+cargo test --locked -p ruby-iir-compiler

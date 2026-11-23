@@ -1,1 +1,1 @@
-cargo test -p pdf417 -- --nocapture
+cargo test --locked -p pdf417 -- --nocapture

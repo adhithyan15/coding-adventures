@@ -1,1 +1,1 @@
-cargo test -p twig-vm -- --nocapture
+cargo test --locked -p twig-vm -- --nocapture

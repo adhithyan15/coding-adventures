@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-biometric-approval -- --nocapture
+cargo test --locked -p chief-of-staff-biometric-approval -- --nocapture

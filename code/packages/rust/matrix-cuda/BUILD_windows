@@ -3,4 +3,4 @@
 # dlopen / LoadLibrary, so there is no link-time NVIDIA dependency.
 # `cargo test` runs the Phase 1 unit tests (which gracefully no-op
 # when CUDA is not available at runtime).
-cargo test -p matrix-cuda
+cargo test --locked -p matrix-cuda

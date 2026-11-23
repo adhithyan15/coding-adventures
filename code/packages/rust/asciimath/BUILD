@@ -1,1 +1,1 @@
-cargo test -p asciimath -- --nocapture
+cargo test --locked -p asciimath -- --nocapture

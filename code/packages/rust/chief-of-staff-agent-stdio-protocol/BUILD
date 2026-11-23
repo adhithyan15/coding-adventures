@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-agent-stdio-protocol && cargo clippy -p chief-of-staff-agent-stdio-protocol --all-targets -- -D warnings && RUSTDOCFLAGS="-D warnings" cargo doc -p chief-of-staff-agent-stdio-protocol --no-deps
+cargo test --locked -p chief-of-staff-agent-stdio-protocol && cargo clippy --locked -p chief-of-staff-agent-stdio-protocol --all-targets -- -D warnings && RUSTDOCFLAGS="-D warnings" cargo doc --locked -p chief-of-staff-agent-stdio-protocol --no-deps

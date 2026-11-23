@@ -1,1 +1,1 @@
-cargo test -p constraint-vm -- --nocapture
+cargo test --locked -p constraint-vm -- --nocapture

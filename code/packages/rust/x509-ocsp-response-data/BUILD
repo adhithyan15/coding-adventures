@@ -1,1 +1,1 @@
-cargo test -p x509-ocsp-response-data -- --nocapture
+cargo test --locked -p x509-ocsp-response-data -- --nocapture

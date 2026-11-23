@@ -1,2 +1,2 @@
-cargo build -p coding-adventures-source-preprocessor
-cargo test -p coding-adventures-source-preprocessor
+cargo build --locked -p coding-adventures-source-preprocessor
+cargo test --locked -p coding-adventures-source-preprocessor

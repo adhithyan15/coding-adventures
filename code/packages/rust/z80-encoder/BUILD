@@ -1,1 +1,1 @@
-cargo test -p z80-encoder
+cargo test --locked -p z80-encoder

@@ -1,1 +1,1 @@
-cargo test --package coding-adventures-sql-csv-source
+cargo test --locked --package coding-adventures-sql-csv-source

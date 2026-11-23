@@ -1,1 +1,1 @@
-cargo test -p brainfuck-jvm-compiler
+cargo test --locked -p brainfuck-jvm-compiler

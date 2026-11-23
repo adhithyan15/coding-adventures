@@ -1,2 +1,2 @@
-cargo build -p javascript-iir-compiler
-cargo test -p javascript-iir-compiler
+cargo build --locked -p javascript-iir-compiler
+cargo test --locked -p javascript-iir-compiler

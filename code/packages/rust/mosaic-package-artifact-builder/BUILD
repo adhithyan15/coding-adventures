@@ -1,1 +1,1 @@
-cargo test -p mosaic-package-artifact-builder -- --nocapture
+cargo test --locked -p mosaic-package-artifact-builder -- --nocapture

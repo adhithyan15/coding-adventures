@@ -1,1 +1,1 @@
-cargo test -p document-ast-to-docx -- --nocapture
+cargo test --locked -p document-ast-to-docx -- --nocapture

@@ -65,18 +65,19 @@
     {
       "id": "K-04",
       "priority": 2,
-      "status": "in-review",
+      "status": "merged",
       "title": "M0: pin the wasm lane into code/kiln/legacy/pinned.json",
       "why": "pinned.json was still {\"languages\": []}, so every package planned as `unpinned` and no pinning precondition could ever hold.",
       "scope": "147 cargo lines in code/packages/wasm/*/BUILD and BUILD_windows get --locked; gf256 and polynomial gain the Cargo.lock they never had; pinned.json gains wasm; KILN03 7.1",
       "depends_on": [],
       "risk": "low: mechanical, and a stale lockfile fails the build instead of re-resolving",
-      "outcome": "Measured with the real build tool + legacy-plan: exactly 75 packages change, all wasm/, and the only difference is the removal of `unpinned:wasm`; no key changes. NOT a step toward `cacheable`: pinning is per closure and every other wasm crate depends on a rust crate."
+      "outcome": "Measured with the real build tool + legacy-plan: exactly 75 packages change, all wasm/, and the only difference is the removal of `unpinned:wasm`; no key changes. NOT a step toward `cacheable`: pinning is per closure and every other wasm crate depends on a rust crate.",
+      "pr": 19850
     },
     {
       "id": "K-10",
       "priority": 2,
-      "status": "discovered",
+      "status": "in-review",
       "title": "M0: pin `rust` (the lane the wasm closures are waiting on)",
       "why": "Found while measuring K-04: a package is `unpinned` if ANY language in its closure is, and 74 of 75 wasm crates depend on code/packages/rust/*. So wasm can never leave the class alone, and rust is about 29% of build time by the census's own figures. Its workspace Cargo.lock is already committed and already satisfies `cargo metadata --locked`.",
       "scope": "~1471 cargo lines in code/packages/rust/*/BUILD and BUILD_windows; pinned.json",
@@ -163,14 +164,25 @@
     {
       "id": "K-13",
       "priority": 1,
-      "status": "in-review",
+      "status": "merged",
       "title": "An end-to-end emit test for the merge job",
       "why": "The merge's void and refusal paths are tested; an EMIT test needs a real `prepare` shard (trusted linux/amd64). It belongs with PR 3b and is the last unproven link between 'shards record' and 'the ledger has manifests'.",
       "scope": "a Linux-only test beside TestSandboxRecordCollect, plus the same in CI's kiln-sandbox job",
       "depends_on": [
         "K-12"
       ],
-      "risk": "low once PR 3b exists"
+      "risk": "low once PR 3b exists",
+      "pr": 19853
+    },
+    {
+      "id": "K-14",
+      "priority": 2,
+      "status": "discovered",
+      "title": "The plan's class vocabulary cannot say \"pinned, waiting for a trace\"",
+      "why": "Pinning rust moved 1,636 packages from `unpinned` to `uncacheable`, because classify() has no other bucket while `cacheable` is unreachable without a KILN04 manifest. The reasons stay correct (`unpinned:rust` is gone), but the histogram then tells a reader that a third of the repository is uncacheable when it is merely un-recorded. Any M2 report built on this histogram inherits the confusion.",
+      "scope": "KILN03 section 7 class table + classify() in internal/legacy/plan.go + the plan schema note",
+      "depends_on": [],
+      "risk": "low mechanically (a label), but it is a plan-schema change, so it wants a spec revision and the owner's agreement"
     }
   ],
   "log": [

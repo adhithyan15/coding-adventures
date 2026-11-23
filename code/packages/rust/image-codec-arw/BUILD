@@ -1,1 +1,1 @@
-cargo test -p image-codec-arw -- --nocapture
+cargo test --locked -p image-codec-arw -- --nocapture

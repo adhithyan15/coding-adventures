@@ -1,1 +1,1 @@
-cargo test -p spreadsheet-io -- --nocapture
+cargo test --locked -p spreadsheet-io -- --nocapture

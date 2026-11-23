@@ -1,1 +1,1 @@
-cargo test -p twig-lsp-bridge -- --nocapture
+cargo test --locked -p twig-lsp-bridge -- --nocapture

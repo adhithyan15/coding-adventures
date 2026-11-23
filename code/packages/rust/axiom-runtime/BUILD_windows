@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-axiom-runtime -- --nocapture
+cargo test --locked -p coding-adventures-axiom-runtime -- --nocapture

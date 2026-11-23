@@ -1,1 +1,1 @@
-cargo test -p arm1-backend
+cargo test --locked -p arm1-backend

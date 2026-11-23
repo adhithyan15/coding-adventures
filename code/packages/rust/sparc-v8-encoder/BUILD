@@ -1,1 +1,1 @@
-cargo test -p sparc-v8-encoder
+cargo test --locked -p sparc-v8-encoder

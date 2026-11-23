@@ -1,1 +1,1 @@
-cargo test -p basic-lsp-bridge -- --nocapture
+cargo test --locked -p basic-lsp-bridge -- --nocapture

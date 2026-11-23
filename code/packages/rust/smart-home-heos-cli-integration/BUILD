@@ -1,1 +1,1 @@
-cargo test -p smart-home-heos-cli-integration -- --nocapture
+cargo test --locked -p smart-home-heos-cli-integration -- --nocapture

@@ -1,1 +1,1 @@
-cargo test -p coding-adventures-starlark-parser -- --nocapture
+cargo test --locked -p coding-adventures-starlark-parser -- --nocapture
