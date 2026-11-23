@@ -470,7 +470,7 @@ fn the_b5_knob_grid_is_24_knobs_with_the_smallest_quick() {
     // row as an experiment outside the plan (VOS-D119, tests/review_fixes4.rs).
     assert!(vos_capacity_probe::exp::knobs("B5").is_empty());
     assert!(!vos_capacity_probe::exp::EXPERIMENTS.contains(&"B5"));
-    assert_eq!(vos_capacity_probe::exp::row_wall_s("B5"), 600);
+    assert_eq!(vos_capacity_probe::exp::row_wall_s("B5"), 1800);
 }
 
 /// `run_row` on the quick knobs: unsat with a replayed control, the four metrics, the budget, and
@@ -485,7 +485,7 @@ fn b5_run_row_and_structure_agree() {
         assert_eq!(row.result, "unsat", "{at}");
         assert!(row.control.ok(), "{at}: {:?}", row.control);
         assert_eq!(row.pass_default_limits, Some(true), "{at}");
-        assert_eq!(row.wall_s, Some(600));
+        assert_eq!(row.wall_s, Some(1800));
         for m in ["lemmas", "candidates", "refuted", "escalations"] {
             assert!(row.metric(m).is_some(), "{at}: metric {m}");
         }

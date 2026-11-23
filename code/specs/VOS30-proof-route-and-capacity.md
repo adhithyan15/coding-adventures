@@ -1360,8 +1360,16 @@ route-green predicate. None changes a recorded row: new rows are added by `merge
   lemma is DRAT-checked under the default limits. Outputs that do not merge form one
   final obligation. Metrics added to a row: lemmas, candidates, refuted, escalations.
   **B5 is green iff every lemma and the final obligation are route-green and the total
-  is under 600 s.** Lemma counts above 1,000 per entry are reported and not gated;
-  this is stated in advance. G3: the mutated program through the same sweep must end
+  is under 600 s.** The total is computed as the row's `solve_ms` plus `check_ms`
+  (strictly under 600,000 ms), and `route_green` enforces it. Lemma counts above 1,000
+  per entry are reported and not gated; this is stated in advance. **B5's walls are
+  measurement walls, not gates** (owner direction, 2026-11-23: relax timeouts where
+  things need more time to prove out): the row wall is 1,800 s, each lemma solve and
+  the final obligation get 600 s, and B5's G3 control gets its own 600 s and a
+  1,000,000-conflict cap (the other experiments' controls keep 30 s and 300,000). They
+  only decide whether a run produces an answer or ends `unknown`, so a slow sweep
+  records its real conflicts; the route budget (50,000 conflicts, `check_work` 2^31),
+  the 8.3 thresholds and the 600 s total are unchanged and judge the recorded numbers. G3: the mutated program through the same sweep must end
   SAT, its model checked against the **original unswept** control CNF and replayed on
   the simulator. Negative control: a sweeper that merges on simulation signature
   without proof is shown wrong on a mutant that agrees on all 256 patterns.
@@ -1683,9 +1691,17 @@ silent drop):
    when it is 120, so rows that do not change stay byte-identical. As built, an
    obligation's deadline is the earlier of the row's deadline and 120 s after it
    starts (`exp::obligation_deadline`); the parent's kill is `hard_limit_for(wall_s)`;
-   `validate` accepts `wall_s` only as 600 and only on B3, D3 and D4, and a chain row
+   `validate` accepts `wall_s` only as the row budget of a chain (`row_wall_s`: 600 on
+   B3, D3 and D4, and later D5) and a chain row
    recorded before the budget existed (no field) stays valid; `compare_rerun` does not
    compare it (it is the budget, not a measurement).
+   **B5's walls (VOS-028c3b, owner direction 2026-11-23).** B5 is the one exception to
+   the 600 s: its row wall is **1,800 s**, each lemma solve and the final obligation
+   **600 s**, and its G3 control has its own **600 s and 1,000,000-conflict cap**; the
+   hard kill is 1,800 s plus 600 s plus 150 s of slack (2,550 s). They are measurement
+   walls, not gates: they decide only whether a run answers or ends `unknown`, and
+   change no gate number of 8.3 or 8.6 (the 600 s total of B5 is solve plus check
+   milliseconds, enforced by `route_green`).
 3. **Whole-process-group kill.** The row runs as a child in its **own process
    group**; the parent kills the *group* on the wall timeout, covering **every
    stage**: instance generation and CNF writing, the solve, and `drat-check`, not

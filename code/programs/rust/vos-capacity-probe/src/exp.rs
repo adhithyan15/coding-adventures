@@ -489,9 +489,34 @@ pub const CHAIN_WALL_S: u64 = 600;
 /// The wall timeout of one obligation, and of a non-chain row, seconds.
 pub const OBLIGATION_WALL_S: u64 = 120;
 
-/// The row budget of an experiment's rows, seconds: 600 for a chain, 120 for everything else.
+/// B5's row wall, seconds.  A MEASUREMENT wall, not a gate (owner direction, 2026-11-23: relax
+/// timeouts where things need more time to prove out).  It only decides whether a sweep
+/// produces an answer or ends `unknown`; a slow sweep should record its real conflicts and
+/// times rather than a timeout.  The pre-registered gates (the route budget of 50,000
+/// conflicts and `check_work` 2^31 per obligation, the section 8.3 per-step green thresholds
+/// including `GREEN_MAX_SOLVE_MS`, and B5's "total under 600 s") are unchanged and are judged
+/// on the recorded numbers by `results::route_green`.  Other experiments keep 600 / 120.
+pub const B5_ROW_WALL_S: u64 = 1800;
+
+/// B5's wall for each lemma solve and for the final obligation, seconds (measurement wall,
+/// see [`B5_ROW_WALL_S`]).
+pub const B5_OBLIGATION_WALL_S: u64 = 600;
+
+/// B5's control-stage budget (measurement wall, see [`B5_ROW_WALL_S`]).  The G3 control sweeps
+/// the mutated miter and must end SAT; at 30 s a slow sweep would end the control `unknown`
+/// and hide a real result, so B5's control gets its own budget.
+pub const B5_CONTROL_WALL: Duration = Duration::from_secs(600);
+
+/// B5's control conflict cap (measurement wall, see [`B5_ROW_WALL_S`]); other controls keep
+/// 300,000.
+pub const B5_CONTROL_CONFLICT_CAP: u64 = 1_000_000;
+
+/// The row budget of an experiment's rows, seconds: 1,800 for B5 (a measurement wall), 600 for
+/// every other chain, 120 for everything else.
 pub fn row_wall_s(exp: &str) -> u64 {
-    if CHAIN_EXPERIMENTS.contains(&exp) {
+    if exp == "B5" {
+        B5_ROW_WALL_S
+    } else if CHAIN_EXPERIMENTS.contains(&exp) {
         CHAIN_WALL_S
     } else {
         OBLIGATION_WALL_S
@@ -1414,7 +1439,7 @@ fn b5_row(spec: &RowSpec, deadline: Instant, progress: &mut dyn FnMut(&Row)) -> 
             mode: ProofMode::Certified,
             seed: spec.seed,
             row_deadline: deadline,
-            obligation_wall: Duration::from_secs(OBLIGATION_WALL_S),
+            obligation_wall: Duration::from_secs(B5_OBLIGATION_WALL_S),
             conflict_cap: None,
         },
     );
@@ -1486,7 +1511,7 @@ fn b5_row(spec: &RowSpec, deadline: Instant, progress: &mut dyn FnMut(&Row)) -> 
 /// against that CNF, against the premises and the miter on the AIG, and replayed on the
 /// concrete machines.  `control_instance_sha256` is the digest of the unswept control CNF.
 fn b5_control(shape: &dyn Shape, seed: u64) -> (Control, String, String) {
-    let deadline = Instant::now() + CONTROL_WALL;
+    let deadline = Instant::now() + B5_CONTROL_WALL;
     let mut last_sha = String::new();
     let mut note = String::new();
     for site in shape.sites(seed).into_iter().take(8) {
@@ -1509,8 +1534,8 @@ fn b5_control(shape: &dyn Shape, seed: u64) -> (Control, String, String) {
                 mode: ProofMode::Solver,
                 seed,
                 row_deadline: deadline,
-                obligation_wall: CONTROL_WALL,
-                conflict_cap: Some(300_000),
+                obligation_wall: B5_CONTROL_WALL,
+                conflict_cap: Some(B5_CONTROL_CONFLICT_CAP),
             },
         );
         match rep.verdict {

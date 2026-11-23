@@ -48,6 +48,11 @@ pub const ROUTE_MAX_CONFLICTS: u64 = 50_000;
 /// The route-budget checker-work cap of VOS30 section 8.6.1 (2^31, half of `DEFAULT_MAX_WORK`).
 pub const ROUTE_MAX_CHECK_WORK: u64 = 1 << 31;
 
+/// The B5 clause of VOS30 section 8.6.3: a B5 row's total time, `solve_ms + check_ms`, must be
+/// strictly under 600 s (milliseconds).  A gate, pre-registered; the B5 measurement walls
+/// (`exp::B5_ROW_WALL_S`) are looser than it so that a slow sweep is recorded, then judged here.
+pub const B5_ROUTE_MAX_TOTAL_MS: f64 = 600_000.0;
+
 /// Everything the file records besides the rows.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Meta {
@@ -471,6 +476,10 @@ pub fn route_green(r: &Row) -> bool {
     }
     if r.mode == "enum" {
         return true;
+    }
+    // Section 8.6.3: a B5 row additionally needs its total (solve plus check) under 600 s.
+    if r.experiment == "B5" && r.solve_ms + r.check_ms.unwrap_or(0.0) >= B5_ROUTE_MAX_TOTAL_MS {
+        return false;
     }
     let work_ok =
         r.mode == "incremental" || r.check_work.is_some_and(|w| w <= ROUTE_MAX_CHECK_WORK);

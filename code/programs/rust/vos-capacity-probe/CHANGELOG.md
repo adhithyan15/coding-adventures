@@ -28,6 +28,16 @@ All notable changes to this package are documented here.
 - **`validate` cross-rule.** A B5 row with `fuse = 1` must carry the same `instance_sha256` as the
   matching B2 row.
 - **Chain budget.** B5 joins the 600 s chain budget (VOS-D095).
+- **B5 measurement walls (owner direction, 2026-11-23; VOS-D118).** `exp::B5_ROW_WALL_S` = 1,800 s
+  (`row_wall_s("B5")`, recorded as `wall_s`), `B5_OBLIGATION_WALL_S` = 600 s for each lemma and the
+  final obligation, and `B5_CONTROL_WALL` = 600 s with `B5_CONTROL_CONFLICT_CAP` = 1,000,000 for
+  B5's G3 control. `runner::hard_limit_for(1800)` adds the longer control stage (2,550 s). These
+  are measurement walls, not gates: no gate number changed, and every other experiment's walls and
+  recorded rows are unchanged.
+- **`route_green` enforces B5's 600 s total.** The pre-registered clause of VOS30 8.6.3 is now
+  implemented: a B5 row needs `solve_ms + check_ms` strictly under `B5_ROUTE_MAX_TOTAL_MS`
+  (600,000). `decide_replan` reads it through `group_route_green`. Tests: boundary and non-B5
+  controls in `tests/results_logic.rs`, the row walls of B5/B3/D3/D4/D5/B2.
 - **Not yet in the plan.** B5 is not registered in `plan(Tier::Full)`; registration and Unix
   recording are VOS-028c3c (queue item 9c3). `FULL_PLAN_EXEMPT` stays empty.
 

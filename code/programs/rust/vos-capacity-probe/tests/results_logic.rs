@@ -850,6 +850,48 @@ fn route_green_enforces_both_route_bounds_on_top_of_green() {
 }
 
 #[test]
+fn b5_route_green_needs_its_total_under_600_s() {
+    let kb = || {
+        Knob::of(&[
+            ("length", Kv::I(200)),
+            ("divergence", Kv::F(0.25)),
+            ("fuse", Kv::I(2)),
+        ])
+    };
+    let mut b5 = rg_row("B5", kb(), "certified", 1);
+    // The total is solve plus check; every other field stays route-green.
+    b5.solve_ms = 9_000.0;
+    b5.worst_step_solve_ms = 9_000.0;
+    b5.check_ms = Some(590_999.0);
+    assert!(route_green(&b5));
+    b5.check_ms = Some(591_001.0);
+    assert!(green(&b5) && !route_green(&b5));
+    b5.check_ms = None;
+    b5.solve_ms = 600_001.0;
+    assert!(!route_green(&b5));
+    b5.solve_ms = 599_999.0;
+    assert!(route_green(&b5));
+    // A non-B5 row with the same total is unaffected.
+    let mut b3 = rg_row("B3", Knob::of(&[("length", Kv::I(200))]), "certified", 1);
+    b3.solve_ms = 9_000.0;
+    b3.worst_step_solve_ms = 9_000.0;
+    b3.check_ms = Some(591_001.0);
+    assert!(route_green(&b3));
+}
+
+#[test]
+fn row_walls_are_b5_1800_other_chains_600_rest_120() {
+    use vos_capacity_probe::exp::{row_wall_s, wall_field};
+    assert_eq!(row_wall_s("B5"), 1800);
+    assert_eq!(wall_field("B5"), Some(1800));
+    for e in ["B3", "D3", "D4", "D5"] {
+        assert_eq!(row_wall_s(e), 600, "{e}");
+    }
+    assert_eq!(row_wall_s("B2"), 120);
+    assert_eq!(wall_field("B2"), None);
+}
+
+#[test]
 fn cut_density_k_selects_largest_all_green_spacing() {
     let all = all_route_green();
     assert_eq!(cut_density_k(&all), 4);
