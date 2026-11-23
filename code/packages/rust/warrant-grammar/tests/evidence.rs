@@ -5,7 +5,9 @@
 use std::collections::BTreeMap;
 
 use coding_adventures_sha256::sha256_hex;
-use coding_adventures_warrant_grammar::binding::{BindingManifest, ErrorNormalization, OpBinding};
+use coding_adventures_warrant_grammar::binding::{
+    BindingManifest, ErrorNormalization, EvidenceBindingFile, OpBinding,
+};
 use coding_adventures_warrant_grammar::driver::parse_driver_record;
 use coding_adventures_warrant_grammar::checker::check_warrant;
 use coding_adventures_warrant_grammar::codegen::{CodegenErrorKind, DiagnosticCode};
@@ -91,11 +93,28 @@ fn is_fail(v: &Verdict, id: &str) -> bool {
     matches!(v, Verdict::Fail { failure_id, .. } if *failure_id == id)
 }
 
+/// Wrap a hand-built manifest for `compile_*` (no drivers, no opt-ins).
+fn wrap(manifest: BindingManifest) -> EvidenceBindingFile {
+    EvidenceBindingFile {
+        manifest,
+        spec: String::new(),
+        output: String::new(),
+        seed: 0,
+        property_cases: 0,
+        fuzz_iterations: 0,
+        negctl_fuzz_iterations: 0,
+        exhaustive_budget: 0,
+        arg_types: BTreeMap::new(),
+        proofs_not_live: BTreeMap::new(),
+        hosts: Default::default(),
+    }
+}
+
 #[test]
 fn checked_in_harness_matches_the_spec_and_generator() {
     let generated = with_parsed(SPEC, |file| {
         let checked = check_warrant(file).expect("spec must type-check");
-        compile_rust_evidence_harness(file, &checked, &ct_bindings(), &options(SPEC))
+        compile_rust_evidence_harness(file, &checked, &wrap(ct_bindings()), &options(SPEC))
             .expect("generation must succeed")
     });
     assert_eq!(
@@ -246,7 +265,8 @@ fn missing_binding_is_rejected_by_validation() {
         let checked = check_warrant(file).unwrap();
         let mut b = ct_bindings();
         b.bindings.remove("eq_u64");
-        let err = compile_rust_evidence_harness(file, &checked, &b, &options(SPEC)).unwrap_err();
+        let err =
+            compile_rust_evidence_harness(file, &checked, &wrap(b), &options(SPEC)).unwrap_err();
         assert_eq!(err.code, DiagnosticCode::W0704);
     });
 }

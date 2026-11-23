@@ -53,6 +53,8 @@ pub enum DiagnosticCode {
     W0708,
     /// W0710: A table row whose fields or values do not fit the declared columns.
     W0710,
+    /// W0711: A WX-F driver inconsistent with its operation (VER04k 3.3).
+    W0711,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -71,6 +73,7 @@ impl fmt::Display for DiagnosticCode {
             Self::W0602 => write!(f, "W0602"),
             Self::W0708 => write!(f, "W0708"),
             Self::W0710 => write!(f, "W0710"),
+            Self::W0711 => write!(f, "W0711"),
         }
     }
 }
@@ -94,6 +97,8 @@ pub enum CodegenErrorKind {
     /// WX-D (VER04k section 2.7, step 2): the evaluation's cumulative owned
     /// data would pass [`DATA_BUDGET_BYTES`].  Refused before allocating.
     DataBudgetExceeded,
+    /// WX-F (VER04k section 3.3): a driver inconsistent with its operation.
+    DriverInconsistency(String),
 }
 
 /// Codegen and compilation error.

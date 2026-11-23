@@ -9,7 +9,9 @@
 use std::collections::BTreeMap;
 
 use coding_adventures_sha256::sha256_hex;
-use coding_adventures_warrant_grammar::binding::{BindingManifest, ErrorNormalization, OpBinding};
+use coding_adventures_warrant_grammar::binding::{
+    BindingManifest, ErrorNormalization, EvidenceBindingFile, OpBinding,
+};
 use coding_adventures_warrant_grammar::checker::check_warrant;
 use coding_adventures_warrant_grammar::evidence::{compile_rust_evidence_harness, EvidenceOptions};
 use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
@@ -108,12 +110,29 @@ pub fn options(spec: &str, budget: u64) -> EvidenceOptions {
     }
 }
 
+/// Wrap a hand-built manifest for `compile_*` (no drivers, no opt-ins).
+fn wrap(manifest: BindingManifest) -> EvidenceBindingFile {
+    EvidenceBindingFile {
+        manifest,
+        spec: String::new(),
+        output: String::new(),
+        seed: 0,
+        property_cases: 0,
+        fuzz_iterations: 0,
+        negctl_fuzz_iterations: 0,
+        exhaustive_budget: 0,
+        arg_types: BTreeMap::new(),
+        proofs_not_live: BTreeMap::new(),
+        hosts: Default::default(),
+    }
+}
+
 pub fn generate(budget: u64) -> String {
     let doc = SourceDocument::admit(SPEC.as_bytes(), SourceLimits::default()).expect("admit");
     let layout = capture_layout(&doc, LayoutLimits::default()).expect("layout");
     let file = parse_document(&layout, &doc, ParserLimits::default()).expect("parse");
     let checked = check_warrant(&file).expect("the fixture must type-check");
-    compile_rust_evidence_harness(&file, &checked, &bindings(), &options(SPEC, budget))
+    compile_rust_evidence_harness(&file, &checked, &wrap(bindings()), &options(SPEC, budget))
         .expect("generation must succeed")
 }
 

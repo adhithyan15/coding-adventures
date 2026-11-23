@@ -83,7 +83,7 @@ pub(crate) fn generate_one(root: &std::path::Path, package: &str, check: bool) -
         dir: "tests/generated/tables",
         tables: &tables,
     };
-    let text = compile_rust_evidence_harness_with_tables(&file, &checked, &b.manifest, &options, &set)
+    let text = compile_rust_evidence_harness_with_tables(&file, &checked, &b, &options, &set)
         .map_err(|e| format!("{e}"))?;
     let package_dir = root.join("code/packages/rust").join(package);
     for (rel, bytes) in set.files() {

@@ -108,7 +108,7 @@ fn reference_harness() -> String {
         arg_types: b.arg_types.clone(),
         hosts: b.hosts.clone(),
     };
-    compile_rust_evidence_harness(&file, &checked, &b.manifest, &options).expect("reference generation")
+    compile_rust_evidence_harness(&file, &checked, &b, &options).expect("reference generation")
 }
 
 #[test]

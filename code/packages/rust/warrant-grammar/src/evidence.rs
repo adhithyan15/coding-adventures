@@ -32,10 +32,11 @@ use std::fmt::Write as _;
 use std::path::Path;
 
 use crate::binding::{
-    is_rust_identifier, is_rust_path, validate_bindings, BindingManifest, HostShape, HostSpec, HostTy,
-    InoutForm, MAX_EXPORT_SEGMENTS,
+    is_rust_identifier, is_rust_path, validate_bindings, BindingManifest, EvidenceBindingFile,
+    HostShape, HostSpec, HostTy, InoutForm, MAX_EXPORT_SEGMENTS,
 };
 use crate::checker::{CheckedWarrantModule, PostSlot};
+use crate::driver::validate_driver_consistency;
 use crate::codegen::{
     find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
 };
@@ -3072,26 +3073,36 @@ pub fn load_document_tables(
 pub fn compile_rust_evidence_harness(
     file: &WarrantFile<'_>,
     checked: &CheckedWarrantModule,
-    manifest: &BindingManifest,
+    bindings: &EvidenceBindingFile,
     options: &EvidenceOptions,
 ) -> Result<String, CodegenError> {
-    compile_rust_evidence_harness_with_tables(file, checked, manifest, options, &TableSet::NONE)
+    compile_rust_evidence_harness_with_tables(file, checked, bindings, options, &TableSet::NONE)
 }
 
 /// [`compile_rust_evidence_harness`] for a document with `vectors` tables.
 pub fn compile_rust_evidence_harness_with_tables(
     file: &WarrantFile<'_>,
     checked: &CheckedWarrantModule,
-    manifest: &BindingManifest,
+    bindings: &EvidenceBindingFile,
     options: &EvidenceOptions,
     tables: &TableSet<'_>,
 ) -> Result<String, CodegenError> {
-    validate_bindings(checked, manifest).map_err(|e| CodegenError {
+    validate_bindings(checked, &bindings.manifest).map_err(|e| CodegenError {
         code: DiagnosticCode::W0704,
         kind: CodegenErrorKind::MissingBinding(format!("{:?}", e.kind)),
         span: e.span,
     })?;
-    generate_evidence_harness_with_tables(file, manifest, options, tables)
+    // WX-F slice 2: driver records are typed against the document before
+    // generation (which still refuses every driver op, W0704, until the
+    // evaluation slice). The code survives the boundary: a CheckerError here
+    // is always W0711, and flattening it to W0704 would hide which rule
+    // failed from `--check` output.
+    validate_driver_consistency(file, bindings).map_err(|e| CodegenError {
+        code: DiagnosticCode::W0711,
+        kind: CodegenErrorKind::DriverInconsistency(format!("{:?}", e.kind)),
+        span: e.span,
+    })?;
+    generate_evidence_harness_with_tables(file, &bindings.manifest, options, tables)
 }
 
 /// [`compile_rust_evidence_harness`] without the binding/contract validation

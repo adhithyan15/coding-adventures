@@ -382,7 +382,7 @@ fn bool_field_flip_accepts_only_declared_records_with_direct_bool_fields_and_one
         compile_rust_evidence_harness(
             &file,
             &checked,
-            &b.manifest,
+            &b,
             &EvidenceOptions {
                 package_crate: "subject".into(),
                 spec_path: "code/specs/t.warrant".into(),
