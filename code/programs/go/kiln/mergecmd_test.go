@@ -27,6 +27,13 @@ func cliMerge(t *testing.T, args ...string) (int, string) {
 }
 
 func TestRecordMergeUsageErrors(t *testing.T) {
+	// The CLI falls back to $GITHUB_REPOSITORY, $GITHUB_RUN_ID and $GITHUB_SHA,
+	// and they ARE set on a CI runner. The "no run metadata" case below is only
+	// a usage error when they are absent, so clear them here rather than letting
+	// the suite pass on a laptop and fail on CI.
+	for _, k := range []string{"GITHUB_REPOSITORY", "GITHUB_RUN_ID", "GITHUB_SHA"} {
+		t.Setenv(k, "")
+	}
 	dir := t.TempDir()
 	cases := map[string][]string{
 		"no arguments":       {},
