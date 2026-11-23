@@ -52,8 +52,8 @@ fn bad(spec: &str, op_line: &str, driver_line: &str, needle: &str) {
     );
 }
 
-const SPEC_SHA1: &str = "warrant t v1\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks public\n";
-const OP_SHA1: &str = "op digest_chunks driver faults=drop-last-chunk";
+const SPEC_SHA1: &str = "warrant t v1\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks public\n  claim c:\n    forall chunks: List<Bytes>. digest_chunks(chunks) == digest_chunks(chunks)\n";
+const OP_SHA1: &str = "op digest_chunks driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step";
 const DRIVER_SHA1: &str = "driver digest_chunks state=subject::Digest new=new() drive=chunks step=update(mut,elem:bytes) finish=sum1(ref)->bytes result=finish";
 
 #[test]
@@ -68,90 +68,90 @@ fn lengths_allowed_on_bytes_elements() {
 
 #[test]
 fn collect_driver_is_consistent() {
-    let spec = "warrant t v1\n  op dec_all(bs: List<Bytes>) -> List<U8>\n  labels dec_all:\n    bs public\n";
+    let spec = "warrant t v1\n  op dec_all(bs: List<Bytes>) -> List<U8>\n  labels dec_all:\n    bs public\n  claim c:\n    forall bs: List<Bytes>. dec_all(bs) == dec_all(bs)\n";
     ok(
         spec,
-        "op dec_all driver faults=drop-last-chunk",
+        "op dec_all driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,drop-last-output",
         "driver dec_all state=subject::Dec new=new() drive=bs step=dec(mut,elem:bytes)->u8 result=collect",
     );
 }
 
 #[test]
 fn both_driver_is_consistent() {
-    let spec = "warrant t v1\n  op scan(xs: List<U8>) -> (List<U8>, Nat)\n  labels scan:\n    xs public\n";
+    let spec = "warrant t v1\n  op scan(xs: List<U8>) -> (List<U8>, Nat)\n  labels scan:\n    xs public\n  claim c:\n    forall xs: List<U8>. scan(xs) == scan(xs)\n";
     ok(
         spec,
-        "op scan driver faults=drop-last-chunk",
+        "op scan driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step,drop-last-output",
         "driver scan state=subject::Scan new=new() drive=xs step=push(mut,elem:u8)->u8 finish=len(ref)->u32 result=both",
     );
 }
 
 #[test]
 fn nat_count_driver_is_consistent() {
-    let spec = "warrant t v1\n  op fill(n: Nat) -> Bytes\n  labels fill:\n    n public\n";
+    let spec = "warrant t v1\n  op fill(n: Nat) -> Bytes\n  labels fill:\n    n public\n  claim c:\n    forall n: Nat. fill(n) == fill(n)\n";
     ok(
         spec,
-        "op fill driver faults=drop-last-chunk",
+        "op fill driver faults=drop-last-chunk,duplicate-last-chunk,early-finish,reset-per-step",
         "driver fill state=subject::Fill new=new() drive=n step=tick(mut) finish=out(ref)->bytes result=finish",
     );
 }
 
 #[test]
 fn fallible_driver_with_errors_map_is_consistent() {
-    let spec = "warrant t v1\n  error E = TOO_LONG\n  op digest_try(chunks: List<Bytes>) -> Result<Bytes, E>\n  labels digest_try:\n    chunks public\n";
+    let spec = "warrant t v1\n  error E = TOO_LONG\n  op digest_try(chunks: List<Bytes>) -> Result<Bytes, E>\n  labels digest_try:\n    chunks public\n  claim c:\n    forall chunks: List<Bytes>. digest_try(chunks) == digest_try(chunks)\n";
     ok(
         spec,
-        "op digest_try driver faults=drop-last-chunk",
+        "op digest_try driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
         "driver digest_try state=subject::D new=new() drive=chunks step=try_update(mut,elem:bytes)->result finish=digest(ref)->bytes result=finish errors=subject::E/LengthOverflow=TOO_LONG",
     );
 }
 
 #[test]
 fn tuple_element_path_is_consistent() {
-    let spec = "warrant t v1\n  op encode_bits(bits: List<(Bool, U8)>) -> Bytes\n  labels encode_bits:\n    bits public\n";
+    let spec = "warrant t v1\n  op encode_bits(bits: List<(Bool, U8)>) -> Bytes\n  labels encode_bits:\n    bits public\n  claim c:\n    forall bits: List<(Bool, U8)>. encode_bits(bits) == encode_bits(bits)\n";
     ok(
         spec,
-        "op encode_bits driver faults=drop-last-chunk",
+        "op encode_bits driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
         "driver encode_bits state=subject::Enc new=new() drive=bits step=write_bit(mut,elem.0:bool,elem.1:u8) finish=finish(own)->bytes result=finish",
     );
 }
 
 #[test]
 fn record_element_path_is_consistent() {
-    let spec = "warrant t v1\n  record Rec(a: U8, b: Bool)\n  op pack(rs: List<Rec>) -> Bytes\n  labels pack:\n    rs public\n";
+    let spec = "warrant t v1\n  record Rec(a: U8, b: Bool)\n  op pack(rs: List<Rec>) -> Bytes\n  labels pack:\n    rs public\n  claim c:\n    forall rs: List<Rec>. pack(rs) == pack(rs)\n";
     ok(
         spec,
-        "op pack driver faults=drop-last-chunk",
+        "op pack driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
         "driver pack state=subject::Pack new=new() drive=rs step=push(mut,elem.0:u8,elem.1:bool) finish=seal(ref)->bytes result=finish",
     );
 }
 
 #[test]
 fn second_parameter_consumed_by_new_is_consistent() {
-    let spec = "warrant t v1\n  op keyed(chunks: List<Bytes>, key: U8) -> Bytes\n  labels keyed:\n    chunks public\n    key public\n";
+    let spec = "warrant t v1\n  op keyed(chunks: List<Bytes>, key: U8) -> Bytes\n  labels keyed:\n    chunks public\n    key public\n  claim c:\n    forall chunks: List<Bytes>, key: U8. keyed(chunks, key) == keyed(chunks, key)\n";
     ok(
         spec,
-        "op keyed driver faults=drop-last-chunk",
+        "op keyed driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
         "driver keyed state=subject::K new=new(param.key:u8) drive=chunks step=update(mut,elem:bytes) finish=sum(ref)->bytes result=finish",
     );
 }
 
 #[test]
 fn secret_labels_with_driver_opt_in_is_consistent() {
-    let spec = "warrant t v1\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks secret\n";
+    let spec = "warrant t v1\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks secret\n  claim c:\n    forall chunks: List<Bytes>. digest_chunks(chunks) == digest_chunks(chunks)\n";
     ok(
         spec,
-        "op digest_chunks driver faults=drop-last-chunk proofs_not_live=driver",
+        "op digest_chunks driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step proofs_not_live=driver",
         DRIVER_SHA1,
     );
 }
 
 #[test]
 fn bound_row_with_driver_opt_in_is_consistent() {
-    let spec = "warrant t v1\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks public\n  bound digest_chunks:\n    steps <= 10\n";
+    let spec = "warrant t v1\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks public\n  bound digest_chunks:\n    steps <= 10\n  claim c:\n    forall chunks: List<Bytes>. digest_chunks(chunks) == digest_chunks(chunks)\n";
     ok(
         spec,
-        "op digest_chunks driver faults=drop-last-chunk proofs_not_live=driver",
+        "op digest_chunks driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step proofs_not_live=driver",
         DRIVER_SHA1,
     );
 }
@@ -164,10 +164,10 @@ fn export_op_is_untouched() {
 
 #[test]
 fn phantom_named_host_is_w0711() {
-    let spec = "warrant t v1\n  record Rec(a: U8, b: Bool)\n  op pack(rs: List<Rec>) -> Bytes\n  labels pack:\n    rs public\n";
+    let spec = "warrant t v1\n  record Rec(a: U8, b: Bool)\n  op pack(rs: List<Rec>) -> Bytes\n  labels pack:\n    rs public\n  claim c:\n    forall rs: List<Rec>. pack(rs) == pack(rs)\n";
     bad(
         spec,
-        "op pack driver faults=drop-last-chunk",
+        "op pack driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
         "driver pack state=subject::Pack new=new() drive=rs step=push(mut,elem:Rec) finish=seal(ref)->bytes result=finish",
         "no `struct`/`enum` line declares",
     );
@@ -175,9 +175,9 @@ fn phantom_named_host_is_w0711() {
 
 #[test]
 fn declared_struct_host_is_consistent() {
-    let spec = "warrant t v1\n  record Rec(a: U8, b: Bool)\n  op pack(rs: List<Rec>) -> Bytes\n  labels pack:\n    rs public\n";
+    let spec = "warrant t v1\n  record Rec(a: U8, b: Bool)\n  op pack(rs: List<Rec>) -> Bytes\n  labels pack:\n    rs public\n  claim c:\n    forall rs: List<Rec>. pack(rs) == pack(rs)\n";
     let text = bindings_extra(
-        "op pack driver faults=drop-last-chunk",
+        "op pack driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
         "driver pack state=subject::Pack new=new() drive=rs step=push(mut,elem:Rec) finish=seal(ref)->bytes result=finish",
         "struct Rec path=subject::Rec fields=a:u8,b:bool",
     );
@@ -216,7 +216,7 @@ fn driven_parameter_of_type_u8_is_w0711() {
     let spec = "warrant t v1\n  op f(x: U8) -> Bytes\n  labels f:\n    x public\n";
     bad(
         spec,
-        "op f driver faults=drop-last-chunk",
+        "op f driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
         "driver f state=subject::S new=new() drive=x step=tick(mut,elem:u8) finish=out(ref)->bytes result=finish",
         "neither `List<T>`, `Bytes` nor `Nat`",
     );
@@ -234,10 +234,10 @@ fn unknown_drive_parameter_is_w0711() {
 
 #[test]
 fn elem_on_nat_driver_is_w0711() {
-    let spec = "warrant t v1\n  op fill(n: Nat) -> Bytes\n  labels fill:\n    n public\n";
+    let spec = "warrant t v1\n  op fill(n: Nat) -> Bytes\n  labels fill:\n    n public\n  claim c:\n    forall n: Nat. fill(n) == fill(n)\n";
     bad(
         spec,
-        "op fill driver faults=drop-last-chunk",
+        "op fill driver faults=drop-last-chunk,duplicate-last-chunk,early-finish,reset-per-step",
         "driver fill state=subject::Fill new=new() drive=n step=tick(mut,elem:u8) finish=out(ref)->bytes result=finish",
         "with no element",
     );
@@ -247,10 +247,10 @@ fn elem_on_nat_driver_is_w0711() {
 
 #[test]
 fn elem_2_on_a_pair_is_w0711() {
-    let spec = "warrant t v1\n  op encode_bits(bits: List<(Bool, U8)>) -> Bytes\n  labels encode_bits:\n    bits public\n";
+    let spec = "warrant t v1\n  op encode_bits(bits: List<(Bool, U8)>) -> Bytes\n  labels encode_bits:\n    bits public\n  claim c:\n    forall bits: List<(Bool, U8)>. encode_bits(bits) == encode_bits(bits)\n";
     bad(
         spec,
-        "op encode_bits driver faults=drop-last-chunk",
+        "op encode_bits driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
         "driver encode_bits state=subject::Enc new=new() drive=bits step=write_bit(mut,elem.2:u8) finish=finish(own)->bytes result=finish",
         "component 2 of a 2-tuple",
     );
@@ -258,10 +258,10 @@ fn elem_2_on_a_pair_is_w0711() {
 
 #[test]
 fn elem_path_into_scalar_is_w0711() {
-    let spec = "warrant t v1\n  op scan(xs: List<U8>) -> Bytes\n  labels scan:\n    xs public\n";
+    let spec = "warrant t v1\n  op scan(xs: List<U8>) -> Bytes\n  labels scan:\n    xs public\n  claim c:\n    forall xs: List<U8>. scan(xs) == scan(xs)\n";
     bad(
         spec,
-        "op scan driver faults=drop-last-chunk",
+        "op scan driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step,drop-last-output",
         "driver scan state=subject::S new=new() drive=xs step=push(mut,elem.0:u8) finish=out(ref)->bytes result=finish",
         "no components",
     );
@@ -272,7 +272,7 @@ fn elem_path_into_variant_is_w0711() {
     let spec = "warrant t v1\n  variant V = A(x: U8) | B\n  op scan(vs: List<V>) -> Bytes\n  labels scan:\n    vs public\n";
     bad(
         spec,
-        "op scan driver faults=drop-last-chunk",
+        "op scan driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step,drop-last-output",
         "driver scan state=subject::S new=new() drive=vs step=push(mut,elem.0:u8) finish=out(ref)->bytes result=finish",
         "not a record",
     );
@@ -312,10 +312,10 @@ fn ctx_source_without_ctx_is_w0711() {
 
 #[test]
 fn unconsumed_second_parameter_is_w0711() {
-    let spec = "warrant t v1\n  op keyed(chunks: List<Bytes>, key: U8) -> Bytes\n  labels keyed:\n    chunks public\n    key public\n";
+    let spec = "warrant t v1\n  op keyed(chunks: List<Bytes>, key: U8) -> Bytes\n  labels keyed:\n    chunks public\n    key public\n  claim c:\n    forall chunks: List<Bytes>, key: U8. keyed(chunks, key) == keyed(chunks, key)\n";
     bad(
         spec,
-        "op keyed driver faults=drop-last-chunk",
+        "op keyed driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
         "driver keyed state=subject::K new=new() drive=chunks step=update(mut,elem:bytes) finish=sum(ref)->bytes result=finish",
         "consumed by neither",
     );
@@ -335,10 +335,10 @@ fn collect_on_bytes20_result_is_w0711() {
 
 #[test]
 fn collect_with_unit_step_is_w0711() {
-    let spec = "warrant t v1\n  op dec_all(bs: List<Bytes>) -> List<U8>\n  labels dec_all:\n    bs public\n";
+    let spec = "warrant t v1\n  op dec_all(bs: List<Bytes>) -> List<U8>\n  labels dec_all:\n    bs public\n  claim c:\n    forall bs: List<Bytes>. dec_all(bs) == dec_all(bs)\n";
     bad(
         spec,
-        "op dec_all driver faults=drop-last-chunk",
+        "op dec_all driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,drop-last-output",
         "driver dec_all state=subject::Dec new=new() drive=bs step=dec(mut,elem:bytes) result=collect",
         "emits no value",
     );
@@ -376,10 +376,10 @@ fn fallible_step_on_non_result_is_w0711() {
 
 #[test]
 fn fallible_driver_without_errors_map_is_w0711() {
-    let spec = "warrant t v1\n  error E = TOO_LONG\n  op digest_try(chunks: List<Bytes>) -> Result<Bytes, E>\n  labels digest_try:\n    chunks public\n";
+    let spec = "warrant t v1\n  error E = TOO_LONG\n  op digest_try(chunks: List<Bytes>) -> Result<Bytes, E>\n  labels digest_try:\n    chunks public\n  claim c:\n    forall chunks: List<Bytes>. digest_try(chunks) == digest_try(chunks)\n";
     bad(
         spec,
-        "op digest_try driver faults=drop-last-chunk",
+        "op digest_try driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
         "driver digest_try state=subject::D new=new() drive=chunks step=try_update(mut,elem:bytes)->result finish=digest(ref)->bytes result=finish",
         "has no `errors=` map",
     );
@@ -387,10 +387,10 @@ fn fallible_driver_without_errors_map_is_w0711() {
 
 #[test]
 fn errors_map_naming_unknown_case_is_w0711() {
-    let spec = "warrant t v1\n  error E = TOO_LONG\n  op digest_try(chunks: List<Bytes>) -> Result<Bytes, E>\n  labels digest_try:\n    chunks public\n";
+    let spec = "warrant t v1\n  error E = TOO_LONG\n  op digest_try(chunks: List<Bytes>) -> Result<Bytes, E>\n  labels digest_try:\n    chunks public\n  claim c:\n    forall chunks: List<Bytes>. digest_try(chunks) == digest_try(chunks)\n";
     bad(
         spec,
-        "op digest_try driver faults=drop-last-chunk",
+        "op digest_try driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
         "driver digest_try state=subject::D new=new() drive=chunks step=try_update(mut,elem:bytes)->result finish=digest(ref)->bytes result=finish errors=subject::E/LengthOverflow=NOPE",
         "not a case of",
     );
@@ -413,7 +413,7 @@ fn static_params_on_driven_op_are_w0711() {
     let spec = "warrant t v1\n  op f<N: Nat>(x: Bytes<N>) -> Bool\n  labels f:\n    x public\n";
     bad(
         spec,
-        "op f driver faults=drop-last-chunk",
+        "op f driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
         "driver f state=subject::S new=new() drive=x step=tick(mut,elem:u8) finish=out(ref)->bool result=finish",
         "static parameters",
     );
@@ -429,7 +429,7 @@ fn driver_on_v0_document_is_w0711() {
 
 #[test]
 fn secret_without_opt_in_is_w0711() {
-    let spec = "warrant t v1\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks secret\n";
+    let spec = "warrant t v1\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks secret\n  claim c:\n    forall chunks: List<Bytes>. digest_chunks(chunks) == digest_chunks(chunks)\n";
     bad(spec, OP_SHA1, DRIVER_SHA1, "proofs_not_live=driver");
 }
 
@@ -441,10 +441,10 @@ fn bound_row_without_opt_in_is_w0711() {
 
 #[test]
 fn wrong_opt_in_reason_is_w0711() {
-    let spec = "warrant t v1\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks secret\n";
+    let spec = "warrant t v1\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks secret\n  claim c:\n    forall chunks: List<Bytes>. digest_chunks(chunks) == digest_chunks(chunks)\n";
     bad(
         spec,
-        "op digest_chunks driver faults=drop-last-chunk proofs_not_live=frontend-refuses-lib",
+        "op digest_chunks driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step proofs_not_live=frontend-refuses-lib",
         DRIVER_SHA1,
         "proofs_not_live=driver",
     );
@@ -452,10 +452,10 @@ fn wrong_opt_in_reason_is_w0711() {
 
 #[test]
 fn lengths_on_non_bytes_elements_is_w0711() {
-    let spec = "warrant t v1\n  op scan(xs: List<U8>) -> Bytes\n  labels scan:\n    xs public\n";
+    let spec = "warrant t v1\n  op scan(xs: List<U8>) -> Bytes\n  labels scan:\n    xs public\n  claim c:\n    forall xs: List<U8>. scan(xs) == scan(xs)\n";
     bad(
         spec,
-        "op scan driver faults=drop-last-chunk",
+        "op scan driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step,drop-last-output",
         "driver scan state=subject::S new=new() drive=xs step=push(mut,elem:u8) finish=out(ref)->bytes result=finish lengths=1,2",
         "needs `Bytes` elements",
     );
