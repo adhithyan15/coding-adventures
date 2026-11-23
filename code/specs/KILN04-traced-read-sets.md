@@ -4971,8 +4971,14 @@ that is worth doing or whether Rust goes straight to M4.
 ### 7.1 Merge decisions (stage 4a)
 
 Implemented by `internal/recfmt` (the record formats, strict decoding) and
-`internal/recmerge` (`Merge`, pure: no I/O, no clock). The recorder and the
-`kiln record-merge` command are later PRs. The design review found these
+`internal/recmerge` (`Merge`, pure: no I/O, no clock). The recorder is stage 4
+PR 2b; the job that drives the merge is `kiln record-merge` (stage 4 PR 3a,
+`internal/record/merge.go`), which verifies its own tree (B1), reads the three
+build-tool exports once, decodes the shards, recomputes every key through
+`legacy.Traced` (never trusting a shard's), calls `Merge`, and writes the
+ledger only when the run is not void. It is a thin adapter on purpose: every
+decision it could make is one `recmerge` already makes. The CI job around it
+(`kiln-record.yml`, stage 4 PR 3b) is still to come, so nothing calls it yet. The design review found these
 gaps in the text above; each decision below replaces it.
 
 **G1. An unknown write set voids the run.** §7's rules are cross-shard
