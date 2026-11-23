@@ -41,7 +41,9 @@
 //! A re-run builds an instance from the recorded knob.  Run in process, a hand-edited knob of
 //! 10^9 would exhaust this process's memory.  Every row here runs in a child under the limits
 //! of `runner` (CPU `ulimit` backstop, 2 GiB resident-set poll, process-group kill), and a row
-//! whose `(experiment, mode, knob)` is not in the plan is refused without being run.
+//! whose `(experiment, mode, knob)` is not in the plan is refused without being run.  `validate`
+//! refuses such a row too (an unregistered experiment such as B5 before VOS-028c3c is a
+//! violation, VOS-D119), so the file is rejected before this module is reached.
 
 use crate::cost::is_cheap;
 use crate::exp::RowSpec;

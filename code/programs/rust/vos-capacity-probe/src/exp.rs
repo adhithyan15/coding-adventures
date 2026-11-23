@@ -365,11 +365,26 @@ pub fn shape_for(spec: &RowSpec) -> Result<Box<dyn Shape>, String> {
             len: k.int("length") as usize,
             divergence: k.f("divergence"),
         }),
-        "B5" => Box::new(B5Shape {
-            len: k.int("length") as usize,
-            divergence: k.f("divergence"),
-            fuse: k.int("fuse") as usize,
-        }),
+        "B5" => {
+            // Security review: a knob is hand-editable, and `as usize` of -1 or 10^12 is a huge
+            // allocation or a panic.  Refuse a length outside 1..=100_000, a fuse outside 1..=64
+            // and a divergence outside [0, 1]; the error becomes a `crashed` row via `failed`.
+            let (len, fuse, div) = (k.int("length"), k.int("fuse"), k.f("divergence"));
+            if !(1..=100_000).contains(&len) {
+                return Err(format!("B5 length {len} is not in 1..=100000"));
+            }
+            if !(1..=64).contains(&fuse) {
+                return Err(format!("B5 fuse {fuse} is not in 1..=64"));
+            }
+            if !(0.0..=1.0).contains(&div) {
+                return Err(format!("B5 divergence {div} is not in [0, 1]"));
+            }
+            Box::new(B5Shape {
+                len: len as usize,
+                divergence: div,
+                fuse: fuse as usize,
+            })
+        }
         "B4" => {
             let kind = match k.s("shape") {
                 "assoc" => B4Kind::Assoc(k.int("n") as usize),

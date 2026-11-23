@@ -605,8 +605,13 @@ pub fn bounds_violations(id: &str, r: &Row) -> Vec<String> {
 /// The cross-rule of VOS30 section 8.6.3: **`fuse = 1` is B2**.  Every B5 row with `fuse = 1`
 /// must have a B2 row of equal length, divergence and seed whose `instance_sha256` is equal (the
 /// sweep's instance, before sweeping, is B2's instance).  A violation names both rows.  Kept as
-/// its own function because `validate` refuses B5 rows as unplanned until VOS-028c3c registers
-/// them, so a test calls this directly.
+/// its own function so a test can call it directly: `validate` refuses a B5 row as an experiment
+/// outside the plan (VOS-D119) until VOS-028c3c registers B5.
+///
+/// Two refusals (security review): a B5 row with an empty `instance_sha256` is a violation (an
+/// empty digest equal to an empty B2 digest proved nothing), and the digest is compared with
+/// EVERY B2 row of equal length, divergence and seed, not just the first, so one tampered twin
+/// cannot hide behind an honest one.
 pub fn b5_fuse1_violations(rows: &[Row]) -> Vec<String> {
     let id = |r: &Row| {
         format!(
@@ -622,28 +627,37 @@ pub fn b5_fuse1_violations(rows: &[Row]) -> Vec<String> {
         .iter()
         .filter(|r| r.experiment == "B5" && r.knob.int("fuse") == 1)
     {
-        let b2 = rows.iter().find(|r| {
-            r.experiment == "B2"
-                && r.knob.int("length") == b5.knob.int("length")
-                && (r.knob.f("divergence") - b5.knob.f("divergence")).abs() < 1e-9
-                && r.seed == b5.seed
-        });
-        match b2 {
-            None => v.push(format!(
+        if b5.instance_sha256.is_empty() {
+            v.push(format!("{}: instance_sha256 is empty", id(b5)));
+        }
+        let twins: Vec<&Row> = rows
+            .iter()
+            .filter(|r| {
+                r.experiment == "B2"
+                    && r.knob.int("length") == b5.knob.int("length")
+                    && (r.knob.f("divergence") - b5.knob.f("divergence")).abs() < 1e-9
+                    && r.seed == b5.seed
+            })
+            .collect();
+        if twins.is_empty() {
+            v.push(format!(
                 "{}: fuse = 1 is B2, but no B2 row has length {}, divergence {} and seed {}",
                 id(b5),
                 b5.knob.int("length"),
                 b5.knob.f("divergence"),
                 b5.seed
-            )),
-            Some(b2) if b2.instance_sha256 != b5.instance_sha256 => v.push(format!(
-                "{}: fuse = 1 is B2, but its instance_sha256 {} differs from {} of {}",
-                id(b5),
-                b5.instance_sha256,
-                b2.instance_sha256,
-                id(b2)
-            )),
-            Some(_) => {}
+            ));
+        }
+        for b2 in twins {
+            if b2.instance_sha256 != b5.instance_sha256 {
+                v.push(format!(
+                    "{}: fuse = 1 is B2, but its instance_sha256 {} differs from {} of {}",
+                    id(b5),
+                    b5.instance_sha256,
+                    b2.instance_sha256,
+                    id(b2)
+                ));
+            }
         }
     }
     v
@@ -713,9 +727,18 @@ pub fn validate(res: &Results) -> Vec<String> {
         }
         // VOS-D097 item 4: the knob VALUES are a closed set too.  A hand-edited length of 10^9
         // is refused here, never run (a row that is re-run is built from its knob).
-        if EXPERIMENTS.contains(&r.experiment.as_str())
-            && !planned.contains(&(r.experiment.clone(), r.mode.clone(), r.knob.key()))
-        {
+        //
+        // VOS-D119 (security review of VOS-028c3b): this check used to run only for an experiment
+        // in `EXPERIMENTS`, so a row of an unregistered experiment (B5 and D5 before VOS-028c3c,
+        // or any made-up name) skipped it and passed with any knob.  An experiment the plan does
+        // not list is now refused outright, and the knob check applies to every row.
+        if !EXPERIMENTS.contains(&r.experiment.as_str()) {
+            v.push(format!(
+                "{id}: experiment {:?} is not one of the plan's experiments",
+                r.experiment
+            ));
+        }
+        if !planned.contains(&(r.experiment.clone(), r.mode.clone(), r.knob.key())) {
             v.push(format!(
                 "{id}: the (mode, knob) is not one of the plan's knobs for {}",
                 r.experiment

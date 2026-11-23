@@ -466,7 +466,8 @@ fn the_b5_knob_grid_is_24_knobs_with_the_smallest_quick() {
     // A B5 row is one instance for the collapse rule and the structural rebuild.
     assert!(!vos_capacity_probe::exp::is_segmented("B5"));
     assert!(vos_capacity_probe::exp::is_segmented("D5"));
-    // B5 is not in the plan until VOS-028c3c registers it.
+    // B5 is not in the plan until VOS-028c3c registers it; until then `validate` refuses a B5
+    // row as an experiment outside the plan (VOS-D119, tests/review_fixes4.rs).
     assert!(vos_capacity_probe::exp::knobs("B5").is_empty());
     assert!(!vos_capacity_probe::exp::EXPERIMENTS.contains(&"B5"));
     assert_eq!(vos_capacity_probe::exp::row_wall_s("B5"), 600);

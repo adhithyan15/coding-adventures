@@ -327,6 +327,11 @@ impl Sweeper<'_> {
         let mut accepted = true;
         if out.verdict == Verdict::Unsat {
             r.worst_conflicts = r.worst_conflicts.max(out.conflicts);
+            // Security review: in certified mode an UNSAT answer with no DRAT text is refused
+            // (it used to count as vacuously accepted); see `refuse_missing_proof`.
+            if proof && out.drat.is_none() {
+                accepted = refuse_missing_proof(r);
+            }
             if let Some(d) = &out.drat {
                 self.proofs.update(d.as_bytes());
                 r.max_drat_bytes = r.max_drat_bytes.max(d.len() as u64);
@@ -359,12 +364,14 @@ impl Sweeper<'_> {
         let mut depth = FRONTIER_DEPTH;
         loop {
             let cut = LemmaCnf::build(&self.red, x, y, depth);
-            let (verdict, accepted) = self.solve(&cut.cnf);
+            let (verdict, _accepted) = self.solve(&cut.cnf);
             match verdict {
                 Verdict::Unsat => {
-                    // A rejected proof is recorded by `solve` (`all_accepted`) and turns the
-                    // row red; the merge still happens so the rest of the sweep is measured.
-                    let _ = accepted;
+                    // The merge is made even after a rejected proof that is not `invalid`:
+                    // `solve` already recorded it (`all_accepted = false`), which turns the
+                    // row red through `pass_default_limits = false`, as for the other
+                    // experiments, and `invalid` marks the row crashed.  Merging anyway keeps
+                    // the rest of the sweep measured.
                     self.rep.lemmas += 1;
                     return Lemma::Proved;
                 }
@@ -622,4 +629,36 @@ fn finish(sw: Sweeper<'_>) -> SweepReport {
 pub fn node_values(aig: &Aig, inputs: &[bool]) -> Vec<bool> {
     let words: Vec<u64> = inputs.iter().map(|&b| b as u64).collect();
     aig.simulate(&words).iter().map(|v| v & 1 == 1).collect()
+}
+
+/// What a certified sweep does with an UNSAT answer that came back without a proof (security
+/// review of VOS-028c3b).  It refuses it: the answer is not accepted, `all_accepted` goes false
+/// and the note says why, unless an earlier note is already there.  Before this, a missing proof
+/// was counted as accepted, so a certified sweep could pass on bare UNSAT claims.  Returns
+/// `false`, the value of `accepted` for this solve.
+fn refuse_missing_proof(r: &mut SweepReport) -> bool {
+    r.all_accepted = false;
+    if r.note.is_empty() {
+        r.note = "no proof for an UNSAT answer in certified mode".into();
+    }
+    false
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Negative control: the old code left `all_accepted` true for a missing proof.
+    #[test]
+    fn a_missing_proof_is_not_accepted() {
+        let mut r = SweepReport::new();
+        assert!(!refuse_missing_proof(&mut r));
+        assert!(!r.all_accepted);
+        assert_eq!(r.note, "no proof for an UNSAT answer in certified mode");
+        // An earlier note is kept.
+        let mut r = SweepReport::new();
+        r.note = "first".into();
+        refuse_missing_proof(&mut r);
+        assert_eq!(r.note, "first");
+    }
 }

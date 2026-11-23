@@ -31,6 +31,19 @@ All notable changes to this package are documented here.
 - **Not yet in the plan.** B5 is not registered in `plan(Tier::Full)`; registration and Unix
   recording are VOS-028c3c (queue item 9c3). `FULL_PLAN_EXEMPT` stays empty.
 
+### Fixed (VOS-028c3b security review; VOS-D119)
+
+- **`validate` refuses an unregistered experiment.** The closed knob set was checked only for
+  experiments in `EXPERIMENTS`, so a B5 row (unregistered until VOS-028c3c) or a row with any
+  made-up name passed with any knob. An experiment outside the plan is now a violation and the
+  knob check applies to every row.
+- **A certified sweep requires a proof.** An UNSAT answer with no DRAT text in `ProofMode::Certified`
+  is no longer counted as accepted (`all_accepted = false`, with a note).
+- **The B5 cross-rule is stricter.** A B5 `fuse = 1` row needs a non-empty `instance_sha256`, and it
+  is compared with every B2 row of equal length, divergence and seed, not only the first.
+- **B5 knob bounds.** `shape_for` refuses a length outside 1..=100000, a fuse outside 1..=64 and a
+  divergence outside [0, 1] with an error (a `crashed` row), never a panic or a huge allocation.
+
 ### Added (VOS-028c3a, VOS30 sections 8.6.1, 8.6.2, 8.6.3, 8.6.4 and 9.12; VOS-D117)
 
 - **B3 cut densities `every2` and `every4`.** `exp::b3_c3_knobs` and `exp::C3_CUTS` add the 72
