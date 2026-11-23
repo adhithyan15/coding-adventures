@@ -602,6 +602,53 @@ pub fn bounds_violations(id: &str, r: &Row) -> Vec<String> {
     v
 }
 
+/// The cross-rule of VOS30 section 8.6.3: **`fuse = 1` is B2**.  Every B5 row with `fuse = 1`
+/// must have a B2 row of equal length, divergence and seed whose `instance_sha256` is equal (the
+/// sweep's instance, before sweeping, is B2's instance).  A violation names both rows.  Kept as
+/// its own function because `validate` refuses B5 rows as unplanned until VOS-028c3c registers
+/// them, so a test calls this directly.
+pub fn b5_fuse1_violations(rows: &[Row]) -> Vec<String> {
+    let id = |r: &Row| {
+        format!(
+            "{} {} {} seed {}",
+            r.experiment,
+            r.knob.key(),
+            r.mode,
+            r.seed
+        )
+    };
+    let mut v = Vec::new();
+    for b5 in rows
+        .iter()
+        .filter(|r| r.experiment == "B5" && r.knob.int("fuse") == 1)
+    {
+        let b2 = rows.iter().find(|r| {
+            r.experiment == "B2"
+                && r.knob.int("length") == b5.knob.int("length")
+                && (r.knob.f("divergence") - b5.knob.f("divergence")).abs() < 1e-9
+                && r.seed == b5.seed
+        });
+        match b2 {
+            None => v.push(format!(
+                "{}: fuse = 1 is B2, but no B2 row has length {}, divergence {} and seed {}",
+                id(b5),
+                b5.knob.int("length"),
+                b5.knob.f("divergence"),
+                b5.seed
+            )),
+            Some(b2) if b2.instance_sha256 != b5.instance_sha256 => v.push(format!(
+                "{}: fuse = 1 is B2, but its instance_sha256 {} differs from {} of {}",
+                id(b5),
+                b5.instance_sha256,
+                b2.instance_sha256,
+                id(b2)
+            )),
+            Some(_) => {}
+        }
+    }
+    v
+}
+
 /// The schema and guard rules of `check`, row by row and across rows.  Returns every violation.
 pub fn validate(res: &Results) -> Vec<String> {
     let mut v = Vec::new();
@@ -767,6 +814,7 @@ pub fn validate(res: &Results) -> Vec<String> {
         e.0.insert(r.seed);
         e.1 = r.seeds;
     }
+    v.extend(b5_fuse1_violations(&res.rows));
     for (k, (set, _)) in &seeds {
         if u32::try_from(set.len()).unwrap_or(u32::MAX) < MIN_SEEDS {
             v.push(format!(
@@ -1130,7 +1178,8 @@ pub fn compare_timing(rec: &Row, now: &Row) -> Vec<String> {
 ///   fields reproduce: `entropy_bits * 2 < declared_bits`, or `ands * 4 < full` for the 25% rule.
 pub fn collapse_violations(id: &str, r: &Row) -> Vec<String> {
     let mut v = Vec::new();
-    let chain = CHAIN_EXPERIMENTS.contains(&r.experiment.as_str());
+    // B5 shares the chain budget but is one instance (`exp::is_segmented`).
+    let chain = crate::exp::is_segmented(&r.experiment);
     if let Some(reason) = &r.collapsed_reason {
         if !crate::inst::COLLAPSE_REASONS.contains(&reason.as_str()) {
             v.push(format!(

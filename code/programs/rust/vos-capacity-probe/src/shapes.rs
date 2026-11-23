@@ -19,7 +19,8 @@
 use crate::cpu::{konst, Cpu, Pool};
 use crate::inst::Instance;
 use crate::prog::{
-    assemble, decode_all, eval_ops, gen_b, mutate_op, mutation_sites, Concrete, Op, Rhs, Rng,
+    assemble, decode_all, eval_ops, gen_b, gen_b5, mutate_op, mutation_sites, Concrete, Op, Rhs,
+    Rng,
 };
 use crate::sem::{self, Bin};
 use bit_blaster::aig::{Aig, Edge};
@@ -155,6 +156,88 @@ pub struct ProgParams {
 
 /// Build the monolithic or cut miter of a program pair.
 pub fn prog_instance(p: &ProgParams) -> Result<Instance, String> {
+    prog_instance_fused(p, &[])
+}
+
+/// Run the reference side with each `[start, end)` run of accumulating adds *right-nested*.
+///
+/// ```text
+///   code      ((((a + b) + c2) + c3) + c4)         one adder per instruction, left to right
+///   reference a + (b + (c2 + (c3 + c4)))           the same sum, associated the other way
+/// ```
+///
+/// The two are equal as integers (addition mod 2^32 is associative) but share *no* internal
+/// node: the code's `a + b` has no counterpart on the reference side, so the only equivalence
+/// points are the run boundaries, `w` instructions apart.  That sparsity is the point of the
+/// `fuse` knob of experiment B5.  Instructions outside runs execute with [`Cpu::exec`], exactly
+/// as [`Cpu::run`] would; B5 programs have no branches.  The run's alternative encoding (the
+/// first add's) is applied to the last, outermost add `a + S`.
+pub fn run_reference_fused(
+    rc: &mut Cpu,
+    aig: &mut Aig,
+    pool: &mut Pool,
+    ops: &[Op],
+    alt: &[Option<u32>],
+    runs: &[(usize, usize)],
+) -> Result<(), String> {
+    let mut pc = 0usize;
+    let mut next_run = 0usize;
+    while pc < ops.len() {
+        if next_run < runs.len() && runs[next_run].0 == pc {
+            let (s, e) = runs[next_run];
+            next_run += 1;
+            if e <= s || e > ops.len() {
+                return Err(format!("run [{s}, {e}) is outside the program"));
+            }
+            let mut acc: Option<u8> = None;
+            let mut terms: Vec<u8> = Vec::new();
+            for op in &ops[s..e] {
+                match *op {
+                    Op::Alu {
+                        k: Bin::Add,
+                        rd,
+                        rs1,
+                        rhs: Rhs::Reg(r),
+                    } if rd == rs1 && rd != 0 && r != rd && acc.is_none_or(|a| a == rd) => {
+                        acc = Some(rd);
+                        terms.push(r);
+                    }
+                    _ => return Err(format!("run [{s}, {e}) is not accumulating adds")),
+                }
+            }
+            let a = acc.ok_or("an empty run")?;
+            let words: Vec<BitVec> = terms.iter().map(|&r| rc.read_reg(aig, pool, r)).collect();
+            let mut sum = words[words.len() - 1].clone();
+            for w in words[..words.len() - 1].iter().rev() {
+                sum = sem::primary(aig, Bin::Add, w, &sum);
+            }
+            let old = rc.read_reg(aig, pool, a);
+            let new = match alt
+                .get(s)
+                .copied()
+                .flatten()
+                .and_then(|v| sem::alternative(aig, Bin::Add, v, &old, &sum))
+            {
+                Some(w) => w,
+                None => sem::primary(aig, Bin::Add, &old, &sum),
+            };
+            rc.write_reg(a, new);
+            pc = e;
+        } else {
+            let at = alt.get(pc).copied().flatten();
+            if rc.exec(aig, pool, &ops[pc], at)?.is_some() {
+                return Err("a fused reference has no branches".into());
+            }
+            pc += 1;
+        }
+    }
+    Ok(())
+}
+
+/// [`prog_instance`] with the reference's runs of accumulating adds right-nested (experiment B5).
+/// With `runs` empty the reference side executes through [`Cpu::run`] exactly as before, so the
+/// AIG, the CNF and every digest of B2, B3 and C1 are unchanged.
+pub fn prog_instance_fused(p: &ProgParams, runs: &[(usize, usize)]) -> Result<Instance, String> {
     let mut aig = Aig::new();
     let mut pool = Pool::new();
     for (n, w) in &p.widths {
@@ -165,7 +248,11 @@ pub fn prog_instance(p: &ProgParams) -> Result<Instance, String> {
     let mut cc = Cpu::new(sc);
     cc.run(&mut aig, &mut pool, &decoded, &[], &mut |_, _| false)?;
     let mut rc = Cpu::new(sr);
-    rc.run(&mut aig, &mut pool, &p.reference, &p.alt, &mut |_, _| false)?;
+    if runs.is_empty() {
+        rc.run(&mut aig, &mut pool, &p.reference, &p.alt, &mut |_, _| false)?;
+    } else {
+        run_reference_fused(&mut rc, &mut aig, &mut pool, &p.reference, &p.alt, runs)?;
+    }
     let regs: Vec<u8> = cc.written_regs.union(&rc.written_regs).copied().collect();
     let words: Vec<u32> = cc.written_words.union(&rc.written_words).copied().collect();
     let mut code_out: Vec<Edge> = Vec::new();
@@ -288,6 +375,70 @@ impl Shape for BShape {
         BShape {
             len: self.len,
             divergence: 1.0,
+        }
+        .build(seed, None)
+        .ok()
+        .map(|i| i.cone_ands())
+    }
+}
+
+/// Experiment B5: B2's program with runs of `fuse` accumulating adds that the reference
+/// right-nests (VOS30 section 8.6.3).  At `fuse = 1` it is B2: the same program, the same CNF,
+/// the same `instance_sha256`.
+pub struct B5Shape {
+    /// Instructions.
+    pub len: usize,
+    /// Divergence.
+    pub divergence: f64,
+    /// Adds per run.
+    pub fuse: usize,
+}
+
+impl B5Shape {
+    fn params(
+        &self,
+        seed: u64,
+        mutation: Option<usize>,
+    ) -> Result<(ProgParams, Vec<(usize, usize)>), String> {
+        let g = gen_b5(seed, self.len, self.divergence, self.fuse);
+        let mut code = g.ops.clone();
+        if let Some(site) = mutation {
+            code[site] = mutate_op(&code[site]).ok_or("no mutation at this site")?;
+        }
+        Ok((
+            ProgParams {
+                code,
+                reference: g.ops,
+                alt: g.alt,
+                separate: false,
+                mask: u32::MAX,
+                widths: vec![],
+                shuffle: None,
+            },
+            g.runs,
+        ))
+    }
+}
+
+impl Shape for B5Shape {
+    fn build(&self, seed: u64, mutation: Option<usize>) -> Result<Instance, String> {
+        let (p, runs) = self.params(seed, mutation)?;
+        prog_instance_fused(&p, &runs)
+    }
+    fn sites(&self, seed: u64) -> Vec<usize> {
+        mutation_sites(
+            seed,
+            &gen_b5(seed, self.len, self.divergence, self.fuse).ops,
+        )
+    }
+    fn full_divergence_ands(&self, seed: u64) -> Option<usize> {
+        if self.divergence >= 1.0 {
+            return None;
+        }
+        B5Shape {
+            len: self.len,
+            divergence: 1.0,
+            fuse: self.fuse,
         }
         .build(seed, None)
         .ok()

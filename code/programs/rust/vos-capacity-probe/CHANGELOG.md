@@ -4,6 +4,33 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Added (VOS-028c3b, VOS30 sections 8.4 item 11, 8.6.3 and 9.12)
+
+- **Experiment B5, SAT sweeping (`src/sweep.rs`).** A deterministic sweeper over one AIG for both
+  sides: 256 seeded simulation patterns (`Aig::simulate`) give candidate classes up to complement,
+  with the lowest node as the representative. Candidates are proved in topological order, each
+  lemma a fresh CNF over its cone on a reduced AIG in which already-merged nodes are substituted,
+  cut at an 8-level frontier whose nodes are shared free inputs. A SAT answer at the frontier is
+  possibly spurious, so the depth doubles up to the full cone; only a full-cone SAT is a real
+  counterexample, and it refines the classes. Every UNSAT lemma and the final obligation (the
+  outputs that do not merge) is DRAT-checked under `Limits::default()`. Row metrics `lemmas`,
+  `candidates`, `refuted` and `escalations` are added.
+- **`fuse` generator (`gen_b5`, `B5Shape`).** `fuse = w` starts from B2's program (`gen_b` at the
+  same length, divergence and seed) and turns every accumulating register-register `add a, a, b`
+  into a run of w adds into `a`, each extra add `a += c_j` drawing `c_j` from a separate seeded
+  stream, so P's own stream is untouched; the result is truncated to the instance length. The
+  reference right-nests each run, so equivalence points are at most w instructions apart. With
+  `fuse = 1` there are no runs and the program, its encodings and the DIMACS are B2's, byte for
+  byte.
+- **G3 control and signature-merge negative control (`tests/sweep.rs`).** The G3 control goes
+  through the same sweep; its model is checked against the unswept control CNF and replayed. The
+  signature-merge negative control is a separate test of the same sweep.
+- **`validate` cross-rule.** A B5 row with `fuse = 1` must carry the same `instance_sha256` as the
+  matching B2 row.
+- **Chain budget.** B5 joins the 600 s chain budget (VOS-D095).
+- **Not yet in the plan.** B5 is not registered in `plan(Tier::Full)`; registration and Unix
+  recording are VOS-028c3c (queue item 9c3). `FULL_PLAN_EXEMPT` stays empty.
+
 ### Added (VOS-028c3a, VOS30 sections 8.6.1, 8.6.2, 8.6.3, 8.6.4 and 9.12; VOS-D117)
 
 - **B3 cut densities `every2` and `every4`.** `exp::b3_c3_knobs` and `exp::C3_CUTS` add the 72

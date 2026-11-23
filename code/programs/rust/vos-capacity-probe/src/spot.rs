@@ -390,7 +390,8 @@ pub fn structure_comparable(r: &Row) -> bool {
     if r.experiment.starts_with('E') {
         return true;
     }
-    let chain = crate::exp::CHAIN_EXPERIMENTS.contains(&r.experiment.as_str());
+    // A B5 row rebuilds its one unswept miter whole, whatever its result (`exp::is_segmented`).
+    let chain = crate::exp::is_segmented(&r.experiment);
     match r.result.as_str() {
         "unsat" | "collapsed" => true,
         // A chain that stopped on a SAT segment built only the segments up to it (round 3,

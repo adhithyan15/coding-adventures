@@ -23,6 +23,7 @@ use crate::shapes::*;
 use crate::solve::{
     check_default, model_satisfies, solve_assuming, solve_cnf, Cap, SolveOpts, Verdict,
 };
+use crate::sweep::{node_values, sweep, ProofMode, SweepOpts, SweepVerdict};
 use bit_blaster::tseitin::Tseitin;
 use cdcl_sat::Solver;
 use coding_adventures_sha256::Sha256Hasher;
@@ -101,6 +102,40 @@ pub fn b3_c3_knobs() -> Vec<Planned> {
                         quick: false,
                     });
                 }
+            }
+        }
+    }
+    v
+}
+
+/// Lengths of experiment B5 (VOS30 section 8.6.3).
+pub const B5_LENGTHS: [i64; 3] = [25, 200, 1000];
+/// Divergences of experiment B5.
+pub const B5_DIVERGENCES: [f64; 2] = [0.25, 1.0];
+/// The `fuse` values of experiment B5: adds per run, 1 being B2.
+pub const B5_FUSES: [i64; 4] = [1, 2, 4, 8];
+
+/// The 24 knobs of experiment B5 (VOS30 section 8.6.3; 120 rows at 5 seeds).  Not registered in
+/// [`knobs`] until VOS-028c3c records them, so `FULL_PLAN_EXEMPT` stays empty.  The quick tier
+/// is every knob at length 25 (the spec's "length 25 (quick)": 8 knobs, both divergences and
+/// all four fuses), the one length whose sweep costs a unit test.
+pub fn b5_knobs() -> Vec<Planned> {
+    let mut v = Vec::new();
+    for len in B5_LENGTHS {
+        for d in B5_DIVERGENCES {
+            for fuse in B5_FUSES {
+                v.push(Planned {
+                    knob: Knob::of(&[
+                        ("length", Kv::I(len)),
+                        ("divergence", Kv::F(d)),
+                        ("fuse", Kv::I(fuse)),
+                    ]),
+                    mode: "certified",
+                    // The smallest knob, as for every experiment: the quick tier fails on an
+                    // `unknown` row, and fuse 4 and 8 are not expected to finish even at 25
+                    // instructions (VOS-D118), so they are full-tier only.
+                    quick: len == 25 && fuse == 1,
+                });
             }
         }
     }
@@ -330,6 +365,11 @@ pub fn shape_for(spec: &RowSpec) -> Result<Box<dyn Shape>, String> {
             len: k.int("length") as usize,
             divergence: k.f("divergence"),
         }),
+        "B5" => Box::new(B5Shape {
+            len: k.int("length") as usize,
+            divergence: k.f("divergence"),
+            fuse: k.int("fuse") as usize,
+        }),
         "B4" => {
             let kind = match k.s("shape") {
                 "assoc" => B4Kind::Assoc(k.int("n") as usize),
@@ -414,8 +454,18 @@ pub fn segments_for(spec: &RowSpec) -> Result<Vec<Box<dyn Shape>>, String> {
 /// The seconds the control stage may take.
 pub const CONTROL_WALL: Duration = Duration::from_secs(30);
 
-/// The experiments whose row is a split or a chain of obligations (VOS30 section 9.5, VOS-D095).
-pub const CHAIN_EXPERIMENTS: [&str; 4] = ["B3", "D3", "D4", "D5"];
+/// The experiments whose row is a split or a chain of obligations (VOS30 section 9.5, VOS-D095),
+/// and B5, whose row is a sweep of many lemmas under the same 600 s budget (section 8.6.3).
+pub const CHAIN_EXPERIMENTS: [&str; 5] = ["B3", "D3", "D4", "D5", "B5"];
+
+/// Whether a row of `exp` is built from several *segments* (a split or a chain), as opposed to
+/// one instance.  B5 shares the chain budget of [`CHAIN_EXPERIMENTS`] but sweeps ONE unswept
+/// miter: it collapses like a single instance (any section 4.5 reason, the 25% AND-count note),
+/// and its structure is rebuilt whole whatever its result, so a SAT or unknown B5 row stays
+/// comparable.  The one place this distinction is made, so `results` and `spot` cannot drift.
+pub fn is_segmented(exp: &str) -> bool {
+    CHAIN_EXPERIMENTS.contains(&exp) && exp != "B5"
+}
 
 /// The row budget of a chain row, seconds (VOS-D095): the 8.3 feasibility total is about ten
 /// minutes, so a chain's whole row gets 600 s while each obligation keeps [`OBLIGATION_WALL`].
@@ -481,6 +531,7 @@ pub fn run_row(spec: &RowSpec, wall: Duration, progress: &mut dyn FnMut(&Row)) -
             Err(e) => failed(spec, &e),
         },
         "D5" => d5_row(spec, deadline, progress),
+        "B5" => b5_row(spec, deadline, progress),
         "E1" => enumx::e1_row(spec),
         "E2" => enumx::e2_row(spec),
         other => failed(spec, &format!("unknown experiment {other}")),
@@ -718,7 +769,7 @@ pub struct Structure {
 /// every shape.
 pub fn structure_of(spec: &RowSpec) -> Result<Structure, String> {
     match spec.experiment.as_str() {
-        "A1" | "A2" | "B1" | "B2" | "B4" | "C1" | "C2" | "D1" | "D2" => {
+        "A1" | "A2" | "B1" | "B2" | "B4" | "B5" | "C1" | "C2" | "D1" | "D2" => {
             let shape = shape_for(spec)?;
             let inst = shape
                 .build(spec.seed, None)
@@ -1309,4 +1360,165 @@ fn d5_control(
         .collect::<Vec<_>>()
         .join("; ");
     (Control::none(&why), combined_sha, note)
+}
+
+/// Experiment B5 (VOS30 section 8.6.3): SAT sweeping with certified lemmas on B2 with the `fuse`
+/// knob.  One instance, one sweep; the instance fields (`instance_sha256`, `ands`, `vars`,
+/// `clauses`, entropy) describe the UNSWEPT miter exactly as B2's row does, so a `fuse = 1` row
+/// carries B2's digest.  The solver fields sum the sweep: `conflicts` over every solve,
+/// `worst_step_conflicts` over the UNSAT lemmas and the final obligation, `steps` = lemmas + 1,
+/// `drat_sha256` over the proofs in order, `drat_bytes` and `check_work` the maxima.  The metrics
+/// are the four counters of section 9.6.  The G3 control runs the same sweep without proofs on
+/// the mutated program, which must end SAT, with a model that satisfies the unswept CNF.
+fn b5_row(spec: &RowSpec, deadline: Instant, progress: &mut dyn FnMut(&Row)) -> Row {
+    let mut row = base_row(spec);
+    let shape = match shape_for(spec) {
+        Ok(s) => s,
+        Err(e) => return failed(spec, &e),
+    };
+    let inst = match shape.build(spec.seed, None) {
+        Ok(i) => i,
+        Err(e) => return failed(spec, &format!("build: {e}")),
+    };
+    let (cnf, _ts) = inst.cnf();
+    row.instance_sha256 = dimacs_sha(&cnf).1;
+    row.ands = inst.cone_ands() as u64;
+    row.vars = cnf.num_vars as u64;
+    row.clauses = cnf.clauses.len() as u64;
+    let ent = entropy(&inst, spec.seed);
+    row.entropy_bits = ent.sensitive as u64;
+    row.declared_bits = ent.declared as u64;
+    if ent.sampled {
+        row.note = "G2 entropy estimated from sampled bits".into();
+    }
+    row.result = "unknown".into();
+    progress(&row);
+    let rep = sweep(
+        &inst,
+        &SweepOpts {
+            mode: ProofMode::Certified,
+            seed: spec.seed,
+            row_deadline: deadline,
+            obligation_wall: Duration::from_secs(OBLIGATION_WALL_S),
+            conflict_cap: None,
+        },
+    );
+    row.conflicts = rep.total_conflicts;
+    row.propagations = rep.total_propagations;
+    row.worst_step_conflicts = Some(rep.worst_conflicts);
+    row.steps = rep.lemmas + 1;
+    row.solve_ms = rep.total_solve_ms;
+    row.worst_step_solve_ms = rep.worst_solve_ms;
+    row.metrics.push(("lemmas".into(), rep.lemmas as f64));
+    row.metrics
+        .push(("candidates".into(), rep.candidates as f64));
+    row.metrics.push(("refuted".into(), rep.refuted as f64));
+    row.metrics
+        .push(("escalations".into(), rep.escalations as f64));
+    match &rep.verdict {
+        SweepVerdict::Unsat => {
+            row.drat_sha256 = rep.drat_sha256.clone();
+            row.drat_bytes = Some(rep.max_drat_bytes);
+            row.check_ms = Some(rep.check_ms);
+            row.check_work = rep.max_check_work;
+            row.pass_default_limits = Some(rep.all_accepted);
+            row.result = "unsat".into();
+            if rep.invalid {
+                row.result = "crashed".into();
+                row.note = format!("drat-check rejected the solver proof: {}", rep.note);
+            } else if !rep.note.is_empty() {
+                row.note = rep.note.clone();
+            }
+            if row.result == "unsat" {
+                let full = shape.full_divergence_ands(spec.seed);
+                apply_guards(
+                    &mut row,
+                    &inst,
+                    ent,
+                    cnf.clauses.len(),
+                    rep.total_conflicts,
+                    full,
+                );
+            }
+        }
+        SweepVerdict::Sat(_) => {
+            row.result = "sat".into();
+            row.note = "UNSAT expected: the instance has a counterexample".into();
+        }
+        SweepVerdict::Unknown(cap) => {
+            row.result = "unknown".into();
+            row.cap = cap.name().into();
+            if !rep.note.is_empty() {
+                row.note = rep.note.clone();
+            }
+        }
+    }
+    drop(cnf);
+    if matches!(row.result.as_str(), "unsat" | "collapsed" | "sat") {
+        let (ctl, sha, note) = b5_control(shape.as_ref(), spec.seed);
+        row.control = ctl;
+        row.control_instance_sha256 = sha;
+        if !note.is_empty() && row.note.is_empty() {
+            row.note = note;
+        }
+    }
+    row
+}
+
+/// The G3 control of a B5 row: the program mutated at successive sites, the SAME sweep (no
+/// proofs), which must end SAT.  The sweep counterexample is turned into a full Tseitin model
+/// of the UNSWEPT control CNF (simulate the AIG, give every encoded node its value) and checked
+/// against that CNF, against the premises and the miter on the AIG, and replayed on the
+/// concrete machines.  `control_instance_sha256` is the digest of the unswept control CNF.
+fn b5_control(shape: &dyn Shape, seed: u64) -> (Control, String, String) {
+    let deadline = Instant::now() + CONTROL_WALL;
+    let mut last_sha = String::new();
+    let mut note = String::new();
+    for site in shape.sites(seed).into_iter().take(8) {
+        if Instant::now() >= deadline && !last_sha.is_empty() {
+            note = "the control stage ran out of time".into();
+            break;
+        }
+        let ci = match shape.build(seed, Some(site)) {
+            Ok(i) => i,
+            Err(e) => {
+                note = format!("control build at site {site}: {e}");
+                continue;
+            }
+        };
+        let (ccnf, cts) = ci.cnf();
+        last_sha = dimacs_sha(&ccnf).1;
+        let rep = sweep(
+            &ci,
+            &SweepOpts {
+                mode: ProofMode::Solver,
+                seed,
+                row_deadline: deadline,
+                obligation_wall: CONTROL_WALL,
+                conflict_cap: Some(300_000),
+            },
+        );
+        match rep.verdict {
+            SweepVerdict::Sat(inputs) => {
+                let values = node_values(&ci.aig, &inputs);
+                let mut model = vec![false; ccnf.num_vars];
+                for (n, v) in values.iter().enumerate() {
+                    if let Some(var) = cts.node_var(n) {
+                        model[var.index()] = *v;
+                    }
+                }
+                let model_ok = model_satisfies(&ccnf, &model);
+                return (finish_control(&ci, &cts, &model, model_ok), last_sha, note);
+            }
+            SweepVerdict::Unsat => {
+                note = format!(
+                    "control at site {site} is UNSAT (the mutation changed nothing observable)"
+                )
+            }
+            SweepVerdict::Unknown(c) => {
+                note = format!("control at site {site} ended on the {} cap", c.name())
+            }
+        }
+    }
+    (Control::none("no SAT control"), last_sha, note)
 }
