@@ -26,13 +26,14 @@
     {
       "id": "K-01",
       "priority": 1,
-      "status": "in-review",
+      "status": "merged",
       "title": "Census PR E: schedule the weekly Kiln census in the PR8-gate configuration",
       "why": "The PR8 gate (>=3 clean shards on both runner images, home: runner) is the only thing between the recorder and the scanner deletion, and today it needs a person to dispatch it. Without a schedule the repository produces no automatic evidence for it.",
       "scope": ".github/workflows/kiln-census.yml schedule trigger + input fallbacks for a non-dispatch event; KILN04 4.8; CHANGELOG.d",
       "depends_on": [],
       "risk": "low: CI configuration and docs only, no build or recorder code",
-      "pr": null
+      "pr": 19849,
+      "outcome": "Merged 2026-11-22 as f4d3e1d2ab2. The weekly run is red until the PR8 gate passes, by design."
     },
     {
       "id": "K-02",
@@ -41,7 +42,9 @@
       "title": "Production recmerge.Keys: memoised weak/strong keys per distinct host facts",
       "why": "recmerge.Merge takes a Keys interface that nothing implements ('memoised per distinct facts (PR 3)'). No shard can become a manifest until it exists.",
       "scope": "code/programs/go/kiln/internal/legacy (or a new mergecmd package) + tests",
-      "depends_on": ["K-01"],
+      "depends_on": [
+        "K-01"
+      ],
       "risk": "medium: key bytes are soundness-critical; every path must fail closed on refusal"
     },
     {
@@ -51,18 +54,41 @@
       "title": "stage-4 PR 3b: the `kiln record-merge` command and the kiln-record.yml / merge jobs",
       "why": "The last executable gap between 'shards record' and 'the ledger has manifests'. Until it lands, stage 5a lookup has nothing to look up and all recorder work stays inert.",
       "scope": "new CLI subcommand over internal/recfmt + internal/recmerge + internal/ledger; the CI jobs",
-      "depends_on": ["K-02"],
+      "depends_on": [
+        "K-02"
+      ],
       "risk": "high: a merge bug produces false hits; the CI half cannot be validated on a branch because prepare refuses an untrusted run"
     },
     {
       "id": "K-04",
       "priority": 2,
-      "status": "planned",
-      "title": "M0: pin the first ecosystem into code/kiln/legacy/pinned.json",
-      "why": "pinned.json is still {\"languages\": []}, so every package is class `unpinned` and nothing can ever be cacheable. The natural first lane is `wasm` (75 packages, small, each with a tracked Cargo.lock).",
-      "scope": "BUILD --locked per package (or a rule), pinned.json, a CI check that fails on a stale lockfile, KILN03 5",
+      "status": "in-review",
+      "title": "M0: pin the wasm lane into code/kiln/legacy/pinned.json",
+      "why": "pinned.json was still {\"languages\": []}, so every package planned as `unpinned` and no pinning precondition could ever hold.",
+      "scope": "147 cargo lines in code/packages/wasm/*/BUILD and BUILD_windows get --locked; gf256 and polynomial gain the Cargo.lock they never had; pinned.json gains wasm; KILN03 7.1",
       "depends_on": [],
-      "risk": "medium: 75+ BUILD files; a stale lockfile turns the lane red at once, which is the point"
+      "risk": "low: mechanical, and a stale lockfile fails the build instead of re-resolving",
+      "outcome": "Measured with the real build tool + legacy-plan: exactly 75 packages change, all wasm/, and the only difference is the removal of `unpinned:wasm`; no key changes. NOT a step toward `cacheable`: pinning is per closure and every other wasm crate depends on a rust crate."
+    },
+    {
+      "id": "K-10",
+      "priority": 2,
+      "status": "discovered",
+      "title": "M0: pin `rust` (the lane the wasm closures are waiting on)",
+      "why": "Found while measuring K-04: a package is `unpinned` if ANY language in its closure is, and 74 of 75 wasm crates depend on code/packages/rust/*. So wasm can never leave the class alone, and rust is about 29% of build time by the census's own figures. Its workspace Cargo.lock is already committed and already satisfies `cargo metadata --locked`.",
+      "scope": "~1471 cargo lines in code/packages/rust/*/BUILD and BUILD_windows; pinned.json",
+      "depends_on": [],
+      "risk": "medium: mechanical but wide; the whole rust lane becomes affected in one PR, so CI cost is the real cost"
+    },
+    {
+      "id": "K-11",
+      "priority": 3,
+      "status": "discovered",
+      "title": "CHANGELOG.d/_meta.md does not state the shard filename rule",
+      "why": "Found by losing a CI cycle on PR #19849: the name must be ^[0-9]{5}-[A-Z0-9]+(-[A-Z0-9]+)*-[0-9a-f]{8}\\.md$ (uppercase slug, lowercase hex digest, enforced by human-language-data/src/doc-shard.ts). _meta.md only says 'each numbered Markdown file is one entry'.",
+      "scope": "CHANGELOG.d/_meta.md, one paragraph",
+      "depends_on": [],
+      "risk": "none"
     },
     {
       "id": "K-05",
@@ -111,7 +137,10 @@
       "title": "PR 7 (Phase B parser conversions) and PR 8 (delete the old scanner)",
       "why": "PR 8 removes the cross-check oracle; KILN04 4.9 gates it on Phase B plus a 14-day / 200-kiln-sandbox-run soak with zero mismatches.",
       "scope": "internal/trace and its grammar path",
-      "depends_on": ["K-01", "soak"],
+      "depends_on": [
+        "K-01",
+        "soak"
+      ],
       "risk": "high: deleting the oracle is one-way",
       "owner_only": true
     }
