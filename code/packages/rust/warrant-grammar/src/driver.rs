@@ -8,18 +8,23 @@
 //! Slice 1 (this module): parse `driver` records and validate their schema
 //! (VER04k sections 3.2 and 3.4, rules 1-3 and 7). Every violation is W0501.
 //! Slice 2 (this module): type driver records against the checked document
-//! (VER04k 3.3 and 3.4 rule 5). Every inconsistency is W0711. Obligations,
-//! evaluation and sabotage follow in later slices; generation refuses driver
-//! ops explicitly until then (W0704 at the evidence/codegen gates).
+//! (VER04k 3.3 and 3.4 rule 5). Every inconsistency is W0711.
+//! Slice 3 (this module): the fault set (VER04k 3.4 rule 4, 3.5, 3.6).
+//! `faults=` must list every applicable driver fault (W0502) and none that
+//! does not apply (W0701), and a driver needing a two-element exercise must
+//! get one from some claim or example (W0601). Obligations and evaluation
+//! follow in later slices; generation refuses driver ops explicitly until
+//! then (W0704 at the evidence/codegen gates).
 
 use crate::binding::{
     is_rust_identifier, is_rust_path, parse_host_errors, parse_host_ty, split_top, EvidenceBindingFile,
     HostErrors, HostTy, HostType, MAX_EXPORT_SEGMENTS,
 };
 use crate::checker::{CheckerError, CheckerErrorKind, DiagnosticCode};
+use crate::codegen::{CodegenLimits, EvalValue, Evaluator};
 use crate::evidence::{ty_of_type, Ty, TyEnv};
 use crate::fixed::FixedTy;
-use crate::parser::{Declaration, OpDecl, TypeExpr, Version, WarrantFile};
+use crate::parser::{Declaration, Expression, Literal, OpDecl, TypeExpr, Version, WarrantFile};
 
 /// Longest Rust identifier accepted anywhere in a driver record (VER04k 3.4
 /// rule 2): segments, method names and function names are all capped, because
@@ -114,7 +119,7 @@ pub struct DriverFinish {
 
 /// What the driven operation returns: the finish value, the collected step
 /// values, or both.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DriverResult {
     Finish,
     Collect,
@@ -652,13 +657,14 @@ fn driver_ty(
 
 /// Validate one driver record against its operation (VER04k 3.3), reading
 /// types through the generator's resolver so the verdict agrees with
-/// generation by construction.
+/// generation by construction. Returns the driven type and the drive
+/// parameter's index for the fault-set checks.
 fn check_driver_against_op(
     op: &OpDecl<'_>,
     record: &DriverRecord,
     env: &TyEnv<'_>,
     declared: &std::collections::BTreeMap<String, HostType>,
-) -> Result<(), CheckerError> {
+) -> Result<(Ty, usize), CheckerError> {
     let op_name = op.name;
     let bad = |message: String| w0711(message, op.span);
     // Every `Named` host type must be declared by a `struct`/`enum` line:
@@ -679,13 +685,14 @@ fn check_driver_against_op(
     }
     // Rule 1: the driven parameter and its element type (`None` is a `Nat`
     // count driver: steps with no element).
-    let driven = op.params.iter().find(|p| p.name == record.drive);
-    let Some(driven) = driven else {
+    let drive_index = op.params.iter().position(|p| p.name == record.drive);
+    let Some(drive_index) = drive_index else {
         return Err(bad(format!(
             "driver drives `{}` but operation `{op_name}` has no such parameter",
             record.drive
         )));
     };
+    let driven = &op.params[drive_index];
     let driven_ty = driver_ty(
         &driven.param_type,
         env,
@@ -931,7 +938,7 @@ fn check_driver_against_op(
             )));
         }
     }
-    Ok(())
+    Ok((driven_ty, drive_index))
 }
 
 /// Whether operation `op` carries proof obligations a driver cannot lower:
@@ -987,15 +994,15 @@ pub fn validate_driver_consistency(
     }
     let env = TyEnv::new(file);
     for op in driven {
-        let Some(record) = bindings
-            .manifest
-            .bindings
-            .get(op.name)
-            .and_then(|b| b.driver.as_ref())
-        else {
+        let Some(binding) = bindings.manifest.bindings.get(op.name) else {
             continue;
         };
-        check_driver_against_op(op, record, &env, &bindings.hosts.types)?;
+        let Some(record) = binding.driver.as_ref() else {
+            continue;
+        };
+        let (driven_ty, drive_index) =
+            check_driver_against_op(op, record, &env, &bindings.hosts.types)?;
+        check_driver_fault_set(op, record, &binding.negative_controls, &driven_ty)?;
         // VER04k 3.4 rule 5: obligations need the opt-in.
         if op_needs_driver_not_live(file, op.name) {
             let opted_in = bindings
@@ -1012,6 +1019,292 @@ pub fn validate_driver_consistency(
                 ));
             }
         }
+        check_driver_exercised(file, op, drive_index, &driven_ty, record.result)?;
     }
     Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// Slice 3: the fault set (VER04k 3.4 rule 4, 3.5, 3.6).
+// ---------------------------------------------------------------------------
+
+/// The six driver faults of VER04k 3.6, in table order.
+pub const DRIVER_FAULTS: [&str; 6] = [
+    "drop-last-chunk",
+    "reorder-chunks",
+    "duplicate-last-chunk",
+    "early-finish",
+    "reset-per-step",
+    "drop-last-output",
+];
+
+/// The faults that need a two-element exercise to be catchable (VER04k 3.5).
+const NEEDY_FAULTS: [&str; 3] = ["reorder-chunks", "early-finish", "reset-per-step"];
+
+fn w_fault(code: DiagnosticCode, message: String, span: (usize, usize)) -> CheckerError {
+    CheckerError {
+        code,
+        kind: CheckerErrorKind::DriverFaultSet(message),
+        span,
+    }
+}
+
+/// Whether the driven shape can hold two elements (VER04k 3.6 "applies
+/// when"). A `Nat` count can drive two steps; whether reorder applies to it
+/// is decided separately below.
+fn shape_holds_two(driven_ty: &Ty) -> bool {
+    match driven_ty {
+        Ty::List(_) | Ty::Bytes | Ty::Nat | Ty::NatCount => true,
+        Ty::BytesN(n) => *n >= 2,
+        _ => false,
+    }
+}
+
+/// Whether a driver fault applies to a driver of this shape and result mode
+/// (VER04k 3.6 table).
+fn driver_fault_applies(fault: &str, driven_ty: &Ty, result: DriverResult) -> bool {
+    let multi = shape_holds_two(driven_ty);
+    let collects = matches!(result, DriverResult::Collect | DriverResult::Both);
+    let finishes = matches!(result, DriverResult::Finish | DriverResult::Both);
+    match fault {
+        "drop-last-chunk" | "duplicate-last-chunk" => true,
+        // Reorder needs two distinguishable elements; `Nat` steps take no
+        // element, so every step is identical and the rewrite is always the
+        // identity (W0701 if listed, never required).
+        "reorder-chunks" => multi && !matches!(driven_ty, Ty::Nat | Ty::NatCount),
+        "early-finish" => multi,
+        "reset-per-step" => multi && finishes,
+        "drop-last-output" => collects,
+        _ => false,
+    }
+}
+
+/// Check the `faults=` set of one driven operation (VER04k 3.4 rule 4):
+/// every applicable driver fault listed, none inapplicable one. Faults
+/// outside the six driver faults are judged by the existing per-fault
+/// machinery, not here.
+fn check_driver_fault_set(
+    op: &OpDecl<'_>,
+    record: &DriverRecord,
+    faults: &[String],
+    driven_ty: &Ty,
+) -> Result<(), CheckerError> {
+    let bad = |code, message: String| w_fault(code, message, op.span);
+    let mut missing = Vec::new();
+    for fault in DRIVER_FAULTS {
+        let listed = faults.iter().any(|f| f == fault);
+        let applies = driver_fault_applies(fault, driven_ty, record.result);
+        if !applies && listed {
+            return Err(bad(
+                DiagnosticCode::W0701,
+                format!(
+                    "`faults=` of `{}` lists `{fault}`, which does not apply to this driver",
+                    op.name
+                ),
+            ));
+        }
+        if applies && !listed {
+            missing.push(fault);
+        }
+    }
+    if !missing.is_empty() {
+        return Err(bad(
+            DiagnosticCode::W0502,
+            format!(
+                "`faults=` of `{}` is missing driver fault{}: {}",
+                op.name,
+                if missing.len() == 1 { "" } else { "s" },
+                missing.join(", ")
+            ),
+        ));
+    }
+    Ok(())
+}
+
+/// Whether element expression `e` of element type `t` can be non-empty.
+/// Scalars, tuples, options and records have no empty value; only `Bytes`
+/// and lists can be provably empty, and only literals prove it.
+fn maybe_nonempty(e: &Expression<'_>, t: &Ty) -> bool {
+    match e {
+        Expression::Grouped { inner, .. } => maybe_nonempty(inner, t),
+        Expression::Literal {
+            lit: Literal::Bytes(s),
+            ..
+        } if matches!(t, Ty::Bytes | Ty::BytesN(_)) => !s.is_empty(),
+        Expression::List { elements, .. } if matches!(t, Ty::List(_)) => !elements.is_empty(),
+        _ => true,
+    }
+}
+
+/// Whether a ground value drives a two-element exercise. A value of the
+/// wrong shape is a mistyped argument the checker already refused; never
+/// pile a W0601 onto it.
+fn value_drives_big(v: &EvalValue, driven: &Ty) -> bool {
+    match (driven, v) {
+        (Ty::List(t), EvalValue::List(es)) => {
+            es.len() >= 2 && es.iter().filter(|e| value_nonempty(e, t)).count() >= 2
+        }
+        (Ty::Bytes | Ty::BytesN(_), EvalValue::Bytes(b)) => b.len() >= 2,
+        (Ty::Nat | Ty::NatCount, EvalValue::Nat(n)) => *n >= 2,
+        (Ty::Nat | Ty::NatCount, EvalValue::Int(n)) => *n >= 2,
+        (Ty::Nat | Ty::NatCount, EvalValue::U8(n)) => *n >= 2,
+        (Ty::Nat | Ty::NatCount, EvalValue::U64(n)) => *n >= 2,
+        (Ty::Nat | Ty::NatCount, EvalValue::Fixed(_, n)) => *n >= 2,
+        _ => true,
+    }
+}
+
+/// Whether a ground element value of element type `t` is non-empty.
+fn value_nonempty(v: &EvalValue, t: &Ty) -> bool {
+    match (t, v) {
+        (Ty::Bytes | Ty::BytesN(_), EvalValue::Bytes(b)) => !b.is_empty(),
+        (Ty::List(_), EvalValue::List(es)) => !es.is_empty(),
+        _ => true,
+    }
+}
+
+/// Whether a driven argument can drive a two-element exercise (VER04k 3.5).
+/// Ground arguments (literals, literal arithmetic, `len` of literals,
+/// nullary models over literals) are measured EXACTLY through the ground
+/// evaluator, so `fill(5 - 5)` and `fill(z())` with `z() = 0` are caught.
+/// Binder-dependent arguments fall back to the structural rules below, true
+/// unless PROVABLY too small: a model over binders may still drive big
+/// (VER04k 3.7's own claims do), so opacity counts as exercisable and the
+/// runtime coverage control (evaluation slice) is the backstop for
+/// semantically-small-but-syntactically-opaque drives.
+fn drives_big(arg: &Expression<'_>, driven: &Ty, file: &WarrantFile<'_>) -> bool {
+    let mut evaluator = Evaluator::new(file, CodegenLimits::default());
+    if let Ok(value) = evaluator.eval(arg, &std::collections::HashMap::new()) {
+        return value_drives_big(&value, driven);
+    }
+    match arg {
+        Expression::Grouped { inner, .. } => drives_big(inner, driven, file),
+        Expression::List { elements, .. } => match driven {
+            Ty::List(t) => {
+                elements.len() >= 2
+                    && elements.iter().filter(|e| maybe_nonempty(e, t)).count() >= 2
+            }
+            // A list literal for a non-list driven type is a type error the
+            // checker already refused; never pile a W0601 onto it.
+            _ => true,
+        },
+        Expression::Literal { lit, .. } => match (driven, lit) {
+            // Bytes literals are even-length hex; length is half of it.
+            (Ty::Bytes | Ty::BytesN(_), Literal::Bytes(s)) => s.len() / 2 >= 2,
+            (Ty::Nat | Ty::NatCount, Literal::U64(v)) => *v >= 2,
+            (Ty::Nat | Ty::NatCount, Literal::Int(v)) => *v >= 2,
+            (Ty::Nat | Ty::NatCount, Literal::Fixed(_, v)) => *v >= 2,
+            // Anything else is a mistyped literal; the checker owns it.
+            _ => true,
+        },
+        // A bare name or qualified path ranges over its domain (which holds
+        // two for every type this check runs on), and a call is opaque:
+        // both count as exercisable. Narrow fixed widths never reach here:
+        // their needy set is empty, so the vacuity check is skipped.
+        Expression::Reference { .. } => true,
+        Expression::Conditional {
+            then_branch,
+            else_branch,
+            ..
+        } => drives_big(then_branch, driven, file) || drives_big(else_branch, driven, file),
+        Expression::Match { arms, .. } => arms.iter().any(|a| drives_big(&a.body, driven, file)),
+        // Binary, unary, tuple, projection: opaque or mistyped; the checker
+        // owns mistyped, opacity counts as exercisable.
+        _ => true,
+    }
+}
+
+/// Whether expression `e` contains a call to `op` whose driven argument can
+/// drive two elements. The recursion follows expression structure, which the
+/// parser caps at 128 deep, so even an unchecked document cannot overflow it.
+fn call_drives_big(
+    e: &Expression<'_>,
+    op: &str,
+    drive_index: usize,
+    driven_ty: &Ty,
+    file: &WarrantFile<'_>,
+) -> bool {
+    match e {
+        Expression::Reference { name, args, .. } => {
+            let Some(args) = args else {
+                return false;
+            };
+            if name.segments.as_slice() == [op] {
+                if let Some(arg) = args.get(drive_index) {
+                    if drives_big(arg, driven_ty, file) {
+                        return true;
+                    }
+                }
+            }
+            // Not a big-driving call to this op; nested calls may still be.
+            args.iter()
+                .any(|a| call_drives_big(a, op, drive_index, driven_ty, file))
+        }
+        Expression::Grouped { inner, .. } => call_drives_big(inner, op, drive_index, driven_ty, file),
+        Expression::Binary { left, right, .. } => {
+            call_drives_big(left, op, drive_index, driven_ty, file)
+                || call_drives_big(right, op, drive_index, driven_ty, file)
+        }
+        Expression::Unary { operand, .. } => call_drives_big(operand, op, drive_index, driven_ty, file),
+        Expression::Conditional {
+            condition,
+            then_branch,
+            else_branch,
+            ..
+        } => {
+            call_drives_big(condition, op, drive_index, driven_ty, file)
+                || call_drives_big(then_branch, op, drive_index, driven_ty, file)
+                || call_drives_big(else_branch, op, drive_index, driven_ty, file)
+        }
+        Expression::Match { target, arms, .. } => {
+            call_drives_big(target, op, drive_index, driven_ty, file)
+                || arms
+                    .iter()
+                    .any(|a| call_drives_big(&a.body, op, drive_index, driven_ty, file))
+        }
+        Expression::Quantified { body, .. } => call_drives_big(body, op, drive_index, driven_ty, file),
+        Expression::List { elements, .. } | Expression::Tuple { elements, .. } => elements
+            .iter()
+            .any(|a| call_drives_big(a, op, drive_index, driven_ty, file)),
+        Expression::Project { base, .. } => call_drives_big(base, op, drive_index, driven_ty, file),
+        Expression::Literal { .. } => false,
+    }
+}
+
+/// Fail with W0601 unless some claim or example calls `op` with a
+/// two-element exercise on the driven parameter (VER04k 3.5). Skipped when
+/// no two-element fault applies: there is nothing to catch.
+fn check_driver_exercised(
+    file: &WarrantFile<'_>,
+    op: &OpDecl<'_>,
+    drive_index: usize,
+    driven_ty: &Ty,
+    result: DriverResult,
+) -> Result<(), CheckerError> {
+    let needy = NEEDY_FAULTS
+        .iter()
+        .any(|f| driver_fault_applies(f, driven_ty, result));
+    if !needy {
+        return Ok(());
+    }
+    let exercised = file.declarations.iter().any(|d| {
+        let body = match d {
+            Declaration::Claim(c) => &c.body,
+            Declaration::Example(e) => &e.body,
+            _ => return false,
+        };
+        call_drives_big(body, op.name, drive_index, driven_ty, file)
+    });
+    if exercised {
+        Ok(())
+    } else {
+        Err(w_fault(
+            DiagnosticCode::W0601,
+            format!(
+                "operation `{}` is never called with a two-element sequence (driver not exercised)",
+                op.name
+            ),
+            op.span,
+        ))
+    }
 }

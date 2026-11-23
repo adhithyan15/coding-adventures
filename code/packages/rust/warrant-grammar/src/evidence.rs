@@ -35,7 +35,7 @@ use crate::binding::{
     is_rust_identifier, is_rust_path, validate_bindings, BindingManifest, EvidenceBindingFile,
     HostShape, HostSpec, HostTy, InoutForm, MAX_EXPORT_SEGMENTS,
 };
-use crate::checker::{CheckedWarrantModule, PostSlot};
+use crate::checker::{CheckedWarrantModule, DiagnosticCode as CheckerCode, PostSlot};
 use crate::driver::validate_driver_consistency;
 use crate::codegen::{
     find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
@@ -3092,15 +3092,47 @@ pub fn compile_rust_evidence_harness_with_tables(
         kind: CodegenErrorKind::MissingBinding(format!("{:?}", e.kind)),
         span: e.span,
     })?;
-    // WX-F slice 2: driver records are typed against the document before
-    // generation (which still refuses every driver op, W0704, until the
-    // evaluation slice). The code survives the boundary: a CheckerError here
-    // is always W0711, and flattening it to W0704 would hide which rule
-    // failed from `--check` output.
-    validate_driver_consistency(file, bindings).map_err(|e| CodegenError {
-        code: DiagnosticCode::W0711,
-        kind: CodegenErrorKind::DriverInconsistency(format!("{:?}", e.kind)),
-        span: e.span,
+    // WX-F slices 2-3: driver records are typed and fault-checked against
+    // the document before generation (which still refuses every driver op,
+    // W0704, until the evaluation slice). The code survives the boundary:
+    // flattening to W0704 would hide which rule failed from `--check`
+    // output. The wildcard is unreachable (the driver check emits only the
+    // four codes below) but stays fail-closed rather than panicking.
+    validate_driver_consistency(file, bindings).map_err(|e| {
+        let detail = format!("{:?}", e.kind);
+        let (code, kind) = match e.code {
+            CheckerCode::W0711 => (
+                DiagnosticCode::W0711,
+                CodegenErrorKind::DriverInconsistency(detail),
+            ),
+            CheckerCode::W0502 => (
+                DiagnosticCode::W0502,
+                CodegenErrorKind::DriverFaultSet(detail),
+            ),
+            CheckerCode::W0701 => (
+                DiagnosticCode::W0701,
+                CodegenErrorKind::DriverFaultSet(detail),
+            ),
+            CheckerCode::W0601 => (
+                DiagnosticCode::W0601,
+                CodegenErrorKind::DriverFaultSet(detail),
+            ),
+            unexpected => {
+                debug_assert!(
+                    false,
+                    "driver check emitted unexpected code {unexpected:?}; update this mapping"
+                );
+                (
+                    DiagnosticCode::W0704,
+                    CodegenErrorKind::MissingBinding(detail),
+                )
+            }
+        };
+        CodegenError {
+            code,
+            kind,
+            span: e.span,
+        }
     })?;
     generate_evidence_harness_with_tables(file, &bindings.manifest, options, tables)
 }

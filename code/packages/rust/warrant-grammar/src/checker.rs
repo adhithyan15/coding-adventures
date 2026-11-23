@@ -206,6 +206,9 @@ pub enum DiagnosticCode {
     /// parameters, proof obligations without `proofs_not_live=driver`, or a
     /// driver on a v0 document.
     W0711,
+    /// W0701: A WX-F `faults=` entry that does not apply to the driver's
+    /// shape (VER04k 3.4 rule 4).
+    W0701,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -224,6 +227,7 @@ impl fmt::Display for DiagnosticCode {
             Self::W0710 => write!(f, "W0710"),
             Self::W0713 => write!(f, "W0713"),
             Self::W0711 => write!(f, "W0711"),
+            Self::W0701 => write!(f, "W0701"),
         }
     }
 }
@@ -306,6 +310,10 @@ pub enum CheckerErrorKind {
     /// WX-F: a driver inconsistent with its operation (W0711); the text says
     /// which rule of VER04k 3.3 (or 3.4 rule 5) failed.
     DriverInconsistency(String),
+    /// WX-F: a driver fault-set problem (W0502 missing, W0701 inapplicable,
+    /// W0601 unexercised); the text says which rule of VER04k 3.4 rule 4 or
+    /// 3.5 failed.
+    DriverFaultSet(String),
 }
 
 /// Semantic checking error with source span.

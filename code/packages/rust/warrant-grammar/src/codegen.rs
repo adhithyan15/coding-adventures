@@ -55,6 +55,9 @@ pub enum DiagnosticCode {
     W0710,
     /// W0711: A WX-F driver inconsistent with its operation (VER04k 3.3).
     W0711,
+    /// W0502: A WX-F `faults=` list missing an applicable driver fault
+    /// (VER04k 3.4 rule 4).
+    W0502,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -74,6 +77,7 @@ impl fmt::Display for DiagnosticCode {
             Self::W0708 => write!(f, "W0708"),
             Self::W0710 => write!(f, "W0710"),
             Self::W0711 => write!(f, "W0711"),
+            Self::W0502 => write!(f, "W0502"),
         }
     }
 }
@@ -99,6 +103,8 @@ pub enum CodegenErrorKind {
     DataBudgetExceeded,
     /// WX-F (VER04k section 3.3): a driver inconsistent with its operation.
     DriverInconsistency(String),
+    /// WX-F (VER04k 3.4 rule 4, 3.5): a driver fault-set problem.
+    DriverFaultSet(String),
 }
 
 /// Codegen and compilation error.
