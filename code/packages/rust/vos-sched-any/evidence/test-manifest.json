@@ -4,7 +4,7 @@
   "schema": "warrant-test-evidence-v1",
   "source_sha256": "b72eb1b890bef7444d008c63f990ac6752512b00a70a6d5657f8dcb639256631",
   "spec": "code/specs/vos-sched-any.warrant",
-  "spec_sha256": "f25c1f456f5bbbadb10c54b7237523928e63bec37b48a211058bed6b80ca604d",
+  "spec_sha256": "3dc726bd57e26bd3da8ea44718f4ed77e1f67c5b8fd6ed5ffb660353eeedd5c7",
   "tests": [
     {
       "cases": 1,
@@ -23,6 +23,17 @@
       "kind": "example",
       "max_observed_heap": 0,
       "op": "alpha_w",
+      "verdict": "pass"
+    },
+    {
+      "bound_at_max": 0,
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/vos_sched_any/example/insert_three_image_pins_choice",
+      "instances_observed": 2,
+      "kind": "example",
+      "max_observed_heap": 0,
+      "op": "insert_img",
       "verdict": "pass"
     },
     {
@@ -937,14 +948,14 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "",
+      "caught_by": "insert_three_image_pins_choice",
       "claim": "",
       "fault": "field-flip-last",
       "id": "warrant/vos_sched_any/negctl/example/insert_img/field-flip-last",
       "kind": "negctl",
       "op": "insert_img",
       "target": "example",
-      "verdict": "fail"
+      "verdict": "pass"
     },
     {
       "caught_by": "insert_oracle_lo",

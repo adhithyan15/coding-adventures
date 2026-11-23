@@ -533,11 +533,9 @@ fn count_binders_sees_through_every_expression_shape_and_the_budget_overflow_is_
         "Ty::Fx(F::U8), Ty::NatCount"
     );
     assert!(g("f(a, n) == [shl(a, n)]").unwrap().contains("V::List(vec!["));
-    for body in [
-        "f(a, n) == (forall m: Nat. shl(a, m) == a)",
-    ] {
-        assert_eq!(g(body).unwrap_err().0, DiagnosticCode::W0701, "{body}");
-    }
+    // A nested quantifier is still refused.
+    let body = "f(a, n) == (forall m: Nat. shl(a, m) == a)";
+    assert_eq!(g(body).unwrap_err().0, DiagnosticCode::W0701, "{body}");
     // Nine U8 binders overflow the u64 product: nothing can be demoted, W0706.
     let binders: Vec<String> = (0..9).map(|i| format!("x{i}: U8")).collect();
     let (code, msg) = generate(
