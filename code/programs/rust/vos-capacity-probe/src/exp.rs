@@ -511,6 +511,19 @@ pub const B5_CONTROL_WALL: Duration = Duration::from_secs(600);
 /// 300,000.
 pub const B5_CONTROL_CONFLICT_CAP: u64 = 1_000_000;
 
+/// The wall of an experiment's G3 control stage (VOS-D123).  Keyed on the EXPERIMENT, never on
+/// a wall value: B5's control sweeps a mutated miter and gets [`B5_CONTROL_WALL`]; every other
+/// experiment keeps [`CONTROL_WALL`].  The parent's hard limit and B5's own control loop both
+/// read this one function, so the two cannot drift apart, and a future experiment that is
+/// given a 1,800 s row wall does not silently inherit B5's 600 s of control slack.
+pub fn control_wall(exp: &str) -> Duration {
+    if exp == "B5" {
+        B5_CONTROL_WALL
+    } else {
+        CONTROL_WALL
+    }
+}
+
 /// The row budget of an experiment's rows, seconds: 1,800 for B5 (a measurement wall), 600 for
 /// every other chain, 120 for everything else.
 pub fn row_wall_s(exp: &str) -> u64 {
@@ -1518,7 +1531,7 @@ fn b5_row(spec: &RowSpec, deadline: Instant, progress: &mut dyn FnMut(&Row)) -> 
 /// against that CNF, against the premises and the miter on the AIG, and replayed on the
 /// concrete machines.  `control_instance_sha256` is the digest of the unswept control CNF.
 fn b5_control(shape: &dyn Shape, seed: u64) -> (Control, String, String) {
-    let deadline = Instant::now() + B5_CONTROL_WALL;
+    let deadline = Instant::now() + control_wall("B5");
     let mut last_sha = String::new();
     let mut note = String::new();
     for site in shape.sites(seed).into_iter().take(8) {
@@ -1541,7 +1554,7 @@ fn b5_control(shape: &dyn Shape, seed: u64) -> (Control, String, String) {
                 mode: ProofMode::Solver,
                 seed,
                 row_deadline: deadline,
-                obligation_wall: B5_CONTROL_WALL,
+                obligation_wall: control_wall("B5"),
                 conflict_cap: Some(B5_CONTROL_CONFLICT_CAP),
             },
         );

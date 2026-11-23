@@ -34,7 +34,7 @@
 //!   is drained and discarded, so a child that prints without end neither fills the parent's
 //!   memory nor blocks on a full pipe.
 
-use crate::exp::{row_wall_s, wall_field, RowSpec, B5_CONTROL_WALL, B5_ROW_WALL_S, CONTROL_WALL};
+use crate::exp::{control_wall, row_wall_s, wall_field, RowSpec, CONTROL_WALL};
 use crate::results::{green, RSS_CAP_KB, TIMEOUT_S};
 use crate::row::{Control, Knob, Row};
 use coding_adventures_bounded_json::{parse, serialize, JsonNumber, JsonValue};
@@ -52,21 +52,17 @@ use std::time::{Duration, Instant};
 /// proof checker's own work limit (2^32 visits) bounds a check to about two minutes.
 pub const KILL_SLACK: Duration = Duration::from_secs(150);
 
-/// The wall time after which the parent kills a row's process group, for a row whose budget is
-/// `wall_s` seconds: the budget, the control stage and the slack (VOS30 section 9.5 item 3).
-pub fn hard_limit_for(wall_s: u64) -> Duration {
-    // B5's row (the only one with the 1,800 s budget) has its own, longer control stage.
-    let control = if wall_s == B5_ROW_WALL_S {
-        B5_CONTROL_WALL
-    } else {
-        CONTROL_WALL
-    };
-    Duration::from_secs(wall_s) + control + KILL_SLACK
+/// The wall time after which the parent kills a row's process group, for a row of experiment
+/// `experiment`: its row budget, its control stage and the slack (VOS30 section 9.5 item 3).
+/// Keyed on the experiment (VOS-D123): the budget is [`row_wall_s`] and the control stage is
+/// [`control_wall`], so no wall value is ever compared against a magic number.
+pub fn hard_limit_for(experiment: &str) -> Duration {
+    Duration::from_secs(row_wall_s(experiment)) + control_wall(experiment) + KILL_SLACK
 }
 
 /// The hard limit of a 120 s (non-chain) row.
 pub fn hard_limit() -> Duration {
-    hard_limit_for(TIMEOUT_S)
+    Duration::from_secs(TIMEOUT_S) + CONTROL_WALL + KILL_SLACK
 }
 
 /// The most a parent waits for a killed child to be reaped before it gives up and moves on.
@@ -75,11 +71,11 @@ pub const REAP_LIMIT: Duration = Duration::from_secs(5);
 /// The most output (bytes) read from each of a child's stdout and stderr.
 pub const CHILD_OUTPUT_CAP: u64 = 1024 * 1024;
 
-/// The CPU-seconds backstop N of a row whose budget is `wall_s`: the hard limit in whole seconds,
+/// The CPU-seconds backstop N of a row of `experiment`: the hard limit in whole seconds,
 /// computed from the budget constants, never read from text.  CPU time never exceeds wall time
 /// for a single-threaded solver, so this only ever fires for a child the wall-clock kill missed.
-pub fn cpu_limit_s(wall_s: u64) -> u64 {
-    hard_limit_for(wall_s).as_secs()
+pub fn cpu_limit_s(experiment: &str) -> u64 {
+    hard_limit_for(experiment).as_secs()
 }
 
 /// The one piece of shell text the probe ever runs: set the CPU limit from argument 1, drop it,
@@ -316,7 +312,7 @@ pub fn launch_command_sub(exe: &Path, sub: &str, spec: &RowSpec, wall_s: u64) ->
         c.arg("-c")
             .arg(ULIMIT_SCRIPT)
             .arg("sh")
-            .arg(cpu_limit_s(wall_s).to_string())
+            .arg(cpu_limit_s(&spec.experiment).to_string())
             .arg("/usr/bin/time");
         c
     };
@@ -592,7 +588,8 @@ pub fn run_one_bounded(exe: &Path, spec: &RowSpec, bound: Option<Duration>) -> R
 /// `check`, which builds an instance and never solves it).
 pub fn run_sub_bounded(exe: &Path, sub: &str, spec: &RowSpec, bound: Option<Duration>) -> Row {
     let wall_s = row_wall_s(&spec.experiment);
-    let hard = bound.map_or(hard_limit_for(wall_s), |b| b.min(hard_limit_for(wall_s)));
+    let limit = hard_limit_for(&spec.experiment);
+    let hard = bound.map_or(limit, |b| b.min(limit));
     match run_child_sub(exe, sub, spec, wall_s, RSS_CAP_KB, hard, READER_WAIT) {
         Ok(ch) => finish_row(spec, &ch),
         Err(e) => {
@@ -943,10 +940,33 @@ mod tests {
             assert_eq!(finish_row(&b3, &child("", "", end)).wall_s, Some(600));
             assert_eq!(finish_row(&spec(), &child("", "", end)).wall_s, None);
         }
-        assert_eq!(cpu_limit_s(600), 780);
-        assert_eq!(cpu_limit_s(120), 300);
+        assert_eq!(cpu_limit_s("B3"), 780);
+        assert_eq!(cpu_limit_s("A1"), 300);
         // B5: 1,800 s row + 600 s control + 150 s slack.
-        assert_eq!(cpu_limit_s(1800), 2550);
+        assert_eq!(cpu_limit_s("B5"), 2550);
+    }
+
+    #[test]
+    fn the_hard_limit_is_keyed_on_the_experiment() {
+        // Unchanged values: 120 s rows, 600 s chains, B5's 1,800 s row with its 600 s control.
+        assert_eq!(hard_limit_for("A1").as_secs(), 300);
+        assert_eq!(hard_limit_for("D4").as_secs(), 780);
+        assert_eq!(hard_limit_for("B5").as_secs(), 2550);
+        assert_eq!(hard_limit(), hard_limit_for("A1"));
+        // The control stage follows the experiment, not the wall: only B5 gets 600 s.
+        assert_eq!(control_wall("B5"), Duration::from_secs(600));
+        for e in ["A1", "B2", "B3", "D3", "D4", "D5"] {
+            assert_eq!(control_wall(e), CONTROL_WALL, "{e}");
+        }
+        // A non-B5 experiment never gets B5's control slack, whatever its row wall: the limit is
+        // exactly row wall + 30 s + slack for every one of them.
+        for e in ["A1", "B3", "D5"] {
+            assert_eq!(
+                hard_limit_for(e),
+                Duration::from_secs(row_wall_s(e)) + CONTROL_WALL + KILL_SLACK,
+                "{e}"
+            );
+        }
     }
 
     #[test]

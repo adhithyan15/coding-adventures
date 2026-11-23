@@ -4,6 +4,40 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Added (VOS-028c3c-2a, VOS30 section 9.12.1)
+
+- **Comparison classes (`results::compare_class`, VOS-D124, VOS-D128).** `compare_rerun` now
+  compares a row in one of three classes. `Exact` (neither row wall-capped nor killed) is the old
+  comparison, byte for byte. `WallWhole` (either row has cap `wall`, both `unknown`, the
+  experiment not segmented) compares identity, `instance_sha256`, `ands`, `vars`, `clauses`,
+  `entropy_bits`, `declared_bits`, `result`, `cap` and `wall_s`: a single instance is built whole
+  before the solve, so its structure does not depend on where the clock ran out, and dropping it
+  would let an edited instance hide behind a timeout. `Minimal` (a wall-capped segmented row, which
+  hashes only the segments reached before the deadline, or a `killed`/`oom`/`crashed` row on either
+  side) compares identity, `result`, `cap` and `wall_s` only. A flip between a completed verdict and
+  `unknown`/`wall` is one `result differs` finding. `compare_timing` is skipped when either row is
+  not `Exact` (it used to look at the recorded row only). Counted from the committed file: 64 of the
+  141 wall-capped rows are segmented (D4 55, B3 7, D3 2) and none ended killed, oom or crashed.
+  `spot` inherits the rule and keeps its "not verified" rule.
+- **`validate FILE` and `validate_classes` (VOS-D127 L3, VOS-D129, VOS-D130).**
+  `results::validate_classes` returns `Validation { structural, rows }`; `validate` is the same
+  findings in the same order as before (one tagged pass, so `check` and `merge` print what they
+  always printed). Structural: no rows, dirty tree, tree ids, merges, closed sets (result, cap,
+  experiment, plan knob, tier), `wall_s`, seed counts. Row: everything that reads a row's control,
+  counters, resident set, `green`, collapse rules or the B5/B2 twin digests. The new subcommand
+  runs only `validate`, re-runs nothing, and exits 2 on a structural finding or an unreadable file,
+  1 on row findings only, 0 when clean.
+
+### Changed (VOS-028c3c-2a)
+
+- **`runner::hard_limit_for` and `cpu_limit_s` take the experiment, not the wall (VOS-D123).** The
+  control stage comes from the new `exp::control_wall(experiment)`, which `b5_control` also uses,
+  so a future experiment with a 1,800 s row wall does not inherit B5's 600 s of control slack. The
+  values are unchanged (300, 780 and 2,550 s).
+- **`rerun_collect` re-runs each quick row under its own experiment wall (VOS-D131).**
+  `results::rerun_wall` is `row_wall_s`, so a chain row gets 600 s (B5 1,800 s), not a flat 120 s.
+- The results file and every digest are unchanged.
+
 ### Added (VOS-028c3b, VOS30 sections 8.4 item 11, 8.6.3 and 9.12)
 
 - **B5's 600 s total is the sweep's elapsed time, fail-closed.** `b5_row` records `sweep_ms`

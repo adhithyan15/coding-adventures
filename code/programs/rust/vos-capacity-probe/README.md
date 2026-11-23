@@ -76,6 +76,7 @@ and skips the sampled re-run, saying so.
 vos-capacity-probe list
 vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] --out results.json
 vos-capacity-probe check [--full] code/specs/data/vos30-capacity-results.json [--jobs N]
+vos-capacity-probe validate code/specs/data/vos30-capacity-results.json
 vos-capacity-probe table [--check | --write]
 vos-capacity-probe decide
 vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
@@ -86,6 +87,11 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
 * `run --tier full` is the recorded offline run (hours). Its output is committed only after a named
   reviewer has regenerated it on a stated host; `dirty_tree`, `binary_sha256` and the regeneration
   banner are **self-reported**, so that review is a process control.
+* `validate FILE` runs only the schema and guard rules of `check` (no re-run, no executable, no plan
+  coverage, so a shard's file can be classified) and tells the findings apart: exit 2 for a
+  **structural** finding or an unreadable file (the recording is discarded), exit 1 for **row**
+  findings only, for example a failed control (the recording is kept and blocks the commit, VOS30
+  9.12.1), exit 0 when clean.
 * `check` validates every row against the schema and the guards (`tier` must be `quick` or `full`
   and the plan's for the knob; every `(experiment, mode, knob)` in the plan's closed set) and
   requires the file to hold exactly the rows of the plan: none missing, none extra, none twice, and

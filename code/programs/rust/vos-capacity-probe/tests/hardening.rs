@@ -126,8 +126,9 @@ fn a_chain_has_a_600_s_row_budget_and_every_other_row_keeps_120_s() {
         );
     }
     // The hard kill moves with the budget: 600 s + 30 s of control + 150 s of slack.
-    assert_eq!(hard_limit_for(CHAIN_WALL_S), Duration::from_secs(780));
-    assert_eq!(hard_limit(), hard_limit_for(120));
+    assert_eq!(row_wall_s("B3"), CHAIN_WALL_S);
+    assert_eq!(hard_limit_for("B3"), Duration::from_secs(780));
+    assert_eq!(hard_limit(), hard_limit_for("A1"));
     assert!(KILL_SLACK >= Duration::from_secs(150));
 }
 
