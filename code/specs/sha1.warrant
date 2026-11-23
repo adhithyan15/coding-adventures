@@ -1,0 +1,36 @@
+-- sha1: the WX-F conversion pilot (VER04k section 3, test plan "Conversion pilot").
+--
+-- digest_chunks is a DRIVEN operation: the binding (evidence.bindings in the
+-- sha1 package) executes it as Digest::new/update/sum1, one step per element.
+-- sum1 is the one-shot export the driven operation must agree with. The claims
+-- are 3.1's: one-shot agreement, split independence, and every two-way split
+-- (take/drop are WX-D1). The three-way split and chunk-size claims need WX-D2
+-- (map) and land with the WX-D composition slice, as does the range-coder
+-- round-trip pilot.
+warrant sha1 v1
+  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>
+  op sum1(data: Bytes) -> Bytes<20>
+
+  labels digest_chunks:
+    chunks public
+  labels sum1:
+    data public
+  input digest_chunks.chunks:
+    hostile
+    ensures no_panic, terminates
+  input sum1.data:
+    hostile
+    ensures no_panic, terminates
+  bound digest_chunks:
+    steps <= 200000
+  bound sum1:
+    steps <= 200000
+
+  example empty_stream_is_the_empty_digest:
+    digest_chunks([]) == b"da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  claim one_shot_agrees:
+    forall m: Bytes. digest_chunks([m]) == sum1(m)
+  claim split_independent:
+    forall a: Bytes, b: Bytes. digest_chunks([a, b]) == digest_chunks([concat(a, b)])
+  claim any_two_way_split:
+    forall m: Bytes, k: Nat. digest_chunks([take(m, k), drop(m, k)]) == sum1(m)

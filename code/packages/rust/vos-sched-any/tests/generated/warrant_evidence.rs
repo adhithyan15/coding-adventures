@@ -4295,32 +4295,32 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_any/negctl/exhaustive/alpha_w/field-zero", "negctl", "alpha_w", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("alpha_build_with_oracle", neg_exh_alpha_build_with_oracle), ("safety_alpha_build", neg_exh_safety_alpha_build), ("safety_init", neg_exh_safety_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 14] = [("dispatch_sound", neg_exh_dispatch_sound), ("dispatch_covers_run", neg_exh_dispatch_covers_run), ("insert_oracle_lo", neg_exh_insert_oracle_lo), ("insert_oracle_hi", neg_exh_insert_oracle_hi), ("insert_oracle_ids", neg_exh_insert_oracle_ids), ("remove_oracle_lo", neg_exh_remove_oracle_lo), ("remove_oracle_hi", neg_exh_remove_oracle_hi), ("remove_oracle_ids", neg_exh_remove_oracle_ids), ("alpha_build_with_oracle", neg_exh_alpha_build_with_oracle), ("insert_safe", neg_exh_insert_safe), ("remove_safe", neg_exh_remove_safe), ("dispatch_safe", neg_exh_dispatch_safe), ("safety_alpha_build", neg_exh_safety_alpha_build), ("safety_init", neg_exh_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_any/negctl/exhaustive/alpha_w/field-flip", "negctl", "alpha_w", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("alpha_build_with_oracle", neg_exh_alpha_build_with_oracle), ("safety_alpha_build", neg_exh_safety_alpha_build), ("safety_init", neg_exh_safety_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 14] = [("dispatch_sound", neg_exh_dispatch_sound), ("dispatch_covers_run", neg_exh_dispatch_covers_run), ("insert_oracle_lo", neg_exh_insert_oracle_lo), ("insert_oracle_hi", neg_exh_insert_oracle_hi), ("insert_oracle_ids", neg_exh_insert_oracle_ids), ("remove_oracle_lo", neg_exh_remove_oracle_lo), ("remove_oracle_hi", neg_exh_remove_oracle_hi), ("remove_oracle_ids", neg_exh_remove_oracle_ids), ("alpha_build_with_oracle", neg_exh_alpha_build_with_oracle), ("insert_safe", neg_exh_insert_safe), ("remove_safe", neg_exh_remove_safe), ("dispatch_safe", neg_exh_dispatch_safe), ("safety_alpha_build", neg_exh_safety_alpha_build), ("safety_init", neg_exh_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_any/negctl/property/alpha_w/field-zero", "negctl", "alpha_w", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("alpha_build_with_oracle", neg_prop_alpha_build_with_oracle), ("safety_alpha_build", neg_prop_safety_alpha_build), ("safety_init", neg_prop_safety_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 14] = [("dispatch_sound", neg_prop_dispatch_sound), ("dispatch_covers_run", neg_prop_dispatch_covers_run), ("insert_oracle_lo", neg_prop_insert_oracle_lo), ("insert_oracle_hi", neg_prop_insert_oracle_hi), ("insert_oracle_ids", neg_prop_insert_oracle_ids), ("remove_oracle_lo", neg_prop_remove_oracle_lo), ("remove_oracle_hi", neg_prop_remove_oracle_hi), ("remove_oracle_ids", neg_prop_remove_oracle_ids), ("alpha_build_with_oracle", neg_prop_alpha_build_with_oracle), ("insert_safe", neg_prop_insert_safe), ("remove_safe", neg_prop_remove_safe), ("dispatch_safe", neg_prop_dispatch_safe), ("safety_alpha_build", neg_prop_safety_alpha_build), ("safety_init", neg_prop_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_any/negctl/property/alpha_w/field-flip", "negctl", "alpha_w", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("alpha_build_with_oracle", neg_prop_alpha_build_with_oracle), ("safety_alpha_build", neg_prop_safety_alpha_build), ("safety_init", neg_prop_safety_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 14] = [("dispatch_sound", neg_prop_dispatch_sound), ("dispatch_covers_run", neg_prop_dispatch_covers_run), ("insert_oracle_lo", neg_prop_insert_oracle_lo), ("insert_oracle_hi", neg_prop_insert_oracle_hi), ("insert_oracle_ids", neg_prop_insert_oracle_ids), ("remove_oracle_lo", neg_prop_remove_oracle_lo), ("remove_oracle_hi", neg_prop_remove_oracle_hi), ("remove_oracle_ids", neg_prop_remove_oracle_ids), ("alpha_build_with_oracle", neg_prop_alpha_build_with_oracle), ("insert_safe", neg_prop_insert_safe), ("remove_safe", neg_prop_remove_safe), ("dispatch_safe", neg_prop_dispatch_safe), ("safety_alpha_build", neg_prop_safety_alpha_build), ("safety_init", neg_prop_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_any/negctl/fuzz/alpha_w/field-zero", "negctl", "alpha_w", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("alpha_build_with_oracle", neg_fuz_alpha_build_with_oracle), ("safety_alpha_build", neg_fuz_safety_alpha_build), ("safety_init", neg_fuz_safety_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 14] = [("dispatch_sound", neg_fuz_dispatch_sound), ("dispatch_covers_run", neg_fuz_dispatch_covers_run), ("insert_oracle_lo", neg_fuz_insert_oracle_lo), ("insert_oracle_hi", neg_fuz_insert_oracle_hi), ("insert_oracle_ids", neg_fuz_insert_oracle_ids), ("remove_oracle_lo", neg_fuz_remove_oracle_lo), ("remove_oracle_hi", neg_fuz_remove_oracle_hi), ("remove_oracle_ids", neg_fuz_remove_oracle_ids), ("alpha_build_with_oracle", neg_fuz_alpha_build_with_oracle), ("insert_safe", neg_fuz_insert_safe), ("remove_safe", neg_fuz_remove_safe), ("dispatch_safe", neg_fuz_dispatch_safe), ("safety_alpha_build", neg_fuz_safety_alpha_build), ("safety_init", neg_fuz_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_any/negctl/fuzz/alpha_w/field-flip", "negctl", "alpha_w", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("alpha_build_with_oracle", neg_fuz_alpha_build_with_oracle), ("safety_alpha_build", neg_fuz_safety_alpha_build), ("safety_init", neg_fuz_safety_init)];
+        let runs: [(&str, fn(Fault) -> Verdict); 14] = [("dispatch_sound", neg_fuz_dispatch_sound), ("dispatch_covers_run", neg_fuz_dispatch_covers_run), ("insert_oracle_lo", neg_fuz_insert_oracle_lo), ("insert_oracle_hi", neg_fuz_insert_oracle_hi), ("insert_oracle_ids", neg_fuz_insert_oracle_ids), ("remove_oracle_lo", neg_fuz_remove_oracle_lo), ("remove_oracle_hi", neg_fuz_remove_oracle_hi), ("remove_oracle_ids", neg_fuz_remove_oracle_ids), ("alpha_build_with_oracle", neg_fuz_alpha_build_with_oracle), ("insert_safe", neg_fuz_insert_safe), ("remove_safe", neg_fuz_remove_safe), ("dispatch_safe", neg_fuz_dispatch_safe), ("safety_alpha_build", neg_fuz_safety_alpha_build), ("safety_init", neg_fuz_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip")
     });
@@ -4330,32 +4330,32 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_any/negctl/exhaustive/dispatch_img/field-zero", "negctl", "dispatch_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("dispatch_sound", neg_exh_dispatch_sound)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("dispatch_sound", neg_exh_dispatch_sound), ("dispatch_safe", neg_exh_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_any/negctl/exhaustive/dispatch_img/field-flip-last", "negctl", "dispatch_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("dispatch_sound", neg_exh_dispatch_sound)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("dispatch_sound", neg_exh_dispatch_sound), ("dispatch_safe", neg_exh_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip-last")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_any/negctl/property/dispatch_img/field-zero", "negctl", "dispatch_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("dispatch_sound", neg_prop_dispatch_sound)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("dispatch_sound", neg_prop_dispatch_sound), ("dispatch_safe", neg_prop_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_any/negctl/property/dispatch_img/field-flip-last", "negctl", "dispatch_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("dispatch_sound", neg_prop_dispatch_sound)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("dispatch_sound", neg_prop_dispatch_sound), ("dispatch_safe", neg_prop_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip-last")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_any/negctl/fuzz/dispatch_img/field-zero", "negctl", "dispatch_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("dispatch_sound", neg_fuz_dispatch_sound)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("dispatch_sound", neg_fuz_dispatch_sound), ("dispatch_safe", neg_fuz_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_any/negctl/fuzz/dispatch_img/field-flip-last", "negctl", "dispatch_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("dispatch_sound", neg_fuz_dispatch_sound)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("dispatch_sound", neg_fuz_dispatch_sound), ("dispatch_safe", neg_fuz_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip-last")
     });
@@ -4365,107 +4365,137 @@ pub fn build_suite(fault: Fault) -> Suite {
         negctl_result(caught, "wrong-ctor")
     });
     reg(&mut suite, Meta { fault: "wrong-ctor".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_any/negctl/exhaustive/dispatch_out/wrong-ctor", "negctl", "dispatch_out", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("dispatch_covers_run", neg_exh_dispatch_covers_run), ("dispatch_covers_idle", neg_exh_dispatch_covers_idle), ("dispatch_safe", neg_exh_dispatch_safe)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("dispatch_sound", neg_exh_dispatch_sound), ("dispatch_covers_run", neg_exh_dispatch_covers_run), ("dispatch_covers_idle", neg_exh_dispatch_covers_idle), ("dispatch_safe", neg_exh_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });
     reg(&mut suite, Meta { fault: "wrong-ctor".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_any/negctl/property/dispatch_out/wrong-ctor", "negctl", "dispatch_out", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("dispatch_covers_run", neg_prop_dispatch_covers_run), ("dispatch_covers_idle", neg_prop_dispatch_covers_idle), ("dispatch_safe", neg_prop_dispatch_safe)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("dispatch_sound", neg_prop_dispatch_sound), ("dispatch_covers_run", neg_prop_dispatch_covers_run), ("dispatch_covers_idle", neg_prop_dispatch_covers_idle), ("dispatch_safe", neg_prop_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });
     reg(&mut suite, Meta { fault: "wrong-ctor".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_any/negctl/fuzz/dispatch_out/wrong-ctor", "negctl", "dispatch_out", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("dispatch_covers_run", neg_fuz_dispatch_covers_run), ("dispatch_covers_idle", neg_fuz_dispatch_covers_idle), ("dispatch_safe", neg_fuz_dispatch_safe)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("dispatch_sound", neg_fuz_dispatch_sound), ("dispatch_covers_run", neg_fuz_dispatch_covers_run), ("dispatch_covers_idle", neg_fuz_dispatch_covers_idle), ("dispatch_safe", neg_fuz_dispatch_safe)];
         let caught: Vec<&str> = attacking("dispatch_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "example".into(), ..Meta::new("warrant/vos_sched_any/negctl/example/init/field-flip", "negctl", "init", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("insert_three_sets_bit_three", neg_ex_insert_three_sets_bit_three)];
+        let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
+    });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_any/negctl/exhaustive/init/field-flip", "negctl", "init", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("safety_init", neg_exh_safety_init)];
+        let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
+    });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_any/negctl/property/init/field-flip", "negctl", "init", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("safety_init", neg_prop_safety_init)];
+        let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
+    });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_any/negctl/fuzz/init/field-flip", "negctl", "init", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("safety_init", neg_fuz_safety_init)];
+        let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
+    });
+    reg(&mut suite, Meta { fault: "field-zero".into(), target: "example".into(), ..Meta::new("warrant/vos_sched_any/negctl/example/insert_img/field-zero", "negctl", "insert_img", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("insert_three_sets_bit_three", neg_ex_insert_three_sets_bit_three)];
+        let caught: Vec<&str> = attacking("insert_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-zero")
+    });
+    reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "example".into(), ..Meta::new("warrant/vos_sched_any/negctl/example/insert_img/field-flip-last", "negctl", "insert_img", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("insert_three_sets_bit_three", neg_ex_insert_three_sets_bit_three)];
+        let caught: Vec<&str> = attacking("insert_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip-last")
+    });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_any/negctl/exhaustive/insert_img/field-zero", "negctl", "insert_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("insert_oracle_lo", neg_exh_insert_oracle_lo), ("insert_oracle_hi", neg_exh_insert_oracle_hi), ("insert_oracle_ids", neg_exh_insert_oracle_ids)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("insert_oracle_lo", neg_exh_insert_oracle_lo), ("insert_oracle_hi", neg_exh_insert_oracle_hi), ("insert_oracle_ids", neg_exh_insert_oracle_ids), ("insert_safe", neg_exh_insert_safe)];
         let caught: Vec<&str> = attacking("insert_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_any/negctl/exhaustive/insert_img/field-flip-last", "negctl", "insert_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("insert_oracle_lo", neg_exh_insert_oracle_lo), ("insert_oracle_hi", neg_exh_insert_oracle_hi), ("insert_oracle_ids", neg_exh_insert_oracle_ids)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("insert_oracle_lo", neg_exh_insert_oracle_lo), ("insert_oracle_hi", neg_exh_insert_oracle_hi), ("insert_oracle_ids", neg_exh_insert_oracle_ids), ("insert_safe", neg_exh_insert_safe)];
         let caught: Vec<&str> = attacking("insert_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip-last")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_any/negctl/property/insert_img/field-zero", "negctl", "insert_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("insert_oracle_lo", neg_prop_insert_oracle_lo), ("insert_oracle_hi", neg_prop_insert_oracle_hi), ("insert_oracle_ids", neg_prop_insert_oracle_ids)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("insert_oracle_lo", neg_prop_insert_oracle_lo), ("insert_oracle_hi", neg_prop_insert_oracle_hi), ("insert_oracle_ids", neg_prop_insert_oracle_ids), ("insert_safe", neg_prop_insert_safe)];
         let caught: Vec<&str> = attacking("insert_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_any/negctl/property/insert_img/field-flip-last", "negctl", "insert_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("insert_oracle_lo", neg_prop_insert_oracle_lo), ("insert_oracle_hi", neg_prop_insert_oracle_hi), ("insert_oracle_ids", neg_prop_insert_oracle_ids)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("insert_oracle_lo", neg_prop_insert_oracle_lo), ("insert_oracle_hi", neg_prop_insert_oracle_hi), ("insert_oracle_ids", neg_prop_insert_oracle_ids), ("insert_safe", neg_prop_insert_safe)];
         let caught: Vec<&str> = attacking("insert_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip-last")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_any/negctl/fuzz/insert_img/field-zero", "negctl", "insert_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("insert_oracle_lo", neg_fuz_insert_oracle_lo), ("insert_oracle_hi", neg_fuz_insert_oracle_hi), ("insert_oracle_ids", neg_fuz_insert_oracle_ids)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("insert_oracle_lo", neg_fuz_insert_oracle_lo), ("insert_oracle_hi", neg_fuz_insert_oracle_hi), ("insert_oracle_ids", neg_fuz_insert_oracle_ids), ("insert_safe", neg_fuz_insert_safe)];
         let caught: Vec<&str> = attacking("insert_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_any/negctl/fuzz/insert_img/field-flip-last", "negctl", "insert_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("insert_oracle_lo", neg_fuz_insert_oracle_lo), ("insert_oracle_hi", neg_fuz_insert_oracle_hi), ("insert_oracle_ids", neg_fuz_insert_oracle_ids)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("insert_oracle_lo", neg_fuz_insert_oracle_lo), ("insert_oracle_hi", neg_fuz_insert_oracle_hi), ("insert_oracle_ids", neg_fuz_insert_oracle_ids), ("insert_safe", neg_fuz_insert_safe)];
         let caught: Vec<&str> = attacking("insert_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip-last")
     });
     reg(&mut suite, Meta { fault: "wrong-ctor".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_any/negctl/exhaustive/insert_out/wrong-ctor", "negctl", "insert_out", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("insert_safe", neg_exh_insert_safe)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("insert_oracle_lo", neg_exh_insert_oracle_lo), ("insert_oracle_hi", neg_exh_insert_oracle_hi), ("insert_oracle_ids", neg_exh_insert_oracle_ids), ("insert_safe", neg_exh_insert_safe)];
         let caught: Vec<&str> = attacking("insert_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });
     reg(&mut suite, Meta { fault: "wrong-ctor".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_any/negctl/property/insert_out/wrong-ctor", "negctl", "insert_out", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("insert_safe", neg_prop_insert_safe)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("insert_oracle_lo", neg_prop_insert_oracle_lo), ("insert_oracle_hi", neg_prop_insert_oracle_hi), ("insert_oracle_ids", neg_prop_insert_oracle_ids), ("insert_safe", neg_prop_insert_safe)];
         let caught: Vec<&str> = attacking("insert_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });
     reg(&mut suite, Meta { fault: "wrong-ctor".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_any/negctl/fuzz/insert_out/wrong-ctor", "negctl", "insert_out", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("insert_safe", neg_fuz_insert_safe)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("insert_oracle_lo", neg_fuz_insert_oracle_lo), ("insert_oracle_hi", neg_fuz_insert_oracle_hi), ("insert_oracle_ids", neg_fuz_insert_oracle_ids), ("insert_safe", neg_fuz_insert_safe)];
         let caught: Vec<&str> = attacking("insert_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_any/negctl/exhaustive/remove_img/field-zero", "negctl", "remove_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("remove_oracle_lo", neg_exh_remove_oracle_lo), ("remove_oracle_hi", neg_exh_remove_oracle_hi), ("remove_oracle_ids", neg_exh_remove_oracle_ids)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("remove_oracle_lo", neg_exh_remove_oracle_lo), ("remove_oracle_hi", neg_exh_remove_oracle_hi), ("remove_oracle_ids", neg_exh_remove_oracle_ids), ("remove_safe", neg_exh_remove_safe)];
         let caught: Vec<&str> = attacking("remove_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_any/negctl/exhaustive/remove_img/field-flip-last", "negctl", "remove_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("remove_oracle_lo", neg_exh_remove_oracle_lo), ("remove_oracle_hi", neg_exh_remove_oracle_hi), ("remove_oracle_ids", neg_exh_remove_oracle_ids)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("remove_oracle_lo", neg_exh_remove_oracle_lo), ("remove_oracle_hi", neg_exh_remove_oracle_hi), ("remove_oracle_ids", neg_exh_remove_oracle_ids), ("remove_safe", neg_exh_remove_safe)];
         let caught: Vec<&str> = attacking("remove_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip-last")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_any/negctl/property/remove_img/field-zero", "negctl", "remove_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("remove_oracle_lo", neg_prop_remove_oracle_lo), ("remove_oracle_hi", neg_prop_remove_oracle_hi), ("remove_oracle_ids", neg_prop_remove_oracle_ids)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("remove_oracle_lo", neg_prop_remove_oracle_lo), ("remove_oracle_hi", neg_prop_remove_oracle_hi), ("remove_oracle_ids", neg_prop_remove_oracle_ids), ("remove_safe", neg_prop_remove_safe)];
         let caught: Vec<&str> = attacking("remove_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_any/negctl/property/remove_img/field-flip-last", "negctl", "remove_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("remove_oracle_lo", neg_prop_remove_oracle_lo), ("remove_oracle_hi", neg_prop_remove_oracle_hi), ("remove_oracle_ids", neg_prop_remove_oracle_ids)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("remove_oracle_lo", neg_prop_remove_oracle_lo), ("remove_oracle_hi", neg_prop_remove_oracle_hi), ("remove_oracle_ids", neg_prop_remove_oracle_ids), ("remove_safe", neg_prop_remove_safe)];
         let caught: Vec<&str> = attacking("remove_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip-last")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_any/negctl/fuzz/remove_img/field-zero", "negctl", "remove_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("remove_oracle_lo", neg_fuz_remove_oracle_lo), ("remove_oracle_hi", neg_fuz_remove_oracle_hi), ("remove_oracle_ids", neg_fuz_remove_oracle_ids)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("remove_oracle_lo", neg_fuz_remove_oracle_lo), ("remove_oracle_hi", neg_fuz_remove_oracle_hi), ("remove_oracle_ids", neg_fuz_remove_oracle_ids), ("remove_safe", neg_fuz_remove_safe)];
         let caught: Vec<&str> = attacking("remove_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
     reg(&mut suite, Meta { fault: "field-flip-last".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_any/negctl/fuzz/remove_img/field-flip-last", "negctl", "remove_img", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 3] = [("remove_oracle_lo", neg_fuz_remove_oracle_lo), ("remove_oracle_hi", neg_fuz_remove_oracle_hi), ("remove_oracle_ids", neg_fuz_remove_oracle_ids)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("remove_oracle_lo", neg_fuz_remove_oracle_lo), ("remove_oracle_hi", neg_fuz_remove_oracle_hi), ("remove_oracle_ids", neg_fuz_remove_oracle_ids), ("remove_safe", neg_fuz_remove_safe)];
         let caught: Vec<&str> = attacking("remove_img", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlipLast))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-flip-last")
     });
     reg(&mut suite, Meta { fault: "wrong-ctor".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_any/negctl/exhaustive/remove_out/wrong-ctor", "negctl", "remove_out", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("remove_safe", neg_exh_remove_safe)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("remove_oracle_lo", neg_exh_remove_oracle_lo), ("remove_oracle_hi", neg_exh_remove_oracle_hi), ("remove_oracle_ids", neg_exh_remove_oracle_ids), ("remove_safe", neg_exh_remove_safe)];
         let caught: Vec<&str> = attacking("remove_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });
     reg(&mut suite, Meta { fault: "wrong-ctor".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_any/negctl/property/remove_out/wrong-ctor", "negctl", "remove_out", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("remove_safe", neg_prop_remove_safe)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("remove_oracle_lo", neg_prop_remove_oracle_lo), ("remove_oracle_hi", neg_prop_remove_oracle_hi), ("remove_oracle_ids", neg_prop_remove_oracle_ids), ("remove_safe", neg_prop_remove_safe)];
         let caught: Vec<&str> = attacking("remove_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });
     reg(&mut suite, Meta { fault: "wrong-ctor".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_any/negctl/fuzz/remove_out/wrong-ctor", "negctl", "remove_out", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("remove_safe", neg_fuz_remove_safe)];
+        let runs: [(&str, fn(Fault) -> Verdict); 4] = [("remove_oracle_lo", neg_fuz_remove_oracle_lo), ("remove_oracle_hi", neg_fuz_remove_oracle_hi), ("remove_oracle_ids", neg_fuz_remove_oracle_ids), ("remove_safe", neg_fuz_remove_safe)];
         let caught: Vec<&str> = attacking("remove_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });

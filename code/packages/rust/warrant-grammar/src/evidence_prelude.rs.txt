@@ -391,6 +391,54 @@ impl V {
         }
     }
 //@endif
+//@if seqsplit
+    /// `take(xs, n)` / `drop(xs, n)` / `slice(xs, s, n)` (WX-D1, VER04k 2.2)
+    /// over byte strings and lists. Counts clamp exactly like the ground
+    /// evaluator (`clamp_count` in codegen.rs): negative means zero,
+    /// past-the-end means "all of it", and nothing narrows before the
+    /// compare, so huge counts clamp to the length.
+    fn seq_len(xs: &V) -> usize {
+        match xs {
+            V::Bytes(b) => b.len(),
+//@if comp
+            V::List(l) => l.len(),
+//@endif
+            _ => panic!("sequence operand expected"),
+        }
+    }
+    fn seq_clamp(n: i128, len: usize) -> usize {
+        if n <= 0 {
+            0
+        } else if n >= len as i128 {
+            len
+        } else {
+            n as usize
+        }
+    }
+    fn subseq(xs: &V, start: usize, l: usize) -> V {
+        match xs {
+            V::Bytes(b) => V::Bytes(b[start..start + l].to_vec()),
+//@if comp
+            V::List(v) => V::List(v[start..start + l].to_vec()),
+//@endif
+            _ => panic!("sequence operand expected"),
+        }
+    }
+    pub fn seq_take(xs: &V, n: &V) -> V {
+        let len = Self::seq_len(xs);
+        Self::subseq(xs, 0, Self::seq_clamp(n.int(), len))
+    }
+    pub fn seq_drop(xs: &V, n: &V) -> V {
+        let len = Self::seq_len(xs);
+        let s = Self::seq_clamp(n.int(), len);
+        Self::subseq(xs, s, len - s)
+    }
+    pub fn seq_slice(xs: &V, s: &V, n: &V) -> V {
+        let len = Self::seq_len(xs);
+        let start = Self::seq_clamp(s.int(), len);
+        Self::subseq(xs, start, Self::seq_clamp(n.int(), len - start))
+    }
+//@endif
 //@if fixedn
     /// `fixed<N>(b)` (VOS-D025): `Some(b)` when `b` has exactly `n` bytes, else `None`.
     /// The result is an `Option` of the same byte string; its width lives in the
