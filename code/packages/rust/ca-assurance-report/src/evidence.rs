@@ -920,10 +920,18 @@ fn check_source_equivalence_entries(
             .ok_or_else(|| {
                 EvidenceError(format!("{}: operation has no evidence binding", entry.id))
             })?;
-        if entry.function != binding.export {
+        // WX-F slice 1: driver records have no single export to compare
+        // against. Refuse loudly instead of treating them as matching.
+        let export = binding.export.as_deref().ok_or_else(|| {
+            EvidenceError(format!(
+                "{}: operation uses a WX-F driver; source-equivalence checks land in a later slice",
+                entry.id
+            ))
+        })?;
+        if entry.function != export {
             return err(format!(
-                "{}: source-equivalence function `{}` does not match bound export `{}`",
-                entry.id, entry.function, binding.export
+                "{}: source-equivalence function `{}` does not match bound export `{export}`",
+                entry.id, entry.function
             ));
         }
         if !bindings.proofs_not_live.contains_key(&op.name) {
@@ -935,7 +943,7 @@ fn check_source_equivalence_entries(
         let refusal = crate::source_equivalence::reproduce_refusal(
             snapshot.frame,
             snapshot.cargo_manifest,
-            &binding.export,
+            export,
         )?;
         let want_note_prefix = format!("isolated export attempt: {refusal};");
         if !entry.note.starts_with(&want_note_prefix) {
