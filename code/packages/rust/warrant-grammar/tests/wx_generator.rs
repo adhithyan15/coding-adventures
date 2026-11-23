@@ -520,14 +520,20 @@ fn count_binders_sees_through_every_expression_shape_and_the_budget_overflow_is_
         "Ty::Fx(F::U8), Ty::NatCount"
     );
     // A match body is walked too (WX-A translates it, so the count is seen
-    // inside its arm), while list and nested quantifier bodies are walked and
-    // then refused by the translator (W0701), never silently skipped.
+    // inside its arm). List bodies are walked for counts and translated
+    // (WX-F 3.2 item 1 needs list values in evidence bodies); nested
+    // quantifier bodies are walked and then refused by the translator
+    // (W0701), never silently skipped.
     assert_eq!(
         tys_of(&g("f(a, n) == (match try<U8>(1) with None -> shl(a, n) | Some(v) -> v)").unwrap()),
         "Ty::Fx(F::U8), Ty::NatCount"
     );
+    assert_eq!(
+        tys_of(&g("f(a, n) == [shl(a, n)]").unwrap()),
+        "Ty::Fx(F::U8), Ty::NatCount"
+    );
+    assert!(g("f(a, n) == [shl(a, n)]").unwrap().contains("V::List(vec!["));
     for body in [
-        "f(a, n) == [shl(a, n)]",
         "f(a, n) == (forall m: Nat. shl(a, m) == a)",
     ] {
         assert_eq!(g(body).unwrap_err().0, DiagnosticCode::W0701, "{body}");
