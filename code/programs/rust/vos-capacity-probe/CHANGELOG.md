@@ -36,6 +36,15 @@ All notable changes to this package are documented here.
   values are unchanged (300, 780 and 2,550 s).
 - **`rerun_collect` re-runs each quick row under its own experiment wall (VOS-D131).**
   `results::rerun_wall` is `row_wall_s`, so a chain row gets 600 s (B5 1,800 s), not a flat 120 s.
+- **Security-review fixes (VOS-028c3c-2a, VOS-D134).** (1) The two identity checks of
+  `bounds_violations`, `seeds` over `MAX_SEEDS` and `seed` outside `1..=seeds`, are now
+  *structural* findings (the row is not a row of the plan), not row findings, so `validate FILE`
+  exits 2 for them; every check that reads a measured value stays a row finding. The messages and
+  their order are unchanged (the function builds one tagged list). (2) The spot check treats a
+  re-run the spot bound killed as "not verified" whatever the recorded `result` is; a `killed`
+  record used to vouch for it. (3) `validate` refuses more than one positional ("validate takes
+  exactly one results file"). Tests: `a_bad_seed_range_is_structural`,
+  `validate_takes_exactly_one_file`, and a `killed` record in the spot bound test (unix).
 - The results file and every digest are unchanged.
 
 ### Added (VOS-028c3b, VOS30 sections 8.4 item 11, 8.6.3 and 9.12)

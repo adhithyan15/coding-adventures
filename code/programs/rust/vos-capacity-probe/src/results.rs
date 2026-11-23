@@ -564,12 +564,22 @@ pub const MAX_METRIC: f64 = 1e18;
 /// `check_ms` finite or absent, every counter under its stated bound, and the orderings that hold
 /// by construction (sensitive bits at most declared bits, the worst obligation's conflicts at most
 /// the total, a seed within the seed count).
-pub fn bounds_violations(id: &str, r: &Row) -> Vec<String> {
-    let mut v = Vec::new();
+///
+/// Each message is tagged with its [`FindingClass`] (security review of VOS-028c3c-2a).  The two
+/// checks that read only IDENTITY fields, `seeds` over [`MAX_SEEDS`] and `seed` outside
+/// `1..=seeds`, are **structural**: they say the row is not a row of the plan, and no measured
+/// value can excuse them.  Every other check reads something the run MEASURED (times, counters,
+/// sizes, resident set, metrics, and the entropy and worst-step orderings between measured
+/// counters) and stays a **row** finding.  One tagged list, in the old order, so the untagged
+/// [`bounds_violations`] is exactly the old output.
+fn bounds_tagged(id: &str, r: &Row) -> Vec<(FindingClass, String)> {
+    use FindingClass::{Row as RowC, Structural};
+    let mut v: Vec<(FindingClass, String)> = Vec::new();
     let mut time = |name: &str, x: f64| {
         if !x.is_finite() || !(0.0..=MAX_TIME_MS).contains(&x) {
-            v.push(format!(
-                "{id}: {name} {x} is not a finite time in 0..={MAX_TIME_MS} ms"
+            v.push((
+                RowC,
+                format!("{id}: {name} {x} is not a finite time in 0..={MAX_TIME_MS} ms"),
             ));
         }
     };
@@ -580,7 +590,7 @@ pub fn bounds_violations(id: &str, r: &Row) -> Vec<String> {
     }
     let mut count = |name: &str, x: u64, max: u64| {
         if x > max {
-            v.push(format!("{id}: {name} {x} is over the bound {max}"));
+            v.push((RowC, format!("{id}: {name} {x} is over the bound {max}")));
         }
     };
     count("conflicts", r.conflicts, MAX_CONFLICTS);
@@ -601,29 +611,49 @@ pub fn bounds_violations(id: &str, r: &Row) -> Vec<String> {
     count("check_work", r.check_work.unwrap_or(0), MAX_PROOF);
     count("steps", r.steps, MAX_STEPS);
     count("peak_rss_kb", r.peak_rss_kb, MAX_RSS_KB);
-    count("seeds", u64::from(r.seeds), u64::from(MAX_SEEDS));
+    // Identity, not measurement: the seed count is a plan field.
+    if r.seeds > MAX_SEEDS {
+        v.push((
+            Structural,
+            format!("{id}: seeds {} is over the bound {MAX_SEEDS}", r.seeds),
+        ));
+    }
     if r.entropy_bits > r.declared_bits {
-        v.push(format!(
-            "{id}: entropy_bits {} exceeds declared_bits {}",
-            r.entropy_bits, r.declared_bits
+        v.push((
+            RowC,
+            format!(
+                "{id}: entropy_bits {} exceeds declared_bits {}",
+                r.entropy_bits, r.declared_bits
+            ),
         ));
     }
     if r.worst_step_conflicts.is_some_and(|w| w > r.conflicts) {
-        v.push(format!(
-            "{id}: worst_step_conflicts exceeds the total conflicts"
+        v.push((
+            RowC,
+            format!("{id}: worst_step_conflicts exceeds the total conflicts"),
         ));
     }
+    // Identity, not measurement: which seed of the sweep this row is.
     if r.seed == 0 || r.seed > u64::from(r.seeds) {
-        v.push(format!("{id}: seed {} is not in 1..={}", r.seed, r.seeds));
+        v.push((
+            Structural,
+            format!("{id}: seed {} is not in 1..={}", r.seed, r.seeds),
+        ));
     }
     for (k, x) in &r.metrics {
         if !x.is_finite() || !(0.0..=MAX_METRIC).contains(x) {
-            v.push(format!(
-                "{id}: metric {k} {x} is not finite in 0..={MAX_METRIC}"
+            v.push((
+                RowC,
+                format!("{id}: metric {k} {x} is not finite in 0..={MAX_METRIC}"),
             ));
         }
     }
     v
+}
+
+/// [`bounds_tagged`] without the tags: the messages in the old order.
+pub fn bounds_violations(id: &str, r: &Row) -> Vec<String> {
+    bounds_tagged(id, r).into_iter().map(|(_, m)| m).collect()
 }
 
 /// The cross-rule of VOS30 section 8.6.3: **`fuse = 1` is B2**.  Every B5 row with `fuse = 1`
@@ -861,7 +891,7 @@ fn validate_tagged(res: &Results) -> Tagged {
                 "{id}: peak RSS is missing or 0 (an unparsed value is invalid)"
             ));
         }
-        v.extend_rows(bounds_violations(&id, r));
+        v.0.extend(bounds_tagged(&id, r));
         if r.green != green(r) {
             v.row(format!(
                 "{id}: green is {} but section 8.3 gives {}",

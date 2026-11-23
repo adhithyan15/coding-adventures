@@ -778,6 +778,18 @@ mod unix_children {
             false,
         );
         assert!(v[0].contains("not verified"), "{v:?}");
+        // Security review of VOS-028c3c-2a: a bound-killed re-run is not verified even when the
+        // recorded row is itself `killed` (a `killed` record must not vouch for a killed re-run).
+        let mut killed = rows[0].clone();
+        killed.result = "killed".into();
+        let v = rerun_one(
+            std::path::Path::new(EXE),
+            &killed,
+            &planned,
+            Some(Duration::from_millis(1)),
+            false,
+        );
+        assert!(v[0].contains("not verified"), "{v:?}");
     }
 
     #[test]

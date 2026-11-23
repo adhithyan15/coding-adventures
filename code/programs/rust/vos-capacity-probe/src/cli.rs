@@ -816,7 +816,13 @@ pub fn cmd_validate(
     out: &mut dyn Write,
     err: &mut dyn Write,
 ) -> Result<(), Failure> {
-    let path = positionals(args)
+    let pos = positionals(args);
+    if pos.len() > 1 {
+        return Err(Failure::Usage(
+            "validate takes exactly one results file".into(),
+        ));
+    }
+    let path = pos
         .first()
         .copied()
         .ok_or_else(|| Failure::Usage("validate needs a results file".into()))?;

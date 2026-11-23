@@ -165,3 +165,49 @@ fn validate_is_the_union_in_the_old_order() {
     assert!(v.structural.iter().any(|m| m.contains("tier")));
     assert!(v.rows.iter().any(|m| m.contains("green is")));
 }
+
+#[test]
+fn a_bad_seed_range_is_structural() {
+    // Seed 0 and seed above the seed count are identity findings: the row is not a row of the
+    // plan.  They are structural (exit 2), not row findings (exit 1).
+    for (name, bad_seed) in [("seed0", Some(0u64)), ("seedhi", None)] {
+        let mut res = committed();
+        let seeds = u64::from(res.rows[0].seeds);
+        res.rows[0].seed = bad_seed.unwrap_or(seeds + 1);
+        let v = validate_classes(&res);
+        assert!(
+            v.structural.iter().any(|m| m.contains("is not in 1..=")),
+            "{name}: {v:?}"
+        );
+        assert!(
+            !v.rows.iter().any(|m| m.contains("is not in 1..=")),
+            "{name}: {v:?}"
+        );
+        let (r, _) = run_validate(&res, name);
+        assert!(matches!(r, Err(Failure::Usage(_))), "{name}: {r:?}");
+    }
+    // An over-large seed count is structural too.
+    let mut res = committed();
+    res.rows[0].seeds = 1001;
+    let v = validate_classes(&res);
+    assert!(
+        v.structural
+            .iter()
+            .any(|m| m.contains("seeds 1001 is over")),
+        "{v:?}"
+    );
+}
+
+#[test]
+fn validate_takes_exactly_one_file() {
+    let dir = scratch("arity");
+    let f = dir.join("r.json");
+    std::fs::write(&f, committed().to_text()).unwrap();
+    let a = f.to_string_lossy().into_owned();
+    let (mut o, mut e) = (Vec::new(), Vec::new());
+    let r = dispatch(&["validate".into(), a.clone(), a], &mut o, &mut e);
+    assert!(
+        matches!(&r, Err(Failure::Usage(m)) if m == "validate takes exactly one results file"),
+        "{r:?}"
+    );
+}

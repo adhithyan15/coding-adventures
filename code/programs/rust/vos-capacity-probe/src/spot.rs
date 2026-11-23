@@ -191,7 +191,7 @@ pub fn rerun_one_row(
         );
     }
     let now = runner::run_one_bounded(exe, &spec_of(rec), bound);
-    if bound.is_some() && now.result == "killed" && rec.result != "killed" {
+    if bound.is_some() && now.result == "killed" {
         return (
             vec![format!(
                 "{}: not verified: the re-run did not finish inside the spot-check budget",
