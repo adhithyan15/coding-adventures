@@ -1583,7 +1583,7 @@ change to this specification and a re-record, never a tuning.
   standard runners of this public repository. We rely on the runner class's published
   limits and do not measure them: 4 vCPU, 16 GB of memory and a 6 h job limit (assumed;
   if GitHub changes them, this section is stale). **One binary is built once per
-  workflow run** and passed to every shard by `--exe`. Record and verify use the same
+  workflow run** and passed to every shard by `--exe` (integrity: section 9.12.2). Record and verify use the same
   runner label, the same `--jobs` and the same N, because the host class changes
   timings (section 9.12.1).
 * **`--jobs 2`, for record and verify.** The 4 vCPU are assumed to be 2 physical cores
@@ -2875,7 +2875,8 @@ are never opened.**
   1. the build job fails;
   2. a runner is lost, or the job is cancelled by GitHub;
   3. a shard hits its `timeout-minutes` or the 6 h job limit;
-  4. the binary artifact download, or a shard's artifact upload, fails;
+  4. the binary artifact download, or a shard's artifact upload, fails, or a shard's
+     recomputed digest of the binary differs from the build job's (section 9.12.2, item 1);
   5. the probe exits with status 2. In this code that is `Failure::Usage`: a malformed
      command line, or an input that cannot be read or an output that cannot be
      written (`main.rs`; status 1 is `Failure::Violations`). `run --tier full` returns
@@ -2884,7 +2885,8 @@ are never opened.**
      rows, never an infrastructure failure;
   6. a shard's output is missing, truncated, or fails `validate`;
   7. `join` refuses: a digest, tree-id or revision mismatch, rows that are not disjoint,
-     or a union that is not equal to the plan;
+     a union that is not equal to the plan, or a refusal under `--expect-run-id` or
+     `--expect-binary-sha256` (section 9.12.2, items 1 and 2);
   8. `/usr/bin/time`, `ps` or `ulimit` is unavailable on a runner.
 * **Row outcomes are always kept:** `unsat`, `sat`, `unknown` (any cap), `collapsed`,
   `refused`, `killed`, `oom`, `crashed`, a red `green`, a failed control and any
@@ -2895,13 +2897,75 @@ are never opened.**
   `--jobs`, without inspecting values. A second timeout stops the recording and opens an
   issue. A partial salvage is impossible, because shard membership changes with N.
 
-**Open point, stated and not resolved.** Whether the verify build must reproduce the
-recording's `binary_sha256`. What the code does today: `validate` requires only that
-`binary_sha256` be 64 hex digits, `join` is planned to refuse unless it is identical across
-shards, and `check --full` compares the tree ids (`trees`) of the file with the working
-tree and does **not** compare `binary_sha256` with the verifying binary. A verify build
-from the same tree on the same runner class need not be byte-identical. VOS-028c3c-2
-decides, and records the decision here.
+**`binary_sha256`: decided (VOS-D125).** What the code does today: `validate` requires only
+that `binary_sha256` be 64 hex digits, `join` is planned to refuse unless it is identical
+across shards, and `check --full` compares the tree ids (`trees`) of the file with the
+working tree and does **not** compare `binary_sha256` with the verifying binary. A verify
+build from the same tree on the same runner class need not be byte-identical. The decision:
+
+* **Within one workflow run**, every shard and `join` must match the build job's digest
+  (section 9.12.2, items 1 and 2).
+* **Between a recording and a later verify**, `binary_sha256` is **informational**. A
+  verify builds the binary afresh from the same tree and is not required to be
+  byte-identical, so a green verify is evidence that the tree reproduces the recorded
+  rows under the comparison rules, **not** that the two binaries are identical. No
+  reviewer reads it as binary equivalence.
+* **No out-of-tool tree-id computation is required.** The tree ids `check --full` compares
+  are computed by the reviewed probe, built from the checked-out tree in the same run,
+  and the binary is pinned by item 1 of section 9.12.2 within that run.
+
+#### 9.12.2 Workflow and provenance security (pre-registered; implemented in VOS-028c3c-2 and VOS-028c3c-3)
+
+**Status: requirements, from the security review of VOS-028c3c-1 (VOS-D125).** The probe
+items are VOS-028c3c-2 and the workflow items are VOS-028c3c-3. As in 9.12.1, a change to
+one after a recording exists is a change to this specification and a re-record.
+
+1. **The shared binary.** The build job computes the SHA-256 of the binary and exposes it
+   as a job output. Every shard downloads the artifact, recomputes the digest and fails
+   if it differs (an infrastructure failure, discard list item 4 of 9.12.1), before any
+   use of `--exe`. `join` takes `--expect-binary-sha256 <hex>` and refuses unless every
+   shard's recorded `binary_sha256` equals it. The artifact is uploaded with
+   `if-no-files-found: error` and a short `retention-days`.
+2. **Shard outputs.** Shard artifacts are named with the shard index, N, the run id and the
+   run attempt (`shard-<K>-of-<N>-<run_id>-<run_attempt>`). The join job downloads
+   exactly N artifacts by exact name (never a wildcard or pattern) and fails if any is
+   missing or extra. Each shard's output records the workflow run id (a provenance field
+   VOS-028c3c-2 adds) and `join` takes `--expect-run-id` and refuses a shard whose run id
+   differs.
+3. **`binary_sha256` between runs.** Decided in 9.12.1: pinned within a run by items 1 and
+   2, informational between a recording and a later verify.
+4. **Triggers.** The workflow's triggers are exactly `workflow_dispatch` (record mode and an
+   on-demand verify) and `schedule` (gated verify). `pull_request`,
+   `pull_request_target` and `workflow_run` are forbidden. Record mode runs only on
+   `refs/heads/main` or a branch of this repository (a job-level `if:` on
+   `github.repository` and `github.ref`). The failure job's issue title and body are
+   built from fixed strings plus the run id and run URL, never from row values, branch
+   names, commit messages or other text an author controls.
+5. **The gate fails closed.** If the lookup of the last green run fails, the gated run
+   skips (the weekly unconditional run still runs). After a red run, the next gated run
+   skips unless the tree ids or the results file differ from the red run's, while the
+   tracking issue stays open. Dispatch and schedule share one concurrency group
+   (`cancel-in-progress: false`, section 9.3).
+6. **No shared caches.** The build job restores no `actions/cache` entry from a key that a
+   `pull_request` run of any workflow can write. If a Cargo cache is used it is keyed to
+   this workflow and written only from `main`. The binary is built in a clean target
+   directory.
+7. **Recording runs are listed by GitHub, not by an editable note.** The Actions run
+   history of `vos-capacity-full.yml` is the list of record-mode dispatches. The
+   `regeneration` banner that `sign` writes (VOS-D120) records the run id of the
+   recording. The reviewer who signs (VOS-028c3d) lists every record-mode run at the
+   recorded tree from the Actions history and confirms that each one other than the
+   signed run was discarded under the discard rule of 9.12.1, with its log entry. A
+   record-mode run at the same tree that is neither signed nor logged as discarded makes
+   the recording unsignable; this stops a recording being picked from several. Discard
+   classification is made from job conclusions and log lines, never from row artifacts
+   (9.12.1).
+8. **Permissions.** Top-level `permissions: contents: read`; each job lists only what it
+   needs and never widens beyond it. The build, shard and join jobs have `contents: read`
+   only. Only the failure job has `issues: write`, declared at job level. The actions used
+   are limited to `actions/checkout`, `actions/upload-artifact`,
+   `actions/download-artifact` and a Rust toolchain installer, each pinned by full commit
+   SHA, and `actions/checkout` uses `persist-credentials: false`. No secrets, no push.
 
 ---
 
