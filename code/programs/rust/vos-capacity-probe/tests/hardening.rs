@@ -873,9 +873,13 @@ mod unix_children {
             assert_eq!(args[0], "-c");
             assert_eq!(args[1], ULIMIT_SCRIPT, "the script never contains the data");
             assert_eq!(args[2], "sh");
+            // N is keyed on the EXPERIMENT (VOS-D123), not on the `wall_s` argument: these specs
+            // name a hostile, unknown experiment, which gets the 120 s row budget, the 30 s
+            // control stage and the 150 s slack, 300 s.  (In production `wall_s` is always
+            // `row_wall_s` of the same experiment, so the two never disagree.)
             assert_eq!(
-                args[3], "780",
-                "N is the number formatted from the budget constant"
+                args[3], "300",
+                "N is the number formatted from the budget constants of the experiment"
             );
             assert!(args[3].bytes().all(|b| b.is_ascii_digit()));
             assert_eq!(args[4], "/usr/bin/time");
