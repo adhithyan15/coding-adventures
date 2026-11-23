@@ -186,8 +186,10 @@ fn parse_arg_source(text: &str) -> Result<ArgSource, String> {
         return Ok(ArgSource::ElemPath(path));
     }
     if let Some(name) = text.strip_prefix("param.") {
-        if !is_rust_identifier(name) {
-            return Err(format!("`param.` source `{text}` is not an identifier"));
+        if !is_capped_ident(name) {
+            return Err(format!(
+                "`param.` source `{text}` is not an identifier of at most {MAX_DRIVER_IDENT_BYTES} bytes"
+            ));
         }
         return Ok(ArgSource::Param(name.to_string()));
     }
@@ -423,15 +425,25 @@ pub fn parse_driver_record(words: &[&str]) -> Result<DriverRecord, String> {
             "ctx" => ctx = Some(parse_driver_ctx(v)?),
             "new" => new = Some(parse_driver_new(v)?),
             "drive" => {
-                if !is_rust_identifier(v) {
-                    return Err(format!("`drive=` parameter `{v}` is not an identifier"));
+                if !is_capped_ident(v) {
+                    return Err(format!(
+                        "`drive=` parameter `{v}` is not an identifier of at most {MAX_DRIVER_IDENT_BYTES} bytes"
+                    ));
                 }
                 drive = Some(v.to_string());
             }
             "step" => step = Some(parse_driver_step(v)?),
             "finish" => finish = Some(parse_driver_finish(v)?),
             "result" => result = Some(parse_driver_result(v)?),
-            "errors" => errors = Some(parse_host_errors(v).map_err(|e| format!("`errors=`: {e}"))?),
+            "errors" => {
+                let parsed =
+                    parse_host_errors(v).map_err(|e| format!("`errors=`: {e}"))?;
+                // The shared host-errors parser caps nothing; the error-enum
+                // path is spliced into generated source later, so cap it here
+                // rather than widening the shared parser's contract.
+                check_rust_path(&parsed.path, "`errors=` path")?;
+                errors = Some(parsed)
+            }
             "lengths" => lengths = Some(parse_driver_lengths(v)?),
             _ => return Err(format!("unknown driver option `{k}=`")),
         }

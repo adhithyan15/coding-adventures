@@ -161,3 +161,35 @@ fn rejects_bad_paths_identifiers_and_lengths() {
         );
     }
 }
+
+#[test]
+fn rejects_uncapped_drive_param_and_error_paths() {
+    let template = |driver: &str| format!("{SHA1_OP}driver digest_chunks {driver}\n");
+    // 129-byte drive parameter name.
+    let long_drive = "d".repeat(129);
+    assert!(parse_err(&template(&format!(
+        "state=s::T new=new() drive={long_drive} step=s(mut) result=finish"
+    )))
+    .contains("W0501"));
+    // 129-byte param.NAME source.
+    let long_param = "p".repeat(129);
+    assert!(parse_err(&template(&format!(
+        "state=s::T new=new() drive=x step=s(mut,param.{long_param}:u8) result=finish"
+    )))
+    .contains("W0501"));
+    // errors= path: 9 segments and a 129-byte segment.
+    let long_path = (0..9).map(|i| format!("e{i}")).collect::<Vec<_>>().join("::");
+    assert!(parse_err(&template(&format!(
+        "state=s::T new=new() drive=x step=s(mut) result=finish errors={long_path}/V=C"
+    )))
+    .contains("W0501"));
+    let long_seg = "e".repeat(129);
+    assert!(parse_err(&template(&format!(
+        "state=s::T new=new() drive=x step=s(mut) result=finish errors=crate::{long_seg}/V=C"
+    )))
+    .contains("W0501"));
+    // A capped errors path still parses.
+    parse_ok(&template(
+        "state=s::T new=new() drive=x step=s(mut) result=finish errors=crate::E/V=C",
+    ));
+}

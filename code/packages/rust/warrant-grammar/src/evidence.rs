@@ -3801,15 +3801,21 @@ pub fn generate_evidence_harness_with_tables(
         let binding = &manifest.bindings[op.name];
         // WX-F slice 1: driver records parse but no adapter consumes them.
         // (The harness entry gate rejects these first; this is defense in
-        // depth for direct callers of adapter generation.)
-        let export = binding.export.as_deref().ok_or_else(|| CodegenError {
-            code: DiagnosticCode::W0704,
-            kind: CodegenErrorKind::UnsupportedTarget(format!(
-                "operation `{}` uses a WX-F driver; generation lands in a later slice",
-                op.name
-            )),
-            span: op.span,
-        })?;
+        // depth for direct callers of adapter generation, including a
+        // hand-built manifest with both fields set.)
+        let export = match (&binding.export, &binding.driver) {
+            (Some(e), None) => e.as_str(),
+            _ => {
+                return Err(CodegenError {
+                    code: DiagnosticCode::W0704,
+                    kind: CodegenErrorKind::UnsupportedTarget(format!(
+                        "operation `{}` uses a WX-F driver; generation lands in a later slice",
+                        op.name
+                    )),
+                    span: op.span,
+                })
+            }
+        };
         let shape = shape_of(op, v1, &env)?;
         let adapters_before = adapters.len();
         // WX-H: the numeric parameter an `output` row mentions is the limit the

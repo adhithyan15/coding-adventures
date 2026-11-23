@@ -2574,18 +2574,24 @@ fn generate_claim_helper(
     file: &WarrantFile<'_>,
 ) -> Result<String, CodegenError> {
     let op_binding = &manifest.bindings[&claim.op_name];
-    let op_export = op_binding.export.as_deref().ok_or_else(|| {
-        // WX-F slice 1 parses driver records but does not generate from
-        // them; a driven claim refuses here instead of emitting garbage.
-        CodegenError {
-            code: DiagnosticCode::W0704,
-            kind: CodegenErrorKind::UnsupportedTarget(format!(
-                "operation `{}` uses a WX-F driver; generation lands in a later slice",
-                claim.op_name
-            )),
-            span: (0, 0),
+    // WX-F slice 1 parses driver records but does not generate from them.
+    // A hand-built both-Some manifest must refuse like a parsed driver-only
+    // one; silently ignoring the record would emit the wrong adapter.
+    // (Defense in depth: the only caller passes an empty claim list today,
+    // so this arm is currently unreached; it guards future wiring.)
+    let op_export = match (&op_binding.export, &op_binding.driver) {
+        (Some(e), None) => e.as_str(),
+        _ => {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0704,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "operation `{}` uses a WX-F driver; generation lands in a later slice",
+                    claim.op_name
+                )),
+                span: (0, 0),
+            })
         }
-    })?;
+    };
 
     for binder in &claim.binders {
         if !is_bytes_type(&binder.param_type)
