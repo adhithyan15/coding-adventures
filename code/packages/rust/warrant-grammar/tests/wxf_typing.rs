@@ -499,7 +499,18 @@ fn bad_driver_reports_w0711_through_compile() {
 }
 
 #[test]
-fn good_driver_still_refuses_generation_with_w0704() {
+fn good_driver_generates_an_adapter() {
+    // WX-F slice 4 lifts the generation refusal: a valid driver now emits
+    // a driver adapter instead of W0704.
+    let doc = SourceDocument::admit(SPEC_SHA1.as_bytes(), SourceLimits::default()).expect("admit");
+    let layout = capture_layout(&doc, LayoutLimits::default()).expect("layout");
+    let file = parse_document(&layout, &doc, ParserLimits::default()).expect("parse");
+    let checked = check_warrant(&file).expect("fixture must type-check");
     let text = bindings(OP_SHA1, DRIVER_SHA1);
-    assert_eq!(compile_code(SPEC_SHA1, &text), CodegenCode::W0704);
+    let b = parse_evidence_bindings(&text).expect("bindings parse");
+    let out = compile_rust_evidence_harness(&file, &checked, &b, &options())
+        .expect("generation must succeed");
+    assert!(out.contains("fn op_digest_chunks("), "adapter missing");
+    assert!(out.contains("Digest::new()"), "constructor call missing: {out}");
+    assert!(out.contains("driver-steps-exceeded"), "cap guard missing");
 }

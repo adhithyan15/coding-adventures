@@ -391,5 +391,5 @@ fn hand_built_driver_manifest_refuses_with_w0704() {
     op.driver = Some(record);
     let (code, msg) = generate_src(SPEC, &bindings).unwrap_err();
     assert_eq!(code, DiagnosticCode::W0704);
-    assert!(msg.contains("WX-F driver"), "{msg}");
+    assert!(msg.contains("both export= and driver"), "{msg}");
 }

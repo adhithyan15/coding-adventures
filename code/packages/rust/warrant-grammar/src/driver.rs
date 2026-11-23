@@ -17,8 +17,8 @@
 //! then (W0704 at the evidence/codegen gates).
 
 use crate::binding::{
-    is_rust_identifier, is_rust_path, parse_host_errors, parse_host_ty, split_top, EvidenceBindingFile,
-    HostErrors, HostTy, HostType, MAX_EXPORT_SEGMENTS,
+    is_rust_identifier, is_rust_path, parse_host_errors, parse_host_ty, split_top, valid_host_ty,
+    EvidenceBindingFile, HostErrors, HostTy, HostType, MAX_EXPORT_SEGMENTS,
 };
 use crate::checker::{CheckerError, CheckerErrorKind, DiagnosticCode};
 use crate::codegen::{CodegenLimits, EvalValue, Evaluator};
@@ -39,6 +39,10 @@ pub const MAX_DRIVER_LENGTH: u64 = 4096;
 
 /// Deepest `elem.i.j...` component path (VER04k 3.2: nested at most 4 deep).
 pub const MAX_ELEM_DEPTH: usize = 4;
+
+/// Most steps one drive may run (VER04k 3.5): the adapter refuses before
+/// calling `new` past this.
+pub const MAX_DRIVER_STEPS: u64 = 65_536;
 
 /// Receiver of a `step=` method: `mut` is `&mut self`, `own` is `self -> Self`.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -143,11 +147,11 @@ pub struct DriverRecord {
     pub lengths: Option<Vec<u64>>,
 }
 
-fn is_capped_ident(text: &str) -> bool {
+pub(crate) fn is_capped_ident(text: &str) -> bool {
     text.len() <= MAX_DRIVER_IDENT_BYTES && is_rust_identifier(text)
 }
 
-fn check_rust_path(text: &str, what: &str) -> Result<(), String> {
+pub(crate) fn check_rust_path(text: &str, what: &str) -> Result<(), String> {
     if text.split("::").count() > MAX_EXPORT_SEGMENTS {
         return Err(format!(
             "{what} `{text}` has more than {MAX_EXPORT_SEGMENTS} `::` segments"
@@ -548,6 +552,65 @@ fn undeclared_named<'h>(
     }
 }
 
+/// Re-validate every string a driver record splices into generated source.
+/// The line parser checks these, but a caller may build a manifest by hand,
+/// so generation checks again: anything else would be code injection.
+pub(crate) fn validate_driver_record_strings(record: &DriverRecord) -> Result<(), String> {
+    check_rust_path(&record.state, "`state=`")?;
+    if let Some(ctx) = &record.ctx {
+        check_rust_path(&ctx.func, "`ctx=` function")?;
+    }
+    for (what, name) in [
+        ("`new=` function", record.new.func.as_str()),
+        ("`step=` method", record.step.method.as_str()),
+        ("`drive=` parameter", record.drive.as_str()),
+    ] {
+        if !is_capped_ident(name) {
+            return Err(format!("{what} `{name}` is not an identifier"));
+        }
+    }
+    if let Some(finish) = &record.finish {
+        if !is_capped_ident(&finish.method) {
+            return Err(format!(
+                "`finish=` method `{}` is not an identifier",
+                finish.method
+            ));
+        }
+    }
+    if let Some(errors) = &record.errors {
+        check_rust_path(&errors.path, "`errors=` path")?;
+        for (variant, case) in &errors.map {
+            if !is_rust_identifier(variant) || !is_rust_identifier(case) {
+                return Err(format!(
+                    "`errors=` entry `{variant}={case}` must name identifiers"
+                ));
+            }
+        }
+    }
+    for arg in record
+        .new
+        .args
+        .iter()
+        .chain(record.ctx.iter().flat_map(|c| c.args.iter()))
+        .chain(record.step.args.iter())
+    {
+        if let ArgSource::Param(name) = &arg.from {
+            if !is_capped_ident(name) {
+                return Err(format!("`param.` source `{name}` is not an identifier"));
+            }
+        }
+    }
+    for h in record_host_types(record) {
+        if !valid_host_ty(h) {
+            return Err(format!(
+                "host type `{}` could not have come from the bindings grammar",
+                host_name(h)
+            ));
+        }
+    }
+    Ok(())
+}
+
 /// Every host type a record names: argument hosts, step returns, finish.
 fn record_host_types(record: &DriverRecord) -> Vec<&HostTy> {
     let mut out = Vec::new();
@@ -590,9 +653,22 @@ fn ty_name(t: &Ty) -> String {
     }
 }
 
+/// The element type of a driven shape: `Some` for lists (the element) and
+/// fixed/byte strings (`U8` bytes), `None` for a `Nat` count driver (steps
+/// with no element).
+pub(crate) fn drive_elem_ty(driven_ty: &Ty) -> Option<Ty> {
+    match driven_ty {
+        Ty::List(t) => Some((**t).clone()),
+        Ty::Bytes | Ty::BytesN(_) => Some(Ty::Fx(FixedTy::U8)),
+        Ty::Nat | Ty::NatCount => None,
+        _ => None,
+    }
+}
+
 /// Resolve an `elem.i.j...` path through tuple components and record fields
-/// (by index), returning the generator type at the leaf.
-fn resolve_elem_path(elem: &Ty, path: &[usize]) -> Result<Ty, String> {
+/// (by index), returning the type chain from the element down to the leaf
+/// (generation walks the same chain to build value accessors).
+pub(crate) fn resolve_elem_chain(elem: &Ty, path: &[usize]) -> Result<Vec<Ty>, String> {
     // The parser caps paths at `MAX_ELEM_DEPTH`, but the record fields are
     // public, so a hand-built record may carry a longer one. Refuse it here
     // rather than walking it: the walk always ends in `Err`, but the cap
@@ -603,9 +679,10 @@ fn resolve_elem_path(elem: &Ty, path: &[usize]) -> Result<Ty, String> {
             path.len()
         ));
     }
-    let mut current = elem.clone();
+    let mut chain = vec![elem.clone()];
     for (depth, index) in path.iter().enumerate() {
-        current = match &current {
+        let current = chain.last().expect("chain holds the element");
+        let next = match current {
             Ty::Tuple(ts) => ts.get(*index).cloned().ok_or_else(|| {
                 format!(
                     "element path reaches component {index} of a {}-tuple",
@@ -635,8 +712,14 @@ fn resolve_elem_path(elem: &Ty, path: &[usize]) -> Result<Ty, String> {
                 ))
             }
         };
+        chain.push(next);
     }
-    Ok(current)
+    Ok(chain)
+}
+
+/// Resolve an `elem.i.j...` path to its leaf type.
+fn resolve_elem_path(elem: &Ty, path: &[usize]) -> Result<Ty, String> {
+    resolve_elem_chain(elem, path).map(|mut chain| chain.pop().expect("chain holds the element"))
 }
 
 /// Convert a declared type through the generator's own resolver. A checked
@@ -683,6 +766,18 @@ fn check_driver_against_op(
             "operation `{op_name}` has static parameters, which a driver cannot instantiate"
         )));
     }
+    // An `own` step returns the state (`self -> Self`), so it cannot also
+    // emit a value: there is only one return slot.
+    if matches!(record.step.receiver, StepReceiver::Own)
+        && matches!(
+            record.step.returns,
+            StepReturns::Value(_) | StepReturns::ResultOf(_)
+        )
+    {
+        return Err(bad(format!(
+            "step of `{op_name}` takes `own` but also emits a value; `own` returns only the state"
+        )));
+    }
     // Rule 1: the driven parameter and its element type (`None` is a `Nat`
     // count driver: steps with no element).
     let drive_index = op.params.iter().position(|p| p.name == record.drive);
@@ -700,9 +795,9 @@ fn check_driver_against_op(
         &format!("driven parameter `{}` of `{op_name}`", record.drive),
     )?;
     let elem_ty: Option<Ty> = match &driven_ty {
-        Ty::List(t) => Some((**t).clone()),
-        Ty::Bytes | Ty::BytesN(_) => Some(Ty::Fx(FixedTy::U8)),
-        Ty::Nat | Ty::NatCount => None,
+        Ty::List(_) | Ty::Bytes | Ty::BytesN(_) | Ty::Nat | Ty::NatCount => {
+            drive_elem_ty(&driven_ty)
+        }
         other => {
             return Err(bad(format!(
                 "driver drives `{}` of type {}, which is neither `List<T>`, `Bytes` nor `Nat`",
@@ -779,6 +874,11 @@ fn check_driver_against_op(
                     if record.ctx.is_none() {
                         return Err(bad(format!(
                             "`{at}` of `{op_name}` takes the context value, but the driver has no `ctx=`"
+                        )));
+                    }
+                    if call == "ctx" {
+                        return Err(bad(format!(
+                            "`{at}` of `{op_name}` takes the context value to build the context"
                         )));
                     }
                     // The context value is a host-built opaque value with no

@@ -36,7 +36,7 @@ use crate::binding::{
     HostShape, HostSpec, HostTy, InoutForm, MAX_EXPORT_SEGMENTS,
 };
 use crate::checker::{CheckedWarrantModule, DiagnosticCode as CheckerCode, PostSlot};
-use crate::driver::validate_driver_consistency;
+use crate::driver::{validate_driver_consistency, validate_driver_record_strings};
 use crate::codegen::{
     find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
 };
@@ -48,6 +48,7 @@ use crate::parser::{
     UnaryOp, Version, WarrantFile, Width,
 };
 
+mod driver_gen;
 mod inout;
 
 /// The runtime prelude embedded verbatim in every generated harness.
@@ -1300,6 +1301,19 @@ const WXG_FAULTS: &[(&str, &str)] = &[
     ("cursor-off-by-one", "CursorOffByOne"),
 ];
 
+/// The faults of VER04k section 3.6 (WX-F): rewrites of a driver adapter's
+/// drive plan. They apply to the driven operation they are bound to only.
+/// Slice 4 maps the names so bindings validate; the rewrites land in slice 5
+/// (no pilot exists yet, so nothing can run them before then).
+const WXF_FAULTS: &[(&str, &str)] = &[
+    ("drop-last-chunk", "DropLastChunk"),
+    ("reorder-chunks", "ReorderChunks"),
+    ("duplicate-last-chunk", "DuplicateLastChunk"),
+    ("early-finish", "EarlyFinish"),
+    ("reset-per-step", "ResetPerStep"),
+    ("drop-last-output", "DropLastOutput"),
+];
+
 /// WX-FAULT2 applies only to a declared record (never a variant) with a
 /// directly observable Bool field, optionally behind exactly one Result or
 /// Option. Resolve aliases before this predicate is called.
@@ -1346,6 +1360,12 @@ fn fault_variant(name: &str) -> Option<&'static str> {
         })
         .or_else(|| {
             WXG_FAULTS
+                .iter()
+                .find(|(n, _)| *n == name)
+                .map(|(_, v)| *v)
+        })
+        .or_else(|| {
+            WXF_FAULTS
                 .iter()
                 .find(|(n, _)| *n == name)
                 .map(|(_, v)| *v)
@@ -1408,6 +1428,7 @@ fn fault_block(used: &BTreeSet<String>) -> String {
         .chain(WXH_FAULTS.iter().copied())
         .chain(WXE_FAULTS.iter().copied())
         .chain(WXG_FAULTS.iter().copied())
+        .chain(WXF_FAULTS.iter().copied())
         .filter(|(n, _)| used.contains(*n))
         .collect();
     let mut s = String::new();
@@ -1487,6 +1508,9 @@ enum Shape {
     /// WX-G: an operation with an `inout` parameter, called with a host `&mut`
     /// and read back (VER04k section 4.6).
     Inout,
+    /// WX-F: a driven operation, executed as a constructor/step/finish
+    /// protocol instead of one export call.
+    Driver,
 }
 
 impl Shape {
@@ -1495,7 +1519,7 @@ impl Shape {
     fn scoped(self) -> bool {
         matches!(
             self,
-            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout
+            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout | Shape::Driver
         )
     }
 }
@@ -1505,7 +1529,7 @@ impl Shape {
     /// the ones the operation's binding names (`negative_controls`).
     fn faults(self) -> &'static [(&'static str, &'static str)] {
         match self {
-            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout => &[],
+            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout | Shape::Driver => &[],
             Shape::BytesEq | Shape::FixedEq => {
                 &[("invert", "Fault::Invert"), ("ignore-last-byte", "Fault::IgnoreLastByte")]
             }
@@ -1603,8 +1627,9 @@ fn adapter(
     let n = op.name;
     let mut s = String::new();
     match shape {
-        // Scalar operations are emitted by `scalar_adapter`/`scalar_adapter_v1`.
-        Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout => {}
+        // Scalar operations are emitted by `scalar_adapter`/`scalar_adapter_v1`;
+        // driven operations by `driver_gen::driver_adapter`.
+        Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout | Shape::Driver => {}
         Shape::BytesEq => {
             let _ = write!(
                 s,
@@ -3169,38 +3194,48 @@ pub fn generate_evidence_harness_with_tables(
         return Err(unsupported(format!("spec path {:?} cannot be embedded", options.spec_path), (0, 0)));
     }
     for (op, b) in &manifest.bindings {
-        // WX-F slice 1: driver records parse and schema-validate, but no
-        // generator consumes them yet. Refuse loudly instead of emitting
-        // calls to a missing export.
-        if b.driver.is_some() {
-            return Err(CodegenError {
-                code: DiagnosticCode::W0704,
-                kind: CodegenErrorKind::UnsupportedTarget(format!(
-                    "operation `{op}` uses a WX-F driver; generation lands in a later slice"
-                )),
-                span: (0, 0),
-            });
+        // WX-F slice 4: driven operations generate a driver adapter. A
+        // hand-built record bypasses the line parser, so every string it
+        // splices into generated source is re-validated here.
+        match (&b.export, &b.driver) {
+            (Some(_), Some(_)) => {
+                return Err(CodegenError {
+                    code: DiagnosticCode::W0704,
+                    kind: CodegenErrorKind::MissingBinding(format!(
+                        "operation `{op}` has both export= and driver"
+                    )),
+                    span: (0, 0),
+                });
+            }
+            (None, None) => {
+                return Err(unsupported(
+                    format!("operation `{op}` has neither export= nor driver"),
+                    (0, 0),
+                ));
+            }
+            (None, Some(d)) => {
+                validate_driver_record_strings(d).map_err(|e| {
+                    unsupported(format!("operation `{op}`: {e}"), (0, 0))
+                })?;
+            }
+            (Some(_), None) => {}
         }
-        let export = b.export.as_deref().ok_or_else(|| {
-            unsupported(
-                format!("operation `{op}` has neither export= nor driver"),
-                (0, 0),
-            )
-        })?;
-        // VER04k section 4.6: an operation with `inout=` may name a method or a
-        // function by a Rust path (at most 8 segments); every other export is an
-        // identifier, as it always was.
-        let has_inout = options.hosts.ops.get(op).is_some_and(|h| !h.inout.is_empty());
-        let export_ok = if has_inout {
-            is_rust_path(export) && export.split("::").count() <= MAX_EXPORT_SEGMENTS
-        } else {
-            is_rust_identifier(export)
-        };
-        if !export_ok {
-            return Err(unsupported(
-                format!("export `{export}` of operation `{op}` is not a Rust identifier"),
-                (0, 0),
-            ));
+        if let Some(export) = b.export.as_deref() {
+            // VER04k section 4.6: an operation with `inout=` may name a method or a
+            // function by a Rust path (at most 8 segments); every other export is an
+            // identifier, as it always was.
+            let has_inout = options.hosts.ops.get(op).is_some_and(|h| !h.inout.is_empty());
+            let export_ok = if has_inout {
+                is_rust_path(export) && export.split("::").count() <= MAX_EXPORT_SEGMENTS
+            } else {
+                is_rust_identifier(export)
+            };
+            if !export_ok {
+                return Err(unsupported(
+                    format!("export `{export}` of operation `{op}` is not a Rust identifier"),
+                    (0, 0),
+                ));
+            }
         }
         if let Some(n) = &b.error_normalization {
             if !is_rust_identifier(&n.error_case) {
@@ -3842,24 +3877,40 @@ pub fn generate_evidence_harness_with_tables(
     let mut adapters = String::new();
     for op in &op_decls {
         let binding = &manifest.bindings[op.name];
-        // WX-F slice 1: driver records parse but no adapter consumes them.
-        // (The harness entry gate rejects these first; this is defense in
-        // depth for direct callers of adapter generation, including a
-        // hand-built manifest with both fields set.)
-        let export = match (&binding.export, &binding.driver) {
-            (Some(e), None) => e.as_str(),
-            _ => {
+        // WX-F slice 4: driven operations generate a driver adapter. Both
+        // fields set, or neither, is refused (the entry gate catches these
+        // first; this is defense in depth for direct callers).
+        match (&binding.export, &binding.driver) {
+            (Some(_), Some(_)) => {
                 return Err(CodegenError {
                     code: DiagnosticCode::W0704,
-                    kind: CodegenErrorKind::UnsupportedTarget(format!(
-                        "operation `{}` uses a WX-F driver; generation lands in a later slice",
+                    kind: CodegenErrorKind::MissingBinding(format!(
+                        "operation `{}` has both export= and driver",
                         op.name
                     )),
                     span: op.span,
                 })
             }
+            (None, None) => {
+                return Err(CodegenError {
+                    code: DiagnosticCode::W0704,
+                    kind: CodegenErrorKind::MissingBinding(format!(
+                        "operation `{}` has neither export= nor driver",
+                        op.name
+                    )),
+                    span: op.span,
+                })
+            }
+            _ => {}
+        }
+        let shape = if binding.driver.is_some() {
+            Shape::Driver
+        } else {
+            shape_of(op, v1, &env)?
         };
-        let shape = shape_of(op, v1, &env)?;
+        // Export path only from here in the non-driver arms; the driver
+        // branch below carries its record instead.
+        let export = binding.export.as_deref().unwrap_or_default();
         let adapters_before = adapters.len();
         // WX-H: the numeric parameter an `output` row mentions is the limit the
         // four limit faults rewrite (VER04j section 14.2 item 36).
@@ -3890,7 +3941,41 @@ pub fn generate_evidence_harness_with_tables(
                 ));
             }
         }
-        if shape == Shape::Inout {
+        if shape == Shape::Driver {
+            // A driven `inout` operation has unspecified semantics (VER04k
+            // covers drivers and post-states separately); refuse explicitly
+            // rather than emitting an adapter that drops post-states.
+            if op.params.iter().any(|p| p.inout) {
+                return Err(CodegenError {
+                    code: DiagnosticCode::W0704,
+                    kind: CodegenErrorKind::UnsupportedTarget(format!(
+                        "operation `{}` combines a driver with inout parameters",
+                        op.name
+                    )),
+                    span: op.span,
+                });
+            }
+            let record = binding.driver.as_ref().expect("driver shape has a record");
+            features.insert("scoped");
+            features.insert("driver");
+            adapters.push_str(&driver_gen::driver_adapter(
+                op,
+                &env,
+                record,
+                err_case,
+                &binding.negative_controls,
+                options,
+                obs_ops.contains_key(op.name),
+            )?);
+            let mut list = Vec::new();
+            for f in &binding.negative_controls {
+                let variant = fault_variant(f).ok_or_else(|| {
+                    unsupported(format!("unknown fault `{f}` for `{}`", op.name), op.span)
+                })?;
+                list.push((f.clone(), format!("Fault::{variant}")));
+            }
+            op_faults.insert(op.name.to_string(), list);
+        } else if shape == Shape::Inout {
             features.insert("scoped");
             adapters.push_str(&inout::inout_adapter(
                 op,
@@ -3999,15 +4084,20 @@ pub fn generate_evidence_harness_with_tables(
                 ));
             }
             // VOS-D063: only the export call is inside the allocation window.
-            let emitted = scope_export_calls(&emitted, export).ok_or_else(|| {
-                unsupported(
-                    format!(
-                        "the adapter of `{}` has no call of `{}` to observe",
-                        op.name, export
-                    ),
-                    op.span,
-                )
-            })?;
+            // Drivers emit their own window around the whole drive instead.
+            let emitted = if shape == Shape::Driver {
+                emitted
+            } else {
+                scope_export_calls(&emitted, export).ok_or_else(|| {
+                    unsupported(
+                        format!(
+                            "the adapter of `{}` has no call of `{}` to observe",
+                            op.name, export
+                        ),
+                        op.span,
+                    )
+                })?
+            };
             adapters.push_str(&emitted.replacen(&from, &to, 1));
             let n = op.name;
             let resolve = if shape.scoped() {

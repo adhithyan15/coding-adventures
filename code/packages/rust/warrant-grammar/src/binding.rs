@@ -237,6 +237,29 @@ const HOST_INTS: [&str; 9] = ["u8", "u16", "u32", "u64", "i8", "i16", "i32", "i6
 const MAX_HOST_DEPTH: usize = 8;
 const MAX_HOST_ITEMS: usize = 256;
 
+/// Whether a host type could have come from [`parse_host_ty`]: closed int
+/// vocabulary, identifier names, capped widths, tuples of 2 to 8, bounded
+/// depth. Generation re-checks hand-built records with this; anything else
+/// would splice unchecked text into generated source.
+pub(crate) fn valid_host_ty(h: &HostTy) -> bool {
+    fn go(h: &HostTy, depth: usize) -> bool {
+        if depth > MAX_HOST_DEPTH {
+            return false;
+        }
+        match h {
+            HostTy::Int(s) => HOST_INTS.contains(&s.as_str()),
+            HostTy::Bool | HostTy::Bytes => true,
+            HostTy::BytesN(n) => *n <= crate::evidence::MAX_FIXED_WIDTH,
+            HostTy::Tuple(hs) => {
+                (2..=8).contains(&hs.len()) && hs.iter().all(|h| go(h, depth + 1))
+            }
+            HostTy::Opt(h) | HostTy::List(h) => go(h, depth + 1),
+            HostTy::Named(n) => is_rust_identifier(n),
+        }
+    }
+    go(h, 0)
+}
+
 /// Split `text` on commas that are not inside `()` or `<>`.
 pub fn split_top(text: &str) -> Vec<&str> {
     let mut out = Vec::new();
