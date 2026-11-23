@@ -2812,7 +2812,8 @@ must stay in sync (`FULL_PLAN_EXEMPT` stays empty) and full recording runs on Un
 #### 9.12.1 Pre-registration: the recording and the full verify on CI runners (VOS-028c3c-1)
 
 **Status: specification, pre-registered before any code or recording exists.** The
-code is VOS-028c3c-2 (the probe) and VOS-028c3c-3 (the workflow); the recording is
+code is VOS-028c3c-2a (comparison and `validate`), 2b (shards, `join`, provenance) and 2c
+(`sign`), then VOS-028c3c-3 (the workflow); the recording is
 VOS-028c3c and the sign-off VOS-028c3d. The host, `--jobs`, N and cadence are fixed in
 sections 9.2 and 9.3; this subsection fixes the comparison rule for wall-capped rows,
 the recording and the rule for discarding one. As in 8.6, a change to any of these after
@@ -2832,12 +2833,37 @@ VOS-D124).**
   `unknown` with cap `wall`** (counted from the file; another 122 are `unknown` with cap
   `conflicts`, which is deterministic and unaffected). With the rule as it stands, `check
   --full` could never pass on an honest recording.
-* **The rule.** A row recorded, or re-run, with cap `wall` is compared on its identity
-  `(experiment, knob, mode, tier, seed, seeds)`, its instance digests, its `result` and
-  its `cap` only. Its counters, proof fields and timing fields are excluded, as for
-  `killed`. A flip between a completed verdict (`unsat`, `collapsed`, `pass`) and
-  `unknown` with cap `wall` is a **finding**, handled by the re-run rule below. Rows with
-  any other cap, including `unknown` with cap `conflicts`, are compared exactly as today.
+* **The rule (amended in VOS-028c3c-2a, VOS-D128).** A row recorded, or re-run, with cap
+  `wall` falls into one of two reduced classes. In both, the counters, proof fields,
+  timing-band fields, `steps`, `note`, the control fields and the metrics are excluded,
+  as for `killed`.
+  * **A wall-capped single instance** (the experiment is not segmented, and both rows are
+    `unknown`) is compared on its identity `(experiment, knob, mode, tier, seed, seeds)`,
+    its **instance structure fields** (`instance_sha256`, `ands`, `vars`, `clauses`,
+    `entropy_bits`, `declared_bits`), its `result`, its `cap` and `wall_s`. The structure
+    fields stay because a single instance, B5's unswept miter included, is built whole
+    before the solve starts, so they do not depend on where the clock ran out; dropping
+    them would let an edited instance hide behind a timeout.
+  * **A wall-capped segmented row** (`exp::is_segmented`: the chain experiments other
+    than B5) is compared on its identity, `result`, `cap` and `wall_s` only. The chain
+    row hashes only the segments it reached before the deadline, so its instance digest
+    and its structure fields (`ands`, `vars`, `clauses`, `steps`, `note`) are partial and
+    differ between any two runs. Counted from the committed file, **64 of the 141
+    wall-capped rows are segmented** (D4 55, B3 7, D3 2); the other 77 (D1 37, B2 20, C1
+    20) are single instances.
+  * **A row that ended `killed`, `oom` or `crashed`** on either side is compared on its
+    identity, `result`, `cap` and `wall_s` only: its digests are `pending` or
+    `unavailable` and its counters are partial (`oom` has cap `rss`, so no other-cap rule
+    could ever reproduce it). The committed file has none of the three (counted from the
+    file; its results are `unsat` 1,208, `unknown` 263, `pass` 75, `refused` 60,
+    `collapsed` 19).
+  A flip between a completed verdict (`unsat`, `collapsed`, `pass`) and `unknown` with cap
+  `wall` is a **finding** (one `result differs` line), handled by the re-run rule below.
+  Rows with any other cap, including `unknown` with cap `conflicts`, are compared exactly
+  as today. `compare_timing` (the band) is skipped when either row is in a reduced class.
+* **The re-run wall (VOS-D131).** The in-process re-run of a quick-tier row uses that
+  row's own experiment wall (`row_wall_s`: 600 s for a chain row, 1,800 s for B5), not a
+  flat 120 s, so a row that was recorded with a 600 s clock is re-run with one.
 * **The re-run rule.** A verify shard that fails is re-run **once**, on the same runner
   class with the same binary. If the re-run passes, the failing rows are logged in the
   tracking issue as flakes. A row that fails twice keeps the workflow red until it is
@@ -2881,18 +2907,32 @@ are never opened.**
      command line, or an input that cannot be read or an output that cannot be
      written (`main.rs`; status 1 is `Failure::Violations`). `run --tier full` returns
      `Failure::Violations` nowhere (only the quick-tier gate does), so a status 1 from a
-     full-tier `run` does not occur, and a status 1 from `check` is a finding about
-     rows, never an infrastructure failure;
-  6. a shard's output is missing, truncated, or fails `validate`;
+     full-tier `run` does not occur, and a status 1 from `check` or from `validate` is
+     a finding about rows (the second class below), never an infrastructure failure;
+  6. a shard's output is missing, truncated, or fails `validate FILE` with exit status 2
+     (a structural finding; the `validate` subcommand, VOS-D130, exits 2 on a
+     structural finding, 1 on row findings only and 0 when clean);
   7. `join` refuses: a digest, tree-id or revision mismatch, rows that are not disjoint,
      a union that is not equal to the plan, or a refusal under `--expect-run-id` or
      `--expect-binary-sha256` (section 9.12.2, items 1 and 2);
   8. `/usr/bin/time`, `ps` or `ulimit` is unavailable on a runner.
+* **Three classes of finding (VOS-D129, decided by the coordinator before any
+  recording exists, so a pre-registration and not a tuning).**
+  1. **Structural** (`validate FILE` exit 2: no rows, a dirty tree, missing tree ids, an
+     open-set value, a bad `wall_s`, a wrong seed count, and the infrastructure list
+     above): the recording is **discarded**.
+  2. **Row-guard** (`validate FILE` exit 1: any `rows`-class finding, for example a
+     failed control, a red `green`, a counter or RSS violation, a collapse or B5-twin
+     digest mismatch): the recording is **kept**. It blocks commit B of VOS-028c3c and
+     opens an issue; the resolution is an investigation followed by a wholesale
+     re-record or a change to this specification, never an edit of rows.
+  3. **Clean** (exit 0): committable.
 * **Row outcomes are always kept:** `unsat`, `sat`, `unknown` (any cap), `collapsed`,
   `refused`, `killed`, `oom`, `crashed`, a red `green`, a failed control and any
-  `decide` outcome. On a **verify**, a `TIMING_BAND` miss or a difference in a
-  deterministic field is a **finding**, handled by the re-run rule above; it is never a
-  reason to discard a recording.
+  `decide` outcome. Kept does not mean committable: a row outcome that is a row-guard
+  finding (class 2 above) is kept and blocks commit B. On a **verify**, a
+  `TIMING_BAND` miss or a difference in a deterministic field is a **finding**, handled
+  by the re-run rule above; it is never a reason to discard a recording.
 * **On a shard timeout:** re-record wholesale at **N' = 2N = 128**, with the same
   `--jobs`, without inspecting values. A second timeout stops the recording and opens an
   issue. A partial salvage is impossible, because shard membership changes with N.
