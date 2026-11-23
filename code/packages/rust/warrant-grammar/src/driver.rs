@@ -14,7 +14,7 @@
 
 use crate::binding::{
     is_rust_identifier, is_rust_path, parse_host_errors, parse_host_ty, split_top, EvidenceBindingFile,
-    HostErrors, HostTy, MAX_EXPORT_SEGMENTS,
+    HostErrors, HostTy, HostType, MAX_EXPORT_SEGMENTS,
 };
 use crate::checker::{CheckerError, CheckerErrorKind, DiagnosticCode};
 use crate::evidence::{ty_of_type, Ty, TyEnv};
@@ -528,6 +528,41 @@ fn host_carries(w: &Ty, h: &HostTy) -> bool {
     }
 }
 
+/// The first `Named` host type in `h` with no `struct`/`enum` declaration,
+/// if any (generation could not build its adapter).
+fn undeclared_named<'h>(
+    h: &'h HostTy,
+    declared: &std::collections::BTreeMap<String, crate::binding::HostType>,
+) -> Option<&'h str> {
+    match h {
+        HostTy::Named(n) if !declared.contains_key(n) => Some(n.as_str()),
+        HostTy::Named(_) => None,
+        HostTy::Tuple(hs) => hs.iter().find_map(|h| undeclared_named(h, declared)),
+        HostTy::Opt(h) | HostTy::List(h) => undeclared_named(h, declared),
+        _ => None,
+    }
+}
+
+/// Every host type a record names: argument hosts, step returns, finish.
+fn record_host_types(record: &DriverRecord) -> Vec<&HostTy> {
+    let mut out = Vec::new();
+    for arg in record
+        .new
+        .args
+        .iter()
+        .chain(record.ctx.iter().flat_map(|c| c.args.iter()))
+        .chain(record.step.args.iter())
+    {
+        out.extend(arg.host.as_ref());
+    }
+    match &record.step.returns {
+        StepReturns::Value(h) | StepReturns::ResultOf(h) => out.push(h),
+        StepReturns::Unit | StepReturns::Result => {}
+    }
+    out.extend(record.finish.as_ref().map(|f| &f.host));
+    out
+}
+
 /// Render a generator type for diagnostics (parameter sources keep their
 /// written syntax; only leaves reached through paths need this).
 fn ty_name(t: &Ty) -> String {
@@ -553,6 +588,16 @@ fn ty_name(t: &Ty) -> String {
 /// Resolve an `elem.i.j...` path through tuple components and record fields
 /// (by index), returning the generator type at the leaf.
 fn resolve_elem_path(elem: &Ty, path: &[usize]) -> Result<Ty, String> {
+    // The parser caps paths at `MAX_ELEM_DEPTH`, but the record fields are
+    // public, so a hand-built record may carry a longer one. Refuse it here
+    // rather than walking it: the walk always ends in `Err`, but the cap
+    // keeps a hostile length from buying resolution work.
+    if path.len() > MAX_ELEM_DEPTH {
+        return Err(format!(
+            "element path nests {} deep, at most {MAX_ELEM_DEPTH}",
+            path.len()
+        ));
+    }
     let mut current = elem.clone();
     for (depth, index) in path.iter().enumerate() {
         current = match &current {
@@ -612,9 +657,20 @@ fn check_driver_against_op(
     op: &OpDecl<'_>,
     record: &DriverRecord,
     env: &TyEnv<'_>,
+    declared: &std::collections::BTreeMap<String, HostType>,
 ) -> Result<(), CheckerError> {
     let op_name = op.name;
     let bad = |message: String| w0711(message, op.span);
+    // Every `Named` host type must be declared by a `struct`/`enum` line:
+    // generation builds its adapter from the declaration, so a phantom name
+    // agrees with nothing.
+    for h in record_host_types(record) {
+        if let Some(name) = undeclared_named(h, declared) {
+            return Err(bad(format!(
+                "driver of `{op_name}` names host type `{name}`, which no `struct`/`enum` line declares"
+            )));
+        }
+    }
     // Rule 5 (first half): no static parameters on a driven operation.
     if !op.static_params.is_empty() {
         return Err(bad(format!(
@@ -939,7 +995,7 @@ pub fn validate_driver_consistency(
         else {
             continue;
         };
-        check_driver_against_op(op, record, &env)?;
+        check_driver_against_op(op, record, &env, &bindings.hosts.types)?;
         // VER04k 3.4 rule 5: obligations need the opt-in.
         if op_needs_driver_not_live(file, op.name) {
             let opted_in = bindings

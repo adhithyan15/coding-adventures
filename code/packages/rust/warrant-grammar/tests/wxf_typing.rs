@@ -5,7 +5,7 @@
 use coding_adventures_warrant_grammar::binding::parse_evidence_bindings;
 use coding_adventures_warrant_grammar::checker::{check_warrant, CheckerErrorKind};
 use coding_adventures_warrant_grammar::codegen::DiagnosticCode as CodegenCode;
-use coding_adventures_warrant_grammar::driver::validate_driver_consistency;
+use coding_adventures_warrant_grammar::driver::{validate_driver_consistency, ArgSource};
 use coding_adventures_warrant_grammar::evidence::{compile_rust_evidence_harness, EvidenceOptions};
 use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
 use coding_adventures_warrant_grammar::parser::{parse_document, ParserLimits};
@@ -15,6 +15,10 @@ const HEAD: &str = "package subject\nrevision 0\nspec code/specs/t.warrant\noutp
 
 fn bindings(op_line: &str, driver_line: &str) -> String {
     format!("{HEAD}{op_line}\n{driver_line}\n")
+}
+
+fn bindings_extra(op_line: &str, driver_line: &str, extra: &str) -> String {
+    format!("{HEAD}{extra}\n{op_line}\n{driver_line}\n")
 }
 
 /// Parse + check `spec` (a bad fixture fails the test, never W0711), then
@@ -156,6 +160,53 @@ fn bound_row_with_driver_opt_in_is_consistent() {
 fn export_op_is_untouched() {
     let text = format!("{HEAD}op digest_chunks export=ct_digest faults=x\n");
     assert_eq!(check(SPEC_SHA1, &text), Ok(()));
+}
+
+#[test]
+fn phantom_named_host_is_w0711() {
+    let spec = "warrant t v1\n  record Rec(a: U8, b: Bool)\n  op pack(rs: List<Rec>) -> Bytes\n  labels pack:\n    rs public\n";
+    bad(
+        spec,
+        "op pack driver faults=drop-last-chunk",
+        "driver pack state=subject::Pack new=new() drive=rs step=push(mut,elem:Rec) finish=seal(ref)->bytes result=finish",
+        "no `struct`/`enum` line declares",
+    );
+}
+
+#[test]
+fn declared_struct_host_is_consistent() {
+    let spec = "warrant t v1\n  record Rec(a: U8, b: Bool)\n  op pack(rs: List<Rec>) -> Bytes\n  labels pack:\n    rs public\n";
+    let text = bindings_extra(
+        "op pack driver faults=drop-last-chunk",
+        "driver pack state=subject::Pack new=new() drive=rs step=push(mut,elem:Rec) finish=seal(ref)->bytes result=finish",
+        "struct Rec path=subject::Rec fields=a:u8,b:bool",
+    );
+    assert_eq!(check(spec, &text), Ok(()), "{spec}\n{text}");
+}
+
+#[test]
+fn hand_built_deep_path_is_w0711() {
+    let doc = SourceDocument::admit(SPEC_SHA1.as_bytes(), SourceLimits::default()).expect("admit");
+    let layout = capture_layout(&doc, LayoutLimits::default()).expect("layout");
+    let file = parse_document(&layout, &doc, ParserLimits::default()).expect("parse");
+    check_warrant(&file).expect("fixture must type-check");
+    let text = bindings(OP_SHA1, DRIVER_SHA1);
+    let mut b = parse_evidence_bindings(&text).expect("bindings parse");
+    b.manifest.bindings
+        .get_mut("digest_chunks")
+        .expect("bound")
+        .driver
+        .as_mut()
+        .expect("driver")
+        .step
+        .args[0]
+        .from = ArgSource::ElemPath(vec![0; 100]);
+    let err = validate_driver_consistency(&file, &b).expect_err("must be W0711");
+    assert_eq!(err.code.to_string(), "W0711");
+    let CheckerErrorKind::DriverInconsistency(m) = err.kind else {
+        panic!("wrong kind: {:?}", err.kind);
+    };
+    assert!(m.contains("nests 100 deep"), "missing depth in: {m}");
 }
 
 // --- Consistency negatives (VER04k 3.11): driven parameter, rule 1 ---
