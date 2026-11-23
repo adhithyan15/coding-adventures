@@ -71,7 +71,7 @@
 use crate::exp::obligation_deadline;
 use crate::inst::Instance;
 use crate::prog::Rng;
-use crate::solve::{check_default, solve_cnf, Cap, SolveOpts, Verdict};
+use crate::solve::{check_default, solve_cnf, Cap, SolveOpts, SolveOut, Verdict};
 use bit_blaster::aig::{Aig, Edge, Node};
 use bit_blaster::tseitin::Tseitin;
 use cdcl_sat::Cnf;
@@ -318,40 +318,7 @@ impl Sweeper<'_> {
                 conflict_cap: self.opts.conflict_cap,
             },
         );
-        let r = &mut self.rep;
-        r.solves += 1;
-        r.total_conflicts += out.conflicts;
-        r.total_propagations += out.propagations;
-        r.total_solve_ms += out.solve_ms;
-        r.worst_solve_ms = r.worst_solve_ms.max(out.solve_ms);
-        let mut accepted = true;
-        if out.verdict == Verdict::Unsat {
-            r.worst_conflicts = r.worst_conflicts.max(out.conflicts);
-            // Security review: in certified mode an UNSAT answer with no DRAT text is refused
-            // (it used to count as vacuously accepted); see `refuse_missing_proof`.
-            if proof && out.drat.is_none() {
-                accepted = refuse_missing_proof(r);
-            }
-            if let Some(d) = &out.drat {
-                self.proofs.update(d.as_bytes());
-                r.max_drat_bytes = r.max_drat_bytes.max(d.len() as u64);
-                let chk = check_default(cnf, d);
-                r.check_ms += chk.ms;
-                if let Some(w) = chk.work {
-                    r.max_check_work = Some(r.max_check_work.unwrap_or(0).max(w));
-                }
-                if !chk.accepted {
-                    accepted = false;
-                    r.all_accepted = false;
-                    if chk.invalid {
-                        r.invalid = true;
-                    }
-                    if r.note.is_empty() {
-                        r.note = chk.reason.unwrap_or_default();
-                    }
-                }
-            }
-        }
+        let accepted = account(&mut self.rep, &mut self.proofs, cnf, &out, proof);
         (out.verdict, accepted)
     }
 
@@ -631,6 +598,53 @@ pub fn node_values(aig: &Aig, inputs: &[bool]) -> Vec<bool> {
     aig.simulate(&words).iter().map(|v| v & 1 == 1).collect()
 }
 
+/// Account for one solve in `r`: the counters, and in certified mode the proof check.  Pure in the
+/// sense that it touches only its arguments, so a test can drive it with a hand-made `SolveOut`.
+/// Returns whether the solve's proof (if any) was accepted.  A certified UNSAT with no DRAT text
+/// is refused (see [`refuse_missing_proof`]).
+fn account(
+    r: &mut SweepReport,
+    proofs: &mut Sha256Hasher,
+    cnf: &Cnf,
+    out: &SolveOut,
+    proof: bool,
+) -> bool {
+    r.solves += 1;
+    r.total_conflicts += out.conflicts;
+    r.total_propagations += out.propagations;
+    r.total_solve_ms += out.solve_ms;
+    r.worst_solve_ms = r.worst_solve_ms.max(out.solve_ms);
+    let mut accepted = true;
+    if out.verdict == Verdict::Unsat {
+        r.worst_conflicts = r.worst_conflicts.max(out.conflicts);
+        // Security review: in certified mode an UNSAT answer with no DRAT text is refused
+        // (it used to count as vacuously accepted); see `refuse_missing_proof`.
+        if proof && out.drat.is_none() {
+            accepted = refuse_missing_proof(r);
+        }
+        if let Some(d) = &out.drat {
+            proofs.update(d.as_bytes());
+            r.max_drat_bytes = r.max_drat_bytes.max(d.len() as u64);
+            let chk = check_default(cnf, d);
+            r.check_ms += chk.ms;
+            if let Some(w) = chk.work {
+                r.max_check_work = Some(r.max_check_work.unwrap_or(0).max(w));
+            }
+            if !chk.accepted {
+                accepted = false;
+                r.all_accepted = false;
+                if chk.invalid {
+                    r.invalid = true;
+                }
+                if r.note.is_empty() {
+                    r.note = chk.reason.unwrap_or_default();
+                }
+            }
+        }
+    }
+    accepted
+}
+
 /// What a certified sweep does with an UNSAT answer that came back without a proof (security
 /// review of VOS-028c3b).  It refuses it: the answer is not accepted, `all_accepted` goes false
 /// and the note says why, unless an earlier note is already there.  Before this, a missing proof
@@ -651,14 +665,28 @@ mod tests {
     /// Negative control: the old code left `all_accepted` true for a missing proof.
     #[test]
     fn a_missing_proof_is_not_accepted() {
+        // Drive the accounting `Sweeper::solve` itself calls, with an UNSAT that has no DRAT.
+        let cnf = Cnf::new(0);
+        let out = SolveOut {
+            verdict: Verdict::Unsat,
+            conflicts: 1,
+            propagations: 1,
+            solve_ms: 0.0,
+            drat: None,
+        };
         let mut r = SweepReport::new();
-        assert!(!refuse_missing_proof(&mut r));
+        let mut h = Sha256Hasher::new();
+        assert!(!account(&mut r, &mut h, &cnf, &out, true));
         assert!(!r.all_accepted);
         assert_eq!(r.note, "no proof for an UNSAT answer in certified mode");
         // An earlier note is kept.
         let mut r = SweepReport::new();
         r.note = "first".into();
-        refuse_missing_proof(&mut r);
+        assert!(!account(&mut r, &mut h, &cnf, &out, true));
         assert_eq!(r.note, "first");
+        // Outside certified mode the same answer is not refused.
+        let mut r = SweepReport::new();
+        assert!(account(&mut r, &mut h, &cnf, &out, false));
+        assert!(r.all_accepted);
     }
 }

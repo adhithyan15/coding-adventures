@@ -48,9 +48,13 @@ pub const ROUTE_MAX_CONFLICTS: u64 = 50_000;
 /// The route-budget checker-work cap of VOS30 section 8.6.1 (2^31, half of `DEFAULT_MAX_WORK`).
 pub const ROUTE_MAX_CHECK_WORK: u64 = 1 << 31;
 
-/// The B5 clause of VOS30 section 8.6.3: a B5 row's total time, `solve_ms + check_ms`, must be
-/// strictly under 600 s (milliseconds).  A gate, pre-registered; the B5 measurement walls
-/// (`exp::B5_ROW_WALL_S`) are looser than it so that a slow sweep is recorded, then judged here.
+/// The B5 clause of VOS30 section 8.6.3: a B5 row's total, the sweep's whole elapsed time
+/// recorded as the `sweep_ms` metric (instance build through verdict: simulation, AIG
+/// construction, every lemma solve and proof check, the final obligation; the G3 control is
+/// excluded), must be strictly under 600 s (milliseconds).  A gate, pre-registered; the B5
+/// measurement walls (`exp::B5_ROW_WALL_S`) are looser than it so that a slow sweep is
+/// recorded, then judged here.  Fail-closed: a row without a finite, non-negative `sweep_ms`
+/// is not route-green.
 pub const B5_ROUTE_MAX_TOTAL_MS: f64 = 600_000.0;
 
 /// Everything the file records besides the rows.
@@ -477,9 +481,18 @@ pub fn route_green(r: &Row) -> bool {
     if r.mode == "enum" {
         return true;
     }
-    // Section 8.6.3: a B5 row additionally needs its total (solve plus check) under 600 s.
-    if r.experiment == "B5" && r.solve_ms + r.check_ms.unwrap_or(0.0) >= B5_ROUTE_MAX_TOTAL_MS {
-        return false;
+    // Section 8.6.3: a B5 row additionally needs its sweep's elapsed time under 600 s.  Fail
+    // closed: a missing, NaN, infinite or negative `sweep_ms` is not route-green (a NaN cannot
+    // pass: it fails `is_finite` before the comparison is reached).
+    if r.experiment == "B5" {
+        let total = r
+            .metrics
+            .iter()
+            .find(|(k, _)| k == "sweep_ms")
+            .map(|(_, x)| *x);
+        if !total.is_some_and(|x| x.is_finite() && (0.0..B5_ROUTE_MAX_TOTAL_MS).contains(&x)) {
+            return false;
+        }
     }
     let work_ok =
         r.mode == "incremental" || r.check_work.is_some_and(|w| w <= ROUTE_MAX_CHECK_WORK);
@@ -932,7 +945,7 @@ pub fn quick_specs(res: &Results) -> Vec<(RowSpec, &Row)> {
 /// The metrics whose VALUES are timings or rates, so they differ on every run.  Every other
 /// metric is a count and is compared exactly (round 2, finding 2).  A nondeterministic metric
 /// must still be PRESENT on both sides: the key set is compared symmetrically.
-pub const NONDETERMINISTIC_METRICS: [&str; 2] = ["run_ms", "cases_per_s"];
+pub const NONDETERMINISTIC_METRICS: [&str; 3] = ["run_ms", "cases_per_s", "sweep_ms"];
 
 /// Compare a re-run row with its recorded one: **every deterministic field**, exactly.
 ///

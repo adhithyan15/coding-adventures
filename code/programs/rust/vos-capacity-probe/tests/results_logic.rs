@@ -737,6 +737,10 @@ fn rg_row(exp: &str, knob: Knob, mode: &str, seed: u64) -> Row {
     } else {
         None
     };
+    if exp == "B5" {
+        // A recorded B5 row carries its sweep time (VOS30 8.6.3); route-green is fail-closed on it.
+        r.metrics.push(("sweep_ms".into(), 1_000.0));
+    }
     r.check_work = if mode == "incremental" {
         None
     } else {
@@ -859,23 +863,31 @@ fn b5_route_green_needs_its_total_under_600_s() {
         ])
     };
     let mut b5 = rg_row("B5", kb(), "certified", 1);
-    // The total is solve plus check; every other field stays route-green.
-    b5.solve_ms = 9_000.0;
-    b5.worst_step_solve_ms = 9_000.0;
-    b5.check_ms = Some(590_999.0);
+    // The total is the sweep's elapsed time, the `sweep_ms` metric; every other field stays
+    // route-green.
+    let set = |r: &mut Row, x: Option<f64>| {
+        r.metrics.retain(|(k, _)| k != "sweep_ms");
+        if let Some(x) = x {
+            r.metrics.push(("sweep_ms".into(), x));
+        }
+    };
+    set(&mut b5, Some(599_999.0));
     assert!(route_green(&b5));
-    b5.check_ms = Some(591_001.0);
-    assert!(green(&b5) && !route_green(&b5));
-    b5.check_ms = None;
-    b5.solve_ms = 600_001.0;
-    assert!(!route_green(&b5));
-    b5.solve_ms = 599_999.0;
+    for bad in [600_000.0, 600_001.0, f64::NAN, f64::INFINITY, -1.0] {
+        set(&mut b5, Some(bad));
+        assert!(!route_green(&b5), "sweep_ms {bad} must not be route-green");
+    }
+    set(&mut b5, None);
+    assert!(!route_green(&b5), "a missing sweep_ms fails closed");
+    set(&mut b5, Some(0.0));
     assert!(route_green(&b5));
     // A non-B5 row with the same total is unaffected.
     let mut b3 = rg_row("B3", Knob::of(&[("length", Kv::I(200))]), "certified", 1);
     b3.solve_ms = 9_000.0;
     b3.worst_step_solve_ms = 9_000.0;
     b3.check_ms = Some(591_001.0);
+    assert!(route_green(&b3));
+    b3.metrics.push(("sweep_ms".into(), f64::NAN));
     assert!(route_green(&b3));
 }
 

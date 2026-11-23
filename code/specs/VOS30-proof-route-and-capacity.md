@@ -1360,8 +1360,14 @@ route-green predicate. None changes a recorded row: new rows are added by `merge
   lemma is DRAT-checked under the default limits. Outputs that do not merge form one
   final obligation. Metrics added to a row: lemmas, candidates, refuted, escalations.
   **B5 is green iff every lemma and the final obligation are route-green and the total
-  is under 600 s.** The total is computed as the row's `solve_ms` plus `check_ms`
-  (strictly under 600,000 ms), and `route_green` enforces it. Lemma counts above 1,000
+  is under 600 s.** "The total" is the sweep's whole elapsed time, recorded as the
+  row metric `sweep_ms`: from the start of the instance build through the sweep's verdict
+  (simulation, AIG construction, every lemma solve and proof check, and the final obligation),
+  with the G3 control excluded, because it is not part of the proof. It must be strictly
+  under 600,000 ms, and `route_green` enforces it fail-closed: a B5 row with no finite,
+  non-negative `sweep_ms` is not route-green. This definition was fixed before any recorded
+  run (VOS-D118); the narrower sum `solve_ms` plus `check_ms` is not the total, since with
+  an 1,800 s row wall it would let up to about 1,800 s of non-solver work pass. Lemma counts above 1,000
   per entry are reported and not gated; this is stated in advance. **B5's walls are
   measurement walls, not gates** (owner direction, 2026-11-23: relax timeouts where
   things need more time to prove out): the row wall is 1,800 s, each lemma solve and
@@ -1700,8 +1706,9 @@ silent drop):
    **600 s**, and its G3 control has its own **600 s and 1,000,000-conflict cap**; the
    hard kill is 1,800 s plus 600 s plus 150 s of slack (2,550 s). They are measurement
    walls, not gates: they decide only whether a run answers or ends `unknown`, and
-   change no gate number of 8.3 or 8.6 (the 600 s total of B5 is solve plus check
-   milliseconds, enforced by `route_green`).
+   change no gate number of 8.3 or 8.6 (the 600 s total of B5 is the sweep's elapsed
+   time, the `sweep_ms` metric: instance build through verdict, G3 control excluded, a
+   definition fixed before any recorded run, enforced fail-closed by `route_green`).
 3. **Whole-process-group kill.** The row runs as a child in its **own process
    group**; the parent kills the *group* on the wall timeout, covering **every
    stage**: instance generation and CNF writing, the solve, and `drat-check`, not
@@ -1793,7 +1800,8 @@ and its four solver crates, keyed `vos-capacity-probe`, `bit-blaster`, `cdcl-sat
 and hex object ids when the object is present); in a merges entry `"kind": "add"`
 (section 9.2; `validate` accepts no other kind); and, planned for VOS-028c3, in a B5
 row's `metrics` the counts `lemmas`, `candidates`, `refuted` and `escalations`,
-compared by the re-run like every other metric. The `limits` object is unchanged (the
+compared by the re-run like every other metric, and the timing `sweep_ms` (the B5 total of
+8.6.3; nondeterministic, so present on both sides but not compared by value). The `limits` object is unchanged (the
 chain budget is recorded per row), so a merge rewrites no byte of it.
 
 `dirty_tree`, `binary_sha256` and the regeneration banner are **self-reported by

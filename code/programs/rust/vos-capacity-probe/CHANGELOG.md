@@ -6,6 +6,14 @@ All notable changes to this package are documented here.
 
 ### Added (VOS-028c3b, VOS30 sections 8.4 item 11, 8.6.3 and 9.12)
 
+- **B5's 600 s total is the sweep's elapsed time, fail-closed.** `b5_row` records `sweep_ms`
+  (instance build through the sweep's verdict, G3 control excluded) as a row metric, listed in
+  `NONDETERMINISTIC_METRICS`; `route_green` requires it present, finite, non-negative and
+  strictly under 600,000 ms (NaN, infinity, negative or missing is not route-green), replacing
+  the `solve_ms + check_ms` reading (VOS30 8.6.3, VOS-D118). The sweep's per-solve accounting is
+  now the function `account`, so the missing-proof test exercises the code `Sweeper::solve`
+  runs.
+
 - **Experiment B5, SAT sweeping (`src/sweep.rs`).** A deterministic sweeper over one AIG for both
   sides: 256 seeded simulation patterns (`Aig::simulate`) give candidate classes up to complement,
   with the lowest node as the representative. Candidates are proved in topological order, each

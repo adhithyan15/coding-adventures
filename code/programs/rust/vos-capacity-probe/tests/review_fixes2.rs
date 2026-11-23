@@ -418,7 +418,10 @@ fn compare_rerun_flags_every_deterministic_field_and_ignores_only_the_nondetermi
         "{:?}",
         compare_rerun(&rec, &slower)
     );
-    assert_eq!(NONDETERMINISTIC_METRICS, ["run_ms", "cases_per_s"]);
+    assert_eq!(
+        NONDETERMINISTIC_METRICS,
+        ["run_ms", "cases_per_s", "sweep_ms"]
+    );
 }
 
 #[test]

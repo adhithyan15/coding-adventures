@@ -1416,6 +1416,11 @@ fn b5_row(spec: &RowSpec, deadline: Instant, progress: &mut dyn FnMut(&Row)) -> 
         Ok(s) => s,
         Err(e) => return failed(spec, &e),
     };
+    // `sweep_ms` (VOS30 8.6.3, VOS-D118) is the sweep's whole elapsed time: from here, the start
+    // of the instance build, through the return of `sweep` (simulation, AIG construction, every
+    // lemma solve and proof check, the final obligation).  The row's reporting work in between
+    // (digest, entropy) is inside it too.  The G3 control runs after and is excluded.
+    let sweep_start = Instant::now();
     let inst = match shape.build(spec.seed, None) {
         Ok(i) => i,
         Err(e) => return failed(spec, &format!("build: {e}")),
@@ -1443,6 +1448,7 @@ fn b5_row(spec: &RowSpec, deadline: Instant, progress: &mut dyn FnMut(&Row)) -> 
             conflict_cap: None,
         },
     );
+    let sweep_ms = sweep_start.elapsed().as_secs_f64() * 1000.0;
     row.conflicts = rep.total_conflicts;
     row.propagations = rep.total_propagations;
     row.worst_step_conflicts = Some(rep.worst_conflicts);
@@ -1455,6 +1461,7 @@ fn b5_row(spec: &RowSpec, deadline: Instant, progress: &mut dyn FnMut(&Row)) -> 
     row.metrics.push(("refuted".into(), rep.refuted as f64));
     row.metrics
         .push(("escalations".into(), rep.escalations as f64));
+    row.metrics.push(("sweep_ms".into(), sweep_ms));
     match &rep.verdict {
         SweepVerdict::Unsat => {
             row.drat_sha256 = rep.drat_sha256.clone();
