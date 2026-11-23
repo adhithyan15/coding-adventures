@@ -4,4 +4,4 @@
 # cargo test panics with newer wasm-bindgen on non-wasm targets because
 # #[wasm_bindgen] struct allocation calls __wbindgen_malloc (a wasm host import).
 set -e
-cargo build
+cargo build --locked

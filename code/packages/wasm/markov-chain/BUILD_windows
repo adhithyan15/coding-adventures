@@ -1,1 +1,1 @@
-cargo test -p markov-chain-wasm -- --nocapture
+cargo test --locked -p markov-chain-wasm -- --nocapture
