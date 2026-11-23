@@ -3141,6 +3141,7 @@ static SOURCE_SHA256: Mutex<String> = Mutex::new(String::new());
 static DRIVER_OBLIGATIONS: Mutex<BTreeMap<String, Vec<String>>> =
     Mutex::new(BTreeMap::new());
 static DRIVER_STEPS_MAX: Mutex<BTreeMap<String, u64>> = Mutex::new(BTreeMap::new());
+static DRIVER_DRIVEN_MAX: Mutex<BTreeMap<String, u64>> = Mutex::new(BTreeMap::new());
 thread_local! {
     static DRIVER_CALLS: Cell<u64> = const { Cell::new(0) };
 }
@@ -3162,6 +3163,45 @@ fn driver_note_call() {
 
 fn driver_take_calls() -> u64 {
     DRIVER_CALLS.with(|c| c.replace(0))
+}
+
+/// Sabotage coverage (VER04k 3.5): the largest drive of `op` noted since the
+/// last take. Separate from `DRIVER_STEPS_MAX` (which the manifest reports)
+/// so a negctl can reset it without touching the manifest. Suite execution
+/// is sequential, so reset-then-run-then-read is exact.
+fn driver_note_driven(op: &str, n: usize) {
+    let mut m = lock_or_recover(&DRIVER_DRIVEN_MAX);
+    let e = m.entry(op.into()).or_insert(0);
+    *e = (*e).max(n as u64);
+}
+
+fn driver_take_max_driven(op: &str) -> u64 {
+    lock_or_recover(&DRIVER_DRIVEN_MAX).remove(op).unwrap_or(0)
+}
+
+/// A needy-fault negative control passes iff some suite caught the fault AND
+/// a drive of at least two elements executed while catching it: a fault
+/// caught only on smaller drives (or on nondeterministic constructor noise)
+/// fails its control instead of passing vacuously.
+fn negctl_result_driver(
+    caught: Vec<&str>,
+    fault: &str,
+    driven_max: u64,
+) -> (Verdict, Stats, String) {
+    if driven_max < 2 {
+        (
+            Verdict::fail(
+                "corpus-mismatch",
+                format!(
+                    "fault {fault} ran no drive of two elements (max {driven_max}); its control is vacuous"
+                ),
+            ),
+            Stats::default(),
+            String::new(),
+        )
+    } else {
+        negctl_result(caught, fault)
+    }
 }
 
 fn driver_ops_json() -> BTreeMap<String, Json> {

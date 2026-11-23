@@ -1,10 +1,13 @@
-//! WX-F slice 4: driver adapter generation, asserted as text. The obligations
-//! themselves execute in `tests/wxf_driver_evidence.rs`; here the adapter
-//! variants, pins, registrations and refusal paths are pinned down.
+//! WX-F slices 4-5: driver adapter generation, asserted as text. The obligations
+//! themselves execute in `tests/wxf_driver_evidence.rs` (and the sha1 pilot
+//! executes the sabotage); here the adapter variants, pins, fault plans,
+//! registrations and refusal paths are pinned down.
 
 use coding_adventures_warrant_grammar::binding::parse_evidence_bindings;
 use coding_adventures_warrant_grammar::checker::check_warrant;
-use coding_adventures_warrant_grammar::codegen::DiagnosticCode as CodegenCode;
+use coding_adventures_warrant_grammar::codegen::{
+    find_all_operations_in_expr, find_operation_in_expr, DiagnosticCode as CodegenCode,
+};
 use coding_adventures_warrant_grammar::driver::validate_driver_consistency;
 use coding_adventures_warrant_grammar::evidence::{compile_rust_evidence_harness, EvidenceOptions};
 use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
@@ -281,4 +284,153 @@ fn hostile_strings_in_hand_built_records_are_refused() {
         .method = "update(); evil(); //".to_string();
     let err = compile_rust_evidence_harness(&file, &checked, &b, &options()).expect_err("must refuse");
     assert_eq!(err.code, CodegenCode::W0701);
+}
+
+// Slice 5a: the fault plan (3.5/3.6) and its coverage control.
+
+const SPEC_COLLECT: &str = "warrant t v1\n  op scan(data: Bytes) -> List<U8>\n  labels scan:\n    data public\n  claim c:\n    forall data: Bytes. scan(data) == scan(data)\n";
+const OP_COLLECT: &str = "op scan driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,drop-last-output";
+const DRIVER_COLLECT: &str = "driver scan state=subject::Dec new=new() drive=data step=read(mut,elem:u8)->u8 result=collect";
+
+#[test]
+fn plan_arms_cover_listed_faults_only() {
+    let out = generates(SPEC_SHA1, OP_SHA1, DRIVER_SHA1);
+    for arm in [
+        "Fault::DropLastChunk",
+        "Fault::ReorderChunks",
+        "Fault::DuplicateLastChunk",
+        "Fault::EarlyFinish",
+        "Fault::ResetPerStep",
+    ] {
+        assert!(out.contains(arm), "plan arm missing for {arm}");
+    }
+    // `drop-last-output` is not listed for this finish-mode driver: no arm,
+    // and the wildcard keeps the identity.
+    assert!(!out.contains("Fault::DropLastOutput"), "unlisted arm emitted");
+    assert!(out.contains("_ => ((0..peril).collect(), false, false)"), "wildcard missing");
+}
+
+#[test]
+fn plan_rewrites_match_the_spec_table() {
+    let out = generates(SPEC_SHA1, OP_SHA1, DRIVER_SHA1);
+    assert!(out.contains("(0..peril.saturating_sub(1)).collect()"), "drop-last order");
+    assert!(out.contains("(0..peril).rev().collect()"), "reorder order");
+    assert!(out.contains("o.push(peril - 1)"), "duplicate order");
+    assert!(out.contains("vec![0usize]"), "early order");
+    assert!(out.contains("((0..peril).collect(), true, false)"), "reset flag");
+    assert!(out.contains("for step in order"), "loop drives the plan");
+    assert!(out.contains("driver_note_driven(\"digest_chunks\", peril)"), "coverage note");
+}
+
+#[test]
+fn reset_arm_emitted_only_when_listed() {
+    let out = generates(SPEC_SHA1, OP_SHA1, DRIVER_SHA1);
+    assert!(out.contains("if reset_each"), "reset arm missing");
+    // A collect-mode driver cannot list `reset-per-step` (3.6: finish/both
+    // only), so its adapter has no reset arm.
+    let collect = format!("{HEAD}{OP_COLLECT}\n{DRIVER_COLLECT}\n");
+    let out = generate(SPEC_COLLECT, &collect).expect("collect must generate");
+    // The plan tuple always names the flag; the re-creation arm must be gone.
+    assert!(!out.contains("if reset_each"), "reset arm must be absent");
+}
+
+#[test]
+fn drop_output_pop_only_when_collecting() {
+    let out = generates(SPEC_SHA1, OP_SHA1, DRIVER_SHA1);
+    assert!(!out.contains("collected.pop()"), "finish mode must not pop");
+    let collect = format!("{HEAD}{OP_COLLECT}\n{DRIVER_COLLECT}\n");
+    let out = generate(SPEC_COLLECT, &collect).expect("collect must generate");
+    assert!(out.contains("if drop_output { collected.pop(); }"), "collect must pop");
+}
+
+#[test]
+fn needy_negctl_checks_driven_coverage() {
+    let out = generates(SPEC_SHA1, OP_SHA1, DRIVER_SHA1);
+    assert!(
+        out.contains("negctl_result_driver(caught, \"reorder-chunks\", driver_take_max_driven(\"digest_chunks\"))"),
+        "needy epilogue missing"
+    );
+    assert!(
+        out.contains("driver_take_max_driven(\"digest_chunks\");"),
+        "coverage reset missing"
+    );
+    // Non-needy faults keep the plain control.
+    assert!(
+        out.contains("negctl_result(caught, \"drop-last-chunk\")"),
+        "plain epilogue missing"
+    );
+    assert!(!out.contains("negctl_result_driver(caught, \"drop-last-chunk\""), "drop must stay plain");
+}
+
+const SPEC_REL: &str = "warrant t v1\n  op a(chunks: List<Bytes>) -> Bytes<20>\n  labels a:\n    chunks public\n  op b(chunks: List<Bytes>) -> Bytes<20>\n  labels b:\n    chunks public\n  claim r:\n    forall m: Bytes. a([m, m]) == b([m, m])\n";
+
+#[test]
+fn relational_claim_controls_every_operation_it_calls() {
+    let text = format!(
+        "{HEAD}\
+         op a driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step\n\
+         driver a state=subject::A new=new() drive=chunks step=feed(mut,elem:bytes) finish=out(ref)->bytes result=finish\n\
+         op b driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step\n\
+         driver b state=subject::B new=new() drive=chunks step=feed(mut,elem:bytes) finish=out(ref)->bytes result=finish\n"
+    );
+    let out = generate(SPEC_REL, &text).expect("relational must generate");
+    // Both operations' negctls run the shared claim (fail-open vacuity: the
+    // binder-dependent drive passes W0601 statically; the runtime coverage
+    // control closes it).
+    for op in ["a", "b"] {
+        assert!(
+            out.contains(&format!("negctl/exhaustive/{op}/drop-last-chunk")),
+            "negctl missing for {op}"
+        );
+    }
+    assert!(out.matches("(\"r\", neg_exh_r)").count() >= 2, "r must join both ops");
+}
+
+#[test]
+fn find_all_orders_first_like_find_first() {
+    let doc = SourceDocument::admit(SPEC_REL.as_bytes(), SourceLimits::default()).expect("admit");
+    let layout = capture_layout(&doc, LayoutLimits::default()).expect("layout");
+    let file = parse_document(&layout, &doc, ParserLimits::default()).expect("parse");
+    let ops: std::collections::HashSet<&str> = ["a", "b"].into_iter().collect();
+    let body = file
+        .declarations
+        .iter()
+        .find_map(|d| match d {
+            coding_adventures_warrant_grammar::parser::Declaration::Claim(c) => match &c.body {
+                coding_adventures_warrant_grammar::parser::Expression::Quantified {
+                    body, ..
+                } => Some(body.as_ref()),
+                _ => None,
+            },
+            _ => None,
+        })
+        .expect("claim");
+    let all = find_all_operations_in_expr(body, &ops);
+    let first = find_operation_in_expr(body, &ops);
+    assert_eq!(all, vec!["a", "b"]);
+    assert_eq!(first, Some("a"));
+    assert_eq!(all.first().copied(), first, "first must agree");
+}
+
+const SPEC_SPLIT: &str = "warrant t v1\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks public\n  claim c:\n    forall m: Bytes. digest_chunks([m]) == digest_chunks([m])\n  claim s:\n    forall m: Bytes, k: Nat. digest_chunks([take(m, k), drop(m, k)]) == digest_chunks([m])\n";
+
+#[test]
+fn split_builtins_emit_and_gate_their_region() {
+    let out = generates(SPEC_SPLIT, OP_SHA1, DRIVER_SHA1);
+    assert!(out.contains("V::seq_take("), "take missing");
+    assert!(out.contains("V::seq_drop("), "drop missing");
+    assert!(out.contains("pub fn seq_take(xs: &V, n: &V) -> V"), "region missing");
+    // Harnesses that never split stay byte-identical: no region without use.
+    let plain = generates(SPEC_SHA1, OP_SHA1, DRIVER_SHA1);
+    assert!(!plain.contains("seq_take"), "region leaked");
+    assert!(!plain.contains("seq_drop"), "region leaked");
+}
+
+#[test]
+fn bytes_literal_flows_into_bytes_position() {
+    // `[b"00"]` against `List<Bytes>`: the literal checks as unbounded
+    // `Bytes` (inward flow, like `Int`), so pilot examples typecheck.
+    let spec = "warrant t v1\n  op digest_chunks(chunks: List<Bytes>) -> Bytes<20>\n  labels digest_chunks:\n    chunks public\n  example e:\n    digest_chunks([b\"00\"]) == digest_chunks([b\"00\"])\n  claim c:\n    forall chunks: List<Bytes>. digest_chunks(chunks) == digest_chunks(chunks)\n";
+    let out = generates(spec, OP_SHA1, DRIVER_SHA1);
+    assert!(out.contains("V::List(vec!["), "list must emit");
 }

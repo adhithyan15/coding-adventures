@@ -36,7 +36,7 @@ use crate::binding::{
     EvidenceBindingFile, HostShape, HostSpec, HostTy, InoutForm, MAX_EXPORT_SEGMENTS,
 };
 use crate::checker::{CheckedWarrantModule, DiagnosticCode as CheckerCode, PostSlot};
-use crate::driver::{validate_driver_consistency, validate_driver_record_strings};
+use crate::driver::{validate_driver_consistency, validate_driver_record_strings, NEEDY_FAULTS};
 use crate::codegen::{
     find_all_operations_in_expr, find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind,
     DiagnosticCode,
@@ -1351,7 +1351,7 @@ fn bool_field_flip_applies(full: &Ty) -> bool {
     }
 }
 
-fn fault_variant(name: &str) -> Option<&'static str> {
+pub(crate) fn fault_variant(name: &str) -> Option<&'static str> {
     FAULTS
         .iter()
         .find(|(n, _)| *n == name)
@@ -4358,6 +4358,28 @@ pub fn generate_evidence_harness_with_tables(
                     // that catches the fault, so a 2^24-case claim that cannot
                     // catch it is not run to completion; `caught_by` names
                     // that first claim.
+                    //
+                    // WX-F: a needy driver fault additionally requires a drive
+                    // of at least two elements to have executed (3.5): the
+                    // static W0601 is fail-open on binder-dependent and
+                    // model-shape drives, so only this runtime control closes
+                    // semantically-small-but-syntactically-opaque vacuity.
+                    let needy = shapes[op] == Shape::Driver
+                        && NEEDY_FAULTS.iter().any(|n| n == fname);
+                    if needy {
+                        let _ = write!(
+                            suite,
+                            "    reg(&mut suite, Meta {{ fault: \"{fname}\".into(), target: \"{kind}\".into(), ..Meta::new(\"{idn}\", \"negctl\", \"{op}\", \"\") }}, || {{\n\
+                             \x20       let runs: [(&str, fn(Fault) -> Verdict); {len}] = [{members}];\n\
+                             \x20       driver_take_max_driven(\"{op}\");\n\
+                             \x20       let caught: Vec<&str> = attacking(\"{op}\", || runs.iter().find(|(_, f)| is_detected(&f({frust}))).map(|(n, _)| *n).into_iter().collect());\n\
+                             \x20       negctl_result_driver(caught, \"{fname}\", driver_take_max_driven(\"{op}\"))\n    }});\n",
+                            idn = id("negctl", &format!("{kind}/{op}/{fname}")),
+                            len = members.len(),
+                            members = members.join(", "),
+                        );
+                        continue;
+                    }
                     let _ = write!(
                         suite,
                         "    reg(&mut suite, Meta {{ fault: \"{fname}\".into(), target: \"{kind}\".into(), ..Meta::new(\"{idn}\", \"negctl\", \"{op}\", \"\") }}, || {{\n\

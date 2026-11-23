@@ -28,6 +28,19 @@ warrant sha1 v1
 
   example empty_stream_is_the_empty_digest:
     digest_chunks([]) == b"da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  -- Two-element drives: the example suite's catchers for the needy faults
+  -- (reorder/early-finish/reset are identity on shorter drives, so the
+  -- empty example alone cannot control them). Digests from hashlib.
+  example two_chunks_absorb_in_order:
+    digest_chunks([b"00", b"01"]) == b"3f29546453678b855931c174a97d6c0894b8f546"
+  -- A chunk split mid-block (32 + 33) and a full block plus one byte: the
+  -- 3.1 bug class (a chunk crossing the 64-byte boundary), pinned.
+  example split_block_absorbs:
+    digest_chunks([b"0000000000000000000000000000000000000000000000000000000000000000", b"000000000000000000000000000000000000000000000000000000000000000000"]) == b"f0fa45906bd0f4c3668fcd0d8f68d4b298b30e5b"
+  example full_block_then_one_byte_absorbs:
+    digest_chunks([b"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", b"00"]) == b"f0fa45906bd0f4c3668fcd0d8f68d4b298b30e5b"
+  example one_shot_pins_the_digest:
+    sum1(b"0001") == b"3f29546453678b855931c174a97d6c0894b8f546"
   claim one_shot_agrees:
     forall m: Bytes. digest_chunks([m]) == sum1(m)
   claim split_independent:

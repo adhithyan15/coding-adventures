@@ -1139,7 +1139,7 @@ pub const DRIVER_FAULTS: [&str; 6] = [
 ];
 
 /// The faults that need a two-element exercise to be catchable (VER04k 3.5).
-const NEEDY_FAULTS: [&str; 3] = ["reorder-chunks", "early-finish", "reset-per-step"];
+pub(crate) const NEEDY_FAULTS: [&str; 3] = ["reorder-chunks", "early-finish", "reset-per-step"];
 
 fn w_fault(code: DiagnosticCode, message: String, span: (usize, usize)) -> CheckerError {
     CheckerError {
