@@ -140,6 +140,11 @@ pub fn join(inputs: &[(String, Results)], expect: &Expect) -> Result<Joined, Str
     }
 
     // 3. One run: every shard agrees with shard 0 on everything provenance.
+    //
+    // `rustc` and `os` are deliberately NOT compared.  `binary_sha256` (pinned by
+    // `--expect-binary-sha256` from the build job, VOS30 9.12.2 item 1) already fixes the build,
+    // and `os` (`uname -sr`) may legitimately differ between runners of one label (VOS-D133).
+    // The joined meta takes both from shard 0.
     let (first_name, first) = (shards[0].2, shards[0].3);
     let frec = first.meta.recording.as_ref().expect("checked above");
     for &(k, _, name, res) in &shards[1..] {
@@ -202,6 +207,19 @@ pub fn join(inputs: &[(String, Results)], expect: &Expect) -> Result<Joined, Str
             .collect();
         let mut have: BTreeSet<Identity> = BTreeSet::new();
         for r in &res.rows {
+            // The plan is for MIN_SEEDS seeds per knob; a row claiming another count is not
+            // the plan's row, whatever its identity says.
+            if r.seeds != MIN_SEEDS {
+                return Err(format!(
+                    "join refuses {name}: row {} {} {} seed {} records seeds {}, the plan \
+                     records {MIN_SEEDS}",
+                    r.experiment,
+                    r.knob.key(),
+                    r.mode,
+                    r.seed,
+                    r.seeds
+                ));
+            }
             let id: Identity = (r.experiment.clone(), r.mode.clone(), r.knob.key(), r.seed);
             if !have.insert(id.clone()) {
                 return Err(format!(

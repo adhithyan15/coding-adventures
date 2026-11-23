@@ -10,6 +10,7 @@ use std::path::PathBuf;
 use vos_capacity_probe::cli::{dispatch, Failure};
 use vos_capacity_probe::exp::{
     b3_c3_knobs, b5_knobs, d5_knobs, full_knob_list, parse_shard, plan, plan_shard, shard_of, Tier,
+    MAX_SHARDS,
 };
 use vos_capacity_probe::join::{join, Expect};
 use vos_capacity_probe::results::{Recording, Results, MIN_SEEDS, TREE_NAMES};
@@ -927,4 +928,72 @@ fn run_shard_refuses_what_it_should_before_running_anything() {
             "ASCII digits",
         );
     }
+}
+
+#[test]
+fn a_row_that_records_another_seed_count_is_refused() {
+    // The plan is for MIN_SEEDS seeds per knob.  A row with the right identity but another
+    // `seeds` would otherwise be joined as if it were the plan's.
+    let mut ins = shards(5);
+    ins[1].1.rows[0].seeds = MIN_SEEDS + 1;
+    refused(&ins, &no_expect(), "records seeds");
+    let mut ins = shards(5);
+    ins[4].1.rows[0].seeds = MIN_SEEDS - 1;
+    // (Fewer than MIN_SEEDS is caught even earlier, by structural validation.)
+    assert!(join(&ins, &no_expect()).is_err());
+}
+
+#[test]
+fn join_caps_its_inputs_and_refuses_repeated_flags_and_overwrites() {
+    let dir = scratch("hardening");
+    let files = write_shards(&dir, 5);
+    let out = dir.join("joined.json");
+    let out_s = out.to_string_lossy().into_owned();
+    let usage = |args: &[&str], needle: &str| {
+        let (r, _, _) = run(args);
+        match r {
+            Err(Failure::Usage(m)) => assert!(m.contains(needle), "{args:?}: {m}"),
+            other => panic!("{args:?}: {other:?}"),
+        }
+    };
+    // More input files than MAX_SHARDS: refused before any is read (none of these exist).
+    let many: Vec<String> = (0..=MAX_SHARDS)
+        .map(|i| {
+            dir.join(format!("absent-{i}.json"))
+                .to_string_lossy()
+                .into_owned()
+        })
+        .collect();
+    let mut args = vec!["join", "--out", out_s.as_str()];
+    args.extend(many.iter().map(String::as_str));
+    usage(&args, "input files");
+    // A repeated flag is a usage error, never "first wins".
+    let mut args = vec!["join", "--out", out_s.as_str(), "--out", "other.json"];
+    args.extend(files.iter().map(String::as_str));
+    usage(&args, "--out given more than once");
+    let mut args = vec![
+        "join",
+        "--out",
+        out_s.as_str(),
+        "--expect-run-id",
+        "1",
+        "--expect-run-id",
+        "2",
+    ];
+    args.extend(files.iter().map(String::as_str));
+    usage(&args, "--expect-run-id given more than once");
+    usage(
+        &["run", "--tier", "full", "--shard", "0/4", "--shard", "1/4"],
+        "--shard given more than once",
+    );
+    // `--out` naming an input is refused, spelled any way that reaches the same file.
+    let mut args = vec!["join", "--out", files[0].as_str()];
+    args.extend(files.iter().map(String::as_str));
+    usage(&args, "one of the input files");
+    // An existing `--out` is never overwritten.
+    std::fs::write(&out, "precious").unwrap();
+    let mut args = vec!["join", "--out", out_s.as_str()];
+    args.extend(files.iter().map(String::as_str));
+    usage(&args, "already exists");
+    assert_eq!(std::fs::read_to_string(&out).unwrap(), "precious");
 }

@@ -674,8 +674,15 @@ fn refuse_unknown_flags(cmd: &str, args: &[String], allowed: &[&str]) -> Result<
     }
 }
 
-/// The value of `name` when present: it must have a value that is not another flag.
+/// The value of `name` when present: it must have a value that is not another flag, and the
+/// flag may be given at most once.  "First one wins" would let a stale `--expect-run-id 1`
+/// hide behind a later `--expect-run-id 2` (or the reverse) without anyone noticing which gate
+/// applied, so a repeat is a usage error (exit 2).  Every caller is `run` or `join`; no command
+/// legitimately repeats one of these flags.
 fn value_of(args: &[String], name: &str) -> Result<Option<String>, Failure> {
+    if args.iter().filter(|a| *a == name).count() > 1 {
+        return Err(Failure::Usage(format!("{name} given more than once")));
+    }
     match args.iter().position(|a| a == name) {
         None => Ok(None),
         Some(i) => match args.get(i + 1) {
@@ -748,6 +755,36 @@ pub fn cmd_join(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
     let files = positionals(args);
     if files.is_empty() {
         return Err(Failure::Usage("join needs at least one shard file".into()));
+    }
+    // Bound the work before reading anything: a plan has at most MAX_SHARDS shards, so more
+    // input files than that cannot be a valid set and are not worth opening.
+    if files.len() > crate::exp::MAX_SHARDS as usize {
+        return Err(Failure::Usage(format!(
+            "join refuses: {} input files, at most {} shards exist",
+            files.len(),
+            crate::exp::MAX_SHARDS
+        )));
+    }
+    // `join` never overwrites: an existing `--out` is refused outright.  That also covers
+    // `--out` naming one of the inputs (an input must exist to be read), but the explicit
+    // same-file comparison gives that case its own, clearer message (canonicalised, so
+    // `./a.json` and `a.json` are the same file).
+    let out_path = Path::new(&target);
+    if let Ok(canon_out) = out_path.canonicalize() {
+        if files.iter().any(|f| {
+            Path::new(f.as_str())
+                .canonicalize()
+                .is_ok_and(|c| c == canon_out)
+        }) {
+            return Err(Failure::Usage(format!(
+                "join refuses: --out {target} is one of the input files"
+            )));
+        }
+    }
+    if out_path.exists() {
+        return Err(Failure::Usage(format!(
+            "join refuses: --out {target} already exists (join never overwrites)"
+        )));
     }
     let mut inputs = Vec::new();
     for f in files {

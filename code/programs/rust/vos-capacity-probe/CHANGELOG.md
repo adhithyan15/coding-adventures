@@ -27,6 +27,12 @@ All notable changes to this package are documented here.
   `--expect-shards` and `--expect-jobs` refuse on a mismatch; a local run (no run id) refuses
   `--expect-run-id`. Row findings are printed as `join: finding:` and do not refuse. Unknown
   flags are refused.
+- **Hardening from the 2b-i security review (VOS-D136).** `join` pins every row's `seeds` to
+  `MIN_SEEDS`, refuses more than `MAX_SHARDS` input files before reading any, refuses a flag given
+  more than once (`value_of` counts occurrences; `run` and `join` are its only callers) and never
+  overwrites `--out` (an existing file, including an input, is refused). `rustc` and `os` are
+  documented as intentionally not compared (the binary digest fixes the build; `os` may vary
+  across runners of one label, VOS-D133).
 
 ### Added (VOS-028c3c-2a, VOS30 section 9.12.1)
 
