@@ -160,6 +160,7 @@ pub fn gather(exe: &Path) -> Meta {
         revisions,
         regeneration: None,
         merges: Vec::new(),
+        recording: None,
         trees: head_trees(),
     }
 }

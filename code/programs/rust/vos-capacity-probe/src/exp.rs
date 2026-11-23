@@ -351,6 +351,81 @@ pub fn plan(tier: Tier, only: &[String], seeds: u32) -> Vec<RowSpec> {
     out
 }
 
+// ---------------------------------------------------------------------------------------
+// Sharding (VOS30 section 9.2, VOS-028c3c-2b)
+// ---------------------------------------------------------------------------------------
+
+/// The largest shard count `--shard K/N` accepts.  N = 64 is the pre-registered value and 128
+/// the one re-record fallback; 1024 is a bound against a typo, not a design figure.
+pub const MAX_SHARDS: u32 = 1024;
+
+/// Every knob of the plan in plan order, each with the experiment that owns it: the sequence
+/// [`plan`] walks, and so the sequence sharding is defined over.  One list for both, so a shard
+/// can never disagree with the plan about which knob has which index.
+pub fn full_knob_list() -> Vec<(&'static str, Planned)> {
+    let mut v = Vec::new();
+    for exp in EXPERIMENTS {
+        for k in knobs(exp) {
+            v.push((exp, k));
+        }
+    }
+    v
+}
+
+/// The knobs of the full plan in plan order ([`full_knob_list`] without the experiment names).
+/// The B3 `every2`/`every4`, D5 and B5 knobs join this list when VOS-028c3c registers them in
+/// [`knobs`]; the sharding test is written for that future list too.
+pub fn full_knobs() -> Vec<Planned> {
+    full_knob_list().into_iter().map(|(_, k)| k).collect()
+}
+
+/// Parse `K/N`: two plain decimal integers (ASCII digits only: no sign, no space), with
+/// `0 <= K < N` and `1 <= N <=` [`MAX_SHARDS`].  K is 0-based.
+pub fn parse_shard(s: &str) -> Result<(u32, u32), String> {
+    let bad = || format!("--shard wants K/N with 0 <= K < N <= {MAX_SHARDS}, not {s:?}");
+    let (k, n) = s.split_once('/').ok_or_else(bad)?;
+    let digits = |x: &str| !x.is_empty() && x.len() <= 5 && x.bytes().all(|b| b.is_ascii_digit());
+    if !digits(k) || !digits(n) {
+        return Err(bad());
+    }
+    let (k, n): (u32, u32) = (k.parse().map_err(|_| bad())?, n.parse().map_err(|_| bad())?);
+    if n == 0 || n > MAX_SHARDS || k >= n {
+        return Err(bad());
+    }
+    Ok((k, n))
+}
+
+/// The shard that owns knob `i` (0-based, plan order) among `n`: plain round-robin, `i mod n`.
+/// All seeds of a knob stay together because the unit being dealt is the knob.  Round-robin is
+/// enough because the 24 B5 knobs are one contiguous block, so with `n >= 24` no shard gets two
+/// (VOS30 section 9.2).
+pub fn shard_of(i: usize, n: u32) -> u32 {
+    (i % n as usize) as u32
+}
+
+/// The rows of shard `k` of `n`: the full plan restricted to the knobs [`shard_of`] gives `k`,
+/// every seed of each, in plan order.  The union over `k` in `0..n` is `plan(Tier::Full, &[],
+/// seeds)` with every row in exactly one shard, which is what `join` re-checks.
+pub fn plan_shard(seeds: u32, k: u32, n: u32) -> Vec<RowSpec> {
+    let mut out = Vec::new();
+    for (i, (exp, p)) in full_knob_list().into_iter().enumerate() {
+        if shard_of(i, n) != k {
+            continue;
+        }
+        for seed in 1..=seeds as u64 {
+            out.push(RowSpec {
+                experiment: exp.to_string(),
+                knob: p.knob.clone(),
+                mode: p.mode.to_string(),
+                seed,
+                seeds,
+                tier: if p.quick { "quick" } else { "full" }.to_string(),
+            });
+        }
+    }
+    out
+}
+
 /// The single-instance shape of an experiment's knob.
 pub fn shape_for(spec: &RowSpec) -> Result<Box<dyn Shape>, String> {
     let k = &spec.knob;

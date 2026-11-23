@@ -75,6 +75,8 @@ and skips the sampled re-run, saying so.
 ```text
 vos-capacity-probe list
 vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] --out results.json
+vos-capacity-probe run --tier full --shard K/N [--run-id DIGITS --run-attempt DIGITS] [--jobs N] --out shard.json
+vos-capacity-probe join --out joined.json [--expect-binary-sha256 H] [--expect-run-id I] [--expect-run-attempt A] [--expect-shards N] [--expect-jobs J] shard.json...
 vos-capacity-probe check [--full] code/specs/data/vos30-capacity-results.json [--jobs N]
 vos-capacity-probe validate code/specs/data/vos30-capacity-results.json
 vos-capacity-probe table [--check | --write]
@@ -87,6 +89,19 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
 * `run --tier full` is the recorded offline run (hours). Its output is committed only after a named
   reviewer has regenerated it on a stated host; `dirty_tree`, `binary_sha256` and the regeneration
   banner are **self-reported**, so that review is a process control.
+* `run --tier full --shard K/N` (0-based, `K < N <= 1024`; refuses `--tier quick` and `--only`) runs
+  one slice of the plan: knob `i` in plan order goes to shard `i mod N`, all seeds of a knob
+  together. The output carries a `recording` block (`mode`, `shard`, `jobs`, and `run_id` and
+  `run_attempt` when `--run-id` and `--run-attempt` are given: explicit flags, ASCII digits, never
+  read from the environment). A local run gives neither id.
+* `join` turns the N shard files into one results file, or refuses with exit 2 and writes nothing:
+  each input canonical and structurally valid; the shard set exactly `0..N`; the tool, binary
+  digest, tree ids, revisions, host triple (not `os`), recording mode, jobs, run id and attempt
+  identical; no merges or banner; each input's rows exactly the plan's shard `K/N`. The
+  `--expect-*` flags refuse on a mismatch (a local run, with no run id, refuses `--expect-run-id`
+  and `--expect-run-attempt`). The output has the rows in plan order and a `recording` of
+  `{mode, run_id, run_attempt, shards, jobs}`; row findings print as `join: finding:` and do not
+  refuse. An unknown flag is refused, so a typo cannot skip a gate. VOS30 sections 9.2 and 9.12.2.
 * `validate FILE` runs only the schema and guard rules of `check` (no re-run, no executable, no plan
   coverage, so a shard's file can be classified) and tells the findings apart: exit 2 for a
   **structural** finding or an unreadable file (the recording is discarded), exit 1 for **row**

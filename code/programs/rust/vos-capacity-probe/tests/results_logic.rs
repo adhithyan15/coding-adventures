@@ -54,6 +54,7 @@ fn meta() -> Meta {
         revisions: vec![("repo".into(), "abc".into())],
         regeneration: None,
         merges: Vec::new(),
+        recording: None,
         trees: Vec::new(),
     }
 }
