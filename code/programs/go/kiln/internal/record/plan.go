@@ -59,10 +59,6 @@ type planFile struct {
 // Partition is the plan projected onto package paths.
 type Partition struct {
 	Shards []recfmt.ShardPlan
-	// Paths maps a package NAME to its rel_path, which is the only bridge
-	// between the build tool's exports (they name packages) and Kiln (it keys
-	// by path). The merge job needs it to key the steps export (B6).
-	Paths map[string]string
 }
 
 // ParsePartition decodes plan bytes that the caller already read and hashed,
@@ -127,7 +123,7 @@ func parsePartition(data []byte, count int) (*Partition, error) {
 	if len(pf.Shards) != count {
 		return nil, fmt.Errorf("plan: has %d shards, want exactly %d", len(pf.Shards), count)
 	}
-	out := &Partition{Paths: paths}
+	out := &Partition{}
 	seenIdx := map[int]bool{}
 	for _, sh := range pf.Shards {
 		if sh.Index < 0 || sh.Index >= count || seenIdx[sh.Index] {

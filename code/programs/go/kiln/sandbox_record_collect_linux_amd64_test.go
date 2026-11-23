@@ -47,6 +47,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -54,10 +55,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/host"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/ledger"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recmerge"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/record"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/source"
 )
 
 // collectKeys answers the merge's key questions from the sealed action files:
@@ -508,5 +512,90 @@ exit 0
 				t.Errorf("F: an empty recipe was emitted: %+v", o)
 			}
 		}
+	}
+
+	// The merge JOB, not just the merge engine: `record.Merge` is what
+	// `kiln record-merge` runs, and everything above tested recmerge with a
+	// fake Keys and a hand-built Expected. Here the job derives both itself --
+	// B1 from the fixture's commit, the expectations from the exports `prepare`
+	// sealed, the keys from the real legacy.Traced -- and its verdict must be
+	// the same one, with an empty ledger.
+	//
+	// The shard artifact is the three sealed pre/ files plus the records
+	// collect wrote, which is what the CI job uploads.
+	artDir := filepath.Join(base, "shard0")
+	if err := os.Mkdir(artDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	for _, n := range []string{record.ShardBindingFile, record.ShardHostFactsFile, record.ShardInventoryFile} {
+		data, err := os.ReadFile(filepath.Join(recDir, "pre", n))
+		if err != nil {
+			t.Fatalf("sealed %s: %v", n, err)
+		}
+		if err := os.WriteFile(filepath.Join(artDir, n), data, 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	recordsData, err := os.ReadFile(out)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(artDir, record.ShardRecordsFile), recordsData, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	jobOpts := func() record.MergeOptions {
+		return record.MergeOptions{
+			Root:       repo,
+			Source:     source.NewGitAt(repo, gitBin, source.PinnedEnv()),
+			GraphPath:  filepath.Join(recDir, "pre", "graph.json"),
+			StepsPath:  filepath.Join(recDir, "pre", "steps.json"),
+			PlanPath:   filepath.Join(recDir, "pre", "build-plan.json"),
+			ShardCount: 1,
+			Shards:     []record.ShardArtifact{{Index: 0, Dir: artDir}},
+			Run:        recmerge.Run{Repository: "owner/repo", ID: "1", Attempt: 1, Revision: "0000000000000000000000000000000000000000"},
+			Kiln:       "kiln/test traced/2 recorder/13",
+			Now:        time.Now().UTC(),
+			LedgerDir:  filepath.Join(base, "ledger"),
+			Scope:      ledger.Local,
+			Authority:  host.NewLocal(io.Discard),
+		}
+	}
+	// B1 first: the job must refuse a tree that is not the revision the shard
+	// names, BEFORE it reads a shard or keys anything.
+	if _, err := record.Merge(jobOpts()); err == nil || !strings.Contains(err.Error(), "B1") {
+		t.Fatalf("a wrong revision was not refused by B1: %v", err)
+	}
+	// The fixture's action E changed a tracked file after the build, which is
+	// exactly what B1 exists to catch; the collect header already recorded it.
+	// Restore the commit so B1 passes and the job reaches the shard, whose
+	// recorded cause still makes the run void.
+	recStepGit(t, gitBin, home, repo, "checkout", "--", ".")
+	o := jobOpts()
+	o.Run.Revision = sha
+	rep, err := record.Merge(o)
+	if err != nil {
+		t.Fatalf("record.Merge: %v", err)
+	}
+	if rep.Verdict.Emitted || rep.Written {
+		t.Errorf("a void run was emitted: %+v", rep)
+	}
+	if rep.Manifests != 0 || rep.Passes != 0 {
+		t.Errorf("a void run would have written %d manifest(s) and %d pass(es)", rep.Manifests, rep.Passes)
+	}
+	if rep.Revision != sha {
+		t.Errorf("B1 verified %q, want %q", rep.Revision, sha)
+	}
+	if rep.Actions == 0 {
+		t.Error("the job judged no actions, so it did not reach the shard")
+	}
+	// Nothing at all reaches the ledger: all-or-nothing (section 7, rule 3).
+	if _, err := os.Stat(o.LedgerDir); !errors.Is(err, os.ErrNotExist) {
+		if ents, _ := os.ReadDir(o.LedgerDir); len(ents) != 0 {
+			t.Errorf("a void run wrote %d ledger entries", len(ents))
+		}
+	}
+	if len(rep.Verdict.RunVoid) == 0 {
+		t.Error("the job reported a void run with no causes")
 	}
 }

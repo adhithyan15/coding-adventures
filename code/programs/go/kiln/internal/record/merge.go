@@ -51,6 +51,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/key"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/ledger"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
@@ -238,19 +239,29 @@ func Merge(o MergeOptions) (*MergeReport, error) {
 		Plan:        append([]recfmt.ShardPlan(nil), part.Shards...),
 		Steps:       map[string]string{},
 	}
-	// B6: the steps the merge's own tree runs, per package rel_path. The export
-	// names packages; the plan maps a name to its path, and an export that
-	// names a package the plan does not hold is a broken input, not a void run
-	// -- nothing a shard could have caused.
-	for _, p := range steps.Packages {
-		rel, ok := part.Paths[p.Package]
-		if !ok {
-			return nil, fmt.Errorf("steps export names %q, which the plan does not hold", printable(p.Package))
+	// B6: the steps the merge's own tree runs, per package rel_path. A steps
+	// entry's "package" field IS the graph's rel_path (legacy.Steps.Lines is
+	// looked up that way), so no name -> path mapping is involved; the plan is
+	// consulted only to refuse an export that names something no shard runs,
+	// which is a broken input rather than a void run -- nothing a shard could
+	// have caused.
+	run := map[string]bool{}
+	for _, sh := range part.Shards {
+		for _, rel := range sh.Packages {
+			run[rel] = true
 		}
-		if _, dup := exp.Steps[rel]; dup {
+	}
+	for _, p := range steps.Packages {
+		if err := key.ValidatePath(p.Package); err != nil {
+			return nil, fmt.Errorf("steps export names %q, which is not a path: %v", printable(p.Package), err)
+		}
+		if !run[p.Package] {
+			return nil, fmt.Errorf("steps export names %q, which no shard of the plan runs", printable(p.Package))
+		}
+		if _, dup := exp.Steps[p.Package]; dup {
 			return nil, fmt.Errorf("steps export names %q twice", printable(p.Package))
 		}
-		exp.Steps[rel] = recfmt.StepsDigest(p.Steps)
+		exp.Steps[p.Package] = recfmt.StepsDigest(p.Steps)
 	}
 	for _, sh := range part.Shards {
 		rep.PlanPackages += len(sh.Assigned)
