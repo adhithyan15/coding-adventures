@@ -95,16 +95,17 @@ pub fn dispatch(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Re
         Some("list") => cmd_list(out),
         Some("run") => cmd_run(&args[1..], out, err),
         Some("check") => cmd_check(&args[1..], out, err),
+        Some("validate") => cmd_validate(&args[1..], out, err),
         Some("table") => cmd_table(&args[1..], out, err),
         Some("decide") => cmd_decide(&args[1..], out),
         Some("merge") => cmd_merge(&args[1..], out),
         Some("row") => cmd_row(&args[1..], out),
         Some("structure") => cmd_structure(&args[1..], out),
         Some(other) => Err(Failure::Usage(format!(
-            "unknown command {other}; try list, run, check, table, decide, merge"
+            "unknown command {other}; try list, run, check, validate, table, decide, merge"
         ))),
         None => Err(Failure::Usage(
-            "no command; try list, run, check, table, decide, merge".into(),
+            "no command; try list, run, check, validate, table, decide, merge".into(),
         )),
     }
 }
@@ -795,6 +796,57 @@ pub fn cmd_check(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> R
     } else {
         Err(Failure::Violations(bad.len()))
     }
+}
+
+/// `validate FILE` (VOS-D130; VOS30 9.12.1): the schema and guard rules of `check`, and nothing
+/// else, with the findings told apart by class.  It re-runs nothing and needs no executable,
+/// so a recording's reviewer can classify it without trusting the machine that made it.
+///
+/// ```text
+///   exit 2   structural finding, or the file cannot be read or is not a canonical results file
+///            (the recording is discarded, VOS30 9.12.1 class 1)
+///   exit 1   row findings only (the recording is kept and blocks commit B, class 2)
+///   exit 0   clean (class 3)
+/// ```
+///
+/// Exit 2 is `Failure::Usage` and exit 1 is `Failure::Violations`, as everywhere in this tool.
+/// Plan coverage is NOT checked: a shard's file legitimately holds only its share of the plan.
+pub fn cmd_validate(
+    args: &[String],
+    out: &mut dyn Write,
+    err: &mut dyn Write,
+) -> Result<(), Failure> {
+    let pos = positionals(args);
+    if pos.len() > 1 {
+        return Err(Failure::Usage(
+            "validate takes exactly one results file".into(),
+        ));
+    }
+    let path = pos
+        .first()
+        .copied()
+        .ok_or_else(|| Failure::Usage("validate needs a results file".into()))?;
+    let res = Results::from_canonical_text(&read(Path::new(path))?).map_err(Failure::Usage)?;
+    let w = |e: std::io::Error| Failure::Usage(e.to_string());
+    let found = results::validate_classes(&res);
+    for m in &found.structural {
+        let _ = writeln!(err, "validate: structural: {m}");
+    }
+    for m in &found.rows {
+        let _ = writeln!(err, "validate: row: {m}");
+    }
+    if !found.structural.is_empty() {
+        return Err(Failure::Usage(format!(
+            "{} structural finding(s) and {} row finding(s): the recording is structurally invalid",
+            found.structural.len(),
+            found.rows.len()
+        )));
+    }
+    if !found.rows.is_empty() {
+        return Err(Failure::Violations(found.rows.len()));
+    }
+    writeln!(out, "validate: ok ({} rows)", res.rows.len()).map_err(w)?;
+    Ok(())
 }
 
 fn paths(args: &[String]) -> (PathBuf, PathBuf) {

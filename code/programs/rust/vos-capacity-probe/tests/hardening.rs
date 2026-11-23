@@ -126,8 +126,9 @@ fn a_chain_has_a_600_s_row_budget_and_every_other_row_keeps_120_s() {
         );
     }
     // The hard kill moves with the budget: 600 s + 30 s of control + 150 s of slack.
-    assert_eq!(hard_limit_for(CHAIN_WALL_S), Duration::from_secs(780));
-    assert_eq!(hard_limit(), hard_limit_for(120));
+    assert_eq!(row_wall_s("B3"), CHAIN_WALL_S);
+    assert_eq!(hard_limit_for("B3"), Duration::from_secs(780));
+    assert_eq!(hard_limit(), hard_limit_for("A1"));
     assert!(KILL_SLACK >= Duration::from_secs(150));
 }
 
@@ -777,6 +778,18 @@ mod unix_children {
             false,
         );
         assert!(v[0].contains("not verified"), "{v:?}");
+        // Security review of VOS-028c3c-2a: a bound-killed re-run is not verified even when the
+        // recorded row is itself `killed` (a `killed` record must not vouch for a killed re-run).
+        let mut killed = rows[0].clone();
+        killed.result = "killed".into();
+        let v = rerun_one(
+            std::path::Path::new(EXE),
+            &killed,
+            &planned,
+            Some(Duration::from_millis(1)),
+            false,
+        );
+        assert!(v[0].contains("not verified"), "{v:?}");
     }
 
     #[test]
@@ -860,9 +873,13 @@ mod unix_children {
             assert_eq!(args[0], "-c");
             assert_eq!(args[1], ULIMIT_SCRIPT, "the script never contains the data");
             assert_eq!(args[2], "sh");
+            // N is keyed on the EXPERIMENT (VOS-D123), not on the `wall_s` argument: these specs
+            // name a hostile, unknown experiment, which gets the 120 s row budget, the 30 s
+            // control stage and the 150 s slack, 300 s.  (In production `wall_s` is always
+            // `row_wall_s` of the same experiment, so the two never disagree.)
             assert_eq!(
-                args[3], "780",
-                "N is the number formatted from the budget constant"
+                args[3], "300",
+                "N is the number formatted from the budget constants of the experiment"
             );
             assert!(args[3].bytes().all(|b| b.is_ascii_digit()));
             assert_eq!(args[4], "/usr/bin/time");
