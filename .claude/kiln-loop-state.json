@@ -76,12 +76,14 @@
     {
       "id": "K-10",
       "priority": 2,
-      "status": "discovered",
+      "status": "blocked",
       "title": "M0: pin `rust` (the lane the wasm closures are waiting on)",
       "why": "Found while measuring K-04: a package is `unpinned` if ANY language in its closure is, and 74 of 75 wasm crates depend on code/packages/rust/*. So wasm can never leave the class alone, and rust is about 29% of build time by the census's own figures. Its workspace Cargo.lock is already committed and already satisfies `cargo metadata --locked`.",
       "scope": "~1471 cargo lines in code/packages/rust/*/BUILD and BUILD_windows; pinned.json",
       "depends_on": [],
-      "risk": "medium: mechanical but wide; the whole rust lane becomes affected in one PR, so CI cost is the real cost"
+      "risk": "medium: mechanical but wide; the whole rust lane becomes affected in one PR, so CI cost is the real cost",
+      "note": "PR #19854: the code is correct (metadata contracts, Kiln sandbox, Ubuntu and Windows builds all green on 3e393962) but the macOS job exceeded GitHub's 6-hour job cap and was cancelled, so CI gate failed. Split into subset PRs of ~300-400 packages; see the lesson and K-15.",
+      "pr": 19854
     },
     {
       "id": "K-11",
@@ -171,6 +173,16 @@
         "K-12"
       ],
       "risk": "low once PR 3b exists"
+    },
+    {
+      "id": "K-15",
+      "priority": 1,
+      "status": "discovered",
+      "title": "Pin rust in subsets small enough for the 6h macOS job cap",
+      "why": "Whole-lane pinning is one affected set of the entire rust lane, and the PR build is unsharded (only the scheduled full build shards), so the macOS job was cancelled at 6h01m. Split by package directory into ~300-400 packages per PR, watching the AFFECTED package count (dependents included), not the changed-file count. pinned.json gains rust only in the last subset.",
+      "scope": "code/packages/rust/<subset>/BUILD and BUILD_windows",
+      "depends_on": [],
+      "risk": "medium: each attempt can still exceed 6h if a subset is dominated by a heavily-depended-on crate"
     }
   ],
   "log": [
@@ -182,6 +194,11 @@
       "at": "2026-11-22",
       "item": "K-01",
       "note": "First implementation attempt used `${{ inputs.x || 'y' }}` for the schedule defaults. REJECTED in review: in an Actions expression the string \"0\" coerces to the number 0 and is falsy, so a dispatch with shard_indices=0 (the documented default) would silently have recorded shards 0,1,2. Replaced with an explicit `SCHEDULED == 'true'` guard and `${VAR:-default}` in the shell; verified all three paths locally (schedule -> 15/0,1,2/runner; dispatch -> 15/0/fresh unchanged; index>=count still refused)."
+    },
+    {
+      "at": "2026-11-23",
+      "item": "K-10",
+      "note": "Closed PR #19854. Verified green: Repo-wide metadata contracts, both Kiln sandbox images, build (ubuntu-latest), build (windows-2025). Only build (macos-latest) failed, by cancellation at the platform's 6h job cap. Two real bugs were found and fixed on the way: generated vos-sched BUILDs had to be pinned at their generator (build_gen.rs), and the barcode-layout-1d lane evidence had to be repinned. Both fixes stay in the split PRs."
     }
   ]
 }
