@@ -375,17 +375,17 @@ pub fn canonical_build(g: &GenInputs, windows: bool) -> String {
     l("# needs-toolchain: python".to_string());
     l("# Lines 1 to 5 of VOS04 5.2: unit (with and without the evidence feature, then doc), shape, capability, document, harness drift.".to_string());
     l(format!(
-        "cargo test -p {c} --lib --test behaviour -- --nocapture"
+        "cargo test --locked -p {c} --lib --test behaviour -- --nocapture"
     ));
     if !g.features.is_empty() {
-        l(format!("cargo test -p {c}{feat} --lib --test behaviour"));
+        l(format!("cargo test --locked -p {c}{feat} --lib --test behaviour"));
     }
-    l(format!("cargo test -p {c} --doc"));
-    l("cargo run -q -p vos-shape-check -- .".to_string());
-    l("cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .".to_string());
-    l(format!("cargo run -q --manifest-path {vl} -- check-doc ."));
+    l(format!("cargo test --locked -p {c} --doc"));
+    l("cargo run --locked -q -p vos-shape-check -- .".to_string());
+    l("cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir .".to_string());
+    l(format!("cargo run --locked -q --manifest-path {vl} -- check-doc ."));
     l(format!(
-        "cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check {c}"
+        "cargo run --locked -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check {c}"
     ));
     l("# Lines 6 to 8: the generated suite (exhaustive, property, fuzz) rewrites the evidence manifest.  The old one is removed first, so a".to_string());
     l("# run that exits 0 without rewriting it leaves no file and fails check-component (CC02), instead of passing on a stale one.".to_string());
@@ -401,14 +401,14 @@ pub fn canonical_build(g: &GenInputs, windows: bool) -> String {
         let sh = if windows { "bash" } else { "sh" };
         l(format!("{sh} {TOLERANCE_SCRIPT}"));
     } else if windows {
-        l(format!("set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p {c}{feat} --test warrant_evidence"));
+        l(format!("set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test --locked -q -p {c}{feat} --test warrant_evidence"));
     } else {
-        l(format!("WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p {c}{feat} --test warrant_evidence"));
+        l(format!("WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test --locked -q -p {c}{feat} --test warrant_evidence"));
     }
     l("# Line 9: sabotage.  Each fault must make the suite of the claim it names report `not ok` (the shared checker, VOS-D099).".to_string());
     for e in &g.plan {
         let filter = format!("/{}/{}", e.tier, e.name);
-        let tail = format!("../../../scripts/warrant_negctl.py -- cargo test -q -p {c}{feat} --test warrant_evidence");
+        let tail = format!("../../../scripts/warrant_negctl.py -- cargo test --locked -q -p {c}{feat} --test warrant_evidence");
         if windows {
             let mut x = format!("set WARRANT_EVIDENCE_FAULT={}&& ", e.fault);
             if let Some(a) = &e.attack {
@@ -439,7 +439,7 @@ pub fn canonical_build(g: &GenInputs, windows: bool) -> String {
             .to_string(),
     );
     l(format!(
-        "cargo run -q --manifest-path {vl} -- check-component ."
+        "cargo run --locked -q --manifest-path {vl} -- check-component ."
     ));
     l(MARKER.to_string());
     s
@@ -473,16 +473,16 @@ pub fn canonical_contract_build(krate: &str) -> String {
             .to_string(),
     );
     l(format!(
-        "cargo test -p {krate} --lib --tests -- --nocapture"
+        "cargo test --locked -p {krate} --lib --tests -- --nocapture"
     ));
-    l(format!("cargo test -p {krate} --doc"));
-    l("cargo run -q -p vos-shape-check -- .".to_string());
-    l("cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .".to_string());
+    l(format!("cargo test --locked -p {krate} --doc"));
+    l("cargo run --locked -q -p vos-shape-check -- .".to_string());
+    l("cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir .".to_string());
     l(format!(
-        "cargo run -q --manifest-path {vl} -- check-contract ."
+        "cargo run --locked -q --manifest-path {vl} -- check-contract ."
     ));
     l(format!(
-        "cargo run -q --manifest-path {vl} -- check-component ."
+        "cargo run --locked -q --manifest-path {vl} -- check-component ."
     ));
     l(MARKER.to_string());
     s
@@ -548,7 +548,7 @@ set -eu\n\
 known_ids='{ids}'\n\
 \n\
 status=0\n\
-out=$(WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p {c}{feat} --test warrant_evidence 2>/dev/null) || status=$?\n\
+out=$(WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test --locked -q -p {c}{feat} --test warrant_evidence 2>/dev/null) || status=$?\n\
 \n\
 ok=$(printf '%s\\n' \"$out\" | grep -c '^ok ' || true)\n\
 failed=$(printf '%s\\n' \"$out\" | sed -n 's/^not ok [0-9][0-9]* - //p' | sort)\n\

@@ -322,7 +322,7 @@ fn the_root_is_found_above_the_two_rust_roots_and_nowhere_else() {
 
 #[test]
 fn the_real_repository_passes_from_the_crates_own_directory() {
-    // `cargo test` runs in this crate's directory, as the BUILD line does: the root is found
+    // `cargo test --locked` runs in this crate's directory, as the BUILD line does: the root is found
     // from the working directory, with no argument.
     let o = check_publish(None).expect("a verdict");
     assert!(o.findings.is_empty(), "{}", show(&o));

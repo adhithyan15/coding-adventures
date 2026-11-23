@@ -85,7 +85,7 @@ fn the_document_is_the_golden_text() {
     let golden = std::fs::read_to_string(&path).expect("the golden file");
     assert_eq!(
         doc, golden,
-        "run VOS_LINK_BLESS=1 cargo test to accept an intended change"
+        "run VOS_LINK_BLESS=1 cargo test --locked to accept an intended change"
     );
 }
 

@@ -16,7 +16,7 @@ warrant/vos_sched_rr/negctl/property/init/field-flip
 warrant/vos_sched_rr/negctl/fuzz/init/field-flip'
 
 status=0
-out=$(WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null) || status=$?
+out=$(WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test --locked -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null) || status=$?
 
 ok=$(printf '%s\n' "$out" | grep -c '^ok ' || true)
 failed=$(printf '%s\n' "$out" | sed -n 's/^not ok [0-9][0-9]* - //p' | sort)

@@ -1042,7 +1042,7 @@ fn a_generated_contract_crate_is_a_component() {
         "no shell syntax to differ on"
     );
     assert_eq!(build, canonical_contract_build(C));
-    assert!(build.contains("\ncargo test -p vos-fixture-contract --lib --tests -- --nocapture\n"));
+    assert!(build.contains("\ncargo test --locked -p vos-fixture-contract --lib --tests -- --nocapture\n"));
     assert!(build.contains("-- check-contract .\n"));
     assert!(build.ends_with(&format!("-- check-component .\n{MARKER}\n")));
     assert!(!build.contains("python") && !build.contains("WARRANT_EVIDENCE"));
@@ -1106,8 +1106,8 @@ fn bypass_echo_and_or_true_lines_fail_by_byte_inequality() {
     let r = component("cc03-echo");
     r.edit(
         &pkg_path("BUILD"),
-        "cargo run -q --manifest-path",
-        "echo cargo run -q --manifest-path",
+        "cargo run --locked -q --manifest-path",
+        "echo cargo run --locked -q --manifest-path",
     );
     let o = cc(&r);
     only(&o, "CC03", CC03);
@@ -1134,7 +1134,7 @@ fn bypass_echo_and_or_true_lines_fail_by_byte_inequality() {
     let r = component("cc03-missing");
     r.edit(
         &pkg_path("BUILD"),
-        "cargo test -p vos-fixture-contract --doc\n",
+        "cargo test --locked -p vos-fixture-contract --doc\n",
         "",
     );
     only(&cc(&r), "CC03", CC03);
@@ -1142,13 +1142,13 @@ fn bypass_echo_and_or_true_lines_fail_by_byte_inequality() {
     let r = component("cc03-hash");
     r.edit(
         &pkg_path("BUILD"),
-        "cargo run -q -p vos-shape-check -- .\n",
-        "true # cargo run -q -p vos-shape-check -- .\n",
+        "cargo run --locked -q -p vos-shape-check -- .\n",
+        "true # cargo run --locked -q -p vos-shape-check -- .\n",
     );
     only(&cc(&r), "CC03", CC03);
 
     let r = component("cc03-windows");
-    r.write(&pkg_path("BUILD_windows"), "rem cargo test\n");
+    r.write(&pkg_path("BUILD_windows"), "rem cargo test --locked\n");
     only(&cc(&r), "CC03", CC03);
 }
 

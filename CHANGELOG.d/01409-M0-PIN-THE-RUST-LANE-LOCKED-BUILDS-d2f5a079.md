@@ -10,6 +10,13 @@
   rather than resolve a build, and the same packages' `test` and `build` lines
   already fail on a stale lockfile. Locking them would risk a flag the tool does
   not accept for no soundness gain.
+- Four rust packages (`vos-sched-{contract,any,fp-bitmap,rr}`) have a BUILD that
+  `vos-link gen-build` owns byte for byte, so they are pinned at the generator,
+  not in the file: `build_gen.rs` now emits `--locked`, the four packages and
+  `vos-sched-rr/warrant/check_evidence.sh` were regenerated with it, and the
+  five `vos-link` test files whose fixtures quote a canonical line were updated
+  with it. `vos-link`'s 13 test binaries pass and `check-component` PASSes for
+  all four.
 - `pinned.json` gains `rust` (now `["rust", "wasm"]`). Verified current:
   the workspace `Cargo.lock`, `os-kernel`'s own lockfile (excluded from the
   workspace, different target), and `programs/rust/vos-link`, which a BUILD runs

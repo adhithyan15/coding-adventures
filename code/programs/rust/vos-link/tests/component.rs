@@ -302,16 +302,16 @@ fn gen_build_writes_the_lines_of_section_5_2_in_order() {
     let r = good("gb-lines", PROD, "production", false);
     let b = r.read(&p(PROD, "BUILD"));
     let order = [
-        "cargo test -p vos-fix-comp --lib --test behaviour -- --nocapture\n",
-        "cargo test -p vos-fix-comp --features ghost --lib --test behaviour\n",
-        "cargo test -p vos-fix-comp --doc\n",
-        "cargo run -q -p vos-shape-check -- .\n",
-        "cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .\n",
+        "cargo test --locked -p vos-fix-comp --lib --test behaviour -- --nocapture\n",
+        "cargo test --locked -p vos-fix-comp --features ghost --lib --test behaviour\n",
+        "cargo test --locked -p vos-fix-comp --doc\n",
+        "cargo run --locked -q -p vos-shape-check -- .\n",
+        "cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir .\n",
         "Cargo.toml -- check-doc .\n",
         "--example gen_evidence -- --check vos-fix-comp\n",
         "\nrm -f evidence/test-manifest.json\n",
-        "WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p vos-fix-comp --features ghost --test warrant_evidence\n",
-        "WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/c1 python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-fix-comp --features ghost --test warrant_evidence\n",
+        "WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test --locked -q -p vos-fix-comp --features ghost --test warrant_evidence\n",
+        "WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/c1 python3 ../../../scripts/warrant_negctl.py -- cargo test --locked -q -p vos-fix-comp --features ghost --test warrant_evidence\n",
         "WARRANT_EVIDENCE_FILTER=/example/e1 python3 ",
         "WARRANT_EVIDENCE_FAULT=field-flip WARRANT_EVIDENCE_ATTACK=g WARRANT_EVIDENCE_FILTER=/exhaustive/c1 python3 ../../../scripts/warrant_negctl.py -- ",
         "if [ \"$(uname)\" = \"Linux\" ]; then cargo tarpaulin -p vos-fix-comp --features ghost --lib --test behaviour --ignore-tests --engine llvm --include-files 'vos-fix-comp/src/*' --fail-under 95 --skip-clean; fi\n",
@@ -336,8 +336,8 @@ fn the_windows_build_has_set_lines_python_and_no_coverage_gate() {
     assert!(!w.contains("tarpaulin"));
     // The stale manifest is removed first; `if exist` makes it safe and idempotent under cmd.
     assert!(w.contains("\nif exist evidence\\test-manifest.json del /f /q evidence\\test-manifest.json\nset WARRANT_EVIDENCE_OUT"));
-    assert!(w.contains("\nset WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p vos-fix-comp --features ghost --test warrant_evidence\n"));
-    assert!(w.contains("\nset WARRANT_EVIDENCE_FAULT=field-flip&& set WARRANT_EVIDENCE_ATTACK=g&& set WARRANT_EVIDENCE_FILTER=/exhaustive/c1&& python ../../../scripts/warrant_negctl.py -- cargo test"));
+    assert!(w.contains("\nset WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test --locked -q -p vos-fix-comp --features ghost --test warrant_evidence\n"));
+    assert!(w.contains("\nset WARRANT_EVIDENCE_FAULT=field-flip&& set WARRANT_EVIDENCE_ATTACK=g&& set WARRANT_EVIDENCE_FILTER=/exhaustive/c1&& python ../../../scripts/warrant_negctl.py -- cargo test --locked"));
     assert!(!w.contains("python3"));
 }
 
@@ -407,7 +407,7 @@ fn gen_build_writes_the_tolerance_script_from_excused_controls() {
     let r = good("gb-script", PROD, "production", true);
     let s = r.read(&p(PROD, "warrant/check_evidence.sh"));
     assert!(s.contains("known_ids='m/negctl/exhaustive/g/field-flip\nm/negctl/property/g/field-flip\nm/negctl/fuzz/g/field-flip'"), "{s}");
-    assert!(s.contains("cargo test -q -p vos-fix-comp --features ghost --test warrant_evidence"));
+    assert!(s.contains("cargo test --locked -q -p vos-fix-comp --features ghost --test warrant_evidence"));
     assert!(s.contains("[ \"$ok\" -eq 0 ]"));
 }
 
@@ -513,7 +513,7 @@ fn changelog_d_meta_satisfies_the_changelog_rule() {
 
 // --- CC03: BUILD equals what gen-build writes; every bypass of the first draft -------------
 
-const DOCLINE: &str = "cargo test -p vos-fix-comp --doc\n";
+const DOCLINE: &str = "cargo test --locked -p vos-fix-comp --doc\n";
 const COVLINE: &str = "if [ \"$(uname)\" = \"Linux\" ]; then cargo tarpaulin -p vos-fix-comp --features ghost --lib --test behaviour --ignore-tests --engine llvm --include-files 'vos-fix-comp/src/*' --fail-under 95 --skip-clean; fi\n";
 
 fn break_build(label: &str, file: &str, from: &str, to: &str) -> Outcome {
@@ -538,7 +538,7 @@ fn bypass_true_then_comment() {
             "by-true",
             "BUILD",
             DOCLINE,
-            "true # cargo test -p vos-fix-comp --doc\n",
+            "true # cargo test --locked -p vos-fix-comp --doc\n",
         ),
         "CC03",
         CC03,
@@ -561,7 +561,7 @@ fn bypass_line_or_true() {
             "by-ortrue",
             "BUILD",
             DOCLINE,
-            "cargo test -p vos-fix-comp --doc || true\n",
+            "cargo test --locked -p vos-fix-comp --doc || true\n",
         ),
         "CC03",
         CC03,
@@ -679,11 +679,11 @@ fn bypass_the_marker_removed_or_text_before_the_header() {
 #[test]
 fn each_missing_build_line_fails_in_both_build_files_and_names_the_line() {
     let cases = [
-        "cargo test -p vos-fix-comp --lib --test behaviour -- --nocapture\n",
-        "cargo test -p vos-fix-comp --features ghost --lib --test behaviour\n",
+        "cargo test --locked -p vos-fix-comp --lib --test behaviour -- --nocapture\n",
+        "cargo test --locked -p vos-fix-comp --features ghost --lib --test behaviour\n",
         DOCLINE,
-        "cargo run -q -p vos-shape-check -- .\n",
-        "cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .\n",
+        "cargo run --locked -q -p vos-shape-check -- .\n",
+        "cargo run --locked -q -p coding_adventures_ca_capability_analyzer -- --dir .\n",
         "Cargo.toml -- check-doc .\n",
         "--example gen_evidence -- --check vos-fix-comp\n",
         "WARRANT_EVIDENCE_OUT=",
@@ -720,7 +720,7 @@ fn check_component_before_the_generated_suite_is_a_difference_too() {
     let r = good("cc03-order", PROD, "production", false);
     let path = p(PROD, "BUILD");
     let text = r.read(&path);
-    let cc = "cargo run -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check-component .\n";
+    let cc = "cargo run --locked -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check-component .\n";
     let moved = text
         .replace(cc, "")
         .replace("# Lines 6 to 8", &format!("{cc}# Lines 6 to 8"));
@@ -734,14 +734,14 @@ fn the_finding_names_the_first_differing_line_expected_and_found() {
         "cc03-text",
         "BUILD",
         DOCLINE,
-        "cargo test -p vos-fix-comp --doc --nocapture\n",
+        "cargo test --locked -p vos-fix-comp --doc --nocapture\n",
     );
     only(&o, "CC03", "BUILD:8: ");
-    has(&o, "CC03", "expected \"cargo test -p vos-fix-comp --doc\"");
+    has(&o, "CC03", "expected \"cargo test --locked -p vos-fix-comp --doc\"");
     has(
         &o,
         "CC03",
-        "found \"cargo test -p vos-fix-comp --doc --nocapture\"",
+        "found \"cargo test --locked -p vos-fix-comp --doc --nocapture\"",
     );
 }
 

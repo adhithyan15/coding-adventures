@@ -37,7 +37,7 @@ fn the_document_is_the_golden_text() {
     // The golden file is the real output for the real contract: a change to the contract
     // package, to a part, or to the tool shows up here as a diff to review (VOS02 12.1
     // item 10: a contract change lists every document it regenerates).  To accept an
-    // intended change: VOS_LINK_BLESS=1 cargo test.
+    // intended change: VOS_LINK_BLESS=1 cargo test --locked.
     let r = Repo::with("golden", "vos-fixture-bitmap");
     r.gen("vos-fixture-bitmap");
     let doc = r.doc("vos-fixture-bitmap");
@@ -54,7 +54,7 @@ fn the_document_is_the_golden_text() {
     let golden = std::fs::read_to_string(golden_path()).expect("the golden file");
     assert_eq!(
         doc, golden,
-        "run VOS_LINK_BLESS=1 cargo test to accept an intended change"
+        "run VOS_LINK_BLESS=1 cargo test --locked to accept an intended change"
     );
 }
 
