@@ -1,3 +1,3 @@
 rustup target add wasm32-unknown-unknown
-cargo test -- --nocapture
-cargo build --target wasm32-unknown-unknown --release
+cargo test --locked -- --nocapture
+cargo build --locked --target wasm32-unknown-unknown --release
