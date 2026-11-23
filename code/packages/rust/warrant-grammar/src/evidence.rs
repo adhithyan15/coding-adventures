@@ -32,8 +32,8 @@ use std::fmt::Write as _;
 use std::path::Path;
 
 use crate::binding::{
-    is_rust_identifier, is_rust_path, validate_bindings, BindingManifest, EvidenceBindingFile,
-    HostShape, HostSpec, HostTy, InoutForm, MAX_EXPORT_SEGMENTS,
+    is_rust_identifier, is_rust_path, validate_bindings, validate_host_spec, BindingManifest,
+    EvidenceBindingFile, HostShape, HostSpec, HostTy, InoutForm, MAX_EXPORT_SEGMENTS,
 };
 use crate::checker::{CheckedWarrantModule, DiagnosticCode as CheckerCode, PostSlot};
 use crate::driver::{validate_driver_consistency, validate_driver_record_strings};
@@ -3190,6 +3190,8 @@ pub fn generate_evidence_harness_with_tables(
             (0, 0),
         ));
     }
+    validate_host_spec(&options.hosts)
+        .map_err(|e| unsupported(format!("host spec: {e}"), (0, 0)))?;
     if options.spec_path.contains(['"', '\\', '\n', '\r']) {
         return Err(unsupported(format!("spec path {:?} cannot be embedded", options.spec_path), (0, 0)));
     }

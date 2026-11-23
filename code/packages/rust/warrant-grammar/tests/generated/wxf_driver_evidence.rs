@@ -662,6 +662,7 @@ pub enum Fault {
     DuplicateLastChunk,
     EarlyFinish,
     ResetPerStep,
+    DropLastOutput,
 }
 
 impl Fault {
@@ -673,6 +674,7 @@ impl Fault {
             Fault::DuplicateLastChunk => "duplicate-last-chunk",
             Fault::EarlyFinish => "early-finish",
             Fault::ResetPerStep => "reset-per-step",
+            Fault::DropLastOutput => "drop-last-output",
         }
     }
     pub fn parse(text: &str) -> Option<Fault> {
@@ -683,6 +685,7 @@ impl Fault {
             Fault::DuplicateLastChunk,
             Fault::EarlyFinish,
             Fault::ResetPerStep,
+            Fault::DropLastOutput,
         ]
         .into_iter()
         .find(|f| f.name() == text)
@@ -1554,6 +1557,106 @@ fn shrink_comp(tys: &[Ty], cand: Vec<V>, prop_raw: &dyn Fn(&Vec<V>) -> bool) -> 
     (cur, steps)
 }
 
+// ----- refinement starvation (VOS-D079, VER04h section 4.1) ----------------
+//
+// A refinement is applied by rejection: a case is redrawn up to 100 times.  A
+// refinement that admits few draws (`t < 8` over a byte admits 8 of 256, about
+// 3 percent) loses all 100 draws of some case with probability 0.97^100 = 4.7
+// percent, so 4,096 cases never all succeed and the suite failed with
+// `property-exhausted` while the exhaustive suite (which enumerates the
+// admissible values) passed.
+//
+//   * A claim whose every binder is *exactly enumerable* (its draw support IS
+//     its exhaustive domain) is rescued: when the 100 draws of one case are all
+//     rejected, the case is drawn uniformly from the admissible set instead.
+//     The ordinary rejection draw is untouched, so every case that used to be
+//     drawn is drawn identically.
+//   * Any other claim cannot be rescued (sampling the enumeration would narrow
+//     what the suite covers), so a refinement below `1/ACCEPT_FLOOR_DEN`
+//     acceptance is refused on the first draw with a clear message.  The floor
+//     is 1/8: see `ACCEPT_FLOOR_DEN` for the derivation.
+
+/// Draws measured by the acceptance probe.
+const ACCEPT_PROBE: u64 = 2048;
+/// The floor: fewer than one admitted draw in this many is refused.
+///
+/// Derivation.  A case draws at most R = 100 times, so it is lost with
+/// probability (1 - a)^R at acceptance a, and the suite fails if any of its C
+/// cases is lost: P(fail) ~ C * (1 - a)^R.  Requiring that below 0.01 with
+/// C = 4096 gives (1 - a)^100 < 2.4e-6, a > 12.0 percent, so the floor is 1/8
+/// (12.5 percent).  At the old 1/32 a claim at 4 percent (0.96^100 = 1.7 percent
+/// per case) passed the probe and then failed.  A document whose
+/// `property_cases` exceeds 4096 must re-derive the floor (the assertion below).
+const ACCEPT_FLOOR_DEN: u64 = 8;
+const _: () = assert!(PROPERTY_CASES <= 4096, "re-derive ACCEPT_FLOOR_DEN for this case count");
+
+/// True when the values `fresh` can draw for `ty` are exactly `domain(ty)`.
+fn exact_support(ty: Ty) -> bool {
+    match ty {
+        Ty::Bool => true,
+        Ty::Nat => true,
+        Ty::Fx(f) => f.bits() <= 16,
+        Ty::Tuple(cs) => cs.iter().all(|c| exact_support(*c)),
+        Ty::Data(_, ctors) => ctors.iter().all(|(_, fs)| fs.iter().all(|c| exact_support(*c))),
+        Ty::Opt(t) | Ty::Res(t, _) => exact_support(*t),
+        _ => false,
+    }
+}
+
+/// Every admitted environment of the Cartesian product of the binder domains,
+/// in the exhaustive suite's order.  Callers check `within_budget` first.
+fn admissible_set(tys: &[Ty], admit: Admit) -> Vec<Vec<V>> {
+    let domains: Vec<Vec<V>> = tys.iter().map(|t| domain(*t)).collect();
+    let mut out = Vec::new();
+    if domains.iter().any(|d| d.is_empty()) {
+        return out;
+    }
+    let mut idx = vec![0usize; domains.len()];
+    loop {
+        let env: Vec<V> = idx.iter().zip(&domains).map(|(i, d)| d[*i].clone()).collect();
+        if admit(&env) {
+            out.push(env);
+        }
+        let mut pos = idx.len();
+        loop {
+            if pos == 0 {
+                return out;
+            }
+            pos -= 1;
+            idx[pos] += 1;
+            if idx[pos] < domains[pos].len() {
+                break;
+            }
+            idx[pos] = 0;
+        }
+    }
+}
+
+/// The acceptance floor, as a pure function of the counts (`Err` is the message).
+fn acceptance_verdict(admitted: u64, probe: u64) -> Result<(), String> {
+    if admitted * ACCEPT_FLOOR_DEN < probe {
+        return Err(format!(
+            "refinement acceptance {admitted}/{probe} is below the floor 1/{ACCEPT_FLOOR_DEN} \
+             on a domain that cannot be enumerated (widen the refinement or narrow the binder types)"
+        ));
+    }
+    Ok(())
+}
+
+/// Measure the acceptance of `ACCEPT_PROBE` draws from a stream derived from
+/// `seed` (so the case stream of the suite is untouched).
+fn acceptance_probe(seed: u64, tys: &[Ty], admit: Admit) -> Result<(), String> {
+    let mut rng = SplitMix64::new(seed ^ 0xACCE_97F1_0042_0001);
+    let mut admitted = 0u64;
+    for _ in 0..ACCEPT_PROBE {
+        let mode = rng.bounded(8) as u8;
+        if admit(&build(tys, &mut RngSrc(&mut rng), mode)) {
+            admitted += 1;
+        }
+    }
+    acceptance_verdict(admitted, ACCEPT_PROBE)
+}
+
 /// L2 property suite over relation-biased generators.
 pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault) -> (Verdict, Stats) {
     let seed = SplitMix64::new(EVIDENCE_SEED ^ fnv1a64(tag.as_bytes())).next_u64();
@@ -1566,7 +1669,13 @@ pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault)
     let cases = Cell::new(0u64);
     let discarded = Cell::new(0u64);
     let equal = Cell::new(0u64);
+    let rescue = tys.iter().all(|t| exact_support(*t)) && within_budget(tys);
+    let pool: std::cell::RefCell<Option<Vec<Vec<V>>>> = std::cell::RefCell::new(None);
+    let probed = Cell::new(false);
     let gen = |rng: &mut SplitMix64| -> Result<Vec<V>, String> {
+        if !rescue && !probed.replace(true) {
+            acceptance_probe(seed, tys, admit)?;
+        }
         for _ in 0..100 {
             let mode = rng.bounded(8) as u8;
             let env = build(tys, &mut RngSrc(rng), mode);
@@ -1578,6 +1687,27 @@ pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault)
                 return Ok(env);
             }
             discarded.set(discarded.get() + 1);
+        }
+        if rescue {
+            let mut slot = pool.borrow_mut();
+            let set = slot.get_or_insert_with(|| {
+                let set = admissible_set(tys, admit);
+                // Rescued cases repeat members of a small set: say how small, so
+                // the case count is not read as that many distinct cases.
+                eprintln!(
+                    "# property {tag}: rescued by enumeration, {} distinct admissible case(s)",
+                    set.len()
+                );
+                set
+            });
+            if !set.is_empty() {
+                let env = set[rng.bounded(set.len() as u64) as usize].clone();
+                cases.set(cases.get() + 1);
+                if env.len() >= 2 && env[0] == env[1] {
+                    equal.set(equal.get() + 1);
+                }
+                return Ok(env);
+            }
         }
         Err(FID_EXHAUSTED.to_string())
     };
@@ -2043,6 +2173,100 @@ pub fn fuz_c(fault: Fault, iterations: u64) -> (Verdict, Stats) {
     (v, s)
 }
 
+const CLAIM_C2_NAMES: &[&str] = &["key", "chunks"];
+
+const CLAIM_C2_DEMOTED: &[&str] = &[];
+
+const CLAIM_C2_TYS: &[Ty] = &[Ty::Fx(F::U8), Ty::List(&Ty::Bytes)];
+
+#[allow(unused_variables)]
+fn claim_c2_admit(env: &[V]) -> bool {
+    let b_key = env[0].clone();
+    let b_chunks = env[1].clone();
+    true && V::compare(&b_chunks.clone().length(), &V::Int(1i128), ">=").truthy()
+}
+
+#[allow(unused_variables, unused_mut)]
+fn claim_c2_holds(env: &[V], fault: Fault) -> bool {
+    let b_key = env[0].clone();
+    let b_chunks = env[1].clone();
+    match catch_unwind(AssertUnwindSafe(|| V::Bool(op_scan2(&[], &[b_key.clone(), b_chunks.clone()], fault) == op_scan2(&[], &[b_key.clone(), b_chunks.clone()], fault)).truthy())) {
+        Ok(v) => v,
+        Err(p) if p.is::<Unreachable>() => {
+            count_unreach();
+            true
+        }
+        Err(p) => std::panic::resume_unwind(p),
+    }
+}
+
+pub fn exh_c2(fault: Fault) -> (Verdict, Stats) {
+    take_unreach();
+    let (v, mut s) = exhaustive(CLAIM_C2_TYS, claim_c2_admit, claim_c2_holds, fault);
+    s.unreachable = take_unreach();
+    (v, s)
+}
+
+pub fn prop_c2(fault: Fault) -> (Verdict, Stats) {
+    take_unreach();
+    let (v, mut s) = property("claim/wxf_driver/c2", CLAIM_C2_TYS, claim_c2_admit, claim_c2_holds, fault);
+    s.unreachable = take_unreach();
+    (v, s)
+}
+
+pub fn fuz_c2(fault: Fault, iterations: u64) -> (Verdict, Stats) {
+    take_unreach();
+    let (v, mut s) = fuzz_claim("fuzz/wxf_driver/c2", CLAIM_C2_TYS, claim_c2_admit, claim_c2_holds, fault, iterations);
+    s.unreachable = take_unreach();
+    (v, s)
+}
+
+const CLAIM_C3_NAMES: &[&str] = &["chunks"];
+
+const CLAIM_C3_DEMOTED: &[&str] = &[];
+
+const CLAIM_C3_TYS: &[Ty] = &[Ty::List(&Ty::Bytes)];
+
+#[allow(unused_variables)]
+fn claim_c3_admit(env: &[V]) -> bool {
+    let b_chunks = env[0].clone();
+    true
+}
+
+#[allow(unused_variables, unused_mut)]
+fn claim_c3_holds(env: &[V], fault: Fault) -> bool {
+    let b_chunks = env[0].clone();
+    match catch_unwind(AssertUnwindSafe(|| V::Bool(op_try_hash(&[], &[b_chunks.clone()], fault) == op_try_hash(&[], &[b_chunks.clone()], fault)).truthy())) {
+        Ok(v) => v,
+        Err(p) if p.is::<Unreachable>() => {
+            count_unreach();
+            true
+        }
+        Err(p) => std::panic::resume_unwind(p),
+    }
+}
+
+pub fn exh_c3(fault: Fault) -> (Verdict, Stats) {
+    take_unreach();
+    let (v, mut s) = exhaustive(CLAIM_C3_TYS, claim_c3_admit, claim_c3_holds, fault);
+    s.unreachable = take_unreach();
+    (v, s)
+}
+
+pub fn prop_c3(fault: Fault) -> (Verdict, Stats) {
+    take_unreach();
+    let (v, mut s) = property("claim/wxf_driver/c3", CLAIM_C3_TYS, claim_c3_admit, claim_c3_holds, fault);
+    s.unreachable = take_unreach();
+    (v, s)
+}
+
+pub fn fuz_c3(fault: Fault, iterations: u64) -> (Verdict, Stats) {
+    take_unreach();
+    let (v, mut s) = fuzz_claim("fuzz/wxf_driver/c3", CLAIM_C3_TYS, claim_c3_admit, claim_c3_holds, fault, iterations);
+    s.unreachable = take_unreach();
+    (v, s)
+}
+
 #[allow(unused_variables)]
 fn field_pos(ty: &str, f: &str) -> usize {
     match (ty, f) {
@@ -2053,7 +2277,7 @@ fn field_pos(ty: &str, f: &str) -> usize {
 const _: fn() -> Digest = Digest::new;
 const _: fn(&mut Digest, &[u8]) = Digest::update;
 #[allow(dead_code)]
-fn _shape_finish() {
+fn _shape_finish_digest_chunks() {
     fn assert_sig<F, B>(_: F)
     where
         F: FnOnce(&Digest) -> B,
@@ -2084,6 +2308,79 @@ fn op_digest_chunks(_w: &[u64], args: &[V], fault: Fault) -> V {
         }
         let f = st.sum1();
         { let b1: Vec<u8> = (f).to_vec(); if b1.len() != 20 { panic!("operation `digest_chunks`: the export returned {} bytes for a Bytes<20> result, which is not 20 bytes", b1.len()); } V::Bytes(b1) }
+}
+
+const _: fn(u8, &[u8]) -> Scan = Scan::new;
+const _: fn(&mut Scan, &[u8]) -> u8 = Scan::push;
+const _: fn(&Scan) -> u32 = Scan::total;
+#[allow(unused_variables, unused_mut)]
+fn op_scan2(_w: &[u64], args: &[V], fault: Fault) -> V {
+    let fault = fault_for("scan2", fault);
+    let _ = &fault;
+    let elems: Vec<V> = match &args[1] {
+        V::List(es) => es.clone(),
+        _ => panic!("driver scan2: List drive is not a list"),
+    };
+    let peril: usize = elems.len();
+    if peril > 65536 { panic!("driver-steps-exceeded"); }
+    driver_note_steps("scan2", peril);
+    if peril == 0 { panic!("driver scan2: constructor takes the first element of an empty drive"); }
+    let mut c0: Vec<Vec<u8>> = Vec::with_capacity(peril);
+    for step in 0..peril {
+        c0.push(elems[step].bytes().to_vec());
+    }
+    let w0 = host::<u8>(args[0].int());
+    let w1 = elems[0].bytes();
+        driver_note_call();
+        let mut st = Scan::new(w0, w1);
+        let mut collected: Vec<V> = Vec::new();
+        for step in 0..peril {
+            driver_note_call();
+            let sv = st.push(&c0[step]);
+            collected.push(V::Fixed(F::U8, (sv) as i128));
+        }
+        let f = st.total();
+        V::Tup(vec![V::List(collected), V::Int((f) as i128)])
+}
+
+const _: fn() -> Digest = Digest::new;
+const _: fn(&mut Digest, &[u8]) -> Result<(), E> = Digest::try_update;
+#[allow(dead_code)]
+fn _shape_finish_try_hash() {
+    fn assert_sig<F, B>(_: F)
+    where
+        F: FnOnce(&Digest) -> B,
+        B: AsRef<[u8]>,
+    {}
+    assert_sig(Digest::sum1);
+}
+#[allow(unused_variables, unused_mut)]
+fn op_try_hash(_w: &[u64], args: &[V], fault: Fault) -> V {
+    let fault = fault_for("try_hash", fault);
+    let _ = &fault;
+    let elems: Vec<V> = match &args[0] {
+        V::List(es) => es.clone(),
+        _ => panic!("driver try_hash: List drive is not a list"),
+    };
+    let peril: usize = elems.len();
+    if peril > 65536 { panic!("driver-steps-exceeded"); }
+    driver_note_steps("try_hash", peril);
+    let mut c0: Vec<Vec<u8>> = Vec::with_capacity(peril);
+    for step in 0..peril {
+        c0.push(elems[step].bytes().to_vec());
+    }
+        driver_note_call();
+        let mut st = Digest::new();
+        for step in 0..peril {
+            driver_note_call();
+            match st.try_update(&c0[step]) {
+                Ok(()) => {},
+                Err(e) => return match e { E::LengthOverflow { .. } => V::Err("TOO_LONG".into()),
+         #[allow(unreachable_patterns)] _ => panic!("unmapped host error"), },
+            }
+        }
+        let f = st.sum1();
+        V::Ok(Box::new({ let b1: Vec<u8> = (f).to_vec(); if b1.len() != 20 { panic!("operation `try_hash`: the export returned {} bytes for a Bytes<20> result, which is not 20 bytes", b1.len()); } V::Bytes(b1) }))
 }
 
 #[allow(unused_variables, unused_mut)]
@@ -2201,7 +2498,12 @@ pub fn obl_digest_chunks_finish_observational(fault: Fault) -> (Verdict, Stats) 
         let mut args = template.clone();
         args[0] = s0.clone();
         let r_adapter = op_digest_chunks(&[], &args, fault);
-        if r_adapter != va {
+        let shaped = match &r_adapter {
+            V::Ok(b) => b.as_ref(),
+            v => v,
+        };
+        let replica_ok = shaped == &va;
+        if !replica_ok {
             let mut s = Stats::default();
             s.cases = cases;
             return (Verdict::fail("driver-replica-diverged", "replicated drive disagrees with adapter"), s);
@@ -2299,6 +2601,486 @@ pub fn obl_digest_chunks_steps_cap(fault: Fault) -> (Verdict, Stats) {
     s.cases = 2;
     (Verdict::Pass, s)
 }
+#[allow(unused_variables, unused_mut)]
+pub fn obl_scan2_shape(_fault: Fault) -> (Verdict, Stats) {
+    (Verdict::Pass, Stats::default())
+}
+#[allow(unused_variables, unused_mut)]
+pub fn obl_scan2_empty(fault: Fault) -> (Verdict, Stats) {
+    let mut args = vec![domain_take(Ty::Fx(F::U8), 1).into_iter().next().expect("parameter domain is inhabited"), V::Bool(false)];
+    args[1] = V::List(vec![]);
+    let r = catch_unwind(AssertUnwindSafe(|| op_scan2(&[], &args, fault)));
+    match r {
+        Err(p) => {
+            let msg = p.downcast_ref::<String>().cloned().unwrap_or_default() + p.downcast_ref::<&str>().unwrap_or(&"");
+            if !msg.contains("takes the first element of an empty drive") {
+                let mut s = Stats::default();
+                s.cases = 1;
+                return (Verdict::fail("driver-wrong-refusal", "empty drive refused wrongly"), s);
+            }
+        }
+        Ok(_) => {
+            let mut s = Stats::default();
+            s.cases = 1;
+            return (Verdict::fail("driver-no-refusal", "empty drive with element constructor proceeded"), s);
+        }
+    }
+    let mut s = Stats::default();
+    s.cases = 1;
+    (Verdict::Pass, s)
+}
+#[allow(unused_variables, unused_mut)]
+pub fn obl_scan2_empty_element(fault: Fault) -> (Verdict, Stats) {
+    let alphabet: Vec<V> = vec![V::Bytes(vec![]), V::Bytes(vec![0x00])];
+    let template: Vec<V> = vec![domain_take(Ty::Fx(F::U8), 1).into_iter().next().expect("parameter domain is inhabited"), V::Bool(false)];
+    let mut cases = 0u64;
+    let drive = |elems: Vec<V>| { let mut args = template.clone(); args[1] = V::List(elems); op_scan2(&[], &args, fault) };
+    for v0 in &alphabet {
+        let _ = drive(vec![v0.clone()]); cases += 1;
+    }
+    for v0 in &alphabet {
+        for v1 in &alphabet {
+            let _ = drive(vec![v0.clone(), v1.clone()]); cases += 1;
+        }
+    }
+    for v0 in &alphabet {
+        for v1 in &alphabet {
+            for v2 in &alphabet {
+                let _ = drive(vec![v0.clone(), v1.clone(), v2.clone()]); cases += 1;
+            }
+        }
+    }
+    let mut s = Stats::default();
+    s.cases = cases;
+    (Verdict::Pass, s)
+}
+#[allow(unused_variables, unused_mut)]
+pub fn obl_scan2_deterministic(fault: Fault) -> (Verdict, Stats) {
+    let seqs = domain_take(Ty::List(&Ty::Bytes), 16);
+    let template: Vec<V> = vec![domain_take(Ty::Fx(F::U8), 1).into_iter().next().expect("parameter domain is inhabited"), V::Bool(false)];
+    let drive = |v: V| { let mut args = template.clone(); args[1] = v; op_scan2(&[], &args, fault) };
+    let mut cases = 0u64;
+    let mut first: Option<V> = None;
+    let mut sensitive = false;
+    let mut distinct = 0usize;
+    let mut completed = 0u64;
+    for (i, s0) in seqs.iter().enumerate() {
+        if matches!(s0, V::List(es) if es.is_empty()) || matches!(s0, V::Bytes(b) if b.is_empty()) { continue; }
+        let r1 = drive(s0.clone());
+        let r2 = drive(s0.clone());
+        cases += 2;
+        if r1 != r2 {
+            let mut s = Stats::default();
+            s.cases = cases;
+            return (Verdict::fail("driver-nondeterministic", "same sequence drove different results"), s);
+        }
+        if seqs[..i].iter().all(|b| b != s0) {
+            distinct += 1;
+            match &first {
+                None => first = Some(r1),
+                Some(f) => if f != &r1 { sensitive = true; },
+            }
+        }
+        completed += 1;
+    }
+    if completed == 0 {
+        let mut s = Stats::default();
+        s.cases = cases;
+        return (Verdict::fail("driver-no-drive-completed", "no drive completed"), s);
+    }
+    if distinct >= 2 && !sensitive {
+        let mut s = Stats::default();
+        s.cases = cases;
+        return (Verdict::fail("driver-control-insensitive", "no two distinct sequences drove different results"), s);
+    }
+    let mut s = Stats::default();
+    s.cases = cases;
+    (Verdict::Pass, s)
+}
+#[allow(unused_variables, unused_mut)]
+pub fn obl_scan2_finish_observational(fault: Fault) -> (Verdict, Stats) {
+    let seqs = domain_take(Ty::List(&Ty::Bytes), 16);
+    let template: Vec<V> = vec![domain_take(Ty::Fx(F::U8), 1).into_iter().next().expect("parameter domain is inhabited"), V::Bool(false)];
+    let mut cases = 0u64;
+    let mut completed = 0u64;
+    let mut controlled = false;
+    let extra = V::Bytes(vec![0xa5]);
+    for s0 in &seqs {
+        if matches!(s0, V::List(es) if es.is_empty()) || matches!(s0, V::Bytes(b) if b.is_empty()) { continue; }
+        let (va, vb, rcollected) = {
+            let mut args = template.clone();
+            args[1] = s0.clone();
+            let elems: Vec<V> = match &(args[1].clone()) {
+                V::List(es) => es.clone(),
+                _ => panic!("driver scan2: List drive is not a list"),
+            };
+            let peril: usize = elems.len();
+            driver_note_steps("scan2", peril);
+            let mut c0: Vec<Vec<u8>> = Vec::with_capacity(peril);
+            for step in 0..peril {
+                c0.push(elems[step].bytes().to_vec());
+            }
+            let w0 = host::<u8>(args[0].int());
+            let w1 = elems[0].bytes();
+            driver_note_call();
+            let mut st = Scan::new(w0, w1);
+            let mut collected: Vec<V> = Vec::new();
+            for step in 0..peril {
+                driver_note_call();
+                let sv = st.push(&c0[step]);
+                collected.push(V::Fixed(F::U8, (sv) as i128));
+            }
+            let fa = st.total();
+            let fb = st.total();
+            (V::Int((fa) as i128), V::Int((fb) as i128), collected)
+        };
+        cases += 1;
+        if va != vb {
+            let mut s = Stats::default();
+            s.cases = cases;
+            return (Verdict::fail("driver-finish-mutating", "finish observed different values"), s);
+        }
+        completed += 1;
+        let mut args = template.clone();
+        args[1] = s0.clone();
+        let r_adapter = op_scan2(&[], &args, fault);
+        let shaped = match &r_adapter {
+            V::Ok(b) => b.as_ref(),
+            v => v,
+        };
+        let replica_ok = match shaped {
+            V::Tup(ps) if ps.len() == 2 => ps[0] == V::List(rcollected) && ps[1] == va,
+            _ => false,
+        };
+        if !replica_ok {
+            let mut s = Stats::default();
+            s.cases = cases;
+            return (Verdict::fail("driver-replica-diverged", "replicated drive disagrees with adapter"), s);
+        }
+        let differed = {
+            let mut args = template.clone();
+            args[1] = s0.clone();
+            let q0 = extra.bytes().to_vec();
+            let elems: Vec<V> = match &(args[1].clone()) {
+                V::List(es) => es.clone(),
+                _ => panic!("driver scan2: List drive is not a list"),
+            };
+            let peril: usize = elems.len();
+            driver_note_steps("scan2", peril);
+            let mut c0: Vec<Vec<u8>> = Vec::with_capacity(peril);
+            for step in 0..peril {
+                c0.push(elems[step].bytes().to_vec());
+            }
+            let w0 = host::<u8>(args[0].int());
+            let w1 = elems[0].bytes();
+            driver_note_call();
+            let mut st = Scan::new(w0, w1);
+            let mut collected: Vec<V> = Vec::new();
+            for step in 0..peril {
+                driver_note_call();
+                let sv = st.push(&c0[step]);
+                collected.push(V::Fixed(F::U8, (sv) as i128));
+            }
+            let g1 = st.total();
+            st.push(&q0);
+            let g2 = st.total();
+            let vg1v = V::Int((g1) as i128);
+            let vg2v = V::Int((g2) as i128);
+            vg1v != vg2v
+        };
+        if differed { controlled = true; }
+    }
+    if completed == 0 {
+        let mut s = Stats::default();
+        s.cases = cases;
+        return (Verdict::fail("driver-no-drive-completed", "no drive completed"), s);
+    }
+    if !controlled {
+        let mut s = Stats::default();
+        s.cases = cases;
+        return (Verdict::fail("driver-control-dead", "extra step never changed the finish"), s);
+    }
+    let mut s = Stats::default();
+    s.cases = cases;
+    (Verdict::Pass, s)
+}
+#[allow(unused_variables, unused_mut)]
+pub fn obl_scan2_steps_cap(fault: Fault) -> (Verdict, Stats) {
+    let template: Vec<V> = vec![domain_take(Ty::Fx(F::U8), 1).into_iter().next().expect("parameter domain is inhabited"), V::Bool(false)];
+    driver_take_calls();
+    let mut args = template.clone();
+    args[1] = V::List(vec![V::Bytes(vec![]); 65537]);
+    let r = catch_unwind(AssertUnwindSafe(|| op_scan2(&[], &args, fault)));
+    let calls = driver_take_calls();
+    match r {
+        Err(p) => {
+            let msg = p.downcast_ref::<String>().cloned().unwrap_or_default() + p.downcast_ref::<&str>().unwrap_or(&"");
+            if !msg.contains("driver-steps-exceeded") {
+                let mut s = Stats::default();
+                s.cases = 1;
+                return (Verdict::fail("driver-wrong-refusal", "cap refusal had the wrong shape"), s);
+            }
+            if calls != 0 {
+                let mut s = Stats::default();
+                s.cases = 1;
+                return (Verdict::fail("driver-called-before-refusal", "adapter called subject before refusing"), s);
+            }
+        }
+        Ok(_) => {
+            let mut s = Stats::default();
+            s.cases = 1;
+            return (Verdict::fail("driver-no-refusal", "adapter drove past the cap"), s);
+        }
+    }
+    driver_take_calls();
+    let mut args = template.clone();
+    args[1] = V::List(vec![V::Bytes(vec![]); 65536]);
+    let r = catch_unwind(AssertUnwindSafe(|| op_scan2(&[], &args, fault)));
+    let calls = driver_take_calls();
+    match r {
+        Ok(_) if calls > 0 => {}
+        Ok(_) => {
+            let mut s = Stats::default();
+            s.cases = 2;
+            return (Verdict::fail("driver-control-blind", "cap drive observed no call"), s);
+        }
+        Err(_) => {
+            let mut s = Stats::default();
+            s.cases = 2;
+            return (Verdict::fail("driver-control-refused", "cap drive refused"), s);
+        }
+    }
+    let mut s = Stats::default();
+    s.cases = 2;
+    (Verdict::Pass, s)
+}
+#[allow(unused_variables, unused_mut)]
+pub fn obl_try_hash_shape(_fault: Fault) -> (Verdict, Stats) {
+    (Verdict::Pass, Stats::default())
+}
+#[allow(unused_variables, unused_mut)]
+pub fn obl_try_hash_empty(fault: Fault) -> (Verdict, Stats) {
+    let mut args = vec![V::Bool(false)];
+    args[0] = V::List(vec![]);
+    let _ = op_try_hash(&[], &args, fault);
+    let mut s = Stats::default();
+    s.cases = 1;
+    (Verdict::Pass, s)
+}
+#[allow(unused_variables, unused_mut)]
+pub fn obl_try_hash_empty_element(fault: Fault) -> (Verdict, Stats) {
+    let alphabet: Vec<V> = vec![V::Bytes(vec![]), V::Bytes(vec![0x00])];
+    let template: Vec<V> = vec![V::Bool(false)];
+    let mut cases = 0u64;
+    let drive = |elems: Vec<V>| { let mut args = template.clone(); args[0] = V::List(elems); op_try_hash(&[], &args, fault) };
+    for v0 in &alphabet {
+        let _ = drive(vec![v0.clone()]); cases += 1;
+    }
+    for v0 in &alphabet {
+        for v1 in &alphabet {
+            let _ = drive(vec![v0.clone(), v1.clone()]); cases += 1;
+        }
+    }
+    for v0 in &alphabet {
+        for v1 in &alphabet {
+            for v2 in &alphabet {
+                let _ = drive(vec![v0.clone(), v1.clone(), v2.clone()]); cases += 1;
+            }
+        }
+    }
+    let mut s = Stats::default();
+    s.cases = cases;
+    (Verdict::Pass, s)
+}
+#[allow(unused_variables, unused_mut)]
+pub fn obl_try_hash_deterministic(fault: Fault) -> (Verdict, Stats) {
+    let seqs = domain_take(Ty::List(&Ty::Bytes), 16);
+    let template: Vec<V> = vec![V::Bool(false)];
+    let drive = |v: V| { let mut args = template.clone(); args[0] = v; op_try_hash(&[], &args, fault) };
+    let mut cases = 0u64;
+    let mut first: Option<V> = None;
+    let mut sensitive = false;
+    let mut distinct = 0usize;
+    for (i, s0) in seqs.iter().enumerate() {
+        let r1 = drive(s0.clone());
+        let r2 = drive(s0.clone());
+        cases += 2;
+        if r1 != r2 {
+            let mut s = Stats::default();
+            s.cases = cases;
+            return (Verdict::fail("driver-nondeterministic", "same sequence drove different results"), s);
+        }
+        if seqs[..i].iter().all(|b| b != s0) {
+            distinct += 1;
+            match &first {
+                None => first = Some(r1),
+                Some(f) => if f != &r1 { sensitive = true; },
+            }
+        }
+    }
+    if distinct >= 2 && !sensitive {
+        let mut s = Stats::default();
+        s.cases = cases;
+        return (Verdict::fail("driver-control-insensitive", "no two distinct sequences drove different results"), s);
+    }
+    let mut s = Stats::default();
+    s.cases = cases;
+    (Verdict::Pass, s)
+}
+#[allow(unused_variables, unused_mut)]
+pub fn obl_try_hash_finish_observational(fault: Fault) -> (Verdict, Stats) {
+    let seqs = domain_take(Ty::List(&Ty::Bytes), 16);
+    let template: Vec<V> = vec![V::Bool(false)];
+    let mut cases = 0u64;
+    let mut completed = 0u64;
+    let mut controlled = false;
+    let extra = V::Bytes(vec![0xa5]);
+    'seq: for s0 in &seqs {
+        let (va, vb) = {
+            let mut args = template.clone();
+            args[0] = s0.clone();
+            let elems: Vec<V> = match &(args[0].clone()) {
+                V::List(es) => es.clone(),
+                _ => panic!("driver try_hash: List drive is not a list"),
+            };
+            let peril: usize = elems.len();
+            driver_note_steps("try_hash", peril);
+            let mut c0: Vec<Vec<u8>> = Vec::with_capacity(peril);
+            for step in 0..peril {
+                c0.push(elems[step].bytes().to_vec());
+            }
+            driver_note_call();
+            let mut st = Digest::new();
+            for step in 0..peril {
+                driver_note_call();
+                match st.try_update(&c0[step]) {
+                    Ok(()) => {},
+                    Err(_) => continue 'seq,
+                }
+            }
+            let fa = st.sum1();
+            let fb = st.sum1();
+            ({ let b1: Vec<u8> = (fa).to_vec(); if b1.len() != 20 { panic!("operation `try_hash`: the export returned {} bytes for a Bytes<20> result, which is not 20 bytes", b1.len()); } V::Bytes(b1) }, { let b2: Vec<u8> = (fb).to_vec(); if b2.len() != 20 { panic!("operation `try_hash`: the export returned {} bytes for a Bytes<20> result, which is not 20 bytes", b2.len()); } V::Bytes(b2) })
+        };
+        cases += 1;
+        if va != vb {
+            let mut s = Stats::default();
+            s.cases = cases;
+            return (Verdict::fail("driver-finish-mutating", "finish observed different values"), s);
+        }
+        completed += 1;
+        let mut args = template.clone();
+        args[0] = s0.clone();
+        let r_adapter = op_try_hash(&[], &args, fault);
+        let shaped = match &r_adapter {
+            V::Ok(b) => b.as_ref(),
+            v => v,
+        };
+        let replica_ok = shaped == &va;
+        if !replica_ok {
+            let mut s = Stats::default();
+            s.cases = cases;
+            return (Verdict::fail("driver-replica-diverged", "replicated drive disagrees with adapter"), s);
+        }
+        let differed = {
+            let mut args = template.clone();
+            args[0] = s0.clone();
+            let q0 = extra.bytes().to_vec();
+            let elems: Vec<V> = match &(args[0].clone()) {
+                V::List(es) => es.clone(),
+                _ => panic!("driver try_hash: List drive is not a list"),
+            };
+            let peril: usize = elems.len();
+            driver_note_steps("try_hash", peril);
+            let mut c0: Vec<Vec<u8>> = Vec::with_capacity(peril);
+            for step in 0..peril {
+                c0.push(elems[step].bytes().to_vec());
+            }
+            driver_note_call();
+            let mut st = Digest::new();
+            for step in 0..peril {
+                driver_note_call();
+                match st.try_update(&c0[step]) {
+                    Ok(()) => {},
+                    Err(_) => continue 'seq,
+                }
+            }
+            let g1 = st.sum1();
+            match st.try_update(&q0) {
+                Ok(()) => {},
+                Err(_) => continue 'seq,
+            }
+            let g2 = st.sum1();
+            let vg1v = { let b3: Vec<u8> = (g1).to_vec(); if b3.len() != 20 { panic!("operation `try_hash`: the export returned {} bytes for a Bytes<20> result, which is not 20 bytes", b3.len()); } V::Bytes(b3) };
+            let vg2v = { let b4: Vec<u8> = (g2).to_vec(); if b4.len() != 20 { panic!("operation `try_hash`: the export returned {} bytes for a Bytes<20> result, which is not 20 bytes", b4.len()); } V::Bytes(b4) };
+            vg1v != vg2v
+        };
+        if differed { controlled = true; }
+    }
+    if completed == 0 {
+        let mut s = Stats::default();
+        s.cases = cases;
+        return (Verdict::fail("driver-no-drive-completed", "no drive completed"), s);
+    }
+    if !controlled {
+        let mut s = Stats::default();
+        s.cases = cases;
+        return (Verdict::fail("driver-control-dead", "extra step never changed the finish"), s);
+    }
+    let mut s = Stats::default();
+    s.cases = cases;
+    (Verdict::Pass, s)
+}
+#[allow(unused_variables, unused_mut)]
+pub fn obl_try_hash_steps_cap(fault: Fault) -> (Verdict, Stats) {
+    let template: Vec<V> = vec![V::Bool(false)];
+    driver_take_calls();
+    let mut args = template.clone();
+    args[0] = V::List(vec![V::Bytes(vec![]); 65537]);
+    let r = catch_unwind(AssertUnwindSafe(|| op_try_hash(&[], &args, fault)));
+    let calls = driver_take_calls();
+    match r {
+        Err(p) => {
+            let msg = p.downcast_ref::<String>().cloned().unwrap_or_default() + p.downcast_ref::<&str>().unwrap_or(&"");
+            if !msg.contains("driver-steps-exceeded") {
+                let mut s = Stats::default();
+                s.cases = 1;
+                return (Verdict::fail("driver-wrong-refusal", "cap refusal had the wrong shape"), s);
+            }
+            if calls != 0 {
+                let mut s = Stats::default();
+                s.cases = 1;
+                return (Verdict::fail("driver-called-before-refusal", "adapter called subject before refusing"), s);
+            }
+        }
+        Ok(_) => {
+            let mut s = Stats::default();
+            s.cases = 1;
+            return (Verdict::fail("driver-no-refusal", "adapter drove past the cap"), s);
+        }
+    }
+    driver_take_calls();
+    let mut args = template.clone();
+    args[0] = V::List(vec![V::Bytes(vec![]); 65536]);
+    let r = catch_unwind(AssertUnwindSafe(|| op_try_hash(&[], &args, fault)));
+    let calls = driver_take_calls();
+    match r {
+        Ok(_) if calls > 0 => {}
+        Ok(_) => {
+            let mut s = Stats::default();
+            s.cases = 2;
+            return (Verdict::fail("driver-control-blind", "cap drive observed no call"), s);
+        }
+        Err(_) => {
+            let mut s = Stats::default();
+            s.cases = 2;
+            return (Verdict::fail("driver-control-refused", "cap drive refused"), s);
+        }
+    }
+    let mut s = Stats::default();
+    s.cases = 2;
+    (Verdict::Pass, s)
+}
 fn neg_exh_c(fault: Fault) -> Verdict {
     exh_c(fault).0
 }
@@ -2309,6 +3091,30 @@ fn neg_prop_c(fault: Fault) -> Verdict {
 
 fn neg_fuz_c(fault: Fault) -> Verdict {
     fuz_c(fault, NEGCTL_FUZZ_ITERATIONS).0
+}
+
+fn neg_exh_c2(fault: Fault) -> Verdict {
+    exh_c2(fault).0
+}
+
+fn neg_prop_c2(fault: Fault) -> Verdict {
+    prop_c2(fault).0
+}
+
+fn neg_fuz_c2(fault: Fault) -> Verdict {
+    fuz_c2(fault, NEGCTL_FUZZ_ITERATIONS).0
+}
+
+fn neg_exh_c3(fault: Fault) -> Verdict {
+    exh_c3(fault).0
+}
+
+fn neg_prop_c3(fault: Fault) -> Verdict {
+    prop_c3(fault).0
+}
+
+fn neg_fuz_c3(fault: Fault) -> Verdict {
+    fuz_c3(fault, NEGCTL_FUZZ_ITERATIONS).0
 }
 
 pub fn build_suite(fault: Fault) -> Suite {
@@ -2323,6 +3129,30 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { seed: seed_of("fuzz/wxf_driver/c").to_string(), ..Meta::new("warrant/wxf_driver/fuzz/c", "fuzz", "digest_chunks", "c") }, move || {
         let (v, s) = fuz_c(fault, FUZZ_ITERATIONS);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta { domain: describe(CLAIM_C2_TYS, CLAIM_C2_NAMES), demoted: CLAIM_C2_DEMOTED.iter().map(|s| s.to_string()).collect(), ..Meta::new("warrant/wxf_driver/exhaustive/c2", "exhaustive", "scan2", "c2") }, move || {
+        let (v, s) = exh_c2(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta { seed: seed_of("claim/wxf_driver/c2").to_string(), ..Meta::new("warrant/wxf_driver/property/c2", "property", "scan2", "c2") }, move || {
+        let (v, s) = prop_c2(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta { seed: seed_of("fuzz/wxf_driver/c2").to_string(), ..Meta::new("warrant/wxf_driver/fuzz/c2", "fuzz", "scan2", "c2") }, move || {
+        let (v, s) = fuz_c2(fault, FUZZ_ITERATIONS);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta { domain: describe(CLAIM_C3_TYS, CLAIM_C3_NAMES), demoted: CLAIM_C3_DEMOTED.iter().map(|s| s.to_string()).collect(), ..Meta::new("warrant/wxf_driver/exhaustive/c3", "exhaustive", "try_hash", "c3") }, move || {
+        let (v, s) = exh_c3(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta { seed: seed_of("claim/wxf_driver/c3").to_string(), ..Meta::new("warrant/wxf_driver/property/c3", "property", "try_hash", "c3") }, move || {
+        let (v, s) = prop_c3(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta { seed: seed_of("fuzz/wxf_driver/c3").to_string(), ..Meta::new("warrant/wxf_driver/fuzz/c3", "fuzz", "try_hash", "c3") }, move || {
+        let (v, s) = fuz_c3(fault, FUZZ_ITERATIONS);
         (v, s, String::new())
     });
     driver_note_obligations("digest_chunks", &["shape", "empty", "empty-element", "deterministic", "finish-observational", "steps-cap"]);
@@ -2348,6 +3178,56 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta::new("warrant/wxf_driver/driver/digest_chunks/steps-cap", "driver", "digest_chunks", ""), move || {
         let (v, s) = obl_digest_chunks_steps_cap(fault);
+        (v, s, String::new())
+    });
+    driver_note_obligations("scan2", &["shape", "empty", "empty-element", "deterministic", "finish-observational", "steps-cap"]);
+    reg(&mut suite, Meta::new("warrant/wxf_driver/driver/scan2/shape", "driver", "scan2", ""), move || {
+        let (v, s) = obl_scan2_shape(fault);
+        (v, s, "signatures pinned at compile time".into())
+    });
+    reg(&mut suite, Meta::new("warrant/wxf_driver/driver/scan2/empty", "driver", "scan2", ""), move || {
+        let (v, s) = obl_scan2_empty(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta::new("warrant/wxf_driver/driver/scan2/empty-element", "driver", "scan2", ""), move || {
+        let (v, s) = obl_scan2_empty_element(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta::new("warrant/wxf_driver/driver/scan2/deterministic", "driver", "scan2", ""), move || {
+        let (v, s) = obl_scan2_deterministic(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta::new("warrant/wxf_driver/driver/scan2/finish-observational", "driver", "scan2", ""), move || {
+        let (v, s) = obl_scan2_finish_observational(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta::new("warrant/wxf_driver/driver/scan2/steps-cap", "driver", "scan2", ""), move || {
+        let (v, s) = obl_scan2_steps_cap(fault);
+        (v, s, String::new())
+    });
+    driver_note_obligations("try_hash", &["shape", "empty", "empty-element", "deterministic", "finish-observational", "steps-cap"]);
+    reg(&mut suite, Meta::new("warrant/wxf_driver/driver/try_hash/shape", "driver", "try_hash", ""), move || {
+        let (v, s) = obl_try_hash_shape(fault);
+        (v, s, "signatures pinned at compile time".into())
+    });
+    reg(&mut suite, Meta::new("warrant/wxf_driver/driver/try_hash/empty", "driver", "try_hash", ""), move || {
+        let (v, s) = obl_try_hash_empty(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta::new("warrant/wxf_driver/driver/try_hash/empty-element", "driver", "try_hash", ""), move || {
+        let (v, s) = obl_try_hash_empty_element(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta::new("warrant/wxf_driver/driver/try_hash/deterministic", "driver", "try_hash", ""), move || {
+        let (v, s) = obl_try_hash_deterministic(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta::new("warrant/wxf_driver/driver/try_hash/finish-observational", "driver", "try_hash", ""), move || {
+        let (v, s) = obl_try_hash_finish_observational(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta::new("warrant/wxf_driver/driver/try_hash/steps-cap", "driver", "try_hash", ""), move || {
+        let (v, s) = obl_try_hash_steps_cap(fault);
         (v, s, String::new())
     });
     reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/digest_chunks/drop-last-chunk", "negctl", "digest_chunks", "") }, || {
@@ -2423,6 +3303,171 @@ pub fn build_suite(fault: Fault) -> Suite {
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/digest_chunks/reset-per-step", "negctl", "digest_chunks", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_fuz_c)];
         let caught: Vec<&str> = attacking("digest_chunks", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "reset-per-step")
+    });
+    reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/scan2/drop-last-chunk", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_exh_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastChunk))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "drop-last-chunk")
+    });
+    reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/scan2/reorder-chunks", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_exh_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "reorder-chunks")
+    });
+    reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/scan2/duplicate-last-chunk", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_exh_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DuplicateLastChunk))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "duplicate-last-chunk")
+    });
+    reg(&mut suite, Meta { fault: "early-finish".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/scan2/early-finish", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_exh_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "early-finish")
+    });
+    reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/scan2/reset-per-step", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_exh_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "reset-per-step")
+    });
+    reg(&mut suite, Meta { fault: "drop-last-output".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/scan2/drop-last-output", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_exh_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastOutput))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "drop-last-output")
+    });
+    reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/scan2/drop-last-chunk", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_prop_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastChunk))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "drop-last-chunk")
+    });
+    reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/scan2/reorder-chunks", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_prop_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "reorder-chunks")
+    });
+    reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/scan2/duplicate-last-chunk", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_prop_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DuplicateLastChunk))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "duplicate-last-chunk")
+    });
+    reg(&mut suite, Meta { fault: "early-finish".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/scan2/early-finish", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_prop_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "early-finish")
+    });
+    reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/scan2/reset-per-step", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_prop_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "reset-per-step")
+    });
+    reg(&mut suite, Meta { fault: "drop-last-output".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/scan2/drop-last-output", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_prop_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastOutput))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "drop-last-output")
+    });
+    reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/scan2/drop-last-chunk", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_fuz_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastChunk))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "drop-last-chunk")
+    });
+    reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/scan2/reorder-chunks", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_fuz_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "reorder-chunks")
+    });
+    reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/scan2/duplicate-last-chunk", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_fuz_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DuplicateLastChunk))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "duplicate-last-chunk")
+    });
+    reg(&mut suite, Meta { fault: "early-finish".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/scan2/early-finish", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_fuz_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "early-finish")
+    });
+    reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/scan2/reset-per-step", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_fuz_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "reset-per-step")
+    });
+    reg(&mut suite, Meta { fault: "drop-last-output".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/scan2/drop-last-output", "negctl", "scan2", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c2", neg_fuz_c2)];
+        let caught: Vec<&str> = attacking("scan2", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastOutput))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "drop-last-output")
+    });
+    reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/try_hash/drop-last-chunk", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_exh_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastChunk))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "drop-last-chunk")
+    });
+    reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/try_hash/reorder-chunks", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_exh_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "reorder-chunks")
+    });
+    reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/try_hash/duplicate-last-chunk", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_exh_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DuplicateLastChunk))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "duplicate-last-chunk")
+    });
+    reg(&mut suite, Meta { fault: "early-finish".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/try_hash/early-finish", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_exh_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "early-finish")
+    });
+    reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_driver/negctl/exhaustive/try_hash/reset-per-step", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_exh_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "reset-per-step")
+    });
+    reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/try_hash/drop-last-chunk", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_prop_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastChunk))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "drop-last-chunk")
+    });
+    reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/try_hash/reorder-chunks", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_prop_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "reorder-chunks")
+    });
+    reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/try_hash/duplicate-last-chunk", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_prop_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DuplicateLastChunk))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "duplicate-last-chunk")
+    });
+    reg(&mut suite, Meta { fault: "early-finish".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/try_hash/early-finish", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_prop_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "early-finish")
+    });
+    reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "property".into(), ..Meta::new("warrant/wxf_driver/negctl/property/try_hash/reset-per-step", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_prop_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "reset-per-step")
+    });
+    reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/try_hash/drop-last-chunk", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_fuz_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastChunk))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "drop-last-chunk")
+    });
+    reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/try_hash/reorder-chunks", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_fuz_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "reorder-chunks")
+    });
+    reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/try_hash/duplicate-last-chunk", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_fuz_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DuplicateLastChunk))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "duplicate-last-chunk")
+    });
+    reg(&mut suite, Meta { fault: "early-finish".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/try_hash/early-finish", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_fuz_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "early-finish")
+    });
+    reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_driver/negctl/fuzz/try_hash/reset-per-step", "negctl", "try_hash", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c3", neg_fuz_c3)];
+        let caught: Vec<&str> = attacking("try_hash", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "reset-per-step")
     });
     suite

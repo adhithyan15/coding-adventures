@@ -200,6 +200,7 @@ fn ret_pin(
 fn shape_pins(
     record: &DriverRecord,
     hosts: &HostSpec,
+    op_name: &str,
     op_span: (usize, usize),
 ) -> Result<String, CodegenError> {
     let bad = |m: String| unsupported(m, op_span);
@@ -250,7 +251,7 @@ fn shape_pins(
                 }
                 RetPin::BytesFlex => {
                     let _ = writeln!(pins, "#[allow(dead_code)]");
-                    let _ = writeln!(pins, "fn _shape_step() {{");
+                    let _ = writeln!(pins, "fn _shape_step_{op_name}() {{");
                     let _ = writeln!(pins, "    fn assert_sig<F, B>(_: F)");
                     let _ = writeln!(pins, "    where");
                     let _ = writeln!(pins, "        F: FnOnce({sig}) -> B,");
@@ -272,7 +273,7 @@ fn shape_pins(
                         }
                         RetPin::BytesFlex => {
                             let _ = writeln!(pins, "#[allow(dead_code)]");
-                            let _ = writeln!(pins, "fn _shape_step() {{");
+                            let _ = writeln!(pins, "fn _shape_step_{op_name}() {{");
                             let _ = writeln!(pins, "    fn assert_sig<F, B>(_: F)");
                             let _ = writeln!(pins, "    where");
                             let _ = writeln!(
@@ -303,7 +304,7 @@ fn shape_pins(
             }
             RetPin::BytesFlex => {
                 let _ = writeln!(pins, "#[allow(dead_code)]");
-                let _ = writeln!(pins, "fn _shape_finish() {{");
+                let _ = writeln!(pins, "fn _shape_finish_{op_name}() {{");
                 let _ = writeln!(pins, "    fn assert_sig<F, B>(_: F)");
                 let _ = writeln!(pins, "    where");
                 let _ = writeln!(pins, "        F: FnOnce({recv}) -> B,");
@@ -361,38 +362,9 @@ pub(crate) fn driver_adapter(
     let (cx, fallible_step) = drive_cx(op, env, record, &options.hosts, faults)?;
     let drive_index = cx.drive_index;
     // Result-mode coherence, mirroring typing.
-    let emitted_host: Option<HostTy> = match &record.step.returns {
-        StepReturns::Value(h) | StepReturns::ResultOf(h) => Some(h.clone()),
-        StepReturns::Unit | StepReturns::Result => None,
-    };
-    let collect_elem: Option<Ty> = match record.result {
-        DriverResult::Finish => None,
-        DriverResult::Collect | DriverResult::Both => match &cx.mode_base {
-            Ty::List(u) if !matches!(record.result, DriverResult::Both) => Some((**u).clone()),
-            Ty::Tuple(ts)
-                if matches!(record.result, DriverResult::Both) && ts.len() == 2 =>
-            {
-                match &ts[0] {
-                    Ty::List(u) => Some((**u).clone()),
-                    _ => {
-                        return Err(bad(
-                            "`both` needs a `(List<U>, F)` return type".to_string(),
-                        ))
-                    }
-                }
-            }
-            _ => {
-                return Err(bad(
-                    "result mode does not match the return type".to_string(),
-                ))
-            }
-        },
-    };
+    let collection = collect_info(&cx)?;
     if matches!(record.result, DriverResult::Finish | DriverResult::Both) && record.finish.is_none() {
         return Err(bad("result mode needs a `finish=`".to_string()));
-    }
-    if collect_elem.is_some() && emitted_host.is_none() {
-        return Err(bad("collecting result mode needs a step that emits".to_string()));
     }
     let fallible = fallible_step || record.ctx.as_ref().is_some_and(|c| c.returns_result);
     if fallible && record.errors.is_none() {
@@ -405,7 +377,7 @@ pub(crate) fn driver_adapter(
         ctr: 0,
     };
     let mut s = String::new();
-    s.push_str(&shape_pins(record, &options.hosts, op.span)?);
+    s.push_str(&shape_pins(record, &options.hosts, op.name, op.span)?);
     let _ = writeln!(s, "#[allow(unused_variables, unused_mut)]");
     let _ = writeln!(s, "fn op_{n}(_w: &[u64], args: &[V], fault: Fault) -> V {{");
     let _ = writeln!(s, "    let fault = fault_for(\"{n}\", fault);");
@@ -528,25 +500,20 @@ pub(crate) fn driver_adapter(
     // The drive loop. Collected values convert inline like exports convert
     // inline: host-to-model conversion never raises `Unreachable`, so it is
     // safe inside containment.
-    let collect_host = emitted_host.clone();
-    if collect_elem.is_some() {
+    if collection.is_some() {
         let _ = writeln!(drive, "let mut collected: Vec<V> = Vec::new();");
     }
     let _ = writeln!(drive, "for step in 0..peril {{");
     let _ = writeln!(drive, "    driver_note_call();");
-    if let Some(sv) = emit_step_call(
+    emit_step_call(
         &cx,
         &step_uses,
-        collect_elem.is_some(),
+        collection.as_ref().map(|(u, h)| (u, h)),
         OnStepErr::ReturnMapped,
         "    ",
+        &mut hc,
         &mut drive,
-    )? {
-        let u = collect_elem.as_ref().expect("collect mode has an element type");
-        let h = collect_host.as_ref().expect("collect mode has an emitted type");
-        let v = from_host(u, h, &sv, &mut hc).map_err(&bad)?;
-        let _ = writeln!(drive, "    collected.push({v});");
-    }
+    )?;
     let _ = writeln!(drive, "}}");
     // Finish and result shaping.
     match record.result {
@@ -765,17 +732,57 @@ enum OnStepErr {
     SkipSeq,
 }
 
+/// The collect element type/host for collect/both modes, validating
+/// result-mode coherence (mirrors typing for `generate_*` callers).
+fn collect_info(cx: &DriveCx<'_>) -> Result<Option<(Ty, HostTy)>, CodegenError> {
+    let bad = |m: String| unsupported(format!("operation `{}`: {m}", cx.op.name), cx.op.span);
+    let emitted: Option<&HostTy> = match &cx.record.step.returns {
+        StepReturns::Value(h) | StepReturns::ResultOf(h) => Some(h),
+        StepReturns::Unit | StepReturns::Result => None,
+    };
+    match cx.record.result {
+        DriverResult::Finish => Ok(None),
+        DriverResult::Collect | DriverResult::Both => {
+            let u = match &cx.mode_base {
+                Ty::List(u) if !matches!(cx.record.result, DriverResult::Both) => (**u).clone(),
+                Ty::Tuple(ts)
+                    if matches!(cx.record.result, DriverResult::Both) && ts.len() == 2 =>
+                {
+                    match &ts[0] {
+                        Ty::List(u) => (**u).clone(),
+                        _ => {
+                            return Err(bad(
+                                "`both` needs a `(List<U>, F)` return type".to_string(),
+                            ))
+                        }
+                    }
+                }
+                _ => {
+                    return Err(bad(
+                        "result mode does not match the return type".to_string(),
+                    ))
+                }
+            };
+            let h = emitted.cloned().ok_or_else(|| {
+                bad("collecting result mode needs a step that emits".to_string())
+            })?;
+            Ok(Some((u, h)))
+        }
+    }
+}
+
 /// Emit one step call with `uses` as the argument expressions, appending to
-/// `out` at `indent`. When `collect` and the step emits, binds the value to
-/// `sv` and returns its name; otherwise the call stands alone.
+/// `out` at `indent`. When `collect` holds the element type/host and the
+/// step emits, converts the value and pushes it onto `collected`.
 fn emit_step_call(
     cx: &DriveCx<'_>,
     uses: &[String],
-    collect: bool,
+    collect: Option<(&Ty, &HostTy)>,
     on_err: OnStepErr,
     indent: &str,
+    hc: &mut HostCx<'_>,
     out: &mut String,
-) -> Result<Option<String>, CodegenError> {
+) -> Result<(), CodegenError> {
     let bad = |m: String| unsupported(format!("operation `{}`: {m}", cx.op.name), cx.op.span);
     let m = &cx.record.step.method;
     let args = uses.join(", ");
@@ -807,11 +814,11 @@ fn emit_step_call(
     match (&cx.record.step.receiver, &cx.record.step.returns) {
         (StepReceiver::Mut, StepReturns::Unit) => {
             let _ = writeln!(out, "{indent}st.{m}({args});");
-            Ok(None)
+            Ok(())
         }
         (StepReceiver::Own, StepReturns::Unit) => {
             let _ = writeln!(out, "{indent}st = st.{m}({args});");
-            Ok(None)
+            Ok(())
         }
         (StepReceiver::Mut, StepReturns::Result) => {
             let _ = writeln!(out, "{indent}match st.{m}({args}) {{");
@@ -819,7 +826,7 @@ fn emit_step_call(
             missing_arm(out, "{}");
             err_arm(out)?;
             let _ = writeln!(out, "{indent}}}");
-            Ok(None)
+            Ok(())
         }
         (StepReceiver::Own, StepReturns::Result) => {
             let _ = writeln!(out, "{indent}st = match st.{m}({args}) {{");
@@ -827,31 +834,35 @@ fn emit_step_call(
             missing_arm(out, "st");
             err_arm(out)?;
             let _ = writeln!(out, "{indent}}}");
-            Ok(None)
-        }
-        (StepReceiver::Mut, StepReturns::Value(_)) if collect => {
-            let _ = writeln!(out, "{indent}let sv = st.{m}({args});");
-            Ok(Some("sv".to_string()))
+            Ok(())
         }
         (StepReceiver::Mut, StepReturns::Value(_)) => {
-            let _ = writeln!(out, "{indent}st.{m}({args});");
-            Ok(None)
-        }
-        (StepReceiver::Mut, StepReturns::ResultOf(_)) if collect => {
-            let _ = writeln!(out, "{indent}let sv = match st.{m}({args}) {{");
-            let _ = writeln!(out, "{indent}    Ok(v) => v,");
-            missing_arm(out, "continue");
-            err_arm(out)?;
-            let _ = writeln!(out, "{indent}}};");
-            Ok(Some("sv".to_string()))
+            if let Some((u, h)) = collect {
+                let v = from_host(u, h, "sv", hc).map_err(&bad)?;
+                let _ = writeln!(out, "{indent}let sv = st.{m}({args});");
+                let _ = writeln!(out, "{indent}collected.push({v});");
+            } else {
+                let _ = writeln!(out, "{indent}st.{m}({args});");
+            }
+            Ok(())
         }
         (StepReceiver::Mut, StepReturns::ResultOf(_)) => {
-            let _ = writeln!(out, "{indent}match st.{m}({args}) {{");
-            let _ = writeln!(out, "{indent}    Ok(_) => {{}},");
-            missing_arm(out, "{}");
-            err_arm(out)?;
-            let _ = writeln!(out, "{indent}}}");
-            Ok(None)
+            if let Some((u, h)) = collect {
+                let v = from_host(u, h, "sv", hc).map_err(&bad)?;
+                let _ = writeln!(out, "{indent}let sv = match st.{m}({args}) {{");
+                let _ = writeln!(out, "{indent}    Ok(v) => v,");
+                missing_arm(out, "continue");
+                err_arm(out)?;
+                let _ = writeln!(out, "{indent}}};");
+                let _ = writeln!(out, "{indent}collected.push({v});");
+            } else {
+                let _ = writeln!(out, "{indent}match st.{m}({args}) {{");
+                let _ = writeln!(out, "{indent}    Ok(_) => {{}},");
+                missing_arm(out, "{}");
+                err_arm(out)?;
+                let _ = writeln!(out, "{indent}}}");
+            }
+            Ok(())
         }
         (StepReceiver::Own, StepReturns::Value(_) | StepReturns::ResultOf(_)) => Err(bad(
             "`own` step cannot emit a value".to_string(),
@@ -903,7 +914,8 @@ fn nonempty_v(t: &Ty) -> String {
 /// extraction, conversions, context, constructor and loop, leaving the
 /// state in `st`. Shared by the `finish-observational` main check and
 /// control so both drive identically; the adapter's drive uses the same
-/// conversion and call emitters.
+/// conversion and call emitters. Must be emitted inside a `'seq` loop:
+/// aborted sequences skip to the next one.
 fn emit_state_drive(
     cx: &DriveCx<'_>,
     driven_expr: &str,
@@ -1007,13 +1019,9 @@ fn emit_state_drive(
         let ctx_args = emit_arg_conversions(cx, &ctx.args, &first_base, "x", indent, hc, out)?;
         let call = format!("{}({})", ctx.func, ctx_args.join(", "));
         if ctx.returns_result {
-            let errors = cx.record.errors.as_ref().ok_or_else(|| {
-                bad("fallible ctx without `errors=` cannot map host errors".to_string())
-            })?;
-            let mapped = errors_expr("e", &errors.path, &errors.map);
             let _ = writeln!(
                 out,
-                "{indent}let ctxv = match {call} {{ Ok(v) => v, Err(e) => return {mapped}, }};"
+                "{indent}let ctxv = match {call} {{ Ok(v) => v, Err(_) => continue 'seq, }};"
             );
         } else {
             let _ = writeln!(out, "{indent}let ctxv = {call};");
@@ -1028,14 +1036,19 @@ fn emit_state_drive(
         cx.record.new.func,
         new_args.join(", ")
     );
+    let collection = collect_info(cx)?;
+    if collection.is_some() {
+        let _ = writeln!(out, "{indent}let mut collected: Vec<V> = Vec::new();");
+    }
     let _ = writeln!(out, "{indent}for step in 0..peril {{");
     let _ = writeln!(out, "{indent}    driver_note_call();");
     emit_step_call(
         cx,
         &step_uses,
-        false,
+        collection.as_ref().map(|(u, h)| (u, h)),
         OnStepErr::SkipSeq,
         &format!("{indent}    "),
+        hc,
         out,
     )?;
     let _ = writeln!(out, "{indent}}}");
@@ -1092,6 +1105,7 @@ pub(crate) fn obligation_fns(
 ) -> Result<(String, Vec<&'static str>), CodegenError> {
     let n = op.name;
     let bad = |m: String| unsupported(format!("operation `{n}`: {m}"), op.span);
+    validate_driver_record_strings(record).map_err(&bad)?;
     let (cx, _) = drive_cx(op, env, record, &options.hosts, faults)?;
     let mut hc = HostCx {
         op: n.to_string(),
@@ -1102,6 +1116,15 @@ pub(crate) fn obligation_fns(
     let obligations = driver_obligations(record, &cx.driven_ty);
     let template = template_expr(&cx);
     let idx = cx.drive_index;
+    // A constructor taking the first element cannot run on an empty drive;
+    // obligations skip those sequences, and claims exclude them with
+    // refinements the same way.
+    let takes_elem = |args: &[DriverArg]| {
+        args.iter()
+            .any(|a| matches!(a.from, ArgSource::Elem | ArgSource::ElemPath(_)))
+    };
+    let ctor_takes_elem = takes_elem(&record.new.args)
+        || record.ctx.as_ref().is_some_and(|c| takes_elem(&c.args));
     let mut s = String::new();
     for ob in &obligations {
         match *ob {
@@ -1120,6 +1143,10 @@ pub(crate) fn obligation_fns(
                     Ty::Bytes | Ty::BytesN(_) => "V::Bytes(vec![])".to_string(),
                     _ => "V::Int(0)".to_string(),
                 };
+                // A constructor taking the first element cannot run on an
+                // empty drive; the adapter refuses loudly, and the
+                // obligation expects exactly that refusal (mirroring how
+                // `steps-cap` expects its own).
                 let _ = writeln!(s, "#[allow(unused_variables, unused_mut)]");
                 let _ = writeln!(
                     s,
@@ -1127,7 +1154,41 @@ pub(crate) fn obligation_fns(
                 );
                 let _ = writeln!(s, "    let mut args = {template};");
                 let _ = writeln!(s, "    args[{idx}] = {empty};");
-                let _ = writeln!(s, "    let _ = op_{n}(&[], &args, fault);");
+                if ctor_takes_elem {
+                    let _ = writeln!(
+                        s,
+                        "    let r = catch_unwind(AssertUnwindSafe(|| op_{n}(&[], &args, fault)));"
+                    );
+                    let _ = writeln!(s, "    match r {{");
+                    let _ = writeln!(s, "        Err(p) => {{");
+                    let _ = writeln!(
+                        s,
+                        "            let msg = p.downcast_ref::<String>().cloned().unwrap_or_default() + p.downcast_ref::<&str>().unwrap_or(&\"\");"
+                    );
+                    let _ = writeln!(
+                        s,
+                        "            if !msg.contains(\"takes the first element of an empty drive\") {{"
+                    );
+                    let _ = writeln!(s, "                let mut s = Stats::default();");
+                    let _ = writeln!(s, "                s.cases = 1;");
+                    let _ = writeln!(
+                        s,
+                        "                return (Verdict::fail(\"driver-wrong-refusal\", \"empty drive refused wrongly\"), s);"
+                    );
+                    let _ = writeln!(s, "            }}");
+                    let _ = writeln!(s, "        }}");
+                    let _ = writeln!(s, "        Ok(_) => {{");
+                    let _ = writeln!(s, "            let mut s = Stats::default();");
+                    let _ = writeln!(s, "            s.cases = 1;");
+                    let _ = writeln!(
+                        s,
+                        "            return (Verdict::fail(\"driver-no-refusal\", \"empty drive with element constructor proceeded\"), s);"
+                    );
+                    let _ = writeln!(s, "        }}");
+                    let _ = writeln!(s, "    }}");
+                } else {
+                    let _ = writeln!(s, "    let _ = op_{n}(&[], &args, fault);");
+                }
                 let _ = writeln!(s, "    let mut s = Stats::default();");
                 let _ = writeln!(s, "    s.cases = 1;");
                 let _ = writeln!(s, "    (Verdict::Pass, s)");
@@ -1215,7 +1276,16 @@ pub(crate) fn obligation_fns(
                 let _ = writeln!(s, "    let mut first: Option<V> = None;");
                 let _ = writeln!(s, "    let mut sensitive = false;");
                 let _ = writeln!(s, "    let mut distinct = 0usize;");
+                if ctor_takes_elem {
+                    let _ = writeln!(s, "    let mut completed = 0u64;");
+                }
                 let _ = writeln!(s, "    for (i, s0) in seqs.iter().enumerate() {{");
+                if ctor_takes_elem {
+                    let _ = writeln!(
+                        s,
+                        "        if matches!(s0, V::List(es) if es.is_empty()) || matches!(s0, V::Bytes(b) if b.is_empty()) {{ continue; }}"
+                    );
+                }
                 let _ = writeln!(s, "        let r1 = drive(s0.clone());");
                 let _ = writeln!(s, "        let r2 = drive(s0.clone());");
                 let _ = writeln!(s, "        cases += 2;");
@@ -1240,7 +1310,20 @@ pub(crate) fn obligation_fns(
                 );
                 let _ = writeln!(s, "            }}");
                 let _ = writeln!(s, "        }}");
+                if ctor_takes_elem {
+                    let _ = writeln!(s, "        completed += 1;");
+                }
                 let _ = writeln!(s, "    }}");
+                if ctor_takes_elem {
+                    let _ = writeln!(s, "    if completed == 0 {{");
+                    let _ = writeln!(s, "        let mut s = Stats::default();");
+                    let _ = writeln!(s, "        s.cases = cases;");
+                    let _ = writeln!(
+                        s,
+                        "        return (Verdict::fail(\"driver-no-drive-completed\", \"no drive completed\"), s);"
+                    );
+                    let _ = writeln!(s, "    }}");
+                }
                 let _ = writeln!(s, "    if distinct >= 2 && !sensitive {{");
                 let _ = writeln!(s, "        let mut s = Stats::default();");
                 let _ = writeln!(s, "        s.cases = cases;");
@@ -1261,9 +1344,7 @@ pub(crate) fn obligation_fns(
                     t => t.clone(),
                 };
                 let f_host = finish.host.clone();
-                // Finish-only cross-check: the replicated drive must agree
-                // with the adapter (both-mode shaping is adapter-only).
-                let cross_check = matches!(record.result, DriverResult::Finish);
+                let is_both = matches!(record.result, DriverResult::Both);
                 let conv = |v: &str, hc: &mut HostCx<'_>| -> Result<String, CodegenError> {
                     from_host(&f_ty, &f_host, v, hc).map_err(&bad)
                 };
@@ -1297,9 +1378,21 @@ pub(crate) fn obligation_fns(
                 } else {
                     let _ = writeln!(s, "    for s0 in &seqs {{");
                 }
+                // A constructor taking the first element cannot run on an
+                // empty drive; skip those sequences.
+                if ctor_takes_elem {
+                    let _ = writeln!(
+                        s,
+                        "        if matches!(s0, V::List(es) if es.is_empty()) || matches!(s0, V::Bytes(b) if b.is_empty()) {{ continue; }}"
+                    );
+                }
                 // Main: drive, finish twice, compare. Each drive runs in its
                 // own block so temporaries never collide.
-                let _ = writeln!(s, "        let (va, vb) = {{");
+                if is_both {
+                    let _ = writeln!(s, "        let (va, vb, rcollected) = {{");
+                } else {
+                    let _ = writeln!(s, "        let (va, vb) = {{");
+                }
                 let _ = writeln!(s, "            let mut args = template.clone();");
                 let _ = writeln!(s, "            args[{idx}] = s0.clone();");
                 let mut main = String::new();
@@ -1311,7 +1404,11 @@ pub(crate) fn obligation_fns(
                 let _ = writeln!(s, "            let fb = st.{}();", finish.method);
                 let va = conv("fa", &mut hc)?;
                 let vb = conv("fb", &mut hc)?;
-                let _ = writeln!(s, "            ({va}, {vb})");
+                if is_both {
+                    let _ = writeln!(s, "            ({va}, {vb}, collected)");
+                } else {
+                    let _ = writeln!(s, "            ({va}, {vb})");
+                }
                 let _ = writeln!(s, "        }};");
                 let _ = writeln!(s, "        cases += 1;");
                 let _ = writeln!(s, "        if va != vb {{");
@@ -1323,19 +1420,38 @@ pub(crate) fn obligation_fns(
                 );
                 let _ = writeln!(s, "        }}");
                 let _ = writeln!(s, "        completed += 1;");
-                if cross_check {
-                    let _ = writeln!(s, "        let mut args = template.clone();");
-                    let _ = writeln!(s, "        args[{idx}] = s0.clone();");
-                    let _ = writeln!(s, "        let r_adapter = op_{n}(&[], &args, fault);");
-                    let _ = writeln!(s, "        if r_adapter != va {{");
-                    let _ = writeln!(s, "            let mut s = Stats::default();");
-                    let _ = writeln!(s, "            s.cases = cases;");
+                // Cross-check: the replicated drive must agree with the
+                // adapter, tuple-destructured for both-mode shaping. The
+                // adapter wraps `Result` payloads; unwrap one layer first so
+                // fallible drivers compare like-for-like (a completed
+                // replica never yields `Err`, and neither does the adapter
+                // on the same input unless the subject diverges).
+                let _ = writeln!(s, "        let mut args = template.clone();");
+                let _ = writeln!(s, "        args[{idx}] = s0.clone();");
+                let _ = writeln!(s, "        let r_adapter = op_{n}(&[], &args, fault);");
+                let _ = writeln!(s, "        let shaped = match &r_adapter {{");
+                let _ = writeln!(s, "            V::Ok(b) => b.as_ref(),");
+                let _ = writeln!(s, "            v => v,");
+                let _ = writeln!(s, "        }};");
+                if is_both {
+                    let _ = writeln!(s, "        let replica_ok = match shaped {{");
                     let _ = writeln!(
                         s,
-                        "            return (Verdict::fail(\"driver-replica-diverged\", \"replicated drive disagrees with adapter\"), s);"
+                        "            V::Tup(ps) if ps.len() == 2 => ps[0] == V::List(rcollected) && ps[1] == va,"
                     );
-                    let _ = writeln!(s, "        }}");
+                    let _ = writeln!(s, "            _ => false,");
+                    let _ = writeln!(s, "        }};");
+                } else {
+                    let _ = writeln!(s, "        let replica_ok = shaped == &va;");
                 }
+                let _ = writeln!(s, "        if !replica_ok {{");
+                let _ = writeln!(s, "            let mut s = Stats::default();");
+                let _ = writeln!(s, "            s.cases = cases;");
+                let _ = writeln!(
+                    s,
+                    "            return (Verdict::fail(\"driver-replica-diverged\", \"replicated drive disagrees with adapter\"), s);"
+                );
+                let _ = writeln!(s, "        }}");
                 // Control: fresh drive, finish, one extra step, finish. The
                 // extra element's conversions hoist above the drive so a
                 // retaining subject never observes a temporary that drops
@@ -1375,7 +1491,7 @@ pub(crate) fn obligation_fns(
                     let _ = writeln!(s, "{line}");
                 }
                 let _ = writeln!(s, "            let g1 = st.{}();", finish.method);
-                let _ = emit_step_call(&cx, &uses, false, OnStepErr::SkipSeq, "            ", &mut s)?;
+                emit_step_call(&cx, &uses, None, OnStepErr::SkipSeq, "            ", &mut hc, &mut s)?;
                 let _ = writeln!(s, "            let g2 = st.{}();", finish.method);
                 let vg1 = conv("g1", &mut hc)?;
                 let vg2 = conv("g2", &mut hc)?;

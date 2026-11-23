@@ -90,6 +90,25 @@ fn misspelled_method_surfaces_in_pins_and_calls() {
     assert!(out.contains("st.updat("), "call should name it");
 }
 
+const SPEC_TWO: &str = "warrant t v1\n  op a(chunks: List<Bytes>) -> Bytes<20>\n  labels a:\n    chunks public\n  op b(chunks: List<Bytes>) -> Bytes<20>\n  labels b:\n    chunks public\n  claim ca:\n    forall chunks: List<Bytes>. a(chunks) == a(chunks)\n  claim cb:\n    forall chunks: List<Bytes>. b(chunks) == b(chunks)\n";
+
+#[test]
+fn two_drivers_namespace_their_shape_pins() {
+    // Regression: `_shape_step`/`_shape_finish` collided across two driver
+    // ops in one harness (the e2e fixture caught it compiling op 3).
+    let text = format!(
+        "{HEAD}\
+         op a driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step\n\
+         driver a state=subject::A new=new() drive=chunks step=feed(mut,elem:bytes) finish=out(ref)->bytes result=finish\n\
+         op b driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step\n\
+         driver b state=subject::B new=new() drive=chunks step=feed(mut,elem:bytes) finish=out(ref)->bytes result=finish\n"
+    );
+    let out = generate(SPEC_TWO, &text).expect("generation must succeed");
+    assert!(out.contains("fn _shape_finish_a()"), "finish pin for a missing");
+    assert!(out.contains("fn _shape_finish_b()"), "finish pin for b missing");
+    assert!(!out.contains("fn _shape_finish()"), "unprefixed pin must be gone");
+}
+
 #[test]
 fn obligations_register_with_driver_ids() {
     let out = generates(SPEC_SHA1, OP_SHA1, DRIVER_SHA1);

@@ -4,3 +4,15 @@ warrant wxf_driver v1
     chunks public
   claim c:
     forall chunks: List<Bytes>. digest_chunks(chunks) == digest_chunks(chunks)
+  op scan2(key: U8, chunks: List<Bytes>) -> (List<U8>, Nat)
+  labels scan2:
+    key public
+    chunks public
+  claim c2:
+    forall key: U8, chunks: List<Bytes> | len(chunks) >= 1. scan2(key, chunks) == scan2(key, chunks)
+  error E = TOO_LONG
+  op try_hash(chunks: List<Bytes>) -> Result<Bytes<20>, E>
+  labels try_hash:
+    chunks public
+  claim c3:
+    forall chunks: List<Bytes>. try_hash(chunks) == try_hash(chunks)

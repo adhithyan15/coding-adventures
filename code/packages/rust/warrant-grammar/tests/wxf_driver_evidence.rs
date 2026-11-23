@@ -63,6 +63,41 @@ mod harness {
             out
         }
 
+        /// A both-mode subject with an element-taking constructor. Honest
+        /// always: faulty modes only steer `Digest`, so this also exercises
+        /// the empty-guard and tuple cross-check paths in every mode.
+        #[derive(Debug)]
+        pub struct Scan {
+            key: u8,
+            first: Vec<u8>,
+            lens: Vec<u8>,
+        }
+
+        impl Scan {
+            pub fn new(key: u8, first: &[u8]) -> Self {
+                Scan {
+                    key,
+                    first: first.to_vec(),
+                    lens: Vec::new(),
+                }
+            }
+
+            pub fn push(&mut self, chunk: &[u8]) -> u8 {
+                let ell = chunk.len().min(255) as u8 ^ self.key;
+                self.lens.push(ell);
+                ell
+            }
+
+            pub fn total(&self) -> u32 {
+                self.lens.len() as u32 + self.first.len() as u32
+            }
+        }
+
+        #[derive(Debug)]
+        pub enum E {
+            LengthOverflow { len: usize },
+        }
+
         #[derive(Debug)]
         pub struct Digest {
             acc: Vec<u8>,
@@ -87,6 +122,14 @@ mod harness {
                 log(format!("update({})", hex(chunk)));
                 self.steps += 1;
                 self.acc.extend_from_slice(chunk);
+            }
+
+            pub fn try_update(&mut self, chunk: &[u8]) -> Result<(), E> {
+                if chunk.len() > 64 {
+                    return Err(E::LengthOverflow { len: chunk.len() });
+                }
+                self.update(chunk);
+                Ok(())
             }
 
             pub fn sum1(&self) -> [u8; 20] {
@@ -122,23 +165,49 @@ use harness::wxf_subject::*;
 fn honest_subject_passes_every_obligation() {
     set_mode(MODE_HONEST);
     let previous = std::panic::take_hook();
-    std::panic::set_hook(Box::new(|_| ()));
-    for (name, f, runtimes) in [
-        ("shape", harness::obl_digest_chunks_shape as fn(harness::Fault) -> _, 0u64),
-        ("empty", harness::obl_digest_chunks_empty, 1),
-        ("empty-element", harness::obl_digest_chunks_empty_element, 14),
-        ("deterministic", harness::obl_digest_chunks_deterministic, 32),
+    let _ = &previous;
+    for (name, f, lo, hi) in [
+        ("shape", harness::obl_digest_chunks_shape as fn(harness::Fault) -> _, 0u64, 0u64),
+        ("empty", harness::obl_digest_chunks_empty, 1, 1),
+        ("empty-element", harness::obl_digest_chunks_empty_element, 14, 14),
+        ("deterministic", harness::obl_digest_chunks_deterministic, 32, 32),
         (
             "finish-observational",
             harness::obl_digest_chunks_finish_observational,
-            16,
+            16, 16,
         ),
-        ("steps-cap", harness::obl_digest_chunks_steps_cap, 2),
+        ("steps-cap", harness::obl_digest_chunks_steps_cap, 2, 2),
+        ("scan2/shape", harness::obl_scan2_shape as fn(harness::Fault) -> _, 0u64, 0u64),
+        ("scan2/empty", harness::obl_scan2_empty, 1, 1),
+        ("scan2/empty-element", harness::obl_scan2_empty_element, 14, 14),
+        // scan2's constructor takes the first element, so empty sequences
+        // are skipped: fewer cases, but never zero (the completed guard).
+        ("scan2/deterministic", harness::obl_scan2_deterministic, 2, 32),
+        (
+            "scan2/finish-observational",
+            harness::obl_scan2_finish_observational,
+            1, 16,
+        ),
+        ("scan2/steps-cap", harness::obl_scan2_steps_cap, 2, 2),
+        ("try_hash/shape", harness::obl_try_hash_shape as fn(harness::Fault) -> _, 0u64, 0u64),
+        ("try_hash/empty", harness::obl_try_hash_empty, 1, 1),
+        ("try_hash/empty-element", harness::obl_try_hash_empty_element, 14, 14),
+        ("try_hash/deterministic", harness::obl_try_hash_deterministic, 32, 32),
+        (
+            "try_hash/finish-observational",
+            harness::obl_try_hash_finish_observational,
+            16, 16,
+        ),
+        ("try_hash/steps-cap", harness::obl_try_hash_steps_cap, 2, 2),
     ] {
         let (v, s) = f(harness::Fault::None);
         assert_eq!(v, Verdict::Pass, "{name} failed: {v:?}");
         // `shape` is compile-time (the pins); the rest count their drives.
-        assert_eq!(s.cases, runtimes, "{name} ran an unexpected case count");
+        assert!(
+            (lo..=hi).contains(&s.cases),
+            "{name} ran {c} cases, expected {lo}..={hi}",
+            c = s.cases
+        );
     }
     std::panic::set_hook(previous);
 }
@@ -289,7 +358,7 @@ fn the_full_generated_suite_passes_and_manifest_names_drivers() {
         .iter()
         .filter(|o| o.id.contains("/driver/"))
         .collect();
-    assert_eq!(driver.len(), 6, "six obligations run");
+    assert_eq!(driver.len(), 18, "six obligations run per op");
     assert!(driver.iter().all(|o| o.passed()));
 
     let out = std::env::temp_dir().join(format!("wxf_manifest_{}.json", std::process::id()));
@@ -303,9 +372,16 @@ fn the_full_generated_suite_passes_and_manifest_names_drivers() {
         flat.contains("\"warrant/wxf_driver/driver/digest_chunks/empty\""),
         "{manifest}"
     );
+    assert!(
+        flat.contains("\"warrant/wxf_driver/driver/scan2/steps-cap\""),
+        "{manifest}"
+    );
     assert!(flat.contains("\"kind\": \"driver\""), "{manifest}");
     assert!(flat.contains("\"steps_max_observed\":"), "{manifest}");
     assert!(flat.contains("\"obligations\":"), "{manifest}");
+    assert!(flat.contains("\"digest_chunks\":"), "{manifest}");
+    assert!(flat.contains("\"scan2\":"), "{manifest}");
+    assert!(flat.contains("\"try_hash\":"), "{manifest}");
     let kinds: BTreeSet<&str> = driver
         .iter()
         .map(|o| o.id.rsplit('/').next().unwrap())
