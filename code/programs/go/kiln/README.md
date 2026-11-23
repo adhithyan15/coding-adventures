@@ -831,8 +831,9 @@ it could make is one `recmerge` already makes and already tests. In order it:
 2. reads the build tool's three exports -- the same three `prepare` seals --
    **once** each, so the bytes hashed for the binding are the bytes parsed, and
    takes their SHA-256 names. The plan is projected onto package paths
-   (`record.ParsePartition`), and its `Paths` map is the only bridge between
-   the exports (they name packages) and Kiln (it keys by path).
+   (`record.ParsePartition`); the steps export is already keyed by `rel_path`
+   (`legacy.Steps.Lines` is looked up that way), so the plan is consulted only
+   to refuse an export naming a package no shard runs.
 3. decodes every shard with `recfmt.DecodeShard` from the exact uploaded bytes.
    A symlink, a missing file, a duplicate index or one directory used as two
    shards is an ERROR, never "no observations": a missing artifact must not be

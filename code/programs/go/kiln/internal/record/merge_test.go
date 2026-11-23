@@ -215,9 +215,10 @@ func TestDecodeShardsRefusesBadArtifacts(t *testing.T) {
 	})
 }
 
-// The steps export names PACKAGES and the plan is keyed by PATH, so Paths is
-// the only bridge between them. A plan that lost it would silently key nothing.
-func TestParsePartitionExposesTheNameToPathBridge(t *testing.T) {
+// ParsePartition is the in-memory half of ReadPartition: the merge job reads the
+// plan's bytes once (so the digest covers what is parsed) and projects them onto
+// the shard plans here.
+func TestParsePartitionProjectsThePlan(t *testing.T) {
 	_, _, planPath := writeExports(t)
 	data, err := os.ReadFile(planPath)
 	if err != nil {
@@ -227,14 +228,50 @@ func TestParsePartitionExposesTheNameToPathBridge(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := p.Paths["go/a"]; got != "code/packages/go/a" {
-		t.Fatalf("Paths[go/a] = %q", got)
+	if len(p.Shards) != 1 || p.Shards[0].Index != 0 {
+		t.Fatalf("shards: %+v", p.Shards)
+	}
+	if got := p.Shards[0].Assigned; len(got) != 1 || got[0] != "code/packages/go/a" {
+		t.Fatalf("assigned: %v", got)
 	}
 	if _, err := p.Digest(); err != nil {
 		t.Fatalf("digest: %v", err)
 	}
 	if _, err := ParsePartition(data, 2); err == nil {
 		t.Fatal("accepted the plan at the wrong shard count")
+	}
+}
+
+// A steps export is keyed by rel_path (legacy.Steps.Lines is looked up that
+// way). An entry that names a path, or a path no shard runs, is a broken input
+// -- refused with an error, never treated as a void run.
+func TestMergeRefusesAStepsExportThePlanDoesNotRun(t *testing.T) {
+	graph, steps, plan := writeExports(t)
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "records.jsonl"), nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	base := MergeOptions{
+		Root: dir, Source: source.NewGit(dir),
+		GraphPath: graph, StepsPath: steps, PlanPath: plan,
+		ShardCount: 1, Shards: []ShardArtifact{{Index: 0, Dir: dir}},
+		Run: recmergeRun(), Kiln: testKlien, Now: time.Unix(1700000000, 0).UTC(), DryRun: true,
+	}
+	// The plan lists go/a only; the export names b as well.
+	for name, body := range map[string]string{
+		"unplanned":  `{"schema":"kiln-legacy-steps/1","os":"linux","packages":[{"package":"go/a","steps":["x"]},{"package":"code/packages/go/b","steps":["y"]}]}`,
+		"not a path": `{"schema":"kiln-legacy-steps/1","os":"linux","packages":[{"package":"../escape","steps":["x"]}]}`,
+		"twice":      `{"schema":"kiln-legacy-steps/1","os":"linux","packages":[{"package":"code/packages/go/a","steps":["x"]},{"package":"code/packages/go/a","steps":["y"]}]}`,
+	} {
+		p := filepath.Join(t.TempDir(), "steps.json")
+		if err := os.WriteFile(p, []byte(body), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		o := base
+		o.StepsPath = p
+		if _, err := Merge(o); err == nil {
+			t.Errorf("%s: accepted", name)
+		}
 	}
 }
 
