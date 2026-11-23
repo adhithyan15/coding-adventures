@@ -99,7 +99,7 @@ fn generate_with(spec: &str) -> Result<String, String> {
         arg_types: b.arg_types.clone(),
         hosts: b.hosts.clone(),
     };
-    compile_rust_evidence_harness(&file, &checked, &b.manifest, &options).map_err(|e| format!("{e:?}"))
+    compile_rust_evidence_harness(&file, &checked, &b, &options).map_err(|e| format!("{e:?}"))
 }
 
 #[test]

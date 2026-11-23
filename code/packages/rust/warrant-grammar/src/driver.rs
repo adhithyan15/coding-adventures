@@ -7,14 +7,19 @@
 //!
 //! Slice 1 (this module): parse `driver` records and validate their schema
 //! (VER04k sections 3.2 and 3.4, rules 1-3 and 7). Every violation is W0501.
-//! Typing against the document (W0711), obligations, evaluation and sabotage
-//! follow in later slices; generation refuses driver ops explicitly until
-//! then (W0704 at the evidence/codegen gates).
+//! Slice 2 (this module): type driver records against the checked document
+//! (VER04k 3.3 and 3.4 rule 5). Every inconsistency is W0711. Obligations,
+//! evaluation and sabotage follow in later slices; generation refuses driver
+//! ops explicitly until then (W0704 at the evidence/codegen gates).
 
 use crate::binding::{
-    is_rust_identifier, is_rust_path, parse_host_errors, parse_host_ty, split_top, HostErrors,
-    HostTy, MAX_EXPORT_SEGMENTS,
+    is_rust_identifier, is_rust_path, parse_host_errors, parse_host_ty, split_top, EvidenceBindingFile,
+    HostErrors, HostTy, HostType, MAX_EXPORT_SEGMENTS,
 };
+use crate::checker::{CheckerError, CheckerErrorKind, DiagnosticCode};
+use crate::evidence::{ty_of_type, Ty, TyEnv};
+use crate::fixed::FixedTy;
+use crate::parser::{Declaration, OpDecl, TypeExpr, Version, WarrantFile};
 
 /// Longest Rust identifier accepted anywhere in a driver record (VER04k 3.4
 /// rule 2): segments, method names and function names are all capped, because
@@ -460,4 +465,553 @@ pub fn parse_driver_record(words: &[&str]) -> Result<DriverRecord, String> {
         errors,
         lengths,
     })
+}
+
+// ---------------------------------------------------------------------------
+// Slice 2: typing against the checked document (VER04k 3.3, 3.4 rule 5).
+// ---------------------------------------------------------------------------
+
+/// Most `errors=` map entries on one driver (VER04k 3.3 rule 4).
+pub const MAX_DRIVER_ERROR_ENTRIES: usize = 64;
+
+/// The `proofs_not_live=` reason a driven operation with proof obligations
+/// must carry (VER04k 3.4 rule 5).
+pub const DRIVER_NOT_LIVE_REASON: &str = "driver";
+
+fn w0711(message: String, span: (usize, usize)) -> CheckerError {
+    CheckerError {
+        code: DiagnosticCode::W0711,
+        kind: CheckerErrorKind::DriverInconsistency(message),
+        span,
+    }
+}
+
+/// Render a host type in binding-file syntax for diagnostics.
+fn host_name(h: &HostTy) -> String {
+    match h {
+        HostTy::Int(s) => s.clone(),
+        HostTy::Bool => "bool".to_string(),
+        HostTy::Bytes => "bytes".to_string(),
+        HostTy::BytesN(n) => format!("bytes<{n}>"),
+        HostTy::Tuple(hs) => {
+            let inner: Vec<String> = hs.iter().map(host_name).collect();
+            format!("({})", inner.join(","))
+        }
+        HostTy::Opt(h) => format!("opt<{}>", host_name(h)),
+        HostTy::List(h) => format!("list<{}>", host_name(h)),
+        HostTy::Named(n) => n.clone(),
+    }
+}
+
+/// Whether host type `h` can carry generator type `w` under the WX-A host
+/// mapping: the exact predicate `to_host`/`from_host` implement, plus the
+/// two v0 scalar leaves (drivers route scalars through host types where the
+/// export path never does). Mirrored here so refusal precedes generation.
+fn host_carries(w: &Ty, h: &HostTy) -> bool {
+    match (w, h) {
+        (Ty::Bool, HostTy::Bool) => true,
+        (Ty::U8, HostTy::Int(rt)) if rt == "u8" => true,
+        (Ty::U64, HostTy::Int(rt)) if rt == "u64" => true,
+        (Ty::Fx(f) | Ty::FxEdge(f), HostTy::Int(rt)) if rt == f.suffix() => true,
+        // A `Nat` bound to a host `usize`/`u32` declares its width; values
+        // the host cannot hold are unreachable by type (VER04j 4.6).
+        (Ty::Nat | Ty::NatCount, HostTy::Int(rt)) if rt.starts_with('u') => true,
+        (Ty::Bytes | Ty::BytesN(_), HostTy::Bytes) => true,
+        (Ty::BytesN(n), HostTy::BytesN(m)) if n == m => true,
+        (Ty::List(t), HostTy::List(hh)) => host_carries(t, hh),
+        (Ty::Opt(t), HostTy::Opt(hh)) => host_carries(t, hh),
+        (Ty::Tuple(ts), HostTy::Tuple(hs)) if ts.len() == hs.len() => {
+            ts.iter().zip(hs.iter()).all(|(t, h)| host_carries(t, h))
+        }
+        (Ty::Data { name, .. }, HostTy::Named(hn)) if hn == name => true,
+        _ => false,
+    }
+}
+
+/// The first `Named` host type in `h` with no `struct`/`enum` declaration,
+/// if any (generation could not build its adapter).
+fn undeclared_named<'h>(
+    h: &'h HostTy,
+    declared: &std::collections::BTreeMap<String, crate::binding::HostType>,
+) -> Option<&'h str> {
+    match h {
+        HostTy::Named(n) if !declared.contains_key(n) => Some(n.as_str()),
+        HostTy::Named(_) => None,
+        HostTy::Tuple(hs) => hs.iter().find_map(|h| undeclared_named(h, declared)),
+        HostTy::Opt(h) | HostTy::List(h) => undeclared_named(h, declared),
+        _ => None,
+    }
+}
+
+/// Every host type a record names: argument hosts, step returns, finish.
+fn record_host_types(record: &DriverRecord) -> Vec<&HostTy> {
+    let mut out = Vec::new();
+    for arg in record
+        .new
+        .args
+        .iter()
+        .chain(record.ctx.iter().flat_map(|c| c.args.iter()))
+        .chain(record.step.args.iter())
+    {
+        out.extend(arg.host.as_ref());
+    }
+    match &record.step.returns {
+        StepReturns::Value(h) | StepReturns::ResultOf(h) => out.push(h),
+        StepReturns::Unit | StepReturns::Result => {}
+    }
+    out.extend(record.finish.as_ref().map(|f| &f.host));
+    out
+}
+
+/// Render a generator type for diagnostics (parameter sources keep their
+/// written syntax; only leaves reached through paths need this).
+fn ty_name(t: &Ty) -> String {
+    match t {
+        Ty::Bool => "Bool".to_string(),
+        Ty::U8 => "U8".to_string(),
+        Ty::U64 => "U64".to_string(),
+        Ty::Nat | Ty::NatCount => "Nat".to_string(),
+        Ty::Bytes => "Bytes".to_string(),
+        Ty::BytesN(n) => format!("Bytes<{n}>"),
+        Ty::Fx(f) | Ty::FxEdge(f) => f.suffix().to_uppercase(),
+        Ty::Tuple(ts) => {
+            let inner: Vec<String> = ts.iter().map(ty_name).collect();
+            format!("({})", inner.join(", "))
+        }
+        Ty::Data { name, .. } => name.clone(),
+        Ty::Opt(t) => format!("Option<{}>", ty_name(t)),
+        Ty::Res(t, _, _) => format!("Result<{}>", ty_name(t)),
+        Ty::List(t) => format!("List<{}>", ty_name(t)),
+    }
+}
+
+/// Resolve an `elem.i.j...` path through tuple components and record fields
+/// (by index), returning the generator type at the leaf.
+fn resolve_elem_path(elem: &Ty, path: &[usize]) -> Result<Ty, String> {
+    // The parser caps paths at `MAX_ELEM_DEPTH`, but the record fields are
+    // public, so a hand-built record may carry a longer one. Refuse it here
+    // rather than walking it: the walk always ends in `Err`, but the cap
+    // keeps a hostile length from buying resolution work.
+    if path.len() > MAX_ELEM_DEPTH {
+        return Err(format!(
+            "element path nests {} deep, at most {MAX_ELEM_DEPTH}",
+            path.len()
+        ));
+    }
+    let mut current = elem.clone();
+    for (depth, index) in path.iter().enumerate() {
+        current = match &current {
+            Ty::Tuple(ts) => ts.get(*index).cloned().ok_or_else(|| {
+                format!(
+                    "element path reaches component {index} of a {}-tuple",
+                    ts.len()
+                )
+            })?,
+            Ty::Data { name, ctors, record } => {
+                if !record {
+                    return Err(format!(
+                        "element path reaches `{name}`, which is a variant, not a record"
+                    ));
+                }
+                let fields = ctors.first().map(|(_, fs)| fs).ok_or_else(|| {
+                    format!("element path reaches record `{name}` with no constructor")
+                })?;
+                fields.get(*index).cloned().ok_or_else(|| {
+                    format!(
+                        "element path reaches field {index} of record `{name}` with {} fields",
+                        fields.len()
+                    )
+                })?
+            }
+            other => {
+                return Err(format!(
+                    "element path descends into `{}` at depth {depth}, which has no components",
+                    ty_name(other)
+                ))
+            }
+        };
+    }
+    Ok(current)
+}
+
+/// Convert a declared type through the generator's own resolver. A checked
+/// document converts cleanly; anything else fails closed as W0711.
+fn driver_ty(
+    t: &TypeExpr<'_>,
+    env: &TyEnv<'_>,
+    op_span: (usize, usize),
+    what: &str,
+) -> Result<Ty, CheckerError> {
+    ty_of_type(t, env, true, op_span, 0).map_err(|e| {
+        w0711(
+            format!("{what} has a type the generator cannot resolve: {e}"),
+            op_span,
+        )
+    })
+}
+
+/// Validate one driver record against its operation (VER04k 3.3), reading
+/// types through the generator's resolver so the verdict agrees with
+/// generation by construction.
+fn check_driver_against_op(
+    op: &OpDecl<'_>,
+    record: &DriverRecord,
+    env: &TyEnv<'_>,
+    declared: &std::collections::BTreeMap<String, HostType>,
+) -> Result<(), CheckerError> {
+    let op_name = op.name;
+    let bad = |message: String| w0711(message, op.span);
+    // Every `Named` host type must be declared by a `struct`/`enum` line:
+    // generation builds its adapter from the declaration, so a phantom name
+    // agrees with nothing.
+    for h in record_host_types(record) {
+        if let Some(name) = undeclared_named(h, declared) {
+            return Err(bad(format!(
+                "driver of `{op_name}` names host type `{name}`, which no `struct`/`enum` line declares"
+            )));
+        }
+    }
+    // Rule 5 (first half): no static parameters on a driven operation.
+    if !op.static_params.is_empty() {
+        return Err(bad(format!(
+            "operation `{op_name}` has static parameters, which a driver cannot instantiate"
+        )));
+    }
+    // Rule 1: the driven parameter and its element type (`None` is a `Nat`
+    // count driver: steps with no element).
+    let driven = op.params.iter().find(|p| p.name == record.drive);
+    let Some(driven) = driven else {
+        return Err(bad(format!(
+            "driver drives `{}` but operation `{op_name}` has no such parameter",
+            record.drive
+        )));
+    };
+    let driven_ty = driver_ty(
+        &driven.param_type,
+        env,
+        op.span,
+        &format!("driven parameter `{}` of `{op_name}`", record.drive),
+    )?;
+    let elem_ty: Option<Ty> = match &driven_ty {
+        Ty::List(t) => Some((**t).clone()),
+        Ty::Bytes | Ty::BytesN(_) => Some(Ty::Fx(FixedTy::U8)),
+        Ty::Nat | Ty::NatCount => None,
+        other => {
+            return Err(bad(format!(
+                "driver drives `{}` of type {}, which is neither `List<T>`, `Bytes` nor `Nat`",
+                record.drive,
+                ty_name(other)
+            )))
+        }
+    };
+    // Rule 2: every argument's source resolves and its host type carries it.
+    let mut calls: Vec<(&str, &[DriverArg])> =
+        vec![("new", &record.new.args), ("step", &record.step.args)];
+    if let Some(ctx) = &record.ctx {
+        calls.push(("ctx", &ctx.args));
+    }
+    let mut consumed: std::collections::BTreeSet<&str> = std::collections::BTreeSet::new();
+    for (call, args) in calls {
+        for (i, arg) in args.iter().enumerate() {
+            let at = format!("{call} argument {i}");
+            match &arg.from {
+                ArgSource::Elem | ArgSource::ElemPath(_) => {
+                    let Some(elem) = &elem_ty else {
+                        return Err(bad(format!(
+                            "`{at}` of `{op_name}` takes the driven element, but `{}` is a `Nat` count with no element",
+                            record.drive
+                        )));
+                    };
+                    let path = match &arg.from {
+                        ArgSource::ElemPath(p) => p.as_slice(),
+                        _ => &[],
+                    };
+                    let leaf = resolve_elem_path(elem, path)
+                        .map_err(|e| bad(format!("`{at}` of `{op_name}`: {e}")))?;
+                    let Some(host) = &arg.host else {
+                        return Err(bad(format!(
+                            "`{at}` of `{op_name}` takes the driven element but names no host type"
+                        )));
+                    };
+                    if !host_carries(&leaf, host) {
+                        return Err(bad(format!(
+                            "`{at}` of `{op_name}` binds host `{}` to `{}`, which it cannot carry",
+                            host_name(host),
+                            ty_name(&leaf)
+                        )));
+                    }
+                }
+                ArgSource::Param(name) => {
+                    let param = op.params.iter().find(|p| p.name == name);
+                    let Some(param) = param else {
+                        return Err(bad(format!(
+                            "`{at}` of `{op_name}` takes `param.{name}`, which is not a parameter"
+                        )));
+                    };
+                    consumed.insert(name.as_str());
+                    let Some(host) = &arg.host else {
+                        return Err(bad(format!(
+                            "`{at}` of `{op_name}` takes `param.{name}` but names no host type"
+                        )));
+                    };
+                    let param_ty = driver_ty(
+                        &param.param_type,
+                        env,
+                        op.span,
+                        &format!("`{at}` of `{op_name}`"),
+                    )?;
+                    if !host_carries(&param_ty, host) {
+                        return Err(bad(format!(
+                            "`{at}` of `{op_name}` binds host `{}` to `{}`, which it cannot carry",
+                            host_name(host),
+                            ty_name(&param_ty)
+                        )));
+                    }
+                }
+                ArgSource::Ctx => {
+                    if record.ctx.is_none() {
+                        return Err(bad(format!(
+                            "`{at}` of `{op_name}` takes the context value, but the driver has no `ctx=`"
+                        )));
+                    }
+                    // The context value is a host-built opaque value with no
+                    // static Warrant type, so no carry check applies.
+                }
+            }
+        }
+    }
+    // Rule 3: every non-driven runtime parameter is consumed.
+    for p in &op.params {
+        if p.name != record.drive && !consumed.contains(p.name) {
+            return Err(bad(format!(
+                "parameter `{}` of `{op_name}` is consumed by neither `new`, `ctx` nor a step argument",
+                p.name
+            )));
+        }
+    }
+    // Rule 4: the result mode against the return type.
+    let fallible = matches!(
+        record.step.returns,
+        StepReturns::Result | StepReturns::ResultOf(_)
+    ) || record.ctx.as_ref().is_some_and(|c| c.returns_result);
+    let return_ty = driver_ty(
+        &op.return_type,
+        env,
+        op.span,
+        &format!("return type of `{op_name}`"),
+    )?;
+    let (mode_base, err_cases) = match &return_ty {
+        Ty::Res(t, cases, _) => (&**t, Some(cases.as_slice())),
+        t => (t, None),
+    };
+    if fallible && err_cases.is_none() {
+        return Err(bad(format!(
+            "driver of `{op_name}` is fallible but the operation does not return `Result`"
+        )));
+    }
+    let emitted: Option<&HostTy> = match &record.step.returns {
+        StepReturns::Value(h) | StepReturns::ResultOf(h) => Some(h),
+        StepReturns::Unit | StepReturns::Result => None,
+    };
+    match record.result {
+        DriverResult::Finish => {
+            let Some(finish) = &record.finish else {
+                return Err(bad(format!(
+                    "driver of `{op_name}` returns `finish` but has no `finish=`"
+                )));
+            };
+            if !host_carries(mode_base, &finish.host) {
+                return Err(bad(format!(
+                    "`finish` of `{op_name}` returns host `{}` which cannot carry `{}`",
+                    host_name(&finish.host),
+                    ty_name(mode_base)
+                )));
+            }
+        }
+        DriverResult::Collect => {
+            let Some(h) = emitted else {
+                return Err(bad(format!(
+                    "driver of `{op_name}` returns `collect` but the step emits no value"
+                )));
+            };
+            let Ty::List(u) = mode_base else {
+                return Err(bad(format!(
+                    "driver of `{op_name}` returns `collect` but the operation returns `{}`",
+                    ty_name(mode_base)
+                )));
+            };
+            if !host_carries(u, h) {
+                return Err(bad(format!(
+                    "`collect` of `{op_name}` gathers host `{}` which cannot carry `{}`",
+                    host_name(h),
+                    ty_name(u)
+                )));
+            }
+        }
+        DriverResult::Both => {
+            let Some(finish) = &record.finish else {
+                return Err(bad(format!(
+                    "driver of `{op_name}` returns `both` but has no `finish=`"
+                )));
+            };
+            let Some(h) = emitted else {
+                return Err(bad(format!(
+                    "driver of `{op_name}` returns `both` but the step emits no value"
+                )));
+            };
+            let Ty::Tuple(ts) = mode_base else {
+                return Err(bad(format!(
+                    "driver of `{op_name}` returns `both` but the operation returns `{}`",
+                    ty_name(mode_base)
+                )));
+            };
+            let [l, f] = ts.as_slice() else {
+                return Err(bad(format!(
+                    "driver of `{op_name}` returns `both` but the operation returns a {}-tuple, not `(List<U>, F)`",
+                    ts.len()
+                )));
+            };
+            let Ty::List(u) = l else {
+                return Err(bad(format!(
+                    "driver of `{op_name}` returns `both` but the tuple's first component is `{}`, not a list",
+                    ty_name(l)
+                )));
+            };
+            if !host_carries(u, h) {
+                return Err(bad(format!(
+                    "`both` of `{op_name}` gathers host `{}` which cannot carry `{}`",
+                    host_name(h),
+                    ty_name(u)
+                )));
+            }
+            if !host_carries(f, &finish.host) {
+                return Err(bad(format!(
+                    "`both` of `{op_name}` finishes with host `{}` which cannot carry `{}`",
+                    host_name(&finish.host),
+                    ty_name(f)
+                )));
+            }
+        }
+    }
+    // Rule 4 (`errors=` map): every listed host variant maps to a case of E.
+    if let Some(errors) = &record.errors {
+        if errors.map.len() > MAX_DRIVER_ERROR_ENTRIES {
+            return Err(bad(format!(
+                "`errors=` of `{op_name}` maps {} variants, at most {MAX_DRIVER_ERROR_ENTRIES}",
+                errors.map.len()
+            )));
+        }
+        let Some(cases) = err_cases else {
+            return Err(bad(format!(
+                "`errors=` of `{op_name}` maps host errors but the operation does not return `Result`"
+            )));
+        };
+        for (variant, case) in &errors.map {
+            if !cases.iter().any(|c| c == case) {
+                return Err(bad(format!(
+                    "`errors=` of `{op_name}` maps host variant `{variant}` to `{case}`, which is not a case of the error type"
+                )));
+            }
+        }
+    }
+    if fallible && record.errors.is_none() {
+        return Err(bad(format!(
+            "driver of `{op_name}` is fallible but has no `errors=` map"
+        )));
+    }
+    // VER04k 3.4 rule 7 (typing half): `lengths=` only on `Bytes` elements.
+    if record.lengths.is_some() {
+        let driven_is_bytes = matches!(driven_ty, Ty::Bytes | Ty::BytesN(_));
+        let elem_is_bytes = elem_ty
+            .as_ref()
+            .is_some_and(|t| matches!(t, Ty::Bytes));
+        if !driven_is_bytes && !elem_is_bytes {
+            return Err(bad(format!(
+                "`lengths=` of `{op_name}` needs `Bytes` elements or a `Bytes` driven parameter"
+            )));
+        }
+    }
+    Ok(())
+}
+
+/// Whether operation `op` carries proof obligations a driver cannot lower:
+/// a secret `labels` row or any `bound` row (VER04k 3.4 rule 5).
+fn op_needs_driver_not_live(file: &WarrantFile<'_>, op: &str) -> bool {
+    file.declarations.iter().any(|d| match d {
+        Declaration::Labels(l) if l.name == op => l.rows.iter().any(|r| r.is_secret),
+        Declaration::Bound(b) if b.name == op => !b.rows.is_empty(),
+        _ => false,
+    })
+}
+
+/// Validate every driver record against its operation (VER04k 3.3 rules 1-6
+/// and 3.4 rule 5), reading types through the generator's own resolver so
+/// the verdict agrees with generation by construction. The caller passes a
+/// document that already checked: this runs beside
+/// [`crate::binding::validate_bindings`]. Non-driver bindings are untouched,
+/// and generation still refuses all driver ops (W0704) until the evaluation
+/// slice lands.
+pub fn validate_driver_consistency(
+    file: &WarrantFile<'_>,
+    bindings: &EvidenceBindingFile,
+) -> Result<(), CheckerError> {
+    let driven: Vec<&OpDecl<'_>> = file
+        .declarations
+        .iter()
+        .filter_map(|d| match d {
+            Declaration::Op(op)
+                if bindings
+                    .manifest
+                    .bindings
+                    .get(op.name)
+                    .is_some_and(|b| b.driver.is_some()) =>
+            {
+                Some(op)
+            }
+            _ => None,
+        })
+        .collect();
+    if driven.is_empty() {
+        return Ok(());
+    }
+    // Rule 5 (second half): drivers need a v1 document.
+    if file.version != Version::V1 {
+        let op = driven[0];
+        return Err(w0711(
+            format!(
+                "operation `{}` uses a driver, which needs a v1 document",
+                op.name
+            ),
+            op.span,
+        ));
+    }
+    let env = TyEnv::new(file);
+    for op in driven {
+        let Some(record) = bindings
+            .manifest
+            .bindings
+            .get(op.name)
+            .and_then(|b| b.driver.as_ref())
+        else {
+            continue;
+        };
+        check_driver_against_op(op, record, &env, &bindings.hosts.types)?;
+        // VER04k 3.4 rule 5: obligations need the opt-in.
+        if op_needs_driver_not_live(file, op.name) {
+            let opted_in = bindings
+                .proofs_not_live
+                .get(op.name)
+                .is_some_and(|r| r == DRIVER_NOT_LIVE_REASON);
+            if !opted_in {
+                return Err(w0711(
+                    format!(
+                        "operation `{}` has proof obligations a driver cannot lower; add `proofs_not_live=driver`",
+                        op.name
+                    ),
+                    op.span,
+                ));
+            }
+        }
+    }
+    Ok(())
 }

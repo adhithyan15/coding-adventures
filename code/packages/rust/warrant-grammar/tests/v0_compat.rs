@@ -166,7 +166,7 @@ fn every_bound_package_regenerates_its_checked_in_evidence_byte_for_byte() {
                 arg_types: b.arg_types.clone(),
                 hosts: b.hosts.clone(),
             };
-            let text = compile_rust_evidence_harness(&file, &checked, &b.manifest, &options)
+            let text = compile_rust_evidence_harness(&file, &checked, &b, &options)
                 .unwrap_or_else(|e| panic!("{package}: {e}"));
             let on_disk = std::fs::read(root.join(&b.output)).unwrap();
             assert!(
@@ -189,7 +189,7 @@ fn every_bound_package_regenerates_its_checked_in_evidence_byte_for_byte() {
             arg_types: b.arg_types.clone(),
             hosts: Default::default(),
         };
-        let text = compile_rust_evidence_harness(&file, &checked, &b.manifest, &options)
+        let text = compile_rust_evidence_harness(&file, &checked, &b, &options)
             .unwrap_or_else(|e| panic!("{package}: {e}"));
         let on_disk = std::fs::read(root.join(&b.output)).unwrap();
         assert!(
@@ -203,7 +203,7 @@ fn every_bound_package_regenerates_its_checked_in_evidence_byte_for_byte() {
             hosts: b.hosts.clone(),
             ..options
         };
-        let driver_text = compile_rust_evidence_harness(&file, &checked, &b.manifest, &with_hosts)
+        let driver_text = compile_rust_evidence_harness(&file, &checked, &b, &with_hosts)
             .unwrap_or_else(|e| panic!("{package}: {e}"));
         assert!(driver_text == text, "{package}: passing the host lines changed a v0 harness");
         // The v1 machinery must not leak into a v0 harness.

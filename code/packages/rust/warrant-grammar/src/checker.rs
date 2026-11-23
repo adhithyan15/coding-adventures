@@ -199,6 +199,13 @@ pub enum DiagnosticCode {
     /// more than four of them, `inout` on a `fresh` operation, or an `ensures`
     /// row that calls an operation or quantifies.
     W0713,
+    /// W0711: A WX-F driver inconsistent with its operation (VER04k section
+    /// 3.3, and 3.4 rule 5): wrong driven-parameter type, an unresolvable
+    /// element path, an unconsumed parameter, a result mode the return type
+    /// cannot carry, a fallible step on a non-`Result` operation, static
+    /// parameters, proof obligations without `proofs_not_live=driver`, or a
+    /// driver on a v0 document.
+    W0711,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -216,6 +223,7 @@ impl fmt::Display for DiagnosticCode {
             Self::W0602 => write!(f, "W0602"),
             Self::W0710 => write!(f, "W0710"),
             Self::W0713 => write!(f, "W0713"),
+            Self::W0711 => write!(f, "W0711"),
         }
     }
 }
@@ -295,6 +303,9 @@ pub enum CheckerErrorKind {
     Postcondition(String),
     /// WX-G: an `ensures` block with more than [`MAX_ENSURES_ROWS`] rows.
     TooManyEnsuresRows { len: usize, limit: usize },
+    /// WX-F: a driver inconsistent with its operation (W0711); the text says
+    /// which rule of VER04k 3.3 (or 3.4 rule 5) failed.
+    DriverInconsistency(String),
 }
 
 /// Semantic checking error with source span.

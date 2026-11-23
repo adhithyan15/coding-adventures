@@ -34,7 +34,7 @@ fn generate_from(spec: &str, bindings: &str) -> Result<String, String> {
         arg_types: b.arg_types.clone(),
         hosts: b.hosts.clone(),
     };
-    compile_rust_evidence_harness(&file, &checked, &b.manifest, &options)
+    compile_rust_evidence_harness(&file, &checked, &b, &options)
         .map_err(|e: CodegenError| format!("{e}"))
 }
 
