@@ -103,7 +103,8 @@ fn convert_arg(
         ArgSource::Elem => (elem_of("argument")?, elem_base.to_string()),
         ArgSource::ElemPath(path) => {
             let elem = elem_of("argument")?;
-            let chain = resolve_elem_chain(&elem, path).map_err(&bad)?;
+            let chain = resolve_elem_chain(&elem, path)
+                .map_err(|m| unsupported(format!("operation `{}`: {m}", op.name), op.span))?;
             let leaf = chain.last().expect("chain holds the element").clone();
             (leaf, format!("{elem_base}{}", path_suffix(&chain, path)))
         }
@@ -351,7 +352,8 @@ pub(crate) fn driver_adapter(
 ) -> Result<String, CodegenError> {
     let n = op.name;
     let bad = |m: String| unsupported(format!("operation `{n}`: {m}"), op.span);
-    validate_driver_record_strings(record).map_err(&bad)?;
+    validate_driver_record_strings(record)
+        .map_err(|m| unsupported(format!("operation `{n}`: {m}"), op.span))?;
     for f in faults {
         if !crate::driver::DRIVER_FAULTS.contains(&f.as_str()) && f != "missing-error" {
             return Err(bad(format!("fault `{f}` is not a driver-operation fault")));
@@ -526,7 +528,8 @@ pub(crate) fn driver_adapter(
                 "let f = st.{m}();",
                 m = finish.method
             );
-            let v = from_host(&cx.mode_base, &finish.host, "f", &mut hc).map_err(&bad)?;
+            let v = from_host(&cx.mode_base, &finish.host, "f", &mut hc)
+                .map_err(|m| unsupported(format!("operation `{n}`: {m}"), op.span))?;
             if cx.is_result {
                 let _ = writeln!(drive, "V::Ok(Box::new({v}))");
             } else {
@@ -838,7 +841,8 @@ fn emit_step_call(
         }
         (StepReceiver::Mut, StepReturns::Value(_)) => {
             if let Some((u, h)) = collect {
-                let v = from_host(u, h, "sv", hc).map_err(&bad)?;
+                let v = from_host(u, h, "sv", hc)
+                    .map_err(|m| unsupported(format!("operation `{}`: {m}", cx.op.name), cx.op.span))?;
                 let _ = writeln!(out, "{indent}let sv = st.{m}({args});");
                 let _ = writeln!(out, "{indent}collected.push({v});");
             } else {
@@ -848,7 +852,8 @@ fn emit_step_call(
         }
         (StepReceiver::Mut, StepReturns::ResultOf(_)) => {
             if let Some((u, h)) = collect {
-                let v = from_host(u, h, "sv", hc).map_err(&bad)?;
+                let v = from_host(u, h, "sv", hc)
+                    .map_err(|m| unsupported(format!("operation `{}`: {m}", cx.op.name), cx.op.span))?;
                 let _ = writeln!(out, "{indent}let sv = match st.{m}({args}) {{");
                 let _ = writeln!(out, "{indent}    Ok(v) => v,");
                 missing_arm(out, "continue");
@@ -1105,7 +1110,8 @@ pub(crate) fn obligation_fns(
 ) -> Result<(String, Vec<&'static str>), CodegenError> {
     let n = op.name;
     let bad = |m: String| unsupported(format!("operation `{n}`: {m}"), op.span);
-    validate_driver_record_strings(record).map_err(&bad)?;
+    validate_driver_record_strings(record)
+        .map_err(|m| unsupported(format!("operation `{n}`: {m}"), op.span))?;
     let (cx, _) = drive_cx(op, env, record, &options.hosts, faults)?;
     let mut hc = HostCx {
         op: n.to_string(),
@@ -1346,7 +1352,8 @@ pub(crate) fn obligation_fns(
                 let f_host = finish.host.clone();
                 let is_both = matches!(record.result, DriverResult::Both);
                 let conv = |v: &str, hc: &mut HostCx<'_>| -> Result<String, CodegenError> {
-                    from_host(&f_ty, &f_host, v, hc).map_err(&bad)
+                    from_host(&f_ty, &f_host, v, hc)
+                        .map_err(|m| unsupported(format!("operation `{n}`: {m}"), op.span))
                 };
                 let _ = writeln!(s, "#[allow(unused_variables, unused_mut)]");
                 let _ = writeln!(
