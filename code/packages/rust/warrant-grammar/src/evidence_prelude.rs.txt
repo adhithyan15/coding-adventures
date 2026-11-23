@@ -3085,6 +3085,58 @@ static STATS: Mutex<BTreeMap<String, (Stats, String)>> = Mutex::new(BTreeMap::ne
 /// argument), recorded so a checker can detect a manifest older than the source.
 static SOURCE_SHA256: Mutex<String> = Mutex::new(String::new());
 
+//@if driver
+// ----- WX-F driver obligations (VER04k 3.5) -----------------------------------
+// Per-operation obligation ids and the largest drive of the run. The call
+// counter is thread-local: obligation tests assert on their own thread's
+// drives while suites run concurrently.
+static DRIVER_OBLIGATIONS: Mutex<BTreeMap<String, Vec<String>>> =
+    Mutex::new(BTreeMap::new());
+static DRIVER_STEPS_MAX: Mutex<BTreeMap<String, u64>> = Mutex::new(BTreeMap::new());
+thread_local! {
+    static DRIVER_CALLS: Cell<u64> = const { Cell::new(0) };
+}
+
+fn driver_note_obligations(op: &str, obligations: &[&str]) {
+    lock_or_recover(&DRIVER_OBLIGATIONS)
+        .insert(op.into(), obligations.iter().map(|s| s.to_string()).collect());
+}
+
+fn driver_note_steps(op: &str, n: usize) {
+    let mut m = lock_or_recover(&DRIVER_STEPS_MAX);
+    let e = m.entry(op.into()).or_insert(0);
+    *e = (*e).max(n as u64);
+}
+
+fn driver_note_call() {
+    DRIVER_CALLS.with(|c| c.set(c.get() + 1));
+}
+
+fn driver_take_calls() -> u64 {
+    DRIVER_CALLS.with(|c| c.replace(0))
+}
+
+fn driver_ops_json() -> BTreeMap<String, Json> {
+    let obs = lock_or_recover(&DRIVER_OBLIGATIONS).clone();
+    let steps = lock_or_recover(&DRIVER_STEPS_MAX).clone();
+    let mut ops = BTreeMap::new();
+    for (op, list) in &obs {
+        let mut d = BTreeMap::new();
+        d.insert(
+            "obligations".into(),
+            Json::Arr(list.iter().cloned().map(Json::Str).collect()),
+        );
+        d.insert(
+            "steps_max_observed".into(),
+            Json::Num(steps.get(op).copied().unwrap_or(0)),
+        );
+        let mut e = BTreeMap::new();
+        e.insert("driver".into(), Json::Obj(d));
+        ops.insert(op.clone(), Json::Obj(e));
+    }
+    ops
+}
+//@endif
 fn reg(
     suite: &mut Suite,
     meta: Meta,
@@ -3177,6 +3229,12 @@ fn write_manifest(outcomes: &[Outcome]) {
             "example" => {
                 e.insert("cases".into(), Json::Num(1));
             }
+//@if driver
+            "driver" => {
+                e.insert("cases".into(), Json::Num(s.cases));
+                e.insert("note".into(), Json::Str(note));
+            }
+//@endif
             "exhaustive" => {
                 e.insert("cases".into(), Json::Num(s.cases));
                 e.insert("discarded".into(), Json::Num(s.discarded));
@@ -3272,6 +3330,15 @@ fn write_manifest(outcomes: &[Outcome]) {
         ("evidence_seed", Json::Str(EVIDENCE_SEED.to_string())),
         ("tests", Json::Arr(tests)),
     ]);
+//@if driver
+    let mut doc = doc;
+    let ops = driver_ops_json();
+    if !ops.is_empty() {
+        if let Json::Obj(top) = &mut doc {
+            top.insert("ops".into(), Json::Obj(ops));
+        }
+    }
+//@endif
     if let Err(e) = manifest::write(&path, &doc) {
         eprintln!("cannot write evidence manifest: {e}");
     }

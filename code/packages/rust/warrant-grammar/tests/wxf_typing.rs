@@ -409,6 +409,31 @@ fn errors_map_without_result_is_w0711() {
 // --- Static parameters and document version, rule 5 ---
 
 #[test]
+fn own_step_emitting_a_value_is_w0711() {
+    // Slice-2 gap closed in slice 4: `own` returns only the state.
+    let spec = "warrant t v1\n  op dec_all(bs: List<Bytes>) -> List<U8>\n  labels dec_all:\n    bs public\n  claim c:\n    forall bs: List<Bytes>. dec_all(bs) == dec_all(bs)\n";
+    bad(
+        spec,
+        "op dec_all driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,drop-last-output",
+        "driver dec_all state=subject::Dec new=new() drive=bs step=dec(own,elem:bytes)->u8 result=collect",
+        "returns only the state",
+    );
+}
+
+#[test]
+fn ctx_used_to_build_itself_is_w0711() {
+    // Slice-2 gap closed in slice 4: the context value does not exist yet
+    // while its own arguments convert.
+    let spec = "warrant t v1\n  op keyed(chunks: List<Bytes>, key: U8) -> Bytes\n  labels keyed:\n    chunks public\n    key public\n  claim c:\n    forall chunks: List<Bytes>, key: U8. keyed(chunks, key) == keyed(chunks, key)\n";
+    bad(
+        spec,
+        "op keyed driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step",
+        "driver keyed state=subject::K ctx=mkctx(ctx) new=new(param.key:u8) drive=chunks step=update(mut,elem:bytes) finish=sum(ref)->bytes result=finish",
+        "to build the context",
+    );
+}
+
+#[test]
 fn static_params_on_driven_op_are_w0711() {
     let spec = "warrant t v1\n  op f<N: Nat>(x: Bytes<N>) -> Bool\n  labels f:\n    x public\n";
     bad(
@@ -499,7 +524,18 @@ fn bad_driver_reports_w0711_through_compile() {
 }
 
 #[test]
-fn good_driver_still_refuses_generation_with_w0704() {
+fn good_driver_generates_an_adapter() {
+    // WX-F slice 4 lifts the generation refusal: a valid driver now emits
+    // a driver adapter instead of W0704.
+    let doc = SourceDocument::admit(SPEC_SHA1.as_bytes(), SourceLimits::default()).expect("admit");
+    let layout = capture_layout(&doc, LayoutLimits::default()).expect("layout");
+    let file = parse_document(&layout, &doc, ParserLimits::default()).expect("parse");
+    let checked = check_warrant(&file).expect("fixture must type-check");
     let text = bindings(OP_SHA1, DRIVER_SHA1);
-    assert_eq!(compile_code(SPEC_SHA1, &text), CodegenCode::W0704);
+    let b = parse_evidence_bindings(&text).expect("bindings parse");
+    let out = compile_rust_evidence_harness(&file, &checked, &b, &options())
+        .expect("generation must succeed");
+    assert!(out.contains("fn op_digest_chunks("), "adapter missing");
+    assert!(out.contains("Digest::new()"), "constructor call missing: {out}");
+    assert!(out.contains("driver-steps-exceeded"), "cap guard missing");
 }

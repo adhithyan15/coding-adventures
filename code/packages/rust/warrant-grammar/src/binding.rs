@@ -237,6 +237,103 @@ const HOST_INTS: [&str; 9] = ["u8", "u16", "u32", "u64", "i8", "i16", "i32", "i6
 const MAX_HOST_DEPTH: usize = 8;
 const MAX_HOST_ITEMS: usize = 256;
 
+/// Whether a whole host spec could have come from `struct`/`enum`/`host`
+/// lines: every spliced path, name and type re-checked. Generation runs
+/// this on hand-built options; anything else would splice unchecked text
+/// into generated source.
+pub(crate) fn validate_host_spec(spec: &HostSpec) -> Result<(), String> {
+    for (name, decl) in &spec.types {
+        if !is_rust_identifier(name) {
+            return Err(format!("host type name `{name}` is not an identifier"));
+        }
+        if !is_rust_path(&decl.path) {
+            return Err(format!("host type `{name}` has a bad path"));
+        }
+        let mut fields = Vec::new();
+        match &decl.shape {
+            HostShape::Struct(fs) => fields.extend(fs.iter()),
+            HostShape::Enum(vs) => {
+                for (v, fs) in vs {
+                    if !is_rust_identifier(v) {
+                        return Err(format!("host variant `{v}` is not an identifier"));
+                    }
+                    fields.extend(fs.iter());
+                }
+            }
+        }
+        for f in fields {
+            // Mirrors the line parser: an identifier or a positional index.
+            let ok = is_rust_identifier(&f.name)
+                || (!f.name.is_empty() && f.name.bytes().all(|b| b.is_ascii_digit()));
+            if !ok {
+                return Err(format!("host field `{}` is not an identifier or an index", f.name));
+            }
+            if !valid_host_ty(&f.ty) {
+                return Err(format!("host field `{}` has a bad type", f.name));
+            }
+        }
+    }
+    for (op, h) in &spec.ops {
+        if !is_rust_identifier(op) {
+            return Err(format!("host op `{op}` is not an identifier"));
+        }
+        for t in h.args.iter().flatten().chain(h.ret.iter()) {
+            if !valid_host_ty(t) {
+                return Err(format!("host signature of `{op}` has a bad type"));
+            }
+        }
+        if let Some(errors) = &h.errors {
+            if !is_rust_path(&errors.path) {
+                return Err(format!("host errors path of `{op}` is bad"));
+            }
+            for (variant, case) in &errors.map {
+                if !is_rust_identifier(variant) || !is_rust_identifier(case) {
+                    return Err(format!("host errors entry of `{op}` must name identifiers"));
+                }
+            }
+        }
+        if let Some(case) = &h.err_any {
+            if !is_rust_identifier(case) {
+                return Err(format!("host `err_any` of `{op}` is not an identifier"));
+            }
+        }
+        for (param, form) in &h.inout {
+            if !is_rust_identifier(param) {
+                return Err(format!("host `inout` parameter `{param}` is not an identifier"));
+            }
+            if let InoutForm::Int(s) = form {
+                if !HOST_INTS.contains(&s.as_str()) {
+                    return Err(format!("host `inout` integer `{s}` is unknown"));
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Whether a host type could have come from [`parse_host_ty`]: closed int
+/// vocabulary, identifier names, capped widths, tuples of 2 to 8, bounded
+/// depth. Generation re-checks hand-built records with this; anything else
+/// would splice unchecked text into generated source.
+pub(crate) fn valid_host_ty(h: &HostTy) -> bool {
+    fn go(h: &HostTy, depth: usize) -> bool {
+        if depth > MAX_HOST_DEPTH {
+            return false;
+        }
+        match h {
+            HostTy::Int(s) => HOST_INTS.contains(&s.as_str()),
+            HostTy::Bool | HostTy::Bytes => true,
+            HostTy::BytesN(n) => *n <= crate::evidence::MAX_FIXED_WIDTH,
+            HostTy::Tuple(hs) => {
+                (2..=8).contains(&hs.len()) && hs.iter().all(|h| go(h, depth + 1))
+            }
+            HostTy::Opt(h) | HostTy::List(h) => go(h, depth + 1),
+            HostTy::Named(n) => is_rust_identifier(n),
+        }
+    }
+    go(h, 0)
+}
+
 /// Split `text` on commas that are not inside `()` or `<>`.
 pub fn split_top(text: &str) -> Vec<&str> {
     let mut out = Vec::new();
