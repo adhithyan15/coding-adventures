@@ -4,9 +4,10 @@
 //! validating signature compatibility, freshness assertions, negative controls,
 //! error normalizations, and closed failure codes (`W0501`, `W0502`).
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use crate::checker::{CheckedWarrantModule, CheckerError, CheckerErrorKind, DiagnosticCode, Type};
+use crate::driver::DriverRecord;
 
 /// Closed error normalization rule.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -18,7 +19,13 @@ pub struct ErrorNormalization {
 /// Binding specification for a single Warrant public operation.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct OpBinding {
-    pub export: String,
+    /// The `export=` callee, or `None` for a WX-F driven operation (which
+    /// executes as a constructor/step/finish protocol instead of one call).
+    /// Exactly one of `export` and `driver` is `Some` (VER04k 3.4 rule 1).
+    pub export: Option<String>,
+    /// The parsed `driver` record for a driven operation, attached after the
+    /// whole file parses so `driver` lines may precede their `op` lines.
+    pub driver: Option<crate::driver::DriverRecord>,
     pub static_params: Vec<String>,
     pub fresh: bool,
     pub error_normalization: Option<ErrorNormalization>,
@@ -157,7 +164,9 @@ pub fn parse_inout_form(text: &str) -> Result<InoutForm, String> {
         _ => {
             if let Some(t) = text.strip_prefix("int:") {
                 if !HOST_INTS.contains(&t) {
-                    return Err(format!("`int:{t}`: the host integer is one of {HOST_INTS:?}"));
+                    return Err(format!(
+                        "`int:{t}`: the host integer is one of {HOST_INTS:?}"
+                    ));
                 }
                 InoutForm::Int(t.to_string())
             } else if let Some(n) = text.strip_prefix("slice-of:struct:") {
@@ -184,15 +193,22 @@ fn parse_inout_entries(text: &str) -> Result<Vec<(String, InoutForm)>, String> {
             .split_once(':')
             .ok_or_else(|| format!("inout entry `{entry}` is not `<param>:<form>`"))?;
         if !is_rust_identifier(param) {
-            return Err(format!("inout entry `{entry}`: `{param}` is not a parameter name"));
+            return Err(format!(
+                "inout entry `{entry}`: `{param}` is not a parameter name"
+            ));
         }
         if out.iter().any(|(p, _)| p == param) {
-            return Err(format!("inout parameter `{param}` is given a host form twice"));
+            return Err(format!(
+                "inout parameter `{param}` is given a host form twice"
+            ));
         }
         if out.len() >= 4 {
             return Err("more than 4 inout entries".to_string());
         }
-        out.push((param.to_string(), parse_inout_form(form).map_err(|e| format!("inout entry `{entry}`: {e}"))?));
+        out.push((
+            param.to_string(),
+            parse_inout_form(form).map_err(|e| format!("inout entry `{entry}`: {e}"))?,
+        ));
     }
     if out.is_empty() {
         return Err("inout= needs at least one `<param>:<form>` entry".to_string());
@@ -226,7 +242,9 @@ pub struct HostSpec {
     pub ops: BTreeMap<String, OpHost>,
 }
 
-const HOST_INTS: [&str; 9] = ["u8", "u16", "u32", "u64", "i8", "i16", "i32", "i64", "usize"];
+const HOST_INTS: [&str; 9] = [
+    "u8", "u16", "u32", "u64", "i8", "i16", "i32", "i64", "usize",
+];
 const MAX_HOST_DEPTH: usize = 8;
 const MAX_HOST_ITEMS: usize = 256;
 
@@ -261,7 +279,9 @@ pub fn parse_host_ty(text: &str) -> Result<HostTy, String> {
 
 fn parse_host_ty_at(t: &str, depth: usize) -> Result<HostTy, String> {
     if depth > MAX_HOST_DEPTH {
-        return Err(format!("host type `{t}` nests deeper than {MAX_HOST_DEPTH}"));
+        return Err(format!(
+            "host type `{t}` nests deeper than {MAX_HOST_DEPTH}"
+        ));
     }
     if HOST_INTS.contains(&t) {
         return Ok(HostTy::Int(t.to_string()));
@@ -288,10 +308,16 @@ fn parse_host_ty_at(t: &str, depth: usize) -> Result<HostTy, String> {
         };
     }
     if let Some(inner) = t.strip_prefix("opt<").and_then(|r| r.strip_suffix('>')) {
-        return Ok(HostTy::Opt(Box::new(parse_host_ty_at(inner.trim(), depth + 1)?)));
+        return Ok(HostTy::Opt(Box::new(parse_host_ty_at(
+            inner.trim(),
+            depth + 1,
+        )?)));
     }
     if let Some(inner) = t.strip_prefix("list<").and_then(|r| r.strip_suffix('>')) {
-        return Ok(HostTy::List(Box::new(parse_host_ty_at(inner.trim(), depth + 1)?)));
+        return Ok(HostTy::List(Box::new(parse_host_ty_at(
+            inner.trim(),
+            depth + 1,
+        )?)));
     }
     if let Some(inner) = t.strip_prefix('(').and_then(|r| r.strip_suffix(')')) {
         let parts = split_top(inner);
@@ -328,7 +354,9 @@ fn parse_host_fields(text: &str) -> Result<Vec<HostField>, String> {
         let ok = is_rust_identifier(name)
             || (!name.is_empty() && name.bytes().all(|b| b.is_ascii_digit()));
         if !ok {
-            return Err(format!("field name `{name}` is not an identifier or an index"));
+            return Err(format!(
+                "field name `{name}` is not an identifier or an index"
+            ));
         }
         if out.iter().any(|f| f.name == name) {
             return Err(format!("field `{name}` appears twice"));
@@ -354,7 +382,7 @@ fn host_names(t: &HostTy, out: &mut Vec<String>) {
 }
 
 /// Parse the value of `errors=`: `PATH/Variant=CASE,Variant2=CASE2`.
-fn parse_host_errors(text: &str) -> Result<HostErrors, String> {
+pub(crate) fn parse_host_errors(text: &str) -> Result<HostErrors, String> {
     let (path, rest) = text
         .split_once('/')
         .ok_or_else(|| format!("errors=`{text}` must be PATH/Variant=CASE,..."))?;
@@ -401,12 +429,15 @@ fn parse_host_errors(text: &str) -> Result<HostErrors, String> {
 /// op power export=power args=u8,u32 faults=exp-mod-256 proofs_not_live=frontend-refuses-lib
 /// ```
 ///
-/// Keys other than `op` appear once.  `op` options: `export=` (required),
+/// Keys other than `op` appear once.  `op` options: `export=` or bare
+/// `driver` (exactly one, VER04k 3.4 rule 1),
 /// `static=A,B`, bare `fresh`, `error=CASE` (panic-to-error normalization),
 /// `args=u8,u32` (Rust parameter types of a scalar export), `faults=a,b`
 /// (required, at least one), `proofs_not_live=REASON` (the operation's proof
 /// obligations are acknowledged as not runnable; see
-/// [`EvidenceBindingFile::proofs_not_live`]).  `package` and every `export` must
+/// [`EvidenceBindingFile::proofs_not_live`]).  A `driver NAME k=v...` line
+/// carries the WX-F record for a driver-flagged op (see
+/// [`crate::driver::parse_driver_record`]).  `package` and every `export` must
 /// be Rust identifiers, `exhaustive_budget` is at most [`MAX_EXHAUSTIVE_BUDGET`]
 /// (2^26), and `spec`/`output` are plain relative paths that
 /// [`EvidenceBindingFile::validate_paths`] pins to the package.  Anything unknown is an error: a typo must not
@@ -476,13 +507,21 @@ impl EvidenceBindingFile {
     /// outside the package's generated-test directory.
     pub fn validate_paths(&self, package: &str) -> Result<(), String> {
         if !is_package_dir_name(package) {
-            return Err(format!("package `{package}` must match [A-Za-z0-9][A-Za-z0-9_-]*"));
+            return Err(format!(
+                "package `{package}` must match [A-Za-z0-9][A-Za-z0-9_-]*"
+            ));
         }
         if !plain_relative_path(&self.spec) {
-            return Err(format!("spec `{}` must be a plain relative path (no `..`, no absolute path)", self.spec));
+            return Err(format!(
+                "spec `{}` must be a plain relative path (no `..`, no absolute path)",
+                self.spec
+            ));
         }
         if !plain_relative_path(&self.output) {
-            return Err(format!("output `{}` must be a plain relative path (no `..`, no absolute path)", self.output));
+            return Err(format!(
+                "output `{}` must be a plain relative path (no `..`, no absolute path)",
+                self.output
+            ));
         }
         let want_spec = format!("code/specs/{package}.warrant");
         if self.spec != want_spec {
@@ -490,8 +529,13 @@ impl EvidenceBindingFile {
         }
         let dir = format!("code/packages/rust/{package}/tests/generated/");
         match self.output.strip_prefix(&dir) {
-            Some(file) if !file.is_empty() && !file.contains('/') && file.ends_with(".rs") => Ok(()),
-            _ => Err(format!("output `{}` must be a .rs file directly under `{dir}`", self.output)),
+            Some(file) if !file.is_empty() && !file.contains('/') && file.ends_with(".rs") => {
+                Ok(())
+            }
+            _ => Err(format!(
+                "output `{}` must be a .rs file directly under `{dir}`",
+                self.output
+            )),
         }
     }
 }
@@ -520,6 +564,8 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
     let mut arg_types = BTreeMap::new();
     let mut proofs_not_live = BTreeMap::new();
     let mut hosts = HostSpec::default();
+    let mut drivers: BTreeMap<String, DriverRecord> = BTreeMap::new();
+    let mut driver_ops: BTreeSet<String> = BTreeSet::new();
     for (n, raw) in text.lines().enumerate() {
         let line = raw.trim();
         if line.is_empty() || line.starts_with('#') {
@@ -554,7 +600,9 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
             "exhaustive_budget" => num(&mut exhaustive_budget)?,
             "struct" | "enum" => {
                 let mut words = rest.split_whitespace();
-                let name = words.next().ok_or_else(|| at(format!("`{key}` needs a type name")))?;
+                let name = words
+                    .next()
+                    .ok_or_else(|| at(format!("`{key}` needs a type name")))?;
                 if !is_rust_identifier(name) {
                     return Err(at(format!("type name `{name}` is not an identifier")));
                 }
@@ -565,7 +613,11 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                         ("path", false) => path = Some(v.to_string()),
                         ("fields", false) if key == "struct" => body = Some(v.to_string()),
                         ("ctors", false) if key == "enum" => body = Some(v.to_string()),
-                        _ => return Err(at(format!("{key} `{name}`: unknown or malformed option `{w}`"))),
+                        _ => {
+                            return Err(at(format!(
+                                "{key} `{name}`: unknown or malformed option `{w}`"
+                            )))
+                        }
                     }
                 }
                 let path = path.ok_or_else(|| at(format!("{key} `{name}` has no path=")))?;
@@ -573,7 +625,10 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                     return Err(at(format!("path `{path}` is not a Rust path")));
                 }
                 let body = body.ok_or_else(|| {
-                    at(format!("{key} `{name}` has no {}=", if key == "struct" { "fields" } else { "ctors" }))
+                    at(format!(
+                        "{key} `{name}` has no {}=",
+                        if key == "struct" { "fields" } else { "ctors" }
+                    ))
                 })?;
                 let shape = if key == "struct" {
                     HostShape::Struct(parse_host_fields(&body).map_err(at)?)
@@ -591,7 +646,9 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                             None => (part, Vec::new()),
                         };
                         if !is_rust_identifier(cname) || ctors.iter().any(|(c, _)| c == cname) {
-                            return Err(at(format!("constructor name `{cname}` is invalid or repeated")));
+                            return Err(at(format!(
+                                "constructor name `{cname}` is invalid or repeated"
+                            )));
                         }
                         if ctors.len() >= MAX_HOST_ITEMS {
                             return Err(at("too many constructors".to_string()));
@@ -600,7 +657,11 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                     }
                     HostShape::Enum(ctors)
                 };
-                if hosts.types.insert(name.to_string(), HostType { path, shape }).is_some() {
+                if hosts
+                    .types
+                    .insert(name.to_string(), HostType { path, shape })
+                    .is_some()
+                {
                     return Err(at(format!("{key} `{name}` is declared twice")));
                 }
             }
@@ -608,6 +669,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                 let mut words = rest.split_whitespace();
                 let name = words.next().ok_or_else(|| at("`op` needs a name".into()))?;
                 let mut export = None;
+                let mut driver_flag = false;
                 let mut static_params = Vec::new();
                 let mut fresh = false;
                 let mut error = None;
@@ -629,6 +691,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                     };
                     match k {
                         "export" if !v.is_empty() => export = Some(v.to_string()),
+                        "driver" if v.is_empty() => driver_flag = true,
                         "static" if !v.is_empty() => static_params = list(),
                         "fresh" if v.is_empty() => fresh = true,
                         "error" if !v.is_empty() => error = Some(v.to_string()),
@@ -640,27 +703,52 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                         "err_any" if is_rust_identifier(v) => err_any = Some(v.to_string()),
                         "inout" if !v.is_empty() => {
                             if !inout.is_empty() {
-                                return Err(at(format!("W0501: op `{name}`: `inout=` appears twice")));
+                                return Err(at(format!(
+                                    "W0501: op `{name}`: `inout=` appears twice"
+                                )));
                             }
                             inout = parse_inout_entries(v)
                                 .map_err(|e| at(format!("W0501: op `{name}`: {e}")))?;
                         }
                         "faults" if !v.is_empty() => faults = list(),
                         "proofs_not_live" if !v.is_empty() => not_live = Some(v.to_string()),
-                        _ => return Err(at(format!("op `{name}`: unknown or malformed option `{w}`"))),
+                        _ => {
+                            return Err(at(format!(
+                                "op `{name}`: unknown or malformed option `{w}`"
+                            )))
+                        }
                     }
                 }
-                let export = export.ok_or_else(|| at(format!("op `{name}` has no export=")))?;
-                if inout.is_empty() {
-                    if !is_rust_identifier(&export) {
-                        return Err(at(format!("op `{name}`: export `{export}` is not a Rust identifier")));
-                    }
-                } else if !is_rust_path(&export) || export.split("::").count() > MAX_EXPORT_SEGMENTS {
-                    // VER04k section 4.6: an inout operation may name a method or a
-                    // function by a Rust path of at most 8 segments.
+                // VER04k 3.4 rule 1: exactly one of `export=` and bare `driver`.
+                if export.is_some() && driver_flag {
                     return Err(at(format!(
-                        "W0501: op `{name}`: export `{export}` is not a Rust path of at most {MAX_EXPORT_SEGMENTS} segments"
+                        "W0501: op `{name}`: `export=` and `driver` are mutually exclusive"
                     )));
+                }
+                if export.is_none() && !driver_flag {
+                    return Err(at(format!(
+                        "W0501: op `{name}` needs exactly one of `export=` and `driver`"
+                    )));
+                }
+                if driver_flag {
+                    driver_ops.insert(name.to_string());
+                }
+                if let Some(export) = export.as_deref() {
+                    if inout.is_empty() {
+                        if !is_rust_identifier(export) {
+                            return Err(at(format!(
+                                "op `{name}`: export `{export}` is not a Rust identifier"
+                            )));
+                        }
+                    } else if !is_rust_path(export)
+                        || export.split("::").count() > MAX_EXPORT_SEGMENTS
+                    {
+                        // VER04k section 4.6: an inout operation may name a method or a
+                        // function by a Rust path of at most 8 segments.
+                        return Err(at(format!(
+                            "W0501: op `{name}`: export `{export}` is not a Rust path of at most {MAX_EXPORT_SEGMENTS} segments"
+                        )));
+                    }
                 }
                 if let Some(reason) = not_live {
                     proofs_not_live.insert(name.to_string(), reason);
@@ -702,6 +790,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                     name.to_string(),
                     OpBinding {
                         export,
+                        driver: None,
                         static_params,
                         fresh,
                         error_normalization: error.map(|c| ErrorNormalization {
@@ -715,7 +804,45 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                     return Err(at(format!("op `{name}` is bound twice")));
                 }
             }
+            "driver" => {
+                let mut words = rest.split_whitespace();
+                let name = words
+                    .next()
+                    .ok_or_else(|| at("`driver` needs an operation name".into()))?;
+                if !is_rust_identifier(name) {
+                    return Err(at(format!(
+                        "W0501: driver operation `{name}` is not an identifier"
+                    )));
+                }
+                let rest_words: Vec<&str> = words.collect();
+                let record = crate::driver::parse_driver_record(&rest_words)
+                    .map_err(|e| at(format!("W0501: driver `{name}`: {e}")))?;
+                if drivers.insert(name.to_string(), record).is_some() {
+                    return Err(at(format!("W0501: driver `{name}` is declared twice")));
+                }
+            }
             other => return Err(at(format!("unknown key `{other}`"))),
+        }
+    }
+    // VER04k 3.4 rule 1, cross-line half: every `driver` line names an
+    // operation whose `op` line carries `driver`, and every such operation
+    // has exactly one `driver` line.
+    for name in drivers.keys() {
+        let binding = bindings
+            .get(name)
+            .ok_or_else(|| format!("W0501: driver `{name}` names an unknown operation"))?;
+        if binding.export.is_some() {
+            return Err(format!(
+                "W0501: driver `{name}` names operation `{name}`, whose `op` line lacks `driver`"
+            ));
+        }
+    }
+    for name in driver_ops {
+        let record = drivers.remove(&name).ok_or_else(|| {
+            format!("W0501: op `{name}` carries `driver` but has no `driver` line")
+        })?;
+        if let Some(binding) = bindings.get_mut(&name) {
+            binding.driver = Some(record);
         }
     }
     let need = |v: Option<String>, k: &str| v.ok_or_else(|| format!("missing `{k}`"));
@@ -735,11 +862,16 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
         }
     }
     for o in hosts.ops.values() {
-        o.args.iter().flatten().for_each(|t| host_names(t, &mut named));
+        o.args
+            .iter()
+            .flatten()
+            .for_each(|t| host_names(t, &mut named));
         o.ret.iter().for_each(|t| host_names(t, &mut named));
     }
     if let Some(missing) = named.iter().find(|n| !hosts.types.contains_key(*n)) {
-        return Err(format!("host type `{missing}` is used but has no `struct` or `enum` line"));
+        return Err(format!(
+            "host type `{missing}` is used but has no `struct` or `enum` line"
+        ));
     }
     let package = need(package, "package")?;
     if !is_rust_identifier(&package) {
@@ -749,7 +881,9 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
     let output = need(output, "output")?;
     for (key, path) in [("spec", &spec), ("output", &output)] {
         if !plain_relative_path(path) {
-            return Err(format!("{key} `{path}` must be a plain relative path (no `..`, no absolute path)"));
+            return Err(format!(
+                "{key} `{path}` must be a plain relative path (no `..`, no absolute path)"
+            ));
         }
     }
     let exhaustive_budget = exhaustive_budget.unwrap_or(400_000);

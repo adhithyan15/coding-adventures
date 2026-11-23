@@ -417,7 +417,8 @@ fn the_list_cap_applies_wherever_a_literal_appears_in_v1() {
 
 #[test]
 fn a_v1_parameter_or_quantifier_binder_named_like_a_built_in_is_w0203() {
-    let op = |p: &str| format!("warrant t v1\n  op f({p}: U8) -> U8\n  labels f:\n    {p} public\n");
+    let op =
+        |p: &str| format!("warrant t v1\n  op f({p}: U8) -> U8\n  labels f:\n    {p} public\n");
     for (what, src) in [
         (
             "take(take, 0)",
@@ -437,10 +438,16 @@ fn a_v1_parameter_or_quantifier_binder_named_like_a_built_in_is_w0203() {
             v1_model("a: U8", "Bool", "forall map: U8. map == a"),
         ),
         // Every reserved v1 built-in, not only the twelve WX-D names.
-        ("popcount parameter", v1_model("popcount: U8", "U8", "popcount")),
+        (
+            "popcount parameter",
+            v1_model("popcount: U8", "U8", "popcount"),
+        ),
         ("len parameter", v1_model("len: Bytes", "Nat", "len(len)")),
         ("U16 parameter", v1_model("U16: U8", "U8", "U16")),
-        ("Some binder", v1_model("a: U8", "Bool", "forall Some: U8. a == a")),
+        (
+            "Some binder",
+            v1_model("a: U8", "Bool", "forall Some: U8. a == a"),
+        ),
         ("op parameter", op("rem")),
     ] {
         let e = rejected(&src);
@@ -825,7 +832,10 @@ mod dotted_names {
             ))
             .expect_err("E.NOPE");
             assert_eq!(e.code, DiagnosticCode::W0202);
-            assert_eq!(e.kind, CheckerErrorKind::UnboundConstructor("E.NOPE".into()));
+            assert_eq!(
+                e.kind,
+                CheckerErrorKind::UnboundConstructor("E.NOPE".into())
+            );
         }
         // v1 binder projection, one and two levels deep.
         let src = "warrant t v1\n  record In(v: U8)\n  record Out(i: In, w: U8)\n  model f(o: Out) -> U8 = o.i.v\n  model g(o: Out) -> U8 = o.w\n  example e0:\n    f(Out(In(7u8), 9u8)) == 7u8\n  example e1:\n    g(Out(In(7u8), 9u8)) == 9u8\n  example e2:\n    f(Out(In(7u8), 9u8)) == 9u8\n";
@@ -852,7 +862,8 @@ mod generation {
         b.insert(
             "f".to_string(),
             OpBinding {
-                export: "f".into(),
+                export: Some("f".into()),
+                driver: None,
                 static_params: Vec::new(),
                 fresh: false,
                 error_normalization: None,

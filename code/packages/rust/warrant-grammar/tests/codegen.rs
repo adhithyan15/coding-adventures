@@ -7,8 +7,8 @@ use coding_adventures_warrant_grammar::{
     checker::check_warrant,
     codegen::{
         compile_rust_l0_harness, compile_warrant_to_tfv, extract_claim_cases, extract_example_case,
-        hex_decode, verify_regeneration, CodegenErrorKind, CodegenLimits,
-        DiagnosticCode, EvalValue, Evaluator, RustL0Options,
+        hex_decode, verify_regeneration, CodegenErrorKind, CodegenLimits, DiagnosticCode,
+        EvalValue, Evaluator, RustL0Options,
     },
     layout::{capture_layout, LayoutLimits},
     parser::{
@@ -24,7 +24,8 @@ fn ct_compare_bindings() -> BindingManifest {
     bindings.insert(
         "eq".to_string(),
         OpBinding {
-            export: "ct_eq".to_string(),
+            export: Some("ct_eq".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: false,
             error_normalization: None,
@@ -34,7 +35,8 @@ fn ct_compare_bindings() -> BindingManifest {
     bindings.insert(
         "eq_fixed".to_string(),
         OpBinding {
-            export: "ct_eq_fixed".to_string(),
+            export: Some("ct_eq_fixed".to_string()),
+            driver: None,
             static_params: vec!["N".to_string()],
             fresh: false,
             error_normalization: None,
@@ -44,7 +46,8 @@ fn ct_compare_bindings() -> BindingManifest {
     bindings.insert(
         "select_bytes".to_string(),
         OpBinding {
-            export: "ct_select_bytes".to_string(),
+            export: Some("ct_select_bytes".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: true,
             error_normalization: Some(
@@ -59,7 +62,8 @@ fn ct_compare_bindings() -> BindingManifest {
     bindings.insert(
         "eq_u64".to_string(),
         OpBinding {
-            export: "ct_eq_u64".to_string(),
+            export: Some("ct_eq_u64".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: false,
             error_normalization: None,
@@ -1903,7 +1907,8 @@ fn test_security_remediations() {
             bindings.insert(
                 "unsupported_op".to_string(),
                 OpBinding {
-                    export: "test_export".to_string(),
+                    export: Some("test_export".to_string()),
+                    driver: None,
                     static_params: vec![],
                     fresh: false,
                     error_normalization: None,
@@ -1927,9 +1932,9 @@ fn test_security_remediations() {
         with_parsed(CT_COMPARE_WARRANT, |ct_file| {
             let checked = check_warrant(ct_file).unwrap();
             let mut manifest = ct_compare_bindings();
-            manifest.bindings.get_mut("eq").unwrap().export = "custom_eq_export".to_string();
+            manifest.bindings.get_mut("eq").unwrap().export = Some("custom_eq_export".to_string());
             manifest.bindings.get_mut("select_bytes").unwrap().export =
-                "custom_select_export".to_string();
+                Some("custom_select_export".to_string());
             manifest
                 .bindings
                 .get_mut("select_bytes")
@@ -2012,7 +2017,9 @@ fn test_claim_validation_errors() {
     with_parsed(no_op_claim, |file| {
         let err = extract_claim_cases(file).unwrap_err();
         assert_eq!(err.code, DiagnosticCode::W0702);
-        assert!(err.to_string().contains("does not invoke a recognized subject operation"));
+        assert!(err
+            .to_string()
+            .contains("does not invoke a recognized subject operation"));
     });
 
     // 4. Missing binding for operation in manifest (W0704)
@@ -2029,4 +2036,3 @@ fn test_claim_validation_errors() {
         assert!(err.to_string().contains("has no binding in manifest"));
     });
 }
-

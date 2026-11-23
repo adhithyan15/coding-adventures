@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — WX-F driver record schema (slice 1)
+
+- Parse and schema-validate binding-file `driver` records (VER04k 3.2/3.4
+  rules 1-3, 7): `state`/`ctx`/`new`/`drive`/`step`/`finish`/`result`/
+  `errors`/`lengths` with closed vocabularies, capped identifiers and
+  paths, and strictly increasing bounded lengths. Every violation is
+  W0501; op lines take exactly one of `export=` and bare `driver`.
+- Generation refuses driven operations explicitly (W0704) until a later
+  slice consumes the records. Typing against the document (W0711),
+  obligations, evaluation and sabotage follow.
+
 ## Unreleased — opt-in Boolean record-result fault (WX-FAULT2)
 
 - Add the `bool-field-flip` evidence fault for a declared record result with a

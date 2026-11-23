@@ -96,7 +96,8 @@ fn test_valid_ct_compare_pilot() {
     bindings.insert(
         "eq".to_string(),
         OpBinding {
-            export: "ct_eq".to_string(),
+            export: Some("ct_eq".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: false,
             error_normalization: None,
@@ -106,7 +107,8 @@ fn test_valid_ct_compare_pilot() {
     bindings.insert(
         "eq_fixed".to_string(),
         OpBinding {
-            export: "ct_eq_fixed".to_string(),
+            export: Some("ct_eq_fixed".to_string()),
+            driver: None,
             static_params: vec!["N".to_string()],
             fresh: false,
             error_normalization: None,
@@ -116,7 +118,8 @@ fn test_valid_ct_compare_pilot() {
     bindings.insert(
         "select_bytes".to_string(),
         OpBinding {
-            export: "ct_select_bytes".to_string(),
+            export: Some("ct_select_bytes".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: true,
             error_normalization: Some(ErrorNormalization {
@@ -129,7 +132,8 @@ fn test_valid_ct_compare_pilot() {
     bindings.insert(
         "eq_u64".to_string(),
         OpBinding {
-            export: "ct_eq_u64".to_string(),
+            export: Some("ct_eq_u64".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: false,
             error_normalization: None,
@@ -695,7 +699,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b1.insert(
         "op_a".to_string(),
         OpBinding {
-            export: "op_a".to_string(),
+            export: Some("op_a".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: true,
             error_normalization: None,
@@ -717,7 +722,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b2.insert(
         "op_a".to_string(),
         OpBinding {
-            export: "op_a".to_string(),
+            export: Some("op_a".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: true,
             error_normalization: None,
@@ -727,7 +733,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b2.insert(
         "op_b".to_string(),
         OpBinding {
-            export: "op_b".to_string(),
+            export: Some("op_b".to_string()),
+            driver: None,
             static_params: vec!["N".to_string()],
             fresh: false,
             error_normalization: None,
@@ -737,7 +744,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b2.insert(
         "unknown_op".to_string(),
         OpBinding {
-            export: "unknown".to_string(),
+            export: Some("unknown".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: false,
             error_normalization: None,
@@ -759,7 +767,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b3.insert(
         "op_a".to_string(),
         OpBinding {
-            export: "op_a".to_string(),
+            export: Some("op_a".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: true,
             error_normalization: None,
@@ -769,7 +778,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b3.insert(
         "op_b".to_string(),
         OpBinding {
-            export: "op_b".to_string(),
+            export: Some("op_b".to_string()),
+            driver: None,
             static_params: vec![], // Missing N!
             fresh: false,
             error_normalization: None,
@@ -791,7 +801,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b4.insert(
         "op_a".to_string(),
         OpBinding {
-            export: "op_a".to_string(),
+            export: Some("op_a".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: true,
             error_normalization: Some(ErrorNormalization {
@@ -804,7 +815,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b4.insert(
         "op_b".to_string(),
         OpBinding {
-            export: "op_b".to_string(),
+            export: Some("op_b".to_string()),
+            driver: None,
             static_params: vec!["N".to_string()],
             fresh: false,
             error_normalization: None,
@@ -826,7 +838,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b5.insert(
         "op_a".to_string(),
         OpBinding {
-            export: "op_a".to_string(),
+            export: Some("op_a".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: true,
             error_normalization: None,
@@ -836,7 +849,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b5.insert(
         "op_b".to_string(),
         OpBinding {
-            export: "op_b".to_string(),
+            export: Some("op_b".to_string()),
+            driver: None,
             static_params: vec!["N".to_string()],
             fresh: false,
             error_normalization: Some(ErrorNormalization {
@@ -861,7 +875,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b6.insert(
         "op_a".to_string(),
         OpBinding {
-            export: "op_a".to_string(),
+            export: Some("op_a".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: false, // Must be true!
             error_normalization: None,
@@ -871,7 +886,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b6.insert(
         "op_b".to_string(),
         OpBinding {
-            export: "op_b".to_string(),
+            export: Some("op_b".to_string()),
+            driver: None,
             static_params: vec!["N".to_string()],
             fresh: false,
             error_normalization: None,
@@ -893,7 +909,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b7.insert(
         "op_a".to_string(),
         OpBinding {
-            export: "op_a".to_string(),
+            export: Some("op_a".to_string()),
+            driver: None,
             static_params: vec![],
             fresh: true,
             error_normalization: None,
@@ -903,7 +920,8 @@ fn test_w0501_and_w0502_binding_errors() {
     b7.insert(
         "op_b".to_string(),
         OpBinding {
-            export: "op_b".to_string(),
+            export: Some("op_b".to_string()),
+            driver: None,
             static_params: vec!["N".to_string()],
             fresh: false,
             error_normalization: None,

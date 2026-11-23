@@ -2574,7 +2574,18 @@ fn generate_claim_helper(
     file: &WarrantFile<'_>,
 ) -> Result<String, CodegenError> {
     let op_binding = &manifest.bindings[&claim.op_name];
-    let op_export = &op_binding.export;
+    let op_export = op_binding.export.as_deref().ok_or_else(|| {
+        // WX-F slice 1 parses driver records but does not generate from
+        // them; a driven claim refuses here instead of emitting garbage.
+        CodegenError {
+            code: DiagnosticCode::W0704,
+            kind: CodegenErrorKind::UnsupportedTarget(format!(
+                "operation `{}` uses a WX-F driver; generation lands in a later slice",
+                claim.op_name
+            )),
+            span: (0, 0),
+        }
+    })?;
 
     for binder in &claim.binders {
         if !is_bytes_type(&binder.param_type)
@@ -3070,22 +3081,22 @@ pub fn compile_rust_l0_harness(
     let eq_export = manifest
         .bindings
         .get("eq")
-        .map(|b| b.export.as_str())
+        .and_then(|b| b.export.as_deref())
         .unwrap_or("ct_eq");
     let eq_fixed_export = manifest
         .bindings
         .get("eq_fixed")
-        .map(|b| b.export.as_str())
+        .and_then(|b| b.export.as_deref())
         .unwrap_or("ct_eq_fixed");
     let select_export = manifest
         .bindings
         .get("select_bytes")
-        .map(|b| b.export.as_str())
+        .and_then(|b| b.export.as_deref())
         .unwrap_or("ct_select_bytes");
     let eq_u64_export = manifest
         .bindings
         .get("eq_u64")
-        .map(|b| b.export.as_str())
+        .and_then(|b| b.export.as_deref())
         .unwrap_or("ct_eq_u64");
 
     let select_error_case = manifest

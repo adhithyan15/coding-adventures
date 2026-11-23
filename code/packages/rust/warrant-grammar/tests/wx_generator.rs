@@ -18,7 +18,8 @@ fn bindings(ops: &[(&str, &[&str])]) -> BindingManifest {
         b.insert(
             name.to_string(),
             OpBinding {
-                export: name.to_string(),
+                export: Some(name.to_string()),
+                driver: None,
                 static_params: Vec::new(),
                 fresh: false,
                 error_normalization: None,
