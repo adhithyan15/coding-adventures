@@ -48,6 +48,15 @@ pub const ROUTE_MAX_CONFLICTS: u64 = 50_000;
 /// The route-budget checker-work cap of VOS30 section 8.6.1 (2^31, half of `DEFAULT_MAX_WORK`).
 pub const ROUTE_MAX_CHECK_WORK: u64 = 1 << 31;
 
+/// The B5 clause of VOS30 section 8.6.3: a B5 row's total, the sweep's whole elapsed time
+/// recorded as the `sweep_ms` metric (instance build through verdict: simulation, AIG
+/// construction, every lemma solve and proof check, the final obligation; the G3 control is
+/// excluded), must be strictly under 600 s (milliseconds).  A gate, pre-registered; the B5
+/// measurement walls (`exp::B5_ROW_WALL_S`) are looser than it so that a slow sweep is
+/// recorded, then judged here.  Fail-closed: a row without a finite, non-negative `sweep_ms`
+/// is not route-green.
+pub const B5_ROUTE_MAX_TOTAL_MS: f64 = 600_000.0;
+
 /// Everything the file records besides the rows.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Meta {
@@ -472,6 +481,19 @@ pub fn route_green(r: &Row) -> bool {
     if r.mode == "enum" {
         return true;
     }
+    // Section 8.6.3: a B5 row additionally needs its sweep's elapsed time under 600 s.  Fail
+    // closed: a missing, NaN, infinite or negative `sweep_ms` is not route-green (a NaN cannot
+    // pass: it fails `is_finite` before the comparison is reached).
+    if r.experiment == "B5" {
+        let total = r
+            .metrics
+            .iter()
+            .find(|(k, _)| k == "sweep_ms")
+            .map(|(_, x)| *x);
+        if !total.is_some_and(|x| x.is_finite() && (0.0..B5_ROUTE_MAX_TOTAL_MS).contains(&x)) {
+            return false;
+        }
+    }
     let work_ok =
         r.mode == "incremental" || r.check_work.is_some_and(|w| w <= ROUTE_MAX_CHECK_WORK);
     r.worst_step_conflicts.unwrap_or(r.conflicts) <= ROUTE_MAX_CONFLICTS && work_ok
@@ -602,6 +624,67 @@ pub fn bounds_violations(id: &str, r: &Row) -> Vec<String> {
     v
 }
 
+/// The cross-rule of VOS30 section 8.6.3: **`fuse = 1` is B2**.  Every B5 row with `fuse = 1`
+/// must have a B2 row of equal length, divergence and seed whose `instance_sha256` is equal (the
+/// sweep's instance, before sweeping, is B2's instance).  A violation names both rows.  Kept as
+/// its own function so a test can call it directly: `validate` refuses a B5 row as an experiment
+/// outside the plan (VOS-D119) until VOS-028c3c registers B5.
+///
+/// Two refusals (security review): a B5 row with an empty `instance_sha256` is a violation (an
+/// empty digest equal to an empty B2 digest proved nothing), and the digest is compared with
+/// EVERY B2 row of equal length, divergence and seed, not just the first, so one tampered twin
+/// cannot hide behind an honest one.
+pub fn b5_fuse1_violations(rows: &[Row]) -> Vec<String> {
+    let id = |r: &Row| {
+        format!(
+            "{} {} {} seed {}",
+            r.experiment,
+            r.knob.key(),
+            r.mode,
+            r.seed
+        )
+    };
+    let mut v = Vec::new();
+    for b5 in rows
+        .iter()
+        .filter(|r| r.experiment == "B5" && r.knob.int("fuse") == 1)
+    {
+        if b5.instance_sha256.is_empty() {
+            v.push(format!("{}: instance_sha256 is empty", id(b5)));
+        }
+        let twins: Vec<&Row> = rows
+            .iter()
+            .filter(|r| {
+                r.experiment == "B2"
+                    && r.knob.int("length") == b5.knob.int("length")
+                    && (r.knob.f("divergence") - b5.knob.f("divergence")).abs() < 1e-9
+                    && r.seed == b5.seed
+            })
+            .collect();
+        if twins.is_empty() {
+            v.push(format!(
+                "{}: fuse = 1 is B2, but no B2 row has length {}, divergence {} and seed {}",
+                id(b5),
+                b5.knob.int("length"),
+                b5.knob.f("divergence"),
+                b5.seed
+            ));
+        }
+        for b2 in twins {
+            if b2.instance_sha256 != b5.instance_sha256 {
+                v.push(format!(
+                    "{}: fuse = 1 is B2, but its instance_sha256 {} differs from {} of {}",
+                    id(b5),
+                    b5.instance_sha256,
+                    b2.instance_sha256,
+                    id(b2)
+                ));
+            }
+        }
+    }
+    v
+}
+
 /// The schema and guard rules of `check`, row by row and across rows.  Returns every violation.
 pub fn validate(res: &Results) -> Vec<String> {
     let mut v = Vec::new();
@@ -666,9 +749,18 @@ pub fn validate(res: &Results) -> Vec<String> {
         }
         // VOS-D097 item 4: the knob VALUES are a closed set too.  A hand-edited length of 10^9
         // is refused here, never run (a row that is re-run is built from its knob).
-        if EXPERIMENTS.contains(&r.experiment.as_str())
-            && !planned.contains(&(r.experiment.clone(), r.mode.clone(), r.knob.key()))
-        {
+        //
+        // VOS-D119 (security review of VOS-028c3b): this check used to run only for an experiment
+        // in `EXPERIMENTS`, so a row of an unregistered experiment (B5 and D5 before VOS-028c3c,
+        // or any made-up name) skipped it and passed with any knob.  An experiment the plan does
+        // not list is now refused outright, and the knob check applies to every row.
+        if !EXPERIMENTS.contains(&r.experiment.as_str()) {
+            v.push(format!(
+                "{id}: experiment {:?} is not one of the plan's experiments",
+                r.experiment
+            ));
+        }
+        if !planned.contains(&(r.experiment.clone(), r.mode.clone(), r.knob.key())) {
             v.push(format!(
                 "{id}: the (mode, knob) is not one of the plan's knobs for {}",
                 r.experiment
@@ -767,6 +859,7 @@ pub fn validate(res: &Results) -> Vec<String> {
         e.0.insert(r.seed);
         e.1 = r.seeds;
     }
+    v.extend(b5_fuse1_violations(&res.rows));
     for (k, (set, _)) in &seeds {
         if u32::try_from(set.len()).unwrap_or(u32::MAX) < MIN_SEEDS {
             v.push(format!(
@@ -852,7 +945,7 @@ pub fn quick_specs(res: &Results) -> Vec<(RowSpec, &Row)> {
 /// The metrics whose VALUES are timings or rates, so they differ on every run.  Every other
 /// metric is a count and is compared exactly (round 2, finding 2).  A nondeterministic metric
 /// must still be PRESENT on both sides: the key set is compared symmetrically.
-pub const NONDETERMINISTIC_METRICS: [&str; 2] = ["run_ms", "cases_per_s"];
+pub const NONDETERMINISTIC_METRICS: [&str; 3] = ["run_ms", "cases_per_s", "sweep_ms"];
 
 /// Compare a re-run row with its recorded one: **every deterministic field**, exactly.
 ///
@@ -1130,7 +1223,8 @@ pub fn compare_timing(rec: &Row, now: &Row) -> Vec<String> {
 ///   fields reproduce: `entropy_bits * 2 < declared_bits`, or `ands * 4 < full` for the 25% rule.
 pub fn collapse_violations(id: &str, r: &Row) -> Vec<String> {
     let mut v = Vec::new();
-    let chain = CHAIN_EXPERIMENTS.contains(&r.experiment.as_str());
+    // B5 shares the chain budget but is one instance (`exp::is_segmented`).
+    let chain = crate::exp::is_segmented(&r.experiment);
     if let Some(reason) = &r.collapsed_reason {
         if !crate::inst::COLLAPSE_REASONS.contains(&reason.as_str()) {
             v.push(format!(

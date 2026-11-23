@@ -737,6 +737,10 @@ fn rg_row(exp: &str, knob: Knob, mode: &str, seed: u64) -> Row {
     } else {
         None
     };
+    if exp == "B5" {
+        // A recorded B5 row carries its sweep time (VOS30 8.6.3); route-green is fail-closed on it.
+        r.metrics.push(("sweep_ms".into(), 1_000.0));
+    }
     r.check_work = if mode == "incremental" {
         None
     } else {
@@ -847,6 +851,56 @@ fn route_green_enforces_both_route_bounds_on_top_of_green() {
     assert!(route_green(&inc));
     inc.worst_step_conflicts = Some(ROUTE_MAX_CONFLICTS + 1);
     assert!(!route_green(&inc));
+}
+
+#[test]
+fn b5_route_green_needs_its_total_under_600_s() {
+    let kb = || {
+        Knob::of(&[
+            ("length", Kv::I(200)),
+            ("divergence", Kv::F(0.25)),
+            ("fuse", Kv::I(2)),
+        ])
+    };
+    let mut b5 = rg_row("B5", kb(), "certified", 1);
+    // The total is the sweep's elapsed time, the `sweep_ms` metric; every other field stays
+    // route-green.
+    let set = |r: &mut Row, x: Option<f64>| {
+        r.metrics.retain(|(k, _)| k != "sweep_ms");
+        if let Some(x) = x {
+            r.metrics.push(("sweep_ms".into(), x));
+        }
+    };
+    set(&mut b5, Some(599_999.0));
+    assert!(route_green(&b5));
+    for bad in [600_000.0, 600_001.0, f64::NAN, f64::INFINITY, -1.0] {
+        set(&mut b5, Some(bad));
+        assert!(!route_green(&b5), "sweep_ms {bad} must not be route-green");
+    }
+    set(&mut b5, None);
+    assert!(!route_green(&b5), "a missing sweep_ms fails closed");
+    set(&mut b5, Some(0.0));
+    assert!(route_green(&b5));
+    // A non-B5 row with the same total is unaffected.
+    let mut b3 = rg_row("B3", Knob::of(&[("length", Kv::I(200))]), "certified", 1);
+    b3.solve_ms = 9_000.0;
+    b3.worst_step_solve_ms = 9_000.0;
+    b3.check_ms = Some(591_001.0);
+    assert!(route_green(&b3));
+    b3.metrics.push(("sweep_ms".into(), f64::NAN));
+    assert!(route_green(&b3));
+}
+
+#[test]
+fn row_walls_are_b5_1800_other_chains_600_rest_120() {
+    use vos_capacity_probe::exp::{row_wall_s, wall_field};
+    assert_eq!(row_wall_s("B5"), 1800);
+    assert_eq!(wall_field("B5"), Some(1800));
+    for e in ["B3", "D3", "D4", "D5"] {
+        assert_eq!(row_wall_s(e), 600, "{e}");
+    }
+    assert_eq!(row_wall_s("B2"), 120);
+    assert_eq!(wall_field("B2"), None);
 }
 
 #[test]

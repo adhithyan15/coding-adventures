@@ -1092,10 +1092,19 @@ Print these with every number, because each one limits what it supports:
     fewer than five distinct `instance_sha256`. Each group's line is its worst
     seed's own row, every cell from that one row.
 11. **B5 is a proxy for equivalence sweeping on compiled code, and `fuse` is
-    synthetic (planned, VOS-028c3; section 8.6.3).** `fuse = w` inserts runs of
-    accumulating `add`s that the reference right-nests; no compiler is known to
-    produce that divergence at that spacing. A green B5 shows that a sweeper of
-    this design can certify equivalence points at the stated spacing on this shape;
+    synthetic (planned, VOS-028c3; section 8.6.3).** `fuse = w` starts from B2's
+    program P (`gen_b` at the same length, divergence and seed) and turns every
+    accumulating register-register `add a, a, b` into a run of w adds into `a`: the
+    original followed by w - 1 adds `a += c_j`, each `c_j` an accumulator other than
+    `a` drawn from a separate seeded stream, so P's own stream is untouched; the result
+    is truncated to the instance length. The run's first add keeps P's alternative
+    encoding; the reference computes the run right-nested, `a + (b + (c_2 + ... +
+    c_w))`, so the run's intermediate values have no counterpart and equivalence points
+    are at most w instructions apart (exactly w across each run; instructions outside
+    runs stay per-instruction points). With `fuse = 1` there are no runs and the
+    program, its alternative encodings and the instance are B2's (byte-identical
+    DIMACS). No compiler is known to produce that divergence at that spacing. A
+    green B5 shows that a sweeper of this design can certify equivalence points at the stated spacing on this shape;
     it does not show that real compiled code has such points. Only VOS-029b's
     re-run on the real object can.
 
@@ -1325,14 +1334,24 @@ route-green predicate. None changes a recorded row: new rows are added by `merge
   counts obligations at their own number, it does not hide them.
 * **B5, equivalence sweeping, a research experiment** (the route's escape hatch of
   VOS00 section 12 row 9). Instance length in {25 (quick), 200, 1,000}, divergence in
-  {25%, 100%}, `fuse` in {1, 2, 4, 8}: 24 knobs, 120 rows. B2's divergence is a
+  {25%, 100%}, `fuse` in {1, 2, 4, 8}: 24 knobs, 120 rows; the quick knobs are length
+  25 at `fuse = 1` (both divergences), the smallest, since the quick tier fails on an
+  `unknown` row (VOS-D118). B2's divergence is a
   per-instruction alternative encoding, so every instruction's output word is already
   an equivalence point and sweeping B2 would rediscover B3 `every1` (a tautology, not a
-  test). The `fuse` knob makes the points sparser: `fuse = w` inserts runs of w
-  accumulating `add`s that the reference right-nests, so equivalence points occur only
-  every w instructions. **`fuse = 1` is B2**, and its `instance_sha256` must equal B2's
-  (a cross-rule of `validate`). The sweep is deterministic: one AIG for both sides;
-  256 seeded simulation patterns (`Aig::simulate`) give candidate classes up to
+  test). The `fuse` knob makes the points sparser. `fuse = w` starts from B2's program P
+  (`gen_b` at the same length, divergence and seed) and turns every accumulating
+  register-register `add a, a, b` into a run of w adds into `a`: the original followed by
+  w - 1 adds `a += c_j`, each `c_j` an accumulator other than `a` drawn from a separate
+  seeded stream, so P's own stream is untouched; the result is truncated to the instance
+  length. The run's first add keeps P's alternative encoding; the reference computes the
+  run right-nested, `a + (b + (c_2 + ... + c_w))`, so the run's intermediate values have
+  no counterpart and equivalence points are at most w instructions apart (exactly w
+  across each run; instructions outside runs stay per-instruction points). With
+  `fuse = 1` there are no runs and the program, its alternative encodings and the
+  instance are B2's (byte-identical DIMACS). **`fuse = 1` is B2**, and its
+  `instance_sha256` must equal B2's (a cross-rule of `validate`). The sweep is
+  deterministic: one AIG for both sides; 256 seeded simulation patterns (`Aig::simulate`) give candidate classes up to
   complement, the representative is the lowest node; candidates are proved in
   topological order, each lemma a fresh CNF over its cone with already-merged nodes
   substituted, cut at an 8-level frontier whose nodes are shared free inputs. A SAT
@@ -1341,8 +1360,22 @@ route-green predicate. None changes a recorded row: new rows are added by `merge
   lemma is DRAT-checked under the default limits. Outputs that do not merge form one
   final obligation. Metrics added to a row: lemmas, candidates, refuted, escalations.
   **B5 is green iff every lemma and the final obligation are route-green and the total
-  is under 600 s.** Lemma counts above 1,000 per entry are reported and not gated;
-  this is stated in advance. G3: the mutated program through the same sweep must end
+  is under 600 s.** "The total" is the sweep's whole elapsed time, recorded as the
+  row metric `sweep_ms`: from the start of the instance build through the sweep's verdict
+  (simulation, AIG construction, every lemma solve and proof check, and the final obligation),
+  with the G3 control excluded, because it is not part of the proof. It must be strictly
+  under 600,000 ms, and `route_green` enforces it fail-closed: a B5 row with no finite,
+  non-negative `sweep_ms` is not route-green. This definition was fixed before any recorded
+  run (VOS-D118); the narrower sum `solve_ms` plus `check_ms` is not the total, since with
+  an 1,800 s row wall it would let up to about 1,800 s of non-solver work pass. Lemma counts above 1,000
+  per entry are reported and not gated; this is stated in advance. **B5's walls are
+  measurement walls, not gates** (owner direction, 2026-11-23: relax timeouts where
+  things need more time to prove out): the row wall is 1,800 s, each lemma solve and
+  the final obligation get 600 s, and B5's G3 control gets its own 600 s and a
+  1,000,000-conflict cap (the other experiments' controls keep 30 s and 300,000). They
+  only decide whether a run produces an answer or ends `unknown`, so a slow sweep
+  records its real conflicts; the route budget (50,000 conflicts, `check_work` 2^31),
+  the 8.3 thresholds and the 600 s total are unchanged and judge the recorded numbers. G3: the mutated program through the same sweep must end
   SAT, its model checked against the **original unswept** control CNF and replayed on
   the simulator. Negative control: a sweeper that merges on simulation signature
   without proof is shown wrong on a mutant that agrees on all 256 patterns.
@@ -1664,9 +1697,18 @@ silent drop):
    when it is 120, so rows that do not change stay byte-identical. As built, an
    obligation's deadline is the earlier of the row's deadline and 120 s after it
    starts (`exp::obligation_deadline`); the parent's kill is `hard_limit_for(wall_s)`;
-   `validate` accepts `wall_s` only as 600 and only on B3, D3 and D4, and a chain row
+   `validate` accepts `wall_s` only as the row budget of a chain (`row_wall_s`: 600 on
+   B3, D3 and D4, and later D5) and a chain row
    recorded before the budget existed (no field) stays valid; `compare_rerun` does not
    compare it (it is the budget, not a measurement).
+   **B5's walls (VOS-028c3b, owner direction 2026-11-23).** B5 is the one exception to
+   the 600 s: its row wall is **1,800 s**, each lemma solve and the final obligation
+   **600 s**, and its G3 control has its own **600 s and 1,000,000-conflict cap**; the
+   hard kill is 1,800 s plus 600 s plus 150 s of slack (2,550 s). They are measurement
+   walls, not gates: they decide only whether a run answers or ends `unknown`, and
+   change no gate number of 8.3 or 8.6 (the 600 s total of B5 is the sweep's elapsed
+   time, the `sweep_ms` metric: instance build through verdict, G3 control excluded, a
+   definition fixed before any recorded run, enforced fail-closed by `route_green`).
 3. **Whole-process-group kill.** The row runs as a child in its **own process
    group**; the parent kills the *group* on the wall timeout, covering **every
    stage**: instance generation and CNF writing, the solve, and `drat-check`, not
@@ -1758,7 +1800,8 @@ and its four solver crates, keyed `vos-capacity-probe`, `bit-blaster`, `cdcl-sat
 and hex object ids when the object is present); in a merges entry `"kind": "add"`
 (section 9.2; `validate` accepts no other kind); and, planned for VOS-028c3, in a B5
 row's `metrics` the counts `lemmas`, `candidates`, `refuted` and `escalations`,
-compared by the re-run like every other metric. The `limits` object is unchanged (the
+compared by the re-run like every other metric, and the timing `sweep_ms` (the B5 total of
+8.6.3; nondeterministic, so present on both sides but not compared by value). The `limits` object is unchanged (the
 chain budget is recorded per row), so a merge rewrites no byte of it.
 
 `dirty_tree`, `binary_sha256` and the regeneration banner are **self-reported by
@@ -2669,12 +2712,12 @@ below is a separate step, run on the committed tree and merged in a second commi
 `results.rs` and `table.rs`. Because `plan(Tier::Full)` and `vos30-capacity-results.json`
 must stay in sync (`FULL_PLAN_EXEMPT` stays empty) and full recording runs on Unix:
 
-* **`VOS-028c3a` (this step):** B3 `every2`/`every4` support, D5 (touched-word obligations,
+* **`VOS-028c3a` (done, #19795):** B3 `every2`/`every4` support, D5 (touched-word obligations,
   separate structural frame obligation, two-mutant G3), `route_green` (8.6.1), `cut_density_k`
   (8.6.2) and `decide_replan` (8.6.4, including the orthogonal memory verdict), with a
   negative control for every clause in `tests/results_logic.rs` and shape/G3 tests in
   `tests/shapes.rs`; `plan(Tier::Full)` is not expanded yet.
-* **`VOS-028c3b` (planned):** B5 (`src/sweep.rs` and `tests/sweep.rs`), G3 unswept-control
+* **`VOS-028c3b` (this step):** B5 (`src/sweep.rs` and `tests/sweep.rs`), G3 unswept-control
   replay and signature-merge negative control, and `B5 fuse = 1` `instance_sha256` parity
   with B2; `plan(Tier::Full)` is not expanded yet.
 * **`VOS-028c3c` (planned):** Register B3 `every2`/`every4`, D5 and B5 in `plan(Tier::Full)`,

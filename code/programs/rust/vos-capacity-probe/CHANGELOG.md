@@ -4,6 +4,64 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Added (VOS-028c3b, VOS30 sections 8.4 item 11, 8.6.3 and 9.12)
+
+- **B5's 600 s total is the sweep's elapsed time, fail-closed.** `b5_row` records `sweep_ms`
+  (instance build through the sweep's verdict, G3 control excluded) as a row metric, listed in
+  `NONDETERMINISTIC_METRICS`; `route_green` requires it present, finite, non-negative and
+  strictly under 600,000 ms (NaN, infinity, negative or missing is not route-green), replacing
+  the `solve_ms + check_ms` reading (VOS30 8.6.3, VOS-D118). The sweep's per-solve accounting is
+  now the function `account`, so the missing-proof test exercises the code `Sweeper::solve`
+  runs.
+
+- **Experiment B5, SAT sweeping (`src/sweep.rs`).** A deterministic sweeper over one AIG for both
+  sides: 256 seeded simulation patterns (`Aig::simulate`) give candidate classes up to complement,
+  with the lowest node as the representative. Candidates are proved in topological order, each
+  lemma a fresh CNF over its cone on a reduced AIG in which already-merged nodes are substituted,
+  cut at an 8-level frontier whose nodes are shared free inputs. A SAT answer at the frontier is
+  possibly spurious, so the depth doubles up to the full cone; only a full-cone SAT is a real
+  counterexample, and it refines the classes. Every UNSAT lemma and the final obligation (the
+  outputs that do not merge) is DRAT-checked under `Limits::default()`. Row metrics `lemmas`,
+  `candidates`, `refuted` and `escalations` are added.
+- **`fuse` generator (`gen_b5`, `B5Shape`).** `fuse = w` starts from B2's program (`gen_b` at the
+  same length, divergence and seed) and turns every accumulating register-register `add a, a, b`
+  into a run of w adds into `a`, each extra add `a += c_j` drawing `c_j` from a separate seeded
+  stream, so P's own stream is untouched; the result is truncated to the instance length. The
+  reference right-nests each run, so equivalence points are at most w instructions apart. With
+  `fuse = 1` there are no runs and the program, its encodings and the DIMACS are B2's, byte for
+  byte.
+- **G3 control and signature-merge negative control (`tests/sweep.rs`).** The G3 control goes
+  through the same sweep; its model is checked against the unswept control CNF and replayed. The
+  signature-merge negative control is a separate test of the same sweep.
+- **`validate` cross-rule.** A B5 row with `fuse = 1` must carry the same `instance_sha256` as the
+  matching B2 row.
+- **Chain budget.** B5 joins the 600 s chain budget (VOS-D095).
+- **B5 measurement walls (owner direction, 2026-11-23; VOS-D118).** `exp::B5_ROW_WALL_S` = 1,800 s
+  (`row_wall_s("B5")`, recorded as `wall_s`), `B5_OBLIGATION_WALL_S` = 600 s for each lemma and the
+  final obligation, and `B5_CONTROL_WALL` = 600 s with `B5_CONTROL_CONFLICT_CAP` = 1,000,000 for
+  B5's G3 control. `runner::hard_limit_for(1800)` adds the longer control stage (2,550 s). These
+  are measurement walls, not gates: no gate number changed, and every other experiment's walls and
+  recorded rows are unchanged.
+- **`route_green` enforces B5's 600 s total.** The pre-registered clause of VOS30 8.6.3 is now
+  implemented: a B5 row needs `solve_ms + check_ms` strictly under `B5_ROUTE_MAX_TOTAL_MS`
+  (600,000). `decide_replan` reads it through `group_route_green`. Tests: boundary and non-B5
+  controls in `tests/results_logic.rs`, the row walls of B5/B3/D3/D4/D5/B2.
+- **Not yet in the plan.** B5 is not registered in `plan(Tier::Full)`; registration and Unix
+  recording are VOS-028c3c (queue item 9c3). `FULL_PLAN_EXEMPT` stays empty.
+
+### Fixed (VOS-028c3b security review; VOS-D119)
+
+- **`validate` refuses an unregistered experiment.** The closed knob set was checked only for
+  experiments in `EXPERIMENTS`, so a B5 row (unregistered until VOS-028c3c) or a row with any
+  made-up name passed with any knob. An experiment outside the plan is now a violation and the
+  knob check applies to every row.
+- **A certified sweep requires a proof.** An UNSAT answer with no DRAT text in `ProofMode::Certified`
+  is no longer counted as accepted (`all_accepted = false`, with a note).
+- **The B5 cross-rule is stricter.** A B5 `fuse = 1` row needs a non-empty `instance_sha256`, and it
+  is compared with every B2 row of equal length, divergence and seed, not only the first.
+- **B5 knob bounds.** `shape_for` refuses a length outside 1..=100000, a fuse outside 1..=64 and a
+  divergence outside [0, 1] with an error (a `crashed` row), never a panic or a huge allocation.
+
 ### Added (VOS-028c3a, VOS30 sections 8.6.1, 8.6.2, 8.6.3, 8.6.4 and 9.12; VOS-D117)
 
 - **B3 cut densities `every2` and `every4`.** `exp::b3_c3_knobs` and `exp::C3_CUTS` add the 72

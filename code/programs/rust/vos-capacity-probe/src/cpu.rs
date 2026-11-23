@@ -188,7 +188,9 @@ impl Cpu {
         self.regs[r as usize].clone().expect("just set")
     }
 
-    fn write_reg(&mut self, r: u8, w: BitVec) {
+    /// Write register `r` (a write to `x0` is dropped) and record it as written.  Public for
+    /// the fused reference of experiment B5, which computes a whole run of adds at once.
+    pub fn write_reg(&mut self, r: u8, w: BitVec) {
         if r != 0 {
             self.regs[r as usize] = Some(w);
             self.written_regs.insert(r);

@@ -34,7 +34,7 @@
 //!   is drained and discarded, so a child that prints without end neither fills the parent's
 //!   memory nor blocks on a full pipe.
 
-use crate::exp::{row_wall_s, wall_field, RowSpec, CONTROL_WALL};
+use crate::exp::{row_wall_s, wall_field, RowSpec, B5_CONTROL_WALL, B5_ROW_WALL_S, CONTROL_WALL};
 use crate::results::{green, RSS_CAP_KB, TIMEOUT_S};
 use crate::row::{Control, Knob, Row};
 use coding_adventures_bounded_json::{parse, serialize, JsonNumber, JsonValue};
@@ -55,7 +55,13 @@ pub const KILL_SLACK: Duration = Duration::from_secs(150);
 /// The wall time after which the parent kills a row's process group, for a row whose budget is
 /// `wall_s` seconds: the budget, the control stage and the slack (VOS30 section 9.5 item 3).
 pub fn hard_limit_for(wall_s: u64) -> Duration {
-    Duration::from_secs(wall_s) + CONTROL_WALL + KILL_SLACK
+    // B5's row (the only one with the 1,800 s budget) has its own, longer control stage.
+    let control = if wall_s == B5_ROW_WALL_S {
+        B5_CONTROL_WALL
+    } else {
+        CONTROL_WALL
+    };
+    Duration::from_secs(wall_s) + control + KILL_SLACK
 }
 
 /// The hard limit of a 120 s (non-chain) row.
@@ -939,6 +945,8 @@ mod tests {
         }
         assert_eq!(cpu_limit_s(600), 780);
         assert_eq!(cpu_limit_s(120), 300);
+        // B5: 1,800 s row + 600 s control + 150 s slack.
+        assert_eq!(cpu_limit_s(1800), 2550);
     }
 
     #[test]
