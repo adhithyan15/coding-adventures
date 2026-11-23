@@ -59,6 +59,21 @@ type planFile struct {
 // Partition is the plan projected onto package paths.
 type Partition struct {
 	Shards []recfmt.ShardPlan
+	// Paths maps a package NAME to its rel_path, which is the only bridge
+	// between the build tool's exports (they name packages) and Kiln (it keys
+	// by path). The merge job needs it to key the steps export (B6).
+	Paths map[string]string
+}
+
+// ParsePartition decodes plan bytes that the caller already read and hashed,
+// and that must hold exactly count shards. It is the in-memory half of
+// ReadPartition, for a caller whose digest must cover the same bytes that are
+// parsed (the merge job, which names the plan's SHA-256 in the binding).
+func ParsePartition(data []byte, count int) (*Partition, error) {
+	if int64(len(data)) > MaxPlanBytes {
+		return nil, fmt.Errorf("plan exceeds %d bytes", MaxPlanBytes)
+	}
+	return parsePartition(data, count)
 }
 
 // ReadPartition decodes the plan at p, which must hold exactly count shards.
@@ -112,7 +127,7 @@ func parsePartition(data []byte, count int) (*Partition, error) {
 	if len(pf.Shards) != count {
 		return nil, fmt.Errorf("plan: has %d shards, want exactly %d", len(pf.Shards), count)
 	}
-	out := &Partition{}
+	out := &Partition{Paths: paths}
 	seenIdx := map[int]bool{}
 	for _, sh := range pf.Shards {
 		if sh.Index < 0 || sh.Index >= count || seenIdx[sh.Index] {

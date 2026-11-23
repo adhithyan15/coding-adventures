@@ -41,7 +41,9 @@ implementation, built up one spec at a time.
   `GIT_*` removed and repo-configured hooks/fsmonitor disabled.
 - A tiny CLI.
 
-`Ledger` and `Tools` (the other two section 13 interfaces) are not built yet.
+Of the four section 13 interfaces, `Source`, `Host` and `Ledger` are built (the
+ledger is below). `Tools` -- managed tool provisioning, M5 -- is not: today a
+tool is pinned and probed, never fetched.
 
 ### `.kilnignore`
 
@@ -489,8 +491,8 @@ The design and every decision are in KILN04 section 4.7.
 ## Record formats and the merge engine (`internal/recfmt`, `internal/recmerge`, KILN04 stage 4)
 
 Stage 4 records traced read-sets in shards and merges them in one job. These two
-packages are the pure half (no I/O, no clock, no CLI yet; the recorder and
-`kiln record-merge` come in later PRs):
+packages are the pure half (no I/O, no clock). The job that drives them is
+`kiln record-merge`, further down:
 
 - `internal/recfmt`: the strict wire formats (shard binding, host facts,
   pre-BUILD inventory, shard header, record line) with decoders and canonical
@@ -804,6 +806,59 @@ read as hostile and every path is quoted for Markdown. Exit 0 clean, 4 on a
 cross-check mismatch or allowed divergence, 1 on an infrastructure failure or a
 refusal (it never writes inside `--dir`), 2 on usage. Code:
 `internal/record/census_report.go`, `census_render.go`, `census_stats.go`.
+
+## `kiln record-merge` (KILN04 section 7.1, stage 4 PR 3a)
+
+One job joins every recording shard, applies the cross-shard rules once and
+writes the ledger. Until it runs, nothing can become a manifest or a pass:
+`kiln record collect` writes raw records and decides nothing, because section
+7's rules span shards (another action's leftover, another shard's write, a
+shared port, a daemon).
+
+```
+kiln record-merge --root <abs> --graph g.json --steps s.json --plan p.json \
+    --shard-count 15 --shard 0=<dir> [--shard 1=<dir> ...] \
+    --ledger <dir> --scope shared|local \
+    [--repository o/n] [--run-id X] [--run-attempt N] [--revision SHA] \
+    [--now <unix>] [--kiln <id>] [--dry-run]
+```
+
+The job is a thin wrapper around `recmerge.Merge`, deliberately: every decision
+it could make is one `recmerge` already makes and already tests. In order it:
+
+1. **B1** -- proves the checkout is byte-for-byte `--revision`, with
+   `record.VerifyTree`. Every digest and key below is computed from that tree.
+2. reads the build tool's three exports -- the same three `prepare` seals --
+   **once** each, so the bytes hashed for the binding are the bytes parsed, and
+   takes their SHA-256 names. The plan is projected onto package paths
+   (`record.ParsePartition`), and its `Paths` map is the only bridge between
+   the exports (they name packages) and Kiln (it keys by path).
+3. decodes every shard with `recfmt.DecodeShard` from the exact uploaded bytes.
+   A symlink, a missing file, a duplicate index or one directory used as two
+   shards is an ERROR, never "no observations": a missing artifact must not be
+   able to emit.
+4. recomputes the keys (`TracedKeys`, below).
+5. `recmerge.Merge` -- binding B1-B6 and the cross-action rules M1-M15.
+6. writes the ledger, **only** when the run is not void, manifests first.
+
+The exit status is the report: `0` emitted, `1` the job is broken (an input
+could not be read or decoded), `2` usage, `3` this run may not write the ledger
+it was asked for, `4` **the run is void** -- a result, not a malfunction, so a
+CI job can tell "the recorder is not sound yet" from "the merge job is broken".
+
+**The keys (`TracedKeys`).** `recmerge.Keys` over `legacy.Traced` -- the same
+implementation `prepare` records with and `legacy-plan` plans with, so there is
+one key algorithm in the repository and this type only adapts it. It builds one
+`*legacy.Traced` per **distinct** host-facts value (a full build has thousands
+of actions but a handful of distinct image/root/home/environment tuples, and
+`legacy.Traced` memoises its digests), cached by the facts' canonical encoding.
+A shard's own weak key is never trusted: the merge recomputes W from the
+shard's facts and `recmerge` refuses the shard when they differ (B3).
+
+**Trust.** The authority is the real `host.Detect` verdict -- there is no
+`--trusted` flag, because that would be the stray `true` the `Authority`
+interface exists to prevent. `--dry-run` needs neither a ledger nor trust and
+writes nothing.
 
 ## Lookup in the plan (`kiln legacy-plan --ledger`, KILN04 stage 5a)
 

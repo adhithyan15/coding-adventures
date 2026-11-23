@@ -38,26 +38,28 @@
     {
       "id": "K-02",
       "priority": 1,
-      "status": "blocked",
+      "status": "in-review",
       "title": "Production recmerge.Keys: memoised weak/strong keys per distinct host facts",
       "why": "recmerge.Merge takes a Keys interface that nothing implements ('memoised per distinct facts (PR 3)'). No shard can become a manifest until it exists.",
       "scope": "code/programs/go/kiln/internal/legacy (or a new mergecmd package) + tests",
       "depends_on": [
         "K-01"
       ],
-      "risk": "medium: key bytes are soundness-critical; every path must fail closed on refusal"
+      "risk": "medium: key bytes are soundness-critical; every path must fail closed on refusal",
+      "outcome": "Landed inside K-03 as internal/record/mergekeys.go (TracedKeys): one *legacy.Traced per distinct facts, so the adapter and the job are reviewable together."
     },
     {
       "id": "K-03",
       "priority": 1,
-      "status": "blocked",
-      "title": "stage-4 PR 3b: the `kiln record-merge` command and the kiln-record.yml / merge jobs",
+      "status": "in-review",
+      "title": "stage-4 PR 3a: `kiln record-merge` + production recmerge.Keys",
       "why": "The last executable gap between 'shards record' and 'the ledger has manifests'. Until it lands, stage 5a lookup has nothing to look up and all recorder work stays inert.",
       "scope": "new CLI subcommand over internal/recfmt + internal/recmerge + internal/ledger; the CI jobs",
       "depends_on": [
         "K-02"
       ],
-      "risk": "high: a merge bug produces false hits; the CI half cannot be validated on a branch because prepare refuses an untrusted run"
+      "risk": "high: a merge bug produces false hits; the CI half cannot be validated on a branch because prepare refuses an untrusted run",
+      "note": "Both landed in one PR because the Keys alone would be dead code. The remaining half of K-03 -- the `kiln-record.yml` / merge CI jobs -- is K-12."
     },
     {
       "id": "K-04",
@@ -113,12 +115,13 @@
     {
       "id": "K-07",
       "priority": 3,
-      "status": "discovered",
+      "status": "merged",
       "title": "Stale claim in the Kiln README: '`Ledger` and `Tools` ... are not built yet'",
       "why": "The Ledger is built and documented 60 lines further down the same file. `Tools` provisioning (M5) is genuinely absent. The file is the implementation contract, so a contradiction in it is a real reading hazard.",
       "scope": "code/programs/go/kiln/README.md line 44 (fold into another Kiln PR, not its own)",
       "depends_on": [],
-      "risk": "none"
+      "risk": "none",
+      "outcome": "Folded into the record-merge PR rather than sent alone."
     },
     {
       "id": "K-08",
@@ -143,6 +146,30 @@
       ],
       "risk": "high: deleting the oracle is one-way",
       "owner_only": true
+    },
+    {
+      "id": "K-12",
+      "priority": 1,
+      "status": "discovered",
+      "title": "stage-4 PR 3b: the kiln-record.yml and kiln-record-merge CI jobs",
+      "why": "`kiln record-merge` exists but nothing calls it, so the ledger still has no writer in CI. Needs the census workflow's setup (trusted default-branch dispatch, pinned toolchains, strace, the sandbox probe gate) and must NOT copy the census's job-start stamp (KILN04 4.8: it stamps first and fails if strace is missing).",
+      "scope": ".github/workflows/kiln-record.yml; a --strict mode; the merge job's ledger upload",
+      "depends_on": [
+        "K-03"
+      ],
+      "risk": "high: cannot be validated on a branch at all, because prepare refuses an untrusted run. Requires a trusted dispatch after merge, so it should be landed by the owner or verified with a follow-up dispatch."
+    },
+    {
+      "id": "K-13",
+      "priority": 1,
+      "status": "discovered",
+      "title": "An end-to-end emit test for the merge job",
+      "why": "The merge's void and refusal paths are tested; an EMIT test needs a real `prepare` shard (trusted linux/amd64). It belongs with PR 3b and is the last unproven link between 'shards record' and 'the ledger has manifests'.",
+      "scope": "a Linux-only test beside TestSandboxRecordCollect, plus the same in CI's kiln-sandbox job",
+      "depends_on": [
+        "K-12"
+      ],
+      "risk": "low once PR 3b exists"
     }
   ],
   "log": [
