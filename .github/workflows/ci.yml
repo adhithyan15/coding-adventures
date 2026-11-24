@@ -1322,6 +1322,33 @@ jobs:
           nproc
           go test -count=1 -run Sandbox -v -json . > "$RUNNER_TEMP/kiln-sandbox.json"
 
+      # KILN04 D50 and the D46 lesson: a trace refusal rule that passed ONE run
+      # against the real recorder is not evidence (it is how the D46 flake got in).
+      # The tests whose traces can contain a restarted spawn (`= ? ERESTARTNOINTR`)
+      # or an open with no -y annotation, and the neighbours that already
+      # tolerate kernel-timing refusals, run twenty times in a row.  A skip is a
+      # failure (KILN_REQUIRE_SANDBOX), and the grammar cross-check inside each run
+      # must stay at zero mismatches and zero allowed divergences.
+      - name: Repeat the restart and signal real-strace tests (-count=20)
+        working-directory: code/programs/go/kiln
+        env:
+          KILN_REQUIRE_SANDBOX: '1'
+          KILN_TRACE_DIFF: '1'
+        shell: bash
+        run: |
+          set +e
+          go test -count=20 -run 'TestSandboxStraceRestartedSpawn|TestSandboxStraceSignals|TestSandboxStraceDyingThreads' -v . > "$RUNNER_TEMP/kiln-sandbox-repeat.log" 2>&1
+          rc=$?
+          grep -E '^(--- FAIL|FAIL|ok|PASS)|D50 on the real kernel|PROBE: crosscheck' "$RUNNER_TEMP/kiln-sandbox-repeat.log" | tail -n 80
+          if [ "$rc" -ne 0 ]; then
+            tail -n 200 "$RUNNER_TEMP/kiln-sandbox-repeat.log"
+          fi
+          if grep -q -E 'mismatches=[1-9]|allowed=[1-9]' "$RUNNER_TEMP/kiln-sandbox-repeat.log"; then
+            echo "the grammar cross-check disagreed or allowed a divergence on a real trace"
+            rc=1
+          fi
+          exit $rc
+
       # The assertion script's own tests (the G1 gate, the D34 cross-check census
       # and this job's wiring). No workflow discovered this file before D34.
       - name: Test the sandbox assertion script

@@ -167,7 +167,14 @@ const TracedSemantics uint64 = 2
 // inode.  The accept set grows, so every weak key changes.  (Taking the number:
 // main was 17 when this was written; if #19908 has not merged this is main+2, and
 // whichever of the two lands second renumbers.)
-const RecorderVersion = 19
+//
+// Version 21: two parse shapes are accepted that were refused (KILN04 D50).  A
+// fork, vfork or clone that ended `= ? ERESTARTNOINTR` created nothing and is
+// dropped; a successful read-only open or openat with no -y annotation is
+// recorded against the walked path.  The accept set grows, so every weak key
+// changes.  (20 is taken by open PR #19908; this number leaves it room, and
+// whichever lands second renumbers: the version only goes up.)
+const RecorderVersion = 21
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
