@@ -66,17 +66,29 @@ pub const REVISION_CRATES: [&str; 4] = ["bit-blaster", "cdcl-sat", "drat-check",
 ///   their own; they build through the probe's.)
 /// * the four files the probe's `src/enumx.rs` pulls in at compile time with `include!` and
 ///   `include_bytes!`: the two generated warrant harnesses and the two `.warrant` documents.
+/// * `src/` and `Cargo.toml` of EVERY path package in the probe's dependency closure (the E1
+///   path: `vos-sched-fp-bitmap` with its `ghost` feature, `vos-sched-contract`,
+///   `vos-probe-ready`, `warrant-grammar`; and `cpu-simulator`, `riscv-encoder`, `bounded-json`,
+///   `sha256`, `test-bootstrap`, `zeroize`, `arithmetic`, `logic-gates`, `transistors`,
+///   `grammar-tools`).  `Cargo.lock` pins registry crates but not the content of a path
+///   dependency, so each path crate must be recorded itself.  The set is read from the probe's
+///   `Cargo.lock` (a package with no `source`); `tests/tree_entries.rs` recomputes it and fails
+///   when a path dependency is added without its entries.  Dev-dependency-only crates are
+///   included too: over-coverage is safe, under-coverage is not.
+/// * the two `#[path]` fixtures of `test-bootstrap` (its bins, not linked into the probe; included
+///   for safety) and the repository-root `.cargo/config.toml` (rustflags or a linker there would
+///   change the build; it is the only `.cargo/config*` on an ancestor path of the probe).
 ///
 /// Left out, on purpose: `tests/` and `benches/` (never linked into the `run` binary; they assert
 /// on values, they do not produce them), `README.md`, `CHANGELOG.md`, `BUILD`, `BUILD_windows`,
-/// `required_capabilities.json` and `vos.toml` (documentation and build-tool metadata).  The
-/// probe has no `build.rs`, and none of the four solver crates does either; a crate that gains
-/// one must add it here.  The crates the five depend on (`cpu-simulator`, `riscv-encoder`,
-/// `sha256`, ...) were never recorded and still are not: that gap is unchanged by this narrowing.
+/// `required_capabilities.json` and `vos.toml` (documentation and build-tool metadata).  None of
+/// the path crates has a `build.rs`; one that gains one must add it here.  What remains
+/// uncovered: registry crates (pinned by the probe's `Cargo.lock`) and the Rust toolchain
+/// (pinned by `mise.toml` and the workflow).
 ///
 /// `code/scripts/vos_results_guard.py` mirrors this list, and a Python test parses it from this
 /// file and compares, so the two cannot drift.
-pub const TREE_ENTRIES: [(&str, &str); 15] = [
+pub const TREE_ENTRIES: [(&str, &str); 46] = [
     (
         "vos-capacity-probe/src",
         "code/programs/rust/vos-capacity-probe/src",
@@ -128,6 +140,97 @@ pub const TREE_ENTRIES: [(&str, &str); 15] = [
         "specs/vos-probe-ready.warrant",
         "code/specs/vos-probe-ready.warrant",
     ),
+    ("arithmetic/src", "code/packages/rust/arithmetic/src"),
+    (
+        "arithmetic/Cargo.toml",
+        "code/packages/rust/arithmetic/Cargo.toml",
+    ),
+    ("bounded-json/src", "code/packages/rust/bounded-json/src"),
+    (
+        "bounded-json/Cargo.toml",
+        "code/packages/rust/bounded-json/Cargo.toml",
+    ),
+    ("sha256/src", "code/packages/rust/sha256/src"),
+    ("sha256/Cargo.toml", "code/packages/rust/sha256/Cargo.toml"),
+    (
+        "test-bootstrap/src",
+        "code/packages/rust/test-bootstrap/src",
+    ),
+    (
+        "test-bootstrap/Cargo.toml",
+        "code/packages/rust/test-bootstrap/Cargo.toml",
+    ),
+    (
+        "warrant-grammar/src",
+        "code/packages/rust/warrant-grammar/src",
+    ),
+    (
+        "warrant-grammar/Cargo.toml",
+        "code/packages/rust/warrant-grammar/Cargo.toml",
+    ),
+    ("zeroize/src", "code/packages/rust/zeroize/src"),
+    (
+        "zeroize/Cargo.toml",
+        "code/packages/rust/zeroize/Cargo.toml",
+    ),
+    ("cpu-simulator/src", "code/packages/rust/cpu-simulator/src"),
+    (
+        "cpu-simulator/Cargo.toml",
+        "code/packages/rust/cpu-simulator/Cargo.toml",
+    ),
+    ("grammar-tools/src", "code/packages/rust/grammar-tools/src"),
+    (
+        "grammar-tools/Cargo.toml",
+        "code/packages/rust/grammar-tools/Cargo.toml",
+    ),
+    ("logic-gates/src", "code/packages/rust/logic-gates/src"),
+    (
+        "logic-gates/Cargo.toml",
+        "code/packages/rust/logic-gates/Cargo.toml",
+    ),
+    ("riscv-encoder/src", "code/packages/rust/riscv-encoder/src"),
+    (
+        "riscv-encoder/Cargo.toml",
+        "code/packages/rust/riscv-encoder/Cargo.toml",
+    ),
+    ("transistors/src", "code/packages/rust/transistors/src"),
+    (
+        "transistors/Cargo.toml",
+        "code/packages/rust/transistors/Cargo.toml",
+    ),
+    (
+        "vos-probe-ready/src",
+        "code/packages/rust/vos-probe-ready/src",
+    ),
+    (
+        "vos-probe-ready/Cargo.toml",
+        "code/packages/rust/vos-probe-ready/Cargo.toml",
+    ),
+    (
+        "vos-sched-contract/src",
+        "code/packages/rust/vos-sched-contract/src",
+    ),
+    (
+        "vos-sched-contract/Cargo.toml",
+        "code/packages/rust/vos-sched-contract/Cargo.toml",
+    ),
+    (
+        "vos-sched-fp-bitmap/src",
+        "code/packages/rust/vos-sched-fp-bitmap/src",
+    ),
+    (
+        "vos-sched-fp-bitmap/Cargo.toml",
+        "code/packages/rust/vos-sched-fp-bitmap/Cargo.toml",
+    ),
+    (
+        "test-bootstrap/tests/exit_fixture.rs",
+        "code/packages/rust/test-bootstrap/tests/exit_fixture.rs",
+    ),
+    (
+        "test-bootstrap/tests/self_corpus.rs",
+        "code/packages/rust/test-bootstrap/tests/self_corpus.rs",
+    ),
+    ("repo/.cargo/config.toml", ".cargo/config.toml"),
 ];
 
 /// The git ids (`git rev-parse HEAD:<path>`) of every [`TREE_ENTRIES`] input; empty if git cannot

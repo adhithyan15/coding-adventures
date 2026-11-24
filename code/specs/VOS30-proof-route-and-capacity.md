@@ -2035,13 +2035,21 @@ generated harnesses the probe `include!`s
 (`vos-sched-fp-bitmap/tests/generated/warrant_evidence.rs`,
 `vos-probe-ready/tests/generated/warrant_evidence.rs`) and the two documents it
 `include_bytes!`s (`specs/vos-sched-fp-bitmap.warrant`, `specs/vos-probe-ready.warrant`);
-the list is `TREE_ENTRIES` in the probe's `src/meta.rs`, and the CI guard's map is tested
+`src` and `Cargo.toml` of **every other path package in the probe's dependency closure**
+(read from the probe's `Cargo.lock`: `arithmetic`, `bounded-json`, `sha256`, `test-bootstrap`,
+`warrant-grammar`, `zeroize`, `cpu-simulator`, `grammar-tools`, `logic-gates`, `riscv-encoder`,
+`transistors`, `vos-probe-ready`, `vos-sched-contract`, `vos-sched-fp-bitmap`, the E1 path
+among them), because `Cargo.lock` does not pin a path dependency's content; the two
+`#[path]` fixtures of `test-bootstrap`; and the repository-root `.cargo/config.toml`
+(`repo/.cargo/config.toml`, the only `.cargo/config*` on an ancestor path of the probe). A
+probe test recomputes the path-package set from `Cargo.lock` and fails when one lacks its
+entries. What stays uncovered: registry crates (pinned by `Cargo.lock`) and the toolchain
+(pinned by `mise.toml` and the workflow). The list is `TREE_ENTRIES` in the probe's `src/meta.rs`, and the CI guard's map is tested
 equal to it. **Left out, with the reason:** `tests/`, `benches/` (not linked into the
 measuring binary), `README.md`, `CHANGELOG.md`, `BUILD`, `BUILD_windows`,
 `required_capabilities.json`, `vos.toml` (documentation and build-tool metadata): an edit to
 any of them cannot change a recorded value, so it must not stale the recording. None of the
-five crates has a `build.rs`; one that gains it joins the list. The crates the five depend
-on were never recorded and are not now. `validate` requires exactly these names in the
+five crates has a `build.rs`; one that gains it joins the list. `validate` requires exactly these names in the
 `tool` object, and hex object ids; a `merges` entry may instead keep the five whole-crate
 names the 0.1.0 and early 0.2.0 files recorded (`vos-capacity-probe`, `bit-blaster`,
 `cdcl-sat`, `drat-check`, `riscv-simulator`), as history: they are never compared with a
