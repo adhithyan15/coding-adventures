@@ -607,6 +607,19 @@ export function nandXnor(a: Bit, b: Bit): Bit {
 // TypeScript's Array.reduce does exactly this: it takes an array and
 // repeatedly applies a 2-argument function from left to right.
 
+// Cap the arity (MAX_WIDTH, from ./bounds.js) before any
+// iteration, then copy the arguments by index once so later work only ever
+// touches this private array.
+function snapshotArgs(gate: string, args: readonly unknown[]): Bit[] {
+  const n = args.length;
+  if (n > MAX_WIDTH) {
+    throw new RangeError(`${gate} accepts at most ${MAX_WIDTH} inputs, got ${n}`);
+  }
+  const copy: unknown[] = new Array(n);
+  for (let i = 0; i < n; i++) copy[i] = args[i];
+  return copy as Bit[];
+}
+
 /**
  * AND with N inputs. Returns 1 only if ALL inputs are 1.
  *
@@ -624,19 +637,6 @@ export function nandXnor(a: Bit, b: Bit): Bit {
  * andN(1, 1, 1, 1) // => 1
  * andN(1, 1, 0, 1) // => 0
  */
-// Cap the arity (reusing MAX_WIDTH from the sequential module) before any
-// iteration, then copy the arguments by index once so later work only ever
-// touches this private array.
-function snapshotArgs(gate: string, args: readonly unknown[]): Bit[] {
-  const n = args.length;
-  if (n > MAX_WIDTH) {
-    throw new RangeError(`${gate} accepts at most ${MAX_WIDTH} inputs, got ${n}`);
-  }
-  const copy: unknown[] = new Array(n);
-  for (let i = 0; i < n; i++) copy[i] = args[i];
-  return copy as Bit[];
-}
-
 export function andN(...args: Bit[]): Bit {
   const inputs = snapshotArgs("andN", args);
   if (inputs.length < 2) {

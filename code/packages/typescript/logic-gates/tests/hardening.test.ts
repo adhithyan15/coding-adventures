@@ -74,7 +74,7 @@ describe("validateBit name hardening", () => {
     for (const bad of ["s", 0.5, null]) {
       expect(() => validateBit(bad, evil as unknown as string)).toThrow(TypeError);
     }
-    expect(() => validateBit(2, evil as unknown as string)).toThrow(/^RangeError|argument must be 0 or 1/);
+    expect(() => validateBit(2, evil as unknown as string)).toThrow(/^argument must be 0 or 1/);
     expect(() => validateBit(2, Symbol("s") as unknown as string)).toThrow(RangeError);
     expect(() => validateBit(2, Object.create(null))).toThrow(RangeError);
     expect(hooks.n).toBe(0);
@@ -104,6 +104,12 @@ describe("n-ary caps", () => {
     for (const f of [andN, orN, xorN] as Fn[]) {
       expect(() => f(...big)).toThrow(RangeError);
     }
+  });
+  it("accepts exactly MAX_WIDTH arguments", () => {
+    const ones = new Array<0 | 1>(MAX_WIDTH).fill(1);
+    expect(andN(...ones)).toBe(1);
+    expect(orN(...ones)).toBe(1);
+    expect(xorN(...ones)).toBe(0);
   });
   it("cap is checked before any element is inspected", () => {
     hooks.n = 0;
