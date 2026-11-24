@@ -55,7 +55,7 @@ import {
   CMOSXor,
   CMOSXnor,
 } from "@coding-adventures/transistors";
-import { MAX_WIDTH } from "./sequential.js";
+import { MAX_WIDTH, MAX_NAME_LENGTH } from "./bounds.js";
 
 const _cmosNot  = new CMOSInverter();
 const _cmosNand = new CMOSNand();
@@ -101,8 +101,8 @@ export function validateBit(value: unknown, name: string = "input"): asserts val
   }
 }
 
-/** Longest argument label validateBit will echo into an error message. */
-export const MAX_NAME_LENGTH = 64;
+// Re-exported so existing importers of this module keep working.
+export { MAX_NAME_LENGTH };
 
 /**
  * Raised when the transistor layer (a dependency) returns something that is
