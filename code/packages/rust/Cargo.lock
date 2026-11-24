@@ -4987,6 +4987,10 @@ dependencies = [
 [[package]]
 name = "coding_adventures_sha1"
 version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "coding_adventures_sha256"

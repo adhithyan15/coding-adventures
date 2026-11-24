@@ -618,7 +618,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "safety_alpha_build",
+      "caught_by": "canon_insert_post",
       "claim": "",
       "fault": "field-zero",
       "id": "warrant/vos_sched_fp_bitmap/negctl/exhaustive/alpha_w/field-zero",
@@ -628,7 +628,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "safety_alpha_build",
+      "caught_by": "canon_insert_post",
       "claim": "",
       "fault": "field-flip",
       "id": "warrant/vos_sched_fp_bitmap/negctl/exhaustive/alpha_w/field-flip",
@@ -638,7 +638,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "safety_alpha_build",
+      "caught_by": "canon_insert_post",
       "claim": "",
       "fault": "field-zero",
       "id": "warrant/vos_sched_fp_bitmap/negctl/property/alpha_w/field-zero",
@@ -648,7 +648,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "safety_alpha_build",
+      "caught_by": "canon_insert_post",
       "claim": "",
       "fault": "field-flip",
       "id": "warrant/vos_sched_fp_bitmap/negctl/property/alpha_w/field-flip",
@@ -658,7 +658,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "safety_alpha_build",
+      "caught_by": "canon_insert_post",
       "claim": "",
       "fault": "field-zero",
       "id": "warrant/vos_sched_fp_bitmap/negctl/fuzz/alpha_w/field-zero",
@@ -668,7 +668,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "safety_alpha_build",
+      "caught_by": "canon_insert_post",
       "claim": "",
       "fault": "field-flip",
       "id": "warrant/vos_sched_fp_bitmap/negctl/fuzz/alpha_w/field-flip",
@@ -718,7 +718,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "dispatch_policy",
+      "caught_by": "canon_dispatch_img",
       "claim": "",
       "fault": "wrong-ctor",
       "id": "warrant/vos_sched_fp_bitmap/negctl/exhaustive/dispatch_out/wrong-ctor",
@@ -728,7 +728,7 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "dispatch_policy",
+      "caught_by": "canon_dispatch_img",
       "claim": "",
       "fault": "wrong-ctor",
       "id": "warrant/vos_sched_fp_bitmap/negctl/property/dispatch_out/wrong-ctor",
@@ -738,13 +738,23 @@
       "verdict": "pass"
     },
     {
-      "caught_by": "dispatch_policy",
+      "caught_by": "canon_dispatch_img",
       "claim": "",
       "fault": "wrong-ctor",
       "id": "warrant/vos_sched_fp_bitmap/negctl/fuzz/dispatch_out/wrong-ctor",
       "kind": "negctl",
       "op": "dispatch_out",
       "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "insert_three_sets_bit_three",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/vos_sched_fp_bitmap/negctl/example/init/field-flip",
+      "kind": "negctl",
+      "op": "init",
+      "target": "example",
       "verdict": "pass"
     },
     {
@@ -775,6 +785,16 @@
       "kind": "negctl",
       "op": "init",
       "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "insert_three_sets_bit_three",
+      "claim": "",
+      "fault": "field-zero",
+      "id": "warrant/vos_sched_fp_bitmap/negctl/example/insert_img/field-zero",
+      "kind": "negctl",
+      "op": "insert_img",
+      "target": "example",
       "verdict": "pass"
     },
     {
