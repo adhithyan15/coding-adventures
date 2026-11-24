@@ -162,3 +162,13 @@ cannot hold a Java value (128-bit integers), the Kotlin surface keeps
 * The Kotlin corpus runner is separate from `Corpus.evaluate`; both decode with
   the Java `StrictJson`/`Values`, so a decoder bug is shared and is covered by
   the Java package's own tests.
+* A Kotlin `TODO()` / `NotImplementedError` is an `Error` that the engine does
+  not list, so it escapes `checkProperty` as a raw exception rather than a
+  `property-panic` verdict, exactly as unlisted Errors do in Java.
+* Kotlin `Pair`/`Triple` witnesses render as `(1, 2)`, not Java's `{1,2}`, so the
+  `repro-fnv` digests of tuple witnesses differ from the Java engine's.
+  Cross-language digest equality is not claimed.
+* Both Unix `BUILD` files (Java and Kotlin) take the same lock,
+  `.build-locks/jvm-test-bootstrap.lock`, because the Kotlin build writes into the
+  Java package's `gradle-build` and `.gradle` through `includeBuild`. The lock is
+  released by a trap and a wait of 30 minutes fails with a message.

@@ -50,6 +50,13 @@ Things inherited from the engine and worth knowing:
   `ciModeFrom(System::getenv)` to decide, then pass `ON` or `OFF`.
 - There is no wall-clock timeout; `property-timeout` is reserved.
 - 128-bit integers stay `BigInteger` (no Kotlin type holds them).
+- A Kotlin `TODO()` / `NotImplementedError` is an `Error`, and the engine only
+  converts the Error kinds it lists into verdicts, so it escapes `checkProperty`
+  as a raw exception instead of a `property-panic` verdict (the same as Java for
+  unlisted Errors).
+- Kotlin `Pair`/`Triple` witnesses render as `(1, 2)`, not Java's `{1,2}`, so the
+  `repro-fnv` digest of a tuple witness differs from the Java engine's.
+  Cross-language digest equality is not claimed.
 
 ## Conformance
 
