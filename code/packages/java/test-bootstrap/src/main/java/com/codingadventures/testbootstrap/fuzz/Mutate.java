@@ -416,6 +416,11 @@ public final class Mutate {
 
   /** {@link #mutateSequence(byte[], long, int, int)} over a caller-built stream (the sabotage seam). */
   static byte[] mutateSequence(byte[] data, SplitMix64 rng, int steps, int maxLen) {
+    return mutateSequence(data, rng, steps, maxLen, MAX_SEQUENCE_WORK);
+  }
+
+  /** The same with an explicit work cap, so a test can make the cap bind. */
+  static byte[] mutateSequence(byte[] data, SplitMix64 rng, int steps, int maxLen, long workCap) {
     if (steps > MAX_ITERATIONS) {
       throw new IllegalArgumentException("steps exceeds MAX_ITERATIONS");
     }
@@ -429,7 +434,7 @@ public final class Mutate {
         cur = new byte[] {0};
       }
       work += cur.length;
-      if (work > MAX_SEQUENCE_WORK) {
+      if (work > workCap) {
         throw new IllegalArgumentException("mutateSequence work exceeds MAX_SEQUENCE_WORK");
       }
       int n = cur.length;
