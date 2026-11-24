@@ -45,13 +45,13 @@ type LogicGatesTests() =
 
     [<Fact>]
     member _.``Invalid inputs are rejected``() =
-        Assert.Throws<ArgumentOutOfRangeException>(fun () -> LogicGates.notGate -1 |> ignore) |> ignore
-        Assert.Throws<ArgumentOutOfRangeException>(fun () -> LogicGates.andGate 2 1 |> ignore) |> ignore
-        Assert.Throws<ArgumentOutOfRangeException>(fun () -> LogicGates.orGate 0 -1 |> ignore) |> ignore
-        Assert.Throws<ArgumentOutOfRangeException>(fun () -> LogicGates.xorGate 0 2 |> ignore) |> ignore
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(fun () -> LogicGates.notGate -1 |> ignore) |> ignore
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(fun () -> LogicGates.andGate 2 1 |> ignore) |> ignore
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(fun () -> LogicGates.orGate 0 -1 |> ignore) |> ignore
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(fun () -> LogicGates.xorGate 0 2 |> ignore) |> ignore
         Assert.Throws<ArgumentException>(fun () -> LogicGates.andN [ 1 ] |> ignore) |> ignore
         Assert.Throws<ArgumentException>(fun () -> LogicGates.orN [] |> ignore) |> ignore
-        Assert.Throws<ArgumentOutOfRangeException>(fun () -> LogicGates.xorN [ 0; 2 ] |> ignore) |> ignore
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(fun () -> LogicGates.xorN [ 0; 2 ] |> ignore) |> ignore
 
     [<Fact>]
     member _.``De Morgan relationships hold``() =
@@ -102,7 +102,7 @@ type NaryTests() =
         for (_, m, f) in gates do
             let l = List.replicate (max m 3) 1 @ [ 7; 9 ]
             let idx = List.findIndex (fun v -> v = 7) l
-            let ex = Assert.Throws<ArgumentOutOfRangeException>(fun () -> f l |> ignore)
+            let ex = Assert.Throws<InvalidBitException>(fun () -> f l |> ignore)
             Assert.Equal(sprintf "inputs[%d]" idx, ex.ParamName)
 
     [<Fact>]
@@ -126,7 +126,7 @@ type NaryTests() =
                     else
                         match List.tryFindIndex (fun v -> v <> 0 && v <> 1) l with
                         | Some i ->
-                            let ex = Assert.Throws<ArgumentOutOfRangeException>(fun () -> f l |> ignore)
+                            let ex = Assert.Throws<InvalidBitException>(fun () -> f l |> ignore)
                             Assert.Equal(sprintf "inputs[%d]" i, ex.ParamName)
                         | None -> Assert.Equal(expected name l, f l)
 
@@ -135,5 +135,5 @@ type NaryLateIndexTests() =
     member _.LateBadElementNamedByIndex() =
         let l = List.replicate 65535 1 @ [ 2 ]
         for f in [ LogicGates.andN; LogicGates.orN; LogicGates.xorN ] do
-            let ex = Assert.Throws<ArgumentOutOfRangeException>(fun () -> f l |> ignore)
+            let ex = Assert.Throws<InvalidBitException>(fun () -> f l |> ignore)
             Assert.Equal("inputs[65535]", ex.ParamName)

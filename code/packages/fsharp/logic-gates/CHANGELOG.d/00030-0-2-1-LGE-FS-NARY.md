@@ -1,4 +1,4 @@
-## 0.1.1
+## 0.2.1
 
 - LGE-FS-NARY: `andN` / `orN` / `xorN` now cap input length at the public
   `LogicGates.maxInputs = 65536`; longer lists raise `ArgumentException`
