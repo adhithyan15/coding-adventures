@@ -1,6 +1,6 @@
 python ../../../specs/fixtures/game-input-frame-v1/validate.py
 python -m unittest discover -s ../../../specs/fixtures/game-input-frame-v1 -p "test_*.py"
-cargo test -p game-input-frame -- --nocapture
-cargo test -p game-input-frame --release -- --nocapture
-cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --check-module
-cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --verify-cert effect_certificate.json
+cargo test --locked -p game-input-frame -- --nocapture
+cargo test --locked -p game-input-frame --release -- --nocapture
+cargo run --locked --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --check-module
+cargo run --locked --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --verify-cert effect_certificate.json

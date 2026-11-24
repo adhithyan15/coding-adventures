@@ -1,1 +1,1 @@
-cargo test -p type-checker-protocol -- --nocapture
+cargo test --locked -p type-checker-protocol -- --nocapture

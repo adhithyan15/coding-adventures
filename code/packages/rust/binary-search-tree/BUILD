@@ -1,1 +1,1 @@
-cargo test -p binary-search-tree -- --nocapture
+cargo test --locked -p binary-search-tree -- --nocapture

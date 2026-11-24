@@ -1,1 +1,1 @@
-cargo test -p atbash-cipher -- --nocapture
+cargo test --locked -p atbash-cipher -- --nocapture

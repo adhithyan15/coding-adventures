@@ -1,1 +1,1 @@
-cargo test -p board-vm-runtime -- --nocapture
+cargo test --locked -p board-vm-runtime -- --nocapture

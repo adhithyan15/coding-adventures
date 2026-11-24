@@ -1,2 +1,2 @@
-cargo build -p grammar-tools
-cargo test -p grammar-tools -- --nocapture
+cargo build --locked -p grammar-tools
+cargo test --locked -p grammar-tools -- --nocapture

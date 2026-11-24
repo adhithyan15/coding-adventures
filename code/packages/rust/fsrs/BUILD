@@ -1,1 +1,1 @@
-cargo test -p fsrs -- --nocapture
+cargo test --locked -p fsrs -- --nocapture
