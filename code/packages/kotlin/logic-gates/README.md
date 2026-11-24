@@ -49,8 +49,18 @@ val xor = LogicGates.XOR(1, 1)   // 0
 val not = LogicGates.NOT(0)      // 1
 
 // Input validation
-LogicGates.AND(2, 1)  // throws IllegalArgumentException: "a must be 0 or 1, got: 2"
+LogicGates.AND(2, 1)  // throws InvalidBitException: "a must be 0 or 1, got: 2"
 ```
+
+## Input validation
+
+Every gate (all 11, including the NAND-built ones) validates every argument
+itself and throws `InvalidBitException(parameter, value)` for the first
+argument that is not 0 or 1. It extends `IllegalArgumentException`, so existing
+handlers keep working. Kotlin has no implicit numeric widening and the API has
+no `Number`/`Any` overloads, so `Long`, `Char`, `Boolean` and `Double`
+arguments fail at compile time. Line coverage is gated at 95% by JaCoCo during
+`gradle test`.
 
 ## Running Tests
 

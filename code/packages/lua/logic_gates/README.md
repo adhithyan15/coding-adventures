@@ -83,3 +83,20 @@ end
 ```bash
 cd tests && busted . --verbose --pattern=test_
 ```
+
+## Input validation and errors
+
+A bit is valid only if it is the Lua **integer** 0 or 1 (`math.type(v) == "integer"`).
+The floats `1.0`/`0.0`, strings, booleans, `nil`, tables etc. are rejected, because
+`1.0 == 1` is true in Lua 5.3+ and would otherwise slip through.
+
+Invalid input raises a structured error table, not a string:
+
+```lua
+local ok, err = pcall(lg.AND, 1.0, 1)
+-- err.code  == "INVALID_BIT"
+-- err.param == "a"
+-- lg.is_invalid_bit(err) == true;  tostring(err) is a readable message
+```
+
+Extra arguments raise `INVALID_ARITY` (`lg.is_invalid_arity(err)`).

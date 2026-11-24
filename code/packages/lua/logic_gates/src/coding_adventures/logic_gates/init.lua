@@ -16,7 +16,7 @@ local gates = require("coding_adventures.logic_gates.gates")
 local sequential = require("coding_adventures.logic_gates.sequential")
 
 return {
-    VERSION = "0.1.0",
+    VERSION = "0.4.0",
 
     -- Combinational gates
     AND = gates.AND,
@@ -32,6 +32,10 @@ return {
     NAND_AND = gates.NAND_AND,
     NAND_OR = gates.NAND_OR,
     NAND_XOR = gates.NAND_XOR,
+
+    -- Error identity (stable across lanes: err.code == "INVALID_BIT")
+    is_invalid_bit = gates.is_invalid_bit,
+    is_invalid_arity = gates.is_invalid_arity,
 
     -- Multi-input
     ANDn = gates.ANDn,
