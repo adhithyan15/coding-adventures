@@ -1,0 +1,86 @@
+package record
+
+// Tests of the per-language step wall and the unknown-write-set reason codes
+// (census_stepwall.go).  Portable: no file is touched.
+
+import (
+	"reflect"
+	"strings"
+	"testing"
+)
+
+// Walls arrive in milliseconds and leave as seconds.  The median is nearest
+// rank: the lower middle for an even count.
+func TestLangWallOf(t *testing.T) {
+	for _, c := range []struct {
+		name string
+		ms   []float64
+		want LangWall
+	}{
+		{"no samples", nil, LangWall{}},
+		{"one sample", []float64{589000}, LangWall{N: 1, P50: 589, Max: 589}},
+		{"odd count, unsorted", []float64{3000, 1000, 2000}, LangWall{N: 3, P50: 2, Max: 3}},
+		{"even count takes the lower middle", []float64{4000, 1000, 3000, 2000}, LangWall{N: 4, P50: 2, Max: 4}},
+		{"sub-second rounds to three decimals", []float64{1, 2}, LangWall{N: 2, P50: 0.001, Max: 0.002}},
+	} {
+		t.Run(c.name, func(t *testing.T) {
+			in := append([]float64(nil), c.ms...)
+			if got := langWallOf(c.ms); got != c.want {
+				t.Errorf("got %+v, want %+v", got, c.want)
+			}
+			if !reflect.DeepEqual(in, append([]float64(nil), c.ms...)) {
+				t.Error("the input was modified")
+			}
+		})
+	}
+}
+
+// A prefix up to the first colon picks the code; anything unknown is "other".
+func TestUnknownReasonCode(t *testing.T) {
+	for _, c := range []struct{ in, want string }{
+		{"serial-violated: seq 3 was used twice", UnknownSerialViolated},
+		{"serial-violated: traces/.seq is not a counter", UnknownSerialViolated},
+		{"interrupted: a step started and was never accounted for (1 of 2)", UnknownInterrupted},
+		{"not run: the build stopped before this step", UnknownNotRun},
+		{"serial-violated", UnknownSerialViolated}, // no colon: the whole text is the prefix
+		{"mystery: something new", UnknownOther},
+		{"serial-violated-ish: no", UnknownOther}, // a longer word is not the prefix
+		{"not-run: dashed is not the spelling", UnknownOther},
+		{"", UnknownOther},
+		{"free text with no colon", UnknownOther},
+	} {
+		if got := unknownReasonCode(c.in); got != c.want {
+			t.Errorf("%q: got %q, want %q", c.in, got, c.want)
+		}
+	}
+}
+
+// Record lines are counted, reasons coded, and bad or over-long lines survive.
+func TestScanRecordLines(t *testing.T) {
+	long := `{"unknown_writes":"interrupted: x","pad":"` + strings.Repeat("a", censusRecordsReadChunk) + "\"}\n"
+	in := `{"action":"a","unknown_writes":""}` + "\n" +
+		`{"action":"b","unknown_writes":"serial-violated: seq 1 was used twice"}` + "\n" +
+		`{"action":"c","unknown_writes":"interrupted: a step started"}` + "\n" +
+		`{"action":"d","unknown_writes":"not run: the build stopped before this step"}` + "\n" +
+		`{"action":"e","unknown_writes":"brand new"}` + "\n" +
+		"not json\n" +
+		long +
+		`{"action":"f","unknown_writes":"not run: again"}` + "\n" +
+		`{"action":"unterminated","unknown_writes":"not run: never counted"}`
+	codes := map[string]int{}
+	n := scanRecordLines(strings.NewReader(in), 1<<40, codes)
+	if n != 8 {
+		t.Errorf("lines = %d, want 8", n)
+	}
+	want := map[string]int{UnknownSerialViolated: 1, UnknownInterrupted: 1, UnknownNotRun: 2, UnknownOther: 1}
+	if !reflect.DeepEqual(codes, want) {
+		t.Errorf("codes = %v, want %v", codes, want)
+	}
+	// The byte limit cuts the read.
+	if n := scanRecordLines(strings.NewReader(in), 10, map[string]int{}); n != 0 {
+		t.Errorf("limit 10: lines = %d", n)
+	}
+	if n := scanRecordLines(strings.NewReader(in), -5, map[string]int{}); n != 0 {
+		t.Errorf("negative limit: lines = %d", n)
+	}
+}
