@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - Sync Rust library-rule boundary for lean-kernel
+
+- Add `code/packages/rust/lean-kernel` (PR #19889) to `starlark-rust-library-rule-consumers`, whose exact roots must equal every Rust BUILD that loads `rust_library.star`. The boundary has 27 entries, 42 input registrations, 510 scopes, and 531 authorizations (digest `d556af0a...`); all `boundary_sha256` pins in the corpus were updated.
+
 ## Unreleased - Sync TypeScript workspace configuration boundary
 
 - Remove 7 TypeScript packages modernized to standalone `tsconfig.json` (`analog-waveform`, `audio-device-sink`, `discrete-waveform`, `note-frequency`, `pcm-audio`, `wave`, `web-audio-sink`) from `typescript-workspace-configuration`. The boundary has 27 entries, 42 input registrations, 509 scopes, and 530 authorizations (digest `43dcbadf...`).
