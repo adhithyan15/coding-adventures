@@ -388,4 +388,33 @@ class EngineTest {
     assertEquals(2, r.value().size());
     assertEquals(List.of(0, 0), r.value());
   }
+
+  /**
+   * The corpus never accepts a half in bisection (its properties fail on length
+   * or sum), so a shrinker that forgot the left or the right half would still
+   * pass it. These pin both halves with exact step counts: three bisections take
+   * 8 elements to 1, where per-element deletion would take seven steps.
+   */
+  @Test
+  void bisectionAcceptsTheLeftHalfThenTheRightHalf() {
+    List<BigInteger> ones = new ArrayList<>(java.util.Collections.nCopies(7, BigInteger.ONE));
+
+    List<BigInteger> leftHeavy = new ArrayList<>();
+    leftHeavy.add(big(9));
+    leftHeavy.addAll(ones);
+    Shrunk<List<BigInteger>> left = Shrink.shrinkList(leftHeavy, BigInteger.ZERO, l -> l.isEmpty() || !l.get(0).equals(big(9)), 1000);
+    assertEquals(List.of(big(9)), left.value());
+    assertEquals(3, left.steps());
+
+    List<BigInteger> rightHeavy = new ArrayList<>(ones);
+    rightHeavy.add(big(9));
+    Shrunk<List<BigInteger>> right = Shrink.shrinkList(rightHeavy, BigInteger.ZERO, l -> l.isEmpty() || !l.get(l.size() - 1).equals(big(9)), 1000);
+    assertEquals(List.of(big(9)), right.value());
+    assertEquals(3, right.steps());
+
+    // The same through the generator-attached shrinker, with the byte walk.
+    Shrunk<byte[]> bytes = Gens.bytes(0, 8).shrink(new byte[] {9, 1, 1, 1, 1, 1, 1, 1}, b -> b.length > 0 && b[0] == 9, 1000);
+    assertArrayEquals(new byte[] {9}, bytes.value());
+    assertEquals(3, bytes.steps());
+  }
 }
