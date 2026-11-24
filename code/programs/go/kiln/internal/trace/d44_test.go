@@ -167,7 +167,7 @@ func TestUnresumedUnknownCallCarriesOnlyACode(t *testing.T) {
 		"11  clone(child_stack=0x7f0000001000, " + dyThread + ") = 2 /* 55 in strace's PID NS */\n"
 	const end = "11  exit_group(5) = ?\n55  +++ exited with 0 +++\n" + helperEnd
 	for name, want := range map[string]string{
-		"syscall_0x1c8":    "unknown-number:yes",
+		"syscall_0x1c7":    "unknown-number:yes", // 455: refused by D47 too (456 is dropped)
 		"syscall_0x01c8":   "unknown-number:no",
 		"evil_name_xyz123": "unknown-number:no",
 	} {

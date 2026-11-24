@@ -4027,7 +4027,7 @@ the leader or any other member that survives still appears. A thread orphan
 adds no process, read or write the model infers anything from, so no other
 verdict changes. The accept set grows, so `RecorderVersion` is 14.
 
-**Decision D46: `cwd-race` by overlap, not by existence of a sharer (`kiln:recorder` 14 to 15).**
+**Decision D46: `cwd-race` by overlap, not by existence of a sharer (`kiln:recorder` 15 to 16).**
 The census shows `cwd-race` on `chdir` or `fchdir` in Ruby (two actions per
 image) and Kotlin (one). The old rule refused any successful `chdir` or
 `fchdir` while another live process shared the cwd (threads, `CLONE_FS`). That
@@ -4086,7 +4086,7 @@ calls do not read the cwd, so they cannot be affected. The check is on every
 cell whatever its `refs`, so a sharer that exited inside the chdir's interval
 still counts (the old rule forgot it), which makes the rule slightly stricter
 there. The cross-check stays equal because the rule is in the shared model.
-`RecorderVersion` is bumped 14 to 15 because the verdict changes both ways.
+`RecorderVersion` is bumped 15 to 16 because the verdict changes both ways.
 
 *AT_FDCWD with an empty path.* A dirfd slot that is `AT_FDCWD` with an EMPTY
 path is cwd-dependent too: `statx(AT_FDCWD, "", AT_EMPTY_PATH, ...)`,
@@ -4145,6 +4145,47 @@ against non-standard kernels or crafted traces), and requiring completed
 Pass 2 (`model.call`) is shared by both trace readers, so the grammar path and
 the oracle scanner stay identical with zero cross-check divergences.
 `RecorderVersion` is bumped 12 to 13 because the accept set grows.
+
+**Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 15).**
+(The decision number D46 is left to the open cwd-race work.) Go actions were refused as `unresumed-call` by a
+dying `syscall_0x1c8` (456) call: the pinned strace 6.8 predates it, so it
+prints the number rather than a name. D44 made the spelling recognisable
+(`isUnknownNumberName`) but census-only. The spelling alone is NOT enough to
+drop the call: the filter in `internal/sandbox/bpf.go` answers ENOSYS only to
+numbers ABOVE `MaxKnownSyscall`; at or below it the filter is a DENYLIST
+(`RefusedSyscalls` get EPERM, `clone3` ENOSYS, everything else ALLOW), so an
+unknown number there reaches the kernel and may be a path-taking call.
+
+*The rule.* `dyingPolicy` (shared by both readers, next to `nullPathDying`)
+drops a dying call, with no event, whose name matches `isUnknownNumberName`
+exactly and whose parsed number N satisfies either
+
+- (a) `syscallceil.Max < N <= 0xffffffff`. The filter answers ENOSYS (or, with
+  the x32 bit set, KILLs the process), so the call did nothing; sound by
+  construction. The ceiling is one constant in the leaf package
+  `internal/syscallceil`, read by `BuildFilter`'s `jgt` and by the parser, with
+  a sandbox test pinning the filter's boundary to it. The 32-bit bound is
+  needed because `seccomp_data.nr` is 32 bits: strace could print
+  `syscall_0x1000001c8`, which the filter sees as nr 456, not as a number above
+  the ceiling. Such a number stays refused. Equal to the ceiling stays refused
+  (461, `lsm_list_modules`, reaches the kernel); so does zero.
+- (b) N is in the closed set `{456}`. Source: torvalds/linux
+  `arch/x86/entry/syscalls/syscall_64.tbl`, `456 common futex_requeue
+  sys_futex_requeue`, signature `futex_requeue(struct futex_waitv *waiters,
+  unsigned int flags, int nr_wake, int nr_requeue)`: no path argument and no
+  descriptor, so dropping it removes no input from the read set. Any addition
+  needs a table citation and a no-path signature. (454 futex_wake and 455
+  futex_wait are known to the table but not in the set: unknown numbers below
+  the ceiling are refused unless listed.)
+
+Every other unknown number stays `unresumed-call`. Near-miss spellings are not
+`isUnknownNumberName` and never reach the rule. A completed or non-dying
+unknown-number call is unchanged (refused by name outside the policy). The rule
+is not a spawn (`droppedSpawnOf` says `dropNone` for the unknown class), so it
+accounts for no orphan pid (D44, D44a). `RecorderVersion` is 16: the accept set
+grows (version 15 belongs to the cwd-race work).
+
+*The root helper's own group.* The rule also matches a dying unknown-number call in the root helper's own process group, which is not under the step's seccomp filter, so branch (a)'s ENOSYS argument does not cover it. That group is Kiln's own binary, which issues no such call today; a helper that ever did would have to be re-reviewed against this decision.
 
 **Decision D44: orphan exits, NULL-path dying calls, short mknod, and the
 unknown-number census code (census run 8; `kiln:recorder` 11 to 12).** Three

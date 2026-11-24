@@ -1,7 +1,7 @@
 
 ## [0.1.0] - UNRELEASED
 
-### Changed (KILN04 D46, `kiln:recorder` 14 to 15)
+### Changed (KILN04 D46, `kiln:recorder` 15 to 16)
 
 - `cwd-race` is now raised by overlap, not by the existence of a sharer. A
   successful `chdir` or `fchdir` on a cwd shared with another process
@@ -22,7 +22,7 @@
 - Both trace readers get the rule (it is in the shared model), checked by the
   cross-check hook in new `internal/trace/d46_test.go`; four older tests that
   expected a refusal without an overlap now build an overlap.
-- `RecorderVersion` bumped 14 to 15 in `internal/legacy/traced.go` (the verdict
-  changes both ways; 14 is D44a, #19873).
+- `RecorderVersion` bumped 15 to 16 in `internal/legacy/traced.go` (the verdict
+  changes both ways; 15 is D47, #19876).
 - Added Decision D46 to `code/specs/KILN04-traced-read-sets.md` and updated
   the cwd-race lines of its parser section and of the README.
