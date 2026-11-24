@@ -6,6 +6,7 @@ Each case builds a throwaway git repository and runs the guard on a range.
 from __future__ import annotations
 
 import json
+import unittest.mock as mock
 import subprocess
 import sys
 import tempfile
@@ -23,10 +24,12 @@ IDENT = ["-c", "user.name=t", "-c", "user.email=t@example.invalid",
          "-c", "commit.gpgsign=false"]
 
 
-def results_json(trees):
+def results_json(trees, recording=False):
     doc = {"schema": 2, "tool": {"name": "vos-capacity-probe", "version": "0.2.0"}}
     if trees is not None:
         doc["tool"]["trees"] = trees
+    if recording:
+        doc["recording"] = {"mode": "record"}
     return json.dumps(doc)
 
 
@@ -108,20 +111,43 @@ class GuardTest(unittest.TestCase):
         self.r.commit({PROBE: "1"}, "A")
         self.r.commit({RES: "{}"}, "B")
         self.r.git("checkout", "-q", "main")
-        self.r.commit({"unrelated/file.rs": "main work"}, "main moves")
+        main_tip = self.r.commit({"unrelated/file.rs": "main work"}, "main moves")
         self.r.git("checkout", "-q", "pr")
         self.r.git("merge", "-q", "--no-ff", "-m", "merge main", "main")
-        self.assertEqual(self.run_guard(), 0)
+        # main's commit is part of the base the PR was opened against
+        self.assertEqual(self.run_guard(base=main_tip), 0)
+
+    def test_merge_of_side_branch_after_b_fails(self):
+        self.r.git("checkout", "-q", "-b", "pr")
+        self.r.commit({RES: "{}"}, "B")
+        self.r.git("checkout", "-q", "-b", "side")
+        self.r.commit({PROBE: "sneaky"}, "probe edit after the recording")
+        self.r.git("checkout", "-q", "pr")
+        self.r.commit({SPEC: "x"}, "specs")
+        self.r.git("merge", "-q", "--no-ff", "-m", "merge side", "side")
+        self.assertEqual(self.run_guard(), 1)
+
+    def test_octopus_with_one_side_branch_fails(self):
+        self.r.git("checkout", "-q", "-b", "pr")
+        self.r.commit({RES: "{}"}, "B")
+        self.r.git("checkout", "-q", "-b", "side")
+        self.r.commit({PROBE: "sneaky"}, "probe edit")
+        self.r.git("checkout", "-q", "main")
+        main_tip = self.r.commit({"unrelated/file.rs": "m"}, "main moves")
+        self.r.git("checkout", "-q", "pr")
+        self.r.commit({SPEC: "x"}, "specs")
+        self.r.git("merge", "-q", "-m", "octopus", "main", "side")
+        self.assertEqual(self.run_guard(base=main_tip), 1)
 
     def test_merge_bringing_results_from_main_is_not_a_results_commit(self):
         self.r.git("checkout", "-q", "-b", "pr")
         self.r.commit({PROBE: "1"}, "A")
         self.r.git("checkout", "-q", "main")
-        self.r.commit({RES: "{}"}, "main records")
+        main_tip = self.r.commit({RES: "{}"}, "main records")
         self.r.git("checkout", "-q", "pr")
         self.r.git("merge", "-q", "--no-ff", "-m", "merge main", "main")
         self.r.commit({PROBE: "2"}, "more probe work")
-        self.assertEqual(self.run_guard(), 0)
+        self.assertEqual(self.run_guard(base=main_tip), 0)
 
     def test_late_commit_outside_specs_after_results_fails(self):
         self.r.commit({RES: "{}"}, "B")
@@ -134,14 +160,14 @@ class GuardTest(unittest.TestCase):
         self.r.commit({PROBE: "pr"}, "A")
         self.r.commit({RES: "{}"}, "B")
         self.r.git("checkout", "-q", "main")
-        self.r.commit({PROBE: "main"}, "main edits probe")
+        main_tip = self.r.commit({PROBE: "main"}, "main edits probe")
         self.r.git("checkout", "-q", "pr")
         merge = self.r.run("merge", "main", "-m", "m", check=False)
         self.assertNotEqual(merge.returncode, 0)  # conflict on PROBE
         self.r.write({PROBE: "resolved"})
         self.r.git("add", PROBE)
         self.r.git("commit", "-q", "-m", "resolve")
-        self.assertEqual(self.run_guard(), 1)
+        self.assertEqual(self.run_guard(base=main_tip), 1)
 
     def record(self):
         """Commit the five tree dirs, then a results file recording their ids."""
@@ -171,7 +197,8 @@ class GuardTest(unittest.TestCase):
         self.r.git("checkout", "-q", "pr")
         self.r.git("merge", "-q", "--no-ff", "-m", "merge main", "main")
         # Rule 1 alone passes (the merge takes main's path unchanged).
-        self.assertEqual(guard.check(self.r.root, self.base, self.r.rev("HEAD")), [])
+        main_tip = self.r.rev("main")
+        self.assertEqual(guard.check(self.r.root, main_tip, self.r.rev("HEAD")), [])
         self.assertEqual(self.run_guard(), 1)
 
     def test_rule2_no_trees_passes(self):
@@ -189,6 +216,55 @@ class GuardTest(unittest.TestCase):
     def test_rule2_unknown_name_exit_2(self):
         self.r.commit({RES: results_json({"nope": "0" * 40})})
         self.assertEqual(self.run_guard(), 2)
+
+    def full_trees(self):
+        files = {f"{p}/f.txt": "a" for p in guard.TREE_PATHS.values()}
+        self.r.commit(files, "trees")
+        return {n: self.r.rev(f"HEAD:{p}") for n, p in guard.TREE_PATHS.items()}
+
+    def test_rule2_recorded_file_with_all_trees_passes(self):
+        self.r.commit({RES: results_json(self.full_trees(), recording=True)})
+        self.assertEqual(self.run_guard(), 0)
+
+    def test_rule2_recorded_file_missing_trees_fails(self):
+        self.full_trees()
+        self.r.commit({RES: results_json(None, recording=True)})
+        self.assertEqual(self.run_guard(), 1)
+
+    def test_rule2_recorded_file_with_four_trees_fails(self):
+        trees = self.full_trees()
+        del trees["cdcl-sat"]
+        self.r.commit({RES: results_json(trees, recording=True)})
+        self.assertEqual(self.run_guard(), 1)
+
+    def test_rule2_recorded_file_with_extra_tree_fails(self):
+        trees = self.full_trees()
+        trees["extra"] = "0" * 40
+        self.r.commit({RES: results_json(trees, recording=True)})
+        self.assertEqual(self.run_guard(), 1)
+
+    def test_duplicate_json_key_exit_2(self):
+        self.r.commit({RES: '{"tool": {}, "tool": {}}'})
+        self.assertEqual(self.run_guard(), 2)
+
+    def test_deeply_nested_json_exit_2(self):
+        self.r.commit({RES: "[" * 200000 + "]" * 200000})
+        self.assertEqual(self.run_guard(), 2)
+
+    def test_undecodable_bytes_do_not_crash(self):
+        raw = guard.decode(b"code/specs/\xff.txt")
+        self.assertTrue(raw.startswith("code/specs/"))
+        self.assertNotIn("\udcff", guard.printable(raw))
+        self.assertTrue(guard.printable(raw).endswith("\ufffd.txt"))
+
+    def test_commit_cap_exit_2(self):
+        self.r.commit({SPEC: "1"})
+        self.r.commit({SPEC: "2"})
+        self.r.commit({SPEC: "3"})
+        with mock.patch.object(guard, "MAX_COMMITS", 2):
+            self.assertEqual(self.run_guard(), 2)
+        with mock.patch.object(guard, "MAX_COMMITS", 3):
+            self.assertEqual(self.run_guard(), 0)
 
     def test_bad_sha_exit_2(self):
         self.assertEqual(self.run_guard(base="HEAD"), 2)
