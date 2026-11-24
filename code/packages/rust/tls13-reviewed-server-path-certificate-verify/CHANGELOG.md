@@ -6,6 +6,12 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Sealed long-lived continuity from the authenticated ordered retry
+  `Certificate` leaf join through the later reviewed-path-derived
+  `CertificateVerify` callback, rejecting different authentication objects,
+  single-use server record owners, decoded leaves, and signature verdicts. The
+  receipt retains the issuer borrow so recycled addresses cannot substitute a
+  later owner.
 - Exact-object composition between the sealed HTTPS destination and reviewed-
   path `CertificateVerify` verdict and the authenticated ordered retry
   `CertificateVerify` callback, with value-equal detached-verdict rejection.

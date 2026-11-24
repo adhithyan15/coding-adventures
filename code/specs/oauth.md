@@ -6979,6 +6979,36 @@ transport, or open a network connection. Those ordered-certificate, Finished,
 revocation, record, and transport compositions remain prerequisites, and
 concrete HTTPS and live-provider readiness remain unavailable.
 
+A bounded ordered-continuity follow-up now carries the authenticated retry
+server `Certificate` leaf join across callback lifetimes as a sealed
+non-copyable receipt. The receipt is initialized only from the complete exact-
+object leaf-to-reviewed-authentication proof and retains the reviewed
+destination/path/signature evidence together with the exact single-use server
+record-state issuer identity, decoded leaf identity, and `CertificateVerify`
+verdict identity established by that proof. The authenticated ordered retry
+issuer identity carries the original issuer borrow, so the receipt cannot
+outlive that issuer and a later issuer cannot substitute an address reused
+after deallocation. The authenticated ordered retry
+`CertificateVerify` callback can complete the receipt only when it retains the
+same reviewed-authentication object, the same single-use server record-state
+issuer, and the same repository-owned signature-verdict object. The completed
+receipt therefore records one ordered server-flight continuity chain from the
+authenticated `Certificate` leaf through the destination/path-derived RSA-key
+verdict used by the later `CertificateVerify` callback. A different ordered
+record owner, byte-equal independent leaf decode, detached authentication
+wrapper, or value-equal detached signature verdict fails closed.
+
+This sealed receipt does not retain callback-scoped message bytes after their
+synchronous authorization and does not replace their complete upstream proof
+graphs; those graphs remain authoritative at each transition. It does not
+decode another message, perform new signature or certificate validation,
+authenticate or append Finished, establish Finished-key provenance, refresh
+revocation state, select later record epochs, protect application data,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Those Finished, revocation, record, and transport compositions remain
+prerequisites, and concrete HTTPS and live-provider readiness remain
+unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
