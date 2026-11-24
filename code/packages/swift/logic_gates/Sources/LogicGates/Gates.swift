@@ -125,6 +125,10 @@ public let maxSelectBits = 16
 public let maxWidth = 1 << 16
 /// Maximum counter width in bits.
 public let maxCounterWidth = 64
+/// Maximum number of inputs to an n-ary gate (`andN`, `orN`). Checked before
+/// any per-element work. Swift arrays are value types (copy-on-write), so the
+/// count checked here cannot change under us (no TOCTOU).
+public let maxInputs = 1 << 16
 
 /// True when `n` is a positive power of two.
 @inline(__always)
@@ -597,6 +601,9 @@ public func nandXor(_ a: Int, _ b: Int) throws -> Int {
 /// - Throws: `LogicGateError.insufficientInputs` if fewer than 2 inputs.
 ///           `LogicGateError.invalidBit` if any input is not 0 or 1.
 public func andN(_ inputs: [Int]) throws -> Int {
+    guard inputs.count <= maxInputs else {
+        throw LogicGateError.invalidWidth(name: "inputs", value: inputs.count)
+    }
     guard inputs.count >= 2 else {
         throw LogicGateError.insufficientInputs(minimum: 2, got: inputs.count)
     }
@@ -624,6 +631,9 @@ public func andN(_ inputs: [Int]) throws -> Int {
 /// - Throws: `LogicGateError.insufficientInputs` if fewer than 2 inputs.
 ///           `LogicGateError.invalidBit` if any input is not 0 or 1.
 public func orN(_ inputs: [Int]) throws -> Int {
+    guard inputs.count <= maxInputs else {
+        throw LogicGateError.invalidWidth(name: "inputs", value: inputs.count)
+    }
     guard inputs.count >= 2 else {
         throw LogicGateError.insufficientInputs(minimum: 2, got: inputs.count)
     }

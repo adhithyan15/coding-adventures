@@ -374,6 +374,10 @@ public func shiftRegister(
     serialIn: Int, clock: Int,
     q: [Int] = [0, 0, 0, 0]  // default: 4-bit shift register
 ) throws -> (q: [Int], serialOut: Int, states: [FlipFlopState]) {
+    // Width cap first: before any validation loop or allocation.
+    guard q.count <= maxWidth else {
+        throw LogicGateError.invalidWidth(name: "q", value: q.count)
+    }
     try validateBit(serialIn, name: "serialIn")
     try validateBit(clock, name: "clock")
     for (i, v) in q.enumerated() { try validateBit(v, name: "q[\(i)]") }
