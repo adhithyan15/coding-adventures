@@ -552,3 +552,114 @@ class TestCounter:
         _, state = counter(0, width=4)
         assert "value" in state
         assert "ff_state" in state
+
+
+# ---------------------------------------------------------------------------
+# State validation on every path (LGE-PY-SEQ-COMB)
+# ---------------------------------------------------------------------------
+
+from logic_gates import sequential as _seq  # noqa: E402
+
+
+def _ff(**over: object) -> dict:
+    d = {"master_q": 0, "master_q_bar": 1, "slave_q": 0, "slave_q_bar": 1}
+    d.update(over)
+    return d
+
+
+class TestCounterStateValidation:
+    def _good(self, width: int = 4) -> dict:
+        return {"value": [0] * width, "ff_state": [_ff() for _ in range(width)]}
+
+    @pytest.mark.parametrize(
+        ("clock", "reset"), [(0, 0), (1, 0), (0, 1), (1, 1)]
+    )
+    def test_bad_value_element_rejected_on_every_path(self, clock: int, reset: int) -> None:
+        st = self._good()
+        st["value"] = [0, "x", 0, 0]
+        with pytest.raises((TypeError, ValueError), match=r"state\['value'\]\[1\]"):
+            _seq.counter(clock, reset, st, 4)
+
+    @pytest.mark.parametrize(
+        ("clock", "reset"), [(0, 0), (1, 0), (0, 1), (1, 1)]
+    )
+    def test_value_length_mismatch_rejected(self, clock: int, reset: int) -> None:
+        for bad in ([0] * 5, [0] * 3, []):
+            st = self._good()
+            st["value"] = bad
+            with pytest.raises(ValueError, match="does not match width"):
+                _seq.counter(clock, reset, st, 4)
+
+    def test_reset_hold_does_not_leak_unvalidated_value(self) -> None:
+        st = self._good()
+        st["value"] = [object()] * 4
+        with pytest.raises((TypeError, ValueError)):
+            _seq.counter(0, 1, st, 4)
+
+    def test_value_not_list(self) -> None:
+        st = self._good()
+        st["value"] = (0, 0, 0, 0)
+        with pytest.raises(TypeError, match="value"):
+            _seq.counter(1, 0, st, 4)
+
+    def test_bad_ff_state(self) -> None:
+        st = self._good()
+        st["ff_state"] = [_ff(slave_q=7)] + [_ff() for _ in range(3)]
+        with pytest.raises(ValueError, match="ff_state"):
+            _seq.counter(1, 0, st, 4)
+        st["ff_state"] = [_ff()] * 3
+        with pytest.raises(ValueError, match="ff_state"):
+            _seq.counter(1, 0, st, 4)
+        st["ff_state"] = "abcd"
+        with pytest.raises(TypeError, match="ff_state"):
+            _seq.counter(1, 0, st, 4)
+
+    def test_bad_state_container(self) -> None:
+        with pytest.raises(ValueError):
+            _seq.counter(1, 0, {"value": [0] * 4}, 4)
+        with pytest.raises(ValueError):
+            _seq.counter(1, 0, [0, 0, 0, 0], 4)  # type: ignore[arg-type]
+
+    def test_width_cap(self) -> None:
+        bits, _st = _seq.counter(0, 0, None, 64)
+        assert len(bits) == 64
+        with pytest.raises(ValueError, match="exceeds maximum"):
+            _seq.counter(0, 0, None, 65)
+        with pytest.raises(ValueError):
+            _seq.counter(0, 0, None, 0)
+        with pytest.raises(TypeError):
+            _seq.counter(0, 0, None, "4")  # type: ignore[arg-type]
+        with pytest.raises(TypeError):
+            _seq.counter(0, 0, None, 4.0)  # type: ignore[arg-type]
+
+
+class TestRegisterShiftStateValidation:
+    def test_register_bad_state_entries(self) -> None:
+        with pytest.raises(ValueError, match=r"state\[1\]"):
+            _seq.register([0, 1], 0, [_ff(), {"master_q": 0}])
+        with pytest.raises(ValueError, match="slave_q"):
+            _seq.register([0, 1], 0, [_ff(), _ff(slave_q=2)])
+        with pytest.raises(ValueError, match=r"state\[0\]"):
+            _seq.register([0, 1], 0, [_ff(extra=1), _ff()])
+        with pytest.raises(ValueError):
+            _seq.register([0, 1], 0, [None, _ff()])  # type: ignore[list-item]
+        with pytest.raises(TypeError):
+            _seq.register([0, 1], 0, {0: _ff(), 1: _ff()})  # type: ignore[arg-type]
+
+    def test_register_width_cap(self) -> None:
+        with pytest.raises(ValueError, match="exceeds maximum"):
+            _seq.register([0] * ((1 << 16) + 1), 0)
+
+    def test_shift_register_bad_state(self) -> None:
+        with pytest.raises(ValueError, match="slave_q"):
+            _seq.shift_register(1, 0, [_ff(slave_q=2), _ff()], width=2)
+        with pytest.raises(ValueError, match=r"state\[1\]"):
+            _seq.shift_register(1, 0, [_ff(), {}], width=2)
+        with pytest.raises(TypeError):
+            _seq.shift_register(1, 0, ({}, {}), width=2)  # type: ignore[arg-type]
+
+    def test_shift_register_width_validation(self) -> None:
+        with pytest.raises(ValueError, match="exceeds maximum"):
+            _seq.shift_register(1, 0, None, width=(1 << 16) + 1)
+        with pytest.raises(TypeError):
+            _seq.shift_register(1, 0, None, width="8")  # type: ignore[arg-type]
