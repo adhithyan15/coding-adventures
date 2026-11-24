@@ -4063,6 +4063,46 @@ Pass 2 (`model.call`) is shared by both trace readers, so the grammar path and
 the oracle scanner stay identical with zero cross-check divergences.
 `RecorderVersion` is bumped 12 to 13 because the accept set grows.
 
+**Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 16).**
+(D46 and `RecorderVersion` 15 are left to the open cwd-race work; this decision
+takes the next free numbers.) Go actions were refused as `unresumed-call` by a
+dying `syscall_0x1c8` (456) call: the pinned strace 6.8 predates it, so it
+prints the number rather than a name. D44 made the spelling recognisable
+(`isUnknownNumberName`) but census-only. The spelling alone is NOT enough to
+drop the call: the filter in `internal/sandbox/bpf.go` answers ENOSYS only to
+numbers ABOVE `MaxKnownSyscall`; at or below it the filter is a DENYLIST
+(`RefusedSyscalls` get EPERM, `clone3` ENOSYS, everything else ALLOW), so an
+unknown number there reaches the kernel and may be a path-taking call.
+
+*The rule.* `dyingPolicy` (shared by both readers, next to `nullPathDying`)
+drops a dying call, with no event, whose name matches `isUnknownNumberName`
+exactly and whose parsed number N satisfies either
+
+- (a) `syscallceil.Max < N <= 0xffffffff`. The filter answers ENOSYS (or, with
+  the x32 bit set, KILLs the process), so the call did nothing; sound by
+  construction. The ceiling is one constant in the leaf package
+  `internal/syscallceil`, read by `BuildFilter`'s `jgt` and by the parser, with
+  a sandbox test pinning the filter's boundary to it. The 32-bit bound is
+  needed because `seccomp_data.nr` is 32 bits: strace could print
+  `syscall_0x1000001c8`, which the filter sees as nr 456, not as a number above
+  the ceiling. Such a number stays refused. Equal to the ceiling stays refused
+  (461, `lsm_list_modules`, reaches the kernel); so does zero.
+- (b) N is in the closed set `{456}`. Source: torvalds/linux
+  `arch/x86/entry/syscalls/syscall_64.tbl`, `456 common futex_requeue
+  sys_futex_requeue`, signature `futex_requeue(struct futex_waitv *waiters,
+  unsigned int flags, int nr_wake, int nr_requeue)`: no path argument and no
+  descriptor, so dropping it removes no input from the read set. Any addition
+  needs a table citation and a no-path signature. (454 futex_wake and 455
+  futex_wait are known to the table but not in the set: unknown numbers below
+  the ceiling are refused unless listed.)
+
+Every other unknown number stays `unresumed-call`. Near-miss spellings are not
+`isUnknownNumberName` and never reach the rule. A completed or non-dying
+unknown-number call is unchanged (refused by name outside the policy). The rule
+is not a spawn (`droppedSpawnOf` says `dropNone` for the unknown class), so it
+accounts for no orphan pid (D44, D44a). `RecorderVersion` is 16: the accept set
+grows (version 15 belongs to the cwd-race work).
+
 **Decision D44: orphan exits, NULL-path dying calls, short mknod, and the
 unknown-number census code (census run 8; `kiln:recorder` 11 to 12).** Three
 refusals left in the census are explained by shapes that cannot hide a read,
