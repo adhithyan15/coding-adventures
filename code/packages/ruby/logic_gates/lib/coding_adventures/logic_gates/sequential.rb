@@ -55,8 +55,8 @@ module CodingAdventures
   module LogicGates
     module Sequential
       # Exact-class snapshots of caller containers (nil if not exact).
-      def self.snap(x)
-        LogicGates.__send__(:copy_array, x)
+      def self.snap(x, cap)
+        LogicGates.__send__(:copy_array, x, cap)
       end
 
       def self.snap_hash(x, allowed)
@@ -134,7 +134,7 @@ module CodingAdventures
             "state must be a Hash with the keys :bits and :ff_states"
         end
 
-        ffs = snap(state[:ff_states])
+        ffs = snap(state[:ff_states], MAX_WIDTH)
         unless ffs && ffs.length == width
           raise ArgumentError,
             "state[:ff_states] must be an Array of #{width} flip-flop states"
@@ -142,7 +142,7 @@ module CodingAdventures
 
         out = {ff_states: ffs.each_with_index.map { |f, i| snapshot_ff_state(f, "state[:ff_states][#{i}]") }}
         if state.key?(:bits)
-          bits = snap(state[:bits])
+          bits = snap(state[:bits], MAX_WIDTH)
           unless bits && bits.length == width
             raise ArgumentError, "state[:bits] must be an Array of #{width} bits"
           end
@@ -362,7 +362,7 @@ module CodingAdventures
         validate_bit(clock, "clock")
 
         # Initialize state on first call
-        state = if state.nil?
+        state = if NilClass === state
           {q: 0, q_bar: 1, master_q: 0, master_q_bar: 1}
         else
           snapshot_ff_state(state)
@@ -440,7 +440,7 @@ module CodingAdventures
       def self.register(data:, clock:, state: nil)
         validate_bit(clock, "clock")
 
-        data = snap(data)
+        data = snap(data, MAX_WIDTH)
         unless data && !data.empty?
           raise ArgumentError, "data must be a non-empty Array of bits"
         end
@@ -454,7 +454,7 @@ module CodingAdventures
         width = data.length
 
         # Initialize flip-flop states if this is the first call
-        ff_states = if state.nil?
+        ff_states = if NilClass === state
           Array.new(width) { {q: 0, q_bar: 1, master_q: 0, master_q_bar: 1} }
         else
           snapshot_register_state(state, width, need_bits: false)[:ff_states]
@@ -530,7 +530,7 @@ module CodingAdventures
         end
 
         if width > MAX_WIDTH
-          raise ArgumentError, "width must be at most #{MAX_WIDTH}, got #{width}"
+          raise ArgumentError, "width must be at most #{MAX_WIDTH}, got #{LogicGates.__send__(:describe_value, width)}"
         end
 
         unless %i[left right].include?(direction)
@@ -538,7 +538,7 @@ module CodingAdventures
         end
 
         # Initialize state if needed
-        if state.nil?
+        if NilClass === state
           current_bits = Array.new(width, 0)
         else
           snap = snapshot_register_state(state, width, need_bits: true)
@@ -609,11 +609,11 @@ module CodingAdventures
         end
 
         if width > MAX_COUNTER_WIDTH
-          raise ArgumentError, "width must be at most #{MAX_COUNTER_WIDTH}, got #{width}"
+          raise ArgumentError, "width must be at most #{MAX_COUNTER_WIDTH}, got #{LogicGates.__send__(:describe_value, width)}"
         end
 
         # Get current bits from state, or initialize to zeros
-        if state.nil?
+        if NilClass === state
           current_bits = Array.new(width, 0)
         else
           state = snapshot_register_state(state, width, need_bits: true)

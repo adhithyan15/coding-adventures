@@ -132,6 +132,16 @@ module CodingAdventures
     #   raw byte of an invalid string -> \xNN
     def self.safe_name_text(name)
       out = +""
+      # Only the first MAX_DESCRIPTION_LENGTH characters can survive the cap
+      # and every character is at most 4 bytes, so scanning more than
+      # 4 * MAX bytes can never change the result. Truncating a valid string
+      # may cut a character in half; scrub drops that partial tail.
+      limit = 4 * MAX_DESCRIPTION_LENGTH
+      if name.bytesize > limit
+        valid = name.valid_encoding?
+        name = name.byteslice(0, limit)
+        name = name.scrub("") if valid
+      end
       pieces = if name.valid_encoding?
         name.each_char.map do |ch|
           c = ch.ord
@@ -171,8 +181,13 @@ module CodingAdventures
     # with Array.new / Hash[], which on an exact core container run no user
     # code, and all later work uses the copy only. Returns nil if x is not an
     # exact Array (or Hash).
-    def self.copy_array(x)
-      Kernel.instance_method(:class).bind_call(x).equal?(Array) ? Array.new(x) : nil
+    def self.copy_array(x, cap)
+      return nil unless Kernel.instance_method(:class).bind_call(x).equal?(Array)
+
+      len = Array.instance_method(:length).bind_call(x)
+      raise ArgumentError, "container length #{len} exceeds the limit of #{cap}" if len > cap
+
+      Array.new(x)
     rescue TypeError
       nil # BasicObject: no #class to bind
     end
@@ -185,6 +200,8 @@ module CodingAdventures
     # present, so a default proc can never fire). Returns nil on any violation.
     def self.copy_hash(x, allowed)
       return nil unless Kernel.instance_method(:class).bind_call(x).equal?(Hash)
+
+      return nil if Hash.instance_method(:size).bind_call(x) > allowed.size
 
       keys = Hash.instance_method(:keys).bind_call(x)
       reader = Hash.instance_method(:[])

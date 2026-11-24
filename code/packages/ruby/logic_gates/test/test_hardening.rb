@@ -407,4 +407,60 @@ class TestHardening < Minitest::Test
     assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: ff) }
     refute fired
   end
+
+  # --- round 3: dispatch-free nil checks, bounded messages -------------------
+
+  class NilSpy
+    attr_reader :calls
+
+    def initialize
+      @calls = 0
+    end
+
+    %i[nil? equal? == ! respond_to? class].each do |m|
+      define_method(m) { |*| (@calls += 1) && true }
+    end
+  end
+
+  def test_nil_check_does_not_dispatch_and_non_nil_state_is_rejected
+    spy = NilSpy.new
+    assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: spy) }
+    assert_raises(ArgumentError) { SEQ.register(data: [0], clock: 0, state: spy) }
+    assert_raises(ArgumentError) { SEQ.shift_register(serial_in: 0, clock: 0, state: spy) }
+    assert_raises(ArgumentError) { SEQ.counter(clock: 0, state: spy) }
+    assert_equal 0, spy.calls
+    [BasicObject.new, false, 0].each do |bad|
+      assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: bad) }
+      assert_raises(ArgumentError) { SEQ.counter(clock: 0, state: bad) }
+    end
+  end
+
+  def test_huge_bignums_never_make_long_messages
+    big = 10**200_000
+    [
+      -> { COMB.demux(0, [0], big) },
+      -> { COMB.demux(0, [0], -big) },
+      -> { SEQ.shift_register(serial_in: 0, clock: 0, width: big) },
+      -> { SEQ.counter(clock: 0, width: big) },
+      -> { SEQ.counter(clock: 0, width: -big) }
+    ].each do |f|
+      err = assert_raises(ArgumentError, &f)
+      assert_operator err.message.length, :<=, 256
+    end
+  end
+
+  def test_oversize_containers_rejected_before_copy
+    assert_raises(ArgumentError) { COMB.mux4(0, 0, 0, 0, Array.new(100_000, 0)) }
+    assert_raises(ArgumentError) { SEQ.register(data: [0], clock: 0, state: {ff_states: Array.new(70_000, 0)}) }
+    assert_raises(ArgumentError) do
+      SEQ.d_flip_flop(data: 0, clock: 0, state: (1..100).to_h { |i| [:"k#{i}", 0] })
+    end
+  end
+
+  def test_enormous_class_name_is_bounded
+    err = assert_raises(IBE) { LG.not_gate(named("é" * 1_000_000)) }
+    assert_operator err.value_description.length, :<=, PREFIX + 64
+    err = assert_raises(IBE) { LG.not_gate(named("\xff".dup.force_encoding("UTF-8") * 1_000_000)) }
+    assert_operator err.value_description.length, :<=, PREFIX + 64
+  end
 end

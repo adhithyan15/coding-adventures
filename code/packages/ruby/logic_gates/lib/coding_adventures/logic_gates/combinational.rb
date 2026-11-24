@@ -51,8 +51,8 @@ module CodingAdventures
   module LogicGates
     module Combinational
       # Exact-class snapshot of a caller Array (nil if not an exact Array).
-      def self.snap(x)
-        LogicGates.__send__(:copy_array, x)
+      def self.snap(x, cap)
+        LogicGates.__send__(:copy_array, x, cap)
       end
       private_class_method :snap
       # Resource caps, checked before any allocation (Rust-parity values).
@@ -137,7 +137,7 @@ module CodingAdventures
         validate_bit(d2, "d2")
         validate_bit(d3, "d3")
 
-        sel = snap(sel)
+        sel = snap(sel, 2)
         unless sel && sel.length == 2
           raise ArgumentError, "sel must be an Array of exactly 2 bits"
         end
@@ -168,7 +168,7 @@ module CodingAdventures
       # @param sel [Array<Integer>] log2(N) select bits (LSB first)
       # @return [Integer] the selected data input value (0 or 1)
       def self.mux_n(inputs, sel)
-        inputs = snap(inputs)
+        inputs = snap(inputs, MAX_MUX_INPUTS)
         unless inputs
           raise ArgumentError, "inputs must be an Array of bits"
         end
@@ -188,7 +188,7 @@ module CodingAdventures
         end
 
         expected_sel_bits = Math.log2(n).to_i
-        sel = snap(sel)
+        sel = snap(sel, MAX_SELECT_BITS)
         unless sel && sel.length == expected_sel_bits
           raise ArgumentError,
             "sel must be an Array of #{expected_sel_bits} bits for #{n} inputs"
@@ -236,16 +236,16 @@ module CodingAdventures
         end
 
         if n_outputs > MAX_OUTPUTS
-          raise ArgumentError, "n_outputs must be at most #{MAX_OUTPUTS}, got #{n_outputs}"
+          raise ArgumentError, "n_outputs must be at most #{MAX_OUTPUTS}, got #{LogicGates.__send__(:describe_value, n_outputs)}"
         end
 
         if n_outputs < 2 || (n_outputs & (n_outputs - 1)) != 0
           raise ArgumentError,
-            "n_outputs must be a power of 2 >= 2, got #{n_outputs}"
+            "n_outputs must be a power of 2 >= 2, got #{LogicGates.__send__(:describe_value, n_outputs)}"
         end
 
         expected_sel_bits = Math.log2(n_outputs).to_i
-        sel = snap(sel)
+        sel = snap(sel, MAX_SELECT_BITS)
         unless sel && sel.length == expected_sel_bits
           raise ArgumentError,
             "sel must be an Array of #{expected_sel_bits} bits for #{n_outputs} outputs"
@@ -277,7 +277,7 @@ module CodingAdventures
       # @param inputs [Array<Integer>] N input bits (LSB first), N >= 1
       # @return [Array<Integer>] 2^N bits, exactly one of which is 1
       def self.decoder(inputs)
-        inputs = snap(inputs)
+        inputs = snap(inputs, MAX_SELECT_BITS)
         unless inputs && inputs.length >= 1
           raise ArgumentError, "inputs must be a non-empty Array of bits"
         end
@@ -340,7 +340,7 @@ module CodingAdventures
       # @return [Array<Integer>] N bits representing the binary index (LSB first)
       # @raise [ArgumentError] if input is not valid one-hot
       def self.encoder(inputs)
-        inputs = snap(inputs)
+        inputs = snap(inputs, MAX_OUTPUTS)
         unless inputs
           raise ArgumentError, "inputs must be an Array of bits"
         end
@@ -404,7 +404,7 @@ module CodingAdventures
       # @return [Array(Array<Integer>, Integer)] [binary_output, valid]
       #   where binary_output is LSB-first and valid is 0 or 1
       def self.priority_encoder(inputs)
-        inputs = snap(inputs)
+        inputs = snap(inputs, MAX_OUTPUTS)
         unless inputs
           raise ArgumentError, "inputs must be an Array of bits"
         end
