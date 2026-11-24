@@ -415,24 +415,24 @@ func TestProbesLeftNothing(t *testing.T) {
 	tmp, state := filepath.Join(base, "tmp"), filepath.Join(base, "state")
 	os.Mkdir(tmp, 0o755)
 	cfg := &sandbox.Config{Tmpdir: tmp, StateRoots: []string{state}}
-	if err := probesLeftNothing(cfg); err != nil {
+	if err := probesLeftNothing(cfg, false); err != nil {
 		t.Fatal(err) // an absent state root is fine
 	}
 	os.Mkdir(state, 0o755)
-	if err := probesLeftNothing(cfg); err != nil {
+	if err := probesLeftNothing(cfg, false); err != nil {
 		t.Fatal(err)
 	}
 	os.WriteFile(filepath.Join(state, "f"), nil, 0o644)
-	if err := probesLeftNothing(cfg); err == nil || !strings.Contains(err.Error(), "unscrubbed:state-preloaded") {
+	if err := probesLeftNothing(cfg, false); err == nil || !strings.Contains(err.Error(), "unscrubbed:state-preloaded") {
 		t.Fatalf("%v", err)
 	}
 	os.Remove(filepath.Join(state, "f"))
 	os.WriteFile(filepath.Join(tmp, "f"), nil, 0o644)
-	if err := probesLeftNothing(cfg); err == nil || !strings.Contains(err.Error(), "unscrubbed:tmpdir-written") {
+	if err := probesLeftNothing(cfg, false); err == nil || !strings.Contains(err.Error(), "unscrubbed:tmpdir-written") {
 		t.Fatalf("%v", err)
 	}
 	cfg.Tmpdir = filepath.Join(base, "gone")
-	if err := probesLeftNothing(cfg); err == nil {
+	if err := probesLeftNothing(cfg, false); err == nil {
 		t.Fatal("a missing tmpdir passed")
 	}
 }
