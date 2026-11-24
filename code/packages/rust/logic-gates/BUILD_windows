@@ -12,7 +12,7 @@ cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --ch
 # LG02: the basic-gates Warrant document is a byte-identical copy of eleven gates' blocks;
 # fail if it drifted from logic-gates.warrant, then run the guard's own tests.
 python ../../../scripts/logic_gates_basic_drift.py
-python -m unittest discover -s ../../../scripts/tests -p test_logic_gates_basic_drift.py
+python ../../../scripts/tests/test_logic_gates_basic_drift.py
 set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p logic-gates --test warrant_evidence
 set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/and_rejects_non_bit&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence
 set WARRANT_EVIDENCE_FAULT=saturate-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table&& python ../../../scripts/warrant_negctl.py -- cargo test -q -p logic-gates --test warrant_evidence

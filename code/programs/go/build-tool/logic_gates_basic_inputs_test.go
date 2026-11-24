@@ -115,7 +115,7 @@ func TestLogicGatesBasicRowIsPinnedToTheBuildLine(t *testing.T) {
 		text := string(data)
 		for _, want := range []string{
 			"../../../scripts/logic_gates_basic_drift.py",
-			"-m unittest discover -s ../../../scripts/tests -p test_logic_gates_basic_drift.py",
+			"../../../scripts/tests/test_logic_gates_basic_drift.py",
 		} {
 			ran := false
 			for _, line := range strings.Split(text, "\n") {

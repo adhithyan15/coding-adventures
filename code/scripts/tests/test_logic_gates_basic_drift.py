@@ -17,6 +17,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import unittest.mock
 
 SCRIPTS = pathlib.Path(__file__).resolve().parents[1]
 REPO = SCRIPTS.parents[1]
@@ -24,7 +25,7 @@ sys.path.insert(0, str(SCRIPTS))
 
 import logic_gates_basic_drift as drift
 
-COPIED = [drift.FULL_SPEC, drift.BASIC_SPEC, drift.BUILD_FILE, drift.BINDINGS]
+COPIED = [drift.FULL_SPEC, drift.BASIC_SPEC, *drift.BUILD_FILES, drift.BINDINGS]
 
 
 def _write(root: str, rel: str, data: bytes) -> None:
@@ -70,6 +71,25 @@ class Tree(unittest.TestCase):
             _write(self.root, rel, (REPO / rel).read_bytes())
 
     # -- helpers ----------------------------------------------------------
+    def run_drift(self, git=None):
+        # The temporary tree is not a git repository: stub the tracked-files query.
+        return drift.run(self.root, git_ls_files=git or (lambda root, rel: []))
+
+    def symlink(self, target: str, link: str) -> None:
+        """Create a symlink; skip (loudly) only where the OS lacks the privilege."""
+        try:
+            os.symlink(target, link)
+        except NotImplementedError as exc:
+            print(f"SKIPPED: os.symlink not implemented here ({exc})", file=sys.stderr)
+            self.skipTest("os.symlink not implemented")
+        except OSError as exc:
+            if os.name == "nt":
+                print(
+                    f"SKIPPED: no symlink privilege on Windows ({exc})", file=sys.stderr
+                )
+                self.skipTest("no symlink privilege")
+            self.fail(f"os.symlink failed on a platform where symlinks work: {exc}")
+
     def basic(self) -> str:
         return _read(self.root, drift.BASIC_SPEC).decode()
 
@@ -87,7 +107,7 @@ class Tree(unittest.TestCase):
 
     def fails(self, *needles: str) -> str:
         with self.assertRaises(drift.DriftError) as ctx:
-            drift.run(self.root)
+            self.run_drift()
         for needle in needles:
             self.assertIn(needle, str(ctx.exception))
         return str(ctx.exception)
@@ -141,7 +161,7 @@ class RealTree(unittest.TestCase):
 
 class Documents(Tree):
     def test_unmodified_copy_passes(self) -> None:
-        notes = drift.run(self.root)
+        notes = self.run_drift()
         self.assertTrue(
             any("skipped" in n for n in notes),
             "fixture absent -> checks 10-12 say skipped",
@@ -179,7 +199,7 @@ class Documents(Tree):
                 self.set_basic(original.replace(old, new, 1))
                 self.fails(kind + " block")
         self.set_basic(original)
-        drift.run(self.root)
+        self.run_drift()
 
     def test_one_byte_change_inside_a_copied_claim(self) -> None:
         self.replace_basic(
@@ -195,12 +215,12 @@ class Documents(Tree):
         self.replace_basic(
             "  op not_gate", "      -- an indented comment\n  op not_gate"
         )
-        drift.run(self.root)
+        self.run_drift()
         self.replace_basic(
             "a public\n  labels and_gate",
             "a public -- trailing comment\n  labels and_gate",
         )
-        drift.run(self.root)
+        self.run_drift()
 
     def test_stray_column_zero_line_fails(self) -> None:
         self.set_basic(self.basic() + "stray\n")
@@ -254,7 +274,7 @@ class Documents(Tree):
 
     def test_quote_inside_a_comment_is_ignored(self) -> None:
         self.replace_basic("  op not_gate", '  -- a "quoted" comment\n  op not_gate')
-        drift.run(self.root)
+        self.run_drift()
 
     def test_one_byte_difference_inside_a_bytes_literal_fails(self) -> None:
         # The basic eleven have no BYTES_LITERAL, so plant the same literal in both
@@ -264,7 +284,7 @@ class Documents(Tree):
         planted = anchor + ' and b"0a0b" == b"0a0b"'
         _write(self.root, drift.FULL_SPEC, full.replace(anchor, planted, 1).encode())
         self.set_basic(self.basic().replace(anchor, planted, 1))
-        drift.run(self.root)
+        self.run_drift()
         self.set_basic(
             self.basic().replace('b"0a0b" == b"0a0b"', 'b"0a0b" == b"0a0c"', 1)
         )
@@ -332,20 +352,14 @@ class Safety(Tree):
         path = os.path.join(self.root, *drift.BASIC_SPEC.split("/"))
         real = path + ".real"
         os.rename(path, real)
-        try:
-            os.symlink(real, path)
-        except (OSError, NotImplementedError):
-            self.skipTest("symlinks unavailable")
+        self.symlink(real, path)
         self.fails("real path differs")
 
     def test_symlinked_parent_directory_refused(self) -> None:
         specs = os.path.join(self.root, "code", "specs")
         other = os.path.join(self.root, "code", "specs_real")
         os.rename(specs, other)
-        try:
-            os.symlink(other, specs)
-        except (OSError, NotImplementedError):
-            self.skipTest("symlinks unavailable")
+        self.symlink(other, specs)
         self.fails("real path differs")
 
     def test_oversize_refused(self) -> None:
@@ -356,7 +370,7 @@ class Safety(Tree):
         pad = drift.MAX_BYTES - len(self.basic().encode())
         # Trailing blank lines are harmless content; the size rule alone must not fire.
         self.set_basic(self.basic().encode() + b"\n" * pad)
-        drift.run(self.root)
+        self.run_drift()
 
     def test_missing_input_refused(self) -> None:
         os.remove(os.path.join(self.root, *drift.BASIC_SPEC.split("/")))
@@ -375,7 +389,7 @@ class Fixture(Tree):
         _fixture(self.root)
 
     def test_consistent_fixture_passes(self) -> None:
-        notes = drift.run(self.root)
+        notes = self.run_drift()
         self.assertTrue(any("passed" in n for n in notes))
 
     def test_pin_count_is_31(self) -> None:
@@ -403,19 +417,19 @@ class Fixture(Tree):
         corpus = json.loads(_read(self.root, drift.CORPUS))
         dropped = corpus["controls"].pop()
         _write(self.root, drift.CORPUS, json.dumps(corpus).encode())
-        msg = self.fails("only in BUILD")
+        msg = self.fails("controls: 30 (op, fault) pairs")
         self.assertIn(dropped["op"], msg)
         corpus["controls"].append(dropped)
         corpus["controls"].append(
             {"op": "and_gate", "fault": "bogus", "required_claims": ["x"]}
         )
         _write(self.root, drift.CORPUS, json.dumps(corpus).encode())
-        self.fails("only in corpus")
+        self.fails("controls: 32 (op, fault) pairs", "and_gate/bogus")
 
     def test_profile_versus_bindings_fails(self) -> None:
         path = drift.PROFILE
         _write(self.root, path, _read(self.root, path) + b"fault and_gate bogus\n")
-        self.fails("corpus.profile faults differ")
+        self.fails("corpus.profile: 32 (op, fault) pairs", "and_gate/bogus")
 
     def test_stale_digest_fails(self) -> None:
         self.replace_basic(
@@ -427,11 +441,215 @@ class Fixture(Tree):
         fixture = os.path.join(self.root, *drift.FIXTURE_DIR.split("/"))
         other = fixture + "_real"
         os.rename(fixture, other)
-        try:
-            os.symlink(other, fixture)
-        except (OSError, NotImplementedError):
-            self.skipTest("symlinks unavailable")
+        self.symlink(other, fixture)
         self.fails("real path differs")
+
+
+class FailClosed(Tree):
+    """Review fixes M1-M4, L5-L7: no parser may match nothing and pass."""
+
+    def edit(self, rel: str, fn) -> None:
+        _write(self.root, rel, fn(_read(self.root, rel).decode()).encode())
+
+    def pin_lines(self, text: str) -> list:
+        return [ln for ln in text.split("\n") if "WARRANT_EVIDENCE_FAULT=" in ln]
+
+    # M1: empty or reformatted parses must fail inside the script
+    def test_build_without_pins_fails(self) -> None:
+        self.edit(
+            drift.BUILD_FILE,
+            lambda t: "\n".join(
+                l for l in t.split("\n") if "WARRANT_EVIDENCE_FAULT=" not in l
+            ),
+        )
+        self.fails("0 basic-op fault pins")
+
+    def test_empty_build_file_fails(self) -> None:
+        _write(self.root, drift.BUILD_FILE, b"")
+        self.fails("0 basic-op fault pins")
+
+    def test_reformatted_pin_line_fails(self) -> None:
+        self.edit(
+            drift.BUILD_FILE,
+            lambda t: t.replace(
+                "WARRANT_EVIDENCE_FAULT=", "env WARRANT_EVIDENCE_FAULT=", 1
+            ),
+        )
+        self.fails("unrecognised fault pin")
+
+    def test_commented_out_pins_do_not_count(self) -> None:
+        self.edit(
+            drift.BUILD_FILE,
+            lambda t: t.replace(
+                "\nWARRANT_EVIDENCE_FAULT=", "\n# WARRANT_EVIDENCE_FAULT=", 1
+            ),
+        )
+        self.fails("30 basic-op fault pins")
+
+    def test_trailing_comment_or_noop_pin_is_rejected(self) -> None:
+        lines = _read(self.root, drift.BUILD_FILE).decode().split("\n")
+        i = next(n for n, ln in enumerate(lines) if "WARRANT_EVIDENCE_FAULT=" in ln)
+        lines[i] += " # not really"
+        _write(self.root, drift.BUILD_FILE, "\n".join(lines).encode())
+        self.fails("contains '#'")
+
+    def test_empty_bindings_fails(self) -> None:
+        _write(self.root, drift.BINDINGS, b"")
+        self.fails("0 (op, fault) pairs")
+
+    def test_bindings_missing_one_fault_fails(self) -> None:
+        self.edit(
+            drift.BINDINGS,
+            lambda t: t.replace(
+                "faults=missing-error,saturate-add,saturate-sub",
+                "faults=missing-error,saturate-add",
+                1,
+            ),
+        )
+        self.fails("30 (op, fault) pairs")
+
+    # M2: every BUILD variant is parsed
+    def test_divergent_pin_in_build_linux_fails(self) -> None:
+        self.edit(
+            drift.BUILD_FILES[1],
+            lambda t: t.replace(
+                "/exhaustive/and_truth_table", "/exhaustive/and_rejects_non_bit", 1
+            ),
+        )
+        self.fails("BUILD_linux pins differ")
+
+    def test_divergent_pin_in_build_windows_fails(self) -> None:
+        self.edit(
+            drift.BUILD_FILES[2],
+            lambda t: t.replace(
+                "&& set WARRANT_EVIDENCE_FILTER=/exhaustive/or_truth_table",
+                "&& set WARRANT_EVIDENCE_FILTER=/exhaustive/or_rejects_non_bit",
+                1,
+            ),
+        )
+        self.fails("BUILD_windows pins differ")
+
+    def test_missing_build_windows_fails(self) -> None:
+        os.remove(os.path.join(self.root, *drift.BUILD_FILES[2].split("/")))
+        self.fails("missing")
+
+    def test_windows_form_is_parsed(self) -> None:
+        pins = drift._parse_pins(_read(self.root, drift.BUILD_FILES[2]).decode())
+        self.assertEqual(len(pins), 31)
+
+    # M3: the fixture skip is explicit and fails closed
+    def test_absent_fixture_skips_only_when_git_tracks_nothing(self) -> None:
+        self.assertTrue(any("skipped" in n for n in self.run_drift()))
+        self.fails_with_git(
+            lambda root, rel: [rel + "/corpus.json"], "git tracks 1 file"
+        )
+
+    def fails_with_git(self, git, needle: str) -> None:
+        with self.assertRaises(drift.DriftError) as ctx:
+            self.run_drift(git)
+        self.assertIn(needle, str(ctx.exception))
+
+    def test_git_unavailable_fails_closed(self) -> None:
+        with self.assertRaises(drift.DriftError) as ctx:
+            drift.run(self.root)  # the temporary tree is no git repository
+        self.assertIn("failing closed", str(ctx.exception))
+        with (
+            unittest.mock.patch.object(
+                drift.subprocess, "run", side_effect=FileNotFoundError("git")
+            ),
+            self.assertRaises(drift.DriftError),
+        ):
+            drift.run(self.root)
+
+    def test_required_fixture_absent_fails(self) -> None:
+        with unittest.mock.patch.object(drift, "FIXTURE_REQUIRED", True):
+            self.fails("FIXTURE_REQUIRED")
+
+    def test_non_enoent_error_on_the_fixture_path_fails_closed(self) -> None:
+        fixtures = os.path.join(self.root, "code", "specs", "fixtures")
+        _write(self.root, "code/specs/fixtures", b"a file where a directory should be")
+        self.assertTrue(os.path.isfile(fixtures))
+        self.fails("failing closed")
+
+    def test_the_flag_is_false_until_the_fixture_lands(self) -> None:
+        self.assertEqual(
+            drift.FIXTURE_REQUIRED,
+            os.path.isdir(os.path.join(REPO, *drift.FIXTURE_DIR.split("/"))),
+        )
+
+    # L5: duplicates
+    def test_duplicate_block_key_in_either_document_fails(self) -> None:
+        dup = "  error GateError = INVALID_INPUT\n"
+        self.set_basic(self.basic() + dup)
+        self.fails("duplicate error block")
+        self.set_basic((REPO / drift.BASIC_SPEC).read_bytes())
+        full = (REPO / drift.FULL_SPEC).read_text()
+        _write(self.root, drift.FULL_SPEC, (full + dup).encode())
+        self.fails("duplicate error block", drift.FULL_SPEC)
+
+    # L7: the file must be the one lstat saw
+    def test_inode_change_between_lstat_and_open_fails(self) -> None:
+        real = os.fstat
+
+        def swapped(fd):
+            st = real(fd)
+            return os.stat_result(
+                (
+                    st.st_mode,
+                    st.st_ino + 1,
+                    st.st_dev,
+                    st.st_nlink,
+                    st.st_uid,
+                    st.st_gid,
+                    st.st_size,
+                    0,
+                    0,
+                    0,
+                )
+            )
+
+        with unittest.mock.patch.object(drift.os, "fstat", swapped):
+            self.fails("changed between lstat and open")
+
+
+class FixtureExact(Tree):
+    def setUp(self) -> None:
+        super().setUp()
+        _fixture(self.root)
+
+    def test_required_claim_must_be_the_exact_form(self) -> None:
+        for bad in (
+            "and_truth_table",
+            "warrant/other_module/exhaustive/and_truth_table",
+            "x/warrant/logic_gates_basic/exhaustive/and_truth_table",
+        ):
+            with self.subTest(bad):
+                _fixture(self.root)
+                corpus = json.loads(_read(self.root, drift.CORPUS))
+                for control in corpus["controls"]:
+                    if (control["op"], control["fault"]) == (
+                        "and_gate",
+                        "saturate-add",
+                    ):
+                        control["required_claims"] = [bad]
+                _write(self.root, drift.CORPUS, json.dumps(corpus).encode())
+                self.fails("expected " + drift.CLAIM_PREFIX + "and_truth_table")
+
+    def test_duplicate_control_fails(self) -> None:
+        corpus = json.loads(_read(self.root, drift.CORPUS))
+        corpus["controls"].append(dict(corpus["controls"][0]))
+        _write(self.root, drift.CORPUS, json.dumps(corpus).encode())
+        self.fails("duplicate control")
+
+    def test_empty_controls_fail(self) -> None:
+        corpus = json.loads(_read(self.root, drift.CORPUS))
+        corpus["controls"] = []
+        _write(self.root, drift.CORPUS, json.dumps(corpus).encode())
+        self.fails("0 (op, fault) pairs")
+
+    def test_empty_profile_fails(self) -> None:
+        _write(self.root, drift.PROFILE, b"")
+        self.fails("0 (op, fault) pairs")
 
 
 class ClaimTable(unittest.TestCase):

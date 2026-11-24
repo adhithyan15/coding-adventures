@@ -13,3 +13,11 @@
 - The changelog moved to a sharded `CHANGELOG.d/`; the previous `CHANGELOG.md` is shard 00010, unchanged.
 
 No source, test or recorded evidence change.
+
+### Hardening (review)
+
+- The guard fails closed on empty parses (exact 31-pair sets), parses `BUILD`, `BUILD_linux` and
+  `BUILD_windows` and requires identical pins, rejects duplicate controls and block keys, and
+  requires the exact corpus claim form. The fixture checks are gated by `FIXTURE_REQUIRED`
+  (False until LGE-S1c, which flips it to True in the PR that adds the fixture). The BUILD files
+  run the test file directly so a missing file is an error.

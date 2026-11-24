@@ -108,6 +108,7 @@ import json
 import os
 import re
 import stat
+import subprocess
 import sys
 
 # ---------------------------------------------------------------------------
@@ -122,6 +123,14 @@ FIXTURE_DIR = "code/specs/fixtures/logic-gates-basic-warrant-v2"
 PROFILE = FIXTURE_DIR + "/corpus.profile"
 CORPUS = FIXTURE_DIR + "/corpus.json"
 BUILD_FILE = "code/packages/rust/logic-gates/BUILD"
+# Every BUILD variant the build tool may pick (Linux, macOS, Windows) must carry the same pins.
+BUILD_FILES = (BUILD_FILE, BUILD_FILE + "_linux", BUILD_FILE + "_windows")
+
+# Checks 10-12 need the LGE-S1c fixture.  While it does not exist this stays False and the
+# checks are skipped, but ONLY if the directory is absent AND git tracks nothing under it.
+# LGE-S1c flips this to True in the same PR that adds the fixture; after that an absent
+# fixture is a failure.
+FIXTURE_REQUIRED = False
 BINDINGS = "code/packages/rust/logic-gates/evidence.bindings"
 
 FULL_HEADER = "warrant logic_gates v1"
@@ -156,6 +165,20 @@ OPS: dict[str, tuple[str, ...]] = {
 }
 
 EXPECTED_EXAMPLE_COUNT = 39
+
+# The exact (op, fault) set LG02 5.1 fixes: 9 two-input ops x 3 faults + 2 one-input ops x 2 = 31.
+EXPECTED_PAIRS = {
+    (op, fault)
+    for op, params in OPS.items()
+    for fault in (
+        ("missing-error", "saturate-add", "saturate-sub")
+        if len(params) == 2
+        else ("missing-error", "shift-mask")
+    )
+}
+EXPECTED_PIN_COUNT = 31
+# The one exact form of a corpus required claim (the ct-compare corpus uses the same shape).
+CLAIM_PREFIX = "warrant/logic_gates_basic/exhaustive/"
 
 # The explicit claim -> op table of check 11.  A claim that mentions two ops
 # (nand_xor_equals_xor calls nand_xor and xor_gate) maps to the NAND-built op.
@@ -229,6 +252,8 @@ def _read_input(root: str, rel: str) -> bytes:
         raise DriftError(f"{rel}: cannot open ({exc})")
     try:
         after = os.fstat(fd)
+        if (after.st_dev, after.st_ino) != (before.st_dev, before.st_ino):
+            raise DriftError(f"{rel}: changed between lstat and open")
         if not stat.S_ISREG(after.st_mode):
             raise DriftError(f"{rel}: refused, not a regular file")
         if after.st_size > MAX_BYTES:
@@ -363,6 +388,8 @@ def parse_document(rel: str, data: bytes) -> Document:
                     f"{rel}:{lineno}: a two-space line that starts no block: {content!r}"
                 )
             key = _block_key(rel, lineno, word, rest)
+            if any(b.key == key for b in blocks):
+                raise DriftError(f"{rel}:{lineno}: duplicate {key[0]} block {key[1]}")
             current = Block(key, lineno, [content])
             blocks.append(current)
         else:
@@ -525,15 +552,23 @@ def _parse_profile(text: str) -> set:
         if parts and parts[0] == "fault":
             if len(parts) != 3:
                 raise DriftError(f"{PROFILE}:{number}: expected 'fault <op> <fault>'")
+            if (parts[1], parts[2]) in pairs:
+                raise DriftError(
+                    f"{PROFILE}:{number}: duplicate fault line {parts[1]}/{parts[2]}"
+                )
             pairs.add((parts[1], parts[2]))
     return pairs
 
 
 def _parse_bindings(text: str) -> set:
     pairs = set()
+    seen_ops = set()
     for line in text.split("\n"):
         parts = line.split()
         if len(parts) >= 2 and parts[0] == "op" and parts[1] in OPS:
+            if parts[1] in seen_ops:
+                raise DriftError(f"{BINDINGS}: op {parts[1]} appears twice")
+            seen_ops.add(parts[1])
             faults = [p[len("faults=") :] for p in parts[2:] if p.startswith("faults=")]
             if len(faults) != 1:
                 raise DriftError(
@@ -544,20 +579,68 @@ def _parse_bindings(text: str) -> set:
     return pairs
 
 
-_PIN = re.compile(
-    r"WARRANT_EVIDENCE_FAULT=(\S+)\s+WARRANT_EVIDENCE_FILTER=/exhaustive/(\S+)"
-)
+def _pin_tokens(line: str) -> tuple[str, str, list[str]] | None:
+    """Split one BUILD line into (fault, filter, command tokens), or None if it is no pin.
+
+    Unix form:    WARRANT_EVIDENCE_FAULT=F WARRANT_EVIDENCE_FILTER=/exhaustive/C CMD...
+    Windows form: set WARRANT_EVIDENCE_FAULT=F&& set WARRANT_EVIDENCE_FILTER=/exhaustive/C&& CMD...
+
+    A line that mentions the variable but is not exactly one of these forms is an
+    error (a reformatted or half-commented pin must not silently stop counting).
+    """
+    if "WARRANT_EVIDENCE_FAULT=" not in line:
+        return None
+    if "#" in line:
+        raise DriftError(
+            f"a fault pin line contains '#' (comment or no-op form): {line.strip()[:100]!r}"
+        )
+    if line.startswith("set "):
+        parts = [p.strip() for p in line.split("&&")]
+        if len(parts) != 3 or not (
+            parts[0].startswith("set WARRANT_EVIDENCE_FAULT=")
+            and parts[1].startswith("set WARRANT_EVIDENCE_FILTER=")
+        ):
+            raise DriftError(
+                f"unrecognised Windows fault pin line: {line.strip()[:100]!r}"
+            )
+        fault = parts[0][len("set WARRANT_EVIDENCE_FAULT=") :]
+        flt = parts[1][len("set WARRANT_EVIDENCE_FILTER=") :]
+        command = parts[2].split()
+    else:
+        tokens = line.split()
+        if len(tokens) < 3 or not (
+            tokens[0].startswith("WARRANT_EVIDENCE_FAULT=")
+            and tokens[1].startswith("WARRANT_EVIDENCE_FILTER=")
+        ):
+            raise DriftError(f"unrecognised fault pin line: {line.strip()[:100]!r}")
+        fault = tokens[0][len("WARRANT_EVIDENCE_FAULT=") :]
+        flt = tokens[1][len("WARRANT_EVIDENCE_FILTER=") :]
+        command = tokens[2:]
+    if not command or not any(t.endswith("warrant_negctl.py") for t in command[:2]):
+        raise DriftError(
+            f"a fault pin does not run warrant_negctl.py: {line.strip()[:100]!r}"
+        )
+    if len(fault) > 64 or len(flt) > 128 or not fault or not flt:
+        raise DriftError(
+            f"a fault pin has an empty or oversized field: {line.strip()[:100]!r}"
+        )
+    return fault, flt, command
 
 
 def _parse_pins(text: str) -> list[tuple[str, str, str]]:
-    """(op, fault, claim) for every BUILD fault pin whose claim is one of the 26."""
+    """(op, fault, claim) for every executed fault pin whose claim is one of the 26."""
     pins = []
     for line in text.split("\n"):
-        if line.lstrip().startswith("#"):
+        if line.lstrip().startswith("#") or line.lstrip().startswith("rem "):
             continue
-        match = _PIN.search(line)
-        if match and match.group(2) in CLAIM_TO_OP:
-            pins.append((CLAIM_TO_OP[match.group(2)], match.group(1), match.group(2)))
+        parsed = _pin_tokens(line)
+        if parsed is None:
+            continue
+        fault, flt, _ = parsed
+        prefix = "/exhaustive/"
+        claim = flt[len(prefix) :] if flt.startswith(prefix) else ""
+        if claim in CLAIM_TO_OP:
+            pins.append((CLAIM_TO_OP[claim], fault, claim))
     return pins
 
 
@@ -565,15 +648,49 @@ def _describe(pairs: set) -> str:
     return ", ".join(f"{op}/{fault}" for op, fault in sorted(pairs))
 
 
-def check_fixture(root: str, basic_bytes: bytes) -> None:
-    """Checks 10, 11 and 12 (the fixture exists)."""
-    profile = _parse_profile(_read_input(root, PROFILE).decode("utf-8", "replace"))
-    bindings = _parse_bindings(_read_input(root, BINDINGS).decode("utf-8", "replace"))
-    if profile != bindings:
+def _expect_pairs(name: str, got: set) -> None:
+    """An empty or partial parse must not pass: compare with the embedded exact set."""
+    if got != EXPECTED_PAIRS:
         raise DriftError(
-            f"corpus.profile faults differ from evidence.bindings: only in profile "
-            f"[{_describe(profile - bindings)}], only in bindings [{_describe(bindings - profile)}]"
+            f"{name}: {len(got)} (op, fault) pairs, expected {len(EXPECTED_PAIRS)}; "
+            f"missing [{_describe(EXPECTED_PAIRS - got)}], unexpected [{_describe(got - EXPECTED_PAIRS)}]"
         )
+
+
+def check_pins(root: str) -> set:
+    """Checks 10/11 parts that need no fixture: the bindings and every BUILD variant.
+
+    Returns the (op, fault, claim) pin set, identical in BUILD, BUILD_linux and
+    BUILD_windows.
+    """
+    _expect_pairs(
+        BINDINGS,
+        _parse_bindings(_read_input(root, BINDINGS).decode("utf-8", "replace")),
+    )
+    variants = {}
+    for rel in BUILD_FILES:
+        pins = _parse_pins(_read_input(root, rel).decode("utf-8", "replace"))
+        as_set = set(pins)
+        if len(as_set) != len(pins):
+            raise DriftError(f"{rel}: a fault pin appears twice")
+        if len(pins) != EXPECTED_PIN_COUNT:
+            raise DriftError(
+                f"{rel}: {len(pins)} basic-op fault pins, expected {EXPECTED_PIN_COUNT}"
+            )
+        _expect_pairs(rel, {(op, fault) for op, fault, _ in pins})
+        variants[rel] = as_set
+    reference = variants[BUILD_FILES[0]]
+    for rel in BUILD_FILES[1:]:
+        if variants[rel] != reference:
+            diff = sorted(variants[rel] ^ reference)
+            raise DriftError(f"{rel} pins differ from {BUILD_FILES[0]}: {diff[:3]}")
+    return reference
+
+
+def check_fixture(root: str, basic_bytes: bytes, pins: set) -> None:
+    """Checks 10, 11 and 12 against the fixture (which must exist)."""
+    profile = _parse_profile(_read_input(root, PROFILE).decode("utf-8", "replace"))
+    _expect_pairs(PROFILE, profile)
     try:
         corpus = json.loads(_read_input(root, CORPUS).decode("utf-8"))
         controls = corpus["controls"]
@@ -586,37 +703,75 @@ def check_fixture(root: str, basic_bytes: bytes) -> None:
     for control in controls:
         try:
             pair = (control["op"], control["fault"])
-            required[pair] = list(control["required_claims"])
+            claims = list(control["required_claims"])
         except (KeyError, TypeError) as exc:
             raise DriftError(
                 f"{CORPUS}: a control lacks op, fault or required_claims ({exc!r})"
             )
-    pins = _parse_pins(_read_input(root, BUILD_FILE).decode("utf-8", "replace"))
-    pinned = {(op, fault) for op, fault, _ in pins}
-    if pinned != set(required):
-        raise DriftError(
-            f"BUILD fault pins differ from corpus controls: only in BUILD "
-            f"[{_describe(pinned - set(required))}], only in corpus [{_describe(set(required) - pinned)}]"
-        )
-    if set(required) != profile:
-        raise DriftError(
-            f"corpus controls differ from corpus.profile: [{_describe(set(required) ^ profile)}]"
-        )
-    for op, fault, claim in pins:
-        if not any(
-            r == claim or r.endswith("/exhaustive/" + claim)
-            for r in required[(op, fault)]
-        ):
+        if pair in required:
+            raise DriftError(f"{CORPUS}: duplicate control {pair[0]}/{pair[1]}")
+        required[pair] = claims
+    _expect_pairs(CORPUS + " controls", set(required))
+    for op, fault, claim in sorted(pins):
+        exact = CLAIM_PREFIX + claim
+        if exact not in required[(op, fault)]:
             raise DriftError(
-                f"BUILD pins claim {claim} for {op}/{fault} but corpus required_claims "
-                f"are {required[(op, fault)]}"
+                f"BUILD pins claim {claim} for {op}/{fault} but the corpus required_claims "
+                f"are {required[(op, fault)]} (expected {exact})"
             )
     actual = hashlib.sha256(basic_bytes).hexdigest()
     if actual != digest:
         raise DriftError(
-            f"{CORPUS}: spec_sha256 {digest} does not match {BASIC_SPEC} ({actual}); "
-            "regenerate the fixture"
+            f"{CORPUS}: spec_sha256 {digest} does not match {BASIC_SPEC} ({actual}); regenerate the fixture"
         )
+
+
+def _git_tracked_under(root: str, rel: str) -> list[str]:
+    """Paths git tracks under ``rel``; raises DriftError if git cannot answer."""
+    try:
+        proc = subprocess.run(
+            ["git", "-C", root, "ls-files", "--", rel],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise DriftError(
+            f"cannot ask git whether {rel} is tracked ({exc}); failing closed"
+        )
+    if proc.returncode != 0:
+        raise DriftError(
+            f"git ls-files failed ({proc.stderr.strip()[:100]}); failing closed"
+        )
+    return [line for line in proc.stdout.split("\n") if line]
+
+
+def _fixture_state(root: str, git_ls_files) -> bool:
+    """True if the fixture directory is present; False if it may be skipped.
+
+    Fails closed: any OSError but ENOENT, a required-but-absent fixture, or a
+    fixture git still tracks but the checkout lacks, is an error, not a skip.
+    """
+    path = os.path.join(root, *FIXTURE_DIR.split("/"))
+    try:
+        os.lstat(path)
+    except FileNotFoundError:
+        pass
+    except OSError as exc:
+        raise DriftError(f"{FIXTURE_DIR}: cannot be examined ({exc}); failing closed")
+    else:
+        return True
+    if FIXTURE_REQUIRED:
+        raise DriftError(
+            f"{FIXTURE_DIR} is required (FIXTURE_REQUIRED) but does not exist"
+        )
+    tracked = git_ls_files(root, FIXTURE_DIR)
+    if tracked:
+        raise DriftError(
+            f"{FIXTURE_DIR} is missing but git tracks {len(tracked)} file(s) under it, e.g. {tracked[0]}"
+        )
+    return False
 
 
 # ---------------------------------------------------------------------------
@@ -624,29 +779,32 @@ def check_fixture(root: str, basic_bytes: bytes) -> None:
 # ---------------------------------------------------------------------------
 
 
-def run(root: str) -> list[str]:
+def run(root: str, git_ls_files=_git_tracked_under) -> list[str]:
     """Run every check against the tree at ``root``; raise DriftError on drift.
 
     Returns the informational lines to print on success.  Tests call this with a
-    temporary tree; the command line passes only the realpath-derived root.
+    temporary tree (and a stub for ``git_ls_files``); the command line passes only
+    the realpath-derived root.
     """
     root = os.path.realpath(root)
     full = parse_document(FULL_SPEC, _read_input(root, FULL_SPEC))
     basic_bytes = _read_input(root, BASIC_SPEC)
     basic = parse_document(BASIC_SPEC, basic_bytes)
     compare_documents(full, basic)
+    pins = check_pins(root)
     notes = [
-        f"documents match: {len(basic.blocks)} blocks, {EXPECTED_EXAMPLE_COUNT} examples, {len(CLAIM_TO_OP)} claims"
+        f"documents match: {len(basic.blocks)} blocks, {EXPECTED_EXAMPLE_COUNT} examples, {len(CLAIM_TO_OP)} claims",
+        f"bindings and all three BUILD files agree: {len(pins)} fault pins",
     ]
-    if os.path.lexists(os.path.join(root, *FIXTURE_DIR.split("/"))):
-        check_fixture(root, basic_bytes)
+    if _fixture_state(root, git_ls_files):
+        check_fixture(root, basic_bytes, pins)
         notes.append(
             "fixture checks 10-12 passed (fault lists, fault pins, corpus digest)"
         )
     else:
         notes.append(
-            f"checks 10-12 skipped: {FIXTURE_DIR} does not exist yet (LGE-S1c adds it); "
-            "they become mandatory the moment it does"
+            f"fixture checks skipped: FIXTURE_REQUIRED is False and {FIXTURE_DIR} is neither present nor "
+            "tracked by git (LGE-S1c adds it and sets FIXTURE_REQUIRED = True)"
         )
     return notes
 
