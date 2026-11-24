@@ -937,13 +937,9 @@ func (r *censusRun) action(hexName string) {
 			la.clean++
 		}
 	}
-	if lang == "go" {
-		a.execHead.GoActions++
-	}
-	if builtOK(rec, scs) {
-		if lang == "go" {
-			a.execHead.GoBuiltOK++
-		}
+	built := builtOK(rec, scs)
+	a.noteGoAction(lang, built)
+	if built {
 		a.actions.BuiltOK++
 		la.builtOK++
 		if recordable {
@@ -1191,6 +1187,29 @@ func (r *censusRun) readCensus(adir, name string) (censusState, *CensusDoc) {
 		a.problem("census_bad_entry")
 		return censusInvalid, nil
 	}
+	// The counter is DIAGNOSTIC.  The classifier bumps it before it raises any
+	// exechead-* sub-code, so a file's count can never be below the sum of its own
+	// exechead-* occurrences (entries AND the overflow the classifier or the
+	// encoder shed): a smaller one contradicts itself and the file is refused.  That
+	// is all that can be checked.  A forged value on a clean file (no sub-codes) is
+	// undetectable here; it can only make a vacuous shard look exercised, and it
+	// never hides a hard-zero criterion, which reads other fields.  The cap is a
+	// saturation point, so a count held at it is not held to the sum.
+	var ehSum int64
+	for _, e := range doc.Entries {
+		if isExecHeadSubKind(e.Kind) {
+			ehSum = satAdd(ehSum, e.Count)
+		}
+	}
+	for k, n := range doc.Overflow {
+		if isExecHeadSubKind(k) {
+			ehSum = satAdd(ehSum, n)
+		}
+	}
+	if doc.ExecHeadTmpfsExecs < ehSum && doc.ExecHeadTmpfsExecs < traced.MaxTmpfsExecs {
+		a.problem("census_bad_entry")
+		return censusInvalid, nil
+	}
 	// Counted here, for every valid file, EMPTY ONES TOO: a believed exec raises
 	// no reason, so an action whose every exec was believed has an empty census
 	// and must still count as having exercised the mechanism.
@@ -1217,6 +1236,25 @@ func (a *censusAcc) kindFor(kind string) *kindAcc {
 	k = &kindAcc{paths: map[string]int64{}, prefixes: map[string]*prefixAcc{}}
 	a.kinds[kind] = k
 	return k
+}
+
+// isExecHeadSubKind says kind is one of the exechead-* exec-unreadable census kinds
+// (the ones the classifier raises from the exec-head pairing).
+func isExecHeadSubKind(kind string) bool {
+	code, ok := strings.CutPrefix(kind, execHeadSubKindPrefix)
+	return ok && strings.HasPrefix(code, "exechead-")
+}
+
+// noteGoAction counts one action for the vacuity counters go_actions and
+// go_built_ok; any other language counts nothing.
+func (a *censusAcc) noteGoAction(lang string, built bool) {
+	if lang != "go" {
+		return
+	}
+	a.execHead.GoActions++
+	if built {
+		a.execHead.GoBuiltOK++
+	}
 }
 
 // addCensus folds one valid census into the histograms.

@@ -296,7 +296,7 @@ class VacuityTests(unittest.TestCase):
             paths = [self.shard(d, f"{i}.json", exec_head_summary(tmpfs_execs=0)) for i in range(3)]
             rc, out = self.run_main(["x", "--exec-head-run", *paths])
             self.assertEqual(rc, 1)
-            self.assertIn("all 3 sampled shards have tmpfs_execs 0", out)
+            self.assertIn("all 3 sampled shards on this image have tmpfs_execs 0", out)
             self.assertIn("go_emittable is not a result", out)
 
     def test_the_run_passes_when_one_shard_exercised_the_mechanism(self):
@@ -309,14 +309,26 @@ class VacuityTests(unittest.TestCase):
             self.assertEqual(rc, 0)
             self.assertIn("exercised", out)
 
-    def test_an_unreadable_shard_is_skipped_but_no_readable_shard_fails(self):
+    def test_an_unreadable_shard_fails_the_run_and_is_named(self):
         with tempfile.TemporaryDirectory() as d:
             good, bad = self.shard(d, "g.json", exec_head_summary()), self.shard(d, "b.json", "{not json")
             rc, out = self.run_main(["x", "--exec-head-run", good, bad])
-            self.assertEqual(rc, 0)
-            self.assertIn("1 unreadable summaries skipped", out)
+            self.assertEqual(rc, 1)
+            self.assertIn("summary unreadable: b.json", out)
             self.assertEqual(self.run_main(["x", "--exec-head-run", bad])[0], 1)
             self.assertEqual(self.run_main(["x", "--exec-head-run"])[0], 1)
+
+    def test_expected_shards_fails_when_fewer_summaries_were_read(self):
+        with tempfile.TemporaryDirectory() as d:
+            paths = [self.shard(d, f"{i}.json", exec_head_summary()) for i in range(2)]
+            self.assertEqual(self.run_main(["x", "--exec-head-run", "--expected-shards", "2", *paths])[0], 0)
+            rc, out = self.run_main(["x", "--exec-head-run", "--expected-shards", "3", *paths])
+            self.assertEqual(rc, 1)
+            self.assertIn("only 2 readable summaries, expected 3", out)
+            # No summary at all with a count expected (the shards left no JSON).
+            self.assertEqual(self.run_main(["x", "--exec-head-run", "--expected-shards", "1"])[0], 1)
+            for bad in (["--expected-shards"], ["--expected-shards", "x"], ["--expected-shards", "-1"]):
+                self.assertEqual(self.run_main(["x", "--exec-head-run", *bad, *paths])[0], 1)
 
     def test_unsealed_shards_do_not_count_and_a_run_with_none_sealed_fails(self):
         with tempfile.TemporaryDirectory() as d:

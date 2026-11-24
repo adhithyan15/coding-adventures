@@ -79,6 +79,48 @@ func TestCensusExecHeadTmpfsExecsComesFromEmptyAndNonEmptyCensuses(t *testing.T)
 	}
 }
 
+// A census whose tmpfs_execs is below the sum of its own exechead-* occurrences
+// (entries plus overflow) contradicts itself and is refused; one at or above the
+// sum, or with no exechead-* kind at all, is accepted.
+func TestCensusExecHeadTmpfsExecsBelowItsSubCodesIsRefused(t *testing.T) {
+	dir := t.TempDir()
+	try := func(name string, tmpfs int64, entries, overflow string) censusState {
+		adir := filepath.Join(dir, name)
+		if err := os.MkdirAll(adir, 0o700); err != nil {
+			t.Fatal(err)
+		}
+		doc := fmt.Sprintf(`{"schema":%q,"action":"code/p/%s","total":9,"overflow_total":0,"overflow":{%s},"entries":[%s],"exec_head_tmpfs_execs":%d}`,
+			CensusSchema, name, overflow, entries, tmpfs)
+		if err := os.WriteFile(filepath.Join(adir, CensusFileName), []byte(doc), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		r := &censusRun{o: CensusOptions{}, acc: newCensusAcc(newRedactor(nil))}
+		st, _ := r.readCensus(adir, "code/p/"+name)
+		return st
+	}
+	ent := `{"kind":"trace-incomplete:exec-unreadable:exechead-pair","path":"/tmp/x","count":3}`
+	ovf := `"trace-incomplete:exec-unreadable:exechead-gone":2`
+	other := `{"kind":"host-read","path":"/etc/x","count":50}`
+	for name, c := range map[string]struct {
+		tmpfs   int64
+		entries string
+		ovf     string
+		want    censusState
+	}{
+		"entries only, below":  {2, ent, "", censusInvalid},
+		"entries only, equal":  {3, ent, "", censusNonEmpty},
+		"overflow counts":      {4, ent, ovf, censusInvalid},
+		"overflow, enough":     {5, ent, ovf, censusNonEmpty},
+		"forged zero":          {0, ent, "", censusInvalid},
+		"other kinds ignored":  {0, other, "", censusNonEmpty},
+		"saturated count held": {traced.MaxTmpfsExecs, ent, ovf, censusNonEmpty},
+	} {
+		if got := try(strings.ReplaceAll(name, " ", "_"), c.tmpfs, c.entries, c.ovf); got != c.want {
+			t.Errorf("%s: state %v, want %v", name, got, c.want)
+		}
+	}
+}
+
 // The vacuity line is the FIRST line of the Exec heads section when a sealed
 // shard has no Go action or no tmpfs exec, and absent otherwise; the three
 // counters are always printed for a sealed shard.
@@ -92,7 +134,13 @@ func TestCensusExecHeadVacuityLine(t *testing.T) {
 		return s[:strings.Index(s, "## Reasons by kind")]
 	}
 	const want = "## Exec heads\n\n" + ExecHeadVacuousLine + "\n"
-	for name, c := range map[string][3]int64{"no go": {0, 0, 5}, "no tmpfs execs": {3, 2, 0}, "neither": {0, 0, 0}} {
+	// No Go action but tmpfs execs (rustdoc test binaries): the mechanism WAS
+	// exercised, so only the separate no-Go line is printed, never the vacuity one.
+	ng := section(0, 0, 5, true)
+	if !strings.HasPrefix(ng, "## Exec heads\n\n"+ExecHeadNoGoLine+"\n") || strings.Contains(ng, ExecHeadVacuousLine) {
+		t.Errorf("no go, tmpfs execs > 0:\n%s", ng)
+	}
+	for name, c := range map[string][3]int64{"no tmpfs execs": {3, 2, 0}, "neither": {0, 0, 0}} {
 		s := section(int(c[0]), int(c[1]), c[2], true)
 		if !strings.HasPrefix(s, want) {
 			t.Errorf("%s: the section does not start with the vacuity line:\n%s", name, s)
@@ -106,6 +154,34 @@ func TestCensusExecHeadVacuityLine(t *testing.T) {
 	}
 	if s := section(0, 0, 0, false); strings.Contains(s, "nothing exercised them") || !strings.Contains(s, "WITHOUT exec heads") {
 		t.Errorf("an unsealed shard is not judged vacuous:\n%s", s)
+	}
+}
+
+// A Go action that built, whose census carries tmpfs execs: the counters add up.
+func TestCensusExecHeadGoActionAccumulation(t *testing.T) {
+	acc := newCensusAcc(newRedactor(nil))
+	acc.execHead.Sealed = true
+	acc.noteGoAction("go", true)
+	acc.noteGoAction("x", true) // another language: counts nothing
+	dir := t.TempDir()
+	c := traced.NewCensus()
+	c.TmpfsExecs = 9
+	data, err := EncodeCensus("code/packages/go/p", c)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, CensusFileName), data, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	r := &censusRun{o: CensusOptions{}, acc: acc}
+	r.readCensus(dir, "code/packages/go/p")
+	e := acc.execHeadSummary()
+	if e.GoActions != 1 || e.GoBuiltOK != 1 || e.TmpfsExecs != 9 {
+		t.Fatalf("go %d built %d tmpfs %d", e.GoActions, e.GoBuiltOK, e.TmpfsExecs)
+	}
+	acc.noteGoAction("go", false)
+	if e := acc.execHeadSummary(); e.GoActions != 2 || e.GoBuiltOK != 1 {
+		t.Fatalf("a failed Go build: %+v", e)
 	}
 }
 

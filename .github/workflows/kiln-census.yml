@@ -818,7 +818,9 @@ jobs:
       # when no step ever exec'd a binary under the step tmpfs (census run A: Rust-only
       # shards, every action failed in 0.1 s).  A single shard without Go is
       # legitimate (the sample is random), so the shard check only NOTES it; this
-      # step fails the job when ALL sampled shards have tmpfs_execs 0.  It is one
+      # step fails the job when ALL sampled shards on this image (each matrix leg
+      # checks only its own, at most three) have tmpfs_execs 0, when a summary is
+      # unreadable, or when fewer summaries exist than shards were sampled.  It is one
       # call over every shard's summary JSON, after the last shard, because a shard
       # cannot see its siblings.  Only a run dispatched with exec_head: true.
       - name: Fail when no shard exercised exec heads
@@ -832,7 +834,10 @@ jobs:
           not_clean="$RUNNER_TEMP/bin/census_not_clean.py"
           shopt -s nullglob
           summaries=("$CENSUS_OUT"/census-*.json)
-          python3 "$not_clean" --exec-head-run "${summaries[@]}" >> "$GITHUB_STEP_SUMMARY"
+          # The number of shards this job sampled: SHARD_INDICES is the validated,
+          # comma-joined list the setup step wrote to GITHUB_ENV (at most three).
+          IFS=, read -r -a sampled <<< "${SHARD_INDICES:-}"
+          python3 "$not_clean" --exec-head-run --expected-shards "${#sampled[@]}" "${summaries[@]}" >> "$GITHUB_STEP_SUMMARY"
           rc=$?
           if (( rc != 0 )); then
             echo "::error::exec heads ran but nothing exercised them (every sampled shard has tmpfs_execs 0): not a result"

@@ -5167,9 +5167,13 @@ from the text above, the text is not changed and the departure is listed here:
   zero in the hard-zero criteria is a result only if something that could have been nonzero happened. A
   sealed shard with `go_actions == 0` or `tmpfs_execs == 0` opens its Exec heads section with "exec heads
   ran but nothing exercised them; go_emittable is not a result", and `census_not_clean.py` prints a NOTE
-  for it, never a failure (one shard without Go is legitimate). The run fails when ALL sampled shards have
-  `tmpfs_execs == 0`: `census_not_clean.py --exec-head-run <summary.json>...`, called once by a final
-  workflow step because a shard cannot see its siblings. `RecorderVersion` and the step schema are
+  for it, never a failure (one shard without Go is legitimate). The check fails when ALL sampled shards on this image
+  have `tmpfs_execs == 0` (each matrix leg checks only its own, at most three), when a summary is
+  unreadable, or when fewer than `--expected-shards N` were read: `census_not_clean.py --exec-head-run
+  [--expected-shards N] <summary.json>...`, called once per image by a final workflow step because a
+  shard cannot see its siblings. `readCensus` refuses a `census.json` whose `exec_head_tmpfs_execs` is
+  below the sum of its own `exechead-*` occurrences (entries plus overflow); the counter is diagnostic, and
+  a forged value on a clean file is undetectable and never hides a hard-zero criterion. `RecorderVersion` and the step schema are
   unchanged; this is census and reporting only.
 - *Not done:* runs A and B (the first dispatches with `exec_head: true`, fresh and then runner home,
   on both images), and a real-kernel run of the supervised step's classification on the ubuntu-26.04

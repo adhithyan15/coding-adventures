@@ -13,8 +13,13 @@
   result"; the three counters are printed; the stdout census line gains `tmpfs_execs=N` for a
   sealed shard.
 - **`ci/census_not_clean.py`**: per shard, `tmpfs_execs 0` or `go_actions 0` is a NOTE, never
-  a failure (one shard without Go is legitimate). The new `--exec-head-run <census.json>...`
-  fails when ALL sampled sealed shards have `tmpfs_execs 0` (or none ran with exec heads).
+  a failure (one shard without Go is legitimate). The new
+  `--exec-head-run [--expected-shards N] <census.json>...` fails when ALL sampled sealed shards on
+  this image have `tmpfs_execs 0` (each matrix leg checks only its own, at most 3), when none ran
+  with exec heads, when a summary is unreadable (named), or when fewer than N were read (the
+  workflow passes the sampled count). `readCensus` refuses a file whose `exec_head_tmpfs_execs` is
+  below its own `exechead-*` occurrences; the counter is diagnostic and a forged value on a clean
+  file is undetectable.
   `--strict-exec-head` requires the three new fields to be real ints (missing fails closed).
 - **Workflow**: a last step, "Fail when no shard exercised exec heads", makes one
   `--exec-head-run` call over every shard's summary. A final invocation was chosen over an

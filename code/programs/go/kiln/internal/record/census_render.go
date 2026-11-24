@@ -311,10 +311,16 @@ func renderMarkdown(s *CensusSummary) string {
 		// things going WRONG, so zero reads as success; it is only a result when
 		// something that could have gone wrong happened.  A sealed shard with no Go
 		// action, or in which no exec under the step tmpfs reached the pairing,
-		// exercised nothing, and its all-zero sub-codes and go_emittable say
-		// nothing.  This line comes first so nobody reads past it.
-		if eh.GoActions == 0 || eh.TmpfsExecs == 0 {
+		// says little, but the two cases differ.  tmpfs_execs == 0 means the
+		// mechanism itself was never exercised: its all-zero sub-codes are not a
+		// result.  tmpfs_execs > 0 with no Go action (a Rust-only shard whose
+		// rustdoc test binaries ran under $TMPDIR) DID exercise it; only
+		// go_emittable is empty.  The line comes first so nobody reads past it.
+		switch {
+		case eh.TmpfsExecs == 0:
 			w("%s\n\n", ExecHeadVacuousLine)
+		case eh.GoActions == 0:
+			w("%s\n\n", ExecHeadNoGoLine)
 		}
 		w("- this shard ran WITH exec heads (sealed at prepare); kernel on the trusted table: %v\n", eh.KernelTrusted)
 		w("- exercised: go actions %d; go actions built ok %d; execs under the step tmpfs judged by the exec head %d\n", eh.GoActions, eh.GoBuiltOK, eh.TmpfsExecs)
@@ -577,7 +583,10 @@ func RunCensus(o CensusRunOptions, stdout io.Writer) (*CensusResult, error) {
 	return res, nil
 }
 
+// ExecHeadNoGoLine is the first line of the Exec heads section of a sealed shard
+// that exercised the mechanism (tmpfs_execs > 0) but has no Go action.
+const ExecHeadNoGoLine = "no Go action in this shard; go_emittable is not a result"
+
 // ExecHeadVacuousLine is the first line of the Exec heads section of a sealed
-// shard that exercised nothing (no Go action, or no exec under the step tmpfs
-// reached the exec-head pairing).
+// shard in which no exec under the step tmpfs reached the exec-head pairing.
 const ExecHeadVacuousLine = "exec heads ran but nothing exercised them; go_emittable is not a result"
