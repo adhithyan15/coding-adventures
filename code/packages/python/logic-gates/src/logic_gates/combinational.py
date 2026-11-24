@@ -552,7 +552,10 @@ def encoder(inputs: list[int]) -> list[int]:
     # Validate one-hot: exactly one bit must be 1
     active_count = sum(inputs)
     if active_count != 1:
-        msg = f"inputs must be one-hot (exactly one bit = 1), got {active_count} active bits"
+        msg = (
+            "inputs must be one-hot (exactly one bit = 1), "
+            f"got {active_count} active bits"
+        )
         raise ValueError(msg)
 
     n_output_bits = n_inputs.bit_length() - 1

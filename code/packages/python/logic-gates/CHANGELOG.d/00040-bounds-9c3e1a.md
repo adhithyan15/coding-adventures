@@ -1,4 +1,4 @@
-## Security (unversioned; PR #19933 owns the version bump and the CHANGELOG.d conversion)
+## 0.1.2 (security: bounds and state validation)
 
 - `decoder`, `demux`, `mux_n`: reject oversize requests with `ValueError` before
   any allocation. New constants in `combinational.py`:
