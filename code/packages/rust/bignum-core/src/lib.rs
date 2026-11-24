@@ -176,6 +176,54 @@ impl fmt::Display for PowTooLargeError {
 
 impl std::error::Error for PowTooLargeError {}
 
+/// The error returned by the bitwise operations ([`BigInteger::and`], [`or`], [`xor`],
+/// [`shl`], [`shr`], [`log2`]) when they are asked for something they refuse to guess at.
+///
+/// Lean's `Nat` is non-negative, and the Lean kernel only ever applies `Nat.land`,
+/// `Nat.shiftLeft`, ... to natural numbers. Two's-complement semantics for negatives
+/// would be a *different* operation (Lean's `Int.land` has its own rules), and silently
+/// giving a negative operand some meaning would hide a caller bug in the very code that
+/// is supposed to be the trusted base of a proof checker. So every negative operand is
+/// refused with a typed error rather than interpreted.
+///
+/// [`or`]: BigInteger::or
+/// [`xor`]: BigInteger::xor
+/// [`shl`]: BigInteger::shl
+/// [`shr`]: BigInteger::shr
+/// [`log2`]: BigInteger::log2
+#[derive(Clone, PartialEq, Eq, Debug)]
+pub enum BitwiseError {
+    /// An operand was negative. The bitwise API is defined on non-negative values only.
+    NegativeOperand,
+    /// A bounded shift ([`BigInteger::try_shl`]) would have produced a result wider than
+    /// the caller's ceiling. Carries the projected width and the ceiling.
+    ResultTooLarge {
+        /// The bit length the result would have had.
+        projected_bits: u64,
+        /// The ceiling the caller supplied.
+        max_bits: u64,
+    },
+}
+
+impl fmt::Display for BitwiseError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            BitwiseError::NegativeOperand => {
+                write!(f, "bitwise operations are defined on non-negative integers only")
+            }
+            BitwiseError::ResultTooLarge {
+                projected_bits,
+                max_bits,
+            } => write!(
+                f,
+                "shift result would be {projected_bits} bits, exceeding the {max_bits}-bit ceiling"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for BitwiseError {}
+
 // ===========================================================================
 //  Magnitude primitives — pure functions on normalized little-endian limb slices
 // ===========================================================================
@@ -879,6 +927,237 @@ impl BigInteger {
             b = r;
         }
         a
+    }
+}
+
+// ===========================================================================
+//  BigInteger — bitwise operations, shifts and log2 (Lean `Nat` semantics)
+// ===========================================================================
+//
+// These exist for the Lean 4 proof kernel (VER11a section 4.2, backlog item KRN-002a):
+// the kernel evaluates `Nat.land`, `Nat.lor`, `Nat.xor`, `Nat.shiftLeft`,
+// `Nat.shiftRight` and `Nat.log2` natively on literals, and a wrong answer here is a
+// wrong proof. Each operation therefore matches Lean's definition exactly:
+//
+//   Lean                       here          meaning on naturals
+//   -------------------------  ------------  ----------------------------------------
+//   Nat.land  a b  (a &&& b)   a.and(&b)     bit i of result = bit i of a AND bit i of b
+//   Nat.lor   a b  (a ||| b)   a.or(&b)      ... OR ...
+//   Nat.xor   a b  (a ^^^ b)   a.xor(&b)     ... XOR ...
+//   Nat.shiftLeft  a n         a.shl(n)      a * 2^n
+//   Nat.shiftRight a n         a.shr(n)      floor(a / 2^n)   (0 once n >= bit_len)
+//   Nat.log2 a                 a.log2()      floor(log2 a), and log2 0 = 0
+//
+// Note the last row: mathematically log2(0) is undefined; Lean *defines* it as 0 so the
+// function is total, and so must we, or kernel reduction of `Nat.log2 0` would disagree
+// with Lean's.
+//
+// Negative operands are refused (`BitwiseError::NegativeOperand`); see that type for why.
+//
+// How the limb-wise operations work. Magnitudes are little-endian base-2^32 limbs, and
+// a non-negative number's binary expansion is exactly the concatenation of its limbs'
+// bits, so a bitwise operation is the same operation applied limb by limb. The only
+// subtlety is operands of different length: the shorter one is implicitly padded with
+// zero limbs (leading zeros of a natural number are free).
+//
+//   AND: padded limbs are 0, so the result is 0 beyond the shorter operand and only
+//        min(len) limbs are computed; then trim trailing zeros (forgetting to
+//        re-normalize breaks the "no trailing zero limb" invariant and makes equal
+//        values compare unequal).
+//   OR : result has max(len) limbs; the longer operand's extra limbs pass through.
+//   XOR: like OR, but equal top limbs cancel to zero, so re-normalize.
+
+/// Combine two normalized magnitudes limb by limb with `f`, padding the shorter with
+/// zero limbs, and return a normalized result. `len` is how many limbs to compute.
+fn mag_zip_with(a: &[u32], b: &[u32], len: usize, f: impl Fn(u32, u32) -> u32) -> Vec<u32> {
+    let mut out: Vec<u32> = (0..len)
+        .map(|i| f(a.get(i).copied().unwrap_or(0), b.get(i).copied().unwrap_or(0)))
+        .collect();
+    normalize(&mut out);
+    out
+}
+
+impl BigInteger {
+    /// Refuse negatives: the shared guard of every bitwise operation.
+    fn require_non_negative(&self) -> Result<(), BitwiseError> {
+        if self.is_negative() {
+            Err(BitwiseError::NegativeOperand)
+        } else {
+            Ok(())
+        }
+    }
+
+    /// Wrap a limb vector as a non-negative value, trimming trailing zero limbs first
+    /// (a shift's final carry limb is often 0) so the normalization invariant holds.
+    fn from_nonneg_mag(mut mag: Vec<u32>) -> BigInteger {
+        normalize(&mut mag);
+        let sign = if mag.is_empty() {
+            Sign::Zero
+        } else {
+            Sign::Plus
+        };
+        BigInteger { sign, mag }
+    }
+
+    /// Bitwise AND (Lean `Nat.land`, `a &&& b`). Errors on a negative operand.
+    ///
+    /// ```
+    /// # use bignum_core::BigInteger;
+    /// let a = BigInteger::from_u64(0b1100);
+    /// let b = BigInteger::from_u64(0b1010);
+    /// assert_eq!(a.and(&b).unwrap(), BigInteger::from_u64(0b1000));
+    /// ```
+    pub fn and(&self, other: &BigInteger) -> Result<BigInteger, BitwiseError> {
+        self.require_non_negative()?;
+        other.require_non_negative()?;
+        let len = self.mag.len().min(other.mag.len());
+        Ok(Self::from_nonneg_mag(mag_zip_with(
+            &self.mag,
+            &other.mag,
+            len,
+            |x, y| x & y,
+        )))
+    }
+
+    /// Bitwise OR (Lean `Nat.lor`, `a ||| b`). Errors on a negative operand.
+    ///
+    /// ```
+    /// # use bignum_core::BigInteger;
+    /// let a = BigInteger::from_u64(0b1100);
+    /// let b = BigInteger::from_u64(0b1010);
+    /// assert_eq!(a.or(&b).unwrap(), BigInteger::from_u64(0b1110));
+    /// ```
+    pub fn or(&self, other: &BigInteger) -> Result<BigInteger, BitwiseError> {
+        self.require_non_negative()?;
+        other.require_non_negative()?;
+        let len = self.mag.len().max(other.mag.len());
+        Ok(Self::from_nonneg_mag(mag_zip_with(
+            &self.mag,
+            &other.mag,
+            len,
+            |x, y| x | y,
+        )))
+    }
+
+    /// Bitwise XOR (Lean `Nat.xor`, `a ^^^ b`). Errors on a negative operand.
+    ///
+    /// ```
+    /// # use bignum_core::BigInteger;
+    /// let a = BigInteger::from_u64(0b1100);
+    /// let b = BigInteger::from_u64(0b1010);
+    /// assert_eq!(a.xor(&b).unwrap(), BigInteger::from_u64(0b0110));
+    /// assert!(a.xor(&a).unwrap().is_zero());
+    /// ```
+    pub fn xor(&self, other: &BigInteger) -> Result<BigInteger, BitwiseError> {
+        self.require_non_negative()?;
+        other.require_non_negative()?;
+        let len = self.mag.len().max(other.mag.len());
+        Ok(Self::from_nonneg_mag(mag_zip_with(
+            &self.mag,
+            &other.mag,
+            len,
+            |x, y| x ^ y,
+        )))
+    }
+
+    /// Shift left by `bits` (Lean `Nat.shiftLeft`, `a <<< n`): exactly `self * 2^bits`.
+    /// Errors on a negative `self`.
+    ///
+    /// The result has `bit_len(self) + bits` bits, so an untrusted `bits` can request an
+    /// enormous allocation; use [`BigInteger::try_shl`] when the shift amount is not
+    /// already bounded by the caller.
+    ///
+    /// ```
+    /// # use bignum_core::BigInteger;
+    /// assert_eq!(BigInteger::from_u64(3).shl(40).unwrap(), BigInteger::from_u64(3 << 40));
+    /// assert!(BigInteger::zero().shl(1_000).unwrap().is_zero());
+    /// ```
+    pub fn shl(&self, bits: u64) -> Result<BigInteger, BitwiseError> {
+        self.require_non_negative()?;
+        if self.is_zero() || bits == 0 {
+            return Ok(self.clone());
+        }
+        // Split the shift into whole limbs and a sub-limb remainder: shifting by 32 is
+        // just inserting a zero limb at the bottom.
+        let limb_shift = (bits / 32) as usize;
+        let bit_shift = (bits % 32) as u32;
+        let mut out: Vec<u32> = vec![0; limb_shift];
+        if bit_shift == 0 {
+            out.extend_from_slice(&self.mag);
+        } else {
+            // Each limb's high `bit_shift` bits spill into the next limb up.
+            let mut carry = 0u32;
+            for &limb in &self.mag {
+                out.push((limb << bit_shift) | carry);
+                carry = limb >> (32 - bit_shift);
+            }
+            out.push(carry);
+        }
+        Ok(Self::from_nonneg_mag(out)) // the final carry may be 0: re-normalize
+    }
+
+    /// [`BigInteger::shl`] with a ceiling: refuses, before allocating, when the result
+    /// would be wider than `max_bits`. The O(1) projected-size check mirrors
+    /// [`BigInteger::try_pow`].
+    pub fn try_shl(&self, bits: u64, max_bits: u64) -> Result<BigInteger, BitwiseError> {
+        self.require_non_negative()?;
+        if self.is_zero() {
+            return Ok(BigInteger::zero());
+        }
+        let projected_bits = self.bit_len().saturating_add(bits);
+        if projected_bits > max_bits {
+            return Err(BitwiseError::ResultTooLarge {
+                projected_bits,
+                max_bits,
+            });
+        }
+        self.shl(bits)
+    }
+
+    /// Shift right by `bits` (Lean `Nat.shiftRight`, `a >>> n`): exactly
+    /// `floor(self / 2^bits)`; the shifted-out bits are discarded, and the result is `0`
+    /// once `bits >= bit_len(self)`. Errors on a negative `self`.
+    ///
+    /// ```
+    /// # use bignum_core::BigInteger;
+    /// assert_eq!(BigInteger::from_u64(0b1011).shr(2).unwrap(), BigInteger::from_u64(0b10));
+    /// assert!(BigInteger::from_u64(5).shr(u64::MAX).unwrap().is_zero());
+    /// ```
+    pub fn shr(&self, bits: u64) -> Result<BigInteger, BitwiseError> {
+        self.require_non_negative()?;
+        if bits >= self.bit_len() {
+            return Ok(BigInteger::zero()); // also covers self == 0
+        }
+        // bits < bit_len, so limb_shift < number of limbs: the slice below is non-empty.
+        let limb_shift = (bits / 32) as usize;
+        let bit_shift = (bits % 32) as u32;
+        let src = &self.mag[limb_shift..];
+        let out: Vec<u32> = if bit_shift == 0 {
+            src.to_vec()
+        } else {
+            // Each limb takes its own high bits down and the next limb's low bits in.
+            (0..src.len())
+                .map(|i| {
+                    let hi = src.get(i + 1).copied().unwrap_or(0);
+                    (src[i] >> bit_shift) | (hi << (32 - bit_shift))
+                })
+                .collect()
+        };
+        Ok(Self::from_nonneg_mag(out))
+    }
+
+    /// `floor(log2(self))` (Lean `Nat.log2`), with `log2(0) = 0` exactly as Lean defines
+    /// it. Errors on a negative value. `log2(1) == 0`, `log2(255) == 7`, `log2(256) == 8`.
+    ///
+    /// ```
+    /// # use bignum_core::BigInteger;
+    /// assert_eq!(BigInteger::zero().log2().unwrap(), 0);
+    /// assert_eq!(BigInteger::from_u64(256).log2().unwrap(), 8);
+    /// ```
+    pub fn log2(&self) -> Result<u64, BitwiseError> {
+        self.require_non_negative()?;
+        // bit_len is floor(log2) + 1 for positive values and 0 for zero.
+        Ok(self.bit_len().saturating_sub(1))
     }
 }
 
