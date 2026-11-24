@@ -98,5 +98,8 @@ jobs:
             grep -F 'PROBE: exechead' "$out" | sed -e 's/^[[:space:]]*[A-Za-z0-9_.-]*\.go:[0-9]*: //' | head -n 200 | LC_ALL=C tr -c '[:print:]\n' '?'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+          # Every PROBE line goes to the job log as well: the step summary is
+          # not readable through the API, and the log is what gets triaged.
+          grep -F 'PROBE: exechead' "$out" | LC_ALL=C tr -c '[:print:]\n' '?'
           tail -n 40 "$out"
           exit $rc
