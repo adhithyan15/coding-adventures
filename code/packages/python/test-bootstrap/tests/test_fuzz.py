@@ -304,9 +304,15 @@ def test_tap_line_is_opaque_and_unforgeable() -> None:
     assert format_tap_failure(1, "ct_compare", "fuzz-crash", "3a8f19b2") == (
         "not ok 1 - ct_compare [fuzz-crash:3a8f19b2]"
     )
-    forged = format_tap_failure(2, "t\nok 3 - forged", "fuzz-crash\r\n", "AB\nzz12")
+    forged = format_tap_failure(2, "t\nok 3 - forged", "fuzz-crash", "AB\nzz12")
     assert "\n" not in forged and "\r" not in forged
-    assert forged == "not ok 2 - t_ok_3_-_forged [fuzz-crash__:_____12]"
+    assert forged == "not ok 2 - t_ok_3_-_forged [fuzz-crash:_____12]"
+    # only the five registered ids may appear in a public line
+    for bad in ("fuzz-crash\r\n", "fuzz-arbitrary", "", "ok 3 - forged"):
+        with pytest.raises(ValueError, match="FUZZ_FAILURE_IDS"):
+            format_tap_failure(1, "t", bad, "00000000")
+    for fid in FUZZ_FAILURE_IDS:
+        assert format_tap_failure(1, "t", fid, "00ff00ff").endswith(f"[{fid}:00ff00ff]")
     with pytest.raises(TypeError):
         format_tap_failure("1", "t", "fuzz-crash", "00000000")  # type: ignore[arg-type]
 
@@ -497,8 +503,8 @@ def test_dedup_one_record_per_signature_with_correct_hits() -> None:
             return OutcomePass()
         return _crash("K", f"f{data[0] % 2}") if data[0] >= 0x80 else OutcomePass()
 
-    seeds = [b"\x01", b"\x90\x01", b"\x91", b"\x92\x00\x00"]
-    r = fuzz_target(seeds, FuzzOptions(max_iterations=0), tgt)
+    seeds = [b"\x90\x01", b"\x91", b"\x92\x00\x00"]
+    r = fuzz_target(seeds, FuzzOptions(max_iterations=100), tgt)
     # f0 (0x90, 0x92) and f1 (0x91): two signatures, hits 2 and 1
     sigs = {c.signature: c for c in r.crashes}
     assert len(r.crashes) == 2 == len(sigs)
@@ -956,3 +962,145 @@ def test_minimizer_skips_zero_bytes() -> None:
     sig = crash_signature("K", ["f"])
     exact = lambda d: _crash("K", "f") if d == b"\x01\x00\x02" else OutcomePass()  # noqa: E731
     assert minimize_crashing_input(b"\x01\x00\x02", sig, exact) == b"\x01\x00\x02"
+
+
+# --- security regressions (CWE-400 and friends) --------------------------------
+
+
+def test_total_minimisation_work_is_bounded_by_max_iterations() -> None:
+    calls = 0
+
+    def tgt(data: bytes, _cov: CoverageBitmap) -> Any:
+        nonlocal calls
+        calls += 1
+        # every seed is a distinct signature; probes (shorter data) that lose
+        # the marker byte crash differently, so they never reproduce
+        return _crash(f"K{data[0] if data else 'empty'}", "f")
+
+    seeds = [bytes([i]) * 64 for i in range(40)]
+    opts = FuzzOptions(max_iterations=100, minimize_budget=1000)
+    r = fuzz_target(seeds, opts, tgt)
+    assert len(r.crashes) == 40 and r.iterations == 0
+    assert calls - len(seeds) <= opts.max_iterations  # all probes, campaign-wide
+    done = [c for c in r.crashes if c.minimized]
+    skipped = [c for c in r.crashes if not c.minimized]
+    assert done and skipped  # the allowance ran out part-way
+    for c in skipped:
+        assert len(c.minimal_input) >= 1  # an honest "not minimised" marker
+    assert skipped[-1].minimal_input == bytes([skipped[-1].minimal_input[0]]) * 64
+
+
+def test_zero_iterations_means_no_minimisation_at_all() -> None:
+    calls = 0
+
+    def tgt(data: bytes, _cov: CoverageBitmap) -> Any:
+        nonlocal calls
+        calls += 1
+        return _crash("K", "f")
+
+    r = fuzz_target([b"abcdef"], FuzzOptions(max_iterations=0), tgt)
+    assert calls == 1 and r.crashes[0].minimized is False
+    assert r.crashes[0].minimal_input == b"abcdef"
+
+
+def test_a_fully_minimised_crash_is_marked_so() -> None:
+    r = fuzz_target([b"abc"], FuzzOptions(max_iterations=50), lambda d, c: _crash("K"))
+    assert r.crashes[0].minimized and r.crashes[0].minimal_input == b""
+
+
+def test_per_crash_minimise_ceiling_is_validated() -> None:
+    FuzzOptions(minimize_budget=fuzz.MAX_MINIMIZE_BUDGET)
+    with pytest.raises(ValueError, match="minimize_budget"):
+        FuzzOptions(minimize_budget=fuzz.MAX_MINIMIZE_BUDGET + 1)
+
+
+def test_minimize_crashing_input_has_a_finite_default_budget() -> None:
+    calls = 0
+
+    def always(_d: bytes) -> Any:
+        nonlocal calls
+        calls += 1
+        return OutcomeCrash("K", ("f",)) if _d else OutcomePass()
+
+    sig = crash_signature("K", ["f"])
+    minimize_crashing_input(b"x" * 100_000, sig, always)
+    assert 0 < calls <= fuzz.DEFAULT_MINIMIZE_BUDGET
+    with pytest.raises(TypeError):
+        minimize_crashing_input(b"x", sig, always, None)  # type: ignore[arg-type]
+    for bad in (-1, fuzz.MAX_MINIMIZE_BUDGET + 1):
+        with pytest.raises(ValueError, match="budget"):
+            minimize_crashing_input(b"x", sig, always, bad)
+
+
+def test_harness_does_not_cache_out_of_scope_or_generated_code(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def generator(_d: bytes) -> None:
+        for i in range(50):
+            exec(compile(f"x = {i}\ny = x + 1", "<generated>", "exec"))  # noqa: S102
+
+    everything = lambda *_: True  # noqa: E731
+    with Harness(generator, scope=everything) as h:
+        h(b"", CoverageBitmap())
+    # default scope drops "<generated>" (module code is excluded too)
+    with Harness(generator) as h2:
+        h2(b"", CoverageBitmap())
+        assert all(not i.code.co_filename.startswith("<") for i in h2._codes.values())
+        assert h2._info(compile("", "<x>", "exec")) is fuzz._OUT_OF_SCOPE
+
+    monkeypatch.setattr(fuzz, "MAX_CODE_CACHE", 3)
+
+    def many(_d: bytes) -> None:
+        for i in range(20):
+            ns: dict[str, Any] = {}
+            exec(compile(f"def f{i}():\n    return {i}\n", "gen.py", "exec"), ns)  # noqa: S102
+            ns[f"f{i}"]()
+
+    with Harness(many, scope=lambda f, q: q != "<module>") as h3:
+        h3(b"", CoverageBitmap())
+        assert 0 < len(h3._codes) <= 3
+
+
+def test_nested_harness_timeouts_are_not_claimed_by_the_inner_harness() -> None:
+    inner_returned = []
+
+    def spin(_d: bytes) -> None:
+        n = 0
+        while True:
+            n += 1
+
+    with Harness(spin, step_budget=10**7) as inner:
+
+        def outer_fn(data: bytes) -> None:
+            inner(data, CoverageBitmap())  # the OUTER budget fires inside this
+            inner_returned.append(True)
+
+        with Harness(outer_fn, step_budget=300) as outer:
+            result = outer(b"", CoverageBitmap())
+    assert result == OutcomeTimeout()
+    assert inner_returned == []  # the inner harness re-raised, did not claim it
+    assert Harness(print)._budget_exc is not Harness(print)._budget_exc
+    assert issubclass(Harness(print)._budget_exc, fuzz._StepBudgetExceeded)
+
+
+def test_a_failed_enter_releases_the_monitoring_tool_id(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def boom() -> None:
+        raise RuntimeError("restart failed")
+
+    monkeypatch.setattr(sys.monitoring, "restart_events", boom)
+    with pytest.raises(RuntimeError, match="restart failed"), Harness(_staircase):
+        pass
+    monkeypatch.undo()
+    for tool in (3, 4, 5):  # nothing leaked: every id can be claimed again
+        sys.monitoring.use_tool_id(tool, "probe")
+        sys.monitoring.free_tool_id(tool)
+    with Harness(_staircase, coverage="monitoring") as h:
+        assert h.mechanism == TIER_MONITORING
+
+
+def test_seeds_are_not_in_a_report_repr() -> None:
+    r = fuzz_target([b"a"], FuzzOptions(max_iterations=2, seed=0xC0FFEE), _blind())
+    assert "seed=" not in repr(r) and str(0xC0FFEE) not in repr(r)
+    assert r.seed == 0xC0FFEE  # still available to the caller

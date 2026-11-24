@@ -145,9 +145,15 @@ banker's `round()` (a divergence trap; pinned by a test on an exact half).
   lowercase hex.
 * `minimize_crashing_input(data, sig, test_fn, budget)`: §5.3 as in the Rust
   fix (first chunk `max(1, len/2)`, so the empty input is reachable; exact
-  signature only). `FuzzOptions.minimize_budget` (default 2,000 executions per
-  novel crash) is a **divergence**: Rust has no cap, so a 1 MiB crasher costs
-  ~10^6 executions there.
+  signature only). Minimisation is budgeted in two layers (a **divergence**: Rust
+  has neither, so a 1 MiB crasher costs ~10^6 executions there and 1,000
+  distinct crashes multiply that): `FuzzOptions.minimize_budget` (default 2,000,
+  ceiling 100,000) caps ONE crash, and the whole campaign spends at most
+  `max_iterations` minimisation executions in total. A crash found after the
+  total is spent is still recorded, with `CrashRecord.minimized == False`
+  (its `minimal_input` is then only the shortest input seen). With
+  `max_iterations == 0` nothing is minimised. `minimize_crashing_input`'s
+  `budget` is always finite (default 2,000, ceiling 100,000).
 
 ## 6. Campaign Contracts (VER06 §9.1)
 
@@ -176,14 +182,16 @@ per energy slot `1 + bounded(4)` steps, one `next_u64` sub-seed, then, if
 ## 7. Private Reporting (VER06 §6)
 
 `format_tap_failure(n, target, failure_id, sig)` emits
-`not ok N - <target> [<failure-id>:<hex8>]` only, reducing each argument to its
-grammar (ids `[A-Za-z0-9._/-]`, hash lowercase hex, anything else `_`), so no
+`not ok N - <target> [<failure-id>:<hex8>]` only. `failure_id` must be one of
+the five registered ids (`ValueError` otherwise: an arbitrary string never
+reaches a public line); the target and hash are reduced to their grammar
+(target `[A-Za-z0-9._/-]`, hash lowercase hex, anything else `_`), so no
 argument can forge a TAP line. `is_fuzz_failure_id` implements the closed
 vocabulary (`fuzz-crash`, `fuzz-timeout`, `fuzz-oom`, `fuzz-leak`,
 `fuzz-panic`; constants `FUZZ_FID_*`, prefixed because the PBT lane already
 owns `FID_PANIC`/`FID_TIMEOUT`). `tap_failures(report, target)` renders a
-report. `CrashRecord.minimal_input` and `FuzzReport.corpus` are excluded from
-`repr`.
+report. `CrashRecord.minimal_input` and `FuzzReport.corpus` and `FuzzReport.seed` are
+excluded from `repr` (seeds are never public, VER06 §6).
 
 ## 8. Corpus Runner
 
@@ -221,6 +229,10 @@ differ from 0.2 (different mutator stream, dedup by signature).
 | 10 | Timeouts need tracing | not available in `none`/`reporter` modes; a target that swallows the budget with a bare `except:` can hang |
 | 11 | OOM | only via `MemoryError`; no allocation accounting |
 | 12 | Lazy first-use code (e.g. `lru_cache` fills) can make a campaign's first execution cover more than later ones | recorded |
+| 13 | Hang protection is partial | the step budget counts only traced, in-scope Python lines: a target hanging in C code or the standard library (out of scope), or swallowing `BaseException` (bare `except:`), is **not** interrupted. CI must wrap a campaign in an external wall-clock limit |
+| 14 | `settrace` fallback and global effects | the fallback suspends the previous tracer (pytest-cov, a debugger) for the duration of each execution and restores it after; `sys.monitoring.restart_events()` is process-global (it re-arms every tool's disabled locations; harmless but not free); a failed `Harness.__enter__` releases its tool id |
+| 15 | Memory worst case | bounded by `max_input_len` × (corpus + crash table): at most 65,536 admitted seeds (one new edge each) and 1,000 crash records (further novel signatures only increment `crashes_dropped`); the `Harness` code cache holds only in-scope code, capped at 10,000 entries |
+| 16 | Nested harnesses | each `Harness` raises its own private subclass of the budget exception, so an inner harness re-raises an outer harness's timeout instead of claiming it |
 
 ## 11. Conformance Verification
 

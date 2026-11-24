@@ -49,6 +49,12 @@ MAX_INPUT_BYTES = 1024 * 1024
 MAX_CRASHES = 1000
 MAX_INITIAL_CORPUS = 10_000
 MAX_STEP_BUDGET = 100_000_000
+#: Hard ceiling on target executions spent minimising ONE crash, and the
+#: default for ``minimize_crashing_input``.
+MAX_MINIMIZE_BUDGET = 100_000
+DEFAULT_MINIMIZE_BUDGET = 2000
+#: Most code objects a ``Harness`` remembers (code can be generated at run time).
+MAX_CODE_CACHE = 10_000
 DEFAULT_STEP_BUDGET = 200_000
 #: Frames kept in a crash signature (the innermost ones survive).
 MAX_FRAMES = 64
@@ -539,14 +545,18 @@ def format_tap_failure(
 ) -> str:
     """The only public failure line: ``not ok N - target [failure-id:hex8]``.
 
-    It carries no input bytes, seed, message or stack trace (VER00 7.3).  Each
-    argument is reduced to the characters its grammar allows (ids:
-    ``[A-Za-z0-9._/-]``, the hash: lowercase hex), every other character
-    becoming ``_``.  Without that, a target id holding a newline would let a
-    caller forge a second TAP line (``ok 2 - forged``) inside "an opaque token".
+    It carries no input bytes, seed, message or stack trace (VER00 7.3).
+    ``failure_id`` must be one of the five registered ids (``ValueError``
+    otherwise).  The target and hash are reduced to the characters their
+    grammar allows (target ``[A-Za-z0-9._/-]``, hash lowercase hex), every
+    other character becoming ``_``.  Without that, a target id holding a
+    newline would let a caller forge a second TAP line (``ok 2 - forged``)
+    inside "an opaque token".
     Well-formed arguments pass through unchanged, so the pinned vectors hold.
     """
     _check_strict_int(test_num, "test_num")
+    if not is_fuzz_failure_id(failure_id):
+        raise ValueError("failure_id must be one of the registered FUZZ_FAILURE_IDS")
     return (
         f"not ok {test_num} - {_token(target_id, _is_id_char)} "
         f"[{_token(failure_id, _is_id_char)}:{_token(sig_hash, _is_hex_char)}]"
@@ -589,9 +599,13 @@ FuzzOutcome = OutcomePass | OutcomeCrash | OutcomeTimeout | OutcomeOom
 class FuzzOptions:
     """Bounds of a campaign; every field is validated (CWE-400).
 
-    ``minimize_budget`` is the most target executions spent minimising one
-    novel crash.  The Rust lane has no such cap; here a 1 MiB crasher would
-    otherwise cost over a million executions (recorded in VER06d).
+    ``minimize_budget`` is the most target executions spent minimising ONE
+    novel crash (ceiling ``MAX_MINIMIZE_BUDGET``).  On top of it the whole
+    campaign spends at most ``max_iterations`` minimisation executions in
+    total, so minimisation can at most double a campaign's work, however many
+    distinct crashes it finds.  A crash found after that total is spent is
+    still recorded, with ``CrashRecord.minimized == False``.  The Rust lane
+    has neither cap (recorded in VER06d).
     """
 
     max_iterations: int = 1000
@@ -615,8 +629,8 @@ class FuzzOptions:
             raise ValueError(f"max_input_len must be in [0, {MAX_INPUT_BYTES}]")
         if not 0 <= self.base_energy <= MAX_ITERATIONS:
             raise ValueError(f"base_energy must be in [0, {MAX_ITERATIONS}]")
-        if not 0 <= self.minimize_budget <= MAX_ITERATIONS:
-            raise ValueError(f"minimize_budget must be in [0, {MAX_ITERATIONS}]")
+        if not 0 <= self.minimize_budget <= MAX_MINIMIZE_BUDGET:
+            raise ValueError(f"minimize_budget must be in [0, {MAX_MINIMIZE_BUDGET}]")
 
 
 @dataclass
@@ -634,6 +648,9 @@ class CrashRecord:
     frames: tuple[str, ...]
     minimal_input: bytes = field(repr=False)
     hits: int = 1
+    #: False when minimisation was skipped or cut short by a budget, so
+    #: ``minimal_input`` is only the shortest input seen, not a fixed point.
+    minimized: bool = True
 
 
 @dataclass(frozen=True)
@@ -654,7 +671,7 @@ class FuzzReport:
     #: Novel signatures dropped after ``MAX_CRASHES`` distinct ones were held.
     crashes_dropped: int = 0
     coverage_tier: str = TIER_BLACK_BOX
-    seed: int = 42
+    seed: int = field(default=42, repr=False)  # seeds are never public (VER06 s6)
     #: Admitted seeds (PRIVATE, like ``CrashRecord.minimal_input``).
     corpus: tuple[bytes, ...] = field(default=(), repr=False)
 
@@ -727,21 +744,15 @@ def _same_crash(outcome: object, target_sig: str) -> bool:
     )
 
 
-def minimize_crashing_input(
+def _minimize(
     data: bytes,
     target_sig: str,
     test_fn: Callable[[bytes], FuzzOutcome],
-    budget: int | None = None,
-) -> bytes:
-    """Shrink ``data`` while it keeps the **exact** crash signature.
+    budget: int,
+) -> tuple[bytes, int, bool]:
+    """Minimise; return ``(bytes, executions spent, finished)``.
 
-    Pass 1 deletes blocks, halving the block size each round; pass 2 zeroes
-    individual non-essential bytes.  A candidate that crashes *differently*
-    (another signature) is rejected, so minimisation never trades one bug for
-    another.  Pass 1 starts at ``max(1, len // 2)``: with a one-byte input
-    ``len // 2`` is 0 and the empty input would never be tried.
-
-    ``budget`` caps the number of ``test_fn`` executions (None: unlimited).
+    ``finished`` is False when the budget stopped the search early.
     """
     current = _as_bytes(data, "data")
     spent = 0
@@ -751,17 +762,14 @@ def minimize_crashing_input(
         spent += 1
         return _same_crash(test_fn(candidate), target_sig)
 
-    def exhausted() -> bool:
-        return budget is not None and spent >= budget
-
     if not current:
-        return current
+        return current, 0, True
     chunk = max(1, len(current) // 2)
     while chunk > 0:
         offset = 0
         while offset < len(current):
-            if exhausted():
-                return current
+            if spent >= budget:
+                return current, spent, False
             end = offset + min(chunk, len(current) - offset)
             candidate = current[:offset] + current[end:]
             if reproduces(candidate):
@@ -773,13 +781,36 @@ def minimize_crashing_input(
     for i in range(len(buf)):
         if buf[i] == 0:
             continue
-        if exhausted():
-            break
+        if spent >= budget:
+            return bytes(buf), spent, False
         original = buf[i]
         buf[i] = 0
         if not reproduces(bytes(buf)):
             buf[i] = original
-    return bytes(buf)
+    return bytes(buf), spent, True
+
+
+def minimize_crashing_input(
+    data: bytes,
+    target_sig: str,
+    test_fn: Callable[[bytes], FuzzOutcome],
+    budget: int = DEFAULT_MINIMIZE_BUDGET,
+) -> bytes:
+    """Shrink ``data`` while it keeps the **exact** crash signature.
+
+    Pass 1 deletes blocks, halving the block size each round; pass 2 zeroes
+    individual non-essential bytes.  A candidate that crashes *differently*
+    (another signature) is rejected, so minimisation never trades one bug for
+    another.  Pass 1 starts at ``max(1, len // 2)``: with a one-byte input
+    ``len // 2`` is 0 and the empty input would never be tried.
+
+    ``budget`` caps the number of ``test_fn`` executions; it is always finite
+    (default ``DEFAULT_MINIMIZE_BUDGET``, ceiling ``MAX_MINIMIZE_BUDGET``).
+    """
+    _check_strict_int(budget, "budget")
+    if not 0 <= budget <= MAX_MINIMIZE_BUDGET:
+        raise ValueError(f"budget must be in [0, {MAX_MINIMIZE_BUDGET}]")
+    return _minimize(data, target_sig, test_fn, budget)[0]
 
 
 # =============================================================================
@@ -811,6 +842,8 @@ class _Campaign:
         self.timeouts = 0
         self.ooms = 0
         self.dropped = 0
+        # Campaign-wide minimisation allowance (see FuzzOptions).
+        self.minimize_left = opts.max_iterations
 
     def execute(self, data: bytes) -> tuple[FuzzOutcome, CoverageBitmap]:
         step = CoverageBitmap()
@@ -854,11 +887,11 @@ class _Campaign:
         if len(self.crashes) >= MAX_CRASHES:
             self.dropped += 1
             return
-        minimal = minimize_crashing_input(
-            data, sig, self.probe, self.opts.minimize_budget
-        )
+        allowance = min(self.opts.minimize_budget, self.minimize_left)
+        minimal, spent, finished = _minimize(data, sig, self.probe, allowance)
+        self.minimize_left -= spent
         self.crashes.append(
-            CrashRecord(sig, outcome.kind, tuple(outcome.frames), minimal, 1)
+            CrashRecord(sig, outcome.kind, tuple(outcome.frames), minimal, 1, finished)
         )
 
 
@@ -1043,6 +1076,10 @@ class _CodeInfo:
         return e
 
 
+#: Shared stand-in for every out-of-scope code object (never stored per code).
+_OUT_OF_SCOPE = _CodeInfo(compile("", "<out-of-scope>", "exec"), False)
+
+
 def _frame_label(text: str) -> str:
     """A frame or kind with nothing outside ``[A-Za-z0-9._<>$/-]``, bounded."""
     keep = "._<>$/-"
@@ -1123,6 +1160,11 @@ class Harness:
         self._steps = 0
         self._tool: int | None = None
         self._mask = 0
+        # A private subclass per instance: an inner Harness that sees an outer
+        # one's budget exception re-raises it instead of claiming the timeout.
+        self._budget_exc: type[_StepBudgetExceeded] = type(
+            "_HarnessBudgetExceeded", (_StepBudgetExceeded,), {}
+        )
         self.mechanism: str | None = (
             "none" if coverage in ("none", "reporter") else None
         )
@@ -1168,31 +1210,47 @@ class Harness:
                 mon.use_tool_id(tool, "coding_adventures_test_bootstrap.fuzz")
             except ValueError:
                 continue
-            events = self._events()
-            mon.register_callback(tool, events[0], self._on_line)
-            for event in events[1:]:
-                mon.register_callback(tool, event, self._on_branch)
-            self._mask = 0
-            for event in events:
-                self._mask |= event
-            mon.restart_events()  # re-arm locations another campaign disabled
+            try:
+                events = self._events()
+                mon.register_callback(tool, events[0], self._on_line)
+                for event in events[1:]:
+                    mon.register_callback(tool, event, self._on_branch)
+                self._mask = 0
+                for event in events:
+                    self._mask |= event
+                mon.restart_events()  # re-arm locations another campaign disabled
+            except BaseException:
+                # Never leak a claimed tool id (it is process-global).
+                mon.free_tool_id(tool)
+                raise
             return tool
         return None
 
     # -- per-code bookkeeping ---------------------------------------------
 
     def _info(self, code: Any) -> _CodeInfo:
+        """Facts about ``code``; only in-scope code is remembered.
+
+        Out-of-scope code (the standard library, ``<string>`` code built by
+        ``compile``/``eval``) shares one sentinel and is never stored, and the
+        cache is capped, so a target that generates code cannot grow it
+        without bound.
+        """
         info = self._codes.get(id(code))
-        if info is None:
-            name = getattr(code, "co_qualname", code.co_name)
-            info = _CodeInfo(code, bool(self._scope(code.co_filename, name)))
+        if info is not None:
+            return info
+        name = getattr(code, "co_qualname", code.co_name)
+        if not self._scope(code.co_filename, name):
+            return _OUT_OF_SCOPE
+        info = _CodeInfo(code, True)
+        if len(self._codes) < MAX_CODE_CACHE:
             self._codes[id(code)] = info
         return info
 
     def _tick(self) -> None:
         self._steps += 1
         if self._steps > self._budget:
-            raise _StepBudgetExceeded
+            raise self._budget_exc
 
     # -- sys.monitoring callbacks -----------------------------------------
 
@@ -1263,7 +1321,7 @@ class Harness:
             raise RuntimeError("Harness must be used as a context manager")
         try:
             self._run(data, cov)
-        except _StepBudgetExceeded:
+        except self._budget_exc:
             return OutcomeTimeout()
         except MemoryError:
             return OutcomeOom()
