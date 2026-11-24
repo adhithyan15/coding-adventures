@@ -637,6 +637,27 @@ class FailClosed(Tree):
         self.assertTrue(os.path.isfile(fixtures))
         self.fails("failing closed")
 
+    def test_windows_style_enoent_under_a_regular_file_fails_closed(self) -> None:
+        # Simulate Windows, which reports "path not found" (FileNotFoundError) for a child
+        # of a regular file; the guard must still notice that the parent is not a directory.
+        _write(self.root, "code/specs/fixtures", b"a file where a directory should be")
+        real = os.lstat
+
+        def windows_lstat(path, *args, **kwargs):
+            parent = os.path.dirname(path)
+            if os.path.isfile(parent):
+                raise FileNotFoundError(2, "path not found", path)
+            return real(path, *args, **kwargs)
+
+        with unittest.mock.patch.object(drift.os, "lstat", windows_lstat):
+            self.fails("not a real directory")
+
+    def test_symlinked_ancestor_of_the_fixture_fails_closed(self) -> None:
+        fixtures = os.path.join(self.root, "code", "specs", "fixtures")
+        os.makedirs(os.path.join(self.root, "elsewhere"))
+        self.symlink(os.path.join(self.root, "elsewhere"), fixtures)
+        self.fails("not a real directory")
+
     def test_the_flag_is_false_until_the_fixture_lands(self) -> None:
         self.assertEqual(
             drift.FIXTURE_REQUIRED,

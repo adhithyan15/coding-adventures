@@ -796,17 +796,33 @@ def _git_tracked_under(root: str, rel: str) -> list[str]:
 def _fixture_state(root: str, git_ls_files) -> bool:
     """True if the fixture directory is present; False if it may be skipped.
 
-    Fails closed: any OSError but ENOENT, a required-but-absent fixture, or a
+    Fails closed: any OSError but ENOENT, an ancestor that exists but is not a directory, a required-but-absent fixture, or a
     fixture git still tracks but the checkout lacks, is an error, not a skip.
     """
-    path = os.path.join(root, *FIXTURE_DIR.split("/"))
-    try:
-        os.lstat(path)
-    except FileNotFoundError:
-        pass
-    except OSError as exc:
-        raise DriftError(f"{FIXTURE_DIR}: cannot be examined ({exc}); failing closed")
-    else:
+    # Walk the components from the root.  Asking lstat about the leaf alone is not enough:
+    # with a regular file where a parent directory should be, POSIX answers ENOTDIR but
+    # Windows answers "path not found" (ENOENT), which would read as "absent".  So every
+    # existing ancestor must itself be a real directory (no link, no file).
+    present = True
+    current = root
+    parts = FIXTURE_DIR.split("/")
+    for index, part in enumerate(parts):
+        current = os.path.join(current, part)
+        try:
+            mode = os.lstat(current).st_mode
+        except FileNotFoundError:
+            present = False
+            break
+        except OSError as exc:
+            raise DriftError(
+                f"{FIXTURE_DIR}: cannot be examined ({exc}); failing closed"
+            )
+        if index < len(parts) - 1 and not stat.S_ISDIR(mode):
+            raise DriftError(
+                f"{os.path.relpath(current, root)}: exists but is not a real directory "
+                f"(on the path to {FIXTURE_DIR}); failing closed"
+            )
+    if present:
         return True
     if FIXTURE_REQUIRED:
         raise DriftError(
