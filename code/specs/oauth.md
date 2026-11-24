@@ -7026,6 +7026,31 @@ transport, or open a network connection. Those ordered-Finished, key-
 provenance, record, and transport compositions remain prerequisites, and
 concrete HTTPS and live-provider readiness remain unavailable.
 
+An authenticated ordered retry server `Finished` at the post-accept
+`Complete` position can now be verified against the exact transcript snapshot
+captured immediately before that message. The verifier accepts the server
+Finished key only through the complete retry-derived Finished-key proof,
+requires that proof to retain the same exact retry base-schedule evidence as
+the pending ordered message, and requires the selected suite and server sender
+role to agree before repository-owned HMAC verification. Verification consumes
+the exact authenticated message body, and non-copyable success evidence
+retains the single-use ordered record-owner identity, retry-derived Finished-
+key proof, pre-message transcript snapshot, optional client-authentication
+requirement, and `VerifiedFinished` verdict whose retained peer bytes equal the
+authenticated body. A detached retry proof, different record owner, wrong
+ordered position, client key, different suite, malformed length, or invalid
+verify-data fails with a stable payload-free category.
+
+This exact ordered-Finished proof does not yet join the preceding long-lived
+ordered `Certificate`-to-`CertificateVerify` continuity receipt, append the
+Finished encoding to the transcript, derive application traffic secrets,
+select later record epochs, enforce the requested client-authentication
+response, protect application data, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Those cross-callback continuity,
+post-Finished key-schedule, record, and transport compositions remain
+prerequisites, and concrete HTTPS and live-provider readiness remain
+unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
