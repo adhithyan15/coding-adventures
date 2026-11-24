@@ -12,7 +12,7 @@ my $E = 'CodingAdventures::Transistors::Error';
 sub err_of(&) { my $c = shift; local $@; eval { $c->(); 1 } ? undef : $@ }
 
 # Assert class, code, param and predicate for one rejection.
-sub check {
+sub chk {
     my ( $err, $code, $param, $label ) = @_;
     is( ref($err), $E, "$label: class" );
     is( $err->code,  $code,  "$label: code $code" );
@@ -30,18 +30,18 @@ my %one = ( cmos_not => \&cmos_not, ttl_not => \&ttl_not );
 for my $n ( sort keys %two ) {
     for my $i ( 0 .. $#bad ) {
         my $v = $bad[$i];
-        check( err_of { $two{$n}->( $v, 1 ) }, 'INVALID_BIT', 'a', "$n a #$i" );
-        check( err_of { $two{$n}->( 1, $v ) }, 'INVALID_BIT', 'b', "$n b #$i" );
+        chk( err_of { $two{$n}->( $v, 1 ) }, 'INVALID_BIT', 'a', "$n a #$i" );
+        chk( err_of { $two{$n}->( 1, $v ) }, 'INVALID_BIT', 'b', "$n b #$i" );
     }
-    check( err_of { $two{$n}->(1) },         'INVALID_ARITY', undef, "$n 1 arg" );
-    check( err_of { $two{$n}->( 1, 1, 1 ) }, 'INVALID_ARITY', undef, "$n 3 args" );
+    chk( err_of { $two{$n}->(1) },         'INVALID_ARITY', undef, "$n 1 arg" );
+    chk( err_of { $two{$n}->( 1, 1, 1 ) }, 'INVALID_ARITY', undef, "$n 3 args" );
 }
 for my $n ( sort keys %one ) {
     for my $i ( 0 .. $#bad ) {
-        check( err_of { $one{$n}->( $bad[$i] ) }, 'INVALID_BIT', 'a', "$n #$i" );
+        chk( err_of { $one{$n}->( $bad[$i] ) }, 'INVALID_BIT', 'a', "$n #$i" );
     }
-    check( err_of { $one{$n}->() },       'INVALID_ARITY', undef, "$n 0 args" );
-    check( err_of { $one{$n}->( 1, 1 ) }, 'INVALID_ARITY', undef, "$n 2 args" );
+    chk( err_of { $one{$n}->() },       'INVALID_ARITY', undef, "$n 0 args" );
+    chk( err_of { $one{$n}->( 1, 1 ) }, 'INVALID_ARITY', undef, "$n 2 args" );
 }
 
 # --- analog matrix over nmos pmos npn pnp ---------------------------------
@@ -52,12 +52,12 @@ for my $n ( sort keys %analog ) {
     my ( $f, $p1, $p2 ) = @{ $analog{$n} };
     for my $i ( 0 .. $#badnum ) {
         my $v = $badnum[$i];
-        check( err_of { $f->($v) }, 'INVALID_NUMBER', $p1, "$n $p1 #$i" );
+        chk( err_of { $f->($v) }, 'INVALID_NUMBER', $p1, "$n $p1 #$i" );
         next unless defined $v;    # explicit undef optional arg means "default"
-        check( err_of { $f->( 1, $v ) }, 'INVALID_NUMBER', $p2, "$n $p2 #$i" );
+        chk( err_of { $f->( 1, $v ) }, 'INVALID_NUMBER', $p2, "$n $p2 #$i" );
     }
-    check( err_of { $f->() },          'INVALID_ARITY', undef, "$n 0 args" );
-    check( err_of { $f->( 1, 1, 1 ) }, 'INVALID_ARITY', undef, "$n 3 args" );
+    chk( err_of { $f->() },          'INVALID_ARITY', undef, "$n 0 args" );
+    chk( err_of { $f->( 1, 1, 1 ) }, 'INVALID_ARITY', undef, "$n 3 args" );
 }
 
 # --- messages and bounded description -------------------------------------
@@ -86,6 +86,28 @@ for my $n ( sort keys %analog ) {
     is( ( $e cmp "$e" ), 0, 'cmp' );
     is( ( 'A' cmp $e ), -1, 'cmp swapped' );
     like( $e, qr/must be 0 or 1/, 'like on object' );
+
+    # `!`, `.=`, ordering comparisons, swapped x.
+    ok( !( !$e ), '! is false for an error' );
+    my $ok = !$e;
+    ok( !$ok, 'my $ok = !$e' );
+    my $took = 0;
+    if ( !$e ) { $took = 1 }
+    is( $took, 0, 'if (!$err) not taken' );
+    my $acc = $e;
+    $acc .= 'z';
+    is( ref( \$acc ), 'SCALAR', '.= yields a plain string' );
+    is( $acc, "Transistors: a must be 0 or 1\nz", '.= text' );
+    ok( $e lt 'zzz', 'lt' );
+    ok( $e le "$e",  'le' );
+    ok( $e gt 'A',   'gt' );
+    ok( $e ge "$e",  'ge' );
+    ok( 'zzz' gt $e, 'swapped gt' );
+    ok( 'A' lt $e,   'swapped lt' );
+    ok( !( $e gt 'zzz' ), 'gt false' );
+    ok( dies { my $x = 'a' x $e }, 'swapped x dies' );
+    ok( dies { my $x = $e <=> 1 }, '<=> fails loudly' );
+    ok( dies { my $x = $e * 2 },   '* fails loudly' );
 
     my @w;
     { local $SIG{__WARN__} = sub { push @w, @_ }; warn $e; }

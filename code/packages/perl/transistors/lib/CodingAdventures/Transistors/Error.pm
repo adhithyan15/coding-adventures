@@ -50,16 +50,38 @@ use overload
         my ( $s, $o, $swap ) = @_;
         $swap ? "$o" . $s->{message} : $s->{message} . "$o";
     },
-    'x'      => sub { $_[0]{message} x $_[1] },
+    '.='     => sub { my ( $s, $o ) = @_; $s->{message} . "$o" },
+    'lt'     => sub { my ( $s, $o, $swap ) = @_; ( $swap ? "$o" lt "$s" : "$s" lt "$o" ) ? 1 : 0 },
+    'le'     => sub { my ( $s, $o, $swap ) = @_; ( $swap ? "$o" le "$s" : "$s" le "$o" ) ? 1 : 0 },
+    'gt'     => sub { my ( $s, $o, $swap ) = @_; ( $swap ? "$o" gt "$s" : "$s" gt "$o" ) ? 1 : 0 },
+    'ge'     => sub { my ( $s, $o, $swap ) = @_; ( $swap ? "$o" ge "$s" : "$s" ge "$o" ) ? 1 : 0 },
+    '!'      => sub { 0 },
+    # Copy constructor: Perl needs one before a mutator such as `.=` runs on a
+    # shared reference.  The object is immutable, so sharing it is fine.
+    '='      => sub { $_[0] },
+    'x'      => sub {
+        my ( $s, $o, $swap ) = @_;
+        die "CodingAdventures::Transistors::Error: an error object is not a repeat count\n"
+            if $swap;
+        $s->{message} x $o;
+    },
     fallback => 0;
 
 # WHY fallback => 0 PLUS EXPLICIT STRING OPERATORS?  Interpolation and
 # concatenation ("failed: $@", warn/die wrapping) are how error text is
 # normally carried along; with no `.` overload they would throw 'Operation
 # ".": no method found', REPLACING $@ and hiding the original code.  So the
-# string operators (. x eq ne cmp "") are all defined.  Numeric operators
-# (==, +, ...) are deliberately NOT defined and keep failing loudly: an error
-# is not a number.
+# string operators (. .= x eq ne cmp lt le gt ge "") are all defined, plus
+# `!` (always false: an error object is a true value, so `if (!$@)` works).
+# `.=` yields a plain STRING (message . rhs), not an Error: appending text
+# deliberately ends the object's identity.  `"a" x $err` dies (the object is
+# not a repeat count).  Numeric operators (==, +, -, *, /, <=>, 0+) are
+# deliberately NOT defined and keep failing loudly: an error is not a number.
+#
+# MUTABILITY: the accessors are read-only, but the fields live in a plain
+# hash and are not enforced read-only; code that reaches into the hash, or
+# blesses its own hash into this very class, can alter or forge an error.
+# Perl has no private state, so that is the trust boundary of the package.
 
 # new(code => ..., param => ..., value_description => ..., message => ...)
 sub new {
