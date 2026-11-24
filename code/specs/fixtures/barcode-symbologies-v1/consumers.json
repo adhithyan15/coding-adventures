@@ -161,6 +161,16 @@
       "encode": "encodeItf",
       "pair_binary_pattern": "EncodedPair.binaryPattern",
       "error_identifier": "InvalidItfInputError.errorId"
+    },
+    {
+      "symbology": "upc-a",
+      "language": "dart",
+      "package_root": "code/packages/dart/upc-a",
+      "test_path": "code/packages/dart/upc-a/test/upc_a_conformance_test.dart",
+      "normalize": "normalizeUpcA",
+      "encode": "encodeUpcA",
+      "pair_binary_pattern": "EncodedDigit.pattern",
+      "error_identifier": "InvalidUpcAInputError.errorId"
     }
   ]
 }
