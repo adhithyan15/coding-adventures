@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Exact-object composition between the sealed HTTPS destination and reviewed-
+  path `CertificateVerify` verdict and the authenticated ordered retry
+  `CertificateVerify` callback, with value-equal detached-verdict rejection.
 - Exact decoded-leaf object composition between an authenticated retry
   handshake `Certificate` proof and the sealed HTTPS DNS destination,
   reviewed-path, path-derived RSA key, and server `CertificateVerify` verdict,
