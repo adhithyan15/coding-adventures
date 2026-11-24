@@ -127,6 +127,7 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | 3 | LGE-R-kotlin | `InvalidBitException`, exhaustive tests, JaCoCo gate | PR #19938 |
 | 3 | LGE-R-csharp | `InvalidBitException`, exhaustive tests, 95% gate | PR #19939 |
 | 3 | LGE-R-fsharp | `InvalidBitException`, exhaustive tests, 95% gate | PR #19941 |
+| 3 | LGE-R-swift | Exhaustive truth tables and bit rejection with exact `invalidBit(name:got:)` payloads, no crash on oversized selects (caps at 16 select bits and 2^16 lines) | merged #19955 |
 | 3 | LGE-R-<lane> | Lane-local exhaustive suites for ruby, swift, elixir, dart, ocaml (OCaml: literal expected values, not `land`/`lor`) | queued |
 | 2 | LGE-HS-DEPS | Haskell dependents (security, pre-existing): `alu [] []` returns Right with bottom flags; `rippleCarryAdder [] [] 5` returns an unvalidated carry; `isNegative` checks only the head; `newBRAM` width 0 throws DivideByZero out of the Either; RAM ticks never validate data/clock/write-enable (stores 5); `configureLUT` does not validate its truth table; RAM sizes uncapped | queued, after #19942 |
 | 2 | LGE-DOS-ALL | Cap decoder/demux/mux select bits at 16 and sequential widths in every lane with these blocks (Rust SEC-008, Go and Haskell done in-PR; Python confirmed unbounded) | queued |
@@ -149,10 +150,13 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | 3 | LGE-KT-NARY | Kotlin N-ary gates: snapshot the input, cap its length, report `inputs[i]` | local, ready |
 | 3 | LGE-CS-NARY | C# N-ary gates: snapshot the input, cap its length, report `inputs[i]` | local, ready |
 | 3 | LGE-FS-NARY | F# N-ary gates: snapshot the input, cap its length, report `inputs[i]` | local, ready |
+| 3 | LGE-SWIFT-CAPS | Swift `logic-gates`: `maxInputs` cap on andN/orN and a `maxWidth` cap on shiftRegister, checked before any loop or allocation; `inputs[i]` payload naming (local branch `claude/swift-logic-gates-caps`, commits cf97c6031c9 and 60bc70d7e5a) | local, ready |
+| 3 | LGE-SWIFT-HARDEN | Swift `logic-gates` hardening found by the lane review: iterative `muxN` (no recursion), the LG02 section 9 wide-integer rows 2^31, 2^32, 2^32+1 and 2^53+1 for all eleven gates, exact payload assertions for the block functions, a coverage threshold gate in BUILD, a release-configuration test run (`-c release -Xswiftc -enable-testing`) | queued |
 | 5 | LGE-S3-FIX | VER15a fix batch from the review of LGE-S3 (shared-object 1321 subset, fail-closed eval subset, tighter ids) | local, ready |
 | 7 | LGE-A-PYTHON | Python analyzer rules (`no_dynamic_eval_reachable`, `no_computed_key_writes_to_shared_objects`, banned constructs) with seeded negative-control corpora, and wiring the merged `ca-capability-analyzer` scanner into the report step | queued |
 | 7 | LGE-A-TYPESCRIPT | TypeScript analyzer rules `ts.no-int32-bitwise-operators`, `ts.call-graph-acyclic`, `ts.import-allowlist`, `ts.no-prototype-keys`, plus the eval and computed-key rules, each with a seeded negative-control corpus | queued |
 | 8 | LGE-PUB-NPM | npm publish gate rejects `file:` dependencies, verifies `@coding-adventures` scope ownership, and installs with `npm ci --ignore-scripts` | queued |
+| 8 | LGE-PUB-SWIFT | SwiftPM publish gate rejects `.package(path:)` dependencies and a Package.swift that is not at the tagged repository root, and requires pinned remote dependencies; swift/logic_gates today has a path dependency on `../transistors` and lives in a monorepo subdirectory | queued |
 | 8 | LGE-OCAML-REP-VERSION | OCAML07 representative chain hardcodes 0.1.0 in five places; parameterize before the first OCaml release | queued |
 | 6 | LGE-CV2 | Dependencies owned by the portable-warrant queue and idle since 2026-11-20: S6b/S6c (Python v2 runner), S7 (TypeScript), Go v2 port, S9 lane validator and per-corpus registry; coordinate before taking any | queued |
 | 6 | LGE-L-<lane> | Lane runner (v2) and logic-gates binding with BUILD negative controls, VER04i order, at most two lanes in flight | blocked on LGE-CV2 |
