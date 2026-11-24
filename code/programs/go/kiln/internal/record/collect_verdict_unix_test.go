@@ -551,7 +551,7 @@ func TestCollectInterruptedVersusSerialViolated(t *testing.T) {
 		{"the highest number's step died with its trace", func(f *cfix) {
 			rmSidecar(f, cz, 0)
 			os.Remove(RecordFile(f.p.dir, cz))
-		}, "interrupted: a step was running when the build stopped"},
+		}, "interrupted: a step started and was never accounted for (the build was stopped, or its supervisor died)"},
 		{"two numbers missing", func(f *cfix) {
 			rmSidecar(f, cz, 0)
 			rmSidecar(f, cb, 1)
@@ -600,7 +600,7 @@ func TestCollectInterruptedNotRunAction(t *testing.T) {
 		ResultsPackage{Package: cz, Status: "not-run", StepsRun: 0, StepsTotal: 1},
 	)
 	_, sh := f.collect()
-	requireUnknown(t, sh, ca, "interrupted: a step was running")
+	requireUnknown(t, sh, ca, "interrupted: a step started and was never accounted for")
 	requireUnknown(t, sh, cb, "")
 	requireUnknown(t, sh, cz, "not run: the build stopped before this step")
 }

@@ -2233,7 +2233,7 @@ entry). The shard-wide serial rules below still override it.
 `seq` is not below it or is used twice, when the number of sidecars is not the
 counter's value, or when `traces/` holds an entry that is not `.seq`, `.serial`,
 `.collected` or an action's directory. One shape of the counter mismatch has its
-own reason, `interrupted: a step was running when the build stopped`: exactly one
+own reason, `interrupted: a step started and was never accounted for (the build was stopped, or its supervisor died)`: exactly one
 number is missing, it is the highest (counter minus one), and exactly one step in
 the shard has a trace and no sidecar (the build was killed, for instance at a census
 shard's time cap, while that step ran). Every record is still unknown and the order

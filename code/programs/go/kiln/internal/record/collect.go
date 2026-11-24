@@ -376,7 +376,7 @@ func checkOutPlacement(o CollectOptions) error {
 // step running (see interruptedShape). The shard is as void as under
 // `serial-violated`: only the words differ, so the operator is not sent hunting
 // for a broken lock when the build merely hit its time cap.
-const reasonInterrupted = "interrupted: a step was running when the build stopped"
+const reasonInterrupted = "interrupted: a step started and was never accounted for (the build was stopped, or its supervisor died)"
 
 // reasonNotRun is the reason of an action that never began in an interrupted
 // shard: it has no step directory at all. It is still an unknown write set (the
