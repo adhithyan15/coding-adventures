@@ -143,6 +143,17 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | 7 | LGE-CPP-EXT | C++ memory-safety safe-subset extension, distinct from the C one (references, `this`, containers, `string_view`/`span`, iterators, lambdas by reference, `new`, RAII) and its analyzer rule (VER15a section 5.5) | queued |
 | 5 | LGE-S3v | Validator `code/scripts/validate_weakness_lanes.py` with falsification tests (VER15a section 9) | queued |
 | 5 | LGE-S3b | Per-language threat lists `code/specs/data/weakness-registry-v2/lanes/<lang>.json` (draft agent plus independent adversarial reviewer per lane) | queued |
+| 3 | LGE-TS-HARDEN | TypeScript `logic-gates` hardening found by the lane review: `validateBit` parameter name, mux/dmux arity checks, `InternalGateError`, `tsc` in BUILD, n-ary input cap | local, ready |
+| 3 | LGE-PY-HARDEN | Python `logic-gates` hardening found by the lane review: bounded error text, metaclass-safe type names, exact-list mux4/mux8, LG02 section 9 rows | local, ready |
+| 3 | LGE-JAVA-NARY | Java N-ary gates: snapshot the input array, cap its length, report `inputs[i]` | local, ready |
+| 3 | LGE-KT-NARY | Kotlin N-ary gates: snapshot the input, cap its length, report `inputs[i]` | local, ready |
+| 3 | LGE-CS-NARY | C# N-ary gates: snapshot the input, cap its length, report `inputs[i]` | local, ready |
+| 3 | LGE-FS-NARY | F# N-ary gates: snapshot the input, cap its length, report `inputs[i]` | local, ready |
+| 5 | LGE-S3-FIX | VER15a fix batch from the review of LGE-S3 (shared-object 1321 subset, fail-closed eval subset, tighter ids) | local, ready |
+| 7 | LGE-A-PYTHON | Python analyzer rules (`no_dynamic_eval_reachable`, `no_computed_key_writes_to_shared_objects`, banned constructs) with seeded negative-control corpora, and wiring the merged `ca-capability-analyzer` scanner into the report step | queued |
+| 7 | LGE-A-TYPESCRIPT | TypeScript analyzer rules `ts.no-int32-bitwise-operators`, `ts.call-graph-acyclic`, `ts.import-allowlist`, `ts.no-prototype-keys`, plus the eval and computed-key rules, each with a seeded negative-control corpus | queued |
+| 8 | LGE-PUB-NPM | npm publish gate rejects `file:` dependencies, verifies `@coding-adventures` scope ownership, and installs with `npm ci --ignore-scripts` | queued |
+| 8 | LGE-OCAML-REP-VERSION | OCAML07 representative chain hardcodes 0.1.0 in five places; parameterize before the first OCaml release | queued |
 | 6 | LGE-CV2 | Dependencies owned by the portable-warrant queue and idle since 2026-11-20: S6b/S6c (Python v2 runner), S7 (TypeScript), Go v2 port, S9 lane validator and per-corpus registry; coordinate before taking any | queued |
 | 6 | LGE-L-<lane> | Lane runner (v2) and logic-gates binding with BUILD negative controls, VER04i order, at most two lanes in flight | blocked on LGE-CV2 |
 | 7 | LGE-S4 | VER08c grammar-driven capability analyzer spec | queued |
