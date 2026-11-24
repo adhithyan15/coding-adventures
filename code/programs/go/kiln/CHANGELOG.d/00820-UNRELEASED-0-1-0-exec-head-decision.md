@@ -27,3 +27,9 @@
   `PR_SET_MM` refused in the first filter (step 3, with a `RecorderVersion` bump),
   a verified-kernel-series table, and `CLOEXEC` and exactly-one-fd listener
   receipt.
+- D48 re-review text fixes: the `PR_SET_MM` filter check compares the low 32 bits of
+  `args[0]` only (with a high-bits test), `failed` is concluded only from a definite
+  other-syscall reading (`running` or unreadable means keep polling; a wrong
+  `failed` is fail-closed), the step pid's pairing has the anchor as its only rule,
+  and a future `prepare`-time probe of the two kernel facts is noted as the
+  alternative to the kernel-series table.

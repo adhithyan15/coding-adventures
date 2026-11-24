@@ -4396,8 +4396,17 @@ blocks a build, it only declines to vouch.
   thread's current system call number; readable by the supervisor on the same
   terms as `/proc/<tid>/mem`) and `exe` AFTER. `exe` changes before a successful
   exec returns to user mode, so a thread seen outside `execve` (and
-  `execveat`) whose `exe` is still the old image has failed for good. The line is
-  written at once and the thread group's queue is released.
+  `execveat`) whose `exe` is still the old image has failed for good. "Outside
+  `execve`" is concluded ONLY from a definite reading of a different system call
+  number, or of a blocked state in a call that is not `execve`/`execveat`.
+  `/proc/<tid>/syscall` reports `running` whenever the task is not blocked, and
+  that includes while it is inside `execve`; so `running`, or a file that cannot be
+  read, means "not decided, keep polling", never `failed`. The line is written at
+  once and the thread group's queue is released. A wrong `failed` is fail-closed:
+  it can only release the queue early (a second exec of the group is then
+  considered while the first is still loading, which yields a `same-image` or
+  `mismatch` refusal for it, never a false accept), and the failed line itself is
+  never believed.
 - `timeout`: the deadline (the CONFIRM deadline, a constant of step 4, well under
   the stall deadline) passed while the thread was still IN `execve` and `exe` had
   not changed. This is distinct from the STALL deadline, which measures the
@@ -4479,9 +4488,11 @@ confirmed) whose target is `underTmp`. Everything else is as today.
   `stepExec`, `:1073`). So the init pid's events the classifier receives (the
   failed probes the step's PATH search makes, then the step's exec) pair one for
   one with that tid's lines from the first line, however many setup execs the init
-  makes, and the count must be equal there too. The one event the pairing steps
-  over, the anchored step exec, is allowed only when its path is the recorded
-  Kiln helper. A refusal here is the `exechead-pair` sub-code.
+  makes, and the count must be equal there too. The anchor is the only rule for
+  the step's pid: nothing is skipped or tolerated, and there is no "leading
+  unmatched event" allowance. The anchor itself is trusted only if the setup execs
+  the parser dropped were of the recorded Kiln helper (`isHelperExe`). A refusal
+  here is the `exechead-pair` sub-code.
 - Use the head only when the status is `confirmed` AND the line's `path` equals
   the trace's decoded path byte for byte. strace prints the path as a C-escaped
   string with `-s 4096` (`sandbox/strace.go:91`, which exceeds `PATH_MAX`, so a
@@ -4568,7 +4579,10 @@ every exec, and silence must not become permission.
   DEFENCE IN DEPTH, not a fallback: step 3 refuses `prctl(PR_SET_MM, ...)`
   (option 35, any sub-option) with EPERM unconditionally in the FIRST filter, a
   check on `args[0]` of `prctl` (157), so the hole is closed by the filter whatever
-  the capability check does. The valid-map probe is still the evidence required
+  the capability check does. The option is an `int`, so the kernel looks only at
+  the LOW 32 BITS of `args[0]`; the filter compares the low word only, as the
+  `clone` flags check does, or a call with junk in the high bits would pass the
+  filter and still reach `PR_SET_MM`. The valid-map probe is still the evidence required
   before step 5, because the capability argument and the filter are two layers and
   the probe is what shows the sandbox's own answer. The filter change alters what a
   step can do (a step calling `PR_SET_MM` gets EPERM; no build step has reason to),
@@ -4581,7 +4595,11 @@ sidecar header; the classifier believes a head only when the header's kernel ser
 (initially `7.0`), and otherwise refuses with `exechead-kernel`, the behaviour of
 today. A table is needed, not a version floor: the facts are old kernel behaviour
 (CONTINUE is 5.5, the write-deny far older), but a series nobody ran them on is
-not evidence.
+not evidence. A later version could drop the table: `prepare` could probe the two
+facts on the recording machine itself (an exec while a writer is open is refused;
+a write-open of a running binary is refused) and seal the result in `pre/`. That is
+evidence about the actual kernel and needs no list of series. v1 keeps the `7.0`
+table.
 
 *Known v1 limit.* A process that exits before the confirm is `gone` and stays
 refused: its binary could have been rewritten after it left. A Go test binary runs
@@ -4618,7 +4636,8 @@ first. Step 4 changes nothing the classifier believes and does not bump.
    `record/classify_step.go:568`, and the tests that spell the argv) accept the new
    `--exec-notify-fd` argument; `kiln record step` gets the deadline on
    receiving the listener (kill the step, mark it unclean, on timeout); the first
-   filter refuses `PR_SET_MM` (with a filter test and the `RecorderVersion` bump
+   filter refuses `PR_SET_MM` (with a filter test, including that `PR_SET_MM` with
+   high bits set in `args[0]` is still refused, and the `RecorderVersion` bump
    above); the supervisor-side socket end is `CLOEXEC`, and the listener is received
    with `MSG_CMSG_CLOEXEC`, exactly one descriptor and one data byte expected, any
    extra descriptor or data failing the step.
