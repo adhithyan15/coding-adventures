@@ -2431,7 +2431,7 @@
           "reason": "The language exclusion is proposed, not signed off: the (c, CWE-1321) whitelist entry in VER15a section 5.5 needs its reviewer sign-off before the row can read 'excluded by language semantics (not machine-checked)'. C has no objects with prototype chains.",
           "evidence": [],
           "becomes_when": [
-            "reviewer sign-off on the (c, CWE-1321) language exclusion (LGE-S3b)"
+            "LGE-S3b"
           ],
           "becomes_status": "excluded-by-language"
         },

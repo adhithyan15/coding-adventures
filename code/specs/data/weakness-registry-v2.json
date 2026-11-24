@@ -277,9 +277,10 @@
         "all"
       ],
       "safe_subsets": [
-        "compiled_languages_no_eval"
+        "compiled_languages_no_eval",
+        "no_dynamic_eval_reachable"
       ],
-      "exclusion_rationale": "Compiled language without dynamic code evaluation or runtime eval primitives. The static analyzer verifies zero dynamic execution mechanisms.",
+      "exclusion_rationale": "Compiled language without dynamic code evaluation or runtime eval primitives. The static analyzer verifies zero dynamic execution mechanisms. v2 addition: no_dynamic_eval_reachable serves interpreted lanes, and needs a live analyzer rule proving that no eval, exec, compile, Function, dynamic import, load or require-of-a-variable (or the lane's equivalent) is reachable from the package's call graph (VER15a section 1.3).",
       "attack_patterns": [
         "Injected code evaluation in eval() or Function()",
         "Dynamic script compilation of untrusted strings"
@@ -622,7 +623,11 @@
       "description": "The software receives untrusted input that can modify the prototype attributes of Object in prototype-based languages.",
       "applies_to": [
         "javascript",
-        "typescript"
+        "typescript",
+        "python",
+        "ruby",
+        "perl",
+        "lua"
       ],
       "safe_subsets": [
         "safe_rust",
@@ -631,9 +636,10 @@
         "cpp",
         "jvm",
         "dotnet",
-        "ocaml"
+        "ocaml",
+        "no_property_writes_on_caller_objects"
       ],
-      "exclusion_rationale": "Language does not possess prototype-based inheritance or dynamic object prototype chains. Verified by compiler and analyzer.",
+      "exclusion_rationale": "Language does not possess prototype-based inheritance or dynamic object prototype chains. Verified by compiler and analyzer. v2 addition: no_property_writes_on_caller_objects serves languages that do have a prototype, class or metatable analogue, and needs a live analyzer rule proving that the package writes no property, attribute, class slot or metatable on any object reachable from a caller-supplied value and performs no recursive merge of caller data (VER15a section 1.3).",
       "attack_patterns": [
         "Recursive deep merge on __proto__ or constructor.prototype keys",
         "Path lookup polluting global Object prototype properties"
