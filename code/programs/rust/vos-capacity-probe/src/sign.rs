@@ -24,8 +24,8 @@
 //! name mean something.
 //!
 //! The whole of it is a pure function over the input text, so every refusal is a unit test:
-//! the two things that need the outside world, the working tree's ids and "is this revision an
-//! ancestor of HEAD", are passed in.  Reading the file, the `--out` write and the flags are
+//! the two things that need the outside world, the working tree's ids and "the tree ids at this
+//! commit" (VOS-D137), are passed in.  Reading the file, the `--out` write and the flags are
 //! `cli::cmd_sign`'s job.
 
 use crate::cli::full_refusals;
@@ -54,14 +54,14 @@ pub struct SignRequest {
 }
 
 /// Sign `input` (the text of a joined recording).  `current` is the working tree's ids
-/// (`meta::working_trees`) and `is_ancestor` answers "is this 40-hex revision HEAD or an ancestor
-/// of it" (`meta::is_ancestor_of_head`).  `Err` is a refusal: the caller exits 2 and writes
+/// (`meta::working_trees`) and `trees_at` answers "what are the five tree ids at this 40-hex
+/// commit" (`meta::trees_at`).  `Err` is a refusal: the caller exits 2 and writes
 /// nothing.
 pub fn sign(
     input: &str,
     req: &SignRequest,
     current: &[(String, String)],
-    is_ancestor: &dyn Fn(&str) -> Result<bool, String>,
+    trees_at: &dyn Fn(&str) -> Result<Vec<(String, String)>, String>,
 ) -> Result<Results, String> {
     // 1. The words and numbers typed on the command line are well formed.  The reviewer and the
     //    host end up spliced into the spec's Markdown, so their charset is closed (VOS-D120).
@@ -144,8 +144,7 @@ pub fn sign(
         ));
     }
 
-    // 5. The revision typed is the one recorded, and the reviewer's checkout has it in its
-    //    history (so the trees the file records are the ones the reviewer can read).
+    // 5. The revision typed is the one recorded (the tree check against it is in step 6).
     let repo = res
         .meta
         .revisions
@@ -159,17 +158,6 @@ pub fn sign(
             repo.unwrap_or("(none)")
         ));
     }
-    match is_ancestor(&req.head_sha) {
-        Ok(true) => {}
-        Ok(false) => {
-            return Err(format!(
-                "sign refuses: {} is not HEAD or an ancestor of it (check out the recorded \
-                 revision, or a descendant of it)",
-                req.head_sha
-            ))
-        }
-        Err(e) => return Err(format!("sign refuses: {e}")),
-    }
 
     // 6. The file is fit to sign: structurally valid, describing the tree at hand, covering the
     //    whole plan.  Row findings do not refuse: they are kept row outcomes (VOS30 9.12.1).
@@ -182,6 +170,29 @@ pub fn sign(
     }
     if let Some(m) = full_refusals(&res, current).first() {
         return Err(format!("sign refuses: {m}"));
+    }
+    // The recorded trees are present and are the working tree's (above); they must also be the
+    // trees AT the typed commit.  Not ancestry (VOS-D137): main is squash-merged, so the commit a
+    // CI recording ran at is never in main's history, while the content it ran on is.  A tree id
+    // is a hash of content, so equal ids are equal content, which survives a squash.
+    let at_head_sha = trees_at(&req.head_sha).map_err(|e| format!("sign refuses: {e}"))?;
+    // Name the first tree that differs, so the reviewer sees what moved; a recorded set of a
+    // different size differs too.
+    let differs = |k: &str, v: &str| {
+        at_head_sha
+            .iter()
+            .find(|(n, _)| n == k)
+            .map(|(_, x)| x.as_str())
+            != Some(v)
+    };
+    let first = res.meta.trees.iter().find(|(k, v)| differs(k, v));
+    if first.is_some() || at_head_sha.len() != res.meta.trees.len() {
+        let first = first.map_or("the set of trees".to_string(), |(k, _)| k.clone());
+        return Err(format!(
+            "sign refuses: the tree ids at {} differ from the recorded `trees` ({first}); \
+             --head-sha must be the commit the recording ran at",
+            req.head_sha
+        ));
     }
     if let Some(m) = full_plan_covered(&res).first() {
         return Err(format!("sign refuses: the full plan is not covered: {m}"));

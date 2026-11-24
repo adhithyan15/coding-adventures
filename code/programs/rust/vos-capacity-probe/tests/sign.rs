@@ -64,6 +64,20 @@ fn req() -> SignRequest {
     }
 }
 
+/// The commit `HEAD` holds exactly the recorded trees: the honest reviewer's case (VOS-D137).
+fn at_head(rev: &str) -> Result<Vec<(String, String)>, String> {
+    assert_eq!(rev, HEAD, "sign asks about the typed commit and no other");
+    Ok(trees())
+}
+
+/// A commit that is not in the reviewer's checkout.
+fn missing(rev: &str) -> Result<Vec<(String, String)>, String> {
+    Err(format!(
+        "commit {rev} is not in this checkout (run `git fetch origin {rev}` and sign again)"
+    ))
+}
+
+/// For the merge tests, which still take an ancestry function (`merge` keeps that rule).
 fn yes(_: &str) -> Result<bool, String> {
     Ok(true)
 }
@@ -80,7 +94,7 @@ fn do_sign(text: &str, r: &SignRequest) -> Result<Results, String> {
         head_sha: r.head_sha.clone(),
         expect_sha256: r.expect_sha256.clone().or_else(|| Some(digest(text))),
     };
-    sign(text, &with, &trees(), &yes)
+    sign(text, &with, &trees(), &at_head)
 }
 
 fn refused(text: &str, r: &SignRequest, needle: &str) {
@@ -158,7 +172,7 @@ fn an_absent_expected_digest_is_refused() {
     // The sign-off is tied to the joined file the join job printed a digest for: no digest, no
     // signature, even for an otherwise perfect file (VOS30 9.12.2 item 7).
     let input = joined().to_text();
-    let e = sign(&input, &req(), &trees(), &yes).unwrap_err();
+    let e = sign(&input, &req(), &trees(), &at_head).unwrap_err();
     assert!(e.contains("--expect-sha256 is required"), "{e}");
 }
 
@@ -261,16 +275,73 @@ fn a_head_sha_that_is_not_the_recorded_revision_is_refused() {
 }
 
 #[test]
-fn a_head_sha_that_is_not_an_ancestor_of_head_is_refused() {
+fn a_head_sha_whose_trees_differ_from_the_recorded_ones_is_refused() {
+    // VOS-D137: the check is on content (tree ids at the commit), not on ancestry.  Each of the
+    // five paths in turn differs at the typed commit.
     let input = joined().to_text();
     let mut r = req();
     r.expect_sha256 = Some(digest(&input));
-    let no = |_: &str| Ok(false);
-    let e = sign(&input, &r, &trees(), &no).unwrap_err();
-    assert!(e.contains("is not HEAD or an ancestor of it"), "{e}");
-    let cannot = |_: &str| Err("git cannot place revision".to_string());
-    let e = sign(&input, &r, &trees(), &cannot).unwrap_err();
-    assert!(e.contains("git cannot place revision"), "{e}");
+    for i in 0..TREE_NAMES.len() {
+        let moved = |_: &str| -> Result<Vec<(String, String)>, String> {
+            let mut t = trees();
+            t[i].1 = "f".repeat(40);
+            Ok(t)
+        };
+        let e = sign(&input, &r, &trees(), &moved).unwrap_err();
+        assert!(
+            e.contains("differ from the recorded `trees`") && e.contains(TREE_NAMES[i]),
+            "{e}"
+        );
+    }
+    // A commit that has fewer trees than the file records differs too.
+    let short = |_: &str| -> Result<Vec<(String, String)>, String> {
+        Ok(trees().into_iter().take(4).collect())
+    };
+    let e = sign(&input, &r, &trees(), &short).unwrap_err();
+    assert!(e.contains("differ from the recorded `trees`"), "{e}");
+}
+
+#[test]
+fn a_head_sha_that_is_not_in_the_checkout_is_refused_with_the_fetch_hint() {
+    let input = joined().to_text();
+    let mut r = req();
+    r.expect_sha256 = Some(digest(&input));
+    let e = sign(&input, &r, &trees(), &missing).unwrap_err();
+    assert!(e.starts_with("sign refuses: "), "{e}");
+    assert!(e.contains(&format!("git fetch origin {HEAD}")), "{e}");
+}
+
+#[test]
+fn a_head_sha_whose_trees_equal_the_recorded_ones_signs_whatever_its_ancestry() {
+    // Nothing about HEAD or the history is asked: only the trees at the typed commit.
+    let signed = do_sign(&joined().to_text(), &req()).expect("signs");
+    assert_eq!(signed.meta.regeneration.unwrap().head_sha, HEAD);
+}
+
+#[test]
+fn trees_at_reads_real_commits_and_refuses_missing_ones() {
+    // The real function, on this very checkout (every git checkout has HEAD; no Unix needed).
+    use vos_capacity_probe::meta::{head_trees, trees_at};
+    let head = std::process::Command::new("git")
+        .args(["rev-parse", "HEAD"])
+        .current_dir(env!("CARGO_MANIFEST_DIR"))
+        .output();
+    if let Ok(o) = head {
+        if o.status.success() {
+            let sha = String::from_utf8_lossy(&o.stdout).trim().to_string();
+            assert_eq!(trees_at(&sha).unwrap(), head_trees());
+        }
+    }
+    // Not 40 hex: refused before git is run.
+    for bad in ["", "abc", &"g".repeat(40), &"a".repeat(41), "--version"] {
+        assert!(trees_at(bad).unwrap_err().contains("40-hex"), "{bad}");
+    }
+    // 40 hex that no object store holds.
+    let e = trees_at(&"0".repeat(40)).unwrap_err();
+    assert!(
+        e.contains(&format!("git fetch origin {}", "0".repeat(40))),
+        "{e}"
+    );
 }
 
 #[test]
@@ -288,7 +359,7 @@ fn a_file_that_does_not_describe_the_tree_at_hand_is_refused() {
     now[1].1 = "f".repeat(40);
     let mut r = req();
     r.expect_sha256 = Some(digest(&input));
-    let e = sign(&input, &r, &now, &yes).unwrap_err();
+    let e = sign(&input, &r, &now, &at_head).unwrap_err();
     assert!(e.contains("check --full refuses"), "{e}");
     // A file that records no tree ids at all.
     let mut r = joined();
@@ -578,6 +649,53 @@ fn the_command_refuses_a_bad_command_line_and_writes_nothing() {
     assert!(!out.exists());
     // No file and two files.
     assert!(run(&["sign", "--out", &o]).is_err());
+    std::fs::remove_dir_all(&dir).ok();
+}
+
+#[test]
+fn the_command_names_the_fetch_for_a_commit_that_is_not_in_the_checkout() {
+    // VOS-D137, through the real command: the file records the working tree's own ids (so that
+    // `full_refusals` is clean) and a typed revision no object store holds, so the refusal comes
+    // from `meta::trees_at`.  Skipped when git cannot read the working tree (no checkout) or the
+    // five crates have uncommitted changes (a `+uncommitted` id is not a valid recorded id).
+    let now = vos_capacity_probe::meta::working_trees();
+    if now.is_empty() || now != vos_capacity_probe::meta::head_trees() {
+        return;
+    }
+    let mut r = joined();
+    r.meta.trees = now;
+    let text = r.to_text();
+    let dir = std::env::temp_dir().join(format!("sign-fetch-{}", std::process::id()));
+    std::fs::create_dir_all(&dir).unwrap();
+    let (input, out) = (dir.join("in.json"), dir.join("out.json"));
+    std::fs::write(&input, &text).unwrap();
+    let a: Vec<String> = [
+        "sign",
+        input.to_str().unwrap(),
+        "--reviewer",
+        "R",
+        "--host",
+        "H",
+        "--run-id",
+        "123",
+        "--run-attempt",
+        "1",
+        "--head-sha",
+        HEAD,
+        "--expect-sha256",
+        &digest(&text),
+        "--out",
+        out.to_str().unwrap(),
+    ]
+    .iter()
+    .map(|s| s.to_string())
+    .collect();
+    let e = dispatch(&a, &mut Vec::new(), &mut Vec::new());
+    assert!(
+        matches!(&e, Err(Failure::Usage(m)) if m.contains(&format!("git fetch origin {HEAD}"))),
+        "{e:?}"
+    );
+    assert!(!out.exists());
     std::fs::remove_dir_all(&dir).ok();
 }
 

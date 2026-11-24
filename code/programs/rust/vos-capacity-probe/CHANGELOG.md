@@ -4,6 +4,21 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Fixed (VOS-028c3c-2d, VOS-D137; VOS30 section 9.12.2)
+
+- **`sign` checks tree ids at `--head-sha`, not ancestry.** Main is squash-merged, so the commit a
+  CI recording ran at never reaches main's history and "HEAD or an ancestor" would have refused
+  every signature at main (VOS-028c3d). `sign::sign` now takes `trees_at: &dyn Fn(&str) ->
+  Result<Vec<(String, String)>, String>` (was `is_ancestor`) and refuses unless the five tree ids
+  at `--head-sha` equal the recorded `trees`, naming the first tree that differs. The CLI passes
+  the new `meta::trees_at(rev)`: it validates 40-hex first, clears the `GIT_*` selection
+  variables, runs no shell, requires the commit to exist locally (else the refusal says
+  `git fetch origin <sha>`; GitHub keeps PR head commits), and reads each
+  `git rev-parse <rev>:<path>` over `meta::TREE_PATHS`, requiring a 40-hex id. `full_refusals`
+  and `head_sha == revisions.repo` are unchanged. `meta::is_ancestor_of_head` stays: `merge` still
+  uses it. Tests: one tree differing (each of five), a short set, a missing commit, an equal set
+  signing, `trees_at` on this checkout, and the CLI's fetch hint.
+
 ### Added (VOS-028c3c-2c, VOS-D120, VOS-D134; VOS30 sections 9.2, 9.6 and 9.12.2)
 
 - **`sign FILE --reviewer NAME --host LABEL --run-id I --run-attempt A --head-sha S

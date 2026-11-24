@@ -170,17 +170,7 @@ pub fn is_ancestor_of_head(rev: &str) -> Result<bool, String> {
     if rev.len() != 40 || !rev.bytes().all(|b| b.is_ascii_hexdigit()) {
         return Err(format!("{rev:?} is not a 40-hex revision"));
     }
-    let st = Command::new("git")
-        .args(["merge-base", "--is-ancestor", rev, "HEAD"])
-        // An inherited `GIT_DIR` (a hook, a worktree wrapper) would point git at a repository
-        // other than the checkout the reviewer is standing in, so clear the variables that
-        // choose one.  Only here: the other git calls keep their environment.
-        .env_remove("GIT_DIR")
-        .env_remove("GIT_WORK_TREE")
-        .env_remove("GIT_COMMON_DIR")
-        .env_remove("GIT_INDEX_FILE")
-        .env_remove("GIT_OBJECT_DIRECTORY")
-        .current_dir(repo_root())
+    let st = clean_git(&["merge-base", "--is-ancestor", rev, "HEAD"])
         .status()
         .map_err(|e| format!("cannot run git: {e}"))?;
     match st.code() {
@@ -188,6 +178,61 @@ pub fn is_ancestor_of_head(rev: &str) -> Result<bool, String> {
         Some(1) => Ok(false),
         _ => Err(format!("git cannot place revision {rev}")),
     }
+}
+
+/// A `git` command aimed at THIS checkout.  An inherited `GIT_DIR` (a hook, a worktree wrapper)
+/// would point git at a repository other than the one the reviewer is standing in, so the
+/// variables that choose one are cleared.  Only on the calls that judge a revision: the other git
+/// calls keep their environment.
+fn clean_git(args: &[&str]) -> Command {
+    let mut c = Command::new("git");
+    c.args(args)
+        .env_remove("GIT_DIR")
+        .env_remove("GIT_WORK_TREE")
+        .env_remove("GIT_COMMON_DIR")
+        .env_remove("GIT_INDEX_FILE")
+        .env_remove("GIT_OBJECT_DIRECTORY")
+        .current_dir(repo_root());
+    c
+}
+
+/// The tree ids of the five [`TREE_PATHS`] AT the commit `rev` (a 40-hex id): the same names and
+/// ids [`head_trees`] would have recorded had HEAD been `rev` (VOS-D137).
+///
+/// Why this and not ancestry: main is squash-merged, so the commit a CI recording ran at is never
+/// in main's history, but the trees it recorded are, byte for byte, as long as nothing under
+/// those five paths changed since.  A tree id is a hash of the content, so equality of ids is
+/// equality of content.
+///
+/// `Err` when `rev` is not 40-hex, when the commit is not in this checkout's object store (the
+/// message names `git fetch origin <rev>`; GitHub keeps a pull request's head commits), or when
+/// git cannot read a path at it.
+pub fn trees_at(rev: &str) -> Result<Vec<(String, String)>, String> {
+    if rev.len() != 40 || !rev.bytes().all(|b| b.is_ascii_hexdigit()) {
+        return Err(format!("{rev:?} is not a 40-hex revision"));
+    }
+    let have = clean_git(&["cat-file", "-e", &format!("{rev}^{{commit}}")])
+        .output()
+        .map_err(|e| format!("cannot run git: {e}"))?;
+    if !have.status.success() {
+        return Err(format!(
+            "commit {rev} is not in this checkout (run `git fetch origin {rev}` and sign again)"
+        ));
+    }
+    let mut out = Vec::new();
+    for (name, path) in TREE_NAMES.iter().zip(TREE_PATHS) {
+        let r = clean_git(&["rev-parse", &format!("{rev}:{path}")])
+            .output()
+            .map_err(|e| format!("cannot run git: {e}"))?;
+        let id = String::from_utf8_lossy(&r.stdout).trim().to_string();
+        // A path missing at `rev` makes git print the spec back and fail; an id is exactly 40
+        // hex digits, so anything else is refused here rather than compared.
+        if !r.status.success() || id.len() != 40 || !id.bytes().all(|b| b.is_ascii_hexdigit()) {
+            return Err(format!("git cannot read {path} at commit {rev}"));
+        }
+        out.push((name.to_string(), id));
+    }
+    Ok(out)
 }
 
 /// The current UTC time, `YYYY-MM-DDTHH:MM:SSZ`.
