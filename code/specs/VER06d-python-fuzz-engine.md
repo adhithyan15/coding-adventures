@@ -167,7 +167,7 @@ base_energy=10, minimize_budget=2000)`, all validated:
    every campaign execution (triage included); novel crashes are minimised;
    re-hits keep the shorter input.
 5. **Feedback**: pinned by a staircase target (four nested byte comparisons):
-   cracked for every tested seed with coverage and for none blind.
+   cracked for 7 of 8 seeds in 6,000 iterations with coverage and for none blind.
 
 Draw order per iteration (matches Rust): `bounded(len(corpus))` for the seed;
 per energy slot `1 + bounded(4)` steps, one `next_u64` sub-seed, then, if
