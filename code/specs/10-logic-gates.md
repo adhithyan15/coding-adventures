@@ -451,6 +451,25 @@ Semantics:
   construction, which is why the API takes `int` rather than a bit array or an
   out-parameter.
 
+### Checking results (CWE-252)
+
+`LG_INVALID` is -1, which is truthy in C, so `if (lg_and(a, b))` silently
+treats invalid input as true. The ABI stays `int`-in, `int`-out, but:
+
+- Every function is declared with `LG_NODISCARD`, a single header macro that
+  expands to C23 `[[nodiscard]]` when `__STDC_VERSION__ >= 202311L`, else
+  `__attribute__((warn_unused_result))` on GCC/Clang, else `_Check_return_`
+  (SAL) on MSVC, else nothing. Dropping a result therefore warns (an error
+  under `-Werror` / `/WX`).
+- The documented usage is to compare with `== 1`, or to test
+  `!= LG_INVALID` first. A result must never be used directly as a boolean.
+- `tools/run.sh` compiles a tiny translation unit that discards a result with
+  `-Werror` and asserts the compile FAILS (skipped with a printed reason on a
+  compiler without the attribute).
+- The sanitizer pass of `tools/run.sh` fails closed: when `CI` is set and no
+  compiler can run ASan/UBSan it exits non-zero; locally it is skipped with a
+  prominent message. A final line lists which builds actually ran.
+
 ## Verification (Warrant, LG01)
 
 The stateless half of the Rust implementation (the gates and the combinational
