@@ -1,5 +1,3 @@
-# Changelog — coding_adventures_logic_gates
-
 ## 0.1.0 — 2026-07-13
 
 - Add the seven primitive gates and NAND-only derivations.
