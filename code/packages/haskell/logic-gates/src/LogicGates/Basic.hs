@@ -1,3 +1,4 @@
+{-# LANGUAGE Safe #-}
 -- |
 -- Module      : LogicGates.Basic
 -- Description : The seven fundamental logic gates plus four gates built only from NAND.
@@ -30,6 +31,8 @@ module LogicGates.Basic
     , LogicGateError(..)
     , validateBit
     , validateBits
+    , takeChecked
+    , forceBits
     , notGate
     , andGate
     , orGate
@@ -73,6 +76,33 @@ validateBit name b
 -- list's own parameter name.
 validateBits :: String -> [Bit] -> Either LogicGateError [Bit]
 validateBits name = mapM (validateBit name)
+
+-- | Bounded, fully-forced snapshot of a caller-supplied list.
+--
+-- Haskell lists can be lazy and infinite (@cycle [0]@) or astronomically
+-- long.  A bare 'length' on such a list never returns, and because the loop
+-- does not allocate, @System.Timeout@ cannot interrupt it.  So every
+-- list-taking function snapshots its input through this function FIRST: it
+-- walks at most @cap + 1@ cells, rejects the list with 'InvalidShape' if it
+-- is longer than @cap@, and otherwise returns a list whose spine and
+-- elements have all been evaluated, so no thunk can fire later.
+--
+-- >>> takeChecked "sel" 2 [1, 0]
+-- Right [1,0]
+-- >>> takeChecked "sel" 2 (cycle [0])
+-- Left (InvalidShape "sel must have at most 2 elements")
+takeChecked :: String -> Int -> [Int] -> Either LogicGateError [Int]
+takeChecked name cap xs =
+    let prefix = take (cap + 1) xs
+        n = length prefix
+    in if n > cap
+       then Left (InvalidShape (name ++ " must have at most " ++ show cap ++ " elements"))
+       else Right (forceBits prefix)
+
+-- | Evaluate every element of a list (the spine is already forced by
+-- consuming it) and hand the list back.
+forceBits :: [Int] -> [Int]
+forceBits xs = foldr seq () xs `seq` xs
 
 -- ---------------------------------------------------------------------------
 -- Fundamental gates
