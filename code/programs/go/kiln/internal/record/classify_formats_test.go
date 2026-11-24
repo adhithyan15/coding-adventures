@@ -203,7 +203,7 @@ func TestSidecarSeqIsValidated(t *testing.T) {
 	}
 	// A sidecar without seq is a schema/1 file: refused (the field is required
 	// by the schema, and the schema string differs).
-	old := strings.Replace(strings.Replace(string(data), `"seq":7,`, "", 1), "step/2", "step/1", 1)
+	old := strings.Replace(strings.Replace(string(data), `"seq":7,`, "", 1), "step/3", "step/1", 1)
 	if _, err := DecodeStepSidecar([]byte(old)); err == nil {
 		t.Fatal("a step/1 sidecar was decoded")
 	}

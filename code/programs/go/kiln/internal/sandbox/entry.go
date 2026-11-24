@@ -245,6 +245,12 @@ func CheckExecNotifySocket(what string, mode uint32, domain, sockType int, conne
 const (
 	// ExecNotifyByte is the one data byte the init sends with the listener.
 	ExecNotifyByte byte = 'L'
+	// ExecNotifyByteKillable is the byte instead of ExecNotifyByte when the
+	// listener was installed with SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV (Linux
+	// 5.19): a notified call waits only for the supervisor or a fatal signal, so a
+	// caught signal can never interrupt it (no EINTR, no restart).  The recorder
+	// accepts either byte and records which in the sidecar's header.
+	ExecNotifyByteKillable byte = 'K'
 	// ExecNotifyRefused starts the message of every refusal that is the exec
 	// listener's own (it could not be installed or sent, or it was gone at the
 	// step's exec): always exit status ExitFailure, the step never ran, and the

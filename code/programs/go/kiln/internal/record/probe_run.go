@@ -105,7 +105,7 @@ func runProbe(in ProbeInput, probeDir string, spec ProbeSpec, deadline time.Dura
 	o.applyDefaults()
 	sink := &traceSink{w: f, h: sha256.New(), limit: ProbeTraceCap}
 	began := time.Now()
-	run := runStrace(o, in.Cfg.PackageDir(in.Action), in.Strace, argv, in.Env, sink)
+	run := runStrace(o, in.Cfg.PackageDir(in.Action), in.Strace, argv, in.Env, sink, nil)
 	elapsed := time.Since(began)
 	if err := f.Sync(); err != nil && sink.reason == "" {
 		sink.reason = TruncWriteFailed

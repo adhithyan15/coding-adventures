@@ -4869,6 +4869,127 @@ first. Step 4 changes nothing the classifier believes and does not bump.
 
 Steps 3 and 4 may merge first.
 
+*Implementation status.* Step 3 is merged (#19906). Step 4 is implemented
+(`internal/exechead`: the format, the strict decoder PR 5 reads with, and the
+supervisor; `internal/record/exechead_step.go` and `step.go`: the wiring; the
+real-kernel tests are `TestSandboxExecHead*` in the root package, named in
+`ci/assert_sandbox_tests.py`). Where the implementation departs from the text
+above, the text is not changed and the departure is listed here:
+
+- *The kill at a lost hand-over is strace's, not the init's.* There is no init
+  pid yet when the listener has not arrived (the init's pidfd is taken from the
+  first notification), so the receive-deadline kill is `cmd.Process.Kill()` on
+  strace (pidfd-backed in Go) and `--kill-on-exit` takes every tracee. Every
+  later kill (the stall watchdog after the first notification, the lifetime
+  bound) goes through the init's pidfd first and strace second, as specified.
+- *`overload` is not by itself unclean.* The per-notification `overload` (the
+  confirm cap, a group's queue cap) taints and writes its line, as specified,
+  and the step stays clean; the step is unclean (`exechead-overflow`) when the
+  SIDECAR's line or byte cap is passed, when the thread-group table overflows
+  (the global overload-all taint), and when the inbox cap is passed.
+- *The settle and the queue.* A held notification is handed back to the
+  processor at the FRONT of its inbox when its group's exec is decided, instead
+  of being "kept queued behind B": the order of lines and answers is the same
+  (B is answered first, then each held one is judged against B's outcome), and
+  the processor stays single-threaded.
+- *A non-leader exec is recorded, not refused here.* Its line carries a `tid`
+  that differs from the `tgid`, which is what PR 5's pairing refuses on. By the
+  different-tid rule the group is TAINTED as soon as a second thread notifies after
+  the leader's undecided exec (CI showed it: the non-leader's line and the next exec
+  of the group are both `tainted`), so a non-leader's exec is never `confirmed`
+  either; the "own successful exec is not a taint" sentence of D48 step 1 applies
+  only to the vanished-thread rule.
+- *Line cap.* A line is at most 128 KiB (a 64 KiB head is 87384 base64 characters
+  and a 4095-byte path may need six characters per byte once JSON-escaped, so
+  "about 90 KiB" is not an upper bound); the file is at most 64 MiB and 131072
+  notification lines.
+- *Test seams.* `Timing.PollStart` (delay each poller's first look) and
+  `Timing.ProcessDelay` (delay the processor per notification) exist so the
+  real-kernel tests can hold an exec pending, make one `gone`, or interrupt an
+  unanswered notification. Both are zero in production.
+- *Not tested against a real kernel here:* the race of a taint set before an
+  `overload` CONTINUE against a poller finishing at that moment (the ordering is
+  by the one lock, `finishLocked` reads the taint under it), and the reuse of a
+  tid number after a non-leader exec (needs a pid-reuse the kernel will not
+  produce on demand); PR 5's pairing tests are where they belong.
+- *Landed DEFAULT-OFF (review).* `kiln record step` runs the supervisor only with
+  `--exec-head` (`StepOptions.ExecHead`); without it nothing changes (no socket, no
+  second filter, the step sidecar's `exechead_*` fields empty, schema `/3` either
+  way). The census and the other recorder tests stay on the old path; the census
+  opts in when step 5 exists.
+- *The pending-lifetime bound (changed, approved in review).* A pending exec older
+  than the bound is killed (`exechead-stuck`) ONLY if the thread's last
+  `/proc/<tid>/syscall` reading shows it blocked in `execve`/`execveat`. Otherwise
+  the group is tainted and the line is `timeout`. Why: a failed in-place exec can
+  leave its thread computing in user mode, where the file reads `running`; killing
+  that would kill a healthy step. This replaces "ends in an unclean step" in step 1.
+- *Vanished thread, exe unchanged (implemented).* A poller that finds the notified
+  thread gone (a non-leader, whose `/proc/<tid>` no longer exists) with `exe` still
+  the pre-exec image re-checks `exe` for up to 100 ms (a non-leader's own exec makes
+  its tid vanish briefly BEFORE exe changes); only if it is still unchanged does the
+  group taint and the line is `tainted`.
+- *`WAIT_KILLABLE_RECV`.* The init asks for `SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV`
+  (Linux 5.19) with `NEW_LISTENER`, so a caught signal cannot interrupt an unanswered
+  notification (no EINTR, no `ERESTARTSYS` in the trace, no restart); on `EINVAL` it
+  falls back to plain `NEW_LISTENER`. The hand-over byte is `K` for the former and
+  `L` for the latter (`sandbox.ExecNotifyByteKillable`), the supervisor accepts
+  either, and the sidecar header records it (`"wait_killable"`). The restart path
+  (ERESTARTNOINTR, the first notification invalid, a second one) can therefore only
+  be exercised on a kernel that refuses the flag; on the 7.0 CI kernels the signal
+  test pins that no restart and no drop happens.
+- *Receiver death.* If the receiver stops for any reason but the listener hanging up,
+  Finish or Abort (an error, a panic), the step is killed and marked unclean
+  (`exechead-receiver`), the listener is closed (later execs get ENOSYS instead of
+  blocking) and the processor is stopped. A panic in a poller or the watchdog
+  degrades the supervisor and kills the step.
+- *Locking.* The kill path takes no `mu` (the init pidfd is atomic; unclean reasons
+  have their own mutex), because `mu` can be held across a blocking sidecar write.
+  The group's pidfd is read through a DUP taken under `mu`; the kill target is a dup
+  of the pidfd the first notification's group was validated with, not a second
+  `pidfd_open` of the number.
+- *Unmeasured tmpfs devices (changed).* Where D48 said a device that could not be
+  measured counts as "on the tmpfs", the supervisor now records every exec `outside`
+  and never opens the file for reading (fail closed; the classifier refuses an exec
+  under the tmpfs as today).
+- *Start-up check.* `New` calls `seccomp(SECCOMP_GET_NOTIF_SIZES)` and refuses if the
+  kernel's structure sizes differ from the layouts hard-coded here (80, 24, 64).
+- *Header write is deferred* until the hand-over is decided (it carries
+  `wait_killable`); the file is still created exclusively before the step starts.
+- *`Decode` takes a mandatory `Expect`* (nonce, action digest, step): a zero or
+  malformed one is refused, never read as "no check".
+- *For step 5 (PR 5):* refuse any line with `tid != tgid`; a non-confirmed line
+  carries no evidence, and an `outside` line has no transition check; an empty path
+  under the tmpfs refuses (`unpinned` with path `""` is not a path); read the file
+  with `exechead.Decode` and the step sidecar's nonce, the action's digest and the
+  step number.
+- *Not done:* a real-kernel test of `kiln record step --exec-head` end to end (the
+  harness drives the supervisor with the production wiring but not `RunStep`), and
+  a held thread to exercise the "blocked in execve" lifetime kill.
+- *Known limits.* (a) The sidecar's blocking `Append` still runs under `mu`; the
+  kill path, the stall check and the lifetime check do not depend on `mu` (atomics,
+  a separate unclean mutex, `TryLock`, and a starvation bound that kills when the
+  lock is unavailable for longer than the lifetime), but a stalled disk stalls the
+  processor and pollers until the stall deadline kills the step. (b) The listener
+  is guarded by a read-write lock so a closed descriptor number is never used.
+  (c) Shutdown edge cases: a poller finishing after the processor has exited leaves
+  its released notifications unprocessed (their threads are dead with the step); a
+  receive that never ends is shut down after `FinishWait` and the step is marked
+  unclean; `Finish` abandons a blocked `NOTIF_RECV` (the goroutine ends with the
+  process). (d) The init pidfd is bound only for the first notification and only if
+  its last `NSpid` entry is 1; otherwise the kill is strace's alone.
+- *For PR 5, before the census opts in:* add an end-to-end real-kernel
+  `RunStep --exec-head` test (the fd 6 pass-through via strace and the step
+  sidecar's digest fields), and close the narrow lifetime false-kill where a new
+  execve from the same tid lands just as the bound is checked (skip the kill if a
+  notification from that tid is in the inbox or being processed).
+- *`RecorderVersion`: NO bump at step 4; PR 5 bumps.* With the supervisor
+  default-off a recording is byte for byte the same apart from three empty
+  sidecar fields, step sidecars are not cached across versions, and the filter
+  flag change applies only with `--exec-notify-fd`. The step sidecar's schema
+is `kiln-record-step/3` (`exechead_nonce`, `exechead_sha256`, `exechead_bytes`).
+The paragraph "Step 4 changes nothing the classifier believes and does not
+bump" above stands.
+
 **Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 15).**
 (The decision number D46 is left to the open cwd-race work.) Go actions were refused as `unresumed-call` by a
 dying `syscall_0x1c8` (456) call: the pinned strace 6.8 predates it, so it
