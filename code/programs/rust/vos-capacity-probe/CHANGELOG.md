@@ -24,6 +24,20 @@ All notable changes to this package are documented here.
   derives its base from the real list; the B5 refusal test uses an out-of-plan fuse; the
   cfg(unix) `run --tier quick` test expects 105 rows and the spot-check population is computed.
 
+### Changed (VOS-D139, VOS-D140; VOS30 section 9.2)
+
+- **The recorded `trees` are one git id per build input, not per crate.** `meta::TREE_PATHS`
+  (five whole crate directories) is replaced by `meta::TREE_ENTRIES`: `src/` and `Cargo.toml` of
+  the probe and the four solver crates, the probe's `Cargo.lock`, and the four files `enumx.rs`
+  `include!`s / `include_bytes!`s (15 entries, named `<crate>/<relative path>`). `tests/`,
+  README, CHANGELOG, BUILD and the other metadata cannot change a recorded value and are no longer
+  recorded, so a doc or test edit no longer stales a recording. `TREE_NAMES` is derived from the
+  list; `LEGACY_TREE_NAMES` keeps the five old names valid in a `merges[i]` record only (history,
+  never compared: `stale_lines` gives one advisory line for such a record, and `check --full`
+  refuses it). `working_trees` marks each entry's own path `+uncommitted`.
+- **Fixed (VOS-D139):** the assertion in `tests/review_fixes.rs` that the committed file lacks
+  exactly 600 plan rows (the pre-recording state) is deleted; it would fail once a recording lands.
+
 ### Fixed (VOS-028c3c-2d, VOS-D137; VOS30 section 9.12.2)
 
 - **`sign` checks tree ids at `--head-sha`, not ancestry.** Main is squash-merged, so the commit a

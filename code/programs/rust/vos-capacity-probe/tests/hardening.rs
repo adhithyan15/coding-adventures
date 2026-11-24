@@ -303,7 +303,7 @@ fn stale_lines_name_each_changed_tree_and_say_nothing_for_a_file_without_trees()
     let v = stale_lines("tool", &rec, &cur);
     assert_eq!(v.len(), 1);
     assert!(
-        v[0].starts_with("stale: tool: bit-blaster was recorded at tree"),
+        v[0].starts_with(&format!("stale: tool: {} was recorded at tree", rec[1].0)),
         "{}",
         v[0]
     );
@@ -318,7 +318,7 @@ fn trees_validate_and_round_trip_and_an_absent_object_keeps_the_bytes() {
     f.meta.trees = bogus_trees('a');
     assert!(validate(&f).is_empty());
     let text = f.to_text();
-    assert!(text.contains("\"trees\":{\"vos-capacity-probe\":"));
+    assert!(text.contains("\"trees\":{\"vos-capacity-probe/src\":"));
     assert_eq!(Results::from_text(&text).unwrap(), f);
     f.meta.trees[0].1 = "xyz".into();
     assert!(validate(&f).join("|").contains("not a hex object id"));
@@ -347,7 +347,7 @@ fn check_full_refuses_a_file_that_does_not_describe_the_tree() {
     // A differing recorded tree: refused until the rows are regenerated.
     f.meta.trees = bogus_trees('b');
     let r = full_refusals(&f, &cur);
-    assert_eq!(r.len(), 5, "{r:?}");
+    assert_eq!(r.len(), TREE_NAMES.len(), "{r:?}");
     assert!(r[0].contains("check --full refuses") && r[0].contains("regenerate"));
     // A merges entry at another tree, or without any, refuses too.
     let mut f = committed();
@@ -358,7 +358,7 @@ fn check_full_refuses_a_file_that_does_not_describe_the_tree() {
         .join("|")
         .contains("merges[0] records no tree ids"));
     f.meta.merges[0].trees = bogus_trees('c');
-    assert_eq!(full_refusals(&f, &cur).len(), 5);
+    assert_eq!(full_refusals(&f, &cur).len(), TREE_NAMES.len());
     // And through the command: exit status 1, nothing re-run (this returns at once).
     let dir = scratch("full-refuse");
     let p = dir.join("results.json");
@@ -1007,4 +1007,36 @@ mod unix_children {
         assert_eq!(ch.end, vos_capacity_probe::runner::End::Killed);
         assert!(t0.elapsed() < Duration::from_secs(20), "{:?}", t0.elapsed());
     }
+}
+
+// ---- VOS-D140: input-level entries; the early merge records keep their whole-crate names -----
+
+#[test]
+fn legacy_whole_crate_names_are_history_in_a_merge_record_only() {
+    use vos_capacity_probe::results::LEGACY_TREE_NAMES;
+    let legacy: Vec<(String, String)> = LEGACY_TREE_NAMES
+        .iter()
+        .map(|n| (n.to_string(), "a".repeat(40)))
+        .collect();
+    // The committed file's early merges carry them and it validates today.
+    assert!(committed().meta.merges.iter().any(|g| g.trees == legacy
+        || g.trees
+            .iter()
+            .map(|(k, _)| k.as_str())
+            .eq(LEGACY_TREE_NAMES)));
+    assert!(
+        validate(&committed()).is_empty(),
+        "{:?}",
+        validate(&committed())
+    );
+    // In the `tool` block they are refused: that block must name the entries.
+    let mut f = committed();
+    f.meta.trees = legacy.clone();
+    assert!(validate(&f).join("|").contains("trees must name exactly"));
+    // A legacy record is never compared name by name: one advisory line, and `check --full`
+    // refuses it.
+    let cur = bogus_trees('b');
+    let v = stale_lines("merges[0]", &legacy, &cur);
+    assert_eq!(v.len(), 1, "{v:?}");
+    assert!(v[0].contains("whole-crate"), "{}", v[0]);
 }

@@ -21,6 +21,7 @@
 use crate::exp::{
     is_segmented, knobs, plan, row_wall_s, run_row, RowSpec, Tier, CHAIN_EXPERIMENTS, EXPERIMENTS,
 };
+use crate::meta::TREE_ENTRIES;
 use crate::row::{Control, Knob, Row};
 use crate::solve::{CONFLICT_SLICE, PROOF_CONFLICT_CAP};
 use coding_adventures_bounded_json::{parse, JsonNumber, JsonValue};
@@ -399,8 +400,22 @@ pub struct Merge {
     pub trees: Vec<(String, String)>,
 }
 
-/// The names a `trees` object must carry, in order: the probe and the four solver crates.
-pub const TREE_NAMES: [&str; 5] = [
+/// The names a `trees` object must carry, in order: those of [`crate::meta::TREE_ENTRIES`] (the
+/// build inputs whose git ids are recorded, VOS-D140).
+pub const TREE_NAMES: [&str; TREE_ENTRIES.len()] = {
+    let mut names = [""; TREE_ENTRIES.len()];
+    let mut i = 0;
+    while i < TREE_ENTRIES.len() {
+        names[i] = TREE_ENTRIES[i].0;
+        i += 1;
+    }
+    names
+};
+
+/// The names the five whole-crate tree ids carried before VOS-D140.  A merge entry recorded then
+/// (the committed file has several) keeps them as history: [`validate`] accepts them in a
+/// `merges[i]` record and nowhere else, and nothing ever compares them with a working tree.
+pub const LEGACY_TREE_NAMES: [&str; 5] = [
     "vos-capacity-probe",
     "bit-blaster",
     "cdcl-sat",
@@ -1283,14 +1298,16 @@ pub fn planned_tiers() -> BTreeMap<(String, String, String), bool> {
 }
 
 /// Is a recorded `trees` object well formed: empty (a file from before 0.2.0), or exactly the
-/// names of [`TREE_NAMES`], each a 40- or 64-digit hex object id?
+/// names of [`TREE_NAMES`] (or, in a merge record, the historical [`LEGACY_TREE_NAMES`]), each a 40- or 64-digit hex object id?
 fn trees_violations(at: &str, t: &[(String, String)]) -> Vec<String> {
     let mut v = Vec::new();
     if t.is_empty() {
         return v;
     }
     let names: Vec<&str> = t.iter().map(|(k, _)| k.as_str()).collect();
-    if names != TREE_NAMES {
+    // Only a merged-in record may keep the historical whole-crate names (never the tool block).
+    let legacy_ok = at != "tool" && names == LEGACY_TREE_NAMES;
+    if names != TREE_NAMES && !legacy_ok {
         v.push(format!("{at}: trees must name exactly {TREE_NAMES:?}"));
     }
     for (k, x) in t {

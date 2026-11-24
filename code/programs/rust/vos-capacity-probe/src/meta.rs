@@ -4,7 +4,7 @@
 //! tool that writes the file, so nothing technical stops an edited tool from writing another
 //! value.  That is why regeneration by a named person is a process control (VOS30 section 9.6).
 
-use crate::results::{Meta, TREE_NAMES};
+use crate::results::{Meta, LEGACY_TREE_NAMES};
 use coding_adventures_sha256::sha256_hex;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -44,23 +44,98 @@ fn run(cmd: &str, args: &[&str], dir: Option<&Path>) -> Option<String> {
 /// The crates whose revisions the file records (section 9.6).
 pub const REVISION_CRATES: [&str; 4] = ["bit-blaster", "cdcl-sat", "drat-check", "riscv-simulator"];
 
-/// The repository path of each tree [`TREE_NAMES`] names, in the same order: the probe and its
-/// four solver crates (VOS30 section 9.12).
-pub const TREE_PATHS: [&str; 5] = [
-    "code/programs/rust/vos-capacity-probe",
-    "code/packages/rust/bit-blaster",
-    "code/packages/rust/cdcl-sat",
-    "code/packages/rust/drat-check",
-    "code/packages/rust/riscv-simulator",
+/// The inputs whose git ids the results file records: `(name, repository path)`, in file order.
+/// Each id comes from `git rev-parse <rev>:<path>`, which is a tree id for a directory and a blob
+/// id for a file; both are hashes of content, so equal ids mean equal bytes.
+///
+/// # Why entries are inputs, not crates (VOS-D139, VOS-D140)
+///
+/// This list used to hold the five whole crate directories (the probe and its four solver
+/// crates).  Those directories also hold `tests/`, `README.md`, `CHANGELOG.md` and `BUILD`, none
+/// of which can change a recorded value.  Recording them made two things go wrong: a test inside
+/// the probe asserted the "nothing recorded yet" state and so failed once a recording was
+/// committed, and fixing it changed the probe's tree and staled the recording (D139); and after a
+/// merge any README, CHANGELOG or test edit in those crates would stale the recording (D140).
+///
+/// So each entry is something that is compiled into, or read by, the binary that measures:
+///
+/// * `src/` of each of the five crates: the code that computes every recorded value.
+/// * `Cargo.toml` of each crate: features, dependencies and their paths.
+/// * the probe's `Cargo.lock`: the probe is its own cargo root, so its lockfile fixes every
+///   dependency version of the solver crates it builds.  (The solver crates have no lockfile of
+///   their own; they build through the probe's.)
+/// * the four files the probe's `src/enumx.rs` pulls in at compile time with `include!` and
+///   `include_bytes!`: the two generated warrant harnesses and the two `.warrant` documents.
+///
+/// Left out, on purpose: `tests/` and `benches/` (never linked into the `run` binary; they assert
+/// on values, they do not produce them), `README.md`, `CHANGELOG.md`, `BUILD`, `BUILD_windows`,
+/// `required_capabilities.json` and `vos.toml` (documentation and build-tool metadata).  The
+/// probe has no `build.rs`, and none of the four solver crates does either; a crate that gains
+/// one must add it here.  The crates the five depend on (`cpu-simulator`, `riscv-encoder`,
+/// `sha256`, ...) were never recorded and still are not: that gap is unchanged by this narrowing.
+///
+/// `code/scripts/vos_results_guard.py` mirrors this list, and a Python test parses it from this
+/// file and compares, so the two cannot drift.
+pub const TREE_ENTRIES: [(&str, &str); 15] = [
+    (
+        "vos-capacity-probe/src",
+        "code/programs/rust/vos-capacity-probe/src",
+    ),
+    (
+        "vos-capacity-probe/Cargo.toml",
+        "code/programs/rust/vos-capacity-probe/Cargo.toml",
+    ),
+    (
+        "vos-capacity-probe/Cargo.lock",
+        "code/programs/rust/vos-capacity-probe/Cargo.lock",
+    ),
+    ("bit-blaster/src", "code/packages/rust/bit-blaster/src"),
+    (
+        "bit-blaster/Cargo.toml",
+        "code/packages/rust/bit-blaster/Cargo.toml",
+    ),
+    ("cdcl-sat/src", "code/packages/rust/cdcl-sat/src"),
+    (
+        "cdcl-sat/Cargo.toml",
+        "code/packages/rust/cdcl-sat/Cargo.toml",
+    ),
+    ("drat-check/src", "code/packages/rust/drat-check/src"),
+    (
+        "drat-check/Cargo.toml",
+        "code/packages/rust/drat-check/Cargo.toml",
+    ),
+    (
+        "riscv-simulator/src",
+        "code/packages/rust/riscv-simulator/src",
+    ),
+    (
+        "riscv-simulator/Cargo.toml",
+        "code/packages/rust/riscv-simulator/Cargo.toml",
+    ),
+    (
+        "vos-sched-fp-bitmap/tests/generated/warrant_evidence.rs",
+        "code/packages/rust/vos-sched-fp-bitmap/tests/generated/warrant_evidence.rs",
+    ),
+    (
+        "vos-probe-ready/tests/generated/warrant_evidence.rs",
+        "code/packages/rust/vos-probe-ready/tests/generated/warrant_evidence.rs",
+    ),
+    (
+        "specs/vos-sched-fp-bitmap.warrant",
+        "code/specs/vos-sched-fp-bitmap.warrant",
+    ),
+    (
+        "specs/vos-probe-ready.warrant",
+        "code/specs/vos-probe-ready.warrant",
+    ),
 ];
 
-/// The content-addressed tree ids (`git rev-parse HEAD:<path>`) of the probe and its four solver
-/// crates; empty if git cannot say for any of them (a file without `trees` is then recorded, and
-/// `check --full` refuses it).
+/// The git ids (`git rev-parse HEAD:<path>`) of every [`TREE_ENTRIES`] input; empty if git cannot
+/// say for any of them (a file without `trees` is then recorded, and `check --full` refuses it).
 pub fn head_trees() -> Vec<(String, String)> {
     let root = repo_root();
     let mut out = Vec::new();
-    for (name, path) in TREE_NAMES.iter().zip(TREE_PATHS) {
+    for (name, path) in TREE_ENTRIES {
         match run("git", &["rev-parse", &format!("HEAD:{path}")], Some(&root)) {
             Some(id) if !id.is_empty() => out.push((name.to_string(), id)),
             _ => return Vec::new(),
@@ -69,12 +144,12 @@ pub fn head_trees() -> Vec<(String, String)> {
     out
 }
 
-/// The tree ids of the WORKING tree: like [`head_trees`], but a path with an uncommitted change
-/// (or an untracked file) gets `+uncommitted` appended, so it equals no recorded id.
+/// The ids of the WORKING tree: like [`head_trees`], but an entry whose path has an uncommitted
+/// change (or an untracked file) gets `+uncommitted` appended, so it equals no recorded id.
 pub fn working_trees() -> Vec<(String, String)> {
     let root = repo_root();
     let mut out = head_trees();
-    for ((_, id), path) in out.iter_mut().zip(TREE_PATHS) {
+    for ((_, id), (_, path)) in out.iter_mut().zip(TREE_ENTRIES) {
         let dirty = run("git", &["status", "--porcelain", "--", path], Some(&root))
             .is_none_or(|s| !s.is_empty());
         if dirty {
@@ -98,6 +173,19 @@ pub fn stale_lines(
     if current.is_empty() {
         return vec![format!(
             "stale: {what}: the working tree's ids cannot be read (is this a git checkout?)"
+        )];
+    }
+    // A record made before the input-level entries (VOS-D140) names five whole crate directories.
+    // Its ids are historical and cannot be compared with any entry now, so it gets one line, not
+    // five "absent" ones; `check --full` turns that line into a refusal, as a stale id always was.
+    if recorded
+        .iter()
+        .map(|(k, _)| k.as_str())
+        .eq(LEGACY_TREE_NAMES)
+    {
+        return vec![format!(
+            "stale: {what}: recorded at whole-crate tree ids (before the input-level entries, \
+             VOS-D140); they cannot be compared with the working tree"
         )];
     }
     recorded
@@ -213,12 +301,12 @@ fn clean_git(args: &[&str]) -> Command {
     c
 }
 
-/// The tree ids of the five [`TREE_PATHS`] AT the commit `rev` (a 40-hex id): the same names and
+/// The ids of every [`TREE_ENTRIES`] input AT the commit `rev` (a 40-hex id): the same names and
 /// ids [`head_trees`] would have recorded had HEAD been `rev` (VOS-D137).
 ///
 /// Why this and not ancestry: main is squash-merged, so the commit a CI recording ran at is never
 /// in main's history, but the trees it recorded are, byte for byte, as long as nothing under
-/// those five paths changed since.  A tree id is a hash of the content, so equality of ids is
+/// those inputs changed since.  A tree id is a hash of the content, so equality of ids is
 /// equality of content.
 ///
 /// `Err` when `rev` is not 40-hex, when the commit is not in this checkout's object store (the
@@ -237,7 +325,7 @@ pub fn trees_at(rev: &str) -> Result<Vec<(String, String)>, String> {
         ));
     }
     let mut out = Vec::new();
-    for (name, path) in TREE_NAMES.iter().zip(TREE_PATHS) {
+    for (name, path) in TREE_ENTRIES {
         // No `^{tree}` peel here: in `<rev>:<path>` everything after the colon is the path, so a
         // suffix would be read as part of it.  The id is only ever compared for equality with the
         // recorded one, which `head_trees` produced the same way, so a blob id could not match.

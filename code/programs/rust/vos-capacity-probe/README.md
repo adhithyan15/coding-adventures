@@ -127,7 +127,7 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
 * `sign` writes the reviewer's `regeneration` banner (VOS-D120) into a NEW file (never in place, never
   over an existing file) and exits 2, writing nothing, unless the input is a canonical, joined,
   `record`-mode file with no banner and no merges, the run id and attempt flags equal its `recording`, `--head-sha`
-  is the recorded `repo` revision and the five tree ids at that commit equal the recorded `trees` (VOS-D137: not ancestry, because main is squash-merged; a commit missing locally is refused with a `git fetch origin <sha>` hint), `--reviewer` and `--host` are 1 to 64
+  is the recorded `repo` revision and the input ids (`meta::TREE_ENTRIES`, VOS-D140) at that commit equal the recorded `trees` (VOS-D137: not ancestry, because main is squash-merged; a commit missing locally is refused with a `git fetch origin <sha>` hint), `--reviewer` and `--host` are 1 to 64
   characters of ASCII letters, digits, space and `. _ , ' @ -` (no leading, trailing or doubled
   space), the file has no structural finding, describes the working tree and covers the full plan,
   and `--expect-sha256` (REQUIRED: the joined file's SHA-256 the join job printed) equals the
