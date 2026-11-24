@@ -54,6 +54,15 @@
 module CodingAdventures
   module LogicGates
     module Sequential
+      # Exact-class snapshots of caller containers (nil if not exact).
+      def self.snap(x)
+        LogicGates.__send__(:copy_array, x)
+      end
+
+      def self.snap_hash(x)
+        LogicGates.__send__(:copy_hash, x)
+      end
+      private_class_method :snap, :snap_hash
       # Resource caps, checked before any allocation (Rust-parity values).
       MAX_WIDTH = 65_536
       MAX_COUNTER_WIDTH = 64
@@ -101,7 +110,8 @@ module CodingAdventures
       # "state[:key]". The returned Hash is a fresh copy, so later mutation
       # (or a lying object) cannot change what the circuit computes.
       def self.snapshot_ff_state(state, label = "state")
-        unless Hash === state && state.size == FF_KEYS.size && FF_KEYS.all? { |k| state.key?(k) }
+        state = snap_hash(state)
+        unless state && state.size == FF_KEYS.size && FF_KEYS.all? { |k| state.key?(k) }
           raise ArgumentError,
             "#{label} must be a Hash with exactly the keys #{FF_KEYS.inspect}"
         end
@@ -116,7 +126,8 @@ module CodingAdventures
       # Validate and snapshot a register-shaped state ({bits:, ff_states:}).
       # `need_bits` is true for shift_register / counter, which read :bits.
       def self.snapshot_register_state(state, width, need_bits:)
-        keys_ok = Hash === state && state.key?(:ff_states) &&
+        state = snap_hash(state)
+        keys_ok = state&.key?(:ff_states) &&
           (need_bits ? state.key?(:bits) : true) &&
           state.keys.all? { |k| k == :ff_states || k == :bits }
         unless keys_ok
@@ -124,20 +135,20 @@ module CodingAdventures
             "state must be a Hash with the keys :bits and :ff_states"
         end
 
-        ffs = state[:ff_states]
-        unless Array === ffs && ffs.length == width
+        ffs = snap(state[:ff_states])
+        unless ffs && ffs.length == width
           raise ArgumentError,
             "state[:ff_states] must be an Array of #{width} flip-flop states"
         end
 
         out = {ff_states: ffs.each_with_index.map { |f, i| snapshot_ff_state(f, "state[:ff_states][#{i}]") }}
         if state.key?(:bits)
-          bits = state[:bits]
-          unless Array === bits && bits.length == width
+          bits = snap(state[:bits])
+          unless bits && bits.length == width
             raise ArgumentError, "state[:bits] must be an Array of #{width} bits"
           end
           bits.each_with_index { |b, i| validate_bit(b, "state[:bits][#{i}]") }
-          out[:bits] = bits.dup
+          out[:bits] = bits
         end
         out
       end
@@ -430,7 +441,8 @@ module CodingAdventures
       def self.register(data:, clock:, state: nil)
         validate_bit(clock, "clock")
 
-        unless Array === data && !data.empty?
+        data = snap(data)
+        unless data && !data.empty?
           raise ArgumentError, "data must be a non-empty Array of bits"
         end
 

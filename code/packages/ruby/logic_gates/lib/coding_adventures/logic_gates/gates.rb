@@ -122,24 +122,67 @@ module CodingAdventures
     # Render a class name safely for an error message (CWE-117 / CWE-150).
     #
     # A class can be given an arbitrary name with Module#set_temporary_name,
-    # including newlines or ANSI escapes. We therefore escape every control
-    # and non-ASCII character as \u{...} / \xNN and cap the result at
-    # MAX_DESCRIPTION_LENGTH characters, cutting only on an escape boundary
-    # so an escape sequence is never split in half.
+    # including newlines, ANSI escapes or invalid UTF-8. Every non-printable
+    # or non-ASCII character is escaped, the backslash itself is escaped as
+    # a double backslash (so the output is unambiguous), and the result is
+    # capped at MAX_DESCRIPTION_LENGTH characters on an escape boundary:
+    #
+    #   printable ASCII  -> itself        backslash -> two backslashes
+    #   other code point -> \u{HEX}       (valid strings only)
+    #   raw byte of an invalid string -> \xNN
     def self.safe_name_text(name)
       out = +""
-      name.each_char do |ch|
-        piece = if ch.ord >= 0x20 && ch.ord < 0x7f
-          ch
-        else
-          (ch.ord < 0x100) ? format("\\x%02X", ch.ord) : format("\\u{%X}", ch.ord)
+      pieces = if name.valid_encoding?
+        name.each_char.map do |ch|
+          c = ch.ord
+          if ch == "\\"
+            "\\\\"
+          elsif c >= 0x20 && c < 0x7f
+            ch
+          else
+            format("\\u{%X}", c)
+          end
         end
+      else
+        name.b.each_byte.map do |b|
+          if b == 0x5c
+            "\\\\"
+          elsif b >= 0x20 && b < 0x7f
+            b.chr
+          else
+            format("\\x%02X", b)
+          end
+        end
+      end
+      pieces.each do |piece|
         break if out.length + piece.length > MAX_DESCRIPTION_LENGTH
         out << piece
       end
       out
     end
     private_class_method :safe_name_text
+
+    # Copy a caller-supplied container WITHOUT calling any method on it.
+    #
+    # `Array === x` and `x.is_a?(Array)` accept subclasses, and every later
+    # call (length, each, [], dup) would then dispatch to the caller's
+    # overrides. So we ask the real class through Kernel#class (bound, never
+    # the object's own) and accept only EXACT Array / Hash. The copy is made
+    # with Array.new / Hash[], which on an exact core container run no user
+    # code, and all later work uses the copy only. Returns nil if x is not an
+    # exact Array (or Hash).
+    def self.copy_array(x)
+      Kernel.instance_method(:class).bind_call(x).equal?(Array) ? Array.new(x) : nil
+    rescue TypeError
+      nil # BasicObject: no #class to bind
+    end
+
+    def self.copy_hash(x)
+      Kernel.instance_method(:class).bind_call(x).equal?(Hash) ? {}.merge(x) : nil
+    rescue TypeError
+      nil
+    end
+    private_class_method :copy_array, :copy_hash
 
     # Describe a rejected value without invoking any method defined by the
     # value itself. The class name is read with the unbound
@@ -159,7 +202,7 @@ module CodingAdventures
       end
       name = Module.instance_method(:name).bind_call(klass)
       name = "anonymous class" unless String === name
-      "an instance of #{safe_name_text(name.to_str)}"
+      "an instance of #{safe_name_text(name)}"
     end
     private_class_method :describe_value
 

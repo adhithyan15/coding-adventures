@@ -31,3 +31,18 @@ Security hardening (LGE-RB-HARDEN). Behaviour changes:
   BUILD_windows now run `standardrb`.
 - Out of scope (cannot be closed inside the package): in-process monkeypatching
   of core classes such as redefining `Integer#==`.
+
+Review follow-ups (same release):
+
+- Container arguments (`inputs`, `sel`, `data`, `state` and nested
+  `ff_states` / `bits`) must be exact `Array` / `Hash`; subclasses and duck
+  types are rejected with `ArgumentError` without any method being called on
+  them, and the validated copy is the only thing used afterwards.
+- Non-Array / wrong-size `sel` in `mux4`/`mux_n`/`demux`, a non-Array `inputs`,
+  and a non-Integer `demux` `n_outputs` ("n_outputs must be an Integer") raise
+  `ArgumentError`, not `InvalidBitError`.
+- Class-name escaping: backslash is doubled, every non-ASCII code point is
+  `\u{HEX}`, and `\xNN` is used only for raw bytes of an invalid-UTF-8 name
+  (which no longer raises from `ord`).
+- Messages no longer use `inspect`; `CMOS_*` mutation raises `FrozenError`.
+- RBS updated for the `MAX_*` constants.

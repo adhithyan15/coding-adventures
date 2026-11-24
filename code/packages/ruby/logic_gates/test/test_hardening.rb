@@ -81,8 +81,8 @@ class TestHardening < Minitest::Test
   def test_temporary_name_with_control_chars_is_escaped
     err = assert_raises(IBE) { LG.not_gate(named("<Evil\n\e[31mX>")) }
     assert_clean(err)
-    assert_includes err.value_description, "\\x0A"
-    assert_includes err.value_description, "\\x1B"
+    assert_includes err.value_description, "\\u{A}"
+    assert_includes err.value_description, "\\u{1B}"
   end
 
   def test_long_temporary_name_is_capped
@@ -92,7 +92,7 @@ class TestHardening < Minitest::Test
 
   def test_cap_never_splits_an_escape
     err = assert_raises(IBE) { LG.not_gate(named("<" + "\n" * 500 + ">")) }
-    assert_match(/\Aan instance of <(\\x0A)+\z/, err.value_description)
+    assert_match(/\Aan instance of <(\\u\{A\})+\z/, err.value_description)
     assert_operator err.value_description.length, :<=, PREFIX + 64
   end
 
@@ -100,6 +100,17 @@ class TestHardening < Minitest::Test
     err = assert_raises(IBE) { LG.not_gate(named("<café\u{1F600}>")) }
     assert_match(/\A[\x20-\x7e]+\z/, err.value_description)
     assert_includes err.value_description, "\\u{1F600}"
+  end
+
+  def test_backslash_is_escaped_so_output_is_unambiguous
+    err = assert_raises(IBE) { LG.not_gate(named("a\\u{A}b\nc")) }
+    assert_includes err.value_description, "a\\\\u{A}b\\u{A}c"
+  end
+
+  def test_invalid_utf8_name_is_escaped_per_byte
+    err = assert_raises(IBE) { LG.not_gate(named("fake<\xff\\>".dup.force_encoding("UTF-8"))) }
+    assert_includes err.value_description, "fake<\\xFF\\\\>"
+    assert_clean(err)
   end
 
   def test_anonymous_class_and_basic_object
@@ -221,5 +232,95 @@ class TestHardening < Minitest::Test
     skip "Ractor unavailable" unless defined?(Ractor)
     r = Ractor.new { CodingAdventures::LogicGates.and_gate(1, 1) }
     assert_equal 1, r.respond_to?(:value) ? r.value : r.take
+  end
+
+  # --- exact-class container snapshots (subclass / duck spoofing) -------------
+
+  class LiarArray < Array
+    class << self
+      attr_accessor :calls
+    end
+    self.calls = 0
+    %i[length size each each_with_index map sum index dup [] is_a? to_ary first].each do |m|
+      define_method(m) do |*a, &b|
+        LiarArray.calls += 1
+        (m == :each_with_index) ? [5, 7].each_with_index(&b) : super(*a, &b)
+      end
+    end
+  end
+
+  class LiarHash < Hash
+    class << self
+      attr_accessor :calls
+    end
+    self.calls = 0
+    %i[size key? [] keys each to_hash fetch].each do |m|
+      define_method(m) do |*a, &b|
+        LiarHash.calls += 1
+        super(*a, &b)
+      end
+    end
+  end
+
+  class DuckArray
+    attr_reader :calls
+
+    def initialize
+      @calls = 0
+    end
+
+    %i[is_a? length size each_with_index map to_ary [] each].each do |m|
+      define_method(m) { |*| (@calls += 1) && true }
+    end
+  end
+
+  def test_array_subclass_and_duck_rejected_everywhere_without_dispatch
+    LiarArray.calls = 0
+    duck = DuckArray.new
+    [LiarArray.new([0, 1]), LiarArray.new([0, 0]), duck].each do |bad|
+      assert_raises(ArgumentError) { COMB.decoder(bad) }
+      assert_raises(ArgumentError) { COMB.encoder(bad) }
+      assert_raises(ArgumentError) { COMB.priority_encoder(bad) }
+      assert_raises(ArgumentError) { COMB.mux_n(bad, [0]) }
+      assert_raises(ArgumentError) { COMB.mux_n([0, 1], bad) }
+      assert_raises(ArgumentError) { COMB.mux4(0, 0, 0, 0, bad) }
+      assert_raises(ArgumentError) { COMB.demux(1, bad, 4) }
+      assert_raises(ArgumentError) { SEQ.register(data: bad, clock: 0) }
+      assert_raises(ArgumentError) { SEQ.register(data: [0], clock: 0, state: {ff_states: bad}) }
+      assert_raises(ArgumentError) { SEQ.counter(clock: 0, width: 2, state: {bits: bad, ff_states: [1, 2]}) }
+    end
+    assert_equal 0, LiarArray.calls
+    assert_equal 0, duck.calls
+  end
+
+  def test_hash_subclass_state_rejected_without_dispatch
+    LiarHash.calls = 0
+    good = SEQ.register(data: [0, 1], clock: 0)
+    bad_state = LiarHash[good]
+    assert_raises(ArgumentError) { SEQ.register(data: [0, 1], clock: 0, state: bad_state) }
+    assert_raises(ArgumentError) { SEQ.shift_register(serial_in: 0, clock: 0, width: 2, state: bad_state) }
+    assert_raises(ArgumentError) { SEQ.counter(clock: 0, width: 2, state: bad_state) }
+    ff = LiarHash[q: 0, q_bar: 1, master_q: 0, master_q_bar: 1]
+    assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: ff) }
+    assert_raises(ArgumentError) { SEQ.register(data: [0], clock: 0, state: {ff_states: [ff]}) }
+    assert_equal 0, LiarHash.calls
+  end
+
+  def test_basic_object_container_is_rejected
+    assert_raises(ArgumentError) { COMB.decoder(BasicObject.new) }
+    assert_raises(ArgumentError) { SEQ.register(data: BasicObject.new, clock: 0) }
+  end
+
+  def test_exact_array_with_singleton_overrides_uses_snapshot
+    arr = [1, 0]
+    def arr.each_with_index
+      yield 7, 0
+    end
+    assert_equal [0, 1, 0, 0], COMB.decoder(arr)
+  end
+
+  def test_demux_n_outputs_type_message
+    err = assert_raises(ArgumentError) { COMB.demux(1, [0], 1.0) }
+    assert_equal "n_outputs must be an Integer", err.message
   end
 end

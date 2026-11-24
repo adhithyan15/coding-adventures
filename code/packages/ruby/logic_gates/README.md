@@ -130,12 +130,28 @@ rescue CodingAdventures::LogicGates::InvalidBitError => e
 end
 ```
 
-`InvalidBitError` subclasses `ArgumentError`. As of 0.4.0 a non-Integer no
-longer raises `TypeError` (breaking): one identity covers every rejection.
-The description never calls the value's own `to_s`/`inspect`. Wrong argument
-counts still raise Ruby's own `ArgumentError`. `and_n`/`or_n` validate through
-`and_gate`/`or_gate`. The sequential and combinational modules keep their own
-validators.
+`InvalidBitError` subclasses `ArgumentError`. Since 0.4.0 a non-Integer no
+longer raises `TypeError` (breaking); since 0.5.0 the sequential and
+combinational blocks use the same validator and raise it too (also breaking).
+The description never calls the value's own methods; class names are escaped
+(control and non-ASCII as `\u{..}`, backslash doubled, invalid bytes as
+`\xNN`) and capped at 64 characters.
+
+### 0.5.0 hardening (all breaking or behaviour-visible)
+
+- Block validators: `TypeError` -> `InvalidBitError` naming the block's parameter.
+- `and_n`/`or_n` validate every input first (`and_n(0, bad)` raises) and accept
+  at most `MAX_INPUTS` = 65,536.
+- Caps checked before allocation: mux_n / encoder / priority_encoder / demux
+  sizes > 65,536, decoder > 16 inputs, register / shift_register width >
+  65,536, counter width > 64 raise `ArgumentError`.
+- Container arguments (`inputs`, `sel`, `data`, `state`) must be EXACT `Array`
+  / `Hash` (subclasses and duck types raise `ArgumentError`); they are copied
+  once and only the copy is used. Malformed `state:` raises `ArgumentError`
+  (shape) or `InvalidBitError` (bad bit), never `NoMethodError`.
+- `CMOS_*` constants are frozen and Ractor-shareable (mutation raises
+  `FrozenError`).
+- Messages no longer embed `inspect` output.
 
 ## Spec
 
