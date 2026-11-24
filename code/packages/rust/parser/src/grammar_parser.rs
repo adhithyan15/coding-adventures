@@ -132,6 +132,16 @@ impl fmt::Display for GrammarParseError {
     }
 }
 
+impl GrammarParseError {
+    /// True when this error is the fail-closed recursion-depth refusal.
+    pub fn is_depth_exceeded(&self) -> bool {
+        self.message.contains(DEPTH_EXCEEDED_MESSAGE)
+    }
+}
+
+/// Stable marker text carried by every depth-exhaustion [`GrammarParseError`].
+pub const DEPTH_EXCEEDED_MESSAGE: &str = "input nests deeper than the supported limit";
+
 impl std::error::Error for GrammarParseError {}
 
 // ===========================================================================
@@ -3153,5 +3163,66 @@ term       = NUMBER | NAME ;
                 .sum::<usize>()
         }
         assert_eq!(count(&ast), 256);
+    }
+
+    // -----------------------------------------------------------------------
+    // LGE-PARSER-DEPTH: depth exhaustion must fail the WHOLE parse
+    // -----------------------------------------------------------------------
+
+    /// `start = group | { "(" | NUMBER | ")" } ;` plus the right-recursive
+    /// `group` rule. The first alternative recurses once per paren; the second
+    /// is a lenient catch-all that matches any paren/number soup.
+    fn lenient_fallback_grammar() -> ParserGrammar {
+        let mut g = nested_group_grammar();
+        let lenient = GrammarElement::Repetition {
+            element: Box::new(GrammarElement::Alternation {
+                choices: vec![
+                    GrammarElement::Literal { value: "(".to_string() },
+                    GrammarElement::TokenReference { name: "NUMBER".to_string() },
+                    GrammarElement::Literal { value: ")".to_string() },
+                ],
+            }),
+        };
+        g.rules.insert(
+            0,
+            GrammarRule {
+                name: "start".to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::RuleReference { name: "group".to_string() },
+                        lenient,
+                    ],
+                },
+                line_number: 1,
+            },
+        );
+        g
+    }
+
+    /// Regression: an alternative that exhausts the depth cap used to be
+    /// silently replaced by a lenient later alternative, so `parse()` returned
+    /// `Ok` with a different tree. It must be an error.
+    #[test]
+    fn test_depth_exhaustion_in_one_alternative_fails_whole_parse() {
+        let tokens = nested_paren_tokens(200);
+        let mut parser =
+            GrammarParser::new(tokens, lenient_fallback_grammar()).with_max_depth(32);
+        let err = parser
+            .parse()
+            .expect_err("depth exhaustion must not be masked by a lenient alternative");
+        assert!(err.is_depth_exceeded(), "wrong error: {err}");
+        assert!(err.message.contains(DEPTH_EXCEEDED_MESSAGE), "{err}");
+    }
+
+    /// Control: within the cap the first alternative succeeds normally, and
+    /// without any cap the lenient grammar parses deep input fine.
+    #[test]
+    fn test_depth_within_cap_still_parses_with_fallback_grammar() {
+        let ok = GrammarParser::new(nested_paren_tokens(5), lenient_fallback_grammar())
+            .with_max_depth(64)
+            .parse();
+        assert!(ok.is_ok(), "{ok:?}");
+        let ok = GrammarParser::new(nested_paren_tokens(200), lenient_fallback_grammar()).parse();
+        assert!(ok.is_ok(), "{ok:?}");
     }
 }
