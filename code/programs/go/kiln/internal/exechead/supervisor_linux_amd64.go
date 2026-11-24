@@ -591,9 +591,13 @@ type event struct {
 
 // inbox is an unbounded-until-capped FIFO with push-to-front, for the processor.
 type inbox struct {
-	mu     sync.Mutex
-	cond   *sync.Cond
-	q      []event
+	mu   sync.Mutex
+	cond *sync.Cond
+	q    []event
+	// cur is the event the processor has taken and not finished with (pop sets it
+	// under mu, done clears it), so "waiting or being processed" is ONE fact read
+	// under one lock: there is no instant at which a notification is in neither.
+	cur    *event
 	closed bool
 }
 
@@ -635,7 +639,33 @@ func (b *inbox) pop() (event, bool) {
 	}
 	e := b.q[0]
 	b.q = b.q[1:]
+	b.cur = &e
 	return e, true
+}
+
+// done says the processor has finished the event pop gave it.
+func (b *inbox) done() {
+	b.mu.Lock()
+	b.cur = nil
+	b.mu.Unlock()
+}
+
+// holds says a notification from thread tid is waiting in the inbox or is being
+// processed right now (a taint event carries no notification).  The pending-
+// lifetime bound asks it: such a notification is about to SETTLE the thread's
+// pending exec (the same-thread rule of D48 step 1), so the exec is not stuck.
+func (b *inbox) holds(tid uint32) bool {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if b.cur != nil && b.cur.kind != evTaint && b.cur.n.Pid == tid {
+		return true
+	}
+	for _, e := range b.q {
+		if e.kind != evTaint && e.n.Pid == tid {
+			return true
+		}
+	}
+	return false
 }
 
 func (b *inbox) close() {
@@ -670,6 +700,7 @@ func (s *Supervisor) runProcessor() {
 		s.procStart.Store(time.Now().UnixNano())
 		s.handleEvent(ev)
 		s.procStart.Store(0)
+		s.inb.done()
 	}
 }
 
@@ -1772,6 +1803,16 @@ func (s *Supervisor) runWatchdog() {
 				}
 			}
 			s.mu.Unlock()
+			if cand != nil && s.sameTidArriving(cand.tid) {
+				// The false kill D48's step-4 review found: the pending exec's thread
+				// has made a NEW execve, and that notification is in the inbox or being
+				// processed.  The thread reads as blocked in execve because it IS (in
+				// the new call), but the same-thread rule settles the old exec at
+				// receipt, so nothing is stuck.  Skip the candidate this tick (neither
+				// kill nor taint); if the processor really is stuck the stall
+				// deadline says so.
+				cand = nil
+			}
 			if cand != nil {
 				// Kill only a thread seen BLOCKED in execve/execveat: that is a stuck
 				// step.  Anything else (a failed in-place exec can leave its thread
@@ -1780,6 +1821,16 @@ func (s *Supervisor) runWatchdog() {
 				// the candidate is re-checked under the lock first: it may have been
 				// decided since, and a stale candidate must not kill anything.
 				inExec := readSyscallState(cand.tid) == syscallInExec
+				if inExec {
+					// The new notification may be between the kernel and the inbox
+					// (received, not yet pushed): give it a moment, then ask again,
+					// before a kill that cannot be taken back.
+					time.Sleep(sameTidGrace)
+					if s.sameTidArriving(cand.tid) {
+						continue
+					}
+					inExec = readSyscallState(cand.tid) == syscallInExec
+				}
 				if s.mu.TryLock() {
 					if cand.state == statePending {
 						if inExec {
@@ -1806,6 +1857,14 @@ func (s *Supervisor) runWatchdog() {
 		}
 	}
 }
+
+// sameTidGrace is how long the lifetime bound waits, before a kill, for a
+// notification of the candidate's own thread to appear in the inbox.
+const sameTidGrace = 50 * time.Millisecond
+
+// sameTidArriving says a notification from thread tid is in the inbox or being
+// processed.
+func (s *Supervisor) sameTidArriving(tid int) bool { return s.inb.holds(uint32(tid)) }
 
 func (s *Supervisor) stalled(note string) {
 	s.markLocked(UncleanStall, note) // umu only: never mu

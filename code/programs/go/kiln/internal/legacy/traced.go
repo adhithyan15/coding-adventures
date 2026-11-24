@@ -154,7 +154,20 @@ const TracedSemantics uint64 = 2
 // execveat.  Nothing the classifier believes changes yet (consumption is step 5,
 // which bumps again), but the same action could in principle record differently,
 // so every weak key changes.
-const RecorderVersion = 17
+//
+// Version 18 is taken by open PR #19908 (a change that is not this one's); this
+// number leaves it room.
+//
+// Version 19: exec heads recorded at exec time are BELIEVED (KILN04 D48, step 5).
+// An exec of a program under the step's fresh tmpfs (the `go test` binary) is no
+// longer always `exec-unreadable:under-tmp`: when the step ran with `--exec-head`
+// and its `.exechead` file pairs with the trace (one line per exec event of each
+// pid, a `confirmed` status, the same path bytes, a kernel series on the table),
+// the loader chain is read from the head the supervisor took from the pinned
+// inode.  The accept set grows, so every weak key changes.  (Taking the number:
+// main was 17 when this was written; if #19908 has not merged this is main+2, and
+// whichever of the two lands second renumbers.)
+const RecorderVersion = 19
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real

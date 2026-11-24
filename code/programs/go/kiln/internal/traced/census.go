@@ -35,14 +35,14 @@ import (
 // The invariant (TestCensusKindCapsFitTheOverallBound): the per-kind caps of
 // every kind the classifier can feed add up to at most MaxCensusEntries, so the
 // overall bound never decides which kind loses.  The sub-coded kinds
-// (unstable-path:*, exec-unreadable:*: nineteen of them) hold 256 paths each,
+// (unstable-path:*, exec-unreadable:*: thirty-two of them, the thirteen exechead-* codes of KILN04 D48 step 5 included) hold 256 paths each,
 // the nine path kinds (the eight censusPrefixes plus proc-path) 1024:
-// 9*1024 + 19*256 = 14080 <= 16384.
+// 9*1024 + 32*256 = 17408 <= 20480.
 const (
 	MaxCensusPerKind = 1024
 	// MaxCensusPerSubKind is the cap of a sub-coded kind.
 	MaxCensusPerSubKind = 256
-	MaxCensusEntries    = 16384
+	MaxCensusEntries    = 20480
 )
 
 // censusSubKindPrefixes start the kinds that have sub-codes.
@@ -58,6 +58,11 @@ var censusSubCodes = map[string][]string{
 	},
 	"trace-incomplete:exec-unreadable": {
 		"modified-after-exec", "virtual-exe", "virtual-interpreter", "under-tmp", "in-repo", "host-disk",
+		// KILN04 D48 step 5: the exec under the fresh tmpfs had a supervisor's
+		// line and it was not believed; the sub-code says why (exechead.go).
+		"exechead-pair", "exechead-kernel", "exechead-outside", "exechead-gone", "exechead-mismatch",
+		"exechead-timeout", "exechead-unpinned", "exechead-fexecve", "exechead-same-image",
+		"exechead-failed", "exechead-overload", "exechead-tainted", "exechead-notelf",
 	},
 }
 
