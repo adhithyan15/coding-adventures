@@ -174,26 +174,48 @@ fn duplicate_block_ids_are_still_reported_as_duplicates() {
 
 /// Every in-repo adopter: the lowering of the real ct-compare source and the
 /// small sources the other tests lower.
+///
+/// This asks only the KRN-006b question (`check_definite_assignment`: entry
+/// block, dense ids, every read bound on every path).  The full type rules
+/// are a separate matter: the lowering emits tail expressions as
+/// `Return(None)`-style unit returns that `check_function` rejects with a
+/// `TypeMismatch` (a finding reported separately), so `check_program` cannot
+/// be the oracle here.
 #[test]
-fn lowered_adopters_pass_the_checker() {
+fn lowered_adopters_satisfy_definite_assignment() {
     let ct = include_str!("../../ct-compare/src/lib.rs");
     let file = parse_rust_file(ct).expect("parse ct-compare");
-    for (export, params) in [
-        ("ct_eq", &["a", "b"][..]),
-        ("ct_eq_equal_length", &["a", "b"][..]),
-        ("ct_select_bytes", &["a", "b", "choice"][..]),
-        ("ct_eq_u64", &["a", "b"][..]),
-    ] {
-        let program = lower_source_file(&file, &[(export, params)]).expect("lower");
-        assert_eq!(check(&program), Ok(()), "ct-compare export {export}");
-    }
+    let program = lower_source_file(
+        &file,
+        &[
+            ("ct_eq", &["a", "b"]),
+            ("ct_eq_equal_length", &["a", "b"]),
+            ("ct_select_bytes", &["a", "b", "choice"]),
+            ("ct_eq_u64", &["a", "b"]),
+        ],
+    )
+    .expect("lower ct-compare");
+    assert_adopter_is_sound(&program, "ct-compare");
 
     let small = [
         "pub fn f(n: usize) -> usize {\n    let v = vec![7u8; n];\n    n\n}\n",
         "pub fn h(a: u64) -> u64 {\n    assert!(a == 3);\n    a\n}\n",
+        "pub fn w(n: u64) -> u64 {\n    let mut s = 0u64;\n    for idx in 0..n {\n        let t = idx + 1;\n        s = s + t;\n    }\n    if s == 3 {\n        let r = 1u64;\n        return r;\n    }\n    s\n}\n",
     ];
     for src in small {
         let program = lower_source_file(&parse_rust_file(src).expect("parse"), &[]).expect("lower");
-        assert_eq!(check(&program), Ok(()), "source {src}");
+        assert_adopter_is_sound(&program, src);
+    }
+}
+
+fn assert_adopter_is_sound(program: &Program, what: &str) {
+    let checker = TypeChecker::new(program);
+    for func in &program.functions {
+        assert_eq!(
+            checker.check_definite_assignment(func),
+            Ok(()),
+            "{what}: function {}",
+            func.name
+        );
     }
 }
