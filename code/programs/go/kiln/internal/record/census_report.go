@@ -456,6 +456,11 @@ type ExecHeadSummary struct {
 	// GoEmittable is Actions.Emittable restricted to language go: the actions
 	// whose `go test` binary under the fresh tmpfs this change exists to believe.
 	GoEmittable int `json:"go_emittable"`
+	// SealMismatch counts the STARTED steps whose sidecar has an exec-head nonce
+	// exactly when the seal says off (or none when it says on): the census's own
+	// count of what collect voids a run for, so a gate does not depend on
+	// collect's header being present.  It must be 0.
+	SealMismatch int `json:"seal_mismatch"`
 }
 
 // execHeadSubCodes are the exec-unreadable sub-codes of D48 step 5, in the order
@@ -478,6 +483,15 @@ var (
 
 // execHeadSubKindPrefix starts the census kinds of the sub-codes.
 const execHeadSubKindPrefix = "trace-incomplete:exec-unreadable:"
+
+// satAdd adds two non-negative counts, saturating at 1<<62 instead of wrapping.
+func satAdd(a, b int64) int64 {
+	const top = 1 << 62
+	if a < 0 || b < 0 || a > top-b {
+		return top
+	}
+	return a + b
+}
 
 // noteExecHeadKind counts n occurrences of a census kind that is an exec-head
 // sub-code; any other kind is not its business.
@@ -590,6 +604,7 @@ type censusAcc struct {
 	execHeadSteps, execHeadKills int
 	execHeadKillSteps            int
 	execHeadNotified             int64
+	execHeadSealMismatch         int
 
 	// Line shapes (trace.Shape): the distinct outlines kept, by key, the number
 	// of outline computations spent and the occurrences not kept.
@@ -1763,10 +1778,15 @@ func (a *censusAcc) sidecarFacts(sc StepSidecar) {
 	if sc.Exit125 {
 		f.Exit125++
 	}
+	if sc.Started && (sc.ExecHeadNonce != "") != a.execHead.Sealed {
+		a.execHeadSealMismatch++
+	}
 	if sc.ExecHeadNonce != "" {
 		a.execHeadSteps++
-		a.execHeadNotified += int64(sc.ExecHeadNotified)
-		a.execHeadKills += sc.ExecHeadKills
+		// Saturating sums: each count is at most MaxExecHeadCount (Validate), but
+		// enough sidecars of that would still wrap.
+		a.execHeadNotified = satAdd(a.execHeadNotified, int64(sc.ExecHeadNotified))
+		a.execHeadKills = int(satAdd(int64(a.execHeadKills), int64(sc.ExecHeadKills)))
 		if sc.ExecHeadKills > 0 {
 			a.execHeadKillSteps++
 		}
@@ -1909,6 +1929,7 @@ func relabelRunner(in []Redaction, stepHome, stepTmp string) []Redaction {
 func (a *censusAcc) execHeadSummary() ExecHeadSummary {
 	e := a.execHead
 	e.SupervisedSteps, e.Kills, e.KillSteps, e.Notifications = a.execHeadSteps, a.execHeadKills, a.execHeadKillSteps, a.execHeadNotified
+	e.SealMismatch = a.execHeadSealMismatch
 	e.SubCodes, e.Unclean, e.ParseReasons = map[string]int{}, map[string]int{}, map[string]int{}
 	for _, c := range execHeadSubCodes {
 		e.SubCodes[c] = int(min(a.execHeadSub[c], 1<<31-1))

@@ -22,12 +22,13 @@ package main
 //
 // One action, run under `prepare --exec-head` (KILN04 D48 step 6: the choice is
 // sealed in the binding, so a shard is wholly supervised or wholly not; the
-// unsupervised control of step 5 now needs a shard of its own and is covered by
-// the classifier's unit tests):
+// unsupervised control of step 5 is a second shard, prepared without the flag
+// into its own record directory, at the end of the test):
 //
 //	H  x/h  believed: no exec-unreadable reason
 //
-// and a `--exec-head=false` step against the on seal, which must be refused.
+// and a `--exec-head=false` step against the on seal, which must be refused. The
+// control records the SAME action with no exec heads: refused as exec-unreadable.
 //
 // What is asserted, exactly:
 //
@@ -446,5 +447,87 @@ exit 0
 		if !hasReason(rh, execUnreadable) {
 			t.Errorf("kernel %s is not on the table, but H was believed: %q", file.Header.Kernel, rh.Record.Reasons)
 		}
+	}
+
+	// ---- the control: the SAME action, recorded by a second shard prepared WITHOUT
+	// --exec-head (its own record directory), is refused as exec-unreadable.  That
+	// is what proves the supervised head, and nothing else, made H pass above.
+	if err := os.RemoveAll(legacy.RecordTmpdir); err != nil {
+		t.Fatalf("clearing the recorder's tmpdir for the control: %v", err)
+	}
+	recDirC := filepath.Join(base, "record-control")
+	prepC := exec.Command(kiln, "record", "prepare", "--root", repo, "--dir", recDirC, "--build-tool", filepath.Join(bin, "build-tool"),
+		"--shard-index", "0", "--shard-count", "1", "--job-start", fmt.Sprint(time.Now().Unix()),
+		"--strace", straceBin, "--git", gitBin)
+	prepC.Dir, prepC.Env = "/", prepEnv
+	if so, eb, code := recStepRun(t, prepC); code != 0 {
+		t.Fatalf("record prepare (control): exit %d\nstdout: %s\nstderr: %s", code, so, eb)
+	}
+	t.Cleanup(func() { // the sealed directory is read-only
+		filepath.Walk(recDirC, func(p string, info os.FileInfo, err error) error {
+			if err == nil {
+				os.Chmod(p, 0o700)
+			}
+			return nil
+		})
+	})
+	preC, err := record.VerifyPre(recDirC)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if preC.Binding.ExecHead {
+		t.Fatal("the control's binding is sealed with exec_head")
+	}
+	// No --exec-head anywhere: the wrapper of an off seal has none, and a step takes
+	// the off choice from the seal.
+	stepC := exec.Command(kiln, "record", "step", "--dir", recDirC, "--", "sh", "-c", line)
+	stepC.Dir = preC.Config.PackageDir(actH)
+	stepC.Env = append(append([]string{}, preC.Tools.BuildToolEnv...), "KILN_ACTION="+actH, "KILN_STEP=0", "KILN_STEP_COUNT=1")
+	if so, eb, code := recStepRun(t, stepC); code != 0 {
+		t.Fatalf("the control's step: exit %d\nstdout: %s\nstderr: %s", code, so, eb)
+	}
+	if _, err := os.Lstat(record.StepFile(recDirC, actH, 0, "exechead")); err == nil {
+		t.Fatal("the control left an exec-head file")
+	}
+	outC := filepath.Join(outDir, "records-control.jsonl")
+	colC := exec.Command(kiln, "record", "collect", "--root", repo, "--dir", recDirC, "--results", resultsPath, "--out", outC)
+	colC.Dir, colC.Env = "/", []string{"PATH=/usr/bin:/bin", "HOME=" + home}
+	if so, eb, code := recStepRun(t, colC); code != 0 {
+		t.Fatalf("record collect (control): exit %d\nstdout: %s\nstderr: %s", code, so, eb)
+	}
+	filesC := recfmt.ShardFiles{}
+	for _, f := range []struct {
+		rel string
+		dst *[]byte
+	}{{"binding.json", &filesC.Binding}, {"host-facts.json", &filesC.HostFacts}, {"inventory.json", &filesC.Inventory}} {
+		if *f.dst, err = os.ReadFile(filepath.Join(recDirC, "pre", f.rel)); err != nil {
+			t.Fatal(err)
+		}
+	}
+	rfC, err := os.Open(outC)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer rfC.Close()
+	filesC.Records = rfC
+	shC, err := recfmt.DecodeShard(0, filesC, recfmt.DefaultLimits)
+	if err != nil {
+		t.Fatalf("the control's shard does not decode: %v", err)
+	}
+	var rc *recfmt.ShardRecord
+	for i := range shC.Records {
+		if shC.Records[i].Action == actH {
+			rc = &shC.Records[i]
+		}
+	}
+	if rc == nil {
+		t.Fatalf("no control record for %s", actH)
+	}
+	if rc.Unknown != "" {
+		logStepTraces(t, recDirC, actH)
+		t.Fatalf("the control has unknown writes %q", rc.Unknown)
+	}
+	if !hasReason(*rc, execUnreadable) {
+		t.Errorf("the control (no exec heads) must be refused as exec-unreadable, as today: %q", rc.Record.Reasons)
 	}
 }

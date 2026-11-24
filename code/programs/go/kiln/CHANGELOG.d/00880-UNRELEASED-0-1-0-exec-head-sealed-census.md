@@ -26,5 +26,12 @@
 ### Changed
 
 - `TestSandboxRecordExecHead` (Linux only) now prepares with `--exec-head` and runs one
-  supervised action; it also asserts that `--exec-head=false` is refused against the on seal.
-  Not run by the author (no Linux machine); it compiles for linux/amd64.
+  supervised action; it asserts that `--exec-head=false` is refused against the on seal, and
+  keeps its control as a second shard prepared without the flag (same action, own record
+  directory, refused as exec-unreadable). Not run by the author (no Linux machine); it
+  compiles for linux/amd64.
+- The census `exec_head` block gains `seal_mismatch` (started steps disagreeing with the
+  seal, counted directly); sidecar counts are capped at `MaxExecHeadCount` (1<<31) and the
+  census sums saturate; the census sub-code list is held equal to the classifier's;
+  `--strict-exec-head` requires a sealed summary, nonzero supervised steps and
+  notifications, and real int counters.

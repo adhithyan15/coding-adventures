@@ -47,37 +47,82 @@ import sys
 TRUSTED_KERNEL = re.compile(r"^7\.0([.\-+~_]|$)")
 
 
+def _count(v, what: str) -> int:
+    """A counter: an int that is not a bool and not negative.  Anything else is a
+    malformed summary and raises, which main() reports as unreadable (fail closed)."""
+    if type(v) is not int or v < 0:
+        raise ValueError(f"{what} is not a count")
+    return v
+
+
+def _counts(m, what: str) -> int:
+    """The sum of a table of counters, every value checked."""
+    if not isinstance(m, dict):
+        raise ValueError(f"{what} is not a table")
+    return sum(_count(v, f"{what} value") for v in m.values())
+
+
 def exec_head_ran(summary: dict) -> bool:
-    """True when the shard ran with exec heads (the census reads it from the sealed binding)."""
+    """True when the shard ran with exec heads (the census reads it from the sealed binding).
+
+    A `sealed` that is present but not a bool is malformed and raises."""
     eh = summary.get("exec_head")
-    return bool(eh) and bool(eh.get("sealed"))
+    if not eh:
+        return False
+    sealed = eh.get("sealed")
+    if sealed is not None and type(sealed) is not bool:
+        raise ValueError("exec_head.sealed is not a bool")
+    return sealed is True
 
 
-def exec_head_reasons(summary: dict) -> list[str]:
+def exec_head_reasons(summary: dict, requested: bool = False) -> list[str]:
     """The exec-head criteria: none unless the shard ran with exec heads.
 
-    A sealed shard must carry the whole block; a missing key raises KeyError, which
-    main() reports as an unreadable summary (fail closed), never as clean."""
+    requested says the run was dispatched with exec_head: true (--strict-exec-head).
+    Then a summary that is not sealed is itself a failure: the mechanism the run was
+    meant to exercise was not on.
+
+    A sealed shard must carry the whole block, every counter a real int (not a bool,
+    not negative); a missing key or a wrong type raises, which main() reports as an
+    unreadable summary (fail closed), never as clean."""
     if not exec_head_ran(summary):
-        return []
+        return ["exec-head requested but summary not sealed"] if requested else []
     eh = summary["exec_head"]
     why = []
-    unclean = sum(eh["unclean"].values())
+    steps = _count(eh["supervised_steps"], "supervised_steps")
+    notified = _count(eh["notifications"], "notifications")
+    kills = _count(eh["kills"], "kills")
+    _count(eh["kill_steps"], "kill_steps")
+    _count(eh["go_emittable"], "go_emittable")
+    mismatch = _count(eh["seal_mismatch"], "seal_mismatch")
+    unclean = _counts(eh["unclean"], "unclean")
+    parse = _counts(eh["parse_reasons"], "parse_reasons")
+    sub = eh["sub_codes"]
+    _counts(sub, "sub_codes")
+    kernel_hits = sub["exechead-kernel"]
+    # A fresh home always has Go steps, so a supervisor that heard nothing never ran.
+    if steps == 0:
+        why.append("no step was supervised (supervised_steps 0): the exec-head mechanism did not run")
+    if notified == 0:
+        why.append("the supervisor heard no notification (notifications 0): the mechanism did not run")
     if unclean > 0:
         why.append(f"{unclean} exechead-* unclean reasons on steps")
-    if eh["kills"] > 0:
-        why.append(f"{eh['kills']} supervisor kills")
-    parse = sum(eh["parse_reasons"].values())
-    seal = summary["collect"]["unknown_reasons"].get("exechead-seal", 0) if summary.get("collect") else 0
+    if kills > 0:
+        why.append(f"{kills} supervisor kills")
+    if mismatch > 0:
+        why.append(f"{mismatch} started steps disagree with the exec-head seal")
+    seal = 0
+    if summary.get("collect"):
+        seal = _count(summary["collect"]["unknown_reasons"].get("exechead-seal", 0), "exechead-seal")
     if parse + seal > 0:
         why.append(f"{parse + seal} exechead-* parse reasons")
     trusted = bool(eh.get("kernel_trusted")) or bool(TRUSTED_KERNEL.match(summary["host"]["kernel"]))
-    if trusted and eh["sub_codes"]["exechead-kernel"] > 0:
-        why.append(f"{eh['sub_codes']['exechead-kernel']} exechead-kernel on a trusted kernel series")
+    if trusted and kernel_hits > 0:
+        why.append(f"{kernel_hits} exechead-kernel on a trusted kernel series")
     return why
 
 
-def reasons(summary: dict) -> list[str]:
+def reasons(summary: dict, requested: bool = False) -> list[str]:
     cc, bounds = summary["cross_check"], summary["bounds"]
     why = []
     if cc["skipped_too_large"] > 0:
@@ -86,7 +131,7 @@ def reasons(summary: dict) -> list[str]:
         why.append(f"{bounds['actions_skipped']} actions skipped by the census bounds")
     if cc["traces"] > 0 and cc["accepted"] == 0:
         why.append("every trace was refused by both readers")
-    return why + exec_head_reasons(summary)
+    return why + exec_head_reasons(summary, requested)
 
 
 def main(argv: list[str]) -> int:
@@ -96,8 +141,8 @@ def main(argv: list[str]) -> int:
     try:
         with open(path, encoding="utf-8") as f:
             summary = json.load(f)
-        why, ran = reasons(summary), exec_head_ran(summary)
-        eh_why = exec_head_reasons(summary)
+        why, ran = reasons(summary, strict_eh), exec_head_ran(summary)
+        eh_why = exec_head_reasons(summary, strict_eh)
     except Exception as e:  # noqa: BLE001 - RecursionError, MemoryError and the rest too; only the type name is printed
         print(f"- shard {shard}: **not clean**: summary JSON unreadable ({type(e).__name__})\n")
         return 1 if strict or strict_eh else 0

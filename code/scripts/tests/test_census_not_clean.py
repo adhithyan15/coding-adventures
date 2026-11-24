@@ -46,7 +46,12 @@ def exec_head_summary(sealed=True, kernel="7.0.0-1014-aws", trusted=None, **over
         "kill_steps": 0,
         "notifications": 12,
         "go_emittable": 3,
+        "seal_mismatch": over.get("mismatch", 0),
     }
+    if "steps" in over:
+        s["exec_head"]["supervised_steps"] = over["steps"]
+    if "notifications" in over:
+        s["exec_head"]["notifications"] = over["notifications"]
     return s
 
 
@@ -170,8 +175,76 @@ class StrictExecHeadTests(unittest.TestCase):
     def test_an_unreadable_summary_fails(self):
         self.assertEqual(self.run_flag("{not json"), 1)
 
-    def test_a_shard_without_exec_heads_is_unaffected(self):
-        self.assertEqual(self.run_flag(exec_head_summary(sealed=False, kills=5)), 0)
+    def test_a_shard_without_exec_heads_is_unaffected_by_the_plain_flags(self):
+        self.assertEqual(self.run_flag(exec_head_summary(sealed=False, kills=5), "--strict"), 0)
+        self.assertEqual(self.run_flag(exec_head_summary(sealed=False, kills=5), ""), 0)
+
+    def test_requested_but_not_sealed_fails(self):
+        # exec_head: true was dispatched, but the summary says the shard was not sealed
+        # (or has no block at all): the mechanism under test was not on.
+        for s in (exec_head_summary(sealed=False), summary()):
+            self.assertEqual(self.run_flag(s), 1)
+            self.assertEqual(mod.reasons(s, requested=True), ["exec-head requested but summary not sealed"])
+            self.assertEqual(mod.reasons(s), [])
+        s = exec_head_summary()
+        del s["exec_head"]["sealed"]
+        self.assertEqual(self.run_flag(s), 1)
+
+    def test_a_non_bool_sealed_fails_closed(self):
+        for v in ("true", 1, "yes", [True]):
+            s = exec_head_summary()
+            s["exec_head"]["sealed"] = v
+            self.assertEqual(self.run_flag(s), 1, v)
+
+    def test_zero_supervised_steps_or_notifications_means_it_did_not_run(self):
+        for over, needle in [({"steps": 0}, "supervised_steps 0"), ({"notifications": 0}, "notifications 0")]:
+            with self.subTest(over):
+                s = exec_head_summary(**over)
+                why = mod.reasons(s)
+                self.assertEqual(len(why), 1, why)
+                self.assertIn(needle, why[0])
+                self.assertEqual(self.run_flag(s), 1)
+
+    def test_a_direct_seal_mismatch_count_fails_without_a_collect_block(self):
+        s = exec_head_summary(mismatch=2)
+        s["collect"] = None  # the census ran without --records
+        why = mod.reasons(s)
+        self.assertEqual(len(why), 1, why)
+        self.assertIn("2 started steps disagree with the exec-head seal", why[0])
+        self.assertEqual(self.run_flag(s), 1)
+
+    def test_every_counter_must_be_a_real_count(self):
+        bad_values = [True, False, -1, 1.0, "0", None, [0], {"a": 0}]
+        scalars = ["kills", "kill_steps", "supervised_steps", "notifications", "go_emittable", "seal_mismatch"]
+        for key in scalars:
+            for v in bad_values:
+                with self.subTest(key=key, value=v):
+                    s = exec_head_summary()
+                    s["exec_head"][key] = v
+                    self.assertEqual(self.run_flag(s), 1)
+        for table in ("unclean", "sub_codes", "parse_reasons"):
+            for v in bad_values:
+                with self.subTest(table=table, value=v):
+                    s = exec_head_summary()
+                    first = next(iter(s["exec_head"][table]))
+                    s["exec_head"][table][first] = v
+                    self.assertEqual(self.run_flag(s), 1)
+            with self.subTest(table=table, value="not a table"):
+                s = exec_head_summary()
+                s["exec_head"][table] = 3
+                self.assertEqual(self.run_flag(s), 1)
+
+    def test_a_missing_counter_fails_closed(self):
+        for key in ["kills", "kill_steps", "supervised_steps", "notifications", "go_emittable", "seal_mismatch"]:
+            with self.subTest(key):
+                s = exec_head_summary()
+                del s["exec_head"][key]
+                self.assertEqual(self.run_flag(s), 1)
+
+    def test_a_non_int_collect_seal_count_fails_closed(self):
+        s = exec_head_summary()
+        s["collect"]["unknown_reasons"]["exechead-seal"] = True
+        self.assertEqual(self.run_flag(s), 1)
 
 
 class NotCleanTests(unittest.TestCase):

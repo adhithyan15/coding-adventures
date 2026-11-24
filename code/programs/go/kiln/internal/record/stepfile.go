@@ -65,6 +65,11 @@ const (
 	UncleanPipesHeld  = "strace-pipes-held-open"
 )
 
+// MaxExecHeadCount bounds the supervisor's two counts in a sidecar.  No step
+// comes near it (the file itself is capped at a few thousand lines); the bound
+// exists so a sum over many sidecars can never overflow into a negative.
+const MaxExecHeadCount = 1 << 31
+
 // StepSidecar is `traces/<sha256(action)>/<step>.json`.
 type StepSidecar struct {
 	Schema    string `json:"schema"`
@@ -204,8 +209,8 @@ func (s *StepSidecar) Validate() error {
 	case s.ExecHeadBytes <= 0:
 		return fmt.Errorf("step sidecar: exechead_bytes %d (the file holds at least its header)", s.ExecHeadBytes)
 	}
-	if s.ExecHeadNotified < 0 || s.ExecHeadKills < 0 {
-		return fmt.Errorf("step sidecar: exechead counts %d, %d", s.ExecHeadNotified, s.ExecHeadKills)
+	if s.ExecHeadNotified < 0 || s.ExecHeadKills < 0 || s.ExecHeadNotified > MaxExecHeadCount || s.ExecHeadKills > MaxExecHeadCount {
+		return fmt.Errorf("step sidecar: exechead counts %d, %d (each between 0 and %d)", s.ExecHeadNotified, s.ExecHeadKills, MaxExecHeadCount)
 	}
 	if s.StepNetNS != s.Started {
 		return fmt.Errorf("step sidecar: step_netns must equal started (the step ran under the sandbox exactly when strace started)")

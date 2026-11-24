@@ -5115,8 +5115,8 @@ from the text above, the text is not changed and the departure is listed here:
 - *Not done:* runs A and B (the first dispatches with `exec_head: true`, fresh and then runner home,
   on both images), and a real-kernel run of the supervised step's classification on the ubuntu-26.04
   image (the test runs wherever the `kiln-sandbox` job does; it was not run by the author, who had no
-  Linux machine). The step-5 e2e test now runs ONE supervised action under a sealed prepare; its
-  unsupervised control needs a shard of its own and is covered by the classifier's unit tests.
+  Linux machine). The step-5 e2e test runs ONE supervised action under a sealed prepare, and a
+  control shard prepared without the flag (the same action, refused as exec-unreadable).
 
 **Decision D47: dying unknown-number calls (D44 follow-up; `kiln:recorder` 14 to 15).**
 (The decision number D46 is left to the open cwd-race work.) Go actions were refused as `unresumed-call` by a

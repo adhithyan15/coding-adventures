@@ -91,6 +91,10 @@ func TestCensusExecHeadAccumulation(t *testing.T) {
 	if e.ParseReasons["exechead-digest"] != 2 || len(e.ParseReasons) != 5 {
 		t.Errorf("parse reasons %v", e.ParseReasons)
 	}
+	// The unsupervised started step disagrees with the on seal.
+	if e.SealMismatch != 1 {
+		t.Errorf("seal mismatch %d, want 1", e.SealMismatch)
+	}
 	if e.SupervisedSteps != 2 || e.Notifications != 12 || e.Kills != 1 || e.KillSteps != 1 || e.GoEmittable != 4 {
 		t.Errorf("sums %+v", e)
 	}
