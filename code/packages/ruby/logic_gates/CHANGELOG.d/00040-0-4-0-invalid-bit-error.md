@@ -22,3 +22,4 @@
   matrix, in every argument position, plus arity checks.
 - Sequential and combinational validators are unchanged (still `TypeError`).
 - Package is now `standardrb` clean (behaviour-neutral: gemspec spacing, a conditional assignment in `combinational.rb`, an unused local in `sequential.rb`).
+- `value_description` for an Integer wider than 64 bits is now "an Integer of N bits" instead of the full decimal string, so a huge bignum cannot cost superlinear CPU or build a huge message. Removed a dead allocation in `sequential.rb` (shift register).

@@ -93,7 +93,8 @@ module CodingAdventures
     #   @return [String] the name of the offending parameter ("a", "b", ...)
     # @!attribute [r] value_description
     #   @return [String] a bounded description of the value: the integer
-    #     itself for an Integer, otherwise only the class name. The value's own
+    #     itself for an Integer of at most 64 bits ("an Integer of N bits"
+    #     beyond that), otherwise only the class name. The value's own
     #     #to_s / #inspect is never called, because for an arbitrary object
     #     that could run hostile code or produce unbounded output.
     class InvalidBitError < ArgumentError
@@ -112,7 +113,11 @@ module CodingAdventures
     # Describe a rejected value without invoking any method defined by the
     # value itself.
     def self.describe_value(value)
-      return value.to_s if Integer === value # standard Integer#to_s: bounded, safe
+      if Integer === value
+        # Integer#to_s on a huge bignum is superlinear and builds a huge string,
+        # so only integers up to 64 bits are echoed; larger ones are summarised.
+        return (value.bit_length > 64) ? "an Integer of #{value.bit_length} bits" : value.to_s
+      end
 
       klass = begin
         Object.instance_method(:class).bind_call(value)

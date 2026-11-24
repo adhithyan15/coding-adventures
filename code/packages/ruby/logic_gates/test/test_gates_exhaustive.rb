@@ -132,9 +132,9 @@ class TestGatesExhaustive < Minitest::Test
     err = assert_raises(Invalid) { LG.public_send(gate, *args) }
     assert_equal PARAMS[position], err.param, "#{gate} reported #{err.param}"
     assert_kind_of ArgumentError, err
-    # Integers echo themselves (10**100 is 101 digits); every other value is
-    # described by a class name capped at 64 characters.
-    assert_operator err.value_description.length, :<=, 64 unless err.value_description.match?(/\A-?\d+\z/)
+    # Every description is short: a class name capped at 64 characters, a
+    # 64-bit integer, or an "Integer of N bits" summary.
+    assert_operator err.value_description.length, :<=, 64
     assert_includes err.message, err.param
   end
 
@@ -183,9 +183,22 @@ class TestGatesExhaustive < Minitest::Test
     assert_includes err.message, "2"
   end
 
-  def test_error_for_huge_integer_is_still_the_integer
-    err = assert_raises(Invalid) { LG.not_gate(10**100) }
-    assert_equal((10**100).to_s, err.value_description)
+  def test_error_for_64_bit_integer_is_still_the_integer
+    err = assert_raises(Invalid) { LG.not_gate(2**63) }
+    assert_equal((2**63).to_s, err.value_description)
+    err = assert_raises(Invalid) { LG.not_gate(-(2**63)) }
+    assert_equal((-(2**63)).to_s, err.value_description)
+  end
+
+  def test_error_for_huge_integer_is_summarised_and_fast
+    nil
+    elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    err = assert_raises(Invalid) { LG.not_gate(10**100_000) }
+    elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - elapsed
+    assert_match(/\Aan Integer of \d+ bits\z/, err.value_description)
+    assert_operator err.message.length, :<, 100
+    assert_operator elapsed, :<, 1.0
+    assert_equal "an Integer of 66 bits", assert_raises(Invalid) { LG.not_gate(2**65) }.value_description
   end
 
   def test_error_for_non_integer_names_only_the_class
