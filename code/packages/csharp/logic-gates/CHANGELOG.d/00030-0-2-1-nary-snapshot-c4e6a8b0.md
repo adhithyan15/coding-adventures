@@ -10,3 +10,8 @@
   bit errors; null stays `ArgumentNullException`.
 - Bad elements keep throwing `InvalidBitException` named `inputs[i]` (first bad
   element of the snapshot).
+
+### Changed (breaking)
+
+- Arrays longer than 65536 elements, previously accepted by `AndN`/`OrN`/`XorN`,
+  now throw `ArgumentException`.

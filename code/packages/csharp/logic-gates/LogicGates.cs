@@ -147,6 +147,9 @@ public static class LogicGates
     // package's existing ArgumentNullException and length errors stay
     // ArgumentException; a bad element throws InvalidBitException named
     // "inputs[i]" (built only on failure).
+    //
+    // The TOCTOU guarantee is structural (a single clone; the caller's array
+    // is never re-read afterwards) and is not exercised by a concurrent test.
     private static int[] Snapshot(string gate, int[]? inputs, int min)
     {
         ArgumentNullException.ThrowIfNull(inputs);
