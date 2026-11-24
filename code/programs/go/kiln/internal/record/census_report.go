@@ -265,7 +265,9 @@ type TraceSizes struct {
 }
 
 // TimingSummary is G2's raw material: the step wall, the grammar parse time and
-// their ratio, with the counts over each limit.  Report-only.
+// their ratio, with the counts over each limit.  G2 is a REPORTED TARGET, never
+// a gate (KILN04 D49): nothing in the census exit status or CI reads these, and
+// `G2Failing` counts traces over either old limit for the record only.
 type TimingSummary struct {
 	StepWallMS     Dist `json:"step_wall_ms"`
 	ParseMS        Dist `json:"parse_ms"`
@@ -283,6 +285,9 @@ type TimingSummary struct {
 	// G2AtP99 is the G2 verdict over the traces at or above the census p99 size,
 	// where G2 is defined.
 	G2AtP99 G2P99 `json:"g2_at_p99"`
+	// G2Target is the reported G2 target (KILN04 D49): parse share at p50 at
+	// most 10%, with this run's image and parse throughput beside it.
+	G2Target G2Target `json:"g2_target"`
 	// FirstParse is the first timed parse alone: it includes the process's lazy
 	// initialisation (grammar tables), which each classify child pays again, so
 	// it is the cost to add back per action.
@@ -295,6 +300,23 @@ type SizeTiming struct {
 	N          int   `json:"n"`
 	ParseMS    Dist  `json:"parse_ms"`
 	ParseShare Dist  `json:"parse_share"`
+}
+
+// G2TargetShare is the G2 target: parse share of step wall time at p50.
+const G2TargetShare = 0.10
+
+// G2Target is the reported G2 target.  Reported, not a gate (KILN04 D49).
+type G2Target struct {
+	TargetShareP50 float64 `json:"target_share_p50"`
+	ShareP50       float64 `json:"share_p50"`
+	// Met is whether ShareP50 is at or under the target; false when no share
+	// was measured (ShareN is 0).
+	Met    bool `json:"met"`
+	ShareN int  `json:"share_n"`
+	// ImageID and ParseMBPerSP50 are the per-image parse throughput: one census
+	// covers one runner image, so the image id names the figure.
+	ImageID        string  `json:"image_id"`
+	ParseMBPerSP50 float64 `json:"parse_mb_per_s_p50"`
 }
 
 // G2P99 is G2 over the traces at or above the census p99 size.
@@ -1674,6 +1696,11 @@ func (a *censusAcc) summary(top int) *CensusSummary {
 		WallsDropped: a.wallsDropped, ParseRefused: a.parseRefused, FirstParse: a.first,
 	}
 	a.timingBySize(&s.Timing, s.TraceSizes.All.P99)
+	s.Timing.G2Target = G2Target{
+		TargetShareP50: G2TargetShare, ShareP50: s.Timing.ParseShare.P50,
+		Met: s.Timing.ParseShare.N > 0 && s.Timing.ParseShare.P50 <= G2TargetShare, ShareN: s.Timing.ParseShare.N,
+		ImageID: a.host.ImageID, ParseMBPerSP50: s.Timing.ParseMBPerS.P50,
+	}
 	pa := PerActionSummary{CapBytes: DefaultMaxTraceTotal, Largest: []ActionBytes{}}
 	bytesF := make([]float64, 0, len(a.actionBytes))
 	for _, ab := range a.actionBytes {
