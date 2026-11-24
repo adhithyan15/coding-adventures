@@ -309,6 +309,18 @@ sub pnp {
 # This duality guarantees that when the pull-down network is ON, the pull-up
 # is OFF, and vice versa.
 
+# _check_bit -- accept only a defined, non-reference scalar spelled "0" or "1".
+#
+# The old check, `die ... if $a != 0 && $a != 1`, NUMIFIED its argument first:
+# "1abc" became 1, and "a", "" and undef all became 0, with at most a warning.
+# A type check must come before a value check.  \z (not $) so "1\n" fails.
+sub _check_bit {
+    my ( $v, $name ) = @_;
+    die "Transistors: $name must be 0 or 1\n"
+        if !defined $v || ref $v || $v !~ /\A[01]\z/;
+    return;
+}
+
 my $VDD = 3.3;  # Supply voltage (V)
 my $VTH = 0.4;  # Threshold voltage (V)
 
@@ -350,7 +362,7 @@ sub _vgs_pmos { return $_[0] == 1 ? 0.0 : -$VDD }
 
 sub cmos_not {
     my $a = ( @_ == 2 ) ? $_[1] : $_[0];
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
+    _check_bit($a, "a");
 
     my $nmos_on = nmos( _vgs_nmos($a), $VTH );
     my $pmos_on = pmos( _vgs_pmos($a), $VTH );
@@ -398,8 +410,8 @@ sub cmos_not {
 
 sub cmos_nand {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    _check_bit($a, "a");
+    _check_bit($b, "b");
 
     my $nmos1_on = nmos( _vgs_nmos($a), $VTH );
     my $nmos2_on = nmos( _vgs_nmos($b), $VTH );
@@ -446,8 +458,8 @@ sub cmos_nand {
 
 sub cmos_nor {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    _check_bit($a, "a");
+    _check_bit($b, "b");
 
     my $nmos1_on = nmos( _vgs_nmos($a), $VTH );
     my $nmos2_on = nmos( _vgs_nmos($b), $VTH );
@@ -480,8 +492,8 @@ sub cmos_nor {
 
 sub cmos_and {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    _check_bit($a, "a");
+    _check_bit($b, "b");
     return cmos_not( cmos_nand( $a, $b ) );
 }
 
@@ -496,8 +508,8 @@ sub cmos_and {
 
 sub cmos_or {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    _check_bit($a, "a");
+    _check_bit($b, "b");
     return cmos_not( cmos_nor( $a, $b ) );
 }
 
@@ -524,8 +536,8 @@ sub cmos_or {
 
 sub cmos_xor {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    _check_bit($a, "a");
+    _check_bit($b, "b");
     # 4-NAND XOR construction:
     my $c = cmos_nand( $a, $b );                  # NAND(A, B)
     my $d = cmos_nand( $a, $c );                  # NAND(A, NAND(A,B))
@@ -550,8 +562,8 @@ sub cmos_xor {
 
 sub cmos_xnor {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    _check_bit($a, "a");
+    _check_bit($b, "b");
     return cmos_not( cmos_xor( $a, $b ) );
 }
 
@@ -614,8 +626,8 @@ my $TTL_HIGH_MIN = 2.0;   # Minimum voltage recognised as logic HIGH
 
 sub ttl_nand {
     my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
-    die "Transistors: b must be 0 or 1\n" if $b != 0 && $b != 1;
+    _check_bit($a, "a");
+    _check_bit($b, "b");
 
     # Convert digital bits to TTL voltage levels.
     my $va = $a == 1 ? $VCC : 0.0;
@@ -667,7 +679,7 @@ sub ttl_nand {
 
 sub ttl_not {
     my $a = ( @_ == 2 ) ? $_[1] : $_[0];
-    die "Transistors: a must be 0 or 1\n" if $a != 0 && $a != 1;
+    _check_bit($a, "a");
     return $a == 1 ? 0 : 1;
 }
 
