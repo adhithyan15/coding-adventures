@@ -48,3 +48,11 @@ Review follow-ups (same release):
 - RBS updated for the `MAX_*` constants.
 - State hashes are copied without hashing or comparing any caller key: bound `Hash#keys`, every key must be a Symbol in the allowed frozen list, values read only for those keys via bound `Hash#[]` (default procs never fire). `shift_register` describes a bad `direction` via the safe class-name helper instead of `inspect`.
 - Round 3: `NilClass === state` replaces `state.nil?` (no caller dispatch); error messages echo bignums only through `describe_value` (bit length); oversize caller Arrays are refused by bound `Array#length` before copying, oversize Hashes by bound `Hash#size` before `keys`; class names are byte-truncated before scanning.
+- Round 4 (behaviour change): error messages no longer include the caller's
+  class name. `value_description` is the Integer itself (bit length beyond 64
+  bits) or one of the fixed texts "nil", "a boolean", "a Float", "a String",
+  "a Symbol", "an Array", "a Hash", "a Rational", "a Complex",
+  "a value of another type", chosen by exact class identity. The class-name
+  escaping code was removed. `sr_latch`, `d_latch`, `d_flip_flop`, `register`,
+  `shift_register` and `counter` reject unknown keywords with the fixed text
+  "unknown keyword". Unreachable duplicate cap re-checks were removed.

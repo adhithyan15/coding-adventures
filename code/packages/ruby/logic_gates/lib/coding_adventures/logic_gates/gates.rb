@@ -99,7 +99,8 @@ module CodingAdventures
     # @!attribute [r] value_description
     #   @return [String] a bounded description of the value: the integer
     #     itself for an Integer of at most 64 bits ("an Integer of N bits"
-    #     beyond that), otherwise only the class name. The value's own
+    #     beyond that), otherwise a fixed literal ("a String", "a value of
+    #     another type"), never the caller's class name. The value's own
     #     #to_s / #inspect is never called, because for an arbitrary object
     #     that could run hostile code or produce unbounded output.
     class InvalidBitError < ArgumentError
@@ -112,65 +113,9 @@ module CodingAdventures
       end
     end
 
-    # Longest class-name text echoed back in a rejection message.
-    MAX_DESCRIPTION_LENGTH = 64
-
     # Most inputs an n-ary gate (and_n / or_n) accepts. Checked before any
     # validation or gate work so a huge argument list costs O(1) to refuse.
     MAX_INPUTS = 65_536
-
-    # Render a class name safely for an error message (CWE-117 / CWE-150).
-    #
-    # A class can be given an arbitrary name with Module#set_temporary_name,
-    # including newlines, ANSI escapes or invalid UTF-8. Every non-printable
-    # or non-ASCII character is escaped, the backslash itself is escaped as
-    # a double backslash (so the output is unambiguous), and the result is
-    # capped at MAX_DESCRIPTION_LENGTH characters on an escape boundary:
-    #
-    #   printable ASCII  -> itself        backslash -> two backslashes
-    #   other code point -> \u{HEX}       (valid strings only)
-    #   raw byte of an invalid string -> \xNN
-    def self.safe_name_text(name)
-      out = +""
-      # Only the first MAX_DESCRIPTION_LENGTH characters can survive the cap
-      # and every character is at most 4 bytes, so scanning more than
-      # 4 * MAX bytes can never change the result. Truncating a valid string
-      # may cut a character in half; scrub drops that partial tail.
-      limit = 4 * MAX_DESCRIPTION_LENGTH
-      if name.bytesize > limit
-        valid = name.valid_encoding?
-        name = name.byteslice(0, limit)
-        name = name.scrub("") if valid
-      end
-      pieces = if name.valid_encoding?
-        name.each_char.map do |ch|
-          c = ch.ord
-          if ch == "\\"
-            "\\\\"
-          elsif c >= 0x20 && c < 0x7f
-            ch
-          else
-            format("\\u{%X}", c)
-          end
-        end
-      else
-        name.b.each_byte.map do |b|
-          if b == 0x5c
-            "\\\\"
-          elsif b >= 0x20 && b < 0x7f
-            b.chr
-          else
-            format("\\x%02X", b)
-          end
-        end
-      end
-      pieces.each do |piece|
-        break if out.length + piece.length > MAX_DESCRIPTION_LENGTH
-        out << piece
-      end
-      out
-    end
-    private_class_method :safe_name_text
 
     # Copy a caller-supplied container WITHOUT calling any method on it.
     #
@@ -216,10 +161,28 @@ module CodingAdventures
     end
     private_class_method :copy_array, :copy_hash
 
+    # Fixed descriptions by exact built-in class identity. The caller's own
+    # class name, strings and methods NEVER reach a message: a class name can
+    # be set to anything (newlines, ANSI escapes, odd encodings) with
+    # Module#set_temporary_name, so we only ever emit one of these literals.
+    TYPE_DESCRIPTIONS = {
+      NilClass => "nil",
+      TrueClass => "a boolean",
+      FalseClass => "a boolean",
+      Float => "a Float",
+      String => "a String",
+      Symbol => "a Symbol",
+      Array => "an Array",
+      Hash => "a Hash",
+      Rational => "a Rational",
+      Complex => "a Complex"
+    }.freeze
+    private_constant :TYPE_DESCRIPTIONS
+
     # Describe a rejected value without invoking any method defined by the
-    # value itself. The class name is read with the unbound
-    # Module#name (never a user-overridable `name`), must be an exact String,
-    # and is escaped and length-capped.
+    # value itself. Integers are echoed (up to 64 bits, else by bit length);
+    # everything else maps, by exact class identity read through the bound
+    # Kernel#class, to a fixed literal or "a value of another type".
     def self.describe_value(value)
       if Integer === value
         # Integer#to_s on a huge bignum is superlinear and builds a huge string,
@@ -228,13 +191,14 @@ module CodingAdventures
       end
 
       klass = begin
-        Object.instance_method(:class).bind_call(value)
+        Kernel.instance_method(:class).bind_call(value)
       rescue TypeError
-        BasicObject # a BasicObject instance has no #class to bind
+        return "a value of another type" # BasicObject has no #class to bind
       end
-      name = Module.instance_method(:name).bind_call(klass)
-      name = "anonymous class" unless String === name
-      "an instance of #{safe_name_text(name)}"
+      TYPE_DESCRIPTIONS.each do |known, text|
+        return text if klass.equal?(known)
+      end
+      "a value of another type"
     end
     private_class_method :describe_value
 

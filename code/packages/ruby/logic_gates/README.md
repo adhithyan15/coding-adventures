@@ -126,16 +126,17 @@ begin
   CodingAdventures::LogicGates.and_gate(1, 2)
 rescue CodingAdventures::LogicGates::InvalidBitError => e
   e.param             # => "b"
-  e.value_description # => "2"  (class name, e.g. "an instance of Float", for non-Integers)
+  e.value_description # => "2"  (a fixed text such as "a Float" for non-Integers)
 end
 ```
 
 `InvalidBitError` subclasses `ArgumentError`. Since 0.4.0 a non-Integer no
 longer raises `TypeError` (breaking); since 0.5.0 the sequential and
 combinational blocks use the same validator and raise it too (also breaking).
-The description never calls the value's own methods; class names are escaped
-(control and non-ASCII as `\u{..}`, backslash doubled, invalid bytes as
-`\xNN`) and capped at 64 characters.
+The description never calls the value's own methods and never contains the
+caller's class name: an Integer is echoed (by bit length beyond 64 bits), any
+other value maps by exact built-in class to a fixed text ("nil", "a boolean",
+"a Float", "a String", ...) or "a value of another type".
 
 ### 0.5.0 hardening (all breaking or behaviour-visible)
 
@@ -151,7 +152,12 @@ The description never calls the value's own methods; class names are escaped
   (shape) or `InvalidBitError` (bad bit), never `NoMethodError`.
 - `CMOS_*` constants are frozen and Ractor-shareable (mutation raises
   `FrozenError`).
-- Messages no longer embed `inspect` output.
+- Messages no longer embed `inspect` output or the caller's class name.
+- The sequential constructors reject unknown keywords with the fixed message
+  "unknown keyword" (the key is never echoed).
+- Worst-case work at the caps: `decoder` at 16 select bits builds 65,536
+  outputs with 16 gate calls each (about a million gate evaluations, seconds);
+  `and_n`/`or_n`/`mux_n`/`register` at 65,536 inputs are linear.
 
 ## Spec
 

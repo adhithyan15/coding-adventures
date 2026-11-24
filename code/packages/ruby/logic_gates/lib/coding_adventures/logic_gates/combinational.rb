@@ -174,9 +174,6 @@ module CodingAdventures
         end
 
         n = inputs.length
-        if n > MAX_MUX_INPUTS
-          raise ArgumentError, "inputs length must be at most #{MAX_MUX_INPUTS}, got #{n}"
-        end
 
         if n < 2
           raise ArgumentError, "inputs must have at least 2 elements"
@@ -282,11 +279,6 @@ module CodingAdventures
           raise ArgumentError, "inputs must be a non-empty Array of bits"
         end
 
-        if inputs.length > MAX_SELECT_BITS
-          raise ArgumentError,
-            "decoder accepts at most #{MAX_SELECT_BITS} inputs, got #{inputs.length}"
-        end
-
         inputs.each_with_index { |bit, i| validate_bit(bit, "inputs[#{i}]") }
 
         n = inputs.length
@@ -346,10 +338,6 @@ module CodingAdventures
         end
 
         n_inputs = inputs.length
-        if n_inputs > MAX_OUTPUTS
-          raise ArgumentError,
-            "inputs length must be at most #{MAX_OUTPUTS}, got #{n_inputs}"
-        end
 
         if n_inputs < 2 || (n_inputs & (n_inputs - 1)) != 0
           raise ArgumentError,
@@ -410,10 +398,6 @@ module CodingAdventures
         end
 
         n_inputs = inputs.length
-        if n_inputs > MAX_OUTPUTS
-          raise ArgumentError,
-            "inputs length must be at most #{MAX_OUTPUTS}, got #{n_inputs}"
-        end
 
         if n_inputs < 2 || (n_inputs & (n_inputs - 1)) != 0
           raise ArgumentError,

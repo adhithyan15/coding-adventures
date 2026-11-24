@@ -9,7 +9,6 @@ class TestHardening < Minitest::Test
   COMB = LG::Combinational
   SEQ = LG::Sequential
   IBE = LG::InvalidBitError
-  PREFIX = "an instance of ".length
 
   # A probe that counts every call made on it, and lies about its type.
   class Probe
@@ -76,46 +75,6 @@ class TestHardening < Minitest::Test
   def named(name)
     skip "Module#set_temporary_name needs Ruby 3.3+" unless Module.method_defined?(:set_temporary_name)
     Class.new.tap { |c| c.set_temporary_name(name) }.new
-  end
-
-  def test_temporary_name_with_control_chars_is_escaped
-    err = assert_raises(IBE) { LG.not_gate(named("<Evil\n\e[31mX>")) }
-    assert_clean(err)
-    assert_includes err.value_description, "\\u{A}"
-    assert_includes err.value_description, "\\u{1B}"
-  end
-
-  def test_long_temporary_name_is_capped
-    err = assert_raises(IBE) { LG.not_gate(named("<" + "x" * 500 + ">")) }
-    assert_equal PREFIX + 64, err.value_description.length
-  end
-
-  def test_cap_never_splits_an_escape
-    err = assert_raises(IBE) { LG.not_gate(named("<" + "\n" * 500 + ">")) }
-    assert_match(/\Aan instance of <(\\u\{A\})+\z/, err.value_description)
-    assert_operator err.value_description.length, :<=, PREFIX + 64
-  end
-
-  def test_non_ascii_name_is_escaped
-    err = assert_raises(IBE) { LG.not_gate(named("<café\u{1F600}>")) }
-    assert_match(/\A[\x20-\x7e]+\z/, err.value_description)
-    assert_includes err.value_description, "\\u{1F600}"
-  end
-
-  def test_backslash_is_escaped_so_output_is_unambiguous
-    err = assert_raises(IBE) { LG.not_gate(named("a\\u{A}b\nc")) }
-    assert_includes err.value_description, "a\\\\u{A}b\\u{A}c"
-  end
-
-  def test_invalid_utf8_name_is_escaped_per_byte
-    err = assert_raises(IBE) { LG.not_gate(named("fake<\xff\\>".dup.force_encoding("UTF-8"))) }
-    assert_includes err.value_description, "fake<\\xFF\\\\>"
-    assert_clean(err)
-  end
-
-  def test_anonymous_class_and_basic_object
-    assert_includes assert_raises(IBE) { LG.not_gate(Class.new.new) }.message, "anonymous class"
-    assert_includes assert_raises(IBE) { LG.not_gate(BasicObject.new) }.message, "BasicObject"
   end
 
   def test_huge_integer_described_by_bit_length
@@ -370,7 +329,7 @@ class TestHardening < Minitest::Test
     spy = SpyKey.new
     err = assert_raises(ArgumentError) { SEQ.shift_register(serial_in: 0, clock: 0, direction: spy) }
     assert_equal 0, spy.calls
-    assert_includes err.message, "SpyKey"
+    assert_equal "direction must be :left or :right, got a value of another type", err.message
     assert_clean_message(err.message)
   end
 
@@ -457,10 +416,70 @@ class TestHardening < Minitest::Test
     end
   end
 
-  def test_enormous_class_name_is_bounded
-    err = assert_raises(IBE) { LG.not_gate(named("é" * 1_000_000)) }
-    assert_operator err.value_description.length, :<=, PREFIX + 64
-    err = assert_raises(IBE) { LG.not_gate(named("\xff".dup.force_encoding("UTF-8") * 1_000_000)) }
-    assert_operator err.value_description.length, :<=, PREFIX + 64
+  # --- round 4: fixed-text descriptions, unknown keywords, copy_hash branches --
+
+  class StringishName < String
+    def to_s = raise("must not be called")
+
+    def to_str = raise("must not be called")
+
+    def inspect = raise("must not be called")
+  end
+
+  def message_for(value)
+    assert_raises(IBE) { LG.not_gate(value) }.message
+  end
+
+  def test_messages_never_contain_caller_controlled_text
+    names = ["<Evil\n\e[31mX>", "caf\u00e9", "a\\b", "x" * 1000,
+      "fake<\xff>".dup.force_encoding("UTF-8"),
+      "abc".encode("UTF-16LE"), "abc".encode("ISO-2022-JP"), "+AGE-".dup.force_encoding("UTF-7")]
+    names.each do |n|
+      msg = message_for(named(n))
+      assert_equal "a must be the Integer 0 or 1, got a value of another type", msg
+    end
+    klass = Class.new
+    klass.set_temporary_name(StringishName.new("<boom>")) if Module.method_defined?(:set_temporary_name)
+    assert_equal "a must be the Integer 0 or 1, got a value of another type", message_for(klass.new)
+  end
+
+  def test_fixed_descriptions_for_builtin_types
+    {nil => "nil", true => "a boolean", false => "a boolean", 0.5 => "a Float", "x" => "a String",
+     :s => "a Symbol", [1] => "an Array", {} => "a Hash", Rational(1) => "a Rational",
+     Complex(1) => "a Complex", Object.new => "a value of another type"}.each do |v, text|
+      assert_equal "a must be the Integer 0 or 1, got #{text}", message_for(v)
+    end
+  end
+
+  def test_basic_object_description
+    assert_equal "a must be the Integer 0 or 1, got a value of another type", message_for(BasicObject.new)
+  end
+
+  def test_unknown_keywords_get_fixed_message_and_are_not_touched
+    # Ruby itself hashes a non-Symbol keyword key when building `rest`; what
+    # matters is that OUR code never calls inspect / to_s on it.
+    spy = Object.new
+    counter = [0]
+    %i[inspect to_s to_str].each { |m| spy.define_singleton_method(m) { |*| (counter[0] += 1).to_s } }
+    calls = [
+      -> { SEQ.sr_latch(set_input: 0, reset: 0, **{"x" * 1_000_000 => 1}) },
+      -> { SEQ.d_latch(data: 0, enable: 0, **{spy => 1}) },
+      -> { SEQ.d_flip_flop(data: 0, clock: 0, **{spy => 1}) },
+      -> { SEQ.register(data: [0], clock: 0, **{spy => 1}) },
+      -> { SEQ.shift_register(serial_in: 0, clock: 0, **{spy => 1}) },
+      -> { SEQ.counter(clock: 0, **{spy => 1}) }
+    ]
+    calls.each do |c|
+      err = assert_raises(ArgumentError, &c)
+      assert_equal "unknown keyword", err.message
+    end
+    assert_equal 0, counter[0]
+  end
+
+  def test_in_range_size_state_hash_with_bad_keys
+    ok = {q: 0, q_bar: 1, master_q: 0, master_q_bar: 1}
+    assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: {:q => 0, :q_bar => 1, :master_q => 0, "master_q_bar" => 1}) }
+    assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: {q: 0, q_bar: 1, master_q: 0, other: 1}) }
+    assert_raises(ArgumentError) { SEQ.d_flip_flop(data: 0, clock: 0, state: ok.except(:q)) }
   end
 end

@@ -100,6 +100,14 @@ module CodingAdventures
 
       private_class_method :validate_bit, :validate_bits
 
+      # Unknown keywords are refused with FIXED text: the offending key (which
+      # may be a huge string or an object with a hostile #inspect) is never
+      # echoed or touched. `rest` is our own fresh Hash, so #empty? is safe.
+      def self.reject_unknown_keywords(rest)
+        raise ArgumentError, "unknown keyword" unless rest.empty?
+      end
+      private_class_method :reject_unknown_keywords
+
       FF_KEYS = %i[q q_bar master_q master_q_bar].freeze
       REG_KEYS = %i[bits ff_states].freeze
       private_constant :FF_KEYS, :REG_KEYS
@@ -218,7 +226,8 @@ module CodingAdventures
       # @param q [Integer] the current Q state (default 0)
       # @param q_bar [Integer] the current Q_bar state (default 1)
       # @return [Hash] { q:, q_bar: } the new state after evaluation
-      def self.sr_latch(set_input:, reset:, q: 0, q_bar: 1)
+      def self.sr_latch(set_input:, reset:, q: 0, q_bar: 1, **rest)
+        reject_unknown_keywords(rest)
         validate_bit(set_input, "set_input")
         validate_bit(reset, "reset")
         validate_bit(q, "q")
@@ -297,7 +306,8 @@ module CodingAdventures
       # @param q [Integer] the current Q state (default 0)
       # @param q_bar [Integer] the current Q_bar state (default 1)
       # @return [Hash] { q:, q_bar: } the new state after evaluation
-      def self.d_latch(data:, enable:, q: 0, q_bar: 1)
+      def self.d_latch(data:, enable:, q: 0, q_bar: 1, **rest)
+        reject_unknown_keywords(rest)
         validate_bit(data, "data")
         validate_bit(enable, "enable")
         validate_bit(q, "q")
@@ -357,7 +367,8 @@ module CodingAdventures
       # @param clock [Integer] the clock signal (0 or 1)
       # @param state [Hash, nil] previous state, or nil for fresh start
       # @return [Hash] { q:, q_bar:, master_q:, master_q_bar: }
-      def self.d_flip_flop(data:, clock:, state: nil)
+      def self.d_flip_flop(data:, clock:, state: nil, **rest)
+        reject_unknown_keywords(rest)
         validate_bit(data, "data")
         validate_bit(clock, "clock")
 
@@ -437,16 +448,13 @@ module CodingAdventures
       # @return [Hash] { bits: [...], ff_states: [...] }
       #   - bits: the current output values (array of 0/1)
       #   - ff_states: internal state of each flip-flop (for next cycle)
-      def self.register(data:, clock:, state: nil)
+      def self.register(data:, clock:, state: nil, **rest)
+        reject_unknown_keywords(rest)
         validate_bit(clock, "clock")
 
         data = snap(data, MAX_WIDTH)
         unless data && !data.empty?
           raise ArgumentError, "data must be a non-empty Array of bits"
-        end
-
-        if data.length > MAX_WIDTH
-          raise ArgumentError, "data width must be at most #{MAX_WIDTH}, got #{data.length}"
         end
 
         validate_bits(data, "data")
@@ -521,7 +529,8 @@ module CodingAdventures
       # @param width [Integer] number of bits (default 8)
       # @param direction [:left, :right] shift direction (default :right)
       # @return [Hash] { bits: [...], ff_states: [...] }
-      def self.shift_register(serial_in:, clock:, state: nil, width: 8, direction: :right)
+      def self.shift_register(serial_in:, clock:, state: nil, width: 8, direction: :right, **rest)
+        reject_unknown_keywords(rest)
         validate_bit(serial_in, "serial_in")
         validate_bit(clock, "clock")
 
@@ -600,7 +609,8 @@ module CodingAdventures
       # @param state [Hash, nil] previous state, or nil for fresh start
       # @param width [Integer] number of bits (default 8)
       # @return [Hash] { bits: [...], ff_states: [...] }
-      def self.counter(clock:, reset: 0, state: nil, width: 8)
+      def self.counter(clock:, reset: 0, state: nil, width: 8, **rest)
+        reject_unknown_keywords(rest)
         validate_bit(clock, "clock")
         validate_bit(reset, "reset")
 

@@ -6,7 +6,6 @@ module CodingAdventures
       def initialize: (String param, String value_description) -> void
     end
 
-    MAX_DESCRIPTION_LENGTH: Integer
     MAX_INPUTS: Integer
 
     module Combinational
