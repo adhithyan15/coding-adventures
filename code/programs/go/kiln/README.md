@@ -489,8 +489,26 @@ when it exits (it is PID 1) the kernel kills everything left behind.
   when the step execs fails the exec with `ENOSYS`, which the init reports as
   status 125 and `exec-notify: the listener is gone ...` with the step not run.
   Without the option nothing changes and no second filter exists. The
-  supervisor that answers the notifications is `kiln record step`'s (a later
-  change); the sandbox tests use a minimal responder.
+  supervisor that answers the notifications is `kiln record step`'s
+  (`internal/exechead`, below); the step 3 sandbox tests use a minimal responder.
+- **The exec-head supervisor (`kiln record step`, KILN04 D48 step 4).** `record
+  step` makes the socket pair (its end close-on-exec; the other end is strace's
+  descriptor 6, and `--exec-notify-fd 6` goes on `sandbox-exec`'s argv), receives
+  the listener with a deadline (exactly one descriptor and one `L`; strace holds
+  its own copy of the socket, so end of file never signals a lost hand-over), and
+  answers every `execve`/`execveat` with CONTINUE. For each it records
+  `traces/<sha>/<n>.exechead` (JSON Lines: a header with the kernel, a per-step
+  nonce, the action's digest and the step, then one line per notification with
+  `tid`, `tgid`, `syscall`, the path the step asked for and a status). A file on the
+  step's fresh tmpfs is pinned (opened through `/proc/<tgid>/root` with `openat2`),
+  and the line is `confirmed`, with the first 64 KiB of the pinned inode, only when
+  `/proc/<tgid>/exe` was SEEN to change to that inode; otherwise `outside`, `gone`,
+  `mismatch`, `timeout`, `unpinned`, `fexecve`, `same-image`, `failed`, `overload` or
+  `tainted` says why no head is vouched for. The step sidecar (`kiln-record-step/3`)
+  binds the file with `exechead_nonce`, `exechead_sha256` and `exechead_bytes`. A lost
+  hand-over, a supervisor that stops, a cap that is passed, a stall or a stuck exec
+  makes the step unclean. Nothing reads the file yet: consuming it is D48 step 5
+  (`exechead.Decode` is the strict reader).
 - **`prctl(PR_SET_MM, ...)` is refused** (EPERM, every sub-option, the option's
   high 32 bits ignored like the kernel does): it could re-point
   `/proc/<pid>/exe`, which the exec-head confirm will rely on.
