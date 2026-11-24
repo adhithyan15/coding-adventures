@@ -6,7 +6,6 @@ Zero external dependencies.
 
 from __future__ import annotations
 
-import re
 import struct
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -19,11 +18,16 @@ MAX_INPUT_BYTES = 1024 * 1024
 
 # TF01: X, S and D bodies are lowercase hex in whole bytes.  `bytes.fromhex`
 # alone would also accept uppercase digits and embedded spaces.
-_LOWER_HEX = re.compile(r"(?:[0-9a-f]{2})*")
+_HEX_DIGITS = frozenset("0123456789abcdef")
+
+
+def is_lowercase_hex(body: str) -> bool:
+    """True for an even-length string of ``0-9a-f`` (the empty string is fine)."""
+    return len(body) % 2 == 0 and all(c in _HEX_DIGITS for c in body)
 
 
 def _lower_hex(body: str, tok: str) -> bytes:
-    if not _LOWER_HEX.fullmatch(body):
+    if not is_lowercase_hex(body):
         raise ValueError(f"Hex must be even-length lowercase: {tok}")
     return bytes.fromhex(body)
 

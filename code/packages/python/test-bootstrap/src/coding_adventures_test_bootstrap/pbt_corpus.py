@@ -31,7 +31,6 @@ Case encoding (JSON)::
 
 from __future__ import annotations
 
-import re
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from typing import Any
@@ -50,7 +49,7 @@ from coding_adventures_test_bootstrap.pbt import (
     shrink_list,
     simulate_replay,
 )
-from coding_adventures_test_bootstrap.tfv import parse_tfv
+from coding_adventures_test_bootstrap.tfv import is_lowercase_hex, parse_tfv
 
 #: ``pbt-v1`` holds exactly this many cases; a different count is a problem
 #: (a truncated list, or a corpus that grew without this lane being reviewed).
@@ -125,8 +124,15 @@ class _CaseError(Exception):
     """A malformed case (not an engine mismatch)."""
 
 
-_CANONICAL_INT = re.compile(r"-?(?:0|[1-9][0-9]*)")
-_LOWER_HEX = re.compile(r"(?:[0-9a-f]{2})*")
+def _is_canonical_int(text: str) -> bool:
+    """Decimal digits only, no sign except a leading ``-``, no leading zeros,
+    no ``-0``, no underscores or spaces (``int()`` would accept all of those)."""
+    digits = text[1:] if text.startswith("-") else text
+    if not (digits.isascii() and digits.isdigit()):
+        return False
+    if digits[0] == "0":
+        return text == "0"
+    return True
 
 
 def _decode(node: Any) -> Any:
@@ -139,14 +145,12 @@ def _decode(node: Any) -> Any:
         kind = node.get("kind")
         if kind == "int" and set(node) == {"kind", "value"}:
             text = node["value"]
-            if not isinstance(text, str) or not _CANONICAL_INT.fullmatch(text):
+            if not isinstance(text, str) or not _is_canonical_int(text):
                 raise _CaseError(f"non-canonical int {text!r}")
-            if text == "-0":
-                raise _CaseError("non-canonical int '-0'")
             return int(text)
         if kind == "bytes" and set(node) == {"kind", "hex"}:
             text = node["hex"]
-            if not isinstance(text, str) or not _LOWER_HEX.fullmatch(text):
+            if not isinstance(text, str) or not is_lowercase_hex(text):
                 raise _CaseError(f"bytes hex must be even-length lowercase: {text!r}")
             return bytes.fromhex(text)
         raise _CaseError(f"unrecognised value node {dict(node)!r}")
