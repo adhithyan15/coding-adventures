@@ -284,10 +284,11 @@ class Sha384Hasher {
 
     while (data.length - offset >= sha384BlockLength) {
       // The transient copy is scrubbed after use: unlike the reference
-      // (which compresses over borrowed slices), this copy would
-      // otherwise leave dead plaintext in the heap until GC.
-      final block =
-          Uint8List.fromList(data.sublist(offset, offset + sha384BlockLength));
+      // (which compresses over borrowed slices), copies would otherwise
+      // leave dead plaintext in the heap until GC. setRange copies
+      // straight from the source with no intermediate list.
+      final block = Uint8List(sha384BlockLength);
+      block.setRange(0, sha384BlockLength, data, offset);
       _compress(_state, block);
       zeroizeBytes(block);
       offset += sha384BlockLength;
