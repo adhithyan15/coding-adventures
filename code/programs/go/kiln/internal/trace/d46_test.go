@@ -228,6 +228,73 @@ func TestD46Fchdir(t *testing.T) {
 			"1  fchdir(3</x>) = 0\n")
 }
 
+// A relative AF_UNIX pathname address is resolved against the cwd by bind,
+// connect, sendto and sendmsg, so it is cwd-dependent; an absolute one and an
+// abstract one (sun_path=@"x") are not.
+func TestD46UnixSocketAddresses(t *testing.T) {
+	in := func(call string) string {
+		return "1  chdir(\"/x\" <unfinished ...>\n2  " + call + "\n1  <... chdir resumed>)  = 0\n"
+	}
+	rel := `{sa_family=AF_UNIX, sun_path="s"}`
+	for _, c := range []string{
+		`bind(3<socket:[9]>, ` + rel + `, 110) = 0`,
+		`connect(3<socket:[9]>, ` + rel + `, 110) = 0`,
+		`sendto(3<socket:[9]>, "x", 1, 0, ` + rel + `, 110) = 1`,
+		`sendmsg(3<socket:[9]>, {msg_name=` + rel + `, msg_namelen=110, msg_iov=[{iov_base="x", iov_len=1}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 1`,
+	} {
+		d46Refuse(t, in(c))
+	}
+	for _, c := range []string{
+		`bind(3<socket:[9]>, {sa_family=AF_UNIX, sun_path="/run/s"}, 110) = 0`,
+		`connect(3<socket:[9]>, {sa_family=AF_UNIX, sun_path=@"abs"}, 110) = 0`,
+		`sendmsg(3<socket:[9]>, {msg_name={sa_family=AF_UNIX, sun_path="/run/s"}, msg_namelen=110, msg_iov=[{iov_base="x", iov_len=1}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, 0) = 1`,
+	} {
+		d46Accept(t, in(c))
+	}
+}
+
+// Every exec is cwd-dependent: an absolute script whose #! names a relative
+// interpreter resolves it against the cwd inside the same call.
+func TestD46ExecIsDependent(t *testing.T) {
+	d46Refuse(t,
+		"1  chdir(\"/x\" <unfinished ...>\n"+
+			"2  execve(\"/abs/script\", [\"script\"], 0x1 /* 0 vars */) = 0\n"+
+			"1  <... chdir resumed>)  = 0\n")
+}
+
+// An empty path with AT_FDCWD acts on the cwd directory itself, so it is
+// cwd-dependent; with a real dirfd it names that descriptor and is not.
+func TestD46EmptyPathAtFdcwdIsDependent(t *testing.T) {
+	in := func(call string) string {
+		return "1  chdir(\"/x\" <unfinished ...>\n2  " + call + "\n1  <... chdir resumed>)  = 0\n"
+	}
+	for _, c := range []string{
+		`statx(AT_FDCWD, "", AT_EMPTY_PATH, STATX_ALL, {stx_mask=STATX_ALL}) = 0`,
+		`newfstatat(AT_FDCWD, "", {st_mode=S_IFDIR|0755}, AT_EMPTY_PATH) = 0`,
+		`fchownat(AT_FDCWD, "", 0, 0, AT_EMPTY_PATH) = 0`,
+		`linkat(AT_FDCWD, "", 5</d>, "n", AT_EMPTY_PATH) = 0`,
+		`linkat(5</d>, "a", AT_FDCWD, "", 0) = -1 ENOENT (No such file or directory)`,
+	} {
+		d46Refuse(t, in(c))
+	}
+	for _, c := range []string{
+		`statx(5</d>, "", AT_EMPTY_PATH, STATX_ALL, {stx_mask=STATX_ALL}) = 0`,
+		`newfstatat(5</d>, "", {st_mode=S_IFDIR|0755}, AT_EMPTY_PATH) = 0`,
+		`fchownat(5</d>, "", 0, 0, AT_EMPTY_PATH) = 0`,
+	} {
+		d46Accept(t, in(c))
+	}
+}
+
+// A split unshare(CLONE_FS) has no start record, so with another sharer it
+// cannot be placed and is refused; an unsplit one is checked as usual.
+func TestD46SplitUnshareWithSharerRefuses(t *testing.T) {
+	thread := "11  clone(child_stack=0x1, flags=" + threadFlags + "|CLONE_FS|CLONE_FILES) = 2 /* 12 in strace's PID NS */\n" +
+		"12  futex(0x1, FUTEX_WAIT_PRIVATE, 0, NULL) = 0\n"
+	split := "11  unshare(CLONE_FS <unfinished ...>\n12  futex(0x1, FUTEX_WAKE_PRIVATE, 1) = 0\n11  <... unshare resumed>)  = 0\n"
+	wantReasonOpts(t, helperRootSetup+thread+split+helperExec+"12  +++ exited with 0 +++\n"+helperEnd, helperOpts, reasonCwdRace)
+}
+
 func TestD46UnsharedChdirIsNeverARace(t *testing.T) {
 	// No sharer at all: overlapping lines of OTHER processes change nothing.
 	text := "1  chdir(\"/x\" <unfinished ...>\n" +

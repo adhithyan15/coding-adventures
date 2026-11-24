@@ -4053,7 +4053,13 @@ i.e. no dirfd argument or `AT_FDCWD`; `Path` and `Path2` are checked, each
 against its own dirfd; a symlink target is content and never counts). Also
 cwd-dependent: a successful `fork`, `vfork` or `clone`/`clone3` without
 `CLONE_FS` (the child copies the cwd), and a successful helper-window
-`unshare(CLONE_FS)` (it copies the cwd). A relative `chdir` is dependent
+`unshare(CLONE_FS)` (it copies the cwd). Also cwd-dependent: `bind`, `connect`,
+`sendto`, `sendmsg` and `sendmmsg` whose address is an `AF_UNIX` pathname that
+is non-empty, not abstract (`@`) and relative (the classifier joins it with the
+cwd); a `sendmsg`/`sendmmsg` counts once if any of its addresses qualifies,
+and an absolute or abstract address does not. Also: **every `exec`**, whatever
+its path, because an absolute script whose `#!` names a relative interpreter
+resolves it against the cwd inside the same call. A relative `chdir` is dependent
 whether it succeeds or fails; an absolute failed `chdir` and a failed
 `fchdir` are neither dependent nor a change, so they never race. `fchdir`
 takes its directory from the descriptor's absolute `-y` name, so it is a
@@ -4081,6 +4087,23 @@ cell whatever its `refs`, so a sharer that exited inside the chdir's interval
 still counts (the old rule forgot it), which makes the rule slightly stricter
 there. The cross-check stays equal because the rule is in the shared model.
 `RecorderVersion` is bumped 14 to 15 because the verdict changes both ways.
+
+*AT_FDCWD with an empty path.* A dirfd slot that is `AT_FDCWD` with an EMPTY
+path is cwd-dependent too: `statx(AT_FDCWD, "", AT_EMPTY_PATH, ...)`,
+`newfstatat`, `fchownat`, `linkat` (either slot) and `execveat` act on the cwd
+directory itself. Only an entry that has the dirfd slot counts, so a bare
+empty `Path2` of an entry with no second dirfd does not; with a real dirfd the
+empty path names that descriptor and is independent.
+
+*Split helper `unshare(CLONE_FS)`.* Pass 1 emits no start record for
+`unshare`, so a split one has no known start line; with another sharer on the
+cell it is refused as `cwd-race`. An unsplit one is checked as a dependent
+call.
+
+*Census attribution.* The refusal is raised by whichever call completes
+second, so `Error.Call` may now name the sharer's call (`openat`, `connect`,
+...) under `cwd-race` rather than `chdir`/`fchdir`; the census files those
+under `other`.
 
 *Not covered (still refused if it overlaps, never accepted wrongly).* A
 sharer's ignored-class call that reads the cwd for its own output (`getcwd`)

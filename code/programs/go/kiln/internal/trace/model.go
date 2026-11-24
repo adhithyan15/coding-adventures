@@ -973,12 +973,13 @@ func (m *model) apply(rec *record) *Error {
 		// setup chdirs are not a cwd-race with the Go runtime's threads.
 		if inWindow && c.name == "unshare" && c.ret.ok() && len(c.args) > 0 && unshareHasFS(c.args[0]) {
 			// The copy reads the cwd, so it is a cwd-dependent call too (D46).
-			start := rec.line
-			if rec.split && p.hasStart {
-				start = p.startLine
+			// Pass 1 emits no start record for unshare (a refused-class name),
+			// so a SPLIT one has no known start line; with another sharer
+			// that is a race we cannot bound, and it is refused.
+			if rec.split && p.cwd.refs > 1 {
+				return incomplete(rec.line, reasonCwdRace)
 			}
-			p.hasStart = false
-			if !p.cwd.cwdOrdered(start, rec.line, true, false) {
+			if !p.cwd.cwdOrdered(rec.line, rec.line, true, false) {
 				return incomplete(rec.line, reasonCwdRace)
 			}
 			p.cwd.refs--
@@ -1179,11 +1180,28 @@ func joinCwd(cwd, p string) (string, bool) {
 // ignores the cwd, so neither depends on it.  AT_FDCWD leaves the dirfd path
 // empty, which is exactly the case that does depend on it.  Target is a
 // symlink's CONTENT, which no call resolves, so it never counts.
-func cwdDependsOn(ev *Event) bool {
+//
+// A dirfd slot that is AT_FDCWD (empty dirfd path) with an EMPTY path is
+// dependent too: statx(AT_FDCWD, "", AT_EMPTY_PATH), newfstatat, fchownat,
+// linkat and execveat then act on the cwd directory itself.  Only an entry
+// that HAS the dirfd slot counts, so a bare empty Path2 does not.
+func cwdDependsOn(ev *Event, ent entry) bool {
 	rel := func(path, dirfdPath string) bool {
 		return path != "" && path[0] != '/' && dirfdPath == ""
 	}
-	return rel(ev.Path, ev.DirfdPath) || rel(ev.Path2, ev.Dirfd2Path)
+	empty := func(path, dirfdPath string, slot int) bool {
+		return slot > 0 && path == "" && dirfdPath == ""
+	}
+	return rel(ev.Path, ev.DirfdPath) || rel(ev.Path2, ev.Dirfd2Path) ||
+		empty(ev.Path, ev.DirfdPath, ent.dirfd) || empty(ev.Path2, ev.Dirfd2Path, ent.dirfd2)
+}
+
+// cwdRelative reports whether a socket address names a filesystem object by a
+// relative path: an AF_UNIX pathname address that is non-empty, not abstract
+// and does not start with '/'.  bind, connect and sendto resolve it against the
+// cwd (D46).  A nil address (sendto without one) depends on nothing.
+func (a *Addr) cwdRelative() bool {
+	return a != nil && a.Family == "AF_UNIX" && !a.Abstract && a.Address != "" && a.Address[0] != '/'
 }
 
 // cwdOrdered is the whole of D46.  It is called when a call on cell c
@@ -1334,6 +1352,9 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		if r != "" {
 			return fail(r)
 		}
+		if !p.cwd.cwdOrdered(startLine, rec.line, ev.Addr.cwdRelative(), false) {
+			return fail(reasonCwdRace)
+		}
 	case roleMsg:
 		socks, r := findSockaddrs(arg(ent.addr))
 		if r != "" {
@@ -1341,6 +1362,7 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		}
 		seen := map[string]bool{}
 		var evs []Event
+		relative := false
 		for _, s := range socks {
 			if seen[s] {
 				continue
@@ -1350,7 +1372,12 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 			if e2.Addr, r = parseSockaddr(s, false); r != "" {
 				return fail(r)
 			}
+			relative = relative || e2.Addr.cwdRelative()
 			evs = append(evs, e2)
+		}
+		// One ordering check for the whole call (D46).
+		if !p.cwd.cwdOrdered(startLine, rec.line, relative, false) {
+			return fail(reasonCwdRace)
 		}
 		if len(evs) == 0 {
 			evs = append(evs, ev)
@@ -1372,8 +1399,10 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		// order ambiguous, whoever shares the cell (threads, CLONE_FS children).
 		// A fork child has its own copy and is never on this cell.  A failed
 		// chdir changes nothing, but its own relative path still reads the cwd.
+		// Every exec is dependent: an absolute script whose #! names a relative
+		// interpreter resolves it against the cwd inside the same call.
 		mod := ent.role == roleChdir && c.ret.ok()
-		if !p.cwd.cwdOrdered(startLine, rec.line, cwdDependsOn(&ev), mod) {
+		if !p.cwd.cwdOrdered(startLine, rec.line, cwdDependsOn(&ev, ent) || ent.role == roleExec, mod) {
 			return fail(reasonCwdRace)
 		}
 		if mod {
