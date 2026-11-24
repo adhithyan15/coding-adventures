@@ -292,8 +292,20 @@ public func register(
     q: [Int]? = nil, masterQ: [Int]? = nil
 ) throws -> (q: [Int], states: [FlipFlopState]) {
     let n = data.count
+    guard n <= maxWidth else {
+        throw LogicGateError.invalidWidth(name: "data", value: n)
+    }
+    // Reject mismatched state vectors instead of silently padding with 0.
+    if let q = q, q.count != n {
+        throw LogicGateError.invalidShape("q.count \(q.count) != data.count \(n)")
+    }
+    if let mq = masterQ, mq.count != n {
+        throw LogicGateError.invalidShape("masterQ.count \(mq.count) != data.count \(n)")
+    }
     let currentQ   = q       ?? Array(repeating: 0, count: n)
     let currentMQ  = masterQ ?? Array(repeating: 0, count: n)
+    for (i, v) in currentQ.enumerated()  { try validateBit(v, name: "q[\(i)]") }
+    for (i, v) in currentMQ.enumerated() { try validateBit(v, name: "masterQ[\(i)]") }
 
     try validateBit(clock, name: "clock")
     for (i, d) in data.enumerated() { try validateBit(d, name: "data[\(i)]") }
@@ -302,8 +314,8 @@ public func register(
     var states: [FlipFlopState] = []
 
     for i in 0..<n {
-        let cq  = i < currentQ.count  ? currentQ[i]  : 0
-        let cmq = i < currentMQ.count ? currentMQ[i] : 0
+        let cq  = currentQ[i]
+        let cmq = currentMQ[i]
 
         // Two-phase evaluation: first run the master-sample phase (clock=0)
         // so the master latch sees the current D value, then run the actual
@@ -428,6 +440,10 @@ public func counter(
 ) throws -> (q: [Int], overflow: Int, states: [FlipFlopState]) {
     try validateBit(clock, name: "clock")
     try validateBit(reset, name: "reset")
+    // A zero-width counter has no meaning (and used to report overflow=1).
+    guard q.count >= 1 && q.count <= maxCounterWidth else {
+        throw LogicGateError.invalidWidth(name: "q", value: q.count)
+    }
     for (i, v) in q.enumerated() { try validateBit(v, name: "q[\(i)]") }
 
     let n = q.count
