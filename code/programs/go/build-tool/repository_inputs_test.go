@@ -648,14 +648,14 @@ func TestPbtV1CorpusSelectsThePythonEngine(t *testing.T) {
 		{Name: "rust/ct-compare", Language: "rust"},
 	}
 	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
-	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	got, err := repositoryInputConsumersForChange(corpus, packages, "python")
 	if err != nil {
 		t.Fatal(err)
 	}
 	if want := map[string]bool{"python/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
-	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "all"); err == nil {
+	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "python"); err == nil {
 		t.Fatal("a corpus change with the engine package missing must fail closed")
 	}
 }
@@ -693,6 +693,37 @@ func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 	}
 	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "all"); err == nil {
 		t.Fatal("a corpus change with the engine package missing must fail closed")
+	}
+}
+
+func TestPbtV1CorpusSelectsTheGoEngine(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
+		{Name: "python/test-bootstrap", Language: "python"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	corpus := []string{"code/specs/fixtures/pbt-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]bool{"go/test-bootstrap": true, "python/test-bootstrap": true}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	got, err = repositoryInputConsumersForChange(corpus, packages, "go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"go/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("go filter: got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "go"); err == nil {
+		t.Fatal("a corpus change with the Go engine package missing must fail closed")
+	}
+	// A change to the Go package's own tests is not a corpus change.
+	if got, err := repositoryInputConsumersForChange([]string{"code/packages/go/test-bootstrap/pbt/corpus_test.go"}, packages, "all"); err != nil || len(got) != 0 {
+		t.Fatalf("an engine-source change is selected by its package, not the corpus row: %v %v", got, err)
 	}
 }
 
