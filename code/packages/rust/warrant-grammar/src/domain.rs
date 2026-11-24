@@ -228,7 +228,7 @@ impl Domain {
                 } else {
                     let j = i - 347;
                     let l = ls[(j / 2) as usize] as usize;
-                    let b = if j % 2 == 0 { 0x00 } else { 0xa5 };
+                    let b = if j.is_multiple_of(2) { 0x00 } else { 0xa5 };
                     EvalValue::Bytes(vec![b; l])
                 }
             }
