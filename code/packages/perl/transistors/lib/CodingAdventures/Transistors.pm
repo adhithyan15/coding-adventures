@@ -325,6 +325,25 @@ sub _check_bit {
     return $v eq '1' ? 1 : 0;
 }
 
+# _fname -- name of the public function that called _args (for messages).
+sub _fname { return ( ( caller(1) )[3] =~ s/.*:://r ); }
+
+# _args -- unpack and arity-check a gate's arguments.
+#
+# The old code guessed "method call" from the argument COUNT, so
+# cmos_nand(0, 1, 1) silently dropped the 0.  We now strip a leading invocant
+# only when it is exactly this package's name (which can never be a bit), and
+# die on any other argument count.
+sub _args {
+    my ( $fname, $min, $max, $args ) = @_;
+    my @a = @{$args};
+    shift @a if @a && defined $a[0] && !ref $a[0] && $a[0] eq __PACKAGE__;
+    die "Transistors: $fname takes " . ( $min == $max ? $min : "$min to $max" )
+        . " argument(s), got " . scalar(@a) . "\n"
+        if @a < $min || @a > $max;
+    return @a;
+}
+
 my $VDD = 3.3;  # Supply voltage (V)
 my $VTH = 0.4;  # Threshold voltage (V)
 
@@ -365,7 +384,7 @@ sub _vgs_pmos { return $_[0] == 1 ? 0.0 : -$VDD }
 # @return      0 or 1.
 
 sub cmos_not {
-    my $a = ( @_ == 2 ) ? $_[1] : $_[0];
+    my ($a) = _args( _fname(), 1, 1, \@_ );
     $a = _check_bit($a, "a");
 
     my $nmos_on = nmos( _vgs_nmos($a), $VTH );
@@ -413,7 +432,7 @@ sub cmos_not {
 # @return          0 or 1.
 
 sub cmos_nand {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
     $a = _check_bit($a, "a");
     $b = _check_bit($b, "b");
 
@@ -461,7 +480,7 @@ sub cmos_nand {
 # @return          0 or 1.
 
 sub cmos_nor {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
     $a = _check_bit($a, "a");
     $b = _check_bit($b, "b");
 
@@ -495,7 +514,7 @@ sub cmos_nor {
 # @return          0 or 1.
 
 sub cmos_and {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
     $a = _check_bit($a, "a");
     $b = _check_bit($b, "b");
     return cmos_not( cmos_nand( $a, $b ) );
@@ -511,7 +530,7 @@ sub cmos_and {
 # @return          0 or 1.
 
 sub cmos_or {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
     $a = _check_bit($a, "a");
     $b = _check_bit($b, "b");
     return cmos_not( cmos_nor( $a, $b ) );
@@ -539,7 +558,7 @@ sub cmos_or {
 # @return          0 or 1.
 
 sub cmos_xor {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
     $a = _check_bit($a, "a");
     $b = _check_bit($b, "b");
     # 4-NAND XOR construction:
@@ -565,7 +584,7 @@ sub cmos_xor {
 # @return          0 or 1.
 
 sub cmos_xnor {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
     $a = _check_bit($a, "a");
     $b = _check_bit($b, "b");
     return cmos_not( cmos_xor( $a, $b ) );
@@ -629,7 +648,7 @@ my $TTL_HIGH_MIN = 2.0;   # Minimum voltage recognised as logic HIGH
 # @return          0 or 1.
 
 sub ttl_nand {
-    my ( $a, $b ) = ( @_ == 3 ) ? ( $_[1], $_[2] ) : ( $_[0], $_[1] );
+    my ( $a, $b ) = _args( _fname(), 2, 2, \@_ );
     $a = _check_bit($a, "a");
     $b = _check_bit($b, "b");
 
@@ -682,7 +701,7 @@ sub ttl_nand {
 # @return      0 or 1.
 
 sub ttl_not {
-    my $a = ( @_ == 2 ) ? $_[1] : $_[0];
+    my ($a) = _args( _fname(), 1, 1, \@_ );
     $a = _check_bit($a, "a");
     return $a == 1 ? 0 : 1;
 }

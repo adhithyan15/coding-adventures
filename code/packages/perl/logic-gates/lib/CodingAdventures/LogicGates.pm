@@ -149,8 +149,11 @@ sub _describe {
     my ($value) = @_;
     return 'undef' if !defined $value;
     return 'a ' . Scalar::Util::reftype($value) . ' reference' if ref $value;
-    my $text = "$value";
-    $text = substr( $text, 0, 32 ) . '...' if length $text > 35;
+    # Cut BEFORE copying: substr/length on the original scalar never build a
+    # full copy, so a 10 MB hostile string costs us 32 characters, not 10 MB.
+    my $long = length($value) > 32;
+    my $text = substr( $value, 0, 32 );
+    $text .= '...' if $long;
     $text =~ s/([^\x20-\x7e])/sprintf( '\\x%02x', ord $1 )/ge;
     return "'$text'";
 }
@@ -188,8 +191,12 @@ sub _bit {
 sub _args {
     my ( $fname, $min, $max, $args ) = @_;
     my @a = @{$args};
+    # The package name is never a valid bit, so a leading argument equal to it
+    # is unambiguously an invocant (Class->AND(1,0)); strip it BEFORE the
+    # arity check.  A plain call that passes the name as data, AND($pkg, 1),
+    # ends up one argument short and dies with an arity error.
     shift @a
-        if @a > $max && defined $a[0] && !ref $a[0] && $a[0] eq __PACKAGE__;
+        if @a && defined $a[0] && !ref $a[0] && $a[0] eq __PACKAGE__;
     if ( @a < $min || @a > $max ) {
         my $want = $min == $max ? $min : "$min to $max";
         die "logic_gates: $fname takes $want argument(s), got " . scalar(@a) . "\n";
@@ -640,13 +647,16 @@ use constant MAX_WIDTH => 65536;
 sub _validate_width {
     my ($width) = @_;
     die "logic_gates: Counter width must be 1 to " . MAX_WIDTH . ", got " . _describe($width) . "\n"
-        unless defined $width && !ref $width && $width =~ /\A[1-9][0-9]{0,4}\z/ && $width <= MAX_WIDTH;
-    return;
+        unless defined $width && !ref $width && $width =~ /\A[1-9][0-9]{0,4}\z/ && 0 + substr( $width, 0 ) <= MAX_WIDTH;
+    # Return a fresh integer built from the validated STRING form.  A dualvar
+    # such as dualvar(-5, "3") is therefore the width 3 (the string decides,
+    # as for bits); its numeric part is never used.
+    return 0 + substr( $width, 0 );
 }
 
 sub new_counter_state {
     my ($width) = _args( 'new_counter_state', 1, 1, \@_ );
-    _validate_width($width);
+    $width = _validate_width($width);
     return {
         bits  => [ (0) x $width ],
         width => $width,
@@ -945,8 +955,7 @@ sub Counter {
     die "logic_gates: Counter requires non-nil state\n"
         unless defined $state && ref $state eq 'HASH';
 
-    my $width = $state->{width};
-    _validate_width($width);
+    my $width = _validate_width( $state->{width} );
     die "logic_gates: Counter state bits must be an array of width bits\n"
         unless ref $state->{bits} eq 'ARRAY' && @{ $state->{bits} } == $width;
 

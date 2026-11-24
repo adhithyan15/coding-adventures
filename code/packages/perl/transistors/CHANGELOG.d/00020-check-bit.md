@@ -10,3 +10,4 @@
 - `_check_bit` now returns a fresh canonical integer 0/1 and the gates compute
   on it, so `dualvar(5, "1")` (string "1", number 5) can no longer pass
   validation and then compute as 5.
+- The cmos_* and ttl_* gates enforce arity with `_args` (leading invocant stripped only when it is exactly the package name); `cmos_nand(0, 1, 1)` and `cmos_not(0, 1)` now die instead of silently dropping or misreading an argument.

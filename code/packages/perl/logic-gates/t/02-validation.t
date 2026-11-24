@@ -339,4 +339,73 @@ is( new_flip_flop_state( 1, 0, 1, 0 ),
     ok( time - $t0 < 10, 'rejection of absurd widths returns promptly' );
 }
 
+# ===========================================================================
+# Canonical widths: the STRING form decides (dualvar(-5,"3") is width 3).
+# ===========================================================================
+
+{
+    for my $dv ( dualvar( -5, '3' ), dualvar( 70000, '3' ), dualvar( 0, '3' ) ) {
+        my $st = new_counter_state($dv);
+        is( $st->{width}, 3, 'dualvar width canonicalised to its string form' );
+        is( scalar @{ $st->{bits} }, 3, 'dualvar width: bits sized from the string form' );
+        my ( $bits, $st2 ) = Counter( 1, 0, { width => $dv, bits => [ 0, 0, 0 ] } );
+        is( $bits, [ 1, 0, 0 ], 'Counter with dualvar width counts on width 3' );
+        is( $st2->{width}, 3, 'Counter stores the canonical width' );
+    }
+    like( dies { new_counter_state( dualvar( 3, '-5' ) ) }, qr/Counter width must be/, 'dualvar(3,"-5") rejected' );
+}
+
+# ===========================================================================
+# Error text is bounded: a 10 MB input must not be copied into the message.
+# ===========================================================================
+
+{
+    my $huge = 'x' x ( 10 * 1024 * 1024 );
+    my $err = dies { AND( $huge, 1 ) };
+    like( $err, qr/must be 0 or 1/, 'huge string rejected' );
+    ok( length($err) < 200, 'error message for a 10 MB input is short' );
+    my $err2 = dies { new_counter_state($huge) };
+    ok( length($err2) < 200, 'width error for a 10 MB input is short' );
+}
+
+# ===========================================================================
+# Method-style calls work for EVERY public function; the package name as data
+# is rejected.
+# ===========================================================================
+
+{
+    my $C = 'CodingAdventures::LogicGates';
+    is( $C->AND( 1, 1 ), 1, 'Class->AND' );
+    is( $C->NOT(1), 0, 'Class->NOT' );
+    is( $C->NAND_NOT(1), 0, 'Class->NAND_NOT' );
+    is( $C->ANDn( 1, 1, 1 ), 1, 'Class->ANDn' );
+    is( $C->ORn( 0, 1 ), 1, 'Class->ORn' );
+    is( $C->XORn( 1, 0 ), 1, 'Class->XORn' );
+    is( [ $C->SRLatch( 1, 0, 0, 1 ) ], [ 1, 0 ], 'Class->SRLatch' );
+    is( [ $C->DLatch( 1, 1, 0, 1 ) ], [ 1, 0 ], 'Class->DLatch' );
+    my ( $q, $qb, $fs ) = $C->DFlipFlop( 1, 1 );
+    is( ref $fs, 'HASH', 'Class->DFlipFlop (2 args)' );
+    ( $q, $qb, $fs ) = $C->DFlipFlop( 1, 0, $fs );
+    is( $q, 1, 'Class->DFlipFlop (3 args)' );
+    my ( $o, $rs ) = $C->Register( [ 1, 0 ], 1 );
+    is( scalar @{$o}, 2, 'Class->Register (2 args)' );
+    ( $o, $rs ) = $C->Register( [ 1, 0 ], 0, $rs );
+    is( $o, [ 1, 0 ], 'Class->Register (3 args)' );
+    my $sst = [ $C->new_flip_flop_state() ];
+    is( scalar @{$sst}, 1, 'Class->new_flip_flop_state()' );
+    is( $C->new_flip_flop_state( 1, 0, 1, 0 )->{master_q}, 1, 'Class->new_flip_flop_state(4)' );
+    my @sr = $C->ShiftRegister( 1, 1, [ $C->new_flip_flop_state() ], 'left' );
+    is( scalar @sr, 3, 'Class->ShiftRegister' );
+    my $cs = $C->new_counter_state(2);
+    is( $cs->{width}, 2, 'Class->new_counter_state' );
+    my ( $cb, $cs2 ) = $C->Counter( 1, 0, $cs );
+    is( $cb, [ 1, 0 ], 'Class->Counter' );
+
+    # The package name passed as plain data is never a bit.
+    like( dies { AND( $C, 1 ) },  qr/AND takes 2 argument\(s\), got 1/, 'AND(pkg, 1) dies' );
+    like( dies { NOT($C) },       qr/NOT takes 1 argument\(s\), got 0/, 'NOT(pkg) dies' );
+    like( dies { DFlipFlop( 1, $C ) }, qr/clock must be 0 or 1/, 'DFlipFlop(1, pkg) dies' );
+    like( dies { ANDn( 1, 1, $C ) },   qr/input must be 0 or 1/, 'ANDn(1,1,pkg) dies' );
+}
+
 done_testing;

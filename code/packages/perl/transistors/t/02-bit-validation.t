@@ -34,4 +34,25 @@ for my $f ( [ cmos_nand => \&cmos_nand ], [ cmos_nor => \&cmos_nor ], [ cmos_and
 is( cmos_not( dualvar( 5, '1' ) ), 0, 'cmos_not(dualvar(5,"1")) = 0' );
 is( cmos_not( dualvar( 1, '0' ) ), 1, 'cmos_not(dualvar(1,"0")) = 1' );
 like( dies { cmos_not( dualvar( 1, 'x' ) ) }, qr/must be 0 or 1/, 'cmos_not rejects dualvar(1,"x")' );
+# Arity: wrong counts die (cmos_nand(0,1,1) used to silently drop the 0).
+{
+    my $C = 'CodingAdventures::Transistors';
+    my %two = ( cmos_nand => \&cmos_nand, cmos_nor => \&cmos_nor, cmos_and => \&cmos_and,
+                cmos_or => \&cmos_or, cmos_xor => \&cmos_xor, cmos_xnor => \&cmos_xnor,
+                ttl_nand => \&CodingAdventures::Transistors::ttl_nand );
+    my %one = ( cmos_not => \&cmos_not, ttl_not => \&CodingAdventures::Transistors::ttl_not );
+    for my $n ( sort keys %two ) {
+        like( dies { $two{$n}->( 0, 1, 1 ) }, qr/Transistors: $n takes 2 argument\(s\), got 3/, "$n 3 args dies" );
+        like( dies { $two{$n}->(1) },         qr/$n takes 2 argument\(s\), got 1/,              "$n 1 arg dies" );
+        like( dies { $two{$n}->() },          qr/$n takes 2 argument\(s\), got 0/,              "$n 0 args dies" );
+        is( $two{$n}->( $C, 1, 0 ), $two{$n}->( 1, 0 ), "$n method style works" );
+        like( dies { $two{$n}->( $C, $C ) }, qr/takes 2 argument/, "$n package name as data dies" );
+    }
+    for my $n ( sort keys %one ) {
+        like( dies { $one{$n}->( 0, 1 ) }, qr/$n takes 1 argument\(s\), got 2/, "$n 2 args dies" );
+        like( dies { $one{$n}->() },       qr/$n takes 1 argument\(s\), got 0/, "$n 0 args dies" );
+        is( $one{$n}->( $C, 1 ), $one{$n}->(1), "$n method style works" );
+    }
+}
+
 done_testing;
