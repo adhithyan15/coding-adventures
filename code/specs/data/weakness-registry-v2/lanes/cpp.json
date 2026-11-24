@@ -59,7 +59,7 @@
           "kind": "sanitizer-run",
           "id": "sanitizer-run:asan+ubsan",
           "state": "claimed",
-          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target)."
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target). For a row that uses a lane extension (VER15a section 5.5) this item can never be live while the run is skippable: live needs an affirmative run record."
         },
         {
           "kind": "compiler-flag",
@@ -77,7 +77,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:cpp.no-address-surface",
           "state": "planned",
-          "detail": "The C++ memory-addressing surface: no reference or pointer parameter or return, no this, no container, string_view, span or iterator, no lambda capture by reference, no new, and RAII only on the allow-listed rejection path (detail::reject: one std::string temporary and one exception object). This is the rule LGE-CPP-EXT would define; it does not exist and VER15a section 5.5 has no cpp lane extension that names it. The cpp analyzer is not built; its grammar front end is LGE-A2.",
+          "detail": "The C++ memory-addressing surface (VER15a section 5.6.1), on the preprocessed and template-instantiated translation unit and on every externally visible entity including detail:: : no raw pointer or array object, parameter or return (a const char* parameter is a pointer, and a string literal decays to one at the call site), no escaping reference, no &, no pointer arithmetic, no reinterpret_cast, no new or delete, no iterator, string_view or span, no std::string data(), c_str(), operator[] or begin(), no by-reference lambda capture, no this escape, no static or thread_local object, no container. The only allow-listed code is the rejection helpers, which must have no pointer parameter and match a pinned AST shape and content hash (not a name): one message built from std::string temporaries produced by one fixed expression and one exception object. The rule does not exist (LGE-CPP-EXT), and the current header fails it (logic_gates.hpp:77, :83 take const char*).",
           "planned_item": "LGE-CPP-EXT"
         },
         {
@@ -100,6 +100,20 @@
           "state": "claimed",
           "detail": "code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80: reject() constructs a std::string from a const char*, appends std::to_string(value) (a temporary) and passes the result to std::invalid_argument, which copies it into a heap-allocated exception object. Every rejected call therefore allocates, and any of those allocations can throw std::bad_alloc instead of std::invalid_argument.",
           "ref": "code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:cpp-int-only-rejection-helpers",
+          "state": "planned",
+          "detail": "detail::reject and detail::check take only int arguments (reject(int which, int value), check(int which, int value)) and choose the parameter name from string literals inside the body, so no pointer parameter exists and no literal decays to a pointer at a gate call site. Planned in LGE-CPP-HARDEN (in progress). Prerequisite of the cpp_address_surface_allowlist extension (VER15a section 5.6.1).",
+          "planned_item": "LGE-CPP-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:cpp.no-global-or-static-state",
+          "state": "planned",
+          "detail": "No namespace-scope or function-local static, no thread_local and no global variable in library sources (the scalar-state check VER15a section 5.6 assigns to the CWE-362 and CWE-367 rows). The cpp analyzer is not built; its grammar front end is LGE-A2.",
+          "planned_item": "LGE-A2"
         }
       ],
       "registry_floor": "proved",
@@ -108,13 +122,17 @@
         "analyzer-rule:cpp.no-address-surface",
         "analyzer-rule:cpp.no-ub-reachable",
         "sanitizer-run:asan+ubsan",
-        "compiler-flag:strict-cxx17"
+        "compiler-flag:strict-cxx17",
+        "type-system:cpp-int-only-rejection-helpers",
+        "analyzer-rule:cpp.no-global-or-static-state"
       ],
       "safe_subset": "lane-extension:cpp_address_surface_allowlist",
       "requires_closed": [
         "cpp.signed-overflow-ub",
         "cpp.bitwise-shift",
-        "cpp.uninitialized-variable"
+        "cpp.uninitialized-variable",
+        "cpp.odr-header-only-version-skew",
+        "cpp.constexpr-runtime-divergence"
       ]
     },
     {
@@ -129,7 +147,7 @@
           "kind": "sanitizer-run",
           "id": "sanitizer-run:asan+ubsan",
           "state": "claimed",
-          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target)."
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target). For a row that uses a lane extension (VER15a section 5.5) this item can never be live while the run is skippable: live needs an affirmative run record."
         },
         {
           "kind": "compiler-flag",
@@ -147,7 +165,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:cpp.no-address-surface",
           "state": "planned",
-          "detail": "The C++ memory-addressing surface: no reference or pointer parameter or return, no this, no container, string_view, span or iterator, no lambda capture by reference, no new, and RAII only on the allow-listed rejection path (detail::reject: one std::string temporary and one exception object). This is the rule LGE-CPP-EXT would define; it does not exist and VER15a section 5.5 has no cpp lane extension that names it. The cpp analyzer is not built; its grammar front end is LGE-A2.",
+          "detail": "The C++ memory-addressing surface (VER15a section 5.6.1), on the preprocessed and template-instantiated translation unit and on every externally visible entity including detail:: : no raw pointer or array object, parameter or return (a const char* parameter is a pointer, and a string literal decays to one at the call site), no escaping reference, no &, no pointer arithmetic, no reinterpret_cast, no new or delete, no iterator, string_view or span, no std::string data(), c_str(), operator[] or begin(), no by-reference lambda capture, no this escape, no static or thread_local object, no container. The only allow-listed code is the rejection helpers, which must have no pointer parameter and match a pinned AST shape and content hash (not a name): one message built from std::string temporaries produced by one fixed expression and one exception object. The rule does not exist (LGE-CPP-EXT), and the current header fails it (logic_gates.hpp:77, :83 take const char*).",
           "planned_item": "LGE-CPP-EXT"
         },
         {
@@ -170,6 +188,20 @@
           "state": "claimed",
           "detail": "code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80: reject() constructs a std::string from a const char*, appends std::to_string(value) (a temporary) and passes the result to std::invalid_argument, which copies it into a heap-allocated exception object. Every rejected call therefore allocates, and any of those allocations can throw std::bad_alloc instead of std::invalid_argument.",
           "ref": "code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:cpp-int-only-rejection-helpers",
+          "state": "planned",
+          "detail": "detail::reject and detail::check take only int arguments (reject(int which, int value), check(int which, int value)) and choose the parameter name from string literals inside the body, so no pointer parameter exists and no literal decays to a pointer at a gate call site. Planned in LGE-CPP-HARDEN (in progress). Prerequisite of the cpp_address_surface_allowlist extension (VER15a section 5.6.1).",
+          "planned_item": "LGE-CPP-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:cpp.no-global-or-static-state",
+          "state": "planned",
+          "detail": "No namespace-scope or function-local static, no thread_local and no global variable in library sources (the scalar-state check VER15a section 5.6 assigns to the CWE-362 and CWE-367 rows). The cpp analyzer is not built; its grammar front end is LGE-A2.",
+          "planned_item": "LGE-A2"
         }
       ],
       "registry_floor": "proved",
@@ -178,13 +210,17 @@
         "analyzer-rule:cpp.no-address-surface",
         "analyzer-rule:cpp.no-ub-reachable",
         "sanitizer-run:asan+ubsan",
-        "compiler-flag:strict-cxx17"
+        "compiler-flag:strict-cxx17",
+        "type-system:cpp-int-only-rejection-helpers",
+        "analyzer-rule:cpp.no-global-or-static-state"
       ],
       "safe_subset": "lane-extension:cpp_address_surface_allowlist",
       "requires_closed": [
         "cpp.signed-overflow-ub",
         "cpp.bitwise-shift",
-        "cpp.uninitialized-variable"
+        "cpp.uninitialized-variable",
+        "cpp.odr-header-only-version-skew",
+        "cpp.constexpr-runtime-divergence"
       ]
     },
     {
@@ -192,14 +228,14 @@
       "origin": "registry-v2",
       "cwe": 125,
       "name": "Out-of-bounds Read",
-      "rationale": "Out-of-bounds read needs an index or a pointer that can run past an object. The only pointers are const char* parameters bound to the string literals \"a\" and \"b\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:97, :103-104) that std::string reads up to the terminating NUL, and the literal is never indexed or offset by the library. Children 126 and 127 are covered by this row.",
+      "rationale": "Out-of-bounds read needs an index or a pointer that can run past an object. The only pointers are const char* parameters bound to the string literals \"a\" and \"b\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:97, :103-104) that std::string reads up to the terminating NUL, and the literal is never indexed or offset by the library. Children 126 and 127 are covered by this row. Today detail::reject is public (logic_gates::detail::reject) and takes a const char* that a caller can point at any memory, after which std::string reads up to a NUL: an out-of-bounds read reachable through the shipped header until the int-only helper change.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
           "kind": "sanitizer-run",
           "id": "sanitizer-run:asan+ubsan",
           "state": "claimed",
-          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target)."
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target). For a row that uses a lane extension (VER15a section 5.5) this item can never be live while the run is skippable: live needs an affirmative run record."
         },
         {
           "kind": "compiler-flag",
@@ -217,7 +253,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:cpp.no-address-surface",
           "state": "planned",
-          "detail": "The C++ memory-addressing surface: no reference or pointer parameter or return, no this, no container, string_view, span or iterator, no lambda capture by reference, no new, and RAII only on the allow-listed rejection path (detail::reject: one std::string temporary and one exception object). This is the rule LGE-CPP-EXT would define; it does not exist and VER15a section 5.5 has no cpp lane extension that names it. The cpp analyzer is not built; its grammar front end is LGE-A2.",
+          "detail": "The C++ memory-addressing surface (VER15a section 5.6.1), on the preprocessed and template-instantiated translation unit and on every externally visible entity including detail:: : no raw pointer or array object, parameter or return (a const char* parameter is a pointer, and a string literal decays to one at the call site), no escaping reference, no &, no pointer arithmetic, no reinterpret_cast, no new or delete, no iterator, string_view or span, no std::string data(), c_str(), operator[] or begin(), no by-reference lambda capture, no this escape, no static or thread_local object, no container. The only allow-listed code is the rejection helpers, which must have no pointer parameter and match a pinned AST shape and content hash (not a name): one message built from std::string temporaries produced by one fixed expression and one exception object. The rule does not exist (LGE-CPP-EXT), and the current header fails it (logic_gates.hpp:77, :83 take const char*).",
           "planned_item": "LGE-CPP-EXT"
         },
         {
@@ -240,6 +276,20 @@
           "state": "claimed",
           "detail": "code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80: reject() constructs a std::string from a const char*, appends std::to_string(value) (a temporary) and passes the result to std::invalid_argument, which copies it into a heap-allocated exception object. Every rejected call therefore allocates, and any of those allocations can throw std::bad_alloc instead of std::invalid_argument.",
           "ref": "code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:cpp-int-only-rejection-helpers",
+          "state": "planned",
+          "detail": "detail::reject and detail::check take only int arguments (reject(int which, int value), check(int which, int value)) and choose the parameter name from string literals inside the body, so no pointer parameter exists and no literal decays to a pointer at a gate call site. Planned in LGE-CPP-HARDEN (in progress). Prerequisite of the cpp_address_surface_allowlist extension (VER15a section 5.6.1).",
+          "planned_item": "LGE-CPP-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:cpp.no-global-or-static-state",
+          "state": "planned",
+          "detail": "No namespace-scope or function-local static, no thread_local and no global variable in library sources (the scalar-state check VER15a section 5.6 assigns to the CWE-362 and CWE-367 rows). The cpp analyzer is not built; its grammar front end is LGE-A2.",
+          "planned_item": "LGE-A2"
         }
       ],
       "registry_floor": "proved",
@@ -248,13 +298,17 @@
         "analyzer-rule:cpp.no-address-surface",
         "analyzer-rule:cpp.no-ub-reachable",
         "sanitizer-run:asan+ubsan",
-        "compiler-flag:strict-cxx17"
+        "compiler-flag:strict-cxx17",
+        "type-system:cpp-int-only-rejection-helpers",
+        "analyzer-rule:cpp.no-global-or-static-state"
       ],
       "safe_subset": "lane-extension:cpp_address_surface_allowlist",
       "requires_closed": [
         "cpp.signed-overflow-ub",
         "cpp.bitwise-shift",
-        "cpp.uninitialized-variable"
+        "cpp.uninitialized-variable",
+        "cpp.odr-header-only-version-skew",
+        "cpp.constexpr-runtime-divergence"
       ]
     },
     {
@@ -269,7 +323,7 @@
           "kind": "sanitizer-run",
           "id": "sanitizer-run:asan+ubsan",
           "state": "claimed",
-          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target)."
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target). For a row that uses a lane extension (VER15a section 5.5) this item can never be live while the run is skippable: live needs an affirmative run record."
         },
         {
           "kind": "compiler-flag",
@@ -287,7 +341,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:cpp.no-address-surface",
           "state": "planned",
-          "detail": "The C++ memory-addressing surface: no reference or pointer parameter or return, no this, no container, string_view, span or iterator, no lambda capture by reference, no new, and RAII only on the allow-listed rejection path (detail::reject: one std::string temporary and one exception object). This is the rule LGE-CPP-EXT would define; it does not exist and VER15a section 5.5 has no cpp lane extension that names it. The cpp analyzer is not built; its grammar front end is LGE-A2.",
+          "detail": "The C++ memory-addressing surface (VER15a section 5.6.1), on the preprocessed and template-instantiated translation unit and on every externally visible entity including detail:: : no raw pointer or array object, parameter or return (a const char* parameter is a pointer, and a string literal decays to one at the call site), no escaping reference, no &, no pointer arithmetic, no reinterpret_cast, no new or delete, no iterator, string_view or span, no std::string data(), c_str(), operator[] or begin(), no by-reference lambda capture, no this escape, no static or thread_local object, no container. The only allow-listed code is the rejection helpers, which must have no pointer parameter and match a pinned AST shape and content hash (not a name): one message built from std::string temporaries produced by one fixed expression and one exception object. The rule does not exist (LGE-CPP-EXT), and the current header fails it (logic_gates.hpp:77, :83 take const char*).",
           "planned_item": "LGE-CPP-EXT"
         },
         {
@@ -310,6 +364,20 @@
           "state": "claimed",
           "detail": "code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80: reject() constructs a std::string from a const char*, appends std::to_string(value) (a temporary) and passes the result to std::invalid_argument, which copies it into a heap-allocated exception object. Every rejected call therefore allocates, and any of those allocations can throw std::bad_alloc instead of std::invalid_argument.",
           "ref": "code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:cpp-int-only-rejection-helpers",
+          "state": "planned",
+          "detail": "detail::reject and detail::check take only int arguments (reject(int which, int value), check(int which, int value)) and choose the parameter name from string literals inside the body, so no pointer parameter exists and no literal decays to a pointer at a gate call site. Planned in LGE-CPP-HARDEN (in progress). Prerequisite of the cpp_address_surface_allowlist extension (VER15a section 5.6.1).",
+          "planned_item": "LGE-CPP-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:cpp.no-global-or-static-state",
+          "state": "planned",
+          "detail": "No namespace-scope or function-local static, no thread_local and no global variable in library sources (the scalar-state check VER15a section 5.6 assigns to the CWE-362 and CWE-367 rows). The cpp analyzer is not built; its grammar front end is LGE-A2.",
+          "planned_item": "LGE-A2"
         }
       ],
       "registry_floor": "proved",
@@ -318,13 +386,17 @@
         "analyzer-rule:cpp.no-address-surface",
         "analyzer-rule:cpp.no-ub-reachable",
         "sanitizer-run:asan+ubsan",
-        "compiler-flag:strict-cxx17"
+        "compiler-flag:strict-cxx17",
+        "type-system:cpp-int-only-rejection-helpers",
+        "analyzer-rule:cpp.no-global-or-static-state"
       ],
       "safe_subset": "lane-extension:cpp_address_surface_allowlist",
       "requires_closed": [
         "cpp.signed-overflow-ub",
         "cpp.bitwise-shift",
-        "cpp.uninitialized-variable"
+        "cpp.uninitialized-variable",
+        "cpp.odr-header-only-version-skew",
+        "cpp.constexpr-runtime-divergence"
       ]
     },
     {
@@ -332,14 +404,14 @@
       "origin": "registry-v2",
       "cwe": 476,
       "name": "NULL Pointer Dereference",
-      "rationale": "NULL pointer dereference needs a pointer that can be null. The only pointers are const char* parameters (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77, :83) always bound to a string literal, never to a computed or caller-supplied value; no function returns a pointer. nullptr_t and pointer arguments are rejected by the deleted overloads, though that is not tested (see cpp.untested-argument-types).",
+      "rationale": "NULL pointer dereference needs a pointer that can be null. The only pointers are const char* parameters (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77, :83) always bound to a string literal, never to a computed or caller-supplied value; no function returns a pointer. nullptr_t and pointer arguments are rejected by the deleted overloads, though that is not tested (see cpp.untested-argument-types). Likewise logic_gates::detail::reject(nullptr, 0) is callable by a user today and dereferences the null pointer.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
           "kind": "sanitizer-run",
           "id": "sanitizer-run:asan+ubsan",
           "state": "claimed",
-          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target)."
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target). For a row that uses a lane extension (VER15a section 5.5) this item can never be live while the run is skippable: live needs an affirmative run record."
         },
         {
           "kind": "compiler-flag",
@@ -357,7 +429,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:cpp.no-address-surface",
           "state": "planned",
-          "detail": "The C++ memory-addressing surface: no reference or pointer parameter or return, no this, no container, string_view, span or iterator, no lambda capture by reference, no new, and RAII only on the allow-listed rejection path (detail::reject: one std::string temporary and one exception object). This is the rule LGE-CPP-EXT would define; it does not exist and VER15a section 5.5 has no cpp lane extension that names it. The cpp analyzer is not built; its grammar front end is LGE-A2.",
+          "detail": "The C++ memory-addressing surface (VER15a section 5.6.1), on the preprocessed and template-instantiated translation unit and on every externally visible entity including detail:: : no raw pointer or array object, parameter or return (a const char* parameter is a pointer, and a string literal decays to one at the call site), no escaping reference, no &, no pointer arithmetic, no reinterpret_cast, no new or delete, no iterator, string_view or span, no std::string data(), c_str(), operator[] or begin(), no by-reference lambda capture, no this escape, no static or thread_local object, no container. The only allow-listed code is the rejection helpers, which must have no pointer parameter and match a pinned AST shape and content hash (not a name): one message built from std::string temporaries produced by one fixed expression and one exception object. The rule does not exist (LGE-CPP-EXT), and the current header fails it (logic_gates.hpp:77, :83 take const char*).",
           "planned_item": "LGE-CPP-EXT"
         },
         {
@@ -380,6 +452,20 @@
           "state": "claimed",
           "detail": "code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80: reject() constructs a std::string from a const char*, appends std::to_string(value) (a temporary) and passes the result to std::invalid_argument, which copies it into a heap-allocated exception object. Every rejected call therefore allocates, and any of those allocations can throw std::bad_alloc instead of std::invalid_argument.",
           "ref": "code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:cpp-int-only-rejection-helpers",
+          "state": "planned",
+          "detail": "detail::reject and detail::check take only int arguments (reject(int which, int value), check(int which, int value)) and choose the parameter name from string literals inside the body, so no pointer parameter exists and no literal decays to a pointer at a gate call site. Planned in LGE-CPP-HARDEN (in progress). Prerequisite of the cpp_address_surface_allowlist extension (VER15a section 5.6.1).",
+          "planned_item": "LGE-CPP-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:cpp.no-global-or-static-state",
+          "state": "planned",
+          "detail": "No namespace-scope or function-local static, no thread_local and no global variable in library sources (the scalar-state check VER15a section 5.6 assigns to the CWE-362 and CWE-367 rows). The cpp analyzer is not built; its grammar front end is LGE-A2.",
+          "planned_item": "LGE-A2"
         }
       ],
       "registry_floor": "proved",
@@ -388,13 +474,17 @@
         "analyzer-rule:cpp.no-address-surface",
         "analyzer-rule:cpp.no-ub-reachable",
         "sanitizer-run:asan+ubsan",
-        "compiler-flag:strict-cxx17"
+        "compiler-flag:strict-cxx17",
+        "type-system:cpp-int-only-rejection-helpers",
+        "analyzer-rule:cpp.no-global-or-static-state"
       ],
       "safe_subset": "lane-extension:cpp_address_surface_allowlist",
       "requires_closed": [
         "cpp.signed-overflow-ub",
         "cpp.bitwise-shift",
-        "cpp.uninitialized-variable"
+        "cpp.uninitialized-variable",
+        "cpp.odr-header-only-version-skew",
+        "cpp.constexpr-runtime-divergence"
       ]
     },
     {
@@ -402,14 +492,14 @@
       "origin": "registry-v2",
       "cwe": 190,
       "name": "Integer Overflow to Buffer Boundary",
-      "rationale": "Registry class \"Integer Overflow to Buffer Boundary\": wraparound that yields a wrong buffer size or offset. The library computes no size, count or offset from an integer and indexes nothing, so the chain \"integer error then memory error\" has no second link in the package source. This row says nothing about integer overflow in general; that is cpp.signed-overflow-ub.",
+      "rationale": "Registry class \"Integer Overflow to Buffer Boundary\": wraparound that yields a wrong buffer size or offset. The library computes no size, count or offset from an integer and indexes nothing, so the chain \"integer error then memory error\" has no second link in the package source. This row says nothing about integer overflow in general; that is cpp.signed-overflow-ub. Standard-library length arithmetic (std::string, std::to_string) is trusted; the extension also requires the value-range rule to cover unsigned and size_t arithmetic and that the package authors no arithmetic other than on the validated 0/1 range.",
       "applicability": "applicable-in-principle",
       "closed_by": [
         {
           "kind": "sanitizer-run",
           "id": "sanitizer-run:asan+ubsan",
           "state": "claimed",
-          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target)."
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target). For a row that uses a lane extension (VER15a section 5.5) this item can never be live while the run is skippable: live needs an affirmative run record."
         },
         {
           "kind": "compiler-flag",
@@ -427,7 +517,7 @@
           "kind": "analyzer-rule",
           "id": "analyzer-rule:cpp.no-address-surface",
           "state": "planned",
-          "detail": "The C++ memory-addressing surface: no reference or pointer parameter or return, no this, no container, string_view, span or iterator, no lambda capture by reference, no new, and RAII only on the allow-listed rejection path (detail::reject: one std::string temporary and one exception object). This is the rule LGE-CPP-EXT would define; it does not exist and VER15a section 5.5 has no cpp lane extension that names it. The cpp analyzer is not built; its grammar front end is LGE-A2.",
+          "detail": "The C++ memory-addressing surface (VER15a section 5.6.1), on the preprocessed and template-instantiated translation unit and on every externally visible entity including detail:: : no raw pointer or array object, parameter or return (a const char* parameter is a pointer, and a string literal decays to one at the call site), no escaping reference, no &, no pointer arithmetic, no reinterpret_cast, no new or delete, no iterator, string_view or span, no std::string data(), c_str(), operator[] or begin(), no by-reference lambda capture, no this escape, no static or thread_local object, no container. The only allow-listed code is the rejection helpers, which must have no pointer parameter and match a pinned AST shape and content hash (not a name): one message built from std::string temporaries produced by one fixed expression and one exception object. The rule does not exist (LGE-CPP-EXT), and the current header fails it (logic_gates.hpp:77, :83 take const char*).",
           "planned_item": "LGE-CPP-EXT"
         },
         {
@@ -470,6 +560,20 @@
           "state": "claimed",
           "detail": "Every gate body is validation followed by comparison operators and a conditional expression (a == 1 && b == 1 ? 1 : 0, code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:96-141); the NAND-built gates only call nand_gate (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:148-177). There is no +, -, *, /, %, <<, >> or ++ in the header.",
           "ref": "code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:96-177"
+        },
+        {
+          "kind": "type-system",
+          "id": "type-system:cpp-int-only-rejection-helpers",
+          "state": "planned",
+          "detail": "detail::reject and detail::check take only int arguments (reject(int which, int value), check(int which, int value)) and choose the parameter name from string literals inside the body, so no pointer parameter exists and no literal decays to a pointer at a gate call site. Planned in LGE-CPP-HARDEN (in progress). Prerequisite of the cpp_address_surface_allowlist extension (VER15a section 5.6.1).",
+          "planned_item": "LGE-CPP-HARDEN"
+        },
+        {
+          "kind": "analyzer-rule",
+          "id": "analyzer-rule:cpp.no-global-or-static-state",
+          "state": "planned",
+          "detail": "No namespace-scope or function-local static, no thread_local and no global variable in library sources (the scalar-state check VER15a section 5.6 assigns to the CWE-362 and CWE-367 rows). The cpp analyzer is not built; its grammar front end is LGE-A2.",
+          "planned_item": "LGE-A2"
         }
       ],
       "registry_floor": "proved",
@@ -479,13 +583,17 @@
         "analyzer-rule:cpp.no-ub-reachable",
         "sanitizer-run:asan+ubsan",
         "compiler-flag:strict-cxx17",
-        "analyzer-rule:cpp.integer-value-range"
+        "analyzer-rule:cpp.integer-value-range",
+        "type-system:cpp-int-only-rejection-helpers",
+        "analyzer-rule:cpp.no-global-or-static-state"
       ],
       "safe_subset": "lane-extension:cpp_address_surface_allowlist",
       "requires_closed": [
         "cpp.signed-overflow-ub",
         "cpp.bitwise-shift",
-        "cpp.uninitialized-variable"
+        "cpp.uninitialized-variable",
+        "cpp.odr-header-only-version-skew",
+        "cpp.constexpr-runtime-divergence"
       ]
     },
     {
@@ -1434,7 +1542,7 @@
           "kind": "sanitizer-run",
           "id": "sanitizer-run:asan+ubsan",
           "state": "claimed",
-          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target)."
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target). For a row that uses a lane extension (VER15a section 5.5) this item can never be live while the run is skippable: live needs an affirmative run record."
         },
         {
           "kind": "compiler-flag",
@@ -1711,7 +1819,7 @@
           "kind": "sanitizer-run",
           "id": "sanitizer-run:asan+ubsan",
           "state": "claimed",
-          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target)."
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target). For a row that uses a lane extension (VER15a section 5.5) this item can never be live while the run is skippable: live needs an affirmative run record."
         },
         {
           "kind": "lane-corpus",
@@ -1744,7 +1852,7 @@
           "kind": "sanitizer-run",
           "id": "sanitizer-run:asan+ubsan",
           "state": "claimed",
-          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target)."
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target). For a row that uses a lane extension (VER15a section 5.5) this item can never be live while the run is skippable: live needs an affirmative run record."
         },
         {
           "kind": "source-ref",
@@ -1954,7 +2062,7 @@
           "kind": "sanitizer-run",
           "id": "sanitizer-run:asan+ubsan",
           "state": "claimed",
-          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target)."
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target). For a row that uses a lane extension (VER15a section 5.5) this item can never be live while the run is skippable: live needs an affirmative run record."
         },
         {
           "kind": "source-ref",
@@ -2177,7 +2285,7 @@
           "kind": "sanitizer-run",
           "id": "sanitizer-run:asan+ubsan",
           "state": "claimed",
-          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target)."
+          "detail": "-fsanitize=address,undefined -fno-sanitize-recover=all over the whole suite (code/packages/cpp/logic-gates/tools/run.sh:27, :31-33), so every rejected call allocates and frees a std::string and an exception object under ASan. SKIPPED silently when the compiler cannot build and run a sanitized probe (code/packages/cpp/logic-gates/tools/run.sh:25-28, :34-36 print \"[skip]\" and the script still exits 0), not run at all on Windows (code/packages/cpp/logic-gates/tools/run.ps1:1-32 has no sanitizer), and leak detection is platform-dependent (LeakSanitizer is not available on every ASan target). For a row that uses a lane extension (VER15a section 5.5) this item can never be live while the run is skippable: live needs an affirmative run record."
         },
         {
           "kind": "build-check",
@@ -2639,7 +2747,7 @@
           "threat": "cpp.cwe-416",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The route is the VER15a section 5.5 lane extension cpp_address_surface_allowlist, whose allow-list is exactly detail::reject (one std::string temporary and one exception object); it needs analyzer-rule:cpp.no-address-surface (LGE-CPP-EXT) and analyzer-rule:cpp.no-ub-reachable (LGE-A2) to be live, and cpp.signed-overflow-ub, cpp.bitwise-shift and cpp.uninitialized-variable closed first. None of that exists. Do not copy the C reading: the header's own claim of \"no pointers, arrays, allocation\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:62) is false on the rejection path (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80 takes a const char*, builds a std::string and throws a heap-allocated std::invalid_argument), so the C analyzer rule c.no-pointer-array-heap would fail on this header today; the C++ extension allow-lists exactly that path and nothing else. What exists: the suite drives about 2,000 rejections per gate and position through the allocating path under ASan+UBSan with -fno-sanitize-recover=all (a use after free of the message or exception object would abort), under strict warnings. Sanitizers show absence on the inputs run, not impossibility. The sanitizer run may be skipped: code/packages/cpp/logic-gates/tools/run.sh:34-36 prints \"[skip]\" and exits 0 when the compiler cannot build a sanitized program, so a green build does not prove it ran, and the Windows runner has no sanitizer at all (code/packages/cpp/logic-gates/tools/run.ps1:1-32); no backlog row schedules a fix (the C equivalent is LGE-C3). The row is also conditional on the package being free of undefined behaviour (VER15a section 5.5).",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The route is the VER15a section 5.5 lane extension cpp_address_surface_allowlist, whose allow-list is exactly detail::reject (std::string temporaries produced by one fixed expression and one exception object); it needs analyzer-rule:cpp.no-address-surface (LGE-CPP-EXT) and analyzer-rule:cpp.no-ub-reachable (LGE-A2) to be live, and cpp.signed-overflow-ub, cpp.bitwise-shift and cpp.uninitialized-variable closed first. None of that exists. Do not copy the C reading: the header's own claim of \"no pointers, arrays, allocation\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:62) is false on the rejection path (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80 takes a const char*, builds a std::string and throws a heap-allocated std::invalid_argument), so the C analyzer rule c.no-pointer-array-heap would fail on this header today; the C++ extension allow-lists exactly that path and nothing else. What exists: the suite drives about 2,000 rejections per gate and position through the allocating path under ASan+UBSan with -fno-sanitize-recover=all (a use after free of the message or exception object would abort), under strict warnings. Sanitizers show absence on the inputs run, not impossibility. The sanitizer run may be skipped: code/packages/cpp/logic-gates/tools/run.sh:34-36 prints \"[skip]\" and exits 0 when the compiler cannot build a sanitized program, so a green build does not prove it ran, and the Windows runner has no sanitizer at all (code/packages/cpp/logic-gates/tools/run.ps1:1-32); no backlog row schedules a fix (the C equivalent is LGE-C3). The row is also conditional on the package being free of undefined behaviour (VER15a section 5.5). Prerequisites of the extension: the header change that makes detail::reject and detail::check take only int arguments (LGE-CPP-HARDEN, in progress; logic_gates.hpp:77 and :83 take const char* today, and detail:: is callable by users, so logic_gates::detail::reject(ptr, v) would read caller memory, a CWE-125 and CWE-476 path in the library as shipped); the allow-list pinned by AST shape and content hash, not by name; requires_closed also lists cpp.odr-header-only-version-skew and cpp.constexpr-runtime-divergence (the other threats the no-ub rule names), closed only by excluded or live-evidence discharged; the sanitizer item cannot be live while the run is skippable. Not machine-enforced: no validator or reporter recomputes this (LGE-S3v, LGE-W1), so the row is stored open. If it ever closes it renders \"excluded, assuming a correct standard library\" (the standard library and unwinder are trusted; allocation failure is CWE-248/703, not memory unsafety; stack exhaustion is CWE-674).",
           "evidence": [
             {
               "closure_id": "sanitizer-run:asan+ubsan",
@@ -2673,6 +2781,8 @@
             }
           ],
           "becomes_when": [
+            "type-system:cpp-int-only-rejection-helpers",
+            "LGE-CPP-HARDEN",
             "analyzer-rule:cpp.no-address-surface",
             "analyzer-rule:cpp.no-ub-reachable",
             "LGE-CPP-EXT",
@@ -2685,7 +2795,7 @@
           "threat": "cpp.cwe-787",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The route is the VER15a section 5.5 lane extension cpp_address_surface_allowlist, whose allow-list is exactly detail::reject (one std::string temporary and one exception object); it needs analyzer-rule:cpp.no-address-surface (LGE-CPP-EXT) and analyzer-rule:cpp.no-ub-reachable (LGE-A2) to be live, and cpp.signed-overflow-ub, cpp.bitwise-shift and cpp.uninitialized-variable closed first. None of that exists. Do not copy the C reading: the header's own claim of \"no pointers, arrays, allocation\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:62) is false on the rejection path (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80 takes a const char*, builds a std::string and throws a heap-allocated std::invalid_argument), so the C analyzer rule c.no-pointer-array-heap would fail on this header today; the C++ extension allow-lists exactly that path and nothing else. The suite runs clean under ASan+UBSan on the inputs run. The sanitizer run may be skipped: code/packages/cpp/logic-gates/tools/run.sh:34-36 prints \"[skip]\" and exits 0 when the compiler cannot build a sanitized program, so a green build does not prove it ran, and the Windows runner has no sanitizer at all (code/packages/cpp/logic-gates/tools/run.ps1:1-32); no backlog row schedules a fix (the C equivalent is LGE-C3). ",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The route is the VER15a section 5.5 lane extension cpp_address_surface_allowlist, whose allow-list is exactly detail::reject (std::string temporaries produced by one fixed expression and one exception object); it needs analyzer-rule:cpp.no-address-surface (LGE-CPP-EXT) and analyzer-rule:cpp.no-ub-reachable (LGE-A2) to be live, and cpp.signed-overflow-ub, cpp.bitwise-shift and cpp.uninitialized-variable closed first. None of that exists. Do not copy the C reading: the header's own claim of \"no pointers, arrays, allocation\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:62) is false on the rejection path (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80 takes a const char*, builds a std::string and throws a heap-allocated std::invalid_argument), so the C analyzer rule c.no-pointer-array-heap would fail on this header today; the C++ extension allow-lists exactly that path and nothing else. The suite runs clean under ASan+UBSan on the inputs run. The sanitizer run may be skipped: code/packages/cpp/logic-gates/tools/run.sh:34-36 prints \"[skip]\" and exits 0 when the compiler cannot build a sanitized program, so a green build does not prove it ran, and the Windows runner has no sanitizer at all (code/packages/cpp/logic-gates/tools/run.ps1:1-32); no backlog row schedules a fix (the C equivalent is LGE-C3).  Prerequisites of the extension: the header change that makes detail::reject and detail::check take only int arguments (LGE-CPP-HARDEN, in progress; logic_gates.hpp:77 and :83 take const char* today, and detail:: is callable by users, so logic_gates::detail::reject(ptr, v) would read caller memory, a CWE-125 and CWE-476 path in the library as shipped); the allow-list pinned by AST shape and content hash, not by name; requires_closed also lists cpp.odr-header-only-version-skew and cpp.constexpr-runtime-divergence (the other threats the no-ub rule names), closed only by excluded or live-evidence discharged; the sanitizer item cannot be live while the run is skippable. Not machine-enforced: no validator or reporter recomputes this (LGE-S3v, LGE-W1), so the row is stored open. If it ever closes it renders \"excluded, assuming a correct standard library\" (the standard library and unwinder are trusted; allocation failure is CWE-248/703, not memory unsafety; stack exhaustion is CWE-674).",
           "evidence": [
             {
               "closure_id": "sanitizer-run:asan+ubsan",
@@ -2714,6 +2824,8 @@
             }
           ],
           "becomes_when": [
+            "type-system:cpp-int-only-rejection-helpers",
+            "LGE-CPP-HARDEN",
             "analyzer-rule:cpp.no-address-surface",
             "analyzer-rule:cpp.no-ub-reachable",
             "LGE-CPP-EXT",
@@ -2726,7 +2838,7 @@
           "threat": "cpp.cwe-125",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The route is the VER15a section 5.5 lane extension cpp_address_surface_allowlist, whose allow-list is exactly detail::reject (one std::string temporary and one exception object); it needs analyzer-rule:cpp.no-address-surface (LGE-CPP-EXT) and analyzer-rule:cpp.no-ub-reachable (LGE-A2) to be live, and cpp.signed-overflow-ub, cpp.bitwise-shift and cpp.uninitialized-variable closed first. None of that exists. Do not copy the C reading: the header's own claim of \"no pointers, arrays, allocation\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:62) is false on the rejection path (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80 takes a const char*, builds a std::string and throws a heap-allocated std::invalid_argument), so the C analyzer rule c.no-pointer-array-heap would fail on this header today; the C++ extension allow-lists exactly that path and nothing else. The const char* parameter of detail::reject is read by std::string up to the NUL of a literal, and every call site in the header passes a literal (logic_gates.hpp:97-176). The sanitizer run may be skipped: code/packages/cpp/logic-gates/tools/run.sh:34-36 prints \"[skip]\" and exits 0 when the compiler cannot build a sanitized program, so a green build does not prove it ran, and the Windows runner has no sanitizer at all (code/packages/cpp/logic-gates/tools/run.ps1:1-32); no backlog row schedules a fix (the C equivalent is LGE-C3). ",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The route is the VER15a section 5.5 lane extension cpp_address_surface_allowlist, whose allow-list is exactly detail::reject (std::string temporaries produced by one fixed expression and one exception object); it needs analyzer-rule:cpp.no-address-surface (LGE-CPP-EXT) and analyzer-rule:cpp.no-ub-reachable (LGE-A2) to be live, and cpp.signed-overflow-ub, cpp.bitwise-shift and cpp.uninitialized-variable closed first. None of that exists. Do not copy the C reading: the header's own claim of \"no pointers, arrays, allocation\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:62) is false on the rejection path (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80 takes a const char*, builds a std::string and throws a heap-allocated std::invalid_argument), so the C analyzer rule c.no-pointer-array-heap would fail on this header today; the C++ extension allow-lists exactly that path and nothing else. The const char* parameter of detail::reject is read by std::string up to the NUL of a literal, and every call site in the header passes a literal (logic_gates.hpp:97-176). The sanitizer run may be skipped: code/packages/cpp/logic-gates/tools/run.sh:34-36 prints \"[skip]\" and exits 0 when the compiler cannot build a sanitized program, so a green build does not prove it ran, and the Windows runner has no sanitizer at all (code/packages/cpp/logic-gates/tools/run.ps1:1-32); no backlog row schedules a fix (the C equivalent is LGE-C3).  Prerequisites of the extension: the header change that makes detail::reject and detail::check take only int arguments (LGE-CPP-HARDEN, in progress; logic_gates.hpp:77 and :83 take const char* today, and detail:: is callable by users, so logic_gates::detail::reject(ptr, v) would read caller memory, a CWE-125 and CWE-476 path in the library as shipped); the allow-list pinned by AST shape and content hash, not by name; requires_closed also lists cpp.odr-header-only-version-skew and cpp.constexpr-runtime-divergence (the other threats the no-ub rule names), closed only by excluded or live-evidence discharged; the sanitizer item cannot be live while the run is skippable. Not machine-enforced: no validator or reporter recomputes this (LGE-S3v, LGE-W1), so the row is stored open. If it ever closes it renders \"excluded, assuming a correct standard library\" (the standard library and unwinder are trusted; allocation failure is CWE-248/703, not memory unsafety; stack exhaustion is CWE-674).",
           "evidence": [
             {
               "closure_id": "sanitizer-run:asan+ubsan",
@@ -2755,6 +2867,8 @@
             }
           ],
           "becomes_when": [
+            "type-system:cpp-int-only-rejection-helpers",
+            "LGE-CPP-HARDEN",
             "analyzer-rule:cpp.no-address-surface",
             "analyzer-rule:cpp.no-ub-reachable",
             "LGE-CPP-EXT",
@@ -2767,7 +2881,7 @@
           "threat": "cpp.cwe-415",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The route is the VER15a section 5.5 lane extension cpp_address_surface_allowlist, whose allow-list is exactly detail::reject (one std::string temporary and one exception object); it needs analyzer-rule:cpp.no-address-surface (LGE-CPP-EXT) and analyzer-rule:cpp.no-ub-reachable (LGE-A2) to be live, and cpp.signed-overflow-ub, cpp.bitwise-shift and cpp.uninitialized-variable closed first. None of that exists. Do not copy the C reading: the header's own claim of \"no pointers, arrays, allocation\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:62) is false on the rejection path (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80 takes a const char*, builds a std::string and throws a heap-allocated std::invalid_argument), so the C analyzer rule c.no-pointer-array-heap would fail on this header today; the C++ extension allow-lists exactly that path and nothing else. ASan reports a double free on the inputs run; none occurs. The sanitizer run may be skipped: code/packages/cpp/logic-gates/tools/run.sh:34-36 prints \"[skip]\" and exits 0 when the compiler cannot build a sanitized program, so a green build does not prove it ran, and the Windows runner has no sanitizer at all (code/packages/cpp/logic-gates/tools/run.ps1:1-32); no backlog row schedules a fix (the C equivalent is LGE-C3). ",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The route is the VER15a section 5.5 lane extension cpp_address_surface_allowlist, whose allow-list is exactly detail::reject (std::string temporaries produced by one fixed expression and one exception object); it needs analyzer-rule:cpp.no-address-surface (LGE-CPP-EXT) and analyzer-rule:cpp.no-ub-reachable (LGE-A2) to be live, and cpp.signed-overflow-ub, cpp.bitwise-shift and cpp.uninitialized-variable closed first. None of that exists. Do not copy the C reading: the header's own claim of \"no pointers, arrays, allocation\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:62) is false on the rejection path (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80 takes a const char*, builds a std::string and throws a heap-allocated std::invalid_argument), so the C analyzer rule c.no-pointer-array-heap would fail on this header today; the C++ extension allow-lists exactly that path and nothing else. ASan reports a double free on the inputs run; none occurs. The sanitizer run may be skipped: code/packages/cpp/logic-gates/tools/run.sh:34-36 prints \"[skip]\" and exits 0 when the compiler cannot build a sanitized program, so a green build does not prove it ran, and the Windows runner has no sanitizer at all (code/packages/cpp/logic-gates/tools/run.ps1:1-32); no backlog row schedules a fix (the C equivalent is LGE-C3).  Prerequisites of the extension: the header change that makes detail::reject and detail::check take only int arguments (LGE-CPP-HARDEN, in progress; logic_gates.hpp:77 and :83 take const char* today, and detail:: is callable by users, so logic_gates::detail::reject(ptr, v) would read caller memory, a CWE-125 and CWE-476 path in the library as shipped); the allow-list pinned by AST shape and content hash, not by name; requires_closed also lists cpp.odr-header-only-version-skew and cpp.constexpr-runtime-divergence (the other threats the no-ub rule names), closed only by excluded or live-evidence discharged; the sanitizer item cannot be live while the run is skippable. Not machine-enforced: no validator or reporter recomputes this (LGE-S3v, LGE-W1), so the row is stored open. If it ever closes it renders \"excluded, assuming a correct standard library\" (the standard library and unwinder are trusted; allocation failure is CWE-248/703, not memory unsafety; stack exhaustion is CWE-674).",
           "evidence": [
             {
               "closure_id": "sanitizer-run:asan+ubsan",
@@ -2796,6 +2910,8 @@
             }
           ],
           "becomes_when": [
+            "type-system:cpp-int-only-rejection-helpers",
+            "LGE-CPP-HARDEN",
             "analyzer-rule:cpp.no-address-surface",
             "analyzer-rule:cpp.no-ub-reachable",
             "LGE-CPP-EXT",
@@ -2808,7 +2924,7 @@
           "threat": "cpp.cwe-476",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The route is the VER15a section 5.5 lane extension cpp_address_surface_allowlist, whose allow-list is exactly detail::reject (one std::string temporary and one exception object); it needs analyzer-rule:cpp.no-address-surface (LGE-CPP-EXT) and analyzer-rule:cpp.no-ub-reachable (LGE-A2) to be live, and cpp.signed-overflow-ub, cpp.bitwise-shift and cpp.uninitialized-variable closed first. None of that exists. Do not copy the C reading: the header's own claim of \"no pointers, arrays, allocation\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:62) is false on the rejection path (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80 takes a const char*, builds a std::string and throws a heap-allocated std::invalid_argument), so the C analyzer rule c.no-pointer-array-heap would fail on this header today; the C++ extension allow-lists exactly that path and nothing else. UBSan includes -fsanitize=null, which would abort on a null dereference on the inputs run; none occurs. The sanitizer run may be skipped: code/packages/cpp/logic-gates/tools/run.sh:34-36 prints \"[skip]\" and exits 0 when the compiler cannot build a sanitized program, so a green build does not prove it ran, and the Windows runner has no sanitizer at all (code/packages/cpp/logic-gates/tools/run.ps1:1-32); no backlog row schedules a fix (the C equivalent is LGE-C3). ",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The route is the VER15a section 5.5 lane extension cpp_address_surface_allowlist, whose allow-list is exactly detail::reject (std::string temporaries produced by one fixed expression and one exception object); it needs analyzer-rule:cpp.no-address-surface (LGE-CPP-EXT) and analyzer-rule:cpp.no-ub-reachable (LGE-A2) to be live, and cpp.signed-overflow-ub, cpp.bitwise-shift and cpp.uninitialized-variable closed first. None of that exists. Do not copy the C reading: the header's own claim of \"no pointers, arrays, allocation\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:62) is false on the rejection path (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80 takes a const char*, builds a std::string and throws a heap-allocated std::invalid_argument), so the C analyzer rule c.no-pointer-array-heap would fail on this header today; the C++ extension allow-lists exactly that path and nothing else. UBSan includes -fsanitize=null, which would abort on a null dereference on the inputs run; none occurs. The sanitizer run may be skipped: code/packages/cpp/logic-gates/tools/run.sh:34-36 prints \"[skip]\" and exits 0 when the compiler cannot build a sanitized program, so a green build does not prove it ran, and the Windows runner has no sanitizer at all (code/packages/cpp/logic-gates/tools/run.ps1:1-32); no backlog row schedules a fix (the C equivalent is LGE-C3).  Prerequisites of the extension: the header change that makes detail::reject and detail::check take only int arguments (LGE-CPP-HARDEN, in progress; logic_gates.hpp:77 and :83 take const char* today, and detail:: is callable by users, so logic_gates::detail::reject(ptr, v) would read caller memory, a CWE-125 and CWE-476 path in the library as shipped); the allow-list pinned by AST shape and content hash, not by name; requires_closed also lists cpp.odr-header-only-version-skew and cpp.constexpr-runtime-divergence (the other threats the no-ub rule names), closed only by excluded or live-evidence discharged; the sanitizer item cannot be live while the run is skippable. Not machine-enforced: no validator or reporter recomputes this (LGE-S3v, LGE-W1), so the row is stored open. If it ever closes it renders \"excluded, assuming a correct standard library\" (the standard library and unwinder are trusted; allocation failure is CWE-248/703, not memory unsafety; stack exhaustion is CWE-674).",
           "evidence": [
             {
               "closure_id": "sanitizer-run:asan+ubsan",
@@ -2837,6 +2953,8 @@
             }
           ],
           "becomes_when": [
+            "type-system:cpp-int-only-rejection-helpers",
+            "LGE-CPP-HARDEN",
             "analyzer-rule:cpp.no-address-surface",
             "analyzer-rule:cpp.no-ub-reachable",
             "LGE-CPP-EXT",
@@ -2849,7 +2967,7 @@
           "threat": "cpp.cwe-190",
           "status": "open",
           "reached": "tested",
-          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The route is the VER15a section 5.5 lane extension cpp_address_surface_allowlist, whose allow-list is exactly detail::reject (one std::string temporary and one exception object); it needs analyzer-rule:cpp.no-address-surface (LGE-CPP-EXT) and analyzer-rule:cpp.no-ub-reachable (LGE-A2) to be live, and cpp.signed-overflow-ub, cpp.bitwise-shift and cpp.uninitialized-variable closed first. None of that exists. Do not copy the C reading: the header's own claim of \"no pointers, arrays, allocation\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:62) is false on the rejection path (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80 takes a const char*, builds a std::string and throws a heap-allocated std::invalid_argument), so the C analyzer rule c.no-pointer-array-heap would fail on this header today; the C++ extension allow-lists exactly that path and nothing else. The wide-integer rows run (INT_MIN..INT_MAX probes) under UBSan signed-integer-overflow checking on the inputs run. The CWE-190 name is \"Integer Overflow to Buffer Boundary\", not integer overflow in general. The sanitizer run may be skipped: code/packages/cpp/logic-gates/tools/run.sh:34-36 prints \"[skip]\" and exits 0 when the compiler cannot build a sanitized program, so a green build does not prove it ran, and the Windows runner has no sanitizer at all (code/packages/cpp/logic-gates/tools/run.ps1:1-32); no backlog row schedules a fix (the C equivalent is LGE-C3). ",
+          "reason": "Evidence claimed, not machine-checked: no repository tool reads it at report time. The route is the VER15a section 5.5 lane extension cpp_address_surface_allowlist, whose allow-list is exactly detail::reject (std::string temporaries produced by one fixed expression and one exception object); it needs analyzer-rule:cpp.no-address-surface (LGE-CPP-EXT) and analyzer-rule:cpp.no-ub-reachable (LGE-A2) to be live, and cpp.signed-overflow-ub, cpp.bitwise-shift and cpp.uninitialized-variable closed first. None of that exists. Do not copy the C reading: the header's own claim of \"no pointers, arrays, allocation\" (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:62) is false on the rejection path (code/packages/cpp/logic-gates/include/logic_gates/logic_gates.hpp:77-80 takes a const char*, builds a std::string and throws a heap-allocated std::invalid_argument), so the C analyzer rule c.no-pointer-array-heap would fail on this header today; the C++ extension allow-lists exactly that path and nothing else. The wide-integer rows run (INT_MIN..INT_MAX probes) under UBSan signed-integer-overflow checking on the inputs run. Standard-library length math is trusted, the value-range rule must cover unsigned and size_t arithmetic, and the package must author no arithmetic other than on the validated 0/1 range. The CWE-190 name is \"Integer Overflow to Buffer Boundary\", not integer overflow in general. The sanitizer run may be skipped: code/packages/cpp/logic-gates/tools/run.sh:34-36 prints \"[skip]\" and exits 0 when the compiler cannot build a sanitized program, so a green build does not prove it ran, and the Windows runner has no sanitizer at all (code/packages/cpp/logic-gates/tools/run.ps1:1-32); no backlog row schedules a fix (the C equivalent is LGE-C3).  Prerequisites of the extension: the header change that makes detail::reject and detail::check take only int arguments (LGE-CPP-HARDEN, in progress; logic_gates.hpp:77 and :83 take const char* today, and detail:: is callable by users, so logic_gates::detail::reject(ptr, v) would read caller memory, a CWE-125 and CWE-476 path in the library as shipped); the allow-list pinned by AST shape and content hash, not by name; requires_closed also lists cpp.odr-header-only-version-skew and cpp.constexpr-runtime-divergence (the other threats the no-ub rule names), closed only by excluded or live-evidence discharged; the sanitizer item cannot be live while the run is skippable. Not machine-enforced: no validator or reporter recomputes this (LGE-S3v, LGE-W1), so the row is stored open. If it ever closes it renders \"excluded, assuming a correct standard library\" (the standard library and unwinder are trusted; allocation failure is CWE-248/703, not memory unsafety; stack exhaustion is CWE-674).",
           "evidence": [
             {
               "closure_id": "sanitizer-run:asan+ubsan",
@@ -2883,6 +3001,8 @@
             }
           ],
           "becomes_when": [
+            "type-system:cpp-int-only-rejection-helpers",
+            "LGE-CPP-HARDEN",
             "analyzer-rule:cpp.no-address-surface",
             "analyzer-rule:cpp.no-ub-reachable",
             "analyzer-rule:cpp.integer-value-range",
