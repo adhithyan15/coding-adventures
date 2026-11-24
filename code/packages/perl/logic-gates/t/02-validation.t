@@ -496,4 +496,26 @@ sub err_of(&) { my $c = shift; local $@; eval { $c->(); 1 } ? undef : $@ }
     ok( dies { my $n = $e + 1 },  '+ still fails loudly' );
 }
 
+# Negation, .=, string relational operators, swapped x.
+{
+    my $e = err_of { AND( 'x', 1 ) };
+    my $m = "logic_gates: a must be 0 or 1, got 'x'\n";
+    ok( !( !$e ), 'double negation true' );
+    my $nb = !$e;
+    ok( !$nb, '!$err is false, no die' );
+    my $c = $e;
+    $c .= "z";
+    is( $c, $m . "z", '.= gives plain string' );
+    is( ref( \$c ), 'SCALAR', '.= result is not the object' );
+    ok( $e lt "m", 'lt' );  ok( !( "m" lt $e ), 'lt swapped' );
+    ok( $e le $m, 'le' );   ok( "m" ge $e, 'ge swapped' );
+    ok( $e gt "a", 'gt' );  ok( "z" gt $e, 'gt swapped' );
+    ok( $e ge $m, 'ge' );   ok( "a" le $e, 'le swapped' );
+    ok( dies { my $n = 3 x $e }, 'swapped x dies loudly' );
+    for my $op ( '-', '*', '/', '<=>', '0+' ) {
+        my $code = $op eq '0+' ? '0 + $e' : "\$e $op 1";
+        ok( dies { eval "no warnings; my \$r = $code; 1" or die $@ }, "$op fails loudly" );
+    }
+}
+
 done_testing;

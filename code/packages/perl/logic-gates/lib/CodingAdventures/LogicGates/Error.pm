@@ -22,7 +22,9 @@ package CodingAdventures::LogicGates::Error;
 #   INVALID_SHAPE  a container argument has the wrong type, length or value
 #                  (state hash, bit array, direction, missing state ...)
 #
-# FIELDS (all read-only)
+# FIELDS (read-only accessors; the object has no setters.  The object itself is
+# an ordinary blessed hash: `$err .= "z"` replaces the VARIABLE with a plain
+# string, it never mutates the error.)
 #
 #   code               one of the codes above
 #   param              name of the first offending parameter (or undef)
@@ -52,15 +54,30 @@ use overload
         my ( $s, $o, $swap ) = @_;
         $swap ? "$o" . $s->{message} : $s->{message} . "$o";
     },
-    'x'      => sub { $_[0]{message} x $_[1] },
+    '.='     => sub { my ( $s, $o ) = @_; $s->{message} . "$o" },
+    'x'      => sub {
+        my ( $s, $o, $swap ) = @_;
+        # `3 x $err` would need the error as a repeat COUNT: that is numeric.
+        die "CodingAdventures::LogicGates::Error: cannot use an error as a repeat count\n" if $swap;
+        $s->{message} x $o;
+    },
+    '!'      => sub { 0 },
+    # Copy constructor: `$b = $a; $b .= "z"` needs one.  The object is
+    # immutable, so sharing it is a correct copy.
+    '='      => sub { $_[0] },
+    'lt'     => sub { my ( $s, $o, $w ) = @_; ( $w ? "$o" cmp "$s" : "$s" cmp "$o" ) <  0 },
+    'le'     => sub { my ( $s, $o, $w ) = @_; ( $w ? "$o" cmp "$s" : "$s" cmp "$o" ) <= 0 },
+    'gt'     => sub { my ( $s, $o, $w ) = @_; ( $w ? "$o" cmp "$s" : "$s" cmp "$o" ) >  0 },
+    'ge'     => sub { my ( $s, $o, $w ) = @_; ( $w ? "$o" cmp "$s" : "$s" cmp "$o" ) >= 0 },
     fallback => 0;
 
 # WHY fallback => 0 PLUS EXPLICIT STRING OPERATORS?  Interpolation and
 # concatenation ("failed: $@", $@ . "y", warn/die wrapping) are the ways error
 # text is normally carried along, and with no `.` overload they would throw
 # 'Operation ".": no method found', REPLACING $@ and hiding the original
-# error and its code.  So the string operators (. x eq ne cmp "") are all
-# defined.  Numeric operators (==, +, ...) are deliberately NOT defined and
+# error and its code.  So the string operators (. .= x eq ne lt le gt ge cmp
+# "") and boolean negation (!) are all defined.  `.=` yields a plain string
+# (the variable stops holding the object, as with any string append).  Numeric operators (==, +, ...) are deliberately NOT defined and
 # keep failing loudly: an error is not a number, and `$err == 1` would
 # otherwise silently compare something meaningless.
 
