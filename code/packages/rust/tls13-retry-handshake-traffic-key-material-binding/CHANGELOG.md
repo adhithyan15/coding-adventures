@@ -69,3 +69,8 @@
   downstream receipts can reject cross-owner substitution across callback
   lifetimes without retaining borrowed message bytes. The identity retains the
   issuer lifetime so an address recycled after issuer destruction cannot match.
+- Authenticate the exact ordered retry server `Finished` body against its
+  exact pre-message transcript snapshot and retry-derived server Finished-key
+  proof, rejecting detached retry evidence before HMAC work and retaining the
+  ordered-owner identity, key proof, snapshot, client-authentication flag, and
+  exact peer verify-data verdict in non-copyable success evidence.
