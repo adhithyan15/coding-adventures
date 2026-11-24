@@ -1,4 +1,8 @@
-## [0.2.0] - 2026-11-24
+## [Unreleased] - 2026-11-24
+
+Ships with the first published release (0.1.0). The OCAML07 representative-chain
+contract pins every representative package at 0.1.0, so no version bump is
+claimed here.
 
 ### Changed
 
