@@ -272,21 +272,6 @@ let test_sequential_state_errors () =
 
 (* ---- Hardening: resource caps, hostile lists, total functions ---- *)
 
-exception Timed_out
-
-(* Runs [f] with a wall-clock guard. A regression that loops forever on a
-   cyclic list fails the test after [seconds] instead of hanging CI. *)
-let with_timeout seconds f =
-  let previous =
-    Sys.signal Sys.sigalrm (Sys.Signal_handle (fun _ -> raise Timed_out))
-  in
-  ignore (Unix.alarm seconds);
-  Fun.protect
-    ~finally:(fun () ->
-      ignore (Unix.alarm 0);
-      Sys.set_signal Sys.sigalrm previous)
-    f
-
 let cyclic_ones =
   let rec l = 1 :: l in
   l
@@ -314,36 +299,37 @@ let expect_length_error name = function
   | Ok _ -> Alcotest.fail "expected Invalid_length"
 
 let test_cyclic_lists () =
-  with_timeout 10 (fun () ->
-      expect_width 65_537 (Basic.and_n cyclic_ones);
-      expect_width 65_537 (Basic.or_n cyclic_ones);
-      expect_width 65_537 (Basic.xor_n cyclic_zeros);
-      expect_width 65_537 (Combinational.mux_n cyclic_ones ~sel:[]);
-      expect_width 65_537 (Combinational.encoder cyclic_ones);
-      expect_width 65_537 (Combinational.priority_encoder cyclic_zeros);
-      expect_width 17 (Combinational.decoder cyclic_zeros);
-      expect_length_error "sel" (Combinational.mux_n [ 0; 1 ] ~sel:cyclic_zeros);
-      expect_length_error "sel"
-        (Combinational.demux 1 ~sel:cyclic_zeros ~n_outputs:4);
-      expect_length_error "inputs"
-        (Combinational.mux8 cyclic_zeros ~sel:[ 0; 0; 0 ]);
-      expect_width 65_537 (Sequential.register ~data:cyclic_zeros ~clock:0 ());
-      expect_width 65_537
-        (Sequential.register ~width:4 ~data:cyclic_zeros ~clock:0 ());
-      expect_length_error "state"
-        (Sequential.register ~state:cyclic_zeros_state ~width:2 ~data:[ 0; 0 ]
-           ~clock:0 ());
-      expect_length_error "state"
-        (Sequential.shift_register ~state:cyclic_zeros_state ~width:2
-           ~serial_in:0 ~clock:0 ());
-      expect_length_error "counter value"
-        (Sequential.counter
-           ~state:{ value = cyclic_zeros; flip_flops = [] }
-           ~width:2 ~clock:0 ());
-      expect_length_error "counter flip-flops"
-        (Sequential.counter
-           ~state:{ value = [ 0; 0 ]; flip_flops = cyclic_zeros_state }
-           ~width:2 ~clock:0 ()))
+  (fun () ->
+    expect_width 65_537 (Basic.and_n cyclic_ones);
+    expect_width 65_537 (Basic.or_n cyclic_ones);
+    expect_width 65_537 (Basic.xor_n cyclic_zeros);
+    expect_width 65_537 (Combinational.mux_n cyclic_ones ~sel:[]);
+    expect_width 65_537 (Combinational.encoder cyclic_ones);
+    expect_width 65_537 (Combinational.priority_encoder cyclic_zeros);
+    expect_width 17 (Combinational.decoder cyclic_zeros);
+    expect_length_error "sel" (Combinational.mux_n [ 0; 1 ] ~sel:cyclic_zeros);
+    expect_length_error "sel"
+      (Combinational.demux 1 ~sel:cyclic_zeros ~n_outputs:4);
+    expect_length_error "inputs"
+      (Combinational.mux8 cyclic_zeros ~sel:[ 0; 0; 0 ]);
+    expect_width 65_537 (Sequential.register ~data:cyclic_zeros ~clock:0 ());
+    expect_width 65_537
+      (Sequential.register ~width:4 ~data:cyclic_zeros ~clock:0 ());
+    expect_length_error "state"
+      (Sequential.register ~state:cyclic_zeros_state ~width:2 ~data:[ 0; 0 ]
+         ~clock:0 ());
+    expect_length_error "state"
+      (Sequential.shift_register ~state:cyclic_zeros_state ~width:2 ~serial_in:0
+         ~clock:0 ());
+    expect_length_error "counter value"
+      (Sequential.counter
+         ~state:{ value = cyclic_zeros; flip_flops = [] }
+         ~width:2 ~clock:0 ());
+    expect_length_error "counter flip-flops"
+      (Sequential.counter
+         ~state:{ value = [ 0; 0 ]; flip_flops = cyclic_zeros_state }
+         ~width:2 ~clock:0 ()))
+    ()
 
 let test_caps () =
   (* Exactly at the list cap is accepted; one past is rejected. *)

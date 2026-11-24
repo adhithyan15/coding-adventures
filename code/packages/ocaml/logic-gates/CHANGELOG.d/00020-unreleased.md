@@ -33,7 +33,9 @@ claimed here.
 - `shift_register` validates the caller's flip-flop snapshot first, so a corrupt
   `slave_q` is reported as `flip-flop state` instead of being misattributed to
   `data`.
-- `src/dune` enables `-w +a` minus the stylistic warnings 4, 9, 40-42, 44, 45
-  and 70.
-- Tests: cap boundaries, cyclic lists under a timeout guard, former partial
+- Ordering change: the size and length check now runs before bit validation.
+  For `mux_n`, `demux`, `decoder`, `register` (and the other list-taking
+  circuits) an oversized or mis-sized input reports the length or width error
+  rather than `Invalid_bit`.
+- Tests: cap boundaries, cyclic lists, former partial
   paths, shift_register attribution, wide ints on all non-bit positions.

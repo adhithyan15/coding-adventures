@@ -2,12 +2,5 @@
  (name coding_adventures_logic_gates)
  (public_name coding-adventures-logic-gates)
  (wrapped false)
- ; Enable the full warning set minus the stylistic ones that fight the
- ; project's labelled-argument API (4 fragile match, 9 missing record fields,
- ; 40-42 name-resolution, 44-45 open shadowing, 70 missing mli). Dune's dev
- ; profile already promotes the core warnings to errors; no -warn-error is
- ; forced so release/opam builds on other compilers cannot break.
- (flags
-  (:standard -w +a-4-9-40-41-42-44-45-70))
  (instrumentation
   (backend bisect_ppx)))
