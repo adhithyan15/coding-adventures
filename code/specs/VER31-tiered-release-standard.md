@@ -338,6 +338,23 @@ Rules:
   `ca-assurance-report --check`.
 - The generator label is printed beside the computed rung, so a reader sees both
   `proved` (what the tool wrote) and `checked` (what the evidence supports).
+- **The report cannot vouch for itself** (added in LV-007a after its security
+  review). Two rules keep a weakened generator or checker, or a hand-edited
+  report, from reaching `proved`:
+  - **Tool-trust ids are always assumed.** For every claim with a
+    certificate, the gate itself adds the (c) ids of our own verification
+    tools (`tcb.report.checker-correct`, `tcb.evidence.manifest-honesty`,
+    `tcb.drat.checker-correct`, `tcb.bitblast.encoding-correct`,
+    `tcb.symexec.engine-correct`), whatever the report lists. The bucket
+    file cannot move them out of (c).
+  - **A discharge counts only if the catalogue records it.** A
+    `proof.discharged` id closes nothing unless the code-owned catalogue marks
+    that id `discharged` too. Today the catalogue discharges nothing, so no
+    report can raise a claim past `checked`.
+- Report strings rendered into notes (claim ids, symbols, labels, exemption
+  ids, report-level assumption ids) must be plain text
+  (`[A-Za-z0-9_.:/(),<> -]`); anything else is a refusal, so a report cannot
+  spoof the tier text the owner reads.
 
 ---
 
@@ -352,14 +369,14 @@ file someone typed, except where the row says so.
 | F1 | Tests pass | Runs the package's tests (`cargo test -p <crate>`; `npm test`). |
 | F2 | Coverage at the repository bar | Line coverage of 80 % or more (CLAUDE.md), measured by `cargo tarpaulin --engine llvm` (pinned as in `ci.yml`) or `vitest --coverage` (v8). The figure is printed; the library target of 95 % is shown, not enforced. |
 | F3 | Lint | `cargo clippy -p <crate> --all-targets -- -D warnings`; `tsc --noEmit` under `strict`. |
-| F4 | A recorded security review covering the released source | `security-review.json` in the package (schema `ver31-security-review-v1`): `files` (repository path to the SHA-256 of the bytes reviewed), `reviewer`, `date`, `findings` (each `fixed`, `accepted` or `not-applicable`), `outcome`. The gate requires `outcome: pass` and no open finding of severity `high` or `critical`. **The gate computes the scope the review must cover; it does not trust the record's.** The required set is every file in the built artifact (`cargo package --list`; `npm pack --dry-run --json`), plus the package's manifest, build script and lockfile, plus repository-level build configuration (the workspace `Cargo.toml`, `.cargo/`, `rust-toolchain*`). The required set excludes exactly `security-review.json`; the gate refuses any
+| F4 | A recorded security review covering the released source | `security-review.json` in the package (schema `ver31-security-review-v1`): `files` (repository path to the SHA-256 of the bytes reviewed), `reviewer`, `date`, `findings` (each `fixed`, `accepted` or `not-applicable`), `outcome`. The gate requires `outcome: pass` and no open finding of severity `high` or `critical`. **The gate computes the scope the review must cover; it does not trust the record's.** The required set is every git-tracked file under the package (source, tests, BUILD files, build and test configuration, manifests, lockfile, evidence), every file in the built artifact, and the build configuration on the package's ancestor path: `.cargo/**`, `rust-toolchain`/`rust-toolchain.toml` and `.npmrc` in the repository root and every directory down to the package, plus the workspace `Cargo.toml`. (LV-007a refinement: the workspace `Cargo.toml` is covered as `code/packages/rust/Cargo.toml#settings`, its bytes with the `members`/`exclude` arrays removed, because every new crate rewrites those arrays (about 100 commits a month) while `[patch]` and `[profile]` stay covered. The workspace `Cargo.lock` is not required: F8 guarantees no runtime dependency, so it cannot change the shipped bytes. A TypeScript package's own `package-lock.json` stays required, because it pins the compiler that builds `dist/`.) The required set excludes exactly `security-review.json`; the gate refuses any
 other exclusion, so files regenerated after the review (CHANGELOG,
 `assurance_report.json`, `ASSURANCE.md`) need a fresh review record. `scope` must
 cover that set (git-tracked files only; build outputs such as `dist/` are covered through the tracked `src/` they are built from, which is always required). Each entry must be a normalized repository-relative path with no `..`, no glob and no leading `:`, and must not be a symlink. Freshness: every listed file's bytes at the tagged commit hash to the recorded digest. (LV-007a replaced "reviewed_commit on `main` plus `git diff`": the repository squash-merges, so a feature-branch commit never lands on `main`; binding the reviewed bytes is squash-proof and stricter.) The record is typed; its coverage and freshness are computed. |
 | F5 | Fuzz and property tests on every untrusted-input surface | Every claim of the report has `fuzz.status` and `property.status` equal to `pass`. A lane package (section 6.2) needs its own property and fuzz suites over each public operation (VER05a, VER06b engines), declared as the npm scripts `test:property` and `test:fuzz` and run by F1. |
 | F6 | Recorded benchmarks | `evidence/bench-manifest.json` exists, parses as `warrant-bench-evidence-v1`, has at least one `pass` entry, and is fresh: the package BUILD regenerates it and F10's reproduction check requires the committed bytes to match. |
 | F7 | README and CHANGELOG | `README.md`; `CHANGELOG.md` or `CHANGELOG.d/_meta.md`; the changelog names the version being released. |
-| F8 | Zero third-party runtime dependencies | Cargo `[dependencies]`, `[build-dependencies]` and every `[target.*.dependencies]` are empty; npm `dependencies`, `peerDependencies`, `optionalDependencies` and `bundleDependencies` are empty. Development dependencies are allowed because they do not ship. |
+| F8 | Zero third-party runtime dependencies | Cargo `[dependencies]`, `[build-dependencies]` and every `[target.*.dependencies]` are empty (read with a real TOML parser); npm `dependencies`, `peerDependencies`, `optionalDependencies` and `bundleDependencies` are empty. Development dependencies are allowed because they do not ship. The check runs twice: on the tree's manifest, and (F8b) on the manifest **inside the artifact**, whose name, version, licence and dependencies must equal the tree's and the tag's, because a build step could rewrite `package.json` before packing. |
 | F9 | Licence | Manifest licence `MIT` and a `LICENSE` file inside the package. |
 | F10 | The generated report ships verbatim and is about this code | `ca-assurance-report --check` passes at the tagged commit (and `--check-lane` for a lane package). The report is fresh: the gate re-runs the package BUILD, which re-derives every evidence manifest from real runs (and checks the generated harness against the `.warrant`), and then requires `git diff --exit-code` on the package directory, so the committed evidence must reproduce byte for byte. (LV-007a replaced "the report's `commit` is an ancestor of the tag": the `commit` field is a generator argument, and squash merges keep feature-branch commits off `main`.) The committed `ASSURANCE.md` must equal a fresh rendering. The built artifact contains `assurance_report.json` byte-identical to the checked file, and a generated `ASSURANCE.md` (section 8), even when the verdict is `report-only`. |
 | F11 | Version | The tag version equals the manifest version; the major version is `0` unless the release tier is `proved` or higher; the version is not already on the registry. |
@@ -422,20 +439,42 @@ every publish job of every language, and in a dry-run mode on demand.
   `ca-assurance-report` (`tcb.report.checker-correct`). Its tests are the
   evidence; the release notes say so.
 - **Privilege split.** GitHub grants permissions per job, not per step, so the
-  gate is two jobs.
-  - `gate` has `permissions: contents: read` only. It runs every test, lint and
-    coverage step, which is where third-party development dependencies execute.
-    It builds the artifacts, writes their SHA-256 digests into `gate.json`, and
-    uploads both.
-  - `attest` needs `gate` and `verify-tag`, so no attestation is minted for an
+  gate is three jobs.
+  - `gate` has `permissions: contents: read` only. It runs the package BUILD,
+    every test, lint and coverage step, which is where third-party development
+    dependencies execute, and builds the artifact. It requires the BUILD to
+    reproduce the committed evidence and leave no untracked file. It uploads the
+    raw artifact, `lcov.info` and a small `gate-facts.json`. It does **not**
+    decide anything: code running in that job could rewrite any file the job
+    later reads, including a gate script or git itself (LV-007a security
+    review).
+  - `judge` (`contents: read`, a fresh runner) runs no package code. It checks
+    out the tagged tree; builds `ca-assurance-report` from `main` in a separate
+    worktree outside that tree and runs it against the report; re-packages a
+    crate itself (`cargo package --no-verify`, toolchain pinned) and requires
+    the gate's `.crate` to match byte for byte; asks the registry about the
+    version; and runs `main`'s `release_gate.py`. Its `gate.json` is the only one
+    the later jobs trust.
+  - `attest` needs `judge` and `verify-tag`, so no attestation is minted for an
     unverified tag. It checks out no package source and installs nothing.
-    It downloads the artifacts, refuses unless their digests equal `gate.json`, and
-    is the only job with `id-token: write` and `attestations: write` outside the
-    `release` environment.
+    It downloads the judged artifact, refuses unless its name is a plain
+    `*.crate`/`*.tgz`, its digest equals the judged `gate.json` and the decision
+    is `publishable`. It is the only job with `id-token: write` and
+    `attestations: write` outside the `release` environment.
 
-  No job that runs package, test or dependency code holds `id-token: write`
-  outside the `release` environment.
-- **Publish uses the gated bytes.** npm publishes the gate's tarball. crates.io
+  No job that runs package, test or dependency code holds `id-token: write`.
+
+  **Residual risk, stated in every release's notes:** F1-F3 (tests, coverage,
+  lint), the evidence-reproduction result and, for npm, the built `dist/` are
+  produced in `gate` next to the package's own code. The judge re-derives what
+  it can without running that code (the report check, the crate bytes, the
+  shipped manifest, every tier); it cannot rebuild `dist/` without running the
+  compiler the lockfile pins, so an npm tarball's compiled JavaScript is only as
+  trustworthy as the reviewed `src/`, lockfile and build configuration (F4).
+- **Publish uses the judged bytes.** npm publishes the judged tarball, after
+  checking that the `package.json` inside it names the judged package and the
+  tag's version (npm publishes whatever the tarball says), with
+  `--ignore-scripts`. crates.io
   cannot upload a prebuilt file, so its publish job runs `cargo package
   --no-verify`, refuses unless the `.crate` digest equals `gate.json`, runs `cargo
   publish --no-verify` (verification already ran in `gate`), then downloads the
@@ -446,7 +485,13 @@ every publish job of every language, and in a dry-run mode on demand.
   publisher pins the same `release` environment and a build backend running in a
   publish job could otherwise publish any package. `cargo package` must be
   reproducible for the digest comparison to pass; if it is not, the job fails
-  closed.
+  closed. Because `cargo publish` runs in the tagged tree while holding the
+  token, the crates.io job refuses any `.cargo/config` on the package's
+  ancestor path that sets a credential provider, proxy, CA, source,
+  registry, alias or env table, and pins `RUSTUP_TOOLCHAIN`,
+  `CARGO_REGISTRY_CREDENTIAL_PROVIDER`, `CARGO_REGISTRY_GLOBAL_CREDENTIAL_PROVIDERS`
+  and `CARGO_HTTP_CAINFO` in the environment, which overrides every config
+  file.
 - **Every job checks out `${{ github.sha }}`**, never the tag name, so a tag moved
   mid-run cannot change what is built.
 - **Dry run:** `workflow_dispatch` with a package path and a ref runs `gate`
@@ -640,6 +685,11 @@ These files decide what a release may claim or who may authorize it:
 - `code/scripts/release_gate.py`
 - `code/assumptions/buckets-v1.json` and `code/assumptions/catalogue-v1.json`
 - `code/specs/signoffs/`
+- the tools a report's numbers come from: `ca-assurance-report`, `drat-check`,
+  `warrant-grammar`, `warrant-ir` (the judge also runs `main`'s copies, not the
+  tagged tree's)
+- build configuration cargo reads while the crates.io token is held:
+  `.cargo/` directories, the workspace `Cargo.toml`, `rust-toolchain*`
 
 Auto-merge must not move them. The controls:
 

@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import base64
 import copy
+import dataclasses
 import io
 import json
 import shutil
@@ -61,6 +62,18 @@ def claim(**over) -> dict:
         else:
             base[key] = value
     return base
+
+
+def proved_claim(assumptions: list[str], discharged: list[str] = ()) -> dict:
+    """A proved-label claim whose tool-trust ids are discharged (as they must be)."""
+    tools = list(rg.ALWAYS_ASSUMED)
+    return claim(proof_assumptions=sorted(set(assumptions) | set(tools)),
+                 proof_discharged=sorted(set(discharged) | set(tools)))
+
+
+def with_catalogue_discharged(*ids: str) -> rg.Buckets:
+    """The real buckets, as if the catalogue recorded ``ids`` (and the tools) discharged."""
+    return dataclasses.replace(BUCKETS, catalogue_discharged=frozenset(ids) | frozenset(rg.ALWAYS_ASSUMED))
 
 
 def write_buckets(tmp: Path, doc: dict) -> Path:
@@ -133,20 +146,39 @@ class LadderTests(unittest.TestCase):
         self.assertEqual(rg.claim_rung(claim(), BUCKETS, {"spec.secret-labels.complete"})["rung"], "checked")
 
     def test_unsigned_statement_blocks_proved(self) -> None:
-        c = claim(proof_assumptions=["cc.version-pinned", "spec.secret-labels.complete"])
-        self.assertEqual(rg.claim_rung(c, BUCKETS, set())["rung"], "checked")
-        self.assertEqual(rg.claim_rung(c, BUCKETS, {"spec.secret-labels.complete"})["rung"], "proved")
+        b = with_catalogue_discharged()
+        c = proved_claim(["cc.version-pinned", "spec.secret-labels.complete"])
+        self.assertEqual(rg.claim_rung(c, b, set())["rung"], "checked")
+        self.assertEqual(rg.claim_rung(c, b, {"spec.secret-labels.complete"})["rung"], "proved")
 
     def test_baseline_discharged_needs_every_non_floor_a(self) -> None:
-        c = claim(proof_assumptions=["cc.version-pinned", "phys.silicon.realization"],
-                  proof_discharged=["cc.version-pinned"])
-        self.assertEqual(rg.claim_rung(c, BUCKETS, set())["rung"], "proved, baseline discharged")
-        c = claim(proof_assumptions=["cc.version-pinned", "phys.silicon.realization"])
-        self.assertEqual(rg.claim_rung(c, BUCKETS, set())["rung"], "proved")
+        b = with_catalogue_discharged("cc.version-pinned")
+        c = proved_claim(["cc.version-pinned", "phys.silicon.realization"], ["cc.version-pinned"])
+        self.assertEqual(rg.claim_rung(c, b, set())["rung"], "proved, baseline discharged")
+        c = proved_claim(["cc.version-pinned", "phys.silicon.realization"])
+        self.assertEqual(rg.claim_rung(c, b, set())["rung"], "proved")
 
     def test_discharged_c_no_longer_blocks(self) -> None:
-        c = claim(proof_assumptions=["wir.inline.sound"], proof_discharged=["wir.inline.sound"])
-        self.assertEqual(rg.claim_rung(c, BUCKETS, set())["rung"], "proved, baseline discharged")
+        c = proved_claim(["wir.inline.sound"], ["wir.inline.sound"])
+        b = with_catalogue_discharged("wir.inline.sound")
+        self.assertEqual(rg.claim_rung(c, b, set())["rung"], "proved, baseline discharged")
+
+    def test_report_discharge_without_catalogue_record_does_not_count(self) -> None:
+        c = proved_claim(["wir.inline.sound"], ["wir.inline.sound"])
+        self.assertEqual(rg.claim_rung(c, with_catalogue_discharged(), set())["rung"], "checked")
+        # The real catalogue discharges nothing, so even the tool ids stay open.
+        self.assertEqual(rg.claim_rung(c, BUCKETS, set())["rung"], "checked")
+
+    def test_tool_trust_ids_are_added_even_when_the_report_omits_them(self) -> None:
+        bare = claim(proof_assumptions=[], proof_discharged=[])
+        rec = rg.claim_rung(bare, BUCKETS, set())
+        self.assertEqual(rec["rung"], "checked")
+        self.assertEqual(sorted(rec["open_c"]), sorted(rg.ALWAYS_ASSUMED))
+
+    def test_spoofing_text_refused(self) -> None:
+        for over in ({"id": "c1\n## proved"}, {"symbol": "f|x"}, {"proof_label": "proved`"}):
+            with self.assertRaises(rg.GateError):
+                rg.claim_rung(claim(**over), BUCKETS, set())
 
     def test_proved_per_run_is_at_most_checked(self) -> None:
         c = claim(proof_label="proved-per-run", proof_assumptions=["cc.version-pinned"])
@@ -228,10 +260,21 @@ class ManifestTests(unittest.TestCase):
             '[build-dependencies]\ncc = "1"\n',
             "[target.'cfg(unix)'.dependencies]\nlibc = \"0.2\"\n",
             '[dependencies.serde]\nversion = "1"\n',
-            '[package]\nname = "x"\ndependencies.serde = "1"\n',
+            # The six forms the line scanner missed (security review, LV-007a).
+            '[dependencies] # runtime\nserde = "1"\n',
+            '["dependencies"]\nserde = "1"\n',
+            'dependencies = { serde = "1" }\n',
+            'target."cfg(unix)".dependencies.serde = "1"\n',
+            '[target]\n"cfg(unix)".dependencies.serde = "1"\n',
+            '[target."cfg(unix)"]\ndependencies = { serde = "1" }\n',
+            '[build_dependencies]\ncc = "1"\n',
         ):
             self.assertTrue(rg.cargo_has_runtime_deps(text), text)
         self.assertEqual(rg.cargo_has_runtime_deps("[target.'cfg(unix)'.dev-dependencies]\nx = \"1\"\n"), [])
+        # A dotted key under [package] is package.dependencies, not a dependency.
+        self.assertEqual(rg.cargo_has_runtime_deps('[package]\nname = "x"\n'), [])
+        with self.assertRaises(rg.GateError):
+            rg.cargo_has_runtime_deps("[dependencies\n")
 
     def test_cargo_package_field(self) -> None:
         text = '[package]\nname = "a"\nversion = "0.1.0" # c\n[lib]\nname = "b"\n'
@@ -482,7 +525,7 @@ class ReviewTests(unittest.TestCase):
 
     def _record(self, repo: Path, pkg: str, paths: list[str], **over) -> None:
         doc = {"schema": rg.REVIEW_SCHEMA, "outcome": "pass", "reviewer": "t", "date": "2026-11-23",
-               "findings": [], "files": {f: rg.sha256_hex((repo / f).read_bytes()) for f in paths}}
+               "findings": [], "files": {f: rg.review_digest(repo, f) for f in paths}}
         doc.update(over)
         (repo / pkg / "security-review.json").write_text(json.dumps(doc), "utf-8")
 
@@ -591,7 +634,7 @@ class PipelineTests(unittest.TestCase):
             art.write_bytes(_tgz(members))
             required = rg.required_review_scope(repo, pkg, "rust", sorted(rg.artifact_members(art)))
             review = {"schema": rg.REVIEW_SCHEMA, "outcome": "pass", "reviewer": "t", "date": "2026-11-23",
-                      "findings": [], "files": {f: rg.sha256_hex((repo / f).read_bytes()) for f in required}}
+                      "findings": [], "files": {f: rg.review_digest(repo, f) for f in required}}
             (repo / pkg / "security-review.json").write_text(json.dumps(review), "utf-8")
             lcov = Path(tmp) / "lcov.info"
             lcov.write_text(f"SF:{repo}/{pkg}/src/lib.rs\nLF:100\nLH:93\nend_of_record\n", "utf-8")
@@ -722,8 +765,8 @@ class StubbedCryptoTests(unittest.TestCase):
                            "code/specs/signoffs/demo.json.sig": _sshsig(SK, rg.NS_STATEMENT, 0x05)})
             signed = rg.verify_signoff(repo, warrant, f"# revision: 1\nowner {SK} AAAA\n")
             self.assertEqual(signed, {"spec.secret-labels.complete"})
-            c = claim(proof_assumptions=["cc.version-pinned", "spec.secret-labels.complete"])
-            self.assertEqual(rg.claim_rung(c, BUCKETS, signed)["rung"], "proved")
+            c = proved_claim(["cc.version-pinned", "spec.secret-labels.complete"])
+            self.assertEqual(rg.claim_rung(c, with_catalogue_discharged(), signed)["rung"], "proved")
 
     def test_pipeline_reports_signers_anchor_and_lane(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -750,3 +793,118 @@ class StubbedCryptoTests(unittest.TestCase):
             checks = {c["id"]: c for c in rg.floor_static(pkg, "typescript", "0.2.0", REPORT, True)}
         self.assertEqual(checks["F5"]["status"], "pass")
         self.assertIn(f5["status"], ("pass", "fail"))
+
+
+class WorkspaceSettingsTests(unittest.TestCase):
+    def test_member_churn_does_not_stale_a_review_but_settings_do(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = _init_repo(Path(tmp))
+            ws = "code/packages/rust/Cargo.toml"
+            pkg = "code/packages/rust/demo"
+            _commit(repo, {ws: '[workspace]\nmembers = [\n  "demo",\n]\nresolver = "2"\n',
+                           f"{pkg}/src/lib.rs": "fn a() {}\n", f"{pkg}/Cargo.toml": "[package]\n"})
+            required = rg.required_review_scope(repo, pkg, "rust", ["src/lib.rs"])
+            self.assertIn(ws + rg.SETTINGS_SUFFIX, required)
+            self.assertNotIn("code/packages/rust/Cargo.lock", required)
+            doc = {"schema": rg.REVIEW_SCHEMA, "outcome": "pass", "reviewer": "t", "date": "d", "findings": [],
+                   "files": {f: rg.review_digest(repo, f) for f in required}}
+            (repo / pkg / "security-review.json").write_text(json.dumps(doc), "utf-8")
+            (repo / ws).write_text('[workspace]\nmembers = [\n  "demo",\n  "other",\n]\nresolver = "2"\n')
+            self.assertEqual(rg.check_review(repo, pkg, required)["status"], "pass")
+            (repo / ws).write_text('[workspace]\nmembers = ["demo"]\nresolver = "2"\n[patch.crates-io]\nx = { path = "x" }\n')
+            self.assertEqual(rg.check_review(repo, pkg, required)["status"], "fail")
+
+
+class ReviewRoundTwoTests(unittest.TestCase):
+    """Rules added after the LV-007a security review."""
+
+    def test_signed_tag_object_cannot_be_replayed_under_another_ref(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = _init_repo(Path(tmp))
+            sha = _commit(repo, {"a": "1"})
+            _git(repo, "tag", "-a", "-m", "m", "rust/real/v0.1.0", sha)
+            obj = _git(repo, "rev-parse", "refs/tags/rust/real/v0.1.0").strip()
+            _git(repo, "update-ref", "refs/tags/rust/other/v9.9.9", obj)
+            with self.assertRaises(rg.GateError) as ctx:
+                rg.verify_tag(repo, "rust/other/v9.9.9", sha, "")
+            self.assertIn("do not name", ctx.exception.message)
+
+    def test_warrant_comes_only_from_the_spec_directive(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "code/specs").mkdir(parents=True)
+            (repo / "code/specs/a.warrant").write_text("x")
+            pkg = repo / "code/packages/rust/a"
+            pkg.mkdir(parents=True)
+            report = pkg / "assurance_report.json"
+            (pkg / "evidence.bindings").write_text("# see code/specs/a.warrant\n")
+            self.assertIsNone(rg.warrant_path(repo, report))
+            (pkg / "evidence.bindings").write_text("spec code/specs/a.warrant\n")
+            self.assertEqual(rg.warrant_path(repo, report), "code/specs/a.warrant")
+            (pkg / "evidence.bindings").write_text("spec code/specs/a.warrant\nspec code/specs/a.warrant\n")
+            self.assertIsNone(rg.warrant_path(repo, report))
+        self.assertEqual(rg.warrant_path(REPO, CT / "assurance_report.json"), "code/specs/ct-compare.warrant")
+
+    def test_h1_needs_warrant_derived_evidence(self) -> None:
+        self.assertTrue(rg.h1_holds(REPORT, "code/specs/ct-compare.warrant"))
+        self.assertFalse(rg.h1_holds(REPORT, None))
+        doc = copy.deepcopy(REPORT)
+        doc["claims"][0]["evidence"].append("handwritten/test")
+        self.assertFalse(rg.h1_holds(doc, "code/specs/ct-compare.warrant"))
+
+    def test_shipped_manifest_must_match_tree_and_tag(self) -> None:
+        tree = rg.read_manifest(CT, "rust")
+        good = b'[package]\nname = "coding_adventures_ct_compare"\nversion = "0.1.0"\nlicense = "MIT"\n'
+        self.assertEqual(rg.check_shipped_manifest({"Cargo.toml": good}, "rust", tree, "0.1.0")["status"], "pass")
+        for bad in (good.replace(b"0.1.0", b"0.9.0"), good.replace(b"MIT", b"GPL-3.0"),
+                    good.replace(b"coding_adventures_ct_compare", b"other"),
+                    good + b'[dependencies]\nserde = "1"\n', b"not toml ["):
+            self.assertEqual(rg.check_shipped_manifest({"Cargo.toml": bad}, "rust", tree, "0.1.0")["status"],
+                             "fail", bad)
+        self.assertEqual(rg.check_shipped_manifest({}, "rust", tree, "0.1.0")["status"], "fail")
+        npm = rg.Manifest("typescript", "@x/y", "0.2.0", "MIT", [])
+        pj = json.dumps({"name": "@x/y", "version": "0.2.0", "license": "MIT",
+                         "dependencies": {"left-pad": "1"}}).encode()
+        self.assertEqual(rg.check_shipped_manifest({"package.json": pj}, "typescript", npm, "0.2.0")["status"],
+                         "fail")
+
+    def test_review_scope_covers_package_tree_and_ancestor_build_config(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = _init_repo(Path(tmp))
+            pkg = "code/packages/rust/demo"
+            _commit(repo, {f"{pkg}/src/lib.rs": "x", f"{pkg}/tests/t.rs": "x", f"{pkg}/BUILD": "x",
+                           ".cargo/config.toml": "x", "code/packages/rust/.cargo/config.toml": "x",
+                           "rust-toolchain.toml": "x", f"{pkg}/security-review.json": "{}",
+                           "code/other/file": "x"})
+            required = rg.required_review_scope(repo, pkg, "rust", [])
+            for want in (f"{pkg}/src/lib.rs", f"{pkg}/tests/t.rs", f"{pkg}/BUILD", ".cargo/config.toml",
+                         "code/packages/rust/.cargo/config.toml", "rust-toolchain.toml"):
+                self.assertIn(want, required)
+            self.assertNotIn(f"{pkg}/security-review.json", required)
+            self.assertNotIn("code/other/file", required)
+
+    def test_signoff_must_name_the_package(self) -> None:
+        with unittest.mock.patch.object(rg, "ssh_verify", return_value=True), tempfile.TemporaryDirectory() as tmp:
+            repo = _init_repo(Path(tmp))
+            warrant = "code/specs/demo.warrant"
+            doc = {"schema": rg.SIGNOFF_SCHEMA, "warrant": warrant, "signer": "owner", "package": "rust/demo",
+                   "warrant_sha256": rg.sha256_hex(b"claim x\n"), "ids": ["spec.secret-labels.complete"]}
+            _commit(repo, {warrant: "claim x\n", "code/specs/signoffs/demo.json": json.dumps(doc),
+                           "code/specs/signoffs/demo.json.sig": _sshsig(SK, rg.NS_STATEMENT, 0x05)})
+            signers = f"# revision: 1\nowner {SK} AAAA\n"
+            self.assertEqual(rg.verify_signoff(repo, warrant, signers, "rust/demo"), {"spec.secret-labels.complete"})
+            self.assertEqual(rg.verify_signoff(repo, warrant, signers, "rust/other"), set())
+
+    def test_exemption_text_is_escaped_or_refused(self) -> None:
+        doc = copy.deepcopy(REPORT)
+        doc["exemptions"][0]["id"] = "X\n## H2 holds"
+        with self.assertRaises(rg.GateError):
+            rg.higher_tier_conditions(doc, True, False)
+
+    def test_bucket_file_cannot_move_tool_trust_out_of_c(self) -> None:
+        doc = copy.deepcopy(RAW_BUCKETS)
+        for e in doc["assumptions"]:
+            if e["id"] == "tcb.report.checker-correct":
+                e["bucket"] = "a"
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(rg.GateError):
+            rg.load_buckets(write_buckets(Path(tmp), doc), REPO / rg.CATALOGUE_REL)

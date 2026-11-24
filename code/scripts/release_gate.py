@@ -102,6 +102,8 @@ from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+import tomllib
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -160,6 +162,21 @@ RANK = {
     "proved, baseline discharged": 5,
 }
 PROVED_FAMILY = ("proved", "proved-to-isa", "proved-to-gate-level")
+# Our own verification tools.  The gate adds these to every proof-backed
+# claim itself, whatever the report lists: a report (or a weakened generator
+# or checker) that "forgets" them must not be able to reach `proved`.  They
+# leave only when the code-owned catalogue records them as discharged.
+ALWAYS_ASSUMED = (
+    "tcb.report.checker-correct",
+    "tcb.evidence.manifest-honesty",
+    "tcb.drat.checker-correct",
+    "tcb.bitblast.encoding-correct",
+    "tcb.symexec.engine-correct",
+)
+# Strings from the report that are rendered into Markdown the owner reads
+# before approving.  Anything else (newlines, pipes, backticks) is refused, so
+# a report cannot spoof the tier text.
+SAFE_TEXT_RE = re.compile(r"^[A-Za-z0-9_.:/(),<> -]{1,128}$")
 CERT_RE = re.compile(r"^drat:sha256:[0-9a-f]{64}$")
 BOUNDED_RE = re.compile(r"^bounded\(([0-9]{1,9})\)$")
 
@@ -170,6 +187,13 @@ VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+([.-]?[0-9A-Za-z]+)*$")
 TAG_RE = re.compile(r"^(python|ruby|rust|typescript)/[A-Za-z0-9_-]+/v[0-9]+\.[0-9]+\.[0-9]+([.-]?[0-9A-Za-z]+)*$")
 # A git ref the gate may read history from: a fully qualified ref or HEAD.
 REF_RE = re.compile(r"^(HEAD|refs/(remotes|heads)/[A-Za-z0-9._/-]+)$")
+
+
+def safe_text(value: Any) -> str:
+    """Refuse report text that could spoof the Markdown the owner reads."""
+    if not isinstance(value, str) or not SAFE_TEXT_RE.match(value):
+        raise GateError("INPUT", f"report text {value!r} is not plain text")
+    return value
 
 
 class GateError(Exception):
@@ -249,6 +273,9 @@ class Buckets:
     floor: dict[str, bool]
     revision: int
     sha256: str
+    # Ids the code-owned catalogue itself records as `discharged`.  A report's
+    # `proof.discharged` counts only for these (see `claim_rung`).
+    catalogue_discharged: frozenset[str] = frozenset()
 
 
 def load_buckets(buckets_path: Path, catalogue_path: Path) -> Buckets:
@@ -280,11 +307,14 @@ def load_buckets(buckets_path: Path, catalogue_path: Path) -> Buckets:
     if not isinstance(entries, list):
         raise GateError("CATALOGUE", "catalogue has no assumptions array")
     cat_floor: dict[str, bool] = {}
+    cat_discharged: set[str] = set()
     for entry in entries:
         ident = entry.get("id")
         if not isinstance(ident, str):
             raise GateError("CATALOGUE", "catalogue entry without a string id")
         cat_floor[ident] = entry.get("status") == "floor" or entry.get("kind") == "declared"
+        if entry.get("status") == "discharged":
+            cat_discharged.add(ident)
 
     bucket: dict[str, str] = {}
     floor: dict[str, bool] = {}
@@ -311,7 +341,11 @@ def load_buckets(buckets_path: Path, catalogue_path: Path) -> Buckets:
     disagree = sorted(i for i in bucket if floor[i] != cat_floor[i])
     if disagree:
         raise GateError("BUCKETS", f"floor flag disagrees with the catalogue: {', '.join(disagree)}")
-    return Buckets(bucket=bucket, floor=floor, revision=revision, sha256=sha256_hex(raw))
+    missing_tcb = sorted(i for i in ALWAYS_ASSUMED if bucket.get(i) != "c")
+    if missing_tcb:
+        raise GateError("BUCKETS", f"tool-trust ids must stay in bucket c: {', '.join(missing_tcb)}")
+    return Buckets(bucket=bucket, floor=floor, revision=revision, sha256=sha256_hex(raw),
+                   catalogue_discharged=frozenset(cat_discharged))
 
 
 # ---------------------------------------------------------------------------
@@ -361,8 +395,14 @@ def claim_rung(claim: dict, buckets: Buckets, signed_b: set[str]) -> dict:
         if status not in (None, "pass"):
             raise GateError("LADDER", f"claim {ident}: {optional} status is {status!r}")
 
+    for field_name in ("id", "symbol"):
+        value = claim.get(field_name)
+        if not isinstance(value, str) or not SAFE_TEXT_RE.match(value):
+            raise GateError("LADDER", f"claim {field_name} {value!r} is not plain text")
     proof = claim.get("proof")
     label = proof.get("label") if isinstance(proof, dict) else None
+    if label is not None and (not isinstance(label, str) or not SAFE_TEXT_RE.match(label)):
+        raise GateError("LADDER", f"claim {ident}: label {label!r} is not plain text")
     assumptions: list[str] = []
     discharged: list[str] = []
     if isinstance(proof, dict):
@@ -374,6 +414,11 @@ def claim_rung(claim: dict, buckets: Buckets, signed_b: set[str]) -> dict:
     stray = sorted(set(discharged) - set(assumptions))
     if stray:
         raise GateError("LADDER", f"claim {ident}: discharged ids not in its assumptions: {', '.join(stray)}")
+    # A discharge counts only if the code-owned catalogue records it too; the
+    # report alone (or a weakened checker) cannot close an id.
+    discharged = [d for d in discharged if d in buckets.catalogue_discharged]
+    if isinstance(proof, dict) and proof.get("certificate") is not None:
+        assumptions = sorted(set(assumptions) | set(ALWAYS_ASSUMED))
 
     open_ids = [a for a in assumptions if a not in set(discharged)]
     open_c = sorted(a for a in open_ids if buckets.bucket[a] == "c")
@@ -471,9 +516,10 @@ def find_lane_report(repo: Path, lane: str) -> Path:
 
 
 def higher_tier_conditions(report: dict, warrant_present: bool, jail_live: bool) -> list[dict]:
+    """H1-H4.  ``warrant_present`` must already be the full H1 (``h1_holds``)."""
     rungs = report.get("rungs") or {}
     not_pass = sorted(k for k, v in rungs.items() if v != "pass")
-    unapproved = [e.get("id") for e in report.get("exemptions") or [] if e.get("approved") is not True]
+    unapproved = [safe_text(e.get("id")) for e in report.get("exemptions") or [] if e.get("approved") is not True]
     verdict = report.get("verdict")
     h2_reason = f"verdict is {verdict}"
     if not_pass:
@@ -483,7 +529,8 @@ def higher_tier_conditions(report: dict, warrant_present: bool, jail_live: bool)
         h2_reason += f" ({len(unapproved)} unapproved exemptions)"
     return [
         {"id": "H1", "name": "Warrant spec", "holds": warrant_present,
-         "detail": "Warrant spec present" if warrant_present else "no Warrant spec found"},
+         "detail": "Warrant spec present; every claim's evidence is Warrant-derived" if warrant_present
+         else "no Warrant spec, or a claim's evidence is not Warrant-derived"},
         {"id": "H2", "name": "report meets the bar (verdict pass)", "holds": verdict == "pass",
          "detail": h2_reason},
         {"id": "H3", "name": "live runtime-jail evidence", "holds": jail_live,
@@ -503,51 +550,53 @@ def _check(ident: str, name: str, status: str, detail: str) -> dict:
     return {"id": ident, "name": name, "status": status, "detail": detail}
 
 
-def cargo_has_runtime_deps(text: str) -> list[str]:
-    """Return the dependency-bearing tables of a Cargo.toml that are non-empty.
+def parse_cargo(text: str) -> dict:
+    """Parse a Cargo.toml with the standard library's TOML parser.
 
-    A deliberately small reader, not a TOML parser.  It is *conservative*: it
-    reports a table as non-empty if any key line appears under a header whose
-    name is ``dependencies`` / ``build-dependencies``, a ``target.*.``
-    variant of those, or a sub-table such as ``[dependencies.foo]``, and it
-    flags dotted keys such as ``dependencies.foo = ...`` anywhere.  A false
-    alarm costs a human look; a miss would ship a third-party dependency.
+    The first version of this gate used a hand-written line scanner, and a
+    security review found six valid manifests that declare a dependency it
+    missed (a trailing comment on a header, a quoted table name, inline tables,
+    dotted ``target."cfg(..)".dependencies`` keys). A real parser cannot be
+    fooled by TOML syntax; malformed TOML is a refusal.
     """
+    try:
+        return tomllib.loads(text)
+    except tomllib.TOMLDecodeError as exc:
+        raise GateError("MANIFEST", f"Cargo.toml is not valid TOML: {exc}") from exc
+
+
+def cargo_has_runtime_deps(text: str) -> list[str]:
+    """Every dependency a Cargo.toml declares that would ship (F8).
+
+    ``[dependencies]`` and ``[build-dependencies]`` (also spelled
+    ``build_dependencies``), at the root and under every ``[target.<cfg>]``.
+    ``[dev-dependencies]`` do not ship and are allowed.
+    """
+    doc = parse_cargo(text)
     found: list[str] = []
-    section = ""
-    dep_section = re.compile(
-        r"^(target\..+\.)?(dependencies|build-dependencies)(\..+)?$"
-    )
-    for raw in text.splitlines():
-        line = raw.strip()
-        if not line or line.startswith("#"):
-            continue
-        if line.startswith("["):
-            section = line.strip("[]").strip()
-            if dep_section.match(section) and "." in section and not section.startswith("target."):
-                found.append(section)  # [dependencies.foo] declares foo
-            continue
-        if re.match(r"^(build-)?dependencies\.", line):
-            found.append(line.split("=")[0].strip())
-            continue
-        if dep_section.match(section):
-            found.append(f"{section}: {line.split('=')[0].strip()}")
-    return sorted(set(found))
+
+    def collect(table: dict, where: str) -> None:
+        for key in ("dependencies", "build-dependencies", "build_dependencies"):
+            deps = table.get(key)
+            if isinstance(deps, dict):
+                found.extend(f"{where}{key}: {name}" for name in deps)
+            elif deps is not None:
+                found.append(f"{where}{key}: malformed")
+
+    collect(doc, "")
+    targets = doc.get("target")
+    if isinstance(targets, dict):
+        for cfg, table in targets.items():
+            if isinstance(table, dict):
+                collect(table, f"target.{cfg}.")
+    return sorted(found)
 
 
 def cargo_package_field(text: str, key: str) -> str | None:
-    """Read ``key = "value"`` from the ``[package]`` table of a Cargo.toml."""
-    section = ""
-    for raw in text.splitlines():
-        line = raw.strip()
-        if line.startswith("["):
-            section = line.strip("[]").strip()
-            continue
-        if section == "package":
-            match = re.match(rf'^{re.escape(key)}\s*=\s*"([^"]*)"\s*(#.*)?$', line)
-            if match:
-                return match.group(1)
-    return None
+    """Read a string ``key`` from the ``[package]`` table of a Cargo.toml."""
+    package = parse_cargo(text).get("package")
+    value = package.get(key) if isinstance(package, dict) else None
+    return value if isinstance(value, str) else None
 
 
 @dataclass
@@ -560,15 +609,27 @@ class Manifest:
 
 
 def read_manifest(pkg: Path, lang: str) -> Manifest:
+    """Read the package manifest from the repository tree."""
     if lang == "rust":
-        text = read_capped(pkg / "Cargo.toml", MAX_TEXT_BYTES).decode("utf-8")
+        return manifest_from_text("rust", read_capped(pkg / "Cargo.toml", MAX_TEXT_BYTES).decode("utf-8"))
+    if lang == "typescript":
+        return manifest_from_text("typescript", read_capped(pkg / "package.json", MAX_JSON_BYTES).decode("utf-8"))
+    raise GateError("MANIFEST", f"unsupported language {lang}")
+
+
+def manifest_from_text(lang: str, text: str) -> Manifest:
+    """Parse a manifest's text: the tree's, or the one inside the artifact."""
+    if lang == "rust":
         name = cargo_package_field(text, "name")
         version = cargo_package_field(text, "version")
         if not name or not version:
             raise GateError("MANIFEST", "Cargo.toml has no [package] name/version")
         return Manifest("rust", name, version, cargo_package_field(text, "license"), cargo_has_runtime_deps(text))
     if lang == "typescript":
-        doc = load_json(pkg / "package.json")
+        try:
+            doc = json.loads(text)
+        except ValueError as exc:
+            raise GateError("MANIFEST", f"package.json is not valid JSON: {exc}") from exc
         deps = []
         for key in ("dependencies", "peerDependencies", "optionalDependencies", "bundleDependencies", "bundledDependencies"):
             value = doc.get(key)
@@ -689,10 +750,35 @@ def floor_static(pkg: Path, lang: str, version: str, report: dict, claims_from_l
 # F4: the security-review record covers exactly what ships
 # ---------------------------------------------------------------------------
 
+# Repository-level build configuration a review must cover.  The workspace
+# manifest is covered by its *settings* (``#settings``: the file with its
+# ``members``/``exclude`` arrays removed), because adding any crate to the
+# workspace rewrites those arrays and would make every review stale, while
+# ``[patch]``, ``[profile]`` and the rest can change what a crate compiles to.
+# The workspace ``Cargo.lock`` is not listed: F8 guarantees no runtime
+# dependency, so the lockfile cannot change the shipped bytes.
+SETTINGS_SUFFIX = "#settings"
 REPO_BUILD_CONFIG = {
-    "rust": ["code/packages/rust/Cargo.toml", "code/packages/rust/Cargo.lock"],
+    "rust": ["code/packages/rust/Cargo.toml" + SETTINGS_SUFFIX],
     "typescript": [],
 }
+
+
+def workspace_settings(text: str) -> str:
+    """A Cargo workspace manifest without its ``members``/``exclude`` arrays."""
+    return re.sub(r"(?ms)^\s*(members|exclude)\s*=\s*\[.*?\]\s*$\n?", "", text)
+
+
+def review_digest(repo: Path, key: str) -> str | None:
+    """The digest a review record stores for ``key`` (a path, or path#settings)."""
+    rel = key.removesuffix(SETTINGS_SUFFIX)
+    target = repo / rel
+    if target.is_symlink() or not target.is_file():
+        return None
+    data = read_capped(target, MAX_ARTIFACT_MEMBER_BYTES)
+    if key.endswith(SETTINGS_SUFFIX):
+        data = workspace_settings(data.decode("utf-8")).encode("utf-8")
+    return sha256_hex(data)
 
 
 def safe_rel(path: str) -> bool:
@@ -706,32 +792,35 @@ def safe_rel(path: str) -> bool:
 
 
 def required_review_scope(repo: Path, pkg_rel: str, lang: str, artifact_files: list[str]) -> list[str]:
-    """Every file the review must cover (VER31 F4), as repository paths.
+    """Every file the review must cover (VER31 F4), as repository keys.
 
-    The artifact's own file list, mapped back to the repository; the package
-    manifest, build script and lockfile; and repository-level build
-    configuration.  ``security-review.json`` is the one exclusion.
+    * every git-tracked file under the package (source, tests, BUILD files,
+      tsconfig/vitest config, manifests, lockfile, evidence): build and test
+      configuration decides what ships and what the evidence means;
+    * the artifact's own members, mapped back to the repository;
+    * build configuration on the package's ancestor path: ``.cargo/**``,
+      ``rust-toolchain`` / ``rust-toolchain.toml`` and ``.npmrc`` in the
+      repository root and every directory down to the package;
+    * the workspace manifest's settings (``#settings``, see REPO_BUILD_CONFIG).
+
+    ``security-review.json`` is the one exclusion.  Only tracked files count:
+    build outputs (``dist/``, ``Cargo.toml.orig``) are covered through the
+    tracked source they are built from.
     """
-    required: set[str] = set()
-    for rel in artifact_files:
-        required.add(f"{pkg_rel}/{rel}")
-    # The source a built artifact (dist/) was compiled from.
-    required.update(git(repo, "ls-files", "--", f"{pkg_rel}/src").splitlines())
-    for extra in ("Cargo.toml", "build.rs", "package.json", "package-lock.json"):
-        if (repo / pkg_rel / extra).is_file():
-            required.add(f"{pkg_rel}/{extra}")
-    for extra in REPO_BUILD_CONFIG.get(lang, []):
-        if (repo / extra).is_file():
-            required.add(extra)
-    for extra in sorted((repo / "code/packages/rust/.cargo").glob("*")) if lang == "rust" else []:
-        if extra.is_file():
-            required.add(str(extra.relative_to(repo)))
-    required.discard(f"{pkg_rel}/security-review.json")
-    # Only tracked repository files can be reviewed in advance.  Build outputs
-    # (dist/, Cargo.toml.orig, .cargo_vcs_info.json) are excluded here and
-    # covered through the source they are built from.
-    tracked = set(git(repo, "ls-files", "--", *sorted(required)).splitlines()) if required else set()
-    return sorted(p for p in required if p in tracked)
+    candidates: set[str] = {f"{pkg_rel}/{rel}" for rel in artifact_files}
+    parts = PurePosixPath(pkg_rel).parts
+    ancestors = [""] + ["/".join(parts[: i + 1]) for i in range(len(parts))]
+    pathspecs = [pkg_rel]
+    for anc in ancestors:
+        prefix = f"{anc}/" if anc else ""
+        pathspecs += [f"{prefix}.cargo", f"{prefix}rust-toolchain", f"{prefix}rust-toolchain.toml",
+                      f"{prefix}.npmrc"]
+    tracked_listing = git(repo, "--literal-pathspecs", "ls-files", "--", *pathspecs).splitlines()
+    candidates.update(tracked_listing)
+    tracked = set(git(repo, "--literal-pathspecs", "ls-files", "--", *sorted(candidates)).splitlines())
+    tracked.discard(f"{pkg_rel}/security-review.json")
+    settings = [e for e in REPO_BUILD_CONFIG.get(lang, []) if (repo / e.removesuffix(SETTINGS_SUFFIX)).is_file()]
+    return sorted(tracked) + settings
 
 
 def check_review(repo: Path, pkg_rel: str, required: list[str]) -> dict:
@@ -760,18 +849,17 @@ def check_review(repo: Path, pkg_rel: str, required: list[str]) -> dict:
     if not isinstance(files, dict):
         return _check("F4", "security review", "fail", "files must map path -> sha256")
     for rel in files:
-        if not safe_rel(rel):
+        if not safe_rel(rel.removesuffix(SETTINGS_SUFFIX)):
             return _check("F4", "security review", "fail", f"unsafe scope path {rel!r}")
     uncovered = [p for p in required if p not in files]
     if uncovered:
         return _check("F4", "security review", "fail", f"review does not cover: {', '.join(uncovered)}")
     changed = []
     for rel, digest in sorted(files.items()):
-        target = repo / rel
-        if target.is_symlink() or not target.is_file():
+        actual = review_digest(repo, rel)
+        if actual is None:
             changed.append(f"{rel} (missing or symlink)")
-            continue
-        if sha256_hex(read_capped(target, MAX_ARTIFACT_MEMBER_BYTES)) != digest:
+        elif actual != digest:
             changed.append(rel)
     if changed:
         return _check("F4", "security review", "fail", f"changed since review: {', '.join(changed)}")
@@ -822,6 +910,35 @@ def check_artifact(members: dict[str, bytes], report_bytes: bytes, assurance_byt
         problems.append("LICENSE missing")
     return _check("F10b", "report ships verbatim", "fail" if problems else "pass",
                   "; ".join(problems) if problems else "assurance_report.json and ASSURANCE.md byte-identical")
+
+
+def check_shipped_manifest(members: dict[str, bytes], lang: str, tree: Manifest, version: str) -> dict:
+    """F8b.  The manifest *inside the artifact* is what the registry reads.
+
+    A build step (``prepack``, ``npm run build``) could rewrite
+    ``package.json`` after the tree was checked, so the shipped manifest's
+    name, version, licence and runtime dependencies must equal the tree's and
+    the tag's.  For a crate this is Cargo's normalized ``Cargo.toml``.
+    """
+    name = "Cargo.toml" if lang == "rust" else "package.json"
+    raw = members.get(name)
+    if raw is None:
+        return _check("F8b", "shipped manifest", "fail", f"artifact has no {name}")
+    try:
+        shipped = manifest_from_text(lang, raw.decode("utf-8"))
+    except (GateError, UnicodeDecodeError) as exc:
+        return _check("F8b", "shipped manifest", "fail", f"cannot read shipped {name}: {exc}")
+    problems = []
+    if shipped.registry_name != tree.registry_name:
+        problems.append(f"name {shipped.registry_name!r} != tree {tree.registry_name!r}")
+    if shipped.version != version:
+        problems.append(f"version {shipped.version!r} != tag {version!r}")
+    if shipped.license != "MIT":
+        problems.append(f"licence {shipped.license!r}")
+    if shipped.runtime_deps:
+        problems.append("runtime dependencies: " + "; ".join(shipped.runtime_deps))
+    return _check("F8b", "shipped manifest", "fail" if problems else "pass",
+                  "; ".join(problems) if problems else f"{shipped.registry_name} {shipped.version}, MIT, no runtime deps")
 
 
 # ---------------------------------------------------------------------------
@@ -993,7 +1110,7 @@ def verify_signers_chain(repo: Path, ref: str) -> tuple[str, list[dict]]:
         if blob is None:
             raise GateError("SIGNERS", f"{SIGNERS_REL} deleted at {commit[:12]}")
         text = blob.decode("utf-8")
-        placeholder = not re.search(r"^#\s*revision:\s*[0-9]", text, re.M) and all(
+        placeholder = not re.search(r"^#\s*revision:\s*[0-9]", text, re.MULTILINE) and all(
             not ln.strip() or ln.strip().startswith("#") for ln in text.splitlines()
         )
         if placeholder and previous_text is None:
@@ -1036,7 +1153,7 @@ def verify_buckets_signature(repo: Path, ref: str, buckets: Buckets, signers_tex
     return verify_signed_file(signers_text, data, sig_path.read_text("utf-8"), NS_BUCKETS)
 
 
-def verify_signoff(repo: Path, warrant_rel: str, signers_text: str) -> set[str]:
+def verify_signoff(repo: Path, warrant_rel: str, signers_text: str, package: str | None = None) -> set[str]:
     """Return the (b) ids a valid statement sign-off covers (VER31 3.2).
 
     Any defect returns the empty set: a broken sign-off leaves (b) open, it
@@ -1054,6 +1171,8 @@ def verify_signoff(repo: Path, warrant_rel: str, signers_text: str) -> set[str]:
         raw = read_capped(rec_path, MAX_JSON_BYTES)
         doc = json.loads(raw)
         if doc.get("schema") != SIGNOFF_SCHEMA or doc.get("warrant") != warrant_rel:
+            return set()
+        if package is not None and doc.get("package") != package:
             return set()
         actual = sha256_hex(read_capped(repo / warrant_rel, MAX_TEXT_BYTES))
         if doc.get("warrant_sha256") != actual:
@@ -1084,6 +1203,14 @@ def verify_tag(repo: Path, tag: str, commit: str, signers_text: str) -> str:
     peeled = git(repo, "rev-parse", f"refs/tags/{tag}^{{commit}}").strip()
     if peeled != commit:
         raise GateError("TAG", f"{tag} points at {peeled[:12]}, not the release commit {commit[:12]}")
+    body = git(repo, "cat-file", "tag", f"refs/tags/{tag}")
+    # The signature covers these headers, but `git verify-tag` does not compare
+    # them with the ref name.  Without this check one signed tag object could
+    # be pushed under another ref (another package or version) and replayed.
+    headers = dict(line.split(" ", 1) for line in body.split("\n\n", 1)[0].splitlines() if " " in line)
+    if headers.get("object") != commit or headers.get("type") != "commit" or headers.get("tag") != tag:
+        raise GateError("TAG", f"tag object headers {headers.get('tag')!r}/{headers.get('type')!r} do not name "
+                               f"{tag} at {commit[:12]}")
     with tempfile.TemporaryDirectory() as tmp:
         allowed = Path(tmp) / "allowed_signers"
         allowed.write_text(signers_text, encoding="utf-8")
@@ -1091,7 +1218,6 @@ def verify_tag(repo: Path, tag: str, commit: str, signers_text: str) -> str:
                     "verify-tag", f"refs/tags/{tag}"], repo)
         if proc.returncode != 0:
             raise GateError("TAG", f"git verify-tag failed: {proc.stderr.decode(errors='replace').strip()}")
-    body = git(repo, "cat-file", "tag", f"refs/tags/{tag}")
     start = body.find("-----BEGIN SSH SIGNATURE-----")
     if start == -1:
         raise GateError("TAG", "tag has no SSH signature")
@@ -1146,7 +1272,7 @@ def render_assurance(name: str, claims: list[dict], report: dict, report_sha: st
         for ident in union[key]:
             floor = " (floor: can never be discharged)" if buckets.floor.get(ident) else ""
             out.append(f"- `{ident}`{floor}")
-    report_level = sorted(report.get("assumptions") or [])
+    report_level = sorted(safe_text(i) for i in report.get("assumptions") or [])
     out.append("")
     out.append(f"### Report-level assumptions: {len(report_level)} ids")
     out.append("")
@@ -1163,7 +1289,7 @@ def render_assurance(name: str, claims: list[dict], report: dict, report_sha: st
     if not exemptions:
         out.append("None.")
     for e in exemptions:
-        out.append(f"- `{e.get('id')}`: {'approved' if e.get('approved') else 'unapproved'}")
+        out.append(f"- `{safe_text(e.get('id'))}`: {'approved' if e.get('approved') is True else 'unapproved'}")
     out.append("")
     return "\n".join(out)
 
@@ -1211,18 +1337,28 @@ def compute_claims(ctx: Context, report: dict, buckets: Buckets, lane: str | Non
 
 
 def warrant_path(repo: Path, report_path: Path) -> str | None:
-    """H1: the package's Warrant file, from its evidence bindings."""
+    """The package's Warrant file: the ``spec`` directive of its bindings.
+
+    Only the directive the evidence generator itself reads counts (a path in a
+    comment does not), and exactly one is allowed.
+    """
     bindings = report_path.parent / "evidence.bindings"
-    candidates = []
-    if bindings.is_file():
-        text = read_capped(bindings, MAX_TEXT_BYTES).decode("utf-8", "replace")
-        candidates = re.findall(r"code/specs/[A-Za-z0-9_.-]+\.warrant", text)
-    name = report_path.parent.name
-    candidates.append(f"code/specs/{name}.warrant")
-    for cand in candidates:
-        if (repo / cand).is_file():
-            return cand
-    return None
+    if not bindings.is_file():
+        return None
+    text = read_capped(bindings, MAX_TEXT_BYTES).decode("utf-8", "replace")
+    specs = re.findall(r"^spec[ \t]+(\S+)[ \t]*$", text, re.MULTILINE)
+    if len(specs) != 1 or not re.match(r"^code/specs/[A-Za-z0-9_.-]+\.warrant$", specs[0]):
+        return None
+    return specs[0] if (repo / specs[0]).is_file() else None
+
+
+def h1_holds(report: dict, warrant: str | None) -> bool:
+    """H1 (VER31 6.1): a Warrant spec, and every claim's evidence derives from it."""
+    claims = report.get("claims") or []
+    return warrant is not None and bool(claims) and all(
+        c.get("evidence") and all(isinstance(e, str) and e.startswith("warrant/") for e in c["evidence"])
+        for c in claims
+    )
 
 
 def run_check(ctx: Context) -> dict:
@@ -1268,10 +1404,10 @@ def run_check(ctx: Context) -> dict:
     warrant = warrant_path(repo, report_path)
     signed_b = set()
     if signers_text is not None and warrant is not None and not lane:
-        signed_b = verify_signoff(repo, warrant, signers_text)
+        signed_b = verify_signoff(repo, warrant, signers_text, report.get("package"))
     claims = compute_claims(ctx, report, buckets, lane, signed_b)
     claim_tier = weakest(c["rung"] for c in claims)
-    conditions = higher_tier_conditions(report, warrant is not None, ctx.jail_live)
+    conditions = higher_tier_conditions(report, h1_holds(report, warrant), ctx.jail_live)
 
     # -- Floor checks.
     floor: list[dict] = []
@@ -1289,8 +1425,11 @@ def run_check(ctx: Context) -> dict:
                         "clippy -D warnings / tsc strict ran in this job" if ctx.lint_ran else "lint not run"))
     floor.extend(floor_static(pkg, ctx.lang, ctx.version, report, claims_from_lane=lane is not None))
 
-    expected_assurance = render_assurance(manifest.registry_name, claims, report, sha256_hex(report_bytes),
-                                          buckets, lane).encode("utf-8")
+    # ASSURANCE.md is committed, so it is rendered without any sign-off (the
+    # same way `assurance` renders it); the release notes give the signed state.
+    unsigned_claims = compute_claims(ctx, report, buckets, lane, set())
+    expected_assurance = render_assurance(manifest.registry_name, unsigned_claims, report,
+                                          sha256_hex(report_bytes), buckets, lane).encode("utf-8")
     committed = pkg / "ASSURANCE.md"
     fresh = committed.is_file() and read_capped(committed, MAX_TEXT_BYTES) == expected_assurance
     if not fresh:
@@ -1306,6 +1445,7 @@ def run_check(ctx: Context) -> dict:
     if ctx.artifact is not None:
         members = artifact_members(ctx.artifact)
         floor.append(check_artifact(members, report_bytes, expected_assurance))
+        floor.append(check_shipped_manifest(members, ctx.lang, manifest, ctx.version))
         required = required_review_scope(repo, ctx.pkg_rel, ctx.lang, sorted(members))
         floor.append(check_review(repo, ctx.pkg_rel, required))
         artifact_info = {"file": ctx.artifact.name, "sha256": sha256_hex(ctx.artifact.read_bytes())}
