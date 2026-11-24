@@ -535,3 +535,72 @@ func TestCollectAShardOverTheCapsIsReplacedByAVoidOne(t *testing.T) {
 	recfmt.DefaultLimits.MaxLine = 10
 	g.refuse("does not decode even with every record unknown")
 }
+
+// A census shard that hits its build-time cap kills the build tool while one
+// step runs: that step has a trace and no sidecar, and the counter is one ahead
+// of the sidecars. That exact shape is `interrupted`; every other way the counter
+// can disagree with the sidecars stays `serial-violated`. Either way the shard is
+// void (every record an unknown write set).
+func TestCollectInterruptedVersusSerialViolated(t *testing.T) {
+	rmSidecar := func(f *cfix, a string, j int) { os.Remove(StepFile(f.p.dir, a, j, "json")) }
+	for _, c := range []struct {
+		name string
+		do   func(f *cfix)
+		want string
+	}{
+		{"the highest number's step died with its trace", func(f *cfix) {
+			rmSidecar(f, cz, 0)
+			os.Remove(RecordFile(f.p.dir, cz))
+		}, "interrupted: a step started and was never accounted for (the build was stopped, or its supervisor died)"},
+		{"two numbers missing", func(f *cfix) {
+			rmSidecar(f, cz, 0)
+			rmSidecar(f, cb, 1)
+		}, "serial-violated: the counter reached 4 and 2 sidecars"},
+		{"one number missing, not the highest", func(f *cfix) { rmSidecar(f, cb, 1) },
+			"serial-violated: the counter reached 4 and 3 sidecars"},
+		{"the highest number missing and no trace for it", func(f *cfix) { f.setSeq("5\n") },
+			"serial-violated: the counter reached 5 and 4 sidecars"},
+		{"the highest step's trace and sidecar both gone", func(f *cfix) {
+			rmSidecar(f, cz, 0)
+			os.Remove(StepFile(f.p.dir, cz, 0, "trace"))
+		}, "serial-violated: the counter reached 4 and 3 sidecars"},
+	} {
+		t.Run(c.name, func(t *testing.T) {
+			f := newCfix(t)
+			f.good()
+			c.do(f)
+			_, sh := f.collect()
+			// The shard stays void in every shape: ca, whose step is fully
+			// accounted for, is unknown with the shard-wide reason. (An action that
+			// owns the damaged step keeps its own, more specific reason.)
+			requireUnknown(t, sh, ca, c.want)
+			for _, a := range []string{cb, cz} {
+				if r := recOf(t, sh, a); r.Unknown == "" {
+					t.Fatalf("%s is believed", a)
+				}
+			}
+		})
+	}
+}
+
+// In an interrupted shard an action with no step directory at all says it was
+// not run, instead of inheriting the shard-wide message. It stays an unknown
+// write set: nothing becomes emittable.
+func TestCollectInterruptedNotRunAction(t *testing.T) {
+	f := newCfix(t)
+	f.step(ca, 0, 0, nil)
+	f.verdict(ca, 1, nil)
+	f.step(cb, 0, 1, nil)
+	f.step(cb, 1, 2, nil)
+	os.Remove(StepFile(f.p.dir, cb, 1, "json")) // killed mid-step: trace, no sidecar
+	f.setSeq("3\n")
+	f.setResults(
+		ResultsPackage{Package: ca, Status: "built", StepsRun: 1, StepsTotal: 1},
+		ResultsPackage{Package: cb, Status: "built", StepsRun: 1, StepsTotal: 2},
+		ResultsPackage{Package: cz, Status: "not-run", StepsRun: 0, StepsTotal: 1},
+	)
+	_, sh := f.collect()
+	requireUnknown(t, sh, ca, "interrupted: a step started and was never accounted for")
+	requireUnknown(t, sh, cb, "")
+	requireUnknown(t, sh, cz, "not run: the build stopped before this step")
+}
