@@ -73,7 +73,7 @@ const (
 
 	maxCensusFailedBytes = 64 << 10 // a record.failed is read at most this big
 	maxCensusRecordBytes = 32 << 20 // a record.json is read at most this big
-	maxCensusEntries     = 65536    // entries in one census.json (the writer's own bound is 16384)
+	maxCensusEntries     = 65536    // entries in one census.json (the writer's own bound is 20480)
 	maxCensusKinds       = 128      // distinct kinds kept; the rest are "(other)"
 	maxCensusDistinct    = 100_000  // distinct (kind, path) pairs kept, over everything
 	maxCensusPathBytes   = 32 << 20 // total bytes of the distinct paths kept

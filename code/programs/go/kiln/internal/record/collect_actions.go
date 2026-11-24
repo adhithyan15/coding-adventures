@@ -9,6 +9,7 @@ package record
 //	    0.json 0.trace  1.json 1.trace ...   one sidecar and one trace per step
 //	    0.rerun / 0.overlap                  markers (a step run twice; a lock refused)
 //	    0.strace-stderr                      strace's own words, opaque
+//	    0.exechead                           the exec-head supervisor's lines (D48); bound to the sidecar by digest
 //	    record.json  or  record.failed       the verdict of the epilogue (P13)
 //
 // and `collect` turns the directory, the build tool's results and the sealed
@@ -222,6 +223,10 @@ func scanAction(dir string) dirScan {
 		case "strace-stderr":
 			// Opaque, never read (see the file comment).
 			continue
+		case "exechead":
+			// The exec-head supervisor's lines (KILN04 D48): a regular file like
+			// the others.  Its content is checked against the step sidecar's
+			// digest in checkSidecars, and the epilogue classified with it.
 		default:
 			s.flag("an unexpected entry " + reasonText(name))
 			continue
@@ -414,6 +419,13 @@ func checkSidecars(c *collector, name string, planned Action, s dirScan, bad *[]
 			}
 		}
 		if why := checkTrace(StepFile(c.dir, name, j, "trace"), sc); why != "" {
+			*bad = append(*bad, fmt.Sprintf("step %d: %s", j, why))
+		}
+		// KILN04 D48 step 5: the classifier believed this step's exec heads when
+		// the epilogue ran.  The file must still be the one the sidecar binds
+		// (the same check the epilogue made, readExecHead), or the record built on
+		// it is not trusted.
+		if _, why := readExecHead(c.dir, name, j, sc); why != "" {
 			*bad = append(*bad, fmt.Sprintf("step %d: %s", j, why))
 		}
 		out.seqs = append(out.seqs, seqUse{action: name, step: j, seq: sc.Seq})

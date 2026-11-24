@@ -336,3 +336,27 @@ func TestRecordStepRefusesWhenItCannotArmParentDeath(t *testing.T) {
 		t.Fatalf("%d %q", code, e)
 	}
 }
+
+// The exec-head supervisor is OFF unless `--exec-head` asks for it (KILN04 D48
+// lands default-off; the census opts in once the classifier consumes the file).
+func TestRecordStepExecHeadIsOptIn(t *testing.T) {
+	recordStepHooks(t)
+	recordPlatformOK = func() bool { return true }
+	recordSelf = func() (string, error) { return "/canonical/kiln", nil }
+	var got []bool
+	recordStep = func(o record.StepOptions) (*record.StepResult, error) {
+		got = append(got, o.ExecHead)
+		return &record.StepResult{}, nil
+	}
+	for _, args := range [][]string{
+		{"step", "--dir", absPath("/d"), "--", "sh", "-c", "true"},
+		{"step", "--dir", absPath("/d"), "--exec-head", "--", "sh", "-c", "true"},
+	} {
+		if code, _, e := runRec(args...); code != 0 {
+			t.Fatalf("%v: %d %q", args, code, e)
+		}
+	}
+	if len(got) != 2 || got[0] || !got[1] {
+		t.Fatalf("ExecHead per run: %v, want [false true]", got)
+	}
+}

@@ -76,6 +76,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/exechead"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
@@ -417,6 +418,7 @@ func classifyAction(d ClassifyDeps, pre *Pre, action string, step int, last Step
 	pkgDir := pre.Config.PackageDir(action)
 	reasons := map[string]bool{}
 	var traces []*trace.Trace
+	var heads []*exechead.File
 	netns := true
 	for j := 0; j <= step; j++ {
 		sc := last
@@ -446,7 +448,17 @@ func classifyAction(d ClassifyDeps, pre *Pre, action string, step int, last Step
 			reasons[fmt.Sprintf("step %d: %s", j, why)] = true
 			continue
 		}
+		// KILN04 D48 step 5: the step's exec-head file, bound to the sidecar by
+		// nonce, digest and length.  A file that cannot be trusted refuses the
+		// WHOLE action, like a trace that does not parse; a step that ran
+		// without the supervisor has none, and is classified as before.
+		eh, why := readExecHead(pre.Dir, action, j, sc)
+		if why != "" {
+			reasons[fmt.Sprintf("step %d: %s", j, why)] = true
+			continue
+		}
 		traces = append(traces, tr)
+		heads = append(heads, eh)
 	}
 	rec.StepNetNS = netns
 	if len(reasons) > 0 {
@@ -460,7 +472,14 @@ func classifyAction(d ClassifyDeps, pre *Pre, action string, step int, last Step
 	if err != nil {
 		return ClassifiedRecord{}, err
 	}
-	raw, err := d.Classify(cfg, traced.Input{Package: action, Traces: traces, Recipe: planned.Steps, StepNetNS: netns, Census: d.Census})
+	in := traced.Input{Package: action, Traces: traces, Recipe: planned.Steps, StepNetNS: netns, Census: d.Census}
+	for _, h := range heads {
+		if h != nil {
+			in.ExecHeads = heads // one entry per trace, nil for a step with no supervisor
+			break
+		}
+	}
+	raw, err := d.Classify(cfg, in)
 	if err != nil {
 		return ClassifiedRecord{}, fmt.Errorf("classify: %w", err)
 	}
