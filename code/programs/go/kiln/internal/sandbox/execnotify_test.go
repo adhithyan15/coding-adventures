@@ -133,8 +133,8 @@ func TestCheckExecNotifySocket(t *testing.T) {
 // TestHandshakeConstants pins what PR 4's supervisor reads: one byte, a
 // message prefix, and the refusal text.
 func TestHandshakeConstants(t *testing.T) {
-	if ExecNotifyByte != 'L' {
-		t.Errorf("handshake byte %q", ExecNotifyByte)
+	if ExecNotifyByte != 'L' || ExecNotifyByteKillable != 'K' {
+		t.Errorf("handshake bytes %q %q", ExecNotifyByte, ExecNotifyByteKillable)
 	}
 	if !strings.HasPrefix(ExecNotifyRefused, "exec-notify") || !strings.Contains(ExecNotifyListenerGone, "did not run") {
 		t.Errorf("%q %q", ExecNotifyRefused, ExecNotifyListenerGone)

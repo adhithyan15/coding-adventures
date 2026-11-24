@@ -66,7 +66,7 @@ func isCloexec(t *testing.T, fd int) bool {
 func TestReceiveListenerAcceptsExactlyOneDescriptorAndOneByte(t *testing.T) {
 	s, tx := recvFixture(t, 5*time.Second)
 	send(t, tx, []byte{'L'}, devNull(t))
-	fd, err := s.receiveListener()
+	fd, _, err := s.receiveListener()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -84,7 +84,7 @@ func TestReceiveListenerRefusesAnythingElse(t *testing.T) {
 	}{
 		{"two descriptors", func(t *testing.T, tx int) { send(t, tx, []byte{'L'}, devNull(t), devNull(t)) }, "2 descriptors"},
 		{"no descriptor", func(t *testing.T, tx int) { send(t, tx, []byte{'L'}) }, "0 descriptors"},
-		{"the wrong byte", func(t *testing.T, tx int) { send(t, tx, []byte{'X'}, devNull(t)) }, "want exactly one 'L'"},
+		{"the wrong byte", func(t *testing.T, tx int) { send(t, tx, []byte{'X'}, devNull(t)) }, "want exactly one 'L' or 'K'"},
 		{"two data bytes", func(t *testing.T, tx int) { send(t, tx, []byte("LL"), devNull(t)) }, "2 data bytes"},
 		{"more descriptors than the buffer", func(t *testing.T, tx int) {
 			fds := make([]int, 8)
@@ -107,7 +107,7 @@ func TestReceiveListenerRefusesAnythingElse(t *testing.T) {
 		t.Run(c.name, func(t *testing.T) {
 			s, tx := recvFixture(t, 5*time.Second)
 			c.do(t, tx)
-			fd, err := s.receiveListener()
+			fd, _, err := s.receiveListener()
 			if err == nil {
 				syscall.Close(fd)
 				t.Fatal("accepted")
@@ -125,7 +125,7 @@ func TestReceiveListenerDeadlineIsTheOnlyWayToNoticeALostHandover(t *testing.T) 
 	s, tx := recvFixture(t, 300*time.Millisecond)
 	_ = tx // open, silent: another holder keeps it alive
 	start := time.Now()
-	fd, err := s.receiveListener()
+	fd, _, err := s.receiveListener()
 	if err == nil {
 		syscall.Close(fd)
 		t.Fatal("a listener out of nothing")
@@ -144,7 +144,7 @@ func TestReceiveListenerSurvivesASlowSender(t *testing.T) {
 		time.Sleep(200 * time.Millisecond)
 		send(t, tx, []byte{'L'}, devNull(t))
 	}()
-	fd, err := s.receiveListener()
+	fd, _, err := s.receiveListener()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -164,7 +164,7 @@ func TestReceiveListenerClosesWhatItRefused(t *testing.T) {
 	nul := devNull(t)
 	before := count()
 	send(t, tx, []byte("LL"), nul, nul)
-	if fd, err := s.receiveListener(); err == nil {
+	if fd, _, err := s.receiveListener(); err == nil {
 		syscall.Close(fd)
 		t.Fatal("accepted")
 	}
@@ -197,7 +197,7 @@ func TestNewMakesACloexecSocketAndWritesTheHeader(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	f, err := Decode(data, Limits{}, &Expect{Nonce: testNonce, ActionSHA256: testAction, Step: 1, CheckStep: true})
+	f, err := Decode(data, Limits{}, Expect{Nonce: testNonce, ActionSHA256: testAction, Step: 1})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -252,5 +252,26 @@ func TestReadCStringIsBoundedAndPageSafe(t *testing.T) {
 	// An address nobody owns.
 	if _, res := readCString(pid, 8); res != pathUnreadable {
 		t.Fatalf("address 8: %v", res)
+	}
+}
+
+func TestReceiveListenerSaysWhetherItIsKillable(t *testing.T) {
+	for b, want := range map[byte]bool{'L': false, 'K': true} {
+		s, tx := recvFixture(t, 5*time.Second)
+		send(t, tx, []byte{b}, devNull(t))
+		fd, killable, err := s.receiveListener()
+		if err != nil {
+			t.Fatalf("%q: %v", b, err)
+		}
+		syscall.Close(fd)
+		if killable != want {
+			t.Errorf("%q: killable %v", b, killable)
+		}
+	}
+}
+
+func TestCheckNotifSizesMatchesTheKernel(t *testing.T) {
+	if err := checkNotifSizes(); err != nil {
+		t.Fatal(err)
 	}
 }

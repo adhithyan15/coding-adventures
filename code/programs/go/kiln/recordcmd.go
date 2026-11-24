@@ -256,11 +256,12 @@ func runRecordStep(args []string, stdout, stderr io.Writer) int {
 	fs := flag.NewFlagSet("record step", flag.ContinueOnError)
 	fs.SetOutput(stderr)
 	dir := fs.String("dir", "", "the record directory (absolute)")
+	execHead := fs.Bool("exec-head", false, "supervise the step's exec notifications and write <step>.exechead (KILN04 D48; off by default)")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
 	if *dir == "" || !filepath.IsAbs(*dir) || fs.NArg() == 0 {
-		fmt.Fprintln(stderr, "usage: kiln record step --dir <abs> -- sh -c <line>")
+		fmt.Fprintln(stderr, "usage: kiln record step --dir <abs> [--exec-head] -- sh -c <line>")
 		return 2
 	}
 	if !recordPlatformOK() {
@@ -289,6 +290,7 @@ func runRecordStep(args []string, stdout, stderr io.Writer) int {
 	res, err := recordStep(record.StepOptions{
 		Dir: *dir, Argv: fs.Args(), Environ: os.Environ(), Cwd: cwd, KilnExe: self,
 		Stdout: stdout, Stderr: stderr,
+		ExecHead: *execHead,
 	})
 	if err != nil {
 		// Nothing printed here is a value from the environment.

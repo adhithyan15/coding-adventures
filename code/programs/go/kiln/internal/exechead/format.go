@@ -127,6 +127,10 @@ const (
 	// UncleanHandover: the listener never arrived, or arrived wrongly (not
 	// exactly one descriptor and one data byte 'L'), within the deadline.
 	UncleanHandover = "exechead-handover"
+	// UncleanReceiver: the receiver stopped for a reason other than the listener
+	// hanging up (an error, a panic).  The step is killed and the listener closed,
+	// so no later exec can block for ever.
+	UncleanReceiver = "exechead-receiver"
 	// UncleanFailed: a supervisor-side error (an ioctl failure other than ENOENT
 	// for a vanished notification, a sidecar write failure, a panic), or the
 	// supervisor stopped before the step ended.
@@ -152,6 +156,12 @@ type Header struct {
 	// ActionSHA256 and Step name the step the file belongs to.
 	ActionSHA256 string `json:"action_sha256"`
 	Step         int    `json:"step"`
+	// WaitKillable says the listener was installed with
+	// SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV (the init sent 'K'): a signal cannot
+	// interrupt an unanswered notification.  False when the kernel refused the
+	// flag (plain NEW_LISTENER, where a signal can interrupt and restart a call),
+	// and when no listener ever arrived.
+	WaitKillable bool `json:"wait_killable"`
 }
 
 // Line is one notification.
@@ -183,6 +193,7 @@ type wireHeader struct {
 	Nonce        *string `json:"nonce"`
 	ActionSHA256 *string `json:"action_sha256"`
 	Step         *int    `json:"step"`
+	WaitKillable *bool   `json:"wait_killable"`
 }
 
 type wireLine struct {

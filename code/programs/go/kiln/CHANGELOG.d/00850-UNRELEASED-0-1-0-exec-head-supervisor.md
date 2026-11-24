@@ -62,6 +62,29 @@
 - `traced.HeadLimit` exports the classifier's head limit; a test holds
   `exechead.HeadLimit` equal to it.
 
+### Review follow-up (same PR)
+
+- DEFAULT-OFF: the supervisor runs only with `kiln record step --exec-head`
+  (`StepOptions.ExecHead`); `NoExecHead` is gone and the existing tests need no
+  opt-out. The sidecar's `exechead_*` fields stay empty when it is off.
+- A receiver that stops (an error, a panic) kills the step and marks it
+  `exechead-receiver`, closes the listener and stops the processor; a poller or
+  watchdog panic degrades the supervisor and kills the step. Test seam
+  `Timing.InjectReceiverError`.
+- The pending-lifetime bound kills only a thread seen blocked in execve; otherwise
+  the group is tainted and the line is `timeout`.
+- A vanished non-leader thread with exe unchanged taints after a bounded re-check.
+- The group pidfd is read through a dup under the lock; the init pidfd is a dup of
+  the validated one and atomic; the kill path takes no `mu`; both goroutines recover.
+- Unmeasured tmpfs devices record every exec `outside` and never open a file.
+- The init asks for `SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV` (falling back to plain
+  `NEW_LISTENER` on `EINVAL`); the hand-over byte is `K` or `L`, and the header's
+  `wait_killable` records which. `sandbox.ExecNotifyByteKillable`.
+- `exechead.Decode` takes a mandatory `Expect`; `New` checks
+  `SECCOMP_GET_NOTIF_SIZES`.
+- New real-kernel tests: receiver death, rename of the target by another process
+  (replacing the lifetime-kill test with `...PendingLifetimeTaintsAHealthyStep`).
+
 ### Changed
 
 - `RecorderVersion` 17 to 19 (origin/main is at 17; open PR #19908 takes 18). The

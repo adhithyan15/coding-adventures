@@ -56,7 +56,7 @@ func NewWriter(w io.Writer, h Header, lim Limits) (*Writer, error) {
 	if err := checkHeader(h); err != nil {
 		return nil, err
 	}
-	data, err := encodeCanonical(wireHeader{V: &h.V, Kernel: &h.Kernel, Nonce: &h.Nonce, ActionSHA256: &h.ActionSHA256, Step: &h.Step})
+	data, err := encodeCanonical(wireHeader{V: &h.V, Kernel: &h.Kernel, Nonce: &h.Nonce, ActionSHA256: &h.ActionSHA256, Step: &h.Step, WaitKillable: &h.WaitKillable})
 	if err != nil {
 		return nil, err
 	}

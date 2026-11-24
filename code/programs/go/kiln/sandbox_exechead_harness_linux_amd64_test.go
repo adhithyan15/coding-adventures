@@ -208,7 +208,7 @@ func (f *sandboxFixture) ehArgv(t *testing.T, r *ehRun, argv []string, o ehOpt) 
 	if err != nil {
 		t.Fatal(err)
 	}
-	r.file, err = exechead.Decode(data, exechead.Limits{}, &exechead.Expect{Nonce: r.hdr.Nonce, ActionSHA256: r.hdr.ActionSHA256, Step: 0, CheckStep: true})
+	r.file, err = exechead.Decode(data, exechead.Limits{}, exechead.Expect{Nonce: r.hdr.Nonce, ActionSHA256: r.hdr.ActionSHA256, Step: 0})
 	if err != nil {
 		t.Fatalf("the sidecar does not decode: %v\n%s", err, clipText(string(data), 4000))
 	}

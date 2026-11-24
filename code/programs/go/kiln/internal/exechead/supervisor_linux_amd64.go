@@ -99,6 +99,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
 	"sync"
@@ -122,14 +123,21 @@ type Supervisor struct {
 
 	lfd atomic.Int32 // the listener, -1 until received
 
-	mu      sync.Mutex
-	cond    *sync.Cond // on mu: an exec became written
-	w       *Writer
-	groups  map[int]*group
-	active  map[*exec]struct{} // pinned execs with a poller
-	slots   int                // global confirm slots in use
+	// umu guards unclean and notes ONLY.  It is separate from mu because the kill
+	// paths (the stall watchdog, the receiver's death) mark the step unclean, and
+	// mu can be held across a blocking write of the sidecar: a stalled disk must not
+	// be able to stop the step from being killed.
+	umu     sync.Mutex
 	unclean []string
 	notes   []string
+
+	mu     sync.Mutex
+	cond   *sync.Cond // on mu: an exec became written
+	w      *Writer    // created when the hand-over has been decided (the header says whether the listener is killable)
+	hdr    Header
+	groups map[int]*group
+	active map[*exec]struct{} // pinned execs with a poller
+	slots  int                // global confirm slots in use
 	// overloadAll is the table-overflow state: every later line is `tainted`.
 	overloadAll bool
 	// writing is false once the sidecar cannot take more lines (cap or error).
@@ -141,8 +149,13 @@ type Supervisor struct {
 	devs       map[uint64]bool
 	devsDone   bool
 	unmeasured bool
-	initPidfd  int // a pidfd of the sandbox's init (the first notification's group), or -1
-	received   bool
+	// initPidfd is a DUP of the pidfd the first notification's group was validated
+	// with (the sandbox's init), or -1.  Atomic: the kill reads it without mu.
+	initPidfd atomic.Int32
+	received  bool
+	pStarted  atomic.Bool
+	pOnce     sync.Once
+	rCount    int // notifications the receiver has taken (the injection seam)
 
 	inb inbox
 
@@ -239,23 +252,30 @@ func New(cfg Config) (*Supervisor, error) {
 		}
 		cfg.Header.Kernel = k
 	}
+	// The header is checked now and written when the hand-over is decided (it says
+	// whether the listener is killable); a file that could not be written is found
+	// out then, and makes the step unclean.
+	probe := cfg.Header
+	probe.V = Version
+	if err := checkHeader(probe); err != nil {
+		return nil, err
+	}
+	// The kernel's notification structures must be the ones this file hard-codes:
+	// a kernel that reports other sizes would read our buffers wrongly.
+	if err := checkNotifSizes(); err != nil {
+		return nil, err
+	}
 	pair, err := syscall.Socketpair(syscall.AF_UNIX, syscall.SOCK_STREAM|syscall.SOCK_CLOEXEC, 0)
 	if err != nil {
 		return nil, fmt.Errorf("exechead: socketpair: %w", err)
 	}
-	w, err := NewWriter(cfg.Out, cfg.Header, cfg.Timing.File)
-	if err != nil {
-		syscall.Close(pair[0])
-		syscall.Close(pair[1])
-		return nil, err
-	}
 	s := &Supervisor{
 		cfg: cfg, tm: cfg.Timing.withDefaults(), parent: pair[0],
 		child:  os.NewFile(uintptr(pair[1]), "exec-notify-child-end"),
-		groups: map[int]*group{}, active: map[*exec]struct{}{}, w: w, writing: true,
-		initPidfd: -1,
-		rDone:     make(chan struct{}), pDone: make(chan struct{}), wDone: make(chan struct{}), stopW: make(chan struct{}),
+		groups: map[int]*group{}, active: map[*exec]struct{}{}, hdr: cfg.Header, writing: true,
+		rDone: make(chan struct{}), pDone: make(chan struct{}), wDone: make(chan struct{}), stopW: make(chan struct{}),
 	}
+	s.initPidfd.Store(-1)
 	s.lfd.Store(-1)
 	s.cond = sync.NewCond(&s.mu)
 	s.inb.init()
@@ -313,18 +333,68 @@ func (s *Supervisor) Abort() {
 
 // ---------------------------------------------------------------- the receiver
 
+// startWriter creates the sidecar's writer (and so writes the header) once, with
+// the hand-over's outcome.  Called by the receiver, and by Finish if the receiver
+// never got that far.
+func (s *Supervisor) startWriter(killable bool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.w != nil {
+		return
+	}
+	h := s.hdr
+	h.V = Version
+	h.WaitKillable = killable
+	w, err := NewWriter(s.cfg.Out, h, s.cfg.Timing.File)
+	if err != nil {
+		s.writing = false
+		s.markLocked(UncleanFailed, "the sidecar's header: "+err.Error())
+		// A writer that writes nothing, so the counters stay valid.
+		w, _ = NewWriter(io.Discard, h, s.cfg.Timing.File)
+	}
+	s.w = w
+}
+
+// closeP closes pDone once.
+func (s *Supervisor) closeP() { s.pOnce.Do(func() { close(s.pDone) }) }
+
+// receiverDied is what happens when the receiver stops for any reason other than
+// the listener hanging up, Finish asking, or Abort: the step is marked unclean
+// (exechead-receiver) and KILLED, and the listener is closed.  Without that the
+// listener would stay open with nobody to answer, and every later exec of the step
+// would block for ever (and the watchdog, which watches the processor, would not
+// see it).  Closing the listener makes any exec still to come fail with ENOSYS
+// instead of blocking.  The inbox is closed so the processor stops.
+func (s *Supervisor) receiverDied(why string) {
+	s.rExit.Store(rError)
+	s.mu.Lock()
+	s.markLocked(UncleanReceiver, why)
+	s.mu.Unlock()
+	if !s.ending.Load() {
+		s.killStep()
+	}
+	if fd := int(s.lfd.Swap(-1)); fd >= 0 {
+		syscall.Close(fd)
+	}
+	s.inb.close()
+	if !s.pStarted.Load() {
+		s.closeP()
+	}
+}
+
 // runReceiver gets the listener, starts the processor and loops on the listener.
 func (s *Supervisor) runReceiver() {
 	defer close(s.rDone)
 	defer func() {
 		if r := recover(); r != nil {
-			s.rExit.Store(rError)
 			s.degrade(fmt.Sprintf("the receiver panicked: %v", r))
+			s.receiverDied(fmt.Sprintf("the receiver panicked: %v", r))
 		}
 	}()
-	lfd, err := s.receiveListener()
+	lfd, killable, err := s.receiveListener()
 	if err != nil {
 		s.rExit.Store(rNoListener)
+		s.startWriter(false)
 		s.mu.Lock()
 		s.markLocked(UncleanHandover, err.Error())
 		s.mu.Unlock()
@@ -335,43 +405,51 @@ func (s *Supervisor) runReceiver() {
 			s.killStep()
 		}
 		s.inb.close()
-		close(s.pDone)
+		s.closeP()
 		return
 	}
+	s.startWriter(killable)
 	s.lfd.Store(int32(lfd))
 	s.mu.Lock()
 	s.received = true
 	s.mu.Unlock()
+	s.pStarted.Store(true)
 	go s.runProcessor()
-	s.rExit.Store(s.receiveLoop(lfd))
+	code := s.receiveLoop(lfd)
+	if code == rError {
+		s.receiverDied("the receive loop failed")
+		return
+	}
+	s.rExit.Store(code)
 	s.inb.close()
 }
 
 // receiveListener receives the one message of the hand-over: exactly one
-// descriptor (SCM_RIGHTS) and exactly one data byte, 'L'.  Anything else fails.
+// descriptor (SCM_RIGHTS) and exactly one data byte, 'L' (a plain listener) or 'K' (one installed with
+// SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV).  Anything else fails.
 // The wait is bounded by Timing.Handover.
-func (s *Supervisor) receiveListener() (int, error) {
+func (s *Supervisor) receiveListener() (int, bool, error) {
 	deadline := time.Now().Add(s.tm.Handover)
 	data := make([]byte, 8) // room for more than the contract allows, so extra is SEEN
 	oob := make([]byte, syscall.CmsgSpace(4*4))
 	for {
 		left := time.Until(deadline)
 		if left <= 0 {
-			return -1, fmt.Errorf("no listener within %s", s.tm.Handover)
+			return -1, false, fmt.Errorf("no listener within %s", s.tm.Handover)
 		}
 		tv := syscall.NsecToTimeval(left.Nanoseconds())
 		if err := syscall.SetsockoptTimeval(s.parent, syscall.SOL_SOCKET, syscall.SO_RCVTIMEO, &tv); err != nil {
-			return -1, fmt.Errorf("SO_RCVTIMEO: %w", err)
+			return -1, false, fmt.Errorf("SO_RCVTIMEO: %w", err)
 		}
 		n, oobn, flags, _, err := syscall.Recvmsg(s.parent, data, oob, 0x40000000 /* MSG_CMSG_CLOEXEC */)
 		if err == syscall.EINTR || err == syscall.EAGAIN {
 			continue
 		}
 		if err != nil {
-			return -1, fmt.Errorf("receiving the listener: %w", err)
+			return -1, false, fmt.Errorf("receiving the listener: %w", err)
 		}
 		if n == 0 && oobn == 0 {
-			return -1, errors.New("the socket closed without the listener (the sandbox did not get as far as the hand-over)")
+			return -1, false, errors.New("the socket closed without the listener (the sandbox did not get as far as the hand-over)")
 		}
 		fds, perr := parseRights(oob[:oobn])
 		closeAll := func() {
@@ -382,16 +460,16 @@ func (s *Supervisor) receiveListener() (int, error) {
 		switch {
 		case perr != nil:
 			closeAll()
-			return -1, perr
+			return -1, false, perr
 		case flags&0x8 != 0: // MSG_CTRUNC
 			closeAll()
-			return -1, errors.New("the control message was truncated: more descriptors than one")
+			return -1, false, errors.New("the control message was truncated: more descriptors than one")
 		case len(fds) != 1:
 			closeAll()
-			return -1, fmt.Errorf("%d descriptors arrived, want exactly 1", len(fds))
-		case n != 1 || data[0] != 'L':
+			return -1, false, fmt.Errorf("%d descriptors arrived, want exactly 1", len(fds))
+		case n != 1 || (data[0] != 'L' && data[0] != 'K'):
 			closeAll()
-			return -1, fmt.Errorf("%d data bytes arrived (first %#x), want exactly one 'L'", n, data[0])
+			return -1, false, fmt.Errorf("%d data bytes arrived (first %#x), want exactly one 'L' or 'K'", n, data[0])
 		}
 		// Nothing else may be queued behind it: a second message is a protocol
 		// violation.  Non-blocking; EAGAIN (nothing) and end of file are fine.
@@ -405,9 +483,9 @@ func (s *Supervisor) receiveListener() (int, error) {
 				}
 			}
 			syscall.Close(fds[0])
-			return -1, errors.New("more than the one message arrived")
+			return -1, false, errors.New("more than the one message arrived")
 		}
-		return fds[0], nil
+		return fds[0], data[0] == 'K', nil
 	}
 }
 
@@ -470,6 +548,13 @@ func (s *Supervisor) receiveLoop(lfd int) int32 {
 				return rAborted
 			}
 			s.degrade("NOTIF_RECV: " + err.Error())
+			return rError
+		}
+		s.rCount++
+		if k := s.tm.InjectReceiverError; k > 0 && s.rCount == k {
+			// A test seam: the receiver fails as if NOTIF_RECV had.
+			s.answer(n.ID)
+			s.degrade("injected receiver error")
 			return rError
 		}
 		if !s.inb.push(event{kind: evNotif, n: n, at: time.Now()}, s.tm.MaxInbox) {
@@ -573,7 +658,7 @@ func (b *inbox) oldest() time.Time {
 
 // runProcessor takes the inbox one item at a time.
 func (s *Supervisor) runProcessor() {
-	defer close(s.pDone)
+	defer s.closeP()
 	for {
 		ev, ok := s.inb.pop()
 		if !ok {
@@ -652,6 +737,8 @@ func (s *Supervisor) fail(msg string) {
 
 // markLocked adds an unclean reason once, and keeps the first note per reason.
 func (s *Supervisor) markLocked(reason, note string) {
+	s.umu.Lock()
+	defer s.umu.Unlock()
 	for _, r := range s.unclean {
 		if r == reason {
 			if note != "" && len(s.notes) < 16 {
@@ -686,14 +773,22 @@ func (s *Supervisor) degrade(msg string) {
 	}
 }
 
+// supervisorDied is the response to a panic outside the receiver (a poller, the
+// watchdog): the supervisor degrades to answer-only, the step is unclean and it is
+// killed, because something that was meant to watch it has stopped.
+func (s *Supervisor) supervisorDied(why string) {
+	s.degrade(why)
+	if !s.ending.Load() {
+		s.killStep()
+	}
+}
+
 // killStep ends the step: the pidfd of the sandbox's init when we have one (its
 // death kills every process of the pid namespace), then strace (whose
 // --kill-on-exit takes every tracee).  Never a pid number.
 func (s *Supervisor) killStep() {
-	s.mu.Lock()
-	fd := s.initPidfd
-	s.mu.Unlock()
-	if fd >= 0 {
+	// No s.mu: it can be held across a blocking write of the sidecar.
+	if fd := int(s.initPidfd.Load()); fd >= 0 {
 		pidfdKill(fd)
 	}
 	if s.killStrace != nil {
@@ -704,7 +799,7 @@ func (s *Supervisor) killStep() {
 // writeLocked writes one line.  A cap ends the writing (the step is unclean,
 // notifications are still answered); a write error does too.
 func (s *Supervisor) writeLocked(l Line) {
-	if !s.writing {
+	if !s.writing || s.w == nil {
 		return
 	}
 	err := s.w.Append(l)
@@ -758,8 +853,10 @@ func (s *Supervisor) groupFor(tgid int, id uint64) (*group, bool) {
 	s.mu.Lock()
 	g := s.groups[tgid]
 	s.mu.Unlock()
-	if g != nil && (g.pidfd < 0 || !pidfdExited(g.pidfd)) {
-		return g, true
+	if g != nil {
+		if has, exited := s.pidfdState(g); !has || !exited {
+			return g, true
+		}
 	}
 	if g != nil {
 		// The process of that number has exited, so this is a new one.  If the old
@@ -818,14 +915,39 @@ func (s *Supervisor) groupFor(tgid int, id uint64) (*group, bool) {
 	}
 	g = &group{tgid: tgid, pidfd: pfd}
 	s.groups[tgid] = g
-	if s.initPidfd < 0 {
-		// The first notification is the init's own execve of the step: its group's
-		// pidfd, kept separately, is the kill target.
-		if ipfd, err := pidfdOpen(tgid); err == nil {
-			s.initPidfd = ipfd
+	if s.initPidfd.Load() < 0 {
+		// The first notification is the init's own execve of the step: a DUP of the
+		// pidfd it was just validated with (not a second pidfd_open of the number) is
+		// the kill target.
+		if ipfd := dupCloexec(pfd); ipfd >= 0 {
+			s.initPidfd.Store(int32(ipfd))
 		}
 	}
 	return g, true
+}
+
+// pidfdState says whether the group has a pidfd and whether it has exited.  The
+// descriptor is DUPLICATED under mu and polled outside it, so a concurrent
+// dropGroupLocked (which closes the original) can never make this poll a closed
+// or reused descriptor number.
+func (s *Supervisor) pidfdState(g *group) (has, exited bool) {
+	s.mu.Lock()
+	fd := -1
+	if g.pidfd >= 0 {
+		fd = dupCloexec(g.pidfd)
+	}
+	s.mu.Unlock()
+	if fd < 0 {
+		return false, false
+	}
+	defer syscall.Close(fd)
+	return true, pidfdExited(fd)
+}
+
+// groupExited says the group's process has exited (false when it has no pidfd).
+func (s *Supervisor) groupExited(g *group) bool {
+	_, e := s.pidfdState(g)
+	return e
 }
 
 // dropGroupLocked forgets a group (it has exited): its pidfd is closed, and any
@@ -834,7 +956,7 @@ func (s *Supervisor) dropGroupLocked(g *group) {
 	if s.groups[g.tgid] == g {
 		delete(s.groups, g.tgid)
 	}
-	if g.pidfd >= 0 && g.pidfd != s.initPidfd {
+	if g.pidfd >= 0 {
 		syscall.Close(g.pidfd)
 	}
 	g.pidfd = -1
@@ -1111,7 +1233,7 @@ func (s *Supervisor) handleNormal(n seccompNotif, g *group, tid, tgid int) {
 	pre, err := statExe(tgid)
 	if err != nil {
 		syscall.Close(pin.fd)
-		if g.pidfd >= 0 && pidfdExited(g.pidfd) {
+		if s.groupExited(g) {
 			s.release(n, g, tid, tgid, req, StatusGone)
 		} else {
 			s.release(n, g, tid, tgid, req, StatusUnpinned)
@@ -1256,7 +1378,31 @@ func (s *Supervisor) onTmpfs(tgid int, dev uint64) bool {
 		unmeasured, hit = s.unmeasured, s.devs[dev]
 		s.mu.Unlock()
 	}
-	return unmeasured || hit
+	// A device that could not be measured means the step's tmpfs is not known:
+	// nothing is on it as far as the supervisor can say, so every file is
+	// `outside` and none is opened for reading (fail closed; the classifier then
+	// refuses an exec under the tmpfs as it does today).
+	if unmeasured {
+		s.mu.Lock()
+		s.noteLocked("the step's tmpfs devices could not be measured: every exec is recorded `outside`")
+		s.mu.Unlock()
+		return false
+	}
+	return hit
+}
+
+// noteLocked keeps a diagnostic note (once).
+func (s *Supervisor) noteLocked(note string) {
+	s.umu.Lock()
+	defer s.umu.Unlock()
+	for _, n := range s.notes {
+		if n == note {
+			return
+		}
+	}
+	if len(s.notes) < 16 {
+		s.notes = append(s.notes, note)
+	}
 }
 
 // measureDevices stats each of the step's tmpfs roots through the process's root.
@@ -1297,6 +1443,7 @@ const (
 	obsConfirmable            // exe changed from the pre-exec image to the pin
 	obsMismatch               // exe changed to something else
 	obsFailed                 // the thread left execve, exe is still the pre-exec image
+	obsVanished               // the notified thread is gone and exe has not (yet) changed
 )
 
 // observe looks once.  The order is the point: /proc/<tid>/syscall FIRST, the exe
@@ -1307,7 +1454,7 @@ const (
 func (s *Supervisor) observe(ex *exec) obs {
 	sc := readSyscallState(ex.tid)
 	cur, err := statExe(ex.tgid)
-	if ex.g.pidfd >= 0 && pidfdExited(ex.g.pidfd) {
+	if s.groupExited(ex.g) {
 		return obsGone
 	}
 	if err != nil {
@@ -1318,6 +1465,12 @@ func (s *Supervisor) observe(ex *exec) obs {
 		if sc == syscallOutsideExec {
 			return obsFailed
 		}
+		if ex.tid != ex.tgid && tidGone(ex.tid) {
+			// The notified thread has vanished (it is not the leader, so it is not
+			// merely a zombie) and exe has not changed: a sibling's exec did de_thread
+			// on it, or its own exec is about to change exe.  The poller re-checks.
+			return obsVanished
+		}
 		return obsNone
 	case cur == ex.pinID:
 		return obsConfirmable
@@ -1326,10 +1479,24 @@ func (s *Supervisor) observe(ex *exec) obs {
 	}
 }
 
+// vanishRecheck bounds the wait before a vanished thread with exe unchanged taints.
+const vanishRecheck = 100 * time.Millisecond
+
+// tidGone says /proc/<tid> no longer exists.
+func tidGone(tid int) bool {
+	_, err := os.Stat("/proc/" + strconv.Itoa(tid))
+	return err != nil && os.IsNotExist(err)
+}
+
 // poll is the poller of one pinned exec: it watches until the exec is decided, or
 // another goroutine settles it.
 func (s *Supervisor) poll(ex *exec) {
 	defer s.wg.Done()
+	defer func() {
+		if r := recover(); r != nil {
+			s.supervisorDied(fmt.Sprintf("a poller panicked: %v", r))
+		}
+	}()
 	g := ex.g
 	delay := 50 * time.Microsecond
 	if d := s.tm.PollStart; d > 0 {
@@ -1349,6 +1516,34 @@ func (s *Supervisor) poll(ex *exec) {
 			// `timeout`, never a guess.
 			if s.claim(ex) {
 				s.finish(ex, StatusTimeout, nil)
+			}
+			return
+		}
+		if o == obsVanished {
+			// D48 step 1: a vanished thread with exe unchanged is a taint, UNLESS it
+			// was the thread's own exec (a non-leader's tid vanishes briefly before
+			// exe changes).  Re-check for a short bounded time; only if exe is still
+			// the pre-exec image does the group taint.
+			changed := false
+			for end := time.Now().Add(vanishRecheck); time.Now().Before(end); {
+				time.Sleep(2 * time.Millisecond)
+				if cur, err := statExe(ex.tgid); err == nil && cur != ex.pre {
+					changed = true
+					break
+				}
+				if s.groupExited(g) {
+					changed = true // the group is gone: the next look says so
+					break
+				}
+			}
+			if changed {
+				continue
+			}
+			s.mu.Lock()
+			g.tainted = true
+			s.mu.Unlock()
+			if s.claim(ex) {
+				s.finish(ex, StatusTainted, nil)
 			}
 			return
 		}
@@ -1415,7 +1610,7 @@ func (s *Supervisor) confirmHead(ex *exec) (Status, []byte) {
 	}
 	cur, err := statExe(ex.tgid)
 	if err != nil {
-		if ex.g.pidfd >= 0 && pidfdExited(ex.g.pidfd) {
+		if s.groupExited(ex.g) {
 			return StatusGone, nil
 		}
 		return StatusMismatch, nil
@@ -1433,7 +1628,7 @@ func (s *Supervisor) settle(ex *exec) (Status, []byte) {
 	cur, err := statExe(ex.tgid)
 	switch {
 	case err != nil:
-		if ex.g.pidfd >= 0 && pidfdExited(ex.g.pidfd) {
+		if s.groupExited(ex.g) {
 			return StatusGone, nil
 		}
 		return StatusTimeout, nil
@@ -1509,6 +1704,11 @@ func (s *Supervisor) finishLocked(ex *exec, st Status, head []byte, byTaint bool
 // sweeps groups that have exited.
 func (s *Supervisor) runWatchdog() {
 	defer close(s.wDone)
+	defer func() {
+		if r := recover(); r != nil {
+			s.supervisorDied(fmt.Sprintf("the watchdog panicked: %v", r))
+		}
+	}()
 	tick := time.NewTicker(25 * time.Millisecond)
 	defer tick.Stop()
 	sweep := 0
@@ -1525,6 +1725,7 @@ func (s *Supervisor) runWatchdog() {
 		// The stall deadline: the processor has had one notification too long, or
 		// one has waited in the inbox too long.  A held notification (in a group
 		// queue) is not a stall: it is held by design and by the lifetime bound.
+		// Neither check, nor the kill, takes mu.
 		if ps := s.procStart.Load(); ps != 0 && now.Sub(time.Unix(0, ps)) > s.tm.Stall {
 			s.stalled("the processor has held one notification for over " + s.tm.Stall.String())
 			return
@@ -1533,22 +1734,35 @@ func (s *Supervisor) runWatchdog() {
 			s.stalled("a notification waited in the inbox for over " + s.tm.Stall.String())
 			return
 		}
-		// The absolute bound on a pending exec's life, from its CONTINUE.
-		s.mu.Lock()
-		var stuck *exec
-		for ex := range s.active {
-			if ex.state != stateWritten && now.Sub(ex.cont) > s.tm.Lifetime {
-				stuck = ex
-				break
+		// The absolute bound on a pending exec's life, from its CONTINUE.  mu is only
+		// TRIED: if a blocked write holds it, the stall check above still works.
+		if s.mu.TryLock() {
+			var cand *exec
+			for ex := range s.active {
+				if ex.state == statePending && now.Sub(ex.cont) > s.tm.Lifetime {
+					cand = ex
+					break
+				}
 			}
-		}
-		if stuck != nil {
-			s.markLocked(UncleanStuck, fmt.Sprintf("exec by thread %d pending for over %s", stuck.tid, s.tm.Lifetime))
-		}
-		s.mu.Unlock()
-		if stuck != nil {
-			s.killStep()
-			return
+			s.mu.Unlock()
+			if cand != nil {
+				// Kill only a thread seen BLOCKED in execve/execveat: that is a stuck
+				// step.  Anything else (a failed in-place exec can leave its thread
+				// computing, which reads `running`) is a healthy step whose exec nobody
+				// observed: the group is tainted and the line is `timeout`.
+				if readSyscallState(cand.tid) == syscallInExec {
+					s.markLocked(UncleanStuck, fmt.Sprintf("exec by thread %d blocked in execve for over %s", cand.tid, s.tm.Lifetime))
+					s.killStep()
+					return
+				}
+				s.mu.Lock()
+				if cand.state == statePending {
+					cand.state = stateClaimed
+					cand.g.tainted = true
+					s.finishLocked(cand, StatusTimeout, nil, false)
+				}
+				s.mu.Unlock()
+			}
 		}
 		if sweep++; sweep%8 == 0 {
 			s.mu.Lock()
@@ -1559,9 +1773,7 @@ func (s *Supervisor) runWatchdog() {
 }
 
 func (s *Supervisor) stalled(note string) {
-	s.mu.Lock()
-	s.markLocked(UncleanStall, note)
-	s.mu.Unlock()
+	s.markLocked(UncleanStall, note) // umu only: never mu
 	s.killStep()
 }
 
@@ -1575,7 +1787,8 @@ func (s *Supervisor) Finish() Result {
 		// Never started (strace did not start): close both ends, nothing to wait for.
 		s.child.Close()
 		syscall.Close(s.parent)
-		return Result{Unclean: s.unclean, Lines: s.w.Lines(), Bytes: s.w.Bytes(), SHA256: s.w.SHA256()}
+		s.startWriter(false)
+		return Result{Lines: s.w.Lines(), Bytes: s.w.Bytes(), SHA256: s.w.SHA256()}
 	}
 	s.ending.Store(true)
 	wait := func(ch <-chan struct{}, what string) {
@@ -1615,6 +1828,7 @@ func (s *Supervisor) Finish() Result {
 	}
 	close(s.stopW)
 	<-s.wDone
+	s.startWriter(false)
 
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -1635,13 +1849,13 @@ func (s *Supervisor) Finish() Result {
 				ex.pin = -1
 			}
 		}
-		if g.pidfd >= 0 && g.pidfd != s.initPidfd {
+		if g.pidfd >= 0 {
 			syscall.Close(g.pidfd)
+			g.pidfd = -1
 		}
 	}
-	if s.initPidfd >= 0 {
-		syscall.Close(s.initPidfd)
-		s.initPidfd = -1
+	if fd := int(s.initPidfd.Swap(-1)); fd >= 0 {
+		syscall.Close(fd)
 	}
 	if fd := int(s.lfd.Swap(-1)); fd >= 0 {
 		syscall.Close(fd)
@@ -1650,8 +1864,11 @@ func (s *Supervisor) Finish() Result {
 	if err := s.cfg.Out.Sync(); err != nil {
 		s.markLocked(UncleanFailed, "syncing the sidecar: "+err.Error())
 	}
+	s.umu.Lock()
+	unclean, notes := append([]string{}, s.unclean...), append([]string{}, s.notes...)
+	s.umu.Unlock()
 	return Result{
-		Unclean: append([]string{}, s.unclean...), Notes: append([]string{}, s.notes...),
+		Unclean: unclean, Notes: notes,
 		Lines: s.w.Lines(), Bytes: s.w.Bytes(), SHA256: s.w.SHA256(), Received: s.received,
 		Dropped: int(s.dropped.Load()),
 	}

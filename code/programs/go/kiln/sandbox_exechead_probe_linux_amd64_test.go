@@ -57,6 +57,7 @@ func sleepMS(n int) { time.Sleep(time.Duration(n) * time.Millisecond) }
 //	selfexec                      exec this very file (a self re-exec)
 //	chain <path>                  exec <path>
 //	race <a> <b>                  exec a path whose last byte another thread flips between a's and b's
+//	racepath <path>               exec <path> (another PROCESS renames files over it meanwhile), then report
 //	execfail <path>               exec <path> (which fails), stay alive 1.5 s
 //	bypass <path>                 the same-thread bypass (see the test)
 //	held <path>                   a different thread's exec held behind a pending one
@@ -111,6 +112,10 @@ func ehProbe(args []string, out *os.File) int {
 		_, _, e := syscall.Syscall(syscall.SYS_EXECVE, uintptr(unsafe.Pointer(&buf[0])), uintptr(unsafe.Pointer(&argv[0])), uintptr(unsafe.Pointer(&envv[0])))
 		stop.Store(true)
 		say("race=%v", e)
+		return 1
+	case "racepath":
+		err := syscall.Exec(args[1], []string{args[1], execHeadProbeCommand, "report"}, env)
+		say("racepath=%v", err)
 		return 1
 	case "execfail":
 		say("execfail=%v", rawExecve(args[1]))

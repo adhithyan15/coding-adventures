@@ -491,7 +491,9 @@ when it exits (it is PID 1) the kernel kills everything left behind.
   Without the option nothing changes and no second filter exists. The
   supervisor that answers the notifications is `kiln record step`'s
   (`internal/exechead`, below); the step 3 sandbox tests use a minimal responder.
-- **The exec-head supervisor (`kiln record step`, KILN04 D48 step 4).** `record
+- **The exec-head supervisor (`kiln record step --exec-head`, KILN04 D48 step 4;
+  OFF by default).** Without the flag `record step` is unchanged: no socket, no
+  second filter, no `.exechead`, the sidecar's exechead fields empty. With it, `record
   step` makes the socket pair (its end close-on-exec; the other end is strace's
   descriptor 6, and `--exec-notify-fd 6` goes on `sandbox-exec`'s argv), receives
   the listener with a deadline (exactly one descriptor and one `L`; strace holds

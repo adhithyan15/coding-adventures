@@ -17,6 +17,8 @@ const (
 	testAction = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 )
 
+var testExpect = Expect{Nonce: testNonce, ActionSHA256: testAction, Step: 2}
+
 func testHeader() Header {
 	return Header{V: Version, Kernel: "7.0.0-1014-aws", Nonce: testNonce, ActionSHA256: testAction, Step: 2}
 }
@@ -57,7 +59,7 @@ func build(t *testing.T, lines ...Line) []byte {
 func TestRoundTrip(t *testing.T) {
 	head := []byte("\x7fELF\x02\x01\x01")
 	data := build(t, plainLine(10, StatusOutside), confirmedLine(11, "/tmp/x/t.test", head), confirmedLine(12, "/tmp/y", []byte{}))
-	f, err := Decode(data, Limits{}, &Expect{Nonce: testNonce, ActionSHA256: testAction, Step: 2, CheckStep: true})
+	f, err := Decode(data, Limits{}, testExpect)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -90,7 +92,7 @@ func TestEveryStatusRoundTrips(t *testing.T) {
 		lines = append(lines, plainLine(5, st))
 	}
 	lines = append(lines, confirmedLine(5, "/tmp/a", []byte("#!/bin/sh\n")))
-	f, err := Decode(build(t, lines...), Limits{}, nil)
+	f, err := Decode(build(t, lines...), Limits{}, testExpect)
 	if err != nil || len(f.Lines) != 11 {
 		t.Fatalf("%v %d", err, len(f.Lines))
 	}
@@ -159,7 +161,7 @@ func TestDecodeRefuses(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			f, err := Decode(c.data, Limits{}, nil)
+			f, err := Decode(c.data, Limits{}, testExpect)
 			if err == nil {
 				t.Fatalf("accepted: %+v", f)
 			}
@@ -172,36 +174,62 @@ func TestDecodeRefuses(t *testing.T) {
 
 func TestDecodeExpect(t *testing.T) {
 	data := build(t, plainLine(10, StatusOutside))
-	for name, e := range map[string]*Expect{
-		"another nonce":  {Nonce: strings.Repeat("1", 32)},
-		"another action": {ActionSHA256: strings.Repeat("b", 64)},
-		"another step":   {Step: 3, CheckStep: true},
+	for name, e := range map[string]Expect{
+		"another nonce":  {Nonce: strings.Repeat("1", 32), ActionSHA256: testAction, Step: 2},
+		"another action": {Nonce: testNonce, ActionSHA256: strings.Repeat("b", 64), Step: 2},
+		"another step":   {Nonce: testNonce, ActionSHA256: testAction, Step: 3},
 	} {
 		if _, err := Decode(data, Limits{}, e); err == nil {
 			t.Errorf("%s: accepted", name)
 		}
 	}
-	// Step 0 is a real step number: only checked when asked.
-	if _, err := Decode(data, Limits{}, &Expect{Step: 0}); err != nil {
-		t.Errorf("an unasked step check refused: %v", err)
+	// The three are MANDATORY: a zero or malformed Expect is refused, never
+	// treated as "no check".
+	for name, e := range map[string]Expect{
+		"a zero Expect":      {},
+		"no nonce":           {ActionSHA256: testAction, Step: 2},
+		"no action":          {Nonce: testNonce, Step: 2},
+		"a short nonce":      {Nonce: "00", ActionSHA256: testAction, Step: 2},
+		"a negative step":    {Nonce: testNonce, ActionSHA256: testAction, Step: -1},
+		"an upper-case hash": {Nonce: testNonce, ActionSHA256: strings.ToUpper(testAction), Step: 2},
+	} {
+		if _, err := Decode(data, Limits{}, e); err == nil || !strings.Contains(err.Error(), "mandatory") {
+			t.Errorf("%s: %v", name, err)
+		}
 	}
-	if _, err := Decode(data, Limits{}, &Expect{Step: 0, CheckStep: true}); err == nil {
-		t.Error("step 0 asked for, the file says 2")
+	if _, err := Decode(data, Limits{}, testExpect); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestHeaderWaitKillableRoundTrips(t *testing.T) {
+	var buf bytes.Buffer
+	h := testHeader()
+	h.WaitKillable = true
+	if _, err := NewWriter(&buf, h, Limits{}); err != nil {
+		t.Fatal(err)
+	}
+	f, err := Decode(buf.Bytes(), Limits{}, testExpect)
+	if err != nil || !f.Header.WaitKillable {
+		t.Fatalf("%+v %v", f, err)
+	}
+	if !strings.Contains(buf.String(), `"wait_killable":true`) {
+		t.Fatal(buf.String())
 	}
 }
 
 func TestDecodeCaps(t *testing.T) {
 	data := build(t, plainLine(1, StatusOutside), plainLine(2, StatusOutside), plainLine(3, StatusOutside))
-	if _, err := Decode(data, Limits{MaxLines: 3}, nil); err != nil {
+	if _, err := Decode(data, Limits{MaxLines: 3}, testExpect); err != nil {
 		t.Fatalf("exactly at the line cap: %v", err)
 	}
-	if _, err := Decode(data, Limits{MaxLines: 2}, nil); err == nil || !strings.Contains(err.Error(), "more than 2") {
+	if _, err := Decode(data, Limits{MaxLines: 2}, testExpect); err == nil || !strings.Contains(err.Error(), "more than 2") {
 		t.Fatalf("over the line cap: %v", err)
 	}
-	if _, err := Decode(data, Limits{MaxBytes: int64(len(data))}, nil); err != nil {
+	if _, err := Decode(data, Limits{MaxBytes: int64(len(data))}, testExpect); err != nil {
 		t.Fatalf("exactly at the byte cap: %v", err)
 	}
-	if _, err := Decode(data, Limits{MaxBytes: int64(len(data)) - 1}, nil); err == nil || !strings.Contains(err.Error(), "over the cap") {
+	if _, err := Decode(data, Limits{MaxBytes: int64(len(data)) - 1}, testExpect); err == nil || !strings.Contains(err.Error(), "over the cap") {
 		t.Fatalf("over the byte cap: %v", err)
 	}
 }
@@ -212,13 +240,13 @@ func TestDecodePerLineCap(t *testing.T) {
 	// A line of exactly the cap parses as far as the cap goes (and is then refused
 	// for what it is); one byte more is refused for its length.
 	pad := strings.Repeat("a", MaxLineBytes)
-	_, err := Decode(join([]string{ls[0], `{"seq":0,"x":"` + pad + `"}`}), Limits{MaxBytes: 1 << 30}, nil)
+	_, err := Decode(join([]string{ls[0], `{"seq":0,"x":"` + pad + `"}`}), Limits{MaxBytes: 1 << 30}, testExpect)
 	if err == nil || !strings.Contains(err.Error(), "over the cap") {
 		t.Fatalf("a line over the per-line cap: %v", err)
 	}
 	// A confirmed line at the head limit is fine; the whole line is under the cap.
 	big := bytes.Repeat([]byte{0xa5}, HeadLimit)
-	f, err := Decode(build(t, confirmedLine(7, "/tmp/big", big)), Limits{}, nil)
+	f, err := Decode(build(t, confirmedLine(7, "/tmp/big", big)), Limits{}, testExpect)
 	if err != nil || len(f.Lines[0].Head) != HeadLimit {
 		t.Fatalf("a head of the limit: %v", err)
 	}
@@ -241,7 +269,7 @@ func TestDecodePerLineCap(t *testing.T) {
 	if err != nil || len(enc) > MaxLineBytes {
 		t.Fatalf("worst-case line: %d bytes, %v", len(enc), err)
 	}
-	if _, err := Decode(build(t, worst), Limits{}, nil); err != nil {
+	if _, err := Decode(build(t, worst), Limits{}, testExpect); err != nil {
 		t.Fatalf("the worst-case line does not decode: %v", err)
 	}
 }
@@ -374,7 +402,7 @@ func TestSecondFileIsNotAppendable(t *testing.T) {
 	// Two files concatenated are not one file: the second header is a line whose
 	// keys are wrong, and the seq restarts.
 	a := build(t, plainLine(1, StatusOutside))
-	if _, err := Decode(append(append([]byte{}, a...), a...), Limits{}, nil); err == nil {
+	if _, err := Decode(append(append([]byte{}, a...), a...), Limits{}, testExpect); err == nil {
 		t.Fatal("two files in one were accepted")
 	}
 }

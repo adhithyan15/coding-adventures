@@ -56,6 +56,9 @@ type Timing struct {
 	// interrupt one that is still unanswered.
 	PollStart    time.Duration
 	ProcessDelay time.Duration
+	// InjectReceiverError makes the receiver fail as if NOTIF_RECV had, after it
+	// has taken that many notifications (0: never).
+	InjectReceiverError int
 }
 
 func (t Timing) withDefaults() Timing {

@@ -109,7 +109,9 @@ REQUIRED = (
     "TestSandboxExecHeadLostHandover",
     "TestSandboxExecHeadSupervisorKilledMidStep",
     "TestSandboxExecHeadStallKillsTheStep",
-    "TestSandboxExecHeadPendingLifetimeKillsTheStep",
+    "TestSandboxExecHeadPendingLifetimeTaintsAHealthyStep",
+    "TestSandboxExecHeadReceiverDeathKillsTheStep",
+    "TestSandboxExecHeadRenameByAnotherProcessNeverFalselyConfirms",
     "TestSandboxExecHeadThreadSwapNeverFalselyConfirms",
 )
 

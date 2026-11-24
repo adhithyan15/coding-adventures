@@ -215,14 +215,16 @@ type StepOptions struct {
 	// replaces it to run its own test binary as the child.
 	ChildCmd func(args, env []string) *exec.Cmd
 
-	// NoExecHead turns the exec-head supervisor off (KILN04 D48): no socket, no
-	// `--exec-notify-fd`, no `<step>.exechead`, and the step sidecar's exechead
-	// fields stay empty.  The command never sets it; it exists for tests whose
-	// "strace" is a script that cannot hand a listener over.  Platforms without
-	// the mechanism (exechead.Supported is false) behave as if it were set.
-	NoExecHead bool
-	// ExecHead overrides the supervisor's deadlines and caps (tests).
-	ExecHead exechead.Timing
+	// ExecHead turns the exec-head supervisor ON (KILN04 D48): the socket pair,
+	// `--exec-notify-fd`, `<step>.exechead`, and the step sidecar's exechead
+	// fields.  It is OFF by default: the step then runs exactly as before this
+	// change (no listener, no second filter, the exechead fields empty).  The
+	// command sets it with `kiln record step --exec-head`; the census workflow will
+	// opt in once the classifier consumes the file (D48 step 5).  Platforms without
+	// the mechanism (exechead.Supported is false) behave as if it were unset.
+	ExecHead bool
+	// ExecHeadTiming overrides the supervisor's deadlines and caps (tests).
+	ExecHeadTiming exechead.Timing
 
 	// Seams, for tests. Each defaults to the real thing.
 	FreeBytes func(dir string) (uint64, error)
@@ -422,7 +424,7 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	// "strace") none of it exists and the sidecar's exechead fields stay empty.
 	var sup *exechead.Supervisor
 	var execNonce string
-	if exechead.Supported && !o.NoExecHead {
+	if exechead.Supported && o.ExecHead {
 		var ehFile *os.File
 		sup, ehFile, execNonce, err = newExecHead(o, pre, action, step)
 		if err != nil {

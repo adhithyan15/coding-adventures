@@ -375,3 +375,32 @@ func readLimited(fd int, buf []byte) ([]byte, error) {
 	}
 	return buf[:got], nil
 }
+
+// dupCloexec duplicates fd with F_DUPFD_CLOEXEC, or returns -1.
+func dupCloexec(fd int) int {
+	n, _, e := syscall.Syscall(syscall.SYS_FCNTL, uintptr(fd), 1030 /* F_DUPFD_CLOEXEC */, 3)
+	if e != 0 {
+		return -1
+	}
+	return int(n)
+}
+
+// notifSizes is struct seccomp_notif_sizes.
+type notifSizes struct{ notif, resp, data uint16 }
+
+// checkNotifSizes asks the kernel how big its seccomp notification structures
+// are (seccomp(SECCOMP_GET_NOTIF_SIZES)) and refuses to run if they are not the
+// ones this package hard-codes: the ioctl numbers embed the sizes, and a buffer of
+// the wrong size is read wrongly.
+func checkNotifSizes() error {
+	var z notifSizes
+	_, _, e := syscall.Syscall(317 /* seccomp */, 3 /* SECCOMP_GET_NOTIF_SIZES */, 0, uintptr(unsafe.Pointer(&z)))
+	if e != 0 {
+		return fmt.Errorf("exechead: seccomp(GET_NOTIF_SIZES): %v", e)
+	}
+	want := notifSizes{notif: uint16(unsafe.Sizeof(seccompNotif{})), resp: uint16(unsafe.Sizeof(seccompNotifResp{})), data: uint16(unsafe.Sizeof(seccompData{}))}
+	if z != want {
+		return fmt.Errorf("exechead: the kernel's seccomp notification sizes are %+v, this build hard-codes %+v", z, want)
+	}
+	return nil
+}

@@ -462,7 +462,7 @@ func TestSandboxExecNotifyNotifies(t *testing.T) {
 		}
 	}
 	h := r.resp.handshake()
-	if !h.ok || h.dataBytes != 1 || h.dataByte != sandbox.ExecNotifyByte || h.fds != 1 || h.truncated {
+	if !h.ok || h.dataBytes != 1 || (h.dataByte != sandbox.ExecNotifyByte && h.dataByte != sandbox.ExecNotifyByteKillable) || h.fds != 1 || h.truncated {
 		t.Errorf("hand-over %+v: want one byte %q and one descriptor, nothing truncated", h, sandbox.ExecNotifyByte)
 	}
 	if !h.eofAfter {

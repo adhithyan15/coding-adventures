@@ -49,7 +49,7 @@ func newExecHead(o StepOptions, pre *Pre, action string, step int) (*exechead.Su
 		Out:    f,
 		Header: exechead.Header{V: exechead.Version, Nonce: nonce, ActionSHA256: hex.EncodeToString(sum[:]), Step: step},
 		Tmpfs:  execHeadTmpfs(pre.Config),
-		Timing: o.ExecHead,
+		Timing: o.ExecHeadTiming,
 	})
 	if err != nil {
 		f.Close()

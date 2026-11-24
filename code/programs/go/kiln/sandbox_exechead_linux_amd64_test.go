@@ -348,10 +348,21 @@ func TestSandboxExecHeadSignalInterrupted(t *testing.T) {
 	if n := len(r.byPath("/nonexistent/sig")); n != 1 {
 		t.Fatalf("%d lines for the restarted exec, want 1", n)
 	}
+	r.none(exechead.StatusTainted)
+	if r.file.Header.WaitKillable {
+		// SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV (Linux 5.19): a signal cannot
+		// interrupt an unanswered notification at all, so there is no restart and
+		// nothing to drop.  The restart path (ERESTARTNOINTR, a second notification,
+		// the first no longer valid) exists only on a kernel that refuses the flag;
+		// it is exercised there, and this branch pins that the flag removes it.
+		if r.res.Dropped != 0 {
+			t.Errorf("a killable listener dropped %d notifications", r.res.Dropped)
+		}
+		return
+	}
 	if r.res.Dropped < 1 {
 		t.Errorf("no notification was dropped as invalid (Dropped = %d)", r.res.Dropped)
 	}
-	r.none(exechead.StatusTainted)
 }
 
 func TestSandboxExecHeadTwoThreadOverlapTaints(t *testing.T) {
@@ -441,7 +452,7 @@ func TestSandboxExecHeadHeaderAndSeq(t *testing.T) {
 	if _, err := exechead.NewWriter(&raw, other, exechead.Limits{}); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := exechead.Decode(raw.Bytes(), exechead.Limits{}, &exechead.Expect{Nonce: r.hdr.Nonce}); err == nil {
+	if _, err := exechead.Decode(raw.Bytes(), exechead.Limits{}, exechead.Expect{Nonce: r.hdr.Nonce, ActionSHA256: r.hdr.ActionSHA256, Step: 0}); err == nil {
 		t.Error("a file with another nonce was accepted")
 	}
 }
@@ -487,17 +498,68 @@ func TestSandboxExecHeadStallKillsTheStep(t *testing.T) {
 	}
 }
 
-func TestSandboxExecHeadPendingLifetimeKillsTheStep(t *testing.T) {
+func TestSandboxExecHeadPendingLifetimeTaintsAHealthyStep(t *testing.T) {
 	f := newSandboxFixture(t)
-	r := f.ehScript(t, `cp /bin/sleep {tmp}/s && {tmp}/s 30; true`,
-		ehOpt{timing: exechead.Timing{Lifetime: 800 * time.Millisecond, PollStart: 6 * time.Second, FinishWait: time.Second}})
-	r.unclean(exechead.UncleanStuck)
+	// The poller does not look for 3 s and the lifetime bound is 800 ms.  The
+	// process is NOT blocked in execve (it is asleep in its new image), so the bound
+	// does not kill the step: the group is tainted and the line is `timeout`.  (A
+	// thread seen blocked in execve past the bound is killed as `exechead-stuck`;
+	// no test can hold a real thread there, so that branch is by inspection.)
+	r := f.ehScript(t, `cp /bin/sleep {tmp}/s && {tmp}/s 1; true`,
+		ehOpt{timing: exechead.Timing{Lifetime: 800 * time.Millisecond, PollStart: 3 * time.Second, FinishWait: 6 * time.Second}})
+	r.clean()
+	if r.exit != 0 {
+		t.Fatalf("exit %d: a healthy step was killed", r.exit)
+	}
+	if l := r.one(f.tmp + "/s"); l.Status != exechead.StatusTimeout {
+		t.Fatalf("%s", formatLine(l))
+	}
+	r.none(exechead.StatusConfirmed)
+}
+
+func TestSandboxExecHeadReceiverDeathKillsTheStep(t *testing.T) {
+	f := newSandboxFixture(t)
+	// The receiver fails after its second notification (an injected error, zero in
+	// production).  Without the fix the listener would stay open with nobody
+	// answering, and the next exec would block for ever.
+	r := f.ehScript(t, `/bin/true; /bin/true; sleep 30`, ehOpt{timing: exechead.Timing{InjectReceiverError: 2, FinishWait: 3 * time.Second}})
+	r.unclean(exechead.UncleanReceiver)
 	if r.elapsed > 25*time.Second {
 		t.Fatalf("the step ran for %s: it was not killed", r.elapsed)
 	}
-	if l := r.one(f.tmp + "/s"); l.Status == exechead.StatusConfirmed {
-		t.Fatalf("a stuck exec was confirmed: %s", formatLine(l))
+}
+
+func TestSandboxExecHeadRenameByAnotherProcessNeverFalselyConfirms(t *testing.T) {
+	f := newSandboxFixture(t)
+	var loop strings.Builder
+	for i := 0; i < 30; i++ {
+		loop.WriteString(` {bin} ` + execHeadProbeCommand + ` racepath {tmp}/p;`)
 	}
+	// A SEPARATE PROCESS (a background shell loop) renames one file and then the
+	// other over {tmp}/p, atomically, while the step execs {tmp}/p: the kernel's
+	// lookup may find a different inode than the one pinned.  Whatever happens, a
+	// `confirmed` line must name the inode that really ran.
+	flip := `( while [ ! -f {tmp}/stop ]; do ln -f {tmp}/fa {tmp}/t1 && mv -f {tmp}/t1 {tmp}/p; ln -f {tmp}/fb {tmp}/t2 && mv -f {tmp}/t2 {tmp}/p; done ) &`
+	r := f.ehScript(t, `cp {bin} {tmp}/fa && cp {bin} {tmp}/fb && ln {tmp}/fa {tmp}/p && `+flip+loop.String()+` touch {tmp}/stop; wait; true`, ehOpt{})
+	r.clean()
+	inos := r.printed("ino")
+	var raced []exechead.Line
+	for _, l := range r.file.Lines {
+		if l.Path == f.tmp+"/p" {
+			raced = append(raced, l)
+		}
+	}
+	if len(raced) != 30 || len(inos) != 30 {
+		t.Fatalf("%d lines for the raced exec and %d reports, want 30 each", len(raced), len(inos))
+	}
+	counts := map[exechead.Status]int{}
+	for i, l := range raced {
+		counts[l.Status]++
+		if l.Status == exechead.StatusConfirmed && strconv.FormatUint(l.Ino, 10) != inos[i] {
+			t.Errorf("exec %d: confirmed as inode %d, but the process that ran is inode %s", i, l.Ino, inos[i])
+		}
+	}
+	t.Logf("statuses of the 30 raced execs: %v", counts)
 }
 
 func TestSandboxExecHeadThreadSwapNeverFalselyConfirms(t *testing.T) {

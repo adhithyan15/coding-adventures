@@ -21,14 +21,15 @@ type File struct {
 	SHA256 string
 }
 
-// Expect is what a caller already knows the file must say.  A zero field is not
-// checked, except Step, which is checked only when CheckStep is set (zero is a
-// valid step number).
+// Expect is what a caller already knows the file must say: the nonce the step
+// sidecar holds, the action's digest and the step number.  ALL THREE ARE
+// MANDATORY: a file that does not name this step is not this step's file, and a
+// caller that could skip the check (a zero Expect) would one day skip it by
+// accident.  Decode refuses an Expect whose nonce or digest is not well formed.
 type Expect struct {
 	Nonce        string
 	ActionSHA256 string
 	Step         int
-	CheckStep    bool
 }
 
 // Decode reads a sidecar strictly.  PR 5's classifier uses it, so it is as
@@ -54,7 +55,10 @@ type Expect struct {
 // The per-line sha256 is self-attested: it detects a corrupted line, not a
 // forged one.  The binding to the step is the whole file's digest in the step
 // sidecar plus the nonce here.
-func Decode(data []byte, lim Limits, want *Expect) (*File, error) {
+func Decode(data []byte, lim Limits, want Expect) (*File, error) {
+	if !hexN(want.Nonce, 32) || !hexN(want.ActionSHA256, 64) || want.Step < 0 {
+		return nil, errors.New("exechead: the expected nonce, action digest and step are mandatory")
+	}
 	if len(data) == 0 {
 		return nil, errors.New("exechead: the file is empty")
 	}
@@ -100,17 +104,14 @@ func Decode(data []byte, lim Limits, want *Expect) (*File, error) {
 	return f, nil
 }
 
-func (e *Expect) check(h Header) error {
-	if e == nil {
-		return nil
-	}
-	if e.Nonce != "" && h.Nonce != e.Nonce {
+func (e Expect) check(h Header) error {
+	if h.Nonce != e.Nonce {
 		return errors.New("the nonce is not the step sidecar's")
 	}
-	if e.ActionSHA256 != "" && h.ActionSHA256 != e.ActionSHA256 {
+	if h.ActionSHA256 != e.ActionSHA256 {
 		return errors.New("the file belongs to another action")
 	}
-	if e.CheckStep && h.Step != e.Step {
+	if h.Step != e.Step {
 		return fmt.Errorf("the file belongs to step %d, not %d", h.Step, e.Step)
 	}
 	return nil
@@ -121,14 +122,14 @@ func decodeHeader(line []byte) (Header, error) {
 	if err := legacy.PolicyDecode(line, &w); err != nil {
 		return Header{}, err
 	}
-	if w.V == nil || w.Kernel == nil || w.Nonce == nil || w.ActionSHA256 == nil || w.Step == nil {
+	if w.V == nil || w.Kernel == nil || w.Nonce == nil || w.ActionSHA256 == nil || w.Step == nil || w.WaitKillable == nil {
 		return Header{}, errors.New("a key is missing")
 	}
-	h := Header{V: *w.V, Kernel: *w.Kernel, Nonce: *w.Nonce, ActionSHA256: *w.ActionSHA256, Step: *w.Step}
+	h := Header{V: *w.V, Kernel: *w.Kernel, Nonce: *w.Nonce, ActionSHA256: *w.ActionSHA256, Step: *w.Step, WaitKillable: *w.WaitKillable}
 	if err := checkHeader(h); err != nil {
 		return Header{}, err
 	}
-	again, err := encodeCanonical(wireHeader{V: &h.V, Kernel: &h.Kernel, Nonce: &h.Nonce, ActionSHA256: &h.ActionSHA256, Step: &h.Step})
+	again, err := encodeCanonical(wireHeader{V: &h.V, Kernel: &h.Kernel, Nonce: &h.Nonce, ActionSHA256: &h.ActionSHA256, Step: &h.Step, WaitKillable: &h.WaitKillable})
 	if err != nil || !bytes.Equal(again, line) {
 		return Header{}, errors.New("not the canonical encoding (spacing, key order or escapes differ)")
 	}

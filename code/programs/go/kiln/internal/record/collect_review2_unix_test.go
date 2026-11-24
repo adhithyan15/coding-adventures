@@ -27,7 +27,7 @@ func TestStepTombstoneCheckFailsClosed(t *testing.T) {
 	}
 	t.Cleanup(func() { os.Chmod(traces, 0o700) })
 	env := append(append([]string{}, f.pre.Tools.BuildToolEnv...), EnvAction+"="+ca, EnvStep+"=0", EnvStepCount+"=1")
-	_, err := RunStep(StepOptions{Dir: f.p.dir, Argv: []string{"sh", "-c", "echo a"}, Environ: env, Cwd: f.pre.Config.PackageDir(ca), KilnExe: f.p.kiln, NoExecHead: true})
+	_, err := RunStep(StepOptions{Dir: f.p.dir, Argv: []string{"sh", "-c", "echo a"}, Environ: env, Cwd: f.pre.Config.PackageDir(ca), KilnExe: f.p.kiln})
 	if err == nil || !strings.Contains(err.Error(), "cannot be checked") {
 		t.Fatalf("%v", err)
 	}

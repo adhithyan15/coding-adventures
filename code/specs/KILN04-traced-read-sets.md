@@ -4908,6 +4908,59 @@ above, the text is not changed and the departure is listed here:
   by the one lock, `finishLocked` reads the taint under it), and the reuse of a
   tid number after a non-leader exec (needs a pid-reuse the kernel will not
   produce on demand); PR 5's pairing tests are where they belong.
+- *Landed DEFAULT-OFF (review).* `kiln record step` runs the supervisor only with
+  `--exec-head` (`StepOptions.ExecHead`); without it nothing changes (no socket, no
+  second filter, the step sidecar's `exechead_*` fields empty, schema `/3` either
+  way). The census and the other recorder tests stay on the old path; the census
+  opts in when step 5 exists.
+- *The pending-lifetime bound (changed, approved in review).* A pending exec older
+  than the bound is killed (`exechead-stuck`) ONLY if the thread's last
+  `/proc/<tid>/syscall` reading shows it blocked in `execve`/`execveat`. Otherwise
+  the group is tainted and the line is `timeout`. Why: a failed in-place exec can
+  leave its thread computing in user mode, where the file reads `running`; killing
+  that would kill a healthy step. This replaces "ends in an unclean step" in step 1.
+- *Vanished thread, exe unchanged (implemented).* A poller that finds the notified
+  thread gone (a non-leader, whose `/proc/<tid>` no longer exists) with `exe` still
+  the pre-exec image re-checks `exe` for up to 100 ms (a non-leader's own exec makes
+  its tid vanish briefly BEFORE exe changes); only if it is still unchanged does the
+  group taint and the line is `tainted`.
+- *`WAIT_KILLABLE_RECV`.* The init asks for `SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV`
+  (Linux 5.19) with `NEW_LISTENER`, so a caught signal cannot interrupt an unanswered
+  notification (no EINTR, no `ERESTARTSYS` in the trace, no restart); on `EINVAL` it
+  falls back to plain `NEW_LISTENER`. The hand-over byte is `K` for the former and
+  `L` for the latter (`sandbox.ExecNotifyByteKillable`), the supervisor accepts
+  either, and the sidecar header records it (`"wait_killable"`). The restart path
+  (ERESTARTNOINTR, the first notification invalid, a second one) can therefore only
+  be exercised on a kernel that refuses the flag; on the 7.0 CI kernels the signal
+  test pins that no restart and no drop happens.
+- *Receiver death.* If the receiver stops for any reason but the listener hanging up,
+  Finish or Abort (an error, a panic), the step is killed and marked unclean
+  (`exechead-receiver`), the listener is closed (later execs get ENOSYS instead of
+  blocking) and the processor is stopped. A panic in a poller or the watchdog
+  degrades the supervisor and kills the step.
+- *Locking.* The kill path takes no `mu` (the init pidfd is atomic; unclean reasons
+  have their own mutex), because `mu` can be held across a blocking sidecar write.
+  The group's pidfd is read through a DUP taken under `mu`; the kill target is a dup
+  of the pidfd the first notification's group was validated with, not a second
+  `pidfd_open` of the number.
+- *Unmeasured tmpfs devices (changed).* Where D48 said a device that could not be
+  measured counts as "on the tmpfs", the supervisor now records every exec `outside`
+  and never opens the file for reading (fail closed; the classifier refuses an exec
+  under the tmpfs as today).
+- *Start-up check.* `New` calls `seccomp(SECCOMP_GET_NOTIF_SIZES)` and refuses if the
+  kernel's structure sizes differ from the layouts hard-coded here (80, 24, 64).
+- *Header write is deferred* until the hand-over is decided (it carries
+  `wait_killable`); the file is still created exclusively before the step starts.
+- *`Decode` takes a mandatory `Expect`* (nonce, action digest, step): a zero or
+  malformed one is refused, never read as "no check".
+- *For step 5 (PR 5):* refuse any line with `tid != tgid`; a non-confirmed line
+  carries no evidence, and an `outside` line has no transition check; an empty path
+  under the tmpfs refuses (`unpinned` with path `""` is not a path); read the file
+  with `exechead.Decode` and the step sidecar's nonce, the action's digest and the
+  step number.
+- *Not done:* a real-kernel test of `kiln record step --exec-head` end to end (the
+  harness drives the supervisor with the production wiring but not `RunStep`), and
+  a held thread to exercise the "blocked in execve" lifetime kill.
 - *`RecorderVersion`* is bumped for step 4 (19; 18 is another change's), although
   the classifier believes nothing new: a step can now be unclean for the
   supervisor's reasons, so the same action can record differently, and the step
