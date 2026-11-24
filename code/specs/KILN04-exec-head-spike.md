@@ -221,9 +221,10 @@ and the confirm step closes both; the first read does not.
   `unshare` and `clone(CLONE_NEWUSER)`, so it cannot make a namespace in which it
   would have some. The experiment PROBEs both forms: `prctl PR_SET_MM_EXE_FILE=` and
   `prctl PR_SET_MM_MAP(exe_fd)=` in `sandbox` (expect `operation_not_permitted`)
-  and in the unprivileged `userns` child (the map call is all zeros but for
-  `exe_fd`, so EPERM means the capability check failed and EINVAL means it passed
-  and validation refused it).
+  and in the unprivileged `userns` child. CORRECTION from run 45346779343: the
+  first map probe (all zeros but `exe_fd`) returned EINVAL even in the unprivileged
+  `host` child, so it says nothing about the capability check; section 7 describes
+  the valid-map probe that replaced it and what each outcome means.
 - `execveat(fd, "", AT_EMPTY_PATH)` (fexecve) has no path to read: the notification
   carries an empty string and a descriptor. The first version REFUSES it: no pin is made, so no sidecar entry exists, and an `under-tmp` binary exec'd that way stays refused as today. Handling it would mean opening `/proc/<pid>/fd/<n>` from the
   supervisor; the experiment logs whether that open works
@@ -366,7 +367,15 @@ this stands.
 | `notif case=elf-fast-exit ...` | a binary that exits before the confirm: `confirm=gone:...` is the expected refusal |
 | `notif case=script ...` | the script: `confirm=exe-mismatch exe="/usr/bin/dash"` expected |
 | `exec-with-writer fd=<errno\|allowed> shared-map=<errno\|allowed>` (`host`, `userns`) | whether exec refuses a file with an existing writer (the precondition of section 3.3); `text_file_busy` expected for `fd` |
-| `prctl PR_SET_MM_MAP(exe_fd)=<errno>` | the map form of the exe re-pointing, next to `PR_SET_MM_EXE_FILE` (in `sandbox` and the unprivileged `userns` child) |
+| `prctl PR_SET_MM_MAP(zero-fields,exe_fd)=<errno>` | the first map probe (all fields zero). INCONCLUSIVE: run 45346779343 showed `invalid_argument` in `host`, `userns` and `sandbox` alike, including the unprivileged `host`, so address validation runs before (or without) the capability check. Kept only for comparison |
+| `prctl PR_SET_MM_MAP_SIZE=<n> sizeof=104 match=<bool>` | the kernel's `struct prctl_mm_map` size against the probe's struct (the query needs no capability); the valid probe is skipped on a mismatch |
+| `prctl PR_SET_MM_MAP(valid,exe_fd)=<errno\|ok> exe_after="<readlink /proc/self/exe>"` | the real question: the map filled from the process's own `/proc/self/stat` (start_code, end_code, start_stack, start_data, end_data, start_brk, arg_start, arg_end, env_start, env_end), `brk(0)` and `/proc/self/auxv`, with `exe_fd` an `O_RDONLY` descriptor of a COPY of `/usr/bin/true` in the child's temp dir. Run last, in the short-lived re-executed child of `host`, `userns` and `sandbox` (never in the test process); `host` is the control. Outcomes in section 7 |
+| `fdpath child inherited=<ok\|errno\|not-a-socket>` and `child listener-sent=<ok\|errno>` | the child under `strace -f` (or alone): did descriptor 3 arrive, and did the listener go back over it |
+| `fdpath strace=<attached\|absent> inherited=<ok\|errno> listener=<received\|errno> confirm="<confirm> etxtbsy=<..> head_same=.. alive_after_reread=.."` | descriptor-path probe: the test process makes a socketpair, starts `strace -f <test binary> fdpath` with one end deliberately inherited on descriptor 3, the child installs the notify filter and sends the listener back over it, and the test process, as supervisor, pins and confirms the child's exec of a binary it made, ran and deleted. `strace=absent` means no execve in the trace file (strace missing or unable to trace) and the child ran alone |
+| `fdpath sandbox-path="..."` and `fdpath-sandbox scan inherited=<ok\|bad_file_descriptor> open_3_63=<n> sockets=<n> fds="..."` | the REAL sandbox root and init, with the socketpair end as `ExtraFiles` of the `sandbox-exec` command. The first line is the static reason from the code why it cannot be passed; the second is what the step (as `probe-bin`) holds: expected `sockets=0`, hence `inherited=bad_file_descriptor`. The sandbox case is not run under strace here (that needs the `TestSandboxRealStrace` harness), so strace inheritance and sandbox inheritance are probed separately |
+| `xns strace=<..> strace-exec-lines=<n> run=<errno\|ok> strace_stderr="<quoted, 512B>" tracee_exit="exited with N"\|"killed by SIG"\|none` | the strace run in the xns child, with strace's captured stderr and the tracee's own exit read from the trace |
+| `xns strace-trace first_execve="..." first_stderr_write="..."` | the first `execve(` and the first `write(2,` line of that trace: what the tracee was and what it said |
+| `prep true_real="..." sleep_real="..." multicall=<bool>` | whether the image's `true`/`sleep` resolve to a differently named (multi-call) executable |
 | `xns-super notif-pid=<pid[,pid]> strace=<attached\|absent> strace-exec-lines=<n>` | which pid the OUTSIDE supervisor sees (the `xns` child is in a pid namespace of its own, and logs its own `pid inside the namespace=`), and whether a seccomp notification and a ptrace stop (`strace -f -o`) coexisted on the same execs |
 | `notif case=fexecve path="" pin="execveat-empty-path(dirfd=3 flags=0x1000 open_proc_fd=ok)" ...` | whether fexecve notifies, with what, and whether `/proc/<pid>/fd/<n>` opens |
 | `prctl PR_SET_MM_EXE_FILE=<errno>` | `operation_not_permitted` in `sandbox` closes the exe re-pointing hole |
@@ -387,6 +396,97 @@ this stands.
   installed, or unable to trace under the filter), whether a notification and a
   ptrace stop on the same exec coexist is OPEN: the kiln-sandbox job runs the
   step under strace, so this must be answered before the design is built.
+- OPEN (hypothesis, to be confirmed by the next run): the `exit_status_1` of
+  `xns strace=... run=` on ubuntu-26.04 (strace 6.19, kernel 7.0.0-1020-azure)
+  against `run=ok` on 24.04. The notifications still arrived and confirmed, and
+  every other line agreed, so the supervisor and the filter are not implicated.
+  strace exits with its tracee's status, so the 1 most likely belongs to the
+  TRACEE, and the likeliest cause is the probe's own harness: the image's
+  coreutils on 26.04 is the uutils multi-call binary, `/usr/bin/sleep` resolves to
+  one executable that picks the applet from `argv[0]`, and the probe copied it to
+  `bin-sleep2`, an unknown applet, which prints an error and exits 1 at once.
+  (The other cases ignore the program's status; they only watch the pin and the
+  confirm, so they did not show it. A side effect to keep in mind: on that image
+  the `elf-live-then-deleted` binary may have exited at once instead of living
+  0.5 s, and its `confirm` then raced the exit.) The probe now names its copies
+  `true` and `sleep` (the second `sleep` in a directory of its own), prints
+  `prep ... multicall=<bool>`, and splits strace's stderr from the tracee's exit
+  (`strace_stderr=`, `tracee_exit=`, and the first `execve(` / `write(2,` lines of
+  the trace). Confirmed if 26.04 prints `multicall=true`, and `run=ok
+  tracee_exit="exited with 0"` after the rename. Alternatives the new fields would
+  show instead: `strace_stderr` starting `strace:` (strace 6.19 itself failing
+  under `no_new_privs` plus the notify filter, a ptrace restriction in the pid
+  namespace, or `--seccomp-bpf` interplay, none of which the xns child sets), a
+  `first_execve` with `ENOENT` or `EACCES` (a missing or non-executable file in
+  the tmpfs), or `tracee_exit` of a signal.
+- `PR_SET_MM_MAP` (the exe re-pointing hole). The first probe (`zero-fields`) is
+  inconclusive: an all-zero map fails address validation with EINVAL, and run
+  45346779343 saw EINVAL even in the unprivileged `host` child, so validation
+  evidently comes before the capability check. The valid-map probe supplies the
+  process's own addresses and auxv and a descriptor of a different regular file.
+  Reading each environment (the order inside the kernel is capability, then
+  validation, then the check that the old exe is no longer mapped, so each errno
+  says how far the call got):
+  - `host` (control, no capabilities anywhere): MUST be `operation_not_permitted`
+    or, if the kernel checks the mapping first, `device_or_resource_busy`. If it
+    is `ok`, the primitive needs no privilege at all and the confirm cannot be
+    trusted in ANY environment: redesign.
+  - `sandbox`: `operation_not_permitted` closes the hole for the real step (it has
+    no capability in its user namespace and cannot make a new one). If it is
+    `ok` the confirm design (`/proc/<pid>/exe` equals the pin) must be
+    REDESIGNED, because a step could make `exe` name any file it can open and so
+    forge the confirm of a different binary; the defences would be to drop
+    `prctl(PR_SET_MM)` in the seccomp filter or to confirm through something the
+    step cannot re-point (the `maps` of the executable mapping, `AT_EXECFD`/the
+    mapped inode, or the pid's `exe` link cross-checked against the mapped file).
+    `device_or_resource_busy` or `invalid_argument` from the sandbox means the
+    capability check passed or was not reached: treat it as NOT closed and
+    investigate before building, since only `operation_not_permitted` proves the
+    check refused.
+  - `userns` (uid 0 with a full set in a namespace of its own): the earlier text of
+    this note INFERRED success. `ok` confirms that a capability in one's own user
+    namespace suffices and the step's closure rests on having none; `operation_not_permitted`
+    means the check is against the initial namespace (stronger for us, and
+    it would make the earlier inference wrong); `device_or_resource_busy` is as good as `ok`
+    for this question: the capability check runs before the "old exe still mapped"
+    check, so EBUSY means the call got past the capability with capabilities held
+    only in its own namespace (the Go test binary always has its old exe mapped, so
+    EBUSY is the likely answer; do not chase it). `exe_after` shows whether the
+    link actually moved.
+  - A size mismatch (`PR_SET_MM_MAP_SIZE`) makes the valid probe `skipped`: fix
+    the struct first.
+- NOT COVERED: the sandbox under strace, end to end, with a listener descriptor
+  passed through both. This spike probes strace inheritance and the sandbox's
+  descriptor handling separately; the first real evidence for the combination
+  will be the kiln-sandbox tests of the production listener (the dedicated
+  inherited socket that `kiln record step` creates, validated as a connected unix
+  socket, sent over by the init before the step starts and closed before it runs).
+- The descriptor path (`fdpath`). Findings from the code, before any run: the real
+  `sandbox-exec` root cannot pass an extra descriptor to the step. `RunExec` marks
+  every descriptor of 3 and up close-on-exec with `close_range` before the spawn
+  and maps only `/dev/null`, `--stdout-fd`, `--stderr-fd` and the liveness pipe
+  into the init; `RunInit` marks 3 and up close-on-exec again before the step;
+  and `CheckOutputFD` accepts only a write-only pipe for the two output
+  descriptors, so a socket cannot ride in as one of them. Passing the listener
+  socket therefore needs a production change (an explicit `--listener-fd` that
+  the root maps and the init keeps open as a descriptor the step cannot see:
+  closed, or `CLOEXEC`, before the exec), which this spike does not make. The probe
+  splits the question: `fdpath strace=... inherited=... listener=...
+  confirm=...` runs the inheritance through `strace -f` (and no sandbox) and the
+  supervisor round trip on a real inherited socket; `fdpath-sandbox scan
+  sockets=0` is the evidence for the sandbox half (`sockets>0` would mean the code
+  reading above is wrong). Outcomes: `inherited=ok listener=received
+  confirm="exe-match-after-..."` with `strace=attached` means strace -f passes
+  the descriptor, a seccomp notification and a ptrace stop coexist on a real
+  exec, and the listener round trip works from a process outside the step; the
+  remaining work is the root/init plumbing above. `inherited=bad_file_descriptor`
+  with `strace=attached` means strace itself closes or does not pass descriptor 3
+  (a design problem for strace-wrapped recording: use a pathname socket or a
+  descriptor number strace keeps). `listener=` an errno or a `NEW_LISTENER
+  refused` in the child means the filter cannot be installed in a traced process.
+  An empty `confirm` (`no-execve-notification`) with `listener=received` means
+  the supervisor did not see the child's exec: ptrace and seccomp do not
+  coexist the way the xns line assumed.
 - If a CI log shows the pid namespace was not in effect (the child's
   `pid inside the namespace=1` is absent), the pid the supervisor sees is not
   evidence for the real topology.

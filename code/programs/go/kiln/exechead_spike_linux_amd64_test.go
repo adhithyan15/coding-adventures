@@ -52,6 +52,7 @@ package main
 //     KILN_EXECHEAD_SPIKE_MARKS=1.
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"debug/elf"
@@ -149,6 +150,20 @@ func clean(s string) string {
 	}, s)
 }
 
+// spikeCapEff is this process's effective capability set (all ones when it
+// cannot be read: be careful).
+func spikeCapEff() uint64 {
+	b, _ := os.ReadFile("/proc/self/status")
+	for _, l := range strings.Split(string(b), "\n") {
+		if strings.HasPrefix(l, "CapEff:") {
+			if v, err := strconv.ParseUint(strings.TrimSpace(strings.TrimPrefix(l, "CapEff:")), 16, 64); err == nil {
+				return v
+			}
+		}
+	}
+	return ^uint64(0)
+}
+
 // spikePrivileged reports whether this process is root or holds CAP_SYS_ADMIN.
 func spikePrivileged() bool {
 	if os.Geteuid() == 0 {
@@ -169,7 +184,7 @@ func spikePrivileged() bool {
 // spikeRun starts cmd in its own process group and kills the group at the
 // deadline, whatever the child's scheduler is doing.
 func spikeRun(cmd *exec.Cmd) (stdout, stderr string, err error) {
-	var out, errb bytes.Buffer
+	var out, errb capBuf
 	cmd.Stdout, cmd.Stderr = &out, &errb
 	cmd.WaitDelay = 5 * time.Second
 	if cmd.SysProcAttr == nil {
@@ -272,7 +287,7 @@ func TestExecHeadSpike(t *testing.T) {
 	f := newSandboxFixture(t)
 
 	if spikePrivileged() {
-		t.Logf("PROBE: exechead host, userns and xns children not run: this process is root or holds CAP_SYS_ADMIN")
+		t.Logf("PROBE: exechead host, userns, xns and fdpath children not run: this process is root or holds CAP_SYS_ADMIN")
 	} else {
 		// host: no namespace.
 		dir := t.TempDir()
@@ -291,6 +306,9 @@ func TestExecHeadSpike(t *testing.T) {
 
 		// xns: the listener handed to this process, outside that namespace.
 		spikeCrossNS(t, exe, nsAttr(true), childEnv)
+
+		// fdpath: an inherited socket through strace -f, listener sent back.
+		spikeFdPath(t, exe, childEnv)
 	}
 
 	// sandbox: the real step, run like sandboxRunTimeout does, but in its own
@@ -308,6 +326,10 @@ func TestExecHeadSpike(t *testing.T) {
 	cmd.Env = withCover(t, []string{"KILN_ACTION=pkg", "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=/usr/bin:/bin"})
 	o, e, err := spikeRun(cmd)
 	logLines("sandbox", o, e, err)
+
+	// fdpath through the real sandbox root and init (safe when privileged: it is
+	// the same unprivileged-step sandbox as above).
+	spikeFdPathSandbox(t, f, marks)
 }
 
 func truncate(s string, n int) string {
@@ -315,6 +337,191 @@ func truncate(s string, n int) string {
 		return s[:n] + "..."
 	}
 	return s
+}
+
+// spikeRecvListener receives one descriptor over the socket (SCM_RIGHTS), waiting
+// at most 20 seconds, with close-on-exec set on it; any extra descriptor sent
+// with it is closed.  It returns -1 and the error when none arrived.
+func spikeRecvListener(parentEnd int) (int, error) {
+	tv := syscall.Timeval{Sec: 20}
+	syscall.SetsockoptTimeval(parentEnd, syscall.SOL_SOCKET, syscall.SO_RCVTIMEO, &tv)
+	oob := make([]byte, syscall.CmsgSpace(4))
+	var p [1]byte
+	_, oobn, _, _, err := syscall.Recvmsg(parentEnd, p[:], oob, 0x40000000 /* MSG_CMSG_CLOEXEC */)
+	lfd := -1
+	if err == nil {
+		if msgs, perr := syscall.ParseSocketControlMessage(oob[:oobn]); perr == nil {
+			for _, m := range msgs {
+				if rs, rerr := syscall.ParseUnixRights(&m); rerr == nil && len(rs) > 0 {
+					if lfd < 0 {
+						lfd = rs[0]
+						rs = rs[1:]
+					}
+					for _, extra := range rs {
+						syscall.Close(extra)
+					}
+				}
+			}
+		}
+	}
+	return lfd, err
+}
+
+// spikeFdPath is the descriptor-path probe.  This process makes a socketpair and
+// starts `strace -f <test binary> fdpath` (the test binary alone when strace is
+// absent) with one end deliberately inherited on descriptor 3 (os/exec dup2s an
+// ExtraFiles entry, which clears close-on-exec on the copy).  The child, still
+// under strace, installs the notify filter and sends the listener back over that
+// socket; this process is then the supervisor for the child's exec of a binary
+// it made, ran and deleted, exactly as in the xns case.  Line:
+//
+//	fdpath strace=<attached|absent> inherited=<ok|errno> listener=<received|errno> confirm=<...>
+func spikeFdPath(t *testing.T, exe string, childEnv func(string) []string) {
+	say := func(format string, a ...any) {
+		t.Log(clean(fmt.Sprintf("PROBE: exechead fdpath "+format, a...)))
+	}
+	fds, err := syscall.Socketpair(syscall.AF_UNIX, syscall.SOCK_STREAM|syscall.SOCK_CLOEXEC, 0)
+	if err != nil {
+		say("socketpair failed: %s", spikeErr(err))
+		return
+	}
+	parentEnd := fds[0]
+	defer syscall.Close(parentEnd)
+	childFile := os.NewFile(uintptr(fds[1]), "fdpath-child")
+	dir := t.TempDir()
+	traceOut := filepath.Join(dir, "fdpath-strace.out")
+	straceState := "absent"
+	var cmd *exec.Cmd
+	if st, lerr := exec.LookPath("strace"); lerr == nil {
+		straceState = "attached"
+		cmd = exec.Command(st, "-f", "-e", straceProbeSet, "-o", traceOut, exe, spikeCommand, "fdpath", dir, "0")
+	} else {
+		cmd = exec.Command(exe, spikeCommand, "fdpath", dir, "0")
+	}
+	cmd.Env = childEnv(dir)
+	cmd.ExtraFiles = []*os.File{childFile}
+	var out, errb capBuf
+	cmd.Stdout, cmd.Stderr = &out, &errb
+	cmd.WaitDelay = 5 * time.Second
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	if err := cmd.Start(); err != nil {
+		childFile.Close()
+		say("start failed: %s", spikeErr(err))
+		return
+	}
+	childFile.Close()
+	reaped := killGroupAfter(cmd.Process.Pid, spikeChildDeadline)
+
+	lfd, rerr := spikeRecvListener(parentEnd)
+	listener, confirm := "received", "-"
+	var sup *notifSup
+	supDone := make(chan struct{})
+	if lfd < 0 {
+		listener = "none-received"
+		if rerr != nil {
+			listener = spikeErr(rerr)
+		}
+		close(supDone)
+	} else {
+		sup = newNotifSup(lfd)
+		sup.confirm.Store(true)
+		go func() { sup.run(); close(supDone) }()
+	}
+	werr := cmd.Wait()
+	reaped()
+	var recs []*execRec
+	if sup != nil {
+		sup.stop.Store(true)
+		<-supDone
+		sup.wg.Wait()
+		syscall.Close(lfd)
+		sup.mu.Lock()
+		recs = append(recs, sup.recs...)
+		sup.mu.Unlock()
+		// The record that matters is the exec of the binary the child made and
+		// deleted ("sleep" in its spike directory); fall back to the first pin.
+		var pick *execRec
+		for _, r := range recs {
+			if r.pin == "ok" && strings.HasSuffix(r.path, "/spike/sleep") {
+				pick = r
+			}
+		}
+		for _, r := range recs {
+			if pick == nil && r.pin == "ok" {
+				pick = r
+			}
+		}
+		switch {
+		case pick != nil:
+			confirm = fmt.Sprintf("%q", orDash(pick.confirm)+" etxtbsy="+orDash(pick.etxtbsy)+" "+orDash(pick.stable))
+		case len(recs) == 0:
+			confirm = `"no-execve-notification"`
+		default:
+			confirm = fmt.Sprintf("%q", "no-pin:"+recs[0].pin)
+		}
+	}
+	inherited := "unreported"
+	for _, l := range strings.Split(out.String(), "\n") {
+		if !strings.HasPrefix(l, "PROBE: exechead ") {
+			continue
+		}
+		t.Log(clean(l))
+		if i := strings.Index(l, " fdpath child inherited="); i >= 0 {
+			inherited = clean(strings.Fields(l[i+len(" fdpath child inherited="):])[0])
+		}
+	}
+	if sup != nil && len(recs) > 0 {
+		say("%s", clean(recLine("outside-supervisor", recs[len(recs)-1])))
+	}
+	if werr != nil || inherited == "unreported" {
+		say("child exit=%q stderr=%q", fmt.Sprint(werr), truncate(errb.String(), 200))
+	}
+	if straceState == "attached" {
+		b, trunc := readTrace(traceOut)
+		if bytes.Count(b, []byte("execve(")) == 0 {
+			straceState = "absent"
+		}
+		if trunc {
+			say("strace-trace truncated=true limit=%d", maxTrace)
+		}
+	}
+	say("strace=%s inherited=%s listener=%s confirm=%s", straceState, inherited, listener, confirm)
+}
+
+// spikeFdPathSandbox asks whether an inherited descriptor can reach the sandbox's
+// step through the REAL sandbox-exec root and init, with no change to them.  The
+// socket is an ExtraFiles entry of the sandbox-exec command (descriptor 3 of the
+// root); the step lists the descriptors it holds.  Static reasons it should not
+// arrive are in the line below, from the code (sandbox_linux_amd64.go).
+func spikeFdPathSandbox(t *testing.T, f *sandboxFixture, marks string) {
+	say := func(format string, a ...any) {
+		t.Log(clean(fmt.Sprintf("PROBE: exechead fdpath "+format, a...)))
+	}
+	say("sandbox-path=%q", "RunExec marks every descriptor of 3 and up close-on-exec (close_range) before the spawn and maps only /dev/null, --stdout-fd, --stderr-fd and the liveness pipe into the init; RunInit marks 3 and up close-on-exec again before the step; CheckOutputFD accepts only a write-only pipe for --stdout-fd/--stderr-fd. A socket cannot be inherited into the step without a production change.")
+	fds, err := syscall.Socketpair(syscall.AF_UNIX, syscall.SOCK_STREAM|syscall.SOCK_CLOEXEC, 0)
+	if err != nil {
+		say("sandbox socketpair failed: %s", spikeErr(err))
+		return
+	}
+	defer syscall.Close(fds[0])
+	childFile := os.NewFile(uintptr(fds[1]), "fdpath-sandbox")
+	defer childFile.Close()
+	cmd := exec.Command(f.exe, sandbox.ExecCommand, "--config", f.cfg, "--",
+		filepath.Join(f.pkg, "probe-bin"), spikeCommand, "fdpath-sandbox", "", marks)
+	cmd.Dir = f.pkg
+	cmd.Env = withCover(t, []string{"KILN_ACTION=pkg", "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=/usr/bin:/bin"})
+	cmd.ExtraFiles = []*os.File{childFile}
+	o, e, err := spikeRun(cmd)
+	n := 0
+	for _, l := range strings.Split(o, "\n") {
+		if strings.HasPrefix(l, "PROBE: exechead fdpath-sandbox ") {
+			t.Log(clean(l))
+			n++
+		}
+	}
+	if err != nil || n == 0 {
+		say("sandbox harness exit=%q lines=%d stderr=%q", fmt.Sprint(err), n, truncate(clean(e), 200))
+	}
 }
 
 // spikeCrossNS: a child in a user and mount namespace of its own installs the
@@ -338,7 +545,7 @@ func spikeCrossNS(t *testing.T, exe string, attr *syscall.SysProcAttr, childEnv 
 	cmd.Env = childEnv(dir)
 	cmd.SysProcAttr = attr
 	cmd.ExtraFiles = []*os.File{childFile}
-	var out, errb bytes.Buffer
+	var out, errb capBuf
 	cmd.Stdout, cmd.Stderr = &out, &errb
 	cmd.WaitDelay = 5 * time.Second
 	cmd.SysProcAttr.Setpgid = true
@@ -350,27 +557,7 @@ func spikeCrossNS(t *testing.T, exe string, attr *syscall.SysProcAttr, childEnv 
 	childFile.Close()
 	reaped := killGroupAfter(cmd.Process.Pid, spikeChildDeadline)
 
-	tv := syscall.Timeval{Sec: 20}
-	syscall.SetsockoptTimeval(parentEnd, syscall.SOL_SOCKET, syscall.SO_RCVTIMEO, &tv)
-	oob := make([]byte, syscall.CmsgSpace(4))
-	var p [1]byte
-	_, oobn, _, _, err := syscall.Recvmsg(parentEnd, p[:], oob, 0x40000000 /* MSG_CMSG_CLOEXEC */)
-	var lfd = -1
-	if err == nil {
-		if msgs, perr := syscall.ParseSocketControlMessage(oob[:oobn]); perr == nil {
-			for _, m := range msgs {
-				if rs, rerr := syscall.ParseUnixRights(&m); rerr == nil && len(rs) > 0 {
-					if lfd < 0 {
-						lfd = rs[0]
-						rs = rs[1:]
-					}
-					for _, extra := range rs {
-						syscall.Close(extra)
-					}
-				}
-			}
-		}
-	}
+	lfd, err := spikeRecvListener(parentEnd)
 	if lfd < 0 {
 		say("no listener fd received (recvmsg=%s)", spikeErr(err))
 		cmd.Wait()
@@ -490,6 +677,10 @@ func spikeMain(args []string, out *os.File) int {
 		}
 	}
 	say("id uid=%d %s", os.Getuid(), procStatusFacts())
+	if label == "fdpath-sandbox" {
+		fdScanChild(say)
+		return 0
+	}
 
 	work := filepath.Join(dir, "spike")
 	if err := os.MkdirAll(work, 0o755); err != nil {
@@ -499,8 +690,12 @@ func spikeMain(args []string, out *os.File) int {
 	trueReal, _ := filepath.EvalSymlinks("/usr/bin/true")
 	sleepReal, _ := filepath.EvalSymlinks("/usr/bin/sleep")
 	shReal, _ := filepath.EvalSymlinks("/bin/sh")
-	binTrue := filepath.Join(work, "bin-true")
-	binSleep := filepath.Join(work, "bin-sleep")
+	// The copies keep the REAL program names ("true", "sleep").  On a runner image
+	// whose coreutils is a multi-call binary (uutils on ubuntu-26.04: /usr/bin/true
+	// resolves to one "coreutils" executable that picks the applet from argv[0]),
+	// a copy named "bin-sleep" is an unknown applet and exits 1 at once.
+	binTrue := filepath.Join(work, "true")
+	binSleep := filepath.Join(work, "sleep")
 	script := filepath.Join(work, "s.sh")
 	for src, dst := range map[string]string{trueReal: binTrue, sleepReal: binSleep} {
 		b, err := os.ReadFile(src)
@@ -517,8 +712,14 @@ func spikeMain(args []string, out *os.File) int {
 		return 0
 	}
 
+	say("prep true_real=%q sleep_real=%q multicall=%v", trueReal, sleepReal,
+		filepath.Base(trueReal) != "true" || filepath.Base(sleepReal) != "sleep")
 	if label == "xns" {
 		xnsChild(binTrue, binSleep, say)
+		return 0
+	}
+	if label == "fdpath" {
+		fdPathChild(binSleep, say)
 		return 0
 	}
 
@@ -550,10 +751,93 @@ func spikeMain(args []string, out *os.File) int {
 		}
 		mm.exeFd = uint32(f.Fd())
 		_, _, e = syscall.RawSyscall6(syscall.SYS_PRCTL, 35 /*PR_SET_MM*/, 14 /*PR_SET_MM_MAP*/, uintptr(unsafe.Pointer(&mm)), unsafe.Sizeof(mm), 0, 0)
-		say("prctl PR_SET_MM_MAP(exe_fd)=%s", spikeErr(errnoOrNil(e)))
+		say("prctl PR_SET_MM_MAP(zero-fields,exe_fd)=%s (inconclusive: address validation may precede the capability check)", spikeErr(errnoOrNil(e)))
 		f.Close()
 	}
+	// The valid map, last of all: if it ever succeeds this process's /proc/self/exe
+	// changes.  This process is a short-lived child of the test, never the runner.
+	spikeSetMMMapValid(label, binTrue, say)
 	return 0
+}
+
+// mmMap is struct prctl_mm_map (include/uapi/linux/prctl.h): eleven addresses,
+// the auxv pointer, its size, and the exe descriptor: 104 bytes.
+type mmMap struct {
+	start, end, startData, endData, startBrk, brk, startStack, argStart, argEnd, envStart, envEnd uint64
+	auxv                                                                                          uint64
+	auxvSize, exeFd                                                                               uint32
+}
+
+// spikeSetMMMapValid calls PR_SET_MM_MAP with this process's OWN values and the
+// descriptor of a different regular file as exe_fd, so that a capability-holding
+// caller gets past address validation.  Outcomes (KILN04-exec-head-spike.md
+// section 7): EPERM means the capability check refused; EBUSY means it passed but
+// the kernel will not re-point an exe whose old file is still mapped; EINVAL
+// means the fields or the descriptor failed validation (the probe is wrong, not
+// an answer); ok means /proc/self/exe now names the other file.
+func spikeSetMMMapValid(label, exePath string, say spikeSay) {
+	// PR_SET_MM is governed by CAP_SYS_RESOURCE (bit 24).  The userns child holds
+	// it in its own namespace on purpose; any other environment that has it
+	// (a privileged host child) must not re-point its exe.
+	if label != "userns" && spikeCapEff()&(1<<24) != 0 {
+		say("prctl PR_SET_MM_MAP(valid,exe_fd)=skipped(cap_sys_resource)")
+		return
+	}
+	var size uint32
+	_, _, e := syscall.RawSyscall6(syscall.SYS_PRCTL, 35 /*PR_SET_MM*/, 15 /*PR_SET_MM_MAP_SIZE*/, uintptr(unsafe.Pointer(&size)), 0, 0, 0)
+	if e != 0 {
+		say("prctl PR_SET_MM_MAP_SIZE=%s", spikeErr(e))
+		return
+	}
+	say("prctl PR_SET_MM_MAP_SIZE=%d sizeof=%d match=%v", size, unsafe.Sizeof(mmMap{}), uintptr(size) == unsafe.Sizeof(mmMap{}))
+	if uintptr(size) != unsafe.Sizeof(mmMap{}) {
+		say("prctl PR_SET_MM_MAP(valid,exe_fd)=skipped(size-mismatch)")
+		return
+	}
+	statB, err := os.ReadFile("/proc/self/stat")
+	if err != nil {
+		say("prctl PR_SET_MM_MAP(valid,exe_fd)=skipped(stat:%s)", spikeErr(err))
+		return
+	}
+	// The fields after the last ")" start at proc(5) field 3 (state).
+	i := bytes.LastIndexByte(statB, ')')
+	if i < 0 {
+		say("prctl PR_SET_MM_MAP(valid,exe_fd)=skipped(stat-format)")
+		return
+	}
+	fields := strings.Fields(string(statB[i+1:]))
+	field := func(n int) uint64 { // n is proc(5)'s 1-based field number
+		if n-3 >= len(fields) {
+			return 0
+		}
+		v, _ := strconv.ParseUint(fields[n-3], 10, 64)
+		return v
+	}
+	auxv, err := os.ReadFile("/proc/self/auxv")
+	if err != nil || len(auxv) == 0 {
+		say("prctl PR_SET_MM_MAP(valid,exe_fd)=skipped(auxv:%s)", spikeErr(err))
+		return
+	}
+	brk, _, _ := syscall.RawSyscall(syscall.SYS_BRK, 0, 0, 0)
+	f, err := os.Open(exePath)
+	if err != nil {
+		say("prctl PR_SET_MM_MAP(valid,exe_fd)=skipped(open:%s)", spikeErr(err))
+		return
+	}
+	defer f.Close()
+	m := mmMap{
+		start: field(26), end: field(27), startStack: field(28),
+		startData: field(45), endData: field(46), startBrk: field(47), brk: uint64(brk),
+		argStart: field(48), argEnd: field(49), envStart: field(50), envEnd: field(51),
+		auxv: uint64(uintptr(unsafe.Pointer(&auxv[0]))), auxvSize: uint32(len(auxv)), exeFd: uint32(f.Fd()),
+	}
+	_, _, e = syscall.RawSyscall6(syscall.SYS_PRCTL, 35 /*PR_SET_MM*/, 14 /*PR_SET_MM_MAP*/, uintptr(unsafe.Pointer(&m)), unsafe.Sizeof(m), 0, 0)
+	runtime.KeepAlive(auxv)
+	after, rerr := os.Readlink("/proc/self/exe")
+	if rerr != nil {
+		after = "?" + spikeErr(rerr)
+	}
+	say("prctl PR_SET_MM_MAP(valid,exe_fd)=%s exe_after=%q", spikeErr(errnoOrNil(e)), after)
 }
 
 func errnoOrNil(e syscall.Errno) error {
@@ -1293,7 +1577,7 @@ func spikeNotif(binTrue, binSleep, script string, say spikeSay) {
 				c, cancel := spikeCmd(exe, spikeFexecCommand)
 				defer cancel()
 				c.ExtraFiles = []*os.File{fx}
-				var eb bytes.Buffer
+				var eb capBuf
 				c.Stderr = &eb
 				c.Run()
 				if eb.Len() > 0 {
@@ -1359,8 +1643,11 @@ func spikeFexec() int {
 // exits at once.  The supervisor's findings are logged by the other side.
 func xnsChild(binTrue, binSleep string, say spikeSay) {
 	// A second copy of sleep for the strace case (the first is deleted while it runs).
-	sleep2 := binSleep + "2"
-	if b, err := os.ReadFile(binSleep); err == nil {
+	// It sits in a directory of its own so that it can keep the name "sleep".
+	sleep2 := filepath.Join(filepath.Dir(binSleep), "s2", "sleep")
+	if err := os.MkdirAll(filepath.Dir(sleep2), 0o755); err != nil {
+		say("xns setup s2 failed: %s", spikeErr(err))
+	} else if b, err := os.ReadFile(binSleep); err == nil {
 		os.WriteFile(sleep2, b, 0o755)
 	}
 	done := make(chan struct{})
@@ -1401,20 +1688,176 @@ func xnsChild(binTrue, binSleep string, say spikeSay) {
 			say("xns strace=absent strace-exec-lines=0")
 		} else {
 			out := filepath.Join(filepath.Dir(binSleep), "strace.out")
-			c3, cancel3 := spikeCmd(st, "-f", "-o", out, sleep2, "0.3")
+			c3, cancel3 := spikeCmd(st, "-f", "-e", straceProbeSet, "-o", out, sleep2, "0.3")
 			defer cancel3()
+			var se capBuf
+			c3.Stderr = &se
 			runErr := c3.Run()
-			b, _ := os.ReadFile(out)
+			b, trunc := readTrace(out)
 			n := bytes.Count(b, []byte("execve("))
 			state := "absent"
 			if n > 0 {
 				state = "attached"
 			}
-			say("xns strace=%s strace-exec-lines=%d run=%s", state, n, spikeErr(runErr))
+			// strace exits with its tracee's status, so a non-zero run is the
+			// TRACEE's unless strace_stderr says strace itself failed (its own
+			// diagnostics start "strace:").  The tracee's status is read from the
+			// trace: the last "+++ exited with N +++" or "+++ killed by SIG +++".
+			say("xns strace=%s strace-exec-lines=%d run=%s strace_stderr=%q tracee_exit=%s truncated=%v",
+				state, n, spikeErr(runErr), truncate(clean(se.String()), 512), straceTraceeExit(b), trunc)
+			// The first exec and the first write to descriptor 2 in the trace say
+			// what the tracee was and what it complained about.
+			say("xns strace-trace first_execve=%q first_stderr_write=%q", straceLine(b, "execve("), straceLine(b, "write(2,"))
 		}
 		time.Sleep(100 * time.Millisecond)
 	}()
 	<-done
+}
+
+// straceTraceeExit is the last exit or kill line of a strace -f -o file: the
+// first process in the file is the tracee, and the LAST such line is its own
+// when it spawns nothing.  "none" if the trace has no exit line.
+func straceTraceeExit(trace []byte) string {
+	last := ""
+	traceLines(trace, func(l string) bool {
+		if i := strings.Index(l, "+++ "); i >= 0 && strings.HasSuffix(strings.TrimSpace(l), "+++") {
+			last = strings.TrimSpace(strings.Trim(strings.TrimSpace(l[i:]), "+"))
+		}
+		return true
+	})
+	if last == "" {
+		return "none"
+	}
+	return strconv.Quote(clean(last))
+}
+
+// straceLine is the first trace line containing needle, cut short ("" if none).
+func straceLine(trace []byte, needle string) string {
+	found := ""
+	traceLines(trace, func(l string) bool {
+		if strings.Contains(l, needle) {
+			found = truncate(clean(l), 200)
+			return false
+		}
+		return true
+	})
+	return found
+}
+
+// straceProbeSet is the narrowest -e trace set the probes read: the exec lines
+// (counted, and the first one shown), the writes to descriptor 2 (the first
+// one shown).  The "+++ exited with N +++" lines are printed whatever the set.
+const straceProbeSet = "trace=execve,execveat,exit_group,write"
+
+// maxTrace bounds how much of a strace output file, a stderr or a child's
+// stdout the probes keep.
+const (
+	maxTrace = 4 << 20
+	maxCap   = 64 << 10
+)
+
+// readTrace reads at most maxTrace bytes of path; truncated says the file was
+// longer.
+func readTrace(path string) (b []byte, truncated bool) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, false
+	}
+	defer f.Close()
+	b, _ = io.ReadAll(io.LimitReader(f, maxTrace+1))
+	if len(b) > maxTrace {
+		return b[:maxTrace], true
+	}
+	return b, false
+}
+
+// traceLines calls fn for each line of trace (a line longer than 64 KiB ends the
+// scan) until fn returns false.
+func traceLines(trace []byte, fn func(string) bool) {
+	sc := bufio.NewScanner(bytes.NewReader(trace))
+	sc.Buffer(make([]byte, 0, 4096), 64<<10)
+	for sc.Scan() {
+		if !fn(sc.Text()) {
+			return
+		}
+	}
+}
+
+// capBuf is a writer that keeps the first maxCap bytes and discards the rest,
+// reporting every write as complete so the child is never blocked or failed.
+type capBuf struct{ b bytes.Buffer }
+
+func (c *capBuf) Write(p []byte) (int, error) {
+	if room := maxCap - c.b.Len(); room > 0 {
+		c.b.Write(p[:min(room, len(p))])
+	}
+	return len(p), nil
+}
+func (c *capBuf) String() string { return c.b.String() }
+func (c *capBuf) Len() int       { return c.b.Len() }
+
+// fdPathChild runs under `strace -f` (or alone when strace is absent) with an
+// inherited socket on descriptor 3.  It reports whether the descriptor arrived,
+// installs the notification filter, sends the listener back over the inherited
+// socket, and execs a program for the supervisor in the test process to pin.
+func fdPathChild(binSleep string, say spikeSay) {
+	var st syscall.Stat_t
+	inherited := "ok"
+	if err := syscall.Fstat(3, &st); err != nil {
+		inherited = spikeErr(err)
+	} else if st.Mode&syscall.S_IFMT != syscall.S_IFSOCK {
+		inherited = "not-a-socket"
+	}
+	say("child inherited=%s", inherited)
+	if inherited != "ok" {
+		return
+	}
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		runtime.LockOSThread()
+		fd, err := installNotifFilter()
+		if err != nil {
+			say("child NEW_LISTENER refused: %s", spikeErr(err))
+			return
+		}
+		if err := syscall.Sendmsg(3, []byte{0}, syscall.UnixRights(fd), nil, 0); err != nil {
+			say("child listener-sent=%s", spikeErr(err))
+			return
+		}
+		say("child listener-sent=ok")
+		c, cancel := spikeCmd(binSleep, "0.5")
+		defer cancel()
+		if c.Start() == nil {
+			os.Remove(binSleep) // made, run, deleted
+			c.Wait()
+		}
+		time.Sleep(100 * time.Millisecond)
+	}()
+	<-done
+}
+
+// fdScanChild runs as the sandbox's STEP, with a socket the test process opened
+// before sandbox-exec: which descriptors of 3 and up are open, and is any a
+// socket?  The root and the init mark every descriptor of 3 and up close-on-exec
+// and the spawn passes only its own four, so none is expected.
+func fdScanChild(say spikeSay) {
+	open, socks := 0, 0
+	var list []string
+	for fd := 3; fd < 64; fd++ {
+		var st syscall.Stat_t
+		if syscall.Fstat(fd, &st) != nil {
+			continue
+		}
+		open++
+		kind := "other"
+		if st.Mode&syscall.S_IFMT == syscall.S_IFSOCK {
+			socks++
+			kind = "socket"
+		}
+		list = append(list, strconv.Itoa(fd)+":"+kind)
+	}
+	say("scan inherited=%s open_3_63=%d sockets=%d fds=%q", map[bool]string{true: "ok", false: "bad_file_descriptor"}[socks > 0], open, socks, strings.Join(list, ","))
 }
 
 // spikeWriter: does the kernel refuse to exec a file somebody already has open
