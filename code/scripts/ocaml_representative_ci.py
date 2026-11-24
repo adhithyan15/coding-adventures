@@ -23,7 +23,7 @@ MANIFEST_RELATIVE_PATH = Path(
 )
 WORKFLOW_RELATIVE_PATH = Path(".github/workflows/build-ocaml-representative.yml")
 EXPECTED_WORKFLOW_SHA256 = (
-    "c45d240d96a9067b2d3c55b236c5ac0f69ca72f032cbd3116a61bf5a19442f09"
+    "a563f8079c05971f50d9f6e8fe387efd0dc246aaaf30d667edb75dd50e64f128"
 )
 WINDOWS_COVERAGE_PREFIX_BLOCK = (
     '          coverage_prefix="$PWD/bisect"\n'
@@ -398,6 +398,7 @@ def validate_workflow_policy_text(workflow_text: str) -> None:
         "create-source-archive",
         "validate-downstream-output",
         "if-no-files-found: error",
+        'archive-mirrors: "https://opam.ocaml.org/cache"',
         "retention-days: 7",
     ):
         if required not in workflow_text:

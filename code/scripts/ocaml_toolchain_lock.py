@@ -964,6 +964,7 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
     if list(fresh_steps) != [
         "Checkout reviewed source",
         "Set up the reviewed OCaml compiler and repository",
+        "Add the opam archive mirror",
         "Require the reviewed runner and opam bootstrap",
         "Generate fresh solver evidence",
         "Upload fresh solver evidence",
@@ -975,6 +976,7 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
     if list(locked_steps) != [
         "Checkout reviewed source",
         "Set up the reviewed OCaml compiler and repository",
+        "Add the opam archive mirror",
         "Require the reviewed runner and opam bootstrap",
         "Install the reviewed transitive lock",
         "Run both scaffold kinds line by line",
@@ -1047,6 +1049,23 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
         ("fresh-solve", fresh_steps),
         ("locked-fixtures", locked_steps),
     ):
+        # Upstream archives (menhir, fix on gitlab.inria.fr) get regenerated,
+        # so the pinned repository's checksums stop matching live URLs. The
+        # content-addressed opam.ocaml.org cache is the only reviewed fallback.
+        mirror_step = _workflow_mapping(
+            steps["Add the opam archive mirror"], f"jobs.{job_name}.mirror"
+        )
+        mirror_run = mirror_step.get("run")
+        if (
+            mirror_step.get("shell") != "bash"
+            or not isinstance(mirror_run, str)
+            or 'archive-mirrors: "https://opam.ocaml.org/cache"' not in mirror_run
+            or "--no-checksums" in mirror_run
+        ):
+            raise ContractError(
+                f"workflow jobs.{job_name} must configure only the reviewed "
+                "opam archive mirror"
+            )
         _require_run_fragments(
             _workflow_mapping(
                 steps["Require the reviewed runner and opam bootstrap"],

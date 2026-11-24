@@ -550,6 +550,23 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
                     self.manifest, self.workflow.replace(removed, "REMOVED")
                 )
 
+    def test_rejects_missing_or_altered_archive_mirror(self) -> None:
+        mirror = 'archive-mirrors: "https://opam.ocaml.org/cache"'
+        self.assertIn(mirror, self.workflow)
+        cases = (
+            self.workflow.replace(mirror, 'archive-mirrors: "https://example.invalid"'),
+            self.workflow.replace("Add the opam archive mirror", "Renamed"),
+            self.workflow.replace(
+                "printf 'archive-mirrors:", "opam install --no-checksums; printf 'archive-mirrors:"
+            ),
+        )
+        for index, workflow in enumerate(cases):
+            with (
+                self.subTest(case=index),
+                self.assertRaises(toolchain.ContractError),
+            ):
+                toolchain.validate_workflow_text(self.manifest, workflow)
+
     def test_rejects_forbidden_workflow_constructs(self) -> None:
         for forbidden in (
             "continue-on-error: true",
