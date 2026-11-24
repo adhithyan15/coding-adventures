@@ -53,6 +53,9 @@ pub struct SignRequest {
     pub expect_sha256: Option<String>,
 }
 
+/// The tree ids at a commit: `(name, id)` pairs, or the refusal (`meta::trees_at`).
+pub type TreesAt = dyn Fn(&str) -> Result<Vec<(String, String)>, String>;
+
 /// Sign `input` (the text of a joined recording).  `current` is the working tree's ids
 /// (`meta::working_trees`) and `trees_at` answers "what are the five tree ids at this 40-hex
 /// commit" (`meta::trees_at`).  `Err` is a refusal: the caller exits 2 and writes
@@ -61,7 +64,7 @@ pub fn sign(
     input: &str,
     req: &SignRequest,
     current: &[(String, String)],
-    trees_at: &dyn Fn(&str) -> Result<Vec<(String, String)>, String>,
+    trees_at: &TreesAt,
 ) -> Result<Results, String> {
     // 1. The words and numbers typed on the command line are well formed.  The reviewer and the
     //    host end up spliced into the spec's Markdown, so their charset is closed (VOS-D120).
