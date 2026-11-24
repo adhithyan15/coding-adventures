@@ -463,6 +463,7 @@ jobs:
             fi
           done < <(git -c core.quotepath=off ls-files -z '*Cargo.lock')
           echo "cargo fetch: $ok ok, $failed failed"
+          printf -- '- cargo fetch before recording: %s ok, %s failed (a failed workspace fails offline in the sandbox)\n\n' "$ok" "$failed" >> "$GITHUB_STEP_SUMMARY"
           exit 0
 
       # The job's start stamp: prepare binds it (KILN04 5.3, --job-start), and

@@ -135,7 +135,10 @@ type Options struct {
 	// census's pre-fetched cargo registry). It skips ONLY the fail-fast
 	// stateRootEmpty refusals; RunStep's seq-0 marker and collect's
 	// `state-preloaded` shard-void are untouched, so a shard recorded with this
-	// set is always void. Never set it outside the census.
+	// set is void whenever a state root is non-empty (or cannot be inspected)
+	// at its first step, which is the census's case.  If the roots happen to
+	// be empty the recording is simply clean and the flag changed nothing.
+	// Never set it outside the census.
 	AllowPreloadedState bool
 	// JobStart is the Unix time the job's first step stamped (§5.3, setup
 	// stamps).

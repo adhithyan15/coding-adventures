@@ -7,7 +7,9 @@
   configuration and the probes' post-run state-root check; the tmpdir check is
   unchanged). RunStep's seq-0 `traces/.state-preloaded` marker and collect's
   `state-preloaded` shard-void are untouched, so a shard recorded with the flag
-  is always void, by design.
+  is void whenever a state root is non-empty at its first step (always, in the
+  census, which pre-fetches the cargo registry); with empty roots the flag
+  changes nothing.
 
 ### Changed
 

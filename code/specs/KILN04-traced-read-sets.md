@@ -1599,8 +1599,11 @@ job timeout.
   nothing" check; the tmpdir half of that check still holds). It does not touch
   RunStep's seq-0 marker (`traces/.state-preloaded`) or `collect`'s
   `state-preloaded` shard-void, which are the real protection (P15), so a shard
-  recorded this way is ALWAYS void, by design, and can never be emitted: the
-  census measures the recorder, it does not publish records. Before the shards
+  recorded this way is void whenever a state root is non-empty (or cannot be
+  inspected) at its first step, and preloaded state can never be emitted.  In
+  the census the roots are always pre-fetched, so every runner shard is void:
+  the census measures the recorder, it does not publish records.  (With empty
+  roots the flag changes nothing and the recording is simply clean.) Before the shards
   the workflow runs `cargo fetch --locked` for every tracked `Cargo.lock` into
   `~/.cargo/registry` and `~/.cargo/git` (failures logged and tolerated), and
   `prepare` runs with `CARGO_NET_OFFLINE=true` (`CARGO_*` is in `env.json`, so it

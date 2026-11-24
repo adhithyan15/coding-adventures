@@ -167,7 +167,7 @@ func runRecordPrepare(args []string, stdout, stderr io.Writer) int {
 	count := fs.Int("shard-count", 0, "the number of shards")
 	jobStart := fs.Int64("job-start", -1, "Unix time the job's first step stamped")
 	allowPre := fs.Bool("allow-preloaded-state", false,
-		"CENSUS ONLY: accept non-empty state roots (a pre-fetched cargo registry). The shard is ALWAYS void (state-preloaded) by design, so it can never be emitted")
+		"CENSUS ONLY: accept non-empty state roots (a pre-fetched cargo registry). A shard whose state roots are non-empty at its first step is void (state-preloaded), so preloaded state can never be emitted")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
