@@ -363,8 +363,7 @@ void main() {
       for (var i = 0; i < errors.length; i++) {
         for (var j = 0; j < errors.length; j++) {
           if (i != j) {
-            expect(errors[i] == errors[j], isFalse,
-                reason: '$i vs $j');
+            expect(errors[i] == errors[j], isFalse, reason: '$i vs $j');
           }
         }
       }
