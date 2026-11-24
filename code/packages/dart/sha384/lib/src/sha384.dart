@@ -162,14 +162,26 @@ void _compress(List<_U64> state, Uint8List block) {
     temporary2.wipe();
   }
 
-  state[0] = state[0] + a;
-  state[1] = state[1] + b;
-  state[2] = state[2] + c;
-  state[3] = state[3] + d;
-  state[4] = state[4] + e;
-  state[5] = state[5] + f;
-  state[6] = state[6] + g;
-  state[7] = state[7] + h;
+  // Feed-forward: compute the sums, wipe the old chaining words
+  // (they would otherwise survive as garbage holding prior state),
+  // then install the sums. Safe: a..h are always fresh objects by
+  // round end, never aliases of state[i].
+  final sums = [
+    state[0] + a,
+    state[1] + b,
+    state[2] + c,
+    state[3] + d,
+    state[4] + e,
+    state[5] + f,
+    state[6] + g,
+    state[7] + h,
+  ];
+  for (final word in state) {
+    word.wipe();
+  }
+  for (var i = 0; i < 8; i++) {
+    state[i] = sums[i];
+  }
 
   for (final word in schedule) {
     word.wipe();
@@ -271,10 +283,13 @@ class Sha384Hasher {
     }
 
     while (data.length - offset >= sha384BlockLength) {
-      _compress(
-        _state,
-        Uint8List.fromList(data.sublist(offset, offset + sha384BlockLength)),
-      );
+      // The transient copy is scrubbed after use: unlike the reference
+      // (which compresses over borrowed slices), this copy would
+      // otherwise leave dead plaintext in the heap until GC.
+      final block =
+          Uint8List.fromList(data.sublist(offset, offset + sha384BlockLength));
+      _compress(_state, block);
+      zeroizeBytes(block);
       offset += sha384BlockLength;
     }
 
