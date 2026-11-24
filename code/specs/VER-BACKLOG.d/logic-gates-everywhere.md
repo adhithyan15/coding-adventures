@@ -130,9 +130,15 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | 5 | LGE-S3b | Per-language threat lists `code/specs/data/weakness-registry-v2/lanes/<lang>.json` (draft agent plus independent adversarial reviewer per lane) | queued |
 | 6 | LGE-CV2 | Dependencies owned by the portable-warrant queue and idle since 2026-11-20: S6b/S6c (Python v2 runner), S7 (TypeScript), Go v2 port, S9 lane validator and per-corpus registry; coordinate before taking any | queued |
 | 6 | LGE-L-<lane> | Lane runner (v2) and logic-gates binding with BUILD negative controls, VER04i order, at most two lanes in flight | blocked on LGE-CV2 |
-| 7 | LGE-S4 | VER08c grammar-driven capability analyzer spec | queued |
-| 7 | LGE-A1 | Analyzer core plus rule tables for c, csharp, fsharp, haskell, java, perl, ruby | queued |
-| 7 | LGE-A2 | `.tokens` then `.grammar` for cpp, kotlin, elixir, lua, swift, dart | queued |
+| 7 | LGE-S4 | [VER08c](../VER08c-grammar-driven-capability-analyzer.md): grammar-driven capability analyzer spec (rule-table format, two modes, output contract, C rules, per-lane rollout) | spec in PR |
+| 7 | LGE-A0 | VER08c schemas: `rule-table.schema.json`, report schema `ca-grammar-analyzer-report-v1`; extend the `banned_construct_exceptions` language enum only if a package needs an exception | queued (blocked on LGE-S4) |
+| 7 | LGE-A1-core | `rust/ca-grammar-analyzer` crate: rule loader, token and node matchers, text and JSON report, bounds, negative-control runner, CLI, own manifest | queued (blocked on LGE-A0) |
+| 7 | LGE-A1-<lane> | Rule table, controls and BUILD line, one lane per PR: java first (grammar already matches Java 21), then fsharp, haskell, csharp (C# 13 vs a C# 12 grammar), perl (no 5.26 grammar), ruby (3.4 vs 3.3 grammar) | queued (blocked on LGE-A1-core) |
+| 7 | LGE-A1-c-g / -c-r / -c-sem | C: header grammar extension decided by measuring the real package; the active rules (`c.no-shift-operators`, `grammar-is-allowlist`, include allowlist); then SIR27-based `c.integer-value-range` and `c.no-ub-reachable` | queued (blocked on the C package PR #19926) |
+| 7 | LGE-A2-tokens-<lane> | `.tokens` file, generated lexer crate and lexical corpus for cpp, kotlin, elixir, lua, swift, dart (six PRs) | queued |
+| 7 | LGE-A2-rules-<lane> | Tokens-only rule table and controls per lane | queued (blocked on LGE-A1-core and the lane's tokens PR) |
+| 7 | LGE-A2-grammar-<lane> | `.grammar` and parser crate; lane moves to AST mode | queued |
+| 7 | LGE-A3-gate | Independent protected CI gate running the analyzer over every package of the 13 lanes | queued (blocked on LGE-A1-core) |
 | 7 | LGE-W1 | Per-lane v2 weakness matrices in `ca-assurance-report` | queued |
 | 8 | LGE-S5 | VER31 amendment: publish job per registry and the gate | queued |
 | 8 | LGE-PUB-<registry> | Publish jobs and gate, one registry per PR; first release per lane needs the owner's go-ahead | queued |
@@ -154,3 +160,4 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | 2026-11-24 | design spike | v2 corpus required; lane replay blocked on CV2 runners; separate corpus-only basic document chosen |
 | 2026-11-24 | Perl review | four security-review rounds: dualvars computed on the numeric part, invocant guessing that dropped inputs (`ANDn('CodingAdventures::LogicGates',1,1)` returned 1), unbounded widths, the same guessing in `nmos`/`pmos`/`npn`/`pnp`; all fixed in #19927 |
 | 2026-11-24 | discoveries | Go panics with plain strings; Perl, Lua and Haskell report free-text errors; TypeScript accepts `-0` and NAND/NOR/XNOR skip their own validation; logged above |
+| 2026-11-24 | LGE-S4 | VER08c written (spec only). Findings: `ca-assurance-report` consumes no analyzer output today (it reads the effect certificate and runs its own scan), so LGE-W1 must define the consumer; the C grammar is an integer-core subset and the legacy C parser deletes `#` lines; csharp (13 vs 12), ruby (3.4 vs 3.3) and perl (5.26) have grammar version gaps |
