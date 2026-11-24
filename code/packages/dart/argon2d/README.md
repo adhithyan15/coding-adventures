@@ -38,8 +38,8 @@ delegates to the in-lane blake2b package.
 - **Unit** (`test/argon2d_test.dart`): mirrors all 16 reference
   tests (the RFC 9106 §5.1 vector, hex agreement, the validation
   matrix, determinism, binding, tag lengths, multi-lane,
-  multi-pass), plus empty passwords and exact error texts/values.
-  21 tests.
+  multi-pass), plus empty passwords, exact error texts/values,
+  and the 32-bit tag-length cap. 22 tests.
 - **Differential** (`test/cli_vectors_test.dart`): 60 seeded vectors
   from the reference C `argon2` CLI in Argon2d mode over passwords,
   salts, and cost sweeps. Regenerate with

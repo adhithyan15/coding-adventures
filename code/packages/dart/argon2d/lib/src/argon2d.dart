@@ -303,6 +303,14 @@ void _validate(
   if (tagLength < 4) {
     throw TagLengthTooSmall(tagLength);
   }
+  // The reference takes tag_length as u32, so its TagLengthTooLarge
+  // variant is unreachable there; Dart ints are 64-bit, so the lane
+  // enforces the bound the type carried in the reference. Without
+  // this, _le32 would silently truncate the H0 domain separator and
+  // _blake2bLong would attempt a t-byte allocation.
+  if (tagLength > max32) {
+    throw TagLengthTooLarge(tagLength);
+  }
   if (parallelism < 1 || parallelism > 0xffffff) {
     throw InvalidParallelism(parallelism);
   }
@@ -324,6 +332,12 @@ void _validate(
 /// carry a secret key, associated data, and a version override.
 ///
 /// Throws [Argon2Error] when inputs fail validation.
+///
+/// Like the reference, cost parameters carry no upper bound beyond
+/// their encoding width: callers must not pass untrusted
+/// [timeCost]/[memoryCost] through unchecked, since Argon2 is
+/// deliberately expensive (a hostile memory cost exhausts memory in
+/// the reference too — that is what memory-hard means).
 Uint8List argon2d(
   List<int> password,
   List<int> salt, {
