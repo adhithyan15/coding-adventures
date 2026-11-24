@@ -1,0 +1,17 @@
+# Warrant binding manifest for code/specs/sha256.warrant (the WX-F fallible pilot).
+# digest_try is DRIVEN (Sha256Hasher::new/try_update/digest, one step per
+# chunk); the fallible step maps through errors=. sha256 is the one-shot
+# export the driven operation must agree with.
+package coding_adventures_sha256
+revision 0.1.0
+spec code/specs/sha256.warrant
+output code/packages/rust/sha256/tests/generated/warrant_evidence.rs
+seed 0x5348413257494644
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 400000
+
+op digest_try driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step proofs_not_live=driver
+driver digest_try state=coding_adventures_sha256::Sha256Hasher new=new() drive=chunks step=try_update(mut,elem:bytes)->result finish=digest(ref)->bytes result=finish errors=coding_adventures_sha256::Sha256Error/MessageTooLong=TOO_LONG
+op sha256 export=sha256 args=bytes faults=flip-result-bit,drop-last-result-byte
