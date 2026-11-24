@@ -95,9 +95,10 @@ appears that the catalogue lacks. A new catalogue id therefore fails CI until
 someone buckets it, and the default for an id nobody has argued is (c).
 
 The bucket file is a trust root: moving one `wir.*` id from (c) to (a) would raise
-every computed tier. So the gate does not trust it by convention. Its SHA-256 must
-equal the digest in a bucket record signed with the owner's hardware key
-(`buckets-v1.json.sig`, section 9.6), and it is code-owned by the owner. The
+every computed tier. So the gate does not trust it by convention. Its exact bytes
+must verify against a detached signature made with the owner's hardware key
+(`buckets-v1.json.sig`, checked with `ssh-keygen -Y verify -n
+coding-adventures-buckets`; section 9.6), and it is code-owned by the owner. The
 meaning of each bucket is fixed in the gate program ((a) never blocks `proved`;
 (b) and (c) block it). A bucket file whose `blocks_proved` values say otherwise is
 refused, so the data cannot redefine a bucket.
@@ -110,7 +111,7 @@ Two more fields keep the signed record self-sufficient:
   that turns an (a) id into a floor cannot exempt it.
 - **`revision`**, an integer that increases with every signed change. The gate
   refuses a revision lower than the highest that has ever appeared on `main` (it
-  reads every version of the file in `main`'s history). Restoring an old file
+  reads every version of the file in `main`'s first-parent history). Restoring an old file
   together with its old valid signature, which would undo a later tightening, is
   therefore refused.
 
@@ -505,8 +506,11 @@ verify-required`), with git's `gpg.format=ssh`. The public key is listed in
 The signers file is a chain. Each version carries a `# revision: <n>` line and a
 detached signature `.github/release-signers.sig` (namespace
 `coding-adventures-signers`) made by a key listed in the **previous** version. The
-gate walks `main`'s history of the file and verifies every transition, so a newly
-added key cannot authorize itself, and an older revision cannot be restored. The
+gate walks `main`'s first-parent history of the file (`git log --first-parent
+refs/remotes/origin/main -- .github/release-signers`) and verifies every
+transition. A missing `.sig`, or a gap or repeat in the revision sequence, is a
+refusal. This means a newly added key cannot authorize itself, and an older
+revision cannot be restored. The
 first version is the trust anchor: the owner adds it, and every release's notes
 print its fingerprint. The gate must also confirm that the pinned OpenSSH version
 accepts `verify-required` in `allowed_signers`. If it does not, the option is
@@ -572,7 +576,12 @@ and today the agents in this repository use that token. The rule therefore is:
 
 Until the machine account exists, every release's notes state the residual risk
 plainly: an attacker holding the owner's credential and a commit they control is
-stopped only by the approval step and the signers chain. The named upgrade is a
+stopped only by the approval step, which the same token can perform through the
+API. In practice nothing stops them until the machine account exists. The signers
+chain does not help here, because that attacker supplies the YAML that runs it.
+Whether "machine account in place, owner token off agent hosts" is a precondition
+of the first release is the owner's risk decision, recorded in the LV-007b
+hand-off. The named upgrade is a
 custom deployment protection rule (a GitHub App) that verifies the signed tag
 outside the tagged YAML, so the check no longer depends on the workflow file the
 tag carries.
@@ -628,8 +637,9 @@ Auto-merge must not move them. The controls:
    ruleset requires code-owner review, so a PR that touches one waits for the
    owner even when auto-merge is set. The repository has no CODEOWNERS file today;
    LV-007a adds it.
-2. **Signed bucket record:** the gate refuses a `buckets-v1.json` whose SHA-256
-   differs from the digest in `buckets-v1.json.sig`. The catalogue itself is not
+2. **Signed bucket file:** the gate refuses a `buckets-v1.json` whose exact bytes
+   do not verify against the detached signature `buckets-v1.json.sig` (namespace
+   `coding-adventures-buckets`, a key from the signers file on `main`). The catalogue itself is not
    signed, because it changes with every VER13 edit. What a release relies on from
    it (each id's bucket and floor flag) is copied into the signed bucket file and
    cross-checked. That record is signed by the
