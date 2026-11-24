@@ -67,6 +67,7 @@ REQUIRED = (
     "TestSandboxOutputDescriptors",
     "TestSandboxRecordStep",
     "TestSandboxRecordCollect",
+    "TestSandboxRecordEmit",
     "TestSandboxStraceSignals",
     "TestSandboxStraceClone3Enosys",
     "TestSandboxStraceGlibcThreadClone3",
