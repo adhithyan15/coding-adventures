@@ -148,6 +148,7 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | 3 | LGE-JAVA-NARY | Java N-ary gates: snapshot the input array, cap its length, report `inputs[i]` | local, ready |
 | 3 | LGE-KT-NARY | Kotlin N-ary gates: snapshot the input, cap its length, report `inputs[i]` | local, ready |
 | 3 | LGE-CS-NARY | C# N-ary gates: snapshot the input, cap its length, report `inputs[i]` | local, ready |
+| 3 | LGE-CS-HARDEN | `csharp/logic-gates` hardening found by the lane review: tests under Debug and Release, TreatWarningsAsErrors and AnalysisMode, ImplicitUsings disabled, packages.lock.json with `--locked-mode` and NuGet source mapping, null-safe `InvalidBitException` parameter name, invariant-culture messages, target-framework move to net10.0 (needs the shared CI SDK pin at .github/workflows/ci.yml:4989-4992 bumped too) | local, in progress |
 | 3 | LGE-FS-NARY | F# N-ary gates: snapshot the input, cap its length, report `inputs[i]` | local, ready |
 | 5 | LGE-S3-FIX | VER15a fix batch from the review of LGE-S3 (shared-object 1321 subset, fail-closed eval subset, tighter ids) | local, ready |
 | 7 | LGE-A-PYTHON | Python analyzer rules (`no_dynamic_eval_reachable`, `no_computed_key_writes_to_shared_objects`, banned constructs) with seeded negative-control corpora, and wiring the merged `ca-capability-analyzer` scanner into the report step | queued |
