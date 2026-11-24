@@ -536,8 +536,8 @@ fn b5_knob(len: i64, div: f64, fuse: i64) -> Knob {
     ])
 }
 
-/// `fuse = 1` is B2: a matching pair passes; a different digest or a missing B2 row is reported,
-/// naming both rows; `fuse > 1` rows are not compared.
+/// `fuse = 1` is B2: a matching pair passes; a different digest is reported, naming both rows; a
+/// missing B2 twin is not this rule's finding (VOS-D138); `fuse > 1` rows are not compared.
 #[test]
 fn validate_cross_rule_fuse_1_must_equal_b2() {
     let a = "aa".repeat(32);
@@ -552,13 +552,14 @@ fn validate_cross_rule_fuse_1_must_equal_b2() {
     assert!(v[0].contains("B5") && v[0].contains("B2"), "{v:?}");
     assert!(v[0].contains(&a) && v[0].contains(&b), "{v:?}");
 
-    // No B2 row of that length, divergence or seed.
-    assert_eq!(b5_fuse1_violations(std::slice::from_ref(&good)).len(), 1);
-    let other_div = row("B2", b2_knob(25, 1.0), "monolithic", &a);
-    assert_eq!(b5_fuse1_violations(&[other_div, good.clone()]).len(), 1);
-    let mut other_seed = b2.clone();
+    // VOS-D138: no B2 twin of that length, divergence or seed is NOT a finding here (a partial
+    // file legitimately lacks it; `full_plan_covered` catches it on a complete file).
+    assert!(b5_fuse1_violations(std::slice::from_ref(&good)).is_empty());
+    let other_div = row("B2", b2_knob(25, 1.0), "monolithic", &b);
+    assert!(b5_fuse1_violations(&[other_div, good.clone()]).is_empty());
+    let mut other_seed = row("B2", b2_knob(25, 0.25), "monolithic", &b);
     other_seed.seed = 2;
-    assert_eq!(b5_fuse1_violations(&[other_seed, good]).len(), 1);
+    assert!(b5_fuse1_violations(&[other_seed, good]).is_empty());
 
     // fuse > 1 is a different instance by design.
     let fused = row("B5", b5_knob(25, 0.25, 2), "certified", &b);

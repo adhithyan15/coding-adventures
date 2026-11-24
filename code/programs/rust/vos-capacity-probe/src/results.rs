@@ -949,8 +949,9 @@ pub fn bounds_violations(id: &str, r: &Row) -> Vec<String> {
 }
 
 /// The cross-rule of VOS30 section 8.6.3: **`fuse = 1` is B2**.  Every B5 row with `fuse = 1`
-/// must have a B2 row of equal length, divergence and seed whose `instance_sha256` is equal (the
-/// sweep's instance, before sweeping, is B2's instance).  A violation names both rows.  Kept as
+/// must agree with every PRESENT B2 row of equal length, divergence and seed on `instance_sha256`
+/// (the sweep's instance, before sweeping, is B2's instance); a missing twin is not a finding
+/// here (VOS-D138, see below).  A violation names both rows.  Kept as
 /// its own function so a test can call it directly: `validate` refuses a B5 row as an experiment
 /// outside the plan (VOS-D119) until VOS-028c3c registers B5.
 ///
@@ -985,15 +986,12 @@ pub fn b5_fuse1_violations(rows: &[Row]) -> Vec<String> {
                     && r.seed == b5.seed
             })
             .collect();
-        if twins.is_empty() {
-            v.push(format!(
-                "{}: fuse = 1 is B2, but no B2 row has length {}, divergence {} and seed {}",
-                id(b5),
-                b5.knob.int("length"),
-                b5.knob.f("divergence"),
-                b5.seed
-            ));
-        }
+        // VOS-D138: a missing twin is NOT this function's finding.  Completeness is
+        // `full_plan_covered`'s job: on a complete (committed / joined) file every B2 row must be
+        // present or `check`/`sign` refuses the file, so a missing twin cannot be used to dodge
+        // the comparison.  On a partial file (the quick tier, or one record shard) the twin
+        // legitimately lives elsewhere, and reporting it would put a false row finding on every
+        // such shard.  So: compare against every twin that IS present, and only those.
         for b2 in twins {
             if b2.instance_sha256 != b5.instance_sha256 {
                 v.push(format!(

@@ -16,6 +16,7 @@ All notable changes to this package are documented here.
   `quick_row_cap()` follows. `FULL_PLAN_EXEMPT` stays empty. **No results are recorded here:**
   the recording on CI runners follows in commit B of this PR, and until then `check` on the
   committed file fails `full_plan_covered` (620 rows missing: 600 full and 20 quick), by design.
+- **Fixed (VOS-D138): the B5/B2 twin check compares only twins present in the file.** `b5_fuse1_violations` no longer reports a missing B2 twin (a quick-only file or one record shard legitimately lacks it); a present twin with a different digest is still a violation, and removing a B2 row from a complete file is caught by `full_plan_covered`.
 - Tests: `tests/common/mod.rs` `complete_plan` completes the committed file with clones of
   recorded sibling rows (B3 every8, D4, B2) so the join, sign, verify fan-in and hardening tests
   keep a plan-covering fixture; they are fixture rows, never results. `the_real_plan_keeps_b5_one_per_shard`

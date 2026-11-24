@@ -88,6 +88,44 @@ fn every_b2_twin_must_match_not_just_the_first() {
     assert_eq!(v.len(), 1, "{v:?}");
 }
 
+/// VOS-D138: a missing B2 twin is not a `b5_fuse1` finding (a quick-only file or one record shard
+/// legitimately lacks it), but on a complete file removing the twin is still caught, by
+/// `full_plan_covered`; and a PRESENT twin that differs is still a violation.
+#[test]
+fn a_missing_b2_twin_is_full_plan_coverage_s_finding_not_the_cross_rules() {
+    use vos_capacity_probe::results::full_plan_missing;
+    let a = "aa".repeat(32);
+    let b5 = row("B5", b5_knob(25, 0.25, 1), &a);
+    // (b) alone in the file: no b5_fuse1 finding.
+    assert!(b5_fuse1_violations(std::slice::from_ref(&b5)).is_empty());
+    // (a) a present twin with a different digest is still a violation.
+    let evil = row("B2", b2_knob(), &"bb".repeat(32));
+    assert_eq!(b5_fuse1_violations(&[evil, b5.clone()]).len(), 1);
+    // (c) removing the twin from the real file is caught by full_plan_missing / full_plan_covered
+    // even though b5_fuse1_violations stays silent.
+    let mut f = committed();
+    let at = f
+        .rows
+        .iter()
+        .position(|r| {
+            r.experiment == "B2"
+                && r.tier == "full"
+                && r.seed == 1
+                && r.knob.int("length") == 25
+                && (r.knob.f("divergence") - 0.25).abs() < 1e-9
+        })
+        .expect("a B2 length-25 divergence-0.25 seed-1 row");
+    let before = full_plan_missing(&f).len();
+    let mut twin_b5 = f.rows[at].clone();
+    twin_b5.experiment = "B5".into();
+    twin_b5.knob = b5_knob(25, 0.25, 1);
+    f.rows.remove(at);
+    f.rows.push(twin_b5);
+    assert!(b5_fuse1_violations(&f.rows).is_empty());
+    assert_eq!(full_plan_missing(&f).len(), before + 1);
+    assert!(full_plan_missing(&f).iter().any(|m| m.contains("B2")));
+}
+
 // ---- 4. B5 knob bounds --------------------------------------------------------------------------
 
 fn spec(len: i64, fuse: i64) -> RowSpec {
