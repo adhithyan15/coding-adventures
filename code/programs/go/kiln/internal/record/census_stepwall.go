@@ -65,11 +65,12 @@ const (
 	UnknownSerialViolated = "serial-violated"
 	UnknownInterrupted    = "interrupted"
 	UnknownNotRun         = "not-run"
+	UnknownExecHeadSeal   = "exechead-seal" // D48 step 6: a started step disagrees with the sealed exec-head choice
 	UnknownOther          = "other"
 )
 
 // unknownCodes is every key of CollectSummary.UnknownReasons, in print order.
-var unknownCodes = []string{UnknownSerialViolated, UnknownInterrupted, UnknownNotRun, UnknownOther}
+var unknownCodes = []string{UnknownSerialViolated, UnknownInterrupted, UnknownNotRun, UnknownExecHeadSeal, UnknownOther}
 
 // unknownReasonCode maps a record's `unknown_writes` text to a fixed code by its
 // prefix up to the first colon:
@@ -77,6 +78,7 @@ var unknownCodes = []string{UnknownSerialViolated, UnknownInterrupted, UnknownNo
 //	serial-violated: seq 3 was used twice        -> serial-violated
 //	interrupted: a step started and was ...      -> interrupted
 //	not run: the build stopped before this step  -> not-run
+//	exechead-seal: a started step disagrees ...  -> exechead-seal
 //	anything else, or no colon at all            -> other
 //
 // These are plain string prefixes, so the "interrupted" and "not run" ones work
@@ -94,6 +96,8 @@ func unknownReasonCode(s string) string {
 		return UnknownInterrupted
 	case "not run":
 		return UnknownNotRun
+	case "exechead-seal":
+		return UnknownExecHeadSeal
 	}
 	return UnknownOther
 }

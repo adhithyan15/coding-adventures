@@ -491,6 +491,14 @@ when it exits (it is PID 1) the kernel kills everything left behind.
   Without the option nothing changes and no second filter exists. The
   supervisor that answers the notifications is `kiln record step`'s
   (`internal/exechead`, below); the step 3 sandbox tests use a minimal responder.
+- **The exec-head choice is sealed at prepare (KILN04 D48 step 6).** `kiln record
+  prepare --exec-head` writes `exec_head` into the sealed binding and `--exec-head`
+  into `pre/exec-wrapper.json`; `kiln record step` takes the choice from the seal
+  (its own flag can only agree with it, or the step is refused), and `collect` voids a
+  run in which any started step disagrees (`exechead-seal`). The census reports the
+  choice, per-code counts, supervisor kills and notifications and the Go emittable
+  count, and `ci/census_not_clean.py` gates on them for an exec-head shard. The census
+  workflow's `exec_head` dispatch input turns it on; such a run is not PR8 evidence.
 - **The exec-head supervisor (`kiln record step --exec-head`, KILN04 D48 step 4;
   OFF by default).** Without the flag `record step` is unchanged: no socket, no
   second filter, no `.exechead`, the sidecar's exechead fields empty. With it, `record

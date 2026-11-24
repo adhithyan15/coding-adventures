@@ -108,6 +108,8 @@ type actionOut struct {
 	// neverStarted says the action ran nothing and left no directory: the
 	// build tool was not asked to run it (or was stopped before it did).
 	neverStarted bool
+	// execHeadDisagree: see sidecarOK.
+	execHeadDisagree int
 }
 
 // unknownText joins the reasons an action's write set is unknown, in order.
@@ -335,6 +337,9 @@ type sidecarOK struct {
 	seqs       []seqUse
 	allZero    bool // every started step exited 0
 	allDecoded bool
+	// execHeadDisagree counts the started steps whose sidecar disagrees with the
+	// sealed exec-head choice (execHeadMismatch in collect.go).
+	execHeadDisagree int
 	// orphanTraces: steps with a trace and no sidecar.
 	orphanTraces int
 }
@@ -430,6 +435,12 @@ func checkSidecars(c *collector, name string, planned Action, s dirScan, bad *[]
 		}
 		out.seqs = append(out.seqs, seqUse{action: name, step: j, seq: sc.Seq})
 		if sc.Started {
+			// D48 step 6: the sealed binding says whether every step ran its
+			// exec-head supervisor; the sidecar says whether this one did.  The
+			// shard-wide verdict is execHeadMismatch's.
+			if (sc.ExecHeadNonce != "") != c.pre.Binding.ExecHead {
+				out.execHeadDisagree++
+			}
 			out.started++
 			out.summaries = append(out.summaries, recfmt.Step{WallMS: wallMS(sc), TraceBytes: sc.TraceBytes, Clean: sc.Clean})
 			if sc.RootStatus != 0 {
@@ -540,6 +551,7 @@ func (c *collector) assembleAction(name string, planned Action) actionOut {
 	sc := checkSidecars(c, name, planned, s, &bad)
 	out.seqs = sc.seqs
 	out.orphanTraces = sc.orphanTraces
+	out.execHeadDisagree = sc.execHeadDisagree
 	v := readVerdict(c, name, s, sc.started, &bad)
 
 	// The build tool's own count and status (the cross-check, section 7).

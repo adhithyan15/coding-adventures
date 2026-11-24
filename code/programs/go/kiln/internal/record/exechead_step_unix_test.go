@@ -103,8 +103,10 @@ func TestCollectBindsTheExecHeadFileToTheStepSidecar(t *testing.T) {
 		return ehBytes(t, ehHeader(ehNonce, ca, 0), ehConfirmedLine("/tmp/x/t.test", []byte("\x7fELF")))
 	}
 	t.Run("a file that matches its sidecar is accepted", func(t *testing.T) {
-		f := newCfix(t)
-		f.good()
+		// A shard whose steps carry heads is one sealed with --exec-head (D48
+		// step 6): every started step has one, a's with a confirmed line.
+		f := newSealedCfix(t, true)
+		f.runWithHeads(func(string, int) bool { return true })
 		f.bindExecHead(good(t))
 		_, sh := f.collect()
 		requireKnown(t, sh, ca)

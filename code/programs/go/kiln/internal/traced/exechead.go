@@ -101,6 +101,24 @@ import (
 // evidence.  Matched EXACTLY.
 var trustedKernelSeries = []string{"7.0"}
 
+// ExecHeadSubCodes are the `exechead-*` sub-codes of the exec-unreadable census
+// kind, from the classifier's own vocabulary (censusSubCodes), for a consumer
+// that keeps a copy and must be held equal to it.
+func ExecHeadSubCodes() []string {
+	var out []string
+	for _, c := range censusSubCodes["trace-incomplete:exec-unreadable"] {
+		if len(c) > 9 && c[:9] == "exechead-" {
+			out = append(out, c)
+		}
+	}
+	return out
+}
+
+// KernelTrusted is kernelTrusted for the census, which reports whether a shard's
+// kernel (the binding's `uname -r`) was on the table, so a gate can insist that
+// `exechead-kernel` never fires on a trusted series.
+func KernelTrusted(release string) bool { return kernelTrusted(release) }
+
 // kernelTrusted says the header's `uname -r` is of a series on the table.  The
 // release is "major.minor" then end of text or one of ".", "-", "+", "~", "_"
 // (7.0.0-1014-aws, 7.0.1, 7.0-rc2); digits are compared as written, so "7.00",

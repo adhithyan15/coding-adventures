@@ -65,6 +65,11 @@ const (
 	UncleanPipesHeld  = "strace-pipes-held-open"
 )
 
+// MaxExecHeadCount bounds the supervisor's two counts in a sidecar.  No step
+// comes near it (the file itself is capped at a few thousand lines); the bound
+// exists so a sum over many sidecars can never overflow into a negative.
+const MaxExecHeadCount = 1 << 31
+
 // StepSidecar is `traces/<sha256(action)>/<step>.json`.
 type StepSidecar struct {
 	Schema    string `json:"schema"`
@@ -125,6 +130,12 @@ type StepSidecar struct {
 	ExecHeadNonce  string `json:"exechead_nonce"`
 	ExecHeadSHA256 string `json:"exechead_sha256"`
 	ExecHeadBytes  int64  `json:"exechead_bytes"`
+	// ExecHeadNotified is how many notifications the supervisor took, and
+	// ExecHeadKills how many times it killed the step (D48 step 6 item 2).  They
+	// are diagnostics for the census, never believed by the classifier, and zero
+	// when no supervisor ran.
+	ExecHeadNotified int `json:"exechead_notified"`
+	ExecHeadKills    int `json:"exechead_kills"`
 	// StepNetNS is true only when the step really ran under `kiln
 	// sandbox-exec`, which unshares the network namespace (so an unbound
 	// loopback or abstract peer is not another process's). It is the recorder's
@@ -188,8 +199,8 @@ func (s *StepSidecar) Validate() error {
 	}
 	switch {
 	case s.ExecHeadNonce == "":
-		if s.ExecHeadSHA256 != "" || s.ExecHeadBytes != 0 {
-			return fmt.Errorf("step sidecar: exechead digest or length without a nonce")
+		if s.ExecHeadSHA256 != "" || s.ExecHeadBytes != 0 || s.ExecHeadNotified != 0 || s.ExecHeadKills != 0 {
+			return fmt.Errorf("step sidecar: exechead digest, length or counts without a nonce")
 		}
 	case !exechead.ValidNonce(s.ExecHeadNonce):
 		return fmt.Errorf("step sidecar: exechead_nonce is not 32 lowercase hex digits")
@@ -197,6 +208,9 @@ func (s *StepSidecar) Validate() error {
 		return fmt.Errorf("step sidecar: exechead_sha256 is not a SHA-256 in lowercase hex")
 	case s.ExecHeadBytes <= 0:
 		return fmt.Errorf("step sidecar: exechead_bytes %d (the file holds at least its header)", s.ExecHeadBytes)
+	}
+	if s.ExecHeadNotified < 0 || s.ExecHeadKills < 0 || s.ExecHeadNotified > MaxExecHeadCount || s.ExecHeadKills > MaxExecHeadCount {
+		return fmt.Errorf("step sidecar: exechead counts %d, %d (each between 0 and %d)", s.ExecHeadNotified, s.ExecHeadKills, MaxExecHeadCount)
 	}
 	if s.StepNetNS != s.Started {
 		return fmt.Errorf("step sidecar: step_netns must equal started (the step ran under the sandbox exactly when strace started)")

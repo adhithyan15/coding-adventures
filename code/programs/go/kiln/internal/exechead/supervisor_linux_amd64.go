@@ -176,6 +176,10 @@ type Supervisor struct {
 
 	procStart atomic.Int64 // UnixNano when the processor took its current item, 0 idle
 	dropped   atomic.Int64
+	// notified and kills feed Result.Notified and Result.Kills.  Atomic because
+	// Finish may read them while a goroutine that did not stop in time still runs.
+	notified atomic.Int64
+	kills    atomic.Int64
 
 	started bool
 	rDone   chan struct{}
@@ -554,6 +558,7 @@ func (s *Supervisor) receiveLoop(lfd int) int32 {
 			return rError
 		}
 		s.rCount++
+		s.notified.Add(1)
 		if k := s.tm.InjectReceiverError; k > 0 && s.rCount == k {
 			// A test seam: the receiver fails as if NOTIF_RECV had.
 			s.answer(n.ID)
@@ -837,6 +842,7 @@ func (s *Supervisor) supervisorDied(why string) {
 // --kill-on-exit takes every tracee).  Never a pid number.
 func (s *Supervisor) killStep() {
 	// No s.mu: it can be held across a blocking write of the sidecar.
+	s.kills.Add(1)
 	if fd := int(s.initPidfd.Load()); fd >= 0 {
 		pidfdKill(fd)
 	}
@@ -1962,6 +1968,6 @@ func (s *Supervisor) Finish() Result {
 	return Result{
 		Unclean: unclean, Notes: notes,
 		Lines: s.w.Lines(), Bytes: s.w.Bytes(), SHA256: s.w.SHA256(), Received: s.received,
-		Dropped: int(s.dropped.Load()),
+		Dropped: int(s.dropped.Load()), Notified: int(s.notified.Load()), Kills: int(s.kills.Load()),
 	}
 }
