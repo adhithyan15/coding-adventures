@@ -1063,9 +1063,10 @@ impl BigInteger {
     /// Shift left by `bits` (Lean `Nat.shiftLeft`, `a <<< n`): exactly `self * 2^bits`.
     /// Errors on a negative `self`.
     ///
-    /// The result has `bit_len(self) + bits` bits, so an untrusted `bits` can request an
-    /// enormous allocation; use [`BigInteger::try_shl`] when the shift amount is not
-    /// already bounded by the caller.
+    /// The result has `bit_len(self) + bits` bits, so plain `shl` can allocate without
+    /// bound: **untrusted callers must use [`BigInteger::try_shl`]** with a ceiling. `shl`
+    /// itself only refuses (with `ResultTooLarge`) a shift whose limb count cannot be
+    /// represented in `usize` on the current target.
     ///
     /// ```
     /// # use bignum_core::BigInteger;
@@ -1079,7 +1080,19 @@ impl BigInteger {
         }
         // Split the shift into whole limbs and a sub-limb remainder: shifting by 32 is
         // just inserting a zero limb at the bottom.
-        let limb_shift = (bits / 32) as usize;
+        //
+        // The limb count must fit `usize`: on 32-bit targets (wasm32) a plain `as usize`
+        // would silently truncate once `bits >= 2^37` and return a WRONG number. Checked
+        // here, before any allocation, so an absurd shift is a typed error, not a wrong
+        // answer or an abort.
+        let too_large = || BitwiseError::ResultTooLarge {
+            projected_bits: self.bit_len().saturating_add(bits),
+            max_bits: (usize::MAX as u64).saturating_mul(32),
+        };
+        let limb_shift = usize::try_from(bits / 32).map_err(|_| too_large())?;
+        limb_shift
+            .checked_add(self.mag.len() + 1)
+            .ok_or_else(too_large)?;
         let bit_shift = (bits % 32) as u32;
         let mut out: Vec<u32> = vec![0; limb_shift];
         if bit_shift == 0 {

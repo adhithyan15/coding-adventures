@@ -313,3 +313,27 @@ fn error_display_is_informative() {
     let s = e.to_string();
     assert!(s.contains("13") && s.contains("12"));
 }
+
+#[test]
+fn unrepresentable_shift_is_a_typed_error_without_allocating() {
+    // u64::MAX bits is ~2^59 limbs: never allocatable. On 64-bit targets the guard that
+    // fires is try_shl's ceiling; on 32-bit it is shl's own usize conversion check.
+    // Either way: a typed error, no allocation, no wrap.
+    let a = BigInteger::from_u64(3);
+    assert!(matches!(
+        a.try_shl(u64::MAX, u64::MAX / 2),
+        Err(BitwiseError::ResultTooLarge { .. })
+    ));
+    if usize::BITS == 32 {
+        assert!(matches!(
+            a.shl(u64::MAX),
+            Err(BitwiseError::ResultTooLarge { .. })
+        ));
+        assert!(matches!(
+            a.shl(1u64 << 37),
+            Err(BitwiseError::ResultTooLarge { .. })
+        ));
+    }
+    // zero never allocates whatever the shift
+    assert!(BigInteger::zero().shl(u64::MAX).unwrap().is_zero());
+}
