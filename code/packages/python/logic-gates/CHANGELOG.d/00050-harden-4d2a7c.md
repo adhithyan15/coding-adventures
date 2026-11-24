@@ -13,3 +13,8 @@
   generator, lying list subclass) raise `TypeError` instead of `ValueError`; wrong length
   still raises `ValueError`. Closes a TOCTOU where a list subclass with alternating
   `__getitem__` bypassed validation (CWE-367/843). `mux2` sel pinned as exact int.
+- Review follow-ups: `_safe_type_name` reads the name via `type.__dict__` so a metaclass
+  `__getattribute__` never runs, and truncates on an escape boundary; `_safe_int_text` uses
+  unbound `int.bit_length`/`int.__repr__`. mux4/mux8 behaviour change restated: a non-list
+  or list-subclass `sel`/`inputs` (previously `ValueError`, or accepted for subclasses)
+  now raises `TypeError`.

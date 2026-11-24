@@ -142,7 +142,7 @@ def test_safe_helpers() -> None:
     assert _safe_type_name(NewlineName()).count("\n") == 0
     assert len(_safe_type_name(NewlineName())) <= 70
     assert "\\x1b" in _safe_type_name(NewlineName())
-    assert _safe_type_name(Lying()) == "<unnamed>"
+    assert _safe_type_name(Lying()) == "Lying"
     assert _safe_type_name(3) == "int"
 
 

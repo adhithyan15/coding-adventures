@@ -49,16 +49,33 @@ def _safe_type_name(value: object) -> str:
     ``__str__`` or ``__format__`` is ever invoked.
     """
     try:
-        raw = type(value).__qualname__
-    except Exception:  # pragma: no cover - hostile metaclass
+        # Read through ``type.__dict__`` so a metaclass ``__getattribute__``
+        # (arbitrary user code) is never dispatched to.
+        raw = type.__dict__["__qualname__"].__get__(type(value))
+    except Exception:  # pragma: no cover - defensive
         raw = None
     if type(raw) is not str:
         raw = "<unnamed>"
-    out = raw.encode("ascii", "backslashreplace").decode("ascii")
-    out = "".join(c if c.isprintable() else f"\\x{ord(c):02x}" for c in out)
-    if len(out) > _MAX_NAME_LEN:
-        out = out[:_MAX_NAME_LEN] + "..."
-    return out
+    # Escape one character at a time and stop at the cap, so an escape
+    # sequence is never cut in half.
+    parts: list[str] = []
+    used = 0
+    for c in raw:
+        o = ord(c)
+        if 32 <= o < 127:
+            piece = c
+        elif o < 256:
+            piece = f"\\x{o:02x}"
+        elif o < 65536:
+            piece = f"\\u{o:04x}"
+        else:
+            piece = f"\\U{o:08x}"
+        if used + len(piece) > _MAX_NAME_LEN:
+            parts.append("...")
+            break
+        parts.append(piece)
+        used += len(piece)
+    return "".join(parts)
 
 
 def _safe_int_text(value: int) -> str:
@@ -66,10 +83,12 @@ def _safe_int_text(value: int) -> str:
 
     CPython refuses ``str()`` above 4300 digits; the bit-length guard keeps
     the library's own message in force for arbitrarily large values.
+    ``int.bit_length`` is called unbound so a subclass cannot interpose.
     """
-    if value.bit_length() > 128:
-        return f"an int with {value.bit_length()} bits"
-    return str(value)
+    bits = int.bit_length(value)
+    if bits > 128:
+        return f"an int with {bits} bits"
+    return int.__repr__(value)
 
 
 def _validate_bit(value: int, name: str = "input") -> None:
