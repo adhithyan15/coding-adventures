@@ -87,6 +87,59 @@ export interface CounterState {
   ffState: FlipFlopState[];
 }
 
+/** Largest width (flip-flop count) for register, shift register and counter. */
+export const MAX_WIDTH = 65536;
+/** Largest counter width. */
+export const MAX_COUNTER_WIDTH = 64;
+
+// A width must be a real integer in 1..cap, checked BEFORE any allocation.
+// `NaN < 1` is false, so a bare `width < 1` test let NaN through to
+// Array.from({length: NaN}) (an empty array) and 1e9 to a huge allocation.
+function validateWidth(width: unknown, name: string, cap: number): asserts width is number {
+  if (typeof width !== "number" || !Number.isInteger(width)) {
+    throw new TypeError(`${name} must be an integer, got ${String(width)}`);
+  }
+  if (Object.is(width, -0) || width < 1 || width > cap) {
+    throw new RangeError(`${name} must be in 1..${cap}, got ${Object.is(width, -0) ? "-0" : width}`);
+  }
+}
+
+// Exact-shape check for one flip-flop state object.
+function validateFlipFlopState(state: unknown, name: string): asserts state is FlipFlopState {
+  if (typeof state !== "object" || state === null || Array.isArray(state)) {
+    throw new TypeError(`${name} must be a flip-flop state object`);
+  }
+  const rec = state as Record<string, unknown>;
+  for (const key of ["masterQ", "masterQBar", "slaveQ", "slaveQBar"]) {
+    validateBit(rec[key], `${name}.${key}`);
+  }
+}
+
+// State array: real array of exactly `width` valid flip-flop states.
+function validateFlipFlopStates(state: unknown, width: number, name: string): asserts state is FlipFlopState[] {
+  if (!Array.isArray(state)) {
+    throw new TypeError(`${name} must be an array of flip-flop states`);
+  }
+  if (state.length !== width) {
+    throw new RangeError(`${name} length ${state.length} does not match width ${width}`);
+  }
+  for (let i = 0; i < width; i++) {
+    validateFlipFlopState(state[i], `${name}[${i}]`);
+  }
+}
+
+function validateBitArray(value: unknown, width: number, name: string): asserts value is Bit[] {
+  if (!Array.isArray(value)) {
+    throw new TypeError(`${name} must be an array of bits`);
+  }
+  if (value.length !== width) {
+    throw new RangeError(`${name} length ${value.length} does not match width ${width}`);
+  }
+  for (let i = 0; i < width; i++) {
+    validateBit(value[i], `${name}[${i}]`);
+  }
+}
+
 // ===========================================================================
 // Helper: create a fresh FlipFlopState
 // ===========================================================================
@@ -356,8 +409,10 @@ export function dFlipFlop(
   validateBit(data, "data");
   validateBit(clock, "clock");
 
-  if (!state) {
+  if (state === undefined) {
     state = freshFlipFlopState();
+  } else {
+    validateFlipFlopState(state, "state");
   }
 
   // Master latch: enabled when clock is LOW (NOT clock)
@@ -448,11 +503,17 @@ export function register(
   if (data.length === 0) {
     throw new RangeError("data must not be empty");
   }
+  if (data.length > MAX_WIDTH) {
+    throw new RangeError(`data length ${data.length} exceeds ${MAX_WIDTH}`);
+  }
 
   for (let i = 0; i < data.length; i++) {
     validateBit(data[i], `data[${i}]`);
   }
 
+  if (width !== undefined) {
+    validateWidth(width, "width", MAX_WIDTH);
+  }
   if (width !== undefined && data.length !== width) {
     throw new RangeError(
       `data length ${data.length} does not match width ${width}`,
@@ -462,14 +523,15 @@ export function register(
   const n = data.length;
 
   // Initialize state if this is the first call
-  if (!state) {
+  if (state === undefined) {
     state = Array.from({ length: n }, () => freshFlipFlopState());
-  }
-
-  if (state.length !== n) {
-    throw new RangeError(
-      `state length ${state.length} does not match data length ${n}`,
-    );
+  } else {
+    if (Array.isArray(state) && state.length !== n) {
+      throw new RangeError(
+        `state length ${state.length} does not match data length ${n}`,
+      );
+    }
+    validateFlipFlopStates(state, n, "state");
   }
 
   // Run each flip-flop independently with the shared clock
@@ -556,19 +618,13 @@ export function shiftRegister(
     );
   }
 
-  if (width < 1) {
-    throw new RangeError(`width must be >= 1, got ${width}`);
-  }
+  validateWidth(width, "width", MAX_WIDTH);
 
   // Initialize state: all flip-flops start at 0
-  if (!state) {
+  if (state === undefined) {
     state = Array.from({ length: width }, () => freshFlipFlopState());
-  }
-
-  if (state.length !== width) {
-    throw new RangeError(
-      `state length ${state.length} does not match width ${width}`,
-    );
+  } else {
+    validateFlipFlopStates(state, width, "state");
   }
 
   // Read current parallel output before shifting (from slaveQ of each FF)
@@ -664,16 +720,21 @@ export function counter(
   validateBit(clock, "clock");
   validateBit(reset, "reset");
 
-  if (width < 1) {
-    throw new RangeError(`width must be >= 1, got ${width}`);
-  }
+  validateWidth(width, "width", MAX_COUNTER_WIDTH);
 
-  // Initialize state
-  if (!state) {
+  // Initialize state, or validate caller-supplied state on EVERY path
+  // (hold, reset, increment) -- never trust or echo it unchecked.
+  if (state === undefined) {
     state = {
       value: Array.from({ length: width }, () => 0 as Bit),
       ffState: Array.from({ length: width }, () => freshFlipFlopState()),
     };
+  } else {
+    if (typeof state !== "object" || state === null || Array.isArray(state)) {
+      throw new TypeError("state must be a counter state object");
+    }
+    validateBitArray(state.value, width, "state.value");
+    validateFlipFlopStates(state.ffState, width, "state.ffState");
   }
 
   const currentValue: Bit[] = [...state.value];
@@ -707,7 +768,7 @@ export function counter(
   // Only update the stored value when the register captures it (clock=1).
   // On clock=0, the master latch is transparent but slave holds — so the
   // counter value hasn't actually changed yet.
-  const storedValue = clock === 1 ? nextValue : currentValue;
+  const storedValue = clock === 1 ? nextValue : [...currentValue];
 
   const newState: CounterState = {
     value: storedValue,

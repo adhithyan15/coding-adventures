@@ -43,6 +43,9 @@
 
 import { AND, NOT, OR, type Bit, validateBit } from "./gates.js";
 
+/** Largest select/address width a decoder or demux accepts (2^16 outputs). */
+export const MAX_SELECT_BITS = 16;
+
 // ===========================================================================
 // MULTIPLEXER (MUX) -- The Selector Switch
 // ===========================================================================
@@ -271,13 +274,20 @@ function muxNInner(inputs: Bit[], sel: Bit[]): Bit {
 export function demuxN(data: Bit, sel: Bit[], nOutputs: number): Bit[] {
   validateBit(data, "data");
 
-  if (nOutputs < 2 || (nOutputs & (nOutputs - 1)) !== 0) {
+  // Integer-only checks, bounded BEFORE any bit twiddling: `&` truncates its
+  // operands to 32 bits, so an unchecked 2**32 would masquerade as 0.
+  if (typeof nOutputs !== "number" || !Number.isInteger(nOutputs)) {
+    throw new TypeError(`nOutputs must be an integer, got ${String(nOutputs)}`);
+  }
+  if (nOutputs < 2 || nOutputs > 2 ** MAX_SELECT_BITS || (nOutputs & (nOutputs - 1)) !== 0) {
     throw new RangeError(
-      `nOutputs must be a power of 2 >= 2, got ${nOutputs}`,
+      `nOutputs must be a power of 2 in 2..${2 ** MAX_SELECT_BITS}, got ${nOutputs}`,
     );
   }
 
-  const expectedSelBits = Math.log2(nOutputs);
+  // nOutputs <= 65536 here, so this integer loop is exact and tiny.
+  let expectedSelBits = 0;
+  for (let v = nOutputs; v > 1; v >>= 1) expectedSelBits++;
   if (!Array.isArray(sel) || sel.length !== expectedSelBits) {
     throw new RangeError(
       `sel must be an array of ${expectedSelBits} bits for ${nOutputs} outputs`,
@@ -348,12 +358,24 @@ export function decoder(inputs: Bit[]): Bit[] {
     throw new RangeError("inputs must be a non-empty array of bits");
   }
 
+  // DoS / wrong-answer guard. The output has 2^n entries, and JavaScript's
+  // `<<` only looks at the low 5 bits of its shift count: `1 << 32 === 1`,
+  // `1 << 31` is negative (the loop below would never run, returning []),
+  // `1 << 64 === 1`. So without this cap a 32-bit select silently returned
+  // ONE output, and 25..30 bits tried to allocate hundreds of MB. Reject
+  // before shifting or allocating anything.
+  if (inputs.length > MAX_SELECT_BITS) {
+    throw new RangeError(
+      `inputs has ${inputs.length} bits; decoder supports at most ${MAX_SELECT_BITS}`,
+    );
+  }
+
   for (let i = 0; i < inputs.length; i++) {
     validateBit(inputs[i], `inputs[${i}]`);
   }
 
   const n = inputs.length;
-  const nOutputs = 1 << n; // 2^n
+  const nOutputs = 1 << n; // 2^n, exact because n <= MAX_SELECT_BITS
 
   // Precompute complements once
   const complements: Bit[] = inputs.map((b) => NOT(b));
