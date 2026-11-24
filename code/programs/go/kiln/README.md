@@ -303,7 +303,9 @@ tr, err := trace.Parse(file, "/work/repo", trace.Limits{})
   bounded while scanning (`arity`).
 - **Working directory.** A child's cwd is snapshotted when the parent's
   `fork`/`clone` succeeds; a split call uses the cwd at its start; a `chdir`
-  on a cwd shared by live `CLONE_FS` processes is `cwd-race`. A trace whose
+  or `fchdir` on a cwd shared with another process (`CLONE_FS`, threads) is
+  `cwd-race` only when a sharer's cwd-dependent call overlaps its interval
+  (D46). A trace whose
   last line lacks its newline is incomplete.
 - **Sandbox helper.** `trace.ParseOptions(r, cwd, trace.Options{HelperRoot: true, HelperExe: kiln})`
   models the helper tree: the root (and its threads) spawns exactly one init

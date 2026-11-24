@@ -678,9 +678,11 @@ have been read"), which a later stage could judge.
   `chdir("../b")` from `/a` it is `/a/../b`. Only `fchdir` gives a resolved
   path (its `-y` annotation). Stage 1b walks the cwd expression like any
   other path.
-- A successful `chdir` or `fchdir` on a cwd shared by more than one live
-  process is `cwd-race`: relative paths of the sharer would change
-  unobserved.
+- A successful `chdir` or `fchdir` on a cwd shared with another process
+  (`CLONE_FS`, threads) is `cwd-race` only when the call's line interval
+  intersects that of a sharer's cwd-dependent call or of another successful
+  chdir/fchdir on the same cwd; otherwise the order is unambiguous and the
+  change is applied at the chdir's completion line (D46).
 - Pids with leading zeros are not pids.
 
 **The helper.** With `Options.HelperRoot` and `Options.HelperExe` (the
@@ -719,9 +721,8 @@ first successful exec of a non-Kiln path is the step.**
     locks the main goroutine's thread with `runtime.LockOSThread` before the
     exec), because an exec by another thread changes the pid strace prints;
   - do its setup `chdir`s before any thread starts, or after
-    `unshare(CLONE_FS)`, which the parser does not model, so avoid
-    `unshare(CLONE_FS)`: threads that share a cwd make a `chdir` a
-    `cwd-race`;
+    `unshare(CLONE_FS)`: threads that share a cwd make a `chdir` that
+    overlaps one of their cwd-dependent calls a `cwd-race` (D46);
   - make **no traced call in the root group after the spawn**. Go runtime
     thread creation is a `clone`, so the helper starts all the threads it
     will need before it spawns the init child;
@@ -3991,6 +3992,65 @@ read by path changes. The annotation comes from the kernel (strace's -y) and is
 the lexer's ANNOTATED token; a quoted string is another token kind, so a path
 containing `socket:[` cannot fake it (and `/x/socket:[1]` starts with `/`). Pass 2
 is shared, so both trace readers change together and the cross-check stays equal.
+
+**Decision D46: `cwd-race` by overlap, not by existence of a sharer (`kiln:recorder` 13 to 15; 14 is taken by an open PR).**
+The census shows `cwd-race` on `chdir` or `fchdir` in Ruby (two actions per
+image) and Kotlin (one). The old rule refused any successful `chdir` or
+`fchdir` while another live process shared the cwd (threads, `CLONE_FS`). That
+is far stronger than the hazard: a shared cwd is only dangerous if some
+sharer's cwd-dependent call could have run on either side of the change.
+
+*The rule (`internal/trace/model.go`, `cwdOrdered`).* Every cwd cell
+(`cwdCell`, shared by the processes of one `CLONE_FS` family; a fork child
+copies it and is **not** a sharer) remembers `lastChange`, the completion line
+of its last successful `chdir`/`fchdir`, and `lastDep`, the completion line of
+its last cwd-dependent call. When a call on the cell completes at line `E`
+having started at line `S` (`S == E` if uninterrupted; the split call's start
+marker gives `S`):
+- a call that is **cwd-dependent or a successful chdir/fchdir** is `cwd-race`
+  if `lastChange > S`;
+- a **successful chdir/fchdir** is `cwd-race` also if `lastDep > S`;
+- otherwise the call records its `E` in `lastDep` (if dependent) and
+  `lastChange` (if a successful change), and the cwd change is applied at `E`.
+
+*Definitions.* A call is **cwd-dependent** when a path it resolves is relative
+and unanchored (`path != ""`, not starting with `/`, and its dirfd path empty,
+i.e. no dirfd argument or `AT_FDCWD`; `Path` and `Path2` are checked, each
+against its own dirfd; a symlink target is content and never counts). Also
+cwd-dependent: a successful `fork`, `vfork` or `clone`/`clone3` without
+`CLONE_FS` (the child copies the cwd), and a successful helper-window
+`unshare(CLONE_FS)` (it copies the cwd). A relative `chdir` is dependent
+whether it succeeds or fails; an absolute failed `chdir` and a failed
+`fchdir` are neither dependent nor a change, so they never race. `fchdir`
+takes its directory from the descriptor's absolute `-y` name, so it is a
+change but not dependent. Absolute-path calls, calls under a real dirfd and
+ignored-class calls never ask and never record.
+
+*Soundness.* Two calls overlap iff their line intervals intersect; with a
+later-completing call `B` and an earlier one `A` already seen, that is
+`startB < endA`, which is what the two tests above ask (for `A` a change or a
+dependent call, `lastChange` and `lastDep` hold the latest such `endA`; the
+latest is enough because the question is "any `endA` after `startB`"). The
+lines are the order in which strace handled ptrace stops. A call's effect
+happens between its own entry stop and its own exit stop, and a
+tracee is held at each stop until strace resumes it, so a call's effect lies
+inside its interval of handling order; strace flushes a pending entry as
+`<unfinished ...>` when any other line is printed, so an uninterrupted printed
+call really had no printed stop of anyone inside it. Disjoint intervals are
+therefore a true order, and with no overlap every sharer call is wholly before
+or after every change, so a relative path resolves against the cwd the model
+had at that line. Overlap is refused for all three hazards: a sharer's
+relative call (which cwd did it use?), two changes (which was last?), and a
+copying spawn (which cwd did the child get?). Absolute and dirfd-anchored
+calls do not read the cwd, so they cannot be affected. The check is on every
+cell whatever its `refs`, so a sharer that exited inside the chdir's interval
+still counts (the old rule forgot it), which makes the rule slightly stricter
+there. The cross-check stays equal because the rule is in the shared model.
+`RecorderVersion` is bumped 13 to 15 because the verdict changes both ways.
+
+*Not covered (still refused if it overlaps, never accepted wrongly).* A
+sharer's ignored-class call that reads the cwd for its own output (`getcwd`)
+affects no path, so it is outside the rule.
 
 **Decision D45: completed NULL-path `statx` failing with `EFAULT` (`home: runner` census run `44755244478`; `kiln:recorder` 12 to 13).**
 On the first `home: runner` census run, 100% of Rust actions (8/8 on both

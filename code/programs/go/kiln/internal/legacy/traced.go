@@ -122,7 +122,18 @@ const TracedSemantics uint64 = 2
 // completed statx with a literal NULL path, valid flags without AT_EMPTY_PATH,
 // and a -1 EFAULT result is dropped with no event (e.g. Rust std's statx probe).
 // The accept set grows, so every weak key changes.
-const RecorderVersion = 13
+//
+// Version 14 is taken by the open PR #19873; this change skips to 15.
+//
+// Version 15: cwd-race by overlap (KILN04 D46).  A chdir or fchdir on a cwd
+// shared with another live process (threads, CLONE_FS) is accepted unless a
+// sharer's cwd-dependent call overlaps its line interval, instead of being
+// refused whenever a sharer exists.  A sharer call that overlaps a chdir used
+// to be seen only as "a sharer exists"; the same overlap is now also checked
+// when the chdir's sharer was already gone, and a copying fork or clone and an
+// unshare(CLONE_FS) count as cwd-dependent calls.  The verdict changes both
+// ways, so every weak key changes.
+const RecorderVersion = 15
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
