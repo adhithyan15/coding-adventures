@@ -1847,7 +1847,7 @@ pub fn rerun_wall(experiment: &str) -> Duration {
 
 /// The overall wall budget of plain `check`'s in-process re-run, seconds (VOS-D134, VOS30 section
 /// 9.2).  Each row has its own wall ([`rerun_wall`]: up to 1,800 s), and a crafted file can hold
-/// many rows; the budget bounds their SUM.  The 85 committed quick rows reproduce in about 10 s
+/// many rows; the budget bounds their SUM.  The 85 quick rows committed before VOS-028c3c commit A (105 in the plan now) reproduce in about 10 s
 /// (measured on a Windows developer machine at `--jobs 4`, 2026-11-23), so 1,800 s is more than
 /// 150 times what an honest file needs: it bites only a file built to be slow, never a slow
 /// runner.  It equals the longest single row wall, so one honest B5 quick row still fits.

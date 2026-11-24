@@ -4,6 +4,25 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Changed (VOS-028c3c commit A; VOS30 sections 8.6.3 and 9.2)
+
+- **B3 `every2`/`every4`, D5 and B5 are registered in `plan(Tier::Full)`.** `EXPERIMENTS` is 16
+  names (B5 after B4, D5 after D4). `knobs("B3")` now appends the 72 cut knobs after its 108, so
+  B3 is one contiguous run of 180 knobs (VOS-D135); `knobs("B5")` and `knobs("D5")` are the 24-knob
+  grids as one contiguous block each. The plan is 445 knobs and 2,225 rows at five seeds; at
+  N = 64 no shard holds more than one B5 knob, one D5 knob or three B3 knobs. The quick tier is
+  the smallest knob of each new experiment (B5 length 25 at `fuse = 1`, both divergences; D5
+  `t = 4, k = 1`, both splits; no B3 cut knob), so it grows from 85 to 105 rows and
+  `quick_row_cap()` follows. `FULL_PLAN_EXEMPT` stays empty. **No results are recorded here:**
+  the recording on CI runners follows in commit B of this PR, and until then `check` on the
+  committed file fails `full_plan_covered` (620 rows missing: 600 full and 20 quick), by design.
+- Tests: `tests/common/mod.rs` `complete_plan` completes the committed file with clones of
+  recorded sibling rows (B3 every8, D4, B2) so the join, sign, verify fan-in and hardening tests
+  keep a plan-covering fixture; they are fixture rows, never results. `the_real_plan_keeps_b5_one_per_shard`
+  is now live and also covers D5 and B3 and the 2,225 and 105 totals; `no_shard_holds_more_than_one_b5_knob`
+  derives its base from the real list; the B5 refusal test uses an out-of-plan fuse; the
+  cfg(unix) `run --tier quick` test expects 105 rows and the spot-check population is computed.
+
 ### Fixed (VOS-028c3c-2d, VOS-D137; VOS30 section 9.12.2)
 
 - **`sign` checks tree ids at `--head-sha`, not ancestry.** Main is squash-merged, so the commit a

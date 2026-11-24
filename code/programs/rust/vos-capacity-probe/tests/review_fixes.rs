@@ -2,6 +2,8 @@
 //! each with a negative control: a row, file or path that the fixed code refuses and the code
 //! before the fix accepted.  Tests that start child processes are unix-only.
 
+mod common;
+
 #[cfg(unix)]
 use std::path::Path;
 use std::path::PathBuf;
@@ -24,9 +26,15 @@ fn data(name: &str) -> PathBuf {
         .join(name)
 }
 
-fn committed() -> Results {
+fn committed_raw() -> Results {
     Results::from_text(&std::fs::read_to_string(data("data/vos30-capacity-results.json")).unwrap())
         .unwrap()
+}
+
+/// The committed file completed with fixture rows for the plan rows it lacks (VOS-028c3c commit A
+/// registered B3 every2/every4, D5 and B5 before the recording; `common::complete_plan`).
+fn committed() -> Results {
+    common::complete_plan(committed_raw())
 }
 
 fn spec_text() -> String {
@@ -120,6 +128,12 @@ fn h2_the_committed_file_is_exactly_the_full_plan_and_the_exemption_list_is_the_
         exempt, missing,
         "the reviewed exemption list must equal the missing rows exactly"
     );
+    // The REAL committed file, before the recording (VOS-028c3c commit B): it lacks exactly the 600
+    // rows of the newly registered knobs (B3 every2/every4 360, D5 120, B5 120), so `check` on it
+    // fails `full_plan_covered` by design until the recording lands.  Delete this block in commit B.
+    let raw = committed_raw();
+    assert_eq!(full_plan_missing(&raw).len(), 600);
+    assert!(!full_plan_covered(&raw).is_empty());
     // Every exemption has a reason, and section 9.12 lists it with that reason.
     let spec = section_9_12();
     for (id, why) in FULL_PLAN_EXEMPT {
@@ -363,7 +377,9 @@ fn the_constants_the_spec_quotes_are_the_ones_in_the_code() {
 fn m4_the_cost_table_matches_the_committed_recording() {
     use std::collections::BTreeMap;
     let mut worst: BTreeMap<(String, String, String), f64> = BTreeMap::new();
-    for r in &committed().rows {
+    // The REAL committed recording, not the fixture-completed file: the cost table describes
+    // recorded rows only.
+    for r in &committed_raw().rows {
         if r.tier != "full" || r.experiment.starts_with('E') {
             continue;
         }

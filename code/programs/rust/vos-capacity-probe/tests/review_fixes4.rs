@@ -34,17 +34,18 @@ fn row(exp: &str, knob: Knob, sha: &str) -> Row {
 // ---- 1. validate refuses an unregistered experiment --------------------------------------------
 
 #[test]
-fn an_extra_b5_row_is_refused_by_validate() {
+fn an_out_of_plan_b5_row_is_refused_by_validate() {
     let mut f = committed();
     assert!(validate(&f).is_empty());
     let mut r = f.rows[0].clone();
     r.experiment = "B5".into();
-    r.knob = b5_knob(25, 0.25, 2);
+    // B5 is registered since VOS-028c3c commit A; a fuse outside the plan's {1, 2, 4, 8} is not.
+    r.knob = b5_knob(25, 0.25, 3);
     f.rows.push(r);
     let v = validate(&f);
     assert!(
         v.iter()
-            .any(|m| m.contains("experiment \"B5\" is not one of the plan's experiments")),
+            .any(|m| m.contains("is not one of the plan's knobs")),
         "{v:?}"
     );
 }

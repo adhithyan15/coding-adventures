@@ -2,6 +2,8 @@
 //! --add`, each clause with a negative control.  The tests that start child processes are
 //! unix-only, as the runner is (VOS30 section 9.12).
 
+mod common;
+
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 use vos_capacity_probe::cli::{add_results, dispatch, full_refusals, merge_results, Failure};
@@ -22,8 +24,10 @@ fn committed_text() -> String {
     std::fs::read_to_string(p).unwrap()
 }
 
+/// The committed file completed with fixture rows for the plan rows it lacks (VOS-028c3c commit A
+/// registered B3 every2/every4, D5 and B5 before the recording): "a complete file".
 fn committed() -> Results {
-    Results::from_text(&committed_text()).unwrap()
+    common::complete_plan(Results::from_text(&committed_text()).unwrap())
 }
 
 fn ok_control() -> Control {
@@ -420,11 +424,16 @@ fn check_prints_a_non_fatal_stale_line_when_a_recorded_tree_differs() {
     // Stale is not fatal: no violation mentions it.  (Under a very slow build, such as the
     // opt-level 0 coverage build, the time-budgeted re-runs can end "not verified"; that is a
     // budget artifact and the only kind of violation tolerated here.)
+    // The B5 and D5 quick rows of this file are fixture clones (`common::complete_plan`), so their
+    // re-run differs by construction; findings about them are not what this test is about.
     assert!(
-        e.lines().all(|l| {
-            !l.contains("stale") && (l.contains("not verified") || l.contains("below the floor"))
-                || l.is_empty()
-        }),
+        e.lines()
+            .filter(|l| !l.starts_with("check: B5 ") && !l.starts_with("check: D5 "))
+            .all(|l| {
+                !l.contains("stale")
+                    && (l.contains("not verified") || l.contains("below the floor"))
+                    || l.is_empty()
+            }),
         "stale is not fatal: {e}"
     );
     if e.is_empty() {
@@ -434,7 +443,10 @@ fn check_prints_a_non_fatal_stale_line_when_a_recorded_tree_differs() {
     assert!(o.contains("stale: tool: "), "{o}");
     #[cfg(unix)]
     {
-        assert!(o.contains("spot check: population 1420"), "{o}");
+        // 1,420 on the committed file; the fixture rows of `common::complete_plan` add the new
+        // full-tier rows, so the population is computed from the file that was checked.
+        let want = format!("spot check: population {}", population(&f).len());
+        assert!(o.contains(&want), "{o}");
         assert!(o.contains("structural rebuild: population"), "{o}");
     }
     #[cfg(not(unix))]
