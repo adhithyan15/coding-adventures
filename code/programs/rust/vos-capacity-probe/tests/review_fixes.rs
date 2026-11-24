@@ -128,12 +128,6 @@ fn h2_the_committed_file_is_exactly_the_full_plan_and_the_exemption_list_is_the_
         exempt, missing,
         "the reviewed exemption list must equal the missing rows exactly"
     );
-    // The REAL committed file, before the recording (VOS-028c3c commit B): it lacks exactly the 600
-    // rows of the newly registered knobs (B3 every2/every4 360, D5 120, B5 120), so `check` on it
-    // fails `full_plan_covered` by design until the recording lands.  Delete this block in commit B.
-    let raw = committed_raw();
-    assert_eq!(full_plan_missing(&raw).len(), 600);
-    assert!(!full_plan_covered(&raw).is_empty());
     // Every exemption has a reason, and section 9.12 lists it with that reason.
     let spec = section_9_12();
     for (id, why) in FULL_PLAN_EXEMPT {
