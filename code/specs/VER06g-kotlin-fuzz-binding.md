@@ -140,8 +140,7 @@ accepted). For `crash_dedup` it additionally compares the **signature hashes**:
 `crashSignature(a) == crashSignature(b)` must equal `is_duplicate`, and each hash is
 8 lowercase hex digits. It requires all 14 ops, an accepted and a rejected id, and
 exactly 25 cases. Every problem about a case starts with that case's id. Fixture
-sizes are capped (CWE-400): ints and lists by `Values.MAX_SIZE`, at most 16
-`mutate_sequence` cases, every problem clipped to 400 characters.
+sizes are capped (CWE-400): ints and lists by `Values.MAX_SIZE`, the aggregate `mutate_sequence` work budget (section 6), every problem clipped to 400 characters.
 
 ## 4. Negative controls and the Kotlin-layer seams
 
@@ -206,10 +205,16 @@ store).
    package-private. The Kotlin layer has its own `Seams` (section 4) and the Java
    hooks remain exercised by the Java package's own corpus test.
 5. **Aggregate `mutate_sequence` budget.** Java's corpus runner hands the engine a
-   shared work cap through a package-private entry point. The public engine call
-   caps one call at `MAX_SEQUENCE_WORK`; the Kotlin runner therefore bounds the
-   aggregate by refusing more than 16 `mutate_sequence` cases and capping steps and
-   inputs at `Values.MAX_SIZE`. The committed fixture has one such case.
+   shared work cap through a package-private counted entry point (2^24 byte
+   copies, charging real work). The public call only caps one call at
+   `MAX_SEQUENCE_WORK` (2^28), so the Kotlin runner keeps its own 2^24 aggregate:
+   it calls `mutateSequence` with `maxLen = input.size + 4096` (the buffer never
+   exceeds it) and charges `input.size + steps * maxLen` **before** running, which
+   is an upper bound on the real work. A case that does not fit zeroes the budget,
+   is a reported problem, and every later case fails without running. Consequence:
+   a sequence case whose growth would pass `input.size + 4096` is judged against
+   that smaller cap (the committed case does not), and very long sequences are
+   refused sooner than in Java.
 6. **`FuzzOptions.toString` redacts the seed**, which the Java record prints.
 7. **Both Unix `BUILD` files** (Java and Kotlin) take the same lock,
    `.build-locks/jvm-test-bootstrap.lock` (VER05f section 7).
@@ -233,4 +238,10 @@ store).
 * one test per Kotlin-layer seam, each required to fail the corpus run;
 * Kotlin API tests: the DSL, crash dedup, budget exhaustion as timeout or OOM,
   `TODO()` as a crash, redacted `toString`, coverage tiers, validation;
+* pinned-value and differential tests of every wrapper (`FuzzWrapperPinTest`): each
+  mutator overload (`Long` and `BigInteger`) over a grid, against the engine's own
+  `Mutate`; `crashSignature` and `calculateEnergy` against the values the Java
+  engine pins; options, handle and report views against the engine. fuzz-v1 pins no
+  real signature hash and no energy value, so the corpus alone would not notice a
+  wrapper that altered them;
 * the Java and Kotlin `BUILD` scripts pass.

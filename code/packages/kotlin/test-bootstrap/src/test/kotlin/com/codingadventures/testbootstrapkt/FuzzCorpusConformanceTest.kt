@@ -253,13 +253,24 @@ class FuzzCorpusConformanceTest {
     }
 
     @Test
-    fun theSequenceCaseCountIsCappedAndFixtureSizesAreProblemsNotHangs() {
+    fun theSequenceWorkBudgetIsAggregateAndFixtureSizesAreProblemsNotHangs() {
         val all = loadCases()
         val c = firstOf(all, "mutate_sequence")
         c["steps"] = intNode("1000000000")
         assertTrue(anyContains(problems(swapped(all, c)), "outside [0, 10000]"))
-        val many = (0 until 20).map { i -> firstOf(all, "mutate_sequence").also { it["id"] = "seq/$i" } }
-        assertTrue(anyContains(problems(many), "more than ${KotlinFuzzCorpusRunner.MAX_SEQUENCE_CASES}"))
+        // Each sequence case is charged input + steps * maxLen up front, so a corpus of them
+        // exhausts the 2^24 aggregate budget quickly and every later case fails without running.
+        val many = (0 until 50).map { i ->
+            firstOf(all, "mutate_sequence").also {
+                it["id"] = "seq/$i"
+                it["steps"] = intNode("1000")
+            }
+        }
+        val ps = problems(many)
+        val charge = 8L + 1000L * (8 + KotlinFuzzCorpusRunner.SEQUENCE_GROWTH)
+        val ran = (KotlinFuzzCorpusRunner.MAX_SEQUENCE_WORK / charge).toInt()
+        assertEquals(50 - ran, ps.count { "work budget" in it }, ps.toString())
+        assertTrue(ps.none { it.startsWith("seq/0:") && "work budget" in it }, "the first case fits the budget")
         val tooMany = (0 until 10_001).map { i -> firstOf(all, "failure_id_valid").also { it["id"] = "f/$i" } }
         assertTrue(anyContains(problems(tooMany), "exceeds the cap"))
     }

@@ -7,6 +7,7 @@ import com.codingadventures.testbootstrap.fuzz.Options as JFuzzOptions
 import com.codingadventures.testbootstrap.fuzz.Report as JReport
 import com.codingadventures.testbootstrap.fuzz.Signature
 import com.codingadventures.testbootstrap.fuzz.Target
+import java.util.Collections
 
 /*
  * The Kotlin face of the coverage-guided campaign (VER06g section 2.1).  The
@@ -125,8 +126,8 @@ class Report internal constructor(@get:JvmSynthetic internal val engine: JReport
     /** Distinct covered edges. */
     val totalEdges: Int get() = engine.totalEdges()
 
-    /** One record per distinct signature. */
-    val crashes: List<CrashRecord> = engine.crashes().map { CrashRecord(it) }
+    /** One record per distinct signature (an unmodifiable list, also to Java callers). */
+    val crashes: List<CrashRecord> = Collections.unmodifiableList(engine.crashes().map { CrashRecord(it) })
 
     /** Executions that exhausted their step budget. */
     val timeouts: Int get() = engine.timeouts()
@@ -208,6 +209,7 @@ class CampaignBuilder {
         body = block
     }
 
+    @JvmSynthetic
     internal fun run(): Report {
         val t = body ?: throw IllegalStateException("fuzz { } needs a target { data, h -> ... }")
         return runCampaign(corpus.toList(), FuzzOptions(iterations, seed, maxInputLen, baseEnergy, minimizeBudget, stepBudget, memBudget), t)

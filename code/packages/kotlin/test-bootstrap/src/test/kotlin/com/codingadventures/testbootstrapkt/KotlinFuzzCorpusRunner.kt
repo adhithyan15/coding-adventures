@@ -17,8 +17,16 @@ import java.math.BigInteger
 object KotlinFuzzCorpusRunner {
     const val CASE_COUNT = 25
 
-    /** The Kotlin runner caps the cases that run `mutateSequence` (VER06g section 6, item 5). */
-    const val MAX_SEQUENCE_CASES = 16
+    /**
+     * Aggregate `mutate_sequence` work budget of one corpus, in byte copies (VER06g section 6,
+     * item 5).  Each case is charged `input.size + steps * maxLen` BEFORE it runs, which
+     * bounds the real work (the buffer never exceeds `maxLen`), so a failing or refused
+     * case costs nothing extra and the total can never pass this figure.
+     */
+    const val MAX_SEQUENCE_WORK: Long = 1L shl 24
+
+    /** Growth allowance above the input length: `maxLen = input.size + SEQUENCE_GROWTH`. */
+    const val SEQUENCE_GROWTH = 4096
 
     private const val MAX_CASES = 10_000
 
@@ -117,7 +125,7 @@ object KotlinFuzzCorpusRunner {
         val opsSeen = HashSet<String>()
         var acceptedIdSeen = false
         var rejectedIdSeen = false
-        var sequenceCases = 0
+        val workLeft = longArrayOf(MAX_SEQUENCE_WORK)
         for (raw in cases) {
             val c = raw as? Map<*, *>
             if (c == null) {
@@ -143,8 +151,7 @@ object KotlinFuzzCorpusRunner {
             try {
                 val v = HashMap<String, Any?>()
                 for ((k, value) in c) if (k != "id" && k != "op") v[k as String] = Values.decode(value)
-                if (op == "mutate_sequence" && ++sequenceCases > MAX_SEQUENCE_CASES) throw CaseProblem("more than $MAX_SEQUENCE_CASES mutate_sequence cases")
-                val found = check(cid, op, v)
+                val found = check(cid, op, v, workLeft)
                 problems += found.problems
                 if (op == "failure_id_valid") {
                     if (found.accepted) acceptedIdSeen = true else rejectedIdSeen = true
@@ -171,7 +178,7 @@ object KotlinFuzzCorpusRunner {
 
     private class Found(val problems: List<String>, val accepted: Boolean = false)
 
-    private fun check(cid: String, op: String, v: Map<String, Any?>): Found =
+    private fun check(cid: String, op: String, v: Map<String, Any?>, work: LongArray): Found =
         when (op) {
             "corpus_admit" -> Found(checkAdmit(cid, v))
             "crash_dedup" -> Found(checkDedup(cid, v))
@@ -183,7 +190,7 @@ object KotlinFuzzCorpusRunner {
             "private_reporting" -> Found(checkPrivate(cid, v))
             "corpus_reject" ->
                 Found(if (tfvIsValid(textOf(v["text"], "text"))) listOf("$cid: corpus_reject text was accepted by the strict parser") else emptyList())
-            else -> Found(checkMutator(cid, op, v))
+            else -> Found(checkMutator(cid, op, v, work))
         }
 
     private fun compare(cid: String, op: String, got: ByteArray, v: Map<String, Any?>): MutableList<String> {
@@ -197,7 +204,7 @@ object KotlinFuzzCorpusRunner {
         return problems
     }
 
-    private fun checkMutator(cid: String, op: String, v: Map<String, Any?>): List<String> {
+    private fun checkMutator(cid: String, op: String, v: Map<String, Any?>, work: LongArray): List<String> {
         val input = bytesOf(v[if (op == "mutate_splice") "target" else "input"], if (op == "mutate_splice") "target" else "input")
         val got: ByteArray =
             when (op) {
@@ -223,7 +230,15 @@ object KotlinFuzzCorpusRunner {
                 }
                 else -> { // mutate_sequence
                     val seed = intOf(v["seed"], "seed").toLong().toULong()
-                    input.mutateSequence(seed, sizeOf(v["steps"], "steps"))
+                    val steps = sizeOf(v["steps"], "steps")
+                    val maxLen = input.size + SEQUENCE_GROWTH
+                    val charge = input.size.toLong() + steps.toLong() * maxLen
+                    if (charge > work[0]) {
+                        work[0] = 0 // the aggregate is breached: nothing is left for any later case
+                        throw CaseProblem("mutate_sequence work budget of $MAX_SEQUENCE_WORK byte-copies exhausted")
+                    }
+                    work[0] -= charge
+                    input.mutateSequence(seed, steps, maxLen)
                 }
             }
         val problems = compare(cid, op, got, v)
@@ -242,7 +257,8 @@ object KotlinFuzzCorpusRunner {
         val problems = mutableListOf<String>()
         if (got.admitted != admitted) problems += "$cid: corpus_admit admitted ${got.admitted}, corpus $admitted"
         if (!same(BigInteger.valueOf(got.newEdges.toLong()), newEdges)) problems += "$cid: corpus_admit new_edges ${got.newEdges}, corpus ${show(newEdges)}"
-        if (got.admitted != trace.any { it !in existing.toSet() }) problems += "$cid: corpus_admit disagrees with set difference"
+        val have = existing.toSet()
+        if (got.admitted != trace.any { it !in have }) problems += "$cid: corpus_admit disagrees with set difference"
         return problems
     }
 
