@@ -680,6 +680,7 @@ func TestFuzzV1CorpusPathMatcher(t *testing.T) {
 
 func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 	packages := []discovery.Package{
+		{Name: "go/test-bootstrap", Language: "go"},
 		{Name: "python/test-bootstrap", Language: "python"},
 		{Name: "rust/ct-compare", Language: "rust"},
 	}
@@ -688,10 +689,18 @@ func TestFuzzV1CorpusSelectsThePythonEngine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if want := map[string]bool{"python/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+	want := map[string]bool{"go/test-bootstrap": true, "python/test-bootstrap": true}
+	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
-	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "all"); err == nil {
+	got, err = repositoryInputConsumersForChange(corpus, packages, "python")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"python/test-bootstrap": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("python filter: got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[:1], "python"); err == nil {
 		t.Fatal("a corpus change with the engine package missing must fail closed")
 	}
 }
