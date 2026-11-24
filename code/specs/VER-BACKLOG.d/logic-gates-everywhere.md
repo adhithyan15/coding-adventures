@@ -96,27 +96,46 @@ wired.
 
 ## Queue
 
-Phases run in this order; Phase 3 runs in parallel with Phases 1, 2 and 5.
+Phases run in this order; Phase 3 (analyzers) runs in parallel with the
+rest. Re-prioritized 2026-11-24 after the design spike: no lane can replay a
+`warrant-corpus-v2` corpus yet (the Python, TypeScript and Go runners read v1
+only; `ca-assurance-report` lane evidence is hard-wired to ct-compare v1), so
+each lane's interim evidence is a **lane-local exhaustive** suite and a
+release may claim only that until the lane's v2 runner lands.
 
-| ID | Work | State |
-|---|---|---|
-| LGE-000 | This backlog shard and the VER-BACKLOG pointer | in progress |
-| LGE-S1 | Basic-gates Warrant contract and committed corpus (design spike first: separate document vs split vs op subset) | design spike running |
-| LGE-S2 | VER04i 13.2 amendment: logic gates opens lanes 4 to 17 | queued |
-| LGE-S3 | VER15 amendment, `weakness-registry-v2.json`, per-lane matrix section | queued |
-| LGE-S3b | Per-language threat lists, `code/specs/data/weakness-registry-v2/lanes/<lang>.json` (draft agent plus independent adversarial reviewer per lane) | queued |
-| LGE-S4 | VER08c grammar-driven capability analyzer spec | queued |
-| LGE-S5 | VER31 amendment: publish job per registry and the gate | queued |
-| LGE-P1 | Perl: type-and-value bit validation, type-confusion regression suite | in progress |
-| LGE-H1 | Haskell: add xnor and the four NAND-built gates, full tests | queued |
-| LGE-C1 | New `c/logic-gates` (status-code API, no pointers), exhaustive tests under ASan/UBSan | queued |
-| LGE-CPP1 | New `cpp/logic-gates` (`constexpr`, `std::invalid_argument`) | queued |
-| LGE-R* | Rejection and type-confusion top-ups: python, typescript, elixir, java, kotlin, dart, lua, csharp, fsharp, ocaml, go, swift, ruby | queued |
-| LGE-L-<lane> | Lane runner (PR a) and logic-gates binding with BUILD negative controls (PR b), VER04i order, at most two lanes in flight | queued |
-| LGE-A1 | Analyzer core plus rule tables for c, csharp, fsharp, haskell, java, perl, ruby | queued |
-| LGE-A2 | `.tokens` then `.grammar` for cpp, kotlin, elixir, lua, swift, dart | queued |
-| LGE-W1 | Per-lane v2 weakness matrices in `ca-assurance-report` | queued |
-| LGE-PUB-<registry> | Publish jobs and gate, one registry per PR; first release per lane needs the owner's go-ahead | queued |
+Priority rule before each pick: (1) unblock in-flight PRs; (2) security bugs
+in a gate validator; (3) lane-local exhaustive suites and error identities
+(they are what a release can truthfully claim); (4) the LG02 corpus chain;
+(5) registry v2 and threat lists; (6) CV2 runner dependencies; (7) analyzers;
+(8) publishing.
+
+| Pri | ID | Work | State |
+|---|---|---|---|
+| - | LGE-000 | This backlog shard and the VER-BACKLOG pointer | merged #19922 |
+| 1 | LGE-P1 | Perl: canonical type-and-value bit validation, arity, no invocant guessing, bounded widths, analog input validation in transistors; 2,654 + 607 tests | PR #19927 |
+| 1 | LGE-H1 | Haskell: xnor and the four NAND-built gates, full tests | PR #19924 |
+| 1 | LGE-C1 | New `c/logic-gates` (status code, no pointers), 1,351,741 checks under strict warnings and ASan/UBSan | PR #19926 |
+| 1 | LGE-CPP1 | New `cpp/logic-gates` (`constexpr`, `std::invalid_argument`, deleted non-int overloads), 96,454 checks | PR #19928 |
+| 1 | LGE-S1a | LG02 cross-lane contract (separate corpus-only `logic-gates-basic.warrant`, drift guard, v2 corpus, per-lane error identities) and the VER04i 13.2 amendment (was LGE-S2) | security-review findings being addressed |
+| 3 | LGE-R-python | Exhaustive rejection and type-confusion matrix; `type(x) is int` | in progress |
+| 3 | LGE-R-typescript | Every gate validates its own inputs (NAND/NOR/XNOR relied on transistors); reject `-0`; matrix | in progress |
+| 3 | LGE-R-go | Typed panic value (today a plain string at `gates.go:92`, and a different one at `:154`, so a recover adapter cannot tell them apart); `assertPanics` checks its message; matrix | queued |
+| 3 | LGE-ID-perl | Stable error identity: `CodingAdventures::LogicGates::Error` with a code (bindings may not match message text) | queued |
+| 3 | LGE-ID-lua | Stable error identity (error table with `code`); reject `1.0`; matrix | queued |
+| 3 | LGE-ID-haskell | `LogicGateError` ADT instead of `Left String` | queued |
+| 3 | LGE-R-<lane> | Lane-local exhaustive suites for ruby, swift, elixir, java, kotlin, csharp, fsharp, dart, ocaml (OCaml: literal expected values, not `land`/`lor`) | queued |
+| 4 | LGE-S1b | `logic-gates-basic.warrant` and `code/scripts/logic_gates_basic_drift.py` with its tests and build-input wiring | queued |
+| 4 | LGE-S1c | Generated `logic-gates-basic-warrant-v2` fixture, build-tool row (optional `bindings`), `--check` and `verify-v2` BUILD lines | queued |
+| 5 | LGE-S3 | VER15 amendment, `weakness-registry-v2.json` (CWE-20, CWE-843, CWE-704), per-lane matrix section | queued |
+| 5 | LGE-S3b | Per-language threat lists `code/specs/data/weakness-registry-v2/lanes/<lang>.json` (draft agent plus independent adversarial reviewer per lane) | queued |
+| 6 | LGE-CV2 | Dependencies owned by the portable-warrant queue and idle since 2026-11-20: S6b/S6c (Python v2 runner), S7 (TypeScript), Go v2 port, S9 lane validator and per-corpus registry; coordinate before taking any | queued |
+| 6 | LGE-L-<lane> | Lane runner (v2) and logic-gates binding with BUILD negative controls, VER04i order, at most two lanes in flight | blocked on LGE-CV2 |
+| 7 | LGE-S4 | VER08c grammar-driven capability analyzer spec | queued |
+| 7 | LGE-A1 | Analyzer core plus rule tables for c, csharp, fsharp, haskell, java, perl, ruby | queued |
+| 7 | LGE-A2 | `.tokens` then `.grammar` for cpp, kotlin, elixir, lua, swift, dart | queued |
+| 7 | LGE-W1 | Per-lane v2 weakness matrices in `ca-assurance-report` | queued |
+| 8 | LGE-S5 | VER31 amendment: publish job per registry and the gate | queued |
+| 8 | LGE-PUB-<registry> | Publish jobs and gate, one registry per PR; first release per lane needs the owner's go-ahead | queued |
 
 ## Honest limits
 
@@ -131,3 +150,7 @@ Phases run in this order; Phase 3 runs in parallel with Phases 1, 2 and 5.
 | Date | Item | Result |
 |---|---|---|
 | 2026-11-24 | audit | table above; Perl bug reproduced locally |
+| 2026-11-24 | LGE-000 | merged #19922 |
+| 2026-11-24 | design spike | v2 corpus required; lane replay blocked on CV2 runners; separate corpus-only basic document chosen |
+| 2026-11-24 | Perl review | four security-review rounds: dualvars computed on the numeric part, invocant guessing that dropped inputs (`ANDn('CodingAdventures::LogicGates',1,1)` returned 1), unbounded widths, the same guessing in `nmos`/`pmos`/`npn`/`pnp`; all fixed in #19927 |
+| 2026-11-24 | discoveries | Go panics with plain strings; Perl, Lua and Haskell report free-text errors; TypeScript accepts `-0` and NAND/NOR/XNOR skip their own validation; logged above |
