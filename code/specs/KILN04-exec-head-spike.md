@@ -447,13 +447,20 @@ this stands.
     this note INFERRED success. `ok` confirms that a capability in one's own user
     namespace suffices and the step's closure rests on having none; `operation_not_permitted`
     means the check is against the initial namespace (stronger for us, and
-    it would make the earlier inference wrong); `device_or_resource_busy` means the kernel
-    refuses to re-point while the old exe is mapped, which the Go test binary
-    always has, so the probe cannot reach `ok` and only the other two environments'
-    `operation_not_permitted` carries information. `exe_after` shows whether the
+    it would make the earlier inference wrong); `device_or_resource_busy` is as good as `ok`
+    for this question: the capability check runs before the "old exe still mapped"
+    check, so EBUSY means the call got past the capability with capabilities held
+    only in its own namespace (the Go test binary always has its old exe mapped, so
+    EBUSY is the likely answer; do not chase it). `exe_after` shows whether the
     link actually moved.
   - A size mismatch (`PR_SET_MM_MAP_SIZE`) makes the valid probe `skipped`: fix
     the struct first.
+- NOT COVERED: the sandbox under strace, end to end, with a listener descriptor
+  passed through both. This spike probes strace inheritance and the sandbox's
+  descriptor handling separately; the first real evidence for the combination
+  will be the kiln-sandbox tests of the production listener (the dedicated
+  inherited socket that `kiln record step` creates, validated as a connected unix
+  socket, sent over by the init before the step starts and closed before it runs).
 - The descriptor path (`fdpath`). Findings from the code, before any run: the real
   `sandbox-exec` root cannot pass an extra descriptor to the step. `RunExec` marks
   every descriptor of 3 and up close-on-exec with `close_range` before the spawn
