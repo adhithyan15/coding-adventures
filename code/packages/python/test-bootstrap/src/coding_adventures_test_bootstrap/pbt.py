@@ -900,8 +900,17 @@ def ci_from_environ(environ: Mapping[str, str]) -> bool:
     return value is not None and value.strip().lower() not in ("", "0", "false")
 
 
-def _canon(value: Any) -> str:
-    """A stable text form of a witness (used in messages and the CI digest)."""
+_CANON_MAX_DEPTH = 16
+
+
+def _canon(value: Any, depth: int = 0) -> str:
+    """A stable text form of a witness (used in messages and the CI digest).
+
+    Total: it never raises.  Nesting deeper than ``_CANON_MAX_DEPTH`` renders as
+    ``...`` (a custom generator can build arbitrarily deep values, and this runs
+    outside any ``try`` in redacted mode), and an object whose ``repr`` raises
+    renders as its type name.
+    """
     if isinstance(value, bool):
         return "true" if value else "false"
     if isinstance(value, int):
@@ -909,8 +918,13 @@ def _canon(value: Any) -> str:
     if isinstance(value, (bytes, bytearray)):
         return "0x" + bytes(value).hex()
     if isinstance(value, (list, tuple)):
-        return "[" + ",".join(_canon(v) for v in value) + "]"
-    return repr(value)
+        if depth >= _CANON_MAX_DEPTH:
+            return "..."
+        return "[" + ",".join(_canon(v, depth + 1) for v in value) + "]"
+    try:
+        return repr(value)
+    except Exception:
+        return f"<{type(value).__name__}>"
 
 
 def _validate_options(options: PbtOptions) -> None:

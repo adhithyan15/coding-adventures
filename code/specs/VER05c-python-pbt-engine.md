@@ -244,6 +244,10 @@ text from a panicking property or generator is replaced by its type name.
 Caveat (VER05 §7.4 #3): for small input domains the digest preimage space is
 small and brute-forceable; it is a correlation handle, not secrecy.
 
+`for_all` and `PropertyResult` are **local-development APIs that do not redact**: they return the raw counterexample and error text. Callers must use `check_property` in CI. The `repro-fnv` digest is brute-forceable for small witnesses (the same open caveat as VER05 §7.4 row 3).
+
+The witness text/digest encoder `_canon` is total: nesting deeper than 16 renders as `...` and an object whose `repr` raises renders as its type name, so `check_property` always returns a verdict. Fixture-controlled sizes in the corpus runner (counts, retries, lengths, list/bytes sizes, integer digits) are capped (`CORPUS_MAX_SIZE` = 10,000; 1,000 digits) and an excess is a reported problem, as is a non-string case id (CWE-400).
+
 ---
 
 ## 6. Conformance and Negative Controls

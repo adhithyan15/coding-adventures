@@ -55,6 +55,14 @@ from coding_adventures_test_bootstrap.tfv import is_lowercase_hex, parse_tfv
 #: (a truncated list, or a corpus that grew without this lane being reviewed).
 PBT_V1_CASE_COUNT = 25
 
+#: Upper bound on every fixture-controlled size (counts, retries, lengths,
+#: list/bytes elements).  The fixture is data, so a hostile or corrupted value
+#: such as ``count = 10**9`` must be a reported problem, not a hang (CWE-400).
+#: Real pbt-v1 values are all below 200.
+CORPUS_MAX_SIZE = 10_000
+#: Upper bound on the decimal digits of any integer in a case.
+CORPUS_MAX_INT_DIGITS = 1_000
+
 #: Predicates for the shrink and replay cases.  ``True`` means "holds".
 PROPERTIES: dict[str, Callable[[Any], bool]] = {
     "int_le_100": lambda x: x <= 100,
@@ -140,6 +148,8 @@ def _decode(node: Any) -> Any:
     if isinstance(node, (bool, str)):
         return node
     if isinstance(node, list):
+        if len(node) > CORPUS_MAX_SIZE:
+            raise _CaseError(f"list exceeds {CORPUS_MAX_SIZE} elements")
         return [_decode(item) for item in node]
     if isinstance(node, Mapping):
         kind = node.get("kind")
@@ -147,11 +157,15 @@ def _decode(node: Any) -> Any:
             text = node["value"]
             if not isinstance(text, str) or not _is_canonical_int(text):
                 raise _CaseError(f"non-canonical int {text!r}")
+            if len(text) > CORPUS_MAX_INT_DIGITS:
+                raise _CaseError(f"int exceeds {CORPUS_MAX_INT_DIGITS} digits")
             return int(text)
         if kind == "bytes" and set(node) == {"kind", "hex"}:
             text = node["hex"]
             if not isinstance(text, str) or not is_lowercase_hex(text):
                 raise _CaseError(f"bytes hex must be even-length lowercase: {text!r}")
+            if len(text) > 2 * CORPUS_MAX_SIZE:
+                raise _CaseError(f"bytes exceed {CORPUS_MAX_SIZE} bytes")
             return bytes.fromhex(text)
         raise _CaseError(f"unrecognised value node {dict(node)!r}")
     raise _CaseError(f"unsupported JSON value {node!r}")
@@ -178,24 +192,32 @@ def _int(value: Any, what: str) -> int:
     return value
 
 
+def _size(value: Any, what: str) -> int:
+    """An int that drives a loop or an allocation: ``0 <= n <= CORPUS_MAX_SIZE``."""
+    number = _int(value, what)
+    if not 0 <= number <= CORPUS_MAX_SIZE:
+        raise _CaseError(f"{what} {number} outside [0, {CORPUS_MAX_SIZE}]")
+    return number
+
+
 def _check_gen(cid: str, op: str, v: dict[str, Any]) -> list[str]:
     if op == "gen_primitive":
         got = gen_primitive(
-            _int(v["seed"], "seed"), v["type"], _int(v["count"], "count")
+            _int(v["seed"], "seed"), v["type"], _size(v["count"], "count")
         )
     elif op == "gen_bounded":
         got = gen_bounded(
             _int(v["seed"], "seed"),
             _int(v["min"], "min"),
             _int(v["max"], "max"),
-            _int(v["count"], "count"),
+            _size(v["count"], "count"),
         )
     else:
         got = gen_bytes_corpus(
             _int(v["seed"], "seed"),
-            _int(v["min_len"], "min_len"),
-            _int(v["max_len"], "max_len"),
-            _int(v["count"], "count"),
+            _size(v["min_len"], "min_len"),
+            _size(v["max_len"], "max_len"),
+            _size(v["count"], "count"),
         )
     return [] if _same(got, v["outputs"]) else [f"{cid}: {op} outputs mismatch"]
 
@@ -274,7 +296,7 @@ def _check_replay(cid: str, v: dict[str, Any]) -> list[str]:
 
 
 def _check_filter_exhausted(cid: str, v: dict[str, Any]) -> list[str]:
-    max_retries = _int(v["max_retries"], "max_retries")
+    max_retries = _size(v["max_retries"], "max_retries")
     calls = 0
 
     def never(_value: int) -> bool:
@@ -307,7 +329,14 @@ def evaluate_pbt_corpus(
     """Evaluate every case; report how many ran and every problem found."""
     problems: list[str] = []
     evaluated = 0
-    ids = [case.get("id") if isinstance(case, Mapping) else None for case in cases]
+    # Ids are compared as strings only: an unhashable id (a list or dict) must
+    # be a reported problem, not a TypeError out of ``set()``.
+    ids = [
+        case.get("id")
+        if isinstance(case, Mapping) and isinstance(case.get("id"), str)
+        else None
+        for case in cases
+    ]
     if len(ids) != len(set(ids)):
         problems.append("duplicate or missing case id")
     if expected_cases is not None and len(cases) != expected_cases:

@@ -622,3 +622,33 @@ def test_tuple_shrink_budget_spans_slots_and_bisection_keeps_the_right_half() ->
     # only the right half still fails (sum >= 18): bisection must keep it
     out, steps = shrink_list([1, 2, 9, 9], 0, lambda xs: sum(xs) < 18)
     assert out == [9, 9] and steps >= 1
+
+
+def test_canon_is_total_even_for_hostile_witnesses() -> None:
+    deep: list = []
+    for _ in range(5000):
+        deep = [deep]
+    assert pbt._canon(deep).count("...") == 1
+
+    class Hostile:
+        def __repr__(self) -> str:
+            raise RuntimeError("no repr for you")
+
+    assert pbt._canon(Hostile()) == "<Hostile>"
+    for ci in (True, False):
+        v = pbt.check_property(
+            1,
+            pbt.Gen(lambda rng: deep),
+            lambda x: False,
+            pbt.PbtOptions(num_tests=1, ci=ci),
+        )
+        assert v.failure_id == pbt.FID_COUNTEREXAMPLE
+        v = pbt.check_property(
+            1,
+            pbt.Gen(lambda rng: Hostile()),
+            lambda x: False,
+            pbt.PbtOptions(num_tests=1, ci=ci),
+        )
+        assert v.failure_id == pbt.FID_COUNTEREXAMPLE
+    red = pbt.check_property(1, pbt.Gen(lambda rng: [[[42]]]), lambda x: False)
+    assert "42" not in red.message.split("repro-fnv")[0]

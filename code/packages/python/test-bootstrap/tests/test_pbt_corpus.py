@@ -445,3 +445,51 @@ def test_engine_invariants_are_checked_independently_of_expected_values(
     monkeypatch.setattr(pbt_corpus, "shrink_list", lambda *a, **k: ([0], 1))
     seq["expected_minimal"], seq["expected_steps"] = [_int(0)], _int(1)
     assert any("does not falsify" in p for p in _problems(seq))
+
+
+# --- CWE-400: fixture-controlled sizes are capped ----------------------------
+
+
+@pytest.mark.parametrize(
+    ("op", "field", "huge"),
+    [
+        ("gen_primitive", "count", 10**9),
+        ("gen_bounded", "count", 10**9),
+        ("gen_bytes", "count", 10**9),
+        ("gen_bytes", "max_len", 10**9),
+        ("filter_exhausted", "max_retries", 10**12),
+    ],
+)
+def test_oversized_loop_drivers_are_problems_not_hangs(
+    op: str, field: str, huge: int
+) -> None:
+    case = _first(op)
+    case[field] = _int(huge)
+    problems = _problems(case)
+    assert any("outside [0," in p for p in problems), problems
+
+
+def test_negative_sizes_and_oversized_values_are_problems() -> None:
+    case = _first("gen_primitive")
+    case["count"] = _int(-1)
+    assert any("outside [0," in p for p in _problems(case))
+    case = _first("gen_bounded")
+    case["outputs"] = [_int(0)] * 10_001
+    assert any("list exceeds" in p for p in _problems(case))
+    case = _first("shrink_bytes")
+    case["initial"] = {"kind": "bytes", "hex": "00" * 10_001}
+    assert any("bytes exceed" in p for p in _problems(case))
+    case = _first("gen_bounded")
+    case["max"] = _int(10**1001)
+    assert any("digits" in p for p in _problems(case))
+
+
+def test_unhashable_or_non_string_ids_are_problems() -> None:
+    for bad in ([1], {"a": 1}, 5, None, 1.5):
+        case = _first("failure_id_valid")
+        case["id"] = bad
+        problems = _problems(case, expected=None)
+        assert problems and any("id" in p for p in problems), bad
+    a, b = _first("failure_id_valid"), _first("failure_id_valid")
+    a["id"] = b["id"] = ["same"]
+    assert _problems(a, b, expected=None)
