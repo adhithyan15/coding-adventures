@@ -150,16 +150,22 @@ run from the Rust `logic-gates` BUILD (next to the existing
 the fixture's own checks. It exits 0 on equality and 1 on any difference, and
 prints the first differing block, never both files.
 
-**Inputs and safety.** The script takes **no path arguments**. It computes the
-repository root from its own location and reads only fixed repo-relative paths
-(`code/specs/logic-gates.warrant`, `code/specs/logic-gates-basic.warrant`,
+**Inputs and safety.** The script takes **no path arguments** and no
+environment input. It resolves its own location with `realpath` to find the
+repository root, and reads only these fixed repo-relative paths:
+`code/specs/logic-gates.warrant`, `code/specs/logic-gates-basic.warrant`,
 `code/specs/fixtures/logic-gates-basic-warrant-v2/corpus.profile` and
 `corpus.json`, `code/packages/rust/logic-gates/BUILD` and
-`code/packages/rust/logic-gates/evidence.bindings`). It refuses a symbolic link
-at any of those paths (checked with `lstat` before reading), refuses a file over
-a stated size cap, and fails if any is missing. A guard that could be pointed at
-another file, or that followed a link out of the repository, could be made to
-compare a file with itself.
+`code/packages/rust/logic-gates/evidence.bindings`. For every input it (a) takes
+the `realpath` and fails unless that path is still strictly under the root (this
+covers a symbolic link in a *parent* directory as well as in the file itself),
+(b) fails if the `lstat` mode is not a regular file, (c) opens it with
+`O_NOFOLLOW` (or the platform's equivalent; on Windows, where `O_NOFOLLOW` does
+not exist, the `lstat` and `realpath` checks carry the rule) and reads from that
+descriptor, and (d) fails if the file is larger than **1 MiB** (1,048,576 bytes;
+the largest input today, `logic-gates.warrant`, is 867 lines) or missing. A
+guard that could be pointed at another file, or that followed a link out of the
+repository, could be made to compare a file with itself.
 
 ### 4.1 The grammar facts the guard is built on
 
@@ -185,14 +191,31 @@ The guard parses as the Warrant grammar does, not by its own idea of the format:
    `WHITESPACE` accepts tabs, but a tab makes indentation depth ambiguous, so a
    tab is a difference), a byte-order mark, invalid UTF-8, a missing final LF,
    and any indentation that is not a multiple of two spaces.
-2. *Comment rule = the grammar's rule.* Before comparison, each line has its
-   comment removed with exactly the regular expression `--[^\n]*` (leftmost
-   match), then trailing blanks are dropped, and a line that is empty after that
-   is blank. Nothing else is normalised. A `--` immediately preceded by a
-   non-blank character (as in `a--b`) is **refused**, because the lexer's choice
-   between `COMMENT` and two `MINUS` tokens there is not something a spec
-   should depend on. An indented `--` line is therefore skipped *only because
-   the grammar skips it*; there is no other, looser rule.
+2. *Comment rule = the grammar's rule, applied outside literals.* The guard
+   scans each line left to right the way the lexer does, with the lexer's token
+   set. **The Warrant grammar has no general string literal.** The only quoted
+   token in `code/grammars/warrant/warrant.tokens` is
+   `BYTES_LITERAL = /b"(?:[0-9a-f]{2})*"/` (line 14): its body is hex digits
+   only, so it can never contain `-`, a space or a quote. At each position the
+   scan therefore does one of three things: (i) if the text at the position
+   matches `BYTES_LITERAL`, it consumes the literal whole and keeps it as
+   content; (ii) otherwise, if the text is `--`, it removes `--` to the end of
+   the line (the `COMMENT` skip token, `warrant.tokens:5`, `/--[^\n]*/`); (iii)
+   otherwise, a `"` that is not the start of a `BYTES_LITERAL` is **refused**
+   (there is no token for it, so a quoted string is a lexer error in the
+   Warrant, and a comment-looking ` -- ` inside quotes cannot be smuggled past
+   the guard as a "string"). Then trailing blanks are dropped, and a line empty
+   after that is blank. Nothing else is normalised. A `--` immediately preceded by
+   a non-blank character (as in `a--b`) is refused, because the lexer's choice
+   between `COMMENT` and two `MINUS` tokens there is not something a spec should
+   depend on. Quotes that appear **inside a comment** (the header of
+   `logic-gates.warrant` has several, for example line 18) are comment text and
+   are ignored with it. Checked against the current file: after comments are
+   removed, every `"` in `logic-gates.warrant` begins a `BYTES_LITERAL`.
+   The refuse-any-quote alternative (refuse every `"` that is not a
+   `BYTES_LITERAL`) is exactly what rule (iii) does, so no separate string
+   tokeniser is needed and the two readings agree. An indented `--` line is
+   skipped only because the grammar skips it.
 3. *No line outside a block (closes the vacuous pass).* After step 2, every
    non-blank line must be either (a) the single column-0 header line
    `warrant <module> v1`, or (b) inside an extracted block. A column-0 line that
@@ -235,13 +258,22 @@ The guard parses as the Warrant grammar does, not by its own idea of the format:
     one claim per fault in lines of the form
     `WARRANT_EVIDENCE_FAULT=<fault> WARRANT_EVIDENCE_FILTER=/exhaustive/<claim> ...`
     (`code/packages/rust/logic-gates/BUILD:28-58`). The guard parses those 31
-    lines for the eleven ops, maps each claim to its op by the subject call in the
-    claim body (for example `not_truth_table` to `not_gate`), and compares with
-    the committed `corpus.json`: the set of `(op, fault)` pairs is equal, and for
-    every pair the BUILD's pinned claim is a member of that control's
-    `required_claims` (VER04r section 8.3, control row). A pin the corpus does
-    not list, a control with no pin, and a pinned claim the corpus calls blind all
-    fail.
+    lines for the eleven ops and maps each claim to its op with an **explicit
+    claim-to-op table embedded in the script**, not by inspecting the claim body:
+    for each of the 11 ops `<claim stem>_truth_table` and
+    `<claim stem>_rejects_non_bit` map to that op (stems: `not`, `and`, `or`,
+    `xor`, `nand`, `nor`, `xnor` map to `not_gate`, `and_gate`, ... and
+    `nand_not`, `nand_and`, `nand_or`, `nand_xor` to themselves), and the four
+    `*_equals_*` claims are not pinned by any fault today; if one ever is, a claim
+    that mentions two ops (for example `nand_xor_equals_xor`, which calls
+    `nand_xor` and `xor_gate`) maps to the **NAND-built** op (`nand_xor`), the
+    one whose behaviour it exercises. The table is itself checked: its claim
+    names must equal the 26 claim names of check 5, so a renamed claim cannot
+    leave a stale entry. The guard compares with the committed `corpus.json`: the
+    set of `(op, fault)` pairs is equal, and for every pair the BUILD's pinned
+    claim is a member of that control's `required_claims` (VER04r section 8.3,
+    control row). A pin the corpus does not list, a control with no pin, and a
+    pinned claim the corpus calls blind all fail.
 12. *Fixture freshness.* The fixture must have been generated from the current
     basic document. The generator already enforces this: `corpus.json` records
     `spec_sha256`, the SHA-256 of the spec's raw bytes
@@ -251,13 +283,29 @@ The guard parses as the Warrant grammar does, not by its own idea of the format:
     the document without regenerating the fixture is a `--check` drift. The guard
     additionally recomputes the SHA-256 of `logic-gates-basic.warrant` and fails
     if it differs from `corpus.json`'s `spec_sha256`, so the failure is reported
-    here with a clear message and not only by the generator.
+    here with a clear message and not only by the generator. **Honest status of the generator check:** a generator `--check` is
+    wired in a BUILD today only for `ct-compare`
+    (`code/packages/rust/warrant-corpus-gen/BUILD:25` generates that fixture into
+    a temporary directory, runs `--check`, damages one chunk and requires the
+    check to fail). It is not run for this fixture yet. LGE-S1c adds the same
+    kind of line for `logic-gates-basic` to that BUILD (without `--bindings`,
+    section 5.1). Until it lands, **the guard's SHA-256 comparison is the only
+    freshness check**, and it proves that `corpus.json` was generated from the
+    current document, not that the rest of the fixture matches `corpus.json`.
 
-The script has its own tests: a deliberately edited copy of each block kind must
-fail, and so must each of these: a stray column-0 line, a two-space line with an
-unknown keyword, a tab-indented line, and a one-byte change inside a copied
-claim. An indented `--` comment line that changes nothing else must pass. The
-BUILD line fails closed if Python is not available.
+The script has its own tests in
+`code/scripts/tests/test_logic_gates_basic_drift.py` (the repository's
+convention for script tests is `code/scripts/tests/test_<script>.py`; for example
+`test_warrant_negctl.py` tests `code/scripts/warrant_negctl.py`). A deliberately
+edited copy of each block kind must fail, and so must each of these: a stray
+column-0 line, a two-space line with an unknown keyword, a tab-indented line, a
+one-byte change inside a copied claim, **a one-byte difference inside a
+`BYTES_LITERAL`** (the only quoted content the grammar has), **a line containing a
+plain quoted string with ` -- ` inside it** (refused by rule (iii), proving the
+comment rule cannot be hidden behind quotes), a symbolic link in place of an
+input, a symbolic link in a parent directory, and an input over 1 MiB. An
+indented `--` comment line that changes nothing else must pass. The BUILD line
+fails closed if Python is not available.
 
 ### 4.3 When the guard runs (build-tool selection)
 
@@ -576,7 +624,15 @@ so no row is ambiguous.
 | ruby | `Integer` and 0 or 1 (`gates.rb:90-98`) | `1.0`, `0.0`, `Rational(1, 1)`, `true`, `false`, strings, `nil`, arrays | none |
 | elixir | `is_integer` and 0 or 1 (`gates.ex:56-70`) | `1.0`, `true`, `false`, atoms, `nil`, strings, lists | none |
 | lua | `math.type(x) == "integer"` and 0 or 1 (Lua 5.3+, the runner already requires `math.type`, VER04r section 7.2 lua row) | `1.0`, `0.0`, `-0.0`, `NaN`, `+-inf`, strings (including `"1"`: Lua would coerce them in arithmetic), booleans, `nil`, tables | none. Today `gates.lua:72-76` is `value ~= 0 and value ~= 1`, which accepts `1.0`, so the `1.0` row fails until the Lua identity follow-up lands |
-| perl | decided by LGE-P1 (the Perl validation fix in progress); this spec fixes only the floor: `undef`, references, `"1abc"`, the empty string, `NaN` and `Inf` are reject rows | those | Perl does not reliably separate the number 1 from the string `"1"`, so whether the plain strings `"0"`/`"1"` are accepted is LGE-P1's decision; the matrix records that decision explicitly and does not leave the row unmarked |
+| perl | defined, not a reference, and its string form matches `/\A[01]\z/` (decided by LGE-P1, PR #19927). The strings `"0"`/`"1"` and the integers 0/1 are accepted, as are the floats 0.0/1.0, because Perl stringifies them as `"0"`/`"1"`. Validation returns a fresh canonical integer | `"1.0"`, `" 1"`, `"1\n"`, `"01"`, `"+1"`, `"0 but true"`, `"1abc"`, the empty string, a `dualvar` whose string part is not a bit, references, `undef`, `NaN`, `Inf` | the strings `"0"`/`"1"` and the floats 0.0/1.0 (the documented Perl exception: the language does not separate the number from its string form) |
+
+**Gate rule: a failing row blocks the label.** A lane whose matrix has a row that
+currently fails (today: TypeScript `-0`, Lua `1.0`), or whose stable-identity
+follow-up of section 7 is still pending (Lua, Perl, Haskell, Go), **may not
+claim the lane-local label as passing** until the library change that fixes it
+has merged. The matrix is committed with the failing row marked, so the gap is
+visible, but the lane's release text may say "lane-local exhaustive" only when
+every row of its matrix passes.
 
 The statically typed lanes accept the integers 0 and 1 and reject every other
 value of their integer type; the booleans, floats and strings rows do not exist
