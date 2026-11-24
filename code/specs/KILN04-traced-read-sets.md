@@ -4276,16 +4276,26 @@ that owns that namespace, on the evidence below):
    "Decided" means the first exec is DEFINITELY over: its confirm, or its thread
    definitely out of `execve` (the `failed` reading below), or the group exited
    (the pidfd is readable). It is never a timer. A `timeout` does not release the
-   queue; the queue stays held until one of those happens, under a global hold
-   deadline that kills the step (`exechead-stuck`, unclean): an exec stuck in the
-   kernel for that long is a stuck step, and holding is what keeps the invariant
-   that the soundness argument of step 7 needs. THE BACKSTOP IS TAINT. Each
+   queue; the queue stays held until one of those happens (the release triggers,
+   table below), under a hold deadline that kills the step (`exechead-stuck`,
+   unclean): an exec stuck in the kernel for that long is a stuck step, and holding
+   is what keeps the invariant that the soundness argument of step 7 needs. The
+   STALL clock (below) starts when a notification is DEQUEUED for processing, not
+   when it was received, so a held notification is not a stall; the hold deadline
+   (a constant of step 4) is its own bound, per held queue, measured from the
+   first exec's CONTINUE. THE BACKSTOP IS TAINT. Each
    thread group has a TAINTED state. Any `overload` CONTINUE of a notification
    for the group, any `timeout`, and any release of a notification whose exec
-   state is still unknown (the notified thread vanished from `/proc` while the
-   group lives, which `de_thread` does when a sibling's exec succeeds; a
-   `/proc/<tid>/syscall` that cannot be classified past the deadline) taints the
-   `tgid` for good. Every pending and every later line of a tainted `tgid` gets
+   state is still unknown taints the `tgid` for good. Unknown means: the notified
+   thread vanished from `/proc` while the group lives AND `exe` has not changed
+   (`de_thread` does that when a sibling's exec succeeds); or a
+   `/proc/<tid>/syscall` that cannot be classified past the deadline. A thread
+   that vanished because ITS OWN exec succeeded (a non-leader's exec takes over
+   the leader's pid; `exe` changed to the pin) is not taint. A queued notification
+   that was never released and whose thread dies in `de_thread` is simply DROPPED
+   when `NOTIF_ID_VALID` fails at dequeue, and does not taint (it never ran).
+   Non-leader execs stay refused for pairing, as below; this only fixes the taint
+   rule. Every pending and every later line of a tainted `tgid` gets
    the status `tainted` (or the triggering status, for the line that triggered it)
    and is NEVER `confirmed`, because an overlapping exec could turn `exe` into the
    pin and falsely confirm another line. Taint alone is the minimum; the held queue
@@ -4302,8 +4312,21 @@ that owns that namespace, on the evidence below):
    with backoff (from 50 microseconds, doubling, to 5 milliseconds). Past the cap, or
    past a cap on queued same-group notifications, a notification is answered
    CONTINUE without a pin, status `overload`, AND its `tgid` is tainted (the
-   answered exec overlaps the pending one). The supervisor never stops
-   answering.
+   answered exec overlaps the pending one). The queue caps are PER GROUP and
+   separate from the global confirm cap: a group's queued notifications hold no
+   poller and no descriptor, only memory under that group's own cap, so one step's
+   threads cannot push other groups into `overload`; the global cap bounds only the
+   ACTIVE confirm of each group. The supervisor never stops answering.
+   TAINT STATE is keyed by `(tgid, pidfd)` and dropped when the pidfd becomes
+   readable (the group is gone, the number may be reused). The table is bounded;
+   on overflow a GLOBAL overload-all taint is set (every later line of every group
+   is `tainted`) instead of evicting an entry, since an evicted entry would
+   un-taint a group. An `overload` taints even when the caps are hit before the pidfd
+   is open: the `tgid` is recorded first, as a pidfd-less entry. ORDERING: the taint
+   is set BEFORE the `overload` CONTINUE is sent; a poller reads the taint AFTER its
+   final `exe` re-check (step 8), under the same lock as the line write, so a line
+   is never written `confirmed` after a taint that an overlapping exec could have
+   caused.
 2. Read the path string from the tracee, `process_vm_readv` at `args[0]` (`args[1]`
    for `execveat`), at most `PATH_MAX`, up to the NUL. This is the string
    recorded as `path`; it is evidence of what was asked, never trusted as what
@@ -4350,7 +4373,12 @@ that owns that namespace, on the evidence below):
    when the process exits) and any pid reuse are decided on the descriptor, never
    on a number, and every read of `/proc/<tgid>` below is bracketed by a pidfd
    check. Then record the PRE-EXEC IDENTITY: `stat("/proc/<tgid>/exe")`'s
-   `(dev, ino)`, taken now, before the answer. If it already equals the pin, the process is running
+   `(dev, ino)`, taken now, before the answer (for a notification that was
+   queued, at DEQUEUE time, after the previous exec of the group is decided; a
+   pre-exec identity read earlier would be the previous image). This transition rule is
+   DEFENCE IN DEPTH: the basis of the argument is the order of the reads (the
+   syscall first, `exe` after) and the held queue; the identity check catches what
+   those miss. If it already equals the pin, the process is running
    the very file it is about to exec (a self re-exec), and the confirm below could
    not tell the exec from nothing happening: status `same-image`, write the line
    and CONTINUE without a confirm (see "the confirm needs an observed
@@ -4459,6 +4487,29 @@ blocks a build, it only declines to vouch.
 - `tainted`: the thread group is tainted (step 1); the line is never confirmed.
 - `unpinned`: step 5 failed.
 - `fexecve`: step 2.
+
+*Release triggers.* When each line's status lets the thread group's next queued
+notification go (the group's queue is released, never by a timer):
+
+| status | released | taints the group |
+| --- | --- | --- |
+| `confirmed` | at the confirm (after the step-8 re-check) | no |
+| `mismatch` | when `exe` changed to something else | no |
+| `failed` | when the thread is definitely out of `execve` | no |
+| `gone` | when the pidfd is readable | the entry is dropped |
+| `timeout` | NOT at the timeout: the poller keeps polling until the exec is decided (one of the four above), and only then releases; the hold deadline kills the step | yes, at the timeout |
+| `outside`, `unpinned`, `fexecve`, `same-image`, `overload`, `tainted` | at once (they have no poller) | yes (`tainted` already is) |
+
+Releasing the pollerless statuses at once and tainting the group is the preferred
+option: those lines never observe the exec's end, so the next notification could
+overlap an exec still in flight, and the taint is what makes that harmless, while
+holding the queue behind an exec nobody polls would need a poller for every
+host-binary exec, which is the common case and the cost D48 avoids. The price is
+that a process which execs a host binary and later a tmpfs binary in the SAME pid
+is refused (`exechead-tainted`); a build's children are forked, so each starts a
+group of its own. The N5 pairing refusal (unfinished, killed and result-less exec
+events) is the backstop for a group whose overlapping exec dies in `de_thread`: the
+trace shows that exec as `+++ killed` or unresumed, and the pid is refused.
 
 *The sidecar `<trace>.exechead`.* Written only by the supervisor, beside the trace
 (`StepFile`, `record/stepfile.go:132`), created exclusively (`writeExcl`) before
@@ -4575,7 +4626,12 @@ nobody to answer it. `kiln record step` therefore has a deadline on RECEIVING th
 listener (step 3's handshake); on timeout it kills the step and marks it unclean.
 A notification the supervisor has not answered within the
 stall deadline kills the step rather than answering it: a stuck supervisor stalls
-every exec, and silence must not become permission.
+every exec, and silence must not become permission. THE KILL TARGET is a pidfd,
+never a pid number: the watchdog and the hold deadline kill the step through the
+pidfd of the step's init (the pid-namespace init, whose death kills every process
+in the namespace), which is the pidfd taken (step 1) for the first notification's
+`tgid`, the init's own `execve` of the step; `--kill-on-exit` of strace is the
+second line.
 
 *Security preconditions, with evidence.* The probe is `TestExecHeadSpike`
 (`exechead_spike_linux_amd64_test.go`), run as workflow runs 45342132127 and
@@ -4696,7 +4752,11 @@ first. Step 4 changes nothing the classifier believes and does not bump.
    `mismatch`, `timeout`, `unpinned`, `fexecve`) and encoder/decoder unit tests
    (malformed, duplicate, oversize). Two more: a self re-exec (a tmpfs binary
    exec'ing itself) is refused `same-image`, and a first exec of a tmpfs binary
-   from a different image confirms. And tests that `overload` or `timeout` taints every later line of the group, that
+   from a different image confirms. And a race test that the taint set before an `overload` CONTINUE is seen by a
+   poller finishing at that moment (no `confirmed` line after it), a test that a
+   queued notification whose thread dies in `de_thread` is dropped without taint
+   while its pid is refused by the pairing, and a test that a non-leader's own
+   successful exec is not taint. And tests that `overload` or `timeout` taints every later line of the group, that
    an overlapping exec in the same thread group never confirms, and that a killed
    or unfinished exec (`= ?`, an unresumed `<unfinished ...>`, `+++ killed`)
    refuses that pid. And one for the rename variant: fork a child of

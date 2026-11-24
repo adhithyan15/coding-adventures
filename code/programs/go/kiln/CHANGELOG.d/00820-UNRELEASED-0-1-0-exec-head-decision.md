@@ -42,3 +42,13 @@
   not adopted), path-read and `execveat` edge cases, `NOTIF_ID_VALID` and the pidfd
   at the first use of the `tgid`, a watchdog goroutine enforcing the stall
   deadline, exact major.minor kernel matching, and the step-4 tests for them.
+- D48 third review (LOW and INFO): a release-trigger table per status (pollerless
+  statuses release at once and taint, `timeout` keeps polling until decided),
+  the stall clock starting at dequeue so a held notification is not a stall,
+  taint set before the `overload` CONTINUE and read by the poller after its final
+  `exe` re-check under one lock, the vanished-tid rule (taint only if `exe` is
+  unchanged; a queued thread dying in `de_thread` is dropped without taint), the
+  same-pre-exec-identity rule as defence in depth with the identity read at
+  dequeue, taint keyed by `(tgid, pidfd)` in a bounded table with a global
+  overload-all taint, pidfd-based kill target, per-group queue caps separate from
+  the global confirm cap, and the extra step-4 tests.
