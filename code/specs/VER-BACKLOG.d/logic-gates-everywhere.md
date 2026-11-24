@@ -145,8 +145,24 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | 7 | LGE-A1 | Analyzer core plus rule tables for c, csharp, fsharp, haskell, java, perl, ruby | queued |
 | 7 | LGE-A2 | `.tokens` then `.grammar` for cpp, kotlin, elixir, lua, swift, dart | queued |
 | 7 | LGE-W1 | Per-lane v2 weakness matrices in `ca-assurance-report` | queued |
-| 8 | LGE-S5 | VER31 amendment: publish job per registry and the gate | queued |
-| 8 | LGE-PUB-<registry> | Publish jobs and gate, one registry per PR; first release per lane needs the owner's go-ahead | queued |
+| 8 | LGE-S5 | [VER31a](../VER31a-registry-publishing.md): per-registry publish jobs behind the VER31 gate, tag grammar, owner actions, findings B1-B9 | spec in review |
+| 8 | LGE-OWNER-ACCOUNTS | Owner creates accounts, namespaces and trusted publishers (never the coordinator): crates.io account and name claim; npm `coding-adventures` org; PyPI trusted publishers pinning environment `release`; RubyGems key into the environment or trusted publisher; Maven Central portal account, namespace verification and GPG key; NuGet account and `CodingAdventures.` prefix; hex.pm account and API key; luarocks.org account and API key; PAUSE (CPAN) account; Hackage account and token; pub.dev account and automated-publishing setup; GitHub account able to PR `ocaml/opam-repository`; Swift mirror repo if chosen; C/C++ signing; GitHub `release` environment, tag-protection ruleset, machine account, `.github/release-signers` and CODEOWNERS (VER31a section 1.2). Also decisions O1-O6 (VER31a section 6) | owner action |
+| 8 | LGE-PUB-gate | Wire the VER31 gate (LV-007a) and the multi-lane `parse-tag` allow-list, Go tag shape and `registry` output (VER31a sections 2-3) before any registry row below | blocked on LV-007a |
+| 8 | LGE-PUB-crates | crates.io: `rust/logic-gates`; needs a version on the `transistors` path dep (B1), a `license` field, name decision O6; owner claims the name by a hand-published first version | queued; owner: crates.io account |
+| 8 | LGE-PUB-npm | npm: `@coding-adventures/logic-gates` with provenance; owner: `coding-adventures` org, first version by hand, trusted publisher; `file:../transistors` dep (B1) | queued |
+| 8 | LGE-PUB-pypi | PyPI: `coding-adventures-logic-gates`, existing job moved under the gate and the `release` environment; owner: trusted publisher pinning `release` | queued |
+| 8 | LGE-PUB-rubygems | RubyGems: `coding_adventures_logic_gates`; trusted publishing in place of `RUBYGEMS_API_KEY`; transistors gem dep (B1); owner: trusted publisher or key moved into `release` | queued |
+| 8 | LGE-PUB-go | Go proxy: tag `code/packages/go/logic-gates/vX.Y.Z`, remove `replace` and `v0.0.0` on transistors (B1, B7); owner signs the tag; no account | queued |
+| 8 | LGE-PUB-maven | Maven Central for java and kotlin: distinct artifact ids (B2), namespace decision (B3, O2), signed bundle to the Central portal; owner: portal account, namespace verification, GPG key and token secrets | queued |
+| 8 | LGE-PUB-nuget | NuGet for csharp and fsharp: `.nupkg` push, trusted publishing or key; owner: nuget.org account, ID prefix reservation | queued |
+| 8 | LGE-PUB-hex | Hex: `coding_adventures_logic_gates`; add package metadata to `mix.exs`; path dep on transistors (B1); owner: hex.pm account and API key | queued |
+| 8 | LGE-PUB-luarocks | LuaRocks: `coding-adventures-logic-gates`; transistors rock dep (B1); owner: luarocks.org account and API key | queued |
+| 8 | LGE-PUB-cpan | CPAN: `CodingAdventures-LogicGates` via PAUSE; transistors dist dep (B1); owner: PAUSE account | queued |
+| 8 | LGE-PUB-hackage | Hackage: rename `logic-gates` (B4, O6), `cabal sdist` and upload; owner: Hackage account and token | queued |
+| 8 | LGE-PUB-pubdev | pub.dev: remove `publish_to: none` (B5), add LICENSE, automated publishing; owner: pub.dev account and package setup | queued |
+| 8 | LGE-PUB-opam | opam: `prepare-opam` opens a PR to `ocaml/opam-repository`, never a direct upload; owner: GitHub fork credential, maintainer review | queued |
+| 8 | LGE-PUB-swift | Swift: blocked by the root `Package.swift` requirement (B6); owner decides mirror repo, shim or defer (O3) | blocked on owner decision |
+| 8 | LGE-PUB-source | C and C++: GitHub Release source tarball, SHA256SUMS, signature, attestation; C++ waits for PR #19928 (B8); owner: signing method (O4) | queued |
 
 ## Honest limits
 
@@ -167,4 +183,5 @@ in a gate validator; (3) lane-local exhaustive suites and error identities
 | 2026-11-24 | discoveries | Go panics with plain strings; Perl, Lua and Haskell report free-text errors; TypeScript accepts `-0` and NAND/NOR/XNOR skip their own validation; logged above |
 | 2026-11-24 | merges | #19924 Haskell gates, #19927 Perl validation, #19930 status, #19931 LG02, #19932 TypeScript, #19935 Go |
 | 2026-11-24 | discoveries | review rounds found pre-existing DoS (unbounded 2^n decoders, uncapped widths) in Go, Python and Haskell, crashes escaping Either in Haskell, and unvalidated state in Go/Python/Haskell sequential code; logged above at priority 2-3 |
+| 2026-11-24 | LGE-S5 | VER31a drafted; nine findings (B1-B9): unpublished transistors dependency in 8 lanes, Java/Kotlin Maven coordinate clash, Go subdirectory tag, SwiftPM root manifest, generic crate/Hackage names |
 | 2026-11-24 | LG02 errata | drift guard: checks 10-12 gated until LGE-S1c; three BUILD variants parsed; recorded in LG02 by the LGE-S1b PR |
