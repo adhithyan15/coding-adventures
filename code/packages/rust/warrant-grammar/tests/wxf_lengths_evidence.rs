@@ -41,9 +41,17 @@ mod harness {
         let mut rng = SplitMix64::new(seed);
         (0..n).map(|_| fresh(ty, &mut RngSrc(&mut rng))).collect()
     }
+
+    /// `n` relations of `prev` in `mode` for binder type `ty`.
+    pub fn relate_many(prev: V, ty: Ty, mode: u8, seed: u64, n: usize) -> Vec<V> {
+        let mut rng = SplitMix64::new(seed);
+        (0..n)
+            .map(|_| relate(&prev, ty, mode, &mut RngSrc(&mut rng)))
+            .collect()
+    }
 }
 
-use harness::{fresh_many, Ty, V};
+use harness::{fresh_many, relate_many, Ty, V};
 
 const HINTS: &[u64] = &[55, 64];
 const BASE: u64 = 347;
@@ -97,6 +105,89 @@ fn fresh_draws_hinted_lengths_about_a_quarter_of_the_time() {
         (890..=1110).contains(&fills),
         "hinted fraction off: {fills}/4000 fills"
     );
+}
+
+fn flat_bytes(v: &V) -> Vec<u8> {
+    match v {
+        V::List(vs) => vs
+            .iter()
+            .flat_map(|e| match e {
+                V::Bytes(b) => b.clone(),
+                _ => panic!("marked lists hold bytes, got {e:?}"),
+            })
+            .collect(),
+        other => panic!("expected a list, got {other:?}"),
+    }
+}
+
+#[test]
+fn rechunking_preserves_bytes_under_a_new_split() {
+    let prev = V::List(vec![
+        V::Bytes(vec![0x00, 0x01]),
+        V::Bytes(vec![0x02]),
+        V::Bytes(vec![0x03, 0x04, 0x05]),
+    ]);
+    let want = flat_bytes(&prev);
+    for mode in [2u8, 3u8] {
+        let outs = relate_many(prev.clone(), Ty::ListDriven, mode, 11, 64);
+        // Same bytes, always two chunks (one split point).
+        for o in &outs {
+            assert_eq!(flat_bytes(o), want, "mode {mode} changed bytes");
+            match o {
+                V::List(vs) => assert_eq!(vs.len(), 2, "mode {mode} shape"),
+                other => panic!("mode {mode}: {other:?}"),
+            }
+        }
+        // The split point varies: not every draw repeats one chunking.
+        let distinct: std::collections::HashSet<Vec<usize>> = outs
+            .iter()
+            .map(|o| match o {
+                V::List(vs) => vs
+                    .iter()
+                    .map(|e| match e {
+                        V::Bytes(b) => b.len(),
+                        _ => 0,
+                    })
+                    .collect(),
+                _ => vec![],
+            })
+            .collect();
+        assert!(distinct.len() >= 3, "mode {mode}: splits never vary");
+    }
+}
+
+#[test]
+fn rechunking_edges_and_unmarked_control() {
+    // Empty concatenations split into two empty chunks; singletons split too.
+    let empty = relate_many(V::List(vec![]), Ty::ListDriven, 2, 1, 1);
+    assert_eq!(
+        empty[0],
+        V::List(vec![V::Bytes(vec![]), V::Bytes(vec![])]),
+        "empty edge"
+    );
+    let one = relate_many(
+        V::List(vec![V::Bytes(vec![0x09])]),
+        Ty::ListDriven,
+        3,
+        1,
+        1,
+    );
+    assert_eq!(flat_bytes(&one[0]), vec![0x09]);
+    // Unmarked lists still clone on modes 2-3 (the pre-existing relation).
+    let prev = V::List(vec![V::Bytes(vec![0x01]), V::Bytes(vec![0x02])]);
+    for mode in [2u8, 3u8] {
+        let outs = relate_many(prev.clone(), Ty::List(&Ty::Bytes), mode, 5, 8);
+        assert!(outs.iter().all(|o| *o == prev), "mode {mode} must clone");
+    }
+}
+
+#[test]
+fn marked_binders_enumerate_like_plain_lists() {
+    let marked = Ty::ListDriven;
+    let plain = Ty::List(&Ty::Bytes);
+    assert_eq!(harness::domain(marked), harness::domain(plain));
+    assert_eq!(harness::domain_size(marked), harness::domain_size(plain));
+    assert_eq!(harness::domain_bytes(marked), harness::domain_bytes(plain));
 }
 
 #[test]

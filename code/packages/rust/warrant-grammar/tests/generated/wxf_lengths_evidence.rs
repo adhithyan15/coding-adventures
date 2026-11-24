@@ -761,6 +761,10 @@ pub enum Ty {
     /// `List<T>`: every list of length 0..=2 over the first 16 elements of `T`,
     /// plus length-3 lists over its first 4.
     List(&'static Ty),
+    /// WX-F: a `List<Bytes>` binder of a claim calling a driven operation.
+    /// Enumerates, sizes and draws exactly like `List<Bytes>`; the mark
+    /// exists so relation bias re-chunks pairs of them (VER04k 3.7).
+    ListDriven,
 }
 
 const ALPHABET: [u8; 4] = [0x00, 0x01, 0x80, 0xff];
@@ -794,6 +798,7 @@ pub fn domain(ty: Ty) -> Vec<V> {
         Ty::Tuple(_) | Ty::Data(..) | Ty::Opt(_) | Ty::Res(..) | Ty::List(_) => {
             domain_take(ty, domain_size(ty).map_or(0, |n| n as usize))
         }
+        Ty::ListDriven => domain(Ty::List(&Ty::Bytes)),
         Ty::Bytes => {
             let mut v: Vec<Vec<u8>> = vec![Vec::new()];
             v.extend((0..=255u8).map(|b| vec![b]));
@@ -859,6 +864,7 @@ pub fn domain_size(ty: Ty) -> Option<u64> {
             1u64.checked_add(d)?.checked_add(d * d)?.checked_add(e * e * e)
         }
         Ty::Bytes => Some(1 + 256 + 16 + 64 + 10),
+        Ty::ListDriven => domain_size(Ty::List(&Ty::Bytes)),
         Ty::BytesN(n) if n as u64 > MAX_FIXED_WIDTH => None,
         Ty::BytesN(0) => Some(1),
         Ty::BytesN(1) => Some(256),
@@ -889,6 +895,7 @@ pub fn domain_bytes(ty: Ty) -> Option<u64> {
 
 fn is_comp(ty: Ty) -> bool {
     matches!(ty, Ty::Tuple(_) | Ty::Data(..) | Ty::Opt(_) | Ty::Res(..) | Ty::List(_))
+    || matches!(ty, Ty::ListDriven)
 }
 
 /// Size of the Cartesian product of component domains (`None` on overflow).
@@ -909,6 +916,7 @@ fn elem_cost(ty: Ty) -> Option<u64> {
     match ty {
         Ty::Bytes => node.checked_add(8),
         Ty::BytesN(n) => node.checked_add(n as u64),
+        Ty::ListDriven => elem_cost(Ty::List(&Ty::Bytes)),
         Ty::Tuple(cs) => {
             let mut c = node;
             for t in cs {
@@ -946,6 +954,7 @@ pub fn domain_take(ty: Ty, k: usize) -> Vec<V> {
         return Vec::new();
     }
     match ty {
+        Ty::ListDriven => domain_take(Ty::List(&Ty::Bytes), k),
         Ty::Tuple(cs) => product(cs, k).into_iter().map(V::Tup).collect(),
         Ty::Data(name, ctors) => {
             let mut out = Vec::new();
@@ -1109,6 +1118,7 @@ fn describe_ty(ty: Ty) -> String {
             "List<{}> size({size}) [len 0..=2 over the first 16, len 3 over the first 4]",
             describe_ty(*t)
         ),
+        Ty::ListDriven => describe_ty(Ty::List(&Ty::Bytes)),
         other => leaf(format!("{other:?}"), "set"),
     }
 }
@@ -1297,6 +1307,7 @@ fn fresh(ty: Ty, src: &mut dyn Src) -> V {
             let n = src.bounded(4) as usize;
             V::List((0..n).map(|_| fresh(*t, src)).collect())
         }
+        Ty::ListDriven => fresh(Ty::List(&Ty::Bytes), src),
         Ty::Bytes => {
             let len = src.bounded(65) as usize;
             V::Bytes((0..len).map(|_| src.byte()).collect())
@@ -1326,6 +1337,29 @@ fn relate(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> V {
     }
     match (prev, mode) {
         (_, 0) | (_, 1) => fresh(ty, src),
+        // Re-chunking (VER04k 3.7): for a driven `List<Bytes>` pair the
+        // second list carries the first list's bytes under a new random
+        // split, so split claims meet unequal chunkings of equal content.
+        // Modes 2-3 mean "same content, related form" here instead of a
+        // clone; a re-split can still reproduce the original chunking.
+        // Non-`Bytes` elements cannot occur on a marked binder and fall
+        // through to the clone below.
+        (V::List(vs), 2) | (V::List(vs), 3)
+            if matches!(ty, Ty::ListDriven)
+                && vs.iter().all(|v| matches!(v, V::Bytes(_))) =>
+        {
+            let bytes: Vec<u8> = vs.iter().fold(Vec::new(), |mut acc, v| {
+                if let V::Bytes(b) = v {
+                    acc.extend_from_slice(b);
+                }
+                acc
+            });
+            let k = src.bounded(bytes.len() as u64 + 1) as usize;
+            V::List(vec![
+                V::Bytes(bytes[..k].to_vec()),
+                V::Bytes(bytes[k..].to_vec()),
+            ])
+        }
         (p, 2) | (p, 3) => p.clone(),
         (V::Bytes(b), 4) | (V::Bytes(b), 5) if !b.is_empty() => {
             let mut o = b.clone();
@@ -1383,6 +1417,14 @@ fn relate_comp(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> Option<V> {
             let i = src.bounded(vs.len() as u64) as usize;
             let mut o = vs.clone();
             o[i] = relate(&vs[i], *t, mode, src);
+            Some(V::List(o))
+        }
+        // Modes 4+: one-element change, like any list (re-chunking owns
+        // modes 2-3 only).
+        (V::List(vs), Ty::ListDriven) if !vs.is_empty() => {
+            let i = src.bounded(vs.len() as u64) as usize;
+            let mut o = vs.clone();
+            o[i] = relate(&vs[i], Ty::Bytes, mode, src);
             Some(V::List(o))
         }
         _ => None,
@@ -1478,6 +1520,7 @@ fn shrink_value(ty: Ty, v: &V, holds: &dyn Fn(&V) -> bool, steps: &mut usize) ->
         !holds(c)
     };
     match (v, ty) {
+        (v, Ty::ListDriven) => shrink_value(Ty::List(&Ty::Bytes), v, holds, steps),
         (V::Tup(vs), Ty::Tuple(cs)) => {
             let mut cur = vs.clone();
             for i in 0..cur.len() {
@@ -2126,6 +2169,54 @@ pub fn fuz_c(fault: Fault, iterations: u64) -> (Verdict, Stats) {
     (v, s)
 }
 
+const CLAIM_PAIR_NAMES: &[&str] = &["xs", "ys"];
+
+const CLAIM_PAIR_DEMOTED: &[&str] = &[];
+
+const CLAIM_PAIR_TYS: &[Ty] = &[Ty::ListDriven, Ty::ListDriven];
+
+#[allow(unused_variables)]
+fn claim_pair_admit(env: &[V]) -> bool {
+    let b_xs = env[0].clone();
+    let b_ys = env[1].clone();
+    true
+}
+
+#[allow(unused_variables, unused_mut)]
+fn claim_pair_holds(env: &[V], fault: Fault) -> bool {
+    let b_xs = env[0].clone();
+    let b_ys = env[1].clone();
+    match catch_unwind(AssertUnwindSafe(|| V::Bool(op_scan(&[], &[b_xs.clone()], fault) == op_scan(&[], &[b_xs.clone()], fault)).truthy())) {
+        Ok(v) => v,
+        Err(p) if p.is::<Unreachable>() => {
+            count_unreach();
+            true
+        }
+        Err(p) => std::panic::resume_unwind(p),
+    }
+}
+
+pub fn exh_pair(fault: Fault) -> (Verdict, Stats) {
+    take_unreach();
+    let (v, mut s) = exhaustive(CLAIM_PAIR_TYS, claim_pair_admit, claim_pair_holds, fault);
+    s.unreachable = take_unreach();
+    (v, s)
+}
+
+pub fn prop_pair(fault: Fault) -> (Verdict, Stats) {
+    take_unreach();
+    let (v, mut s) = property("claim/wxf_lengths/pair", CLAIM_PAIR_TYS, claim_pair_admit, claim_pair_holds, fault);
+    s.unreachable = take_unreach();
+    (v, s)
+}
+
+pub fn fuz_pair(fault: Fault, iterations: u64) -> (Verdict, Stats) {
+    take_unreach();
+    let (v, mut s) = fuzz_claim("fuzz/wxf_lengths/pair", CLAIM_PAIR_TYS, claim_pair_admit, claim_pair_holds, fault, iterations);
+    s.unreachable = take_unreach();
+    (v, s)
+}
+
 #[allow(unused_variables)]
 fn field_pos(ty: &str, f: &str) -> usize {
     match (ty, f) {
@@ -2411,6 +2502,18 @@ fn neg_fuz_c(fault: Fault) -> Verdict {
     fuz_c(fault, NEGCTL_FUZZ_ITERATIONS).0
 }
 
+fn neg_exh_pair(fault: Fault) -> Verdict {
+    exh_pair(fault).0
+}
+
+fn neg_prop_pair(fault: Fault) -> Verdict {
+    prop_pair(fault).0
+}
+
+fn neg_fuz_pair(fault: Fault) -> Verdict {
+    fuz_pair(fault, NEGCTL_FUZZ_ITERATIONS).0
+}
+
 pub fn build_suite(fault: Fault) -> Suite {
     let mut suite = Suite::new();
     reg(&mut suite, Meta { domain: describe(CLAIM_C_TYS, CLAIM_C_NAMES), demoted: CLAIM_C_DEMOTED.iter().map(|s| s.to_string()).collect(), ..Meta::new("warrant/wxf_lengths/exhaustive/c", "exhaustive", "scan", "c") }, move || {
@@ -2423,6 +2526,18 @@ pub fn build_suite(fault: Fault) -> Suite {
     });
     reg(&mut suite, Meta { seed: seed_of("fuzz/wxf_lengths/c").to_string(), ..Meta::new("warrant/wxf_lengths/fuzz/c", "fuzz", "scan", "c") }, move || {
         let (v, s) = fuz_c(fault, FUZZ_ITERATIONS);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta { domain: describe(CLAIM_PAIR_TYS, CLAIM_PAIR_NAMES), demoted: CLAIM_PAIR_DEMOTED.iter().map(|s| s.to_string()).collect(), ..Meta::new("warrant/wxf_lengths/exhaustive/pair", "exhaustive", "scan", "pair") }, move || {
+        let (v, s) = exh_pair(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta { seed: seed_of("claim/wxf_lengths/pair").to_string(), ..Meta::new("warrant/wxf_lengths/property/pair", "property", "scan", "pair") }, move || {
+        let (v, s) = prop_pair(fault);
+        (v, s, String::new())
+    });
+    reg(&mut suite, Meta { seed: seed_of("fuzz/wxf_lengths/pair").to_string(), ..Meta::new("warrant/wxf_lengths/fuzz/pair", "fuzz", "scan", "pair") }, move || {
+        let (v, s) = fuz_pair(fault, FUZZ_ITERATIONS);
         (v, s, String::new())
     });
     driver_note_obligations("scan", &["shape", "empty", "empty-element", "deterministic", "finish-observational", "steps-cap"]);
@@ -2451,85 +2566,85 @@ pub fn build_suite(fault: Fault) -> Suite {
         (v, s, String::new())
     });
     reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_lengths/negctl/exhaustive/scan/drop-last-chunk", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_exh_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_exh_c), ("pair", neg_exh_pair)];
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastChunk))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "drop-last-chunk")
     });
     reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_lengths/negctl/exhaustive/scan/reorder-chunks", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_exh_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_exh_c), ("pair", neg_exh_pair)];
         driver_take_max_driven("scan");
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
         negctl_result_driver(caught, "reorder-chunks", driver_take_max_driven("scan"))
     });
     reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_lengths/negctl/exhaustive/scan/duplicate-last-chunk", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_exh_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_exh_c), ("pair", neg_exh_pair)];
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DuplicateLastChunk))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "duplicate-last-chunk")
     });
     reg(&mut suite, Meta { fault: "early-finish".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_lengths/negctl/exhaustive/scan/early-finish", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_exh_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_exh_c), ("pair", neg_exh_pair)];
         driver_take_max_driven("scan");
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
         negctl_result_driver(caught, "early-finish", driver_take_max_driven("scan"))
     });
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxf_lengths/negctl/exhaustive/scan/reset-per-step", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_exh_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_exh_c), ("pair", neg_exh_pair)];
         driver_take_max_driven("scan");
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
         negctl_result_driver(caught, "reset-per-step", driver_take_max_driven("scan"))
     });
     reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "property".into(), ..Meta::new("warrant/wxf_lengths/negctl/property/scan/drop-last-chunk", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_prop_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_prop_c), ("pair", neg_prop_pair)];
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastChunk))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "drop-last-chunk")
     });
     reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "property".into(), ..Meta::new("warrant/wxf_lengths/negctl/property/scan/reorder-chunks", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_prop_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_prop_c), ("pair", neg_prop_pair)];
         driver_take_max_driven("scan");
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
         negctl_result_driver(caught, "reorder-chunks", driver_take_max_driven("scan"))
     });
     reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "property".into(), ..Meta::new("warrant/wxf_lengths/negctl/property/scan/duplicate-last-chunk", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_prop_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_prop_c), ("pair", neg_prop_pair)];
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DuplicateLastChunk))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "duplicate-last-chunk")
     });
     reg(&mut suite, Meta { fault: "early-finish".into(), target: "property".into(), ..Meta::new("warrant/wxf_lengths/negctl/property/scan/early-finish", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_prop_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_prop_c), ("pair", neg_prop_pair)];
         driver_take_max_driven("scan");
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
         negctl_result_driver(caught, "early-finish", driver_take_max_driven("scan"))
     });
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "property".into(), ..Meta::new("warrant/wxf_lengths/negctl/property/scan/reset-per-step", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_prop_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_prop_c), ("pair", neg_prop_pair)];
         driver_take_max_driven("scan");
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
         negctl_result_driver(caught, "reset-per-step", driver_take_max_driven("scan"))
     });
     reg(&mut suite, Meta { fault: "drop-last-chunk".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_lengths/negctl/fuzz/scan/drop-last-chunk", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_fuz_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_fuz_c), ("pair", neg_fuz_pair)];
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DropLastChunk))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "drop-last-chunk")
     });
     reg(&mut suite, Meta { fault: "reorder-chunks".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_lengths/negctl/fuzz/scan/reorder-chunks", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_fuz_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_fuz_c), ("pair", neg_fuz_pair)];
         driver_take_max_driven("scan");
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ReorderChunks))).map(|(n, _)| *n).into_iter().collect());
         negctl_result_driver(caught, "reorder-chunks", driver_take_max_driven("scan"))
     });
     reg(&mut suite, Meta { fault: "duplicate-last-chunk".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_lengths/negctl/fuzz/scan/duplicate-last-chunk", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_fuz_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_fuz_c), ("pair", neg_fuz_pair)];
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::DuplicateLastChunk))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "duplicate-last-chunk")
     });
     reg(&mut suite, Meta { fault: "early-finish".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_lengths/negctl/fuzz/scan/early-finish", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_fuz_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_fuz_c), ("pair", neg_fuz_pair)];
         driver_take_max_driven("scan");
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::EarlyFinish))).map(|(n, _)| *n).into_iter().collect());
         negctl_result_driver(caught, "early-finish", driver_take_max_driven("scan"))
     });
     reg(&mut suite, Meta { fault: "reset-per-step".into(), target: "fuzz".into(), ..Meta::new("warrant/wxf_lengths/negctl/fuzz/scan/reset-per-step", "negctl", "scan", "") }, || {
-        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("c", neg_fuz_c)];
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("c", neg_fuz_c), ("pair", neg_fuz_pair)];
         driver_take_max_driven("scan");
         let caught: Vec<&str> = attacking("scan", || runs.iter().find(|(_, f)| is_detected(&f(Fault::ResetPerStep))).map(|(n, _)| *n).into_iter().collect());
         negctl_result_driver(caught, "reset-per-step", driver_take_max_driven("scan"))

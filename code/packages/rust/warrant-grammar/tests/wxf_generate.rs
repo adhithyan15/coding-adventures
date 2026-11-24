@@ -459,6 +459,35 @@ fn bindings_len(a_lengths: &str, b_lengths: Option<&str>) -> String {
 }
 
 #[test]
+fn driven_list_binders_are_marked_for_rechunking() {
+    // `List<Bytes>` binders of a claim calling a driven op are marked;
+    // `List<U8>` binders are not (re-chunking is byte content); unmarked
+    // claims keep plain `Ty::List` and no region ships.
+    let head = "warrant t v1\n  op a(chunks: List<Bytes>) -> Bytes<20>\n  labels a:\n    chunks public\n";
+    let bindings = format!(
+        "{HEAD}\
+         op a driver faults=drop-last-chunk,reorder-chunks,duplicate-last-chunk,early-finish,reset-per-step\n\
+         driver a state=subject::A new=new() drive=chunks step=feed(mut,elem:bytes) finish=out(ref)->bytes result=finish\n"
+    );
+    let pair = format!("{head}  claim r:\n    forall xs: List<Bytes>, ys: List<Bytes>. a(xs) == a(xs)\n");
+    let out = generate(&pair, &bindings).expect("must generate");
+    assert!(
+        out.contains("CLAIM_R_TYS: &[Ty] = &[Ty::ListDriven, Ty::ListDriven];"),
+        "pair not marked"
+    );
+    assert!(out.contains("Ty::ListDriven =>"), "rechunk region missing");
+    let mixed = format!("{head}  claim r:\n    forall xs: List<Bytes>, ns: List<U8>. a(xs) == a(xs)\n");
+    let out = generate(&mixed, &bindings).expect("must generate");
+    assert!(
+        out.contains("CLAIM_R_TYS: &[Ty] = &[Ty::ListDriven, Ty::List(&Ty::Fx(F::U8))];"),
+        "non-bytes list marked"
+    );
+    // SPEC_SPLIT's binders are `Bytes`/`Nat` only: nothing to mark.
+    let plain = generates(SPEC_SPLIT, OP_SHA1, DRIVER_SHA1);
+    assert!(!plain.contains("ListDriven"), "mark leaked without list binders");
+}
+
+#[test]
 fn hinted_binders_carry_the_union_sorted() {
     // Both drivers hint; the `Bytes` binder draws from the union (sorted
     // across drivers) while the `Nat` binder is untouched.

@@ -117,7 +117,7 @@
 //!   produce is the caller's responsibility.
 
 pub use crate::checker::{resolve_post_slot, slot_shape, PostSlot, SlotShape};
-pub use crate::corpus::{inout_descriptor, InoutDescriptor};
+pub use crate::corpus::{driven_descriptor, inout_descriptor, DrivenDescriptor, InoutDescriptor};
 use crate::codegen::{CodegenError, EvalValue};
 use crate::evidence::{resolve_claim_tys, ty_of_type, TyEnv};
 pub use crate::evidence::{
@@ -266,6 +266,9 @@ impl Domain {
                     EvalValue::Result(Err((err.0.clone(), cases[(i - n) as usize].clone())))
                 }
             }
+            // A marked binder enumerates exactly like `List<Bytes>`; only the
+            // property relation differs (re-chunking in the prelude).
+            Domain::ListDriven => Domain::List(Box::new(Domain::Bytes)).nth_in_range(i),
             Domain::List(t) => {
                 let n = t.domain_size().expect("size checked by the caller");
                 let (d, e) = (n.min(16), n.min(4));

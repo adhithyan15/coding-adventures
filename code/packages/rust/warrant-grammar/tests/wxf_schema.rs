@@ -6,6 +6,7 @@
 //! refuses driven operations explicitly until then.
 
 use coding_adventures_warrant_grammar::binding::parse_evidence_bindings;
+use coding_adventures_warrant_grammar::driver::driver_named_methods;
 
 const BASE: &str = "package p\nrevision 1\nspec code/specs/p.warrant\noutput code/packages/rust/p/tests/generated/e.rs\nseed 1\nproperty_cases 1\nfuzz_iterations 1\nnegctl_fuzz_iterations 1\n";
 
@@ -192,4 +193,24 @@ fn rejects_uncapped_drive_param_and_error_paths() {
     parse_ok(&template(
         "state=s::T new=new() drive=x step=s(mut) result=finish errors=crate::E/V=C",
     ));
+}
+
+#[test]
+fn named_methods_lists_constructor_step_finish_and_ctx() {
+    // VER04k 3.4 rule 6: each counts as bound for the export analyzer.
+    let file = parse_ok(&format!("{SHA1_OP}{SHA1_DRIVER}"));
+    let driver = file.manifest.bindings["digest_chunks"]
+        .driver
+        .as_ref()
+        .expect("record");
+    assert_eq!(driver_named_methods(driver), vec!["new", "update", "sum1"]);
+    // A context function joins first; a collect-mode record has no finish.
+    let file = parse_ok(&format!(
+        "{SHA1_OP}driver digest_chunks state=S ctx=cx(param.seed:u8) new=new() drive=chunks step=update(mut,elem:bytes)->u8 result=collect\n"
+    ));
+    let driver = file.manifest.bindings["digest_chunks"]
+        .driver
+        .as_ref()
+        .expect("record");
+    assert_eq!(driver_named_methods(driver), vec!["cx", "new", "update"]);
 }

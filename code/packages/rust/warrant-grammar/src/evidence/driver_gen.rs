@@ -955,7 +955,7 @@ fn minimal_v(t: &Ty) -> String {
         }
         Ty::Opt(_) => "V::Opt(None)".to_string(),
         Ty::Res(t, _, _) => format!("V::Ok(Box::new({}))", minimal_v(t)),
-        Ty::List(_) => "V::List(vec![])".to_string(),
+        Ty::List(_) | Ty::ListDriven => "V::List(vec![])".to_string(),
     }
 }
 
@@ -963,8 +963,12 @@ fn minimal_v(t: &Ty) -> String {
 /// lists, which get one minimal element.
 fn nonempty_v(t: &Ty) -> String {
     match t {
-        Ty::Bytes | Ty::BytesN(_) => "V::Bytes(vec![0xa5])".to_string(),
+        Ty::Bytes | Ty::BytesN(_) | Ty::BytesHinted(_) => "V::Bytes(vec![0xa5])".to_string(),
         Ty::List(u) => format!("V::List(vec![{}])", minimal_v(u)),
+        Ty::ListDriven => format!(
+            "V::List(vec![{}])",
+            minimal_v(&Ty::Bytes)
+        ),
         _ => minimal_v(t),
     }
 }

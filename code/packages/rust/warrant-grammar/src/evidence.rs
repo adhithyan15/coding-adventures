@@ -208,6 +208,11 @@ pub enum Ty {
     /// `lengths=` hints (VER04k 3.7): the base byte-string domain plus the
     /// `00`/`a5` fills at each hinted length (sorted, deduplicated).
     BytesHinted(Vec<u64>),
+    /// WX-F: a `List<Bytes>` binder of a claim calling a driven operation
+    /// (VER04k 3.7). Identical to `List<Bytes>` in domain, size and draws;
+    /// the mark exists so the property generator's relation bias can
+    /// re-chunk pairs of them (same bytes, new split) instead of cloning.
+    ListDriven,
 }
 
 impl Ty {
@@ -248,6 +253,7 @@ impl Ty {
                 format!("Ty::Res(&{}, &[{}])", t.rust(), items.join(", "))
             }
             Ty::List(t) => format!("Ty::List(&{})", t.rust()),
+            Ty::ListDriven => "Ty::ListDriven".into(),
         }
     }
 
@@ -294,6 +300,8 @@ impl Ty {
             }
             Ty::Opt(t) => t.domain_size()?.checked_add(1),
             Ty::Res(t, cases, _) => t.domain_size()?.checked_add(cases.len() as u64),
+            // Marked binders enumerate exactly like `List<Bytes>`.
+            Ty::ListDriven => Ty::List(Box::new(Ty::Bytes)).domain_size(),
             Ty::List(t) => {
                 let n = t.domain_size()?;
                 let (d, e) = (n.min(16), n.min(4));
@@ -338,6 +346,7 @@ impl Ty {
             Ty::Opt(t) => node.checked_add(t.elem_cost()?),
             Ty::Res(t, _, _) => node.checked_add(t.elem_cost()?.max(2 * node)),
             Ty::List(t) => node.checked_add(t.elem_cost()?.checked_mul(3)?),
+            Ty::ListDriven => Ty::List(Box::new(Ty::Bytes)).elem_cost(),
             _ => Some(node),
         }
     }
@@ -3052,6 +3061,7 @@ fn shape_of_ty(t: &Ty) -> ColShape {
         }
         Ty::Opt(t) => ColShape::Opt(Box::new(shape_of_ty(t))),
         Ty::List(t) => ColShape::List(Box::new(shape_of_ty(t))),
+        Ty::ListDriven => ColShape::List(Box::new(shape_of_ty(&Ty::Bytes))),
         Ty::Res(t, cases, _) => ColShape::Result(Box::new(shape_of_ty(t)), cases.clone()),
     }
 }
@@ -3733,6 +3743,20 @@ pub fn generate_evidence_harness_with_tables(
             .collect::<BTreeSet<_>>()
             .into_iter()
             .collect();
+        // WX-F (VER04k 3.7): `List<Bytes>` binders of a claim calling any
+        // driven operation are marked for the re-chunking relation
+        // (same bytes, new split). The mark changes nothing but pairing:
+        // domains, sizes and draws delegate to `List<Bytes>` exactly.
+        let calls_driver = called
+            .iter()
+            .any(|o| manifest.bindings.get(*o).is_some_and(|b| b.driver.is_some()));
+        if calls_driver {
+            for t in tys.iter_mut() {
+                if matches!(t, Ty::List(inner) if **inner == Ty::Bytes) {
+                    *t = Ty::ListDriven;
+                }
+            }
+        }
         if !hinted.is_empty() {
             for t in tys.iter_mut() {
                 if *t == Ty::Bytes {
@@ -4493,6 +4517,10 @@ pub fn generate_evidence_harness_with_tables(
     // WX-F lengths hints: the region ships only when some binder uses it.
     if body.contains("Ty::BytesHinted(") {
         features.insert("lengths");
+    }
+    // WX-F re-chunking: the region ships only when some binder is marked.
+    if body.contains("Ty::ListDriven") {
+        features.insert("rechunk");
     }
     if body.contains("V::fixed_n(") {
         features.insert("fixedn");
