@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CodingAdventures.LogicGates.CSharp</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>Adhithya Rajasekaran</Authors>
     <Description>Core digital logic gates and NAND-derived variants</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

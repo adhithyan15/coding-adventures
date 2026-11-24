@@ -136,62 +136,77 @@ public static class LogicGates
         return Nand(Nand(a, nand), Nand(b, nand));
     }
 
-    /// <summary>AND over two or more inputs.</summary>
+    /// <summary>Largest input array the N-ary gates accept.</summary>
+    public const int MaxInputs = 65536;
+
+    // Validate-then-compute over a PRIVATE COPY. Checking the caller's array
+    // and then re-reading it is a time-of-check/time-of-use race (CWE-367) if
+    // another thread mutates it in between. Shape errors (null, too short,
+    // too long) are reported before bit errors, and the length is checked
+    // before copying so an oversized array is never duplicated. Null keeps the
+    // package's existing ArgumentNullException and length errors stay
+    // ArgumentException; a bad element throws InvalidBitException named
+    // "inputs[i]" (built only on failure).
+    private static int[] Snapshot(string gate, int[]? inputs, int min)
+    {
+        ArgumentNullException.ThrowIfNull(inputs);
+        var n = inputs.Length;
+        if (n < min)
+        {
+            throw new ArgumentException($"{gate} requires at least {min} inputs.", nameof(inputs));
+        }
+
+        if (n > MaxInputs)
+        {
+            throw new ArgumentException($"{gate} accepts at most {MaxInputs} inputs, got {n}.", nameof(inputs));
+        }
+
+        var copy = (int[])inputs.Clone();
+        for (var i = 0; i < copy.Length; i++)
+        {
+            if (copy[i] is not (0 or 1))
+            {
+                throw new InvalidBitException($"inputs[{i}]", copy[i]);
+            }
+        }
+
+        return copy;
+    }
+
+    /// <summary>AND over two or more inputs (at most <see cref="MaxInputs"/>).</summary>
     public static int AndN(params int[] inputs)
     {
-        ArgumentNullException.ThrowIfNull(inputs);
-        if (inputs.Length < 2)
+        var v = Snapshot("AndN", inputs, 2);
+        var result = And(v[0], v[1]);
+        for (var i = 2; i < v.Length; i++)
         {
-            throw new ArgumentException("AndN requires at least two inputs.", nameof(inputs));
-        }
-
-        for (var i = 0; i < inputs.Length; i++)
-        {
-            ValidateBit(inputs[i], $"inputs[{i}]");
-        }
-
-        var result = And(inputs[0], inputs[1]);
-        for (var i = 2; i < inputs.Length; i++)
-        {
-            result = And(result, inputs[i]);
+            result = And(result, v[i]);
         }
 
         return result;
     }
 
-    /// <summary>OR over two or more inputs.</summary>
+    /// <summary>OR over two or more inputs (at most <see cref="MaxInputs"/>).</summary>
     public static int OrN(params int[] inputs)
     {
-        ArgumentNullException.ThrowIfNull(inputs);
-        if (inputs.Length < 2)
+        var v = Snapshot("OrN", inputs, 2);
+        var result = Or(v[0], v[1]);
+        for (var i = 2; i < v.Length; i++)
         {
-            throw new ArgumentException("OrN requires at least two inputs.", nameof(inputs));
-        }
-
-        for (var i = 0; i < inputs.Length; i++)
-        {
-            ValidateBit(inputs[i], $"inputs[{i}]");
-        }
-
-        var result = Or(inputs[0], inputs[1]);
-        for (var i = 2; i < inputs.Length; i++)
-        {
-            result = Or(result, inputs[i]);
+            result = Or(result, v[i]);
         }
 
         return result;
     }
 
-    /// <summary>Return odd parity over zero or more inputs.</summary>
+    /// <summary>Return odd parity over zero or more inputs (at most <see cref="MaxInputs"/>).</summary>
     public static int XorN(params int[] inputs)
     {
-        ArgumentNullException.ThrowIfNull(inputs);
-
+        var v = Snapshot("XorN", inputs, 0);
         var result = 0;
-        for (var i = 0; i < inputs.Length; i++)
+        for (var i = 0; i < v.Length; i++)
         {
-            ValidateBit(inputs[i], $"inputs[{i}]");
-            result = Xor(result, inputs[i]);
+            result = Xor(result, v[i]);
         }
 
         return result;
