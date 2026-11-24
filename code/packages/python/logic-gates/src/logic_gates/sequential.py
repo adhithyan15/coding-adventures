@@ -42,7 +42,7 @@ This module builds each component from the gates defined in gates.py,
 showing exactly how physical memory works at the transistor level.
 """
 
-from logic_gates.combinational import MAX_COUNTER_WIDTH, MAX_WIDTH
+from logic_gates.combinational import MAX_COUNTER_WIDTH, MAX_WIDTH, _require_bit_list
 from logic_gates.gates import AND, NOR, NOT, XOR, _validate_bit
 
 # ---------------------------------------------------------------------------
@@ -471,24 +471,16 @@ def register(
     """
     _validate_bit(clock, "clock")
 
-    if not isinstance(data, list):
-        msg = "data must be a list of bits"
-        raise TypeError(msg)
+    # Exact-list check, length cap and element validation happen BEFORE any
+    # iteration of caller data (list subclasses with lying __len__/__iter__
+    # are rejected); from here on only the validated copy is used.
+    data = _require_bit_list(data, "data", min_len=1)
 
-    if len(data) == 0:
-        msg = "data must not be empty"
-        raise ValueError(msg)
-
-    if len(data) > MAX_WIDTH:
-        msg = f"data length {len(data)} exceeds maximum {MAX_WIDTH}"
-        raise ValueError(msg)
-
-    for i, bit in enumerate(data):
-        _validate_bit(bit, f"data[{i}]")
-
-    if width is not None and len(data) != width:
-        msg = f"data length {len(data)} does not match width {width}"
-        raise ValueError(msg)
+    if width is not None:
+        _check_width(width, "width", MAX_WIDTH)
+        if len(data) != width:
+            msg = f"data length {len(data)} does not match width {width}"
+            raise ValueError(msg)
 
     n = len(data)
 
@@ -589,8 +581,9 @@ def shift_register(
     _validate_bit(serial_in, "serial_in")
     _validate_bit(clock, "clock")
 
-    if direction not in ("right", "left"):
-        msg = f"direction must be 'right' or 'left', got '{direction}'"
+    # Exact str only, and never echo the raw value into the message.
+    if type(direction) is not str or direction not in ("right", "left"):
+        msg = "direction must be the str 'right' or 'left'"
         raise ValueError(msg)
 
     _check_width(width, "width", MAX_WIDTH)

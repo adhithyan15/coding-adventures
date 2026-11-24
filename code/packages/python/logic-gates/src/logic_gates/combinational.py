@@ -66,12 +66,13 @@ MAX_WIDTH = 1 << 16
 MAX_COUNTER_WIDTH = 64
 
 
-def _require_bit_list(value: object, name: str, *, min_len: int = 0) -> None:
+def _require_bit_list(value: object, name: str, *, min_len: int = 0) -> list[int]:
     """Require ``value`` to be exactly a ``list`` of valid bits, <= MAX_WIDTH.
 
     ``type(value) is list`` (not isinstance) so that dicts, tuples, sets,
     strings and list subclasses with hostile ``__len__``/``__getitem__`` are
     rejected with TypeError before any of their contents are touched.
+    Returns a fresh validated copy.
     The length cap is checked before the per-element loop so an oversize
     list is rejected in O(1).
     """
@@ -81,11 +82,17 @@ def _require_bit_list(value: object, name: str, *, min_len: int = 0) -> None:
     if len(value) > MAX_WIDTH:
         msg = f"{name} has {len(value)} elements; maximum is {MAX_WIDTH}"
         raise ValueError(msg)
+    if min_len == 1 and len(value) == 0:
+        msg = f"{name} must not be empty"
+        raise ValueError(msg)
     if len(value) < min_len:
         msg = f"{name} must have at least {min_len} elements, got {len(value)}"
         raise ValueError(msg)
     for i, bit in enumerate(value):
         _validate_bit(bit, f"{name}[{i}]")
+    # Return a fresh plain list of canonical ints so callers compute only on
+    # the validated copy, never on the caller's (mutable) original.
+    return [int(bit) for bit in value]
 
 
 # ===========================================================================

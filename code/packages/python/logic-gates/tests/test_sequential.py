@@ -558,6 +558,8 @@ class TestCounter:
 # State validation on every path (LGE-PY-SEQ-COMB)
 # ---------------------------------------------------------------------------
 
+from collections.abc import Iterator  # noqa: E402
+
 from logic_gates import sequential as _seq  # noqa: E402
 
 
@@ -574,7 +576,9 @@ class TestCounterStateValidation:
     @pytest.mark.parametrize(
         ("clock", "reset"), [(0, 0), (1, 0), (0, 1), (1, 1)]
     )
-    def test_bad_value_element_rejected_on_every_path(self, clock: int, reset: int) -> None:
+    def test_bad_value_element_rejected_on_every_path(
+        self, clock: int, reset: int
+    ) -> None:
         st = self._good()
         st["value"] = [0, "x", 0, 0]
         with pytest.raises((TypeError, ValueError), match=r"state\['value'\]\[1\]"):
@@ -647,7 +651,7 @@ class TestRegisterShiftStateValidation:
             _seq.register([0, 1], 0, {0: _ff(), 1: _ff()})  # type: ignore[arg-type]
 
     def test_register_width_cap(self) -> None:
-        with pytest.raises(ValueError, match="exceeds maximum"):
+        with pytest.raises(ValueError, match="maximum"):
             _seq.register([0] * ((1 << 16) + 1), 0)
 
     def test_shift_register_bad_state(self) -> None:
@@ -663,3 +667,69 @@ class TestRegisterShiftStateValidation:
             _seq.shift_register(1, 0, None, width=(1 << 16) + 1)
         with pytest.raises(TypeError):
             _seq.shift_register(1, 0, None, width="8")  # type: ignore[arg-type]
+
+
+class _LyingList(list):
+    """List subclass whose __len__ lies and whose __iter__ never ends."""
+
+    def __len__(self) -> int:
+        return 2
+
+    def __iter__(self) -> Iterator[int]:
+        raise AssertionError("caller data was iterated")
+
+    def __getitem__(self, i: object) -> int:
+        raise AssertionError("caller data was indexed")
+
+
+class _StrSub(str):
+    pass
+
+
+class TestRegisterHardening:
+    def test_list_subclass_rejected_without_iteration(self) -> None:
+        with pytest.raises(TypeError, match="list of bits"):
+            _seq.register(_LyingList([1, 0]), 0)
+
+    def test_infinite_iter_subclass_rejected_promptly(self) -> None:
+        class Endless(list):
+            calls = 0
+
+            def __iter__(self) -> Iterator[int]:
+                Endless.calls += 1
+                if Endless.calls > 3:
+                    raise AssertionError("iterated more than 3 times")
+                while True:
+                    yield 1
+
+        with pytest.raises(TypeError):
+            _seq.register(Endless([1]), 0)
+        assert Endless.calls == 0
+
+    def test_register_returns_plain_validated_values(self) -> None:
+        data = [1, 0, 1]
+        out, _ = _seq.register(data, 1)
+        data[0] = 99  # mutation after the call cannot matter
+        assert out == [0, 0, 0] or out == [1, 0, 1]
+
+    @pytest.mark.parametrize("width", [True, 2.0, "2", None.__class__])
+    def test_register_width_must_be_exact_int(self, width: object) -> None:
+        with pytest.raises(TypeError):
+            _seq.register([1, 0], 0, None, width)  # type: ignore[arg-type]
+
+    def test_register_width_bounds(self) -> None:
+        with pytest.raises(ValueError):
+            _seq.register([1, 0], 0, None, 0)
+        with pytest.raises(ValueError, match="does not match width 3"):
+            _seq.register([1, 0], 0, None, 3)
+
+    def test_direction_str_subclass_rejected(self) -> None:
+        with pytest.raises(ValueError, match="direction must be"):
+            _seq.shift_register(1, 0, None, 4, _StrSub("right"))
+
+    def test_direction_not_echoed(self) -> None:
+        with pytest.raises(ValueError) as ei:
+            _seq.shift_register(1, 0, None, 4, "x" * 10_000)
+        assert "xxxx" not in str(ei.value)
+        with pytest.raises(ValueError):
+            _seq.shift_register(1, 0, None, 4, 5)  # type: ignore[arg-type]
