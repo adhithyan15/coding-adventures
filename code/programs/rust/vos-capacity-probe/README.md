@@ -78,6 +78,8 @@ vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] --out results
 vos-capacity-probe run --tier full --shard K/N [--run-id DIGITS --run-attempt DIGITS] [--jobs N] --out shard.json
 vos-capacity-probe join --out joined.json [--expect-binary-sha256 H] [--expect-run-id I] [--expect-run-attempt A] [--expect-shards N] [--expect-jobs J] shard.json...
 vos-capacity-probe check [--full] code/specs/data/vos30-capacity-results.json [--jobs N]
+vos-capacity-probe check --full --shard K/N [--rerun-out F] [--run-id I --run-attempt A] code/specs/data/vos30-capacity-results.json [--jobs N]
+vos-capacity-probe decision-diff --recorded R.json --rerun J.json [--expect-shards N]
 vos-capacity-probe validate code/specs/data/vos30-capacity-results.json
 vos-capacity-probe table [--check | --write]
 vos-capacity-probe decide
@@ -102,6 +104,17 @@ vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [-
   and `--expect-run-attempt`). The output has the rows in plan order and a `recording` of
   `{mode, run_id, run_attempt, shards, jobs}`; row findings print as `join: finding:` and do not
   refuse. An unknown flag is refused, so a typo cannot skip a gate. VOS30 sections 9.2 and 9.12.2.
+* `check --full --shard K/N` validates the whole file, then re-runs only shard `K`'s rows (quick in
+  process, full in children) with the comparison classes of VOS30 9.12.1. `--rerun-out F` writes
+  those re-run rows as a canonical file with a `verify` `recording` and the verifying binary's
+  `meta` (`--rerun-out` needs `--exe`, if given, to be the running binary, and is never replaced:
+  it is published with a hard link); `join` fans N such files into one, and
+  `decision-diff --recorded R --rerun J` (exit 2 unless `J` is a JOINED `verify` file, `R` is not a
+  `verify` file, both record the same non-empty tree ids and have no structural finding, and the row
+  identities are equal; `--expect-shards N` pins the shard count) compares the section 8.3 decision, the re-plan decision and
+  the cut density `K` of the two without solving: exit 1 on a difference. Every `check` mode first
+  refuses (exit 2, nothing re-run) a structural finding, a repeated row identity, or more quick
+  specs than the plan has (VOS-D134).
 * `validate FILE` runs only the schema and guard rules of `check` (no re-run, no executable, no plan
   coverage, so a shard's file can be classified) and tells the findings apart: exit 2 for a
   **structural** finding or an unreadable file (the recording is discarded), exit 1 for **row**

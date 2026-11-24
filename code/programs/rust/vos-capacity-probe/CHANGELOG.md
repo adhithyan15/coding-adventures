@@ -4,6 +4,47 @@ All notable changes to this package are documented here.
 
 ## [0.2.0] - Unreleased
 
+### Added (VOS-028c3c-2b-ii, VOS30 sections 9.2 and 9.12.1)
+
+- **`check --full --shard K/N [--rerun-out F] [--run-id I --run-attempt A]`.** The whole file is
+  validated as `check --full` does, then only the rows of `plan_shard(5, K, N)` are re-run (quick
+  tier in process through `results::rerun_collect_in`, full tier in children through
+  `spot::full_rerun_collect_in`; the old entry points are wrappers with `None`), with the same
+  comparison classes. A shard with no quick-tier row is not a finding. `--shard` without `--full`,
+  and `--rerun-out`, `--run-id` or `--run-attempt` without `--shard`, are usage errors; every flag
+  is read by `value_of`.
+- **`--rerun-out F`** writes the shard's re-run rows as a canonical file with the verifying
+  binary's own `meta` and a `recording` of mode `verify` (`cli::verify_results`, pure). It is never
+  overwritten (refused before any re-run) and is written even when rows differ. `join` already
+  accepted mode `verify`; a test now pins it, and `decision-diff` of the joined file closes the
+  fan-in.
+- **`decision-diff --recorded R --rerun J [--expect-shards N]`.** Requires equal row-identity sets
+  (else exit 2), runs `decision_differences` without solving, exit 1 on any difference, 0 on none.
+  It first authenticates the re-run (security review, MEDIUM; each a usage refusal): `--rerun` has
+  a `recording` of mode `verify` and is JOINED (`shards` set, no `shard`); `--recorded` is not a
+  verify file; the two record equal, non-empty tree ids; `check_guards` is empty for both; and
+  `--expect-shards`, when given, equals the joined `shards`. A file compared with itself, or with
+  any file that merely holds the same rows, is refused.
+- **Security review fixes (VOS-028c3c-2b-ii).** `cli::write_new` publishes with a hard link, which
+  fails if the target exists, so `join --out` and `--rerun-out` can never replace a file created
+  between the early `exists()` check and the publish (`write_atomic` still replaces, for
+  `run --out`, `merge --out` and `table --write`). `check --rerun-out` refuses an `--exe` that is
+  not the running binary (its digest goes into the verify `meta`). `check --shard K/N` refuses a
+  slice with no row of the plan (exit 2) and records a finding when the rows re-run differ from the
+  slice's rows in the file. `check` refuses an unknown flag (`--rerun-ot`).
+- **VOS-D132.** `decision_differences` also compares `cut_density_k`, the `decide_replan` row, its
+  memory verdict and its `because` lines with the counters cut. The only caller outside the tests
+  is `check --full`.
+- **VOS-D134.** `results::check_guards` runs first in every `check` mode: structural findings of
+  `validate_classes`, a duplicate row identity, and more quick specs than the plan's 85 quick rows
+  each exit 2 ("nothing was re-run"). Not done: an overall wall budget for `rerun_collect`.
+
+### Changed (VOS-028c3c-2b-ii)
+
+- A structural finding in `check` is now exit 2 (`Failure::Usage`), not exit 1. Two tests that
+  expected exit 1 for a deleted row and for a hostile knob (`review_fixes.rs`) were updated.
+- `Identity` in `results` is public, with `identity_of`, `shard_identities` and `quick_row_cap`.
+
 ### Added (VOS-028c3c-2b-i, VOS30 sections 9.2 and 9.12.2)
 
 - **Sharding (`exp::full_knobs`, `parse_shard`, `shard_of`, `plan_shard`; `run --shard K/N`).**

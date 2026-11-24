@@ -1499,6 +1499,8 @@ vos-capacity-probe list
 vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] [--seeds N] --out results.json
 vos-capacity-probe check [--full] results.json [--jobs N] [--exe PATH]
 vos-capacity-probe run --tier full [--jobs N] [--seeds N] --shard K/N [--run-id DIGITS] [--run-attempt DIGITS] --out shard.json
+vos-capacity-probe check --full --shard K/N [--rerun-out F] [--run-id DIGITS --run-attempt DIGITS] results.json [--jobs N] [--exe PATH]
+vos-capacity-probe decision-diff --recorded R.json --rerun J.json [--expect-shards N]
 vos-capacity-probe join --out J [--expect-binary-sha256 H] [--expect-run-id I] [--expect-run-attempt A] [--expect-shards N] [--expect-jobs J] SHARD.json...
 vos-capacity-probe merge [--add] --base A.json --fresh B.json --experiment E1 [--where field=value] [--ignore-outside] --out C.json
 vos-capacity-probe table [--check | --write] [--results FILE] [--spec FILE]
@@ -1576,7 +1578,7 @@ malformed command line or an unreadable input (a gate never confuses the two).
 * `decide` prints the section 8.3 outcome and the conditions that placed it.
 
 **As built (VOS-028c3c-2b-i): `run --shard`, the `recording` block and `join`.**
-`check --full --shard`, `--rerun-out` and `decision-diff` are VOS-028c3c-2b-ii.
+`check --full --shard`, `--rerun-out` and `decision-diff` are VOS-028c3c-2b-ii (below).
 
 * **`run --shard K/N`** requires `--tier full` and refuses `--only` (a shard is a slice
   of the whole plan). `K` and `N` are decimal integers with `0 <= K < N` and
@@ -1590,7 +1592,7 @@ malformed command line or an unreadable input (a gate never confuses the two).
   `--run-attempt` flags, each ASCII digits, 1 to 20 of them, never from the
   environment. A shard run with neither flag records the block without them (both keys
   omitted); giving one flag without the other is refused. `mode` is `record` for `run`
-  (`verify` is written by the fan-in of 2b-ii). On the joined file the block is
+  and `verify` for `check --full --shard --rerun-out` (2b-ii, below). On the joined file the block is
   `{ "mode", "run_id", "run_attempt", "shards": N, "jobs": J }`: `shard` becomes `shards`.
 * **`join --out J FILE...`** refuses, with status 2 and **writing nothing** (the output
   is built in memory, then written to a temporary file and renamed), unless: every input
@@ -1610,9 +1612,67 @@ malformed command line or an unreadable input (a gate never confuses the two).
   outcomes, section 9.12.1). The join of a quick-tier or `--only` run is refused by the
   plan comparison.
 
-**The CI host, parallelism and sharding (pre-registered by VOS-028c3c-1; planned,
-not built beyond 2b-i).** `run --shard K/N`, `check --full --shard K/N` and `join` are
-VOS-028c3c-2; the workflow that runs them is VOS-028c3c-3. The values below are fixed
+**As built (VOS-028c3c-2b-ii): the verify fan-in, VOS-D132 and VOS-D134.**
+
+* **`check --full --shard K/N [--rerun-out F] [--run-id I --run-attempt A] FILE`.**
+  `--shard` without `--full` is refused (status 2), as are `--rerun-out`, `--run-id` and
+  `--run-attempt` without `--shard`, `--run-id` without `--run-attempt` (or the reverse),
+  and `--run-id` without `--rerun-out`; every flag goes through the same reader as `run`
+  and `join` (a repeated flag is refused). All of this is decided before the file is read.
+  The WHOLE file is then validated exactly as `check --full` does today (the guards below,
+  `validate`, quick and full plan coverage, `full_refusals`), and only then are the rows
+  whose identities are in `plan_shard(5, K, N)` re-run, quick tier in process and full
+  tier in children, with the comparison classes of 9.12.1 (`compare_rerun` and
+  `compare_timing`). A shard that holds no quick-tier row is not a finding (the whole-file
+  run still says "the file has no quick-tier row to re-run"). The decision comparison
+  runs over the recorded rows with the shard's re-run rows laid over them. Exit status:
+  1 on any difference (a row finding), 2 on a usage or structural refusal.
+* **`--rerun-out F`** writes the shard's RE-RUN rows (in the recorded file's order, `green`
+  recomputed; a quick row borrows its recorded resident set, as in `check --full`) as a
+  canonical results file whose `meta` is the VERIFYING binary's own (`meta::gather`:
+  binary digest, trees, revisions, triple) with `merges` and `regeneration` empty and a
+  `recording` of `{ "mode": "verify", "shard": "K/N", "jobs": J }` (plus `run_id` and
+  `run_attempt` when given). It is never overwritten: an existing `F` is refused BEFORE
+  any re-run, and the write is atomic and publish-if-absent (a hard link, which fails if `F`
+  appeared in the meantime; `join --out` publishes the same way). `--exe`, if given with
+  `--rerun-out`, must be the running binary, whose digest the `meta` records; a `--shard` slice with
+  no row of the plan is refused, and a finding is raised if the rows re-run differ from the slice's
+  rows in the file. It is written before the verdict, so a shard with
+  differences still leaves its file for the fan-in. `join` takes verify shards exactly as
+  it takes record shards (the mode is one of `record`, `verify`, identical across the
+  inputs) and its output carries `mode: "verify"` and `shards: N`.
+* **`decision-diff --recorded R --rerun J [--expect-shards N]`.** Reads both files (canonical,
+  capped) and AUTHENTICATES the re-run before comparing a row (all status 2): `J`'s `recording` is
+  mode `verify` and joined (`shards` set, no `shard`), `R`'s is not mode `verify`, the two record
+  equal non-empty tree ids, `check_guards` is empty for both, and `--expect-shards`, when given,
+  equals `J`'s `shards`; so a file compared with itself, or with any file that merely holds the
+  same rows, is not a verification. Then it requires the two row-identity sets to be equal and each free of a repeated identity
+  (else status 2: `J` is not a re-run of `R`), orders `J`'s rows as `R`'s, and runs
+  `results::decision_differences`; it solves and re-runs nothing. Status 0 and one
+  `decision-diff: ok` line when there is no difference, status 1 with one
+  `decision-diff:` line per difference otherwise. The fan-in is therefore: N
+  `check --full --shard K/N --rerun-out`, one `join` of the N verify files, one
+  `decision-diff` of the recorded file against the joined one.
+* **VOS-D132: `decision_differences` compares more than `decide`.** Besides the section
+  8.3 row and its time-stripped `because` lines, it compares `cut_density_k`, the
+  `decide_replan` row (R1 to R4), the re-plan memory verdict (`memory_shipped_t`) and the
+  re-plan `because` lines with the counters cut (each line ends `; worst conflicts C,
+  worst check_work W`, which a wall-capped row varies between runs; the row name and its
+  route-green verdict stay). Before this a verification could pass while the re-plan
+  outcome or `K` differed. Its only caller outside the tests is `check --full`.
+* **VOS-D134: guards before any re-run, in every `check` mode.** `results::check_guards`
+  returns (a) every structural finding of `validate_classes`, (b) any row identity
+  `(experiment, mode, knob, seed)` that appears twice, and (c) a count of quick-tier
+  specs above the plan's quick-row count (85). Any of them is printed as `check:
+  structural: ...` and `check` exits **2** (`Failure::Usage`: "nothing was re-run"), the
+  class-1 outcome of 9.12.1; before, a structural finding was one of the exit-1
+  violations and (b) and (c) did not exist. Plan coverage and the row findings keep
+  exit 1. Not done, and still queued with the workflow: an overall wall budget for
+  `rerun_collect`.
+
+**The CI host, parallelism and sharding (pre-registered by VOS-028c3c-1; built
+through 2b-ii).** `run --shard K/N`, `check --full --shard K/N`, `join` and
+`decision-diff` are VOS-028c3c-2b; the workflow that runs them is VOS-028c3c-3. The values below are fixed
 here, before any code or recording exists. A change to one after a recording is a
 change to this specification and a re-record, never a tuning.
 
@@ -2907,6 +2967,13 @@ VOS-D124).**
   investigated or the file is wholesale re-recorded. `TIMING_BAND` (4, two-sided, in
   `results.rs`) and the slacks (`TIMING_SLACK_MS` = 50, `RSS_SLACK_KB` = 8192) are never
   changed in response to a failure.
+* **As built (VOS-028c3c-2b-ii).** The mechanics of the rule are `check --full --shard
+  K/N`, which exits 1 on a difference and still writes its `--rerun-out` file, so a
+  shard that is re-run once (above) produces a second file for the same shard; `join`
+  takes one file per shard and refuses a duplicate, so the workflow chooses which file
+  represents the shard. The decision is then checked once, by `decision-diff` of the
+  recorded file against the joined verify file (section 9.2); a difference there is a
+  finding of the second class below, never a reason to discard.
 
 **The recording is a wholesale re-record of every row at one tree.** Why, disclosed:
 
